@@ -1,53 +1,50 @@
 From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH v3 12/12] dt-bindings: msm/dsi: Add DSIv2 documentation
-Date: Tue,  1 Dec 2015 15:30:10 +0530
-Message-ID: <1448964010-18207-13-git-send-email-architt@codeaurora.org>
+Subject: [PATCH v3 11/12] dt-bindings: msm/dsi: Fix the order in which clocks are listed
+Date: Tue,  1 Dec 2015 15:30:09 +0530
+Message-ID: <1448964010-18207-12-git-send-email-architt@codeaurora.org>
 References: <1447844131-4182-1-git-send-email-architt@codeaurora.org>
  <1448964010-18207-1-git-send-email-architt@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1448964010-18207-1-git-send-email-architt@codeaurora.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org, robdclark@gmail.com
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, robh@kernel.org, Archit Taneja <architt@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIGFkZGl0aW9uYWwgcHJvcGVydHkgaW5mbyBuZWVkZWQgZm9yIERTSXYyIERULgoKQ2M6IGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnCkNjOiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3Jn
-PgoKU2lnbmVkLW9mZi1ieTogQXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4K
-LS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZHNpLnR4
-dCB8IDQgKysrKwogMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0IGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQKaW5k
-ZXggZTA5Nzk1NS4uZTc0MjNiZSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQKQEAgLTIxLDEwICsyMSwxMyBAQCBSZXF1
-aXJlZCBwcm9wZXJ0aWVzOgogICAqICJieXRlX2NsayIKICAgKiAicGl4ZWxfY2xrIgogICAqICJj
-b3JlX2NsayIKKyAgRm9yIERTSXYyLCB3ZSBuZWVkIGFuIGFkZGl0aW9uYWwgY2xvY2s6CisgICAq
-ICJzcmNfY2xrIgogLSB2ZGQtc3VwcGx5OiBwaGFuZGxlIHRvIHZkZCByZWd1bGF0b3IgZGV2aWNl
-IG5vZGUKIC0gdmRkaW8tc3VwcGx5OiBwaGFuZGxlIHRvIHZkZC1pbyByZWd1bGF0b3IgZGV2aWNl
-IG5vZGUKIC0gdmRkYS1zdXBwbHk6IHBoYW5kbGUgdG8gdmRkYSByZWd1bGF0b3IgZGV2aWNlIG5v
-ZGUKIC0gcWNvbSxkc2ktcGh5OiBwaGFuZGxlIHRvIERTSSBQSFkgZGV2aWNlIG5vZGUKKy0gc3lz
-Y29uLXNmcGI6IEEgcGhhbmRsZSB0byBtbXNzX3NmcGIgc3lzY29uIG5vZGUgKG9ubHkgZm9yIERT
-SXYyKQogCiBPcHRpb25hbCBwcm9wZXJ0aWVzOgogLSBwYW5lbEAwOiBOb2RlIG9mIHBhbmVsIGNv
-bm5lY3RlZCB0byB0aGlzIERTSSBjb250cm9sbGVyLgpAQCAtNTEsNiArNTQsNyBAQCBSZXF1aXJl
-ZCBwcm9wZXJ0aWVzOgogICAqICJxY29tLGRzaS1waHktMjhubS1ocG0iCiAgICogInFjb20sZHNp
-LXBoeS0yOG5tLWxwIgogICAqICJxY29tLGRzaS1waHktMjBubSIKKyAgKiAicWNvbSxkc2ktcGh5
-LTI4bm0tODk2MCIKIC0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0
-aGUgcmVnaXN0ZXJzIG9mIFBMTCwgUEhZIGFuZCBQSFkKICAgcmVndWxhdG9yCiAtIHJlZy1uYW1l
-czogVGhlIG5hbWVzIG9mIHJlZ2lzdGVyIHJlZ2lvbnMuIFRoZSBmb2xsb3dpbmcgcmVnaW9ucyBh
-cmUgcmVxdWlyZWQ6Ci0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMg
-YSBtZW1iZXIgb2YgdGhlIENvZGUgQXVyb3JhIEZvcnVtLApob3N0ZWQgYnkgVGhlIExpbnV4IEZv
-dW5kYXRpb24KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+List the clocks in the order that's used in DT. We don't have mdp/dsi
+DT nodes for any SoC in upstream yet, but we align with the order
+we intend to use.
+
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>
+
+Signed-off-by: Archit Taneja <architt@codeaurora.org>
+---
+ Documentation/devicetree/bindings/display/msm/dsi.txt | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
+index f344b9e..e097955 100644
+--- a/Documentation/devicetree/bindings/display/msm/dsi.txt
++++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
+@@ -14,13 +14,13 @@ Required properties:
+ - clocks: device clocks
+   See Documentation/devicetree/bindings/clocks/clock-bindings.txt for details.
+ - clock-names: the following clocks are required:
++  * "mdp_core_clk"
++  * "iface_clk"
+   * "bus_clk"
+-  * "byte_clk"
+-  * "core_clk"
+   * "core_mmss_clk"
+-  * "iface_clk"
+-  * "mdp_core_clk"
++  * "byte_clk"
+   * "pixel_clk"
++  * "core_clk"
+ - vdd-supply: phandle to vdd regulator device node
+ - vddio-supply: phandle to vdd-io regulator device node
+ - vdda-supply: phandle to vdda regulator device node
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
