@@ -1,58 +1,64 @@
-From: Thomas Kaiser <Thomas.Kaiser-HBiBh4CdNZE5WgrkcBd8vg@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: dts: sun7i: Add dts file for the
- lamobo-r1 board
-Date: Tue, 01 Dec 2015 08:01:25 +0100
-Message-ID: <D2830123.E6258%Thomas.Kaiser@kaiser-edv.de>
-References: <1448046713-13579-1-git-send-email-hdegoede@redhat.com>
- <20151122195925.GR32142@lukather>
- <5652CE10.1020808@redhat.com>
- <D279EE2F.E5EF6%Thomas.Kaiser@kaiser-edv.de>
- <20151130190329.GD3664@lukather>
-Reply-To: thomas.kaiser-HBiBh4CdNZE5WgrkcBd8vg@public.gmane.org
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v2 03/10] drm/hisilicon: Add hisilicon DRM master driver
+Date: Tue, 1 Dec 2015 08:12:13 +0100
+Message-ID: <20151201071213.GD17050@phenom.ffwll.local>
+References: <CACvgo51NJNRKObgExtv=vNJ10GSgDPz=nQs=4BHAcgqPpSB_ug@mail.gmail.com>
+ <20151130074603.GE17050@phenom.ffwll.local>
+ <20151130172528.GA10974@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDQ6N3ODDQIM3C7VWICRUBFA4MQIE-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20151130190329.GD3664@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20151130172528.GA10974@rob-hp-laptop>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linuxarm@huawei.com, ML dri-devel <dri-devel@lists.freedesktop.org>, xuwei5@hisilicon.com, Benjamin Gaignard <benjamin.gaignard@linaro.org>, zourongrong@huawei.com, xuyiping@hisilicon.com, corbet@lwn.net, w.f@huawei.com, lijianhua@huawei.com, devicetree@vger.kernel.org, bintian.wang@huawei.com, puck.chen@hisilicon.com, LAKML <linux-arm-kernel@lists.infradead.org>, andy.green@linaro.org, Emil Velikov <emil.l.velikov@gmail.com>, liguozhu@hisilicon.com, haojian.zhuang@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Maxime Ripard wrote:
-
->Quite the opposite actually, it would allow people that want to
->deviate from the standard to do so while allowing people that
->want to follow that standard to do so as well.
-
-Well, the majority of people that buy boards because of this specific
-26/40 pin header can't do that. They expect that everything works as with
-the Raspberry Pi (a few GPIOs here, I2C there and so on) and will simply
-have to give up if they (or let's better say the distro they use) switched
-to mainline kernel and nothing works any longer _as expected_.
-
-These people don't know where device trees grow and also don't care. They
-expect compatibility to a 'de facto' standard and the hardware vendors
-producing boards with this specific 26/40 pin header try to be compliant
-to that by modifying pin definitions in the OS images they provide or
-recommend. So maybe it simply doesn't matter how this stuff is defined
-since it gets patched back in in every 'distro' ready for the average user.
-
-At least that's the case for the Lamobo R1 we're talking about. As said
-before: No one will use that board without also applying the OpenWRT
-patchset to be able to use the internal switch IC. So I doubt anybody will
-use the .dts we're talking here about since the OS images people will use
-already include their own:
-
-    http://linux-sunxi.org/Lamobo_R1#Images
-
-Best regards,
-
-Thomas
+T24gTW9uLCBOb3YgMzAsIDIwMTUgYXQgMTE6MjU6MjhBTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3Jv
+dGU6Cj4gT24gTW9uLCBOb3YgMzAsIDIwMTUgYXQgMDg6NDY6MDNBTSArMDEwMCwgRGFuaWVsIFZl
+dHRlciB3cm90ZToKPiA+IE9uIFNhdCwgTm92IDI4LCAyMDE1IGF0IDAzOjI1OjM1UE0gKzAwMDAs
+IEVtaWwgVmVsaWtvdiB3cm90ZToKPiA+ID4gSGkgWGlubGlhbmcsCj4gPiA+IAo+ID4gPiBPbiAy
+OCBOb3ZlbWJlciAyMDE1IGF0IDEwOjM4LCBYaW5saWFuZyBMaXUgPHhpbmxpYW5nLmxpdUBsaW5h
+cm8ub3JnPiB3cm90ZToKPiA+ID4gPiBBZGQgRFJNIG1hc3RlciBkcml2ZXIgZm9yIGhpNjIyMCBT
+b0Mgd2hpY2ggdXNlZCBpbiBIaUtleSBib2FyZC4KPiA+ID4gPiBBZGQgZHVtYiBidWZmZXIgZmVh
+dHVyZS4KPiA+ID4gPiBBZGQgcHJpbWUgZG1hYnVmIGZlYXR1cmUuCj4gPiA+ID4KPiAKPiA+ID4g
+PiArc3RhdGljIGludCBoaXNpX2dlbV9jbWFfZHVtYl9jcmVhdGUoc3RydWN0IGRybV9maWxlICpm
+aWxlLAo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBk
+cm1fZGV2aWNlICpkZXYsCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgc3RydWN0IGRybV9tb2RlX2NyZWF0ZV9kdW1iICphcmdzKQo+ID4gPiA+ICt7Cj4gPiA+ID4g
+KyAgICAgICBpbnQgbWluX3BpdGNoID0gRElWX1JPVU5EX1VQKGFyZ3MtPndpZHRoICogYXJncy0+
+YnBwLCA4KTsKPiA+ID4gPiArCj4gPiA+ID4gKyAgICAgICAvKiBtYWxpIGdwdSBuZWVkIHBpdGNo
+IDggYnl0ZXMgYWxpZ25tZW50IGZvciAzMmJwcCAqLwo+ID4gPiA+ICsgICAgICAgYXJncy0+cGl0
+Y2ggPSByb3VuZHVwKG1pbl9waXRjaCwgOCk7Cj4gPiA+ID4gKwo+ID4gPiBJJ20gbm90IHN1cmUg
+eW91IHdhbnQgdGhpcyBraW5kIG9mIGRlcGVuZGVuY3kgb2YgYW4gb3V0IG9mIHRyZWUgZHJpdmVy
+Cj4gPiA+IHVwc3RyZWFtLiBJZiB0aGlzIGlzIHNvbWUgbGltaXRhdGlvbiBvbiB0aGUgZGlzcGxh
+eSBlbmdpbmUgc28gYmUgaXQsCj4gPiA+IGJ1dCB0YWlsb3JpbmcgdGhpbmdzIGZvciBhbiBleHRl
+cm5hbCBtb2R1bGUgc2VlbXMgbGlrZSBhIHZlcnkgYmFkCj4gPiA+IGlkZWEuCj4gPiAKPiA+IFl1
+cCwgbmFja2VkLiBkdW1iX2NyZWF0ZSBpcyBmb3IgZHVtYiBidWZmZXJzLCBub3QgcmVuZGVyaW5n
+LiBNYWxpIG5lZWRzIHRvCj4gPiBnbyB1cHN0cmVhbSB0byBmaXggdGhpcyAuLi4KPiAKPiBJIGJl
+bGlldmUgdGhpcyBpcyBjb3B5LW4tcGFzdGUgZnJvbSBSb2NrY2hpcCBkcml2ZXIuCj4gCj4gSSdt
+IGN1cmlvdXMgd2h5IHRoZXJlIGlzIG5vdCBhIGNvbW1vbiBpbnRlcmZhY2UgZm9yIHJlbmRlcmlu
+ZyBidWZmZXJzIGF0IAo+IGxlYXN0IGZvciBzeXN0ZW1zIHdpdGhvdXQgZ3JhcGhpY3MgbWVtb3J5
+IGxpa2UgbW9zdCBBUk0gc3lzdGVtcy4gQXJlIHRoZSAKPiByZXF1aXJlbWVudHMgb2YgR1BVIHNv
+IGRpdmVyc2UgdGhhdCB0aGluZ3MgbGlrZSBwaXRjaCBhbGlnbm1lbnQgY2FuJ3QgYmUgCj4gcGFy
+YW1ldGVyaXplZD8KCnBpdGNoIHJlcXVpcmVtZW50cyBpcyBnZW5lcmFsbHkgdGhlIGxlYXN0IHdv
+cnJ5LiBUaGUgcmVhbCBmdW4gc3RhcnRzIHdpdGgKdGlsaW5nIG1vZGVzIGFuZCBob3cgYWxsIHRo
+YXQgc3R1ZmYgaW50ZXJhY3RzLiBBdG0gdGhlIG9ubHkgc29sdXRpb24gd2UKaGF2ZSBpcyAidXNl
+cnNwYWNlIG5lZWRzIHRvIGtub3ciIGluIGZvcm0gb2YgZWl0aGVyIGdyYWxsb2MgKGFuZHJvaWQp
+IG9yCmdibSAoY3JvcywgZGVza3RvcCBsaW51eCkuIFRoZXJlIGhhdmUgYmVlbiBpZGVhcyB0byBm
+b3IgZGVzY3JpYmluZyBidWZmZXIKbGltaXRzLCBidXQgbm90aGluZyBjb25jcmV0ZSB5ZXQuCi1E
+YW5pZWwKLS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0
+aW9uCmh0dHA6Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpLWRldmVsCg==
