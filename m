@@ -1,58 +1,49 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [linux-meson] Re: [PATCH v2 4/5] pinctrl: dt-binding: Extend
- meson documentation with GPIO IRQs support
-Date: Tue, 1 Dec 2015 17:02:21 +0100
-Message-ID: <20151201160221.GA28755@caronte>
-References: <1448273816-11290-1-git-send-email-carlo@caione.org>
- <1448273816-11290-5-git-send-email-carlo@caione.org>
- <20151123234720.GA879@rob-hp-laptop>
+From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: enable pinctrl for Broadcom NSP
+Date: Tue, 1 Dec 2015 08:05:41 -0800
+Message-ID: <565DC555.2070004@broadcom.com>
+References: <1448042309-46445-1-git-send-email-yrdreddy@broadcom.com>
+ <5654FBE4.5010802@gmail.com>
+ <CACRpkdZCBbrfHq+DiWcfe6i_2FPUXyMQwbsQu5_zAKYa=fJugg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151123234720.GA879@rob-hp-laptop>
+In-Reply-To: <CACRpkdZCBbrfHq+DiWcfe6i_2FPUXyMQwbsQu5_zAKYa=fJugg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Yendapally Reddy Dhananjaya Reddy <yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On lun, nov 23, 2015 at 05:47:20 -0600, Rob Herring wrote:
-> On Mon, Nov 23, 2015 at 11:16:55AM +0100, Carlo Caione wrote:
-> > From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> > 
-> > Extend the pinctrl binding documentation with the support for external
-> > GPIO interrupts.
-> > 
-> > Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> > Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-> > index 3f6a524..56743eb 100644
-> > --- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-> > +++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-> > @@ -3,6 +3,12 @@
-> >  Required properties for the root node:
-> >   - compatible: "amlogic,meson8-pinctrl" or "amlogic,meson8b-pinctrl"
-> >   - reg: address and size of registers controlling irq functionality
-> > + - reg-names: should be "irq"
-> 
-> You don't really need names when there is only one. Otherwise:
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Hi Linus,
 
-I missed this reply sorry. The name is conveniently used so that I can
-use the meson_map_resource() helper function to map that and get back
-the regmap struct in one shot.
+On 15-12-01 02:00 AM, Linus Walleij wrote:
+> On Wed, Nov 25, 2015 at 1:08 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On 20/11/15 09:58, Yendapally Reddy Dhananjaya Reddy wrote:
+>>> This enables the pinctrl support for Broadcom NSP SoC
+>>>
+>>> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>
+>> Looks like a sane pinctrl node here, unless there are objections, I
+>> would like to go ahead and apply this for v4.5, thanks!
+>
+> I'm waiting for an indication from the other BCM pinctrl
+> maintainers to tell whether this SoC is unique enough to deserve
+> its own driver.
+If Stephen Warren is the other maintainer you are talking about he does 
+not work at Broadcom.  I don't think he is familiar with the variety of 
+pinctrl implementations present.  But yes, the pinctrl implementations 
+have been rather unique in these Socs.  As Ray indicated we're trying to 
+get the silicon designers to standardize more going forward so we don't 
+have to create unique drivers for these SoCs.
+>
+> Yours,
+> Linus Walleij
+>
 
-I'm going to submit v3 soon without this modification leaving out your
-Acked-by. Let me know if your ACK is still valid without this code
-change.
+Regards,
+  Scott
 
--- 
-Carlo Caione
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
