@@ -1,45 +1,145 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH (v5) 3/11] MIPS: bmips: Add bcm6345-l2-timer interrupt
- controller
-Date: Mon, 30 Nov 2015 16:22:50 -0800
-Message-ID: <565CE85A.3080904@roeck-us.net>
-References: <5650BFD6.5030700@simon.arlott.org.uk>
- <CAOiHx=k0Aa+qrBT1J7_cQaQRxndBmwsgSgi3x0eJOYTAy6Zq7Q@mail.gmail.com>
- <5653612A.4050309@simon.arlott.org.uk> <565361AF.20400@simon.arlott.org.uk>
- <70d031ae4c3aa29888d77b64686c39e7e7eaae92@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
- <5654E67A.9060800@gmail.com> <5657886F.3090908@simon.arlott.org.uk>
- <alpine.DEB.2.11.1511270926580.3572@nanos>
- <56599D73.7040801@simon.arlott.org.uk>
+From: Ingi Kim <ingi2.kim@samsung.com>
+Subject: Re: [PATCH v6 2/2] leds: rt5033: Add RT5033 Flash led device driver
+Date: Tue, 01 Dec 2015 10:54:20 +0900
+Message-ID: <565CFDCC.3090108@samsung.com>
+References: <1448446948-13729-1-git-send-email-ingi2.kim@samsung.com>
+ <1448446948-13729-3-git-send-email-ingi2.kim@samsung.com>
+ <5655D001.8090803@samsung.com> <5656BC88.2070603@samsung.com>
+ <5656D43D.106@samsung.com> <565BB510.2040903@samsung.com>
+ <565C2C1A.3080100@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56599D73.7040801-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Miguel Gaio <miguel.gaio-HH44TBFINEIAvxtiuMwx3w@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <565C2C1A.3080100@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, rpurdie@rpsys.net, inki.dae@samsung.com, sw0312.kim@samsung.com, beomho.seo@samsung.com, andi.shyti@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/28/2015 04:26 AM, Simon Arlott wrote:
-> Add the BCM6345/BCM6318 timer as an interrupt controller so that it can be
-> used by the watchdog to warn that its timer will expire soon.
->
-> Support for clocksource/clockevents is not implemented as the timer
-> interrupt is not per CPU (except on the BCM6318) and the MIPS clock is
-> better. This could be added later if required without changing the device
-> tree binding.
->
-> Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Hi Jacek,
 
-Hi Simon,
+On 2015=EB=85=84 11=EC=9B=94 30=EC=9D=BC 19:59, Jacek Anaszewski wrote:
+> Hi Ingi,
+>=20
+> On 11/30/2015 03:31 AM, Ingi Kim wrote:
+>> Hi Jacek,
+>>
+>> On 2015=EB=85=84 11=EC=9B=94 26=EC=9D=BC 18:43, Jacek Anaszewski wro=
+te:
+>>> Hi Ingi,
+>>>
+>>> On 11/26/2015 09:02 AM, Ingi Kim wrote:
+>>> [...]
+>>>>>> +torch_unlock:
+>>>>>> +    mutex_unlock(&led->lock);
+>>>>>> +    return ret;
+>>>>>> +}
+>>>>>> +
+>>>>>> +static int rt5033_led_flash_brightness_set(struct led_classdev_=
+flash *fled_cdev,
+>>>>>> +                       u32 brightness)
+>>>>>> +{
+>>>>>> +    struct rt5033_sub_led *sub_led =3D flcdev_to_sub_led(fled_c=
+dev);
+>>>>>> +    struct rt5033_led *led =3D sub_led_to_led(sub_led);
+>>>>>> +
+>>>>>> +    mutex_lock(&led->lock);
+>>>>>> +    sub_led->flash_brightness =3D brightness;
+>>>>>> +    mutex_unlock(&led->lock);
+>>>>>
+>>>>> Mutex protection is redundant in this case. You would need it if =
+device
+>>>>> state was also changed here.
+>>>>
+>>>> Okay, I'll remove it.
+>>>>
+>>>>>
+>>>>> BTW why flash brightness can't be written to the device here?
+>>>>>
+>>>>
+>>>> Flash brightness is only affected when FLED flashed (strobing).
+>>>> So, I think it is better to be written in rt5033_led_flash_strobe_=
+set function.
+>>>
+>>> strobe_set op should strobe the flash ASAP, and delegating brightne=
+ss
+>>> setting there extends a delay between calling strobe_set op
+>>> and actual flash strobe. If you set the brightness here, then you
+>>> wouldn't have to do that in the strobe_set op, of course unless the
+>>> the brightness is altered through the API of the other LED, in two
+>>> separate LEDs case.
+>>>
+>>
+>> The brightness may be able to change its brightness in two separate =
+LEDs case as you see.
+>> So, I think it would be better to write brightness setting in strobe=
+_op.
+>=20
+> Could you motivate your statement, please? Why would it be better?
+>=20
+>> In consideration of delay, of course, the brightness is set just whe=
+n it would be changed.
+>=20
+> I think that joint iout arrangement will be prevailing - this is the
+> case for your board, isn't it? With the modification I am proposing
+> the gain is clear.
+>=20
 
-can you please re-send the entire series, with all Acked-by:/Reviewed-by:
-tags as appropriate ?
+You're right, thanks.
+Did you mean that flash attributes should be written
+on their ops(flash brightness, flash timeout)?
 
-Thanks,
-Guenter
+let me update the driver on your suggestion.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>>>> +
+>>>>>> +    return 0;
+>>>>>> +}
+>>>>>> +
+>>>>>> +static int rt5033_led_flash_timeout_set(struct led_classdev_fla=
+sh *fled_cdev,
+>>>>>> +                    u32 timeout)
+>>>>>> +{
+>>>>>> +    struct rt5033_sub_led *sub_led =3D flcdev_to_sub_led(fled_c=
+dev);
+>>>>>> +    struct rt5033_led *led =3D sub_led_to_led(sub_led);
+>>>>>> +
+>>>>>> +    mutex_lock(&led->lock);
+>>>>>> +    sub_led->flash_timeout =3D timeout;
+>>>>>> +    mutex_unlock(&led->lock);
+>>>>>
+>>>>> Ditto.
+>>>>>
+>>>
+>>> Timeout should be also written here.
+>>>
+>>
+>> The timeout may be able to change its flash timeout in two separate =
+LEDs case as you see.
+>> So, I think it would be better to write timeout setting in strobe_op=
+=2E
+>> In consideration of delay, of course, the timeout is set just when i=
+t would be changed.
+>>
+>>> If you will add regmap_write in both ops, then mutex protection wil=
+l
+>>> have to be preserved, to assure consistency between registers state
+>>> and sub_led->flash_brightness and sub_led->flash_timeout state.
+>>>
+>>
+>> Thanks, but mutex protection is useless in this case.
+>> so I try to remove it.
+>>
+>>>>
+>>>>>> +#define RT5033_FLED_CTRL4_VTRREG_MAX    0x60
+>>>>>
+>>>>> Rename DEF to MASK.
+>>>
+>>> Hmm, here it should be: Rename MAX to MASK.
+>>>
+>>
+>> Oh
+>> Okay, Thanks :)
+>>
+>=20
+>=20
