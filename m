@@ -1,71 +1,58 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] dmaengine: usb-dmac: Document SoC specific bindings
-Date: Tue, 1 Dec 2015 15:47:26 +0900
-Message-ID: <20151201064726.GJ16260@verge.net.au>
-References: <1448331641-21758-1-git-send-email-horms+renesas@verge.net.au>
- <20151124201655.GA23437@rob-hp-laptop>
- <20151125002032.GF20596@verge.net.au>
+From: Thomas Kaiser <Thomas.Kaiser-HBiBh4CdNZE5WgrkcBd8vg@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: dts: sun7i: Add dts file for the
+ lamobo-r1 board
+Date: Tue, 01 Dec 2015 08:01:25 +0100
+Message-ID: <D2830123.E6258%Thomas.Kaiser@kaiser-edv.de>
+References: <1448046713-13579-1-git-send-email-hdegoede@redhat.com>
+ <20151122195925.GR32142@lukather>
+ <5652CE10.1020808@redhat.com>
+ <D279EE2F.E5EF6%Thomas.Kaiser@kaiser-edv.de>
+ <20151130190329.GD3664@lukather>
+Reply-To: thomas.kaiser-HBiBh4CdNZE5WgrkcBd8vg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151125002032.GF20596@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDQ6N3ODDQIM3C7VWICRUBFA4MQIE-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20151130190329.GD3664@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi,
 
-On Wed, Nov 25, 2015 at 09:20:32AM +0900, Simon Horman wrote:
-> On Tue, Nov 24, 2015 at 02:16:55PM -0600, Rob Herring wrote:
-> > On Tue, Nov 24, 2015 at 11:20:41AM +0900, Simon Horman wrote:
-> > > In general Renesas hardware is not documented to the extent where the
-> > > relationship between IP blocks on different SoCs can be assumed although
-> > > they may appear to operate the same way. Furthermore the documentation
-> > > typically does not specify a version for individual IP blocks. For these
-> > > reasons a convention of using the SoC name in place of a version and
-> > > providing SoC-specific compat strings has been adopted.
-> > > 
-> > > Although not universally liked this convention is used in the bindings for
-> > > most drivers for Renesas hardware. The purpose of this patch is to
-> > > update the Renesas USB DMA Controller driver to follow this convention.
-> > > 
-> > > Cc: devicetree@vger.kernel.org
-> > > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> > > 
-> > > ---
-> > > * r8a7792 (R-Car V2H) is omitted as my reading of the documentation
-> > >   is that Renesas USB-DMAC does not exist on that SoC
-> > > * r8a7795 (R-Car H2) is omitted as its unclear to me on the compatibility
-> > >   of USB-DMAC that SoC
-> > > 
-> > > * Once this has been merged I intend to provide follow-up patches
-> > >   to use these new compat strings in the relevant dtsi files.
-> > > ---
-> > >  Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt | 9 +++++++--
-> > >  1 file changed, 7 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-> > > index 040f365954cc..3bb624e10615 100644
-> > > --- a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-> > > +++ b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-> > > @@ -1,7 +1,12 @@
-> > >  * Renesas USB DMA Controller Device Tree bindings
-> > >  
-> > >  Required Properties:
-> > > -- compatible: must contain "renesas,usb-dmac"
-> > > +- compatible: "renesas,usb-dmac-<soctype>", "renesas,usb-dmac" as fallback.
-> > > +	      Examples with soctypes are:
-> > > +		- "renesas,usb-dmac-r8a7790" (R-Car H2)
-> > > +		- "renesas,usb-dmac-r8a7791" (R-Car M2-W)
-> > > +		- "renesas,usb-dmac-r8a7793" (R-Car M2-N)
-> > > +		- "renesas,usb-dmac-r8a7794" (R-Car E2)
-> > 
-> > Weren't you changing the order of SoC and block names on new bindings? 
-> 
-> Could you clarify what the desired order is?
-> My intention is for these bindings to use the preferred order.
+Maxime Ripard wrote:
 
-ping
+>Quite the opposite actually, it would allow people that want to
+>deviate from the standard to do so while allowing people that
+>want to follow that standard to do so as well.
+
+Well, the majority of people that buy boards because of this specific
+26/40 pin header can't do that. They expect that everything works as with
+the Raspberry Pi (a few GPIOs here, I2C there and so on) and will simply
+have to give up if they (or let's better say the distro they use) switched
+to mainline kernel and nothing works any longer _as expected_.
+
+These people don't know where device trees grow and also don't care. They
+expect compatibility to a 'de facto' standard and the hardware vendors
+producing boards with this specific 26/40 pin header try to be compliant
+to that by modifying pin definitions in the OS images they provide or
+recommend. So maybe it simply doesn't matter how this stuff is defined
+since it gets patched back in in every 'distro' ready for the average user.
+
+At least that's the case for the Lamobo R1 we're talking about. As said
+before: No one will use that board without also applying the OpenWRT
+patchset to be able to use the internal switch IC. So I doubt anybody will
+use the .dts we're talking here about since the OS images people will use
+already include their own:
+
+    http://linux-sunxi.org/Lamobo_R1#Images
+
+Best regards,
+
+Thomas
