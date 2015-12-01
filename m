@@ -1,129 +1,49 @@
-From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: Re: [PATCH v2 03/10] drm/hisilicon: Add hisilicon DRM master driver
-Date: Tue, 1 Dec 2015 18:18:27 +0800
-Message-ID: <CAGd==06V+tchhDsAUfhCBNdyuiRgojPxcv5RmTtxqJHLuhyo6w@mail.gmail.com>
-References: <CACvgo51NJNRKObgExtv=vNJ10GSgDPz=nQs=4BHAcgqPpSB_ug@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/2 net-next] ravb: Add fallback compatibility strings
+Date: Tue, 1 Dec 2015 13:26:08 +0300
+Message-ID: <565D75C0.1020502@cogentembedded.com>
+References: <1448955783-22806-1-git-send-email-horms+renesas@verge.net.au>
+ <1448955783-22806-2-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACvgo51NJNRKObgExtv=vNJ10GSgDPz=nQs=4BHAcgqPpSB_ug@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Emil Velikov <emil.l.velikov@gmail.com>
-Cc: ML dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, Daniel Stone <daniel@fooishbar.org>, architt@codeaurora.org, David Airlie <airlied@linux.ie>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Green <andy.green@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, linux-doc@vger.kernel.org, Wang Fei <w.f@huawei.com>, zourongrong@huawei.com, linuxarm@huawei.com, Xu Wei <xuwei5@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Feng Chen <puck.chen@hisilicon.com>, lijianhua@huawei.com, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1448955783-22806-2-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>, netdev@vger.kernel.org, linux-sh@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 28 November 2015 at 23:25, Emil Velikov <emil.l.velikov@gmail.com> wrote:
+Hello.
 
-Hi Emil, thanks again for review.
+On 12/1/2015 10:43 AM, Simon Horman wrote:
 
-> Hi Xinliang,
+> Add fallback compatibility strings for R-Car Gen 2 & 3 SoC Families.
+> This is in keeping with the fallback scheme being adopted wherever
+> appropriate for drivers for Renesas SoCs.
 >
-> On 28 November 2015 at 10:38, Xinliang Liu <xinliang.liu@linaro.org> wrote:
->> Add DRM master driver for hi6220 SoC which used in HiKey board.
->> Add dumb buffer feature.
->> Add prime dmabuf feature.
->>
->> Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
->> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
->> Signed-off-by: Andy Green <andy.green@linaro.org>
-> Your s-o-b should be the bottom of the list. There was a presentation
-> (ages ago) from Greg KH, who nicely described the order as a "chain of
-> command" or "guilt path". Looks like the rest of the series could use
-> this tweak.
-
-will fixed in v3.
-
+> Also correct typo.
 >
->> ---
->>  drivers/gpu/drm/Kconfig                  |   2 +
->>  drivers/gpu/drm/Makefile                 |   1 +
->>  drivers/gpu/drm/hisilicon/Kconfig        |   9 ++
->>  drivers/gpu/drm/hisilicon/Makefile       |   3 +
->>  drivers/gpu/drm/hisilicon/hisi_drm_drv.c | 214 +++++++++++++++++++++++++++++++
->>  5 files changed, 229 insertions(+)
->>  create mode 100644 drivers/gpu/drm/hisilicon/Kconfig
->>  create mode 100644 drivers/gpu/drm/hisilicon/Makefile
->>  create mode 100644 drivers/gpu/drm/hisilicon/hisi_drm_drv.c
->>
->> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
->> index 8773fad..038aae8 100644
->> --- a/drivers/gpu/drm/Kconfig
->> +++ b/drivers/gpu/drm/Kconfig
->> @@ -274,3 +274,5 @@ source "drivers/gpu/drm/amd/amdkfd/Kconfig"
->>  source "drivers/gpu/drm/imx/Kconfig"
->>
->>  source "drivers/gpu/drm/vc4/Kconfig"
->> +
->> +source "drivers/gpu/drm/hisilicon/Kconfig"
-> I could swear that we can a patch that sorts these alphabetically,
-> although it doesn't seem to have made it upstream yet :-(
-
-Yes, as there are so many drm drivers now, it's time to do this work I think.
-I'll try to send a separate patch for this soon.
-
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> ---
+>   Documentation/devicetree/bindings/net/renesas,ravb.txt | 11 +++++++++--
+>   drivers/net/ethernet/renesas/ravb_main.c               |  2 ++
+>   2 files changed, 11 insertions(+), 2 deletions(-)
 >
->> --- /dev/null
->> +++ b/drivers/gpu/drm/hisilicon/hisi_drm_drv.c
+> diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> index b486f3f5f6a3..115006325bff 100644
+> --- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> +++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> @@ -1,12 +1,19 @@
+>   * Renesas Electronics Ethernet AVB
 >
->> +static int hisi_drm_load(struct drm_device *dev, unsigned long flags)
->> +{
-> The use of .load (and .unload?) callbacks is not recommended. Take a
-> look at Laurent Pinchart's patch [1] about the whys and hows on the
-> topic
+>   This file provides information on what the device node for the Ethernet AVB
+> -interface contains.
+> +interface.
 
-will removed .load/unload in v3.
+    Why?
 
->
->> +static struct dma_buf *hisi_gem_prime_export(struct drm_device *dev,
->> +                                            struct drm_gem_object *obj,
->> +                                            int flags)
->> +{
->> +       /* we want to be able to write in mmapped buffer */
->> +       flags |= O_RDWR;
-> Erm... something feels fishy here. Out of the existing 15 drivers
-> setting up the prime callbacks only one (sti) does a similar thing. So
-> either everyone else is missing something obvious or hisilicon and sti
-> can rework their inner working to remove this (dare I say it) hack.
+[...]
 
-I would talk to sti guys about this. Not sure how to handle this now.
+MBR, Sergei
 
->
->> +static int hisi_gem_cma_dumb_create(struct drm_file *file,
->> +                                   struct drm_device *dev,
->> +                                   struct drm_mode_create_dumb *args)
->> +{
->> +       int min_pitch = DIV_ROUND_UP(args->width * args->bpp, 8);
->> +
->> +       /* mali gpu need pitch 8 bytes alignment for 32bpp */
->> +       args->pitch = roundup(min_pitch, 8);
->> +
-> I'm not sure you want this kind of dependency of an out of tree driver
-> upstream. If this is some limitation on the display engine so be it,
-> but tailoring things for an external module seems like a very bad
-> idea.
-
-I can move this mali dependency to user drivers (such as gralloc and
-xf86-video-armsoc).
-Do you think it is reasonable?
-
->
->> +       return drm_gem_cma_dumb_create_internal(file, dev, args);
->> +}
->
->> +static int hisi_drm_bind(struct device *dev)
->> +{
->> +       dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
->> +       return drm_platform_init(&hisi_drm_driver, to_platform_device(dev));
-> As pointed out by the the kernel doc - drm_platform_init is deprecated.
->
-
-will remove drm_platform_init in v3.
-
-Thanks,
--xinliang
-
->
-> Regards,
-> Emil
->
-> [1] http://lists.freedesktop.org/archives/dri-devel/2015-November/095466.html
