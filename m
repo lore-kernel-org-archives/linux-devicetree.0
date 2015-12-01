@@ -1,58 +1,23 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: Re: [PATCH] Enable PCIe PHY support in Cygnus
-Date: Tue, 1 Dec 2015 15:16:54 -0800
-Message-ID: <565E2A66.7050306@broadcom.com>
-References: <1447870619-2828-1-git-send-email-rjui@broadcom.com>
- <5654FCF5.40406@gmail.com> <565E2969.7000500@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 3/3] ARM: dts: enable pinctrl for Broadcom NSP
+Date: Tue, 01 Dec 2015 15:17:20 -0800
+Message-ID: <565E2A80.8040901@gmail.com>
+References: <1448042309-46445-1-git-send-email-yrdreddy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <565E2969.7000500@gmail.com>
+In-Reply-To: <1448042309-46445-1-git-send-email-yrdreddy@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+To: Yendapally Reddy Dhananjaya Reddy <yrdreddy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 20/11/15 09:58, Yendapally Reddy Dhananjaya Reddy wrote:
+> This enables the pinctrl support for Broadcom NSP SoC
+> 
+> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yrdreddy@broadcom.com>
 
-
-On 12/1/2015 3:12 PM, Florian Fainelli wrote:
-> On 24/11/15 16:12, Florian Fainelli wrote:
->> On 18/11/15 10:16, Ray Jui wrote:
->>> This patch enales PCIe PHY in device tree for Broadcom Cygnus based platforms
->>>
->>> This patch is developed based on v4.4-rc1 and available here:
->>> https://github.com/Broadcom/cygnus-linux/tree/cygnus-pcie-phy-dt-v1
->>>
->>> Ray Jui (1):
->>>    ARM: dts: enable PCIe PHY support for Cygnus
->>
->> Applied to devicetree/next with Scott's Acked-by, thanks!
->
-> This caused the DTC compiler to warn:
->
-> Warning (reg_format): "reg" property in /axi/phy@0301d0a0/phy@0 has
-> invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-> Warning (reg_format): "reg" property in /axi/phy@0301d0a0/phy@1 has
-> invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-> Warning (avoid_default_addr_size): Relying on default #address-cells
-> value for /axi/phy@0301d0a0/phy@0
-> Warning (avoid_default_addr_size): Relying on default #size-cells value
-> for /axi/phy@0301d0a0/phy@0
-> Warning (avoid_default_addr_size): Relying on default #address-cells
-> value for /axi/phy@0301d0a0/phy@1
-> Warning (avoid_default_addr_size): Relying on default #size-cells value
-> for /axi/phy@0301d0a0/phy@1
->    CC      drivers/base/power/runtime.o
->    DTC     arch/arm/boot/dts/bcm911360k.dtb
->    CC      lib/bitmap.o
->
-> I added an #address-cells = <0> and #size-cells = <1> to fix this, since
-> your reg property is a single digit.
->
-
-Sorry I missed that. Both are required properties.
-
-Thanks!
-
-Ray
+Applied to devicetree/next, thanks!
+-- 
+Florian
