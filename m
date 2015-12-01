@@ -1,155 +1,54 @@
-From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: Re: [PATCH v2 10/10] drm/hisilicon: Add support for external bridge
-Date: Tue, 1 Dec 2015 22:50:53 +0800
-Message-ID: <CAGd==05Tw5YBWK19jJTruerkkj1Z8q05dB9VyP0AnTMwxyuPNQ@mail.gmail.com>
-References: <1448707145-69348-1-git-send-email-xinliang.liu@linaro.org>
-	<1448707145-69348-11-git-send-email-xinliang.liu@linaro.org>
-	<565D62A3.2030301@codeaurora.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH (v2) 2/2] regulator: bcm63xx: Add BCM63xx fixed regulator
+ device
+Date: Tue, 1 Dec 2015 15:11:23 +0000
+Message-ID: <20151201151123.GK1929@sirena.org.uk>
+References: <565A18DD.60108@simon.arlott.org.uk>
+ <20151130121043.GX1929@sirena.org.uk>
+ <565CB1CF.5040306@simon.arlott.org.uk>
+ <565CB1FF.9090407@simon.arlott.org.uk>
+ <565CB3C6.30301@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <565D62A3.2030301@codeaurora.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, Daniel Stone <daniel@fooishbar.org>, David Airlie <airlied@linux.ie>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-doc@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, linuxarm@huawei.com, Andy Green <andy.green@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Xu Wei <xuwei5@hisilicon.com>, Wang Fei <w.f@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, XinWei Kong <kong.kongxinwei@hisilicon.com>, zourongrong@huawei.com, lijianhua@huawei.com, Sumit Semwal <sumit.semwal@lina>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="8VdhJeX3P1F5ipXj"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <565CB3C6.30301-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1 December 2015 at 17:04, Archit Taneja <architt@codeaurora.org> wrote:
->
->
-> On 11/28/2015 04:09 PM, Xinliang Liu wrote:
->>
->> Add support for external HDMI bridge.
->>
->> Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
->> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
->> Signed-off-by: Andy Green <andy.green@linaro.org>
->> ---
->>   drivers/gpu/drm/hisilicon/hisi_drm_dsi.c | 51
->> ++++++++++++++++++++++++++++++++
->>   1 file changed, 51 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
->> b/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
->> index 066e08d..9e056db 100644
->> --- a/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
->> +++ b/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
->> @@ -78,6 +78,7 @@ struct dsi_hw_ctx {
->>
->>   struct hisi_dsi {
->>         struct drm_encoder encoder;
->> +       struct drm_bridge *bridge;
->>         struct mipi_dsi_host host;
->>         struct drm_display_mode cur_mode;
->>         struct dsi_hw_ctx *ctx;
->> @@ -671,6 +672,25 @@ static int dsi_host_init(struct device *dev, struct
->> hisi_dsi *dsi)
->>         return 0;
->>   }
->>
->> +static int dsi_bridge_init(struct drm_device *dev, struct hisi_dsi *dsi)
->> +{
->> +       struct drm_encoder *encoder = &dsi->encoder;
->> +       struct drm_bridge *bridge = dsi->bridge;
->> +       int ret;
->> +
->> +       /* associate the bridge to dsi encoder */
->> +       encoder->bridge = bridge;
->> +       bridge->encoder = encoder;
->> +
->> +       ret = drm_bridge_attach(dev, bridge);
->> +       if (ret) {
->> +               DRM_ERROR("failed to attach exteranl bridge\n");
->
->
-> s/exteranl/external
->
 
-will be fixed in v3.
+--8VdhJeX3P1F5ipXj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->
->> +               return ret;
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->>   static int dsi_bind(struct device *dev, struct device *master, void
->> *data)
->>   {
->>         struct dsi_data *ddata = dev_get_drvdata(dev);
->> @@ -686,6 +706,10 @@ static int dsi_bind(struct device *dev, struct device
->> *master, void *data)
->>         if (ret)
->>                 return ret;
->>
->> +       ret = dsi_bridge_init(drm_dev, dsi);
->> +       if (ret)
->> +               return ret;
->> +
->>         return 0;
->>   }
->>
->> @@ -702,8 +726,35 @@ static const struct component_ops dsi_ops = {
->>   static int dsi_parse_dt(struct platform_device *pdev, struct hisi_dsi
->> *dsi)
->>   {
->>         struct dsi_hw_ctx *ctx = dsi->ctx;
->> +       struct device_node *np = pdev->dev.of_node;
->> +       struct device_node *endpoint, *bridge_node;
->> +       struct drm_bridge *bridge;
->>         struct resource *res;
->>
->> +       /*
->> +        * Get the endpoint node. In our case, dsi has one output port
->> +        * to which the external HDMI bridge is connected.
->> +        */
->> +       endpoint = of_graph_get_next_endpoint(np, NULL);
->> +       if (!endpoint) {
->> +               DRM_ERROR("no valid endpoint node\n");
->> +               return -ENODEV;
->> +       }
->> +       of_node_put(endpoint);
->> +
->> +       bridge_node = of_graph_get_remote_port_parent(endpoint);
->> +       if (!bridge_node) {
->> +               DRM_ERROR("no valid bridge node\n");
->> +               return -ENODEV;
->> +       }
->> +       of_node_put(bridge_node);
->> +
->> +       bridge = of_drm_find_bridge(bridge_node);
->> +       if (!bridge) {
->> +               DRM_INFO("wait for external HDMI bridge driver.\n");
->> +               return -EPROBE_DEFER;
->> +       }
->> +       dsi->bridge = bridge;
->
->
-> This could be left for later, but it would be better if the dsi driver
-> registers even if the bridge driver module isn't inserted yet, or
-> happens much later in boot.
->
-> We could achieve this by trying to attach the bridge (done in
-> dsi_bridge_init) in the dsi_host_attach callback instead of having it
-> in dsi_bind.
+On Mon, Nov 30, 2015 at 08:38:30PM +0000, Simon Arlott wrote:
+> The BCM63xx has one or more registers with bits that act as regulators
+> to enable/disable power to individual chip peripherals.
 
-Do you mean that it is the right time or place to attach the bridge in
-dsi_host_attach callback.
-Why? Because at this time bridge driver must be register?
+Please don't submit new revisions of single patches in followup to an
+existing series, it just makes everything more confusing.  If you need
+to update a series please just post an update to the series.
 
-Thanks,
--xinliang
+--8VdhJeX3P1F5ipXj
+Content-Type: application/pgp-signature; name="signature.asc"
 
->
-> Thanks,
-> Archit
->
->>
->>         ctx->dsi_cfg_clk = devm_clk_get(&pdev->dev, "pclk_dsi");
->>         if (IS_ERR(ctx->dsi_cfg_clk)) {
->>
->
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> hosted by The Linux Foundation
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWXbibAAoJECTWi3JdVIfQc+wH/09EjH+40rzX9zsg9yh6FV4w
+fC7UW24hEW4lrFnbCNV2y08zTvvOcu4vH3eQQrkEk/JyLZjvMjbW50NeOrQxRN3P
+TDA14IIjAaFQ5iEBEFI8JBzneBvxXulQcUXDRwP2J6qRUKWDBjpEey7oneK+aNw/
+jYF76Cjvq1SQmu6GAHvYz2uHs8RzTCCE/Zoun5Xf/+2JgkEZi9pYZ/tjOsZjBZ0m
+DQRBp9pY8XskJsxTZvxf0BFCxOTZ359LNB75BiDt/roK41WkOkqDJBjAhcsAokPd
+apWpbFoRvXZT9qU33bS6RXK5AWXithU6P2fipUOt61v6jt+Z/fH+2YAphq+of4k=
+=NHfs
+-----END PGP SIGNATURE-----
+
+--8VdhJeX3P1F5ipXj--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
