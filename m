@@ -1,138 +1,167 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v4 2/5] spi: spi-ti-qspi: add mmap mode read support
-Date: Tue, 1 Dec 2015 13:14:33 +0530
-Message-ID: <565D4FE1.50704@ti.com>
-References: <1448860515-28336-1-git-send-email-vigneshr@ti.com>
- <1448860515-28336-3-git-send-email-vigneshr@ti.com>
- <87lh9f15fh.fsf@saruman.tx.rr.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v6 2/2] leds: rt5033: Add RT5033 Flash led device driver
+Date: Tue, 01 Dec 2015 08:55:35 +0100
+Message-ID: <565D5277.9080008@samsung.com>
+References: <1448446948-13729-1-git-send-email-ingi2.kim@samsung.com>
+ <1448446948-13729-3-git-send-email-ingi2.kim@samsung.com>
+ <5655D001.8090803@samsung.com> <5656BC88.2070603@samsung.com>
+ <5656D43D.106@samsung.com> <565BB510.2040903@samsung.com>
+ <565C2C1A.3080100@samsung.com> <565CFDCC.3090108@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87lh9f15fh.fsf@saruman.tx.rr.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Balbi, Felipe" <balbi@ti.com>, Tony Lindgren <tony@atomide.com>, Brian Norris <computersforpeace@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, "hramrach@gmail.com" <hramrach@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <565CFDCC.3090108@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Ingi Kim <ingi2.kim@samsung.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, rpurdie@rpsys.net, inki.dae@samsung.com, sw0312.kim@samsung.com, beomho.seo@samsung.com, andi.shyti@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
+On 12/01/2015 02:54 AM, Ingi Kim wrote:
+> Hi Jacek,
+>
+> On 2015=EB=85=84 11=EC=9B=94 30=EC=9D=BC 19:59, Jacek Anaszewski wrot=
+e:
+>> Hi Ingi,
+>>
+>> On 11/30/2015 03:31 AM, Ingi Kim wrote:
+>>> Hi Jacek,
+>>>
+>>> On 2015=EB=85=84 11=EC=9B=94 26=EC=9D=BC 18:43, Jacek Anaszewski wr=
+ote:
+>>>> Hi Ingi,
+>>>>
+>>>> On 11/26/2015 09:02 AM, Ingi Kim wrote:
+>>>> [...]
+>>>>>>> +torch_unlock:
+>>>>>>> +    mutex_unlock(&led->lock);
+>>>>>>> +    return ret;
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static int rt5033_led_flash_brightness_set(struct led_classdev=
+_flash *fled_cdev,
+>>>>>>> +                       u32 brightness)
+>>>>>>> +{
+>>>>>>> +    struct rt5033_sub_led *sub_led =3D flcdev_to_sub_led(fled_=
+cdev);
+>>>>>>> +    struct rt5033_led *led =3D sub_led_to_led(sub_led);
+>>>>>>> +
+>>>>>>> +    mutex_lock(&led->lock);
+>>>>>>> +    sub_led->flash_brightness =3D brightness;
+>>>>>>> +    mutex_unlock(&led->lock);
+>>>>>>
+>>>>>> Mutex protection is redundant in this case. You would need it if=
+ device
+>>>>>> state was also changed here.
+>>>>>
+>>>>> Okay, I'll remove it.
+>>>>>
+>>>>>>
+>>>>>> BTW why flash brightness can't be written to the device here?
+>>>>>>
+>>>>>
+>>>>> Flash brightness is only affected when FLED flashed (strobing).
+>>>>> So, I think it is better to be written in rt5033_led_flash_strobe=
+_set function.
+>>>>
+>>>> strobe_set op should strobe the flash ASAP, and delegating brightn=
+ess
+>>>> setting there extends a delay between calling strobe_set op
+>>>> and actual flash strobe. If you set the brightness here, then you
+>>>> wouldn't have to do that in the strobe_set op, of course unless th=
+e
+>>>> the brightness is altered through the API of the other LED, in two
+>>>> separate LEDs case.
+>>>>
+>>>
+>>> The brightness may be able to change its brightness in two separate=
+ LEDs case as you see.
+>>> So, I think it would be better to write brightness setting in strob=
+e_op.
+>>
+>> Could you motivate your statement, please? Why would it be better?
+>>
+>>> In consideration of delay, of course, the brightness is set just wh=
+en it would be changed.
+>>
+>> I think that joint iout arrangement will be prevailing - this is the
+>> case for your board, isn't it? With the modification I am proposing
+>> the gain is clear.
+>>
+>
+> You're right, thanks.
+> Did you mean that flash attributes should be written
+> on their ops(flash brightness, flash timeout)?
 
-On 12/01/2015 04:05 AM, Balbi, Felipe wrote:
-> 
-> Hi,
-> 
-> Vignesh R <vigneshr@ti.com> writes:
-[...]
->> +}
->> +
->> +static int ti_qspi_spi_flash_read(struct  spi_device *spi,
->> +				  struct spi_flash_read_message *msg)
->> +{
->> +	struct ti_qspi *qspi = spi_master_get_devdata(spi->master);
->> +	int ret = 0;
->> +
->> +	mutex_lock(&qspi->list_lock);
->> +
->> +	if (!qspi->mmap_enabled)
->> +		ti_qspi_enable_memory_map(spi);
->> +	ti_qspi_setup_mmap_read(spi, msg);
->> +	memcpy_fromio(msg->buf, qspi->mmap_base + msg->from, msg->len);
->> +	msg->retlen = msg->len;
-> 
-> the way I have always expected this to work was that spi controller
-> would setup the mmap region (using ranges?) and pass the base address to
-> the SPI NOR flash instead, so that could call standard
-> write[bwl]/read[bwl] functions.
-> 
-> I mean, when we're dealing with AXI, AHB, PCI, OCP, whatever we
-> completely ignore these details, why should SPI be different ? If it's
-> memory mapped, the SW view of the thing is a piece of memory and that
-> should be accessible with standard {read,write}[bwl]() calls.
-> 
+Both in those ops and conditionally in the strobe_set op,
+in order to handle two LEDs case, when the other LED has
+altered any of the shared settings.
 
-This is just an acceleration provided to improve flash read speeds.
-Whenever there is an access to QSPI memory map region, there is a
-SFI_MM_IF block in QSPI IP that generates SPI bus signals in order fetch
-the data from flash. This SFI_MM_IF must first be configured with flash
-specific information like read opcode, read mode, dummy bytes etc (which
-may vary from flash to flash), by writing to QSPI_SPI_SETUP*_REG also,
-SFI_MM_IF needs to be selected by writing to QSPI_SPI_SWITCH_REG.
-IMO, there has to be a call from spi-nor to ti-qspi before using
-standard {read,write}[bwl]() calls for populating flash info, power mgmt
-and locking SPI bus.
-
-> I really think $subject is not a good way forward because it gives too
-> much responsibility to the SPI controller driver; note that this driver
-> is the one actually accessing the memory map region, instead of simply
-> setting it up and passing it along.
-> 
-
-How would you propose to setup mmap transfers while taking care of SPI
-bus locking and passing of flash info to ti-qspi?
-
-
-> So the way I see it, the DTS should be like so:
-> 
-> qspi@XYZ {
->          reg = <XYZ foo>;
->          [...]
->          ranges = <0 0 0x30000000 $size>;
-> 
->          flash@0,0 {
->                    compatible = "mp2580";
->                    reg = <0 0 $flash_size>;
->          };
-> };
-> 
-> 
-> if you have more than one device sitting on this SPI bus using different
-> chip selects, that's easy too, just change your ranges property:
-> 
-> qspi@XYZ {
->          reg = <XYZ foo>;
->          [...]
->          ranges = <0 0 0x30000000 0x1000
->                    1 0 0x30001000 0x1000
->                    2 0 0x30002000 0x1000>;
-> 
->          flash@0,0 {
->                  [...]
->          };
-> 
->          flash@1,0 {
->                    [...]
->          };
-> 
->          flash@2,0 {
->                    [...]
-> 	};
-> };
-> 
-
-No, even if there are multiple slaves, all slaves map to the same start
-address (0x30000000 in above example). Based on the chip-select line
-that is asserted (selected by writing to a particular CTRL_MODULE
-register field), the corresponding slave responds. Different slaves
-cannot be mapped to different address ranges inside mmap address space.
-The ranges property will always be the same for all slaves and all
-chip-selects.
-
-> and so on. From ti-qspi perspective, you should just setup the memory
-> map and from mp25p80 you would check if your reg property pointed to an
-> address that looks like memory, then ioremap it and use tradicional
-> {read,write}[bwl]() accessors. Any reasons why that wasn't done the way
-> pointed out above ?
-> 
-
-There might be a SPI controller that provides accelerated interface for
-SPI flash read not as a memory mapping but some-other way. Brian Norris
-has pointed out that there is at least one other controller which
-provides such acceleration w/o memory mapping[1] May be Brian can
-explain that better?
+> let me update the driver on your suggestion.
+>
+>>>>>>> +
+>>>>>>> +    return 0;
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static int rt5033_led_flash_timeout_set(struct led_classdev_fl=
+ash *fled_cdev,
+>>>>>>> +                    u32 timeout)
+>>>>>>> +{
+>>>>>>> +    struct rt5033_sub_led *sub_led =3D flcdev_to_sub_led(fled_=
+cdev);
+>>>>>>> +    struct rt5033_led *led =3D sub_led_to_led(sub_led);
+>>>>>>> +
+>>>>>>> +    mutex_lock(&led->lock);
+>>>>>>> +    sub_led->flash_timeout =3D timeout;
+>>>>>>> +    mutex_unlock(&led->lock);
+>>>>>>
+>>>>>> Ditto.
+>>>>>>
+>>>>
+>>>> Timeout should be also written here.
+>>>>
+>>>
+>>> The timeout may be able to change its flash timeout in two separate=
+ LEDs case as you see.
+>>> So, I think it would be better to write timeout setting in strobe_o=
+p.
+>>> In consideration of delay, of course, the timeout is set just when =
+it would be changed.
+>>>
+>>>> If you will add regmap_write in both ops, then mutex protection wi=
+ll
+>>>> have to be preserved, to assure consistency between registers stat=
+e
+>>>> and sub_led->flash_brightness and sub_led->flash_timeout state.
+>>>>
+>>>
+>>> Thanks, but mutex protection is useless in this case.
+>>> so I try to remove it.
+>>>
+>>>>>
+>>>>>>> +#define RT5033_FLED_CTRL4_VTRREG_MAX    0x60
+>>>>>>
+>>>>>> Rename DEF to MASK.
+>>>>
+>>>> Hmm, here it should be: Rename MAX to MASK.
+>>>>
+>>>
+>>> Oh
+>>> Okay, Thanks :)
+>>>
+>>
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
+l" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+>
+>
 
 
-[1]https://lkml.org/lkml/2015/11/10/618
-
--- 
-Regards
-Vignesh
+--=20
+Best Regards,
+Jacek Anaszewski
