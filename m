@@ -1,64 +1,67 @@
 From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v2 03/10] drm/hisilicon: Add hisilicon DRM master driver
-Date: Tue, 1 Dec 2015 08:12:13 +0100
-Message-ID: <20151201071213.GD17050@phenom.ffwll.local>
-References: <CACvgo51NJNRKObgExtv=vNJ10GSgDPz=nQs=4BHAcgqPpSB_ug@mail.gmail.com>
- <20151130074603.GE17050@phenom.ffwll.local>
- <20151130172528.GA10974@rob-hp-laptop>
+Subject: Re: [PATCH v2 06/10] drm/hisilicon: Add vblank feature
+Date: Tue, 1 Dec 2015 08:13:25 +0100
+Message-ID: <20151201071325.GE17050@phenom.ffwll.local>
+References: <1448707145-69348-1-git-send-email-xinliang.liu@linaro.org>
+ <1448707145-69348-7-git-send-email-xinliang.liu@linaro.org>
+ <20151130075432.GF17050@phenom.ffwll.local>
+ <CAGd==05xhhdA7FWveei4U91rGKCHRNLyRG3-kin5B2V+ao+GrA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20151130172528.GA10974@rob-hp-laptop>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linuxarm@huawei.com, ML dri-devel <dri-devel@lists.freedesktop.org>, xuwei5@hisilicon.com, Benjamin Gaignard <benjamin.gaignard@linaro.org>, zourongrong@huawei.com, xuyiping@hisilicon.com, corbet@lwn.net, w.f@huawei.com, lijianhua@huawei.com, devicetree@vger.kernel.org, bintian.wang@huawei.com, puck.chen@hisilicon.com, LAKML <linux-arm-kernel@lists.infradead.org>, andy.green@linaro.org, Emil Velikov <emil.l.velikov@gmail.com>, liguozhu@hisilicon.com, haojian.zhuang@linaro.org
+In-Reply-To: <CAGd==05xhhdA7FWveei4U91rGKCHRNLyRG3-kin5B2V+ao+GrA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Xinliang Liu <xinliang.liu@linaro.org>
+Cc: Daniel Vetter <daniel@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Daniel Stone <daniel@fooishbar.org>, architt@codeaurora.org, David Airlie <airlied@linux.ie>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-doc@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, linuxarm@huawei.com, Andy Green <andy.green@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Xu Wei <xuwei5@hisilicon.com>, Wang Fei <w.f@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, XinWei Kong <kong.kongxinwei@hisilicon.com>, zourongrong@huawei.com, lijianhua@huawei.com, Sumit
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBOb3YgMzAsIDIwMTUgYXQgMTE6MjU6MjhBTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3Jv
-dGU6Cj4gT24gTW9uLCBOb3YgMzAsIDIwMTUgYXQgMDg6NDY6MDNBTSArMDEwMCwgRGFuaWVsIFZl
-dHRlciB3cm90ZToKPiA+IE9uIFNhdCwgTm92IDI4LCAyMDE1IGF0IDAzOjI1OjM1UE0gKzAwMDAs
-IEVtaWwgVmVsaWtvdiB3cm90ZToKPiA+ID4gSGkgWGlubGlhbmcsCj4gPiA+IAo+ID4gPiBPbiAy
-OCBOb3ZlbWJlciAyMDE1IGF0IDEwOjM4LCBYaW5saWFuZyBMaXUgPHhpbmxpYW5nLmxpdUBsaW5h
-cm8ub3JnPiB3cm90ZToKPiA+ID4gPiBBZGQgRFJNIG1hc3RlciBkcml2ZXIgZm9yIGhpNjIyMCBT
-b0Mgd2hpY2ggdXNlZCBpbiBIaUtleSBib2FyZC4KPiA+ID4gPiBBZGQgZHVtYiBidWZmZXIgZmVh
-dHVyZS4KPiA+ID4gPiBBZGQgcHJpbWUgZG1hYnVmIGZlYXR1cmUuCj4gPiA+ID4KPiAKPiA+ID4g
-PiArc3RhdGljIGludCBoaXNpX2dlbV9jbWFfZHVtYl9jcmVhdGUoc3RydWN0IGRybV9maWxlICpm
-aWxlLAo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBk
-cm1fZGV2aWNlICpkZXYsCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgc3RydWN0IGRybV9tb2RlX2NyZWF0ZV9kdW1iICphcmdzKQo+ID4gPiA+ICt7Cj4gPiA+ID4g
-KyAgICAgICBpbnQgbWluX3BpdGNoID0gRElWX1JPVU5EX1VQKGFyZ3MtPndpZHRoICogYXJncy0+
-YnBwLCA4KTsKPiA+ID4gPiArCj4gPiA+ID4gKyAgICAgICAvKiBtYWxpIGdwdSBuZWVkIHBpdGNo
-IDggYnl0ZXMgYWxpZ25tZW50IGZvciAzMmJwcCAqLwo+ID4gPiA+ICsgICAgICAgYXJncy0+cGl0
-Y2ggPSByb3VuZHVwKG1pbl9waXRjaCwgOCk7Cj4gPiA+ID4gKwo+ID4gPiBJJ20gbm90IHN1cmUg
-eW91IHdhbnQgdGhpcyBraW5kIG9mIGRlcGVuZGVuY3kgb2YgYW4gb3V0IG9mIHRyZWUgZHJpdmVy
-Cj4gPiA+IHVwc3RyZWFtLiBJZiB0aGlzIGlzIHNvbWUgbGltaXRhdGlvbiBvbiB0aGUgZGlzcGxh
-eSBlbmdpbmUgc28gYmUgaXQsCj4gPiA+IGJ1dCB0YWlsb3JpbmcgdGhpbmdzIGZvciBhbiBleHRl
-cm5hbCBtb2R1bGUgc2VlbXMgbGlrZSBhIHZlcnkgYmFkCj4gPiA+IGlkZWEuCj4gPiAKPiA+IFl1
-cCwgbmFja2VkLiBkdW1iX2NyZWF0ZSBpcyBmb3IgZHVtYiBidWZmZXJzLCBub3QgcmVuZGVyaW5n
-LiBNYWxpIG5lZWRzIHRvCj4gPiBnbyB1cHN0cmVhbSB0byBmaXggdGhpcyAuLi4KPiAKPiBJIGJl
-bGlldmUgdGhpcyBpcyBjb3B5LW4tcGFzdGUgZnJvbSBSb2NrY2hpcCBkcml2ZXIuCj4gCj4gSSdt
-IGN1cmlvdXMgd2h5IHRoZXJlIGlzIG5vdCBhIGNvbW1vbiBpbnRlcmZhY2UgZm9yIHJlbmRlcmlu
-ZyBidWZmZXJzIGF0IAo+IGxlYXN0IGZvciBzeXN0ZW1zIHdpdGhvdXQgZ3JhcGhpY3MgbWVtb3J5
-IGxpa2UgbW9zdCBBUk0gc3lzdGVtcy4gQXJlIHRoZSAKPiByZXF1aXJlbWVudHMgb2YgR1BVIHNv
-IGRpdmVyc2UgdGhhdCB0aGluZ3MgbGlrZSBwaXRjaCBhbGlnbm1lbnQgY2FuJ3QgYmUgCj4gcGFy
-YW1ldGVyaXplZD8KCnBpdGNoIHJlcXVpcmVtZW50cyBpcyBnZW5lcmFsbHkgdGhlIGxlYXN0IHdv
-cnJ5LiBUaGUgcmVhbCBmdW4gc3RhcnRzIHdpdGgKdGlsaW5nIG1vZGVzIGFuZCBob3cgYWxsIHRo
-YXQgc3R1ZmYgaW50ZXJhY3RzLiBBdG0gdGhlIG9ubHkgc29sdXRpb24gd2UKaGF2ZSBpcyAidXNl
-cnNwYWNlIG5lZWRzIHRvIGtub3ciIGluIGZvcm0gb2YgZWl0aGVyIGdyYWxsb2MgKGFuZHJvaWQp
-IG9yCmdibSAoY3JvcywgZGVza3RvcCBsaW51eCkuIFRoZXJlIGhhdmUgYmVlbiBpZGVhcyB0byBm
-b3IgZGVzY3JpYmluZyBidWZmZXIKbGltaXRzLCBidXQgbm90aGluZyBjb25jcmV0ZSB5ZXQuCi1E
-YW5pZWwKLS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0
-aW9uCmh0dHA6Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+On Tue, Dec 01, 2015 at 11:16:19AM +0800, Xinliang Liu wrote:
+> On 30 November 2015 at 15:54, Daniel Vetter <daniel@ffwll.ch> wrote:
+> > On Sat, Nov 28, 2015 at 06:39:01PM +0800, Xinliang Liu wrote:
+> >> Add vblank handle for ADE.
+> >>
+> >> Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
+> >> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+> >> Signed-off-by: Andy Green <andy.green@linaro.org>
+> >> ---
+> >>  drivers/gpu/drm/hisilicon/hisi_drm_ade.c | 78 ++++++++++++++++++++++++++++++++
+> >>  drivers/gpu/drm/hisilicon/hisi_drm_ade.h | 16 +++++++
+> >>  drivers/gpu/drm/hisilicon/hisi_drm_drv.c | 19 +++++++-
+> >>  3 files changed, 112 insertions(+), 1 deletion(-)
+> >>  create mode 100644 drivers/gpu/drm/hisilicon/hisi_drm_ade.h
+> >>
+> >> diff --git a/drivers/gpu/drm/hisilicon/hisi_drm_ade.c b/drivers/gpu/drm/hisilicon/hisi_drm_ade.c
+> >> index b0976c3..acb11e7 100644
+> >> --- a/drivers/gpu/drm/hisilicon/hisi_drm_ade.c
+> >> +++ b/drivers/gpu/drm/hisilicon/hisi_drm_ade.c
+> >> @@ -267,7 +267,79 @@ static void ade_power_down(struct ade_hw_ctx *ctx)
+> >>       ctx->power_on = false;
+> >>  }
+> >>
+> >> +static struct drm_crtc *hisi_get_crtc_from_index(struct drm_device *dev,
+> >> +                                              unsigned int index)
+> >
+> > Ugly that you had to add this, but unfortunately necessary :( Fixing up
+> > the drm vblank hooks so that they deal with struct drm_crtc directly is
+> > somewhere on my todo. But drm_irq.c is still a bit a mess, so this is some
+> > ways off still.
+> >
+> > What might be possible as a follow-up cleanup though is to add
+> > vblank_enable and vblank_disable functions to struct
+> > drm_crtc_helper_funcs. And then provide this code here to map from int
+> > index to struct drm_crtc * as helpers in a new drm_vblank_helper.c file.
+> > That might be a good intermediate step.
+> 
+> I would like to have a try to make this intermediate step patch and
+> send out for review soon.
+
+Awesome, looking forward to reviewing it. If you have questions about
+details fastest to ping me on irc (nick: danvet, #dri-devel on
+freenode.net).
+
+Cheers, Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
