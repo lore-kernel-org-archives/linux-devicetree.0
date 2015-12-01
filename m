@@ -1,195 +1,86 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v4 1/5] clk: sunxi: Add CLK_OF_DECLARE support for
- sun8i-a23-apb0-clk driver
-Date: Tue, 1 Dec 2015 22:39:14 +0800
-Message-ID: <CAGb2v645Bb-dAroH3kMO_vKgif-s0at-uJ4PJrZ78zB=HGr+4A@mail.gmail.com>
-References: <1448766190-11345-1-git-send-email-wens@csie.org>
- <1448766190-11345-2-git-send-email-wens@csie.org> <20151201100416.GF29263@lukather>
- <CAGb2v66bJJZ_xmD8B2X6nR3bxte9CdrnBpnd1KMRTmyRTr1KRQ@mail.gmail.com>
- <20151201125032.GH29263@lukather> <CAGb2v6502U3=GcbZOtj59r2_JRjKfTq=U9TGQgWFKpr3_-hcNw@mail.gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v3 00/27] memory: omap-gpmc: mtd: nand: Support GPMC NAND
+ on non-OMAP platforms
+Date: Tue, 1 Dec 2015 16:41:16 +0200
+Message-ID: <565DB18C.7040505@ti.com>
+References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
+ <20151026212346.GJ13239@google.com> <562F45BF.8020205@ti.com>
+ <20151130195449.GI64635@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v6502U3=GcbZOtj59r2_JRjKfTq=U9TGQgWFKpr3_-hcNw@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Emilio Lopez <emilio@elopez.com.ar>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151130195449.GI64635@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: tony@atomide.com, dwmw2@infradead.org, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 1, 2015 at 10:19 PM, Chen-Yu Tsai <wens@csie.org> wrote:
-> On Tue, Dec 1, 2015 at 8:50 PM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
->> On Tue, Dec 01, 2015 at 07:54:06PM +0800, Chen-Yu Tsai wrote:
->>> On Tue, Dec 1, 2015 at 6:04 PM, Maxime Ripard
->>> <maxime.ripard@free-electrons.com> wrote:
->>> > Hi,
->>> >
->>> > On Sun, Nov 29, 2015 at 11:03:06AM +0800, Chen-Yu Tsai wrote:
->>> >> The APBS clock on sun9i is the same as the APB0 clock on sun8i. With
->>> >> sun9i we are supporting the PRCM clocks by using CLK_OF_DECLARE,
->>> >> instead of through a PRCM mfd device and subdevices for each clock
->>> >> and reset control. As such we need a CLK_OF_DECLARE version of
->>> >> the sun8i-a23-apb0-clk driver.
->>> >>
->>> >> Also, build it for sun9i/A80, and not just for configurations with
->>> >> MFD_SUN6I_PRCM enabled.
->>> >>
->>> >> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->>> >> ---
->>> >>  drivers/clk/sunxi/Makefile         |  5 +--
->>> >>  drivers/clk/sunxi/clk-sun8i-apb0.c | 71 +++++++++++++++++++++++++++++++-------
->>> >>  2 files changed, 62 insertions(+), 14 deletions(-)
->>> >>
->>> >> diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
->>> >> index cb4c299214ce..c55d5cd1c0e5 100644
->>> >> --- a/drivers/clk/sunxi/Makefile
->>> >> +++ b/drivers/clk/sunxi/Makefile
->>> >> @@ -15,6 +15,7 @@ obj-y += clk-sun9i-core.o
->>> >>  obj-y += clk-sun9i-mmc.o
->>> >>  obj-y += clk-usb.o
->>> >>
->>> >> +obj-$(CONFIG_MACH_SUN9I) += clk-sun8i-apb0.o
->>> >> +
->>> >
->>> > So sun8i doesn't use it?
->>>
->>> Shit... I messed up. clk-sun8i-apb0.o should also be under
->>> CONFIG_MFD_SUN6I_PRCM.
->>>
->>> I'll send a new version of this patch. No need to keep spamming
->>> people with the whole series.
+Hi Brian,
+
+On 30/11/15 21:54, Brian Norris wrote:
+> Hi Roger,
+> 
+> On Tue, Oct 27, 2015 at 11:37:03AM +0200, Roger Quadros wrote:
+>> On 26/10/15 23:23, Brian Norris wrote:
+>>> I'm not too familiar with OMAP platforms, and I might have missed out on
+>>> prior discussions/context, so please forgive if I'm asking silly or old
+>>> questions here.
 >>
->> Ok.
+>> No worries at all.
 >>
->>> >>  obj-$(CONFIG_MFD_SUN6I_PRCM) += \
->>> >> -     clk-sun6i-ar100.o clk-sun6i-apb0.o clk-sun6i-apb0-gates.o \
->>> >> -     clk-sun8i-apb0.o
->>> >> +     clk-sun6i-ar100.o clk-sun6i-apb0.o clk-sun6i-apb0-gates.o
->>> >> diff --git a/drivers/clk/sunxi/clk-sun8i-apb0.c b/drivers/clk/sunxi/clk-sun8i-apb0.c
->>> >> index 7ae5d2c2cde1..c1e2ac8f4b0d 100644
->>> >> --- a/drivers/clk/sunxi/clk-sun8i-apb0.c
->>> >> +++ b/drivers/clk/sunxi/clk-sun8i-apb0.c
->>> >> @@ -17,13 +17,68 @@
->>> >>  #include <linux/clk-provider.h>
->>> >>  #include <linux/module.h>
->>> >>  #include <linux/of.h>
->>> >> +#include <linux/of_address.h>
->>> >>  #include <linux/platform_device.h>
->>> >>
->>> >> +static struct clk *sun8i_a23_apb0_register(struct device_node *node,
->>> >> +                                        void __iomem *reg)
->>> >> +{
->>> >> +     const char *clk_name = node->name;
->>> >> +     const char *clk_parent;
->>> >> +     struct clk *clk;
->>> >> +     int ret;
->>> >> +
->>> >> +     clk_parent = of_clk_get_parent_name(node, 0);
->>> >> +     if (!clk_parent)
->>> >> +             return ERR_PTR(-EINVAL);
->>> >> +
->>> >> +     of_property_read_string(node, "clock-output-names", &clk_name);
->>> >> +
->>> >> +     /* The A23 APB0 clock is a standard 2 bit wide divider clock */
->>> >> +     clk = clk_register_divider(NULL, clk_name, clk_parent, 0, reg,
->>> >> +                                0, 2, CLK_DIVIDER_POWER_OF_TWO, NULL);
->>> >> +     if (IS_ERR(clk))
->>> >> +             return clk;
->>> >> +
->>> >> +     ret = of_clk_add_provider(node, of_clk_src_simple_get, clk);
->>> >> +     if (ret)
->>> >> +             goto err_unregister;
->>> >> +
->>> >> +     return clk;
->>> >> +
->>> >> +err_unregister:
->>> >> +     clk_unregister_divider(clk);
->>> >> +
->>> >> +     return ERR_PTR(ret);
->>> >> +}
->>> >> +
->>> >> +static void sun8i_a23_apb0_setup(struct device_node *node)
->>> >> +{
->>> >> +     void __iomem *reg;
->>> >> +     struct resource res;
->>> >> +     struct clk *clk;
->>> >> +
->>> >> +     reg = of_io_request_and_map(node, 0, of_node_full_name(node));
->>> >> +     if (IS_ERR(reg))
->>> >> +             return;
->>> >> +
->>> >> +     clk = sun8i_a23_apb0_register(node, reg);
->>> >> +     if (IS_ERR(clk))
->>> >> +             goto err_unmap;
->>> >> +
->>> >> +     return;
->>> >> +
->>> >> +err_unmap:
->>> >> +     iounmap(reg);
->>> >> +     of_address_to_resource(node, 0, &res);
->>> >> +     release_mem_region(res.start, resource_size(&res));
->>> >> +}
->>> >> +CLK_OF_DECLARE(sun8i_a23_apb0, "allwinner,sun8i-a23-apb0-clk",
->>> >> +            sun8i_a23_apb0_setup);
->>> >> +
->>> >>  static int sun8i_a23_apb0_clk_probe(struct platform_device *pdev)
->>> >>  {
->>> >>       struct device_node *np = pdev->dev.of_node;
->>> >> -     const char *clk_name = np->name;
->>> >> -     const char *clk_parent;
->>> >>       struct resource *r;
->>> >>       void __iomem *reg;
->>> >>       struct clk *clk;
->>> >> @@ -33,19 +88,11 @@ static int sun8i_a23_apb0_clk_probe(struct platform_device *pdev)
->>> >>       if (IS_ERR(reg))
->>> >>               return PTR_ERR(reg);
->>> >>
->>> >> -     clk_parent = of_clk_get_parent_name(np, 0);
->>> >> -     if (!clk_parent)
->>> >> -             return -EINVAL;
->>> >> -
->>> >> -     of_property_read_string(np, "clock-output-names", &clk_name);
->>> >> -
->>> >> -     /* The A23 APB0 clock is a standard 2 bit wide divider clock */
->>> >> -     clk = clk_register_divider(&pdev->dev, clk_name, clk_parent, 0, reg,
->>> >> -                                0, 2, CLK_DIVIDER_POWER_OF_TWO, NULL);
->>> >> +     clk = sun8i_a23_apb0_register(np, reg);
->>> >>       if (IS_ERR(clk))
->>> >>               return PTR_ERR(clk);
->>> >>
->>> >> -     return of_clk_add_provider(np, of_clk_src_simple_get, clk);
->>> >> +     return 0;
->>> >>  }
->>> >
->>> > Won't this probe twice now? First the CLK_OF_DECLARE will register a
->>> > clock, and then the device model will call probe a second time.
 >>>
->>> AFAIK it will.
+>>> On Fri, Sep 18, 2015 at 05:53:22PM +0300, Roger Quadros wrote:
+>>>> - Remove NAND IRQ handling from omap-gpmc driver, share the GPMC IRQ
+>>>> with the omap2-nand driver and handle NAND IRQ events in the NAND driver.
+>>>> This causes performance increase when using prefetch-irq mode.
+>>>> 30% increase in read, 17% increase in write in prefetch-irq mode.
 >>>
->>> > I guess then request_mem_region will catch it, but then you return an
->>> > error code, which is probably an error success, since the clock is
->>> > registered :)
+>>> Have you pinpointed the exact causes for the performance increase, or
+>>> can you give an educated guess? AIUI, you're reducing the number of
+>>> interrupts needed for NAND prefetch mode, but you're also removing a bit
+>>> of abstraction and implementing hooks that look awfully like the
+>>> existing abstractions:
 >>>
->>> Indeed. clk-mod0.c actually has a comment block explaining this.
->>> I didn't want to repeat the whole thing though.
+>>> +       int (*nand_irq_enable)(enum gpmc_nand_irq irq);
+>>> +       int (*nand_irq_disable)(enum gpmc_nand_irq irq);
+>>> +       void (*nand_irq_clear)(enum gpmc_nand_irq irq);
+>>> +       u32 (*nand_irq_status)(void);
+>>>
+>>> That's not really a problem if there's a good reason for them (brcmnand
+>>> implements similar hooks because of quirks in the implementation of
+>>> interrupts across various BRCM SoCs, and it's not worth writing irqchip
+>>> drivers for those cases). I'm mainly curious for an explanation.
 >>
->> I guess, we can simply return 0 if of_io_request_and_map returns
->> EBUSY, since it would simply mean that we already probed.
->
-> I think CLK_OF_DECLARE gets probed first, then platform devices.
-> of_io_request_and_map fails for mfd cells, which have no DT reg
-> properties. So we should be ignoring -EINVAL instead of -EBUSY.
+>> I have both implementations with me. My guess is that the 20% performance
+>> gain is due to absence of irqchip/irqdomain translation code.
+>> I haven't investigated further though.
+> 
+> I don't have much context for whether this makes sense or not. According
+> to your tests, you're getting ~800K interrupts over ~15 seconds. So
+> should you start noticing performance hits due to abstraction at 53K
+> interrupts per second?
 
-Right... I misread your comment. You're talking about the platform device
-part. About ignoring the error here: normally we use CLK_OF_DECLARE with
-clocks under the "clocks" node, which don't get registered as platform
-device. (Or is this not so common?) So if one does get probed twice, I
-think we shouldn't ignore the error. It's likely the DT has a problem
-and the probe error will let the user know.
+Yes, this was my understanding.
 
-What do you think?
+> 
+> But anyway, I'm not sure that completely answered my question. My
+> question was whether you were removing the irqchip code solely for
+> performance reasons, or are there others?
 
-ChenYu
+Yes. Only for performance reasons.
 
-> But yeah, I'll have it return 0 in this case, and add a brief
-> comment.
+> 
+>> Another concern I have is that I'm not using any locking around
+>> gpmc_nand_irq_enable/disable(). Could this pose problems in multiple NAND
+>> use cases? My understanding is that it should not as the controller access
+>> is serialized between multiple NAND chips.
+> 
+> Right, if you're touching just a NAND interrupt, and it's only used by a
+> single instance of this NAND controller, then the NAND controller
+> serialization code will handle this for you.
+
+OK.
+
+cheers,
+-roger
