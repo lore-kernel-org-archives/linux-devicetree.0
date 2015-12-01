@@ -1,149 +1,156 @@
-From: Juri Lelli <juri.lelli@arm.com>
-Subject: Re: [RFC PATCH 2/8] Documentation: arm: define DT cpu capacity
- bindings
-Date: Tue, 1 Dec 2015 11:20:44 +0000
-Message-ID: <20151201112044.GV20439@e106622-lin>
-References: <1448288921-30307-1-git-send-email-juri.lelli@arm.com>
- <1448288921-30307-3-git-send-email-juri.lelli@arm.com>
- <20151124020631.GA15165@rob-hp-laptop>
- <20151124105423.GM26372@e106622-lin>
- <CAKfTPtAww=r6H2Jrgu+8jDsYohPj7HD=_sdAP2utEEH-YLVsaA@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [Question] DT-Bindings for run-time configurable bus?
+Date: Tue, 01 Dec 2015 12:29:03 +0100
+Message-ID: <9491984.N5sK0AKL2L@wuerfel>
+References: <CAK7LNATGi4isAaG0XS13ZnfFQKCxzaxeJvusSg3RYn7z29BF9A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtAww=r6H2Jrgu+8jDsYohPj7HD=_sdAP2utEEH-YLVsaA@mail.gmail.com>
+In-Reply-To: <CAK7LNATGi4isAaG0XS13ZnfFQKCxzaxeJvusSg3RYn7z29BF9A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Paul
+To: linux-arm-kernel@lists.infradead.org
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Andrew Lunn <andrew@lunn.ch>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frank.rowand@sonymobile.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vincent,
-
-On 30/11/15 10:59, Vincent Guittot wrote:
-> Hi Juri,
+On Tuesday 01 December 2015 13:30:25 Masahiro Yamada wrote:
+> Hello experts,
 > 
-> On 24 November 2015 at 11:54, Juri Lelli <juri.lelli@arm.com> wrote:
-> > Hi,
-> >
-> > On 23/11/15 20:06, Rob Herring wrote:
-> >> On Mon, Nov 23, 2015 at 02:28:35PM +0000, Juri Lelli wrote:
-> >> > ARM systems may be configured to have cpus with different power/performance
-> >> > characteristics within the same chip. In this case, additional information
-> >> > has to be made available to the kernel (the scheduler in particular) for it
-> >> > to be aware of such differences and take decisions accordingly.
-> >> >
+> I am tackling on a new bus driver, but I am worndering
+> what the DT-binding specification should be.
 > 
-> [snip]
+> Here is my hardware situation:
 > 
-> >> > +==========================================
-> >> > +2 - CPU capacity definition
-> >> > +==========================================
-> >> > +
-> >> > +CPU capacity is a number that provides the scheduler information about CPUs
-> >> > +heterogeneity. Such heterogeneity can come from micro-architectural differences
-> >> > +(e.g., ARM big.LITTLE systems) or maximum frequency at which CPUs can run
-> >> > +(e.g., SMP systems with multiple frequency domains). Heterogeneity in this
-> >> > +context is about differing performance characteristics; this binding tries to
-> >> > +capture a first-order approximation of the relative performance of CPUs.
-> >> > +
-> >> > +One simple way to estimate CPU capacities is to iteratively run a well-known
-> >> > +CPU user space benchmark (e.g, sysbench, dhrystone, etc.) on each CPU at
-> >> > +maximum frequency and then normalize values w.r.t.  the best performing CPU.
-> >> > +One can also do a statistically significant study of a wide collection of
-> >> > +benchmarks, but pros of such an approach are not really evident at the time of
-> >> > +writing.
-> >> > +
-> >> > +==========================================
-> >> > +3 - capacity-scale
-> >> > +==========================================
-> >> > +
-> >> > +CPUs capacities are defined with respect to capacity-scale property in the cpus
-> >> > +node [1]. The property is optional; if not defined a 1024 capacity-scale is
-> >> > +assumed. This property defines both the highest CPU capacity present in the
-> >> > +system and granularity of CPU capacity values.
-> >>
-> >> I don't really see the point of this vs. having an absolute scale.
-> >>
-> >
-> > IMHO, we need this for several reasons, one being to address one of your
-> > concerns below: vendors are free to choose their scale without being
-> > forced to publish absolute data. Another reason is that it might make
-> > life easier in certain cases; for example, someone could implement a
-> > system with a few clusters of, say, A57s, but some run at half the clock
-> > of the others (e.g., you have a 1.2GHz cluster and a 600MHz cluster); in
-> > this case I think it is just easier to define capacity-scale as 1200 and
-> > capacities as 1200 and 600. Last reason that I can think of right now is
-> > that we don't probably want to bound ourself to some particular range
-> > from the beginning, as that range might be enough now, but it could
-> > change in the future (as in, right now [1-1024] looks fine for
-> > scheduling purposes, but that might change).
+> My SoC has an external bus (it is called UniPhier System Bus).
+> This is a simple parallel bus with address, data,
+> chip-selects, and some other control signals.
+> It supports up to 8 chip-selects.
 > 
-> Like Rob, i don't really see the benefit of this optional
-> capacity-scale property. Parsing the capacity of all cpu nodes should
-> give you a range as well.
-> IMHO, this property looks like an optimization of the code that will
-> parse the dt more than a HW description
+> Each CS address space can be mapped onto the CPU view,
+> and it must be configured run-time via the bus controller registers.
+> 
+> Let's assume this situation:
+> 
+>  - An ethernet device is connected at the offset address 0x01f00000 of CS1
+>  - A UART device is connected at the offset address 0x00200000 of CS5
+> 
+> 
+> A quick draft of device tree would be as follows:
+> 
+> 
+> amba {
+>      compatible = "simple-bus";
+>      #address-cells = <1>;
+>      #size-cells = <1>;
+>      ranges;
+> 
+>      extbus {
+>            compatible = "socionext,uniphier-system-bus";
+>            reg = <0x58c00000 0x400>; /* registers of bus controller */
+>            #address-cells = <2>;
+>            #size-cells = <1>;
+> 
+>            ethernet@1,01f00000 {
+>                  compatible = "smsc,lan9115";
+>                  reg = <1 0x01f00000 0x1000>;
+>                  interrupts = <0 48 4>
+>                  phy-mode = "mii";
+>            };
+> 
+>            uart@5,00200000 {
+>                  compatible = "ns16550a";
+>                  reg = <5 0x00200000 0x20>;
+>                  interrupts = <0 49 4>
+>                  clock-frequency = <12288000>;
+>            };
+>      };
+> };
 > 
 
-I agree that we can come up with the same information just looking at
-the biggest capacity value of all CPUs and treat that value as
-capacity-scale. I just thought that having that explicit made things
-clearer, as it could be not easy to immediately see from a DT with many
-CPUs which is the biggest capacity value. But, yes, we could remove that
-anyway.
+That looks reasonable.
 
-Thanks,
-
-- Juri
-
-> >
-> >> > +
-> >> > +==========================================
-> >> > +4 - capacity
-> >> > +==========================================
-> >> > +
-> >> > +capacity is an optional cpu node [1] property: u32 value representing CPU
-> >> > +capacity, relative to capacity-scale. It is required and enforced that capacity
-> >> > +<= capacity-scale.
-> >>
-> >> I think you need something absolute and probably per MHz (like
-> >> dynamic-power-coefficient property). Perhaps the IPC (instructions per
-> >> clock) value?
-> >>
-> >> In other words, I want to see these numbers have a defined method
-> >> of determining them and don't want to see random values from every
-> >> vendor. ARM, Ltd. says core X has a value of Y would be good enough for
-> >> me. Vendor X's A57 having a value of 2 and Vendor Y's A57 having a
-> >> value of 1024 is not what I want to see. Of course things like cache
-> >> sizes can vary the performance, but is a baseline value good enough?
-> >>
-> >
-> > A standard reference baseline is what we advocate with this set, but
-> > making this baseline work for every vendor's implementation is hardly
-> > achievable, IMHO. I don't think we can come up with any number that
-> > applies to each and every implementation; you can have different
-> > revisions of the same core and vendors might make implementation choices
-> > that end up with different peak performance.
-> >
-> >> However, no vendor will want to publish their values if these are
-> >> absolute values relative to other vendors.
-> >>
-> >
-> > Right. That is why I think we need to abstract numbers, as we do with
-> > capacity-scale.
-> >
-> >> If you expect these to need frequent tuning, then don't put them in DT.
-> >>
-> >
-> > I expect that it is possible to come up with a sensible baseline number
-> > for a specific platform implementation, so there is value in
-> > standardizing how we specify this value and how it is then consumed.
-> > Finer grained tuning might then happen both offline (with changes to the
-> > mainline DT) and online (using the sysfs interface), but that should
-> > only apply to a narrow set of use cases.
-> >
-> > Thanks,
-> >
-> > - Juri
+> Please note "ranges" property is missing from the extbus node.
 > 
+> As mentioned above, the address translation from the external bus
+> to the parent bus is run-time configurable.
+> 
+> 
+> It is possible to map
+>   CS1 of extbus  to  0x40000000-0x41ffffff of CPU view
+>   CS5 of extbus  to  0x42000000-0x43ffffff of CPU view
+> 
+> It is also possible to map
+>   CS1 of extbus  to  0x46000000-0x47ffffff of CPU view
+>   CS5 of extbus  to  0x44000000-0x45ffffff of CPU view
+> 
+> There is nothing preventing us from a particular
+> address mapping.
+> It is completely up to the software (driver)
+> to choose one mapping from another.
+
+Ok.
+
+> And I notice a conflict between the followings.
+> 
+> [1] Device Tree is a hardware description language.
+> It should not describe the software configuration.
+> 
+> So, ranges such as
+>    ranges = <1 0 0x40000000 0x02000000
+>              5 0 0x42000000 0x02000000>;
+> 
+>    or
+> 
+>    ranges = <1 0 0x46000000 0x02000000
+>              5 0 0x44000000 0x02000000>;
+> 
+> are configuration information, which should not be
+> included in the device tree.
+> 
+> Any address mapping is OK as long as no region overlap occurs.
+> No point to specify "ranges" from the device tree.
+> 
+> 
+> [2] of_translate_address() expects "ranges" in every bus node
+> 
+> When we need to translate the "reg" property into the CPU-viewed address,
+> we call of_translate_address().  It translates addresses,
+> parsing "ranges" property when crossing buses.
+> It potentially means, "ranges" properties are statically defined
+> in the device tree.
+> 
+> 
+> I have not been able to find a good way
+> to solve the conflict between [1] and [2].
+> 
+> 
+> To sum up, what I want is:
+> 
+>  - Let the driver to configure the address translation on run-time
+>  - Once the bus is configured, I want the sub nodes to be accessed
+>    from the CPU, like the other statically instantiated devices.
+> 
+> 
+> Any comment is welcome!
+> 
+> 
+> BTW, perhaps Marvell Mbus has a similar situation (run-time configurable)?
+> (Documentation/devicetree/bindings/bus/mvebu-mbus.txt)
+> I am not familiar with such SoCs, though.
+
+Yes, this is the example I was thinking of. For mbus, we decided that
+doing the full dynamic reassignment of addresses is too bothersome
+for the OS, so the DT contains a "reasonable" default that the OS can
+use. This is also what we do for most PCI host controllers on embedded
+systems. They tend to have programmable translations, and the DT contains
+the settings that are known to work and that the driver uses to set up
+the I/O windows even if a lot of other settings would work just as
+well.
+
+A more traditional setup that we use on server-class machines is that
+the bootloader decides what the windows should be, sets them up and
+documents them in DT. The OS can still change them if it wants to,
+but it doesn't actually have to worry about the fact that those are
+programmable, or what registers are used for programming them.
+
+	Arnd
