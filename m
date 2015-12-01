@@ -1,58 +1,30 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: arm64: dts: qcom: Add apq8096 dragonboard dts skeletons
-Date: Mon, 30 Nov 2015 23:21:22 -0800
-Message-ID: <20151201072122.GA26865@codeaurora.org>
-References: <1448517238-32338-1-git-send-email-rnayak@codeaurora.org>
- <20151130234817.GC21446@codeaurora.org>
- <565D0D83.201@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <565D0D83.201@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: agross@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH 0/4] PCI: rcar, rcar-gen2: More Gen2 compat strings
+Date: Tue,  1 Dec 2015 16:24:28 +0900
+Message-ID: <1448954672-27236-1-git-send-email-horms+renesas@verge.net.au>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-On 12/01, Rajendra Nayak wrote:
-> 
-> On 12/01/2015 05:18 AM, Stephen Boyd wrote:
-> > On 11/26, Rajendra Nayak wrote:
-> >> Add new dtsi and dts files for the apq8096 dragonboards with just
-> >> a serial device used as debug console
-> >>
-> >> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> >> ---
-> >> Patch applies on top of Stephens' patches to add msm8996 dtsi
-> >> https://lkml.org/lkml/2015/11/17/955
-> >>
-> >>  arch/arm64/boot/dts/qcom/Makefile                 |  2 +-
-> >>  arch/arm64/boot/dts/qcom/apq8096-dragonboard.dts  | 21 ++++++++++++++++
-> >>  arch/arm64/boot/dts/qcom/apq8096-dragonboard.dtsi | 30 +++++++++++++++++++++++
-> >>  3 files changed, 52 insertions(+), 1 deletion(-)
-> >>  create mode 100644 arch/arm64/boot/dts/qcom/apq8096-dragonboard.dts
-> >>  create mode 100644 arch/arm64/boot/dts/qcom/apq8096-dragonboard.dtsi
-> >>
-> >> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> >> index fa1f661..bd992ef 100644
-> >> --- a/arch/arm64/boot/dts/qcom/Makefile
-> >> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> >> @@ -1,5 +1,5 @@
-> >>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
-> >> -dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
-> >> +dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb apq8096-dragonboard.dtb
-> > 
-> > We should move to one dtb per line in this file. Other platforms
-> > are doing the same thing.
-> 
-> Sure, will repost with the change. I just saw the 8916/8016 ones were all in
-> a single line so did the same.
-> 
+Hi,
 
-Yeah we should probably change the 8916 one too. Make everything
-the same.
+this short series adds generic gen2 and soc-specific r8a7793 compat strings
+to the rcar PCI and rcar-gen2 PCIE drivers. The intention is to provide
+a complete set of compat strings for known Gen2 SoCs.
+
+Simon Horman (4):
+  PCI: rcar-gen2: Add generic compatibility string
+  PCI: rcar-gen2: Add device tree support for r8a7793
+  PCI: rcar: Add Gen2 fallback compatibility string
+  PCI: rcar: Add device tree support for r8a7793
+
+ Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 12 ++++++++++--
+ Documentation/devicetree/bindings/pci/rcar-pci.txt      | 14 +++++++++++---
+ drivers/pci/host/pci-rcar-gen2.c                        |  1 +
+ drivers/pci/host/pcie-rcar.c                            |  1 +
+ 4 files changed, 23 insertions(+), 5 deletions(-)
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.1.4
