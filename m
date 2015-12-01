@@ -1,133 +1,41 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v2 10/10] drm/hisilicon: Add support for external bridge
-Date: Tue, 1 Dec 2015 14:34:35 +0530
-Message-ID: <565D62A3.2030301@codeaurora.org>
-References: <1448707145-69348-1-git-send-email-xinliang.liu@linaro.org>
- <1448707145-69348-11-git-send-email-xinliang.liu@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1448707145-69348-11-git-send-email-xinliang.liu@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Xinliang Liu <xinliang.liu@linaro.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch, robh@kernel.org, daniel@fooishbar.org, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, andy.green@linaro.org, haojian.zhuang@linaro.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, benjamin.gaignard@linaro.org, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, zourongrong@huawei.com, lijianhua@huawei.com, sumit.semwal@linaro.org
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [PATCH 0/3] Add the rk3368 evb board with the act8846 pmic
+Date: Tue,  1 Dec 2015 17:13:23 +0800
+Message-ID: <1448961206-23769-1-git-send-email-wxt@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org
+Cc: linux-rockchip@lists.infradead.org, Douglas Anderson <dianders@chromium.org>, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Olof Johansson <olof@lixom.net>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Roger Chen <roger.chen@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>, Yunzhi Li <lyz@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Romain Perier <romain.perier@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This series pacthes try to add the evb dts for rk3368 SoCs,
+This's similar with the rj3288 evb board.
+
+On the moment, pwm/backlight/usb/thermal/emmc stuff can work for this
+board, I add the base version for the future firstly.
+
+PATCH [1/3]: Force rk3368 PWM clock (and its parents) On
+That's similar HACK way to work.
+
+PATCH [2/3]: Add the RK3368 EVB board for with the act8846 pmic for dtsi
+
+PATCH [3/3]: Add the PWM node info for rk3368 core.
 
 
-On 11/28/2015 04:09 PM, Xinliang Liu wrote:
-> Add support for external HDMI bridge.
->
-> Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
-> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-> Signed-off-by: Andy Green <andy.green@linaro.org>
-> ---
->   drivers/gpu/drm/hisilicon/hisi_drm_dsi.c | 51 ++++++++++++++++++++++++++++++++
->   1 file changed, 51 insertions(+)
->
-> diff --git a/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c b/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
-> index 066e08d..9e056db 100644
-> --- a/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
-> +++ b/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
-> @@ -78,6 +78,7 @@ struct dsi_hw_ctx {
->
->   struct hisi_dsi {
->   	struct drm_encoder encoder;
-> +	struct drm_bridge *bridge;
->   	struct mipi_dsi_host host;
->   	struct drm_display_mode cur_mode;
->   	struct dsi_hw_ctx *ctx;
-> @@ -671,6 +672,25 @@ static int dsi_host_init(struct device *dev, struct hisi_dsi *dsi)
->   	return 0;
->   }
->
-> +static int dsi_bridge_init(struct drm_device *dev, struct hisi_dsi *dsi)
-> +{
-> +	struct drm_encoder *encoder = &dsi->encoder;
-> +	struct drm_bridge *bridge = dsi->bridge;
-> +	int ret;
-> +
-> +	/* associate the bridge to dsi encoder */
-> +	encoder->bridge = bridge;
-> +	bridge->encoder = encoder;
-> +
-> +	ret = drm_bridge_attach(dev, bridge);
-> +	if (ret) {
-> +		DRM_ERROR("failed to attach exteranl bridge\n");
 
-s/exteranl/external
+Caesar Wang (3):
+  clk: rockchip: Force rk3368 PWM clock (and its parents) on
+  arm64: dts: rockchip: add rk3368 evaluation board
+  arm64: dts: rockchip: add the pwm node info for RK3368 SoCs
 
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->   static int dsi_bind(struct device *dev, struct device *master, void *data)
->   {
->   	struct dsi_data *ddata = dev_get_drvdata(dev);
-> @@ -686,6 +706,10 @@ static int dsi_bind(struct device *dev, struct device *master, void *data)
->   	if (ret)
->   		return ret;
->
-> +	ret = dsi_bridge_init(drm_dev, dsi);
-> +	if (ret)
-> +		return ret;
-> +
->   	return 0;
->   }
->
-> @@ -702,8 +726,35 @@ static const struct component_ops dsi_ops = {
->   static int dsi_parse_dt(struct platform_device *pdev, struct hisi_dsi *dsi)
->   {
->   	struct dsi_hw_ctx *ctx = dsi->ctx;
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct device_node *endpoint, *bridge_node;
-> +	struct drm_bridge *bridge;
->   	struct resource *res;
->
-> +	/*
-> +	 * Get the endpoint node. In our case, dsi has one output port
-> +	 * to which the external HDMI bridge is connected.
-> +	 */
-> +	endpoint = of_graph_get_next_endpoint(np, NULL);
-> +	if (!endpoint) {
-> +		DRM_ERROR("no valid endpoint node\n");
-> +		return -ENODEV;
-> +	}
-> +	of_node_put(endpoint);
-> +
-> +	bridge_node = of_graph_get_remote_port_parent(endpoint);
-> +	if (!bridge_node) {
-> +		DRM_ERROR("no valid bridge node\n");
-> +		return -ENODEV;
-> +	}
-> +	of_node_put(bridge_node);
-> +
-> +	bridge = of_drm_find_bridge(bridge_node);
-> +	if (!bridge) {
-> +		DRM_INFO("wait for external HDMI bridge driver.\n");
-> +		return -EPROBE_DEFER;
-> +	}
-> +	dsi->bridge = bridge;
-
-This could be left for later, but it would be better if the dsi driver
-registers even if the bridge driver module isn't inserted yet, or
-happens much later in boot.
-
-We could achieve this by trying to attach the bridge (done in 
-dsi_bridge_init) in the dsi_host_attach callback instead of having it
-in dsi_bind.
-
-Thanks,
-Archit
-
->
->   	ctx->dsi_cfg_clk = devm_clk_get(&pdev->dev, "pclk_dsi");
->   	if (IS_ERR(ctx->dsi_cfg_clk)) {
->
+ arch/arm64/boot/dts/rockchip/Makefile              |   2 +-
+ .../arm64/boot/dts/rockchip/rk3368-evb-act8846.dts | 173 +++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi       | 286 +++++++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  60 +++++
+ drivers/clk/rockchip/clk-rk3368.c                  |   9 +
+ 5 files changed, 529 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-evb-act8846.dts
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
-Forum, hosted by The Linux Foundation
+1.9.1
