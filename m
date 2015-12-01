@@ -1,79 +1,163 @@
-From: Alexander Aring <alex.aring@gmail.com>
-Subject: Re: [PATCH 2/3] ARM: bcm2835: add rpi power domain driver
-Date: Tue, 1 Dec 2015 22:00:42 +0100
-Message-ID: <20151201210037.GB2074@omega>
-References: <1447956490-22930-1-git-send-email-alex.aring@gmail.com>
- <1447956490-22930-3-git-send-email-alex.aring@gmail.com>
- <7hr3j782qr.fsf@deeprootsystems.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] touchscreen: pixcir_i2c: Add support for wake and
+ enable gpios
+Date: Tue, 1 Dec 2015 13:27:39 -0800
+Message-ID: <20151201212739.GD3740@dtor-ws>
+References: <1448207853-24256-1-git-send-email-hdegoede@redhat.com>
+ <20151122221950.GA16428@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <7hr3j782qr.fsf@deeprootsystems.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>
-Cc: linux-rpi-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, swarren@wwwdotorg.org, lee@kernel.org, eric@anholt.net, linux@arm.linux.org.uk, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, rjw@rjwysocki.net, ulf.hansson@linaro.org, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org, kernel@pengutronix.de
+In-Reply-To: <20151122221950.GA16428@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Sander Vermin <sander-wENMetUwf8VmR6Xm/wNWPw@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, Nov 30, 2015 at 03:51:56PM -0800, Kevin Hilman wrote:
-> Alexander Aring <alex.aring@gmail.com> writes:
+On Sun, Nov 22, 2015 at 04:19:50PM -0600, Rob Herring wrote:
+> On Sun, Nov 22, 2015 at 04:57:33PM +0100, Hans de Goede wrote:
+> > From: Sander Vermin <sander-wENMetUwf8VmR6Xm/wNWPw@public.gmane.org>
+> > 
+> > On some devices the wake and enable pins of the pixcir touchscreen
+> > controller are connected to gpios and these must be controlled by the
+> > driver for the device to operate properly.
+> > 
+> > Signed-off-by: Sander Vermin <sander-wENMetUwf8VmR6Xm/wNWPw@public.gmane.org>
+> > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> > ---
+> > Changes in v2 (Hans de Goede):
+> > -Split the changes for dealing with inverted / swapped axis out into a
+> >  separate patch
+> > -Remove a bunch of dev_info calls to make the driver less chatty
+> > -Use devm_gpiod_get_optional as these new gpios are optional
+> > -Only msleep after setting enable high if we have an enable pin
+> > Changes in v3 (Hans de Goede):
+> > -Use "if (ts->gpio_foo)" instead of "if (!IS_ERR_OR_NULL(ts->foo))"
+> > -No need to set gpio-s to 1 after requesting them with GPIOD_OUT_HIGH
+> > ---
+> >  .../bindings/input/touchscreen/pixcir_i2c_ts.txt   |  2 ++
 > 
-> > This patch adds support for RPi several Power Domains and enable support
-> > to enable the USB Power Domain when it's not enabled before.
-> >
-> > This patch based on Eric Anholt's patch to support Power Domains. He had
-> > an issue about -EPROBE_DEFER inside the power domain subsystem, this
-> > issue was solved by commit <311fa6a> ("PM / Domains: Return -EPROBE_DEFER
-> > if we fail to init or turn-on domain").
+> For the binding:
 > 
-> [...]
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Applied, thank you.
+
 > 
-> > +#define RPI_POWER_DOMAIN(_domain, _name)			\
-> > +	[_domain] = {						\
-> 
-> Using _domain as the array index is going to create a sparsely filled
-> array here, wasting memory.   I'm not sure what the other domain numbers
-> are for other domains to know if this is a big waste or not, but it's
-> still a bit wasteful.
-> 
-> In any case, AFAICT, it doesn't look like you need to have the array
-> index match the domain number anyways since you're using container_of().
-> 
-> So I suggest just removing this array index part, and just creating them
-> in arrary order.  Then your _probe function isn't going to try to setup
-> 3 non-enabled domains before it finally hits the USB domain.
-> 
+> >  drivers/input/touchscreen/pixcir_i2c_ts.c          | 40 ++++++++++++++++++++++
+> >  2 files changed, 42 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt b/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
+> > index 8eb240a..72ca5ec 100644
+> > --- a/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
+> > +++ b/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
+> > @@ -10,6 +10,8 @@ Required properties:
+> >  
+> >  Optional properties:
+> >  - reset-gpio: GPIO connected to the RESET line of the chip
+> > +- enable-gpios: GPIO connected to the ENABLE line of the chip
+> > +- wake-gpios: GPIO connected to the WAKE line of the chip
+> >  
+> >  Example:
+> >  
+> > diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
+> > index 211408c..22a67c6 100644
+> > --- a/drivers/input/touchscreen/pixcir_i2c_ts.c
+> > +++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
+> > @@ -38,6 +38,8 @@ struct pixcir_i2c_ts_data {
+> >  	struct input_dev *input;
+> >  	struct gpio_desc *gpio_attb;
+> >  	struct gpio_desc *gpio_reset;
+> > +	struct gpio_desc *gpio_enable;
+> > +	struct gpio_desc *gpio_wake;
+> >  	const struct pixcir_i2c_chip_data *chip;
+> >  	int max_fingers;	/* Max fingers supported in this instance */
+> >  	bool running;
+> > @@ -208,6 +210,11 @@ static int pixcir_set_power_mode(struct pixcir_i2c_ts_data *ts,
+> >  	struct device *dev = &ts->client->dev;
+> >  	int ret;
+> >  
+> > +	if (mode == PIXCIR_POWER_ACTIVE || mode == PIXCIR_POWER_IDLE) {
+> > +		if (ts->gpio_wake)
+> > +			gpiod_set_value_cansleep(ts->gpio_wake, 1);
+> > +	}
+> > +
+> >  	ret = i2c_smbus_read_byte_data(ts->client, PIXCIR_REG_POWER_MODE);
+> >  	if (ret < 0) {
+> >  		dev_err(dev, "%s: can't read reg 0x%x : %d\n",
+> > @@ -228,6 +235,11 @@ static int pixcir_set_power_mode(struct pixcir_i2c_ts_data *ts,
+> >  		return ret;
+> >  	}
+> >  
+> > +	if (mode == PIXCIR_POWER_HALT) {
+> > +		if (ts->gpio_wake)
+> > +			gpiod_set_value_cansleep(ts->gpio_wake, 0);
+> > +	}
+> > +
+> >  	return 0;
+> >  }
+> >  
+> > @@ -302,6 +314,11 @@ static int pixcir_start(struct pixcir_i2c_ts_data *ts)
+> >  	struct device *dev = &ts->client->dev;
+> >  	int error;
+> >  
+> > +	if (ts->gpio_enable) {
+> > +		gpiod_set_value_cansleep(ts->gpio_enable, 1);
+> > +		msleep(100);
+> > +	}
+> > +
+> >  	/* LEVEL_TOUCH interrupt with active low polarity */
+> >  	error = pixcir_set_int_mode(ts, PIXCIR_INT_LEVEL_TOUCH, 0);
+> >  	if (error) {
+> > @@ -343,6 +360,9 @@ static int pixcir_stop(struct pixcir_i2c_ts_data *ts)
+> >  	/* Wait till running ISR is complete */
+> >  	synchronize_irq(ts->client->irq);
+> >  
+> > +	if (ts->gpio_enable)
+> > +		gpiod_set_value_cansleep(ts->gpio_enable, 0);
+> > +
+> >  	return 0;
+> >  }
+> >  
+> > @@ -534,6 +554,26 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+> >  		return error;
+> >  	}
+> >  
+> > +	tsdata->gpio_wake = devm_gpiod_get_optional(dev, "wake",
+> > +						    GPIOD_OUT_HIGH);
+> > +	if (IS_ERR(tsdata->gpio_wake)) {
+> > +		error = PTR_ERR(tsdata->gpio_wake);
+> > +		if (error != -EPROBE_DEFER)
+> > +			dev_err(dev, "Failed to get wake gpio: %d\n", error);
+> > +		return error;
+> > +	}
+> > +
+> > +	tsdata->gpio_enable = devm_gpiod_get_optional(dev, "enable",
+> > +						      GPIOD_OUT_HIGH);
+> > +	if (IS_ERR(tsdata->gpio_enable)) {
+> > +		error = PTR_ERR(tsdata->gpio_enable);
+> > +		if (error != -EPROBE_DEFER)
+> > +			dev_err(dev, "Failed to get enable gpio: %d\n", error);
+> > +		return error;
+> > +	}
+> > +  	if (tsdata->gpio_enable)
+> > +		msleep(100);
+> > +
+> >  	error = devm_request_threaded_irq(dev, client->irq, NULL, pixcir_ts_isr,
+> >  					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+> >  					  client->name, tsdata);
+> > -- 
+> > 2.5.0
+> > 
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-The idea is here to keeping the _same_ power domains indexes for
-device-tree power domain API like the RPi firmware provides it.
-
-If somebody dumps the devicetree and see the power domain index, if
-he/she does then a firmware API power domain index mapping it is wrong.
-Because we need then a separate mapping:
-
-$ARRAY_DEFINED_INDEX <-> $RPI_FIRMWARE_POWER_DOMAIN_API_INDEX
-
-With the current solution to make a 1:1 mapping it there is no
-confusing anymore, because:
-
-$ARRAY_DEFINED_INDEX == $RPI_FIRMWARE_POWER_DOMAIN_API_INDEX
-
-
-Also there exists power domains 1-10 (so far I know), 1-2 are currently
-not used (and dummy-calls inside the rpi firmware implementation). So
-later they should be provided anyway.
-
-There exists a little improvement to let the for (i = 0; i < num_domains
-...) start at "i = 1", the entry with index "0" will be a waste of memory
-then and it's not provided by the firmware API as a power domain.
-
-
-These are my arguments to keeping the current way of registering power
-domains, if you still want that I should change it then I will do it or
-maybe I show here some "good" arguments here to keeping this behaviour.
-
-Please let me know. Thanks.
-
-- Alex
+-- 
+Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
