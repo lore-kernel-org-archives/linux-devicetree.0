@@ -1,8 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 6/7] ARM: dts: sun9i: Add Reduced Serial Bus
- controller device node to A80 dtsi
-Date: Tue,  1 Dec 2015 13:47:24 +0800
-Message-ID: <1448948845-28347-7-git-send-email-wens@csie.org>
+Subject: [PATCH 5/7] ARM: dts: sun9i: optimus: Enable consumer
+ IR receiver
+Date: Tue,  1 Dec 2015 13:47:23 +0800
+Message-ID: <1448948845-28347-6-git-send-email-wens@csie.org>
 References: <1448948845-28347-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
@@ -20,48 +20,27 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a device node for the Reduced Serial Bus (RSB)
-controller and the defacto pinmux setting to the A80 dtsi.
-
-Since there is only one possible pinmux setting for RSB, just
-set it in the dtsi.
+The A80 Optimus board has a consumer IR receiver. Enable it in the DT.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun9i-a80.dtsi | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/arm/boot/dts/sun9i-a80-optimus.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
-index 80777a33ee78..dc666c69f6ab 100644
---- a/arch/arm/boot/dts/sun9i-a80.dtsi
-+++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-@@ -900,6 +900,27 @@
- 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
- 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 			};
-+
-+			r_rsb_pins: r_rsb {
-+				allwinner,pins = "PN0", "PN1";
-+				allwinner,function = "s_rsb";
-+				allwinner,drive = <SUN4I_PINCTRL_20_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+			};
-+		};
-+
-+		r_rsb: i2c@08003400 {
-+			compatible = "allwinner,sun8i-a23-rsb";
-+			reg = <0x08003400 0x400>;
-+			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&apbs_gates 3>;
-+			clock-frequency = <3000000>;
-+			resets = <&apbs_rst 3>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&r_rsb_pins>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 		};
- 	};
+diff --git a/arch/arm/boot/dts/sun9i-a80-optimus.dts b/arch/arm/boot/dts/sun9i-a80-optimus.dts
+index ae7db9fcb2a7..79766e5867cd 100644
+--- a/arch/arm/boot/dts/sun9i-a80-optimus.dts
++++ b/arch/arm/boot/dts/sun9i-a80-optimus.dts
+@@ -183,6 +183,10 @@
+ 	status = "okay";
  };
+ 
++&r_ir {
++	status = "okay";
++};
++
+ &r_pio {
+ 	led_r_pins_optimus: led-pins@1 {
+ 		allwinner,pins = "PM15";
 -- 
 2.6.2
