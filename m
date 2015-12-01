@@ -1,76 +1,87 @@
-From: Kapil Hali <kapilh@broadcom.com>
-Subject: [PATCH v4 5/5] ARM: BCM: Add SMP support for Broadcom 4708
-Date: Tue, 1 Dec 2015 11:24:09 -0500
-Message-ID: <1448987049-17041-6-git-send-email-kapilh@broadcom.com>
-References: <1448987049-17041-1-git-send-email-kapilh@broadcom.com>
+From: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 0/5] SMP support for Broadcom NSP
+Date: Tue, 1 Dec 2015 11:24:04 -0500
+Message-ID: <1448987049-17041-1-git-send-email-kapilh@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448987049-17041-1-git-send-email-kapilh@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: Gregory Fong <gregory.0xf0@gmail.com>, Lee Jones <lee@kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Kever Yang <kever.yang@rock-chips.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Kapil Hali <kapilh@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jon Mason <jonmason@broadcom.com>
+Change in v4:
+* Cleaned up kona_smp.c and associated DT file.
+* Corrected documentation for DT bindings.
+* Corrected secondary-boot-reg entry for bcm4708 DT file.
 
-Add SMP support for Broadcom's 4708 SoCs.
+Change in v3:
+* Fixed patch subject from RESEND PATCH to PATCH
+* Deleted arch/arm/mach-bcm/bcm_nsp.h file
+* Removed inclusion of header file bcm_nsp.h in platsmp.c
+* Removed unused variable 'timeout' in nsp_boot_secondary()
 
-Signed-off-by: Jon Mason <jonmason@broadcom.com>
-Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
-Tested-by: Hauke Mehrtens <hauke@hauke-m.de>
-Signed-off-by: Kapil Hali <kapilh@broadcom.com>
----
- arch/arm/boot/dts/bcm4708.dtsi | 2 ++
- arch/arm/mach-bcm/Kconfig      | 1 +
- arch/arm/mach-bcm/Makefile     | 3 +++
- 3 files changed, 6 insertions(+)
+Changes in v2:
+Removed the pen_holding method of SMP bringup for NSP SoC and
+replaced it with simple wakeup of secondary core using ARM IPI.
 
-diff --git a/arch/arm/boot/dts/bcm4708.dtsi b/arch/arm/boot/dts/bcm4708.dtsi
-index 31141e8..eed4dd1 100644
---- a/arch/arm/boot/dts/bcm4708.dtsi
-+++ b/arch/arm/boot/dts/bcm4708.dtsi
-@@ -15,6 +15,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "brcm,bcm-nsp-smp";
- 
- 		cpu@0 {
- 			device_type = "cpu";
-@@ -27,6 +28,7 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
- 			next-level-cache = <&L2>;
-+			secondary-boot-reg = <0xffff0400>;
- 			reg = <0x1>;
- 		};
- 	};
-diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-index 83765a0..e85246f 100644
---- a/arch/arm/mach-bcm/Kconfig
-+++ b/arch/arm/mach-bcm/Kconfig
-@@ -54,6 +54,7 @@ config ARCH_BCM_NSP
- config ARCH_BCM_5301X
- 	bool "Broadcom BCM470X / BCM5301X ARM SoC" if ARCH_MULTI_V7
- 	select ARCH_BCM_IPROC
-+	select HAVE_SMP
- 	help
- 	  Support for Broadcom BCM470X and BCM5301X SoCs with ARM CPU cores.
- 
-diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
-index 5193a25..7d66515 100644
---- a/arch/arm/mach-bcm/Makefile
-+++ b/arch/arm/mach-bcm/Makefile
-@@ -43,6 +43,9 @@ obj-$(CONFIG_ARCH_BCM2835)	+= board_bcm2835.o
- 
- # BCM5301X
- obj-$(CONFIG_ARCH_BCM_5301X)	+= bcm_5301x.o
-+ifeq ($(CONFIG_ARCH_BCM_5301X),y)
-+obj-$(CONFIG_SMP)		+= platsmp.o
-+endif
- 
- # BCM63XXx
- ifeq ($(CONFIG_ARCH_BCM_63XX),y)
+
+This series adds SMP support for Broadcom's Northstar Plus SoC.
+
+There are similar SMP enablement methods for many ARMv7 bsed SoCs.
+BCM NSP SoC, has a typical such mechanism - after power-on, the
+secondary core is held in a standby state, primary core provides a
+startup address for the secondary core and wakes it up. Booting of
+the secondary core is serialized using pen_release global variable.
+
+The startup address is programmed at a special register location
+which is defined in the device tree using a "secondary-boot-reg"
+property in a node whose "enable-method" property matches.
+
+The first patch adds cpu-enable-method in the device tree bindings
+documentation. It also updates ARM CPU device tree documentation
+with Broadcom Northstar Plus CPU details.
+
+The second patch adds SMP support to the BCM NSP device tree file.
+
+The third patch, enables SMP on BCM NSP. It also consolidates
+common SMP handling between BCM NSP and BCM Kona.
+
+The final patch, enables SMP on BCM 4708 and this patch is pulled
+in from Jon Mason's patch from the mailing list.
+
+This patch series is constructed based on Linux v4.4-rc1.
+
+The source code is available at GITHUB:
+https://github.com/Broadcom/cygnus-linux/tree/nsp-smp-v2
+
+
+Jon Mason (1):
+  ARM: BCM: Add SMP support for Broadcom 4708
+
+Kapil Hali (4):
+  dt-bindings: add SMP enable-method for Broadcom NSP
+  ARM: BCM: Clean up SMP support for Broadcom Kona
+  ARM: dts: Add SMP support for Broadcom NSP
+  ARM: BCM: Add SMP support for Broadcom NSP
+
+ .../bindings/arm/bcm/brcm,nsp-cpu-method.txt       |  39 ++++++
+ Documentation/devicetree/bindings/arm/cpus.txt     |   1 +
+ arch/arm/boot/dts/bcm-nsp.dtsi                     |  33 +++--
+ arch/arm/boot/dts/bcm11351.dtsi                    |   2 +-
+ arch/arm/boot/dts/bcm21664.dtsi                    |   2 +-
+ arch/arm/boot/dts/bcm4708.dtsi                     |   2 +
+ arch/arm/mach-bcm/Kconfig                          |   3 +
+ arch/arm/mach-bcm/Makefile                         |  11 +-
+ arch/arm/mach-bcm/{kona_smp.c => platsmp.c}        | 144 +++++++++++++++++----
+ 9 files changed, 193 insertions(+), 44 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
+ rename arch/arm/mach-bcm/{kona_smp.c => platsmp.c} (63%)
+
 -- 
 2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
