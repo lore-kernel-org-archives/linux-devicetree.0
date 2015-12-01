@@ -1,85 +1,87 @@
-From: Kapil Hali <kapilh@broadcom.com>
-Subject: [PATCH v4 1/5] dt-bindings: add SMP enable-method for Broadcom NSP
-Date: Tue, 1 Dec 2015 11:24:05 -0500
-Message-ID: <1448987049-17041-2-git-send-email-kapilh@broadcom.com>
-References: <1448987049-17041-1-git-send-email-kapilh@broadcom.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v4 4/5] ARM: dts: DRA7: add entry for qspi mmap region
+Date: Tue, 1 Dec 2015 08:39:50 -0800
+Message-ID: <20151201163950.GR23396@atomide.com>
+References: <1448860515-28336-1-git-send-email-vigneshr@ti.com>
+ <1448860515-28336-5-git-send-email-vigneshr@ti.com>
+ <20151130223408.GJ23396@atomide.com>
+ <565D25E6.4070206@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448987049-17041-1-git-send-email-kapilh@broadcom.com>
+Content-Disposition: inline
+In-Reply-To: <565D25E6.4070206@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: Gregory Fong <gregory.0xf0@gmail.com>, Lee Jones <lee@kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Kever Yang <kever.yang@rock-chips.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Kapil Hali <kapilh@broadcom.com>
+To: Vignesh R <vigneshr@ti.com>
+Cc: Brian Norris <computersforpeace@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, hramrach@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a compatible string "brcm,bcm-nsp-smp" for Broadcom's
-Northstar Plus CPU to the 32-bit ARM CPU device tree binding
-documentation file and create a new binding documentation for
-Northstar Plus CPU.
+* Vignesh R <vigneshr@ti.com> [151130 20:46]:
+> On 12/01/2015 04:04 AM, Tony Lindgren wrote:
+> > 
+> > Actually none of the IO areas above are within the same interconnect target:
+> > 
+> > 0x4b300000  QSPI0 address space in L3 main interconnect
+> > 0x5c000000  QSPI1 address space in L3 main interconnect
+> 
+> 
+> First address range (configuration port: 0x4b300000) corresponds to QSPI
+> registers space. These registers alone are sufficient for generic SPI
+> communication (serial flash as well as non-flash SPI devices).
 
-Signed-off-by: Kapil Hali <kapilh@broadcom.com>
----
- .../bindings/arm/bcm/brcm,nsp-cpu-method.txt       | 39 ++++++++++++++++++++++
- Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
- 2 files changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
+OK
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
-new file mode 100644
-index 0000000..bf08872
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
-@@ -0,0 +1,39 @@
-+Broadcom Northstar Plus SoC CPU Enable Method
-+---------------------------------------------
-+This binding defines the enable method used for starting secondary
-+CPUs in the following Broadcom SoCs:
-+  BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
-+
-+The enable method is specified by defining the following required
-+properties in the "cpus" device tree node:
-+  - enable-method = "brcm,bcm-nsp-smp";
-+  - secondary-boot-reg = <...>;
-+
-+The secondary-boot-reg property is a u32 value that specifies the
-+physical address of the register which should hold the common
-+entry point for a secondary CPU. This entry is cpu node specific
-+and should be added per cpu. E.g., in case of NSP (BCM58625) which
-+is a dual core CPU SoC, this entry should be added to cpu1 node.
-+
-+
-+Example:
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		enable-method = "brcm,bcm-nsp-smp";
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			next-level-cache = <&L2>;
-+			reg = <0>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			next-level-cache = <&L2>;
-+			reg = <1>;
-+			secondary-boot-reg = <0xffff042c>;
-+		};
-+	};
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index 3a07a87..d191554 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -190,6 +190,7 @@ nodes to be present and contain the properties described below.
- 			    "allwinner,sun6i-a31"
- 			    "allwinner,sun8i-a23"
- 			    "arm,psci"
-+			    "brcm,bcm-nsp-smp"
- 			    "brcm,brahma-b15"
- 			    "marvell,armada-375-smp"
- 			    "marvell,armada-380-smp"
--- 
-2.1.0
+> In order to speed up SPI flash reads SFI_MM_IF(SPI memory mapped
+> interface) is provided by QSPI IP. This _cannot_ be used with non-flash
+> devices.
+
+OK
+
+> The second address range (0x5c000000) corresponds to memory-mapped
+> region of SFI_MM_IF, through which SPI flash memories can be read as if
+> though they were RAM addresses (i.e using readl/memcpy). The SFI_MM_IF
+> block that takes care of communicating over SPI bus and getting the data
+> from flash device.
+
+OK
+
+> But SFI_MM_IF block needs to know some flash specific information(such
+> as read opcode, address bytes, dummy bytes, mode). This information must
+> first be populated in QSPI_SPI_SETUP*_REG(0x4B300054-60) before
+> accessing SFI_MM_IF address range via readl.
+> Both addresses space belong to same instance of the driver, one
+> corresponds to register space and other is memory-mapped region.
+> Therefore both regions are claimed by the same driver.
+
+OK
+
+> > 0x4a002558  CTRL_CORE_CONTROL_IO_2 in System Control Module (SCM) in L4_CFG
+> > 
+> > The first two address spaces should be two separate instances of this driver.
+> 
+> Not actually two instances.
+
+OK. They are both on L3 main so that won't cause any issues for separate
+interconnect driver instances. As they are still separate targets flushing
+a posted write to one area will not flush anything to the other.
+
+> > The CTRL_CORE_CONTROL_IO_2 needs seems like a shared clock register that
+> > needs to be accessed using the clock framework most likely.
+> > 
+> 
+> Not shared clock.
+> The CTRL_CORE_CONTROL_IO_2[10:8] QSPI_MEMMAPPED_CS bit fields provides a
+> functionality for remapping the previously described address space which
+> starts at 0x5C000000 L3_MAIN address to one of the four supported chip
+> selects.
+> How about using syscon to access CTRL_CORE_CONTROL_IO_2?
+
+A separate driver implementing some Linux generic framework would be idael :)
+
+But if that does not fit, yeah then syscon makes sense as that IO range
+will be on separate interconnect driver (and clock and possibly power domain)
+instances eventually.
+
+Regards,
+
+Tony
