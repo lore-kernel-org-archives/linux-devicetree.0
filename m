@@ -1,149 +1,47 @@
-From: Heiko Schocher <hs@denx.de>
-Subject: Re: [PATCH v2] arm, am335x: add support for the bosch shc board
-Date: Tue, 1 Dec 2015 07:09:27 +0100
-Message-ID: <565D3997.9060905@denx.de>
-References: <1447748655-2088-1-git-send-email-hs@denx.de>
- <20151130214130.GA23396@atomide.com> <565D2DF9.2010806@denx.de>
- <20151201055333.GO23396@atomide.com>
-Reply-To: hs@denx.de
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ravb: add R8A7791 support
+Date: Tue, 1 Dec 2015 15:22:19 +0900
+Message-ID: <20151201062218.GD16260@verge.net.au>
+References: <6051623.qN4lqSyZKg@wasted.cogentembedded.com>
+ <CAMuHMdWE_G2WqsGZEaa4Ck3zziTLGVPfaVdU2gbnLA5zWpmR1w@mail.gmail.com>
+ <565B6AAD.8080205@cogentembedded.com>
+ <20151130004207.GD3501@verge.net.au>
+ <CAMuHMdV6frDHnsNo5+C3TPD-T8vgBZWkn722wCc5aCQ8+NDn+A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151201055333.GO23396@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-kernel@vger.kernel.org, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Robert Nelson <robertcnelson@gmail.com>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Georg.Soffel@bosch-si.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV6frDHnsNo5+C3TPD-T8vgBZWkn722wCc5aCQ8+NDn+A@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Tony,
+On Mon, Nov 30, 2015 at 09:08:57AM +0100, Geert Uytterhoeven wrote:
+> Hi Simon,
+> 
+> On Mon, Nov 30, 2015 at 1:42 AM, Simon Horman <horms@verge.net.au> wrote:
+> > On Mon, Nov 30, 2015 at 12:14:21AM +0300, Sergei Shtylyov wrote:
+> >> On 11/29/2015 10:26 PM, Geert Uytterhoeven wrote:
+> >> >>Add support  for yet another ARM member of the R-Car family, R-Car M2, also
+> >> >R-Car M2-W?
+> >>
+> >>    Right, forgot about the postfixes.
+> >>
+> >> >>known as R8A7791.
+> >> >
+> >> >There's also R-Car M2-N, aka R8A7793, but you probably know that ;-)
+> >>
+> >>    Will fix.
+> >
+> > I would prefer if we added generic gen2 and gen3 compat strings to the driver
+> > and only documented new soc-specific compat strings.
+> >
+> > Actually by chance I was planning to up patches to do that and add compat
+> > strings for the missing Gen2 boards. But I won't complain if you beat me to
+> > it.
+> 
+> You're aware we have to keep the existing SoC-specific ones in the driver,
+> for backwards compatibility?
 
-Am 01.12.2015 um 06:53 schrieb Tony Lindgren:
-> * Heiko Schocher <hs@denx.de> [151130 21:21]:
->> Hello Tony,
->>
->> Am 30.11.2015 um 22:41 schrieb Tony Lindgren:
->>> * Heiko Schocher <hs@denx.de> [151117 00:25]:
->>>> --- /dev/null
->>>> +++ b/arch/arm/boot/dts/am335x-shc.dts
->>>> +&tps {
->>>> +	compatible = "ti,tps65217";
->>>> +	ti,pmic-shutdown-controller;
->>>> +
->>>> +	regulators {
->>>> +		#address-cells = <1>;
->>>> +		#size-cells = <0>;
->>>> +
->>>> +		dcdc1_reg: regulator@0 {
->>>> +			reg = <0>;
->>>> +			regulator-name = "vdds_dpr";
->>>> +			regulator-compatible = "dcdc1";
->>>> +			regulator-min-microvolt = <1300000>;
->>>> +			regulator-max-microvolt = <1450000>;
->>>> +			regulator-boot-on;
->>>> +			regulator-always-on;
->>>> +		};
->>>> +
->>>> +		dcdc2_reg: regulator@1 {
->>>> +			reg = <1>;
->>>> +			/*
->>>> +			 * VDD_MPU voltage limits 0.95V - 1.26V with
->>>> +			 * +/-4% tolerance
->>>> +			 */
->>>> +			regulator-compatible = "dcdc2";
->>>> +			regulator-name = "vdd_mpu";
->>>> +			regulator-min-microvolt = <925000>;
->>>> +			regulator-max-microvolt = <1375000>;
->>>> +			regulator-boot-on;
->>>> +			regulator-always-on;
->>>> +			regulator-ramp-delay = <70000>;
->>>> +		};
->>>> +
->>>> +		dcdc3_reg: regulator@2 {
->>>> +			reg = <2>;
->>>> +			/*
->>>> +			 * VDD_CORE voltage limits 0.95V - 1.1V with
->>>> +			 * +/-4% tolerance
->>>> +			 */
->>>> +			regulator-name = "vdd_core";
->>>> +			regulator-compatible = "dcdc3";
->>>> +			regulator-min-microvolt = <925000>;
->>>> +			regulator-max-microvolt = <1125000>;
->>>> +			regulator-boot-on;
->>>> +			regulator-always-on;
->>>> +		};
->>>> +
->>>> +		ldo1_reg: regulator@3 {
->>>> +			reg = <3>;
->>>> +			regulator-name = "vio,vrtc,vdds";
->>>> +			regulator-compatible = "ldo1";
->>>> +			regulator-min-microvolt = <1000000>;
->>>> +			regulator-max-microvolt = <1800000>;
->>>> +			regulator-always-on;
->>>> +		};
->>>> +
->>>> +		ldo2_reg: regulator@4 {
->>>> +			reg = <4>;
->>>> +			regulator-name = "vdd_3v3aux";
->>>> +			regulator-compatible = "ldo2";
->>>> +			regulator-min-microvolt = <900000>;
->>>> +			regulator-max-microvolt = <3300000>;
->>>> +			regulator-always-on;
->>>> +		};
->>>> +
->>>> +		ldo3_reg: regulator@5 {
->>>> +			reg = <5>;
->>>> +			regulator-name = "vdd_1v8";
->>>> +			regulator-compatible = "ldo3";
->>>> +			regulator-min-microvolt = <900000>;
->>>> +			regulator-max-microvolt = <1800000>;
->>>> +			regulator-always-on;
->>>> +		};
->>>> +
->>>> +		ldo4_reg: regulator@6 {
->>>> +			reg = <6>;
->>>> +			regulator-name = "vdd_3v3a";
->>>> +			regulator-compatible = "ldo4";
->>>> +			regulator-min-microvolt = <1800000>;
->>>> +			regulator-max-microvolt = <3300000>;
->>>> +			regulator-always-on;
->>>> +		};
->>>> +	};
->>>> +};
->>>
->>> Applying this into omap-for-v4.5/dt.. But I'm getting concerned about this
->>> "regulator-always-on" stuff and having multiple copies of the same thing.
->>>
->>> I think we should have a common am33xx-tps65217.dtsi file that has the
->>> regulators defined at one place and other then include it. And they are
->>> controllable AFAIK..
->>
->> Hmm... Mark Brown (added to Cc) suggested to move this regulator nodes
->> into the board DT file and remove such files [1].
->
-> Hmm it was probably the name of that file causing confusion as it was not
-> am33xx specific. If we have many board variants using almost the same exact
-> regulators and configuration it totally makes sense to have a shared dtsi
-> file for them :)
-
-Ack.
-
-> It may actually be better to have it as am33xx-common.dtsi and I bet that
-> covers quite a few am33xx boards for the basic shared functionality.
-
-I try to find some time to make such a patch...
-
-bye,
-Heiko
->
-> Regards,
->
-> Tony
->
->
->> [1] https://lkml.org/lkml/2015/10/21/581
->
-
--- 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Yes, I am aware of that.
