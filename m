@@ -1,31 +1,53 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 1/5] Documentation: tps65912: Add DT bindings for the
- TPS65912 PMIC
-Date: Tue, 1 Dec 2015 10:56:18 +0100
-Message-ID: <CACRpkdbKQrvFaQ4EF6AK-pNTG+UGqgo1esv-VPisGTBLNRHoHw@mail.gmail.com>
-References: <1447869580-10416-1-git-send-email-afd@ti.com>
-	<1447869580-10416-2-git-send-email-afd@ti.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: [PATCH v3 12/12] dt-bindings: msm/dsi: Add DSIv2 documentation
+Date: Tue,  1 Dec 2015 15:30:10 +0530
+Message-ID: <1448964010-18207-13-git-send-email-architt@codeaurora.org>
+References: <1447844131-4182-1-git-send-email-architt@codeaurora.org>
+ <1448964010-18207-1-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447869580-10416-2-git-send-email-afd-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1448964010-18207-1-git-send-email-architt@codeaurora.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, robdclark@gmail.com
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 18, 2015 at 6:59 PM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
-
-> The TPS65912 PMIC contains several regulators and a GPIO controller.
-> Add bindings for the TPS65912 PMIC.
->
-> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
-
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QWRkIGFkZGl0aW9uYWwgcHJvcGVydHkgaW5mbyBuZWVkZWQgZm9yIERTSXYyIERULgoKQ2M6IGRl
+dmljZXRyZWVAdmdlci5rZXJuZWwub3JnCkNjOiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3Jn
+PgoKU2lnbmVkLW9mZi1ieTogQXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4K
+LS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZHNpLnR4
+dCB8IDQgKysrKwogMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQKaW5k
+ZXggZTA5Nzk1NS4uZTc0MjNiZSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQKQEAgLTIxLDEwICsyMSwxMyBAQCBSZXF1
+aXJlZCBwcm9wZXJ0aWVzOgogICAqICJieXRlX2NsayIKICAgKiAicGl4ZWxfY2xrIgogICAqICJj
+b3JlX2NsayIKKyAgRm9yIERTSXYyLCB3ZSBuZWVkIGFuIGFkZGl0aW9uYWwgY2xvY2s6CisgICAq
+ICJzcmNfY2xrIgogLSB2ZGQtc3VwcGx5OiBwaGFuZGxlIHRvIHZkZCByZWd1bGF0b3IgZGV2aWNl
+IG5vZGUKIC0gdmRkaW8tc3VwcGx5OiBwaGFuZGxlIHRvIHZkZC1pbyByZWd1bGF0b3IgZGV2aWNl
+IG5vZGUKIC0gdmRkYS1zdXBwbHk6IHBoYW5kbGUgdG8gdmRkYSByZWd1bGF0b3IgZGV2aWNlIG5v
+ZGUKIC0gcWNvbSxkc2ktcGh5OiBwaGFuZGxlIHRvIERTSSBQSFkgZGV2aWNlIG5vZGUKKy0gc3lz
+Y29uLXNmcGI6IEEgcGhhbmRsZSB0byBtbXNzX3NmcGIgc3lzY29uIG5vZGUgKG9ubHkgZm9yIERT
+SXYyKQogCiBPcHRpb25hbCBwcm9wZXJ0aWVzOgogLSBwYW5lbEAwOiBOb2RlIG9mIHBhbmVsIGNv
+bm5lY3RlZCB0byB0aGlzIERTSSBjb250cm9sbGVyLgpAQCAtNTEsNiArNTQsNyBAQCBSZXF1aXJl
+ZCBwcm9wZXJ0aWVzOgogICAqICJxY29tLGRzaS1waHktMjhubS1ocG0iCiAgICogInFjb20sZHNp
+LXBoeS0yOG5tLWxwIgogICAqICJxY29tLGRzaS1waHktMjBubSIKKyAgKiAicWNvbSxkc2ktcGh5
+LTI4bm0tODk2MCIKIC0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0
+aGUgcmVnaXN0ZXJzIG9mIFBMTCwgUEhZIGFuZCBQSFkKICAgcmVndWxhdG9yCiAtIHJlZy1uYW1l
+czogVGhlIG5hbWVzIG9mIHJlZ2lzdGVyIHJlZ2lvbnMuIFRoZSBmb2xsb3dpbmcgcmVnaW9ucyBh
+cmUgcmVxdWlyZWQ6Ci0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMg
+YSBtZW1iZXIgb2YgdGhlIENvZGUgQXVyb3JhIEZvcnVtLApob3N0ZWQgYnkgVGhlIExpbnV4IEZv
+dW5kYXRpb24KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
