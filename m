@@ -1,44 +1,68 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 5/5] ARM: dts: sun9i: Add TODO comments
- for the main and low power clocks
-Date: Tue, 1 Dec 2015 14:08:04 +0100
-Message-ID: <20151201130803.GJ29263@lukather>
-References: <1448766190-11345-1-git-send-email-wens@csie.org>
- <1448766190-11345-6-git-send-email-wens@csie.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Simon Arlott <simon@fire.lp0.eu>
+Subject: [PATCH 07/11] watchdog: bcm63xx_wdt: Add get_timeleft function
+Date: Tue, 1 Dec 2015 13:07:56 +0000
+Message-ID: <565D9BAC.2010809@simon.arlott.org.uk>
+References: <565D9A40.60409@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gBdJBemW82xJqIAr"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBUFX62ZAKGQESKGVMWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1448766190-11345-6-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <565D9A40.60409@simon.arlott.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, MIPS Mailing List <linux-mips@linux-mips.org>, Jonas Gorski <jogo@openwrt.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Kevin Cernekee <cernekee@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Maxime Bizon <mbizon@freebox.fr>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
---gBdJBemW82xJqIAr
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Return the remaining time from the hardware control register.
 
-On Sun, Nov 29, 2015 at 11:03:10AM +0800, Chen-Yu Tsai wrote:
-> The main (24MHz) clock on the A80 is configurable via the PRCM address
-> space. The low power/speed (32kHz) clock is from an external chip, the
-> AC100.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+---
+ drivers/watchdog/bcm63xx_wdt.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-Applied 4 and 5, thanks!
-Maxime
+diff --git a/drivers/watchdog/bcm63xx_wdt.c b/drivers/watchdog/bcm63xx_wdt.c
+index 0a19731..ab4a794 100644
+--- a/drivers/watchdog/bcm63xx_wdt.c
++++ b/drivers/watchdog/bcm63xx_wdt.c
+@@ -78,6 +78,19 @@ static int bcm63xx_wdt_stop(struct watchdog_device *wdd)
+ 	return 0;
+ }
+ 
++static unsigned int bcm63xx_wdt_get_timeleft(struct watchdog_device *wdd)
++{
++	struct bcm63xx_wdt_hw *hw = to_wdt_hw(wdd);
++	unsigned long flags;
++	u32 val;
++
++	raw_spin_lock_irqsave(&hw->lock, flags);
++	val = __raw_readl(hw->regs + WDT_CTL_REG);
++	val /= hw->clock_hz;
++	raw_spin_unlock_irqrestore(&hw->lock, flags);
++	return val;
++}
++
+ static int bcm63xx_wdt_set_timeout(struct watchdog_device *wdd,
+ 	unsigned int timeout)
+ {
+@@ -132,6 +145,7 @@ static struct watchdog_ops bcm63xx_wdt_ops = {
+ 	.owner = THIS_MODULE,
+ 	.start = bcm63xx_wdt_start,
+ 	.stop = bcm63xx_wdt_stop,
++	.get_timeleft = bcm63xx_wdt_get_timeleft,
+ 	.set_timeout = bcm63xx_wdt_set_timeout,
+ };
+ 
+@@ -256,6 +270,7 @@ module_platform_driver(bcm63xx_wdt_driver);
+ 
+ MODULE_AUTHOR("Miguel Gaio <miguel.gaio@efixo.com>");
+ MODULE_AUTHOR("Florian Fainelli <florian@openwrt.org>");
++MODULE_AUTHOR("Simon Arlott");
+ MODULE_DESCRIPTION("Driver for the Broadcom BCM63xx SoC watchdog");
+ MODULE_LICENSE("GPL");
+ MODULE_ALIAS("platform:bcm63xx-wdt");
+-- 
+2.1.4
+
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---gBdJBemW82xJqIAr--
+Simon Arlott
