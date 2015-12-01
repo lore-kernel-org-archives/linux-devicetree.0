@@ -1,44 +1,45 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH 2/3] ARM: bcm2835: add rpi power domain driver
-Date: Mon, 30 Nov 2015 15:51:56 -0800
-Message-ID: <7hr3j782qr.fsf@deeprootsystems.com>
-References: <1447956490-22930-1-git-send-email-alex.aring@gmail.com>
-	<1447956490-22930-3-git-send-email-alex.aring@gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH (v5) 3/11] MIPS: bmips: Add bcm6345-l2-timer interrupt
+ controller
+Date: Mon, 30 Nov 2015 16:22:50 -0800
+Message-ID: <565CE85A.3080904@roeck-us.net>
+References: <5650BFD6.5030700@simon.arlott.org.uk>
+ <CAOiHx=k0Aa+qrBT1J7_cQaQRxndBmwsgSgi3x0eJOYTAy6Zq7Q@mail.gmail.com>
+ <5653612A.4050309@simon.arlott.org.uk> <565361AF.20400@simon.arlott.org.uk>
+ <70d031ae4c3aa29888d77b64686c39e7e7eaae92@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+ <5654E67A.9060800@gmail.com> <5657886F.3090908@simon.arlott.org.uk>
+ <alpine.DEB.2.11.1511270926580.3572@nanos>
+ <56599D73.7040801@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1447956490-22930-3-git-send-email-alex.aring@gmail.com>
-	(Alexander Aring's message of "Thu, 19 Nov 2015 19:08:09 +0100")
-Sender: linux-pm-owner@vger.kernel.org
-To: Alexander Aring <alex.aring@gmail.com>
-Cc: linux-rpi-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, swarren@wwwdotorg.org, lee@kernel.org, eric@anholt.net, linux@arm.linux.org.uk, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, rjw@rjwysocki.net, ulf.hansson@linaro.org, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56599D73.7040801-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Miguel Gaio <miguel.gaio-HH44TBFINEIAvxtiuMwx3w@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Alexander Aring <alex.aring@gmail.com> writes:
-
-> This patch adds support for RPi several Power Domains and enable support
-> to enable the USB Power Domain when it's not enabled before.
+On 11/28/2015 04:26 AM, Simon Arlott wrote:
+> Add the BCM6345/BCM6318 timer as an interrupt controller so that it can be
+> used by the watchdog to warn that its timer will expire soon.
 >
-> This patch based on Eric Anholt's patch to support Power Domains. He had
-> an issue about -EPROBE_DEFER inside the power domain subsystem, this
-> issue was solved by commit <311fa6a> ("PM / Domains: Return -EPROBE_DEFER
-> if we fail to init or turn-on domain").
+> Support for clocksource/clockevents is not implemented as the timer
+> interrupt is not per CPU (except on the BCM6318) and the MIPS clock is
+> better. This could be added later if required without changing the device
+> tree binding.
+>
+> Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
 
-[...]
+Hi Simon,
 
-> +#define RPI_POWER_DOMAIN(_domain, _name)			\
-> +	[_domain] = {						\
+can you please re-send the entire series, with all Acked-by:/Reviewed-by:
+tags as appropriate ?
 
-Using _domain as the array index is going to create a sparsely filled
-array here, wasting memory.   I'm not sure what the other domain numbers
-are for other domains to know if this is a big waste or not, but it's
-still a bit wasteful.
+Thanks,
+Guenter
 
-In any case, AFAICT, it doesn't look like you need to have the array
-index match the domain number anyways since you're using container_of().
-
-So I suggest just removing this array index part, and just creating them
-in arrary order.  Then your _probe function isn't going to try to setup
-3 non-enabled domains before it finally hits the USB domain.
-
-Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
