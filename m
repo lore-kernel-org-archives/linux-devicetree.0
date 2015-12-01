@@ -1,84 +1,88 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [PATCH 4/4] dmaengine: qcom_bam_dma: add controlled remotely dt
- property
-Date: Tue, 1 Dec 2015 11:30:26 -0600
-Message-ID: <20151201173026.GD26687@Agamemnon.attlocal.net>
-References: <1448961299-15161-1-git-send-email-stanimir.varbanov@linaro.org>
- <1448961299-15161-5-git-send-email-stanimir.varbanov@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] ASoC: pcm3168a: Add driver for
+ pcm3168a codec
+Date: Tue, 1 Dec 2015 17:59:56 +0000
+Message-ID: <20151201175956.GN1929@sirena.org.uk>
+References: <1448376224-23964-3-git-send-email-Damien.Horsley@imgtec.com>
+ <20151127125411.GR1929@sirena.org.uk> <565C7E1A.1000104@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1448961299-15161-5-git-send-email-stanimir.varbanov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Archit Taneja <architt@codeaurora.org>
+Content-Type: multipart/mixed; boundary="===============8996058769655493258=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <565C7E1A.1000104@imgtec.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Damien Horsley <Damien.Horsley@imgtec.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Jyri Sarha <jsarha@ti.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, James Hartley <james.hartley@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 01, 2015 at 11:14:59AM +0200, Stanimir Varbanov wrote:
-> Some of the peripherals has bam which is controlled by remote
-> processor, thus the bam dma driver must avoid register writes
-> which initialise bam hw block. Those registers are protected
-> from xPU block and any writes to them will lead to secure
-> violation and system reboot.
-> 
-> Adding the contolled_remotely flag in bam driver to avoid
-> not permitted register writes in bam_init function.
-> 
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> ---
->  .../devicetree/bindings/dma/qcom_bam_dma.txt       |    2 ++
->  drivers/dma/qcom_bam_dma.c                         |    7 +++++++
->  2 files changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> index 1c9d48ea4914..87b6b2bf5e1e 100644
-> --- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> +++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> @@ -13,6 +13,8 @@ Required properties:
->  - clock-names: must contain "bam_clk" entry
->  - qcom,ee : indicates the active Execution Environment identifier (0-7) used in
->    the secure world.
-> +- qcom,controlled-remotely : optional, indicates that the bam is controled by
-> +  remote proccessor i.e. execution enviroment.
 
-Please fix the spelling.  controlled, environment.  Otherwise looks ok.
-
->  
->  Example:
->  
-> diff --git a/drivers/dma/qcom_bam_dma.c b/drivers/dma/qcom_bam_dma.c
-> index 6d290de9ab2b..5dedab77180a 100644
-> --- a/drivers/dma/qcom_bam_dma.c
-> +++ b/drivers/dma/qcom_bam_dma.c
-> @@ -387,6 +387,7 @@ struct bam_device {
->  
->  	/* execution environment ID, from DT */
->  	u32 ee;
-> +	bool controlled_remotely;
->  
->  	const struct reg_offset_data *layout;
->  
-> @@ -1039,6 +1040,9 @@ static int bam_init(struct bam_device *bdev)
->  	val = readl_relaxed(bam_addr(bdev, 0, BAM_NUM_PIPES));
->  	bdev->num_channels = val & BAM_NUM_PIPES_MASK;
->  
-> +	if (bdev->controlled_remotely)
-> +		return 0;
-> +
->  	/* s/w reset bam */
->  	/* after reset all pipes are disabled and idle */
->  	val = readl_relaxed(bam_addr(bdev, 0, BAM_CTRL));
-> @@ -1126,6 +1130,9 @@ static int bam_dma_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	bdev->controlled_remotely = of_property_read_bool(pdev->dev.of_node,
-> +						"qcom,controlled-remotely");
-> +
->  	bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
->  	if (IS_ERR(bdev->bamclk))
->  		return PTR_ERR(bdev->bamclk);
+--===============8996058769655493258==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="59V5pGBotOHHLP27"
+Content-Disposition: inline
 
 
-Reviewed-by: Andy Gross <agross@codeaurora.org>
+--59V5pGBotOHHLP27
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Nov 30, 2015 at 04:49:30PM +0000, Damien Horsley wrote:
+> On 27/11/15 12:54, Mark Brown wrote:
+
+> > Please try to keep your CC lists reasonable - only CC people who have an
+> > interest in the patch you're posting.  The CC list you have here is far
+> > too broad, I can't figure out why a lot of the people there ended up
+> > there.  If you've got 10 people that's generally a warning sign.
+
+> The list was generated by scripts/get_maintainer.pl when used on the
+> patches. I will remove some that look like they don't need to be there.
+
+You should not be using get_maintainer unfiltered, you need to think
+about why everyone is there.  People often end up getting included due
+to just random cleanups and getting lots of mail about drivers they have
+no lasting interest in may be demotivating.
+
+> > Being in right justified mode *does* have an effect - it changes where
+> > the audio data starts relative to LRCLK.  It is true that if the frame
+> > has exactly the right number of clocks left and right justified are
+> > identical but extra clocks are in general permitted so it looks like
+> > your right justified case above just isn't something the device really
+> > supports.
+
+> Should the value returned by snd_soc_params_to_frame_size be treated as
+> the minimum frame size?
+
+Yes, in general most hardware is perfectly happy with extra clocks.
+
+--59V5pGBotOHHLP27
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWXeAbAAoJECTWi3JdVIfQrKAH/iqPyMv/FL4E2kmuN6Lvg6oY
+HkH/vdONjMFUPZU9FZp2kRPOZoLbVfVw7FwuTp1871nklCXR1YgKbQT4TXPJGpZJ
+VO8Mf0b8bUkuJxwKe1BZ8rKMdd/rhGdrCe4TFqjCjBVNKmBww3N2ftbu7rtGiUL7
+mZMErqUWX5sm2GzzbxByrVsLD9IpkgGnPz6jeCyVfu6XAQfrJnrrWFktGSL4vXc2
+PF7DBMA2eRO9l5vdQi8p6hJT9lTgF2aKqK8W7u8t+gNgAT5D+THDEmYAPB/UgEHX
+3Q0UQPWNOMLky1IK4NcyZdty5SsVsUKr8Pub5xMESb9qeuEGFeEhE6SGxan7W4o=
+=Wget
+-----END PGP SIGNATURE-----
+
+--59V5pGBotOHHLP27--
+
+--===============8996058769655493258==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============8996058769655493258==--
