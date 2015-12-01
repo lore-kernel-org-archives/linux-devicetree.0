@@ -1,55 +1,94 @@
-From: Salil Mehta <mehta.salil.lnk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V4 net-next 4/5] net:hns: Add support of ethtool TSO set
- option for Hip06 in HNS
-Date: Tue, 1 Dec 2015 13:56:05 +0000
-Message-ID: <565DA6F5.7040804__15509.2290290215$1448978309$gmane$org@gmail.com>
-References: <1448048952-146714-1-git-send-email-salil.mehta@huawei.com>
- <1448048952-146714-5-git-send-email-salil.mehta@huawei.com>
- <CO2PR11MB00885531F54375191E6F015597180@CO2PR11MB0088.namprd11.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: [PATCH V2 04/14] ARM: dts: am437x: cm-t43: add spi-flash support
+Date: Tue,  1 Dec 2015 15:54:59 +0200
+Message-ID: <1448978109-5614-5-git-send-email-nikita@compulab.co.il>
+References: <1448978109-5614-1-git-send-email-nikita@compulab.co.il>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CO2PR11MB00885531F54375191E6F015597180-aWXWhCNu7Z/c7AgKY82GyJPPoyLQLiKMvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+In-Reply-To: <1448978109-5614-1-git-send-email-nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yuval Mintz <Yuval.Mintz-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>, Salil Mehta <salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org" <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org" <kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org>
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+CM-T43 has an on-board 2MB SPI-flash which stores U-Boot and the U-Boot
+environment. Add it to the device tree.
 
+Signed-off-by: Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Cc: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+---
+Changes in V2:
+	- Removed unnecessary line break after pinmux_spi0_pins section.
 
-On 22/11/15 11:17, Yuval Mintz wrote:
->> +static netdev_features_t hns_nic_fix_features(
->> +		struct net_device *netdev, netdev_features_t features) {
->> +	struct hns_nic_priv *priv = netdev_priv(netdev);
->> +
->> +	switch (priv->enet_ver) {
->> +	case AE_VERSION_1:
->> +		features &= ~(NETIF_F_TSO | NETIF_F_TSO6 |
->> +				NETIF_F_HW_VLAN_CTAG_FILTER);
->> +		break;
->> +	default:
->> +		break;
->> +	}
->> +	return features;
->> +}
->> +
-> Isn't AE_VERSION_1 something fixed once you publish your features?
-> If it can't be changed, why not simply remove the features from
-> `hw_features' instead of having to implement this ndo?
-Hi Yuval,
-I some how missed to reply this, though I worked on your suggestions
-in the already floated V5 patch earlier. Sorry for this!
-There could be a case where the feature is supported by the SoC
-and therefore it is already part of the 'hw_features' but it has been
-say DISABLED or ENABLED by ethtool. In such a case, we need to
-make sure we strike off that feature from the 'features' flag.
+ arch/arm/boot/dts/am437x-cm-t43.dts | 40 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-Therefore, we need this leg I suppose. Let me know If I am missing
-something here or there is a gap in my understanding.
-
-Thanks
-Salil
-
+diff --git a/arch/arm/boot/dts/am437x-cm-t43.dts b/arch/arm/boot/dts/am437x-cm-t43.dts
+index 27b748a..27e5948 100644
+--- a/arch/arm/boot/dts/am437x-cm-t43.dts
++++ b/arch/arm/boot/dts/am437x-cm-t43.dts
+@@ -44,6 +44,15 @@
+ 			AM4372_IOPAD(0x98c, PIN_INPUT_PULLUP | SLEWCTRL_FAST | MUX_MODE0)  /* i2c0_scl.i2c0_scl */
+ 		>;
+ 	};
++
++	spi0_pins: pinmux_spi0_pins {
++		pinctrl-single,pins = <
++			AM4372_IOPAD(0x950, PIN_INPUT | MUX_MODE0) /* spi0_sclk.spi0_sclk */
++			AM4372_IOPAD(0x954, PIN_INPUT | MUX_MODE0) /* spi0_d0.spi0_d0 */
++			AM4372_IOPAD(0x958, PIN_OUTPUT | MUX_MODE0) /* spi0_d1.spi0_d1 */
++			AM4372_IOPAD(0x95C, PIN_OUTPUT | MUX_MODE0) /* spi0_cs0.spi0_cs0 */
++		>;
++	};
+ };
+ 
+ &i2c0 {
+@@ -146,6 +155,37 @@
+ 	status = "okay";
+ };
+ 
++&spi0 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi0_pins>;
++	dmas = <&edma 16
++		&edma 17>;
++	dma-names = "tx0", "rx0";
++
++	flash: w25q64cvzpig@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <20000000>;
++		partition@0 {
++			label = "uboot";
++			reg = <0x0 0xc0000>;
++		};
++
++		partition@c0000 {
++			label = "uboot environment";
++			reg = <0xc0000 0x40000>;
++		};
++
++		partition@100000 {
++			label = "reserved";
++			reg = <0x100000 0x100000>;
++		};
++	};
++};
++
+ &uart0 {
+ 	status = "okay";
+ };
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
