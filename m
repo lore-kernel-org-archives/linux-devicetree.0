@@ -1,46 +1,133 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 5/7] ARM: dts: sun9i: optimus: Enable consumer
- IR receiver
-Date: Tue,  1 Dec 2015 13:47:23 +0800
-Message-ID: <1448948845-28347-6-git-send-email-wens@csie.org>
-References: <1448948845-28347-1-git-send-email-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2] arm, am335x: add support for the bosch shc board
+Date: Mon, 30 Nov 2015 21:53:33 -0800
+Message-ID: <20151201055333.GO23396@atomide.com>
+References: <1447748655-2088-1-git-send-email-hs@denx.de>
+ <20151130214130.GA23396@atomide.com>
+ <565D2DF9.2010806@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB7PI6SZAKGQE4IPVARY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1448948845-28347-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <565D2DF9.2010806@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Schocher <hs@denx.de>
+Cc: linux-kernel@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Robert Nelson <robertcnelson@gmail.com>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Georg.Soffel@bosch-si.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The A80 Optimus board has a consumer IR receiver. Enable it in the DT.
+* Heiko Schocher <hs@denx.de> [151130 21:21]:
+> Hello Tony,
+> 
+> Am 30.11.2015 um 22:41 schrieb Tony Lindgren:
+> >* Heiko Schocher <hs@denx.de> [151117 00:25]:
+> >>--- /dev/null
+> >>+++ b/arch/arm/boot/dts/am335x-shc.dts
+> >>+&tps {
+> >>+	compatible = "ti,tps65217";
+> >>+	ti,pmic-shutdown-controller;
+> >>+
+> >>+	regulators {
+> >>+		#address-cells = <1>;
+> >>+		#size-cells = <0>;
+> >>+
+> >>+		dcdc1_reg: regulator@0 {
+> >>+			reg = <0>;
+> >>+			regulator-name = "vdds_dpr";
+> >>+			regulator-compatible = "dcdc1";
+> >>+			regulator-min-microvolt = <1300000>;
+> >>+			regulator-max-microvolt = <1450000>;
+> >>+			regulator-boot-on;
+> >>+			regulator-always-on;
+> >>+		};
+> >>+
+> >>+		dcdc2_reg: regulator@1 {
+> >>+			reg = <1>;
+> >>+			/*
+> >>+			 * VDD_MPU voltage limits 0.95V - 1.26V with
+> >>+			 * +/-4% tolerance
+> >>+			 */
+> >>+			regulator-compatible = "dcdc2";
+> >>+			regulator-name = "vdd_mpu";
+> >>+			regulator-min-microvolt = <925000>;
+> >>+			regulator-max-microvolt = <1375000>;
+> >>+			regulator-boot-on;
+> >>+			regulator-always-on;
+> >>+			regulator-ramp-delay = <70000>;
+> >>+		};
+> >>+
+> >>+		dcdc3_reg: regulator@2 {
+> >>+			reg = <2>;
+> >>+			/*
+> >>+			 * VDD_CORE voltage limits 0.95V - 1.1V with
+> >>+			 * +/-4% tolerance
+> >>+			 */
+> >>+			regulator-name = "vdd_core";
+> >>+			regulator-compatible = "dcdc3";
+> >>+			regulator-min-microvolt = <925000>;
+> >>+			regulator-max-microvolt = <1125000>;
+> >>+			regulator-boot-on;
+> >>+			regulator-always-on;
+> >>+		};
+> >>+
+> >>+		ldo1_reg: regulator@3 {
+> >>+			reg = <3>;
+> >>+			regulator-name = "vio,vrtc,vdds";
+> >>+			regulator-compatible = "ldo1";
+> >>+			regulator-min-microvolt = <1000000>;
+> >>+			regulator-max-microvolt = <1800000>;
+> >>+			regulator-always-on;
+> >>+		};
+> >>+
+> >>+		ldo2_reg: regulator@4 {
+> >>+			reg = <4>;
+> >>+			regulator-name = "vdd_3v3aux";
+> >>+			regulator-compatible = "ldo2";
+> >>+			regulator-min-microvolt = <900000>;
+> >>+			regulator-max-microvolt = <3300000>;
+> >>+			regulator-always-on;
+> >>+		};
+> >>+
+> >>+		ldo3_reg: regulator@5 {
+> >>+			reg = <5>;
+> >>+			regulator-name = "vdd_1v8";
+> >>+			regulator-compatible = "ldo3";
+> >>+			regulator-min-microvolt = <900000>;
+> >>+			regulator-max-microvolt = <1800000>;
+> >>+			regulator-always-on;
+> >>+		};
+> >>+
+> >>+		ldo4_reg: regulator@6 {
+> >>+			reg = <6>;
+> >>+			regulator-name = "vdd_3v3a";
+> >>+			regulator-compatible = "ldo4";
+> >>+			regulator-min-microvolt = <1800000>;
+> >>+			regulator-max-microvolt = <3300000>;
+> >>+			regulator-always-on;
+> >>+		};
+> >>+	};
+> >>+};
+> >
+> >Applying this into omap-for-v4.5/dt.. But I'm getting concerned about this
+> >"regulator-always-on" stuff and having multiple copies of the same thing.
+> >
+> >I think we should have a common am33xx-tps65217.dtsi file that has the
+> >regulators defined at one place and other then include it. And they are
+> >controllable AFAIK..
+> 
+> Hmm... Mark Brown (added to Cc) suggested to move this regulator nodes
+> into the board DT file and remove such files [1].
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun9i-a80-optimus.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Hmm it was probably the name of that file causing confusion as it was not
+am33xx specific. If we have many board variants using almost the same exact
+regulators and configuration it totally makes sense to have a shared dtsi
+file for them :)
 
-diff --git a/arch/arm/boot/dts/sun9i-a80-optimus.dts b/arch/arm/boot/dts/sun9i-a80-optimus.dts
-index ae7db9fcb2a7..79766e5867cd 100644
---- a/arch/arm/boot/dts/sun9i-a80-optimus.dts
-+++ b/arch/arm/boot/dts/sun9i-a80-optimus.dts
-@@ -183,6 +183,10 @@
- 	status = "okay";
- };
- 
-+&r_ir {
-+	status = "okay";
-+};
-+
- &r_pio {
- 	led_r_pins_optimus: led-pins@1 {
- 		allwinner,pins = "PM15";
--- 
-2.6.2
+It may actually be better to have it as am33xx-common.dtsi and I bet that
+covers quite a few am33xx boards for the basic shared functionality.
+
+Regards,
+
+Tony
+
+
+> [1] https://lkml.org/lkml/2015/10/21/581
