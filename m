@@ -1,88 +1,221 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH] ARM: dts: vf610: use reset values for L2 cache latencies
-Date: Mon, 30 Nov 2015 17:59:26 -0800
-Message-ID: <1448935166-2697-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+From: xuejiancheng <xuejiancheng@huawei.com>
+Subject: Re: [PATCH 1/5] clk: hi3519: add CRG driver for hisilicon hi3519 soc
+Date: Tue, 1 Dec 2015 10:41:20 +0800
+Message-ID: <565D08D0.6040701@huawei.com>
+References: <1448694806-31226-1-git-send-email-xuejiancheng@huawei.com>
+ <20151130203521.GA16224@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20151130203521.GA16224@rob-hp-laptop>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: mturquette@linaro.org, sboyd@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-Linux on Vybrid used several different L2 latencies so far, none
-of them seem to be the right ones. According to the application note
-AN4947 ("Understanding Vybrid Architecture"), the tag portion runs
-on CPU clock and is inside the L2 cache controller, whereas the data
-portion is stored in the external SRAM running on platform clock.
-Hence it is likely that the correct value requires a higher data
-latency then tag latency.
+Hello Rob,
 
-These are the values which have been used so far:
-- The mainline values:
-  arm,data-latency = <1 1 1>;
-  arm,tag-latency = <2 2 2>;
-  Those values have lead to problems on higher clocks. They look
-  like a poor translation from the reset values (missing +1 offset
-  and a mix up between tag/latency values).
-- The Linux 3.0 (SoC vendor BSP) values (converted to DT notation):
-  arm,data-latency = <4 2 3>
-  arm,tag-latency = <4 2 3>
-  The cache initialization function along with the value matches the
-  i.MX6 code from the same kernel, so it seems that those values have
-  just been copied.
-- The Colibri values:
-  arm,data-latency = <2 1 2>;
-  arm,tag-latency = <3 2 3>;
-  Those were a mix between the values of the Linux 3.0 based BSP and
-  the mainline values above.
-- The SoC Reset values (converted to DT notation):
-  arm,data-latency = <3 3 3>;
-  arm,tag-latency = <2 2 2>;
+Thanks for your suggestions!
 
-So far there is no official statement on what the correct values are.
-See also the related Freescale community thread:
-https://community.freescale.com/message/579785#579785
+On 2015/12/1 4:35, Rob Herring wrote:
+> On Sat, Nov 28, 2015 at 03:13:26PM +0800, Jiancheng Xue wrote:
+>> The CRG(Clock and Reset Generator) module provides
+>> clock and reset signals for other modules in hi3519 soc.
+>>
+>> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
+>> ---
+>>  .../devicetree/bindings/clock/hi3519-clock.txt     |  46 +++++++
+>>  drivers/clk/hisilicon/Makefile                     |   1 +
+>>  drivers/clk/hisilicon/clk-hi3519.c                 | 130 ++++++++++++++++++
+>>  drivers/clk/hisilicon/reset.c                      | 149 +++++++++++++++++++++
+>>  drivers/clk/hisilicon/reset.h                      |  25 ++++
+>>  include/dt-bindings/clock/hi3519-clock.h           |  78 +++++++++++
+> 
+> It is preferred to put binding doc and header in separate patch.
 
-For now, the reset values seem to be the best bet. Remove all other
-"bogus" values and use the reset value on vf610.dtsi level.
+I will put them in separate patch in next version. Thank you!
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
-Hi Shawn,
+> 
+>>  6 files changed, 429 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/hi3519-clock.txt
+>>  create mode 100644 drivers/clk/hisilicon/clk-hi3519.c
+>>  create mode 100644 drivers/clk/hisilicon/reset.c
+>>  create mode 100644 drivers/clk/hisilicon/reset.h
+>>  create mode 100644 include/dt-bindings/clock/hi3519-clock.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/hi3519-clock.txt b/Documentation/devicetree/bindings/clock/hi3519-clock.txt
+>> new file mode 100644
+>> index 0000000..9fea878
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/hi3519-clock.txt
+>> @@ -0,0 +1,46 @@
+>> +* Hisilicon Hi3519 Clock and Reset Generator(CRG)
+>> +
+>> +The Hi3519 CRG module provides clock and reset signals to various
+>> +controllers within the SoC.
+>> +
+>> +This binding uses the following bindings:
+>> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> +    Documentation/devicetree/bindings/reset/reset.txt
+>> +
+>> +Required Properties:
+>> +
+>> +- compatible: should be one of the following.
+>> +  - "hisilicon,hi3519-clock" - controller compatible with Hi3519 SoC.
+> 
+> Use -crg rather than -clock if that is the block name.
 
-Any chance to get this into 4.4?
+I agreed with you! It is proper to use -crg.
 
---
-Stefan
+> 
+>> +
+>> +- reg: physical base address of the controller and length of memory mapped
+>> +  region.
+>> +
+>> +- #clock-cells: should be 1.
+>> +
+>> +Each clock is assigned an identifier and client nodes use this identifier
+>> +to specify the clock which they consume.
+>> +
+>> +All these identifier could be found in <dt-bindings/clock/hi3519-clock.h>.
+>> +
+>> +- #reset-cells: should be 2.
+>> +
+>> +A reset signal can be controlled by writing a bit register in the CRG module.
+>> +The reset specifier consists of two cells. The first cell represents the
+>> +register offset relative to the base address. The second cell represents the
+>> +bit index in the register.
+>> +
+>> +Example: CRG nodes
+>> +CRG: clock-reset-controller {
+>> +	compatible = "hisilicon,hi3519-clock";
+>> +        reg = <0x12010000 0x10000>;
+>> +        #clock-cells = <1>;
+>> +        #reset-cells = <2>;
+>> +};
+>> +
+>> +Example: consumer nodes
+>> +i2c0: i2c@0x12110000 {
+>> +	compatible = "hisilicon,hi3519-i2c";
+>> +        reg = <0x12110000 0x1000>;
+>> +        clocks = <&CRG HI3519_I2C0_RST>;*/
+>> +        resets = <&CRG 0xE4 0>;
+>> +};
+> 
+> 
+>> diff --git a/drivers/clk/hisilicon/reset.h b/drivers/clk/hisilicon/reset.h
+>> new file mode 100644
+>> index 0000000..74bea4e
+>> --- /dev/null
+>> +++ b/drivers/clk/hisilicon/reset.h
+>> @@ -0,0 +1,25 @@
+>> +/*
+>> + * Copyright (c) 2015 HiSilicon Technologies Co., Ltd.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License
+>> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +
+>> +#ifndef	__HISI_RESET_H
+>> +#define	__HISI_RESET_H
+>> +
+>> +#include <linux/of.h>
+>> +
+>> +int __init hisi_reset_init(struct device_node *np, int nr_rsts);
+>> +
+>> +#endif	/* __HISI_RESET_H */
+>> diff --git a/include/dt-bindings/clock/hi3519-clock.h b/include/dt-bindings/clock/hi3519-clock.h
+>> new file mode 100644
+>> index 0000000..2e08666
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/hi3519-clock.h
+>> @@ -0,0 +1,78 @@
+>> +/*
+>> + * Copyright (c) 2015 HiSilicon Technologies Co., Ltd.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License
+>> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +
+>> +#ifndef __DTS_HI3519_CLOCK_H
+>> +#define __DTS_HI3519_CLOCK_H
+>> +
+>> +/* fixed rate */
+>> +#define HI3519_FIXED_2376M		1
+>> +#define HI3519_FIXED_1188M		2
+>> +#define HI3519_FIXED_594M		3
+>> +#define HI3519_FIXED_297M		4
+>> +#define HI3519_FIXED_148P5M		5
+>> +#define HI3519_FIXED_74P25M		6
+>> +#define HI3519_FIXED_792M		7
+>> +#define HI3519_FIXED_475M		8
+>> +#define HI3519_FIXED_340M		9
+>> +#define HI3519_FIXED_72M		10
+>> +#define HI3519_FIXED_400M		11
+>> +#define HI3519_FIXED_200M		12
+>> +#define HI3519_FIXED_54M		13
+>> +#define HI3519_FIXED_27M		14
+>> +#define HI3519_FIXED_37P125M		15
+>> +#define HI3519_FIXED_3000M		16
+>> +#define HI3519_FIXED_1500M		17
+>> +#define HI3519_FIXED_500M		18
+>> +#define HI3519_FIXED_250M		19
+>> +#define HI3519_FIXED_125M		20
+>> +#define HI3519_FIXED_1000M		21
+>> +#define HI3519_FIXED_600M		22
+>> +#define HI3519_FIXED_750M		23
+>> +#define HI3519_FIXED_150M		24
+>> +#define HI3519_FIXED_75M		25
+>> +#define HI3519_FIXED_300M		26
+>> +#define HI3519_FIXED_60M		27
+>> +#define HI3519_FIXED_214M		28
+>> +#define HI3519_FIXED_107M		29
+>> +#define HI3519_FIXED_100M		30
+>> +#define HI3519_FIXED_50M		31
+>> +#define HI3519_FIXED_25M		32
+>> +#define HI3519_FIXED_24M		33
+>> +#define HI3519_FIXED_3M			34
+> 
+> All these are really fixed frequency, not just fixed until the s/w 
+> support is written? 
 
- arch/arm/boot/dts/vf610-colibri.dtsi | 5 -----
- arch/arm/boot/dts/vf610.dtsi         | 2 +-
- 2 files changed, 1 insertion(+), 6 deletions(-)
+Yes, these clocks are fixed frequency in h/w.
 
-diff --git a/arch/arm/boot/dts/vf610-colibri.dtsi b/arch/arm/boot/dts/vf610-colibri.dtsi
-index 19fe045..2d7eab7 100644
---- a/arch/arm/boot/dts/vf610-colibri.dtsi
-+++ b/arch/arm/boot/dts/vf610-colibri.dtsi
-@@ -18,8 +18,3 @@
- 		reg = <0x80000000 0x10000000>;
- 	};
- };
--
--&L2 {
--	arm,data-latency = <2 1 2>;
--	arm,tag-latency = <3 2 3>;
--};
-diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
-index 5f8eb1b..58bc6e4 100644
---- a/arch/arm/boot/dts/vf610.dtsi
-+++ b/arch/arm/boot/dts/vf610.dtsi
-@@ -19,7 +19,7 @@
- 		reg = <0x40006000 0x1000>;
- 		cache-unified;
- 		cache-level = <2>;
--		arm,data-latency = <1 1 1>;
-+		arm,data-latency = <3 3 3>;
- 		arm,tag-latency = <2 2 2>;
- 	};
- };
--- 
-2.6.2
+> 
+> You only need to include clocks which are externally accessible from the 
+> CRG.
+> 
+
+Some clocks will be used when other device nodes are added into device trees.
+OK. I will delete unused clocks in next version.
+And a clocks will be added only when it's needed.
+
+
+Thank you!
+
+Best Regards,
+
+Jiancheng Xue
+
+
