@@ -1,61 +1,92 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 4/7] ARM: dts: sun9i: Add consumer IR receiver device
- node and pinmux settings
-Date: Tue, 1 Dec 2015 14:09:31 +0100
-Message-ID: <20151201130931.GM29263@lukather>
-References: <1448948845-28347-1-git-send-email-wens@csie.org>
- <1448948845-28347-5-git-send-email-wens@csie.org>
+From: Simon Arlott <simon@fire.lp0.eu>
+Subject: [PATCH 08/11] watchdog: bcm63xx_wdt: Warn if the watchdog is
+ currently running
+Date: Tue, 1 Dec 2015 13:08:57 +0000
+Message-ID: <565D9BE9.4060008@simon.arlott.org.uk>
+References: <565D9A40.60409@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="LJm8egi4vkexsie5"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1448948845-28347-5-git-send-email-wens@csie.org>
+In-Reply-To: <565D9A40.60409@simon.arlott.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com
+To: Guenter Roeck <linux@roeck-us.net>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, MIPS Mailing List <linux-mips@linux-mips.org>, Jonas Gorski <jogo@openwrt.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Kevin Cernekee <cernekee@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Maxime Bizon <mbizon@freebox.fr>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Warn when the device is registered if the hardware watchdog is currently
+running and report the remaining time left.
 
---LJm8egi4vkexsie5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+---
+ drivers/watchdog/bcm63xx_wdt.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-On Tue, Dec 01, 2015 at 01:47:22PM +0800, Chen-Yu Tsai wrote:
-> The Allwinner A80 SoC has a consumer IR receiver, which is the same as
-> older SoCs.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+diff --git a/drivers/watchdog/bcm63xx_wdt.c b/drivers/watchdog/bcm63xx_wdt.c
+index ab4a794..2312dc2 100644
+--- a/drivers/watchdog/bcm63xx_wdt.c
++++ b/drivers/watchdog/bcm63xx_wdt.c
+@@ -14,6 +14,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/clk.h>
++#include <linux/delay.h>
+ #include <linux/errno.h>
+ #include <linux/io.h>
+ #include <linux/kernel.h>
+@@ -159,6 +160,8 @@ static int bcm63xx_wdt_probe(struct platform_device *pdev)
+ 	struct bcm63xx_wdt_hw *hw;
+ 	struct watchdog_device *wdd;
+ 	struct resource *r;
++	u32 timeleft1, timeleft2;
++	unsigned int timeleft;
+ 	int ret;
+ 
+ 	hw = devm_kzalloc(&pdev->dev, sizeof(*hw), GFP_KERNEL);
+@@ -199,7 +202,6 @@ static int bcm63xx_wdt_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	raw_spin_lock_init(&hw->lock);
+-	hw->running = false;
+ 
+ 	wdd->parent = &pdev->dev;
+ 	wdd->ops = &bcm63xx_wdt_ops;
+@@ -213,6 +215,23 @@ static int bcm63xx_wdt_probe(struct platform_device *pdev)
+ 	watchdog_init_timeout(wdd, 0, &pdev->dev);
+ 	watchdog_set_nowayout(wdd, nowayout);
+ 
++	/* Compare two reads of the time left value, 2 clock ticks apart */
++	rmb();
++	timeleft1 = __raw_readl(hw->regs + WDT_CTL_REG);
++	udelay(DIV_ROUND_UP(1000000, hw->clock_hz / 2));
++	/* Ensure the register is read twice */
++	rmb();
++	timeleft2 = __raw_readl(hw->regs + WDT_CTL_REG);
++
++	/* If the time left is changing, the watchdog is running */
++	if (timeleft1 != timeleft2) {
++		hw->running = true;
++		timeleft = bcm63xx_wdt_get_timeleft(wdd);
++	} else {
++		hw->running = false;
++		timeleft = 0;
++	}
++
+ 	ret = watchdog_register_device(wdd);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "failed to register watchdog device\n");
+@@ -230,6 +249,8 @@ static int bcm63xx_wdt_probe(struct platform_device *pdev)
+ 		dev_name(wdd->dev), hw->regs,
+ 		wdd->timeout, wdd->max_timeout);
+ 
++	if (hw->running)
++		dev_alert(wdd->dev, "running, reboot in %us\n", timeleft);
+ 	return 0;
+ 
+ unregister_watchdog:
+-- 
+2.1.4
 
-Applied, thanks!
-Maxime
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---LJm8egi4vkexsie5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWXZwLAAoJEBx+YmzsjxAgIu8P/i5gpRcayOpgZZuOL9rVf6ET
-CvDUW+kYafVJPL8oFwurSXeYrkEg+I+PSSCgn1JUshdGVDQootlZw1z372ctX7+8
-Piz3QgbM9I4VEZy5U/fBxs5tcUj7Ml3qFObH7OsC2/a6q6rkKE1nnN61d0B1wgZQ
-USY7s/VuyH/UIkHpkxKQh2aMytd/d8zdAsuA9lSA2Ws8YAhdV/zjBjYf5OdARpoo
-IWZXDw+8EIEHx5d7ntnh1QRFD+6YGgE+bSbbKuyYyAb2Cl8uUJV8040n2q+zVRNJ
-/7Kp4+KdHS9qJKGmWtDgY4DUarHD6k66KWLKV+MMsB1g9XZwSQaPYxKvKxyhktk8
-CWFQno4CjpkjRsAE0u/7kkf08GSGkXNaNRn83XJ9d2PpCePEkYQr2I7vbpF9eufl
-3i2g34+lFJI4xH650+YKBUuRScUwAQNA7LbKCs6R/T7P+2yMPQgzVx51qMCI9wzM
-vccBl0Sqk7htpiTaHKiOZDfeWNxhbAc0fbIMmgetdBrt4PSz74iWwSUUBcfQw9yF
-SifrLWm2AFeiJjVF5eJxBV3RIclZIX3lulHuLa0KfMeDAKsfwQMdVIgc79p7hfG0
-TVaQGcJmjtpJyP4JKuFzHPHx8/CAm8puBzo8+KmS+taw8wjf/jEEoqzkOUcgpsAs
-6Z0DL9TIYJZshXGqpwBf
-=hRKo
------END PGP SIGNATURE-----
-
---LJm8egi4vkexsie5--
+-- 
+Simon Arlott
