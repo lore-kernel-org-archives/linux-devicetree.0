@@ -1,87 +1,165 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v2 06/10] drm/hisilicon: Add vblank feature
-Date: Tue, 1 Dec 2015 13:54:38 +0100
-Message-ID: <20151201125438.GT17050@phenom.ffwll.local>
-References: <1448707145-69348-1-git-send-email-xinliang.liu@linaro.org>
- <1448707145-69348-7-git-send-email-xinliang.liu@linaro.org>
- <20151130075432.GF17050@phenom.ffwll.local>
- <CAGd==05xhhdA7FWveei4U91rGKCHRNLyRG3-kin5B2V+ao+GrA@mail.gmail.com>
- <20151201071325.GE17050@phenom.ffwll.local>
- <CAGd==06DT723n168txuJxo1ViVB8R_XiuRt8SroCbFcs=BhfFg@mail.gmail.com>
+From: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Subject: [PATCH 01/11] clocksource: Add brcm,bcm6345-timer/brcm,bcm6318-timer
+ device tree binding
+Date: Tue, 1 Dec 2015 13:01:52 +0000
+Message-ID: <565D9A40.60409@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGd==06DT723n168txuJxo1ViVB8R_XiuRt8SroCbFcs=BhfFg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Xinliang Liu <xinliang.liu@linaro.org>
-Cc: Daniel Vetter <daniel@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Daniel Stone <daniel@fooishbar.org>, architt@codeaurora.org, David Airlie <airlied@linux.ie>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-doc@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, linuxarm@huawei.com, Andy Green <andy.green@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Xu Wei <xuwei5@hisilicon.com>, Wang Fei <w.f@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, XinWei Kong <kong.kongxinwei@hisilicon.com>, zourongrong@huawei.com, lijianhua@huawei.com, Sumit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 01, 2015 at 06:34:43PM +0800, Xinliang Liu wrote:
-> On 1 December 2015 at 15:13, Daniel Vetter <daniel@ffwll.ch> wrote:
-> > On Tue, Dec 01, 2015 at 11:16:19AM +0800, Xinliang Liu wrote:
-> >> On 30 November 2015 at 15:54, Daniel Vetter <daniel@ffwll.ch> wrote:
-> >> > On Sat, Nov 28, 2015 at 06:39:01PM +0800, Xinliang Liu wrote:
-> >> >> Add vblank handle for ADE.
-> >> >>
-> >> >> Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
-> >> >> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-> >> >> Signed-off-by: Andy Green <andy.green@linaro.org>
-> >> >> ---
-> >> >>  drivers/gpu/drm/hisilicon/hisi_drm_ade.c | 78 ++++++++++++++++++++++++++++++++
-> >> >>  drivers/gpu/drm/hisilicon/hisi_drm_ade.h | 16 +++++++
-> >> >>  drivers/gpu/drm/hisilicon/hisi_drm_drv.c | 19 +++++++-
-> >> >>  3 files changed, 112 insertions(+), 1 deletion(-)
-> >> >>  create mode 100644 drivers/gpu/drm/hisilicon/hisi_drm_ade.h
-> >> >>
-> >> >> diff --git a/drivers/gpu/drm/hisilicon/hisi_drm_ade.c b/drivers/gpu/drm/hisilicon/hisi_drm_ade.c
-> >> >> index b0976c3..acb11e7 100644
-> >> >> --- a/drivers/gpu/drm/hisilicon/hisi_drm_ade.c
-> >> >> +++ b/drivers/gpu/drm/hisilicon/hisi_drm_ade.c
-> >> >> @@ -267,7 +267,79 @@ static void ade_power_down(struct ade_hw_ctx *ctx)
-> >> >>       ctx->power_on = false;
-> >> >>  }
-> >> >>
-> >> >> +static struct drm_crtc *hisi_get_crtc_from_index(struct drm_device *dev,
-> >> >> +                                              unsigned int index)
-> >> >
-> >> > Ugly that you had to add this, but unfortunately necessary :( Fixing up
-> >> > the drm vblank hooks so that they deal with struct drm_crtc directly is
-> >> > somewhere on my todo. But drm_irq.c is still a bit a mess, so this is some
-> >> > ways off still.
-> >> >
-> >> > What might be possible as a follow-up cleanup though is to add
-> >> > vblank_enable and vblank_disable functions to struct
-> >> > drm_crtc_helper_funcs. And then provide this code here to map from int
-> >> > index to struct drm_crtc * as helpers in a new drm_vblank_helper.c file.
-> >> > That might be a good intermediate step.
-> >>
-> >> I would like to have a try to make this intermediate step patch and
-> >> send out for review soon.
-> >
-> > Awesome, looking forward to reviewing it. If you have questions about
-> > details fastest to ping me on irc (nick: danvet, #dri-devel on
-> > freenode.net).
-> 
-> Great!  What't your time zone. So that I can ping you in right time.
+Add device tree bindings for the BCM6345/BCM6318 timers. This is requir=
+ed
+for the BCM6345 watchdog which needs to respond to one of the timer
+interrupts.
 
-Europe, GMT+1.
+Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../bindings/timer/brcm,bcm6318-timer.txt          | 44 ++++++++++++++=
+++++++
+ .../bindings/timer/brcm,bcm6345-timer.txt          | 47 ++++++++++++++=
+++++++++
+ 2 files changed, 91 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/brcm,bcm631=
+8-timer.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/brcm,bcm634=
+5-timer.txt
 
-Cheers, Daniel
+diff --git a/Documentation/devicetree/bindings/timer/brcm,bcm6318-timer=
+=2Etxt b/Documentation/devicetree/bindings/timer/brcm,bcm6318-timer.txt
+new file mode 100644
+index 0000000..cf4be7e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/brcm,bcm6318-timer.txt
+@@ -0,0 +1,44 @@
++Broadcom BCM6318 Timer
++
++This block is a timer that is connected to multiple interrupts on the =
+main
++interrupt controller and functions as a programmable interrupt control=
+ler for
++timer events. There is a main timer interrupt for all timers.
++
++- 4 independent timers with their own interrupt, and own maskable leve=
+l
++  interrupt bit in the main timer interrupt
++
++- 1 watchdog timer with an unmaskable level interrupt bit in the main =
+timer
++  interrupt
++
++- Contains one enable/status word pair
++
++- No atomic set/clear operations
++
++Required properties:
++
++- compatible: should be "brcm,bcm<soc>-timer", "brcm,bcm6318-timer"
++- reg: specifies the base physical address and size of the registers, =
+excluding
++  the watchdog registers
++- interrupt-controller: identifies the node as an interrupt controller
++- #interrupt-cells: specifies the number of cells needed to encode an =
+interrupt
++  source, should be 1.
++- interrupt-parent: specifies the phandle to the parent interrupt cont=
+roller(s)
++  this one is cascaded from
++- interrupts: specifies the interrupt line(s) in the interrupt-parent =
+controller
++  node for the main timer interrupt, followed by the individual timer
++  interrupts; valid values depend on the type of parent interrupt cont=
+roller
++- clocks: phandle of timer reference clock (periph)
++
++Example:
++
++timer: timer@10000040 {
++	compatible =3D "brcm,bcm63148-timer", "brcm,bcm6318-timer";
++	reg =3D <0x10000040 0x28>;
++
++	interrupt-controller;
++	#interrupt-cells =3D <1>;
++
++	interrupt-parent =3D <&periph_intc>;
++	interrupts =3D <31>, <0>, <1>, <2>, <3>;
++	clock =3D <&periph_osc>;
++};
+diff --git a/Documentation/devicetree/bindings/timer/brcm,bcm6345-timer=
+=2Etxt b/Documentation/devicetree/bindings/timer/brcm,bcm6345-timer.txt
+new file mode 100644
+index 0000000..03250dd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/brcm,bcm6345-timer.txt
+@@ -0,0 +1,47 @@
++Broadcom BCM6345 Timer
++
++This block is a timer that is connected to one interrupt on the main i=
+nterrupt
++controller and functions as a programmable interrupt controller for ti=
+mer
++events.
++
++- 3 independent timers with their own maskable level interrupt bit (bu=
+t not
++  per CPU because there is only one parent interrupt and the timers sh=
+are it)
++
++- 1 watchdog timer with an unmaskable level interrupt
++
++- Contains one enable/status word pair
++
++- No atomic set/clear operations
++
++The lack of per CPU ability of timers makes them unusable as a set of
++clockevent devices, otherwise they could be attached to the remaining
++interrupts.
++
++Required properties:
++
++- compatible: should be "brcm,bcm<soc>-timer", "brcm,bcm6345-timer"
++- reg: specifies the base physical address and size of the registers, =
+excluding
++  the watchdog registers
++- interrupt-controller: identifies the node as an interrupt controller
++- #interrupt-cells: specifies the number of cells needed to encode an =
+interrupt
++  source, should be 1.
++- interrupt-parent: specifies the phandle to the parent interrupt cont=
+roller(s)
++  this one is cascaded from
++- interrupts: specifies the interrupt line(s) in the interrupt-parent =
+controller
++  node for the timer interrupt; valid values depend on the type of par=
+ent
++  interrupt controller
++- clocks: phandle of timer reference clock (periph)
++
++Example:
++
++timer: timer@10000080 {
++	compatible =3D "brcm,bcm63168-timer", "brcm,bcm6345-timer";
++	reg =3D <0x10000080 0x1c>;
++
++	interrupt-controller;
++	#interrupt-cells =3D <1>;
++
++	interrupt-parent =3D <&periph_intc>;
++	interrupts =3D <0>;
++	clock=C2=B7=3D=C2=B7<&periph_osc>;
++};
+--=20
+2.1.4
 
-> 
-> Thanks,
-> -xinliang
-> 
-> >
-> > Cheers, Daniel
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+--=20
+Simon Arlott
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdo=
+g" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
