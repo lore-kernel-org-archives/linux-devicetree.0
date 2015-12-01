@@ -1,89 +1,37 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH 2/3] ARM: bcm2835: add rpi power domain driver
-Date: Tue, 01 Dec 2015 15:27:57 -0800
-Message-ID: <7hr3j5696q.fsf@deeprootsystems.com>
-References: <1447956490-22930-1-git-send-email-alex.aring@gmail.com>
-	<1447956490-22930-3-git-send-email-alex.aring@gmail.com>
-	<7hr3j782qr.fsf@deeprootsystems.com> <20151201210037.GB2074@omega>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 0/3] Add the rk3368 evb board with the act8846 pmic
+Date: Wed, 02 Dec 2015 00:50:29 +0100
+Message-ID: <5501370.GQCpicsLkL@diego>
+References: <1448961206-23769-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20151201210037.GB2074@omega> (Alexander Aring's message of "Tue,
-	1 Dec 2015 22:00:42 +0100")
-Sender: linux-pm-owner@vger.kernel.org
-To: Alexander Aring <alex.aring@gmail.com>
-Cc: linux-rpi-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, swarren@wwwdotorg.org, lee@kernel.org, eric@anholt.net, linux@arm.linux.org.uk, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, rjw@rjwysocki.net, ulf.hansson@linaro.org, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1448961206-23769-1-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Olof Johansson <olof@lixom.net>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Roger Chen <roger.chen@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>, Yunzhi Li <lyz@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Romain Perier <romain.perier@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Alexander Aring <alex.aring@gmail.com> writes:
+Hi Caesar,
 
-> Hi,
->
-> On Mon, Nov 30, 2015 at 03:51:56PM -0800, Kevin Hilman wrote:
->> Alexander Aring <alex.aring@gmail.com> writes:
->> 
->> > This patch adds support for RPi several Power Domains and enable support
->> > to enable the USB Power Domain when it's not enabled before.
->> >
->> > This patch based on Eric Anholt's patch to support Power Domains. He had
->> > an issue about -EPROBE_DEFER inside the power domain subsystem, this
->> > issue was solved by commit <311fa6a> ("PM / Domains: Return -EPROBE_DEFER
->> > if we fail to init or turn-on domain").
->> 
->> [...]
->> 
->> > +#define RPI_POWER_DOMAIN(_domain, _name)			\
->> > +	[_domain] = {						\
->> 
->> Using _domain as the array index is going to create a sparsely filled
->> array here, wasting memory.   I'm not sure what the other domain numbers
->> are for other domains to know if this is a big waste or not, but it's
->> still a bit wasteful.
->> 
->> In any case, AFAICT, it doesn't look like you need to have the array
->> index match the domain number anyways since you're using container_of().
->> 
->> So I suggest just removing this array index part, and just creating them
->> in arrary order.  Then your _probe function isn't going to try to setup
->> 3 non-enabled domains before it finally hits the USB domain.
->> 
->
-> The idea is here to keeping the _same_ power domains indexes for
-> device-tree power domain API like the RPi firmware provides it.
->
-> If somebody dumps the devicetree and see the power domain index, if
-> he/she does then a firmware API power domain index mapping it is wrong.
-> Because we need then a separate mapping:
->
-> $ARRAY_DEFINED_INDEX <-> $RPI_FIRMWARE_POWER_DOMAIN_API_INDEX
->
-> With the current solution to make a 1:1 mapping it there is no
-> confusing anymore, because:
->
-> $ARRAY_DEFINED_INDEX == $RPI_FIRMWARE_POWER_DOMAIN_API_INDEX
+Am Dienstag, 1. Dezember 2015, 17:13:23 schrieb Caesar Wang:
+> This series pacthes try to add the evb dts for rk3368 SoCs,
+> This's similar with the rj3288 evb board.
+> 
+> On the moment, pwm/backlight/usb/thermal/emmc stuff can work for this
+> board, I add the base version for the future firstly.
+applied all 3 to relevant branches for 4.5, with some small changes:
 
-I'm not proposing to change the DT numbers or the firmware numbers.  All
-I'm proposing is that those numbers don't need to be mapped to the array
-index.  IOW, in your structure definition macro:
+> PATCH [1/3]: Force rk3368 PWM clock (and its parents) On
+> That's similar HACK way to work.
+shortened the comment in the code a bit
 
-+#define RPI_POWER_DOMAIN(_domain, _name)			\
-+	[_domain] = {						\
-+		.domain = _domain,				\
-[...]
+> PATCH [2/3]: Add the RK3368 EVB board for with the act8846 pmic for dtsi
+Moved some minor stuff around a bit (ordering, etc)
 
-just drop the " [_domain] = { " line.
+> PATCH [3/3]: Add the PWM node info for rk3368 core.
+this now comes before the addition of the evb files
 
-> Also there exists power domains 1-10 (so far I know), 1-2 are currently
-> not used (and dummy-calls inside the rpi firmware implementation). So
-> later they should be provided anyway.
 
-They could then be added in any order in the struture.
-
-> There exists a little improvement to let the for (i = 0; i < num_domains
-> ...) start at "i = 1", the entry with index "0" will be a waste of memory
-> then and it's not provided by the firmware API as a power domain.
-
-Even index 0 will not be wasted with the above approach.
-
-Kevin
-
+Heiko
