@@ -1,86 +1,185 @@
-From: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 0/5] SMP support for Broadcom NSP
-Date: Tue, 1 Dec 2015 11:24:04 -0500
-Message-ID: <1448987049-17041-1-git-send-email-kapilh@broadcom.com>
+From: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: Re: [PATCH v2 01/18] ARM: am57xx: cl-som-am57x: dts: add basic module
+ support
+Date: Tue, 01 Dec 2015 18:24:44 +0200
+Message-ID: <565DC9CC.1070000@compulab.co.il>
+References: <1448433590-1399-2-git-send-email-lifshitz@compulab.co.il> <1448893551-676-1-git-send-email-lifshitz@compulab.co.il> <20151130215415.GE23396@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151130215415.GE23396-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Change in v4:
-* Cleaned up kona_smp.c and associated DT file.
-* Corrected documentation for DT bindings.
-* Corrected secondary-boot-reg entry for bcm4708 DT file.
+Hi Tony,
 
-Change in v3:
-* Fixed patch subject from RESEND PATCH to PATCH
-* Deleted arch/arm/mach-bcm/bcm_nsp.h file
-* Removed inclusion of header file bcm_nsp.h in platsmp.c
-* Removed unused variable 'timeout' in nsp_boot_secondary()
+On 11/30/2015 11:54 PM, Tony Lindgren wrote:
+> * Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org> [151130 06:27]:
+>> +++ b/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
+>> +		tps659038_pmic {
+>> +			compatible = "ti,tps659038-pmic";
+>> +
+>> +			regulators {
+>> +				smps12_reg: smps12 {
+>> +					/* VDD_MPU */
+>> +					regulator-name = "smps12";
+>> +					regulator-min-microvolt = < 850000>;
+>> +					regulator-max-microvolt = <1250000>;
+>> +					regulator-always-on;
+>> +					regulator-boot-on;
+>> +				};
+>> +
+>> +				smps3_reg: smps3 {
+>> +					/* VDD_DDR */
+>> +					regulator-name = "smps3";
+>> +					regulator-min-microvolt = <1500000>;
+>> +					regulator-max-microvolt = <1500000>;
+>> +					regulator-always-on;
+>> +					regulator-boot-on;
+>> +				};
+>> +
+>> +				smps45_reg: smps45 {
+>> +					/* VDD_DSPEVE */
+>> +					regulator-name = "smps45";
+>> +					regulator-min-microvolt = < 850000>;
+>> +					regulator-max-microvolt = <1250000>;
+>> +					regulator-always-on;
+>> +					regulator-boot-on;
+>> +				};
+>> +
+>> +				smps6_reg: smps6 {
+>> +					/* VDD_GPU */
+>> +					regulator-name = "smps6";
+>> +					regulator-min-microvolt = < 850000>;
+>> +					regulator-max-microvolt = <1250000>;
+>> +					regulator-always-on;
+>> +					regulator-boot-on;
+>> +				};
+>> +
+>> +				smps7_reg: smps7 {
+>> +					/* VDD_CORE */
+>> +					regulator-name = "smps7";
+>> +					regulator-min-microvolt = < 850000>;
+>> +					regulator-max-microvolt = <1160000>;
+>> +					regulator-always-on;
+>> +					regulator-boot-on;
+>> +				};
+>> +
+>> +				smps8_reg: smps8 {
+>> +					/* VDD_IVA */
+>> +					regulator-name = "smps8";
+>> +					regulator-min-microvolt = < 850000>;
+>> +					regulator-max-microvolt = <1250000>;
+>> +					regulator-always-on;
+>> +					regulator-boot-on;
+>> +				};
+>> +
+>> +				smps9_reg: smps9 {
+>> +					/* PMIC_3V3 */
+>> +					regulator-name = "smps9";
+>> +					regulator-min-microvolt = <3300000>;
+>> +					regulator-max-microvolt = <3300000>;
+>> +					regulator-always-on;
+>> +					regulator-boot-on;
+>> +				};
+>> +
+>> +
+>> +				ldo1_reg: ldo1 {
+>> +					/* VDD_SD / VDDSHV8  */
+>> +					regulator-name = "ldo1";
+>> +					regulator-min-microvolt = <1800000>;
+>> +					regulator-max-microvolt = <3300000>;
+>> +					regulator-boot-on;
+>> +					regulator-always-on;
+>> +				};
+>> +
+>> +				ldo2_reg: ldo2 {
+>> +					/* VDD_1V8 */
+>> +					regulator-name = "ldo2";
+>> +					regulator-min-microvolt = <1800000>;
+>> +					regulator-max-microvolt = <1800000>;
+>> +					regulator-always-on;
+>> +					regulator-boot-on;
+>> +				};
+>> +
+>> +				ldo3_reg: ldo3 {
+>> +					/* VDDA_1V8_PHYA - supplies VDDA_SATA, VDDA_USB1/2/3 */
+>> +					regulator-name = "ldo3";
+>> +					regulator-min-microvolt = <1800000>;
+>> +					regulator-max-microvolt = <1800000>;
+>> +					regulator-always-on;
+>> +					regulator-boot-on;
+>> +				};
+>> +
+>> +				ldo4_reg: ldo4 {
+>> +					/* VDDA_1V8_PHYB - supplies VDDA_HDMI, VDDA_PCIE/0/1 */
+>> +					regulator-name = "ldo4";
+>> +					regulator-min-microvolt = <1800000>;
+>> +					regulator-max-microvolt = <1800000>;
+>> +					regulator-always-on;
+>> +					regulator-boot-on;
+>> +				};
+>> +
+>> +				ldo9_reg: ldo9 {
+>> +					/* VDD_RTC */
+>> +					regulator-name = "ldo9";
+>> +					regulator-min-microvolt = <1050000>;
+>> +					regulator-max-microvolt = <1050000>;
+>> +					regulator-always-on;
+>> +					regulator-boot-on;
+>> +				};
+>> +
+>> +				ldoln_reg: ldoln {
+>> +					/* VDDA_1V8_PLL */
+>> +					regulator-name = "ldoln";
+>> +					regulator-min-microvolt = <1800000>;
+>> +					regulator-max-microvolt = <1800000>;
+>> +					regulator-always-on;
+>> +					regulator-boot-on;
+>> +				};
+>> +
+>> +				ldousb_reg: ldousb {
+>> +					/* VDDA_3V_USB: VDDA_USBHS33 */
+>> +					regulator-name = "ldousb";
+>> +					regulator-min-microvolt = <3300000>;
+>> +					regulator-max-microvolt = <3300000>;
+>> +					regulator-always-on;
+>> +					regulator-boot-on;
+>> +				};
+>> +
+>> +				/* regen1 not used */
+>> +			};
+>> +		};
+>
+> Can you please put these into dra7-tps659038-common.dtsi so we don't have
+> multiple copies of it? Then make other boards include that..
 
-Changes in v2:
-Removed the pen_holding method of SMP bringup for NSP SoC and
-replaced it with simple wakeup of secondary core using ARM IPI.
+It might looks the same set of regulators for multiple boards,
+but it is not. Each board may apply its own regulators usage scheme, and 
+this is our case (as compared to am57xx-beagle-x15.dts).
 
+For the best of my knowledge, it used to be in a common *.dtsi file (at 
+least in early OMAP5 DT support in TI kernel tree), but then I found 
+that PMIC registration had been moved to the boards DT files.
 
-This series adds SMP support for Broadcom's Northstar Plus SoC.
+> That allows to set them up as real controllable regulators instead of all
+> this silly "regulator-always-on" stuff that has been going on since omap4 :)
+>
+> Regards,
+>
+> Tony
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
 
-There are similar SMP enablement methods for many ARMv7 bsed SoCs.
-BCM NSP SoC, has a typical such mechanism - after power-on, the
-secondary core is held in a standby state, primary core provides a
-startup address for the secondary core and wakes it up. Booting of
-the secondary core is serialized using pen_release global variable.
+Regards,
 
-The startup address is programmed at a special register location
-which is defined in the device tree using a "secondary-boot-reg"
-property in a node whose "enable-method" property matches.
-
-The first patch adds cpu-enable-method in the device tree bindings
-documentation. It also updates ARM CPU device tree documentation
-with Broadcom Northstar Plus CPU details.
-
-The second patch adds SMP support to the BCM NSP device tree file.
-
-The third patch, enables SMP on BCM NSP. It also consolidates
-common SMP handling between BCM NSP and BCM Kona.
-
-The final patch, enables SMP on BCM 4708 and this patch is pulled
-in from Jon Mason's patch from the mailing list.
-
-This patch series is constructed based on Linux v4.4-rc1.
-
-The source code is available at GITHUB:
-https://github.com/Broadcom/cygnus-linux/tree/nsp-smp-v2
-
-
-Jon Mason (1):
-  ARM: BCM: Add SMP support for Broadcom 4708
-
-Kapil Hali (4):
-  dt-bindings: add SMP enable-method for Broadcom NSP
-  ARM: BCM: Clean up SMP support for Broadcom Kona
-  ARM: dts: Add SMP support for Broadcom NSP
-  ARM: BCM: Add SMP support for Broadcom NSP
-
- .../bindings/arm/bcm/brcm,nsp-cpu-method.txt       |  39 ++++++
- Documentation/devicetree/bindings/arm/cpus.txt     |   1 +
- arch/arm/boot/dts/bcm-nsp.dtsi                     |  33 +++--
- arch/arm/boot/dts/bcm11351.dtsi                    |   2 +-
- arch/arm/boot/dts/bcm21664.dtsi                    |   2 +-
- arch/arm/boot/dts/bcm4708.dtsi                     |   2 +
- arch/arm/mach-bcm/Kconfig                          |   3 +
- arch/arm/mach-bcm/Makefile                         |  11 +-
- arch/arm/mach-bcm/{kona_smp.c => platsmp.c}        | 144 +++++++++++++++++----
- 9 files changed, 193 insertions(+), 44 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
- rename arch/arm/mach-bcm/{kona_smp.c => platsmp.c} (63%)
-
--- 
-2.1.0
-
+Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
