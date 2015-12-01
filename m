@@ -1,31 +1,89 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Enable PCIe PHY support in Cygnus
-Date: Tue, 01 Dec 2015 15:20:47 -0800
-Message-ID: <565E2B4F.2020002@gmail.com>
-References: <1447870619-2828-1-git-send-email-rjui@broadcom.com> <5654FCF5.40406@gmail.com> <565E2969.7000500@gmail.com> <4359956.cn9R5kOVVW@wuerfel>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH 2/3] ARM: bcm2835: add rpi power domain driver
+Date: Tue, 01 Dec 2015 15:27:57 -0800
+Message-ID: <7hr3j5696q.fsf@deeprootsystems.com>
+References: <1447956490-22930-1-git-send-email-alex.aring@gmail.com>
+	<1447956490-22930-3-git-send-email-alex.aring@gmail.com>
+	<7hr3j782qr.fsf@deeprootsystems.com> <20151201210037.GB2074@omega>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4359956.cn9R5kOVVW@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20151201210037.GB2074@omega> (Alexander Aring's message of "Tue,
+	1 Dec 2015 22:00:42 +0100")
+Sender: linux-pm-owner@vger.kernel.org
+To: Alexander Aring <alex.aring@gmail.com>
+Cc: linux-rpi-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, swarren@wwwdotorg.org, lee@kernel.org, eric@anholt.net, linux@arm.linux.org.uk, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, rjw@rjwysocki.net, ulf.hansson@linaro.org, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On 01/12/15 15:18, Arnd Bergmann wrote:
-> On Tuesday 01 December 2015 15:12:41 Florian Fainelli wrote:
->>   CC      lib/bitmap.o
->>
->> I added an #address-cells = <0> and #size-cells = <1> to fix this, since
->> your reg property is a single digit.
-> 
-> Did you mean #address-cells = <1> and #size-cells = <0>?
+Alexander Aring <alex.aring@gmail.com> writes:
 
-Ermm, yes, thanks for catching this..
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Hi,
+>
+> On Mon, Nov 30, 2015 at 03:51:56PM -0800, Kevin Hilman wrote:
+>> Alexander Aring <alex.aring@gmail.com> writes:
+>> 
+>> > This patch adds support for RPi several Power Domains and enable support
+>> > to enable the USB Power Domain when it's not enabled before.
+>> >
+>> > This patch based on Eric Anholt's patch to support Power Domains. He had
+>> > an issue about -EPROBE_DEFER inside the power domain subsystem, this
+>> > issue was solved by commit <311fa6a> ("PM / Domains: Return -EPROBE_DEFER
+>> > if we fail to init or turn-on domain").
+>> 
+>> [...]
+>> 
+>> > +#define RPI_POWER_DOMAIN(_domain, _name)			\
+>> > +	[_domain] = {						\
+>> 
+>> Using _domain as the array index is going to create a sparsely filled
+>> array here, wasting memory.   I'm not sure what the other domain numbers
+>> are for other domains to know if this is a big waste or not, but it's
+>> still a bit wasteful.
+>> 
+>> In any case, AFAICT, it doesn't look like you need to have the array
+>> index match the domain number anyways since you're using container_of().
+>> 
+>> So I suggest just removing this array index part, and just creating them
+>> in arrary order.  Then your _probe function isn't going to try to setup
+>> 3 non-enabled domains before it finally hits the USB domain.
+>> 
+>
+> The idea is here to keeping the _same_ power domains indexes for
+> device-tree power domain API like the RPi firmware provides it.
+>
+> If somebody dumps the devicetree and see the power domain index, if
+> he/she does then a firmware API power domain index mapping it is wrong.
+> Because we need then a separate mapping:
+>
+> $ARRAY_DEFINED_INDEX <-> $RPI_FIRMWARE_POWER_DOMAIN_API_INDEX
+>
+> With the current solution to make a 1:1 mapping it there is no
+> confusing anymore, because:
+>
+> $ARRAY_DEFINED_INDEX == $RPI_FIRMWARE_POWER_DOMAIN_API_INDEX
+
+I'm not proposing to change the DT numbers or the firmware numbers.  All
+I'm proposing is that those numbers don't need to be mapped to the array
+index.  IOW, in your structure definition macro:
+
++#define RPI_POWER_DOMAIN(_domain, _name)			\
++	[_domain] = {						\
++		.domain = _domain,				\
+[...]
+
+just drop the " [_domain] = { " line.
+
+> Also there exists power domains 1-10 (so far I know), 1-2 are currently
+> not used (and dummy-calls inside the rpi firmware implementation). So
+> later they should be provided anyway.
+
+They could then be added in any order in the struture.
+
+> There exists a little improvement to let the for (i = 0; i < num_domains
+> ...) start at "i = 1", the entry with index "0" will be a waste of memory
+> then and it's not provided by the firmware API as a power domain.
+
+Even index 0 will not be wasted with the above approach.
+
+Kevin
+
