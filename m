@@ -1,46 +1,51 @@
-From: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 3/4] dmaengine: qcom_bam_dma: use correct pipe FIFO size
-Date: Tue,  1 Dec 2015 11:14:58 +0200
-Message-ID: <1448961299-15161-4-git-send-email-stanimir.varbanov@linaro.org>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH 2/4] dmaengine: qcom_bam_dma: clear BAM interrupt only if it is rised
+Date: Tue,  1 Dec 2015 11:14:57 +0200
+Message-ID: <1448961299-15161-3-git-send-email-stanimir.varbanov@linaro.org>
 References: <1448961299-15161-1-git-send-email-stanimir.varbanov@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448961299-15161-1-git-send-email-stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1448961299-15161-1-git-send-email-stanimir.varbanov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andy Gross <agross@codeaurora.org>, Archit Taneja <architt@codeaurora.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The pipe fifo size register must instruct the bam hw
-how many hw descriptors can be pushed to fifo. Currently
-we isntruct the hw with 32KBytes but wrap the tail in
-bam_start_dma in BAM_P_EVNT_REG on 4095 i.e. 32760. This
-leads to stalled transactions when the tail wraps.
+Currently we write BAM_IRQ_CLR register with zero even when no
+BAM_IRQ occured. This write has some bad side effects when the
+BAM instance is for the crypto engine. In case of crypto engine
+some of the BAM registers are xPU protected and they cannot be
+controlled by the driver.
 
-Fix this by use the correct fifo size in BAM_P_FIFO_SIZES
-register i.e. 32K - 8.
-
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 ---
- drivers/dma/qcom_bam_dma.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/qcom_bam_dma.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/dma/qcom_bam_dma.c b/drivers/dma/qcom_bam_dma.c
-index 0f06f3b7a72b..6d290de9ab2b 100644
+index dc9da477eb69..0f06f3b7a72b 100644
 --- a/drivers/dma/qcom_bam_dma.c
 +++ b/drivers/dma/qcom_bam_dma.c
-@@ -458,7 +458,7 @@ static void bam_chan_init_hw(struct bam_chan *bchan,
- 	 */
- 	writel_relaxed(ALIGN(bchan->fifo_phys, sizeof(struct bam_desc_hw)),
- 			bam_addr(bdev, bchan->id, BAM_P_DESC_FIFO_ADDR));
--	writel_relaxed(BAM_DESC_FIFO_SIZE,
-+	writel_relaxed(BAM_MAX_DATA_SIZE,
- 			bam_addr(bdev, bchan->id, BAM_P_FIFO_SIZES));
+@@ -800,13 +800,17 @@ static irqreturn_t bam_dma_irq(int irq, void *data)
+ 	if (srcs & P_IRQ)
+ 		tasklet_schedule(&bdev->task);
  
- 	/* enable the per pipe interrupts, enable EOT, ERR, and INT irqs */
+-	if (srcs & BAM_IRQ)
++	if (srcs & BAM_IRQ) {
+ 		clr_mask = readl_relaxed(bam_addr(bdev, 0, BAM_IRQ_STTS));
+ 
+-	/* don't allow reorder of the various accesses to the BAM registers */
+-	mb();
++		/*
++		 * don't allow reorder of the various accesses to the BAM
++		 * registers
++		 */
++		mb();
+ 
+-	writel_relaxed(clr_mask, bam_addr(bdev, 0, BAM_IRQ_CLR));
++		writel_relaxed(clr_mask, bam_addr(bdev, 0, BAM_IRQ_CLR));
++	}
+ 
+ 	return IRQ_HANDLED;
+ }
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
