@@ -1,37 +1,137 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 0/3] Add the rk3368 evb board with the act8846 pmic
-Date: Wed, 02 Dec 2015 00:50:29 +0100
-Message-ID: <5501370.GQCpicsLkL@diego>
-References: <1448961206-23769-1-git-send-email-wxt@rock-chips.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 3/3] Addition of binding for firmware signals on peach-pi
+Date: Wed, 02 Dec 2015 08:51:26 +0900
+Message-ID: <565E327E.90404@samsung.com>
+References: <1448997171-7064-1-git-send-email-martyn.welch@collabora.co.uk>
+ <1448997171-7064-4-git-send-email-martyn.welch@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448961206-23769-1-git-send-email-wxt@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Caesar Wang <wxt@rock-chips.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Olof Johansson <olof@lixom.net>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Roger Chen <roger.chen@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>, Yunzhi Li <lyz@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Romain Perier <romain.perier@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1448997171-7064-4-git-send-email-martyn.welch@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Martyn Welch <martyn.welch@collabora.co.uk>
+Cc: Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Caesar,
-
-Am Dienstag, 1. Dezember 2015, 17:13:23 schrieb Caesar Wang:
-> This series pacthes try to add the evb dts for rk3368 SoCs,
-> This's similar with the rj3288 evb board.
+On 02.12.2015 04:12, Martyn Welch wrote:
+> The peach pi has a GPIO connected to the firmware write protect, developer
+> mode and recovery mode lines. This patch adds the required nodes to the
+> device tree to configure the pinmuxing and allow these to be read from
+> user space.
 > 
-> On the moment, pwm/backlight/usb/thermal/emmc stuff can work for this
-> board, I add the base version for the future firstly.
-applied all 3 to relevant branches for 4.5, with some small changes:
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Cc: Kukjin Kim <kgene@kernel.org>
+> Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-samsung-soc@vger.kernel.org
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.co.uk>
+> ---
+>  arch/arm/boot/dts/exynos5800-peach-pi.dts | 40 +++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
 
-> PATCH [1/3]: Force rk3368 PWM clock (and its parents) On
-> That's similar HACK way to work.
-shortened the comment in the code a bit
+Hi,
 
-> PATCH [2/3]: Add the RK3368 EVB board for with the act8846 pmic for dtsi
-Moved some minor stuff around a bit (ordering, etc)
+Thanks for the patch.
 
-> PATCH [3/3]: Add the PWM node info for rk3368 core.
-this now comes before the addition of the evb files
+Few points from my side:
+1. Please add a prefix to the subject: "ARM: dts:".
+
+2. There is no need of such huge CC-list in the body of commit. This
+CC-list comes from get_maintainer so there is no benefit of duplicating
+it here. The CC is usually used to notify other people who might be
+interested but get_maintainer does not point them.
+
+3. I received only this third patch. I did not receive cover letter
+explaining possible dependencies so I am not sure how to deal with the
+patch. It looks like there are no dependencies... but maybe there are?
+Is this is a new binding or no? Please provide a cover letter (if it
+exists already be sure to send it to all interested parties) or send
+entire patchset so the big picture could be seen.
+
+The patch itself looks good but I'll wait with a review tag for #3.
+
+Best regards,
+Krzysztof
 
 
-Heiko
+> 
+> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+> index 49a4f43..485c18f 100644
+> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
+> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+> @@ -53,6 +53,25 @@
+>  		};
+>  	};
+>  
+> +	chromeos-firmware {
+> +		compatible = "google,gpio-firmware";
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&wp_gpio &dev_mode &rec_mode>;
+> +
+> +		write-protect {
+> +			gpios = <&gpx3 0 GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		developer-switch {
+> +			gpios = <&gpx1 3 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		recovery-switch {
+> +			gpios = <&gpx0 7 GPIO_ACTIVE_LOW>;
+> +		};
+> +	};
+> +
+>  	gpio-keys {
+>  		compatible = "gpio-keys";
+>  
+> @@ -731,6 +750,13 @@
+>  		samsung,pin-val = <0>;
+>  	};
+>  
+> +	rec_mode: rec-mode {
+> +		samsung,pins = "gpx0-7";
+> +		samsung,pin-function = <0>;
+> +		samsung,pin-pud = <0>;
+> +		samsung,pin-drv = <0>;
+> +	};
+> +
+>  	tpm_irq: tpm-irq {
+>  		samsung,pins = "gpx1-0";
+>  		samsung,pin-function = <0>;
+> @@ -752,6 +778,13 @@
+>  		samsung,pin-drv = <0>;
+>  	};
+>  
+> +	dev_mode: dev-mode {
+> +		samsung,pins = "gpx1-3";
+> +		samsung,pin-function = <0>;
+> +		samsung,pin-pud = <3>;
+> +		samsung,pin-drv = <0>;
+> +	};
+> +
+>  	ec_irq: ec-irq {
+>  		samsung,pins = "gpx1-5";
+>  		samsung,pin-function = <0>;
+> @@ -773,6 +806,13 @@
+>  		samsung,pin-drv = <0>;
+>  	};
+>  
+> +	wp_gpio: wp_gpio {
+> +		samsung,pins = "gpx3-0";
+> +		samsung,pin-function = <0>;
+> +		samsung,pin-pud = <0>;
+> +		samsung,pin-drv = <0>;
+> +	};
+> +
+>  	max77802_irq: max77802-irq {
+>  		samsung,pins = "gpx3-1";
+>  		samsung,pin-function = <0>;
+> 
