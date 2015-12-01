@@ -1,96 +1,64 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [PATCH v2 1/5] ARM: dts: sun8i: Add SID node
-Date: Tue, 1 Dec 2015 09:41:17 +0100
-Message-ID: <20151201084117.GB29263@lukather>
-References: <cover.1448263428.git.atx@atx.name>
- <b897b1c8741c8a871163b84d01b480f99329536d.1448263428.git.atx@atx.name>
- <20151123124356.GW32142@lukather>
- <a7d4e538-db64-476d-b5de-5222419229a2@googlegroups.com>
- <20151124093202.GL32142@lukather>
- <56550D70.6060109@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/2 net-next] ravb: Add fallback compatibility strings
+Date: Tue, 1 Dec 2015 09:42:52 +0100
+Message-ID: <CAMuHMdW_PagMbAqrvM-_-sJumhMPoYGobNF485Q1D+CRQ5j+bQ@mail.gmail.com>
+References: <1448955783-22806-1-git-send-email-horms+renesas@verge.net.au>
+	<1448955783-22806-2-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PmA2V3Z32TCmWXqI"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBLV26WZAKGQE55JI2RQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56550D70.6060109-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Shuge <shugelinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, atx-MwjtXicnQwU@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gpatchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1448955783-22806-2-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---PmA2V3Z32TCmWXqI
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Tue, Dec 1, 2015 at 8:43 AM, Simon Horman <horms+renesas@verge.net.au> wrote:
+> Add fallback compatibility strings for R-Car Gen 2 & 3 SoC Families.
+> This is in keeping with the fallback scheme being adopted wherever
+> appropriate for drivers for Renesas SoCs.
+>
+> Also correct typo.
+>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> ---
+>  Documentation/devicetree/bindings/net/renesas,ravb.txt | 11 +++++++++--
+>  drivers/net/ethernet/renesas/ravb_main.c               |  2 ++
+>  2 files changed, 11 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> index b486f3f5f6a3..115006325bff 100644
+> --- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> +++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> @@ -1,12 +1,19 @@
+>  * Renesas Electronics Ethernet AVB
+>
+>  This file provides information on what the device node for the Ethernet AVB
+> -interface contains.
+> +interface.
+>
+>  Required properties:
+>  - compatible: "renesas,etheravb-r8a7790" if the device is a part of R8A7790 SoC.
+>               "renesas,etheravb-r8a7794" if the device is a part of R8A7794 SoC.
+>               "renesas,etheravb-r8a7795" if the device is a part of R8A7795 SoC.
+> +             "renesas,etheravb-gen2" for generic R-Car Gen 2 compatible interface.
+> +             "renesas,etheravb-gen3" for generic R-Car Gen 3 compatible interface.
+> +
 
-Hi,
+(Same comment, different audience)
 
-On Wed, Nov 25, 2015 at 09:22:56AM +0800, Shuge wrote:
-> On Monday, November 23, 2015 at 17:32 UTC+8, Maxime Ripard wrote:
-> > On Mon, Nov 23, 2015 at 10:51:15PM -0800, Sugar Wu wrote:
-> >> On Monday, November 23, 2015 at 8:43:59 PM UTC+8, Maxime Ripard wrote:
-> >>>
-> >>> Hi, 
-> >>>
-> >>> On Mon, Nov 23, 2015 at 09:02:48AM +0100, Josef Gajdusek wrote: 
-> >>>> Add a node describing the Security ID memory to the 
-> >>>> Allwinner H3 .dtsi file. 
-> >>>>
-> >>>> Signed-off-by: Josef Gajdusek <a...-MwjtXicnQwU@public.gmane.org <javascript:>> 
-> >>>> --- 
-> >>>>  arch/arm/boot/dts/sun8i-h3.dtsi | 7 +++++++ 
-> >>>>  1 file changed, 7 insertions(+) 
-> >>>>
-> >>>> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi 
-> >>> b/arch/arm/boot/dts/sun8i-h3.dtsi 
-> >>>> index 0faa38a..58de718 100644 
-> >>>> --- a/arch/arm/boot/dts/sun8i-h3.dtsi 
-> >>>> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi 
-> >>>> @@ -359,6 +359,13 @@ 
-> >>>>                          #size-cells = <0>; 
-> >>>>                  }; 
-> >>>>   
-> >>>> +                sid: eeprom@01c14000 { 
-> >>>> +                        compatible = "allwinner,sun4i-a10-sid"; 
-> >>>> +                        reg = <0x01c14000 0x400>; 
-> >>>
-> >>> The datasheet says it's 256 bytes wide, while the size here is of 1kB, 
-> >>> is it intentional? 
-> >>
-> >> SID memory map is 0x01c14000 ~ 0x01c143FF, include 2048bits efuse space.
-> >> H3 efuse space is SID_SRAM, its range is  0x01c14200 ~ +0x100.
-> > 
-> > Interesting, what is below the 0x200 registers?
-> >
-> Some control register about SID.
-> offset: 0x40  SID Program/Read Control Register
-> offset: 0x50  SID Program Key Value Register
-> offset: 0x60  SID Read Key Value Register
-> offset: 0x70  \
-> offset: 0x80  SJTAG Attribute 0 Register
-> offset: 0x84  SJTAG Attribute 1 Register
-> offset: 0x88  SJTAG Select Register
-> offset: 0x90  SID Program Ctrol register for burned timing
+Shouldn't that be "renesas,etheravb-rcar-gen" or "renesas,etheravb-rcar2"?
 
-Thanks!
+Else you'll be in trouble when Renesas starts focussing on airplanes
+(R-Plane Gen2), rockets (R-Rocket Gen2), or IoT (R-IoT Gen2).
 
-I guess the layout changed a bit from the A10 and alikes then.
+Gr{oetje,eeting}s,
 
-Anyway, we should expose only to the nvmem framework the actual eeprom
-space, so from 0x200 to 0x300 from what you're saying (just like we
-should only expose the first 4 bytes in the A10 / A20)
+                        Geert
 
-Maxime
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---PmA2V3Z32TCmWXqI--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
