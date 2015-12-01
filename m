@@ -1,7 +1,7 @@
 From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH 1/4] dmaengine: qcom_bam_dma: fix dma free memory on remove
-Date: Tue,  1 Dec 2015 11:14:56 +0200
-Message-ID: <1448961299-15161-2-git-send-email-stanimir.varbanov@linaro.org>
+Subject: [PATCH 4/4] dmaengine: qcom_bam_dma: add controlled remotely dt property
+Date: Tue,  1 Dec 2015 11:14:59 +0200
+Message-ID: <1448961299-15161-5-git-send-email-stanimir.varbanov@linaro.org>
 References: <1448961299-15161-1-git-send-email-stanimir.varbanov@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1448961299-15161-1-git-send-email-stanimir.varbanov@linaro.org>
@@ -10,58 +10,65 @@ To: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kerne
 Cc: Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andy Gross <agross@codeaurora.org>, Archit Taneja <architt@codeaurora.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Building the driver as a module and when removing the already
-inserted module gives below:
+Some of the peripherals has bam which is controlled by remote
+processor, thus the bam dma driver must avoid register writes
+which initialise bam hw block. Those registers are protected
+from xPU block and any writes to them will lead to secure
+violation and system reboot.
 
-[ 1389.392788] Unable to handle kernel paging request at virtual address ffffffbdc000001c
-[ 1389.421321] pgd = ffffffc02fa87000
-[ 1389.447899] [ffffffbdc000001c] *pgd=0000000000000000, *pud=0000000000000000
-[ 1389.460142] Internal error: Oops: 96000006 [#1] PREEMPT SMP
-[ 1389.466963] Modules linked in: qcom_bam_dma(-)
-[ 1389.486608] CPU: 2 PID: 2442 Comm: rmmod Not tainted 4.2.0+ #407
-[ 1389.493885] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-[ 1389.501196] task: ffffffc035bae2c0 ti: ffffffc0368a8000 task.ti: ffffffc0368a8000
-[ 1389.508566] PC is at __free_pages+0xc/0x40
-[ 1389.515893] LR is at free_pages.part.93+0x30/0x38
-[ 1389.523141] pc : [<ffffffc00016180c>] lr : [<ffffffc00016197c>] pstate: 80000145
-[ 1389.530602] sp : ffffffc0368abc20
-[ 1389.537931] x29: ffffffc0368abc20 x28: ffffffc0368a8000
-[ 1389.549153] x27: 0000000000000000 x26: 0000000000000000
-[ 1389.560412] x25: ffffffc000cb2000 x24: 0000000000000170
-[ 1389.571530] x23: 0000000000000004 x22: ffffffc036bc5010
-[ 1389.582721] x21: ffffffc036bc5010 x20: 0000000000000000
-[ 1389.593981] x19: 0000000000000002 x18: 0000007fcbc8e8b0
-[ 1389.605301] x17: 0000007f9b8226ec x16: ffffffc0002089e8
-[ 1389.616647] x15: 0000007f9b8a0588 x14: 0ffffffffffffffc
-[ 1389.628039] x13: 0000000000000030 x12: 0000000000000000
-[ 1389.639436] x11: 0000000000000008 x10: ffffffc000ecc000
-[ 1389.650872] x9 : ffffffc035bae2c0 x8 : ffffffc035bae9a8
-[ 1389.662367] x7 : ffffffc035bae9a0 x6 : 0000000000000000
-[ 1389.673906] x5 : ffffffbdc000001c x4 : 0000000080000000
-[ 1389.685475] x3 : ffffffbdc0000000 x2 : 0000004080000000
-[ 1389.697049] x1 : 0000000000000003 x0 : ffffffbdc0000000
-
-The memory has been already freed by bam_free_chan() so fix this
-by skiping already freed memory.
+Adding the contolled_remotely flag in bam driver to avoid
+not permitted register writes in bam_init function.
 
 Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 ---
- drivers/dma/qcom_bam_dma.c |    3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/dma/qcom_bam_dma.txt       |    2 ++
+ drivers/dma/qcom_bam_dma.c                         |    7 +++++++
+ 2 files changed, 9 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+index 1c9d48ea4914..87b6b2bf5e1e 100644
+--- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
++++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+@@ -13,6 +13,8 @@ Required properties:
+ - clock-names: must contain "bam_clk" entry
+ - qcom,ee : indicates the active Execution Environment identifier (0-7) used in
+   the secure world.
++- qcom,controlled-remotely : optional, indicates that the bam is controled by
++  remote proccessor i.e. execution enviroment.
+ 
+ Example:
+ 
 diff --git a/drivers/dma/qcom_bam_dma.c b/drivers/dma/qcom_bam_dma.c
-index 5a250cdc8376..dc9da477eb69 100644
+index 6d290de9ab2b..5dedab77180a 100644
 --- a/drivers/dma/qcom_bam_dma.c
 +++ b/drivers/dma/qcom_bam_dma.c
-@@ -1231,6 +1231,9 @@ static int bam_dma_remove(struct platform_device *pdev)
- 		bam_dma_terminate_all(&bdev->channels[i].vc.chan);
- 		tasklet_kill(&bdev->channels[i].vc.task);
+@@ -387,6 +387,7 @@ struct bam_device {
  
-+		if (!bdev->channels[i].fifo_virt)
-+			continue;
+ 	/* execution environment ID, from DT */
+ 	u32 ee;
++	bool controlled_remotely;
+ 
+ 	const struct reg_offset_data *layout;
+ 
+@@ -1039,6 +1040,9 @@ static int bam_init(struct bam_device *bdev)
+ 	val = readl_relaxed(bam_addr(bdev, 0, BAM_NUM_PIPES));
+ 	bdev->num_channels = val & BAM_NUM_PIPES_MASK;
+ 
++	if (bdev->controlled_remotely)
++		return 0;
 +
- 		dma_free_writecombine(bdev->dev, BAM_DESC_FIFO_SIZE,
- 			bdev->channels[i].fifo_virt,
- 			bdev->channels[i].fifo_phys);
+ 	/* s/w reset bam */
+ 	/* after reset all pipes are disabled and idle */
+ 	val = readl_relaxed(bam_addr(bdev, 0, BAM_CTRL));
+@@ -1126,6 +1130,9 @@ static int bam_dma_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	bdev->controlled_remotely = of_property_read_bool(pdev->dev.of_node,
++						"qcom,controlled-remotely");
++
+ 	bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
+ 	if (IS_ERR(bdev->bamclk))
+ 		return PTR_ERR(bdev->bamclk);
 -- 
 1.7.9.5
