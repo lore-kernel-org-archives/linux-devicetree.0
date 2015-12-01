@@ -1,173 +1,138 @@
-From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: Re: [PATCH v2 06/10] drm/hisilicon: Add vblank feature
-Date: Tue, 1 Dec 2015 11:16:19 +0800
-Message-ID: <CAGd==05xhhdA7FWveei4U91rGKCHRNLyRG3-kin5B2V+ao+GrA@mail.gmail.com>
-References: <1448707145-69348-1-git-send-email-xinliang.liu@linaro.org>
- <1448707145-69348-7-git-send-email-xinliang.liu@linaro.org>
- <20151130075432.GF17050@phenom.ffwll.local>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [Question] DT-Bindings for run-time configurable bus?
+Date: Tue, 1 Dec 2015 13:30:25 +0900
+Message-ID: <CAK7LNATGi4isAaG0XS13ZnfFQKCxzaxeJvusSg3RYn7z29BF9A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20151130075432.GF17050@phenom.ffwll.local>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel@ffwll.ch>
-Cc: linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>, Xu Wei <xuwei5@hisilicon.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, zourongrong@huawei.com, Yiping Xu <xuyiping@hisilicon.com>, Jon Corbet <corbet@lwn.net>, Wang Fei <w.f@huawei.com>, lijianhua@huawei.com, devicetree@vger.kernel.org, Bintian Wang <bintian.wang@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Andy Green <andy.green@linaro.org>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Haojian Zhuang <haojian.zhuang@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frank.rowand@sonymobile.com>, Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMzAgTm92ZW1iZXIgMjAxNSBhdCAxNTo1NCwgRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xs
-LmNoPiB3cm90ZToKPiBPbiBTYXQsIE5vdiAyOCwgMjAxNSBhdCAwNjozOTowMVBNICswODAwLCBY
-aW5saWFuZyBMaXUgd3JvdGU6Cj4+IEFkZCB2YmxhbmsgaGFuZGxlIGZvciBBREUuCj4+Cj4+IFNp
-Z25lZC1vZmYtYnk6IFhpbmxpYW5nIExpdSA8eGlubGlhbmcubGl1QGxpbmFyby5vcmc+Cj4+IFNp
-Z25lZC1vZmYtYnk6IFhpbndlaSBLb25nIDxrb25nLmtvbmd4aW53ZWlAaGlzaWxpY29uLmNvbT4K
-Pj4gU2lnbmVkLW9mZi1ieTogQW5keSBHcmVlbiA8YW5keS5ncmVlbkBsaW5hcm8ub3JnPgo+PiAt
-LS0KPj4gIGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fYWRlLmMgfCA3OCArKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+PiAgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNv
-bi9oaXNpX2RybV9hZGUuaCB8IDE2ICsrKysrKysKPj4gIGRyaXZlcnMvZ3B1L2RybS9oaXNpbGlj
-b24vaGlzaV9kcm1fZHJ2LmMgfCAxOSArKysrKysrLQo+PiAgMyBmaWxlcyBjaGFuZ2VkLCAxMTIg
-aW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
-cnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fYWRlLmgKPj4KPj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fYWRlLmMgYi9kcml2ZXJzL2dwdS9kcm0v
-aGlzaWxpY29uL2hpc2lfZHJtX2FkZS5jCj4+IGluZGV4IGIwOTc2YzMuLmFjYjExZTcgMTAwNjQ0
-Cj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9kcm1fYWRlLmMKPj4gKysr
-IGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9hZGUuYwo+PiBAQCAtMjY3LDcg
-KzI2Nyw3OSBAQCBzdGF0aWMgdm9pZCBhZGVfcG93ZXJfZG93bihzdHJ1Y3QgYWRlX2h3X2N0eCAq
-Y3R4KQo+PiAgICAgICBjdHgtPnBvd2VyX29uID0gZmFsc2U7Cj4+ICB9Cj4+Cj4+ICtzdGF0aWMg
-c3RydWN0IGRybV9jcnRjICpoaXNpX2dldF9jcnRjX2Zyb21faW5kZXgoc3RydWN0IGRybV9kZXZp
-Y2UgKmRldiwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICB1bnNpZ25lZCBpbnQgaW5kZXgpCj4KPiBVZ2x5IHRoYXQgeW91IGhhZCB0byBhZGQgdGhpcywg
-YnV0IHVuZm9ydHVuYXRlbHkgbmVjZXNzYXJ5IDooIEZpeGluZyB1cAo+IHRoZSBkcm0gdmJsYW5r
-IGhvb2tzIHNvIHRoYXQgdGhleSBkZWFsIHdpdGggc3RydWN0IGRybV9jcnRjIGRpcmVjdGx5IGlz
-Cj4gc29tZXdoZXJlIG9uIG15IHRvZG8uIEJ1dCBkcm1faXJxLmMgaXMgc3RpbGwgYSBiaXQgYSBt
-ZXNzLCBzbyB0aGlzIGlzIHNvbWUKPiB3YXlzIG9mZiBzdGlsbC4KPgo+IFdoYXQgbWlnaHQgYmUg
-cG9zc2libGUgYXMgYSBmb2xsb3ctdXAgY2xlYW51cCB0aG91Z2ggaXMgdG8gYWRkCj4gdmJsYW5r
-X2VuYWJsZSBhbmQgdmJsYW5rX2Rpc2FibGUgZnVuY3Rpb25zIHRvIHN0cnVjdAo+IGRybV9jcnRj
-X2hlbHBlcl9mdW5jcy4gQW5kIHRoZW4gcHJvdmlkZSB0aGlzIGNvZGUgaGVyZSB0byBtYXAgZnJv
-bSBpbnQKPiBpbmRleCB0byBzdHJ1Y3QgZHJtX2NydGMgKiBhcyBoZWxwZXJzIGluIGEgbmV3IGRy
-bV92YmxhbmtfaGVscGVyLmMgZmlsZS4KPiBUaGF0IG1pZ2h0IGJlIGEgZ29vZCBpbnRlcm1lZGlh
-dGUgc3RlcC4KCkkgd291bGQgbGlrZSB0byBoYXZlIGEgdHJ5IHRvIG1ha2UgdGhpcyBpbnRlcm1l
-ZGlhdGUgc3RlcCBwYXRjaCBhbmQKc2VuZCBvdXQgZm9yIHJldmlldyBzb29uLgoKPiBCdXQgbm90
-aGluZyB0aGF0IG5lZWRzIHRvIGJlIGRvbmUgYmVmb3JlIG1lcmdpbmcgaGlzaWxpY29uLCB0aGF0
-J3MgZm9yCj4gc3VyZS4KPgo+IE9uZSBtb3JlIGNvbW1lbnQgYmVsb3cuCj4KPj4gK3sKPj4gKyAg
-ICAgdW5zaWduZWQgaW50IGluZGV4X3RtcCA9IDA7Cj4+ICsgICAgIHN0cnVjdCBkcm1fY3J0YyAq
-Y3J0YzsKPj4gKwo+PiArICAgICBsaXN0X2Zvcl9lYWNoX2VudHJ5KGNydGMsICZkZXYtPm1vZGVf
-Y29uZmlnLmNydGNfbGlzdCwgaGVhZCkgewo+PiArICAgICAgICAgICAgIGlmIChpbmRleF90bXAg
-PT0gaW5kZXgpCj4+ICsgICAgICAgICAgICAgICAgICAgICByZXR1cm4gY3J0YzsKPj4gKwo+PiAr
-ICAgICAgICAgICAgIGluZGV4X3RtcCsrOwo+PiArICAgICB9Cj4+ICsKPj4gKyAgICAgV0FSTl9P
-Tih0cnVlKTsKPj4gK30KPj4gKwo+PiAraW50IGFkZV9lbmFibGVfdmJsYW5rKHN0cnVjdCBkcm1f
-ZGV2aWNlICpkZXYsIGludCBjcnRjX2luZGV4KQo+PiArewo+PiArICAgICBzdHJ1Y3QgZHJtX2Ny
-dGMgKmNydGMgPSBoaXNpX2dldF9jcnRjX2Zyb21faW5kZXgoZGV2LCBjcnRjX2luZGV4KTsKPj4g
-KyAgICAgc3RydWN0IGFkZV9jcnRjICphY3J0YyA9IHRvX2FkZV9jcnRjKGNydGMpOwo+PiArICAg
-ICBzdHJ1Y3QgYWRlX2h3X2N0eCAqY3R4ID0gYWNydGMtPmN0eDsKPj4gKyAgICAgdm9pZCBfX2lv
-bWVtICpiYXNlID0gY3R4LT5iYXNlOwo+PiArICAgICB1MzIgaW50cl9lbjsKPj4gKwo+PiArICAg
-ICBEUk1fSU5GTygiZW5hYmxlX3ZibGFuayBlbnRlci5cbiIpOwo+PiArICAgICBpZiAoIWN0eC0+
-cG93ZXJfb24pCj4+ICsgICAgICAgICAgICAgKHZvaWQpYWRlX3Bvd2VyX3VwKGN0eCk7Cj4+ICsK
-Pj4gKyAgICAgaW50cl9lbiA9IHJlYWRsKGJhc2UgKyBMRElfSU5UX0VOKTsKPj4gKyAgICAgaW50
-cl9lbiB8PSBMRElfSVNSX0ZSQU1FX0VORF9JTlQ7Cj4+ICsgICAgIHdyaXRlbChpbnRyX2VuLCBi
-YXNlICsgTERJX0lOVF9FTik7Cj4+Cj4+ICsgICAgIHJldHVybiAwOwo+PiArfQo+PiArCj4+ICt2
-b2lkIGFkZV9kaXNhYmxlX3ZibGFuayhzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LCBpbnQgY3J0Y19p
-bmRleCkKPj4gK3sKPj4gKyAgICAgc3RydWN0IGRybV9jcnRjICpjcnRjID0gaGlzaV9nZXRfY3J0
-Y19mcm9tX2luZGV4KGRldiwgY3J0Y19pbmRleCk7Cj4+ICsgICAgIHN0cnVjdCBhZGVfY3J0YyAq
-YWNydGMgPSB0b19hZGVfY3J0YyhjcnRjKTsKPj4gKyAgICAgc3RydWN0IGFkZV9od19jdHggKmN0
-eCA9IGFjcnRjLT5jdHg7Cj4+ICsgICAgIHZvaWQgX19pb21lbSAqYmFzZSA9IGN0eC0+YmFzZTsK
-Pj4gKyAgICAgdTMyIGludHJfZW47Cj4+ICsKPj4gKyAgICAgRFJNX0lORk8oImRpc2FibGVfdmJs
-YW5rIGVudGVyLlxuIik7Cj4+ICsgICAgIGlmICghY3R4LT5wb3dlcl9vbikgewo+PiArICAgICAg
-ICAgICAgIERSTV9FUlJPUigicG93ZXIgaXMgZG93biEgdmJsYW5rIGRpc2FibGUgZmFpbFxuIik7
-Cj4+ICsgICAgICAgICAgICAgcmV0dXJuOwo+PiArICAgICB9Cj4+ICsgICAgIGludHJfZW4gPSBy
-ZWFkbChiYXNlICsgTERJX0lOVF9FTik7Cj4+ICsgICAgIGludHJfZW4gJj0gfkxESV9JU1JfRlJB
-TUVfRU5EX0lOVDsKPj4gKyAgICAgd3JpdGVsKGludHJfZW4sIGJhc2UgKyBMRElfSU5UX0VOKTsK
-Pj4gK30KPj4gKwo+PiArc3RhdGljIGlycXJldHVybl90IGFkZV9pcnFfaGFuZGxlcihpbnQgaXJx
-LCB2b2lkICpkYXRhKQo+PiArewo+PiArICAgICBzdHJ1Y3QgYWRlX2NydGMgKmFjcnRjID0gZGF0
-YTsKPj4gKyAgICAgc3RydWN0IGFkZV9od19jdHggKmN0eCA9IGFjcnRjLT5jdHg7Cj4+ICsgICAg
-IHN0cnVjdCBkcm1fY3J0YyAqY3J0YyA9ICZhY3J0Yy0+YmFzZTsKPj4gKyAgICAgc3RydWN0IGRy
-bV9kZXZpY2UgKmRldiA9IGNydGMtPmRldjsKPj4gKyAgICAgdm9pZCBfX2lvbWVtICpiYXNlID0g
-Y3R4LT5iYXNlOwo+PiArICAgICB1MzIgc3RhdHVzOwo+PiArCj4+ICsgICAgIHN0YXR1cyA9IHJl
-YWRsKGJhc2UgKyBMRElfTVNLX0lOVCk7Cj4+ICsgICAgIC8qIERSTV9JTkZPKCJMREkgSVJROiBz
-dGF0dXM9MHglWFxuIixzdGF0dXMpOyAqLwo+PiArCj4+ICsgICAgIC8qIHZibGFuayBpcnEgKi8K
-Pj4gKyAgICAgaWYgKHN0YXR1cyAmIExESV9JU1JfRlJBTUVfRU5EX0lOVCkgewo+PiArICAgICAg
-ICAgICAgIHdyaXRlbChMRElfSVNSX0ZSQU1FX0VORF9JTlQsIGJhc2UgKyBMRElfSU5UX0NMUik7
-Cj4+ICsgICAgICAgICAgICAgZHJtX2hhbmRsZV92YmxhbmsoZGV2LCBkcm1fY3J0Y19pbmRleChj
-cnRjKSk7Cj4KPiBkcm1fY3J0Y19oYW5kbGVfdmJsYW5rIHBsZWFzZS4gQXQgbGVhc3Qgd2hlbiBj
-YWxsaW5nIGludG8gdGhlIHZibGFuayBjb2RlCj4gZHJpdmVycyBkb24ndCBoYXZlIHRvIGRvIHRo
-ZSBzdHJ1Y3QgZHJtX2NydGMgLT4gaW50IGluZGV4IGNvbnZlcnNpb24gYW55Cj4gbW9yZS4gUGxl
-YXNlIG1ha2Ugc3VyZSB5b3UgZG8gdGhhdCBldmVyeXdoZXJlLCBpbiBjYXNlIEkndmUgbWlzc2Vk
-IG9uZS4KCndpbGwgdXNlIGRybV9jcnRjX2hhbmRsZV92YmxhbmsgaW4gdjMuCgpUaGFua3MsCi14
-aW5saWFuZwoKPgo+IENoZWVycywgRGFuaWVsCj4KPj4gKyAgICAgfQo+PiArCj4+ICsgICAgIHJl
-dHVybiBJUlFfSEFORExFRDsKPj4gK30KPj4KPj4gIC8qCj4+ICAgKiBzZXQgbW9kdWxlcycgcmVz
-ZXQgbW9kZTogYnkgc29mdHdhcmUgb3IgaGFyZHdhcmUKPj4gQEAgLTg1OCw2ICs5MzAsMTIgQEAg
-c3RhdGljIGludCBhZGVfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1h
-c3Rlciwgdm9pZCAqZGF0YSkKPj4gICAgICAgaWYgKHJldCkKPj4gICAgICAgICAgICAgICByZXR1
-cm4gcmV0Owo+Pgo+PiArICAgICAvKiB2YmxhbmsgaXJxIGluaXQgKi8KPj4gKyAgICAgcmV0ID0g
-cmVxdWVzdF9pcnEoY3R4LT5pcnEsIGFkZV9pcnFfaGFuZGxlciwgRFJJVkVSX0lSUV9TSEFSRUQs
-Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGRybV9kZXYtPmRyaXZlci0+bmFtZSwgYWNydGMp
-Owo+PiArICAgICBpZiAocmV0KQo+PiArICAgICAgICAgICAgIHJldHVybiByZXQ7Cj4+ICsKPj4g
-ICAgICAgcmV0dXJuIDA7Cj4+ICB9Cj4+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
-aGlzaWxpY29uL2hpc2lfZHJtX2FkZS5oIGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNp
-X2RybV9hZGUuaAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi5kMWQ3
-YjVkCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9o
-aXNpX2RybV9hZGUuaAo+PiBAQCAtMCwwICsxLDE2IEBACj4+ICsvKgo+PiArICogQ29weXJpZ2h0
-IChjKSAyMDE0LTIwMTUgSGlzaWxpY29uIExpbWl0ZWQuCj4+ICsgKgo+PiArICogVGhpcyBwcm9n
-cmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vciBtb2Rp
-ZnkKPj4gKyAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExp
-Y2Vuc2UgdmVyc2lvbiAyIGFzCj4+ICsgKiBwdWJsaXNoZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUg
-Rm91bmRhdGlvbi4KPj4gKyAqCj4+ICsgKi8KPj4gKwo+PiArI2lmbmRlZiBfX0hJU0lfRFJNX0FE
-RV9IX18KPj4gKyNkZWZpbmUgX19ISVNJX0RSTV9BREVfSF9fCj4+ICsKPj4gK2ludCBhZGVfZW5h
-YmxlX3ZibGFuayhzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LCBpbnQgY3J0Y19pbmRleCk7Cj4+ICt2
-b2lkIGFkZV9kaXNhYmxlX3ZibGFuayhzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LCBpbnQgY3J0Y19p
-bmRleCk7Cj4+ICsKPj4gKyNlbmRpZgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2hp
-c2lsaWNvbi9oaXNpX2RybV9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vaGlzaV9k
-cm1fZHJ2LmMKPj4gaW5kZXggZDBlY2E4MC4uMTNmNTlhYSAxMDA2NDQKPj4gLS0tIGEvZHJpdmVy
-cy9ncHUvZHJtL2hpc2lsaWNvbi9oaXNpX2RybV9kcnYuYwo+PiArKysgYi9kcml2ZXJzL2dwdS9k
-cm0vaGlzaWxpY29uL2hpc2lfZHJtX2Rydi5jCj4+IEBAIC0yMSw2ICsyMSw3IEBACj4+ICAjaW5j
-bHVkZSA8ZHJtL2RybV9mYl9jbWFfaGVscGVyLmg+Cj4+ICAjaW5jbHVkZSA8ZHJtL2RybV9hdG9t
-aWNfaGVscGVyLmg+Cj4+Cj4+ICsjaW5jbHVkZSAiaGlzaV9kcm1fYWRlLmgiCj4+ICAjaW5jbHVk
-ZSAiaGlzaV9kcm1fZHJ2LmgiCj4+Cj4+ICAjZGVmaW5lIERSSVZFUl9OQU1FICAiaGlzaS1kcm0i
-Cj4+IEBAIC0yOSw2ICszMCw3IEBAIHN0YXRpYyBpbnQgaGlzaV9kcm1fdW5sb2FkKHN0cnVjdCBk
-cm1fZGV2aWNlICpkZXYpCj4+ICB7Cj4+ICAgICAgIHN0cnVjdCBoaXNpX2RybV9wcml2YXRlICpw
-cml2ID0gZGV2LT5kZXZfcHJpdmF0ZTsKPj4KPj4gKyAgICAgZHJtX3ZibGFua19jbGVhbnVwKGRl
-dik7Cj4+ICAgICAgIGRybV9tb2RlX2NvbmZpZ19jbGVhbnVwKGRldik7Cj4+ICAgICAgIGRldm1f
-a2ZyZWUoZGV2LT5kZXYsIHByaXYpOwo+PiAgICAgICBkZXYtPmRldl9wcml2YXRlID0gTlVMTDsK
-Pj4gQEAgLTc2LDExICs3OCwyMiBAQCBzdGF0aWMgaW50IGhpc2lfZHJtX2xvYWQoc3RydWN0IGRy
-bV9kZXZpY2UgKmRldiwgdW5zaWduZWQgbG9uZyBmbGFncykKPj4gICAgICAgICAgICAgICBnb3Rv
-IGVycl9tb2RlX2NvbmZpZ19jbGVhbnVwOwo+PiAgICAgICB9Cj4+Cj4+ICsgICAgIC8qIHZibGFu
-ayBpbml0ICovCj4+ICsgICAgIHJldCA9IGRybV92YmxhbmtfaW5pdChkZXYsIGRldi0+bW9kZV9j
-b25maWcubnVtX2NydGMpOwo+PiArICAgICBpZiAocmV0KSB7Cj4+ICsgICAgICAgICAgICAgRFJN
-X0VSUk9SKCJmYWlsZWQgdG8gaW5pdGlhbGl6ZSB2YmxhbmsuXG4iKTsKPj4gKyAgICAgICAgICAg
-ICBnb3RvIGVycl91bmJpbmRfYWxsOwo+PiArICAgICB9Cj4+ICsgICAgIC8qIHdpdGggaXJxX2Vu
-YWJsZWQgPSB0cnVlLCB3ZSBjYW4gdXNlIHRoZSB2YmxhbmsgZmVhdHVyZS4gKi8KPj4gKyAgICAg
-ZGV2LT5pcnFfZW5hYmxlZCA9IHRydWU7Cj4+ICsKPj4gICAgICAgLyogcmVzZXQgYWxsIHRoZSBz
-dGF0ZXMgb2YgY3J0Yy9wbGFuZS9lbmNvZGVyL2Nvbm5lY3RvciAqLwo+PiAgICAgICBkcm1fbW9k
-ZV9jb25maWdfcmVzZXQoZGV2KTsKPj4KPj4gICAgICAgcmV0dXJuIDA7Cj4+Cj4+ICtlcnJfdW5i
-aW5kX2FsbDoKPj4gKyAgICAgY29tcG9uZW50X3VuYmluZF9hbGwoZGV2LT5kZXYsIGRldik7Cj4+
-ICBlcnJfbW9kZV9jb25maWdfY2xlYW51cDoKPj4gICAgICAgZHJtX21vZGVfY29uZmlnX2NsZWFu
-dXAoZGV2KTsKPj4gICAgICAgZGV2bV9rZnJlZShkZXYtPmRldiwgcHJpdik7Cj4+IEBAIC0xMjYs
-NyArMTM5LDcgQEAgc3RhdGljIGludCBoaXNpX2dlbV9jbWFfZHVtYl9jcmVhdGUoc3RydWN0IGRy
-bV9maWxlICpmaWxlLAo+Pgo+PiAgc3RhdGljIHN0cnVjdCBkcm1fZHJpdmVyIGhpc2lfZHJtX2Ry
-aXZlciA9IHsKPj4gICAgICAgLmRyaXZlcl9mZWF0dXJlcyAgICAgICAgPSBEUklWRVJfR0VNIHwg
-RFJJVkVSX01PREVTRVQgfCBEUklWRVJfUFJJTUUgfAo+PiAtICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIERSSVZFUl9BVE9NSUMsCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgRFJJVkVSX0FUT01JQyB8IERSSVZFUl9IQVZFX0lSUSwKPj4gICAgICAgLmxvYWQgICAgICAg
-ICAgICAgICAgICAgPSBoaXNpX2RybV9sb2FkLAo+PiAgICAgICAudW5sb2FkICAgICAgICAgICAg
-ICAgICA9IGhpc2lfZHJtX3VubG9hZCwKPj4gICAgICAgLmZvcHMgICAgICAgICAgICAgICAgICAg
-PSAmaGlzaV9kcm1fZm9wcywKPj4gQEAgLTE0OCw2ICsxNjEsMTAgQEAgc3RhdGljIHN0cnVjdCBk
-cm1fZHJpdmVyIGhpc2lfZHJtX2RyaXZlciA9IHsKPj4gICAgICAgLmdlbV9wcmltZV92dW5tYXAg
-ICAgICAgPSBkcm1fZ2VtX2NtYV9wcmltZV92dW5tYXAsCj4+ICAgICAgIC5nZW1fcHJpbWVfbW1h
-cCAgICAgICAgID0gZHJtX2dlbV9jbWFfcHJpbWVfbW1hcCwKPj4KPj4gKyAgICAgLmdldF92Ymxh
-bmtfY291bnRlciAgICAgPSBkcm1fdmJsYW5rX2NvdW50LAo+PiArICAgICAuZW5hYmxlX3ZibGFu
-ayAgICAgICAgICA9IGFkZV9lbmFibGVfdmJsYW5rLAo+PiArICAgICAuZGlzYWJsZV92Ymxhbmsg
-ICAgICAgICA9IGFkZV9kaXNhYmxlX3ZibGFuaywKPj4gKwo+PiAgICAgICAubmFtZSAgICAgICAg
-ICAgICAgICAgICA9ICJoaXNpIiwKPj4gICAgICAgLmRlc2MgICAgICAgICAgICAgICAgICAgPSAi
-SGlzaWxpY29uIFNvQ3MnIERSTSBEcml2ZXIiLAo+PiAgICAgICAuZGF0ZSAgICAgICAgICAgICAg
-ICAgICA9ICIyMDE1MDcxOCIsCj4+IC0tCj4+IDEuOS4xCj4+Cj4KPiAtLQo+IERhbmllbCBWZXR0
-ZXIKPiBTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KPiBodHRwOi8vYmxvZy5m
-ZndsbC5jaApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hello experts,
+
+I am tackling on a new bus driver, but I am worndering
+what the DT-binding specification should be.
+
+Here is my hardware situation:
+
+My SoC has an external bus (it is called UniPhier System Bus).
+This is a simple parallel bus with address, data,
+chip-selects, and some other control signals.
+It supports up to 8 chip-selects.
+
+Each CS address space can be mapped onto the CPU view,
+and it must be configured run-time via the bus controller registers.
+
+Let's assume this situation:
+
+ - An ethernet device is connected at the offset address 0x01f00000 of CS1
+ - A UART device is connected at the offset address 0x00200000 of CS5
+
+
+A quick draft of device tree would be as follows:
+
+
+amba {
+     compatible = "simple-bus";
+     #address-cells = <1>;
+     #size-cells = <1>;
+     ranges;
+
+     extbus {
+           compatible = "socionext,uniphier-system-bus";
+           reg = <0x58c00000 0x400>; /* registers of bus controller */
+           #address-cells = <2>;
+           #size-cells = <1>;
+
+           ethernet@1,01f00000 {
+                 compatible = "smsc,lan9115";
+                 reg = <1 0x01f00000 0x1000>;
+                 interrupts = <0 48 4>
+                 phy-mode = "mii";
+           };
+
+           uart@5,00200000 {
+                 compatible = "ns16550a";
+                 reg = <5 0x00200000 0x20>;
+                 interrupts = <0 49 4>
+                 clock-frequency = <12288000>;
+           };
+     };
+};
+
+
+
+Please note "ranges" property is missing from the extbus node.
+
+As mentioned above, the address translation from the external bus
+to the parent bus is run-time configurable.
+
+
+It is possible to map
+  CS1 of extbus  to  0x40000000-0x41ffffff of CPU view
+  CS5 of extbus  to  0x42000000-0x43ffffff of CPU view
+
+It is also possible to map
+  CS1 of extbus  to  0x46000000-0x47ffffff of CPU view
+  CS5 of extbus  to  0x44000000-0x45ffffff of CPU view
+
+There is nothing preventing us from a particular
+address mapping.
+It is completely up to the software (driver)
+to choose one mapping from another.
+
+
+And I notice a conflict between the followings.
+
+[1] Device Tree is a hardware description language.
+It should not describe the software configuration.
+
+So, ranges such as
+   ranges = <1 0 0x40000000 0x02000000
+             5 0 0x42000000 0x02000000>;
+
+   or
+
+   ranges = <1 0 0x46000000 0x02000000
+             5 0 0x44000000 0x02000000>;
+
+are configuration information, which should not be
+included in the device tree.
+
+Any address mapping is OK as long as no region overlap occurs.
+No point to specify "ranges" from the device tree.
+
+
+[2] of_translate_address() expects "ranges" in every bus node
+
+When we need to translate the "reg" property into the CPU-viewed address,
+we call of_translate_address().  It translates addresses,
+parsing "ranges" property when crossing buses.
+It potentially means, "ranges" properties are statically defined
+in the device tree.
+
+
+I have not been able to find a good way
+to solve the conflict between [1] and [2].
+
+
+To sum up, what I want is:
+
+ - Let the driver to configure the address translation on run-time
+ - Once the bus is configured, I want the sub nodes to be accessed
+   from the CPU, like the other statically instantiated devices.
+
+
+Any comment is welcome!
+
+
+BTW, perhaps Marvell Mbus has a similar situation (run-time configurable)?
+(Documentation/devicetree/bindings/bus/mvebu-mbus.txt)
+I am not familiar with such SoCs, though.
+
+
+-- 
+Best Regards
+Masahiro Yamada
