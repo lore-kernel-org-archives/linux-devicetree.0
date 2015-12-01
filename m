@@ -1,49 +1,36 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/2 net-next] ravb: Add fallback compatibility strings
-Date: Tue, 1 Dec 2015 13:26:08 +0300
-Message-ID: <565D75C0.1020502@cogentembedded.com>
-References: <1448955783-22806-1-git-send-email-horms+renesas@verge.net.au>
- <1448955783-22806-2-git-send-email-horms+renesas@verge.net.au>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 3/4] dmaengine: qcom_bam_dma: use correct pipe FIFO size
+Date: Tue, 01 Dec 2015 11:28:32 +0100
+Message-ID: <1971752.Auss6gPApO@wuerfel>
+References: <1448961299-15161-1-git-send-email-stanimir.varbanov@linaro.org> <1448961299-15161-4-git-send-email-stanimir.varbanov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1448955783-22806-2-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>, netdev@vger.kernel.org, linux-sh@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1448961299-15161-4-git-send-email-stanimir.varbanov@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andy Gross <agross@codeaurora.org>, Archit Taneja <architt@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Tuesday 01 December 2015 11:14:58 Stanimir Varbanov wrote:
+> 
+> diff --git a/drivers/dma/qcom_bam_dma.c b/drivers/dma/qcom_bam_dma.c
+> index 0f06f3b7a72b..6d290de9ab2b 100644
+> --- a/drivers/dma/qcom_bam_dma.c
+> +++ b/drivers/dma/qcom_bam_dma.c
+> @@ -458,7 +458,7 @@ static void bam_chan_init_hw(struct bam_chan *bchan,
+>          */
+>         writel_relaxed(ALIGN(bchan->fifo_phys, sizeof(struct bam_desc_hw)),
+>                         bam_addr(bdev, bchan->id, BAM_P_DESC_FIFO_ADDR));
+> -       writel_relaxed(BAM_DESC_FIFO_SIZE,
+> +       writel_relaxed(BAM_MAX_DATA_SIZE,
+>                         bam_addr(bdev, bchan->id, BAM_P_FIFO_SIZES));
+>  
+>         /* enable the per pipe interrupts, enable EOT, ERR, and INT irqs */
 
-On 12/1/2015 10:43 AM, Simon Horman wrote:
+I'm looking at that now and fail to see why these have to use writel_relaxed().
 
-> Add fallback compatibility strings for R-Car Gen 2 & 3 SoC Families.
-> This is in keeping with the fallback scheme being adopted wherever
-> appropriate for drivers for Renesas SoCs.
->
-> Also correct typo.
->
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> ---
->   Documentation/devicetree/bindings/net/renesas,ravb.txt | 11 +++++++++--
->   drivers/net/ethernet/renesas/ravb_main.c               |  2 ++
->   2 files changed, 11 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-> index b486f3f5f6a3..115006325bff 100644
-> --- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
-> +++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-> @@ -1,12 +1,19 @@
->   * Renesas Electronics Ethernet AVB
->
->   This file provides information on what the device node for the Ethernet AVB
-> -interface contains.
-> +interface.
+Could you add a patch to use readl/writel by default?
 
-    Why?
-
-[...]
-
-MBR, Sergei
-
+	Arnd
