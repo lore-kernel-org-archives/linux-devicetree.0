@@ -1,55 +1,52 @@
-From: Dongsheng Wang <dongsheng.wang@freescale.com>
-Subject: [RESEND 1/2] ARM: dts: ls1021a: Add DCU dts node
-Date: Tue, 1 Dec 2015 16:02:56 +0800
-Message-ID: <1448956977-8930-1-git-send-email-dongsheng.wang@freescale.com>
+From: Haibo Chen <haibo.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v4 0/4] Add i.mx7d adc driver support
+Date: Tue, 1 Dec 2015 16:22:26 +0800
+Message-ID: <1448958150-25579-1-git-send-email-haibo.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org
-Cc: Jianwei Wang <jianwei.wang.chn@gmail.com>, devicetree@vger.kernel.org, Xiubo Li <lixiubo@cmss.chinamobile.com>, Alison Wang <alison.wang@freescale.com>, Yi Meng <b56799@freescale.com>, Wang Dongsheng <dongsheng.wang@freescale.com>, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: haibo.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jianwei Wang <jianwei.wang.chn@gmail.com>
+This patch set add imx7d adc driver support.
 
-Add DCU node, DCU is a display controller of Freescale
-named 2D-ACE.
+Changes in v4:
+-sort the include head file alphabetically
+-really just clear the bit 31 of register REG_ADC_CH_A\B\C\D_CFG1 
+ in function imx7d_adc_sample_rate_set()
+-add document in imx7d_adc_isr() to clarify the clear operation
+-add function imx7d_adc_power_down()
+-adjust the format of the code and add some small changes
 
-Signed-off-by: Alison Wang <alison.wang@freescale.com>
-Signed-off-by: Xiubo Li <lixiubo@cmss.chinamobile.com>
-Signed-off-by: Jianwei Wang <jianwei.wang.chn@gmail.com>
-Signed-off-by: Yi Meng <b56799@freescale.com>
-Signed-off-by: Wang Dongsheng <dongsheng.wang@freescale.com>
+Changes in v3:
+-move down the irq request in probe()
+-remove the property 'num-channels' in dts
+-remove some unused head file
+-add clear register operation in imx7d_adc_isr()
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 9430a99..f01c98b 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -428,6 +428,16 @@
- 				 <&platform_clk 1>;
- 		};
- 
-+		dcu: dcu@2ce0000 {
-+			compatible = "fsl,ls1021a-dcu";
-+			reg = <0x0 0x2ce0000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&platform_clk 0>;
-+			clock-names = "dcu";
-+			big-endian;
-+			status = "disabled";
-+		};
-+
- 		mdio0: mdio@2d24000 {
- 			compatible = "gianfar";
- 			device_type = "mdio";
+Changes in v2:
+-prefix defines with IMX7D_ for all the register
+-use BIT macro to define a single bit
+-remove the dma_en from struct adc_feature which is not support currently
+-use static const array to replace the switch case code
+
+Haibo Chen (4):
+  iio: adc: add IMX7D ADC driver support
+  Documentation: add the binding file for Freescale imx7d ADC driver
+  ARM: dts: imx7d.dtsi: add ADC support
+  ARM: dts: imx7d-sdb: add ADC support
+
+ .../devicetree/bindings/iio/adc/imx7d-adc.txt      |  22 +
+ arch/arm/boot/dts/imx7d-sdb.dts                    |  10 +
+ arch/arm/boot/dts/imx7d.dtsi                       |  18 +
+ drivers/iio/adc/Kconfig                            |   9 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/imx7d_adc.c                        | 588 +++++++++++++++++++++
+ 6 files changed, 648 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
+ create mode 100644 drivers/iio/adc/imx7d_adc.c
+
 -- 
-2.1.0.27.g96db324
+1.9.1
