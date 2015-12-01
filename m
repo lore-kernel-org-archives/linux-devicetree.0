@@ -1,156 +1,33 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [Question] DT-Bindings for run-time configurable bus?
-Date: Tue, 01 Dec 2015 12:29:03 +0100
-Message-ID: <9491984.N5sK0AKL2L@wuerfel>
-References: <CAK7LNATGi4isAaG0XS13ZnfFQKCxzaxeJvusSg3RYn7z29BF9A@mail.gmail.com>
+From: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 03/10] dt-bindings: document the MPS2 UART bindings
+Date: Tue, 01 Dec 2015 11:35:28 +0000
+Message-ID: <565D8600.4040105@arm.com>
+References: <1448447621-17900-1-git-send-email-vladimir.murzin@arm.com> <1448447621-17900-4-git-send-email-vladimir.murzin@arm.com> <20151125200729.GJ30473@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNATGi4isAaG0XS13ZnfFQKCxzaxeJvusSg3RYn7z29BF9A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Andrew Lunn <andrew@lunn.ch>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frank.rowand@sonymobile.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151125200729.GJ30473@rob-hp-laptop>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 01 December 2015 13:30:25 Masahiro Yamada wrote:
-> Hello experts,
+On 25/11/15 20:07, Rob Herring wrote:
+> On Wed, Nov 25, 2015 at 10:33:34AM +0000, Vladimir Murzin wrote:
+>> This adds documentation of device tree bindings for the
+>> UART found on ARM MPS2 platform
+>>
+>> Signed-off-by: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
 > 
-> I am tackling on a new bus driver, but I am worndering
-> what the DT-binding specification should be.
-> 
-> Here is my hardware situation:
-> 
-> My SoC has an external bus (it is called UniPhier System Bus).
-> This is a simple parallel bus with address, data,
-> chip-selects, and some other control signals.
-> It supports up to 8 chip-selects.
-> 
-> Each CS address space can be mapped onto the CPU view,
-> and it must be configured run-time via the bus controller registers.
-> 
-> Let's assume this situation:
-> 
->  - An ethernet device is connected at the offset address 0x01f00000 of CS1
->  - A UART device is connected at the offset address 0x00200000 of CS5
-> 
-> 
-> A quick draft of device tree would be as follows:
-> 
-> 
-> amba {
->      compatible = "simple-bus";
->      #address-cells = <1>;
->      #size-cells = <1>;
->      ranges;
-> 
->      extbus {
->            compatible = "socionext,uniphier-system-bus";
->            reg = <0x58c00000 0x400>; /* registers of bus controller */
->            #address-cells = <2>;
->            #size-cells = <1>;
-> 
->            ethernet@1,01f00000 {
->                  compatible = "smsc,lan9115";
->                  reg = <1 0x01f00000 0x1000>;
->                  interrupts = <0 48 4>
->                  phy-mode = "mii";
->            };
-> 
->            uart@5,00200000 {
->                  compatible = "ns16550a";
->                  reg = <5 0x00200000 0x20>;
->                  interrupts = <0 49 4>
->                  clock-frequency = <12288000>;
->            };
->      };
-> };
-> 
+> Why did ARM invent a new UART?
 
-That looks reasonable.
+It is not something new and it was inherited from MPS (version 1) and I
+can only guess why it was there in a first place ;)
 
-> Please note "ranges" property is missing from the extbus node.
 > 
-> As mentioned above, the address translation from the external bus
-> to the parent bus is run-time configurable.
-> 
-> 
-> It is possible to map
->   CS1 of extbus  to  0x40000000-0x41ffffff of CPU view
->   CS5 of extbus  to  0x42000000-0x43ffffff of CPU view
-> 
-> It is also possible to map
->   CS1 of extbus  to  0x46000000-0x47ffffff of CPU view
->   CS5 of extbus  to  0x44000000-0x45ffffff of CPU view
-> 
-> There is nothing preventing us from a particular
-> address mapping.
-> It is completely up to the software (driver)
-> to choose one mapping from another.
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 
-Ok.
+Thanks for your time.
 
-> And I notice a conflict between the followings.
-> 
-> [1] Device Tree is a hardware description language.
-> It should not describe the software configuration.
-> 
-> So, ranges such as
->    ranges = <1 0 0x40000000 0x02000000
->              5 0 0x42000000 0x02000000>;
-> 
->    or
-> 
->    ranges = <1 0 0x46000000 0x02000000
->              5 0 0x44000000 0x02000000>;
-> 
-> are configuration information, which should not be
-> included in the device tree.
-> 
-> Any address mapping is OK as long as no region overlap occurs.
-> No point to specify "ranges" from the device tree.
-> 
-> 
-> [2] of_translate_address() expects "ranges" in every bus node
-> 
-> When we need to translate the "reg" property into the CPU-viewed address,
-> we call of_translate_address().  It translates addresses,
-> parsing "ranges" property when crossing buses.
-> It potentially means, "ranges" properties are statically defined
-> in the device tree.
-> 
-> 
-> I have not been able to find a good way
-> to solve the conflict between [1] and [2].
-> 
-> 
-> To sum up, what I want is:
-> 
->  - Let the driver to configure the address translation on run-time
->  - Once the bus is configured, I want the sub nodes to be accessed
->    from the CPU, like the other statically instantiated devices.
-> 
-> 
-> Any comment is welcome!
-> 
-> 
-> BTW, perhaps Marvell Mbus has a similar situation (run-time configurable)?
-> (Documentation/devicetree/bindings/bus/mvebu-mbus.txt)
-> I am not familiar with such SoCs, though.
-
-Yes, this is the example I was thinking of. For mbus, we decided that
-doing the full dynamic reassignment of addresses is too bothersome
-for the OS, so the DT contains a "reasonable" default that the OS can
-use. This is also what we do for most PCI host controllers on embedded
-systems. They tend to have programmable translations, and the DT contains
-the settings that are known to work and that the driver uses to set up
-the I/O windows even if a lot of other settings would work just as
-well.
-
-A more traditional setup that we use on server-class machines is that
-the bootloader decides what the windows should be, sets them up and
-documents them in DT. The OS can still change them if it wants to,
-but it doesn't actually have to worry about the fact that those are
-programmable, or what registers are used for programming them.
-
-	Arnd
+Vladimir
