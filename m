@@ -1,104 +1,64 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v2] arm64: dts: qcom: Add apq8096 dragonboard dts skeletons
-Date: Tue,  1 Dec 2015 21:41:15 +0530
-Message-ID: <1448986275-16807-1-git-send-email-rnayak@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: agross@codeaurora.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, sboyd@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: enable pinctrl for Broadcom NSP
+Date: Tue, 1 Dec 2015 08:24:21 -0800
+Message-ID: <565DC9B5.8070801@broadcom.com>
+References: <1448042309-46445-1-git-send-email-yrdreddy@broadcom.com>
+ <5654FBE4.5010802@gmail.com>
+ <CACRpkdZCBbrfHq+DiWcfe6i_2FPUXyMQwbsQu5_zAKYa=fJugg@mail.gmail.com>
+ <565DC555.2070004@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <565DC555.2070004-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Yendapally Reddy Dhananjaya Reddy <yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add new dtsi and dts files for the apq8096 dragonboards with just
-a serial device used as debug console
 
-While at it, also rearrange the Makefile so we have one dtb per line
-so as to be consistent with whats done on other platforms.
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/Makefile                 |  4 ++-
- arch/arm64/boot/dts/qcom/apq8096-dragonboard.dts  | 21 ++++++++++++++++
- arch/arm64/boot/dts/qcom/apq8096-dragonboard.dtsi | 30 +++++++++++++++++++++++
- 3 files changed, 54 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/qcom/apq8096-dragonboard.dts
- create mode 100644 arch/arm64/boot/dts/qcom/apq8096-dragonboard.dtsi
+On 12/1/2015 8:05 AM, Scott Branden wrote:
+> Hi Linus,
+>
+> On 15-12-01 02:00 AM, Linus Walleij wrote:
+>> On Wed, Nov 25, 2015 at 1:08 AM, Florian Fainelli
+>> <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> On 20/11/15 09:58, Yendapally Reddy Dhananjaya Reddy wrote:
+>>>> This enables the pinctrl support for Broadcom NSP SoC
+>>>>
+>>>> Signed-off-by: Yendapally Reddy Dhananjaya Reddy
+>>>> <yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>
+>>> Looks like a sane pinctrl node here, unless there are objections, I
+>>> would like to go ahead and apply this for v4.5, thanks!
+>>
+>> I'm waiting for an indication from the other BCM pinctrl
+>> maintainers to tell whether this SoC is unique enough to deserve
+>> its own driver.
+> If Stephen Warren is the other maintainer you are talking about he does
+> not work at Broadcom.  I don't think he is familiar with the variety of
+> pinctrl implementations present.  But yes, the pinctrl implementations
+> have been rather unique in these Socs.  As Ray indicated we're trying to
+> get the silicon designers to standardize more going forward so we don't
+> have to create unique drivers for these SoCs.
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index fa1f661..0fd9a17 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -1,5 +1,7 @@
--dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-dragonboard.dtb
- 
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-dragonboard.dts b/arch/arm64/boot/dts/qcom/apq8096-dragonboard.dts
-new file mode 100644
-index 0000000..65f4a6a
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/apq8096-dragonboard.dts
-@@ -0,0 +1,21 @@
-+/*
-+ * Copyright (c) 2014-2015, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+
-+#include "apq8096-dragonboard.dtsi"
-+
-+/ {
-+	model = "Qualcomm Technologies, Inc. APQ 8096 DragonBoard";
-+	compatible = "qcom,apq8096-dragonboard";
-+};
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-dragonboard.dtsi b/arch/arm64/boot/dts/qcom/apq8096-dragonboard.dtsi
-new file mode 100644
-index 0000000..9bab5c0
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/apq8096-dragonboard.dtsi
-@@ -0,0 +1,30 @@
-+/*
-+ * Copyright (c) 2014-2015, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include "msm8996.dtsi"
-+
-+/ {
-+	aliases {
-+		serial0 = &blsp2_uart1;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0";
-+	};
-+
-+	soc {
-+		serial@75b0000 {
-+			status = "okay";
-+		};
-+	};
-+};
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Yes. Hopefully NSP and NS2 will be the last iProc based SoCs that 
+require unique pinmux driver.
+
+>>
+>> Yours,
+>> Linus Walleij
+>>
+>
+> Regards,
+>   Scott
+>
+
+Thanks,
+
+Ray
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
