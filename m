@@ -1,693 +1,923 @@
-From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 1/4] arm64, numa: adding numa support for arm64 platforms.
-Date: Tue, 1 Dec 2015 14:15:20 +0530
-Message-ID: <CAFpQJXUqKKNJr_goQUBPhfSbPT3tHuYMuKcae3mXUuq22ZD9uQ@mail.gmail.com>
-References: <1447780843-9223-1-git-send-email-gkulkarni@caviumnetworks.com>
-	<1447780843-9223-2-git-send-email-gkulkarni@caviumnetworks.com>
-	<56580D80.2050806@huawei.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v2 08/10] drm/hisilicon: Add dsi encoder driver
+Date: Tue, 1 Dec 2015 14:28:18 +0530
+Message-ID: <565D612A.1010307@codeaurora.org>
+References: <1448707145-69348-1-git-send-email-xinliang.liu@linaro.org>
+ <1448707145-69348-9-git-send-email-xinliang.liu@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56580D80.2050806-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngie>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1448707145-69348-9-git-send-email-xinliang.liu@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Xinliang Liu <xinliang.liu@linaro.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch, robh@kernel.org, daniel@fooishbar.org, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, andy.green@linaro.org, haojian.zhuang@linaro.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, benjamin.gaignard@linaro.org, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, zourongrong@huawei.com, lijianhua@huawei.com, sumit.semwal@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 27, 2015 at 1:30 PM, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+
+
+On 11/28/2015 04:09 PM, Xinliang Liu wrote:
+> Add dsi encoder driver for hi6220 SoC.
 >
+> Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
+> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+> Signed-off-by: Andy Green <andy.green@linaro.org>
+> ---
+>   drivers/gpu/drm/hisilicon/Kconfig        |   1 +
+>   drivers/gpu/drm/hisilicon/Makefile       |   3 +-
+>   drivers/gpu/drm/hisilicon/hisi_drm_dsi.c | 728 +++++++++++++++++++++++++++++++
+>   drivers/gpu/drm/hisilicon/hisi_dsi_reg.h |  89 ++++
+>   4 files changed, 820 insertions(+), 1 deletion(-)
+>   create mode 100644 drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
+>   create mode 100644 drivers/gpu/drm/hisilicon/hisi_dsi_reg.h
 >
-> On 2015/11/18 1:20, Ganapatrao Kulkarni wrote:
->> Adding numa support for arm64 based platforms.
->> This patch adds by default the dummy numa node and
->> maps all memory and cpus to node 0.
->> using this patch, numa can be simulated on single node arm64 platforms.
->>
->> Reviewed-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> diff --git a/drivers/gpu/drm/hisilicon/Kconfig b/drivers/gpu/drm/hisilicon/Kconfig
+> index 70aa8d1..f1c33c2 100644
+> --- a/drivers/gpu/drm/hisilicon/Kconfig
+> +++ b/drivers/gpu/drm/hisilicon/Kconfig
+> @@ -4,6 +4,7 @@ config DRM_HISI
+>   	select DRM_KMS_HELPER
+>   	select DRM_GEM_CMA_HELPER
+>   	select DRM_KMS_CMA_HELPER
+> +	select DRM_MIPI_DSI
+>   	help
+>   	  Choose this option if you have a hisilicon chipsets(hi6220).
+>   	  If M is selected the module will be called hisi-drm.
+> diff --git a/drivers/gpu/drm/hisilicon/Makefile b/drivers/gpu/drm/hisilicon/Makefile
+> index 3433c8b..5083c1f 100644
+> --- a/drivers/gpu/drm/hisilicon/Makefile
+> +++ b/drivers/gpu/drm/hisilicon/Makefile
+> @@ -1,4 +1,5 @@
+>   hisi-drm-y := hisi_drm_drv.o \
+> -	      hisi_drm_ade.o
+> +	      hisi_drm_ade.o \
+> +	      hisi_drm_dsi.o
 >
-> I've tested this patch on QEMU VM.
+>   obj-$(CONFIG_DRM_HISI)	+= hisi-drm.o
+> diff --git a/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c b/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
+> new file mode 100644
+> index 0000000..7a6cf66
+> --- /dev/null
+> +++ b/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
+> @@ -0,0 +1,728 @@
+> +/*
+> + * Hisilicon hi6220 SoC dsi driver
+> + *
+> + * Copyright (c) 2014-2015 Hisilicon Limited.
+> + * Author:
+> + *	Xinliang Liu <xinliang.liu@linaro.org>
+> + *	Xinliang Liu <z.liuxinliang@hisilicon.com>
+> + *	Xinwei Kong <kong.kongxinwei@hisilicon.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/component.h>
+> +#include <linux/of_graph.h>
+> +
+> +#include <drm/drm_crtc_helper.h>
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_encoder_slave.h>
+> +#include <drm/drm_atomic_helper.h>
+> +
+> +#include "hisi_dsi_reg.h"
+> +
+> +#define MAX_TX_ESC_CLK		   (10)
+> +#define ROUND(x, y) ((x) / (y) + ((x) % (y) * 10 / (y) >= 5 ? 1 : 0))
+> +#define DEFAULT_MIPI_CLK_RATE   19200000
+> +#define DEFAULT_MIPI_CLK_PERIOD_PS (1000000000 / (DEFAULT_MIPI_CLK_RATE / 1000))
+> +#define R(x) ((u32)((((u64)(x) * (u64)1000 * (u64)mode->clock) / \
+> +	      phy->lane_byte_clk_kHz)))
+> +
+> +#define encoder_to_dsi(encoder) \
+> +	container_of(encoder, struct hisi_dsi, encoder)
+> +#define host_to_dsi(host) \
+> +	container_of(host, struct hisi_dsi, host)
+> +
+> +struct mipi_phy_register {
+> +	u32 clk_t_lpx;
+> +	u32 clk_t_hs_prepare;
+> +	u32 clk_t_hs_zero;
+> +	u32 clk_t_hs_trial;
+> +	u32 clk_t_wakeup;
+> +	u32 data_t_lpx;
+> +	u32 data_t_hs_prepare;
+> +	u32 data_t_hs_zero;
+> +	u32 data_t_hs_trial;
+> +	u32 data_t_ta_go;
+> +	u32 data_t_ta_get;
+> +	u32 data_t_wakeup;
+> +	u32 hstx_ckg_sel;
+> +	u32 pll_fbd_div5f;
+> +	u32 pll_fbd_div1f;
+> +	u32 pll_fbd_2p;
+> +	u32 pll_enbwt;
+> +	u32 pll_fbd_p;
+> +	u32 pll_fbd_s;
+> +	u32 pll_pre_div1p;
+> +	u32 pll_pre_p;
+> +	u32 pll_vco_750M;
+> +	u32 pll_lpf_rs;
+> +	u32 pll_lpf_cs;
+> +	u32 clklp2hs_time;
+> +	u32 clkhs2lp_time;
+> +	u32 lp2hs_time;
+> +	u32 hs2lp_time;
+> +	u32 clk_to_data_delay;
+> +	u32 data_to_clk_delay;
+> +	u32 lane_byte_clk_kHz;
+> +	u32 clk_division;
+> +};
+> +
+> +struct dsi_hw_ctx {
+> +	void __iomem *base;
+> +	struct clk *dsi_cfg_clk;
+> +};
+> +
+> +struct hisi_dsi {
+> +	struct drm_encoder encoder;
+> +	struct drm_display_mode cur_mode;
+> +	struct dsi_hw_ctx *ctx;
+> +	struct mipi_phy_register phy;
+> +
+> +	u32 lanes;
+> +	enum mipi_dsi_pixel_format format;
+> +	unsigned long mode_flags;
+> +	bool enable;
+> +};
+> +
+> +struct dsi_data {
+> +	struct hisi_dsi dsi;
+> +	struct dsi_hw_ctx ctx;
+> +};
+> +
+> +struct dsi_phy_seq_info {
+> +	u32 min_range_kHz;
+> +	u32 max_range_kHz;
+> +	u32 pll_vco_750M;
+> +	u32 hstx_ckg_sel;
+> +};
+> +
+> +static const struct dsi_phy_seq_info dphy_seq_info[] = {
+> +	{   46000,    62000,   1,    7 },
+> +	{   62000,    93000,   0,    7 },
+> +	{   93000,   125000,   1,    6 },
+> +	{  125000,   187000,   0,    6 },
+> +	{  187000,   250000,   1,    5 },
+> +	{  250000,   375000,   0,    5 },
+> +	{  375000,   500000,   1,    4 },
+> +	{  500000,   750000,   0,    4 },
+> +	{  750000,  1000000,   1,    0 },
+> +	{ 1000000,  1500000,   0,    0 }
+> +};
+> +
+> +static void set_dsi_phy_rate_equal_or_faster(u32 phy_freq_kHz,
+> +					     struct mipi_phy_register *phy)
+> +{
+> +	u32 ui = 0;
+> +	u32 cfg_clk_ps = DEFAULT_MIPI_CLK_PERIOD_PS;
+> +	u32 i = 0;
+> +	u32 q_pll = 1;
+> +	u32 m_pll = 0;
+> +	u32 n_pll = 0;
+> +	u32 r_pll = 1;
+> +	u32 m_n = 0;
+> +	u32 m_n_int = 0;
+> +	u64 f_kHz;
+> +	u64 temp;
+> +	u64 tmp_kHz = phy_freq_kHz;
+> +
+> +	do {
+> +		f_kHz = tmp_kHz;
+> +
+> +		/* Find the PLL clock range from the table */
+> +		for (i = 0; i < ARRAY_SIZE(dphy_seq_info); i++)
+> +			if (f_kHz > dphy_seq_info[i].min_range_kHz &&
+> +			    f_kHz <= dphy_seq_info[i].max_range_kHz)
+> +				break;
+> +
+> +		if (i == ARRAY_SIZE(dphy_seq_info)) {
+> +			DRM_ERROR("%lldkHz out of range\n", f_kHz);
+> +			return;
+> +		}
+> +
+> +		phy->pll_vco_750M = dphy_seq_info[i].pll_vco_750M;
+> +		phy->hstx_ckg_sel = dphy_seq_info[i].hstx_ckg_sel;
+> +
+> +		if (phy->hstx_ckg_sel <= 7 &&
+> +		    phy->hstx_ckg_sel >= 4)
+> +			q_pll = 0x10 >> (7 - phy->hstx_ckg_sel);
+> +
+> +		temp = f_kHz * (u64)q_pll * (u64)cfg_clk_ps;
+> +		m_n_int = temp / (u64)1000000000;
+> +		m_n = (temp % (u64)1000000000) / (u64)100000000;
+> +
+> +		if (m_n_int % 2 == 0) {
+> +			if (m_n * 6 >= 50) {
+> +				n_pll = 2;
+> +				m_pll = (m_n_int + 1) * n_pll;
+> +			} else if (m_n * 6 >= 30) {
+> +				n_pll = 3;
+> +				m_pll = m_n_int * n_pll + 2;
+> +			} else {
+> +				n_pll = 1;
+> +				m_pll = m_n_int * n_pll;
+> +			}
+> +		} else {
+> +			if (m_n * 6 >= 50) {
+> +				n_pll = 1;
+> +				m_pll = (m_n_int + 1) * n_pll;
+> +			} else if (m_n * 6 >= 30) {
+> +				n_pll = 1;
+> +				m_pll = (m_n_int + 1) * n_pll;
+> +			} else if (m_n * 6 >= 10) {
+> +				n_pll = 3;
+> +				m_pll = m_n_int * n_pll + 1;
+> +			} else {
+> +				n_pll = 2;
+> +				m_pll = m_n_int * n_pll;
+> +			}
+> +		}
+> +
+> +		if (n_pll == 1) {
+> +			phy->pll_fbd_p = 0;
+> +			phy->pll_pre_div1p = 1;
+> +		} else {
+> +			phy->pll_fbd_p = n_pll;
+> +			phy->pll_pre_div1p = 0;
+> +		}
+> +
+> +		if (phy->pll_fbd_2p <= 7 && phy->pll_fbd_2p >= 4)
+> +			r_pll = 0x10 >> (7 - phy->pll_fbd_2p);
+> +
+> +		if (m_pll == 2) {
+> +			phy->pll_pre_p = 0;
+> +			phy->pll_fbd_s = 0;
+> +			phy->pll_fbd_div1f = 0;
+> +			phy->pll_fbd_div5f = 1;
+> +		} else if (m_pll >= 2 * 2 * r_pll && m_pll <= 2 * 4 * r_pll) {
+> +			phy->pll_pre_p = m_pll / (2 * r_pll);
+> +			phy->pll_fbd_s = 0;
+> +			phy->pll_fbd_div1f = 1;
+> +			phy->pll_fbd_div5f = 0;
+> +		} else if (m_pll >= 2 * 5 * r_pll && m_pll <= 2 * 150 * r_pll) {
+> +			if (((m_pll / (2 * r_pll)) % 2) == 0) {
+> +				phy->pll_pre_p =
+> +					(m_pll / (2 * r_pll)) / 2 - 1;
+> +				phy->pll_fbd_s =
+> +					(m_pll / (2 * r_pll)) % 2 + 2;
+> +			} else {
+> +				phy->pll_pre_p =
+> +					(m_pll / (2 * r_pll)) / 2;
+> +				phy->pll_fbd_s =
+> +					(m_pll / (2 * r_pll)) % 2;
+> +			}
+> +			phy->pll_fbd_div1f = 0;
+> +			phy->pll_fbd_div5f = 0;
+> +		} else {
+> +			phy->pll_pre_p = 0;
+> +			phy->pll_fbd_s = 0;
+> +			phy->pll_fbd_div1f = 0;
+> +			phy->pll_fbd_div5f = 1;
+> +		}
+> +
+> +		f_kHz = (u64)1000000000 * (u64)m_pll /
+> +			((u64)cfg_clk_ps * (u64)n_pll * (u64)q_pll);
+> +
+> +		if (f_kHz >= phy_freq_kHz)
+> +			break;
+> +
+> +		tmp_kHz += 10;
+> +
+> +	} while (1);
+> +
+> +	ui = 1000000 / f_kHz;
+> +
+> +	phy->clk_t_lpx = ROUND(50, 8 * ui);
+> +	phy->clk_t_hs_prepare = ROUND(133, 16 * ui) - 1;
+> +
+> +	phy->clk_t_hs_zero = ROUND(262, 8 * ui);
+> +	phy->clk_t_hs_trial = 2 * (ROUND(60, 8 * ui) - 1);
+> +	phy->clk_t_wakeup = ROUND(1000000, (cfg_clk_ps / 1000) - 1);
+> +	if (phy->clk_t_wakeup > 0xff)
+> +		phy->clk_t_wakeup = 0xff;
+> +	phy->data_t_wakeup = phy->clk_t_wakeup;
+> +	phy->data_t_lpx = phy->clk_t_lpx;
+> +	phy->data_t_hs_prepare = ROUND(125 + 10 * ui, 16 * ui) - 1;
+> +	phy->data_t_hs_zero = ROUND(105 + 6 * ui, 8 * ui);
+> +	phy->data_t_hs_trial = 2 * (ROUND(60 + 4 * ui, 8 * ui) - 1);
+> +	phy->data_t_ta_go = 3;
+> +	phy->data_t_ta_get = 4;
+> +
+> +	phy->pll_enbwt = 1;
+> +	phy->clklp2hs_time = ROUND(407, 8 * ui) + 12;
+> +	phy->clkhs2lp_time = ROUND(105 + 12 * ui, 8 * ui);
+> +	phy->lp2hs_time = ROUND(240 + 12 * ui, 8 * ui) + 1;
+> +	phy->hs2lp_time = phy->clkhs2lp_time;
+> +	phy->clk_to_data_delay = 1 + phy->clklp2hs_time;
+> +	phy->data_to_clk_delay = ROUND(60 + 52 * ui, 8 * ui) +
+> +				phy->clkhs2lp_time;
+> +
+> +	phy->lane_byte_clk_kHz = f_kHz / 8;
+> +	phy->clk_division = phy->lane_byte_clk_kHz / MAX_TX_ESC_CLK;
+> +	if (phy->lane_byte_clk_kHz % MAX_TX_ESC_CLK)
+> +		phy->clk_division++;
+> +}
+> +
+> +static u32 dsi_get_dpi_color_coding(enum mipi_dsi_pixel_format format)
+> +{
+> +	u32 val;
+> +
+> +	/* TODO: only support RGB888 now, to support more */
+> +	switch (format) {
+> +	case MIPI_DSI_FMT_RGB888:
+> +		val = DSI_24BITS_1;
+> +		break;
+> +	default:
+> +		val = DSI_24BITS_1;
+> +		break;
+> +	}
+> +
+> +	return val;
+> +}
+> +
+> +static void dsi_mipi_phy_clks(void __iomem *base,
+> +			      struct mipi_phy_register *phy,
+> +			      u32 lanes)
+> +{
+> +	u32 delay_count;
+> +	bool is_ready;
+> +	u32 val;
+> +	u32 i;
+> +
+> +	/* set lanes value */
+> +	val = (lanes - 1) | (PHY_STOP_WAIT_TIME << 8);
+> +	writel(val, base + PHY_IF_CFG);
+> +
+> +	/* set phy clk division */
+> +	val = readl(base + CLKMGR_CFG) | phy->clk_division;
+> +	writel(val, base + CLKMGR_CFG);
+> +
+> +	/* clean up phy set param */
+> +	writel(0, base + PHY_RSTZ);
+> +	writel(0, base + PHY_TST_CTRL0);
+> +	writel(1, base + PHY_TST_CTRL0);
+> +	writel(0, base + PHY_TST_CTRL0);
+> +
+> +	/* clock lane Timing control - TLPX */
+> +	dsi_phy_tst_set(base, 0x10010, phy->clk_t_lpx);
+> +
+> +	/* clock lane Timing control - THS-PREPARE */
+> +	dsi_phy_tst_set(base, 0x10011, phy->clk_t_hs_prepare);
+> +
+> +	/* clock lane Timing control - THS-ZERO */
+> +	dsi_phy_tst_set(base, 0x10012, phy->clk_t_hs_zero);
+> +
+> +	/* clock lane Timing control - THS-TRAIL */
+> +	dsi_phy_tst_set(base, 0x10013, phy->clk_t_hs_trial);
+> +
+> +	/* clock lane Timing control - TWAKEUP */
+> +	dsi_phy_tst_set(base, 0x10014, phy->clk_t_wakeup);
+> +
+> +	/* data lane */
+> +	for (i = 0; i < lanes; i++) {
+> +		/* Timing control - TLPX*/
+> +		dsi_phy_tst_set(base, 0x10020 + (i << 4), phy->data_t_lpx);
+> +
+> +		/* Timing control - THS-PREPARE */
+> +		dsi_phy_tst_set(base, 0x10021 + (i << 4),
+> +				phy->data_t_hs_prepare);
+> +
+> +		/* Timing control - THS-ZERO */
+> +		dsi_phy_tst_set(base, 0x10022 + (i << 4), phy->data_t_hs_zero);
+> +
+> +		/* Timing control - THS-TRAIL */
+> +		dsi_phy_tst_set(base, 0x10023 + (i << 4), phy->data_t_hs_trial);
+> +
+> +		/* Timing control - TTA-GO */
+> +		dsi_phy_tst_set(base, 0x10024 + (i << 4), phy->data_t_ta_go);
+> +
+> +		/* Timing control - TTA-GET */
+> +		dsi_phy_tst_set(base, 0x10025 + (i << 4), phy->data_t_ta_get);
+> +
+> +		/*  Timing control - TWAKEUP */
+> +		dsi_phy_tst_set(base, 0x10026 + (i << 4), phy->data_t_wakeup);
+> +	}
+> +
+> +	/* physical configuration I  */
+> +	dsi_phy_tst_set(base, 0x10060, phy->hstx_ckg_sel);
+> +
+> +	/* physical configuration pll II  */
+> +	val = (phy->pll_fbd_div5f << 5) + (phy->pll_fbd_div1f << 4) +
+> +				(phy->pll_fbd_2p << 1) + phy->pll_enbwt;
+> +	dsi_phy_tst_set(base, 0x10063, val);
+> +
+> +	/* physical configuration pll II  */
+> +	dsi_phy_tst_set(base, 0x10064, phy->pll_fbd_p);
+> +
+> +	/* physical configuration pll III  */
+> +	dsi_phy_tst_set(base, 0x10065, phy->pll_fbd_s);
+> +
+> +	/*physical configuration pll IV*/
+> +	val = (phy->pll_pre_div1p << 7) + phy->pll_pre_p;
+> +	dsi_phy_tst_set(base, 0x10066, val);
+> +
+> +	/*physical configuration pll V*/
+
+It would be nice to fix the comment spacing for uniformity.
+
+> +	val = (phy->pll_vco_750M << 4) + (phy->pll_lpf_rs << 2) +
+> +					phy->pll_lpf_cs + BIT(5);
+> +	dsi_phy_tst_set(base, 0x10067, val);
+> +
+> +	writel(BIT(2), base + PHY_RSTZ);
+> +	udelay(1);
+> +	writel(BIT(2) | BIT(0), base + PHY_RSTZ);
+> +	udelay(1);
+> +	writel(BIT(2) | BIT(1) | BIT(0), base + PHY_RSTZ);
+> +	usleep_range(1000, 1500);
+> +
+> +	/* wait for phy's clock ready */
+> +	delay_count = 0;
+> +	is_ready = false;
+> +	while (1) {
+> +		val = readl(base +  PHY_STATUS);
+> +		if (((BIT(0) | BIT(2)) & val) || delay_count > 100) {
+> +			is_ready = (delay_count < 100) ? true : false;
+> +			delay_count = 0;
+> +			break;
+> +		}
+> +
+> +		udelay(1);
+> +		++delay_count;
+> +	}
+
+You could simplify this a bit:
+
+	delay_count = 100
+	while (delay_count) {
+	...
+	--delay_count;
+	}
+
+	if (!delay_count)
+		DRM_INFO("...");
+> +
+> +	if (!is_ready)
+> +		DRM_INFO("phylock and phystopstateclklane is not ready.\n");
+> +}
+> +
+> +static void dsi_set_mode_timing(void __iomem *base,
+> +				struct mipi_phy_register *phy,
+> +				struct drm_display_mode *mode,
+> +				enum mipi_dsi_pixel_format format)
+> +{
+> +	u32 hfp, hbp, hsw, vfp, vbp, vsw;
+> +	u32 hline_time;
+> +	u32 hsa_time;
+> +	u32 hbp_time;
+> +	u32 pixel_clk_kHz;
+> +	int htot, vtot;
+> +	u32 val;
+> +
+> +	/* DSI color coding setting */
+> +	val = dsi_get_dpi_color_coding(format);
+> +	writel(val, base + DPI_COLOR_CODING);
+> +
+> +	/* DSI format and pol setting */
+> +	val = (mode->flags & DRM_MODE_FLAG_NHSYNC ? 1 : 0) << 2;
+> +	val |= (mode->flags & DRM_MODE_FLAG_NVSYNC ? 1 : 0) << 1;
+> +	writel(val, base +  DPI_CFG_POL);
+> +
+> +	/*
+> +	 * The DSI IP accepts vertical timing using lines as normal,
+> +	 * but horizontal timing is a mixture of pixel-clocks for the
+> +	 * active region and byte-lane clocks for the blanking-related
+> +	 * timings.  hfp is specified as the total hline_time in byte-
+> +	 * lane clocks minus hsa, hbp and active.
+> +	 */
+> +	pixel_clk_kHz = mode->clock;
+> +	htot = mode->htotal;
+> +	vtot = mode->vtotal;
+> +	hfp = mode->hsync_start - mode->hdisplay;
+> +	hbp = mode->htotal - mode->hsync_end;
+> +	hsw = mode->hsync_end - mode->hsync_start;
+> +	vfp = mode->vsync_start - mode->vdisplay;
+> +	vbp = mode->vtotal - mode->vsync_end;
+> +	vsw = mode->vsync_end - mode->vsync_start;
+> +	if (vsw > 15) {
+> +		DRM_INFO("vsw exceeded 15\n");
+> +		vtot -= vsw - 15;
+> +		vsw = 15;
+> +	}
+> +
+> +	hsa_time = (hsw * phy->lane_byte_clk_kHz) / pixel_clk_kHz;
+> +	hbp_time = (hbp * phy->lane_byte_clk_kHz) / pixel_clk_kHz;
+> +	hline_time  = (((u64)htot * (u64)phy->lane_byte_clk_kHz)) /
+> +		      pixel_clk_kHz;
+> +
+> +	if ((R(hline_time) / 1000) > htot) {
+> +		DRM_INFO("--: hline_time=%d\n", hline_time);
+> +		hline_time--;
+> +	}
+> +
+> +	if ((R(hline_time) / 1000) < htot) {
+
+Could we use a better macro name here? Also, it would be nice to pass
+the phy argument to it too. Maybe even move the divide by 1000 in the macro.
+
+> +		DRM_INFO("++: hline_time=%d\n", hline_time);
+> +		hline_time++;
+> +	}
+> +
+> +	/* all specified in byte-lane clocks */
+> +	writel(hsa_time, base + VID_HSA_TIME);
+> +	writel(hbp_time, base + VID_HBP_TIME);
+> +	writel(hline_time, base + VID_HLINE_TIME);
+> +
+> +	writel(vsw, base + VID_VSA_LINES);
+> +	writel(vbp, base + VID_VBP_LINES);
+> +	writel(vfp, base + VID_VFP_LINES);
+> +	writel(mode->vdisplay, base + VID_VACTIVE_LINES);
+> +	writel(mode->hdisplay, base + VID_PKT_SIZE);
+> +}
+> +
+> +static void dsi_set_video_mode_type(void __iomem *base,
+> +				    struct mipi_phy_register *phy,
+> +				    unsigned long flags)
+> +{
+> +	u32 val;
+> +	u32 mode_mask = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
+> +		MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
+> +	u32 non_burst_sync_pulse = MIPI_DSI_MODE_VIDEO |
+> +		MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
+> +	u32 non_burst_sync_event = MIPI_DSI_MODE_VIDEO;
+> +
+> +	/*
+> +	 * choose video type
+> +	 */
+> +	if ((flags & mode_mask) == non_burst_sync_pulse)
+> +		val = DSI_NON_BURST_SYNC_PULSES;
+> +	else if ((flags & mode_mask) == non_burst_sync_event)
+> +		val = DSI_NON_BURST_SYNC_EVENTS;
+> +	else
+> +		val = DSI_BURST_SYNC_PULSES_1;
+> +
+> +	writel(val, base + VID_MODE_CFG);
+> +	/* TODO: to support LCD panel need to set LP command transfer */
+> +}
+> +
+> +static void dsi_mipi_init(struct hisi_dsi *dsi)
+> +{
+> +	struct dsi_hw_ctx *ctx = dsi->ctx;
+> +	struct mipi_phy_register *phy = &dsi->phy;
+> +	struct drm_display_mode *mode = &dsi->cur_mode;
+> +	void __iomem *base = ctx->base;
+> +	u32 dphy_freq_kHz;
+> +
+> +	/* count phy params */
+> +	dphy_freq_kHz = mode->clock * 24 / dsi->lanes;
+
+Maybe replace the 24 above with the bpp in use for future compatibility?
+
+> +	set_dsi_phy_rate_equal_or_faster(dphy_freq_kHz, phy);
+> +
+> +	/* reset Core */
+> +	writel(0, base + PWR_UP);
+> +
+> +	/* set phy clocks */
+> +	dsi_mipi_phy_clks(base, phy, dsi->lanes);
+> +
+> +	/* set dsi mode */
+> +	dsi_set_mode_timing(base, phy, mode, dsi->format);
+> +
+> +	/* set video mode type and low power */
+> +	dsi_set_video_mode_type(base, phy, dsi->mode_flags);
+> +
+> +	/* DSI and D-PHY Initialization */
+> +	writel(DSI_VIDEO_MODE, base + MODE_CFG);
+> +	writel(BIT(0), base + LPCLK_CTRL);
+> +	writel(BIT(0), base + PWR_UP);
+> +}
+> +
+> +static void dsi_encoder_disable(struct drm_encoder *encoder)
+> +{
+> +	struct hisi_dsi *dsi = encoder_to_dsi(encoder);
+> +	struct dsi_hw_ctx *ctx = dsi->ctx;
+> +	void __iomem *base = ctx->base;
+> +
+> +	DRM_DEBUG_DRIVER("enter\n");
+> +	if (!dsi->enable)
+> +		return;
+> +
+> +	writel(0, base + PWR_UP);
+> +	writel(0, base + LPCLK_CTRL);
+> +	writel(0, base + PHY_RSTZ);
+> +	clk_disable_unprepare(ctx->dsi_cfg_clk);
+> +
+> +	dsi->enable = false;
+> +	DRM_DEBUG_DRIVER("exit success.\n");
+> +}
+> +
+> +static void dsi_encoder_enable(struct drm_encoder *encoder)
+> +{
+> +	struct hisi_dsi *dsi = encoder_to_dsi(encoder);
+> +	struct dsi_hw_ctx *ctx = dsi->ctx;
+> +	int ret;
+> +
+> +	DRM_DEBUG_DRIVER("enter.\n");
+> +	if (dsi->enable)
+> +		return;
+> +
+> +	/* mipi dphy clock enable */
+> +	ret = clk_prepare_enable(ctx->dsi_cfg_clk);
+> +	if (ret) {
+> +		DRM_ERROR("fail to enable dsi_cfg_clk: %d\n", ret);
+> +		return;
+> +	}
+> +
+> +	dsi_mipi_init(dsi);
+> +
+> +	dsi->enable = true;
+> +	DRM_DEBUG_DRIVER("exit success.\n");
+> +}
+> +
+> +static void dsi_encoder_mode_set(struct drm_encoder *encoder,
+> +				 struct drm_display_mode *mode,
+> +				 struct drm_display_mode *adj_mode)
+> +{
+> +	struct hisi_dsi *dsi = encoder_to_dsi(encoder);
+> +
+> +	DRM_DEBUG_DRIVER("enter.\n");
+> +	drm_mode_copy(&dsi->cur_mode, adj_mode);
+> +	DRM_DEBUG_DRIVER("exit success.\n");
+> +}
+> +
+> +static int dsi_encoder_atomic_check(struct drm_encoder *encoder,
+> +				    struct drm_crtc_state *crtc_state,
+> +				    struct drm_connector_state *conn_state)
+> +{
+> +	struct drm_display_mode *mode = &crtc_state->mode;
+> +
+> +	DRM_DEBUG_DRIVER("enter.\n");
+> +	if (mode->flags & DRM_MODE_FLAG_INTERLACE) {
+> +		DRM_ERROR("not support INTERLACE mode\n");
+> +		return MODE_NO_INTERLACE;
+> +	}
+> +
+> +	/* pixel clock support range is (1190494208/64, 1190494208)Hz */
+> +	if (mode->clock < 18602 || mode->clock > 1190494) {
+
+I don't think we need to worry about the maximum limit if we support 
+pixel clocks up to 1190 Mhz :)
+
+> +		DRM_ERROR("mode clock not support\n");
+> +		return MODE_CLOCK_RANGE;
+> +	}
+> +
+> +	DRM_DEBUG_DRIVER("exit success.\n");
+> +	return 0;
+> +}
+> +
+> +static const struct drm_encoder_helper_funcs hisi_encoder_helper_funcs = {
+> +	.atomic_check	= dsi_encoder_atomic_check,
+> +	.mode_set	= dsi_encoder_mode_set,
+> +	.enable		= dsi_encoder_enable,
+> +	.disable	= dsi_encoder_disable
+> +};
+> +
+> +static const struct drm_encoder_funcs hisi_encoder_funcs = {
+> +	.destroy = drm_encoder_cleanup,
+> +};
+> +
+> +static int hisi_drm_encoder_init(struct drm_device *dev,
+> +				 struct drm_encoder *encoder)
+> +{
+> +	int ret;
+> +
+> +	encoder->possible_crtcs = 1;
+> +	ret = drm_encoder_init(dev, encoder, &hisi_encoder_funcs,
+> +			       DRM_MODE_ENCODER_TMDS);
+
+We should have the encoder as DRM_MODE_ENCODER_DSI here, even if the
+connector is finally hdmi.
+
+> +	if (ret) {
+> +		DRM_ERROR("failed to init dsi encoder\n");
+> +		return ret;
+> +	}
+> +
+> +	drm_encoder_helper_add(encoder, &hisi_encoder_helper_funcs);
+> +
+> +	return 0;
+> +}
+> +
+> +static int dsi_bind(struct device *dev, struct device *master, void *data)
+> +{
+> +	struct dsi_data *ddata = dev_get_drvdata(dev);
+> +	struct hisi_dsi *dsi = &ddata->dsi;
+> +	struct drm_device *drm_dev = data;
+> +	int ret;
+> +
+> +	ret = hisi_drm_encoder_init(drm_dev, &dsi->encoder);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static void dsi_unbind(struct device *dev, struct device *master, void *data)
+> +{
+> +	/* do nothing */
+> +}
+> +
+> +static const struct component_ops dsi_ops = {
+> +	.bind	= dsi_bind,
+> +	.unbind	= dsi_unbind,
+> +};
+> +
+> +static int dsi_parse_dt(struct platform_device *pdev, struct hisi_dsi *dsi)
+> +{
+> +	struct dsi_hw_ctx *ctx = dsi->ctx;
+> +	struct resource *res;
+> +
+> +
+> +	ctx->dsi_cfg_clk = devm_clk_get(&pdev->dev, "pclk_dsi");
+> +	if (IS_ERR(ctx->dsi_cfg_clk)) {
+> +		DRM_ERROR("failed to get dsi plck clock\n");
+> +		return PTR_ERR(ctx->dsi_cfg_clk);
+> +	}
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	ctx->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(ctx->base)) {
+> +		DRM_ERROR("failed to remap dsi io region\n");
+> +		return PTR_ERR(ctx->base);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int dsi_probe(struct platform_device *pdev)
+> +{
+> +	struct dsi_data *data;
+> +	struct hisi_dsi *dsi;
+> +	struct dsi_hw_ctx *ctx;
+> +	int ret;
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data) {
+> +		DRM_ERROR("failed to allocate dsi data.\n");
+> +		return -ENOMEM;
+> +	}
+> +	dsi = &data->dsi;
+> +	ctx = &data->ctx;
+> +	dsi->ctx = ctx;
+> +
+> +	ret = dsi_parse_dt(pdev, dsi);
+> +	if (ret)
+> +		return ret;
+> +
+> +	platform_set_drvdata(pdev, data);
+> +
+> +	return component_add(&pdev->dev, &dsi_ops);
+> +}
+> +
+> +static int dsi_remove(struct platform_device *pdev)
+> +{
+> +	component_del(&pdev->dev, &dsi_ops);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id dsi_of_match[] = {
+> +	{.compatible = "hisilicon,hi6220-dsi"},
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, dsi_of_match);
+> +
+> +static struct platform_driver dsi_driver = {
+> +	.probe = dsi_probe,
+> +	.remove = dsi_remove,
+> +	.driver = {
+> +		.name = "hisi-dsi",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = dsi_of_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(dsi_driver);
+> +
+> +MODULE_AUTHOR("Xinliang Liu <xinliang.liu@linaro.org>");
+> +MODULE_AUTHOR("Xinliang Liu <z.liuxinliang@hisilicon.com>");
+> +MODULE_AUTHOR("Xinwei Kong <kong.kongxinwei@hisilicon.com>");
+> +MODULE_DESCRIPTION("hisilicon hi6220 SoC dsi driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/gpu/drm/hisilicon/hisi_dsi_reg.h b/drivers/gpu/drm/hisilicon/hisi_dsi_reg.h
+> new file mode 100644
+> index 0000000..db8f9df
+> --- /dev/null
+> +++ b/drivers/gpu/drm/hisilicon/hisi_dsi_reg.h
+> @@ -0,0 +1,89 @@
+> +/*
+> + * Copyright (c) 2014-2015 Hisilicon Limited.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + */
+> +
+> +#ifndef __HISI_DSI_REG_H__
+> +#define __HISI_DSI_REG_H__
+> +
+> +/*
+> + * regs
+> + */
+> +#define  PWR_UP                  (0x4)   /* Core power-up */
+> +#define  PHY_IF_CFG              (0xA4)  /* D-PHY interface configuration */
+> +#define  CLKMGR_CFG              (0x8)   /* the internal clock dividers */
+> +#define  PHY_RSTZ                (0xA0)  /* D-PHY reset control */
+> +#define  PHY_TST_CTRL0           (0xB4)  /* D-PHY test interface control 0 */
+> +#define  PHY_TST_CTRL1           (0xB8)  /* D-PHY test interface control 1 */
+> +#define  DPI_VCID                (0xC)   /* DPI virtual channel id */
+> +#define  DPI_COLOR_CODING        (0x10)  /* DPI color coding */
+> +#define  DPI_CFG_POL             (0x14)  /* DPI polarity configuration */
+> +#define  VID_HSA_TIME            (0x48)  /* Horizontal Sync Active time */
+> +#define  VID_HBP_TIME            (0x4C)  /* Horizontal Back Porch time */
+> +#define  VID_HLINE_TIME          (0x50)  /* Line time */
+> +#define  VID_VSA_LINES           (0x54)  /* Vertical Sync Active period */
+> +#define  VID_VBP_LINES           (0x58)  /* Vertical Back Porch period */
+> +#define  VID_VFP_LINES           (0x5C)  /* Vertical Front Porch period */
+> +#define  VID_VACTIVE_LINES       (0x60)  /* Vertical resolution */
+> +#define  VID_PKT_SIZE            (0x3C)  /* Video packet size */
+> +#define  VID_MODE_CFG            (0x38)  /* Video mode configuration */
+> +#define  DPI_LP_CMD_TIM          (0x18)  /* Low-power command timing config */
+> +#define  PHY_TMR_CFG             (0x9C)  /* Data lanes timing configuration */
+> +#define  BTA_TO_CNT              (0x8C)  /* Response timeout definition */
+> +#define  PHY_TMR_LPCLK_CFG       (0x98)  /* clock lane timing configuration */
+> +#define  CLK_DATA_TMR_CFG        (0xCC)
+> +#define  LPCLK_CTRL              (0x94)  /* Low-power in clock lane */
+> +#define  PCKHDL_CFG              (0x2C)  /* Packet handler configuration */
+> +#define  EDPI_CMD_SIZE           (0x64)  /* Size for eDPI packets */
+> +#define  MODE_CFG                (0x34)  /* Video or Command mode selection */
+> +#define  PHY_STATUS              (0xB0)  /* D-PHY PPI status interface */
+> +
+> +#define	PHY_STOP_WAIT_TIME      (0x30)
+> +
+> +/*
+> + * regs relevant enum
+> + */
+> +enum dpi_color_coding {
+> +	DSI_24BITS_1 = 5,
+> +};
+> +
+> +enum dsi_video_mode_type {
+> +	DSI_NON_BURST_SYNC_PULSES = 0,
+> +	DSI_NON_BURST_SYNC_EVENTS,
+> +	DSI_BURST_SYNC_PULSES_1,
+> +	DSI_BURST_SYNC_PULSES_2
+> +};
+> +
+> +enum dsi_work_mode {
+> +	DSI_VIDEO_MODE = 0,
+> +	DSI_COMMAND_MODE
+> +};
+> +
+> +/*
+> + * regs Write/Read functions
+> + */
+> +static inline void dsi_phy_tst_set(void __iomem *base, u32 reg, u32 val)
+> +{
+> +	writel(reg, base + PHY_TST_CTRL1);
+> +	/* reg addr written at first */
+> +	wmb();
+> +	writel(0x02, base + PHY_TST_CTRL0);
+> +	/* cmd1 sent for write */
+> +	wmb();
+> +	writel(0x00, base + PHY_TST_CTRL0);
+> +	/* cmd2 sent for write */
+> +	wmb();
+> +	writel(val, base + PHY_TST_CTRL1);
+> +	/* Then write data */
+> +	wmb();
+> +	writel(0x02, base + PHY_TST_CTRL0);
+> +	/* cmd2 sent for write */
+> +	wmb();
+> +	writel(0x00, base + PHY_TST_CTRL0);
+> +}
+> +
+
+This doesn't look like something that should be inlined. Maybe move it 
+to hisi_drm_dsi.c?
+
+> +#endif /* __HISI_DRM_DSI_H__ */
 >
-> Tested-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-thanks a lot!
->> ---
->>  arch/arm64/Kconfig              |  25 +++
->>  arch/arm64/include/asm/mmzone.h |  17 ++
->>  arch/arm64/include/asm/numa.h   |  47 +++++
->>  arch/arm64/kernel/setup.c       |   4 +
->>  arch/arm64/kernel/smp.c         |   2 +
->>  arch/arm64/mm/Makefile          |   1 +
->>  arch/arm64/mm/init.c            |  30 +++-
->>  arch/arm64/mm/numa.c            | 384 ++++++++++++++++++++++++++++++++++++++++
->>  8 files changed, 506 insertions(+), 4 deletions(-)
->>  create mode 100644 arch/arm64/include/asm/mmzone.h
->>  create mode 100644 arch/arm64/include/asm/numa.h
->>  create mode 100644 arch/arm64/mm/numa.c
->>
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index 9ac16a4..7d8fb42 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -71,6 +71,7 @@ config ARM64
->>       select HAVE_GENERIC_DMA_COHERENT
->>       select HAVE_HW_BREAKPOINT if PERF_EVENTS
->>       select HAVE_MEMBLOCK
->> +     select HAVE_MEMBLOCK_NODE_MAP if NUMA
->>       select HAVE_PATA_PLATFORM
->>       select HAVE_PERF_EVENTS
->>       select HAVE_PERF_REGS
->> @@ -482,6 +483,30 @@ config HOTPLUG_CPU
->>         Say Y here to experiment with turning CPUs off and on.  CPUs
->>         can be controlled through /sys/devices/system/cpu.
->>
->> +# Common NUMA Features
->> +config NUMA
->> +     bool "Numa Memory Allocation and Scheduler Support"
->> +     depends on SMP
->> +     help
->> +       Enable NUMA (Non Uniform Memory Access) support.
->> +
->> +       The kernel will try to allocate memory used by a CPU on the
->> +       local memory controller of the CPU and add some more
->> +       NUMA awareness to the kernel.
->> +
->> +config NODES_SHIFT
->> +     int "Maximum NUMA Nodes (as a power of 2)"
->> +     range 1 10
->> +     default "2"
->> +     depends on NEED_MULTIPLE_NODES
->> +     help
->> +       Specify the maximum number of NUMA Nodes available on the target
->> +       system.  Increases memory reserved to accommodate various tables.
->> +
->> +config USE_PERCPU_NUMA_NODE_ID
->> +     def_bool y
->> +     depends on NUMA
->> +
->>  source kernel/Kconfig.preempt
->>  source kernel/Kconfig.hz
->>
->> diff --git a/arch/arm64/include/asm/mmzone.h b/arch/arm64/include/asm/mmzone.h
->> new file mode 100644
->> index 0000000..6ddd468
->> --- /dev/null
->> +++ b/arch/arm64/include/asm/mmzone.h
->> @@ -0,0 +1,17 @@
->> +#ifndef __ASM_ARM64_MMZONE_H_
->> +#define __ASM_ARM64_MMZONE_H_
->> +
->> +#ifdef CONFIG_NUMA
->> +
->> +#include <linux/mmdebug.h>
->> +#include <linux/types.h>
->> +
->> +#include <asm/smp.h>
->> +#include <asm/numa.h>
->> +
->> +extern struct pglist_data *node_data[];
->> +
->> +#define NODE_DATA(nid)               (node_data[(nid)])
->> +
->> +#endif /* CONFIG_NUMA */
->> +#endif /* __ASM_ARM64_MMZONE_H_ */
->> diff --git a/arch/arm64/include/asm/numa.h b/arch/arm64/include/asm/numa.h
->> new file mode 100644
->> index 0000000..c00f3a4
->> --- /dev/null
->> +++ b/arch/arm64/include/asm/numa.h
->> @@ -0,0 +1,47 @@
->> +#ifndef _ASM_NUMA_H
->> +#define _ASM_NUMA_H
->> +
->> +#include <linux/nodemask.h>
->> +#include <asm/topology.h>
->> +
->> +#ifdef CONFIG_NUMA
->> +
->> +#define NR_NODE_MEMBLKS              (MAX_NUMNODES * 2)
->> +#define ZONE_ALIGN (1UL << (MAX_ORDER + PAGE_SHIFT))
->> +
->> +/* currently, arm64 implements flat NUMA topology */
->> +#define parent_node(node)    (node)
->> +
->> +extern int __node_distance(int from, int to);
->> +#define node_distance(a, b) __node_distance(a, b)
->> +
->> +/* dummy definitions for pci functions */
->> +#define pcibus_to_node(node) 0
->> +#define cpumask_of_pcibus(bus)       0
->> +
->> +extern int cpu_to_node_map[NR_CPUS];
->> +extern nodemask_t numa_nodes_parsed __initdata;
->> +
->> +/* Mappings between node number and cpus on that node. */
->> +extern cpumask_var_t node_to_cpumask_map[MAX_NUMNODES];
->> +extern void numa_clear_node(unsigned int cpu);
->> +#ifdef CONFIG_DEBUG_PER_CPU_MAPS
->> +extern const struct cpumask *cpumask_of_node(int node);
->> +#else
->> +/* Returns a pointer to the cpumask of CPUs on Node 'node'. */
->> +static inline const struct cpumask *cpumask_of_node(int node)
->> +{
->> +     return node_to_cpumask_map[node];
->> +}
->> +#endif
->> +
->> +void __init arm64_numa_init(void);
->> +int __init numa_add_memblk(int nodeid, u64 start, u64 end);
->> +void __init numa_set_distance(int from, int to, int distance);
->> +void __init numa_reset_distance(void);
->> +void numa_store_cpu_info(unsigned int cpu);
->> +#else        /* CONFIG_NUMA */
->> +static inline void numa_store_cpu_info(unsigned int cpu)             { }
->> +static inline void arm64_numa_init(void)             { }
->> +#endif       /* CONFIG_NUMA */
->> +#endif       /* _ASM_NUMA_H */
->> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
->> index 8119479..d9b9761 100644
->> --- a/arch/arm64/kernel/setup.c
->> +++ b/arch/arm64/kernel/setup.c
->> @@ -53,6 +53,7 @@
->>  #include <asm/cpufeature.h>
->>  #include <asm/cpu_ops.h>
->>  #include <asm/kasan.h>
->> +#include <asm/numa.h>
->>  #include <asm/sections.h>
->>  #include <asm/setup.h>
->>  #include <asm/smp_plat.h>
->> @@ -372,6 +373,9 @@ static int __init topology_init(void)
->>  {
->>       int i;
->>
->> +     for_each_online_node(i)
->> +             register_one_node(i);
->> +
->>       for_each_possible_cpu(i) {
->>               struct cpu *cpu = &per_cpu(cpu_data.cpu, i);
->>               cpu->hotpluggable = 1;
->> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
->> index b1adc51..d6e7d6a 100644
->> --- a/arch/arm64/kernel/smp.c
->> +++ b/arch/arm64/kernel/smp.c
->> @@ -45,6 +45,7 @@
->>  #include <asm/cputype.h>
->>  #include <asm/cpu_ops.h>
->>  #include <asm/mmu_context.h>
->> +#include <asm/numa.h>
->>  #include <asm/pgtable.h>
->>  #include <asm/pgalloc.h>
->>  #include <asm/processor.h>
->> @@ -125,6 +126,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
->>  static void smp_store_cpu_info(unsigned int cpuid)
->>  {
->>       store_cpu_topology(cpuid);
->> +     numa_store_cpu_info(cpuid);
->>  }
->>
->>  /*
->> diff --git a/arch/arm64/mm/Makefile b/arch/arm64/mm/Makefile
->> index 57f57fd..2e57922 100644
->> --- a/arch/arm64/mm/Makefile
->> +++ b/arch/arm64/mm/Makefile
->> @@ -6,4 +6,5 @@ obj-$(CONFIG_HUGETLB_PAGE)    += hugetlbpage.o
->>  obj-$(CONFIG_ARM64_PTDUMP)   += dump.o
->>
->>  obj-$(CONFIG_KASAN)          += kasan_init.o
->> +obj-$(CONFIG_NUMA)           += numa.o
->>  KASAN_SANITIZE_kasan_init.o  := n
->> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->> index 17bf39a..8dc9c5d 100644
->> --- a/arch/arm64/mm/init.c
->> +++ b/arch/arm64/mm/init.c
->> @@ -37,6 +37,7 @@
->>
->>  #include <asm/fixmap.h>
->>  #include <asm/memory.h>
->> +#include <asm/numa.h>
->>  #include <asm/sections.h>
->>  #include <asm/setup.h>
->>  #include <asm/sizes.h>
->> @@ -77,6 +78,19 @@ static phys_addr_t max_zone_dma_phys(void)
->>       return min(offset + (1ULL << 32), memblock_end_of_DRAM());
->>  }
->>
->> +#ifdef CONFIG_NUMA
->> +static void __init zone_sizes_init(unsigned long min, unsigned long max)
->> +{
->> +     unsigned long max_zone_pfns[MAX_NR_ZONES]  = {0};
->> +
->> +     if (IS_ENABLED(CONFIG_ZONE_DMA))
->> +             max_zone_pfns[ZONE_DMA] = PFN_DOWN(max_zone_dma_phys());
->> +     max_zone_pfns[ZONE_NORMAL] = max;
->> +
->> +     free_area_init_nodes(max_zone_pfns);
->> +}
->> +
->> +#else
->>  static void __init zone_sizes_init(unsigned long min, unsigned long max)
->>  {
->>       struct memblock_region *reg;
->> @@ -116,6 +130,7 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max)
->>
->>       free_area_init_node(0, zone_size, min, zhole_size);
->>  }
->> +#endif /* CONFIG_NUMA */
->>
->>  #ifdef CONFIG_HAVE_ARCH_PFN_VALID
->>  int pfn_valid(unsigned long pfn)
->> @@ -133,10 +148,15 @@ static void arm64_memory_present(void)
->>  static void arm64_memory_present(void)
->>  {
->>       struct memblock_region *reg;
->> +     int nid = 0;
->>
->> -     for_each_memblock(memory, reg)
->> -             memory_present(0, memblock_region_memory_base_pfn(reg),
->> -                            memblock_region_memory_end_pfn(reg));
->> +     for_each_memblock(memory, reg) {
->> +#ifdef CONFIG_NUMA
->> +             nid = reg->nid;
->> +#endif
->> +             memory_present(nid, memblock_region_memory_base_pfn(reg),
->> +                             memblock_region_memory_end_pfn(reg));
->> +     }
->>  }
->>  #endif
->>
->> @@ -193,6 +213,9 @@ void __init bootmem_init(void)
->>
->>       early_memtest(min << PAGE_SHIFT, max << PAGE_SHIFT);
->>
->> +     max_pfn = max_low_pfn = max;
->> +
->> +     arm64_numa_init();
->>       /*
->>        * Sparsemem tries to allocate bootmem in memory_present(), so must be
->>        * done after the fixed reservations.
->> @@ -203,7 +226,6 @@ void __init bootmem_init(void)
->>       zone_sizes_init(min, max);
->>
->>       high_memory = __va((max << PAGE_SHIFT) - 1) + 1;
->> -     max_pfn = max_low_pfn = max;
->>  }
->>
->>  #ifndef CONFIG_SPARSEMEM_VMEMMAP
->> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
->> new file mode 100644
->> index 0000000..e3afbf8
->> --- /dev/null
->> +++ b/arch/arm64/mm/numa.c
->> @@ -0,0 +1,384 @@
->> +/*
->> + * NUMA support, based on the x86 implementation.
->> + *
->> + * Copyright (C) 2015 Cavium Inc.
->> + * Author: Ganapatrao Kulkarni <gkulkarni-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + *
->> + * You should have received a copy of the GNU General Public License
->> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
->> + */
->> +
->> +#include <linux/bootmem.h>
->> +#include <linux/ctype.h>
->> +#include <linux/init.h>
->> +#include <linux/kernel.h>
->> +#include <linux/mm.h>
->> +#include <linux/memblock.h>
->> +#include <linux/module.h>
->> +#include <linux/mmzone.h>
->> +#include <linux/nodemask.h>
->> +#include <linux/sched.h>
->> +#include <linux/string.h>
->> +#include <linux/topology.h>
->> +
->> +#include <asm/smp_plat.h>
->> +
->> +struct pglist_data *node_data[MAX_NUMNODES] __read_mostly;
->> +EXPORT_SYMBOL(node_data);
->> +nodemask_t numa_nodes_parsed __initdata;
->> +int cpu_to_node_map[NR_CPUS] = { [0 ... NR_CPUS-1] = NUMA_NO_NODE };
->> +
->> +static int numa_off;
->> +static int numa_distance_cnt;
->> +static u8 *numa_distance;
->> +
->> +static __init int numa_parse_early_param(char *opt)
->> +{
->> +     if (!opt)
->> +             return -EINVAL;
->> +     if (!strncmp(opt, "off", 3)) {
->> +             pr_info("%s\n", "NUMA turned off");
->> +             numa_off = 1;
->> +     }
->> +     return 0;
->> +}
->> +early_param("numa", numa_parse_early_param);
->> +
->> +cpumask_var_t node_to_cpumask_map[MAX_NUMNODES];
->> +EXPORT_SYMBOL(node_to_cpumask_map);
->> +
->> +#ifdef CONFIG_DEBUG_PER_CPU_MAPS
->> +/*
->> + * Returns a pointer to the bitmask of CPUs on Node 'node'.
->> + */
->> +const struct cpumask *cpumask_of_node(int node)
->> +{
->> +
->> +     if (WARN_ON(node >= nr_node_ids))
->> +             return cpu_none_mask;
->> +
->> +     if (WARN_ON(node_to_cpumask_map[node] == NULL))
->> +             return cpu_online_mask;
->> +
->> +     return node_to_cpumask_map[node];
->> +}
->> +EXPORT_SYMBOL(cpumask_of_node);
->> +#endif
->> +
->> +static void map_cpu_to_node(unsigned int cpu, int nid)
->> +{
->> +     set_cpu_numa_node(cpu, nid);
->> +     if (nid >= 0)
->> +             cpumask_set_cpu(cpu, node_to_cpumask_map[nid]);
->> +}
->> +
->> +static void unmap_cpu_to_node(unsigned int cpu)
->> +{
->> +     int nid = cpu_to_node(cpu);
->> +
->> +     if (nid >= 0)
->> +             cpumask_clear_cpu(cpu, node_to_cpumask_map[nid]);
->> +     set_cpu_numa_node(cpu, NUMA_NO_NODE);
->> +}
->> +
->> +void numa_clear_node(unsigned int cpu)
->> +{
->> +     unmap_cpu_to_node(cpu);
->> +}
->> +
->> +/*
->> + * Allocate node_to_cpumask_map based on number of available nodes
->> + * Requires node_possible_map to be valid.
->> + *
->> + * Note: cpumask_of_node() is not valid until after this is done.
->> + * (Use CONFIG_DEBUG_PER_CPU_MAPS to check this.)
->> + */
->> +static void __init setup_node_to_cpumask_map(void)
->> +{
->> +     unsigned int cpu;
->> +     int node;
->> +
->> +     /* setup nr_node_ids if not done yet */
->> +     if (nr_node_ids == MAX_NUMNODES)
->> +             setup_nr_node_ids();
->> +
->> +     /* allocate and clear the mapping */
->> +     for (node = 0; node < nr_node_ids; node++) {
->> +             alloc_bootmem_cpumask_var(&node_to_cpumask_map[node]);
->> +             cpumask_clear(node_to_cpumask_map[node]);
->> +     }
->> +
->> +     for_each_possible_cpu(cpu)
->> +             set_cpu_numa_node(cpu, NUMA_NO_NODE);
->> +
->> +     /* cpumask_of_node() will now work */
->> +     pr_debug("Node to cpumask map for %d nodes\n", nr_node_ids);
->> +}
->> +
->> +/*
->> + *  Set the cpu to node and mem mapping
->> + */
->> +void numa_store_cpu_info(unsigned int cpu)
->> +{
->> +     map_cpu_to_node(cpu, numa_off ? 0 : cpu_to_node_map[cpu]);
->> +}
->> +
->> +/**
->> + * numa_add_memblk - Set node id to memblk
->> + * @nid: NUMA node ID of the new memblk
->> + * @start: Start address of the new memblk
->> + * @size:  Size of the new memblk
->> + *
->> + * RETURNS:
->> + * 0 on success, -errno on failure.
->> + */
->> +int __init numa_add_memblk(int nid, u64 start, u64 size)
->> +{
->> +     int ret;
->> +
->> +     ret = memblock_set_node(start, size, &memblock.memory, nid);
->> +     if (ret < 0) {
->> +             pr_err("NUMA: memblock [0x%llx - 0x%llx] failed to add on node %d\n",
->> +                     start, (start + size - 1), nid);
->> +             return ret;
->> +     }
->> +
->> +     node_set(nid, numa_nodes_parsed);
->> +     pr_info("NUMA: Adding memblock [0x%llx - 0x%llx] on node %d\n",
->> +                     start, (start + size - 1), nid);
->> +     return ret;
->> +}
->> +EXPORT_SYMBOL(numa_add_memblk);
->> +
->> +/* Initialize NODE_DATA for a node on the local memory */
->> +static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
->> +{
->> +     const size_t nd_size = roundup(sizeof(pg_data_t), SMP_CACHE_BYTES);
->> +     u64 nd_pa;
->> +     void *nd;
->> +     int tnid;
->> +
->> +     pr_info("Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
->> +                     nid, start_pfn << PAGE_SHIFT,
->> +                     (end_pfn << PAGE_SHIFT) - 1);
->> +
->> +     nd_pa = memblock_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
->> +     nd = __va(nd_pa);
->> +
->> +     /* report and initialize */
->> +     pr_info("  NODE_DATA [mem %#010Lx-%#010Lx]\n",
->> +             nd_pa, nd_pa + nd_size - 1);
->> +     tnid = early_pfn_to_nid(nd_pa >> PAGE_SHIFT);
->> +     if (tnid != nid)
->> +             pr_info("    NODE_DATA(%d) on node %d\n", nid, tnid);
->> +
->> +     node_data[nid] = nd;
->> +     memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
->> +     NODE_DATA(nid)->node_id = nid;
->> +     NODE_DATA(nid)->node_start_pfn = start_pfn;
->> +     NODE_DATA(nid)->node_spanned_pages = end_pfn - start_pfn;
->> +}
->> +
->> +/**
->> + * numa_reset_distance - Reset NUMA distance table
->> + *
->> + * The current table is freed.
->> + * The next numa_set_distance() call will create a new one.
->> + */
->> +void __init numa_reset_distance(void)
->> +{
->> +     size_t size;
->> +
->> +     if (!numa_distance)
->> +             return;
->> +
->> +     size = numa_distance_cnt * numa_distance_cnt *
->> +             sizeof(numa_distance[0]);
->> +
->> +     memblock_free(__pa(numa_distance), size);
->> +     numa_distance_cnt = 0;
->> +     numa_distance = NULL;
->> +}
->> +
->> +static int __init numa_alloc_distance(void)
->> +{
->> +     size_t size;
->> +     u64 phys;
->> +     int i, j;
->> +
->> +     size = nr_node_ids * nr_node_ids * sizeof(numa_distance[0]);
->> +     phys = memblock_find_in_range(0, PFN_PHYS(max_pfn),
->> +                                   size, PAGE_SIZE);
->> +     if (WARN_ON(!phys))
->> +             return -ENOMEM;
->> +
->> +     memblock_reserve(phys, size);
->> +
->> +     numa_distance = __va(phys);
->> +     numa_distance_cnt = nr_node_ids;
->> +
->> +     /* fill with the default distances */
->> +     for (i = 0; i < numa_distance_cnt; i++)
->> +             for (j = 0; j < numa_distance_cnt; j++)
->> +                     numa_distance[i * numa_distance_cnt + j] = i == j ?
->> +                             LOCAL_DISTANCE : REMOTE_DISTANCE;
->> +
->> +     pr_debug("NUMA: Initialized distance table, cnt=%d\n",
->> +                     numa_distance_cnt);
->> +
->> +     return 0;
->> +}
->> +
->> +/**
->> + * numa_set_distance - Set NUMA distance from one NUMA to another
->> + * @from: the 'from' node to set distance
->> + * @to: the 'to'  node to set distance
->> + * @distance: NUMA distance
->> + *
->> + * Set the distance from node @from to @to to @distance.  If distance table
->> + * doesn't exist, one which is large enough to accommodate all the currently
->> + * known nodes will be created.
->> + *
->> + * If such table cannot be allocated, a warning is printed and further
->> + * calls are ignored until the distance table is reset with
->> + * numa_reset_distance().
->> + *
->> + * If @from or @to is higher than the highest known node or lower than zero
->> + * at the time of table creation or @distance doesn't make sense, the call
->> + * is ignored.
->> + * This is to allow simplification of specific NUMA config implementations.
->> + */
->> +void __init numa_set_distance(int from, int to, int distance)
->> +{
->> +     if (!numa_distance)
->> +             return;
->> +
->> +     if (from >= numa_distance_cnt || to >= numa_distance_cnt ||
->> +                     from < 0 || to < 0) {
->> +             pr_warn_once("NUMA: Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
->> +                         from, to, distance);
->> +             return;
->> +     }
->> +
->> +     if ((u8)distance != distance ||
->> +         (from == to && distance != LOCAL_DISTANCE)) {
->> +             pr_warn_once("NUMA: Warning: invalid distance parameter, from=%d to=%d distance=%d\n",
->> +                          from, to, distance);
->> +             return;
->> +     }
->> +
->> +     numa_distance[from * numa_distance_cnt + to] = distance;
->> +}
->> +EXPORT_SYMBOL(numa_set_distance);
->> +
->> +int __node_distance(int from, int to)
->> +{
->> +     if (from >= numa_distance_cnt || to >= numa_distance_cnt)
->> +             return from == to ? LOCAL_DISTANCE : REMOTE_DISTANCE;
->> +     return numa_distance[from * numa_distance_cnt + to];
->> +}
->> +EXPORT_SYMBOL(__node_distance);
->> +
->> +static int __init numa_register_nodes(void)
->> +{
->> +     int nid;
->> +     struct memblock_region *mblk;
->> +
->> +     /* Check that valid nid is set to memblks */
->> +     for_each_memblock(memory, mblk)
->> +             if (mblk->nid == NUMA_NO_NODE || mblk->nid >= MAX_NUMNODES)
->> +                     return -EINVAL;
->> +
->> +     /* Finally register nodes. */
->> +     for_each_node_mask(nid, numa_nodes_parsed) {
->> +             unsigned long start_pfn, end_pfn;
->> +
->> +             get_pfn_range_for_nid(nid, &start_pfn, &end_pfn);
->> +             setup_node_data(nid, start_pfn, end_pfn);
->> +             node_set_online(nid);
->> +     }
->> +
->> +     /* Setup online nodes to actual nodes*/
->> +     node_possible_map = numa_nodes_parsed;
->> +
->> +     /* Dump memblock with node info and return. */
->> +     memblock_dump_all();
->> +     return 0;
->> +}
->> +
->> +static int __init numa_init(int (*init_func)(void))
->> +{
->> +     int ret;
->> +
->> +     nodes_clear(numa_nodes_parsed);
->> +     nodes_clear(node_possible_map);
->> +     nodes_clear(node_online_map);
->> +     numa_reset_distance();
->> +
->> +     ret = init_func();
->> +     if (ret < 0)
->> +             return ret;
->> +
->> +     if (nodes_empty(numa_nodes_parsed))
->> +             return -EINVAL;
->> +
->> +     ret = numa_register_nodes();
->> +     if (ret < 0)
->> +             return ret;
->> +
->> +     ret = numa_alloc_distance();
->> +     if (ret < 0)
->> +             return ret;
->> +
->> +     setup_node_to_cpumask_map();
->> +
->> +     /* init boot processor */
->> +     cpu_to_node_map[0] = 0;
->> +     map_cpu_to_node(0, 0);
->> +
->> +     return 0;
->> +}
->> +
->> +/**
->> + * dummy_numa_init - Fallback dummy NUMA init
->> + *
->> + * Used if there's no underlying NUMA architecture, NUMA initialization
->> + * fails, or NUMA is disabled on the command line.
->> + *
->> + * Must online at least one node and add memory blocks that cover all
->> + * allowed memory.  This function must not fail.
->> + */
->> +static int __init dummy_numa_init(void)
->> +{
->> +     struct memblock_region *mblk;
->> +
->> +     pr_info("%s\n", "No NUMA configuration found");
->> +     pr_info("Faking a node at [mem %#018Lx-%#018Lx]\n",
->> +            0LLU, PFN_PHYS(max_pfn) - 1);
->> +     for_each_memblock(memory, mblk)
->> +             numa_add_memblk(0, mblk->base, mblk->size);
->> +     numa_off = 1;
->> +
->> +     return 0;
->> +}
->> +
->> +/**
->> + * arm64_numa_init - Initialize NUMA
->> + *
->> + * Try each configured NUMA initialization method until one succeeds.  The
->> + * last fallback is dummy single node config encomapssing whole memory and
->> + * never fails.
->> + */
->> +void __init arm64_numa_init(void)
->> +{
->> +     numa_init(dummy_numa_init);
->> +}
->>
->
-> --
-> Shannon
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum, hosted by The Linux Foundation
