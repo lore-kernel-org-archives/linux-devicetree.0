@@ -1,195 +1,129 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v4 1/5] clk: sunxi: Add CLK_OF_DECLARE support for
- sun8i-a23-apb0-clk driver
-Date: Tue, 1 Dec 2015 11:04:16 +0100
-Message-ID: <20151201100416.GF29263@lukather>
-References: <1448766190-11345-1-git-send-email-wens@csie.org>
- <1448766190-11345-2-git-send-email-wens@csie.org>
+From: Xinliang Liu <xinliang.liu@linaro.org>
+Subject: Re: [PATCH v2 03/10] drm/hisilicon: Add hisilicon DRM master driver
+Date: Tue, 1 Dec 2015 18:18:27 +0800
+Message-ID: <CAGd==06V+tchhDsAUfhCBNdyuiRgojPxcv5RmTtxqJHLuhyo6w@mail.gmail.com>
+References: <CACvgo51NJNRKObgExtv=vNJ10GSgDPz=nQs=4BHAcgqPpSB_ug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Zs/RYxT/hKAHzkfQ"
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1448766190-11345-2-git-send-email-wens@csie.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Emilio Lopez <emilio@elopez.com.ar>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACvgo51NJNRKObgExtv=vNJ10GSgDPz=nQs=4BHAcgqPpSB_ug@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Emil Velikov <emil.l.velikov@gmail.com>
+Cc: ML dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, Daniel Stone <daniel@fooishbar.org>, architt@codeaurora.org, David Airlie <airlied@linux.ie>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Green <andy.green@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, linux-doc@vger.kernel.org, Wang Fei <w.f@huawei.com>, zourongrong@huawei.com, linuxarm@huawei.com, Xu Wei <xuwei5@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Feng Chen <puck.chen@hisilicon.com>, lijianhua@huawei.com, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 28 November 2015 at 23:25, Emil Velikov <emil.l.velikov@gmail.com> wrote:
 
---Zs/RYxT/hKAHzkfQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Emil, thanks again for review.
 
-Hi,
+> Hi Xinliang,
+>
+> On 28 November 2015 at 10:38, Xinliang Liu <xinliang.liu@linaro.org> wrote:
+>> Add DRM master driver for hi6220 SoC which used in HiKey board.
+>> Add dumb buffer feature.
+>> Add prime dmabuf feature.
+>>
+>> Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
+>> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+>> Signed-off-by: Andy Green <andy.green@linaro.org>
+> Your s-o-b should be the bottom of the list. There was a presentation
+> (ages ago) from Greg KH, who nicely described the order as a "chain of
+> command" or "guilt path". Looks like the rest of the series could use
+> this tweak.
 
-On Sun, Nov 29, 2015 at 11:03:06AM +0800, Chen-Yu Tsai wrote:
-> The APBS clock on sun9i is the same as the APB0 clock on sun8i. With
-> sun9i we are supporting the PRCM clocks by using CLK_OF_DECLARE,
-> instead of through a PRCM mfd device and subdevices for each clock
-> and reset control. As such we need a CLK_OF_DECLARE version of
-> the sun8i-a23-apb0-clk driver.
->=20
-> Also, build it for sun9i/A80, and not just for configurations with
-> MFD_SUN6I_PRCM enabled.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> ---
->  drivers/clk/sunxi/Makefile         |  5 +--
->  drivers/clk/sunxi/clk-sun8i-apb0.c | 71 +++++++++++++++++++++++++++++++-=
-------
->  2 files changed, 62 insertions(+), 14 deletions(-)
->=20
-> diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
-> index cb4c299214ce..c55d5cd1c0e5 100644
-> --- a/drivers/clk/sunxi/Makefile
-> +++ b/drivers/clk/sunxi/Makefile
-> @@ -15,6 +15,7 @@ obj-y +=3D clk-sun9i-core.o
->  obj-y +=3D clk-sun9i-mmc.o
->  obj-y +=3D clk-usb.o
-> =20
-> +obj-$(CONFIG_MACH_SUN9I) +=3D clk-sun8i-apb0.o
-> +
+will fixed in v3.
 
-So sun8i doesn't use it?
+>
+>> ---
+>>  drivers/gpu/drm/Kconfig                  |   2 +
+>>  drivers/gpu/drm/Makefile                 |   1 +
+>>  drivers/gpu/drm/hisilicon/Kconfig        |   9 ++
+>>  drivers/gpu/drm/hisilicon/Makefile       |   3 +
+>>  drivers/gpu/drm/hisilicon/hisi_drm_drv.c | 214 +++++++++++++++++++++++++++++++
+>>  5 files changed, 229 insertions(+)
+>>  create mode 100644 drivers/gpu/drm/hisilicon/Kconfig
+>>  create mode 100644 drivers/gpu/drm/hisilicon/Makefile
+>>  create mode 100644 drivers/gpu/drm/hisilicon/hisi_drm_drv.c
+>>
+>> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+>> index 8773fad..038aae8 100644
+>> --- a/drivers/gpu/drm/Kconfig
+>> +++ b/drivers/gpu/drm/Kconfig
+>> @@ -274,3 +274,5 @@ source "drivers/gpu/drm/amd/amdkfd/Kconfig"
+>>  source "drivers/gpu/drm/imx/Kconfig"
+>>
+>>  source "drivers/gpu/drm/vc4/Kconfig"
+>> +
+>> +source "drivers/gpu/drm/hisilicon/Kconfig"
+> I could swear that we can a patch that sorts these alphabetically,
+> although it doesn't seem to have made it upstream yet :-(
 
->  obj-$(CONFIG_MFD_SUN6I_PRCM) +=3D \
-> -	clk-sun6i-ar100.o clk-sun6i-apb0.o clk-sun6i-apb0-gates.o \
-> -	clk-sun8i-apb0.o
-> +	clk-sun6i-ar100.o clk-sun6i-apb0.o clk-sun6i-apb0-gates.o
-> diff --git a/drivers/clk/sunxi/clk-sun8i-apb0.c b/drivers/clk/sunxi/clk-s=
-un8i-apb0.c
-> index 7ae5d2c2cde1..c1e2ac8f4b0d 100644
-> --- a/drivers/clk/sunxi/clk-sun8i-apb0.c
-> +++ b/drivers/clk/sunxi/clk-sun8i-apb0.c
-> @@ -17,13 +17,68 @@
->  #include <linux/clk-provider.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> +#include <linux/of_address.h>
->  #include <linux/platform_device.h>
-> =20
-> +static struct clk *sun8i_a23_apb0_register(struct device_node *node,
-> +					   void __iomem *reg)
-> +{
-> +	const char *clk_name =3D node->name;
-> +	const char *clk_parent;
-> +	struct clk *clk;
-> +	int ret;
-> +
-> +	clk_parent =3D of_clk_get_parent_name(node, 0);
-> +	if (!clk_parent)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	of_property_read_string(node, "clock-output-names", &clk_name);
-> +
-> +	/* The A23 APB0 clock is a standard 2 bit wide divider clock */
-> +	clk =3D clk_register_divider(NULL, clk_name, clk_parent, 0, reg,
-> +				   0, 2, CLK_DIVIDER_POWER_OF_TWO, NULL);
-> +	if (IS_ERR(clk))
-> +		return clk;
-> +
-> +	ret =3D of_clk_add_provider(node, of_clk_src_simple_get, clk);
-> +	if (ret)
-> +		goto err_unregister;
-> +
-> +	return clk;
-> +
-> +err_unregister:
-> +	clk_unregister_divider(clk);
-> +
-> +	return ERR_PTR(ret);
-> +}
-> +
-> +static void sun8i_a23_apb0_setup(struct device_node *node)
-> +{
-> +	void __iomem *reg;
-> +	struct resource res;
-> +	struct clk *clk;
-> +
-> +	reg =3D of_io_request_and_map(node, 0, of_node_full_name(node));
-> +	if (IS_ERR(reg))
-> +		return;
-> +
-> +	clk =3D sun8i_a23_apb0_register(node, reg);
-> +	if (IS_ERR(clk))
-> +		goto err_unmap;
-> +
-> +	return;
-> +
-> +err_unmap:
-> +	iounmap(reg);
-> +	of_address_to_resource(node, 0, &res);
-> +	release_mem_region(res.start, resource_size(&res));
-> +}
-> +CLK_OF_DECLARE(sun8i_a23_apb0, "allwinner,sun8i-a23-apb0-clk",
-> +	       sun8i_a23_apb0_setup);
-> +
->  static int sun8i_a23_apb0_clk_probe(struct platform_device *pdev)
->  {
->  	struct device_node *np =3D pdev->dev.of_node;
-> -	const char *clk_name =3D np->name;
-> -	const char *clk_parent;
->  	struct resource *r;
->  	void __iomem *reg;
->  	struct clk *clk;
-> @@ -33,19 +88,11 @@ static int sun8i_a23_apb0_clk_probe(struct platform_d=
-evice *pdev)
->  	if (IS_ERR(reg))
->  		return PTR_ERR(reg);
-> =20
-> -	clk_parent =3D of_clk_get_parent_name(np, 0);
-> -	if (!clk_parent)
-> -		return -EINVAL;
-> -
-> -	of_property_read_string(np, "clock-output-names", &clk_name);
-> -
-> -	/* The A23 APB0 clock is a standard 2 bit wide divider clock */
-> -	clk =3D clk_register_divider(&pdev->dev, clk_name, clk_parent, 0, reg,
-> -				   0, 2, CLK_DIVIDER_POWER_OF_TWO, NULL);
-> +	clk =3D sun8i_a23_apb0_register(np, reg);
->  	if (IS_ERR(clk))
->  		return PTR_ERR(clk);
-> =20
-> -	return of_clk_add_provider(np, of_clk_src_simple_get, clk);
-> +	return 0;
->  }
+Yes, as there are so many drm drivers now, it's time to do this work I think.
+I'll try to send a separate patch for this soon.
 
-Won't this probe twice now? First the CLK_OF_DECLARE will register a
-clock, and then the device model will call probe a second time.
+>
+>> --- /dev/null
+>> +++ b/drivers/gpu/drm/hisilicon/hisi_drm_drv.c
+>
+>> +static int hisi_drm_load(struct drm_device *dev, unsigned long flags)
+>> +{
+> The use of .load (and .unload?) callbacks is not recommended. Take a
+> look at Laurent Pinchart's patch [1] about the whys and hows on the
+> topic
 
-I guess then request_mem_region will catch it, but then you return an
-error code, which is probably an error success, since the clock is
-registered :)
+will removed .load/unload in v3.
 
-Maxime
+>
+>> +static struct dma_buf *hisi_gem_prime_export(struct drm_device *dev,
+>> +                                            struct drm_gem_object *obj,
+>> +                                            int flags)
+>> +{
+>> +       /* we want to be able to write in mmapped buffer */
+>> +       flags |= O_RDWR;
+> Erm... something feels fishy here. Out of the existing 15 drivers
+> setting up the prime callbacks only one (sti) does a similar thing. So
+> either everyone else is missing something obvious or hisilicon and sti
+> can rework their inner working to remove this (dare I say it) hack.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+I would talk to sti guys about this. Not sure how to handle this now.
 
---Zs/RYxT/hKAHzkfQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+>
+>> +static int hisi_gem_cma_dumb_create(struct drm_file *file,
+>> +                                   struct drm_device *dev,
+>> +                                   struct drm_mode_create_dumb *args)
+>> +{
+>> +       int min_pitch = DIV_ROUND_UP(args->width * args->bpp, 8);
+>> +
+>> +       /* mali gpu need pitch 8 bytes alignment for 32bpp */
+>> +       args->pitch = roundup(min_pitch, 8);
+>> +
+> I'm not sure you want this kind of dependency of an out of tree driver
+> upstream. If this is some limitation on the display engine so be it,
+> but tailoring things for an external module seems like a very bad
+> idea.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+I can move this mali dependency to user drivers (such as gralloc and
+xf86-video-armsoc).
+Do you think it is reasonable?
 
-iQIcBAEBAgAGBQJWXXCgAAoJEBx+YmzsjxAgnf4P/0GUaUECBA9nSZJsJqeDShuy
-xJEp6phiR8M8q+cOPPifn5T+wPLxr9ObCoDKFJsJmvu/8Ag6NC3xyUQZSjQ3sFAr
-c8tVOD9syX5yBGMZRqVPUIb7hm1InfQ1p6BQ98e9XkkQNmgManKAvdBylUTJ5wXv
-HUXJ3cE+r5w5GQDgFak9INcglHwy2spNcoSy5wd7/mlyjTaTHx8bLWsVg4XgdxuV
-4yr9pSzMa2+UYibDAKMEAf+nelLrazgyYSP4OjZtpGcymU+ekdE+c36AZauRW5d7
-xsla2dQAZHkvX3rkopIz09/ez9MPIKM130Zadv2iOHDlbKjoMfIY9v7frH+RIqxu
-Q5AjBAVLs5M72O67vlqI+lNqBHC6SNQ+c0P2gpynnQiN21ZfD7KCUqj9v77eUay5
-AaXnfCQRUo3zi37n38WbZq18bYK/HZX1rwCi1kyGZjNkS4ypqWcagUSt9MuN3I7a
-ZCBGcAH9FEbbogN9v35MXTm8bNu8XQLrHW5TegQyS8OW/t/uwzQ9OQ3yvI8F2BRj
-rcp/C5hbceOuLoaZT8q+lAlH+fRfXKVfKS3QfWRWAIwSCVeewlMmPS3iByD57ibd
-vEJIDl87Ltw2khIitxrlftwG6VyDQ+dYO0WSWncJAdc4FfRB3KGu2KKJR+SvLol1
-by+zCGnKgWZb4C6gm+c5
-=jGyx
------END PGP SIGNATURE-----
+>
+>> +       return drm_gem_cma_dumb_create_internal(file, dev, args);
+>> +}
+>
+>> +static int hisi_drm_bind(struct device *dev)
+>> +{
+>> +       dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
+>> +       return drm_platform_init(&hisi_drm_driver, to_platform_device(dev));
+> As pointed out by the the kernel doc - drm_platform_init is deprecated.
+>
 
---Zs/RYxT/hKAHzkfQ--
+will remove drm_platform_init in v3.
+
+Thanks,
+-xinliang
+
+>
+> Regards,
+> Emil
+>
+> [1] http://lists.freedesktop.org/archives/dri-devel/2015-November/095466.html
