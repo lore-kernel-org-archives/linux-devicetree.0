@@ -1,83 +1,57 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] dmaengine: usb-dmac: Document SoC specific bindings
-Date: Tue, 1 Dec 2015 09:33:09 +0100
-Message-ID: <CAMuHMdWF25z0m09QxbFyLDJZ6gZt-fscsi=2H3Ss3GZbVbS1Eg@mail.gmail.com>
-References: <1448331641-21758-1-git-send-email-horms+renesas@verge.net.au>
-	<20151124201655.GA23437@rob-hp-laptop>
-	<20151125002032.GF20596@verge.net.au>
-	<20151201064726.GJ16260@verge.net.au>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 1/4] PCI: rcar-gen2: Add generic compatibility string
+Date: Tue, 1 Dec 2015 09:41:49 +0100
+Message-ID: <CAMuHMdVJvChiFTkeeJNBcPG2CsC3PxoEC4Lx0fHOeMMMPLew0g@mail.gmail.com>
+References: <1448954672-27236-1-git-send-email-horms+renesas@verge.net.au>
+	<1448954672-27236-2-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20151201064726.GJ16260@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Rob Herring <robh@kernel.org>, Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448954672-27236-2-git-send-email-horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 1, 2015 at 7:47 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Wed, Nov 25, 2015 at 09:20:32AM +0900, Simon Horman wrote:
->> On Tue, Nov 24, 2015 at 02:16:55PM -0600, Rob Herring wrote:
->> > On Tue, Nov 24, 2015 at 11:20:41AM +0900, Simon Horman wrote:
->> > > In general Renesas hardware is not documented to the extent where the
->> > > relationship between IP blocks on different SoCs can be assumed although
->> > > they may appear to operate the same way. Furthermore the documentation
->> > > typically does not specify a version for individual IP blocks. For these
->> > > reasons a convention of using the SoC name in place of a version and
->> > > providing SoC-specific compat strings has been adopted.
->> > >
->> > > Although not universally liked this convention is used in the bindings for
->> > > most drivers for Renesas hardware. The purpose of this patch is to
->> > > update the Renesas USB DMA Controller driver to follow this convention.
->> > >
->> > > Cc: devicetree@vger.kernel.org
->> > > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
->> > > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
->> > >
->> > > ---
->> > > * r8a7792 (R-Car V2H) is omitted as my reading of the documentation
->> > >   is that Renesas USB-DMAC does not exist on that SoC
->> > > * r8a7795 (R-Car H2) is omitted as its unclear to me on the compatibility
->> > >   of USB-DMAC that SoC
->> > >
->> > > * Once this has been merged I intend to provide follow-up patches
->> > >   to use these new compat strings in the relevant dtsi files.
->> > > ---
->> > >  Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt | 9 +++++++--
->> > >  1 file changed, 7 insertions(+), 2 deletions(-)
->> > >
->> > > diff --git a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
->> > > index 040f365954cc..3bb624e10615 100644
->> > > --- a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
->> > > +++ b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
->> > > @@ -1,7 +1,12 @@
->> > >  * Renesas USB DMA Controller Device Tree bindings
->> > >
->> > >  Required Properties:
->> > > -- compatible: must contain "renesas,usb-dmac"
->> > > +- compatible: "renesas,usb-dmac-<soctype>", "renesas,usb-dmac" as fallback.
->> > > +       Examples with soctypes are:
->> > > +         - "renesas,usb-dmac-r8a7790" (R-Car H2)
->> > > +         - "renesas,usb-dmac-r8a7791" (R-Car M2-W)
->> > > +         - "renesas,usb-dmac-r8a7793" (R-Car M2-N)
->> > > +         - "renesas,usb-dmac-r8a7794" (R-Car E2)
->> >
->> > Weren't you changing the order of SoC and block names on new bindings?
->>
->> Could you clarify what the desired order is?
->> My intention is for these bindings to use the preferred order.
+On Tue, Dec 1, 2015 at 8:24 AM, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> Add fallback compatibility string for R-Car Gen 2 Family.
+> This is in keeping with the fallback scheme being adopted wherever
+> appropriate for drivers for Renesas SoCs.
 >
-> ping
+> Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 11 +++++++++--
+>  drivers/pci/host/pci-rcar-gen2.c                        |  1 +
+>  2 files changed, 10 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> index 891463cb09c2..b19be08a8113 100644
+> --- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> +++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> @@ -8,7 +8,14 @@ OHCI and EHCI controllers.
+>  Required properties:
+>  - compatible: "renesas,pci-r8a7790" for the R8A7790 SoC;
+>               "renesas,pci-r8a7791" for the R8A7791 SoC;
+> -             "renesas,pci-r8a7794" for the R8A7794 SoC.
+> +             "renesas,pci-r8a7794" for the R8A7794 SoC;
+> +             "renesas,pci-gen2" for a generic R-Car Gen2 compatible device.
 
-Not speaking for Rob, but I think he means e.g. "renesas,r8a7790-usb-dmac".
+Shouldn't that be "renesas,pci-rcar-gen" or "renesas,pci-rcar2"?
+
+Else you'll be in trouble when Renesas starts focussing on airplanes
+(R-Plane Gen2), rockets (R-Rocket Gen2), or IoT (R-IoT Gen2).
 
 Gr{oetje,eeting}s,
 
                         Geert
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
 In personal conversations with technical people, I call myself a hacker. But
 when I'm talking to journalists I just say "programmer" or something like that.
                                 -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
