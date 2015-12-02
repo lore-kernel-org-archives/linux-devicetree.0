@@ -1,118 +1,93 @@
-From: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] Device tree binding documentation for chromeos-firmware
-Date: Wed, 02 Dec 2015 16:49:59 +0000
-Message-ID: <565F2137.609@collabora.co.uk>
-References: <1448997171-7064-1-git-send-email-martyn.welch@collabora.co.uk> <1448997171-7064-2-git-send-email-martyn.welch@collabora.co.uk> <20151202151552.GA11101@rob-hp-laptop>
+From: Salil Mehta <salil.mehta@huawei.com>
+Subject: [PATCH V6 net-next 0/5] net:hns: Add support of Hip06 SoC to the Hislicon Network Subsystem
+Date: Wed, 2 Dec 2015 16:52:46 +0000
+Message-ID: <1449075171-4820-1-git-send-email-salil.mehta@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151202151552.GA11101@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, paul.gortmaker@windriver.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de, liguozhu@hisilicon.com, yisen.zhuang@huawei.com, dingtianhong@huawei.com, zhangfei.gao@linaro.org, huangdaode@hisilicon.com, kenneth-lee-2012@foxmail.com, salil.mehta@huawei.com, mehta.salil.lnk@gmail.com, xuwei5@hisilicon.com, lisheng011@huawei.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
+This PATCH V6 addresses the review comments provided by
+David Miller over the existing use of ENABLE/DISABLE
+hash defines with the code. These hash defines are doing
+a similar job as implicit type bool would do. So these are
+kind of duplicate and are redundant.
 
+PATCH V5:
+This PATCH addresses the review comments by Yuval Mintz
+ <Yuval.Mintz@qlogic.com>. This rework of comments are basically
+ related to:
+ 1) styling of the code,
+ 2) RSS default Key initiailization related code
+ 3) redundant code removal 
 
-On 02/12/15 15:15, Rob Herring wrote:
-> On Tue, Dec 01, 2015 at 07:12:49PM +0000, Martyn Welch wrote:
->> This patch adds documentation for the chromeos-firmware binding.
->>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
->> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
->> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Signed-off-by: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
->> ---
->>   .../devicetree/bindings/misc/chromeos-firmware.txt | 27 ++++++++++++++++++++++
->
-> bindings/firmware/ please.
->
+PATCH V4:
+This addresses the review comment provided by 
+Sergei Shtylyov. The changelog of every patch has also
+been modified.
 
-OK.
+PATCH V3:
+ Addresses the review comment floated by David Miller 
 
->>   1 file changed, 27 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/misc/chromeos-firmware.txt
->>
->> diff --git a/Documentation/devicetree/bindings/misc/chromeos-firmware.txt b/Documentation/devicetree/bindings/misc/chromeos-firmware.txt
->> new file mode 100644
->> index 0000000..8240611
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/misc/chromeos-firmware.txt
->> @@ -0,0 +1,27 @@
->> +Device-Tree bindings for chromeos-firmware.c.
->
-> Perhaps a bit more description what this is.
->
-> What aspect of this is firmware? How does this relate to the EC?
->
+PATCH V2:
+1) Bug Fixes and Clean-up: Internally identified
+2) Addresses internal review comments by Kenneth Lee and
+   by Huang Daode
+3) Addresses the review comment from "Yisen.Zhuang(Zhuangyuzeng)"
+4) Adds fix from Fengguang Wu for an error generated from 
+   "kbuild test robot" from Intel
+5) Ethtool support for TSO set option from Lisheng
 
-With respect to write-protect, this line is the write protection for the 
-flash which holds the bootloader.
+PATCH V1:
+Adds initial support of Hip06 SoC with below changes:  
+This patch-set adds support of new Hisilicon Hip06 SoC to the existing
+(already part of net-next) HNS ethernet driver for Hip05 SoC. Hip06 is
+a multi-core SoC and is a derivative of Hip05 SoC with lots of new
+hardware featres supported like RSS, TSO, hardware VLAN assist etc. 
 
-For the developer-switch and recovery-switch, I understand that pulling 
-these lines low result in the stock firmware forcing the device to boot 
-into developer mode and recovery mode respectively. The device I have no 
-longer runs the stock firmware, so I'm not able to confirm this, though 
-I am able to drive these lines.
+The changes in the driver are mainly due to following:
+ 1) changes in the DMA descriptor provided by the Hip06 ethernet 
+    hardware. These changes need to co-exist with already present
+    Hip05 DMA descriptor and its operating functions. The decision
+    to choose the correct type of DMA descriptor is taken dynamically
+    depending upon the version of the hardware (i.e. V1/hip05 or
+    V2/hip06, see already existing hisilicon-hns-nic.txt binding file
+    for the detailed description version and naming).
+ 2) To support new features added to the Hip06 ethernet hardware:
+    a. RSS (Receive Side Scaling)
+    b. TSO (TCP Segment Offload)
+    c. Hardware VLAN support (currently we are initializing hardware
+       to not assist in stripping the vlan tag at hardware level.
+       Proper support of this feature and ethtool would come after
+       these patches have been accepted)
 
-As far as I'm aware, none of these are related to the operation of the EC.
+Kindly note that, this patchset has been based on latest net-next.
 
-Will update the binding documentation.
+Salil Mehta (5):
+  net:hns: Add support of Hip06 SoC to the Hislicon Network Subsystem
+  net:hns: Add Hip06 "RSS(Receive Side Scaling)" support to HNS Driver
+  net:hns: Add Hip06 "TSO(TCP Segment Offload)" support HNS Driver
+  net:hns: Add support of ethtool TSO set option for Hip06 in HNS
+  net:hns: Add the init code to disable Hip06 "Hardware VLAN assist"
 
->> +
->> +Required properties:
->> +	- compatible = "google,gpio-firmware";
->
-> No versions?
->
+ drivers/net/ethernet/hisilicon/hns/hnae.h          |   58 ++-
+ drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c  |   98 +++-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c  |   14 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.h  |    4 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c |  213 +++++++--
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h |   24 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c |    6 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c  |   72 ++-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h  |   32 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.c  |   76 ++-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.h  |    8 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h  |   88 +++-
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c      |  483 +++++++++++++++++---
+ drivers/net/ethernet/hisilicon/hns/hns_enet.h      |   12 +
+ drivers/net/ethernet/hisilicon/hns/hns_ethtool.c   |   95 +++-
+ 15 files changed, 1077 insertions(+), 206 deletions(-)
 
-I'm not aware of any and would rather not start inventing ones that 
-aren't already there.
-
->> +
->> +Each signal is represented as a sub-node of "chromeos_firmware":
->> +Subnode properties:
->> +
->> +	- gpios: OF device-tree gpio specification.
->> +
->> +Example nodes:
->> +
->> +	chromeos_firmware {
->
-> This should go under /firmware
-
-Ok, will do.
-
->
->> +		compatible = "google,gpio-firmware";
->> +
->> +		write-protect {
->
-> You need to define what are valid sub nodes. The example is not
-> documentation.
->
-
-Ok
-
->> +			gpios = <&gpx3 0 GPIO_ACTIVE_LOW>;
->> +		};
->> +
->> +		developer-switch {
->> +			gpios = <&gpx1 3 GPIO_ACTIVE_HIGH>;
->> +		};
->> +
->> +		recovery-switch {
->> +			gpios = <&gpx0 7 GPIO_ACTIVE_LOW>;
->> +		};
->> +	};
->> --
->> 2.1.4
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.7.9.5
