@@ -1,124 +1,99 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 4/6] pinctrl: meson: Enable GPIO IRQs
-Date: Wed, 02 Dec 2015 09:03:20 +0000
-Message-ID: <565EB3D8.5070400@arm.com>
-References: <1448987062-31225-1-git-send-email-carlo@caione.org>	<1448987062-31225-5-git-send-email-carlo@caione.org>	<565DF211.8000005@arm.com> <CAOQ7t2YN8Ey1vZO4yrn9SdbR7FzPNVY-HGRBZOctLgK1vHo9VA@mail.gmail.com>
+From: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH v3] arm64: dts: add all hi6220 i2c nodes
+Date: Wed, 2 Dec 2015 17:06:31 +0800
+Message-ID: <565EB497.6080700@hisilicon.com>
+References: <1449037749-14388-1-git-send-email-kong.kongxinwei@hisilicon.com> <20151202073427.GM692@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOQ7t2YN8Ey1vZO4yrn9SdbR7FzPNVY-HGRBZOctLgK1vHo9VA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20151202073427.GM692@tiger>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/12/15 19:41, Carlo Caione wrote:
-> On Tue, Dec 1, 2015 at 8:16 PM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
->> On 01/12/15 16:24, Carlo Caione wrote:
->>> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> 
->>> +static int meson_irq_domain_alloc(struct irq_domain *domain, unsigned int irq,
->>> +                               unsigned int nr_irqs, void *arg)
->>> +{
->>> +     struct meson_pinctrl *pc = domain->host_data;
->>> +     struct irq_fwspec *irq_data = arg;
->>> +     struct irq_fwspec gic_data;
->>> +     irq_hw_number_t hwirq;
->>> +     int index, ret, i;
->>> +
->>> +     if (irq_data->param_count != 2)
->>> +             return -EINVAL;
->>> +
->>> +     hwirq = irq_data->param[0];
->>> +     dev_dbg(pc->dev, "%s irq %d, nr %d, hwirq %lu\n",
->>> +                     __func__, irq, nr_irqs, hwirq);
->>> +
->>> +     for (i = 0; i < nr_irqs; i++) {
->>> +             index = meson_map_gic_irq(domain, hwirq + i);
->>> +             if (index < 0)
->>> +                     return index;
->>> +
->>> +             irq_domain_set_hwirq_and_chip(domain, irq + i,
->>> +                                           hwirq + i,
->>> +                                           &meson_irq_chip,
->>> +                                           pc);
->>> +
->>> +             gic_data.param_count = 3;
->>> +             gic_data.fwnode = domain->parent->fwnode;
->>> +             gic_data.param[0] = 0; /* SPI */
->>> +             gic_data.param[1] = pc->gic_irqs[index];
->>> +             gic_data.param[1] = IRQ_TYPE_EDGE_RISING;
-> 
-> Oh, this should be gic_data.param[2]. Just noticed.
-> 
->> That feels quite wrong. Hardcoding the trigger like this and hoping for
->> a set_type to set it right at a later time is just asking for trouble.
->> Why can't you use the trigger type that has been provided by the
->> interrupt descriptor?
-> 
-> In v2 I had the set of fwspec to track number and trigger type of the
-> IRQ, so it was straightforward. With this patch I have moved away from
-> that solution (as you suggested) and I'm using the 'amlogic,irqs-gpio'
-> parameter to track down the IRQ numbers (but not the trigger type).
-> It's the same solution we have in drivers/irqchip/irq-crossbar.c where
-> the trigger type is hardcoded in allocate_gic_irq().
-> If I need to save both the IRQ and the trigger type at this point I
-> wonder if it's better to go back to the set of fwspec or convert the
-> fwspec to of_phandle_args and save that.
 
-No. This should come from the interrupt specifier you are getting from
-the device. You should never make up that information.
 
-Your amlogic,irqs-gpio property gives you a list of downstream
-interrupts. The device connected to your pinctrl HW provides you with
-the upstream interrupt number (which you will map to one of your
-downstream IRQ) and crucially the trigger type. Please look at how the
-TI cross bar works (again).
-
->>> +static int meson_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
->>> +{
->>> +     struct meson_domain *domain = to_meson_domain(chip);
->>> +     struct meson_pinctrl *pc = domain->pinctrl;
->>> +     struct meson_bank *bank;
->>> +     struct irq_fwspec irq_data;
->>> +     unsigned int hwirq, irq;
->>> +
->>> +     hwirq = domain->data->pin_base + offset;
->>> +
->>> +     if (meson_get_bank(domain, hwirq, &bank))
->>> +             return -ENXIO;
->>> +
->>> +     irq_data.param_count = 2;
->>> +     irq_data.param[0] = hwirq;
->>> +
->>> +     /* dummy. It will be changed later in meson_irq_set_type */
->>> +     irq_data.param[1] = IRQ_TYPE_EDGE_RISING;
+On 2015/12/2 15:34, Shawn Guo wrote:
+> On Wed, Dec 02, 2015 at 02:29:09PM +0800, Xinwei Kong wrote:
+>> This patch adds all I2C nodes for the Hi6220 SoC. This hi6220 Soc
+>> use this I2C IP of Synopsys Designware for HiKey board.
 >>
->> Blah. Worse than I though... How do you end-up here? Why can't you
->> obtain the corresponding of_phandle_args instead of making things up?
+>> Signed-off-by: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 31 +++++++++++++++++++++++++++++++
+>>  1 file changed, 31 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+>> index 82d2488..6eae673 100644
+>> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+>> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+>> @@ -208,5 +208,36 @@
+>>  			clock-names = "uartclk", "apb_pclk";
+>>  			status = "disabled";
+>>  		};
+>> +
+>> +		i2c0: i2c@f7100000 {
+>> +			compatible = "snps,designware-i2c";
+>> +			reg = <0x0 0xf7100000 0x0 0x1000>;
+>> +			interrupts = <0 44 4>;
+>> +			i2c-sda-hold-time-ns = <300>;
+>> +			pinctrl-names = "default";
+>> +			pinctrl-0 = <&i2c0_pmx_func &i2c0_cfg_func>;
+>> +			status = "disabled";
 > 
-> because I do not have a of_phandle. This is basically the .to_irq hook
-> of the gpio_chip. This code is being called programmatically from the
-> gpiolib. No DTS/OF involved here.
+> You got me wrong.  I was asking you to drop property 'clock-names' only,
+> not 'clocks' together.  I do not think it works if you drop property
+> 'clocks', because I see that dw_i2c_plat_probe() will fail if
+> devm_clk_get() fails.  Did you test the patch before posting it out?
+
+I am sorry that my Hikey board don't work well. I will fix my board and test
+it.
+
+Thank you very much.
+xinwei
+
 > 
->> This looks mad. Do you really need this?
+> Shawn
 > 
-> Well, I'm open to any suggestion on how improve this mess.
+>> +		};
+>> +
+>> +		i2c1: i2c@f7101000 {
+>> +			compatible = "snps,designware-i2c";
+>> +			reg = <0x0 0xf7101000 0x0 0x1000>;
+>> +			interrupts = <0 45 4>;
+>> +			i2c-sda-hold-time-ns = <300>;
+>> +			pinctrl-names = "default";
+>> +			pinctrl-0 = <&i2c1_pmx_func &i2c1_cfg_func>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		i2c2: i2c@f7102000 {
+>> +			compatible = "snps,designware-i2c";
+>> +			reg = <0x0 0xf7102000 0x0 0x1000>;
+>> +			interrupts = <0 46 4>;
+>> +			i2c-sda-hold-time-ns = <300>;
+>> +			pinctrl-names = "default";
+>> +			pinctrl-0 = <&i2c2_pmx_func &i2c2_cfg_func>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>>  	};
+>>  };
+>> -- 
+>> 1.9.1
+>>
+>>
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-i2c" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> .
+> 
 
-The question to answer is: in what circumstances do you have to convert
-a GPIO into an IRQ at runtime? The only case should be "when you
-discover a device having an interrupt pointing to your pinctrl". And in
-this case, you have all the information to reconfigure the HW and assign
-the interrupt.
-
-I really don't get why you want or need to involve gpiolib in this.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
