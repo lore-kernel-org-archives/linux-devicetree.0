@@ -1,70 +1,133 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] Device tree binding documentation for chromeos-firmware
-Date: Wed, 2 Dec 2015 12:44:38 -0600
-Message-ID: <CAL_JsqLhoEc9M=ZUgqL1_ZFKVN+1UfL=h-mWUdri0O_bqZyf_g@mail.gmail.com>
-References: <1448997171-7064-1-git-send-email-martyn.welch@collabora.co.uk>
- <1448997171-7064-2-git-send-email-martyn.welch@collabora.co.uk>
- <20151202151552.GA11101@rob-hp-laptop> <565F2137.609@collabora.co.uk>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH RFC 0/3] input: rotary_encoder: use more than two gpios
+ as input
+Date: Wed, 2 Dec 2015 19:59:20 +0100
+Message-ID: <20151202185920.GO5072@pengutronix.de>
+References: <1449050834-31779-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <2266988.l83Fg404My@pcimr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <565F2137.609@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martyn Welch <martyn.welch@collabora.co.uk>
-Cc: Olof Johansson <olof@lixom.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2266988.l83Fg404My@pcimr>
+Sender: linux-input-owner@vger.kernel.org
+To: Rojhalat Ibrahim <imr@rtschenk.de>
+Cc: linux-arm-kernel@lists.infradead.org, Guido =?iso-8859-1?Q?Mart=EDnez?= <guido@vanguardiasur.com.ar>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Rob Herring <robh@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Johan Hovold <johan@kernel.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 2, 2015 at 10:49 AM, Martyn Welch
-<martyn.welch@collabora.co.uk> wrote:
->
->
-> On 02/12/15 15:15, Rob Herring wrote:
->>
->> On Tue, Dec 01, 2015 at 07:12:49PM +0000, Martyn Welch wrote:
->>>
->>> This patch adds documentation for the chromeos-firmware binding.
->>>
->>> Cc: Rob Herring <robh+dt@kernel.org>
->>> Cc: Pawel Moll <pawel.moll@arm.com>
->>> Cc: Mark Rutland <mark.rutland@arm.com>
->>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
->>> Cc: Kumar Gala <galak@codeaurora.org>
->>> Cc: devicetree@vger.kernel.org
->>> Signed-off-by: Martyn Welch <martyn.welch@collabora.co.uk>
->>> ---
->>>   .../devicetree/bindings/misc/chromeos-firmware.txt | 27
->>> ++++++++++++++++++++++
->>
->>
->> bindings/firmware/ please.
->>
->
-> OK.
->
->>>   1 file changed, 27 insertions(+)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/misc/chromeos-firmware.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/misc/chromeos-firmware.txt
->>> b/Documentation/devicetree/bindings/misc/chromeos-firmware.txt
->>> new file mode 100644
->>> index 0000000..8240611
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/misc/chromeos-firmware.txt
->>> @@ -0,0 +1,27 @@
->>> +Device-Tree bindings for chromeos-firmware.c.
->>
->>
->> Perhaps a bit more description what this is.
->>
->> What aspect of this is firmware? How does this relate to the EC?
->>
->
-> With respect to write-protect, this line is the write protection for the
-> flash which holds the bootloader.
+Hello,
 
-What is driving the write-protect? Are trying to assign ownership of
-the SOC GPIOs to the bootloader/firmware? If so, I think this is all
-wrong.
+On Wed, Dec 02, 2015 at 01:52:58PM +0100, Rojhalat Ibrahim wrote:
+> On Wednesday 02 December 2015 11:07:11 Uwe Kleine-K=F6nig wrote:
+> > some time ago I worked on the rotary encoder driver to make it supp=
+ort
+> > more than two input lines. This is the (only slightly tested[1]) re=
+base of
+> > this series on top of 4.4-rc2 (from 4.1).
+> >=20
+> > It would be great to get some feedback, especially (but not only) f=
+or my
+> > change to raumfeld.c.
+> >=20
+> > Before Ezequiel's patch 3a341a4c30d4 ("Input: rotary-encoder - add
+> > support for quarter-period mode") we had a dt property
+> > "rotary-encoder,half-period" defined. It's presence meant that we h=
+ad 2
+> > indents per period; it's absence that there is only 1. Ezequiel
+> > introduced rotary-encoder,steps-per-period instead when adding supp=
+ort
+> > for quarter-period mode (which has 4 indents per period).
+> >=20
+> > Up to now (i.e. with two inputs) a period has length 4. Now with (s=
+ay)
+> > four inputs a period has length 16 instead. Now how should this be
+> > modeled in dt? This series implements that I have to pass
+> >=20
+> > 	rotary-encoder,steps-per-period =3D <16>;
+> >=20
+> > now for "quarter-period mode" (i.e. 4 indents per 4 state changes[2=
+]),
+> > but that feels unnatural. I'd prefer to set a property to <1> inste=
+ad,
+> > meaning the device has an indent for each state change[2]. half-per=
+iod
+> > mode would be <2> and full-period mode would be <4>. But I don't ha=
+ve a
+> > nice name for such a property and maybe it's easier to live with
+> > steps-per-period =3D <16>? What do you think?
+> >=20
+> > Also note that these patches are not as technically versatile as
+> > possible. With 4 (n) input lines we could detect a quick rotation w=
+here the
+> > machine's latency only allows to sample after 7 (2^(n-1)-1) state
+> > changes. Currently this is not implemented, but can be done later.
+> >=20
+> > Best regards
+> > Uwe
+> >=20
+>=20
+> AFAIUI the rotary encoder driver only handles incremental encoders no=
+t
+> absolute encoders. (So in fact the assumed rotary encoder could also =
+be a
 
-Rob
+There is a device tree property "rotary-encoder,relative-axis" which
+switches between absolute and relative reporting. This is maybe badly
+named, but IIUC is there to differenciate between incremental and
+absolute encoders.
+
+> linear encoder with an incremental interface.) Those encoders almost =
+always
+> have an interface with two outputs (A, B) with a phase shift of 90 de=
+grees
+> between them. So in this case we have 4 steps per period. Sometimes t=
+here
+> is only one line for 1 or 2 steps per period. But I have never seen o=
+r
+
+I don't see how using only a single gpio would work for a rotary
+encoder. I suspect we use different vocabulary to describe our devices
+and so don't understand each other?! At least you cannot detect the
+direction of the movement with a single input line, do you?
+
+> heard of a device with more than 2 lines (except for the third output=
+ which
+> serves as a reference position index marker).
+>=20
+> Do devices wirh more than two outputs actually exist?
+> Or is the purpose of supporting more than 2 lines something other tha=
+n
+> connecting an actual encoder to them?
+
+I have a real rotary encoder with 4 input lines and so 16
+distinguishable positions. It would be described as:
+
+	compatible =3D "rotary-encoder";
+	gpios =3D <&gpio4 12 GPIO_ACTIVE_HIGH>, <&gpio4 11 GPIO_ACTIVE_HIGH>, =
+<&gpio4 10 GPIO_ACTIVE_HIGH>, <&gpio4 9 GPIO_ACTIVE_HIGH>;
+	rotary-encoder,steps =3D <16>;
+	rotary-encoder,steps-per-period =3D <16>;
+
+with the binding implemented in my patches.
+
+The wikipedia article about rotary encoders[1] uses a device with 3
+input lines to explain gray encoding. So I didn't consider "my" device
+as exotic up to now.
+
+Best regards
+Uwe
+
+[1] https://en.wikipedia.org/wiki/Rotary_encoder
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
