@@ -1,100 +1,117 @@
-From: Damien Riegel <damien.riegel@savoirfairelinux.com>
-Subject: Re: [PATCH v7 2/6] mfd: syscon: add a DT property to set value width
-Date: Wed, 2 Dec 2015 18:21:02 -0500
-Message-ID: <20151202232102.GB6055@localhost>
-References: <1448899191-13891-1-git-send-email-damien.riegel@savoirfairelinux.com>
- <1448899191-13891-3-git-send-email-damien.riegel@savoirfairelinux.com>
- <20151130190015.GA31006@rob-hp-laptop>
+From: Peter Hurley <peter@hurleysoftware.com>
+Subject: Re: [PATCH 01/28] serial: earlycon: allow MEM32 I/O for DT earlycon
+Date: Wed, 2 Dec 2015 18:38:58 -0500
+Message-ID: <565F8112.8040907@hurleysoftware.com>
+References: <1448900513-20856-1-git-send-email-paul.burton@imgtec.com>
+ <1448900513-20856-2-git-send-email-paul.burton@imgtec.com>
+ <CAL_JsqJ3cZEbWT_Ycrb1euWJ05cN31wOYikbwKhZSEyFu2rkrA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151130190015.GA31006@rob-hp-laptop>
+In-Reply-To: <CAL_JsqJ3cZEbWT_Ycrb1euWJ05cN31wOYikbwKhZSEyFu2rkrA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Samuel Ortiz <sameo@linux.intel.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, kernel@savoirfairelinux.com
+To: Rob Herring <robh+dt@kernel.org>, Paul Burton <paul.burton@imgtec.com>
+Cc: Linux-MIPS <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jiri Slaby <jslaby@suse.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Lee, Arnd,
-
-I had to make changes in this patch to address Rob's comments.
-reg-io-width is now in bytes while bus-width was a value in bits. Could
-you please review this patch ?
-
-Thanks,
-Damien
-
-On Mon, Nov 30, 2015 at 01:00:15PM -0600, Rob Herring wrote:
-> On Mon, Nov 30, 2015 at 10:59:47AM -0500, Damien Riegel wrote:
-> > Currently syscon has a fixed configuration of 32 bits for register and
-> > values widths. In some cases, it would be desirable to be able to
-> > customize the value width.
-> > 
-> > For example, certain boards (like the ones manufactured by Technologic
-> > Systems) have a FPGA that is memory-mapped, but its registers are only
-> > 16-bit wide.
-> > 
-> > This patch adds an optional "reg-io-width" DT binding for syscon that
-> > allows to change the width for the data bus (i.e. val_bits). If this
-> > property is provided, it will also set the register stride to
-> > reg-io-width's value. If not provided, the default configuration is
-> > used.
-> > 
-> > Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
+On 11/30/2015 05:52 PM, Rob Herring wrote:
+> On Mon, Nov 30, 2015 at 10:21 AM, Paul Burton <paul.burton@imgtec.com> wrote:
+>> Read the reg-io-width property when earlycon is setup via device tree,
+>> and set the I/O type to UPIO_MEM32 when 4 is read. This behaviour
+>> matches that of the of_serial driver, and is needed for DT configured
+>> earlycon on the MIPS Boston board.
+>>
+>> Note that this is only possible when CONFIG_LIBFDT is enabled, but
+>> enabling it everywhere seems like overkill. Thus systems that need this
+>> functionality should select CONFIG_LIBFDT for themselves.
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
+> libfdt is enabled if you are booting from DT, so checking this
+> property should not add anything.
 > 
-> > ---
-> >  Documentation/devicetree/bindings/mfd/syscon.txt |  4 ++++
-> >  drivers/mfd/syscon.c                             | 13 +++++++++++++
-> >  2 files changed, 17 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
-> > index fe8150b..408f768 100644
-> > --- a/Documentation/devicetree/bindings/mfd/syscon.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
-> > @@ -13,6 +13,10 @@ Required properties:
-> >  - compatible: Should contain "syscon".
-> >  - reg: the register region can be accessed from syscon
-> >  
-> > +Optional property:
-> > +- reg-io-width: the size (in bytes) of the IO accesses that should be
-> > +  performed on the device.
-> > +
-> >  Examples:
-> >  gpr: iomuxc-gpr@020e0000 {
-> >  	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
-> > diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-> > index 176bf0f..b7aabee 100644
-> > --- a/drivers/mfd/syscon.c
-> > +++ b/drivers/mfd/syscon.c
-> > @@ -47,6 +47,7 @@ static struct syscon *of_syscon_register(struct device_node *np)
-> >  	struct syscon *syscon;
-> >  	struct regmap *regmap;
-> >  	void __iomem *base;
-> > +	u32 reg_io_width;
-> >  	int ret;
-> >  	struct regmap_config syscon_config = syscon_regmap_config;
-> >  
-> > @@ -69,6 +70,18 @@ static struct syscon *of_syscon_register(struct device_node *np)
-> >  	 else if (of_property_read_bool(np, "little-endian"))
-> >  		syscon_config.val_format_endian = REGMAP_ENDIAN_LITTLE;
-> >  
-> > +	/*
-> > +	 * search for reg-io-width property in DT. If it is not provided,
-> > +	 * default to 4 bytes. regmap_init_mmio will return an error if values
-> > +	 * are invalid so there is no need to check them here.
-> > +	 */
-> > +	ret = of_property_read_u32(np, "reg-io-width", &reg_io_width);
-> > +	if (ret)
-> > +		reg_io_width = 4;
-> > +
-> > +	syscon_config.reg_stride = reg_io_width;
-> > +	syscon_config.val_bits = reg_io_width * 8;
-> > +
-> >  	regmap = regmap_init_mmio(NULL, base, &syscon_config);
-> >  	if (IS_ERR(regmap)) {
-> >  		pr_err("regmap init failed\n");
-> > -- 
-> > 2.5.0
-> > 
+>>
+>> Signed-off-by: Paul Burton <paul.burton@imgtec.com>
+>> ---
+>>
+>>  drivers/of/fdt.c              |  2 +-
+>>  drivers/tty/serial/Makefile   |  1 +
+>>  drivers/tty/serial/earlycon.c | 15 ++++++++++++++-
+>>  include/linux/serial_core.h   |  2 +-
+>>  4 files changed, 17 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>> index d243029..71c7f0d 100644
+>> --- a/drivers/of/fdt.c
+>> +++ b/drivers/of/fdt.c
+>> @@ -833,7 +833,7 @@ static int __init early_init_dt_scan_chosen_serial(void)
+>>                 if (addr == OF_BAD_ADDR)
+>>                         return -ENXIO;
+>>
+>> -               of_setup_earlycon(addr, match->data);
+>> +               of_setup_earlycon(fdt, offset, addr, match->data);
+>>                 return 0;
+>>         }
+>>         return -ENODEV;
+>> diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
+>> index 5ab4111..1d290d6 100644
+>> --- a/drivers/tty/serial/Makefile
+>> +++ b/drivers/tty/serial/Makefile
+>> @@ -7,6 +7,7 @@ obj-$(CONFIG_SERIAL_21285) += 21285.o
+>>
+>>  obj-$(CONFIG_SERIAL_EARLYCON) += earlycon.o
+>>  obj-$(CONFIG_SERIAL_EARLYCON_ARM_SEMIHOST) += earlycon-arm-semihost.o
+>> +CFLAGS_earlycon.o += -I$(srctree)/scripts/dtc/libfdt
+> 
+> This is no longer necessary.
+> 
+>>
+>>  # These Sparc drivers have to appear before others such as 8250
+>>  # which share ttySx minor node space.  Otherwise console device
+>> diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
+>> index f096360..2b936a7 100644
+>> --- a/drivers/tty/serial/earlycon.c
+>> +++ b/drivers/tty/serial/earlycon.c
+>> @@ -17,6 +17,7 @@
+>>  #include <linux/kernel.h>
+>>  #include <linux/init.h>
+>>  #include <linux/io.h>
+>> +#include <linux/libfdt.h>
+>>  #include <linux/serial_core.h>
+>>  #include <linux/sizes.h>
+>>  #include <linux/mod_devicetable.h>
+>> @@ -196,17 +197,29 @@ static int __init param_setup_earlycon(char *buf)
+>>  }
+>>  early_param("earlycon", param_setup_earlycon);
+>>
+>> -int __init of_setup_earlycon(unsigned long addr,
+>> +int __init of_setup_earlycon(const void *fdt, int offset, unsigned long addr,
+> 
+> I would add iotype as a parameter instead, and then...
+> 
+>>                              int (*setup)(struct earlycon_device *, const char *))
+>>  {
+>>         int err;
+>>         struct uart_port *port = &early_console_dev.port;
+>> +       const __be32 *prop;
+>>
+>>         port->iotype = UPIO_MEM;
+>>         port->mapbase = addr;
+>>         port->uartclk = BASE_BAUD * 16;
+>>         port->membase = earlycon_map(addr, SZ_4K);
+>>
+>> +       if (config_enabled(CONFIG_LIBFDT)) {
+>> +               prop = fdt_getprop(fdt, offset, "reg-io-width", NULL);
+>> +               if (prop) {
+>> +                       switch (be32_to_cpup(prop)) {
+>> +                       case 4:
+>> +                               port->iotype = UPIO_MEM32;
+>> +                               break;
+>> +                       }
+>> +               }
+> 
+> ...move this parsing into fdt.c where we parse the address.
+
+FWIW, all of of_setup_earlycon() should only be #ifdef CONFIG_OF_EARLY_FLATTREE
+
+Regards,
+Peter Hurley
