@@ -1,304 +1,211 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 6/7] ARM: Amlogic: Add SMP bringup code for Meson8b
-Date: Wed,  2 Dec 2015 18:22:32 +0100
-Message-ID: <1449076953-5058-7-git-send-email-carlo@caione.org>
+From: Carlo Caione <carlo@caione.org>
+Subject: [PATCH v2 3/7] clk: Amlogic: Add reset controller for CPU cores for Meson8b
+Date: Wed,  2 Dec 2015 18:22:29 +0100
+Message-ID: <1449076953-5058-4-git-send-email-carlo@caione.org>
 References: <1449076953-5058-1-git-send-email-carlo@caione.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449076953-5058-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1449076953-5058-1-git-send-email-carlo@caione.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux@arm.linux.org.uk, linux-meson@googlegroups.com, drake@endlessm.com, jerry.cao@amlogic.com, victor.wan@amlogic.com, pawel.moll@arm.com, arnd@arndb.de
+Cc: Carlo Caione <carlo@endlessm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+From: Carlo Caione <carlo@endlessm.com>
 
-This adds the necessary SMP-operations and startup code to use the
-additional cores on the Amlogic Meson8b SoCs.
+In the Amlogic Meson8b SoC we need to soft reset the CPU cores during
+the boot to enable the SMP support. With this patch we extend the clock
+controller adding a small reset controller in charge of resetting the
+cores.
 
-Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Carlo Caione <carlo@endlessm.com>
 ---
- arch/arm/Makefile             |   1 +
- arch/arm/mach-meson/Kconfig   |   1 +
- arch/arm/mach-meson/Makefile  |   1 +
- arch/arm/mach-meson/platsmp.c | 234 ++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 237 insertions(+)
- create mode 100644 arch/arm/mach-meson/platsmp.c
+ drivers/clk/meson/clk-cpu.c              | 60 +++++++++++++++++++++++++++++++-
+ drivers/clk/meson/clkc.c                 |  5 +--
+ drivers/clk/meson/clkc.h                 |  6 ++--
+ drivers/clk/meson/meson8b-clkc.c         |  4 +--
+ include/dt-bindings/clock/meson8b-clkc.h |  5 +++
+ 5 files changed, 73 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index 2c2b28e..ec0609a 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -150,6 +150,7 @@ textofs-$(CONFIG_SA1111) := 0x00208000
- endif
- textofs-$(CONFIG_ARCH_MSM8X60) := 0x00208000
- textofs-$(CONFIG_ARCH_MSM8960) := 0x00208000
-+textofs-$(CONFIG_ARCH_MESON) := 0x00208000
- textofs-$(CONFIG_ARCH_AXXIA) := 0x00308000
- 
- # Machine directory name.  This list is sorted alphanumerically
-diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfig
-index 5d56f86..e171744 100644
---- a/arch/arm/mach-meson/Kconfig
-+++ b/arch/arm/mach-meson/Kconfig
-@@ -6,6 +6,7 @@ menuconfig ARCH_MESON
- 	select CACHE_L2X0
- 	select PINCTRL
- 	select PINCTRL_MESON
-+	select HAVE_ARM_SCU if SMP
- 
- if ARCH_MESON
- 
-diff --git a/arch/arm/mach-meson/Makefile b/arch/arm/mach-meson/Makefile
-index 9d7380e..bc26c85 100644
---- a/arch/arm/mach-meson/Makefile
-+++ b/arch/arm/mach-meson/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_ARCH_MESON) += meson.o
-+obj-$(CONFIG_SMP) += platsmp.o
-diff --git a/arch/arm/mach-meson/platsmp.c b/arch/arm/mach-meson/platsmp.c
-new file mode 100644
-index 0000000..1235830
---- /dev/null
-+++ b/arch/arm/mach-meson/platsmp.c
-@@ -0,0 +1,234 @@
-+/*
-+ * Copyright (C) 2015 Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/regmap.h>
+diff --git a/drivers/clk/meson/clk-cpu.c b/drivers/clk/meson/clk-cpu.c
+index f7c30ea..8836fa9 100644
+--- a/drivers/clk/meson/clk-cpu.c
++++ b/drivers/clk/meson/clk-cpu.c
+@@ -37,9 +37,14 @@
+ #include <linux/slab.h>
+ #include <linux/clk.h>
+ #include <linux/clk-provider.h>
 +#include <linux/reset.h>
-+#include <linux/smp.h>
-+#include <linux/mfd/syscon.h>
-+#include <asm/smp_scu.h>
-+#include <asm/smp_plat.h>
++#include <linux/reset-controller.h>
+ 
+ #define MESON_CPU_CLK_CNTL1		0x00
+ #define MESON_CPU_CLK_CNTL		0x40
++#define MESON_CPU_CLK_CNTL_CPU		0x19c
 +
-+#define MESON_CPU_CTRL_REG			(0x00)
-+#define MESON_CPU_CTRL_ADDR_REG(c)		(0x04 + ((c - 1) << 2))
-+
-+#define MESON_CPU_AO_RTI_PWR_A9_CNTL0		(0x00)
-+#define MESON_CPU_AO_RTI_PWR_A9_CNTL1		(0x04)
-+#define MESON_CPU_AO_RTI_PWR_A9_MEM_PD0		(0x14)
-+
-+#define MESON_CPU_PWR_A9_CNTL0_M(c)		(0x03 << ((c * 2) + 16))
-+#define MESON_CPU_PWR_A9_CNTL1_M(c)		(0x03 << ((c + 1) << 1))
-+#define MESON_CPU_PWR_A9_MEM_PD0_M(c)		(0x0f << (32 - (c * 4)))
-+#define MESON_CPU_PWR_A9_CNTL1_ST(c)		(0x01 << (c + 16))
-+
-+static void __iomem *sram_base;
-+static void __iomem *scu_base;
-+static struct regmap *pmu;
-+
-+static void __init meson8b_smp_prepare_cpus(unsigned int max_cpus)
-+{
-+	static struct device_node *node;
-+
-+	/* SMP SRAM */
-+	node = of_find_compatible_node(NULL, NULL, "amlogic,meson8b-smp-sram");
-+	if (!node) {
-+		pr_err("Missing SRAM node\n");
-+		return;
-+	}
-+
-+	sram_base = of_iomap(node, 0);
-+	if (!sram_base) {
-+		pr_err("Couldn't map SRAM registers\n");
-+		return;
-+	}
-+
-+	/* PMU */
-+	pmu = syscon_regmap_lookup_by_compatible("amlogic,meson8b-pmu");
-+	if (IS_ERR(pmu)) {
-+		pr_err("Couldn't map PMU registors\n");
-+		return;
-+	}
-+
-+	/* SCU */
-+	node = of_find_compatible_node(NULL, NULL, "arm,cortex-a5-scu");
-+	if (!node) {
-+		pr_err("Missing SCU node\n");
-+		return;
-+	}
-+
-+	scu_base = of_iomap(node, 0);
-+	if (!scu_base) {
-+		pr_err("Couln't map SCU registers\n");
-+		return;
-+	}
-+
-+	scu_enable(scu_base);
-+}
-+
-+static struct reset_control *meson_get_core_reset(int cpu)
-+{
-+	struct device_node *np;
-+
-+	np = of_get_cpu_node(cpu, 0);
-+
-+	return of_reset_control_get(np, NULL);
-+}
-+
-+static int meson8b_set_cpu_power_ctrl(unsigned int cpu, bool is_power_on)
-+{
-+	struct reset_control *rstc;
-+	int ret;
-+	u32 val;
-+
-+	rstc = meson_get_core_reset(cpu);
-+	if (IS_ERR(rstc)) {
-+		pr_err("Couldn't get the reset controller\n");
-+		return -EINVAL;
-+	}
-+
-+	if (is_power_on) {
-+
-+		/* CPU power UP */
-+		ret = regmap_update_bits(pmu, MESON_CPU_AO_RTI_PWR_A9_CNTL0,
-+					 MESON_CPU_PWR_A9_CNTL0_M(cpu), 0);
-+		if (ret < 0) {
-+			pr_err("Couldn't power up the CPU\n");
-+			return ret;
-+		}
-+
-+		udelay(5);
-+
-+		/* Reset enable */
-+		reset_control_assert(rstc);
-+
-+		/* Memory power UP */
-+		ret = regmap_update_bits(pmu, MESON_CPU_AO_RTI_PWR_A9_MEM_PD0,
-+					 MESON_CPU_PWR_A9_MEM_PD0_M(cpu), 0);
-+		if (ret < 0) {
-+			pr_err("Couldn't power up the memory\n");
-+			return ret;
-+		}
-+
-+		/* Wake up CPU */
-+		ret = regmap_update_bits(pmu, MESON_CPU_AO_RTI_PWR_A9_CNTL1,
-+					 MESON_CPU_PWR_A9_CNTL1_M(cpu), 0);
-+		if (ret < 0) {
-+			pr_err("Couldn't wake up the CPU\n");
-+			return ret;
-+		}
-+
-+		udelay(10);
-+
-+		val = 0;
-+		while (!(val & MESON_CPU_PWR_A9_CNTL1_ST(cpu))) {
-+			ret = regmap_read(pmu, MESON_CPU_AO_RTI_PWR_A9_CNTL1, &val);
-+			if (ret < 0) {
-+				pr_err("CPU wake up failed\n");
-+				return ret;
-+			}
-+		}
-+
-+		/* Isolation disable */
-+		ret = regmap_update_bits(pmu, MESON_CPU_AO_RTI_PWR_A9_CNTL0,
-+					 BIT(cpu), 0);
-+		if (ret < 0) {
-+			pr_err("Error when disabling isolation\n");
-+			return ret;
-+		}
-+
-+		/* Reset disable */
-+		reset_control_deassert(rstc);
-+
-+	} else {
-+
-+		/* CPU power DOWN */
-+		ret = regmap_update_bits(pmu, MESON_CPU_AO_RTI_PWR_A9_CNTL0,
-+					 MESON_CPU_PWR_A9_CNTL0_M(cpu), 0x3);
-+		if (ret < 0) {
-+			pr_err("Couldn't power down the CPU\n");
-+			return ret;
-+		}
-+
-+		/* Isolation enable */
-+		ret = regmap_update_bits(pmu, MESON_CPU_AO_RTI_PWR_A9_CNTL0,
-+					 BIT(cpu), 0x3);
-+		if (ret < 0) {
-+			pr_err("Error when enabling isolation\n");
-+			return ret;
-+		}
-+
-+		udelay(10);
-+
-+		/* Sleep status */
-+		ret = regmap_update_bits(pmu, MESON_CPU_AO_RTI_PWR_A9_CNTL1,
-+					 MESON_CPU_PWR_A9_CNTL1_M(cpu), 0x3);
-+		if (ret < 0) {
-+			pr_err("Couldn't change sleep status\n");
-+			return ret;
-+		}
-+
-+		/* Memory power DOWN */
-+		ret = regmap_update_bits(pmu, MESON_CPU_AO_RTI_PWR_A9_MEM_PD0,
-+					 MESON_CPU_PWR_A9_MEM_PD0_M(cpu), 0xf);
-+		if (ret < 0) {
-+			pr_err("Couldn't power down the memory\n");
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int meson8b_smp_boot_secondary(unsigned int cpu, struct task_struct *idle)
-+{
-+	unsigned long timeout;
-+	int ret;
-+	u32 reg;
-+
-+	ret = meson8b_set_cpu_power_ctrl(cpu, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	timeout = jiffies + (10 * HZ);
-+	while (readl(sram_base + MESON_CPU_CTRL_ADDR_REG(cpu)))
-+		if (!time_before(jiffies, timeout))
-+			return -EPERM;
-+
-+	udelay(100);
-+	writel(virt_to_phys(secondary_startup), sram_base + MESON_CPU_CTRL_ADDR_REG(cpu));
-+
-+	reg = readl(sram_base + MESON_CPU_CTRL_REG);
-+	reg |= (BIT(cpu) | BIT(0));
-+	writel(reg, sram_base + MESON_CPU_CTRL_REG);
-+
-+	return 0;
-+}
-+
-+static void meson8b_smp_secondary_init(unsigned int cpu)
-+{
-+	scu_power_mode(scu_base, SCU_PM_NORMAL);
-+}
-+
-+static struct smp_operations meson8b_smp_ops __initdata = {
-+	.smp_prepare_cpus	= meson8b_smp_prepare_cpus,
-+	.smp_boot_secondary	= meson8b_smp_boot_secondary,
-+	.smp_secondary_init	= meson8b_smp_secondary_init,
++#define MESON_MAX_CPU_RST		4
+ 
+ #define MESON_CPU_CLK_MUX1		BIT(7)
+ #define MESON_CPU_CLK_MUX2		BIT(0)
+@@ -51,6 +56,11 @@
+ 
+ #include "clkc.h"
+ 
++struct meson_reset_cpu {
++	void __iomem			*reset_base;
++	struct reset_controller_dev	rcdev;
 +};
 +
-+CPU_METHOD_OF_DECLARE(meson8b_smp, "amlogic,meson8b-smp", &meson8b_smp_ops);
+ struct meson_clk_cpu {
+ 	struct notifier_block		clk_nb;
+ 	const struct clk_div_table	*div_table;
+@@ -182,13 +192,50 @@ static const struct clk_ops meson_clk_cpu_ops = {
+ 	.set_rate	= meson_clk_cpu_set_rate,
+ };
+ 
+-struct clk *meson_clk_register_cpu(const struct clk_conf *clk_conf,
++static int meson_reset_cpu_assert(struct reset_controller_dev *rcdev,
++				  unsigned long id)
++{
++	u32 reg;
++	struct meson_reset_cpu *reset_cpu = container_of(rcdev,
++							 struct meson_reset_cpu,
++							 rcdev);
++
++	reg = readl(reset_cpu->reset_base);
++	reg |= BIT(id + 24);
++	writel(reg, reset_cpu->reset_base);
++
++	return 0;
++}
++
++static int meson_reset_cpu_deassert(struct reset_controller_dev *rcdev,
++				    unsigned long id)
++{
++	u32 reg;
++	struct meson_reset_cpu *reset_cpu = container_of(rcdev,
++							 struct meson_reset_cpu,
++							 rcdev);
++
++	reg = readl(reset_cpu->reset_base);
++	reg &= ~BIT(id + 24);
++	writel(reg, reset_cpu->reset_base);
++
++	return 0;
++}
++
++static struct reset_control_ops meson_cpu_reset_ops = {
++	.assert		= meson_reset_cpu_assert,
++	.deassert	= meson_reset_cpu_deassert,
++};
++
++struct clk *meson_clk_register_cpu(struct device_node *np,
++				   const struct clk_conf *clk_conf,
+ 				   void __iomem *reg_base,
+ 				   spinlock_t *lock)
+ {
+ 	struct clk *clk;
+ 	struct clk *pclk;
+ 	struct meson_clk_cpu *clk_cpu;
++	struct meson_reset_cpu *reset_cpu;
+ 	struct clk_init_data init;
+ 	int ret;
+ 
+@@ -231,6 +278,17 @@ struct clk *meson_clk_register_cpu(const struct clk_conf *clk_conf,
+ 		goto unregister_clk_nb;
+ 	}
+ 
++	reset_cpu = kzalloc(sizeof(*reset_cpu), GFP_KERNEL);
++	if (!reset_cpu)
++		goto out;
++
++	reset_cpu->reset_base = reg_base + MESON_CPU_CLK_CNTL_CPU;
++	reset_cpu->rcdev.nr_resets = MESON_MAX_CPU_RST;
++	reset_cpu->rcdev.ops = &meson_cpu_reset_ops;
++	reset_cpu->rcdev.of_node = np;
++	reset_controller_register(&reset_cpu->rcdev);
++
++out:
+ 	return clk;
+ 
+ unregister_clk_nb:
+diff --git a/drivers/clk/meson/clkc.c b/drivers/clk/meson/clkc.c
+index c83ae13..df71e82 100644
+--- a/drivers/clk/meson/clkc.c
++++ b/drivers/clk/meson/clkc.c
+@@ -197,7 +197,8 @@ meson_clk_register_fixed_rate(const struct clk_conf *clk_conf,
+ 	return clk;
+ }
+ 
+-void __init meson_clk_register_clks(const struct clk_conf *clk_confs,
++void __init meson_clk_register_clks(struct device_node *np,
++				    const struct clk_conf *clk_confs,
+ 				    size_t nr_confs,
+ 				    void __iomem *clk_base)
+ {
+@@ -221,7 +222,7 @@ void __init meson_clk_register_clks(const struct clk_conf *clk_confs,
+ 							   clk_base);
+ 			break;
+ 		case CLK_CPU:
+-			clk = meson_clk_register_cpu(clk_conf, clk_base,
++			clk = meson_clk_register_cpu(np, clk_conf, clk_base,
+ 						     &clk_lock);
+ 			break;
+ 		case CLK_PLL:
+diff --git a/drivers/clk/meson/clkc.h b/drivers/clk/meson/clkc.h
+index 609ae92..648d41d 100644
+--- a/drivers/clk/meson/clkc.h
++++ b/drivers/clk/meson/clkc.h
+@@ -177,9 +177,11 @@ struct clk_conf {
+ 	}								\
+ 
+ struct clk **meson_clk_init(struct device_node *np, unsigned long nr_clks);
+-void meson_clk_register_clks(const struct clk_conf *clk_confs,
++void meson_clk_register_clks(struct device_node *np,
++			     const struct clk_conf *clk_confs,
+ 			     unsigned int nr_confs, void __iomem *clk_base);
+-struct clk *meson_clk_register_cpu(const struct clk_conf *clk_conf,
++struct clk *meson_clk_register_cpu(struct device_node *np,
++				   const struct clk_conf *clk_conf,
+ 				   void __iomem *reg_base, spinlock_t *lock);
+ struct clk *meson_clk_register_pll(const struct clk_conf *clk_conf,
+ 				   void __iomem *reg_base, spinlock_t *lock);
+diff --git a/drivers/clk/meson/meson8b-clkc.c b/drivers/clk/meson/meson8b-clkc.c
+index 61f6d55..98f1ebd 100644
+--- a/drivers/clk/meson/meson8b-clkc.c
++++ b/drivers/clk/meson/meson8b-clkc.c
+@@ -179,7 +179,7 @@ static void __init meson8b_clkc_init(struct device_node *np)
+ 		return;
+ 	}
+ 
+-	meson_clk_register_clks(&meson8b_xtal_conf, 1, clk_base);
++	meson_clk_register_clks(np, &meson8b_xtal_conf, 1, clk_base);
+ 	iounmap(clk_base);
+ 
+ 	/*  Generic clocks and PLLs */
+@@ -189,7 +189,7 @@ static void __init meson8b_clkc_init(struct device_node *np)
+ 		return;
+ 	}
+ 
+-	meson_clk_register_clks(meson8b_clk_confs,
++	meson_clk_register_clks(np, meson8b_clk_confs,
+ 				ARRAY_SIZE(meson8b_clk_confs),
+ 				clk_base);
+ }
+diff --git a/include/dt-bindings/clock/meson8b-clkc.h b/include/dt-bindings/clock/meson8b-clkc.h
+index bd2720d..bbdadca 100644
+--- a/include/dt-bindings/clock/meson8b-clkc.h
++++ b/include/dt-bindings/clock/meson8b-clkc.h
+@@ -5,6 +5,11 @@
+ #ifndef __MESON8B_CLKC_H
+ #define __MESON8B_CLKC_H
+ 
++#define RST_CORE0		0
++#define RST_CORE1		1
++#define RST_CORE2		2
++#define RST_CORE3		3
++
+ #define CLKID_UNUSED		0
+ #define CLKID_XTAL		1
+ #define CLKID_PLL_FIXED		2
 -- 
 2.5.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
