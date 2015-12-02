@@ -1,79 +1,51 @@
-From: Jin Qian <jinqian@android.com>
-Subject: [PATCH v3 4/8] platform: goldfish: pipe: add devicetree bindings
-Date: Wed,  2 Dec 2015 11:35:59 -0800
-Message-ID: <1449084968-30211-4-git-send-email-jinqian@android.com>
-References: <1449084968-30211-1-git-send-email-jinqian@android.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449084968-30211-1-git-send-email-jinqian@android.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Hackmann <ghackmann@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yu Ning <yu.ning@intel.com>, =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>, Christoffer Dall <christoffer.dall@linaro.org>, Peter Senna Tschudin <peter.senna@gmail.com>, Jason Hu <jia-cheng.hu@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jin Qian <jinqian@android.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 3/7] ARM: dts: imx: Add Advantech BA-16 Qseven module
+Date: Wed, 02 Dec 2015 20:36:24 +0100
+Message-ID: <1647955.6yZUflBPcH@wuerfel>
+References: <1449080180-31945-1-git-send-email-akshay.bhat@timesys.com> <1449080180-31945-4-git-send-email-akshay.bhat@timesys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449080180-31945-4-git-send-email-akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Greg Hackmann <ghackmann@google.com>
+On Wednesday 02 December 2015 13:16:16 Akshay Bhat wrote:
+> +               brightness-levels = <  0   1   2   3   4   5   6   7   8   9
+> +                                     10  11  12  13  14  15  16  17  18  19
+> +                                     20  21  22  23  24  25  26  27  28  29
+> +                                     30  31  32  33  34  35  36  37  38  39
+> +                                     40  41  42  43  44  45  46  47  48  49
+> +                                     50  51  52  53  54  55  56  57  58  59
+> +                                     60  61  62  63  64  65  66  67  68  69
+> +                                     70  71  72  73  74  75  76  77  78  79
+> +                                     80  81  82  83  84  85  86  87  88  89
+> +                                     90  91  92  93  94  95  96  97  98  99
+> +                                    100 101 102 103 104 105 106 107 108 109
+> +                                    110 111 112 113 114 115 116 117 118 119
+> +                                    120 121 122 123 124 125 126 127 128 129
+> +                                    130 131 132 133 134 135 136 137 138 139
+> +                                    140 141 142 143 144 145 146 147 148 149
+> +                                    150 151 152 153 154 155 156 157 158 159
+> +                                    160 161 162 163 164 165 166 167 168 169
+> +                                    170 171 172 173 174 175 176 177 178 179
+> +                                    180 181 182 183 184 185 186 187 188 189
+> +                                    190 191 192 193 194 195 196 197 198 199
+> +                                    200 201 202 203 204 205 206 207 208 209
+> +                                    210 211 212 213 214 215 216 217 218 219
+> +                                    220 221 222 223 224 225 226 227 228 229
+> +                                    230 231 232 233 234 235 236 237 238 239
+> +                                    240 241 242 243 244 245 246 247 248 249
+> +                                    250 251 252 253 254 255>;
+> 
 
-Add bindings so we don't need to rely on goldfish virtual bus for
-probing any more, which means we don't need ARM and MIPS goldfish
-board code for instantiating the bus.
+That is a lot of brightness levels. Why do you need so many of them?
 
-In the long term we would like to move towards replacing the Android
-pipe with virtio-vsock that is currently under development.
-
-Signed-off-by: Greg Hackmann <ghackmann@google.com>
-Signed-off-by: Jin Qian <jinqian@android.com>
----
- Documentation/devicetree/bindings/goldfish/pipe.txt | 17 +++++++++++++++++
- drivers/platform/goldfish/goldfish_pipe.c           | 10 +++++++++-
- 2 files changed, 26 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/goldfish/pipe.txt
-
-diff --git a/Documentation/devicetree/bindings/goldfish/pipe.txt b/Documentation/devicetree/bindings/goldfish/pipe.txt
-new file mode 100644
-index 0000000..e417a31
---- /dev/null
-+++ b/Documentation/devicetree/bindings/goldfish/pipe.txt
-@@ -0,0 +1,17 @@
-+Android Goldfish QEMU Pipe
-+
-+Andorid pipe virtual device generated by android emulator.
-+
-+Required properties:
-+
-+- compatible : should contain "google,android-pipe" to match emulator
-+- reg        : <registers mapping>
-+- interrupts : <interrupt mapping>
-+
-+Example:
-+
-+	android_pipe@a010000 {
-+		compatible = "google,android-pipe";
-+		reg = <ff018000 0x2000>;
-+		interrupts = <0x12>;
-+	};
-diff --git a/drivers/platform/goldfish/goldfish_pipe.c b/drivers/platform/goldfish/goldfish_pipe.c
-index 20a9337..0b187ff 100644
---- a/drivers/platform/goldfish/goldfish_pipe.c
-+++ b/drivers/platform/goldfish/goldfish_pipe.c
-@@ -624,11 +624,19 @@ static int goldfish_pipe_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id goldfish_pipe_of_match[] = {
-+	{ .compatible = "google,android-pipe", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, goldfish_pipe_of_match);
-+
- static struct platform_driver goldfish_pipe = {
- 	.probe = goldfish_pipe_probe,
- 	.remove = goldfish_pipe_remove,
- 	.driver = {
--		.name = "goldfish_pipe"
-+		.name = "goldfish_pipe",
-+		.owner = THIS_MODULE,
-+		.of_match_table = goldfish_pipe_of_match,
- 	}
- };
- 
--- 
-2.6.0.rc2.230.g3dd15c0
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
