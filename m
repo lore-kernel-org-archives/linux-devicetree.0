@@ -1,49 +1,49 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/4] PCI: rcar-gen2: Add generic compatibility string
-Date: Wed, 2 Dec 2015 09:26:50 +0900
-Message-ID: <20151202002650.GI27457@verge.net.au>
-References: <1448954672-27236-1-git-send-email-horms+renesas@verge.net.au>
- <1448954672-27236-2-git-send-email-horms+renesas@verge.net.au>
- <CAMuHMdVJvChiFTkeeJNBcPG2CsC3PxoEC4Lx0fHOeMMMPLew0g@mail.gmail.com>
+Subject: Re: [PATCH 1/2 net-next] ravb: Add fallback compatibility strings
+Date: Wed, 2 Dec 2015 09:27:44 +0900
+Message-ID: <20151202002744.GJ27457@verge.net.au>
+References: <1448955783-22806-1-git-send-email-horms+renesas@verge.net.au>
+ <1448955783-22806-2-git-send-email-horms+renesas@verge.net.au>
+ <565D75C0.1020502@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdVJvChiFTkeeJNBcPG2CsC3PxoEC4Lx0fHOeMMMPLew0g@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <565D75C0.1020502@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: netdev@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 01, 2015 at 09:41:49AM +0100, Geert Uytterhoeven wrote:
-> On Tue, Dec 1, 2015 at 8:24 AM, Simon Horman <horms+renesas@verge.net.au> wrote:
-> > Add fallback compatibility string for R-Car Gen 2 Family.
-> > This is in keeping with the fallback scheme being adopted wherever
-> > appropriate for drivers for Renesas SoCs.
-> >
-> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> > ---
-> >  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 11 +++++++++--
-> >  drivers/pci/host/pci-rcar-gen2.c                        |  1 +
-> >  2 files changed, 10 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> > index 891463cb09c2..b19be08a8113 100644
-> > --- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> > +++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> > @@ -8,7 +8,14 @@ OHCI and EHCI controllers.
-> >  Required properties:
-> >  - compatible: "renesas,pci-r8a7790" for the R8A7790 SoC;
-> >               "renesas,pci-r8a7791" for the R8A7791 SoC;
-> > -             "renesas,pci-r8a7794" for the R8A7794 SoC.
-> > +             "renesas,pci-r8a7794" for the R8A7794 SoC;
-> > +             "renesas,pci-gen2" for a generic R-Car Gen2 compatible device.
+On Tue, Dec 01, 2015 at 01:26:08PM +0300, Sergei Shtylyov wrote:
+> Hello.
 > 
-> Shouldn't that be "renesas,pci-rcar-gen" or "renesas,pci-rcar2"?
+> On 12/1/2015 10:43 AM, Simon Horman wrote:
 > 
-> Else you'll be in trouble when Renesas starts focussing on airplanes
-> (R-Plane Gen2), rockets (R-Rocket Gen2), or IoT (R-IoT Gen2).
+> >Add fallback compatibility strings for R-Car Gen 2 & 3 SoC Families.
+> >This is in keeping with the fallback scheme being adopted wherever
+> >appropriate for drivers for Renesas SoCs.
+> >
+> >Also correct typo.
+> >
+> >Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> >---
+> >  Documentation/devicetree/bindings/net/renesas,ravb.txt | 11 +++++++++--
+> >  drivers/net/ethernet/renesas/ravb_main.c               |  2 ++
+> >  2 files changed, 11 insertions(+), 2 deletions(-)
+> >
+> >diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> >index b486f3f5f6a3..115006325bff 100644
+> >--- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> >+++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> >@@ -1,12 +1,19 @@
+> >  * Renesas Electronics Ethernet AVB
+> >
+> >  This file provides information on what the device node for the Ethernet AVB
+> >-interface contains.
+> >+interface.
+> 
+>    Why?
 
-Point taken.
-
-I think renesas,pci-rcar-gen2 should work well enough.
+Because I miss read it (multiple times).
+I'll drop this change.
