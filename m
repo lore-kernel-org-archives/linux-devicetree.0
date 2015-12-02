@@ -1,116 +1,74 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: Re: [PATCHv7 2/2] mailbox: Adding driver for Xilinx LogiCORE IP mailbox.
-Date: Wed, 2 Dec 2015 09:26:48 -0800
-Message-ID: <CAAtXAHe_7vR71wZPbEw1so_40OEHiNN38mnTuqoX7SCwqEpfcw@mail.gmail.com>
-References: <1436922022-17564-1-git-send-email-moritz.fischer@ettus.com>
-	<1436922022-17564-3-git-send-email-moritz.fischer@ettus.com>
-	<CABb+yY3tpepdO=s9nb9kAE241sYVTTXB-ci_4ihuthHTekedNg@mail.gmail.com>
+From: Ray Jui <rjui@broadcom.com>
+Subject: Re: [PATCH 1/3] pinctrl: Broadcom NSP GPIO-a device tree bindings
+Date: Wed, 2 Dec 2015 09:32:34 -0800
+Message-ID: <565F2B32.6000808@broadcom.com>
+References: <1449031598-18849-1-git-send-email-yrdreddy@broadcom.com>
+ <20151202150735.GA6165@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY3tpepdO=s9nb9kAE241sYVTTXB-ci_4ihuthHTekedNg@mail.gmail.com>
+In-Reply-To: <20151202150735.GA6165@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, mchehab@osg.samsung.com, Arnd Bergmann <arnd@arndb.de>, joe@perches.com, Jingoo Han <jingoohan1@gmail.com>, Devicetree List <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh@kernel.org>, Yendapally Reddy Dhananjaya Reddy <yrdreddy@broadcom.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jassi,
+Hi Rob,
 
-thanks for your feedback.
-
-On Mon, Aug 10, 2015 at 1:05 AM, Jassi Brar <jassisinghbrar@gmail.com> wrote:
-> On Wed, Jul 15, 2015 at 6:30 AM, Moritz Fischer
-> <moritz.fischer@ettus.com> wrote:
+On 12/2/2015 7:07 AM, Rob Herring wrote:
+> On Tue, Dec 01, 2015 at 11:46:38PM -0500, Yendapally Reddy Dhananjaya Reddy wrote:
+>> Device tree binding documentation for Broadcom NSP GPIO-a driver
 >
->> +
->> +static void xilinx_mbox_rx_data(struct mbox_chan *chan)
->> +{
->> +       struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
->> +       u32 data;
->> +
->> +       if (xilinx_mbox_pending(mbox)) {
->> +               data = readl_relaxed(mbox->mbox_base + MAILBOX_REG_RDDATA);
->> +               mbox_chan_received_data(chan, (void *)data);
->>
-> If RDDATA is a FIFO, then above seems wrong - you are assuming
-> messages are always going to be exactly 32-bits for every protocol.
-> Ideally you should empty the fifo fully, at least when RX has an
-> interrupt.
-
->From my understanding it's hard to tell how much actually is in the fifo,
-you can tell if it's full for send direction, or empty for read direction.
-
-Maybe the STI / RTI can be setup in a smart way to work with multiple message
-sizes.
+> Bindings are for h/w, not drivers...
 >
->> +
->> +static int xilinx_mbox_irq_send_data(struct mbox_chan *chan, void *data)
->> +{
->> +       struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
->> +       u32 *udata = data;
->> +
->> +       if (xilinx_mbox_full(mbox))
->> +               return -EBUSY;
 >>
-> This check is redundant. last_tx_done already makes sure this is always true.
-
-Good to know. I'll fix it.
+>> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yrdreddy@broadcom.com>
+>> ---
+>>   .../devicetree/bindings/pinctrl/brcm,nsp-gpio.txt  | 80 ++++++++++++++++++++++
+>>   1 file changed, 80 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt
+>> new file mode 100644
+>> index 0000000..bea4211
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt
+>> @@ -0,0 +1,80 @@
+>> +Broadcom Northstar plus (NSP) GPIO/PINCONF Controller
+>> +
+>> +Required properties:
+>> +- compatible:
+>> +    Must be "brcm,nsp-gpio-a"
+>> +
+>> +- reg:
+>> +    Should contain the register physical address and length for each of
+>> +    GPIO base, IO control registers
+>> +
+>> +- #gpio-cells:
+>> +    Must be two. The first cell is the GPIO pin number (within the
+>> +    controller's pin space) and the second cell is used for the following:
+>> +    bit[0]: polarity (0 for active high and 1 for active low)
+>> +
+>> +- gpio-controller:
+>> +    Specifies that the node is a GPIO controller
+>> +
+>> +- ngpios:
+>> +    Number of gpios supported (58x25 supports 32 and 58x23 supports 24)
 >
->> +       /* enable interrupt before send */
->> +       xilinx_mbox_tx_intmask(mbox, true);
->> +
->> +       writel_relaxed(*udata, mbox->mbox_base + MAILBOX_REG_WRDATA);
->> +
-> From status EMPTY and FULL, it seems WRDATA is a FIFO. So here also
-> you should expect messages to be <= fifo depth. And not assume exactly
-> 32bit messages always.
-
-How do I determine the message size? Doesn't
-drivers/mailbox/bcm2835-mailbox.c or
-mailbox-altera.c make the same assumption?
-
+> 2 chips? You should have 2 compatible strings. I think this is incorrect
+> use of ngpios which AIUI is not for how many lines there are, but how
+> many can be used (e.g. not reserved).
 >
->> +
->> +static bool xilinx_mbox_last_tx_done(struct mbox_chan *chan)
->> +{
->> +       struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
->> +
->> +       /* return false if mailbox is full */
->> +       return !xilinx_mbox_full(mbox);
->>
-> Instead of FULL, I think it should check for stricter EMPTY status ...
-> mbox api submits only 1 message at a time.
 
-The EMPTY status applies to the receive direction only, I could check
-the STI status
-bit though I suppose.
+I believe this is the identical GPIO controller IP that is integrated 
+into two different SoC chip variants. The only difference is the 
+supported number of GPIO pins.
 
-[...]
->> +
->> +       mbox->irq = platform_get_irq(pdev, 0);
->> +       /* if irq is present, we can use it, otherwise, poll */
->> +       if (mbox->irq > 0) {
->> +               mbox->controller.txdone_irq = true;
->> +               mbox->controller.ops = &xilinx_mbox_irq_ops;
->> +       } else {
->> +               dev_info(&pdev->dev, "IRQ not found, fallback to polling.\n");
->> +               mbox->controller.txdone_poll = true;
->> +               mbox->controller.txpoll_period = MBOX_POLLING_MS;
->> +               mbox->controller.ops = &xilinx_mbox_poll_ops;
->> +
->> +               setup_timer(&mbox->rxpoll_timer, xilinx_mbox_poll_rx,
->> +                           (unsigned long)&mbox->chan);
->>
-> I believe there is indeed some platform that doesn't have RX-Interrupt?
->  If no, please remove this.
->  If yes, you may want to get some hint from platform about the size of
-> messages and do mbox_chan_received_data() only upon reading those many
-> bytes.
-
-I'd be fine to drop the polling use case for the moment, on my
-platform I can wire up the IRQ.
-We can always add it back in in a follow up use case.
+In this case, I believe this is what Linus prefers: 1) Using a single 
+compatible string (tied to the GPIO controller IP); 2) Addressing 
+difference in number of GPIOs using DT property 'ngpios'.
 
 Thanks,
 
-Moritz
+Ray
