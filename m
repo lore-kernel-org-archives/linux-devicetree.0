@@ -1,47 +1,57 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v3 00/27] memory: omap-gpmc: mtd: nand: Support GPMC NAND
- on non-OMAP platforms
-Date: Wed, 2 Dec 2015 10:13:30 -0800
-Message-ID: <20151202181330.GG64635@google.com>
-References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
- <20151026212346.GJ13239@google.com>
- <562F45BF.8020205@ti.com>
- <20151130195449.GI64635@google.com>
- <565DB18C.7040505@ti.com>
- <20151202032643.GF64635@google.com>
- <565E7DAC.7060401@ti.com>
- <20151202150317.GC23396@atomide.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 1/2] clk: Add brcm,bcm63xx-gate-clk device tree binding
+Date: Wed, 2 Dec 2015 10:12:56 -0800
+Message-ID: <CAGVrzcYsjN+5Mvhasx7gqcqdzjJuzTekWwAWfMqjNrF9c7m9Ug@mail.gmail.com>
+References: <565CB727.7030209@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151202150317.GC23396@atomide.com>
+In-Reply-To: <565CB727.7030209@simon.arlott.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Roger Quadros <rogerq@ti.com>, dwmw2@infradead.org, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>
+To: Simon Arlott <simon@fire.lp0.eu>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Cernekee <cernekee@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 02, 2015 at 07:03:17AM -0800, Tony Lindgren wrote:
-> * Roger Quadros <rogerq@ti.com> [151201 21:13]:
-> > On 02/12/15 08:56, Brian Norris wrote:
-> > > 
-> > > I'll take another pass over your patch set, but if things are looking
-> > > better, how do you expect to merge this? There are significant portions
-> > > that touch at least 2 or 3 different subsystem trees, AFAICT.
-> > 
-> > Tony could create an immutable branch with all the dts and memory changes.
-> > You could base the mtd changes on top of that?
-> 
-> If we all agree on that it will be immutable Roger can set up the branch
-> with our acks and we can all merge it in as needed. I believe v4.4-rc1
-> should work as a base for us all?
+2015-11-30 12:52 GMT-08:00 Simon Arlott <simon@fire.lp0.eu>:
+> Add device tree binding for the BCM63xx's gated clocks.
+>
+> The BCM63xx contains clocks gated with a register. Clocks are indexed
+> by bits in the register and are active high. Clock gate bits are
+> interleaved with other status bits and configurable clocks in the same
+> register.
+>
+> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+> ---
+>  .../bindings/clock/brcm,bcm63xx-gate-clk.txt       | 58 ++++++++++++++++++++++
+>  1 file changed, 58 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm63xx-gate-clk.txt
+>
+> diff --git a/Documentation/devicetree/bindings/clock/brcm,bcm63xx-gate-clk.txt b/Documentation/devicetree/bindings/clock/brcm,bcm63xx-gate-clk.txt
+> new file mode 100644
+> index 0000000..3f4ead1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/brcm,bcm63xx-gate-clk.txt
+> @@ -0,0 +1,58 @@
+> +Broadcom BCM63xx clocks
+> +
+> +This binding uses the common clock binding:
+> +       Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +The BCM63xx contains clocks gated with a register. Clocks are indexed
+> +by bits in the register and are active high. Clock gate bits are
+> +interleaved with other status bits and configurable clocks in the same
+> +register.
 
-There are oustanding comments about the NAND ready/busy GPIO naming in
-patch 18, which I'd like addressed. I'll re-review the rest before the
-end of the day (West Coast U.S.A.). I'm not sure my acks are worth much
-beyond the MTD stuff.
+Most MIPS-based BCM63xx SoCs have clock gating set of registers, these
+SoCs are pretty much all of them except 63381 (maybe newer ones too),
+this one uses the PMB interface, like 63138 to control resets and
+clocks fed to peripherals.
 
-Regarding branches, 4.4-rc1 is fine with me.
+> +
+> +Required properties:
+> +- compatible:  Should be "brcm,bcm<soc>-gate-clk", "brcm,bcm63xx-gate-clk"
 
-Regards,
-Brian
+I think we would want to start with the lowest common denominator
+here, which is either 6345 or 6348.
+--
+Florian
