@@ -1,7 +1,7 @@
 From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 7/7] ARM: dts: imx: Add support for Advantech/GE B850v3
-Date: Wed,  2 Dec 2015 13:16:20 -0500
-Message-ID: <1449080180-31945-8-git-send-email-akshay.bhat@timesys.com>
+Subject: [PATCH v4 4/7] ARM: dts: imx: Add support for Advantech/GE Bx50v3
+Date: Wed,  2 Dec 2015 13:16:17 -0500
+Message-ID: <1449080180-31945-5-git-send-email-akshay.bhat@timesys.com>
 References: <1449080180-31945-1-git-send-email-akshay.bhat@timesys.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1449080180-31945-1-git-send-email-akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
@@ -10,33 +10,24 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for Advantech/GE B850v3 board.
+From: Justin Waters <justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+
+Advantech has 3 carrier boards (B450v3, B650v3, B850v3) which use
+the Advantech BA-16 module (based on iMX6D). This file has the
+devicetree entries that are common to all 3 boards.
 
 Signed-off-by: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile         |   1 +
- arch/arm/boot/dts/imx6q-b850v3.dts | 127 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 128 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-b850v3.dts
+ arch/arm/boot/dts/imx6q-bx50v3.dtsi | 207 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 207 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-bx50v3.dtsi
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 9cdff66..37d5b09 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -312,6 +312,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-arm2.dtb \
- 	imx6q-b450v3.dtb \
- 	imx6q-b650v3.dtb \
-+	imx6q-b850v3.dtb \
- 	imx6q-cm-fx6.dtb \
- 	imx6q-cubox-i.dtb \
- 	imx6q-dfi-fs700-m60.dtb \
-diff --git a/arch/arm/boot/dts/imx6q-b850v3.dts b/arch/arm/boot/dts/imx6q-b850v3.dts
+diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
 new file mode 100644
-index 0000000..7ebb7d9
+index 0000000..61bb9aa
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-b850v3.dts
-@@ -0,0 +1,127 @@
++++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+@@ -0,0 +1,207 @@
 +/*
 + * Copyright 2015 Timesys Corporation.
 + * Copyright 2015 General Electric Company
@@ -49,104 +40,171 @@ index 0000000..7ebb7d9
 + * http://www.gnu.org/copyleft/gpl.html
 + */
 +
-+/dts-v1/;
-+
-+#include "imx6q-bx50v3.dtsi"
++#include "imx6q-ba16.dtsi"
 +
 +/ {
-+	model = "Advantech MX6Q B850V3 QSeven Board";
-+	compatible = "ge,imx6q-b850v3", "advantech,imx6q-ba16", "fsl,imx6q";
-+
-+	chosen {
-+		stdout-path = &uart3;
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		mclk: clock@0 {
++			compatible = "fixed-clock";
++			reg = <0>;
++			#clock-cells = <0>;
++			clock-frequency = <22000000>;
++		};
 +	};
 +
-+	panel_lvds0 {
-+		compatible = "auo,b133htn01";
-+		backlight = <&backlight_lvds>;
-+		ddc-i2c-bus = <&mux_i2c12>;
++	reg_wl18xx_vmmc: regulator@6 {
++		compatible = "regulator-fixed";
++		regulator-name = "vwl1807";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&pca9539 3 GPIO_ACTIVE_HIGH>;
++		startup-delay-us = <70000>;
++		enable-active-high;
++	};
 +
-+		port {
-+			panel_in_lvds0: endpoint {
-+				remote-endpoint = <&lvds0_out>;
-+			};
-+		};
++	reg_wlan: regulator@7 {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V_wlan";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++		gpio = <&gpio6 14 GPIO_ACTIVE_HIGH>;
++	};
++
++	sound {
++		compatible = "fsl,imx6q-ba16-sgtl5000",
++			     "fsl,imx-audio-sgtl5000";
++		model = "imx6q-ba16-sgtl5000";
++		ssi-controller = <&ssi1>;
++		audio-codec = <&codec>;
++		audio-routing =
++			"MIC_IN", "Mic Jack",
++			"Mic Jack", "Mic Bias",
++			"LINE_IN", "Line In Jack",
++			"Headphone Jack", "HP_OUT";
++		mux-int-port = <1>;
++		mux-ext-port = <4>;
 +	};
 +};
 +
-+&ldb {
-+	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
-+			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
-+	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
-+				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
-+	fsl,dual-channel;
++&ecspi5 {
++	fsl,spi-num-chipselects = <1>;
++	cs-gpios = <&gpio1 17 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi5>;
 +	status = "okay";
 +
-+	lvds0: lvds-channel@0 {
-+		fsl,data-mapping = "spwg";
-+		fsl,data-width = <24>;
-+		status = "okay";
-+
-+		port@4 {
-+			reg = <4>;
-+
-+			lvds0_out: endpoint {
-+				remote-endpoint = <&panel_in_lvds0>;
-+			};
-+		};
++	m25_eeprom: m25p80@0 {
++		compatible = "atmel,at25";
++		spi-max-frequency = <20000000>;
++		size = <0x8000>;
++		pagesize = <64>;
++		reg = <0>;
++		address-width = <16>;
 +	};
 +};
 +
-+&i2c2 {
-+	pca9547_ddc: mux@70 {
++&i2c1 {
++	pca9547: mux@70 {
 +		compatible = "nxp,pca9547";
 +		reg = <0x70>;
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +
-+		mux_i2c11: i2c@0 {
++		mux_i2c3: i2c@0 {
 +			#address-cells = <1>;
 +			#size-cells = <0>;
 +			reg = <0x0>;
++
++			ads7830: ads7830@48 {
++				compatible = "ti,ads7830";
++				reg = <0x48>;
++			};
++
++			mma8453: mma8453@1c {
++				compatible = "fsl,mma8453";
++				reg = <0x1c>;
++			};
 +		};
 +
-+		mux_i2c12: i2c@1 {
++		mux_i2c4: i2c@1 {
 +			#address-cells = <1>;
 +			#size-cells = <0>;
 +			reg = <0x1>;
++
++			eeprom: eeprom@50 {
++				compatible = "atmel,24c08";
++				reg = <0x50>;
++			};
++
++			mpl3115: mpl3115@60 {
++				compatible = "fsl,mpl3115";
++				reg = <0x60>;
++			};
 +		};
 +
-+		mux_i2c13: i2c@2 {
++		mux_i2c5: i2c@2 {
 +			#address-cells = <1>;
 +			#size-cells = <0>;
 +			reg = <0x2>;
 +		};
 +
-+		mux_i2c14: i2c@3 {
++		mux_i2c6: i2c@3 {
 +			#address-cells = <1>;
 +			#size-cells = <0>;
 +			reg = <0x3>;
++
++			codec: sgtl5000@0a {
++				compatible = "fsl,sgtl5000";
++				reg = <0x0a>;
++				clocks = <&mclk>;
++				VDDA-supply = <&reg_1p8v>;
++				VDDIO-supply = <&reg_3p3v>;
++			};
 +		};
 +
-+		mux_i2c15: i2c@4 {
++		mux_i2c7: i2c@4 {
 +			#address-cells = <1>;
 +			#size-cells = <0>;
 +			reg = <0x4>;
++
++			pca9539: pca9539@74 {
++				compatible = "nxp,pca9539";
++				reg = <0x74>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				interrupt-parent = <&gpio2>;
++				interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++			};
 +		};
 +
-+		mux_i2c16: i2c@5 {
++		mux_i2c8: i2c@5 {
 +			#address-cells = <1>;
 +			#size-cells = <0>;
 +			reg = <0x5>;
++
++			igb@49 {
++				compatible = "intel,igb";
++				reg = <0x49>;
++			};
++
++			igb@61 {
++				compatible = "intel,igb";
++				reg = <0x61>;
++			};
 +		};
 +
-+		mux_i2c17: i2c@6 {
++		mux_i2c9: i2c@6 {
 +			#address-cells = <1>;
 +			#size-cells = <0>;
 +			reg = <0x6>;
 +		};
 +
-+		mux_i2c18: i2c@7 {
++		mux_i2c10: i2c@7 {
 +			#address-cells = <1>;
 +			#size-cells = <0>;
 +			reg = <0x7>;
@@ -154,14 +212,27 @@ index 0000000..7ebb7d9
 +	};
 +};
 +
-+&hdmi {
-+	ddc-i2c-bus = <&mux_i2c11>;
-+};
++&usdhc4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc4>;
++	bus-width = <4>;
++	vmmc-supply = <&reg_wl18xx_vmmc>;
++	no-1-8-v;
++	non-removable;
++	enable-sdio-wakeup;
++	keep-power-in-suspend;
++	cap-power-off-card;
++	max-frequency = <25000000>;
++	status = "okay";
 +
-+&mux_i2c3 {
-+	ads7830_2: ads7830@4a {
-+		compatible = "ti,ads7830";
-+		reg = <0x4a>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	wlcore: wlcore@0 {
++		compatible = "ti,wl1837";
++		reg = <2>;
++		interrupt-parent = <&gpio2>;
++		interrupts = <6 IRQ_TYPE_LEVEL_HIGH>;
++		tcxo-clock-frequency = <26000000>;
 +	};
 +};
 -- 
