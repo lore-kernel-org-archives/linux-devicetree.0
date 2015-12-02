@@ -1,124 +1,65 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 4/6] pinctrl: meson: Enable GPIO IRQs
-Date: Wed, 02 Dec 2015 11:47:33 +0000
-Message-ID: <565EDA55.1080900@arm.com>
-References: <1448987062-31225-1-git-send-email-carlo@caione.org>	<1448987062-31225-5-git-send-email-carlo@caione.org>	<565DF211.8000005@arm.com>	<CAOQ7t2YN8Ey1vZO4yrn9SdbR7FzPNVY-HGRBZOctLgK1vHo9VA@mail.gmail.com>	<565EB3D8.5070400@arm.com> <CAL9uMOE1orp8zQABMOW0eFMuZ9XcGfLF1RLOwurEcN-csxfGtg@mail.gmail.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: [PATCH v3 0/4] drm: Add support for the ARM HDLCD display controller
+Date: Wed,  2 Dec 2015 12:22:58 +0000
+Message-ID: <1449058982-18595-1-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL9uMOE1orp8zQABMOW0eFMuZ9XcGfLF1RLOwurEcN-csxfGtg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh@kernel.org>, Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: devicetree <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Punit Agrawal <punit.agrawal@arm.com>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>, Andrew Morton <akpm@linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/15 11:37, Carlo Caione wrote:
-> On Wed, Dec 2, 2015 at 10:03 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
->> On 01/12/15 19:41, Carlo Caione wrote:
->>> On Tue, Dec 1, 2015 at 8:16 PM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
->>>> On 01/12/15 16:24, Carlo Caione wrote:
->>>>> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> 
-> [...]
-> 
->>> In v2 I had the set of fwspec to track number and trigger type of the
->>> IRQ, so it was straightforward. With this patch I have moved away from
->>> that solution (as you suggested) and I'm using the 'amlogic,irqs-gpio'
->>> parameter to track down the IRQ numbers (but not the trigger type).
->>> It's the same solution we have in drivers/irqchip/irq-crossbar.c where
->>> the trigger type is hardcoded in allocate_gic_irq().
->>> If I need to save both the IRQ and the trigger type at this point I
->>> wonder if it's better to go back to the set of fwspec or convert the
->>> fwspec to of_phandle_args and save that.
->>
->> No. This should come from the interrupt specifier you are getting from
->> the device. You should never make up that information.
->>
->> Your amlogic,irqs-gpio property gives you a list of downstream
->> interrupts. The device connected to your pinctrl HW provides you with
->> the upstream interrupt number (which you will map to one of your
->> downstream IRQ) and crucially the trigger type. Please look at how the
->> TI cross bar works (again).
-> 
-> Ok, this definitely makes sense and I'm going to fix it in the next
-> revision, thanks for the explanation. Still I fail to see how the TI
-> cross bar driver is actually doing what you are suggesting here. If
-> I'm correctly reading the code here
-> http://lxr.free-electrons.com/source/drivers/irqchip/irq-crossbar.c#L101
-> the driver is hardcoding the trigger type for the downstream IRQ to be
-> passed to the GIC code. But probably I'm missing something obvious.
-
-Damn. No, you're right. I'll fix that. Thanks for the heads up, and
-apologies for the shouting! ;-)
-
->>>>> +static int meson_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
->>>>> +{
->>>>> +     struct meson_domain *domain = to_meson_domain(chip);
->>>>> +     struct meson_pinctrl *pc = domain->pinctrl;
->>>>> +     struct meson_bank *bank;
->>>>> +     struct irq_fwspec irq_data;
->>>>> +     unsigned int hwirq, irq;
->>>>> +
->>>>> +     hwirq = domain->data->pin_base + offset;
->>>>> +
->>>>> +     if (meson_get_bank(domain, hwirq, &bank))
->>>>> +             return -ENXIO;
->>>>> +
->>>>> +     irq_data.param_count = 2;
->>>>> +     irq_data.param[0] = hwirq;
->>>>> +
->>>>> +     /* dummy. It will be changed later in meson_irq_set_type */
->>>>> +     irq_data.param[1] = IRQ_TYPE_EDGE_RISING;
->>>>
->>>> Blah. Worse than I though... How do you end-up here? Why can't you
->>>> obtain the corresponding of_phandle_args instead of making things up?
->>>
->>> because I do not have a of_phandle. This is basically the .to_irq hook
->>> of the gpio_chip. This code is being called programmatically from the
->>> gpiolib. No DTS/OF involved here.
->>>
->>>> This looks mad. Do you really need this?
->>>
->>> Well, I'm open to any suggestion on how improve this mess.
->>
->> The question to answer is: in what circumstances do you have to convert
->> a GPIO into an IRQ at runtime? The only case should be "when you
->> discover a device having an interrupt pointing to your pinctrl". And in
->> this case, you have all the information to reconfigure the HW and assign
->> the interrupt.
->>
->> I really don't get why you want or need to involve gpiolib in this.
-> 
-> Again probably I'm missing something (and Linus probably could help
-> here) but the only place I see the .to_irq hook (that is
-> meson_gpio_to_irq() in the driver code) being called is from
-> gpiod_to_irq() function in the gpiolib code.
-> 
-> One practical case in which that code path is involved is when (for
-> example) I have something like 'cd-gpios = <&gpio GPIOX 0>;' for the
-> card detection IRQ in the MMC node and in this case I fail to see an
-> easy way to get the trigger type without touching the MMC / gpiolib
-> code (any idea?).
-> This function is not called at all when in the DTS I explicitly have
-> the interrupt specifier defined using the 'interrupts = <...>'
-> property and in that case I have all the information I need to map the
-> downstream IRQ.
-
-I do think that the moment you want to describe an interrupt (and have
-the HW that can trigger one), you should end up describing this as a
-real interrupt, and not as a "shake this pin" kind of thing.
-
-The former gives you strong guarantees as to how this is going to be
-processed, while the later looks like a hack to paper over missing
-functionalities in past kernels...
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciBBUk0ncyBIRExDRCBkaXNwbGF5IGNvbnRyb2xs
+ZXIgZm91bmQgaW4gSnVubwphbmQgQVJNIFRDMiBDb3JldGlsZS4gVGhlIEhETENEIG91dHB1dHMg
+YW4gUkdCIHN0cmVhbSB0aGF0IGZlZWRzIGludG8gYQpzaW5nbGUgZGlnaXRhbCBlbmNvZGVyIChE
+Vkkgb3IgSERNSSkuCgpUaGlzIHNlcmllcyBkZXBlbmRzIG9uIFN1ZGVlcCBIb2xsYSdzIFNDUEkg
+ZHJpdmVyIChub3cgaW4gbWFpbmxpbmUpIGFuZCBvbgp0aGUgdGRhOTk4eCBwYXRjaGVzIHRoYXQg
+aGF2ZSBiZWVuIHF1ZXVlZCBvbiBSdXNzZWxsJ3MgcGF0Y2ggc3lzdGVtIGhlcmUgWzFdLgoKT25s
+eSB0aGUgSnVubyBmdW5jdGlvbmFsaXR5IGhhcyBiZWVuIHRlc3RlZCBhcyB0aGUgVEMyIENvcmV0
+aWxlIHJlcXVpcmUKYSB3b3JraW5nIFNpSTkwMjIgZHJpdmVyIGZvciBWRXhwcmVzcyB0aGF0IGlz
+IG5vdCBzdWJqZWN0IG9mIHRoaXMgcGF0Y2hzZXQuCgpDaGFuZ2Vsb2c6CnYzOiBDaGFuZ2VkIHRo
+ZSBkcml2ZXIgdG8gdXNlIHRoZSBtZW1vcnktcmVnaW9uIHBoYW5kbGUgZm9yIGJlc3Bva2UgZnJh
+bWVidWZmZXJzLgp2MjogQWRkZWQgc3VwcG9ydCBmb3IgYXRvbWljIG1vZGVzZXQgWzJdCnYxOiBP
+cmlnaW5hbCBEUk0gc3VibWlzc2lvbiBbM10KClsxXSBodHRwOi8vd3d3LmFybS5saW51eC5vcmcu
+dWsvZGV2ZWxvcGVyL3BhdGNoZXMvc2VhcmNoLnBocD91aWQ9Mjg5NQpbMl0gaHR0cDovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAxNS1Ob3ZlbWJlci8wOTQxNzcu
+aHRtbApbM10gaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwv
+MjAxNS1BdWd1c3QvMDg3Njg1Lmh0bWwKCkJlc3QgcmVnYXJkcywKTGl2aXUKCkxpdml1IER1ZGF1
+ICg0KToKICBkcm06IGFybTogQWRkIERUIGJpbmRpbmdzIGRvY3VtZW50YXRpb24gZm9yIEhETENE
+IGRyaXZlci4KICBkcm06IEFkZCBzdXBwb3J0IGZvciBBUk0ncyBIRExDRCBjb250cm9sbGVyLgog
+IGFybTY0OiBKdW5vOiBBZGQgSERMQ0Qgc3VwcG9ydCB0byB0aGUgSnVubyBib2FyZHMuCiAgTUFJ
+TlRBSU5FUlM6IEFkZCBMaXZpdSBEdWRhdSBhcyBtYWludGFpbmVyIGZvciBBUk0gSERMQ0QgZHJp
+dmVyLgoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXJtLGhkbGNkLnR4dCAgICAg
+IHwgIDc5ICsrKwogTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgfCAgIDYgKwogYXJjaC9hcm02NC9ib290L2R0cy9hcm0vanVuby1iYXNlLmR0c2kgICAg
+ICAgICAgICAgfCAgNDYgKy0KIGRyaXZlcnMvZ3B1L2RybS9LY29uZmlnICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHwgICAyICsKIGRyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZSAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvZ3B1L2RybS9hcm0vS2NvbmZpZyAgICAg
+ICAgICAgICAgICAgICAgICAgIHwgIDI5ICsrCiBkcml2ZXJzL2dwdS9kcm0vYXJtL01ha2VmaWxl
+ICAgICAgICAgICAgICAgICAgICAgICB8ICAgMiArCiBkcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNk
+X2NydGMuYyAgICAgICAgICAgICAgICAgICB8IDMzNCArKysrKysrKysrKysrCiBkcml2ZXJzL2dw
+dS9kcm0vYXJtL2hkbGNkX2Rydi5jICAgICAgICAgICAgICAgICAgICB8IDU1NSArKysrKysrKysr
+KysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9hcm0vaGRsY2RfZHJ2LmggICAgICAgICAgICAg
+ICAgICAgIHwgIDQyICsrCiBkcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNkX3JlZ3MuaCAgICAgICAg
+ICAgICAgICAgICB8ICA4NyArKysrCiAxMSBmaWxlcyBjaGFuZ2VkLCAxMTc5IGluc2VydGlvbnMo
+KyksIDQgZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXJtLGhkbGNkLnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0
+IGRyaXZlcnMvZ3B1L2RybS9hcm0vS2NvbmZpZwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+Z3B1L2RybS9hcm0vTWFrZWZpbGUKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
+YXJtL2hkbGNkX2NydGMuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9hcm0v
+aGRsY2RfZHJ2LmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNk
+X2Rydi5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2FybS9oZGxjZF9yZWdz
+LmgKCi0tIAoyLjYuMgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwK
