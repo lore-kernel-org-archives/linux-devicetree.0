@@ -1,61 +1,60 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [GIT PULL 4/9] ARM64: EXYNOS: Soc specific code for v4.5
-Date: Wed, 02 Dec 2015 10:39:41 +0900
-Message-ID: <1449020386-20250-5-git-send-email-k.kozlowski@samsung.com>
-References: <1449020386-20250-1-git-send-email-k.kozlowski@samsung.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 11/19] ARM: dts: imx: replace legacy *,wakeup property
+ with wakeup-source
+Date: Wed, 2 Dec 2015 09:54:00 +0800
+Message-ID: <20151202015400.GB692@tiger>
+References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
+ <1445422216-29375-12-git-send-email-sudeep.holla@arm.com>
+ <20151123053705.GH13744@tiger>
+ <5656EE1E.2030104@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <1449020386-20250-1-git-send-email-k.kozlowski@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-samsung-soc@vger.kernel.org, arm@kernel.org, Kukjin Kim <kgene@kernel.org>
-Cc: devicetree@vger.kernel.org, k.kozlowski@samsung.com, Kevin Hilman <khilman@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5656EE1E.2030104@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
+On Thu, Nov 26, 2015 at 11:33:50AM +0000, Sudeep Holla wrote:
+> 
+> 
+> On 23/11/15 05:37, Shawn Guo wrote:
+> >On Wed, Oct 21, 2015 at 11:10:08AM +0100, Sudeep Holla wrote:
+> >>Though the keyboard and other driver will continue to support the legacy
+> >>"gpio-key,wakeup", "linux,wakeup" boolean property to enable the wakeup
+> >>source, "wakeup-source" is the new standard binding.
+> >>
+> >>This patch replaces all the legacy wakeup properties with the unified
+> >>"wakeup-source" property in order to avoid any futher copy-paste
+> >>duplication.
+> >>
+> >>Cc: Shawn Guo <shawnguo@kernel.org>
+> >>Cc: Sascha Hauer <kernel@pengutronix.de>
+> >>Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> >
+> ><snip>
+> >
+> >>diff --git a/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi b/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi
+> >>index 321662f53e33..16fc69c69ab2 100644
+> >>--- a/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi
+> >>+++ b/arch/arm/boot/dts/imx51-digi-connectcore-som.dtsi
+> >>@@ -156,7 +156,7 @@
+> >>  	pinctrl-names = "default";
+> >>  	pinctrl-0 = <&pinctrl_esdhc2>;
+> >>  	cap-sdio-irq;
+> >>-	enable-sdio-wakeup;
+> >>+	wakeup-source;
+> >
+> >I do not see this be mentioned in commit log.  I do not see relevant
+> >kernel changes in v4.4-rc1 to support that.  Am I missing anything?
+> >
+> 
+> Sorry for that, you weren't copied on that patch[1], Ulf has queued it
+> now [2]
 
-ARM64 change touch also defconfig.
+My branch is based on v4.4-rc1 which doesn't have that patch.  That
+said, I can not apply it for now.
 
-Best regards,
-Krzysztof
-
-
-The following changes since commit 8005c49d9aea74d382f474ce11afbbc7d7130bec:
-
-  Linux 4.4-rc1 (2015-11-15 17:00:27 -0800)
-
-are available in the git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-soc64-4.5
-
-for you to fetch changes up to db44c07a3f0b32815bd1f3e731db9e043e57cf9c:
-
-  arm64: EXYNOS: Consolidate ARCH_EXYNOS7 symbol into ARCH_EXYNOS (2015-11-22 19:31:30 +0900)
-
-----------------------------------------------------------------
-Samsung Exynos ARM64 improvements:
-1. Use just one Kconfig symbol for Exynos SoC: ARCH_EXYNOS.
-   This depends on change in drivers/clk where the old ARCH_EXYNOS7
-   was used.
-
-----------------------------------------------------------------
-Krzysztof Kozlowski (3):
-      clk: samsung: Don't build ARMv8 clock drivers on ARMv7
-      Merge tag 'samsung-clk-arm64-symbols-4.5' into next/soc64
-      arm64: EXYNOS: Consolidate ARCH_EXYNOS7 symbol into ARCH_EXYNOS
-
- arch/arm64/Kconfig.platforms        | 11 ++---------
- arch/arm64/boot/dts/exynos/Makefile |  2 +-
- arch/arm64/configs/defconfig        |  2 +-
- drivers/clk/samsung/Kconfig         |  6 ++++++
- drivers/clk/samsung/Makefile        |  4 ++--
- 5 files changed, 12 insertions(+), 13 deletions(-)
+Shawn
