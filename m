@@ -1,133 +1,104 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH RFC 0/3] input: rotary_encoder: use more than two gpios
- as input
-Date: Wed, 2 Dec 2015 19:59:20 +0100
-Message-ID: <20151202185920.GO5072@pengutronix.de>
-References: <1449050834-31779-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <2266988.l83Fg404My@pcimr>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH (v6) 1/2] mtd: brcmnand: Add brcm,bcm63268-nand device
+ tree binding
+Date: Wed, 2 Dec 2015 11:05:55 -0800
+Message-ID: <20151202190555.GJ64635@google.com>
+References: <56506D55.3000907@simon.arlott.org.uk>
+ <20151122215945.GA5930@rob-hp-laptop>
+ <56523E85.905@simon.arlott.org.uk>
+ <56523EFF.9050502@simon.arlott.org.uk>
+ <56535977.9050201@gmail.com>
+ <56541BD3.4070202@simon.arlott.org.uk>
+ <5654AF69.7040901@gmail.com>
+ <afc6fb02d51a5378e315ade84a134eaf7a58a94f@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <2266988.l83Fg404My@pcimr>
-Sender: linux-input-owner@vger.kernel.org
-To: Rojhalat Ibrahim <imr@rtschenk.de>
-Cc: linux-arm-kernel@lists.infradead.org, Guido =?iso-8859-1?Q?Mart=EDnez?= <guido@vanguardiasur.com.ar>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Rob Herring <robh@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Johan Hovold <johan@kernel.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-input@vger.kernel.org
+In-Reply-To: <afc6fb02d51a5378e315ade84a134eaf7a58a94f-dyyJQ+qCPjsfFgGGEbPnq5KvX+y0N6jJ2mWzQvkZbzCn6nfhxgf73RdaaeUjXGGo@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
++ Broadcom list + Kamal
 
-On Wed, Dec 02, 2015 at 01:52:58PM +0100, Rojhalat Ibrahim wrote:
-> On Wednesday 02 December 2015 11:07:11 Uwe Kleine-K=F6nig wrote:
-> > some time ago I worked on the rotary encoder driver to make it supp=
-ort
-> > more than two input lines. This is the (only slightly tested[1]) re=
-base of
-> > this series on top of 4.4-rc2 (from 4.1).
-> >=20
-> > It would be great to get some feedback, especially (but not only) f=
-or my
-> > change to raumfeld.c.
-> >=20
-> > Before Ezequiel's patch 3a341a4c30d4 ("Input: rotary-encoder - add
-> > support for quarter-period mode") we had a dt property
-> > "rotary-encoder,half-period" defined. It's presence meant that we h=
-ad 2
-> > indents per period; it's absence that there is only 1. Ezequiel
-> > introduced rotary-encoder,steps-per-period instead when adding supp=
-ort
-> > for quarter-period mode (which has 4 indents per period).
-> >=20
-> > Up to now (i.e. with two inputs) a period has length 4. Now with (s=
-ay)
-> > four inputs a period has length 16 instead. Now how should this be
-> > modeled in dt? This series implements that I have to pass
-> >=20
-> > 	rotary-encoder,steps-per-period =3D <16>;
-> >=20
-> > now for "quarter-period mode" (i.e. 4 indents per 4 state changes[2=
-]),
-> > but that feels unnatural. I'd prefer to set a property to <1> inste=
-ad,
-> > meaning the device has an indent for each state change[2]. half-per=
-iod
-> > mode would be <2> and full-period mode would be <4>. But I don't ha=
-ve a
-> > nice name for such a property and maybe it's easier to live with
-> > steps-per-period =3D <16>? What do you think?
-> >=20
-> > Also note that these patches are not as technically versatile as
-> > possible. With 4 (n) input lines we could detect a quick rotation w=
-here the
-> > machine's latency only allows to sample after 7 (2^(n-1)-1) state
-> > changes. Currently this is not implemented, but can be done later.
-> >=20
-> > Best regards
-> > Uwe
-> >=20
->=20
-> AFAIUI the rotary encoder driver only handles incremental encoders no=
-t
-> absolute encoders. (So in fact the assumed rotary encoder could also =
-be a
+On Tue, Nov 24, 2015 at 08:19:37PM -0000, Simon Arlott wrote:
+> Add device tree binding for NAND on the BCM63268.
+> 
+> The BCM63268 has a NAND interrupt register with combined status and enable
+> registers.
+> 
+> Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mtd/brcm,brcmnand.txt      | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> index 4ff7128..f2a71c8 100644
+> --- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> @@ -72,6 +72,14 @@ we define additional 'compatible' properties and associated register resources w
+>         and enable registers
+>       - reg-names: (required) "nand-int-base"
+> 
+> +   * "brcm,nand-bcm63268"
+> +     - compatible: should contain "brcm,nand-bcm<soc>", "brcm,nand-bcm63268"
 
-There is a device tree property "rotary-encoder,relative-axis" which
-switches between absolute and relative reporting. This is maybe badly
-named, but IIUC is there to differenciate between incremental and
-absolute encoders.
+Looks like you're aiming to support bcm63168? Is bcm63268 the first
+chip to include this style of register then? The numbering seems
+backwards, but that may just be reality.
 
-> linear encoder with an incremental interface.) Those encoders almost =
-always
-> have an interface with two outputs (A, B) with a phase shift of 90 de=
-grees
-> between them. So in this case we have 4 steps per period. Sometimes t=
-here
-> is only one line for 1 or 2 steps per period. But I have never seen o=
-r
+> +     - reg: (required) the 'NAND_INTR_BASE' register range, with combined status
+> +       and enable registers, and boot address registers
+> +     - reg-names: (required) "nand-intr-base"
+> +     - clock: (required) reference to the clock for the NAND controller
+> +     - clock-names: (required) "nand"
+> +
+>     * "brcm,nand-iproc"
+>       - reg: (required) the "IDM" register range, for interrupt enable and APB
+>         bus access endianness configuration, and the "EXT" register range,
+> @@ -148,3 +156,30 @@ nand@f0442800 {
+>  		};
+>  	};
+>  };
+> +
+> +nand@10000200 {
+> +	compatible = "brcm,nand-bcm63168", "brcm,nand-bcm63268",
+> +		"brcm,brcmnand-v4.0", "brcm,brcmnand";
+> +	reg = <0x10000200 0x180>,
+> +	      <0x10000600 0x200>,
+> +	      <0x100000b0 0x10>;
+> +	reg-names = "nand", "nand-cache", "nand-intr-base";
+> +	interrupt-parent = <&periph_intc>;
+> +	interrupts = <50>;
+> +	clocks = <&periph_clk 20>;
+> +	clock-names = "nand";
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	nand0: nandcs@0 {
+> +		compatible = "brcm,nandcs";
+> +		reg = <0>;
+> +		nand-on-flash-bbt;
+> +		nand-ecc-strength = <1>;
+> +		nand-ecc-step-size = <512>;
+> +
+> +		#address-cells = <0>;
+> +		#size-cells = <0>;
 
-I don't see how using only a single gpio would work for a rotary
-encoder. I suspect we use different vocabulary to describe our devices
-and so don't understand each other?! At least you cannot detect the
-direction of the movement with a single input line, do you?
+What are these {address,size}-cells for? If you need them for
+partitioning, then those are wrong -- they shouldn't be zero. Maybe just
+drop them? (I can cut them out when applying, if that's the only change
+to make.)
 
-> heard of a device with more than 2 lines (except for the third output=
- which
-> serves as a reference position index marker).
->=20
-> Do devices wirh more than two outputs actually exist?
-> Or is the purpose of supporting more than 2 lines something other tha=
-n
-> connecting an actual encoder to them?
+> +	};
+> +};
 
-I have a real rotary encoder with 4 input lines and so 16
-distinguishable positions. It would be described as:
-
-	compatible =3D "rotary-encoder";
-	gpios =3D <&gpio4 12 GPIO_ACTIVE_HIGH>, <&gpio4 11 GPIO_ACTIVE_HIGH>, =
-<&gpio4 10 GPIO_ACTIVE_HIGH>, <&gpio4 9 GPIO_ACTIVE_HIGH>;
-	rotary-encoder,steps =3D <16>;
-	rotary-encoder,steps-per-period =3D <16>;
-
-with the binding implemented in my patches.
-
-The wikipedia article about rotary encoders[1] uses a device with 3
-input lines to explain gray encoding. So I didn't consider "my" device
-as exotic up to now.
-
-Best regards
-Uwe
-
-[1] https://en.wikipedia.org/wiki/Rotary_encoder
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+Brian
 --
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
