@@ -1,122 +1,70 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH 0/4] ARM: dts: vf610: relicense the device trees under
- GPLv2/X11
-Date: Wed, 02 Dec 2015 13:48:52 -0800
-Message-ID: <3247a5110998c32c64e4e39e64fcb700@agner.ch>
-References: <1448323069-23208-1-git-send-email-stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448323069-23208-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Cosmin Stoica <cosminstefan.stoica-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, mporter-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>, Bill Pringlemeir <bpringle-rieW9WUcm8FFJ04o6PK0Fg@public.gmane.org>, Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH 1/2] ARM: dts: vf-colibri: split PWM pinctrl
+Date: Wed,  2 Dec 2015 14:11:46 -0800
+Message-ID: <1449094307-6011-1-git-send-email-stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Split PWM pins into separate pinctrl nodes to allow overrides which
+select pins individually. This is useful for carrier boards which use
+only one pin for PWM and would like to use the other pin for a
+different purpose.
 
-[added latest email address of Matt Porter]
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ arch/arm/boot/dts/vf-colibri.dtsi | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-There are only a few Acks missing.
-
-I still miss an answer from a Freescale developer. Yuan, Cosmin or
-Frank, any chance to get an ack on this?
-
---
-Stefan
-
-
-On 2015-11-23 15:57, Stefan Agner wrote:
-> The GPLv2 license makes it impractical for other software components
-> licensed under another license to use our device trees. To fix this,
-> and make our device tree usable by other software components, relicense
-> them under a GPLv2/X11 dual-license.
-> 
-> In order to get this accepted, we *need* all contributors to the Vybrid
-> device tree files to send an ack to the patches applying on a file they
-> contributed on.
-> 
-> I think some Freescale email addresses are not valid anymore, can someone
-> from Freescale make an ack on their behalf?
-> 
-> The needed Acked-by by device tree are:
-> 
-> vf???.dtsi:
->   Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
->   Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
->   Cosmin Stoica <cosminstefan.stoica-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->   Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->   Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->   Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->   Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> vf610-colibri:
->   Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
->   Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
->   Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> vf610-cosmic:
->   Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
->   Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->   Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
->   Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> vf610-twr:
->   Bill Pringlemeir <bpringle-rieW9WUcm8FFJ04o6PK0Fg@public.gmane.org>
->   Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
->   Cosmin Stoica <cosminstefan.stoica-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->   Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->   Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> CC: Bhuvanchandra DV <bhuvanchandra.dv-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-> CC: Bill Pringlemeir <bpringle-rieW9WUcm8FFJ04o6PK0Fg@public.gmane.org>
-> CC: Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> CC: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-> CC: Cosmin Stoica <cosminstefan.stoica-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> CC: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> CC: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> CC: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> CC: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> CC: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> CC: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> CC: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> CC: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> CC: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> CC: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> CC: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> CC: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> CC: Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> Stefan Agner (4):
->   ARM: dts: vf610: relicense vf???.dtsi under GPLv2/X11
->   ARM: dts: vf610-colibri: relicense vf*colibri* under GPLv2/X11
->   ARM: dts: vf610-cosmic: relicense vf610-cosmic.dts under GPLv2/X11
->   ARM: dts: vf610-twr: relicense vf610-twr.dts under GPLv2/X11
-> 
->  arch/arm/boot/dts/vf-colibri-eval-v3.dtsi   | 40 ++++++++++++++++++++++++---
->  arch/arm/boot/dts/vf-colibri.dtsi           | 40 ++++++++++++++++++++++++---
->  arch/arm/boot/dts/vf500-colibri-eval-v3.dts | 40 ++++++++++++++++++++++++---
->  arch/arm/boot/dts/vf500-colibri.dtsi        | 40 ++++++++++++++++++++++++---
->  arch/arm/boot/dts/vf500.dtsi                | 40 ++++++++++++++++++++++++---
->  arch/arm/boot/dts/vf610-colibri-eval-v3.dts | 42 +++++++++++++++++++++++++----
->  arch/arm/boot/dts/vf610-colibri.dtsi        | 40 ++++++++++++++++++++++++---
->  arch/arm/boot/dts/vf610-cosmic.dts          | 40 ++++++++++++++++++++++++---
->  arch/arm/boot/dts/vf610-twr.dts             | 40 ++++++++++++++++++++++++---
->  arch/arm/boot/dts/vf610.dtsi                | 40 ++++++++++++++++++++++++---
->  arch/arm/boot/dts/vfxxx.dtsi                | 40 ++++++++++++++++++++++++---
->  11 files changed, 397 insertions(+), 45 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
+index e5949b9..924b660 100644
+--- a/arch/arm/boot/dts/vf-colibri.dtsi
++++ b/arch/arm/boot/dts/vf-colibri.dtsi
+@@ -74,12 +74,12 @@
+ 
+ &pwm0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_pwm0>;
++	pinctrl-0 = <&pinctrl_pwm0_a &pinctrl_pwm0_c>;
+ };
+ 
+ &pwm1 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_pwm1>;
++	pinctrl-0 = <&pinctrl_pwm1_b &pinctrl_pwm1_d>;
+ };
+ 
+ &uart0 {
+@@ -195,16 +195,26 @@
+ 			>;
+ 		};
+ 
+-		pinctrl_pwm0: pwm0grp {
++		pinctrl_pwm0_a: pwm0agrp {
+ 			fsl,pins = <
+ 				VF610_PAD_PTB0__FTM0_CH0		0x1182
++			>;
++		};
++
++		pinctrl_pwm0_c: pwm0cgrp {
++			fsl,pins = <
+ 				VF610_PAD_PTB1__FTM0_CH1		0x1182
+ 			>;
+ 		};
+ 
+-		pinctrl_pwm1: pwm1grp {
++		pinctrl_pwm1_b: pwm1bgrp {
+ 			fsl,pins = <
+ 				VF610_PAD_PTB8__FTM1_CH0		0x1182
++			>;
++		};
++
++		pinctrl_pwm1_d: pwm1dgrp {
++			fsl,pins = <
+ 				VF610_PAD_PTB9__FTM1_CH1		0x1182
+ 			>;
+ 		};
+-- 
+2.6.2
