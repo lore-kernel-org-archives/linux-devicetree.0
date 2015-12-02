@@ -1,137 +1,49 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 3/3] Addition of binding for firmware signals on peach-pi
-Date: Wed, 02 Dec 2015 08:51:26 +0900
-Message-ID: <565E327E.90404@samsung.com>
-References: <1448997171-7064-1-git-send-email-martyn.welch@collabora.co.uk>
- <1448997171-7064-4-git-send-email-martyn.welch@collabora.co.uk>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/4] PCI: rcar-gen2: Add generic compatibility string
+Date: Wed, 2 Dec 2015 09:26:50 +0900
+Message-ID: <20151202002650.GI27457@verge.net.au>
+References: <1448954672-27236-1-git-send-email-horms+renesas@verge.net.au>
+ <1448954672-27236-2-git-send-email-horms+renesas@verge.net.au>
+ <CAMuHMdVJvChiFTkeeJNBcPG2CsC3PxoEC4Lx0fHOeMMMPLew0g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1448997171-7064-4-git-send-email-martyn.welch@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Martyn Welch <martyn.welch@collabora.co.uk>
-Cc: Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVJvChiFTkeeJNBcPG2CsC3PxoEC4Lx0fHOeMMMPLew0g@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02.12.2015 04:12, Martyn Welch wrote:
-> The peach pi has a GPIO connected to the firmware write protect, developer
-> mode and recovery mode lines. This patch adds the required nodes to the
-> device tree to configure the pinmuxing and allow these to be read from
-> user space.
+On Tue, Dec 01, 2015 at 09:41:49AM +0100, Geert Uytterhoeven wrote:
+> On Tue, Dec 1, 2015 at 8:24 AM, Simon Horman <horms+renesas@verge.net.au> wrote:
+> > Add fallback compatibility string for R-Car Gen 2 Family.
+> > This is in keeping with the fallback scheme being adopted wherever
+> > appropriate for drivers for Renesas SoCs.
+> >
+> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> > ---
+> >  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 11 +++++++++--
+> >  drivers/pci/host/pci-rcar-gen2.c                        |  1 +
+> >  2 files changed, 10 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> > index 891463cb09c2..b19be08a8113 100644
+> > --- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> > +++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> > @@ -8,7 +8,14 @@ OHCI and EHCI controllers.
+> >  Required properties:
+> >  - compatible: "renesas,pci-r8a7790" for the R8A7790 SoC;
+> >               "renesas,pci-r8a7791" for the R8A7791 SoC;
+> > -             "renesas,pci-r8a7794" for the R8A7794 SoC.
+> > +             "renesas,pci-r8a7794" for the R8A7794 SoC;
+> > +             "renesas,pci-gen2" for a generic R-Car Gen2 compatible device.
 > 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Kukjin Kim <kgene@kernel.org>
-> Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-samsung-soc@vger.kernel.org
-> Signed-off-by: Martyn Welch <martyn.welch@collabora.co.uk>
-> ---
->  arch/arm/boot/dts/exynos5800-peach-pi.dts | 40 +++++++++++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
-
-Hi,
-
-Thanks for the patch.
-
-Few points from my side:
-1. Please add a prefix to the subject: "ARM: dts:".
-
-2. There is no need of such huge CC-list in the body of commit. This
-CC-list comes from get_maintainer so there is no benefit of duplicating
-it here. The CC is usually used to notify other people who might be
-interested but get_maintainer does not point them.
-
-3. I received only this third patch. I did not receive cover letter
-explaining possible dependencies so I am not sure how to deal with the
-patch. It looks like there are no dependencies... but maybe there are?
-Is this is a new binding or no? Please provide a cover letter (if it
-exists already be sure to send it to all interested parties) or send
-entire patchset so the big picture could be seen.
-
-The patch itself looks good but I'll wait with a review tag for #3.
-
-Best regards,
-Krzysztof
-
-
+> Shouldn't that be "renesas,pci-rcar-gen" or "renesas,pci-rcar2"?
 > 
-> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> index 49a4f43..485c18f 100644
-> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> @@ -53,6 +53,25 @@
->  		};
->  	};
->  
-> +	chromeos-firmware {
-> +		compatible = "google,gpio-firmware";
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&wp_gpio &dev_mode &rec_mode>;
-> +
-> +		write-protect {
-> +			gpios = <&gpx3 0 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		developer-switch {
-> +			gpios = <&gpx1 3 GPIO_ACTIVE_HIGH>;
-> +		};
-> +
-> +		recovery-switch {
-> +			gpios = <&gpx0 7 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-> +
->  	gpio-keys {
->  		compatible = "gpio-keys";
->  
-> @@ -731,6 +750,13 @@
->  		samsung,pin-val = <0>;
->  	};
->  
-> +	rec_mode: rec-mode {
-> +		samsung,pins = "gpx0-7";
-> +		samsung,pin-function = <0>;
-> +		samsung,pin-pud = <0>;
-> +		samsung,pin-drv = <0>;
-> +	};
-> +
->  	tpm_irq: tpm-irq {
->  		samsung,pins = "gpx1-0";
->  		samsung,pin-function = <0>;
-> @@ -752,6 +778,13 @@
->  		samsung,pin-drv = <0>;
->  	};
->  
-> +	dev_mode: dev-mode {
-> +		samsung,pins = "gpx1-3";
-> +		samsung,pin-function = <0>;
-> +		samsung,pin-pud = <3>;
-> +		samsung,pin-drv = <0>;
-> +	};
-> +
->  	ec_irq: ec-irq {
->  		samsung,pins = "gpx1-5";
->  		samsung,pin-function = <0>;
-> @@ -773,6 +806,13 @@
->  		samsung,pin-drv = <0>;
->  	};
->  
-> +	wp_gpio: wp_gpio {
-> +		samsung,pins = "gpx3-0";
-> +		samsung,pin-function = <0>;
-> +		samsung,pin-pud = <0>;
-> +		samsung,pin-drv = <0>;
-> +	};
-> +
->  	max77802_irq: max77802-irq {
->  		samsung,pins = "gpx3-1";
->  		samsung,pin-function = <0>;
-> 
+> Else you'll be in trouble when Renesas starts focussing on airplanes
+> (R-Plane Gen2), rockets (R-Rocket Gen2), or IoT (R-IoT Gen2).
+
+Point taken.
+
+I think renesas,pci-rcar-gen2 should work well enough.
