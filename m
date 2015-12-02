@@ -1,75 +1,107 @@
-From: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND RFC/PATCH 6/8] media: platform: mtk-vcodec: Add Mediatek
- V4L2 Video Encoder Driver
-Date: Wed, 2 Dec 2015 16:02:50 +0000
-Message-ID: <565F162A.4070106@linaro.org>
-References: <1447764885-23100-1-git-send-email-tiffany.lin@mediatek.com>
- <1447764885-23100-7-git-send-email-tiffany.lin@mediatek.com>
- <56588622.8060600@linaro.org> <1448883594.25093.45.camel@mtksdaap41>
- <CAMTL27FchgtJZS4YpVge-x+TstnVHmG1aAnaOV32qCU3zMUbAQ@mail.gmail.com>
- <1448966550.7534.95.camel@mtksdaap41> <565DBFF3.1000409@linaro.org>
- <1449061708.8326.5.camel@mtksdaap41>
+From: Kapil Hali <kapilh@broadcom.com>
+Subject: Re: [PATCH v4 1/5] dt-bindings: add SMP enable-method for Broadcom
+ NSP
+Date: Wed, 2 Dec 2015 21:36:09 +0530
+Message-ID: <565F16F1.9070809@broadcom.com>
+References: <1448987049-17041-1-git-send-email-kapilh@broadcom.com>
+ <1448987049-17041-2-git-send-email-kapilh@broadcom.com>
+ <20151202152604.GA20467@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449061708.8326.5.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Mikhail Ulyanov <mikhail.ulyanov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, =?UTF-8?B?QW5kcmV3LUNUIENoZW4gKOm
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151202152604.GA20467@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Lee Jones <lee@kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Kever Yang <kever.yang@rock-chips.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/15 13:08, tiffany lin wrote:
->>> We need MTK_STATE_ABORT to inform encoder thread (mtk_venc_worker) that
->>> stop encodeing job from stopped ctx instance.
->>> When user space qbuf, we need to make sure everything is ready to sent
->>> buf to encode.
+Hi Rob,
+
+On 12/2/2015 8:56 PM, Rob Herring wrote:
+> On Tue, Dec 01, 2015 at 11:24:05AM -0500, Kapil Hali wrote:
+>> Add a compatible string "brcm,bcm-nsp-smp" for Broadcom's
+>> Northstar Plus CPU to the 32-bit ARM CPU device tree binding
+>> documentation file and create a new binding documentation for
+>> Northstar Plus CPU.
 >>
->> Agree that you need a flag here. In fact currently you have two,
->> MTK_STATE_ABORT and an unused one called aborting.
+>> Signed-off-by: Kapil Hali <kapilh@broadcom.com>
+>> ---
+>>  .../bindings/arm/bcm/brcm,nsp-cpu-method.txt       | 39 ++++++++++++++++++++++
+>>  Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
+>>  2 files changed, 40 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
 >>
->> You need to be very careful with these flags though. They are a magnet
->> for data race bugs (especially combined with SMP).
+>> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
+>> new file mode 100644
+>> index 0000000..bf08872
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
+>> @@ -0,0 +1,39 @@
+>> +Broadcom Northstar Plus SoC CPU Enable Method
+>> +---------------------------------------------
+>> +This binding defines the enable method used for starting secondary
+>> +CPUs in the following Broadcom SoCs:
+>> +  BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
+>> +
+>> +The enable method is specified by defining the following required
+>> +properties in the "cpus" device tree node:
+>> +  - enable-method = "brcm,bcm-nsp-smp";
+>> +  - secondary-boot-reg = <...>;
+> 
+> Both of these are supposed to be per cpu core.
+
+'enable-method' if not found in 'cpu' node is looked at in the 'cpus' 
+node. Except for two-three SoC families, 'enable-method' is within 
+'cpus' node. Is my interpretation incorrect? Did I miss anything here?
+
+> 
+> Rob
+> 
+>> +
+>> +The secondary-boot-reg property is a u32 value that specifies the
+>> +physical address of the register which should hold the common
+>> +entry point for a secondary CPU. This entry is cpu node specific
+>> +and should be added per cpu. E.g., in case of NSP (BCM58625) which
+>> +is a dual core CPU SoC, this entry should be added to cpu1 node.
+>> +
+>> +
+>> +Example:
+>> +	cpus {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		enable-method = "brcm,bcm-nsp-smp";
+>> +
+>> +		cpu0: cpu@0 {
+>> +			device_type = "cpu";
+>> +			compatible = "arm,cortex-a9";
+>> +			next-level-cache = <&L2>;
+>> +			reg = <0>;
+>> +		};
+>> +
+>> +		cpu1: cpu@1 {
+>> +			device_type = "cpu";
+>> +			compatible = "arm,cortex-a9";
+>> +			next-level-cache = <&L2>;
+>> +			reg = <1>;
+>> +			secondary-boot-reg = <0xffff042c>;
+>> +		};
+>> +	};
+>> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+>> index 3a07a87..d191554 100644
+>> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+>> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+>> @@ -190,6 +190,7 @@ nodes to be present and contain the properties described below.
+>>  			    "allwinner,sun6i-a31"
+>>  			    "allwinner,sun8i-a23"
+>>  			    "arm,psci"
+>> +			    "brcm,bcm-nsp-smp"
+>>  			    "brcm,brahma-b15"
+>>  			    "marvell,armada-375-smp"
+>>  			    "marvell,armada-380-smp"
+>> -- 
+>> 2.1.0
 >>
->> For example at present I can't see any locking in the worker code. This
->> means there is nothing to make all those read-modify-write sequences
->> that manage the state atomic (thus risking state corruption).
->>
-> We prevent that one function set the flag and others clear the flag.
-> So there is no special lock to protect state.
-
-What prevents concurrent access from different calling contexts? It 
-looks to me like the work on the work queue may run concurrently with 
-the ioctl calls.
-
-
-> +static void vb2ops_venc_stop_streaming(struct vb2_queue *q)
-> +{
-> +	struct mtk_vcodec_ctx *ctx = vb2_get_drv_priv(q);
-> +	struct v4l2_device *v4l2_dev = &ctx->dev->v4l2_dev;
-> +	struct vb2_buffer *src_buf, *dst_buf;
-> +	int retry;
-> +	int ret;
-> +
-> +	mtk_v4l2_debug(2, "[%d]-> type=%d", ctx->idx, q->type);
-> +
-> +	retry = 0;
-> +	while ((ctx->state & MTK_STATE_RUNNING) && (retry < 10)) {
-> +		mtk_vcodec_clean_ctx_int_flags(ctx);
-> +		ctx->state |= MTK_STATE_ABORT;
-
-As a simple example I think the above line can run concurrently with the 
-following code near the end of the worker code.
-
-> +	ctx->state &= ~MTK_STATE_RUNNING;
-> +	v4l2_m2m_job_finish(ctx->dev->m2m_dev_enc, ctx->m2m_ctx);
-
-If I'm right then the state of the flags can definitely get clobbered 
-due to the read-modify-write actions on the state.
-
-
-Daniel.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+Thanks,
+Kapil
