@@ -1,13 +1,12 @@
 Return-Path: <>
 From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH v3 3/5] iio: health: Add driver for the TI AFE4404 heart monitor
-Date: Mon, 14 Dec 2015 16:35:59 -0600
-Message-ID: <1450132561-5245-4-git-send-email-afd@ti.com>
-In-Reply-To: <1450132561-5245-1-git-send-email-afd@ti.com>
-References: <1450132561-5245-1-git-send-email-afd@ti.com>
+Subject: [PATCH v2 2/2] iio: health: Add driver for the TI AFE4404 heart monitor
+Date: Wed, 2 Dec 2015 13:57:20 -0600
+Message-ID: <1449086240-13375-3-git-send-email-afd@ti.com>
+In-Reply-To: <1449086240-13375-1-git-send-email-afd@ti.com>
+References: <1449086240-13375-1-git-send-email-afd@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>
 Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew
 List-ID: <devicetree@vger.kernel.org>
@@ -20,14 +19,14 @@ Datasheet: http://www.ti.com/product/AFE4404/datasheet
 
 Signed-off-by: Andrew F. Davis <afd@ti.com>
 ---
- .../ABI/testing/sysfs-bus-iio-health-afe4404       |  60 ++
+ .../ABI/testing/sysfs-bus-iio-health-afe4404       |  20 +
  drivers/iio/Kconfig                                |   1 +
  drivers/iio/Makefile                               |   1 +
  drivers/iio/health/Kconfig                         |  25 +
  drivers/iio/health/Makefile                        |   6 +
- drivers/iio/health/afe4404.c                       | 700 +++++++++++++++++++++
- drivers/iio/health/afe440x.h                       | 202 ++++++
- 7 files changed, 995 insertions(+)
+ drivers/iio/health/afe4404.c                       | 619 +++++++++++++++++++++
+ drivers/iio/health/afe440x.h                       | 168 ++++++
+ 7 files changed, 840 insertions(+)
  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-health-afe4404
  create mode 100644 drivers/iio/health/Kconfig
  create mode 100644 drivers/iio/health/Makefile
@@ -36,10 +35,10 @@ Signed-off-by: Andrew F. Davis <afd@ti.com>
 
 diff --git a/Documentation/ABI/testing/sysfs-bus-iio-health-afe4404 b/Documentation/ABI/testing/sysfs-bus-iio-health-afe4404
 new file mode 100644
-index 0000000..b01ca47
+index 0000000..c104d66
 --- /dev/null
 +++ b/Documentation/ABI/testing/sysfs-bus-iio-health-afe4404
-@@ -0,0 +1,60 @@
+@@ -0,0 +1,20 @@
 +What:		/sys/bus/iio/devices/iio:deviceX/tia_resistanceY
 +		/sys/bus/iio/devices/iio:deviceX/tia_capacitanceY
 +Date:		December 2015
@@ -49,10 +48,8 @@ index 0000000..b01ca47
 +		Get and set the resistance and the capacitance settings for the
 +		Transimpedance Amplifier. Y is 1 for Rf1 and Cf1, Y is 2 for
 +		Rf2 and Cf2 values.
-+		Valid Resistance settings are 500000, 250000, 100000, 50000,
-+		25000, 10000, 1000000, and 2000000 Ohms.
-+		Valid capacitance settings are 5, 2.5, 10, 7.5, 20, 17.5, 25,
-+		and 22.5 picoFarads.
++		Resistance setting is from 0 -> 7
++		Capcitance setting is from 0 -> 15
 +
 +What:		/sys/bus/iio/devices/iio:deviceX/tia_separate_en
 +Date:		December 2015
@@ -62,44 +59,6 @@ index 0000000..b01ca47
 +		Enable or disable separate settings for the TransImpedance
 +		Amplifier above, when disabled both values are set by the
 +		first channel.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_ledY_raw
-+		/sys/bus/iio/devices/iio:deviceX/in_intensity_ledY_ambient_raw
-+Date:		December 2015
-+KernelVersion:
-+Contact:	Andrew F. Davis <afd@ti.com>
-+Description:
-+		Get measured values from the ADC for these stages. Y is the
-+		specific LED number. The values are expressed in 24-bit twos
-+		complement.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_ledY-ledY_ambient_raw
-+Date:		December 2015
-+KernelVersion:
-+Contact:	Andrew F. Davis <afd@ti.com>
-+Description:
-+		Get differential values from the ADC for these stages. Y is the
-+		specific LED number. The values are expressed in 24-bit twos
-+		complement for the specified LEDs.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/out_current_ledY_offset
-+		/sys/bus/iio/devices/iio:deviceX/out_current_ledY_ambient_offset
-+Date:		December 2015
-+KernelVersion:
-+Contact:	Andrew F. Davis <afd@ti.com>
-+Description:
-+		Get and set the offset cancellation DAC setting for these
-+		stages. The values are expressed in 5-bit sign–magnitude.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/out_current_ledY_raw
-+Date:		December 2015
-+KernelVersion:
-+Contact:	Andrew F. Davis <afd@ti.com>
-+Description:
-+		Get and set the LED current for the specified LED. Y is the
-+		specific LED number.
-+		Values range from 0 -> 63. Current is calculated by
-+		current = value * 0.8mA
 diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
 index 66792e7..ac085ab 100644
 --- a/drivers/iio/Kconfig
@@ -169,10 +128,10 @@ index 0000000..c108c8d
 +obj-$(CONFIG_AFE4404) += afe4404.o
 diff --git a/drivers/iio/health/afe4404.c b/drivers/iio/health/afe4404.c
 new file mode 100644
-index 0000000..d199a35
+index 0000000..d36c1d9
 --- /dev/null
 +++ b/drivers/iio/health/afe4404.c
-@@ -0,0 +1,700 @@
+@@ -0,0 +1,619 @@
 +/*
 + * AFE4404 Heart Rate Monitors and Low-Cost Pulse Oximeters
 + *
@@ -291,22 +250,39 @@ index 0000000..d199a35
 +	LED3,
 +	LED1_ALED1,
 +	LED2_ALED2,
++	AVG_LED1_ALED1,
++	AVG_LED2_ALED2,
 +	ILED1,
 +	ILED2,
 +	ILED3,
 +};
 +
-+static const struct afe440x_reg_info reg_info[] = {
-+	AFE440X_REG_INFO(LED1, AFE440X_LED1VAL, AFE4404_OFFDAC, AFE4404_OFFDAC_CURR_LED1),
-+	AFE440X_REG_INFO(ALED1, AFE440X_ALED1VAL, AFE4404_OFFDAC, AFE4404_OFFDAC_CURR_ALED1),
-+	AFE440X_REG_INFO(LED2, AFE440X_LED2VAL, AFE4404_OFFDAC, AFE4404_OFFDAC_CURR_LED2),
-+	AFE440X_REG_INFO(ALED2, AFE440X_ALED2VAL, AFE4404_OFFDAC, AFE4404_OFFDAC_CURR_ALED2),
-+	AFE440X_REG_INFO(LED3, AFE440X_ALED2VAL, 0, NULL),
-+	AFE440X_REG_INFO(LED1_ALED1, AFE440X_LED1_ALED1VAL, 0, NULL),
-+	AFE440X_REG_INFO(LED2_ALED2, AFE440X_LED2_ALED2VAL, 0, NULL),
-+	AFE440X_REG_INFO(ILED1, AFE440X_LEDCNTRL, 0, AFE4404_LEDCNTRL_ILED1),
-+	AFE440X_REG_INFO(ILED2, AFE440X_LEDCNTRL, 0, AFE4404_LEDCNTRL_ILED2),
-+	AFE440X_REG_INFO(ILED3, AFE440X_LEDCNTRL, 0, AFE4404_LEDCNTRL_ILED3),
++#define AFE4404_REG_INFO(_id, _reg, _offreg, _sm)		\
++	[_id] = {						\
++		.reg = _reg,					\
++		.offreg = _offreg,				\
++		.shift = _sm ## _SHIFT,				\
++		.mask = _sm ## _MASK,				\
++	}
++
++struct {
++	unsigned int reg;
++	unsigned int offreg;
++	unsigned int shift;
++	unsigned int mask;
++} reg_info[] = {
++	AFE4404_REG_INFO(LED1, AFE440X_LED1VAL, AFE4404_OFFDAC, AFE4404_OFFDAC_CURR_LED1),
++	AFE4404_REG_INFO(ALED1, AFE440X_ALED1VAL, AFE4404_OFFDAC, AFE4404_OFFDAC_CURR_ALED1),
++	AFE4404_REG_INFO(LED2, AFE440X_LED2VAL, AFE4404_OFFDAC, AFE4404_OFFDAC_CURR_LED2),
++	AFE4404_REG_INFO(ALED2, AFE440X_ALED2VAL, AFE4404_OFFDAC, AFE4404_OFFDAC_CURR_ALED2),
++	AFE4404_REG_INFO(LED3, AFE440X_ALED2VAL, 0, NULL),
++	AFE4404_REG_INFO(LED1_ALED1, AFE440X_LED1_ALED1VAL, 0, NULL),
++	AFE4404_REG_INFO(LED2_ALED2, AFE440X_LED2_ALED2VAL, 0, NULL),
++	AFE4404_REG_INFO(AVG_LED1_ALED1, AFE4404_AVG_LED1_ALED1VAL, 0, NULL),
++	AFE4404_REG_INFO(AVG_LED2_ALED2, AFE4404_AVG_LED2_ALED2VAL, 0, NULL),
++	AFE4404_REG_INFO(ILED1, AFE440X_LEDCNTRL, 0, AFE4404_LEDCNTRL_ILED1),
++	AFE4404_REG_INFO(ILED2, AFE440X_LEDCNTRL, 0, AFE4404_LEDCNTRL_ILED2),
++	AFE4404_REG_INFO(ILED3, AFE440X_LEDCNTRL, 0, AFE4404_LEDCNTRL_ILED3),
 +};
 +
 +static const struct iio_chan_spec afe4404_channels[] = {
@@ -318,32 +294,12 @@ index 0000000..d199a35
 +	AFE440X_INTENSITY_CHAN(LED3, "led3", BIT(IIO_CHAN_INFO_OFFSET)),
 +	AFE440X_INTENSITY_CHAN(LED1_ALED1, "led1-led1_ambient", 0),
 +	AFE440X_INTENSITY_CHAN(LED2_ALED2, "led2-led2_ambient", 0),
++	AFE440X_INTENSITY_CHAN(AVG_LED1_ALED1, "led1-led1_ambient_mean", 0),
++	AFE440X_INTENSITY_CHAN(AVG_LED2_ALED2, "led2-led2_ambient_mean", 0),
 +	/* LED current */
 +	AFE440X_CURRENT_CHAN(ILED1, "led1"),
 +	AFE440X_CURRENT_CHAN(ILED2, "led2"),
 +	AFE440X_CURRENT_CHAN(ILED3, "led3"),
-+};
-+
-+static const struct afe440x_reg_lookup afe4404_res_table[] = {
-+	{ .integer = 500000, .fract = 0 },
-+	{ .integer = 250000, .fract = 0 },
-+	{ .integer = 100000, .fract = 0 },
-+	{ .integer = 50000, .fract = 0 },
-+	{ .integer = 25000, .fract = 0 },
-+	{ .integer = 10000, .fract = 0 },
-+	{ .integer = 1000000, .fract = 0 },
-+	{ .integer = 2000000, .fract = 0 },
-+};
-+
-+static const struct afe440x_reg_lookup afe4404_cap_table[] = {
-+	{ .integer = 5, .fract = 0 },
-+	{ .integer = 2, .fract = 500000 },
-+	{ .integer = 10, .fract = 0 },
-+	{ .integer = 7, .fract = 500000 },
-+	{ .integer = 20, .fract = 0 },
-+	{ .integer = 17, .fract = 500000 },
-+	{ .integer = 25, .fract = 0 },
-+	{ .integer = 22, .fract = 500000 },
 +};
 +
 +static ssize_t afe440x_show_register(struct device *dev,
@@ -352,47 +308,18 @@ index 0000000..d199a35
 +{
 +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
 +	struct afe440x_data *afe440x = iio_device_get_drvdata(indio_dev);
-+	struct afe440x_attr *afe440x_attr = to_afe440x_attr(attr);
-+	unsigned int reg_val, type;
-+	int vals[2];
-+	int ret, val_len;
++	struct afe440x_reg *afe440x_reg = to_afe440x_reg(attr);
++	unsigned int reg_val;
++	int ret;
 +
-+	ret = regmap_read(afe440x->regmap, afe440x_attr->reg, &reg_val);
++	ret = regmap_read(afe440x->regmap, afe440x_reg->reg, &reg_val);
 +	if (ret)
 +		return ret;
 +
-+	reg_val >>= afe440x_attr->shift;
-+	reg_val &= afe440x_attr->mask;
++	reg_val >>= afe440x_reg->shift;
++	reg_val &= afe440x_reg->mask;
 +
-+	switch (afe440x_attr->type) {
-+	case SIMPLE:
-+		type = IIO_VAL_INT;
-+		val_len = 1;
-+		vals[0] = reg_val;
-+		break;
-+	case RESISTANCE:
-+		type = IIO_VAL_INT_PLUS_MICRO;
-+		val_len = 2;
-+		if (reg_val < ARRAY_SIZE(afe4404_res_table)) {
-+			vals[0] = afe4404_res_table[reg_val].integer;
-+			vals[1] = afe4404_res_table[reg_val].fract;
-+			break;
-+		}
-+		return -EINVAL;
-+	case CAPACITANCE:
-+		type = IIO_VAL_INT_PLUS_MICRO;
-+		val_len = 2;
-+		if (reg_val < ARRAY_SIZE(afe4404_cap_table)) {
-+			vals[0] = afe4404_cap_table[reg_val].integer;
-+			vals[1] = afe4404_cap_table[reg_val].fract;
-+			break;
-+		}
-+		return -EINVAL;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return iio_format_value(buf, type, val_len, vals);
++	return scnprintf(buf, PAGE_SIZE, "%u\n", reg_val);
 +}
 +
 +static ssize_t afe440x_store_register(struct device *dev,
@@ -401,71 +328,46 @@ index 0000000..d199a35
 +{
 +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
 +	struct afe440x_data *afe440x = iio_device_get_drvdata(indio_dev);
-+	struct afe440x_attr *afe440x_attr = to_afe440x_attr(attr);
++	struct afe440x_reg *afe440x_reg = to_afe440x_reg(attr);
 +	unsigned int reg_val;
-+	int val, integer, fract, ret;
++	int val, ret;
 +
-+	ret = iio_str_to_fixpoint(buf, 100000, &integer, &fract);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_read(afe440x->regmap, afe440x_attr->reg, &reg_val);
-+	if (ret)
-+		return ret;
-+
-+	switch (afe440x_attr->type) {
-+	case SIMPLE:
-+		val = integer;
-+		break;
-+	case RESISTANCE:
-+		for (val = 0; val < ARRAY_SIZE(afe4404_res_table); val++)
-+			if (afe4404_res_table[val].integer == integer &&
-+			    afe4404_res_table[val].fract == fract)
-+				break;
-+		if (val == ARRAY_SIZE(afe4404_res_table))
-+			return -EINVAL;
-+		break;
-+	case CAPACITANCE:
-+		for (val = 0; val < ARRAY_SIZE(afe4404_cap_table); val++)
-+			if (afe4404_cap_table[val].integer == integer &&
-+			    afe4404_cap_table[val].fract == fract)
-+				break;
-+		if (val == ARRAY_SIZE(afe4404_cap_table))
-+			return -EINVAL;
-+		break;
-+	default:
++	if (kstrtoint(buf, 0, &val))
 +		return -EINVAL;
-+	}
 +
-+	reg_val &= ~afe440x_attr->mask;
-+	reg_val |= ((val << afe440x_attr->shift) & afe440x_attr->mask);
++	ret = regmap_read(afe440x->regmap, afe440x_reg->reg, &reg_val);
++	if (ret)
++		return ret;
 +
-+	ret = regmap_write(afe440x->regmap, afe440x_attr->reg, reg_val);
++	reg_val &= ~afe440x_reg->mask;
++	reg_val |= ((val << afe440x_reg->shift) & afe440x_reg->mask);
++
++	ret = regmap_write(afe440x->regmap, afe440x_reg->reg, reg_val);
 +	if (ret)
 +		return ret;
 +
 +	return count;
 +}
 +
-+static AFE440X_ATTR(tia_separate_en, AFE4404_TIA_GAIN_SEP, AFE440X_TIAGAIN_ENSEPGAIN, SIMPLE);
++AFE440X_ATTR(tia_separate_en, AFE4404_TIA_GAIN_SEP, AFE440X_TIAGAIN_ENSEPGAIN);
 +
-+static AFE440X_ATTR(tia_resistance1, AFE4404_TIA_GAIN, AFE4404_TIA_GAIN_RES, RESISTANCE);
-+static AFE440X_ATTR(tia_capacitance1, AFE4404_TIA_GAIN, AFE4404_TIA_GAIN_CAP, CAPACITANCE);
++AFE440X_ATTR(tia_resistance1, AFE4404_TIA_GAIN, AFE4404_TIA_GAIN_RES);
++AFE440X_ATTR(tia_capacitance1, AFE4404_TIA_GAIN, AFE4404_TIA_GAIN_CAP);
 +
-+static AFE440X_ATTR(tia_resistance2, AFE4404_TIA_GAIN_SEP, AFE4404_TIA_GAIN_RES, RESISTANCE);
-+static AFE440X_ATTR(tia_capacitance2, AFE4404_TIA_GAIN_SEP, AFE4404_TIA_GAIN_CAP, CAPACITANCE);
++AFE440X_ATTR(tia_resistance2, AFE4404_TIA_GAIN_SEP, AFE4404_TIA_GAIN_RES);
++AFE440X_ATTR(tia_capacitance2, AFE4404_TIA_GAIN_SEP, AFE4404_TIA_GAIN_CAP);
 +
-+static struct attribute *afe440x_attributes[] = {
-+	&afe440x_attr_tia_separate_en.dev_attr.attr,
-+	&afe440x_attr_tia_resistance1.dev_attr.attr,
-+	&afe440x_attr_tia_capacitance1.dev_attr.attr,
-+	&afe440x_attr_tia_resistance2.dev_attr.attr,
-+	&afe440x_attr_tia_capacitance2.dev_attr.attr,
++static struct attribute *afe4404_attributes[] = {
++	&afe440x_reg_tia_separate_en.dev_attr.attr,
++	&afe440x_reg_tia_resistance1.dev_attr.attr,
++	&afe440x_reg_tia_capacitance1.dev_attr.attr,
++	&afe440x_reg_tia_resistance2.dev_attr.attr,
++	&afe440x_reg_tia_capacitance2.dev_attr.attr,
 +	NULL
 +};
 +
-+static const struct attribute_group afe440x_attribute_group = {
-+	.attrs = afe440x_attributes
++static const struct attribute_group afe4404_attribute_group = {
++	.attrs = afe4404_attributes
 +};
 +
 +static int afe440x_read_raw(struct iio_dev *indio_dev,
@@ -565,8 +467,8 @@ index 0000000..d199a35
 +	return -EINVAL;
 +}
 +
-+static const struct iio_info afe440x_iio_info = {
-+	.attrs = &afe440x_attribute_group,
++static const struct iio_info afe4404_iio_info = {
++	.attrs	= &afe4404_attribute_group,
 +	.read_raw = afe440x_read_raw,
 +	.write_raw = afe440x_write_raw,
 +	.driver_module = THIS_MODULE,
@@ -577,13 +479,13 @@ index 0000000..d199a35
 +	struct iio_poll_func *pf = private;
 +	struct iio_dev *indio_dev = pf->indio_dev;
 +	struct afe440x_data *afe440x = iio_device_get_drvdata(indio_dev);
-+	int ret, bit, i = 0;
++	int ret, bit, reg, i = 0;
 +	s32 buffer[12];
 +
 +	for_each_set_bit(bit, indio_dev->active_scan_mask,
 +			 indio_dev->masklength) {
-+		ret = regmap_read(afe440x->regmap, reg_info[bit].reg,
-+				  &buffer[i++]);
++		reg = reg_info[bit].reg;
++		ret = regmap_read(afe440x->regmap, reg, &buffer[i++]);
 +		if (ret)
 +			goto err;
 +	}
@@ -685,7 +587,7 @@ index 0000000..d199a35
 +
 +	ret = regulator_disable(afe440x->regulator);
 +	if (ret) {
-+		dev_err(dev, "Unable to disable regulator\n");
++		dev_err(dev, "Failed to disable regulator\n");
 +		return ret;
 +	}
 +
@@ -704,7 +606,7 @@ index 0000000..d199a35
 +
 +	ret = regulator_enable(afe440x->regulator);
 +	if (ret) {
-+		dev_err(dev, "Unable to enable regulator\n");
++		dev_err(dev, "Failed to enable regulator\n");
 +		return ret;
 +	}
 +
@@ -713,8 +615,7 @@ index 0000000..d199a35
 +
 +SIMPLE_DEV_PM_OPS(afe440x_pm_ops, afe440x_suspend, afe440x_resume);
 +
-+static int afe440x_iio_setup(struct afe440x_data *afe440x,
-+			     const struct afe440x_info *afe440x_info)
++static int afe440x_iio_setup(struct afe440x_data *afe440x)
 +{
 +	struct iio_dev *indio_dev;
 +	int ret;
@@ -729,10 +630,10 @@ index 0000000..d199a35
 +
 +	indio_dev->modes = INDIO_DIRECT_MODE;
 +	indio_dev->dev.parent = afe440x->dev;
-+	indio_dev->channels = afe440x_info->channels;
-+	indio_dev->num_channels = afe440x_info->num_channels;
-+	indio_dev->name = afe440x_info->name;
-+	indio_dev->info = afe440x_info->info;
++	indio_dev->channels = afe440x->channels;
++	indio_dev->num_channels = afe440x->num_channels;
++	indio_dev->name = afe440x->name;
++	indio_dev->info = afe440x->info;
 +
 +	if (afe440x->irq > 0) {
 +		afe440x->trig = devm_iio_trigger_alloc(afe440x->dev,
@@ -758,8 +659,7 @@ index 0000000..d199a35
 +		ret = devm_request_threaded_irq(afe440x->dev, afe440x->irq,
 +						iio_trigger_generic_data_rdy_poll,
 +						NULL, IRQF_ONESHOT,
-+						afe440x_info->name,
-+						afe440x->trig);
++						afe440x->name, afe440x->trig);
 +		if (ret) {
 +			dev_err(afe440x->dev, "Unable to request IRQ\n");
 +			return ret;
@@ -781,13 +681,6 @@ index 0000000..d199a35
 +
 +	return 0;
 +}
-+
-+static const struct afe440x_info afe4404_info = {
-+	.name = AFE4404_DRIVER_NAME,
-+	.channels = afe4404_channels,
-+	.num_channels = ARRAY_SIZE(afe4404_channels),
-+	.info = &afe440x_iio_info,
-+};
 +
 +static int afe4404_probe(struct i2c_client *client,
 +			 const struct i2c_device_id *id)
@@ -815,11 +708,6 @@ index 0000000..d199a35
 +		dev_err(afe440x->dev, "Unable to get regulator\n");
 +		return PTR_ERR(afe440x->regulator);
 +	}
-+	ret = regulator_enable(afe440x->regulator);
-+	if (ret) {
-+		dev_err(afe440x->dev, "Unable to enable regulator\n");
-+		return ret;
-+	}
 +
 +	ret = regmap_write(afe440x->regmap, AFE440X_CONTROL0,
 +			   AFE440X_CONTROL0_SW_RESET);
@@ -835,21 +723,12 @@ index 0000000..d199a35
 +		return ret;
 +	}
 +
-+	return afe440x_iio_setup(afe440x, &afe4404_info);
-+}
++	afe440x->channels = afe4404_channels;
++	afe440x->num_channels = ARRAY_SIZE(afe4404_channels);
++	afe440x->name = AFE4404_DRIVER_NAME;
++	afe440x->info = &afe4404_iio_info;
 +
-+static int afe4404_remove(struct i2c_client *client)
-+{
-+	struct afe440x_data *afe440x = i2c_get_clientdata(client);
-+	int ret;
-+
-+	ret = regulator_disable(afe440x->regulator);
-+	if (ret) {
-+		dev_err(afe440x->dev, "Unable to disable regulator\n");
-+		return ret;
-+	}
-+
-+	return 0;
++	return afe440x_iio_setup(afe440x);
 +}
 +
 +static const struct i2c_device_id afe4404_ids[] = {
@@ -865,7 +744,6 @@ index 0000000..d199a35
 +		.pm = &afe440x_pm_ops,
 +	},
 +	.probe = afe4404_probe,
-+	.remove = afe4404_remove,
 +	.id_table = afe4404_ids,
 +};
 +module_i2c_driver(afe4404_i2c_driver);
@@ -875,15 +753,16 @@ index 0000000..d199a35
 +MODULE_LICENSE("GPL");
 diff --git a/drivers/iio/health/afe440x.h b/drivers/iio/health/afe440x.h
 new file mode 100644
-index 0000000..575e528
+index 0000000..73a2577
 --- /dev/null
 +++ b/drivers/iio/health/afe440x.h
-@@ -0,0 +1,202 @@
+@@ -0,0 +1,168 @@
 +/*
 + * AFE440X Heart Rate Monitors and Low-Cost Pulse Oximeters
 + *
-+ * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
-+ *	Andrew F. Davis <afd@ti.com>
++ * Author: Andrew F. Davis <afd@ti.com>
++ *
++ * Copyright: (C) 2015 Texas Instruments, Inc.
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -972,21 +851,6 @@ index 0000000..575e528
 +#define AFE440X_CONTROL0_WRITE		0x0
 +#define AFE440X_CONTROL0_READ		0x1
 +
-+struct afe440x_reg_info {
-+	unsigned int reg;
-+	unsigned int offreg;
-+	unsigned int shift;
-+	unsigned int mask;
-+};
-+
-+#define AFE440X_REG_INFO(_id, _reg, _offreg, _sm)		\
-+	[_id] = {						\
-+		.reg = _reg,					\
-+		.offreg = _offreg,				\
-+		.shift = _sm ## _SHIFT,				\
-+		.mask = _sm ## _MASK,				\
-+	}
-+
 +#define AFE440X_INTENSITY_CHAN(_index, _name, _mask)		\
 +	{							\
 +		.type = IIO_INTENSITY,				\
@@ -1016,70 +880,50 @@ index 0000000..575e528
 +		.output = true,					\
 +	}
 +
-+enum reg_type {
-+	SIMPLE,
-+	RESISTANCE,
-+	CAPACITANCE,
-+};
-+
-+struct afe440x_reg_lookup {
-+	int integer;
-+	int fract;
-+};
-+
-+struct afe440x_attr {
++struct afe440x_reg {
 +	struct device_attribute dev_attr;
 +	unsigned int reg;
 +	unsigned int shift;
 +	unsigned int mask;
-+	enum reg_type type;
 +};
 +
-+#define to_afe440x_attr(_dev_attr)				\
-+	container_of(_dev_attr, struct afe440x_attr, dev_attr)
++#define to_afe440x_reg(_dev_attr)				\
++	container_of(_dev_attr, struct afe440x_reg, dev_attr)
 +
-+#define AFE440X_ATTR(_name, _reg, _field, _type)		\
-+	struct afe440x_attr afe440x_attr_##_name = {		\
++#define AFE440X_ATTR(_name, _reg, _field)			\
++	struct afe440x_reg afe440x_reg_##_name = {		\
 +		.dev_attr = __ATTR(_name, (S_IRUGO | S_IWUSR),	\
 +				   afe440x_show_register,	\
 +				   afe440x_store_register),	\
 +		.reg = _reg,					\
 +		.shift = _field ## _SHIFT,			\
 +		.mask = _field ## _MASK,			\
-+		.type = _type,					\
 +	}
-+
-+/**
-+ * struct afe440x_info
-+ * @name - Device name
-+ * @channels - IIO channels
-+ * @num_channels - Number of IIO channels
-+ * @info - IIO info for device
-+ */
-+struct afe440x_info {
-+	const char *name;
-+	struct iio_chan_spec const *channels;
-+	int num_channels;
-+	const struct iio_info *info;
-+};
 +
 +/**
 + * struct afe440x_data
 + * @dev - Device structure
++ * @name - Device name
 + * @regmap - Register map of the device
 + * @regulator - Pointer to the regulator for the IC
++ * @channels - IIO channels
++ * @num_channels - Number of IIO channels
++ * @info - IIO info for device
 + * @trig - IIO trigger for this device
 + * @irq - ADC_RDY line interrupt number
-+ */
++**/
 +struct afe440x_data {
 +	struct device *dev;
++	const char *name;
 +	struct regmap *regmap;
-+	struct spi_device *spi;
 +	struct regulator *regulator;
++	struct iio_chan_spec const *channels;
++	int num_channels;
++	const struct iio_info *info;
 +	struct iio_trigger *trig;
 +	int irq;
 +};
 +
 +#endif /* _AFE440X_H */
 -- 
-2.6.4
+1.9.1
