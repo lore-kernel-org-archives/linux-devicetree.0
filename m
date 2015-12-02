@@ -1,57 +1,59 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 1/2] clk: Add brcm,bcm63xx-gate-clk device tree binding
-Date: Wed, 2 Dec 2015 10:12:56 -0800
-Message-ID: <CAGVrzcYsjN+5Mvhasx7gqcqdzjJuzTekWwAWfMqjNrF9c7m9Ug@mail.gmail.com>
-References: <565CB727.7030209@simon.arlott.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <565CB727.7030209@simon.arlott.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Arlott <simon@fire.lp0.eu>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Cernekee <cernekee@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 0/7]  ARM: dts: Add Advantech board support
+Date: Wed,  2 Dec 2015 13:16:13 -0500
+Message-ID: <1449080180-31945-1-git-send-email-akshay.bhat@timesys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-11-30 12:52 GMT-08:00 Simon Arlott <simon@fire.lp0.eu>:
-> Add device tree binding for the BCM63xx's gated clocks.
->
-> The BCM63xx contains clocks gated with a register. Clocks are indexed
-> by bits in the register and are active high. Clock gate bits are
-> interleaved with other status bits and configurable clocks in the same
-> register.
->
-> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
-> ---
->  .../bindings/clock/brcm,bcm63xx-gate-clk.txt       | 58 ++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm63xx-gate-clk.txt
->
-> diff --git a/Documentation/devicetree/bindings/clock/brcm,bcm63xx-gate-clk.txt b/Documentation/devicetree/bindings/clock/brcm,bcm63xx-gate-clk.txt
-> new file mode 100644
-> index 0000000..3f4ead1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/brcm,bcm63xx-gate-clk.txt
-> @@ -0,0 +1,58 @@
-> +Broadcom BCM63xx clocks
-> +
-> +This binding uses the common clock binding:
-> +       Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +The BCM63xx contains clocks gated with a register. Clocks are indexed
-> +by bits in the register and are active high. Clock gate bits are
-> +interleaved with other status bits and configurable clocks in the same
-> +register.
+This series aims to add Advantech BA-16 module (iMX6 based) and GE board support.
 
-Most MIPS-based BCM63xx SoCs have clock gating set of registers, these
-SoCs are pretty much all of them except 63381 (maybe newer ones too),
-this one uses the PMB interface, like 63138 to control resets and
-clocks fed to peripherals.
+This series has been tested against linux-next tag next-20151127.
 
-> +
-> +Required properties:
-> +- compatible:  Should be "brcm,bcm<soc>-gate-clk", "brcm,bcm63xx-gate-clk"
+Modifications:
+v3->v4:
+- Remove simple-bus for regulators as suggested by Lucas Stash
+- Use simple-panel instead of display-timings as suggested by Lucas Stash
+- Add epson RTC node
+- Reorder nodes alphabetically
 
-I think we would want to start with the lowest common denominator
-here, which is either 6345 or 6348.
+History:
+--------
+[v1]: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-October/381872.html
+[v2]: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-November/383276.html
+[v3]: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-November/384202.html
+
+Akshay Bhat (5):
+  of: Add vendor prefix for Advantech Corporation
+  of: Add vendor prefix for General Electric Company
+  ARM: dts: imx: Add support for Advantech/GE B450v3
+  ARM: dts: imx: Add support for Advantech/GE B650v3
+  ARM: dts: imx: Add support for Advantech/GE B850v3
+
+Justin Waters (2):
+  ARM: dts: imx: Add Advantech BA-16 Qseven module
+  ARM: dts: imx: Add support for Advantech/GE Bx50v3
+
+ .../devicetree/bindings/vendor-prefixes.txt        |   2 +
+ arch/arm/boot/dts/Makefile                         |   3 +
+ arch/arm/boot/dts/imx6q-b450v3.dts                 |  84 +++
+ arch/arm/boot/dts/imx6q-b650v3.dts                 |  84 +++
+ arch/arm/boot/dts/imx6q-b850v3.dts                 | 127 +++++
+ arch/arm/boot/dts/imx6q-ba16.dtsi                  | 586 +++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-bx50v3.dtsi                | 207 ++++++++
+ 7 files changed, 1093 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-b450v3.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-b650v3.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-b850v3.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-ba16.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6q-bx50v3.dtsi
+
+-- 
+2.6.3
+
 --
-Florian
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
