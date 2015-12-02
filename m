@@ -1,144 +1,68 @@
-From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 5/7] ARM: dts: imx: Add support for Advantech/GE B450v3
-Date: Wed, 2 Dec 2015 13:34:20 -0500
-Message-ID: <565F39AC.1010201@timesys.com>
-References: <1447178408-26982-1-git-send-email-akshay.bhat@timesys.com>
- <1447178408-26982-6-git-send-email-akshay.bhat@timesys.com>
- <1447672792.3144.11.camel@pengutronix.de>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH 2/2] drm/panel: simple: Add support for Kyocera TCG121XGLP
+ panel
+Date: Wed,  2 Dec 2015 19:41:11 +0100
+Message-ID: <1449081671-25327-2-git-send-email-l.stach@pengutronix.de>
+References: <1449081671-25327-1-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447672792.3144.11.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, martin.donnelly-JJi787mZWgc@public.gmane.org, peter.stretz-ELdSlb/RfAS1Z/+hSey0Gg@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1449081671-25327-1-git-send-email-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11/16/2015 06:19 AM, Lucas Stach wrote:
-> Am Dienstag, den 10.11.2015, 13:00 -0500 schrieb Akshay Bhat:
->> Add support for Advantech/GE B450v3 board.
->>
->> Signed-off-by: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/Makefile         |  1 +
->>   arch/arm/boot/dts/imx6q-b450v3.dts | 75 ++++++++++++++++++++++++++++++++++++++
->>   2 files changed, 76 insertions(+)
->>   create mode 100644 arch/arm/boot/dts/imx6q-b450v3.dts
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index 30bbc37..b3330fe 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -310,6 +310,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
->>   	imx6dl-wandboard-revb1.dtb \
->>   	imx6q-apf6dev.dtb \
->>   	imx6q-arm2.dtb \
->> +	imx6q-b450v3.dtb \
->>   	imx6q-cm-fx6.dtb \
->>   	imx6q-cubox-i.dtb \
->>   	imx6q-dfi-fs700-m60.dtb \
->> diff --git a/arch/arm/boot/dts/imx6q-b450v3.dts b/arch/arm/boot/dts/imx6q-b450v3.dts
->> new file mode 100644
->> index 0000000..919e4a4
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/imx6q-b450v3.dts
->> @@ -0,0 +1,75 @@
->> +/*
->> + * Copyright 2015 Timesys Corporation.
->> + * Copyright 2015 General Electric Company
->> + *
->> + * The code contained herein is licensed under the GNU General Public
->> + * License. You may obtain a copy of the GNU General Public License
->> + * Version 2 or later at the following locations:
->> + *
->> + * http://www.opensource.org/licenses/gpl-license.html
->> + * http://www.gnu.org/copyleft/gpl.html
->> + */
->> +
->> +/dts-v1/;
->> +
->> +#include "imx6q-bx50v3.dtsi"
->> +
->> +/ {
->> +	model = "Advantech MX6Q B450V3 QSeven Board";
->> +	compatible = "ge,imx6q-b450v3", "advantech,imx6q-ba16", "fsl,imx6q";
->> +
->> +	chosen {
->> +		stdout-path = &uart3;
->> +	};
->> +};
->> +
->> +&ldb {
->> +	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
->> +			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
->> +	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
->> +				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
->> +	status = "okay";
->> +
->> +	lvds0: lvds-channel@0 {
->> +		fsl,data-mapping = "spwg";
->> +		fsl,data-width = <24>;
->> +		status = "okay";
->> +
->> +		display-timings {
->> +			native-mode = <&timing0>;
->> +			timing0: G121X1-L03 {
->> +				clock-frequency = <65000000>;
->> +				hactive = <1024>;
->> +				vactive = <768>;
->> +				hback-porch = <320>;
->> +				hfront-porch = <0>;
->> +				vback-porch = <0>;
->> +				vfront-porch = <38>;
->> +				hsync-len = <1>;
->> +				vsync-len = <1>;
->> +			};
->> +		};
->
-> Display timings in DT are deprecated and new boards should add the
-> display with a specific compatible to the simple-panel driver and then
-> link a panel node to the LVDS channels. Take a look at the i.MX6
-> Nitrogen DTs for an example on how to do this.
->
-> Same comment applies to the next patches as well.
-
-Thanks for the example Lucas. Added G121X1-L03 panel which is now in 
-linux-next 
-(https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/drivers/gpu/drm/panel?h=next-20151127&id=f8fa17ba812b7df1535f6bb75d7264670f5997a6)
-
-v4 patch now uses simple-panel:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/390373.html
-
->
->> +	};
->> +
->> +	lvds1: lvds-channel@1 {
->> +		fsl,data-mapping = "spwg";
->> +		fsl,data-width = <24>;
->> +		status = "okay";
->> +
->> +		display-timings {
->> +			native-mode = <&timing1>;
->> +			timing1: G121X1-L03 {
->> +				clock-frequency = <65000000>;
->> +				hactive = <1024>;
->> +				vactive = <768>;
->> +				hback-porch = <320>;
->> +				hfront-porch = <0>;
->> +				vback-porch = <0>;
->> +				vfront-porch = <38>;
->> +				hsync-len = <1>;
->> +				vsync-len = <1>;
->> +			};
->> +		};
->> +	};
->> +
->> +};
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhlIEt5b2NlcmEgVENHMTIxWEdMUCBwYW5lbCBpcyBhbiBYR0EgTENEIFRGVCBwYW5lbCBjb25u
+ZWN0ZWQgdGhyb3VnaApMVkRTLCB3aGljaCBjYW4gYmUgc3VwcG9ydGVkIGJ5IHRoZSBzaW1wbGUg
+cGFuZWwgZHJpdmVyLgoKU2lnbmVkLW9mZi1ieTogTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0
+cm9uaXguZGU+Ci0tLQogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwva3lvLHRjZzEyMXhnbHAu
+dHh0ICAgICAgfCAgNyArKysrKysKIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUu
+YyAgICAgICAgICAgICAgIHwgMjcgKysrKysrKysrKysrKysrKysrKysrKwogMiBmaWxlcyBjaGFu
+Z2VkLCAzNCBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwva3lvLHRjZzEyMXhnbHAudHh0CgpkaWZm
+IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
+a3lvLHRjZzEyMXhnbHAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvcGFuZWwva3lvLHRjZzEyMXhnbHAudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4
+IDAwMDAwMDAwMDAwMC4uYThlOTQwZmU3MzFlCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwva3lvLHRjZzEyMXhnbHAudHh0
+CkBAIC0wLDAgKzEsNyBAQAorS3lvY2VyYSBDb3Jwb3JhdGlvbiAxMi4xIiBYR0EgKDEwMjR4NzY4
+KSBURlQgTENEIHBhbmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IHNo
+b3VsZCBiZSAia3lvLHRjZzEyMXhnbHAiCisKK1RoaXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdp
+dGggdGhlIHNpbXBsZS1wYW5lbCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQKK2luIHNpbXBs
+ZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3RvcnkuCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
+cm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2lt
+cGxlLmMKaW5kZXggZjk3YjczZWM0NzEzLi4xNDc2YmI5MGFjMTQgMTAwNjQ0Ci0tLSBhL2RyaXZl
+cnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFu
+ZWwvcGFuZWwtc2ltcGxlLmMKQEAgLTkwMiw2ICs5MDIsMzAgQEAgc3RhdGljIGNvbnN0IHN0cnVj
+dCBwYW5lbF9kZXNjIGlubm9sdXhfemowNzBuYV8wMXAgPSB7CiAJfSwKIH07CiAKK3N0YXRpYyBj
+b25zdCBzdHJ1Y3QgZGlzcGxheV90aW1pbmcga3lvX3RjZzEyMXhnbHBfdGltaW5nID0geworCS5w
+aXhlbGNsb2NrID0geyA1MjAwMDAwMCwgNjUwMDAwMDAsIDcxMDAwMDAwIH0sCisJLmhhY3RpdmUg
+PSB7IDEwMjQsIDEwMjQsIDEwMjQgfSwKKwkuaGZyb250X3BvcmNoID0geyAyLCAyLCAyIH0sCisJ
+LmhiYWNrX3BvcmNoID0geyAyLCAyLCAyIH0sCisJLmhzeW5jX2xlbiA9IHsgODYsIDEyNCwgMjQ0
+IH0sCisJLnZhY3RpdmUgPSB7IDc2OCwgNzY4LCA3NjggfSwKKwkudmZyb250X3BvcmNoID0geyAy
+LCAyLCAyIH0sCisJLnZiYWNrX3BvcmNoID0geyAyLCAyLCAyIH0sCisJLnZzeW5jX2xlbiA9IHsg
+NiwgMzQsIDczIH0sCisJLmZsYWdzID0gRElTUExBWV9GTEFHU19ERV9ISUdILAorfTsKKworc3Rh
+dGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGt5b190Y2cxMjF4Z2xwID0geworCS50aW1pbmdz
+ID0gJmt5b190Y2cxMjF4Z2xwX3RpbWluZywKKwkubnVtX3RpbWluZ3MgPSAxLAorCS5icGMgPSA4
+LAorCS5zaXplID0geworCQkud2lkdGggPSAyNDYsCisJCS5oZWlnaHQgPSAxODQsCisJfSwKKwku
+YnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdCODg4XzFYN1g0X1NQV0csCit9OworCiBzdGF0
+aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgbGdfbGIwNzB3djhfbW9kZSA9IHsKIAku
+Y2xvY2sgPSAzMzI0NiwKIAkuaGRpc3BsYXkgPSA4MDAsCkBAIC0xMTY3LDYgKzExOTEsOSBAQCBz
+dGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBwbGF0Zm9ybV9vZl9tYXRjaFtdID0gewog
+CQkuY29tcGF0aWJsZSA9ICJpbm5vbHV4LHpqMDcwbmEtMDFwIiwKIAkJLmRhdGEgPSAmaW5ub2x1
+eF96ajA3MG5hXzAxcCwKIAl9LCB7CisJCS5jb21wYXRpYmxlID0gImt5byx0Y2cxMjF4Z2xwIiwK
+KwkJLmRhdGEgPSAma3lvX3RjZzEyMXhnbHAsCisJfSwgewogCQkuY29tcGF0aWJsZSA9ICJsZyxs
+YjA3MHd2OCIsCiAJCS5kYXRhID0gJmxnX2xiMDcwd3Y4LAogCX0sIHsKLS0gCjIuNi4yCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
