@@ -1,94 +1,103 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: Re: [PATCH v3 0/3] soc: ti: Introduce wkup_m3_ipc driver
-Date: Wed, 2 Dec 2015 14:29:53 -0600
-Message-ID: <565F54C1.8090407@ti.com>
-References: <1442967294-23837-1-git-send-email-d-gerlach@ti.com> <20151020161843.GE3078@atomide.com>
+From: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Subject: Re: [PATCH (v6) 1/2] mtd: brcmnand: Add brcm,bcm63268-nand device
+ tree binding
+Date: Wed, 2 Dec 2015 20:34:38 +0000
+Message-ID: <565F55DE.4050703@simon.arlott.org.uk>
+References: <56523E85.905@simon.arlott.org.uk>
+ <56523EFF.9050502@simon.arlott.org.uk> <56535977.9050201@gmail.com>
+ <56541BD3.4070202@simon.arlott.org.uk> <5654AF69.7040901@gmail.com>
+ <afc6fb02d51a5378e315ade84a134eaf7a58a94f@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+ <20151202190555.GJ64635@google.com> <565F4953.2070206@simon.arlott.org.uk>
+ <20151202200036.GL64635@google.com> <565F50B0.4020802@simon.arlott.org.uk>
+ <20151202202127.GN64635@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151020161843.GE3078@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>, Suman Anna <s-anna@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Keerty J <j-keerthy@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151202202127.GN64635-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On 10/20/2015 11:18 AM, Tony Lindgren wrote:
-> Hi all,
->
-> * Dave Gerlach <d-gerlach@ti.com> [150922 17:20]:
->> Hi,
->> This series is version 3 of the code to introduce a wkup_m3_ipc driver
->> to handle communication between the MPU and Cortex M3 present on TI AM335x
->> and AM437x SoCs. v2 of this series can be found at [1]. Only patch 3
->> has been changed based on a request from Tony and a few cleanups:
->>
->> - Rather than exporting all of the functionality of the driver, added
->>    wkup_m3_ipc_get and wkup_m3_ipc_put to allow users to just get a handle
->>    containing an ops structure for use.
->>
->> - Changed all ops (previously exported functions) to take pointer to
->>    struct wkup_m3_ipc as an argument now that user code will get this
->>    from wkup_m3_ipc_get.
->>
->> - General cleanup to probe function
->>
->> - Added MODULE_DEVICE_TABLE so driver can probe automatically.
->>
->> The series containing the DT nodes can be found here [2]. The actual dt
->> nodes for wkup_m3_ipc (last two patches) have been merged but discussion
->> is still open for the ti,mbox-send-noirq flag patches and depends on the
->> comments provided for the omap-mailbox change presented in patch 1 of
->> this series.
->>
->> A full branch containing all necessary PM code for both am335x and am437x
->> has been pushed here [3] to provide a big picture view of the plan for
->> this series.
->>
->> This driver relies on the firmware at [4] in the next-upstream branch
->> being present in /lib/firmware in the rootfs or built in to the kernel.
->
-> Anybody got comments on this one? Should I pick up this series or
-> what's the plan?
+On 02/12/15 20:21, Brian Norris wrote:
+> Hi Simon,
+> 
+> On Wed, Dec 02, 2015 at 08:12:32PM +0000, Simon Arlott wrote:
+>> On 02/12/15 20:00, Brian Norris wrote:
+>> > On Wed, Dec 02, 2015 at 07:41:07PM +0000, Simon Arlott wrote:
+>> >> I've created a bcm963268part driver so there won't need to be any
+>> >> partitions in DT for bcm63268.
+>> > 
+>> > Just curious, do you plan to submit this driver? We're working on
+>> 
+>> Yes, it's just the most recent one I've been working on. I still have
+>> USBH and IUDMA to submit
+>> 
+>> > matching up partition parsers to flash devices via device tree
+>> > of_match_table's, so you could do something like this:
+>> > 
+>> > 	nand0: nandcs@0 {
+>> > 		compatible = "brcm,nandcs";
+>> > 		...
+>> > 
+>> > 		partitions {
+>> > 			compatible = "brcm,bcm963268-partitions";
+>> > 			...
+>> > 		};
+>> > 	};
+>> 
+>> I modified brcmnand to look for a machine matching "brcm,bcm963268", but
+> 
+> Like this?
+> 
+> http://patchwork.ozlabs.org/patch/473180/
+> 
+> I'd like to avoid that (hence the "Rejected" status).
 
-Now that Patch 1 has been merged [1] can patch 2 and 3 be picked up? 
-These apply cleanly on v4.4-rc3.
+I exported default_mtd_part_types, copied it, and then added to it:
++	for (i = 0; i < nr_types; i++)
++		part_types[i] = default_mtd_part_types[i];
++
++	/* Add partition type based on machine */
++	if (of_machine_is_compatible("brcm,bcm963268"))
++		part_types[i++] = "bcm963268part";
++	else
++		part_types[i++] = NULL;
++
++	part_types[i++] = NULL;
 
-Regards,
-Dave
+>> that way is ok with me. Presumably "ofpart" defers to another matching
+>> partition parser?
+> 
+> Yes, "ofpart" is for specifying the entire partition table in the device
+> tree as subnodes of either the flash node or of the flash's "partitions"
+> subnode. It's not the most flexible, but it does work generically.
+> 
+>> Is there a patch for that method of parser detection available?
+> 
+> I have something working here, but I haven't had time to finish cleaning
+> it up and submitting it. There's an older patch that works similarly,
+> though it has some deficiencies:
+> 
+> http://patchwork.ozlabs.org/patch/475988/
+> 
+> The main difference between that and my (yet-to-be-submitted) proposal
+> is that I'd like parsers to opt in by adding a proper of_match_table
+> with non-Linux-specific DT bindings, and then we can drop the
+> "linux,..." naming and make it a reasonably generic property.
 
-[1] 
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=8e3c5952144f045a0c81bf674d3f5e1d9aafceb7
+I'll submit my parser without any means of using it, let me know if you
+want me to work on a patch for a match table.
 
->
 > Regards,
->
-> Tony
->
->
->> [1] https://lkml.org/lkml/2015/7/17/797
->> [2] https://lkml.org/lkml/2015/7/17/813
->> [3] https://github.com/dgerlach/linux-pm/tree/pm-v4.3-rc1-amx3-suspend
->> [4] https://git.ti.com/ti-cm3-pm-firmware
->>
->> Dave Gerlach (3):
->>    mailbox/omap: Add ti,mbox-send-noirq quirk to fix AM33xx CPU Idle
->>    Documentation: dt: add bindings for TI Wakeup M3 IPC device
->>    soc: ti: Add wkup_m3_ipc driver
->>
->>   .../devicetree/bindings/mailbox/omap-mailbox.txt   |   8 +
->>   .../devicetree/bindings/soc/ti/wkup_m3_ipc.txt     |  57 +++
->>   drivers/mailbox/omap-mailbox.c                     |  49 +-
->>   drivers/soc/ti/Kconfig                             |  10 +
->>   drivers/soc/ti/Makefile                            |   1 +
->>   drivers/soc/ti/wkup_m3_ipc.c                       | 508 +++++++++++++++++++++
->>   include/linux/wkup_m3_ipc.h                        |  55 +++
->>   7 files changed, 684 insertions(+), 4 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/soc/ti/wkup_m3_ipc.txt
->>   create mode 100644 drivers/soc/ti/wkup_m3_ipc.c
->>   create mode 100644 include/linux/wkup_m3_ipc.h
->>
->> --
->> 2.4.6
->>
+> Brian
+> 
+
+
+-- 
+Simon Arlott
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
