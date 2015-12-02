@@ -1,23 +1,57 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v4] arm64: dts: add all hi6220 i2c nodes
-Date: Wed, 2 Dec 2015 20:57:39 +0800
-Message-ID: <20151202125739.GU692@tiger>
-References: <1449051201-7288-1-git-send-email-kong.kongxinwei@hisilicon.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/4] dmaengine: qcom_bam_dma: clear BAM interrupt only if it is rised
+Date: Wed, 02 Dec 2015 14:05:28 +0100
+Message-ID: <11168224.Usic9kvUpA@wuerfel>
+References: <1448961299-15161-1-git-send-email-stanimir.varbanov@linaro.org> <6461444.oollnBsbrb@wuerfel> <565EEA99.3070207@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1449051201-7288-1-git-send-email-kong.kongxinwei@hisilicon.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, pawel.moll@arm.com, galak@codeaurora.org, catalin.marinas@arm.com, w.f@huawei.com, liguozhu@hisilicon.com, puck.chen@hisilicon.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <565EEA99.3070207@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 02, 2015 at 06:13:21PM +0800, Xinwei Kong wrote:
-> This patch adds all I2C nodes for the Hi6220 SoC. This hi6220 Soc
-> use this I2C IP of Synopsys Designware for HiKey board.
+On Wednesday 02 December 2015 14:56:57 Stanimir Varbanov wrote:
+> On 12/01/2015 12:29 PM, Arnd Bergmann wrote:
+> > On Tuesday 01 December 2015 11:14:57 Stanimir Varbanov wrote:
+> >> +       if (srcs & BAM_IRQ) {
+> >>                 clr_mask = readl_relaxed(bam_addr(bdev, 0, BAM_IRQ_STTS));
+> >>  
+> >> -       /* don't allow reorder of the various accesses to the BAM registers */
+> >> -       mb();
+> >> +               /*
+> >> +                * don't allow reorder of the various accesses to the BAM
+> >> +                * registers
+> >> +                */
+> >> +               mb();
+> >>  
+> >> -       writel_relaxed(clr_mask, bam_addr(bdev, 0, BAM_IRQ_CLR));
+> >> +               writel_relaxed(clr_mask, bam_addr(bdev, 0, BAM_IRQ_CLR));
+> >> +       }
+> >>
+> > 
+> > I think the comment here should be moved: change the writel_relaxed()
+> > to writel(), which already includes the appropriate barriers, and
 > 
-> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-> Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
+> If we agree with such a change it should be subject to another patch.
 
-Reviewed-by: Shawn Guo <shawnguo@kernel.org>
+Correct.
+
+> > add a comment at the readl_relaxed() to explain why it doesn't need
+> > a barrier.
+> 
+> Infact I'm not sure that readl_relaxed(BAM_IRQ_STTS) does not need
+> barrier. If I read the code above correctly the mb() should guarantee
+> that all load and store operations before it are happened before the
+> write to BAM_IRQ_CLR register, and on the other hand if we replace
+> writel_relaxed with writel, the writel has wmb() which guarantees only
+> store operations. Did I miss something?
+
+You are right, we only guarantee that stores to memory are complete
+before we writel() an MMIO register.
+
+What do you gain from synchronizing reads before an MMIO write?
+
+	Arnd
