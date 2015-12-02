@@ -1,122 +1,109 @@
-From: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH V3] ARM: dts: imx6q-icore-rqs: Add Engicam IMX6 Q7 initial support
-Date: Wed, 2 Dec 2015 10:15:35 +0100
-Message-ID: <CAOf5uw=khw+nnVBsc3R63whQ=LAqXX47Y+P+5Nv1NVrL_g4m4g@mail.gmail.com>
-References: <1447665552.3144.6.camel@pengutronix.de>
-	<20151116112931.GA10464@panicking>
-	<1447673895.3144.16.camel@pengutronix.de>
-	<20151116114127.GB10464@panicking>
-	<1447674695.3144.21.camel@pengutronix.de>
-	<20151116115421.GC10464@panicking>
-	<20151116172318.GA513@panicking>
-	<1447752697.3144.47.camel@pengutronix.de>
-	<20151118151030.GA11558@panicking>
-	<CAOf5uw=q7fwh93w7LUQaAV3-+YLDwzL65wB1WB5L2BKUe+Vtpg@mail.gmail.com>
-	<20151202020930.GD692@tiger>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151202020930.GD692@tiger>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v1 00/10] Support for Cortex-M Prototyping System
+Date: Wed,  2 Dec 2015 09:33:00 +0000
+Message-ID: <1449048790-25859-1-git-send-email-vladimir.murzin@arm.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Mark.Rutland-5wv7dgnIgG8@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
+Hi,
 
-On Wed, Dec 2, 2015 at 3:09 AM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Nov 25, 2015 at 07:14:13PM +0100, Michael Trimarchi wrote:
->> Hi Shawn
->>
->> On Wed, Nov 18, 2015 at 4:10 PM, Michael Trimarchi
->> <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
->> > www.engicam.com/en/products/embedded/som/standard/i-core-rqs-m6s-dl-d-q
->> >
->> > Signed-off-by: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->> > ---
->> > I'm not quite sure how ethernet tuning parameter
->> > are working in other setup and this seems the
->> > correct way to use it
->> >
->>
->> As you can see my way to connect the ethernet phy is different. I have
->> seen that most of the boards put all the tuning under fec but unfortunately
->> this does not work. I don't know if people check if their value are correctly
->> written to the phy.
->
-> Hmm, I'm not sure what example you are looking at.  But here is what I
-> see from arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
->
-> &fec {
->         pinctrl-names = "default";
->         pinctrl-0 = <&pinctrl_enet>;
->         phy-mode = "rgmii";
->         phy-reset-gpios = <&gpio3 23 GPIO_ACTIVE_LOW>;
->         txen-skew-ps = <0>;
->         txc-skew-ps = <3000>;
->         rxdv-skew-ps = <0>;
->         rxc-skew-ps = <3000>;
->         rxd0-skew-ps = <0>;
->         rxd1-skew-ps = <0>;
->         rxd2-skew-ps = <0>;
->         rxd3-skew-ps = <0>;
->         txd0-skew-ps = <0>;
->         txd1-skew-ps = <0>;
->         txd2-skew-ps = <0>;
->         txd3-skew-ps = <0>;
->         interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
->                               <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
->         status = "okay";
-> };
->
+This patch series provide the basic support for running ucLinux on V2M-MPS2
+platform.
 
-Yes sorry, could be only one. According in what I have seen this can
-not work and the information stored in the
-fec parameters are not written in the registers. Other small thing is
-the IMX6/7 default config does not include
-this phy at all, but that is a minor issue. Can you please do the
-final review of my board so I can take care on this
-too for Sabrelite?
+With these patches applied ucLinux can be run on both HW and FVP models
+with Cortex-M3/M4/M7 configurations.
 
-Michael
+Board description:
 
-> Shawn
->
->>
->> > +
->> > +&fec {
->> > +       pinctrl-names = "default";
->> > +       pinctrl-0 = <&pinctrl_enet_3>;
->> > +       phy-handle = <&eth_phy>;
->> > +       phy-mode = "rgmii";
->> > +       status = "okay";
->> > +       mdio {
->> > +               eth_phy: ethernet-phy {
->> > +                       rxc-skew-ps = <1140>;
->> > +                       txc-skew-ps = <1140>;
->> > +                       txen-skew-ps = <600>;
->> > +                       rxdv-skew-ps = <240>;
->> > +                       rxd0-skew-ps = <420>;
->> > +                       rxd1-skew-ps = <600>;
->> > +                       rxd2-skew-ps = <420>;
->> > +                       rxd3-skew-ps = <240>;
->> > +                       txd0-skew-ps = <60>;
->> > +                       txd1-skew-ps = <60>;
->> > +                       txd2-skew-ps = <60>;
->> > +                       txd3-skew-ps = <240>;
->> > +               };
->> > +       };
->> > +};
->> > +
+http://infocenter.arm.com/help/topic/com.arm.doc.100112_0100_03_en/arm_vers=
+atile_express_cortex_m_prototyping_system_(v2m_mps2)_technical_reference_ma=
+nual_100112_0100_03_en.pdf
 
+Application notes (cover Cortex-M3/M4/M7):
 
+http://infocenter.arm.com/help/topic/com.arm.doc.dai0385a/DAI0385A_cortex_m=
+3_on_v2m_mps2.pdf
+http://infocenter.arm.com/help/topic/com.arm.doc.dai0386a/DAI0386A_cortex_m=
+4_on_v2m_mps2.pdf
+http://infocenter.arm.com/help/topic/com.arm.doc.dai0399a/DAI0399A_cortex_m=
+7_on_v2m_mps2.pdf
+http://infocenter.arm.com/help/topic/com.arm.doc.dai0400a/DAI0400A_cortex_m=
+7_on_v2m_mps2.pdf
 
--- 
-| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
-| COO  -  Founder                                      Cruquiuskade 47 |
-| +31(0)851119172                                 Amsterdam 1018 AM NL |
-|                  [`as] http://www.amarulasolutions.com               |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cortex-M System Design Kit (referenced as CMDK from documents above):
+
+http://infocenter.arm.com/help/topic/com.arm.doc.ddi0479c/DDI0479C_cortex_m=
+_system_design_kit_r1p0_trm.pdf
+
+I'd be happy to hear any feedback/comments on this series (especially on ua=
+rt
+since I'm not sure I got it right)!
+
+Changelog:
+
+  RFC -> v1:
+      - dropped RFC tag
+      - rebased on 4.4-rc3
+      - added Acks from Rob
+      - updated mps2-timer per Daniel
+      - fixed build failures reported by 0-DAY kernel test infrastructure
+
+Thanks!
+
+Vladimir Murzin (10):
+  dt-bindings: document the MPS2 timer bindings
+  clockevents/drivers: add MPS2 Timer driver
+  dt-bindings: document the MPS2 UART bindings
+  serial: mps2-uart: add MPS2 UART driver
+  serial: mps2-uart: add support for early console
+  ARM: mps2: introduce MPS2 platform
+  ARM: mps2: add low-level debug support
+  ARM: configs: add MPS2 defconfig
+  ARM: dts: introduce MPS2 AN385/AN386
+  ARM: dts: introduce MPS2 AN399/AN400
+
+ .../devicetree/bindings/serial/arm,mps2-uart.txt   |   22 +
+ .../devicetree/bindings/timer/arm,mps2-timer.txt   |   28 +
+ arch/arm/Kconfig                                   |    8 +
+ arch/arm/Kconfig.debug                             |   12 +-
+ arch/arm/Makefile                                  |    1 +
+ arch/arm/boot/dts/Makefile                         |    3 +
+ arch/arm/boot/dts/mps2-an385.dts                   |   90 +++
+ arch/arm/boot/dts/mps2-an399.dts                   |   92 +++
+ arch/arm/boot/dts/mps2.dtsi                        |  227 +++++++
+ arch/arm/configs/mps2_defconfig                    |  112 ++++
+ arch/arm/include/debug/mps2.S                      |   27 +
+ arch/arm/mach-mps2/Makefile                        |    1 +
+ arch/arm/mach-mps2/Makefile.boot                   |    3 +
+ arch/arm/mach-mps2/dtmachine.c                     |   21 +
+ drivers/clocksource/Kconfig                        |    5 +
+ drivers/clocksource/Makefile                       |    1 +
+ drivers/clocksource/mps2-timer.c                   |  277 +++++++++
+ drivers/tty/serial/Kconfig                         |   13 +
+ drivers/tty/serial/Makefile                        |    1 +
+ drivers/tty/serial/mps2-uart.c                     |  626 ++++++++++++++++=
+++++
+ include/uapi/linux/serial_core.h                   |    3 +
+ 21 files changed, 1572 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/serial/arm,mps2-uart.=
+txt
+ create mode 100644 Documentation/devicetree/bindings/timer/arm,mps2-timer.=
+txt
+ create mode 100644 arch/arm/boot/dts/mps2-an385.dts
+ create mode 100644 arch/arm/boot/dts/mps2-an399.dts
+ create mode 100644 arch/arm/boot/dts/mps2.dtsi
+ create mode 100644 arch/arm/configs/mps2_defconfig
+ create mode 100644 arch/arm/include/debug/mps2.S
+ create mode 100644 arch/arm/mach-mps2/Makefile
+ create mode 100644 arch/arm/mach-mps2/Makefile.boot
+ create mode 100644 arch/arm/mach-mps2/dtmachine.c
+ create mode 100644 drivers/clocksource/mps2-timer.c
+ create mode 100644 drivers/tty/serial/mps2-uart.c
+
+--=20
+1.7.9.5
