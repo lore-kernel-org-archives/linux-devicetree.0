@@ -1,54 +1,124 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v3 00/27] memory: omap-gpmc: mtd: nand: Support GPMC NAND
- on non-OMAP platforms
-Date: Wed, 2 Dec 2015 12:05:06 -0800
-Message-ID: <20151202200506.GF23396@atomide.com>
-References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
- <20151026212346.GJ13239@google.com>
- <562F45BF.8020205@ti.com>
- <20151130195449.GI64635@google.com>
- <565DB18C.7040505@ti.com>
- <20151202032643.GF64635@google.com>
- <565E7DAC.7060401@ti.com>
- <20151202150317.GC23396@atomide.com>
- <20151202181330.GG64635@google.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH (v7) 2/2] mtd: brcmnand: Add support for the BCM63268
+Date: Wed, 2 Dec 2015 12:10:58 -0800
+Message-ID: <20151202201058.GM64635@google.com>
+References: <56541BD3.4070202@simon.arlott.org.uk>
+ <5654AF69.7040901@gmail.com>
+ <afc6fb02d51a5378e315ade84a134eaf7a58a94f@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+ <210ac819ff369893bd7d10640026a5b75455e684@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+ <CAOiHx==RsnZKb93hp1PXhz-Am_uJ4g_RR3R8VQ_dnd8hd1Wcpw@mail.gmail.com>
+ <772c4df64731e4e4f5bbbb9051cea28aaf805f4e@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+ <CAOiHx=mTPfiU40Tbz24vWELcoKEWhi=N2mqwL92SnV61dA2Myg@mail.gmail.com>
+ <565610B9.5040407@simon.arlott.org.uk>
+ <20151202191811.GK64635@google.com>
+ <565F4C89.5030609@simon.arlott.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20151202181330.GG64635@google.com>
+In-Reply-To: <565F4C89.5030609@simon.arlott.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: Roger Quadros <rogerq@ti.com>, dwmw2@infradead.org, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>
+To: Simon Arlott <simon@fire.lp0.eu>
+Cc: Jonas Gorski <jogo@openwrt.org>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, MTD Maling List <linux-mtd@lists.infradead.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, bcm-kernel-feedback-list@broadcom.com, Kamal Dasu <kdasu.kdev@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-* Brian Norris <computersforpeace@gmail.com> [151202 10:14]:
-> On Wed, Dec 02, 2015 at 07:03:17AM -0800, Tony Lindgren wrote:
-> > * Roger Quadros <rogerq@ti.com> [151201 21:13]:
-> > > On 02/12/15 08:56, Brian Norris wrote:
-> > > > 
-> > > > I'll take another pass over your patch set, but if things are looking
-> > > > better, how do you expect to merge this? There are significant portions
-> > > > that touch at least 2 or 3 different subsystem trees, AFAICT.
-> > > 
-> > > Tony could create an immutable branch with all the dts and memory changes.
-> > > You could base the mtd changes on top of that?
+Hi,
+
+On Wed, Dec 02, 2015 at 07:54:49PM +0000, Simon Arlott wrote:
+> On 02/12/15 19:18, Brian Norris wrote:
+> > On Wed, Nov 25, 2015 at 07:49:13PM +0000, Simon Arlott wrote:
+> >> +static int bcm63268_nand_probe(struct platform_device *pdev)
+> >> +{
+> >> +	struct device *dev = &pdev->dev;
+> >> +	struct bcm63268_nand_soc *priv;
+> >> +	struct brcmnand_soc *soc;
+> >> +	struct resource *res;
+> >> +	int ret;
+> >> +
+> >> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> >> +	if (!priv)
+> >> +		return -ENOMEM;
+> >> +	soc = &priv->soc;
+> >> +
+> >> +	res = platform_get_resource_byname(pdev,
+> >> +		IORESOURCE_MEM, "nand-intr-base");
+> >> +	if (!res)
+> >> +		return -EINVAL;
+> >> +
+> >> +	priv->base = devm_ioremap_resource(dev, res);
+> >> +	if (IS_ERR(priv->base))
+> >> +		return PTR_ERR(priv->base);
+> >> +
+> >> +	priv->clk = devm_clk_get(&pdev->dev, "nand");
+> >> +	if (IS_ERR(priv->clk))
+> >> +		return PTR_ERR(priv->clk);
 > > 
-> > If we all agree on that it will be immutable Roger can set up the branch
-> > with our acks and we can all merge it in as needed. I believe v4.4-rc1
-> > should work as a base for us all?
+> > Perhaps we should put this clock handling in brcmnand.c? Just have it
+> > treat the clock as optional (i.e., ignore errors except for
+> > EPROBE_DEFER?), so we don't fail if no clock was provided? This could
+> > help other platforms too, if they gain clock support.
 > 
-> There are oustanding comments about the NAND ready/busy GPIO naming in
-> patch 18, which I'd like addressed. I'll re-review the rest before the
-> end of the day (West Coast U.S.A.). I'm not sure my acks are worth much
-> beyond the MTD stuff.
+> Unless most soc variants have clocks I'd prefer to leave it in this
+> module.
 
-OK, I'm happy with the gpmc related parts.
+I'm quite confident your SoC is not the only one with clocks.
 
-> Regarding branches, 4.4-rc1 is fine with me.
+> > If we do this, you'll want to document the clock in the common binding,
+> > not the bcm63268-specific part.
+> > 
+> > Also, could it help to disable/enable the clock during suspend/resume?
+> > If you move it to brcmnand.c, this would also be pretty simple.
+> 
+> Alternatively, it could proxy the brcmnand_pm_ops functions. I don't
+> have any way to test suspend/resume.
 
-OK
+OK, no need to add it now then. It can be added if/when it's needed.
 
-Thanks,
+> >> +
+> >> +	ret = clk_prepare_enable(priv->clk);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	soc->ctlrdy_ack = bcm63268_nand_intc_ack;
+> >> +	soc->ctlrdy_set_enabled = bcm63268_nand_intc_set;
+> >> +
+> >> +	/* Disable and ack all interrupts  */
+> >> +	brcmnand_writel(0, priv->base + BCM63268_NAND_INT);
+> >> +	brcmnand_writel(BCM63268_NAND_STATUS_MASK,
+> >> +			priv->base + BCM63268_NAND_INT);
+> >> +
+> >> +	ret = brcmnand_probe(pdev, soc);
+> >> +	if (ret)
+> >> +		clk_disable_unprepare(priv->clk);
+> >> +
+> >> +	return ret;
+> >> +}
 
-Tony
+> >> diff --git a/drivers/mtd/nand/brcmnand/brcmnand.c b/drivers/mtd/nand/brcmnand/brcmnand.c
+> >> index 2c8f67f..5f26b8a 100644
+> >> --- a/drivers/mtd/nand/brcmnand/brcmnand.c
+> >> +++ b/drivers/mtd/nand/brcmnand/brcmnand.c
+> >> @@ -2262,6 +2262,14 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
+> >>  }
+> >>  EXPORT_SYMBOL_GPL(brcmnand_probe);
+> >>  
+> >> +struct brcmnand_soc *brcmnand_get_socdata(struct platform_device *pdev)
+> >> +{
+> >> +	struct brcmnand_controller *ctrl = dev_get_drvdata(&pdev->dev);
+> >> +
+> >> +	return ctrl ? ctrl->soc : NULL;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(brcmnand_get_socdata);
+> > 
+> > If you move the clk handling to the core brcmnand.c, then you won't need
+> > this still.
+> 
+> Would you prefer a clock name in the soc data structure that is used to
+> call devm_clk_get()?
+
+Not really. If we specify a clock name now, we can suggest other SoC's
+to use the same name (where possible). So we wouldn't need any new code
+or documentation, and we definitely don't need each snowflake sub-driver
+to pass a new name.
+
+Brian
