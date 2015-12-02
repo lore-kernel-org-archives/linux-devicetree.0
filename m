@@ -1,103 +1,124 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH (v6) 1/2] mtd: brcmnand: Add brcm,bcm63268-nand device
- tree binding
-Date: Wed, 2 Dec 2015 12:48:18 -0800
-Message-ID: <20151202204818.GP64635@google.com>
-References: <56535977.9050201@gmail.com>
- <56541BD3.4070202@simon.arlott.org.uk>
- <5654AF69.7040901@gmail.com>
- <afc6fb02d51a5378e315ade84a134eaf7a58a94f@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
- <20151202190555.GJ64635@google.com>
- <565F4953.2070206@simon.arlott.org.uk>
- <20151202200036.GL64635@google.com>
- <565F50B0.4020802@simon.arlott.org.uk>
- <20151202202127.GN64635@google.com>
- <565F55DE.4050703@simon.arlott.org.uk>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH] ARM: dts: vf610: use reset values for L2 cache latencies
+Date: Wed, 02 Dec 2015 12:51:04 -0800
+Message-ID: <b5a03fc2848b21fcac0f88436a4f7c87@agner.ch>
+References: <1448935166-2697-1-git-send-email-stefan@agner.ch>
+ <20151202081306.GR692@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <565F55DE.4050703@simon.arlott.org.uk>
+In-Reply-To: <20151202081306.GR692@tiger>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Arlott <simon@fire.lp0.eu>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, linux-mtd@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonas Gorski <jogo@openwrt.org>, bcm-kernel-feedback-list@broadcom.com, Kamal Dasu <kdasu.kdev@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 02, 2015 at 08:34:38PM +0000, Simon Arlott wrote:
-> On 02/12/15 20:21, Brian Norris wrote:
-> > On Wed, Dec 02, 2015 at 08:12:32PM +0000, Simon Arlott wrote:
-> >> On 02/12/15 20:00, Brian Norris wrote:
-> >> > On Wed, Dec 02, 2015 at 07:41:07PM +0000, Simon Arlott wrote:
-> >> >> I've created a bcm963268part driver so there won't need to be any
-> >> >> partitions in DT for bcm63268.
-> >> > 
-> >> > Just curious, do you plan to submit this driver? We're working on
-> >> 
-> >> Yes, it's just the most recent one I've been working on. I still have
-> >> USBH and IUDMA to submit
-> >> 
-> >> > matching up partition parsers to flash devices via device tree
-> >> > of_match_table's, so you could do something like this:
-> >> > 
-> >> > 	nand0: nandcs@0 {
-> >> > 		compatible = "brcm,nandcs";
-> >> > 		...
-> >> > 
-> >> > 		partitions {
-> >> > 			compatible = "brcm,bcm963268-partitions";
-> >> > 			...
-> >> > 		};
-> >> > 	};
-> >> 
-> >> I modified brcmnand to look for a machine matching "brcm,bcm963268", but
-> > 
-> > Like this?
-> > 
-> > http://patchwork.ozlabs.org/patch/473180/
-> > 
-> > I'd like to avoid that (hence the "Rejected" status).
+On 2015-12-02 00:13, Shawn Guo wrote:
+> On Mon, Nov 30, 2015 at 05:59:26PM -0800, Stefan Agner wrote:
+>> Linux on Vybrid used several different L2 latencies so far, none
+>> of them seem to be the right ones. According to the application note
+>> AN4947 ("Understanding Vybrid Architecture"), the tag portion runs
+>> on CPU clock and is inside the L2 cache controller, whereas the data
+>> portion is stored in the external SRAM running on platform clock.
+>> Hence it is likely that the correct value requires a higher data
+>> latency then tag latency.
+>> 
+>> These are the values which have been used so far:
+>> - The mainline values:
+>>   arm,data-latency = <1 1 1>;
+>>   arm,tag-latency = <2 2 2>;
+>>   Those values have lead to problems on higher clocks. They look
+>>   like a poor translation from the reset values (missing +1 offset
+>>   and a mix up between tag/latency values).
+>> - The Linux 3.0 (SoC vendor BSP) values (converted to DT notation):
+>>   arm,data-latency = <4 2 3>
+>>   arm,tag-latency = <4 2 3>
+>>   The cache initialization function along with the value matches the
+>>   i.MX6 code from the same kernel, so it seems that those values have
+>>   just been copied.
+>> - The Colibri values:
+>>   arm,data-latency = <2 1 2>;
+>>   arm,tag-latency = <3 2 3>;
+>>   Those were a mix between the values of the Linux 3.0 based BSP and
+>>   the mainline values above.
+>> - The SoC Reset values (converted to DT notation):
+>>   arm,data-latency = <3 3 3>;
+>>   arm,tag-latency = <2 2 2>;
+>> 
+>> So far there is no official statement on what the correct values are.
+>> See also the related Freescale community thread:
+>> https://community.freescale.com/message/579785#579785
+>> 
+>> For now, the reset values seem to be the best bet. Remove all other
+>> "bogus" values and use the reset value on vf610.dtsi level.
+>> 
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> ---
+>> Hi Shawn,
+>> 
+>> Any chance to get this into 4.4?
 > 
-> I exported default_mtd_part_types, copied it, and then added to it:
-> +	for (i = 0; i < nr_types; i++)
-> +		part_types[i] = default_mtd_part_types[i];
-> +
-> +	/* Add partition type based on machine */
-> +	if (of_machine_is_compatible("brcm,bcm963268"))
-> +		part_types[i++] = "bcm963268part";
-> +	else
-> +		part_types[i++] = NULL;
-> +
-> +	part_types[i++] = NULL;
+> I can try.  Generally, upstream maintainers are becoming more strict for
+> -rc inclusion after -rc3 phase.  Do you have any user stories about why
+> this is a critical/urgent fix?  If we send this a critical fix for 4.4-rc
+> inclusion, do we need to Cc stable?
 
-OK, so even uglier :)
+It came up a while ago on Freescale community, but I think that user
+used downstream BSP's:
+https://community.freescale.com/thread/332326
 
-> >> that way is ok with me. Presumably "ofpart" defers to another matching
-> >> partition parser?
-> > 
-> > Yes, "ofpart" is for specifying the entire partition table in the device
-> > tree as subnodes of either the flash node or of the flash's "partitions"
-> > subnode. It's not the most flexible, but it does work generically.
-> > 
-> >> Is there a patch for that method of parser detection available?
-> > 
-> > I have something working here, but I haven't had time to finish cleaning
-> > it up and submitting it. There's an older patch that works similarly,
-> > though it has some deficiencies:
-> > 
-> > http://patchwork.ozlabs.org/patch/475988/
-> > 
-> > The main difference between that and my (yet-to-be-submitted) proposal
-> > is that I'd like parsers to opt in by adding a proper of_match_table
-> > with non-Linux-specific DT bindings, and then we can drop the
-> > "linux,..." naming and make it a reasonably generic property.
+The Colibri VF61 board overwrites the latency, so it is not really
+critical for this board.
+
+The Freescale Tower runs at 400MHz by default, but has a CPU which would
+support up to 500MHz. I am pretty sure with 500MHz CPU clock, things
+will go south with current settings.
+
+Regarding stable: Would probably be consistent...
+
+--
+Stefan
+
+
 > 
-> I'll submit my parser without any means of using it,
-
-Sounds fine.
-
-> let me know if you
-> want me to work on a patch for a match table.
-
-If you're interested, I may CC you on my patches for testing/review.
-
-Brian
+> Shawn
+> 
+>> 
+>> --
+>> Stefan
+>> 
+>>  arch/arm/boot/dts/vf610-colibri.dtsi | 5 -----
+>>  arch/arm/boot/dts/vf610.dtsi         | 2 +-
+>>  2 files changed, 1 insertion(+), 6 deletions(-)
+>> 
+>> diff --git a/arch/arm/boot/dts/vf610-colibri.dtsi b/arch/arm/boot/dts/vf610-colibri.dtsi
+>> index 19fe045..2d7eab7 100644
+>> --- a/arch/arm/boot/dts/vf610-colibri.dtsi
+>> +++ b/arch/arm/boot/dts/vf610-colibri.dtsi
+>> @@ -18,8 +18,3 @@
+>>  		reg = <0x80000000 0x10000000>;
+>>  	};
+>>  };
+>> -
+>> -&L2 {
+>> -	arm,data-latency = <2 1 2>;
+>> -	arm,tag-latency = <3 2 3>;
+>> -};
+>> diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
+>> index 5f8eb1b..58bc6e4 100644
+>> --- a/arch/arm/boot/dts/vf610.dtsi
+>> +++ b/arch/arm/boot/dts/vf610.dtsi
+>> @@ -19,7 +19,7 @@
+>>  		reg = <0x40006000 0x1000>;
+>>  		cache-unified;
+>>  		cache-level = <2>;
+>> -		arm,data-latency = <1 1 1>;
+>> +		arm,data-latency = <3 3 3>;
+>>  		arm,tag-latency = <2 2 2>;
+>>  	};
+>>  };
+>> --
+>> 2.6.2
+>> 
+>> 
