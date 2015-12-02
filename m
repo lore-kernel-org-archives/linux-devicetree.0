@@ -1,90 +1,196 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v8 14/17] drm: bridge: analogix/dp: add max link rate and
- lane count limit for RK3288
-Date: Wed, 2 Dec 2015 18:46:57 +0800
-Message-ID: <565ECC21.3060306@rock-chips.com>
-References: <1446020143-32645-1-git-send-email-ykk@rock-chips.com>
- <1446022561-16870-1-git-send-email-ykk@rock-chips.com>
- <2807882.UeSPH80il3@diego>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH 1/4] i2c: at91: add upport for the HOLD field
+Date: Wed, 2 Dec 2015 12:01:49 +0100
+Message-ID: <565ECF9D.30707@atmel.com>
+References: <1449052747-20991-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2807882.UeSPH80il3@diego>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Yao <mark.yao@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, javier@osg.samsung.com, Andy Yan <andy.yan@rock-chips.com>, dri-deve
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1449052747-20991-1-git-send-email-ludovic.desroches@atmel.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Ludovic Desroches <ludovic.desroches@atmel.com>, wsa@the-dreams.de, alexandre.belloni@free-electrons.com
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+Le 02/12/2015 11:39, Ludovic Desroches a =E9crit :
+> The hold field allows to configure the data hold time which can be se=
+t
+> with the help of the generic binding 'i2c-sda-hold-time-ns'. This
+> feature has been introduced with SAMA5D4 SoC family.
+>=20
+> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+> ---
+>  drivers/i2c/busses/i2c-at91.c | 54 +++++++++++++++++++++++++++++++++=
++++++++---
+>  1 file changed, 51 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-at91.c b/drivers/i2c/busses/i2c-a=
+t91.c
+> index 10835d1..09e1690 100644
+> --- a/drivers/i2c/busses/i2c-at91.c
+> +++ b/drivers/i2c/busses/i2c-at91.c
+> @@ -64,6 +64,7 @@
+>  #define	AT91_TWI_IADR		0x000c	/* Internal Address Register */
+> =20
+>  #define	AT91_TWI_CWGR		0x0010	/* Clock Waveform Generator Reg */
+> +#define	AT91_TWI_CWGR_HOLD(x)	(((x) & 0x1f) << 24)
 
-On 11/27/2015 09:32 PM, Heiko St=C3=BCbner wrote:
-> Am Mittwoch, 28. Oktober 2015, 16:56:01 schrieb Yakir Yang:
->> There are some IP limit on rk3288 that only support 4 physical lanes
->> of 2.7/1.6 Gbps/lane, so seprate them out by device_type flag.
->>
->> Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
->> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
->> ---
-> [...]
->
->> diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
->> b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c index
->> 6307060..563ffb1d 100644
->> --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
->> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
->> @@ -890,8 +890,8 @@ static void analogix_dp_commit(struct analogix_d=
-p_device
->> *dp) return;
->>   	}
->>
->> -	ret =3D analogix_dp_set_link_train(dp, dp->video_info.lane_count,
->> -					 dp->video_info.link_rate);
->> +	ret =3D analogix_dp_set_link_train(dp, dp->video_info.max_lane_cou=
-nt,
->> +					 dp->video_info.max_link_rate);
->>   	if (ret) {
->>   		dev_err(dp->dev, "unable to do link train\n");
->>   		return;
->> @@ -1156,16 +1156,25 @@ static int analogix_dp_dt_parse_pdata(struct
->> analogix_dp_device *dp) struct device_node *dp_node =3D dp->dev->of_=
-node;
->>   	struct video_info *video_info =3D &dp->video_info;
->>
->> -	if (of_property_read_u32(dp_node, "samsung,link-rate",
->> -				 &video_info->link_rate)) {
->> -		dev_err(dp->dev, "failed to get link-rate\n");
->> -		return -EINVAL;
->> -	}
->> -
->> -	if (of_property_read_u32(dp_node, "samsung,lane-count",
->> -				 &video_info->lane_count)) {
->> -		dev_err(dp->dev, "failed to get lane-count\n");
->> -		return -EINVAL;
->> +	switch (dp->plat_data && dp->plat_data->dev_type) {
-> drivers/gpu/drm/bridge/analogix/analogix_dp_core.c: In function =E2=80=
-=98analogix_dp_dt_parse_pdata=E2=80=99:
-> drivers/gpu/drm/bridge/analogix/analogix_dp_core.c:1191:10: warning: =
-switch condition has boolean value [-Wswitch-bool]
->    switch (dp->plat_data && dp->plat_data->dev_type) {
->            ^
->
-> As I think we always will need to distinguish between implementations=
-,
-> I guess it should be safe to exit with an error, it that implementati=
-on-data
-> is not available, like just doing before the switch a:
->
-> if (!dp->plat_data)
-> 	return -EINVAL;
+I would have defined MAX_HOLD here and used it in the mask above...
 
-Done, thanks
 
-- Yakir
+> =20
+>  #define	AT91_TWI_SR		0x0020	/* Status Register */
+>  #define	AT91_TWI_TXCOMP		BIT(0)	/* Transmission Complete */
+> @@ -110,6 +111,7 @@ struct at91_twi_pdata {
+>  	unsigned clk_offset;
+>  	bool has_unre_flag;
+>  	bool has_alt_cmd;
+> +	bool has_hold_field;
+>  	struct at_dma_slave dma_slave;
+>  };
+> =20
+> @@ -187,10 +189,13 @@ static void at91_init_twi_bus(struct at91_twi_d=
+ev *dev)
+>   */
+>  static void at91_calc_twi_clock(struct at91_twi_dev *dev, int twi_cl=
+k)
+>  {
+> -	int ckdiv, cdiv, div;
+> +	int ckdiv, cdiv, div, hold =3D 0;
+>  	struct at91_twi_pdata *pdata =3D dev->pdata;
+>  	int offset =3D pdata->clk_offset;
+>  	int max_ckdiv =3D pdata->clk_max_div;
+> +	u32 twd_hold_time_ns =3D 0;
+> +
+> +#define MAX_HOLD 31
 
->
-> Heiko
->
->
->
+Instead of here ^^
+
+> =20
+>  	div =3D max(0, (int)DIV_ROUND_UP(clk_get_rate(dev->clk),
+>  				       2 * twi_clk) - offset);
+> @@ -204,8 +209,33 @@ static void at91_calc_twi_clock(struct at91_twi_=
+dev *dev, int twi_clk)
+>  		cdiv =3D 255;
+>  	}
+> =20
+> -	dev->twi_cwgr_reg =3D (ckdiv << 16) | (cdiv << 8) | cdiv;
+> -	dev_dbg(dev->dev, "cdiv %d ckdiv %d\n", cdiv, ckdiv);
+> +	if (pdata->has_hold_field) {
+> +		of_property_read_u32(dev->dev->of_node, "i2c-sda-hold-time-ns",
+> +				     &twd_hold_time_ns);
+> +
+> +		/*
+> +		 * hold time =3D HOLD + 3 x T_peripheral_clock
+> +		 * Use clk rate in kHz to prevent overflows when computing
+> +		 * hold.
+> +		 */
+> +		hold =3D DIV_ROUND_UP(twd_hold_time_ns
+> +				    * (clk_get_rate(dev->clk) / 1000), 1000000);
+> +		hold -=3D 3;
+> +		if (hold < 0)
+> +			hold =3D 0;
+> +		if (hold > MAX_HOLD) {
+> +			dev_warn(dev->dev,
+> +				 "HOLD field set to its maximum value (%d instead of %d)\n",
+> +				 MAX_HOLD, hold);
+> +			hold =3D MAX_HOLD;
+> +		}
+> +	}
+> +
+> +	dev->twi_cwgr_reg =3D (ckdiv << 16) | (cdiv << 8) | cdiv
+> +			    | AT91_TWI_CWGR_HOLD(hold);
+> +
+> +	dev_dbg(dev->dev, "cdiv %d ckdiv %d hold %d (%d ns)\n",
+> +		cdiv, ckdiv, hold, twd_hold_time_ns);
+>  }
+> =20
+>  static void at91_twi_dma_cleanup(struct at91_twi_dev *dev)
+> @@ -797,6 +827,7 @@ static struct at91_twi_pdata at91rm9200_config =3D=
+ {
+>  	.clk_offset =3D 3,
+>  	.has_unre_flag =3D true,
+>  	.has_alt_cmd =3D false,
+> +	.has_hold_field =3D false,
+>  };
+> =20
+>  static struct at91_twi_pdata at91sam9261_config =3D {
+> @@ -804,6 +835,7 @@ static struct at91_twi_pdata at91sam9261_config =3D=
+ {
+>  	.clk_offset =3D 4,
+>  	.has_unre_flag =3D false,
+>  	.has_alt_cmd =3D false,
+> +	.has_hold_field =3D false,
+>  };
+> =20
+>  static struct at91_twi_pdata at91sam9260_config =3D {
+> @@ -811,6 +843,7 @@ static struct at91_twi_pdata at91sam9260_config =3D=
+ {
+>  	.clk_offset =3D 4,
+>  	.has_unre_flag =3D false,
+>  	.has_alt_cmd =3D false,
+> +	.has_hold_field =3D false,
+>  };
+> =20
+>  static struct at91_twi_pdata at91sam9g20_config =3D {
+> @@ -818,6 +851,7 @@ static struct at91_twi_pdata at91sam9g20_config =3D=
+ {
+>  	.clk_offset =3D 4,
+>  	.has_unre_flag =3D false,
+>  	.has_alt_cmd =3D false,
+> +	.has_hold_field =3D false,
+>  };
+> =20
+>  static struct at91_twi_pdata at91sam9g10_config =3D {
+> @@ -825,6 +859,7 @@ static struct at91_twi_pdata at91sam9g10_config =3D=
+ {
+>  	.clk_offset =3D 4,
+>  	.has_unre_flag =3D false,
+>  	.has_alt_cmd =3D false,
+> +	.has_hold_field =3D false,
+>  };
+> =20
+>  static const struct platform_device_id at91_twi_devtypes[] =3D {
+> @@ -854,6 +889,15 @@ static struct at91_twi_pdata at91sam9x5_config =3D=
+ {
+>  	.clk_offset =3D 4,
+>  	.has_unre_flag =3D false,
+>  	.has_alt_cmd =3D false,
+> +	.has_hold_field =3D false,
+> +};
+> +
+> +static struct at91_twi_pdata sama5d4_config =3D {
+> +	.clk_max_div =3D 7,
+> +	.clk_offset =3D 4,
+> +	.has_unre_flag =3D false,
+> +	.has_alt_cmd =3D false,
+> +	.has_hold_field =3D true,
+>  };
+> =20
+>  static struct at91_twi_pdata sama5d2_config =3D {
+> @@ -861,6 +905,7 @@ static struct at91_twi_pdata sama5d2_config =3D {
+>  	.clk_offset =3D 4,
+>  	.has_unre_flag =3D true,
+>  	.has_alt_cmd =3D true,
+> +	.has_hold_field =3D true,
+>  };
+> =20
+>  static const struct of_device_id atmel_twi_dt_ids[] =3D {
+> @@ -883,6 +928,9 @@ static const struct of_device_id atmel_twi_dt_ids=
+[] =3D {
+>  		.compatible =3D "atmel,at91sam9x5-i2c",
+>  		.data =3D &at91sam9x5_config,
+>  	}, {
+> +		.compatible =3D "atmel,sama5d4-i2c",
+> +		.data =3D &sama5d4_config,
+> +	}, {
+>  		.compatible =3D "atmel,sama5d2-i2c",
+>  		.data =3D &sama5d2_config,
+>  	}, {
+
+Otherwise it's okay for me.
+
+Bye,
+--=20
+Nicolas Ferre
