@@ -1,114 +1,184 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 10/10] dt-bindings: Add DSIv2 documentation
-Date: Wed, 2 Dec 2015 00:20:01 -0800
-Message-ID: <20151202082001.GC4139@codeaurora.org>
-References: <1444827544-25656-1-git-send-email-architt@codeaurora.org>
- <1447844131-4182-1-git-send-email-architt@codeaurora.org>
- <1447844131-4182-11-git-send-email-architt@codeaurora.org>
- <CAL_JsqJufZvsGyxZ40+kPcAVr5mXqCi+Qej_8X6=GRxT9j+5+w@mail.gmail.com>
- <564C981F.3040907@codeaurora.org>
- <CAL_JsqJ7PovZsz0=b90bUChKtNra1pXxEjU_DiYAn7JUgShm5Q@mail.gmail.com>
- <5652AE71.4060609@codeaurora.org>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v2 10/10] drm/hisilicon: Add support for external bridge
+Date: Wed, 2 Dec 2015 13:50:36 +0530
+Message-ID: <565EA9D4.4090905@codeaurora.org>
+References: <1448707145-69348-1-git-send-email-xinliang.liu@linaro.org>
+ <1448707145-69348-11-git-send-email-xinliang.liu@linaro.org>
+ <565D62A3.2030301@codeaurora.org>
+ <CAGd==05Tw5YBWK19jJTruerkkj1Z8q05dB9VyP0AnTMwxyuPNQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5652AE71.4060609@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: Rob Herring <robh@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAGd==05Tw5YBWK19jJTruerkkj1Z8q05dB9VyP0AnTMwxyuPNQ@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Xinliang Liu <xinliang.liu@linaro.org>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, Daniel Stone <daniel@fooishbar.org>, David Airlie <airlied@linux.ie>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-doc@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, linuxarm@huawei.com, Andy Green <andy.green@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Xu Wei <xuwei5@hisilicon.com>, Wang Fei <w.f@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, XinWei Kong <kong.kongxinwei@hisilicon.com>, zourongrong@huawei.com, lijianhua@huawei.com, Sumit Semwal <sumit.semwal@lina>
 List-Id: devicetree@vger.kernel.org
 
-On 11/23, Archit Taneja wrote:
-> 
-> 
-> On 11/21/2015 1:29 AM, Rob Herring wrote:
-> >+Stephen
-> >
-> >On Wed, Nov 18, 2015 at 9:24 AM, Archit Taneja <architt@codeaurora.org> wrote:
-> >>Hi Rob,
-> >>
-> >>On 11/18/2015 6:48 PM, Rob Herring wrote:
-> >>>
-> >>>+dt list
-> >>>
-> >>>On Wed, Nov 18, 2015 at 4:55 AM, Archit Taneja <architt@codeaurora.org>
-> >>>wrote:
-> >>>>
-> >>>>Add additional property info needed for DSIv2 DT.
-> >>>
-> >>>
-> >>>Please use get_maintainers.pl.
-> >>
-> >>
-> >>Sorry about that, missed out doing that posting this time.
-> >>
-> >>>
-> >>>>Signed-off-by: Archit Taneja <architt@codeaurora.org>
-> >>>>---
-> >>>>   Documentation/devicetree/bindings/display/msm/dsi.txt | 10 +++++++++-
-> >>>>   1 file changed, 9 insertions(+), 1 deletion(-)
-> >>>>
-> >>>>diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt
-> >>>>b/Documentation/devicetree/bindings/display/msm/dsi.txt
-> >>>>index f344b9e..ca65a34 100644
-> >>>>--- a/Documentation/devicetree/bindings/display/msm/dsi.txt
-> >>>>+++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
-> >>>>@@ -13,18 +13,25 @@ Required properties:
-> >>>>   - power-domains: Should be <&mmcc MDSS_GDSC>.
-> >>>>   - clocks: device clocks
-> >>>>     See Documentation/devicetree/bindings/clocks/clock-bindings.txt for
-> >>>>details.
-> >>>>-- clock-names: the following clocks are required:
-> >>>>+- clock-names: these vary based on the DSI version. For DSI6G:
-> >>>>     * "bus_clk"
-> >>>>     * "byte_clk"
-> >>>>+  * "byte_clk_src
-> >>>
-> >>>
-> >>>This sounds like the parent of byte_clk. Is that really a clock within
-> >>>the block?
-> >>
-> >>
-> >>byte_clk_src isn't in the block, but byte_clk_src's parent is one of
-> >>the PLLs in this block. We take this clock so that we can re-parent
-> >>it to an appropriate PLL. The decision of what PLL to choose needs to
-> >>be done by the DSI block's driver.
-> >
-> >Seems like abuse to me. The list of clocks should match what are
-> >inputs to the block, not what the driver happens to need. Without a
-> >full understanding of the clock tree here, I don't have a suggestion.
-> >Maybe Stephen does.
-> 
-> We don't need specify byte_clk_src (and other xyz_clk_src clocks) via
-> DT. There is a static link set up between byte_clk and byte_clk_src by
-> our clock driver that never changes. We can retrieve it in the driver
-> itself using clk_get_parent(byte_clk). This way we stick to only
-> input clocks.
-> 
-> Stephen, does that sound okay?
-> 
 
-I guess so. From the DT perspective it's "correct" so sure.
 
-It would be nice if we could use assigned-clock-parents though.
-As far as I can recall that's hard because the clock tree looks
-like a cyclic graph when we take a clock provider level view. The
-display block consumes the byte_clk and provides the source of it
-too. So if we used assigned parents we would need to wait for
-both clocks to be registered with the framework before we can
-reconfigure the parent of byte_clk_src to be the PLL that the
-display clock outputs. Unfortunately, of_clk_set_defaults() is
-called during device driver probe, which in the display driver
-case would be before the PLL is registered.
+On 12/01/2015 08:20 PM, Xinliang Liu wrote:
+> On 1 December 2015 at 17:04, Archit Taneja <architt@codeaurora.org> wrote:
+>>
+>>
+>> On 11/28/2015 04:09 PM, Xinliang Liu wrote:
+>>>
+>>> Add support for external HDMI bridge.
+>>>
+>>> Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
+>>> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+>>> Signed-off-by: Andy Green <andy.green@linaro.org>
+>>> ---
+>>>    drivers/gpu/drm/hisilicon/hisi_drm_dsi.c | 51
+>>> ++++++++++++++++++++++++++++++++
+>>>    1 file changed, 51 insertions(+)
+>>>
+>>> diff --git a/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
+>>> b/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
+>>> index 066e08d..9e056db 100644
+>>> --- a/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
+>>> +++ b/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
+>>> @@ -78,6 +78,7 @@ struct dsi_hw_ctx {
+>>>
+>>>    struct hisi_dsi {
+>>>          struct drm_encoder encoder;
+>>> +       struct drm_bridge *bridge;
+>>>          struct mipi_dsi_host host;
+>>>          struct drm_display_mode cur_mode;
+>>>          struct dsi_hw_ctx *ctx;
+>>> @@ -671,6 +672,25 @@ static int dsi_host_init(struct device *dev, struct
+>>> hisi_dsi *dsi)
+>>>          return 0;
+>>>    }
+>>>
+>>> +static int dsi_bridge_init(struct drm_device *dev, struct hisi_dsi *dsi)
+>>> +{
+>>> +       struct drm_encoder *encoder = &dsi->encoder;
+>>> +       struct drm_bridge *bridge = dsi->bridge;
+>>> +       int ret;
+>>> +
+>>> +       /* associate the bridge to dsi encoder */
+>>> +       encoder->bridge = bridge;
+>>> +       bridge->encoder = encoder;
+>>> +
+>>> +       ret = drm_bridge_attach(dev, bridge);
+>>> +       if (ret) {
+>>> +               DRM_ERROR("failed to attach exteranl bridge\n");
+>>
+>>
+>> s/exteranl/external
+>>
+>
+> will be fixed in v3.
+>
+>>
+>>> +               return ret;
+>>> +       }
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +
+>>>    static int dsi_bind(struct device *dev, struct device *master, void
+>>> *data)
+>>>    {
+>>>          struct dsi_data *ddata = dev_get_drvdata(dev);
+>>> @@ -686,6 +706,10 @@ static int dsi_bind(struct device *dev, struct device
+>>> *master, void *data)
+>>>          if (ret)
+>>>                  return ret;
+>>>
+>>> +       ret = dsi_bridge_init(drm_dev, dsi);
+>>> +       if (ret)
+>>> +               return ret;
+>>> +
+>>>          return 0;
+>>>    }
+>>>
+>>> @@ -702,8 +726,35 @@ static const struct component_ops dsi_ops = {
+>>>    static int dsi_parse_dt(struct platform_device *pdev, struct hisi_dsi
+>>> *dsi)
+>>>    {
+>>>          struct dsi_hw_ctx *ctx = dsi->ctx;
+>>> +       struct device_node *np = pdev->dev.of_node;
+>>> +       struct device_node *endpoint, *bridge_node;
+>>> +       struct drm_bridge *bridge;
+>>>          struct resource *res;
+>>>
+>>> +       /*
+>>> +        * Get the endpoint node. In our case, dsi has one output port
+>>> +        * to which the external HDMI bridge is connected.
+>>> +        */
+>>> +       endpoint = of_graph_get_next_endpoint(np, NULL);
+>>> +       if (!endpoint) {
+>>> +               DRM_ERROR("no valid endpoint node\n");
+>>> +               return -ENODEV;
+>>> +       }
+>>> +       of_node_put(endpoint);
+>>> +
+>>> +       bridge_node = of_graph_get_remote_port_parent(endpoint);
+>>> +       if (!bridge_node) {
+>>> +               DRM_ERROR("no valid bridge node\n");
+>>> +               return -ENODEV;
+>>> +       }
+>>> +       of_node_put(bridge_node);
+>>> +
+>>> +       bridge = of_drm_find_bridge(bridge_node);
+>>> +       if (!bridge) {
+>>> +               DRM_INFO("wait for external HDMI bridge driver.\n");
+>>> +               return -EPROBE_DEFER;
+>>> +       }
+>>> +       dsi->bridge = bridge;
+>>
+>>
+>> This could be left for later, but it would be better if the dsi driver
+>> registers even if the bridge driver module isn't inserted yet, or
+>> happens much later in boot.
+>>
+>> We could achieve this by trying to attach the bridge (done in
+>> dsi_bridge_init) in the dsi_host_attach callback instead of having it
+>> in dsi_bind.
+>
+> Do you mean that it is the right time or place to attach the bridge in
+> dsi_host_attach callback.
+> Why? Because at this time bridge driver must be register?
 
-My only thought there would be to make of_clk_set_defaults() wait
-until both clocks are registered before it does any parent
-setting. But only in the case where the assigned parents contains
-a clock that is provided by the node being processed. I suppose
-the simplest thing to do would be to skip it during the device
-driver probe and handle it when the clk provider is registered.
+The bridge/panel drivers generally call drm_bridge_add/drm_panel_add and 
+mipi_dsi_attach() during probe.
+
+If the driver calls drm_bridge_add() before mipi_dsi_attach() in probe,
+then 'of_drm_find_bridge()' should succeed in the callback. This, 
+however, is prone to all sorts of race conditions and hence not the
+best solution.
+
+In the case of panels, a dsi host can always create a dummy connector,
+and search for a panel (of_drm_find_panel) in its 'detect' helper.
+Unfortunately, we don't have a free connector in the case of bridges.
+The connector are, in most cases, created by the bridge driver itself,
+and the dsi host driver has no say over the connector ops.
+
+I don't have a better solution yet, hence I said it could be left for
+later :)
+
+Archit
+
+>
+> Thanks,
+> -xinliang
+>
+>>
+>> Thanks,
+>> Archit
+>>
+>>>
+>>>          ctx->dsi_cfg_clk = devm_clk_get(&pdev->dev, "pclk_dsi");
+>>>          if (IS_ERR(ctx->dsi_cfg_clk)) {
+>>>
+>>
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> hosted by The Linux Foundation
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum, hosted by The Linux Foundation
