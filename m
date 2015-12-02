@@ -1,78 +1,153 @@
-From: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] Revert "of/irq: make of_irq_find_parent static"
-Date: Wed, 2 Dec 2015 16:14:47 +0000
-Message-ID: <1449072887-2734-1-git-send-email-qais.yousef@imgtec.com>
+From: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v8 1/3] dt-bindings: binding for jz4780-{nand,bch}
+Date: Wed, 2 Dec 2015 16:26:15 +0000
+Message-ID: <1449073577-28465-2-git-send-email-harvey.hunt@imgtec.com>
+References: <1449073577-28465-1-git-send-email-harvey.hunt@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449073577-28465-1-git-send-email-harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: alex-oucj9GSTHrKwpo/f3jThPQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This reverts commit 52493d446141b07c8ba28dd6a529513f8b2342bd.
+From: Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 
-Signed-off-by: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Add DT bindings for NAND devices connected to the NEMC on JZ4780 SoCs,
+as well as the hardware BCH controller, used by the jz4780_{nand,bch}
+drivers.
 
-Conflicts:
-	include/linux/of_irq.h
+Signed-off-by: Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Alex Smith <alex-oucj9GSTHrKwpo/f3jThPQ@public.gmane.org>
+Signed-off-by: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 ---
-I have a patch series that is under review that makes use of of_irq_find_parent()
+v7 -> v8:
+ - Describe how NAND chips are now child nodes of the NAND controller.
 
-The affected patch is this:
+v6 -> v7:
+ - Add nand-ecc-mode to DT bindings.
+ - Add nand-on-flash-bbt to DT bindings.
 
-	https://lkml.org/lkml/2015/11/25/291
+v5 -> v6:
+ - No change.
 
-Is it wrong to use this function? If yes, what's the alternative?
-If no, OK to revert?
+v4 -> v5:
+ - Rename ingenic,bch-device to ingenic,bch-controller to fit with
+   existing convention.
 
-Thanks,
-Qais
+v3 -> v4:
+ - No change
 
+v2 -> v3:
+ - Rebase to 4.0-rc6
+ - Changed ingenic,ecc-size to common nand-ecc-step-size
+ - Changed ingenic,ecc-strength to common nand-ecc-strength
+ - Changed ingenic,busy-gpio to common rb-gpios
+ - Changed ingenic,wp-gpio to common wp-gpios
 
- drivers/of/irq.c       | 2 +-
- include/linux/of_irq.h | 6 ++++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+v1 -> v2:
+ - Rebase to 4.0-rc3
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 902b89be7217..45735d56e435 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -53,7 +53,7 @@ EXPORT_SYMBOL_GPL(irq_of_parse_and_map);
-  * Returns a pointer to the interrupt parent node, or NULL if the interrupt
-  * parent could not be determined.
-  */
--static struct device_node *of_irq_find_parent(struct device_node *child)
-+struct device_node *of_irq_find_parent(struct device_node *child)
- {
- 	struct device_node *p;
- 	const __be32 *parp;
-diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index 039f2eec49ce..0c9ea9fb5b63 100644
---- a/include/linux/of_irq.h
-+++ b/include/linux/of_irq.h
-@@ -93,6 +93,7 @@ static inline void of_msi_configure(struct device *dev, struct device_node *np)
-  * so declare it here regardless of the CONFIG_OF_IRQ setting.
-  */
- extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
-+extern struct device_node *of_irq_find_parent(struct device_node *child);
- u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in);
- 
- #else /* !CONFIG_OF && !CONFIG_SPARC */
-@@ -102,6 +103,11 @@ static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
- 	return 0;
- }
- 
-+static inline void *of_irq_find_parent(struct device_node *child)
-+{
-+	return NULL;
-+}
+ .../bindings/mtd/ingenic,jz4780-nand.txt           | 81 ++++++++++++++++++++++
+ 1 file changed, 81 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+
+diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+new file mode 100644
+index 0000000..8151602
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+@@ -0,0 +1,81 @@
++* Ingenic JZ4780 NAND/BCH
 +
- static inline u32 of_msi_map_rid(struct device *dev,
- 				 struct device_node *msi_np, u32 rid_in)
- {
++This file documents the device tree bindings for NAND flash devices on the
++JZ4780. NAND devices are connected to the NEMC controller (described in
++memory-controllers/ingenic,jz4780-nemc.txt), and thus NAND device nodes must
++be children of the NEMC node.
++
++Required NAND controller device properties:
++- compatible: Should be set to "ingenic,jz4780-nand".
++- reg: For each bank with a NAND chip attached, should specify a bank number,
++  an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
++
++Optional NAND controller device properties:
++- ingenic,bch-controller: To make use of the hardware BCH controller, this
++  property must contain a phandle for the BCH controller node. The required
++  properties for this node are described below. If this is not specified,
++  software BCH will be used instead.
++
++Optional children nodes:
++Individual NAND chips are children of the NAND controller node.
++
++Required children node properties:
++- reg: An integer ranging from 1 to 6 representing the CS line to use.
++- #address-cells: See partition.txt
++- #size-cells: See partition.txt
++
++Optional children node properties:
++- nand-ecc-step-size: ECC block size in bytes.
++- nand-ecc-strength: ECC strength (max number of correctable bits).
++- nand-ecc-mode: String, operation mode of the NAND ecc mode. "hw" by default
++- nand-on-flash-bbt: boolean to enable on flash bbt option, if not present false
++- rb-gpios: GPIO specifier for the busy pin.
++- wp-gpios: GPIO specifier for the write protect pin.
++
++Example:
++
++nemc: nemc@13410000 {
++	...
++
++	nandc: nand-controller@1 {
++		compatible = "ingenic,jz4780-nand";
++		reg = <1 0 0x1000000>;	/* Bank 1 */
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++		ingenic,bch-controller = <&bch>;
++
++        nand@1 {
++            reg = <1>;
++            #address-cells = <2>;
++            #size-cells = <2>;
++
++            nand-ecc-step-size = <1024>;
++            nand-ecc-strength = <24>;
++            nand-ecc-mode = "hw";
++            nand-on-flash-bbt;
++
++            rb-gpios = <&gpa 20 GPIO_ACTIVE_LOW>;
++            wp-gpios = <&gpf 22 GPIO_ACTIVE_LOW>;
++        };
++	};
++};
++
++The BCH controller is a separate SoC component used for error correction on
++NAND devices. The following is a description of the device properties for a
++BCH controller.
++
++Required BCH properties:
++- compatible: Should be set to "ingenic,jz4780-bch".
++- reg: Should specify the BCH controller registers location and length.
++- clocks: Clock for the BCH controller.
++
++Example:
++
++bch: bch@134d0000 {
++	compatible = "ingenic,jz4780-bch";
++	reg = <0x134d0000 0x10000>;
++
++	clocks = <&cgu JZ4780_CLK_BCH>;
++};
 -- 
-2.1.0
+2.6.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
