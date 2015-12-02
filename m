@@ -1,169 +1,111 @@
-From: Martyn Welch <martyn.welch@collabora.co.uk>
-Subject: Re: [PATCH 3/3] Addition of binding for firmware signals on peach-pi
-Date: Wed, 02 Dec 2015 09:36:05 +0000
-Message-ID: <565EBB85.2030607@collabora.co.uk>
-References: <1448997171-7064-1-git-send-email-martyn.welch@collabora.co.uk> <1448997171-7064-4-git-send-email-martyn.welch@collabora.co.uk> <565E327E.90404@samsung.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v2 10/10] dt-bindings: Add DSIv2 documentation
+Date: Wed, 2 Dec 2015 15:26:45 +0530
+Message-ID: <565EC05D.8070009@codeaurora.org>
+References: <1444827544-25656-1-git-send-email-architt@codeaurora.org>
+ <1447844131-4182-1-git-send-email-architt@codeaurora.org>
+ <1447844131-4182-11-git-send-email-architt@codeaurora.org>
+ <CAL_JsqJufZvsGyxZ40+kPcAVr5mXqCi+Qej_8X6=GRxT9j+5+w@mail.gmail.com>
+ <564C981F.3040907@codeaurora.org>
+ <CAL_JsqJ7PovZsz0=b90bUChKtNra1pXxEjU_DiYAn7JUgShm5Q@mail.gmail.com>
+ <5652AE71.4060609@codeaurora.org> <20151202082001.GC4139@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <565E327E.90404@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20151202082001.GC4139@codeaurora.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 01/12/15 23:51, Krzysztof Kozlowski wrote:
-> On 02.12.2015 04:12, Martyn Welch wrote:
->> The peach pi has a GPIO connected to the firmware write protect, developer
->> mode and recovery mode lines. This patch adds the required nodes to the
->> device tree to configure the pinmuxing and allow these to be read from
->> user space.
->>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Pawel Moll <pawel.moll@arm.com>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
->> Cc: Kumar Gala <galak@codeaurora.org>
->> Cc: Russell King <linux@arm.linux.org.uk>
->> Cc: Kukjin Kim <kgene@kernel.org>
->> Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->> Cc: devicetree@vger.kernel.org
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-samsung-soc@vger.kernel.org
->> Signed-off-by: Martyn Welch <martyn.welch@collabora.co.uk>
->> ---
->>   arch/arm/boot/dts/exynos5800-peach-pi.dts | 40 +++++++++++++++++++++++++++++++
->>   1 file changed, 40 insertions(+)
->
-> Hi,
->
-> Thanks for the patch.
->
-> Few points from my side:
-> 1. Please add a prefix to the subject: "ARM: dts:".
->
-
-Ok, sorry.
-
-> 2. There is no need of such huge CC-list in the body of commit. This
-> CC-list comes from get_maintainer so there is no benefit of duplicating
-> it here. The CC is usually used to notify other people who might be
-> interested but get_maintainer does not point them.
->
-
-Ok, yes these were pulled from get_maintainer.
-
-> 3. I received only this third patch. I did not receive cover letter
-> explaining possible dependencies so I am not sure how to deal with the
-> patch. It looks like there are no dependencies... but maybe there are?
-> Is this is a new binding or no? Please provide a cover letter (if it
-> exists already be sure to send it to all interested parties) or send
-> entire patchset so the big picture could be seen.
->
-
-I'll make sure I do that next time.
-
-The cover letter read:
-
-Some Chromebooks have gpio attached to signals used to cause the 
-firmware to enter alternative modes of operation and/or control other 
-device characteristics (such as write protection on flash devices). This 
-patch adds a driver that exposes a read-only interface to allow these 
-signals to be read from user space.
-
-In addition this patch series provides the required bindings for this to 
-the peach-pi Chromebook.
-
-
-This is a new binding, but the driver is based on functionality in the 
-kernel shipped on Chromebooks. The binding has been modified based on 
-the form of existing bindings in the mainline kernel.
-
-Does that help?
-
-Martyn
-
-> The patch itself looks good but I'll wait with a review tag for #3.
->
-> Best regards,
-> Krzysztof
->
->
->>
->> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
->> index 49a4f43..485c18f 100644
->> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
->> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
->> @@ -53,6 +53,25 @@
->>   		};
->>   	};
->>
->> +	chromeos-firmware {
->> +		compatible = "google,gpio-firmware";
->> +
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&wp_gpio &dev_mode &rec_mode>;
->> +
->> +		write-protect {
->> +			gpios = <&gpx3 0 GPIO_ACTIVE_LOW>;
->> +		};
->> +
->> +		developer-switch {
->> +			gpios = <&gpx1 3 GPIO_ACTIVE_HIGH>;
->> +		};
->> +
->> +		recovery-switch {
->> +			gpios = <&gpx0 7 GPIO_ACTIVE_LOW>;
->> +		};
->> +	};
->> +
->>   	gpio-keys {
->>   		compatible = "gpio-keys";
->>
->> @@ -731,6 +750,13 @@
->>   		samsung,pin-val = <0>;
->>   	};
->>
->> +	rec_mode: rec-mode {
->> +		samsung,pins = "gpx0-7";
->> +		samsung,pin-function = <0>;
->> +		samsung,pin-pud = <0>;
->> +		samsung,pin-drv = <0>;
->> +	};
->> +
->>   	tpm_irq: tpm-irq {
->>   		samsung,pins = "gpx1-0";
->>   		samsung,pin-function = <0>;
->> @@ -752,6 +778,13 @@
->>   		samsung,pin-drv = <0>;
->>   	};
->>
->> +	dev_mode: dev-mode {
->> +		samsung,pins = "gpx1-3";
->> +		samsung,pin-function = <0>;
->> +		samsung,pin-pud = <3>;
->> +		samsung,pin-drv = <0>;
->> +	};
->> +
->>   	ec_irq: ec-irq {
->>   		samsung,pins = "gpx1-5";
->>   		samsung,pin-function = <0>;
->> @@ -773,6 +806,13 @@
->>   		samsung,pin-drv = <0>;
->>   	};
->>
->> +	wp_gpio: wp_gpio {
->> +		samsung,pins = "gpx3-0";
->> +		samsung,pin-function = <0>;
->> +		samsung,pin-pud = <0>;
->> +		samsung,pin-drv = <0>;
->> +	};
->> +
->>   	max77802_irq: max77802-irq {
->>   		samsung,pins = "gpx3-1";
->>   		samsung,pin-function = <0>;
->>
->
+CgpPbiAxMi8wMi8yMDE1IDAxOjUwIFBNLCBTdGVwaGVuIEJveWQgd3JvdGU6Cj4gT24gMTEvMjMs
+IEFyY2hpdCBUYW5lamEgd3JvdGU6Cj4+Cj4+Cj4+IE9uIDExLzIxLzIwMTUgMToyOSBBTSwgUm9i
+IEhlcnJpbmcgd3JvdGU6Cj4+PiArU3RlcGhlbgo+Pj4KPj4+IE9uIFdlZCwgTm92IDE4LCAyMDE1
+IGF0IDk6MjQgQU0sIEFyY2hpdCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9yYS5vcmc+IHdyb3Rl
+Ogo+Pj4+IEhpIFJvYiwKPj4+Pgo+Pj4+IE9uIDExLzE4LzIwMTUgNjo0OCBQTSwgUm9iIEhlcnJp
+bmcgd3JvdGU6Cj4+Pj4+Cj4+Pj4+ICtkdCBsaXN0Cj4+Pj4+Cj4+Pj4+IE9uIFdlZCwgTm92IDE4
+LCAyMDE1IGF0IDQ6NTUgQU0sIEFyY2hpdCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9yYS5vcmc+
+Cj4+Pj4+IHdyb3RlOgo+Pj4+Pj4KPj4+Pj4+IEFkZCBhZGRpdGlvbmFsIHByb3BlcnR5IGluZm8g
+bmVlZGVkIGZvciBEU0l2MiBEVC4KPj4+Pj4KPj4+Pj4KPj4+Pj4gUGxlYXNlIHVzZSBnZXRfbWFp
+bnRhaW5lcnMucGwuCj4+Pj4KPj4+Pgo+Pj4+IFNvcnJ5IGFib3V0IHRoYXQsIG1pc3NlZCBvdXQg
+ZG9pbmcgdGhhdCBwb3N0aW5nIHRoaXMgdGltZS4KPj4+Pgo+Pj4+Pgo+Pj4+Pj4gU2lnbmVkLW9m
+Zi1ieTogQXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4KPj4+Pj4+IC0tLQo+
+Pj4+Pj4gICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2Rz
+aS50eHQgfCAxMCArKysrKysrKystCj4+Pj4+PiAgICAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRp
+b25zKCspLCAxIGRlbGV0aW9uKC0pCj4+Pj4+Pgo+Pj4+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0Cj4+Pj4+PiBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0Cj4+Pj4+
+PiBpbmRleCBmMzQ0YjllLi5jYTY1YTM0IDEwMDY0NAo+Pj4+Pj4gLS0tIGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQKPj4+Pj4+ICsrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0Cj4+Pj4+
+PiBAQCAtMTMsMTggKzEzLDI1IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+Pj4+PiAgICAtIHBv
+d2VyLWRvbWFpbnM6IFNob3VsZCBiZSA8Jm1tY2MgTURTU19HRFNDPi4KPj4+Pj4+ICAgIC0gY2xv
+Y2tzOiBkZXZpY2UgY2xvY2tzCj4+Pj4+PiAgICAgIFNlZSBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvY2xvY2tzL2Nsb2NrLWJpbmRpbmdzLnR4dCBmb3IKPj4+Pj4+IGRldGFpbHMu
+Cj4+Pj4+PiAtLSBjbG9jay1uYW1lczogdGhlIGZvbGxvd2luZyBjbG9ja3MgYXJlIHJlcXVpcmVk
+Ogo+Pj4+Pj4gKy0gY2xvY2stbmFtZXM6IHRoZXNlIHZhcnkgYmFzZWQgb24gdGhlIERTSSB2ZXJz
+aW9uLiBGb3IgRFNJNkc6Cj4+Pj4+PiAgICAgICogImJ1c19jbGsiCj4+Pj4+PiAgICAgICogImJ5
+dGVfY2xrIgo+Pj4+Pj4gKyAgKiAiYnl0ZV9jbGtfc3JjCj4+Pj4+Cj4+Pj4+Cj4+Pj4+IFRoaXMg
+c291bmRzIGxpa2UgdGhlIHBhcmVudCBvZiBieXRlX2Nsay4gSXMgdGhhdCByZWFsbHkgYSBjbG9j
+ayB3aXRoaW4KPj4+Pj4gdGhlIGJsb2NrPwo+Pj4+Cj4+Pj4KPj4+PiBieXRlX2Nsa19zcmMgaXNu
+J3QgaW4gdGhlIGJsb2NrLCBidXQgYnl0ZV9jbGtfc3JjJ3MgcGFyZW50IGlzIG9uZSBvZgo+Pj4+
+IHRoZSBQTExzIGluIHRoaXMgYmxvY2suIFdlIHRha2UgdGhpcyBjbG9jayBzbyB0aGF0IHdlIGNh
+biByZS1wYXJlbnQKPj4+PiBpdCB0byBhbiBhcHByb3ByaWF0ZSBQTEwuIFRoZSBkZWNpc2lvbiBv
+ZiB3aGF0IFBMTCB0byBjaG9vc2UgbmVlZHMgdG8KPj4+PiBiZSBkb25lIGJ5IHRoZSBEU0kgYmxv
+Y2sncyBkcml2ZXIuCj4+Pgo+Pj4gU2VlbXMgbGlrZSBhYnVzZSB0byBtZS4gVGhlIGxpc3Qgb2Yg
+Y2xvY2tzIHNob3VsZCBtYXRjaCB3aGF0IGFyZQo+Pj4gaW5wdXRzIHRvIHRoZSBibG9jaywgbm90
+IHdoYXQgdGhlIGRyaXZlciBoYXBwZW5zIHRvIG5lZWQuIFdpdGhvdXQgYQo+Pj4gZnVsbCB1bmRl
+cnN0YW5kaW5nIG9mIHRoZSBjbG9jayB0cmVlIGhlcmUsIEkgZG9uJ3QgaGF2ZSBhIHN1Z2dlc3Rp
+b24uCj4+PiBNYXliZSBTdGVwaGVuIGRvZXMuCj4+Cj4+IFdlIGRvbid0IG5lZWQgc3BlY2lmeSBi
+eXRlX2Nsa19zcmMgKGFuZCBvdGhlciB4eXpfY2xrX3NyYyBjbG9ja3MpIHZpYQo+PiBEVC4gVGhl
+cmUgaXMgYSBzdGF0aWMgbGluayBzZXQgdXAgYmV0d2VlbiBieXRlX2NsayBhbmQgYnl0ZV9jbGtf
+c3JjIGJ5Cj4+IG91ciBjbG9jayBkcml2ZXIgdGhhdCBuZXZlciBjaGFuZ2VzLiBXZSBjYW4gcmV0
+cmlldmUgaXQgaW4gdGhlIGRyaXZlcgo+PiBpdHNlbGYgdXNpbmcgY2xrX2dldF9wYXJlbnQoYnl0
+ZV9jbGspLiBUaGlzIHdheSB3ZSBzdGljayB0byBvbmx5Cj4+IGlucHV0IGNsb2Nrcy4KPj4KPj4g
+U3RlcGhlbiwgZG9lcyB0aGF0IHNvdW5kIG9rYXk/Cj4+Cj4KPiBJIGd1ZXNzIHNvLiBGcm9tIHRo
+ZSBEVCBwZXJzcGVjdGl2ZSBpdCdzICJjb3JyZWN0IiBzbyBzdXJlLgo+Cj4gSXQgd291bGQgYmUg
+bmljZSBpZiB3ZSBjb3VsZCB1c2UgYXNzaWduZWQtY2xvY2stcGFyZW50cyB0aG91Z2guCj4gQXMg
+ZmFyIGFzIEkgY2FuIHJlY2FsbCB0aGF0J3MgaGFyZCBiZWNhdXNlIHRoZSBjbG9jayB0cmVlIGxv
+b2tzCj4gbGlrZSBhIGN5Y2xpYyBncmFwaCB3aGVuIHdlIHRha2UgYSBjbG9jayBwcm92aWRlciBs
+ZXZlbCB2aWV3LiBUaGUKPiBkaXNwbGF5IGJsb2NrIGNvbnN1bWVzIHRoZSBieXRlX2NsayBhbmQg
+cHJvdmlkZXMgdGhlIHNvdXJjZSBvZiBpdAo+IHRvby4gU28gaWYgd2UgdXNlZCBhc3NpZ25lZCBw
+YXJlbnRzIHdlIHdvdWxkIG5lZWQgdG8gd2FpdCBmb3IKPiBib3RoIGNsb2NrcyB0byBiZSByZWdp
+c3RlcmVkIHdpdGggdGhlIGZyYW1ld29yayBiZWZvcmUgd2UgY2FuCj4gcmVjb25maWd1cmUgdGhl
+IHBhcmVudCBvZiBieXRlX2Nsa19zcmMgdG8gYmUgdGhlIFBMTCB0aGF0IHRoZQo+IGRpc3BsYXkg
+Y2xvY2sgb3V0cHV0cy4gVW5mb3J0dW5hdGVseSwgb2ZfY2xrX3NldF9kZWZhdWx0cygpIGlzCj4g
+Y2FsbGVkIGR1cmluZyBkZXZpY2UgZHJpdmVyIHByb2JlLCB3aGljaCBpbiB0aGUgZGlzcGxheSBk
+cml2ZXIKPiBjYXNlIHdvdWxkIGJlIGJlZm9yZSB0aGUgUExMIGlzIHJlZ2lzdGVyZWQuCj4KPiBN
+eSBvbmx5IHRob3VnaHQgdGhlcmUgd291bGQgYmUgdG8gbWFrZSBvZl9jbGtfc2V0X2RlZmF1bHRz
+KCkgd2FpdAo+IHVudGlsIGJvdGggY2xvY2tzIGFyZSByZWdpc3RlcmVkIGJlZm9yZSBpdCBkb2Vz
+IGFueSBwYXJlbnQKPiBzZXR0aW5nLiBCdXQgb25seSBpbiB0aGUgY2FzZSB3aGVyZSB0aGUgYXNz
+aWduZWQgcGFyZW50cyBjb250YWlucwo+IGEgY2xvY2sgdGhhdCBpcyBwcm92aWRlZCBieSB0aGUg
+bm9kZSBiZWluZyBwcm9jZXNzZWQuIEkgc3VwcG9zZQo+IHRoZSBzaW1wbGVzdCB0aGluZyB0byBk
+byB3b3VsZCBiZSB0byBza2lwIGl0IGR1cmluZyB0aGUgZGV2aWNlCj4gZHJpdmVyIHByb2JlIGFu
+ZCBoYW5kbGUgaXQgd2hlbiB0aGUgY2xrIHByb3ZpZGVyIGlzIHJlZ2lzdGVyZWQuCj4KClRoZSBh
+c3NpZ25lZC1jbG9jay1wYXJlbnRzIHN0dWZmIHlvdSBtZW50aW9uZWQgaXMgbmVlZGVkIHRvIHNl
+dCBhIApkZWZhdWx0IGxpbmsgYmV0d2VlbiB0aGUgb25lIG9mIHRoZSBEU0kgUExMcyBhbmQgdGhl
+IFJDRywgcmlnaHQ/IEkganVzdCAKd2FudGVkIHRvIG1ha2UgY2xlYXIgaWYgd2Ugd2VyZSBzdGls
+bCBkaXNjdXNzaW5nIHRoZSBzYW1lIGlzc3VlLgoKIEZyb20gd2hhdCBJIHVuZGVyc3RhbmQsIHdl
+IGRvbid0IG5lZWQgdGhlIGFzc2lnbmVkLWNsb2NrLXBhcmVudHMgc3R1ZmYKdG8gZXN0YWJsaXNo
+IGEgbGluayBiZXR3ZWVuIGJ5dGVfY2xrX3NyYyhSQ0cgY2xvY2spIGFuZCBieXRlX2NsayhicmFu
+Y2ggCmNsb2NrKS4gVGhhdCdzIGEgZml4ZWQgbGluayBzZXQgdXAgYnkgdGhlIGNsb2NrIHN0cnVj
+dHMgcHJvdmlkZWQgaW4gdGhlIApnY2MgZHJpdmVyIGFuZCBkb2Vzbid0IG5lZWQgdG8gYmUgc3Bl
+Y2lhbGx5IGFzc2lnbmVkLCBhbmQganVzdCBhCmNsa19nZXRfcGFyZW50IGluIHRoZSBkcml2ZXIg
+ZG9lcyB0aGUgam9iIHRoZXJlLgoKQWJvdXQgYXNzaWduaW5nIGEgcGFyZW50IHRvIHRoZSBSQ0cs
+IHdvdWxkbid0IHRoYXQgYmUgeG8gYnkgZGVmYXVsdCwgYW5kCmNoYW5nZWQgYnkgdGhlIGRybS9t
+c20gZHJpdmVyIHRvIG9uZSBvZiB0aGUgUExMcyB3aGVuIHRoZSBuZWVkIGFycml2ZXM/CkkgZGlk
+bid0IGdldCB3aHkgd2UgbmVlZCB0byBlc3RhYmxpc2ggdGhhdCBiZWZvcmVoYW5kIGluIERUPwoK
+QXJjaGl0CgotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVt
+YmVyIG9mIHRoZSBDb2RlIEF1cm9yYSAKRm9ydW0sIGhvc3RlZCBieSBUaGUgTGludXggRm91bmRh
+dGlvbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
