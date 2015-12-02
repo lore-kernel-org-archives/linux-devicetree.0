@@ -1,11 +1,13 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 1/2] arm64: dts: rockchip: change the correct voltage range for rk3368 evb board
-Date: Wed,  2 Dec 2015 19:12:20 +0800
-Message-ID: <1449054741-25354-1-git-send-email-wxt@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [PATCH 2/2] ARM: dts: rockchip: change the correct voltage range for rk3288 evb board
+Date: Wed,  2 Dec 2015 19:12:21 +0800
+Message-ID: <1449054741-25354-2-git-send-email-wxt@rock-chips.com>
+References: <1449054741-25354-1-git-send-email-wxt@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1449054741-25354-1-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org
+Cc: linux-rockchip@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 In general, the logic voltage is affected by ddr frequency factors.
@@ -14,17 +16,18 @@ ddr frequency driver in mainline.
 
 AFAIK, the 1.8v voltage is used by the SD3.0 card.
 
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+
 ---
 
- arch/arm64/boot/dts/rockchip/rk3368-evb-act8846.dts | 6 +++---
+ arch/arm/boot/dts/rk3288-evb-act8846.dts | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-evb-act8846.dts b/arch/arm64/boot/dts/rockchip/rk3368-evb-act8846.dts
-index eed6d3c..8a5275f 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-evb-act8846.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-evb-act8846.dts
-@@ -104,8 +104,8 @@
+diff --git a/arch/arm/boot/dts/rk3288-evb-act8846.dts b/arch/arm/boot/dts/rk3288-evb-act8846.dts
+index 43949a6..2797f32 100644
+--- a/arch/arm/boot/dts/rk3288-evb-act8846.dts
++++ b/arch/arm/boot/dts/rk3288-evb-act8846.dts
+@@ -119,8 +119,8 @@
  
  			vdd_log: REG3 {
  				regulator-name = "VDD_LOG";
@@ -35,7 +38,7 @@ index eed6d3c..8a5275f 100644
  				regulator-always-on;
  			};
  
-@@ -118,7 +118,7 @@
+@@ -133,7 +133,7 @@
  
  			vccio_sd: REG5 {
  				regulator-name = "VCCIO_SD";
@@ -46,8 +49,3 @@ index eed6d3c..8a5275f 100644
  			};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
