@@ -1,208 +1,41 @@
-From: Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 10/10] drm/hisilicon: Add support for external bridge
-Date: Wed, 2 Dec 2015 19:24:52 +0800
-Message-ID: <CAGd==069ewFTj9ebAqVtcOdRV6hVqGcRDxDNOYtMQQ3SP8Uw5w@mail.gmail.com>
-References: <1448707145-69348-1-git-send-email-xinliang.liu@linaro.org>
-	<1448707145-69348-11-git-send-email-xinliang.liu@linaro.org>
-	<565D62A3.2030301@codeaurora.org>
-	<CAGd==05Tw5YBWK19jJTruerkkj1Z8q05dB9VyP0AnTMwxyuPNQ@mail.gmail.com>
-	<565EA9D4.4090905@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH] dt-bindings: tda998x: Document the required 'port' node.
+Date: Wed,  2 Dec 2015 11:35:39 +0000
+Message-ID: <1449056139-31222-1-git-send-email-Liviu.Dudau@arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <565EA9D4.4090905-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Stone <daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Liguozhu (Kenneth)" <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wang Fei <w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Feng Chen <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yiping Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, XinWei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, zourongrong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lijianhua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Sumit Semwal <sumit.semwal@lina>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2 December 2015 at 16:20, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->
->
-> On 12/01/2015 08:20 PM, Xinliang Liu wrote:
->>
->> On 1 December 2015 at 17:04, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->>>
->>>
->>>
->>> On 11/28/2015 04:09 PM, Xinliang Liu wrote:
->>>>
->>>>
->>>> Add support for external HDMI bridge.
->>>>
->>>> Signed-off-by: Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>> Signed-off-by: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->>>> Signed-off-by: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>> ---
->>>>    drivers/gpu/drm/hisilicon/hisi_drm_dsi.c | 51
->>>> ++++++++++++++++++++++++++++++++
->>>>    1 file changed, 51 insertions(+)
->>>>
->>>> diff --git a/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
->>>> b/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
->>>> index 066e08d..9e056db 100644
->>>> --- a/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
->>>> +++ b/drivers/gpu/drm/hisilicon/hisi_drm_dsi.c
->>>> @@ -78,6 +78,7 @@ struct dsi_hw_ctx {
->>>>
->>>>    struct hisi_dsi {
->>>>          struct drm_encoder encoder;
->>>> +       struct drm_bridge *bridge;
->>>>          struct mipi_dsi_host host;
->>>>          struct drm_display_mode cur_mode;
->>>>          struct dsi_hw_ctx *ctx;
->>>> @@ -671,6 +672,25 @@ static int dsi_host_init(struct device *dev, struct
->>>> hisi_dsi *dsi)
->>>>          return 0;
->>>>    }
->>>>
->>>> +static int dsi_bridge_init(struct drm_device *dev, struct hisi_dsi
->>>> *dsi)
->>>> +{
->>>> +       struct drm_encoder *encoder = &dsi->encoder;
->>>> +       struct drm_bridge *bridge = dsi->bridge;
->>>> +       int ret;
->>>> +
->>>> +       /* associate the bridge to dsi encoder */
->>>> +       encoder->bridge = bridge;
->>>> +       bridge->encoder = encoder;
->>>> +
->>>> +       ret = drm_bridge_attach(dev, bridge);
->>>> +       if (ret) {
->>>> +               DRM_ERROR("failed to attach exteranl bridge\n");
->>>
->>>
->>>
->>> s/exteranl/external
->>>
->>
->> will be fixed in v3.
->>
->>>
->>>> +               return ret;
->>>> +       }
->>>> +
->>>> +       return 0;
->>>> +}
->>>> +
->>>>    static int dsi_bind(struct device *dev, struct device *master, void
->>>> *data)
->>>>    {
->>>>          struct dsi_data *ddata = dev_get_drvdata(dev);
->>>> @@ -686,6 +706,10 @@ static int dsi_bind(struct device *dev, struct
->>>> device
->>>> *master, void *data)
->>>>          if (ret)
->>>>                  return ret;
->>>>
->>>> +       ret = dsi_bridge_init(drm_dev, dsi);
->>>> +       if (ret)
->>>> +               return ret;
->>>> +
->>>>          return 0;
->>>>    }
->>>>
->>>> @@ -702,8 +726,35 @@ static const struct component_ops dsi_ops = {
->>>>    static int dsi_parse_dt(struct platform_device *pdev, struct hisi_dsi
->>>> *dsi)
->>>>    {
->>>>          struct dsi_hw_ctx *ctx = dsi->ctx;
->>>> +       struct device_node *np = pdev->dev.of_node;
->>>> +       struct device_node *endpoint, *bridge_node;
->>>> +       struct drm_bridge *bridge;
->>>>          struct resource *res;
->>>>
->>>> +       /*
->>>> +        * Get the endpoint node. In our case, dsi has one output port
->>>> +        * to which the external HDMI bridge is connected.
->>>> +        */
->>>> +       endpoint = of_graph_get_next_endpoint(np, NULL);
->>>> +       if (!endpoint) {
->>>> +               DRM_ERROR("no valid endpoint node\n");
->>>> +               return -ENODEV;
->>>> +       }
->>>> +       of_node_put(endpoint);
->>>> +
->>>> +       bridge_node = of_graph_get_remote_port_parent(endpoint);
->>>> +       if (!bridge_node) {
->>>> +               DRM_ERROR("no valid bridge node\n");
->>>> +               return -ENODEV;
->>>> +       }
->>>> +       of_node_put(bridge_node);
->>>> +
->>>> +       bridge = of_drm_find_bridge(bridge_node);
->>>> +       if (!bridge) {
->>>> +               DRM_INFO("wait for external HDMI bridge driver.\n");
->>>> +               return -EPROBE_DEFER;
->>>> +       }
->>>> +       dsi->bridge = bridge;
->>>
->>>
->>>
->>> This could be left for later, but it would be better if the dsi driver
->>> registers even if the bridge driver module isn't inserted yet, or
->>> happens much later in boot.
->>>
->>> We could achieve this by trying to attach the bridge (done in
->>> dsi_bridge_init) in the dsi_host_attach callback instead of having it
->>> in dsi_bind.
->>
->>
->> Do you mean that it is the right time or place to attach the bridge in
->> dsi_host_attach callback.
->> Why? Because at this time bridge driver must be register?
->
->
-> The bridge/panel drivers generally call drm_bridge_add/drm_panel_add and
-> mipi_dsi_attach() during probe.
->
-> If the driver calls drm_bridge_add() before mipi_dsi_attach() in probe,
-> then 'of_drm_find_bridge()' should succeed in the callback. This, however,
-> is prone to all sorts of race conditions and hence not the
-> best solution.
->
-> In the case of panels, a dsi host can always create a dummy connector,
-> and search for a panel (of_drm_find_panel) in its 'detect' helper.
-> Unfortunately, we don't have a free connector in the case of bridges.
-> The connector are, in most cases, created by the bridge driver itself,
-> and the dsi host driver has no say over the connector ops.
->
-> I don't have a better solution yet, hence I said it could be left for
-> later :)
+All the users of the tda998x driver are component based and bind the
+driver via the device graph method described in
+Documentation/devicetree/bindings/graph.txt. Add the fact that the
+'port' node is required to the bindings.
 
-Understand, This is an Initialization dependence of two drivers. One
-driver need to do something after other driver init.
-I don't think there is a best solution. I prefer to keep waiting in probe stage.
+Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/display/bridge/tda998x.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Thanks,
--xinliang
+diff --git a/Documentation/devicetree/bindings/display/bridge/tda998x.txt b/Documentation/devicetree/bindings/display/bridge/tda998x.txt
+index e9e4bce..e178e6b 100644
+--- a/Documentation/devicetree/bindings/display/bridge/tda998x.txt
++++ b/Documentation/devicetree/bindings/display/bridge/tda998x.txt
+@@ -5,6 +5,10 @@ Required properties;
+ 
+   - reg: I2C address
+ 
++Required node:
++  - port: Input port node with endpoint definition, as described
++        in Documentation/devicetree/bindings/graph.txt
++
+ Optional properties:
+   - interrupts: interrupt number and trigger type
+ 	default: polling
+-- 
+2.6.2
 
->
-> Archit
->
->
->>
->> Thanks,
->> -xinliang
->>
->>>
->>> Thanks,
->>> Archit
->>>
->>>>
->>>>          ctx->dsi_cfg_clk = devm_clk_get(&pdev->dev, "pclk_dsi");
->>>>          if (IS_ERR(ctx->dsi_cfg_clk)) {
->>>>
->>>
->>> --
->>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
->>> Forum,
->>> hosted by The Linux Foundation
->
->
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> hosted by The Linux Foundation
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
