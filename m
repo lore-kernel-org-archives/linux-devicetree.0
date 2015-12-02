@@ -1,66 +1,54 @@
-From: Simon Arlott <simon@fire.lp0.eu>
-Subject: Re: [PATCH (v6) 1/2] mtd: brcmnand: Add brcm,bcm63268-nand device
- tree binding
-Date: Wed, 2 Dec 2015 20:02:43 +0000
-Message-ID: <565F4E63.3030100@simon.arlott.org.uk>
-References: <56506D55.3000907@simon.arlott.org.uk>
- <20151122215945.GA5930@rob-hp-laptop> <56523E85.905@simon.arlott.org.uk>
- <56523EFF.9050502@simon.arlott.org.uk> <56535977.9050201@gmail.com>
- <56541BD3.4070202@simon.arlott.org.uk> <5654AF69.7040901@gmail.com>
- <afc6fb02d51a5378e315ade84a134eaf7a58a94f@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
- <20151202190555.GJ64635@google.com>
- <CAGVrzcZa2LNcajdnZHgZ2j+2Yj0_0a-7VmtXoBtWwFK2C02CyA@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v3 00/27] memory: omap-gpmc: mtd: nand: Support GPMC NAND
+ on non-OMAP platforms
+Date: Wed, 2 Dec 2015 12:05:06 -0800
+Message-ID: <20151202200506.GF23396@atomide.com>
+References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
+ <20151026212346.GJ13239@google.com>
+ <562F45BF.8020205@ti.com>
+ <20151130195449.GI64635@google.com>
+ <565DB18C.7040505@ti.com>
+ <20151202032643.GF64635@google.com>
+ <565E7DAC.7060401@ti.com>
+ <20151202150317.GC23396@atomide.com>
+ <20151202181330.GG64635@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGVrzcZa2LNcajdnZHgZ2j+2Yj0_0a-7VmtXoBtWwFK2C02CyA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20151202181330.GG64635@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Brian Norris <computersforpeace@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonas Gorski <jogo@openwrt.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Kamal Dasu <kdasu.kdev@gmail.com>
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Roger Quadros <rogerq@ti.com>, dwmw2@infradead.org, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/15 19:38, Florian Fainelli wrote:
-> 2015-12-02 11:05 GMT-08:00 Brian Norris <computersforpeace@gmail.com>:
->> + Broadcom list + Kamal
->>
->> On Tue, Nov 24, 2015 at 08:19:37PM -0000, Simon Arlott wrote:
->>> Add device tree binding for NAND on the BCM63268.
->>>
->>> The BCM63268 has a NAND interrupt register with combined status and enable
->>> registers.
->>>
->>> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
->>> ---
->>>  .../devicetree/bindings/mtd/brcm,brcmnand.txt      | 35 ++++++++++++++++++++++
->>>  1 file changed, 35 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
->>> b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
->>> index 4ff7128..f2a71c8 100644
->>> --- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
->>> +++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
->>> @@ -72,6 +72,14 @@ we define additional 'compatible' properties and associated register resources w
->>>         and enable registers
->>>       - reg-names: (required) "nand-int-base"
->>>
->>> +   * "brcm,nand-bcm63268"
->>> +     - compatible: should contain "brcm,nand-bcm<soc>", "brcm,nand-bcm63268"
->>
->> Looks like you're aiming to support bcm63168? Is bcm63268 the first
->> chip to include this style of register then? The numbering seems
->> backwards, but that may just be reality.
+* Brian Norris <computersforpeace@gmail.com> [151202 10:14]:
+> On Wed, Dec 02, 2015 at 07:03:17AM -0800, Tony Lindgren wrote:
+> > * Roger Quadros <rogerq@ti.com> [151201 21:13]:
+> > > On 02/12/15 08:56, Brian Norris wrote:
+> > > > 
+> > > > I'll take another pass over your patch set, but if things are looking
+> > > > better, how do you expect to merge this? There are significant portions
+> > > > that touch at least 2 or 3 different subsystem trees, AFAICT.
+> > > 
+> > > Tony could create an immutable branch with all the dts and memory changes.
+> > > You could base the mtd changes on top of that?
+> > 
+> > If we all agree on that it will be immutable Roger can set up the branch
+> > with our acks and we can all merge it in as needed. I believe v4.4-rc1
+> > should work as a base for us all?
 > 
-> 6362 (NAND rev 2.1, ann. Sep 8, 2009), 6368 (v0.1?!?, ann. Jan 7,
-> 2009) and 6328 (v2.1, can't find release date) are earlier chips that
-> have an identical combined interrupt enable + status register and a
-> NAND controller within the same 32-bits word, so these would qualify
-> as a better compatible string for this specific addition integration
-> stub here. I would gowith 6368 here then?
-> 
+> There are oustanding comments about the NAND ready/busy GPIO naming in
+> patch 18, which I'd like addressed. I'll re-review the rest before the
+> end of the day (West Coast U.S.A.). I'm not sure my acks are worth much
+> beyond the MTD stuff.
 
-I could change it to 6368 but there's no documented NAND_INTR_BASE for
-it. Only the 63268 and 6818 have a #define for NAND_INTR_BASE.
+OK, I'm happy with the gpmc related parts.
 
--- 
-Simon Arlott
+> Regarding branches, 4.4-rc1 is fine with me.
+
+OK
+
+Thanks,
+
+Tony
