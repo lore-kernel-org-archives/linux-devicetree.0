@@ -1,57 +1,90 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] ASoC: cygnus: Add Cygnus audio DAI driver
-Date: Wed, 2 Dec 2015 10:45:43 +0000
-Message-ID: <20151202104543.GD1929@sirena.org.uk>
-References: <1447114664-21799-1-git-send-email-ssimran@broadcom.com>
- <1447114664-21799-3-git-send-email-ssimran@broadcom.com>
- <20151122134440.GQ26072@sirena.org.uk>
- <565E54D2.50806@broadcom.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v8 14/17] drm: bridge: analogix/dp: add max link rate and
+ lane count limit for RK3288
+Date: Wed, 2 Dec 2015 18:46:57 +0800
+Message-ID: <565ECC21.3060306@rock-chips.com>
+References: <1446020143-32645-1-git-send-email-ykk@rock-chips.com>
+ <1446022561-16870-1-git-send-email-ykk@rock-chips.com>
+ <2807882.UeSPH80il3@diego>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="17ucDnirktTaGR4W"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <565E54D2.50806-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simran Rai <ssimran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Lori Hikichi <lhikichi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arun Parameswaran <arunp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2807882.UeSPH80il3@diego>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc: Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Yao <mark.yao@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, djkurtz@chromium.org, dianders@chromium.org, Sean Paul <seanpaul@chromium.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, emil.l.velikov@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Pawel Moll <pawel.moll@arm.com>, ajaynumb@gmail.com, robherring2@gmail.com, javier@osg.samsung.com, Andy Yan <andy.yan@rock-chips.com>, dri-deve
 List-Id: devicetree@vger.kernel.org
 
+Hi Heiko,
 
---17ucDnirktTaGR4W
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 11/27/2015 09:32 PM, Heiko St=C3=BCbner wrote:
+> Am Mittwoch, 28. Oktober 2015, 16:56:01 schrieb Yakir Yang:
+>> There are some IP limit on rk3288 that only support 4 physical lanes
+>> of 2.7/1.6 Gbps/lane, so seprate them out by device_type flag.
+>>
+>> Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+>> ---
+> [...]
+>
+>> diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+>> b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c index
+>> 6307060..563ffb1d 100644
+>> --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+>> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+>> @@ -890,8 +890,8 @@ static void analogix_dp_commit(struct analogix_d=
+p_device
+>> *dp) return;
+>>   	}
+>>
+>> -	ret =3D analogix_dp_set_link_train(dp, dp->video_info.lane_count,
+>> -					 dp->video_info.link_rate);
+>> +	ret =3D analogix_dp_set_link_train(dp, dp->video_info.max_lane_cou=
+nt,
+>> +					 dp->video_info.max_link_rate);
+>>   	if (ret) {
+>>   		dev_err(dp->dev, "unable to do link train\n");
+>>   		return;
+>> @@ -1156,16 +1156,25 @@ static int analogix_dp_dt_parse_pdata(struct
+>> analogix_dp_device *dp) struct device_node *dp_node =3D dp->dev->of_=
+node;
+>>   	struct video_info *video_info =3D &dp->video_info;
+>>
+>> -	if (of_property_read_u32(dp_node, "samsung,link-rate",
+>> -				 &video_info->link_rate)) {
+>> -		dev_err(dp->dev, "failed to get link-rate\n");
+>> -		return -EINVAL;
+>> -	}
+>> -
+>> -	if (of_property_read_u32(dp_node, "samsung,lane-count",
+>> -				 &video_info->lane_count)) {
+>> -		dev_err(dp->dev, "failed to get lane-count\n");
+>> -		return -EINVAL;
+>> +	switch (dp->plat_data && dp->plat_data->dev_type) {
+> drivers/gpu/drm/bridge/analogix/analogix_dp_core.c: In function =E2=80=
+=98analogix_dp_dt_parse_pdata=E2=80=99:
+> drivers/gpu/drm/bridge/analogix/analogix_dp_core.c:1191:10: warning: =
+switch condition has boolean value [-Wswitch-bool]
+>    switch (dp->plat_data && dp->plat_data->dev_type) {
+>            ^
+>
+> As I think we always will need to distinguish between implementations=
+,
+> I guess it should be safe to exit with an error, it that implementati=
+on-data
+> is not available, like just doing before the switch a:
+>
+> if (!dp->plat_data)
+> 	return -EINVAL;
 
-On Tue, Dec 01, 2015 at 06:17:54PM -0800, Simran Rai wrote:
-> On 11/22/2015 5:44 AM, Mark Brown wrote:
+Done, thanks
 
-> >I would expect any initialisationn of clocks beyond the ones that the
-> >device directly interacts with to be handled within the clock API
-> >configuration rather than in a specific driver, this avoids the driver
-> >being dependent on a particular system integration.
+- Yakir
 
-> I will have to figure out a way to propagate the frequency from leaf clocks to the parent
-> clock. Will send out another patch with the fix.
-
-The idea is that the clock API should take care of this.
-
---17ucDnirktTaGR4W
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWXsvWAAoJECTWi3JdVIfQizUH/2COn8Y6LRhnAHyYeH1bRmWx
-4ch+FHrhThvsHo+Q4g2qx6Di51y06ypneutLyNEM8bUaZ9YTpMazia1XX0YrDvGp
-hSgEooiAvFbCljagWfJWwLlNy+86wzi6bPcTYTJml6hfTjY5xVdd3rPDu7YiYGMX
-qcf9lI42nFPQn1HG+9D/fS2QKfXWg+U6g2PPq3Fh25VrS0rRdVhLJ76RAQh2uVGk
-M/7I/VNf4cGgg82LYQTPfkBQy/YEZR+EKnCyACIl6jEG5h1uBxGpWnQp6e4ZyhmI
-0+xAMhouweBOE8qutqz9lKRkWuQsBDFzLvTDjSq65rWlZIkNnMUSYnKw2dIGdHk=
-=RGTF
------END PGP SIGNATURE-----
-
---17ucDnirktTaGR4W--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Heiko
+>
+>
+>
