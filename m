@@ -1,402 +1,63 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RFC 3/3] input: rotary_encoder: support more than 2 gpios
- as input
-Date: Wed, 2 Dec 2015 08:29:41 -0600
-Message-ID: <20151202142941.GA16722@rob-hp-laptop>
-References: <1449050834-31779-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <1449050834-31779-4-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Meng Yi <B56799@freescale.com>
+Subject: =?gb2312?B?tPC4tDogW1BBVENIIDEvMl0gQVJNOiBkdHM6IGxzMTAyMWE6IEFkZCBEQ1Ug?=
+ =?gb2312?Q?dts_node.?=
+Date: Wed, 2 Dec 2015 14:29:36 +0000
+Message-ID: <DM2PR0301MB0912F64ECB3624D1751FADD68F0E0@DM2PR0301MB0912.namprd03.prod.outlook.com>
+References: <1448433967-6710-1-git-send-email-b56799@freescale.com>,
+ <20151202124003.GS692@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1449050834-31779-4-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Guido =?iso-8859-1?Q?Mart=EDnez?= <guido-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sylvain Rochet <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20151202124003.GS692@tiger>
+Content-Language: zh-CN
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Jianwei Wang <jianwei.wang.chn@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xiubo Li <lixiubo@cmss.chinamobile.com>, Huan Wang <alison.wang@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 02, 2015 at 11:07:14AM +0100, Uwe Kleine-K=F6nig wrote:
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/input/rotary-encoder.txt   |   2 +-
-
-=46or the binding:
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
->  arch/arm/mach-pxa/raumfeld.c                       |  25 +++-
->  drivers/input/misc/rotary_encoder.c                | 127 +++++++++--=
-----------
->  include/linux/rotary_encoder.h                     |   4 -
->  4 files changed, 79 insertions(+), 79 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.t=
-xt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> index de99cbbbf6da..6c9f0c8a846c 100644
-> --- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> +++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> @@ -1,7 +1,7 @@
->  Rotary encoder DT bindings
-> =20
->  Required properties:
-> -- gpios: a spec for two GPIOs to be used
-> +- gpios: a spec for at least two GPIOs to be used, most significant =
-first
-> =20
->  Optional properties:
->  - linux,axis: the input subsystem axis to map to this rotary encoder=
-=2E
-> diff --git a/arch/arm/mach-pxa/raumfeld.c b/arch/arm/mach-pxa/raumfel=
-d.c
-> index 36571a9a44fe..f47e59b0efa8 100644
-> --- a/arch/arm/mach-pxa/raumfeld.c
-> +++ b/arch/arm/mach-pxa/raumfeld.c
-> @@ -21,6 +21,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/interrupt.h>
->  #include <linux/gpio.h>
-> +#include <linux/gpio/machine.h>
->  #include <linux/smsc911x.h>
->  #include <linux/input.h>
->  #include <linux/rotary_encoder.h>
-> @@ -370,10 +371,25 @@ static struct rotary_encoder_platform_data raum=
-feld_rotary_encoder_info =3D {
->  	.steps		=3D 24,
->  	.axis		=3D REL_X,
->  	.relative_axis	=3D 1,
-> -	.gpio_a		=3D GPIO_VOLENC_A,
-> -	.gpio_b		=3D GPIO_VOLENC_B,
-> -	.inverted_a	=3D 1,
-> -	.inverted_b	=3D 0,
-> +};
-> +
-> +static struct gpiod_lookup_table raumfeld_rotary_encoder_gpio_lookup=
- =3D {
-> +	.dev_id =3D "rotary_encoder.0",
-> +	.table =3D {
-> +		{
-> +			.chip_label =3D "gpio-0",
-> +			.chip_hwnum =3D GPIO_VOLENC_A,
-> +			.idx =3D 0,
-> +			.flags =3D GPIO_ACTIVE_LOW,
-> +		},
-> +		{
-> +			.chip_label =3D "gpio-0",
-> +			.chip_hwnum =3D GPIO_VOLENC_B,
-> +			.idx =3D 1,
-> +			.flags =3D GPIO_ACTIVE_HIGH,
-> +		},
-> +		{ /* sentinel */ }
-> +	},
->  };
-> =20
->  static struct platform_device rotary_encoder_device =3D {
-> @@ -1051,6 +1067,7 @@ static void __init raumfeld_controller_init(voi=
-d)
->  	int ret;
-> =20
->  	pxa3xx_mfp_config(ARRAY_AND_SIZE(raumfeld_controller_pin_config));
-> +	gpiod_add_lookup_table(&raumfeld_rotary_encoder_gpio_lookup);
->  	platform_device_register(&rotary_encoder_device);
->  	spi_register_board_info(ARRAY_AND_SIZE(controller_spi_devices));
->  	i2c_register_board_info(0, &raumfeld_controller_i2c_board_info, 1);
-> diff --git a/drivers/input/misc/rotary_encoder.c b/drivers/input/misc=
-/rotary_encoder.c
-> index 0582e851993f..99f19e037370 100644
-> --- a/drivers/input/misc/rotary_encoder.c
-> +++ b/drivers/input/misc/rotary_encoder.c
-> @@ -25,7 +25,6 @@
->  #include <linux/slab.h>
->  #include <linux/of.h>
->  #include <linux/of_platform.h>
-> -#include <linux/of_gpio.h>
->  #include <linux/pm.h>
-> =20
->  #define DRV_NAME "rotary-encoder"
-> @@ -36,45 +35,47 @@ struct rotary_encoder {
->  	/* configuration */
->  	unsigned int steps;
->  	unsigned int axis;
-> -	unsigned int gpio_a;
-> -	unsigned int gpio_b;
-> -	unsigned int inverted_a;
-> -	unsigned int inverted_b;
->  	unsigned int steps_per_period;
->  	bool relative_axis;
->  	bool rollover;
->  	bool wakeup_source;
-> =20
-> -	unsigned int irq_a;
-> -	unsigned int irq_b;
-> +	struct gpio_descs *gpios;
-> +	unsigned int *irq;
-> =20
->  	/* state */
->  	unsigned int pos;
->  	bool armed;
-> -	unsigned char dir;	/* 0 - clockwise, 1 - CCW */
-> +	signed char dir;	/* 1 - clockwise, -1 - CCW */
->  	char last_stable;
->  };
-> =20
-> -static int rotary_encoder_get_state(const struct rotary_encoder *enc=
-oder)
-> +static unsigned rotary_encoder_get_state(const struct rotary_encoder=
- *encoder)
->  {
-> -	int a =3D !!gpio_get_value(encoder->gpio_a);
-> -	int b =3D !!gpio_get_value(encoder->gpio_b);
-> +	int i;
-> +	unsigned ret =3D 0;
-> =20
-> -	a ^=3D encoder->inverted_a;
-> -	b ^=3D encoder->inverted_b;
-> +	for (i =3D 0; i < encoder->gpios->ndescs; ++i) {
-> +		int val =3D gpiod_get_value(encoder->gpios->desc[i]);
-> +		/* convert from gray encoding to normal */
-> +		if (ret & 1)
-> +			val =3D !val;
-> =20
-> -	return ((a << 1) | b);
-> +		ret =3D ret << 1 | val;
-> +	}
-> +
-> +	return ret & 3;
->  }
-> =20
->  static void rotary_encoder_report_event(struct rotary_encoder *encod=
-er)
->  {
->  	if (encoder->relative_axis) {
->  		input_report_rel(encoder->input,
-> -				 encoder->axis, encoder->dir ? -1 : 1);
-> +				 encoder->axis, encoder->dir);
->  	} else {
->  		unsigned int pos =3D encoder->pos;
-> =20
-> -		if (encoder->dir) {
-> +		if (encoder->dir < 0) {
->  			/* turning counter-clockwise */
->  			if (encoder->rollover)
->  				pos +=3D encoder->steps;
-> @@ -112,12 +113,12 @@ static irqreturn_t rotary_encoder_irq(int irq, =
-void *dev_id)
->  		break;
-> =20
->  	case 0x1:
-> -	case 0x2:
-> +	case 0x3:
->  		if (encoder->armed)
-> -			encoder->dir =3D state - 1;
-> +			encoder->dir =3D 2 - state;
->  		break;
-> =20
-> -	case 0x3:
-> +	case 0x2:
->  		encoder->armed =3D true;
->  		break;
->  	}
-> @@ -134,7 +135,7 @@ static irqreturn_t rotary_encoder_half_period_irq=
-(int irq, void *dev_id)
-> =20
->  	switch (state) {
->  	case 0x00:
-> -	case 0x03:
-> +	case 0x02:
->  		if (state !=3D encoder->last_stable) {
->  			rotary_encoder_report_event(encoder);
->  			encoder->last_stable =3D state;
-> @@ -142,8 +143,8 @@ static irqreturn_t rotary_encoder_half_period_irq=
-(int irq, void *dev_id)
->  		break;
-> =20
->  	case 0x01:
-> -	case 0x02:
-> -		encoder->dir =3D (encoder->last_stable + state) & 0x01;
-> +	case 0x03:
-> +		encoder->dir =3D ((encoder->last_stable - state + 1) % 4) - 1;
->  		break;
->  	}
-> =20
-> @@ -212,7 +213,6 @@ static int rotary_encoder_parse_dt(struct device =
-*dev,
->  	const struct of_device_id *of_id =3D
->  				of_match_device(rotary_encoder_of_match, dev);
->  	struct device_node *np =3D dev->of_node;
-> -	enum of_gpio_flags flags;
->  	int error;
-> =20
->  	if (!of_id || !np)
-> @@ -221,12 +221,6 @@ static int rotary_encoder_parse_dt(struct device=
- *dev,
->  	of_property_read_u32(np, "rotary-encoder,steps", &encoder->steps);
->  	of_property_read_u32(np, "linux,axis", &encoder->axis);
-> =20
-> -	encoder->gpio_a =3D of_get_gpio_flags(np, 0, &flags);
-> -	encoder->inverted_a =3D flags & OF_GPIO_ACTIVE_LOW;
-> -
-> -	encoder->gpio_b =3D of_get_gpio_flags(np, 1, &flags);
-> -	encoder->inverted_b =3D flags & OF_GPIO_ACTIVE_LOW;
-> -
->  	encoder->relative_axis =3D
->  		of_property_read_bool(np, "rotary-encoder,relative-axis");
->  	encoder->rollover =3D
-> @@ -273,11 +267,6 @@ static int rotary_encoder_parse_pdata(struct dev=
-ice *dev,
-> =20
->  	encoder->steps =3D pdata->steps;
->  	encoder->axis =3D pdata->axis;
-> -	encoder->gpio_a =3D pdata->gpio_a;
-> -	encoder->gpio_b =3D pdata->gpio_b;
-> -	encoder->inverted_a =3D pdata->inverted_a;
-> -	encoder->inverted_b =3D pdata->inverted_b;
-> -	encoder->steps_per_period =3D pdata->steps_per_period;
->  	encoder->relative_axis =3D pdata->relative_axis;
->  	encoder->rollover =3D pdata->rollover;
-> =20
-> @@ -291,6 +280,7 @@ static int rotary_encoder_probe(struct platform_d=
-evice *pdev)
->  	struct input_dev *input;
->  	irq_handler_t handler;
->  	int err;
-> +	unsigned int i;
-> =20
->  	encoder =3D devm_kzalloc(dev, sizeof(struct rotary_encoder), GFP_KE=
-RNEL);
->  	input =3D devm_input_allocate_device(&pdev->dev);
-> @@ -307,6 +297,16 @@ static int rotary_encoder_probe(struct platform_=
-device *pdev)
->  	if (err < 0)
->  		return err;
-> =20
-> +	encoder->gpios =3D devm_gpiod_get_array(dev, NULL, GPIOD_IN);
-> +	if (IS_ERR(encoder->gpios)) {
-> +		dev_err(dev, "unable to get gpios\n");
-> +		return PTR_ERR(encoder->gpios);
-> +	}
-> +	if (encoder->gpios->ndescs < 2) {
-> +		dev_err(dev, "not enough gpios found\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	encoder->input =3D input;
-> =20
->  	input->name =3D pdev->name;
-> @@ -322,25 +322,7 @@ static int rotary_encoder_probe(struct platform_=
-device *pdev)
->  				     encoder->axis, 0, encoder->steps, 0, 1);
->  	}
-> =20
-> -	/* request the GPIOs */
-> -	err =3D devm_gpio_request_one(dev, encoder->gpio_a,
-> -				    GPIOF_IN, dev_name(dev));
-> -	if (err) {
-> -		dev_err(dev, "unable to request GPIO %d\n", encoder->gpio_a);
-> -		return err;
-> -	}
-> -
-> -	err =3D devm_gpio_request_one(dev, encoder->gpio_b,
-> -				    GPIOF_IN, dev_name(dev));
-> -	if (err) {
-> -		dev_err(dev, "unable to request GPIO %d\n", encoder->gpio_b);
-> -		return err;
-> -	}
-> -
-> -	encoder->irq_a =3D gpio_to_irq(encoder->gpio_a);
-> -	encoder->irq_b =3D gpio_to_irq(encoder->gpio_b);
-> -
-> -	switch (encoder->steps_per_period) {
-> +	switch (encoder->steps_per_period >> (encoder->gpios->ndescs - 2)) =
-{
->  	case 4:
->  		handler =3D &rotary_encoder_quarter_period_irq;
->  		encoder->last_stable =3D rotary_encoder_get_state(encoder);
-> @@ -358,20 +340,23 @@ static int rotary_encoder_probe(struct platform=
-_device *pdev)
->  		return -EINVAL;
->  	}
-> =20
-> -	err =3D devm_request_irq(dev, encoder->irq_a, handler,
-> -			       IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
-> -			       DRV_NAME, encoder);
-> -	if (err) {
-> -		dev_err(dev, "unable to request IRQ %d\n", encoder->irq_a);
-> -		return err;
-> -	}
-> +	encoder->irq =3D
-> +		devm_kzalloc(dev,
-> +			     sizeof(*encoder->irq) * encoder->gpios->ndescs,
-> +			     GFP_KERNEL);
-> +	if (!encoder->irq)
-> +		return -ENOMEM;
-> =20
-> -	err =3D devm_request_irq(dev, encoder->irq_b, handler,
-> -			       IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
-> -			       DRV_NAME, encoder);
-> -	if (err) {
-> -		dev_err(dev, "unable to request IRQ %d\n", encoder->irq_b);
-> -		return err;
-> +	for (i =3D 0; i < encoder->gpios->ndescs; ++i) {
-> +		encoder->irq[i] =3D gpiod_to_irq(encoder->gpios->desc[i]);
-> +		err =3D devm_request_irq(dev, encoder->irq[i], handler,
-> +				       IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
-> +				       DRV_NAME, encoder);
-> +		if (err) {
-> +			dev_err(dev, "unable to request IRQ %d (gpio#%d)\n",
-> +				encoder->irq[i], i);
-> +			return err;
-> +		}
->  	}
-> =20
->  	err =3D input_register_device(input);
-> @@ -399,8 +384,9 @@ static int rotary_encoder_suspend(struct device *=
-dev)
->  	struct rotary_encoder *encoder =3D dev_get_drvdata(dev);
-> =20
->  	if (device_may_wakeup(dev)) {
-> -		enable_irq_wake(encoder->irq_a);
-> -		enable_irq_wake(encoder->irq_b);
-> +		unsigned int i;
-> +		for (i =3D 0; i < encoder->gpios->ndescs; ++i)
-> +			enable_irq_wake(encoder->irq[i]);
->  	}
-> =20
->  	return 0;
-> @@ -411,8 +397,9 @@ static int rotary_encoder_resume(struct device *d=
-ev)
->  	struct rotary_encoder *encoder =3D dev_get_drvdata(dev);
-> =20
->  	if (device_may_wakeup(dev)) {
-> -		disable_irq_wake(encoder->irq_a);
-> -		disable_irq_wake(encoder->irq_b);
-> +		unsigned int i;
-> +		for (i =3D 0; i < encoder->gpios->ndescs; ++i)
-> +			disable_irq_wake(encoder->irq[i]);
->  	}
-> =20
->  	return 0;
-> diff --git a/include/linux/rotary_encoder.h b/include/linux/rotary_en=
-coder.h
-> index fe3dc64e5aeb..4536c813a1e9 100644
-> --- a/include/linux/rotary_encoder.h
-> +++ b/include/linux/rotary_encoder.h
-> @@ -4,10 +4,6 @@
->  struct rotary_encoder_platform_data {
->  	unsigned int steps;
->  	unsigned int axis;
-> -	unsigned int gpio_a;
-> -	unsigned int gpio_b;
-> -	unsigned int inverted_a;
-> -	unsigned int inverted_b;
->  	unsigned int steps_per_period;
->  	bool relative_axis;
->  	bool rollover;
-> --=20
-> 2.6.2
->=20
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhhbmtzIEEgbG90IQ0KDQpSZWdhcmRzLA0KDQpZaSBNZW5nDQoNCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18NCreivP7IyzogU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJu
+ZWwub3JnPg0Kt6LLzcqxvOQ6IDIwMTXE6jEy1MIyyNUgMjA6NDANCsrVvP7IyzogWWkgTWVuZy1C
+NTY3OTkNCrOty806IEppYW53ZWkgV2FuZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IFhp
+dWJvIExpOyBXYW5nIEh1YW4tQjE4OTY1OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBs
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCtb3zOI6IFJlOiBbUEFUQ0ggMS8y
+XSBBUk06IGR0czogbHMxMDIxYTogQWRkIERDVSBkdHMgbm9kZS4NCg0KT24gV2VkLCBOb3YgMjUs
+IDIwMTUgYXQgMDI6NDY6MDZQTSArMDgwMCwgTWVuZyBZaSB3cm90ZToNCj4gU2lnbmVkLW9mZi1i
+eTogQWxpc29uIFdhbmcgPGIxODk2NUBmcmVlc2NhbGUuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBY
+aXVibyBMaSA8bGl4aXVib0BjbXNzLmNoaW5hbW9iaWxlLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTog
+SmlhbndlaSBXYW5nIDxqaWFud2VpLndhbmcuY2huQGdtYWlsLmNvbT4NCg0KRm9yZ290IHRvIG1l
+bnRpb24gdGhhdCB5b3UgbWlzc2VkIGFkZGluZyB5b3VyIG93biBTb0IuICBBZGRlZCB3aGVuDQph
+cHBseWluZy4NCg0KU2hhd24NCg0KPiAtLS0NCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEu
+ZHRzaSB8IDEwICsrKysrKysrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCsp
+DQo+DQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9sczEwMjFhLmR0c2kgYi9hcmNo
+L2FybS9ib290L2R0cy9sczEwMjFhLmR0c2kNCj4gaW5kZXggOTQzMGE5OS4uZjAxYzk4YiAxMDA2
+NDQNCj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvbHMxMDIxYS5kdHNpDQo+ICsrKyBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaQ0KPiBAQCAtNDI4LDYgKzQyOCwxNiBAQA0KPiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZwbGF0Zm9ybV9jbGsgMT47DQo+ICAgICAgICAg
+ICAgICAgfTsNCj4NCj4gKyAgICAgICAgICAgICBkY3U6IGRjdUAyY2UwMDAwIHsNCj4gKyAgICAg
+ICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGxzMTAyMWEtZGN1IjsNCj4gKyAgICAg
+ICAgICAgICAgICAgICAgIHJlZyA9IDwweDAgMHgyY2UwMDAwIDB4MCAweDEwMDAwPjsNCj4gKyAg
+ICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSAxNzIgSVJRX1RZUEVfTEVW
+RUxfSElHSD47DQo+ICsgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JnBsYXRmb3JtX2Ns
+ayAwPjsNCj4gKyAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gImRjdSI7DQo+ICsg
+ICAgICAgICAgICAgICAgICAgICBiaWctZW5kaWFuOw0KPiArICAgICAgICAgICAgICAgICAgICAg
+c3RhdHVzID0gImRpc2FibGVkIjsNCj4gKyAgICAgICAgICAgICB9Ow0KPiArDQo+ICAgICAgICAg
+ICAgICAgbWRpbzA6IG1kaW9AMmQyNDAwMCB7DQo+ICAgICAgICAgICAgICAgICAgICAgICBjb21w
+YXRpYmxlID0gImdpYW5mYXIiOw0KPiAgICAgICAgICAgICAgICAgICAgICAgZGV2aWNlX3R5cGUg
+PSAibWRpbyI7DQo+IC0tDQo+IDIuMS4wLjI3Lmc5NmRiMzI0DQo+DQo+DQo+IF9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+IGxpbnV4LWFybS1rZXJuZWwg
+bWFpbGluZyBsaXN0DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
+ZWwNCj4NCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
+bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
+LWFybS1rZXJuZWwK
