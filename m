@@ -1,7 +1,7 @@
 From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 5/7] ARM: dts: imx: Add support for Advantech/GE B450v3
-Date: Wed,  2 Dec 2015 13:16:18 -0500
-Message-ID: <1449080180-31945-6-git-send-email-akshay.bhat@timesys.com>
+Subject: [PATCH v4 2/7] of: Add vendor prefix for General Electric Company
+Date: Wed,  2 Dec 2015 13:16:15 -0500
+Message-ID: <1449080180-31945-3-git-send-email-akshay.bhat@timesys.com>
 References: <1449080180-31945-1-git-send-email-akshay.bhat@timesys.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1449080180-31945-1-git-send-email-akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
@@ -10,117 +10,26 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for Advantech/GE B450v3 board.
+This patch adds vendor prefix for General Electric Company
 
 Signed-off-by: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile         |  1 +
- arch/arm/boot/dts/imx6q-b450v3.dts | 84 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 85 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-b450v3.dts
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 760a737..219830f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -310,6 +310,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6dl-wandboard-revb1.dtb \
- 	imx6q-apf6dev.dtb \
- 	imx6q-arm2.dtb \
-+	imx6q-b450v3.dtb \
- 	imx6q-cm-fx6.dtb \
- 	imx6q-cubox-i.dtb \
- 	imx6q-dfi-fs700-m60.dtb \
-diff --git a/arch/arm/boot/dts/imx6q-b450v3.dts b/arch/arm/boot/dts/imx6q-b450v3.dts
-new file mode 100644
-index 0000000..ba1ec0a
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-b450v3.dts
-@@ -0,0 +1,84 @@
-+/*
-+ * Copyright 2015 Timesys Corporation.
-+ * Copyright 2015 General Electric Company
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6q-bx50v3.dtsi"
-+
-+/ {
-+	model = "Advantech MX6Q B450V3 QSeven Board";
-+	compatible = "ge,imx6q-b450v3", "advantech,imx6q-ba16", "fsl,imx6q";
-+
-+	chosen {
-+		stdout-path = &uart3;
-+	};
-+
-+	panel_lvds0 {
-+		compatible = "innolux,g121x1-l03";
-+		backlight = <&backlight_lvds>;
-+		power-supply = <&reg_lvds>;
-+
-+		port {
-+			panel_in_lvds0: endpoint {
-+				remote-endpoint = <&lvds0_out>;
-+			};
-+		};
-+	};
-+
-+	panel_lvds1 {
-+		compatible = "innolux,g121x1-l03";
-+		backlight = <&backlight_lvds>;
-+		power-supply = <&reg_lvds>;
-+
-+		port {
-+			panel_in_lvds1: endpoint {
-+				remote-endpoint = <&lvds1_out>;
-+			};
-+		};
-+	};
-+};
-+
-+&ldb {
-+	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
-+			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
-+	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
-+				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
-+	status = "okay";
-+
-+	lvds0: lvds-channel@0 {
-+		fsl,data-mapping = "spwg";
-+		fsl,data-width = <24>;
-+		status = "okay";
-+
-+		port@4 {
-+			reg = <4>;
-+
-+			lvds0_out: endpoint {
-+				remote-endpoint = <&panel_in_lvds0>;
-+			};
-+		};
-+	};
-+
-+	lvds1: lvds-channel@1 {
-+		fsl,data-mapping = "spwg";
-+		fsl,data-width = <24>;
-+		status = "okay";
-+
-+		port@4 {
-+			reg = <4>;
-+
-+			lvds1_out: endpoint {
-+				remote-endpoint = <&panel_in_lvds1>;
-+			};
-+		};
-+	};
-+};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index c51bf7c..f1cc839 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -88,6 +88,7 @@ fcs	Fairchild Semiconductor
+ firefly	Firefly
+ focaltech	FocalTech Systems Co.,Ltd
+ fsl	Freescale Semiconductor
++ge	General Electric Company
+ GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+ gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+ geniatech	Geniatech, Inc.
 -- 
 2.6.3
 
