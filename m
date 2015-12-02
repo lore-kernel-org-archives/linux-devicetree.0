@@ -1,108 +1,114 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: vf610: use reset values for L2 cache latencies
-Date: Wed, 2 Dec 2015 16:13:06 +0800
-Message-ID: <20151202081306.GR692@tiger>
-References: <1448935166-2697-1-git-send-email-stefan@agner.ch>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 10/10] dt-bindings: Add DSIv2 documentation
+Date: Wed, 2 Dec 2015 00:20:01 -0800
+Message-ID: <20151202082001.GC4139@codeaurora.org>
+References: <1444827544-25656-1-git-send-email-architt@codeaurora.org>
+ <1447844131-4182-1-git-send-email-architt@codeaurora.org>
+ <1447844131-4182-11-git-send-email-architt@codeaurora.org>
+ <CAL_JsqJufZvsGyxZ40+kPcAVr5mXqCi+Qej_8X6=GRxT9j+5+w@mail.gmail.com>
+ <564C981F.3040907@codeaurora.org>
+ <CAL_JsqJ7PovZsz0=b90bUChKtNra1pXxEjU_DiYAn7JUgShm5Q@mail.gmail.com>
+ <5652AE71.4060609@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1448935166-2697-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <5652AE71.4060609@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Archit Taneja <architt@codeaurora.org>
+Cc: Rob Herring <robh@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 30, 2015 at 05:59:26PM -0800, Stefan Agner wrote:
-> Linux on Vybrid used several different L2 latencies so far, none
-> of them seem to be the right ones. According to the application note
-> AN4947 ("Understanding Vybrid Architecture"), the tag portion runs
-> on CPU clock and is inside the L2 cache controller, whereas the data
-> portion is stored in the external SRAM running on platform clock.
-> Hence it is likely that the correct value requires a higher data
-> latency then tag latency.
+On 11/23, Archit Taneja wrote:
 > 
-> These are the values which have been used so far:
-> - The mainline values:
->   arm,data-latency = <1 1 1>;
->   arm,tag-latency = <2 2 2>;
->   Those values have lead to problems on higher clocks. They look
->   like a poor translation from the reset values (missing +1 offset
->   and a mix up between tag/latency values).
-> - The Linux 3.0 (SoC vendor BSP) values (converted to DT notation):
->   arm,data-latency = <4 2 3>
->   arm,tag-latency = <4 2 3>
->   The cache initialization function along with the value matches the
->   i.MX6 code from the same kernel, so it seems that those values have
->   just been copied.
-> - The Colibri values:
->   arm,data-latency = <2 1 2>;
->   arm,tag-latency = <3 2 3>;
->   Those were a mix between the values of the Linux 3.0 based BSP and
->   the mainline values above.
-> - The SoC Reset values (converted to DT notation):
->   arm,data-latency = <3 3 3>;
->   arm,tag-latency = <2 2 2>;
 > 
-> So far there is no official statement on what the correct values are.
-> See also the related Freescale community thread:
-> https://community.freescale.com/message/579785#579785
+> On 11/21/2015 1:29 AM, Rob Herring wrote:
+> >+Stephen
+> >
+> >On Wed, Nov 18, 2015 at 9:24 AM, Archit Taneja <architt@codeaurora.org> wrote:
+> >>Hi Rob,
+> >>
+> >>On 11/18/2015 6:48 PM, Rob Herring wrote:
+> >>>
+> >>>+dt list
+> >>>
+> >>>On Wed, Nov 18, 2015 at 4:55 AM, Archit Taneja <architt@codeaurora.org>
+> >>>wrote:
+> >>>>
+> >>>>Add additional property info needed for DSIv2 DT.
+> >>>
+> >>>
+> >>>Please use get_maintainers.pl.
+> >>
+> >>
+> >>Sorry about that, missed out doing that posting this time.
+> >>
+> >>>
+> >>>>Signed-off-by: Archit Taneja <architt@codeaurora.org>
+> >>>>---
+> >>>>   Documentation/devicetree/bindings/display/msm/dsi.txt | 10 +++++++++-
+> >>>>   1 file changed, 9 insertions(+), 1 deletion(-)
+> >>>>
+> >>>>diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt
+> >>>>b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> >>>>index f344b9e..ca65a34 100644
+> >>>>--- a/Documentation/devicetree/bindings/display/msm/dsi.txt
+> >>>>+++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> >>>>@@ -13,18 +13,25 @@ Required properties:
+> >>>>   - power-domains: Should be <&mmcc MDSS_GDSC>.
+> >>>>   - clocks: device clocks
+> >>>>     See Documentation/devicetree/bindings/clocks/clock-bindings.txt for
+> >>>>details.
+> >>>>-- clock-names: the following clocks are required:
+> >>>>+- clock-names: these vary based on the DSI version. For DSI6G:
+> >>>>     * "bus_clk"
+> >>>>     * "byte_clk"
+> >>>>+  * "byte_clk_src
+> >>>
+> >>>
+> >>>This sounds like the parent of byte_clk. Is that really a clock within
+> >>>the block?
+> >>
+> >>
+> >>byte_clk_src isn't in the block, but byte_clk_src's parent is one of
+> >>the PLLs in this block. We take this clock so that we can re-parent
+> >>it to an appropriate PLL. The decision of what PLL to choose needs to
+> >>be done by the DSI block's driver.
+> >
+> >Seems like abuse to me. The list of clocks should match what are
+> >inputs to the block, not what the driver happens to need. Without a
+> >full understanding of the clock tree here, I don't have a suggestion.
+> >Maybe Stephen does.
 > 
-> For now, the reset values seem to be the best bet. Remove all other
-> "bogus" values and use the reset value on vf610.dtsi level.
+> We don't need specify byte_clk_src (and other xyz_clk_src clocks) via
+> DT. There is a static link set up between byte_clk and byte_clk_src by
+> our clock driver that never changes. We can retrieve it in the driver
+> itself using clk_get_parent(byte_clk). This way we stick to only
+> input clocks.
 > 
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> ---
-> Hi Shawn,
+> Stephen, does that sound okay?
 > 
-> Any chance to get this into 4.4?
 
-I can try.  Generally, upstream maintainers are becoming more strict for
--rc inclusion after -rc3 phase.  Do you have any user stories about why
-this is a critical/urgent fix?  If we send this a critical fix for 4.4-rc
-inclusion, do we need to Cc stable?
+I guess so. From the DT perspective it's "correct" so sure.
 
-Shawn
+It would be nice if we could use assigned-clock-parents though.
+As far as I can recall that's hard because the clock tree looks
+like a cyclic graph when we take a clock provider level view. The
+display block consumes the byte_clk and provides the source of it
+too. So if we used assigned parents we would need to wait for
+both clocks to be registered with the framework before we can
+reconfigure the parent of byte_clk_src to be the PLL that the
+display clock outputs. Unfortunately, of_clk_set_defaults() is
+called during device driver probe, which in the display driver
+case would be before the PLL is registered.
 
-> 
-> --
-> Stefan
-> 
->  arch/arm/boot/dts/vf610-colibri.dtsi | 5 -----
->  arch/arm/boot/dts/vf610.dtsi         | 2 +-
->  2 files changed, 1 insertion(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/vf610-colibri.dtsi b/arch/arm/boot/dts/vf610-colibri.dtsi
-> index 19fe045..2d7eab7 100644
-> --- a/arch/arm/boot/dts/vf610-colibri.dtsi
-> +++ b/arch/arm/boot/dts/vf610-colibri.dtsi
-> @@ -18,8 +18,3 @@
->  		reg = <0x80000000 0x10000000>;
->  	};
->  };
-> -
-> -&L2 {
-> -	arm,data-latency = <2 1 2>;
-> -	arm,tag-latency = <3 2 3>;
-> -};
-> diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
-> index 5f8eb1b..58bc6e4 100644
-> --- a/arch/arm/boot/dts/vf610.dtsi
-> +++ b/arch/arm/boot/dts/vf610.dtsi
-> @@ -19,7 +19,7 @@
->  		reg = <0x40006000 0x1000>;
->  		cache-unified;
->  		cache-level = <2>;
-> -		arm,data-latency = <1 1 1>;
-> +		arm,data-latency = <3 3 3>;
->  		arm,tag-latency = <2 2 2>;
->  	};
->  };
-> -- 
-> 2.6.2
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+My only thought there would be to make of_clk_set_defaults() wait
+until both clocks are registered before it does any parent
+setting. But only in the case where the assigned parents contains
+a clock that is provided by the node being processed. I suppose
+the simplest thing to do would be to skip it during the device
+driver probe and handle it when the clk provider is registered.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
