@@ -1,63 +1,55 @@
-From: Meng Yi <B56799@freescale.com>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIIDEvMl0gQVJNOiBkdHM6IGxzMTAyMWE6IEFkZCBEQ1Ug?=
- =?gb2312?Q?dts_node.?=
-Date: Wed, 2 Dec 2015 14:29:36 +0000
-Message-ID: <DM2PR0301MB0912F64ECB3624D1751FADD68F0E0@DM2PR0301MB0912.namprd03.prod.outlook.com>
-References: <1448433967-6710-1-git-send-email-b56799@freescale.com>,
- <20151202124003.GS692@tiger>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 net-next 2/2] ravb: add device tree support for
+ r8a779[123]
+Date: Wed, 2 Dec 2015 08:31:08 -0600
+Message-ID: <20151202143108.GA17738@rob-hp-laptop>
+References: <1449035913-9129-1-git-send-email-horms+renesas@verge.net.au>
+ <1449035913-9129-3-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20151202124003.GS692@tiger>
-Content-Language: zh-CN
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Jianwei Wang <jianwei.wang.chn@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xiubo Li <lixiubo@cmss.chinamobile.com>, Huan Wang <alison.wang@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1449035913-9129-3-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: netdev@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhhbmtzIEEgbG90IQ0KDQpSZWdhcmRzLA0KDQpZaSBNZW5nDQoNCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18NCreivP7IyzogU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJu
-ZWwub3JnPg0Kt6LLzcqxvOQ6IDIwMTXE6jEy1MIyyNUgMjA6NDANCsrVvP7IyzogWWkgTWVuZy1C
-NTY3OTkNCrOty806IEppYW53ZWkgV2FuZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IFhp
-dWJvIExpOyBXYW5nIEh1YW4tQjE4OTY1OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBs
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCtb3zOI6IFJlOiBbUEFUQ0ggMS8y
-XSBBUk06IGR0czogbHMxMDIxYTogQWRkIERDVSBkdHMgbm9kZS4NCg0KT24gV2VkLCBOb3YgMjUs
-IDIwMTUgYXQgMDI6NDY6MDZQTSArMDgwMCwgTWVuZyBZaSB3cm90ZToNCj4gU2lnbmVkLW9mZi1i
-eTogQWxpc29uIFdhbmcgPGIxODk2NUBmcmVlc2NhbGUuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBY
-aXVibyBMaSA8bGl4aXVib0BjbXNzLmNoaW5hbW9iaWxlLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTog
-SmlhbndlaSBXYW5nIDxqaWFud2VpLndhbmcuY2huQGdtYWlsLmNvbT4NCg0KRm9yZ290IHRvIG1l
-bnRpb24gdGhhdCB5b3UgbWlzc2VkIGFkZGluZyB5b3VyIG93biBTb0IuICBBZGRlZCB3aGVuDQph
-cHBseWluZy4NCg0KU2hhd24NCg0KPiAtLS0NCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEu
-ZHRzaSB8IDEwICsrKysrKysrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCsp
-DQo+DQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9sczEwMjFhLmR0c2kgYi9hcmNo
-L2FybS9ib290L2R0cy9sczEwMjFhLmR0c2kNCj4gaW5kZXggOTQzMGE5OS4uZjAxYzk4YiAxMDA2
-NDQNCj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvbHMxMDIxYS5kdHNpDQo+ICsrKyBiL2FyY2gv
-YXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaQ0KPiBAQCAtNDI4LDYgKzQyOCwxNiBAQA0KPiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZwbGF0Zm9ybV9jbGsgMT47DQo+ICAgICAgICAg
-ICAgICAgfTsNCj4NCj4gKyAgICAgICAgICAgICBkY3U6IGRjdUAyY2UwMDAwIHsNCj4gKyAgICAg
-ICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGxzMTAyMWEtZGN1IjsNCj4gKyAgICAg
-ICAgICAgICAgICAgICAgIHJlZyA9IDwweDAgMHgyY2UwMDAwIDB4MCAweDEwMDAwPjsNCj4gKyAg
-ICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSAxNzIgSVJRX1RZUEVfTEVW
-RUxfSElHSD47DQo+ICsgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JnBsYXRmb3JtX2Ns
-ayAwPjsNCj4gKyAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gImRjdSI7DQo+ICsg
-ICAgICAgICAgICAgICAgICAgICBiaWctZW5kaWFuOw0KPiArICAgICAgICAgICAgICAgICAgICAg
-c3RhdHVzID0gImRpc2FibGVkIjsNCj4gKyAgICAgICAgICAgICB9Ow0KPiArDQo+ICAgICAgICAg
-ICAgICAgbWRpbzA6IG1kaW9AMmQyNDAwMCB7DQo+ICAgICAgICAgICAgICAgICAgICAgICBjb21w
-YXRpYmxlID0gImdpYW5mYXIiOw0KPiAgICAgICAgICAgICAgICAgICAgICAgZGV2aWNlX3R5cGUg
-PSAibWRpbyI7DQo+IC0tDQo+IDIuMS4wLjI3Lmc5NmRiMzI0DQo+DQo+DQo+IF9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+IGxpbnV4LWFybS1rZXJuZWwg
-bWFpbGluZyBsaXN0DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
-ZWwNCj4NCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
-bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
-LWFybS1rZXJuZWwK
+On Wed, Dec 02, 2015 at 02:58:33PM +0900, Simon Horman wrote:
+> Simply document new compatibility strings.
+> As a previous patch adds a generic R-Car Gen2 compatibility string
+> there appears to be no need for a driver updates.
+> 
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> 
+> ---
+> v2
+> * No change
+> ---
+>  Documentation/devicetree/bindings/net/renesas,ravb.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> index 7555116b5db2..81a9f9e6b45f 100644
+> --- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> +++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> @@ -5,6 +5,9 @@ interface contains.
+>  
+>  Required properties:
+>  - compatible: "renesas,etheravb-r8a7790" if the device is a part of R8A7790 SoC.
+> +	      "renesas,etheravb-r8a7791" if the device is a part of R8A7791 SoC.
+> +	      "renesas,etheravb-r8a7792" if the device is a part of R8A7792 SoC.
+> +	      "renesas,etheravb-r8a7793" if the device is a part of R8A7793 SoC.
+>  	      "renesas,etheravb-r8a7794" if the device is a part of R8A7794 SoC.
+>  	      "renesas,etheravb-r8a7795" if the device is a part of R8A7795 SoC.
+>  	      "renesas,etheravb-rcar-gen2" for generic R-Car Gen 2 compatible interface.
+> -- 
+> 2.1.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
