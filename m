@@ -1,103 +1,101 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH (v6) 1/2] mtd: brcmnand: Add brcm,bcm63268-nand device
- tree binding
-Date: Wed, 2 Dec 2015 11:05:55 -0800
-Message-ID: <20151202190555.GJ64635@google.com>
-References: <56506D55.3000907@simon.arlott.org.uk>
- <20151122215945.GA5930@rob-hp-laptop>
- <56523E85.905@simon.arlott.org.uk>
- <56523EFF.9050502@simon.arlott.org.uk>
- <56535977.9050201@gmail.com>
- <56541BD3.4070202@simon.arlott.org.uk>
- <5654AF69.7040901@gmail.com>
- <afc6fb02d51a5378e315ade84a134eaf7a58a94f@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] watchdog: imx2_wdt: add external reset support via
+ 'ext-reset-output' dt prop
+Date: Wed, 2 Dec 2015 14:11:00 -0500
+Message-ID: <565F4244.7090502@timesys.com>
+References: <1446758362-11702-1-git-send-email-akshay.bhat@timesys.com>
+ <1446758362-11702-2-git-send-email-akshay.bhat@timesys.com>
+ <20151105222325.GA26159@roeck-us.net>
+ <CAJ+vNU2fSxRJ7YvxOfNzoEoiKgzv-dHj=+eksKxH48ekHiUw2Q@mail.gmail.com>
+ <20151106220249.GA19791@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <afc6fb02d51a5378e315ade84a134eaf7a58a94f-dyyJQ+qCPjsfFgGGEbPnq5KvX+y0N6jJ2mWzQvkZbzCn6nfhxgf73RdaaeUjXGGo@public.gmane.org>
+In-Reply-To: <20151106220249.GA19791-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+ Broadcom list + Kamal
 
-On Tue, Nov 24, 2015 at 08:19:37PM -0000, Simon Arlott wrote:
-> Add device tree binding for NAND on the BCM63268.
-> 
-> The BCM63268 has a NAND interrupt register with combined status and enable
-> registers.
-> 
-> Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-> ---
->  .../devicetree/bindings/mtd/brcm,brcmnand.txt      | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> index 4ff7128..f2a71c8 100644
-> --- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> @@ -72,6 +72,14 @@ we define additional 'compatible' properties and associated register resources w
->         and enable registers
->       - reg-names: (required) "nand-int-base"
-> 
-> +   * "brcm,nand-bcm63268"
-> +     - compatible: should contain "brcm,nand-bcm<soc>", "brcm,nand-bcm63268"
 
-Looks like you're aiming to support bcm63168? Is bcm63268 the first
-chip to include this style of register then? The numbering seems
-backwards, but that may just be reality.
+On 11/06/2015 05:02 PM, Guenter Roeck wrote:
+> On Fri, Nov 06, 2015 at 11:53:42AM -0800, Tim Harvey wrote:
+>> On Thu, Nov 5, 2015 at 2:23 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+>>> On Thu, Nov 05, 2015 at 04:19:21PM -0500, Akshay Bhat wrote:
+>>>> From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+>>>>
+>>>> The IMX6 watchdog supports assertion of a signal (WDOG_B) which
+>>>> can be pinmux'd to an external pin. This is typically used for boards that
+>>>> have PMIC's in control of the IMX6 power rails. In fact, failure to use
+>>>> such an external reset on boards with external PMIC's can result in various
+>>>> hangs due to the IMX6 not being fully reset [1] as well as the board failing
+>>>> to reset because its PMIC has not been reset to provide adequate voltage for
+>>>> the CPU when coming out of reset at 800Mhz.
+>>>>
+>>>> This uses a new device-tree property 'ext-reset-output' to indicate the
+>>>> board has such a reset and to cause the watchdog to be configured to assert
+>>>> WDOG_B instead of an internal reset both on a watchdog timeout and in
+>>>> system_restart.
+>>>>
+>>>> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/333689.html
+>>>>
+>>>> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>>> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+>>>> ---
+>>>>   .../devicetree/bindings/watchdog/fsl-imx-wdt.txt     |  2 ++
+>>>>   drivers/watchdog/imx2_wdt.c                          | 20 ++++++++++++++++++--
+>>>>   2 files changed, 20 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+>>>> index 8dab6fd..9b89b3a 100644
+>>>> --- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+>>>> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+>>>> @@ -9,6 +9,8 @@ Optional property:
+>>>
+>>> properties ?
+>>>
+>>>>   - big-endian: If present the watchdog device's registers are implemented
+>>>>     in big endian mode, otherwise in native mode(same with CPU), for more
+>>>>     detail please see: Documentation/devicetree/bindings/regmap/regmap.txt.
+>>>> +- ext-reset-output: If present the watchdog device is configured to assert its
+>>>
+>>> Should that have a vendor prefix ? Also, not sure if "-output"
+>>> has any real value in the property name. "fsl,external-reset", maybe ?
+>>
+>> Hi Guenter,
+>>
+>> I don't see why a vendor prefix is necessary - its a feature of the
+>> IMX6 watchdog supported by this driver to be able to trigger an
+>> internal chip-level reset and/or an external signal that can be hooked
+>> to additional hardware.
+>>
+> Sounded like vendor specific to me, but then I am not a devicetree maintainer,
+> so I am not an authority on the subject.
 
-> +     - reg: (required) the 'NAND_INTR_BASE' register range, with combined status
-> +       and enable registers, and boot address registers
-> +     - reg-names: (required) "nand-intr-base"
-> +     - clock: (required) reference to the clock for the NAND controller
-> +     - clock-names: (required) "nand"
-> +
->     * "brcm,nand-iproc"
->       - reg: (required) the "IDM" register range, for interrupt enable and APB
->         bus access endianness configuration, and the "EXT" register range,
-> @@ -148,3 +156,30 @@ nand@f0442800 {
->  		};
->  	};
->  };
-> +
-> +nand@10000200 {
-> +	compatible = "brcm,nand-bcm63168", "brcm,nand-bcm63268",
-> +		"brcm,brcmnand-v4.0", "brcm,brcmnand";
-> +	reg = <0x10000200 0x180>,
-> +	      <0x10000600 0x200>,
-> +	      <0x100000b0 0x10>;
-> +	reg-names = "nand", "nand-cache", "nand-intr-base";
-> +	interrupt-parent = <&periph_intc>;
-> +	interrupts = <50>;
-> +	clocks = <&periph_clk 20>;
-> +	clock-names = "nand";
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	nand0: nandcs@0 {
-> +		compatible = "brcm,nandcs";
-> +		reg = <0>;
-> +		nand-on-flash-bbt;
-> +		nand-ecc-strength = <1>;
-> +		nand-ecc-step-size = <512>;
-> +
-> +		#address-cells = <0>;
-> +		#size-cells = <0>;
+Devicetree maintainers,
 
-What are these {address,size}-cells for? If you need them for
-partitioning, then those are wrong -- they shouldn't be zero. Maybe just
-drop them? (I can cut them out when applying, if that's the only change
-to make.)
+Any thoughts?
 
-> +	};
-> +};
+Tim,
 
-Brian
+After looking at all the other watchdog drivers, it does not appear that 
+there is any other processor which uses a similar feature. Since imx is 
+the only processor that appears to support this feature, it might make 
+sense in making this vendor specific. If in the future it is found more 
+processors support a similar functionality, it can be revisited and 
+moved out from being vendor specific?
+
+>
+>> I started with ext-reset, but it was suggested
+>> (http://lists.infradead.org/pipermail/linux-arm-kernel/2015-May/347437.html)
+>> to also make it clear that this is an 'output' and not a reset input.
+>>
+> No problem, as long as you get an Ack from a devicetree maintainer.
+>
+> Guenter
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
