@@ -1,99 +1,121 @@
-From: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH v3] arm64: dts: add all hi6220 i2c nodes
-Date: Wed, 2 Dec 2015 17:06:31 +0800
-Message-ID: <565EB497.6080700@hisilicon.com>
-References: <1449037749-14388-1-git-send-email-kong.kongxinwei@hisilicon.com> <20151202073427.GM692@tiger>
+From: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH V3] ARM: dts: imx6q-icore-rqs: Add Engicam IMX6 Q7 initial support
+Date: Wed, 2 Dec 2015 10:15:35 +0100
+Message-ID: <CAOf5uw=khw+nnVBsc3R63whQ=LAqXX47Y+P+5Nv1NVrL_g4m4g@mail.gmail.com>
+References: <1447665552.3144.6.camel@pengutronix.de>
+	<20151116112931.GA10464@panicking>
+	<1447673895.3144.16.camel@pengutronix.de>
+	<20151116114127.GB10464@panicking>
+	<1447674695.3144.21.camel@pengutronix.de>
+	<20151116115421.GC10464@panicking>
+	<20151116172318.GA513@panicking>
+	<1447752697.3144.47.camel@pengutronix.de>
+	<20151118151030.GA11558@panicking>
+	<CAOf5uw=q7fwh93w7LUQaAV3-+YLDwzL65wB1WB5L2BKUe+Vtpg@mail.gmail.com>
+	<20151202020930.GD692@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151202073427.GM692@tiger>
+In-Reply-To: <20151202020930.GD692@tiger>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi
 
-
-On 2015/12/2 15:34, Shawn Guo wrote:
-> On Wed, Dec 02, 2015 at 02:29:09PM +0800, Xinwei Kong wrote:
->> This patch adds all I2C nodes for the Hi6220 SoC. This hi6220 Soc
->> use this I2C IP of Synopsys Designware for HiKey board.
+On Wed, Dec 2, 2015 at 3:09 AM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Nov 25, 2015 at 07:14:13PM +0100, Michael Trimarchi wrote:
+>> Hi Shawn
 >>
->> Signed-off-by: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 31 +++++++++++++++++++++++++++++++
->>  1 file changed, 31 insertions(+)
+>> On Wed, Nov 18, 2015 at 4:10 PM, Michael Trimarchi
+>> <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+>> > www.engicam.com/en/products/embedded/som/standard/i-core-rqs-m6s-dl-d-q
+>> >
+>> > Signed-off-by: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+>> > ---
+>> > I'm not quite sure how ethernet tuning parameter
+>> > are working in other setup and this seems the
+>> > correct way to use it
+>> >
 >>
->> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
->> index 82d2488..6eae673 100644
->> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
->> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
->> @@ -208,5 +208,36 @@
->>  			clock-names = "uartclk", "apb_pclk";
->>  			status = "disabled";
->>  		};
->> +
->> +		i2c0: i2c@f7100000 {
->> +			compatible = "snps,designware-i2c";
->> +			reg = <0x0 0xf7100000 0x0 0x1000>;
->> +			interrupts = <0 44 4>;
->> +			i2c-sda-hold-time-ns = <300>;
->> +			pinctrl-names = "default";
->> +			pinctrl-0 = <&i2c0_pmx_func &i2c0_cfg_func>;
->> +			status = "disabled";
-> 
-> You got me wrong.  I was asking you to drop property 'clock-names' only,
-> not 'clocks' together.  I do not think it works if you drop property
-> 'clocks', because I see that dw_i2c_plat_probe() will fail if
-> devm_clk_get() fails.  Did you test the patch before posting it out?
+>> As you can see my way to connect the ethernet phy is different. I have
+>> seen that most of the boards put all the tuning under fec but unfortunately
+>> this does not work. I don't know if people check if their value are correctly
+>> written to the phy.
+>
+> Hmm, I'm not sure what example you are looking at.  But here is what I
+> see from arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+>
+> &fec {
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&pinctrl_enet>;
+>         phy-mode = "rgmii";
+>         phy-reset-gpios = <&gpio3 23 GPIO_ACTIVE_LOW>;
+>         txen-skew-ps = <0>;
+>         txc-skew-ps = <3000>;
+>         rxdv-skew-ps = <0>;
+>         rxc-skew-ps = <3000>;
+>         rxd0-skew-ps = <0>;
+>         rxd1-skew-ps = <0>;
+>         rxd2-skew-ps = <0>;
+>         rxd3-skew-ps = <0>;
+>         txd0-skew-ps = <0>;
+>         txd1-skew-ps = <0>;
+>         txd2-skew-ps = <0>;
+>         txd3-skew-ps = <0>;
+>         interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
+>                               <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
+>         status = "okay";
+> };
+>
 
-I am sorry that my Hikey board don't work well. I will fix my board and test
-it.
+Yes sorry, could be only one. According in what I have seen this can
+not work and the information stored in the
+fec parameters are not written in the registers. Other small thing is
+the IMX6/7 default config does not include
+this phy at all, but that is a minor issue. Can you please do the
+final review of my board so I can take care on this
+too for Sabrelite?
 
-Thank you very much.
-xinwei
+Michael
 
-> 
 > Shawn
-> 
->> +		};
->> +
->> +		i2c1: i2c@f7101000 {
->> +			compatible = "snps,designware-i2c";
->> +			reg = <0x0 0xf7101000 0x0 0x1000>;
->> +			interrupts = <0 45 4>;
->> +			i2c-sda-hold-time-ns = <300>;
->> +			pinctrl-names = "default";
->> +			pinctrl-0 = <&i2c1_pmx_func &i2c1_cfg_func>;
->> +			status = "disabled";
->> +		};
->> +
->> +		i2c2: i2c@f7102000 {
->> +			compatible = "snps,designware-i2c";
->> +			reg = <0x0 0xf7102000 0x0 0x1000>;
->> +			interrupts = <0 46 4>;
->> +			i2c-sda-hold-time-ns = <300>;
->> +			pinctrl-names = "default";
->> +			pinctrl-0 = <&i2c2_pmx_func &i2c2_cfg_func>;
->> +			status = "disabled";
->> +		};
->> +
->>  	};
->>  };
->> -- 
->> 1.9.1
+>
 >>
->>
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-i2c" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> .
-> 
+>> > +
+>> > +&fec {
+>> > +       pinctrl-names = "default";
+>> > +       pinctrl-0 = <&pinctrl_enet_3>;
+>> > +       phy-handle = <&eth_phy>;
+>> > +       phy-mode = "rgmii";
+>> > +       status = "okay";
+>> > +       mdio {
+>> > +               eth_phy: ethernet-phy {
+>> > +                       rxc-skew-ps = <1140>;
+>> > +                       txc-skew-ps = <1140>;
+>> > +                       txen-skew-ps = <600>;
+>> > +                       rxdv-skew-ps = <240>;
+>> > +                       rxd0-skew-ps = <420>;
+>> > +                       rxd1-skew-ps = <600>;
+>> > +                       rxd2-skew-ps = <420>;
+>> > +                       rxd3-skew-ps = <240>;
+>> > +                       txd0-skew-ps = <60>;
+>> > +                       txd1-skew-ps = <60>;
+>> > +                       txd2-skew-ps = <60>;
+>> > +                       txd3-skew-ps = <240>;
+>> > +               };
+>> > +       };
+>> > +};
+>> > +
 
+
+
+-- 
+| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
+| COO  -  Founder                                      Cruquiuskade 47 |
+| +31(0)851119172                                 Amsterdam 1018 AM NL |
+|                  [`as] http://www.amarulasolutions.com               |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
