@@ -1,103 +1,35 @@
-From: Jonas Gorski <jogo@openwrt.org>
-Subject: Re: [PATCH] Revert "of/irq: make of_irq_find_parent static"
-Date: Wed, 2 Dec 2015 17:32:44 +0100
-Message-ID: <CAOiHx=m9BCsxQRcEs-ReKujaKo0BRs1V51wX7jzvhgjV0iZkJw@mail.gmail.com>
-References: <1449072887-2734-1-git-send-email-qais.yousef@imgtec.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH RFC 3/4] ARM: bcm2835: specify card detect pin for RPi B
+Date: Wed, 2 Dec 2015 17:33:44 +0100
+Message-ID: <565F1D68.5030503@i2se.com>
+References: <1447949176-21926-1-git-send-email-stefan.wahren@i2se.com>
+ <1447949176-21926-4-git-send-email-stefan.wahren@i2se.com>
+ <565E690B.8020801@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449072887-2734-1-git-send-email-qais.yousef@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Qais Yousef <qais.yousef@imgtec.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, frowand.list@gmail.com, Grant Likely <grant.likely@linaro.org>, David Daney <david.daney@cavium.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <565E690B.8020801-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, Dec 2, 2015 at 5:14 PM, Qais Yousef <qais.yousef@imgtec.com> wrote:
-> This reverts commit 52493d446141b07c8ba28dd6a529513f8b2342bd.
+Am 02.12.2015 um 04:44 schrieb Stephen Warren:
+> On 11/19/2015 09:06 AM, Stefan Wahren wrote:
+>> Only the Raspberry Pi B has a card detect pin. Specify it
+>> on board level because it's not free to use.
+> This seems fine, but it should have no effect in practice; when the SD
+> controller driver gpio_get()s the GPIO, the same setting will be
+> programmed into HW. There's a requirement to use the pinctrl bindings to
+> configure pins to non-GPIO mux settings, but no actual requirement to do
+> so for GPIOs.
 >
-> Signed-off-by: Qais Yousef <qais.yousef@imgtec.com>
->
-> Conflicts:
->         include/linux/of_irq.h
-> ---
-> I have a patch series that is under review that makes use of of_irq_find_parent()
->
-> The affected patch is this:
->
->         https://lkml.org/lkml/2015/11/25/291
->
-> Is it wrong to use this function? If yes, what's the alternative?
-> If no, OK to revert?
+> However, the new node sdhci_cd should be added to some pinctrl-0
+> property or it won't be used.
 
-Make the revert part of the series that needs it, so it won't get
-moved again because of no external users.
-
-also ...
-
->
-> Thanks,
-> Qais
->
->
->  drivers/of/irq.c       | 2 +-
->  include/linux/of_irq.h | 6 ++++++
->  2 files changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index 902b89be7217..45735d56e435 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -53,7 +53,7 @@ EXPORT_SYMBOL_GPL(irq_of_parse_and_map);
->   * Returns a pointer to the interrupt parent node, or NULL if the interrupt
->   * parent could not be determined.
->   */
-> -static struct device_node *of_irq_find_parent(struct device_node *child)
-> +struct device_node *of_irq_find_parent(struct device_node *child)
->  {
->         struct device_node *p;
->         const __be32 *parp;
-> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-> index 039f2eec49ce..0c9ea9fb5b63 100644
-> --- a/include/linux/of_irq.h
-> +++ b/include/linux/of_irq.h
-> @@ -93,6 +93,7 @@ static inline void of_msi_configure(struct device *dev, struct device_node *np)
->   * so declare it here regardless of the CONFIG_OF_IRQ setting.
->   */
->  extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
-> +extern struct device_node *of_irq_find_parent(struct device_node *child);
-
-This is the wrong place to add the prototype, and
-
->  u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in);
->
->  #else /* !CONFIG_OF && !CONFIG_SPARC */
-> @@ -102,6 +103,11 @@ static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
->         return 0;
->  }
->
-> +static inline void *of_irq_find_parent(struct device_node *child)
-> +{
-> +       return NULL;
-> +}
-> +
-
-This is the wrong place to add the inline version. Both need to be
-within the #ifdef CONFIG_OF_IRQ ... #else ... #endif block, as the
-function is not available just with CONFIG_OF.
-
-
->  static inline u32 of_msi_map_rid(struct device *dev,
->                                  struct device_node *msi_np, u32 rid_in)
-
-@Daney:
-
-And this one is at the wrong place as well. Please fix it.
-
-This will break the build if CONFIG_OF is enabled but CONFIG_OF_IRQ
-isn't, and something tries to call these functions.
-
-
-Regards
-Jonas
+This is done in Patch 4
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
