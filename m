@@ -1,126 +1,90 @@
-From: "Simon Arlott" <simon@fire.lp0.eu>
-Subject: Re: [PATCH 1/2] regulator: Add brcm,bcm63xx-regulator device tree
- binding
-Date: Wed, 2 Dec 2015 12:45:50 -0000
-Message-ID: <b7ecdc8ebcdf9582620c22b0e8a4a96d24ba67c1@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
-References: <565A18DD.60108@simon.arlott.org.uk>
-    <20151130121043.GX1929@sirena.org.uk>
-    <565CB1CF.5040306@simon.arlott.org.uk>
-    <20151201221615.GY1929@sirena.org.uk>
+From: Rojhalat Ibrahim <imr@rtschenk.de>
+Subject: Re: [PATCH RFC 0/3] input: rotary_encoder: use more than two gpios as input
+Date: Wed, 02 Dec 2015 13:52:58 +0100
+Message-ID: <2266988.l83Fg404My@pcimr>
+References: <1449050834-31779-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151201221615.GY1929@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jogo@openwrt.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1449050834-31779-1-git-send-email-u.kleine-koenig@pengutronix.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, Guido =?ISO-8859-1?Q?Mart=EDnez?= <guido@vanguardiasur.com.ar>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Rob Herring <robh@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Johan Hovold <johan@kernel.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, December 1, 2015 22:16, Mark Brown wrote:
-> On Mon, Nov 30, 2015 at 08:30:07PM +0000, Simon Arlott wrote:
->
->> +- offset: register offset
->> +- mask: register enable mask
->> +- startup-delay-us: startup time in microseconds
->
-> Why are these in the DT, I would expect that if this is a driver for a
-> specific SoC all these properties would be known as a result of that.
+On Wednesday 02 December 2015 11:07:11 Uwe Kleine-K=F6nig wrote:
+> Hello,
+>=20
+> some time ago I worked on the rotary encoder driver to make it suppor=
+t
+> more than two input lines. This is the (only slightly tested[1]) reba=
+se of
+> this series on top of 4.4-rc2 (from 4.1).
+>=20
+> It would be great to get some feedback, especially (but not only) for=
+ my
+> change to raumfeld.c.
+>=20
+> Before Ezequiel's patch 3a341a4c30d4 ("Input: rotary-encoder - add
+> support for quarter-period mode") we had a dt property
+> "rotary-encoder,half-period" defined. It's presence meant that we had=
+ 2
+> indents per period; it's absence that there is only 1. Ezequiel
+> introduced rotary-encoder,steps-per-period instead when adding suppor=
+t
+> for quarter-period mode (which has 4 indents per period).
+>=20
+> Up to now (i.e. with two inputs) a period has length 4. Now with (say=
+)
+> four inputs a period has length 16 instead. Now how should this be
+> modeled in dt? This series implements that I have to pass
+>=20
+> 	rotary-encoder,steps-per-period =3D <16>;
+>=20
+> now for "quarter-period mode" (i.e. 4 indents per 4 state changes[2])=
+,
+> but that feels unnatural. I'd prefer to set a property to <1> instead=
+,
+> meaning the device has an indent for each state change[2]. half-perio=
+d
+> mode would be <2> and full-period mode would be <4>. But I don't have=
+ a
+> nice name for such a property and maybe it's easier to live with
+> steps-per-period =3D <16>? What do you think?
+>=20
+> Also note that these patches are not as technically versatile as
+> possible. With 4 (n) input lines we could detect a quick rotation whe=
+re the
+> machine's latency only allows to sample after 7 (2^(n-1)-1) state
+> changes. Currently this is not implemented, but can be done later.
+>=20
+> Best regards
+> Uwe
+>=20
 
-This is a driver for multiple SoCs with the same regulator control in
-different places on different SoCs, so the location of it within the misc
-register needs to be provided in the DT:
+AFAIUI the rotary encoder driver only handles incremental encoders not
+absolute encoders. (So in fact the assumed rotary encoder could also be=
+ a
+linear encoder with an incremental interface.) Those encoders almost al=
+ways
+have an interface with two outputs (A, B) with a phase shift of 90 degr=
+ees
+between them. So in this case we have 4 steps per period. Sometimes the=
+re
+is only one line for 1 or 2 steps per period. But I have never seen or
+heard of a device with more than 2 lines (except for the third output w=
+hich
+serves as a reference position index marker).
 
-BCM6362:
-  #define MISC_BASE 0xb0001800 /* Miscellaneous Registers */
-  uint32 miscIddqCtrl; /* 0x48 */
+Do devices wirh more than two outputs actually exist?
+Or is the purpose of supporting more than 2 lines something other than
+connecting an actual encoder to them?
 
-BCM63268/BCM63168:
-  #define MISC_BASE 0xb0001800 /* Miscellaneous Registers */
-  uint32 miscIddqCtrl; /* 0x4c */
+   Rojhalat
 
-
-I'll remove the startup-delay-us property and put a default in the driver.
-
-
-The mask is used as there's one bit per regulator in the register, but
-there's more than one way to express this in the DT:
-
-It currently looks like this:
-  regulators {
-    compatible = "simple-bus";
-    #address-cells = <0>;
-    #size-cells = <0>;
-
-    sar {
-      compatible = "brcm,bcm63168-regulator", "brcm,bcm6345-regulator";
-      regulator-name = "sar_power";
-      regmap = <&misc>;
-      offset = <0x4c>;
-      mask = <0x1>;
-      startup-delay-us = <100000>;
-    };
-
-    ipsec {
-      compatible = "brcm,bcm63168-regulator", "brcm,bcm6345-regulator";
-      regulator-name = "ipsec_power";
-      regmap = <&misc>;
-      offset = <0x4c>;
-      mask = <0x2>;
-      startup-delay-us = <100000>;
-    };
-
-    ...
-  };
-
-  ubus {
-    compatible = "brcm,ubus", "simple-bus";
-    #address-cells = <1>;
-    #size-cells = <1>;
-    ranges;
-
-    misc: syscon@10001800 {
-      compatible = "syscon";
-      reg = <0x10001800 0xd0>;
-    };
-  };
-
-Would this be more appropriate?
-  regulators {
-    compatible = "simple-bus";
-    #address-cells = <0>;
-    #size-cells = <0>;
-
-    misc_iddq_ctrl {
-      compatible = "brcm,bcm63168-regulator", "brcm,bcm6345-regulator";
-      regmap = <&misc>;
-      offset = <0x4c>;
-      #address-cells = <1>;
-      #size-cells = <0>;
-
-      sar@0 {
-        regulator-name = "sar_power";
-      };
-
-      ipsec@1 {
-        regulator-name = "ipsec_power";
-      };
-
-      ...
-    };
-  };
-
-  ubus {
-    compatible = "brcm,ubus", "simple-bus";
-    #address-cells = <1>;
-    #size-cells = <1>;
-    ranges;
-
-    misc: syscon@10001800 {
-      compatible = "syscon";
-      reg = <0x10001800 0xd0>;
-    };
-  };
-
--- 
-Simon Arlott
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
