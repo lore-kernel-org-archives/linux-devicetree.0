@@ -1,47 +1,125 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 10/10] dt-bindings: Add DSIv2 documentation
-Date: Wed, 2 Dec 2015 00:34:04 -0800
-Message-ID: <20151202083404.GD4139@codeaurora.org>
-References: <1444827544-25656-1-git-send-email-architt@codeaurora.org>
- <1447844131-4182-1-git-send-email-architt@codeaurora.org>
- <1447844131-4182-11-git-send-email-architt@codeaurora.org>
- <CAL_JsqJufZvsGyxZ40+kPcAVr5mXqCi+Qej_8X6=GRxT9j+5+w@mail.gmail.com>
- <564C981F.3040907@codeaurora.org>
- <CAL_JsqJ7PovZsz0=b90bUChKtNra1pXxEjU_DiYAn7JUgShm5Q@mail.gmail.com>
- <5652AE71.4060609@codeaurora.org>
- <20151202082001.GC4139@codeaurora.org>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 4/6] pinctrl: meson: Enable GPIO IRQs
+Date: Wed, 02 Dec 2015 09:03:20 +0000
+Message-ID: <565EB3D8.5070400@arm.com>
+References: <1448987062-31225-1-git-send-email-carlo@caione.org>	<1448987062-31225-5-git-send-email-carlo@caione.org>	<565DF211.8000005@arm.com> <CAOQ7t2YN8Ey1vZO4yrn9SdbR7FzPNVY-HGRBZOctLgK1vHo9VA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20151202082001.GC4139@codeaurora.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOQ7t2YN8Ey1vZO4yrn9SdbR7FzPNVY-HGRBZOctLgK1vHo9VA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTIvMDIsIFN0ZXBoZW4gQm95ZCB3cm90ZToKPiAKPiBNeSBvbmx5IHRob3VnaHQgdGhlcmUg
-d291bGQgYmUgdG8gbWFrZSBvZl9jbGtfc2V0X2RlZmF1bHRzKCkgd2FpdAo+IHVudGlsIGJvdGgg
-Y2xvY2tzIGFyZSByZWdpc3RlcmVkIGJlZm9yZSBpdCBkb2VzIGFueSBwYXJlbnQKPiBzZXR0aW5n
-LiBCdXQgb25seSBpbiB0aGUgY2FzZSB3aGVyZSB0aGUgYXNzaWduZWQgcGFyZW50cyBjb250YWlu
-cwo+IGEgY2xvY2sgdGhhdCBpcyBwcm92aWRlZCBieSB0aGUgbm9kZSBiZWluZyBwcm9jZXNzZWQu
-IEkgc3VwcG9zZQo+IHRoZSBzaW1wbGVzdCB0aGluZyB0byBkbyB3b3VsZCBiZSB0byBza2lwIGl0
-IGR1cmluZyB0aGUgZGV2aWNlCj4gZHJpdmVyIHByb2JlIGFuZCBoYW5kbGUgaXQgd2hlbiB0aGUg
-Y2xrIHByb3ZpZGVyIGlzIHJlZ2lzdGVyZWQuCj4gCgpBY3R1YWxseSBpdCBsb29rcyBsaWtlIHdl
-IGFscmVhZHkgaGF2ZSB0aGUgY29kZSBmb3IgdGhhdC4KCglpZiAoY2xrc3BlYy5ucCA9PSBub2Rl
-ICYmICFjbGtfc3VwcGxpZXIpCgkJcmV0dXJuIDA7CgpTbyBhc3NpZ25lZCBwYXJlbnRzIHNob3Vs
-ZCAianVzdCB3b3JrIj8KCi0tIApRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBh
-IG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9y
-YXRpdmUgUHJvamVjdApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+On 01/12/15 19:41, Carlo Caione wrote:
+> On Tue, Dec 1, 2015 at 8:16 PM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+>> On 01/12/15 16:24, Carlo Caione wrote:
+>>> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> 
+>>> +static int meson_irq_domain_alloc(struct irq_domain *domain, unsigned int irq,
+>>> +                               unsigned int nr_irqs, void *arg)
+>>> +{
+>>> +     struct meson_pinctrl *pc = domain->host_data;
+>>> +     struct irq_fwspec *irq_data = arg;
+>>> +     struct irq_fwspec gic_data;
+>>> +     irq_hw_number_t hwirq;
+>>> +     int index, ret, i;
+>>> +
+>>> +     if (irq_data->param_count != 2)
+>>> +             return -EINVAL;
+>>> +
+>>> +     hwirq = irq_data->param[0];
+>>> +     dev_dbg(pc->dev, "%s irq %d, nr %d, hwirq %lu\n",
+>>> +                     __func__, irq, nr_irqs, hwirq);
+>>> +
+>>> +     for (i = 0; i < nr_irqs; i++) {
+>>> +             index = meson_map_gic_irq(domain, hwirq + i);
+>>> +             if (index < 0)
+>>> +                     return index;
+>>> +
+>>> +             irq_domain_set_hwirq_and_chip(domain, irq + i,
+>>> +                                           hwirq + i,
+>>> +                                           &meson_irq_chip,
+>>> +                                           pc);
+>>> +
+>>> +             gic_data.param_count = 3;
+>>> +             gic_data.fwnode = domain->parent->fwnode;
+>>> +             gic_data.param[0] = 0; /* SPI */
+>>> +             gic_data.param[1] = pc->gic_irqs[index];
+>>> +             gic_data.param[1] = IRQ_TYPE_EDGE_RISING;
+> 
+> Oh, this should be gic_data.param[2]. Just noticed.
+> 
+>> That feels quite wrong. Hardcoding the trigger like this and hoping for
+>> a set_type to set it right at a later time is just asking for trouble.
+>> Why can't you use the trigger type that has been provided by the
+>> interrupt descriptor?
+> 
+> In v2 I had the set of fwspec to track number and trigger type of the
+> IRQ, so it was straightforward. With this patch I have moved away from
+> that solution (as you suggested) and I'm using the 'amlogic,irqs-gpio'
+> parameter to track down the IRQ numbers (but not the trigger type).
+> It's the same solution we have in drivers/irqchip/irq-crossbar.c where
+> the trigger type is hardcoded in allocate_gic_irq().
+> If I need to save both the IRQ and the trigger type at this point I
+> wonder if it's better to go back to the set of fwspec or convert the
+> fwspec to of_phandle_args and save that.
+
+No. This should come from the interrupt specifier you are getting from
+the device. You should never make up that information.
+
+Your amlogic,irqs-gpio property gives you a list of downstream
+interrupts. The device connected to your pinctrl HW provides you with
+the upstream interrupt number (which you will map to one of your
+downstream IRQ) and crucially the trigger type. Please look at how the
+TI cross bar works (again).
+
+>>> +static int meson_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
+>>> +{
+>>> +     struct meson_domain *domain = to_meson_domain(chip);
+>>> +     struct meson_pinctrl *pc = domain->pinctrl;
+>>> +     struct meson_bank *bank;
+>>> +     struct irq_fwspec irq_data;
+>>> +     unsigned int hwirq, irq;
+>>> +
+>>> +     hwirq = domain->data->pin_base + offset;
+>>> +
+>>> +     if (meson_get_bank(domain, hwirq, &bank))
+>>> +             return -ENXIO;
+>>> +
+>>> +     irq_data.param_count = 2;
+>>> +     irq_data.param[0] = hwirq;
+>>> +
+>>> +     /* dummy. It will be changed later in meson_irq_set_type */
+>>> +     irq_data.param[1] = IRQ_TYPE_EDGE_RISING;
+>>
+>> Blah. Worse than I though... How do you end-up here? Why can't you
+>> obtain the corresponding of_phandle_args instead of making things up?
+> 
+> because I do not have a of_phandle. This is basically the .to_irq hook
+> of the gpio_chip. This code is being called programmatically from the
+> gpiolib. No DTS/OF involved here.
+> 
+>> This looks mad. Do you really need this?
+> 
+> Well, I'm open to any suggestion on how improve this mess.
+
+The question to answer is: in what circumstances do you have to convert
+a GPIO into an IRQ at runtime? The only case should be "when you
+discover a device having an interrupt pointing to your pinctrl". And in
+this case, you have all the information to reconfigure the HW and assign
+the interrupt.
+
+I really don't get why you want or need to involve gpiolib in this.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
