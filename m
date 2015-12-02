@@ -1,61 +1,94 @@
-From: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-Subject: Re: [PATCH 1/2] regulator: Add brcm,bcm63xx-regulator device tree
- binding
-Date: Wed, 2 Dec 2015 20:26:36 +0000
-Message-ID: <565F53FC.5080309@simon.arlott.org.uk>
-References: <565A18DD.60108@simon.arlott.org.uk>
- <20151130121043.GX1929@sirena.org.uk> <565CB1CF.5040306@simon.arlott.org.uk>
- <20151201221615.GY1929@sirena.org.uk>
- <b7ecdc8ebcdf9582620c22b0e8a4a96d24ba67c1@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
- <20151202125325.GI1929@sirena.org.uk>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH v3 0/3] soc: ti: Introduce wkup_m3_ipc driver
+Date: Wed, 2 Dec 2015 14:29:53 -0600
+Message-ID: <565F54C1.8090407@ti.com>
+References: <1442967294-23837-1-git-send-email-d-gerlach@ti.com> <20151020161843.GE3078@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151202125325.GI1929-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151020161843.GE3078@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>, Suman Anna <s-anna@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Keerty J <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/15 12:53, Mark Brown wrote:
-> On Wed, Dec 02, 2015 at 12:45:50PM -0000, Simon Arlott wrote:
->> On Tue, December 1, 2015 22:16, Mark Brown wrote:
-> 
->> > Why are these in the DT, I would expect that if this is a driver for a
->> > specific SoC all these properties would be known as a result of that.
-> 
->> This is a driver for multiple SoCs with the same regulator control in
->> different places on different SoCs, so the location of it within the misc
->> register needs to be provided in the DT:
-> 
->> BCM6362:
->>   #define MISC_BASE 0xb0001800 /* Miscellaneous Registers */
->>   uint32 miscIddqCtrl; /* 0x48 */
-> 
-> This is the sort of thing you can pick up from the SoC compatible
-> strings.  As things stand there is zero content in this driver that
-> relates to this SoC.
+Hi,
+On 10/20/2015 11:18 AM, Tony Lindgren wrote:
+> Hi all,
+>
+> * Dave Gerlach <d-gerlach@ti.com> [150922 17:20]:
+>> Hi,
+>> This series is version 3 of the code to introduce a wkup_m3_ipc driver
+>> to handle communication between the MPU and Cortex M3 present on TI AM335x
+>> and AM437x SoCs. v2 of this series can be found at [1]. Only patch 3
+>> has been changed based on a request from Tony and a few cleanups:
+>>
+>> - Rather than exporting all of the functionality of the driver, added
+>>    wkup_m3_ipc_get and wkup_m3_ipc_put to allow users to just get a handle
+>>    containing an ops structure for use.
+>>
+>> - Changed all ops (previously exported functions) to take pointer to
+>>    struct wkup_m3_ipc as an argument now that user code will get this
+>>    from wkup_m3_ipc_get.
+>>
+>> - General cleanup to probe function
+>>
+>> - Added MODULE_DEVICE_TABLE so driver can probe automatically.
+>>
+>> The series containing the DT nodes can be found here [2]. The actual dt
+>> nodes for wkup_m3_ipc (last two patches) have been merged but discussion
+>> is still open for the ti,mbox-send-noirq flag patches and depends on the
+>> comments provided for the omap-mailbox change presented in patch 1 of
+>> this series.
+>>
+>> A full branch containing all necessary PM code for both am335x and am437x
+>> has been pushed here [3] to provide a big picture view of the plan for
+>> this series.
+>>
+>> This driver relies on the firmware at [4] in the next-upstream branch
+>> being present in /lib/firmware in the rootfs or built in to the kernel.
+>
+> Anybody got comments on this one? Should I pick up this series or
+> what's the plan?
 
-There's always going to be very little content in the driver that
-relates to this SoC, given that a single bit flip enables/disables
-power.
+Now that Patch 1 has been merged [1] can patch 2 and 3 be picked up? 
+These apply cleanly on v4.4-rc3.
 
-All other device tree drivers allow a register address to be specified
-for the device, how is an offset in the regmap any different?
+Regards,
+Dave
 
->> The mask is used as there's one bit per regulator in the register, but
->> there's more than one way to express this in the DT:
-> 
-> I wouldn't expect to see it in the device tree at all for a device
-> specific driver.
+[1] 
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=8e3c5952144f045a0c81bf674d3f5e1d9aafceb7
 
-If there isn't an individual entry in DT for each regulator, how is it
-supposed to work? There's no #regulator-cells property.
-
--- 
-Simon Arlott
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Regards,
+>
+> Tony
+>
+>
+>> [1] https://lkml.org/lkml/2015/7/17/797
+>> [2] https://lkml.org/lkml/2015/7/17/813
+>> [3] https://github.com/dgerlach/linux-pm/tree/pm-v4.3-rc1-amx3-suspend
+>> [4] https://git.ti.com/ti-cm3-pm-firmware
+>>
+>> Dave Gerlach (3):
+>>    mailbox/omap: Add ti,mbox-send-noirq quirk to fix AM33xx CPU Idle
+>>    Documentation: dt: add bindings for TI Wakeup M3 IPC device
+>>    soc: ti: Add wkup_m3_ipc driver
+>>
+>>   .../devicetree/bindings/mailbox/omap-mailbox.txt   |   8 +
+>>   .../devicetree/bindings/soc/ti/wkup_m3_ipc.txt     |  57 +++
+>>   drivers/mailbox/omap-mailbox.c                     |  49 +-
+>>   drivers/soc/ti/Kconfig                             |  10 +
+>>   drivers/soc/ti/Makefile                            |   1 +
+>>   drivers/soc/ti/wkup_m3_ipc.c                       | 508 +++++++++++++++++++++
+>>   include/linux/wkup_m3_ipc.h                        |  55 +++
+>>   7 files changed, 684 insertions(+), 4 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/soc/ti/wkup_m3_ipc.txt
+>>   create mode 100644 drivers/soc/ti/wkup_m3_ipc.c
+>>   create mode 100644 include/linux/wkup_m3_ipc.h
+>>
+>> --
+>> 2.4.6
+>>
