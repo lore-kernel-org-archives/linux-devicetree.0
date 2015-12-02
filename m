@@ -1,124 +1,86 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] pinctrl: Broadcom NSP GPIO-a device tree bindings
-Date: Wed, 2 Dec 2015 09:07:35 -0600
-Message-ID: <20151202150735.GA6165@rob-hp-laptop>
-References: <1449031598-18849-1-git-send-email-yrdreddy@broadcom.com>
+Subject: Re: [PATCH 1/3] Device tree binding documentation for
+ chromeos-firmware
+Date: Wed, 2 Dec 2015 09:15:52 -0600
+Message-ID: <20151202151552.GA11101@rob-hp-laptop>
+References: <1448997171-7064-1-git-send-email-martyn.welch@collabora.co.uk>
+ <1448997171-7064-2-git-send-email-martyn.welch@collabora.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1449031598-18849-1-git-send-email-yrdreddy@broadcom.com>
+In-Reply-To: <1448997171-7064-2-git-send-email-martyn.welch@collabora.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yendapally Reddy Dhananjaya Reddy <yrdreddy@broadcom.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org
+To: Martyn Welch <martyn.welch@collabora.co.uk>
+Cc: Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 01, 2015 at 11:46:38PM -0500, Yendapally Reddy Dhananjaya Reddy wrote:
-> Device tree binding documentation for Broadcom NSP GPIO-a driver
-
-Bindings are for h/w, not drivers...
-
+On Tue, Dec 01, 2015 at 07:12:49PM +0000, Martyn Welch wrote:
+> This patch adds documentation for the chromeos-firmware binding.
 > 
-> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yrdreddy@broadcom.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.co.uk>
 > ---
->  .../devicetree/bindings/pinctrl/brcm,nsp-gpio.txt  | 80 ++++++++++++++++++++++
->  1 file changed, 80 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt
+>  .../devicetree/bindings/misc/chromeos-firmware.txt | 27 ++++++++++++++++++++++
+
+bindings/firmware/ please.
+
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/chromeos-firmware.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt
+> diff --git a/Documentation/devicetree/bindings/misc/chromeos-firmware.txt b/Documentation/devicetree/bindings/misc/chromeos-firmware.txt
 > new file mode 100644
-> index 0000000..bea4211
+> index 0000000..8240611
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt
-> @@ -0,0 +1,80 @@
-> +Broadcom Northstar plus (NSP) GPIO/PINCONF Controller
+> +++ b/Documentation/devicetree/bindings/misc/chromeos-firmware.txt
+> @@ -0,0 +1,27 @@
+> +Device-Tree bindings for chromeos-firmware.c.
+
+Perhaps a bit more description what this is.
+
+What aspect of this is firmware? How does this relate to the EC?
+
 > +
 > +Required properties:
-> +- compatible:
-> +    Must be "brcm,nsp-gpio-a"
-> +
-> +- reg:
-> +    Should contain the register physical address and length for each of
-> +    GPIO base, IO control registers
-> +
-> +- #gpio-cells:
-> +    Must be two. The first cell is the GPIO pin number (within the
-> +    controller's pin space) and the second cell is used for the following:
-> +    bit[0]: polarity (0 for active high and 1 for active low)
-> +
-> +- gpio-controller:
-> +    Specifies that the node is a GPIO controller
-> +
-> +- ngpios:
-> +    Number of gpios supported (58x25 supports 32 and 58x23 supports 24)
+> +	- compatible = "google,gpio-firmware";
 
-2 chips? You should have 2 compatible strings. I think this is incorrect 
-use of ngpios which AIUI is not for how many lines there are, but how 
-many can be used (e.g. not reserved).
+No versions?
 
 > +
-> +Optional properties:
-> +- interrupts:
-> +    Interrupt ID
+> +Each signal is represented as a sub-node of "chromeos_firmware":
+> +Subnode properties:
 > +
-> +- interrupt-controller:
-> +    Specifies that the node is an interrupt controller
+> +	- gpios: OF device-tree gpio specification.
 > +
-> +- gpio-ranges:
-> +    Specifies the mapping between gpio controller and pin-controllers pins.
-> +    This requires 4 fields in cells defined as -
-> +    1. Phandle of pin-controller.
-> +    2. GPIO base pin offset.
-> +    3  Pin-control base pin offset.
-> +    4. number of gpio pins which are linearly mapped from pin base.
+> +Example nodes:
 > +
-> +Supported generic PINCONF properties in child nodes:
-> +- pins:
-> +    The list of pins (within the controller's own pin space) that properties
-> +    in the node apply to. Pin names are "gpio-<pin>"
-> +
-> +- bias-disable:
-> +    Disable pin bias
-> +
-> +- bias-pull-up:
-> +    Enable internal pull up resistor
-> +
-> +- bias-pull-down:
-> +    Enable internal pull down resistor
-> +
-> +- drive-strength:
-> +    Valid drive strength values include 2, 4, 6, 8, 10, 12, 14, 16 (mA)
-> +
-> +Example:
-> +
-> +	gpioa: gpio-a@18000020 {
+> +	chromeos_firmware {
 
-node names are preferred to be generic, so just "gpio@..."
+This should go under /firmware
 
-> +		compatible = "brcm,nsp-gpio-a";
-> +		reg = <0x18000020 0x100>,
-> +		      <0x1803f1c4 0x1c>;
-> +		#gpio-cells = <2>;
-> +		gpio-controller;
-> +		ngpios = <32>;
-> +		gpio-ranges = <&pinctrl 0 0 31>;
-> +		interrupt-controller;
-> +		interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+> +		compatible = "google,gpio-firmware";
 > +
-> +		/* Hog a few default settings */
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&led>;
-> +		led: led {
-> +			pins = "gpio-1";
-> +			bias-pull-up;
+> +		write-protect {
+
+You need to define what are valid sub nodes. The example is not 
+documentation.
+
+> +			gpios = <&gpx3 0 GPIO_ACTIVE_LOW>;
 > +		};
 > +
-> +		pwr: pwr {
-> +			gpio-hog;
-> +			gpios = <3 1>;
-> +			output-high;
+> +		developer-switch {
+> +			gpios = <&gpx1 3 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		recovery-switch {
+> +			gpios = <&gpx0 7 GPIO_ACTIVE_LOW>;
 > +		};
 > +	};
 > -- 
-> 2.1.0
+> 2.1.4
 > 
