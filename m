@@ -1,74 +1,72 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: Re: [PATCH 1/3] pinctrl: Broadcom NSP GPIO-a device tree bindings
-Date: Wed, 2 Dec 2015 09:32:34 -0800
-Message-ID: <565F2B32.6000808@broadcom.com>
-References: <1449031598-18849-1-git-send-email-yrdreddy@broadcom.com>
- <20151202150735.GA6165@rob-hp-laptop>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 2/2] reset: bcm63xx: Add support for the BCM63xx
+ soft-reset controller
+Date: Wed, 2 Dec 2015 10:03:20 -0800
+Message-ID: <CAGVrzcbjdsbGLuH6T6DSoC5SGN5WDFdM1h1xB5nQyX8wm-Esow@mail.gmail.com>
+References: <565CB83B.7010000@simon.arlott.org.uk> <565CB86F.4040303@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151202150735.GA6165@rob-hp-laptop>
+In-Reply-To: <565CB86F.4040303@simon.arlott.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Yendapally Reddy Dhananjaya Reddy <yrdreddy@broadcom.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org
+To: Simon Arlott <simon@fire.lp0.eu>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Kevin Cernekee <cernekee@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, MIPS Mailing List <linux-mips@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 12/2/2015 7:07 AM, Rob Herring wrote:
-> On Tue, Dec 01, 2015 at 11:46:38PM -0500, Yendapally Reddy Dhananjaya Reddy wrote:
->> Device tree binding documentation for Broadcom NSP GPIO-a driver
+2015-11-30 12:58 GMT-08:00 Simon Arlott <simon@fire.lp0.eu>:
+> The BCM63xx contains a soft-reset controller activated by setting
+> a bit (that must previously have cleared).
 >
-> Bindings are for h/w, not drivers...
->
->>
->> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yrdreddy@broadcom.com>
->> ---
->>   .../devicetree/bindings/pinctrl/brcm,nsp-gpio.txt  | 80 ++++++++++++++++++++++
->>   1 file changed, 80 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt
->> new file mode 100644
->> index 0000000..bea4211
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt
->> @@ -0,0 +1,80 @@
->> +Broadcom Northstar plus (NSP) GPIO/PINCONF Controller
->> +
->> +Required properties:
->> +- compatible:
->> +    Must be "brcm,nsp-gpio-a"
->> +
->> +- reg:
->> +    Should contain the register physical address and length for each of
->> +    GPIO base, IO control registers
->> +
->> +- #gpio-cells:
->> +    Must be two. The first cell is the GPIO pin number (within the
->> +    controller's pin space) and the second cell is used for the following:
->> +    bit[0]: polarity (0 for active high and 1 for active low)
->> +
->> +- gpio-controller:
->> +    Specifies that the node is a GPIO controller
->> +
->> +- ngpios:
->> +    Number of gpios supported (58x25 supports 32 and 58x23 supports 24)
->
-> 2 chips? You should have 2 compatible strings. I think this is incorrect
-> use of ngpios which AIUI is not for how many lines there are, but how
-> many can be used (e.g. not reserved).
->
+> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+> ---
+>  MAINTAINERS                   |   1 +
+>  drivers/reset/Kconfig         |   9 +++
+>  drivers/reset/Makefile        |   1 +
+>  drivers/reset/reset-bcm63xx.c | 134 ++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 145 insertions(+)
+>  create mode 100644 drivers/reset/reset-bcm63xx.c
 
-I believe this is the identical GPIO controller IP that is integrated 
-into two different SoC chip variants. The only difference is the 
-supported number of GPIO pins.
 
-In this case, I believe this is what Linus prefers: 1) Using a single 
-compatible string (tied to the GPIO controller IP); 2) Addressing 
-difference in number of GPIOs using DT property 'ngpios'.
+Could you create a bcm directory and then add your reset-bcm63xx.c
+file there? I have a pending submission for the BCM63138 reset
+controller which is not at all using the same structure and will share
+nothing with your driver.
 
-Thanks,
+[snip]
 
-Ray
+> +static int bcm63xx_reset_xlate(struct reset_controller_dev *rcdev,
+> +       const struct of_phandle_args *reset_spec)
+> +{
+> +       struct bcm63xx_reset_priv *priv = to_bcm63xx_reset_priv(rcdev);
+> +
+> +       if (WARN_ON(reset_spec->args_count != rcdev->of_reset_n_cells))
+> +               return -EINVAL;
+> +
+> +       if (reset_spec->args[0] >= rcdev->nr_resets)
+> +               return -EINVAL;
+
+Should not these two things be moved to the core reset controller code
+based on the #reset-cells value?
+
+[snip]
+
+> +       if (of_property_read_u32(np, "offset", &priv->offset))
+> +               return -EINVAL;
+> +
+> +       /* valid reset bits */
+> +       if (of_property_read_u32(np, "mask", &priv->mask))
+> +               priv->mask = 0xffffffff;
+> +
+> +       priv->rcdev.owner = THIS_MODULE;
+> +       priv->rcdev.ops = &bcm63xx_reset_ops;
+> +       priv->rcdev.nr_resets = 32;
+
+Should not that come from Device Tree, or be computed based on the
+mask property, like hweight_long() or something along these lines?
+
+> +       priv->rcdev.of_node = pdev->dev.of_node;
+> +       priv->rcdev.of_reset_n_cells = 1;
+> +       priv->rcdev.of_xlate = bcm63xx_reset_xlate;
+
+-- 
+Florian
