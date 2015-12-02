@@ -1,66 +1,54 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: Add brcm,bcm63xx-regulator device tree
- binding
-Date: Wed, 2 Dec 2015 12:53:25 +0000
-Message-ID: <20151202125325.GI1929@sirena.org.uk>
-References: <565A18DD.60108@simon.arlott.org.uk>
- <20151130121043.GX1929@sirena.org.uk>
- <565CB1CF.5040306@simon.arlott.org.uk>
- <20151201221615.GY1929@sirena.org.uk>
- <b7ecdc8ebcdf9582620c22b0e8a4a96d24ba67c1@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH 2/4] dmaengine: qcom_bam_dma: clear BAM interrupt only if
+ it is rised
+Date: Wed, 2 Dec 2015 14:56:57 +0200
+Message-ID: <565EEA99.3070207@linaro.org>
+References: <1448961299-15161-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1448961299-15161-3-git-send-email-stanimir.varbanov@linaro.org>
+ <6461444.oollnBsbrb@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Ow93IgaIpYwdfTq+"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b7ecdc8ebcdf9582620c22b0e8a4a96d24ba67c1@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Arlott <simon@fire.lp0.eu>
-Cc: devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jogo@openwrt.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <6461444.oollnBsbrb@wuerfel>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+On 12/01/2015 12:29 PM, Arnd Bergmann wrote:
+> On Tuesday 01 December 2015 11:14:57 Stanimir Varbanov wrote:
+>> +       if (srcs & BAM_IRQ) {
+>>                 clr_mask = readl_relaxed(bam_addr(bdev, 0, BAM_IRQ_STTS));
+>>  
+>> -       /* don't allow reorder of the various accesses to the BAM registers */
+>> -       mb();
+>> +               /*
+>> +                * don't allow reorder of the various accesses to the BAM
+>> +                * registers
+>> +                */
+>> +               mb();
+>>  
+>> -       writel_relaxed(clr_mask, bam_addr(bdev, 0, BAM_IRQ_CLR));
+>> +               writel_relaxed(clr_mask, bam_addr(bdev, 0, BAM_IRQ_CLR));
+>> +       }
+>>
+> 
+> I think the comment here should be moved: change the writel_relaxed()
+> to writel(), which already includes the appropriate barriers, and
 
---Ow93IgaIpYwdfTq+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+If we agree with such a change it should be subject to another patch.
 
-On Wed, Dec 02, 2015 at 12:45:50PM -0000, Simon Arlott wrote:
-> On Tue, December 1, 2015 22:16, Mark Brown wrote:
+> add a comment at the readl_relaxed() to explain why it doesn't need
+> a barrier.
 
-> > Why are these in the DT, I would expect that if this is a driver for a
-> > specific SoC all these properties would be known as a result of that.
+Infact I'm not sure that readl_relaxed(BAM_IRQ_STTS) does not need
+barrier. If I read the code above correctly the mb() should guarantee
+that all load and store operations before it are happened before the
+write to BAM_IRQ_CLR register, and on the other hand if we replace
+writel_relaxed with writel, the writel has wmb() which guarantees only
+store operations. Did I miss something?
 
-> This is a driver for multiple SoCs with the same regulator control in
-> different places on different SoCs, so the location of it within the misc
-> register needs to be provided in the DT:
-
-> BCM6362:
->   #define MISC_BASE 0xb0001800 /* Miscellaneous Registers */
->   uint32 miscIddqCtrl; /* 0x48 */
-
-This is the sort of thing you can pick up from the SoC compatible
-strings.  As things stand there is zero content in this driver that
-relates to this SoC.
-
-> The mask is used as there's one bit per regulator in the register, but
-> there's more than one way to express this in the DT:
-
-I wouldn't expect to see it in the device tree at all for a device
-specific driver.
-
---Ow93IgaIpYwdfTq+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWXunEAAoJECTWi3JdVIfQPIEH/iQfbWhDgPdUMEn+1OMOTvMq
-o1oP8zrqdMlzSKHk/18uaKNjL1eS25rfLzROy6EcQPzpU2do2346oZm+87cEOOZI
-OOvBOrdxjKuUpG1sCB1LpizkbTevSoC6UsbSq+axrkYeaK5Wyl+E90vD33cIL+Uz
-a745hUogv/PL+rtKx3ic+Svenrwvr87QwC2wDcVYBFJU1elLGACnns1KBWEnjHkD
-Ek2IEFrscG0ymsMHXQRvzoEBCy6kjdRYT4FyHFb5M5BHU6+odXC5cXnJGi+CIjI9
-yFL6ltmASgAfr7OSwPOWKeiDuc+IzQ+3WbGoEytV7Ei4ELC/drpAFdg5pojlLZo=
-=McOr
------END PGP SIGNATURE-----
-
---Ow93IgaIpYwdfTq+--
+-- 
+regards,
+Stan
