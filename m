@@ -1,71 +1,104 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: [PATCH] ARM: dts: stm32f429: Boost perfs by remapping SDRAM Bank 1 to 0x0
-Date: Wed,  2 Dec 2015 18:06:52 +0100
-Message-ID: <1449076012-19519-1-git-send-email-mcoquelin.stm32@gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] Revert "of/irq: make of_irq_find_parent static"
+Date: Wed, 2 Dec 2015 11:10:28 -0600
+Message-ID: <CAL_JsqLfFZJ6P6j3ZrjsNNYTqYxyPWMnRTh95NzR1vOm+XtAaA@mail.gmail.com>
+References: <1449072887-2734-1-git-send-email-qais.yousef@imgtec.com> <CAOiHx=m9BCsxQRcEs-ReKujaKo0BRs1V51wX7jzvhgjV0iZkJw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOiHx=m9BCsxQRcEs-ReKujaKo0BRs1V51wX7jzvhgjV0iZkJw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, olof@lixom.net, khilman@kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, Kamil Lulko <rev13@wp.pl>, afaerber@suse.de
+To: Jonas Gorski <jogo@openwrt.org>, Qais Yousef <qais.yousef@imgtec.com>, Carlo Caione <carlo@caione.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-STM32F429 allows to remap FMC SDRAM Bank 1 from 0xc0000000 to 0x0,
-by writing 0x4 to SYSCFG_MEMRMP register.
++Carlo
 
-As mentionned in the reference manual (see chapter 9.3.1), the performance
-gain is really interresting:
-"In remap mode at address 0x0000 0000, the CPU can access the external
-memory via ICode bus instead of System bus which boosts up the
-performance."
+On Wed, Dec 2, 2015 at 10:32 AM, Jonas Gorski <jogo@openwrt.org> wrote:
+> Hi,
+>
+> On Wed, Dec 2, 2015 at 5:14 PM, Qais Yousef <qais.yousef@imgtec.com> wrote:
+>> This reverts commit 52493d446141b07c8ba28dd6a529513f8b2342bd.
+>>
+>> Signed-off-by: Qais Yousef <qais.yousef@imgtec.com>
+>>
+>> Conflicts:
+>>         include/linux/of_irq.h
+>> ---
+>> I have a patch series that is under review that makes use of of_irq_find_parent()
+>>
+>> The affected patch is this:
+>>
+>>         https://lkml.org/lkml/2015/11/25/291
+>>
+>> Is it wrong to use this function? If yes, what's the alternative?
+>> If no, OK to revert?
+>
+> Make the revert part of the series that needs it, so it won't get
+> moved again because of no external users.
 
-These are the dhrystone results with and without the remap enabled:
-Default (SDRAM in 0xc0000000):
----------------------------------
-Microseconds for one run through Dhrystone:   31.8
-Dhrystones per Second:                      31416.9
+There's 2 cases[1] wanting it, so I'm planning to apply for 4.4 since
+we removed it in 4.4.
 
-Remap (SDRAM in 0x0000000):
------------------------------
-Microseconds for one run through Dhrystone:   20.6
-Dhrystones per Second:                      48520.1
+Reverting is perhaps the wrong thing as it conflicts, also needs an
+EXPORT_SYMBOL, and needs to be moved for !OF_IRQ builds as pointed out
+below.
 
-This patch first change the SDRAM start address to 0x0 for STM32429i-EVAL
-board, and also set the dma-range property as the other masters than the M4
-CPU still see SDRAM in 0xc0000000.
+>>  drivers/of/irq.c       | 2 +-
+>>  include/linux/of_irq.h | 6 ++++++
+>>  2 files changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+>> index 902b89be7217..45735d56e435 100644
+>> --- a/drivers/of/irq.c
+>> +++ b/drivers/of/irq.c
+>> @@ -53,7 +53,7 @@ EXPORT_SYMBOL_GPL(irq_of_parse_and_map);
+>>   * Returns a pointer to the interrupt parent node, or NULL if the interrupt
+>>   * parent could not be determined.
+>>   */
+>> -static struct device_node *of_irq_find_parent(struct device_node *child)
+>> +struct device_node *of_irq_find_parent(struct device_node *child)
+>>  {
+>>         struct device_node *p;
+>>         const __be32 *parp;
+>> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+>> index 039f2eec49ce..0c9ea9fb5b63 100644
+>> --- a/include/linux/of_irq.h
+>> +++ b/include/linux/of_irq.h
+>> @@ -93,6 +93,7 @@ static inline void of_msi_configure(struct device *dev, struct device_node *np)
+>>   * so declare it here regardless of the CONFIG_OF_IRQ setting.
+>>   */
+>>  extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
+>> +extern struct device_node *of_irq_find_parent(struct device_node *child);
+>
+> This is the wrong place to add the prototype, and
+>
+>>  u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in);
+>>
+>>  #else /* !CONFIG_OF && !CONFIG_SPARC */
+>> @@ -102,6 +103,11 @@ static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
+>>         return 0;
+>>  }
+>>
+>> +static inline void *of_irq_find_parent(struct device_node *child)
+>> +{
+>> +       return NULL;
+>> +}
+>> +
+>
+> This is the wrong place to add the inline version. Both need to be
+> within the #ifdef CONFIG_OF_IRQ ... #else ... #endif block, as the
+> function is not available just with CONFIG_OF.
+>
+>
+>>  static inline u32 of_msi_map_rid(struct device *dev,
+>>                                  struct device_node *msi_np, u32 rid_in)
+>
+> @Daney:
+>
+> And this one is at the wrong place as well. Please fix it.
+>
+> This will break the build if CONFIG_OF is enabled but CONFIG_OF_IRQ
+> isn't, and something tries to call these functions.
 
-Note that the Discovery board cannot benefit from this feature, since the
-SDRAM is connected to Bank 2.
-
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
----
- arch/arm/boot/dts/stm32429i-eval.dts | 2 +-
- arch/arm/boot/dts/stm32f429.dtsi     | 2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
-index 6964fc9..a717acb 100644
---- a/arch/arm/boot/dts/stm32429i-eval.dts
-+++ b/arch/arm/boot/dts/stm32429i-eval.dts
-@@ -58,7 +58,7 @@
- 	};
- 
- 	memory {
--		reg = <0xc0000000 0x2000000>;
-+		reg = <0x00000000 0x2000000>;
- 	};
- 
- 	aliases {
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index eaf7a72..84e5fb3 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -57,6 +57,8 @@
- 	};
- 
- 	soc {
-+		dma-ranges = <0xc0000000 0x0 0x10000000>;
-+
- 		timer2: timer@40000000 {
- 			compatible = "st,stm32-timer";
- 			reg = <0x40000000 0x400>;
--- 
-1.9.1
+[1] http://www.spinics.net/lists/arm-kernel/msg464847.html
