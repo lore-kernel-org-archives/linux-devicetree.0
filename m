@@ -1,83 +1,99 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 net-next 1/2] ravb: add fallback compatibility strings
-Date: Wed, 2 Dec 2015 08:32:18 -0600
-Message-ID: <20151202143218.GA18640@rob-hp-laptop>
-References: <1449035913-9129-1-git-send-email-horms+renesas@verge.net.au>
- <1449035913-9129-2-git-send-email-horms+renesas@verge.net.au>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v3 1/4] drm: arm: Add DT bindings documentation for HDLCD
+ driver.
+Date: Wed, 2 Dec 2015 14:51:55 +0000
+Message-ID: <20151202145155.GA972@e106497-lin.cambridge.arm.com>
+References: <1449058982-18595-1-git-send-email-Liviu.Dudau@arm.com>
+ <1449058982-18595-2-git-send-email-Liviu.Dudau@arm.com>
+ <20151202142515.GA7404@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1449035913-9129-2-git-send-email-horms+renesas@verge.net.au>
-Sender: netdev-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: netdev@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org
+In-Reply-To: <20151202142515.GA7404@rob-hp-laptop>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 02, 2015 at 02:58:32PM +0900, Simon Horman wrote:
-> Add fallback compatibility strings for R-Car Gen 2 & 3 SoC Families.
-> This is in keeping with the fallback scheme being adopted wherever appropriate
-> for drivers for Renesas SoCs.
-> 
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-> 
-> ---
-> v2
-> * Drop bogus typo non-fix
-> * include "rcar-" in generic bindings
-> ---
->  Documentation/devicetree/bindings/net/renesas,ravb.txt | 9 ++++++++-
->  drivers/net/ethernet/renesas/ravb_main.c               | 2 ++
->  2 files changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-> index b486f3f5f6a3..7555116b5db2 100644
-> --- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
-> +++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-> @@ -7,6 +7,13 @@ Required properties:
->  - compatible: "renesas,etheravb-r8a7790" if the device is a part of R8A7790 SoC.
->  	      "renesas,etheravb-r8a7794" if the device is a part of R8A7794 SoC.
->  	      "renesas,etheravb-r8a7795" if the device is a part of R8A7795 SoC.
-> +	      "renesas,etheravb-rcar-gen2" for generic R-Car Gen 2 compatible interface.
-> +	      "renesas,etheravb-rcar-gen3" for generic R-Car Gen 3 compatible interface.
-> +
-> +	      When compatible with the generic version, nodes must list the
-> +	      SoC-specific version corresponding to the platform first
-> +	      followed by the generic version.
-> +
->  - reg: offset and length of (1) the register block and (2) the stream buffer.
->  - interrupts: A list of interrupt-specifiers, one for each entry in
->  	      interrupt-names.
-> @@ -37,7 +44,7 @@ Optional properties:
->  Example:
->  
->  	ethernet@e6800000 {
-> -		compatible = "renesas,etheravb-r8a7795";
-> +		compatible = "renesas,etheravb-r8a7795", "renesas,etheravb-rcar-gen3";
->  		reg = <0 0xe6800000 0 0x800>, <0 0xe6a00000 0 0x10000>;
->  		interrupt-parent = <&gic>;
->  		interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
-> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-> index 990dc55cdada..c12b163ed7fe 100644
-> --- a/drivers/net/ethernet/renesas/ravb_main.c
-> +++ b/drivers/net/ethernet/renesas/ravb_main.c
-> @@ -1656,7 +1656,9 @@ static int ravb_mdio_release(struct ravb_private *priv)
->  static const struct of_device_id ravb_match_table[] = {
->  	{ .compatible = "renesas,etheravb-r8a7790", .data = (void *)RCAR_GEN2 },
->  	{ .compatible = "renesas,etheravb-r8a7794", .data = (void *)RCAR_GEN2 },
-> +	{ .compatible = "renesas,etheravb-rcar-gen2", .data = (void *)RCAR_GEN2 },
->  	{ .compatible = "renesas,etheravb-r8a7795", .data = (void *)RCAR_GEN3 },
-> +	{ .compatible = "renesas,etheravb-rcar-gen3", .data = (void *)RCAR_GEN3 },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, ravb_match_table);
-> -- 
-> 2.1.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCBEZWMgMDIsIDIwMTUgYXQgMDg6MjU6MTVBTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3Jv
+dGU6Cj4gT24gV2VkLCBEZWMgMDIsIDIwMTUgYXQgMTI6MjI6NTlQTSArMDAwMCwgTGl2aXUgRHVk
+YXUgd3JvdGU6Cj4gPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4KPiA+IENj
+OiBQYXdlbCBNb2xsIDxwYXdlbC5tb2xsQGFybS5jb20+Cj4gPiBDYzogTWFyayBSdXRsYW5kIDxt
+YXJrLnJ1dGxhbmRAYXJtLmNvbT4KPiA+IENjOiBJYW4gQ2FtcGJlbGwgPGlqYytkZXZpY2V0cmVl
+QGhlbGxpb24ub3JnLnVrPgo+ID4gQ2M6IEt1bWFyIEdhbGEgPGdhbGFrQGNvZGVhdXJvcmEub3Jn
+Pgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBMaXZpdSBEdWRhdSA8TGl2aXUuRHVkYXVAYXJtLmNv
+bT4KPiAKPiBJIHN0aWxsIHRoaW5rIHlvdSBzaG91bGQgaGF2ZSBhIG1vcmUgc3BlY2lmaWMgY29t
+cGF0aWJsZSBzdHJpbmcsIGJ1dCAKPiBoZXJlJ3Mgc29tZSByb3BlOgoKOikgTm93IEkgbmVlZCB0
+byBmaW5kIHNvbWUgc29hcCBhbmQgYSBzbWFsbCB3b29kZW4gYm94LgoKPiAKPiBBY2tlZC1ieTog
+Um9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KClRoYW5rcyEKTGl2aXUKCj4gCj4gPiAtLS0K
+PiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybSxoZGxjZC50eHQgICAgICB8
+IDc5ICsrKysrKysrKysrKysrKysrKysrKysKPiA+ICAxIGZpbGUgY2hhbmdlZCwgNzkgaW5zZXJ0
+aW9ucygrKQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9hcm0saGRsY2QudHh0Cj4gPiAKPiA+IGRpZmYgLS1naXQgYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hcm0saGRsY2QudHh0IGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXJtLGhkbGNkLnR4dAo+ID4g
+bmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+IGluZGV4IDAwMDAwMDAuLjc4YmMyNDIKPiA+IC0tLSAv
+ZGV2L251bGwKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L2FybSxoZGxjZC50eHQKPiA+IEBAIC0wLDAgKzEsNzkgQEAKPiA+ICtBUk0gSERMQ0QKPiA+
+ICsKPiA+ICtUaGlzIGlzIGEgZGlzcGxheSBjb250cm9sbGVyIGZvdW5kIG9uIHNldmVyYWwgZGV2
+ZWxvcG1lbnQgcGxhdGZvcm1zIHByb2R1Y2VkCj4gPiArYnkgQVJNIEx0ZCBhbmQgaW4gbW9yZSBt
+b2Rlcm4gb2YgaXRzJyBGYXN0IE1vZGVscy4gVGhlIEhETENEIGlzIGFuIFJHQgo+ID4gK3N0cmVh
+bWVyIHRoYXQgcmVhZHMgdGhlIGRhdGEgZnJvbSBhIGZyYW1lYnVmZmVyIGFuZCBzZW5kcyBpdCB0
+byBhIHNpbmdsZQo+ID4gK2RpZ2l0YWwgZW5jb2RlciAoRFZJIG9yIEhETUkpLgo+ID4gKwo+ID4g
+K1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiArICAtIGNvbXBhdGlibGU6ICJhcm0saGRsY2QiCj4g
+PiArICAtIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIGNvbnRy
+b2xsZXIncyByZWdpc3RlcnMuCj4gPiArICAtIGludGVycnVwdHM6IE9uZSBpbnRlcnJ1cHQgdXNl
+ZCBieSB0aGUgZGlzcGxheSBjb250cm9sbGVyIHRvIG5vdGlmeSB0aGUKPiA+ICsgICAgaW50ZXJy
+dXB0IGNvbnRyb2xsZXIgd2hlbiBhbnkgb2YgdGhlIGludGVycnVwdCBzb3VyY2VzIHByb2dyYW1t
+ZWQgaW4KPiA+ICsgICAgdGhlIGludGVycnVwdCBtYXNrIHJlZ2lzdGVyIGhhdmUgYWN0aXZhdGVk
+Lgo+ID4gKyAgLSBjbG9ja3M6IEEgbGlzdCBvZiBwaGFuZGxlICsgY2xvY2stc3BlY2lmaWVyIHBh
+aXJzLCBvbmUgZm9yIGVhY2gKPiA+ICsgICAgZW50cnkgaW4gJ2Nsb2NrLW5hbWVzJy4KPiA+ICsg
+IC0gY2xvY2stbmFtZXM6IEEgbGlzdCBvZiBjbG9jayBuYW1lcy4gRm9yIEhETENEIGl0IHNob3Vs
+ZCBjb250YWluOgo+ID4gKyAgICAgIC0gInB4bGNsayIgZm9yIHRoZSBjbG9jayBmZWVkaW5nIHRo
+ZSBvdXRwdXQgUExMIG9mIHRoZSBjb250cm9sbGVyLgo+ID4gKwo+ID4gK1JlcXVpcmVkIHN1Yi1u
+b2RlczoKPiA+ICsgIC0gcG9ydDogVGhlIEhETENEIGNvbm5lY3Rpb24gdG8gYW4gZW5jb2RlciBj
+aGlwLiBUaGUgY29ubmVjdGlvbiBpcyBtb2RlbGVkCj4gPiArICAgIHVzaW5nIHRoZSBPRiBncmFw
+aCBiaW5kaW5ncyBzcGVjaWZpZWQgaW4KPiA+ICsgICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2dyYXBoLnR4dC4KPiA+ICsKPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ID4g
+KyAgLSBtZW1vcnktcmVnaW9uOiBwaGFuZGxlIHRvIGEgbm9kZSBkZXNjcmliaW5nIG1lbW9yeSAo
+c2VlCj4gPiArICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1t
+ZW1vcnkvcmVzZXJ2ZWQtbWVtb3J5LnR4dCkgdG8gYmUKPiA+ICsgICAgdXNlZCBmb3IgdGhlIGZy
+YW1lYnVmZmVyOyBpZiBub3QgcHJlc2VudCwgdGhlIGZyYW1lYnVmZmVyIG1heSBiZSBsb2NhdGVk
+Cj4gPiArICAgIGFueXdoZXJlIGluIG1lbW9yeS4KPiA+ICsKPiA+ICsKPiA+ICtFeGFtcGxlOgo+
+ID4gKwo+ID4gKy8gewo+ID4gKwkuLi4KPiA+ICsKPiA+ICsJaGRsY2RAMmIwMDAwMDAgewo+ID4g
+KwkJY29tcGF0aWJsZSA9ICJhcm0saGRsY2QiOwo+ID4gKwkJcmVnID0gPDAgMHgyYjAwMDAwMCAw
+IDB4MTAwMD47Cj4gPiArCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODUgSVJRX1RZUEVfTEVWRUxf
+SElHSD47Cj4gPiArCQljbG9ja3MgPSA8Jm9zY2NsazU+Owo+ID4gKwkJY2xvY2stbmFtZXMgPSAi
+cHhsY2xrIjsKPiA+ICsJCXBvcnQgewo+ID4gKwkJCWhkbGNkX291dHB1dDogZW5kcG9pbnRAMCB7
+Cj4gPiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV9lbmNfaW5wdXQ+Owo+ID4gKwkJCX07
+Cj4gPiArCQl9Owo+ID4gKwl9Owo+ID4gKwo+ID4gKwkvKiBIRE1JIGVuY29kZXIgb24gSTJDIGJ1
+cyAqLwo+ID4gKwlpMmNAN2ZmYTAwMDAgewo+ID4gKwkJLi4uLgo+ID4gKwkJaGRtaS10cmFuc21p
+dHRlckA3MCB7Cj4gPiArCQkJY29tcGF0aWJsZSA9ICIuLi4uLiI7Cj4gPiArCQkJcmVnID0gPDB4
+NzA+Owo+ID4gKwkJCXBvcnRAMCB7Cj4gPiArCQkJCWhkbWlfZW5jX2lucHV0OiBlbmRwb2ludCB7
+Cj4gPiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbGNkX291dHB1dD47Cj4gPiArCQkJCX07
+Cj4gPiArCj4gPiArCQkJCWhkbWlfZW5jX291dHB1dDogZW5kcG9pbnQgewo+ID4gKwkJCQkJcmVt
+b3RlLWVuZHBvaW50ID0gPCZoZG1pXzFfcG9ydD47Cj4gPiArCQkJCX07Cj4gPiArCQkJfTsKPiA+
+ICsJCX07Cj4gPiArCj4gPiArCX07Cj4gPiArCj4gPiArCWhkbWkxOiBjb25uZWN0b3JAMSB7Cj4g
+PiArCQljb21wYXRpYmxlID0gImhkbWktY29ubmVjdG9yIjsKPiA+ICsJCXR5cGUgPSAiYSI7Cj4g
+PiArCQlwb3J0IHsKPiA+ICsJCQloZG1pXzFfcG9ydDogZW5kcG9pbnQgewo+ID4gKwkJCQlyZW1v
+dGUtZW5kcG9pbnQgPSA8JmhkbWlfZW5jX291dHB1dD47Cj4gPiArCQkJfTsKPiA+ICsJCX07Cj4g
+PiArCX07Cj4gPiArCj4gPiArCS4uLgo+ID4gK307Cj4gPiAtLSAKPiA+IDIuNi4yCj4gPiAKPiBf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKPiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4gaHR0cDov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAoKLS0gCj09
+PT09PT09PT09PT09PT09PT09CnwgSSB3b3VsZCBsaWtlIHRvIHwKfCBmaXggdGhlIHdvcmxkLCAg
+fAp8IGJ1dCB0aGV5J3JlIG5vdCB8CnwgZ2l2aW5nIG1lIHRoZSAgIHwKIFwgc291cmNlIGNvZGUh
+ICAvCiAgLS0tLS0tLS0tLS0tLS0tCiAgICDCr1xfKOODhClfL8KvCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
