@@ -1,65 +1,118 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH 2/4] dmaengine: qcom_bam_dma: clear BAM interrupt only if
- it is rised
-Date: Wed, 2 Dec 2015 18:47:12 +0200
-Message-ID: <565F2090.8040103@linaro.org>
-References: <1448961299-15161-1-git-send-email-stanimir.varbanov@linaro.org>
- <6461444.oollnBsbrb@wuerfel> <565EEA99.3070207@linaro.org>
- <11168224.Usic9kvUpA@wuerfel>
+From: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] Device tree binding documentation for chromeos-firmware
+Date: Wed, 02 Dec 2015 16:49:59 +0000
+Message-ID: <565F2137.609@collabora.co.uk>
+References: <1448997171-7064-1-git-send-email-martyn.welch@collabora.co.uk> <1448997171-7064-2-git-send-email-martyn.welch@collabora.co.uk> <20151202151552.GA11101@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <11168224.Usic9kvUpA@wuerfel>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151202151552.GA11101@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/02/2015 03:05 PM, Arnd Bergmann wrote:
-> On Wednesday 02 December 2015 14:56:57 Stanimir Varbanov wrote:
->> On 12/01/2015 12:29 PM, Arnd Bergmann wrote:
->>> On Tuesday 01 December 2015 11:14:57 Stanimir Varbanov wrote:
->>>> +       if (srcs & BAM_IRQ) {
->>>>                 clr_mask = readl_relaxed(bam_addr(bdev, 0, BAM_IRQ_STTS));
->>>>  
->>>> -       /* don't allow reorder of the various accesses to the BAM registers */
->>>> -       mb();
->>>> +               /*
->>>> +                * don't allow reorder of the various accesses to the BAM
->>>> +                * registers
->>>> +                */
->>>> +               mb();
->>>>  
->>>> -       writel_relaxed(clr_mask, bam_addr(bdev, 0, BAM_IRQ_CLR));
->>>> +               writel_relaxed(clr_mask, bam_addr(bdev, 0, BAM_IRQ_CLR));
->>>> +       }
->>>>
->>>
->>> I think the comment here should be moved: change the writel_relaxed()
->>> to writel(), which already includes the appropriate barriers, and
->>
->> If we agree with such a change it should be subject to another patch.
-> 
-> Correct.
-> 
->>> add a comment at the readl_relaxed() to explain why it doesn't need
->>> a barrier.
->>
->> Infact I'm not sure that readl_relaxed(BAM_IRQ_STTS) does not need
->> barrier. If I read the code above correctly the mb() should guarantee
->> that all load and store operations before it are happened before the
->> write to BAM_IRQ_CLR register, and on the other hand if we replace
->> writel_relaxed with writel, the writel has wmb() which guarantees only
->> store operations. Did I miss something?
-> 
-> You are right, we only guarantee that stores to memory are complete
-> before we writel() an MMIO register.
-> 
-> What do you gain from synchronizing reads before an MMIO write?
 
-I don't know just tried to understand the meaning of mb() above.
 
--- 
-regards,
-Stan
+On 02/12/15 15:15, Rob Herring wrote:
+> On Tue, Dec 01, 2015 at 07:12:49PM +0000, Martyn Welch wrote:
+>> This patch adds documentation for the chromeos-firmware binding.
+>>
+>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+>> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Signed-off-by: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/misc/chromeos-firmware.txt | 27 ++++++++++++++++++++++
+>
+> bindings/firmware/ please.
+>
+
+OK.
+
+>>   1 file changed, 27 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/misc/chromeos-firmware.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/misc/chromeos-firmware.txt b/Documentation/devicetree/bindings/misc/chromeos-firmware.txt
+>> new file mode 100644
+>> index 0000000..8240611
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/misc/chromeos-firmware.txt
+>> @@ -0,0 +1,27 @@
+>> +Device-Tree bindings for chromeos-firmware.c.
+>
+> Perhaps a bit more description what this is.
+>
+> What aspect of this is firmware? How does this relate to the EC?
+>
+
+With respect to write-protect, this line is the write protection for the 
+flash which holds the bootloader.
+
+For the developer-switch and recovery-switch, I understand that pulling 
+these lines low result in the stock firmware forcing the device to boot 
+into developer mode and recovery mode respectively. The device I have no 
+longer runs the stock firmware, so I'm not able to confirm this, though 
+I am able to drive these lines.
+
+As far as I'm aware, none of these are related to the operation of the EC.
+
+Will update the binding documentation.
+
+>> +
+>> +Required properties:
+>> +	- compatible = "google,gpio-firmware";
+>
+> No versions?
+>
+
+I'm not aware of any and would rather not start inventing ones that 
+aren't already there.
+
+>> +
+>> +Each signal is represented as a sub-node of "chromeos_firmware":
+>> +Subnode properties:
+>> +
+>> +	- gpios: OF device-tree gpio specification.
+>> +
+>> +Example nodes:
+>> +
+>> +	chromeos_firmware {
+>
+> This should go under /firmware
+
+Ok, will do.
+
+>
+>> +		compatible = "google,gpio-firmware";
+>> +
+>> +		write-protect {
+>
+> You need to define what are valid sub nodes. The example is not
+> documentation.
+>
+
+Ok
+
+>> +			gpios = <&gpx3 0 GPIO_ACTIVE_LOW>;
+>> +		};
+>> +
+>> +		developer-switch {
+>> +			gpios = <&gpx1 3 GPIO_ACTIVE_HIGH>;
+>> +		};
+>> +
+>> +		recovery-switch {
+>> +			gpios = <&gpx0 7 GPIO_ACTIVE_LOW>;
+>> +		};
+>> +	};
+>> --
+>> 2.1.4
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
