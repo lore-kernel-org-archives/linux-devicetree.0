@@ -1,50 +1,68 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v4 3/7] ARM: dts: imx: Add Advantech BA-16 Qseven module
-Date: Wed, 02 Dec 2015 20:36:24 +0100
-Message-ID: <1647955.6yZUflBPcH@wuerfel>
-References: <1449080180-31945-1-git-send-email-akshay.bhat@timesys.com> <1449080180-31945-4-git-send-email-akshay.bhat@timesys.com>
+From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH (v6) 1/2] mtd: brcmnand: Add brcm,bcm63268-nand device
+ tree binding
+Date: Wed, 2 Dec 2015 20:36:33 +0100
+Message-ID: <CAOiHx=mUSmDB_KQNpyksc93D+RKBbR8cwas_DsTPL8H34dxz6g@mail.gmail.com>
+References: <56506D55.3000907@simon.arlott.org.uk> <20151122215945.GA5930@rob-hp-laptop>
+ <56523E85.905@simon.arlott.org.uk> <56523EFF.9050502@simon.arlott.org.uk>
+ <56535977.9050201@gmail.com> <56541BD3.4070202@simon.arlott.org.uk>
+ <5654AF69.7040901@gmail.com> <afc6fb02d51a5378e315ade84a134eaf7a58a94f@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+ <20151202190555.GJ64635@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449080180-31945-4-git-send-email-akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20151202190555.GJ64635-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 02 December 2015 13:16:16 Akshay Bhat wrote:
-> +               brightness-levels = <  0   1   2   3   4   5   6   7   8   9
-> +                                     10  11  12  13  14  15  16  17  18  19
-> +                                     20  21  22  23  24  25  26  27  28  29
-> +                                     30  31  32  33  34  35  36  37  38  39
-> +                                     40  41  42  43  44  45  46  47  48  49
-> +                                     50  51  52  53  54  55  56  57  58  59
-> +                                     60  61  62  63  64  65  66  67  68  69
-> +                                     70  71  72  73  74  75  76  77  78  79
-> +                                     80  81  82  83  84  85  86  87  88  89
-> +                                     90  91  92  93  94  95  96  97  98  99
-> +                                    100 101 102 103 104 105 106 107 108 109
-> +                                    110 111 112 113 114 115 116 117 118 119
-> +                                    120 121 122 123 124 125 126 127 128 129
-> +                                    130 131 132 133 134 135 136 137 138 139
-> +                                    140 141 142 143 144 145 146 147 148 149
-> +                                    150 151 152 153 154 155 156 157 158 159
-> +                                    160 161 162 163 164 165 166 167 168 169
-> +                                    170 171 172 173 174 175 176 177 178 179
-> +                                    180 181 182 183 184 185 186 187 188 189
-> +                                    190 191 192 193 194 195 196 197 198 199
-> +                                    200 201 202 203 204 205 206 207 208 209
-> +                                    210 211 212 213 214 215 216 217 218 219
-> +                                    220 221 222 223 224 225 226 227 228 229
-> +                                    230 231 232 233 234 235 236 237 238 239
-> +                                    240 241 242 243 244 245 246 247 248 249
-> +                                    250 251 252 253 254 255>;
-> 
+On Wed, Dec 2, 2015 at 8:05 PM, Brian Norris
+<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> + Broadcom list + Kamal
+>
+> On Tue, Nov 24, 2015 at 08:19:37PM -0000, Simon Arlott wrote:
+>> Add device tree binding for NAND on the BCM63268.
+>>
+>> The BCM63268 has a NAND interrupt register with combined status and enable
+>> registers.
+>>
+>> Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/mtd/brcm,brcmnand.txt      | 35 ++++++++++++++++++++++
+>>  1 file changed, 35 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+>> b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+>> index 4ff7128..f2a71c8 100644
+>> --- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+>> +++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+>> @@ -72,6 +72,14 @@ we define additional 'compatible' properties and associated register resources w
+>>         and enable registers
+>>       - reg-names: (required) "nand-int-base"
+>>
+>> +   * "brcm,nand-bcm63268"
+>> +     - compatible: should contain "brcm,nand-bcm<soc>", "brcm,nand-bcm63268"
+>
+> Looks like you're aiming to support bcm63168? Is bcm63268 the first
+> chip to include this style of register then? The numbering seems
+> backwards, but that may just be reality.
 
-That is a lot of brightness levels. Why do you need so many of them?
+There are four chip variants, bcm63168, bcm63268, bcm63169 and
+bcm63269, and they were all introduced at the same time. the *16x have
+less features than *26x (IIRC only two rgmii ports instead of four, no
+hw crypto, maybe no dect?), and the *9 ones have no xDSL support.
 
-	Arnd
+>From a registers location/layout, clocks, etc standpoint, there is no
+difference between bcm63168 and bcm63268 (and the x9's).
+
+As a reference, Broadcom uses bcm63268 as the "generic" name for the
+chip family in their code, but on their website only advertise the
+bcm63168. Both chips do exist though, and at least the bcm63169, I
+have devices with these three here.
+
+
+Jonas
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
