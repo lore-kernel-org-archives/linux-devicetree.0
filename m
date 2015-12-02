@@ -1,47 +1,97 @@
-From: Yendapally Reddy Dhananjaya Reddy <yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: enable GPIO-a for Broadcom NSP
-Date: Tue, 1 Dec 2015 23:48:05 -0500
-Message-ID: <1449031685-19087-1-git-send-email-yrdreddy@broadcom.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v3 00/27] memory: omap-gpmc: mtd: nand: Support GPMC NAND
+ on non-OMAP platforms
+Date: Wed, 2 Dec 2015 10:42:12 +0530
+Message-ID: <565E7DAC.7060401@ti.com>
+References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
+ <20151026212346.GJ13239@google.com> <562F45BF.8020205@ti.com>
+ <20151130195449.GI64635@google.com> <565DB18C.7040505@ti.com>
+ <20151202032643.GF64635@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yendapally Reddy Dhananjaya Reddy <yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151202032643.GF64635@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: tony@atomide.com, dwmw2@infradead.org, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This enables the GPIO-a support for Broadcom NSP SoC
+Brian,
 
-Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/bcm-nsp.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+On 02/12/15 08:56, Brian Norris wrote:
+> Hi Roger,
+> 
+> On Tue, Dec 01, 2015 at 04:41:16PM +0200, Roger Quadros wrote:
+>> On 30/11/15 21:54, Brian Norris wrote:
+>>> On Tue, Oct 27, 2015 at 11:37:03AM +0200, Roger Quadros wrote:
+>>>> On 26/10/15 23:23, Brian Norris wrote:
+>>>>> On Fri, Sep 18, 2015 at 05:53:22PM +0300, Roger Quadros wrote:
+>>>>>> - Remove NAND IRQ handling from omap-gpmc driver, share the GPMC IRQ
+>>>>>> with the omap2-nand driver and handle NAND IRQ events in the NAND driver.
+>>>>>> This causes performance increase when using prefetch-irq mode.
+>>>>>> 30% increase in read, 17% increase in write in prefetch-irq mode.
+>>>>>
+>>>>> Have you pinpointed the exact causes for the performance increase, or
+>>>>> can you give an educated guess? AIUI, you're reducing the number of
+>>>>> interrupts needed for NAND prefetch mode, but you're also removing a bit
+>>>>> of abstraction and implementing hooks that look awfully like the
+>>>>> existing abstractions:
+>>>>>
+>>>>> +       int (*nand_irq_enable)(enum gpmc_nand_irq irq);
+>>>>> +       int (*nand_irq_disable)(enum gpmc_nand_irq irq);
+>>>>> +       void (*nand_irq_clear)(enum gpmc_nand_irq irq);
+>>>>> +       u32 (*nand_irq_status)(void);
+>>>>>
+>>>>> That's not really a problem if there's a good reason for them (brcmnand
+>>>>> implements similar hooks because of quirks in the implementation of
+>>>>> interrupts across various BRCM SoCs, and it's not worth writing irqchip
+>>>>> drivers for those cases). I'm mainly curious for an explanation.
+>>>>
+>>>> I have both implementations with me. My guess is that the 20% performance
+>>>> gain is due to absence of irqchip/irqdomain translation code.
+>>>> I haven't investigated further though.
+>>>
+>>> I don't have much context for whether this makes sense or not. According
+>>> to your tests, you're getting ~800K interrupts over ~15 seconds. So
+>>> should you start noticing performance hits due to abstraction at 53K
+>>> interrupts per second?
+>>
+>> Yes, this was my understanding.
+> 
+> Am I computing wrong, or is that a pretty insane rate of interrupts?
 
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index 58aca27..16e3c2b 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -116,4 +116,16 @@
- 			status = "disabled";
- 		};
- 	};
-+
-+	gpioa: gpio-a@18000020 {
-+		compatible = "brcm,nsp-gpio-a";
-+		reg = <0x18000020 0x70>,
-+		      <0x1803f1c4 0x1c>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		ngpios = <32>;
-+		interrupt-controller;
-+		interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-+		gpio-ranges = <&pinctrl 0 0 32>;
-+	};
- };
--- 
-2.1.0
+I don't have the test board with me right now and so can't tell you
+for sure if the mtd tests took 15 seconds or more.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I can try it out on a different board that I have and let you know
+for sure about how many interrupts we get per second.
+> 
+>>> But anyway, I'm not sure that completely answered my question. My
+>>> question was whether you were removing the irqchip code solely for
+>>> performance reasons, or are there others?
+>>
+>> Yes. Only for performance reasons.
+> 
+> Hmm, that's not my favorite answer. I'd prefer that more analysis was
+> done here before scrapping irqchip...
+
+I agree. We could retain the irqchip model till we have more satisfying
+analysis.
+
+> 
+> But maybe that's not too bad. It seems like your patch set overall is a
+> net positive for disentangling some of arch/ and drivers/.
+
+:)
+
+> 
+> I'll take another pass over your patch set, but if things are looking
+> better, how do you expect to merge this? There are significant portions
+> that touch at least 2 or 3 different subsystem trees, AFAICT.
+
+Tony could create an immutable branch with all the dts and memory changes.
+You could base the mtd changes on top of that?
+
+cheers,
+-roger
