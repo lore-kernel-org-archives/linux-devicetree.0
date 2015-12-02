@@ -1,7 +1,7 @@
 From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 5/7] dt-bindings: Amlogic: Add SMP related documentation
-Date: Wed,  2 Dec 2015 18:22:31 +0100
-Message-ID: <1449076953-5058-6-git-send-email-carlo@caione.org>
+Subject: [PATCH v2 7/7] ARM: DTS: Amlogic: Add SMP related nodes for Meson8b
+Date: Wed,  2 Dec 2015 18:22:33 +0100
+Message-ID: <1449076953-5058-8-git-send-email-carlo@caione.org>
 References: <1449076953-5058-1-git-send-email-carlo@caione.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1449076953-5058-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
@@ -12,69 +12,43 @@ List-Id: devicetree@vger.kernel.org
 
 From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-With this patch we add documentation for:
-
-* power-management-unit: the PMU is used to bring up the cores during
-  SMP operations
-* sram: among other things the sram is used to store the first code
-  executed by the core when it is powered up
-* cpu-enable-method: the CPU enable method used by Amlogic Meson8b SoCs
+Add nodes for: SCU, PMU and SRAM. Set also the enable-method for SMP
+bringup.
 
 Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 ---
- .../devicetree/bindings/arm/amlogic/pmu.txt        | 16 +++++++++++
- .../devicetree/bindings/arm/amlogic/smp-sram.txt   | 32 ++++++++++++++++++++++
- Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
- 3 files changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/amlogic/pmu.txt
- create mode 100644 Documentation/devicetree/bindings/arm/amlogic/smp-sram.txt
+ arch/arm/boot/dts/meson8b.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/amlogic/pmu.txt b/Documentation/devicetree/bindings/arm/amlogic/pmu.txt
-new file mode 100644
-index 0000000..7b9b2da
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/amlogic/pmu.txt
-@@ -0,0 +1,16 @@
-+Amlogic power-management-unit:
-+-------------------------------
-+
-+The pmu is used to turn off and on different power domains of the SoCs
-+This includes the power to the CPU cores.
-+
-+Required node properties:
-+- compatible value : = "amlogic,meson8b-pmu";
-+- reg : physical base address and the size of the registers window
-+
-+Example:
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index 51b32ed..27e1b2f 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -51,9 +51,20 @@
+ / {
+ 	interrupt-parent = <&gic>;
+ 
++	scu@c4300000 {
++		compatible = "arm,cortex-a5-scu";
++		reg = <0xc4300000 0x100>;
++	};
 +
 +	pmu@c81000e4 {
 +		compatible = "amlogic,meson8b-pmu", "syscon";
 +		reg = <0xc81000e0 0x18>;
 +	};
-diff --git a/Documentation/devicetree/bindings/arm/amlogic/smp-sram.txt b/Documentation/devicetree/bindings/arm/amlogic/smp-sram.txt
-new file mode 100644
-index 0000000..455ca20
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/amlogic/smp-sram.txt
-@@ -0,0 +1,32 @@
-+Amlogic SRAM for smp bringup:
-+------------------------------
 +
-+Amlogic's smp-capable SoCs use part of the sram for the bringup of the cores.
-+Once the core gets powered up it executes the code that is residing at a
-+specific location.
-+
-+Therefore a reserved section sub-node has to be added to the mmio-sram
-+declaration.
-+
-+Required sub-node properties:
-+- compatible : should be "amlogic,meson8b-smp-sram"
-+
-+The rest of the properties should follow the generic mmio-sram discription
-+found in ../../misc/sram.txt
-+
-+Example:
-+
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "amlogic,meson8b-smp";
+ 
+ 		cpu@200 {
+ 			device_type = "cpu";
+@@ -88,6 +99,19 @@
+ 		};
+ 	};
+ 
 +	sram: sram@d9000000 {
 +		compatible = "mmio-sram";
 +		reg = <0xd9000000 0x20000>;
@@ -88,19 +62,9 @@ index 0000000..455ca20
 +		};
 +	};
 +
-+
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index 3a07a87..22381b4 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -189,6 +189,7 @@ nodes to be present and contain the properties described below.
- 			  can be one of:
- 			    "allwinner,sun6i-a31"
- 			    "allwinner,sun8i-a23"
-+			    "amlogic,meson8b-smp"
- 			    "arm,psci"
- 			    "brcm,brahma-b15"
- 			    "marvell,armada-375-smp"
+ 	soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
 -- 
 2.5.0
 
