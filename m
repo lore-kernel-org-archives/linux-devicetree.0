@@ -1,107 +1,80 @@
-From: Kapil Hali <kapilh@broadcom.com>
-Subject: Re: [PATCH v4 1/5] dt-bindings: add SMP enable-method for Broadcom
- NSP
-Date: Wed, 2 Dec 2015 21:36:09 +0530
-Message-ID: <565F16F1.9070809@broadcom.com>
-References: <1448987049-17041-1-git-send-email-kapilh@broadcom.com>
- <1448987049-17041-2-git-send-email-kapilh@broadcom.com>
- <20151202152604.GA20467@rob-hp-laptop>
+From: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] Revert "of/irq: make of_irq_find_parent static"
+Date: Wed, 2 Dec 2015 16:14:47 +0000
+Message-ID: <1449072887-2734-1-git-send-email-qais.yousef@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151202152604.GA20467@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Lee Jones <lee@kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Kever Yang <kever.yang@rock-chips.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+This reverts commit 52493d446141b07c8ba28dd6a529513f8b2342bd.
 
-On 12/2/2015 8:56 PM, Rob Herring wrote:
-> On Tue, Dec 01, 2015 at 11:24:05AM -0500, Kapil Hali wrote:
->> Add a compatible string "brcm,bcm-nsp-smp" for Broadcom's
->> Northstar Plus CPU to the 32-bit ARM CPU device tree binding
->> documentation file and create a new binding documentation for
->> Northstar Plus CPU.
->>
->> Signed-off-by: Kapil Hali <kapilh@broadcom.com>
->> ---
->>  .../bindings/arm/bcm/brcm,nsp-cpu-method.txt       | 39 ++++++++++++++++++++++
->>  Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
->>  2 files changed, 40 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
->>
->> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
->> new file mode 100644
->> index 0000000..bf08872
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
->> @@ -0,0 +1,39 @@
->> +Broadcom Northstar Plus SoC CPU Enable Method
->> +---------------------------------------------
->> +This binding defines the enable method used for starting secondary
->> +CPUs in the following Broadcom SoCs:
->> +  BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
->> +
->> +The enable method is specified by defining the following required
->> +properties in the "cpus" device tree node:
->> +  - enable-method = "brcm,bcm-nsp-smp";
->> +  - secondary-boot-reg = <...>;
-> 
-> Both of these are supposed to be per cpu core.
+Signed-off-by: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 
-'enable-method' if not found in 'cpu' node is looked at in the 'cpus' 
-node. Except for two-three SoC families, 'enable-method' is within 
-'cpus' node. Is my interpretation incorrect? Did I miss anything here?
+Conflicts:
+	include/linux/of_irq.h
+---
+I have a patch series that is under review that makes use of of_irq_find_parent()
 
-> 
-> Rob
-> 
->> +
->> +The secondary-boot-reg property is a u32 value that specifies the
->> +physical address of the register which should hold the common
->> +entry point for a secondary CPU. This entry is cpu node specific
->> +and should be added per cpu. E.g., in case of NSP (BCM58625) which
->> +is a dual core CPU SoC, this entry should be added to cpu1 node.
->> +
->> +
->> +Example:
->> +	cpus {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		enable-method = "brcm,bcm-nsp-smp";
->> +
->> +		cpu0: cpu@0 {
->> +			device_type = "cpu";
->> +			compatible = "arm,cortex-a9";
->> +			next-level-cache = <&L2>;
->> +			reg = <0>;
->> +		};
->> +
->> +		cpu1: cpu@1 {
->> +			device_type = "cpu";
->> +			compatible = "arm,cortex-a9";
->> +			next-level-cache = <&L2>;
->> +			reg = <1>;
->> +			secondary-boot-reg = <0xffff042c>;
->> +		};
->> +	};
->> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
->> index 3a07a87..d191554 100644
->> --- a/Documentation/devicetree/bindings/arm/cpus.txt
->> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
->> @@ -190,6 +190,7 @@ nodes to be present and contain the properties described below.
->>  			    "allwinner,sun6i-a31"
->>  			    "allwinner,sun8i-a23"
->>  			    "arm,psci"
->> +			    "brcm,bcm-nsp-smp"
->>  			    "brcm,brahma-b15"
->>  			    "marvell,armada-375-smp"
->>  			    "marvell,armada-380-smp"
->> -- 
->> 2.1.0
->>
-> 
+The affected patch is this:
+
+	https://lkml.org/lkml/2015/11/25/291
+
+Is it wrong to use this function? If yes, what's the alternative?
+If no, OK to revert?
+
 Thanks,
-Kapil
+Qais
+
+
+ drivers/of/irq.c       | 2 +-
+ include/linux/of_irq.h | 6 ++++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 902b89be7217..45735d56e435 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -53,7 +53,7 @@ EXPORT_SYMBOL_GPL(irq_of_parse_and_map);
+  * Returns a pointer to the interrupt parent node, or NULL if the interrupt
+  * parent could not be determined.
+  */
+-static struct device_node *of_irq_find_parent(struct device_node *child)
++struct device_node *of_irq_find_parent(struct device_node *child)
+ {
+ 	struct device_node *p;
+ 	const __be32 *parp;
+diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+index 039f2eec49ce..0c9ea9fb5b63 100644
+--- a/include/linux/of_irq.h
++++ b/include/linux/of_irq.h
+@@ -93,6 +93,7 @@ static inline void of_msi_configure(struct device *dev, struct device_node *np)
+  * so declare it here regardless of the CONFIG_OF_IRQ setting.
+  */
+ extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
++extern struct device_node *of_irq_find_parent(struct device_node *child);
+ u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in);
+ 
+ #else /* !CONFIG_OF && !CONFIG_SPARC */
+@@ -102,6 +103,11 @@ static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
+ 	return 0;
+ }
+ 
++static inline void *of_irq_find_parent(struct device_node *child)
++{
++	return NULL;
++}
++
+ static inline u32 of_msi_map_rid(struct device *dev,
+ 				 struct device_node *msi_np, u32 rid_in)
+ {
+-- 
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
