@@ -1,103 +1,79 @@
-From: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-Subject: Re: [PATCH (v6) 1/2] mtd: brcmnand: Add brcm,bcm63268-nand device
- tree binding
-Date: Wed, 2 Dec 2015 20:34:38 +0000
-Message-ID: <565F55DE.4050703@simon.arlott.org.uk>
-References: <56523E85.905@simon.arlott.org.uk>
- <56523EFF.9050502@simon.arlott.org.uk> <56535977.9050201@gmail.com>
- <56541BD3.4070202@simon.arlott.org.uk> <5654AF69.7040901@gmail.com>
- <afc6fb02d51a5378e315ade84a134eaf7a58a94f@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
- <20151202190555.GJ64635@google.com> <565F4953.2070206@simon.arlott.org.uk>
- <20151202200036.GL64635@google.com> <565F50B0.4020802@simon.arlott.org.uk>
- <20151202202127.GN64635@google.com>
+From: Simon Arlott <simon@fire.lp0.eu>
+Subject: Re: [PATCH 2/2] reset: bcm63xx: Add support for the BCM63xx
+ soft-reset controller
+Date: Wed, 2 Dec 2015 20:43:49 +0000
+Message-ID: <565F5805.6010506@simon.arlott.org.uk>
+References: <565CB83B.7010000@simon.arlott.org.uk>
+ <565CB86F.4040303@simon.arlott.org.uk>
+ <CAGVrzcbjdsbGLuH6T6DSoC5SGN5WDFdM1h1xB5nQyX8wm-Esow@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151202202127.GN64635-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGVrzcbjdsbGLuH6T6DSoC5SGN5WDFdM1h1xB5nQyX8wm-Esow@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Kevin Cernekee <cernekee@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, MIPS Mailing List <linux-mips@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/15 20:21, Brian Norris wrote:
-> Hi Simon,
+On 02/12/15 18:03, Florian Fainelli wrote:
+> 2015-11-30 12:58 GMT-08:00 Simon Arlott <simon@fire.lp0.eu>:
+>> The BCM63xx contains a soft-reset controller activated by setting
+>> a bit (that must previously have cleared).
+>>
+>> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+>> ---
+>>  MAINTAINERS                   |   1 +
+>>  drivers/reset/Kconfig         |   9 +++
+>>  drivers/reset/Makefile        |   1 +
+>>  drivers/reset/reset-bcm63xx.c | 134 ++++++++++++++++++++++++++++++++++++++++++
+>>  4 files changed, 145 insertions(+)
+>>  create mode 100644 drivers/reset/reset-bcm63xx.c
 > 
-> On Wed, Dec 02, 2015 at 08:12:32PM +0000, Simon Arlott wrote:
->> On 02/12/15 20:00, Brian Norris wrote:
->> > On Wed, Dec 02, 2015 at 07:41:07PM +0000, Simon Arlott wrote:
->> >> I've created a bcm963268part driver so there won't need to be any
->> >> partitions in DT for bcm63268.
->> > 
->> > Just curious, do you plan to submit this driver? We're working on
->> 
->> Yes, it's just the most recent one I've been working on. I still have
->> USBH and IUDMA to submit
->> 
->> > matching up partition parsers to flash devices via device tree
->> > of_match_table's, so you could do something like this:
->> > 
->> > 	nand0: nandcs@0 {
->> > 		compatible = "brcm,nandcs";
->> > 		...
->> > 
->> > 		partitions {
->> > 			compatible = "brcm,bcm963268-partitions";
->> > 			...
->> > 		};
->> > 	};
->> 
->> I modified brcmnand to look for a machine matching "brcm,bcm963268", but
 > 
-> Like this?
-> 
-> http://patchwork.ozlabs.org/patch/473180/
-> 
-> I'd like to avoid that (hence the "Rejected" status).
-
-I exported default_mtd_part_types, copied it, and then added to it:
-+	for (i = 0; i < nr_types; i++)
-+		part_types[i] = default_mtd_part_types[i];
-+
-+	/* Add partition type based on machine */
-+	if (of_machine_is_compatible("brcm,bcm963268"))
-+		part_types[i++] = "bcm963268part";
-+	else
-+		part_types[i++] = NULL;
-+
-+	part_types[i++] = NULL;
-
->> that way is ok with me. Presumably "ofpart" defers to another matching
->> partition parser?
-> 
-> Yes, "ofpart" is for specifying the entire partition table in the device
-> tree as subnodes of either the flash node or of the flash's "partitions"
-> subnode. It's not the most flexible, but it does work generically.
-> 
->> Is there a patch for that method of parser detection available?
-> 
-> I have something working here, but I haven't had time to finish cleaning
-> it up and submitting it. There's an older patch that works similarly,
-> though it has some deficiencies:
-> 
-> http://patchwork.ozlabs.org/patch/475988/
-> 
-> The main difference between that and my (yet-to-be-submitted) proposal
-> is that I'd like parsers to opt in by adding a proper of_match_table
-> with non-Linux-specific DT bindings, and then we can drop the
-> "linux,..." naming and make it a reasonably generic property.
-
-I'll submit my parser without any means of using it, let me know if you
-want me to work on a patch for a match table.
-
-> Regards,
-> Brian
+> Could you create a bcm directory and then add your reset-bcm63xx.c
+> file there? I have a pending submission for the BCM63138 reset
+> controller which is not at all using the same structure and will share
+> nothing with your driver.
 > 
 
+Ok, I'll call it reset-bcm6345.c to avoid confusion.
+
+> 
+>> +static int bcm63xx_reset_xlate(struct reset_controller_dev *rcdev,
+>> +       const struct of_phandle_args *reset_spec)
+>> +{
+>> +       struct bcm63xx_reset_priv *priv = to_bcm63xx_reset_priv(rcdev);
+>> +
+>> +       if (WARN_ON(reset_spec->args_count != rcdev->of_reset_n_cells))
+>> +               return -EINVAL;
+>> +
+>> +       if (reset_spec->args[0] >= rcdev->nr_resets)
+>> +               return -EINVAL;
+> 
+> Should not these two things be moved to the core reset controller code
+> based on the #reset-cells value?
+> 
+
+This has already been removed from the next version of the patch.
+
+> 
+>> +       if (of_property_read_u32(np, "offset", &priv->offset))
+>> +               return -EINVAL;
+>> +
+>> +       /* valid reset bits */
+>> +       if (of_property_read_u32(np, "mask", &priv->mask))
+>> +               priv->mask = 0xffffffff;
+>> +
+>> +       priv->rcdev.owner = THIS_MODULE;
+>> +       priv->rcdev.ops = &bcm63xx_reset_ops;
+>> +       priv->rcdev.nr_resets = 32;
+> 
+> Should not that come from Device Tree, or be computed based on the
+> mask property, like hweight_long() or something along these lines?
+
+The "mask" property has been removed. It will assume 32 resets and rely
+on the rest of the DT to only refer to valid bits.
 
 -- 
 Simon Arlott
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
