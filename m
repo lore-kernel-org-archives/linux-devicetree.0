@@ -1,69 +1,71 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: ls1021a: Add a TFT LCD panel.
-Date: Wed, 2 Dec 2015 13:48:14 +0800
-Message-ID: <20151202054811.GG692@tiger>
-References: <1448433967-6710-1-git-send-email-b56799@freescale.com>
- <1448433967-6710-2-git-send-email-b56799@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1448433967-6710-2-git-send-email-b56799-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Meng Yi <b56799-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Jianwei Wang <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xiubo Li <lixiubo-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>, Alison Wang <b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH v2] dmaengine: usb-dmac: Document SoC specific compatibility strings
+Date: Wed,  2 Dec 2015 14:53:54 +0900
+Message-ID: <1449035634-18761-1-git-send-email-horms+renesas@verge.net.au>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: dmaengine@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Simon Horman <horms+renesas@verge.net.au>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 25, 2015 at 02:46:07PM +0800, Meng Yi wrote:
-> Signed-off-by: Alison Wang <b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Xiubo Li <lixiubo-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org>
-> Signed-off-by: Jianwei Wang <jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/ls1021a-twr.dts | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
-> index fbb89d1..fad2e3b 100644
-> --- a/arch/arm/boot/dts/ls1021a-twr.dts
-> +++ b/arch/arm/boot/dts/ls1021a-twr.dts
-> @@ -105,6 +105,17 @@
->  			bitclock-master;
->  		};
->  	};
-> +
-> +	panel: panel {
-> +		compatible = "nec,nl4827hc19-05b";
-> +	};
-> +
+In general Renesas hardware is not documented to the extent where the
+relationship between IP blocks on different SoCs can be assumed although
+they may appear to operate the same way. Furthermore the documentation
+typically does not specify a version for individual IP blocks. For these
+reasons a convention of using the SoC name in place of a version and
+providing SoC-specific compatibility strings has been adopted.
 
-This new line shouldn't be needed.
+Although not universally liked this convention is used in the bindings for
+most drivers for Renesas hardware. The purpose of this patch is to
+update the Renesas USB DMA Controller driver to follow this convention.
 
-> +};
-> +
-> +&dcu {
-> +	fsl,panel = <&panel>;
-> +	status = "okay";
-> +
+Cc: devicetree@vger.kernel.org
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 
-Ditto
+---
+Notes:
+* r8a7792 (R-Car V2H) is omitted as my reading of the documentation
+  is that Renesas USB-DMAC does not exist on that SoC.
 
-I fixed them up and applied the both patches.
+v2:
+* Use <vendor>,<chip>-<block> rather than <vendor>,<block>-<chip>
+  pattern for new compatibility strings
+* Added compatibility string for r8a7795 on advice from Shimoda-san
+* Added Acks
+---
+ Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Shawn
+diff --git a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+index 040f365954cc..e7780a186a36 100644
+--- a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
++++ b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+@@ -1,7 +1,13 @@
+ * Renesas USB DMA Controller Device Tree bindings
+ 
+ Required Properties:
+-- compatible: must contain "renesas,usb-dmac"
++-compatible: "renesas,<soctype>-usb-dmac", "renesas,usb-dmac" as fallback.
++	Examples with soctypes are:
++	  - "renesas,r8a7790-usb-dmac" (R-Car H2)
++	  - "renesas,r8a7791-usb-dmac" (R-Car M2-W)
++	  - "renesas,r8a7793-usb-dmac" (R-Car M2-N)
++	  - "renesas,r8a7794-usb-dmac" (R-Car E2)
++	  - "renesas,r8a7795-usb-dmac" (R-Car H3)
+ - reg: base address and length of the registers block for the DMAC
+ - interrupts: interrupt specifiers for the DMAC, one for each entry in
+   interrupt-names.
+@@ -15,7 +21,7 @@ Required Properties:
+ Example: R8A7790 (R-Car H2) USB-DMACs
+ 
+ 	usb_dmac0: dma-controller@e65a0000 {
+-		compatible = "renesas,usb-dmac";
++		compatible = "renesas,r8a7790-usb-dmac", "renesas,usb-dmac";
+ 		reg = <0 0xe65a0000 0 0x100>;
+ 		interrupts = <0 109 IRQ_TYPE_LEVEL_HIGH
+ 			      0 109 IRQ_TYPE_LEVEL_HIGH>;
+-- 
+2.1.4
 
->  };
->  
->  &dspi1 {
-> -- 
-> 2.1.0.27.g96db324
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
