@@ -1,34 +1,86 @@
-From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: DaVinci DA850: added missing #gpio-cells into DTSI
-Date: Wed,  2 Dec 2015 15:18:08 +0100
-Message-ID: <1449065888-31735-1-git-send-email-petr@barix.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/4] drm: arm: Add DT bindings documentation for HDLCD
+ driver.
+Date: Wed, 2 Dec 2015 08:25:15 -0600
+Message-ID: <20151202142515.GA7404@rob-hp-laptop>
+References: <1449058982-18595-1-git-send-email-Liviu.Dudau@arm.com>
+ <1449058982-18595-2-git-send-email-Liviu.Dudau@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1449058982-18595-2-git-send-email-Liviu.Dudau@arm.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The gpio definition was missing the mandatory parameter "#gpio-cells"
----
- arch/arm/boot/dts/da850.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index b695548..c42ae76 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -260,6 +260,7 @@
- 		gpio: gpio@1e26000 {
- 			compatible = "ti,dm6441-gpio";
- 			gpio-controller;
-+			#gpio-cells = <2>;
- 			reg = <0x226000 0x1000>;
- 			interrupts = <42 IRQ_TYPE_EDGE_BOTH
- 				43 IRQ_TYPE_EDGE_BOTH 44 IRQ_TYPE_EDGE_BOTH
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCBEZWMgMDIsIDIwMTUgYXQgMTI6MjI6NTlQTSArMDAwMCwgTGl2aXUgRHVkYXUgd3Jv
+dGU6Cj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Cj4gQ2M6IFBhd2VsIE1v
+bGwgPHBhd2VsLm1vbGxAYXJtLmNvbT4KPiBDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRA
+YXJtLmNvbT4KPiBDYzogSWFuIENhbXBiZWxsIDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51
+az4KPiBDYzogS3VtYXIgR2FsYSA8Z2FsYWtAY29kZWF1cm9yYS5vcmc+Cj4gCj4gU2lnbmVkLW9m
+Zi1ieTogTGl2aXUgRHVkYXUgPExpdml1LkR1ZGF1QGFybS5jb20+CgpJIHN0aWxsIHRoaW5rIHlv
+dSBzaG91bGQgaGF2ZSBhIG1vcmUgc3BlY2lmaWMgY29tcGF0aWJsZSBzdHJpbmcsIGJ1dCAKaGVy
+ZSdzIHNvbWUgcm9wZToKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoK
+PiAtLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hcm0saGRsY2QudHh0ICAg
+ICAgfCA3OSArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA3OSBpbnNl
+cnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9hcm0saGRsY2QudHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybSxoZGxjZC50eHQgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hcm0saGRsY2QudHh0Cj4gbmV3IGZp
+bGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi43OGJjMjQyCj4gLS0tIC9kZXYvbnVsbAo+
+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybSxoZGxj
+ZC50eHQKPiBAQCAtMCwwICsxLDc5IEBACj4gK0FSTSBIRExDRAo+ICsKPiArVGhpcyBpcyBhIGRp
+c3BsYXkgY29udHJvbGxlciBmb3VuZCBvbiBzZXZlcmFsIGRldmVsb3BtZW50IHBsYXRmb3JtcyBw
+cm9kdWNlZAo+ICtieSBBUk0gTHRkIGFuZCBpbiBtb3JlIG1vZGVybiBvZiBpdHMnIEZhc3QgTW9k
+ZWxzLiBUaGUgSERMQ0QgaXMgYW4gUkdCCj4gK3N0cmVhbWVyIHRoYXQgcmVhZHMgdGhlIGRhdGEg
+ZnJvbSBhIGZyYW1lYnVmZmVyIGFuZCBzZW5kcyBpdCB0byBhIHNpbmdsZQo+ICtkaWdpdGFsIGVu
+Y29kZXIgKERWSSBvciBIRE1JKS4KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKyAgLSBj
+b21wYXRpYmxlOiAiYXJtLGhkbGNkIgo+ICsgIC0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3Mg
+YW5kIGxlbmd0aCBvZiB0aGUgY29udHJvbGxlcidzIHJlZ2lzdGVycy4KPiArICAtIGludGVycnVw
+dHM6IE9uZSBpbnRlcnJ1cHQgdXNlZCBieSB0aGUgZGlzcGxheSBjb250cm9sbGVyIHRvIG5vdGlm
+eSB0aGUKPiArICAgIGludGVycnVwdCBjb250cm9sbGVyIHdoZW4gYW55IG9mIHRoZSBpbnRlcnJ1
+cHQgc291cmNlcyBwcm9ncmFtbWVkIGluCj4gKyAgICB0aGUgaW50ZXJydXB0IG1hc2sgcmVnaXN0
+ZXIgaGF2ZSBhY3RpdmF0ZWQuCj4gKyAgLSBjbG9ja3M6IEEgbGlzdCBvZiBwaGFuZGxlICsgY2xv
+Y2stc3BlY2lmaWVyIHBhaXJzLCBvbmUgZm9yIGVhY2gKPiArICAgIGVudHJ5IGluICdjbG9jay1u
+YW1lcycuCj4gKyAgLSBjbG9jay1uYW1lczogQSBsaXN0IG9mIGNsb2NrIG5hbWVzLiBGb3IgSERM
+Q0QgaXQgc2hvdWxkIGNvbnRhaW46Cj4gKyAgICAgIC0gInB4bGNsayIgZm9yIHRoZSBjbG9jayBm
+ZWVkaW5nIHRoZSBvdXRwdXQgUExMIG9mIHRoZSBjb250cm9sbGVyLgo+ICsKPiArUmVxdWlyZWQg
+c3ViLW5vZGVzOgo+ICsgIC0gcG9ydDogVGhlIEhETENEIGNvbm5lY3Rpb24gdG8gYW4gZW5jb2Rl
+ciBjaGlwLiBUaGUgY29ubmVjdGlvbiBpcyBtb2RlbGVkCj4gKyAgICB1c2luZyB0aGUgT0YgZ3Jh
+cGggYmluZGluZ3Mgc3BlY2lmaWVkIGluCj4gKyAgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZ3JhcGgudHh0Lgo+ICsKPiArT3B0aW9uYWwgcHJvcGVydGllczoKPiArICAtIG1l
+bW9yeS1yZWdpb246IHBoYW5kbGUgdG8gYSBub2RlIGRlc2NyaWJpbmcgbWVtb3J5IChzZWUKPiAr
+ICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkvcmVz
+ZXJ2ZWQtbWVtb3J5LnR4dCkgdG8gYmUKPiArICAgIHVzZWQgZm9yIHRoZSBmcmFtZWJ1ZmZlcjsg
+aWYgbm90IHByZXNlbnQsIHRoZSBmcmFtZWJ1ZmZlciBtYXkgYmUgbG9jYXRlZAo+ICsgICAgYW55
+d2hlcmUgaW4gbWVtb3J5Lgo+ICsKPiArCj4gK0V4YW1wbGU6Cj4gKwo+ICsvIHsKPiArCS4uLgo+
+ICsKPiArCWhkbGNkQDJiMDAwMDAwIHsKPiArCQljb21wYXRpYmxlID0gImFybSxoZGxjZCI7Cj4g
+KwkJcmVnID0gPDAgMHgyYjAwMDAwMCAwIDB4MTAwMD47Cj4gKwkJaW50ZXJydXB0cyA9IDxHSUNf
+U1BJIDg1IElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ICsJCWNsb2NrcyA9IDwmb3NjY2xrNT47Cj4g
+KwkJY2xvY2stbmFtZXMgPSAicHhsY2xrIjsKPiArCQlwb3J0IHsKPiArCQkJaGRsY2Rfb3V0cHV0
+OiBlbmRwb2ludEAwIHsKPiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV9lbmNfaW5wdXQ+
+Owo+ICsJCQl9Owo+ICsJCX07Cj4gKwl9Owo+ICsKPiArCS8qIEhETUkgZW5jb2RlciBvbiBJMkMg
+YnVzICovCj4gKwlpMmNAN2ZmYTAwMDAgewo+ICsJCS4uLi4KPiArCQloZG1pLXRyYW5zbWl0dGVy
+QDcwIHsKPiArCQkJY29tcGF0aWJsZSA9ICIuLi4uLiI7Cj4gKwkJCXJlZyA9IDwweDcwPjsKPiAr
+CQkJcG9ydEAwIHsKPiArCQkJCWhkbWlfZW5jX2lucHV0OiBlbmRwb2ludCB7Cj4gKwkJCQkJcmVt
+b3RlLWVuZHBvaW50ID0gPCZoZGxjZF9vdXRwdXQ+Owo+ICsJCQkJfTsKPiArCj4gKwkJCQloZG1p
+X2VuY19vdXRwdXQ6IGVuZHBvaW50IHsKPiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlf
+MV9wb3J0PjsKPiArCQkJCX07Cj4gKwkJCX07Cj4gKwkJfTsKPiArCj4gKwl9Owo+ICsKPiArCWhk
+bWkxOiBjb25uZWN0b3JAMSB7Cj4gKwkJY29tcGF0aWJsZSA9ICJoZG1pLWNvbm5lY3RvciI7Cj4g
+KwkJdHlwZSA9ICJhIjsKPiArCQlwb3J0IHsKPiArCQkJaGRtaV8xX3BvcnQ6IGVuZHBvaW50IHsK
+PiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV9lbmNfb3V0cHV0PjsKPiArCQkJfTsKPiAr
+CQl9Owo+ICsJfTsKPiArCj4gKwkuLi4KPiArfTsKPiAtLSAKPiAyLjYuMgo+IApfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
