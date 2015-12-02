@@ -1,74 +1,63 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 7/7] ARM: DTS: Amlogic: Add SMP related nodes for Meson8b
-Date: Wed,  2 Dec 2015 18:22:33 +0100
-Message-ID: <1449076953-5058-8-git-send-email-carlo@caione.org>
-References: <1449076953-5058-1-git-send-email-carlo@caione.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449076953-5058-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [PATCH 3/4] dmaengine: qcom_bam_dma: use correct pipe FIFO size
+Date: Wed, 2 Dec 2015 11:22:55 -0600
+Message-ID: <20151202172255.GA9599@Agamemnon.attlocal.net>
+References: <1448961299-15161-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1448961299-15161-4-git-send-email-stanimir.varbanov@linaro.org>
+ <20151201172307.GA26687@Agamemnon.attlocal.net>
+ <565F1FDB.4020106@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <565F1FDB.4020106@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Archit Taneja <architt@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+On Wed, Dec 02, 2015 at 06:44:11PM +0200, Stanimir Varbanov wrote:
+> On 12/01/2015 07:23 PM, Andy Gross wrote:
+> > On Tue, Dec 01, 2015 at 11:14:58AM +0200, Stanimir Varbanov wrote:
+> >> The pipe fifo size register must instruct the bam hw
+> >> how many hw descriptors can be pushed to fifo. Currently
+> >> we isntruct the hw with 32KBytes but wrap the tail in
+> >> bam_start_dma in BAM_P_EVNT_REG on 4095 i.e. 32760. This
+> >> leads to stalled transactions when the tail wraps.
+> >>
+> >> Fix this by use the correct fifo size in BAM_P_FIFO_SIZES
+> >> register i.e. 32K - 8.
+> >>
+> >> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> >> ---
+> >>  drivers/dma/qcom_bam_dma.c |    2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/dma/qcom_bam_dma.c b/drivers/dma/qcom_bam_dma.c
+> >> index 0f06f3b7a72b..6d290de9ab2b 100644
+> >> --- a/drivers/dma/qcom_bam_dma.c
+> >> +++ b/drivers/dma/qcom_bam_dma.c
+> >> @@ -458,7 +458,7 @@ static void bam_chan_init_hw(struct bam_chan *bchan,
+> >>  	 */
+> >>  	writel_relaxed(ALIGN(bchan->fifo_phys, sizeof(struct bam_desc_hw)),
+> >>  			bam_addr(bdev, bchan->id, BAM_P_DESC_FIFO_ADDR));
+> >> -	writel_relaxed(BAM_DESC_FIFO_SIZE,
+> >> +	writel_relaxed(BAM_MAX_DATA_SIZE,
+> >>  			bam_addr(bdev, bchan->id, BAM_P_FIFO_SIZES));
+> > 
+> > This is just using the #define.  That is ok, but if you use this instead of the
+> > BAM_P_FIFO_SIZES then you need to fix your comment.  Or actually use the
+> > register value.... otherwise looks fine.
+> 
+> I did not follow your comment, but the intension of the patch is to set
+> the proper FIFO size in BAM_P_FIFO_SIZES register, i.e. 32K - 8.
 
-Add nodes for: SCU, PMU and SRAM. Set also the enable-method for SMP
-bringup.
+Sorry, I mixed up the usage and was thinking there was something you read out
+that told you the size.  That's not how it works, unfortunately.  The
+MAX_DATA_SIZE is fine, but the name is a little misleading.  Perhaps just
+BAM_FIFO_SIZE?
 
-Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/meson8b.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index 51b32ed..27e1b2f 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -51,9 +51,20 @@
- / {
- 	interrupt-parent = <&gic>;
- 
-+	scu@c4300000 {
-+		compatible = "arm,cortex-a5-scu";
-+		reg = <0xc4300000 0x100>;
-+	};
-+
-+	pmu@c81000e4 {
-+		compatible = "amlogic,meson8b-pmu", "syscon";
-+		reg = <0xc81000e0 0x18>;
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "amlogic,meson8b-smp";
- 
- 		cpu@200 {
- 			device_type = "cpu";
-@@ -88,6 +99,19 @@
- 		};
- 	};
- 
-+	sram: sram@d9000000 {
-+		compatible = "mmio-sram";
-+		reg = <0xd9000000 0x20000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0xd9000000 0x20000>;
-+
-+		smp-sram@1ff80 {
-+			compatible = "amlogic,meson8b-smp-sram";
-+			reg = <0x1ff80 0x8>;
-+		};
-+	};
-+
- 	soc {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
--- 
-2.5.0
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Andy
