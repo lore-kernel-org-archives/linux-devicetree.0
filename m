@@ -1,96 +1,63 @@
-From: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-Subject: Re: [PATCH v2] arm64: dts: add all hi6220 i2c nodes
-Date: Wed, 2 Dec 2015 10:40:00 +0800
-Message-ID: <565E5A00.50803@hisilicon.com>
-References: <1448524623-10320-1-git-send-email-kong.kongxinwei@hisilicon.com> <20151202020524.GC692@tiger>
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 0/4] support the efuse for rk3188/rk3066a SoCs and cleanup
+ driver on nvmem.
+Date: Wed, 2 Dec 2015 10:44:00 +0800
+Message-ID: <565E5AF0.4040802@rock-chips.com>
+References: <1447227272-1728-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20151202020524.GC692@tiger>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, tyler.baker@linaro.org, arnd@arndb.de, bintian.wang@huawei.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, puck.chen@hisilicon.com, liguozhu@hisilicon.com, w.f@huawei.com
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447227272-1728-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jiri Kosina <trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-hi Shawn
+Hi Srinivas,
 
-On 2015/12/2 10:05, Shawn Guo wrote:
-> On Thu, Nov 26, 2015 at 03:57:03PM +0800, Xinwei Kong wrote:
->> This patch adds all I2C nodes for the Hi6220 SoC. This hi6220 Soc
->> use this I2C IP of Synopsys Designware for HiKey board.
->>
->> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
->> ---
->>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 37 +++++++++++++++++++++++++++++++
->>  1 file changed, 37 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
->> index 82d2488..85d4a8b 100644
->> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
->> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
->> @@ -208,5 +208,42 @@
->>  			clock-names = "uartclk", "apb_pclk";
->>  			status = "disabled";
->>  		};
->> +
->> +		i2c0: i2c@f7100000 {
->> +			compatible = "snps,designware-i2c";
->> +			reg = <0x0 0xf7100000 0x0 0x1000>;
->> +			interrupts = <0 44 4>;
->> +			clocks = <&sys_ctrl HI6220_I2C0_CLK>;
->> +			clock-names = "clk_i2c0";
-> 
-> Neither bindings doc i2c-designware.txt defines this property, nor
-> kernel i2c-designware driver uses this property.  So I think this
-> clock-names property can just be dropped.
-> 
-This property should been delete it. I will debug it in HiKey board then
-send v3 patch.
+What's the think of this series patches?
 
-Thank you
-xinwei
-> Otherwise, the patch looks good to me.
-> 
-> Shawn
-> 
->> +			i2c-sda-hold-time-ns = <300>;
->> +			pinctrl-names = "default";
->> +			pinctrl-0 = <&i2c0_pmx_func &i2c0_cfg_func>;
->> +			status = "disabled";
->> +		};
->> +
->> +		i2c1: i2c@f7101000 {
->> +			compatible = "snps,designware-i2c";
->> +			reg = <0x0 0xf7101000 0x0 0x1000>;
->> +			interrupts = <0 45 4>;
->> +			clocks = <&sys_ctrl HI6220_I2C1_CLK>;
->> +			clock-names = "clk_i2c1";
->> +			i2c-sda-hold-time-ns = <300>;
->> +			pinctrl-names = "default";
->> +			pinctrl-0 = <&i2c1_pmx_func &i2c1_cfg_func>;
->> +			status = "disabled";
->> +		};
->> +
->> +		i2c2: i2c@f7102000 {
->> +			compatible = "snps,designware-i2c";
->> +			reg = <0x0 0xf7102000 0x0 0x1000>;
->> +			interrupts = <0 46 4>;
->> +			clocks = <&sys_ctrl HI6220_I2C2_CLK>;
->> +			clock-names = "clk_i2c2";
->> +			i2c-sda-hold-time-ns = <300>;
->> +			pinctrl-names = "default";
->> +			pinctrl-0 = <&i2c2_pmx_func &i2c2_cfg_func>;
->> +			status = "disabled";
->> +		};
->> +
->>  	};
->>  };
->> -- 
->> 1.9.1
->>
->>
->>
-> 
-> .
-> 
+Let me know if you have any suggestions or ideas.:-)
+
+Thanks!
+
+=E5=9C=A8 2015=E5=B9=B411=E6=9C=8811=E6=97=A5 15:34, Caesar Wang =E5=86=
+=99=E9=81=93:
+> This patchset to support reading the efuse info for more SoCs.
+> (Note: support 32 bits SoCs).
+>
+> Meanwhile, cleanup sunxi/rockchip drivers for more readability.
+>
+> You can easy to test for following:
+>
+> cd /sys/bus/nvmem/devices/rockchip-efuse0
+> localhost rockchip-efuse0 # busybox hexdump -C nvmem
+>
+>
+>
+> Caesar Wang (4):
+>    nvmem: sunxi: trivial: fix code style
+>    nvmem: rockchip: trivial: Make the driver more readability
+>    ARM: dts: rockchip: add eFuse node for rk3066a SoCs
+>    ARM: dts: rockchip: add eFuse node for rk3188 SoCs
+>
+>   arch/arm/boot/dts/rk3066a.dtsi | 13 ++++++
+>   arch/arm/boot/dts/rk3188.dtsi  | 13 ++++++
+>   drivers/nvmem/rockchip-efuse.c | 90 ++++++++++++++++++++-----------=
+-----------
+>   drivers/nvmem/sunxi_sid.c      |  9 ++---
+>   4 files changed, 71 insertions(+), 54 deletions(-)
+>
+
+
+--=20
+caesar wang | software engineer | wxt-TNX95d0MmH73oGB3hsPCZA@public.gmane.org
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
