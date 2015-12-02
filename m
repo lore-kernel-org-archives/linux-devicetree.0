@@ -1,50 +1,57 @@
-Return-Path: <mehta.salil.lnk@gmail.com>
-Subject: Re: [PATCH V4 net-next 4/5] net:hns: Add support of ethtool TSO set
- option for Hip06 in HNS
-References: <1448048952-146714-1-git-send-email-salil.mehta@huawei.com>
- <1448048952-146714-5-git-send-email-salil.mehta@huawei.com>
- <CO2PR11MB00885531F54375191E6F015597180@CO2PR11MB0088.namprd11.prod.outlook.com>
-From: Salil Mehta <mehta.salil.lnk@gmail.com>
-Message-ID: <565DA6F5.7040804@gmail.com>
-Date: Tue, 1 Dec 2015 13:56:05 +0000
+Return-Path: <>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [PATCH v2 1/2] Documentation: afe4404: Add DT bindings for the AFE4404 heart monitor
+Date: Wed, 2 Dec 2015 13:57:19 -0600
+Message-ID: <1449086240-13375-2-git-send-email-afd@ti.com>
+In-Reply-To: <1449086240-13375-1-git-send-email-afd@ti.com>
+References: <1449086240-13375-1-git-send-email-afd@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <CO2PR11MB00885531F54375191E6F015597180@CO2PR11MB0088.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-To: Yuval Mintz <Yuval.Mintz@qlogic.com>, Salil Mehta <salil.mehta@huawei.com>, David Miller <davem@davemloft.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "paul.gortmaker@windriver.com" <paul.gortmaker@windriver.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "liguozhu@hisilicon.com" <liguozhu@hisilicon.com>, "yisen.zhuang@huawei.com" <yisen.zhuang@huawei.com>, "dingtianhong@huawei.com" <dingtianhong@huawei.com>, "zhangfei.gao@linaro.org" <zhangfei.gao@linaro.org>, "huangdaode@hisilicon.com" <huangdaode@hisilicon.com>, "kenneth-lee-2012@foxmail.com" <kenneth-lee-2012@foxmail.com>, "xuwei5@hisilicon.com" <xuwei5@hisilicon.com>, "lisheng011@huawei.com" <lisheng011@huawei.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>, "linuxarm@huawei.com" <linuxarm@huawei.com>
+Content-Type: text/plain
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>
+Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew
 List-ID: <devicetree@vger.kernel.org>
 
+Add the TI afe4404 heart monitor DT bindings documentation.
+Create health directory created under iio.
 
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+---
+ .../devicetree/bindings/iio/health/afe4404.txt     | 27 ++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/health/afe4404.txt
 
-On 22/11/15 11:17, Yuval Mintz wrote:
->> +static netdev_features_t hns_nic_fix_features(
->> +		struct net_device *netdev, netdev_features_t features) {
->> +	struct hns_nic_priv *priv = netdev_priv(netdev);
->> +
->> +	switch (priv->enet_ver) {
->> +	case AE_VERSION_1:
->> +		features &= ~(NETIF_F_TSO | NETIF_F_TSO6 |
->> +				NETIF_F_HW_VLAN_CTAG_FILTER);
->> +		break;
->> +	default:
->> +		break;
->> +	}
->> +	return features;
->> +}
->> +
-> Isn't AE_VERSION_1 something fixed once you publish your features?
-> If it can't be changed, why not simply remove the features from
-> `hw_features' instead of having to implement this ndo?
-Hi Yuval,
-I some how missed to reply this, though I worked on your suggestions
-in the already floated V5 patch earlier. Sorry for this!
-There could be a case where the feature is supported by the SoC
-and therefore it is already part of the 'hw_features' but it has been
-say DISABLED or ENABLED by ethtool. In such a case, we need to
-make sure we strike off that feature from the 'features' flag.
-
-Therefore, we need this leg I suppose. Let me know If I am missing
-something here or there is a gap in my understanding.
-
-Thanks
-Salil
+diff --git a/Documentation/devicetree/bindings/iio/health/afe4404.txt b/Documentation/devicetree/bindings/iio/health/afe4404.txt
+new file mode 100644
+index 0000000..25b77a4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/health/afe4404.txt
+@@ -0,0 +1,27 @@
++* Texas Instruments AFE4404 Heart rate and Pulse Oximeter
++
++Required properties:
++ - compatible		: Should be "ti,afe4404".
++ - reg			: I2C address of the device.
++ - tx_sup-supply	: Regulator supply to LEDs.
++ - interrupt-parent	: Phandle to he parent interrupt controller.
++ - interrupts		: The interrupt line the device ADC_RDY pin is connected to.
++
++Optional properties:
++ - reset-gpios		: GPIO used to reset the device.
++
++Example:
++
++&i2c2 {
++	heart_mon@58 {
++		compatible = "ti,afe4404";
++		reg = <0x58>;
++
++		tx_sup-supply = <&vbat>;
++
++		interrupt-parent = <&gpio1>;
++		interrupts = <28 IRQ_TYPE_EDGE_RISING>;
++
++		reset-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
++	};
++};
+-- 
+1.9.1
