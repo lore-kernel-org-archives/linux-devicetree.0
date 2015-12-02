@@ -1,28 +1,23 @@
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH v2 net-next 0/2] ravb: More compatibility strings
-Date: Wed,  2 Dec 2015 14:58:31 +0900
-Message-ID: <1449035913-9129-1-git-send-email-horms+renesas@verge.net.au>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, linux-sh@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH V1] ARM: dts: imx6: Change the clock name for spba clock
+Date: Wed, 2 Dec 2015 14:14:12 +0800
+Message-ID: <20151202061412.GI692@tiger>
+References: <8cd5b975aa4792f1dd9ac2f8909689f8d2018160.1448505436.git.shengjiu.wang@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <8cd5b975aa4792f1dd9ac2f8909689f8d2018160.1448505436.git.shengjiu.wang@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shengjiu Wang <shengjiu.wang@freescale.com>
+Cc: kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Nov 26, 2015 at 10:39:30AM +0800, Shengjiu Wang wrote:
+> Audio IP need the spba clock, but original clock name "dma" is not
+> accurate, so change it to name "spba". The audio driver has been
+> using the new name "spba", the binding document has been updated.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@freescale.com>
 
-this short series adds generic gen2 and gen3, and soc-specific
-compatibility strings for the missing gen2 SoCs.
-
-Key Changes in v2:
-* Include "rcar-" in generic bindings
-
-Simon Horman (2):
-  ravb: add fallback compatibility strings
-  ravb: add device tree support for r8a779[123]
-
- Documentation/devicetree/bindings/net/renesas,ravb.txt | 12 +++++++++++-
- drivers/net/ethernet/renesas/ravb_main.c               |  2 ++
- 2 files changed, 13 insertions(+), 1 deletion(-)
-
--- 
-2.1.4
+Applied, thanks.
