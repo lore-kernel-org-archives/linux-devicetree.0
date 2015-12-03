@@ -1,100 +1,155 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v7 0/5] mfd: tps65912: Driver rewrite with DT support
-Date: Thu, 3 Dec 2015 09:52:56 -0600
-Message-ID: <56606558.9080200@ti.com>
-References: <1447869580-10416-1-git-send-email-afd@ti.com>
- <20151124162624.GI807@x1>
+From: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] Device tree binding documentation for chromeos-firmware
+Date: Thu, 03 Dec 2015 16:11:20 +0000
+Message-ID: <566069A8.1070002@collabora.co.uk>
+References: <1448997171-7064-1-git-send-email-martyn.welch@collabora.co.uk> <1448997171-7064-2-git-send-email-martyn.welch@collabora.co.uk> <20151202151552.GA11101@rob-hp-laptop> <56601611.6010800@collabora.co.uk> <CAL_JsqJGk5_Nk7joSHfJXxcVrpHDBbawY=nPOrOiraWinuka4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151124162624.GI807@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJGk5_Nk7joSHfJXxcVrpHDBbawY=nPOrOiraWinuka4w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/24/2015 10:26 AM, Lee Jones wrote:
-> On Wed, 18 Nov 2015, Andrew F. Davis wrote:
+
+
+On 03/12/15 15:08, Rob Herring wrote:
+> On Thu, Dec 3, 2015 at 4:14 AM, Martyn Welch
+> <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> wrote:
+>>
+>> On 02/12/15 15:15, Rob Herring wrote:
+>>>
+>>> On Tue, Dec 01, 2015 at 07:12:49PM +0000, Martyn Welch wrote:
+>>>>
+>>>> This patch adds documentation for the chromeos-firmware binding.
+>>>>
+>>>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+>>>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>>>> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+>>>> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>>> Signed-off-by: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+>>>> ---
+>>>>    .../devicetree/bindings/misc/chromeos-firmware.txt | 27
+>>>> ++++++++++++++++++++++
+>>>
+>>>
+>>> bindings/firmware/ please.
+>>>
+>>>>    1 file changed, 27 insertions(+)
+>>>>    create mode 100644
+>>>> Documentation/devicetree/bindings/misc/chromeos-firmware.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/misc/chromeos-firmware.txt
+>>>> b/Documentation/devicetree/bindings/misc/chromeos-firmware.txt
+>>>> new file mode 100644
+>>>> index 0000000..8240611
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/misc/chromeos-firmware.txt
+>>>> @@ -0,0 +1,27 @@
+>>
+>>
+>> <snip>
+>>
+>>>> +
+>>>> +Each signal is represented as a sub-node of "chromeos_firmware":
+>>>> +Subnode properties:
+>>>> +
+>>>> +       - gpios: OF device-tree gpio specification.
+>>>> +
+>>>> +Example nodes:
+>>>> +
+>>>> +       chromeos_firmware {
+>>>
+>>>
+>>> This should go under /firmware
+>>>
+>>
+>> I've changed this to be:
+>>
+>>          firmware {
+>>                  chromeos {
+>>                          ...
+>>                  };
+>>          ];
+>>
+>> Which I generally accept (assuming this is considered a part of the
+>> firmware) as a better way to represent this in the device tree, however this
+>> has the nasty side effect of causing the device tree parsing to avoid
+>> parsing the chromeos child and seeing it's compatible property (as the
+>> firmware node isn't a bus), resulting in the probe routine not being called.
+>>
+>> If I add a 'compatible = "simple-bus"' property to the firmware node it
+>> works, but this doesn't seem quite right as I believe "simple-bus" is
+>> defined as a "simple memory mapped bus".
+>>
+>> I /could/ rewrite the initialisation to call of_find_compatible_node(), but
+>> this seems rather hacky and inefficient. I can think of 2 other ways this
+>> could be resolved:
+>>
+>> (1) As this is only tangentially related to firmware, I rename it something
+>> like "chromeos-signals" and make it it's own node. In essence this driver
+>> provides a mechanism built on top of specific GPIO (ala gpio-keys seems to
+>> be, after-all this has a similar use of resources to that).
 >
->> In an effort to cleanup this driver and add Device Tree support
->> the driver has been rewritten based on new driver styles and
->> modern kernel driver helpers. This has nearly halved the lines
->> of code while keeping all previous functionality.
->>
->> Platform file based initialization has been dropped as there is
->> no examples of this use in the kernel.
->>
->> v1 can be found here: [1] v2: [2] v3: [3] v4: [4] v5: [5] v6: [6]
->>
->> Changes from v6:
->>   - Removed compatible strings from DT sub-nodes
->>   - Rearranged DT bindings
->>   - Small fixes
->>
->> Changes from v5:
->>   - Small formatting changes to DT Docs
->>   - Converted to_tps65912_gpio from macro to inline function
->>
->> Changes from v4:
->>   - Use mfd core to add sub-devices
->>
->> Changes from v3:
->>   - Reorganized regulator driver and related DT node
->>   - Other small fixes as discussed in v3 thread
->>
->> Changes from v2:
->>   - Split the series further into subsystems
->>
->> Changes from v1:
->>   - Split the rewrite into delete/create patches
->>   - Several small fixes as discussed in v1 thread
->>
->> [1] http://www.spinics.net/lists/devicetree/msg93863.html
->> [2] http://www.spinics.net/lists/devicetree/msg95003.html
->> [3] http://www.spinics.net/lists/devicetree/msg95133.html
->> [4] http://www.spinics.net/lists/devicetree/msg96109.html
->> [5] http://www.spinics.net/lists/devicetree/msg100601.html
->> [6] https://lkml.org/lkml/2015/10/30/690
->>
->> Andrew F. Davis (5):
->>    Documentation: tps65912: Add DT bindings for the TPS65912 PMIC
->>    mfd: tps65912: Remove old driver in preparation for new driver
->>    mfd: tps65912: Add driver for the TPS65912 PMIC
->>    regulator: tps65912: Add regulator driver for the TPS65912 PMIC
->>    gpio: tps65912: Add GPIO driver for the TPS65912 PMIC
->>
->>   Documentation/devicetree/bindings/mfd/tps65912.txt |  50 ++
->>   drivers/gpio/Kconfig                               |   2 +-
->>   drivers/gpio/gpio-tps65912.c                       | 317 ++++-----
->>   drivers/mfd/Kconfig                                |  20 +-
->>   drivers/mfd/Makefile                               |   3 +-
->>   drivers/mfd/tps65912-core.c                        | 290 ++++-----
->>   drivers/mfd/tps65912-i2c.c                         | 219 +++----
->>   drivers/mfd/tps65912-irq.c                         | 217 -------
->>   drivers/mfd/tps65912-spi.c                         | 219 +++----
->>   drivers/regulator/Kconfig                          |   2 +-
->>   drivers/regulator/tps65912-regulator.c             | 710 +++++----------------
->>   include/linux/mfd/tps65912.h                       | 208 +++---
+> I'm starting to fail to understand the relationship to firmware here...
 >
-> Just waiting for the regulator Ack now, right?
+> gpio-keys are at least a thing (being a key or set of keys). Your
+> grouping is a rather random collection of GPIOs. Maybe you need
+> "gpio-switch" binding and then the function would be "label" property.
 >
 
-I believe so, is there a friendly way to poke Mark Brown so this doesn't
-get caught in his filter? This is almost identical to the regulator he
-applied the other day from me so I don't imagine there will be much problem
-with this patch.
+So, something like this:
 
->>   12 files changed, 780 insertions(+), 1477 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/mfd/tps65912.txt
->>   rewrite drivers/gpio/gpio-tps65912.c (74%)
->>   rewrite drivers/mfd/tps65912-core.c (95%)
->>   rewrite drivers/mfd/tps65912-i2c.c (93%)
->>   delete mode 100644 drivers/mfd/tps65912-irq.c
->>   rewrite drivers/mfd/tps65912-spi.c (92%)
->>   rewrite drivers/regulator/tps65912-regulator.c (94%)
->>
->> --
->> 1.9.1
->>
+gpio-switch {
+	compatible = "gpio-switch";
+
+	pinctrl-names = "default";
+	pinctrl-0 = <&wp_gpio &dev_mode &rec_mode>;
+
+	write-protect {
+		label = "write-protect";
+		gpios = <&gpx3 0 GPIO_ACTIVE_LOW>;
+		read-only;
+	};
+
+	developer-switch {
+		label = "developer-switch";
+		gpios = <&gpx1 3 GPIO_ACTIVE_HIGH>;
+		read-only;
+	};
+
+	recovery-switch {
+		label = "recovery-switch";
+		gpios = <&gpx0 7 GPIO_ACTIVE_LOW>;
+		read-only;
+	};
+};
+
+(Making it much more generic in the process.)
+
+
+>> (2) Add a compatible string something like 'compatible="logical-group";' to
+>> the firmware node and add that too the bus matching logic. This would have
+>> the advantage of solving this in the general case (I guess there are other
+>> instances where a grouping of things more logically rather than physically
+>> connected would ideally be grouped together), though I expect there may be
+>> some strong views regarding this approach.
 >
+> Why do you need them grouped?
+>
+
+That's effectively what is achieved by putting this (and I assume 
+anything else considered "firmware" under a firmware node isn't it? (or 
+and I miss-understanding your request?)
+
+I think it is a moot point, I'll rework as you've suggested.
+
+Martyn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
