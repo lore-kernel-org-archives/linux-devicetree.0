@@ -1,91 +1,83 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 10/10] dt-bindings: Add DSIv2 documentation
-Date: Wed, 2 Dec 2015 23:16:23 -0800
-Message-ID: <20151203071623.GB14699@codeaurora.org>
-References: <1444827544-25656-1-git-send-email-architt@codeaurora.org>
- <1447844131-4182-1-git-send-email-architt@codeaurora.org>
- <1447844131-4182-11-git-send-email-architt@codeaurora.org>
- <CAL_JsqJufZvsGyxZ40+kPcAVr5mXqCi+Qej_8X6=GRxT9j+5+w@mail.gmail.com>
- <564C981F.3040907@codeaurora.org>
- <CAL_JsqJ7PovZsz0=b90bUChKtNra1pXxEjU_DiYAn7JUgShm5Q@mail.gmail.com>
- <5652AE71.4060609@codeaurora.org>
- <20151202082001.GC4139@codeaurora.org>
- <565EC05D.8070009@codeaurora.org>
+From: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Subject: Re: [PATCH 1/2] regulator: Add brcm,bcm63xx-regulator device tree
+ binding
+Date: Thu, 3 Dec 2015 08:14:33 +0000
+Message-ID: <565FF9E9.1090503@simon.arlott.org.uk>
+References: <565A18DD.60108@simon.arlott.org.uk>
+ <20151130121043.GX1929@sirena.org.uk> <565CB1CF.5040306@simon.arlott.org.uk>
+ <20151201221615.GY1929@sirena.org.uk>
+ <b7ecdc8ebcdf9582620c22b0e8a4a96d24ba67c1@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+ <20151202125325.GI1929@sirena.org.uk> <565F53FC.5080309@simon.arlott.org.uk>
+ <20151203000631.GM1929@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <565EC05D.8070009@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: Rob Herring <robh@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151203000631.GM1929-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/02, Archit Taneja wrote:
-> On 12/02/2015 01:50 PM, Stephen Boyd wrote:
-> >
-> >My only thought there would be to make of_clk_set_defaults() wait
-> >until both clocks are registered before it does any parent
-> >setting. But only in the case where the assigned parents contains
-> >a clock that is provided by the node being processed. I suppose
-> >the simplest thing to do would be to skip it during the device
-> >driver probe and handle it when the clk provider is registered.
-> >
+On 03/12/15 00:06, Mark Brown wrote:
+> On Wed, Dec 02, 2015 at 08:26:36PM +0000, Simon Arlott wrote:
+>> On 02/12/15 12:53, Mark Brown wrote:
 > 
-> The assigned-clock-parents stuff you mentioned is needed to set a
-> default link between the one of the DSI PLLs and the RCG, right? I
-> just wanted to make clear if we were still discussing the same
-> issue.
-
-Yes.
-
+>> > This is the sort of thing you can pick up from the SoC compatible
+>> > strings.  As things stand there is zero content in this driver that
+>> > relates to this SoC.
 > 
-> From what I understand, we don't need the assigned-clock-parents stuff
-> to establish a link between byte_clk_src(RCG clock) and
-> byte_clk(branch clock). That's a fixed link set up by the clock
-> structs provided in the gcc driver and doesn't need to be specially
-> assigned, and just a
-> clk_get_parent in the driver does the job there.
-
-There's only one parent of the byte_clk and that's byte_clk_src.
-So yes, there's no need to describe that in DT and
-clk_get_parent() works fine.
-
+>> There's always going to be very little content in the driver that
+>> relates to this SoC, given that a single bit flip enables/disables
+>> power.
 > 
-> About assigning a parent to the RCG, wouldn't that be xo by default, and
-> changed by the drm/msm driver to one of the PLLs when the need arrives?
-> I didn't get why we need to establish that beforehand in DT?
+>> All other device tree drivers allow a register address to be specified
+>> for the device, how is an offset in the regmap any different?
 > 
+> It's not that it's an offset in regmap, it's that you're trying to make
+> a device driver with literally *no* content that is specific to the
+> actual device.  If you're making a driver for a specific device like
 
-Yes, it would be XO out of reset, but we have no idea what the
-bootloader is doing. I thought the problem was that byte_clk_src
-is not actually an input to the DSI device. The proposal was to
-have DT specify byte_clk_src and byte_clk in the clocks array so
-that byte_clk_src could be reparented to the PLL and the byte_clk
-could be enabled/disabled. If we use DT to do the parent
-configuring then the DSI node doesn't have the byte_clk_src in
-its clocks array and thus DT is reflecting reality.
+The device that only has a single register, I don't want to make it
+specific to the device by hard coding a register address in the driver
+that changes when the same device is used on different SoCs.
 
-If we want to dynamically switch the parent of byte_clk_src to be
-different PLLs at runtime, then yes we'll need to get the parent
-of the byte_clk (which is byte_clk_src) and set the PLL as the
-parent. Or we'll need to make clk_set_parent() on the byte_clk
-transparently set the grand-parent to be the PLL. In that case we
-may need to introduce some sort of flag like
-CLK_SET_PARENT_GRANDPARENT to add this type of behavior.
+> this it should know at least something about how to control the device
+> from the compatible string.  If you're making a generic driver it should
+> not make reference to specific devices.
 
-I don't have a huge problem with
+Will you accept a generic driver for a simple enable regulator device on
+a regmap? What should its compatible string be?
 
-	clk_set_parent(clk_get_parent(byte_clk), PLL)
+> In general I would prefer to have a driver with a SoC specific
+> compatible string and the data tables in the kernel, that way we keep
+> the device trees stable and our ABI more robust.
+> 
+>> >> The mask is used as there's one bit per regulator in the register, but
+>> >> there's more than one way to express this in the DT:
+> 
+>> > I wouldn't expect to see it in the device tree at all for a device
+>> > specific driver.
+> 
+>> If there isn't an individual entry in DT for each regulator, how is it
+>> supposed to work? There's no #regulator-cells property.
+> 
+> There could be one if it would help, but we do normally manage to do
+> this without - look at how other regulator drivers work.
 
-except that this fails the abstraction test. It leaks information
-about the clock tree into a driver that shouldn't need to know
-that on this particular SoC there's a clock in between the PLL
-and the byte_clk. Future designs may not have the intermediate
-clock and then we'll need to update the driver to handle the
-difference, when we could have added the flag and things would
-work the same.
+Several of them have a fixed list of supported regulator names in the
+driver. The regulator names for this device are meaningless to the
+driver because all of the regulators look the same. They don't have a
+known or controllable voltage and can only be turned on or off.
+
+Any table mapping regulator names to bits in the register would be
+different for each SoC making the list of regulator names in the device
+tree redundant. If they're not listed in the device tree then I can't
+use them as a phandle for other devices.
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Simon Arlott
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
