@@ -1,140 +1,83 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv7 2/2] mailbox: Adding driver for Xilinx LogiCORE IP mailbox.
-Date: Thu, 3 Dec 2015 10:35:36 +0530
-Message-ID: <CAJe_ZhexWxTOYTLKH0-NPQ-XVARFUatHVT_XGYcDe_Vhx8ncOg@mail.gmail.com>
-References: <1436922022-17564-1-git-send-email-moritz.fischer@ettus.com>
-	<1436922022-17564-3-git-send-email-moritz.fischer@ettus.com>
-	<CABb+yY3tpepdO=s9nb9kAE241sYVTTXB-ci_4ihuthHTekedNg@mail.gmail.com>
-	<CAAtXAHe_7vR71wZPbEw1so_40OEHiNN38mnTuqoX7SCwqEpfcw@mail.gmail.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 00/27] memory: omap-gpmc: mtd: nand: Support GPMC NAND
+ on non-OMAP platforms
+Date: Wed, 2 Dec 2015 21:09:05 -0800
+Message-ID: <20151203050905.GE120110@google.com>
+References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAtXAHe_7vR71wZPbEw1so_40OEHiNN38mnTuqoX7SCwqEpfcw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1442588029-13769-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2 December 2015 at 22:56, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Jassi,
->
-> thanks for your feedback.
->
-> On Mon, Aug 10, 2015 at 1:05 AM, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Wed, Jul 15, 2015 at 6:30 AM, Moritz Fischer
->> <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org> wrote:
->>
->>> +
->>> +static void xilinx_mbox_rx_data(struct mbox_chan *chan)
->>> +{
->>> +       struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
->>> +       u32 data;
->>> +
->>> +       if (xilinx_mbox_pending(mbox)) {
->>> +               data = readl_relaxed(mbox->mbox_base + MAILBOX_REG_RDDATA);
->>> +               mbox_chan_received_data(chan, (void *)data);
->>>
->> If RDDATA is a FIFO, then above seems wrong - you are assuming
->> messages are always going to be exactly 32-bits for every protocol.
->> Ideally you should empty the fifo fully, at least when RX has an
->> interrupt.
->
-> From my understanding it's hard to tell how much actually is in the fifo,
-> you can tell if it's full for send direction, or empty for read direction.
->
-Simply read the whole FIFO and leave it to the client driver to parse
-that data according to the protocol it drives.
+Hi,
 
-> Maybe the STI / RTI can be setup in a smart way to work with multiple message
-> sizes.
->>
->>> +
->>> +static int xilinx_mbox_irq_send_data(struct mbox_chan *chan, void *data)
->>> +{
->>> +       struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
->>> +       u32 *udata = data;
->>> +
->>> +       if (xilinx_mbox_full(mbox))
->>> +               return -EBUSY;
->>>
->> This check is redundant. last_tx_done already makes sure this is always true.
->
-> Good to know. I'll fix it.
->>
->>> +       /* enable interrupt before send */
->>> +       xilinx_mbox_tx_intmask(mbox, true);
->>> +
->>> +       writel_relaxed(*udata, mbox->mbox_base + MAILBOX_REG_WRDATA);
->>> +
->> From status EMPTY and FULL, it seems WRDATA is a FIFO. So here also
->> you should expect messages to be <= fifo depth. And not assume exactly
->> 32bit messages always.
->
-> How do I determine the message size?
->
-Always expect any write request is exactly the size of FIFO depth.
+On Fri, Sep 18, 2015 at 05:53:22PM +0300, Roger Quadros wrote:
+> Hi,
+> 
+> We do a couple of things in this series which result in
+> cleaner device tree implementation, faster perfomance and
+> multi-platform support. As an added bonus we get new GPI/Interrupt pins
+> for use in the system.
+> 
+> - Establish a custom interface between NAND and GPMC driver. This is
+> needed because all of the NAND registers sit in the GPMC register space.
+> Some bits like NAND IRQ are even shared with GPMC.
+> 
+> - Remove NAND IRQ handling from omap-gpmc driver, share the GPMC IRQ
+> with the omap2-nand driver and handle NAND IRQ events in the NAND driver.
+> This causes performance increase when using prefetch-irq mode.
+> 30% increase in read, 17% increase in write in prefetch-irq mode.
+> 
+> - Clean up device tree support so that omap-gpmc IP and the omap2 NAND
+> driver can be used on non-OMAP platforms. e.g. Keystone.
+> 
+> - Implement GPIOCHIP + IRQCHIP for the GPMC WAITPINS. SoCs can contain
+> 2 to 4 of these and most of them would be unused otherwise. It also
+> allows a cleaner implementation of NAND Ready pin status for the NAND driver.
+> 
+> - Implement GPIOlib based NAND ready pin checking for OMAP NAND driver.
+> 
+> This series is available at
+> git-9UaJU3cA/F/QT0dZR+AlfA@public.gmane.org:rogerq/linux.git
+> in branch
+> for-v4.4/gpmc-v3
+> 
+> cheers,
+> -roger
+> 
+> Changelog:
+> v3:
+> -Fixed and tested NAND using legacy boot on omap3-beagle.
+> -Support rising and falling edge interrupts on WAITpins.
+> -Update DT node of all gpmc users.
 
-> Doesn't
-> drivers/mailbox/bcm2835-mailbox.c or
->
-Well I did point it out
-http://lists.infradead.org/pipermail/linux-rpi-kernel/2015-June/001902.html
- ... but developer assumes there will _never_ be need to pass a
-message bigger than 32-bits. Sadly overlooking the possibility that
-some protocol might have simple, say, 64-bits wide commands and
-responses that could avoid using any Shared-Memory at all.
+The MTD stuff looks mostly good to me know. I've made all my comments
+for now, but I'm not sure how you're going to end up rebasing/splitting
+and what you're going to do with the irqchip removal, so I'll refrain
+from ack's for now. Hopefully I can either ack or merge v4.
 
-> mailbox-altera.c make the same assumption?
->
-There are 2 registers, for CMD and PRT each, that make up 1 message.
-It doesn't seem like a fifo.
+I brought it up on one other patch, but it's not really clear to me what
+the split is on board file vs. device tree handling, since you seem to
+have a combination of both (i.e., platform data that passes along device
+nodes). What's the plan on that?
 
->>
->>> +
->>> +static bool xilinx_mbox_last_tx_done(struct mbox_chan *chan)
->>> +{
->>> +       struct xilinx_mbox *mbox = mbox_chan_to_xilinx_mbox(chan);
->>> +
->>> +       /* return false if mailbox is full */
->>> +       return !xilinx_mbox_full(mbox);
->>>
->> Instead of FULL, I think it should check for stricter EMPTY status ...
->> mbox api submits only 1 message at a time.
->
-> The EMPTY status applies to the receive direction only, I could check
-> the STI status
-> bit though I suppose.
->
-I don't know the h/w but you get my idea. So whatever is in the next revision.
+And of course, there's the question of how exactly to merge this, given
+the:
+(1) conflicts already existing in the MTD dev tree
+(2) this touches several trees, often in the same patch and
+(3) even if the patches were split out a little better into MTD and
+    non-MTD stuff, I think there would still be dependencies such that
+    we'd need at least 1 (probably 2) cross merges to get it all
+    straight
 
-> [...]
->>> +
->>> +       mbox->irq = platform_get_irq(pdev, 0);
->>> +       /* if irq is present, we can use it, otherwise, poll */
->>> +       if (mbox->irq > 0) {
->>> +               mbox->controller.txdone_irq = true;
->>> +               mbox->controller.ops = &xilinx_mbox_irq_ops;
->>> +       } else {
->>> +               dev_info(&pdev->dev, "IRQ not found, fallback to polling.\n");
->>> +               mbox->controller.txdone_poll = true;
->>> +               mbox->controller.txpoll_period = MBOX_POLLING_MS;
->>> +               mbox->controller.ops = &xilinx_mbox_poll_ops;
->>> +
->>> +               setup_timer(&mbox->rxpoll_timer, xilinx_mbox_poll_rx,
->>> +                           (unsigned long)&mbox->chan);
->>>
->> I believe there is indeed some platform that doesn't have RX-Interrupt?
->>  If no, please remove this.
->>  If yes, you may want to get some hint from platform about the size of
->> messages and do mbox_chan_received_data() only upon reading those many
->> bytes.
->
-> I'd be fine to drop the polling use case for the moment, on my
-> platform I can wire up the IRQ.
-> We can always add it back in in a follow up use case.
->
+I'd be happy to hear your thoughts.
 
-Thanks.
+Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
