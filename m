@@ -1,189 +1,213 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 3/3] Addition of binding for firmware signals on peach-pi
-Date: Thu, 03 Dec 2015 09:10:40 +0900
-Message-ID: <565F8880.6000108@samsung.com>
-References: <1448997171-7064-1-git-send-email-martyn.welch@collabora.co.uk>
- <1448997171-7064-4-git-send-email-martyn.welch@collabora.co.uk>
- <565E327E.90404@samsung.com> <565EBB85.2030607@collabora.co.uk>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] mtd: brcmnand: Request and enable the clock if
+ present
+Date: Wed, 2 Dec 2015 16:11:50 -0800
+Message-ID: <20151203001150.GA120110@google.com>
+References: <565F81A6.6060307@simon.arlott.org.uk>
+ <565F81F4.8090300@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <565EBB85.2030607@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Martyn Welch <martyn.welch@collabora.co.uk>
-Cc: Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <565F81F4.8090300-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02.12.2015 18:36, Martyn Welch wrote:
-> 
-> 
-> On 01/12/15 23:51, Krzysztof Kozlowski wrote:
->> On 02.12.2015 04:12, Martyn Welch wrote:
->>> The peach pi has a GPIO connected to the firmware write protect,
->>> developer
->>> mode and recovery mode lines. This patch adds the required nodes to the
->>> device tree to configure the pinmuxing and allow these to be read from
->>> user space.
->>>
->>> Cc: Rob Herring <robh+dt@kernel.org>
->>> Cc: Pawel Moll <pawel.moll@arm.com>
->>> Cc: Mark Rutland <mark.rutland@arm.com>
->>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
->>> Cc: Kumar Gala <galak@codeaurora.org>
->>> Cc: Russell King <linux@arm.linux.org.uk>
->>> Cc: Kukjin Kim <kgene@kernel.org>
->>> Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->>> Cc: devicetree@vger.kernel.org
->>> Cc: linux-arm-kernel@lists.infradead.org
->>> Cc: linux-samsung-soc@vger.kernel.org
->>> Signed-off-by: Martyn Welch <martyn.welch@collabora.co.uk>
->>> ---
->>>   arch/arm/boot/dts/exynos5800-peach-pi.dts | 40
->>> +++++++++++++++++++++++++++++++
->>>   1 file changed, 40 insertions(+)
->>
->> Hi,
->>
->> Thanks for the patch.
->>
->> Few points from my side:
->> 1. Please add a prefix to the subject: "ARM: dts:".
->>
-> 
-> Ok, sorry.
-> 
->> 2. There is no need of such huge CC-list in the body of commit. This
->> CC-list comes from get_maintainer so there is no benefit of duplicating
->> it here. The CC is usually used to notify other people who might be
->> interested but get_maintainer does not point them.
->>
-> 
-> Ok, yes these were pulled from get_maintainer.
-> 
->> 3. I received only this third patch. I did not receive cover letter
->> explaining possible dependencies so I am not sure how to deal with the
->> patch. It looks like there are no dependencies... but maybe there are?
->> Is this is a new binding or no? Please provide a cover letter (if it
->> exists already be sure to send it to all interested parties) or send
->> entire patchset so the big picture could be seen.
->>
-> 
-> I'll make sure I do that next time.
-> 
-> The cover letter read:
-> 
-> Some Chromebooks have gpio attached to signals used to cause the
-> firmware to enter alternative modes of operation and/or control other
-> device characteristics (such as write protection on flash devices). This
-> patch adds a driver that exposes a read-only interface to allow these
-> signals to be read from user space.
-> 
-> In addition this patch series provides the required bindings for this to
-> the peach-pi Chromebook.
-> 
-> 
-> This is a new binding, but the driver is based on functionality in the
-> kernel shipped on Chromebooks. The binding has been modified based on
-> the form of existing bindings in the mainline kernel.
-> 
-> Does that help?
+Hi Simon,
 
-Yes, that helps. With the changes above (subject and reduced CC-line in
-commit message):
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-
-As there are no dependencies this should go through samsung-soc. Just
-let us know about DT bindings being accepted/applied.
-
-Best regards,
-Krzysztof
-
-
+On Wed, Dec 02, 2015 at 11:42:44PM +0000, Simon Arlott wrote:
+> Attempt to enable a clock named "nand" as some SoCs have a clock for the
+> controller that needs to be enabled.
 > 
-> Martyn
+> Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+> ---
+>  drivers/mtd/nand/brcmnand/brcmnand.c | 69 ++++++++++++++++++++++++++++--------
+>  1 file changed, 54 insertions(+), 15 deletions(-)
 > 
->> The patch itself looks good but I'll wait with a review tag for #3.
->>
->> Best regards,
->> Krzysztof
->>
->>
->>>
->>> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts
->>> b/arch/arm/boot/dts/exynos5800-peach-pi.dts
->>> index 49a4f43..485c18f 100644
->>> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
->>> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
->>> @@ -53,6 +53,25 @@
->>>           };
->>>       };
->>>
->>> +    chromeos-firmware {
->>> +        compatible = "google,gpio-firmware";
->>> +
->>> +        pinctrl-names = "default";
->>> +        pinctrl-0 = <&wp_gpio &dev_mode &rec_mode>;
->>> +
->>> +        write-protect {
->>> +            gpios = <&gpx3 0 GPIO_ACTIVE_LOW>;
->>> +        };
->>> +
->>> +        developer-switch {
->>> +            gpios = <&gpx1 3 GPIO_ACTIVE_HIGH>;
->>> +        };
->>> +
->>> +        recovery-switch {
->>> +            gpios = <&gpx0 7 GPIO_ACTIVE_LOW>;
->>> +        };
->>> +    };
->>> +
->>>       gpio-keys {
->>>           compatible = "gpio-keys";
->>>
->>> @@ -731,6 +750,13 @@
->>>           samsung,pin-val = <0>;
->>>       };
->>>
->>> +    rec_mode: rec-mode {
->>> +        samsung,pins = "gpx0-7";
->>> +        samsung,pin-function = <0>;
->>> +        samsung,pin-pud = <0>;
->>> +        samsung,pin-drv = <0>;
->>> +    };
->>> +
->>>       tpm_irq: tpm-irq {
->>>           samsung,pins = "gpx1-0";
->>>           samsung,pin-function = <0>;
->>> @@ -752,6 +778,13 @@
->>>           samsung,pin-drv = <0>;
->>>       };
->>>
->>> +    dev_mode: dev-mode {
->>> +        samsung,pins = "gpx1-3";
->>> +        samsung,pin-function = <0>;
->>> +        samsung,pin-pud = <3>;
->>> +        samsung,pin-drv = <0>;
->>> +    };
->>> +
->>>       ec_irq: ec-irq {
->>>           samsung,pins = "gpx1-5";
->>>           samsung,pin-function = <0>;
->>> @@ -773,6 +806,13 @@
->>>           samsung,pin-drv = <0>;
->>>       };
->>>
->>> +    wp_gpio: wp_gpio {
->>> +        samsung,pins = "gpx3-0";
->>> +        samsung,pin-function = <0>;
->>> +        samsung,pin-pud = <0>;
->>> +        samsung,pin-drv = <0>;
->>> +    };
->>> +
->>>       max77802_irq: max77802-irq {
->>>           samsung,pins = "gpx3-1";
->>>           samsung,pin-function = <0>;
->>>
->>
-> 
-> 
+> diff --git a/drivers/mtd/nand/brcmnand/brcmnand.c b/drivers/mtd/nand/brcmnand/brcmnand.c
+> index 2c8f67f..0a9cccf 100644
+> --- a/drivers/mtd/nand/brcmnand/brcmnand.c
+> +++ b/drivers/mtd/nand/brcmnand/brcmnand.c
+> @@ -11,6 +11,7 @@
+>   * GNU General Public License for more details.
+>   */
+>  
+> +#include <linux/clk.h>
+>  #include <linux/version.h>
+>  #include <linux/module.h>
+>  #include <linux/init.h>
+> @@ -122,6 +123,9 @@ struct brcmnand_controller {
+>  	/* Some SoCs provide custom interrupt status register(s) */
+>  	struct brcmnand_soc	*soc;
+>  
+> +	/* Some SoCs have a gateable clock for the controller */
+> +	struct clk		*clk;
+> +
+>  	int			cmd_pending;
+>  	bool			dma_pending;
+>  	struct completion	done;
+> @@ -2136,10 +2140,24 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
+>  	if (IS_ERR(ctrl->nand_base))
+>  		return PTR_ERR(ctrl->nand_base);
+>  
+> +	/* Enable clock before using NAND registers */
+> +	ctrl->clk = devm_clk_get(dev, "nand");
+> +	if (!IS_ERR(ctrl->clk)) {
+> +		ret = clk_prepare_enable(ctrl->clk);
+> +		if (ret)
+> +			return ret;
+> +	} else {
+> +		ret = PTR_ERR(ctrl->clk);
+> +		if (ret == -EPROBE_DEFER)
+> +			return ret;
+> +
+> +		ctrl->clk = NULL;
+> +	}
+> +
+>  	/* Initialize NAND revision */
+>  	ret = brcmnand_revision_init(ctrl);
+>  	if (ret)
+> -		return ret;
+> +		goto err;
+>  
+>  	/*
+>  	 * Most chips have this cache at a fixed offset within 'nand' block.
+> @@ -2148,8 +2166,10 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "nand-cache");
+>  	if (res) {
+>  		ctrl->nand_fc = devm_ioremap_resource(dev, res);
+> -		if (IS_ERR(ctrl->nand_fc))
+> -			return PTR_ERR(ctrl->nand_fc);
+> +		if (IS_ERR(ctrl->nand_fc)) {
+> +			ret = PTR_ERR(ctrl->nand_fc);
+> +			goto err;
+> +		}
+>  	} else {
+>  		ctrl->nand_fc = ctrl->nand_base +
+>  				ctrl->reg_offsets[BRCMNAND_FC_BASE];
+> @@ -2159,8 +2179,10 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "flash-dma");
+>  	if (res) {
+>  		ctrl->flash_dma_base = devm_ioremap_resource(dev, res);
+> -		if (IS_ERR(ctrl->flash_dma_base))
+> -			return PTR_ERR(ctrl->flash_dma_base);
+> +		if (IS_ERR(ctrl->flash_dma_base)) {
+> +			ret = PTR_ERR(ctrl->flash_dma_base);
+> +			goto err;
+> +		}
+>  
+>  		flash_dma_writel(ctrl, FLASH_DMA_MODE, 1); /* linked-list */
+>  		flash_dma_writel(ctrl, FLASH_DMA_ERROR_STATUS, 0);
+> @@ -2169,13 +2191,16 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
+>  		ctrl->dma_desc = dmam_alloc_coherent(dev,
+>  						     sizeof(*ctrl->dma_desc),
+>  						     &ctrl->dma_pa, GFP_KERNEL);
+> -		if (!ctrl->dma_desc)
+> -			return -ENOMEM;
+> +		if (!ctrl->dma_desc) {
+> +			ret = -ENOMEM;
+> +			goto err;
+> +		}
+>  
+>  		ctrl->dma_irq = platform_get_irq(pdev, 1);
+>  		if ((int)ctrl->dma_irq < 0) {
+>  			dev_err(dev, "missing FLASH_DMA IRQ\n");
+> -			return -ENODEV;
+> +			ret = -ENODEV;
+> +			goto err;
+>  		}
+>  
+>  		ret = devm_request_irq(dev, ctrl->dma_irq,
+> @@ -2184,7 +2209,7 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
+>  		if (ret < 0) {
+>  			dev_err(dev, "can't allocate IRQ %d: error %d\n",
+>  					ctrl->dma_irq, ret);
+> -			return ret;
+> +			goto err;
+>  		}
+>  
+>  		dev_info(dev, "enabling FLASH_DMA\n");
+> @@ -2208,7 +2233,8 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
+>  	ctrl->irq = platform_get_irq(pdev, 0);
+>  	if ((int)ctrl->irq < 0) {
+>  		dev_err(dev, "no IRQ defined\n");
+> -		return -ENODEV;
+> +		ret = -ENODEV;
+> +		goto err;
+>  	}
+>  
+>  	/*
+> @@ -2232,7 +2258,7 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
+>  	if (ret < 0) {
+>  		dev_err(dev, "can't allocate IRQ %d: error %d\n",
+>  			ctrl->irq, ret);
+> -		return ret;
+> +		goto err;
+>  	}
+>  
+>  	for_each_available_child_of_node(dn, child) {
+> @@ -2240,8 +2266,10 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
+>  			struct brcmnand_host *host;
+>  
+>  			host = devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
+> -			if (!host)
+> -				return -ENOMEM;
+> +			if (!host) {
+> +				ret = -ENOMEM;
+> +				goto err;
+> +			}
+>  			host->pdev = pdev;
+>  			host->ctrl = ctrl;
+>  			host->of_node = child;
+
+Please submit against l2-mtd.git or linux-next.git:
+
+http://linux-mtd.infradead.org/source.html
+
+> @@ -2255,10 +2283,18 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
+>  	}
+>  
+>  	/* No chip-selects could initialize properly */
+> -	if (list_empty(&ctrl->host_list))
+> -		return -ENODEV;
+> +	if (list_empty(&ctrl->host_list)) {
+> +		ret = -ENODEV;
+> +		goto err;
+> +	}
+>  
+>  	return 0;
+> +
+> +err:
+> +	if (ctrl->clk)
+
+This NULL check is unnecessary.
+
+> +		clk_disable_unprepare(ctrl->clk);
+> +	return ret;
+> +
+>  }
+>  EXPORT_SYMBOL_GPL(brcmnand_probe);
+>  
+> @@ -2270,6 +2306,9 @@ int brcmnand_remove(struct platform_device *pdev)
+>  	list_for_each_entry(host, &ctrl->host_list, node)
+>  		nand_release(&host->mtd);
+>  
+> +	if (ctrl->clk)
+
+Same here.
+
+> +		clk_disable_unprepare(ctrl->clk);
+> +
+>  	dev_set_drvdata(&pdev->dev, NULL);
+>  
+>  	return 0;
+
+Otherwise, LGTM.
+
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
