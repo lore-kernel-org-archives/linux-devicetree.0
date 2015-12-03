@@ -1,82 +1,189 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: Add brcm,bcm63xx-regulator device tree
- binding
-Date: Thu, 3 Dec 2015 00:06:31 +0000
-Message-ID: <20151203000631.GM1929@sirena.org.uk>
-References: <565A18DD.60108@simon.arlott.org.uk>
- <20151130121043.GX1929@sirena.org.uk>
- <565CB1CF.5040306@simon.arlott.org.uk>
- <20151201221615.GY1929@sirena.org.uk>
- <b7ecdc8ebcdf9582620c22b0e8a4a96d24ba67c1@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
- <20151202125325.GI1929@sirena.org.uk>
- <565F53FC.5080309@simon.arlott.org.uk>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 3/3] Addition of binding for firmware signals on peach-pi
+Date: Thu, 03 Dec 2015 09:10:40 +0900
+Message-ID: <565F8880.6000108@samsung.com>
+References: <1448997171-7064-1-git-send-email-martyn.welch@collabora.co.uk>
+ <1448997171-7064-4-git-send-email-martyn.welch@collabora.co.uk>
+ <565E327E.90404@samsung.com> <565EBB85.2030607@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="iZbCgRUW+AWDD03y"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <565F53FC.5080309@simon.arlott.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Arlott <simon@fire.lp0.eu>
-Cc: devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jogo@openwrt.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <565EBB85.2030607@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Martyn Welch <martyn.welch@collabora.co.uk>
+Cc: Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 02.12.2015 18:36, Martyn Welch wrote:
+> 
+> 
+> On 01/12/15 23:51, Krzysztof Kozlowski wrote:
+>> On 02.12.2015 04:12, Martyn Welch wrote:
+>>> The peach pi has a GPIO connected to the firmware write protect,
+>>> developer
+>>> mode and recovery mode lines. This patch adds the required nodes to the
+>>> device tree to configure the pinmuxing and allow these to be read from
+>>> user space.
+>>>
+>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>> Cc: Pawel Moll <pawel.moll@arm.com>
+>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+>>> Cc: Kumar Gala <galak@codeaurora.org>
+>>> Cc: Russell King <linux@arm.linux.org.uk>
+>>> Cc: Kukjin Kim <kgene@kernel.org>
+>>> Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>>> Cc: devicetree@vger.kernel.org
+>>> Cc: linux-arm-kernel@lists.infradead.org
+>>> Cc: linux-samsung-soc@vger.kernel.org
+>>> Signed-off-by: Martyn Welch <martyn.welch@collabora.co.uk>
+>>> ---
+>>>   arch/arm/boot/dts/exynos5800-peach-pi.dts | 40
+>>> +++++++++++++++++++++++++++++++
+>>>   1 file changed, 40 insertions(+)
+>>
+>> Hi,
+>>
+>> Thanks for the patch.
+>>
+>> Few points from my side:
+>> 1. Please add a prefix to the subject: "ARM: dts:".
+>>
+> 
+> Ok, sorry.
+> 
+>> 2. There is no need of such huge CC-list in the body of commit. This
+>> CC-list comes from get_maintainer so there is no benefit of duplicating
+>> it here. The CC is usually used to notify other people who might be
+>> interested but get_maintainer does not point them.
+>>
+> 
+> Ok, yes these were pulled from get_maintainer.
+> 
+>> 3. I received only this third patch. I did not receive cover letter
+>> explaining possible dependencies so I am not sure how to deal with the
+>> patch. It looks like there are no dependencies... but maybe there are?
+>> Is this is a new binding or no? Please provide a cover letter (if it
+>> exists already be sure to send it to all interested parties) or send
+>> entire patchset so the big picture could be seen.
+>>
+> 
+> I'll make sure I do that next time.
+> 
+> The cover letter read:
+> 
+> Some Chromebooks have gpio attached to signals used to cause the
+> firmware to enter alternative modes of operation and/or control other
+> device characteristics (such as write protection on flash devices). This
+> patch adds a driver that exposes a read-only interface to allow these
+> signals to be read from user space.
+> 
+> In addition this patch series provides the required bindings for this to
+> the peach-pi Chromebook.
+> 
+> 
+> This is a new binding, but the driver is based on functionality in the
+> kernel shipped on Chromebooks. The binding has been modified based on
+> the form of existing bindings in the mainline kernel.
+> 
+> Does that help?
 
---iZbCgRUW+AWDD03y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, that helps. With the changes above (subject and reduced CC-line in
+commit message):
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-On Wed, Dec 02, 2015 at 08:26:36PM +0000, Simon Arlott wrote:
-> On 02/12/15 12:53, Mark Brown wrote:
+As there are no dependencies this should go through samsung-soc. Just
+let us know about DT bindings being accepted/applied.
 
-> > This is the sort of thing you can pick up from the SoC compatible
-> > strings.  As things stand there is zero content in this driver that
-> > relates to this SoC.
+Best regards,
+Krzysztof
 
-> There's always going to be very little content in the driver that
-> relates to this SoC, given that a single bit flip enables/disables
-> power.
 
-> All other device tree drivers allow a register address to be specified
-> for the device, how is an offset in the regmap any different?
-
-It's not that it's an offset in regmap, it's that you're trying to make
-a device driver with literally *no* content that is specific to the
-actual device.  If you're making a driver for a specific device like
-this it should know at least something about how to control the device
-=66rom the compatible string.  If you're making a generic driver it should
-not make reference to specific devices.
-
-In general I would prefer to have a driver with a SoC specific
-compatible string and the data tables in the kernel, that way we keep
-the device trees stable and our ABI more robust.
-
-> >> The mask is used as there's one bit per regulator in the register, but
-> >> there's more than one way to express this in the DT:
-
-> > I wouldn't expect to see it in the device tree at all for a device
-> > specific driver.
-
-> If there isn't an individual entry in DT for each regulator, how is it
-> supposed to work? There's no #regulator-cells property.
-
-There could be one if it would help, but we do normally manage to do
-this without - look at how other regulator drivers work.
-
---iZbCgRUW+AWDD03y
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWX4eGAAoJECTWi3JdVIfQpCAH/0J/ovtd52QiQgJeDjqsPc9B
-VmWe2aEoe3WNseajWbIgqZJvbN6CH/xuDHkroz+mBIslJQTBbFqYogF4xrBS54i2
-KhnTVJuw5dAXwxrCsGqHtEIbSb0x1L7pI9+PJnUiFWf3YcefMAKXoBBjaK/2le1t
-toQoQvYkn5SiR6wKxLW4ZGD7lFdDy3tUwAEENH5oIGvH8EG+j86Nlz5gpaK23TjW
-PuZJmdhKbH9wVDqeQn7BxgD4Uptfc1yzPAhkHcU+3HTWv1aoz2dsX+xNQBzOKgS6
-tNaA+ck8H1Pkxw7idu1iAsY52XOtVweOrgH4K3FJYRZMkZIVz+Sb2iATyvIlnQU=
-=emdl
------END PGP SIGNATURE-----
-
---iZbCgRUW+AWDD03y--
+> 
+> Martyn
+> 
+>> The patch itself looks good but I'll wait with a review tag for #3.
+>>
+>> Best regards,
+>> Krzysztof
+>>
+>>
+>>>
+>>> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>>> b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>>> index 49a4f43..485c18f 100644
+>>> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>>> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>>> @@ -53,6 +53,25 @@
+>>>           };
+>>>       };
+>>>
+>>> +    chromeos-firmware {
+>>> +        compatible = "google,gpio-firmware";
+>>> +
+>>> +        pinctrl-names = "default";
+>>> +        pinctrl-0 = <&wp_gpio &dev_mode &rec_mode>;
+>>> +
+>>> +        write-protect {
+>>> +            gpios = <&gpx3 0 GPIO_ACTIVE_LOW>;
+>>> +        };
+>>> +
+>>> +        developer-switch {
+>>> +            gpios = <&gpx1 3 GPIO_ACTIVE_HIGH>;
+>>> +        };
+>>> +
+>>> +        recovery-switch {
+>>> +            gpios = <&gpx0 7 GPIO_ACTIVE_LOW>;
+>>> +        };
+>>> +    };
+>>> +
+>>>       gpio-keys {
+>>>           compatible = "gpio-keys";
+>>>
+>>> @@ -731,6 +750,13 @@
+>>>           samsung,pin-val = <0>;
+>>>       };
+>>>
+>>> +    rec_mode: rec-mode {
+>>> +        samsung,pins = "gpx0-7";
+>>> +        samsung,pin-function = <0>;
+>>> +        samsung,pin-pud = <0>;
+>>> +        samsung,pin-drv = <0>;
+>>> +    };
+>>> +
+>>>       tpm_irq: tpm-irq {
+>>>           samsung,pins = "gpx1-0";
+>>>           samsung,pin-function = <0>;
+>>> @@ -752,6 +778,13 @@
+>>>           samsung,pin-drv = <0>;
+>>>       };
+>>>
+>>> +    dev_mode: dev-mode {
+>>> +        samsung,pins = "gpx1-3";
+>>> +        samsung,pin-function = <0>;
+>>> +        samsung,pin-pud = <3>;
+>>> +        samsung,pin-drv = <0>;
+>>> +    };
+>>> +
+>>>       ec_irq: ec-irq {
+>>>           samsung,pins = "gpx1-5";
+>>>           samsung,pin-function = <0>;
+>>> @@ -773,6 +806,13 @@
+>>>           samsung,pin-drv = <0>;
+>>>       };
+>>>
+>>> +    wp_gpio: wp_gpio {
+>>> +        samsung,pins = "gpx3-0";
+>>> +        samsung,pin-function = <0>;
+>>> +        samsung,pin-pud = <0>;
+>>> +        samsung,pin-drv = <0>;
+>>> +    };
+>>> +
+>>>       max77802_irq: max77802-irq {
+>>>           samsung,pins = "gpx3-1";
+>>>           samsung,pin-function = <0>;
+>>>
+>>
+> 
+> 
