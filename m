@@ -1,85 +1,273 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/9] i2c: document generic DT bindings for timing
- parameters
-Date: Thu, 3 Dec 2015 14:39:08 -0600
-Message-ID: <20151203203908.GA29831@rob-hp-laptop>
-References: <1449157899-6572-1-git-send-email-wsa@the-dreams.de>
- <1449157899-6572-2-git-send-email-wsa@the-dreams.de>
+Subject: Re: [PATCH v4 2/5] DT: PCI: qcom: Document PCIe devicetree bindings
+Date: Thu, 3 Dec 2015 14:42:14 -0600
+Message-ID: <20151203204214.GA26902@rob-hp-laptop>
+References: <1449149725-27607-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1449149725-27607-3-git-send-email-stanimir.varbanov@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1449157899-6572-2-git-send-email-wsa@the-dreams.de>
-Sender: linux-sh-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-i2c@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-rockchip@lists.infradead.org, Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, devicetree@vger.kernel.org
+In-Reply-To: <1449149725-27607-3-git-send-email-stanimir.varbanov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Stanimir Varbanov <svarbanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 03, 2015 at 04:51:31PM +0100, Wolfram Sang wrote:
-> From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+On Thu, Dec 03, 2015 at 03:35:21PM +0200, Stanimir Varbanov wrote:
+> From: Stanimir Varbanov <svarbanov@mm-sol.com>
 > 
-> Also, sort the properties alphabetically and make indentation
-> consistent. Wording largely taken from i2c-rk3x.txt, thanks guys!
+> Document Qualcomm PCIe driver devicetree bindings.
 > 
-> Only "i2c-scl-internal-delay-ns" is new, the rest is used by two drivers
-> already and was documented in their driver binding documentation.
-> 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 
 Acked-by: Rob Herring <robh@kernel.org>
 
 > ---
->  Documentation/devicetree/bindings/i2c/i2c.txt | 31 ++++++++++++++++++++++-----
->  1 file changed, 26 insertions(+), 5 deletions(-)
+>  .../devicetree/bindings/pci/qcom,pcie.txt          |  233 ++++++++++++++++++++
+>  1 file changed, 233 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
-> index 8a99150ac3a7fd..a00219f5ee0733 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c.txt
-> @@ -29,12 +29,33 @@ Optional properties
->  These properties may not be supported by all drivers. However, if a driver
->  wants to support one of the below features, it should adapt the bindings below.
->  
-> -- clock-frequency	- frequency of bus clock in Hz.
-> -- wakeup-source		- device can be used as a wakeup source.
-> +- clock-frequency
-> +	frequency of bus clock in Hz.
->  
-> -- interrupts		- interrupts used by the device.
-> -- interrupt-names	- "irq" and "wakeup" names are recognized by I2C core,
-> -			  other names are left to individual drivers.
-> +- i2c-scl-falling-time-ns
-> +	Number of nanoseconds the SCL signal takes to fall; t(f) in the I2C
-> +	specification.
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> new file mode 100644
+> index 000000000000..6d71ee2e335d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> @@ -0,0 +1,233 @@
+> +* Qualcomm PCI express root complex
 > +
-> +- i2c-scl-internal-delay-ns
-> +	Number of nanoseconds the IP core additionally needs to setup SCL.
+> +- compatible:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: Value should contain
+> +			- "qcom,pcie-ipq8064" for ipq8064
+> +			- "qcom,pcie-apq8064" for apq8064
+> +			- "qcom,pcie-apq8084" for apq8084
 > +
-> +- i2c-scl-rising-time-ns
-> +	Number of nanoseconds the SCL signal takes to rise; t(r) in the I2C
-> +	specification.
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: Register ranges as listed in the reg-names property
 > +
-> +- i2c-sda-falling-time-ns
-> +	Number of nanoseconds the SDA signal takes to fall; t(f) in the I2C
-> +	specification.
+> +- reg-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: Must include the following entries
+> +			- "parf"   Qualcomm specific registers
+> +			- "dbi"	   Designware PCIe registers
+> +			- "elbi"   External local bus interface registers
+> +			- "config" PCIe configuration space
 > +
-> +- interrupts
-> +	interrupts used by the device.
+> +- device_type:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: Should be "pci". As specified in designware-pcie.txt
 > +
-> +- interrupt-names
-> +	"irq" and "wakeup" names are recognized by I2C core, other names are
-> +	left to individual drivers.
+> +- #address-cells:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: Should be set to 3. As specified in designware-pcie.txt
 > +
-> +- wakeup-source
-> +	device can be used as a wakeup source.
->  
->  Binding may contain optional "interrupts" property, describing interrupts
->  used by the device. I2C core will assign "irq" interrupt (or the very first
+> +- #size-cells:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: Should be set 2. As specified in designware-pcie.txt
+> +
+> +- ranges:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: As specified in designware-pcie.txt
+> +
+> +- interrupts:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: MSI interrupt
+> +
+> +- interrupt-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: Should contain "msi"
+> +
+> +- #interrupt-cells:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: Should be 1. As specified in designware-pcie.txt
+> +
+> +- interrupt-map-mask:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: As specified in designware-pcie.txt
+> +
+> +- interrupt-map:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: As specified in designware-pcie.txt
+> +
+> +- clocks:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: List of phandle and clock specifier pairs as listed
+> +		    in clock-names property
+> +
+> +- clock-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: Should contain the following entries
+> +			- "iface"	Configuration AHB clock
+> +
+> +- clock-names:
+> +	Usage: required for ipq/apq8064
+> +	Value type: <stringlist>
+> +	Definition: Should contain the following entries
+> +			- "core"	Clocks the pcie hw block
+> +			- "phy"		Clocks the pcie PHY block
+> +- clock-names:
+> +	Usage: required for apq8084
+> +	Value type: <stringlist>
+> +	Definition: Should contain the following entries
+> +			- "aux"		Auxiliary (AUX) clock
+> +			- "bus_master"	Master AXI clock
+> +			- "bus_slave"	Slave AXI clock
+> +- resets:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: List of phandle and reset specifier pairs as listed
+> +		    in reset-names property
+> +
+> +- reset-names:
+> +	Usage: required for ipq/apq8064
+> +	Value type: <stringlist>
+> +	Definition: Should contain the following entries
+> +			- "axi"  AXI reset
+> +			- "ahb"  AHB reset
+> +			- "por"  POR reset
+> +			- "pci"  PCI reset
+> +			- "phy"  PHY reset
+> +
+> +- reset-names:
+> +	Usage: required for apq8084
+> +	Value type: <stringlist>
+> +	Definition: Should contain the following entries
+> +			- "core" Core reset
+> +
+> +- power-domains:
+> +	Usage: required for apq8084
+> +	Value type: <prop-encoded-array>
+> +	Definition: A phandle and power domain specifier pair to the
+> +		    power domain which is responsible for collapsing
+> +		    and restoring power to the peripheral
+> +
+> +- vdda-supply:
+> +	Usage: required
+> +	Value type: <phandle>
+> +	Definition: A phandle to the core analog power supply
+> +
+> +- vdda_phy-supply:
+> +	Usage: required for ipq/apq8064
+> +	Value type: <phandle>
+> +	Definition: A phandle to the analog power supply for PHY
+> +
+> +- vdda_refclk-supply:
+> +	Usage: required for ipq/apq8064
+> +	Value type: <phandle>
+> +	Definition: A phandle to the analog power supply for IC which generates
+> +		    reference clock
+> +
+> +- phys:
+> +	Usage: required for apq8084
+> +	Value type: <phandle>
+> +	Definition: List of phandle(s) as listed in phy-names property
+> +
+> +- phy-names:
+> +	Usage: required for apq8084
+> +	Value type: <stringlist>
+> +	Definition: Should contain "pciephy"
+> +
+> +- <name>-gpios:
+> +	Usage: optional
+> +	Value type: <prop-encoded-array>
+> +	Definition: List of phandle and gpio specifier pairs. Should contain
+> +			- "perst-gpios"	PCIe endpoint reset signal line
+> +			- "wake-gpios"	PCIe endpoint wake signal line
+> +
+> +* Example for ipq/apq8064
+> +	pcie@1b500000 {
+> +		compatible = "qcom,pcie-apq8064", "qcom,pcie-ipq8064", "snps,dw-pcie";
+> +		reg = <0x1b500000 0x1000
+> +		       0x1b502000 0x80
+> +		       0x1b600000 0x100
+> +		       0x0ff00000 0x100000>;
+> +		reg-names = "dbi", "elbi", "parf", "config";
+> +		device_type = "pci";
+> +		linux,pci-domain = <0>;
+> +		bus-range = <0x00 0xff>;
+> +		num-lanes = <1>;
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		ranges = <0x81000000 0 0 0x0fe00000 0 0x00100000   /* I/O */
+> +			  0x82000000 0 0 0x08000000 0 0x07e00000>; /* memory */
+> +		interrupts = <GIC_SPI 238 IRQ_TYPE_NONE>;
+> +		interrupt-names = "msi";
+> +		#interrupt-cells = <1>;
+> +		interrupt-map-mask = <0 0 0 0x7>;
+> +		interrupt-map = <0 0 0 1 &intc 0 36 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+> +				<0 0 0 2 &intc 0 37 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+> +				<0 0 0 3 &intc 0 38 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+> +				<0 0 0 4 &intc 0 39 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+> +		clocks = <&gcc PCIE_A_CLK>,
+> +			 <&gcc PCIE_H_CLK>,
+> +			 <&gcc PCIE_PHY_CLK>;
+> +		clock-names = "core", "iface", "phy";
+> +		resets = <&gcc PCIE_ACLK_RESET>,
+> +			 <&gcc PCIE_HCLK_RESET>,
+> +			 <&gcc PCIE_POR_RESET>,
+> +			 <&gcc PCIE_PCI_RESET>,
+> +			 <&gcc PCIE_PHY_RESET>;
+> +		reset-names = "axi", "ahb", "por", "pci", "phy";
+> +		pinctrl-0 = <&pcie_pins_default>;
+> +		pinctrl-names = "default";
+> +	};
+> +
+> +* Example for apq8084
+> +	pcie0@fc520000 {
+> +		compatible = "qcom,pcie-apq8084", "snps,dw-pcie";
+> +		reg = <0xfc520000 0x2000>,
+> +		      <0xff000000 0x1000>,
+> +		      <0xff001000 0x1000>,
+> +		      <0xff002000 0x2000>;
+> +		reg-names = "parf", "dbi", "elbi", "config";
+> +		device_type = "pci";
+> +		linux,pci-domain = <0>;
+> +		bus-range = <0x00 0xff>;
+> +		num-lanes = <1>;
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		ranges = <0x81000000 0 0          0xff200000 0 0x00100000   /* I/O */
+> +			  0x82000000 0 0x00300000 0xff300000 0 0x00d00000>; /* memory */
+> +		interrupts = <GIC_SPI 243 IRQ_TYPE_NONE>;
+> +		interrupt-names = "msi";
+> +		#interrupt-cells = <1>;
+> +		interrupt-map-mask = <0 0 0 0x7>;
+> +		interrupt-map = <0 0 0 1 &intc 0 244 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+> +				<0 0 0 2 &intc 0 245 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+> +				<0 0 0 3 &intc 0 247 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+> +				<0 0 0 4 &intc 0 248 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+> +		clocks = <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
+> +			 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
+> +			 <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
+> +			 <&gcc GCC_PCIE_0_AUX_CLK>;
+> +		clock-names = "iface", "master_bus", "slave_bus", "aux";
+> +		resets = <&gcc GCC_PCIE_0_BCR>;
+> +		reset-names = "core";
+> +		power-domains = <&gcc PCIE0_GDSC>;
+> +		vdda-supply = <&pma8084_l3>;
+> +		phys = <&pciephy0>;
+> +		phy-names = "pciephy";
+> +		perst-gpio = <&tlmm 70 GPIO_ACTIVE_LOW>;
+> +		pinctrl-0 = <&pcie0_pins_default>;
+> +		pinctrl-names = "default";
+> +	};
 > -- 
-> 2.1.4
+> 1.7.9.5
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
