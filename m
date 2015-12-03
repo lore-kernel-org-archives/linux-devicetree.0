@@ -1,66 +1,68 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: exynos-dp: update ports node binding
- for panel
-Date: Thu, 3 Dec 2015 17:38:53 -0600
-Message-ID: <20151203233853.GA8608@rob-hp-laptop>
-References: <1449135010-8111-1-git-send-email-inki.dae@samsung.com>
- <1449135010-8111-4-git-send-email-inki.dae@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] regulator: Add brcm,bcm63xx-regulator device tree
+ binding
+Date: Thu, 3 Dec 2015 23:45:48 +0000
+Message-ID: <20151203234548.GJ5727@sirena.org.uk>
+References: <20151130121043.GX1929@sirena.org.uk>
+ <565CB1CF.5040306@simon.arlott.org.uk>
+ <20151201221615.GY1929@sirena.org.uk>
+ <b7ecdc8ebcdf9582620c22b0e8a4a96d24ba67c1@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+ <20151202125325.GI1929@sirena.org.uk>
+ <565F53FC.5080309@simon.arlott.org.uk>
+ <20151203000631.GM1929@sirena.org.uk>
+ <565FF9E9.1090503@simon.arlott.org.uk>
+ <20151203150528.GG5727@sirena.org.uk>
+ <5660D274.7000402@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="n8884J15jRwcBTvu"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1449135010-8111-4-git-send-email-inki.dae@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Inki Dae <inki.dae@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, k.kozlowski@samsung.com, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, kgene.kim@samsung.com, galak@codeaurora.org
+In-Reply-To: <5660D274.7000402@simon.arlott.org.uk>
+Sender: linux-pm-owner@vger.kernel.org
+To: Simon Arlott <simon@fire.lp0.eu>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBEZWMgMDMsIDIwMTUgYXQgMDY6MzA6MTBQTSArMDkwMCwgSW5raSBEYWUgd3JvdGU6
-Cj4gVGhpcyBwYXRjaCB1cGRhdGVzIGEgcG9ydHMgbm9kZSBiaW5kaW5nIGZvciBwYW5lbC4KPiAK
-PiBXaXRoIHRoaXMsIGRwIG5vZGUgY2FuIGhhdmUgYSBwb3J0cyBub2RlIHdoaWNoIGRlc2NyaWJl
-cwo+IGEgcmVtb3RlIGVuZHBvaW50IG5vZGUgdGhhdCBjYW4gYmUgY29ubmVjdGVkIHRvIHBhbmVs
-IG9yIGJyaWRnZQo+IG5vZGUuCj4gCj4gU2lnbmVkLW9mZi1ieTogSW5raSBEYWUgPGlua2kuZGFl
-QHNhbXN1bmcuY29tPgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9leHlub3MvZXh5bm9z
-X2RwLnR4dCAgICAgICAgICB8IDI4ICsrKysrKysrKysrKysrKysrKy0tLS0KPiAgMSBmaWxlIGNo
-YW5nZWQsIDI0IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V4eW5vcy9leHlub3Nf
-ZHAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZXh5bm9z
-L2V4eW5vc19kcC50eHQKPiBpbmRleCA2NDY5M2YyLi4xNWI1MmNiIDEwMDY0NAo+IC0tLSBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V4eW5vcy9leHlub3NfZHAu
-dHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZXh5
-bm9zL2V4eW5vc19kcC50eHQKPiBAQCAtNjYsOCArNjYsMTUgQEAgT3B0aW9uYWwgcHJvcGVydGll
-cyBmb3IgZHAtY29udHJvbGxlcjoKPiAgCQlIb3RwbHVnIGRldGVjdCBHUElPLgo+ICAJCQlJbmRp
-Y2F0ZXMgd2hpY2ggR1BJTyBzaG91bGQgYmUgdXNlZCBmb3IgaG90cGx1Zwo+ICAJCQlkZXRlY3Rp
-b24KPiAtCS12aWRlbyBpbnRlcmZhY2VzOiBEZXZpY2Ugbm9kZSBjYW4gY29udGFpbiB2aWRlbyBp
-bnRlcmZhY2UgcG9ydAo+IC0JCQkgICAgbm9kZXMgYWNjb3JkaW5nIHRvIFsxXS4KPiArVmlkZW8g
-aW50ZXJmYWNlczoKPiArICBEZXZpY2Ugbm9kZSBjYW4gY29udGFpbiB2aWRlbyBpbnRlcmZhY2Ug
-cG9ydCBub2RlcyBhY2NvcmRpbmcgdG8gWzFdLgo+ICsgIFRoZSBmb2xsb3dpbmcgYXJlIHByb3Bl
-cnRpZXMgc3BlY2lmaWMgdG8gdGhvc2Ugbm9kZXM6Cj4gKwo+ICsgIGVuZHBvaW50IG5vZGUgY29u
-bmVjdGVkIHRvIGJyaWRnZSBvciBwYW5lbCBub2RlOgo+ICsgICAtIHJlbW90ZS1lbmRwb2ludDog
-c3BlY2lmaWVzIHRoZSBlbmRwb2ludCBpbiBwYW5lbCBvciBicmlkZ2Ugbm9kZS4KPiArCQkgICAg
-ICBUaGlzIG5vZGUgaXMgcmVxdWlyZWQgaW4gYWxsIGtpbmRzIG9mIGV4eW5vcyBkcAo+ICsJCSAg
-ICAgIHRvIHJlcHJlc2VudCB0aGUgY29ubmVjdGlvbiBiZXR3ZWVuIGRwIGFuZCBicmlkZ2UKPiAr
-CQkgICAgICAsb3IgZHAgYW5kIHBhbmVsLgoKRml4IHlvdXIgcHVuY3R1YXRpb24uCgo+ICAKPiAg
-WzFdOiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJm
-YWNlcy50eHQKPiAgCj4gQEAgLTExMSw5ICsxMTgsMjIgQEAgQm9hcmQgU3BlY2lmaWMgcG9ydGlv
-bjoKPiAgCQl9Owo+ICAKPiAgCQlwb3J0cyB7Cj4gLQkJCXBvcnRAMCB7Cj4gKwkJCSNhZGRyZXNz
-LWNlbGxzID0gPDE+Owo+ICsJCQkjc2l6ZS1jZWxscyA9IDwwPjsKCllvdSBkb24ndCBuZWVkIHRo
-ZXNlLgoKPiArCj4gKwkJCXBvcnQgewo+ICAJCQkJZHBfb3V0OiBlbmRwb2ludCB7Cj4gLQkJCQkJ
-cmVtb3RlLWVuZHBvaW50ID0gPCZicmlkZ2VfaW4+Owo+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9
-IDwmZHBfaW4+Owo+ICsJCQkJfTsKPiArCQkJfTsKPiArCQl9Owo+ICsKPiArCQlwYW5lbEAwIHsK
-PiArCQkJcmVnID0gPDA+OwoKRHJvcCB0aGUgQDAgYW5kIHJlZyBhcyB5b3Ugb25seSBoYXZlIDEu
-Cgo+ICsJCQkuLi4KPiArCQkJcG9ydCB7Cj4gKwkJCQlkcF9pbjogZW5kcG9pbnQgewo+ICsJCQkJ
-CXJlbW90ZS1lbmRwb2ludCA9IDwmZHBfb3V0PjsKPiAgCQkJCX07Cj4gIAkJCX07Cj4gIAkJfTsK
-PiAtLSAKPiAxLjkuMQo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+
+--n8884J15jRwcBTvu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Dec 03, 2015 at 11:38:28PM +0000, Simon Arlott wrote:
+
+> #define MISC_IDDQ_CTRL_GMAC         (1<<18)
+> #define MISC_IDDQ_CTRL_WLAN_PADS    (1<<13)
+> #define MISC_IDDQ_CTRL_PCIE         (1<<12)
+> #define MISC_IDDQ_CTRL_FAP          (1<<11)
+> #define MISC_IDDQ_CTRL_VDSL_MIPS    (1<<10)
+> #define MISC_IDDQ_CTRL_VDSL_PHY     (1<<9)
+> #define MISC_IDDQ_CTRL_PERIPH       (1<<8)
+> #define MISC_IDDQ_CTRL_PCM          (1<<7)
+> #define MISC_IDDQ_CTRL_ROBOSW       (1<<6)
+> #define MISC_IDDQ_CTRL_USBD         (1<<5)
+> #define MISC_IDDQ_CTRL_USBH         (1<<4)
+> #define MISC_IDDQ_CTRL_DECT         (1<<3)
+> #define MISC_IDDQ_CTRL_MIPS         (1<<2)
+> #define MISC_IDDQ_CTRL_IPSEC        (1<<1)
+> #define MISC_IDDQ_CTRL_SAR          (1<<0)
+
+Are you *sure* these are regulators and not power domains?  These names
+look a lot like they could be power domains.
+
+--n8884J15jRwcBTvu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWYNQsAAoJECTWi3JdVIfQ/moH/3hG8cpHiwwXDP9khyuqOHxL
+Cx3bTEX08lkt7x2Rpg+HA3ZhiXVmhjLtfCqAV3a25vLSsduyFekDeaL1c+7VL9es
+KwfTIWzD0yR6WqiugyX8D9df47d2OBxuPeTZ6epyjn8jq7aFKxSPXTfFjw0HqLHX
+QOrWt/c8uFb1bI+WbpTq94PjwvBArbCowzsKAnje2gZBiBVZ/swS3bdysoKswbZG
+EB1FVFxoJtj/UBPhQopoA+QVSuLCKBXpu6Rid+sUBR9zdjWCDb2rGVc9QgxnBisy
+yJNda9pjCL6pDXMgOFQjQK8LF9+skndjSeggxs8A8neYaKh9MZVhn4Fw/7JgfM0=
+=KN8/
+-----END PGP SIGNATURE-----
+
+--n8884J15jRwcBTvu--
