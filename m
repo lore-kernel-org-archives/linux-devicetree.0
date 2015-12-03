@@ -1,55 +1,69 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
-Subject: [PATCH v2 3/4] ARM: at91/dt: sama5d4: update i2c compatible string
-Date: Thu, 3 Dec 2015 10:53:53 +0100
-Message-ID: <1449136434-27619-5-git-send-email-ludovic.desroches@atmel.com>
-References: <1449136434-27619-1-git-send-email-ludovic.desroches@atmel.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v3 2/4] drm: Add support for ARM's HDLCD controller.
+Date: Thu, 3 Dec 2015 10:00:21 +0000
+Message-ID: <20151203100021.GD972@e106497-lin.cambridge.arm.com>
+References: <1449058982-18595-1-git-send-email-Liviu.Dudau@arm.com>
+ <1449058982-18595-3-git-send-email-Liviu.Dudau@arm.com>
+ <CAPj87rNFFGeL8z9GBXxyVri1RyhVpMGS0yz7opgCYamHYV1Yow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449136434-27619-1-git-send-email-ludovic.desroches@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, nicolas.ferre@atmel.com, alexandre.belloni@free-electrons.com
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Ludovic Desroches <ludovic.desroches@atmel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CAPj87rNFFGeL8z9GBXxyVri1RyhVpMGS0yz7opgCYamHYV1Yow@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Stone <daniel@fooishbar.org>
+Cc: Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Robin Murphy <robin.murphy@arm.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-A new compatible string has been introduced: atmel,sama5d4-i2c. It
-allows to use the i2c-sda-hold-time-ns property if needed.
-
-Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
----
- arch/arm/boot/dts/sama5d4.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
-index 2193637..83d7e7c 100644
---- a/arch/arm/boot/dts/sama5d4.dtsi
-+++ b/arch/arm/boot/dts/sama5d4.dtsi
-@@ -916,7 +916,7 @@
- 			};
- 
- 			i2c0: i2c@f8014000 {
--				compatible = "atmel,at91sam9x5-i2c";
-+				compatible = "atmel,sama5d4-i2c";
- 				reg = <0xf8014000 0x4000>;
- 				interrupts = <32 IRQ_TYPE_LEVEL_HIGH 6>;
- 				dmas = <&dma1
-@@ -935,7 +935,7 @@
- 			};
- 
- 			i2c1: i2c@f8018000 {
--				compatible = "atmel,at91sam9x5-i2c";
-+				compatible = "atmel,sama5d4-i2c";
- 				reg = <0xf8018000 0x4000>;
- 				interrupts = <33 IRQ_TYPE_LEVEL_HIGH 6>;
- 				dmas = <&dma1
-@@ -975,7 +975,7 @@
- 			};
- 
- 			i2c2: i2c@f8024000 {
--				compatible = "atmel,at91sam9x5-i2c";
-+				compatible = "atmel,sama5d4-i2c";
- 				reg = <0xf8024000 0x4000>;
- 				interrupts = <34 IRQ_TYPE_LEVEL_HIGH 6>;
- 				dmas = <&dma1
--- 
-2.5.0
+T24gV2VkLCBEZWMgMDIsIDIwMTUgYXQgMDU6MjE6NDRQTSArMDAwMCwgRGFuaWVsIFN0b25lIHdy
+b3RlOgo+IEhpIExpdml1LAoKSGkgRGFuaWVsLAoKPiAKPiBPbiAyIERlY2VtYmVyIDIwMTUgYXQg
+MTI6MjMsIExpdml1IER1ZGF1IDxMaXZpdS5EdWRhdUBhcm0uY29tPiB3cm90ZToKPiA+ICsgICAg
+ICAgaWYgKGlycV9zdGF0dXMgJiBIRExDRF9JTlRFUlJVUFRfVlNZTkMpIHsKPiA+ICsgICAgICAg
+ICAgICAgICB1bnNpZ25lZCBsb25nIGZsYWdzOwo+ID4gKwo+ID4gKyAgICAgICAgICAgICAgIGRy
+bV9oYW5kbGVfdmJsYW5rKGRybSwgMCk7Cj4gPiArCj4gPiArICAgICAgICAgICAgICAgc3Bpbl9s
+b2NrX2lycXNhdmUoJmRybS0+ZXZlbnRfbG9jaywgZmxhZ3MpOwo+ID4gKyAgICAgICAgICAgICAg
+IGlmIChoZGxjZC0+ZXZlbnQpIHsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGRybV9zZW5k
+X3ZibGFua19ldmVudChkcm0sIGhkbGNkLT5ldmVudC0+cGlwZSwgaGRsY2QtPmV2ZW50KTsKPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgIGRybV9jcnRjX3ZibGFua19wdXQoJmhkbGNkLT5jcnRj
+KTsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGhkbGNkLT5ldmVudCA9IE5VTEw7Cj4gPiAr
+ICAgICAgICAgICAgICAgfQo+ID4gKyAgICAgICAgICAgICAgIHNwaW5fdW5sb2NrX2lycXJlc3Rv
+cmUoJmRybS0+ZXZlbnRfbG9jaywgZmxhZ3MpOwo+ID4gKyAgICAgICB9Cj4gCj4gQXMgd2l0aCBW
+QzQgYW5kIFJvY2tjaGlwLCB5b3UncmUgbWlzc2luZyBhIC0+cHJlY2xvc2UgaGFuZGxlciBpbiB5
+b3VyCj4gZHJtX2RydiwgdG8gbWFrZSBzdXJlIHRoYXQgeW91IGRvbid0IHRyeSB0byBzZW5kIGV2
+ZW50cyB0byBhIGRlYWQKPiBjbGllbnQgKHdoaWNoIGNhdXNlcyBhbiBPT1BTKToKPiBodHRwczov
+L2dpdC5jb2xsYWJvcmEuY29tL2NnaXQvdXNlci9kYW5pZWxzL2xpbnV4LmdpdC9jb21taXQvP2g9
+d2lwLzQuNC54L3JvY2tjaGlwLWRybS1maXhlcyZpZD1kMTRmMjFiY2Q3Cj4gKGFuZCBpdHMgcGFy
+ZW50KQogClRoYW5rcyBmb3IgcmV2aWV3aW5nIHRoaXMhCgpJIGRvIGFja25vd2xlZGdlIHlvdXIg
+Y29uY2VybnMgYW5kIHlvdSBtaWdodCBjb3JyZWN0IG15IHVuZGVyc3RhbmRpbmcgb24KaG93IGF0
+b21pYyBEUk0gd29ya3MsIGJ1dCBJIGJlbGlldmUgaW4gdGhpcyBjYXNlIHdlIHNob3VsZCBiZSBz
+YWZlLiBUaGUKZXZlbnQgc3RvcmVkIGluIGhkbGNkLT5ldmVudCBpcyB0YWtlbiBvdXQgb2YgdGhl
+IGNydGMtPnN0YXRlLT5ldmVudCBkdXJpbmcKdGhlIGNydGMtPmF0b21pY19iZWdpbigpIGNhbGxi
+YWNrLiBJZiB0aGUgY2xpZW50IGlzIGRlYWQgdGhlIGNhbGxiYWNrIHNob3VsZApub3QgYmUgY2Fs
+bGVkLCBzbyB0aGF0J3MgaG93IHdlIGF2b2lkIHRoZSBPT1BTLgoKPiBBbHNvLCBpcyB0aGVyZSBh
+bnl0aGluZyBwcmV2ZW50aW5nIGNsaWVudHMgZnJvbSBzdWJtaXR0aW5nIG11bHRpcGxlCj4gcGFn
+ZWZsaXBzIGJlZm9yZSB0aGUgZXZlbnQgaXMgc2VudD8gSSBjb3VsZG4ndCBzZWUgYW55dGhpbmcg
+ZnJvbSBhCj4gcXVpY2sgbG9vaywgc28geW91IGNvdWxkIGhhdmUgdGhlIHNpdHVhdGlvbiBvZjoK
+PiAgIC0gY2xpZW50IHN1Ym1pdHMgcGFnZWZsaXAsIGV2ZW50IDEgc3RvcmVkIHRvIGhkbGNkLT5l
+dmVudAo+ICAgLSBjbGllbnQgc3VibWl0cyBwYWdlZmxpcCwgZXZlbnQgMiBzdG9yZWQgdG8gaGRs
+Y2QtPmV2ZW50Cj4gICAtIHZibGFuayBhcnJpdmVzLCBldmVudCAyIGlzIHNlbnQKPiAgIC0gZXZl
+bnQgMSBoYXMgZGlzYXBwZWFyZWQgYW5kIGJlZW4gbGVha2VkCgpBcyBmb3IgbXVsdGlwbGUgZXZl
+bnRzIGJlaW5nIHN1Ym1pdHRlZCBiZWZvcmUgdnN5bmMgaW50ZXJydXB0IGhhcHBlbmluZzogZ2l2
+ZW4KdGhhdCB0aGUgZXZlbnQgaXMgcGx1Y2tlZCBvdXQgb2YgdGhlIGNydGMtPnN0YXRlLCBpcyB0
+aGF0IHBvc3NpYmxlPyBBbmQgaWYgc28sCmlzIHRoZXJlIGEgY2FzZSB3aGVyZSBoYXZpbmcgdGhl
+IGxhdGVyIGV2ZW50IG92ZXJ3cml0ZSB0aGUgZWFybGllciBvbmUgYSBkZXNpcmVkCm91dGNvbWU/
+Cgo+IAo+IENoZWVycywKPiBEYW5pZWwKPiAKCkJlc3QgcmVnYXJkcywKTGl2aXUKCi0tIAo9PT09
+PT09PT09PT09PT09PT09PQp8IEkgd291bGQgbGlrZSB0byB8CnwgZml4IHRoZSB3b3JsZCwgIHwK
+fCBidXQgdGhleSdyZSBub3QgfAp8IGdpdmluZyBtZSB0aGUgICB8CiBcIHNvdXJjZSBjb2RlISAg
+LwogIC0tLS0tLS0tLS0tLS0tLQogICAgwq9cXyjjg4QpXy/CrwpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
