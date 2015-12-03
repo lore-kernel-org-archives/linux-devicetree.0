@@ -1,53 +1,171 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v4 1/5] dt-bindings: add SMP enable-method for Broadcom NSP
-Date: Thu, 03 Dec 2015 13:18:45 -0800
-Message-ID: <5660B1B5.5000702@gmail.com>
-References: <1448987049-17041-1-git-send-email-kapilh@broadcom.com>
- <1448987049-17041-2-git-send-email-kapilh@broadcom.com>
- <20151202152604.GA20467@rob-hp-laptop> <565F16F1.9070809@broadcom.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v9 1/3] dt-bindings: binding for jz4780-{nand,bch}
+Date: Thu, 3 Dec 2015 15:38:12 -0600
+Message-ID: <20151203213812.GA32235@rob-hp-laptop>
+References: <1449144142-24004-1-git-send-email-harvey.hunt@imgtec.com>
+ <1449144142-24004-2-git-send-email-harvey.hunt@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <565F16F1.9070809@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kapil Hali <kapilh@broadcom.com>, Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kever Yang <kever.yang@rock-chips.com>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Lee Jones <lee@kernel.org>, Chen-Yu Tsai <wens@csie.org>, bcm-kernel-feedback-list@broadcom.com, Hauke Mehrtens <hauke@hauke-m.de>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, Gregory Fong <gregory.0xf0@gmail.com>, linux-arm-kernel@lists.infradead.org, Paul Walmsley <paul@pwsan.com>, Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1449144142-24004-2-git-send-email-harvey.hunt@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Harvey Hunt <harvey.hunt@imgtec.com>
+Cc: linux-mtd@lists.infradead.org, Alex Smith <alex.smith@imgtec.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/15 08:06, Kapil Hali wrote:
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
->>> @@ -0,0 +1,39 @@
->>> +Broadcom Northstar Plus SoC CPU Enable Method
->>> +---------------------------------------------
->>> +This binding defines the enable method used for starting secondary
->>> +CPUs in the following Broadcom SoCs:
->>> +  BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
->>> +
->>> +The enable method is specified by defining the following required
->>> +properties in the "cpus" device tree node:
->>> +  - enable-method = "brcm,bcm-nsp-smp";
->>> +  - secondary-boot-reg = <...>;
->>
->> Both of these are supposed to be per cpu core.
+On Thu, Dec 03, 2015 at 12:02:20PM +0000, Harvey Hunt wrote:
+> From: Alex Smith <alex.smith@imgtec.com>
 > 
-> 'enable-method' if not found in 'cpu' node is looked at in the 'cpus' 
-> node. Except for two-three SoC families, 'enable-method' is within 
-> 'cpus' node. Is my interpretation incorrect? Did I miss anything here?
+> Add DT bindings for NAND devices connected to the NEMC on JZ4780 SoCs,
+> as well as the hardware BCH controller, used by the jz4780_{nand,bch}
+> drivers.
+> 
+> Signed-off-by: Alex Smith <alex.smith@imgtec.com>
+> Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+> Cc: David Woodhouse <dwmw2@infradead.org>
+> Cc: Brian Norris <computersforpeace@gmail.com>
+> Cc: linux-mtd@lists.infradead.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Harvey Hunt <harvey.hunt@imgtec.com>
+> ---
+> v8 -> v9:
+>  - Document that partitions are represented as a child node of a NAND chip.
 
-So, what do we do from here? I would appreciate a timely answer from the
-DT maintainers here so we can decide on the fate of this patch series
-for 4.5.
+Don't multiple flash chips typically get interleaved in order to get 
+parallelism needed for performance? Then the view of the partitions 
+would apply across all chips. Anyway, it's optional, so:
 
-Thank you
--- 
-Florian
+Acked-by: Rob Herring <robh@kernel.org>
+
+> v7 -> v8:
+>  - Describe how NAND chips are now child nodes of the NAND controller.
+> 
+> v6 -> v7:
+>  - Add nand-ecc-mode to DT bindings.
+>  - Add nand-on-flash-bbt to DT bindings.
+> 
+> v5 -> v6:
+>  - No change.
+> 
+> v4 -> v5:
+>  - Rename ingenic,bch-device to ingenic,bch-controller to fit with
+>    existing convention.
+> 
+> v3 -> v4:
+>  - No change
+> 
+> v2 -> v3:
+>  - Rebase to 4.0-rc6
+>  - Changed ingenic,ecc-size to common nand-ecc-step-size
+>  - Changed ingenic,ecc-strength to common nand-ecc-strength
+>  - Changed ingenic,busy-gpio to common rb-gpios
+>  - Changed ingenic,wp-gpio to common wp-gpios
+> 
+> v1 -> v2:
+>  - Rebase to 4.0-rc3
+> 
+>  .../bindings/mtd/ingenic,jz4780-nand.txt           | 86 ++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+> new file mode 100644
+> index 0000000..29ea585
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+> @@ -0,0 +1,86 @@
+> +* Ingenic JZ4780 NAND/BCH
+> +
+> +This file documents the device tree bindings for NAND flash devices on the
+> +JZ4780. NAND devices are connected to the NEMC controller (described in
+> +memory-controllers/ingenic,jz4780-nemc.txt), and thus NAND device nodes must
+> +be children of the NEMC node.
+> +
+> +Required NAND controller device properties:
+> +- compatible: Should be set to "ingenic,jz4780-nand".
+> +- reg: For each bank with a NAND chip attached, should specify a bank number,
+> +  an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
+> +
+> +Optional NAND controller device properties:
+> +- ingenic,bch-controller: To make use of the hardware BCH controller, this
+> +  property must contain a phandle for the BCH controller node. The required
+> +  properties for this node are described below. If this is not specified,
+> +  software BCH will be used instead.
+> +
+> +Optional children nodes:
+> +- Individual NAND chips are children of the NAND controller node.
+> +
+> +Required children node properties:
+> +- reg: An integer ranging from 1 to 6 representing the CS line to use.
+> +
+> +Optional children node properties:
+> +- nand-ecc-step-size: ECC block size in bytes.
+> +- nand-ecc-strength: ECC strength (max number of correctable bits).
+> +- nand-ecc-mode: String, operation mode of the NAND ecc mode. "hw" by default
+> +- nand-on-flash-bbt: boolean to enable on flash bbt option, if not present false
+> +- rb-gpios: GPIO specifier for the busy pin.
+> +- wp-gpios: GPIO specifier for the write protect pin.
+> +
+> +Optional child node of NAND chip nodes:
+> +- partitions: see Documentation/devicetree/bindings/mtd/partition.txt
+> +
+> +Example:
+> +
+> +nemc: nemc@13410000 {
+> +	...
+> +
+> +	nandc: nand-controller@1 {
+> +		compatible = "ingenic,jz4780-nand";
+> +		reg = <1 0 0x1000000>;	/* Bank 1 */
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ingenic,bch-controller = <&bch>;
+> +
+> +		nand@1 {
+> +			reg = <1>;
+> +
+> +			nand-ecc-step-size = <1024>;
+> +			nand-ecc-strength = <24>;
+> +			nand-ecc-mode = "hw";
+> +			nand-on-flash-bbt;
+> +
+> +			rb-gpios = <&gpa 20 GPIO_ACTIVE_LOW>;
+> +			wp-gpios = <&gpf 22 GPIO_ACTIVE_LOW>;
+> +
+> +			partitions {
+> +				#address-cells = <2>;
+> +				#size-cells = <2>;
+> +				...
+> +			}
+> +		};
+> +	};
+> +};
+> +
+> +The BCH controller is a separate SoC component used for error correction on
+> +NAND devices. The following is a description of the device properties for a
+> +BCH controller.
+> +
+> +Required BCH properties:
+> +- compatible: Should be set to "ingenic,jz4780-bch".
+> +- reg: Should specify the BCH controller registers location and length.
+> +- clocks: Clock for the BCH controller.
+> +
+> +Example:
+> +
+> +bch: bch@134d0000 {
+> +	compatible = "ingenic,jz4780-bch";
+> +	reg = <0x134d0000 0x10000>;
+> +
+> +	clocks = <&cgu JZ4780_CLK_BCH>;
+> +};
+> -- 
+> 2.6.2
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
