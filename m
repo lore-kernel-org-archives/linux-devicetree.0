@@ -1,212 +1,85 @@
-From: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-Subject: [PATCH linux-next 3/3] mtd: brcmnand: Add support for the BCM6368
-Date: Thu, 3 Dec 2015 20:01:39 +0000
-Message-ID: <56609FA3.5030505@simon.arlott.org.uk>
-References: <56609F09.7020607@simon.arlott.org.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/9] i2c: document generic DT bindings for timing
+ parameters
+Date: Thu, 3 Dec 2015 14:39:08 -0600
+Message-ID: <20151203203908.GA29831@rob-hp-laptop>
+References: <1449157899-6572-1-git-send-email-wsa@the-dreams.de>
+ <1449157899-6572-2-git-send-email-wsa@the-dreams.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56609F09.7020607-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1449157899-6572-2-git-send-email-wsa@the-dreams.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-i2c@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-rockchip@lists.infradead.org, Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The BCM6368 has a NAND interrupt register with combined status and enab=
-le
-registers.
+On Thu, Dec 03, 2015 at 04:51:31PM +0100, Wolfram Sang wrote:
+> From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> 
+> Also, sort the properties alphabetically and make indentation
+> consistent. Wording largely taken from i2c-rk3x.txt, thanks guys!
+> 
+> Only "i2c-scl-internal-delay-ns" is new, the rest is used by two drivers
+> already and was documented in their driver binding documentation.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Cc: devicetree@vger.kernel.org
 
-As the BCM6328, BCM6362 and BCM6368 all use v2.1 controllers, the first
-variant that will work with this driver is the BCM63268 using a v4.0
-controller.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Set up the device by disabling and acking all interrupts, then handle
-the CTRL_READY interrupt.
-
-Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
----
- drivers/mtd/nand/brcmnand/Makefile       |   1 +
- drivers/mtd/nand/brcmnand/bcm6368_nand.c | 145 +++++++++++++++++++++++=
-++++++++
- 2 files changed, 146 insertions(+)
- create mode 100644 drivers/mtd/nand/brcmnand/bcm6368_nand.c
-
-diff --git a/drivers/mtd/nand/brcmnand/Makefile b/drivers/mtd/nand/brcm=
-nand/Makefile
-index 3b1fbfd..b28ffb59 100644
---- a/drivers/mtd/nand/brcmnand/Makefile
-+++ b/drivers/mtd/nand/brcmnand/Makefile
-@@ -2,5 +2,6 @@
- # more specific iproc_nand.o, for instance
- obj-$(CONFIG_MTD_NAND_BRCMNAND)		+=3D iproc_nand.o
- obj-$(CONFIG_MTD_NAND_BRCMNAND)		+=3D bcm63138_nand.o
-+obj-$(CONFIG_MTD_NAND_BRCMNAND)		+=3D bcm6368_nand.o
- obj-$(CONFIG_MTD_NAND_BRCMNAND)		+=3D brcmstb_nand.o
- obj-$(CONFIG_MTD_NAND_BRCMNAND)		+=3D brcmnand.o
-diff --git a/drivers/mtd/nand/brcmnand/bcm6368_nand.c b/drivers/mtd/nan=
-d/brcmnand/bcm6368_nand.c
-new file mode 100644
-index 0000000..c347ea5
---- /dev/null
-+++ b/drivers/mtd/nand/brcmnand/bcm6368_nand.c
-@@ -0,0 +1,145 @@
-+/*
-+ * Copyright 2015 Simon Arlott
-+ *
-+ * This program is free software; you can redistribute it and/or modif=
-y
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ * Derived from bcm63138_nand.c:
-+ * Copyright =C2=A9 2015 Broadcom Corporation
-+ *
-+ * Derived from bcm963xx_4.12L.06B_consumer/shared/opensource/include/=
-bcm963xx/63268_map_part.h:
-+ * Copyright 2000-2010 Broadcom Corporation
-+ *
-+ * Derived from bcm963xx_4.12L.06B_consumer/shared/opensource/flash/na=
-ndflash.c:
-+ * Copyright 2000-2010 Broadcom Corporation
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+#include "brcmnand.h"
-+
-+struct bcm6368_nand_soc {
-+	struct brcmnand_soc soc;
-+	void __iomem *base;
-+};
-+
-+#define BCM6368_NAND_INT		0x00
-+#define  BCM6368_NAND_STATUS_SHIFT	0
-+#define  BCM6368_NAND_STATUS_MASK	(0xfff << BCM6368_NAND_STATUS_SHIFT)
-+#define  BCM6368_NAND_ENABLE_SHIFT	16
-+#define  BCM6368_NAND_ENABLE_MASK	(0xffff << BCM6368_NAND_ENABLE_SHIFT=
-)
-+#define BCM6368_NAND_BASE_ADDR0	0x04
-+#define BCM6368_NAND_BASE_ADDR1	0x0c
-+
-+enum {
-+	BCM6368_NP_READ		=3D BIT(0),
-+	BCM6368_BLOCK_ERASE	=3D BIT(1),
-+	BCM6368_COPY_BACK	=3D BIT(2),
-+	BCM6368_PAGE_PGM	=3D BIT(3),
-+	BCM6368_CTRL_READY	=3D BIT(4),
-+	BCM6368_DEV_RBPIN	=3D BIT(5),
-+	BCM6368_ECC_ERR_UNC	=3D BIT(6),
-+	BCM6368_ECC_ERR_CORR	=3D BIT(7),
-+};
-+
-+static bool bcm6368_nand_intc_ack(struct brcmnand_soc *soc)
-+{
-+	struct bcm6368_nand_soc *priv =3D
-+			container_of(soc, struct bcm6368_nand_soc, soc);
-+	void __iomem *mmio =3D priv->base + BCM6368_NAND_INT;
-+	u32 val =3D brcmnand_readl(mmio);
-+
-+	if (val & (BCM6368_CTRL_READY << BCM6368_NAND_STATUS_SHIFT)) {
-+		/* Ack interrupt */
-+		val &=3D ~BCM6368_NAND_STATUS_MASK;
-+		val |=3D BCM6368_CTRL_READY << BCM6368_NAND_STATUS_SHIFT;
-+		brcmnand_writel(val, mmio);
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
-+static void bcm6368_nand_intc_set(struct brcmnand_soc *soc, bool en)
-+{
-+	struct bcm6368_nand_soc *priv =3D
-+			container_of(soc, struct bcm6368_nand_soc, soc);
-+	void __iomem *mmio =3D priv->base + BCM6368_NAND_INT;
-+	u32 val =3D brcmnand_readl(mmio);
-+
-+	/* Don't ack any interrupts */
-+	val &=3D ~BCM6368_NAND_STATUS_MASK;
-+
-+	if (en)
-+		val |=3D BCM6368_CTRL_READY << BCM6368_NAND_ENABLE_SHIFT;
-+	else
-+		val &=3D ~(BCM6368_CTRL_READY << BCM6368_NAND_ENABLE_SHIFT);
-+
-+	brcmnand_writel(val, mmio);
-+}
-+
-+static int bcm6368_nand_probe(struct platform_device *pdev)
-+{
-+	struct device *dev =3D &pdev->dev;
-+	struct bcm6368_nand_soc *priv;
-+	struct brcmnand_soc *soc;
-+	struct resource *res;
-+
-+	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+	soc =3D &priv->soc;
-+
-+	res =3D platform_get_resource_byname(pdev,
-+		IORESOURCE_MEM, "nand-intr-base");
-+	if (!res)
-+		return -EINVAL;
-+
-+	priv->base =3D devm_ioremap_resource(dev, res);
-+	if (IS_ERR(priv->base))
-+		return PTR_ERR(priv->base);
-+
-+	soc->ctlrdy_ack =3D bcm6368_nand_intc_ack;
-+	soc->ctlrdy_set_enabled =3D bcm6368_nand_intc_set;
-+
-+	/* Disable and ack all interrupts  */
-+	brcmnand_writel(0, priv->base + BCM6368_NAND_INT);
-+	brcmnand_writel(BCM6368_NAND_STATUS_MASK,
-+			priv->base + BCM6368_NAND_INT);
-+
-+	return brcmnand_probe(pdev, soc);
-+}
-+
-+static const struct of_device_id bcm6368_nand_of_match[] =3D {
-+	{ .compatible =3D "brcm,nand-bcm6368" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, bcm6368_nand_of_match);
-+
-+static struct platform_driver bcm6368_nand_driver =3D {
-+	.probe			=3D bcm6368_nand_probe,
-+	.remove			=3D brcmnand_remove,
-+	.driver =3D {
-+		.name		=3D "bcm6368_nand",
-+		.pm		=3D &brcmnand_pm_ops,
-+		.of_match_table	=3D bcm6368_nand_of_match,
-+	}
-+};
-+module_platform_driver(bcm6368_nand_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Simon Arlott");
-+MODULE_DESCRIPTION("NAND driver for BCM6368");
---=20
-2.1.4
-
---=20
-Simon Arlott
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c.txt | 31 ++++++++++++++++++++++-----
+>  1 file changed, 26 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
+> index 8a99150ac3a7fd..a00219f5ee0733 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c.txt
+> @@ -29,12 +29,33 @@ Optional properties
+>  These properties may not be supported by all drivers. However, if a driver
+>  wants to support one of the below features, it should adapt the bindings below.
+>  
+> -- clock-frequency	- frequency of bus clock in Hz.
+> -- wakeup-source		- device can be used as a wakeup source.
+> +- clock-frequency
+> +	frequency of bus clock in Hz.
+>  
+> -- interrupts		- interrupts used by the device.
+> -- interrupt-names	- "irq" and "wakeup" names are recognized by I2C core,
+> -			  other names are left to individual drivers.
+> +- i2c-scl-falling-time-ns
+> +	Number of nanoseconds the SCL signal takes to fall; t(f) in the I2C
+> +	specification.
+> +
+> +- i2c-scl-internal-delay-ns
+> +	Number of nanoseconds the IP core additionally needs to setup SCL.
+> +
+> +- i2c-scl-rising-time-ns
+> +	Number of nanoseconds the SCL signal takes to rise; t(r) in the I2C
+> +	specification.
+> +
+> +- i2c-sda-falling-time-ns
+> +	Number of nanoseconds the SDA signal takes to fall; t(f) in the I2C
+> +	specification.
+> +
+> +- interrupts
+> +	interrupts used by the device.
+> +
+> +- interrupt-names
+> +	"irq" and "wakeup" names are recognized by I2C core, other names are
+> +	left to individual drivers.
+> +
+> +- wakeup-source
+> +	device can be used as a wakeup source.
+>  
+>  Binding may contain optional "interrupts" property, describing interrupts
+>  used by the device. I2C core will assign "irq" interrupt (or the very first
+> -- 
+> 2.1.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
