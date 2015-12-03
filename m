@@ -1,101 +1,197 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v4 4/5] ARM: dts: DRA7: add entry for qspi mmap region
-Date: Thu, 3 Dec 2015 15:51:28 +0530
-Message-ID: <566017A8.5040106@ti.com>
-References: <1448860515-28336-1-git-send-email-vigneshr@ti.com>
- <1448860515-28336-5-git-send-email-vigneshr@ti.com>
- <20151130223408.GJ23396@atomide.com> <565D25E6.4070206@ti.com>
- <20151201163950.GR23396@atomide.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] i2c: at91: add support for the HOLD field
+Date: Thu, 3 Dec 2015 11:30:36 +0100
+Message-ID: <566019CC.3060005@atmel.com>
+References: <1449136434-27619-1-git-send-email-ludovic.desroches@atmel.com>
+ <1449136434-27619-2-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151201163950.GR23396@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Brian Norris <computersforpeace@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, "hramrach@gmail.com" <hramrach@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449136434-27619-2-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Le 03/12/2015 10:53, Ludovic Desroches a =E9crit :
+> The hold field allows to configure the data hold time which can be se=
+t
+> with the help of the generic binding 'i2c-sda-hold-time-ns'. This
+> feature has been introduced with SAMA5D4 SoC family.
+>=20
+> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
 
-On 12/01/2015 10:09 PM, Tony Lindgren wrote:
-> * Vignesh R <vigneshr@ti.com> [151130 20:46]:
->> On 12/01/2015 04:04 AM, Tony Lindgren wrote:
->>>
->>> Actually none of the IO areas above are within the same interconnect target:
->>>
->>> 0x4b300000  QSPI0 address space in L3 main interconnect
->>> 0x5c000000  QSPI1 address space in L3 main interconnect
->>
->>
->> First address range (configuration port: 0x4b300000) corresponds to QSPI
->> registers space. These registers alone are sufficient for generic SPI
->> communication (serial flash as well as non-flash SPI devices).
-> 
-> OK
-> 
->> In order to speed up SPI flash reads SFI_MM_IF(SPI memory mapped
->> interface) is provided by QSPI IP. This _cannot_ be used with non-flash
->> devices.
-> 
-> OK
-> 
->> The second address range (0x5c000000) corresponds to memory-mapped
->> region of SFI_MM_IF, through which SPI flash memories can be read as if
->> though they were RAM addresses (i.e using readl/memcpy). The SFI_MM_IF
->> block that takes care of communicating over SPI bus and getting the data
->> from flash device.
-> 
-> OK
-> 
->> But SFI_MM_IF block needs to know some flash specific information(such
->> as read opcode, address bytes, dummy bytes, mode). This information must
->> first be populated in QSPI_SPI_SETUP*_REG(0x4B300054-60) before
->> accessing SFI_MM_IF address range via readl.
->> Both addresses space belong to same instance of the driver, one
->> corresponds to register space and other is memory-mapped region.
->> Therefore both regions are claimed by the same driver.
-> 
-> OK
-> 
->>> 0x4a002558  CTRL_CORE_CONTROL_IO_2 in System Control Module (SCM) in L4_CFG
->>>
->>> The first two address spaces should be two separate instances of this driver.
->>
->> Not actually two instances.
-> 
-> OK. They are both on L3 main so that won't cause any issues for separate
-> interconnect driver instances. As they are still separate targets flushing
-> a posted write to one area will not flush anything to the other.
-> 
+> ---
+>  drivers/i2c/busses/i2c-at91.c | 53 +++++++++++++++++++++++++++++++++=
++++++++---
+>  1 file changed, 50 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-at91.c b/drivers/i2c/busses/i2c-a=
+t91.c
+> index 10835d1..921d32b 100644
+> --- a/drivers/i2c/busses/i2c-at91.c
+> +++ b/drivers/i2c/busses/i2c-at91.c
+> @@ -64,6 +64,8 @@
+>  #define	AT91_TWI_IADR		0x000c	/* Internal Address Register */
+> =20
+>  #define	AT91_TWI_CWGR		0x0010	/* Clock Waveform Generator Reg */
+> +#define	AT91_TWI_CWGR_HOLD_MAX	0x1f
+> +#define	AT91_TWI_CWGR_HOLD(x)	(((x) & AT91_TWI_CWGR_HOLD_MAX) << 24)
+> =20
+>  #define	AT91_TWI_SR		0x0020	/* Status Register */
+>  #define	AT91_TWI_TXCOMP		BIT(0)	/* Transmission Complete */
+> @@ -110,6 +112,7 @@ struct at91_twi_pdata {
+>  	unsigned clk_offset;
+>  	bool has_unre_flag;
+>  	bool has_alt_cmd;
+> +	bool has_hold_field;
+>  	struct at_dma_slave dma_slave;
+>  };
+> =20
+> @@ -187,10 +190,11 @@ static void at91_init_twi_bus(struct at91_twi_d=
+ev *dev)
+>   */
+>  static void at91_calc_twi_clock(struct at91_twi_dev *dev, int twi_cl=
+k)
+>  {
+> -	int ckdiv, cdiv, div;
+> +	int ckdiv, cdiv, div, hold =3D 0;
+>  	struct at91_twi_pdata *pdata =3D dev->pdata;
+>  	int offset =3D pdata->clk_offset;
+>  	int max_ckdiv =3D pdata->clk_max_div;
+> +	u32 twd_hold_time_ns =3D 0;
+> =20
+>  	div =3D max(0, (int)DIV_ROUND_UP(clk_get_rate(dev->clk),
+>  				       2 * twi_clk) - offset);
+> @@ -204,8 +208,33 @@ static void at91_calc_twi_clock(struct at91_twi_=
+dev *dev, int twi_clk)
+>  		cdiv =3D 255;
+>  	}
+> =20
+> -	dev->twi_cwgr_reg =3D (ckdiv << 16) | (cdiv << 8) | cdiv;
+> -	dev_dbg(dev->dev, "cdiv %d ckdiv %d\n", cdiv, ckdiv);
+> +	if (pdata->has_hold_field) {
+> +		of_property_read_u32(dev->dev->of_node, "i2c-sda-hold-time-ns",
+> +				     &twd_hold_time_ns);
+> +
+> +		/*
+> +		 * hold time =3D HOLD + 3 x T_peripheral_clock
+> +		 * Use clk rate in kHz to prevent overflows when computing
+> +		 * hold.
+> +		 */
+> +		hold =3D DIV_ROUND_UP(twd_hold_time_ns
+> +				    * (clk_get_rate(dev->clk) / 1000), 1000000);
+> +		hold -=3D 3;
+> +		if (hold < 0)
+> +			hold =3D 0;
+> +		if (hold > AT91_TWI_CWGR_HOLD_MAX) {
+> +			dev_warn(dev->dev,
+> +				 "HOLD field set to its maximum value (%d instead of %d)\n",
+> +				 AT91_TWI_CWGR_HOLD_MAX, hold);
+> +			hold =3D AT91_TWI_CWGR_HOLD_MAX;
+> +		}
+> +	}
+> +
+> +	dev->twi_cwgr_reg =3D (ckdiv << 16) | (cdiv << 8) | cdiv
+> +			    | AT91_TWI_CWGR_HOLD(hold);
+> +
+> +	dev_dbg(dev->dev, "cdiv %d ckdiv %d hold %d (%d ns)\n",
+> +		cdiv, ckdiv, hold, twd_hold_time_ns);
+>  }
+> =20
+>  static void at91_twi_dma_cleanup(struct at91_twi_dev *dev)
+> @@ -797,6 +826,7 @@ static struct at91_twi_pdata at91rm9200_config =3D=
+ {
+>  	.clk_offset =3D 3,
+>  	.has_unre_flag =3D true,
+>  	.has_alt_cmd =3D false,
+> +	.has_hold_field =3D false,
+>  };
+> =20
+>  static struct at91_twi_pdata at91sam9261_config =3D {
+> @@ -804,6 +834,7 @@ static struct at91_twi_pdata at91sam9261_config =3D=
+ {
+>  	.clk_offset =3D 4,
+>  	.has_unre_flag =3D false,
+>  	.has_alt_cmd =3D false,
+> +	.has_hold_field =3D false,
+>  };
+> =20
+>  static struct at91_twi_pdata at91sam9260_config =3D {
+> @@ -811,6 +842,7 @@ static struct at91_twi_pdata at91sam9260_config =3D=
+ {
+>  	.clk_offset =3D 4,
+>  	.has_unre_flag =3D false,
+>  	.has_alt_cmd =3D false,
+> +	.has_hold_field =3D false,
+>  };
+> =20
+>  static struct at91_twi_pdata at91sam9g20_config =3D {
+> @@ -818,6 +850,7 @@ static struct at91_twi_pdata at91sam9g20_config =3D=
+ {
+>  	.clk_offset =3D 4,
+>  	.has_unre_flag =3D false,
+>  	.has_alt_cmd =3D false,
+> +	.has_hold_field =3D false,
+>  };
+> =20
+>  static struct at91_twi_pdata at91sam9g10_config =3D {
+> @@ -825,6 +858,7 @@ static struct at91_twi_pdata at91sam9g10_config =3D=
+ {
+>  	.clk_offset =3D 4,
+>  	.has_unre_flag =3D false,
+>  	.has_alt_cmd =3D false,
+> +	.has_hold_field =3D false,
+>  };
+> =20
+>  static const struct platform_device_id at91_twi_devtypes[] =3D {
+> @@ -854,6 +888,15 @@ static struct at91_twi_pdata at91sam9x5_config =3D=
+ {
+>  	.clk_offset =3D 4,
+>  	.has_unre_flag =3D false,
+>  	.has_alt_cmd =3D false,
+> +	.has_hold_field =3D false,
+> +};
+> +
+> +static struct at91_twi_pdata sama5d4_config =3D {
+> +	.clk_max_div =3D 7,
+> +	.clk_offset =3D 4,
+> +	.has_unre_flag =3D false,
+> +	.has_alt_cmd =3D false,
+> +	.has_hold_field =3D true,
+>  };
+> =20
+>  static struct at91_twi_pdata sama5d2_config =3D {
+> @@ -861,6 +904,7 @@ static struct at91_twi_pdata sama5d2_config =3D {
+>  	.clk_offset =3D 4,
+>  	.has_unre_flag =3D true,
+>  	.has_alt_cmd =3D true,
+> +	.has_hold_field =3D true,
+>  };
+> =20
+>  static const struct of_device_id atmel_twi_dt_ids[] =3D {
+> @@ -883,6 +927,9 @@ static const struct of_device_id atmel_twi_dt_ids=
+[] =3D {
+>  		.compatible =3D "atmel,at91sam9x5-i2c",
+>  		.data =3D &at91sam9x5_config,
+>  	}, {
+> +		.compatible =3D "atmel,sama5d4-i2c",
+> +		.data =3D &sama5d4_config,
+> +	}, {
+>  		.compatible =3D "atmel,sama5d2-i2c",
+>  		.data =3D &sama5d2_config,
+>  	}, {
+>=20
 
-I didn't quite understand what you meant by interconnect driver instance.
-qspi_base and qspi_mmap region are tightly bound to each other and both
-needs to be accessed by ti-qspi driver (though different targets).
-Besides qspi_mmap region is only used to read data, there will not be
-any write accesses to this target. Are you saying this binding is not
-viable?
 
->>> The CTRL_CORE_CONTROL_IO_2 needs seems like a shared clock register that
->>> needs to be accessed using the clock framework most likely.
->>>
->>
->> Not shared clock.
->> The CTRL_CORE_CONTROL_IO_2[10:8] QSPI_MEMMAPPED_CS bit fields provides a
->> functionality for remapping the previously described address space which
->> starts at 0x5C000000 L3_MAIN address to one of the four supported chip
->> selects.
->> How about using syscon to access CTRL_CORE_CONTROL_IO_2?
-> 
-> A separate driver implementing some Linux generic framework would be idael :)
-> 
-> But if that does not fit, yeah then syscon makes sense as that IO range
-> will be on separate interconnect driver (and clock and possibly power domain)
-> instances eventually.
-> 
-
-I will go ahead with syscon for accessing CTRL_CORE_CONTROL_IO_2 register.
-
--- 
-Regards
-Vignesh
+--=20
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
