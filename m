@@ -1,57 +1,76 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RESEND v4 2/6] remoteproc: debugfs: Add ability to boot remote processor using debugfs
-Date: Thu, 03 Dec 2015 14:19:47 +0100
-Message-ID: <2600153.9u9Z7N2IT1@wuerfel>
-References: <1448370862-19120-1-git-send-email-lee.jones@linaro.org> <5329827.I5W30K072M@wuerfel> <20151203130341.GA26902@x1>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH 3/3] dt-bindings: exynos-dp: update ports node binding for
+ panel
+Date: Thu, 3 Dec 2015 10:29:10 -0300
+Message-ID: <566043A6.8090604@osg.samsung.com>
+References: <1449135010-8111-1-git-send-email-inki.dae@samsung.com>
+ <1449135010-8111-4-git-send-email-inki.dae@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151203130341.GA26902@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, Bjorn Andersson <bjorn@kryo.se>, Ohad Ben-Cohen <ohad@wizery.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, kernel@stlinux.com, Nathan_Lynch@mentor.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, ludovic.barre@st.com, Maxime Coquelin <maxime.coquelin@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1449135010-8111-4-git-send-email-inki.dae@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Inki Dae <inki.dae@samsung.com>, dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, k.kozlowski@samsung.com, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 03 December 2015 13:03:41 Lee Jones wrote:
-> On Thu, 03 Dec 2015, Arnd Bergmann wrote:
-> 
-> > On Thursday 03 December 2015 12:26:34 Lee Jones wrote:
-> > > > >
-> > > > > +static ssize_t rproc_state_write(struct file *filp, const char __user *userbuf,
-> > > > > +                                size_t count, loff_t *ppos)
-> > > > > +{
-> > > > > +       struct rproc *rproc = filp->private_data;
-> > > > > +       char buf[10];
-> > > > > +       int ret;
-> > > > > +
-> > > > > +       if (count > sizeof(buf))
-> > > > > +               return count;
-> > > > > +       ret = copy_from_user(buf, userbuf, count);
-> > > > > +       if (ret)
-> > > > > +               return -EFAULT;
-> > > > > +
-> > > > > +       if (buf[count - 1] == '\n')
-> > > > > +               buf[count - 1] = '\0';
-> > > > 
-> > > > I believe you can get here with count = 0.
-> > > 
-> > > I'm pretty sure you can't.
-> > > 
-> > > If you are sure that you can, if you can provide me with a way of
-> > > testing, I'd be happy to put in provisions.
-> > > 
-> > 
-> > I think that a zero-length write() from user space ends up in the write
-> > file operation.
-> 
-> I tested this and didn't see it enter write().  My conclusion was that
-> if the file doesn't change, then nothing is triggered.
-> 
-
-Ah, interesting. I haven't tried myself, and just tried to read the
-code. Maybe glibc already catches zero-length writes before it gets
-into the kernel, or I just missed the part of the syscall that checks
-for this.
-
-	arnd
+SGVsbG8gSW5raSwKCk9uIDEyLzAzLzIwMTUgMDY6MzAgQU0sIElua2kgRGFlIHdyb3RlOgo+IFRo
+aXMgcGF0Y2ggdXBkYXRlcyBhIHBvcnRzIG5vZGUgYmluZGluZyBmb3IgcGFuZWwuCj4gCj4gV2l0
+aCB0aGlzLCBkcCBub2RlIGNhbiBoYXZlIGEgcG9ydHMgbm9kZSB3aGljaCBkZXNjcmliZXMKPiBh
+IHJlbW90ZSBlbmRwb2ludCBub2RlIHRoYXQgY2FuIGJlIGNvbm5lY3RlZCB0byBwYW5lbCBvciBi
+cmlkZ2UKPiBub2RlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IElua2kgRGFlIDxpbmtpLmRhZUBzYW1z
+dW5nLmNvbT4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvZXh5bm9zL2V4eW5vc19kcC50
+eHQgICAgICAgICAgfCAyOCArKysrKysrKysrKysrKysrKystLS0tCj4gIDEgZmlsZSBjaGFuZ2Vk
+LCAyNCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9leHlub3MvZXh5bm9zX2RwLnR4
+dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V4eW5vcy9leHlu
+b3NfZHAudHh0Cj4gaW5kZXggNjQ2OTNmMi4uMTViNTJjYiAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9leHlub3MvZXh5bm9zX2RwLnR4dAo+
+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V4eW5vcy9l
+eHlub3NfZHAudHh0Cj4gQEAgLTY2LDggKzY2LDE1IEBAIE9wdGlvbmFsIHByb3BlcnRpZXMgZm9y
+IGRwLWNvbnRyb2xsZXI6Cj4gIAkJSG90cGx1ZyBkZXRlY3QgR1BJTy4KPiAgCQkJSW5kaWNhdGVz
+IHdoaWNoIEdQSU8gc2hvdWxkIGJlIHVzZWQgZm9yIGhvdHBsdWcKPiAgCQkJZGV0ZWN0aW9uCj4g
+LQktdmlkZW8gaW50ZXJmYWNlczogRGV2aWNlIG5vZGUgY2FuIGNvbnRhaW4gdmlkZW8gaW50ZXJm
+YWNlIHBvcnQKPiAtCQkJICAgIG5vZGVzIGFjY29yZGluZyB0byBbMV0uCj4gK1ZpZGVvIGludGVy
+ZmFjZXM6Cj4gKyAgRGV2aWNlIG5vZGUgY2FuIGNvbnRhaW4gdmlkZW8gaW50ZXJmYWNlIHBvcnQg
+bm9kZXMgYWNjb3JkaW5nIHRvIFsxXS4KPiArICBUaGUgZm9sbG93aW5nIGFyZSBwcm9wZXJ0aWVz
+IHNwZWNpZmljIHRvIHRob3NlIG5vZGVzOgo+ICsKPiArICBlbmRwb2ludCBub2RlIGNvbm5lY3Rl
+ZCB0byBicmlkZ2Ugb3IgcGFuZWwgbm9kZToKPiArICAgLSByZW1vdGUtZW5kcG9pbnQ6IHNwZWNp
+ZmllcyB0aGUgZW5kcG9pbnQgaW4gcGFuZWwgb3IgYnJpZGdlIG5vZGUuCj4gKwkJICAgICAgVGhp
+cyBub2RlIGlzIHJlcXVpcmVkIGluIGFsbCBraW5kcyBvZiBleHlub3MgZHAKPiArCQkgICAgICB0
+byByZXByZXNlbnQgdGhlIGNvbm5lY3Rpb24gYmV0d2VlbiBkcCBhbmQgYnJpZGdlCj4gKwkJICAg
+ICAgLG9yIGRwIGFuZCBwYW5lbC4KPgoKVGhpcyBpcyBuaWNlIGJ1dCBJIHRoaW5rIHRoZSBEVCBi
+aW5kaW5nIHNob3VsZCBhbHNvIGRvY3VtZW50IHRoYXQgaXQgdXNlcwphIHBoYW5kbGUgdG8gZGVm
+aW5lIHRoZSBjb25uZWN0aW9uIHdpdGggdGhlIHBhbmVsIChidXQgZXhwbGFpbiB0aGF0IGlzCmRl
+cHJlY2F0ZWQpLiBJZiBvbmx5IHNvIHBlb3BsZSBsb29raW5nIGF0IGEgRFRTIGFuZCB0aGVuIGdv
+aW5nIHRvIHRoZSBEVApiaW5kaW5nIGNhbiB1bmRlcnN0YW5kIHdoeSB0aGVyZSBpcyB0d28gd2F5
+cyB0byBkZWZpbmUgdGhlIHNhbWUuCiAgCj4gIFsxXTogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0Cj4gIAo+IEBAIC0xMTEsOSArMTE4
+LDIyIEBAIEJvYXJkIFNwZWNpZmljIHBvcnRpb246Cj4gIAkJfTsKPiAgCj4gIAkJcG9ydHMgewo+
+IC0JCQlwb3J0QDAgewo+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkJI3NpemUtY2Vs
+bHMgPSA8MD47Cj4gKwoKVGhlc2UgdHdvIHByb3BlcnRpZXMgYXJlIG9ubHkgbmVlZGVkIHdoZW4g
+dGhlcmUgaXMgbW9yZSB0aGFuIDIgcG9ydHMgYW5kCmEgcmVnIHByb3BlcnR5IGlzIHVzZWQgdG8g
+bnVtYmVyIHRoZSBwb3J0IG5vZGVzIGJ1dCBJIGRvbid0IHRoaW5rIHRoYXQncwp0aGUgY2FzZSBm
+b3IgRXh5bm9zIERQIGFuZCBjZXJ0YWlubHkgaXMgbm90IHRoZSBjYXNlIGluIHRoaXMgZXhhbXBs
+ZSBzbwpJIHRoaW5rIHlvdSBzaG91bGQganVzdCByZW1vdmUgdGhlbS4KCj4gKwkJCXBvcnQgewo+
+ICAJCQkJZHBfb3V0OiBlbmRwb2ludCB7Cj4gLQkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZicmlk
+Z2VfaW4+Owo+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHBfaW4+Owo+ICsJCQkJfTsKPiAr
+CQkJfTsKPiArCQl9Owo+ICsKPiArCQlwYW5lbEAwIHsKPiArCQkJcmVnID0gPDA+Owo+ICsJCQku
+Li4KPiArCQkJcG9ydCB7Cj4gKwkJCQlkcF9pbjogZW5kcG9pbnQgewo+ICsJCQkJCXJlbW90ZS1l
+bmRwb2ludCA9IDwmZHBfb3V0PjsKPiAgCQkJCX07Cj4gIAkJCX07Cj4gIAkJfTsKPiAKClRoZSBy
+ZXN0IGxvb2tzIGdvb2QgdG8gbWUgc28gd2l0aCB0aGUgdHdvIGNoYW5nZXMgZmVlbCBmcmVlIHRv
+IGFkZDoKClJldmlld2VkLWJ5OiBKYXZpZXIgTWFydGluZXogQ2FuaWxsYXMgPGphdmllckBvc2cu
+c2Ftc3VuZy5jb20+CgpCZXN0IHJlZ2FyZHMsCi0tIApKYXZpZXIgTWFydGluZXogQ2FuaWxsYXMK
+T3BlbiBTb3VyY2UgR3JvdXAKU2Ftc3VuZyBSZXNlYXJjaCBBbWVyaWNhCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
