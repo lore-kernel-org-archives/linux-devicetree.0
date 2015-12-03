@@ -1,140 +1,124 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 12/14] ARM: dts: sb-som: introduce SB-SOM baseboard
-Date: Thu, 3 Dec 2015 08:24:08 -0600
-Message-ID: <20151203142408.GA24844@rob-hp-laptop>
-References: <1448978109-5614-1-git-send-email-nikita@compulab.co.il>
- <1448978109-5614-13-git-send-email-nikita@compulab.co.il>
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] drm: Add support for ARM's HDLCD controller.
+Date: Thu, 3 Dec 2015 14:48:55 +0000
+Message-ID: <20151203144855.GA12521@e106497-lin.cambridge.arm.com>
+References: <1449058982-18595-1-git-send-email-Liviu.Dudau@arm.com>
+ <1449058982-18595-3-git-send-email-Liviu.Dudau@arm.com>
+ <CAPj87rNFFGeL8z9GBXxyVri1RyhVpMGS0yz7opgCYamHYV1Yow@mail.gmail.com>
+ <20151203100021.GD972@e106497-lin.cambridge.arm.com>
+ <CAPj87rOyBciAtBH_MiKA1bcqbpmk8gOscOMcLcgcbcag7k1W9g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1448978109-5614-13-git-send-email-nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+In-Reply-To: <CAPj87rOyBciAtBH_MiKA1bcqbpmk8gOscOMcLcgcbcag7k1W9g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+To: Daniel Stone <daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DRI devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 01, 2015 at 03:55:07PM +0200, Nikita Kiryanov wrote:
-> CompuLab SB-SOM baseboard is a carrier board for multiple arm-based SoMs.
-> It currently supports (with minor adjustments to assembly) CM-T43, CM-T54,
-> and CM-QS600 modules. It is a building block in the SBC-T43 single board
-> computer, which consists of cm-t43 on top of sb-som-t43.
-> 
-> Signed-off-by: Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> Cc: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+On Thu, Dec 03, 2015 at 02:20:26PM +0000, Daniel Stone wrote:
+> Hi Liviu,
+>=20
+> On 3 December 2015 at 10:00, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On Wed, Dec 02, 2015 at 05:21:44PM +0000, Daniel Stone wrote:
+> >> On 2 December 2015 at 12:23, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org> wro=
+te:
+> >> > +       if (irq_status & HDLCD_INTERRUPT_VSYNC) {
+> >> > +               unsigned long flags;
+> >> > +
+> >> > +               drm_handle_vblank(drm, 0);
+> >> > +
+> >> > +               spin_lock_irqsave(&drm->event_lock, flags);
+> >> > +               if (hdlcd->event) {
+> >> > +                       drm_send_vblank_event(drm, hdlcd->event-=
+>pipe, hdlcd->event);
+> >> > +                       drm_crtc_vblank_put(&hdlcd->crtc);
+> >> > +                       hdlcd->event =3D NULL;
+> >> > +               }
+> >> > +               spin_unlock_irqrestore(&drm->event_lock, flags);
+> >> > +       }
+> >>
+> >> As with VC4 and Rockchip, you're missing a ->preclose handler in y=
+our
+> >> drm_drv, to make sure that you don't try to send events to a dead
+> >> client (which causes an OOPS):
+> >> https://git.collabora.com/cgit/user/daniels/linux.git/commit/?h=3D=
+wip/4.4.x/rockchip-drm-fixes&id=3Dd14f21bcd7
+> >> (and its parent)
+> >
+> > Thanks for reviewing this!
+> >
+> > I do acknowledge your concerns and you might correct my understandi=
+ng on
+> > how atomic DRM works, but I believe in this case we should be safe.=
+ The
+> > event stored in hdlcd->event is taken out of the crtc->state->event=
+ during
+> > the crtc->atomic_begin() callback. If the client is dead the callba=
+ck should
+> > not be called, so that's how we avoid the OOPS.
+>=20
+> Right, it's taken out of the CRTC state and put into the overall HDLC=
+D
+> structure. So the OOPS happens when:
+>   - client submits state with event requested, async flag set
+>   - atomic_begin moves crtc->state->event into hdlcd->event
+>   - control returns to client, who exits immediately
+>   - vblank happens
+>   - hdlcd->event->base.file_priv now points to a dead client
+>   - OOPS
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+I will try to construct an userspace test to see if I can trigger this =
+scenario.
 
-> ---
-> Changes in V2:
-> 	- Renamed file startek,startek-kd050c to startek,startek-kd050c.txt.
-> 	- s/QS-600/CM-QS600 in file compulab-boards.txt
-> 
->  .../devicetree/bindings/arm/compulab-boards.txt    |  5 +++
->  .../display/panel/startek,startek-kd050c.txt       |  4 +++
->  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->  arch/arm/boot/dts/compulab-sb-som.dtsi             | 42 ++++++++++++++++++++++
->  4 files changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/compulab-boards.txt
->  create mode 100644 Documentation/devicetree/bindings/display/panel/startek,startek-kd050c.txt
->  create mode 100644 arch/arm/boot/dts/compulab-sb-som.dtsi
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/compulab-boards.txt b/Documentation/devicetree/bindings/arm/compulab-boards.txt
-> new file mode 100644
-> index 0000000..71172d5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/compulab-boards.txt
-> @@ -0,0 +1,5 @@
-> +CompuLab SB-SOM is a multi-module baseboard capable of carrying CM-T43, CM-T54,
-> +and CM-QS600 modules with minor modifications to the SB-SOM assembly.
-> +
-> +Required root node properties:
-> +    - compatible = should be "compulab,sb-som"
-> diff --git a/Documentation/devicetree/bindings/display/panel/startek,startek-kd050c.txt b/Documentation/devicetree/bindings/display/panel/startek,startek-kd050c.txt
-> new file mode 100644
-> index 0000000..70cd8d1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/startek,startek-kd050c.txt
-> @@ -0,0 +1,4 @@
-> +Startek Electronic Technology Co. KD050C 5.0" WVGA TFT LCD panel
-> +
-> +Required properties:
-> +- compatible: should be "startek,startek-kd050c"
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 55df1d4..409b134 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -218,6 +218,7 @@ sony	Sony Corporation
->  spansion	Spansion Inc.
->  sprd	Spreadtrum Communications Inc.
->  st	STMicroelectronics
-> +startek	Startek
->  ste	ST-Ericsson
->  stericsson	ST-Ericsson
->  synology	Synology, Inc.
-> diff --git a/arch/arm/boot/dts/compulab-sb-som.dtsi b/arch/arm/boot/dts/compulab-sb-som.dtsi
-> new file mode 100644
-> index 0000000..402a143
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/compulab-sb-som.dtsi
-> @@ -0,0 +1,42 @@
-> +/*
-> + * Copyright (C) 2015 CompuLab, Ltd. - http://www.compulab.co.il/
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +/ {
-> +	model = "CompuLab SB-SOM";
-> +	compatible = "compulab,sb-som";
-> +
-> +	vsb_3v3: fixedregulator-v3_3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vsb_3v3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-always-on;
-> +		enable-active-high;
-> +	};
-> +
-> +	lcd0: display {
-> +		compatible = "startek,startek-kd050c", "panel-dpi";
-> +		label = "lcd";
-> +
-> +		panel-timing {
-> +			clock-frequency = <33000000>;
-> +			hactive = <800>;
-> +			vactive = <480>;
-> +			hfront-porch = <40>;
-> +			hback-porch = <40>;
-> +			hsync-len = <43>;
-> +			vback-porch = <29>;
-> +			vfront-porch = <13>;
-> +			vsync-len = <3>;
-> +			hsync-active = <0>;
-> +			vsync-active = <0>;
-> +			de-active = <1>;
-> +			pixelclk-active = <1>;
-> +		};
-> +	};
-> +};
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks for explaining it to me.
+
+Best regards,
+Liviu
+
+>=20
+> >> Also, is there anything preventing clients from submitting multipl=
+e
+> >> pageflips before the event is sent? I couldn't see anything from a
+> >> quick look, so you could have the situation of:
+> >>   - client submits pageflip, event 1 stored to hdlcd->event
+> >>   - client submits pageflip, event 2 stored to hdlcd->event
+> >>   - vblank arrives, event 2 is sent
+> >>   - event 1 has disappeared and been leaked
+> >
+> > As for multiple events being submitted before vsync interrupt happe=
+ning: given
+> > that the event is plucked out of the crtc->state, is that possible?=
+ And if so,
+> > is there a case where having the later event overwrite the earlier =
+one a desired
+> > outcome?
+>=20
+> Having events being overwritten is extremely undesirable; it could
+> cause a client to stall in the right scenarios (e.g. requests
+> submitted separately for different planes). It would be far better to
+> turn hdlcd->event into a list of events which are sent per-vblank,
+> probably just by retaining a list of pending states to apply; this
+> also makes it easier to handle async commits in the future (which
+> Weston in particular relies on).
+>=20
+> Cheers,
+> Daniel
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
