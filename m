@@ -1,99 +1,182 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v2 10/10] dt-bindings: Add DSIv2 documentation
-Date: Thu, 3 Dec 2015 16:41:13 +0530
-Message-ID: <56602351.70902@codeaurora.org>
-References: <1444827544-25656-1-git-send-email-architt@codeaurora.org>
- <1447844131-4182-1-git-send-email-architt@codeaurora.org>
- <1447844131-4182-11-git-send-email-architt@codeaurora.org>
- <CAL_JsqJufZvsGyxZ40+kPcAVr5mXqCi+Qej_8X6=GRxT9j+5+w@mail.gmail.com>
- <564C981F.3040907@codeaurora.org>
- <CAL_JsqJ7PovZsz0=b90bUChKtNra1pXxEjU_DiYAn7JUgShm5Q@mail.gmail.com>
- <5652AE71.4060609@codeaurora.org> <20151202082001.GC4139@codeaurora.org>
- <565EC05D.8070009@codeaurora.org> <20151203071623.GB14699@codeaurora.org>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v4 3/5] mtd: devices: m25p80: add support for mmap read
+ request
+Date: Thu, 3 Dec 2015 16:53:40 +0530
+Message-ID: <5660263C.8020406@ti.com>
+References: <1448860515-28336-1-git-send-email-vigneshr@ti.com>
+ <1448860515-28336-4-git-send-email-vigneshr@ti.com>
+ <56600E7B.8010208@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20151203071623.GB14699@codeaurora.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56600E7B.8010208@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Cyrille Pitchen <cyrille.pitchen@atmel.com>, Tony Lindgren <tony@atomide.com>, Brian Norris <computersforpeace@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, hramrach@gmail.com, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Marek Vasut <marex@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAxMi8wMy8yMDE1IDEyOjQ2IFBNLCBTdGVwaGVuIEJveWQgd3JvdGU6Cj4gT24gMTIvMDIs
-IEFyY2hpdCBUYW5lamEgd3JvdGU6Cj4+IE9uIDEyLzAyLzIwMTUgMDE6NTAgUE0sIFN0ZXBoZW4g
-Qm95ZCB3cm90ZToKPj4+Cj4+PiBNeSBvbmx5IHRob3VnaHQgdGhlcmUgd291bGQgYmUgdG8gbWFr
-ZSBvZl9jbGtfc2V0X2RlZmF1bHRzKCkgd2FpdAo+Pj4gdW50aWwgYm90aCBjbG9ja3MgYXJlIHJl
-Z2lzdGVyZWQgYmVmb3JlIGl0IGRvZXMgYW55IHBhcmVudAo+Pj4gc2V0dGluZy4gQnV0IG9ubHkg
-aW4gdGhlIGNhc2Ugd2hlcmUgdGhlIGFzc2lnbmVkIHBhcmVudHMgY29udGFpbnMKPj4+IGEgY2xv
-Y2sgdGhhdCBpcyBwcm92aWRlZCBieSB0aGUgbm9kZSBiZWluZyBwcm9jZXNzZWQuIEkgc3VwcG9z
-ZQo+Pj4gdGhlIHNpbXBsZXN0IHRoaW5nIHRvIGRvIHdvdWxkIGJlIHRvIHNraXAgaXQgZHVyaW5n
-IHRoZSBkZXZpY2UKPj4+IGRyaXZlciBwcm9iZSBhbmQgaGFuZGxlIGl0IHdoZW4gdGhlIGNsayBw
-cm92aWRlciBpcyByZWdpc3RlcmVkLgo+Pj4KPj4KPj4gVGhlIGFzc2lnbmVkLWNsb2NrLXBhcmVu
-dHMgc3R1ZmYgeW91IG1lbnRpb25lZCBpcyBuZWVkZWQgdG8gc2V0IGEKPj4gZGVmYXVsdCBsaW5r
-IGJldHdlZW4gdGhlIG9uZSBvZiB0aGUgRFNJIFBMTHMgYW5kIHRoZSBSQ0csIHJpZ2h0PyBJCj4+
-IGp1c3Qgd2FudGVkIHRvIG1ha2UgY2xlYXIgaWYgd2Ugd2VyZSBzdGlsbCBkaXNjdXNzaW5nIHRo
-ZSBzYW1lCj4+IGlzc3VlLgo+Cj4gWWVzLgo+Cj4+Cj4+ICBGcm9tIHdoYXQgSSB1bmRlcnN0YW5k
-LCB3ZSBkb24ndCBuZWVkIHRoZSBhc3NpZ25lZC1jbG9jay1wYXJlbnRzIHN0dWZmCj4+IHRvIGVz
-dGFibGlzaCBhIGxpbmsgYmV0d2VlbiBieXRlX2Nsa19zcmMoUkNHIGNsb2NrKSBhbmQKPj4gYnl0
-ZV9jbGsoYnJhbmNoIGNsb2NrKS4gVGhhdCdzIGEgZml4ZWQgbGluayBzZXQgdXAgYnkgdGhlIGNs
-b2NrCj4+IHN0cnVjdHMgcHJvdmlkZWQgaW4gdGhlIGdjYyBkcml2ZXIgYW5kIGRvZXNuJ3QgbmVl
-ZCB0byBiZSBzcGVjaWFsbHkKPj4gYXNzaWduZWQsIGFuZCBqdXN0IGEKPj4gY2xrX2dldF9wYXJl
-bnQgaW4gdGhlIGRyaXZlciBkb2VzIHRoZSBqb2IgdGhlcmUuCj4KPiBUaGVyZSdzIG9ubHkgb25l
-IHBhcmVudCBvZiB0aGUgYnl0ZV9jbGsgYW5kIHRoYXQncyBieXRlX2Nsa19zcmMuCj4gU28geWVz
-LCB0aGVyZSdzIG5vIG5lZWQgdG8gZGVzY3JpYmUgdGhhdCBpbiBEVCBhbmQKPiBjbGtfZ2V0X3Bh
-cmVudCgpIHdvcmtzIGZpbmUuCj4KPj4KPj4gQWJvdXQgYXNzaWduaW5nIGEgcGFyZW50IHRvIHRo
-ZSBSQ0csIHdvdWxkbid0IHRoYXQgYmUgeG8gYnkgZGVmYXVsdCwgYW5kCj4+IGNoYW5nZWQgYnkg
-dGhlIGRybS9tc20gZHJpdmVyIHRvIG9uZSBvZiB0aGUgUExMcyB3aGVuIHRoZSBuZWVkIGFycml2
-ZXM/Cj4+IEkgZGlkbid0IGdldCB3aHkgd2UgbmVlZCB0byBlc3RhYmxpc2ggdGhhdCBiZWZvcmVo
-YW5kIGluIERUPwo+Pgo+Cj4gWWVzLCBpdCB3b3VsZCBiZSBYTyBvdXQgb2YgcmVzZXQsIGJ1dCB3
-ZSBoYXZlIG5vIGlkZWEgd2hhdCB0aGUKPiBib290bG9hZGVyIGlzIGRvaW5nLiBJIHRob3VnaHQg
-dGhlIHByb2JsZW0gd2FzIHRoYXQgYnl0ZV9jbGtfc3JjCj4gaXMgbm90IGFjdHVhbGx5IGFuIGlu
-cHV0IHRvIHRoZSBEU0kgZGV2aWNlLiBUaGUgcHJvcG9zYWwgd2FzIHRvCj4gaGF2ZSBEVCBzcGVj
-aWZ5IGJ5dGVfY2xrX3NyYyBhbmQgYnl0ZV9jbGsgaW4gdGhlIGNsb2NrcyBhcnJheSBzbwo+IHRo
-YXQgYnl0ZV9jbGtfc3JjIGNvdWxkIGJlIHJlcGFyZW50ZWQgdG8gdGhlIFBMTCBhbmQgdGhlIGJ5
-dGVfY2xrCj4gY291bGQgYmUgZW5hYmxlZC9kaXNhYmxlZC4gSWYgd2UgdXNlIERUIHRvIGRvIHRo
-ZSBwYXJlbnQKPiBjb25maWd1cmluZyB0aGVuIHRoZSBEU0kgbm9kZSBkb2Vzbid0IGhhdmUgdGhl
-IGJ5dGVfY2xrX3NyYyBpbgo+IGl0cyBjbG9ja3MgYXJyYXkgYW5kIHRodXMgRFQgaXMgcmVmbGVj
-dGluZyByZWFsaXR5LgoKT2theSwgSSB1bmRlcnN0YW5kIHlvdXIgcG9pbnQgbm93LgoKPgo+IElm
-IHdlIHdhbnQgdG8gZHluYW1pY2FsbHkgc3dpdGNoIHRoZSBwYXJlbnQgb2YgYnl0ZV9jbGtfc3Jj
-IHRvIGJlCj4gZGlmZmVyZW50IFBMTHMgYXQgcnVudGltZSwgdGhlbiB5ZXMgd2UnbGwgbmVlZCB0
-byBnZXQgdGhlIHBhcmVudAo+IG9mIHRoZSBieXRlX2NsayAod2hpY2ggaXMgYnl0ZV9jbGtfc3Jj
-KSBhbmQgc2V0IHRoZSBQTEwgYXMgdGhlCj4gcGFyZW50LiBPciB3ZSdsbCBuZWVkIHRvIG1ha2Ug
-Y2xrX3NldF9wYXJlbnQoKSBvbiB0aGUgYnl0ZV9jbGsKPiB0cmFuc3BhcmVudGx5IHNldCB0aGUg
-Z3JhbmQtcGFyZW50IHRvIGJlIHRoZSBQTEwuIEluIHRoYXQgY2FzZSB3ZQo+IG1heSBuZWVkIHRv
-IGludHJvZHVjZSBzb21lIHNvcnQgb2YgZmxhZyBsaWtlCj4gQ0xLX1NFVF9QQVJFTlRfR1JBTkRQ
-QVJFTlQgdG8gYWRkIHRoaXMgdHlwZSBvZiBiZWhhdmlvci4KPgo+IEkgZG9uJ3QgaGF2ZSBhIGh1
-Z2UgcHJvYmxlbSB3aXRoCj4KPiAJY2xrX3NldF9wYXJlbnQoY2xrX2dldF9wYXJlbnQoYnl0ZV9j
-bGspLCBQTEwpCj4KPiBleGNlcHQgdGhhdCB0aGlzIGZhaWxzIHRoZSBhYnN0cmFjdGlvbiB0ZXN0
-LiBJdCBsZWFrcyBpbmZvcm1hdGlvbgo+IGFib3V0IHRoZSBjbG9jayB0cmVlIGludG8gYSBkcml2
-ZXIgdGhhdCBzaG91bGRuJ3QgbmVlZCB0byBrbm93Cj4gdGhhdCBvbiB0aGlzIHBhcnRpY3VsYXIg
-U29DIHRoZXJlJ3MgYSBjbG9jayBpbiBiZXR3ZWVuIHRoZSBQTEwKPiBhbmQgdGhlIGJ5dGVfY2xr
-LiBGdXR1cmUgZGVzaWducyBtYXkgbm90IGhhdmUgdGhlIGludGVybWVkaWF0ZQo+IGNsb2NrIGFu
-ZCB0aGVuIHdlJ2xsIG5lZWQgdG8gdXBkYXRlIHRoZSBkcml2ZXIgdG8gaGFuZGxlIHRoZQo+IGRp
-ZmZlcmVuY2UsIHdoZW4gd2UgY291bGQgaGF2ZSBhZGRlZCB0aGUgZmxhZyBhbmQgdGhpbmdzIHdv
-dWxkCj4gd29yayB0aGUgc2FtZS4KCgpJIHdpbGwgaGF2ZSB0byBjaGVjayBpZiB3ZSByZWFsbHkg
-cmVxdWlyZSBkeW5hbWljIFBMTCBjb25maWd1cmF0aW9uCm9yIG5vdC4gQXQgdGhlIG1vbWVudCwg
-dGhlIGRyaXZlciByZWFkcyBhbm90aGVyIERUIHBhcmFtICh0aGF0CmlkZW50aWZpZXMgaWYgd2Ug
-YXJlIGluIGR1YWwgZHNpIG1vZGUpIGFuZCB0aGVuIHNldHMgdGhlIGFwcHJvcHJpYXRlClBMTCBh
-cyBwYXJlbnQuIFNvLCBpbiBhIHNlbnNlLCBpdCBpcyByZWx5aW5nIG9uIERUIGFscmVhZHkgZm9y
-IHNldHRpbmcKdGhlIHBhcmVudC4KCkkgZ3Vlc3Mgd2UgY2FuIGRvIHRoZSBmb2xsb3dpbmc6Cgot
-IHVzZSBhc3NpZ25lZC1jbG9jay1wYXJlbnRzIGluIERUIHRvIHNldCB0aGUgZGVmYXVsdCBQTEwK
-cGFyZW50IChwcm92aWRlZCBpdCB3b3JrcyBvdXQgb2YgdGhlIGJveCkKCi0gV2l0aGluIHRoZSBk
-cml2ZXIsIHN0aWxsIGRvIHRoZQonY2xrX3NldF9wYXJlbnQoY2xrX2dldF9wYXJlbnQoYnl0ZV9j
-bGspLCBQTEwpJyB0aGluZyBhbmQKcmVtb3ZlIGl0IGxhdGVyIGlmIGR5bmFtaWMgc3dpdGNoaW5n
-IGlzbid0IG5lZWRlZCBhdCBhbGwKaWYgdGhlIHBhcmVudCBQTEwgaXMga25vd24gYmVmb3JlaGFu
-ZCBpbiBhbGwgdXNlIGNhc2VzLgoKQXJjaGl0Cgo+CgotLSAKVGhlIFF1YWxjb21tIElubm92YXRp
-b24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSAKRm9ydW0sIGhv
-c3RlZCBieSBUaGUgTGludXggRm91bmRhdGlvbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbAo=
+Hi,
+
+On 12/03/2015 03:12 PM, Cyrille Pitchen wrote:
+> Hi Vignesh,
+>=20
+> Le 30/11/2015 06:15, Vignesh R a =E9crit :
+>> Certain spi controllers may provide accelerated interface to read fr=
+om
+>> m25p80 type flash devices. This interface provides better read
+>> performance than regular SPI interface.
+>> Call spi_flash_read(), if supported, to make use of such interface.
+>>
+>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+>> ---
+>>
+>> v4:=20
+>>  * Use spi_flash_read_message struct to pass args.
+>>  * support passing of opcode/addr/data nbits.
+>>
+>>  drivers/mtd/devices/m25p80.c | 20 ++++++++++++++++++++
+>>  1 file changed, 20 insertions(+)
+>>
+>> diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p=
+80.c
+>> index fe9ceb7b5405..00094a668c62 100644
+>> --- a/drivers/mtd/devices/m25p80.c
+>> +++ b/drivers/mtd/devices/m25p80.c
+>> @@ -131,6 +131,26 @@ static int m25p80_read(struct spi_nor *nor, lof=
+f_t from, size_t len,
+>>  	/* convert the dummy cycles to the number of bytes */
+>>  	dummy /=3D 8;
+>> =20
+>> +	if (spi_flash_read_supported(spi)) {
+>> +		struct spi_flash_read_message msg;
+>> +		int ret;
+>> +
+>> +		msg.buf =3D buf;
+>> +		msg.from =3D from;
+>> +		msg.len =3D len;
+>> +		msg.read_opcode =3D nor->read_opcode;
+>> +		msg.addr_width =3D nor->addr_width;
+>> +		msg.dummy_bytes =3D dummy;
+>> +		/* TODO: Support other combinations */
+>> +		msg.opcode_nbits =3D SPI_NBITS_SINGLE;
+>> +		msg.addr_nbits =3D SPI_NBITS_SINGLE;
+>> +		msg.data_nbits =3D m25p80_rx_nbits(nor);
+>=20
+> I wanted to let you know that the support of other SPI protocols has =
+already
+> been implemented by this series:
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-September/=
+371170.html
+>=20
+> patches 2 & 3 handle the probing of the (Q)SPI memory in spi_nor_scan=
+() and
+> select the right protocols for register read/write, memory read, memo=
+ry write,
+> and memory erase operations. The choice is done according to both the=
+ memory
+> and SPI controller capabilities.
+>=20
+> patch 4 updates the m25p80 driver to take advantage of the bandwidth =
+increase
+> allowed by QSPI protocols. For instance, the Atmel QSPI controller, l=
+ike TI
+> one, maps the SPI NOR memory to the system bus. Yesterday I ran mtd_s=
+peedtest
+> to compare Fast Read 1-1-1 (0x0b) and Fast Read 1-1-4 (0x6b). The SPI=
+ clock
+> frequency was limited to 83MHz. The QSPI memory is a Micron n25q128a1=
+3.
+>=20
+> I only had to change the mode argument of spi_nor_scan() from SPI_NOR=
+_QUAD to
+> SPI_NOR_FAST in the atmel_quadspi driver (based on fsl-quadspi driver=
+ from
+> Freescale since Atmel's driver also uses the system bus mapping for m=
+emory
+> write operations) to force the spi-nor framework to choose the SPI 1-=
+1-1
+> protocol instead of the SPI-1-1-4.
+>=20
+> 1 - Fast Read 1-1-1
+>=20
+> mtd_speedtest: testing eraseblock write speed
+> mtd_speedtest: eraseblock read speed is 9319 KiB/s
+> [...]
+> mtd_speedtest: testing page read speed
+> mtd_speedtest: page read speed is 6649 KiB/s
+> [...]
+> mtd_speedtest: testing 2 page read speed
+> mtd_speedtest: 2 page read speed is 7757 KiB/s
+>=20
+> 2 - Fast Read 1-1-4
+>=20
+> mtd_speedtest: testing eraseblock read speed
+> mtd_speedtest: eraseblock read speed is 30117 KiB/s
+> [...]
+> mtd_speedtest: testing page read speed
+> mtd_speedtest: page read speed is 13096 KiB/s
+> [...]
+> mtd_speedtest: testing 2 page read speed
+> mtd_speedtest: 2 page read speed is 18224 KiB/s
+>=20
+> So the performance improvements are:
+> eraseblock read speed (65536 bytes) : +223%
+> page read speed (512 bytes)         :  +97%
+> 2 page read speed (1024 bytes)      : +135%
+>=20
+>=20
+> That's why I believe that you could take advantage of these performan=
+ce
+> improvements in the TI (Q)SPI controller driver.
+>=20
+
+Well, I based my patches on linux-next as per Brian's suggestion. If
+patches to support other flash protocol modes are accepted, I would be
+happy to rebase and make use of other modes. It would just be the matte=
+r
+of populating msg.{opcode/addr}_n_bits correctly.
+
+
+>=20
+> Also please note that you may have to add in the struct spi_flash_rea=
+d_message
+> two other fields for the number of option/mode cycles and their value=
+=2E
+> Option/mode cycles are sent between the address and dummy cycles. The=
+y are
+> used by some memory manufacturers such as Spansion, Micron and Macron=
+ix to
+> enter/leave their continuous read mode.
+> So if uninitialized dummy cycles are interpreted by the QSPI memory a=
+s
+> option/mode cycles, depending on the actual value, the memory may ent=
+er by
+> mistake in continuous mode. Once in continuous mode, the command op c=
+ode byte
+> must not be sent and is not expected by the memory: the memory implic=
+itly uses
+> the read op code sent in the SPI message which triggered the memory t=
+o enter
+> continuous read mode. Next SPI messages start from the address cycles=
+ until
+> the right option/mode cycles are sent to leave the continuous read mo=
+de.
+>=20
+> Currently the mtd layer doesn't use this feature but it should be awa=
+re of it.
+> That's why I believe we'll have to address this point in spi_nor_scan=
+() and the
+> "regular" m25p80() sooner or later.
+>=20
+
+Above feature can be added incrementally over this series, (as and when
+m25p80 is updated) moreover ti-qspi controller does not support
+option/mode cycles in memory-mapped mode, so I wont be able to test thi=
+s
+feature anyway.
+
+
+--=20
+Regards
+Vignesh
