@@ -1,48 +1,36 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH V3 01/19] ARM: dts: am57xx: cl-som-am57x: add basic
- module support
-Date: Thu, 3 Dec 2015 08:20:37 -0800
-Message-ID: <20151203162037.GO23396@atomide.com>
-References: <1448433590-1399-1-git-send-email-lifshitz@compulab.co.il>
- <1448993001-19495-1-git-send-email-lifshitz@compulab.co.il>
- <1448993001-19495-2-git-send-email-lifshitz@compulab.co.il>
- <20151202152326.GA16775@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 03/10] drm/hisilicon: Add hisilicon DRM master driver
+Date: Thu, 3 Dec 2015 10:21:13 -0600
+Message-ID: <CAL_Jsq+cr7sQ1eus8Yi-mCMDq9PCZbFTSoPqt9P4a_m-JGKo0g@mail.gmail.com>
+References: <1448707145-69348-1-git-send-email-xinliang.liu@linaro.org> <1448707145-69348-4-git-send-email-xinliang.liu@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151202152326.GA16775@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1448707145-69348-4-git-send-email-xinliang.liu@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Xinliang Liu <xinliang.liu@linaro.org>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Vetter <daniel@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>, Archit Taneja <architt@codeaurora.org>, David Airlie <airlied@linux.ie>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linuxarm <linuxarm@huawei.com>, Andy Green <andy.green@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Wei Xu <xuwei5@hisilicon.com>, w.f@huawei.com, Chen Feng <puck.chen@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, Xinwei
 List-Id: devicetree@vger.kernel.org
 
-* Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [151202 07:24]:
-> On Tue, Dec 01, 2015 at 08:03:03PM +0200, Dmitry Lifshitz wrote:
-> > Add support for CompuLab CM-SOM-AM57X board.
-> > 
-> > CL-SOM-AM57x is a miniature System-on-Module (SoM) based on
-> > TI Sitara AM57x ARM Cortex-A15 System-on-Chip family.
-> > 
-> > https://www.compulab.co.il/products/computer-on-modules/cl-som-am57x-ti-am5728-am5718-system-on-module/
-> > 
-> > Add basic DT support for standalone module (without a carrier board):
-> > 
-> > * Memory configuration
-> > * Heartbeat led
-> > * I2C1 and I2C4
-> > * PMIC
-> > * SATA
-> > 
-> > Signed-off-by: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> > Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On Sat, Nov 28, 2015 at 4:38 AM, Xinliang Liu <xinliang.liu@linaro.org> wrote:
+> Add DRM master driver for hi6220 SoC which used in HiKey board.
+> Add dumb buffer feature.
+> Add prime dmabuf feature.
+>
+> Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
+> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+> Signed-off-by: Andy Green <andy.green@linaro.org>
+> ---
 
-Applying the whole series into omap-for-v4.5/dt thanks.
+> +static int hisi_gem_cma_dumb_create(struct drm_file *file,
+> +                                   struct drm_device *dev,
+> +                                   struct drm_mode_create_dumb *args)
+> +{
+> +       int min_pitch = DIV_ROUND_UP(args->width * args->bpp, 8);
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+BTW, is args->bpp supposed to be bits or bytes? I'm using your dumb bo
+support in drm_gralloc which does bytes as that is what
+gralloc_drm_get_bpp returns. The virtio-gpu driver does bits. I'm
+guessing bits is correct.
+
+Rob
