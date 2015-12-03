@@ -1,82 +1,140 @@
-From: Daniel Stone <daniel@fooishbar.org>
-Subject: Re: [PATCH v3 2/4] drm: Add support for ARM's HDLCD controller.
-Date: Thu, 3 Dec 2015 14:20:26 +0000
-Message-ID: <CAPj87rOyBciAtBH_MiKA1bcqbpmk8gOscOMcLcgcbcag7k1W9g@mail.gmail.com>
-References: <1449058982-18595-1-git-send-email-Liviu.Dudau@arm.com>
- <1449058982-18595-3-git-send-email-Liviu.Dudau@arm.com>
- <CAPj87rNFFGeL8z9GBXxyVri1RyhVpMGS0yz7opgCYamHYV1Yow@mail.gmail.com>
- <20151203100021.GD972@e106497-lin.cambridge.arm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 12/14] ARM: dts: sb-som: introduce SB-SOM baseboard
+Date: Thu, 3 Dec 2015 08:24:08 -0600
+Message-ID: <20151203142408.GA24844@rob-hp-laptop>
+References: <1448978109-5614-1-git-send-email-nikita@compulab.co.il>
+ <1448978109-5614-13-git-send-email-nikita@compulab.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20151203100021.GD972@e106497-lin.cambridge.arm.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Robin Murphy <robin.murphy@arm.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1448978109-5614-13-git-send-email-nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGl2aXUsCgpPbiAzIERlY2VtYmVyIDIwMTUgYXQgMTA6MDAsIExpdml1IER1ZGF1IDxMaXZp
-dS5EdWRhdUBhcm0uY29tPiB3cm90ZToKPiBPbiBXZWQsIERlYyAwMiwgMjAxNSBhdCAwNToyMTo0
-NFBNICswMDAwLCBEYW5pZWwgU3RvbmUgd3JvdGU6Cj4+IE9uIDIgRGVjZW1iZXIgMjAxNSBhdCAx
-MjoyMywgTGl2aXUgRHVkYXUgPExpdml1LkR1ZGF1QGFybS5jb20+IHdyb3RlOgo+PiA+ICsgICAg
-ICAgaWYgKGlycV9zdGF0dXMgJiBIRExDRF9JTlRFUlJVUFRfVlNZTkMpIHsKPj4gPiArICAgICAg
-ICAgICAgICAgdW5zaWduZWQgbG9uZyBmbGFnczsKPj4gPiArCj4+ID4gKyAgICAgICAgICAgICAg
-IGRybV9oYW5kbGVfdmJsYW5rKGRybSwgMCk7Cj4+ID4gKwo+PiA+ICsgICAgICAgICAgICAgICBz
-cGluX2xvY2tfaXJxc2F2ZSgmZHJtLT5ldmVudF9sb2NrLCBmbGFncyk7Cj4+ID4gKyAgICAgICAg
-ICAgICAgIGlmIChoZGxjZC0+ZXZlbnQpIHsKPj4gPiArICAgICAgICAgICAgICAgICAgICAgICBk
-cm1fc2VuZF92YmxhbmtfZXZlbnQoZHJtLCBoZGxjZC0+ZXZlbnQtPnBpcGUsIGhkbGNkLT5ldmVu
-dCk7Cj4+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZHJtX2NydGNfdmJsYW5rX3B1dCgmaGRs
-Y2QtPmNydGMpOwo+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGhkbGNkLT5ldmVudCA9IE5V
-TEw7Cj4+ID4gKyAgICAgICAgICAgICAgIH0KPj4gPiArICAgICAgICAgICAgICAgc3Bpbl91bmxv
-Y2tfaXJxcmVzdG9yZSgmZHJtLT5ldmVudF9sb2NrLCBmbGFncyk7Cj4+ID4gKyAgICAgICB9Cj4+
-Cj4+IEFzIHdpdGggVkM0IGFuZCBSb2NrY2hpcCwgeW91J3JlIG1pc3NpbmcgYSAtPnByZWNsb3Nl
-IGhhbmRsZXIgaW4geW91cgo+PiBkcm1fZHJ2LCB0byBtYWtlIHN1cmUgdGhhdCB5b3UgZG9uJ3Qg
-dHJ5IHRvIHNlbmQgZXZlbnRzIHRvIGEgZGVhZAo+PiBjbGllbnQgKHdoaWNoIGNhdXNlcyBhbiBP
-T1BTKToKPj4gaHR0cHM6Ly9naXQuY29sbGFib3JhLmNvbS9jZ2l0L3VzZXIvZGFuaWVscy9saW51
-eC5naXQvY29tbWl0Lz9oPXdpcC80LjQueC9yb2NrY2hpcC1kcm0tZml4ZXMmaWQ9ZDE0ZjIxYmNk
-Nwo+PiAoYW5kIGl0cyBwYXJlbnQpCj4KPiBUaGFua3MgZm9yIHJldmlld2luZyB0aGlzIQo+Cj4g
-SSBkbyBhY2tub3dsZWRnZSB5b3VyIGNvbmNlcm5zIGFuZCB5b3UgbWlnaHQgY29ycmVjdCBteSB1
-bmRlcnN0YW5kaW5nIG9uCj4gaG93IGF0b21pYyBEUk0gd29ya3MsIGJ1dCBJIGJlbGlldmUgaW4g
-dGhpcyBjYXNlIHdlIHNob3VsZCBiZSBzYWZlLiBUaGUKPiBldmVudCBzdG9yZWQgaW4gaGRsY2Qt
-PmV2ZW50IGlzIHRha2VuIG91dCBvZiB0aGUgY3J0Yy0+c3RhdGUtPmV2ZW50IGR1cmluZwo+IHRo
-ZSBjcnRjLT5hdG9taWNfYmVnaW4oKSBjYWxsYmFjay4gSWYgdGhlIGNsaWVudCBpcyBkZWFkIHRo
-ZSBjYWxsYmFjayBzaG91bGQKPiBub3QgYmUgY2FsbGVkLCBzbyB0aGF0J3MgaG93IHdlIGF2b2lk
-IHRoZSBPT1BTLgoKUmlnaHQsIGl0J3MgdGFrZW4gb3V0IG9mIHRoZSBDUlRDIHN0YXRlIGFuZCBw
-dXQgaW50byB0aGUgb3ZlcmFsbCBIRExDRApzdHJ1Y3R1cmUuIFNvIHRoZSBPT1BTIGhhcHBlbnMg
-d2hlbjoKICAtIGNsaWVudCBzdWJtaXRzIHN0YXRlIHdpdGggZXZlbnQgcmVxdWVzdGVkLCBhc3lu
-YyBmbGFnIHNldAogIC0gYXRvbWljX2JlZ2luIG1vdmVzIGNydGMtPnN0YXRlLT5ldmVudCBpbnRv
-IGhkbGNkLT5ldmVudAogIC0gY29udHJvbCByZXR1cm5zIHRvIGNsaWVudCwgd2hvIGV4aXRzIGlt
-bWVkaWF0ZWx5CiAgLSB2YmxhbmsgaGFwcGVucwogIC0gaGRsY2QtPmV2ZW50LT5iYXNlLmZpbGVf
-cHJpdiBub3cgcG9pbnRzIHRvIGEgZGVhZCBjbGllbnQKICAtIE9PUFMKCj4+IEFsc28sIGlzIHRo
-ZXJlIGFueXRoaW5nIHByZXZlbnRpbmcgY2xpZW50cyBmcm9tIHN1Ym1pdHRpbmcgbXVsdGlwbGUK
-Pj4gcGFnZWZsaXBzIGJlZm9yZSB0aGUgZXZlbnQgaXMgc2VudD8gSSBjb3VsZG4ndCBzZWUgYW55
-dGhpbmcgZnJvbSBhCj4+IHF1aWNrIGxvb2ssIHNvIHlvdSBjb3VsZCBoYXZlIHRoZSBzaXR1YXRp
-b24gb2Y6Cj4+ICAgLSBjbGllbnQgc3VibWl0cyBwYWdlZmxpcCwgZXZlbnQgMSBzdG9yZWQgdG8g
-aGRsY2QtPmV2ZW50Cj4+ICAgLSBjbGllbnQgc3VibWl0cyBwYWdlZmxpcCwgZXZlbnQgMiBzdG9y
-ZWQgdG8gaGRsY2QtPmV2ZW50Cj4+ICAgLSB2YmxhbmsgYXJyaXZlcywgZXZlbnQgMiBpcyBzZW50
-Cj4+ICAgLSBldmVudCAxIGhhcyBkaXNhcHBlYXJlZCBhbmQgYmVlbiBsZWFrZWQKPgo+IEFzIGZv
-ciBtdWx0aXBsZSBldmVudHMgYmVpbmcgc3VibWl0dGVkIGJlZm9yZSB2c3luYyBpbnRlcnJ1cHQg
-aGFwcGVuaW5nOiBnaXZlbgo+IHRoYXQgdGhlIGV2ZW50IGlzIHBsdWNrZWQgb3V0IG9mIHRoZSBj
-cnRjLT5zdGF0ZSwgaXMgdGhhdCBwb3NzaWJsZT8gQW5kIGlmIHNvLAo+IGlzIHRoZXJlIGEgY2Fz
-ZSB3aGVyZSBoYXZpbmcgdGhlIGxhdGVyIGV2ZW50IG92ZXJ3cml0ZSB0aGUgZWFybGllciBvbmUg
-YSBkZXNpcmVkCj4gb3V0Y29tZT8KCkhhdmluZyBldmVudHMgYmVpbmcgb3ZlcndyaXR0ZW4gaXMg
-ZXh0cmVtZWx5IHVuZGVzaXJhYmxlOyBpdCBjb3VsZApjYXVzZSBhIGNsaWVudCB0byBzdGFsbCBp
-biB0aGUgcmlnaHQgc2NlbmFyaW9zIChlLmcuIHJlcXVlc3RzCnN1Ym1pdHRlZCBzZXBhcmF0ZWx5
-IGZvciBkaWZmZXJlbnQgcGxhbmVzKS4gSXQgd291bGQgYmUgZmFyIGJldHRlciB0bwp0dXJuIGhk
-bGNkLT5ldmVudCBpbnRvIGEgbGlzdCBvZiBldmVudHMgd2hpY2ggYXJlIHNlbnQgcGVyLXZibGFu
-aywKcHJvYmFibHkganVzdCBieSByZXRhaW5pbmcgYSBsaXN0IG9mIHBlbmRpbmcgc3RhdGVzIHRv
-IGFwcGx5OyB0aGlzCmFsc28gbWFrZXMgaXQgZWFzaWVyIHRvIGhhbmRsZSBhc3luYyBjb21taXRz
-IGluIHRoZSBmdXR1cmUgKHdoaWNoCldlc3RvbiBpbiBwYXJ0aWN1bGFyIHJlbGllcyBvbikuCgpD
-aGVlcnMsCkRhbmllbApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+On Tue, Dec 01, 2015 at 03:55:07PM +0200, Nikita Kiryanov wrote:
+> CompuLab SB-SOM baseboard is a carrier board for multiple arm-based SoMs.
+> It currently supports (with minor adjustments to assembly) CM-T43, CM-T54,
+> and CM-QS600 modules. It is a building block in the SBC-T43 single board
+> computer, which consists of cm-t43 on top of sb-som-t43.
+> 
+> Signed-off-by: Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> Cc: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> ---
+> Changes in V2:
+> 	- Renamed file startek,startek-kd050c to startek,startek-kd050c.txt.
+> 	- s/QS-600/CM-QS600 in file compulab-boards.txt
+> 
+>  .../devicetree/bindings/arm/compulab-boards.txt    |  5 +++
+>  .../display/panel/startek,startek-kd050c.txt       |  4 +++
+>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>  arch/arm/boot/dts/compulab-sb-som.dtsi             | 42 ++++++++++++++++++++++
+>  4 files changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/compulab-boards.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/startek,startek-kd050c.txt
+>  create mode 100644 arch/arm/boot/dts/compulab-sb-som.dtsi
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/compulab-boards.txt b/Documentation/devicetree/bindings/arm/compulab-boards.txt
+> new file mode 100644
+> index 0000000..71172d5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/compulab-boards.txt
+> @@ -0,0 +1,5 @@
+> +CompuLab SB-SOM is a multi-module baseboard capable of carrying CM-T43, CM-T54,
+> +and CM-QS600 modules with minor modifications to the SB-SOM assembly.
+> +
+> +Required root node properties:
+> +    - compatible = should be "compulab,sb-som"
+> diff --git a/Documentation/devicetree/bindings/display/panel/startek,startek-kd050c.txt b/Documentation/devicetree/bindings/display/panel/startek,startek-kd050c.txt
+> new file mode 100644
+> index 0000000..70cd8d1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/startek,startek-kd050c.txt
+> @@ -0,0 +1,4 @@
+> +Startek Electronic Technology Co. KD050C 5.0" WVGA TFT LCD panel
+> +
+> +Required properties:
+> +- compatible: should be "startek,startek-kd050c"
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 55df1d4..409b134 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -218,6 +218,7 @@ sony	Sony Corporation
+>  spansion	Spansion Inc.
+>  sprd	Spreadtrum Communications Inc.
+>  st	STMicroelectronics
+> +startek	Startek
+>  ste	ST-Ericsson
+>  stericsson	ST-Ericsson
+>  synology	Synology, Inc.
+> diff --git a/arch/arm/boot/dts/compulab-sb-som.dtsi b/arch/arm/boot/dts/compulab-sb-som.dtsi
+> new file mode 100644
+> index 0000000..402a143
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/compulab-sb-som.dtsi
+> @@ -0,0 +1,42 @@
+> +/*
+> + * Copyright (C) 2015 CompuLab, Ltd. - http://www.compulab.co.il/
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +/ {
+> +	model = "CompuLab SB-SOM";
+> +	compatible = "compulab,sb-som";
+> +
+> +	vsb_3v3: fixedregulator-v3_3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vsb_3v3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +		enable-active-high;
+> +	};
+> +
+> +	lcd0: display {
+> +		compatible = "startek,startek-kd050c", "panel-dpi";
+> +		label = "lcd";
+> +
+> +		panel-timing {
+> +			clock-frequency = <33000000>;
+> +			hactive = <800>;
+> +			vactive = <480>;
+> +			hfront-porch = <40>;
+> +			hback-porch = <40>;
+> +			hsync-len = <43>;
+> +			vback-porch = <29>;
+> +			vfront-porch = <13>;
+> +			vsync-len = <3>;
+> +			hsync-active = <0>;
+> +			vsync-active = <0>;
+> +			de-active = <1>;
+> +			pixelclk-active = <1>;
+> +		};
+> +	};
+> +};
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
