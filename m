@@ -1,52 +1,63 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH v2 4/4] ARM: at91/dt: sama5d2 Xplained: pmic needs a
- specific sda hold time
-Date: Thu, 3 Dec 2015 11:34:08 +0100
-Message-ID: <56601AA0.5020201@atmel.com>
-References: <1449136434-27619-1-git-send-email-ludovic.desroches@atmel.com>
- <1449136434-27619-6-git-send-email-ludovic.desroches@atmel.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: [PATCH v4 3/4] arm64: Juno: Add HDLCD support to the Juno boards.
+Date: Thu,  3 Dec 2015 10:40:48 +0000
+Message-ID: <1449139249-9171-4-git-send-email-Liviu.Dudau@arm.com>
+References: <1449139249-9171-1-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449136434-27619-6-git-send-email-ludovic.desroches@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Desroches <ludovic.desroches@atmel.com>, wsa@the-dreams.de, alexandre.belloni@free-electrons.com
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1449139249-9171-1-git-send-email-Liviu.Dudau@arm.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh@kernel.org>, Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: devicetree <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Punit Agrawal <punit.agrawal@arm.com>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>, Andrew Morton <akpm@linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 03/12/2015 10:53, Ludovic Desroches a =E9crit :
-> Data have to be held longer for the PMIC device. The ACT8945A
-> datasheet claims that minimum SDA data hold time is about 300 ns.
->=20
-> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
-
-Same here, we'll take this one with at91 material in at91-4.5-dt branch
-soon.
-
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-
-Thanks, bye.
-
-> ---
->  arch/arm/boot/dts/at91-sama5d2_xplained.dts | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/b=
-oot/dts/at91-sama5d2_xplained.dts
-> index ad6de73..9bced00 100644
-> --- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> +++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> @@ -129,6 +129,7 @@
->  				dmas =3D <0>, <0>;
->  				pinctrl-names =3D "default";
->  				pinctrl-0 =3D <&pinctrl_i2c0_default>;
-> +				i2c-sda-hold-time-ns =3D <350>;
->  				status =3D "okay";
-> =20
->  				pmic: act8865@5b {
->=20
-
-
---=20
-Nicolas Ferre
+QVJNJ3MgSnVubyBib2FyZCBoYXMgdHdvIEhETENEIGNvbnRyb2xsZXJzLCBlYWNoIGxpbmtlZCB0
+byBhbiBOWFAKVERBMTk5ODggSERNSSB0cmFuc21pdHRlciB0aGF0IHByb3ZpZGVzIG91dHB1dCBl
+bmNvZGluZy4gQWRkIHRoZW0KdG8gdGhlIGRldmljZSB0cmVlLgoKU2lnbmVkLW9mZi1ieTogTGl2
+aXUgRHVkYXUgPExpdml1LkR1ZGF1QGFybS5jb20+Ci0tLQogYXJjaC9hcm02NC9ib290L2R0cy9h
+cm0vanVuby1iYXNlLmR0c2kgfCA0NiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0t
+CiAxIGZpbGUgY2hhbmdlZCwgNDIgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKCmRpZmYg
+LS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9qdW5vLWJhc2UuZHRzaSBiL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvYXJtL2p1bm8tYmFzZS5kdHNpCmluZGV4IGRkNTE1OGUuLjhlZTA5NGEgMTAw
+NjQ0Ci0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYXJtL2p1bm8tYmFzZS5kdHNpCisrKyBiL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvYXJtL2p1bm8tYmFzZS5kdHNpCkBAIC05Miw4ICs5Miw4IEBACiAJ
+CQlzY3BpX2Nsazogc2NwaV9jbG9ja3NAMyB7CiAJCQkJY29tcGF0aWJsZSA9ICJhcm0sc2NwaS12
+YXJpYWJsZS1jbG9ja3MiOwogCQkJCSNjbG9jay1jZWxscyA9IDwxPjsKLQkJCQljbG9jay1pbmRp
+Y2VzID0gPDM+LCA8ND47Ci0JCQkJY2xvY2stb3V0cHV0LW5hbWVzID0gInB4bGNsazAiLCAicHhs
+Y2xrMSI7CisJCQkJY2xvY2staW5kaWNlcyA9IDwzPjsKKwkJCQljbG9jay1vdXRwdXQtbmFtZXMg
+PSAicHhsY2xrIjsKIAkJCX07CiAJCX07CiAKQEAgLTEyMyw2ICsxMjMsMzQgQEAKIAkJY2xvY2st
+bmFtZXMgPSAiYXBiX3BjbGsiOwogCX07CiAKKwloZGxjZEA3ZmY1MDAwMCB7CisJCWNvbXBhdGli
+bGUgPSAiYXJtLGhkbGNkIjsKKwkJcmVnID0gPDAgMHg3ZmY1MDAwMCAwIDB4MTAwMD47CisJCWlu
+dGVycnVwdHMgPSA8R0lDX1NQSSA5MyBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKwkJY2xvY2tzID0g
+PCZzY3BpX2NsayAzPjsKKwkJY2xvY2stbmFtZXMgPSAicHhsY2xrIjsKKworCQlwb3J0IHsKKwkJ
+CWhkbGNkMV9vdXRwdXQ6IGVuZHBvaW50QDAgeworCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmdGRh
+OTk4eF8xX2lucHV0PjsKKwkJCX07CisJCX07CisJfTsKKworCWhkbGNkQDdmZjYwMDAwIHsKKwkJ
+Y29tcGF0aWJsZSA9ICJhcm0saGRsY2QiOworCQlyZWcgPSA8MCAweDdmZjYwMDAwIDAgMHgxMDAw
+PjsKKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDg1IElSUV9UWVBFX0xFVkVMX0hJR0g+OworCQlj
+bG9ja3MgPSA8JnNjcGlfY2xrIDM+OworCQljbG9jay1uYW1lcyA9ICJweGxjbGsiOworCisJCXBv
+cnQgeworCQkJaGRsY2QwX291dHB1dDogZW5kcG9pbnRAMCB7CisJCQkJcmVtb3RlLWVuZHBvaW50
+ID0gPCZ0ZGE5OTh4XzBfaW5wdXQ+OworCQkJfTsKKwkJfTsKKwl9OworCiAJc29jX3VhcnQwOiB1
+YXJ0QDdmZjgwMDAwIHsKIAkJY29tcGF0aWJsZSA9ICJhcm0scGwwMTEiLCAiYXJtLHByaW1lY2Vs
+bCI7CiAJCXJlZyA9IDwweDAgMHg3ZmY4MDAwMCAweDAgMHgxMDAwPjsKQEAgLTE0MSwxNCArMTY5
+LDI0IEBACiAJCWkyYy1zZGEtaG9sZC10aW1lLW5zID0gPDUwMD47CiAJCWNsb2NrcyA9IDwmc29j
+X3NtYzUwbWh6PjsKIAotCQlkdmkwOiBkdmktdHJhbnNtaXR0ZXJANzAgeworCQloZG1pLXRyYW5z
+bWl0dGVyQDcwIHsKIAkJCWNvbXBhdGlibGUgPSAibnhwLHRkYTk5OHgiOwogCQkJcmVnID0gPDB4
+NzA+OworCQkJcG9ydCB7CisJCQkJdGRhOTk4eF8wX2lucHV0OiBlbmRwb2ludEAwIHsKKwkJCQkJ
+cmVtb3RlLWVuZHBvaW50ID0gPCZoZGxjZDBfb3V0cHV0PjsKKwkJCQl9OworCQkJfTsKIAkJfTsK
+IAotCQlkdmkxOiBkdmktdHJhbnNtaXR0ZXJANzEgeworCQloZG1pLXRyYW5zbWl0dGVyQDcxIHsK
+IAkJCWNvbXBhdGlibGUgPSAibnhwLHRkYTk5OHgiOwogCQkJcmVnID0gPDB4NzE+OworCQkJcG9y
+dCB7CisJCQkJdGRhOTk4eF8xX2lucHV0OiBlbmRwb2ludEAwIHsKKwkJCQkJcmVtb3RlLWVuZHBv
+aW50ID0gPCZoZGxjZDFfb3V0cHV0PjsKKwkJCQl9OworCQkJfTsKIAkJfTsKIAl9OwogCi0tIAoy
+LjYuMgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
