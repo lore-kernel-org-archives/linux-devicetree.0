@@ -1,76 +1,41 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH 3/3] dt-bindings: exynos-dp: update ports node binding for
- panel
-Date: Thu, 3 Dec 2015 10:29:10 -0300
-Message-ID: <566043A6.8090604@osg.samsung.com>
-References: <1449135010-8111-1-git-send-email-inki.dae@samsung.com>
- <1449135010-8111-4-git-send-email-inki.dae@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1449135010-8111-4-git-send-email-inki.dae@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Inki Dae <inki.dae@samsung.com>, dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, k.kozlowski@samsung.com, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH v4 0/5] Qualcomm PCIe driver and designware fixes
+Date: Thu,  3 Dec 2015 15:35:19 +0200
+Message-ID: <1449149725-27607-1-git-send-email-stanimir.varbanov@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gSW5raSwKCk9uIDEyLzAzLzIwMTUgMDY6MzAgQU0sIElua2kgRGFlIHdyb3RlOgo+IFRo
-aXMgcGF0Y2ggdXBkYXRlcyBhIHBvcnRzIG5vZGUgYmluZGluZyBmb3IgcGFuZWwuCj4gCj4gV2l0
-aCB0aGlzLCBkcCBub2RlIGNhbiBoYXZlIGEgcG9ydHMgbm9kZSB3aGljaCBkZXNjcmliZXMKPiBh
-IHJlbW90ZSBlbmRwb2ludCBub2RlIHRoYXQgY2FuIGJlIGNvbm5lY3RlZCB0byBwYW5lbCBvciBi
-cmlkZ2UKPiBub2RlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IElua2kgRGFlIDxpbmtpLmRhZUBzYW1z
-dW5nLmNvbT4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvZXh5bm9zL2V4eW5vc19kcC50
-eHQgICAgICAgICAgfCAyOCArKysrKysrKysrKysrKysrKystLS0tCj4gIDEgZmlsZSBjaGFuZ2Vk
-LCAyNCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9leHlub3MvZXh5bm9zX2RwLnR4
-dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V4eW5vcy9leHlu
-b3NfZHAudHh0Cj4gaW5kZXggNjQ2OTNmMi4uMTViNTJjYiAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9leHlub3MvZXh5bm9zX2RwLnR4dAo+
-ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V4eW5vcy9l
-eHlub3NfZHAudHh0Cj4gQEAgLTY2LDggKzY2LDE1IEBAIE9wdGlvbmFsIHByb3BlcnRpZXMgZm9y
-IGRwLWNvbnRyb2xsZXI6Cj4gIAkJSG90cGx1ZyBkZXRlY3QgR1BJTy4KPiAgCQkJSW5kaWNhdGVz
-IHdoaWNoIEdQSU8gc2hvdWxkIGJlIHVzZWQgZm9yIGhvdHBsdWcKPiAgCQkJZGV0ZWN0aW9uCj4g
-LQktdmlkZW8gaW50ZXJmYWNlczogRGV2aWNlIG5vZGUgY2FuIGNvbnRhaW4gdmlkZW8gaW50ZXJm
-YWNlIHBvcnQKPiAtCQkJICAgIG5vZGVzIGFjY29yZGluZyB0byBbMV0uCj4gK1ZpZGVvIGludGVy
-ZmFjZXM6Cj4gKyAgRGV2aWNlIG5vZGUgY2FuIGNvbnRhaW4gdmlkZW8gaW50ZXJmYWNlIHBvcnQg
-bm9kZXMgYWNjb3JkaW5nIHRvIFsxXS4KPiArICBUaGUgZm9sbG93aW5nIGFyZSBwcm9wZXJ0aWVz
-IHNwZWNpZmljIHRvIHRob3NlIG5vZGVzOgo+ICsKPiArICBlbmRwb2ludCBub2RlIGNvbm5lY3Rl
-ZCB0byBicmlkZ2Ugb3IgcGFuZWwgbm9kZToKPiArICAgLSByZW1vdGUtZW5kcG9pbnQ6IHNwZWNp
-ZmllcyB0aGUgZW5kcG9pbnQgaW4gcGFuZWwgb3IgYnJpZGdlIG5vZGUuCj4gKwkJICAgICAgVGhp
-cyBub2RlIGlzIHJlcXVpcmVkIGluIGFsbCBraW5kcyBvZiBleHlub3MgZHAKPiArCQkgICAgICB0
-byByZXByZXNlbnQgdGhlIGNvbm5lY3Rpb24gYmV0d2VlbiBkcCBhbmQgYnJpZGdlCj4gKwkJICAg
-ICAgLG9yIGRwIGFuZCBwYW5lbC4KPgoKVGhpcyBpcyBuaWNlIGJ1dCBJIHRoaW5rIHRoZSBEVCBi
-aW5kaW5nIHNob3VsZCBhbHNvIGRvY3VtZW50IHRoYXQgaXQgdXNlcwphIHBoYW5kbGUgdG8gZGVm
-aW5lIHRoZSBjb25uZWN0aW9uIHdpdGggdGhlIHBhbmVsIChidXQgZXhwbGFpbiB0aGF0IGlzCmRl
-cHJlY2F0ZWQpLiBJZiBvbmx5IHNvIHBlb3BsZSBsb29raW5nIGF0IGEgRFRTIGFuZCB0aGVuIGdv
-aW5nIHRvIHRoZSBEVApiaW5kaW5nIGNhbiB1bmRlcnN0YW5kIHdoeSB0aGVyZSBpcyB0d28gd2F5
-cyB0byBkZWZpbmUgdGhlIHNhbWUuCiAgCj4gIFsxXTogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0Cj4gIAo+IEBAIC0xMTEsOSArMTE4
-LDIyIEBAIEJvYXJkIFNwZWNpZmljIHBvcnRpb246Cj4gIAkJfTsKPiAgCj4gIAkJcG9ydHMgewo+
-IC0JCQlwb3J0QDAgewo+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkJI3NpemUtY2Vs
-bHMgPSA8MD47Cj4gKwoKVGhlc2UgdHdvIHByb3BlcnRpZXMgYXJlIG9ubHkgbmVlZGVkIHdoZW4g
-dGhlcmUgaXMgbW9yZSB0aGFuIDIgcG9ydHMgYW5kCmEgcmVnIHByb3BlcnR5IGlzIHVzZWQgdG8g
-bnVtYmVyIHRoZSBwb3J0IG5vZGVzIGJ1dCBJIGRvbid0IHRoaW5rIHRoYXQncwp0aGUgY2FzZSBm
-b3IgRXh5bm9zIERQIGFuZCBjZXJ0YWlubHkgaXMgbm90IHRoZSBjYXNlIGluIHRoaXMgZXhhbXBs
-ZSBzbwpJIHRoaW5rIHlvdSBzaG91bGQganVzdCByZW1vdmUgdGhlbS4KCj4gKwkJCXBvcnQgewo+
-ICAJCQkJZHBfb3V0OiBlbmRwb2ludCB7Cj4gLQkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZicmlk
-Z2VfaW4+Owo+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHBfaW4+Owo+ICsJCQkJfTsKPiAr
-CQkJfTsKPiArCQl9Owo+ICsKPiArCQlwYW5lbEAwIHsKPiArCQkJcmVnID0gPDA+Owo+ICsJCQku
-Li4KPiArCQkJcG9ydCB7Cj4gKwkJCQlkcF9pbjogZW5kcG9pbnQgewo+ICsJCQkJCXJlbW90ZS1l
-bmRwb2ludCA9IDwmZHBfb3V0PjsKPiAgCQkJCX07Cj4gIAkJCX07Cj4gIAkJfTsKPiAKClRoZSBy
-ZXN0IGxvb2tzIGdvb2QgdG8gbWUgc28gd2l0aCB0aGUgdHdvIGNoYW5nZXMgZmVlbCBmcmVlIHRv
-IGFkZDoKClJldmlld2VkLWJ5OiBKYXZpZXIgTWFydGluZXogQ2FuaWxsYXMgPGphdmllckBvc2cu
-c2Ftc3VuZy5jb20+CgpCZXN0IHJlZ2FyZHMsCi0tIApKYXZpZXIgTWFydGluZXogQ2FuaWxsYXMK
-T3BlbiBTb3VyY2UgR3JvdXAKU2Ftc3VuZyBSZXNlYXJjaCBBbWVyaWNhCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi,
+
+Here is v4, comments from Bjorn and Rob have been addressed.
+The previous version can be found at [1].
+
+regards,
+Stan
+
+[1] https://lkml.org/lkml/2015/11/23/114
+
+Stanimir Varbanov (5):
+  PCI: designware: add memory barrier after enabling region
+  DT: PCI: qcom: Document PCIe devicetree bindings
+  PCI: qcom: Add Qualcomm PCIe controller driver
+  ARM: dts: apq8064: add pcie devicetree node
+  ARM: dts: ifc6410: enable pcie dt node for this board
+
+ .../devicetree/bindings/pci/qcom,pcie.txt          |  233 ++++++++
+ MAINTAINERS                                        |    7 +
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts         |   26 +
+ arch/arm/boot/dts/qcom-apq8064.dtsi                |   36 ++
+ drivers/pci/host/Kconfig                           |   10 +
+ drivers/pci/host/Makefile                          |    1 +
+ drivers/pci/host/pcie-designware.c                 |    5 +
+ drivers/pci/host/pcie-qcom.c                       |  624 ++++++++++++++++++++
+ 8 files changed, 942 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
+ create mode 100644 drivers/pci/host/pcie-qcom.c
+
+-- 
+1.7.9.5
