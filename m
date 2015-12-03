@@ -1,157 +1,104 @@
-From: Harvey Hunt <harvey.hunt@imgtec.com>
-Subject: [PATCH v9 1/3] dt-bindings: binding for jz4780-{nand,bch}
-Date: Thu, 3 Dec 2015 12:02:20 +0000
-Message-ID: <1449144142-24004-2-git-send-email-harvey.hunt@imgtec.com>
-References: <1449144142-24004-1-git-send-email-harvey.hunt@imgtec.com>
+From: Salil Mehta <salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V7 net-next 0/5] net:hns: Add support of Hip06 SoC to the Hislicon Network Subsystem
+Date: Thu, 3 Dec 2015 12:17:52 +0000
+Message-ID: <1449145077-9400-1-git-send-email-salil.mehta@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449144142-24004-1-git-send-email-harvey.hunt@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org
-Cc: Alex Smith <alex.smith@imgtec.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Harvey Hunt <harvey.hunt@imgtec.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, mehta.salil.lnk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lisheng011-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Alex Smith <alex.smith@imgtec.com>
+This PATCH V7 addresses the TAB formatting comments by 
+Sergei Shtylyov. Missing TABs at some other palces have
+also been corrected.
+ 
+PATCH V6:
+This addresses the review comments provided by
+David Miller over the existing use of ENABLE/DISABLE
+hash defines with the code. These hash defines are doing
+a similar job as implicit type bool would do. So these are
+kind of duplicate and are redundant.
 
-Add DT bindings for NAND devices connected to the NEMC on JZ4780 SoCs,
-as well as the hardware BCH controller, used by the jz4780_{nand,bch}
-drivers.
+PATCH V5:
+This PATCH addresses the review comments by Yuval Mintz
+ <Yuval.Mintz-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org>. This rework of comments are basically
+ related to:
+ 1) styling of the code,
+ 2) RSS default Key initiailization related code
+ 3) redundant code removal 
 
-Signed-off-by: Alex Smith <alex.smith@imgtec.com>
-Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Brian Norris <computersforpeace@gmail.com>
-Cc: linux-mtd@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Harvey Hunt <harvey.hunt@imgtec.com>
----
-v8 -> v9:
- - Document that partitions are represented as a child node of a NAND chip.
+PATCH V4:
+This addresses the review comment provided by 
+Sergei Shtylyov. The changelog of every patch has also
+been modified.
 
-v7 -> v8:
- - Describe how NAND chips are now child nodes of the NAND controller.
+PATCH V3:
+ Addresses the review comment floated by David Miller 
 
-v6 -> v7:
- - Add nand-ecc-mode to DT bindings.
- - Add nand-on-flash-bbt to DT bindings.
+PATCH V2:
+1) Bug Fixes and Clean-up: Internally identified
+2) Addresses internal review comments by Kenneth Lee and
+   by Huang Daode
+3) Addresses the review comment from "Yisen.Zhuang(Zhuangyuzeng)"
+4) Adds fix from Fengguang Wu for an error generated from 
+   "kbuild test robot" from Intel
+5) Ethtool support for TSO set option from Lisheng
 
-v5 -> v6:
- - No change.
+PATCH V1:
+Adds initial support of Hip06 SoC with below changes:  
+This patch-set adds support of new Hisilicon Hip06 SoC to the existing
+(already part of net-next) HNS ethernet driver for Hip05 SoC. Hip06 is
+a multi-core SoC and is a derivative of Hip05 SoC with lots of new
+hardware featres supported like RSS, TSO, hardware VLAN assist etc. 
 
-v4 -> v5:
- - Rename ingenic,bch-device to ingenic,bch-controller to fit with
-   existing convention.
+The changes in the driver are mainly due to following:
+ 1) changes in the DMA descriptor provided by the Hip06 ethernet 
+    hardware. These changes need to co-exist with already present
+    Hip05 DMA descriptor and its operating functions. The decision
+    to choose the correct type of DMA descriptor is taken dynamically
+    depending upon the version of the hardware (i.e. V1/hip05 or
+    V2/hip06, see already existing hisilicon-hns-nic.txt binding file
+    for the detailed description version and naming).
+ 2) To support new features added to the Hip06 ethernet hardware:
+    a. RSS (Receive Side Scaling)
+    b. TSO (TCP Segment Offload)
+    c. Hardware VLAN support (currently we are initializing hardware
+       to not assist in stripping the vlan tag at hardware level.
+       Proper support of this feature and ethtool would come after
+       these patches have been accepted)
 
-v3 -> v4:
- - No change
+Kindly note that, this patchset has been based on latest net-next.
 
-v2 -> v3:
- - Rebase to 4.0-rc6
- - Changed ingenic,ecc-size to common nand-ecc-step-size
- - Changed ingenic,ecc-strength to common nand-ecc-strength
- - Changed ingenic,busy-gpio to common rb-gpios
- - Changed ingenic,wp-gpio to common wp-gpios
+Salil Mehta (5):
+  net:hns: Add support of Hip06 SoC to the Hislicon Network Subsystem
+  net:hns: Add Hip06 "RSS(Receive Side Scaling)" support to HNS Driver
+  net:hns: Add Hip06 "TSO(TCP Segment Offload)" support HNS Driver
+  net:hns: Add support of ethtool TSO set option for Hip06 in HNS
+  net:hns: Add the init code to disable Hip06 "Hardware VLAN assist"
 
-v1 -> v2:
- - Rebase to 4.0-rc3
+ drivers/net/ethernet/hisilicon/hns/hnae.h          |   58 ++-
+ drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c  |   98 +++-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c  |   14 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.h  |    4 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c |  213 +++++++--
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.h |   24 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_misc.c |    6 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.c  |   72 ++-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h  |   32 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.c  |   76 ++-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.h  |    8 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_reg.h  |  188 +++++---
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c      |  483 +++++++++++++++++---
+ drivers/net/ethernet/hisilicon/hns/hns_enet.h      |   12 +
+ drivers/net/ethernet/hisilicon/hns/hns_ethtool.c   |   95 +++-
+ 15 files changed, 1127 insertions(+), 256 deletions(-)
 
- .../bindings/mtd/ingenic,jz4780-nand.txt           | 86 ++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-
-diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-new file mode 100644
-index 0000000..29ea585
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-@@ -0,0 +1,86 @@
-+* Ingenic JZ4780 NAND/BCH
-+
-+This file documents the device tree bindings for NAND flash devices on the
-+JZ4780. NAND devices are connected to the NEMC controller (described in
-+memory-controllers/ingenic,jz4780-nemc.txt), and thus NAND device nodes must
-+be children of the NEMC node.
-+
-+Required NAND controller device properties:
-+- compatible: Should be set to "ingenic,jz4780-nand".
-+- reg: For each bank with a NAND chip attached, should specify a bank number,
-+  an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
-+
-+Optional NAND controller device properties:
-+- ingenic,bch-controller: To make use of the hardware BCH controller, this
-+  property must contain a phandle for the BCH controller node. The required
-+  properties for this node are described below. If this is not specified,
-+  software BCH will be used instead.
-+
-+Optional children nodes:
-+- Individual NAND chips are children of the NAND controller node.
-+
-+Required children node properties:
-+- reg: An integer ranging from 1 to 6 representing the CS line to use.
-+
-+Optional children node properties:
-+- nand-ecc-step-size: ECC block size in bytes.
-+- nand-ecc-strength: ECC strength (max number of correctable bits).
-+- nand-ecc-mode: String, operation mode of the NAND ecc mode. "hw" by default
-+- nand-on-flash-bbt: boolean to enable on flash bbt option, if not present false
-+- rb-gpios: GPIO specifier for the busy pin.
-+- wp-gpios: GPIO specifier for the write protect pin.
-+
-+Optional child node of NAND chip nodes:
-+- partitions: see Documentation/devicetree/bindings/mtd/partition.txt
-+
-+Example:
-+
-+nemc: nemc@13410000 {
-+	...
-+
-+	nandc: nand-controller@1 {
-+		compatible = "ingenic,jz4780-nand";
-+		reg = <1 0 0x1000000>;	/* Bank 1 */
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ingenic,bch-controller = <&bch>;
-+
-+		nand@1 {
-+			reg = <1>;
-+
-+			nand-ecc-step-size = <1024>;
-+			nand-ecc-strength = <24>;
-+			nand-ecc-mode = "hw";
-+			nand-on-flash-bbt;
-+
-+			rb-gpios = <&gpa 20 GPIO_ACTIVE_LOW>;
-+			wp-gpios = <&gpf 22 GPIO_ACTIVE_LOW>;
-+
-+			partitions {
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				...
-+			}
-+		};
-+	};
-+};
-+
-+The BCH controller is a separate SoC component used for error correction on
-+NAND devices. The following is a description of the device properties for a
-+BCH controller.
-+
-+Required BCH properties:
-+- compatible: Should be set to "ingenic,jz4780-bch".
-+- reg: Should specify the BCH controller registers location and length.
-+- clocks: Clock for the BCH controller.
-+
-+Example:
-+
-+bch: bch@134d0000 {
-+	compatible = "ingenic,jz4780-bch";
-+	reg = <0x134d0000 0x10000>;
-+
-+	clocks = <&cgu JZ4780_CLK_BCH>;
-+};
 -- 
-2.6.2
+1.7.9.5
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
