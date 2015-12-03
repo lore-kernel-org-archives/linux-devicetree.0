@@ -1,39 +1,65 @@
-From: Qais Yousef <qais.yousef@imgtec.com>
-Subject: Re: [PATCH] Revert "of/irq: make of_irq_find_parent static"
-Date: Thu, 3 Dec 2015 09:40:39 +0000
-Message-ID: <56600E17.7060408@imgtec.com>
-References: <1449072887-2734-1-git-send-email-qais.yousef@imgtec.com>
- <CAOiHx=m9BCsxQRcEs-ReKujaKo0BRs1V51wX7jzvhgjV0iZkJw@mail.gmail.com>
- <CAL_JsqLfFZJ6P6j3ZrjsNNYTqYxyPWMnRTh95NzR1vOm+XtAaA@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 1/9] clk: hi3519: add dt-binding document and header file
+Date: Thu, 03 Dec 2015 10:44:27 +0100
+Message-ID: <1615805.jmP28L2rmX@wuerfel>
+References: <1449110364-23464-1-git-send-email-xuejiancheng@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLfFZJ6P6j3ZrjsNNYTqYxyPWMnRTh95NzR1vOm+XtAaA@mail.gmail.com>
+In-Reply-To: <1449110364-23464-1-git-send-email-xuejiancheng@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Jonas Gorski <jogo@openwrt.org>, Carlo Caione <carlo@caione.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, David Daney <david.daney@cavium.com>
+To: Jiancheng Xue <xuejiancheng@huawei.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/02/2015 05:10 PM, Rob Herring wrote:
-> +Carlo
->
-> On Wed, Dec 2, 2015 at 10:32 AM, Jonas Gorski <jogo@openwrt.org> wrote:
->> Make the revert part of the series that needs it, so it won't get
->> moved again because of no external users.
-> There's 2 cases[1] wanting it, so I'm planning to apply for 4.4 since
-> we removed it in 4.4.
->
-> Reverting is perhaps the wrong thing as it conflicts, also needs an
-> EXPORT_SYMBOL, and needs to be moved for !OF_IRQ builds as pointed out
-> below.
+On Thursday 03 December 2015 10:39:24 Jiancheng Xue wrote:
+> +#ifndef __DTS_HI3519_CLOCK_H
+> +#define __DTS_HI3519_CLOCK_H
 
-I don't need the EXPORT_SYMBOL() in my case since I'm using it from ARCH 
-code.
+Please try to avoid adding headers like this if you can at all.
 
-> [1] http://www.spinics.net/lists/arm-kernel/msg464847.html
+I might ask you to merge the header file in one merge window
+otherwise and submit the platform code one kernel later, as they
+tendn to cause us needless dependencies otherwise.
 
-Looks like it's already sorted then. I'll pull in this patch and test it.
 
-Thanks,
-Qais
+> +/* fixed rate */
+> +#define HI3519_FIXED_400M              1
+> +#define HI3519_FIXED_200M              2
+> +#define HI3519_FIXED_125M              3
+> +#define HI3519_FIXED_150M              4
+> +#define HI3519_FIXED_75M               5
+> +#define HI3519_FIXED_300M              6
+> +#define HI3519_FIXED_50M               7
+> +#define HI3519_FIXED_24M               8
+> +#define HI3519_FIXED_3M                        9
+> +
+> +/* mux clocks */
+> +#define HI3519_FMC_MUX                 32
+> +#define HI3519_I2C_MUX                 33
+> +#define HI3519_UART_MUX                        34
+> +#define HI3519_SYSAXI_MUX              35
+> +
+> +/*fixed factor clocks*/
+> +#define HI3519_SYSAPB_CLK              64
+> +
+> +/* gate clocks */
+> +#define HI3519_FMC_CLK                 129
+> +#define HI3519_UART0_CLK               153
+> +#define HI3519_UART1_CLK               154
+> +#define HI3519_UART2_CLK               155
+> +#define HI3519_UART3_CLK               156
+> +#define HI3519_UART4_CLK               157
+
+Where do those numbers come from? They are not consecutive, so it sounds
+like they are directly from the data sheet and won't be needed in the driver.
+If that's true, just use the numbers directly, as you do for everything
+else.
+
+> +#define HI3519_NR_CLKS                 256
+> +#define HI3519_NR_RSTS                 256
+> 
+These seem to not be needed at all.
+
+	Arnd
