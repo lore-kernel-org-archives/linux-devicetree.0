@@ -1,212 +1,74 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] mtd: brcmnand: Request and enable the clock if
- present
-Date: Wed, 2 Dec 2015 16:11:50 -0800
-Message-ID: <20151203001150.GA120110@google.com>
-References: <565F81A6.6060307@simon.arlott.org.uk>
- <565F81F4.8090300@simon.arlott.org.uk>
+From: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 0/9] ARM: hisi: enable hi3519 soc
+Date: Thu, 3 Dec 2015 10:29:14 +0800
+Message-ID: <1449109754-23309-1-git-send-email-xuejiancheng@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <565F81F4.8090300-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+Hello,
 
-On Wed, Dec 02, 2015 at 11:42:44PM +0000, Simon Arlott wrote:
-> Attempt to enable a clock named "nand" as some SoCs have a clock for the
-> controller that needs to be enabled.
-> 
-> Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-> ---
->  drivers/mtd/nand/brcmnand/brcmnand.c | 69 ++++++++++++++++++++++++++++--------
->  1 file changed, 54 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/mtd/nand/brcmnand/brcmnand.c b/drivers/mtd/nand/brcmnand/brcmnand.c
-> index 2c8f67f..0a9cccf 100644
-> --- a/drivers/mtd/nand/brcmnand/brcmnand.c
-> +++ b/drivers/mtd/nand/brcmnand/brcmnand.c
-> @@ -11,6 +11,7 @@
->   * GNU General Public License for more details.
->   */
->  
-> +#include <linux/clk.h>
->  #include <linux/version.h>
->  #include <linux/module.h>
->  #include <linux/init.h>
-> @@ -122,6 +123,9 @@ struct brcmnand_controller {
->  	/* Some SoCs provide custom interrupt status register(s) */
->  	struct brcmnand_soc	*soc;
->  
-> +	/* Some SoCs have a gateable clock for the controller */
-> +	struct clk		*clk;
-> +
->  	int			cmd_pending;
->  	bool			dma_pending;
->  	struct completion	done;
-> @@ -2136,10 +2140,24 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
->  	if (IS_ERR(ctrl->nand_base))
->  		return PTR_ERR(ctrl->nand_base);
->  
-> +	/* Enable clock before using NAND registers */
-> +	ctrl->clk = devm_clk_get(dev, "nand");
-> +	if (!IS_ERR(ctrl->clk)) {
-> +		ret = clk_prepare_enable(ctrl->clk);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		ret = PTR_ERR(ctrl->clk);
-> +		if (ret == -EPROBE_DEFER)
-> +			return ret;
-> +
-> +		ctrl->clk = NULL;
-> +	}
-> +
->  	/* Initialize NAND revision */
->  	ret = brcmnand_revision_init(ctrl);
->  	if (ret)
-> -		return ret;
-> +		goto err;
->  
->  	/*
->  	 * Most chips have this cache at a fixed offset within 'nand' block.
-> @@ -2148,8 +2166,10 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "nand-cache");
->  	if (res) {
->  		ctrl->nand_fc = devm_ioremap_resource(dev, res);
-> -		if (IS_ERR(ctrl->nand_fc))
-> -			return PTR_ERR(ctrl->nand_fc);
-> +		if (IS_ERR(ctrl->nand_fc)) {
-> +			ret = PTR_ERR(ctrl->nand_fc);
-> +			goto err;
-> +		}
->  	} else {
->  		ctrl->nand_fc = ctrl->nand_base +
->  				ctrl->reg_offsets[BRCMNAND_FC_BASE];
-> @@ -2159,8 +2179,10 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "flash-dma");
->  	if (res) {
->  		ctrl->flash_dma_base = devm_ioremap_resource(dev, res);
-> -		if (IS_ERR(ctrl->flash_dma_base))
-> -			return PTR_ERR(ctrl->flash_dma_base);
-> +		if (IS_ERR(ctrl->flash_dma_base)) {
-> +			ret = PTR_ERR(ctrl->flash_dma_base);
-> +			goto err;
-> +		}
->  
->  		flash_dma_writel(ctrl, FLASH_DMA_MODE, 1); /* linked-list */
->  		flash_dma_writel(ctrl, FLASH_DMA_ERROR_STATUS, 0);
-> @@ -2169,13 +2191,16 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
->  		ctrl->dma_desc = dmam_alloc_coherent(dev,
->  						     sizeof(*ctrl->dma_desc),
->  						     &ctrl->dma_pa, GFP_KERNEL);
-> -		if (!ctrl->dma_desc)
-> -			return -ENOMEM;
-> +		if (!ctrl->dma_desc) {
-> +			ret = -ENOMEM;
-> +			goto err;
-> +		}
->  
->  		ctrl->dma_irq = platform_get_irq(pdev, 1);
->  		if ((int)ctrl->dma_irq < 0) {
->  			dev_err(dev, "missing FLASH_DMA IRQ\n");
-> -			return -ENODEV;
-> +			ret = -ENODEV;
-> +			goto err;
->  		}
->  
->  		ret = devm_request_irq(dev, ctrl->dma_irq,
-> @@ -2184,7 +2209,7 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
->  		if (ret < 0) {
->  			dev_err(dev, "can't allocate IRQ %d: error %d\n",
->  					ctrl->dma_irq, ret);
-> -			return ret;
-> +			goto err;
->  		}
->  
->  		dev_info(dev, "enabling FLASH_DMA\n");
-> @@ -2208,7 +2233,8 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
->  	ctrl->irq = platform_get_irq(pdev, 0);
->  	if ((int)ctrl->irq < 0) {
->  		dev_err(dev, "no IRQ defined\n");
-> -		return -ENODEV;
-> +		ret = -ENODEV;
-> +		goto err;
->  	}
->  
->  	/*
-> @@ -2232,7 +2258,7 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
->  	if (ret < 0) {
->  		dev_err(dev, "can't allocate IRQ %d: error %d\n",
->  			ctrl->irq, ret);
-> -		return ret;
-> +		goto err;
->  	}
->  
->  	for_each_available_child_of_node(dn, child) {
-> @@ -2240,8 +2266,10 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
->  			struct brcmnand_host *host;
->  
->  			host = devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
-> -			if (!host)
-> -				return -ENOMEM;
-> +			if (!host) {
-> +				ret = -ENOMEM;
-> +				goto err;
-> +			}
->  			host->pdev = pdev;
->  			host->ctrl = ctrl;
->  			host->of_node = child;
+Hi3519 soc is mainly used for ip camera and sport DV solutions. This patchset adds initial support
+for Hi3519 soc. It includes clock driver, arch configuration, device tree and debug uart configuration.
+It has been tested on hi3519 reference board.
 
-Please submit against l2-mtd.git or linux-next.git:
+Spi-nor flash driver and other peripheral drivers will be submitted later.
 
-http://linux-mtd.infradead.org/source.html
+Any comments will be appreciated!
 
-> @@ -2255,10 +2283,18 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
->  	}
->  
->  	/* No chip-selects could initialize properly */
-> -	if (list_empty(&ctrl->host_list))
-> -		return -ENODEV;
-> +	if (list_empty(&ctrl->host_list)) {
-> +		ret = -ENODEV;
-> +		goto err;
-> +	}
->  
->  	return 0;
-> +
-> +err:
-> +	if (ctrl->clk)
+Thanks!
 
-This NULL check is unnecessary.
+Change Log
+----------
+v2:
+-Rebase to v4.4-rc3
+-Put dt-binding doc and header file in a separate patch.
+-Delete unused clocks definitions.
+-Adjust the ARCH_xxx order in Kconfig file
+-Rename ARCH_HI3xxx to ARCH_36xx
 
-> +		clk_disable_unprepare(ctrl->clk);
-> +	return ret;
-> +
->  }
->  EXPORT_SYMBOL_GPL(brcmnand_probe);
->  
-> @@ -2270,6 +2306,9 @@ int brcmnand_remove(struct platform_device *pdev)
->  	list_for_each_entry(host, &ctrl->host_list, node)
->  		nand_release(&host->mtd);
->  
-> +	if (ctrl->clk)
+Jiancheng Xue (9):
+  clk: hi3519: add dt-binding document and header file
+  clk: hi3519: add CRG driver for hisilicon hi3519 soc
+  ARM: hisi: enable Hi3519 soc
+  ARM: dts: add dts files for hi3519-demb board
+  ARM: config: enable ARCH_HI3519
+  ARM: debug: add Hi3519 debug uart
+  ARM: hisi: rename ARCH_HI3xxx to ARCH_HI36xx
+  clk: hisilicon: rename ARCH_HI3xxx to ARCH_HI36xx
+  dmaengine: Kconfig: rename ARCH_HI3xxx to ARCH_HI36xx
 
-Same here.
+ .../devicetree/bindings/clock/hi3519-crg.txt       |  46 +++++++
+ arch/arm/Kconfig.debug                             |  14 +-
+ arch/arm/boot/dts/Makefile                         |   4 +-
+ arch/arm/boot/dts/hi3519-demb.dts                  |  55 ++++++++
+ arch/arm/boot/dts/hi3519.dtsi                      | 129 ++++++++++++++++++
+ arch/arm/configs/hisi_defconfig                    |   3 +-
+ arch/arm/configs/multi_v7_defconfig                |   2 +-
+ arch/arm/mach-hisi/Kconfig                         |  11 +-
+ arch/arm/mach-hisi/hisilicon.c                     |   9 ++
+ drivers/clk/hisilicon/Makefile                     |   3 +-
+ drivers/clk/hisilicon/clk-hi3519.c                 | 100 ++++++++++++++
+ drivers/clk/hisilicon/reset.c                      | 149 +++++++++++++++++++++
+ drivers/clk/hisilicon/reset.h                      |  25 ++++
+ drivers/dma/Kconfig                                |   2 +-
+ include/dt-bindings/clock/hi3519-clock.h           |  51 +++++++
+ 15 files changed, 595 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/hi3519-crg.txt
+ create mode 100644 arch/arm/boot/dts/hi3519-demb.dts
+ create mode 100644 arch/arm/boot/dts/hi3519.dtsi
+ create mode 100644 drivers/clk/hisilicon/clk-hi3519.c
+ create mode 100644 drivers/clk/hisilicon/reset.c
+ create mode 100644 drivers/clk/hisilicon/reset.h
+ create mode 100644 include/dt-bindings/clock/hi3519-clock.h
 
-> +		clk_disable_unprepare(ctrl->clk);
-> +
->  	dev_set_drvdata(&pdev->dev, NULL);
->  
->  	return 0;
+-- 
+1.9.1
 
-Otherwise, LGTM.
-
-Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
