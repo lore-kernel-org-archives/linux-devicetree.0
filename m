@@ -1,154 +1,42 @@
-From: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] Device tree binding documentation for chromeos-firmware
-Date: Thu, 03 Dec 2015 16:11:20 +0000
-Message-ID: <566069A8.1070002@collabora.co.uk>
-References: <1448997171-7064-1-git-send-email-martyn.welch@collabora.co.uk> <1448997171-7064-2-git-send-email-martyn.welch@collabora.co.uk> <20151202151552.GA11101@rob-hp-laptop> <56601611.6010800@collabora.co.uk> <CAL_JsqJGk5_Nk7joSHfJXxcVrpHDBbawY=nPOrOiraWinuka4w@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH V2 12/14] ARM: dts: sb-som: introduce SB-SOM baseboard
+Date: Thu, 3 Dec 2015 08:13:56 -0800
+Message-ID: <20151203161356.GN23396@atomide.com>
+References: <1448978109-5614-1-git-send-email-nikita@compulab.co.il>
+ <1448978109-5614-13-git-send-email-nikita@compulab.co.il>
+ <20151203142408.GA24844@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJGk5_Nk7joSHfJXxcVrpHDBbawY=nPOrOiraWinuka4w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151203142408.GA24844@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+* Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [151203 06:25]:
+> On Tue, Dec 01, 2015 at 03:55:07PM +0200, Nikita Kiryanov wrote:
+> > CompuLab SB-SOM baseboard is a carrier board for multiple arm-based SoMs.
+> > It currently supports (with minor adjustments to assembly) CM-T43, CM-T54,
+> > and CM-QS600 modules. It is a building block in the SBC-T43 single board
+> > computer, which consists of cm-t43 on top of sb-som-t43.
+> > 
+> > Signed-off-by: Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> > Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> > Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> > Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> > Cc: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> > Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
+Applying this whole series into omap-for-v4.5/dt thanks.
 
-On 03/12/15 15:08, Rob Herring wrote:
-> On Thu, Dec 3, 2015 at 4:14 AM, Martyn Welch
-> <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> wrote:
->>
->> On 02/12/15 15:15, Rob Herring wrote:
->>>
->>> On Tue, Dec 01, 2015 at 07:12:49PM +0000, Martyn Welch wrote:
->>>>
->>>> This patch adds documentation for the chromeos-firmware binding.
->>>>
->>>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
->>>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->>>> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
->>>> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>> Signed-off-by: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
->>>> ---
->>>>    .../devicetree/bindings/misc/chromeos-firmware.txt | 27
->>>> ++++++++++++++++++++++
->>>
->>>
->>> bindings/firmware/ please.
->>>
->>>>    1 file changed, 27 insertions(+)
->>>>    create mode 100644
->>>> Documentation/devicetree/bindings/misc/chromeos-firmware.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/misc/chromeos-firmware.txt
->>>> b/Documentation/devicetree/bindings/misc/chromeos-firmware.txt
->>>> new file mode 100644
->>>> index 0000000..8240611
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/misc/chromeos-firmware.txt
->>>> @@ -0,0 +1,27 @@
->>
->>
->> <snip>
->>
->>>> +
->>>> +Each signal is represented as a sub-node of "chromeos_firmware":
->>>> +Subnode properties:
->>>> +
->>>> +       - gpios: OF device-tree gpio specification.
->>>> +
->>>> +Example nodes:
->>>> +
->>>> +       chromeos_firmware {
->>>
->>>
->>> This should go under /firmware
->>>
->>
->> I've changed this to be:
->>
->>          firmware {
->>                  chromeos {
->>                          ...
->>                  };
->>          ];
->>
->> Which I generally accept (assuming this is considered a part of the
->> firmware) as a better way to represent this in the device tree, however this
->> has the nasty side effect of causing the device tree parsing to avoid
->> parsing the chromeos child and seeing it's compatible property (as the
->> firmware node isn't a bus), resulting in the probe routine not being called.
->>
->> If I add a 'compatible = "simple-bus"' property to the firmware node it
->> works, but this doesn't seem quite right as I believe "simple-bus" is
->> defined as a "simple memory mapped bus".
->>
->> I /could/ rewrite the initialisation to call of_find_compatible_node(), but
->> this seems rather hacky and inefficient. I can think of 2 other ways this
->> could be resolved:
->>
->> (1) As this is only tangentially related to firmware, I rename it something
->> like "chromeos-signals" and make it it's own node. In essence this driver
->> provides a mechanism built on top of specific GPIO (ala gpio-keys seems to
->> be, after-all this has a similar use of resources to that).
->
-> I'm starting to fail to understand the relationship to firmware here...
->
-> gpio-keys are at least a thing (being a key or set of keys). Your
-> grouping is a rather random collection of GPIOs. Maybe you need
-> "gpio-switch" binding and then the function would be "label" property.
->
-
-So, something like this:
-
-gpio-switch {
-	compatible = "gpio-switch";
-
-	pinctrl-names = "default";
-	pinctrl-0 = <&wp_gpio &dev_mode &rec_mode>;
-
-	write-protect {
-		label = "write-protect";
-		gpios = <&gpx3 0 GPIO_ACTIVE_LOW>;
-		read-only;
-	};
-
-	developer-switch {
-		label = "developer-switch";
-		gpios = <&gpx1 3 GPIO_ACTIVE_HIGH>;
-		read-only;
-	};
-
-	recovery-switch {
-		label = "recovery-switch";
-		gpios = <&gpx0 7 GPIO_ACTIVE_LOW>;
-		read-only;
-	};
-};
-
-(Making it much more generic in the process.)
-
-
->> (2) Add a compatible string something like 'compatible="logical-group";' to
->> the firmware node and add that too the bus matching logic. This would have
->> the advantage of solving this in the general case (I guess there are other
->> instances where a grouping of things more logically rather than physically
->> connected would ideally be grouped together), though I expect there may be
->> some strong views regarding this approach.
->
-> Why do you need them grouped?
->
-
-That's effectively what is achieved by putting this (and I assume 
-anything else considered "firmware" under a firmware node isn't it? (or 
-and I miss-understanding your request?)
-
-I think it is a moot point, I'll rework as you've suggested.
-
-Martyn
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
