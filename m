@@ -1,57 +1,91 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 1/2] ARM: dts: uniphier: change IRQ number of UART3 of
- PH1-Pro4 SoC
-Date: Thu,  3 Dec 2015 15:33:56 +0900
-Message-ID: <1449124437-18479-2-git-send-email-yamada.masahiro@socionext.com>
-References: <1449124437-18479-1-git-send-email-yamada.masahiro@socionext.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 10/10] dt-bindings: Add DSIv2 documentation
+Date: Wed, 2 Dec 2015 23:16:23 -0800
+Message-ID: <20151203071623.GB14699@codeaurora.org>
+References: <1444827544-25656-1-git-send-email-architt@codeaurora.org>
+ <1447844131-4182-1-git-send-email-architt@codeaurora.org>
+ <1447844131-4182-11-git-send-email-architt@codeaurora.org>
+ <CAL_JsqJufZvsGyxZ40+kPcAVr5mXqCi+Qej_8X6=GRxT9j+5+w@mail.gmail.com>
+ <564C981F.3040907@codeaurora.org>
+ <CAL_JsqJ7PovZsz0=b90bUChKtNra1pXxEjU_DiYAn7JUgShm5Q@mail.gmail.com>
+ <5652AE71.4060609@codeaurora.org>
+ <20151202082001.GC4139@codeaurora.org>
+ <565EC05D.8070009@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1449124437-18479-1-git-send-email-yamada.masahiro@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arm@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <565EC05D.8070009@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Archit Taneja <architt@codeaurora.org>
+Cc: Rob Herring <robh@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The UART3 is assigned with IRQ 29 for old SoCs, IRQ 177 for new ones,
-and PH1-Pro4 is on the boundary.
+On 12/02, Archit Taneja wrote:
+> On 12/02/2015 01:50 PM, Stephen Boyd wrote:
+> >
+> >My only thought there would be to make of_clk_set_defaults() wait
+> >until both clocks are registered before it does any parent
+> >setting. But only in the case where the assigned parents contains
+> >a clock that is provided by the node being processed. I suppose
+> >the simplest thing to do would be to skip it during the device
+> >driver probe and handle it when the clk provider is registered.
+> >
+> 
+> The assigned-clock-parents stuff you mentioned is needed to set a
+> default link between the one of the DSI PLLs and the RCG, right? I
+> just wanted to make clear if we were still discussing the same
+> issue.
 
-  PH1-sLD3: UART3 is unavailable
-  PH1-LD4, PH1-sLD8: only IRQ 29 is supported
-  PH1-Pro4: both IRQ 29 and 177 are supported
-  PH1-Pro5, ProXstream2, PH1-LD6b: only IRQ 177 is supported
+Yes.
 
-This SoC can choose either IRQ 29 or IRQ 177, but the former is shared
-with another hardware (low speed serial0).  The latter is dedicated
-for this hardware and more recommended.
+> 
+> From what I understand, we don't need the assigned-clock-parents stuff
+> to establish a link between byte_clk_src(RCG clock) and
+> byte_clk(branch clock). That's a fixed link set up by the clock
+> structs provided in the gcc driver and doesn't need to be specially
+> assigned, and just a
+> clk_get_parent in the driver does the job there.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+There's only one parent of the byte_clk and that's byte_clk_src.
+So yes, there's no need to describe that in DT and
+clk_get_parent() works fine.
 
- arch/arm/boot/dts/uniphier-ph1-pro4.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> About assigning a parent to the RCG, wouldn't that be xo by default, and
+> changed by the drm/msm driver to one of the PLLs when the need arrives?
+> I didn't get why we need to establish that beforehand in DT?
+> 
 
-diff --git a/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi b/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
-index 254642f..bbf3727 100644
---- a/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
-+++ b/arch/arm/boot/dts/uniphier-ph1-pro4.dtsi
-@@ -151,7 +151,7 @@
- 			reg = <0x54006b00 0x40>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart3>;
--			interrupts = <0 29 4>;
-+			interrupts = <0 177 4>;
- 			clocks = <&uart_clk>;
- 			fifo-size = <64>;
- 		};
+Yes, it would be XO out of reset, but we have no idea what the
+bootloader is doing. I thought the problem was that byte_clk_src
+is not actually an input to the DSI device. The proposal was to
+have DT specify byte_clk_src and byte_clk in the clocks array so
+that byte_clk_src could be reparented to the PLL and the byte_clk
+could be enabled/disabled. If we use DT to do the parent
+configuring then the DSI node doesn't have the byte_clk_src in
+its clocks array and thus DT is reflecting reality.
+
+If we want to dynamically switch the parent of byte_clk_src to be
+different PLLs at runtime, then yes we'll need to get the parent
+of the byte_clk (which is byte_clk_src) and set the PLL as the
+parent. Or we'll need to make clk_set_parent() on the byte_clk
+transparently set the grand-parent to be the PLL. In that case we
+may need to introduce some sort of flag like
+CLK_SET_PARENT_GRANDPARENT to add this type of behavior.
+
+I don't have a huge problem with
+
+	clk_set_parent(clk_get_parent(byte_clk), PLL)
+
+except that this fails the abstraction test. It leaks information
+about the clock tree into a driver that shouldn't need to know
+that on this particular SoC there's a clock in between the PLL
+and the byte_clk. Future designs may not have the intermediate
+clock and then we'll need to update the driver to handle the
+difference, when we could have added the flag and things would
+work the same.
+
 -- 
-1.9.1
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
