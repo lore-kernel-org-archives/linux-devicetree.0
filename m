@@ -1,72 +1,84 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/2] ARM: dts: Use MMC pwrseq instead regulators for IGEP
- WiFi init
-Date: Thu, 3 Dec 2015 11:27:19 -0800
-Message-ID: <20151203192719.GZ23396@atomide.com>
-References: <1449165729-993-1-git-send-email-javier@osg.samsung.com>
- <20151203181624.GW23396@atomide.com>
- <566089E1.7050805@osg.samsung.com>
+From: Simon Arlott <simon@fire.lp0.eu>
+Subject: [PATCH linux-next 1/3] mtd: brcmnand: Add brcm,bcm6368-nand device
+ tree binding
+Date: Thu, 3 Dec 2015 19:59:05 +0000
+Message-ID: <56609F09.7020607@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <566089E1.7050805-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, linux-mtd@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Kamal Dasu <kdasu.kdev@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-* Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> [151203 10:29]:
-> Hello Tony,
-> 
-> On 12/03/2015 03:16 PM, Tony Lindgren wrote:
-> > * Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> [151203 10:03]:
-> >> Hello,
-> >>
-> >> This series converts the IGEPv2 (IGEP0020) and IGEP COM Module (IGEP0030)
-> >> Device Tree to use the MMC power sequence provider to initialize the SDIO
-> >> WiFi chip instead of using fake fixed regulators to just toggle the Reset
-> >> and Power pins in the chip.
-> >>
-> >> The patches were tested on an DM3730 IGEPv2 board but the IGEP COM Module
-> >> is the same with regard to the SDIO WiFi so it should be safe to land too.
-> >>
-> >> The IGEPv2 Rev.F and the IGEP COM Module Rev.G DTS were not converted due
-> >> using a different WiFi chip (wlcore instead of libertas) than the one in
-> >> the board I've access to test so I preferred to leave those untouched.
-> > 
-> > Do you have some solution for the start-up latency issue?
-> >
-> 
-> No, I don't and that's one of the reasons why I didn't want to touch the
-> DTS that have the wlcore chip.
-> 
-> The omap3-igep0020-rev-f.dts and omap3-igep0030-rev-g.dts don't have a
-> startup-delay-us property in the regulator for the WLAN_EN pin as is
-> the case for the IGEPv5 DTS but I don't know if those DTS are just wrong.
+Add device tree binding for NAND on the BCM6368.
 
-OK
+The BCM6368 has a NAND interrupt register with combined status and enable
+registers. It also requires a clock, so add an optional clock to the
+common brcmnand binding.
 
-> The DTS for the igep0020 and igep0030 that have the libertas chip,
-> did have a startup-delay-us for the WIFI_PDN but using the GPIOs
-> for RESET_N_W and WIFI_PDN in the mmc-pwrseq-simple reset-gpios is
-> enough to make the SDIO chip reset, be enumerated and WiFi to work
-> correctly so I don't know if that is really needed or is just a bad
-> description in the DTS.
+Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+---
+ .../devicetree/bindings/mtd/brcm,brcmnand.txt      | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-Hmm OK.
+diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+index 4ff7128..16d7835 100644
+--- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
++++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+@@ -45,6 +45,8 @@ Required properties:
+ - #size-cells      : <0>
+ 
+ Optional properties:
++- clock                     : reference to the clock for the NAND controller
++- clock-names               : "nand" (required for the above clock)
+ - brcm,nand-has-wp          : Some versions of this IP include a write-protect
+                               (WP) control bit. It is always available on >=
+                               v7.0. Use this property to describe the rare
+@@ -72,6 +74,12 @@ we define additional 'compatible' properties and associated register resources w
+        and enable registers
+      - reg-names: (required) "nand-int-base"
+ 
++   * "brcm,nand-bcm6368"
++     - compatible: should contain "brcm,nand-bcm<soc>", "brcm,nand-bcm6368"
++     - reg: (required) the 'NAND_INTR_BASE' register range, with combined status
++       and enable registers, and boot address registers
++     - reg-names: (required) "nand-intr-base"
++
+    * "brcm,nand-iproc"
+      - reg: (required) the "IDM" register range, for interrupt enable and APB
+        bus access endianness configuration, and the "EXT" register range,
+@@ -148,3 +156,27 @@ nand@f0442800 {
+ 		};
+ 	};
+ };
++
++nand@10000200 {
++	compatible = "brcm,nand-bcm63168", "brcm,nand-bcm6368",
++		"brcm,brcmnand-v4.0", "brcm,brcmnand";
++	reg = <0x10000200 0x180>,
++	      <0x10000600 0x200>,
++	      <0x100000b0 0x10>;
++	reg-names = "nand", "nand-cache", "nand-intr-base";
++	interrupt-parent = <&periph_intc>;
++	interrupts = <50>;
++	clocks = <&periph_clk 20>;
++	clock-names = "nand";
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	nand0: nandcs@0 {
++		compatible = "brcm,nandcs";
++		reg = <0>;
++		nand-on-flash-bbt;
++		nand-ecc-strength = <1>;
++		nand-ecc-step-size = <512>;
++	};
++};
+-- 
+2.1.4
 
-> Since is working for the boards with the libertas chip, I preferred
-> to remove the DTS hack but left the boards with wlcore chip since
-> you said the startup-delay-us is needed there (but probably we should
-> add to the regulators in the boards that don't have it then).
-
-OK
-
-Thanks,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Simon Arlott
