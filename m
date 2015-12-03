@@ -1,63 +1,121 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v2 3/4] ARM: at91/dt: sama5d4: update i2c compatible
- string
-Date: Thu, 3 Dec 2015 21:45:32 +0100
-Message-ID: <20151203204532.GB8509@katana>
-References: <1449136434-27619-1-git-send-email-ludovic.desroches@atmel.com>
- <1449136434-27619-5-git-send-email-ludovic.desroches@atmel.com>
- <56601A74.3040507@atmel.com>
+From: Jon Mason <jonmason@broadcom.com>
+Subject: Re: [PATCH v4 5/5] ARM: BCM: Add SMP support for Broadcom 4708
+Date: Thu, 3 Dec 2015 16:08:36 -0500
+Message-ID: <20151203210836.GI18950@broadcom.com>
+References: <1448987049-17041-1-git-send-email-kapilh@broadcom.com>
+ <1448987049-17041-6-git-send-email-kapilh@broadcom.com>
+ <565F0827.4000406@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7iMSBzlTiPOCCT2k"
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <56601A74.3040507@atmel.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Ludovic Desroches <ludovic.desroches@atmel.com>, alexandre.belloni@free-electrons.com, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <565F0827.4000406@hauke-m.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hauke Mehrtens <hauke@hauke-m.de>
+Cc: Kapil Hali <kapilh@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Lee Jones <lee@kernel.org>, Kever Yang <kever.yang@rock-chips.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Dec 02, 2015 at 04:03:03PM +0100, Hauke Mehrtens wrote:
+> On 12/01/2015 05:24 PM, Kapil Hali wrote:
+> > From: Jon Mason <jonmason@broadcom.com>
+> > 
+> > Add SMP support for Broadcom's 4708 SoCs.
+> > 
+> > Signed-off-by: Jon Mason <jonmason@broadcom.com>
+> > Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
+> > Tested-by: Hauke Mehrtens <hauke@hauke-m.de>
+> > Signed-off-by: Kapil Hali <kapilh@broadcom.com>
+> > ---
+> >  arch/arm/boot/dts/bcm4708.dtsi | 2 ++
+> >  arch/arm/mach-bcm/Kconfig      | 1 +
+> >  arch/arm/mach-bcm/Makefile     | 3 +++
+> >  3 files changed, 6 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/bcm4708.dtsi b/arch/arm/boot/dts/bcm4708.dtsi
+> > index 31141e8..eed4dd1 100644
+> > --- a/arch/arm/boot/dts/bcm4708.dtsi
+> > +++ b/arch/arm/boot/dts/bcm4708.dtsi
+> > @@ -15,6 +15,7 @@
+> >  	cpus {
+> >  		#address-cells = <1>;
+> >  		#size-cells = <0>;
+> > +		enable-method = "brcm,bcm-nsp-smp";
+> >  
+> >  		cpu@0 {
+> >  			device_type = "cpu";
+> > @@ -27,6 +28,7 @@
+> >  			device_type = "cpu";
+> >  			compatible = "arm,cortex-a9";
+> >  			next-level-cache = <&L2>;
+> > +			secondary-boot-reg = <0xffff0400>;
+> >  			reg = <0x1>;
+> >  		};
+> >  	};
+> > diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+> > index 83765a0..e85246f 100644
+> > --- a/arch/arm/mach-bcm/Kconfig
+> > +++ b/arch/arm/mach-bcm/Kconfig
+> > @@ -54,6 +54,7 @@ config ARCH_BCM_NSP
+> >  config ARCH_BCM_5301X
+> >  	bool "Broadcom BCM470X / BCM5301X ARM SoC" if ARCH_MULTI_V7
+> >  	select ARCH_BCM_IPROC
+> > +	select HAVE_SMP
+> >  	help
+> >  	  Support for Broadcom BCM470X and BCM5301X SoCs with ARM CPU cores.
+> >  
+> 
+> When applying this patch please make sure it is correctly applied this
+> patch causes some problems here:
+> 
+> http://www.spinics.net/lists/arm-kernel/msg462137.html
+> 
+> > diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
+> > index 5193a25..7d66515 100644
+> > --- a/arch/arm/mach-bcm/Makefile
+> > +++ b/arch/arm/mach-bcm/Makefile
+> > @@ -43,6 +43,9 @@ obj-$(CONFIG_ARCH_BCM2835)	+= board_bcm2835.o
+> >  
+> >  # BCM5301X
+> >  obj-$(CONFIG_ARCH_BCM_5301X)	+= bcm_5301x.o
+> > +ifeq ($(CONFIG_ARCH_BCM_5301X),y)
+> > +obj-$(CONFIG_SMP)		+= platsmp.o
+> > +endif
+> >  
+> >  # BCM63XXx
+> >  ifeq ($(CONFIG_ARCH_BCM_63XX),y)
+> > 
+> 
+> I am getting this on a Northstar 1 / BCM4708:
+> 
+> [ 0.137634] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+> [ 0.143643] Setting up static identity map for 0x82a0 - 0x82d4
+> [ 0.189772] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
+> [ 0.189861] Brought up 2 CPUs
+> [ 0.198845] SMP: Total of 2 processors activated (3188.32 BogoMIPS).
+> [ 0.205446] CPU: WARNING: CPU(s) started in wrong/inconsistent modes
+> (primary CPU mode 0x13)
+> [ 0.214167] CPU: This may indicate a broken bootloader or firmware.
+> 
+> I assume that this is correct and the bootloader is just broken, it uses
+> this bootloader: "CFE for Foxconn Router version: v1.0.14", I haven't
+> noticed any problems, so it is ok for me.
 
---7iMSBzlTiPOCCT2k
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On my 4708 SVK, I see the same issue
 
-On Thu, Dec 03, 2015 at 11:33:24AM +0100, Nicolas Ferre wrote:
-> Le 03/12/2015 10:53, Ludovic Desroches a =C3=A9crit :
-> > A new compatible string has been introduced: atmel,sama5d4-i2c. It
-> > allows to use the i2c-sda-hold-time-ns property if needed.
-> >=20
-> > Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
->=20
-> Wolfram, we'll take this one with us in the at91 branches that will go
-> into arm-soc. It'll be queued in at91-4.5-dt branch soon.
->=20
-> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+[    0.090877] CPU: Testing write buffer coherency: ok
+[    0.091231] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+[    0.091377] Setting up static identity map for 0x82a0 - 0x82f8
+[    0.130146] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
+[    0.130251] Brought up 2 CPUs
+[    0.130323] SMP: Total of 2 processors activated (3188.32 BogoMIPS).
+[    0.130345] CPU: WARNING: CPU(s) started in wrong/inconsistent modes (primary CPU mode 0x13)
+[    0.130374] CPU: This may indicate a broken bootloader or firmware.
 
-I squashed patch 1+2 now and applied them to for-next, thanks!
+I'll investigate it more and see if I can bottom out on the cause.
+
+Thanks,
+Jon
 
 
---7iMSBzlTiPOCCT2k
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWYKnsAAoJEBQN5MwUoCm2hY8P/AnNOkbYa0c15rrENCh5lI+g
-B6QqmGT/N0VGfYk68u6RqafygOHwhMy2fwEkH/UhlYXpkOshsnVWdvO+pWf5thIX
-viWI34a5e6vO4ES85sHuAVu1S9RFYtjZuCGfC+oH1fd9uD1YR/nGsB8T4LWg02mk
-NbUMtmRUeq/72qowmM0uVKRUEU6C/UyQKD/zaJ93wrxYchxAOVpJ3u+3E5m16rxa
-f6bi7MvP+WZjArGUcz2q6iRK7zBUnEOE8kmP6nseD6txC67Gu48eawHQ7voIT6/w
-fut6LpwCigoZc3HGA/vbTiZEBtHlgEJAxA1kfWBoT8Qh7l1I8KLpbkNf9/DFY8EO
-7ahivSYZ4GbML1XzyzXggy1AcXLcuJWoAdtVZA8hRhiRVNzbzlxT5MnLbPQiUNo2
-UlqkZeq0Tdr3mcDZbE8pec5YihwL60ItOygGADxUDjhf5xJC0Mr6MDlSuLrl2mfL
-Kb9ivfeqsQ3XPTDe2hezA2q/F9BTxuNuWt9bjVAzMCjR5F4eawxvChO3eXY9V9u7
-qotkal8xWu1F0DN0uvmnI4WfV4u4OR2Cc7KiZjW/jrRQQdtEaAmoG9B7Cupe/vJp
-69rNwiTy3uHe6vtdOz4r8axRqspGW3QDpEOeb5vuH+ByuGIGrmaEk2t61l7QuEAw
-+rPcklkEN/nlHVFpbatS
-=JHI/
------END PGP SIGNATURE-----
-
---7iMSBzlTiPOCCT2k--
+> 
+> Hauke
