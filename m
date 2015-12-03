@@ -1,67 +1,94 @@
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Subject: [PATCH] of: fix build failure
-Date: Thu,  3 Dec 2015 14:08:10 +0530
-Message-ID: <1449131890-21675-1-git-send-email-sudipm.mukherjee@gmail.com>
-References: <20151203011814.GC5727@sirena.org.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151203011814.GC5727@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-next@vger.kernel.org, Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH (v2) 1/2] reset: Add brcm,bcm6345-reset device tree
+ binding
+Date: Thu, 03 Dec 2015 09:39:03 +0100
+Message-ID: <1449131943.3339.8.camel@pengutronix.de>
+References: <565F5C96.5090700@simon.arlott.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <565F5C96.5090700-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Cc: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We are having build failure with next-20151202 for sparc allmodconfig
-with the error messages:
-undefined reference to 'of_io_request_and_map'
+Hi Simon,
 
-CONFIG_OF is defined for sparc so it is expected that we have a
-definition of of_io_request_and_map() but of/address.c is only compiled
-if it is !SPARC.
+Am Mittwoch, den 02.12.2015, 21:03 +0000 schrieb Simon Arlott:
+> Add device tree binding for the BCM6345 soft reset controller.
+> 
+> The BCM6345 contains a soft-reset controller activated by setting
+> a bit (that must previously have cleared).
+> 
+> Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+> ---
+> Renamed to bcm6345, removed "mask" property.
+> 
+>  .../bindings/reset/brcm,bcm6345-reset.txt          | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.txt b/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.txt
+> new file mode 100644
+> index 0000000..bb9ca6e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.txt
+> @@ -0,0 +1,33 @@
+> +Broadcom BCM6345 reset controller
+> +
+> +The BCM6345 contains a basic soft reset controller in the perf register
+> +set which resets components using a bit in a register.
+> +
+> +Please also refer to reset.txt in this directory for common reset
+> +controller binding usage.
+> +
+> +Required properties:
+> +- compatible:	Should be "brcm,bcm<soc>-reset", "brcm,bcm6345-reset"
 
-Signed-off-by: Sudip Mukherjee <sudip@vectorindia.org>
----
+> +- regmap:	The register map phandle
+> +- offset:	Offset in the register map for the reset register (in bytes)
 
-build log is at:
-https://travis-ci.org/sudipm-mukherjee/parport/builds/94541627
+Is this something the device tree maintainers are happy with?
+I see there are already some regmap properties in the device tree, but
+in this case it looks to me like the reset controller node should be a
+child of the periph_cntl node as that register space is the only means
+of controlling it.
 
-patch has been build tested with sparc allmodconfig and x86_64
-allmodconfig.
+> +- #reset-cells:	Must be set to 1
+> +
+> +Example:
+> +
+> +periph_soft_rst: reset-controller {
+> +	compatible = "brcm,bcm63168-reset", "brcm,bcm6345-reset";
+> +	regmap = <&periph_cntl>;
+> +	offset = <0x10>;
+> +
+> +	#reset-cells = <1>;
+> +};
 
- include/linux/of_address.h | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+I would have written it something like this:
 
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index 507daad..7bf4603 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -112,8 +112,6 @@ static inline bool of_dma_is_coherent(struct device_node *np)
- extern int of_address_to_resource(struct device_node *dev, int index,
- 				  struct resource *r);
- void __iomem *of_iomap(struct device_node *node, int index);
--void __iomem *of_io_request_and_map(struct device_node *device,
--					int index, const char *name);
- #else
- 
- #include <linux/io.h>
-@@ -136,6 +134,19 @@ static inline void __iomem *of_io_request_and_map(struct device_node *device,
- }
- #endif
- 
-+#if defined(CONFIG_OF) && !defined(CONFIG_SPARC)
-+void __iomem *of_io_request_and_map(struct device_node *device,
-+					int index, const char *name);
-+#else
-+#include <linux/io.h>
-+
-+static inline void __iomem *of_io_request_and_map(struct device_node *device,
-+					int index, const char *name)
-+{
-+	return IOMEM_ERR_PTR(-EINVAL);
-+}
-+#endif /* CONFIG_OF && !CONFIG_SPARC */
-+
- #if defined(CONFIG_OF_ADDRESS) && defined(CONFIG_PCI)
- extern const __be32 *of_get_pci_address(struct device_node *dev, int bar_no,
- 			       u64 *size, unsigned int *flags);
--- 
-1.9.1
+periph_cntl: ... {
+	compatible = "syscon", "simple-mfd";
+	#address-cells = <1>;
+	#size-cells = <1>;
+
+	periph_soft_rst: reset-controller {
+		compatible = "brcm,bcm6345-reset";
+		reg = <0x10 0x4>;
+		#reset-cells = <1>;
+	};
+};
+
+for a device that is only controlled through a syscon.
+The driver itself looks good to me.
+
+best regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
