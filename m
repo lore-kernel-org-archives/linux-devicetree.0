@@ -1,277 +1,72 @@
-From: Simon Arlott <simon@fire.lp0.eu>
-Subject: [PATCH linux-next 2/2] clk: bcm6345: Add BCM6345 gated clock support
-Date: Thu, 3 Dec 2015 19:25:46 +0000
-Message-ID: <5660973A.6030703@simon.arlott.org.uk>
-References: <566096D4.3050102@simon.arlott.org.uk>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/2] ARM: dts: Use MMC pwrseq instead regulators for IGEP
+ WiFi init
+Date: Thu, 3 Dec 2015 11:27:19 -0800
+Message-ID: <20151203192719.GZ23396@atomide.com>
+References: <1449165729-993-1-git-send-email-javier@osg.samsung.com>
+ <20151203181624.GW23396@atomide.com>
+ <566089E1.7050805@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <566096D4.3050102@simon.arlott.org.uk>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, linux-mips@linux-mips.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonas Gorski <jogo@openwrt.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <566089E1.7050805-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The BCM6345 contains clocks gated with a register. Clocks are indexed
-by bits in the register and are active high. Clock gate bits are
-interleaved with other status bits and configurable clocks in the same
-register.
+* Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> [151203 10:29]:
+> Hello Tony,
+> 
+> On 12/03/2015 03:16 PM, Tony Lindgren wrote:
+> > * Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> [151203 10:03]:
+> >> Hello,
+> >>
+> >> This series converts the IGEPv2 (IGEP0020) and IGEP COM Module (IGEP0030)
+> >> Device Tree to use the MMC power sequence provider to initialize the SDIO
+> >> WiFi chip instead of using fake fixed regulators to just toggle the Reset
+> >> and Power pins in the chip.
+> >>
+> >> The patches were tested on an DM3730 IGEPv2 board but the IGEP COM Module
+> >> is the same with regard to the SDIO WiFi so it should be safe to land too.
+> >>
+> >> The IGEPv2 Rev.F and the IGEP COM Module Rev.G DTS were not converted due
+> >> using a different WiFi chip (wlcore instead of libertas) than the one in
+> >> the board I've access to test so I preferred to leave those untouched.
+> > 
+> > Do you have some solution for the start-up latency issue?
+> >
+> 
+> No, I don't and that's one of the reasons why I didn't want to touch the
+> DTS that have the wlcore chip.
+> 
+> The omap3-igep0020-rev-f.dts and omap3-igep0030-rev-g.dts don't have a
+> startup-delay-us property in the regulator for the WLAN_EN pin as is
+> the case for the IGEPv5 DTS but I don't know if those DTS are just wrong.
 
-Enabled by default for BMIPS_GENERIC.
+OK
 
-Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
----
-Renamed to BCM6345.
+> The DTS for the igep0020 and igep0030 that have the libertas chip,
+> did have a startup-delay-us for the WIFI_PDN but using the GPIOs
+> for RESET_N_W and WIFI_PDN in the mmc-pwrseq-simple reset-gpios is
+> enough to make the SDIO chip reset, be enumerated and WiFi to work
+> correctly so I don't know if that is really needed or is just a bad
+> description in the DTS.
 
- MAINTAINERS                   |   1 +
- drivers/clk/bcm/Kconfig       |   9 ++
- drivers/clk/bcm/Makefile      |   1 +
- drivers/clk/bcm/clk-bcm6345.c | 191 ++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 202 insertions(+)
- create mode 100644 drivers/clk/bcm/clk-bcm6345.c
+Hmm OK.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 577e5ea..9a61f48 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2381,6 +2381,7 @@ F:	arch/mips/bmips/*
- F:	arch/mips/include/asm/mach-bmips/*
- F:	arch/mips/kernel/*bmips*
- F:	arch/mips/boot/dts/brcm/bcm*.dts*
-+F:	drivers/clk/bcm/clk-bcm6345*
- F:	drivers/irqchip/irq-bcm63*
- F:	drivers/irqchip/irq-bcm7*
- F:	drivers/irqchip/irq-brcmstb*
-diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
-index f287845..043353a 100644
---- a/drivers/clk/bcm/Kconfig
-+++ b/drivers/clk/bcm/Kconfig
-@@ -8,6 +8,15 @@ config CLK_BCM_63XX
- 	  Enable common clock framework support for Broadcom BCM63xx DSL SoCs
- 	  based on the ARM architecture
- 
-+config CLK_BCM_6345
-+	bool "Broadcom BCM6345 clock support"
-+	depends on BMIPS_GENERIC || COMPILE_TEST
-+	depends on COMMON_CLK
-+	default BMIPS_GENERIC
-+	help
-+	  Enable common clock framework support for Broadcom BCM6345 DSL SoCs
-+	  based on the MIPS architecture
-+
- config CLK_BCM_KONA
- 	bool "Broadcom Kona CCU clock support"
- 	depends on ARCH_BCM_MOBILE || COMPILE_TEST
-diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-index 247c267..e2bac43 100644
---- a/drivers/clk/bcm/Makefile
-+++ b/drivers/clk/bcm/Makefile
-@@ -1,4 +1,5 @@
- obj-$(CONFIG_CLK_BCM_63XX)	+= clk-bcm63xx.o
-+obj-$(CONFIG_CLK_BCM_6345)	+= clk-bcm6345.o
- obj-$(CONFIG_CLK_BCM_KONA)	+= clk-kona.o
- obj-$(CONFIG_CLK_BCM_KONA)	+= clk-kona-setup.o
- obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm281xx.o
-diff --git a/drivers/clk/bcm/clk-bcm6345.c b/drivers/clk/bcm/clk-bcm6345.c
-new file mode 100644
-index 0000000..88a1e7e
---- /dev/null
-+++ b/drivers/clk/bcm/clk-bcm6345.c
-@@ -0,0 +1,191 @@
-+/*
-+ * Copyright 2015 Simon Arlott
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * Derived from clk-gate.c:
-+ * Copyright (C) 2010-2011 Canonical Ltd <jeremy.kerr@canonical.com>
-+ * Copyright (C) 2011-2012 Mike Turquette, Linaro Ltd <mturquette@linaro.org>
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/clk-provider.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
-+
-+/**
-+ * DOC: Basic clock which uses a bit in a regmap to gate and ungate the output
-+ *
-+ * Traits of this clock:
-+ * prepare - clk_(un)prepare only ensures parent is (un)prepared
-+ * enable - clk_enable and clk_disable are functional & control gating
-+ * rate - inherits rate from parent.  No clk_set_rate support
-+ * parent - fixed parent.  No clk_set_parent support
-+ */
-+
-+struct clk_bcm6345 {
-+	struct clk_hw hw;
-+	struct regmap *map;
-+	u32 offset;
-+	u32 mask;
-+};
-+
-+#define to_clk_bcm6345(_hw) container_of(_hw, struct clk_bcm6345, hw)
-+
-+static int clk_bcm6345_enable(struct clk_hw *hw)
-+{
-+	struct clk_bcm6345 *gate = to_clk_bcm6345(hw);
-+
-+	return regmap_write_bits(gate->map, gate->offset,
-+					gate->mask, gate->mask);
-+}
-+
-+static void clk_bcm6345_disable(struct clk_hw *hw)
-+{
-+	struct clk_bcm6345 *gate = to_clk_bcm6345(hw);
-+
-+	regmap_write_bits(gate->map, gate->offset,
-+					gate->mask, 0);
-+}
-+
-+static int clk_bcm6345_is_enabled(struct clk_hw *hw)
-+{
-+	struct clk_bcm6345 *gate = to_clk_bcm6345(hw);
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read(gate->map, gate->offset, &val);
-+	if (ret)
-+		return ret;
-+
-+	val &= gate->mask;
-+
-+	return val ? 1 : 0;
-+}
-+
-+const struct clk_ops clk_bcm6345_ops = {
-+	.enable = clk_bcm6345_enable,
-+	.disable = clk_bcm6345_disable,
-+	.is_enabled = clk_bcm6345_is_enabled,
-+};
-+
-+static struct clk * __init of_bcm6345_clk_register(const char *parent_name,
-+	const char *clk_name, struct regmap *map, u32 offset, u32 mask)
-+{
-+	struct clk_bcm6345 *gate;
-+	struct clk_init_data init;
-+	struct clk *ret;
-+
-+	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-+	if (!gate)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = clk_name;
-+	init.ops = &clk_bcm6345_ops;
-+	init.flags = CLK_IS_BASIC;
-+	init.parent_names = (parent_name ? &parent_name : NULL);
-+	init.num_parents = (parent_name ? 1 : 0);
-+	gate->hw.init = &init;
-+	gate->map = map;
-+	gate->offset = offset;
-+	gate->mask = mask;
-+
-+	ret = clk_register(NULL, &gate->hw);
-+	if (IS_ERR(ret))
-+		kfree(gate);
-+
-+	return ret;
-+}
-+
-+static void __init of_bcm6345_clk_setup(struct device_node *node)
-+{
-+	struct clk_onecell_data *clk_data;
-+	const char *parent_name = NULL;
-+	struct regmap *map;
-+	u32 offset;
-+	unsigned int clocks = 0;
-+	int i;
-+
-+	clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
-+	if (!clk_data)
-+		return;
-+
-+	clk_data->clk_num = 32;
-+	clk_data->clks = kmalloc_array(clk_data->clk_num,
-+		sizeof(*clk_data->clks), GFP_KERNEL);
-+
-+	for (i = 0; i < clk_data->clk_num; i++)
-+		clk_data->clks[i] = ERR_PTR(-ENODEV);
-+
-+	if (of_clk_get_parent_count(node) > 0)
-+		parent_name = of_clk_get_parent_name(node, 0);
-+
-+	map = syscon_regmap_lookup_by_phandle(node, "regmap");
-+	if (IS_ERR(map)) {
-+		pr_err("%s: regmap lookup error %ld\n",
-+			node->full_name, PTR_ERR(map));
-+		goto out;
-+	}
-+
-+	if (of_property_read_u32(node, "offset", &offset)) {
-+		pr_err("%s: offset not specified\n", node->full_name);
-+		goto out;
-+	}
-+
-+	/* clks[] is sparse, indexed by bit, maximum clocks checked using i */
-+	for (i = 0; i < clk_data->clk_num; i++) {
-+		u32 bit;
-+		const char *clk_name;
-+
-+		if (of_property_read_u32_index(node, "clock-indices",
-+				i, &bit))
-+			goto out;
-+
-+		if (of_property_read_string_index(node, "clock-output-names",
-+				i, &clk_name))
-+			goto out;
-+
-+		if (bit >= clk_data->clk_num) {
-+			pr_err("%s: clock bit %u out of range\n",
-+				node->full_name, bit);
-+			continue;
-+		}
-+
-+		if (!IS_ERR(clk_data->clks[bit])) {
-+			pr_err("%s: clock bit %u already exists\n",
-+				node->full_name, bit);
-+			continue;
-+		}
-+
-+		clk_data->clks[bit] = of_bcm6345_clk_register(parent_name,
-+					clk_name, map, offset, BIT(bit));
-+		if (!IS_ERR(clk_data->clks[bit]))
-+			clocks++;
-+	}
-+
-+out:
-+	if (clocks) {
-+		of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+		pr_info("%s: registered %u clocks\n", node->name, clocks);
-+	} else {
-+		kfree(clk_data->clks);
-+		kfree(clk_data);
-+	}
-+}
-+
-+CLK_OF_DECLARE(bcm6345_clk, "brcm,bcm6345-gate-clk", of_bcm6345_clk_setup);
--- 
-2.1.4
+> Since is working for the boards with the libertas chip, I preferred
+> to remove the DTS hack but left the boards with wlcore chip since
+> you said the startup-delay-us is needed there (but probably we should
+> add to the regulators in the boards that don't have it then).
 
--- 
-Simon Arlott
+OK
+
+Thanks,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
