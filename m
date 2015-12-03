@@ -1,48 +1,39 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [4.4-rc][PATCH v2] ARM: dts: am4372: fix clock source for arm twd
- and global timers
-Date: Thu, 3 Dec 2015 20:04:46 +0200
-Message-ID: <5660843E.3000801@ti.com>
-References: <1448898998-32749-1-git-send-email-grygorii.strashko@ti.com>
- <20151203163551.GQ23396@atomide.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/2] ARM: dts: Use MMC pwrseq instead regulators for IGEP
+ WiFi init
+Date: Thu, 3 Dec 2015 10:16:24 -0800
+Message-ID: <20151203181624.GW23396@atomide.com>
+References: <1449165729-993-1-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151203163551.GQ23396-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1449165729-993-1-git-send-email-javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: t-kristo-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/03/2015 06:35 PM, Tony Lindgren wrote:
-> * Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org> [151130 07:58]:
->> ARM TWD and Global timer are clocked by PERIPHCLK which is MPU_CLK/2.
->> But now they are clocked by dpll_mpu_m2_ck == MPU_CLK and, as result.
->> Timekeeping core misbehaves. For example, execution of command
->> "sleep 5" will take 10 sec instead of 5.
->>
->> Hence, fix it by adding mpu_periphclk ("fixed-factor-clock") and use
->> it for clocking ARM TWD and Global timer (same way as on OMAP4).
->>
->> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
->> Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
->> Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
->> Fixes:commit 8cbd4c2f6a99 ("arm: boot: dts: am4372: add ARM timers and SCU nodes")
->> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+* Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> [151203 10:03]:
+> Hello,
 > 
-> Is this fix alone enough or do you still need to disable other the ARM
-> timers in the board specific dts file?
+> This series converts the IGEPv2 (IGEP0020) and IGEP COM Module (IGEP0030)
+> Device Tree to use the MMC power sequence provider to initialize the SDIO
+> WiFi chip instead of using fake fixed regulators to just toggle the Reset
+> and Power pins in the chip.
 > 
+> The patches were tested on an DM3730 IGEPv2 board but the IGEP COM Module
+> is the same with regard to the SDIO WiFi so it should be safe to land too.
+> 
+> The IGEPv2 Rev.F and the IGEP COM Module Rev.G DTS were not converted due
+> using a different WiFi chip (wlcore instead of libertas) than the one in
+> the board I've access to test so I preferred to leave those untouched.
 
-This one is independent and it's required for -rc, because ARM TWD timer will be selected
-now for am43xx even if http://www.spinics.net/lists/arm-kernel/msg459649.html
-is not merged yet ;) in case of omap2plus_defconfig build.
+Do you have some solution for the start-up latency issue?
 
+Regards,
 
--- 
-regards,
--grygorii
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
