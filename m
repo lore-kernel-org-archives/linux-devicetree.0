@@ -1,67 +1,110 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH 0/2] ARM: dts: Use MMC pwrseq instead regulators for IGEP
- WiFi init
-Date: Thu, 3 Dec 2015 15:28:49 -0300
-Message-ID: <566089E1.7050805@osg.samsung.com>
-References: <1449165729-993-1-git-send-email-javier@osg.samsung.com>
- <20151203181624.GW23396@atomide.com>
+From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] nvmem: NXP LPC18xx EEPROM memory NVMEM driver
+Date: Thu, 3 Dec 2015 15:39:55 -0300
+Message-ID: <CAAEAJfAqqni1UKiyftBE5kW-TegnuYvJrTvPkHm2gDbOuk4=Bw@mail.gmail.com>
+References: <1445275946-32653-1-git-send-email-ariel@vanguardiasur.com.ar>
+	<1445275946-32653-3-git-send-email-ariel@vanguardiasur.com.ar>
+	<CAGhQ9Vyg6sScq7yM=7judsMPHOc5VF2zf=7LPxmbmL7wF=vvgw@mail.gmail.com>
+	<562E2CB1.80706@linaro.org>
+	<563385B2.90403@vanguardiasur.com.ar>
+	<5649F74A.9020706@vanguardiasur.com.ar>
+	<5649F856.9000101@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151203181624.GW23396@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Enric Balletbo i Serra <eballetbo@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5649F856.9000101-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Tony,
+Hi Srinivas,
 
-On 12/03/2015 03:16 PM, Tony Lindgren wrote:
-> * Javier Martinez Canillas <javier@osg.samsung.com> [151203 10:03]:
->> Hello,
+On 16 November 2015 at 12:37, Srinivas Kandagatla
+<srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>
+>
+> On 16/11/15 15:33, Ariel D'Alessandro wrote:
+>>>>
+>>>>
+>>>> >> >>-------------------------------->cut<------------------------=
+----------
+>>>> >> From 8cae10eff8ea8da9c5a8058ff75abeeddd8a8224 Mon Sep 17 00:00:=
+00
+>>>> >> 2001
+>>>> >>From: Srinivas Kandagatla<srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> >>Date: Mon, 26 Oct 2015 13:30:24 +0000
+>>>> >>Subject: [PATCH] nvmem: core: return error for non word aligned =
+bytes
+>>>> >>
+>>>> >>nvmem providers have restrictions on register strides, so return=
+ error
+>>>> >>code when users attempt to read/write buffers with sizes which a=
+re not
+>>>> >>aligned to the word boundary.
+>>>> >>
+>>>> >>Without this patch the userspace would continue to try as it doe=
+s not
+>>>> >>get any error from the nvmem core, resulting in a hang.
+>>>> >>
+>>>> >>Signed-off-by: Srinivas Kandagatla<srinivas.kandagatla-QSEj5FYQhm5QFI55V6+gNQ@public.gmane.org=
+g>
+>>>> >>---
+>>>> >>  drivers/nvmem/core.c | 6 ++++++
+>>>> >>  1 file changed, 6 insertions(+)
+>>>> >>
+>>>> >>diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+>>>> >>index 6fd4e5a..9d11d98 100644
+>>>> >>--- a/drivers/nvmem/core.c
+>>>> >>+++ b/drivers/nvmem/core.c
+>>>> >>@@ -70,6 +70,9 @@ static ssize_t bin_attr_nvmem_read(struct file
+>>>> >> *filp,
+>>>> >>struct kobject *kobj,
+>>>> >>      if (pos >=3D nvmem->size)
+>>>> >>          return 0;
+>>>> >>
+>>>> >>+    if (count < nvmem->word_size)
+>>>> >>+        return -EINVAL;
+>>>> >>+
+>>>> >>      if (pos + count > nvmem->size)
+>>>> >>          count =3D nvmem->size - pos;
+>>>> >>
+>>>> >>@@ -95,6 +98,9 @@ static ssize_t bin_attr_nvmem_write(struct fil=
+e
+>>>> >> *filp,
+>>>> >>struct kobject *kobj,
+>>>> >>      if (pos >=3D nvmem->size)
+>>>> >>          return 0;
+>>>> >>
+>>>> >>+    if (count < nvmem->word_size)
+>>>> >>+        return -EINVAL;
+>>>> >>+
+>>>> >>      if (pos + count > nvmem->size)
+>>>> >>          count =3D nvmem->size - pos;
+>>>> >>
+>>>
+>>> >
+>>> >Patch looks good to me. I think that it solves the issue.
+>>> >I don't have the board here right now, so I'll check it ASAP and g=
+ive
+>>> >some feedback.
 >>
->> This series converts the IGEPv2 (IGEP0020) and IGEP COM Module (IGEP0030)
->> Device Tree to use the MMC power sequence provider to initialize the SDIO
->> WiFi chip instead of using fake fixed regulators to just toggle the Reset
->> and Power pins in the chip.
->>
->> The patches were tested on an DM3730 IGEPv2 board but the IGEP COM Module
->> is the same with regard to the SDIO WiFi so it should be safe to land too.
->>
->> The IGEPv2 Rev.F and the IGEP COM Module Rev.G DTS were not converted due
->> using a different WiFi chip (wlcore instead of libertas) than the one in
->> the board I've access to test so I preferred to leave those untouched.
-> 
-> Do you have some solution for the start-up latency issue?
+>> Finally tested this. As it seemed, it solved the issue.
+>> Are you submitting a patch for this?
+>
+> Yes, I will send a patch to the mailing list.
 >
 
-No, I don't and that's one of the reasons why I didn't want to touch the
-DTS that have the wlcore chip.
+Ping? It would be good to have that patch and be able to merge this
+lpc18xx-nvmem driver in time for the next merge window.
 
-The omap3-igep0020-rev-f.dts and omap3-igep0030-rev-g.dts don't have a
-startup-delay-us property in the regulator for the WLAN_EN pin as is
-the case for the IGEPv5 DTS but I don't know if those DTS are just wrong.
-
-The DTS for the igep0020 and igep0030 that have the libertas chip,
-did have a startup-delay-us for the WIFI_PDN but using the GPIOs
-for RESET_N_W and WIFI_PDN in the mmc-pwrseq-simple reset-gpios is
-enough to make the SDIO chip reset, be enumerated and WiFi to work
-correctly so I don't know if that is really needed or is just a bad
-description in the DTS.
-
-Since is working for the boards with the libertas chip, I preferred
-to remove the DTS hack but left the boards with wlcore chip since
-you said the startup-delay-us is needed there (but probably we should
-add to the regulators in the boards that don't have it then).
-
-> Regards,
-> 
-> Tony
-> 
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Thanks!
+--=20
+Ezequiel Garc=C3=ADa, VanguardiaSur
+www.vanguardiasur.com.ar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
