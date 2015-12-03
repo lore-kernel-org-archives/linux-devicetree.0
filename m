@@ -1,33 +1,51 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [4.4-rc][PATCH] ARM: dts: am4372: disable arm twd and global
- timer's nodes
-Date: Thu, 3 Dec 2015 08:37:09 -0800
-Message-ID: <20151203163708.GR23396@atomide.com>
-References: <1447855315-419-1-git-send-email-grygorii.strashko@ti.com>
- <20151118141537.GC10644@leverpostej>
- <564C9ACF.6040107@ti.com>
- <20151203163311.GP23396@atomide.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v4 0/4] drm: Add support for the ARM HDLCD display
+ controller
+Date: Thu, 3 Dec 2015 16:56:07 +0000
+Message-ID: <20151203165606.GS8644@n2100.arm.linux.org.uk>
+References: <1449139249-9171-1-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20151203163311.GP23396-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, slash.tmp-GANU6spQydw@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1449139249-9171-1-git-send-email-Liviu.Dudau@arm.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Andrew Morton <akpm@linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [151203 08:34]:
->
-> It seems we should apply this as a fix unless somebody has better ideas.
-
-Actually I think the fix for now is "[4.4-rc][PATCH v2] ARM: dts: am4372: fix
-clock source for arm twd and global timers" until PM starts working?
-
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCBEZWMgMDMsIDIwMTUgYXQgMTA6NDA6NDVBTSArMDAwMCwgTGl2aXUgRHVkYXUgd3Jv
+dGU6Cj4gVGhpcyBzZXJpZXMgZGVwZW5kcyBvbiBTdWRlZXAgSG9sbGEncyBTQ1BJIGRyaXZlciAo
+bm93IGluIG1haW5saW5lKSBhbmQgb24KPiB0aGUgdGRhOTk4eCBwYXRjaGVzIHRoYXQgaGF2ZSBi
+ZWVuIHF1ZXVlZCBvbiBSdXNzZWxsJ3MgcGF0Y2ggc3lzdGVtIGhlcmUgWzFdLgoKTm93IG1lcmdl
+ZCBpbnRvIG15IHRyZWUuCgpDYW4gSSBhc2sgYSBmYWlybHkgb2J2aW91cyBxdWVzdGlvbi4uLgoK
+PiAgZHJpdmVycy9ncHUvZHJtL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAg
+IDIgKwo+ICBkcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB8ICAgMSArCj4gIGRyaXZlcnMvZ3B1L2RybS9hcm0vS2NvbmZpZyAgICAgICAgICAgICAgICAg
+ICAgICAgIHwgIDI5ICsrCj4gIGRyaXZlcnMvZ3B1L2RybS9hcm0vTWFrZWZpbGUgICAgICAgICAg
+ICAgICAgICAgICAgIHwgICAyICsKPiAgZHJpdmVycy9ncHUvZHJtL2FybS9oZGxjZF9jcnRjLmMg
+ICAgICAgICAgICAgICAgICAgfCAzMjcgKysrKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9h
+cm0vaGRsY2RfZHJ2LmMgICAgICAgICAgICAgICAgICAgIHwgNTU1ICsrKysrKysrKysrKysrKysr
+KysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNkX2Rydi5oICAgICAgICAgICAgICAgICAg
+ICB8ICA0MiArKwo+ICBkcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNkX3JlZ3MuaCAgICAgICAgICAg
+ICAgICAgICB8ICA4NyArKysrCgpXaHkgaXMgdGhlIHN1YmRpcmVjdG9yeSBjYWxsZWQgImFybSIg
+YW5kIG5vdCAiaGRsY2QiID8KCkFSTSBMdGQgaGF2ZSBtb3JlIHRoYW4gb25lIGRpc3BsYXkgY29u
+dHJvbGxlciAodGhleSBoYXZlIHRoZSBBTUJBIFBMMTEwCmFuZCBQTDExMSBpbiBhZGRpdGlvbiB0
+byB0aGlzKSwgYW5kIChhZmFpY3MpIHRoaXMgZG9lc24ndCBkcml2ZSB0aGVzZS4KSERMQ0QgcHJv
+YmFibHkgd29uJ3QgYmUgdGhlIGxhc3QgZGlzcGxheSBoYXJkd2FyZSB3aGljaCBBUk0gTHRkIGNv
+bWVzCm91dCB3aXRoIGVpdGhlci4KClNvLCBJIHRoaW5rIG5hbWluZyB0aGUgc3ViZGlyZWN0b3J5
+IGFmdGVyIHRoZSB2ZW5kb3IgaXMgcHJvYmFibHkgYQptaXN0YWtlLgoKLS0gCkZUVEMgYnJvYWRi
+YW5kIGZvciAwLjhtaWxlIGxpbmU6IGN1cnJlbnRseSBhdCA5LjZNYnBzIGRvd24gNDAwa2JwcyB1
+cAphY2NvcmRpbmcgdG8gc3BlZWR0ZXN0Lm5ldC4KX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
