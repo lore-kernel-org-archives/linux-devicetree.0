@@ -1,132 +1,81 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v3 18/27] mtd: nand: omap2: Implement NAND ready using
- gpiolib
-Date: Thu, 3 Dec 2015 09:41:46 +0100
-Message-ID: <20151203094146.41eba882@bbrezillon>
-References: <1442588029-13769-1-git-send-email-rogerq@ti.com>
-	<1442588029-13769-19-git-send-email-rogerq@ti.com>
-	<20151026204900.GI13239@google.com>
-	<20151027092832.4d7bb114@bbrezillon>
-	<20151203044544.GC120110@google.com>
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3 0/5] Fix a trivial typo and support rk3228/rk3399 SoCs for
+ thermal driver.
+Date: Thu,  3 Dec 2015 16:48:38 +0800
+Message-ID: <1449132523-18817-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151203044544.GC120110@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: Roger Quadros <rogerq@ti.com>, tony@atomide.com, dwmw2@infradead.org, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alex Smith <alex.smith@imgtec.com>, Harvey Hunt <harvey.hunt@imgtec.com>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jiri Kosina <trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+This series pacthes to support the next soc for this thermal driver.
+I don't add the dts thermal data since these SoCs have *_not_* land
+in this mainline. I believe these SoCs dts will land in this mainline
+lately,
+then I will add the thermal data for Heiko.
 
-On Wed, 2 Dec 2015 20:45:44 -0800
-Brian Norris <computersforpeace@gmail.com> wrote:
+This series patches can apply into Eduardo branch.
+https://git.kernel.org/cgit/linux/kernel/git/evalenti/linux-soc-thermal.git
 
-> (to be clear, this branch of discussion isn't directly regarding the TI
-> changes; we can handle any generic handling afterward, as long as we get
-> the DT binding right now)
-> 
-> On Tue, Oct 27, 2015 at 09:28:32AM +0100, Boris Brezillon wrote:
-> > On Mon, 26 Oct 2015 13:49:00 -0700
-> > Brian Norris <computersforpeace@gmail.com> wrote:
-> > > On Fri, Sep 18, 2015 at 05:53:40PM +0300, Roger Quadros wrote:
-> > > > @@ -1782,7 +1780,9 @@ static int omap_nand_probe(struct platform_device *pdev)
-> > > >  		info->reg = pdata->reg;
-> > > >  		info->of_node = pdata->of_node;
-> > > >  		info->ecc_opt = pdata->ecc_opt;
-> > > > -		info->dev_ready	= pdata->dev_ready;
-> > > > +		if (pdata->dev_ready)
-> > > > +			dev_info(&pdev->dev, "pdata->dev_ready is deprecated\n");
-> > > > +
-> > > >  		info->xfer_type = pdata->xfer_type;
-> > > >  		info->devsize = pdata->devsize;
-> > > >  		info->elm_of_node = pdata->elm_of_node;
-> > > > @@ -1815,6 +1815,13 @@ static int omap_nand_probe(struct platform_device *pdev)
-> > > >  	nand_chip->IO_ADDR_W = nand_chip->IO_ADDR_R;
-> > > >  	nand_chip->cmd_ctrl  = omap_hwcontrol;
-> > > >  
-> > > > +	info->ready_gpiod = devm_gpiod_get_optional(&pdev->dev, "ready",
-> > > > +						    GPIOD_IN);
-> > > 
-> > > Others have been looking at using GPIOs for the ready/busy pin too. At a
-> > > minimum, we need an updated DT binding doc for this, since I see you're
-> > > adding this via device tree in a later patch (I don't see any DT binding
-> > > patch for this; but I could just be overlooking it). It'd also be great
-> > > if this support was moved to nand_dt_init() so other platforms can
-> > > benefit, but I won't require that.
-> > 
-> > Actually I started to work on a generic solution parsing the DT and
-> > creating CS, WP and RB gpios when they are provided, but I think it's a
-> > bit more complicated than just moving the rb-gpios parsing into
-> > nand_dt_init().
-> > First you'll need something to store your gpio_desc pointers, which
-> > means you'll have to allocate a table of gpio_desc pointers (or a table
-> > of struct embedding a gpio_desc pointer).
-> 
-> I'm not sure what you mean by table. It seems like we would just have a
-> few gpio_desc pointers in struct nand_chip, no?
+Also, this series pacthes have built on github branch.
+https://github.com/rockchip-linux/kernel/commits/develop4.4
 
-Nope, because a single nand_chip can use several CS and R/B lines,
-hence the gpio_desc array.
+PATCH[1/5]:
+That's bit ugly typo, sorry for sending again :(.
 
-> 
-> > The other blocking point is that when nand_scan_ident() is called, the
-> > caller is supposed to have filled the ->dev_ready() or ->waitfunc()
-> > fields, and to choose how to implement it he may need to know
-> > which kind of RB handler should be used (this is the case in the sunxi
-> > driver, where the user can either use a GPIO or native R/B pin directly
-> > connected to the controller).
-> 
-> Right, I was thinking about this one.
-> 
-> > All this makes me think that maybe nand_dt_init() should be called
-> > separately or in a different helper (nand_init() ?) taking care of the
-> > basic nand_chip initializations/allocations without interacting with
-> > the NAND itself.
-> 
-> Yeah, I feel like there have been other good reasons for something like
-> this before, and we just have worked around them so far. Maybe something
-> more like the alloc/add split in many other subsystems? e.g.,
-> platform_device_{alloc,add}, spi_{alloc,add}_device. Now we might want
-> nand_alloc()?
-> 
-> On a slight tangent, it seems silly that nand_scan_tail() doesn't
-> register the MTD, but nand_release() unregisters it. That shouldn't be.
+PATCH[2/5]:
+To fix a build warning came from Dan Carpenter report smatch check,
+Thanks. :)
 
-Yep, that's one of the things we should address too.
+PATCH[3/5]:
+Add the rk3228/rk3399 SoCs compatible for dt-bindings.
 
-> 
-> > Another solution would be to add an ->init() function to nand_chip
-> > and call it after the generic initialization has been done (but before
-> > NAND chip detection). This way the NAND controller driver could adapt
-> > some fields and parse controller specific properties.
-> 
-> That could work too, I guess.
+PATCH[4/5]:
+Add the rk3228 SoCs for thermal driver.
 
-Hm, all these suggestions have been made before I started my
-nand_controller/nand_chip separation work, and I think we can get
-something way simpler if we switch to a model where the core
-implements most of the initialization steps (including parsing of
-generic DT properties) and ask the controller to do its specific
-initialization (as is done in the SPI subsystem for example).
+PATCH[5/5]:
+Add the rk3399 SoCs for thermal driver based on PATCH[4/5].
 
-If you want to have an idea of where I'm heading to, you can have a
-look at the last commits in this branch [1]. The generic DT parsing is
-not yet automated but it could easily be places here [2], so that when
-controller->ops->add() is called everything is in place and the driver
-can overload the default behavior with its own implementation.
+I'd appreciate if someone have free time to review that. :)
 
-Any objection to this approach?
 
-Best Regards,
+Changes in v3:
+- As Brian comments on https://patchwork.kernel.org/patch/7580661/,
+  let's remove the impossible condition.
 
-Boris
+Changes in v2:
+- As Heiko comments, move to documenting the fields in the header
+  instead of inside the table.
 
-[1]https://github.com/bbrezillon/linux-sunxi/commits/nand/layering-rework
-[2]https://github.com/bbrezillon/linux-sunxi/blob/nand/layering-rework/drivers/mtd/nand/nand_base.c#L4025
+Changes in v1:
+- Search more trivial typo for me.
+- As Heiko comments, fix a copy incorrect name.
+- Add a Acked from Rob.
+- fix a irq ack is similar with RK3228 SoCs.
+
+Caesar Wang (5):
+  thermal: rockchip: fix a trivial typo
+  thermal: rockchip: fix a impossible condition caused by the warning
+  dt-bindings: rockchip-thermal: Support the RK3228/RK3399 SoCs
+    compatible
+  thermal: rockchip: Support the RK3228 SoCs in thermal driver
+  thermal: rockchip: Support the RK3399 SoCs in thermal driver
+
+ .../bindings/thermal/rockchip-thermal.txt          |   2 +
+ drivers/thermal/rockchip_thermal.c                 | 178 ++++++++++++++++++---
+ 2 files changed, 162 insertions(+), 18 deletions(-)
 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+1.9.1
