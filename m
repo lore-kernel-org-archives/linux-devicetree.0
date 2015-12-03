@@ -1,134 +1,156 @@
-From: Jon Mason <jonmason@broadcom.com>
-Subject: Re: [PATCH v4 5/5] ARM: BCM: Add SMP support for Broadcom 4708
-Date: Thu, 3 Dec 2015 17:55:17 -0500
-Message-ID: <20151203225517.GJ18950@broadcom.com>
-References: <1448987049-17041-1-git-send-email-kapilh@broadcom.com>
- <1448987049-17041-6-git-send-email-kapilh@broadcom.com>
- <565F0827.4000406@hauke-m.de>
- <20151203210836.GI18950@broadcom.com>
+From: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Subject: Re: [PATCH 1/2] regulator: Add brcm,bcm63xx-regulator device tree
+ binding
+Date: Thu, 3 Dec 2015 23:38:28 +0000
+Message-ID: <5660D274.7000402@simon.arlott.org.uk>
+References: <565A18DD.60108@simon.arlott.org.uk>
+ <20151130121043.GX1929@sirena.org.uk> <565CB1CF.5040306@simon.arlott.org.uk>
+ <20151201221615.GY1929@sirena.org.uk>
+ <b7ecdc8ebcdf9582620c22b0e8a4a96d24ba67c1@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+ <20151202125325.GI1929@sirena.org.uk> <565F53FC.5080309@simon.arlott.org.uk>
+ <20151203000631.GM1929@sirena.org.uk> <565FF9E9.1090503@simon.arlott.org.uk>
+ <20151203150528.GG5727@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151203210836.GI18950@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hauke Mehrtens <hauke@hauke-m.de>
-Cc: Kapil Hali <kapilh@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Lee Jones <lee@kernel.org>, Kever Yang <kever.yang@rock-chips.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151203150528.GG5727-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 03, 2015 at 04:08:36PM -0500, Jon Mason wrote:
-> On Wed, Dec 02, 2015 at 04:03:03PM +0100, Hauke Mehrtens wrote:
-> > On 12/01/2015 05:24 PM, Kapil Hali wrote:
-> > > From: Jon Mason <jonmason@broadcom.com>
-> > > 
-> > > Add SMP support for Broadcom's 4708 SoCs.
-> > > 
-> > > Signed-off-by: Jon Mason <jonmason@broadcom.com>
-> > > Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
-> > > Tested-by: Hauke Mehrtens <hauke@hauke-m.de>
-> > > Signed-off-by: Kapil Hali <kapilh@broadcom.com>
-> > > ---
-> > >  arch/arm/boot/dts/bcm4708.dtsi | 2 ++
-> > >  arch/arm/mach-bcm/Kconfig      | 1 +
-> > >  arch/arm/mach-bcm/Makefile     | 3 +++
-> > >  3 files changed, 6 insertions(+)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/bcm4708.dtsi b/arch/arm/boot/dts/bcm4708.dtsi
-> > > index 31141e8..eed4dd1 100644
-> > > --- a/arch/arm/boot/dts/bcm4708.dtsi
-> > > +++ b/arch/arm/boot/dts/bcm4708.dtsi
-> > > @@ -15,6 +15,7 @@
-> > >  	cpus {
-> > >  		#address-cells = <1>;
-> > >  		#size-cells = <0>;
-> > > +		enable-method = "brcm,bcm-nsp-smp";
-> > >  
-> > >  		cpu@0 {
-> > >  			device_type = "cpu";
-> > > @@ -27,6 +28,7 @@
-> > >  			device_type = "cpu";
-> > >  			compatible = "arm,cortex-a9";
-> > >  			next-level-cache = <&L2>;
-> > > +			secondary-boot-reg = <0xffff0400>;
-> > >  			reg = <0x1>;
-> > >  		};
-> > >  	};
-> > > diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-> > > index 83765a0..e85246f 100644
-> > > --- a/arch/arm/mach-bcm/Kconfig
-> > > +++ b/arch/arm/mach-bcm/Kconfig
-> > > @@ -54,6 +54,7 @@ config ARCH_BCM_NSP
-> > >  config ARCH_BCM_5301X
-> > >  	bool "Broadcom BCM470X / BCM5301X ARM SoC" if ARCH_MULTI_V7
-> > >  	select ARCH_BCM_IPROC
-> > > +	select HAVE_SMP
-> > >  	help
-> > >  	  Support for Broadcom BCM470X and BCM5301X SoCs with ARM CPU cores.
-> > >  
-> > 
-> > When applying this patch please make sure it is correctly applied this
-> > patch causes some problems here:
-> > 
-> > http://www.spinics.net/lists/arm-kernel/msg462137.html
-> > 
-> > > diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
-> > > index 5193a25..7d66515 100644
-> > > --- a/arch/arm/mach-bcm/Makefile
-> > > +++ b/arch/arm/mach-bcm/Makefile
-> > > @@ -43,6 +43,9 @@ obj-$(CONFIG_ARCH_BCM2835)	+= board_bcm2835.o
-> > >  
-> > >  # BCM5301X
-> > >  obj-$(CONFIG_ARCH_BCM_5301X)	+= bcm_5301x.o
-> > > +ifeq ($(CONFIG_ARCH_BCM_5301X),y)
-> > > +obj-$(CONFIG_SMP)		+= platsmp.o
-> > > +endif
-> > >  
-> > >  # BCM63XXx
-> > >  ifeq ($(CONFIG_ARCH_BCM_63XX),y)
-> > > 
-> > 
-> > I am getting this on a Northstar 1 / BCM4708:
-> > 
-> > [ 0.137634] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
-> > [ 0.143643] Setting up static identity map for 0x82a0 - 0x82d4
-> > [ 0.189772] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
-> > [ 0.189861] Brought up 2 CPUs
-> > [ 0.198845] SMP: Total of 2 processors activated (3188.32 BogoMIPS).
-> > [ 0.205446] CPU: WARNING: CPU(s) started in wrong/inconsistent modes
-> > (primary CPU mode 0x13)
-> > [ 0.214167] CPU: This may indicate a broken bootloader or firmware.
-> > 
-> > I assume that this is correct and the bootloader is just broken, it uses
-> > this bootloader: "CFE for Foxconn Router version: v1.0.14", I haven't
-> > noticed any problems, so it is ok for me.
+On 03/12/15 15:05, Mark Brown wrote:
+> On Thu, Dec 03, 2015 at 08:14:33AM +0000, Simon Arlott wrote:
+>> On 03/12/15 00:06, Mark Brown wrote:
 > 
-> On my 4708 SVK, I see the same issue
+>> > this it should know at least something about how to control the device
+>> > from the compatible string.  If you're making a generic driver it should
+>> > not make reference to specific devices.
 > 
-> [    0.090877] CPU: Testing write buffer coherency: ok
-> [    0.091231] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
-> [    0.091377] Setting up static identity map for 0x82a0 - 0x82f8
-> [    0.130146] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
-> [    0.130251] Brought up 2 CPUs
-> [    0.130323] SMP: Total of 2 processors activated (3188.32 BogoMIPS).
-> [    0.130345] CPU: WARNING: CPU(s) started in wrong/inconsistent modes (primary CPU mode 0x13)
-> [    0.130374] CPU: This may indicate a broken bootloader or firmware.
+>> Will you accept a generic driver for a simple enable regulator device on
+>> a regmap? What should its compatible string be?
 > 
-> I'll investigate it more and see if I can bottom out on the cause.
+> Perhaps.  I really don't like putting the entire driver into DT, it's
+> not a pattern I want to encourage.
 
-I looked at previous versions of this patch, and the issue appears to
-be present there as well.  I'm not sure why I didn't notice it before.
+I don't like putting the list of which bit is which regulator name into
+a driver because it means that new hardware that adds a regulator or
+moves them around requires a change to the driver.
 
-I don't think "fixing" CFE is an option.  Should we investigate the
-possibility of setting the CPU mode of CPU1 in the early_boot of
-Linux?
+Documentation/devicetree/usage-model.txt:
+  2.1 High Level View
+  -------------------
+  [...] Using
+  it allows board and device support to become data driven; to make
+  setup decisions based on data passed into the kernel instead of on
+  per-machine hard coded selections.
 
-Thanks,
-Jon
+I agree that an entire driver shouldn't be put in the DT (especially
+given that you then need the DT to debug any issue), but this isn't much
+of a driver when it involves flipping a single bit.
 
+The key thing would be to avoid it growing into something too complex
+(e.g. set register X to 42 to enable and set register Y to 90 to
+disable, would not belong in DT).
+
+Should I be looking at trying to use generic_pm_domain instead of a
+regulator? Those don't appear to require a name so a phandle with an
+argument for the bit would work.
+
+>> > There could be one if it would help, but we do normally manage to do
+>> > this without - look at how other regulator drivers work.
 > 
-> Thanks,
-> Jon
+>> Several of them have a fixed list of supported regulator names in the
 > 
+> Yes, that's the way this is handled.
+
+I see two variants of the hardware bits (three if you consider that the
+GMAC isn't on every SoC):
+
+#define MISC_IDDQ_CTRL_GMAC         (1<<18)
+#define MISC_IDDQ_CTRL_WLAN_PADS    (1<<13)
+#define MISC_IDDQ_CTRL_PCIE         (1<<12)
+#define MISC_IDDQ_CTRL_FAP          (1<<11)
+#define MISC_IDDQ_CTRL_VDSL_MIPS    (1<<10)
+#define MISC_IDDQ_CTRL_VDSL_PHY     (1<<9)
+#define MISC_IDDQ_CTRL_PERIPH       (1<<8)
+#define MISC_IDDQ_CTRL_PCM          (1<<7)
+#define MISC_IDDQ_CTRL_ROBOSW       (1<<6)
+#define MISC_IDDQ_CTRL_USBD         (1<<5)
+#define MISC_IDDQ_CTRL_USBH         (1<<4)
+#define MISC_IDDQ_CTRL_DECT         (1<<3)
+#define MISC_IDDQ_CTRL_MIPS         (1<<2)
+#define MISC_IDDQ_CTRL_IPSEC        (1<<1)
+#define MISC_IDDQ_CTRL_SAR          (1<<0)
+
+#define MISC_IDDQ_CTRL_EPHY         (1<<9)
+#define MISC_IDDQ_CTRL_ROBOSW       (1<<8)
+#define MISC_IDDQ_CTRL_PCIE         (1<<7)
+#define MISC_IDDQ_CTRL_USBH         (1<<6)
+#define MISC_IDDQ_CTRL_USBD         (1<<5)
+#define MISC_IDDQ_CTRL_PCM          (1<<4)
+#define MISC_IDDQ_CTRL_SAR          (1<<3)
+#define MISC_IDDQ_CTRL_ADSL2_AFE    (1<<2)
+#define MISC_IDDQ_CTRL_ADSL2_PHY    (1<<1)
+#define MISC_IDDQ_CTRL_ADSL2_MIPS   (1<<0)
+
+I could put these lists of bits in a driver (associated with the names)
+but I'd strongly prefer to put the list of bits in the DT.
+
+If they are in the driver, then there is nothing to stop someone from
+deciding to force it to fit a different new piece of hardware by
+deliberately using the wrong names in the DT just because they match
+the bits they want to use, and they think they can't wait for a new 
+list of bits to be added to the kernel.
+
+e.g. someone adds an LTE chip and reuses the obsolete DECT regulator:
+
+misc_iddq_ctrl@42 {
+  compatible = "...-regulator";
+  reg = <0x42>;
+
+  regulators {
+    lte_power: dect {
+      regulator-name = "LTE";
+    };
+  };
+};
+
+Associating the bits with the names in the DT avoids this problem at
+the expense of having a very generic driver.
+
+A lot of the existing regulator drivers have mostly numbered regulator
+pins which could have been connected to anything on a hardware variant.
+
+>> driver. The regulator names for this device are meaningless to the
+>> driver because all of the regulators look the same. They don't have a
+>> known or controllable voltage and can only be turned on or off.
 > 
-> > 
-> > Hauke
+> Nonsense.  The names are useful to identify which supply is being
+> referred to.  Having voltage control is irrelevant to identifying
+> regulators.
+
+Ok, but from the driver's point of view there's nothing different about
+any of the regulators on this hardware. I could have numbered them
+"BIT0" to "BIT31" in the driver and used a meaningful alias in DT.
+
+>> Any table mapping regulator names to bits in the register would be
+>> different for each SoC making the list of regulator names in the device
+>> tree redundant. If they're not listed in the device tree then I can't
+>> use them as a phandle for other devices.
+> 
+> The list of regulator nodes in device tree is not redundant, it is as
+> you say used to connect things together.  The question is where to put
+> the control data for those regulators (in this case the enable time and
+> the switch).
+
+Ok, I hadn't considered that regulator names could be in DT without
+any enable bit information when this was in the driver.
+
+-- 
+Simon Arlott
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
