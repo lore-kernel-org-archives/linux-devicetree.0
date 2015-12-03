@@ -1,88 +1,116 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] regulator: Add brcm,bcm63xx-regulator device tree
- binding
-Date: Thu, 3 Dec 2015 15:05:28 +0000
-Message-ID: <20151203150528.GG5727@sirena.org.uk>
-References: <565A18DD.60108@simon.arlott.org.uk>
- <20151130121043.GX1929@sirena.org.uk>
- <565CB1CF.5040306@simon.arlott.org.uk>
- <20151201221615.GY1929@sirena.org.uk>
- <b7ecdc8ebcdf9582620c22b0e8a4a96d24ba67c1@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
- <20151202125325.GI1929@sirena.org.uk>
- <565F53FC.5080309@simon.arlott.org.uk>
- <20151203000631.GM1929@sirena.org.uk>
- <565FF9E9.1090503@simon.arlott.org.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] Device tree binding documentation for chromeos-firmware
+Date: Thu, 3 Dec 2015 09:08:24 -0600
+Message-ID: <CAL_JsqJGk5_Nk7joSHfJXxcVrpHDBbawY=nPOrOiraWinuka4w@mail.gmail.com>
+References: <1448997171-7064-1-git-send-email-martyn.welch@collabora.co.uk>
+ <1448997171-7064-2-git-send-email-martyn.welch@collabora.co.uk>
+ <20151202151552.GA11101@rob-hp-laptop> <56601611.6010800@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="APlYHCtpeOhspHkB"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <565FF9E9.1090503-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56601611.6010800@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martyn Welch <martyn.welch@collabora.co.uk>
+Cc: Olof Johansson <olof@lixom.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Dec 3, 2015 at 4:14 AM, Martyn Welch
+<martyn.welch@collabora.co.uk> wrote:
+>
+> On 02/12/15 15:15, Rob Herring wrote:
+>>
+>> On Tue, Dec 01, 2015 at 07:12:49PM +0000, Martyn Welch wrote:
+>>>
+>>> This patch adds documentation for the chromeos-firmware binding.
+>>>
+>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>> Cc: Pawel Moll <pawel.moll@arm.com>
+>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+>>> Cc: Kumar Gala <galak@codeaurora.org>
+>>> Cc: devicetree@vger.kernel.org
+>>> Signed-off-by: Martyn Welch <martyn.welch@collabora.co.uk>
+>>> ---
+>>>   .../devicetree/bindings/misc/chromeos-firmware.txt | 27
+>>> ++++++++++++++++++++++
+>>
+>>
+>> bindings/firmware/ please.
+>>
+>>>   1 file changed, 27 insertions(+)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/misc/chromeos-firmware.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/misc/chromeos-firmware.txt
+>>> b/Documentation/devicetree/bindings/misc/chromeos-firmware.txt
+>>> new file mode 100644
+>>> index 0000000..8240611
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/misc/chromeos-firmware.txt
+>>> @@ -0,0 +1,27 @@
+>
+>
+> <snip>
+>
+>>> +
+>>> +Each signal is represented as a sub-node of "chromeos_firmware":
+>>> +Subnode properties:
+>>> +
+>>> +       - gpios: OF device-tree gpio specification.
+>>> +
+>>> +Example nodes:
+>>> +
+>>> +       chromeos_firmware {
+>>
+>>
+>> This should go under /firmware
+>>
+>
+> I've changed this to be:
+>
+>         firmware {
+>                 chromeos {
+>                         ...
+>                 };
+>         ];
+>
+> Which I generally accept (assuming this is considered a part of the
+> firmware) as a better way to represent this in the device tree, however this
+> has the nasty side effect of causing the device tree parsing to avoid
+> parsing the chromeos child and seeing it's compatible property (as the
+> firmware node isn't a bus), resulting in the probe routine not being called.
+>
+> If I add a 'compatible = "simple-bus"' property to the firmware node it
+> works, but this doesn't seem quite right as I believe "simple-bus" is
+> defined as a "simple memory mapped bus".
+>
+> I /could/ rewrite the initialisation to call of_find_compatible_node(), but
+> this seems rather hacky and inefficient. I can think of 2 other ways this
+> could be resolved:
+>
+> (1) As this is only tangentially related to firmware, I rename it something
+> like "chromeos-signals" and make it it's own node. In essence this driver
+> provides a mechanism built on top of specific GPIO (ala gpio-keys seems to
+> be, after-all this has a similar use of resources to that).
 
---APlYHCtpeOhspHkB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I'm starting to fail to understand the relationship to firmware here...
 
-On Thu, Dec 03, 2015 at 08:14:33AM +0000, Simon Arlott wrote:
-> On 03/12/15 00:06, Mark Brown wrote:
+gpio-keys are at least a thing (being a key or set of keys). Your
+grouping is a rather random collection of GPIOs. Maybe you need
+"gpio-switch" binding and then the function would be "label" property.
 
-> > this it should know at least something about how to control the device
-> > from the compatible string.  If you're making a generic driver it should
-> > not make reference to specific devices.
+> (2) Add a compatible string something like 'compatible="logical-group";' to
+> the firmware node and add that too the bus matching logic. This would have
+> the advantage of solving this in the general case (I guess there are other
+> instances where a grouping of things more logically rather than physically
+> connected would ideally be grouped together), though I expect there may be
+> some strong views regarding this approach.
 
-> Will you accept a generic driver for a simple enable regulator device on
-> a regmap? What should its compatible string be?
+Why do you need them grouped?
 
-Perhaps.  I really don't like putting the entire driver into DT, it's
-not a pattern I want to encourage.
+> Would either of those be acceptable or is there a better way of resolving
+> this that I've missed?
 
-> > There could be one if it would help, but we do normally manage to do
-> > this without - look at how other regulator drivers work.
+I don't know as I still don't really understand what the h/w looks like here.
 
-> Several of them have a fixed list of supported regulator names in the
-
-Yes, that's the way this is handled.
-
-> driver. The regulator names for this device are meaningless to the
-> driver because all of the regulators look the same. They don't have a
-> known or controllable voltage and can only be turned on or off.
-
-Nonsense.  The names are useful to identify which supply is being
-referred to.  Having voltage control is irrelevant to identifying
-regulators.
-
-> Any table mapping regulator names to bits in the register would be
-> different for each SoC making the list of regulator names in the device
-> tree redundant. If they're not listed in the device tree then I can't
-> use them as a phandle for other devices.
-
-The list of regulator nodes in device tree is not redundant, it is as
-you say used to connect things together.  The question is where to put
-the control data for those regulators (in this case the enable time and
-the switch).
-
---APlYHCtpeOhspHkB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWYFo3AAoJECTWi3JdVIfQijIH/1n755cm/y74LcXgNmrb0Ga7
-XQkNKOrJHeCcJsPSEYqZOL2mLVHwGE7Hq7Is67lAvMG11FfTEYDNvMEqfvUuLA/h
-NUjloATTroeViGDZVs3N+NfU2ybZnsReyr51EnDTpenFJUid9+16Iyd0U5QCaAEp
-OWf+FaMz0/sP4Jqe7HJYmZrrjhbQT6XzVqtq4eVY/fK7wvGW3D5yfUVcRN7oSi72
-hwi5sPAFPVFmZvvJxIhdUzx09qDpENLJ6xQfAAAvNRr3KcYMAPCLt+XpgNiHEF6G
-9+r69hJJNUAoWnXw6PBye4Of55+8T1AWHoF3Xtxnipn/WE3b2WDYVZGA2cJ6BNY=
-=Z69S
------END PGP SIGNATURE-----
-
---APlYHCtpeOhspHkB--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
