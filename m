@@ -1,95 +1,54 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] mtd: brcmnand: Add brcm,bcm6368-nand device tree
- binding
-Date: Fri, 4 Dec 2015 09:06:27 -0600
-Message-ID: <20151204150627.GA29587@rob-hp-laptop>
-References: <565F81A6.6060307@simon.arlott.org.uk>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 08/12] drm/etnaviv: add GPU MMU handling functionality
+Date: Fri, 04 Dec 2015 16:08:28 +0100
+Message-ID: <1449241708.8275.92.camel@pengutronix.de>
+References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
+	 <1449237604-19064-9-git-send-email-l.stach@pengutronix.de>
+	 <CACvgo50UW734S12xH=oszkNhgf53x5gbdeUxCdLZ0kGq1G=2Pg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <565F81A6.6060307-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
+In-Reply-To: <CACvgo50UW734S12xH=oszkNhgf53x5gbdeUxCdLZ0kGq1G=2Pg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 02, 2015 at 11:41:26PM +0000, Simon Arlott wrote:
-> Add device tree binding for NAND on the BCM6368.
-> 
-> The BCM6368 has a NAND interrupt register with combined status and enable
-> registers. It also requires a clock, so add an optional clock to the
-> common brcmnand binding.
-> 
-> Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Hi Emil,
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Am Freitag, den 04.12.2015, 14:59 +0000 schrieb Emil Velikov:
+> Hi Lucas,
+> 
+> On 4 December 2015 at 14:00, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> 
+> > --- /dev/null
+> > +++ b/drivers/gpu/drm/etnaviv/etnaviv_iommu_v2.c
+> 
+> > +struct iommu_domain *etnaviv_iommu_v2_domain_alloc(struct etnaviv_gpu *gpu)
+> > +{
+> > +       /* TODO */
+> > +       return NULL;
+> > +}
+> 
+> I thought you guys removed this since there is pretty much no
+> implementation ? Note the duplicate function declaration in
+> etnaviv_iommu.h and etnaviv_iommu_v2.h.
+> 
+I had nuked this from my tree, but since Russell had a stable tree with
+this included I dropped the removal to keep the diff between the trees
+down. If it bothers anyone I can remove this again, but I would still
+hope that we can merge Christians implementation of IOMMUv2 pretty soon
+after landing the initial set of patches.
 
-> ---
-> Renamed from BCM63268, made clock a generic property.
-> 
->  .../devicetree/bindings/mtd/brcm,brcmnand.txt      | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> index 4ff7128..16d7835 100644
-> --- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> @@ -45,6 +45,8 @@ Required properties:
->  - #size-cells      : <0>
->  
->  Optional properties:
-> +- clock                     : reference to the clock for the NAND controller
-> +- clock-names               : "nand" (required for the above clock)
->  - brcm,nand-has-wp          : Some versions of this IP include a write-protect
->                                (WP) control bit. It is always available on >=
->                                v7.0. Use this property to describe the rare
-> @@ -72,6 +74,12 @@ we define additional 'compatible' properties and associated register resources w
->         and enable registers
->       - reg-names: (required) "nand-int-base"
->  
-> +   * "brcm,nand-bcm6368"
-> +     - compatible: should contain "brcm,nand-bcm<soc>", "brcm,nand-bcm6368"
-> +     - reg: (required) the 'NAND_INTR_BASE' register range, with combined status
-> +       and enable registers, and boot address registers
-> +     - reg-names: (required) "nand-intr-base"
-> +
->     * "brcm,nand-iproc"
->       - reg: (required) the "IDM" register range, for interrupt enable and APB
->         bus access endianness configuration, and the "EXT" register range,
-> @@ -148,3 +156,27 @@ nand@f0442800 {
->  		};
->  	};
->  };
-> +
-> +nand@10000200 {
-> +	compatible = "brcm,nand-bcm63168", "brcm,nand-bcm6368",
-> +		"brcm,brcmnand-v4.0", "brcm,brcmnand";
-> +	reg = <0x10000200 0x180>,
-> +	      <0x10000600 0x200>,
-> +	      <0x100000b0 0x10>;
-> +	reg-names = "nand", "nand-cache", "nand-intr-base";
-> +	interrupt-parent = <&periph_intc>;
-> +	interrupts = <50>;
-> +	clocks = <&periph_clk 20>;
-> +	clock-names = "nand";
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	nand0: nandcs@0 {
-> +		compatible = "brcm,nandcs";
-> +		reg = <0>;
-> +		nand-on-flash-bbt;
-> +		nand-ecc-strength = <1>;
-> +		nand-ecc-step-size = <512>;
-> +	};
-> +};
-> -- 
-> 2.1.4
-> 
-> -- 
-> Simon Arlott
+Thanks for noting the duplicated declaration. I'll remove that.
+
+Regards,
+Lucas
+-- 
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
