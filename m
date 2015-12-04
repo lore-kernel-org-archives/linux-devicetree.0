@@ -1,59 +1,68 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] extcon: arizona: Update naming for micd-timeout DT to
- include units
-Date: Fri, 4 Dec 2015 22:00:40 +0100
-Message-ID: <20151204210040.GC822@amd>
-References: <1448290290-19267-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: "Simon Arlott" <simon@fire.lp0.eu>
+Subject: Re: [PATCH 1/2] clk: Add brcm,bcm63xx-gate-clk device tree binding
+Date: Fri, 4 Dec 2015 21:04:25 -0000
+Message-ID: <74d29bf38adc88b27811a70ed409e9182ddeb5b5@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+References: <565CB727.7030209@simon.arlott.org.uk>
+    <20151204143037.GA3667@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1448290290-19267-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: cw00.choi@samsung.com, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20151204143037.GA3667@rob-hp-laptop>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, linux-mips@linux-mips.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 2015-11-23 14:51:30, Charles Keepax wrote:
-> Add time units of -ms (milliseconds) to wlf,micd-timeout.
-> 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> ---
->  .../devicetree/bindings/extcon/extcon-arizona.txt  |    2 +-
->  drivers/extcon/extcon-arizona.c                    |    2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-> index da9813b..05d85ac 100644
-> --- a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-> +++ b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-> @@ -33,7 +33,7 @@ Optional properties:
->      specified as per the ARIZONA_MICD_TIME_XXX defines.
->    - wlf,micd-dbtime : Microphone detection hardware debounces specified as the
->      number of measurements to take, valid values being 2 and 4.
-> -  - wlf,micd-timeout : Timeout for microphone detection, specified in
-> +  - wlf,micd-timeout-ms : Timeout for microphone detection, specified in
->      milliseconds.
->    - wlf,micd-force-micbias : Force MICBIAS continuously on during microphone
->      detection.
-> diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-> index c377030..8647533 100644
-> --- a/drivers/extcon/extcon-arizona.c
-> +++ b/drivers/extcon/extcon-arizona.c
-> @@ -1230,7 +1230,7 @@ static int arizona_extcon_device_get_pdata(struct arizona *arizona)
->  	device_property_read_u32(arizona->dev, "wlf,micd-dbtime",
->  				 &pdata->micd_dbtime);
->  
-> -	device_property_read_u32(arizona->dev, "wlf,micd-timeout",
-> +	device_property_read_u32(arizona->dev, "wlf,micd-timeout-ms",
->  				 &pdata->micd_timeout);
->  
->  	pdata->micd_force_micbias =
-device_property_read_bool(arizona->dev,
+On Fri, December 4, 2015 14:30, Rob Herring wrote:
+> On Mon, Nov 30, 2015 at 08:52:55PM +0000, Simon Arlott wrote:
+>> +periph_clk: periph_clk {
+>> +	compatible = "brcm,bcm63168-gate-clk", "brcm,bcm63xx-gate-clk";
+>> +	regmap = <&periph_cntl>;
+>
+> What else is in periph_cntrl? Could this all just be part of that node?
 
-While the change is nice, new kernel is supposed to work with old
-DTS. So you'd need to check for both properties here..
-									Pavel
+     uint32        RevID;             /* (00) word 0 */
+     uint32        blkEnables;        /* (04) word 1 */ <-- gated clocks
+     uint32        pll_control;       /* (08) word 2 */ <-- system reset controller bit
+     uint32        deviceTimeoutEn;   /* (0c) word 3 */ <-- unknown
+     uint32        softResetB;        /* (10) word 4 */ <-- device reset controller bits
+    uint32        diagControl;        /* (14) word 5 */ <-- unknown
+    uint32        ExtIrqCfg;          /* (18) word 6*/ <-- external interrupt controller
+    uint32        unused1;            /* (1c) word 7 */ <-- (external interrupt controller?)
+         IrqControl_t     IrqControl[3];    /* (20) (40) (60) */ <-- normal interrupt controller
+
+So it has these clocks, two types of reset controller, and the interrupt
+controllers, but I've left the interrupt controllers registers out of the
+syscon device.
+
+For the registers in the "timer" peripheral at the end of the timer/watchdog
+registers:
+    uint32        EnSwPLL; <-- unknown
+    uint32        ClkRstCtl;
+#define POR_RESET_STATUS            (1 << 31) <-- unknown
+#define HW_RESET_STATUS             (1 << 30) <-- unknown
+#define SW_RESET_STATUS             (1 << 29) <-- unknown
+#define USB_REF_CLKEN               (1 << 18) <-- gated clock
+#define UTO_EXTIN_CLKEN             (1 << 17) <-- gated clock
+#define UTO_CLK50_SEL               (1 << 16) <-- looks like a clock frequency selection bit
+#define FAP2_PLL_CLKEN              (1 << 15) <-- gated clock
+#define FAP2_PLL_FREQ_SHIFT         12        <-- bits for controlling the frequency
+#define FAP1_PLL_CLKEN              (1 << 11) <-- gated clock
+#define FAP1_PLL_FREQ_SHIFT         8         <-- bits for controlling the frequency
+#define WAKEON_DSL                  (1 << 7)  <-- wake on network bit
+#define WAKEON_EPHY                 (1 << 6)  <-- wake on network bit
+#define DSL_ENERGY_DETECT_ENABLE    (1 << 4)  <-- energy saving control for network
+#define GPHY_1_ENERGY_DETECT_ENABLE (1 << 3)  <-- energy saving control for network
+#define EPHY_3_ENERGY_DETECT_ENABLE (1 << 2)  <-- energy saving control for network
+#define EPHY_2_ENERGY_DETECT_ENABLE (1 << 1)  <-- energy saving control for network
+#define EPHY_1_ENERGY_DETECT_ENABLE (1 << 0)  <-- energy saving control for network
+
+I need the usb_ref clock for USB, and I want to be able to disable
+uto_extin, fap1 and fap2 as they're unused by anything in the device tree.
+
+The full list of registers is here:
+https://github.com/lp0/bcm963xx_4.12L.06B_consumer/blob/master/shared/opensource/include/bcm963xx/63268_map_part.h
+
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Simon Arlott
