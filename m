@@ -1,101 +1,91 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
-Date: Fri, 4 Dec 2015 14:19:42 -0600
-Message-ID: <CAL_Jsq+oaJxD3vbDWzn_4ghpqi=RZ1o+8nOcepWYjzcu5Hwpjg@mail.gmail.com>
-References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
- <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
- <20151204162956.GA14978@rob-hp-laptop>
- <1449247305.8275.104.camel@pengutronix.de>
- <CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
- <1449251760.8275.116.camel@pengutronix.de>
+From: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v5 0/5] SMP support for Broadcom NSP
+Date: Fri, 4 Dec 2015 15:23:26 -0500
+Message-ID: <1449260611-24417-1-git-send-email-kapilh@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1449251760.8275.116.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, patchwork-lst@pengutronix.de, "kernel@pengutronix.de" <kernel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBEZWMgNCwgMjAxNSBhdCAxMTo1NiBBTSwgTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVu
-Z3V0cm9uaXguZGU+IHdyb3RlOgo+IEFtIEZyZWl0YWcsIGRlbiAwNC4xMi4yMDE1LCAxMTozMyAt
-MDYwMCBzY2hyaWViIFJvYiBIZXJyaW5nOgo+PiBPbiBGcmksIERlYyA0LCAyMDE1IGF0IDEwOjQx
-IEFNLCBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5kZT4gd3JvdGU6Cj4+ID4gQW0g
-RnJlaXRhZywgZGVuIDA0LjEyLjIwMTUsIDEwOjI5IC0wNjAwIHNjaHJpZWIgUm9iIEhlcnJpbmc6
-Cj4+ID4+IE9uIEZyaSwgRGVjIDA0LCAyMDE1IGF0IDAyOjU5OjU0UE0gKzAxMDAsIEx1Y2FzIFN0
-YWNoIHdyb3RlOgo+PiA+PiA+IEV0bmF2aXYgZm9sbG93cyB0aGUgc2FtZSBwcmljaXBsZSBhcyBp
-bXgtZHJtIHRvIGhhdmUgYSB2aXJ0dWFsCj4+ID4+ID4gbWFzdGVyIGRldmljZSBub2RlIHRvIGJp
-bmQgYWxsIHRoZSBpbmRpdmlkdWFsIEdQVSBjb3JlcyB0b2dldGhlcgo+PiA+PiA+IGludG8gb25l
-IERSTSBkZXZpY2UuCj4+ID4+ID4KPj4gPj4gPiBTaWduZWQtb2ZmLWJ5OiBMdWNhcyBTdGFjaCA8
-bC5zdGFjaEBwZW5ndXRyb25peC5kZT4KPj4gPj4gPiAtLS0KPj4gPj4gPiAgLi4uL2JpbmRpbmdz
-L2Rpc3BsYXkvZXRuYXZpdi9ldG5hdml2LWRybS50eHQgICAgICAgfCA0NiArKysrKysrKysrKysr
-KysrKysrKysrCj4+ID4+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0NiBpbnNlcnRpb25zKCspCj4+ID4+
-ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9ldG5hdml2L2V0bmF2aXYtZHJtLnR4dAo+PiA+PiA+Cj4+ID4+ID4gZGlmZiAtLWdp
-dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V0bmF2aXYvZXRu
-YXZpdi1kcm0udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-ZXRuYXZpdi9ldG5hdml2LWRybS50eHQKPj4gPj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiA+
-PiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uMTlmZGUyOWRjMWQ3Cj4+ID4+ID4gLS0tIC9kZXYvbnVs
-bAo+PiA+PiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L2V0bmF2aXYvZXRuYXZpdi1kcm0udHh0Cj4+ID4+ID4gQEAgLTAsMCArMSw0NiBAQAo+PiA+PiA+
-ICtFdG5hdml2IERSTSBtYXN0ZXIgZGV2aWNlCj4+ID4+ID4gKz09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09Cj4+ID4+ID4gKwo+PiA+PiA+ICtUaGUgRXRuYXZpdiBEUk0gbWFzdGVyIGRl
-dmljZSBpcyBhIHZpcnR1YWwgZGV2aWNlIG5lZWRlZCB0byBsaXN0IGFsbAo+PiA+PiA+ICtWaXZh
-bnRlIEdQVSBjb3JlcyB0aGF0IGNvbXByaXNlIHRoZSBHUFUgc3Vic3lzdGVtLgo+PiA+PiA+ICsK
-Pj4gPj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4gPj4gPiArLSBjb21wYXRpYmxlOiBTaG91
-bGQgYmUgb25lIG9mCj4+ID4+ID4gKyAgICAiZnNsLGlteC1ncHUtc3Vic3lzdGVtIgo+PiA+PiA+
-ICsgICAgIm1hcnZlbGwsZG92ZS1ncHUtc3Vic3lzdGVtIgo+PiA+PiA+ICstIGNvcmVzOiBTaG91
-bGQgY29udGFpbiBhIGxpc3Qgb2YgcGhhbmRsZXMgcG9pbnRpbmcgdG8gVml2YW50ZSBHUFUgZGV2
-aWNlcwo+PiA+PiA+ICsKPj4gPj4gPiArZXhhbXBsZToKPj4gPj4gPiArCj4+ID4+ID4gK2dwdS1z
-dWJzeXN0ZW0gewo+PiA+PiA+ICsgICBjb21wYXRpYmxlID0gImZzbCxpbXgtZ3B1LXN1YnN5c3Rl
-bSI7Cj4+ID4+ID4gKyAgIGNvcmVzID0gPCZncHVfMmQ+LCA8JmdwdV8zZD47Cj4+ID4+ID4gK307
-Cj4+ID4+Cj4+ID4+IFllYWgsIEknbSBub3QgcmVhbGx5IGEgZmFuIG9mIGRvaW5nIHRoaXMgc2lt
-cGx5IGJlY2F1c2UgRFJNIHdhbnRzIDEKPj4gPj4gZHJpdmVyLgo+PiA+Pgo+PiA+IEknbSBhd2Fy
-ZSBvZiB0aGF0LCBidXQgSSBkb24ndCBzZWUgbXVjaCB2YWx1ZSBpbiBraWNraW5nIHRoaXMgZGlz
-Y3Vzc2lvbgo+PiA+IGFyb3VuZCBmb3IgZXZlcnkgRFJNIGRyaXZlciBzdWJtaXNzaW9uLiBUaGlz
-IGlzIHRoZSBiaW5kaW5nIHRoYXQgaGFzCj4+ID4gZW1lcmdlZCBmcm9tIGEgbGVuZ3RoeSBkaXNj
-dXNzaW9uIGF0IEtTIDIwMTMgaW4gRWRpbmJ1cmdoIGFuZCBhdCBsZWFzdAo+PiA+IGFsbG93cyB1
-cyB0byBzdGFuZGFyZGl6ZSBvbiBfc29tZXRoaW5nXy4gQWxzbyBBTFNBIGRvZXMgYSBzaW1pbGFy
-IHRoaW5nCj4+ID4gdG8gYmluZCBjb2RlY3MgYW5kIENQVSBpbnRlcmZhY2VzIHRvZ2V0aGVyLgo+
-Pgo+PiBUaGlzIGNhc2UgaXMgcXVpdGUgZGlmZmVyZW50IHRob3VnaCBJIHRoaW5rLiBUaGUgQUxT
-QSBjYXNlIGFuZCBvdGhlcgo+PiBEUk0gY2FzZXMgYXJlIG9uZXMgdGhhdCBoYXZlIGludGVyLWRl
-cGVuZGVuY2llcyBiZXR3ZWVuIHRoZSBibG9ja3MKPj4gKGUuZy4gc29tZSBzb3J0IG9mIGgvdyBj
-b25uZWN0aW9uKS4gV2hhdCBpcyB0aGUgaW50ZXItZGVwZW5kZW5jeSBoZXJlPwo+Pgo+PiBEb2lu
-ZyB0aGlzIHdheSBoYXMgYWxzbyBiZWVuIGZvdW5kIHRvIGJlIGNvbXBsZXRlbHkgdW5uZWNlc3Nh
-cnkgYW5kCj4+IHJlbW92ZWQgaW4gcmVjZW50IERSTSBkcml2ZXIgcmV2aWV3cy4gQWRtaXR0ZWRs
-eSwgdGhvc2UgYXJlIGNhc2VzCj4+IHdoZXJlIG9uZSBkZXZpY2UgY2FuIGJlIHRoZSBtYXN0ZXIg
-b2YgdGhlIG90aGVycy4gRm9yIDIgcGFyYWxsZWwKPj4gZGV2aWNlcywgSSBkb24ndCBoYXZlIGFu
-IGFsdGVybmF0aXZlIG90aGVyIHRoYW4gcXVlc3Rpb24gd2h5IHRoZXkgbmVlZAo+PiB0byBiZSBh
-IHNpbmdsZSBkcml2ZXIuCj4+Cj4gSWYgeW91IGluc2lzdCBvbiBkb2luZyB0aGluZ3MgZGlmZmVy
-ZW50bHkgZm9yIHRoaXMgZHJpdmVyLCB3ZSBjb3VsZCBhZGQKPiBhIHBhc3MgYXQgZHJpdmVyIHJl
-Z2lzdHJhdGlvbiB0aGF0IHNjYW5zIHRocm91Z2ggdGhlIERULCBsb29raW5nIGZvcgo+IG5vZGVz
-IG1hdGNoaW5nIHRoZSBHUFUgY29yZSBjb21wYXRpYmxlLgoKSSd2ZSBub3QgaW5zaXN0ZWQgb24g
-YW55dGhpbmcuIEknbSBvbmx5IGFza2luZyBhIHF1ZXN0aW9uIHdoaWNoIGRpZG4ndApnZXQgYW5z
-d2VyZWQuIEknbGwgYXNrIGFub3RoZXIgd2F5LiBXaHkgY2FuJ3QgeW91IGhhdmUgMiBpbnN0YW5j
-ZXMgb2YKdGhlIHNhbWUgZHJpdmVyIGdpdmVuIHRoZXkgYXJlIG9ubHkgcmVuZGVyaW5nIG5vZGVz
-PwoKPiBJJ20gbm90IHN1cmUgaWYgdGhhdCBtYWtlcyB0aGluZ3MgY2xlYW5lciB0aG91Z2ggYW5k
-IG1pZ2h0IGJpdGUgdXMgbGF0ZXIKPiBvbi4gQWxzbyBJJ20gbm90IHN1cmUgaWYgbW92aW5nIGF3
-YXkgZnJvbSB0aGUgYmluZGluZyBzY2hlbWUgYWxyZWFkeQo+IGVzdGFibGlzaGVkIGZvciBvdGhl
-ciBEUk0gZHJpdmVycyBtYWtlcyB0aGluZ3MgYmV0dGVyIGZyb20gYSBEVAo+IHBlcnNwZWN0aXZl
-LiBQZXJzb25hbGx5IEkgd291bGQgcHJlZmVyIERUIGJpbmRpbmcgY29uc2lzdGVuY3kgb3Zlcgo+
-IHBlcmZlY3Rpb24gZm9yIHNpbmdsZSBkcml2ZXJzLCBzZWdtZW50aW5nIHRoZSBEVCBiaW5kaW5n
-IHNwYWNlLgoKVGhpcyBpcyB0aGUgbGVhc3Qgb2Ygb3VyIGlzc3VlcyBpbiB0ZXJtcyBvZiBjb25z
-aXN0ZW5jeSBhbW9uZyBkcml2ZXJzLApidXQgdGhhdCBpcyBpbiBmYWN0IHdoYXQgSSdtIHB1c2hp
-bmcgZm9yLiBUaGlzIGlzIHByb2JhYmx5IHRoZSBmaXJzdApjYXNlIG9mIGEgcmVuZGVyIG9ubHkg
-ZHJpdmVyIChhdCBsZWFzdCBmb3IgRFQpLiBTbyB0aGlzIGlzbid0IGEgY2FzZQpvZiBqdXN0IGZv
-bGxvdyB3aGF0IG90aGVycyBhcmUgZG9pbmcuCgpUaGUgaC93IGluIHRoaXMgYXJlYSBjYW4gYmUg
-cXVpdGUgZGlmZmVyZW50LCBzbyB0aGUgRFQgYmluZGluZ3MgYXJlCmdvaW5nIHRvIHJlZmxlY3Qg
-dGhhdCB0byBzb21lIGV4dGVudC4gQSB2aXJ0dWFsIG5vZGUgbWFrZXMgc2Vuc2UgaW4Kc29tZSBj
-YXNlcywgYnV0IGZvciBvdGhlcnMgaXQgbWF5IG5vdC4KClJvYgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Changes in v5:
+* Made 'enable-method' for SMP per 'cpu' core instead of 'cpus'
+node, in the DT files for BCM NSP and BCM4708.
+
+Change in v4:
+* Cleaned up kona_smp.c and associated DT file.
+* Corrected documentation for DT bindings.
+* Corrected secondary-boot-reg entry for bcm4708 DT file.
+
+Change in v3:
+* Fixed patch subject from RESEND PATCH to PATCH
+* Deleted arch/arm/mach-bcm/bcm_nsp.h file
+* Removed inclusion of header file bcm_nsp.h in platsmp.c
+* Removed unused variable 'timeout' in nsp_boot_secondary()
+
+Changes in v2:
+Removed the pen_holding method of SMP bringup for NSP SoC and
+replaced it with simple wakeup of secondary core using ARM IPI.
+
+
+This series adds SMP support for Broadcom's Northstar Plus SoC.
+
+There are similar SMP enablement methods for many ARMv7 bsed SoCs.
+BCM NSP SoC, has a typical such mechanism - after power-on, the
+secondary core is held in a standby state, primary core provides a
+startup address for the secondary core and wakes it up. Booting of
+the secondary core is serialized using pen_release global variable.
+
+The startup address is programmed at a special register location
+which is defined in the device tree using a "secondary-boot-reg"
+property in a node whose "enable-method" property matches.
+
+The first patch adds cpu-enable-method in the device tree bindings
+documentation. It also updates ARM CPU device tree documentation
+with Broadcom Northstar Plus CPU details.
+
+The second patch adds SMP support to the BCM NSP device tree file.
+
+The third patch, enables SMP on BCM NSP. It also consolidates
+common SMP handling between BCM NSP and BCM Kona.
+
+The final patch, enables SMP on BCM 4708 and this patch is pulled
+in from Jon Mason's patch from the mailing list.
+
+This patch series is constructed based on Linux v4.4-rc1.
+
+The source code is available at GITHUB:
+https://github.com/Broadcom/cygnus-linux/tree/nsp-smp-v2
+
+
+Jon Mason (1):
+  ARM: BCM: Add SMP support for Broadcom 4708
+
+Kapil Hali (4):
+  dt-bindings: add SMP enable-method for Broadcom NSP
+  ARM: BCM: Clean up SMP support for Broadcom Kona
+  ARM: dts: Add SMP support for Broadcom NSP
+  ARM: BCM: Add SMP support for Broadcom NSP
+
+ .../bindings/arm/bcm/brcm,nsp-cpu-method.txt       |  39 ++++++
+ Documentation/devicetree/bindings/arm/cpus.txt     |   1 +
+ arch/arm/boot/dts/bcm-nsp.dtsi                     |  33 +++--
+ arch/arm/boot/dts/bcm11351.dtsi                    |   2 +-
+ arch/arm/boot/dts/bcm21664.dtsi                    |   2 +-
+ arch/arm/boot/dts/bcm4708.dtsi                     |   2 +
+ arch/arm/mach-bcm/Kconfig                          |   3 +
+ arch/arm/mach-bcm/Makefile                         |  11 +-
+ arch/arm/mach-bcm/{kona_smp.c => platsmp.c}        | 144 +++++++++++++++++----
+ 9 files changed, 193 insertions(+), 44 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
+ rename arch/arm/mach-bcm/{kona_smp.c => platsmp.c} (63%)
+
+-- 
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
