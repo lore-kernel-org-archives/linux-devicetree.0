@@ -1,60 +1,59 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 11/12] dt-bindings: msm/dsi: Fix the order in which
- clocks are listed
-Date: Fri, 4 Dec 2015 08:45:39 -0600
-Message-ID: <20151204144539.GA15360@rob-hp-laptop>
+Subject: Re: [PATCH v3 12/12] dt-bindings: msm/dsi: Add DSIv2 documentation
+Date: Fri, 4 Dec 2015 08:46:26 -0600
+Message-ID: <20151204144626.GA16243@rob-hp-laptop>
 References: <1447844131-4182-1-git-send-email-architt@codeaurora.org>
  <1448964010-18207-1-git-send-email-architt@codeaurora.org>
- <1448964010-18207-12-git-send-email-architt@codeaurora.org>
+ <1448964010-18207-13-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1448964010-18207-12-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+In-Reply-To: <1448964010-18207-13-git-send-email-architt@codeaurora.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Archit Taneja <architt@codeaurora.org>
-Cc: dri-devel@lists.freedesktop.org, robdclark@gmail.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 01, 2015 at 03:30:09PM +0530, Archit Taneja wrote:
-> List the clocks in the order that's used in DT. We don't have mdp/dsi
-> DT nodes for any SoC in upstream yet, but we align with the order
-> we intend to use.
-> 
-> Cc: devicetree@vger.kernel.org
-> Cc: Rob Herring <robh@kernel.org>
-> 
-> Signed-off-by: Archit Taneja <architt@codeaurora.org>
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-> ---
->  Documentation/devicetree/bindings/display/msm/dsi.txt | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
-> index f344b9e..e097955 100644
-> --- a/Documentation/devicetree/bindings/display/msm/dsi.txt
-> +++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
-> @@ -14,13 +14,13 @@ Required properties:
->  - clocks: device clocks
->    See Documentation/devicetree/bindings/clocks/clock-bindings.txt for details.
->  - clock-names: the following clocks are required:
-> +  * "mdp_core_clk"
-> +  * "iface_clk"
->    * "bus_clk"
-> -  * "byte_clk"
-> -  * "core_clk"
->    * "core_mmss_clk"
-> -  * "iface_clk"
-> -  * "mdp_core_clk"
-> +  * "byte_clk"
->    * "pixel_clk"
-> +  * "core_clk"
->  - vdd-supply: phandle to vdd regulator device node
->  - vddio-supply: phandle to vdd-io regulator device node
->  - vdda-supply: phandle to vdda regulator device node
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> hosted by The Linux Foundation
-> 
+T24gVHVlLCBEZWMgMDEsIDIwMTUgYXQgMDM6MzA6MTBQTSArMDUzMCwgQXJjaGl0IFRhbmVqYSB3
+cm90ZToKPiBBZGQgYWRkaXRpb25hbCBwcm9wZXJ0eSBpbmZvIG5lZWRlZCBmb3IgRFNJdjIgRFQu
+Cj4gCj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4gQ2M6IFJvYiBIZXJyaW5nIDxy
+b2JoQGtlcm5lbC5vcmc+Cj4gCj4gU2lnbmVkLW9mZi1ieTogQXJjaGl0IFRhbmVqYSA8YXJjaGl0
+dEBjb2RlYXVyb3JhLm9yZz4KCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3Jn
+PgoKPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNt
+L2RzaS50eHQgfCA0ICsrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQo+IAo+
+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9t
+c20vZHNpLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21z
+bS9kc2kudHh0Cj4gaW5kZXggZTA5Nzk1NS4uZTc0MjNiZSAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZHNpLnR4dAo+ICsrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0Cj4gQEAg
+LTIxLDEwICsyMSwxMyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAgICogImJ5dGVfY2xrIgo+
+ICAgICogInBpeGVsX2NsayIKPiAgICAqICJjb3JlX2NsayIKPiArICBGb3IgRFNJdjIsIHdlIG5l
+ZWQgYW4gYWRkaXRpb25hbCBjbG9jazoKPiArICAgKiAic3JjX2NsayIKPiAgLSB2ZGQtc3VwcGx5
+OiBwaGFuZGxlIHRvIHZkZCByZWd1bGF0b3IgZGV2aWNlIG5vZGUKPiAgLSB2ZGRpby1zdXBwbHk6
+IHBoYW5kbGUgdG8gdmRkLWlvIHJlZ3VsYXRvciBkZXZpY2Ugbm9kZQo+ICAtIHZkZGEtc3VwcGx5
+OiBwaGFuZGxlIHRvIHZkZGEgcmVndWxhdG9yIGRldmljZSBub2RlCj4gIC0gcWNvbSxkc2ktcGh5
+OiBwaGFuZGxlIHRvIERTSSBQSFkgZGV2aWNlIG5vZGUKPiArLSBzeXNjb24tc2ZwYjogQSBwaGFu
+ZGxlIHRvIG1tc3Nfc2ZwYiBzeXNjb24gbm9kZSAob25seSBmb3IgRFNJdjIpCj4gIAo+ICBPcHRp
+b25hbCBwcm9wZXJ0aWVzOgo+ICAtIHBhbmVsQDA6IE5vZGUgb2YgcGFuZWwgY29ubmVjdGVkIHRv
+IHRoaXMgRFNJIGNvbnRyb2xsZXIuCj4gQEAgLTUxLDYgKzU0LDcgQEAgUmVxdWlyZWQgcHJvcGVy
+dGllczoKPiAgICAqICJxY29tLGRzaS1waHktMjhubS1ocG0iCj4gICAgKiAicWNvbSxkc2ktcGh5
+LTI4bm0tbHAiCj4gICAgKiAicWNvbSxkc2ktcGh5LTIwbm0iCj4gKyAgKiAicWNvbSxkc2ktcGh5
+LTI4bm0tODk2MCIKPiAgLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9m
+IHRoZSByZWdpc3RlcnMgb2YgUExMLCBQSFkgYW5kIFBIWQo+ICAgIHJlZ3VsYXRvcgo+ICAtIHJl
+Zy1uYW1lczogVGhlIG5hbWVzIG9mIHJlZ2lzdGVyIHJlZ2lvbnMuIFRoZSBmb2xsb3dpbmcgcmVn
+aW9ucyBhcmUgcmVxdWlyZWQ6Cj4gLS0gCj4gVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVy
+LCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKPiBob3N0ZWQgYnkg
+VGhlIExpbnV4IEZvdW5kYXRpb24KPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
