@@ -1,112 +1,46 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+From: Ilia Mirkin <imirkin-FrUbXkNCsVf2fBVCVOL8/A@public.gmane.org>
 Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
-Date: Fri, 4 Dec 2015 20:31:01 +0000
-Message-ID: <20151204203101.GD8644@n2100.arm.linux.org.uk>
+Date: Fri, 4 Dec 2015 15:42:47 -0500
+Message-ID: <CAKb7UviPhoiY-YP2aBHm0BHbeEjSF2wTguQScVXMBve-kZc16Q@mail.gmail.com>
 References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
- <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
- <20151204162956.GA14978@rob-hp-laptop>
- <1449247305.8275.104.camel@pengutronix.de>
- <CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
- <1449251760.8275.116.camel@pengutronix.de>
- <CAL_Jsq+oaJxD3vbDWzn_4ghpqi=RZ1o+8nOcepWYjzcu5Hwpjg@mail.gmail.com>
+	<1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
+	<20151204162956.GA14978@rob-hp-laptop>
+	<1449247305.8275.104.camel@pengutronix.de>
+	<CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
+	<1449251760.8275.116.camel@pengutronix.de>
+	<CAL_Jsq+oaJxD3vbDWzn_4ghpqi=RZ1o+8nOcepWYjzcu5Hwpjg@mail.gmail.com>
+	<20151204203101.GD8644@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+oaJxD3vbDWzn_4ghpqi=RZ1o+8nOcepWYjzcu5Hwpjg@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, patchwork-lst@pengutronix.de, "kernel@pengutronix.de" <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151204203101.GD8644-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBEZWMgMDQsIDIwMTUgYXQgMDI6MTk6NDJQTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3Jv
-dGU6Cj4gT24gRnJpLCBEZWMgNCwgMjAxNSBhdCAxMTo1NiBBTSwgTHVjYXMgU3RhY2ggPGwuc3Rh
-Y2hAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOgo+ID4gQW0gRnJlaXRhZywgZGVuIDA0LjEyLjIwMTUs
-IDExOjMzIC0wNjAwIHNjaHJpZWIgUm9iIEhlcnJpbmc6Cj4gPj4gT24gRnJpLCBEZWMgNCwgMjAx
-NSBhdCAxMDo0MSBBTSwgTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+IHdyb3Rl
-Ogo+ID4+ID4gQW0gRnJlaXRhZywgZGVuIDA0LjEyLjIwMTUsIDEwOjI5IC0wNjAwIHNjaHJpZWIg
-Um9iIEhlcnJpbmc6Cj4gPj4gPj4gT24gRnJpLCBEZWMgMDQsIDIwMTUgYXQgMDI6NTk6NTRQTSAr
-MDEwMCwgTHVjYXMgU3RhY2ggd3JvdGU6Cj4gPj4gPj4gPiBFdG5hdml2IGZvbGxvd3MgdGhlIHNh
-bWUgcHJpY2lwbGUgYXMgaW14LWRybSB0byBoYXZlIGEgdmlydHVhbAo+ID4+ID4+ID4gbWFzdGVy
-IGRldmljZSBub2RlIHRvIGJpbmQgYWxsIHRoZSBpbmRpdmlkdWFsIEdQVSBjb3JlcyB0b2dldGhl
-cgo+ID4+ID4+ID4gaW50byBvbmUgRFJNIGRldmljZS4KPiA+PiA+PiA+Cj4gPj4gPj4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5kZT4KPiA+PiA+PiA+
-IC0tLQo+ID4+ID4+ID4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2V0bmF2aXYvZXRuYXZpdi1kcm0u
-dHh0ICAgICAgIHwgNDYgKysrKysrKysrKysrKysrKysrKysrKwo+ID4+ID4+ID4gIDEgZmlsZSBj
-aGFuZ2VkLCA0NiBpbnNlcnRpb25zKCspCj4gPj4gPj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V0bmF2aXYvZXRuYXZpdi1k
-cm0udHh0Cj4gPj4gPj4gPgo+ID4+ID4+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V0bmF2aXYvZXRuYXZpdi1kcm0udHh0IGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZXRuYXZpdi9ldG5hdml2LWRybS50
-eHQKPiA+PiA+PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPj4gPj4gPiBpbmRleCAwMDAwMDAw
-MDAwMDAuLjE5ZmRlMjlkYzFkNwo+ID4+ID4+ID4gLS0tIC9kZXYvbnVsbAo+ID4+ID4+ID4gKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZXRuYXZpdi9ldG5h
-dml2LWRybS50eHQKPiA+PiA+PiA+IEBAIC0wLDAgKzEsNDYgQEAKPiA+PiA+PiA+ICtFdG5hdml2
-IERSTSBtYXN0ZXIgZGV2aWNlCj4gPj4gPj4gPiArPT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT0KPiA+PiA+PiA+ICsKPiA+PiA+PiA+ICtUaGUgRXRuYXZpdiBEUk0gbWFzdGVyIGRldmlj
-ZSBpcyBhIHZpcnR1YWwgZGV2aWNlIG5lZWRlZCB0byBsaXN0IGFsbAo+ID4+ID4+ID4gK1ZpdmFu
-dGUgR1BVIGNvcmVzIHRoYXQgY29tcHJpc2UgdGhlIEdQVSBzdWJzeXN0ZW0uCj4gPj4gPj4gPiAr
-Cj4gPj4gPj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiA+PiA+PiA+ICstIGNvbXBhdGlibGU6
-IFNob3VsZCBiZSBvbmUgb2YKPiA+PiA+PiA+ICsgICAgImZzbCxpbXgtZ3B1LXN1YnN5c3RlbSIK
-PiA+PiA+PiA+ICsgICAgIm1hcnZlbGwsZG92ZS1ncHUtc3Vic3lzdGVtIgo+ID4+ID4+ID4gKy0g
-Y29yZXM6IFNob3VsZCBjb250YWluIGEgbGlzdCBvZiBwaGFuZGxlcyBwb2ludGluZyB0byBWaXZh
-bnRlIEdQVSBkZXZpY2VzCj4gPj4gPj4gPiArCj4gPj4gPj4gPiArZXhhbXBsZToKPiA+PiA+PiA+
-ICsKPiA+PiA+PiA+ICtncHUtc3Vic3lzdGVtIHsKPiA+PiA+PiA+ICsgICBjb21wYXRpYmxlID0g
-ImZzbCxpbXgtZ3B1LXN1YnN5c3RlbSI7Cj4gPj4gPj4gPiArICAgY29yZXMgPSA8JmdwdV8yZD4s
-IDwmZ3B1XzNkPjsKPiA+PiA+PiA+ICt9Owo+ID4+ID4+Cj4gPj4gPj4gWWVhaCwgSSdtIG5vdCBy
-ZWFsbHkgYSBmYW4gb2YgZG9pbmcgdGhpcyBzaW1wbHkgYmVjYXVzZSBEUk0gd2FudHMgMQo+ID4+
-ID4+IGRyaXZlci4KPiA+PiA+Pgo+ID4+ID4gSSdtIGF3YXJlIG9mIHRoYXQsIGJ1dCBJIGRvbid0
-IHNlZSBtdWNoIHZhbHVlIGluIGtpY2tpbmcgdGhpcyBkaXNjdXNzaW9uCj4gPj4gPiBhcm91bmQg
-Zm9yIGV2ZXJ5IERSTSBkcml2ZXIgc3VibWlzc2lvbi4gVGhpcyBpcyB0aGUgYmluZGluZyB0aGF0
-IGhhcwo+ID4+ID4gZW1lcmdlZCBmcm9tIGEgbGVuZ3RoeSBkaXNjdXNzaW9uIGF0IEtTIDIwMTMg
-aW4gRWRpbmJ1cmdoIGFuZCBhdCBsZWFzdAo+ID4+ID4gYWxsb3dzIHVzIHRvIHN0YW5kYXJkaXpl
-IG9uIF9zb21ldGhpbmdfLiBBbHNvIEFMU0EgZG9lcyBhIHNpbWlsYXIgdGhpbmcKPiA+PiA+IHRv
-IGJpbmQgY29kZWNzIGFuZCBDUFUgaW50ZXJmYWNlcyB0b2dldGhlci4KPiA+Pgo+ID4+IFRoaXMg
-Y2FzZSBpcyBxdWl0ZSBkaWZmZXJlbnQgdGhvdWdoIEkgdGhpbmsuIFRoZSBBTFNBIGNhc2UgYW5k
-IG90aGVyCj4gPj4gRFJNIGNhc2VzIGFyZSBvbmVzIHRoYXQgaGF2ZSBpbnRlci1kZXBlbmRlbmNp
-ZXMgYmV0d2VlbiB0aGUgYmxvY2tzCj4gPj4gKGUuZy4gc29tZSBzb3J0IG9mIGgvdyBjb25uZWN0
-aW9uKS4gV2hhdCBpcyB0aGUgaW50ZXItZGVwZW5kZW5jeSBoZXJlPwo+ID4+Cj4gPj4gRG9pbmcg
-dGhpcyB3YXkgaGFzIGFsc28gYmVlbiBmb3VuZCB0byBiZSBjb21wbGV0ZWx5IHVubmVjZXNzYXJ5
-IGFuZAo+ID4+IHJlbW92ZWQgaW4gcmVjZW50IERSTSBkcml2ZXIgcmV2aWV3cy4gQWRtaXR0ZWRs
-eSwgdGhvc2UgYXJlIGNhc2VzCj4gPj4gd2hlcmUgb25lIGRldmljZSBjYW4gYmUgdGhlIG1hc3Rl
-ciBvZiB0aGUgb3RoZXJzLiBGb3IgMiBwYXJhbGxlbAo+ID4+IGRldmljZXMsIEkgZG9uJ3QgaGF2
-ZSBhbiBhbHRlcm5hdGl2ZSBvdGhlciB0aGFuIHF1ZXN0aW9uIHdoeSB0aGV5IG5lZWQKPiA+PiB0
-byBiZSBhIHNpbmdsZSBkcml2ZXIuCj4gPj4KPiA+IElmIHlvdSBpbnNpc3Qgb24gZG9pbmcgdGhp
-bmdzIGRpZmZlcmVudGx5IGZvciB0aGlzIGRyaXZlciwgd2UgY291bGQgYWRkCj4gPiBhIHBhc3Mg
-YXQgZHJpdmVyIHJlZ2lzdHJhdGlvbiB0aGF0IHNjYW5zIHRocm91Z2ggdGhlIERULCBsb29raW5n
-IGZvcgo+ID4gbm9kZXMgbWF0Y2hpbmcgdGhlIEdQVSBjb3JlIGNvbXBhdGlibGUuCj4gCj4gSSd2
-ZSBub3QgaW5zaXN0ZWQgb24gYW55dGhpbmcuIEknbSBvbmx5IGFza2luZyBhIHF1ZXN0aW9uIHdo
-aWNoIGRpZG4ndAo+IGdldCBhbnN3ZXJlZC4gSSdsbCBhc2sgYW5vdGhlciB3YXkuIFdoeSBjYW4n
-dCB5b3UgaGF2ZSAyIGluc3RhbmNlcyBvZgo+IHRoZSBzYW1lIGRyaXZlciBnaXZlbiB0aGV5IGFy
-ZSBvbmx5IHJlbmRlcmluZyBub2Rlcz8KClNvcnJ5LCBidXQgaXQgX2RpZF8gZ2V0IGFuc3dlcmVk
-IC0gSSBhbnN3ZXJlZCB0aGF0IGluIG15IHJlcGx5IHRvIHlvdS4KSSdsbCByZXBlYXQgaXQgYWdh
-aW4sIGJ1dCBtb3JlIGJyaWVmbHksIGFuZCB0aGVuIGV4cGFuZCBvbiBpdDogaXQncyB3aGF0CnVz
-ZXJzcGFjZSBsaWtlIFhvcmcgRFJJMiBhbmQgTUVTQSB3YW50LgoKWWVzLCB0aGVyZSdzIERSSTMs
-IHdoaWNoIGlzIG1vcmUgbW9kZXJuIGFuZCBpbiB0aGVvcnkgYWxsb3dzIG11bHRpcGxlCnJlbmRl
-cmVycyB0byBiZSBvcGVuZWQgYnkgdGhlIGNsaWVudCwgYnV0IHNvIGZhciBJIGZhaWwgdG8gc2Vl
-IGhvdyB0aGF0CmNhbiB3b3JrIHdpdGggYSBzZXBhcmF0ZSBLTVMgRFJNIGRyaXZlci4gIEl0IF9t
-YXlfIGJlIGludGVuZGVkIHRvLCBidXQKdGhlIHByb2JsZW0gSSBzZWUgaGVyZSBpcyB0aGF0IHdo
-ZW4geW91IGhhdmUgdGhlIEtNUyBoYXJkd2FyZSBvbmx5CmNhcGFibGUgb2Ygc2Nhbm5pbmcgb3V0
-IGxpbmVhciBidWZmZXJzLCBidXQgdGhlIEdQVSBoYXJkd2FyZSBpcyBvbmx5CmNhcGFibGUgb2Yg
-cmVuZGVyaW5nIHRvIHRpbGVkIGJ1ZmZlcnMsIHRoZXJlIG5lZWRzIHRvIGJlIHNvbWUgd2F5IHRv
-CmFsbG9jYXRlIEtNUyBidWZmZXJzIGluIHRoZSBjbGllbnQsIGFuZCByaWdodCBub3cgSSBkb24n
-dCBzZWUgYW55IHdheQp0byBrbm93IHdoYXQgdGhlIEtNUyBEUk0gZGV2aWNlIGJlaW5nIHVzZWQg
-aXMgaW4gdGhlIERSSTMvUHJlc2VudCBYb3JnCmV4dGVuc2lvbnMuCgpNb3Jlb3ZlciwgRFJJMyBp
-cyBub3QgeWV0IGF2YWlsYWJsZSBmb3IgR2FsbGl1bSwgc28gaWYgd2UncmUgdGFsa2luZwphYm91
-dCBYb3JnLCB0aGVuIGZ1bmN0aW9uYWwgRFJJMiBpcyBhIHJlcXVpcmVtZW50LCBhbmQgdGhhdCBf
-bmVlZHNfCnRvIGhhdmUgYSBzaW5nbGUgZGV2aWNlIGZvciB0aGUgcmVuZGVyaW5nIGluc3RhbmNl
-cy4gIFhvcmcgaGFzIG5vIHdheQp0byBwYXNzIG11bHRpcGxlIHJlbmRlciBub2RlcyB0byBjbGll
-bnQgb3ZlciBEUkkyLgoKLS0gCkZUVEMgYnJvYWRiYW5kIGZvciAwLjhtaWxlIGxpbmU6IGN1cnJl
-bnRseSBhdCA5LjZNYnBzIGRvd24gNDAwa2JwcyB1cAphY2NvcmRpbmcgdG8gc3BlZWR0ZXN0Lm5l
-dC4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Fri, Dec 4, 2015 at 3:31 PM, Russell King - ARM Linux
+<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> Moreover, DRI3 is not yet available for Gallium, so if we're talking
+> about Xorg, then functional DRI2 is a requirement, and that _needs_
+> to have a single device for the rendering instances.  Xorg has no way
+> to pass multiple render nodes to client over DRI2.
+
+Just to correct... DRI3 has been available on gallium [at least in the
+context of st/mesa] basically since DRI3 was introduced. Not sure what
+issue you're fighting with, but it's definitely not a gallium
+limitation... could be something related to platform devices.
+
+It is also possible to use DRI_PRIME=<udev idpath> to select which
+device to use. Not sure whether that has been available since the
+beginning or not.
+
+That said e.g. st/vdpau still doesn't deal with DRI3 which is a bit
+annoying. And your other points all still stand (buffer sharing =
+pain, tiling = not figured out, etc).
+
+  -ilia
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
