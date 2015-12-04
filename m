@@ -1,127 +1,63 @@
 From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH for-4.4 2/2] doc: dt: mtd: partitions: add compatible property to "partitions" node
-Date: Thu,  3 Dec 2015 18:02:09 -0800
-Message-ID: <1449194529-145705-2-git-send-email-computersforpeace@gmail.com>
-References: <1449194529-145705-1-git-send-email-computersforpeace@gmail.com>
+Subject: [PATCH for-4.4 1/2] mtd: ofpart: don't complain about missing 'partitions' node too loudly
+Date: Thu,  3 Dec 2015 18:02:08 -0800
+Message-ID: <1449194529-145705-1-git-send-email-computersforpeace@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449194529-145705-1-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-As noted here [1], there are potentially future conflicts if we try to
-use MTD's "partitions" subnode to describe anything besides just the
-fixed-in-the-device-tree partitions currently described in this
-document. Particularly, there was a proposal to use this node for the
-AFS parser too.
+The ofpart partition parser might be run on DT-enabled systems that
+don't have any "ofpart" partition subnodes at all, since "ofpart" is in
+the default parser list. So don't complain loudly on every boot.
 
-It can pose a (small) problem to try to differentiate the following
-nodes:
+Example: using m25p80.c with no intent to use ofpart:
 
-	// using binding as currently specified
-	partitions {
-		#address-cells = <x>;
-		#size-cells = <y>;
-		partition@0 {
-			...;
-		};
+&spi2 {
+	status = "okay";
+
+	flash@0 {
+		compatible = "jedec,spi-nor";
+		reg = <0>;
 	};
+};
 
-and
+I see this warning:
 
-	// proposed future binding
-	partitions {
-		compatible = "arm,arm-flash-structure";
-	};
-
-It's especially difficult if other uses of this node start having
-subnodes.
-
-So, since the "partitions" node is new in v4.4, let's fixup the binding
-before release so that it requires a compatible property, so it's much
-clearer to distinguish. e.g.:
-
-	// proposed
-	partitions {
-		compatible = "partitions";
-		#address-cells = <x>;
-		#size-cells = <y>;
-		partition@0 {
-			...;
-		};
-	};
-
-[1] Subject: "mtd: create a partition type device tree binding"
-    http://lkml.kernel.org/g/20151113220039.GA74382-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
-    http://lists.infradead.org/pipermail/linux-mtd/2015-November/063355.html
-    http://lists.infradead.org/pipermail/linux-mtd/2015-November/063364.html
+[    0.588471] m25p80 spi2.0: gd25q32 (4096 Kbytes)
+[    0.593091] spi2.0: 'partitions' subnode not found on /spi@ff130000/flash@0. Trying to parse direct subnodes as partitions.
 
 Cc: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
-This one is more of a future proofing patch. We should probably take this for
-4.4, before the binding "stabilizes" (I don't actually see any users yet), or
-else we'll have to find some other (possibly more complicated) way to avoid
-this potential collision on future development.
+This one really seems like we should put it into 4.4. Basically everyone with a
+DT-enabled MTD using the default parsers will get this warning, even if they're
+not intending to use ofpart at all.
 
- Documentation/devicetree/bindings/mtd/partition.txt | 7 ++++++-
- drivers/mtd/ofpart.c                                | 3 +++
- 2 files changed, 9 insertions(+), 1 deletion(-)
+ drivers/mtd/ofpart.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
-index f1e2a02381a4..047e80575881 100644
---- a/Documentation/devicetree/bindings/mtd/partition.txt
-+++ b/Documentation/devicetree/bindings/mtd/partition.txt
-@@ -6,7 +6,9 @@ used for what purposes, but which don't use an on-flash partition table such
- as RedBoot.
- 
- The partition table should be a subnode of the mtd node and should be named
--'partitions'. Partitions are defined in subnodes of the partitions node.
-+'partitions'. This node should have the following property:
-+- compatible : (required) must be "partitions"
-+Partitions are then defined in subnodes of the partitions node.
- 
- For backwards compatibility partitions as direct subnodes of the mtd device are
- supported. This use is discouraged.
-@@ -36,6 +38,7 @@ Examples:
- 
- flash@0 {
- 	partitions {
-+		compatible = "partitions";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 
-@@ -53,6 +56,7 @@ flash@0 {
- 
- flash@1 {
- 	partitions {
-+		compatible = "partitions";
- 		#address-cells = <1>;
- 		#size-cells = <2>;
- 
-@@ -66,6 +70,7 @@ flash@1 {
- 
- flash@2 {
- 	partitions {
-+		compatible = "partitions";
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 
 diff --git a/drivers/mtd/ofpart.c b/drivers/mtd/ofpart.c
-index 3e9c5857c991..23cd809fad4c 100644
+index 669c3452f278..3e9c5857c991 100644
 --- a/drivers/mtd/ofpart.c
 +++ b/drivers/mtd/ofpart.c
-@@ -55,6 +55,9 @@ static int parse_ofpart_partitions(struct mtd_info *master,
- 			 master->name, mtd_node->full_name);
+@@ -46,8 +46,13 @@ static int parse_ofpart_partitions(struct mtd_info *master,
+ 
+ 	ofpart_node = of_get_child_by_name(mtd_node, "partitions");
+ 	if (!ofpart_node) {
+-		pr_warn("%s: 'partitions' subnode not found on %s. Trying to parse direct subnodes as partitions.\n",
+-			master->name, mtd_node->full_name);
++		/*
++		 * We might get here even when ofpart isn't used at all (e.g.,
++		 * when using another parser), so don't be louder than
++		 * KERN_DEBUG
++		 */
++		pr_debug("%s: 'partitions' subnode not found on %s. Trying to parse direct subnodes as partitions.\n",
++			 master->name, mtd_node->full_name);
  		ofpart_node = mtd_node;
  		dedicated = false;
-+	} else if (!of_device_is_compatible(ofpart_node, "partitions")) {
-+		/* The 'partitions' subnode might be used by another parser */
-+		return 0;
  	}
- 
- 	/* First count the subnodes */
 -- 
 2.6.0.rc2.230.g3dd15c0
 
