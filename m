@@ -1,78 +1,60 @@
-From: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/2] ARM: dts: Use MMC pwrseq instead regulators for IGEP
- WiFi init
-Date: Fri, 4 Dec 2015 15:39:35 +0100
-Message-ID: <CAFqH_536_sG7fju=u39aMKmzXt8KDCxU1-dFM03H060zbh5qxw@mail.gmail.com>
-References: <1449165729-993-1-git-send-email-javier@osg.samsung.com>
-	<20151203181624.GW23396@atomide.com>
-	<566089E1.7050805@osg.samsung.com>
-	<20151203192719.GZ23396@atomide.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 11/12] dt-bindings: msm/dsi: Fix the order in which
+ clocks are listed
+Date: Fri, 4 Dec 2015 08:45:39 -0600
+Message-ID: <20151204144539.GA15360@rob-hp-laptop>
+References: <1447844131-4182-1-git-send-email-architt@codeaurora.org>
+ <1448964010-18207-1-git-send-email-architt@codeaurora.org>
+ <1448964010-18207-12-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151203192719.GZ23396-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?Q?Agust=C3=AD_Fontquerni_i_Gorchs?= <afontquerni-VIneJrwqLopBDgjK7y7TUQ@public.gmane.org>, Pau Pajuel <ppajuel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1448964010-18207-12-git-send-email-architt@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Archit Taneja <architt@codeaurora.org>
+Cc: dri-devel@lists.freedesktop.org, robdclark@gmail.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2015-12-03 20:27 GMT+01:00 Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>:
-> * Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> [151203 10:29]:
->> Hello Tony,
->>
->> On 12/03/2015 03:16 PM, Tony Lindgren wrote:
->> > * Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> [151203 10:03]:
->> >> Hello,
->> >>
->> >> This series converts the IGEPv2 (IGEP0020) and IGEP COM Module (IGEP0030)
->> >> Device Tree to use the MMC power sequence provider to initialize the SDIO
->> >> WiFi chip instead of using fake fixed regulators to just toggle the Reset
->> >> and Power pins in the chip.
->> >>
->> >> The patches were tested on an DM3730 IGEPv2 board but the IGEP COM Module
->> >> is the same with regard to the SDIO WiFi so it should be safe to land too.
->> >>
->> >> The IGEPv2 Rev.F and the IGEP COM Module Rev.G DTS were not converted due
->> >> using a different WiFi chip (wlcore instead of libertas) than the one in
->> >> the board I've access to test so I preferred to leave those untouched.
->> >
->> > Do you have some solution for the start-up latency issue?
->> >
->>
->> No, I don't and that's one of the reasons why I didn't want to touch the
->> DTS that have the wlcore chip.
->>
->> The omap3-igep0020-rev-f.dts and omap3-igep0030-rev-g.dts don't have a
->> startup-delay-us property in the regulator for the WLAN_EN pin as is
->> the case for the IGEPv5 DTS but I don't know if those DTS are just wrong.
->
-> OK
->
->> The DTS for the igep0020 and igep0030 that have the libertas chip,
->> did have a startup-delay-us for the WIFI_PDN but using the GPIOs
->> for RESET_N_W and WIFI_PDN in the mmc-pwrseq-simple reset-gpios is
->> enough to make the SDIO chip reset, be enumerated and WiFi to work
->> correctly so I don't know if that is really needed or is just a bad
->> description in the DTS.
->
-> Hmm OK.
->
->> Since is working for the boards with the libertas chip, I preferred
->> to remove the DTS hack but left the boards with wlcore chip since
->> you said the startup-delay-us is needed there (but probably we should
->> add to the regulators in the boards that don't have it then).
->
-> OK
->
-> Thanks,
->
-> Tony
+On Tue, Dec 01, 2015 at 03:30:09PM +0530, Archit Taneja wrote:
+> List the clocks in the order that's used in DT. We don't have mdp/dsi
+> DT nodes for any SoC in upstream yet, but we align with the order
+> we intend to use.
+> 
+> Cc: devicetree@vger.kernel.org
+> Cc: Rob Herring <robh@kernel.org>
+> 
+> Signed-off-by: Archit Taneja <architt@codeaurora.org>
 
-I guess will be interesting cc'ing the ISEE people. Added Agusti and Pau.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Thanks,
-    Enric
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  Documentation/devicetree/bindings/display/msm/dsi.txt | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> index f344b9e..e097955 100644
+> --- a/Documentation/devicetree/bindings/display/msm/dsi.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> @@ -14,13 +14,13 @@ Required properties:
+>  - clocks: device clocks
+>    See Documentation/devicetree/bindings/clocks/clock-bindings.txt for details.
+>  - clock-names: the following clocks are required:
+> +  * "mdp_core_clk"
+> +  * "iface_clk"
+>    * "bus_clk"
+> -  * "byte_clk"
+> -  * "core_clk"
+>    * "core_mmss_clk"
+> -  * "iface_clk"
+> -  * "mdp_core_clk"
+> +  * "byte_clk"
+>    * "pixel_clk"
+> +  * "core_clk"
+>  - vdd-supply: phandle to vdd regulator device node
+>  - vddio-supply: phandle to vdd-io regulator device node
+>  - vdda-supply: phandle to vdda regulator device node
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> hosted by The Linux Foundation
+> 
