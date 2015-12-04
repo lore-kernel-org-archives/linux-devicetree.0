@@ -1,99 +1,95 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH] ARM: DTS: am33xx: Use the new DT bindings for the eDMA3
-Date: Fri, 4 Dec 2015 11:21:49 -0600
-Message-ID: <87wpsunn82.fsf@saruman.tx.rr.com>
-References: <1449225915-28879-1-git-send-email-peter.ujfalusi@ti.com>
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 11/12] MAINTAINERS: add Lucas Stach as maintainer for the
+ etnaviv DRM driver
+Date: Fri, 4 Dec 2015 18:26:38 +0100
+Message-ID: <5661CCCE.3090607@pengutronix.de>
+References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
+ <1449237604-19064-12-git-send-email-l.stach@pengutronix.de>
+ <20151204170709.GY8644@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0516450787631601975=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1449225915-28879-1-git-send-email-peter.ujfalusi@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, tony@atomide.com
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="5QukKuA098pJTLXKjOKwS1k1rCvpqADcA"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151204170709.GY8644-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============0516450787631601975==
-Content-Type: multipart/signed; boundary="=-=-="; micalg=pgp-sha1;
-	protocol="application/pgp-signature"
-
---=-=-=
-Content-Type: text/plain
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--5QukKuA098pJTLXKjOKwS1k1rCvpqADcA
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
+On 12/04/2015 06:07 PM, Russell King - ARM Linux wrote:
+> On Fri, Dec 04, 2015 at 03:00:03PM +0100, Lucas Stach wrote:
+>> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>=20
+> Acked-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+>=20
+> Although, I would like to be copied on patches, I don't think we
+> have a way to encode that information in MAINTAINERS.
 
-Hi,
+I think you can just add another
+"M: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>" next to Lucas. We have this
+for the CAN drivers and it seems to work.
 
-Peter Ujfalusi <peter.ujfalusi@ti.com> writes:
-> @@ -174,12 +182,44 @@
->  		};
->=20=20
->  		edma: edma@49000000 {
-> -			compatible =3D "ti,edma3";
-> -			ti,hwmods =3D "tpcc", "tptc0", "tptc1", "tptc2";
-> -			reg =3D	<0x49000000 0x10000>,
-> -				<0x44e10f90 0x40>;
-> +			compatible =3D "ti,edma3-tpcc";
-> +			ti,hwmods =3D "tpcc";
-> +			reg =3D	<0x49000000 0x10000>;
-> +			reg-names =3D "edma3_cc";
->  			interrupts =3D <12 13 14>;
-> -			#dma-cells =3D <1>;
-> +			interrupt-names =3D "edma3_ccint", "emda3_mperr",
-> +					  "edma3_ccerrint";
-> +			dma-requests =3D <64>;
-> +			#dma-cells =3D <2>;
-> +
-> +			ti,tptcs =3D <&edma_tptc0 7>, <&edma_tptc1 5>,
-> +				   <&edma_tptc2 0>;
-> +
-> +			ti,edma-memcpy-channels =3D /bits/ 16 <20 21>;
+>=20
+>> ---
+>>  MAINTAINERS | 7 +++++++
+>>  1 file changed, 7 insertions(+)
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index e9caa4b28828..1c69563c61ed 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -3741,6 +3741,13 @@ S:	Maintained
+>>  F:	drivers/gpu/drm/sti
+>>  F:	Documentation/devicetree/bindings/display/st,stih4xx.txt
+>> =20
+>> +DRM DRIVERS FOR VIVANTE GPU IP
+>> +M:	Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> +L:	dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+>> +S:	Maintained
+>> +F:	drivers/gpu/drm/etnaviv
+>> +F:	Documentation/devicetree/bindings/display/etnaviv
+>> +
+>>  DSBR100 USB FM RADIO DRIVER
+>>  M:	Alexey Klimov <klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>  L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> --=20
+>> 2.6.2
+>>
+>=20
 
-can you explain this property here ? Are you setting bits 20 and 21 on a
-16-bit field ?
+Marc
 
-=2D-=20
-balbi
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
---=-=-=
+
+--5QukKuA098pJTLXKjOKwS1k1rCvpqADcA
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iQIcBAEBAgAGBQJWYcuuAAoJEIaOsuA1yqREF/8P/jgEVUYtpWffnZkGywga/nj2
-h3LLH7txd10InHR9RFrsVzid/gP3C8lutU8RV/H6vRIAQcrpc6XVrMht6W5QbpLr
-kHCBn/2SH/EA5ZYjr6xLTn95Qx9OezAyRTtE51S2h1ifqSEBTMtJ9/fmeEFmRU8t
-X0zfoQcLiLRnU0UoVfwzEAGbuH4+7/cU6gS3pCNqMfUV53bar1Wd6udgZm1GPRjc
-XJiR6XROwaHhhEvbjrlYBj4cAFpmNSuQOgVoBX5Ei32zA/QLnj+J7gTgKAWnbaks
-8wilUwe04qVnb/lRuIeXH2XmuTbWdCuTvvhvW15cb5/p+Qo+z16MT3axVglosBOO
-0dYs54/Q1He7RaR+pxG9GBcRc3VGhxES3SienIVJ1NIGXWlAcI20izg2YAQvCRyj
-kOQjixSOElaYj/IwTaAekunra8qler2R8W56Z+Ykd8XTLNapN1VBMppcbDYUlJ8B
-mUcTtsNHg3SWouvv0Y2RePpR8UBFzCfV7th2bG7uUWjKKcY4S93axIBJq+e+5eET
-M0tiwH8ML1Mm10h3gzt/nqOhqsQNfomF+x5QxP7uVZEiV9B4ltIWGWAtxKTEZuE0
-DlqGmCSoMJhjWou+sOVNC+xyNUZK8kg3ZcrkKqC2Zy0f/59d6UoKH+oC8E2kUuSc
-Cug5lFBJVKVAUNUhwxYE
-=Mpvy
+iQEcBAEBCgAGBQJWYczOAAoJEP5prqPJtc/HBuwIAL8+dRb5NN3kiHiVg3OdqTm2
+UAO0mF11tr7fLP5gqUWsSQngTvEGUu7KVUcnb87e8yE5SHnHDoKGlaHCNkM9P4TN
+aF6To/XRcq3xMnzn/hOpEIVsm1h4j1dLAX7xLvg/r7sInHcWYcjVu7mo2HvEPcVJ
+h7poE1Nt/An/xfLxRK9TpudZWQ3n3YsaQ2ceD4DZpGQ77lBc7vPba3GBEQfFoV9a
+jouOezL5Z0d2sWLYVphqkp2EZbBdr3D/6207Cch2OFJTHm1PGag/kMYLqXOEqWgb
+52X+F2D7Hs+jkr4PeYu0m3seerpvHqaX3OxE+gIKk0B4xBNB8mhLF81cws3p8B4=
+=Y9d2
 -----END PGP SIGNATURE-----
---=-=-=--
 
-
---===============0516450787631601975==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============0516450787631601975==--
+--5QukKuA098pJTLXKjOKwS1k1rCvpqADcA--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
