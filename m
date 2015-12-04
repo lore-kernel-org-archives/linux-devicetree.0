@@ -1,51 +1,69 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 11/12] MAINTAINERS: add Lucas Stach as maintainer for the
- etnaviv DRM driver
-Date: Fri, 4 Dec 2015 17:37:39 +0000
-Message-ID: <20151204173739.GB8644@n2100.arm.linux.org.uk>
-References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
- <1449237604-19064-12-git-send-email-l.stach@pengutronix.de>
- <20151204170709.GY8644@n2100.arm.linux.org.uk>
- <5661CCCE.3090607@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <5661CCCE.3090607@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Shawn Guo <shawnguo@kernel.org>
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH v2 5/5] ARM: bcm2835: Add the Raspberry Pi power domain driver to the DT.
+Date: Fri,  4 Dec 2015 09:45:48 -0800
+Message-ID: <1449251148-19344-6-git-send-email-eric@anholt.net>
+References: <1449251148-19344-1-git-send-email-eric@anholt.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1449251148-19344-1-git-send-email-eric@anholt.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexander Aring <alex.aring@gmail.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBEZWMgMDQsIDIwMTUgYXQgMDY6MjY6MzhQTSArMDEwMCwgTWFyYyBLbGVpbmUtQnVk
-ZGUgd3JvdGU6Cj4gT24gMTIvMDQvMjAxNSAwNjowNyBQTSwgUnVzc2VsbCBLaW5nIC0gQVJNIExp
-bnV4IHdyb3RlOgo+ID4gT24gRnJpLCBEZWMgMDQsIDIwMTUgYXQgMDM6MDA6MDNQTSArMDEwMCwg
-THVjYXMgU3RhY2ggd3JvdGU6Cj4gPj4gU2lnbmVkLW9mZi1ieTogTHVjYXMgU3RhY2ggPGwuc3Rh
-Y2hAcGVuZ3V0cm9uaXguZGU+Cj4gPiAKPiA+IEFja2VkLWJ5OiBSdXNzZWxsIEtpbmcgPHJtaytr
-ZXJuZWxAYXJtLmxpbnV4Lm9yZy51az4KPiA+IAo+ID4gQWx0aG91Z2gsIEkgd291bGQgbGlrZSB0
-byBiZSBjb3BpZWQgb24gcGF0Y2hlcywgSSBkb24ndCB0aGluayB3ZQo+ID4gaGF2ZSBhIHdheSB0
-byBlbmNvZGUgdGhhdCBpbmZvcm1hdGlvbiBpbiBNQUlOVEFJTkVSUy4KPiAKPiBJIHRoaW5rIHlv
-dSBjYW4ganVzdCBhZGQgYW5vdGhlcgo+ICJNOiBSdXNzZWxsIEtpbmcgPGxpbnV4QGFybS5saW51
-eC5vcmcudWs+IiBuZXh0IHRvIEx1Y2FzLiBXZSBoYXZlIHRoaXMKPiBmb3IgdGhlIENBTiBkcml2
-ZXJzIGFuZCBpdCBzZWVtcyB0byB3b3JrLgoKV2hhdCBJJ20gYWZ0ZXIgYXZvaWRpbmcgaXMgZW5k
-aW5nIHVwIGhhdmluZyB0byBsb29rIGFmdGVyIHRoaXMgLSBJJ3ZlCmFscmVhZHkgZW5vdWdoIHRo
-aW5ncyBvbiBteSBwbGF0ZSwgYW5kIEknbSBub3QgZ29vZCBhdCBjb250ZXh0IHN3aXRjaGluZwpi
-ZXR3ZWVuIHRoZW0uCgpIb3dldmVyLCBnaXZlbiB0aGF0IEkgaGF2ZSB0aGUgYWJpbGl0eSB0byB0
-ZXN0IGNoYW5nZXMgb24gYm90aCBEb3ZlIGFuZAppTVg2LCB0aGF0J3Mgd2h5IEknZCBsaWtlIHRv
-IGJlIENjJ2QsIHNvIHRoYXQgSSBjYW4gKHdoZW4gSSBoYXZlIHRoZQphdmFpbGFibGUgdGltZSkg
-dGVzdCBvbiBEb3ZlLCBidXQgSSBkb24ndCB3YW50IHRvIGJlIGluIHRoZSBzaXR1YXRpb24Kd2hl
-cmUgSSdtIGJlaW5nIHJlcXVpcmVkIHRvIGdpdmUgYWNrcyBldGMuCgotLSAKRlRUQyBicm9hZGJh
-bmQgZm9yIDAuOG1pbGUgbGluZTogY3VycmVudGx5IGF0IDkuNk1icHMgZG93biA0MDBrYnBzIHVw
-CmFjY29yZGluZyB0byBzcGVlZHRlc3QubmV0LgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbAo=
+From: Alexander Aring <alex.aring@gmail.com>
+
+This connects the USB driver to the USB power domain, so that USB can
+actually be turned on at boot if the bootloader didn't do it for us.
+
+Signed-off-by: Alexander Aring <alex.aring@gmail.com>
+Signed-off-by: Eric Anholt <eric@anholt.net>
+---
+ arch/arm/boot/dts/bcm2835-rpi.dtsi | 11 +++++++++++
+ arch/arm/boot/dts/bcm2835.dtsi     |  2 +-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+index 3572f03..f828202 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
++++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+@@ -1,3 +1,4 @@
++#include <dt-bindings/arm/raspberrypi-power.h>
+ #include "bcm2835.dtsi"
+ 
+ / {
+@@ -20,6 +21,12 @@
+ 			compatible = "raspberrypi,bcm2835-firmware";
+ 			mboxes = <&mailbox>;
+ 		};
++
++		power: power {
++			compatible = "raspberrypi,bcm2835-power";
++			firmware = <&firmware>;
++			#power-domain-cells = <1>;
++		};
+ 	};
+ };
+ 
+@@ -60,3 +67,7 @@
+ 	status = "okay";
+ 	bus-width = <4>;
+ };
++
++&usb {
++	power-domains = <&power RPI_POWER_DOMAIN_USB>;
++};
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index aef64de..6d62af0 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -177,7 +177,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		usb@7e980000 {
++		usb: usb@7e980000 {
+ 			compatible = "brcm,bcm2835-usb";
+ 			reg = <0x7e980000 0x10000>;
+ 			interrupts = <1 9>;
+-- 
+2.6.2
