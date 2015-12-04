@@ -1,59 +1,71 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 12/12] dt-bindings: msm/dsi: Add DSIv2 documentation
-Date: Fri, 4 Dec 2015 08:46:26 -0600
-Message-ID: <20151204144626.GA16243@rob-hp-laptop>
-References: <1447844131-4182-1-git-send-email-architt@codeaurora.org>
- <1448964010-18207-1-git-send-email-architt@codeaurora.org>
- <1448964010-18207-13-git-send-email-architt@codeaurora.org>
+Subject: Re: [PATCH v2 2/7] dt-bindings: Amlogic: Document the CPU reset
+ controller for Meson8b
+Date: Fri, 4 Dec 2015 08:49:35 -0600
+Message-ID: <20151204144935.GA17537@rob-hp-laptop>
+References: <1449076953-5058-1-git-send-email-carlo@caione.org>
+ <1449076953-5058-3-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1448964010-18207-13-git-send-email-architt@codeaurora.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+In-Reply-To: <1449076953-5058-3-git-send-email-carlo@caione.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Carlo Caione <carlo@caione.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux@arm.linux.org.uk, linux-meson@googlegroups.com, drake@endlessm.com, jerry.cao@amlogic.com, victor.wan@amlogic.com, pawel.moll@arm.com, arnd@arndb.de, Carlo Caione <carlo@endlessm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBEZWMgMDEsIDIwMTUgYXQgMDM6MzA6MTBQTSArMDUzMCwgQXJjaGl0IFRhbmVqYSB3
-cm90ZToKPiBBZGQgYWRkaXRpb25hbCBwcm9wZXJ0eSBpbmZvIG5lZWRlZCBmb3IgRFNJdjIgRFQu
-Cj4gCj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4gQ2M6IFJvYiBIZXJyaW5nIDxy
-b2JoQGtlcm5lbC5vcmc+Cj4gCj4gU2lnbmVkLW9mZi1ieTogQXJjaGl0IFRhbmVqYSA8YXJjaGl0
-dEBjb2RlYXVyb3JhLm9yZz4KCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3Jn
-PgoKPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNt
-L2RzaS50eHQgfCA0ICsrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQo+IAo+
-IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9t
-c20vZHNpLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21z
-bS9kc2kudHh0Cj4gaW5kZXggZTA5Nzk1NS4uZTc0MjNiZSAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZHNpLnR4dAo+ICsrKyBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0Cj4gQEAg
-LTIxLDEwICsyMSwxMyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAgICogImJ5dGVfY2xrIgo+
-ICAgICogInBpeGVsX2NsayIKPiAgICAqICJjb3JlX2NsayIKPiArICBGb3IgRFNJdjIsIHdlIG5l
-ZWQgYW4gYWRkaXRpb25hbCBjbG9jazoKPiArICAgKiAic3JjX2NsayIKPiAgLSB2ZGQtc3VwcGx5
-OiBwaGFuZGxlIHRvIHZkZCByZWd1bGF0b3IgZGV2aWNlIG5vZGUKPiAgLSB2ZGRpby1zdXBwbHk6
-IHBoYW5kbGUgdG8gdmRkLWlvIHJlZ3VsYXRvciBkZXZpY2Ugbm9kZQo+ICAtIHZkZGEtc3VwcGx5
-OiBwaGFuZGxlIHRvIHZkZGEgcmVndWxhdG9yIGRldmljZSBub2RlCj4gIC0gcWNvbSxkc2ktcGh5
-OiBwaGFuZGxlIHRvIERTSSBQSFkgZGV2aWNlIG5vZGUKPiArLSBzeXNjb24tc2ZwYjogQSBwaGFu
-ZGxlIHRvIG1tc3Nfc2ZwYiBzeXNjb24gbm9kZSAob25seSBmb3IgRFNJdjIpCj4gIAo+ICBPcHRp
-b25hbCBwcm9wZXJ0aWVzOgo+ICAtIHBhbmVsQDA6IE5vZGUgb2YgcGFuZWwgY29ubmVjdGVkIHRv
-IHRoaXMgRFNJIGNvbnRyb2xsZXIuCj4gQEAgLTUxLDYgKzU0LDcgQEAgUmVxdWlyZWQgcHJvcGVy
-dGllczoKPiAgICAqICJxY29tLGRzaS1waHktMjhubS1ocG0iCj4gICAgKiAicWNvbSxkc2ktcGh5
-LTI4bm0tbHAiCj4gICAgKiAicWNvbSxkc2ktcGh5LTIwbm0iCj4gKyAgKiAicWNvbSxkc2ktcGh5
-LTI4bm0tODk2MCIKPiAgLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9m
-IHRoZSByZWdpc3RlcnMgb2YgUExMLCBQSFkgYW5kIFBIWQo+ICAgIHJlZ3VsYXRvcgo+ICAtIHJl
-Zy1uYW1lczogVGhlIG5hbWVzIG9mIHJlZ2lzdGVyIHJlZ2lvbnMuIFRoZSBmb2xsb3dpbmcgcmVn
-aW9ucyBhcmUgcmVxdWlyZWQ6Cj4gLS0gCj4gVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVy
-LCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKPiBob3N0ZWQgYnkg
-VGhlIExpbnV4IEZvdW5kYXRpb24KPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+On Wed, Dec 02, 2015 at 06:22:28PM +0100, Carlo Caione wrote:
+> From: Carlo Caione <carlo@endlessm.com>
+> 
+> The clock controller on Amlogic Meson8b SoCs has been extended with a
+> reset controller used to reset the CPU cores. It is used during SMP
+> bringup.
+> 
+> With this patch we extend the clock controller documentation.
+> 
+> Signed-off-by: Carlo Caione <carlo@endlessm.com>
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> ---
+>  Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
+> index 2b7b3fa..feeb4de 100644
+> --- a/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
+> +++ b/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
+> @@ -1,7 +1,8 @@
+>  * Amlogic Meson8b Clock and Reset Unit
+>  
+>  The Amlogic Meson8b clock controller generates and supplies clock to various
+> -controllers within the SoC.
+> +controllers within the SoC and also implements a reset controller for the CPU
+> +cores.
+>  
+>  Required Properties:
+>  
+> @@ -13,16 +14,19 @@ Required Properties:
+>  	   mapped region.
+>  
+>  - #clock-cells: should be 1.
+> +- #reset-cells: should be 1.
+>  
+>  Each clock is assigned an identifier and client nodes can use this identifier
+>  to specify the clock which they consume. All available clocks are defined as
+>  preprocessor macros in the dt-bindings/clock/meson8b-clkc.h header and can be
+>  used in device tree sources.
+> +Similar identifiers exist for the CPU core reset lines.
+>  
+>  Example: Clock controller node:
+>  
+>  	clkc: clock-controller@c1104000 {
+>  		#clock-cells = <1>;
+> +		#reset-cells = <1>;
+>  		compatible = "amlogic,meson8b-clkc";
+>  		reg = <0xc1108000 0x4>, <0xc1104000 0x460>;
+>  	};
+> -- 
+> 2.5.0
+> 
