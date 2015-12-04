@@ -1,48 +1,103 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RESEND v4 2/6] remoteproc: debugfs: Add ability to boot remote
- processor using debugfs
-Date: Fri, 4 Dec 2015 08:24:27 +0000
-Message-ID: <20151204082427.GC26902@x1>
-References: <1448370862-19120-1-git-send-email-lee.jones@linaro.org>
- <2600153.9u9Z7N2IT1@wuerfel>
- <20151203172830.GB26902@x1>
- <2473673.tSymyNlg3h@wuerfel>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/4] thermal: rcar: enable to use thermal-zone on DT
+Date: Fri, 4 Dec 2015 09:32:36 +0100
+Message-ID: <CAMuHMdUcQFcQuEmQZ4yMGwm=ouH+aQQhG3V95p=Pb56qWberQA@mail.gmail.com>
+References: <871tb2hpn2.wl%kuninori.morimoto.gx@renesas.com>
+	<87y4dagb0i.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2473673.tSymyNlg3h@wuerfel>
+In-Reply-To: <87y4dagb0i.wl%kuninori.morimoto.gx@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Ohad Ben-Cohen <ohad@wizery.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, kernel@stlinux.com, Nathan_Lynch@mentor.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn@kryo.se>, ludovic.barre@st.com, Maxime Coquelin <maxime.coquelin@st.com>
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Simon <horms@verge.net.au>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Magnus <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 03 Dec 2015, Arnd Bergmann wrote:
+Hi Morimoto-san,
 
-> On Thursday 03 December 2015 17:28:30 Lee Jones wrote:
-> > >=20
-> > > Ah, interesting. I haven't tried myself, and just tried to read t=
-he
-> > > code. Maybe glibc already catches zero-length writes before it ge=
-ts
-> > > into the kernel, or I just missed the part of the syscall that ch=
-ecks
-> > > for this.
-> >=20
-> > Glibc is responsible indeed:
-> >  =20
-> >   http://osxr.org/glibc/source/io/write.c
->=20
-> Ok, so an attacker can force the stack overflow by calling
-> syscall(__NR_write, fd, p, 0) if that has any potential value,
-> but normal users won't hit this case.
+CC devicetree
 
-Right.  I have fixed the issue (and another one I found) anyway, if
-only to rid the GCC warning.
+On Fri, Dec 4, 2015 at 4:17 AM, Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+>
+> This patch enables to use thermal-zone on DT if it was call as
+> "renesas,rcar-thermal-gen2".
+> Previous style is still supported by "renesas,rcar-thermal".
+>
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> ---
+>  .../devicetree/bindings/thermal/rcar-thermal.txt   | 37 +++++++++++++++++-
+>  drivers/thermal/rcar_thermal.c                     | 45 +++++++++++++++++++---
+>  2 files changed, 74 insertions(+), 8 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+> index 332e625..904f204 100644
+> --- a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+> @@ -1,8 +1,9 @@
+>  * Renesas R-Car Thermal
+>
+>  Required properties:
+> -- compatible           : "renesas,thermal-<soctype>", "renesas,rcar-thermal"
+> -                         as fallback.
+> +- compatible           : "renesas,thermal-<soctype>",
+> +                          "renesas,rcar-thermal-gen2" (with thermal-zone) or
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Ugh, another different scheme "<manuf>,<family>-<device>-<familyversion>"...
+
+What about "renesas,rcar-gen2-thermal"?
+
+> +                          "renesas,rcar-thermal" (without thermal-zone) as fallback.
+>                           Examples with soctypes are:
+>                             - "renesas,thermal-r8a73a4" (R-Mobile APE6)
+>                             - "renesas,thermal-r8a7779" (R-Car H1)
+> @@ -36,3 +37,35 @@ thermal@e61f0000 {
+>                 0xe61f0300 0x38>;
+>         interrupts = <0 69 IRQ_TYPE_LEVEL_HIGH>;
+>  };
+> +
+> +Example (with thermal-zone):
+> +
+> +thermal-zones {
+> +       cpu_thermal: cpu-thermal {
+> +               polling-delay-passive   = <1000>;
+> +               polling-delay           = <5000>;
+> +
+> +               thermal-sensors = <&thermal>;
+> +
+> +               trips {
+> +                       cpu-crit {
+> +                               temperature     = <1150000>;
+> +                               hysteresis      = <0>;
+> +                               type            = "critical";
+> +                       };
+> +               };
+> +               cooling-maps {
+> +               };
+> +       };
+> +};
+> +
+> +thermal: thermal@e61f0000 {
+> +       compatible =    "renesas,thermal-r8a7790",
+> +                       "renesas,rcar-thermal-gen2",
+> +                       "renesas,rcar-thermal";
+> +       reg = <0 0xe61f0000 0 0x14>, <0 0xe61f0100 0 0x38>;
+> +       interrupts = <0 69 IRQ_TYPE_LEVEL_HIGH>;
+> +       clocks = <&mstp5_clks R8A7790_CLK_THERMAL>;
+> +       power-domains = <&cpg_clocks>;
+> +       #thermal-sensor-cells = <0>;
+> +};
+
+How are the two nodes above linked?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
