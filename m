@@ -1,75 +1,77 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
 Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
-Date: Fri, 4 Dec 2015 16:56:17 +0000
-Message-ID: <20151204165617.GW8644@n2100.arm.linux.org.uk>
+Date: Fri, 4 Dec 2015 17:05:22 +0000
+Message-ID: <20151204170522.GX8644@n2100.arm.linux.org.uk>
 References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
  <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
  <20151204162956.GA14978@rob-hp-laptop>
+ <1449247305.8275.104.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20151204162956.GA14978@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+In-Reply-To: <1449247305.8275.104.camel@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, kernel@pengutronix.de, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 04, 2015 at 10:29:56AM -0600, Rob Herring wrote:
-> On Fri, Dec 04, 2015 at 02:59:54PM +0100, Lucas Stach wrote:
-> > +Vivante GPU core devices
-> > +====================
-> > +
-> > +Required properties:
-> > +- compatible: Should be "vivante,gc"
-> 
-> This should at least have the specific cores listed like gc-5000 or 
-> whatever the numbering is. As is, I can't even tell if this a 2d or 3d 
-> core.
-
-Who cares whether it's a 2D or 3D core?  There are four options here:
-
-2D
-2D and 3D
-3D
-VG
-
-All of these are determined by feature flags in the core - why should
-DT have to specify this information when the hardware tells us, just
-because we want something humanly visible?
-
-> Also, it probably should have an SOC specific property to deal with SOC 
-> specific configuration or integration.
-
-Thus far, we're not aware of any SoC specific configuration of the
-core.  Even if there was, I can't see it making much difference to
-the DRM driver itself: the DRM driver mostly about command stream
-queuing, GEM buffer management (both of which are independent of SoC
-issues) and PM management, which is performed via runtime PM.
-
-Where SoC specific integration would come in is the runtime PM, and
-that goes as far as what clocks are present, which we already deal
-with, power domains, which again we already deal with, and
-interrupts - again, which are dealt with.
-
-Given that this driver has been developed on two SoCs (Dove and iMX6)
-which are radically different, I can't see any need for other SoC
-specifics.
-
-Did you have anything in mind?
-
-Dove:
-GC600 combined 2D and 3D GPU core, one clock, one interrupt, one PM
-domain.
-
-iMX6 S/DL/D/Q:
-GC320 2D GPU core, GC880 or GC2000 3D GPU core, GC335 VG core, multiple
-clocks, multiple interrupts, multiple PM domains.
-
--- 
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBEZWMgMDQsIDIwMTUgYXQgMDU6NDE6NDVQTSArMDEwMCwgTHVjYXMgU3RhY2ggd3Jv
+dGU6Cj4gQW0gRnJlaXRhZywgZGVuIDA0LjEyLjIwMTUsIDEwOjI5IC0wNjAwIHNjaHJpZWIgUm9i
+IEhlcnJpbmc6Cj4gPiBPbiBGcmksIERlYyAwNCwgMjAxNSBhdCAwMjo1OTo1NFBNICswMTAwLCBM
+dWNhcyBTdGFjaCB3cm90ZToKPiA+ID4gK2dwdS1zdWJzeXN0ZW0gewo+ID4gPiArCWNvbXBhdGli
+bGUgPSAiZnNsLGlteC1ncHUtc3Vic3lzdGVtIjsKPiA+ID4gKwljb3JlcyA9IDwmZ3B1XzJkPiwg
+PCZncHVfM2Q+Owo+ID4gPiArfTsKPiA+IAo+ID4gWWVhaCwgSSdtIG5vdCByZWFsbHkgYSBmYW4g
+b2YgZG9pbmcgdGhpcyBzaW1wbHkgYmVjYXVzZSBEUk0gd2FudHMgMSAKPiA+IGRyaXZlci4KPiA+
+IAo+IEknbSBhd2FyZSBvZiB0aGF0LCBidXQgSSBkb24ndCBzZWUgbXVjaCB2YWx1ZSBpbiBraWNr
+aW5nIHRoaXMgZGlzY3Vzc2lvbgo+IGFyb3VuZCBmb3IgZXZlcnkgRFJNIGRyaXZlciBzdWJtaXNz
+aW9uLiBUaGlzIGlzIHRoZSBiaW5kaW5nIHRoYXQgaGFzCj4gZW1lcmdlZCBmcm9tIGEgbGVuZ3Ro
+eSBkaXNjdXNzaW9uIGF0IEtTIDIwMTMgaW4gRWRpbmJ1cmdoIGFuZCBhdCBsZWFzdAo+IGFsbG93
+cyB1cyB0byBzdGFuZGFyZGl6ZSBvbiBfc29tZXRoaW5nXy4gQWxzbyBBTFNBIGRvZXMgYSBzaW1p
+bGFyIHRoaW5nCj4gdG8gYmluZCBjb2RlY3MgYW5kIENQVSBpbnRlcmZhY2VzIHRvZ2V0aGVyLgoK
+QWJzb2x1dGVseSwgdGhpcyBpcyB0aGUgaW50ZXJmYWNlIGFuZCBtZXRob2QgdGhhdCB3YXMgZGlz
+Y3Vzc2VkIGFuZApzZXR0bGVkIHVwb24sIGFuZCBmb3IgRFQgZm9sayB0byBub3cgc3RhcnQgc2F5
+aW5nIHRoYXQgdGhleSdyZSBub3QKZmFucyBvZiBpdCBpcyBfZmFyXyB0b28gbGF0ZS4gIElmIHRo
+ZXkgaGFkIGNvbmNlcm5zLCB0aGV5IHNob3VsZCBoYXZlCmJlZW4gZGlzY3Vzc2VkIGR1cmluZyB0
+aGUgc3VibWlzc2lvbiBvZiB0aGUgZmlyc3QgdXNlcnMgb2YgaXQsIG5vdAphZnRlciB0aGUgNHRo
+IG9yIDV0aCB1c2VyLgoKU3VyZSwgdGhleSBtYXkgYmUgaGF2aW5nIHJlc2VydmF0aW9ucyBhYm91
+dCBpdCwgYnV0IHRoZW4sIEkgdGhpbmssCml0J3MgdXAgdG8gdGhlbSB0byBjb21lIHVwIHdpdGgg
+YSBiZXR0ZXIgc29sdXRpb24gdG8gdGhpcywgYW5kIGRpc2N1c3MKaXQgb3ZlciB3aXRoIHRoZSBE
+Uk0gcGVvcGxlLCByZW1lbWJlcmluZyB0aGF0IHRoZSBEUk0gcGVvcGxlIGFyZSB2ZXJ5CmFkYW1h
+bnQgdGhhdCB0aGV5J3JlIG5vdCBidWRnaW5nIG9uIHRoZSAibm90IGhvdHBsdWdnaW5nIGJpdHMi
+IGlzc3VlLApvciBpZiB0aGV5IGRvLCBpdCBtZWFucyBfcmFkaWNhbGx5XyBjaGFuZ2luZyB0aGUg
+RFJNIHVzZXIgQVBJIGZvcgpldmVyeXRoaW5nLgoKPiA+IEFsc28sIGl0IHByb2JhYmx5IHNob3Vs
+ZCBoYXZlIGFuIFNPQyBzcGVjaWZpYyBwcm9wZXJ0eSB0byBkZWFsIHdpdGggU09DIAo+ID4gc3Bl
+Y2lmaWMgY29uZmlndXJhdGlvbiBvciBpbnRlZ3JhdGlvbi4KPgo+IFNhbWUgYXMgYWJvdmUgcmVh
+bGx5LiBQYXJ0cyBvZiB0aGUgaWRlbnRpZmljYXRpb24gcmVnaXN0ZXJzIGFyZQo+IGRpZmZlcmVu
+dCBmb3IgZWFjaCBTb0MgaW50ZWdyYXRpb24sIGV2ZW4gaWYgaXQncyB0aGUgc2FtZSBJUCBjb3Jl
+LAo+IHNvIHdlIGNhbiBqdXN0IGRlcml2ZSBhbnkgbmVlZGVkIGRyaXZlciBiZWhhdmlvciBkaWZm
+ZXJlbmNlcyBmcm9tCj4gdGhhdC4KCkkgYWdyZWUuICBUaGVyZSBhcmUgc29tZSBidWdzIGluIHZh
+cmlvdXMgY29yZXMgKGxpa2UgdGhlIEdDMzIwKSBidXQKaXQncyBub3QgY2xlYXIgd2hldGhlciB0
+aGF0J3MgYSBTb0Mgc3BlY2lmaWMgaXNzdWUgb3Igd2hldGhlciBpdCdzIGEKR1BVIGNvcmUgc3Bl
+Y2lmaWMgaXNzdWU6IGFsbCB3ZSBrbm93IGlzIHRoYXQgR0MzMjAgcmV2aXNpb24gWCBzdWZmZXJz
+CmZyb20gYSBjZXJ0YWluIGJ1Zywgd2hpY2ggd2UgbmVlZCB0byB3b3JrIGFyb3VuZCBpbiB1c2Vy
+c3BhY2UgLSBhbmQgYXMKd2UgcGFzcyBhbGwgdGhlIEdQVSBpZGVudGlmeWluZyBpbmZvcm1hdGlv
+biB0byB1c2Vyc3BhY2UsIGFkZGluZyBzdWNoCnN0dWZmIGludG8gRFQsIGFuZCB0aGVuIGhhdmlu
+ZyB0byBmaW5kIHNvbWUgd2F5IHRvIHBhc3MgaXQgdGhyb3VnaCB0bwp1c2Vyc3BhY2Ugd291bGQg
+anVzdCBhZGQgYSB3aG9sZSBuZXcgbGV2ZWwgb2YgY29tcGxleGl0eSB0aGF0IGlzbid0CnJlcXVp
+cmVkLgoKSXQnZCBiZSBhIGNhc2Ugb2YgIm9rYXksIHdlIGtub3cgaU1YNiBoYXMgYSBHQzMyMCB3
+aXRoIHJldmlzaW9uIFgsCnNvIHdlIGJldHRlciBzZXQgRFQgZmxhZyBZIHRvIGluZGljYXRlIHRo
+YXQgaXQgaGFzIHRoaXMgYnVnIiB3aGVuIHdlCmFscmVhZHkga25vdyBpbiB1c2Vyc3BhY2UgdGhh
+dCBpdCdzIGEgR0MzMjAgcmV2aXNpb24gWCBhbmQgdXNlcnNwYWNlCm5lZWRzIHRvIGdlbmVyYXRl
+IHRoZSBjb21tYW5kIHN0cmVhbSBkaWZmZXJlbnRseSBiYXNlZCBvbiB0aGF0LgoKU28sIGl0IHNl
+ZW1zIGNvbXBsZXRlbHkgcG9pbnRsZXNzIHRvIGVuY29kZSB0aGlzIGluZm9ybWF0aW9uIGluIERU
+LgoKLS0gCkZUVEMgYnJvYWRiYW5kIGZvciAwLjhtaWxlIGxpbmU6IGN1cnJlbnRseSBhdCA5LjZN
+YnBzIGRvd24gNDAwa2JwcyB1cAphY2NvcmRpbmcgdG8gc3BlZWR0ZXN0Lm5ldC4KX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
