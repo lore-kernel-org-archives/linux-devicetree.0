@@ -1,39 +1,73 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: [PATCH 0/5] stmmac: Fixed Phy & PTP fixes
-Date: Fri,  4 Dec 2015 17:08:40 +0800
-Message-ID: <1449220125-67417-1-git-send-email-preid@electromag.com.au>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, davem@davemloft.net
-Cc: Phil Reid <preid@electromag.com.au>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH 3/3] dt-bindings: exynos-dp: update ports node binding for
+ panel
+Date: Fri, 04 Dec 2015 18:08:47 +0900
+Message-ID: <5661581F.8040505@samsung.com>
+References: <1449135010-8111-1-git-send-email-inki.dae@samsung.com>
+ <1449135010-8111-4-git-send-email-inki.dae@samsung.com>
+ <20151203233853.GA8608@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20151203233853.GA8608@rob-hp-laptop>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, k.kozlowski@samsung.com, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, kgene.kim@samsung.com, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Provide ability to specify a fixed phy in the device tree and
-retain the mdio bus if no phy is found. This is needed where 
-a dsa is connected via a fixed phy and uses the mdio bus for config.
-Fixed ptp ref clock calculatins for the stmmac when ptp ref clock
-is running at <= 50Mhz. Also add device tree setting to config
-ptp clk source on socfpga platforms.
-
-
-Phil Reid (5):
-  stmmac: create of compatible mdio bus for stmacc driver
-  stmmac: Correct documentation on stmmac clocks.
-  stmmac: Fix calculations for ptp counters when clock input = 50Mhz.
-  stmmac: Add ptp debugfs entry.
-  stmmac: socfpga: Provide dt node to config ptp clk source.
-
- .../devicetree/bindings/net/socfpga-dwmac.txt      |  2 +
- Documentation/devicetree/bindings/net/stmmac.txt   | 27 +++++---
- drivers/net/ethernet/stmicro/stmmac/common.h       |  2 +-
- .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    | 10 +++
- drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  1 +
- .../net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c  |  8 ++-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 79 +++++++++++++++++++---
- drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c  | 32 ++++++---
- .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |  2 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.h   |  5 ++
- 10 files changed, 134 insertions(+), 34 deletions(-)
-
--- 
-1.8.3.1
+SGkgUm9iLAoKMjAxNeuFhCAxMuyblCAwNOydvCAwODozOOyXkCBSb2IgSGVycmluZyDsnbQo6rCA
+KSDsk7Qg6riAOgo+IE9uIFRodSwgRGVjIDAzLCAyMDE1IGF0IDA2OjMwOjEwUE0gKzA5MDAsIElu
+a2kgRGFlIHdyb3RlOgo+PiBUaGlzIHBhdGNoIHVwZGF0ZXMgYSBwb3J0cyBub2RlIGJpbmRpbmcg
+Zm9yIHBhbmVsLgo+Pgo+PiBXaXRoIHRoaXMsIGRwIG5vZGUgY2FuIGhhdmUgYSBwb3J0cyBub2Rl
+IHdoaWNoIGRlc2NyaWJlcwo+PiBhIHJlbW90ZSBlbmRwb2ludCBub2RlIHRoYXQgY2FuIGJlIGNv
+bm5lY3RlZCB0byBwYW5lbCBvciBicmlkZ2UKPj4gbm9kZS4KPj4KPj4gU2lnbmVkLW9mZi1ieTog
+SW5raSBEYWUgPGlua2kuZGFlQHNhbXN1bmcuY29tPgo+PiAtLS0KPj4gIC4uLi9iaW5kaW5ncy9k
+aXNwbGF5L2V4eW5vcy9leHlub3NfZHAudHh0ICAgICAgICAgIHwgMjggKysrKysrKysrKysrKysr
+KysrLS0tLQo+PiAgMSBmaWxlIGNoYW5nZWQsIDI0IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25z
+KC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9leHlub3MvZXh5bm9zX2RwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L2V4eW5vcy9leHlub3NfZHAudHh0Cj4+IGluZGV4IDY0NjkzZjIuLjE1
+YjUyY2IgMTAwNjQ0Cj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L2V4eW5vcy9leHlub3NfZHAudHh0Cj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V4eW5vcy9leHlub3NfZHAudHh0Cj4+IEBAIC02Niw4ICs2
+NiwxNSBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzIGZvciBkcC1jb250cm9sbGVyOgo+PiAgCQlIb3Rw
+bHVnIGRldGVjdCBHUElPLgo+PiAgCQkJSW5kaWNhdGVzIHdoaWNoIEdQSU8gc2hvdWxkIGJlIHVz
+ZWQgZm9yIGhvdHBsdWcKPj4gIAkJCWRldGVjdGlvbgo+PiAtCS12aWRlbyBpbnRlcmZhY2VzOiBE
+ZXZpY2Ugbm9kZSBjYW4gY29udGFpbiB2aWRlbyBpbnRlcmZhY2UgcG9ydAo+PiAtCQkJICAgIG5v
+ZGVzIGFjY29yZGluZyB0byBbMV0uCj4+ICtWaWRlbyBpbnRlcmZhY2VzOgo+PiArICBEZXZpY2Ug
+bm9kZSBjYW4gY29udGFpbiB2aWRlbyBpbnRlcmZhY2UgcG9ydCBub2RlcyBhY2NvcmRpbmcgdG8g
+WzFdLgo+PiArICBUaGUgZm9sbG93aW5nIGFyZSBwcm9wZXJ0aWVzIHNwZWNpZmljIHRvIHRob3Nl
+IG5vZGVzOgo+PiArCj4+ICsgIGVuZHBvaW50IG5vZGUgY29ubmVjdGVkIHRvIGJyaWRnZSBvciBw
+YW5lbCBub2RlOgo+PiArICAgLSByZW1vdGUtZW5kcG9pbnQ6IHNwZWNpZmllcyB0aGUgZW5kcG9p
+bnQgaW4gcGFuZWwgb3IgYnJpZGdlIG5vZGUuCj4+ICsJCSAgICAgIFRoaXMgbm9kZSBpcyByZXF1
+aXJlZCBpbiBhbGwga2luZHMgb2YgZXh5bm9zIGRwCj4+ICsJCSAgICAgIHRvIHJlcHJlc2VudCB0
+aGUgY29ubmVjdGlvbiBiZXR3ZWVuIGRwIGFuZCBicmlkZ2UKPj4gKwkJICAgICAgLG9yIGRwIGFu
+ZCBwYW5lbC4KPiAKPiBGaXggeW91ciBwdW5jdHVhdGlvbi4KClJpZ2h0LiAKCj4gCj4+ICAKPj4g
+IFsxXTogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVy
+ZmFjZXMudHh0Cj4+ICAKPj4gQEAgLTExMSw5ICsxMTgsMjIgQEAgQm9hcmQgU3BlY2lmaWMgcG9y
+dGlvbjoKPj4gIAkJfTsKPj4gIAo+PiAgCQlwb3J0cyB7Cj4+IC0JCQlwb3J0QDAgewo+PiArCQkJ
+I2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4+ICsJCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiAKPiBZb3Ug
+ZG9uJ3QgbmVlZCB0aGVzZS4KCkRpdHRvLgoKPiAKPj4gKwo+PiArCQkJcG9ydCB7Cj4+ICAJCQkJ
+ZHBfb3V0OiBlbmRwb2ludCB7Cj4+IC0JCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmYnJpZGdlX2lu
+PjsKPj4gKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkcF9pbj47Cj4+ICsJCQkJfTsKPj4gKwkJ
+CX07Cj4+ICsJCX07Cj4+ICsKPj4gKwkJcGFuZWxAMCB7Cj4+ICsJCQlyZWcgPSA8MD47Cj4gCj4g
+RHJvcCB0aGUgQDAgYW5kIHJlZyBhcyB5b3Ugb25seSBoYXZlIDEuCgpEaXR0by4KClRoYW5rcywK
+SW5raSBEYWUKCj4gCj4+ICsJCQkuLi4KPj4gKwkJCXBvcnQgewo+PiArCQkJCWRwX2luOiBlbmRw
+b2ludCB7Cj4+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHBfb3V0PjsKPj4gIAkJCQl9Owo+
+PiAgCQkJfTsKPj4gIAkJfTsKPj4gLS0gCj4+IDEuOS4xCj4+Cj4gLS0KPiBUbyB1bnN1YnNjcmli
+ZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgZGV2aWNldHJlZSIg
+aW4KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZwo+
+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21v
+LWluZm8uaHRtbAo+IAo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
