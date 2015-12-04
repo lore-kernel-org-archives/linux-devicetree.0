@@ -1,57 +1,93 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v4 1/2] dt-bindings: GPIO: Add gpio-initval
-Date: Fri, 04 Dec 2015 17:39:40 +0100
-Message-ID: <1449247180.3451.22.camel@pengutronix.de>
-References: <1449234388-4007-1-git-send-email-mpa@pengutronix.de>
-	 <1449234388-4007-2-git-send-email-mpa@pengutronix.de>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
+Date: Fri, 04 Dec 2015 17:41:45 +0100
+Message-ID: <1449247305.8275.104.camel@pengutronix.de>
+References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
+ <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
+ <20151204162956.GA14978@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1449234388-4007-2-git-send-email-mpa@pengutronix.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org, kernel@pengutronix.de, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20151204162956.GA14978@rob-hp-laptop>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, kernel@pengutronix.de, Russell King <rmk+kernel@arm.linux.org.uk>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 04.12.2015, 14:06 +0100 schrieb Markus Pargmann:
-> Add a binding for GPIO initialization.
-> 
-> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-
-Both patches
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-
-small nitpick:
-
-> ---
->  Documentation/devicetree/bindings/gpio/gpio.txt | 34 ++++++++++++++++---------
->  1 file changed, 22 insertions(+), 12 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
-> index 069cdf6f9dac..d11abfa13add 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-> @@ -155,29 +155,39 @@ gpio-controller@00000000 {
->  	ngpios = <18>;
->  }
->  
-> -The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
-> -providing automatic GPIO request and configuration as part of the
-> -gpio-controller's driver probe function.
-> +The GPIO chip may contain GPIO definitions. These define properties for single
-> +GPIOs of this controller.
->  
-> -Each GPIO hog definition is represented as a child node of the GPIO controller.
-> +There are two types of GPIO definitions:
-> +
-> +- GPIO hogging is a mechanism providing automatic GPIO request and
-> +  configuration as part of the gpio-controller driver's probe function. The
-> +  GPIO is held until the gpio-controller is removed.
-> +- GPIO initialization provides an automatic initialization to known save
-
-safe
-
-regards
-Philipp
-
+QW0gRnJlaXRhZywgZGVuIDA0LjEyLjIwMTUsIDEwOjI5IC0wNjAwIHNjaHJpZWIgUm9iIEhlcnJp
+bmc6Cj4gT24gRnJpLCBEZWMgMDQsIDIwMTUgYXQgMDI6NTk6NTRQTSArMDEwMCwgTHVjYXMgU3Rh
+Y2ggd3JvdGU6Cj4gPiBFdG5hdml2IGZvbGxvd3MgdGhlIHNhbWUgcHJpY2lwbGUgYXMgaW14LWRy
+bSB0byBoYXZlIGEgdmlydHVhbAo+ID4gbWFzdGVyIGRldmljZSBub2RlIHRvIGJpbmQgYWxsIHRo
+ZSBpbmRpdmlkdWFsIEdQVSBjb3JlcyB0b2dldGhlcgo+ID4gaW50byBvbmUgRFJNIGRldmljZS4K
+PiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXgu
+ZGU+Cj4gPiAtLS0KPiA+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9ldG5hdml2L2V0bmF2aXYtZHJt
+LnR4dCAgICAgICB8IDQ2ICsrKysrKysrKysrKysrKysrKysrKysKPiA+ICAxIGZpbGUgY2hhbmdl
+ZCwgNDYgaW5zZXJ0aW9ucygrKQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9ldG5hdml2L2V0bmF2aXYtZHJtLnR4dAo+ID4g
+Cj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvZXRuYXZpdi9ldG5hdml2LWRybS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9ldG5hdml2L2V0bmF2aXYtZHJtLnR4dAo+ID4gbmV3IGZpbGUgbW9kZSAx
+MDA2NDQKPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uMTlmZGUyOWRjMWQ3Cj4gPiAtLS0gL2Rldi9u
+dWxsCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9l
+dG5hdml2L2V0bmF2aXYtZHJtLnR4dAo+ID4gQEAgLTAsMCArMSw0NiBAQAo+ID4gK0V0bmF2aXYg
+RFJNIG1hc3RlciBkZXZpY2UKPiA+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+
+ID4gKwo+ID4gK1RoZSBFdG5hdml2IERSTSBtYXN0ZXIgZGV2aWNlIGlzIGEgdmlydHVhbCBkZXZp
+Y2UgbmVlZGVkIHRvIGxpc3QgYWxsCj4gPiArVml2YW50ZSBHUFUgY29yZXMgdGhhdCBjb21wcmlz
+ZSB0aGUgR1BVIHN1YnN5c3RlbS4KPiA+ICsKPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4g
+Ky0gY29tcGF0aWJsZTogU2hvdWxkIGJlIG9uZSBvZgo+ID4gKyAgICAiZnNsLGlteC1ncHUtc3Vi
+c3lzdGVtIgo+ID4gKyAgICAibWFydmVsbCxkb3ZlLWdwdS1zdWJzeXN0ZW0iCj4gPiArLSBjb3Jl
+czogU2hvdWxkIGNvbnRhaW4gYSBsaXN0IG9mIHBoYW5kbGVzIHBvaW50aW5nIHRvIFZpdmFudGUg
+R1BVIGRldmljZXMKPiA+ICsKPiA+ICtleGFtcGxlOgo+ID4gKwo+ID4gK2dwdS1zdWJzeXN0ZW0g
+ewo+ID4gKwljb21wYXRpYmxlID0gImZzbCxpbXgtZ3B1LXN1YnN5c3RlbSI7Cj4gPiArCWNvcmVz
+ID0gPCZncHVfMmQ+LCA8JmdwdV8zZD47Cj4gPiArfTsKPiAKPiBZZWFoLCBJJ20gbm90IHJlYWxs
+eSBhIGZhbiBvZiBkb2luZyB0aGlzIHNpbXBseSBiZWNhdXNlIERSTSB3YW50cyAxIAo+IGRyaXZl
+ci4KPiAKSSdtIGF3YXJlIG9mIHRoYXQsIGJ1dCBJIGRvbid0IHNlZSBtdWNoIHZhbHVlIGluIGtp
+Y2tpbmcgdGhpcyBkaXNjdXNzaW9uCmFyb3VuZCBmb3IgZXZlcnkgRFJNIGRyaXZlciBzdWJtaXNz
+aW9uLiBUaGlzIGlzIHRoZSBiaW5kaW5nIHRoYXQgaGFzCmVtZXJnZWQgZnJvbSBhIGxlbmd0aHkg
+ZGlzY3Vzc2lvbiBhdCBLUyAyMDEzIGluIEVkaW5idXJnaCBhbmQgYXQgbGVhc3QKYWxsb3dzIHVz
+IHRvIHN0YW5kYXJkaXplIG9uIF9zb21ldGhpbmdfLiBBbHNvIEFMU0EgZG9lcyBhIHNpbWlsYXIg
+dGhpbmcKdG8gYmluZCBjb2RlY3MgYW5kIENQVSBpbnRlcmZhY2VzIHRvZ2V0aGVyLgoKPiA+ICsK
+PiA+ICsKPiA+ICtWaXZhbnRlIEdQVSBjb3JlIGRldmljZXMKPiA+ICs9PT09PT09PT09PT09PT09
+PT09PQo+ID4gKwo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiArLSBjb21wYXRpYmxlOiBT
+aG91bGQgYmUgInZpdmFudGUsZ2MiCj4gCj4gVGhpcyBzaG91bGQgYXQgbGVhc3QgaGF2ZSB0aGUg
+c3BlY2lmaWMgY29yZXMgbGlzdGVkIGxpa2UgZ2MtNTAwMCBvciAKPiB3aGF0ZXZlciB0aGUgbnVt
+YmVyaW5nIGlzLiBBcyBpcywgSSBjYW4ndCBldmVuIHRlbGwgaWYgdGhpcyBhIDJkIG9yIDNkIAo+
+IGNvcmUuCj4gClRoZXJlIGlzIHJlYWxseSBubyBuZWVkIGZvciB0aGlzLiBUaGUgY29yZXMgaGF2
+ZSBpZGVudGlmaWNhdGlvbgpyZWdpc3RlcnMgdGhhdCBhcmUgbXVjaCBtb3JlIGFjY3VyYXRlIHRo
+YW4gd2hhdCB3ZSBjb3VsZCBkZXNjcmliZSB3aXRoIGEKY29tcGF0aWJsZSB2YWx1ZS4gU28gdXNp
+bmcgYSBtb3JlIHNwZWNpZmljIGNvbXBhdGlibGUganVzdCBwcm92aWRlcwpyZWR1bmRhbnQgKGFu
+ZCBwb3NzaWJseSB3cm9uZykgaW5mb3JtYXRpb24uCgo+IEFsc28sIGl0IHByb2JhYmx5IHNob3Vs
+ZCBoYXZlIGFuIFNPQyBzcGVjaWZpYyBwcm9wZXJ0eSB0byBkZWFsIHdpdGggU09DIAo+IHNwZWNp
+ZmljIGNvbmZpZ3VyYXRpb24gb3IgaW50ZWdyYXRpb24uCj4gClNhbWUgYXMgYWJvdmUgcmVhbGx5
+LiBQYXJ0cyBvZiB0aGUgaWRlbnRpZmljYXRpb24gcmVnaXN0ZXJzIGFyZQpkaWZmZXJlbnQgZm9y
+IGVhY2ggU29DIGludGVncmF0aW9uLCBldmVuIGlmIGl0J3MgdGhlIHNhbWUgSVAgY29yZSwgc28g
+d2UKY2FuIGp1c3QgZGVyaXZlIGFueSBuZWVkZWQgZHJpdmVyIGJlaGF2aW9yIGRpZmZlcmVuY2Vz
+IGZyb20gdGhhdC4KCj4gPiArLSByZWc6IHNob3VsZCBiZSByZWdpc3RlciBiYXNlIGFuZCBsZW5n
+dGggYXMgZG9jdW1lbnRlZCBpbiB0aGUKPiA+ICsgIGRhdGFzaGVldAo+ID4gKy0gaW50ZXJydXB0
+czogU2hvdWxkIGNvbnRhaW4gdGhlIGNvcmVzIGludGVycnVwdCBsaW5lCj4gPiArLSBjbG9ja3M6
+IHNob3VsZCBjb250YWluIG9uZSBjbG9jayBmb3IgZW50cnkgaW4gY2xvY2stbmFtZXMKPiA+ICsg
+IHNlZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2stYmluZGlu
+Z3MudHh0Cj4gPiArLSBjbG9jay1uYW1lczoKPiA+ICsgICAtICJidXMiOiAgICBBWEkvcmVnaXN0
+ZXIgY2xvY2sKPiA+ICsgICAtICJjb3JlIjogICBHUFUgY29yZSBjbG9jawo+ID4gKyAgIC0gInNo
+YWRlciI6IFNoYWRlciBjbG9jayAob25seSByZXF1aXJlZCBpZiBHUFUgaGFzIGZlYXR1cmUgUElQ
+RV8zRCkKPiA+ICsKPiA+ICtleGFtcGxlOgo+ID4gKwo+ID4gK2dwdV8zZDogZ3B1QDAwMTMwMDAw
+IHsKPiA+ICsJY29tcGF0aWJsZSA9ICJ2aXZhbnRlLGdjIjsKPiA+ICsJcmVnID0gPDB4MDAxMzAw
+MDAgMHg0MDAwPjsKPiA+ICsJaW50ZXJydXB0cyA9IDwwIDkgSVJRX1RZUEVfTEVWRUxfSElHSD47
+Cj4gPiArCWNsb2NrcyA9IDwmY2xrcyBJTVg2UURMX0NMS19HUFUzRF9BWEk+LAo+ID4gKwkgICAg
+ICAgICA8JmNsa3MgSU1YNlFETF9DTEtfR1BVM0RfQ09SRT4sCj4gPiArCSAgICAgICAgIDwmY2xr
+cyBJTVg2UURMX0NMS19HUFUzRF9TSEFERVI+Owo+ID4gKwljbG9jay1uYW1lcyA9ICJidXMiLCAi
+Y29yZSIsICJzaGFkZXIiOwo+ID4gK307Cj4gPiAtLSAKPiA+IDIuNi4yCj4gPiAKCi0tIApQZW5n
+dXRyb25peCBlLksuICAgICAgICAgICAgIHwgTHVjYXMgU3RhY2ggICAgICAgICAgICAgICAgIHwK
+SW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICB8IGh0dHA6Ly93d3cucGVuZ3V0cm9uaXguZGUv
+ICB8CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
