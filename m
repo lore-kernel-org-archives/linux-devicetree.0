@@ -1,51 +1,74 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/12] devicetree: add vendor prefix for Vivante
- Corporation
-Date: Fri, 4 Dec 2015 10:23:43 -0600
-Message-ID: <20151204162343.GA14688@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
+Date: Fri, 4 Dec 2015 10:29:56 -0600
+Message-ID: <20151204162956.GA14978@rob-hp-laptop>
 References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
- <1449237604-19064-2-git-send-email-l.stach@pengutronix.de>
+ <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1449237604-19064-2-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+In-Reply-To: <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, kernel@pengutronix.de, Russell King <rmk+kernel@arm.linux.org.uk>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 04, 2015 at 02:59:53PM +0100, Lucas Stach wrote:
-> From: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Trivial patch to add Vivante Corporation to the list of
-> devicetree vendor prefixes.
-> 
-> Signed-off-by: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 55df1d444e9f..c2767a772650 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -238,6 +238,7 @@ v3	V3 Semiconductor
->  variscite	Variscite Ltd.
->  via	VIA Technologies, Inc.
->  virtio	Virtual I/O Device Specification, developed by the OASIS consortium
-> +vivante	Vivante Corporation
->  voipac	Voipac Technologies s.r.o.
->  wexler	Wexler
->  winbond Winbond Electronics corp.
-> -- 
-> 2.6.2
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBEZWMgMDQsIDIwMTUgYXQgMDI6NTk6NTRQTSArMDEwMCwgTHVjYXMgU3RhY2ggd3Jv
+dGU6Cj4gRXRuYXZpdiBmb2xsb3dzIHRoZSBzYW1lIHByaWNpcGxlIGFzIGlteC1kcm0gdG8gaGF2
+ZSBhIHZpcnR1YWwKPiBtYXN0ZXIgZGV2aWNlIG5vZGUgdG8gYmluZCBhbGwgdGhlIGluZGl2aWR1
+YWwgR1BVIGNvcmVzIHRvZ2V0aGVyCj4gaW50byBvbmUgRFJNIGRldmljZS4KPiAKPiBTaWduZWQt
+b2ZmLWJ5OiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5kZT4KPiAtLS0KPiAgLi4u
+L2JpbmRpbmdzL2Rpc3BsYXkvZXRuYXZpdi9ldG5hdml2LWRybS50eHQgICAgICAgfCA0NiArKysr
+KysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA0NiBpbnNlcnRpb25zKCspCj4g
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9ldG5hdml2L2V0bmF2aXYtZHJtLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9ldG5hdml2L2V0bmF2aXYtZHJtLnR4dCBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V0bmF2aXYvZXRuYXZp
+di1kcm0udHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLjE5
+ZmRlMjlkYzFkNwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9ldG5hdml2L2V0bmF2aXYtZHJtLnR4dAo+IEBAIC0wLDAgKzEs
+NDYgQEAKPiArRXRuYXZpdiBEUk0gbWFzdGVyIGRldmljZQo+ICs9PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PQo+ICsKPiArVGhlIEV0bmF2aXYgRFJNIG1hc3RlciBkZXZpY2UgaXMgYSB2
+aXJ0dWFsIGRldmljZSBuZWVkZWQgdG8gbGlzdCBhbGwKPiArVml2YW50ZSBHUFUgY29yZXMgdGhh
+dCBjb21wcmlzZSB0aGUgR1BVIHN1YnN5c3RlbS4KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6
+Cj4gKy0gY29tcGF0aWJsZTogU2hvdWxkIGJlIG9uZSBvZgo+ICsgICAgImZzbCxpbXgtZ3B1LXN1
+YnN5c3RlbSIKPiArICAgICJtYXJ2ZWxsLGRvdmUtZ3B1LXN1YnN5c3RlbSIKPiArLSBjb3Jlczog
+U2hvdWxkIGNvbnRhaW4gYSBsaXN0IG9mIHBoYW5kbGVzIHBvaW50aW5nIHRvIFZpdmFudGUgR1BV
+IGRldmljZXMKPiArCj4gK2V4YW1wbGU6Cj4gKwo+ICtncHUtc3Vic3lzdGVtIHsKPiArCWNvbXBh
+dGlibGUgPSAiZnNsLGlteC1ncHUtc3Vic3lzdGVtIjsKPiArCWNvcmVzID0gPCZncHVfMmQ+LCA8
+JmdwdV8zZD47Cj4gK307CgpZZWFoLCBJJ20gbm90IHJlYWxseSBhIGZhbiBvZiBkb2luZyB0aGlz
+IHNpbXBseSBiZWNhdXNlIERSTSB3YW50cyAxIApkcml2ZXIuCgo+ICsKPiArCj4gK1ZpdmFudGUg
+R1BVIGNvcmUgZGV2aWNlcwo+ICs9PT09PT09PT09PT09PT09PT09PQo+ICsKPiArUmVxdWlyZWQg
+cHJvcGVydGllczoKPiArLSBjb21wYXRpYmxlOiBTaG91bGQgYmUgInZpdmFudGUsZ2MiCgpUaGlz
+IHNob3VsZCBhdCBsZWFzdCBoYXZlIHRoZSBzcGVjaWZpYyBjb3JlcyBsaXN0ZWQgbGlrZSBnYy01
+MDAwIG9yIAp3aGF0ZXZlciB0aGUgbnVtYmVyaW5nIGlzLiBBcyBpcywgSSBjYW4ndCBldmVuIHRl
+bGwgaWYgdGhpcyBhIDJkIG9yIDNkIApjb3JlLgoKQWxzbywgaXQgcHJvYmFibHkgc2hvdWxkIGhh
+dmUgYW4gU09DIHNwZWNpZmljIHByb3BlcnR5IHRvIGRlYWwgd2l0aCBTT0MgCnNwZWNpZmljIGNv
+bmZpZ3VyYXRpb24gb3IgaW50ZWdyYXRpb24uCgo+ICstIHJlZzogc2hvdWxkIGJlIHJlZ2lzdGVy
+IGJhc2UgYW5kIGxlbmd0aCBhcyBkb2N1bWVudGVkIGluIHRoZQo+ICsgIGRhdGFzaGVldAo+ICst
+IGludGVycnVwdHM6IFNob3VsZCBjb250YWluIHRoZSBjb3JlcyBpbnRlcnJ1cHQgbGluZQo+ICst
+IGNsb2Nrczogc2hvdWxkIGNvbnRhaW4gb25lIGNsb2NrIGZvciBlbnRyeSBpbiBjbG9jay1uYW1l
+cwo+ICsgIHNlZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2st
+YmluZGluZ3MudHh0Cj4gKy0gY2xvY2stbmFtZXM6Cj4gKyAgIC0gImJ1cyI6ICAgIEFYSS9yZWdp
+c3RlciBjbG9jawo+ICsgICAtICJjb3JlIjogICBHUFUgY29yZSBjbG9jawo+ICsgICAtICJzaGFk
+ZXIiOiBTaGFkZXIgY2xvY2sgKG9ubHkgcmVxdWlyZWQgaWYgR1BVIGhhcyBmZWF0dXJlIFBJUEVf
+M0QpCj4gKwo+ICtleGFtcGxlOgo+ICsKPiArZ3B1XzNkOiBncHVAMDAxMzAwMDAgewo+ICsJY29t
+cGF0aWJsZSA9ICJ2aXZhbnRlLGdjIjsKPiArCXJlZyA9IDwweDAwMTMwMDAwIDB4NDAwMD47Cj4g
+KwlpbnRlcnJ1cHRzID0gPDAgOSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiArCWNsb2NrcyA9IDwm
+Y2xrcyBJTVg2UURMX0NMS19HUFUzRF9BWEk+LAo+ICsJICAgICAgICAgPCZjbGtzIElNWDZRRExf
+Q0xLX0dQVTNEX0NPUkU+LAo+ICsJICAgICAgICAgPCZjbGtzIElNWDZRRExfQ0xLX0dQVTNEX1NI
+QURFUj47Cj4gKwljbG9jay1uYW1lcyA9ICJidXMiLCAiY29yZSIsICJzaGFkZXIiOwo+ICt9Owo+
+IC0tIAo+IDIuNi4yCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
