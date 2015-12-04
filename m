@@ -1,62 +1,99 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 11/12] MAINTAINERS: add Lucas Stach as maintainer for
- the etnaviv DRM driver
-Date: Fri, 04 Dec 2015 18:18:14 +0100
-Message-ID: <1449249494.8275.107.camel@pengutronix.de>
-References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
-	 <1449237604-19064-12-git-send-email-l.stach@pengutronix.de>
-	 <20151204170709.GY8644@n2100.arm.linux.org.uk>
-	 <CAKb7Uvjh7B5ExWwRQNMhqDwTwPUsFKv4-jAszVp06qq2rGQFhg@mail.gmail.com>
-	 <20151204171353.GA8644@n2100.arm.linux.org.uk>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH] ARM: DTS: am33xx: Use the new DT bindings for the eDMA3
+Date: Fri, 4 Dec 2015 11:21:49 -0600
+Message-ID: <87wpsunn82.fsf@saruman.tx.rr.com>
+References: <1449225915-28879-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151204171353.GA8644-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Ilia Mirkin <imirkin-FrUbXkNCsVf2fBVCVOL8/A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============0516450787631601975=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1449225915-28879-1-git-send-email-peter.ujfalusi@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>, tony@atomide.com
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 04.12.2015, 17:13 +0000 schrieb Russell King - ARM
-Linux:
-> On Fri, Dec 04, 2015 at 12:08:47PM -0500, Ilia Mirkin wrote:
-> > On Fri, Dec 4, 2015 at 12:07 PM, Russell King - ARM Linux
-> > <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> > > On Fri, Dec 04, 2015 at 03:00:03PM +0100, Lucas Stach wrote:
-> > >> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > >
-> > > Acked-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> > >
-> > > Although, I would like to be copied on patches, I don't think we
-> > > have a way to encode that information in MAINTAINERS.
-> > 
-> > >From the top of the MAINTAINERS file:
-> > 
-> > Descriptions of section entries:
-> > 
-> >         P: Person (obsolete)
-> >         M: Mail patches to: FullName <address@domain>
-> >         R: Designated reviewer: FullName <address@domain>
-> >            These reviewers should be CCed on patches.
-> > 
-> > So I guess that'd mean you want to be a reviewer?
-> 
-> Oh, that got agreed upon?  I thought there was pushback against that
-> idea.
-> 
-There was pushback to change random people in MAINTAINERS from
-maintainer to reviewer just because they don't manage a git tree on
-their own. The reviewer tag itself was agreed upon.
+--===============0516450787631601975==
+Content-Type: multipart/signed; boundary="=-=-="; micalg=pgp-sha1;
+	protocol="application/pgp-signature"
 
-If you want to be CC'ed on patches we should definitely add you as a
-reviewer.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Pengutronix e.K.             | Lucas Stach                 |
-Industrial Linux Solutions   | http://www.pengutronix.de/  |
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi,
+
+Peter Ujfalusi <peter.ujfalusi@ti.com> writes:
+> @@ -174,12 +182,44 @@
+>  		};
+>=20=20
+>  		edma: edma@49000000 {
+> -			compatible =3D "ti,edma3";
+> -			ti,hwmods =3D "tpcc", "tptc0", "tptc1", "tptc2";
+> -			reg =3D	<0x49000000 0x10000>,
+> -				<0x44e10f90 0x40>;
+> +			compatible =3D "ti,edma3-tpcc";
+> +			ti,hwmods =3D "tpcc";
+> +			reg =3D	<0x49000000 0x10000>;
+> +			reg-names =3D "edma3_cc";
+>  			interrupts =3D <12 13 14>;
+> -			#dma-cells =3D <1>;
+> +			interrupt-names =3D "edma3_ccint", "emda3_mperr",
+> +					  "edma3_ccerrint";
+> +			dma-requests =3D <64>;
+> +			#dma-cells =3D <2>;
+> +
+> +			ti,tptcs =3D <&edma_tptc0 7>, <&edma_tptc1 5>,
+> +				   <&edma_tptc2 0>;
+> +
+> +			ti,edma-memcpy-channels =3D /bits/ 16 <20 21>;
+
+can you explain this property here ? Are you setting bits 20 and 21 on a
+16-bit field ?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWYcuuAAoJEIaOsuA1yqREF/8P/jgEVUYtpWffnZkGywga/nj2
+h3LLH7txd10InHR9RFrsVzid/gP3C8lutU8RV/H6vRIAQcrpc6XVrMht6W5QbpLr
+kHCBn/2SH/EA5ZYjr6xLTn95Qx9OezAyRTtE51S2h1ifqSEBTMtJ9/fmeEFmRU8t
+X0zfoQcLiLRnU0UoVfwzEAGbuH4+7/cU6gS3pCNqMfUV53bar1Wd6udgZm1GPRjc
+XJiR6XROwaHhhEvbjrlYBj4cAFpmNSuQOgVoBX5Ei32zA/QLnj+J7gTgKAWnbaks
+8wilUwe04qVnb/lRuIeXH2XmuTbWdCuTvvhvW15cb5/p+Qo+z16MT3axVglosBOO
+0dYs54/Q1He7RaR+pxG9GBcRc3VGhxES3SienIVJ1NIGXWlAcI20izg2YAQvCRyj
+kOQjixSOElaYj/IwTaAekunra8qler2R8W56Z+Ykd8XTLNapN1VBMppcbDYUlJ8B
+mUcTtsNHg3SWouvv0Y2RePpR8UBFzCfV7th2bG7uUWjKKcY4S93axIBJq+e+5eET
+M0tiwH8ML1Mm10h3gzt/nqOhqsQNfomF+x5QxP7uVZEiV9B4ltIWGWAtxKTEZuE0
+DlqGmCSoMJhjWou+sOVNC+xyNUZK8kg3ZcrkKqC2Zy0f/59d6UoKH+oC8E2kUuSc
+Cug5lFBJVKVAUNUhwxYE
+=Mpvy
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+
+--===============0516450787631601975==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============0516450787631601975==--
