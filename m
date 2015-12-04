@@ -1,39 +1,111 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v2 13/12] ARM: dts: dove: add DT GPU support
-Date: Fri, 4 Dec 2015 22:07:45 +0000
-Message-ID: <20151204220745.GF8644@n2100.arm.linux.org.uk>
+From: Ilia Mirkin <imirkin@alum.mit.edu>
+Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
+Date: Fri, 4 Dec 2015 17:43:33 -0500
+Message-ID: <CAKb7UvgzYMxPxtt8iPars13n4sAJ5Z4Hva1KHO+k4yNumDb+DQ@mail.gmail.com>
 References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
- <E1a4wLa-0004Vi-2t@rmk-PC.arm.linux.org.uk>
- <20151204204918.GB809@lunn.ch>
+ <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
+ <20151204162956.GA14978@rob-hp-laptop>
+ <1449247305.8275.104.camel@pengutronix.de>
+ <CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
+ <1449251760.8275.116.camel@pengutronix.de>
+ <CAL_Jsq+oaJxD3vbDWzn_4ghpqi=RZ1o+8nOcepWYjzcu5Hwpjg@mail.gmail.com>
+ <20151204203101.GD8644@n2100.arm.linux.org.uk>
+ <CAKb7UviPhoiY-YP2aBHm0BHbeEjSF2wTguQScVXMBve-kZc16Q@mail.gmail.com>
+ <20151204220533.GE8644@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151204204918.GB809-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20151204220533.GE8644@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, patchwork-lst@pengutronix.de, "kernel@pengutronix.de" <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 04, 2015 at 09:49:18PM +0100, Andrew Lunn wrote:
-> > This additional patch is in conjunction with my PMU (already merged)
-> > and clock driver patch sets.
-> 
-> Hi Russell
-> 
-> Please could you respond to my comment about the clock patch.
-> 
-> http://www.spinics.net/lists/devicetree/msg104464.html
-
-I'm sorry, I haven't had time to look at that your comment yet.  I've
-totally forgotten that you made it, or even what the comment was.  I'll
-look at it at some point though, if I remember.  That's the best I can
-promise.
-
--- 
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBEZWMgNCwgMjAxNSBhdCA1OjA1IFBNLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXgK
+PGxpbnV4QGFybS5saW51eC5vcmcudWs+IHdyb3RlOgo+IE9uIEZyaSwgRGVjIDA0LCAyMDE1IGF0
+IDAzOjQyOjQ3UE0gLTA1MDAsIElsaWEgTWlya2luIHdyb3RlOgo+PiBPbiBGcmksIERlYyA0LCAy
+MDE1IGF0IDM6MzEgUE0sIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eAo+PiA8bGludXhAYXJtLmxp
+bnV4Lm9yZy51az4gd3JvdGU6Cj4+ID4gTW9yZW92ZXIsIERSSTMgaXMgbm90IHlldCBhdmFpbGFi
+bGUgZm9yIEdhbGxpdW0sIHNvIGlmIHdlJ3JlIHRhbGtpbmcKPj4gPiBhYm91dCBYb3JnLCB0aGVu
+IGZ1bmN0aW9uYWwgRFJJMiBpcyBhIHJlcXVpcmVtZW50LCBhbmQgdGhhdCBfbmVlZHNfCj4+ID4g
+dG8gaGF2ZSBhIHNpbmdsZSBkZXZpY2UgZm9yIHRoZSByZW5kZXJpbmcgaW5zdGFuY2VzLiAgWG9y
+ZyBoYXMgbm8gd2F5Cj4+ID4gdG8gcGFzcyBtdWx0aXBsZSByZW5kZXIgbm9kZXMgdG8gY2xpZW50
+IG92ZXIgRFJJMi4KPj4KPj4gSnVzdCB0byBjb3JyZWN0Li4uIERSSTMgaGFzIGJlZW4gYXZhaWxh
+YmxlIG9uIGdhbGxpdW0gW2F0IGxlYXN0IGluIHRoZQo+PiBjb250ZXh0IG9mIHN0L21lc2FdIGJh
+c2ljYWxseSBzaW5jZSBEUkkzIHdhcyBpbnRyb2R1Y2VkLiBOb3Qgc3VyZSB3aGF0Cj4+IGlzc3Vl
+IHlvdSdyZSBmaWdodGluZyB3aXRoLCBidXQgaXQncyBkZWZpbml0ZWx5IG5vdCBhIGdhbGxpdW0K
+Pj4gbGltaXRhdGlvbi4uLiBjb3VsZCBiZSBzb21ldGhpbmcgcmVsYXRlZCB0byBwbGF0Zm9ybSBk
+ZXZpY2VzLgo+Cj4gV2VsbCwgbXkgc3RhdGVtZW50IGlzIGJhc2VkIG9uIHRoZSBmYWN0IHRoYXQg
+dGhlcmUncyBub3RoaW5nIGluCj4gc3JjL2dhbGxpdW0vc3RhdGUtdHJhY2tlci9kcmkgd2hpY2gg
+aGludHMgYXQgYmVpbmcgRFJJMy4gIE1heWJlIGl0J3MKPiBpbXBsZW1lbnRlZCBkaWZmZXJlbnRs
+eSwgSSBkb24ndCBrbm93LiAgSSBuZXZlciB3YW50ZWQgdG8gaGFjayBNRVNBIC0KPiBJJ20gc3Vw
+cG9zZWQgdG8gYmUgdGhlIEFSTSBrZXJuZWwgbWFpbnRhaW5lciAtIGFuZCBJJ20gc3RpbGwgdmVy
+eSBuZXcKPiB0byBNRVNBLgo+Cj4gSSB0aGluayBpdCdzIGEgRFJJMyBsaW1pdGF0aW9uLiAgVGhl
+IGlzc3VlIHdpdGggdGhlIERSSTMgZGVzaWduIGlzIHRoYXQ6Cj4KPiAqIFRoZSBjbGllbnQgaGFz
+IGFjY2VzcyB0byB0aGUgR1BVIHJlbmRlciBub2RlcyBvbmx5LCBidXQgbm90IHRoZQo+ICAgY29y
+cmVzcG9uZGluZyBLTVMgbm9kZS4KPiAqIEJ1ZmZlcnMgaW4gRFJJMyBhcmUgYWxsb2NhdGVkIGZy
+b20gdGhlIEdQVSByZW5kZXIgbm9kZXMuCj4gKiBUaGUgWG9yZyBQcmVzZW50IHByb3RvY29sIGlz
+IHRoZW4gdXNlZCB0byBtYW5hZ2UgdGhlIHZibGFuawo+ICAgc3luY2hvbmlzYXRpb24gYW5kIHBh
+Z2UgZmxpcHMuCj4KPiBOb3csIHRoZSBLTVMgc2Nhbm91dCBoYXJkd2FyZSB0eXBpY2FsbHkgZG9l
+cyBub3Qgc3VwcG9ydCBhbnkga2luZCBvZgo+IHNjYXR0ZXItZ2F0aGVyOiB0aGUgYnVmZmVycyBp
+dCBoYXMgbXVzdCBiZSBjb250aWd1b3VzLiAgVGhlc2UgY2FuIGJlCj4gYWxsb2NhdGVkIGZyb20g
+dGhlIEtNUyBEUk0gZGV2aWNlLgo+Cj4gSG93ZXZlciwgdGhlIERSSTMgY2xpZW50IGhhcyBubyBh
+Y2Nlc3MgdG8gdGhlIEtNUyBEUk0gZGV2aWNlIHRvIGFsbG9jYXRlCj4gbGluZWFyIGJ1ZmZlcnMg
+ZnJvbSwgYW5kIEdQVXMgdHlwaWNhbGx5IGRvbid0IGhhdmUgZHVtYiBidWZmZXIgc3VwcG9ydC4K
+PiBIZW5jZSwgdGhlIGNsaWVudCBjYW4ndCBwYXNzIGEgc3VpdGFibGUgYnVmZmVyIHRvIHRoZSBw
+cmVzZW50IGxheWVyLgo+Cj4gSGVuY2UsIEkgY2FuIHNlZSBubyB3YXkgZm9yIHRoZSByZXNvdXJj
+ZV9jcmVhdGUoKSB0byBiZSBhYmxlIHRvIGFsbG9jYXRlCj4gYW55IGtpbmQgb2Ygc2Nhbm91dCBj
+YXBhYmxlIGJ1ZmZlci4KPgo+IFRoYXQncyBhIHNlcGFyYXRlIGlzc3VlIHRob3VnaDogeW91J3Zl
+IHBvaW50ZWQgb3V0IHRoYXQgeW91IGNhbiBzZWxlY3QKPiB3aGljaCByZW5kZXIgbm9kZSB0byB1
+c2U6IHdoYXQgaWYgd2Ugd2FudCB0byB1c2UgbXVsdGlwbGUgcmVuZGVyIG5vZGVzCj4gc2ltdWx0
+YW5lb3VzbHkgLSBlZywgYmVjYXVzZSB3ZSB3YW50IHRvIHVzZSBtdWx0aXBsZSAzRCBHUFUgY29y
+ZXMKPiB0b2dldGhlcj8gIEhvdyBkb2VzIHRoYXQgd29yayB3aXRoIHN0dWZmPwoKVGhpcyBpcyBh
+IGJpdCBsaWtlIHRoZSBTTEkgcXVlc3Rpb24gLS0gbGV0J3Mgc2F5IHlvdSBoYXZlIDIgcHJpY2V5
+CmRlc2t0b3AgR1BVcywgd2l0aCBhIGZhc3QgaW50ZXJjb25uZWN0IGJldHdlZW4gdGhlbSwgd2hp
+Y2ggbGV0cyB0aGVtCmtub3cgYWJvdXQgZWFjaCBvdGhlciwgaG93IGRvIHlvdSBtYWtlIHVzZSBv
+ZiB0aGF0LiBTb2x1dGlvbjogdW5zb2x2ZWQKOikKCkluIGFuIGlkZWFsIHdvcmxkLCB5b3UnZCBo
+YXZlIGEgc2luZ2xlIGRyaXZlciB0aGF0IGtub3dzIGhvdyB0bwppbnRlcmFjdCB3aXRoIG11bHRp
+cGxlIGRldmljZXMgYW5kIG1ha2UgdGhlbSBkbyBjb29sIHRoaW5ncy4gSG93ZXZlcgp0aGlzIGEg
+Y29tcGxldGVseSB1bnRyb2RkZW4gcGF0aC4gKE5vdCB0byBtZW50aW9uIHRoZSBwcm9ibGVtIG9m
+ICpob3cqCnRvIGJyZWFrIHVwIGEgd29ya2xvYWQgYWNyb3NzIDIgR1BVcy4pCgo+Cj4gSSB0aGlu
+ayB0aGUgaWRlYSB0aGF0IGluZGl2aWR1YWwgR1BVIGNvcmVzIHNob3VsZCBiZSBleHBvc2VkIGFz
+Cj4gc2VwYXJhdGUgRFJNIGRldmljZXMgaXMgZnVuZGFtZW50YWxseSBmbGF3ZWQsIGFuZCBhZGRz
+IGEgaGVsbCBvZiBhCj4gbG90IG9mIGNvbXBsZXhpdHkuCj4KPiBJbiBhbnkgY2FzZSwgSSd2ZSBz
+cGVudCBfd2F5XyB0b28gbXVjaCB0aW1lIG9uIGV0bmF2aXYgZHVyaW5nIE5vdmVtYmVyIC0KPiBx
+dWl0ZSBsaXRlcmFsbHkgYWxtb3N0IGV2ZXJ5IGRheSAoSSB3b3JrZWQgb3V0IHRoYXQgSSB3YXMg
+cHJvZHVjaW5nIDQuNQo+IHBhdGNoZXMgYSBkYXkgZHVyaW5nIE5vdmVtYmVyIGZvciBFdG5hdml2
+IE1FU0EuKSAgSSdtIGFmcmFpZCB0aGF0IGl0J3MKPiBub3cgdGltZSB0aGF0IEkgc3dpdGNoIG15
+IGF0dGVudGlvbiBlbHNld2hlcmUsIHNvIGlmIHRoaXMgbWVhbnMgdGhhdAo+IEV0bmF2aXYgaXMg
+cmVqZWN0ZWQgZm9yIG1lcmdpbmcsIEknbSBhZnJhaWQgaXQnbGwgYmUgYSBmZXcgbW9udGhzIGJl
+Zm9yZQo+IEkgY2FuIGdldCBiYWNrIHRvIGl0Lgo+Cj4gSXQgd291bGQgaGF2ZSBiZWVuIG5pY2Ug
+aWYgdGhlc2UgaXNzdWVzIGhhZCBiZWVuIGJyb3VnaHQgdXAgbXVjaCBlYXJsaWVyLAo+IGR1cmlu
+ZyB0aGUgUkZDIHBvc3Rpbmcgb2YgdGhlIHBhdGNoZXMuICBUaGVzZSBhcmUgbm90aGluZyBuZXcs
+IGFuZCBJIG5vdwo+IGZlZWwgdGhhdCB0aGlzIHdob2xlIHRoaW5nIGhhcyBiZWVuIGEgdG90YWwg
+d2FzdGUgb2YgdGltZS4KClRoZSB3aG9sZSBtdWx0aS1ncHUgdGhpbmcgaXMgYSBiaXQgb2YgYW4g
+b3BlbiBxdWVzdGlvbiByaWdodCBub3cuIEl0CndvcmtzIGluIHRoZW9yeSwgYnV0IGluIHByYWN0
+aWNlIG5vYm9keSdzIGRvbmUgaXQuIE1hYXJ0ZW4gdHJpZWQgdG8KZ2V0IG5vdXZlYXUvZ2syMGEg
+KyB0ZWdyYS9kcm0gb24gSmV0c29uIFRLMSB0byBwbGF5IG5pY2Ugd2l0aCwgZS5nLiwgWAoyZCBh
+Y2NlbCwgYW5kIGl0IHdhcyBhbiBleGVyY2lzZSBpbiBwYWluLiBOb3Qgc3VyZSB0aGF0IGhlIGV2
+ZXIKc3VjY2VlZGVkLgoKSSB0aGluayBpdCdzIHVuZmFpciB0byB0cnkgdG8gbWFrZSBuZXcgaGFy
+ZHdhcmUgZW5hYmxlbWVudCB0aGUgdGltZSB0bwphdHRlbXB0IHRvIGhlYXAgZXh0cmEgd29yayBv
+bnRvIHRob3NlIGF1dGhvcnMgdW5mb3J0dW5hdGUgZW5vdWdoIHRvCmhhdmUgc2xpZ2h0bHkgdW5v
+cnRob2RveCBoYXJkd2FyZSB0aGF0IG1hcHMgbmljZWx5IG9udG8gc29tZQpkZXNpcmVkLWJ1dC1u
+b3QtcXVpdGUtdGhlcmUteWV0IHVzYWdlIG1vZGVsIC0tIHRoZXkgaGF2ZSBlbm91Z2gKcHJvYmxl
+bXMuCgpUaGUgd2F5IGV2ZXJ5dGhpbmcgd29ya3MgaXMgb25lIGRybSBub2RlIGNhbiBkbyBldmVy
+eXRoaW5nLiBQUklNRSBpcyBhCmJhcmVseS1mdW5jdGlvbmFsIHdheSB0byBvZmZsb2FkIHNvbWUg
+dGhpbmdzIG9udG8gYSAoc2luZ2xlKSBzZWNvbmRhcnkKR1BVLiBFdmVyeXRoaW5nIGJleW9uZCB0
+aGF0IGlzIHB1cmVseSB0aGVvcmV0aWNhbC4KCk5vbmUgb2Ygd2hhdCdzIGJlaW5nIGRvbmUgbm93
+IHByZXZlbnRzIHNvbWUgZnV0dXJlIHdoZXJlIHRoZXNlIHRoaW5ncwphcmUgYnJva2VuIHVwLiBO
+byBuZWVkIHRvIGZvcmNlIGl0IG5vdy4KCiAgLWlsaWEKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWwK
