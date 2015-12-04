@@ -1,56 +1,27 @@
-From: Mitchel Humpherys <mitchelh@codeaurora.org>
-Subject: Re: [PATCH v2] of: Check for overlap in reserved memory regions
-Date: Fri, 04 Dec 2015 09:27:50 -0800
-Message-ID: <vnkwy4daktt5.fsf@codeaurora.org>
-References: <1442367036-15205-1-git-send-email-mitchelh@codeaurora.org>
-	<1447294799.29472.15.camel@ellerman.id.au>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447294799.29472.15.camel@ellerman.id.au> (Michael Ellerman's
-	message of "Thu, 12 Nov 2015 13:19:59 +1100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org
+From: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Add support for monitoring gpio switches
+Date: Fri,  4 Dec 2015 17:31:12 +0000
+Message-ID: <1449250275-23435-1-git-send-email-martyn.welch@collabora.co.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 12 2015 at 01:19:59 PM, Michael Ellerman <mpe@ellerman.id.au> wrote:
-> On Tue, 2015-09-15 at 18:30 -0700, Mitchel Humpherys wrote:
->
->> Any overlap in the reserved memory regions (those specified in the
->> reserved-memory DT node) is a bug.
->
-> Can you expand a bit on why you think it's a bug? I assume it was discussed at
-> some point on the list but I didn't see it sorry.
+This driver was written to expose a read only interface to a number of
+gpios on Chromebooks. These gpios are attached to signals which cause the
+firmware on Chromebooks to enter alternative modes of operation and/or
+control other device characteristics (such as write protection on flash
+devices). It was originally posted as "Add support for monitoring Chrome
+OS firmware signals". A request was made to make it more generic.
 
-The reason I think it's a bug is because the overlapping memory could be
-handed out to multiple firmwares, which generally ends in "random"
-firmware crashes.  We've found by sad experience that root-causing such
-a crash can be quite difficult.
+In addition this patch series provides the required bindings for this to
+the peach-pi Chromebook.
 
-Is there a valid use case for overlapping regions?  I can't think of
-one...
+This is a new binding, but the driver is based (now some what loosely) on
+functionality in the kernel shipped on Chromebooks.
 
-> There's nothing I can see in the binding document[1] about whether regions can
-> overlap, or what it would mean if they did.
-
-You're right, the bindings document doesn't say anything about
-overlapping memory regions.  I can submit something unless someone comes
-up with a reason why we should allow overlapping memory regions.
-
-> If we want to declare that overlapping regions are always a bug then there
-> should be some text in the binding explaining that. There's also the
-> possibility that we have existing device trees in the wild that contain
-> overlapping regions, and whether we think it's OK to retrospectively declare
-> that they're incorrect.
-
-I did a quick survey of in-tree users of reserved-memory and couldn't
-find any overlapping regions.
-
-
--Mitch
-
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
