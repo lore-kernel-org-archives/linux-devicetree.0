@@ -1,253 +1,140 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: regulator/mfd: Reorganize S2MPA01
- bindings
-Date: Fri, 4 Dec 2015 09:55:09 -0600
-Message-ID: <20151204155509.GA27455@rob-hp-laptop>
-References: <1449191405-3344-1-git-send-email-k.kozlowski@samsung.com>
- <1449191405-3344-4-git-send-email-k.kozlowski@samsung.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH for-4.4 2/2] doc: dt: mtd: partitions: add compatible
+ property to "partitions" node
+Date: Fri, 4 Dec 2015 09:57:10 -0600
+Message-ID: <20151204155710.GA29035@rob-hp-laptop>
+References: <1449194529-145705-1-git-send-email-computersforpeace@gmail.com>
+ <1449194529-145705-2-git-send-email-computersforpeace@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1449191405-3344-4-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Sangbeom Kim <sbkim73@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Kukjin Kim <kgene@kernel.org>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-clk@vger.kernel.org
+In-Reply-To: <1449194529-145705-2-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 04, 2015 at 10:10:05AM +0900, Krzysztof Kozlowski wrote:
-> The mfd/s2mpa01.txt duplicates some of the information about bindings
-> with old mfd/s2mps11.txt. Now common part exists entirely in
-> mfd/samsung,sec-core.txt so:
->  - add company prefix to file name (regulator/samsung,s2mpa01.txt),
->  - remove duplicated information,
->  - reorganize the contents to match style of
->    regulator/samsung,s2mps11.txt.
+On Thu, Dec 03, 2015 at 06:02:09PM -0800, Brian Norris wrote:
+> As noted here [1], there are potentially future conflicts if we try to
+> use MTD's "partitions" subnode to describe anything besides just the
+> fixed-in-the-device-tree partitions currently described in this
+> document. Particularly, there was a proposal to use this node for the
+> AFS parser too.
 > 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-
-Next time, use git format-patch -M option.
-
-Acked-by: Rob Herring <robh@kernel.org>
-
+> It can pose a (small) problem to try to differentiate the following
+> nodes:
+> 
+> 	// using binding as currently specified
+> 	partitions {
+> 		#address-cells = <x>;
+> 		#size-cells = <y>;
+> 		partition@0 {
+> 			...;
+> 		};
+> 	};
+> 
+> and
+> 
+> 	// proposed future binding
+> 	partitions {
+> 		compatible = "arm,arm-flash-structure";
+> 	};
+> 
+> It's especially difficult if other uses of this node start having
+> subnodes.
+> 
+> So, since the "partitions" node is new in v4.4, let's fixup the binding
+> before release so that it requires a compatible property, so it's much
+> clearer to distinguish. e.g.:
+> 
+> 	// proposed
+> 	partitions {
+> 		compatible = "partitions";
+> 		#address-cells = <x>;
+> 		#size-cells = <y>;
+> 		partition@0 {
+> 			...;
+> 		};
+> 	};
+> 
+> [1] Subject: "mtd: create a partition type device tree binding"
+>     http://lkml.kernel.org/g/20151113220039.GA74382-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
+>     http://lists.infradead.org/pipermail/linux-mtd/2015-November/063355.html
+>     http://lists.infradead.org/pipermail/linux-mtd/2015-November/063364.html
+> 
+> Cc: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/mfd/s2mpa01.txt  | 90 ----------------------
->  .../devicetree/bindings/mfd/samsung,sec-core.txt   |  4 +-
->  .../bindings/regulator/samsung,s2mpa01.txt         | 79 +++++++++++++++++++
->  3 files changed, 82 insertions(+), 91 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mfd/s2mpa01.txt
->  create mode 100644 Documentation/devicetree/bindings/regulator/samsung,s2mpa01.txt
+> This one is more of a future proofing patch. We should probably take this for
+> 4.4, before the binding "stabilizes" (I don't actually see any users yet), or
+> else we'll have to find some other (possibly more complicated) way to avoid
+> this potential collision on future development.
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/s2mpa01.txt b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
-> deleted file mode 100644
-> index c13d3d8c3947..000000000000
-> --- a/Documentation/devicetree/bindings/mfd/s2mpa01.txt
-> +++ /dev/null
-> @@ -1,90 +0,0 @@
-> -
-> -* Samsung S2MPA01 Voltage and Current Regulator
-> -
-> -The Samsung S2MPA01 is a multi-function device which includes high
-> -efficiency buck converters including Dual-Phase buck converter, various LDOs,
-> -and an RTC. It is interfaced to the host controller using an I2C interface.
-> -Each sub-block is addressed by the host system using different I2C slave
-> -addresses.
-> -
-> -Required properties:
-> -- compatible: Should be "samsung,s2mpa01-pmic".
-> -- reg: Specifies the I2C slave address of the PMIC block. It should be 0x66.
-> -
-> -Optional properties:
-> -- interrupt-parent: Specifies the phandle of the interrupt controller to which
-> -  the interrupts from s2mpa01 are delivered to.
-> -- interrupts: An interrupt specifier for the sole interrupt generated by the
-> -  device.
-> -
-> -Optional nodes:
-> -- regulators: The regulators of s2mpa01 that have to be instantiated should be
-> -  included in a sub-node named 'regulators'. Regulator nodes and constraints
-> -  included in this sub-node use the standard regulator bindings which are
-> -  documented elsewhere.
-> -
-> -Properties for BUCK regulator nodes:
-> -- regulator-ramp-delay: ramp delay in uV/us. May be 6250, 12500
-> -  (default), 25000, or 50000. May be 0 for disabling the ramp delay on
-> -  BUCK{1,2,3,4}.
-> -
-> - In the absence of the regulator-ramp-delay property, the default ramp
-> - delay will be used.
-> -
-> -  NOTE: Some BUCKs share the ramp rate setting i.e. same ramp value will be set
-> -  for a particular group of BUCKs. So provide same regulator-ramp-delay=<value>.
-> -
-> -  The following BUCKs share ramp settings:
-> -  * 1 and 6
-> -  * 2 and 4
-> -  * 8, 9, and 10
-> -
-> -The following are the names of the regulators that the s2mpa01 PMIC block
-> -supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
-> -as per the datasheet of s2mpa01.
-> -
-> -	- LDOn
-> -		  - valid values for n are 1 to 26
-> -		  - Example: LDO1, LD02, LDO26
-> -	- BUCKn
-> -		  - valid values for n are 1 to 10.
-> -		  - Example: BUCK1, BUCK2, BUCK9
-> -
-> -Example:
-> -
-> -	s2mpa01_pmic@66 {
-> -		compatible = "samsung,s2mpa01-pmic";
-> -		reg = <0x66>;
-> -
-> -		regulators {
-> -			ldo1_reg: LDO1 {
-> -				regulator-name = "VDD_ALIVE";
-> -				regulator-min-microvolt = <1000000>;
-> -				regulator-max-microvolt = <1000000>;
-> -			};
-> -
-> -			ldo2_reg: LDO2 {
-> -				regulator-name = "VDDQ_MMC2";
-> -				regulator-min-microvolt = <2800000>;
-> -				regulator-max-microvolt = <2800000>;
-> -				regulator-always-on;
-> -			};
-> -
-> -			buck1_reg: BUCK1 {
-> -				regulator-name = "vdd_mif";
-> -				regulator-min-microvolt = <950000>;
-> -				regulator-max-microvolt = <1350000>;
-> -				regulator-always-on;
-> -				regulator-boot-on;
-> -			};
-> -
-> -			buck2_reg: BUCK2 {
-> -				regulator-name = "vdd_arm";
-> -				regulator-min-microvolt = <950000>;
-> -				regulator-max-microvolt = <1350000>;
-> -				regulator-always-on;
-> -				regulator-boot-on;
-> -				regulator-ramp-delay = <50000>;
-> -			};
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/mfd/samsung,sec-core.txt b/Documentation/devicetree/bindings/mfd/samsung,sec-core.txt
-> index 4aeb95c82304..cdd079bfc287 100644
-> --- a/Documentation/devicetree/bindings/mfd/samsung,sec-core.txt
-> +++ b/Documentation/devicetree/bindings/mfd/samsung,sec-core.txt
-> @@ -4,7 +4,7 @@ Binding for Samsung S2M and S5M family multi-function device
->  This is a part of device tree bindings for S2M and S5M family multi-function
->  devices.
+>  Documentation/devicetree/bindings/mtd/partition.txt | 7 ++++++-
+>  drivers/mtd/ofpart.c                                | 3 +++
+>  2 files changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
+> index f1e2a02381a4..047e80575881 100644
+> --- a/Documentation/devicetree/bindings/mtd/partition.txt
+> +++ b/Documentation/devicetree/bindings/mtd/partition.txt
+> @@ -6,7 +6,9 @@ used for what purposes, but which don't use an on-flash partition table such
+>  as RedBoot.
 >  
-> -The Samsung S2MPS11/13/14/15, S2MPU02 and S5M8767 is a family
-> +The Samsung S2MPA01, S2MPS11/13/14/15, S2MPU02 and S5M8767 is a family
->  of multi-function devices which include voltage and current regulators, RTC,
->  charger controller, clock outputs and other sub-blocks. It is interfaced
->  to the host controller using an I2C interface. Each sub-block is usually
-> @@ -13,6 +13,7 @@ addressed by the host system using different I2C slave addresses.
+>  The partition table should be a subnode of the mtd node and should be named
+> -'partitions'. Partitions are defined in subnodes of the partitions node.
+> +'partitions'. This node should have the following property:
+> +- compatible : (required) must be "partitions"
+> +Partitions are then defined in subnodes of the partitions node.
 >  
->  This document describes bindings for main device node. Optional sub-blocks
->  must be a sub-nodes to it. Bindings for them can be found in:
-> + - bindings/regulator/samsung,s2mpa01.txt
->   - bindings/regulator/samsung,s2mps11.txt
->   - bindings/regulator/samsung,s5m8767.txt
->   - bindings/clock/samsung,s2mps11.txt
-> @@ -20,6 +21,7 @@ must be a sub-nodes to it. Bindings for them can be found in:
+>  For backwards compatibility partitions as direct subnodes of the mtd device are
+>  supported. This use is discouraged.
+> @@ -36,6 +38,7 @@ Examples:
 >  
->  Required properties:
->   - compatible: Should be one of the following
-> +	- "samsung,s2mpa01-pmic",
->  	- "samsung,s2mps11-pmic",
->  	- "samsung,s2mps13-pmic",
->  	- "samsung,s2mps14-pmic",
-> diff --git a/Documentation/devicetree/bindings/regulator/samsung,s2mpa01.txt b/Documentation/devicetree/bindings/regulator/samsung,s2mpa01.txt
-> new file mode 100644
-> index 000000000000..bae3c7f838cf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/samsung,s2mpa01.txt
-> @@ -0,0 +1,79 @@
-> +Binding for Samsung S2MPA01 regulator block
-> +===========================================
-> +
-> +This is a part of device tree bindings for S2M family multi-function devices.
-> +More information can be found in bindings/mfd/sec-core.txt file.
-> +
-> +The S2MPA01 device provide buck and LDO regulators.
-> +
-> +To register these with regulator framework instantiate under main device node
-> +a sub-node named "regulators" with more sub-nodes for each regulator using the
-> +common regulator binding documented in:
-> + - Documentation/devicetree/bindings/regulator/regulator.txt
-> +
-> +
-> +Names of regulators supported by S2MPA01 device:
-> +	- LDOn
-> +		  - valid values for n are 1 to 26
-> +		  - Example: LDO1, LD02, LDO26
-> +	- BUCKn
-> +		  - valid values for n are 1 to 10.
-> +		  - Example: BUCK1, BUCK2, BUCK9
-> +Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
-> +as per the datasheet of device.
-> +
-> +
-> +Optional properties of buck regulator nodes under "regulators" sub-node:
-> + - regulator-ramp-delay: ramp delay in uV/us. May be 6250, 12500
-> +   (default), 25000, or 50000. May be 0 for disabling the ramp delay on
-> +   BUCK{1,2,3,4}.
-> +
-> +   In the absence of the regulator-ramp-delay property, the default ramp
-> +   delay will be used.
-> +
-> +   Note: Some bucks share the ramp rate setting i.e. same ramp value
-> +   will be set for a particular group of bucks so provide the same
-> +   regulator-ramp-delay value for them.
-> +   Groups sharing ramp rate:
-> +    - buck{1,6},
-> +    - buck{2,4},
-> +    - buck{8,9,10}.
-> +
-> +Example:
-> +
-> +	s2mpa01_pmic@66 {
-> +		compatible = "samsung,s2mpa01-pmic";
-> +		reg = <0x66>;
-> +
-> +		regulators {
-> +			ldo1_reg: LDO1 {
-> +				regulator-name = "VDD_ALIVE";
-> +				regulator-min-microvolt = <1000000>;
-> +				regulator-max-microvolt = <1000000>;
-> +			};
-> +
-> +			ldo2_reg: LDO2 {
-> +				regulator-name = "VDDQ_MMC2";
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <2800000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			buck1_reg: BUCK1 {
-> +				regulator-name = "vdd_mif";
-> +				regulator-min-microvolt = <950000>;
-> +				regulator-max-microvolt = <1350000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			buck2_reg: BUCK2 {
-> +				regulator-name = "vdd_arm";
-> +				regulator-min-microvolt = <950000>;
-> +				regulator-max-microvolt = <1350000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-ramp-delay = <50000>;
-> +			};
-> +		};
-> +	};
+>  flash@0 {
+>  	partitions {
+> +		compatible = "partitions";
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+>  
+> @@ -53,6 +56,7 @@ flash@0 {
+>  
+>  flash@1 {
+>  	partitions {
+> +		compatible = "partitions";
+>  		#address-cells = <1>;
+>  		#size-cells = <2>;
+>  
+> @@ -66,6 +70,7 @@ flash@1 {
+>  
+>  flash@2 {
+>  	partitions {
+> +		compatible = "partitions";
+>  		#address-cells = <2>;
+>  		#size-cells = <2>;
+>  
+> diff --git a/drivers/mtd/ofpart.c b/drivers/mtd/ofpart.c
+> index 3e9c5857c991..23cd809fad4c 100644
+> --- a/drivers/mtd/ofpart.c
+> +++ b/drivers/mtd/ofpart.c
+> @@ -55,6 +55,9 @@ static int parse_ofpart_partitions(struct mtd_info *master,
+>  			 master->name, mtd_node->full_name);
+>  		ofpart_node = mtd_node;
+>  		dedicated = false;
+> +	} else if (!of_device_is_compatible(ofpart_node, "partitions")) {
+> +		/* The 'partitions' subnode might be used by another parser */
+> +		return 0;
+>  	}
+>  
+>  	/* First count the subnodes */
 > -- 
-> 1.9.1
+> 2.6.0.rc2.230.g3dd15c0
 > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
