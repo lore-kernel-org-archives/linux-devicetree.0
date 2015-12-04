@@ -1,87 +1,111 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 3/6] ARM: DTS: da850: Enable eDMA1
-Date: Fri, 4 Dec 2015 15:53:27 +0200
-Message-ID: <1449237210-16381-4-git-send-email-peter.ujfalusi@ti.com>
-References: <1449237210-16381-1-git-send-email-peter.ujfalusi@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1449237210-16381-1-git-send-email-peter.ujfalusi@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: nsekhar@ti.com
-Cc: khilman@deeprootsystems.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 12/12] ARM: dts: imx6: add Vivante GPU nodes
+Date: Fri,  4 Dec 2015 15:00:04 +0100
+Message-ID: <1449237604-19064-13-git-send-email-l.stach@pengutronix.de>
+References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449237604-19064-1-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The eDMA1 in da850 has only one TPTC and for example MMC1 is HW events are
-handled by it.
+This adds the device nodes for 2D, 3D and VG GPU cores.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- arch/arm/boot/dts/da850-enbw-cmc.dts |  4 ++++
- arch/arm/boot/dts/da850-evm.dts      |  4 ++++
- arch/arm/boot/dts/da850.dtsi         | 17 +++++++++++++++++
- 3 files changed, 25 insertions(+)
+ arch/arm/boot/dts/imx6dl.dtsi  |  5 +++++
+ arch/arm/boot/dts/imx6q.dtsi   | 15 +++++++++++++++
+ arch/arm/boot/dts/imx6qdl.dtsi | 22 ++++++++++++++++++++++
+ 3 files changed, 42 insertions(+)
 
-diff --git a/arch/arm/boot/dts/da850-enbw-cmc.dts b/arch/arm/boot/dts/da850-enbw-cmc.dts
-index ca9117624cf9..44f0dd1866f9 100644
---- a/arch/arm/boot/dts/da850-enbw-cmc.dts
-+++ b/arch/arm/boot/dts/da850-enbw-cmc.dts
-@@ -33,3 +33,7 @@
- 	ti,edma-reserved-slot-ranges = /bits/ 16 <32 50>;
- 	ti,edma-memcpy-channels = /bits/ 16 <20 21>;
- };
+diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
+index 4b0ec0703825..51c517a5cafd 100644
+--- a/arch/arm/boot/dts/imx6dl.dtsi
++++ b/arch/arm/boot/dts/imx6dl.dtsi
+@@ -104,6 +104,11 @@
+ 		compatible = "fsl,imx-display-subsystem";
+ 		ports = <&ipu1_di0>, <&ipu1_di1>;
+ 	};
 +
-+&edma1 {
-+	ti,edma-reserved-slot-ranges = /bits/ 16 <32 90>;
-+};
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index 33467feb272a..70ef9c642ac9 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -248,3 +248,7 @@
- 	ti,edma-reserved-slot-ranges = /bits/ 16 <32 50>;
- 	ti,edma-memcpy-channels = /bits/ 16 <20 21>;
++	gpu-subsystem {
++		compatible = "fsl,imx-gpu-subsystem";
++		cores = <&gpu_2d>, <&gpu_3d>;
++	};
  };
-+
-+&edma1 {
-+	ti,edma-reserved-slot-ranges = /bits/ 16 <32 90>;
-+};
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index 9e46eb51a8da..e311d73a5265 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -174,6 +174,23 @@
- 			interrupts = <32>;
- 			interrupt-names = "edm3_tcerrint";
+ 
+ &gpt {
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index 399103b8e2c9..77d618b2870c 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -153,6 +153,16 @@
+ 			status = "disabled";
  		};
-+		edma1: edma@01e30000 {
-+			compatible = "ti,edma3-tpcc";
-+			/* eDMA3 CC1: 0x01e3 0000 - 0x01e3 7fff */
-+			reg =	<0x230000 0x8000>;
-+			reg-names = "edma3_cc";
-+			interrupts = <93 94>;
-+			interrupt-names = "edma3_ccint", "edma3_ccerrint";
-+			#dma-cells = <2>;
+ 
++		gpu_vg: gpu@02204000 {
++			compatible = "vivante,gc";
++			reg = <0x02204000 0x4000>;
++			interrupts = <0 11 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clks IMX6QDL_CLK_OPENVG_AXI>,
++				 <&clks IMX6QDL_CLK_GPU2D_CORE>;
++			clock-names = "bus", "core";
++			power-domains = <&gpc 1>;
++		};
 +
-+			ti,tptcs = <&edma1_tptc0 7>;
+ 		ipu2: ipu@02800000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+@@ -225,6 +235,11 @@
+ 		compatible = "fsl,imx-display-subsystem";
+ 		ports = <&ipu1_di0>, <&ipu1_di1>, <&ipu2_di0>, <&ipu2_di1>;
+ 	};
++
++	gpu-subsystem {
++		compatible = "fsl,imx-gpu-subsystem";
++		cores = <&gpu_2d>, <&gpu_3d>, <&gpu_vg>;
++	};
+ };
+ 
+ &hdmi {
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 2b6cc8bf3c5c..018975b867e1 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -119,6 +119,28 @@
+ 			status = "disabled";
+ 		};
+ 
++
++		gpu_2d: gpu@00134000 {
++			compatible = "vivante,gc";
++			reg = <0x00134000 0x4000>;
++			interrupts = <0 10 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clks IMX6QDL_CLK_GPU2D_AXI>,
++				 <&clks IMX6QDL_CLK_GPU2D_CORE>;
++			clock-names = "bus", "core";
++			power-domains = <&gpc 1>;
 +		};
-+		edma1_tptc0: tptc@01e38000 {
-+			compatible = "ti,edma3-tptc";
-+			reg =	<0x238000 0x400>;
-+			interrupts = <95>;
-+			interrupt-names = "edm3_tcerrint";
++
++		gpu_3d: gpu@00130000 {
++			compatible = "vivante,gc";
++			reg = <0x00130000 0x4000>;
++			interrupts = <0 9 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clks IMX6QDL_CLK_GPU3D_AXI>,
++				 <&clks IMX6QDL_CLK_GPU3D_CORE>,
++				 <&clks IMX6QDL_CLK_GPU3D_SHADER>;
++			clock-names = "bus", "core", "shader";
++			power-domains = <&gpc 1>;
 +		};
- 		serial0: serial@1c42000 {
- 			compatible = "ns16550a";
- 			reg = <0x42000 0x100>;
++
+ 		hdmi: hdmi@0120000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
 -- 
-2.6.3
+2.6.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
