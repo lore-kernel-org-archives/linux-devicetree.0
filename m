@@ -1,130 +1,70 @@
-From: Yendapally Reddy Dhananjaya Reddy <yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/3] pinctrl: Broadcom NSP GPIO-a device tree bindings
-Date: Fri, 4 Dec 2015 15:07:56 +0530
-Message-ID: <56615EF4.7050605@broadcom.com>
-References: <1449031598-18849-1-git-send-email-yrdreddy@broadcom.com>
- <20151202150735.GA6165@rob-hp-laptop>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v4 0/4] drm: Add support for the ARM HDLCD display
+ controller
+Date: Fri, 4 Dec 2015 10:20:48 +0000
+Message-ID: <20151204102048.GH972@e106497-lin.cambridge.arm.com>
+References: <1449139249-9171-1-git-send-email-Liviu.Dudau@arm.com>
+ <20151203165606.GS8644@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151202150735.GA6165@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20151203165606.GS8644@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Andrew Morton <akpm@linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 12/2/2015 8:37 PM, Rob Herring wrote:
-> On Tue, Dec 01, 2015 at 11:46:38PM -0500, Yendapally Reddy Dhananjaya Reddy wrote:
->> Device tree binding documentation for Broadcom NSP GPIO-a driver
-> Bindings are for h/w, not drivers...
-Right, will address in the next patch.
->> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> ---
->>  .../devicetree/bindings/pinctrl/brcm,nsp-gpio.txt  | 80 ++++++++++++++++++++++
->>  1 file changed, 80 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt
->> new file mode 100644
->> index 0000000..bea4211
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt
->> @@ -0,0 +1,80 @@
->> +Broadcom Northstar plus (NSP) GPIO/PINCONF Controller
->> +
->> +Required properties:
->> +- compatible:
->> +    Must be "brcm,nsp-gpio-a"
->> +
->> +- reg:
->> +    Should contain the register physical address and length for each of
->> +    GPIO base, IO control registers
->> +
->> +- #gpio-cells:
->> +    Must be two. The first cell is the GPIO pin number (within the
->> +    controller's pin space) and the second cell is used for the following:
->> +    bit[0]: polarity (0 for active high and 1 for active low)
->> +
->> +- gpio-controller:
->> +    Specifies that the node is a GPIO controller
->> +
->> +- ngpios:
->> +    Number of gpios supported (58x25 supports 32 and 58x23 supports 24)
-> 2 chips? You should have 2 compatible strings. I think this is incorrect 
-> use of ngpios which AIUI is not for how many lines there are, but how 
-> many can be used (e.g. not reserved).
->
->> +
->> +Optional properties:
->> +- interrupts:
->> +    Interrupt ID
->> +
->> +- interrupt-controller:
->> +    Specifies that the node is an interrupt controller
->> +
->> +- gpio-ranges:
->> +    Specifies the mapping between gpio controller and pin-controllers pins.
->> +    This requires 4 fields in cells defined as -
->> +    1. Phandle of pin-controller.
->> +    2. GPIO base pin offset.
->> +    3  Pin-control base pin offset.
->> +    4. number of gpio pins which are linearly mapped from pin base.
->> +
->> +Supported generic PINCONF properties in child nodes:
->> +- pins:
->> +    The list of pins (within the controller's own pin space) that properties
->> +    in the node apply to. Pin names are "gpio-<pin>"
->> +
->> +- bias-disable:
->> +    Disable pin bias
->> +
->> +- bias-pull-up:
->> +    Enable internal pull up resistor
->> +
->> +- bias-pull-down:
->> +    Enable internal pull down resistor
->> +
->> +- drive-strength:
->> +    Valid drive strength values include 2, 4, 6, 8, 10, 12, 14, 16 (mA)
->> +
->> +Example:
->> +
->> +	gpioa: gpio-a@18000020 {
-> node names are preferred to be generic, so just "gpio@..."
-Right, will address in the next patch.
->> +		compatible = "brcm,nsp-gpio-a";
->> +		reg = <0x18000020 0x100>,
->> +		      <0x1803f1c4 0x1c>;
->> +		#gpio-cells = <2>;
->> +		gpio-controller;
->> +		ngpios = <32>;
->> +		gpio-ranges = <&pinctrl 0 0 31>;
->> +		interrupt-controller;
->> +		interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
->> +
->> +		/* Hog a few default settings */
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&led>;
->> +		led: led {
->> +			pins = "gpio-1";
->> +			bias-pull-up;
->> +		};
->> +
->> +		pwr: pwr {
->> +			gpio-hog;
->> +			gpios = <3 1>;
->> +			output-high;
->> +		};
->> +	};
->> -- 
->> 2.1.0
->>
-Thanks
-Dhananjay
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCBEZWMgMDMsIDIwMTUgYXQgMDQ6NTY6MDdQTSArMDAwMCwgUnVzc2VsbCBLaW5nIC0g
+QVJNIExpbnV4IHdyb3RlOgo+IE9uIFRodSwgRGVjIDAzLCAyMDE1IGF0IDEwOjQwOjQ1QU0gKzAw
+MDAsIExpdml1IER1ZGF1IHdyb3RlOgo+ID4gVGhpcyBzZXJpZXMgZGVwZW5kcyBvbiBTdWRlZXAg
+SG9sbGEncyBTQ1BJIGRyaXZlciAobm93IGluIG1haW5saW5lKSBhbmQgb24KPiA+IHRoZSB0ZGE5
+OTh4IHBhdGNoZXMgdGhhdCBoYXZlIGJlZW4gcXVldWVkIG9uIFJ1c3NlbGwncyBwYXRjaCBzeXN0
+ZW0gaGVyZSBbMV0uCj4gCj4gTm93IG1lcmdlZCBpbnRvIG15IHRyZWUuCgpUaGFua3MhCgpBcmUg
+eW91IHBsYW5uaW5nIHRvIHNlbmQgdGhvc2UgZm9yIDQuNSBvciBhcmUgdGhleSBnb2luZyB0byBi
+ZSBwYXRjaGVzIGZvciA0LjQ/Cgo+IAo+IENhbiBJIGFzayBhIGZhaXJseSBvYnZpb3VzIHF1ZXN0
+aW9uLi4uCj4gCj4gPiAgZHJpdmVycy9ncHUvZHJtL0tjb25maWcgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgfCAgIDIgKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZSAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHwgICAxICsKPiA+ICBkcml2ZXJzL2dwdS9kcm0vYXJtL0tjb25maWcg
+ICAgICAgICAgICAgICAgICAgICAgICB8ICAyOSArKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9hcm0v
+TWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsKPiA+ICBkcml2ZXJzL2dwdS9k
+cm0vYXJtL2hkbGNkX2NydGMuYyAgICAgICAgICAgICAgICAgICB8IDMyNyArKysrKysrKysrKysK
+PiA+ICBkcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNkX2Rydi5jICAgICAgICAgICAgICAgICAgICB8
+IDU1NSArKysrKysrKysrKysrKysrKysrKysKPiA+ICBkcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNk
+X2Rydi5oICAgICAgICAgICAgICAgICAgICB8ICA0MiArKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9h
+cm0vaGRsY2RfcmVncy5oICAgICAgICAgICAgICAgICAgIHwgIDg3ICsrKysKPiAKPiBXaHkgaXMg
+dGhlIHN1YmRpcmVjdG9yeSBjYWxsZWQgImFybSIgYW5kIG5vdCAiaGRsY2QiID8KCkJlY2F1c2Ug
+SSBwbGFuIHRvIGFkZCB0aGUgTWFsaSBEUCBkcml2ZXIgdG8gdGhlIHNhbWUgZGlyZWN0b3J5LiBU
+aGUgSERMQ0QKZmlsZXMgYXJlIHByZWZpeGVkIHdpdGggdGhlIGhkbGNkXyBzdHJpbmcsIHNvIGl0
+IHNob3VsZCBiZSBmYWlybHkgc2ltcGxlCnRvIGRpc3Rpbmd1aXNoIHRoZSByZWxldmFudCBmaWxl
+cy4KCj4gCj4gQVJNIEx0ZCBoYXZlIG1vcmUgdGhhbiBvbmUgZGlzcGxheSBjb250cm9sbGVyICh0
+aGV5IGhhdmUgdGhlIEFNQkEgUEwxMTAKPiBhbmQgUEwxMTEgaW4gYWRkaXRpb24gdG8gdGhpcyks
+IGFuZCAoYWZhaWNzKSB0aGlzIGRvZXNuJ3QgZHJpdmUgdGhlc2UuCj4gSERMQ0QgcHJvYmFibHkg
+d29uJ3QgYmUgdGhlIGxhc3QgZGlzcGxheSBoYXJkd2FyZSB3aGljaCBBUk0gTHRkIGNvbWVzCj4g
+b3V0IHdpdGggZWl0aGVyLgoKVGhlcmUgd2FzIGEgUEwxMTEgRFJNIGRyaXZlciBzdWJtaXR0ZWQg
+YXQgc29tZSBtb21lbnQsIGl0IGRvZXNuJ3QgbG9vawpsaWtlIGl0IGhhcyBiZWVuIG1lcmdlZCwg
+YnV0IHRoZSBwbGFuIHdhcyB0byBoYXZlIGl0IGluc2lkZSB0aGUgYXJtCmRpcmVjdG9yeSBhcyB3
+ZWxsLiBJIGFtIGZvbGxvd2luZyB0aGUgYW1kL2FtZGdwdXxyYWRlb24gaWRlYSBvZiBoYXZpbmcK
+YSB2ZW5kb3IgZGlyZWN0b3J5IGluIGRpc3BsYXkvZ3B1L2RybSBhbmQgdGhlbiBzdWJkaXJlY3Rv
+cmllcyAoaWYgaXQKbWFrZXMgc2Vuc2UpIG9yIGFwcHJvcHJpYXRlbHkgbmFtZWQgZmlsZXMgaW4g
+dGhlcmUuCgo+IAo+IFNvLCBJIHRoaW5rIG5hbWluZyB0aGUgc3ViZGlyZWN0b3J5IGFmdGVyIHRo
+ZSB2ZW5kb3IgaXMgcHJvYmFibHkgYQo+IG1pc3Rha2UuCgpJdCBtaWdodCB0dXJuIG91dCB0aGF0
+IHdheSwgYnV0IGF0IHRoZSBtb21lbnQgSSdtIG5vdCBzZWVpbmcgdG9vIG1hbnkKZG93bnNpZGVz
+LgoKQmVzdCByZWdhcmRzLApMaXZpdQoKPiAKPiAtLSAKPiBGVFRDIGJyb2FkYmFuZCBmb3IgMC44
+bWlsZSBsaW5lOiBjdXJyZW50bHkgYXQgOS42TWJwcyBkb3duIDQwMGticHMgdXAKPiBhY2NvcmRp
+bmcgdG8gc3BlZWR0ZXN0Lm5ldC4KPiAKCi0tIAo9PT09PT09PT09PT09PT09PT09PQp8IEkgd291
+bGQgbGlrZSB0byB8CnwgZml4IHRoZSB3b3JsZCwgIHwKfCBidXQgdGhleSdyZSBub3QgfAp8IGdp
+dmluZyBtZSB0aGUgICB8CiBcIHNvdXJjZSBjb2RlISAgLwogIC0tLS0tLS0tLS0tLS0tLQogICAg
+wq9cXyjjg4QpXy/CrwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
