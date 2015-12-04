@@ -1,71 +1,39 @@
 From: Enric Balletbo i Serra <eballetbo@gmail.com>
-Subject: [PATCHv6 4/5] devicetree: Add new ANX7814 SlimPort transmitter
- binding.
-Date: Fri,  4 Dec 2015 09:35:06 +0100
-Message-ID: <1449218107-6590-5-git-send-email-enric.balletbo@collabora.com>
+Subject: [PATCHv6 3/5] of: Add vendor prefix for Analogix Semiconductor, Inc.
+Date: Fri,  4 Dec 2015 09:35:05 +0100
+Message-ID: <1449218107-6590-4-git-send-email-enric.balletbo@collabora.com>
 References: <1449218107-6590-1-git-send-email-enric.balletbo@collabora.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1449218107-6590-1-git-send-email-enric.balletbo@collabora.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devel@driverdev.osuosl.org, treding@nvidia.com
-Cc: mark.rutland@arm.com, drinkcat@chromium.org, laurent.pinchart@ideasonboard.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, gregkh@linuxfoundation.org, emil.l.velikov@gmail.com, cawa.cheng@mediatek.com, jb.tsai@mediatek.com, sjoerd.simons@collabora.co.uk, robh+dt@kernel.org, span@analogixsemi.com, galak@codeaurora.org, javier@dowhile0.org, eddie.huang@mediatek.com, cjiao@analogixsemi.com, dan.carpenter@oracle.com, nathan.chung@mediatek.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, airlied@linux.ie, gregkh@linuxfoundation.org, sjoerd.simons@collabora.co.uk, javier@dowhile0.org, span@analogixsemi.com, nathan.chung@mediatek.com, djkurtz@chromium.org, drinkcat@chromium.org, laurent.pinchart@ideasonboard.com, dan.carpenter@oracle.com, jb.tsai@mediatek.com, cawa.cheng@mediatek.com, eddie.huang@mediatek.com, cjiao@analogixsemi.com, emil.l.velikov@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-VGhlIEFOWDc4MTQgaXMgYW4gdWx0cmEtbG93IHBvd2VyIEZ1bGwtSEQgKDEwODBwNjApIFNsaW1Q
-b3J0IHRyYW5zbWl0dGVyCmRlc2lnbmVkIGZvciBwb3J0YWJsZSBkZXZpY2VzLgoKWW91IGNhbiBh
-ZGQgc3VwcG9ydCB0byB5b3VyIGJvYXJkIHdpdGggY3VycmVudCBiaW5kaW5nLgoKRXhhbXBsZToK
-Cglhbng3ODE0OiBhbng3ODE0QDM4IHsKCQljb21wYXRpYmxlID0gImFuYWxvZ2l4LGFueDc4MTQi
-OwoJCXJlZyA9IDwweDM4PjsKCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvMD4KCQlpbnRlcnJ1
-cHRzID0gPDEgSVJRX1RZUEVfTEVWRUxfSElHSD47CgkJcGQtZ3Bpb3MgPSA8JmdwaW8wIDIgR1BJ
-T19BQ1RJVkVfSElHSD47CgkJcmVzZXQtZ3Bpb3MgPSA8JmdwaW8wIDMgR1BJT19BQ1RJVkVfSElH
-SD47CgkJdjEwLWdwaW9zID0gPCZncGlvMCA0IEdQSU9fQUNUSVZFX0hJR0g+OwoJCXBvcnRzIHsK
-CQkJYW54NzgxNF9pbjogZW5kcG9pbnQgewoJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pMF9v
-dXQ+OwoJCQl9OwoJCX07Cgl9OwoKU2lnbmVkLW9mZi1ieTogRW5yaWMgQmFsbGV0Ym8gaSBTZXJy
-YSA8ZW5yaWMuYmFsbGV0Ym9AY29sbGFib3JhLmNvbT4KLS0tCgpDaGFuZ2VzIHNpbmNlIGxhc3Qg
-dmVyc2lvbiAocmVxdWVzdGVkIGJ5IFJvYiBIZXJyaW5nKQotIFNwZWNpZnkgaG93IG1hbnkgcG9y
-dHMgYW5kIGhvdyBtYW55IGVuZHBvaW50cyBmb3IgZWFjaCBwb3J0Ci0gU2ltcGxpZnkgdG8ganVz
-dCBwb3J0IChkcm9wcGluZyBwb3J0cykKLSBGb3IgY2FibGUgZGV0IHVzZSBhbiBpbnRlcnJ1cHQg
-aW5zdGVhZCAodG8gYSBncGlvIGNvbnRyb2xsZXIpCgogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
-dmlkZW8vYnJpZGdlL2FueDc4MTQudHh0ICAgfCAzOSArKysrKysrKysrKysrKysrKysrKysrCiAx
-IGZpbGUgY2hhbmdlZCwgMzkgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9icmlkZ2UvYW54NzgxNC50eHQKCmRp
-ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYnJpZGdl
-L2FueDc4MTQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2Jy
-aWRnZS9hbng3ODE0LnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi40ZTY4
-Nzg5Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3ZpZGVvL2JyaWRnZS9hbng3ODE0LnR4dApAQCAtMCwwICsxLDM5IEBACitBbmFsb2dpeCBBTlg3
-ODE0IFNsaW1Qb3J0IChGdWxsLUhEIFRyYW5zbWl0dGVyKQorLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KKworVGhlIEFOWDc4MTQgaXMgYW4gdWx0cmEtbG93
-IHBvd2VyIEZ1bGwtSEQgKDEwODBwNjApIFNsaW1Qb3J0IHRyYW5zbWl0dGVyCitkZXNpZ25lZCBm
-b3IgcG9ydGFibGUgZGV2aWNlcy4KKworUmVxdWlyZWQgcHJvcGVydGllczoKKworIC0gY29tcGF0
-aWJsZQkJOiAiYW5hbG9naXgsYW54NzgxNCIKKyAtIHJlZwkJCTogSTJDIGFkZHJlc3Mgb2YgdGhl
-IGRldmljZQorIC0gaW50ZXJydXB0LXBhcmVudAk6IFNob3VsZCBiZSB0aGUgcGhhbmRsZSBvZiB0
-aGUgaW50ZXJydXB0IGNvbnRyb2xsZXIKKwkJCSAgdGhhdCBzZXJ2aWNlcyBpbnRlcnJ1cHRzIGZv
-ciB0aGlzIGRldmljZQorIC0gaW50ZXJydXB0cwkJOiBTaG91bGQgY29udGFpbiB0aGUgY2FibGUg
-ZGV0ZWN0aW9uIGludGVycnVwdAorIC0gcGQtZ3Bpb3MJCTogV2hpY2ggR1BJTyB0byB1c2UgZm9y
-IHBvd2VyIGRvd24KKyAtIHJlc2V0LWdwaW9zCQk6IFdoaWNoIEdQSU8gdG8gdXNlIGZvciByZXNl
-dAorCitPcHRpb25hbCBwcm9wZXJ0aWVzOgorCisgLSB2MTAtZ3Bpb3MJCTogV2hpY2ggR1BJTyB0
-byB1c2UgZm9yIFYxMCBjb250cm9sLgorIC0gVmlkZW8gcG9ydCBmb3IgSERNSSBvdXRwdXQsIHVz
-aW5nIHRoZSBEVCBiaW5kaW5ncyBkZWZpbmVkIGluIFsxXS4KKworWzFdOiBEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQKKworRXhhbXBs
-ZToKKworCWFueDc4MTQ6IGFueDc4MTRAMzggeworCQljb21wYXRpYmxlID0gImFuYWxvZ2l4LGFu
-eDc4MTQiOworCQlyZWcgPSA8MHgzOD47CisJCWludGVycnVwdC1wYXJlbnQgPSA8JmdwaW8wPgor
-CQlpbnRlcnJ1cHRzID0gPDEgSVJRX1RZUEVfTEVWRUxfSElHSD47CisJCXBkLWdwaW9zID0gPCZn
-cGlvMCAyIEdQSU9fQUNUSVZFX0hJR0g+OworCQlyZXNldC1ncGlvcyA9IDwmZ3BpbzAgMyBHUElP
-X0FDVElWRV9ISUdIPjsKKwkJdjEwLWdwaW9zID0gPCZncGlvMCA0IEdQSU9fQUNUSVZFX0hJR0g+
-OworCQlwb3J0cyB7CisJCQlhbng3ODE0X2luOiBlbmRwb2ludCB7CisJCQkJcmVtb3RlLWVuZHBv
-aW50ID0gPCZoZG1pMF9vdXQ+OworCQkJfTsKKwkJfTsKKwl9OwotLSAKMi4xLjAKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
-IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Analogix Semiconductor develops analog and mixed-signal devices for digital
+media and communications interconnect applications.
+
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+
+Changes since last version (requested by Rob Herring)
+- Fix alphabetical order.
+
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 55df1d4..201d3e1 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -21,6 +21,7 @@ amlogic	Amlogic, Inc.
+ ampire	Ampire Co., Ltd.
+ ams	AMS AG
+ amstaos	AMS-Taos Inc.
++analogix	Analogix Semiconductor, Inc.
+ apm	Applied Micro Circuits Corporation (APM)
+ aptina	Aptina Imaging
+ arasan	Arasan Chip Systems
+-- 
+2.1.0
