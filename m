@@ -1,326 +1,194 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 09/12] drm/etnaviv: add GPU core dump functionality
-Date: Fri,  4 Dec 2015 15:00:01 +0100
-Message-ID: <1449237604-19064-10-git-send-email-l.stach@pengutronix.de>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH 03/12] drm/etnaviv: add etnaviv UAPI header
+Date: Fri,  4 Dec 2015 14:59:55 +0100
+Message-ID: <1449237604-19064-4-git-send-email-l.stach@pengutronix.de>
 References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449237604-19064-1-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, kernel@pengutronix.de, Russell King <rmk+kernel@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-From: The etnaviv authors <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-
-This adds functionality to allow post-portem GPU analysis.
-
-Signed-off-by: Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- drivers/gpu/drm/etnaviv/etnaviv_dump.c | 227 +++++++++++++++++++++++++++++++++
- drivers/gpu/drm/etnaviv/etnaviv_dump.h |  54 ++++++++
- 2 files changed, 281 insertions(+)
- create mode 100644 drivers/gpu/drm/etnaviv/etnaviv_dump.c
- create mode 100644 drivers/gpu/drm/etnaviv/etnaviv_dump.h
-
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_dump.c b/drivers/gpu/drm/etnaviv/etnaviv_dump.c
-new file mode 100644
-index 000000000000..bf8fa859e8be
---- /dev/null
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_dump.c
-@@ -0,0 +1,227 @@
-+/*
-+ * Copyright (C) 2015 Etnaviv Project
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2 as published by
-+ * the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/devcoredump.h>
-+#include "etnaviv_dump.h"
-+#include "etnaviv_gem.h"
-+#include "etnaviv_gpu.h"
-+#include "etnaviv_mmu.h"
-+#include "state.xml.h"
-+#include "state_hi.xml.h"
-+
-+struct core_dump_iterator {
-+	void *start;
-+	struct etnaviv_dump_object_header *hdr;
-+	void *data;
-+};
-+
-+static const unsigned short etnaviv_dump_registers[] = {
-+	VIVS_HI_AXI_STATUS,
-+	VIVS_HI_CLOCK_CONTROL,
-+	VIVS_HI_IDLE_STATE,
-+	VIVS_HI_AXI_CONFIG,
-+	VIVS_HI_INTR_ENBL,
-+	VIVS_HI_CHIP_IDENTITY,
-+	VIVS_HI_CHIP_FEATURE,
-+	VIVS_HI_CHIP_MODEL,
-+	VIVS_HI_CHIP_REV,
-+	VIVS_HI_CHIP_DATE,
-+	VIVS_HI_CHIP_TIME,
-+	VIVS_HI_CHIP_MINOR_FEATURE_0,
-+	VIVS_HI_CACHE_CONTROL,
-+	VIVS_HI_AXI_CONTROL,
-+	VIVS_PM_POWER_CONTROLS,
-+	VIVS_PM_MODULE_CONTROLS,
-+	VIVS_PM_MODULE_STATUS,
-+	VIVS_PM_PULSE_EATER,
-+	VIVS_MC_MMU_FE_PAGE_TABLE,
-+	VIVS_MC_MMU_TX_PAGE_TABLE,
-+	VIVS_MC_MMU_PE_PAGE_TABLE,
-+	VIVS_MC_MMU_PEZ_PAGE_TABLE,
-+	VIVS_MC_MMU_RA_PAGE_TABLE,
-+	VIVS_MC_DEBUG_MEMORY,
-+	VIVS_MC_MEMORY_BASE_ADDR_RA,
-+	VIVS_MC_MEMORY_BASE_ADDR_FE,
-+	VIVS_MC_MEMORY_BASE_ADDR_TX,
-+	VIVS_MC_MEMORY_BASE_ADDR_PEZ,
-+	VIVS_MC_MEMORY_BASE_ADDR_PE,
-+	VIVS_MC_MEMORY_TIMING_CONTROL,
-+	VIVS_MC_BUS_CONFIG,
-+	VIVS_FE_DMA_STATUS,
-+	VIVS_FE_DMA_DEBUG_STATE,
-+	VIVS_FE_DMA_ADDRESS,
-+	VIVS_FE_DMA_LOW,
-+	VIVS_FE_DMA_HIGH,
-+	VIVS_FE_AUTO_FLUSH,
-+};
-+
-+static void etnaviv_core_dump_header(struct core_dump_iterator *iter,
-+	u32 type, void *data_end)
-+{
-+	struct etnaviv_dump_object_header *hdr = iter->hdr;
-+
-+	hdr->magic = cpu_to_le32(ETDUMP_MAGIC);
-+	hdr->type = cpu_to_le32(type);
-+	hdr->file_offset = cpu_to_le32(iter->data - iter->start);
-+	hdr->file_size = cpu_to_le32(data_end - iter->data);
-+
-+	iter->hdr++;
-+	iter->data += hdr->file_size;
-+}
-+
-+static void etnaviv_core_dump_registers(struct core_dump_iterator *iter,
-+	struct etnaviv_gpu *gpu)
-+{
-+	struct etnaviv_dump_registers *reg = iter->data;
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(etnaviv_dump_registers); i++, reg++) {
-+		reg->reg = etnaviv_dump_registers[i];
-+		reg->value = gpu_read(gpu, etnaviv_dump_registers[i]);
-+	}
-+
-+	etnaviv_core_dump_header(iter, ETDUMP_BUF_REG, reg);
-+}
-+
-+static void etnaviv_core_dump_mmu(struct core_dump_iterator *iter,
-+	struct etnaviv_gpu *gpu, size_t mmu_size)
-+{
-+	etnaviv_iommu_dump(gpu->mmu, iter->data);
-+
-+	etnaviv_core_dump_header(iter, ETDUMP_BUF_MMU, iter->data + mmu_size);
-+}
-+
-+static void etnaviv_core_dump_mem(struct core_dump_iterator *iter, u32 type,
-+	void *ptr, size_t size, u64 iova)
-+{
-+	memcpy(iter->data, ptr, size);
-+
-+	iter->hdr->iova = cpu_to_le64(iova);
-+
-+	etnaviv_core_dump_header(iter, type, iter->data + size);
-+}
-+
-+void etnaviv_core_dump(struct etnaviv_gpu *gpu)
-+{
-+	struct core_dump_iterator iter;
-+	struct etnaviv_vram_mapping *vram;
-+	struct etnaviv_gem_object *obj;
-+	struct etnaviv_cmdbuf *cmd;
-+	unsigned int n_obj, n_bomap_pages;
-+	size_t file_size, mmu_size;
-+	__le64 *bomap, *bomap_start;
-+
-+	mmu_size = etnaviv_iommu_dump_size(gpu->mmu);
-+
-+	/* We always dump registers, mmu, ring and end marker */
-+	n_obj = 4;
-+	n_bomap_pages = 0;
-+	file_size = ARRAY_SIZE(etnaviv_dump_registers) *
-+			sizeof(struct etnaviv_dump_registers) +
-+		    mmu_size + gpu->buffer->size;
-+
-+	/* Add in the active command buffers */
-+	list_for_each_entry(cmd, &gpu->active_cmd_list, node) {
-+		file_size += cmd->size;
-+		n_obj++;
-+	}
-+
-+	/* Add in the active buffer objects */
-+	list_for_each_entry(vram, &gpu->mmu->mappings, mmu_node) {
-+		if (!vram->use)
-+			continue;
-+
-+		obj = vram->object;
-+		file_size += obj->base.size;
-+		n_bomap_pages += obj->base.size >> PAGE_SHIFT;
-+		n_obj++;
-+	}
-+
-+	/* If we have any buffer objects, add a bomap object */
-+	if (n_bomap_pages) {
-+		file_size += n_bomap_pages * sizeof(__le64);
-+		n_obj++;
-+	}
-+
-+	/* Add the size of the headers */
-+	file_size += sizeof(*iter.hdr) * n_obj;
-+
-+	/* Allocate the file in vmalloc memory, it's likely to be big */
-+	iter.start = vmalloc(file_size);
-+	if (!iter.start) {
-+		dev_warn(gpu->dev, "failed to allocate devcoredump file\n");
-+		return;
-+	}
-+
-+	/* Point the data member after the headers */
-+	iter.hdr = iter.start;
-+	iter.data = &iter.hdr[n_obj];
-+
-+	memset(iter.hdr, 0, iter.data - iter.start);
-+
-+	etnaviv_core_dump_registers(&iter, gpu);
-+	etnaviv_core_dump_mmu(&iter, gpu, mmu_size);
-+	etnaviv_core_dump_mem(&iter, ETDUMP_BUF_RING, gpu->buffer->vaddr,
-+			      gpu->buffer->size, gpu->buffer->paddr);
-+
-+	list_for_each_entry(cmd, &gpu->active_cmd_list, node)
-+		etnaviv_core_dump_mem(&iter, ETDUMP_BUF_CMD, cmd->vaddr,
-+				      cmd->size, cmd->paddr);
-+
-+	/* Reserve space for the bomap */
-+	if (n_bomap_pages) {
-+		bomap_start = bomap = iter.data;
-+		memset(bomap, 0, sizeof(*bomap) * n_bomap_pages);
-+		etnaviv_core_dump_header(&iter, ETDUMP_BUF_BOMAP,
-+					 bomap + n_bomap_pages);
-+	} else {
-+		/* Silence warning */
-+		bomap_start = bomap = NULL;
-+	}
-+
-+	list_for_each_entry(vram, &gpu->mmu->mappings, mmu_node) {
-+		struct page **pages;
-+		void *vaddr;
-+
-+		if (vram->use == 0)
-+			continue;
-+
-+		obj = vram->object;
-+
-+		pages = etnaviv_gem_get_pages(obj);
-+		if (pages) {
-+			int j;
-+
-+			iter.hdr->data[0] = bomap - bomap_start;
-+
-+			for (j = 0; j < obj->base.size >> PAGE_SHIFT; j++)
-+				*bomap++ = cpu_to_le64(page_to_phys(*pages++));
-+		}
-+
-+		iter.hdr->iova = cpu_to_le64(vram->iova);
-+
-+		vaddr = etnaviv_gem_vaddr(&obj->base);
-+		if (vaddr && !IS_ERR(vaddr))
-+			memcpy(iter.data, vaddr, obj->base.size);
-+
-+		etnaviv_core_dump_header(&iter, ETDUMP_BUF_BO, iter.data +
-+					 obj->base.size);
-+	}
-+
-+	etnaviv_core_dump_header(&iter, ETDUMP_BUF_END, iter.data);
-+
-+	dev_coredumpv(gpu->dev, iter.start, iter.data - iter.start, GFP_KERNEL);
-+}
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_dump.h b/drivers/gpu/drm/etnaviv/etnaviv_dump.h
-new file mode 100644
-index 000000000000..97f2f8db9133
---- /dev/null
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_dump.h
-@@ -0,0 +1,54 @@
-+/*
-+ * Copyright (C) 2015 Etnaviv Project
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2 as published by
-+ * the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ *
-+ * Etnaviv devcoredump file definitions
-+ */
-+#ifndef ETNAVIV_DUMP_H
-+#define ETNAVIV_DUMP_H
-+
-+#include <linux/types.h>
-+
-+enum {
-+	ETDUMP_MAGIC = 0x414e5445,
-+	ETDUMP_BUF_REG = 0,
-+	ETDUMP_BUF_MMU,
-+	ETDUMP_BUF_RING,
-+	ETDUMP_BUF_CMD,
-+	ETDUMP_BUF_BOMAP,
-+	ETDUMP_BUF_BO,
-+	ETDUMP_BUF_END,
-+};
-+
-+struct etnaviv_dump_object_header {
-+	__le32 magic;
-+	__le32 type;
-+	__le32 file_offset;
-+	__le32 file_size;
-+	__le64 iova;
-+	__le32 data[2];
-+};
-+
-+/* Registers object, an array of these */
-+struct etnaviv_dump_registers {
-+	__le32 reg;
-+	__le32 value;
-+};
-+
-+#ifdef __KERNEL__
-+struct etnaviv_gpu;
-+void etnaviv_core_dump(struct etnaviv_gpu *gpu);
-+#endif
-+
-+#endif
--- 
-2.6.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogVGhlIGV0bmF2aXYgYXV0aG9ycyA8ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+Zz4KClRoaXMgYWRkcyB0aGUgaGVhZGVyIGRlZmluaW5nIHRoZSB1c2VyL2tlcm5lbCBBUEkgZm9y
+IHRoZQpldG5hdml2IERSTSBkcml2ZXIuCgpTaWduZWQtb2ZmLWJ5OiBDaHJpc3RpYW4gR21laW5l
+ciA8Y2hyaXN0aWFuLmdtZWluZXJAZ21haWwuY29tPgpTaWduZWQtb2ZmLWJ5OiBSdXNzZWxsIEtp
+bmcgPHJtaytrZXJuZWxAYXJtLmxpbnV4Lm9yZy51az4KU2lnbmVkLW9mZi1ieTogTHVjYXMgU3Rh
+Y2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+Ci0tLQogaW5jbHVkZS91YXBpL2RybS9ldG5hdml2
+X2RybS5oIHwgMjIxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAx
+IGZpbGUgY2hhbmdlZCwgMjIxIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNs
+dWRlL3VhcGkvZHJtL2V0bmF2aXZfZHJtLmgKCmRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkvZHJt
+L2V0bmF2aXZfZHJtLmggYi9pbmNsdWRlL3VhcGkvZHJtL2V0bmF2aXZfZHJtLmgKbmV3IGZpbGUg
+bW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi4wY2NlOTVlZmNkODYKLS0tIC9kZXYvbnVs
+bAorKysgYi9pbmNsdWRlL3VhcGkvZHJtL2V0bmF2aXZfZHJtLmgKQEAgLTAsMCArMSwyMjEgQEAK
+Ky8qCisgKiBDb3B5cmlnaHQgKEMpIDIwMTUgRXRuYXZpdiBQcm9qZWN0CisgKgorICogVGhpcyBw
+cm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vciBt
+b2RpZnkgaXQKKyAqIHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExp
+Y2Vuc2UgdmVyc2lvbiAyIGFzIHB1Ymxpc2hlZCBieQorICogdGhlIEZyZWUgU29mdHdhcmUgRm91
+bmRhdGlvbi4KKyAqCisgKiBUaGlzIHByb2dyYW0gaXMgZGlzdHJpYnV0ZWQgaW4gdGhlIGhvcGUg
+dGhhdCBpdCB3aWxsIGJlIHVzZWZ1bCwgYnV0IFdJVEhPVVQKKyAqIEFOWSBXQVJSQU5UWTsgd2l0
+aG91dCBldmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5IG9mIE1FUkNIQU5UQUJJTElUWSBvcgorICog
+RklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UuICBTZWUgdGhlIEdOVSBHZW5lcmFsIFB1
+YmxpYyBMaWNlbnNlIGZvcgorICogbW9yZSBkZXRhaWxzLgorICoKKyAqIFlvdSBzaG91bGQgaGF2
+ZSByZWNlaXZlZCBhIGNvcHkgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGFsb25n
+IHdpdGgKKyAqIHRoaXMgcHJvZ3JhbS4gIElmIG5vdCwgc2VlIDxodHRwOi8vd3d3LmdudS5vcmcv
+bGljZW5zZXMvPi4KKyAqLworCisjaWZuZGVmIF9fRVROQVZJVl9EUk1fSF9fCisjZGVmaW5lIF9f
+RVROQVZJVl9EUk1fSF9fCisKKyNpbmNsdWRlIDxkcm0vZHJtLmg+CisKKy8qIFBsZWFzZSBub3Rl
+IHRoYXQgbW9kaWZpY2F0aW9ucyB0byBhbGwgc3RydWN0cyBkZWZpbmVkIGhlcmUgYXJlCisgKiBz
+dWJqZWN0IHRvIGJhY2t3YXJkcy1jb21wYXRpYmlsaXR5IGNvbnN0cmFpbnRzOgorICogIDEpIERv
+IG5vdCB1c2UgcG9pbnRlcnMsIHVzZSBfX3U2NCBpbnN0ZWFkIGZvciAzMiBiaXQgLyA2NCBiaXQK
+KyAqICAgICB1c2VyL2tlcm5lbCBjb21wYXRpYmlsaXR5CisgKiAgMikgS2VlcCBmaWVsZHMgYWxp
+Z25lZCB0byB0aGVpciBzaXplCisgKiAgMykgQmVjYXVzZSBvZiBob3cgZHJtX2lvY3RsKCkgd29y
+a3MsIHdlIGNhbiBhZGQgbmV3IGZpZWxkcyBhdAorICogICAgIHRoZSBlbmQgb2YgYW4gaW9jdGwg
+aWYgc29tZSBjYXJlIGlzIHRha2VuOiBkcm1faW9jdGwoKSB3aWxsCisgKiAgICAgemVybyBvdXQg
+dGhlIG5ldyBmaWVsZHMgYXQgdGhlIHRhaWwgb2YgdGhlIGlvY3RsLCBzbyBhIHplcm8KKyAqICAg
+ICB2YWx1ZSBzaG91bGQgaGF2ZSBhIGJhY2t3YXJkcyBjb21wYXRpYmxlIG1lYW5pbmcuICBBbmQg
+Zm9yCisgKiAgICAgb3V0cHV0IHBhcmFtcywgdXNlcnNwYWNlIHdvbid0IHNlZSB0aGUgbmV3bHkg
+YWRkZWQgb3V0cHV0CisgKiAgICAgZmllbGRzLi4gc28gdGhhdCBoYXMgdG8gYmUgc29tZWhvdyBv
+ay4KKyAqLworCisvKiB0aW1lb3V0cyBhcmUgc3BlY2lmaWVkIGluIGNsb2NrLW1vbm90b25pYyBh
+YnNvbHV0ZSB0aW1lcyAodG8gc2ltcGxpZnkKKyAqIHJlc3RhcnRpbmcgaW50ZXJydXB0ZWQgaW9j
+dGxzKS4gIFRoZSBmb2xsb3dpbmcgc3RydWN0IGlzIGxvZ2ljYWxseSB0aGUKKyAqIHNhbWUgYXMg
+J3N0cnVjdCB0aW1lc3BlYycgYnV0IDMyLzY0YiBBQkkgc2FmZS4KKyAqLworc3RydWN0IGRybV9l
+dG5hdml2X3RpbWVzcGVjIHsKKwlfX3M2NCB0dl9zZWM7ICAgICAgICAgIC8qIHNlY29uZHMgKi8K
+KwlfX3M2NCB0dl9uc2VjOyAgICAgICAgIC8qIG5hbm9zZWNvbmRzICovCit9OworCisjZGVmaW5l
+IEVUTkFWSVZfUEFSQU1fR1BVX01PREVMICAgICAgICAgICAgICAgICAgICAgMHgwMQorI2RlZmlu
+ZSBFVE5BVklWX1BBUkFNX0dQVV9SRVZJU0lPTiAgICAgICAgICAgICAgICAgIDB4MDIKKyNkZWZp
+bmUgRVROQVZJVl9QQVJBTV9HUFVfRkVBVFVSRVNfMCAgICAgICAgICAgICAgICAweDAzCisjZGVm
+aW5lIEVUTkFWSVZfUEFSQU1fR1BVX0ZFQVRVUkVTXzEgICAgICAgICAgICAgICAgMHgwNAorI2Rl
+ZmluZSBFVE5BVklWX1BBUkFNX0dQVV9GRUFUVVJFU18yICAgICAgICAgICAgICAgIDB4MDUKKyNk
+ZWZpbmUgRVROQVZJVl9QQVJBTV9HUFVfRkVBVFVSRVNfMyAgICAgICAgICAgICAgICAweDA2Cisj
+ZGVmaW5lIEVUTkFWSVZfUEFSQU1fR1BVX0ZFQVRVUkVTXzQgICAgICAgICAgICAgICAgMHgwNwor
+CisjZGVmaW5lIEVUTkFWSVZfUEFSQU1fR1BVX1NUUkVBTV9DT1VOVCAgICAgICAgICAgICAgMHgx
+MAorI2RlZmluZSBFVE5BVklWX1BBUkFNX0dQVV9SRUdJU1RFUl9NQVggICAgICAgICAgICAgIDB4
+MTEKKyNkZWZpbmUgRVROQVZJVl9QQVJBTV9HUFVfVEhSRUFEX0NPVU5UICAgICAgICAgICAgICAw
+eDEyCisjZGVmaW5lIEVUTkFWSVZfUEFSQU1fR1BVX1ZFUlRFWF9DQUNIRV9TSVpFICAgICAgICAg
+MHgxMworI2RlZmluZSBFVE5BVklWX1BBUkFNX0dQVV9TSEFERVJfQ09SRV9DT1VOVCAgICAgICAg
+IDB4MTQKKyNkZWZpbmUgRVROQVZJVl9QQVJBTV9HUFVfUElYRUxfUElQRVMgICAgICAgICAgICAg
+ICAweDE1CisjZGVmaW5lIEVUTkFWSVZfUEFSQU1fR1BVX1ZFUlRFWF9PVVRQVVRfQlVGRkVSX1NJ
+WkUgMHgxNgorI2RlZmluZSBFVE5BVklWX1BBUkFNX0dQVV9CVUZGRVJfU0laRSAgICAgICAgICAg
+ICAgIDB4MTcKKyNkZWZpbmUgRVROQVZJVl9QQVJBTV9HUFVfSU5TVFJVQ1RJT05fQ09VTlQgICAg
+ICAgICAweDE4CisjZGVmaW5lIEVUTkFWSVZfUEFSQU1fR1BVX05VTV9DT05TVEFOVFMgICAgICAg
+ICAgICAgMHgxOQorCisjZGVmaW5lIEVUTkFfTUFYX1BJUEVTIDQKKworc3RydWN0IGRybV9ldG5h
+dml2X3BhcmFtIHsKKwlfX3UzMiBwaXBlOyAgICAgICAgICAgLyogaW4gKi8KKwlfX3UzMiBwYXJh
+bTsgICAgICAgICAgLyogaW4sIEVUTkFWSVZfUEFSQU1feCAqLworCV9fdTY0IHZhbHVlOyAgICAg
+ICAgICAvKiBvdXQgKGdldF9wYXJhbSkgb3IgaW4gKHNldF9wYXJhbSkgKi8KK307CisKKy8qCisg
+KiBHRU0gYnVmZmVyczoKKyAqLworCisjZGVmaW5lIEVUTkFfQk9fQ0FDSEVfTUFTSyAgIDB4MDAw
+ZjAwMDAKKy8qIGNhY2hlIG1vZGVzICovCisjZGVmaW5lIEVUTkFfQk9fQ0FDSEVEICAgICAgIDB4
+MDAwMTAwMDAKKyNkZWZpbmUgRVROQV9CT19XQyAgICAgICAgICAgMHgwMDAyMDAwMAorI2RlZmlu
+ZSBFVE5BX0JPX1VOQ0FDSEVEICAgICAweDAwMDQwMDAwCisvKiBtYXAgZmxhZ3MgKi8KKyNkZWZp
+bmUgRVROQV9CT19GT1JDRV9NTVUgICAgMHgwMDEwMDAwMAorCitzdHJ1Y3QgZHJtX2V0bmF2aXZf
+Z2VtX25ldyB7CisJX191NjQgc2l6ZTsgICAgICAgICAgIC8qIGluICovCisJX191MzIgZmxhZ3M7
+ICAgICAgICAgIC8qIGluLCBtYXNrIG9mIEVUTkFfQk9feCAqLworCV9fdTMyIGhhbmRsZTsgICAg
+ICAgICAvKiBvdXQgKi8KK307CisKK3N0cnVjdCBkcm1fZXRuYXZpdl9nZW1faW5mbyB7CisJX191
+MzIgaGFuZGxlOyAgICAgICAgIC8qIGluICovCisJX191MzIgcGFkOworCV9fdTY0IG9mZnNldDsg
+ICAgICAgICAvKiBvdXQsIG9mZnNldCB0byBwYXNzIHRvIG1tYXAoKSAqLworfTsKKworI2RlZmlu
+ZSBFVE5BX1BSRVBfUkVBRCAgICAgICAgMHgwMQorI2RlZmluZSBFVE5BX1BSRVBfV1JJVEUgICAg
+ICAgMHgwMgorI2RlZmluZSBFVE5BX1BSRVBfTk9TWU5DICAgICAgMHgwNAorCitzdHJ1Y3QgZHJt
+X2V0bmF2aXZfZ2VtX2NwdV9wcmVwIHsKKwlfX3UzMiBoYW5kbGU7ICAgICAgICAgLyogaW4gKi8K
+KwlfX3UzMiBvcDsgICAgICAgICAgICAgLyogaW4sIG1hc2sgb2YgRVROQV9QUkVQX3ggKi8KKwlz
+dHJ1Y3QgZHJtX2V0bmF2aXZfdGltZXNwZWMgdGltZW91dDsgICAvKiBpbiAqLworfTsKKworc3Ry
+dWN0IGRybV9ldG5hdml2X2dlbV9jcHVfZmluaSB7CisJX191MzIgaGFuZGxlOyAgICAgICAgIC8q
+IGluICovCisJX191MzIgZmxhZ3M7ICAgICAgICAgIC8qIGluLCBwbGFjZWhvbGRlciBmb3Igbm93
+LCBubyBkZWZpbmVkIHZhbHVlcyAqLworfTsKKworLyoKKyAqIENtZHN0cmVhbSBTdWJtaXNzaW9u
+OgorICovCisKKy8qIFRoZSB2YWx1ZSB3cml0dGVuIGludG8gdGhlIGNtZHN0cmVhbSBpcyBsb2dp
+Y2FsbHk6CisgKiByZWxvY2J1Zi0+Z3B1YWRkciArIHJlbG9jX29mZnNldAorICoKKyAqIE5PVEUg
+dGhhdCByZWxvYydzIG11c3QgYmUgc29ydGVkIGJ5IG9yZGVyIG9mIGluY3JlYXNpbmcgc3VibWl0
+X29mZnNldCwKKyAqIG90aGVyd2lzZSBFSU5WQUwuCisgKi8KK3N0cnVjdCBkcm1fZXRuYXZpdl9n
+ZW1fc3VibWl0X3JlbG9jIHsKKwlfX3UzMiBzdWJtaXRfb2Zmc2V0OyAgLyogaW4sIG9mZnNldCBm
+cm9tIHN1Ym1pdF9ibyAqLworCV9fdTMyIHJlbG9jX2lkeDsgICAgICAvKiBpbiwgaW5kZXggb2Yg
+cmVsb2NfYm8gYnVmZmVyICovCisJX191NjQgcmVsb2Nfb2Zmc2V0OyAgIC8qIGluLCBvZmZzZXQg
+ZnJvbSBzdGFydCBvZiByZWxvY19ibyAqLworfTsKKworLyogRWFjaCBidWZmZXIgcmVmZXJlbmNl
+ZCBlbHNld2hlcmUgaW4gdGhlIGNtZHN0cmVhbSBzdWJtaXQgKGllLiB0aGUKKyAqIGNtZHN0cmVh
+bSBidWZmZXIocykgdGhlbXNlbHZlcyBvciByZWxvYyBlbnRyaWVzKSBoYXMgb25lIChhbmQgb25s
+eQorICogb25lKSBlbnRyeSBpbiB0aGUgc3VibWl0LT5ib3NbXSB0YWJsZS4KKyAqCisgKiBBcyBh
+IG9wdGltaXphdGlvbiwgdGhlIGN1cnJlbnQgYnVmZmVyIChncHUgdmlydHVhbCBhZGRyZXNzKSBj
+YW4gYmUKKyAqIHBhc3NlZCBiYWNrIHRocm91Z2ggdGhlICdwcmVzdW1lZCcgZmllbGQuICBJZiBv
+biBhIHN1YnNlcXVlbnQgcmVsb2MsCisgKiB1c2Vyc3BhY2UgcGFzc2VzIGJhY2sgYSAncHJlc3Vt
+ZWQnIGFkZHJlc3MgdGhhdCBpcyBzdGlsbCB2YWxpZCwKKyAqIHRoZW4gcGF0Y2hpbmcgdGhlIGNt
+ZHN0cmVhbSBmb3IgdGhpcyBlbnRyeSBpcyBza2lwcGVkLiAgVGhpcyBjYW4KKyAqIGF2b2lkIGtl
+cm5lbCBuZWVkaW5nIHRvIG1hcC9hY2Nlc3MgdGhlIGNtZHN0cmVhbSBibyBpbiB0aGUgY29tbW9u
+CisgKiBjYXNlLgorICovCisjZGVmaW5lIEVUTkFfU1VCTUlUX0JPX1JFQUQgICAgICAgICAgICAg
+MHgwMDAxCisjZGVmaW5lIEVUTkFfU1VCTUlUX0JPX1dSSVRFICAgICAgICAgICAgMHgwMDAyCitz
+dHJ1Y3QgZHJtX2V0bmF2aXZfZ2VtX3N1Ym1pdF9ibyB7CisJX191MzIgZmxhZ3M7ICAgICAgICAg
+IC8qIGluLCBtYXNrIG9mIEVUTkFfU1VCTUlUX0JPX3ggKi8KKwlfX3UzMiBoYW5kbGU7ICAgICAg
+ICAgLyogaW4sIEdFTSBoYW5kbGUgKi8KKwlfX3U2NCBwcmVzdW1lZDsgICAgICAgLyogaW4vb3V0
+LCBwcmVzdW1lZCBidWZmZXIgYWRkcmVzcyAqLworfTsKKworLyogRWFjaCBjbWRzdHJlYW0gc3Vi
+bWl0IGNvbnNpc3RzIG9mIGEgdGFibGUgb2YgYnVmZmVycyBpbnZvbHZlZCwgYW5kCisgKiBvbmUg
+b3IgbW9yZSBjbWRzdHJlYW0gYnVmZmVycy4gIFRoaXMgYWxsb3dzIGZvciBjb25kaXRpb25hbCBl
+eGVjdXRpb24KKyAqIChjb250ZXh0LXJlc3RvcmUpLCBhbmQgSUIgYnVmZmVycyBuZWVkZWQgZm9y
+IHBlciB0aWxlL2JpbiBkcmF3IGNtZHMuCisgKi8KKyNkZWZpbmUgRVROQV9QSVBFXzNEICAgICAg
+MHgwMAorI2RlZmluZSBFVE5BX1BJUEVfMkQgICAgICAweDAxCisjZGVmaW5lIEVUTkFfUElQRV9W
+RyAgICAgIDB4MDIKK3N0cnVjdCBkcm1fZXRuYXZpdl9nZW1fc3VibWl0IHsKKwlfX3UzMiBmZW5j
+ZTsgICAgICAgICAgLyogb3V0ICovCisJX191MzIgcGlwZTsgICAgICAgICAgIC8qIGluICovCisJ
+X191MzIgZXhlY19zdGF0ZTsgICAgIC8qIGluLCBpbml0aWFsIGV4ZWN1dGlvbiBzdGF0ZSAoRVRO
+QV9QSVBFX3gpICovCisJX191MzIgbnJfYm9zOyAgICAgICAgIC8qIGluLCBudW1iZXIgb2Ygc3Vi
+bWl0X2JvJ3MgKi8KKwlfX3UzMiBucl9yZWxvY3M7ICAgICAgLyogaW4sIG51bWJlciBvZiBzdWJt
+aXRfcmVsb2MncyAqLworCV9fdTMyIHN0cmVhbV9zaXplOyAgICAvKiBpbiwgY21kc3RyZWFtIHNp
+emUgKi8KKwlfX3U2NCBib3M7ICAgICAgICAgICAgLyogaW4sIHB0ciB0byBhcnJheSBvZiBzdWJt
+aXRfYm8ncyAqLworCV9fdTY0IHJlbG9jczsgICAgICAgICAvKiBpbiwgcHRyIHRvIGFycmF5IG9m
+IHN1Ym1pdF9yZWxvYydzICovCisJX191NjQgc3RyZWFtOyAgICAgICAgIC8qIGluLCBwdHIgdG8g
+Y21kc3RyZWFtICovCit9OworCisvKiBUaGUgbm9ybWFsIHdheSB0byBzeW5jaHJvbml6ZSB3aXRo
+IHRoZSBHUFUgaXMganVzdCB0byBDUFVfUFJFUCBvbgorICogYSBidWZmZXIgaWYgeW91IG5lZWQg
+dG8gYWNjZXNzIGl0IGZyb20gdGhlIENQVSAob3RoZXIgY21kc3RyZWFtCisgKiBzdWJtaXNzaW9u
+IGZyb20gc2FtZSBvciBvdGhlciBjb250ZXh0cywgUEFHRV9GTElQIGlvY3RsLCBldGMsIGFsbAor
+ICogaGFuZGxlIHRoZSByZXF1aXJlZCBzeW5jaHJvbml6YXRpb24gdW5kZXIgdGhlIGhvb2QpLiAg
+VGhpcyBpb2N0bAorICogbWFpbmx5IGp1c3QgZXhpc3RzIGFzIGEgd2F5IHRvIGltcGxlbWVudCB0
+aGUgZ2FsbGl1bSBwaXBlX2ZlbmNlCisgKiBBUElzIHdpdGhvdXQgcmVxdWlyaW5nIGEgZHVtbXkg
+Ym8gdG8gc3luY2hyb25pemUgb24uCisgKi8KKyNkZWZpbmUgRVROQV9XQUlUX05PTkJMT0NLICAg
+ICAgMHgwMQorc3RydWN0IGRybV9ldG5hdml2X3dhaXRfZmVuY2UgeworCV9fdTMyIHBpcGU7ICAg
+ICAgICAgICAvKiBpbiAqLworCV9fdTMyIGZlbmNlOyAgICAgICAgICAvKiBpbiAqLworCV9fdTMy
+IGZsYWdzOyAgICAgICAgICAvKiBpbiwgbWFzayBvZiBFVE5BX1dBSVRfeCAqLworCV9fdTMyIHBh
+ZDsKKwlzdHJ1Y3QgZHJtX2V0bmF2aXZfdGltZXNwZWMgdGltZW91dDsgICAvKiBpbiAqLworfTsK
+KworI2RlZmluZSBFVE5BX1VTRVJQVFJfUkVBRAkweDAxCisjZGVmaW5lIEVUTkFfVVNFUlBUUl9X
+UklURQkweDAyCitzdHJ1Y3QgZHJtX2V0bmF2aXZfZ2VtX3VzZXJwdHIgeworCV9fdTY0IHVzZXJf
+cHRyOwkvKiBpbiwgcGFnZSBhbGlnbmVkIHVzZXIgcG9pbnRlciAqLworCV9fdTY0IHVzZXJfc2l6
+ZTsJLyogaW4sIHBhZ2UgYWxpZ25lZCB1c2VyIHNpemUgKi8KKwlfX3UzMiBmbGFnczsJCS8qIGlu
+LCBmbGFncyAqLworCV9fdTMyIGhhbmRsZTsJLyogb3V0LCBub24temVybyBoYW5kbGUgKi8KK307
+CisKK3N0cnVjdCBkcm1fZXRuYXZpdl9nZW1fd2FpdCB7CisJX191MzIgcGlwZTsJCQkJLyogaW4g
+Ki8KKwlfX3UzMiBoYW5kbGU7CQkJCS8qIGluLCBibyB0byBiZSB3YWl0ZWQgZm9yICovCisJX191
+MzIgZmxhZ3M7CQkJCS8qIGluLCBtYXNrIG9mIEVUTkFfV0FJVF94ICAqLworCV9fdTMyIHBhZDsK
+KwlzdHJ1Y3QgZHJtX2V0bmF2aXZfdGltZXNwZWMgdGltZW91dDsJLyogaW4gKi8KK307CisKKyNk
+ZWZpbmUgRFJNX0VUTkFWSVZfR0VUX1BBUkFNICAgICAgICAgIDB4MDAKKy8qIHBsYWNlaG9sZGVy
+OgorI2RlZmluZSBEUk1fRVROQVZJVl9TRVRfUEFSQU0gICAgICAgICAgMHgwMQorICovCisjZGVm
+aW5lIERSTV9FVE5BVklWX0dFTV9ORVcgICAgICAgICAgICAweDAyCisjZGVmaW5lIERSTV9FVE5B
+VklWX0dFTV9JTkZPICAgICAgICAgICAweDAzCisjZGVmaW5lIERSTV9FVE5BVklWX0dFTV9DUFVf
+UFJFUCAgICAgICAweDA0CisjZGVmaW5lIERSTV9FVE5BVklWX0dFTV9DUFVfRklOSSAgICAgICAw
+eDA1CisjZGVmaW5lIERSTV9FVE5BVklWX0dFTV9TVUJNSVQgICAgICAgICAweDA2CisjZGVmaW5l
+IERSTV9FVE5BVklWX1dBSVRfRkVOQ0UgICAgICAgICAweDA3CisjZGVmaW5lIERSTV9FVE5BVklW
+X0dFTV9VU0VSUFRSICAgICAgICAweDA4CisjZGVmaW5lIERSTV9FVE5BVklWX0dFTV9XQUlUICAg
+ICAgICAgICAweDA5CisjZGVmaW5lIERSTV9FVE5BVklWX05VTV9JT0NUTFMgICAgICAgICAweDBh
+CisKKyNkZWZpbmUgRFJNX0lPQ1RMX0VUTkFWSVZfR0VUX1BBUkFNICAgIERSTV9JT1dSKERSTV9D
+T01NQU5EX0JBU0UgKyBEUk1fRVROQVZJVl9HRVRfUEFSQU0sIHN0cnVjdCBkcm1fZXRuYXZpdl9w
+YXJhbSkKKyNkZWZpbmUgRFJNX0lPQ1RMX0VUTkFWSVZfR0VNX05FVyAgICAgIERSTV9JT1dSKERS
+TV9DT01NQU5EX0JBU0UgKyBEUk1fRVROQVZJVl9HRU1fTkVXLCBzdHJ1Y3QgZHJtX2V0bmF2aXZf
+Z2VtX25ldykKKyNkZWZpbmUgRFJNX0lPQ1RMX0VUTkFWSVZfR0VNX0lORk8gICAgIERSTV9JT1dS
+KERSTV9DT01NQU5EX0JBU0UgKyBEUk1fRVROQVZJVl9HRU1fSU5GTywgc3RydWN0IGRybV9ldG5h
+dml2X2dlbV9pbmZvKQorI2RlZmluZSBEUk1fSU9DVExfRVROQVZJVl9HRU1fQ1BVX1BSRVAgRFJN
+X0lPVyhEUk1fQ09NTUFORF9CQVNFICsgRFJNX0VUTkFWSVZfR0VNX0NQVV9QUkVQLCBzdHJ1Y3Qg
+ZHJtX2V0bmF2aXZfZ2VtX2NwdV9wcmVwKQorI2RlZmluZSBEUk1fSU9DVExfRVROQVZJVl9HRU1f
+Q1BVX0ZJTkkgRFJNX0lPVyhEUk1fQ09NTUFORF9CQVNFICsgRFJNX0VUTkFWSVZfR0VNX0NQVV9G
+SU5JLCBzdHJ1Y3QgZHJtX2V0bmF2aXZfZ2VtX2NwdV9maW5pKQorI2RlZmluZSBEUk1fSU9DVExf
+RVROQVZJVl9HRU1fU1VCTUlUICAgRFJNX0lPV1IoRFJNX0NPTU1BTkRfQkFTRSArIERSTV9FVE5B
+VklWX0dFTV9TVUJNSVQsIHN0cnVjdCBkcm1fZXRuYXZpdl9nZW1fc3VibWl0KQorI2RlZmluZSBE
+Uk1fSU9DVExfRVROQVZJVl9XQUlUX0ZFTkNFICAgRFJNX0lPVyhEUk1fQ09NTUFORF9CQVNFICsg
+RFJNX0VUTkFWSVZfV0FJVF9GRU5DRSwgc3RydWN0IGRybV9ldG5hdml2X3dhaXRfZmVuY2UpCisj
+ZGVmaW5lIERSTV9JT0NUTF9FVE5BVklWX0dFTV9VU0VSUFRSICBEUk1fSU9XUihEUk1fQ09NTUFO
+RF9CQVNFICsgRFJNX0VUTkFWSVZfR0VNX1VTRVJQVFIsIHN0cnVjdCBkcm1fZXRuYXZpdl9nZW1f
+dXNlcnB0cikKKyNkZWZpbmUgRFJNX0lPQ1RMX0VUTkFWSVZfR0VNX1dBSVQgICAgIERSTV9JT1co
+RFJNX0NPTU1BTkRfQkFTRSArIERSTV9FVE5BVklWX0dFTV9XQUlULCBzdHJ1Y3QgZHJtX2V0bmF2
+aXZfZ2VtX3dhaXQpCisKKyNlbmRpZiAvKiBfX0VUTkFWSVZfRFJNX0hfXyAqLwotLSAKMi42LjIK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
