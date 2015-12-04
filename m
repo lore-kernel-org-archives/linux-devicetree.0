@@ -1,48 +1,42 @@
-From: Mitchel Humpherys <mitchelh@codeaurora.org>
-Subject: Re: [PATCH] of: Fix comparison of reserved memory regions
-Date: Fri, 04 Dec 2015 09:07:39 -0800
-Message-ID: <vnkwk2oum9b8.fsf@codeaurora.org>
-References: <1447843598-9355-1-git-send-email-mpe@ellerman.id.au>
+From: Ilia Mirkin <imirkin@alum.mit.edu>
+Subject: Re: [PATCH 11/12] MAINTAINERS: add Lucas Stach as maintainer for the
+ etnaviv DRM driver
+Date: Fri, 4 Dec 2015 12:08:47 -0500
+Message-ID: <CAKb7Uvjh7B5ExWwRQNMhqDwTwPUsFKv4-jAszVp06qq2rGQFhg@mail.gmail.com>
+References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
+ <1449237604-19064-12-git-send-email-l.stach@pengutronix.de>
+ <20151204170709.GY8644@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447843598-9355-1-git-send-email-mpe@ellerman.id.au> (Michael
-	Ellerman's message of "Wed, 18 Nov 2015 21:46:38 +1100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org, frowand.list@gmail.com, grant.likely@linaro.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20151204170709.GY8644@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: devicetree@vger.kernel.org, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 18 2015 at 09:46:38 PM, Michael Ellerman <mpe@ellerman.id.au> wrote:
-> In order to check for overlapping reserved memory regions, we first need
-> to sort the array of memory regions. This is implemented using sort(),
-> and a custom comparison function __rmem_cmp().
->
-> Unfortunatley __rmem_cmp() doesn't work in all cases. Because the two
-> base values are phys_addr_t, they may be u64 on some platforms, in which
-> case subtracting one from the other and then (implicitly) casting to int
-> does not give us the -ve/0/+ve value we need.
->
-> This leads to incorrect reports about overlaps, eg:
->
->   ibm,slw-image@1ffe600000 (0x0000001ffe600000--0x0000001ffe700000) overlaps with
->   ibm,firmware-allocs-memory@1000000000 (0x0000001000000000--0x0000001000dc0200)
->
-> Fix it by just doing the standard double if and return 0 logic.
->
-> Fixes: ae1add247bf8 ("of: Check for overlap in reserved memory regions")
-> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-> ---
->  drivers/of/of_reserved_mem.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-
-Woops, thanks.
-
-Tested-by: Mitchel Humpherys <mitchelh@codeaurora.org>
-
--Mitch
-
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+T24gRnJpLCBEZWMgNCwgMjAxNSBhdCAxMjowNyBQTSwgUnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4
+CjxsaW51eEBhcm0ubGludXgub3JnLnVrPiB3cm90ZToKPiBPbiBGcmksIERlYyAwNCwgMjAxNSBh
+dCAwMzowMDowM1BNICswMTAwLCBMdWNhcyBTdGFjaCB3cm90ZToKPj4gU2lnbmVkLW9mZi1ieTog
+THVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+Cj4KPiBBY2tlZC1ieTogUnVzc2Vs
+bCBLaW5nIDxybWsra2VybmVsQGFybS5saW51eC5vcmcudWs+Cj4KPiBBbHRob3VnaCwgSSB3b3Vs
+ZCBsaWtlIHRvIGJlIGNvcGllZCBvbiBwYXRjaGVzLCBJIGRvbid0IHRoaW5rIHdlCj4gaGF2ZSBh
+IHdheSB0byBlbmNvZGUgdGhhdCBpbmZvcm1hdGlvbiBpbiBNQUlOVEFJTkVSUy4KCkZyb20gdGhl
+IHRvcCBvZiB0aGUgTUFJTlRBSU5FUlMgZmlsZToKCkRlc2NyaXB0aW9ucyBvZiBzZWN0aW9uIGVu
+dHJpZXM6CgogICAgICAgIFA6IFBlcnNvbiAob2Jzb2xldGUpCiAgICAgICAgTTogTWFpbCBwYXRj
+aGVzIHRvOiBGdWxsTmFtZSA8YWRkcmVzc0Bkb21haW4+CiAgICAgICAgUjogRGVzaWduYXRlZCBy
+ZXZpZXdlcjogRnVsbE5hbWUgPGFkZHJlc3NAZG9tYWluPgogICAgICAgICAgIFRoZXNlIHJldmll
+d2VycyBzaG91bGQgYmUgQ0NlZCBvbiBwYXRjaGVzLgoKU28gSSBndWVzcyB0aGF0J2QgbWVhbiB5
+b3Ugd2FudCB0byBiZSBhIHJldmlld2VyPwoKICAtaWxpYQpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
