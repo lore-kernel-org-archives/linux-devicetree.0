@@ -1,49 +1,139 @@
-From: "Simon Arlott" <simon@fire.lp0.eu>
-Subject: Re: [PATCH 1/2] regulator: Add brcm,bcm63xx-regulator device tree
- binding
-Date: Fri, 4 Dec 2015 12:26:58 -0000
-Message-ID: <d7609dc97ddd988876e4efefaec2c18a4b7161bd@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
-References: <20151201221615.GY1929@sirena.org.uk>
-    <b7ecdc8ebcdf9582620c22b0e8a4a96d24ba67c1@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
-    <20151202125325.GI1929@sirena.org.uk>
-    <565F53FC.5080309@simon.arlott.org.uk>
-    <20151203000631.GM1929@sirena.org.uk>
-    <565FF9E9.1090503@simon.arlott.org.uk>
-    <20151203150528.GG5727@sirena.org.uk>
-    <5660D274.7000402@simon.arlott.org.uk>
-    <20151203234548.GJ5727@sirena.org.uk>
-    <5660D574.7030803@simon.arlott.org.uk>
-    <20151204110018.GU26072@sirena.org.uk>
+From: Bhupesh SHARMA <bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: DT: Add entry for ARM SP805-WDT
+Date: Fri, 4 Dec 2015 18:02:09 +0530
+Message-ID: <CAFTCetR1Y0vyq62dO3qyFHsfjofkVo_=FY+8p6O2EziY0RXqZg@mail.gmail.com>
+References: <1447683883-6600-1-git-send-email-bhupesh.sharma@freescale.com>
+	<1447683883-6600-2-git-send-email-bhupesh.sharma@freescale.com>
+	<20151116144525.GM20696@leverpostej>
+	<CAFTCetQpb4M0dxCWYHXVZYgNKjZT7-J91hhx1=aa7FhPWgEf6A@mail.gmail.com>
+	<CAFTCetQS=qd7Ey_KGNG5yegqnnG2KS5Ua7J9joOSOkN_9wdYRg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151204110018.GU26072@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jogo@openwrt.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFTCetQS=qd7Ey_KGNG5yegqnnG2KS5Ua7J9joOSOkN_9wdYRg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Leo Li <LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, December 4, 2015 11:00, Mark Brown wrote:
-> On Thu, Dec 03, 2015 at 11:51:16PM +0000, Simon Arlott wrote:
->> On 03/12/15 23:45, Mark Brown wrote:
->
->> > Are you *sure* these are regulators and not power domains?  These names
->> > look a lot like they could be power domains.
->
->> No, I'm not sure. Some of them are may actually be regulators (the "PHY"
->> ones) while others are almost definitely power domains (like the "FAP"
->> Forwarding Assist Processor).
->
-> OK, so the power domains should be being represented and managed as such
-> rather than using regulators - it's a better fit (doing things like
-> support atomic context) and it also sidesteps this.  For the things that
-> you say are clearly regulators should we have more information about
-> those?
+Hi Mark,
 
-I'd prefer to handle them all as power domains since it fits better. Even
-if some of them are regulators there's no extra control or status interface
-and they're used like power domains to disable unused functionality.
+Ping..
 
--- 
-Simon Arlott
+On Sun, Nov 29, 2015 at 3:14 AM, Bhupesh SHARMA <bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Mark,
+>
+> On Wed, Nov 18, 2015 at 7:21 PM, Bhupesh SHARMA <bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Hi Mark,
+>>
+>> Thanks for the review.
+>>
+>> On Mon, Nov 16, 2015 at 8:15 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>>> On Mon, Nov 16, 2015 at 07:54:42PM +0530, Bhupesh Sharma wrote:
+>>>> This patch adds a devicetree binding documentation for ARM's
+>>>> SP805 WatchDog Timer.
+>>>>
+>>>> Signed-off-by: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>>>> ---
+>>>>  .../devicetree/bindings/watchdog/sp805-wdt.txt     |   33 ++++++++++++++++++++
+>>>>  1 file changed, 33 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+>>>> new file mode 100644
+>>>> index 0000000..ec70fe9
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+>>>> @@ -0,0 +1,33 @@
+>>>> +* ARM SP805 Watchdog Timer (WDT) Controller
+>>>> +
+>>>> +SP805 WDT is a ARM Primecell Peripheral and has a standard-id register that
+>>>> +can be used to identify the peripheral type, vendor, and revision.
+>>>> +This value can be used for driver matching.
+>>>> +
+>>>> +Note that the current sp805_wdt driver relies on the 'drivers/amba/bus.c'
+>>>> +framework to invoke the probe function of the sp805_wdt driver using the
+>>>> +unique PRIMECELL identifiers of the sp805 wdt IP.
+>>>
+>>> This paragraph can go. We shouldn't describe kernel internals.
+>>
+>> Ok.
+>>
+>>>> +As SP805 WDT is a primecell IP, it follows the base bindings specified in
+>>>> +'arm/primecell.txt'
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible : Should be "arm,sp805-wdt", "arm,primecell"
+>>>> +- reg : Base address and size of the watchdog timer registers.
+>>>> +- interrupts : Should specify WDT interrupt number.
+>>>> +
+>>>> +Optional properties:
+>>>> +- clocks : From common clock binding. First clock is phandle to clock for apb
+>>>> +           pclk. Additional clocks are optional.
+>>>> +- clock-names : From common clock binding. Shall be "apb_pclk" for first clock.
+>>>
+>>> The hardware has "WDOGCLK", which is what the driver appears to expect
+>>> first implicitly.
+>>
+>> Ok.
+>>
+>>>> +Examples:
+>>>> +
+>>>> +             cluster1_core0_watchdog: wdt@c000000 {
+>>>> +                     compatible = "arm,sp805-wdt", "arm,primecell";
+>>>> +                     reg = <0x0 0xc000000 0x0 0x1000>;
+>>>> +                     interrupts = <1 12 0x8>; /* PPI, Level low type */
+>>>
+>>> I don't see how you can use PPIs here. This is not banked per CPU.
+>>
+>> I have raised this concern to my hardware team. This might be an issue
+>> with the documentation.
+>> I will change it in v2 as per their comments.
+>
+> I just checked back with the hardware team. They confirm that the
+> WDOGINT interrupts lines
+> from the eight instances of the SP805 WDT are infact connected to PPI
+> input of the GICv3 controller.
+>
+> Also this SP805 WDT IP supports 2 interrupt lines:
+> - WDOGINT
+> - WDOGRES
+>
+> but the current sp805_wdt.c driver doesn't handle the WDOGINT
+> interrupt (irrespective of whether
+> it is a SPI or PPI). I could not trace a request_irq being called for
+> the same in the driver.
+>
+> So, I would suggest the following:
+>
+> I can spin a patch for sp805_wdt.c to add support to handle WDOGINT
+> interrupt when the WDT counter expires
+> as currently the cadence_wdt driver does (see [1] and [2] as reference):
+>
+> [1] http://lxr.free-electrons.com/source/drivers/watchdog/cadence_wdt.c#L343
+> [2] http://lxr.free-electrons.com/source/drivers/watchdog/cadence_wdt.c#L254
+>
+> Please suggest if this approach seems fine to you.
+>
+> Regards,
+> Bhupesh
+>
+>
+>>
+>> Regards,
+>> Bhupesh
+>>
+>>> Mark.
+>>>
+>>>> +                     clocks = <&clockgen 4 3>;
+>>>> +                     clock-names = "apb_pclk";
+>>>> +             };
+>>>> +
+>>>> --
+>>>> 1.7.9.5
+>>>>
+>>>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
