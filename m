@@ -1,123 +1,176 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 0/5] mfd: tps65912: Driver rewrite with DT support
-Date: Fri, 4 Dec 2015 08:43:58 +0000
-Message-ID: <20151204084358.GD26902@x1>
-References: <1447869580-10416-1-git-send-email-afd@ti.com>
- <20151124162624.GI807@x1>
- <56606558.9080200@ti.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH v3 1/3] drm/exynos: dp: add of_graph dt binding support for
+ panel
+Date: Fri, 04 Dec 2015 18:00:09 +0900
+Message-ID: <56615619.2040208@samsung.com>
+References: <1449135010-8111-1-git-send-email-inki.dae@samsung.com>
+ <1449135010-8111-2-git-send-email-inki.dae@samsung.com>
+ <566049D0.8070404@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56606558.9080200@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <566049D0.8070404@osg.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>, dri-devel@lists.freedesktop.org
+Cc: airlied@linux.ie, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, k.kozlowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 03 Dec 2015, Andrew F. Davis wrote:
+Hi Javier,
 
-> On 11/24/2015 10:26 AM, Lee Jones wrote:
-> >On Wed, 18 Nov 2015, Andrew F. Davis wrote:
-> >
-> >>In an effort to cleanup this driver and add Device Tree support
-> >>the driver has been rewritten based on new driver styles and
-> >>modern kernel driver helpers. This has nearly halved the lines
-> >>of code while keeping all previous functionality.
-> >>
-> >>Platform file based initialization has been dropped as there is
-> >>no examples of this use in the kernel.
-> >>
-> >>v1 can be found here: [1] v2: [2] v3: [3] v4: [4] v5: [5] v6: [6]
-> >>
-> >>Changes from v6:
-> >>  - Removed compatible strings from DT sub-nodes
-> >>  - Rearranged DT bindings
-> >>  - Small fixes
-> >>
-> >>Changes from v5:
-> >>  - Small formatting changes to DT Docs
-> >>  - Converted to_tps65912_gpio from macro to inline function
-> >>
-> >>Changes from v4:
-> >>  - Use mfd core to add sub-devices
-> >>
-> >>Changes from v3:
-> >>  - Reorganized regulator driver and related DT node
-> >>  - Other small fixes as discussed in v3 thread
-> >>
-> >>Changes from v2:
-> >>  - Split the series further into subsystems
-> >>
-> >>Changes from v1:
-> >>  - Split the rewrite into delete/create patches
-> >>  - Several small fixes as discussed in v1 thread
-> >>
-> >>[1] http://www.spinics.net/lists/devicetree/msg93863.html
-> >>[2] http://www.spinics.net/lists/devicetree/msg95003.html
-> >>[3] http://www.spinics.net/lists/devicetree/msg95133.html
-> >>[4] http://www.spinics.net/lists/devicetree/msg96109.html
-> >>[5] http://www.spinics.net/lists/devicetree/msg100601.html
-> >>[6] https://lkml.org/lkml/2015/10/30/690
-> >>
-> >>Andrew F. Davis (5):
-> >>   Documentation: tps65912: Add DT bindings for the TPS65912 PMIC
-> >>   mfd: tps65912: Remove old driver in preparation for new driver
-> >>   mfd: tps65912: Add driver for the TPS65912 PMIC
-> >>   regulator: tps65912: Add regulator driver for the TPS65912 PMIC
-> >>   gpio: tps65912: Add GPIO driver for the TPS65912 PMIC
-> >>
-> >>  Documentation/devicetree/bindings/mfd/tps65912.txt |  50 ++
-> >>  drivers/gpio/Kconfig                               |   2 +-
-> >>  drivers/gpio/gpio-tps65912.c                       | 317 ++++----=
--
-> >>  drivers/mfd/Kconfig                                |  20 +-
-> >>  drivers/mfd/Makefile                               |   3 +-
-> >>  drivers/mfd/tps65912-core.c                        | 290 ++++----=
--
-> >>  drivers/mfd/tps65912-i2c.c                         | 219 +++----
-> >>  drivers/mfd/tps65912-irq.c                         | 217 -------
-> >>  drivers/mfd/tps65912-spi.c                         | 219 +++----
-> >>  drivers/regulator/Kconfig                          |   2 +-
-> >>  drivers/regulator/tps65912-regulator.c             | 710 +++++---=
--------------
-> >>  include/linux/mfd/tps65912.h                       | 208 +++---
-> >
-> >Just waiting for the regulator Ack now, right?
-> >
+2015=EB=85=84 12=EC=9B=94 03=EC=9D=BC 22:55=EC=97=90 Javier Martinez Ca=
+nillas =EC=9D=B4(=EA=B0=80) =EC=93=B4 =EA=B8=80:
+> Hello Inki,
 >=20
-> I believe so, is there a friendly way to poke Mark Brown so this does=
-n't
-> get caught in his filter? This is almost identical to the regulator h=
-e
-> applied the other day from me so I don't imagine there will be much p=
-roblem
-> with this patch.
+> I found that v2 of this patch is alredy in your exynos-drm for-next b=
+ranch so
+> so I had to revert it in linux-next to apply this one to test. You sh=
+ouldn't
+> push patches that were still not reviewed (specially the ones that we=
+ren't
+> tested like this one) to your branch that gets pulled by -next. The i=
+dea of
+> -next is to have some test coverage but it should be as stable as pos=
+sible.
 
-Just repost the set with all the remaining Acks and explain in the
-cover letter that you're only missing one Ack.  I can prod Mark from
-that point.
+exynos-drm/for-next branch is not really for-next branch. This branch i=
+s used
+only for integration test. As you know, there are many exynos maintaine=
+rs
+and they have their own repository. So we would need to test the integr=
+ation.
+=46or this, exynos-drm/for-next is merged to linux-next not Dave's tree=
+=2E
+Only exynos-drm-next branch will be merged to Dave's tree so only revie=
+wed and
+tested patches will be merged to exynos-drm-next.
 
-> >>  12 files changed, 780 insertions(+), 1477 deletions(-)
-> >>  create mode 100644 Documentation/devicetree/bindings/mfd/tps65912=
-=2Etxt
-> >>  rewrite drivers/gpio/gpio-tps65912.c (74%)
-> >>  rewrite drivers/mfd/tps65912-core.c (95%)
-> >>  rewrite drivers/mfd/tps65912-i2c.c (93%)
-> >>  delete mode 100644 drivers/mfd/tps65912-irq.c
-> >>  rewrite drivers/mfd/tps65912-spi.c (92%)
-> >>  rewrite drivers/regulator/tps65912-regulator.c (94%)
-> >>
-> >
+>=20
+> On 12/03/2015 06:30 AM, Inki Dae wrote:
+>> This patch adds of_graph dt binding support for panel device
+>> and also keeps the backward compatibility.
+>>
+>> i.e.,
+>> The dts file for Exynos5800 based peach pi board
+>> has a panel property so we need to keep the backward compatibility.
+>>
+>> Changelog v3:
+>> - bind only one of two nodes outbound - panel or bridge.
+>>
+>=20
+> This patch fixes one of the comments I had for v2 but I've another
+> comment below.
+> =20
+>> Changelog v2:
+>> - return -EINVAL if getting a port node failed.
+>>
+>> Signed-off-by: Inki Dae <inki.dae@samsung.com>
+>> ---
+>>  drivers/gpu/drm/exynos/exynos_dp_core.c | 21 ++++++++++++++++++++-
+>>  1 file changed, 20 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/exynos/exynos_dp_core.c b/drivers/gpu/d=
+rm/exynos/exynos_dp_core.c
+>> index 94f02a0..60260a0 100644
+>> --- a/drivers/gpu/drm/exynos/exynos_dp_core.c
+>> +++ b/drivers/gpu/drm/exynos/exynos_dp_core.c
+>> @@ -1392,7 +1392,7 @@ static const struct component_ops exynos_dp_op=
+s =3D {
+>>  static int exynos_dp_probe(struct platform_device *pdev)
+>>  {
+>>  	struct device *dev =3D &pdev->dev;
+>> -	struct device_node *panel_node, *bridge_node, *endpoint;
+>> +	struct device_node *panel_node =3D NULL, *bridge_node, *endpoint =3D=
+ NULL;
+>>  	struct exynos_dp_device *dp;
+>>  	int ret;
+>> =20
+>> @@ -1403,14 +1403,32 @@ static int exynos_dp_probe(struct platform_d=
+evice *pdev)
+>> =20
+>>  	platform_set_drvdata(pdev, dp);
+>> =20
+>> +	/* This is for the backward compatibility. */
+>>  	panel_node =3D of_parse_phandle(dev->of_node, "panel", 0);
+>>  	if (panel_node) {
+>>  		dp->panel =3D of_drm_find_panel(panel_node);
+>>  		of_node_put(panel_node);
+>>  		if (!dp->panel)
+>>  			return -EPROBE_DEFER;
+>> +	} else {
+>> +		endpoint =3D of_graph_get_next_endpoint(dev->of_node, NULL);
+>> +		if (endpoint) {
+>> +			panel_node =3D of_graph_get_remote_port_parent(endpoint);
+>=20
+> Here is asssumed that the endpoint will be a panel but it could be th=
+at there
+> is no "panel" phandle but the port is for a bridge chip (i.e: Peach P=
+it) so
+> this assumption seems fragile to me.
+>=20
+> That's what I meant when I said "Assuming you can make a distinction =
+if the
+> endpoint is a panel or a bridge" in the other thread.
+>=20
+>> +			if (panel_node) {
+>> +				dp->panel =3D of_drm_find_panel(panel_node);
+>> +				of_node_put(panel_node);
+>> +				if (!dp->panel)
+>> +					return -EPROBE_DEFER;
+>> +			} else {
+>> +				DRM_ERROR("no port node for panel device.\n");
+>> +				return -EINVAL;
+>> +			}
+>> +		}
+>>  	}
+>> =20
+>> +	if (endpoint)
+>> +		goto out;
+>> +
+>=20
+> Ok, so IIUC what's done here is to test if the panel lookup failed, t=
+hen the
+> endpoint is looked up again but this time a call to of_drm_find_bridg=
+e() is
+> made instead of a call to of_drm_find_panel(). I wonder if there is a=
+ better
+> way to do this...
+>=20
+> In any case then I think you should test if (panel_node) instead of e=
+ndpoint.
+>=20
+>>  	endpoint =3D of_graph_get_next_endpoint(dev->of_node, NULL);
+>>  	if (endpoint) {
+>>  		bridge_node =3D of_graph_get_remote_port_parent(endpoint);
+>> @@ -1423,6 +1441,7 @@ static int exynos_dp_probe(struct platform_dev=
+ice *pdev)
+>>  			return -EPROBE_DEFER;
+>>  	}
+>> =20
+>> +out:
+>>  	pm_runtime_enable(dev);
+>> =20
+>>  	ret =3D component_add(&pdev->dev, &exynos_dp_ops);
+>>
+>=20
+> I can't think of a better way to lookup either a panel or a bridge th=
+ough
+> and I'm not that familiar with DRM so with the correct check, the pat=
+ch
+> looks good to me.
+>=20
+> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>=20
+> Also on an Exynos5800 Peach Pi with the DTS patch I shared, the displ=
+ay
+> is working correctly and also I tested without the DTS patch to make
+> sure that it does not cause a regression for older DTBs.
+>=20
+> Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Inki Dae
+
+>=20
+> Best regards,
+>=20
