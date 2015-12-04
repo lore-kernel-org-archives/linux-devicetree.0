@@ -1,47 +1,67 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v2 13/14] ARM: DTS: am33xx: Use the new DT bindings for
- the eDMA3
-Date: Fri, 4 Dec 2015 10:32:12 +0200
-Message-ID: <56614F8C.9080106@ti.com>
-References: <1444979892-31626-1-git-send-email-peter.ujfalusi@ti.com>
- <1444979892-31626-14-git-send-email-peter.ujfalusi@ti.com>
- <20151204005440.GE23396@atomide.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 2/4] thermal: rcar: enable to use thermal-zone on DT
+Date: Fri, 4 Dec 2015 09:34:17 +0100
+Message-ID: <CAMuHMdUe8kZdZ7-xS7B8J6LdaK7FAitE0Qms=vMAmNis24u7SA@mail.gmail.com>
+References: <871tb2hpn2.wl%kuninori.morimoto.gx@renesas.com>
+	<87y4dagb0i.wl%kuninori.morimoto.gx@renesas.com>
+	<CAMuHMdUcQFcQuEmQZ4yMGwm=ouH+aQQhG3V95p=Pb56qWberQA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151204005440.GE23396@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: vinod.koul@intel.com, nsekhar@ti.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, r.schwebel@pengutronix.de
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdUcQFcQuEmQZ4yMGwm=ouH+aQQhG3V95p=Pb56qWberQA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Magnus <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/04/2015 02:54 AM, Tony Lindgren wrote:
-> Hi Peter,
->=20
-> * Peter Ujfalusi <peter.ujfalusi@ti.com> [151016 00:23]:
->=20
-> I noticed something while changing dm81xx to use the edma_xbar..
->=20
->> --- a/arch/arm/boot/dts/am33xx.dtsi
->> +++ b/arch/arm/boot/dts/am33xx.dtsi
+On Fri, Dec 4, 2015 at 9:32 AM, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+>> +Example (with thermal-zone):
 >> +
->> +		edma_xbar: dma-router@44e10f90 {
->> +			compatible =3D "ti,am335x-edma-crossbar";
->> +			reg =3D <0x44e10f90 0x40>;
+>> +thermal-zones {
+>> +       cpu_thermal: cpu-thermal {
+>> +               polling-delay-passive   = <1000>;
+>> +               polling-delay           = <5000>;
 >> +
->> +			#dma-cells =3D <3>;
->> +			dma-requests =3D <32>;
+>> +               thermal-sensors = <&thermal>;
 >> +
->> +			dma-masters =3D <&edma>;
->>  		};
->=20
-> The edma_xbar should now be just a child at offset 0xf90 under the
-> scm: scm@210000. Can you please check the other patches too?
+>> +               trips {
+>> +                       cpu-crit {
+>> +                               temperature     = <1150000>;
+>> +                               hysteresis      = <0>;
+>> +                               type            = "critical";
+>> +                       };
+>> +               };
+>> +               cooling-maps {
+>> +               };
+>> +       };
+>> +};
+>> +
+>> +thermal: thermal@e61f0000 {
+>> +       compatible =    "renesas,thermal-r8a7790",
+>> +                       "renesas,rcar-thermal-gen2",
+>> +                       "renesas,rcar-thermal";
+>> +       reg = <0 0xe61f0000 0 0x14>, <0 0xe61f0100 0 0x38>;
+>> +       interrupts = <0 69 IRQ_TYPE_LEVEL_HIGH>;
+>> +       clocks = <&mstp5_clks R8A7790_CLK_THERMAL>;
+>> +       power-domains = <&cpg_clocks>;
+>> +       #thermal-sensor-cells = <0>;
+>> +};
+>
+> How are the two nodes above linked?
 
-Thanks Tony,
+Pleae ignore my comment, I found the "<&thermal>".
 
-I'll make sure they are in the correct place when resending them.
+Gr{oetje,eeting}s,
 
---=20
-P=C3=A9ter
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
