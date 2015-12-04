@@ -1,97 +1,63 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 1/9] clk: hi3519: add dt-binding document and header file
-Date: Fri, 04 Dec 2015 11:56:52 +0100
-Message-ID: <21651844.ONg7WdRZpk@wuerfel>
-References: <1449110364-23464-1-git-send-email-xuejiancheng@huawei.com> <1615805.jmP28L2rmX@wuerfel> <566106B8.7080205@huawei.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] regulator: Add brcm,bcm63xx-regulator device tree
+ binding
+Date: Fri, 4 Dec 2015 11:00:18 +0000
+Message-ID: <20151204110018.GU26072@sirena.org.uk>
+References: <20151201221615.GY1929@sirena.org.uk>
+ <b7ecdc8ebcdf9582620c22b0e8a4a96d24ba67c1@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+ <20151202125325.GI1929@sirena.org.uk>
+ <565F53FC.5080309@simon.arlott.org.uk>
+ <20151203000631.GM1929@sirena.org.uk>
+ <565FF9E9.1090503@simon.arlott.org.uk>
+ <20151203150528.GG5727@sirena.org.uk>
+ <5660D274.7000402@simon.arlott.org.uk>
+ <20151203234548.GJ5727@sirena.org.uk>
+ <5660D574.7030803@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <566106B8.7080205@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: xuejiancheng <xuejiancheng@huawei.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Ivd6Nf4GAZ12BQqh"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5660D574.7030803@simon.arlott.org.uk>
+Sender: linux-pm-owner@vger.kernel.org
+To: Simon Arlott <simon@fire.lp0.eu>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 04 December 2015 11:21:28 xuejiancheng wrote:
-> Hi Arnd,
-> 
-> On 2015/12/3 17:44, Arnd Bergmann wrote:
-> > On Thursday 03 December 2015 10:39:24 Jiancheng Xue wrote:
-> >> +#ifndef __DTS_HI3519_CLOCK_H
-> >> +#define __DTS_HI3519_CLOCK_H
-> > 
-> > Please try to avoid adding headers like this if you can at all.
-> > 
-> > I might ask you to merge the header file in one merge window
-> > otherwise and submit the platform code one kernel later, as they
-> > tendn to cause us needless dependencies otherwise.
-> > 
-> 
-> Sorry. In v1, Rob suggested putting binding doc and header files in
-> a separate patch. The clock driver indeed depends on the header.
-> 
-> I will put the header and the clock driver in a patch, and keep the
-> binding doc in another patch.
 
-Having split patches is better, I was really commenting on the fact
-that ideally you would not have a header file at all. If we merge
-the header through arm-soc, then you won't be able to merge the
-clk driver easily, and if you merge the header through the clk
-maintainer, I'm can't take your dts files.
+--Ivd6Nf4GAZ12BQqh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> >> +/* fixed rate */
-> >> +#define HI3519_FIXED_400M              1
-> >> +#define HI3519_FIXED_200M              2
-> >> +#define HI3519_FIXED_125M              3
-> >> +#define HI3519_FIXED_150M              4
-> >> +#define HI3519_FIXED_75M               5
-> >> +#define HI3519_FIXED_300M              6
-> >> +#define HI3519_FIXED_50M               7
-> >> +#define HI3519_FIXED_24M               8
-> >> +#define HI3519_FIXED_3M                        9
-> >> +
-> >> +/* mux clocks */
-> >> +#define HI3519_FMC_MUX                 32
-> >> +#define HI3519_I2C_MUX                 33
-> >> +#define HI3519_UART_MUX                        34
-> >> +#define HI3519_SYSAXI_MUX              35
-> >> +
-> >> +/*fixed factor clocks*/
-> >> +#define HI3519_SYSAPB_CLK              64
-> >> +
-> >> +/* gate clocks */
-> >> +#define HI3519_FMC_CLK                 129
-> >> +#define HI3519_UART0_CLK               153
-> >> +#define HI3519_UART1_CLK               154
-> >> +#define HI3519_UART2_CLK               155
-> >> +#define HI3519_UART3_CLK               156
-> >> +#define HI3519_UART4_CLK               157
-> > 
-> > Where do those numbers come from? They are not consecutive, so it sounds
-> > like they are directly from the data sheet and won't be needed in the driver.
-> > If that's true, just use the numbers directly, as you do for everything
-> > else.
-> 
-> The numbers are defined by myself, not directly from the data sheet. Some numbers
-> are reserved for device nodes which will be added later. So they are not consecutive now.
+On Thu, Dec 03, 2015 at 11:51:16PM +0000, Simon Arlott wrote:
+> On 03/12/15 23:45, Mark Brown wrote:
 
-I don't understand. How do you decide which numbers to reserve? If the
-numbers are completely arbitrary and you have no idea what other clocks
-there are, you can simply have consecutive numbers here and do the driver
-accordingly.
+> > Are you *sure* these are regulators and not power domains?  These names
+> > look a lot like they could be power domains.
 
-If the numbers actually have a real meaning, then you either don't need them
-at all, or you could just put all numbers in there that you would eventually need.
+> No, I'm not sure. Some of them are may actually be regulators (the "PHY"
+> ones) while others are almost definitely power domains (like the "FAP"
+> Forwarding Assist Processor).
 
-> >> +#define HI3519_NR_CLKS                 256
-> >> +#define HI3519_NR_RSTS                 256
-> >>
-> > These seem to not be needed at all.
-> 
-> These are used in drivers/clk/hisilicon/clk-hi3519.c.
+OK, so the power domains should be being represented and managed as such
+rather than using regulators - it's a better fit (doing things like
+support atomic context) and it also sidesteps this.  For the things that
+you say are clearly regulators should we have more information about
+those?
 
-Then move them there. Anything that is not needed by *both* the driver and 
-the dts files doesn't belong in here.
+--Ivd6Nf4GAZ12BQqh
+Content-Type: application/pgp-signature; name="signature.asc"
 
-	Arnd
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWYXJBAAoJECTWi3JdVIfQ890H/2AUI6DDRwo9IliDDxIXJ5mi
+1msdtUuUuBpEP9dKqViHmcOeQrXUmUd5Y/EgtAnPX9kwNXECZGMFPyGKzwYQXbbw
+a+OeKYc46Jy8TXwzGctxpECMYrkVqp42htbBmMxOsIaygJPPl+1E9BhEKpcf/UdD
+ik7gFiEeCOnbvRCPk8yUrLR9qi9z6KKPKu62OoOpnlMk/S4h9Cw3NNVMHSaJihb4
+RQY1V8jFsByBPXWKCFILplafufAVIDqunuWsPVb++VEUownx6sbBohvtv+IUAm7v
+vHzbWnvJN+XUz3CXxkZYVvX8id1DeBun0d9nt4kHjJhy5gAnkMZI8gVqvu2M7FQ=
+=zZVW
+-----END PGP SIGNATURE-----
+
+--Ivd6Nf4GAZ12BQqh--
