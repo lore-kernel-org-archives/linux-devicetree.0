@@ -1,68 +1,58 @@
-From: "Simon Arlott" <simon@fire.lp0.eu>
-Subject: Re: [PATCH 1/2] clk: Add brcm,bcm63xx-gate-clk device tree binding
-Date: Fri, 4 Dec 2015 21:04:25 -0000
-Message-ID: <74d29bf38adc88b27811a70ed409e9182ddeb5b5@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
-References: <565CB727.7030209@simon.arlott.org.uk>
-    <20151204143037.GA3667@rob-hp-laptop>
+From: "Simon Arlott" <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Subject: Re: [PATCH (v2) 1/2] reset: Add brcm,bcm6345-reset device tree
+ binding
+Date: Fri, 4 Dec 2015 21:12:10 -0000
+Message-ID: <6a3790afc811ac4ed732371f2eb33a7c194b996d@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+References: <565F5C96.5090700@simon.arlott.org.uk>
+    <1449131943.3339.8.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain;charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20151204143037.GA3667@rob-hp-laptop>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, linux-mips@linux-mips.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449131943.3339.8.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, December 4, 2015 14:30, Rob Herring wrote:
-> On Mon, Nov 30, 2015 at 08:52:55PM +0000, Simon Arlott wrote:
->> +periph_clk: periph_clk {
->> +	compatible = "brcm,bcm63168-gate-clk", "brcm,bcm63xx-gate-clk";
+On Thu, December 3, 2015 08:39, Philipp Zabel wrote:
+> Am Mittwoch, den 02.12.2015, 21:03 +0000 schrieb Simon Arlott:
+>> +periph_soft_rst: reset-controller {
+>> +	compatible = "brcm,bcm63168-reset", "brcm,bcm6345-reset";
 >> +	regmap = <&periph_cntl>;
+>> +	offset = <0x10>;
+>> +
+>> +	#reset-cells = <1>;
+>> +};
 >
-> What else is in periph_cntrl? Could this all just be part of that node?
+> I would have written it something like this:
+>
+> periph_cntl: ... {
+> 	compatible = "syscon", "simple-mfd";
+> 	#address-cells = <1>;
+> 	#size-cells = <1>;
+>
+> 	periph_soft_rst: reset-controller {
+> 		compatible = "brcm,bcm6345-reset";
+> 		reg = <0x10 0x4>;
+> 		#reset-cells = <1>;
+> 	};
+> };
+>
+> for a device that is only controlled through a syscon.
 
-     uint32        RevID;             /* (00) word 0 */
-     uint32        blkEnables;        /* (04) word 1 */ <-- gated clocks
-     uint32        pll_control;       /* (08) word 2 */ <-- system reset controller bit
-     uint32        deviceTimeoutEn;   /* (0c) word 3 */ <-- unknown
-     uint32        softResetB;        /* (10) word 4 */ <-- device reset controller bits
-    uint32        diagControl;        /* (14) word 5 */ <-- unknown
-    uint32        ExtIrqCfg;          /* (18) word 6*/ <-- external interrupt controller
-    uint32        unused1;            /* (1c) word 7 */ <-- (external interrupt controller?)
-         IrqControl_t     IrqControl[3];    /* (20) (40) (60) */ <-- normal interrupt controller
+Rob, do you want me to change this or is my version ok?
 
-So it has these clocks, two types of reset controller, and the interrupt
-controllers, but I've left the interrupt controllers registers out of the
-syscon device.
-
-For the registers in the "timer" peripheral at the end of the timer/watchdog
-registers:
-    uint32        EnSwPLL; <-- unknown
-    uint32        ClkRstCtl;
-#define POR_RESET_STATUS            (1 << 31) <-- unknown
-#define HW_RESET_STATUS             (1 << 30) <-- unknown
-#define SW_RESET_STATUS             (1 << 29) <-- unknown
-#define USB_REF_CLKEN               (1 << 18) <-- gated clock
-#define UTO_EXTIN_CLKEN             (1 << 17) <-- gated clock
-#define UTO_CLK50_SEL               (1 << 16) <-- looks like a clock frequency selection bit
-#define FAP2_PLL_CLKEN              (1 << 15) <-- gated clock
-#define FAP2_PLL_FREQ_SHIFT         12        <-- bits for controlling the frequency
-#define FAP1_PLL_CLKEN              (1 << 11) <-- gated clock
-#define FAP1_PLL_FREQ_SHIFT         8         <-- bits for controlling the frequency
-#define WAKEON_DSL                  (1 << 7)  <-- wake on network bit
-#define WAKEON_EPHY                 (1 << 6)  <-- wake on network bit
-#define DSL_ENERGY_DETECT_ENABLE    (1 << 4)  <-- energy saving control for network
-#define GPHY_1_ENERGY_DETECT_ENABLE (1 << 3)  <-- energy saving control for network
-#define EPHY_3_ENERGY_DETECT_ENABLE (1 << 2)  <-- energy saving control for network
-#define EPHY_2_ENERGY_DETECT_ENABLE (1 << 1)  <-- energy saving control for network
-#define EPHY_1_ENERGY_DETECT_ENABLE (1 << 0)  <-- energy saving control for network
-
-I need the usb_ref clock for USB, and I want to be able to disable
-uto_extin, fap1 and fap2 as they're unused by anything in the device tree.
-
-The full list of registers is here:
-https://github.com/lp0/bcm963xx_4.12L.06B_consumer/blob/master/shared/opensource/include/bcm963xx/63268_map_part.h
+> The driver itself looks good to me.
+>
+> best regards
+> Philipp
+>
+>
 
 -- 
 Simon Arlott
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
