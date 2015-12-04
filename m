@@ -1,112 +1,130 @@
-From: Alexander Aring <alex.aring@gmail.com>
-Subject: Re: [PATCH 2/3] ARM: bcm2835: add rpi power domain driver
-Date: Fri, 4 Dec 2015 10:22:32 +0100
-Message-ID: <20151204092227.GA1915@omega>
-References: <1447956490-22930-1-git-send-email-alex.aring@gmail.com>
- <1447956490-22930-3-git-send-email-alex.aring@gmail.com>
- <7hr3j782qr.fsf@deeprootsystems.com>
- <20151201210037.GB2074@omega>
- <7hr3j5696q.fsf@deeprootsystems.com>
+From: Yendapally Reddy Dhananjaya Reddy <yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/3] pinctrl: Broadcom NSP GPIO-a device tree bindings
+Date: Fri, 4 Dec 2015 15:07:56 +0530
+Message-ID: <56615EF4.7050605@broadcom.com>
+References: <1449031598-18849-1-git-send-email-yrdreddy@broadcom.com>
+ <20151202150735.GA6165@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7hr3j5696q.fsf@deeprootsystems.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>
-Cc: linux-rpi-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, swarren@wwwdotorg.org, lee@kernel.org, eric@anholt.net, linux@arm.linux.org.uk, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, rjw@rjwysocki.net, ulf.hansson@linaro.org, len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151202150735.GA6165@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Rob,
 
-Meanwhile there exists a new RPi firmware with a new interface to setup
-power domains. Eric Anholt already did some work to access new interface
-and old one based on this patch.
-
-The next days he want to sent this new driver mainline, I will stop the work
-now.
-
-I will add some review notes anyway, maybe Eric Anholt can pick them up.
-
-On Tue, Dec 01, 2015 at 03:27:57PM -0800, Kevin Hilman wrote:
-> Alexander Aring <alex.aring@gmail.com> writes:
-> 
-> > Hi,
-> >
-> > On Mon, Nov 30, 2015 at 03:51:56PM -0800, Kevin Hilman wrote:
-> >> Alexander Aring <alex.aring@gmail.com> writes:
-> >> 
-> >> > This patch adds support for RPi several Power Domains and enable support
-> >> > to enable the USB Power Domain when it's not enabled before.
-> >> >
-> >> > This patch based on Eric Anholt's patch to support Power Domains. He had
-> >> > an issue about -EPROBE_DEFER inside the power domain subsystem, this
-> >> > issue was solved by commit <311fa6a> ("PM / Domains: Return -EPROBE_DEFER
-> >> > if we fail to init or turn-on domain").
-> >> 
-> >> [...]
-> >> 
-> >> > +#define RPI_POWER_DOMAIN(_domain, _name)			\
-> >> > +	[_domain] = {						\
-> >> 
-> >> Using _domain as the array index is going to create a sparsely filled
-> >> array here, wasting memory.   I'm not sure what the other domain numbers
-> >> are for other domains to know if this is a big waste or not, but it's
-> >> still a bit wasteful.
-> >> 
-> >> In any case, AFAICT, it doesn't look like you need to have the array
-> >> index match the domain number anyways since you're using container_of().
-> >> 
-> >> So I suggest just removing this array index part, and just creating them
-> >> in arrary order.  Then your _probe function isn't going to try to setup
-> >> 3 non-enabled domains before it finally hits the USB domain.
-> >> 
-> >
-> > The idea is here to keeping the _same_ power domains indexes for
-> > device-tree power domain API like the RPi firmware provides it.
-> >
-> > If somebody dumps the devicetree and see the power domain index, if
-> > he/she does then a firmware API power domain index mapping it is wrong.
-> > Because we need then a separate mapping:
-> >
-> > $ARRAY_DEFINED_INDEX <-> $RPI_FIRMWARE_POWER_DOMAIN_API_INDEX
-> >
-> > With the current solution to make a 1:1 mapping it there is no
-> > confusing anymore, because:
-> >
-> > $ARRAY_DEFINED_INDEX == $RPI_FIRMWARE_POWER_DOMAIN_API_INDEX
-> 
-> I'm not proposing to change the DT numbers or the firmware numbers.  All
-> I'm proposing is that those numbers don't need to be mapped to the array
-> index.  IOW, in your structure definition macro:
-> 
-> +#define RPI_POWER_DOMAIN(_domain, _name)			\
-> +	[_domain] = {						\
-> +		.domain = _domain,				\
-> [...]
-> 
-> just drop the " [_domain] = { " line.
-> 
-
-This requires additional changes. We need to know the "maximum"
-registered index value of RPi power domain.
-
-Because the dynamic allocating array of (linux) power domains, which we
-determine by:
-
-... num_domains = ARRAY_SIZE(rpi_power_domains);
-
-The RPi power domain defines are also used by devicetree. Usually I
-would change it to an enum with a MAX_ATTR entry, which is not possible
-because devicetree compiler can't deal with enums.
-
-
-Anyway we could determine the max registered RPi power domain index by
-doing something like:
-
-num_domains = 0;
-
-for (i = 0; i < ARRAY_SIZE(rpi_power_domains); i++)
-	max(num_domains, array[i].domain);
-
-- Alex
+On 12/2/2015 8:37 PM, Rob Herring wrote:
+> On Tue, Dec 01, 2015 at 11:46:38PM -0500, Yendapally Reddy Dhananjaya Reddy wrote:
+>> Device tree binding documentation for Broadcom NSP GPIO-a driver
+> Bindings are for h/w, not drivers...
+Right, will address in the next patch.
+>> Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/pinctrl/brcm,nsp-gpio.txt  | 80 ++++++++++++++++++++++
+>>  1 file changed, 80 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt
+>> new file mode 100644
+>> index 0000000..bea4211
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt
+>> @@ -0,0 +1,80 @@
+>> +Broadcom Northstar plus (NSP) GPIO/PINCONF Controller
+>> +
+>> +Required properties:
+>> +- compatible:
+>> +    Must be "brcm,nsp-gpio-a"
+>> +
+>> +- reg:
+>> +    Should contain the register physical address and length for each of
+>> +    GPIO base, IO control registers
+>> +
+>> +- #gpio-cells:
+>> +    Must be two. The first cell is the GPIO pin number (within the
+>> +    controller's pin space) and the second cell is used for the following:
+>> +    bit[0]: polarity (0 for active high and 1 for active low)
+>> +
+>> +- gpio-controller:
+>> +    Specifies that the node is a GPIO controller
+>> +
+>> +- ngpios:
+>> +    Number of gpios supported (58x25 supports 32 and 58x23 supports 24)
+> 2 chips? You should have 2 compatible strings. I think this is incorrect 
+> use of ngpios which AIUI is not for how many lines there are, but how 
+> many can be used (e.g. not reserved).
+>
+>> +
+>> +Optional properties:
+>> +- interrupts:
+>> +    Interrupt ID
+>> +
+>> +- interrupt-controller:
+>> +    Specifies that the node is an interrupt controller
+>> +
+>> +- gpio-ranges:
+>> +    Specifies the mapping between gpio controller and pin-controllers pins.
+>> +    This requires 4 fields in cells defined as -
+>> +    1. Phandle of pin-controller.
+>> +    2. GPIO base pin offset.
+>> +    3  Pin-control base pin offset.
+>> +    4. number of gpio pins which are linearly mapped from pin base.
+>> +
+>> +Supported generic PINCONF properties in child nodes:
+>> +- pins:
+>> +    The list of pins (within the controller's own pin space) that properties
+>> +    in the node apply to. Pin names are "gpio-<pin>"
+>> +
+>> +- bias-disable:
+>> +    Disable pin bias
+>> +
+>> +- bias-pull-up:
+>> +    Enable internal pull up resistor
+>> +
+>> +- bias-pull-down:
+>> +    Enable internal pull down resistor
+>> +
+>> +- drive-strength:
+>> +    Valid drive strength values include 2, 4, 6, 8, 10, 12, 14, 16 (mA)
+>> +
+>> +Example:
+>> +
+>> +	gpioa: gpio-a@18000020 {
+> node names are preferred to be generic, so just "gpio@..."
+Right, will address in the next patch.
+>> +		compatible = "brcm,nsp-gpio-a";
+>> +		reg = <0x18000020 0x100>,
+>> +		      <0x1803f1c4 0x1c>;
+>> +		#gpio-cells = <2>;
+>> +		gpio-controller;
+>> +		ngpios = <32>;
+>> +		gpio-ranges = <&pinctrl 0 0 31>;
+>> +		interrupt-controller;
+>> +		interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+>> +
+>> +		/* Hog a few default settings */
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&led>;
+>> +		led: led {
+>> +			pins = "gpio-1";
+>> +			bias-pull-up;
+>> +		};
+>> +
+>> +		pwr: pwr {
+>> +			gpio-hog;
+>> +			gpios = <3 1>;
+>> +			output-high;
+>> +		};
+>> +	};
+>> -- 
+>> 2.1.0
+>>
+Thanks
+Dhananjay
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
