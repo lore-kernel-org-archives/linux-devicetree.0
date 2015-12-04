@@ -1,42 +1,87 @@
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 5/6] ARM: DTS: da850: Add node for mmc1
-Date: Fri, 4 Dec 2015 15:53:29 +0200
-Message-ID: <1449237210-16381-6-git-send-email-peter.ujfalusi@ti.com>
+Subject: [PATCH 3/6] ARM: DTS: da850: Enable eDMA1
+Date: Fri, 4 Dec 2015 15:53:27 +0200
+Message-ID: <1449237210-16381-4-git-send-email-peter.ujfalusi@ti.com>
 References: <1449237210-16381-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1449237210-16381-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: nsekhar@ti.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, khilman@deeprootsystems.com
+Cc: khilman@deeprootsystems.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-da850 has two MMC controller, MMCSD1 is served by eDMA1
+The eDMA1 in da850 has only one TPTC and for example MMC1 is HW events are
+handled by it.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- arch/arm/boot/dts/da850.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/da850-enbw-cmc.dts |  4 ++++
+ arch/arm/boot/dts/da850-evm.dts      |  4 ++++
+ arch/arm/boot/dts/da850.dtsi         | 17 +++++++++++++++++
+ 3 files changed, 25 insertions(+)
 
+diff --git a/arch/arm/boot/dts/da850-enbw-cmc.dts b/arch/arm/boot/dts/da850-enbw-cmc.dts
+index ca9117624cf9..44f0dd1866f9 100644
+--- a/arch/arm/boot/dts/da850-enbw-cmc.dts
++++ b/arch/arm/boot/dts/da850-enbw-cmc.dts
+@@ -33,3 +33,7 @@
+ 	ti,edma-reserved-slot-ranges = /bits/ 16 <32 50>;
+ 	ti,edma-memcpy-channels = /bits/ 16 <20 21>;
+ };
++
++&edma1 {
++	ti,edma-reserved-slot-ranges = /bits/ 16 <32 90>;
++};
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+index 33467feb272a..70ef9c642ac9 100644
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -248,3 +248,7 @@
+ 	ti,edma-reserved-slot-ranges = /bits/ 16 <32 50>;
+ 	ti,edma-memcpy-channels = /bits/ 16 <20 21>;
+ };
++
++&edma1 {
++	ti,edma-reserved-slot-ranges = /bits/ 16 <32 90>;
++};
 diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index ccaaf2746aca..edaf69ec03a9 100644
+index 9e46eb51a8da..e311d73a5265 100644
 --- a/arch/arm/boot/dts/da850.dtsi
 +++ b/arch/arm/boot/dts/da850.dtsi
-@@ -240,6 +240,14 @@
- 			dma-names = "rx", "tx";
- 			status = "disabled";
+@@ -174,6 +174,23 @@
+ 			interrupts = <32>;
+ 			interrupt-names = "edm3_tcerrint";
  		};
-+		mmc1: mmc@1e1b000 {
-+			compatible = "ti,da830-mmc";
-+			reg = <0x21b000 0x1000>;
-+			interrupts = <72>;
-+			dmas = <&edma1 28 0>, <&edma1 29 0>;
-+			dma-names = "rx", "tx";
-+			status = "disabled";
++		edma1: edma@01e30000 {
++			compatible = "ti,edma3-tpcc";
++			/* eDMA3 CC1: 0x01e3 0000 - 0x01e3 7fff */
++			reg =	<0x230000 0x8000>;
++			reg-names = "edma3_cc";
++			interrupts = <93 94>;
++			interrupt-names = "edma3_ccint", "edma3_ccerrint";
++			#dma-cells = <2>;
++
++			ti,tptcs = <&edma1_tptc0 7>;
 +		};
- 		ehrpwm0: ehrpwm@01f00000 {
- 			compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
- 			#pwm-cells = <3>;
++		edma1_tptc0: tptc@01e38000 {
++			compatible = "ti,edma3-tptc";
++			reg =	<0x238000 0x400>;
++			interrupts = <95>;
++			interrupt-names = "edm3_tcerrint";
++		};
+ 		serial0: serial@1c42000 {
+ 			compatible = "ns16550a";
+ 			reg = <0x42000 0x100>;
 -- 
 2.6.3
