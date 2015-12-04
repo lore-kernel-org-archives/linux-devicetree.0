@@ -1,68 +1,87 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: Misc fix for the ATH79 DDR
- controllers
-Date: Fri, 4 Dec 2015 12:52:51 -0600
-Message-ID: <20151204185251.GA8528@rob-hp-laptop>
-References: <1448800812-7469-1-git-send-email-albeu@free.fr>
- <1448800812-7469-2-git-send-email-albeu@free.fr>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] net/macb: bindings doc: Merge cdns-emac to macb
+Date: Fri, 4 Dec 2015 12:53:10 -0600
+Message-ID: <20151204185310.GA8753@rob-hp-laptop>
+References: <497a8248e7cf8b7f7f30d6c47c8591583dcc0bce.1448891503.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1448800812-7469-2-git-send-email-albeu-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+In-Reply-To: <497a8248e7cf8b7f7f30d6c47c8591583dcc0bce.1448891503.git.michal.simek@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 29, 2015 at 01:40:12PM +0100, Alban Bedel wrote:
-> Fix a few typos and reword the description of the
-> '#qca,ddr-wb-channel-cells' property.
+On Mon, Nov 30, 2015 at 02:51:46PM +0100, Michal Simek wrote:
+> Merge two bindings for the same driver to together.
 > 
-> Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-> CC: trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+
+Applied, thanks.
+
+Rob
+
 
 Applied, thanks.
 
 Rob
 
 > ---
-> Changlog:
-> v2: * Fixed the truncated log message because of a
->       line starting with a #.
-> ---
->  .../bindings/memory-controllers/ath79-ddr-controller.txt          | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt b/Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt
-> index efe35a06..c81af75 100644
-> --- a/Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt
-> +++ b/Documentation/devicetree/bindings/memory-controllers/ath79-ddr-controller.txt
-> @@ -1,6 +1,6 @@
->  Binding for Qualcomm  Atheros AR7xxx/AR9xxx DDR controller
+>  Documentation/devicetree/bindings/net/cdns-emac.txt | 20 --------------------
+>  Documentation/devicetree/bindings/net/macb.txt      |  3 +++
+>  2 files changed, 3 insertions(+), 20 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/net/cdns-emac.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/cdns-emac.txt b/Documentation/devicetree/bindings/net/cdns-emac.txt
+> deleted file mode 100644
+> index 4451ee973223..000000000000
+> --- a/Documentation/devicetree/bindings/net/cdns-emac.txt
+> +++ /dev/null
+> @@ -1,20 +0,0 @@
+> -* Cadence EMAC Ethernet controller
+> -
+> -Required properties:
+> -- compatible: Should be "cdns,[<chip>-]{emac}"
+> -  Use "cdns,at91rm9200-emac" Atmel at91rm9200 SoC.
+> -  Use "cdns,zynq-gem" Xilinx Zynq-7xxx SoC.
+> -  Or the generic form: "cdns,emac".
+> -- reg: Address and length of the register set for the device
+> -- interrupts: Should contain macb interrupt
+> -- phy-mode: see ethernet.txt file in the same directory.
+> -
+> -Examples:
+> -
+> -	macb0: ethernet@fffc4000 {
+> -		compatible = "cdns,at91rm9200-emac";
+> -		reg = <0xfffc4000 0x4000>;
+> -		interrupts = <21>;
+> -		phy-mode = "rmii";
+> -		local-mac-address = [3a 0e 03 04 05 06];
+> -	};
+> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
+> index b5d79761ac97..1361a6daf63f 100644
+> --- a/Documentation/devicetree/bindings/net/macb.txt
+> +++ b/Documentation/devicetree/bindings/net/macb.txt
+> @@ -2,6 +2,7 @@
 >  
-> -The DDR controller of the ARxxx and AR9xxx families provides an interface
-> +The DDR controller of the AR7xxx and AR9xxx families provides an interface
->  to flush the FIFO between various devices and the DDR. This is mainly used
->  by the IRQ controller to flush the FIFO before running the interrupt handler
->  of such devices.
-> @@ -11,9 +11,9 @@ Required properties:
->    "qca,[ar7100|ar7240]-ddr-controller" as fallback.
->    On SoC with PCI support "qca,ar7100-ddr-controller" should be used as
->    fallback, otherwise "qca,ar7240-ddr-controller" should be used.
-> -- reg: Base address and size of the controllers memory area
-> -- #qca,ddr-wb-channel-cells: has to be 1, the index of the write buffer
-> -  channel
-> +- reg: Base address and size of the controller's memory area
-> +- #qca,ddr-wb-channel-cells: Specifies the number of cells needed to encode
-> +			     the write buffer channel index, should be 1.
->  
->  Example:
->  
+>  Required properties:
+>  - compatible: Should be "cdns,[<chip>-]{macb|gem}"
+> +  Use "cdns,at91rm9200-emac" Atmel at91rm9200 SoC.
+>    Use "cdns,at91sam9260-macb" for Atmel at91sam9 SoCs or the 10/100Mbit IP
+>    available on sama5d3 SoCs.
+>    Use "cdns,at32ap7000-macb" for other 10/100 usage or use the generic form: "cdns,macb".
+> @@ -10,7 +11,9 @@ Required properties:
+>    Use "atmel,sama5d2-gem" for the GEM IP (10/100) available on Atmel sama5d2 SoCs.
+>    Use "atmel,sama5d3-gem" for the Gigabit IP available on Atmel sama5d3 SoCs.
+>    Use "atmel,sama5d4-gem" for the GEM IP (10/100) available on Atmel sama5d4 SoCs.
+> +  Use "cdns,zynq-gem" Xilinx Zynq-7xxx SoC.
+>    Use "cdns,zynqmp-gem" for Zynq Ultrascale+ MPSoC.
+> +  Or the generic form: "cdns,emac".
+>  - reg: Address and length of the register set for the device
+>  - interrupts: Should contain macb interrupt
+>  - phy-mode: See ethernet.txt file in the same directory.
 > -- 
-> 2.0.0
+> 1.9.1
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
