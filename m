@@ -1,65 +1,61 @@
-From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 03/12] drm/etnaviv: add etnaviv UAPI header
-Date: Fri, 4 Dec 2015 14:24:49 +0000
-Message-ID: <CACvgo52h7qNZLsmB0iJkC0wyucUdoFcPJvLkD1WLT+Jpm9bNMA@mail.gmail.com>
-References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
-	<1449237604-19064-4-git-send-email-l.stach@pengutronix.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] clk: Add brcm,bcm63xx-gate-clk device tree binding
+Date: Fri, 4 Dec 2015 08:30:37 -0600
+Message-ID: <20151204143037.GA3667@rob-hp-laptop>
+References: <565CB727.7030209@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449237604-19064-4-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <565CB727.7030209@simon.arlott.org.uk>
+Sender: linux-clk-owner@vger.kernel.org
+To: Simon Arlott <simon@fire.lp0.eu>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, linux-mips@linux-mips.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 4 December 2015 at 13:59, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> From: The etnaviv authors <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
->
-> This adds the header defining the user/kernel API for the
-> etnaviv DRM driver.
->
-> Signed-off-by: Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On Mon, Nov 30, 2015 at 08:52:55PM +0000, Simon Arlott wrote:
+> Add device tree binding for the BCM63xx's gated clocks.
+> 
+> The BCM63xx contains clocks gated with a register. Clocks are indexed
+> by bits in the register and are active high. Clock gate bits are
+> interleaved with other status bits and configurable clocks in the same
+> register.
+> 
+> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
 > ---
->  include/uapi/drm/etnaviv_drm.h | 221 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 221 insertions(+)
->  create mode 100644 include/uapi/drm/etnaviv_drm.h
->
-> diff --git a/include/uapi/drm/etnaviv_drm.h b/include/uapi/drm/etnaviv_drm.h
+>  .../bindings/clock/brcm,bcm63xx-gate-clk.txt       | 58 ++++++++++++++++++++++
+>  1 file changed, 58 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm63xx-gate-clk.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/brcm,bcm63xx-gate-clk.txt b/Documentation/devicetree/bindings/clock/brcm,bcm63xx-gate-clk.txt
 > new file mode 100644
-> index 000000000000..0cce95efcd86
+> index 0000000..3f4ead1
 > --- /dev/null
-> +++ b/include/uapi/drm/etnaviv_drm.h
-> @@ -0,0 +1,221 @@
-> +/*
-> + * Copyright (C) 2015 Etnaviv Project
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License version 2 as published by
-> + * the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
+> +++ b/Documentation/devicetree/bindings/clock/brcm,bcm63xx-gate-clk.txt
+> @@ -0,0 +1,58 @@
+> +Broadcom BCM63xx clocks
 > +
-> +#ifndef __ETNAVIV_DRM_H__
-> +#define __ETNAVIV_DRM_H__
+> +This binding uses the common clock binding:
+> +	Documentation/devicetree/bindings/clock/clock-bindings.txt
 > +
-> +#include <drm/drm.h>
+> +The BCM63xx contains clocks gated with a register. Clocks are indexed
+> +by bits in the register and are active high. Clock gate bits are
+> +interleaved with other status bits and configurable clocks in the same
+> +register.
 > +
-Guys, if we get to another revision of the patch can we make this a
-"drm.h" please ?
+> +Required properties:
+> +- compatible:	Should be "brcm,bcm<soc>-gate-clk", "brcm,bcm63xx-gate-clk"
+> +- #clock-cells:	Should be <1>.
+> +- regmap:	The register map phandle
+> +- offset:	Offset in the register map for the reboot register (in bytes)
+> +- clocks:	The external oscillator clock phandle
+> +
+> +Example:
+> +
+> +periph_clk: periph_clk {
+> +	compatible = "brcm,bcm63168-gate-clk", "brcm,bcm63xx-gate-clk";
+> +	regmap = <&periph_cntl>;
 
-Thanks
-Emil
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What else is in periph_cntrl? Could this all just be part of that node?
+
+Rob
