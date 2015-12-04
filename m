@@ -1,240 +1,92 @@
-From: Martyn Welch <martyn.welch@collabora.co.uk>
-Subject: [PATCH 2/3] Add support for monitoring gpio switches
-Date: Fri,  4 Dec 2015 17:31:14 +0000
-Message-ID: <1449250275-23435-3-git-send-email-martyn.welch@collabora.co.uk>
-References: <1449250275-23435-1-git-send-email-martyn.welch@collabora.co.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
+Date: Fri, 4 Dec 2015 11:33:22 -0600
+Message-ID: <CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
+References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
+ <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
+ <20151204162956.GA14978@rob-hp-laptop>
+ <1449247305.8275.104.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1449250275-23435-1-git-send-email-martyn.welch@collabora.co.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Martyn Welch <martyn.welch@collabora.co.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1449247305.8275.104.camel@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, patchwork-lst@pengutronix.de, "kernel@pengutronix.de" <kernel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Select Chromebooks have gpio attached to switches used to cause the
-firmware to enter alternative modes of operation and/or control other
-device characteristics (such as write protection on flash devices). This
-patch adds a driver that exposes a read-only interface to allow these
-signals to be read from user space.
-
-This functionality has been generalised to provide support for any device
-with device tree support which needs to identify a gpio as being used for a
-specific task.
-
-Signed-off-by: Martyn Welch <martyn.welch@collabora.co.uk>
----
- drivers/misc/Kconfig       |  11 ++++
- drivers/misc/Makefile      |   1 +
- drivers/misc/gpio-switch.c | 160 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 172 insertions(+)
- create mode 100644 drivers/misc/gpio-switch.c
-
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 22892c7..d24367c 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -525,6 +525,17 @@ config VEXPRESS_SYSCFG
- 	  bus. System Configuration interface is one of the possible means
- 	  of generating transactions on this bus.
- 
-+config GPIO_SWITCH
-+	tristate "GPIO Switch driver"
-+	depends on GPIO_SYSFS
-+	---help---
-+	 Some devices have gpio attached to dedicated switches, an example of
-+	 this are chromebooks (where connection to some switches for predefined
-+	 purposes are provided on the generic development card). This driver
-+	 provides the ability to create consistently named sysfs entries to the
-+	 functionally equivalent signals across a range of devices. This
-+	 functionality currently requires a device which supports device tree.
-+
- source "drivers/misc/c2port/Kconfig"
- source "drivers/misc/eeprom/Kconfig"
- source "drivers/misc/cb710/Kconfig"
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index 537d7f3..7a7e11a 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -56,3 +56,4 @@ obj-$(CONFIG_GENWQE)		+= genwqe/
- obj-$(CONFIG_ECHO)		+= echo/
- obj-$(CONFIG_VEXPRESS_SYSCFG)	+= vexpress-syscfg.o
- obj-$(CONFIG_CXL_BASE)		+= cxl/
-+obj-$(CONFIG_GPIO_SWITCH)	+= gpio-switch.o
-diff --git a/drivers/misc/gpio-switch.c b/drivers/misc/gpio-switch.c
-new file mode 100644
-index 0000000..1f381d6
---- /dev/null
-+++ b/drivers/misc/gpio-switch.c
-@@ -0,0 +1,160 @@
-+/*
-+ * Copyright (C) 2015 Collabora Ltd.
-+ *
-+ * based on vendor driver,
-+ *
-+ * Copyright (C) 2011 The Chromium OS Authors
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#include <linux/bcd.h>
-+#include <linux/gpio.h>
-+#include <linux/notifier.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+struct gpio_switch_gpio_info {
-+	int gpio;
-+	const char *link;
-+};
-+
-+static int dt_gpio_init(struct platform_device *pdev, struct device_node *child,
-+			struct gpio_switch_gpio_info *gpio)
-+{
-+	int err;
-+	enum of_gpio_flags of_flags;
-+	unsigned long flags = GPIOF_DIR_IN | GPIOF_EXPORT;
-+	const char *name;
-+
-+	err = of_property_read_string(child, "label", &name);
-+	if (err)
-+		return err;
-+
-+	gpio->gpio = of_get_named_gpio_flags(child, "gpios", 0, &of_flags);
-+	if (!gpio_is_valid(gpio->gpio)) {
-+		err = -EINVAL;
-+		goto err_prop;
-+	}
-+
-+	if (of_flags & OF_GPIO_ACTIVE_LOW)
-+		flags |= GPIOF_ACTIVE_LOW;
-+
-+	if (!of_property_read_bool(child, "read-only"))
-+		flags |= GPIOF_EXPORT_CHANGEABLE;
-+
-+	err = gpio_request_one(gpio->gpio, flags, name);
-+	if (err)
-+		goto err_prop;
-+
-+	err = gpio_export_link(&pdev->dev, name, gpio->gpio);
-+	if (err)
-+		goto err_gpio;
-+
-+	gpio->link = name;
-+
-+	return 0;
-+
-+err_gpio:
-+	gpio_free(gpio->gpio);
-+err_prop:
-+	of_node_put(child);
-+
-+	return err;
-+}
-+
-+static void gpio_switch_rem(struct device *dev,
-+			    struct gpio_switch_gpio_info *gpio)
-+{
-+	sysfs_remove_link(&dev->kobj, gpio->link);
-+
-+	gpio_unexport(gpio->gpio);
-+
-+	gpio_free(gpio->gpio);
-+}
-+
-+static int gpio_switch_probe(struct platform_device *pdev)
-+{
-+	struct gpio_switch_gpio_info *gpios;
-+	struct device_node *child;
-+	struct device_node *np = pdev->dev.of_node;
-+	int ret;
-+	int i;
-+
-+	i = of_get_child_count(np);
-+	if (i < 1)
-+		return i;
-+
-+	gpios = devm_kmalloc(&pdev->dev, sizeof(gpios) * i, GFP_KERNEL);
-+	if (!gpios)
-+		return -ENOMEM;
-+
-+	i = 0;
-+
-+	for_each_child_of_node(np, child) {
-+		ret = dt_gpio_init(pdev, child, &gpios[i]);
-+		if (ret) {
-+			dev_err(&pdev->dev, "Failed to init child node %d.\n",
-+				i);
-+			goto err;
-+		}
-+
-+		i++;
-+	}
-+
-+	platform_set_drvdata(pdev, gpios);
-+
-+	return 0;
-+
-+err:
-+	while (i > 0) {
-+		i--;
-+		gpio_switch_rem(&pdev->dev, &gpios[i]);
-+	}
-+
-+	return ret;
-+}
-+
-+static int gpio_switch_remove(struct platform_device *pdev)
-+{
-+	struct gpio_switch_gpio_info *gpios = platform_get_drvdata(pdev);
-+	struct device_node *np = pdev->dev.of_node;
-+	int i;
-+
-+	i = of_get_child_count(np);
-+
-+	while (i > 0) {
-+		i--;
-+		gpio_switch_rem(&pdev->dev, &gpios[i]);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id gpio_switch_of_match[] = {
-+	{ .compatible = "gpio-switch" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, gpio_switch_of_match);
-+
-+static struct platform_driver gpio_switch_driver = {
-+	.probe = gpio_switch_probe,
-+	.remove = gpio_switch_remove,
-+	.driver = {
-+		.name = "gpio_switch",
-+		.of_match_table = gpio_switch_of_match,
-+	},
-+};
-+module_platform_driver(gpio_switch_driver);
-+
-+MODULE_LICENSE("GPL");
--- 
-2.1.4
+T24gRnJpLCBEZWMgNCwgMjAxNSBhdCAxMDo0MSBBTSwgTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVu
+Z3V0cm9uaXguZGU+IHdyb3RlOgo+IEFtIEZyZWl0YWcsIGRlbiAwNC4xMi4yMDE1LCAxMDoyOSAt
+MDYwMCBzY2hyaWViIFJvYiBIZXJyaW5nOgo+PiBPbiBGcmksIERlYyAwNCwgMjAxNSBhdCAwMjo1
+OTo1NFBNICswMTAwLCBMdWNhcyBTdGFjaCB3cm90ZToKPj4gPiBFdG5hdml2IGZvbGxvd3MgdGhl
+IHNhbWUgcHJpY2lwbGUgYXMgaW14LWRybSB0byBoYXZlIGEgdmlydHVhbAo+PiA+IG1hc3RlciBk
+ZXZpY2Ugbm9kZSB0byBiaW5kIGFsbCB0aGUgaW5kaXZpZHVhbCBHUFUgY29yZXMgdG9nZXRoZXIK
+Pj4gPiBpbnRvIG9uZSBEUk0gZGV2aWNlLgo+PiA+Cj4+ID4gU2lnbmVkLW9mZi1ieTogTHVjYXMg
+U3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+Cj4+ID4gLS0tCj4+ID4gIC4uLi9iaW5kaW5n
+cy9kaXNwbGF5L2V0bmF2aXYvZXRuYXZpdi1kcm0udHh0ICAgICAgIHwgNDYgKysrKysrKysrKysr
+KysrKysrKysrKwo+PiA+ICAxIGZpbGUgY2hhbmdlZCwgNDYgaW5zZXJ0aW9ucygrKQo+PiA+ICBj
+cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvZXRuYXZpdi9ldG5hdml2LWRybS50eHQKPj4gPgo+PiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9ldG5hdml2L2V0bmF2aXYtZHJtLnR4
+dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V0bmF2aXYvZXRu
+YXZpdi1kcm0udHh0Cj4+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gPiBpbmRleCAwMDAwMDAw
+MDAwMDAuLjE5ZmRlMjlkYzFkNwo+PiA+IC0tLSAvZGV2L251bGwKPj4gPiArKysgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9ldG5hdml2L2V0bmF2aXYtZHJtLnR4
+dAo+PiA+IEBAIC0wLDAgKzEsNDYgQEAKPj4gPiArRXRuYXZpdiBEUk0gbWFzdGVyIGRldmljZQo+
+PiA+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+PiA+ICsKPj4gPiArVGhlIEV0
+bmF2aXYgRFJNIG1hc3RlciBkZXZpY2UgaXMgYSB2aXJ0dWFsIGRldmljZSBuZWVkZWQgdG8gbGlz
+dCBhbGwKPj4gPiArVml2YW50ZSBHUFUgY29yZXMgdGhhdCBjb21wcmlzZSB0aGUgR1BVIHN1YnN5
+c3RlbS4KPj4gPiArCj4+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ID4gKy0gY29tcGF0aWJs
+ZTogU2hvdWxkIGJlIG9uZSBvZgo+PiA+ICsgICAgImZzbCxpbXgtZ3B1LXN1YnN5c3RlbSIKPj4g
+PiArICAgICJtYXJ2ZWxsLGRvdmUtZ3B1LXN1YnN5c3RlbSIKPj4gPiArLSBjb3JlczogU2hvdWxk
+IGNvbnRhaW4gYSBsaXN0IG9mIHBoYW5kbGVzIHBvaW50aW5nIHRvIFZpdmFudGUgR1BVIGRldmlj
+ZXMKPj4gPiArCj4+ID4gK2V4YW1wbGU6Cj4+ID4gKwo+PiA+ICtncHUtc3Vic3lzdGVtIHsKPj4g
+PiArICAgY29tcGF0aWJsZSA9ICJmc2wsaW14LWdwdS1zdWJzeXN0ZW0iOwo+PiA+ICsgICBjb3Jl
+cyA9IDwmZ3B1XzJkPiwgPCZncHVfM2Q+Owo+PiA+ICt9Owo+Pgo+PiBZZWFoLCBJJ20gbm90IHJl
+YWxseSBhIGZhbiBvZiBkb2luZyB0aGlzIHNpbXBseSBiZWNhdXNlIERSTSB3YW50cyAxCj4+IGRy
+aXZlci4KPj4KPiBJJ20gYXdhcmUgb2YgdGhhdCwgYnV0IEkgZG9uJ3Qgc2VlIG11Y2ggdmFsdWUg
+aW4ga2lja2luZyB0aGlzIGRpc2N1c3Npb24KPiBhcm91bmQgZm9yIGV2ZXJ5IERSTSBkcml2ZXIg
+c3VibWlzc2lvbi4gVGhpcyBpcyB0aGUgYmluZGluZyB0aGF0IGhhcwo+IGVtZXJnZWQgZnJvbSBh
+IGxlbmd0aHkgZGlzY3Vzc2lvbiBhdCBLUyAyMDEzIGluIEVkaW5idXJnaCBhbmQgYXQgbGVhc3QK
+PiBhbGxvd3MgdXMgdG8gc3RhbmRhcmRpemUgb24gX3NvbWV0aGluZ18uIEFsc28gQUxTQSBkb2Vz
+IGEgc2ltaWxhciB0aGluZwo+IHRvIGJpbmQgY29kZWNzIGFuZCBDUFUgaW50ZXJmYWNlcyB0b2dl
+dGhlci4KClRoaXMgY2FzZSBpcyBxdWl0ZSBkaWZmZXJlbnQgdGhvdWdoIEkgdGhpbmsuIFRoZSBB
+TFNBIGNhc2UgYW5kIG90aGVyCkRSTSBjYXNlcyBhcmUgb25lcyB0aGF0IGhhdmUgaW50ZXItZGVw
+ZW5kZW5jaWVzIGJldHdlZW4gdGhlIGJsb2NrcwooZS5nLiBzb21lIHNvcnQgb2YgaC93IGNvbm5l
+Y3Rpb24pLiBXaGF0IGlzIHRoZSBpbnRlci1kZXBlbmRlbmN5IGhlcmU/CgpEb2luZyB0aGlzIHdh
+eSBoYXMgYWxzbyBiZWVuIGZvdW5kIHRvIGJlIGNvbXBsZXRlbHkgdW5uZWNlc3NhcnkgYW5kCnJl
+bW92ZWQgaW4gcmVjZW50IERSTSBkcml2ZXIgcmV2aWV3cy4gQWRtaXR0ZWRseSwgdGhvc2UgYXJl
+IGNhc2VzCndoZXJlIG9uZSBkZXZpY2UgY2FuIGJlIHRoZSBtYXN0ZXIgb2YgdGhlIG90aGVycy4g
+Rm9yIDIgcGFyYWxsZWwKZGV2aWNlcywgSSBkb24ndCBoYXZlIGFuIGFsdGVybmF0aXZlIG90aGVy
+IHRoYW4gcXVlc3Rpb24gd2h5IHRoZXkgbmVlZAp0byBiZSBhIHNpbmdsZSBkcml2ZXIuCgoKPj4g
+PiArVml2YW50ZSBHUFUgY29yZSBkZXZpY2VzCj4+ID4gKz09PT09PT09PT09PT09PT09PT09Cj4+
+ID4gKwo+PiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiA+ICstIGNvbXBhdGlibGU6IFNob3Vs
+ZCBiZSAidml2YW50ZSxnYyIKPj4KPj4gVGhpcyBzaG91bGQgYXQgbGVhc3QgaGF2ZSB0aGUgc3Bl
+Y2lmaWMgY29yZXMgbGlzdGVkIGxpa2UgZ2MtNTAwMCBvcgo+PiB3aGF0ZXZlciB0aGUgbnVtYmVy
+aW5nIGlzLiBBcyBpcywgSSBjYW4ndCBldmVuIHRlbGwgaWYgdGhpcyBhIDJkIG9yIDNkCj4+IGNv
+cmUuCj4+Cj4gVGhlcmUgaXMgcmVhbGx5IG5vIG5lZWQgZm9yIHRoaXMuIFRoZSBjb3JlcyBoYXZl
+IGlkZW50aWZpY2F0aW9uCj4gcmVnaXN0ZXJzIHRoYXQgYXJlIG11Y2ggbW9yZSBhY2N1cmF0ZSB0
+aGFuIHdoYXQgd2UgY291bGQgZGVzY3JpYmUgd2l0aCBhCj4gY29tcGF0aWJsZSB2YWx1ZS4gU28g
+dXNpbmcgYSBtb3JlIHNwZWNpZmljIGNvbXBhdGlibGUganVzdCBwcm92aWRlcwo+IHJlZHVuZGFu
+dCAoYW5kIHBvc3NpYmx5IHdyb25nKSBpbmZvcm1hdGlvbi4KPgo+PiBBbHNvLCBpdCBwcm9iYWJs
+eSBzaG91bGQgaGF2ZSBhbiBTT0Mgc3BlY2lmaWMgcHJvcGVydHkgdG8gZGVhbCB3aXRoIFNPQwo+
+PiBzcGVjaWZpYyBjb25maWd1cmF0aW9uIG9yIGludGVncmF0aW9uLgo+Pgo+IFNhbWUgYXMgYWJv
+dmUgcmVhbGx5LiBQYXJ0cyBvZiB0aGUgaWRlbnRpZmljYXRpb24gcmVnaXN0ZXJzIGFyZQo+IGRp
+ZmZlcmVudCBmb3IgZWFjaCBTb0MgaW50ZWdyYXRpb24sIGV2ZW4gaWYgaXQncyB0aGUgc2FtZSBJ
+UCBjb3JlLCBzbyB3ZQo+IGNhbiBqdXN0IGRlcml2ZSBhbnkgbmVlZGVkIGRyaXZlciBiZWhhdmlv
+ciBkaWZmZXJlbmNlcyBmcm9tIHRoYXQuCgpUaGUgaC93IGRlc2lnbmVycyBtdXN0IGhhdmUgaGFk
+IGEgY2x1ZSBhYm91dCBzL3cuIEZpcnN0IHRpbWUgZm9yCmV2ZXJ5dGhpbmcuLi4gOykKCk9rLCBw
+bGVhc2UganVzdCBhZGQgYSBub3RlIHRvIHRoZSBiaW5kaW5nIHdoeSBhIG1vcmUgc3BlY2lmaWMK
+Y29tcGF0aWJsZSBpcyBub3QgbmVlZGVkIGluIHRoaXMgY2FzZS4KClJvYgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
