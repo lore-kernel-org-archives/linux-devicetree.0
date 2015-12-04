@@ -1,37 +1,77 @@
-From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 08/12] drm/etnaviv: add GPU MMU handling functionality
-Date: Fri, 4 Dec 2015 14:59:53 +0000
-Message-ID: <CACvgo50UW734S12xH=oszkNhgf53x5gbdeUxCdLZ0kGq1G=2Pg@mail.gmail.com>
-References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
-	<1449237604-19064-9-git-send-email-l.stach@pengutronix.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH (v2) 1/2] reset: Add brcm,bcm6345-reset device tree
+ binding
+Date: Fri, 4 Dec 2015 08:59:24 -0600
+Message-ID: <20151204145924.GA23834@rob-hp-laptop>
+References: <565F5C96.5090700@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449237604-19064-9-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <565F5C96.5090700@simon.arlott.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Arlott <simon@fire.lp0.eu>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org, MIPS Mailing List <linux-mips@linux-mips.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lucas,
+On Wed, Dec 02, 2015 at 09:03:18PM +0000, Simon Arlott wrote:
+> Add device tree binding for the BCM6345 soft reset controller.
+> 
+> The BCM6345 contains a soft-reset controller activated by setting
+> a bit (that must previously have cleared).
+> 
+> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+> ---
+> Renamed to bcm6345, removed "mask" property.
 
-On 4 December 2015 at 14:00, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+Acked-by: Rob Herring <robh@kernel.org>
 
+> 
+>  .../bindings/reset/brcm,bcm6345-reset.txt          | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.txt b/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.txt
+> new file mode 100644
+> index 0000000..bb9ca6e
 > --- /dev/null
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_iommu_v2.c
-
-> +struct iommu_domain *etnaviv_iommu_v2_domain_alloc(struct etnaviv_gpu *gpu)
-> +{
-> +       /* TODO */
-> +       return NULL;
-> +}
-
-I thought you guys removed this since there is pretty much no
-implementation ? Note the duplicate function declaration in
-etnaviv_iommu.h and etnaviv_iommu_v2.h.
-
--Emil
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +++ b/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.txt
+> @@ -0,0 +1,33 @@
+> +Broadcom BCM6345 reset controller
+> +
+> +The BCM6345 contains a basic soft reset controller in the perf register
+> +set which resets components using a bit in a register.
+> +
+> +Please also refer to reset.txt in this directory for common reset
+> +controller binding usage.
+> +
+> +Required properties:
+> +- compatible:	Should be "brcm,bcm<soc>-reset", "brcm,bcm6345-reset"
+> +- regmap:	The register map phandle
+> +- offset:	Offset in the register map for the reset register (in bytes)
+> +- #reset-cells:	Must be set to 1
+> +
+> +Example:
+> +
+> +periph_soft_rst: reset-controller {
+> +	compatible = "brcm,bcm63168-reset", "brcm,bcm6345-reset";
+> +	regmap = <&periph_cntl>;
+> +	offset = <0x10>;
+> +
+> +	#reset-cells = <1>;
+> +};
+> +
+> +usbh: usbphy@10002700 {
+> +	compatible = "brcm,bcm63168-usbh";
+> +	reg = <0x10002700 0x38>;
+> +	clocks = <&periph_clk 13>, <&timer_clk 18>;
+> +	resets = <&periph_soft_rst 6>;
+> +	power-supply = <&power_usbh>;
+> +	#phy-cells = <0>;
+> +};
+> +
+> -- 
+> 2.1.4
+> 
+> -- 
+> Simon Arlott
