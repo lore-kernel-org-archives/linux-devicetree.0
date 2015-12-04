@@ -1,79 +1,63 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv6 4/5] devicetree: Add new ANX7814 SlimPort transmitter
- binding.
-Date: Fri, 4 Dec 2015 10:13:58 -0600
-Message-ID: <20151204161358.GA6977@rob-hp-laptop>
-References: <1449218107-6590-1-git-send-email-enric.balletbo@collabora.com>
- <1449218107-6590-5-git-send-email-enric.balletbo@collabora.com>
+Subject: Re: [PATCH 1/5] stmmac: create of compatible mdio bus for stmacc
+ driver
+Date: Fri, 4 Dec 2015 10:16:14 -0600
+Message-ID: <20151204161614.GA8791@rob-hp-laptop>
+References: <1449220125-67417-1-git-send-email-preid@electromag.com.au>
+ <1449220125-67417-2-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1449218107-6590-5-git-send-email-enric.balletbo@collabora.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Enric Balletbo i Serra <eballetbo@gmail.com>
-Cc: mark.rutland@arm.com, sjoerd.simons@collabora.co.uk, laurent.pinchart@ideasonboard.com, devel@driverdev.osuosl.org, drinkcat@chromium.org, cawa.cheng@mediatek.com, nathan.chung@mediatek.com, javier@dowhile0.org, treding@nvidia.com, dan.carpenter@oracle.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dri-devel@lists.freedesktop.org, eddie.huang@mediatek.com, cjiao@analogixsemi.com, jb.tsai@mediatek.com, gregkh@linuxfoundation.org, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, galak@codeaurora.org, span@analogixsemi.com
+In-Reply-To: <1449220125-67417-2-git-send-email-preid@electromag.com.au>
+Sender: netdev-owner@vger.kernel.org
+To: Phil Reid <preid@electromag.com.au>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBEZWMgMDQsIDIwMTUgYXQgMDk6MzU6MDZBTSArMDEwMCwgRW5yaWMgQmFsbGV0Ym8g
-aSBTZXJyYSB3cm90ZToKPiBUaGUgQU5YNzgxNCBpcyBhbiB1bHRyYS1sb3cgcG93ZXIgRnVsbC1I
-RCAoMTA4MHA2MCkgU2xpbVBvcnQgdHJhbnNtaXR0ZXIKPiBkZXNpZ25lZCBmb3IgcG9ydGFibGUg
-ZGV2aWNlcy4KPiAKPiBZb3UgY2FuIGFkZCBzdXBwb3J0IHRvIHlvdXIgYm9hcmQgd2l0aCBjdXJy
-ZW50IGJpbmRpbmcuCj4gCj4gRXhhbXBsZToKPiAKPiAJYW54NzgxNDogYW54NzgxNEAzOCB7Cj4g
-CQljb21wYXRpYmxlID0gImFuYWxvZ2l4LGFueDc4MTQiOwo+IAkJcmVnID0gPDB4Mzg+Owo+IAkJ
-aW50ZXJydXB0LXBhcmVudCA9IDwmZ3BpbzA+Cj4gCQlpbnRlcnJ1cHRzID0gPDEgSVJRX1RZUEVf
-TEVWRUxfSElHSD47Cj4gCQlwZC1ncGlvcyA9IDwmZ3BpbzAgMiBHUElPX0FDVElWRV9ISUdIPjsK
-PiAJCXJlc2V0LWdwaW9zID0gPCZncGlvMCAzIEdQSU9fQUNUSVZFX0hJR0g+Owo+IAkJdjEwLWdw
-aW9zID0gPCZncGlvMCA0IEdQSU9fQUNUSVZFX0hJR0g+Owo+IAkJcG9ydHMgewoKVGhpcyBhbmQg
-dGhlIGV4YW1wbGUgYmVsb3cgc2hvdWxkIGJlIGp1c3QgInBvcnQiIEkgdGhpbmsuIE90aGVyd2lz
-ZToKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKCj4gCQkJYW54Nzgx
-NF9pbjogZW5kcG9pbnQgewo+IAkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWkwX291dD47Cj4g
-CQkJfTsKPiAJCX07Cj4gCX07Cj4gCj4gU2lnbmVkLW9mZi1ieTogRW5yaWMgQmFsbGV0Ym8gaSBT
-ZXJyYSA8ZW5yaWMuYmFsbGV0Ym9AY29sbGFib3JhLmNvbT4KPiAtLS0KPiAKPiBDaGFuZ2VzIHNp
-bmNlIGxhc3QgdmVyc2lvbiAocmVxdWVzdGVkIGJ5IFJvYiBIZXJyaW5nKQo+IC0gU3BlY2lmeSBo
-b3cgbWFueSBwb3J0cyBhbmQgaG93IG1hbnkgZW5kcG9pbnRzIGZvciBlYWNoIHBvcnQKPiAtIFNp
-bXBsaWZ5IHRvIGp1c3QgcG9ydCAoZHJvcHBpbmcgcG9ydHMpCj4gLSBGb3IgY2FibGUgZGV0IHVz
-ZSBhbiBpbnRlcnJ1cHQgaW5zdGVhZCAodG8gYSBncGlvIGNvbnRyb2xsZXIpCj4gCj4gIC4uLi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JyaWRnZS9hbng3ODE0LnR4dCAgIHwgMzkgKysrKysr
-KysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMzkgaW5zZXJ0aW9ucygrKQo+ICBj
-cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVv
-L2JyaWRnZS9hbng3ODE0LnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvdmlkZW8vYnJpZGdlL2FueDc4MTQudHh0IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JyaWRnZS9hbng3ODE0LnR4dAo+IG5ldyBmaWxlIG1v
-ZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uNGU2ODc4OQo+IC0tLSAvZGV2L251bGwKPiArKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYnJpZGdlL2FueDc4MTQu
-dHh0Cj4gQEAgLTAsMCArMSwzOSBAQAo+ICtBbmFsb2dpeCBBTlg3ODE0IFNsaW1Qb3J0IChGdWxs
-LUhEIFRyYW5zbWl0dGVyKQo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLQo+ICsKPiArVGhlIEFOWDc4MTQgaXMgYW4gdWx0cmEtbG93IHBvd2VyIEZ1bGwt
-SEQgKDEwODBwNjApIFNsaW1Qb3J0IHRyYW5zbWl0dGVyCj4gK2Rlc2lnbmVkIGZvciBwb3J0YWJs
-ZSBkZXZpY2VzLgo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArCj4gKyAtIGNvbXBhdGli
-bGUJCTogImFuYWxvZ2l4LGFueDc4MTQiCj4gKyAtIHJlZwkJCTogSTJDIGFkZHJlc3Mgb2YgdGhl
-IGRldmljZQo+ICsgLSBpbnRlcnJ1cHQtcGFyZW50CTogU2hvdWxkIGJlIHRoZSBwaGFuZGxlIG9m
-IHRoZSBpbnRlcnJ1cHQgY29udHJvbGxlcgo+ICsJCQkgIHRoYXQgc2VydmljZXMgaW50ZXJydXB0
-cyBmb3IgdGhpcyBkZXZpY2UKPiArIC0gaW50ZXJydXB0cwkJOiBTaG91bGQgY29udGFpbiB0aGUg
-Y2FibGUgZGV0ZWN0aW9uIGludGVycnVwdAo+ICsgLSBwZC1ncGlvcwkJOiBXaGljaCBHUElPIHRv
-IHVzZSBmb3IgcG93ZXIgZG93bgo+ICsgLSByZXNldC1ncGlvcwkJOiBXaGljaCBHUElPIHRvIHVz
-ZSBmb3IgcmVzZXQKPiArCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKwo+ICsgLSB2MTAtZ3Bp
-b3MJCTogV2hpY2ggR1BJTyB0byB1c2UgZm9yIFYxMCBjb250cm9sLgo+ICsgLSBWaWRlbyBwb3J0
-IGZvciBIRE1JIG91dHB1dCwgdXNpbmcgdGhlIERUIGJpbmRpbmdzIGRlZmluZWQgaW4gWzFdLgo+
-ICsKPiArWzFdOiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8t
-aW50ZXJmYWNlcy50eHQKPiArCj4gK0V4YW1wbGU6Cj4gKwo+ICsJYW54NzgxNDogYW54NzgxNEAz
-OCB7Cj4gKwkJY29tcGF0aWJsZSA9ICJhbmFsb2dpeCxhbng3ODE0IjsKPiArCQlyZWcgPSA8MHgz
-OD47Cj4gKwkJaW50ZXJydXB0LXBhcmVudCA9IDwmZ3BpbzA+Cj4gKwkJaW50ZXJydXB0cyA9IDwx
-IElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ICsJCXBkLWdwaW9zID0gPCZncGlvMCAyIEdQSU9fQUNU
-SVZFX0hJR0g+Owo+ICsJCXJlc2V0LWdwaW9zID0gPCZncGlvMCAzIEdQSU9fQUNUSVZFX0hJR0g+
-Owo+ICsJCXYxMC1ncGlvcyA9IDwmZ3BpbzAgNCBHUElPX0FDVElWRV9ISUdIPjsKPiArCQlwb3J0
-cyB7Cj4gKwkJCWFueDc4MTRfaW46IGVuZHBvaW50IHsKPiArCQkJCXJlbW90ZS1lbmRwb2ludCA9
-IDwmaGRtaTBfb3V0PjsKPiArCQkJfTsKPiArCQl9Owo+ICsJfTsKPiAtLSAKPiAyLjEuMAo+IApf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Fri, Dec 04, 2015 at 05:08:41PM +0800, Phil Reid wrote:
+> The DSA driver needs to be passed a reference to an mdio bus. Typically
+> the mac is configured to use a fixed link but the mdio bus still needs
+> to be registered so that it con configure the switch.
+> This patch follows the same process as the altera tse ethernet driver for
+> creation of the mdio bus.
+> 
+> Signed-off-by: Phil Reid <preid@electromag.com.au>
+> ---
+>  Documentation/devicetree/bindings/net/stmmac.txt   | 10 ++++++-
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c  | 32 ++++++++++++++++------
+>  .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |  2 +-
+>  3 files changed, 34 insertions(+), 10 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+> index f34fc3c..0056c4c 100644
+> --- a/Documentation/devicetree/bindings/net/stmmac.txt
+> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+> @@ -47,7 +47,8 @@ Optional properties:
+>  - snps,burst_len: The AXI burst lenth value of the AXI BUS MODE register.
+>  - tx-fifo-depth: See ethernet.txt file in the same directory
+>  - rx-fifo-depth: See ethernet.txt file in the same directory
+> -
+> +- mdio: with compatible = "snps,dwmac-mdio", create and register mdio bus.
+> +  
+>  Examples:
+>  
+>  	gmac0: ethernet@e0800000 {
+> @@ -65,4 +66,11 @@ Examples:
+>  		tx-fifo-depth = <16384>;
+>  		clocks = <&clock>;
+>  		clock-names = "stmmaceth";
+> +		mdio0: mdio@0 {
+
+Don't need a unit address here. Otherwise, for the binding:
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "snps,dwmac-mdio";
+> +			phy1: ethernet-phy@0 {
+> +			};
+> +		};    
+>  	};
