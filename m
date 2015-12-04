@@ -1,42 +1,108 @@
-From: Ilia Mirkin <imirkin@alum.mit.edu>
-Subject: Re: [PATCH 11/12] MAINTAINERS: add Lucas Stach as maintainer for the
- etnaviv DRM driver
-Date: Fri, 4 Dec 2015 12:08:47 -0500
-Message-ID: <CAKb7Uvjh7B5ExWwRQNMhqDwTwPUsFKv4-jAszVp06qq2rGQFhg@mail.gmail.com>
-References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
- <1449237604-19064-12-git-send-email-l.stach@pengutronix.de>
- <20151204170709.GY8644@n2100.arm.linux.org.uk>
+From: Yendapally Reddy Dhananjaya Reddy <yrdreddy@broadcom.com>
+Subject: [PATCH v2 1/3] pinctrl: Broadcom NSP GPIO-a device tree bindings
+Date: Fri, 4 Dec 2015 12:10:57 -0500
+Message-ID: <1449249057-12975-1-git-send-email-yrdreddy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20151204170709.GY8644@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yrdreddy@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBEZWMgNCwgMjAxNSBhdCAxMjowNyBQTSwgUnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4
-CjxsaW51eEBhcm0ubGludXgub3JnLnVrPiB3cm90ZToKPiBPbiBGcmksIERlYyAwNCwgMjAxNSBh
-dCAwMzowMDowM1BNICswMTAwLCBMdWNhcyBTdGFjaCB3cm90ZToKPj4gU2lnbmVkLW9mZi1ieTog
-THVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+Cj4KPiBBY2tlZC1ieTogUnVzc2Vs
-bCBLaW5nIDxybWsra2VybmVsQGFybS5saW51eC5vcmcudWs+Cj4KPiBBbHRob3VnaCwgSSB3b3Vs
-ZCBsaWtlIHRvIGJlIGNvcGllZCBvbiBwYXRjaGVzLCBJIGRvbid0IHRoaW5rIHdlCj4gaGF2ZSBh
-IHdheSB0byBlbmNvZGUgdGhhdCBpbmZvcm1hdGlvbiBpbiBNQUlOVEFJTkVSUy4KCkZyb20gdGhl
-IHRvcCBvZiB0aGUgTUFJTlRBSU5FUlMgZmlsZToKCkRlc2NyaXB0aW9ucyBvZiBzZWN0aW9uIGVu
-dHJpZXM6CgogICAgICAgIFA6IFBlcnNvbiAob2Jzb2xldGUpCiAgICAgICAgTTogTWFpbCBwYXRj
-aGVzIHRvOiBGdWxsTmFtZSA8YWRkcmVzc0Bkb21haW4+CiAgICAgICAgUjogRGVzaWduYXRlZCBy
-ZXZpZXdlcjogRnVsbE5hbWUgPGFkZHJlc3NAZG9tYWluPgogICAgICAgICAgIFRoZXNlIHJldmll
-d2VycyBzaG91bGQgYmUgQ0NlZCBvbiBwYXRjaGVzLgoKU28gSSBndWVzcyB0aGF0J2QgbWVhbiB5
-b3Ugd2FudCB0byBiZSBhIHJldmlld2VyPwoKICAtaWxpYQpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Device tree binding documentation for Broadcom NSP GPIO-a
+
+Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yrdreddy@broadcom.com>
+---
+ .../devicetree/bindings/pinctrl/brcm,nsp-gpio.txt  | 80 ++++++++++++++++++++++
+ 1 file changed, 80 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt
+new file mode 100644
+index 0000000..0844168
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/brcm,nsp-gpio.txt
+@@ -0,0 +1,80 @@
++Broadcom Northstar plus (NSP) GPIO/PINCONF Controller
++
++Required properties:
++- compatible:
++    Must be "brcm,nsp-gpio-a"
++
++- reg:
++    Should contain the register physical address and length for each of
++    GPIO base, IO control registers
++
++- #gpio-cells:
++    Must be two. The first cell is the GPIO pin number (within the
++    controller's pin space) and the second cell is used for the following:
++    bit[0]: polarity (0 for active high and 1 for active low)
++
++- gpio-controller:
++    Specifies that the node is a GPIO controller
++
++- ngpios:
++    Number of gpios supported (58x25 supports 32 and 58x23 supports 24)
++
++Optional properties:
++- interrupts:
++    Interrupt ID
++
++- interrupt-controller:
++    Specifies that the node is an interrupt controller
++
++- gpio-ranges:
++    Specifies the mapping between gpio controller and pin-controllers pins.
++    This requires 4 fields in cells defined as -
++    1. Phandle of pin-controller.
++    2. GPIO base pin offset.
++    3  Pin-control base pin offset.
++    4. number of gpio pins which are linearly mapped from pin base.
++
++Supported generic PINCONF properties in child nodes:
++- pins:
++    The list of pins (within the controller's own pin space) that properties
++    in the node apply to. Pin names are "gpio-<pin>"
++
++- bias-disable:
++    Disable pin bias
++
++- bias-pull-up:
++    Enable internal pull up resistor
++
++- bias-pull-down:
++    Enable internal pull down resistor
++
++- drive-strength:
++    Valid drive strength values include 2, 4, 6, 8, 10, 12, 14, 16 (mA)
++
++Example:
++
++	gpioa: gpio@18000020 {
++		compatible = "brcm,nsp-gpio-a";
++		reg = <0x18000020 0x100>,
++		      <0x1803f1c4 0x1c>;
++		#gpio-cells = <2>;
++		gpio-controller;
++		ngpios = <32>;
++		gpio-ranges = <&pinctrl 0 0 31>;
++		interrupt-controller;
++		interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
++
++		/* Hog a few default settings */
++		pinctrl-names = "default";
++		pinctrl-0 = <&led>;
++		led: led {
++			pins = "gpio-1";
++			bias-pull-up;
++		};
++
++		pwr: pwr {
++			gpio-hog;
++			gpios = <3 1>;
++			output-high;
++		};
++	};
+-- 
+2.1.0
