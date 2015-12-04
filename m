@@ -1,59 +1,49 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: DTS: am33xx: Use the new DT bindings for the eDMA3
-Date: Fri, 4 Dec 2015 10:47:07 -0800
-Message-ID: <20151204184706.GO23396@atomide.com>
-References: <1449225915-28879-1-git-send-email-peter.ujfalusi@ti.com>
- <87wpsunn82.fsf@saruman.tx.rr.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: Misc fix for the ATH79 MISC
+ interrupt controllers
+Date: Fri, 4 Dec 2015 12:47:13 -0600
+Message-ID: <20151204184713.GA4882@rob-hp-laptop>
+References: <1448800812-7469-1-git-send-email-albeu@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <87wpsunn82.fsf-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <1448800812-7469-1-git-send-email-albeu-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [151204 09:23]:
+On Sun, Nov 29, 2015 at 01:40:11PM +0100, Alban Bedel wrote:
+> Add a missing quote in the example
 > 
-> Hi,
+> Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+> CC: trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+
+Applied, thanks.
+
+Rob
+
+> ---
+>  .../devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt    | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> writes:
-> > @@ -174,12 +182,44 @@
-> >  		};
-> >  
-> >  		edma: edma@49000000 {
-> > -			compatible = "ti,edma3";
-> > -			ti,hwmods = "tpcc", "tptc0", "tptc1", "tptc2";
-> > -			reg =	<0x49000000 0x10000>,
-> > -				<0x44e10f90 0x40>;
-> > +			compatible = "ti,edma3-tpcc";
-> > +			ti,hwmods = "tpcc";
-> > +			reg =	<0x49000000 0x10000>;
-> > +			reg-names = "edma3_cc";
-> >  			interrupts = <12 13 14>;
-> > -			#dma-cells = <1>;
-> > +			interrupt-names = "edma3_ccint", "emda3_mperr",
-> > +					  "edma3_ccerrint";
-> > +			dma-requests = <64>;
-> > +			#dma-cells = <2>;
-> > +
-> > +			ti,tptcs = <&edma_tptc0 7>, <&edma_tptc1 5>,
-> > +				   <&edma_tptc2 0>;
-> > +
-> > +			ti,edma-memcpy-channels = /bits/ 16 <20 21>;
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
+> index ec96b1f..475ae9b 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
+> @@ -22,7 +22,7 @@ Interrupt Controllers bindings used by client devices.
+>  Example:
+>  
+>  	interrupt-controller@18060010 {
+> -		compatible = "qca,ar9132-misc-intc", qca,ar7100-misc-intc";
+> +		compatible = "qca,ar9132-misc-intc", "qca,ar7100-misc-intc";
+>  		reg = <0x18060010 0x4>;
+>  
+>  		interrupt-parent = <&cpuintc>;
+> -- 
+> 2.0.0
 > 
-> can you explain this property here ? Are you setting bits 20 and 21 on a
-> 16-bit field ?
-
-I think it's an arry of u16 dma channels.. But could it be just /bits/ 8
-instead of /bits/ 16?
-
-Regards,
-
-Tony
-
-
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
