@@ -1,58 +1,107 @@
-From: "Simon Arlott" <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-Subject: Re: [PATCH (v2) 1/2] reset: Add brcm,bcm6345-reset device tree
- binding
-Date: Fri, 4 Dec 2015 21:12:10 -0000
-Message-ID: <6a3790afc811ac4ed732371f2eb33a7c194b996d@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
-References: <565F5C96.5090700@simon.arlott.org.uk>
-    <1449131943.3339.8.camel@pengutronix.de>
+From: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v5 0/4] ARM: sunxi: Allwinner H3 support
+Date: Fri,  4 Dec 2015 22:24:39 +0100
+Message-ID: <1449264283-25360-1-git-send-email-jenskuske@gmail.com>
+Reply-To: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449131943.3339.8.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCC5XIE2SIHBBLEJRCZQKGQEXVX355Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, December 3, 2015 08:39, Philipp Zabel wrote:
-> Am Mittwoch, den 02.12.2015, 21:03 +0000 schrieb Simon Arlott:
->> +periph_soft_rst: reset-controller {
->> +	compatible = "brcm,bcm63168-reset", "brcm,bcm6345-reset";
->> +	regmap = <&periph_cntl>;
->> +	offset = <0x10>;
->> +
->> +	#reset-cells = <1>;
->> +};
->
-> I would have written it something like this:
->
-> periph_cntl: ... {
-> 	compatible = "syscon", "simple-mfd";
-> 	#address-cells = <1>;
-> 	#size-cells = <1>;
->
-> 	periph_soft_rst: reset-controller {
-> 		compatible = "brcm,bcm6345-reset";
-> 		reg = <0x10 0x4>;
-> 		#reset-cells = <1>;
-> 	};
-> };
->
-> for a device that is only controlled through a syscon.
+Hi everyone,
 
-Rob, do you want me to change this or is my version ok?
+This is v5 of my patch series introducing basic kernel support for Allwinner's
+H3 SoC. It mainly adds basic clocks, resets and pinctrl. It also adds
+interrupts, timers, watchdog, RTC, dmaengine, MMC and UARTs, which are mostly
+compatible to those in earlier SoCs like A23 and A31, and can simply be reused.
 
-> The driver itself looks good to me.
->
-> best regards
-> Philipp
->
->
+These patches are based on the sunxi-next branch from
+git://github.com/linux-sunxi/linux-sunxi.git
+
+
+Patch 1 adds basic H3 clocks.
+
+Patch 2 adds pin sets for the H3 main PIO.
+
+Patch 3 adds the DTSI for the H3.
+
+Patch 4 adds a DTS for the Orange Pi Plus SBC, which these patches
+were developed and tested with.
+
+Changes since v4:
+- drop the pll clock cleanup and use dummy clocks instead for now, Maxime
+  wants to take care of cleaning up the plls
+- split the resets again (as in v1), drop the of_xlate
+- fix all reported pinctrl mistakes
+- remove memory node and timer frequency from dtsi
+- rename the bus gates to bus_*
+- clean up the bus gates driver
+
+Changes since v3:
+- add a clock driver specific to the bus gates instead of listing parents in
+  the DTSI
+- skip the holes in the reset controller with of_xlate()
+
+Changes since v2:
+- add mbus clock
+- add Maxime's suggestion to take the substring up to the first "_" as name
+  for the divs base clock
+- use A31 pll6 for H3 pll6
+- use a clock similar to the new simple gates for H3 bus gates
+- drop the pinctrl-as-module patch since pinctrl and gpio don't seem to be
+  ready for removable drivers
+- documentation and machine support are merged already
+  
+Changes since v1:
+- Update sunxi README in Documentation
+- Add the multiple parents gates and use them for bus-gates instead of
+  ahb1, ahb2, apb1 and apb2 gates
+- Merge the pll8 clock with sun6i pll6
+- Merge the ahb12, apb1 and apb2 resets to bus-resets with own compatible
+- Add sun6i_timer_init to sun8i machine
+- Remove the single SoC names from machine definition, its sun8i family
+- Make the pinctrl driver tristate and put its Kconfig entry in the right order
+- Rename pinctrl "scr" to "sim" and clock "sim" to "scr" to match user manual
+- Remove the address paragraph from GPL in dts and dtsi
+- Some style cleanup and line wrapping in dtsi
+- Add ARM architected timers
+- dmaengine isn't included anymore, it is merged already
+
+Best Regards,
+Jens
+
+
+Jens Kuske (4):
+  clk: sunxi: Add H3 clocks support
+  pinctrl: sunxi: Add H3 PIO controller support
+  ARM: dts: sunxi: Add Allwinner H3 DTSI
+  ARM: dts: sun8i: Add Orange Pi Plus support
+
+ Documentation/devicetree/bindings/clock/sunxi.txt  |   2 +
+ .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   1 +
+ arch/arm/boot/dts/Makefile                         |   3 +-
+ arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts       |  77 +++
+ arch/arm/boot/dts/sun8i-h3.dtsi                    | 497 ++++++++++++++++++++
+ drivers/clk/sunxi/Makefile                         |   1 +
+ drivers/clk/sunxi/clk-sun8i-bus-gates.c            | 112 +++++
+ drivers/clk/sunxi/clk-sunxi.c                      |   6 +
+ drivers/pinctrl/sunxi/Kconfig                      |   4 +
+ drivers/pinctrl/sunxi/Makefile                     |   1 +
+ drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c           | 515 +++++++++++++++++++++
+ 11 files changed, 1218 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+ create mode 100644 arch/arm/boot/dts/sun8i-h3.dtsi
+ create mode 100644 drivers/clk/sunxi/clk-sun8i-bus-gates.c
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c
 
 -- 
-Simon Arlott
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.6.3
