@@ -1,74 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
-Date: Fri, 4 Dec 2015 10:29:56 -0600
-Message-ID: <20151204162956.GA14978@rob-hp-laptop>
-References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
- <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v4 1/2] dt-bindings: GPIO: Add gpio-initval
+Date: Fri, 04 Dec 2015 17:39:40 +0100
+Message-ID: <1449247180.3451.22.camel@pengutronix.de>
+References: <1449234388-4007-1-git-send-email-mpa@pengutronix.de>
+	 <1449234388-4007-2-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, kernel@pengutronix.de, Russell King <rmk+kernel@arm.linux.org.uk>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1449234388-4007-2-git-send-email-mpa@pengutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org, kernel@pengutronix.de, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBEZWMgMDQsIDIwMTUgYXQgMDI6NTk6NTRQTSArMDEwMCwgTHVjYXMgU3RhY2ggd3Jv
-dGU6Cj4gRXRuYXZpdiBmb2xsb3dzIHRoZSBzYW1lIHByaWNpcGxlIGFzIGlteC1kcm0gdG8gaGF2
-ZSBhIHZpcnR1YWwKPiBtYXN0ZXIgZGV2aWNlIG5vZGUgdG8gYmluZCBhbGwgdGhlIGluZGl2aWR1
-YWwgR1BVIGNvcmVzIHRvZ2V0aGVyCj4gaW50byBvbmUgRFJNIGRldmljZS4KPiAKPiBTaWduZWQt
-b2ZmLWJ5OiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5kZT4KPiAtLS0KPiAgLi4u
-L2JpbmRpbmdzL2Rpc3BsYXkvZXRuYXZpdi9ldG5hdml2LWRybS50eHQgICAgICAgfCA0NiArKysr
-KysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA0NiBpbnNlcnRpb25zKCspCj4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9ldG5hdml2L2V0bmF2aXYtZHJtLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9ldG5hdml2L2V0bmF2aXYtZHJtLnR4dCBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V0bmF2aXYvZXRuYXZp
-di1kcm0udHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLjE5
-ZmRlMjlkYzFkNwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9ldG5hdml2L2V0bmF2aXYtZHJtLnR4dAo+IEBAIC0wLDAgKzEs
-NDYgQEAKPiArRXRuYXZpdiBEUk0gbWFzdGVyIGRldmljZQo+ICs9PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PQo+ICsKPiArVGhlIEV0bmF2aXYgRFJNIG1hc3RlciBkZXZpY2UgaXMgYSB2
-aXJ0dWFsIGRldmljZSBuZWVkZWQgdG8gbGlzdCBhbGwKPiArVml2YW50ZSBHUFUgY29yZXMgdGhh
-dCBjb21wcmlzZSB0aGUgR1BVIHN1YnN5c3RlbS4KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6
-Cj4gKy0gY29tcGF0aWJsZTogU2hvdWxkIGJlIG9uZSBvZgo+ICsgICAgImZzbCxpbXgtZ3B1LXN1
-YnN5c3RlbSIKPiArICAgICJtYXJ2ZWxsLGRvdmUtZ3B1LXN1YnN5c3RlbSIKPiArLSBjb3Jlczog
-U2hvdWxkIGNvbnRhaW4gYSBsaXN0IG9mIHBoYW5kbGVzIHBvaW50aW5nIHRvIFZpdmFudGUgR1BV
-IGRldmljZXMKPiArCj4gK2V4YW1wbGU6Cj4gKwo+ICtncHUtc3Vic3lzdGVtIHsKPiArCWNvbXBh
-dGlibGUgPSAiZnNsLGlteC1ncHUtc3Vic3lzdGVtIjsKPiArCWNvcmVzID0gPCZncHVfMmQ+LCA8
-JmdwdV8zZD47Cj4gK307CgpZZWFoLCBJJ20gbm90IHJlYWxseSBhIGZhbiBvZiBkb2luZyB0aGlz
-IHNpbXBseSBiZWNhdXNlIERSTSB3YW50cyAxIApkcml2ZXIuCgo+ICsKPiArCj4gK1ZpdmFudGUg
-R1BVIGNvcmUgZGV2aWNlcwo+ICs9PT09PT09PT09PT09PT09PT09PQo+ICsKPiArUmVxdWlyZWQg
-cHJvcGVydGllczoKPiArLSBjb21wYXRpYmxlOiBTaG91bGQgYmUgInZpdmFudGUsZ2MiCgpUaGlz
-IHNob3VsZCBhdCBsZWFzdCBoYXZlIHRoZSBzcGVjaWZpYyBjb3JlcyBsaXN0ZWQgbGlrZSBnYy01
-MDAwIG9yIAp3aGF0ZXZlciB0aGUgbnVtYmVyaW5nIGlzLiBBcyBpcywgSSBjYW4ndCBldmVuIHRl
-bGwgaWYgdGhpcyBhIDJkIG9yIDNkIApjb3JlLgoKQWxzbywgaXQgcHJvYmFibHkgc2hvdWxkIGhh
-dmUgYW4gU09DIHNwZWNpZmljIHByb3BlcnR5IHRvIGRlYWwgd2l0aCBTT0MgCnNwZWNpZmljIGNv
-bmZpZ3VyYXRpb24gb3IgaW50ZWdyYXRpb24uCgo+ICstIHJlZzogc2hvdWxkIGJlIHJlZ2lzdGVy
-IGJhc2UgYW5kIGxlbmd0aCBhcyBkb2N1bWVudGVkIGluIHRoZQo+ICsgIGRhdGFzaGVldAo+ICst
-IGludGVycnVwdHM6IFNob3VsZCBjb250YWluIHRoZSBjb3JlcyBpbnRlcnJ1cHQgbGluZQo+ICst
-IGNsb2Nrczogc2hvdWxkIGNvbnRhaW4gb25lIGNsb2NrIGZvciBlbnRyeSBpbiBjbG9jay1uYW1l
-cwo+ICsgIHNlZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2st
-YmluZGluZ3MudHh0Cj4gKy0gY2xvY2stbmFtZXM6Cj4gKyAgIC0gImJ1cyI6ICAgIEFYSS9yZWdp
-c3RlciBjbG9jawo+ICsgICAtICJjb3JlIjogICBHUFUgY29yZSBjbG9jawo+ICsgICAtICJzaGFk
-ZXIiOiBTaGFkZXIgY2xvY2sgKG9ubHkgcmVxdWlyZWQgaWYgR1BVIGhhcyBmZWF0dXJlIFBJUEVf
-M0QpCj4gKwo+ICtleGFtcGxlOgo+ICsKPiArZ3B1XzNkOiBncHVAMDAxMzAwMDAgewo+ICsJY29t
-cGF0aWJsZSA9ICJ2aXZhbnRlLGdjIjsKPiArCXJlZyA9IDwweDAwMTMwMDAwIDB4NDAwMD47Cj4g
-KwlpbnRlcnJ1cHRzID0gPDAgOSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiArCWNsb2NrcyA9IDwm
-Y2xrcyBJTVg2UURMX0NMS19HUFUzRF9BWEk+LAo+ICsJICAgICAgICAgPCZjbGtzIElNWDZRRExf
-Q0xLX0dQVTNEX0NPUkU+LAo+ICsJICAgICAgICAgPCZjbGtzIElNWDZRRExfQ0xLX0dQVTNEX1NI
-QURFUj47Cj4gKwljbG9jay1uYW1lcyA9ICJidXMiLCAiY29yZSIsICJzaGFkZXIiOwo+ICt9Owo+
-IC0tIAo+IDIuNi4yCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+Am Freitag, den 04.12.2015, 14:06 +0100 schrieb Markus Pargmann:
+> Add a binding for GPIO initialization.
+> 
+> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+
+Both patches
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+
+small nitpick:
+
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio.txt | 34 ++++++++++++++++---------
+>  1 file changed, 22 insertions(+), 12 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+> index 069cdf6f9dac..d11abfa13add 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+> @@ -155,29 +155,39 @@ gpio-controller@00000000 {
+>  	ngpios = <18>;
+>  }
+>  
+> -The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
+> -providing automatic GPIO request and configuration as part of the
+> -gpio-controller's driver probe function.
+> +The GPIO chip may contain GPIO definitions. These define properties for single
+> +GPIOs of this controller.
+>  
+> -Each GPIO hog definition is represented as a child node of the GPIO controller.
+> +There are two types of GPIO definitions:
+> +
+> +- GPIO hogging is a mechanism providing automatic GPIO request and
+> +  configuration as part of the gpio-controller driver's probe function. The
+> +  GPIO is held until the gpio-controller is removed.
+> +- GPIO initialization provides an automatic initialization to known save
+
+safe
+
+regards
+Philipp
+
