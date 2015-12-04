@@ -1,55 +1,96 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/4] PCI: rcar: add device tree support for r8a7793
-Date: Fri, 4 Dec 2015 09:05:13 -0600
-Message-ID: <20151204150513.GA29345@rob-hp-laptop>
-References: <1449096700-23304-1-git-send-email-horms+renesas@verge.net.au>
- <1449096700-23304-5-git-send-email-horms+renesas@verge.net.au>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] mtd: brcmnand: Add brcm,bcm6368-nand device tree
+ binding
+Date: Fri, 4 Dec 2015 09:06:27 -0600
+Message-ID: <20151204150627.GA29587@rob-hp-laptop>
+References: <565F81A6.6060307@simon.arlott.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1449096700-23304-5-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-pci-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <565F81A6.6060307-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 03, 2015 at 07:51:40AM +0900, Simon Horman wrote:
-> Simply document new compatibility string.
-> As a previous patch adds a generic R-Car Gen2 compatibility string
-> there appears to be no need for a driver updates.
+On Wed, Dec 02, 2015 at 11:41:26PM +0000, Simon Arlott wrote:
+> Add device tree binding for NAND on the BCM6368.
 > 
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> The BCM6368 has a NAND interrupt register with combined status and enable
+> registers. It also requires a clock, so add an optional clock to the
+> common brcmnand binding.
+> 
+> Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> 
 > ---
-> * The r8a7792 and r8a7794 are omitted from this change as the
->   hardware in question does not appear to be present on those SoCs.
+> Renamed from BCM63268, made clock a generic property.
 > 
-> v2
-> * No change
-> ---
->  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/mtd/brcm,brcmnand.txt      | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> index 6b4d2f798386..d529530b27d2 100644
-> --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> @@ -4,6 +4,7 @@ Required properties:
->  compatible: "renesas,pcie-r8a7779" for the R8A7779 SoC;
->  	    "renesas,pcie-r8a7790" for the R8A7790 SoC;
->  	    "renesas,pcie-r8a7791" for the R8A7791 SoC;
-> +	    "renesas,pcie-r8a7793" for the R8A7793 SoC;
->  	    "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 compatible device.
+> diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> index 4ff7128..16d7835 100644
+> --- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> @@ -45,6 +45,8 @@ Required properties:
+>  - #size-cells      : <0>
 >  
->  	    When compatible with the generic version, nodes must list the
+>  Optional properties:
+> +- clock                     : reference to the clock for the NAND controller
+> +- clock-names               : "nand" (required for the above clock)
+>  - brcm,nand-has-wp          : Some versions of this IP include a write-protect
+>                                (WP) control bit. It is always available on >=
+>                                v7.0. Use this property to describe the rare
+> @@ -72,6 +74,12 @@ we define additional 'compatible' properties and associated register resources w
+>         and enable registers
+>       - reg-names: (required) "nand-int-base"
+>  
+> +   * "brcm,nand-bcm6368"
+> +     - compatible: should contain "brcm,nand-bcm<soc>", "brcm,nand-bcm6368"
+> +     - reg: (required) the 'NAND_INTR_BASE' register range, with combined status
+> +       and enable registers, and boot address registers
+> +     - reg-names: (required) "nand-intr-base"
+> +
+>     * "brcm,nand-iproc"
+>       - reg: (required) the "IDM" register range, for interrupt enable and APB
+>         bus access endianness configuration, and the "EXT" register range,
+> @@ -148,3 +156,27 @@ nand@f0442800 {
+>  		};
+>  	};
+>  };
+> +
+> +nand@10000200 {
+> +	compatible = "brcm,nand-bcm63168", "brcm,nand-bcm6368",
+> +		"brcm,brcmnand-v4.0", "brcm,brcmnand";
+> +	reg = <0x10000200 0x180>,
+> +	      <0x10000600 0x200>,
+> +	      <0x100000b0 0x10>;
+> +	reg-names = "nand", "nand-cache", "nand-intr-base";
+> +	interrupt-parent = <&periph_intc>;
+> +	interrupts = <50>;
+> +	clocks = <&periph_clk 20>;
+> +	clock-names = "nand";
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	nand0: nandcs@0 {
+> +		compatible = "brcm,nandcs";
+> +		reg = <0>;
+> +		nand-on-flash-bbt;
+> +		nand-ecc-strength = <1>;
+> +		nand-ecc-step-size = <512>;
+> +	};
+> +};
 > -- 
 > 2.1.4
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -- 
+> Simon Arlott
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
