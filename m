@@ -1,67 +1,75 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 2/4] thermal: rcar: enable to use thermal-zone on DT
-Date: Fri, 4 Dec 2015 09:34:17 +0100
-Message-ID: <CAMuHMdUe8kZdZ7-xS7B8J6LdaK7FAitE0Qms=vMAmNis24u7SA@mail.gmail.com>
-References: <871tb2hpn2.wl%kuninori.morimoto.gx@renesas.com>
-	<87y4dagb0i.wl%kuninori.morimoto.gx@renesas.com>
-	<CAMuHMdUcQFcQuEmQZ4yMGwm=ouH+aQQhG3V95p=Pb56qWberQA@mail.gmail.com>
+From: Enric Balletbo i Serra <eballetbo@gmail.com>
+Subject: [PATCHv6 0/5] Add initial support for slimport anx78xx
+Date: Fri,  4 Dec 2015 09:35:02 +0100
+Message-ID: <1449218107-6590-1-git-send-email-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUcQFcQuEmQZ4yMGwm=ouH+aQQhG3V95p=Pb56qWberQA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Magnus <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devel@driverdev.osuosl.org, treding@nvidia.com
+Cc: mark.rutland@arm.com, drinkcat@chromium.org, laurent.pinchart@ideasonboard.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, gregkh@linuxfoundation.org, emil.l.velikov@gmail.com, cawa.cheng@mediatek.com, jb.tsai@mediatek.com, sjoerd.simons@collabora.co.uk, robh+dt@kernel.org, span@analogixsemi.com, galak@codeaurora.org, javier@dowhile0.org, eddie.huang@mediatek.com, cjiao@analogixsemi.com, dan.carpenter@oracle.com, nathan.chung@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 4, 2015 at 9:32 AM, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->> +Example (with thermal-zone):
->> +
->> +thermal-zones {
->> +       cpu_thermal: cpu-thermal {
->> +               polling-delay-passive   = <1000>;
->> +               polling-delay           = <5000>;
->> +
->> +               thermal-sensors = <&thermal>;
->> +
->> +               trips {
->> +                       cpu-crit {
->> +                               temperature     = <1150000>;
->> +                               hysteresis      = <0>;
->> +                               type            = "critical";
->> +                       };
->> +               };
->> +               cooling-maps {
->> +               };
->> +       };
->> +};
->> +
->> +thermal: thermal@e61f0000 {
->> +       compatible =    "renesas,thermal-r8a7790",
->> +                       "renesas,rcar-thermal-gen2",
->> +                       "renesas,rcar-thermal";
->> +       reg = <0 0xe61f0000 0 0x14>, <0 0xe61f0100 0 0x38>;
->> +       interrupts = <0 69 IRQ_TYPE_LEVEL_HIGH>;
->> +       clocks = <&mstp5_clks R8A7790_CLK_THERMAL>;
->> +       power-domains = <&cpg_clocks>;
->> +       #thermal-sensor-cells = <0>;
->> +};
->
-> How are the two nodes above linked?
-
-Pleae ignore my comment, I found the "<&thermal>".
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgYWxsLAoKVGhpcyBpcyBhbm90aGVyIHZlcnNpb24gb2YgdGhlIHBhdGNoIHNldCB0byBpbnRy
+b2R1Y2UgdGhlIGFueDc4MTQgdHJhbnNtaXR0ZXIuCkFueSBjb21tZW50cyBhcmUgd2VsY29tZS4K
+ClRoZSBmb2xsb3dpbmcgc2VyaWVzIGFkZCBpbml0aWFsIHN1cHBvcnQgZm9yIHRoZSBTbGltcG9y
+dCBBTlg3ODE0IHRyYW5zbWl0dGVyLCBhCnVsdHJhLWxvdyBwb3dlciBGdWxsLUhEICgxMDgwcDYw
+KSB0cmFuc21pdHRlciBkZXNpZ25lZCBmb3IgcG9ydGFibGUgZGV2aWNlLgoKVGhlIGRyaXZlciB3
+YXMgb3JpZ2luYWxseSBjcmVhdGVkIGFuZCBiYXNlZCBmcm9tIHRoZSB3b3JrIG9mIEp1bmh1YSBY
+aWEgZnJvbQpBbmFsb2dpeC4gVGhpcyBkcml2ZXIgaXMgYSByZWZhY3RvciBvZiB0aGUgb3JpZ2lu
+YWwgZHJpdmVyIGFuZCBmaXhlcyBkaWZmZXJlbnQKY29kaW5nIHN0eWxlIGxpbmVzLCBhbmQgZGlm
+ZmVyZW50IGVycm9ycy93YXJuaW5ncyByZXBvcnRlZCBieSBjaGVja3BhdGNoLiBBbHNvCnRoZXJl
+IHdlcmUgdGhpbmdzIHRoYXQgSSBub3RpY2VkIHRoYXQgd2UgbmVlZCB0byBjaGFuZ2UgbGlrZToK
+CiAtIENvbnZlcnQgdGhlIG51bWJlcmVkIEdQSU8gQVBJIHRvIHRoZSBuZXcgZGVzY3JpcHRvciBi
+YXNlZCBHUElPIEFQSS4KIC0gUmV2aWV3IHRoZSBEVCBiaW5kaW5nCiAtIEFkZCBtaXNzaW5nIE1P
+RFVMRV9ERVZJQ0VfVEFCTEUob2YsIC4uLik7CiAtIEZpeCBNYWtlZmlsZXMgYW5kIEtjb25maWcg
+dG8gYnVpbGQgY29uZGl0aW9uYWxseS4KIC0gVXNlIFNJTVBMRV9ERVZfUE1fT1BTKCkgaW5zdGVh
+ZCBvZiB0aGUgZGVwcmVjYXRlZCBpMmMgLnN1c3BlbmQgYW5kCiAgLnJlc3VtZSBjYWxsYmFja3Mu
+CiAtIE1vdmUgdG8gdXNlIG1hbmFnZWQgZGV2aWNlIHJlc291cmNlcy4KIC0gUmVtb3ZlIGRlYWQv
+dW51c2VkIGNvZGUuCiAtIEFuZCBvdGhlcnMgLi4uCgpDaGFuZ2VzIHNpbmNlIGxhc3QgdmVyc2lv
+bjoKIC0gQWRkIHRoZSByZXZpc2lvbiBoaXN0b3J5IHdpdGhpbiB0aGUgcmVzcGVjdGl2ZSBwYXRj
+aGVzIChyZXF1ZXN0ZWQgYnkgRW1pbCkKIC0gQWRkIHR3byBuZXcgcGF0Y2hlcyAwMSBhbmQgMDIg
+YXMgcGFydCBvZiB0aGUgc2VyaWVzIChyZXF1ZXN0ZWQgYnkgVGhpZXJyeSkKCkVucmljIEJhbGxl
+dGJvIGkgU2VycmEgKDUpOgogIGRybS9kcDogYWRkIERQQ0QgZGVmaW5pdGlvbnMgZnJvbSBEUCAx
+LjEKICBoZG1pOiBhZGRlZCBmdW5jdGlvbnMgZm9yIE1QRUcgSW5mb0ZyYW1lcwogIG9mOiBBZGQg
+dmVuZG9yIHByZWZpeCBmb3IgQW5hbG9naXggU2VtaWNvbmR1Y3RvciwgSW5jLgogIGRldmljZXRy
+ZWU6IEFkZCBuZXcgQU5YNzgxNCBTbGltUG9ydCB0cmFuc21pdHRlciBiaW5kaW5nLgogIGRybTog
+YnJpZGdlOiBhbng3OHh4OiBBZGQgYW54Nzh4eCBkcml2ZXIgc3VwcG9ydCBieSBhbmFsb2dpeC4K
+CiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0ICAgICAgICB8ICAg
+IDEgKwogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYnJpZGdlL2FueDc4MTQudHh0ICAg
+fCAgIDM5ICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZyAgICAgICAgICAgICAgICAg
+ICAgIHwgICAgMiArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlICAgICAgICAgICAg
+ICAgICAgICB8ICAgIDEgKwogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbng3OHh4L0tjb25maWcg
+ICAgICAgICAgICAgfCAgICA1ICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW54Nzh4eC9NYWtl
+ZmlsZSAgICAgICAgICAgIHwgICAgNCArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FueDc4eHgv
+YW54Nzh4eC5oICAgICAgICAgICB8ICAgNDQgKwogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbng3
+OHh4L2FueDc4eHhfbWFpbi5jICAgICAgfCAgMzM0ICsrCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdl
+L2FueDc4eHgvc2xpbXBvcnRfdHhfZHJ2LmMgICB8IDMyMTAgKysrKysrKysrKysrKysrKysrKysK
+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW54Nzh4eC9zbGltcG9ydF90eF9kcnYuaCAgIHwgIDEx
+MCArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FueDc4eHgvc2xpbXBvcnRfdHhfcmVnLmggICB8
+ICA3MzcgKysrKysKIGRyaXZlcnMvdmlkZW8vaGRtaS5jICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHwgIDE1NiArCiBpbmNsdWRlL2RybS9kcm1fZHBfaGVscGVyLmggICAgICAgICAgICAg
+ICAgICAgICAgICB8ICAgMTAgKwogaW5jbHVkZS9saW51eC9oZG1pLmggICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgfCAgIDI0ICsKIDE0IGZpbGVzIGNoYW5nZWQsIDQ2NzcgaW5zZXJ0aW9u
+cygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy92aWRlby9icmlkZ2UvYW54NzgxNC50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
+dS9kcm0vYnJpZGdlL2FueDc4eHgvS2NvbmZpZwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+Z3B1L2RybS9icmlkZ2UvYW54Nzh4eC9NYWtlZmlsZQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
+cnMvZ3B1L2RybS9icmlkZ2UvYW54Nzh4eC9hbng3OHh4LmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
+cml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FueDc4eHgvYW54Nzh4eF9tYWluLmMKIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FueDc4eHgvc2xpbXBvcnRfdHhfZHJ2LmMK
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FueDc4eHgvc2xpbXBv
+cnRfdHhfZHJ2LmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2Fu
+eDc4eHgvc2xpbXBvcnRfdHhfcmVnLmgKCi0tIAoyLjEuMAoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
