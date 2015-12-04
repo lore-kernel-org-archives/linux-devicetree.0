@@ -1,10 +1,8 @@
 From: Dirk Behme <dirk.behme@gmail.com>
-Subject: [PATCH 2/3] arm64: dts: r8a7795: Add Cortex-A57 CPU cores
-Date: Fri,  4 Dec 2015 14:38:52 +0100
-Message-ID: <1449236333-4410-2-git-send-email-dirk.behme@gmail.com>
-References: <1449236333-4410-1-git-send-email-dirk.behme@gmail.com>
+Subject: [PATCH 1/3] arm64: dts: r8a7795: Add PSCI node
+Date: Fri,  4 Dec 2015 14:38:51 +0100
+Message-ID: <1449236333-4410-1-git-send-email-dirk.behme@gmail.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1449236333-4410-1-git-send-email-dirk.behme@gmail.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: linux-sh@vger.kernel.org, horms@verge.net.au, geert+renesas@glider.be
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Gaku Inami <gaku.inami.xw@bp.renesas.com>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
@@ -12,13 +10,13 @@ List-Id: devicetree@vger.kernel.org
 
 From: Gaku Inami <gaku.inami.xw@bp.renesas.com>
 
-Add Cortex-A57 CPU cores to r8a7795 SoC for a total of 4 x Cortex-A57.
+Add PSCI node for r8a7795 SoC, and cpu node enable-method property is
+set to "psci".
 
 Signed-off-by: Gaku Inami <gaku.inami.xw@bp.renesas.com>
 Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
 Sigend-off-by: Dirk Behme <dirk.behme@gmail.com>
 ---
-
 Note: This patch picked from
 
 https://git.kernel.org/cgit/linux/kernel/git/horms/renesas-bsp.git/log/?h=v4.2/rcar-3.0.x
@@ -27,81 +25,33 @@ and rebased against
 
 https://git.kernel.org/cgit/linux/kernel/git/geert/renesas-drivers.git/log/?h=topic/gen3-latest renesas-drivers-2015-12-01-v4.4-rc3
 
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 31 +++++++++++++++++++++++++------
- 1 file changed, 25 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index 5611597..946a5bb 100644
+index 816400c..5611597 100644
 --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
 +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -35,13 +35,31 @@
+@@ -26,6 +26,11 @@
+ 		i2c6 = &i2c6;
+ 	};
+ 
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
+ 	cpus {
  		#address-cells = <1>;
  		#size-cells = <0>;
- 
--		/* 1 core only at this point */
- 		a57_0: cpu@0 {
+@@ -35,6 +40,7 @@
  			compatible = "arm,cortex-a57", "arm,armv8";
  			reg = <0x0>;
  			device_type = "cpu";
- 			enable-method = "psci";
++			enable-method = "psci";
  		};
-+
-+		a57_1: cpu@1 {
-+			compatible = "arm,cortex-a57","arm,armv8";
-+			reg = <0x1>;
-+			device_type = "cpu";
-+			enable-method = "psci";
-+		};
-+		a57_2: cpu@2 {
-+			compatible = "arm,cortex-a57","arm,armv8";
-+			reg = <0x2>;
-+			device_type = "cpu";
-+			enable-method = "psci";
-+		};
-+		a57_3: cpu@3 {
-+			compatible = "arm,cortex-a57","arm,armv8";
-+			reg = <0x3>;
-+			device_type = "cpu";
-+			enable-method = "psci";
-+		};
  	};
  
- 	extal_clk: extal {
-@@ -101,6 +119,7 @@
- 	soc {
- 		compatible = "simple-bus";
- 		interrupt-parent = <&gic>;
-+
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 		ranges;
-@@ -113,7 +132,7 @@
- 			reg = <0x0 0xf1010000 0 0x1000>,
- 			      <0x0 0xf1020000 0 0x2000>;
- 			interrupts = <GIC_PPI 9
--					(GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_HIGH)>;
-+					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
- 		};
- 
- 		gpio0: gpio@e6050000 {
-@@ -231,13 +250,13 @@
- 		timer {
- 			compatible = "arm,armv8-timer";
- 			interrupts = <GIC_PPI 13
--					(GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
-+					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
- 				     <GIC_PPI 14
--					(GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
-+					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
- 				     <GIC_PPI 11
--					(GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
-+					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
- 				     <GIC_PPI 10
--					(GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>;
-+					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
- 		};
- 
- 		cpg: clock-controller@e6150000 {
 -- 
 2.6.3
 
