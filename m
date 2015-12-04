@@ -1,46 +1,52 @@
-From: Yendapally Reddy Dhananjaya Reddy <yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 3/3] ARM: dts: enable GPIO-a for Broadcom NSP
-Date: Fri, 4 Dec 2015 12:12:42 -0500
-Message-ID: <1449249162-16850-1-git-send-email-yrdreddy@broadcom.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 11/12] MAINTAINERS: add Lucas Stach as maintainer for the
+ etnaviv DRM driver
+Date: Fri, 4 Dec 2015 17:13:53 +0000
+Message-ID: <20151204171353.GA8644@n2100.arm.linux.org.uk>
+References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
+ <1449237604-19064-12-git-send-email-l.stach@pengutronix.de>
+ <20151204170709.GY8644@n2100.arm.linux.org.uk>
+ <CAKb7Uvjh7B5ExWwRQNMhqDwTwPUsFKv4-jAszVp06qq2rGQFhg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAKb7Uvjh7B5ExWwRQNMhqDwTwPUsFKv4-jAszVp06qq2rGQFhg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yendapally Reddy Dhananjaya Reddy <yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Ilia Mirkin <imirkin-FrUbXkNCsVf2fBVCVOL8/A@public.gmane.org>
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This enables the GPIO-a support for Broadcom NSP SoC
+On Fri, Dec 04, 2015 at 12:08:47PM -0500, Ilia Mirkin wrote:
+> On Fri, Dec 4, 2015 at 12:07 PM, Russell King - ARM Linux
+> <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> > On Fri, Dec 04, 2015 at 03:00:03PM +0100, Lucas Stach wrote:
+> >> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >
+> > Acked-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> >
+> > Although, I would like to be copied on patches, I don't think we
+> > have a way to encode that information in MAINTAINERS.
+> 
+> >From the top of the MAINTAINERS file:
+> 
+> Descriptions of section entries:
+> 
+>         P: Person (obsolete)
+>         M: Mail patches to: FullName <address@domain>
+>         R: Designated reviewer: FullName <address@domain>
+>            These reviewers should be CCed on patches.
+> 
+> So I guess that'd mean you want to be a reviewer?
 
-Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yrdreddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/bcm-nsp.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Oh, that got agreed upon?  I thought there was pushback against that
+idea.
 
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index 58aca27..148d79e 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -116,4 +116,16 @@
- 			status = "disabled";
- 		};
- 	};
-+
-+	gpioa: gpio@18000020 {
-+		compatible = "brcm,nsp-gpio-a";
-+		reg = <0x18000020 0x70>,
-+		      <0x1803f1c4 0x1c>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		ngpios = <32>;
-+		interrupt-controller;
-+		interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-+		gpio-ranges = <&pinctrl 0 0 32>;
-+	};
- };
+You are correct.
+
 -- 
-2.1.0
-
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
