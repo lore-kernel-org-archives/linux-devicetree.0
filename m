@@ -1,40 +1,54 @@
-From: "Simon Arlott" <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-Subject: Re: [PATCH 1/3] mtd: brcmnand: Add brcm,bcm6368-nand device tree
- binding
-Date: Fri, 4 Dec 2015 21:29:55 -0000
-Message-ID: <b3a23d0b4e1e11c9b71848e0345777cd4163f185@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
-References: <565F81A6.6060307@simon.arlott.org.uk>
-    <CAOiHx=kLrJPfvQUjNiEmvAMVj8v37RMFqaMp=tqzAVe22q+9fQ@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] ARM: DTS: am33xx: Use the new DT bindings for the eDMA3
+Date: Fri, 04 Dec 2015 22:36:31 +0100
+Message-ID: <5617214.abxPrpfVaF@wuerfel>
+References: <1449225915-28879-1-git-send-email-peter.ujfalusi@ti.com> <87wpsunn82.fsf@saruman.tx.rr.com> <20151204184706.GO23396@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOiHx=kLrJPfvQUjNiEmvAMVj8v37RMFqaMp=tqzAVe22q+9fQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20151204184706.GO23396-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, December 4, 2015 16:04, Jonas Gorski wrote:
-> On Thu, Dec 3, 2015 at 12:41 AM, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org> wrote:
->> +   * "brcm,nand-bcm6368"
->> +     - compatible: should contain "brcm,nand-bcm<soc>", "brcm,nand-bcm6368"
->> +     - reg: (required) the 'NAND_INTR_BASE' register range, with combined status
->> +       and enable registers, and boot address registers
->> +     - reg-names: (required) "nand-intr-base"
->
-> Can't we use the same name as bcm63138, i.e. nand-int-base?
+On Friday 04 December 2015 10:47:07 Tony Lindgren wrote:
+> > Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> writes:
+> > > @@ -174,12 +182,44 @@
+> > >             };
+> > >  
+> > >             edma: edma@49000000 {
+> > > -                   compatible = "ti,edma3";
+> > > -                   ti,hwmods = "tpcc", "tptc0", "tptc1", "tptc2";
+> > > -                   reg =   <0x49000000 0x10000>,
+> > > -                           <0x44e10f90 0x40>;
+> > > +                   compatible = "ti,edma3-tpcc";
+> > > +                   ti,hwmods = "tpcc";
+> > > +                   reg =   <0x49000000 0x10000>;
+> > > +                   reg-names = "edma3_cc";
+> > >                     interrupts = <12 13 14>;
+> > > -                   #dma-cells = <1>;
+> > > +                   interrupt-names = "edma3_ccint", "emda3_mperr",
+> > > +                                     "edma3_ccerrint";
+> > > +                   dma-requests = <64>;
+> > > +                   #dma-cells = <2>;
+> > > +
+> > > +                   ti,tptcs = <&edma_tptc0 7>, <&edma_tptc1 5>,
+> > > +                              <&edma_tptc2 0>;
+> > > +
+> > > +                   ti,edma-memcpy-channels = /bits/ 16 <20 21>;
+> > 
+> > can you explain this property here ? Are you setting bits 20 and 21 on a
+> > 16-bit field ?
+> 
+> I think it's an arry of u16 dma channels.. But could it be just /bits/ 8
+> instead of /bits/ 16?
+> 
 
-Brian,
+Please just drop the /bits/ 16 and use normal cells.
 
-Before I change this, is there anything else in the patch series that needs to
-be changed?
-
-(I'll keep the comment referring to "NAND_INTR_BASE" the same because that's the name
-in the original #define for this hardware.)
-
--- 
-Simon Arlott
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
