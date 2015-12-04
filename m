@@ -1,58 +1,41 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 2/4] PCI: rcar-gen2: Add device tree support for r8a7793
-Date: Fri, 4 Dec 2015 15:26:50 -0600
-Message-ID: <20151204212649.GJ20125@localhost>
-References: <1448954672-27236-1-git-send-email-horms+renesas@verge.net.au>
- <1448954672-27236-3-git-send-email-horms+renesas@verge.net.au>
+From: "Simon Arlott" <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Subject: Re: [PATCH 1/3] mtd: brcmnand: Add brcm,bcm6368-nand device tree
+ binding
+Date: Fri, 4 Dec 2015 21:29:55 -0000
+Message-ID: <b3a23d0b4e1e11c9b71848e0345777cd4163f185@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+References: <565F81A6.6060307@simon.arlott.org.uk>
+    <CAOiHx=kLrJPfvQUjNiEmvAMVj8v37RMFqaMp=tqzAVe22q+9fQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1448954672-27236-3-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-pci-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOiHx=kLrJPfvQUjNiEmvAMVj8v37RMFqaMp=tqzAVe22q+9fQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+On Fri, December 4, 2015 16:04, Jonas Gorski wrote:
+> On Thu, Dec 3, 2015 at 12:41 AM, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org> wrote:
+>> +   * "brcm,nand-bcm6368"
+>> +     - compatible: should contain "brcm,nand-bcm<soc>", "brcm,nand-bcm6368"
+>> +     - reg: (required) the 'NAND_INTR_BASE' register range, with combined status
+>> +       and enable registers, and boot address registers
+>> +     - reg-names: (required) "nand-intr-base"
+>
+> Can't we use the same name as bcm63138, i.e. nand-int-base?
 
-On Tue, Dec 01, 2015 at 04:24:30PM +0900, Simon Horman wrote:
-> Simply document new compat strings.
-> There appears to be no need for a driver updates.
-> 
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> ---
->  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> index b19be08a8113..7c231b3e5872 100644
-> --- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> @@ -8,6 +8,7 @@ OHCI and EHCI controllers.
->  Required properties:
->  - compatible: "renesas,pci-r8a7790" for the R8A7790 SoC;
->  	      "renesas,pci-r8a7791" for the R8A7791 SoC;
-> +	      "renesas,pci-r8a7793" for the R8A7793 SoC;
+Brian,
 
-What's the benefit of adding a string here if the driver doesn't check
-for it?  Since the driver doesn't look for it, there's no way to test
-anything.
+Before I change this, is there anything else in the patch series that needs to
+be changed?
 
-It doesn't seem like this file is an authoritative source of names, so
-if we add it here, there's the possibility the r8a7793 will be
-canceled or renamed, and then we'd have to update this if the driver
-ever did need an r8a7793-specific quirk.  If we waited until the
-driver actually needs a quirk, then we'd know exactly what name to
-look for and we could update the driver, DT, and doc all together.
+(I'll keep the comment referring to "NAND_INTR_BASE" the same because that's the name
+in the original #define for this hardware.)
 
->  	      "renesas,pci-r8a7794" for the R8A7794 SoC;
->  	      "renesas,pci-gen2" for a generic R-Car Gen2 compatible device.
->  
-> -- 
-> 2.1.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Simon Arlott
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
