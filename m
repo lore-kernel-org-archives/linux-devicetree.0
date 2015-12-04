@@ -1,102 +1,57 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: [PATCH v4 2/2] gpiolib: Add GPIO initialization
-Date: Fri,  4 Dec 2015 14:06:28 +0100
-Message-ID: <1449234388-4007-3-git-send-email-mpa@pengutronix.de>
-References: <1449234388-4007-1-git-send-email-mpa@pengutronix.de>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1449234388-4007-1-git-send-email-mpa@pengutronix.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, kernel@pengutronix.de, Markus Pargmann <mpa@pengutronix.de>
+From: Dirk Behme <dirk.behme@gmail.com>
+Subject: [PATCH 3/3] arm64: dts: r8a7795: Add pmu device nodes
+Date: Fri,  4 Dec 2015 14:38:53 +0100
+Message-ID: <1449236333-4410-3-git-send-email-dirk.behme@gmail.com>
+References: <1449236333-4410-1-git-send-email-dirk.behme@gmail.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1449236333-4410-1-git-send-email-dirk.behme@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org, horms@verge.net.au, geert+renesas@glider.be
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Yoshifumi Hosoya <yoshifumi.hosoya.wj@renesas.com>, Masaru Nagai <masaru.nagai.vx@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This functions adds a way to initialize a GPIO without hogging it.
+From: Yoshifumi Hosoya <yoshifumi.hosoya.wj@renesas.com>
 
-Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+Enabling the performance monitor unit on r8a7795.
+
+Signed-off-by: Masaru Nagai <masaru.nagai.vx@renesas.com>
+Signed-off-by: Yoshifumi Hosoya <yoshifumi.hosoya.wj@renesas.com>
+Sigend-off-by: Dirk Behme <dirk.behme@gmail.com>
 ---
- drivers/gpio/gpiolib-of.c | 13 ++++++++-----
- drivers/gpio/gpiolib.c    | 26 ++++++++++++++++++++++++++
- drivers/gpio/gpiolib.h    |  2 ++
- 3 files changed, 36 insertions(+), 5 deletions(-)
+Note: This patch picked from
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 5fe34a9df3e6..48cdc22eabf2 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -211,15 +211,18 @@ static void of_gpiochip_scan_gpios(struct gpio_chip *chip)
- 	enum gpiod_flags dflags;
+https://git.kernel.org/cgit/linux/kernel/git/horms/renesas-bsp.git/log/?h=v4.2/rcar-3.0.x
+
+and rebased against
+
+https://git.kernel.org/cgit/linux/kernel/git/geert/renesas-drivers.git/log/?h=topic/gen3-latest renesas-drivers-2015-12-01-v4.4-rc3
+
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index 946a5bb..8113b71 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -247,6 +247,18 @@
+ 			power-domains = <&cpg>;
+ 		};
  
- 	for_each_child_of_node(chip->of_node, np) {
--		if (!of_property_read_bool(np, "gpio-hog"))
--			continue;
- 
- 		desc = of_parse_own_gpio(np, &name, &lflags, &dflags);
--		if (IS_ERR(desc))
-+		if (IS_ERR(desc) || !dflags)
- 			continue;
- 
--		if (gpiod_hog(desc, name, lflags, dflags))
--			continue;
-+		if (of_property_read_bool(np, "gpio-hog"))
-+			gpiod_hog(desc, name, lflags, dflags);
-+		else if (of_property_read_bool(np, "gpio-initval"))
-+			gpiod_initialize(desc, lflags, dflags);
-+		else
-+			dev_dbg(chip->dev, "GPIO line %d (%s): neither gpio-hog nor gpio-initval found.\n",
-+				desc_to_gpio(desc), np->name);
- 	}
- }
- 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index a18f00fc1bb8..10e16b3f0667 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2329,6 +2329,32 @@ static void gpiochip_free_hogs(struct gpio_chip *chip)
- }
- 
- /**
-+ * gpiod_initialize - Initialize a GPIO with a given value
-+ * @desc:	gpio whose value will be assigned
-+ * @lflags:	gpio_lookup_flags - returned from of_find_gpio() or
-+ *		of_get_gpio_hog()
-+ * @dflags:	gpiod_flags - optional GPIO initialization flags
-+ *
-+ * This is used to initialize GPIOs that were defined in DT
-+ */
-+int gpiod_initialize(struct gpio_desc *desc, unsigned long lflags,
-+		     enum gpiod_flags dflags)
-+{
-+	int status;
++		pmu {
++			compatible = "arm,armv8-pmuv3";
++			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-affinity = <&a57_0>,
++					     <&a57_1>,
++					     <&a57_2>,
++					     <&a57_3>;
++		};
 +
-+	gpiod_parse_flags(desc, lflags);
-+
-+	status = gpiod_configure_flags(desc, NULL, dflags);
-+	if (status < 0) {
-+		pr_err("initial setup of GPIO (chip %s, offset %d) failed\n",
-+		       gpiod_to_chip(desc)->label, gpio_chip_hwgpio(desc));
-+		return status;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-  * gpiod_get_array - obtain multiple GPIOs from a multi-index GPIO function
-  * @dev:	GPIO consumer, can be NULL for system-global GPIOs
-  * @con_id:	function within the GPIO consumer
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index 98ab08c0aa2d..4abf53a5e651 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -107,6 +107,8 @@ int gpiod_request(struct gpio_desc *desc, const char *label);
- void gpiod_free(struct gpio_desc *desc);
- int gpiod_hog(struct gpio_desc *desc, const char *name,
- 		unsigned long lflags, enum gpiod_flags dflags);
-+int gpiod_initialize(struct gpio_desc *desc, unsigned long lflags,
-+		     enum gpiod_flags dflags);
- 
- /*
-  * Return the GPIO number of the passed descriptor relative to its chip
+ 		timer {
+ 			compatible = "arm,armv8-timer";
+ 			interrupts = <GIC_PPI 13
 -- 
-2.6.2
+2.6.3
 
