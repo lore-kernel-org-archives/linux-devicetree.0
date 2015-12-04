@@ -1,214 +1,78 @@
-From: <Andrei.Pistirica@microchip.com>
-Subject: RE: [PATCH 07/14] DEVICETREE: Add bindings for PIC32 pin control
- and GPIO
-Date: Fri, 4 Dec 2015 13:02:22 +0000
-Message-ID: <07C910AB6AC6C345A093D5A08F5AF568533C0BCC@CHN-SV-EXMX03.mchp-main.com>
-References: <1448065205-15762-1-git-send-email-joshua.henderson@microchip.com>
- <1448065205-15762-8-git-send-email-joshua.henderson@microchip.com>
- <20151122214700.GA26203@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20151122214700.GA26203@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: robh@kernel.org, Joshua.Henderson@microchip.com
-Cc: linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: [PATCH v4 1/2] dt-bindings: GPIO: Add gpio-initval
+Date: Fri,  4 Dec 2015 14:06:27 +0100
+Message-ID: <1449234388-4007-2-git-send-email-mpa@pengutronix.de>
+References: <1449234388-4007-1-git-send-email-mpa@pengutronix.de>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1449234388-4007-1-git-send-email-mpa@pengutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, kernel@pengutronix.de, Markus Pargmann <mpa@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Add a binding for GPIO initialization.
 
-Thank you for feedback. All the comments will be address in the next driver version.
-We are currently working for a solution to use the standard bindings for pinctrl.
+Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+---
+ Documentation/devicetree/bindings/gpio/gpio.txt | 34 ++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 12 deletions(-)
 
-Regards,
-Andrei
+diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+index 069cdf6f9dac..d11abfa13add 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+@@ -155,29 +155,39 @@ gpio-controller@00000000 {
+ 	ngpios = <18>;
+ }
+ 
+-The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
+-providing automatic GPIO request and configuration as part of the
+-gpio-controller's driver probe function.
++The GPIO chip may contain GPIO definitions. These define properties for single
++GPIOs of this controller.
+ 
+-Each GPIO hog definition is represented as a child node of the GPIO controller.
++There are two types of GPIO definitions:
++
++- GPIO hogging is a mechanism providing automatic GPIO request and
++  configuration as part of the gpio-controller driver's probe function. The
++  GPIO is held until the gpio-controller is removed.
++- GPIO initialization provides an automatic initialization to known save
++  values. The GPIO can be used normally afterwards.
++
++Each GPIO definition is represented as a child node of the GPIO controller.
+ Required properties:
+-- gpio-hog:   A property specifying that this child node represent a GPIO hog.
+ - gpios:      Store the GPIO information (id, flags, ...). Shall contain the
+ 	      number of cells specified in its parent node (GPIO controller
+ 	      node).
+-Only one of the following properties scanned in the order shown below.
+-This means that when multiple properties are present they will be searched
+-in the order presented below and the first match is taken as the intended
+-configuration.
++
++Optional properties:
++- line-name:  The GPIO label name. If not present the node name is used.
++
++ The following two options are mutually exclusive. One of them should be
++ specified, but not both:
++- gpio-hog:   A property specifying that this child node represent a GPIO hog.
++- gpio-initval: This GPIO should be initialized to the specified configuration.
++
++ The following three options are mutually exclusive. They change the setting of
++ the GPIO pin. One of them should be specified:
+ - input:      A property specifying to set the GPIO direction as input.
+ - output-low  A property specifying to set the GPIO direction as output with
+ 	      the value low.
+ - output-high A property specifying to set the GPIO direction as output with
+ 	      the value high.
+ 
+-Optional properties:
+-- line-name:  The GPIO label name. If not present the node name is used.
+-
+ Example of two SOC GPIO banks defined as gpio-controller nodes:
+ 
+ 	qe_pio_a: gpio-controller@1400 {
+-- 
+2.6.2
 
------Original Message-----
-From: Rob Herring [mailto:robh@kernel.org] 
-Sent: Sunday, November 22, 2015 11:47 PM
-To: Joshua Henderson - C16205
-Cc: linux-kernel@vger.kernel.org; linux-mips@linux-mips.org; Andrei Pistirica - M16132; Pawel Moll; Mark Rutland; Ian Campbell; Kumar Gala; devicetree@vger.kernel.org
-Subject: Re: [PATCH 07/14] DEVICETREE: Add bindings for PIC32 pin control and GPIO
-
-On Fri, Nov 20, 2015 at 05:17:19PM -0700, Joshua Henderson wrote:
-> From: Andrei Pistirica <andrei.pistirica@microchip.com>
-> 
-> Document the devicetree bindings for PINCTRL and GPIO found on 
-> Microchip
-> PIC32 class devices. This also adds a header defining related port and 
-> peripheral pin select functionality.
-> 
-> Signed-off-by: Andrei Pistirica <andrei.pistirica@microchip.com>
-> Signed-off-by: Joshua Henderson <joshua.henderson@microchip.com>
-> ---
->  .../bindings/gpio/microchip,pic32-gpio.txt         |   33 ++
->  .../bindings/pinctrl/microchip,pic32-pinctrl.txt   |  100 +++++
->  include/dt-bindings/pinctrl/pic32mzda.h            |  404 ++++++++++++++++++++
->  3 files changed, 537 insertions(+)
->  create mode 100644 
-> Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt
->  create mode 100644 
-> Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt
->  create mode 100644 include/dt-bindings/pinctrl/pic32mzda.h
-> 
-> diff --git 
-> a/Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt 
-> b/Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt
-> new file mode 100644
-> index 0000000..f6eeb2f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt
-> @@ -0,0 +1,33 @@
-> +* Microchip PIC32 GPIO devices (PIO).
-> +
-> +Required properties:
-> + - compatible: "microchip,pic32-gpio"
-
-This should have a chip specific compatible string.
-
-> + - reg: Base address and length for the device.
-> + - interrupts: The port interrupt shared be all pins.
-> + - gpio-controller: Marks the port as GPIO controller.
-> + - #gpio-cells: Two. The first cell is the pin number and
-> +   the second cell is unused.
-> + - interrupt-controller: Marks the device node as an interrupt controller.
-> + - #interrupt-cells: Two. The first cell is the GPIO number and second cell
-> +   is used to specify the trigger type:
-> +	PIC32_PIN_CN_RISING	: low-to-high edge triggered.
-> +	PIC32_PIN_CN_FALLING	: high-to-low edge triggered.
-> +	PIC32_PIN_CN_BOTH	: low-to-high and high-to-low edges triggered.
-
-Can't you use the standard flags?
-
-> +
-> +Note:
-> + - If gpio-ranges is missing, then all the pins (32) related to the gpio bank
-> +   are enabled.
-> +
-> +Example:
-> +	pioA: gpio@1f860000 {
-> +		compatible = "microchip,pic32-gpio";
-> +		reg = <0x1f860000 0x24>;
-> +		interrupts = <PORTA_INPUT_CHANGE_INTERRUPT
-> +				DEFAULT_INT_PRI IRQ_TYPE_LEVEL_HIGH>;
-> +		#gpio-cells = <2>;
-> +		gpio-controller;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		gpio-ranges = <&pic32_pinctrl 0 0 32>;
-> +		clocks = <&PBCLK4>;
-> +	};
-> diff --git 
-> a/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.tx
-> t 
-> b/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.tx
-> t
-> new file mode 100644
-> index 0000000..7cf4167
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctr
-> +++ l.txt
-> @@ -0,0 +1,100 @@
-> +* Microchip PIC32 Pinmux device.
-> +
-> +Please refer to pinctrl-bindings.txt for details of the pinctrl 
-> +properties and common bindings.
-> +
-> +PIC32 'pin configuration node' is a node of a group of pins which can 
-> +be used for a specific device or function. This node represents 
-> +configuraions of single pins or a pairs of mux and related configuration.
-> +
-> +Required properties for pic32 device:
-> + - compatible: "microchip,pic32-pinctrl", "microchip,pic32mz-pinctrl"
-
-Is this both or either one. For both, it should be most specific first.
-
-
-> + - reg: Base address and length for pps:in and pps:out registers.
-> +
-> +Properties for 'pin configuration node':
-> + - pic32,pins: each entry consists of 3 intergers and represents the mux and
-> +   config settings for one pin. The first integer represent the remappable pin,
-> +   the second represent the peripheral pin and the last the configuration.
-> +   The format is pic32,pins = <PIC32_RP_'dir'_'pin'
-> +   PIC32_PP_'dir'_'peripherl-pin' PIC32_PIN_CONF_'config'>. The configurations
-> +   are divided in 2 classes: IN and OUT and each in 4 buckets. Each entry must
-> +   contains items from the same class and bucket, otherwise the driver will
-> +   notify an error and the initialization will fail.
-> + - pic32,single-pins: each entry consists of 3 intergers and represents a pin
-> +   (that is not remappable) and related configuraion. The format is
-> +   pic32,single-pins = <PORT_'x' 'pin' PIC32_PIN_CONF_'config'>. Each port has
-> +   32 pins and please refer to chip documentation for details of remappable
-> +   pins.
-> +
-> +Available pin configurations (refer to dt-bindings/pinctrl/pic32.h):
-> +	PIC32_PIN_CONF_NONE	: no configuration (default).
-> +	PIC32_PIN_CONF_OD	: indicate this pin need a open-drain (no direction).
-> +	PIC32_PIN_CONF_OD_OUT	: indicate this pin need a open-drain out.
-> +	PIC32_PIN_CONF_PU	: indicate this pin need a pull up (no direction).
-> +	PIC32_PIN_CONF_PU_IN	: indicate this pin need a pull up in.
-> +	PIC32_PIN_CONF_PD	: indicate this pin need a pull down (no direction).
-> +	PIC32_PIN_CONF_PD_IN	: indicate this pin need a pull down input.
-> +	PIC32_PIN_CONF_AN	: indicate this pin as analogic (no direction).
-> +	PIC32_PIN_CONF_AN_IN	: indicate this pin as analogic input.
-> +	PIC32_PIN_CONF_DG	: indicate this pin as digital (no direction).
-> +	PIC32_PIN_CONF_DG_IN	: indicate this pin as digital input.
-> +	PIC32_PIN_CONF_DG_OUT	: indicate this pin as digital output.
-> +
-> +NOTEs:
-> +1. The pins functions nods are defined under pic32 pinctrl node. The function's
-> +   pin groups are defined under functions node.
-> +2. Each pin group can have both pic32,pins and pic32,single-pins properties to
-> +   specify re-mappable or non-remappable pins with related mux and configs or
-> +   at least one.
-> +3. Each pin configuration node can have a phandle and devices can set pins
-> +   configurations by referring to the phandle of that pin configuration node.
-> +4. The pinctrl bindings are listed in dt-bindings/pinctrl/pic32.h.
-> +5. The gpio controller must be described in the pinctrl simple-bus.
-> +
-> +Example:
-> +pinctrl@1f800000{
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	compatible = "microchip,pic32-pinctrl", "simple-bus";
-> +	ranges;
-> +	reg = <0x1f801404 0x3c>, /* in  */
-> +	      <0x1f801538 0x57>; /* out */
-> +
-> +	pioA: gpio@1f860000 {
-> +		compatible = "microchip,pic32-gpio";
-
-The gpio controller is a sub-function of the pinctrl? That doesn't really seem to be the case based on the addresses.
-
-> +		reg = <0x1f860000 0x24>;
-> +		gpio-controller;
-> +	};
-> +
-> +	/* functions */
-> +	sw1 {
-> +		pinctrl_sw1: sw1-0 {
-> +			pic32,single-pins = <PORT_B 12 PIC32_PIN_CONF_PULLUP>;
-
-Why isn't this using standard pinctrl properties?
-
-> +		};
-> +	};
-> +
-> +	uart1 {
-> +		pinctrl_uart1: uart1-0 {
-> +			pic32,pins =
-> +				<PIC32_RP_OUT_RPG7 PIC32_PP_OUT_U1TX PIC32_PIN_CONF_NONE
-> +				 PIC32_RP_IN_RPG8 PIC32_PP_IN_U1RX PIC32_PIN_CONF_NONE>;
-> +		};
-> +	};
-> +};
