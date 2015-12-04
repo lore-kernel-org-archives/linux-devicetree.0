@@ -1,75 +1,88 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] drm/panel: simple: Add support for Kyocera
- TCG121XGLP panel
-Date: Fri, 4 Dec 2015 08:55:44 -0600
-Message-ID: <20151204145544.GA22252@rob-hp-laptop>
-References: <1449081671-25327-1-git-send-email-l.stach@pengutronix.de>
- <1449081671-25327-2-git-send-email-l.stach@pengutronix.de>
+Subject: Re: [PATCH v3 4/8] platform: goldfish: pipe: add devicetree bindings
+Date: Fri, 4 Dec 2015 08:57:11 -0600
+Message-ID: <20151204145711.GA22901@rob-hp-laptop>
+References: <1449084968-30211-1-git-send-email-jinqian@android.com>
+ <1449084968-30211-4-git-send-email-jinqian@android.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1449081671-25327-2-git-send-email-l.stach@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de
+In-Reply-To: <1449084968-30211-4-git-send-email-jinqian@android.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jin Qian <jinqian@android.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Hackmann <ghackmann@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yu Ning <yu.ning@intel.com>, Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>, Christoffer Dall <christoffer.dall@linaro.org>, Peter Senna Tschudin <peter.senna@gmail.com>, Jason Hu <jia-cheng.hu@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBEZWMgMDIsIDIwMTUgYXQgMDc6NDE6MTFQTSArMDEwMCwgTHVjYXMgU3RhY2ggd3Jv
-dGU6Cj4gVGhlIEt5b2NlcmEgVENHMTIxWEdMUCBwYW5lbCBpcyBhbiBYR0EgTENEIFRGVCBwYW5l
-bCBjb25uZWN0ZWQgdGhyb3VnaAo+IExWRFMsIHdoaWNoIGNhbiBiZSBzdXBwb3J0ZWQgYnkgdGhl
-IHNpbXBsZSBwYW5lbCBkcml2ZXIuCj4gCj4gU2lnbmVkLW9mZi1ieTogTHVjYXMgU3RhY2ggPGwu
-c3RhY2hAcGVuZ3V0cm9uaXguZGU+CgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
-Lm9yZz4KCj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2t5byx0Y2cxMjF4Z2xw
-LnR4dCAgICAgIHwgIDcgKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1w
-bGUuYyAgICAgICAgICAgICAgIHwgMjcgKysrKysrKysrKysrKysrKysrKysrKwo+ICAyIGZpbGVz
-IGNoYW5nZWQsIDM0IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2t5byx0Y2cxMjF4Z2xwLnR4
-dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9wYW5lbC9reW8sdGNnMTIxeGdscC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9wYW5lbC9reW8sdGNnMTIxeGdscC50eHQKPiBuZXcgZmlsZSBtb2Rl
-IDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uYThlOTQwZmU3MzFlCj4gLS0tIC9kZXYvbnVs
-bAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVs
-L2t5byx0Y2cxMjF4Z2xwLnR4dAo+IEBAIC0wLDAgKzEsNyBAQAo+ICtLeW9jZXJhIENvcnBvcmF0
-aW9uIDEyLjEiIFhHQSAoMTAyNHg3NjgpIFRGVCBMQ0QgcGFuZWwKPiArCj4gK1JlcXVpcmVkIHBy
-b3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJreW8sdGNnMTIxeGdscCIKPiAr
-Cj4gK1RoaXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBiaW5k
-aW5nLCB3aGljaCBpcyBzcGVjaWZpZWQKPiAraW4gc2ltcGxlLXBhbmVsLnR4dCBpbiB0aGlzIGRp
-cmVjdG9yeS4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBs
-ZS5jIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCj4gaW5kZXggZjk3Yjcz
-ZWM0NzEzLi4xNDc2YmI5MGFjMTQgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVs
-L3BhbmVsLXNpbXBsZS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBs
-ZS5jCj4gQEAgLTkwMiw2ICs5MDIsMzAgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNj
-IGlubm9sdXhfemowNzBuYV8wMXAgPSB7Cj4gIAl9LAo+ICB9Owo+ICAKPiArc3RhdGljIGNvbnN0
-IHN0cnVjdCBkaXNwbGF5X3RpbWluZyBreW9fdGNnMTIxeGdscF90aW1pbmcgPSB7Cj4gKwkucGl4
-ZWxjbG9jayA9IHsgNTIwMDAwMDAsIDY1MDAwMDAwLCA3MTAwMDAwMCB9LAo+ICsJLmhhY3RpdmUg
-PSB7IDEwMjQsIDEwMjQsIDEwMjQgfSwKPiArCS5oZnJvbnRfcG9yY2ggPSB7IDIsIDIsIDIgfSwK
-PiArCS5oYmFja19wb3JjaCA9IHsgMiwgMiwgMiB9LAo+ICsJLmhzeW5jX2xlbiA9IHsgODYsIDEy
-NCwgMjQ0IH0sCj4gKwkudmFjdGl2ZSA9IHsgNzY4LCA3NjgsIDc2OCB9LAo+ICsJLnZmcm9udF9w
-b3JjaCA9IHsgMiwgMiwgMiB9LAo+ICsJLnZiYWNrX3BvcmNoID0geyAyLCAyLCAyIH0sCj4gKwku
-dnN5bmNfbGVuID0geyA2LCAzNCwgNzMgfSwKPiArCS5mbGFncyA9IERJU1BMQVlfRkxBR1NfREVf
-SElHSCwKPiArfTsKPiArCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBreW9fdGNn
-MTIxeGdscCA9IHsKPiArCS50aW1pbmdzID0gJmt5b190Y2cxMjF4Z2xwX3RpbWluZywKPiArCS5u
-dW1fdGltaW5ncyA9IDEsCj4gKwkuYnBjID0gOCwKPiArCS5zaXplID0gewo+ICsJCS53aWR0aCA9
-IDI0NiwKPiArCQkuaGVpZ2h0ID0gMTg0LAo+ICsJfSwKPiArCS5idXNfZm9ybWF0ID0gTUVESUFf
-QlVTX0ZNVF9SR0I4ODhfMVg3WDRfU1BXRywKPiArfTsKPiArCj4gIHN0YXRpYyBjb25zdCBzdHJ1
-Y3QgZHJtX2Rpc3BsYXlfbW9kZSBsZ19sYjA3MHd2OF9tb2RlID0gewo+ICAJLmNsb2NrID0gMzMy
-NDYsCj4gIAkuaGRpc3BsYXkgPSA4MDAsCj4gQEAgLTExNjcsNiArMTE5MSw5IEBAIHN0YXRpYyBj
-b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7Cj4gIAkJLmNv
-bXBhdGlibGUgPSAiaW5ub2x1eCx6ajA3MG5hLTAxcCIsCj4gIAkJLmRhdGEgPSAmaW5ub2x1eF96
-ajA3MG5hXzAxcCwKPiAgCX0sIHsKPiArCQkuY29tcGF0aWJsZSA9ICJreW8sdGNnMTIxeGdscCIs
-Cj4gKwkJLmRhdGEgPSAma3lvX3RjZzEyMXhnbHAsCj4gKwl9LCB7Cj4gIAkJLmNvbXBhdGlibGUg
-PSAibGcsbGIwNzB3djgiLAo+ICAJCS5kYXRhID0gJmxnX2xiMDcwd3Y4LAo+ICAJfSwgewo+IC0t
-IAo+IDIuNi4yCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+On Wed, Dec 02, 2015 at 11:35:59AM -0800, Jin Qian wrote:
+> From: Greg Hackmann <ghackmann@google.com>
+> 
+> Add bindings so we don't need to rely on goldfish virtual bus for
+> probing any more, which means we don't need ARM and MIPS goldfish
+> board code for instantiating the bus.
+> 
+> In the long term we would like to move towards replacing the Android
+> pipe with virtio-vsock that is currently under development.
+> 
+> Signed-off-by: Greg Hackmann <ghackmann@google.com>
+> Signed-off-by: Jin Qian <jinqian@android.com>
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> ---
+>  Documentation/devicetree/bindings/goldfish/pipe.txt | 17 +++++++++++++++++
+>  drivers/platform/goldfish/goldfish_pipe.c           | 10 +++++++++-
+>  2 files changed, 26 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/goldfish/pipe.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/goldfish/pipe.txt b/Documentation/devicetree/bindings/goldfish/pipe.txt
+> new file mode 100644
+> index 0000000..e417a31
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/goldfish/pipe.txt
+> @@ -0,0 +1,17 @@
+> +Android Goldfish QEMU Pipe
+> +
+> +Andorid pipe virtual device generated by android emulator.
+> +
+> +Required properties:
+> +
+> +- compatible : should contain "google,android-pipe" to match emulator
+> +- reg        : <registers mapping>
+> +- interrupts : <interrupt mapping>
+> +
+> +Example:
+> +
+> +	android_pipe@a010000 {
+> +		compatible = "google,android-pipe";
+> +		reg = <ff018000 0x2000>;
+> +		interrupts = <0x12>;
+> +	};
+> diff --git a/drivers/platform/goldfish/goldfish_pipe.c b/drivers/platform/goldfish/goldfish_pipe.c
+> index 20a9337..0b187ff 100644
+> --- a/drivers/platform/goldfish/goldfish_pipe.c
+> +++ b/drivers/platform/goldfish/goldfish_pipe.c
+> @@ -624,11 +624,19 @@ static int goldfish_pipe_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static const struct of_device_id goldfish_pipe_of_match[] = {
+> +	{ .compatible = "google,android-pipe", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, goldfish_pipe_of_match);
+> +
+>  static struct platform_driver goldfish_pipe = {
+>  	.probe = goldfish_pipe_probe,
+>  	.remove = goldfish_pipe_remove,
+>  	.driver = {
+> -		.name = "goldfish_pipe"
+> +		.name = "goldfish_pipe",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = goldfish_pipe_of_match,
+>  	}
+>  };
+>  
+> -- 
+> 2.6.0.rc2.230.g3dd15c0
+> 
