@@ -1,102 +1,94 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] dts/ls2080a: Update PCIe compatible
-Date: Fri, 4 Dec 2015 10:22:43 -0600
-Message-ID: <20151204162243.GA12415@rob-hp-laptop>
-References: <1449224417-20753-1-git-send-email-Mingkai.Hu@freescale.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v8 2/2] arm64: dts: mt8173: Add nor flash node
+Date: Fri, 4 Dec 2015 17:22:39 +0100
+Message-ID: <5661BDCF.9020105@gmail.com>
+References: <1447817403-16631-1-git-send-email-bayi.cheng@mediatek.com>
+ <1447817403-16631-3-git-send-email-bayi.cheng@mediatek.com>
+ <CAGS+omBVfc=BPLoobOJSDPnbv97PnGsRxUTF1gbXEz4DeufbmQ@mail.gmail.com>
+ <1448505773.9118.19.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1449224417-20753-1-git-send-email-Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mingkai Hu <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Minghuan Lian <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1448505773.9118.19.camel@mhfsdcap03>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: bayi cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 04, 2015 at 06:20:17PM +0800, Mingkai Hu wrote:
-> From: Minghuan Lian <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> The patch adds LS2085a to PCIe compatible to fix the compatibility
-> issue when using firmware with LS2085a compatible property.
-> 
-> Signed-off-by: Minghuan Lian <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Mingkai Hu <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
-> v2 change:
->  - Rebased to latest kernel base
 
-How about implementing my comments on v1, too?
 
-> 
->  Documentation/devicetree/bindings/pci/layerscape-pci.txt |  1 +
->  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi           | 12 ++++++++----
->  2 files changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> index e376785..4600007 100644
-> --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> @@ -15,6 +15,7 @@ Required properties:
->  - compatible: should contain the platform identifier such as:
->          "fsl,ls1021a-pcie", "snps,dw-pcie"
->          "fsl,ls2080a-pcie", "snps,dw-pcie"
-> +        "fsl,ls2085a-pcie", "snps,dw-pcie"
->  - reg: base addresses and lengths of the PCIe controller
->  - interrupts: A list of interrupt outputs of the controller. Must contain an
->    entry for each entry in the interrupt-names property.
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> index e81cd48..3821bb1 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> @@ -383,7 +383,8 @@
->  		};
->  
->  		pcie@3400000 {
-> -			compatible = "fsl,ls2080a-pcie", "snps,dw-pcie";
-> +			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a-pcie",
-> +				     "snps,dw-pcie";
->  			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
->  			       0x10 0x00000000 0x0 0x00002000>; /* configuration space */
->  			reg-names = "regs", "config";
-> @@ -406,7 +407,8 @@
->  		};
->  
->  		pcie@3500000 {
-> -			compatible = "fsl,ls2080a-pcie", "snps,dw-pcie";
-> +			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a-pcie",
-> +				     "snps,dw-pcie";
->  			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
->  			       0x12 0x00000000 0x0 0x00002000>; /* configuration space */
->  			reg-names = "regs", "config";
-> @@ -429,7 +431,8 @@
->  		};
->  
->  		pcie@3600000 {
-> -			compatible = "fsl,ls2080a-pcie", "snps,dw-pcie";
-> +			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a-pcie",
-> +				     "snps,dw-pcie";
->  			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
->  			       0x14 0x00000000 0x0 0x00002000>; /* configuration space */
->  			reg-names = "regs", "config";
-> @@ -452,7 +455,8 @@
->  		};
->  
->  		pcie@3700000 {
-> -			compatible = "fsl,ls2080a-pcie", "snps,dw-pcie";
-> +			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a-pcie",
-> +				     "snps,dw-pcie";
->  			reg = <0x00 0x03700000 0x0 0x00100000   /* controller registers */
->  			       0x16 0x00000000 0x0 0x00002000>; /* configuration space */
->  			reg-names = "regs", "config";
-> -- 
-> 2.1.0.27.g96db324
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 26/11/15 03:42, bayi cheng wrote:
+> On Thu, 2015-11-26 at 09:20 +0800, Daniel Kurtz wrote:
+>> Hi Bayi, Matthias,
+>>
+>> Sorry for the late review, one comment below...
+>>
+>> On Wed, Nov 18, 2015 at 11:30 AM, Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>>> Add Mediatek nor flash node
+>>>
+>>> Signed-off-by: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>> Acked-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>>   arch/arm64/boot/dts/mediatek/mt8173.dtsi | 18 +++++++++++++++++-
+>>>   1 file changed, 17 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>>> index 4dd5f93..7988656 100644
+>>> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>>> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>>> @@ -387,7 +387,23 @@
+>>>                          status = "disabled";
+>>>                  };
+>>>
+>>> -               i2c3: i2c@11010000 {
+>>> +               nor_flash: spi@1100d000 {
+>>> +                       compatible = "mediatek,mt8173-nor";
+>>> +                       reg = <0 0x1100d000 0 0xe0>;
+>>> +                       clocks = <&pericfg CLK_PERI_SPI>,
+>>> +                                <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
+>>> +                       clock-names = "spi", "sf";
+>>> +                       #address-cells = <1>;
+>>> +                       #size-cells = <0>;
+>>> +                       status = "disabled";
+>>> +
+>>> +                       flash@0 {
+>>> +                               compatible = "jedec,spi-nor";
+>>> +                               reg = <0>;
+>>> +                       };
+>>
+>> I think this flash@0 node represents the flash device present on the
+>> board and should therefore be moved to the board-specific .dts.
+>>
+>> -Dan
+>>
+
+Good catch, thanks.
+
+> Hi Daniel, Thanks for your comments, and I will fixed it in the next
+> patch.
+
+Ok, I dropped your patch in the meanwhile.
+
+Regards,
+Matthias
+
+>>> +               };
+>>> +
+>>> +               i2c3: i2c3@11010000 {
+>>>                          compatible = "mediatek,mt8173-i2c";
+>>>                          reg = <0 0x11010000 0 0x70>,
+>>>                                <0 0x11000280 0 0x80>;
+>>> --
+>>> 1.8.1.1.dirty
+>>>
+>
+>
