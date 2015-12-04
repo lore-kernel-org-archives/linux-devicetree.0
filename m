@@ -1,94 +1,89 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+From: Lucas Stach <l.stach@pengutronix.de>
 Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
-Date: Fri, 4 Dec 2015 17:54:03 +0000
-Message-ID: <20151204175403.GC8644@n2100.arm.linux.org.uk>
+Date: Fri, 04 Dec 2015 18:56:00 +0100
+Message-ID: <1449251760.8275.116.camel@pengutronix.de>
 References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
  <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
  <20151204162956.GA14978@rob-hp-laptop>
  <1449247305.8275.104.camel@pengutronix.de>
  <CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, patchwork-lst@pengutronix.de, "kernel@pengutronix.de" <kernel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 04, 2015 at 11:33:22AM -0600, Rob Herring wrote:
-> On Fri, Dec 4, 2015 at 10:41 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > I'm aware of that, but I don't see much value in kicking this discussion
-> > around for every DRM driver submission. This is the binding that has
-> > emerged from a lengthy discussion at KS 2013 in Edinburgh and at least
-> > allows us to standardize on _something_. Also ALSA does a similar thing
-> > to bind codecs and CPU interfaces together.
-> 
-> This case is quite different though I think. The ALSA case and other
-> DRM cases are ones that have inter-dependencies between the blocks
-> (e.g. some sort of h/w connection). What is the inter-dependency here?
-
-Different GPU cores, where each GPU core is a separate device.  On iMX6,
-we have three different GPU cores, two of which need to do cross-GPU
-synchronisation for accesses to the buffers.
-
-Sure, we could have decided to publish three entirely different DRM
-devices, but that has serious implications: we would be highly non-
-standard on the DRI and XF86 cases, to the point where it'd probably
-be beyond any hope in getting it to work sanely.  DRI2 requires the
-DRM device to be used by MESA to be passed across the X protocol to
-authorise the MESA side.
-
-It's already icky enough with the separate DRM device for KMS - which
-having poked about with DRI3, I can't see really working at the moment.
-
-> > Same as above really. Parts of the identification registers are
-> > different for each SoC integration, even if it's the same IP core, so we
-> > can just derive any needed driver behavior differences from that.
-> 
-> The h/w designers must have had a clue about s/w. First time for
-> everything... ;)
-> 
-> Ok, please just add a note to the binding why a more specific
-> compatible is not needed in this case.
-
-If we did want to be safe, we _could_ require something like:
-
-	compatible = "vivante,gc320", "vivante,gc";
-
-but I don't see much value to that, because, from what I can see if the
-way the GPU numbering/versioning scheme works, the revision number is
-the more important bit of information: I believe this started at 1 which
-has been incremented ever since.
-
-This can be seen as the GC600 is a much older core than the GC320.
-
-The GC numbering tells you nothing (as far as can be worked out yet)
-about what features, what kind of GPU, or anything like that.
-
-Another example: the iMX6 S/DL has a GC880 instead of a GC2000.  While
-both are a 3D GPU, they're not really "compatible" with each other -
-GC880 has one pixel pipe which requires userspace buffers to be tiled
-one way, vs GC2000 which has a different form of tiling to allow two
-pixel pipes to operate efficiently.
-
-The number of pixel pipes (and other features) comes from the feature/
-specification registers embedded in the device - there's currently 6
-32-bit registers, each containing 32 feature flags, describing what
-features are present, and including what bugs are present and/or have
-been fixed.
-
-There have been one "slip-up" along the way, where the Vivante software
-folk have comments in the code along the lines of "Hardware people should
-talk to us!!!" which tends to suggest that they've hit the communication
-problem, and as it's for very early stuff, and nothing later, it suggests
-that they've learnt that lesson themselves already. :)
-
--- 
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QW0gRnJlaXRhZywgZGVuIDA0LjEyLjIwMTUsIDExOjMzIC0wNjAwIHNjaHJpZWIgUm9iIEhlcnJp
+bmc6Cj4gT24gRnJpLCBEZWMgNCwgMjAxNSBhdCAxMDo0MSBBTSwgTHVjYXMgU3RhY2ggPGwuc3Rh
+Y2hAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOgo+ID4gQW0gRnJlaXRhZywgZGVuIDA0LjEyLjIwMTUs
+IDEwOjI5IC0wNjAwIHNjaHJpZWIgUm9iIEhlcnJpbmc6Cj4gPj4gT24gRnJpLCBEZWMgMDQsIDIw
+MTUgYXQgMDI6NTk6NTRQTSArMDEwMCwgTHVjYXMgU3RhY2ggd3JvdGU6Cj4gPj4gPiBFdG5hdml2
+IGZvbGxvd3MgdGhlIHNhbWUgcHJpY2lwbGUgYXMgaW14LWRybSB0byBoYXZlIGEgdmlydHVhbAo+
+ID4+ID4gbWFzdGVyIGRldmljZSBub2RlIHRvIGJpbmQgYWxsIHRoZSBpbmRpdmlkdWFsIEdQVSBj
+b3JlcyB0b2dldGhlcgo+ID4+ID4gaW50byBvbmUgRFJNIGRldmljZS4KPiA+PiA+Cj4gPj4gPiBT
+aWduZWQtb2ZmLWJ5OiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5kZT4KPiA+PiA+
+IC0tLQo+ID4+ID4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2V0bmF2aXYvZXRuYXZpdi1kcm0udHh0
+ICAgICAgIHwgNDYgKysrKysrKysrKysrKysrKysrKysrKwo+ID4+ID4gIDEgZmlsZSBjaGFuZ2Vk
+LCA0NiBpbnNlcnRpb25zKCspCj4gPj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V0bmF2aXYvZXRuYXZpdi1kcm0udHh0Cj4g
+Pj4gPgo+ID4+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L2V0bmF2aXYvZXRuYXZpdi1kcm0udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZXRuYXZpdi9ldG5hdml2LWRybS50eHQKPiA+PiA+IG5ldyBm
+aWxlIG1vZGUgMTAwNjQ0Cj4gPj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjE5ZmRlMjlkYzFkNwo+
+ID4+ID4gLS0tIC9kZXYvbnVsbAo+ID4+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvZXRuYXZpdi9ldG5hdml2LWRybS50eHQKPiA+PiA+IEBAIC0wLDAg
+KzEsNDYgQEAKPiA+PiA+ICtFdG5hdml2IERSTSBtYXN0ZXIgZGV2aWNlCj4gPj4gPiArPT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT0KPiA+PiA+ICsKPiA+PiA+ICtUaGUgRXRuYXZpdiBE
+Uk0gbWFzdGVyIGRldmljZSBpcyBhIHZpcnR1YWwgZGV2aWNlIG5lZWRlZCB0byBsaXN0IGFsbAo+
+ID4+ID4gK1ZpdmFudGUgR1BVIGNvcmVzIHRoYXQgY29tcHJpc2UgdGhlIEdQVSBzdWJzeXN0ZW0u
+Cj4gPj4gPiArCj4gPj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiA+PiA+ICstIGNvbXBhdGli
+bGU6IFNob3VsZCBiZSBvbmUgb2YKPiA+PiA+ICsgICAgImZzbCxpbXgtZ3B1LXN1YnN5c3RlbSIK
+PiA+PiA+ICsgICAgIm1hcnZlbGwsZG92ZS1ncHUtc3Vic3lzdGVtIgo+ID4+ID4gKy0gY29yZXM6
+IFNob3VsZCBjb250YWluIGEgbGlzdCBvZiBwaGFuZGxlcyBwb2ludGluZyB0byBWaXZhbnRlIEdQ
+VSBkZXZpY2VzCj4gPj4gPiArCj4gPj4gPiArZXhhbXBsZToKPiA+PiA+ICsKPiA+PiA+ICtncHUt
+c3Vic3lzdGVtIHsKPiA+PiA+ICsgICBjb21wYXRpYmxlID0gImZzbCxpbXgtZ3B1LXN1YnN5c3Rl
+bSI7Cj4gPj4gPiArICAgY29yZXMgPSA8JmdwdV8yZD4sIDwmZ3B1XzNkPjsKPiA+PiA+ICt9Owo+
+ID4+Cj4gPj4gWWVhaCwgSSdtIG5vdCByZWFsbHkgYSBmYW4gb2YgZG9pbmcgdGhpcyBzaW1wbHkg
+YmVjYXVzZSBEUk0gd2FudHMgMQo+ID4+IGRyaXZlci4KPiA+Pgo+ID4gSSdtIGF3YXJlIG9mIHRo
+YXQsIGJ1dCBJIGRvbid0IHNlZSBtdWNoIHZhbHVlIGluIGtpY2tpbmcgdGhpcyBkaXNjdXNzaW9u
+Cj4gPiBhcm91bmQgZm9yIGV2ZXJ5IERSTSBkcml2ZXIgc3VibWlzc2lvbi4gVGhpcyBpcyB0aGUg
+YmluZGluZyB0aGF0IGhhcwo+ID4gZW1lcmdlZCBmcm9tIGEgbGVuZ3RoeSBkaXNjdXNzaW9uIGF0
+IEtTIDIwMTMgaW4gRWRpbmJ1cmdoIGFuZCBhdCBsZWFzdAo+ID4gYWxsb3dzIHVzIHRvIHN0YW5k
+YXJkaXplIG9uIF9zb21ldGhpbmdfLiBBbHNvIEFMU0EgZG9lcyBhIHNpbWlsYXIgdGhpbmcKPiA+
+IHRvIGJpbmQgY29kZWNzIGFuZCBDUFUgaW50ZXJmYWNlcyB0b2dldGhlci4KPiAKPiBUaGlzIGNh
+c2UgaXMgcXVpdGUgZGlmZmVyZW50IHRob3VnaCBJIHRoaW5rLiBUaGUgQUxTQSBjYXNlIGFuZCBv
+dGhlcgo+IERSTSBjYXNlcyBhcmUgb25lcyB0aGF0IGhhdmUgaW50ZXItZGVwZW5kZW5jaWVzIGJl
+dHdlZW4gdGhlIGJsb2Nrcwo+IChlLmcuIHNvbWUgc29ydCBvZiBoL3cgY29ubmVjdGlvbikuIFdo
+YXQgaXMgdGhlIGludGVyLWRlcGVuZGVuY3kgaGVyZT8KPiAKPiBEb2luZyB0aGlzIHdheSBoYXMg
+YWxzbyBiZWVuIGZvdW5kIHRvIGJlIGNvbXBsZXRlbHkgdW5uZWNlc3NhcnkgYW5kCj4gcmVtb3Zl
+ZCBpbiByZWNlbnQgRFJNIGRyaXZlciByZXZpZXdzLiBBZG1pdHRlZGx5LCB0aG9zZSBhcmUgY2Fz
+ZXMKPiB3aGVyZSBvbmUgZGV2aWNlIGNhbiBiZSB0aGUgbWFzdGVyIG9mIHRoZSBvdGhlcnMuIEZv
+ciAyIHBhcmFsbGVsCj4gZGV2aWNlcywgSSBkb24ndCBoYXZlIGFuIGFsdGVybmF0aXZlIG90aGVy
+IHRoYW4gcXVlc3Rpb24gd2h5IHRoZXkgbmVlZAo+IHRvIGJlIGEgc2luZ2xlIGRyaXZlci4KPiAK
+SWYgeW91IGluc2lzdCBvbiBkb2luZyB0aGluZ3MgZGlmZmVyZW50bHkgZm9yIHRoaXMgZHJpdmVy
+LCB3ZSBjb3VsZCBhZGQKYSBwYXNzIGF0IGRyaXZlciByZWdpc3RyYXRpb24gdGhhdCBzY2FucyB0
+aHJvdWdoIHRoZSBEVCwgbG9va2luZyBmb3IKbm9kZXMgbWF0Y2hpbmcgdGhlIEdQVSBjb3JlIGNv
+bXBhdGlibGUuCgpJJ20gbm90IHN1cmUgaWYgdGhhdCBtYWtlcyB0aGluZ3MgY2xlYW5lciB0aG91
+Z2ggYW5kIG1pZ2h0IGJpdGUgdXMgbGF0ZXIKb24uIEFsc28gSSdtIG5vdCBzdXJlIGlmIG1vdmlu
+ZyBhd2F5IGZyb20gdGhlIGJpbmRpbmcgc2NoZW1lIGFscmVhZHkKZXN0YWJsaXNoZWQgZm9yIG90
+aGVyIERSTSBkcml2ZXJzIG1ha2VzIHRoaW5ncyBiZXR0ZXIgZnJvbSBhIERUCnBlcnNwZWN0aXZl
+LiBQZXJzb25hbGx5IEkgd291bGQgcHJlZmVyIERUIGJpbmRpbmcgY29uc2lzdGVuY3kgb3Zlcgpw
+ZXJmZWN0aW9uIGZvciBzaW5nbGUgZHJpdmVycywgc2VnbWVudGluZyB0aGUgRFQgYmluZGluZyBz
+cGFjZS4KClJlZ2FyZHMsCkx1Y2FzCgotLSAKUGVuZ3V0cm9uaXggZS5LLiAgICAgICAgICAgICB8
+IEx1Y2FzIFN0YWNoICAgICAgICAgICAgICAgICB8CkluZHVzdHJpYWwgTGludXggU29sdXRpb25z
+ICAgfCBodHRwOi8vd3d3LnBlbmd1dHJvbml4LmRlLyAgfAoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
