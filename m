@@ -1,111 +1,98 @@
-From: Ilia Mirkin <imirkin@alum.mit.edu>
-Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
-Date: Fri, 4 Dec 2015 17:43:33 -0500
-Message-ID: <CAKb7UvgzYMxPxtt8iPars13n4sAJ5Z4Hva1KHO+k4yNumDb+DQ@mail.gmail.com>
-References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
- <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
- <20151204162956.GA14978@rob-hp-laptop>
- <1449247305.8275.104.camel@pengutronix.de>
- <CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
- <1449251760.8275.116.camel@pengutronix.de>
- <CAL_Jsq+oaJxD3vbDWzn_4ghpqi=RZ1o+8nOcepWYjzcu5Hwpjg@mail.gmail.com>
- <20151204203101.GD8644@n2100.arm.linux.org.uk>
- <CAKb7UviPhoiY-YP2aBHm0BHbeEjSF2wTguQScVXMBve-kZc16Q@mail.gmail.com>
- <20151204220533.GE8644@n2100.arm.linux.org.uk>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v5 1/5] dt-bindings: add SMP enable-method for Broadcom
+ NSP
+Date: Fri, 04 Dec 2015 15:06:34 -0800
+Message-ID: <56621C7A.5050202@gmail.com>
+References: <1449260611-24417-1-git-send-email-kapilh@broadcom.com> <1449260611-24417-2-git-send-email-kapilh@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20151204220533.GE8644@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, patchwork-lst@pengutronix.de, "kernel@pengutronix.de" <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1449260611-24417-2-git-send-email-kapilh@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kapil Hali <kapilh@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: Gregory Fong <gregory.0xf0@gmail.com>, Lee Jones <lee@kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Kever Yang <kever.yang@rock-chips.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBEZWMgNCwgMjAxNSBhdCA1OjA1IFBNLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXgK
-PGxpbnV4QGFybS5saW51eC5vcmcudWs+IHdyb3RlOgo+IE9uIEZyaSwgRGVjIDA0LCAyMDE1IGF0
-IDAzOjQyOjQ3UE0gLTA1MDAsIElsaWEgTWlya2luIHdyb3RlOgo+PiBPbiBGcmksIERlYyA0LCAy
-MDE1IGF0IDM6MzEgUE0sIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eAo+PiA8bGludXhAYXJtLmxp
-bnV4Lm9yZy51az4gd3JvdGU6Cj4+ID4gTW9yZW92ZXIsIERSSTMgaXMgbm90IHlldCBhdmFpbGFi
-bGUgZm9yIEdhbGxpdW0sIHNvIGlmIHdlJ3JlIHRhbGtpbmcKPj4gPiBhYm91dCBYb3JnLCB0aGVu
-IGZ1bmN0aW9uYWwgRFJJMiBpcyBhIHJlcXVpcmVtZW50LCBhbmQgdGhhdCBfbmVlZHNfCj4+ID4g
-dG8gaGF2ZSBhIHNpbmdsZSBkZXZpY2UgZm9yIHRoZSByZW5kZXJpbmcgaW5zdGFuY2VzLiAgWG9y
-ZyBoYXMgbm8gd2F5Cj4+ID4gdG8gcGFzcyBtdWx0aXBsZSByZW5kZXIgbm9kZXMgdG8gY2xpZW50
-IG92ZXIgRFJJMi4KPj4KPj4gSnVzdCB0byBjb3JyZWN0Li4uIERSSTMgaGFzIGJlZW4gYXZhaWxh
-YmxlIG9uIGdhbGxpdW0gW2F0IGxlYXN0IGluIHRoZQo+PiBjb250ZXh0IG9mIHN0L21lc2FdIGJh
-c2ljYWxseSBzaW5jZSBEUkkzIHdhcyBpbnRyb2R1Y2VkLiBOb3Qgc3VyZSB3aGF0Cj4+IGlzc3Vl
-IHlvdSdyZSBmaWdodGluZyB3aXRoLCBidXQgaXQncyBkZWZpbml0ZWx5IG5vdCBhIGdhbGxpdW0K
-Pj4gbGltaXRhdGlvbi4uLiBjb3VsZCBiZSBzb21ldGhpbmcgcmVsYXRlZCB0byBwbGF0Zm9ybSBk
-ZXZpY2VzLgo+Cj4gV2VsbCwgbXkgc3RhdGVtZW50IGlzIGJhc2VkIG9uIHRoZSBmYWN0IHRoYXQg
-dGhlcmUncyBub3RoaW5nIGluCj4gc3JjL2dhbGxpdW0vc3RhdGUtdHJhY2tlci9kcmkgd2hpY2gg
-aGludHMgYXQgYmVpbmcgRFJJMy4gIE1heWJlIGl0J3MKPiBpbXBsZW1lbnRlZCBkaWZmZXJlbnRs
-eSwgSSBkb24ndCBrbm93LiAgSSBuZXZlciB3YW50ZWQgdG8gaGFjayBNRVNBIC0KPiBJJ20gc3Vw
-cG9zZWQgdG8gYmUgdGhlIEFSTSBrZXJuZWwgbWFpbnRhaW5lciAtIGFuZCBJJ20gc3RpbGwgdmVy
-eSBuZXcKPiB0byBNRVNBLgo+Cj4gSSB0aGluayBpdCdzIGEgRFJJMyBsaW1pdGF0aW9uLiAgVGhl
-IGlzc3VlIHdpdGggdGhlIERSSTMgZGVzaWduIGlzIHRoYXQ6Cj4KPiAqIFRoZSBjbGllbnQgaGFz
-IGFjY2VzcyB0byB0aGUgR1BVIHJlbmRlciBub2RlcyBvbmx5LCBidXQgbm90IHRoZQo+ICAgY29y
-cmVzcG9uZGluZyBLTVMgbm9kZS4KPiAqIEJ1ZmZlcnMgaW4gRFJJMyBhcmUgYWxsb2NhdGVkIGZy
-b20gdGhlIEdQVSByZW5kZXIgbm9kZXMuCj4gKiBUaGUgWG9yZyBQcmVzZW50IHByb3RvY29sIGlz
-IHRoZW4gdXNlZCB0byBtYW5hZ2UgdGhlIHZibGFuawo+ICAgc3luY2hvbmlzYXRpb24gYW5kIHBh
-Z2UgZmxpcHMuCj4KPiBOb3csIHRoZSBLTVMgc2Nhbm91dCBoYXJkd2FyZSB0eXBpY2FsbHkgZG9l
-cyBub3Qgc3VwcG9ydCBhbnkga2luZCBvZgo+IHNjYXR0ZXItZ2F0aGVyOiB0aGUgYnVmZmVycyBp
-dCBoYXMgbXVzdCBiZSBjb250aWd1b3VzLiAgVGhlc2UgY2FuIGJlCj4gYWxsb2NhdGVkIGZyb20g
-dGhlIEtNUyBEUk0gZGV2aWNlLgo+Cj4gSG93ZXZlciwgdGhlIERSSTMgY2xpZW50IGhhcyBubyBh
-Y2Nlc3MgdG8gdGhlIEtNUyBEUk0gZGV2aWNlIHRvIGFsbG9jYXRlCj4gbGluZWFyIGJ1ZmZlcnMg
-ZnJvbSwgYW5kIEdQVXMgdHlwaWNhbGx5IGRvbid0IGhhdmUgZHVtYiBidWZmZXIgc3VwcG9ydC4K
-PiBIZW5jZSwgdGhlIGNsaWVudCBjYW4ndCBwYXNzIGEgc3VpdGFibGUgYnVmZmVyIHRvIHRoZSBw
-cmVzZW50IGxheWVyLgo+Cj4gSGVuY2UsIEkgY2FuIHNlZSBubyB3YXkgZm9yIHRoZSByZXNvdXJj
-ZV9jcmVhdGUoKSB0byBiZSBhYmxlIHRvIGFsbG9jYXRlCj4gYW55IGtpbmQgb2Ygc2Nhbm91dCBj
-YXBhYmxlIGJ1ZmZlci4KPgo+IFRoYXQncyBhIHNlcGFyYXRlIGlzc3VlIHRob3VnaDogeW91J3Zl
-IHBvaW50ZWQgb3V0IHRoYXQgeW91IGNhbiBzZWxlY3QKPiB3aGljaCByZW5kZXIgbm9kZSB0byB1
-c2U6IHdoYXQgaWYgd2Ugd2FudCB0byB1c2UgbXVsdGlwbGUgcmVuZGVyIG5vZGVzCj4gc2ltdWx0
-YW5lb3VzbHkgLSBlZywgYmVjYXVzZSB3ZSB3YW50IHRvIHVzZSBtdWx0aXBsZSAzRCBHUFUgY29y
-ZXMKPiB0b2dldGhlcj8gIEhvdyBkb2VzIHRoYXQgd29yayB3aXRoIHN0dWZmPwoKVGhpcyBpcyBh
-IGJpdCBsaWtlIHRoZSBTTEkgcXVlc3Rpb24gLS0gbGV0J3Mgc2F5IHlvdSBoYXZlIDIgcHJpY2V5
-CmRlc2t0b3AgR1BVcywgd2l0aCBhIGZhc3QgaW50ZXJjb25uZWN0IGJldHdlZW4gdGhlbSwgd2hp
-Y2ggbGV0cyB0aGVtCmtub3cgYWJvdXQgZWFjaCBvdGhlciwgaG93IGRvIHlvdSBtYWtlIHVzZSBv
-ZiB0aGF0LiBTb2x1dGlvbjogdW5zb2x2ZWQKOikKCkluIGFuIGlkZWFsIHdvcmxkLCB5b3UnZCBo
-YXZlIGEgc2luZ2xlIGRyaXZlciB0aGF0IGtub3dzIGhvdyB0bwppbnRlcmFjdCB3aXRoIG11bHRp
-cGxlIGRldmljZXMgYW5kIG1ha2UgdGhlbSBkbyBjb29sIHRoaW5ncy4gSG93ZXZlcgp0aGlzIGEg
-Y29tcGxldGVseSB1bnRyb2RkZW4gcGF0aC4gKE5vdCB0byBtZW50aW9uIHRoZSBwcm9ibGVtIG9m
-ICpob3cqCnRvIGJyZWFrIHVwIGEgd29ya2xvYWQgYWNyb3NzIDIgR1BVcy4pCgo+Cj4gSSB0aGlu
-ayB0aGUgaWRlYSB0aGF0IGluZGl2aWR1YWwgR1BVIGNvcmVzIHNob3VsZCBiZSBleHBvc2VkIGFz
-Cj4gc2VwYXJhdGUgRFJNIGRldmljZXMgaXMgZnVuZGFtZW50YWxseSBmbGF3ZWQsIGFuZCBhZGRz
-IGEgaGVsbCBvZiBhCj4gbG90IG9mIGNvbXBsZXhpdHkuCj4KPiBJbiBhbnkgY2FzZSwgSSd2ZSBz
-cGVudCBfd2F5XyB0b28gbXVjaCB0aW1lIG9uIGV0bmF2aXYgZHVyaW5nIE5vdmVtYmVyIC0KPiBx
-dWl0ZSBsaXRlcmFsbHkgYWxtb3N0IGV2ZXJ5IGRheSAoSSB3b3JrZWQgb3V0IHRoYXQgSSB3YXMg
-cHJvZHVjaW5nIDQuNQo+IHBhdGNoZXMgYSBkYXkgZHVyaW5nIE5vdmVtYmVyIGZvciBFdG5hdml2
-IE1FU0EuKSAgSSdtIGFmcmFpZCB0aGF0IGl0J3MKPiBub3cgdGltZSB0aGF0IEkgc3dpdGNoIG15
-IGF0dGVudGlvbiBlbHNld2hlcmUsIHNvIGlmIHRoaXMgbWVhbnMgdGhhdAo+IEV0bmF2aXYgaXMg
-cmVqZWN0ZWQgZm9yIG1lcmdpbmcsIEknbSBhZnJhaWQgaXQnbGwgYmUgYSBmZXcgbW9udGhzIGJl
-Zm9yZQo+IEkgY2FuIGdldCBiYWNrIHRvIGl0Lgo+Cj4gSXQgd291bGQgaGF2ZSBiZWVuIG5pY2Ug
-aWYgdGhlc2UgaXNzdWVzIGhhZCBiZWVuIGJyb3VnaHQgdXAgbXVjaCBlYXJsaWVyLAo+IGR1cmlu
-ZyB0aGUgUkZDIHBvc3Rpbmcgb2YgdGhlIHBhdGNoZXMuICBUaGVzZSBhcmUgbm90aGluZyBuZXcs
-IGFuZCBJIG5vdwo+IGZlZWwgdGhhdCB0aGlzIHdob2xlIHRoaW5nIGhhcyBiZWVuIGEgdG90YWwg
-d2FzdGUgb2YgdGltZS4KClRoZSB3aG9sZSBtdWx0aS1ncHUgdGhpbmcgaXMgYSBiaXQgb2YgYW4g
-b3BlbiBxdWVzdGlvbiByaWdodCBub3cuIEl0CndvcmtzIGluIHRoZW9yeSwgYnV0IGluIHByYWN0
-aWNlIG5vYm9keSdzIGRvbmUgaXQuIE1hYXJ0ZW4gdHJpZWQgdG8KZ2V0IG5vdXZlYXUvZ2syMGEg
-KyB0ZWdyYS9kcm0gb24gSmV0c29uIFRLMSB0byBwbGF5IG5pY2Ugd2l0aCwgZS5nLiwgWAoyZCBh
-Y2NlbCwgYW5kIGl0IHdhcyBhbiBleGVyY2lzZSBpbiBwYWluLiBOb3Qgc3VyZSB0aGF0IGhlIGV2
-ZXIKc3VjY2VlZGVkLgoKSSB0aGluayBpdCdzIHVuZmFpciB0byB0cnkgdG8gbWFrZSBuZXcgaGFy
-ZHdhcmUgZW5hYmxlbWVudCB0aGUgdGltZSB0bwphdHRlbXB0IHRvIGhlYXAgZXh0cmEgd29yayBv
-bnRvIHRob3NlIGF1dGhvcnMgdW5mb3J0dW5hdGUgZW5vdWdoIHRvCmhhdmUgc2xpZ2h0bHkgdW5v
-cnRob2RveCBoYXJkd2FyZSB0aGF0IG1hcHMgbmljZWx5IG9udG8gc29tZQpkZXNpcmVkLWJ1dC1u
-b3QtcXVpdGUtdGhlcmUteWV0IHVzYWdlIG1vZGVsIC0tIHRoZXkgaGF2ZSBlbm91Z2gKcHJvYmxl
-bXMuCgpUaGUgd2F5IGV2ZXJ5dGhpbmcgd29ya3MgaXMgb25lIGRybSBub2RlIGNhbiBkbyBldmVy
-eXRoaW5nLiBQUklNRSBpcyBhCmJhcmVseS1mdW5jdGlvbmFsIHdheSB0byBvZmZsb2FkIHNvbWUg
-dGhpbmdzIG9udG8gYSAoc2luZ2xlKSBzZWNvbmRhcnkKR1BVLiBFdmVyeXRoaW5nIGJleW9uZCB0
-aGF0IGlzIHB1cmVseSB0aGVvcmV0aWNhbC4KCk5vbmUgb2Ygd2hhdCdzIGJlaW5nIGRvbmUgbm93
-IHByZXZlbnRzIHNvbWUgZnV0dXJlIHdoZXJlIHRoZXNlIHRoaW5ncwphcmUgYnJva2VuIHVwLiBO
-byBuZWVkIHRvIGZvcmNlIGl0IG5vdy4KCiAgLWlsaWEKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWwK
+On 04/12/15 12:23, Kapil Hali wrote:
+> Add a compatible string "brcm,bcm-nsp-smp" for Broadcom's
+> Northstar Plus CPU to the 32-bit ARM CPU device tree binding
+> documentation file and create a new binding documentation for
+> Northstar Plus CPU.
+> 
+> Signed-off-by: Kapil Hali <kapilh@broadcom.com>
+> ---
+>  .../bindings/arm/bcm/brcm,nsp-cpu-method.txt       | 39 ++++++++++++++++++++++
+>  Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
+>  2 files changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
+> new file mode 100644
+> index 0000000..bf08872
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
+> @@ -0,0 +1,39 @@
+> +Broadcom Northstar Plus SoC CPU Enable Method
+> +---------------------------------------------
+> +This binding defines the enable method used for starting secondary
+> +CPUs in the following Broadcom SoCs:
+> +  BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
+> +
+> +The enable method is specified by defining the following required
+> +properties in the "cpus" device tree node:
+> +  - enable-method = "brcm,bcm-nsp-smp";
+> +  - secondary-boot-reg = <...>;
+
+That comment is not quite correct with respect to the paragraph below then?
+
+> +
+> +The secondary-boot-reg property is a u32 value that specifies the
+> +physical address of the register which should hold the common
+> +entry point for a secondary CPU. This entry is cpu node specific
+> +and should be added per cpu. E.g., in case of NSP (BCM58625) which
+> +is a dual core CPU SoC, this entry should be added to cpu1 node.
+> +
+> +
+> +Example:
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		enable-method = "brcm,bcm-nsp-smp";
+
+Based on the requested feedback, this property should now be placed
+under the cpu1 node.
+
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a9";
+> +			next-level-cache = <&L2>;
+> +			reg = <0>;
+> +		};
+> +
+> +		cpu1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a9";
+> +			next-level-cache = <&L2>;
+> +			reg = <1>;
+> +			secondary-boot-reg = <0xffff042c>;
+> +		};
+> +	};
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> index 3a07a87..d191554 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -190,6 +190,7 @@ nodes to be present and contain the properties described below.
+>  			    "allwinner,sun6i-a31"
+>  			    "allwinner,sun8i-a23"
+>  			    "arm,psci"
+> +			    "brcm,bcm-nsp-smp"
+>  			    "brcm,brahma-b15"
+>  			    "marvell,armada-375-smp"
+>  			    "marvell,armada-380-smp"
+> 
+
+
+-- 
+Florian
