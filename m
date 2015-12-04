@@ -1,790 +1,253 @@
-From: "Gabriel L. Somlo" <somlo@cmu.edu>
-Subject: [PATCH v6 1/4] firmware: introduce sysfs driver for
-	QEMU's fw_cfg device
-Date: Fri,  4 Dec 2015 10:29:03 -0500
-Message-ID: <1449242946-12062-2-git-send-email-somlo@cmu.edu>
-References: <1449242946-12062-1-git-send-email-somlo@cmu.edu>
-Return-path: <qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org>
-In-Reply-To: <1449242946-12062-1-git-send-email-somlo@cmu.edu>
-List-Unsubscribe: <https://lists.nongnu.org/mailman/options/qemu-devel>,
-	<mailto:qemu-devel-request@nongnu.org?subject=unsubscribe>
-List-Archive: <http://lists.nongnu.org/archive/html/qemu-devel>
-List-Post: <mailto:qemu-devel@nongnu.org>
-List-Help: <mailto:qemu-devel-request@nongnu.org?subject=help>
-List-Subscribe: <https://lists.nongnu.org/mailman/listinfo/qemu-devel>,
-	<mailto:qemu-devel-request@nongnu.org?subject=subscribe>
-Errors-To: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
-Sender: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de, lersek@redhat.com, ralf@linux-mips.org, rmk+kernel@arm.linux.org.uk, eric@anholt.net, hanjun.guo@linaro.org, zajec5@gmail.com, sudeep.holla@arm.com, agross@codeaurora.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: peter.maydell@linaro.org, ard.biesheuvel@linaro.org, matt@codeblueprint.co.uk, jordan.l.justen@intel.com, mst@redhat.com, qemu-devel@nongnu.org, leif.lindholm@linaro.org, luto@amacapital.net, kraxel@redhat.com, stefanha@gmail.com, pbonzini@redhat.com, revol@free.fr
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/3] dt-bindings: regulator/mfd: Reorganize S2MPA01
+ bindings
+Date: Fri, 4 Dec 2015 09:55:09 -0600
+Message-ID: <20151204155509.GA27455@rob-hp-laptop>
+References: <1449191405-3344-1-git-send-email-k.kozlowski@samsung.com>
+ <1449191405-3344-4-git-send-email-k.kozlowski@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1449191405-3344-4-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Sangbeom Kim <sbkim73@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Kukjin Kim <kgene@kernel.org>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Somlo <somlo@cmu.edu>
+On Fri, Dec 04, 2015 at 10:10:05AM +0900, Krzysztof Kozlowski wrote:
+> The mfd/s2mpa01.txt duplicates some of the information about bindings
+> with old mfd/s2mps11.txt. Now common part exists entirely in
+> mfd/samsung,sec-core.txt so:
+>  - add company prefix to file name (regulator/samsung,s2mpa01.txt),
+>  - remove duplicated information,
+>  - reorganize the contents to match style of
+>    regulator/samsung,s2mps11.txt.
+> 
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-Make fw_cfg entries of type "file" available via sysfs. Entries
-are listed under /sys/firmware/qemu_fw_cfg/by_key, in folders
-named after each entry's selector key. Filename, selector value,
-and size read-only attributes are included for each entry. Also,
-a "raw" attribute allows retrieval of the full binary content of
-each entry.
+Next time, use git format-patch -M option.
 
-The fw_cfg device can be instantiated automatically from ACPI or
-the Device Tree, or manually by using a kernel module (or command
-line) parameter, with a syntax outlined in the documentation file.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Gabriel Somlo <somlo@cmu.edu>
----
- .../ABI/testing/sysfs-firmware-qemu_fw_cfg         |  58 ++
- drivers/firmware/Kconfig                           |  19 +
- drivers/firmware/Makefile                          |   1 +
- drivers/firmware/qemu_fw_cfg.c                     | 632 +++++++++++++++++++++
- 4 files changed, 710 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-firmware-qemu_fw_cfg
- create mode 100644 drivers/firmware/qemu_fw_cfg.c
-
-diff --git a/Documentation/ABI/testing/sysfs-firmware-qemu_fw_cfg b/Documentation/ABI/testing/sysfs-firmware-qemu_fw_cfg
-new file mode 100644
-index 0000000..e9e58d4
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-firmware-qemu_fw_cfg
-@@ -0,0 +1,58 @@
-+What:		/sys/firmware/qemu_fw_cfg/
-+Date:		August 2015
-+Contact:	Gabriel Somlo <somlo@cmu.edu>
-+Description:
-+		Several different architectures supported by QEMU (x86, arm,
-+		sun4*, ppc/mac) are provisioned with a firmware configuration
-+		(fw_cfg) device, originally intended as a way for the host to
-+		provide configuration data to the guest firmware. Starting
-+		with QEMU v2.4, arbitrary fw_cfg file entries may be specified
-+		by the user on the command line, which makes fw_cfg additionally
-+		useful as an out-of-band, asynchronous mechanism for providing
-+		configuration data to the guest userspace.
-+
-+		The authoritative guest-side hardware interface documentation
-+		to the fw_cfg device can be found in "docs/specs/fw_cfg.txt"
-+		in the QEMU source tree.
-+
-+		=== SysFS fw_cfg Interface ===
-+
-+		The fw_cfg sysfs interface described in this document is only
-+		intended to display discoverable blobs (i.e., those registered
-+		with the file directory), as there is no way to determine the
-+		presence or size of "legacy" blobs (with selector keys between
-+		0x0002 and 0x0018) programmatically.
-+
-+		All fw_cfg information is shown under:
-+
-+			/sys/firmware/qemu_fw_cfg/
-+
-+		The only legacy blob displayed is the fw_cfg device revision:
-+
-+			/sys/firmware/qemu_fw_cfg/rev
-+
-+		--- Discoverable fw_cfg blobs by selector key ---
-+
-+		All discoverable blobs listed in the fw_cfg file directory are
-+		displayed as entries named after their unique selector key
-+		value, e.g.:
-+
-+			/sys/firmware/qemu_fw_cfg/by_key/32
-+			/sys/firmware/qemu_fw_cfg/by_key/33
-+			/sys/firmware/qemu_fw_cfg/by_key/34
-+			...
-+
-+		Each such fw_cfg sysfs entry has the following values exported
-+		as attributes:
-+
-+		name  	: The 56-byte nul-terminated ASCII string used as the
-+			  blob's 'file name' in the fw_cfg directory.
-+		size  	: The length of the blob, as given in the fw_cfg
-+			  directory.
-+		key	: The value of the blob's selector key as given in the
-+			  fw_cfg directory. This value is the same as used in
-+			  the parent directory name.
-+		raw	: The raw bytes of the blob, obtained by selecting the
-+			  entry via the control register, and reading a number
-+			  of bytes equal to the blob size from the data
-+			  register.
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index cf478fe..3cf920a 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -161,6 +161,25 @@ config RASPBERRYPI_FIRMWARE
- 	  This option enables support for communicating with the firmware on the
- 	  Raspberry Pi.
- 
-+config FW_CFG_SYSFS
-+	tristate "QEMU fw_cfg device support in sysfs"
-+	depends on SYSFS
-+	default n
-+	help
-+	  Say Y or M here to enable the exporting of the QEMU firmware
-+	  configuration (fw_cfg) file entries via sysfs. Entries are
-+	  found under /sys/firmware/fw_cfg when this option is enabled
-+	  and loaded.
-+
-+config FW_CFG_SYSFS_CMDLINE
-+	bool "QEMU fw_cfg device parameter parsing"
-+	depends on FW_CFG_SYSFS
-+	help
-+	  Allow the qemu_fw_cfg device to be initialized via the kernel
-+	  command line or using a module parameter.
-+	  WARNING: Using incorrect parameters (base address in particular)
-+	  may crash your system.
-+
- config QCOM_SCM
- 	bool
- 	depends on ARM || ARM64
-diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
-index 48dd417..474bada 100644
---- a/drivers/firmware/Makefile
-+++ b/drivers/firmware/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_ISCSI_IBFT_FIND)	+= iscsi_ibft_find.o
- obj-$(CONFIG_ISCSI_IBFT)	+= iscsi_ibft.o
- obj-$(CONFIG_FIRMWARE_MEMMAP)	+= memmap.o
- obj-$(CONFIG_RASPBERRYPI_FIRMWARE) += raspberrypi.o
-+obj-$(CONFIG_FW_CFG_SYSFS)	+= qemu_fw_cfg.o
- obj-$(CONFIG_QCOM_SCM)		+= qcom_scm.o
- obj-$(CONFIG_QCOM_SCM_64)	+= qcom_scm-64.o
- obj-$(CONFIG_QCOM_SCM_32)	+= qcom_scm-32.o
-diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
-new file mode 100644
-index 0000000..5b00d97
---- /dev/null
-+++ b/drivers/firmware/qemu_fw_cfg.c
-@@ -0,0 +1,632 @@
-+/*
-+ * drivers/firmware/qemu_fw_cfg.c
-+ *
-+ * Copyright 2015 Carnegie Mellon University
-+ *
-+ * Expose entries from QEMU's firmware configuration (fw_cfg) device in
-+ * sysfs (read-only, under "/sys/firmware/qemu_fw_cfg/...").
-+ *
-+ * The fw_cfg device may be instantiated via either an ACPI node (on x86
-+ * and select subsets of aarch64), a Device Tree node (on arm), or using
-+ * a kernel module (or command line) parameter with the following syntax:
-+ *
-+ *      [fw_cfg.]ioport=<size>@<base>[:<ctrl_off>:<data_off>]
-+ * or
-+ *      [fw_cfg.]mmio=<size>@<base>[:<ctrl_off>:<data_off>]
-+ *
-+ * where:
-+ *      <size>     := size of ioport or mmio range
-+ *      <base>     := physical base address of ioport or mmio range
-+ *      <ctrl_off> := (optional) offset of control register
-+ *      <data_off> := (optional) offset of data register
-+ *
-+ * e.g.:
-+ *      fw_cfg.ioport=2@0x510:0:1		(the default on x86)
-+ * or
-+ *      fw_cfg.mmio=0xA@0x9020000:8:0		(the default on arm)
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/acpi.h>
-+#include <linux/slab.h>
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+
-+MODULE_AUTHOR("Gabriel L. Somlo <somlo@cmu.edu>");
-+MODULE_DESCRIPTION("QEMU fw_cfg sysfs support");
-+MODULE_LICENSE("GPL");
-+
-+/* selector key values for "well-known" fw_cfg entries */
-+#define FW_CFG_SIGNATURE  0x00
-+#define FW_CFG_ID         0x01
-+#define FW_CFG_FILE_DIR   0x19
-+
-+/* size in bytes of fw_cfg signature */
-+#define FW_CFG_SIG_SIZE 4
-+
-+/* fw_cfg "file name" is up to 56 characters (including terminating nul) */
-+#define FW_CFG_MAX_FILE_PATH 56
-+
-+/* fw_cfg file directory entry type */
-+struct fw_cfg_file {
-+	u32 size;
-+	u16 select;
-+	u16 reserved;
-+	char name[FW_CFG_MAX_FILE_PATH];
-+};
-+
-+/* fw_cfg device i/o register addresses */
-+static bool fw_cfg_is_mmio;
-+static phys_addr_t fw_cfg_p_base;
-+static resource_size_t fw_cfg_p_size;
-+static void __iomem *fw_cfg_dev_base;
-+static void __iomem *fw_cfg_reg_ctrl;
-+static void __iomem *fw_cfg_reg_data;
-+
-+/* atomic access to fw_cfg device (potentially slow i/o, so using mutex) */
-+static DEFINE_MUTEX(fw_cfg_dev_lock);
-+
-+/* pick appropriate endianness for selector key */
-+static inline u16 fw_cfg_sel_endianness(u16 key)
-+{
-+	return fw_cfg_is_mmio ? cpu_to_be16(key) : cpu_to_le16(key);
-+}
-+
-+/* read chunk of given fw_cfg blob (caller responsible for sanity-check) */
-+static inline void fw_cfg_read_blob(u16 key,
-+				    void *buf, loff_t pos, size_t count)
-+{
-+	mutex_lock(&fw_cfg_dev_lock);
-+	iowrite16(fw_cfg_sel_endianness(key), fw_cfg_reg_ctrl);
-+	while (pos-- > 0)
-+		ioread8(fw_cfg_reg_data);
-+	ioread8_rep(fw_cfg_reg_data, buf, count);
-+	mutex_unlock(&fw_cfg_dev_lock);
-+}
-+
-+/* clean up fw_cfg device i/o */
-+static void fw_cfg_io_cleanup(void)
-+{
-+	if (fw_cfg_is_mmio) {
-+		iounmap(fw_cfg_dev_base);
-+		release_mem_region(fw_cfg_p_base, fw_cfg_p_size);
-+	} else {
-+		ioport_unmap(fw_cfg_dev_base);
-+		release_region(fw_cfg_p_base, fw_cfg_p_size);
-+	}
-+}
-+
-+/* initialize fw_cfg device i/o from platform data */
-+static int fw_cfg_do_platform_probe(struct platform_device *pdev)
-+{
-+	char sig[FW_CFG_SIG_SIZE];
-+	struct resource *range, *ctrl, *data;
-+
-+	/* acquire i/o range details */
-+	fw_cfg_is_mmio = false;
-+	range = platform_get_resource(pdev, IORESOURCE_IO, 0);
-+	if (!range) {
-+		fw_cfg_is_mmio = true;
-+		range = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+		if (!range)
-+			return -EINVAL;
-+	}
-+	fw_cfg_p_base = range->start;
-+	fw_cfg_p_size = resource_size(range);
-+
-+	if (fw_cfg_is_mmio) {
-+		if (!request_mem_region(fw_cfg_p_base,
-+					fw_cfg_p_size, "fw_cfg_mem"))
-+			return -EBUSY;
-+		fw_cfg_dev_base = ioremap(fw_cfg_p_base, fw_cfg_p_size);
-+		if (!fw_cfg_dev_base) {
-+			release_mem_region(fw_cfg_p_base, fw_cfg_p_size);
-+			return -EFAULT;
-+		}
-+		/* set register addresses (using arm/mmio offsets) */
-+		fw_cfg_reg_ctrl = fw_cfg_dev_base + 0x08;
-+		fw_cfg_reg_data = fw_cfg_dev_base + 0x00;
-+	} else {
-+		if (!request_region(fw_cfg_p_base,
-+				    fw_cfg_p_size, "fw_cfg_io"))
-+			return -EBUSY;
-+		fw_cfg_dev_base = ioport_map(fw_cfg_p_base, fw_cfg_p_size);
-+		if (!fw_cfg_dev_base) {
-+			release_region(fw_cfg_p_base, fw_cfg_p_size);
-+			return -EFAULT;
-+		}
-+		/* set register addresses (using pc/i386/ioport offsets) */
-+		fw_cfg_reg_ctrl = fw_cfg_dev_base + 0x00;
-+		fw_cfg_reg_data = fw_cfg_dev_base + 0x01;
-+	}
-+
-+	/* were custom register offsets provided (e.g. on the command line)? */
-+	ctrl = platform_get_resource_byname(pdev, IORESOURCE_REG, "ctrl");
-+	data = platform_get_resource_byname(pdev, IORESOURCE_REG, "data");
-+	if (ctrl && data) {
-+		fw_cfg_reg_ctrl = fw_cfg_dev_base + ctrl->start;
-+		fw_cfg_reg_data = fw_cfg_dev_base + data->start;
-+	}
-+
-+	/* verify fw_cfg device signature */
-+	fw_cfg_read_blob(FW_CFG_SIGNATURE, sig, 0, FW_CFG_SIG_SIZE);
-+	if (memcmp(sig, "QEMU", FW_CFG_SIG_SIZE) != 0) {
-+		fw_cfg_io_cleanup();
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+/* fw_cfg revision attribute, in /sys/firmware/qemu_fw_cfg top-level dir. */
-+static u32 fw_cfg_rev;
-+
-+static ssize_t fw_cfg_showrev(struct kobject *k, struct attribute *a, char *buf)
-+{
-+	return sprintf(buf, "%u\n", fw_cfg_rev);
-+}
-+
-+static const struct {
-+	struct attribute attr;
-+	ssize_t (*show)(struct kobject *k, struct attribute *a, char *buf);
-+} fw_cfg_rev_attr = {
-+	.attr = { .name = "rev", .mode = S_IRUSR },
-+	.show = fw_cfg_showrev,
-+};
-+
-+/* fw_cfg_sysfs_entry type */
-+struct fw_cfg_sysfs_entry {
-+	struct kobject kobj;
-+	struct fw_cfg_file f;
-+	struct list_head list;
-+};
-+
-+/* get fw_cfg_sysfs_entry from kobject member */
-+static inline struct fw_cfg_sysfs_entry *to_entry(struct kobject *kobj)
-+{
-+	return container_of(kobj, struct fw_cfg_sysfs_entry, kobj);
-+}
-+
-+/* fw_cfg_sysfs_attribute type */
-+struct fw_cfg_sysfs_attribute {
-+	struct attribute attr;
-+	ssize_t (*show)(struct fw_cfg_sysfs_entry *entry, char *buf);
-+};
-+
-+/* get fw_cfg_sysfs_attribute from attribute member */
-+static inline struct fw_cfg_sysfs_attribute *to_attr(struct attribute *attr)
-+{
-+	return container_of(attr, struct fw_cfg_sysfs_attribute, attr);
-+}
-+
-+/* global cache of fw_cfg_sysfs_entry objects */
-+static LIST_HEAD(fw_cfg_entry_cache);
-+
-+/* kobjects removed lazily by kernel, mutual exclusion needed */
-+static DEFINE_SPINLOCK(fw_cfg_cache_lock);
-+
-+static inline void fw_cfg_sysfs_cache_enlist(struct fw_cfg_sysfs_entry *entry)
-+{
-+	spin_lock(&fw_cfg_cache_lock);
-+	list_add_tail(&entry->list, &fw_cfg_entry_cache);
-+	spin_unlock(&fw_cfg_cache_lock);
-+}
-+
-+static inline void fw_cfg_sysfs_cache_delist(struct fw_cfg_sysfs_entry *entry)
-+{
-+	spin_lock(&fw_cfg_cache_lock);
-+	list_del(&entry->list);
-+	spin_unlock(&fw_cfg_cache_lock);
-+}
-+
-+static void fw_cfg_sysfs_cache_cleanup(void)
-+{
-+	struct fw_cfg_sysfs_entry *entry, *next;
-+
-+	list_for_each_entry_safe(entry, next, &fw_cfg_entry_cache, list) {
-+		/* will end up invoking fw_cfg_sysfs_cache_delist()
-+		 * via each object's release() method (i.e. destructor)
-+		 */
-+		kobject_put(&entry->kobj);
-+	}
-+}
-+
-+/* default_attrs: per-entry attributes and show methods */
-+
-+#define FW_CFG_SYSFS_ATTR(_attr) \
-+struct fw_cfg_sysfs_attribute fw_cfg_sysfs_attr_##_attr = { \
-+	.attr = { .name = __stringify(_attr), .mode = S_IRUSR }, \
-+	.show = fw_cfg_sysfs_show_##_attr, \
-+}
-+
-+static ssize_t fw_cfg_sysfs_show_size(struct fw_cfg_sysfs_entry *e, char *buf)
-+{
-+	return sprintf(buf, "%u\n", e->f.size);
-+}
-+
-+static ssize_t fw_cfg_sysfs_show_key(struct fw_cfg_sysfs_entry *e, char *buf)
-+{
-+	return sprintf(buf, "%u\n", e->f.select);
-+}
-+
-+static ssize_t fw_cfg_sysfs_show_name(struct fw_cfg_sysfs_entry *e, char *buf)
-+{
-+	return sprintf(buf, "%s\n", e->f.name);
-+}
-+
-+static FW_CFG_SYSFS_ATTR(size);
-+static FW_CFG_SYSFS_ATTR(key);
-+static FW_CFG_SYSFS_ATTR(name);
-+
-+static struct attribute *fw_cfg_sysfs_entry_attrs[] = {
-+	&fw_cfg_sysfs_attr_size.attr,
-+	&fw_cfg_sysfs_attr_key.attr,
-+	&fw_cfg_sysfs_attr_name.attr,
-+	NULL,
-+};
-+
-+/* sysfs_ops: find fw_cfg_[entry, attribute] and call appropriate show method */
-+static ssize_t fw_cfg_sysfs_attr_show(struct kobject *kobj, struct attribute *a,
-+				      char *buf)
-+{
-+	struct fw_cfg_sysfs_entry *entry = to_entry(kobj);
-+	struct fw_cfg_sysfs_attribute *attr = to_attr(a);
-+
-+	return attr->show(entry, buf);
-+}
-+
-+static const struct sysfs_ops fw_cfg_sysfs_attr_ops = {
-+	.show = fw_cfg_sysfs_attr_show,
-+};
-+
-+/* release: destructor, to be called via kobject_put() */
-+static void fw_cfg_sysfs_release_entry(struct kobject *kobj)
-+{
-+	struct fw_cfg_sysfs_entry *entry = to_entry(kobj);
-+
-+	fw_cfg_sysfs_cache_delist(entry);
-+	kfree(entry);
-+}
-+
-+/* kobj_type: ties together all properties required to register an entry */
-+static struct kobj_type fw_cfg_sysfs_entry_ktype = {
-+	.default_attrs = fw_cfg_sysfs_entry_attrs,
-+	.sysfs_ops = &fw_cfg_sysfs_attr_ops,
-+	.release = fw_cfg_sysfs_release_entry,
-+};
-+
-+/* raw-read method and attribute */
-+static ssize_t fw_cfg_sysfs_read_raw(struct file *filp, struct kobject *kobj,
-+				     struct bin_attribute *bin_attr,
-+				     char *buf, loff_t pos, size_t count)
-+{
-+	struct fw_cfg_sysfs_entry *entry = to_entry(kobj);
-+
-+	if (pos > entry->f.size)
-+		return -EINVAL;
-+
-+	if (count > entry->f.size - pos)
-+		count = entry->f.size - pos;
-+
-+	fw_cfg_read_blob(entry->f.select, buf, pos, count);
-+	return count;
-+}
-+
-+static struct bin_attribute fw_cfg_sysfs_attr_raw = {
-+	.attr = { .name = "raw", .mode = S_IRUSR },
-+	.read = fw_cfg_sysfs_read_raw,
-+};
-+
-+/* kobjects representing top-level and by_key folders */
-+static struct kobject *fw_cfg_top_ko;
-+static struct kobject *fw_cfg_sel_ko;
-+
-+/* register an individual fw_cfg file */
-+static int fw_cfg_register_file(const struct fw_cfg_file *f)
-+{
-+	int err;
-+	struct fw_cfg_sysfs_entry *entry;
-+
-+	/* allocate new entry */
-+	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
-+	if (!entry)
-+		return -ENOMEM;
-+
-+	/* set file entry information */
-+	memcpy(&entry->f, f, sizeof(struct fw_cfg_file));
-+
-+	/* register entry under "/sys/firmware/qemu_fw_cfg/by_key/" */
-+	err = kobject_init_and_add(&entry->kobj, &fw_cfg_sysfs_entry_ktype,
-+				   fw_cfg_sel_ko, "%d", entry->f.select);
-+	if (err)
-+		goto err_register;
-+
-+	/* add raw binary content access */
-+	err = sysfs_create_bin_file(&entry->kobj, &fw_cfg_sysfs_attr_raw);
-+	if (err)
-+		goto err_add_raw;
-+
-+	/* success, add entry to global cache */
-+	fw_cfg_sysfs_cache_enlist(entry);
-+	return 0;
-+
-+err_add_raw:
-+	kobject_del(&entry->kobj);
-+err_register:
-+	kfree(entry);
-+	return err;
-+}
-+
-+/* iterate over all fw_cfg directory entries, registering each one */
-+static int fw_cfg_register_dir_entries(void)
-+{
-+	int ret = 0;
-+	u32 count, i;
-+	struct fw_cfg_file *dir;
-+	size_t dir_size;
-+
-+	fw_cfg_read_blob(FW_CFG_FILE_DIR, &count, 0, sizeof(count));
-+	count = be32_to_cpu(count);
-+	dir_size = count * sizeof(struct fw_cfg_file);
-+
-+	dir = kmalloc(dir_size, GFP_KERNEL);
-+	if (!dir)
-+		return -ENOMEM;
-+
-+	fw_cfg_read_blob(FW_CFG_FILE_DIR, dir, sizeof(count), dir_size);
-+
-+	for (i = 0; i < count; i++) {
-+		dir[i].size = be32_to_cpu(dir[i].size);
-+		dir[i].select = be16_to_cpu(dir[i].select);
-+		ret = fw_cfg_register_file(&dir[i]);
-+		if (ret)
-+			break;
-+	}
-+
-+	kfree(dir);
-+	return ret;
-+}
-+
-+/* unregister top-level or by_key folder */
-+static inline void fw_cfg_kobj_cleanup(struct kobject *kobj)
-+{
-+	kobject_del(kobj);
-+	kobject_put(kobj);
-+}
-+
-+static int fw_cfg_sysfs_probe(struct platform_device *pdev)
-+{
-+	int err;
-+
-+	/* NOTE: If we supported multiple fw_cfg devices, we'd first create
-+	 * a subdirectory named after e.g. pdev->id, then hang per-device
-+	 * by_key subdirectories underneath it. However, only
-+	 * one fw_cfg device exist system-wide, so if one was already found
-+	 * earlier, we might as well stop here.
-+	 */
-+	if (fw_cfg_sel_ko)
-+		return -EBUSY;
-+
-+	/* create by_key subdirectory of /sys/firmware/qemu_fw_cfg/ */
-+	err = -ENOMEM;
-+	fw_cfg_sel_ko = kobject_create_and_add("by_key", fw_cfg_top_ko);
-+	if (!fw_cfg_sel_ko)
-+		goto err_sel;
-+
-+	/* initialize fw_cfg device i/o from platform data */
-+	err = fw_cfg_do_platform_probe(pdev);
-+	if (err)
-+		goto err_probe;
-+
-+	/* get revision number, add matching top-level attribute */
-+	fw_cfg_read_blob(FW_CFG_ID, &fw_cfg_rev, 0, sizeof(fw_cfg_rev));
-+	fw_cfg_rev = le32_to_cpu(fw_cfg_rev);
-+	err = sysfs_create_file(fw_cfg_top_ko, &fw_cfg_rev_attr.attr);
-+	if (err)
-+		goto err_rev;
-+
-+	/* process fw_cfg file directory entry, registering each file */
-+	err = fw_cfg_register_dir_entries();
-+	if (err)
-+		goto err_dir;
-+
-+	/* success */
-+	pr_debug("fw_cfg: loaded.\n");
-+	return 0;
-+
-+err_dir:
-+	fw_cfg_sysfs_cache_cleanup();
-+	sysfs_remove_file(fw_cfg_top_ko, &fw_cfg_rev_attr.attr);
-+err_rev:
-+	fw_cfg_io_cleanup();
-+err_probe:
-+	fw_cfg_kobj_cleanup(fw_cfg_sel_ko);
-+err_sel:
-+	return err;
-+}
-+
-+static int fw_cfg_sysfs_remove(struct platform_device *pdev)
-+{
-+	pr_debug("fw_cfg: unloading.\n");
-+	fw_cfg_sysfs_cache_cleanup();
-+	fw_cfg_kobj_cleanup(fw_cfg_sel_ko);
-+	fw_cfg_io_cleanup();
-+	return 0;
-+}
-+
-+static const struct of_device_id fw_cfg_sysfs_mmio_match[] = {
-+	{ .compatible = "qemu,fw-cfg-mmio", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, fw_cfg_sysfs_mmio_match);
-+
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id fw_cfg_sysfs_acpi_match[] = {
-+	{ "QEMU0002", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(acpi, fw_cfg_sysfs_acpi_match);
-+#endif
-+
-+static struct platform_driver fw_cfg_sysfs_driver = {
-+	.probe = fw_cfg_sysfs_probe,
-+	.remove = fw_cfg_sysfs_remove,
-+	.driver = {
-+		.name = "fw_cfg",
-+		.of_match_table = fw_cfg_sysfs_mmio_match,
-+		.acpi_match_table = ACPI_PTR(fw_cfg_sysfs_acpi_match),
-+	},
-+};
-+
-+#ifdef CONFIG_FW_CFG_SYSFS_CMDLINE
-+
-+static struct platform_device *fw_cfg_cmdline_dev;
-+
-+/* this probably belongs in e.g. include/linux/types.h,
-+ * but right now we are the only ones doing it...
-+ */
-+#ifdef CONFIG_PHYS_ADDR_T_64BIT
-+#define __PHYS_ADDR_PREFIX "ll"
-+#else
-+#define __PHYS_ADDR_PREFIX ""
-+#endif
-+
-+/* use special scanf/printf modifier for phys_addr_t, resource_size_t */
-+#define PH_ADDR_SCAN_FMT "@%" __PHYS_ADDR_PREFIX "i%n" \
-+			 ":%" __PHYS_ADDR_PREFIX "i" \
-+			 ":%" __PHYS_ADDR_PREFIX "i%n"
-+
-+#define PH_ADDR_PR_1_FMT "0x%" __PHYS_ADDR_PREFIX "x@" \
-+			 "0x%" __PHYS_ADDR_PREFIX "x"
-+
-+#define PH_ADDR_PR_3_FMT PH_ADDR_PR_1_FMT \
-+			 ":%" __PHYS_ADDR_PREFIX "u" \
-+			 ":%" __PHYS_ADDR_PREFIX "u"
-+
-+static int fw_cfg_cmdline_set(const char *arg, const struct kernel_param *kp)
-+{
-+	struct resource res[3] = {};
-+	char *str;
-+	phys_addr_t base;
-+	resource_size_t size, ctrl_off, data_off;
-+	int processed, consumed = 0;
-+
-+	/* only one fw_cfg device can exist system-wide, so if one
-+	 * was processed on the command line already, we might as
-+	 * well stop here.
-+	 */
-+	if (fw_cfg_cmdline_dev) {
-+		/* avoid leaking previously registered device */
-+		platform_device_unregister(fw_cfg_cmdline_dev);
-+		return -EINVAL;
-+	}
-+
-+	/* consume "<size>" portion of command line argument */
-+	size = memparse(arg, &str);
-+
-+	/* get "@<base>[:<ctrl_off>:<data_off>]" chunks */
-+	processed = sscanf(str, PH_ADDR_SCAN_FMT,
-+			   &base, &consumed,
-+			   &ctrl_off, &data_off, &consumed);
-+
-+	/* sscanf() must process precisely 1 or 3 chunks:
-+	 * <base> is mandatory, optionally followed by <ctrl_off>
-+	 * and <data_off>;
-+	 * there must be no extra characters after the last chunk,
-+	 * so str[consumed] must be '\0'.
-+	 */
-+	if (str[consumed] ||
-+	    (processed != 1 && processed != 3))
-+		return -EINVAL;
-+
-+	res[0].start = base;
-+	res[0].end = base + size - 1;
-+	res[0].flags = !strcmp(kp->name, "mmio") ? IORESOURCE_MEM :
-+						   IORESOURCE_IO;
-+
-+	/* insert register offsets, if provided */
-+	if (processed > 1) {
-+		res[1].name = "ctrl";
-+		res[1].start = ctrl_off;
-+		res[1].flags = IORESOURCE_REG;
-+		res[2].name = "data";
-+		res[2].start = data_off;
-+		res[2].flags = IORESOURCE_REG;
-+	}
-+
-+	/* "processed" happens to nicely match the number of resources
-+	 * we need to pass in to this platform device.
-+	 */
-+	fw_cfg_cmdline_dev = platform_device_register_simple("fw_cfg",
-+					PLATFORM_DEVID_NONE, res, processed);
-+	if (IS_ERR(fw_cfg_cmdline_dev))
-+		return PTR_ERR(fw_cfg_cmdline_dev);
-+
-+	return 0;
-+}
-+
-+static int fw_cfg_cmdline_get(char *buf, const struct kernel_param *kp)
-+{
-+	/* stay silent if device was not configured via the command
-+	 * line, or if the parameter name (ioport/mmio) doesn't match
-+	 * the device setting
-+	 */
-+	if (!fw_cfg_cmdline_dev ||
-+	    (!strcmp(kp->name, "mmio") ^
-+	     (fw_cfg_cmdline_dev->resource[0].flags == IORESOURCE_MEM)))
-+		return 0;
-+
-+	switch (fw_cfg_cmdline_dev->num_resources) {
-+	case 1:
-+		return snprintf(buf, PAGE_SIZE, PH_ADDR_PR_1_FMT,
-+				resource_size(&fw_cfg_cmdline_dev->resource[0]),
-+				fw_cfg_cmdline_dev->resource[0].start);
-+	case 3:
-+		return snprintf(buf, PAGE_SIZE, PH_ADDR_PR_3_FMT,
-+				resource_size(&fw_cfg_cmdline_dev->resource[0]),
-+				fw_cfg_cmdline_dev->resource[0].start,
-+				fw_cfg_cmdline_dev->resource[1].start,
-+				fw_cfg_cmdline_dev->resource[2].start);
-+	}
-+
-+	/* Should never get here */
-+	WARN(1, "Unexpected number of resources: %d\n",
-+		fw_cfg_cmdline_dev->num_resources);
-+	return 0;
-+}
-+
-+static const struct kernel_param_ops fw_cfg_cmdline_param_ops = {
-+	.set = fw_cfg_cmdline_set,
-+	.get = fw_cfg_cmdline_get,
-+};
-+
-+device_param_cb(ioport, &fw_cfg_cmdline_param_ops, NULL, S_IRUSR);
-+device_param_cb(mmio, &fw_cfg_cmdline_param_ops, NULL, S_IRUSR);
-+
-+#endif /* CONFIG_FW_CFG_SYSFS_CMDLINE */
-+
-+static int __init fw_cfg_sysfs_init(void)
-+{
-+	/* create /sys/firmware/qemu_fw_cfg/ top level directory */
-+	fw_cfg_top_ko = kobject_create_and_add("qemu_fw_cfg", firmware_kobj);
-+	if (!fw_cfg_top_ko)
-+		return -ENOMEM;
-+
-+	return platform_driver_register(&fw_cfg_sysfs_driver);
-+}
-+
-+static void __exit fw_cfg_sysfs_exit(void)
-+{
-+	platform_driver_unregister(&fw_cfg_sysfs_driver);
-+
-+#ifdef CONFIG_FW_CFG_SYSFS_CMDLINE
-+	platform_device_unregister(fw_cfg_cmdline_dev);
-+#endif
-+
-+	/* clean up /sys/firmware/qemu_fw_cfg/ */
-+	fw_cfg_kobj_cleanup(fw_cfg_top_ko);
-+}
-+
-+module_init(fw_cfg_sysfs_init);
-+module_exit(fw_cfg_sysfs_exit);
--- 
-2.4.3
+> ---
+>  Documentation/devicetree/bindings/mfd/s2mpa01.txt  | 90 ----------------------
+>  .../devicetree/bindings/mfd/samsung,sec-core.txt   |  4 +-
+>  .../bindings/regulator/samsung,s2mpa01.txt         | 79 +++++++++++++++++++
+>  3 files changed, 82 insertions(+), 91 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/s2mpa01.txt
+>  create mode 100644 Documentation/devicetree/bindings/regulator/samsung,s2mpa01.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/s2mpa01.txt b/Documentation/devicetree/bindings/mfd/s2mpa01.txt
+> deleted file mode 100644
+> index c13d3d8c3947..000000000000
+> --- a/Documentation/devicetree/bindings/mfd/s2mpa01.txt
+> +++ /dev/null
+> @@ -1,90 +0,0 @@
+> -
+> -* Samsung S2MPA01 Voltage and Current Regulator
+> -
+> -The Samsung S2MPA01 is a multi-function device which includes high
+> -efficiency buck converters including Dual-Phase buck converter, various LDOs,
+> -and an RTC. It is interfaced to the host controller using an I2C interface.
+> -Each sub-block is addressed by the host system using different I2C slave
+> -addresses.
+> -
+> -Required properties:
+> -- compatible: Should be "samsung,s2mpa01-pmic".
+> -- reg: Specifies the I2C slave address of the PMIC block. It should be 0x66.
+> -
+> -Optional properties:
+> -- interrupt-parent: Specifies the phandle of the interrupt controller to which
+> -  the interrupts from s2mpa01 are delivered to.
+> -- interrupts: An interrupt specifier for the sole interrupt generated by the
+> -  device.
+> -
+> -Optional nodes:
+> -- regulators: The regulators of s2mpa01 that have to be instantiated should be
+> -  included in a sub-node named 'regulators'. Regulator nodes and constraints
+> -  included in this sub-node use the standard regulator bindings which are
+> -  documented elsewhere.
+> -
+> -Properties for BUCK regulator nodes:
+> -- regulator-ramp-delay: ramp delay in uV/us. May be 6250, 12500
+> -  (default), 25000, or 50000. May be 0 for disabling the ramp delay on
+> -  BUCK{1,2,3,4}.
+> -
+> - In the absence of the regulator-ramp-delay property, the default ramp
+> - delay will be used.
+> -
+> -  NOTE: Some BUCKs share the ramp rate setting i.e. same ramp value will be set
+> -  for a particular group of BUCKs. So provide same regulator-ramp-delay=<value>.
+> -
+> -  The following BUCKs share ramp settings:
+> -  * 1 and 6
+> -  * 2 and 4
+> -  * 8, 9, and 10
+> -
+> -The following are the names of the regulators that the s2mpa01 PMIC block
+> -supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
+> -as per the datasheet of s2mpa01.
+> -
+> -	- LDOn
+> -		  - valid values for n are 1 to 26
+> -		  - Example: LDO1, LD02, LDO26
+> -	- BUCKn
+> -		  - valid values for n are 1 to 10.
+> -		  - Example: BUCK1, BUCK2, BUCK9
+> -
+> -Example:
+> -
+> -	s2mpa01_pmic@66 {
+> -		compatible = "samsung,s2mpa01-pmic";
+> -		reg = <0x66>;
+> -
+> -		regulators {
+> -			ldo1_reg: LDO1 {
+> -				regulator-name = "VDD_ALIVE";
+> -				regulator-min-microvolt = <1000000>;
+> -				regulator-max-microvolt = <1000000>;
+> -			};
+> -
+> -			ldo2_reg: LDO2 {
+> -				regulator-name = "VDDQ_MMC2";
+> -				regulator-min-microvolt = <2800000>;
+> -				regulator-max-microvolt = <2800000>;
+> -				regulator-always-on;
+> -			};
+> -
+> -			buck1_reg: BUCK1 {
+> -				regulator-name = "vdd_mif";
+> -				regulator-min-microvolt = <950000>;
+> -				regulator-max-microvolt = <1350000>;
+> -				regulator-always-on;
+> -				regulator-boot-on;
+> -			};
+> -
+> -			buck2_reg: BUCK2 {
+> -				regulator-name = "vdd_arm";
+> -				regulator-min-microvolt = <950000>;
+> -				regulator-max-microvolt = <1350000>;
+> -				regulator-always-on;
+> -				regulator-boot-on;
+> -				regulator-ramp-delay = <50000>;
+> -			};
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/mfd/samsung,sec-core.txt b/Documentation/devicetree/bindings/mfd/samsung,sec-core.txt
+> index 4aeb95c82304..cdd079bfc287 100644
+> --- a/Documentation/devicetree/bindings/mfd/samsung,sec-core.txt
+> +++ b/Documentation/devicetree/bindings/mfd/samsung,sec-core.txt
+> @@ -4,7 +4,7 @@ Binding for Samsung S2M and S5M family multi-function device
+>  This is a part of device tree bindings for S2M and S5M family multi-function
+>  devices.
+>  
+> -The Samsung S2MPS11/13/14/15, S2MPU02 and S5M8767 is a family
+> +The Samsung S2MPA01, S2MPS11/13/14/15, S2MPU02 and S5M8767 is a family
+>  of multi-function devices which include voltage and current regulators, RTC,
+>  charger controller, clock outputs and other sub-blocks. It is interfaced
+>  to the host controller using an I2C interface. Each sub-block is usually
+> @@ -13,6 +13,7 @@ addressed by the host system using different I2C slave addresses.
+>  
+>  This document describes bindings for main device node. Optional sub-blocks
+>  must be a sub-nodes to it. Bindings for them can be found in:
+> + - bindings/regulator/samsung,s2mpa01.txt
+>   - bindings/regulator/samsung,s2mps11.txt
+>   - bindings/regulator/samsung,s5m8767.txt
+>   - bindings/clock/samsung,s2mps11.txt
+> @@ -20,6 +21,7 @@ must be a sub-nodes to it. Bindings for them can be found in:
+>  
+>  Required properties:
+>   - compatible: Should be one of the following
+> +	- "samsung,s2mpa01-pmic",
+>  	- "samsung,s2mps11-pmic",
+>  	- "samsung,s2mps13-pmic",
+>  	- "samsung,s2mps14-pmic",
+> diff --git a/Documentation/devicetree/bindings/regulator/samsung,s2mpa01.txt b/Documentation/devicetree/bindings/regulator/samsung,s2mpa01.txt
+> new file mode 100644
+> index 000000000000..bae3c7f838cf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/samsung,s2mpa01.txt
+> @@ -0,0 +1,79 @@
+> +Binding for Samsung S2MPA01 regulator block
+> +===========================================
+> +
+> +This is a part of device tree bindings for S2M family multi-function devices.
+> +More information can be found in bindings/mfd/sec-core.txt file.
+> +
+> +The S2MPA01 device provide buck and LDO regulators.
+> +
+> +To register these with regulator framework instantiate under main device node
+> +a sub-node named "regulators" with more sub-nodes for each regulator using the
+> +common regulator binding documented in:
+> + - Documentation/devicetree/bindings/regulator/regulator.txt
+> +
+> +
+> +Names of regulators supported by S2MPA01 device:
+> +	- LDOn
+> +		  - valid values for n are 1 to 26
+> +		  - Example: LDO1, LD02, LDO26
+> +	- BUCKn
+> +		  - valid values for n are 1 to 10.
+> +		  - Example: BUCK1, BUCK2, BUCK9
+> +Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
+> +as per the datasheet of device.
+> +
+> +
+> +Optional properties of buck regulator nodes under "regulators" sub-node:
+> + - regulator-ramp-delay: ramp delay in uV/us. May be 6250, 12500
+> +   (default), 25000, or 50000. May be 0 for disabling the ramp delay on
+> +   BUCK{1,2,3,4}.
+> +
+> +   In the absence of the regulator-ramp-delay property, the default ramp
+> +   delay will be used.
+> +
+> +   Note: Some bucks share the ramp rate setting i.e. same ramp value
+> +   will be set for a particular group of bucks so provide the same
+> +   regulator-ramp-delay value for them.
+> +   Groups sharing ramp rate:
+> +    - buck{1,6},
+> +    - buck{2,4},
+> +    - buck{8,9,10}.
+> +
+> +Example:
+> +
+> +	s2mpa01_pmic@66 {
+> +		compatible = "samsung,s2mpa01-pmic";
+> +		reg = <0x66>;
+> +
+> +		regulators {
+> +			ldo1_reg: LDO1 {
+> +				regulator-name = "VDD_ALIVE";
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <1000000>;
+> +			};
+> +
+> +			ldo2_reg: LDO2 {
+> +				regulator-name = "VDDQ_MMC2";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			buck1_reg: BUCK1 {
+> +				regulator-name = "vdd_mif";
+> +				regulator-min-microvolt = <950000>;
+> +				regulator-max-microvolt = <1350000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			buck2_reg: BUCK2 {
+> +				regulator-name = "vdd_arm";
+> +				regulator-min-microvolt = <950000>;
+> +				regulator-max-microvolt = <1350000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-ramp-delay = <50000>;
+> +			};
+> +		};
+> +	};
+> -- 
+> 1.9.1
+> 
