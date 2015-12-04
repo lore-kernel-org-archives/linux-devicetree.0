@@ -1,89 +1,96 @@
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Jon Nettleton <jon.nettleton-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
-Date: Fri, 04 Dec 2015 18:56:00 +0100
-Message-ID: <1449251760.8275.116.camel@pengutronix.de>
+Date: Fri, 4 Dec 2015 19:02:17 +0100
+Message-ID: <CALHpu36m_dfYZrQRvhFYW7-s6nXs_xGr2dz3YvSPr7JYiPEYXA@mail.gmail.com>
 References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
- <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
- <20151204162956.GA14978@rob-hp-laptop>
- <1449247305.8275.104.camel@pengutronix.de>
- <CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
+	<1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
+	<20151204162956.GA14978@rob-hp-laptop>
+	<1449247305.8275.104.camel@pengutronix.de>
+	<CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
+	<1449251760.8275.116.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, patchwork-lst@pengutronix.de, "kernel@pengutronix.de" <kernel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449251760.8275.116.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRnJlaXRhZywgZGVuIDA0LjEyLjIwMTUsIDExOjMzIC0wNjAwIHNjaHJpZWIgUm9iIEhlcnJp
-bmc6Cj4gT24gRnJpLCBEZWMgNCwgMjAxNSBhdCAxMDo0MSBBTSwgTHVjYXMgU3RhY2ggPGwuc3Rh
-Y2hAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOgo+ID4gQW0gRnJlaXRhZywgZGVuIDA0LjEyLjIwMTUs
-IDEwOjI5IC0wNjAwIHNjaHJpZWIgUm9iIEhlcnJpbmc6Cj4gPj4gT24gRnJpLCBEZWMgMDQsIDIw
-MTUgYXQgMDI6NTk6NTRQTSArMDEwMCwgTHVjYXMgU3RhY2ggd3JvdGU6Cj4gPj4gPiBFdG5hdml2
-IGZvbGxvd3MgdGhlIHNhbWUgcHJpY2lwbGUgYXMgaW14LWRybSB0byBoYXZlIGEgdmlydHVhbAo+
-ID4+ID4gbWFzdGVyIGRldmljZSBub2RlIHRvIGJpbmQgYWxsIHRoZSBpbmRpdmlkdWFsIEdQVSBj
-b3JlcyB0b2dldGhlcgo+ID4+ID4gaW50byBvbmUgRFJNIGRldmljZS4KPiA+PiA+Cj4gPj4gPiBT
-aWduZWQtb2ZmLWJ5OiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5kZT4KPiA+PiA+
-IC0tLQo+ID4+ID4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2V0bmF2aXYvZXRuYXZpdi1kcm0udHh0
-ICAgICAgIHwgNDYgKysrKysrKysrKysrKysrKysrKysrKwo+ID4+ID4gIDEgZmlsZSBjaGFuZ2Vk
-LCA0NiBpbnNlcnRpb25zKCspCj4gPj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V0bmF2aXYvZXRuYXZpdi1kcm0udHh0Cj4g
-Pj4gPgo+ID4+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L2V0bmF2aXYvZXRuYXZpdi1kcm0udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZXRuYXZpdi9ldG5hdml2LWRybS50eHQKPiA+PiA+IG5ldyBm
-aWxlIG1vZGUgMTAwNjQ0Cj4gPj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjE5ZmRlMjlkYzFkNwo+
-ID4+ID4gLS0tIC9kZXYvbnVsbAo+ID4+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvZXRuYXZpdi9ldG5hdml2LWRybS50eHQKPiA+PiA+IEBAIC0wLDAg
-KzEsNDYgQEAKPiA+PiA+ICtFdG5hdml2IERSTSBtYXN0ZXIgZGV2aWNlCj4gPj4gPiArPT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT0KPiA+PiA+ICsKPiA+PiA+ICtUaGUgRXRuYXZpdiBE
-Uk0gbWFzdGVyIGRldmljZSBpcyBhIHZpcnR1YWwgZGV2aWNlIG5lZWRlZCB0byBsaXN0IGFsbAo+
-ID4+ID4gK1ZpdmFudGUgR1BVIGNvcmVzIHRoYXQgY29tcHJpc2UgdGhlIEdQVSBzdWJzeXN0ZW0u
-Cj4gPj4gPiArCj4gPj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiA+PiA+ICstIGNvbXBhdGli
-bGU6IFNob3VsZCBiZSBvbmUgb2YKPiA+PiA+ICsgICAgImZzbCxpbXgtZ3B1LXN1YnN5c3RlbSIK
-PiA+PiA+ICsgICAgIm1hcnZlbGwsZG92ZS1ncHUtc3Vic3lzdGVtIgo+ID4+ID4gKy0gY29yZXM6
-IFNob3VsZCBjb250YWluIGEgbGlzdCBvZiBwaGFuZGxlcyBwb2ludGluZyB0byBWaXZhbnRlIEdQ
-VSBkZXZpY2VzCj4gPj4gPiArCj4gPj4gPiArZXhhbXBsZToKPiA+PiA+ICsKPiA+PiA+ICtncHUt
-c3Vic3lzdGVtIHsKPiA+PiA+ICsgICBjb21wYXRpYmxlID0gImZzbCxpbXgtZ3B1LXN1YnN5c3Rl
-bSI7Cj4gPj4gPiArICAgY29yZXMgPSA8JmdwdV8yZD4sIDwmZ3B1XzNkPjsKPiA+PiA+ICt9Owo+
-ID4+Cj4gPj4gWWVhaCwgSSdtIG5vdCByZWFsbHkgYSBmYW4gb2YgZG9pbmcgdGhpcyBzaW1wbHkg
-YmVjYXVzZSBEUk0gd2FudHMgMQo+ID4+IGRyaXZlci4KPiA+Pgo+ID4gSSdtIGF3YXJlIG9mIHRo
-YXQsIGJ1dCBJIGRvbid0IHNlZSBtdWNoIHZhbHVlIGluIGtpY2tpbmcgdGhpcyBkaXNjdXNzaW9u
-Cj4gPiBhcm91bmQgZm9yIGV2ZXJ5IERSTSBkcml2ZXIgc3VibWlzc2lvbi4gVGhpcyBpcyB0aGUg
-YmluZGluZyB0aGF0IGhhcwo+ID4gZW1lcmdlZCBmcm9tIGEgbGVuZ3RoeSBkaXNjdXNzaW9uIGF0
-IEtTIDIwMTMgaW4gRWRpbmJ1cmdoIGFuZCBhdCBsZWFzdAo+ID4gYWxsb3dzIHVzIHRvIHN0YW5k
-YXJkaXplIG9uIF9zb21ldGhpbmdfLiBBbHNvIEFMU0EgZG9lcyBhIHNpbWlsYXIgdGhpbmcKPiA+
-IHRvIGJpbmQgY29kZWNzIGFuZCBDUFUgaW50ZXJmYWNlcyB0b2dldGhlci4KPiAKPiBUaGlzIGNh
-c2UgaXMgcXVpdGUgZGlmZmVyZW50IHRob3VnaCBJIHRoaW5rLiBUaGUgQUxTQSBjYXNlIGFuZCBv
-dGhlcgo+IERSTSBjYXNlcyBhcmUgb25lcyB0aGF0IGhhdmUgaW50ZXItZGVwZW5kZW5jaWVzIGJl
-dHdlZW4gdGhlIGJsb2Nrcwo+IChlLmcuIHNvbWUgc29ydCBvZiBoL3cgY29ubmVjdGlvbikuIFdo
-YXQgaXMgdGhlIGludGVyLWRlcGVuZGVuY3kgaGVyZT8KPiAKPiBEb2luZyB0aGlzIHdheSBoYXMg
-YWxzbyBiZWVuIGZvdW5kIHRvIGJlIGNvbXBsZXRlbHkgdW5uZWNlc3NhcnkgYW5kCj4gcmVtb3Zl
-ZCBpbiByZWNlbnQgRFJNIGRyaXZlciByZXZpZXdzLiBBZG1pdHRlZGx5LCB0aG9zZSBhcmUgY2Fz
-ZXMKPiB3aGVyZSBvbmUgZGV2aWNlIGNhbiBiZSB0aGUgbWFzdGVyIG9mIHRoZSBvdGhlcnMuIEZv
-ciAyIHBhcmFsbGVsCj4gZGV2aWNlcywgSSBkb24ndCBoYXZlIGFuIGFsdGVybmF0aXZlIG90aGVy
-IHRoYW4gcXVlc3Rpb24gd2h5IHRoZXkgbmVlZAo+IHRvIGJlIGEgc2luZ2xlIGRyaXZlci4KPiAK
-SWYgeW91IGluc2lzdCBvbiBkb2luZyB0aGluZ3MgZGlmZmVyZW50bHkgZm9yIHRoaXMgZHJpdmVy
-LCB3ZSBjb3VsZCBhZGQKYSBwYXNzIGF0IGRyaXZlciByZWdpc3RyYXRpb24gdGhhdCBzY2FucyB0
-aHJvdWdoIHRoZSBEVCwgbG9va2luZyBmb3IKbm9kZXMgbWF0Y2hpbmcgdGhlIEdQVSBjb3JlIGNv
-bXBhdGlibGUuCgpJJ20gbm90IHN1cmUgaWYgdGhhdCBtYWtlcyB0aGluZ3MgY2xlYW5lciB0aG91
-Z2ggYW5kIG1pZ2h0IGJpdGUgdXMgbGF0ZXIKb24uIEFsc28gSSdtIG5vdCBzdXJlIGlmIG1vdmlu
-ZyBhd2F5IGZyb20gdGhlIGJpbmRpbmcgc2NoZW1lIGFscmVhZHkKZXN0YWJsaXNoZWQgZm9yIG90
-aGVyIERSTSBkcml2ZXJzIG1ha2VzIHRoaW5ncyBiZXR0ZXIgZnJvbSBhIERUCnBlcnNwZWN0aXZl
-LiBQZXJzb25hbGx5IEkgd291bGQgcHJlZmVyIERUIGJpbmRpbmcgY29uc2lzdGVuY3kgb3Zlcgpw
-ZXJmZWN0aW9uIGZvciBzaW5nbGUgZHJpdmVycywgc2VnbWVudGluZyB0aGUgRFQgYmluZGluZyBz
-cGFjZS4KClJlZ2FyZHMsCkx1Y2FzCgotLSAKUGVuZ3V0cm9uaXggZS5LLiAgICAgICAgICAgICB8
-IEx1Y2FzIFN0YWNoICAgICAgICAgICAgICAgICB8CkluZHVzdHJpYWwgTGludXggU29sdXRpb25z
-ICAgfCBodHRwOi8vd3d3LnBlbmd1dHJvbml4LmRlLyAgfAoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Fri, Dec 4, 2015 at 6:56 PM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> Am Freitag, den 04.12.2015, 11:33 -0600 schrieb Rob Herring:
+>> On Fri, Dec 4, 2015 at 10:41 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>> > Am Freitag, den 04.12.2015, 10:29 -0600 schrieb Rob Herring:
+>> >> On Fri, Dec 04, 2015 at 02:59:54PM +0100, Lucas Stach wrote:
+>> >> > Etnaviv follows the same priciple as imx-drm to have a virtual
+>> >> > master device node to bind all the individual GPU cores together
+>> >> > into one DRM device.
+>> >> >
+>> >> > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> >> > ---
+>> >> >  .../bindings/display/etnaviv/etnaviv-drm.txt       | 46 ++++++++++++++++++++++
+>> >> >  1 file changed, 46 insertions(+)
+>> >> >  create mode 100644 Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
+>> >> >
+>> >> > diff --git a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
+>> >> > new file mode 100644
+>> >> > index 000000000000..19fde29dc1d7
+>> >> > --- /dev/null
+>> >> > +++ b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
+>> >> > @@ -0,0 +1,46 @@
+>> >> > +Etnaviv DRM master device
+>> >> > +================================
+>> >> > +
+>> >> > +The Etnaviv DRM master device is a virtual device needed to list all
+>> >> > +Vivante GPU cores that comprise the GPU subsystem.
+>> >> > +
+>> >> > +Required properties:
+>> >> > +- compatible: Should be one of
+>> >> > +    "fsl,imx-gpu-subsystem"
+>> >> > +    "marvell,dove-gpu-subsystem"
+>> >> > +- cores: Should contain a list of phandles pointing to Vivante GPU devices
+>> >> > +
+>> >> > +example:
+>> >> > +
+>> >> > +gpu-subsystem {
+>> >> > +   compatible = "fsl,imx-gpu-subsystem";
+>> >> > +   cores = <&gpu_2d>, <&gpu_3d>;
+>> >> > +};
+>> >>
+>> >> Yeah, I'm not really a fan of doing this simply because DRM wants 1
+>> >> driver.
+>> >>
+>> > I'm aware of that, but I don't see much value in kicking this discussion
+>> > around for every DRM driver submission. This is the binding that has
+>> > emerged from a lengthy discussion at KS 2013 in Edinburgh and at least
+>> > allows us to standardize on _something_. Also ALSA does a similar thing
+>> > to bind codecs and CPU interfaces together.
+>>
+>> This case is quite different though I think. The ALSA case and other
+>> DRM cases are ones that have inter-dependencies between the blocks
+>> (e.g. some sort of h/w connection). What is the inter-dependency here?
+>>
+>> Doing this way has also been found to be completely unnecessary and
+>> removed in recent DRM driver reviews. Admittedly, those are cases
+>> where one device can be the master of the others. For 2 parallel
+>> devices, I don't have an alternative other than question why they need
+>> to be a single driver.
+>>
+> If you insist on doing things differently for this driver, we could add
+> a pass at driver registration that scans through the DT, looking for
+> nodes matching the GPU core compatible.
+>
+> I'm not sure if that makes things cleaner though and might bite us later
+> on. Also I'm not sure if moving away from the binding scheme already
+> established for other DRM drivers makes things better from a DT
+> perspective. Personally I would prefer DT binding consistency over
+> perfection for single drivers, segmenting the DT binding space.
+>
+
+We should also keep in mind that Vivante is working on newer chipsets
+that also include multiple independent 3d cores.  I am not even sure
+how userspace would deal with this using the suggested changes.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
