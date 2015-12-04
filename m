@@ -1,70 +1,94 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v4 0/4] drm: Add support for the ARM HDLCD display
- controller
-Date: Fri, 4 Dec 2015 10:20:48 +0000
-Message-ID: <20151204102048.GH972@e106497-lin.cambridge.arm.com>
-References: <1449139249-9171-1-git-send-email-Liviu.Dudau@arm.com>
- <20151203165606.GS8644@n2100.arm.linux.org.uk>
+From: Mingkai Hu <Mingkai.Hu@freescale.com>
+Subject: [PATCH v2] dts/ls2080a: Update PCIe compatible
+Date: Fri, 4 Dec 2015 18:20:17 +0800
+Message-ID: <1449224417-20753-1-git-send-email-Mingkai.Hu@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20151203165606.GS8644@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Andrew Morton <akpm@linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org
+Cc: devicetree@vger.kernel.org, Mingkai Hu <Mingkai.Hu@freescale.com>, leoli@freescale.com, linux-arm-kernel@lists.infradead.org, Minghuan Lian <Minghuan.Lian@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBEZWMgMDMsIDIwMTUgYXQgMDQ6NTY6MDdQTSArMDAwMCwgUnVzc2VsbCBLaW5nIC0g
-QVJNIExpbnV4IHdyb3RlOgo+IE9uIFRodSwgRGVjIDAzLCAyMDE1IGF0IDEwOjQwOjQ1QU0gKzAw
-MDAsIExpdml1IER1ZGF1IHdyb3RlOgo+ID4gVGhpcyBzZXJpZXMgZGVwZW5kcyBvbiBTdWRlZXAg
-SG9sbGEncyBTQ1BJIGRyaXZlciAobm93IGluIG1haW5saW5lKSBhbmQgb24KPiA+IHRoZSB0ZGE5
-OTh4IHBhdGNoZXMgdGhhdCBoYXZlIGJlZW4gcXVldWVkIG9uIFJ1c3NlbGwncyBwYXRjaCBzeXN0
-ZW0gaGVyZSBbMV0uCj4gCj4gTm93IG1lcmdlZCBpbnRvIG15IHRyZWUuCgpUaGFua3MhCgpBcmUg
-eW91IHBsYW5uaW5nIHRvIHNlbmQgdGhvc2UgZm9yIDQuNSBvciBhcmUgdGhleSBnb2luZyB0byBi
-ZSBwYXRjaGVzIGZvciA0LjQ/Cgo+IAo+IENhbiBJIGFzayBhIGZhaXJseSBvYnZpb3VzIHF1ZXN0
-aW9uLi4uCj4gCj4gPiAgZHJpdmVycy9ncHUvZHJtL0tjb25maWcgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgfCAgIDIgKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZSAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHwgICAxICsKPiA+ICBkcml2ZXJzL2dwdS9kcm0vYXJtL0tjb25maWcg
-ICAgICAgICAgICAgICAgICAgICAgICB8ICAyOSArKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9hcm0v
-TWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsKPiA+ICBkcml2ZXJzL2dwdS9k
-cm0vYXJtL2hkbGNkX2NydGMuYyAgICAgICAgICAgICAgICAgICB8IDMyNyArKysrKysrKysrKysK
-PiA+ICBkcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNkX2Rydi5jICAgICAgICAgICAgICAgICAgICB8
-IDU1NSArKysrKysrKysrKysrKysrKysrKysKPiA+ICBkcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNk
-X2Rydi5oICAgICAgICAgICAgICAgICAgICB8ICA0MiArKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9h
-cm0vaGRsY2RfcmVncy5oICAgICAgICAgICAgICAgICAgIHwgIDg3ICsrKysKPiAKPiBXaHkgaXMg
-dGhlIHN1YmRpcmVjdG9yeSBjYWxsZWQgImFybSIgYW5kIG5vdCAiaGRsY2QiID8KCkJlY2F1c2Ug
-SSBwbGFuIHRvIGFkZCB0aGUgTWFsaSBEUCBkcml2ZXIgdG8gdGhlIHNhbWUgZGlyZWN0b3J5LiBU
-aGUgSERMQ0QKZmlsZXMgYXJlIHByZWZpeGVkIHdpdGggdGhlIGhkbGNkXyBzdHJpbmcsIHNvIGl0
-IHNob3VsZCBiZSBmYWlybHkgc2ltcGxlCnRvIGRpc3Rpbmd1aXNoIHRoZSByZWxldmFudCBmaWxl
-cy4KCj4gCj4gQVJNIEx0ZCBoYXZlIG1vcmUgdGhhbiBvbmUgZGlzcGxheSBjb250cm9sbGVyICh0
-aGV5IGhhdmUgdGhlIEFNQkEgUEwxMTAKPiBhbmQgUEwxMTEgaW4gYWRkaXRpb24gdG8gdGhpcyks
-IGFuZCAoYWZhaWNzKSB0aGlzIGRvZXNuJ3QgZHJpdmUgdGhlc2UuCj4gSERMQ0QgcHJvYmFibHkg
-d29uJ3QgYmUgdGhlIGxhc3QgZGlzcGxheSBoYXJkd2FyZSB3aGljaCBBUk0gTHRkIGNvbWVzCj4g
-b3V0IHdpdGggZWl0aGVyLgoKVGhlcmUgd2FzIGEgUEwxMTEgRFJNIGRyaXZlciBzdWJtaXR0ZWQg
-YXQgc29tZSBtb21lbnQsIGl0IGRvZXNuJ3QgbG9vawpsaWtlIGl0IGhhcyBiZWVuIG1lcmdlZCwg
-YnV0IHRoZSBwbGFuIHdhcyB0byBoYXZlIGl0IGluc2lkZSB0aGUgYXJtCmRpcmVjdG9yeSBhcyB3
-ZWxsLiBJIGFtIGZvbGxvd2luZyB0aGUgYW1kL2FtZGdwdXxyYWRlb24gaWRlYSBvZiBoYXZpbmcK
-YSB2ZW5kb3IgZGlyZWN0b3J5IGluIGRpc3BsYXkvZ3B1L2RybSBhbmQgdGhlbiBzdWJkaXJlY3Rv
-cmllcyAoaWYgaXQKbWFrZXMgc2Vuc2UpIG9yIGFwcHJvcHJpYXRlbHkgbmFtZWQgZmlsZXMgaW4g
-dGhlcmUuCgo+IAo+IFNvLCBJIHRoaW5rIG5hbWluZyB0aGUgc3ViZGlyZWN0b3J5IGFmdGVyIHRo
-ZSB2ZW5kb3IgaXMgcHJvYmFibHkgYQo+IG1pc3Rha2UuCgpJdCBtaWdodCB0dXJuIG91dCB0aGF0
-IHdheSwgYnV0IGF0IHRoZSBtb21lbnQgSSdtIG5vdCBzZWVpbmcgdG9vIG1hbnkKZG93bnNpZGVz
-LgoKQmVzdCByZWdhcmRzLApMaXZpdQoKPiAKPiAtLSAKPiBGVFRDIGJyb2FkYmFuZCBmb3IgMC44
-bWlsZSBsaW5lOiBjdXJyZW50bHkgYXQgOS42TWJwcyBkb3duIDQwMGticHMgdXAKPiBhY2NvcmRp
-bmcgdG8gc3BlZWR0ZXN0Lm5ldC4KPiAKCi0tIAo9PT09PT09PT09PT09PT09PT09PQp8IEkgd291
-bGQgbGlrZSB0byB8CnwgZml4IHRoZSB3b3JsZCwgIHwKfCBidXQgdGhleSdyZSBub3QgfAp8IGdp
-dmluZyBtZSB0aGUgICB8CiBcIHNvdXJjZSBjb2RlISAgLwogIC0tLS0tLS0tLS0tLS0tLQogICAg
-wq9cXyjjg4QpXy/CrwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+From: Minghuan Lian <Minghuan.Lian@freescale.com>
+
+The patch adds LS2085a to PCIe compatible to fix the compatibility
+issue when using firmware with LS2085a compatible property.
+
+Signed-off-by: Minghuan Lian <Minghuan.Lian@freescale.com>
+Signed-off-by: Mingkai Hu <Mingkai.Hu@freescale.com>
+---
+v2 change:
+ - Rebased to latest kernel base
+
+ Documentation/devicetree/bindings/pci/layerscape-pci.txt |  1 +
+ arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi           | 12 ++++++++----
+ 2 files changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+index e376785..4600007 100644
+--- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
++++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+@@ -15,6 +15,7 @@ Required properties:
+ - compatible: should contain the platform identifier such as:
+         "fsl,ls1021a-pcie", "snps,dw-pcie"
+         "fsl,ls2080a-pcie", "snps,dw-pcie"
++        "fsl,ls2085a-pcie", "snps,dw-pcie"
+ - reg: base addresses and lengths of the PCIe controller
+ - interrupts: A list of interrupt outputs of the controller. Must contain an
+   entry for each entry in the interrupt-names property.
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+index e81cd48..3821bb1 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+@@ -383,7 +383,8 @@
+ 		};
+ 
+ 		pcie@3400000 {
+-			compatible = "fsl,ls2080a-pcie", "snps,dw-pcie";
++			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a-pcie",
++				     "snps,dw-pcie";
+ 			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
+ 			       0x10 0x00000000 0x0 0x00002000>; /* configuration space */
+ 			reg-names = "regs", "config";
+@@ -406,7 +407,8 @@
+ 		};
+ 
+ 		pcie@3500000 {
+-			compatible = "fsl,ls2080a-pcie", "snps,dw-pcie";
++			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a-pcie",
++				     "snps,dw-pcie";
+ 			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
+ 			       0x12 0x00000000 0x0 0x00002000>; /* configuration space */
+ 			reg-names = "regs", "config";
+@@ -429,7 +431,8 @@
+ 		};
+ 
+ 		pcie@3600000 {
+-			compatible = "fsl,ls2080a-pcie", "snps,dw-pcie";
++			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a-pcie",
++				     "snps,dw-pcie";
+ 			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
+ 			       0x14 0x00000000 0x0 0x00002000>; /* configuration space */
+ 			reg-names = "regs", "config";
+@@ -452,7 +455,8 @@
+ 		};
+ 
+ 		pcie@3700000 {
+-			compatible = "fsl,ls2080a-pcie", "snps,dw-pcie";
++			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a-pcie",
++				     "snps,dw-pcie";
+ 			reg = <0x00 0x03700000 0x0 0x00100000   /* controller registers */
+ 			       0x16 0x00000000 0x0 0x00002000>; /* configuration space */
+ 			reg-names = "regs", "config";
+-- 
+2.1.0.27.g96db324
