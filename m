@@ -1,53 +1,56 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: tda998x: Document the required 'port' node.
-Date: Fri, 4 Dec 2015 12:54:31 -0600
-Message-ID: <20151204185431.GA9463@rob-hp-laptop>
-References: <1449056139-31222-1-git-send-email-Liviu.Dudau@arm.com>
+Subject: Re: [PATCH] spi: sh-msiof: Add support for SH-Mobile AG5
+Date: Fri, 4 Dec 2015 12:56:08 -0600
+Message-ID: <20151204185608.GA10576@rob-hp-laptop>
+References: <1448892840-8195-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1449056139-31222-1-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448892840-8195-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 02, 2015 at 11:35:39AM +0000, Liviu Dudau wrote:
-> All the users of the tda998x driver are component based and bind the
-> driver via the device graph method described in
-> Documentation/devicetree/bindings/graph.txt. Add the fact that the
-> 'port' node is required to the bindings.
+On Mon, Nov 30, 2015 at 03:14:00PM +0100, Geert Uytterhoeven wrote:
+> MSIOF in SH-Mobile AG5 (sh73a0) is handled fine by the existing driver.
 > 
-> Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+
+Applied, thanks.
+
+Rob
+
 
 Applied, thanks.
 
 Rob
 
 > ---
->  Documentation/devicetree/bindings/display/bridge/tda998x.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+>  Documentation/devicetree/bindings/spi/sh-msiof.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/tda998x.txt b/Documentation/devicetree/bindings/display/bridge/tda998x.txt
-> index e9e4bce..e178e6b 100644
-> --- a/Documentation/devicetree/bindings/display/bridge/tda998x.txt
-> +++ b/Documentation/devicetree/bindings/display/bridge/tda998x.txt
-> @@ -5,6 +5,10 @@ Required properties;
->  
->    - reg: I2C address
->  
-> +Required node:
-> +  - port: Input port node with endpoint definition, as described
-> +        in Documentation/devicetree/bindings/graph.txt
-> +
->  Optional properties:
->    - interrupts: interrupt number and trigger type
->  	default: polling
+> diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+> index 705075da2f10156e..aa005c1d10d95756 100644
+> --- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
+> +++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+> @@ -10,6 +10,7 @@ Required properties:
+>  			 "renesas,msiof-r8a7792" (R-Car V2H)
+>  			 "renesas,msiof-r8a7793" (R-Car M2-N)
+>  			 "renesas,msiof-r8a7794" (R-Car E2)
+> +			 "renesas,msiof-sh73a0" (SH-Mobile AG5)
+>  - reg                  : A list of offsets and lengths of the register sets for
+>  			 the device.
+>  			 If only one register set is present, it is to be used
 > -- 
-> 2.6.2
+> 1.9.1
 > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
