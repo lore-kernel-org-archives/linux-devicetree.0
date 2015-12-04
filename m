@@ -1,39 +1,55 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH V4 02/16] soc: tegra: pmc: Add missing structure members to kernel-doc
-Date: Fri, 4 Dec 2015 14:57:03 +0000
-Message-ID: <1449241037-22193-3-git-send-email-jonathanh@nvidia.com>
-References: <1449241037-22193-1-git-send-email-jonathanh@nvidia.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 4/4] PCI: rcar: add device tree support for r8a7793
+Date: Fri, 4 Dec 2015 09:05:13 -0600
+Message-ID: <20151204150513.GA29345@rob-hp-laptop>
+References: <1449096700-23304-1-git-send-email-horms+renesas@verge.net.au>
+ <1449096700-23304-5-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449241037-22193-1-git-send-email-jonathanh@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: Vince Hsu <vinceh@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1449096700-23304-5-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-pci-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some members of the tegra_pmc structure are missing from the kernel-doc
-comment for this structure. Add the missing members.
+On Thu, Dec 03, 2015 at 07:51:40AM +0900, Simon Horman wrote:
+> Simply document new compatibility string.
+> As a previous patch adds a generic R-Car Gen2 compatibility string
+> there appears to be no need for a driver updates.
+> 
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
----
- drivers/soc/tegra/pmc.c | 2 ++
- 1 file changed, 2 insertions(+)
+Acked-by: Rob Herring <robh@kernel.org>
 
-diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-index bc34cf7482fb..99ca91f09929 100644
---- a/drivers/soc/tegra/pmc.c
-+++ b/drivers/soc/tegra/pmc.c
-@@ -113,8 +113,10 @@ struct tegra_pmc_soc {
- 
- /**
-  * struct tegra_pmc - NVIDIA Tegra PMC
-+ * @dev: pointer to PMC device structure
-  * @base: pointer to I/O remapped register region
-  * @clk: pointer to pclk clock
-+ * @soc: pointer to SoC data structure
-  * @rate: currently configured rate of pclk
-  * @suspend_mode: lowest suspend mode available
-  * @cpu_good_time: CPU power good time (in microseconds)
--- 
-2.1.4
+> 
+> ---
+> * The r8a7792 and r8a7794 are omitted from this change as the
+>   hardware in question does not appear to be present on those SoCs.
+> 
+> v2
+> * No change
+> ---
+>  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> index 6b4d2f798386..d529530b27d2 100644
+> --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> @@ -4,6 +4,7 @@ Required properties:
+>  compatible: "renesas,pcie-r8a7779" for the R8A7779 SoC;
+>  	    "renesas,pcie-r8a7790" for the R8A7790 SoC;
+>  	    "renesas,pcie-r8a7791" for the R8A7791 SoC;
+> +	    "renesas,pcie-r8a7793" for the R8A7793 SoC;
+>  	    "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 compatible device.
+>  
+>  	    When compatible with the generic version, nodes must list the
+> -- 
+> 2.1.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
