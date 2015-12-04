@@ -1,73 +1,56 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V4 15/16] ARM64: tegra: Add audio PM domain device node for Tegra210
-Date: Fri, 4 Dec 2015 14:57:16 +0000
-Message-ID: <1449241037-22193-16-git-send-email-jonathanh@nvidia.com>
-References: <1449241037-22193-1-git-send-email-jonathanh@nvidia.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/4] PCI: rcar-gen2: add device tree support for
+ r8a7793
+Date: Fri, 4 Dec 2015 09:01:50 -0600
+Message-ID: <20151204150150.GA26773@rob-hp-laptop>
+References: <1449096700-23304-1-git-send-email-horms+renesas@verge.net.au>
+ <1449096700-23304-3-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449241037-22193-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1449096700-23304-3-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the audio power-domain for tegra210. Note that this also removes the
-existing "#power-domain-cells" which was incorrectly included by
-commit e53095857166 ("arm64: tegra: Add Tegra210 support").
+On Thu, Dec 03, 2015 at 07:51:38AM +0900, Simon Horman wrote:
+> Simply document new compatibility string.
+> As a previous patch adds a generic R-Car Gen2 compatibility string
+> there appears to be no need for a driver updates.
+> 
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 
-Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Acked-by: Rob Herring <robh@kernel.org>
 
----
-
-So far I have only added the audio power-domain for tegra210 as this is
-what I have been testing with to date. However, once this series is
-accepted then we can begin to add more.
----
- arch/arm/boot/dts/tegra124.dtsi          |  1 +
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 11 ++++++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
-index 68669f791c8b..d868f4452c4e 100644
---- a/arch/arm/boot/dts/tegra124.dtsi
-+++ b/arch/arm/boot/dts/tegra124.dtsi
-@@ -3,6 +3,7 @@
- #include <dt-bindings/memory/tegra124-mc.h>
- #include <dt-bindings/pinctrl/pinctrl-tegra.h>
- #include <dt-bindings/pinctrl/pinctrl-tegra-xusb.h>
-+#include <dt-bindings/power/tegra-powergate.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/tegra124-car.h>
- #include <dt-bindings/thermal/tegra124-soctherm.h>
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index bc23f4dea002..c5e9c320092b 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -2,6 +2,7 @@
- #include <dt-bindings/gpio/tegra-gpio.h>
- #include <dt-bindings/memory/tegra210-mc.h>
- #include <dt-bindings/pinctrl/pinctrl-tegra.h>
-+#include <dt-bindings/power/tegra-powergate.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
- / {
-@@ -581,7 +582,15 @@
- 		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
- 		clock-names = "pclk", "clk32k_in";
- 
--		#power-domain-cells = <1>;
-+		pm-domains {
-+			pd_audio: aud {
-+				clocks = <&tegra_car TEGRA210_CLK_APE>,
-+					 <&tegra_car TEGRA210_CLK_APB2APE>;
-+				resets = <&tegra_car 198>;
-+				nvidia,powergate = <TEGRA_POWERGATE_AUD>;
-+				#power-domain-cells = <0>;
-+			};
-+		};
- 	};
- 
- 	fuse@0,7000f800 {
--- 
-2.1.4
+> 
+> ---
+> * The r8a7792 is omitted from this change as the hardware in question
+>   does not appear to be present on that SoC.
+> 
+> v2
+> * No change
+> ---
+>  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> index 089a99dcdf10..9c50e0c9d6da 100644
+> --- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> +++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> @@ -8,6 +8,7 @@ OHCI and EHCI controllers.
+>  Required properties:
+>  - compatible: "renesas,pci-r8a7790" for the R8A7790 SoC;
+>  	      "renesas,pci-r8a7791" for the R8A7791 SoC;
+> +	      "renesas,pci-r8a7793" for the R8A7793 SoC;
+>  	      "renesas,pci-r8a7794" for the R8A7794 SoC;
+>  	      "renesas,pci-rcar-gen2" for a generic R-Car Gen2 compatible device.
+>  
+> -- 
+> 2.1.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
