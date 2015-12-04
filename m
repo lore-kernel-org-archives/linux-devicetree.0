@@ -1,93 +1,75 @@
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
-Date: Fri, 04 Dec 2015 17:41:45 +0100
-Message-ID: <1449247305.8275.104.camel@pengutronix.de>
+Date: Fri, 4 Dec 2015 16:56:17 +0000
+Message-ID: <20151204165617.GW8644@n2100.arm.linux.org.uk>
 References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
  <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
  <20151204162956.GA14978@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
 In-Reply-To: <20151204162956.GA14978@rob-hp-laptop>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, kernel@pengutronix.de, Russell King <rmk+kernel@arm.linux.org.uk>, Shawn Guo <shawnguo@kernel.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-QW0gRnJlaXRhZywgZGVuIDA0LjEyLjIwMTUsIDEwOjI5IC0wNjAwIHNjaHJpZWIgUm9iIEhlcnJp
-bmc6Cj4gT24gRnJpLCBEZWMgMDQsIDIwMTUgYXQgMDI6NTk6NTRQTSArMDEwMCwgTHVjYXMgU3Rh
-Y2ggd3JvdGU6Cj4gPiBFdG5hdml2IGZvbGxvd3MgdGhlIHNhbWUgcHJpY2lwbGUgYXMgaW14LWRy
-bSB0byBoYXZlIGEgdmlydHVhbAo+ID4gbWFzdGVyIGRldmljZSBub2RlIHRvIGJpbmQgYWxsIHRo
-ZSBpbmRpdmlkdWFsIEdQVSBjb3JlcyB0b2dldGhlcgo+ID4gaW50byBvbmUgRFJNIGRldmljZS4K
-PiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXgu
-ZGU+Cj4gPiAtLS0KPiA+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9ldG5hdml2L2V0bmF2aXYtZHJt
-LnR4dCAgICAgICB8IDQ2ICsrKysrKysrKysrKysrKysrKysrKysKPiA+ICAxIGZpbGUgY2hhbmdl
-ZCwgNDYgaW5zZXJ0aW9ucygrKQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9ldG5hdml2L2V0bmF2aXYtZHJtLnR4dAo+ID4g
-Cj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvZXRuYXZpdi9ldG5hdml2LWRybS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9ldG5hdml2L2V0bmF2aXYtZHJtLnR4dAo+ID4gbmV3IGZpbGUgbW9kZSAx
-MDA2NDQKPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uMTlmZGUyOWRjMWQ3Cj4gPiAtLS0gL2Rldi9u
-dWxsCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9l
-dG5hdml2L2V0bmF2aXYtZHJtLnR4dAo+ID4gQEAgLTAsMCArMSw0NiBAQAo+ID4gK0V0bmF2aXYg
-RFJNIG1hc3RlciBkZXZpY2UKPiA+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+
-ID4gKwo+ID4gK1RoZSBFdG5hdml2IERSTSBtYXN0ZXIgZGV2aWNlIGlzIGEgdmlydHVhbCBkZXZp
-Y2UgbmVlZGVkIHRvIGxpc3QgYWxsCj4gPiArVml2YW50ZSBHUFUgY29yZXMgdGhhdCBjb21wcmlz
-ZSB0aGUgR1BVIHN1YnN5c3RlbS4KPiA+ICsKPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4g
-Ky0gY29tcGF0aWJsZTogU2hvdWxkIGJlIG9uZSBvZgo+ID4gKyAgICAiZnNsLGlteC1ncHUtc3Vi
-c3lzdGVtIgo+ID4gKyAgICAibWFydmVsbCxkb3ZlLWdwdS1zdWJzeXN0ZW0iCj4gPiArLSBjb3Jl
-czogU2hvdWxkIGNvbnRhaW4gYSBsaXN0IG9mIHBoYW5kbGVzIHBvaW50aW5nIHRvIFZpdmFudGUg
-R1BVIGRldmljZXMKPiA+ICsKPiA+ICtleGFtcGxlOgo+ID4gKwo+ID4gK2dwdS1zdWJzeXN0ZW0g
-ewo+ID4gKwljb21wYXRpYmxlID0gImZzbCxpbXgtZ3B1LXN1YnN5c3RlbSI7Cj4gPiArCWNvcmVz
-ID0gPCZncHVfMmQ+LCA8JmdwdV8zZD47Cj4gPiArfTsKPiAKPiBZZWFoLCBJJ20gbm90IHJlYWxs
-eSBhIGZhbiBvZiBkb2luZyB0aGlzIHNpbXBseSBiZWNhdXNlIERSTSB3YW50cyAxIAo+IGRyaXZl
-ci4KPiAKSSdtIGF3YXJlIG9mIHRoYXQsIGJ1dCBJIGRvbid0IHNlZSBtdWNoIHZhbHVlIGluIGtp
-Y2tpbmcgdGhpcyBkaXNjdXNzaW9uCmFyb3VuZCBmb3IgZXZlcnkgRFJNIGRyaXZlciBzdWJtaXNz
-aW9uLiBUaGlzIGlzIHRoZSBiaW5kaW5nIHRoYXQgaGFzCmVtZXJnZWQgZnJvbSBhIGxlbmd0aHkg
-ZGlzY3Vzc2lvbiBhdCBLUyAyMDEzIGluIEVkaW5idXJnaCBhbmQgYXQgbGVhc3QKYWxsb3dzIHVz
-IHRvIHN0YW5kYXJkaXplIG9uIF9zb21ldGhpbmdfLiBBbHNvIEFMU0EgZG9lcyBhIHNpbWlsYXIg
-dGhpbmcKdG8gYmluZCBjb2RlY3MgYW5kIENQVSBpbnRlcmZhY2VzIHRvZ2V0aGVyLgoKPiA+ICsK
-PiA+ICsKPiA+ICtWaXZhbnRlIEdQVSBjb3JlIGRldmljZXMKPiA+ICs9PT09PT09PT09PT09PT09
-PT09PQo+ID4gKwo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiArLSBjb21wYXRpYmxlOiBT
-aG91bGQgYmUgInZpdmFudGUsZ2MiCj4gCj4gVGhpcyBzaG91bGQgYXQgbGVhc3QgaGF2ZSB0aGUg
-c3BlY2lmaWMgY29yZXMgbGlzdGVkIGxpa2UgZ2MtNTAwMCBvciAKPiB3aGF0ZXZlciB0aGUgbnVt
-YmVyaW5nIGlzLiBBcyBpcywgSSBjYW4ndCBldmVuIHRlbGwgaWYgdGhpcyBhIDJkIG9yIDNkIAo+
-IGNvcmUuCj4gClRoZXJlIGlzIHJlYWxseSBubyBuZWVkIGZvciB0aGlzLiBUaGUgY29yZXMgaGF2
-ZSBpZGVudGlmaWNhdGlvbgpyZWdpc3RlcnMgdGhhdCBhcmUgbXVjaCBtb3JlIGFjY3VyYXRlIHRo
-YW4gd2hhdCB3ZSBjb3VsZCBkZXNjcmliZSB3aXRoIGEKY29tcGF0aWJsZSB2YWx1ZS4gU28gdXNp
-bmcgYSBtb3JlIHNwZWNpZmljIGNvbXBhdGlibGUganVzdCBwcm92aWRlcwpyZWR1bmRhbnQgKGFu
-ZCBwb3NzaWJseSB3cm9uZykgaW5mb3JtYXRpb24uCgo+IEFsc28sIGl0IHByb2JhYmx5IHNob3Vs
-ZCBoYXZlIGFuIFNPQyBzcGVjaWZpYyBwcm9wZXJ0eSB0byBkZWFsIHdpdGggU09DIAo+IHNwZWNp
-ZmljIGNvbmZpZ3VyYXRpb24gb3IgaW50ZWdyYXRpb24uCj4gClNhbWUgYXMgYWJvdmUgcmVhbGx5
-LiBQYXJ0cyBvZiB0aGUgaWRlbnRpZmljYXRpb24gcmVnaXN0ZXJzIGFyZQpkaWZmZXJlbnQgZm9y
-IGVhY2ggU29DIGludGVncmF0aW9uLCBldmVuIGlmIGl0J3MgdGhlIHNhbWUgSVAgY29yZSwgc28g
-d2UKY2FuIGp1c3QgZGVyaXZlIGFueSBuZWVkZWQgZHJpdmVyIGJlaGF2aW9yIGRpZmZlcmVuY2Vz
-IGZyb20gdGhhdC4KCj4gPiArLSByZWc6IHNob3VsZCBiZSByZWdpc3RlciBiYXNlIGFuZCBsZW5n
-dGggYXMgZG9jdW1lbnRlZCBpbiB0aGUKPiA+ICsgIGRhdGFzaGVldAo+ID4gKy0gaW50ZXJydXB0
-czogU2hvdWxkIGNvbnRhaW4gdGhlIGNvcmVzIGludGVycnVwdCBsaW5lCj4gPiArLSBjbG9ja3M6
-IHNob3VsZCBjb250YWluIG9uZSBjbG9jayBmb3IgZW50cnkgaW4gY2xvY2stbmFtZXMKPiA+ICsg
-IHNlZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2stYmluZGlu
-Z3MudHh0Cj4gPiArLSBjbG9jay1uYW1lczoKPiA+ICsgICAtICJidXMiOiAgICBBWEkvcmVnaXN0
-ZXIgY2xvY2sKPiA+ICsgICAtICJjb3JlIjogICBHUFUgY29yZSBjbG9jawo+ID4gKyAgIC0gInNo
-YWRlciI6IFNoYWRlciBjbG9jayAob25seSByZXF1aXJlZCBpZiBHUFUgaGFzIGZlYXR1cmUgUElQ
-RV8zRCkKPiA+ICsKPiA+ICtleGFtcGxlOgo+ID4gKwo+ID4gK2dwdV8zZDogZ3B1QDAwMTMwMDAw
-IHsKPiA+ICsJY29tcGF0aWJsZSA9ICJ2aXZhbnRlLGdjIjsKPiA+ICsJcmVnID0gPDB4MDAxMzAw
-MDAgMHg0MDAwPjsKPiA+ICsJaW50ZXJydXB0cyA9IDwwIDkgSVJRX1RZUEVfTEVWRUxfSElHSD47
-Cj4gPiArCWNsb2NrcyA9IDwmY2xrcyBJTVg2UURMX0NMS19HUFUzRF9BWEk+LAo+ID4gKwkgICAg
-ICAgICA8JmNsa3MgSU1YNlFETF9DTEtfR1BVM0RfQ09SRT4sCj4gPiArCSAgICAgICAgIDwmY2xr
-cyBJTVg2UURMX0NMS19HUFUzRF9TSEFERVI+Owo+ID4gKwljbG9jay1uYW1lcyA9ICJidXMiLCAi
-Y29yZSIsICJzaGFkZXIiOwo+ID4gK307Cj4gPiAtLSAKPiA+IDIuNi4yCj4gPiAKCi0tIApQZW5n
-dXRyb25peCBlLksuICAgICAgICAgICAgIHwgTHVjYXMgU3RhY2ggICAgICAgICAgICAgICAgIHwK
-SW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICB8IGh0dHA6Ly93d3cucGVuZ3V0cm9uaXguZGUv
-ICB8CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Fri, Dec 04, 2015 at 10:29:56AM -0600, Rob Herring wrote:
+> On Fri, Dec 04, 2015 at 02:59:54PM +0100, Lucas Stach wrote:
+> > +Vivante GPU core devices
+> > +====================
+> > +
+> > +Required properties:
+> > +- compatible: Should be "vivante,gc"
+> 
+> This should at least have the specific cores listed like gc-5000 or 
+> whatever the numbering is. As is, I can't even tell if this a 2d or 3d 
+> core.
+
+Who cares whether it's a 2D or 3D core?  There are four options here:
+
+2D
+2D and 3D
+3D
+VG
+
+All of these are determined by feature flags in the core - why should
+DT have to specify this information when the hardware tells us, just
+because we want something humanly visible?
+
+> Also, it probably should have an SOC specific property to deal with SOC 
+> specific configuration or integration.
+
+Thus far, we're not aware of any SoC specific configuration of the
+core.  Even if there was, I can't see it making much difference to
+the DRM driver itself: the DRM driver mostly about command stream
+queuing, GEM buffer management (both of which are independent of SoC
+issues) and PM management, which is performed via runtime PM.
+
+Where SoC specific integration would come in is the runtime PM, and
+that goes as far as what clocks are present, which we already deal
+with, power domains, which again we already deal with, and
+interrupts - again, which are dealt with.
+
+Given that this driver has been developed on two SoCs (Dove and iMX6)
+which are radically different, I can't see any need for other SoC
+specifics.
+
+Did you have anything in mind?
+
+Dove:
+GC600 combined 2D and 3D GPU core, one clock, one interrupt, one PM
+domain.
+
+iMX6 S/DL/D/Q:
+GC320 2D GPU core, GC880 or GC2000 3D GPU core, GC335 VG core, multiple
+clocks, multiple interrupts, multiple PM domains.
+
+-- 
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
