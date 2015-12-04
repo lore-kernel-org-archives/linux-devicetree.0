@@ -1,103 +1,47 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/4] thermal: rcar: enable to use thermal-zone on DT
-Date: Fri, 4 Dec 2015 09:32:36 +0100
-Message-ID: <CAMuHMdUcQFcQuEmQZ4yMGwm=ouH+aQQhG3V95p=Pb56qWberQA@mail.gmail.com>
-References: <871tb2hpn2.wl%kuninori.morimoto.gx@renesas.com>
-	<87y4dagb0i.wl%kuninori.morimoto.gx@renesas.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v2 13/14] ARM: DTS: am33xx: Use the new DT bindings for
+ the eDMA3
+Date: Fri, 4 Dec 2015 10:32:12 +0200
+Message-ID: <56614F8C.9080106@ti.com>
+References: <1444979892-31626-1-git-send-email-peter.ujfalusi@ti.com>
+ <1444979892-31626-14-git-send-email-peter.ujfalusi@ti.com>
+ <20151204005440.GE23396@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87y4dagb0i.wl%kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <20151204005440.GE23396@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Simon <horms@verge.net.au>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Magnus <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Tony Lindgren <tony@atomide.com>
+Cc: vinod.koul@intel.com, nsekhar@ti.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, r.schwebel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Morimoto-san,
+On 12/04/2015 02:54 AM, Tony Lindgren wrote:
+> Hi Peter,
+>=20
+> * Peter Ujfalusi <peter.ujfalusi@ti.com> [151016 00:23]:
+>=20
+> I noticed something while changing dm81xx to use the edma_xbar..
+>=20
+>> --- a/arch/arm/boot/dts/am33xx.dtsi
+>> +++ b/arch/arm/boot/dts/am33xx.dtsi
+>> +
+>> +		edma_xbar: dma-router@44e10f90 {
+>> +			compatible =3D "ti,am335x-edma-crossbar";
+>> +			reg =3D <0x44e10f90 0x40>;
+>> +
+>> +			#dma-cells =3D <3>;
+>> +			dma-requests =3D <32>;
+>> +
+>> +			dma-masters =3D <&edma>;
+>>  		};
+>=20
+> The edma_xbar should now be just a child at offset 0xf90 under the
+> scm: scm@210000. Can you please check the other patches too?
 
-CC devicetree
+Thanks Tony,
 
-On Fri, Dec 4, 2015 at 4:17 AM, Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
->
-> This patch enables to use thermal-zone on DT if it was call as
-> "renesas,rcar-thermal-gen2".
-> Previous style is still supported by "renesas,rcar-thermal".
->
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> ---
->  .../devicetree/bindings/thermal/rcar-thermal.txt   | 37 +++++++++++++++++-
->  drivers/thermal/rcar_thermal.c                     | 45 +++++++++++++++++++---
->  2 files changed, 74 insertions(+), 8 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-> index 332e625..904f204 100644
-> --- a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-> @@ -1,8 +1,9 @@
->  * Renesas R-Car Thermal
->
->  Required properties:
-> -- compatible           : "renesas,thermal-<soctype>", "renesas,rcar-thermal"
-> -                         as fallback.
-> +- compatible           : "renesas,thermal-<soctype>",
-> +                          "renesas,rcar-thermal-gen2" (with thermal-zone) or
+I'll make sure they are in the correct place when resending them.
 
-Ugh, another different scheme "<manuf>,<family>-<device>-<familyversion>"...
-
-What about "renesas,rcar-gen2-thermal"?
-
-> +                          "renesas,rcar-thermal" (without thermal-zone) as fallback.
->                           Examples with soctypes are:
->                             - "renesas,thermal-r8a73a4" (R-Mobile APE6)
->                             - "renesas,thermal-r8a7779" (R-Car H1)
-> @@ -36,3 +37,35 @@ thermal@e61f0000 {
->                 0xe61f0300 0x38>;
->         interrupts = <0 69 IRQ_TYPE_LEVEL_HIGH>;
->  };
-> +
-> +Example (with thermal-zone):
-> +
-> +thermal-zones {
-> +       cpu_thermal: cpu-thermal {
-> +               polling-delay-passive   = <1000>;
-> +               polling-delay           = <5000>;
-> +
-> +               thermal-sensors = <&thermal>;
-> +
-> +               trips {
-> +                       cpu-crit {
-> +                               temperature     = <1150000>;
-> +                               hysteresis      = <0>;
-> +                               type            = "critical";
-> +                       };
-> +               };
-> +               cooling-maps {
-> +               };
-> +       };
-> +};
-> +
-> +thermal: thermal@e61f0000 {
-> +       compatible =    "renesas,thermal-r8a7790",
-> +                       "renesas,rcar-thermal-gen2",
-> +                       "renesas,rcar-thermal";
-> +       reg = <0 0xe61f0000 0 0x14>, <0 0xe61f0100 0 0x38>;
-> +       interrupts = <0 69 IRQ_TYPE_LEVEL_HIGH>;
-> +       clocks = <&mstp5_clks R8A7790_CLK_THERMAL>;
-> +       power-domains = <&cpg_clocks>;
-> +       #thermal-sensor-cells = <0>;
-> +};
-
-How are the two nodes above linked?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--=20
+P=C3=A9ter
