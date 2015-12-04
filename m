@@ -1,37 +1,46 @@
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 4/6] ARM: DTS: da850: Enable DMA use for MMC0
-Date: Fri, 4 Dec 2015 15:53:28 +0200
-Message-ID: <1449237210-16381-5-git-send-email-peter.ujfalusi@ti.com>
+Subject: [PATCH 1/6] ARM: DTS: da850: fix edma0 reg space
+Date: Fri, 4 Dec 2015 15:53:25 +0200
+Message-ID: <1449237210-16381-2-git-send-email-peter.ujfalusi@ti.com>
 References: <1449237210-16381-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1449237210-16381-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: nsekhar@ti.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, khilman@deeprootsystems.com
+Cc: khilman@deeprootsystems.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the needed bindings for MMC0 in order to be able to utilize the DMA
-instead of PIO mode.
+The size of the eDMA0 CC register space is 0x8000 and not 0x10000.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- arch/arm/boot/dts/da850.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/da850.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index e311d73a5265..ccaaf2746aca 100644
+index 0bd98cd00816..e73f5efb3aa3 100644
 --- a/arch/arm/boot/dts/da850.dtsi
 +++ b/arch/arm/boot/dts/da850.dtsi
-@@ -236,6 +236,8 @@
- 			compatible = "ti,da830-mmc";
- 			reg = <0x40000 0x1000>;
- 			interrupts = <16>;
-+			dmas = <&edma0 16 0>, <&edma0 17 0>;
-+			dma-names = "rx", "tx";
- 			status = "disabled";
+@@ -152,7 +152,8 @@
  		};
- 		ehrpwm0: ehrpwm@01f00000 {
+ 		edma0: edma@01c00000 {
+ 			compatible = "ti,edma3";
+-			reg =	<0x0 0x10000>;
++			/* eDMA3 CC0: 0x01c0 0000 - 0x01c0 7fff */
++			reg =	<0x0 0x8000>;
+ 			interrupts = <11 13 12>;
+ 			#dma-cells = <1>;
+ 		};
 -- 
 2.6.3
