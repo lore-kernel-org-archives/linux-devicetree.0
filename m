@@ -1,95 +1,56 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 11/12] MAINTAINERS: add Lucas Stach as maintainer for the
- etnaviv DRM driver
-Date: Fri, 4 Dec 2015 18:26:38 +0100
-Message-ID: <5661CCCE.3090607@pengutronix.de>
-References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
- <1449237604-19064-12-git-send-email-l.stach@pengutronix.de>
- <20151204170709.GY8644@n2100.arm.linux.org.uk>
+From: Mitchel Humpherys <mitchelh@codeaurora.org>
+Subject: Re: [PATCH v2] of: Check for overlap in reserved memory regions
+Date: Fri, 04 Dec 2015 09:27:50 -0800
+Message-ID: <vnkwy4daktt5.fsf@codeaurora.org>
+References: <1442367036-15205-1-git-send-email-mitchelh@codeaurora.org>
+	<1447294799.29472.15.camel@ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="5QukKuA098pJTLXKjOKwS1k1rCvpqADcA"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151204170709.GY8644-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1447294799.29472.15.camel@ellerman.id.au> (Michael Ellerman's
+	message of "Thu, 12 Nov 2015 13:19:59 +1100")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---5QukKuA098pJTLXKjOKwS1k1rCvpqADcA
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On Thu, Nov 12 2015 at 01:19:59 PM, Michael Ellerman <mpe@ellerman.id.au> wrote:
+> On Tue, 2015-09-15 at 18:30 -0700, Mitchel Humpherys wrote:
+>
+>> Any overlap in the reserved memory regions (those specified in the
+>> reserved-memory DT node) is a bug.
+>
+> Can you expand a bit on why you think it's a bug? I assume it was discussed at
+> some point on the list but I didn't see it sorry.
 
-On 12/04/2015 06:07 PM, Russell King - ARM Linux wrote:
-> On Fri, Dec 04, 2015 at 03:00:03PM +0100, Lucas Stach wrote:
->> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->=20
-> Acked-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
->=20
-> Although, I would like to be copied on patches, I don't think we
-> have a way to encode that information in MAINTAINERS.
+The reason I think it's a bug is because the overlapping memory could be
+handed out to multiple firmwares, which generally ends in "random"
+firmware crashes.  We've found by sad experience that root-causing such
+a crash can be quite difficult.
 
-I think you can just add another
-"M: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>" next to Lucas. We have this
-for the CAN drivers and it seems to work.
+Is there a valid use case for overlapping regions?  I can't think of
+one...
 
->=20
->> ---
->>  MAINTAINERS | 7 +++++++
->>  1 file changed, 7 insertions(+)
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index e9caa4b28828..1c69563c61ed 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -3741,6 +3741,13 @@ S:	Maintained
->>  F:	drivers/gpu/drm/sti
->>  F:	Documentation/devicetree/bindings/display/st,stih4xx.txt
->> =20
->> +DRM DRIVERS FOR VIVANTE GPU IP
->> +M:	Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> +L:	dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
->> +S:	Maintained
->> +F:	drivers/gpu/drm/etnaviv
->> +F:	Documentation/devicetree/bindings/display/etnaviv
->> +
->>  DSBR100 USB FM RADIO DRIVER
->>  M:	Alexey Klimov <klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>  L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> --=20
->> 2.6.2
->>
->=20
+> There's nothing I can see in the binding document[1] about whether regions can
+> overlap, or what it would mean if they did.
 
-Marc
+You're right, the bindings document doesn't say anything about
+overlapping memory regions.  I can submit something unless someone comes
+up with a reason why we should allow overlapping memory regions.
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+> If we want to declare that overlapping regions are always a bug then there
+> should be some text in the binding explaining that. There's also the
+> possibility that we have existing device trees in the wild that contain
+> overlapping regions, and whether we think it's OK to retrospectively declare
+> that they're incorrect.
+
+I did a quick survey of in-tree users of reserved-memory and couldn't
+find any overlapping regions.
 
 
---5QukKuA098pJTLXKjOKwS1k1rCvpqADcA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+-Mitch
 
------BEGIN PGP SIGNATURE-----
-
-iQEcBAEBCgAGBQJWYczOAAoJEP5prqPJtc/HBuwIAL8+dRb5NN3kiHiVg3OdqTm2
-UAO0mF11tr7fLP5gqUWsSQngTvEGUu7KVUcnb87e8yE5SHnHDoKGlaHCNkM9P4TN
-aF6To/XRcq3xMnzn/hOpEIVsm1h4j1dLAX7xLvg/r7sInHcWYcjVu7mo2HvEPcVJ
-h7poE1Nt/An/xfLxRK9TpudZWQ3n3YsaQ2ceD4DZpGQ77lBc7vPba3GBEQfFoV9a
-jouOezL5Z0d2sWLYVphqkp2EZbBdr3D/6207Cch2OFJTHm1PGag/kMYLqXOEqWgb
-52X+F2D7Hs+jkr4PeYu0m3seerpvHqaX3OxE+gIKk0B4xBNB8mhLF81cws3p8B4=
-=Y9d2
------END PGP SIGNATURE-----
-
---5QukKuA098pJTLXKjOKwS1k1rCvpqADcA--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
