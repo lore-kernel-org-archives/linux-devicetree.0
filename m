@@ -1,7 +1,7 @@
 From: Brian Norris <computersforpeace@gmail.com>
-Subject: [RFC PATCH 1/7] mtd: move partition parsers to drivers/mtd/partitions/
-Date: Fri,  4 Dec 2015 21:19:17 -0800
-Message-ID: <1449292763-129421-2-git-send-email-computersforpeace@gmail.com>
+Subject: [RFC PATCH 4/7] mtd: add of_match_mtd_parser() and of_mtd_match_mtd_parser() helpers
+Date: Fri,  4 Dec 2015 21:19:20 -0800
+Message-ID: <1449292763-129421-5-git-send-email-computersforpeace@gmail.com>
 References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
@@ -10,88 +10,121 @@ To: linux-mtd@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Arlott <simon@fire.lp0.eu>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Jonas Gorski <jogo@openwrt.org>, Brian Norris <computersforpeace@gmail.com>, devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-For better organization.
+Like the corresponding OF-based device/driver matching infrascture,
+let's begin to support a mtd/partition-parser matching infrastructure.
 
 Signed-off-by: Brian Norris <computersforpeace@gmail.com>
 ---
- drivers/mtd/Makefile                       | 8 +-------
- drivers/mtd/partitions/Makefile            | 7 +++++++
- drivers/mtd/{ => partitions}/afs.c         | 0
- drivers/mtd/{ => partitions}/ar7part.c     | 0
- drivers/mtd/{ => partitions}/bcm47xxpart.c | 0
- drivers/mtd/{ => partitions}/bcm63xxpart.c | 0
- drivers/mtd/{ => partitions}/cmdlinepart.c | 0
- drivers/mtd/{ => partitions}/ofpart.c      | 0
- drivers/mtd/{ => partitions}/redboot.c     | 0
- 9 files changed, 8 insertions(+), 7 deletions(-)
- create mode 100644 drivers/mtd/partitions/Makefile
- rename drivers/mtd/{ => partitions}/afs.c (100%)
- rename drivers/mtd/{ => partitions}/ar7part.c (100%)
- rename drivers/mtd/{ => partitions}/bcm47xxpart.c (100%)
- rename drivers/mtd/{ => partitions}/bcm63xxpart.c (100%)
- rename drivers/mtd/{ => partitions}/cmdlinepart.c (100%)
- rename drivers/mtd/{ => partitions}/ofpart.c (100%)
- rename drivers/mtd/{ => partitions}/redboot.c (100%)
+ drivers/of/of_mtd.c            | 33 +++++++++++++++++++++++++++++++++
+ include/linux/mtd/partitions.h |  2 ++
+ include/linux/of_mtd.h         | 13 +++++++++++++
+ 3 files changed, 48 insertions(+)
 
-diff --git a/drivers/mtd/Makefile b/drivers/mtd/Makefile
-index 99bb9a1f6e16..1c0cd3b1c7c3 100644
---- a/drivers/mtd/Makefile
-+++ b/drivers/mtd/Makefile
-@@ -6,13 +6,7 @@
- obj-$(CONFIG_MTD)		+= mtd.o
- mtd-y				:= mtdcore.o mtdsuper.o mtdconcat.o mtdpart.o mtdchar.o
+diff --git a/drivers/of/of_mtd.c b/drivers/of/of_mtd.c
+index b7361ed70537..169d7500af5d 100644
+--- a/drivers/of/of_mtd.c
++++ b/drivers/of/of_mtd.c
+@@ -9,6 +9,7 @@
+ #include <linux/kernel.h>
+ #include <linux/of_mtd.h>
+ #include <linux/mtd/nand.h>
++#include <linux/mtd/partitions.h>
+ #include <linux/export.h>
  
--obj-$(CONFIG_MTD_OF_PARTS)	+= ofpart.o
--obj-$(CONFIG_MTD_REDBOOT_PARTS) += redboot.o
--obj-$(CONFIG_MTD_CMDLINE_PARTS) += cmdlinepart.o
--obj-$(CONFIG_MTD_AFS_PARTS)	+= afs.o
--obj-$(CONFIG_MTD_AR7_PARTS)	+= ar7part.o
--obj-$(CONFIG_MTD_BCM63XX_PARTS)	+= bcm63xxpart.o
--obj-$(CONFIG_MTD_BCM47XX_PARTS)	+= bcm47xxpart.o
-+obj-y				+= partitions/
+ /**
+@@ -117,3 +118,35 @@ bool of_get_nand_on_flash_bbt(struct device_node *np)
+ 	return of_property_read_bool(np, "nand-on-flash-bbt");
+ }
+ EXPORT_SYMBOL_GPL(of_get_nand_on_flash_bbt);
++
++static const struct of_device_id *of_match_mtd_parser(
++		struct mtd_part_parser *parser, struct device_node *np)
++{
++	if (!parser || !np)
++		return NULL;
++
++	return of_match_node(parser->of_match_table, np);
++}
++
++static struct device_node *mtd_get_partitions_of_node(struct mtd_info *master)
++{
++	struct device_node *np = mtd_get_of_node(master);
++
++	if (!np)
++		return NULL;
++
++	return of_get_child_by_name(np, "partitions");
++}
++
++bool of_mtd_match_mtd_parser(struct mtd_info *mtd,
++			     struct mtd_part_parser *parser)
++{
++	struct device_node *np = mtd_get_partitions_of_node(mtd);
++	bool ret;
++
++	ret = of_match_mtd_parser(parser, np) != NULL;
++	of_node_put(np);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(of_mtd_match_mtd_parser);
+diff --git a/include/linux/mtd/partitions.h b/include/linux/mtd/partitions.h
+index 70736e1e6c8f..2e68ef561a40 100644
+--- a/include/linux/mtd/partitions.h
++++ b/include/linux/mtd/partitions.h
+@@ -51,6 +51,7 @@ struct mtd_partition {
  
- # 'Users' - code which presents functionality to userspace.
- obj-$(CONFIG_MTD_BLKDEVS)	+= mtd_blkdevs.o
-diff --git a/drivers/mtd/partitions/Makefile b/drivers/mtd/partitions/Makefile
-new file mode 100644
-index 000000000000..89822f2bfa59
---- /dev/null
-+++ b/drivers/mtd/partitions/Makefile
-@@ -0,0 +1,7 @@
-+obj-$(CONFIG_MTD_OF_PARTS)	+= ofpart.o
-+obj-$(CONFIG_MTD_REDBOOT_PARTS) += redboot.o
-+obj-$(CONFIG_MTD_CMDLINE_PARTS) += cmdlinepart.o
-+obj-$(CONFIG_MTD_AFS_PARTS)	+= afs.o
-+obj-$(CONFIG_MTD_AR7_PARTS)	+= ar7part.o
-+obj-$(CONFIG_MTD_BCM63XX_PARTS)	+= bcm63xxpart.o
-+obj-$(CONFIG_MTD_BCM47XX_PARTS)	+= bcm47xxpart.o
-diff --git a/drivers/mtd/afs.c b/drivers/mtd/partitions/afs.c
-similarity index 100%
-rename from drivers/mtd/afs.c
-rename to drivers/mtd/partitions/afs.c
-diff --git a/drivers/mtd/ar7part.c b/drivers/mtd/partitions/ar7part.c
-similarity index 100%
-rename from drivers/mtd/ar7part.c
-rename to drivers/mtd/partitions/ar7part.c
-diff --git a/drivers/mtd/bcm47xxpart.c b/drivers/mtd/partitions/bcm47xxpart.c
-similarity index 100%
-rename from drivers/mtd/bcm47xxpart.c
-rename to drivers/mtd/partitions/bcm47xxpart.c
-diff --git a/drivers/mtd/bcm63xxpart.c b/drivers/mtd/partitions/bcm63xxpart.c
-similarity index 100%
-rename from drivers/mtd/bcm63xxpart.c
-rename to drivers/mtd/partitions/bcm63xxpart.c
-diff --git a/drivers/mtd/cmdlinepart.c b/drivers/mtd/partitions/cmdlinepart.c
-similarity index 100%
-rename from drivers/mtd/cmdlinepart.c
-rename to drivers/mtd/partitions/cmdlinepart.c
-diff --git a/drivers/mtd/ofpart.c b/drivers/mtd/partitions/ofpart.c
-similarity index 100%
-rename from drivers/mtd/ofpart.c
-rename to drivers/mtd/partitions/ofpart.c
-diff --git a/drivers/mtd/redboot.c b/drivers/mtd/partitions/redboot.c
-similarity index 100%
-rename from drivers/mtd/redboot.c
-rename to drivers/mtd/partitions/redboot.c
+ struct mtd_info;
+ struct device_node;
++struct of_device_id;
+ 
+ /**
+  * struct mtd_part_parser_data - used to pass data to MTD partition parsers.
+@@ -69,6 +70,7 @@ struct mtd_part_parser {
+ 	struct list_head list;
+ 	struct module *owner;
+ 	const char *name;
++	const struct of_device_id *of_match_table;
+ 	int (*parse_fn)(struct mtd_info *, const struct mtd_partition **,
+ 			struct mtd_part_parser_data *);
+ 	void (*cleanup)(const struct mtd_partition *pparts, int nr_parts);
+diff --git a/include/linux/of_mtd.h b/include/linux/of_mtd.h
+index e266caa36402..781362d0be0c 100644
+--- a/include/linux/of_mtd.h
++++ b/include/linux/of_mtd.h
+@@ -9,6 +9,10 @@
+ #ifndef __LINUX_OF_MTD_H
+ #define __LINUX_OF_MTD_H
+ 
++#include <linux/mtd/mtd.h>
++
++struct mtd_part_parser;
++
+ #ifdef CONFIG_OF_MTD
+ 
+ #include <linux/of.h>
+@@ -18,6 +22,9 @@ int of_get_nand_ecc_strength(struct device_node *np);
+ int of_get_nand_bus_width(struct device_node *np);
+ bool of_get_nand_on_flash_bbt(struct device_node *np);
+ 
++bool of_mtd_match_mtd_parser(struct mtd_info *mtd,
++			     struct mtd_part_parser *parser);
++
+ #else /* CONFIG_OF_MTD */
+ 
+ static inline int of_get_nand_ecc_mode(struct device_node *np)
+@@ -45,6 +52,12 @@ static inline bool of_get_nand_on_flash_bbt(struct device_node *np)
+ 	return false;
+ }
+ 
++static inline bool of_mtd_match_mtd_parser(struct mtd_info *mtd,
++					   struct mtd_part_parser *parser)
++{
++	return false;
++}
++
+ #endif /* CONFIG_OF_MTD */
+ 
+ #endif /* __LINUX_OF_MTD_H */
 -- 
 2.6.0.rc2.230.g3dd15c0
