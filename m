@@ -1,96 +1,33 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH resend 5/6] ARM: dts: sun7i: Add DRAM gates
-Date: Sat,  5 Dec 2015 21:16:46 +0800
-Message-ID: <1449321407-4531-6-git-send-email-wens@csie.org>
-References: <1449321407-4531-1-git-send-email-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Christian Gmeiner <christian.gmeiner@gmail.com>
+Subject: Re: [PATCH 11/12] MAINTAINERS: add Lucas Stach as maintainer for the
+ etnaviv DRM driver
+Date: Sat, 5 Dec 2015 16:17:27 +0100
+Message-ID: <CAH9NwWeuihRiTEkajTqFJ=bJQsj7kBchL=CWePji2Fh+ZRvxDw@mail.gmail.com>
+References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
+ <1449237604-19064-12-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBVOHROZQKGQEXFCDDIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1449321407-4531-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1449237604-19064-12-git-send-email-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: devicetree@vger.kernel.org, DRI mailing list <dri-devel@lists.freedesktop.org>, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The DRAM gates controls direct memory access for some peripherals.
-These peripherals include the display pipeline, so add the required
-gates to the simplefb nodes as well.
-
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20.dtsi | 32 +++++++++++++++++++++++++++++---
- 1 file changed, 29 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index e02eb720c4fc..21169c0a6627 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -68,7 +68,7 @@
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_be0-lcd0-hdmi";
- 			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
--				 <&ahb_gates 44>;
-+				 <&ahb_gates 44>, <&dram_gates 26>;
- 			status = "disabled";
- 		};
- 
-@@ -76,7 +76,8 @@
- 			compatible = "allwinner,simple-framebuffer",
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_be0-lcd0";
--			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 44>;
-+			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 44>,
-+				 <&dram_gates 26>;
- 			status = "disabled";
- 		};
- 
-@@ -85,7 +86,7 @@
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_be0-lcd0-tve0";
- 			clocks = <&pll5 1>, <&ahb_gates 34>, <&ahb_gates 36>,
--				 <&ahb_gates 44>;
-+				 <&ahb_gates 44>, <&dram_gates 26>;
- 			status = "disabled";
- 		};
- 	};
-@@ -501,6 +502,31 @@
- 			clock-output-names = "spi3";
- 		};
- 
-+		dram_gates: clk@01c20100 {
-+			#clock-cells = <1>;
-+			compatible = "allwinner,sun4i-a10-dram-gates-clk";
-+			reg = <0x01c20100 0x4>;
-+			clocks = <&pll5 0>;
-+			clock-indices = <0>,
-+					<1>, <2>,
-+					<3>,
-+					<4>,
-+					<5>, <6>,
-+					<15>,
-+					<24>, <25>,
-+					<26>, <27>,
-+					<28>, <29>;
-+			clock-output-names = "dram_ve",
-+					     "dram_csi0", "dram_csi1",
-+					     "dram_ts",
-+					     "dram_tvd",
-+					     "dram_tve0", "dram_tve1",
-+					     "dram_output",
-+					     "dram_de_fe1", "dram_de_fe0",
-+					     "dram_de_be0", "dram_de_be1",
-+					     "dram_de_mp", "dram_ace";
-+		};
-+
- 		codec_clk: clk@01c20140 {
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun4i-a10-codec-clk";
--- 
-2.6.2
+MjAxNS0xMi0wNCAxNTowMCBHTVQrMDE6MDAgTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9u
+aXguZGU+Ogo+IFNpZ25lZC1vZmYtYnk6IEx1Y2FzIFN0YWNoIDxsLnN0YWNoQHBlbmd1dHJvbml4
+LmRlPgoKQWNrZWQtYnk6IENocmlzdGlhbiBHbWVpbmVyIDxjaHJpc3RpYW4uZ21laW5lckBnbWFp
+bC5jb20+CgpncmVldHMKLS0KQ2hyaXN0aWFuIEdtZWluZXIsIE1TYwoKaHR0cHM6Ly9zb3VuZGNs
+b3VkLmNvbS9jaHJpc3RpYW4tZ21laW5lcgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
