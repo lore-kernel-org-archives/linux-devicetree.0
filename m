@@ -1,105 +1,152 @@
-From: Jonas Gorski <jogo@openwrt.org>
-Subject: Re: [RFC PATCH 0/7] mtd: partitions: add of_match_table support
-Date: Sat, 5 Dec 2015 12:35:42 +0100
-Message-ID: <CAOiHx==8TFK9t4h2C0Q+j==nuRP3EbyVa+nuYuSEj_LCDa820Q@mail.gmail.com>
-References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
+From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: Re: [RFC PATCH 3/7] doc: dt: mtd: partition: add on-flash format binding
+Date: Sat, 5 Dec 2015 12:39:41 +0100
+Message-ID: <CAOiHx=nz2bdA_R610ozsQHhccdcrHVVCamTtne5ReHrA-FcaaQ@mail.gmail.com>
+References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com> <1449292763-129421-4-git-send-email-computersforpeace@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: MTD Maling List <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Arlott <simon@fire.lp0.eu>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, devicetree-spec@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Arnd Bergmann <arnd@arndb.de>, David Hendricks <dhendrix@chromium.org>
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449292763-129421-4-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
 On Sat, Dec 5, 2015 at 6:19 AM, Brian Norris
-<computersforpeace@gmail.com> wrote:
-> Hi,
+<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> The platform description (such as the type of partition formats used on
+> a given flash) should be done independently of the flash driver in use.
+> However, we can't reasonably have *all* partition parsers run on all
+> flash (until they find a match), so let's overload the 'partitions'
+> subnode to support specifying which format(s) to try in the device tree.
 >
-> There have been several discussions [1] about adding a device tree binding for
-> associating flash devices with the partition parser(s) that are used on the
-> flash. There are a few reasons:
+> Start by supporting Google's (Chrome OS) FMAP structure.
 >
->  (1) drivers shouldn't have to be encoding platform knowledge by listing what
->      parsers might be used on a given system (this is the currently all that's
->      supported)
->  (2) we can't just scan for all supported parsers (like the block system does), since
->      there is a wide diversity of "formats" (no standardization), and it is not
->      always safe or efficient to attempt to do so, particularly since many of
->      them allow their data structures to be placed anywhere on the flash, and
->      so require scanning the entire flash device to find them.
+> There have been others interested in extending devicetree support to
+> other parsers, like the bcm47xxpart parser:
 >
-> So instead, let's support a new binding so that a device tree can specify what
-> partition formats might be used. This seems like a reasonable choice (even
-> though it's not strictly a hardware description) because the flash layout /
-> partitioning is often very closely tied with the bootloader/firmware, at
-> production time.
-
-On a first glance this looks good to me, and looks easily extensible
-for application of non-complete partition parsers.
-
-E.g. for the "brcm,bcm6345-imagetag" we would want to actually do something like
-
-partitions {
-    ....
-
-    partition@0 {
-        reg = <0x0 0x10000>;
-        label = "cfe";
-        read-only;
-    };
-
-    partition@10000 {
-        reg = <0x10000 0x3d0000>;
-        label = "firmware";
-        compatible = "brcm,bcm6345-imagetag";
-    };
-
-    partition@3e0000 {
-        reg = <0x3e0000 0x10000>;
-        label = "art";
-        read-only;
-    };
-
-   partition@3f0000 {
-        reg = <0x3f0000 0x10000>;
-        label = "nvram";
-        read-only;
-    };
-};
-
-as the image tag can only specify the offsets and sizes of the rootfs
-and kernel parts, but not of any other parts.
-
+>   http://patchwork.ozlabs.org/patch/475986/
 >
-> Also, as an example first-use of this mechanism, I support Google's FMAP flash
-> structure, used on Chrome OS devices.
+> and the AFS (ARM Flash Structure?) parser:
 >
-> Note that this is an RFC, mainly for the reason noted in patch 6 ("RFC: mtd:
-> partitions: enable of_match_table matching"): the of_match_table support won't
-> yet autoload a partition parser that is built as a module. I'm not quite sure
-> if there's a lot of value in supporting MTD parsers as modules (block partition
-> support can't be), but that is supported for "by-name" parser lookups in MTD
-> already, so I don't feel like dropping that feature yet. Tips or thoughts are
-> particularly welcome on this aspect!
-
-I would assume a lot of the cases these would be a chicken-egg
-problem, you need the parser to be able to find and mount the rootfs,
-but you you need mount the rootfs to load the parser.
-
-> Also note that there's an existing undocumented binding for a
-> "linux,part-probe" property, but it is only usable on the physmap_of.c driver
-> at the moment, and it is IMO not a good binding. I posted my thoughts on that
-> previously here [2], and since no one else cared to make a better one...I did
-> it myself.
+>   http://patchwork.ozlabs.org/patch/537827/
 >
-> I'd love it if we could kill the unreviewed binding off in favor of something
-> more like this...
+> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mtd/partition.txt          | 75 ++++++++++++++++++++--
+>  1 file changed, 69 insertions(+), 6 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
+> index 28ae56f5c972..1bf9a7243993 100644
+> --- a/Documentation/devicetree/bindings/mtd/partition.txt
+> +++ b/Documentation/devicetree/bindings/mtd/partition.txt
+> @@ -1,29 +1,56 @@
+> -Representing flash partitions in devicetree
+> +Flash partitions in device tree
+> +===============================
+>
+> -Partitions can be represented by sub-nodes of an mtd device. This can be used
+> +Flash devices can be partitioned into one or more functional ranges (e.g.,
+> +"boot code", "nvram", and "kernel") in at least two distinct ways:
+> +
+> + (A) a fixed flash layout at production time or
+> + (B) with an on-flash partition table, such as RedBoot, that describes the
+> +     geometry and naming/purpose of each functional region
+> +
+> +The former typically requires an operating system to learn about the
+> +partitioning from some kind of metadata provided by the bootloader/firmware.
+> +Such partitions can be described using the method in "Section A: Fixed Partitions".
+> +
+> +The latter is somewhat analogous to partition tables used on block devices
+> +(e.g., MBR or GPT), except that there is less standardization for flash
+> +devices, and it is not always safe or efficient to attempt to search for all of
+> +them on every flash device in the system, particularly since many of them allow
+> +their data structures to be placed anywhere on the flash, and so require
+> +scanning the entire flash device to find them.
+> +
+> +To assist system software in locating these partition tables, we provide a
+> +binding to describe which partition format(s) may be used on a given flash,
+> +found below in "Section B: On-Flash Partition Tables".
+> +
+> +
+> +Section A: Fixed Partitions
+> +---------------------------
+> +
+> +Partitions can be represented by sub-nodes of a flash device. This can be used
+>  on platforms which have strong conventions about which portions of a flash are
+>  used for what purposes, but which don't use an on-flash partition table such
+>  as RedBoot.
+>
+> -The partition table should be a subnode of the mtd node and should be named
+> +The partition table should be a subnode of the flash node and should be named
+>  'partitions'. This node should have the following property:
+>  - compatible : (required) must be "partitions"
+>  Partitions are then defined in subnodes of the partitions node.
+>
+> -For backwards compatibility partitions as direct subnodes of the mtd device are
+> +For backwards compatibility partitions as direct subnodes of the flash device are
+>  supported. This use is discouraged.
+>  NOTE: also for backwards compatibility, direct subnodes that have a compatible
+>  string are not considered partitions, as they may be used for other bindings.
+>
+>  #address-cells & #size-cells must both be present in the partitions subnode of the
+> -mtd device. There are two valid values for both:
+> +flash device. There are two valid values for both:
+>  <1>: for partitions that require a single 32-bit cell to represent their
+>       size/address (aka the value is below 4 GiB)
+>  <2>: for partitions that require two 32-bit cells to represent their
+>       size/address (aka the value is 4 GiB or greater).
+>
+>  Required properties:
+> -- reg : The partition's offset and size within the mtd bank.
+> +- reg : The partition's offset and size within the flash
+>
+>  Optional properties:
+>  - label : The label / name for this partition.  If omitted, the label is taken
+> @@ -89,3 +116,39 @@ flash@2 {
+>                 };
+>         };
+>  };
+> +
+> +
+> +Section B: On-Flash Partition Tables
+> +------------------------------------
+> +
+> +System designers use a variety of on-flash data structures to describe the
+> +layout of the flash. Because it's not always optimal for system software to
+> +scan for every sort of data structure that might be used, one can specify which
+> +structure(s) might be used on a given flash using the 'partitions' subnode of
+> +the flash node.
+> +
+> +Node name: partitions
+> +Properties:
+> + - compatible: (required) used to define which partition format(s) may be in
+> +   use on this flash may contain one or more of the strings defined in the
+> +   following subsections
+> +
+> +
+> +Google's FMAP (Flash MAP)
+> +#########################
+> +
+> +Often used to describe the boot flash on Chrome OS devices. Specified here:
+> +
+> +  https://github.com/dhendrix/flashmap/blob/wiki/FmapSpec.md
+> +
+> +Properties:
+> +- compatible: (required) must include "google,fmap"
+> +
+> +
+> +Examples:
+> +
+> +flash@0 {
+> +       partitions {
+> +               compatible = "google,fmap";
+> +       };
+> +};
 
-I agree fully that this is a bad binding, as it exposes internal names
-that aren't supposed to be fixed.
+I wonder if this wouldn't be better served in a separate binding doc
+with its compatible name as the filename, like we do with
+driver^Whardware blocks, especially if we want to add more parsers.
 
 
 Jonas
