@@ -1,52 +1,46 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v5 2/5] ARM: BCM: Clean up SMP support for Broadcom Kona
-Date: Fri, 04 Dec 2015 15:07:15 -0800
-Message-ID: <56621CA3.3090903@gmail.com>
-References: <1449260611-24417-1-git-send-email-kapilh@broadcom.com> <1449260611-24417-3-git-send-email-kapilh@broadcom.com>
+From: Xinliang Liu <xinliang.liu@linaro.org>
+Subject: Re: [PATCH v2 03/10] drm/hisilicon: Add hisilicon DRM master driver
+Date: Sat, 5 Dec 2015 09:25:25 +0800
+Message-ID: <CAGd==06=v52p+NeHUH_0WHBTmaN4QMtswY7B+T3LaS8qOSyc6A@mail.gmail.com>
+References: <1448707145-69348-1-git-send-email-xinliang.liu@linaro.org>
+ <1448707145-69348-4-git-send-email-xinliang.liu@linaro.org>
+ <CAL_Jsq+cr7sQ1eus8Yi-mCMDq9PCZbFTSoPqt9P4a_m-JGKo0g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449260611-24417-3-git-send-email-kapilh@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kapil Hali <kapilh@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: Gregory Fong <gregory.0xf0@gmail.com>, Lee Jones <lee@kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Kever Yang <kever.yang@rock-chips.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_Jsq+cr7sQ1eus8Yi-mCMDq9PCZbFTSoPqt9P4a_m-JGKo0g@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linuxarm <linuxarm@huawei.com>, dri-devel <dri-devel@lists.freedesktop.org>, Wei Xu <xuwei5@hisilicon.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, zourongrong@huawei.com, Yiping Xu <xuyiping@hisilicon.com>, Jonathan Corbet <corbet@lwn.net>, Wang Fei <w.f@huawei.com>, lijianhua@huawei.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bintian Wang <bintian.wang@huawei.com>, Chen Feng <puck.chen@hisilicon.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Andy Green <andy.green@linaro.org>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Haojian Zhuang <haojian.zhuang@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/12/15 12:23, Kapil Hali wrote:
-> These changes cleans up SMP implementaion for Broadcom's
-> Kona SoC which are required for handling SMP for iProc
-> family of SoCs at a single place for BCM NSP and BCM Kona.
-> 
-> Signed-off-by: Kapil Hali <kapilh@broadcom.com>
-> ---
->  arch/arm/boot/dts/bcm11351.dtsi |  2 +-
->  arch/arm/boot/dts/bcm21664.dtsi |  2 +-
->  arch/arm/mach-bcm/kona_smp.c    | 82 +++++++++++++++++++++++++++--------------
->  3 files changed, 56 insertions(+), 30 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
-> index 2ddaa51..3dc7a8c 100644
-> --- a/arch/arm/boot/dts/bcm11351.dtsi
-> +++ b/arch/arm/boot/dts/bcm11351.dtsi
-> @@ -31,7 +31,6 @@
->  		#address-cells = <1>;
->  		#size-cells = <0>;
->  		enable-method = "brcm,bcm11351-cpu-method";
-> -		secondary-boot-reg = <0x3500417c>;
-
-I would expect the 'enable-method' to be moved as well to be consistent
-with what you are adding for NSP later on.
-
->  
->  		cpu0: cpu@0 {
->  			device_type = "cpu";
-> @@ -42,6 +41,7 @@
->  		cpu1: cpu@1 {
->  			device_type = "cpu";
->  			compatible = "arm,cortex-a9";
-> +			secondary-boot-reg = <0x3500417c>;
->  			reg = <1>;
->  		};
--- 
-Florian
+T24gNCBEZWNlbWJlciAyMDE1IGF0IDAwOjIxLCBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3Jn
+PiB3cm90ZToKPiBPbiBTYXQsIE5vdiAyOCwgMjAxNSBhdCA0OjM4IEFNLCBYaW5saWFuZyBMaXUg
+PHhpbmxpYW5nLmxpdUBsaW5hcm8ub3JnPiB3cm90ZToKPj4gQWRkIERSTSBtYXN0ZXIgZHJpdmVy
+IGZvciBoaTYyMjAgU29DIHdoaWNoIHVzZWQgaW4gSGlLZXkgYm9hcmQuCj4+IEFkZCBkdW1iIGJ1
+ZmZlciBmZWF0dXJlLgo+PiBBZGQgcHJpbWUgZG1hYnVmIGZlYXR1cmUuCj4+Cj4+IFNpZ25lZC1v
+ZmYtYnk6IFhpbmxpYW5nIExpdSA8eGlubGlhbmcubGl1QGxpbmFyby5vcmc+Cj4+IFNpZ25lZC1v
+ZmYtYnk6IFhpbndlaSBLb25nIDxrb25nLmtvbmd4aW53ZWlAaGlzaWxpY29uLmNvbT4KPj4gU2ln
+bmVkLW9mZi1ieTogQW5keSBHcmVlbiA8YW5keS5ncmVlbkBsaW5hcm8ub3JnPgo+PiAtLS0KPgo+
+PiArc3RhdGljIGludCBoaXNpX2dlbV9jbWFfZHVtYl9jcmVhdGUoc3RydWN0IGRybV9maWxlICpm
+aWxlLAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgZHJtX2Rl
+dmljZSAqZGV2LAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3Qg
+ZHJtX21vZGVfY3JlYXRlX2R1bWIgKmFyZ3MpCj4+ICt7Cj4+ICsgICAgICAgaW50IG1pbl9waXRj
+aCA9IERJVl9ST1VORF9VUChhcmdzLT53aWR0aCAqIGFyZ3MtPmJwcCwgOCk7Cj4KPiBCVFcsIGlz
+IGFyZ3MtPmJwcCBzdXBwb3NlZCB0byBiZSBiaXRzIG9yIGJ5dGVzPyBJJ20gdXNpbmcgeW91ciBk
+dW1iIGJvCj4gc3VwcG9ydCBpbiBkcm1fZ3JhbGxvYyB3aGljaCBkb2VzIGJ5dGVzIGFzIHRoYXQg
+aXMgd2hhdAo+IGdyYWxsb2NfZHJtX2dldF9icHAgcmV0dXJucy4gVGhlIHZpcnRpby1ncHUgZHJp
+dmVyIGRvZXMgYml0cy4gSSdtCj4gZ3Vlc3NpbmcgYml0cyBpcyBjb3JyZWN0LgoKeWVzLCBpdCBp
+cyBiaXRzLiBBbmQgcGl0Y2ggaXMgYnl0ZXMuCgo+Cj4gUm9iCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
