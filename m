@@ -1,52 +1,50 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 6/6] ARM: dts: sun7i: Add VE (Video Engine)
- module clock node
-Date: Sat,  5 Dec 2015 17:00:09 +0800
-Message-ID: <1449306009-2627-7-git-send-email-wens@csie.org>
-References: <1449306009-2627-1-git-send-email-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH RFC 1/4] ARM: bcm2835: remove sdhci pins from GPIO
+ pinctrl
+Date: Sat, 5 Dec 2015 10:12:01 +0100 (CET)
+Message-ID: <213306787.32979.5a38c754-5911-4377-aa1a-501587b3a337.open-xchange@email.1und1.de>
+References: <1447949176-21926-1-git-send-email-stefan.wahren@i2se.com>
+ <1447949176-21926-2-git-send-email-stefan.wahren@i2se.com>
+ <565E6837.1070909@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBJGPRKZQKGQEXFAHAXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1449306009-2627-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <565E6837.1070909-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The video engine has its own module clock, which also includes a
-reset control for it.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> hat am 2. Dezember 2015 um 04:40
+> geschrieben:
+>
+>
+> On 11/19/2015 09:06 AM, Stefan Wahren wrote:
+> > Currently the pins alt3 (sdhci) are assigned to GPIO pinctrl.
+> > This is bad because a user could export it to sysfs and break
+> > sdhci. In order to avoid that remove those pins from GPIO pintrl.
+>
+> > diff --git a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
+> > b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
+>
+> > &gpio {
+> > - pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
+> > + pinctrl-0 = <&gpioout &alt0 &i2s_alt0>;
+>
+> This doesn't make sense. The current DT content is configuring those
+> pins as SDHCI, not as GPIO. Admitedly this is redundant since the
+> firmware and/or bootloader already did this in order to boot the system,
+> but irrespective, the current DT causes no issues. Removing the pinctrl
+> setting should not influence whether the pins can be exported via GPIO
+> sysfs either.
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 21169c0a6627..0940a788f824 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -527,6 +527,15 @@
- 					     "dram_de_mp", "dram_ace";
- 		};
- 
-+		ve_clk: clk@01c2013c {
-+			#clock-cells = <0>;
-+			#reset-cells = <0>;
-+			compatible = "allwinner,sun4i-a10-ve-clk";
-+			reg = <0x01c2013c 0x4>;
-+			clocks = <&pll4>;
-+			clock-output-names = "ve";
-+		};
-+
- 		codec_clk: clk@01c20140 {
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun4i-a10-codec-clk";
--- 
-2.6.2
+You are right. 
+
+Is it generally possible to avoid the GPIO sysfs export for SDHCI pins? 
+Is it an issue of pinctrl-bcm2835?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
