@@ -1,52 +1,54 @@
-From: Martyn Welch <martyn.welch@collabora.co.uk>
-Subject: Re: [PATCH 2/3] Add support for monitoring gpio switches
-Date: Sat, 05 Dec 2015 10:42:44 +0000
-Message-ID: <5662BFA4.1010304@collabora.co.uk>
-References: <1449250275-23435-1-git-send-email-martyn.welch@collabora.co.uk> <1449250275-23435-3-git-send-email-martyn.welch@collabora.co.uk> <20151204185713.GA22925@kroah.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
+Date: Sat, 5 Dec 2015 11:02:09 +0000
+Message-ID: <20151205110209.GG8644@n2100.arm.linux.org.uk>
+References: <20151204162956.GA14978@rob-hp-laptop>
+ <1449247305.8275.104.camel@pengutronix.de>
+ <CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
+ <1449251760.8275.116.camel@pengutronix.de>
+ <CAL_Jsq+oaJxD3vbDWzn_4ghpqi=RZ1o+8nOcepWYjzcu5Hwpjg@mail.gmail.com>
+ <20151204203101.GD8644@n2100.arm.linux.org.uk>
+ <CAKb7UviPhoiY-YP2aBHm0BHbeEjSF2wTguQScVXMBve-kZc16Q@mail.gmail.com>
+ <20151204220533.GE8644@n2100.arm.linux.org.uk>
+ <CAKb7UvgzYMxPxtt8iPars13n4sAJ5Z4Hva1KHO+k4yNumDb+DQ@mail.gmail.com>
+ <20151205101208.GP10243@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20151204185713.GA22925@kroah.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Olof Johansson <olof@lixom.net>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20151205101208.GP10243@phenom.ffwll.local>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, patchwork-lst@pengutronix.de, "kernel@pengutronix.de" <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 04/12/15 18:57, Greg Kroah-Hartman wrote:
-> On Fri, Dec 04, 2015 at 05:31:14PM +0000, Martyn Welch wrote:
->> Select Chromebooks have gpio attached to switches used to cause the
->> firmware to enter alternative modes of operation and/or control other
->> device characteristics (such as write protection on flash devices). This
->> patch adds a driver that exposes a read-only interface to allow these
->> signals to be read from user space.
->>
->> This functionality has been generalised to provide support for any device
->> with device tree support which needs to identify a gpio as being used for a
->> specific task.
->>
->> Signed-off-by: Martyn Welch <martyn.welch@collabora.co.uk>
->> ---
->>   drivers/misc/Kconfig       |  11 ++++
->>   drivers/misc/Makefile      |   1 +
->>   drivers/misc/gpio-switch.c | 160 +++++++++++++++++++++++++++++++++++++++++++++
->
-> Why isn't this in drivers/gpio/ ?
->
-> why make it a misc driver?
->
-
-I thought all the drivers in /drivers/gpio were gpio drivers, rather 
-than users of the gpio framework. Is that not the case?
-
-Happy to move it if the consensus is that that's the correct place to 
-put it.
-
-Martyn
-
-> thanks,
->
-> greg k-h
->
+T24gU2F0LCBEZWMgMDUsIDIwMTUgYXQgMTE6MTI6MDhBTSArMDEwMCwgRGFuaWVsIFZldHRlciB3
+cm90ZToKPiBHaXZlbiB0aGF0IEkgdGhpbmsgdGhlIGN1cnJlbnQgZXRuYXZpdiBpcyBhIHNvdW5k
+IGFyY2hpdGVjdHVyZS4gQW5kIEknbQo+IG5vdCBzYXlpbmcgdGhhdCBiZWNhdXNlIGRybSByZXF1
+aXJlcyBldmVyeXRoaW5nIHRvIGJlIHNtYXNoZWQgaW50byBvbmUKPiBkcml2ZXIsIHNpbmNlIHRo
+YXQncyBzaW1wbGUgbm90IHRoZSBjYXNlLgoKVGhlcmUncyBvdGhlciByZWFzb25zIGFzIHdlbGws
+IG1vc3RseSBmcm9tIHRoZSBwZXJmb3JtYW5jZSBwb2ludCBvZiB2aWV3LgpIYXZpbmcgc2VwYXJh
+dGUgRFJNIGRldmljZXMgZm9yIGVhY2ggR1BVIG1lYW5zIHlvdSBuZWVkIHRvIHVzZSBkbWFidWYg
+dG8Kc2hhcmUgYnVmZmVycyBhY3Jvc3MgdGhlIEdQVXMuICBUaGlzIGJyaW5ncyB3aXRoIGl0IHNl
+dmVyYWwga2luZHMgb2YKb3ZlcmhlYWQ6CgoxLiBoYXZpbmcgbW9yZSBmZCB1c2FnZSBpbiB0aGUg
+Y2xpZW50IHByb2dyYW1zLgoyLiBoYXZpbmcgbW9yZSBtZW1vcnkgdXNhZ2UgYXMgYSByZXN1bHQu
+CjMuIGhhdmluZyBtb3JlIGxvY2tzLCBkdWUgdG8gbW9yZSBvYmplY3QgbGlzdHMuCjQuIGhhdmlu
+ZyB0aGUgb3ZlcmhlYWQgZnJvbSB0aGUgRE1BIEFQSSB3aGVuIGltcG9ydGluZyBidWZmZXJzIGJl
+dHdlZW4KICAgZGlmZmVyZW50IEdQVSBub2Rlcy4KCkZyb20gbXkgcGVyZm9ybWFuY2UgbWVhc3Vy
+ZW1lbnRzIG92ZXIgdGhlIGxhc3QgbW9udGgsIHRoZSB0b3AgaGl0IGlzCmN1cnJlbnRseSBmcm9t
+IHRoZSBETUEgQVBJLCBzbyBoYXZpbmcgdG8gZXhwb3J0IGFuZCBpbXBvcnQgYnVmZmVycwpiZXR3
+ZWVuIGRpZmZlcmVudCBHUFUgZGV2aWNlcyBpcyBqdXN0IGdvaW5nIHRvIG1ha2UgdGhhdCB3b3Jz
+ZS4KCi0tIApGVFRDIGJyb2FkYmFuZCBmb3IgMC44bWlsZSBsaW5lOiBjdXJyZW50bHkgYXQgOS42
+TWJwcyBkb3duIDQwMGticHMgdXAKYWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5uZXQuCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
