@@ -1,62 +1,44 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: Re: [PATCH RFC 0/3] input: rotary_encoder: use more than two gpios as
- input
-Date: Sat, 5 Dec 2015 20:50:18 +0100
-Message-ID: <56633FFA.5080708@zonque.org>
-References: <1449050834-31779-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <2266988.l83Fg404My@pcimr> <20151202185920.GO5072@pengutronix.de>
- <21976926.6E4NCDDElu@pcimr>
+From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 3/7] doc: dt: mtd: partition: add on-flash format binding
+Date: Sat, 5 Dec 2015 22:33:30 +0100
+Message-ID: <CAOMqctTbUNd0GtY07YJuxem9HkU1WZ-NtO556=Yg2QrsF49Xjw@mail.gmail.com>
+References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
+ <1449292763-129421-4-git-send-email-computersforpeace@gmail.com> <CAOiHx=nz2bdA_R610ozsQHhccdcrHVVCamTtne5ReHrA-FcaaQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <21976926.6E4NCDDElu@pcimr>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rojhalat Ibrahim <imr@rtschenk.de>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: devicetree@vger.kernel.org, Sylvain Rochet <sylvain.rochet@finsecur.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Johan Hovold <johan@kernel.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, linux-input@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>, =?UTF-8?Q?Guido_Mart=c3=adnez?= <guido@vanguardiasur.com.ar>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOiHx=nz2bdA_R610ozsQHhccdcrHVVCamTtne5ReHrA-FcaaQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTIvMDMvMjAxNSAwMjowMSBQTSwgUm9qaGFsYXQgSWJyYWhpbSB3cm90ZToKPiBPbiBXZWRu
-ZXNkYXkgMDIgRGVjZW1iZXIgMjAxNSAxOTo1OToyMCBVd2UgS2xlaW5lLUvDtm5pZyB3cm90ZToK
-Cj4+IEkgaGF2ZSBhIHJlYWwgcm90YXJ5IGVuY29kZXIgd2l0aCA0IGlucHV0IGxpbmVzIGFuZCBz
-byAxNgo+PiBkaXN0aW5ndWlzaGFibGUgcG9zaXRpb25zLiBJdCB3b3VsZCBiZSBkZXNjcmliZWQg
-YXM6Cj4+Cj4+IAljb21wYXRpYmxlID0gInJvdGFyeS1lbmNvZGVyIjsKPj4gCWdwaW9zID0gPCZn
-cGlvNCAxMiBHUElPX0FDVElWRV9ISUdIPiwgPCZncGlvNCAxMSBHUElPX0FDVElWRV9ISUdIPiwg
-PCZncGlvNCAxMCBHUElPX0FDVElWRV9ISUdIPiwgPCZncGlvNCA5IEdQSU9fQUNUSVZFX0hJR0g+
-Owo+PiAJcm90YXJ5LWVuY29kZXIsc3RlcHMgPSA8MTY+Owo+PiAJcm90YXJ5LWVuY29kZXIsc3Rl
-cHMtcGVyLXBlcmlvZCA9IDwxNj47Cj4+Cj4+IHdpdGggdGhlIGJpbmRpbmcgaW1wbGVtZW50ZWQg
-aW4gbXkgcGF0Y2hlcy4KPj4KPj4gVGhlIHdpa2lwZWRpYSBhcnRpY2xlIGFib3V0IHJvdGFyeSBl
-bmNvZGVyc1sxXSB1c2VzIGEgZGV2aWNlIHdpdGggMwo+PiBpbnB1dCBsaW5lcyB0byBleHBsYWlu
-IGdyYXkgZW5jb2RpbmcuIFNvIEkgZGlkbid0IGNvbnNpZGVyICJteSIgZGV2aWNlCj4+IGFzIGV4
-b3RpYyB1cCB0byBub3cuCj4+Cj4gCj4gU28geW91IGhhdmUgYW4gYWJzb2x1dGUgZW5jb2Rlci4g
-RnJvbSB0aGUgc3RhdGUgb2YgdGhlIGZvdXIgaW5wdXQgbGluZXMgeW91Cj4gY2FuIGRldGVybWlu
-ZSB0aGUgYWJzb2x1dGUgcG9zaXRpb24gdmFsdWUuIFRoZXJlIGlzIG5vIG5lZWQgdG8gY291bnQg
-c3RlcHMuCj4gQXQgbGVhc3QgdGhhdCdzIHRoZSBvcmlnaW5hbCBwdXJwb3NlIG9mIHlvdXIgZGV2
-aWNlLgo+IAo+IE9mIGNvdXJzZSBpdCBtaWdodCBiZSBjb25jZWl2YWJsZSB0byB1c2UgdGhhdCBr
-aW5kIG9mIGFic29sdXRlIGVuY29kZXIgaW4gYW4KPiBpbmNyZW1lbnRhbCB3YXkgYW5kIGNvdW50
-IHRoZSBzdGVwcyB0aHJvdWdob3V0IG11bHRpcGxlIHJldm9sdXRpb25zLgo+IEJ1dCB3aHkgd291
-bGQgeW91IGRvIHRoYXQ/IFRoZSByZXNvbHV0aW9uIG9mIDE2IHN0ZXBzIHBlciByZXZvbHV0aW9u
-IGlzIG5vdAo+IHZlcnkgZ29vZCAoaW5jcmVtZW50YWwgZW5jb2RlcnMgb2Z0ZW4gaGF2ZSBodW5k
-cmVkcyBvciB0aG91c2FuZHMgb2Ygc3RlcHMgcGVyCj4gcmV2b2x1dGlvbikuIEFuZCB0aGUgd2hv
-bGUgcG9pbnQgb2YgYW4gYWJzb2x1dGUgZW5jb2RlciBpcyB0aGF0IHlvdSBhcmUgYWJsZQo+IHRv
-IGRldGVybWluZSB0aGUgY3VycmVudCBwb3NpdGlvbiBhdCBhbnkgdGltZSBqdXN0IGJ5IGxvb2tp
-bmcgYXQgdGhlIGlucHV0cwo+IHdpdGhvdXQgaGF2aW5nIHRvIGNvdW50IHN0ZXBzLgoKWWVzLCB5
-b3UncmUgcmlnaHQsIHRoYXQncyBhY3R1YWxseSBhIHZlcnkgZGlmZmVyZW50IGtpbmQgb2YgZGV2
-aWNlIHdoaWNoCnNob3VsZCBiZSBzdXBwb3J0ZWQgd2l0aCBhIGRpZmZlcmVudCBtb2RlIG9yIHNv
-bWV0aGluZywgc28gdGhhdCB0aGUKb3V0cHV0IG9mIHRoZSBkcml2ZXIgcmVmbGVjdHMgdGhlIGFi
-c29sdXRlIHN0YXRlIG9mIHRoZSBlbmNvZGVyLiBUaGlzCmV2ZW4gc2ltcGxpZmllcyB0aGluZ3Mg
-aW4gdGhlIGRyaXZlcjogVGhlIGVudGlyZSBzdGF0ZSBsb2dpYyB3b3VsZCBiZQpieXBhc3NlZCBp
-biB0aGlzIG1vZGUsIGFuZCB0aGUgY3VycmVudCBzdGF0ZSBvZiB0aGUgR1BJTyBsaW5lcyB3b3Vs
-ZCBiZQp1c2VkIGRpcmVjdGx5IHRvIGdldCB0aGUgYWJzb2x1dGUgdmFsdWUuIE1ha2VzIHNlbnNl
-PwoKClRoYW5rcywKRGFuaWVsCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On 5 December 2015 at 12:39, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
+> On Sat, Dec 5, 2015 at 6:19 AM, Brian Norris
+> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+
+>> +
+>> +Examples:
+>> +
+>> +flash@0 {
+>> +       partitions {
+>> +               compatible = "google,fmap";
+>> +       };
+>> +};
+>
+> I wonder if this wouldn't be better served in a separate binding doc
+> with its compatible name as the filename, like we do with
+> driver^Whardware blocks, especially if we want to add more parsers.
+
+
+I find that *very* counter productive for bindings that go to the same
+node. You have a description of a node, and then suddenly there you
+have another file with another description of the same node. Totally
+awesome.
+
+Also how do you plan to write partitioning schemes with parameters
+like with non-zero offset of the partition table.
+
+Thanks
+
+Michal
