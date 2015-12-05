@@ -1,39 +1,65 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
-Date: Sat, 5 Dec 2015 11:42:09 +0000
-Message-ID: <20151205114209.GH8644@n2100.arm.linux.org.uk>
-References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
- <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
- <20151204162956.GA14978@rob-hp-laptop>
- <1449247305.8275.104.camel@pengutronix.de>
- <CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
- <1449251760.8275.116.camel@pengutronix.de>
- <CAL_Jsq+oaJxD3vbDWzn_4ghpqi=RZ1o+8nOcepWYjzcu5Hwpjg@mail.gmail.com>
- <1449314779.2702.17.camel@pengutronix.de>
+From: Michael Ellerman <michael-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Subject: Re: [PATCH] of: Fix comparison of reserved memory regions
+Date: Sat, 05 Dec 2015 22:43:57 +1100
+Message-ID: <5CD6EBAA-D0D6-434A-B9EA-B144C05711BC@ellerman.id.au>
+References: <1447843598-9355-1-git-send-email-mpe@ellerman.id.au> <vnkwk2oum9b8.fsf@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1449314779.2702.17.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <vnkwk2oum9b8.fsf-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 05, 2015 at 12:26:19PM +0100, Lucas Stach wrote:
-> I see where you are going here and I appreciate that this discussion
-> isn't a exercise in bikeshed, but based on technical facts.
 
-It would be nice (for the sake of this discussion not getting heated)
-if Rob could show that he's been reading my replies to his questions.
-My impression so far is that I'm being ignored.  Evidence being Rob's
-assertion that his points have not been addressed, where I've replied
-with the technical responses - and not one of those has seen any kind
-of reply.
+
+On 5 December 2015 04:07:39 GMT+11:00, Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>On Wed, Nov 18 2015 at 09:46:38 PM, Michael Ellerman
+><mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org> wrote:
+>> In order to check for overlapping reserved memory regions, we first
+>need
+>> to sort the array of memory regions. This is implemented using
+>sort(),
+>> and a custom comparison function __rmem_cmp().
+>>
+>> Unfortunatley __rmem_cmp() doesn't work in all cases. Because the two
+>> base values are phys_addr_t, they may be u64 on some platforms, in
+>which
+>> case subtracting one from the other and then (implicitly) casting to
+>int
+>> does not give us the -ve/0/+ve value we need.
+>>
+>> This leads to incorrect reports about overlaps, eg:
+>>
+>>   ibm,slw-image@1ffe600000 (0x0000001ffe600000--0x0000001ffe700000)
+>overlaps with
+>>   ibm,firmware-allocs-memory@1000000000
+>(0x0000001000000000--0x0000001000dc0200)
+>>
+>> Fix it by just doing the standard double if and return 0 logic.
+>>
+>> Fixes: ae1add247bf8 ("of: Check for overlap in reserved memory
+>regions")
+>> Signed-off-by: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+>> ---
+>>  drivers/of/of_reserved_mem.c | 8 +++++++-
+>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+>Woops, thanks.
+>
+>Tested-by: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+
+Thanks for testing.
+
+Rob, can we get this merged for 4.4 please?
+
+cheers 
 
 -- 
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Sent from my Android phone with K-9 Mail. Please excuse my brevity.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
