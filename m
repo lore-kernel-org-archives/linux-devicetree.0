@@ -1,133 +1,97 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC PATCH 5/7] mtd: partitions: factor out "match by name" handling
-Date: Fri,  4 Dec 2015 21:19:21 -0800
-Message-ID: <1449292763-129421-6-git-send-email-computersforpeace@gmail.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: [RFC PATCH 1/7] mtd: move partition parsers to drivers/mtd/partitions/
+Date: Fri,  4 Dec 2015 21:19:17 -0800
+Message-ID: <1449292763-129421-2-git-send-email-computersforpeace@gmail.com>
 References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449292763-129421-1-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mtd@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Arlott <simon@fire.lp0.eu>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Jonas Gorski <jogo@openwrt.org>, Brian Norris <computersforpeace@gmail.com>, devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-This code structure is going to be imitated for a match-by-device-node
-implementation, so let's factor out a few functions to make this easier.
+For better organization.
 
-Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Brian Norris <computersforpeace@gmail.com>
 ---
- drivers/mtd/mtdpart.c | 67 +++++++++++++++++++++++++++++++++++++++------------
- 1 file changed, 52 insertions(+), 15 deletions(-)
+ drivers/mtd/Makefile                       | 8 +-------
+ drivers/mtd/partitions/Makefile            | 7 +++++++
+ drivers/mtd/{ => partitions}/afs.c         | 0
+ drivers/mtd/{ => partitions}/ar7part.c     | 0
+ drivers/mtd/{ => partitions}/bcm47xxpart.c | 0
+ drivers/mtd/{ => partitions}/bcm63xxpart.c | 0
+ drivers/mtd/{ => partitions}/cmdlinepart.c | 0
+ drivers/mtd/{ => partitions}/ofpart.c      | 0
+ drivers/mtd/{ => partitions}/redboot.c     | 0
+ 9 files changed, 8 insertions(+), 7 deletions(-)
+ create mode 100644 drivers/mtd/partitions/Makefile
+ rename drivers/mtd/{ => partitions}/afs.c (100%)
+ rename drivers/mtd/{ => partitions}/ar7part.c (100%)
+ rename drivers/mtd/{ => partitions}/bcm47xxpart.c (100%)
+ rename drivers/mtd/{ => partitions}/bcm63xxpart.c (100%)
+ rename drivers/mtd/{ => partitions}/cmdlinepart.c (100%)
+ rename drivers/mtd/{ => partitions}/ofpart.c (100%)
+ rename drivers/mtd/{ => partitions}/redboot.c (100%)
 
-diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
-index 10bf304027dd..b3100742ddf6 100644
---- a/drivers/mtd/mtdpart.c
-+++ b/drivers/mtd/mtdpart.c
-@@ -687,23 +687,47 @@ int add_mtd_partitions(struct mtd_info *master,
- static DEFINE_SPINLOCK(part_parser_lock);
- static LIST_HEAD(part_parsers);
+diff --git a/drivers/mtd/Makefile b/drivers/mtd/Makefile
+index 99bb9a1f6e16..1c0cd3b1c7c3 100644
+--- a/drivers/mtd/Makefile
++++ b/drivers/mtd/Makefile
+@@ -6,13 +6,7 @@
+ obj-$(CONFIG_MTD)		+= mtd.o
+ mtd-y				:= mtdcore.o mtdsuper.o mtdconcat.o mtdpart.o mtdchar.o
  
--static struct mtd_part_parser *mtd_part_parser_get(const char *name)
-+static bool mtd_part_parser_match_name(struct mtd_part_parser *p,
-+				       const char *name)
-+{
-+	return !strcmp(p->name, name);
-+}
-+
-+static struct mtd_part_parser *__mtd_part_parser_get_by_name(const char *name)
- {
- 	struct mtd_part_parser *p, *ret = NULL;
+-obj-$(CONFIG_MTD_OF_PARTS)	+= ofpart.o
+-obj-$(CONFIG_MTD_REDBOOT_PARTS) += redboot.o
+-obj-$(CONFIG_MTD_CMDLINE_PARTS) += cmdlinepart.o
+-obj-$(CONFIG_MTD_AFS_PARTS)	+= afs.o
+-obj-$(CONFIG_MTD_AR7_PARTS)	+= ar7part.o
+-obj-$(CONFIG_MTD_BCM63XX_PARTS)	+= bcm63xxpart.o
+-obj-$(CONFIG_MTD_BCM47XX_PARTS)	+= bcm47xxpart.o
++obj-y				+= partitions/
  
- 	spin_lock(&part_parser_lock);
- 
--	list_for_each_entry(p, &part_parsers, list)
--		if (!strcmp(p->name, name) && try_module_get(p->owner)) {
-+	list_for_each_entry(p, &part_parsers, list) {
-+		if (mtd_part_parser_match_name(p, name) &&
-+				try_module_get(p->owner)) {
- 			ret = p;
- 			break;
- 		}
-+	}
- 
- 	spin_unlock(&part_parser_lock);
- 
- 	return ret;
- }
- 
-+static struct mtd_part_parser *mtd_part_parser_get_by_name(const char *name)
-+{
-+	struct mtd_part_parser *p;
-+
-+	/* Get parser, if already loaded */
-+	p = __mtd_part_parser_get_by_name(name);
-+	if (p)
-+		return p;
-+
-+	if (request_module("%s", name))
-+		return NULL;
-+
-+	/* Try again */
-+	return __mtd_part_parser_get_by_name(name);
-+}
-+
- static inline void mtd_part_parser_put(const struct mtd_part_parser *p)
- {
- 	module_put(p->owner);
-@@ -752,6 +776,27 @@ static const char * const default_mtd_part_types[] = {
- 	NULL
- };
- 
-+static int mtd_part_do_parse(struct mtd_part_parser *parser,
-+			     struct mtd_info *master,
-+			     struct mtd_partitions *pparts,
-+			     struct mtd_part_parser_data *data)
-+{
-+	int ret;
-+
-+	ret = (*parser->parse_fn)(master, &pparts->parts, data);
-+	pr_debug("%s: parser %s: %i\n", master->name, parser->name, ret);
-+	if (ret <= 0)
-+		return ret;
-+
-+	pr_notice("%d %s partitions found on MTD device %s\n",
-+		  ret, parser->name, master->name);
-+
-+	pparts->nr_parts = ret;
-+	pparts->parser = parser;
-+
-+	return ret;
-+}
-+
- /**
-  * parse_mtd_partitions - parse MTD partitions
-  * @master: the master partition (describes whole MTD device)
-@@ -785,23 +830,15 @@ int parse_mtd_partitions(struct mtd_info *master, const char *const *types,
- 
- 	for ( ; *types; types++) {
- 		pr_debug("%s: parsing partitions %s\n", master->name, *types);
--		parser = mtd_part_parser_get(*types);
--		if (!parser && !request_module("%s", *types))
--			parser = mtd_part_parser_get(*types);
-+		parser = mtd_part_parser_get_by_name(*types);
- 		pr_debug("%s: got parser %s\n", master->name,
- 			 parser ? parser->name : NULL);
- 		if (!parser)
- 			continue;
--		ret = (*parser->parse_fn)(master, &pparts->parts, data);
--		pr_debug("%s: parser %s: %i\n",
--			 master->name, parser->name, ret);
--		if (ret > 0) {
--			printk(KERN_NOTICE "%d %s partitions found on MTD device %s\n",
--			       ret, parser->name, master->name);
--			pparts->nr_parts = ret;
--			pparts->parser = parser;
-+		ret = mtd_part_do_parse(parser, master, pparts, data);
-+		/* Found partitions! */
-+		if (ret > 0)
- 			return 0;
--		}
- 		mtd_part_parser_put(parser);
- 		/*
- 		 * Stash the first error we see; only report it if no parser
+ # 'Users' - code which presents functionality to userspace.
+ obj-$(CONFIG_MTD_BLKDEVS)	+= mtd_blkdevs.o
+diff --git a/drivers/mtd/partitions/Makefile b/drivers/mtd/partitions/Makefile
+new file mode 100644
+index 000000000000..89822f2bfa59
+--- /dev/null
++++ b/drivers/mtd/partitions/Makefile
+@@ -0,0 +1,7 @@
++obj-$(CONFIG_MTD_OF_PARTS)	+= ofpart.o
++obj-$(CONFIG_MTD_REDBOOT_PARTS) += redboot.o
++obj-$(CONFIG_MTD_CMDLINE_PARTS) += cmdlinepart.o
++obj-$(CONFIG_MTD_AFS_PARTS)	+= afs.o
++obj-$(CONFIG_MTD_AR7_PARTS)	+= ar7part.o
++obj-$(CONFIG_MTD_BCM63XX_PARTS)	+= bcm63xxpart.o
++obj-$(CONFIG_MTD_BCM47XX_PARTS)	+= bcm47xxpart.o
+diff --git a/drivers/mtd/afs.c b/drivers/mtd/partitions/afs.c
+similarity index 100%
+rename from drivers/mtd/afs.c
+rename to drivers/mtd/partitions/afs.c
+diff --git a/drivers/mtd/ar7part.c b/drivers/mtd/partitions/ar7part.c
+similarity index 100%
+rename from drivers/mtd/ar7part.c
+rename to drivers/mtd/partitions/ar7part.c
+diff --git a/drivers/mtd/bcm47xxpart.c b/drivers/mtd/partitions/bcm47xxpart.c
+similarity index 100%
+rename from drivers/mtd/bcm47xxpart.c
+rename to drivers/mtd/partitions/bcm47xxpart.c
+diff --git a/drivers/mtd/bcm63xxpart.c b/drivers/mtd/partitions/bcm63xxpart.c
+similarity index 100%
+rename from drivers/mtd/bcm63xxpart.c
+rename to drivers/mtd/partitions/bcm63xxpart.c
+diff --git a/drivers/mtd/cmdlinepart.c b/drivers/mtd/partitions/cmdlinepart.c
+similarity index 100%
+rename from drivers/mtd/cmdlinepart.c
+rename to drivers/mtd/partitions/cmdlinepart.c
+diff --git a/drivers/mtd/ofpart.c b/drivers/mtd/partitions/ofpart.c
+similarity index 100%
+rename from drivers/mtd/ofpart.c
+rename to drivers/mtd/partitions/ofpart.c
+diff --git a/drivers/mtd/redboot.c b/drivers/mtd/partitions/redboot.c
+similarity index 100%
+rename from drivers/mtd/redboot.c
+rename to drivers/mtd/partitions/redboot.c
 -- 
 2.6.0.rc2.230.g3dd15c0
