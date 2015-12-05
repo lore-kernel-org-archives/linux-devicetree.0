@@ -1,62 +1,72 @@
-From: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 2/5] ARM: BCM: Clean up SMP support for Broadcom Kona
-Date: Sat, 5 Dec 2015 17:26:08 +0530
-Message-ID: <5662D0D8.1020004@broadcom.com>
-References: <1449260611-24417-1-git-send-email-kapilh@broadcom.com>
- <1449260611-24417-3-git-send-email-kapilh@broadcom.com>
- <56621CA3.3090903@gmail.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
+Date: Sat, 5 Dec 2015 12:17:41 +0000
+Message-ID: <20151205121741.GI8644@n2100.arm.linux.org.uk>
+References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
+ <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
+ <20151204162956.GA14978@rob-hp-laptop>
+ <1449247305.8275.104.camel@pengutronix.de>
+ <CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
+ <1449251760.8275.116.camel@pengutronix.de>
+ <CAL_Jsq+oaJxD3vbDWzn_4ghpqi=RZ1o+8nOcepWYjzcu5Hwpjg@mail.gmail.com>
+ <1449314779.2702.17.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56621CA3.3090903-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1449314779.2702.17.camel@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, patchwork-lst@pengutronix.de, "kernel@pengutronix.de" <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
-
-On 12/5/2015 4:37 AM, Florian Fainelli wrote:
-> On 04/12/15 12:23, Kapil Hali wrote:
->> These changes cleans up SMP implementaion for Broadcom's
->> Kona SoC which are required for handling SMP for iProc
->> family of SoCs at a single place for BCM NSP and BCM Kona.
->>
->> Signed-off-by: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/bcm11351.dtsi |  2 +-
->>  arch/arm/boot/dts/bcm21664.dtsi |  2 +-
->>  arch/arm/mach-bcm/kona_smp.c    | 82 +++++++++++++++++++++++++++--------------
->>  3 files changed, 56 insertions(+), 30 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
->> index 2ddaa51..3dc7a8c 100644
->> --- a/arch/arm/boot/dts/bcm11351.dtsi
->> +++ b/arch/arm/boot/dts/bcm11351.dtsi
->> @@ -31,7 +31,6 @@
->>  		#address-cells = <1>;
->>  		#size-cells = <0>;
->>  		enable-method = "brcm,bcm11351-cpu-method";
->> -		secondary-boot-reg = <0x3500417c>;
-> 
-> I would expect the 'enable-method' to be moved as well to be consistent
-> with what you are adding for NSP later on.
-> 
-Right, it is updated in the new patch set.
->>  
->>  		cpu0: cpu@0 {
->>  			device_type = "cpu";
->> @@ -42,6 +41,7 @@
->>  		cpu1: cpu@1 {
->>  			device_type = "cpu";
->>  			compatible = "arm,cortex-a9";
->> +			secondary-boot-reg = <0x3500417c>;
->>  			reg = <1>;
->>  		};
-Thanks,
-Kapil
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gU2F0LCBEZWMgMDUsIDIwMTUgYXQgMTI6MjY6MTlQTSArMDEwMCwgTHVjYXMgU3RhY2ggd3Jv
+dGU6Cj4gSSBhbHJlYWR5IHNrZXRjaGVkIHVwIHRoZSBhbHRlcm5hdGl2ZSBvZiBoYXZpbmcgdGhl
+IG1hc3RlciBkcml2ZXIgc2Nhbgo+IHRoZSBEVCBmb3IgbWF0Y2hpbmcgR1BVIG5vZGVzIGF0IHBy
+b2JlIHRpbWUgYW5kIGJpbmRpbmcgdGhlbSB0b2dldGhlcgo+IGludG8gYSBzaW5nbGUgZGV2aWNl
+LiBCdXQgZ2l2ZW4gdGhhdCB3ZSBlbmQgdXAgd2l0aCBvbmUgbWFzdGVyIGRldmljZQo+IGFueXdh
+eXMsIGRvIHlvdSByZWFsbHkgcHJlZmVyIHRoaXMgb3ZlciB0aGUgdmlydHVhbCBub2RlLCB3aGlj
+aCBpcyBhCj4gd29ya2luZyBhbmQgcHJvdmVuIHNvbHV0aW9uIHRvIHRoaXMgZXhhY3QgcHJvYmxl
+bT8KCkkgcmVhbGx5IGRvbid0IHRoaW5rIHRoYXQgd291bGQgYmUgYSBzYW5lIGFwcHJvYWNoIGZv
+ciBzZXZlcmFsIHJlYXNvbnM6CgoxLiBXZSBlbmQgdXAgd2l0aCBhIGxvYWQgb2YgcGxhdGZvcm0g
+ZGV2aWNlcyB3aGljaCBhcmUganVzdCBkYW5nbGluZy4KMi4gV2UgbG9zZSB0aGUgYWJpbGl0eSB0
+byBydW50aW1lIFBNIG1hbmFnZSBlYWNoIEdQVSBjb3JlIHNlcGFyYXRlbHksCiAgIGFsb25nIHdp
+dGggdGhlIFBNIGRvbWFpbiBpbmZyYXN0cnVjdHVyZSB0byBtYW5hZ2UgdGhlIHNlcGFyYXRlIEdQ
+VQogICBwb3dlciBkb21haW5zLCBhcyB3ZSB3b3VsZG4ndCBiZSBhYmxlIHRvIGJpbmQgdG8gdGhl
+IGluZGl2aWR1YWwKICAgc3RydWN0IGRldmljZXMuCjMuIFdlIHN0aWxsIG5lZWQgc29tZSBraW5k
+IG9mIG1hc3RlciBzdHJ1Y3QgZGV2aWNlIHRvIHRyaWdnZXIgdGhlCiAgIHJlZ2lzdHJhdGlvbiBv
+ZiBkZXZpY2VzLCBhbmQgdG8gYWN0IGFzIHRoZSBzdHJ1Y3QgZGV2aWNlIGZvciBEUk0KICAgYW5k
+IERNQSBhbGxvY2F0aW9ucy4KCkkgY2FuJ3Qgc2VlIGFueSBhZHZhbnRhZ2VzIHRvIHN1Y2ggYW4g
+YXBwcm9hY2gsIG9ubHkgZG93bnNpZGVzLiAgSGVuY2UsCkknZCBzYXkgdGhhdCBzdWNoIGFuIGFw
+cHJvYWNoIGlzIGNvbXBsZXRlbHkgdW5zdWl0YWJsZSAtIGVzcGVjaWFsbHkgYXMKdGhlIDNEIEdQ
+VXMgY29uc3VtZSBtdWNoIG1vcmUgcG93ZXIgdGhhbiB0aGVpciAyRCBjb3VudGVycGFydHMsIHNv
+IGl0J3MKdmVyeSBhZHZhbnRhZ2VvdXMgdG8gaGF2ZSB0aGUgaW5kaXZpZHVhbCBHUFUgY29yZSBw
+b3dlciBtYW5hZ2VtZW50IHRoYXQKdGhlIGN1cnJlbnQgc3RydWN0dXJlIGVsZWdhbnRseSBnaXZl
+cyB1cy4KClRvIGRvIHRoZSBhYm92ZSwgd2UnZCBwcm9iYWJseSBoYXZlIHRvIHJlLWltcGxlbWVu
+dCBvdXIgb3duIHByaXZhdGUKcGVyLUdQVSBydW50aW1lIFBNIGluZnJhc3RydWN0dXJlLCBhbmQg
+c29tZWhvdyBjb3VwbGUgdGhhdCBpbnRvIHRoZSBQTQpkb21haW5zIHN0dWZmIC0gb3IgZXZlbiBi
+cmluZyB0aGUgU29DIHNwZWNpZmljIFBNIGRvbWFpbiBtYW5pcHVsYXRpb24KaW50byB0aGUgR1BV
+IGRyaXZlci4KClRoZSBvbmx5IHdheSBJIGNhbiBzZWUgYXJvdW5kIHRoYXQgd291bGQgYmUgdG8g
+a2VlcCB0aGUgZXhpc3RpbmcgZHJpdmVyCnN0cnVjdHVyZSwgYnV0IGhhdmUgYSBub24tZHJpdmVy
+IHNoaW0gd2hpY2ggc2NhbnMgdGhlIERUIGFuZCBpcwpyZXNwb25zaWJsZSBmb3IgY3JlYXRpbmcg
+dGhlIHBsYXRmb3JtIGRldmljZXMgLSBkdXBsaWNhdGluZyBpbiBlZmZlY3QKd2hhdCB0aGUgcGxh
+dGZvcm0gZGV2aWNlIGNvZGUgaW4gZHJpdmVycy9vZiBpcyBhbHJlYWR5IGRvaW5nIGJ1dApzcGVj
+aWZpY2FsbHkgZm9yIHRoaXMgZHJpdmVyLiAgSXQnZCBhbHNvIGJlIHJlc3BvbnNpYmxlIGZvciBj
+cmVhdGluZwp0aGUgbWFzdGVyIGRldmljZSBhcyB3ZWxsLiAgSW4gb3RoZXIgd29yZHMsIGl0IHdv
+dWxkIGJlIGEgaGFsZi13YXkKYmV0d2VlbiBEVCBhbmQgbm9uLURUIHNvbHV0aW9uczogRFQgd291
+bGQgYmUgZGVhbHQgd2l0aCBpbiB0aGUgc2hpbQpsYXllciBhbmQgdGhlIGV0bmF2aXYgZHJpdmVy
+IGl0c2VsZiB3b3VsZCBlZmZlY3RpdmVseSBrbm93IG5vdGhpbmcKYWJvdXQgRFQuCgotLSAKRlRU
+QyBicm9hZGJhbmQgZm9yIDAuOG1pbGUgbGluZTogY3VycmVudGx5IGF0IDkuNk1icHMgZG93biA0
+MDBrYnBzIHVwCmFjY29yZGluZyB0byBzcGVlZHRlc3QubmV0LgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
