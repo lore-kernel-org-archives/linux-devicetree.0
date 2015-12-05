@@ -1,376 +1,125 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: [RFC][PATCH] devicetree: Add DTS file to support the Nexus7 2013 (flo) device.
-Date: Fri,  4 Dec 2015 20:36:02 -0800
-Message-ID: <1449290162-4485-1-git-send-email-john.stultz@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: John Stultz <john.stultz@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Vinay Simha BN <simhavcs@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, devicetree@vger.kernel.org
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC PATCH 0/7] mtd: partitions: add of_match_table support
+Date: Fri,  4 Dec 2015 21:19:16 -0800
+Message-ID: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, David Hendricks <dhendrix-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a dts file to support the Nexus7 2013
-device. Its based off of the qcom-apq8064-ifc6410.dts
-which is similar hardware.
+Hi,
 
-Also includes some comments and context folded in
-from Vinay Simha BN <simhavcs@gmail.com>
+There have been several discussions [1] about adding a device tree binding for
+associating flash devices with the partition parser(s) that are used on the
+flash. There are a few reasons:
 
-This is my first DTS submission, so thoughts or feedback
-on would be appreciated.
+ (1) drivers shouldn't have to be encoding platform knowledge by listing what
+     parsers might be used on a given system (this is the currently all that's
+     supported)
+ (2) we can't just scan for all supported parsers (like the block system does), since
+     there is a wide diversity of "formats" (no standardization), and it is not
+     always safe or efficient to attempt to do so, particularly since many of
+     them allow their data structures to be placed anywhere on the flash, and
+     so require scanning the entire flash device to find them.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Vinay Simha BN <simhavcs@gmail.com>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
- arch/arm/boot/dts/Makefile                    |   1 +
- arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts | 306 ++++++++++++++++++++++++++
- arch/arm/boot/dts/qcom-apq8064.dtsi           |   2 +
- 3 files changed, 309 insertions(+)
- create mode 100644 arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
+So instead, let's support a new binding so that a device tree can specify what
+partition formats might be used. This seems like a reasonable choice (even
+though it's not strictly a hardware description) because the flash layout /
+partitioning is often very closely tied with the bootloader/firmware, at
+production time.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 30bbc37..c0f9076a 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -502,6 +502,7 @@ dtb-$(CONFIG_ARCH_PRIMA2) += \
- dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-apq8064-cm-qs600.dtb \
- 	qcom-apq8064-ifc6410.dtb \
-+	qcom-apq8064-nexus7-flo.dtb \
- 	qcom-apq8074-dragonboard.dtb \
- 	qcom-apq8084-ifc6540.dtb \
- 	qcom-apq8084-mtp.dtb \
-diff --git a/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts b/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
-new file mode 100644
-index 0000000..5183d18
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
-@@ -0,0 +1,306 @@
-+#include "qcom-apq8064-v2.0.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+/ {
-+	model = "Qualcomm APQ8064/Nexus7(flo)";
-+	compatible = "qcom,apq8064-nexus7-flo", "qcom,apq8064";
-+
-+	aliases {
-+		serial0 = &gsbi7_serial;
-+		serial1 = &gsbi6_serial;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	soc {
-+		rpm@108000 {
-+			regulators {
-+				vdd_l1_l2_l12_l18-supply = <&pm8921_s4>;
-+				vin_lvs1_3_6-supply = <&pm8921_s4>;
-+				vin_lvs4_5_7-supply = <&pm8921_s4>;
-+
-+
-+				vdd_l24-supply = <&pm8921_s1>;
-+				vdd_l25-supply = <&pm8921_s1>;
-+				vin_lvs2-supply = <&pm8921_s1>;
-+
-+				vdd_l26-supply = <&pm8921_s7>;
-+				vdd_l27-supply = <&pm8921_s7>;
-+				vdd_l28-supply = <&pm8921_s7>;
-+
-+				vdd_ncp-supply = <&pm8921_l6>;
-+
-+				/* Buck SMPS */
-+				pm8921_s1: s1 {
-+					regulator-always-on;
-+					regulator-min-microvolt = <1225000>;
-+					regulator-max-microvolt = <1225000>;
-+					qcom,switch-mode-frequency = <3200000>;
-+					bias-pull-down;
-+				};
-+
-+				/* msm otg HSUSB_VDDCX */
-+				pm8921_s3: s3 {
-+					regulator-min-microvolt = <500000>;
-+					regulator-max-microvolt = <1150000>;
-+					qcom,switch-mode-frequency = <4800000>;
-+				};
-+
-+				/*
-+				 * msm_sdcc.1-sdc-vdd_io
-+				 * tabla2x-slim-CDC_VDDA_RX
-+				 * tabla2x-slim-CDC_VDDA_TX
-+				 * tabla2x-slim-CDC_VDD_CP
-+				 * tabla2x-slim-VDDIO_CDC
-+				 */
-+				pm8921_s4: s4 {
-+					regulator-min-microvolt	= <1800000>;
-+					regulator-max-microvolt	= <1800000>;
-+					qcom,switch-mode-frequency = <3200000>;
-+					regulator-always-on;
-+				};
-+
-+				pm8921_s7: s7 {
-+					regulator-min-microvolt = <1300000>;
-+					regulator-max-microvolt = <1300000>;
-+					qcom,switch-mode-frequency = <3200000>;
-+				};
-+
-+				/* mipi_dsi.1-dsi1_pll_vdda */
-+				pm8921_l2: l2 {
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1200000>;
-+				};
-+
-+				/* msm_otg-HSUSB_3p3 */
-+				pm8921_l3: l3 {
-+					regulator-min-microvolt = <3075000>;
-+					regulator-max-microvolt = <3075000>;
-+					bias-pull-down;
-+				};
-+
-+				/* msm_otg-HSUSB_1p8 */
-+				pm8921_l4: l4 {
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					bias-pull-down;
-+				};
-+
-+				/* msm_sdcc.1-sdc_vdd */
-+				pm8921_l5: l5 {
-+					regulator-min-microvolt = <2950000>;
-+					regulator-max-microvolt = <2950000>;
-+					regulator-always-on;
-+					bias-pull-down;
-+				};
-+
-+				pm8921_l6: l6 {
-+					regulator-min-microvolt = <2950000>;
-+					regulator-max-microvolt = <2950000>;
-+				};
-+
-+				/* mipi_dsi.1-dsi1_avdd */
-+				pm8921_l11: l11 {
-+					regulator-min-microvolt = <3000000>;
-+					regulator-max-microvolt = <3000000>;
-+					bias-pull-down;
-+				};
-+
-+				/* pwm_power for backlight */
-+				pm8921_l17: l17 {
-+					regulator-min-microvolt = <3000000>;
-+					regulator-max-microvolt = <3600000>;
-+					bias-pull-down;
-+				};
-+
-+				/* camera, qdsp6 */
-+				pm8921_l23: l23 {
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					bias-pull-down;
-+				};
-+
-+				/*
-+				 * tabla2x-slim-CDC_VDDA_A_1P2V
-+				 * tabla2x-slim-VDDD_CDC_D
-+				 */
-+				pm8921_l25: l25 {
-+					regulator-min-microvolt = <1250000>;
-+					regulator-max-microvolt = <1250000>;
-+					bias-pull-down;
-+				};
-+
-+				pm8921_lvs1: lvs1 {
-+					bias-pull-down;
-+				};
-+
-+				pm8921_lvs4: lvs4 {
-+					bias-pull-down;
-+				};
-+
-+				pm8921_lvs5: lvs5 {
-+					bias-pull-down;
-+				};
-+
-+				pm8921_lvs6: lvs6 {
-+					bias-pull-down;
-+				};
-+				/*
-+				 * mipi_dsi.1-dsi1_vddio
-+				 * pil_riva-pll_vdd
-+				 */
-+				pm8921_lvs7: lvs7 {
-+					bias-pull-down;
-+				};
-+			};
-+		};
-+
-+		ext_3p3v: regulator-fixed@1 {
-+			compatible = "regulator-fixed";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-name = "ext_3p3v";
-+			regulator-type = "voltage";
-+			startup-delay-us = <0>;
-+			gpio = <&tlmm_pinmux 77 GPIO_ACTIVE_HIGH>;
-+			enable-active-high;
-+			regulator-boot-on;
-+		};
-+
-+		gsbi3: gsbi@16200000 {
-+			status = "okay";
-+			qcom,mode = <GSBI_PROT_I2C>;
-+			i2c3: i2c@16280000 {
-+				status = "okay";
-+				clock-frequency = <200000>;
-+				pinctrl-0 = <&i2c3_pins>;
-+				pinctrl-names = "default";
-+
-+				trackpad: trackpad@10 {
-+					compatible = "elan,ekth3500";
-+					reg = <0x10>;
-+					interrupt-parent = <&tlmm_pinmux>;
-+					interrupts = <6 IRQ_TYPE_EDGE_FALLING>;
-+				};
-+			};
-+		};
-+
-+
-+		gsbi@12440000 {
-+			status = "okay";
-+			qcom,mode = <GSBI_PROT_I2C>;
-+
-+			i2c@12460000 {
-+				status = "okay";
-+				clock-frequency = <200000>;
-+				pinctrl-0 = <&i2c1_pins>;
-+				pinctrl-names = "default";
-+
-+				eeprom: eeprom@52 {
-+					compatible = "atmel,24c128";
-+					reg = <0x52>;
-+					pagesize = <32>;
-+				};
-+			};
-+		};
-+
-+		gsbi@16500000 {
-+			status = "ok";
-+			qcom,mode = <GSBI_PROT_I2C_UART>;
-+
-+			serial@16540000 {
-+				status = "ok";
-+
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&gsbi6_uart_4pins>;
-+			};
-+		};
-+
-+		gsbi@16600000 {
-+			status = "ok";
-+			qcom,mode = <GSBI_PROT_I2C_UART>;
-+			serial@16640000 {
-+				status = "ok";
-+			};
-+		};
-+
-+		/* OTG */
-+		usb1_phy: phy@12500000 {
-+			status		= "okay";
-+			vddcx-supply	= <&pm8921_s3>;
-+			v3p3-supply	= <&pm8921_l3>;
-+			v1p8-supply	= <&pm8921_l4>;
-+		};
-+
-+		usb3_phy: phy@12520000 {
-+			status		= "okay";
-+			vddcx-supply	= <&pm8921_s3>;
-+			v3p3-supply	= <&pm8921_l3>;
-+			v1p8-supply	= <&pm8921_l23>;
-+		};
-+
-+		usb4_phy: phy@12530000 {
-+			status		= "okay";
-+			vddcx-supply	= <&pm8921_s3>;
-+			v3p3-supply	= <&pm8921_l3>;
-+			v1p8-supply	= <&pm8921_l23>;
-+		};
-+
-+		gadget1: gadget@12500000 {
-+			status = "okay";
-+		};
-+
-+		/* OTG */
-+		usb1: usb@12500000 {
-+			status = "okay";
-+		};
-+
-+		usb3: usb@12520000 {
-+			status = "okay";
-+		};
-+
-+		usb4: usb@12530000 {
-+			status = "okay";
-+		};
-+
-+		amba {
-+			/* eMMC */
-+			sdcc1: sdcc@12400000 {
-+				status = "okay";
-+				vmmc-supply = <&pm8921_l5>;
-+				vqmmc-supply = <&pm8921_s4>;
-+			};
-+
-+			/* WLAN */
-+			sdcc4: sdcc@121c0000 {
-+				status = "okay";
-+				vmmc-supply = <&ext_3p3v>;
-+				vqmmc-supply = <&pm8921_lvs1>;
-+			};
-+		};
-+
-+		gpio-keys {
-+			compatible = "gpio-keys";
-+			power {
-+				label = "Power";
-+				gpios = <&tlmm_pinmux 26 GPIO_ACTIVE_LOW>;
-+				linux,code = <KEY_POWER>;
-+				gpio-key,wakeup;
-+			};
-+			volume_up {
-+				label = "Volume Up";
-+				gpios = <&pm8921_gpio 4 GPIO_ACTIVE_HIGH>;
-+				linux,code = <KEY_VOLUMEUP>;
-+			};
-+			volume_down {
-+				label = "Volume Down";
-+				gpios = <&pm8921_gpio 38 GPIO_ACTIVE_HIGH>;
-+				linux,code = <KEY_VOLUMEDOWN>;
-+			};
-+		};
-+
-+	};
-+};
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index a4c1762..d541438 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -288,6 +288,8 @@
- 				clocks = <&gcc GSBI3_QUP_CLK>,
- 					 <&gcc GSBI3_H_CLK>;
- 				clock-names = "core", "iface";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
- 			};
- 		};
- 
+Also, as an example first-use of this mechanism, I support Google's FMAP flash
+structure, used on Chrome OS devices.
+
+Note that this is an RFC, mainly for the reason noted in patch 6 ("RFC: mtd:
+partitions: enable of_match_table matching"): the of_match_table support won't
+yet autoload a partition parser that is built as a module. I'm not quite sure
+if there's a lot of value in supporting MTD parsers as modules (block partition
+support can't be), but that is supported for "by-name" parser lookups in MTD
+already, so I don't feel like dropping that feature yet. Tips or thoughts are
+particularly welcome on this aspect!
+
+Also note that there's an existing undocumented binding for a
+"linux,part-probe" property, but it is only usable on the physmap_of.c driver
+at the moment, and it is IMO not a good binding. I posted my thoughts on that
+previously here [2], and since no one else cared to make a better one...I did
+it myself.
+
+I'd love it if we could kill the unreviewed binding off in favor of something
+more like this...
+
+Currently based on v2 of "mtd: partitions: support cleanup callback for
+parsers":
+
+  http://lkml.kernel.org/g/1449271518-118900-1-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+
+and this series
+("mtd: ofpart: don't complain about missing 'partitions' node too loudly" and
+"doc: dt: mtd: partitions: add compatible property to "partitions" node"):
+
+  http://lkml.kernel.org/g/1449194529-145705-1-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+
+Both of which should hopefully be merged soon.
+
+The current total of this work is stashed here for now:
+
+  git fetch git://git.infradead.org/users/norris/linux-mtd.git partition-of-match
+
+I may rewrite this branch if I post future revisions of these patch sets, FYI.
+
+I look forward to your reviews.
+
+Regards,
+Brian
+
+[1] Trying to extend "linux,part-probe":
+    http://patchwork.ozlabs.org/patch/475988/
+    For bcm47xxpart:
+    http://patchwork.ozlabs.org/patch/475986/
+    For AFS:
+    http://patchwork.ozlabs.org/patch/537827/
+
+[2] "mtd: document linux-specific partition parser DT binding"
+    http://lists.infradead.org/pipermail/linux-mtd/2015-October/062773.html
+
+Brian Norris (7):
+  mtd: move partition parsers to drivers/mtd/partitions/
+  mtd: move partition parsers' Kconfig under a sub-menu
+  doc: dt: mtd: partition: add on-flash format binding
+  mtd: add of_match_mtd_parser() and of_mtd_match_mtd_parser() helpers
+  mtd: partitions: factor out "match by name" handling
+  RFC: mtd: partitions: enable of_match_table matching
+  mtd: partitions: add Google's FMAP partition parser
+
+ .../devicetree/bindings/mtd/partition.txt          |  75 ++++++-
+ drivers/mtd/Kconfig                                | 134 +-----------
+ drivers/mtd/Makefile                               |   8 +-
+ drivers/mtd/mtdpart.c                              |  99 +++++++--
+ drivers/mtd/partitions/Kconfig                     | 138 +++++++++++++
+ drivers/mtd/partitions/Makefile                    |   8 +
+ drivers/mtd/{ => partitions}/afs.c                 |   0
+ drivers/mtd/{ => partitions}/ar7part.c             |   0
+ drivers/mtd/{ => partitions}/bcm47xxpart.c         |   0
+ drivers/mtd/{ => partitions}/bcm63xxpart.c         |   0
+ drivers/mtd/{ => partitions}/cmdlinepart.c         |   0
+ drivers/mtd/partitions/google_fmap.c               | 226 +++++++++++++++++++++
+ drivers/mtd/{ => partitions}/ofpart.c              |   0
+ drivers/mtd/{ => partitions}/redboot.c             |   0
+ drivers/of/of_mtd.c                                |  33 +++
+ include/linux/mtd/partitions.h                     |   2 +
+ include/linux/of_mtd.h                             |  13 ++
+ 17 files changed, 577 insertions(+), 159 deletions(-)
+ create mode 100644 drivers/mtd/partitions/Kconfig
+ create mode 100644 drivers/mtd/partitions/Makefile
+ rename drivers/mtd/{ => partitions}/afs.c (100%)
+ rename drivers/mtd/{ => partitions}/ar7part.c (100%)
+ rename drivers/mtd/{ => partitions}/bcm47xxpart.c (100%)
+ rename drivers/mtd/{ => partitions}/bcm63xxpart.c (100%)
+ rename drivers/mtd/{ => partitions}/cmdlinepart.c (100%)
+ create mode 100644 drivers/mtd/partitions/google_fmap.c
+ rename drivers/mtd/{ => partitions}/ofpart.c (100%)
+ rename drivers/mtd/{ => partitions}/redboot.c (100%)
+
 -- 
-1.9.1
+2.6.0.rc2.230.g3dd15c0
