@@ -1,48 +1,79 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [RFC PATCH 0/7] mtd: partitions: add of_match_table support
-Date: Sat, 5 Dec 2015 11:15:54 +0100
-Message-ID: <CAMuHMdUJXHs_OhT0da+kzc=D4MOFUT9BB3eJ+7a_p6DYx-PKBA@mail.gmail.com>
-References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/4] PCI: rcar-gen2: Add device tree support for r8a7793
+Date: Sat, 5 Dec 2015 11:38:37 +0100
+Message-ID: <CAMuHMdWEXA-KTkqJsofXuBTQKBrtGW7x+2r+V42CuWwbjkqmvQ@mail.gmail.com>
+References: <1448954672-27236-1-git-send-email-horms+renesas@verge.net.au>
+	<1448954672-27236-3-git-send-email-horms+renesas@verge.net.au>
+	<20151204212649.GJ20125@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449292763-129421-1-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, David Hendricks <dhendrix-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20151204212649.GJ20125@localhost>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 5, 2015 at 6:19 AM, Brian Norris
-<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> There have been several discussions [1] about adding a device tree binding for
-> associating flash devices with the partition parser(s) that are used on the
-> flash. There are a few reasons:
->
->  (1) drivers shouldn't have to be encoding platform knowledge by listing what
->      parsers might be used on a given system (this is the currently all that's
->      supported)
->  (2) we can't just scan for all supported parsers (like the block system does), since
->      there is a wide diversity of "formats" (no standardization), and it is not
->      always safe or efficient to attempt to do so, particularly since many of
->      them allow their data structures to be placed anywhere on the flash, and
->      so require scanning the entire flash device to find them.
+Hi Bjorn,
 
-I read the second reason, but would it be useful to (partially) merge
-block/partitions/ and drivers/mtd/partitions/, so I can use e.g. msdos
-partitions
-on an mtd device??
+On Fri, Dec 4, 2015 at 10:26 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> On Tue, Dec 01, 2015 at 04:24:30PM +0900, Simon Horman wrote:
+>> Simply document new compat strings.
+>> There appears to be no need for a driver updates.
+>>
+>> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+>> ---
+>>  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+>> index b19be08a8113..7c231b3e5872 100644
+>> --- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+>> +++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+>> @@ -8,6 +8,7 @@ OHCI and EHCI controllers.
+>>  Required properties:
+>>  - compatible: "renesas,pci-r8a7790" for the R8A7790 SoC;
+>>             "renesas,pci-r8a7791" for the R8A7791 SoC;
+>> +           "renesas,pci-r8a7793" for the R8A7793 SoC;
+>
+> What's the benefit of adding a string here if the driver doesn't check
+> for it?  Since the driver doesn't look for it, there's no way to test
+> anything.
+
+If we ever discover a difference between PCI on r8a7793 compared to PCI on
+other SoCs of the R-Car Gen2 family, we can handle that difference in the
+driver.
+
+> It doesn't seem like this file is an authoritative source of names, so
+
+Yes it is. When adding compatible values to a DTS, checkpatch.pl will check
+for their existence in the binding documentation. Hence we always add the
+compatible values to the DT binding docs, before we start using them.
+
+> if we add it here, there's the possibility the r8a7793 will be
+> canceled or renamed, and then we'd have to update this if the driver
+> ever did need an r8a7793-specific quirk.  If we waited until the
+
+I don't understand what you mean here.
+
+> driver actually needs a quirk, then we'd know exactly what name to
+> look for and we could update the driver, DT, and doc all together.
+
+If we update driver, DT, and doc only after we discover the need for a quirk,
+it's already too late, due to stable DT rules. Hence we always document and
+use SoC-specific compatible values, sometimes combined with family-specific
+compatible values. The driver only matches to the as least specific value as
+possible.
+
+I hope this clears up your worries.
 
 Gr{oetje,eeting}s,
 
                         Geert
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
 In personal conversations with technical people, I call myself a hacker. But
 when I'm talking to journalists I just say "programmer" or something like that.
                                 -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
