@@ -1,61 +1,61 @@
 From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] power: qcom_smbb: Add otg regulator for control of vbus
-Date: Sat, 5 Dec 2015 17:07:18 +0100
-Message-ID: <20151205160717.GA30410@earth>
-References: <1445548337-14612-1-git-send-email-tim.bird@sonymobile.com>
+Subject: Re: [PATCH 0/2] power: Add support for TI BQ24261 charger
+Date: Sat, 5 Dec 2015 17:40:22 +0100
+Message-ID: <20151205164022.GC30410@earth>
+References: <1446136625-20845-1-git-send-email-ramakrishna.pallala@intel.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
+	protocol="application/pgp-signature"; boundary="aT9PWwzfKXlsBJM1"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1445548337-14612-1-git-send-email-tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+In-Reply-To: <1446136625-20845-1-git-send-email-ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org
+To: Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jenny Tc <jenny.tc-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---NzB8fVQJ5HfG6fxh
+--aT9PWwzfKXlsBJM1
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Tim,
+Hi Ramakrishna,
 
-On Thu, Oct 22, 2015 at 02:12:17PM -0700, Tim Bird wrote:
-> Add a regulator to control the OTG chargepath switch.  The OTG
-> switch gets its power from pm8941_5vs1, and that should be expressed
-> as an usb_otg_in-supply property in the DT node for the charger driver.
-> The regulator name is "otg".  This is used by USB code to control VBUS
-> direction.
+On Thu, Oct 29, 2015 at 10:07:03PM +0530, Ramakrishna Pallala wrote:
+> This patch series adds the support for TI BQ24261 charger driver.
+>=20
+> TI BQ24261 charger driver relies on extcon notifications to get the
+> charger cable type and based on that it will set the charging parameters.
 
-I could not find a newer version of this patch with the comments
-=66rom Mark being fixed. Did I miss anything?
+I wonder if there is any new version of this patchset, that I
+missed with the comments from Krzysztof and Andreas being taken
+care of?
 
 -- Sebastian
 
---NzB8fVQJ5HfG6fxh
+--aT9PWwzfKXlsBJM1
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBCgAGBQJWYwuyAAoJENju1/PIO/qakHIQAIgJfPsKIgeYWdGhp4LWxeNq
-MmEaKGkFcjROo4G0YThs7lAj7cl/XMWxwA3V+gZsrFmPwBVBW4yMtNNXPbbmWRBp
-fGasCytZvF+LvDRYKFRglEmA6nbeplbj2eZJsFGUUhWjWjC1yNmiAe0HAjZ3hsEV
-ef7D/kgcvREL/OFvkwfHvTyBvUX5hKhP4BtUJij7GJ+xA8M9IuGfGPNU8uftafLU
-VNP1lIUY0RIUql+rPYCw735vZGJ7jgJ2Ko4K4hYlCroc8Aj6/7KQZcI5Zqskhz90
-FA3lFasMYqzAGf00HzDECK0q76A33qZaPGr4CRn4+G4KErw1wDH8b3zpwneRSTRD
-JKSmkORMX9Ax4egLqiAHvNt6xsCfq6wgLcgMN/PAz81rOeMTjQNhayEYUMqfAFBd
-YOmrSxSDrs74OplIBiiCAavS3aEP3edZiqCW+0wTgU/mir4rKQchhFZ0yLedsKVX
-5Gc2UdqD7WWCroFda2Q4QtIZaFUDH/1K/M5Si7Lg4WR9/S1rZy/o1iN53JuPY9yf
-c2O5w1JUs/ygXjQDq/gsqOgdYmXOgOdcFB6mCIXE4M5d1HjmkoU/1I0DzdCl6vyx
-cPJA6RzwmRSk/GBKDsSk11Voa/mj4sQrCtgcEygjr/ZPs0uy891nFJXc0BlsKbuS
-6zBGFhgfuKUnvM9TeJGn
-=+AZf
+iQIcBAEBCgAGBQJWYxNxAAoJENju1/PIO/qaM4gP/2TF0bT3cluH0mvA6QS23fnf
+Jrgwe9Jity7YMrDLF3lPgwIEjNQbV1+VYTLr523TymglhOa5D5eOlJKa7886TWTD
+osJA07AgbI3TvARPlxb/1Qx8ms3OzDr2df36LpP74VG5b/dulz98qTXafZfikP9v
+dRXoQh+vslvhpayzJuZT1NhPq0hvKWY03J1dRSE4ay5bY1rcjAPskhbbiTG/D7Ym
+OtVab86jfmcmkZ1omtwzyvrTPX9teAYakmHbnRDZHmFdnckUFTsXCAiYIFSasQVn
++/995q3aV8WkcA00K328nfwaPraQXmooJ0qfqIZ7WlCuSmLYkfveMY0jAxGdr1w6
+YWq4lK+RD5KExZ13VZKL055Hji3q+9/8Tj+4rA1Yj2MXr/c2ytsZhuyFuHonqg64
++N/3Qb5duVi1mXNrOU1hCV46kTO+4Ad7Fdr4Sr8JE1NPK15uY/Fe4qytb0Fu59n+
+B8DOvUMbfBOsWlkH71cOOEOKEBgIRo2JxexAz5Tnf0fr6xXP4QkFugWCIxB04/Lf
+sGDvCZQxGp7F6XI58AlrgTkEDbt9Ce082WvYM0HZFTRnCyI4UFSXcGdzLJinyQmc
+DMNDW6i1xhTvVDQu60PbtRXYrV8PU6B9+Fc7Iq+nEwyOUDDbuIhAWLN5Yt8NGSGW
+aKAC4Jpp7D1UTRJjNn3E
+=mmEB
 -----END PGP SIGNATURE-----
 
---NzB8fVQJ5HfG6fxh--
+--aT9PWwzfKXlsBJM1--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
