@@ -1,65 +1,50 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH net-next 2/2] net: hns: enet specisies a reference to dsaf (config and documents)
-Date: Sat, 05 Dec 2015 23:19:04 +0100
-Message-ID: <23027215.8RIhViTVaB@wuerfel>
-References: <1449295856-31068-1-git-send-email-yankejian@huawei.com> <1449295856-31068-3-git-send-email-yankejian@huawei.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
+Date: Sat, 5 Dec 2015 17:22:12 -0600
+Message-ID: <CAL_Jsq+_TyeU-HEGnC0TuGn_qnng-rDfL1BspJyFkGvOmwvUgA@mail.gmail.com>
+References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
+ <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
+ <20151204162956.GA14978@rob-hp-laptop>
+ <1449247305.8275.104.camel@pengutronix.de>
+ <CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
+ <1449251760.8275.116.camel@pengutronix.de>
+ <CAL_Jsq+oaJxD3vbDWzn_4ghpqi=RZ1o+8nOcepWYjzcu5Hwpjg@mail.gmail.com>
+ <1449314779.2702.17.camel@pengutronix.de>
+ <20151205114209.GH8644@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449295856-31068-3-git-send-email-yankejian@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: yankejian <yankejian@huawei.com>
-Cc: davem@davemloft.net, fengguang.wu@intel.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, salil.mehta@huawei.com, Yisen.Zhuang@huawei.com, liguozhu@huawei.com, lisheng011@huawei.com, huangdaode@hisilicon.com, xuwei5@hisilicon.com, haifeng.wei@huawei.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20151205114209.GH8644@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, patchwork-lst@pengutronix.de, "kernel@pengutronix.de" <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 05 December 2015 14:10:56 yankejian wrote:
-> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
-> index 80411b2..ecacfa4 100644
-> --- a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
-> +++ b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
-> @@ -4,8 +4,6 @@ Required properties:
->  - compatible: should be "hisilicon,hns-dsaf-v1" or "hisilicon,hns-dsaf-v2".
->    "hisilicon,hns-dsaf-v1" is for hip05.
->    "hisilicon,hns-dsaf-v2" is for Hi1610 and Hi1612.
-> -- dsa-name: dsa fabric name who provide this interface.
-> -  should be "dsafX", X is the dsaf id.
->  - mode: dsa fabric mode string. only support one of dsaf modes like these:
->                 "2port-64vf",
->                 "6port-16rss",
-> @@ -26,9 +24,8 @@ Required properties:
->  
->  Example:
->  
-> -dsa: dsa@c7000000 {
-> +dsaf0: dsa@c7000000 {
->         compatible = "hisilicon,hns-dsaf-v1";
-> -       dsa_name = "dsaf0";
->         mode = "6port-16rss";
->         interrupt-parent = <&mbigen_dsa>;
->         reg = <0x0 0xC0000000 0x0 0x420000
-> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
-> index 41d19be..e6a9d1c 100644
-> --- a/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
-> +++ b/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
-> @@ -4,8 +4,9 @@ Required properties:
->  - compatible: "hisilicon,hns-nic-v1" or "hisilicon,hns-nic-v2".
->    "hisilicon,hns-nic-v1" is for hip05.
->    "hisilicon,hns-nic-v2" is for Hi1610 and Hi1612.
-> -- ae-name: accelerator name who provides this interface,
-> -  is simply a name referring to the name of name in the accelerator node.
-> +- ae-handle: accelerator engine handle for hns,
-> +  specifies a reference to the associating hardware driver node.
-> +  see Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
->  - port-id: is the index of port provided by DSAF (the accelerator). DSAF can
->    connect to 8 PHYs. Port 0 to 1 are both used for adminstration purpose. They
->    are called debug ports.
-> @@ -41,7 +42,7 @@ Example:
->  
-> 
-
-This looks like an incompatible change, as you add and remove
-required properties. Is there a way to support both the old and
-the new style?
-
-	Arnd
+T24gU2F0LCBEZWMgNSwgMjAxNSBhdCA1OjQyIEFNLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXgK
+PGxpbnV4QGFybS5saW51eC5vcmcudWs+IHdyb3RlOgo+IE9uIFNhdCwgRGVjIDA1LCAyMDE1IGF0
+IDEyOjI2OjE5UE0gKzAxMDAsIEx1Y2FzIFN0YWNoIHdyb3RlOgo+PiBJIHNlZSB3aGVyZSB5b3Ug
+YXJlIGdvaW5nIGhlcmUgYW5kIEkgYXBwcmVjaWF0ZSB0aGF0IHRoaXMgZGlzY3Vzc2lvbgo+PiBp
+c24ndCBhIGV4ZXJjaXNlIGluIGJpa2VzaGVkLCBidXQgYmFzZWQgb24gdGVjaG5pY2FsIGZhY3Rz
+Lgo+Cj4gSXQgd291bGQgYmUgbmljZSAoZm9yIHRoZSBzYWtlIG9mIHRoaXMgZGlzY3Vzc2lvbiBu
+b3QgZ2V0dGluZyBoZWF0ZWQpCj4gaWYgUm9iIGNvdWxkIHNob3cgdGhhdCBoZSdzIGJlZW4gcmVh
+ZGluZyBteSByZXBsaWVzIHRvIGhpcyBxdWVzdGlvbnMuCj4gTXkgaW1wcmVzc2lvbiBzbyBmYXIg
+aXMgdGhhdCBJJ20gYmVpbmcgaWdub3JlZC4gIEV2aWRlbmNlIGJlaW5nIFJvYidzCj4gYXNzZXJ0
+aW9uIHRoYXQgaGlzIHBvaW50cyBoYXZlIG5vdCBiZWVuIGFkZHJlc3NlZCwgd2hlcmUgSSd2ZSBy
+ZXBsaWVkCj4gd2l0aCB0aGUgdGVjaG5pY2FsIHJlc3BvbnNlcyAtIGFuZCBub3Qgb25lIG9mIHRo
+b3NlIGhhcyBzZWVuIGFueSBraW5kCj4gb2YgcmVwbHkuCgpTb3JyeSwgSSBoYWQgbWlzc2VkIHlv
+dXIgcmVwbHkgYmVmb3JlIEkgZGlkIHJlcGx5LgoKSW4gYW55IGNhc2UsIEknbSBzYXRpc2ZpZWQg
+d2l0aCB0aGUgcmVhc29uaW5nIGFuZCB0aGUgdmlydHVhbCBub2RlIGlzCmZpbmUuIEkgZG8gd2Fu
+dCB0byBzZWUgYSBub3RlIGluIHRoZSBiaW5kaW5nIGRvYyBhYm91dCB3aHkgdGhlCmNvbXBhdGli
+bGUgc3RyaW5nIGlzIG5vdCBzcGVjaWZpYy4KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbAo=
