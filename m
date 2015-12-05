@@ -1,85 +1,145 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] of: fix build failure
-Date: Sat, 5 Dec 2015 12:09:41 +0100
-Message-ID: <CAMuHMdWLURXVQNbTv4O9znB-dEH5_kFgPbTYuR5TgOcaDNrSJw@mail.gmail.com>
-References: <20151203011814.GC5727@sirena.org.uk>
-	<1449131890-21675-1-git-send-email-sudipm.mukherjee@gmail.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
+Date: Sat, 05 Dec 2015 12:26:19 +0100
+Message-ID: <1449314779.2702.17.camel@pengutronix.de>
+References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
+ <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
+ <20151204162956.GA14978@rob-hp-laptop>
+ <1449247305.8275.104.camel@pengutronix.de>
+ <CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
+ <1449251760.8275.116.camel@pengutronix.de>
+ <CAL_Jsq+oaJxD3vbDWzn_4ghpqi=RZ1o+8nOcepWYjzcu5Hwpjg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449131890-21675-1-git-send-email-sudipm.mukherjee@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Linux-Next <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_Jsq+oaJxD3vbDWzn_4ghpqi=RZ1o+8nOcepWYjzcu5Hwpjg@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, patchwork-lst@pengutronix.de, "kernel@pengutronix.de" <kernel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sudip
-
-On Thu, Dec 3, 2015 at 9:38 AM, Sudip Mukherjee
-<sudipm.mukherjee@gmail.com> wrote:
-> We are having build failure with next-20151202 for sparc allmodconfig
-> with the error messages:
-> undefined reference to 'of_io_request_and_map'
->
-> CONFIG_OF is defined for sparc so it is expected that we have a
-> definition of of_io_request_and_map() but of/address.c is only compiled
-> if it is !SPARC.
-
-No, it's compiled depending on CONFIG_OF_ADDRESS...
-
-> Signed-off-by: Sudip Mukherjee <sudip@vectorindia.org>
-> ---
->
-> build log is at:
-> https://travis-ci.org/sudipm-mukherjee/parport/builds/94541627
->
-> patch has been build tested with sparc allmodconfig and x86_64
-> allmodconfig.
->
->  include/linux/of_address.h | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
->
-> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-> index 507daad..7bf4603 100644
-> --- a/include/linux/of_address.h
-> +++ b/include/linux/of_address.h
-> @@ -112,8 +112,6 @@ static inline bool of_dma_is_coherent(struct device_node *np)
->  extern int of_address_to_resource(struct device_node *dev, int index,
->                                   struct resource *r);
->  void __iomem *of_iomap(struct device_node *node, int index);
-> -void __iomem *of_io_request_and_map(struct device_node *device,
-> -                                       int index, const char *name);
->  #else
->
->  #include <linux/io.h>
-> @@ -136,6 +134,19 @@ static inline void __iomem *of_io_request_and_map(struct device_node *device,
->  }
->  #endif
->
-> +#if defined(CONFIG_OF) && !defined(CONFIG_SPARC)
-
-... hence wouldn't it be better to use "#ifdef CONFIG_OF_ADDRESS" instead?
-
-> +void __iomem *of_io_request_and_map(struct device_node *device,
-> +                                       int index, const char *name);
-> +#else
-> +#include <linux/io.h>
-> +
-> +static inline void __iomem *of_io_request_and_map(struct device_node *device,
-> +                                       int index, const char *name)
-> +{
-> +       return IOMEM_ERR_PTR(-EINVAL);
-> +}
-> +#endif /* CONFIG_OF && !CONFIG_SPARC */
-> +
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+QW0gRnJlaXRhZywgZGVuIDA0LjEyLjIwMTUsIDE0OjE5IC0wNjAwIHNjaHJpZWIgUm9iIEhlcnJp
+bmc6Cj4gT24gRnJpLCBEZWMgNCwgMjAxNSBhdCAxMTo1NiBBTSwgTHVjYXMgU3RhY2ggPGwuc3Rh
+Y2hAcGVuZ3V0cm9uaXguZGU+Cj4gd3JvdGU6Cj4gPiBBbSBGcmVpdGFnLCBkZW4gMDQuMTIuMjAx
+NSwgMTE6MzMgLTA2MDAgc2NocmllYiBSb2IgSGVycmluZzoKPiA+ID4gT24gRnJpLCBEZWMgNCwg
+MjAxNSBhdCAxMDo0MSBBTSwgTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXgKPiA+ID4g
+LmRlPiB3cm90ZToKPiA+ID4gPiBBbSBGcmVpdGFnLCBkZW4gMDQuMTIuMjAxNSwgMTA6MjkgLTA2
+MDAgc2NocmllYiBSb2IgSGVycmluZzoKPiA+ID4gPiA+IE9uIEZyaSwgRGVjIDA0LCAyMDE1IGF0
+IDAyOjU5OjU0UE0gKzAxMDAsIEx1Y2FzIFN0YWNoIHdyb3RlOgo+ID4gPiA+ID4gPiBFdG5hdml2
+IGZvbGxvd3MgdGhlIHNhbWUgcHJpY2lwbGUgYXMgaW14LWRybSB0byBoYXZlIGEKPiA+ID4gPiA+
+ID4gdmlydHVhbAo+ID4gPiA+ID4gPiBtYXN0ZXIgZGV2aWNlIG5vZGUgdG8gYmluZCBhbGwgdGhl
+IGluZGl2aWR1YWwgR1BVIGNvcmVzCj4gPiA+ID4gPiA+IHRvZ2V0aGVyCj4gPiA+ID4gPiA+IGlu
+dG8gb25lIERSTSBkZXZpY2UuCj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5
+OiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5kZT4KPiA+ID4gPiA+ID4gLS0tCj4g
+PiA+ID4gPiA+IMKgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvZXRuYXZpdi9ldG5hdml2LWRybS50eHTC
+oMKgwqDCoMKgwqDCoHwgNDYKPiA+ID4gPiA+ID4gKysrKysrKysrKysrKysrKysrKysrKwo+ID4g
+PiA+ID4gPiDCoDEgZmlsZSBjaGFuZ2VkLCA0NiBpbnNlcnRpb25zKCspCj4gPiA+ID4gPiA+IMKg
+Y3JlYXRlIG1vZGUgMTAwNjQ0Cj4gPiA+ID4gPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L2V0bmF2aXYvZXRuYXZpdi0KPiA+ID4gPiA+ID4gZHJtLnR4dAo+ID4g
+PiA+ID4gPiAKPiA+ID4gPiA+ID4gZGlmZiAtLWdpdAo+ID4gPiA+ID4gPiBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V0bmF2aXYvZXRuYXZpdgo+ID4gPiA+ID4g
+PiAtZHJtLnR4dAo+ID4gPiA+ID4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L2V0bmF2aXYvZXRuYXZpdgo+ID4gPiA+ID4gPiAtZHJtLnR4dAo+ID4gPiA+ID4g
+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4gPiA+ID4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjE5
+ZmRlMjlkYzFkNwo+ID4gPiA+ID4gPiAtLS0gL2Rldi9udWxsCj4gPiA+ID4gPiA+ICsrKwo+ID4g
+PiA+ID4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V0bmF2
+aXYvZXRuYXZpdgo+ID4gPiA+ID4gPiAtZHJtLnR4dAo+ID4gPiA+ID4gPiBAQCAtMCwwICsxLDQ2
+IEBACj4gPiA+ID4gPiA+ICtFdG5hdml2IERSTSBtYXN0ZXIgZGV2aWNlCj4gPiA+ID4gPiA+ICs9
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+ID4gPiA+ID4gPiArCj4gPiA+ID4gPiA+
+ICtUaGUgRXRuYXZpdiBEUk0gbWFzdGVyIGRldmljZSBpcyBhIHZpcnR1YWwgZGV2aWNlIG5lZWRl
+ZAo+ID4gPiA+ID4gPiB0byBsaXN0IGFsbAo+ID4gPiA+ID4gPiArVml2YW50ZSBHUFUgY29yZXMg
+dGhhdCBjb21wcmlzZSB0aGUgR1BVIHN1YnN5c3RlbS4KPiA+ID4gPiA+ID4gKwo+ID4gPiA+ID4g
+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ID4gPiA+ID4gKy0gY29tcGF0aWJsZTogU2hvdWxk
+IGJlIG9uZSBvZgo+ID4gPiA+ID4gPiArwqDCoMKgwqAiZnNsLGlteC1ncHUtc3Vic3lzdGVtIgo+
+ID4gPiA+ID4gPiArwqDCoMKgwqAibWFydmVsbCxkb3ZlLWdwdS1zdWJzeXN0ZW0iCj4gPiA+ID4g
+PiA+ICstIGNvcmVzOiBTaG91bGQgY29udGFpbiBhIGxpc3Qgb2YgcGhhbmRsZXMgcG9pbnRpbmcg
+dG8KPiA+ID4gPiA+ID4gVml2YW50ZSBHUFUgZGV2aWNlcwo+ID4gPiA+ID4gPiArCj4gPiA+ID4g
+PiA+ICtleGFtcGxlOgo+ID4gPiA+ID4gPiArCj4gPiA+ID4gPiA+ICtncHUtc3Vic3lzdGVtIHsK
+PiA+ID4gPiA+ID4gK8KgwqDCoGNvbXBhdGlibGUgPSAiZnNsLGlteC1ncHUtc3Vic3lzdGVtIjsK
+PiA+ID4gPiA+ID4gK8KgwqDCoGNvcmVzID0gPCZncHVfMmQ+LCA8JmdwdV8zZD47Cj4gPiA+ID4g
+PiA+ICt9Owo+ID4gPiA+ID4gCj4gPiA+ID4gPiBZZWFoLCBJJ20gbm90IHJlYWxseSBhIGZhbiBv
+ZiBkb2luZyB0aGlzIHNpbXBseSBiZWNhdXNlIERSTQo+ID4gPiA+ID4gd2FudHMgMQo+ID4gPiA+
+ID4gZHJpdmVyLgo+ID4gPiA+ID4gCj4gPiA+ID4gSSdtIGF3YXJlIG9mIHRoYXQsIGJ1dCBJIGRv
+bid0IHNlZSBtdWNoIHZhbHVlIGluIGtpY2tpbmcgdGhpcwo+ID4gPiA+IGRpc2N1c3Npb24KPiA+
+ID4gPiBhcm91bmQgZm9yIGV2ZXJ5IERSTSBkcml2ZXIgc3VibWlzc2lvbi4gVGhpcyBpcyB0aGUg
+YmluZGluZwo+ID4gPiA+IHRoYXQgaGFzCj4gPiA+ID4gZW1lcmdlZCBmcm9tIGEgbGVuZ3RoeSBk
+aXNjdXNzaW9uIGF0IEtTIDIwMTMgaW4gRWRpbmJ1cmdoIGFuZAo+ID4gPiA+IGF0IGxlYXN0Cj4g
+PiA+ID4gYWxsb3dzIHVzIHRvIHN0YW5kYXJkaXplIG9uIF9zb21ldGhpbmdfLiBBbHNvIEFMU0Eg
+ZG9lcyBhCj4gPiA+ID4gc2ltaWxhciB0aGluZwo+ID4gPiA+IHRvIGJpbmQgY29kZWNzIGFuZCBD
+UFUgaW50ZXJmYWNlcyB0b2dldGhlci4KPiA+ID4gCj4gPiA+IFRoaXMgY2FzZSBpcyBxdWl0ZSBk
+aWZmZXJlbnQgdGhvdWdoIEkgdGhpbmsuIFRoZSBBTFNBIGNhc2UgYW5kCj4gPiA+IG90aGVyCj4g
+PiA+IERSTSBjYXNlcyBhcmUgb25lcyB0aGF0IGhhdmUgaW50ZXItZGVwZW5kZW5jaWVzIGJldHdl
+ZW4gdGhlCj4gPiA+IGJsb2Nrcwo+ID4gPiAoZS5nLiBzb21lIHNvcnQgb2YgaC93IGNvbm5lY3Rp
+b24pLiBXaGF0IGlzIHRoZSBpbnRlci1kZXBlbmRlbmN5Cj4gPiA+IGhlcmU/Cj4gPiA+IAo+ID4g
+PiBEb2luZyB0aGlzIHdheSBoYXMgYWxzbyBiZWVuIGZvdW5kIHRvIGJlIGNvbXBsZXRlbHkgdW5u
+ZWNlc3NhcnkKPiA+ID4gYW5kCj4gPiA+IHJlbW92ZWQgaW4gcmVjZW50IERSTSBkcml2ZXIgcmV2
+aWV3cy4gQWRtaXR0ZWRseSwgdGhvc2UgYXJlIGNhc2VzCj4gPiA+IHdoZXJlIG9uZSBkZXZpY2Ug
+Y2FuIGJlIHRoZSBtYXN0ZXIgb2YgdGhlIG90aGVycy4gRm9yIDIgcGFyYWxsZWwKPiA+ID4gZGV2
+aWNlcywgSSBkb24ndCBoYXZlIGFuIGFsdGVybmF0aXZlIG90aGVyIHRoYW4gcXVlc3Rpb24gd2h5
+IHRoZXkKPiA+ID4gbmVlZAo+ID4gPiB0byBiZSBhIHNpbmdsZSBkcml2ZXIuCj4gPiA+IAo+ID4g
+SWYgeW91IGluc2lzdCBvbiBkb2luZyB0aGluZ3MgZGlmZmVyZW50bHkgZm9yIHRoaXMgZHJpdmVy
+LCB3ZSBjb3VsZAo+ID4gYWRkCj4gPiBhIHBhc3MgYXQgZHJpdmVyIHJlZ2lzdHJhdGlvbiB0aGF0
+IHNjYW5zIHRocm91Z2ggdGhlIERULCBsb29raW5nCj4gPiBmb3IKPiA+IG5vZGVzIG1hdGNoaW5n
+IHRoZSBHUFUgY29yZSBjb21wYXRpYmxlLgo+IAo+IEkndmUgbm90IGluc2lzdGVkIG9uIGFueXRo
+aW5nLiBJJ20gb25seSBhc2tpbmcgYSBxdWVzdGlvbiB3aGljaAo+IGRpZG4ndAo+IGdldCBhbnN3
+ZXJlZC4gSSdsbCBhc2sgYW5vdGhlciB3YXkuIFdoeSBjYW4ndCB5b3UgaGF2ZSAyIGluc3RhbmNl
+cyBvZgo+IHRoZSBzYW1lIGRyaXZlciBnaXZlbiB0aGV5IGFyZSBvbmx5IHJlbmRlcmluZyBub2Rl
+cz8KPiAKPiA+IEknbSBub3Qgc3VyZSBpZiB0aGF0IG1ha2VzIHRoaW5ncyBjbGVhbmVyIHRob3Vn
+aCBhbmQgbWlnaHQgYml0ZSB1cwo+ID4gbGF0ZXIKPiA+IG9uLiBBbHNvIEknbSBub3Qgc3VyZSBp
+ZiBtb3ZpbmcgYXdheSBmcm9tIHRoZSBiaW5kaW5nIHNjaGVtZQo+ID4gYWxyZWFkeQo+ID4gZXN0
+YWJsaXNoZWQgZm9yIG90aGVyIERSTSBkcml2ZXJzIG1ha2VzIHRoaW5ncyBiZXR0ZXIgZnJvbSBh
+IERUCj4gPiBwZXJzcGVjdGl2ZS4gUGVyc29uYWxseSBJIHdvdWxkIHByZWZlciBEVCBiaW5kaW5n
+IGNvbnNpc3RlbmN5IG92ZXIKPiA+IHBlcmZlY3Rpb24gZm9yIHNpbmdsZSBkcml2ZXJzLCBzZWdt
+ZW50aW5nIHRoZSBEVCBiaW5kaW5nIHNwYWNlLgo+IAo+IFRoaXMgaXMgdGhlIGxlYXN0IG9mIG91
+ciBpc3N1ZXMgaW4gdGVybXMgb2YgY29uc2lzdGVuY3kgYW1vbmcKPiBkcml2ZXJzLAo+IGJ1dCB0
+aGF0IGlzIGluIGZhY3Qgd2hhdCBJJ20gcHVzaGluZyBmb3IuIFRoaXMgaXMgcHJvYmFibHkgdGhl
+IGZpcnN0Cj4gY2FzZSBvZiBhIHJlbmRlciBvbmx5IGRyaXZlciAoYXQgbGVhc3QgZm9yIERUKS4g
+U28gdGhpcyBpc24ndCBhIGNhc2UKPiBvZiBqdXN0IGZvbGxvdyB3aGF0IG90aGVycyBhcmUgZG9p
+bmcuCj4gCj4gVGhlIGgvdyBpbiB0aGlzIGFyZWEgY2FuIGJlIHF1aXRlIGRpZmZlcmVudCwgc28g
+dGhlIERUIGJpbmRpbmdzIGFyZQo+IGdvaW5nIHRvIHJlZmxlY3QgdGhhdCB0byBzb21lIGV4dGVu
+dC4gQSB2aXJ0dWFsIG5vZGUgbWFrZXMgc2Vuc2UgaW4KPiBzb21lIGNhc2VzLCBidXQgZm9yIG90
+aGVycyBpdCBtYXkgbm90Lgo+IApJIHNlZSB3aGVyZSB5b3UgYXJlIGdvaW5nIGhlcmUgYW5kIEkg
+YXBwcmVjaWF0ZSB0aGF0IHRoaXMgZGlzY3Vzc2lvbgppc24ndCBhIGV4ZXJjaXNlIGluIGJpa2Vz
+aGVkLCBidXQgYmFzZWQgb24gdGVjaG5pY2FsIGZhY3RzLgoKU28gbGV0IG1lIHRyeSB0byBleHBs
+YWluIHRoaW5ncyBmcm9tIHRoZSBvdGhlciB3YXkgYXJvdW5kOgpXZSBtYWRlIHRoZSBkZWNpc2lv
+biB0byBoYXZlIGEgc2luZ2xlIERSTSBkZXZpY2UgZm9yIGFsbCB0aGUgVml2YW50ZQpHUFUgbm9k
+ZXMgaW4gYSBzeXN0ZW0gYmFzZWQgb24gdGVjaG5pY2FsIG1lcml0cywgbm90IGJlY2F1c2UgRFJN
+IHdhbnRzCnVzIHRvIGRvIHRoaXMsIGJ1dCBiZWNhdXNlIGl0IGhhcyBwcmFjdGljYWwgdXBzaWRl
+cyBmb3IgdGhlCmltcGxlbWVudGF0aW9uIG9mIHRoZSBkcml2ZXIuCgoxLiBJdCBtYWtlcyBidWZm
+ZXIgYW5kIG1hbmFnZW1lbnQgYW5kIGluZm9ybWF0aW9uIHNoYXJpbmcgYmV0d2VlbiB0aGUKY29y
+ZXMgdGhhdCBhcmUgbGlrZWx5IHRvIGJlIHVzZWQgdG9nZXRoZXIgdmFzdGx5IGVhc2llciBmb3Ig
+dGhlIHVzZS0KY2FzZXMgc2VlbiB0b2RheS4gSGF2aW5nIG9uZSBEUk0gZGV2aWNlIHBlciBjb3Jl
+IHdvdWxkIGJlIHBvc3NpYmxlLCBidXQKd291bGQgbWFrZSB0aGluZ3MgYSBsb3QgaGFyZGVyIGlt
+cGxlbWVudGF0aW9uIHdpc2UuCgoyLiBJdCB3aWxsIGFsbG93IHVzIHRvIHNoYXJlIHJlc291cmNl
+cyBzdWNoIGFzIHRoZSBHUFUgcGFnZSB0YWJsZXMsCm9uY2Ugd2UgbW92ZSB0byBwZXItY2xpZW50
+IGFkZHJlc3Mgc3BhY2VzLCByZWR1Y2luZyB0aGUgZm9vdHByaW50IG9mCm1lbW9yeSB0aGF0IHdl
+IG5lZWQgdG8gYWxsb2NhdGUgb3V0IG9mIENNQS4KCjMuIEl0IG1ha2VzIHN1Ym1pdCBmZW5jaW5n
+IGxvb2sgdGhlIHNhbWUgcmVnYXJkbGVzcyBvZiB0aGUgY29yZQpjb25maWd1cmF0aW9uLiBUaGVy
+ZSBhcmUgY29uZmlndXJhdGlvbnMgd2hlcmUgYSAyRCBhbmQgYSAzRCBjb3JlIGFyZQpzaXR0aW5n
+IGJlaGluZCBhIHNoYXJlZCBmcm9udGVuZCAoRG92ZSkgYW5kIHNvbWUgd2hlcmUgZWFjaCBlbmdp
+bmUgaGFzCml0J3Mgb3duIGZyb250ZW5kIChpLk1YNikuIEhhdmluZyBhIHNpbmdsZSBEUk0gZHJp
+dmVyIGFsbG93cyB1cyB0byBtYWtlCmJvdGggY29uZmlndXJhdGlvbnMgbG9vayB0aGUgc2FtZSB0
+byB1c2Vyc3BhY2UgZnJvbSBhIGZlbmNpbmcKcGVyc3BlY3RpdmUuCgpUaGVyZSBhcmUgcHJvYmFi
+bHkgc29tZSBtb3JlIGFyZ3VtZW50cyB0aGF0IGhhdmUgZXNjYXBlZCB0aGUgdG9wIG9mIG15Cmhl
+YWQgcmlnaHQgbm93LiBSZWdhcmRsZXNzIG9mIGhvdyB0aGUgRFQgYmluZGluZ3MgZW5kIHVwLCB3
+ZSB3b24ndCBtb3ZlCmF3YXkgZnJvbSB0aGUgc2luZ2xlIERSTSBkZXZpY2UgZGVzaWduLgoKU28g
+dGhlIHF1ZXN0aW9uIGlzOiBnaXZlbiB0aGUgYWJvdmUsIGFyZSB5b3Ugb3Bwb3NlZCB0byBoYXZp
+bmcgYQp2aXJ0dWFsIG5vZGUgaW4gRFQgdG8gZGVzY3JpYmUgdGhpcyBtYXN0ZXIgZGV2aWNlPwpJ
+IGFscmVhZHkgc2tldGNoZWQgdXAgdGhlIGFsdGVybmF0aXZlIG9mIGhhdmluZyB0aGUgbWFzdGVy
+IGRyaXZlciBzY2FuCnRoZSBEVCBmb3IgbWF0Y2hpbmcgR1BVIG5vZGVzIGF0IHByb2JlIHRpbWUg
+YW5kIGJpbmRpbmcgdGhlbSB0b2dldGhlcgppbnRvIGEgc2luZ2xlIGRldmljZS4gQnV0IGdpdmVu
+IHRoYXQgd2UgZW5kIHVwIHdpdGggb25lIG1hc3RlciBkZXZpY2UKYW55d2F5cywgZG8geW91IHJl
+YWxseSBwcmVmZXIgdGhpcyBvdmVyIHRoZSB2aXJ0dWFsIG5vZGUsIHdoaWNoIGlzIGEKd29ya2lu
+ZyBhbmQgcHJvdmVuIHNvbHV0aW9uIHRvIHRoaXMgZXhhY3QgcHJvYmxlbT8KClJlZ2FyZHMsCkx1
+Y2FzCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
