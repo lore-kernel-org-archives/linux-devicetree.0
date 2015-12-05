@@ -1,63 +1,69 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: Add brcm,bcm63xx-regulator device tree
- binding
-Date: Fri, 4 Dec 2015 14:31:17 +0000
-Message-ID: <20151204143117.GB26072@sirena.org.uk>
-References: <20151202125325.GI1929@sirena.org.uk>
- <565F53FC.5080309@simon.arlott.org.uk>
- <20151203000631.GM1929@sirena.org.uk>
- <565FF9E9.1090503@simon.arlott.org.uk>
- <20151203150528.GG5727@sirena.org.uk>
- <5660D274.7000402@simon.arlott.org.uk>
- <20151203234548.GJ5727@sirena.org.uk>
- <5660D574.7030803@simon.arlott.org.uk>
- <20151204110018.GU26072@sirena.org.uk>
- <d7609dc97ddd988876e4efefaec2c18a4b7161bd@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] Documentation: afe4404: Add DT bindings for the
+ AFE4404 heart monitor
+Date: Sat, 5 Dec 2015 17:38:42 +0000
+Message-ID: <56632122.8040702@kernel.org>
+References: <1449086240-13375-1-git-send-email-afd@ti.com>
+ <1449086240-13375-2-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zUOaI4FcYSvHUUu9"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d7609dc97ddd988876e4efefaec2c18a4b7161bd@8b5064a13e22126c1b9329f0dc35b8915774b7c3.invalid>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Arlott <simon@fire.lp0.eu>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jogo@openwrt.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449086240-13375-2-git-send-email-afd-l0cyMroinI0@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 02/12/15 19:57, Andrew F. Davis wrote:
+> Add the TI afe4404 heart monitor DT bindings documentation.
+> Create health directory created under iio.
+> 
+> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+One little point inline - otherwise this is straightforward and
+looks good to me.
 
---zUOaI4FcYSvHUUu9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Could add cross references to the interrupt and gpio docs.
 
-On Fri, Dec 04, 2015 at 12:26:58PM -0000, Simon Arlott wrote:
-> On Fri, December 4, 2015 11:00, Mark Brown wrote:
-
-> > OK, so the power domains should be being represented and managed as such
-> > rather than using regulators - it's a better fit (doing things like
-> > support atomic context) and it also sidesteps this.  For the things that
-> > you say are clearly regulators should we have more information about
-> > those?
-
-> I'd prefer to handle them all as power domains since it fits better. Even
-> if some of them are regulators there's no extra control or status interface
-> and they're used like power domains to disable unused functionality.
-
-OK, great - runtime PM is just generally a more idiomatic interface for
-this.
-
---zUOaI4FcYSvHUUu9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWYaOwAAoJECTWi3JdVIfQz9wH/RjTLwdynlZ/Ld3Rm2GVn8C+
-E0KR525dqjvEsKyKeCF6P6ql8liKWI8+ec4X72inJ/156H9h2XqLDVbpGnq/yRk1
-JwNGjyqwCfjbiJhG0UJILR3A0rL/1NJGEHHEXY+oQ3D+rS8Iy9UpTvzlgXxWNYYS
-OZR8RYVauO98xITXHRth0R+PgaAfSjwe/OxL+Kfzcwnkvo0pnddoys9cDbSNBteq
-5mBT3qIuXeXanhJesZs377DXdGgIVMyGdBcq6eNvrsilPE6QKyiZ4mCQcVU3Im/u
-N1YWPR33ipClFk9GTYC487PdWS/Tm0XXCFm2vagk87VLmkEgT/o+Ewa+oQRwCFY=
-=TQsh
------END PGP SIGNATURE-----
-
---zUOaI4FcYSvHUUu9--
+Jonathan
+> ---
+>  .../devicetree/bindings/iio/health/afe4404.txt     | 27 ++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/health/afe4404.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/health/afe4404.txt b/Documentation/devicetree/bindings/iio/health/afe4404.txt
+> new file mode 100644
+> index 0000000..25b77a4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/health/afe4404.txt
+> @@ -0,0 +1,27 @@
+> +* Texas Instruments AFE4404 Heart rate and Pulse Oximeter
+> +
+> +Required properties:
+> + - compatible		: Should be "ti,afe4404".
+> + - reg			: I2C address of the device.
+> + - tx_sup-supply	: Regulator supply to LEDs.
+If the sup bit is for supply I'd drop it and just have
+tx-supply.
+> + - interrupt-parent	: Phandle to he parent interrupt controller.
+> + - interrupts		: The interrupt line the device ADC_RDY pin is connected to.
+> +
+> +Optional properties:
+> + - reset-gpios		: GPIO used to reset the device.
+> +
+> +Example:
+> +
+> +&i2c2 {
+> +	heart_mon@58 {
+> +		compatible = "ti,afe4404";
+> +		reg = <0x58>;
+> +
+> +		tx_sup-supply = <&vbat>;
+> +
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <28 IRQ_TYPE_EDGE_RISING>;
+> +
+> +		reset-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
+> +	};
+> +};
+> 
