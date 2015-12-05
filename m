@@ -1,95 +1,152 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH RFC 2/4] ARM: bcm2835: rename sdhci pin group
-Date: Sat, 5 Dec 2015 10:43:37 +0100 (CET)
-Message-ID: <705524977.33360.5a38c754-5911-4377-aa1a-501587b3a337.open-xchange@email.1und1.de>
-References: <1447949176-21926-1-git-send-email-stefan.wahren@i2se.com>
- <1447949176-21926-3-git-send-email-stefan.wahren@i2se.com>
- <565E6892.4070600@wwwdotorg.org>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
+Date: Sat, 5 Dec 2015 11:12:08 +0100
+Message-ID: <20151205101208.GP10243@phenom.ffwll.local>
+References: <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
+ <20151204162956.GA14978@rob-hp-laptop>
+ <1449247305.8275.104.camel@pengutronix.de>
+ <CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
+ <1449251760.8275.116.camel@pengutronix.de>
+ <CAL_Jsq+oaJxD3vbDWzn_4ghpqi=RZ1o+8nOcepWYjzcu5Hwpjg@mail.gmail.com>
+ <20151204203101.GD8644@n2100.arm.linux.org.uk>
+ <CAKb7UviPhoiY-YP2aBHm0BHbeEjSF2wTguQScVXMBve-kZc16Q@mail.gmail.com>
+ <20151204220533.GE8644@n2100.arm.linux.org.uk>
+ <CAKb7UvgzYMxPxtt8iPars13n4sAJ5Z4Hva1KHO+k4yNumDb+DQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <565E6892.4070600-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CAKb7UvgzYMxPxtt8iPars13n4sAJ5Z4Hva1KHO+k4yNumDb+DQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Ilia Mirkin <imirkin@alum.mit.edu>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dri-devel <dri-devel@lists.freedesktop.org>, patchwork-lst@pengutronix.de, "kernel@pengutronix.de" <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> hat am 2. Dezember 2015 um 04:42
-> geschrieben:
->
->
-> On 11/19/2015 09:06 AM, Stefan Wahren wrote:
-> > The node name of the sdhci pin group doesn't explain it's
-> > real function. So rename it.
->
-> The real function of this node is not to configure SDHCI pins, but to
-> set pins to alt3, as the current name states. Admittedly it's possible
-> that currently the only pins that need to be set to ALT3 are SDHCI
-> related, but that's incidental.
-
-Yes, i understand the original intension to assign every pin to the available
-mux functions ( gpio_in, gpio_out, alt* ).
-
-But 3f37169fb3 ("ARM: bcm2835: dt: Add Raspberry Pi Model B rev2") introduce a
-better self-describing pin group naming for I2S. So my idea was to adapt it
-according to sdhci first and go on.
-
-So here is a possible vision for bcm2835-rpi.dtsi
-
-&gpio {
-	pinctrl-names = "default";
-
-	act_gpio: gpio {
-		brcm,pins = <6>;
-		brcm,function = <BCM2835_FSEL_GPIO_OUT>;
-	};
-
-	i2c0_alt0: i2c {
-		brcm,pins = <0 1>;
-		brcm,function = <BCM2835_FSEL_ALT0>;
-	};
-
-	i2c1_alt0: i2c {
-		brcm,pins = <2 3>;
-		brcm,function = <BCM2835_FSEL_ALT0>;
-	};
-	
-	gpclk_alt0: gpclk {
-		brcm,pins = <4 5>;
-		brcm,function = <BCM2835_FSEL_ALT0>;
-	};
-	
-	spi0_alt0: spi {
-		brcm,pins = <7 8 9 10 11>;
-		brcm,function = <BCM2835_FSEL_ALT0>;
-	};
-	
-	uart0_alt0: spi {
-		brcm,pins = <14 15>;
-		brcm,function = <BCM2835_FSEL_ALT0>;
-	};
-	
-	pwm0_alt0: pwm {
-		brcm,pins = <40>;
-		brcm,function = <BCM2835_FSEL_ALT0>;
-	};
-	
-	pwm1_alt0: pwm {
-		brcm,pins = <45>;
-		brcm,function = <BCM2835_FSEL_ALT0>;
-	};
-
-	sdhci_alt3: sdhci_alt3 {
-		brcm,pins = <48 49 50 51 52 53>;
-		brcm,function = <BCM2835_FSEL_ALT3>;
-	};
-};
-
-Best regards
-Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBEZWMgMDQsIDIwMTUgYXQgMDU6NDM6MzNQTSAtMDUwMCwgSWxpYSBNaXJraW4gd3Jv
+dGU6Cj4gT24gRnJpLCBEZWMgNCwgMjAxNSBhdCA1OjA1IFBNLCBSdXNzZWxsIEtpbmcgLSBBUk0g
+TGludXgKPiA8bGludXhAYXJtLmxpbnV4Lm9yZy51az4gd3JvdGU6Cj4gPiBPbiBGcmksIERlYyAw
+NCwgMjAxNSBhdCAwMzo0Mjo0N1BNIC0wNTAwLCBJbGlhIE1pcmtpbiB3cm90ZToKPiA+PiBPbiBG
+cmksIERlYyA0LCAyMDE1IGF0IDM6MzEgUE0sIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eAo+ID4+
+IDxsaW51eEBhcm0ubGludXgub3JnLnVrPiB3cm90ZToKPiA+PiA+IE1vcmVvdmVyLCBEUkkzIGlz
+IG5vdCB5ZXQgYXZhaWxhYmxlIGZvciBHYWxsaXVtLCBzbyBpZiB3ZSdyZSB0YWxraW5nCj4gPj4g
+PiBhYm91dCBYb3JnLCB0aGVuIGZ1bmN0aW9uYWwgRFJJMiBpcyBhIHJlcXVpcmVtZW50LCBhbmQg
+dGhhdCBfbmVlZHNfCj4gPj4gPiB0byBoYXZlIGEgc2luZ2xlIGRldmljZSBmb3IgdGhlIHJlbmRl
+cmluZyBpbnN0YW5jZXMuICBYb3JnIGhhcyBubyB3YXkKPiA+PiA+IHRvIHBhc3MgbXVsdGlwbGUg
+cmVuZGVyIG5vZGVzIHRvIGNsaWVudCBvdmVyIERSSTIuCj4gPj4KPiA+PiBKdXN0IHRvIGNvcnJl
+Y3QuLi4gRFJJMyBoYXMgYmVlbiBhdmFpbGFibGUgb24gZ2FsbGl1bSBbYXQgbGVhc3QgaW4gdGhl
+Cj4gPj4gY29udGV4dCBvZiBzdC9tZXNhXSBiYXNpY2FsbHkgc2luY2UgRFJJMyB3YXMgaW50cm9k
+dWNlZC4gTm90IHN1cmUgd2hhdAo+ID4+IGlzc3VlIHlvdSdyZSBmaWdodGluZyB3aXRoLCBidXQg
+aXQncyBkZWZpbml0ZWx5IG5vdCBhIGdhbGxpdW0KPiA+PiBsaW1pdGF0aW9uLi4uIGNvdWxkIGJl
+IHNvbWV0aGluZyByZWxhdGVkIHRvIHBsYXRmb3JtIGRldmljZXMuCj4gPgo+ID4gV2VsbCwgbXkg
+c3RhdGVtZW50IGlzIGJhc2VkIG9uIHRoZSBmYWN0IHRoYXQgdGhlcmUncyBub3RoaW5nIGluCj4g
+PiBzcmMvZ2FsbGl1bS9zdGF0ZS10cmFja2VyL2RyaSB3aGljaCBoaW50cyBhdCBiZWluZyBEUkkz
+LiAgTWF5YmUgaXQncwo+ID4gaW1wbGVtZW50ZWQgZGlmZmVyZW50bHksIEkgZG9uJ3Qga25vdy4g
+IEkgbmV2ZXIgd2FudGVkIHRvIGhhY2sgTUVTQSAtCj4gPiBJJ20gc3VwcG9zZWQgdG8gYmUgdGhl
+IEFSTSBrZXJuZWwgbWFpbnRhaW5lciAtIGFuZCBJJ20gc3RpbGwgdmVyeSBuZXcKPiA+IHRvIE1F
+U0EuCj4gPgo+ID4gSSB0aGluayBpdCdzIGEgRFJJMyBsaW1pdGF0aW9uLiAgVGhlIGlzc3VlIHdp
+dGggdGhlIERSSTMgZGVzaWduIGlzIHRoYXQ6Cj4gPgo+ID4gKiBUaGUgY2xpZW50IGhhcyBhY2Nl
+c3MgdG8gdGhlIEdQVSByZW5kZXIgbm9kZXMgb25seSwgYnV0IG5vdCB0aGUKPiA+ICAgY29ycmVz
+cG9uZGluZyBLTVMgbm9kZS4KPiA+ICogQnVmZmVycyBpbiBEUkkzIGFyZSBhbGxvY2F0ZWQgZnJv
+bSB0aGUgR1BVIHJlbmRlciBub2Rlcy4KPiA+ICogVGhlIFhvcmcgUHJlc2VudCBwcm90b2NvbCBp
+cyB0aGVuIHVzZWQgdG8gbWFuYWdlIHRoZSB2YmxhbmsKPiA+ICAgc3luY2hvbmlzYXRpb24gYW5k
+IHBhZ2UgZmxpcHMuCj4gPgo+ID4gTm93LCB0aGUgS01TIHNjYW5vdXQgaGFyZHdhcmUgdHlwaWNh
+bGx5IGRvZXMgbm90IHN1cHBvcnQgYW55IGtpbmQgb2YKPiA+IHNjYXR0ZXItZ2F0aGVyOiB0aGUg
+YnVmZmVycyBpdCBoYXMgbXVzdCBiZSBjb250aWd1b3VzLiAgVGhlc2UgY2FuIGJlCj4gPiBhbGxv
+Y2F0ZWQgZnJvbSB0aGUgS01TIERSTSBkZXZpY2UuCj4gPgo+ID4gSG93ZXZlciwgdGhlIERSSTMg
+Y2xpZW50IGhhcyBubyBhY2Nlc3MgdG8gdGhlIEtNUyBEUk0gZGV2aWNlIHRvIGFsbG9jYXRlCj4g
+PiBsaW5lYXIgYnVmZmVycyBmcm9tLCBhbmQgR1BVcyB0eXBpY2FsbHkgZG9uJ3QgaGF2ZSBkdW1i
+IGJ1ZmZlciBzdXBwb3J0Lgo+ID4gSGVuY2UsIHRoZSBjbGllbnQgY2FuJ3QgcGFzcyBhIHN1aXRh
+YmxlIGJ1ZmZlciB0byB0aGUgcHJlc2VudCBsYXllci4KCk9oIHJpZ2h0LCBidWZmZXIgYWxsb2Mg
+aWYgeW91IGhhdmUgc3BlY2lhbCBjb25zdHJhaW50cyB3b24ndCB3b3JrIHdpdGgKRFJJMyBhcy1p
+cy4gRm9yIHRoYXQgd2UgcHJvYmFibHkgbmVlZCBzb21ldGhpbmcgbGlrZSBEUkkyIGZvciBidWZm
+ZXIgYWxsb2MKKyBQcmVzZW50IChsaWtlIERSSTMgZG9lcykgZm9yIGZsaXBwaW5nIHRoZW0uCgo+
+ID4gSGVuY2UsIEkgY2FuIHNlZSBubyB3YXkgZm9yIHRoZSByZXNvdXJjZV9jcmVhdGUoKSB0byBi
+ZSBhYmxlIHRvIGFsbG9jYXRlCj4gPiBhbnkga2luZCBvZiBzY2Fub3V0IGNhcGFibGUgYnVmZmVy
+Lgo+ID4KPiA+IFRoYXQncyBhIHNlcGFyYXRlIGlzc3VlIHRob3VnaDogeW91J3ZlIHBvaW50ZWQg
+b3V0IHRoYXQgeW91IGNhbiBzZWxlY3QKPiA+IHdoaWNoIHJlbmRlciBub2RlIHRvIHVzZTogd2hh
+dCBpZiB3ZSB3YW50IHRvIHVzZSBtdWx0aXBsZSByZW5kZXIgbm9kZXMKPiA+IHNpbXVsdGFuZW91
+c2x5IC0gZWcsIGJlY2F1c2Ugd2Ugd2FudCB0byB1c2UgbXVsdGlwbGUgM0QgR1BVIGNvcmVzCj4g
+PiB0b2dldGhlcj8gIEhvdyBkb2VzIHRoYXQgd29yayB3aXRoIHN0dWZmPwo+IAo+IFRoaXMgaXMg
+YSBiaXQgbGlrZSB0aGUgU0xJIHF1ZXN0aW9uIC0tIGxldCdzIHNheSB5b3UgaGF2ZSAyIHByaWNl
+eQo+IGRlc2t0b3AgR1BVcywgd2l0aCBhIGZhc3QgaW50ZXJjb25uZWN0IGJldHdlZW4gdGhlbSwg
+d2hpY2ggbGV0cyB0aGVtCj4ga25vdyBhYm91dCBlYWNoIG90aGVyLCBob3cgZG8geW91IG1ha2Ug
+dXNlIG9mIHRoYXQuIFNvbHV0aW9uOiB1bnNvbHZlZAo+IDopCj4gCj4gSW4gYW4gaWRlYWwgd29y
+bGQsIHlvdSdkIGhhdmUgYSBzaW5nbGUgZHJpdmVyIHRoYXQga25vd3MgaG93IHRvCj4gaW50ZXJh
+Y3Qgd2l0aCBtdWx0aXBsZSBkZXZpY2VzIGFuZCBtYWtlIHRoZW0gZG8gY29vbCB0aGluZ3MuIEhv
+d2V2ZXIKPiB0aGlzIGEgY29tcGxldGVseSB1bnRyb2RkZW4gcGF0aC4gKE5vdCB0byBtZW50aW9u
+IHRoZSBwcm9ibGVtIG9mICpob3cqCj4gdG8gYnJlYWsgdXAgYSB3b3JrbG9hZCBhY3Jvc3MgMiBH
+UFVzLikKPiAKPiA+Cj4gPiBJIHRoaW5rIHRoZSBpZGVhIHRoYXQgaW5kaXZpZHVhbCBHUFUgY29y
+ZXMgc2hvdWxkIGJlIGV4cG9zZWQgYXMKPiA+IHNlcGFyYXRlIERSTSBkZXZpY2VzIGlzIGZ1bmRh
+bWVudGFsbHkgZmxhd2VkLCBhbmQgYWRkcyBhIGhlbGwgb2YgYQo+ID4gbG90IG9mIGNvbXBsZXhp
+dHkuCj4gPgo+ID4gSW4gYW55IGNhc2UsIEkndmUgc3BlbnQgX3dheV8gdG9vIG11Y2ggdGltZSBv
+biBldG5hdml2IGR1cmluZyBOb3ZlbWJlciAtCj4gPiBxdWl0ZSBsaXRlcmFsbHkgYWxtb3N0IGV2
+ZXJ5IGRheSAoSSB3b3JrZWQgb3V0IHRoYXQgSSB3YXMgcHJvZHVjaW5nIDQuNQo+ID4gcGF0Y2hl
+cyBhIGRheSBkdXJpbmcgTm92ZW1iZXIgZm9yIEV0bmF2aXYgTUVTQS4pICBJJ20gYWZyYWlkIHRo
+YXQgaXQncwo+ID4gbm93IHRpbWUgdGhhdCBJIHN3aXRjaCBteSBhdHRlbnRpb24gZWxzZXdoZXJl
+LCBzbyBpZiB0aGlzIG1lYW5zIHRoYXQKPiA+IEV0bmF2aXYgaXMgcmVqZWN0ZWQgZm9yIG1lcmdp
+bmcsIEknbSBhZnJhaWQgaXQnbGwgYmUgYSBmZXcgbW9udGhzIGJlZm9yZQo+ID4gSSBjYW4gZ2V0
+IGJhY2sgdG8gaXQuCj4gPgo+ID4gSXQgd291bGQgaGF2ZSBiZWVuIG5pY2UgaWYgdGhlc2UgaXNz
+dWVzIGhhZCBiZWVuIGJyb3VnaHQgdXAgbXVjaCBlYXJsaWVyLAo+ID4gZHVyaW5nIHRoZSBSRkMg
+cG9zdGluZyBvZiB0aGUgcGF0Y2hlcy4gIFRoZXNlIGFyZSBub3RoaW5nIG5ldywgYW5kIEkgbm93
+Cj4gPiBmZWVsIHRoYXQgdGhpcyB3aG9sZSB0aGluZyBoYXMgYmVlbiBhIHRvdGFsIHdhc3RlIG9m
+IHRpbWUuCj4gCj4gVGhlIHdob2xlIG11bHRpLWdwdSB0aGluZyBpcyBhIGJpdCBvZiBhbiBvcGVu
+IHF1ZXN0aW9uIHJpZ2h0IG5vdy4gSXQKPiB3b3JrcyBpbiB0aGVvcnksIGJ1dCBpbiBwcmFjdGlj
+ZSBub2JvZHkncyBkb25lIGl0LiBNYWFydGVuIHRyaWVkIHRvCj4gZ2V0IG5vdXZlYXUvZ2syMGEg
+KyB0ZWdyYS9kcm0gb24gSmV0c29uIFRLMSB0byBwbGF5IG5pY2Ugd2l0aCwgZS5nLiwgWAo+IDJk
+IGFjY2VsLCBhbmQgaXQgd2FzIGFuIGV4ZXJjaXNlIGluIHBhaW4uIE5vdCBzdXJlIHRoYXQgaGUg
+ZXZlcgo+IHN1Y2NlZWRlZC4KPiAKPiBJIHRoaW5rIGl0J3MgdW5mYWlyIHRvIHRyeSB0byBtYWtl
+IG5ldyBoYXJkd2FyZSBlbmFibGVtZW50IHRoZSB0aW1lIHRvCj4gYXR0ZW1wdCB0byBoZWFwIGV4
+dHJhIHdvcmsgb250byB0aG9zZSBhdXRob3JzIHVuZm9ydHVuYXRlIGVub3VnaCB0bwo+IGhhdmUg
+c2xpZ2h0bHkgdW5vcnRob2RveCBoYXJkd2FyZSB0aGF0IG1hcHMgbmljZWx5IG9udG8gc29tZQo+
+IGRlc2lyZWQtYnV0LW5vdC1xdWl0ZS10aGVyZS15ZXQgdXNhZ2UgbW9kZWwgLS0gdGhleSBoYXZl
+IGVub3VnaAo+IHByb2JsZW1zLgo+Cj4gVGhlIHdheSBldmVyeXRoaW5nIHdvcmtzIGlzIG9uZSBk
+cm0gbm9kZSBjYW4gZG8gZXZlcnl0aGluZy4gUFJJTUUgaXMgYQo+IGJhcmVseS1mdW5jdGlvbmFs
+IHdheSB0byBvZmZsb2FkIHNvbWUgdGhpbmdzIG9udG8gYSAoc2luZ2xlKSBzZWNvbmRhcnkKPiBH
+UFUuIEV2ZXJ5dGhpbmcgYmV5b25kIHRoYXQgaXMgcHVyZWx5IHRoZW9yZXRpY2FsLgoKT25lIHRo
+aW5nIHRoYXQgZG9lc24ndCB5ZXQgd29yayB3aXRoIFBSSU1FIGlzIHN5bmNocm9uaXphdGlvbi4g
+QnV0IGF0IGxpc3QKZm9yIHRoZSByZW5kZXItPmRpc3BsYXkgY29tYm8gQWxleCBHb2lucyBmcm9t
+IG52aWRpYSBmaXhlZCBpdCB1cCwgYW5kIGl0J3MKcHJldHR5IG11Y2ggdHJpdmlhbCB0byBkbyBz
+byAoMiBwYXRjaGVzIG9uIGk5MTUgc2luY2Ugd2UgbmVlZGVkIHRvIHN1cHBvcnQKYm90aCBhdG9t
+aWMgYW5kIGxlZ2FjeSBwYWdlX2ZsaXAsIHdvdWxkIGhhdmUgYmVlbiBqdXN0IDEgdGlueSBwYXRj
+aApvdGhlcndpc2UpLiBpOTE1LT5udmlkaWEgd291bGQgaGF2ZSBiZWVuIG1vcmUgd29yayBiZWNh
+dXNlIG9mIHNvbWUgbG9ja2luZwpmdW4sIGJ1dCB0aGUgaW5mcmFzdHJ1Y3R1cmUgaXMgbm93IGFs
+bCB0aGVyZSAoaW5jbHVkaW5nIHBhdGNoZXMgZm9yIFhvcmcpLgoKPiBOb25lIG9mIHdoYXQncyBi
+ZWluZyBkb25lIG5vdyBwcmV2ZW50cyBzb21lIGZ1dHVyZSB3aGVyZSB0aGVzZSB0aGluZ3MKPiBh
+cmUgYnJva2VuIHVwLiBObyBuZWVkIHRvIGZvcmNlIGl0IG5vdy4KClNlZSBteSBvdGhlciBtYWls
+LCBidXQgaW50ZWwgaW1wbGVtZW50ZWQgdGhlIDIgZHJtIGRyaXZlcnMsIG9uZSBsb2dpY2FsCnRo
+aW5nIG1vZGVsLiBVbmZvcnR1bmF0ZWx5IGRpZG4ndCBnbyB1cHN0cmVhbSwgYnV0IGRlZmluaXRl
+bHkgcG9zc2libGUuCgpCdXQgdGhlIHJlYWwgcXVlc3Rpb24gaXMgd2hldGhlciBpdCBtYWtlcyBz
+ZW5zZSB0byBzcGxpdCBkcml2ZXJzLCBhbmQgaW1vCmZvciB0aGF0IHF1ZXN0aW9uIHRoZSBvbmx5
+IGNyaXRlcmlhIHNob3VsZCBiZToKLSBIb3cgZGlmZmVyZW50IGFyZSB0aGUgYmxvY2tzPyBXaGVu
+IHRoZXJlJ3MgYSBtYWpvciBhcmNoaXRlY3R1cmFsIHNoaWZ0CiAgYWNyb3NzIGV2ZXJ5dGhpbmcg
+ZnJvbSBhIHZlbmRvciB0aGVuIHNwbGl0dGluZyBtYWtlcyBzZW5zZS4gTG9va2luZyBhdAogIGV0
+bmF2aXYgaXQgc2VlbXMgbGlrZSB0aGVyZSdzIGF0IGxlYXN0IHNvbWV3aGF0IGEgdW5pZmllZCBm
+cm9udGVuZCBvbgogIHRvcCBvZiB0aGVzZSBkaWZmZXJlbnQgYmxvY2tzLCBzbyBtYWtlcyBzZW5z
+ZSB0byBrZWVwIHRoZW0gdG9nZXRoZXIgaW4KICBvbmUgZHJpdmVyLgoKLSBIb3cgbGlrZWx5IGlz
+IHRoZSBJUCBibG9jayB0byBiZSByZXVzZWQgaW4gYSB0b3RhbGx5IGRpZmZlcmVudCBTb0MvR1BV
+PwogIFRoYXQncyB3aHkgd2UndmUgZG9uZSB0aGUgc3BsaXQgaW4gaW50ZWwgZm9yIGxpYnZhIHNp
+bmNlIHRoYXQgYWRkaXRpb25hbAogIGNvcmUgd2FzIGEgbGljZW5zZWQgSVAgY29yZSBhbHNvIHVz
+ZWQgaXQgb3RoZXIgU29Dcy4gU2luY2UgdGhlIHByb3Bvc2VkCiAgZXRuYXZpdiBkcml2ZXIgY2Fu
+IGFscmVhZHkgd29yayB0b2dldGhlciB3aXRoIDIgZGlmZmVyZW50IGRpc3BsYXkKICBkcml2ZXJz
+IHdlIHNlZW0gdG8gaGF2ZSBzdWZmaWNpZW50IGZsZXhpYmlsaXR5IGhlcmUuIFNvIGlmIHNvbWVv
+bmUgd291bGQKICBjb21iaW5lIGUuZy4gZXRuYXZpdiAyZCBjb3JlIHdpdGggc29tZSBvdGhlciAz
+ZCBjb3JlIGl0IHNob3VsZCBwcmV0dHkKICBtdWNoIGp1c3Qgd29yay4gV2VsbCB0aGVyZSdzIHNv
+bWUgZnVuIG1heWJlIG9uIHRoZSB1c2Vyc3BhY2Ugc2lkZSB0bwogIGdsdWUgdGhpbmdzIHRvZ2V0
+aGVyLCBidXQgbm90IG9uIHRoZSBrZXJuZWwuCgpHaXZlbiB0aGF0IEkgdGhpbmsgdGhlIGN1cnJl
+bnQgZXRuYXZpdiBpcyBhIHNvdW5kIGFyY2hpdGVjdHVyZS4gQW5kIEknbQpub3Qgc2F5aW5nIHRo
+YXQgYmVjYXVzZSBkcm0gcmVxdWlyZXMgZXZlcnl0aGluZyB0byBiZSBzbWFzaGVkIGludG8gb25l
+CmRyaXZlciwgc2luY2UgdGhhdCdzIHNpbXBsZSBub3QgdGhlIGNhc2UuCgpDaGVlcnMsIERhbmll
+bAotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24K
+aHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
