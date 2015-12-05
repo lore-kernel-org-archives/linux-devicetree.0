@@ -1,60 +1,62 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
-Date: Sat, 5 Dec 2015 16:05:44 +0000
-Message-ID: <20151205160544.GK8644@n2100.arm.linux.org.uk>
-References: <CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
- <1449251760.8275.116.camel@pengutronix.de>
- <CAL_Jsq+oaJxD3vbDWzn_4ghpqi=RZ1o+8nOcepWYjzcu5Hwpjg@mail.gmail.com>
- <20151204203101.GD8644@n2100.arm.linux.org.uk>
- <CAKb7UviPhoiY-YP2aBHm0BHbeEjSF2wTguQScVXMBve-kZc16Q@mail.gmail.com>
- <20151204220533.GE8644@n2100.arm.linux.org.uk>
- <CAKb7UvgzYMxPxtt8iPars13n4sAJ5Z4Hva1KHO+k4yNumDb+DQ@mail.gmail.com>
- <20151205101208.GP10243@phenom.ffwll.local>
- <20151205110209.GG8644@n2100.arm.linux.org.uk>
- <20151205153511.GR10243@phenom.ffwll.local>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] power: qcom_smbb: Add otg regulator for control of vbus
+Date: Sat, 5 Dec 2015 17:07:18 +0100
+Message-ID: <20151205160717.GA30410@earth>
+References: <1445548337-14612-1-git-send-email-tim.bird@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20151205153511.GR10243@phenom.ffwll.local>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel@ffwll.ch>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, patchwork-lst@pengutronix.de, "kernel@pengutronix.de" <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
+In-Reply-To: <1445548337-14612-1-git-send-email-tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Bird <tim.bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBEZWMgMDUsIDIwMTUgYXQgMDQ6MzU6MTFQTSArMDEwMCwgRGFuaWVsIFZldHRlciB3
-cm90ZToKPiBJbiB0aGVvcnkgZG1hLWJ1ZiBjb3VsZCBrZWVwIHRyYWNrIG9mIHdobydzIGZsdXNo
-ZWQgYSBidWZmZXIgYWxyZWFkeSwgYnV0Cj4gdGhlcmUncyBubyBpbXBsZW1lbnRhdGlvbiBvZiB0
-aGF0IHlldC4gQW5kIGZvciBhIGdlbmVyaWMgb25lIHdlJ2QgbmVlZCB0bwo+IHZpb2xhdGUgdGhl
-IGN1cnJlbnQgZG1hIGFwaSBhYnN0cmFjdGlvbnMuIFNvIHllYWgsIHBlcmYgaXMgZ29pbmcgdG8g
-dGFuawo+IHVudGlsIHRoYXQncyBzb2x2ZWQsIGF0IGxlYXN0IGZvciBzb21lIHdvcmtsb2Fkcy4g
-VmlkZW8gd2Fzbid0IGEgcHJvYmxlbQo+IGhlcmUgc2luY2UgYWxsIHlvdSBkbyBpcyBlc3RhYmxp
-c2ggYSBzZXQgb2Ygc2hhcmVkIGJ1ZmZlcnMgb25jZSwgbWFraW5nCj4gYWxsIHRoZSBvdmVyaGVh
-ZCBqdXN0IG9uZS10aW1lLiBCdXQgZHluYW1pYyB3b3JrbG9hZHMgbGlrZSBHTCBjYW4ndAo+IGFt
-b3J0aXplIHNldHVwIGNvc3QgdGhhdCBlYXNpbHkuCgpJbmRlZWQsIGFuZCBhcyB0aGUgVml2YW50
-ZSAzRCBjb3JlIGlzIG5vdCBhcyBjYXBhYmxlIGFzIHRoZSAyRCBjb3JlIGF0CmJsaXR0aW5nIGJl
-dHdlZW4gdHdvIHBpeG1hcHMsIHRoZSBjb3N0IG9mIHNwbGl0dGluZyB0aGVtIHdvdWxkIGJlIGhp
-Z2guCihUaGUgZWFybHkgM0QgY29yZXMgc3VjaCBhcyBmb3VuZCBpbiBEb3ZlIHNlZW0gb25seSBh
-YmxlIHRvIGJpdCBmcm9tIHRoZQowLDAgb3JpZ2luLikKClNvLCB3ZSByZWFsbHkgbmVlZCB0byBk
-byB0aGUgM0QgcmVuZGVyaW5nIG9uIHRoZSAzRCBjb3JlLCBhbmQgdGhlbiB1c2UKdGhlIDJEIGNv
-cmUgYXMgYSBibGl0dGVyIC0gcHJlZmVyYWJseSB3aXRoIHRoZSAzRCBjb3JlIHJlbmRlcmluZyB0
-aGUKbmV4dCBmcmFtZSBpbiBwYXJhbGxlbCB3aXRoIHRoZSBibGl0LgoKVGhlcmUncyBtb3JlIHJl
-YXNvbnMgdG8gZG8gdGhpcyB3aGVuIHlvdSBkaXNjb3ZlciB0aGF0IGlNWDYncyBtZW1vcnkgYnVz
-CmFyYml0ZXIgZG9lc24ndCB3b3JrIHF1aXRlIHJpZ2h0OiBpdCBhcHBlYXJzIHRoYXQgZWFjaCBi
-dXMgbWFzdGVyIGhhcyBhCmNlcnRhaW4gYmFuZHdpZHRoIHJlc2VydmVkIHdoaWNoIGlzIG5ldmVy
-IGdpdmVuIHRvIGFueSBvdGhlciBtYXN0ZXIuClRoYXQgbWVhbnMgaXQncyBiZXN0IHRvIHNwcmVh
-ZCB0aGUgbWVtb3J5IHdvcmtsb2FkIG92ZXIgYXMgbWFueSBvZiB0aGUKbWFzdGVycyBhcyBwb3Nz
-aWJsZS4KCi0tIApGVFRDIGJyb2FkYmFuZCBmb3IgMC44bWlsZSBsaW5lOiBjdXJyZW50bHkgYXQg
-OS42TWJwcyBkb3duIDQwMGticHMgdXAKYWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5uZXQuCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--NzB8fVQJ5HfG6fxh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Tim,
+
+On Thu, Oct 22, 2015 at 02:12:17PM -0700, Tim Bird wrote:
+> Add a regulator to control the OTG chargepath switch.  The OTG
+> switch gets its power from pm8941_5vs1, and that should be expressed
+> as an usb_otg_in-supply property in the DT node for the charger driver.
+> The regulator name is "otg".  This is used by USB code to control VBUS
+> direction.
+
+I could not find a newer version of this patch with the comments
+=66rom Mark being fixed. Did I miss anything?
+
+-- Sebastian
+
+--NzB8fVQJ5HfG6fxh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJWYwuyAAoJENju1/PIO/qakHIQAIgJfPsKIgeYWdGhp4LWxeNq
+MmEaKGkFcjROo4G0YThs7lAj7cl/XMWxwA3V+gZsrFmPwBVBW4yMtNNXPbbmWRBp
+fGasCytZvF+LvDRYKFRglEmA6nbeplbj2eZJsFGUUhWjWjC1yNmiAe0HAjZ3hsEV
+ef7D/kgcvREL/OFvkwfHvTyBvUX5hKhP4BtUJij7GJ+xA8M9IuGfGPNU8uftafLU
+VNP1lIUY0RIUql+rPYCw735vZGJ7jgJ2Ko4K4hYlCroc8Aj6/7KQZcI5Zqskhz90
+FA3lFasMYqzAGf00HzDECK0q76A33qZaPGr4CRn4+G4KErw1wDH8b3zpwneRSTRD
+JKSmkORMX9Ax4egLqiAHvNt6xsCfq6wgLcgMN/PAz81rOeMTjQNhayEYUMqfAFBd
+YOmrSxSDrs74OplIBiiCAavS3aEP3edZiqCW+0wTgU/mir4rKQchhFZ0yLedsKVX
+5Gc2UdqD7WWCroFda2Q4QtIZaFUDH/1K/M5Si7Lg4WR9/S1rZy/o1iN53JuPY9yf
+c2O5w1JUs/ygXjQDq/gsqOgdYmXOgOdcFB6mCIXE4M5d1HjmkoU/1I0DzdCl6vyx
+cPJA6RzwmRSk/GBKDsSk11Voa/mj4sQrCtgcEygjr/ZPs0uy891nFJXc0BlsKbuS
+6zBGFhgfuKUnvM9TeJGn
+=+AZf
+-----END PGP SIGNATURE-----
+
+--NzB8fVQJ5HfG6fxh--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
