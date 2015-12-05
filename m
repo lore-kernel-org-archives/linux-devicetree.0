@@ -1,105 +1,62 @@
-From: Kapil Hali <kapilh@broadcom.com>
-Subject: Re: [PATCH v5 1/5] dt-bindings: add SMP enable-method for Broadcom
- NSP
-Date: Sat, 5 Dec 2015 17:25:09 +0530
-Message-ID: <5662D09D.8020807@broadcom.com>
+From: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 2/5] ARM: BCM: Clean up SMP support for Broadcom Kona
+Date: Sat, 5 Dec 2015 17:26:08 +0530
+Message-ID: <5662D0D8.1020004@broadcom.com>
 References: <1449260611-24417-1-git-send-email-kapilh@broadcom.com>
- <1449260611-24417-2-git-send-email-kapilh@broadcom.com>
- <56621C7A.5050202@gmail.com>
+ <1449260611-24417-3-git-send-email-kapilh@broadcom.com>
+ <56621CA3.3090903@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56621C7A.5050202@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>
-Cc: Gregory Fong <gregory.0xf0@gmail.com>, Lee Jones <lee@kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Kever Yang <kever.yang@rock-chips.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56621CA3.3090903-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Florian,
 
-
-On 12/5/2015 4:36 AM, Florian Fainelli wrote:
+On 12/5/2015 4:37 AM, Florian Fainelli wrote:
 > On 04/12/15 12:23, Kapil Hali wrote:
->> Add a compatible string "brcm,bcm-nsp-smp" for Broadcom's
->> Northstar Plus CPU to the 32-bit ARM CPU device tree binding
->> documentation file and create a new binding documentation for
->> Northstar Plus CPU.
+>> These changes cleans up SMP implementaion for Broadcom's
+>> Kona SoC which are required for handling SMP for iProc
+>> family of SoCs at a single place for BCM NSP and BCM Kona.
 >>
->> Signed-off-by: Kapil Hali <kapilh@broadcom.com>
+>> Signed-off-by: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 >> ---
->>  .../bindings/arm/bcm/brcm,nsp-cpu-method.txt       | 39 ++++++++++++++++++++++
->>  Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
->>  2 files changed, 40 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
+>>  arch/arm/boot/dts/bcm11351.dtsi |  2 +-
+>>  arch/arm/boot/dts/bcm21664.dtsi |  2 +-
+>>  arch/arm/mach-bcm/kona_smp.c    | 82 +++++++++++++++++++++++++++--------------
+>>  3 files changed, 56 insertions(+), 30 deletions(-)
 >>
->> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
->> new file mode 100644
->> index 0000000..bf08872
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
->> @@ -0,0 +1,39 @@
->> +Broadcom Northstar Plus SoC CPU Enable Method
->> +---------------------------------------------
->> +This binding defines the enable method used for starting secondary
->> +CPUs in the following Broadcom SoCs:
->> +  BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
->> +
->> +The enable method is specified by defining the following required
->> +properties in the "cpus" device tree node:
->> +  - enable-method = "brcm,bcm-nsp-smp";
->> +  - secondary-boot-reg = <...>;
+>> diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
+>> index 2ddaa51..3dc7a8c 100644
+>> --- a/arch/arm/boot/dts/bcm11351.dtsi
+>> +++ b/arch/arm/boot/dts/bcm11351.dtsi
+>> @@ -31,7 +31,6 @@
+>>  		#address-cells = <1>;
+>>  		#size-cells = <0>;
+>>  		enable-method = "brcm,bcm11351-cpu-method";
+>> -		secondary-boot-reg = <0x3500417c>;
 > 
-> That comment is not quite correct with respect to the paragraph below then?
+> I would expect the 'enable-method' to be moved as well to be consistent
+> with what you are adding for NSP later on.
 > 
-Right, updated in new patch.
->> +
->> +The secondary-boot-reg property is a u32 value that specifies the
->> +physical address of the register which should hold the common
->> +entry point for a secondary CPU. This entry is cpu node specific
->> +and should be added per cpu. E.g., in case of NSP (BCM58625) which
->> +is a dual core CPU SoC, this entry should be added to cpu1 node.
->> +
->> +
->> +Example:
->> +	cpus {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		enable-method = "brcm,bcm-nsp-smp";
-> 
-> Based on the requested feedback, this property should now be placed
-> under the cpu1 node.
-> 
-Right, updated in the new patch.
->> +
->> +		cpu0: cpu@0 {
->> +			device_type = "cpu";
->> +			compatible = "arm,cortex-a9";
->> +			next-level-cache = <&L2>;
->> +			reg = <0>;
->> +		};
->> +
->> +		cpu1: cpu@1 {
->> +			device_type = "cpu";
->> +			compatible = "arm,cortex-a9";
->> +			next-level-cache = <&L2>;
->> +			reg = <1>;
->> +			secondary-boot-reg = <0xffff042c>;
->> +		};
->> +	};
->> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
->> index 3a07a87..d191554 100644
->> --- a/Documentation/devicetree/bindings/arm/cpus.txt
->> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
->> @@ -190,6 +190,7 @@ nodes to be present and contain the properties described below.
->>  			    "allwinner,sun6i-a31"
->>  			    "allwinner,sun8i-a23"
->>  			    "arm,psci"
->> +			    "brcm,bcm-nsp-smp"
->>  			    "brcm,brahma-b15"
->>  			    "marvell,armada-375-smp"
->>  			    "marvell,armada-380-smp"
->>
-> 
-> 
+Right, it is updated in the new patch set.
+>>  
+>>  		cpu0: cpu@0 {
+>>  			device_type = "cpu";
+>> @@ -42,6 +41,7 @@
+>>  		cpu1: cpu@1 {
+>>  			device_type = "cpu";
+>>  			compatible = "arm,cortex-a9";
+>> +			secondary-boot-reg = <0x3500417c>;
+>>  			reg = <1>;
+>>  		};
 Thanks,
 Kapil
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
