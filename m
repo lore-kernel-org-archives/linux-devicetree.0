@@ -1,272 +1,96 @@
 From: Kapil Hali <kapilh@broadcom.com>
-Subject: [PATCH v6 2/5] ARM: BCM: Clean up SMP support for Broadcom Kona
-Date: Sat, 5 Dec 2015 06:53:41 -0500
-Message-ID: <1449316424-14549-3-git-send-email-kapilh@broadcom.com>
+Subject: [PATCH v6 1/5] dt-bindings: add SMP enable-method for Broadcom NSP
+Date: Sat, 5 Dec 2015 06:53:40 -0500
+Message-ID: <1449316424-14549-2-git-send-email-kapilh@broadcom.com>
 References: <1449316424-14549-1-git-send-email-kapilh@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1449316424-14549-1-git-send-email-kapilh@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: Gregory Fong <gregory.0xf0@gmail.com>, Lee Jones <lee@kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Kever Yang <kever.yang@rock-chips.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Kapil Hali <kapilh@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark
+ Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell
+ King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Hauke Mehrtens <hauke@hauke-m.de>, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, Kever Yang <kever.yang@rock-chips.com>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, bcm-kernel-feedback-list@broadcom.com, Gregory Fong <gregory.0xf0@gmail.com>, Olof Johansson <olof@lixom.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, Kapil Hali <kapilh@broadcom.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-These changes cleans up SMP implementaion for Broadcom's
-Kona SoC which are required for handling SMP for iProc
-family of SoCs at a single place for BCM NSP and BCM Kona.
+Add a compatible string "brcm,bcm-nsp-smp" for Broadcom's
+Northstar Plus CPU to the 32-bit ARM CPU device tree binding
+documentation file and create a new binding documentation for
+Northstar Plus CPU.
 
 Signed-off-by: Kapil Hali <kapilh@broadcom.com>
 ---
- .../bindings/arm/bcm/brcm,bcm11351-cpu-method.txt  | 12 ++--
- arch/arm/boot/dts/bcm11351.dtsi                    |  4 +-
- arch/arm/boot/dts/bcm21664.dtsi                    |  4 +-
- arch/arm/mach-bcm/kona_smp.c                       | 82 ++++++++++++++--------
- 4 files changed, 64 insertions(+), 38 deletions(-)
+ .../bindings/arm/bcm/brcm,nsp-cpu-method.txt       | 39 ++++++++++++++++++++++
+ Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
+ 2 files changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method.txt
-index 8240c02..3c5fe4b 100644
---- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method.txt
-+++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method.txt
-@@ -1,17 +1,17 @@
- Broadcom Kona Family CPU Enable Method
- --------------------------------------
- This binding defines the enable method used for starting secondary
--CPUs in the following Broadcom SoCs:
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
+new file mode 100644
+index 0000000..677ef9d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
+@@ -0,0 +1,39 @@
++Broadcom Northstar Plus SoC CPU Enable Method
++---------------------------------------------
++This binding defines the enable method used for starting secondary
 +CPU in the following Broadcom SoCs:
-   BCM11130, BCM11140, BCM11351, BCM28145, BCM28155, BCM21664
- 
- The enable method is specified by defining the following required
--properties in the "cpus" device tree node:
++  BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
++
++The enable method is specified by defining the following required
 +properties in the corresponding secondary "cpu" device tree node:
-   - enable-method = "brcm,bcm11351-cpu-method";
-   - secondary-boot-reg = <...>;
- 
- The secondary-boot-reg property is a u32 value that specifies the
--physical address of the register used to request the ROM holding pen
--code release a secondary CPU.  The value written to the register is
-+physical address of the register used to request the ROM code
-+release a secondary CPU.  The value written to the register is
- formed by encoding the target CPU id into the low bits of the
- physical start address it should jump to.
- 
-@@ -19,8 +19,6 @@ Example:
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		enable-method = "brcm,bcm11351-cpu-method";
--		secondary-boot-reg = <0x3500417c>;
- 
- 		cpu0: cpu@0 {
- 			device_type = "cpu";
-@@ -31,6 +29,8 @@ Example:
- 		cpu1: cpu@1 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
-+			enable-method = "brcm,bcm11351-cpu-method";
-+			secondary-boot-reg = <0x3500417c>;
- 			reg = <1>;
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
-index 2ddaa51..18045c3 100644
---- a/arch/arm/boot/dts/bcm11351.dtsi
-+++ b/arch/arm/boot/dts/bcm11351.dtsi
-@@ -30,8 +30,6 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		enable-method = "brcm,bcm11351-cpu-method";
--		secondary-boot-reg = <0x3500417c>;
- 
- 		cpu0: cpu@0 {
- 			device_type = "cpu";
-@@ -42,6 +40,8 @@
- 		cpu1: cpu@1 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
-+			enable-method = "brcm,bcm11351-cpu-method";
-+			secondary-boot-reg = <0x3500417c>;
- 			reg = <1>;
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/bcm21664.dtsi b/arch/arm/boot/dts/bcm21664.dtsi
-index 2016b72..6dde95f 100644
---- a/arch/arm/boot/dts/bcm21664.dtsi
-+++ b/arch/arm/boot/dts/bcm21664.dtsi
-@@ -30,8 +30,6 @@
-        cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		enable-method = "brcm,bcm11351-cpu-method";
--		secondary-boot-reg = <0x35004178>;
- 
- 		cpu0: cpu@0 {
- 			device_type = "cpu";
-@@ -42,6 +40,8 @@
- 		cpu1: cpu@1 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
-+			enable-method = "brcm,bcm11351-cpu-method";
-+			secondary-boot-reg = <0x35004178>;
- 			reg = <1>;
- 		};
- 	};
-diff --git a/arch/arm/mach-bcm/kona_smp.c b/arch/arm/mach-bcm/kona_smp.c
-index 66a0465..15af781 100644
---- a/arch/arm/mach-bcm/kona_smp.c
-+++ b/arch/arm/mach-bcm/kona_smp.c
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (C) 2014 Broadcom Corporation
-+ * Copyright (C) 2014-2015 Broadcom Corporation
-  * Copyright 2014 Linaro Limited
-  *
-  * This program is free software; you can redistribute it and/or
-@@ -30,9 +30,10 @@
- 
- /* Name of device node property defining secondary boot register location */
- #define OF_SECONDARY_BOOT	"secondary-boot-reg"
-+#define MPIDR_CPUID_BITMASK	0x3
- 
- /* I/O address of register used to coordinate secondary core startup */
--static u32	secondary_boot;
-+static u32	secondary_boot_addr;
- 
- /*
-  * Enable the Cortex A9 Snoop Control Unit
-@@ -78,44 +79,68 @@ static int __init scu_a9_enable(void)
- static void __init bcm_smp_prepare_cpus(unsigned int max_cpus)
- {
- 	static cpumask_t only_cpu_0 = { CPU_BITS_CPU0 };
--	struct device_node *node;
-+	struct device_node *cpus_node = NULL;
-+	struct device_node *cpu_node = NULL;
- 	int ret;
- 
--	BUG_ON(secondary_boot);		/* We're called only once */
--
- 	/*
- 	 * This function is only called via smp_ops->smp_prepare_cpu().
- 	 * That only happens if a "/cpus" device tree node exists
- 	 * and has an "enable-method" property that selects the SMP
- 	 * operations defined herein.
- 	 */
--	node = of_find_node_by_path("/cpus");
--	BUG_ON(!node);
--
--	/*
--	 * Our secondary enable method requires a "secondary-boot-reg"
--	 * property to specify a register address used to request the
--	 * ROM code boot a secondary code.  If we have any trouble
--	 * getting this we fall back to uniprocessor mode.
--	 */
--	if (of_property_read_u32(node, OF_SECONDARY_BOOT, &secondary_boot)) {
--		pr_err("%s: missing/invalid " OF_SECONDARY_BOOT " property\n",
--			node->name);
--		ret = -ENOENT;		/* Arrange to disable SMP */
--		goto out;
-+	cpus_node = of_find_node_by_path("/cpus");
-+	if (!cpus_node)
-+		return;
++  - enable-method = "brcm,bcm-nsp-smp";
++  - secondary-boot-reg = <...>;
 +
-+	for_each_child_of_node(cpus_node, cpu_node) {
-+		u32 cpuid;
++The secondary-boot-reg property is a u32 value that specifies the
++physical address of the register which should hold the common
++entry point for a secondary CPU. This entry is cpu node specific
++and should be added per cpu. E.g., in case of NSP (BCM58625) which
++is a dual core CPU SoC, this entry should be added to cpu1 node.
 +
-+		if (of_node_cmp(cpu_node->type, "cpu"))
-+			continue;
 +
-+		if (of_property_read_u32(cpu_node, "reg", &cpuid)) {
-+			pr_debug("%s: missing reg property\n",
-+				     cpu_node->full_name);
-+			ret = -ENOENT;
-+			goto out;
-+		}
++Example:
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+		/*
-+		 * "secondary-boot-reg" property should be defined only
-+		 * for secondary cpu
-+		 */
-+		if ((cpuid & MPIDR_CPUID_BITMASK) == 1) {
-+			/*
-+			 * Our secondary enable method requires a
-+			 * "secondary-boot-reg" property to specify a register
-+			 * address used to request the ROM code boot a secondary
-+			 * core. If we have any trouble getting this we fall
-+			 * back to uniprocessor mode.
-+			 */
-+			if (of_property_read_u32(cpu_node,
-+						OF_SECONDARY_BOOT,
-+						&secondary_boot_addr)) {
-+				pr_warn("%s: no" OF_SECONDARY_BOOT "property\n",
-+					cpu_node->name);
-+				ret = -ENOENT;
-+				goto out;
-+			}
-+		}
- 	}
- 
- 	/*
--	 * Enable the SCU on Cortex A9 based SoCs.  If -ENOENT is
-+	 * Enable the SCU on Cortex A9 based SoCs. If -ENOENT is
- 	 * returned, the SoC reported a uniprocessor configuration.
- 	 * We bail on any other error.
- 	 */
- 	ret = scu_a9_enable();
- out:
--	of_node_put(node);
-+	of_node_put(cpu_node);
-+	of_node_put(cpus_node);
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			next-level-cache = <&L2>;
++			reg = <0>;
++		};
 +
- 	if (ret) {
- 		/* Update the CPU present map to reflect uniprocessor mode */
--		BUG_ON(ret != -ENOENT);
- 		pr_warn("disabling SMP\n");
- 		init_cpu_present(&only_cpu_0);
- 	}
-@@ -139,7 +164,7 @@ out:
-  * - Wait for the secondary boot register to be re-written, which
-  *   indicates the secondary core has started.
-  */
--static int bcm_boot_secondary(unsigned int cpu, struct task_struct *idle)
-+static int kona_boot_secondary(unsigned int cpu, struct task_struct *idle)
- {
- 	void __iomem *boot_reg;
- 	phys_addr_t boot_func;
-@@ -154,15 +179,16 @@ static int bcm_boot_secondary(unsigned int cpu, struct task_struct *idle)
- 		return -EINVAL;
- 	}
- 
--	if (!secondary_boot) {
-+	if (!secondary_boot_addr) {
- 		pr_err("required secondary boot register not specified\n");
- 		return -EINVAL;
- 	}
- 
--	boot_reg = ioremap_nocache((phys_addr_t)secondary_boot, sizeof(u32));
-+	boot_reg = ioremap_nocache(
-+			(phys_addr_t)secondary_boot_addr, sizeof(u32));
- 	if (!boot_reg) {
- 		pr_err("unable to map boot register for cpu %u\n", cpu_id);
--		return -ENOSYS;
-+		return -ENOMEM;
- 	}
- 
- 	/*
-@@ -191,12 +217,12 @@ static int bcm_boot_secondary(unsigned int cpu, struct task_struct *idle)
- 
- 	pr_err("timeout waiting for cpu %u to start\n", cpu_id);
- 
--	return -ENOSYS;
-+	return -ENXIO;
- }
- 
- static struct smp_operations bcm_smp_ops __initdata = {
- 	.smp_prepare_cpus	= bcm_smp_prepare_cpus,
--	.smp_boot_secondary	= bcm_boot_secondary,
-+	.smp_boot_secondary	= kona_boot_secondary,
- };
- CPU_METHOD_OF_DECLARE(bcm_smp_bcm281xx, "brcm,bcm11351-cpu-method",
- 			&bcm_smp_ops);
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			next-level-cache = <&L2>;
++			enable-method = "brcm,bcm-nsp-smp";
++			secondary-boot-reg = <0xffff042c>;
++			reg = <1>;
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index 3a07a87..d191554 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -190,6 +190,7 @@ nodes to be present and contain the properties described below.
+ 			    "allwinner,sun6i-a31"
+ 			    "allwinner,sun8i-a23"
+ 			    "arm,psci"
++			    "brcm,bcm-nsp-smp"
+ 			    "brcm,brahma-b15"
+ 			    "marvell,armada-375-smp"
+ 			    "marvell,armada-380-smp"
 -- 
 2.1.0
