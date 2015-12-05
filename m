@@ -1,8 +1,7 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH resend 2/6] clk: sunxi: Add VE (Video Engine)
- module clock driver for sun[457]i
-Date: Sat,  5 Dec 2015 21:16:43 +0800
-Message-ID: <1449321407-4531-3-git-send-email-wens@csie.org>
+Subject: [PATCH resend 5/6] ARM: dts: sun7i: Add DRAM gates
+Date: Sat,  5 Dec 2015 21:16:46 +0800
+Message-ID: <1449321407-4531-6-git-send-email-wens@csie.org>
 References: <1449321407-4531-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
@@ -20,230 +19,78 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The video engine has its own special module clock, consisting of a clock
-gate, configurable dividers, and a reset control.
-
-On later (sun[68]i) families, the reset control is moved out of this
-piece of hardware and grouped with reset controls of other peripherals.
+The DRAM gates controls direct memory access for some peripherals.
+These peripherals include the display pipeline, so add the required
+gates to the simplefb nodes as well.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- Documentation/devicetree/bindings/clock/sunxi.txt |   4 +
- drivers/clk/sunxi/Makefile                        |   1 +
- drivers/clk/sunxi/clk-a10-ve.c                    | 171 ++++++++++++++++++++++
- 3 files changed, 176 insertions(+)
- create mode 100644 drivers/clk/sunxi/clk-a10-ve.c
+ arch/arm/boot/dts/sun7i-a20.dtsi | 32 +++++++++++++++++++++++++++++---
+ 1 file changed, 29 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-index ef0b452806b1..14496056319f 100644
---- a/Documentation/devicetree/bindings/clock/sunxi.txt
-+++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-@@ -74,6 +74,7 @@ Required properties:
- 	"allwinner,sun8i-h3-usb-clk" - for usb gates + resets on H3
- 	"allwinner,sun9i-a80-usb-mod-clk" - for usb gates + resets on A80
- 	"allwinner,sun9i-a80-usb-phy-clk" - for usb phy gates + resets on A80
-+	"allwinner,sun4i-a10-ve-clk" - for the Video Engine clock
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index e02eb720c4fc..21169c0a6627 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -68,7 +68,7 @@
+ 				     "simple-framebuffer";
+ 			allwinner,pipeline = "de_be0-lcd0-hdmi";
+ 			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
+-				 <&ahb_gates 44>;
++				 <&ahb_gates 44>, <&dram_gates 26>;
+ 			status = "disabled";
+ 		};
  
- Required properties for all clocks:
- - reg : shall be the control register address for the clock.
-@@ -93,6 +94,9 @@ Required properties for all clocks:
- And "allwinner,*-usb-clk" clocks also require:
- - reset-cells : shall be set to 1
+@@ -76,7 +76,8 @@
+ 			compatible = "allwinner,simple-framebuffer",
+ 				     "simple-framebuffer";
+ 			allwinner,pipeline = "de_be0-lcd0";
+-			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 44>;
++			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 44>,
++				 <&dram_gates 26>;
+ 			status = "disabled";
+ 		};
  
-+The "allwinner,sun4i-a10-ve-clk" clock also requires:
-+- reset-cells : shall be set to 0
+@@ -85,7 +86,7 @@
+ 				     "simple-framebuffer";
+ 			allwinner,pipeline = "de_be0-lcd0-tve0";
+ 			clocks = <&pll5 1>, <&ahb_gates 34>, <&ahb_gates 36>,
+-				 <&ahb_gates 44>;
++				 <&ahb_gates 44>, <&dram_gates 26>;
+ 			status = "disabled";
+ 		};
+ 	};
+@@ -501,6 +502,31 @@
+ 			clock-output-names = "spi3";
+ 		};
+ 
++		dram_gates: clk@01c20100 {
++			#clock-cells = <1>;
++			compatible = "allwinner,sun4i-a10-dram-gates-clk";
++			reg = <0x01c20100 0x4>;
++			clocks = <&pll5 0>;
++			clock-indices = <0>,
++					<1>, <2>,
++					<3>,
++					<4>,
++					<5>, <6>,
++					<15>,
++					<24>, <25>,
++					<26>, <27>,
++					<28>, <29>;
++			clock-output-names = "dram_ve",
++					     "dram_csi0", "dram_csi1",
++					     "dram_ts",
++					     "dram_tvd",
++					     "dram_tve0", "dram_tve1",
++					     "dram_output",
++					     "dram_de_fe1", "dram_de_fe0",
++					     "dram_de_be0", "dram_de_be1",
++					     "dram_de_mp", "dram_ace";
++		};
 +
- The "allwinner,sun9i-a80-mmc-config-clk" clock also requires:
- - #reset-cells : shall be set to 1
- - resets : shall be the reset control phandle for the mmc block.
-diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
-index 103efab05ca8..78db91ad5af6 100644
---- a/drivers/clk/sunxi/Makefile
-+++ b/drivers/clk/sunxi/Makefile
-@@ -7,6 +7,7 @@ obj-y += clk-a10-codec.o
- obj-y += clk-a10-hosc.o
- obj-y += clk-a10-mod1.o
- obj-y += clk-a10-pll2.o
-+obj-y += clk-a10-ve.o
- obj-y += clk-a20-gmac.o
- obj-y += clk-mod0.o
- obj-y += clk-simple-gates.o
-diff --git a/drivers/clk/sunxi/clk-a10-ve.c b/drivers/clk/sunxi/clk-a10-ve.c
-new file mode 100644
-index 000000000000..de0fdb656150
---- /dev/null
-+++ b/drivers/clk/sunxi/clk-a10-ve.c
-@@ -0,0 +1,171 @@
-+/*
-+ * Copyright 2015 Chen-Yu Tsai
-+ *
-+ * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/reset-controller.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+
-+static DEFINE_SPINLOCK(ve_lock);
-+
-+#define SUN4I_VE_ENABLE		31
-+#define SUN4I_VE_DIVIDER_SHIFT	16
-+#define SUN4I_VE_DIVIDER_WIDTH	3
-+#define SUN4I_VE_RESET		0
-+
-+/**
-+ * sunxi_ve_reset... - reset bit in ve clk registers handling
-+ */
-+
-+struct ve_reset_data {
-+	void __iomem			*reg;
-+	spinlock_t			*lock;
-+	struct reset_controller_dev	rcdev;
-+};
-+
-+static int sunxi_ve_reset_assert(struct reset_controller_dev *rcdev,
-+				 unsigned long id)
-+{
-+	struct ve_reset_data *data = container_of(rcdev,
-+						  struct ve_reset_data,
-+						  rcdev);
-+	unsigned long flags;
-+	u32 reg;
-+
-+	spin_lock_irqsave(data->lock, flags);
-+
-+	reg = readl(data->reg);
-+	writel(reg & ~BIT(SUN4I_VE_RESET), data->reg);
-+
-+	spin_unlock_irqrestore(data->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int sunxi_ve_reset_deassert(struct reset_controller_dev *rcdev,
-+				   unsigned long id)
-+{
-+	struct ve_reset_data *data = container_of(rcdev,
-+						  struct ve_reset_data,
-+						  rcdev);
-+	unsigned long flags;
-+	u32 reg;
-+
-+	spin_lock_irqsave(data->lock, flags);
-+
-+	reg = readl(data->reg);
-+	writel(reg | BIT(SUN4I_VE_RESET), data->reg);
-+
-+	spin_unlock_irqrestore(data->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int sunxi_ve_of_xlate(struct reset_controller_dev *rcdev,
-+			     const struct of_phandle_args *reset_spec)
-+{
-+    if (WARN_ON(reset_spec->args_count != 0))
-+	return -EINVAL;
-+
-+    return 0;
-+}
-+
-+static struct reset_control_ops sunxi_ve_reset_ops = {
-+	.assert		= sunxi_ve_reset_assert,
-+	.deassert	= sunxi_ve_reset_deassert,
-+};
-+
-+static void __init sun4i_ve_clk_setup(struct device_node *node)
-+{
-+	struct clk *clk;
-+	struct clk_divider *div;
-+	struct clk_gate *gate;
-+	struct ve_reset_data *reset_data;
-+	const char *parent;
-+	const char *clk_name = node->name;
-+	void __iomem *reg;
-+	int err;
-+
-+	reg = of_io_request_and_map(node, 0, of_node_full_name(node));
-+	if (IS_ERR(reg))
-+		return;
-+
-+	div = kzalloc(sizeof(*div), GFP_KERNEL);
-+	if (!div)
-+		goto err_unmap;
-+
-+	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-+	if (!gate)
-+		goto err_free_div;
-+
-+	of_property_read_string(node, "clock-output-names", &clk_name);
-+	parent = of_clk_get_parent_name(node, 0);
-+
-+	gate->reg = reg;
-+	gate->bit_idx = SUN4I_VE_ENABLE;
-+	gate->lock = &ve_lock;
-+
-+	div->reg = reg;
-+	div->shift = SUN4I_VE_DIVIDER_SHIFT;
-+	div->width = SUN4I_VE_DIVIDER_WIDTH;
-+	div->lock = &ve_lock;
-+
-+	clk = clk_register_composite(NULL, clk_name, &parent, 1,
-+				     NULL, NULL,
-+				     &div->hw, &clk_divider_ops,
-+				     &gate->hw, &clk_gate_ops,
-+				     CLK_SET_RATE_PARENT);
-+	if (IS_ERR(clk))
-+		goto err_free_gate;
-+
-+	err = of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+	if (err)
-+		goto err_unregister_clk;
-+
-+	reset_data = kzalloc(sizeof(*reset_data), GFP_KERNEL);
-+	if (!reset_data)
-+		goto err_del_provider;
-+
-+	reset_data->reg = reg;
-+	reset_data->lock = &ve_lock;
-+	reset_data->rcdev.nr_resets = 1;
-+	reset_data->rcdev.ops = &sunxi_ve_reset_ops;
-+	reset_data->rcdev.of_node = node;
-+	reset_data->rcdev.of_xlate = sunxi_ve_of_xlate;
-+	reset_data->rcdev.of_reset_n_cells = 0;
-+	err = reset_controller_register(&reset_data->rcdev);
-+	if (err)
-+		goto err_free_reset;
-+
-+	return;
-+
-+err_free_reset:
-+	kfree(reset_data);
-+err_del_provider:
-+	of_clk_del_provider(node);
-+err_unregister_clk:
-+	clk_unregister(clk);
-+err_free_gate:
-+	kfree(gate);
-+err_free_div:
-+	kfree(div);
-+err_unmap:
-+	iounmap(reg);
-+}
-+CLK_OF_DECLARE(sun4i_ve, "allwinner,sun4i-a10-ve-clk",
-+	       sun4i_ve_clk_setup);
+ 		codec_clk: clk@01c20140 {
+ 			#clock-cells = <0>;
+ 			compatible = "allwinner,sun4i-a10-codec-clk";
 -- 
 2.6.2
