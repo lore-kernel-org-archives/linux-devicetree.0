@@ -1,12 +1,12 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 5/6] ARM: dts: sun7i: Add DRAM gates
-Date: Sat,  5 Dec 2015 17:00:08 +0800
-Message-ID: <1449306009-2627-6-git-send-email-wens@csie.org>
+Subject: [PATCH 1/6] clk: sunxi: Add DRAM gates support for sun4i-a10
+Date: Sat,  5 Dec 2015 17:00:04 +0800
+Message-ID: <1449306009-2627-2-git-send-email-wens@csie.org>
 References: <1449306009-2627-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBJGPRKZQKGQEXFAHAXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBI6PRKZQKGQEZZPOFAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1449306009-2627-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,78 +19,52 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The DRAM gates controls direct memory access for some peripherals.
-These peripherals include the display pipeline, so add the required
-gates to the simplefb nodes as well.
+The A10/A20 share the same set of DRAM clock gates, which controls
+direct memory access for some peripherals.
+
+On the A10, bit 15 controls the system's DRAM clock output (possibly
+to the DRAM chips), which we need to keep on.
+
+On the A20 this has been moved to the DRAM controller, becoming a no-op.
+However it is still listed in the user manual, so add it anyway.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun7i-a20.dtsi | 32 +++++++++++++++++++++++++++++---
- 1 file changed, 29 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
+ drivers/clk/sunxi/clk-simple-gates.c              | 12 ++++++++++++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index e02eb720c4fc..21169c0a6627 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -68,7 +68,7 @@
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_be0-lcd0-hdmi";
- 			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
--				 <&ahb_gates 44>;
-+				 <&ahb_gates 44>, <&dram_gates 26>;
- 			status = "disabled";
- 		};
- 
-@@ -76,7 +76,8 @@
- 			compatible = "allwinner,simple-framebuffer",
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_be0-lcd0";
--			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 44>;
-+			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 44>,
-+				 <&dram_gates 26>;
- 			status = "disabled";
- 		};
- 
-@@ -85,7 +86,7 @@
- 				     "simple-framebuffer";
- 			allwinner,pipeline = "de_be0-lcd0-tve0";
- 			clocks = <&pll5 1>, <&ahb_gates 34>, <&ahb_gates 36>,
--				 <&ahb_gates 44>;
-+				 <&ahb_gates 44>, <&dram_gates 26>;
- 			status = "disabled";
- 		};
- 	};
-@@ -501,6 +502,31 @@
- 			clock-output-names = "spi3";
- 		};
- 
-+		dram_gates: clk@01c20100 {
-+			#clock-cells = <1>;
-+			compatible = "allwinner,sun4i-a10-dram-gates-clk";
-+			reg = <0x01c20100 0x4>;
-+			clocks = <&pll5 0>;
-+			clock-indices = <0>,
-+					<1>, <2>,
-+					<3>,
-+					<4>,
-+					<5>, <6>,
-+					<15>,
-+					<24>, <25>,
-+					<26>, <27>,
-+					<28>, <29>;
-+			clock-output-names = "dram_ve",
-+					     "dram_csi0", "dram_csi1",
-+					     "dram_ts",
-+					     "dram_tvd",
-+					     "dram_tve0", "dram_tve1",
-+					     "dram_output",
-+					     "dram_de_fe1", "dram_de_fe0",
-+					     "dram_de_be0", "dram_de_be1",
-+					     "dram_de_mp", "dram_ace";
-+		};
+diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+index 153ac72869e8..ef0b452806b1 100644
+--- a/Documentation/devicetree/bindings/clock/sunxi.txt
++++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+@@ -57,6 +57,7 @@ Required properties:
+ 	"allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
+ 	"allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
+ 	"allwinner,sun9i-a80-apbs-gates-clk" - for the APBS gates on A80
++	"allwinner,sun4i-a10-dram-gates-clk" - for the DRAM gates on A10
+ 	"allwinner,sun5i-a13-mbus-clk" - for the MBUS clock on A13
+ 	"allwinner,sun4i-a10-mmc-clk" - for the MMC clock
+ 	"allwinner,sun9i-a80-mmc-clk" - for mmc module clocks on A80
+diff --git a/drivers/clk/sunxi/clk-simple-gates.c b/drivers/clk/sunxi/clk-simple-gates.c
+index c8acc0612c15..f4da52b5ca0e 100644
+--- a/drivers/clk/sunxi/clk-simple-gates.c
++++ b/drivers/clk/sunxi/clk-simple-gates.c
+@@ -160,3 +160,15 @@ CLK_OF_DECLARE(sun5i_a13_ahb, "allwinner,sun5i-a13-ahb-gates-clk",
+ 	       sun4i_a10_ahb_init);
+ CLK_OF_DECLARE(sun7i_a20_ahb, "allwinner,sun7i-a20-ahb-gates-clk",
+ 	       sun4i_a10_ahb_init);
 +
- 		codec_clk: clk@01c20140 {
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun4i-a10-codec-clk";
++static const int sun4i_a10_dram_critical_clocks[] __initconst = {
++	15,	/* dram_output */
++};
++
++static void __init sun4i_a10_dram_init(struct device_node *node)
++{
++	sunxi_simple_gates_setup(node, sun4i_a10_dram_critical_clocks,
++				 ARRAY_SIZE(sun4i_a10_dram_critical_clocks));
++}
++CLK_OF_DECLARE(sun4i_a10_dram, "allwinner,sun4i-a10-dram-gates-clk",
++	       sun4i_a10_dram_init);
 -- 
 2.6.2
