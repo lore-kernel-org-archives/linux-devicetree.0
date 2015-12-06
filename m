@@ -1,66 +1,232 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] dt-bindings: add SMP enable-method for Broadcom NSP
-Date: Sat, 5 Dec 2015 18:52:43 -0600
-Message-ID: <CAL_JsqLQuXzLpFJj7b=_pPN1Tp66P2o69bytxGPHCQu30Qy_CQ@mail.gmail.com>
-References: <1448987049-17041-1-git-send-email-kapilh@broadcom.com>
- <1448987049-17041-2-git-send-email-kapilh@broadcom.com> <20151202152604.GA20467@rob-hp-laptop>
- <565F16F1.9070809@broadcom.com>
+Subject: Re: [PATCH v5 1/4] clk: sunxi: Add H3 clocks support
+Date: Sat, 5 Dec 2015 18:53:48 -0600
+Message-ID: <20151206005348.GA26665@rob-hp-laptop>
+References: <1449264283-25360-1-git-send-email-jenskuske@gmail.com>
+ <1449264283-25360-2-git-send-email-jenskuske@gmail.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <565F16F1.9070809-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kerne
+Return-path: <linux-sunxi+bncBDJIP47K7MERBIUOR2ZQKGQEY3NP6GY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1449264283-25360-2-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 2, 2015 at 10:06 AM, Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Rob,
->
-> On 12/2/2015 8:56 PM, Rob Herring wrote:
->> On Tue, Dec 01, 2015 at 11:24:05AM -0500, Kapil Hali wrote:
->>> Add a compatible string "brcm,bcm-nsp-smp" for Broadcom's
->>> Northstar Plus CPU to the 32-bit ARM CPU device tree binding
->>> documentation file and create a new binding documentation for
->>> Northstar Plus CPU.
->>>
->>> Signed-off-by: Kapil Hali <kapilh-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>> ---
->>>  .../bindings/arm/bcm/brcm,nsp-cpu-method.txt       | 39 ++++++++++++++++++++++
->>>  Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
->>>  2 files changed, 40 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
->>> new file mode 100644
->>> index 0000000..bf08872
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
->>> @@ -0,0 +1,39 @@
->>> +Broadcom Northstar Plus SoC CPU Enable Method
->>> +---------------------------------------------
->>> +This binding defines the enable method used for starting secondary
->>> +CPUs in the following Broadcom SoCs:
->>> +  BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
->>> +
->>> +The enable method is specified by defining the following required
->>> +properties in the "cpus" device tree node:
->>> +  - enable-method = "brcm,bcm-nsp-smp";
->>> +  - secondary-boot-reg = <...>;
->>
->> Both of these are supposed to be per cpu core.
->
-> 'enable-method' if not found in 'cpu' node is looked at in the 'cpus'
-> node. Except for two-three SoC families, 'enable-method' is within
-> 'cpus' node. Is my interpretation incorrect? Did I miss anything here?
+On Fri, Dec 04, 2015 at 10:24:40PM +0100, Jens Kuske wrote:
+> The H3 clock control unit is similar to the those of other sun8i family
+> members like the A23.
+> 
+> It adds a new bus gates clock similar to the simple gates, but with a
+> different parent clock for each single gate.
+> Some of the gates use the new AHB2 clock as parent, whose clock source
+> is muxable between AHB1 and PLL6/2. The documentation isn't totally clear
+> about which devices belong to AHB2 now, especially USB EHIC/OHIC, so it
+> is mostly based on Allwinner kernel source code.
+> 
+> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/clock/sunxi.txt |   2 +
 
-I'm not sure how you counted, but it is much more than 2-3 that are
-correct (including all of PPC). It is quite mixed in dts files, but it
-is documented to be per cpu node, so lets follow the documentation
-please.
+For the binding:
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  drivers/clk/sunxi/Makefile                        |   1 +
+>  drivers/clk/sunxi/clk-sun8i-bus-gates.c           | 112 ++++++++++++++++++++++
+>  drivers/clk/sunxi/clk-sunxi.c                     |   6 ++
+>  4 files changed, 121 insertions(+)
+>  create mode 100644 drivers/clk/sunxi/clk-sun8i-bus-gates.c
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+> index 153ac72..437962d 100644
+> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
+> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+> @@ -29,6 +29,7 @@ Required properties:
+>  	"allwinner,sun6i-a31-ar100-clk" - for the AR100 on A31
+>  	"allwinner,sun9i-a80-cpus-clk" - for the CPUS on A80
+>  	"allwinner,sun6i-a31-ahb1-clk" - for the AHB1 clock on A31
+> +	"allwinner,sun8i-h3-ahb2-clk" - for the AHB2 clock on H3
+>  	"allwinner,sun6i-a31-ahb1-gates-clk" - for the AHB1 gates on A31
+>  	"allwinner,sun8i-a23-ahb1-gates-clk" - for the AHB1 gates on A23
+>  	"allwinner,sun9i-a80-ahb0-gates-clk" - for the AHB0 gates on A80
+> @@ -56,6 +57,7 @@ Required properties:
+>  	"allwinner,sun9i-a80-apb1-gates-clk" - for the APB1 gates on A80
+>  	"allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
+>  	"allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
+> +	"allwinner,sun8i-h3-bus-gates-clk" - for the bus gates on H3
+>  	"allwinner,sun9i-a80-apbs-gates-clk" - for the APBS gates on A80
+>  	"allwinner,sun5i-a13-mbus-clk" - for the MBUS clock on A13
+>  	"allwinner,sun4i-a10-mmc-clk" - for the MMC clock
+> diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
+> index 103efab..abf4916 100644
+> --- a/drivers/clk/sunxi/Makefile
+> +++ b/drivers/clk/sunxi/Makefile
+> @@ -10,6 +10,7 @@ obj-y += clk-a10-pll2.o
+>  obj-y += clk-a20-gmac.o
+>  obj-y += clk-mod0.o
+>  obj-y += clk-simple-gates.o
+> +obj-y += clk-sun8i-bus-gates.o
+>  obj-y += clk-sun8i-mbus.o
+>  obj-y += clk-sun9i-core.o
+>  obj-y += clk-sun9i-mmc.o
+> diff --git a/drivers/clk/sunxi/clk-sun8i-bus-gates.c b/drivers/clk/sunxi/clk-sun8i-bus-gates.c
+> new file mode 100644
+> index 0000000..7ab60c5
+> --- /dev/null
+> +++ b/drivers/clk/sunxi/clk-sun8i-bus-gates.c
+> @@ -0,0 +1,112 @@
+> +/*
+> + * Copyright (C) 2015 Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * Based on clk-simple-gates.c, which is:
+> + * Copyright 2015 Maxime Ripard
+> + *
+> + * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
+> +
+> +static DEFINE_SPINLOCK(gates_lock);
+> +
+> +static void __init sun8i_h3_bus_gates_init(struct device_node *node)
+> +{
+> +	static const char * const names[] = { "ahb1", "ahb2", "apb1", "apb2" };
+> +	enum { AHB1, AHB2, APB1, APB2, PARENT_MAX } clk_parent;
+> +	const char *parents[PARENT_MAX];
+> +	struct clk_onecell_data *clk_data;
+> +	const char *clk_name;
+> +	struct property *prop;
+> +	struct resource res;
+> +	void __iomem *clk_reg;
+> +	void __iomem *reg;
+> +	const __be32 *p;
+> +	int number, i;
+> +	u8 clk_bit;
+> +	u32 index;
+> +
+> +	reg = of_io_request_and_map(node, 0, of_node_full_name(node));
+> +	if (IS_ERR(reg))
+> +		return;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(names); i++) {
+> +		index = of_property_match_string(node, "clock-names",
+> +						 names[i]);
+> +		if (index < 0)
+> +			return;
+> +
+> +		parents[i] = of_clk_get_parent_name(node, index);
+> +	}
+> +
+> +	clk_data = kmalloc(sizeof(struct clk_onecell_data), GFP_KERNEL);
+> +	if (!clk_data)
+> +		goto err_unmap;
+> +
+> +	number = of_property_count_u32_elems(node, "clock-indices");
+> +	of_property_read_u32_index(node, "clock-indices", number - 1, &number);
+> +
+> +	clk_data->clks = kcalloc(number + 1, sizeof(struct clk *), GFP_KERNEL);
+> +	if (!clk_data->clks)
+> +		goto err_free_data;
+> +
+> +	i = 0;
+> +	of_property_for_each_u32(node, "clock-indices", prop, p, index) {
+> +		of_property_read_string_index(node, "clock-output-names",
+> +					      i, &clk_name);
+> +
+> +		if (index == 17 || (index >= 29 && index <= 31))
+> +			clk_parent = AHB2;
+> +		else if (index <= 63 || index >= 128)
+> +			clk_parent = AHB1;
+> +		else if (index >= 64 && index <= 95)
+> +			clk_parent = APB1;
+> +		else if (index >= 96 && index <= 127)
+> +			clk_parent = APB2;
+> +
+> +		clk_reg = reg + 4 * (index / 32);
+> +		clk_bit = index % 32;
+> +
+> +		clk_data->clks[index] = clk_register_gate(NULL, clk_name,
+> +							  parents[clk_parent],
+> +							  0, clk_reg, clk_bit,
+> +							  0, &gates_lock);
+> +		i++;
+> +
+> +		if (IS_ERR(clk_data->clks[index])) {
+> +			WARN_ON(true);
+> +			continue;
+> +		}
+> +	}
+> +
+> +	clk_data->clk_num = number + 1;
+> +	of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+> +
+> +	return;
+> +
+> +err_free_data:
+> +	kfree(clk_data);
+> +err_unmap:
+> +	iounmap(reg);
+> +	of_address_to_resource(node, 0, &res);
+> +	release_mem_region(res.start, resource_size(&res));
+> +}
+> +
+> +CLK_OF_DECLARE(sun8i_h3_bus_gates, "allwinner,sun8i-h3-bus-gates-clk",
+> +	       sun8i_h3_bus_gates_init);
+> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+> index 9c79af0c..5ba2188 100644
+> --- a/drivers/clk/sunxi/clk-sunxi.c
+> +++ b/drivers/clk/sunxi/clk-sunxi.c
+> @@ -778,6 +778,10 @@ static const struct mux_data sun6i_a31_ahb1_mux_data __initconst = {
+>  	.shift = 12,
+>  };
+>  
+> +static const struct mux_data sun8i_h3_ahb2_mux_data __initconst = {
+> +	.shift = 0,
+> +};
+> +
+>  static void __init sunxi_mux_clk_setup(struct device_node *node,
+>  				       struct mux_data *data)
+>  {
+> @@ -1130,6 +1134,7 @@ static const struct of_device_id clk_divs_match[] __initconst = {
+>  static const struct of_device_id clk_mux_match[] __initconst = {
+>  	{.compatible = "allwinner,sun4i-a10-cpu-clk", .data = &sun4i_cpu_mux_data,},
+>  	{.compatible = "allwinner,sun6i-a31-ahb1-mux-clk", .data = &sun6i_a31_ahb1_mux_data,},
+> +	{.compatible = "allwinner,sun8i-h3-ahb2-clk", .data = &sun8i_h3_ahb2_mux_data,},
+>  	{}
+>  };
+>  
+> @@ -1212,6 +1217,7 @@ CLK_OF_DECLARE(sun6i_a31_clk_init, "allwinner,sun6i-a31", sun6i_init_clocks);
+>  CLK_OF_DECLARE(sun6i_a31s_clk_init, "allwinner,sun6i-a31s", sun6i_init_clocks);
+>  CLK_OF_DECLARE(sun8i_a23_clk_init, "allwinner,sun8i-a23", sun6i_init_clocks);
+>  CLK_OF_DECLARE(sun8i_a33_clk_init, "allwinner,sun8i-a33", sun6i_init_clocks);
+> +CLK_OF_DECLARE(sun8i_h3_clk_init, "allwinner,sun8i-h3", sun6i_init_clocks);
+>  
+>  static void __init sun9i_init_clocks(struct device_node *node)
+>  {
+> -- 
+> 2.6.3
+> 
