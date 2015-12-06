@@ -1,46 +1,43 @@
-From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: [PATCH v2 3/3] ARM: dts: dove: add Dove divider clocks
-Date: Sun, 06 Dec 2015 23:28:37 +0000
-Message-ID: <E1a5ijN-0007pq-3t@rmk-PC.arm.linux.org.uk>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH] of: Fix comparison of reserved memory regions
+Date: Mon, 07 Dec 2015 10:33:45 +1100
+Message-ID: <1449444825.23526.1.camel@ellerman.id.au>
+References: <1447843598-9355-1-git-send-email-mpe@ellerman.id.au>
+	 <vnkwk2oum9b8.fsf@codeaurora.org>
+	 <5CD6EBAA-D0D6-434A-B9EA-B144C05711BC@ellerman.id.au>
+	 <CAL_Jsq+PBXGwJC36Hio5KRU7rPSb-FRDZv-rAozg-sL8iCgWHA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+PBXGwJC36Hio5KRU7rPSb-FRDZv-rAozg-sL8iCgWHA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Grant Likely <grant.likely@linaro.org>, Mitchel Humpherys <mitchelh@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the Dove divider clocks to the Dove dtsi file.
+On Sun, 2015-12-06 at 14:31 -0600, Rob Herring wrote:
+> On Sat, Dec 5, 2015 at 5:43 AM, Michael Ellerman <michael@ellerman.id.au> wrote:
+> > On 5 December 2015 04:07:39 GMT+11:00, Mitchel Humpherys <mitchelh@codeaurora.org> wrote:
+> > > On Wed, Nov 18 2015 at 09:46:38 PM, Michael Ellerman
+> > > <mpe@ellerman.id.au> wrote:
+> > > > Fix it by just doing the standard double if and return 0 logic.
+> > > > 
+> > > > Fixes: ae1add247bf8 ("of: Check for overlap in reserved memory
+> > > regions")
+> > > 
+> > > Woops, thanks.
+> > > 
+> > > Tested-by: Mitchel Humpherys <mitchelh@codeaurora.org>
+> > 
+> > Thanks for testing.
+> > 
+> > Rob, can we get this merged for 4.4 please?
+> 
+> Yes. I meant to last week, but was waiting on getting another issue
+> sorted out. I should get it to Linus in the next couple of days.
 
-Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
----
- arch/arm/boot/dts/dove.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Sure thing. No great rush but would be nice for it to be fixed before 4.4
+releases.
 
-diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
-index 179121630ad7..ea36a262d056 100644
---- a/arch/arm/boot/dts/dove.dtsi
-+++ b/arch/arm/boot/dts/dove.dtsi
-@@ -459,6 +459,12 @@
- 					#clock-cells = <1>;
- 				};
- 
-+				divider_clk: core-clock@0064 {
-+					compatible = "marvell,dove-divider-clock";
-+					reg = <0x0064 0x8>;
-+					#clock-cells = <1>;
-+				};
-+
- 				pinctrl: pin-ctrl@0200 {
- 					compatible = "marvell,dove-pinctrl";
- 					reg = <0x0200 0x14>,
--- 
-2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers
