@@ -1,66 +1,48 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: Fix comparison of reserved memory regions
-Date: Sun, 6 Dec 2015 14:31:12 -0600
-Message-ID: <CAL_Jsq+PBXGwJC36Hio5KRU7rPSb-FRDZv-rAozg-sL8iCgWHA@mail.gmail.com>
-References: <1447843598-9355-1-git-send-email-mpe@ellerman.id.au>
- <vnkwk2oum9b8.fsf@codeaurora.org> <5CD6EBAA-D0D6-434A-B9EA-B144C05711BC@ellerman.id.au>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] of/address: replace printk(KERN_ERR ...) with pr_err(...)
+Date: Sun, 6 Dec 2015 14:40:01 -0600
+Message-ID: <CAL_JsqJNsQtGe9cUJVj_iqzsRfB+CyCxACNW6FBDDE28T3tm_w@mail.gmail.com>
+References: <1448864059-12319-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5CD6EBAA-D0D6-434A-B9EA-B144C05711BC-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Ellerman <michael-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Cc: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1448864059-12319-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 5, 2015 at 5:43 AM, Michael Ellerman <michael-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org> wrote:
->
->
-> On 5 December 2015 04:07:39 GMT+11:00, Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->>On Wed, Nov 18 2015 at 09:46:38 PM, Michael Ellerman
->><mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org> wrote:
->>> In order to check for overlapping reserved memory regions, we first
->>need
->>> to sort the array of memory regions. This is implemented using
->>sort(),
->>> and a custom comparison function __rmem_cmp().
->>>
->>> Unfortunatley __rmem_cmp() doesn't work in all cases. Because the two
->>> base values are phys_addr_t, they may be u64 on some platforms, in
->>which
->>> case subtracting one from the other and then (implicitly) casting to
->>int
->>> does not give us the -ve/0/+ve value we need.
->>>
->>> This leads to incorrect reports about overlaps, eg:
->>>
->>>   ibm,slw-image@1ffe600000 (0x0000001ffe600000--0x0000001ffe700000)
->>overlaps with
->>>   ibm,firmware-allocs-memory@1000000000
->>(0x0000001000000000--0x0000001000dc0200)
->>>
->>> Fix it by just doing the standard double if and return 0 logic.
->>>
->>> Fixes: ae1add247bf8 ("of: Check for overlap in reserved memory
->>regions")
->>> Signed-off-by: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
->>> ---
->>>  drivers/of/of_reserved_mem.c | 8 +++++++-
->>>  1 file changed, 7 insertions(+), 1 deletion(-)
->>
->>Woops, thanks.
->>
->>Tested-by: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->
-> Thanks for testing.
->
-> Rob, can we get this merged for 4.4 please?
+On Mon, Nov 30, 2015 at 12:14 AM, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> A trivial change suggested by checkpatch.pl.
 
-Yes. I meant to last week, but was waiting on getting another issue
-sorted out. I should get it to Linus in the next couple of days.
+You might as well all levels while you are at it. Looks like that is
+only one more:
+
+drivers/of/address.c:   printk(KERN_DEBUG "%s", s);
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>
+>  drivers/of/address.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index cd53fe4..5289c80 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -596,7 +596,7 @@ static u64 __of_translate_address(struct device_node *dev,
+>                 pbus = of_match_bus(parent);
+>                 pbus->count_cells(dev, &pna, &pns);
+>                 if (!OF_CHECK_COUNTS(pna, pns)) {
+> -                       printk(KERN_ERR "prom_parse: Bad cell count for %s\n",
+> +                       pr_err("prom_parse: Bad cell count for %s\n",
+>                                of_node_full_name(dev));
+>                         break;
+>                 }
+> --
+> 1.9.1
+>
