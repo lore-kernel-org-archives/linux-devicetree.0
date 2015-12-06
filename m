@@ -1,95 +1,171 @@
-From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: [PATCH v2 1/3] dt-bindings: add Marvell PMU documentation
-Date: Sun, 06 Dec 2015 23:52:21 +0000
-Message-ID: <E1a5j6L-000873-3P@rmk-PC.arm.linux.org.uk>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v7 45/50] drivers/of: Avoid recursively calling
+ unflatten_dt_node()
+Date: Mon, 07 Dec 2015 10:54:47 +1100
+Message-ID: <1449446087.21036.1.camel@kernel.crashing.org>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1446642770-4681-46-git-send-email-gwshan@linux.vnet.ibm.com>
+ <CAL_Jsq+BnPEKkRgQX4+e0MA9dKLVLhy8rVF25Fr9yXL2jp+WLA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <CAL_Jsq+BnPEKkRgQX4+e0MA9dKLVLhy8rVF25Fr9yXL2jp+WLA@mail.gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Rob Herring <robherring2@gmail.com>, Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, aik@ozlabs.ru, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Pantelis Antoniou <panto@antoniou-consulting.com>, Grant Likely <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-Add the required DT binding documentation for the Marvell PMU driver.
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
----
-Who takes these patches?  This never got merged when the PMU driver
-itself was merged.
-
- Documentation/devicetree/bindings/soc/dove/pmu.txt | 56 ++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/dove/pmu.txt
-
-diff --git a/Documentation/devicetree/bindings/soc/dove/pmu.txt b/Documentation/devicetree/bindings/soc/dove/pmu.txt
-new file mode 100644
-index 000000000000..edd40b796b74
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/dove/pmu.txt
-@@ -0,0 +1,56 @@
-+Device Tree bindings for Marvell PMU
-+
-+Required properties:
-+ - compatible: value should be "marvell,dove-pmu".
-+    May also include "simple-bus" if there are child devices, in which
-+    case the ranges node is required.
-+ - reg: two base addresses and sizes of the PM controller and PMU.
-+ - interrupts: single interrupt number for the PMU interrupt
-+ - interrupt-controller: must be specified as the PMU itself is an
-+    interrupt controller.
-+ - #interrupt-cells: must be 1.
-+ - #reset-cells: must be 1.
-+ - domains: sub-node containing domain descriptions
-+
-+Optional properties:
-+ - ranges: defines the address mapping for child devices, as per the
-+   standard property of this name.  Required when compatible includes
-+   "simple-bus".
-+
-+Power domain descriptions are listed as child nodes of the "domains"
-+sub-node.  Each domain has the following properties:
-+
-+Required properties:
-+ - #power-domain-cells: must be 0.
-+
-+Optional properties:
-+ - marvell,pmu_pwr_mask: specifies the mask value for PMU power register
-+ - marvell,pmu_iso_mask: specifies the mask value for PMU isolation register
-+ - resets: points to the reset manager (PMU node) and reset index.
-+
-+Example:
-+
-+	pmu: power-management@d0000 {
-+		compatible = "marvell,dove-pmu";
-+		reg = <0xd0000 0x8000>, <0xd8000 0x8000>;
-+		interrupts = <33>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		#reset-cells = <1>;
-+
-+		domains {
-+			vpu_domain: vpu-domain {
-+				#power-domain-cells = <0>;
-+				marvell,pmu_pwr_mask = <0x00000008>;
-+				marvell,pmu_iso_mask = <0x00000001>;
-+				resets = <&pmu 16>;
-+			};
-+
-+			gpu_domain: gpu-domain {
-+				#power-domain-cells = <0>;
-+				marvell,pmu_pwr_mask = <0x00000004>;
-+				marvell,pmu_iso_mask = <0x00000002>;
-+				resets = <&pmu 18>;
-+			};
-+		};
-+	};
--- 
-2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gU3VuLCAyMDE1LTEyLTA2IGF0IDE0OjI4IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToKPiAK
+PiBEbyB5b3UgcGxhbiB0byByZXNwaW4gdGhlIE9GIHBhcnRzIGF0IGxlYXN0IHNvb24/IFRoZXJl
+J3MgYW5vdGhlcgo+IHByb2JsZW0gR3VlbnRlciBmb3VuZCB0aGF0IG9mX2ZkdF91bmZsYXR0ZW5f
+dHJlZSBpcyBub3QgcmUtZW50cmFudCBkdWUKPiB0byAiZGVwdGgiIGJlaW5nIHN0YXRpYyBhbmQg
+dGhpcyBzZXJpZXMgZml4ZXMgdGhhdC4gU28gSSdkIHJhdGhlcgo+IGFwcGx5IHRoaXMgYW5kIGF2
+b2lkIGFkZGluZyBhIG11dGV4IGlmIHBvc3NpYmxlLgoKR2F2aW4gaXMgb24gdmFjYXRpb24gdW50
+aWwgbmV4dCB5ZWFyLgoKQ2hlZXJzLApCZW4uCgo+IFJvYgo+IAo+ID4gCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBHYXZpbiBTaGFuIDxnd3NoYW5AbGludXgudm5ldC5pYm0uY29tPgo+ID4gLS0tCj4gPiDC
+oGRyaXZlcnMvb2YvZmR0LmMgfCA5NCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKyst
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ID4gwqAxIGZpbGUgY2hhbmdlZCwgNTYgaW5zZXJ0aW9u
+cygrKSwgMzggZGVsZXRpb25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL29mL2Zk
+dC5jIGIvZHJpdmVycy9vZi9mZHQuYwo+ID4gaW5kZXggMTczYjAzNi4uZjQ3OTNkMCAxMDA2NDQK
+PiA+IC0tLSBhL2RyaXZlcnMvb2YvZmR0LmMKPiA+ICsrKyBiL2RyaXZlcnMvb2YvZmR0LmMKPiA+
+IEBAIC0zNTUsNjEgKzM1NSw4MiBAQCBzdGF0aWMgdW5zaWduZWQgbG9uZyBwb3B1bGF0ZV9ub2Rl
+KGNvbnN0IHZvaWQgKmJsb2IsCj4gPiDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIGZwc2l6ZTsKPiA+
+IMKgfQo+ID4gCj4gPiArc3RhdGljIHZvaWQgcmV2ZXJzZV9ub2RlcyhzdHJ1Y3QgZGV2aWNlX25v
+ZGUgKnBhcmVudCkKPiA+ICt7Cj4gPiArwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgZGV2aWNlX25vZGUg
+KmNoaWxkLCAqbmV4dDsKPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqDCoC8qIEluLWRlcHRoIGZpcnN0
+ICovCj4gPiArwqDCoMKgwqDCoMKgwqBjaGlsZCA9IHBhcmVudC0+Y2hpbGQ7Cj4gPiArwqDCoMKg
+wqDCoMKgwqB3aGlsZSAoY2hpbGQpIHsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqByZXZlcnNlX25vZGVzKGNoaWxkKTsKPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqBjaGlsZCA9IGNoaWxkLT5zaWJsaW5nOwo+ID4gK8KgwqDCoMKgwqDCoMKgfQo+ID4g
+Kwo+ID4gK8KgwqDCoMKgwqDCoMKgLyogUmV2ZXJzZSB0aGUgbm9kZXMgaW4gdGhlIGNoaWxkIGxp
+c3QgKi8KPiA+ICvCoMKgwqDCoMKgwqDCoGNoaWxkID0gcGFyZW50LT5jaGlsZDsKPiA+ICvCoMKg
+wqDCoMKgwqDCoHBhcmVudC0+Y2hpbGQgPSBOVUxMOwo+ID4gK8KgwqDCoMKgwqDCoMKgd2hpbGUg
+KGNoaWxkKSB7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbmV4dCA9IGNoaWxk
+LT5zaWJsaW5nOwo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNoaWxk
+LT5zaWJsaW5nID0gcGFyZW50LT5jaGlsZDsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqBwYXJlbnQtPmNoaWxkID0gY2hpbGQ7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgY2hpbGQgPSBuZXh0Owo+ID4gK8KgwqDCoMKgwqDCoMKgfQo+ID4gK30KPiA+ICsKPiA+
+IMKgLyoqCj4gPiDCoCAqIHVuZmxhdHRlbl9kdF9ub2RlIC0gQWxsb2MgYW5kIHBvcHVsYXRlIGEg
+ZGV2aWNlX25vZGUgZnJvbSB0aGUgZmxhdCB0cmVlCj4gPiDCoCAqIEBibG9iOiBUaGUgcGFyZW50
+IGRldmljZSB0cmVlIGJsb2IKPiA+IMKgICogQG1lbTogTWVtb3J5IGNodW5rIHRvIHVzZSBmb3Ig
+YWxsb2NhdGluZyBkZXZpY2Ugbm9kZXMgYW5kIHByb3BlcnRpZXMKPiA+IC0gKiBAcG9mZnNldDog
+cG9pbnRlciB0byBub2RlIGluIGZsYXQgdHJlZQo+ID4gwqAgKiBAZGFkOiBQYXJlbnQgc3RydWN0
+IGRldmljZV9ub2RlCj4gPiDCoCAqIEBub2RlcHA6IFRoZSBkZXZpY2Vfbm9kZSB0cmVlIGNyZWF0
+ZWQgYnkgdGhlIGNhbGwKPiA+IC0gKiBAZnBzaXplOiBTaXplIG9mIHRoZSBub2RlIHBhdGggdXAg
+YXQgdGhlIGN1cnJlbnQgZGVwdGguCj4gPiDCoCAqIEBkcnlydW46IElmIHRydWUsIGRvIG5vdCBh
+bGxvY2F0ZSBkZXZpY2Ugbm9kZXMgYnV0IHN0aWxsIGNhbGN1bGF0ZSBuZWVkZWQKPiA+IMKgICog
+bWVtb3J5IHNpemUKPiA+IMKgICovCj4gPiDCoHN0YXRpYyB2b2lkICp1bmZsYXR0ZW5fZHRfbm9k
+ZShjb25zdCB2b2lkICpibG9iLAo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB2b2lkICptZW0sCj4gPiAtwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaW50ICpwb2Zm
+c2V0LAo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqBzdHJ1Y3QgZGV2aWNlX25vZGUgKmRhZCwKPiA+IMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IGRl
+dmljZV9ub2RlICoqbm9kZXBwLAo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHVuc2lnbmVkIGxvbmcgZnBzaXplLAo+ID4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqBib29sIGRyeXJ1bikKPiA+IMKgewo+ID4gLcKgwqDCoMKgwqDCoMKgc3RydWN0IGRldmljZV9u
+b2RlICpucDsKPiA+IC3CoMKgwqDCoMKgwqDCoHN0YXRpYyBpbnQgZGVwdGg7Cj4gPiAtwqDCoMKg
+wqDCoMKgwqBpbnQgb2xkX2RlcHRoOwo+ID4gLQo+ID4gLcKgwqDCoMKgwqDCoMKgZnBzaXplID0g
+cG9wdWxhdGVfbm9kZShibG9iLCAqcG9mZnNldCwgJm1lbSwgZGFkLCBmcHNpemUsICZucCwgZHJ5
+cnVuKTsKPiA+IC3CoMKgwqDCoMKgwqDCoGlmICghZnBzaXplKQo+ID4gLcKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoHJldHVybiBtZW07Cj4gPiArwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgZGV2
+aWNlX25vZGUgKnJvb3Q7Cj4gPiArwqDCoMKgwqDCoMKgwqBpbnQgb2Zmc2V0ID0gMCwgZGVwdGgg
+PSAwOwo+ID4gK8KgwqDCoMKgwqDCoMKgdW5zaWduZWQgbG9uZyBmcHNpemVzWzY0XTsKPiA+ICvC
+oMKgwqDCoMKgwqDCoHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnBzWzY0XTsKPiA+IAo+ID4gLcKgwqDC
+oMKgwqDCoMKgb2xkX2RlcHRoID0gZGVwdGg7Cj4gPiAtwqDCoMKgwqDCoMKgwqAqcG9mZnNldCA9
+IGZkdF9uZXh0X25vZGUoYmxvYiwgKnBvZmZzZXQsICZkZXB0aCk7Cj4gPiAtwqDCoMKgwqDCoMKg
+wqBpZiAoZGVwdGggPCAwKQo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGRlcHRo
+ID0gMDsKPiA+IC3CoMKgwqDCoMKgwqDCoHdoaWxlICgqcG9mZnNldCA+IDAgJiYgZGVwdGggPiBv
+bGRfZGVwdGgpCj4gPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbWVtID0gdW5mbGF0
+dGVuX2R0X25vZGUoYmxvYiwgbWVtLCBwb2Zmc2V0LCBucCwgTlVMTCwKPiA+IC3CoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqBmcHNpemUsIGRyeXJ1bik7Cj4gPiArwqDCoMKgwqDCoMKgwqBpZiAobm9kZXBw
+KQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCpub2RlcHAgPSBOVUxMOwo+ID4g
+Kwo+ID4gK8KgwqDCoMKgwqDCoMKgcm9vdCA9IGRhZDsKPiA+ICvCoMKgwqDCoMKgwqDCoGZwc2l6
+ZXNbZGVwdGhdID0gZGFkID8gc3RybGVuKG9mX25vZGVfZnVsbF9uYW1lKGRhZCkpIDogMDsKPiA+
+ICvCoMKgwqDCoMKgwqDCoG5wc1tkZXB0aCsrXSA9IGRhZDsKPiA+ICvCoMKgwqDCoMKgwqDCoHdo
+aWxlIChvZmZzZXQgPj0gMCAmJiBkZXB0aCA8IDY0KSB7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgZnBzaXplc1tkZXB0aF0gPSBwb3B1bGF0ZV9ub2RlKGJsb2IsIG9mZnNldCwg
+Jm1lbSwKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoG5wc1tkZXB0aCAt
+IDFdLAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZnBzaXplc1tkZXB0
+aCAtIDFdLAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgJm5wc1tkZXB0
+aF0sIGRyeXJ1bik7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYgKCFmcHNp
+emVzW2RlcHRoXSkKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgcmV0dXJuIG1lbTsKPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqBpZiAoIWRyeXJ1biAmJiBub2RlcHAgJiYgISpub2RlcHApCj4gPiArwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCpub2RlcHAgPSBucHNbZGVwdGhdOwo+ID4g
+K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGlmICghZHJ5cnVuICYmICFyb290KQo+ID4g
+K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByb290ID0gbnBz
+W2RlcHRoXTsKPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBvZmZzZXQg
+PSBmZHRfbmV4dF9ub2RlKGJsb2IsIG9mZnNldCwgJmRlcHRoKTsKPiA+ICvCoMKgwqDCoMKgwqDC
+oH0KPiA+IAo+ID4gLcKgwqDCoMKgwqDCoMKgaWYgKCpwb2Zmc2V0IDwgMCAmJiAqcG9mZnNldCAh
+PSAtRkRUX0VSUl9OT1RGT1VORCkKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBw
+cl9lcnIoInVuZmxhdHRlbjogZXJyb3IgJWQgcHJvY2Vzc2luZyBGRFRcbiIsICpwb2Zmc2V0KTsK
+PiA+ICvCoMKgwqDCoMKgwqDCoGlmIChvZmZzZXQgPCAwICYmIG9mZnNldCAhPSAtRkRUX0VSUl9O
+T1RGT1VORCkKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwcl9lcnIoIiVzOiBF
+cnJvciAlZCBwcm9jZXNzaW5nIEZEVFxuIiwKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoF9fZnVuY19fLCBvZmZzZXQpOwo+ID4gCj4gPiDCoMKgwqDCoMKg
+wqDCoMKgLyoKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoCogUmV2ZXJzZSB0aGUgY2hpbGQgbGlzdC4g
+U29tZSBkcml2ZXJzIGFzc3VtZXMgbm9kZSBvcmRlciBtYXRjaGVzIC5kdHMKPiA+IMKgwqDCoMKg
+wqDCoMKgwqDCoCogbm9kZSBvcmRlcgo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgKi8KPiA+IC3CoMKg
+wqDCoMKgwqDCoGlmICghZHJ5cnVuICYmIG5wLT5jaGlsZCkgewo+ID4gLcKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoHN0cnVjdCBkZXZpY2Vfbm9kZSAqY2hpbGQgPSBucC0+Y2hpbGQ7Cj4g
+PiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbnAtPmNoaWxkID0gTlVMTDsKPiA+IC3C
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB3aGlsZSAoY2hpbGQpIHsKPiA+IC3CoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IGRldmljZV9ub2Rl
+ICpuZXh0ID0gY2hpbGQtPnNpYmxpbmc7Cj4gPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoGNoaWxkLT5zaWJsaW5nID0gbnAtPmNoaWxkOwo+ID4gLcKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBucC0+Y2hpbGQgPSBjaGls
+ZDsKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY2hp
+bGQgPSBuZXh0Owo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoH0KPiA+IC3CoMKg
+wqDCoMKgwqDCoH0KPiA+IC0KPiA+IC3CoMKgwqDCoMKgwqDCoGlmIChub2RlcHApCj4gPiAtwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgKm5vZGVwcCA9IG5wOwo+ID4gK8KgwqDCoMKgwqDC
+oMKgaWYgKCFkcnlydW4pCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV2ZXJz
+ZV9ub2Rlcyhyb290KTsKPiA+IAo+ID4gwqDCoMKgwqDCoMKgwqDCoHJldHVybiBtZW07Cj4gPiDC
+oH0KPiA+IEBAIC00MzEsNyArNDUyLDYgQEAgc3RhdGljIHZvaWQgX191bmZsYXR0ZW5fZGV2aWNl
+X3RyZWUoY29uc3Qgdm9pZCAqYmxvYiwKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB2b2lkICogKCpkdF9hbGxvYykodTY0IHNpemUs
+IHU2NCBhbGlnbikpCj4gPiDCoHsKPiA+IMKgwqDCoMKgwqDCoMKgwqB1bnNpZ25lZCBsb25nIHNp
+emU7Cj4gPiAtwqDCoMKgwqDCoMKgwqBpbnQgc3RhcnQ7Cj4gPiDCoMKgwqDCoMKgwqDCoMKgdm9p
+ZCAqbWVtOwo+ID4gCj4gPiDCoMKgwqDCoMKgwqDCoMKgcHJfZGVidWcoIiAtPiB1bmZsYXR0ZW5f
+ZGV2aWNlX3RyZWUoKVxuIik7Cj4gPiBAQCAtNDUyLDggKzQ3Miw3IEBAIHN0YXRpYyB2b2lkIF9f
+dW5mbGF0dGVuX2RldmljZV90cmVlKGNvbnN0IHZvaWQgKmJsb2IsCj4gPiDCoMKgwqDCoMKgwqDC
+oMKgfQo+ID4gCj4gPiDCoMKgwqDCoMKgwqDCoMKgLyogRmlyc3QgcGFzcywgc2NhbiBmb3Igc2l6
+ZSAqLwo+ID4gLcKgwqDCoMKgwqDCoMKgc3RhcnQgPSAwOwo+ID4gLcKgwqDCoMKgwqDCoMKgc2l6
+ZSA9ICh1bnNpZ25lZCBsb25nKXVuZmxhdHRlbl9kdF9ub2RlKGJsb2IsIE5VTEwsICZzdGFydCwg
+TlVMTCwgTlVMTCwgMCwgdHJ1ZSk7Cj4gPiArwqDCoMKgwqDCoMKgwqBzaXplID0gKHVuc2lnbmVk
+IGxvbmcpdW5mbGF0dGVuX2R0X25vZGUoYmxvYiwgTlVMTCwgTlVMTCwgTlVMTCwgdHJ1ZSk7Cj4g
+PiDCoMKgwqDCoMKgwqDCoMKgc2l6ZSA9IEFMSUdOKHNpemUsIDQpOwo+ID4gCj4gPiDCoMKgwqDC
+oMKgwqDCoMKgcHJfZGVidWcoIsKgwqBzaXplIGlzICVseCwgYWxsb2NhdGluZy4uLlxuIiwgc2l6
+ZSk7Cj4gPiBAQCAtNDY3LDggKzQ4Niw3IEBAIHN0YXRpYyB2b2lkIF9fdW5mbGF0dGVuX2Rldmlj
+ZV90cmVlKGNvbnN0IHZvaWQgKmJsb2IsCj4gPiDCoMKgwqDCoMKgwqDCoMKgcHJfZGVidWcoIsKg
+wqB1bmZsYXR0ZW5pbmcgJXAuLi5cbiIsIG1lbSk7Cj4gPiAKPiA+IMKgwqDCoMKgwqDCoMKgwqAv
+KiBTZWNvbmQgcGFzcywgZG8gYWN0dWFsIHVuZmxhdHRlbmluZyAqLwo+ID4gLcKgwqDCoMKgwqDC
+oMKgc3RhcnQgPSAwOwo+ID4gLcKgwqDCoMKgwqDCoMKgdW5mbGF0dGVuX2R0X25vZGUoYmxvYiwg
+bWVtLCAmc3RhcnQsIE5VTEwsIG15bm9kZXMsIDAsIGZhbHNlKTsKPiA+ICvCoMKgwqDCoMKgwqDC
+oHVuZmxhdHRlbl9kdF9ub2RlKGJsb2IsIG1lbSwgTlVMTCwgbXlub2RlcywgZmFsc2UpOwo+ID4g
+wqDCoMKgwqDCoMKgwqDCoGlmIChiZTMyX3RvX2NwdXAobWVtICsgc2l6ZSkgIT0gMHhkZWFkYmVl
+ZikKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcHJfd2FybmluZygiRW5kIG9m
+IHRyZWUgbWFya2VyIG92ZXJ3cml0dGVuOiAlMDh4XG4iLAo+ID4gwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgYmUzMl90b19jcHVwKG1lbSArIHNp
+emUpKTsKPiA+IC0tCj4gPiAyLjEuMAo+ID4gCj4gLS0KPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRo
+aXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgbGludXgtcGNpIiBpbgo+IHRoZSBi
+b2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnCj4gTW9yZSBtYWpv
+cmRvbW8gaW5mbyBhdMKgwqBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0
+bWwKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhw
+cGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczov
+L2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
