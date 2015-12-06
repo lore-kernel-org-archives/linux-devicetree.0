@@ -1,75 +1,639 @@
-From: Kapil Hali <kapilh@broadcom.com>
-Subject: Re: [PATCH v4 1/5] dt-bindings: add SMP enable-method for Broadcom
- NSP
-Date: Sun, 6 Dec 2015 23:59:28 +0530
-Message-ID: <56647E88.6040002@broadcom.com>
-References: <1448987049-17041-1-git-send-email-kapilh@broadcom.com>
- <1448987049-17041-2-git-send-email-kapilh@broadcom.com>
- <20151202152604.GA20467@rob-hp-laptop> <565F16F1.9070809@broadcom.com>
- <CAL_JsqLQuXzLpFJj7b=_pPN1Tp66P2o69bytxGPHCQu30Qy_CQ@mail.gmail.com>
+From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: Add SolidRun Armada 388 Clearfog A1 DT file
+Date: Sun, 06 Dec 2015 19:49:24 +0000
+Message-ID: <E1a5fJE-0002DJ-M0@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLQuXzLpFJj7b=_pPN1Tp66P2o69bytxGPHCQu30Qy_CQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Lee Jones <lee@kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Kever Yang <kever.yang@rock-chips.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-k
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Add support for the SolidRun Armada 388 Clearfog A1 board.  This board
+has an Armada 388 microsom, dedicated gigabit ethernet, six switched
+gigabit ethernet ports, SFP cage, two Mini-PCIe/mSATA slots, a m.2 SATA
+slot, and a MikroBUS connector to allow MikroBUS modules to be added.
 
-On 12/6/2015 6:22 AM, Rob Herring wrote:
-> On Wed, Dec 2, 2015 at 10:06 AM, Kapil Hali <kapilh@broadcom.com> wrote:
->> Hi Rob,
->>
->> On 12/2/2015 8:56 PM, Rob Herring wrote:
->>> On Tue, Dec 01, 2015 at 11:24:05AM -0500, Kapil Hali wrote:
->>>> Add a compatible string "brcm,bcm-nsp-smp" for Broadcom's
->>>> Northstar Plus CPU to the 32-bit ARM CPU device tree binding
->>>> documentation file and create a new binding documentation for
->>>> Northstar Plus CPU.
->>>>
->>>> Signed-off-by: Kapil Hali <kapilh@broadcom.com>
->>>> ---
->>>>  .../bindings/arm/bcm/brcm,nsp-cpu-method.txt       | 39 ++++++++++++++++++++++
->>>>  Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
->>>>  2 files changed, 40 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
->>>> new file mode 100644
->>>> index 0000000..bf08872
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,nsp-cpu-method.txt
->>>> @@ -0,0 +1,39 @@
->>>> +Broadcom Northstar Plus SoC CPU Enable Method
->>>> +---------------------------------------------
->>>> +This binding defines the enable method used for starting secondary
->>>> +CPUs in the following Broadcom SoCs:
->>>> +  BCM58522, BCM58525, BCM58535, BCM58622, BCM58623, BCM58625, BCM88312
->>>> +
->>>> +The enable method is specified by defining the following required
->>>> +properties in the "cpus" device tree node:
->>>> +  - enable-method = "brcm,bcm-nsp-smp";
->>>> +  - secondary-boot-reg = <...>;
->>>
->>> Both of these are supposed to be per cpu core.
->>
->> 'enable-method' if not found in 'cpu' node is looked at in the 'cpus'
->> node. Except for two-three SoC families, 'enable-method' is within
->> 'cpus' node. Is my interpretation incorrect? Did I miss anything here?
-> 
-> I'm not sure how you counted, but it is much more than 2-3 that are
-> correct (including all of PPC). It is quite mixed in dts files, but it
-> is documented to be per cpu node, so lets follow the documentation
-> please.
-> 
-> Rob
-> 
-I looked at arch/arm/* and not other arch types. But, as you said, let
-us keep it how it is in documentation and I have already updated latest
-patch set reflecting this change.
+This DT file adds support for all board facilities with the exception
+of full SFP support.
 
-Thanks,
-Kapil
+Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/armada-388-clearfog.dts          | 462 +++++++++++++++++++++
+ .../arm/boot/dts/armada-38x-solidrun-microsom.dtsi | 115 +++++
+ 3 files changed, 578 insertions(+)
+ create mode 100644 arch/arm/boot/dts/armada-388-clearfog.dts
+ create mode 100644 arch/arm/boot/dts/armada-38x-solidrun-microsom.dtsi
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 30bbc3746130..7e6a0532c656 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -748,6 +748,7 @@ dtb-$(CONFIG_MACH_ARMADA_38X) += \
+ 	armada-385-db-ap.dtb \
+ 	armada-385-linksys-caiman.dtb \
+ 	armada-385-linksys-cobra.dtb \
++	armada-388-clearfog.dtb \
+ 	armada-388-db.dtb \
+ 	armada-388-gp.dtb \
+ 	armada-388-rd.dtb
+diff --git a/arch/arm/boot/dts/armada-388-clearfog.dts b/arch/arm/boot/dts/armada-388-clearfog.dts
+new file mode 100644
+index 000000000000..fede93fda788
+--- /dev/null
++++ b/arch/arm/boot/dts/armada-388-clearfog.dts
+@@ -0,0 +1,462 @@
++/*
++ * Device Tree file for SolidRun Clearfog A1 (88F6828)
++ *
++ *  Copyright (C) 2015 Russell King
++ *
++ * This board is in development; the contents of this file work with
++ * the A1 rev 2.0 of the board, which does not represent final
++ * production board.  Things will change, don't expect this file to
++ * remain compatible info the future.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "armada-388.dtsi"
++#include "armada-38x-solidrun-microsom.dtsi"
++
++/ {
++	model = "SolidRun Clearfog A1";
++	compatible = "solidrun,clearfog-a1", "marvell,armada388",
++		"marvell,armada385", "marvell,armada380";
++
++	aliases {
++		/* So that mvebu u-boot can update the MAC addresses */
++		ethernet1 = &eth0;
++		ethernet2 = &eth1;
++		ethernet3 = &eth2;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	reg_3p3v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	soc {
++		internal-regs {
++			ethernet@30000 {
++				mac-address = [00 50 43 02 02 02];
++				phy-mode = "sgmii";
++				status = "okay";
++
++				fixed-link {
++					speed = <1000>;
++					full-duplex;
++				};
++			};
++
++			ethernet@34000 {
++				mac-address = [00 50 43 02 02 03];
++				phy-mode = "sgmii";
++				status = "okay";
++
++				fixed-link {
++					speed = <1000>;
++					full-duplex;
++				};
++			};
++
++			ethernet@70000 {
++				mac-address = [00 50 43 02 02 01];
++			};
++
++			i2c@11000 {
++				/* Is there anything on this? */
++				clock-frequency = <100000>;
++				pinctrl-0 = <&i2c0_pins>;
++				pinctrl-names = "default";
++				status = "okay";
++
++				/*
++				 * PCA9655 GPIO expander, up to 1MHz clock.
++				 *  0-CON3 CLKREQ#
++				 *  1-CON3 PERST#
++				 *  2-CON2 PERST#
++				 *  3-CON3 W_DISABLE
++				 *  4-CON2 CLKREQ#
++				 *  5-USB3 overcurrent
++				 *  6-USB3 power
++				 *  7-CON2 W_DISABLE
++				 *  8-JP4 P1
++				 *  9-JP4 P4
++				 * 10-JP4 P5
++				 * 11-m.2 DEVSLP
++				 * 12-SFP_LOS
++				 * 13-SFP_TX_FAULT
++				 * 14-SFP_TX_DISABLE
++				 * 15-SFP_MOD_DEF0
++				 */
++				expander0: gpio-expander@20 {
++					/*
++					 * This is how it should be:
++					 * compatible = "onnn,pca9655",
++					 *	 "nxp,pca9555";
++					 * but you can't do this because of
++					 * the way I2C works.
++					 */
++					compatible = "nxp,pca9555";
++					gpio-controller;
++					#gpio-cells = <2>;
++					reg = <0x20>;
++
++					pcie1_0_clkreq {
++						gpio-hog;
++						gpios = <0 GPIO_ACTIVE_LOW>;
++						input;
++						line-name = "pcie1.0-clkreq";
++					};
++					pcie1_0_w_disable {
++						gpio-hog;
++						gpios = <3 GPIO_ACTIVE_LOW>;
++						output-low;
++						line-name = "pcie1.0-w-disable";
++					};
++					pcie2_0_clkreq {
++						gpio-hog;
++						gpios = <4 GPIO_ACTIVE_LOW>;
++						input;
++						line-name = "pcie2.0-clkreq";
++					};
++					pcie2_0_w_disable {
++						gpio-hog;
++						gpios = <7 GPIO_ACTIVE_LOW>;
++						output-low;
++						line-name = "pcie2.0-w-disable";
++					};
++					usb3_ilimit {
++						gpio-hog;
++						gpios = <5 GPIO_ACTIVE_LOW>;
++						input;
++						line-name = "usb3-current-limit";
++					};
++					usb3_power {
++						gpio-hog;
++						gpios = <6 GPIO_ACTIVE_HIGH>;
++						output-high;
++						line-name = "usb3-power";
++					};
++					m2_devslp {
++						gpio-hog;
++						gpios = <11 GPIO_ACTIVE_HIGH>;
++						output-low;
++						line-name = "m.2 devslp";
++					};
++					sfp_los {
++						/* SFP loss of signal */
++						gpio-hog;
++						gpios = <12 GPIO_ACTIVE_HIGH>;
++						input;
++						line-name = "sfp-los";
++					};
++					sfp_tx_fault {
++						/* SFP laser fault */
++						gpio-hog;
++						gpios = <13 GPIO_ACTIVE_HIGH>;
++						input;
++						line-name = "sfp-tx-fault";
++					};
++					sfp_tx_disable {
++						/* SFP transmit disable */
++						gpio-hog;
++						gpios = <14 GPIO_ACTIVE_HIGH>;
++						output-low;
++						line-name = "sfp-tx-disable";
++					};
++					sfp_mod_def0 {
++						/* SFP module present */
++						gpio-hog;
++						gpios = <15 GPIO_ACTIVE_LOW>;
++						input;
++						line-name = "sfp-mod-def0";
++					};
++				};
++
++				/* The MCP3021 is 100kHz clock only */
++				mikrobus_adc: mcp3021@4c {
++					compatible = "microchip,mcp3021";
++					reg = <0x4c>;
++				};
++
++				/* Also something at 0x64 */
++			};
++
++			i2c@11100 {
++				/*
++				 * Routed to SFP, mikrobus, and PCIe.
++				 * SFP limits this to 100kHz, and requires
++				 *  an AT24C01A/02/04 with address pins tied
++				 *  low, which takes addresses 0x50 and 0x51.
++				 * Mikrobus doesn't specify beyond an I2C
++				 *  bus being present.
++				 * PCIe uses ARP to assign addresses, or
++				 *  0x63-0x64.
++				 */
++				clock-frequency = <100000>;
++				pinctrl-0 = <&clearfog_i2c1_pins>;
++				pinctrl-names = "default";
++				status = "okay";
++			};
++
++			mdio@72004 {
++				pinctrl-0 = <&mdio_pins>;
++				pinctrl-names = "default";
++
++				phy_dedicated: ethernet-phy@0 {
++					/*
++					 * Annoyingly, the marvell phy driver
++					 * configures the LED register, rather
++					 * than preserving reset-loaded setting.
++					 * We undo that rubbish here.
++					 */
++					marvell,reg-init = <3 16 0 0x101e>;
++					reg = <0>;
++				};
++			};
++
++			pinctrl@18000 {
++				clearfog_dsa0_clk_pins: clearfog-dsa0-clk-pins {
++					marvell,pins = "mpp46";
++					marvell,function = "ref";
++				};
++				clearfog_dsa0_pins: clearfog-dsa0-pins {
++					marvell,pins = "mpp23", "mpp41";
++					marvell,function = "gpio";
++				};
++				clearfog_i2c1_pins: i2c1-pins {
++					/* SFP, PCIe, mSATA, mikrobus */
++					marvell,pins = "mpp26", "mpp27";
++					marvell,function = "i2c1";
++				};
++				clearfog_sdhci_cd_pins: clearfog-sdhci-cd-pins {
++					marvell,pins = "mpp20";
++					marvell,function = "gpio";
++				};
++				clearfog_sdhci_pins: clearfog-sdhci-pins {
++					marvell,pins = "mpp21", "mpp28",
++						       "mpp37", "mpp38",
++						       "mpp39", "mpp40";
++					marvell,function = "sd0";
++				};
++				clearfog_spi1_cs_pins: spi1-cs-pins {
++					marvell,pins = "mpp55";
++					marvell,function = "spi1";
++				};
++				mikro_pins: mikro-pins {
++					/* int: mpp22 rst: mpp29 */
++					marvell,pins = "mpp22", "mpp29";
++					marvell,function = "gpio";
++				};
++				mikro_spi_pins: mikro-spi-pins {
++					marvell,pins = "mpp43";
++					marvell,function = "spi1";
++				};
++				mikro_uart_pins: mikro-uart-pins {
++					marvell,pins = "mpp24", "mpp25";
++					marvell,function = "ua1";
++				};
++				rear_button_pins: rear-button-pins {
++					marvell,pins = "mpp34";
++					marvell,function = "gpio";
++				};
++			};
++
++			sata@a8000 {
++				/* pinctrl? */
++				status = "okay";
++			};
++
++			sata@e0000 {
++				/* pinctrl? */
++				status = "okay";
++			};
++
++			sdhci@d8000 {
++				bus-width = <4>;
++				cd-gpios = <&gpio0 20 GPIO_ACTIVE_LOW>;
++				no-1-8-v;
++				pinctrl-0 = <&clearfog_sdhci_pins
++					     &clearfog_sdhci_cd_pins>;
++				pinctrl-names = "default";
++				status = "okay";
++				vmmc = <&reg_3p3v>;
++				wp-inverted;
++			};
++
++			serial@12100 {
++				/* mikrobus uart */
++				pinctrl-0 = <&mikro_uart_pins>;
++				pinctrl-names = "default";
++				status = "okay";
++			};
++
++			spi@10680 {
++				/*
++				 * We don't seem to have the W25Q32 on the
++				 * A1 Rev 2.0 boards, so disable SPI.
++				 * CS0: W25Q32 (doesn't appear to be present)
++				 * CS1:
++				 * CS2: mikrobus
++				 */
++				pinctrl-0 = <&spi1_pins
++					     &clearfog_spi1_cs_pins
++					     &mikro_spi_pins>;
++				pinctrl-names = "default";
++				status = "okay";
++
++				spi-flash@0 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					compatible = "w25q32", "jedec,spi-nor";
++					reg = <0>; /* Chip select 0 */
++					spi-max-frequency = <3000000>;
++					status = "disabled";
++				};
++			};
++
++			usb@58000 {
++				/* CON3, nearest  power. */
++				status = "okay";
++			};
++
++			usb3@f0000 {
++				/* CON2, nearest CPU, USB2 only. */
++				status = "okay";
++			};
++
++			usb3@f8000 {
++				/* CON7 */
++				status = "okay";
++			};
++		};
++
++		pcie-controller {
++			status = "okay";
++			/*
++			 * The two PCIe units are accessible through
++			 * the mini-PCIe connectors on the board.
++			 */
++			pcie@2,0 {
++				/* Port 1, Lane 0. CON3, nearest power. */
++				reset-gpios = <&expander0 1 GPIO_ACTIVE_LOW>;
++				status = "okay";
++			};
++			pcie@3,0 {
++				/* Port 2, Lane 0. CON2, nearest CPU. */
++				reset-gpios = <&expander0 2 GPIO_ACTIVE_LOW>;
++				status = "okay";
++			};
++		};
++	};
++
++	dsa@0 {
++		compatible = "marvell,dsa";
++		dsa,ethernet = <&eth1>;
++		dsa,mii-bus = <&mdio>;
++		pinctrl-0 = <&clearfog_dsa0_clk_pins &clearfog_dsa0_pins>;
++		pinctrl-names = "default";
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		switch@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <4 0>;
++
++			port@0 {
++				reg = <0>;
++				label = "lan1";
++			};
++
++			port@1 {
++				reg = <1>;
++				label = "lan2";
++			};
++
++			port@2 {
++				reg = <2>;
++				label = "lan3";
++			};
++
++			port@3 {
++				reg = <3>;
++				label = "lan4";
++			};
++
++			port@4 {
++				reg = <4>;
++				label = "lan5";
++			};
++
++			port@5 {
++				reg = <5>;
++				label = "cpu";
++			};
++
++			port@6 {
++				/* 88E1512 external phy */
++				reg = <6>;
++				label = "lan6";
++				fixed-link {
++					speed = <1000>;
++					full-duplex;
++				};
++			};
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-0 = <&rear_button_pins>;
++		pinctrl-names = "default";
++
++		button_0 {
++			/* The rear SW3 button */
++			label = "Rear Button";
++			gpios = <&gpio1 2 GPIO_ACTIVE_LOW>;
++			linux,can-disable;
++			linux,code = <BTN_0>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/armada-38x-solidrun-microsom.dtsi b/arch/arm/boot/dts/armada-38x-solidrun-microsom.dtsi
+new file mode 100644
+index 000000000000..3f792a563c05
+--- /dev/null
++++ b/arch/arm/boot/dts/armada-38x-solidrun-microsom.dtsi
+@@ -0,0 +1,115 @@
++/*
++ * Device Tree file for SolidRun Armada 38x Microsom
++ *
++ *  Copyright (C) 2015 Russell King
++ *
++ * This board is in development; the contents of this file work with
++ * the A1 rev 2.0 of the board, which does not represent final
++ * production board.  Things will change, don't expect this file to
++ * remain compatible info the future.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x10000000>; /* 256 MB */
++	};
++
++	soc {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
++			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000
++			  MBUS_ID(0x09, 0x19) 0 0xf1100000 0x10000
++			  MBUS_ID(0x09, 0x15) 0 0xf1110000 0x10000>;
++
++		internal-regs {
++			ethernet@70000 {
++				pinctrl-0 = <&ge0_rgmii_pins>;
++				pinctrl-names = "default";
++				phy = <&phy_dedicated>;
++				phy-mode = "rgmii-id";
++				status = "okay";
++			};
++
++			mdio@72004 {
++				/*
++				 * Add the phy clock here, so the phy can be
++				 * accessed to read its IDs prior to binding
++				 * with the driver.
++				 */
++				pinctrl-0 = <&mdio_pins &microsom_phy_clk_pins>;
++				pinctrl-names = "default";
++
++				phy_dedicated: ethernet-phy@0 {
++					/*
++					 * Annoyingly, the marvell phy driver
++					 * configures the LED register, rather
++					 * than preserving reset-loaded setting.
++					 * We undo that rubbish here.
++					 */
++					marvell,reg-init = <3 16 0 0x101e>;
++					reg = <0>;
++				};
++			};
++
++			pinctrl@18000 {
++				microsom_phy_clk_pins: microsom-phy-clk-pins {
++					marvell,pins = "mpp45";
++					marvell,function = "ref";
++				};
++			};
++
++			rtc@a3800 {
++				/*
++				 * If the rtc doesn't work, run "date reset"
++				 * twice in u-boot.
++				 */
++				status = "okay";
++			};
++
++			serial@12000 {
++				pinctrl-0 = <&uart0_pins>;
++				pinctrl-names = "default";
++				status = "okay";
++			};
++		};
++	};
++};
+-- 
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
