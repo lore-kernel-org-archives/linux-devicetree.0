@@ -1,40 +1,59 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v2 PART-RESEND 0/2] berlin sdhci clock clean up
-Date: Sun, 6 Dec 2015 11:07:41 +0100
-Message-ID: <566408ED.9040902@gmail.com>
-References: <1447671395-8023-1-git-send-email-jszhang@marvell.com>
- <564E3191.8060109@gmail.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <564E3191.8060109@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jisheng Zhang <jszhang@marvell.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mike Turquette <mturquette@baylibre.com>, Stephen Rothwell <sfr@canb.auug.org.au>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: [PATCH v2 4/5] clk: lpc18xx: add NXP specific COMMON_CLK_NXP configuration symbol
+Date: Sun,  6 Dec 2015 12:45:56 +0200
+Message-ID: <1449398757-16834-5-git-send-email-vz@mleia.com>
+References: <1449398757-16834-1-git-send-email-vz@mleia.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1449398757-16834-1-git-send-email-vz@mleia.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Russell King <linux@arm.linux.org.uk>, Roland Stigge <stigge@antcom.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 19.11.2015 21:31, Sebastian Hesselbarth wrote:
-> On 16.11.2015 11:56, Jisheng Zhang wrote:
->> Add or fix the optional clock property, then remove the CLK_IGNORE_UNUSED
->> flag for sdio clk(s).
->>
->> This is a partialy resend of 
->> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-October/379457.html
->>
->> patch3, patch4 has been merged.
-> 
-> Great! Really!
-> 
-> As they have been taken without my Acked-by, ignoring my request to
-> _not_ remove the CLK_IGNORE_UNUSED flags _before_ these two, the
-> remaining patches now become fixes.
-> 
-> Please resend the patches with a proper description what and why they
-> are fixes now.
+The change adds COMMON_CLK_NXP configuration symbol and enables it for
+NXP LPC18XX architecture, this is needed to reuse drivers/clk/nxp
+folder for NXP common clock framework drivers other than LPC18XX one.
 
-Is this going to be resolved anytime soon?
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+Acked-by: Joachim Eastwood <manabian@gmail.com>
+---
+Changes from v1 to v2:
+- removed explicit COMMON_CLK selection for NXP LPC18xx
 
-If not, I am going to send a revert for the CLK_IGNORE_UNUSED patch
-and we start this from the beginning.
+ drivers/clk/Kconfig  | 5 +++++
+ drivers/clk/Makefile | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-Sebastian
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index c3e3a02..7fc1eb9 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -175,6 +175,11 @@ config COMMON_CLK_PWM
+ 	  Adapter driver so that any PWM output can be (mis)used as clock signal
+ 	  at 50% duty cycle.
+ 
++config COMMON_CLK_NXP
++	def_bool COMMON_CLK && ARCH_LPC18XX
++	---help---
++	  Support for clock providers on NXP platforms.
++
+ config COMMON_CLK_PXA
+ 	def_bool COMMON_CLK && ARCH_PXA
+ 	---help---
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index 820714c..15603c1 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -62,8 +62,8 @@ endif
+ obj-$(CONFIG_PLAT_ORION)		+= mvebu/
+ obj-$(CONFIG_ARCH_MESON)		+= meson/
+ obj-$(CONFIG_ARCH_MXS)			+= mxs/
+-obj-$(CONFIG_ARCH_LPC18XX)		+= nxp/
+ obj-$(CONFIG_MACH_PISTACHIO)		+= pistachio/
++obj-$(CONFIG_COMMON_CLK_NXP)		+= nxp/
+ obj-$(CONFIG_COMMON_CLK_PXA)		+= pxa/
+ obj-$(CONFIG_COMMON_CLK_QCOM)		+= qcom/
+ obj-$(CONFIG_ARCH_ROCKCHIP)		+= rockchip/
+-- 
+2.1.4
+
