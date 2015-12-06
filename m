@@ -1,7 +1,7 @@
 From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: [PATCH v2 3/5] dt-bindings: clock: add NXP LPC32xx clock list for consumers
-Date: Sun,  6 Dec 2015 12:45:55 +0200
-Message-ID: <1449398757-16834-4-git-send-email-vz@mleia.com>
+Subject: [PATCH v2 2/5] dt-bindings: clock: add description of LPC32xx USB clock controller
+Date: Sun,  6 Dec 2015 12:45:54 +0200
+Message-ID: <1449398757-16834-3-git-send-email-vz@mleia.com>
 References: <1449398757-16834-1-git-send-email-vz@mleia.com>
 Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1449398757-16834-1-git-send-email-vz@mleia.com>
@@ -10,81 +10,49 @@ To: Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael 
 Cc: Russell King <linux@arm.linux.org.uk>, Roland Stigge <stigge@antcom.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The change adds a list of NXP LPC32xx clocks, which can be requested
-by clock consumers.
+NXP LPC32xx USB controller has a subdevice, which controls USB AHB
+slave, USB OTG, USB OHCI, USB device and I2C controller to USB phy
+clocks, this change adds description of the clock controller, for more
+details reference LPC32xx User's Manual, namely USB control, OTG clock
+control and OTG clock status registers.
 
 Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 ---
 Changes from v1 to v2:
-- incremented by 1 all clock values, possibly clock "0" may have a
-  special meaning in future
+- use lowercase hex numbers in a DT binding example
 
- include/dt-bindings/clock/lpc32xx-clock.h | 56 +++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 include/dt-bindings/clock/lpc32xx-clock.h
+ .../bindings/clock/nxp,lpc3220-usb-clk.txt         | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/nxp,lpc3220-usb-clk.txt
 
-diff --git a/include/dt-bindings/clock/lpc32xx-clock.h b/include/dt-bindings/clock/lpc32xx-clock.h
+diff --git a/Documentation/devicetree/bindings/clock/nxp,lpc3220-usb-clk.txt b/Documentation/devicetree/bindings/clock/nxp,lpc3220-usb-clk.txt
 new file mode 100644
-index 0000000..bcb1c9a
+index 0000000..0aa2494
 --- /dev/null
-+++ b/include/dt-bindings/clock/lpc32xx-clock.h
-@@ -0,0 +1,56 @@
-+/*
-+ * Copyright (c) 2015 Vladimir Zapolskiy <vz@mleia.com>
-+ *
-+ * This code is released using a dual license strategy: BSD/GPL
-+ * You can choose the licence that better fits your requirements.
-+ *
-+ * Released under the terms of 3-clause BSD License
-+ * Released under the terms of GNU General Public License Version 2.0
-+ *
-+ */
++++ b/Documentation/devicetree/bindings/clock/nxp,lpc3220-usb-clk.txt
+@@ -0,0 +1,22 @@
++NXP LPC32xx USB Clock Controller
 +
-+#ifndef __DT_BINDINGS_LPC32XX_CLOCK_H
-+#define __DT_BINDINGS_LPC32XX_CLOCK_H
++Required properties:
++- compatible: should be "nxp,lpc3220-usb-clk"
++- reg:  should contain clock controller registers location and length
++- #clock-cells: must be 1, the cell holds id of a clock provided by the
++  USB clock controller
 +
-+/* LPC32XX System Control Block clocks */
-+#define LPC32XX_CLK_RTC		1
-+#define LPC32XX_CLK_DMA		2
-+#define LPC32XX_CLK_MLC		3
-+#define LPC32XX_CLK_SLC		4
-+#define LPC32XX_CLK_LCD		5
-+#define LPC32XX_CLK_MAC		6
-+#define LPC32XX_CLK_SD		7
-+#define LPC32XX_CLK_DDRAM	8
-+#define LPC32XX_CLK_SSP0	9
-+#define LPC32XX_CLK_SSP1	10
-+#define LPC32XX_CLK_UART3	11
-+#define LPC32XX_CLK_UART4	12
-+#define LPC32XX_CLK_UART5	13
-+#define LPC32XX_CLK_UART6	14
-+#define LPC32XX_CLK_IRDA	15
-+#define LPC32XX_CLK_I2C1	16
-+#define LPC32XX_CLK_I2C2	17
-+#define LPC32XX_CLK_TIMER0	18
-+#define LPC32XX_CLK_TIMER1	19
-+#define LPC32XX_CLK_TIMER2	20
-+#define LPC32XX_CLK_TIMER3	21
-+#define LPC32XX_CLK_TIMER4	22
-+#define LPC32XX_CLK_TIMER5	23
-+#define LPC32XX_CLK_WDOG	24
-+#define LPC32XX_CLK_I2S0	25
-+#define LPC32XX_CLK_I2S1	26
-+#define LPC32XX_CLK_SPI1	27
-+#define LPC32XX_CLK_SPI2	28
-+#define LPC32XX_CLK_MCPWM	29
-+#define LPC32XX_CLK_HSTIMER	30
-+#define LPC32XX_CLK_KEY		31
-+#define LPC32XX_CLK_PWM1	32
-+#define LPC32XX_CLK_PWM2	33
-+#define LPC32XX_CLK_ADC		34
++Examples:
 +
-+/* LPC32XX USB clocks */
-+#define LPC32XX_USB_CLK_I2C	1
-+#define LPC32XX_USB_CLK_DEVICE	2
-+#define LPC32XX_USB_CLK_HOST	3
++	usb {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "simple-bus";
++		ranges = <0x0 0x31020000 0x00001000>;
 +
-+#endif /* __DT_BINDINGS_LPC32XX_CLOCK_H */
++		usbclk: clock-controller@f00 {
++			compatible = "nxp,lpc3220-usb-clk";
++			reg = <0xf00 0x100>;
++			#clock-cells = <1>;
++		};
++	};
 -- 
 2.1.4
 
