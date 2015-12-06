@@ -1,111 +1,40 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH] arm: dts: berlin2q-marvell-dmp: add sdhci1 fully
- functionality
-Date: Sun, 6 Dec 2015 10:28:30 +0100
-Message-ID: <5663FFBE.1070708@gmail.com>
-References: <1448891679-7894-1-git-send-email-jszhang@marvell.com>
+Subject: Re: [PATCH v2 PART-RESEND 0/2] berlin sdhci clock clean up
+Date: Sun, 6 Dec 2015 11:07:41 +0100
+Message-ID: <566408ED.9040902@gmail.com>
+References: <1447671395-8023-1-git-send-email-jszhang@marvell.com>
+ <564E3191.8060109@gmail.com>
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448891679-7894-1-git-send-email-jszhang@marvell.com>
+In-Reply-To: <564E3191.8060109@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jisheng Zhang <jszhang@marvell.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mike Turquette <mturquette@baylibre.com>, Stephen Rothwell <sfr@canb.auug.org.au>
 List-Id: devicetree@vger.kernel.org
 
-On 30.11.2015 14:54, Jisheng Zhang wrote:
-> The sdhci1 on Marvell BG2Q DMP board is used as sdcard interface, we
-> have gpios for card detection, write-protect, vqmmc and vmmc.
+On 19.11.2015 21:31, Sebastian Hesselbarth wrote:
+> On 16.11.2015 11:56, Jisheng Zhang wrote:
+>> Add or fix the optional clock property, then remove the CLK_IGNORE_UNUSED
+>> flag for sdio clk(s).
+>>
+>> This is a partialy resend of 
+>> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-October/379457.html
+>>
+>> patch3, patch4 has been merged.
 > 
-> This patch adds pinmux for this sdcard interface, then adds regulators
-> for vmmc and vqmmc, lastly adds cd-gpios, wp-gpios properties.
+> Great! Really!
 > 
-> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+> As they have been taken without my Acked-by, ignoring my request to
+> _not_ remove the CLK_IGNORE_UNUSED flags _before_ these two, the
+> remaining patches now become fixes.
+> 
+> Please resend the patches with a proper description what and why they
+> are fixes now.
 
-Applied to berlin/dt.
+Is this going to be resolved anytime soon?
 
-> ---
-> since v1:
-
-Please also increment the patch subject version next time.
-
-Thanks!
+If not, I am going to send a revert for the CLK_IGNORE_UNUSED patch
+and we start this from the beginning.
 
 Sebastian
-
->  - move sd1_pmux to soc dtsi
->  - remove cd-inverted and make cd-gpio GPIO_ACTIVE_LOW
-> 
->  arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 37 ++++++++++++++++++++++++++++--
->  arch/arm/boot/dts/berlin2q.dtsi            |  5 ++++
->  2 files changed, 40 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-> index cdcf89b..33b2875 100644
-> --- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-> +++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-> @@ -84,12 +84,45 @@
->  			gpio = <&portb 12 GPIO_ACTIVE_HIGH>;
->  			enable-active-high;
->  		};
-> +
-> +		reg_sdio1_vmmc: regulator@3 {
-> +			compatible = "regulator-fixed";
-> +			regulator-min-microvolt = <3300000>;
-> +			regulator-max-microvolt = <3300000>;
-> +			regulator-name = "sdio1_vmmc";
-> +			enable-active-high;
-> +			regulator-boot-on;
-> +			gpio = <&portb 21 GPIO_ACTIVE_HIGH>;
-> +		};
-> +
-> +		reg_sdio1_vqmmc: regulator@4 {
-> +			compatible = "regulator-gpio";
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <3300000>;
-> +			regulator-name = "sdio1_vqmmc";
-> +			regulator-type = "voltage";
-> +			enable-active-high;
-> +			gpios = <&portb 16 GPIO_ACTIVE_HIGH>;
-> +			states = <3300000 0x1
-> +				  1800000 0x0>;
-> +		};
-> +	};
-> +};
-> +
-> +&soc_pinctrl {
-> +	sd1gpio_pmux: sd1pwr-pmux {
-> +		groups = "G23", "G32";
-> +		function = "gpio";
->  	};
->  };
->  
->  &sdhci1 {
-> -	broken-cd;
-> -	sdhci,wp-inverted;
-> +	vmmc-supply = <&reg_sdio1_vmmc>;
-> +	vqmmc-supply = <&reg_sdio1_vqmmc>;
-> +	cd-gpios = <&portc 30 GPIO_ACTIVE_LOW>;
-> +	wp-gpios = <&portd 0 GPIO_ACTIVE_HIGH>;
-> +	pinctrl-0 = <&sd1gpio_pmux>, <&sd1_pmux>;
-> +	pinctrl-names = "default";
->  	status = "okay";
->  };
->  
-> diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
-> index 8ea177f..73a9362 100644
-> --- a/arch/arm/boot/dts/berlin2q.dtsi
-> +++ b/arch/arm/boot/dts/berlin2q.dtsi
-> @@ -417,6 +417,11 @@
->  			soc_pinctrl: pin-controller {
->  				compatible = "marvell,berlin2q-soc-pinctrl";
->  
-> +				sd1_pmux: sd1-pmux {
-> +					groups = "G31";
-> +					function = "sd1";
-> +				};
-> +
->  				twsi0_pmux: twsi0-pmux {
->  					groups = "G6";
->  					function = "twsi0";
-> 
