@@ -1,181 +1,83 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH net-next 2/2] net: hns: enet specisies a reference to
- dsaf (config and documents)
-Date: Mon, 7 Dec 2015 08:12:21 -0600
-Message-ID: <20151207141221.GA18040@rob-hp-laptop>
-References: <1449302356-54658-1-git-send-email-yankejian@huawei.com>
- <1449302356-54658-3-git-send-email-yankejian@huawei.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/6] clk: sunxi: Add DRAM gates support for sun4i-a10
+Date: Mon, 7 Dec 2015 08:15:08 -0600
+Message-ID: <20151207141508.GA21137@rob-hp-laptop>
+References: <1449306009-2627-1-git-send-email-wens@csie.org>
+ <1449306009-2627-2-git-send-email-wens@csie.org>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDJIP47K7MERB4NIS2ZQKGQEGZ5CMLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1449302356-54658-3-git-send-email-yankejian@huawei.com>
-Sender: netdev-owner@vger.kernel.org
-To: yankejian <yankejian@huawei.com>
-Cc: davem@davemloft.net, arnd@arndb.de, fengguang.wu@intel.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, salil.mehta@huawei.com, Yisen.Zhuang@huawei.com, liguozhu@huawei.com, lisheng011@huawei.com, huangdaode@hisilicon.com, xuwei5@hisilicon.com, haifeng.wei@huawei.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com
+In-Reply-To: <1449306009-2627-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 05, 2015 at 03:59:16PM +0800, yankejian wrote:
-> when enet specisies a reference to dsaf, the correlative config and
-
-s/when/When/
-
-> documents needs to update. this patch updates the correlative dtsi file
-
-s/this/This/
-
-> and bindings documents .
-                        ^
-extra space
-
-This change breaks compatibility with old dtbs. IIRC, this is all new, 
-so maybe it doesn't matter, but you should be explicit that you are 
-doing that.
-
-
+On Sat, Dec 05, 2015 at 05:00:04PM +0800, Chen-Yu Tsai wrote:
+> The A10/A20 share the same set of DRAM clock gates, which controls
+> direct memory access for some peripherals.
 > 
-> Signed-off-by: yankejian <yankejian@huawei.com>
+> On the A10, bit 15 controls the system's DRAM clock output (possibly
+> to the DRAM chips), which we need to keep on.
+> 
+> On the A20 this has been moved to the DRAM controller, becoming a no-op.
+> However it is still listed in the user manual, so add it anyway.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Perhaps someone should go and add all the compatible strings you need 
+here. You don't have to have a user in the kernel. These oneline binding 
+changes are getting old...
+
+Rob
+
 > ---
->  .../devicetree/bindings/net/hisilicon-hns-dsaf.txt    |  5 +----
->  .../devicetree/bindings/net/hisilicon-hns-nic.txt     |  7 ++++---
->  arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi          | 19 +++++++++----------
->  3 files changed, 14 insertions(+), 17 deletions(-)
+>  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
+>  drivers/clk/sunxi/clk-simple-gates.c              | 12 ++++++++++++
+>  2 files changed, 13 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
-> index 80411b2..ecacfa4 100644
-> --- a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
-> +++ b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
-> @@ -4,8 +4,6 @@ Required properties:
->  - compatible: should be "hisilicon,hns-dsaf-v1" or "hisilicon,hns-dsaf-v2".
->    "hisilicon,hns-dsaf-v1" is for hip05.
->    "hisilicon,hns-dsaf-v2" is for Hi1610 and Hi1612.
-> -- dsa-name: dsa fabric name who provide this interface.
-> -  should be "dsafX", X is the dsaf id.
->  - mode: dsa fabric mode string. only support one of dsaf modes like these:
->  		"2port-64vf",
->  		"6port-16rss",
-> @@ -26,9 +24,8 @@ Required properties:
->  
->  Example:
->  
-> -dsa: dsa@c7000000 {
-> +dsaf0: dsa@c7000000 {
->  	compatible = "hisilicon,hns-dsaf-v1";
-> -	dsa_name = "dsaf0";
->  	mode = "6port-16rss";
->  	interrupt-parent = <&mbigen_dsa>;
->  	reg = <0x0 0xC0000000 0x0 0x420000
-> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
-> index 41d19be..e6a9d1c 100644
-> --- a/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
-> +++ b/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
-> @@ -4,8 +4,9 @@ Required properties:
->  - compatible: "hisilicon,hns-nic-v1" or "hisilicon,hns-nic-v2".
->    "hisilicon,hns-nic-v1" is for hip05.
->    "hisilicon,hns-nic-v2" is for Hi1610 and Hi1612.
-> -- ae-name: accelerator name who provides this interface,
-> -  is simply a name referring to the name of name in the accelerator node.
-> +- ae-handle: accelerator engine handle for hns,
-> +  specifies a reference to the associating hardware driver node.
-> +  see Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
->  - port-id: is the index of port provided by DSAF (the accelerator). DSAF can
->    connect to 8 PHYs. Port 0 to 1 are both used for adminstration purpose. They
->    are called debug ports.
-> @@ -41,7 +42,7 @@ Example:
->  
->  	ethernet@0{
->  		compatible = "hisilicon,hns-nic-v1";
-> -		ae-name = "dsaf0";
-> +		ae-handle = <&dsaf0>;
->  		port-id = <0>;
->  		local-mac-address = [a2 14 e4 4b 56 76];
->  	};
-> diff --git a/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi b/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi
-> index 606dd5a..89c883e 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi
-> @@ -23,9 +23,8 @@ soc0: soc@000000000 {
->  		};
->  	};
->  
-> -	dsa: dsa@c7000000 {
-> +	dsaf0: dsa@c7000000 {
->  		compatible = "hisilicon,hns-dsaf-v1";
-> -		dsa_name = "dsaf0";
->  		mode = "6port-16rss";
->  		interrupt-parent = <&mbigen_dsa>;
->  
-> @@ -127,7 +126,7 @@ soc0: soc@000000000 {
->  
->  	eth0: ethernet@0{
->  		compatible = "hisilicon,hns-nic-v1";
-> -		ae-name = "dsaf0";
-> +		ae-handle = <&dsaf0>;
->  		port-id = <0>;
->  		local-mac-address = [00 00 00 01 00 58];
->  		status = "disabled";
-> @@ -135,14 +134,14 @@ soc0: soc@000000000 {
->  	};
->  	eth1: ethernet@1{
->  		compatible = "hisilicon,hns-nic-v1";
-> -		ae-name = "dsaf0";
-> +		ae-handle = <&dsaf0>;
->  		port-id = <1>;
->  		status = "disabled";
->  		dma-coherent;
->  	};
->  	eth2: ethernet@2{
->  		compatible = "hisilicon,hns-nic-v1";
-> -		ae-name = "dsaf0";
-> +		ae-handle = <&dsaf0>;
->  		port-id = <2>;
->  		local-mac-address = [00 00 00 01 00 5a];
->  		status = "disabled";
-> @@ -150,7 +149,7 @@ soc0: soc@000000000 {
->  	};
->  	eth3: ethernet@3{
->  		compatible = "hisilicon,hns-nic-v1";
-> -		ae-name = "dsaf0";
-> +		ae-handle = <&dsaf0>;
->  		port-id = <3>;
->  		local-mac-address = [00 00 00 01 00 5b];
->  		status = "disabled";
-> @@ -158,7 +157,7 @@ soc0: soc@000000000 {
->  	};
->  	eth4: ethernet@4{
->  		compatible = "hisilicon,hns-nic-v1";
-> -		ae-name = "dsaf0";
-> +		ae-handle = <&dsaf0>;
->  		port-id = <4>;
->  		local-mac-address = [00 00 00 01 00 5c];
->  		status = "disabled";
-> @@ -166,7 +165,7 @@ soc0: soc@000000000 {
->  	};
->  	eth5: ethernet@5{
->  		compatible = "hisilicon,hns-nic-v1";
-> -		ae-name = "dsaf0";
-> +		ae-handle = <&dsaf0>;
->  		port-id = <5>;
->  		local-mac-address = [00 00 00 01 00 5d];
->  		status = "disabled";
-> @@ -174,7 +173,7 @@ soc0: soc@000000000 {
->  	};
->  	eth6: ethernet@6{
->  		compatible = "hisilicon,hns-nic-v1";
-> -		ae-name = "dsaf0";
-> +		ae-handle = <&dsaf0>;
->  		port-id = <6>;
->  		local-mac-address = [00 00 00 01 00 5e];
->  		status = "disabled";
-> @@ -182,7 +181,7 @@ soc0: soc@000000000 {
->  	};
->  	eth7: ethernet@7{
->  		compatible = "hisilicon,hns-nic-v1";
-> -		ae-name = "dsaf0";
-> +		ae-handle = <&dsaf0>;
->  		port-id = <7>;
->  		local-mac-address = [00 00 00 01 00 5f];
->  		status = "disabled";
+> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+> index 153ac72869e8..ef0b452806b1 100644
+> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
+> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+> @@ -57,6 +57,7 @@ Required properties:
+>  	"allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
+>  	"allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
+>  	"allwinner,sun9i-a80-apbs-gates-clk" - for the APBS gates on A80
+> +	"allwinner,sun4i-a10-dram-gates-clk" - for the DRAM gates on A10
+>  	"allwinner,sun5i-a13-mbus-clk" - for the MBUS clock on A13
+>  	"allwinner,sun4i-a10-mmc-clk" - for the MMC clock
+>  	"allwinner,sun9i-a80-mmc-clk" - for mmc module clocks on A80
+> diff --git a/drivers/clk/sunxi/clk-simple-gates.c b/drivers/clk/sunxi/clk-simple-gates.c
+> index c8acc0612c15..f4da52b5ca0e 100644
+> --- a/drivers/clk/sunxi/clk-simple-gates.c
+> +++ b/drivers/clk/sunxi/clk-simple-gates.c
+> @@ -160,3 +160,15 @@ CLK_OF_DECLARE(sun5i_a13_ahb, "allwinner,sun5i-a13-ahb-gates-clk",
+>  	       sun4i_a10_ahb_init);
+>  CLK_OF_DECLARE(sun7i_a20_ahb, "allwinner,sun7i-a20-ahb-gates-clk",
+>  	       sun4i_a10_ahb_init);
+> +
+> +static const int sun4i_a10_dram_critical_clocks[] __initconst = {
+> +	15,	/* dram_output */
+> +};
+> +
+> +static void __init sun4i_a10_dram_init(struct device_node *node)
+> +{
+> +	sunxi_simple_gates_setup(node, sun4i_a10_dram_critical_clocks,
+> +				 ARRAY_SIZE(sun4i_a10_dram_critical_clocks));
+> +}
+> +CLK_OF_DECLARE(sun4i_a10_dram, "allwinner,sun4i-a10-dram-gates-clk",
+> +	       sun4i_a10_dram_init);
 > -- 
-> 1.9.1
+> 2.6.2
 > 
