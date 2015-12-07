@@ -1,40 +1,75 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] stmmac: Add ptp debugfs entry.
-Date: Mon, 07 Dec 2015 15:37:20 +0100
-Message-ID: <3249879.RWnkoF3UVT@wuerfel>
-References: <1449452324-53858-1-git-send-email-preid@electromag.com.au> <2080516.uAzdPnupR8@wuerfel> <56658BB0.10700@electromag.com.au>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: clock: add description of LPC32xx
+ clock controller
+Date: Mon, 7 Dec 2015 08:39:15 -0600
+Message-ID: <20151207143915.GA887@rob-hp-laptop>
+References: <1449398757-16834-1-git-send-email-vz@mleia.com>
+ <1449398757-16834-2-git-send-email-vz@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56658BB0.10700-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1449398757-16834-2-git-send-email-vz@mleia.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Roland Stigge <stigge@antcom.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 07 December 2015 21:37:52 Phil Reid wrote:
-> On 7/12/2015 5:03 PM, Arnd Bergmann wrote:
-> > On Monday 07 December 2015 09:38:43 Phil Reid wrote:
-> >> This adds a debugfs entry to view the current status of the ptp
-> >> registers.
-> >>
-> >> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-> >>
-> >
-> > Your description should explain what this is good for. Why do you
-> > need to look at this through debugfs?
-> >
+On Sun, Dec 06, 2015 at 12:45:53PM +0200, Vladimir Zapolskiy wrote:
+> NXP LPC32xx SoC has a clocking and power control unit (CPC) as a part
+> of system control block (SCB). CPC is supplied by two external
+> oscillators and it manages core and most of peripheral
+> clocks, the change adds description of DT bindings for clock
+> controller found on LPC32xx SoC series.
 > 
-> Happy to drop this one. I found it helpful when debugging the ptp
-> behaviour. Allowing quick access to monitor the register updates
-> by the ptp driver. Is there an alternative method that is preferred?
+> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 
-For tracing what the driver does, I'd add a trace event, which also
-lets you see when any updates happen.
+Acked-by: Rob Herring <robh@kernel.org>
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+> Changes from v1 to v2:
+> - none
+> 
+>  .../devicetree/bindings/clock/nxp,lpc3220-clk.txt  | 30 ++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt b/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
+> new file mode 100644
+> index 0000000..20cbca3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
+> @@ -0,0 +1,30 @@
+> +NXP LPC32xx Clock Controller
+> +
+> +Required properties:
+> +- compatible: should be "nxp,lpc3220-clk"
+> +- reg:  should contain clock controller registers location and length
+> +- #clock-cells: must be 1, the cell holds id of a clock provided by the
+> +  clock controller
+> +- clocks: phandles of external oscillators, the list must contain one
+> +  32768 Hz oscillator and may have one optional high frequency oscillator
+> +- clock-names: list of external oscillator clock names, must contain
+> +  "xtal_32k" and may have optional "xtal"
+> +
+> +Examples:
+> +
+> +	/* System Control Block */
+> +	scb {
+> +		compatible = "simple-bus";
+> +		ranges = <0x0 0x040004000 0x00001000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +
+> +		clk: clock-controller@0 {
+> +			compatible = "nxp,lpc3220-clk";
+> +			reg = <0x00 0x114>;
+> +			#clock-cells = <1>;
+> +
+> +			clocks = <&xtal_32k>, <&xtal>;
+> +			clock-names = "xtal_32k", "xtal";
+> +		};
+> +	};
+> -- 
+> 2.1.4
+> 
