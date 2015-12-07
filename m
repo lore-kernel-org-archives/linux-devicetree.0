@@ -1,102 +1,91 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] Device tree binding documentation for gpio-switch
-Date: Mon, 7 Dec 2015 11:37:02 -0600
-Message-ID: <20151207173702.GA17659@rob-hp-laptop>
-References: <1449250275-23435-1-git-send-email-martyn.welch@collabora.co.uk>
- <1449250275-23435-2-git-send-email-martyn.welch@collabora.co.uk>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: add Marvell core PLL and clock divider PMU documentation
+Date: Mon, 07 Dec 2015 18:37:47 +0100
+Message-ID: <87oae2b1n8.fsf@free-electrons.com>
+References: <E1a5ijC-0007pd-SL@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1449250275-23435-2-git-send-email-martyn.welch@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martyn Welch <martyn.welch@collabora.co.uk>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <E1a5ijC-0007pd-SL@rmk-PC.arm.linux.org.uk> (Russell King's
+	message of "Sun, 06 Dec 2015 23:28:26 +0000")
+Sender: linux-clk-owner@vger.kernel.org
+To: Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-+Linus W
+Hi Russell,
+=20
+ On lun., d=C3=A9c. 07 2015, Russell King <rmk+kernel@arm.linux.org.uk>=
+ wrote:
 
-On Fri, Dec 04, 2015 at 05:31:13PM +0000, Martyn Welch wrote:
-> This patch adds documentation for the gpio-switch binding. This binding
-> provides a mechanism to bind named links to gpio, with the primary
-> purpose of enabling standardised access to switches that might be standard
-> across a group of devices but implemented differently on each device.
+> Add documentation for the Marvell clock divider driver, which is used
+> to source clocks for the AXI bus, video decoder, GPU and LCD blocks.
+>
+> Acked-by: Andrew Lunn <andrew@lunn.ch>
+> Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
 
-This is good and what I suggested, but it now makes me wonder if switch 
-is generic enough. This boils down to needing to expose single gpio 
-lines to userspace with a defined function/use. IIRC, there's been some 
-discussion about this before along with improving the userspace 
-interface for GPIO in general. So I'd like to get Linus' thoughts on 
-this.
+Applied on mvebu/dt
 
+Thanks,
 
-> Signed-off-by: Martyn Welch <martyn.welch@collabora.co.uk>
+Gregory
+
 > ---
->  .../devicetree/bindings/misc/gpio-switch.txt       | 47 ++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/gpio-switch.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/gpio-switch.txt b/Documentation/devicetree/bindings/misc/gpio-switch.txt
+>  .../bindings/clock/dove-divider-clock.txt          | 28 ++++++++++++=
+++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/dove-divi=
+der-clock.txt
+>
+> diff --git a/Documentation/devicetree/bindings/clock/dove-divider-clo=
+ck.txt b/Documentation/devicetree/bindings/clock/dove-divider-clock.txt
 > new file mode 100644
-> index 0000000..13528bd
+> index 000000000000..e3eb0f657c5e
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/gpio-switch.txt
-> @@ -0,0 +1,47 @@
-> +Device-Tree bindings for gpio attached switches.
+> +++ b/Documentation/devicetree/bindings/clock/dove-divider-clock.txt
+> @@ -0,0 +1,28 @@
+> +PLL divider based Dove clocks
 > +
-> +This provides a mechanism to provide a named link to specified gpios. This can
-> +be useful in instances such as when theres a need to monitor a switch, which is
-> +common across a family of devices, but attached to different gpios and even
-> +implemented in different ways on differnet devices.
+> +Marvell Dove has a 2GHz PLL, which feeds into a set of dividers to p=
+rovide
+> +high speed clocks for a number of peripherals.  These dividers are p=
+art of
+> +the PMU, and thus this node should be a child of the PMU node.
+> +
+> +The following clocks are provided:
+> +
+> +ID	Clock
+> +-------------
+> +0	AXI bus clock
+> +1	GPU clock
+> +2	VMeta clock
+> +3	LCD clock
 > +
 > +Required properties:
-> +	- compatible = "gpio-switch";
+> +- compatible : shall be "marvell,dove-divider-clock"
+> +- reg : shall be the register address of the Core PLL and Clock Divi=
+der
+> +   Control 0 register.  This will cover that register, as well as th=
+e
+> +   Core PLL and Clock Divider Control 1 register.  Thus, it will hav=
+e
+> +   a size of 8.
+> +- #clock-cells : from common clock binding; shall be set to 1
 > +
-> +Each signal is represented as a sub-node of "gpio-switch". The naming of
-> +sub-nodes is arbitrary.
-> +
-> +Required sub-node properties:
-> +
-> +	- label: Name to be given to gpio switch.
-> +	- gpios: OF device-tree gpio specification.
-> +
-> +Optional sub-node properties:
-> +
-> +	- read-only: Boolean flag to mark the gpio as read-only, i.e. the line
-> +	  should not be driven by the host.
+> +divider_clk: core-clock@0064 {
+> +	compatible =3D "marvell,dove-divider-clock";
+> +	reg =3D <0x0064 0x8>;
+> +	#clock-cells =3D <1>;
+> +};
+> --=20
+> 2.1.0
+>
 
-In terms a a switch use, allowing driving it would be an override of the 
-switch. Is that the idea here?
-
-> +
-> +Example nodes:
-> +
-> +        gpio-switch {
-> +                compatible = "gpio-switch";
-
-Both from a binding and driver perspective, there is no point in 
-grouping these. Each node can simply have this compatible string.
-
-> +
-> +                write-protect {
-> +                        label = "write-protect";
-> +                        gpios = <&gpx3 0 GPIO_ACTIVE_LOW>;
-> +                        read-only;
-> +                };
-> +
-> +                developer-switch {
-> +                        label = "developer-switch";
-> +                        gpios = <&gpx1 3 GPIO_ACTIVE_HIGH>;
-> +                        read-only;
-> +                };
-> +
-> +                recovery-switch {
-> +                        label = "recovery-switch";
-> +                        gpios = <&gpx0 7 GPIO_ACTIVE_LOW>;
-> +                        read-only;
-> +                };
-> +        };
-> +
-> -- 
-> 2.1.4
-> 
+--=20
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
