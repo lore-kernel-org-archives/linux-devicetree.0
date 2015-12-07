@@ -1,37 +1,30 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 6/6] arm64: renesas: r8a7795: Add L2 cache-controller
- nodes
-Date: Mon, 7 Dec 2015 19:03:55 +0000
-Message-ID: <20151207190355.GE28024@leverpostej>
-References: <1449512659-16688-1-git-send-email-geert+renesas@glider.be>
- <1449512659-16688-7-git-send-email-geert+renesas@glider.be>
- <5665D4C7.1050705@arm.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH net 1/2] net: cadence: macb: Disable USRIO register on
+ some platforms
+Date: Mon, 07 Dec 2015 14:09:18 -0500 (EST)
+Message-ID: <20151207.140918.1716095197130825314.davem@davemloft.net>
+References: <1449485914-12883-1-git-send-email-narmstrong@baylibre.com>
+	<1449485914-12883-2-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5665D4C7.1050705@arm.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Lina Iyer <lina.iyer@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449485914-12883-2-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 07, 2015 at 06:49:43PM +0000, Sudeep Holla wrote:
-> 
-> On 07/12/15 18:24, Geert Uytterhoeven wrote:
-> >+	L2_CA57: cache-controller@0 {
-> >+		compatible = "cache";
-> >+		arm,data-latency = <4 4 1>;
-> >+		arm,tag-latency = <3 3 3>;
-> 
-> Interesting, only PL2xx/3xx cache controller driver reads this from the
-> DT and configures the controller. The integrated L2 found in
-> A15/A7/A57/A53 needs doesn't make use of these values from the DT.
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Date: Mon,  7 Dec 2015 11:58:33 +0100
 
-These properties seem to be from l2cc.txt, which really only corresponds
-to PL210/PL220/PL310 (and variants) and isn't as generic as it sounds.
+> -	regs_buff[12] = macb_or_gem_readl(bp, USRIO);
+> +	if (!of_property_read_bool(bp->pdev->dev.of_node, "no-usrio")) {
+> +		regs_buff[12] = macb_or_gem_readl(bp, USRIO);
+> +	}
 
-I don't see that these are necessary at all.
-
-Thanks,
-Mark.
+Single statement basic blocks shall not be enclosed in curly braces.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
