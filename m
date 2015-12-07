@@ -1,80 +1,59 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 3/4] PCI: rcar: Add Gen2 fallback compatibility string
-Date: Mon, 7 Dec 2015 09:39:36 -0600
-Message-ID: <20151207153936.GC7994@localhost>
-References: <1448954672-27236-1-git-send-email-horms+renesas@verge.net.au>
- <1448954672-27236-4-git-send-email-horms+renesas@verge.net.au>
+From: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 0/8] CPUs capacity information for heterogeneous
+ systems
+Date: Mon, 7 Dec 2015 15:41:12 +0000
+Message-ID: <20151207154112.GK14571@e106622-lin>
+References: <1448288921-30307-1-git-send-email-juri.lelli@arm.com>
+ <20151207120244.GE14571@e106622-lin>
+ <20151207121135.GN8644@n2100.arm.linux.org.uk>
+ <20151207123654.GG14571@e106622-lin>
+ <20151207131843.GP8644@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1448954672-27236-4-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-pci-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20151207131843.GP8644-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, morten.rasmussen-5wv7dgnIgG8@public.gmane.org, dietmar.eggemann-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 01, 2015 at 04:24:31PM +0900, Simon Horman wrote:
-> Add fallback compatibility string for R-Car Gen 2 Family.
-> This is in keeping with the fallback scheme being adopted wherever
-> appropriate for drivers for Renesas SoCs.
+On 07/12/15 13:18, Russell King - ARM Linux wrote:
+> On Mon, Dec 07, 2015 at 12:36:54PM +0000, Juri Lelli wrote:
+> > On 07/12/15 12:11, Russell King - ARM Linux wrote:
+> > > It looks like the second patch doesn't yet have the backing from the DT
+> > > people, which prevents the remainder of the patch set progressing.  That's
+> > > the sticking point which needs to be resolved.
+> > > 
+> > 
+> > Agreed. That is exactly the point for which I was seeking more feedback.
+> > OTOH, 7/8 and 8/8 may potentially work without the DT bindings, as they
+> > simply expose a sysfs attribute. If you, and others, see value in them,
+> > I can easily put them at the top of the series and post a v2. Thoughts?
 > 
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> I've no idea, sorry.  When it comes to stuff like CPU level power
+> management, the hardware I have is very limited in its capabilities
+> (no support even for S2RAM.)  I've also never managed to get
+> big.LITTLE working on my platforms that should support it.
+> 
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+No problem. Thanks a lot for your feedback anyway.
 
-> ---
->  Documentation/devicetree/bindings/pci/rcar-pci.txt | 13 ++++++++++---
->  drivers/pci/host/pcie-rcar.c                       |  1 +
->  2 files changed, 11 insertions(+), 3 deletions(-)
+> Eg, I gave up with the TC2 tile in Versatile Express.  I forget the
+> details, but getting it booting was exceedingly difficult, and no one
+> really seemed interested in helping.  So my TC2 tile is collecting
+> dust while the CA9x4 tile lives in the platform - which is now part of
+> the nightly build/boot test farm.
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> index 29d3b989d3b0..872cea085be8 100644
-> --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> @@ -1,8 +1,15 @@
->  * Renesas RCar PCIe interface
->  
->  Required properties:
-> -- compatible: should contain one of the following
-> -	"renesas,pcie-r8a7779", "renesas,pcie-r8a7790", "renesas,pcie-r8a7791"
-> +compatible: "renesas,pcie-r8a7779" for the R8A7779 SoC;
-> +	    "renesas,pcie-r8a7790" for the R8A7790 SoC;
-> +	    "renesas,pcie-r8a7791" for the R8A7791 SoC;
-> +	    "renesas,pcie-gen2" for a generic R-Car Gen2 compatible device.
-> +
-> +	    When compatible with the generic version, nodes must list the
-> +	    SoC-specific version corresponding to the platform first
-> +	    followed by the generic version.
-> +
->  - reg: base address and length of the pcie controller registers.
->  - #address-cells: set to <3>
->  - #size-cells: set to <2>
-> @@ -25,7 +32,7 @@ Example:
->  SoC specific DT Entry:
->  
->  	pcie: pcie@fe000000 {
-> -		compatible = "renesas,pcie-r8a7791";
-> +		compatible = "renesas,pcie-r8a7791", "renesas,pcie-gen2";
->  		reg = <0 0xfe000000 0 0x80000>;
->  		#address-cells = <3>;
->  		#size-cells = <2>;
-> diff --git a/drivers/pci/host/pcie-rcar.c b/drivers/pci/host/pcie-rcar.c
-> index f4fa6c537448..17ee0422ddb1 100644
-> --- a/drivers/pci/host/pcie-rcar.c
-> +++ b/drivers/pci/host/pcie-rcar.c
-> @@ -917,6 +917,7 @@ static int rcar_pcie_parse_map_dma_ranges(struct rcar_pcie *pcie,
->  
->  static const struct of_device_id rcar_pcie_of_match[] = {
->  	{ .compatible = "renesas,pcie-r8a7779", .data = rcar_pcie_hw_init_h1 },
-> +	{ .compatible = "renesas,pcie-gen2", .data = rcar_pcie_hw_init },
->  	{ .compatible = "renesas,pcie-r8a7790", .data = rcar_pcie_hw_init },
->  	{ .compatible = "renesas,pcie-r8a7791", .data = rcar_pcie_hw_init },
->  	{},
-> -- 
-> 2.1.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+I guess I could provide some support for the TC2 bits, if you didn't yet
+give up completely on it :-). Please, don't hesitate to let me know,
+even privately, about that.
+
+Best,
+
+- Juri
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
