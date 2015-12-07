@@ -1,38 +1,41 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v7 45/50] drivers/of: Avoid recursively calling
- unflatten_dt_node()
-Date: Sun, 6 Dec 2015 18:21:00 -0800
-Message-ID: <5664ED0C.6060706@roeck-us.net>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v7 45/50] drivers/of: Avoid recursively calling unflatten_dt_node()
+Date: Sun, 6 Dec 2015 20:33:13 -0600
+Message-ID: <CAL_JsqKWtEkmdDyWKjOFdtgX5wx2f+xfJMFw4jmo05Z5Jo_ZYA@mail.gmail.com>
 References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
  <1446642770-4681-46-git-send-email-gwshan@linux.vnet.ibm.com>
  <CAL_Jsq+BnPEKkRgQX4+e0MA9dKLVLhy8rVF25Fr9yXL2jp+WLA@mail.gmail.com>
- <1449446087.21036.1.camel@kernel.crashing.org>
+ <1449446087.21036.1.camel@kernel.crashing.org> <5664ED0C.6060706@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1449446087.21036.1.camel@kernel.crashing.org>
+In-Reply-To: <5664ED0C.6060706@roeck-us.net>
 Sender: linux-pci-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robherring2@gmail.com>, Gavin Shan <gwshan@linux.vnet.ibm.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, aik@ozlabs.ru, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Pantelis Antoniou <panto@antoniou-consulting.com>, Frank Rowand <frowand.list@gmail.com>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, aik@ozlabs.ru, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Pantelis Antoniou <panto@antoniou-consulting.com>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/06/2015 03:54 PM, Benjamin Herrenschmidt wrote:
-> On Sun, 2015-12-06 at 14:28 -0600, Rob Herring wrote:
+On Sun, Dec 6, 2015 at 8:21 PM, Guenter Roeck <linux@roeck-us.net> wrote:
+> On 12/06/2015 03:54 PM, Benjamin Herrenschmidt wrote:
 >>
->> Do you plan to respin the OF parts at least soon? There's another
->> problem Guenter found that of_fdt_unflatten_tree is not re-entrant due
->> to "depth" being static and this series fixes that. So I'd rather
->> apply this and avoid adding a mutex if possible.
+>> On Sun, 2015-12-06 at 14:28 -0600, Rob Herring wrote:
+>>>
+>>>
+>>> Do you plan to respin the OF parts at least soon? There's another
+>>> problem Guenter found that of_fdt_unflatten_tree is not re-entrant due
+>>> to "depth" being static and this series fixes that. So I'd rather
+>>> apply this and avoid adding a mutex if possible.
+>>
+>>
+>> Gavin is on vacation until next year.
+>>
 >
-> Gavin is on vacation until next year.
+> That is a bit more than the timeline I am looking for.
 >
+> Rob, any chance to accept my patch for now ? After all, it can be
+> reverted after the rework is complete, and it would be easier
+> to apply to earlier kernels.
 
-That is a bit more than the timeline I am looking for.
+Yes, will do. It's only 4.1 and later that it should be marked for stable?
 
-Rob, any chance to accept my patch for now ? After all, it can be
-reverted after the rework is complete, and it would be easier
-to apply to earlier kernels.
-
-Thanks,
-Guenter
+Rob
