@@ -1,89 +1,80 @@
 From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 2/4] PCI: rcar-gen2: Add device tree support for r8a7793
-Date: Mon, 7 Dec 2015 09:38:33 -0600
-Message-ID: <20151207153833.GB7994@localhost>
+Subject: Re: [PATCH 3/4] PCI: rcar: Add Gen2 fallback compatibility string
+Date: Mon, 7 Dec 2015 09:39:36 -0600
+Message-ID: <20151207153936.GC7994@localhost>
 References: <1448954672-27236-1-git-send-email-horms+renesas@verge.net.au>
- <1448954672-27236-3-git-send-email-horms+renesas@verge.net.au>
- <20151204212649.GJ20125@localhost>
- <CAMuHMdWEXA-KTkqJsofXuBTQKBrtGW7x+2r+V42CuWwbjkqmvQ@mail.gmail.com>
+ <1448954672-27236-4-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdWEXA-KTkqJsofXuBTQKBrtGW7x+2r+V42CuWwbjkqmvQ@mail.gmail.com>
+In-Reply-To: <1448954672-27236-4-git-send-email-horms+renesas@verge.net.au>
 Sender: linux-pci-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms+renesas@verge.net.au>, Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 05, 2015 at 11:38:37AM +0100, Geert Uytterhoeven wrote:
-> Hi Bjorn,
+On Tue, Dec 01, 2015 at 04:24:31PM +0900, Simon Horman wrote:
+> Add fallback compatibility string for R-Car Gen 2 Family.
+> This is in keeping with the fallback scheme being adopted wherever
+> appropriate for drivers for Renesas SoCs.
 > 
-> On Fri, Dec 4, 2015 at 10:26 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Tue, Dec 01, 2015 at 04:24:30PM +0900, Simon Horman wrote:
-> >> Simply document new compat strings.
-> >> There appears to be no need for a driver updates.
-> >>
-> >> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> >> ---
-> >>  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 1 +
-> >>  1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> >> index b19be08a8113..7c231b3e5872 100644
-> >> --- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> >> +++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> >> @@ -8,6 +8,7 @@ OHCI and EHCI controllers.
-> >>  Required properties:
-> >>  - compatible: "renesas,pci-r8a7790" for the R8A7790 SoC;
-> >>             "renesas,pci-r8a7791" for the R8A7791 SoC;
-> >> +           "renesas,pci-r8a7793" for the R8A7793 SoC;
-> >
-> > What's the benefit of adding a string here if the driver doesn't check
-> > for it?  Since the driver doesn't look for it, there's no way to test
-> > anything.
-> 
-> If we ever discover a difference between PCI on r8a7793 compared to PCI on
-> other SoCs of the R-Car Gen2 family, we can handle that difference in the
-> driver.
-> 
-> > It doesn't seem like this file is an authoritative source of names, so
-> 
-> Yes it is. When adding compatible values to a DTS, checkpatch.pl will check
-> for their existence in the binding documentation. Hence we always add the
-> compatible values to the DT binding docs, before we start using them.
-> 
-> > if we add it here, there's the possibility the r8a7793 will be
-> > canceled or renamed, and then we'd have to update this if the driver
-> > ever did need an r8a7793-specific quirk.  If we waited until the
-> 
-> I don't understand what you mean here.
-> 
-> > driver actually needs a quirk, then we'd know exactly what name to
-> > look for and we could update the driver, DT, and doc all together.
-> 
-> If we update driver, DT, and doc only after we discover the need for a quirk,
-> it's already too late, due to stable DT rules. Hence we always document and
-> use SoC-specific compatible values, sometimes combined with family-specific
-> compatible values. The driver only matches to the as least specific value as
-> possible.
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 
-The stable DT rules seem to be the key here, but I don't know what
-they are.  I found Documentation/devicetree/bindings/ABI.txt, but it
-doesn't clear it up for me.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-I was assuming vendors could ship a DT in a platform ROM, in the same
-way platforms ship with an ACPI system description.  For ACPI, the
-_HID/_CID in the ROM in the field is authoritative in the sense that
-we have to regard it as a fixed, unchangeable feature of the platform.
-If we want a driver to recognize that device, we have to build the ID
-from the ROM into the driver, and it doesn't matter what is documented
-in the spec or in the kernel source.
-
-If we had a one-sentence description of why adding the doc update when
-we actually need it is too late, that would probably be enough.
-
-I'm perfectly happy with the PCI changes, so if somebody else wants to
-just merge all these via a DT tree, I'm happy to ack the PCI ones.
-
-Bjorn
+> ---
+>  Documentation/devicetree/bindings/pci/rcar-pci.txt | 13 ++++++++++---
+>  drivers/pci/host/pcie-rcar.c                       |  1 +
+>  2 files changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> index 29d3b989d3b0..872cea085be8 100644
+> --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> @@ -1,8 +1,15 @@
+>  * Renesas RCar PCIe interface
+>  
+>  Required properties:
+> -- compatible: should contain one of the following
+> -	"renesas,pcie-r8a7779", "renesas,pcie-r8a7790", "renesas,pcie-r8a7791"
+> +compatible: "renesas,pcie-r8a7779" for the R8A7779 SoC;
+> +	    "renesas,pcie-r8a7790" for the R8A7790 SoC;
+> +	    "renesas,pcie-r8a7791" for the R8A7791 SoC;
+> +	    "renesas,pcie-gen2" for a generic R-Car Gen2 compatible device.
+> +
+> +	    When compatible with the generic version, nodes must list the
+> +	    SoC-specific version corresponding to the platform first
+> +	    followed by the generic version.
+> +
+>  - reg: base address and length of the pcie controller registers.
+>  - #address-cells: set to <3>
+>  - #size-cells: set to <2>
+> @@ -25,7 +32,7 @@ Example:
+>  SoC specific DT Entry:
+>  
+>  	pcie: pcie@fe000000 {
+> -		compatible = "renesas,pcie-r8a7791";
+> +		compatible = "renesas,pcie-r8a7791", "renesas,pcie-gen2";
+>  		reg = <0 0xfe000000 0 0x80000>;
+>  		#address-cells = <3>;
+>  		#size-cells = <2>;
+> diff --git a/drivers/pci/host/pcie-rcar.c b/drivers/pci/host/pcie-rcar.c
+> index f4fa6c537448..17ee0422ddb1 100644
+> --- a/drivers/pci/host/pcie-rcar.c
+> +++ b/drivers/pci/host/pcie-rcar.c
+> @@ -917,6 +917,7 @@ static int rcar_pcie_parse_map_dma_ranges(struct rcar_pcie *pcie,
+>  
+>  static const struct of_device_id rcar_pcie_of_match[] = {
+>  	{ .compatible = "renesas,pcie-r8a7779", .data = rcar_pcie_hw_init_h1 },
+> +	{ .compatible = "renesas,pcie-gen2", .data = rcar_pcie_hw_init },
+>  	{ .compatible = "renesas,pcie-r8a7790", .data = rcar_pcie_hw_init },
+>  	{ .compatible = "renesas,pcie-r8a7791", .data = rcar_pcie_hw_init },
+>  	{},
+> -- 
+> 2.1.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
