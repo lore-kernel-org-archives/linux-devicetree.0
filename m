@@ -1,68 +1,139 @@
-From: Hu Vincent <Mingkai.Hu@freescale.com>
-Subject: RE: [PATCH v2] dts/ls2080a: Update PCIe compatible
-Date: Mon, 7 Dec 2015 08:44:19 +0000
-Message-ID: <BY2PR03MB3169DD34DF302BCF7A60FF284090@BY2PR03MB316.namprd03.prod.outlook.com>
-References: <1449224417-20753-1-git-send-email-Mingkai.Hu@freescale.com>
- <20151204162243.GA12415@rob-hp-laptop>
+From: "Kim, Milo" <milo.kim-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 3/9] Documentation: dt-bindings: leds: add LM3633 LED
+ binding information
+Date: Mon, 7 Dec 2015 17:46:14 +0900
+Message-ID: <56654756.5050601@ti.com>
+References: <1448521025-2796-1-git-send-email-milo.kim@ti.com>
+ <1448521025-2796-4-git-send-email-milo.kim@ti.com>
+ <56583C32.5030307@samsung.com> <565C0677.4030606@ti.com>
+ <565C408B.9070703@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20151204162243.GA12415@rob-hp-laptop>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Li Leo <LeoLi@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Lian M.H." <Minghuan.Lian@freescale.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <565C408B.9070703-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Jacek,
+
+On 11/30/2015 9:26 PM, Jacek Anaszewski wrote:
+> In case of LM3633 the real current outputs are banks and multiplexing
+> that occurs between banks and LVLEDn pins can be conveniently expressed
+> with the bindings I proposed above.
+>
+>> >If three output channels are controlled by one control bank, then it
+>> >should be represented as below.
+>> >
+>> >lvled-group-A {
+>> >      led-sources = <0>, <1>, <2>;
+>> >      led-max-microamp = <some value>;
+>> >}
+>> >
+>> >Please let me know if I misunderstand.
+> You silently assumed some definition of a "channel". led-sources means
+> in fact current sources, and when device is configured so that three
+> output pins are routed to the same current source, then in fact
+> they share common current source.
+
+Thanks for comments. I've modified 'led-sources' based on your feedback.
+Could you check updated dt-bindings below?
+
+* Updates
+- led-sources: List of current sources from 0 to 5.
+- ti,led-outputs: Output channel specifier
+
+The 'ti,led-outputs' property is exactly matched with datasheet 
+description, so it's easy to understand which current source is used for 
+output channels.
+---
+TI LMU LM3633 LED device tree bindings
+
+Required properties:
+   - compatible: "ti,lm3633-leds"
+
+Child nodes:
+   Each node matches with LED control bank.
+   Please refer to the datasheet [1].
+
+   Required properties of a child node:
+   - led-sources: List of current sources from 0 to 5.
+                  0: control bank C for output LED 1
+                     control bank C for output LED 1 and 2
+                     control bank C for output LED 1, 2 and 3
+                  1: control bank D for output LED 2
+                  2: control bank E for output LED 3
+                  3: control bank F for output LED 4
+                     control bank F for output LED 4 and 5
+                     control bank F for output LED 4, 5 and 6
+                  4: control bank G for output LED 5
+                  5: control bank H for output LED 6
+                  Please refer to LED binding [2].
+
+   - ti,led-outputs: Output channel specifier from 0 to 5.
+                     0: LED 1
+                     1: LED 2
+                     2: LED 3
+                     3: LED 4
+                     4: LED 5
+                     5: LED 6
+
+   Optional properties of a child node:
+   - label: LED channel identification. Please refer to LED binding [2].
+   - led-max-microamp: Max current setting. Type is <u32>.
+                       Unit is microampere. Range is from 5000 to 29800.
+                       Step is 800. Please refer to LED binding [2].
+
+Examples:
+
+LED 1 is assigned for status LED. LED 4,5 and 6 are used for RGB 
+indicator. RGB channels are controlled by bank F internally.
+
+leds {
+	compatible = "ti,lm3633-leds";
+
+	status {
+		led-sources = <0>;
+		led-max-microamp = <5000>;
+		ti,led-outputs = <0>;
+	};
+
+	rgb {
+		led-sources = <3>;
+		led-max-microamp = <6600>;
+		ti,led-outputs = <3 4 5>;
+	};
+};
+
+LED 2 is power LED. LED 5 is notification LED.
+
+leds {
+	compatible = "ti,lm3633-leds";
+
+	lvled2 {
+		label = "power";
+		led-sources = <1>;
+		led-max-microamp = <29000>;
+		ti,led-outputs = <1>;
+	};
+
+	lvled5 {
+		label = "noti";
+		led-sources = <4>;
+		led-max-microamp = <6600>;
+		ti,led-outputs = <4>;
+	};
+};
 
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Saturday, December 05, 2015 12:23 AM
-> To: Hu Mingkai-B21284
-> Cc: arm@kernel.org; devicetree@vger.kernel.org; Li Yang-Leo-R58472;
-> linux-arm-kernel@lists.infradead.org; Lian Minghuan-B31939
-> Subject: Re: [PATCH v2] dts/ls2080a: Update PCIe compatible
-> 
-> On Fri, Dec 04, 2015 at 06:20:17PM +0800, Mingkai Hu wrote:
-> > From: Minghuan Lian <Minghuan.Lian@freescale.com>
-> >
-> > The patch adds LS2085a to PCIe compatible to fix the compatibility
-> > issue when using firmware with LS2085a compatible property.
-> >
-> > Signed-off-by: Minghuan Lian <Minghuan.Lian@freescale.com>
-> > Signed-off-by: Mingkai Hu <Mingkai.Hu@freescale.com>
-> > ---
-> > v2 change:
-> >  - Rebased to latest kernel base
-> 
-> How about implementing my comments on v1, too?
-> 
+[1] http://www.ti.com/product/LM3633/datasheet
+[2] ../leds/common.txt
 
-Hi Rob,
-
-Do you mean to change the combinations in layerscape-pci.txt as follows?
-
-> --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> @@ -15,6 +15,7 @@ Required properties:
->  - compatible: should contain the platform identifier such as:
->          "fsl,ls1021a-pcie", "snps,dw-pcie"
-> -        "fsl,ls2080a-pcie", "snps,dw-pcie"
-> +        "fsl,ls2080a-pcie", "fsl,ls2085a-pcie", "snps,dw-pcie"
-
-
-And the ls2085a was released first, but the dts file is for ls2080a (fsl-ls2080a.dtsi),
-So I prefer to put the ls2080a as the first compatible string. How about your suggestion?
-
-Thanks,
-Mingkai
+Best regards,
+Milo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
