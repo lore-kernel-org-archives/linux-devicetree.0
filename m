@@ -1,62 +1,33 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3] of: fix build failure
-Date: Mon, 7 Dec 2015 19:12:30 +0100
-Message-ID: <CAMuHMdVQhW6P79-rNG=oz5QF3eHgQUGWUt0LAbhAzxMxvL+-3w@mail.gmail.com>
-References: <1449490849-1833-1-git-send-email-sudipm.mukherjee@gmail.com>
-	<CAMuHMdWFaHGnT5GNsN+HEYH2RhMwocwV0GNQbnXBiTYuocZ3QA@mail.gmail.com>
-	<20151207163006.GA3819@sudip-laptop>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 4/7] mtd: add of_match_mtd_parser() and
+ of_mtd_match_mtd_parser() helpers
+Date: Mon, 7 Dec 2015 10:13:08 -0800
+Message-ID: <20151207181308.GN120110@google.com>
+References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
+ <1449292763-129421-5-git-send-email-computersforpeace@gmail.com>
+ <CAL_JsqLV1mDpW9tD0XjWRxZSSsYuDiqHbuADQmBUtACgYiHJ+w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151207163006.GA3819@sudip-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLV1mDpW9tD0XjWRxZSSsYuDiqHbuADQmBUtACgYiHJ+w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 7, 2015 at 5:30 PM, Sudip Mukherjee
-<sudipm.mukherjee@gmail.com> wrote:
->> > --- a/include/linux/of_address.h
->> > +++ b/include/linux/of_address.h
->> > @@ -112,8 +112,6 @@ static inline bool of_dma_is_coherent(struct device_node *np)
->> >  extern int of_address_to_resource(struct device_node *dev, int index,
->> >                                   struct resource *r);
->> >  void __iomem *of_iomap(struct device_node *node, int index);
->> > -void __iomem *of_io_request_and_map(struct device_node *device,
->> > -                                       int index, const char *name);
->>
->> Upon closer look, both of_address_to_resource() and of_iomap() are
->> provided by drivers/of/address.c, so they should also be protected by
->> #ifdef CONFIG_OF_ADDRESS instead of CONFIG_OF.
->> Then the whole #ifdef CONFIG_OF section becomes empty.
->>
->> >  #else
-> <snip>
->> >
->> >  #if defined(CONFIG_OF_ADDRESS) && defined(CONFIG_PCI)
->> >  extern const __be32 *of_get_pci_address(struct device_node *dev, int bar_no,
->>
->> Hence can you please move all of them to the existing
->> #ifdef CONFIG_OF_ADDRESS section, and move the #include <linux/io.h>
->> to the top?
->
-> oops, no. I think you have missed seeing few more places.
-> of_address_to_resource() of_iomap() are both defined in
-> arch/sparc/kernel/of_device_common.c
-> So if it is moved under #ifdef CONFIG_OF_ADDRESS then we again
-> get a build failure for duplicate definition of them.
+On Sun, Dec 06, 2015 at 08:45:40PM -0600, Rob Herring wrote:
+> On Fri, Dec 4, 2015 at 11:19 PM, Brian Norris
+> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >  drivers/of/of_mtd.c            | 33 +++++++++++++++++++++++++++++++++
+> 
+> BTW, this file should be moved to drivers/mtd/ at some point.
 
-Oops, you're right.
+How about s/at some point/now/ ? I can send a separate patch. It also
+seems like these should just get linked into the 'mtd' module (when
+CONFIG_OF=y) instead of having a tiny module for just a few functions.
 
-Sorry, I never noticed before sparc provides its own definitions.
+Why did files like this get placed here anyway? Is there a reason that
+there are things like of_net and of_pci here too?
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Brian
