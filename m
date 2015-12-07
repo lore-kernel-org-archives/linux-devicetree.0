@@ -1,40 +1,72 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [RFC PATCH 0/8] CPUs capacity information for heterogeneous
- systems
-Date: Mon, 7 Dec 2015 12:11:35 +0000
-Message-ID: <20151207121135.GN8644@n2100.arm.linux.org.uk>
-References: <1448288921-30307-1-git-send-email-juri.lelli@arm.com>
- <20151207120244.GE14571@e106622-lin>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: [PATCH v5 0/4] drm: Add support for the ARM HDLCD display controller
+Date: Mon,  7 Dec 2015 12:11:01 +0000
+Message-ID: <1449490265-6752-1-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151207120244.GE14571@e106622-lin>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Juri Lelli <juri.lelli@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh@kernel.org>, Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: devicetree <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Punit Agrawal <punit.agrawal@arm.com>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>, Andrew Morton <akpm@linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 07, 2015 at 12:02:44PM +0000, Juri Lelli wrote:
-> On 23/11/15 14:28, Juri Lelli wrote:
-> > Hi all,
-> > 
-> 
-> Hi again everybody,
-> 
-> thanks a lot to Rob and Vincent for feedback, but, IMHO, we'd need more
-> discussion happening on this series to figure out how we move forward;
-> so, this is a ping :-).  It's a simple information that we need to figure
-> out how to provide, and in which form, but it has the potential to form
-> a standardized basis for achieving important performance benefits.
-
-I'm happy to take the first patch, it looks like a simple clean up.
-Please arrange for it to land in my patch system.  Thanks.
-
-It looks like the second patch doesn't yet have the backing from the DT
-people, which prevents the remainder of the patch set progressing.  That's
-the sticking point which needs to be resolved.
-
--- 
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+VGhpcyBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciBBUk0ncyBIRExDRCBkaXNwbGF5IGNvbnRyb2xs
+ZXIgZm91bmQgaW4gSnVubwphbmQgQVJNIFRDMiBDb3JldGlsZS4gVGhlIEhETENEIG91dHB1dHMg
+YW4gUkdCIHN0cmVhbSB0aGF0IGZlZWRzIGludG8gYQpzaW5nbGUgZGlnaXRhbCBlbmNvZGVyIChE
+Vkkgb3IgSERNSSkuCgpUaGUgZGVwZW5kZW5jaWVzIGZvciB0aGlzIHBhdGNoIHNlcmllcyBhcmUg
+bm93IHF1ZXVlZCBmb3IgdGhlIG5leHQgcmVsZWFzZSBvcgphcmUgYWxyZWFkeSBpbiB0aGUgbWFp
+bmxpbmUuCgpPbmx5IHRoZSBKdW5vIGZ1bmN0aW9uYWxpdHkgaGFzIGJlZW4gdGVzdGVkIGFzIHRo
+ZSBUQzIgQ29yZXRpbGUgcmVxdWlyZQphIHdvcmtpbmcgU2lJOTAyMiBkcml2ZXIgZm9yIFZFeHBy
+ZXNzIHRoYXQgaXMgbm90IHN1YmplY3Qgb2YgdGhpcyBwYXRjaHNldC4KCkNoYW5nZWxvZzoKdjU6
+IFF1ZXVlIHRoZSBwZW5kaW5nIHZibGFuayBldmVudHMgc2VudCBieSB1c2Vyc3BhY2UgdXNpbmcg
+YSBsaXN0IGluc3RlYWQgb2YKICAgIGtlZXBpbmcgdGhlIGxhc3QgZXZlbnQgc2Vlbi4gU3VnZ2Vz
+dGVkIGJ5IERhbmllbCBTdG9uZSA8ZGFuaWVsQGZvb2lzaGJhci5vcmc+Lgp2NDogUmVtb3ZlIHNv
+bWUgZGVidWdnaW5nIGNvZGUgdGhhdCBjb3VsZCByZXR1cm4gYW4gZXJyb3Igb24gYSBjcml0aWNh
+bCBwYXRoCiAgICBhbmQgdXBkYXRlZCB0aGUgY2hlY2sgZm9yIHZhbGlkIGZvcm1hdCBpbiBoZGxj
+ZF9zZXRfcHhsX2ZtdCgpIHRvIG9ubHkKICAgIFdBUk4oKSBpZiBhbiBpbnZhbGlkIGZvcm1hdCBm
+b3VuZCAodW5saWtlbHkgY2FzZSkuIEFkZGVkIHRoZSBBQ0tzIHJlY2VpdmVkLiBbMV0KdjM6IENo
+YW5nZWQgdGhlIGRyaXZlciB0byB1c2UgdGhlIG1lbW9yeS1yZWdpb24gcGhhbmRsZSBmb3IgYmVz
+cG9rZSBmcmFtZWJ1ZmZlcnMuIFsyXQp2MjogQWRkZWQgc3VwcG9ydCBmb3IgYXRvbWljIG1vZGVz
+ZXQgWzNdCnYxOiBPcmlnaW5hbCBEUk0gc3VibWlzc2lvbiBbNF0KClsxXSBodHRwOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE1LURlY2VtYmVyLzA5NTk5MC5o
+dG1sClsyXSBodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8y
+MDE1LURlY2VtYmVyLzA5NTg3Ny5odG1sClszXSBodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE1LU5vdmVtYmVyLzA5NDE3Ny5odG1sCls0XSBodHRwOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE1LUF1Z3VzdC8wODc2
+ODUuaHRtbAoKQmVzdCByZWdhcmRzLApMaXZpdQoKTGl2aXUgRHVkYXUgKDQpOgogIGRybTogYXJt
+OiBBZGQgRFQgYmluZGluZ3MgZG9jdW1lbnRhdGlvbiBmb3IgSERMQ0QgZHJpdmVyLgogIGRybTog
+QWRkIHN1cHBvcnQgZm9yIEFSTSdzIEhETENEIGNvbnRyb2xsZXIuCiAgYXJtNjQ6IEp1bm86IEFk
+ZCBIRExDRCBzdXBwb3J0IHRvIHRoZSBKdW5vIGJvYXJkcy4KICBNQUlOVEFJTkVSUzogQWRkIExp
+dml1IER1ZGF1IGFzIG1haW50YWluZXIgZm9yIEFSTSBIRExDRCBkcml2ZXIuCgogLi4uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hcm0saGRsY2QudHh0ICAgICAgfCAgNzkgKysrCiBNQUlO
+VEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNiArCiBh
+cmNoL2FybTY0L2Jvb3QvZHRzL2FybS9qdW5vLWJhc2UuZHRzaSAgICAgICAgICAgICB8ICA0NiAr
+LQogZHJpdmVycy9ncHUvZHJtL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAg
+IDIgKwogZHJpdmVycy9ncHUvZHJtL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAg
+fCAgIDEgKwogZHJpdmVycy9ncHUvZHJtL2FybS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgMjkgKysKIGRyaXZlcnMvZ3B1L2RybS9hcm0vTWFrZWZpbGUgICAgICAgICAgICAgICAg
+ICAgICAgIHwgICAyICsKIGRyaXZlcnMvZ3B1L2RybS9hcm0vaGRsY2RfY3J0Yy5jICAgICAgICAg
+ICAgICAgICAgIHwgMzI5ICsrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL2FybS9oZGxjZF9k
+cnYuYyAgICAgICAgICAgICAgICAgICAgfCA1ODAgKysrKysrKysrKysrKysrKysrKysrCiBkcml2
+ZXJzL2dwdS9kcm0vYXJtL2hkbGNkX2Rydi5oICAgICAgICAgICAgICAgICAgICB8ICA0MiArKwog
+ZHJpdmVycy9ncHUvZHJtL2FybS9oZGxjZF9yZWdzLmggICAgICAgICAgICAgICAgICAgfCAgODcg
+KysrKwogMTEgZmlsZXMgY2hhbmdlZCwgMTE5OSBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygt
+KQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L2FybSxoZGxjZC50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
+YXJtL0tjb25maWcKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYXJtL01ha2Vm
+aWxlCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2FybS9oZGxjZF9jcnRjLmMK
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNkX2Rydi5jCiBjcmVh
+dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2FybS9oZGxjZF9kcnYuaAogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9hcm0vaGRsY2RfcmVncy5oCgotLSAKMi42LjIKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
