@@ -1,61 +1,45 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH resend 5/6] ARM: dts: sun7i: Add DRAM gates
-Date: Mon, 7 Dec 2015 10:21:37 +0100
-Message-ID: <20151207092137.GC27957@lukather>
-References: <1449321407-4531-1-git-send-email-wens@csie.org>
- <1449321407-4531-6-git-send-email-wens@csie.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] pinctrl: sunxi: Add H3 PIO
+ controller support
+Date: Mon, 7 Dec 2015 10:23:22 +0100
+Message-ID: <20151207092322.GD27957@lukather>
+References: <1449264283-25360-1-git-send-email-jenskuske@gmail.com>
+ <1449264283-25360-3-git-send-email-jenskuske@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0lnxQi9hkpPO77W3"
-Return-path: <linux-clk-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="UoPmpPX/dBe4BELn"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBFNASWZQKGQEQXYOLCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1449321407-4531-6-git-send-email-wens@csie.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Emilio Lopez <emilio@elopez.com.ar>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+In-Reply-To: <1449264283-25360-3-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---0lnxQi9hkpPO77W3
-Content-Type: text/plain; charset=us-ascii
+--UoPmpPX/dBe4BELn
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Dec 05, 2015 at 09:16:46PM +0800, Chen-Yu Tsai wrote:
-> The DRAM gates controls direct memory access for some peripherals.
-> These peripherals include the display pipeline, so add the required
-> gates to the simplefb nodes as well.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+On Fri, Dec 04, 2015 at 10:24:41PM +0100, Jens Kuske wrote:
+> The H3 uses the same pin controller as previous SoC's from Allwinner.
+> Add support for the pins controlled by the main PIO controller.
+> 
+> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Applied, thanks!
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Thanks!
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
-
---0lnxQi9hkpPO77W3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWZU+hAAoJEBx+YmzsjxAgp+gQAJnjd6i4xVIgO0L9L5S64U97
-RXPxAPy00IPnu73DqggTs8Drkmf+Xqwck8LTVLJoEj6P+rd4AJYgoIMM4/7KmzBl
-4aMIJwNIQ+dpAi9h/otVUwW3s/4nHQ6LJvOSzVVYMid74R33PSz9UFuTGrKCtRH7
-HgIIJcGBW8OAMjf4TqV9JClHIFL90oWC8PJtIP/R80/l3Sq1k2qOLSk9SxC3d73C
-cfBWgkP7eeQcu0U/6L3MV9pXpztorTz9jYth0wKV1br6gEtwg6ttaOR4FLPrJDxP
-IJdf4SkqxFTHtYh8zmyszu96LyJmS0dYXs49GpnPs9qewvqBqFDQKYv9qPzR+oVg
-EltC/mJvK4BRAFrx0Qd4UEHEbYwFOsxjOGPhWOLyO5zGRG8E9zvsuvpIK4uBoGM9
-X3SMJsco7Don2Ru+c38Q92V3jBQPpadXjoXqHbRnLPQfC+f7wtbOIVaipH8g21X6
-cU2pddt0uK1mJKunOu9t7zGuD1WHGPTgrS39oNMYrNkgNXbk6JLEuNKq+y3CPTzu
-DAHoVgSQMEFkqG6Iq078Xf8597EdUZK8vj7RX6YZpyXspDLqGE/ol5nRCvrONiuo
-kVm0X08ziNtvcYLeuUXKSI79i8fTDQveAFbvaCsjS/iK0ekxugmAd/kGIyIB66CN
-QhodfYZnXP3n+2d+7qeQ
-=awQh
------END PGP SIGNATURE-----
-
---0lnxQi9hkpPO77W3--
+--UoPmpPX/dBe4BELn--
