@@ -1,107 +1,53 @@
-From: xuejiancheng <xuejiancheng@huawei.com>
-Subject: Re: [PATCH v2 4/9] ARM: dts: add dts files for hi3519-demb board
-Date: Mon, 7 Dec 2015 14:37:06 +0800
-Message-ID: <56652912.80308@huawei.com>
-References: <1449110668-23647-1-git-send-email-xuejiancheng@huawei.com>
- <1728470.0OiiXMcl88@wuerfel> <5660FA2E.6040601@huawei.com>
- <3047121.2z9SCS5Au2@wuerfel>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v2 10/10] dt-bindings: Add DSIv2 documentation
+Date: Mon, 7 Dec 2015 12:21:19 +0530
+Message-ID: <56652C67.1070000@codeaurora.org>
+References: <1444827544-25656-1-git-send-email-architt@codeaurora.org>
+ <1447844131-4182-1-git-send-email-architt@codeaurora.org>
+ <1447844131-4182-11-git-send-email-architt@codeaurora.org>
+ <CAL_JsqJufZvsGyxZ40+kPcAVr5mXqCi+Qej_8X6=GRxT9j+5+w@mail.gmail.com>
+ <564C981F.3040907@codeaurora.org>
+ <CAL_JsqJ7PovZsz0=b90bUChKtNra1pXxEjU_DiYAn7JUgShm5Q@mail.gmail.com>
+ <5652AE71.4060609@codeaurora.org> <20151202082001.GC4139@codeaurora.org>
+ <20151202083404.GD4139@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3047121.2z9SCS5Au2@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, suwenping@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yanhaifeng@hisilicon.com, gaofei@hisilicon.com, ml.yang@hisilicon.com, yanghongwei@hisilicon.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20151202083404.GD4139@codeaurora.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 2015/12/4 18:49, Arnd Bergmann wrote:
-> On Friday 04 December 2015 10:27:58 xuejiancheng wrote:
->>>
->>>> +            sysctrl: system-controller@12020000 {
->>>> +                    compatible =3D "hisilicon,sysctrl";
->>>> +                    reg =3D <0x12020000 0x1000>;
->>>> +                    reboot-offset =3D <0x4>;
->>>> +            };
->>>
->>> Is this one identical to the one in hip04?
->>>
->>> If not, pick a new unique compatible string
->>
->> Yes. It's compatible with the one in hip04.
->=20
-> Ok, we should add a compatible string for that then, as the hip04 app=
-arently
-> has a slightly different layout from hip01.
->=20
-> Can you add a separate patch to clarify the existing hisilicon,sysctr=
-l nodes?
->=20
-> It look like hi3620 accidentally uses the same string as hip04 alread=
-y
-> but is actually a bit different.
->=20
-> Maybe split out the sysctrl binding from
-> Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt, as it =
-has
-> you already have a couple of those, and it's not clear how they relat=
-e
-> to one another.
->=20
-> If we introduce a string for all hip04 compatible sysctrl devices, we=
- should
-> document that and use it consistently, so hi3519 becomes
->=20
-> 	compatible =3D "hisilicon,hi3519-sysctrl", "hisilicon,hip04-sysctrl"=
-, "hisilicon,sysctrl";
->=20
-> but I'd clarify in the binding documentation that "hisilicon,sysctrl"=
- should
-> only be used for hip04 and hi3519 but not the others.
->=20
-> As this seems to be a standard part, we can also think about making a
-> high-level driver for in in drivers/soc rather than relying on the sy=
-scon
-> driver which we tend to use more for one-off devices with random regi=
-ster
-> layouts.
->=20
-   Sorry. I didn't understand your meaning well and maybe I gave you a =
-wrong description.
-Please allow me to clarify it again.
-   The "sysctrl" nodes here is just used for the "reboot" function. It =
-is corresponding to
-the driver "drivers/power/reset/hisi-reboot.c". The compatible string i=
-n the driver is
-"hisilicon,sysctrl".
-   The layout of this block is also different from the one in HiP04.
-
->>>> +
->>>> +            crg: crg@12010000 {
->>>> +                    compatible =3D "hisilicon,hi3519-crg";
->>>
->>>
->>> what is a "crg"? Is there a standard name for these?
->>
->> The "crg" means Clock and Reset Generator. It's a block which suppli=
-es clock
->> and reset signals for other modules in the chip. I used "hi3519-cloc=
-k"
->> in last version patch. Rob Herring suggested that it's better to use=
- "hi3519-crg"
->> as the compatible string if it's a whole block.
->>
->> what about writing like this=EF=BC=9F
->>
->> crg: clock-reset-controller@12010000 {
->>         compatible =3D "hisilicon,hi3519-crg";
->>         }
->>
->=20
-> Ok, that's better.
->=20
-> 	Arnd
->=20
-> .
->=20
+CgpPbiAxMi8wMi8yMDE1IDAyOjA0IFBNLCBTdGVwaGVuIEJveWQgd3JvdGU6Cj4gT24gMTIvMDIs
+IFN0ZXBoZW4gQm95ZCB3cm90ZToKPj4KPj4gTXkgb25seSB0aG91Z2h0IHRoZXJlIHdvdWxkIGJl
+IHRvIG1ha2Ugb2ZfY2xrX3NldF9kZWZhdWx0cygpIHdhaXQKPj4gdW50aWwgYm90aCBjbG9ja3Mg
+YXJlIHJlZ2lzdGVyZWQgYmVmb3JlIGl0IGRvZXMgYW55IHBhcmVudAo+PiBzZXR0aW5nLiBCdXQg
+b25seSBpbiB0aGUgY2FzZSB3aGVyZSB0aGUgYXNzaWduZWQgcGFyZW50cyBjb250YWlucwo+PiBh
+IGNsb2NrIHRoYXQgaXMgcHJvdmlkZWQgYnkgdGhlIG5vZGUgYmVpbmcgcHJvY2Vzc2VkLiBJIHN1
+cHBvc2UKPj4gdGhlIHNpbXBsZXN0IHRoaW5nIHRvIGRvIHdvdWxkIGJlIHRvIHNraXAgaXQgZHVy
+aW5nIHRoZSBkZXZpY2UKPj4gZHJpdmVyIHByb2JlIGFuZCBoYW5kbGUgaXQgd2hlbiB0aGUgY2xr
+IHByb3ZpZGVyIGlzIHJlZ2lzdGVyZWQuCj4+Cj4KPiBBY3R1YWxseSBpdCBsb29rcyBsaWtlIHdl
+IGFscmVhZHkgaGF2ZSB0aGUgY29kZSBmb3IgdGhhdC4KPgo+IAlpZiAoY2xrc3BlYy5ucCA9PSBu
+b2RlICYmICFjbGtfc3VwcGxpZXIpCj4gCQlyZXR1cm4gMDsKPgo+IFNvIGFzc2lnbmVkIHBhcmVu
+dHMgc2hvdWxkICJqdXN0IHdvcmsiPwoKSSB0cmllZCB1c2luZyBhc3NpZ25lZC1wYXJlbnRzIGFu
+ZCBpdCB3b3JrcyBmaW5lLgoKVGhlIGlzc3VlIHlvdSBtZW50aW9uZWQgYWJvdmUgZG9lc24ndCBh
+cHBseSBpbiBvdXIgY2FzZSwgYmVjYXVzZQp3ZSBoYXZlIHR3byBkaWZmZXJlbnQgZGV2aWNlcyBm
+b3IgImRzaSIgYW5kICJkc2lfcGh5Ii4gZHNpX3BoeSBpcyB0aGUKY2xvY2sgcHJvdmlkZXIgaGVy
+ZSBhbmQgZHNpIGlzIHRoZSBvbmUgdGhhdCB3YW50cyB0byBhc3NpZ24gY2xvY2tzLgoKSWYgdGhl
+cmUgd2FzIG9ubHkgb25lIGRzaSBkZXZpY2UgcmVwcmVzZW50aW5nIGJvdGggRFNJIGFuZCBQSFks
+IHRoZW4Kd2UnZCBoaXQgdGhlIGNvbmRpdGlvbiB5b3UgbWVudGlvbmVkLgoKVGhhbmtzLApBcmNo
+aXQKCi0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIg
+b2YgdGhlIENvZGUgQXVyb3JhIApGb3J1bSwgaG9zdGVkIGJ5IFRoZSBMaW51eCBGb3VuZGF0aW9u
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
