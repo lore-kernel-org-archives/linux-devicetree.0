@@ -1,92 +1,119 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v9 3/8] ARM: dt: Binding documentation for imx25
- touchscreen controller
-Date: Mon, 7 Dec 2015 14:45:46 -0600
-Message-ID: <20151207204546.GA30936@rob-hp-laptop>
-References: <1449431542-1892-1-git-send-email-mpa@pengutronix.de>
- <1449431542-1892-4-git-send-email-mpa@pengutronix.de>
+From: Martyn Welch <martyn.welch@collabora.co.uk>
+Subject: Re: [PATCH 1/3] Device tree binding documentation for gpio-switch
+Date: Mon, 07 Dec 2015 21:10:55 +0000
+Message-ID: <5665F5DF.50002@collabora.co.uk>
+References: <1449250275-23435-1-git-send-email-martyn.welch@collabora.co.uk> <1449250275-23435-2-git-send-email-martyn.welch@collabora.co.uk> <20151207173702.GA17659@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1449431542-1892-4-git-send-email-mpa@pengutronix.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: Shawn Guo <shawnguo@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee.jones@linaro.org>, Denis Carikli <denis@eukrea.com>, Eric =?iso-8859-1?Q?B=E9nard?= <eric@eukrea.com>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hartmut Knaack <knaack.h@gmx.de>, Fabio Estevam <festevam@gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20151207173702.GA17659@rob-hp-laptop>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 06, 2015 at 08:52:16PM +0100, Markus Pargmann wrote:
-> This is the touchscreen conversion queue binding documentation. It uses
-> the shared imx25 ADC.
-> 
-> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> ---
-> 
-> Notes:
->     Changes in v9:
->      - Updated binding descriptions
->     
->     Changes in v5:
->      - Fix signed/unsigned comparison
->      - Fix unused variable settling_time by putting it in the correct argument list
->      - Use continous conversion queue with the repeat feature and a proper
->        repeat-wait. Previously the touchscreen caused massive number of interrupts.
-> 
->  .../bindings/input/touchscreen/fsl-mx25-tcq.txt    | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/fsl-mx25-tcq.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/fsl-mx25-tcq.txt b/Documentation/devicetree/bindings/input/touchscreen/fsl-mx25-tcq.txt
-> new file mode 100644
-> index 000000000000..d45e50872114
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/fsl-mx25-tcq.txt
-> @@ -0,0 +1,35 @@
-> +Freescale mx25 TS conversion queue module
-> +
-> +mx25 touchscreen conversion queue module which controls the ADC unit of the
-> +mx25 for attached touchscreens.
-> +
-> +Required properties:
-> + - compatible: Should be "fsl,imx25-tcq".
-> + - reg: Memory range of the device.
-> + - interrupts: Should be the interrupt number associated with this module within
-> +   the tscadc unit (<0>).
-> + - interrupt-parent: Should be a phandle to the tscadc unit.
-> + - fsl,wires: Should be '<4>' or '<5>'
-> +
-> +Optional properties:
-> + - fsl,pen-debounce: Pen debounce time in nanoseconds.
 
-This and ...
 
-> + - fsl,pen-threshold: Pen-down threshold for the touchscreen. This is a value
-> +   between 1 and 4096. It is the ratio between the internal reference voltage
-> +   and the measured voltage after the plate was precharged. Resistence between
-> +   plates and therefore the voltage decreases with pressure so that a smaller
-> +   value is equivalent to a higher pressure.
-> + - fsl,settling-time: Settling time in nanoseconds. The settling time is before
-> +   the actual touch detection to wait for an even charge distribution in the
-> +   plate.
+On 07/12/15 17:37, Rob Herring wrote:
+> +Linus W
+>
+> On Fri, Dec 04, 2015 at 05:31:13PM +0000, Martyn Welch wrote:
+>> This patch adds documentation for the gpio-switch binding. This binding
+>> provides a mechanism to bind named links to gpio, with the primary
+>> purpose of enabling standardised access to switches that might be standard
+>> across a group of devices but implemented differently on each device.
+>
+> This is good and what I suggested, but it now makes me wonder if switch
+> is generic enough. This boils down to needing to expose single gpio
+> lines to userspace with a defined function/use. IIRC, there's been some
+> discussion about this before along with improving the userspace
+> interface for GPIO in general. So I'd like to get Linus' thoughts on
+> this.
+>
 
-... this still need units (-ns) appended to the property name.
+No problem. Rename gpio-signal?
 
-> +
-> +This device includes two conversion queues which can be added as subnodes.
-> +The first queue is for the touchscreen, the second for general purpose ADC.
-> +
-> +Example:
-> +	tsc: tcq@50030400 {
-> +		compatible = "fsl,imx25-tcq";
-> +		reg = <0x50030400 0x60>;
-> +		interrupt-parent = <&tscadc>;
-> +		interrupts = <0>;
-> +		fsl,wires = <4>;
-> +	};
-> -- 
-> 2.6.2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>> Signed-off-by: Martyn Welch <martyn.welch@collabora.co.uk>
+>> ---
+>>   .../devicetree/bindings/misc/gpio-switch.txt       | 47 ++++++++++++++++++++++
+>>   1 file changed, 47 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/misc/gpio-switch.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/misc/gpio-switch.txt b/Documentation/devicetree/bindings/misc/gpio-switch.txt
+>> new file mode 100644
+>> index 0000000..13528bd
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/misc/gpio-switch.txt
+>> @@ -0,0 +1,47 @@
+>> +Device-Tree bindings for gpio attached switches.
+>> +
+>> +This provides a mechanism to provide a named link to specified gpios. This can
+>> +be useful in instances such as when theres a need to monitor a switch, which is
+>> +common across a family of devices, but attached to different gpios and even
+>> +implemented in different ways on differnet devices.
+>> +
+>> +Required properties:
+>> +	- compatible = "gpio-switch";
+>> +
+>> +Each signal is represented as a sub-node of "gpio-switch". The naming of
+>> +sub-nodes is arbitrary.
+>> +
+>> +Required sub-node properties:
+>> +
+>> +	- label: Name to be given to gpio switch.
+>> +	- gpios: OF device-tree gpio specification.
+>> +
+>> +Optional sub-node properties:
+>> +
+>> +	- read-only: Boolean flag to mark the gpio as read-only, i.e. the line
+>> +	  should not be driven by the host.
+>
+> In terms a a switch use, allowing driving it would be an override of the
+> switch. Is that the idea here?
+>
+
+Yeah - since it had become a lot more generic and a lot of 
+switches/signals would probably be implemented with a pull-up resistor 
+of something like that, it seemed to make sense to allow them to be 
+driven as well.
+
+>> +
+>> +Example nodes:
+>> +
+>> +        gpio-switch {
+>> +                compatible = "gpio-switch";
+>
+> Both from a binding and driver perspective, there is no point in
+> grouping these. Each node can simply have this compatible string.
+>
+
+True. I did it this way as this is how gpio-keys is implemented. OK, 
+that has one optional parameter (autorepeat) for the block and this has 
+none. Though I can also see that these probably have less in common than 
+the individual lines used in gpio-keys.
+
+>> +
+>> +                write-protect {
+>> +                        label = "write-protect";
+>> +                        gpios = <&gpx3 0 GPIO_ACTIVE_LOW>;
+>> +                        read-only;
+>> +                };
+>> +
+>> +                developer-switch {
+>> +                        label = "developer-switch";
+>> +                        gpios = <&gpx1 3 GPIO_ACTIVE_HIGH>;
+>> +                        read-only;
+>> +                };
+>> +
+>> +                recovery-switch {
+>> +                        label = "recovery-switch";
+>> +                        gpios = <&gpx0 7 GPIO_ACTIVE_LOW>;
+>> +                        read-only;
+>> +                };
+>> +        };
+>> +
+>> --
+>> 2.1.4
+>>
