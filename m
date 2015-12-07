@@ -1,74 +1,63 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH 4/7] media: vb2-dma-contig: add helper for setting dma max seg
- size
-Date: Mon, 07 Dec 2015 13:08:59 +0100
-Message-ID: <1449490142-27502-5-git-send-email-m.szyprowski@samsung.com>
-References: <1449490142-27502-1-git-send-email-m.szyprowski@samsung.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <1449490142-27502-1-git-send-email-m.szyprowski@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Andrzej Hajda <a.hajda@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: [PATCH v5 3/4] arm64: Juno: Add HDLCD support to the Juno boards.
+Date: Mon,  7 Dec 2015 12:11:04 +0000
+Message-ID: <1449490265-6752-4-git-send-email-Liviu.Dudau@arm.com>
+References: <1449490265-6752-1-git-send-email-Liviu.Dudau@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1449490265-6752-1-git-send-email-Liviu.Dudau@arm.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh@kernel.org>, Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: devicetree <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Punit Agrawal <punit.agrawal@arm.com>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>, Andrew Morton <akpm@linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a helper function for device drivers to set DMA's max_seg_size.
-Setting it to largest possible value lets DMA-mapping API always create
-contiguous mappings in DMA address space. This is essential for all
-devices, which use dma-contig videobuf2 memory allocator and shared
-buffers.
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
-Changelog:
-v3:
-- make this code a helper function instead of chaning max_seg_size
-  unconditionally on vb2_dma_contig_init_ctx
-
-v2:
-- set max segment size only if a new dma params structure has been
-  allocated, as suggested by Laurent Pinchart
----
- drivers/media/v4l2-core/videobuf2-dma-contig.c | 15 +++++++++++++++
- include/media/videobuf2-dma-contig.h           |  1 +
- 2 files changed, 16 insertions(+)
-
-diff --git a/drivers/media/v4l2-core/videobuf2-dma-contig.c b/drivers/media/v4l2-core/videobuf2-dma-contig.c
-index c33127284cfe..628518dc3aad 100644
---- a/drivers/media/v4l2-core/videobuf2-dma-contig.c
-+++ b/drivers/media/v4l2-core/videobuf2-dma-contig.c
-@@ -742,6 +742,21 @@ void vb2_dma_contig_cleanup_ctx(void *alloc_ctx)
- }
- EXPORT_SYMBOL_GPL(vb2_dma_contig_cleanup_ctx);
- 
-+int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size)
-+{
-+	if (!dev->dma_parms) {
-+		dev->dma_parms = devm_kzalloc(dev, sizeof(dev->dma_parms),
-+					      GFP_KERNEL);
-+		if (!dev->dma_parms)
-+			return -ENOMEM;
-+	}
-+	if (dma_get_max_seg_size(dev) < size)
-+		return dma_set_max_seg_size(dev, size);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(vb2_dma_contig_set_max_seg_size);
-+
- MODULE_DESCRIPTION("DMA-contig memory handling routines for videobuf2");
- MODULE_AUTHOR("Pawel Osciak <pawel@osciak.com>");
- MODULE_LICENSE("GPL");
-diff --git a/include/media/videobuf2-dma-contig.h b/include/media/videobuf2-dma-contig.h
-index c33dfa69d7ab..0e6ba644939e 100644
---- a/include/media/videobuf2-dma-contig.h
-+++ b/include/media/videobuf2-dma-contig.h
-@@ -26,6 +26,7 @@ vb2_dma_contig_plane_dma_addr(struct vb2_buffer *vb, unsigned int plane_no)
- 
- void *vb2_dma_contig_init_ctx(struct device *dev);
- void vb2_dma_contig_cleanup_ctx(void *alloc_ctx);
-+int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size);
- 
- extern const struct vb2_mem_ops vb2_dma_contig_memops;
- 
--- 
-1.9.2
+QVJNJ3MgSnVubyBib2FyZCBoYXMgdHdvIEhETENEIGNvbnRyb2xsZXJzLCBlYWNoIGxpbmtlZCB0
+byBhbiBOWFAKVERBMTk5ODggSERNSSB0cmFuc21pdHRlciB0aGF0IHByb3ZpZGVzIG91dHB1dCBl
+bmNvZGluZy4gQWRkIHRoZW0KdG8gdGhlIGRldmljZSB0cmVlLgoKU2lnbmVkLW9mZi1ieTogTGl2
+aXUgRHVkYXUgPExpdml1LkR1ZGF1QGFybS5jb20+Ci0tLQogYXJjaC9hcm02NC9ib290L2R0cy9h
+cm0vanVuby1iYXNlLmR0c2kgfCA0NiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0t
+CiAxIGZpbGUgY2hhbmdlZCwgNDIgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKCmRpZmYg
+LS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9qdW5vLWJhc2UuZHRzaSBiL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvYXJtL2p1bm8tYmFzZS5kdHNpCmluZGV4IGRkNTE1OGUuLjhlZTA5NGEgMTAw
+NjQ0Ci0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYXJtL2p1bm8tYmFzZS5kdHNpCisrKyBiL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvYXJtL2p1bm8tYmFzZS5kdHNpCkBAIC05Miw4ICs5Miw4IEBACiAJ
+CQlzY3BpX2Nsazogc2NwaV9jbG9ja3NAMyB7CiAJCQkJY29tcGF0aWJsZSA9ICJhcm0sc2NwaS12
+YXJpYWJsZS1jbG9ja3MiOwogCQkJCSNjbG9jay1jZWxscyA9IDwxPjsKLQkJCQljbG9jay1pbmRp
+Y2VzID0gPDM+LCA8ND47Ci0JCQkJY2xvY2stb3V0cHV0LW5hbWVzID0gInB4bGNsazAiLCAicHhs
+Y2xrMSI7CisJCQkJY2xvY2staW5kaWNlcyA9IDwzPjsKKwkJCQljbG9jay1vdXRwdXQtbmFtZXMg
+PSAicHhsY2xrIjsKIAkJCX07CiAJCX07CiAKQEAgLTEyMyw2ICsxMjMsMzQgQEAKIAkJY2xvY2st
+bmFtZXMgPSAiYXBiX3BjbGsiOwogCX07CiAKKwloZGxjZEA3ZmY1MDAwMCB7CisJCWNvbXBhdGli
+bGUgPSAiYXJtLGhkbGNkIjsKKwkJcmVnID0gPDAgMHg3ZmY1MDAwMCAwIDB4MTAwMD47CisJCWlu
+dGVycnVwdHMgPSA8R0lDX1NQSSA5MyBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKwkJY2xvY2tzID0g
+PCZzY3BpX2NsayAzPjsKKwkJY2xvY2stbmFtZXMgPSAicHhsY2xrIjsKKworCQlwb3J0IHsKKwkJ
+CWhkbGNkMV9vdXRwdXQ6IGVuZHBvaW50QDAgeworCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmdGRh
+OTk4eF8xX2lucHV0PjsKKwkJCX07CisJCX07CisJfTsKKworCWhkbGNkQDdmZjYwMDAwIHsKKwkJ
+Y29tcGF0aWJsZSA9ICJhcm0saGRsY2QiOworCQlyZWcgPSA8MCAweDdmZjYwMDAwIDAgMHgxMDAw
+PjsKKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDg1IElSUV9UWVBFX0xFVkVMX0hJR0g+OworCQlj
+bG9ja3MgPSA8JnNjcGlfY2xrIDM+OworCQljbG9jay1uYW1lcyA9ICJweGxjbGsiOworCisJCXBv
+cnQgeworCQkJaGRsY2QwX291dHB1dDogZW5kcG9pbnRAMCB7CisJCQkJcmVtb3RlLWVuZHBvaW50
+ID0gPCZ0ZGE5OTh4XzBfaW5wdXQ+OworCQkJfTsKKwkJfTsKKwl9OworCiAJc29jX3VhcnQwOiB1
+YXJ0QDdmZjgwMDAwIHsKIAkJY29tcGF0aWJsZSA9ICJhcm0scGwwMTEiLCAiYXJtLHByaW1lY2Vs
+bCI7CiAJCXJlZyA9IDwweDAgMHg3ZmY4MDAwMCAweDAgMHgxMDAwPjsKQEAgLTE0MSwxNCArMTY5
+LDI0IEBACiAJCWkyYy1zZGEtaG9sZC10aW1lLW5zID0gPDUwMD47CiAJCWNsb2NrcyA9IDwmc29j
+X3NtYzUwbWh6PjsKIAotCQlkdmkwOiBkdmktdHJhbnNtaXR0ZXJANzAgeworCQloZG1pLXRyYW5z
+bWl0dGVyQDcwIHsKIAkJCWNvbXBhdGlibGUgPSAibnhwLHRkYTk5OHgiOwogCQkJcmVnID0gPDB4
+NzA+OworCQkJcG9ydCB7CisJCQkJdGRhOTk4eF8wX2lucHV0OiBlbmRwb2ludEAwIHsKKwkJCQkJ
+cmVtb3RlLWVuZHBvaW50ID0gPCZoZGxjZDBfb3V0cHV0PjsKKwkJCQl9OworCQkJfTsKIAkJfTsK
+IAotCQlkdmkxOiBkdmktdHJhbnNtaXR0ZXJANzEgeworCQloZG1pLXRyYW5zbWl0dGVyQDcxIHsK
+IAkJCWNvbXBhdGlibGUgPSAibnhwLHRkYTk5OHgiOwogCQkJcmVnID0gPDB4NzE+OworCQkJcG9y
+dCB7CisJCQkJdGRhOTk4eF8xX2lucHV0OiBlbmRwb2ludEAwIHsKKwkJCQkJcmVtb3RlLWVuZHBv
+aW50ID0gPCZoZGxjZDFfb3V0cHV0PjsKKwkJCQl9OworCQkJfTsKIAkJfTsKIAl9OwogCi0tIAoy
+LjYuMgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
