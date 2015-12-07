@@ -1,73 +1,181 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: add Marvell PMU documentation
-Date: Mon, 07 Dec 2015 11:27:31 +0100
-Message-ID: <87k2oqeep8.fsf@free-electrons.com>
-References: <E1a5j6L-000873-3P@rmk-PC.arm.linux.org.uk>
-	<181206520.JBMXuTWYTV@wuerfel>
-	<20151207100438.GL8644@n2100.arm.linux.org.uk>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v2 3/9] Documentation: dt-bindings: leds: add LM3633 LED
+ binding information
+Date: Mon, 07 Dec 2015 11:50:16 +0100
+Message-ID: <56656468.8020300@samsung.com>
+References: <1448521025-2796-1-git-send-email-milo.kim@ti.com>
+ <1448521025-2796-4-git-send-email-milo.kim@ti.com>
+ <56583C32.5030307@samsung.com> <565C0677.4030606@ti.com>
+ <565C408B.9070703@samsung.com> <56654756.5050601@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151207100438.GL8644-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org> (Russell King's
-	message of "Mon, 7 Dec 2015 10:04:38 +0000")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <56654756.5050601@ti.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: "Kim, Milo" <milo.kim@ti.com>
+Cc: robh+dt@kernel.org, lee.jones@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
-=20
- On lun., d=C3=A9c. 07 2015, Russell King - ARM Linux <linux-lFZ/pmaqli6BGKjqNUprAg@public.gmane.org=
-org.uk> wrote:
+Hi Milo,
 
-> On Mon, Dec 07, 2015 at 10:09:48AM +0100, Arnd Bergmann wrote:
->> On Sunday 06 December 2015 23:52:21 Russell King wrote:
->> > Add the required DT binding documentation for the Marvell PMU driv=
-er.
->> >=20
->> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> > Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
->> > ---
->> > Who takes these patches?  This never got merged when the PMU drive=
-r
->> > itself was merged.
->>=20
->> I'd say it should go along with the dts changes for mvebu, and we'll
->> merge it through arm-soc.
+On 12/07/2015 09:46 AM, Kim, Milo wrote:
+> Hi Jacek,
 >
-> Well, it didn't, the dts changes are already in as well.  Someone now
-> needs to pick it up independently.
-
-OK I will.
-
-The last time Andrew took your series to port it onto 4.2-rc and I
-thought he took everything but actually he only focused on the commits
-with conflict. Then I merged the series without checking it was
-complete. Sorry for having missed it.
-
-Gregory
-
+> On 11/30/2015 9:26 PM, Jacek Anaszewski wrote:
+>> In case of LM3633 the real current outputs are banks and multiplexing
+>> that occurs between banks and LVLEDn pins can be conveniently expressed
+>> with the bindings I proposed above.
+>>
+>>> >If three output channels are controlled by one control bank, then it
+>>> >should be represented as below.
+>>> >
+>>> >lvled-group-A {
+>>> >      led-sources = <0>, <1>, <2>;
+>>> >      led-max-microamp = <some value>;
+>>> >}
+>>> >
+>>> >Please let me know if I misunderstand.
+>> You silently assumed some definition of a "channel". led-sources means
+>> in fact current sources, and when device is configured so that three
+>> output pins are routed to the same current source, then in fact
+>> they share common current source.
 >
-> I wonder how many more of the undocumented bindings are actually caus=
-ed
-> by people not realising that the binding docs patches have been ignor=
-ed.
-> (Yes, I've found cases in the past where bindings are undocumented, a=
-nd
-> no, I don't keep a list and I don't remember which they were.)
+> Thanks for comments. I've modified 'led-sources' based on your feedback.
+> Could you check updated dt-bindings below?
 >
-> --=20
-> FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-> according to speedtest.net.
+> * Updates
+> - led-sources: List of current sources from 0 to 5.
+> - ti,led-outputs: Output channel specifier
+>
+> The 'ti,led-outputs' property is exactly matched with datasheet
+> description, so it's easy to understand which current source is used for
+> output channels.
+> ---
+> TI LMU LM3633 LED device tree bindings
+>
+> Required properties:
+>    - compatible: "ti,lm3633-leds"
+>
+> Child nodes:
+>    Each node matches with LED control bank.
+>    Please refer to the datasheet [1].
+>
+>    Required properties of a child node:
+>    - led-sources: List of current sources from 0 to 5.
+>                   0: control bank C for output LED 1
+>                      control bank C for output LED 1 and 2
+>                      control bank C for output LED 1, 2 and 3
+>                   1: control bank D for output LED 2
+>                   2: control bank E for output LED 3
+>                   3: control bank F for output LED 4
+>                      control bank F for output LED 4 and 5
+>                      control bank F for output LED 4, 5 and 6
+>                   4: control bank G for output LED 5
+>                   5: control bank H for output LED 6
+>                   Please refer to LED binding [2].
+>
+>    - ti,led-outputs: Output channel specifier from 0 to 5.
+>                      0: LED 1
+>                      1: LED 2
+>                      2: LED 3
+>                      3: LED 4
+>                      4: LED 5
+>                      5: LED 6
 
---=20
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This property is redundant. LED class driver can infer this
+information by analyzing the led-sources property from each
+child node.
+
+Below arrangement:
+
+led1 {
+	led-sources = <0>;
+};
+
+led2 {
+	led-sources = <0>;
+};
+
+led3 {
+	led-sources = <2>;
+};
+
+led4 {
+	led-sources = <3>;
+};
+
+led5 {
+	led-sources = <3>;
+};
+
+led6 {
+	led-sources = <3>;
+};
+
+suffices to discover the following:
+
+BANKC controls LVLED1, LVLED2
+BANKE controls LVLED3
+BANKF controls LVLED4, LVLED5, LVLED6
+
+>    Optional properties of a child node:
+>    - label: LED channel identification. Please refer to LED binding [2].
+>    - led-max-microamp: Max current setting. Type is <u32>.
+>                        Unit is microampere. Range is from 5000 to 29800.
+>                        Step is 800. Please refer to LED binding [2].
+>
+> Examples:
+>
+> LED 1 is assigned for status LED. LED 4,5 and 6 are used for RGB
+> indicator. RGB channels are controlled by bank F internally.
+>
+> leds {
+>      compatible = "ti,lm3633-leds";
+>
+>      status {
+>          led-sources = <0>;
+>          led-max-microamp = <5000>;
+>          ti,led-outputs = <0>;
+>      };
+>
+>      rgb {
+>          led-sources = <3>;
+>          led-max-microamp = <6600>;
+>          ti,led-outputs = <3 4 5>;
+>      };
+> };
+>
+> LED 2 is power LED. LED 5 is notification LED.
+>
+> leds {
+>      compatible = "ti,lm3633-leds";
+>
+>      lvled2 {
+>          label = "power";
+>          led-sources = <1>;
+>          led-max-microamp = <29000>;
+>          ti,led-outputs = <1>;
+>      };
+>
+>      lvled5 {
+>          label = "noti";
+>          led-sources = <4>;
+>          led-max-microamp = <6600>;
+>          ti,led-outputs = <4>;
+>      };
+> };
+>
+>
+> [1] http://www.ti.com/product/LM3633/datasheet
+> [2] ../leds/common.txt
+>
+> Best regards,
+> Milo
+>
+>
+
+
+-- 
+Best Regards,
+Jacek Anaszewski
