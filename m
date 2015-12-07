@@ -1,67 +1,43 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH resend 1/6] clk: sunxi: Add DRAM gates support for
- sun4i-a10
-Date: Mon, 7 Dec 2015 09:58:56 +0100
-Message-ID: <20151207085856.GA27957@lukather>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH resend 3/6] ARM: dts: sun4i: Add DRAM gates
+Date: Mon, 7 Dec 2015 09:59:55 +0100
+Message-ID: <20151207085955.GB27957@lukather>
 References: <1449321407-4531-1-git-send-email-wens@csie.org>
- <1449321407-4531-2-git-send-email-wens@csie.org>
+ <1449321407-4531-4-git-send-email-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
-Return-path: <linux-clk-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="8GpibOaaTibBMecb"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBDEVSWZQKGQEBZZIVAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1449321407-4531-2-git-send-email-wens@csie.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Emilio Lopez <emilio@elopez.com.ar>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+In-Reply-To: <1449321407-4531-4-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---nFreZHaLTZJo0R7j
-Content-Type: text/plain; charset=us-ascii
+--8GpibOaaTibBMecb
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Dec 05, 2015 at 09:16:42PM +0800, Chen-Yu Tsai wrote:
-> The A10/A20 share the same set of DRAM clock gates, which controls
-> direct memory access for some peripherals.
->=20
-> On the A10, bit 15 controls the system's DRAM clock output (possibly
-> to the DRAM chips), which we need to keep on.
->=20
-> On the A20 this has been moved to the DRAM controller, becoming a no-op.
-> However it is still listed in the user manual, so add it anyway.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+On Sat, Dec 05, 2015 at 09:16:44PM +0800, Chen-Yu Tsai wrote:
+> The DRAM gates controls direct memory access for some peripherals.
+> These peripherals include the display pipeline, so add the required
+> gates to the simplefb nodes as well.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
 Applied, thanks!
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
-
---nFreZHaLTZJo0R7j
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWZUpQAAoJEBx+YmzsjxAgn40P/jfbEewuOA/2wCFxM6oBCvjD
-ieJw1Hi+1rQnXpsHgEqe8DN+rkkhC3JtN3NlX5dnJEQGrdLihQajBBA35yf54ncC
-DIZZt4wC34J53a5WgFNB/caDKuy754TUGHuai0UloRNIw4u+ttbOtoxi6L3ckIws
-maVjgtv5OkMYltb36LUNMxYmOb0GYq1k6MNIqwa4EAZd7cnN2MlNxO4NJ53UHxGe
-sGWSDW65tHYZLjmHoTGDX7doX03BFCpYfnA5DOC9rh8W7iunf8vd1YLDPhV03DKm
-e4ZbAASF0xzew+Ai1mQTRED90E/c8N+WlOwWY0IoluDTIKUUK/WD9EE893lT1M4A
-V8hXvANdUdRYUZSTbr57tlJKBxCau32gFIBA2Y6z6GH7EgwHnCOX5nQTtNsDGnP8
-hikgbGS6/vUIkHEXCMTY6wtFmvosTME/ujtpd8kRIhLHpkHnkgJGnEZ4a9luSIWL
-41U+btvnpWxl7nvswqtl7AYNGzRH9PTwd7bvPihG8dF3fcTGegwr1O6YDTbBpzT7
-lpe/P+TD3pJjVncb4o1yCqUgeCijEyfwkw4Mioldo7VICuwFgEajLbgJyQl8EnDy
-ryRfT6/mKNu0KF9wFlB+CO7cGSJoEoA//BOJ1NYaUHxd79s8ulARY9MR23qN+HPa
-PCCoFfg/c1R+BrVyxorm
-=MmlA
------END PGP SIGNATURE-----
-
---nFreZHaLTZJo0R7j--
+--8GpibOaaTibBMecb--
