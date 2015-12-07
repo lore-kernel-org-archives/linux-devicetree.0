@@ -1,72 +1,44 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH] extcon: arizona: Update naming for micd-timeout DT to
- include units
-Date: Mon, 07 Dec 2015 10:31:10 +0900
-Message-ID: <5664E15E.7040400@samsung.com>
-References: <1448290290-19267-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20151204210040.GC822@amd>
+From: "Yankejian (Hackim Yim)" <yankejian@huawei.com>
+Subject: Re: [PATCH RESEND net-next 3/3] arm64: hip05-d02: Document devicetree
+ bindings for Hisilicon D02 Board
+Date: Mon, 7 Dec 2015 09:29:59 +0800
+Message-ID: <5664E117.6060105@huawei.com>
+References: <1449302218-54374-1-git-send-email-yankejian@huawei.com>
+ <1449302218-54374-4-git-send-email-yankejian@huawei.com>
+ <2441219.omPQqZs8vd@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20151204210040.GC822@amd>
+In-Reply-To: <2441219.omPQqZs8vd@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, wangkefeng.wang@huawei.com, dingtianhong@huawei.com, liguozhu@huawei.com, Yisen.Zhuang@huawei.com, sboyd@codeaurora.org, haojian.zhuang@linaro.org, wangzhou1@hisilicon.com, bintian.wang@huawei.com, long.wanglong@huawei.com, leo.yan@linaro.org, haifeng.wei@huawei.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
 
-On 2015=EB=85=84 12=EC=9B=94 05=EC=9D=BC 06:00, Pavel Machek wrote:
-> On Mon 2015-11-23 14:51:30, Charles Keepax wrote:
->> Add time units of -ms (milliseconds) to wlf,micd-timeout.
+
+On 2015/12/6 6:13, Arnd Bergmann wrote:
+> On Saturday 05 December 2015 15:56:58 yankejian wrote:
+>> +Required properties:
+>> +- compatible : "hisilicon,peri-c-subctrl", "syscon";
+>> +- reg : Register address and size
+>> +
+>> +The HiP05 PERISUB system controller is shared by peripheral controllers in
+>> +HiP05 Soc to implement some basic configurations. the peripheral
+>> + controllers include mdio, ddr, iic, uart, timer and so on.
+>> +
+>> +Example:
+>> +       /* for HiP05 PCIe-SAS system */
+>> +       pcie_sas: system_controller@0xb0000000 {
+>> +               compatible = "hisilicon,pcie-sas-subctrl", "syscon";
+>> +               reg = <0xb0000000 0x10000>;
+>> +       };
 >>
->> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
->> ---
->>  .../devicetree/bindings/extcon/extcon-arizona.txt  |    2 +-
->>  drivers/extcon/extcon-arizona.c                    |    2 +-
->>  2 files changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/extcon/extcon-arizona=
-=2Etxt b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
->> index da9813b..05d85ac 100644
->> --- a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
->> +++ b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
->> @@ -33,7 +33,7 @@ Optional properties:
->>      specified as per the ARIZONA_MICD_TIME_XXX defines.
->>    - wlf,micd-dbtime : Microphone detection hardware debounces speci=
-fied as the
->>      number of measurements to take, valid values being 2 and 4.
->> -  - wlf,micd-timeout : Timeout for microphone detection, specified =
-in
->> +  - wlf,micd-timeout-ms : Timeout for microphone detection, specifi=
-ed in
->>      milliseconds.
->>    - wlf,micd-force-micbias : Force MICBIAS continuously on during m=
-icrophone
->>      detection.
->> diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon=
--arizona.c
->> index c377030..8647533 100644
->> --- a/drivers/extcon/extcon-arizona.c
->> +++ b/drivers/extcon/extcon-arizona.c
->> @@ -1230,7 +1230,7 @@ static int arizona_extcon_device_get_pdata(str=
-uct arizona *arizona)
->>  	device_property_read_u32(arizona->dev, "wlf,micd-dbtime",
->>  				 &pdata->micd_dbtime);
->> =20
->> -	device_property_read_u32(arizona->dev, "wlf,micd-timeout",
->> +	device_property_read_u32(arizona->dev, "wlf,micd-timeout-ms",
->>  				 &pdata->micd_timeout);
->> =20
->>  	pdata->micd_force_micbias =3D
-> device_property_read_bool(arizona->dev,
->=20
-> While the change is nice, new kernel is supposed to work with old
-> DTS. So you'd need to check for both properties here..
-
-This is new DT option. There are no dtbs usingt this property
-in latest kernel. So, ther is no issue.
-
-Thanks,
-Chanwoo Choi
+> The compatible string in the example does not match the required properties.
+>
+> 	Arnd
+>
+> .
+Hi, Arnd
+Thanks for your suggestions. i will fixes it later.
