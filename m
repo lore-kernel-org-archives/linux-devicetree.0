@@ -1,139 +1,441 @@
-From: xuejiancheng <xuejiancheng@huawei.com>
-Subject: Re: [PATCH v2 1/9] clk: hi3519: add dt-binding document and header
- file
-Date: Mon, 7 Dec 2015 16:01:03 +0800
-Message-ID: <56653CBF.30801@huawei.com>
-References: <1449110364-23464-1-git-send-email-xuejiancheng@huawei.com>
- <1615805.jmP28L2rmX@wuerfel> <566106B8.7080205@huawei.com>
- <21651844.ONg7WdRZpk@wuerfel>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCHv6 5/5] drm: bridge: anx78xx: Add anx78xx driver support
+ by analogix.
+Date: Mon, 7 Dec 2015 11:09:56 +0300
+Message-ID: <20151207080956.GB18797@mwanda>
+References: <1449218107-6590-1-git-send-email-enric.balletbo@collabora.com>
+ <1449218107-6590-6-git-send-email-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <21651844.ONg7WdRZpk@wuerfel>
-Sender: linux-clk-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <1449218107-6590-6-git-send-email-enric.balletbo@collabora.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Enric Balletbo i Serra <eballetbo@gmail.com>
+Cc: mark.rutland@arm.com, airlied@linux.ie, djkurtz@chromium.org, sjoerd.simons@collabora.co.uk, laurent.pinchart@ideasonboard.com, devel@driverdev.osuosl.org, drinkcat@chromium.org, cawa.cheng@mediatek.com, nathan.chung@mediatek.com, javier@dowhile0.org, treding@nvidia.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, dri-devel@lists.freedesktop.org, eddie.huang@mediatek.com, cjiao@analogixsemi.com, jb.tsai@mediatek.com, gregkh@linuxfoundation.org, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, galak@codeaurora.org, span@analogixsemi.com
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Dec 04, 2015 at 09:35:07AM +0100, Enric Balletbo i Serra wrote:
+> +static int sp_wait_aux_op_finish(struct anx78xx *anx78xx)
+> +{
+> +	u8 errcnt;
+> +	u8 val;
+> +	struct device *dev = &anx78xx->client->dev;
+> +
+> +	errcnt = 150;
+> +	while (errcnt--) {
+> +		sp_reg_read(anx78xx, TX_P0, SP_DP_AUX_CH_CTRL2_REG, &val);
+> +		if (!(val & SP_AUX_EN))
+> +			break;
+> +		usleep_range(2000, 4000);
+> +	}
+> +
+> +	if (!errcnt) {
 
-On 2015/12/4 18:56, Arnd Bergmann wrote:
-> On Friday 04 December 2015 11:21:28 xuejiancheng wrote:
->> Hi Arnd,
->>
->> On 2015/12/3 17:44, Arnd Bergmann wrote:
->>> On Thursday 03 December 2015 10:39:24 Jiancheng Xue wrote:
->>>> +#ifndef __DTS_HI3519_CLOCK_H
->>>> +#define __DTS_HI3519_CLOCK_H
->>>
->>> Please try to avoid adding headers like this if you can at all.
->>>
->>> I might ask you to merge the header file in one merge window
->>> otherwise and submit the platform code one kernel later, as they
->>> tendn to cause us needless dependencies otherwise.
->>>
->>
->> Sorry. In v1, Rob suggested putting binding doc and header files in
->> a separate patch. The clock driver indeed depends on the header.
->>
->> I will put the header and the clock driver in a patch, and keep the
->> binding doc in another patch.
-> 
-> Having split patches is better, I was really commenting on the fact
-> that ideally you would not have a header file at all. If we merge
-> the header through arm-soc, then you won't be able to merge the
-> clk driver easily, and if you merge the header through the clk
-> maintainer, I'm can't take your dts files.
+This is off by one.  It should be:
 
-Thank you for your comments. Because the clocks in the crg module have
-different types and random layouts. If this header file is removed,
-the clock driver and the dts files will get very complicated.
+	while (--errcnt) {
+		...
+	}
+	if (errcnt == 0)
+		return -EWHATEVER;
 
-Could you help me acknowledge it if I put the header file and clock driver
-in a patch?
+Or:
 
-Could you give me some suggestions If I want to keep this header file?
+	while (errcnt--) {
+		...
+	}
+	if (errcnt == -1)
+		return -EWHATEVER;
 
-> 
->>>> +/* fixed rate */
->>>> +#define HI3519_FIXED_400M              1
->>>> +#define HI3519_FIXED_200M              2
->>>> +#define HI3519_FIXED_125M              3
->>>> +#define HI3519_FIXED_150M              4
->>>> +#define HI3519_FIXED_75M               5
->>>> +#define HI3519_FIXED_300M              6
->>>> +#define HI3519_FIXED_50M               7
->>>> +#define HI3519_FIXED_24M               8
->>>> +#define HI3519_FIXED_3M                        9
->>>> +
->>>> +/* mux clocks */
->>>> +#define HI3519_FMC_MUX                 32
->>>> +#define HI3519_I2C_MUX                 33
->>>> +#define HI3519_UART_MUX                        34
->>>> +#define HI3519_SYSAXI_MUX              35
->>>> +
->>>> +/*fixed factor clocks*/
->>>> +#define HI3519_SYSAPB_CLK              64
->>>> +
->>>> +/* gate clocks */
->>>> +#define HI3519_FMC_CLK                 129
->>>> +#define HI3519_UART0_CLK               153
->>>> +#define HI3519_UART1_CLK               154
->>>> +#define HI3519_UART2_CLK               155
->>>> +#define HI3519_UART3_CLK               156
->>>> +#define HI3519_UART4_CLK               157
->>>
->>> Where do those numbers come from? They are not consecutive, so it sounds
->>> like they are directly from the data sheet and won't be needed in the driver.
->>> If that's true, just use the numbers directly, as you do for everything
->>> else.
->>
->> The numbers are defined by myself, not directly from the data sheet. Some numbers
->> are reserved for device nodes which will be added later. So they are not consecutive now.
-> 
-> I don't understand. How do you decide which numbers to reserve? If the
-> numbers are completely arbitrary and you have no idea what other clocks
-> there are, you can simply have consecutive numbers here and do the driver
-> accordingly.
+Also "errcnt" is a bad name, it should be retry_cnt or something (or
+maybe it actually is counting errors?).  Also -1 is never a correct
+error code, please change all the -1 returns to something better.
 
-The clocks are divided into several groups according to their types. The clocks in
-a group are expected to have consecutive numbers. So some numbers are reserved for
-every group in this file, just like in some existing headers. Other clocks will be
-added when other peripherals drivers are submitted. They will use the reserve numbers
-and be inserted into existing groups.
+> +	/* Buffer size of AUX CH is 16 */
+> +	if (count > 16)
+> +		return -1;
 
-Of course it is not required to reserve numbers for later added clocks.
+Just make a define so that you don't need to add comments about why 16
+is correct.
 
-> 
-> If the numbers actually have a real meaning, then you either don't need them
-> at all, or you could just put all numbers in there that you would eventually need.
+	if (count > SIZE_AUX_CH)
+		return -EINVAL;
 
-The numbers have no hardware meaning actually.
+> +	errcnt = 10;
+> +	while (errcnt--) {
+> +		sp_reg_read(anx78xx, TX_P0, SP_DP_AUX_CH_CTRL2_REG, &val);
+> +		if (!(val & SP_AUX_EN))
+> +			break;
+> +		usleep_range(1000, 2000);
+> +	}
+> +
+> +	if (!errcnt) {
+> +		dev_err(dev,
+> +			"failed to read DP AUX Channel Control Register 2\n");
+> +		sp_reset_aux(anx78xx);
+> +		return -1;
+> +	}
 
-> 
->>>> +#define HI3519_NR_CLKS                 256
->>>> +#define HI3519_NR_RSTS                 256
->>>>
->>> These seem to not be needed at all.
->>
->> These are used in drivers/clk/hisilicon/clk-hi3519.c.
-> 
-> Then move them there. Anything that is not needed by *both* the driver and 
-> the dts files doesn't belong in here.
+Off by one again.
 
 
-OK. I will move them into the driver code.
+> +
+> +	sp_reg_write(anx78xx, TX_P0, SP_AUX_ADDR_7_0_REG, SP_I2C_EXTRA_ADDR);
+> +	sp_tx_aux_wr(anx78xx, offset);
+> +	/* read 16 bytes (MOT = 1) */
+> +	sp_tx_aux_rd(anx78xx, 0xf0 | DP_AUX_I2C_MOT | DP_AUX_I2C_READ);
+> +
+> +	for (i = 0; i < 16; i++) {
+> +		errcnt = 10;
+> +		while (errcnt--) {
+> +			sp_reg_read(anx78xx, TX_P0, SP_BUF_DATA_COUNT_REG,
+> +				    &val);
+> +			if (val & SP_BUF_DATA_COUNT_MASK)
+> +				break;
+> +			usleep_range(2000, 4000);
+> +		}
+> +
+> +		if (!errcnt) {
+> +			dev_err(dev,
+> +				"failed to read DP Buffer Data Count Register\n");
+> +			sp_reset_aux(anx78xx);
+> +			return -1;
+> +		}
 
-> 
-> 	Arnd
-> 
-> .
-> 
+And here.
 
-Many thanks.
+> +	errcnt = 10;
+> +	while (errcnt--) {
+> +		sp_reg_read(anx78xx, TX_P0, SP_DP_AUX_CH_CTRL2_REG, &val);
+> +		if (!(val & SP_AUX_EN))
+> +			break;
+> +		usleep_range(1000, 2000);
+> +	}
+> +
+> +	if (!errcnt) {
+> +		dev_err(dev,
+> +			"failed to read DP AUX Channel Control Register 2\n");
+> +		sp_reset_aux(anx78xx);
+> +		return -1;
+> +	}
 
-Jiancheng
-
-.
+Here.
 
 
+> +
+> +	return 0;
+> +}
+> +
+> +static int sp_edid_block_checksum(const u8 *raw_edid)
+> +{
+> +	int i;
+> +	u8 csum = 0;
+> +
+> +	for (i = 0; i < EDID_LENGTH; i++)
+> +		csum += raw_edid[i];
+> +
+> +	return csum;
+> +}
+> +
+> +static int sp_tx_edid_read(struct anx78xx *anx78xx)
+> +{
+> +	struct device *dev = &anx78xx->client->dev;
+> +	u8 val, last_block, offset = 0;
+> +	u8 buf[16];
+> +	int i, j, count;
+> +
+> +	sp_tx_edid_read_initial(anx78xx);
+> +	sp_reg_write(anx78xx, TX_P0, SP_DP_AUX_CH_CTRL1_REG, 0x04);
+> +	sp_reg_set_bits(anx78xx, TX_P0, SP_DP_AUX_CH_CTRL2_REG,
+> +			SP_AUX_EN | SP_ADDR_ONLY);
+> +
+> +	if (sp_wait_aux_op_finish(anx78xx))
+> +		return -1;
+> +
+> +	sp_addronly_set(anx78xx, false);
+> +
+> +	/* Read the number of blocks */
+> +	sp_tx_aux_wr(anx78xx, 0x7e);
+> +	sp_tx_aux_rd(anx78xx, DP_AUX_I2C_READ);
+> +	sp_reg_read(anx78xx, TX_P0, SP_DP_BUF_DATA0_REG, &last_block);
+> +	dev_dbg(dev, "last EDID block is %d\n", last_block);
+> +
+> +	/* FIXME: Why not just cap to 3 if the reported value is >3 */
+> +	if (last_block > 3)
+> +		last_block = 1;
+> +
+> +	/* for every block */
+> +	for (count = 0; count <= last_block; count++) {
+> +		switch (count) {
+> +		case 0:
+> +		case 1:
+> +			for (i = 0; i < 8; i++) {
+> +				offset = (i + count * 8) * 16;
+> +				if (sp_edid_read(anx78xx, offset, buf))
+> +					return -1;
+> +				for (j = 0; j < 16; j++)
+> +					sp.edid_blocks[offset + j] = buf[j];
+> +			}
+> +			break;
+> +		case 2:
+> +		case 3:
+> +			offset = (count == 2) ? 0x00 : 0x80;
+> +			for (j = 0; j < 8; j++) {
+> +				if (sp_seg_edid_read(anx78xx, count / 2,
+> +						     offset))
+> +					return -1;
+> +				offset = offset + 0x10;
+> +			}
+> +			break;
+> +		default:
+> +			break;
+
+Is there something which complains if you leave out the default case
+statement?  It's not reachable.
+
+> +		}
+> +	}
+> +
+> +	sp_reset_aux(anx78xx);
+> +
+> +	if (!drm_edid_block_valid(sp.edid_blocks, 0, true, NULL)) {
+> +		dev_err(dev, "EDID block is invalid\n");
+> +		return -1;
+> +	}
+> +
+> +	sp_dp_read_bytes_from_dpcd(anx78xx, DP_TEST_REQUEST, 1, &val);
+> +	if (val & DP_TEST_LINK_EDID_READ) {
+> +		dev_dbg(dev, "EDID test requested\n");
+> +		val = sp_edid_block_checksum(sp.edid_blocks);
+> +		dev_dbg(dev, "EDID checksum is %d\n", val);
+> +		sp_dp_write_bytes_to_dpcd(anx78xx, DP_TEST_EDID_CHECKSUM, 1,
+> +					  &val);
+> +		sp.tx_test_edid = true;
+> +		val = DP_TEST_EDID_CHECKSUM_WRITE;
+> +		sp_dp_write_bytes_to_dpcd(anx78xx, DP_TEST_RESPONSE, 1, &val);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static bool sp_check_with_pre_edid(struct anx78xx *anx78xx)
+> +{
+> +	struct device *dev = &anx78xx->client->dev;
+> +	u8 i;
+> +	u8 buf[16];
+> +	bool ret = false;
+> +
+> +	sp_tx_edid_read_initial(anx78xx);
+> +	sp_reg_write(anx78xx, TX_P0, SP_DP_AUX_CH_CTRL1_REG, 0x04);
+> +	sp_reg_set_bits(anx78xx, TX_P0, SP_DP_AUX_CH_CTRL2_REG, 0x03);
+> +
+> +	if (sp_wait_aux_op_finish(anx78xx))
+> +		goto return_point;
+> +
+> +	sp_addronly_set(anx78xx, false);
+> +
+> +	if (sp_edid_read(anx78xx, 0x70, buf))
+> +		goto return_point;
+> +
+> +	for (i = 0; i < 16; i++) {
+> +		if (sp.edid_blocks[0x70 + i] != buf[i]) {
+> +			dev_dbg(dev, "%s\n",
+> +				"different checksum and blocks num\n");
+> +			goto return_point;
+> +		}
+> +	}
+
+Can you just say:
+
+	if (memcmp(&sp.edid_blocks[0x70], buf, 16) != 0) {
+		dev_dbg(dev, "different checksum and blocks num\n");
+		goto return_point;
+	}
+
+
+> +
+> +	if (sp_edid_read(anx78xx, 0x08, buf))
+> +		goto return_point;
+> +
+> +	for (i = 0; i < 16; i++) {
+> +		if (sp.edid_blocks[i + 8] != buf[i]) {
+> +			dev_dbg(dev, "different edid information\n");
+> +			goto return_point;
+> +		}
+> +	}
+> +
+> +	ret = true;
+> +return_point:
+> +	sp_reset_aux(anx78xx);
+> +
+> +	return ret;
+> +}
+> +
+
+[ snip ]
+
+> +static bool sp_config_video_output(struct anx78xx *anx78xx)
+> +{
+> +	struct device *dev = &anx78xx->client->dev;
+> +	u8 val;
+> +
+> +	switch (sp.tx_vo_state) {
+> +	default:
+> +	case VO_WAIT_VIDEO_STABLE:
+> +		sp_reg_read(anx78xx, RX_P0, SP_SYSTEM_STATUS_REG, &val);
+> +		if ((val & SP_TMDS_DE_DET) && (val & SP_TMDS_CLOCK_DET)) {
+> +			if (sp_tx_bw_lc_sel(anx78xx))
+> +				return false;
+> +			sp_enable_video_input(anx78xx, false);
+> +			sp_hdmi_new_avi_int(anx78xx);
+> +			sp_reg_read(anx78xx, RX_P0,
+> +				    SP_PACKET_RECEIVING_STATUS_REG, &val);
+> +			if (val & SP_VSI_RCVD)
+> +				sp_hdmi_new_vsi_int(anx78xx);
+> +			sp_enable_video_input(anx78xx, true);
+> +			sp.tx_vo_state = VO_WAIT_TX_VIDEO_STABLE;
+> +		} else {
+> +			dev_dbg(dev, "HDMI input video not stable!\n");
+> +			break;
+> +		}
+> +	/* fallthrough */
+> +	case VO_WAIT_TX_VIDEO_STABLE:
+> +		/*
+> +		 * The flag is write clear and can be latched from last
+> +		 * status. So the first read and write is to clear the
+> +		 * previous status.
+> +		 */
+> +		sp_reg_read(anx78xx, TX_P0, SP_DP_SYSTEM_CTRL_BASE + 2, &val);
+> +		sp_reg_write(anx78xx, TX_P0, SP_DP_SYSTEM_CTRL_BASE + 2, val);
+> +
+> +		sp_reg_read(anx78xx, TX_P0, SP_DP_SYSTEM_CTRL_BASE + 2, &val);
+> +		if (val & SP_CHA_STA) {
+> +			dev_dbg(dev, "stream clock not stable!\n");
+> +			break;
+> +		} else {
+
+
+No need for the else statement.  Pull it in one indent level.
+
+> +			/*
+> +			 * The flag is write clear and can be latched from
+> +			 * last status. So the first read and write is to
+> +			 * clear the previous status.
+> +			 */
+> +			sp_reg_read(anx78xx, TX_P0,
+> +				    SP_DP_SYSTEM_CTRL_BASE + 3,
+> +				    &val);
+> +			sp_reg_write(anx78xx, TX_P0,
+> +				     SP_DP_SYSTEM_CTRL_BASE + 3,
+> +				     val);
+> +
+> +			sp_reg_read(anx78xx, TX_P0,
+> +				    SP_DP_SYSTEM_CTRL_BASE + 3,
+> +				    &val);
+> +			if (val & SP_STRM_VALID) {
+> +				if (sp.tx_test_lt)
+> +					sp.tx_test_lt = false;
+> +				sp.tx_vo_state = VO_FINISH;
+> +			} else {
+> +				dev_err(dev, "video stream not valid!\n");
+> +				break;
+> +			}
+> +		}
+> +	/* fallthrough */
+> +	case VO_FINISH:
+> +		sp_block_power_ctrl(anx78xx, SP_TX_PWR_AUDIO, false);
+> +		sp_hdmi_mute_video(anx78xx, false);
+> +		sp_video_mute(anx78xx, false);
+> +		sp_show_information(anx78xx);
+> +		return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+
+[ snip ]
+
+> +static void sp_config_audio(struct anx78xx *anx78xx)
+> +{
+> +	int i;
+> +	u8 val;
+> +
+> +	sp_block_power_ctrl(anx78xx, SP_TX_PWR_AUDIO, true);
+> +
+> +	sp_reg_read(anx78xx, TX_P0, SP_DP_MAIN_LINK_BW_SET_REG, &val);
+> +	if (val & SP_INITIAL_SLIM_M_AUD_SEL)
+> +		if (sp_calculate_audio_m_value(anx78xx))
+> +			return;
+
+Combine these:
+
+	if ((val & SP_INITIAL_SLIM_M_AUD_SEL) &&
+	    sp_calculate_audio_m_value(anx78xx))
+		return;
+
+> +
+> +	sp_reg_clear_bits(anx78xx, TX_P1, SP_AUD_INTERFACE_CTRL0_REG,
+> +			  SP_AUD_INTERFACE_DISABLE);
+> +
+> +	sp_reg_set_bits(anx78xx, TX_P1, SP_AUD_INTERFACE_CTRL2_REG,
+> +			SP_M_AUD_ADJUST_ST);
+> +
+> +	sp_reg_read(anx78xx, RX_P0, SP_HDMI_STATUS_REG, &val);
+> +	if (val & SP_HDMI_AUD_LAYOUT)
+> +		sp_reg_set_bits(anx78xx, TX_P2, SP_AUD_CH_STATUS_BASE + 5,
+> +				SP_I2S_CH_NUM_8 | SP_AUDIO_LAYOUT);
+> +	else
+> +		sp_reg_clear_bits(anx78xx, TX_P2, SP_AUD_CH_STATUS_BASE + 5,
+> +				  SP_I2S_CHANNEL_NUM_MASK | SP_AUDIO_LAYOUT);
+> +
+> +	/* transfer audio channel status from HDMI Rx to Slimport Tx */
+> +	for (i = 1; i <= SP_AUD_CH_STATUS_REG_NUM; i++) {
+> +		sp_reg_read(anx78xx, RX_P0, SP_AUD_SPDIF_CH_STATUS_BASE + i,
+> +			    &val);
+> +		sp_reg_write(anx78xx, TX_P2, SP_AUD_CH_STATUS_BASE + i,
+> +			     val);
+> +	}
+
+Either this loop is off by one or the loop in sp_hdmi_audio_samplechg_int()
+is off by one.  Also just call that function instead of re-implimenting
+it here.
+
+> +
+> +	/* enable audio */
+> +	sp_enable_audio_output(anx78xx, true);
+> +}
+> +
+> +static bool sp_config_audio_output(struct anx78xx *anx78xx)
+> +{
+> +	u8 val;
+> +
+> +	switch (sp.tx_ao_state) {
+> +	default:
+> +	case AO_INIT:
+> +	case AO_CTS_RCV_INT:
+> +	case AO_AUDIO_RCV_INT:
+> +		sp_reg_read(anx78xx, RX_P0, SP_HDMI_STATUS_REG, &val);
+> +		if (!val & SP_HDMI_MODE) {
+
+This is a precendence error.  It should be:
+
+		if (!(val & SP_HDMI_MODE)) {
+
+> +			sp.tx_ao_state = AO_INIT;
+> +			return true;
+> +		}
+> +		break;
+
+regards,
+dan carpenter
