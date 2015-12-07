@@ -1,57 +1,85 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: [PATCH 4/4] ARM: dts: Use OF graph for DP to panel connection in
- exynos5800-peach-pi
-Date: Mon, 07 Dec 2015 21:52:38 +0900
-Message-ID: <1449492758-19989-5-git-send-email-inki.dae@samsung.com>
-References: <1449492758-19989-1-git-send-email-inki.dae@samsung.com>
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: modify rk3288 jaq backlight-level
+Date: Mon,  7 Dec 2015 21:11:08 +0800
+Message-ID: <1449493869-32151-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1449492758-19989-1-git-send-email-inki.dae@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, k.kozlowski@samsung.com, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, javier@osg.samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSmF2aWVyIE1hcnRpbmV6IENhbmlsbGFzIDxqYXZpZXJAb3NnLnNhbXN1bmcuY29tPgoK
-VGhlIERUIGJpbmRpbmcgZm9yIHRoZSBFeHlub3MgRFJNIERpc3BsYXkgUG9ydCAoRFApIGRyaXZl
-ciBpc24ndCBjb25zaXN0ZW50CnNpbmNlIGl0IHVzZXMgYSBwaGFuZGxlIHRvIGRlc2NyaWJlIHRo
-ZSBjb25uZWN0aW9uIGJldHdlZW4gdGhlIERQIHBvcnQgYW5kCnRoZSBkaXNwbGF5IHBhbmVsIGJ1
-dCB1c2VzIHRoZSBPRiBncmFwaCBwb3J0cyBhbmQgZW5kcG9pbnRzIHRvIGRlc2NyaWJlIHRoZQpj
-b25uZWN0aW9uIGJldHdlbiB0aGUgRFAgcG9ydCwgYSBicmlkZ2UgY2hpcCBhbmQgdGhlIHBhbmVs
-LgoKVGhlIEV4eW5vcyBEUCBkcml2ZXIgYW5kIHRoZSBEVCBiaW5kaW5nIGhhdmUgYmVlbiBjaGFu
-Z2VkIHRvIGFsbG93IGFsc28gdG8KZGVzY3JpYmUgdGhlIERQIHBvcnQgdG8gcGFuZWwgY29ubmVj
-dGlvbiB1c2luZyBwb3J0cyAvIGVuZHBvaW50cyAoT0YgZ3JhcGgpCnNvIHRoaXMgcGF0Y2ggY2hh
-bmdlcyB0aGUgRXh5bm9zNTgwMCBQZWFjaCBQaSBEVCB0byBtYWtlIGl0IGNvbnNpc3RlbnQgd2l0
-aAp0aGUgRXh5bm9zNTQyMCBQZWFjaCBQaXQgdGhhdCBoYXMgYSBlRFAgdG8gTFZEUyBjaGlwIGFu
-ZCB1c2VzIE9GIGdyYXBoIHRvby4KClNpZ25lZC1vZmYtYnk6IEphdmllciBNYXJ0aW5leiBDYW5p
-bGxhcyA8amF2aWVyQG9zZy5zYW1zdW5nLmNvbT4KVGVzdGVkLWJ5OiBKYXZpZXIgTWFydGluZXog
-Q2FuaWxsYXMgPGphdmllckBvc2cuc2Ftc3VuZy5jb20+ClJldmlld2VkLWJ5OiBJbmtpIERhZSA8
-aW5raS5kYWVAc2Ftc3VuZy5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTgwMC1w
-ZWFjaC1waS5kdHMgfCAxNSArKysrKysrKysrKysrKy0KIDEgZmlsZSBjaGFuZ2VkLCAxNCBpbnNl
-cnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMv
-ZXh5bm9zNTgwMC1wZWFjaC1waS5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M1ODAwLXBl
-YWNoLXBpLmR0cwppbmRleCA0OWE0ZjQzLi4xY2MyZTk1IDEwMDY0NAotLS0gYS9hcmNoL2FybS9i
-b290L2R0cy9leHlub3M1ODAwLXBlYWNoLXBpLmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy9l
-eHlub3M1ODAwLXBlYWNoLXBpLmR0cwpAQCAtMTIyLDYgKzEyMiwxMiBAQAogCQljb21wYXRpYmxl
-ID0gImF1byxiMTMzaHRuMDEiOwogCQlwb3dlci1zdXBwbHkgPSA8JnRwczY1MDkwX2ZldDY+Owog
-CQliYWNrbGlnaHQgPSA8JmJhY2tsaWdodD47CisKKwkJcG9ydCB7CisJCQlwYW5lbF9pbjogZW5k
-cG9pbnQgeworCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHBfb3V0PjsKKwkJCX07CisJCX07CiAJ
-fTsKIAogCW1tYzFfcHdyc2VxOiBtbWMxX3B3cnNlcSB7CkBAIC0xNDgsNyArMTU0LDE0IEBACiAJ
-c2Ftc3VuZyxsaW5rLXJhdGUgPSA8MHgwYT47CiAJc2Ftc3VuZyxsYW5lLWNvdW50ID0gPDI+Owog
-CXNhbXN1bmcsaHBkLWdwaW8gPSA8JmdweDIgNiBHUElPX0FDVElWRV9ISUdIPjsKLQlwYW5lbCA9
-IDwmcGFuZWw+OworCisJcG9ydHMgeworCQlwb3J0IHsKKwkJCWRwX291dDogZW5kcG9pbnQgewor
-CQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmcGFuZWxfaW4+OworCQkJfTsKKwkJfTsKKwl9OwogfTsK
-IAogJmZpbWQgewotLSAKMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZHJpLWRldmVsCg==
+the panel which jaq use require the pwm duty cycle larger than 3%,
+when the backlight status from power off to power on, otherwise the
+backlight will flush, so we modify the second brightness-level to 8,
+and when the backlight from power off to power on the pwm duty cycle
+will larger than 3%.
+
+Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+
+Changes in v1: None
+
+ arch/arm/boot/dts/rk3288-veyron-jaq.dts | 37 +++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288-veyron-jaq.dts b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
+index c2f52cf..991b717 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-jaq.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
+@@ -88,6 +88,43 @@
+ 	};
+ };
+ 
++&backlight {
++	/* Jaq panel PWM must be >= 3%, so start non-zero brightness at 8 */
++	brightness-levels = <
++		  0
++		  8   9  10  11  12  13  14  15
++		 16  17  18  19  20  21  22  23
++		 24  25  26  27  28  29  30  31
++		 32  33  34  35  36  37  38  39
++		 40  41  42  43  44  45  46  47
++		 48  49  50  51  52  53  54  55
++		 56  57  58  59  60  61  62  63
++		 64  65  66  67  68  69  70  71
++		 72  73  74  75  76  77  78  79
++		 80  81  82  83  84  85  86  87
++		 88  89  90  91  92  93  94  95
++		 96  97  98  99 100 101 102 103
++		104 105 106 107 108 109 110 111
++		112 113 114 115 116 117 118 119
++		120 121 122 123 124 125 126 127
++		128 129 130 131 132 133 134 135
++		136 137 138 139 140 141 142 143
++		144 145 146 147 148 149 150 151
++		152 153 154 155 156 157 158 159
++		160 161 162 163 164 165 166 167
++		168 169 170 171 172 173 174 175
++		176 177 178 179 180 181 182 183
++		184 185 186 187 188 189 190 191
++		192 193 194 195 196 197 198 199
++		200 201 202 203 204 205 206 207
++		208 209 210 211 212 213 214 215
++		216 217 218 219 220 221 222 223
++		224 225 226 227 228 229 230 231
++		232 233 234 235 236 237 238 239
++		240 241 242 243 244 245 246 247
++		248 249 250 251 252 253 254 255>;
++};
++
+ &rk808 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pmic_int_l &dvs_1 &dvs_2>;
+-- 
+1.9.1
