@@ -1,161 +1,50 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 3/7] doc: dt: mtd: partition: add on-flash format
- binding
-Date: Sun, 6 Dec 2015 21:07:31 -0600
-Message-ID: <20151207030731.GA26230@rob-hp-laptop>
-References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
- <1449292763-129421-4-git-send-email-computersforpeace@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v7 45/50] drivers/of: Avoid recursively calling
+ unflatten_dt_node()
+Date: Sun, 6 Dec 2015 19:40:56 -0800
+Message-ID: <5664FFC8.2060904@roeck-us.net>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1446642770-4681-46-git-send-email-gwshan@linux.vnet.ibm.com>
+ <CAL_Jsq+BnPEKkRgQX4+e0MA9dKLVLhy8rVF25Fr9yXL2jp+WLA@mail.gmail.com>
+ <1449446087.21036.1.camel@kernel.crashing.org>
+ <5664ED0C.6060706@roeck-us.net>
+ <CAL_JsqKWtEkmdDyWKjOFdtgX5wx2f+xfJMFw4jmo05Z5Jo_ZYA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1449292763-129421-4-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKWtEkmdDyWKjOFdtgX5wx2f+xfJMFw4jmo05Z5Jo_ZYA@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, aik@ozlabs.ru, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Pantelis Antoniou <panto@antoniou-consulting.com>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 04, 2015 at 09:19:19PM -0800, Brian Norris wrote:
-> The platform description (such as the type of partition formats used on
-> a given flash) should be done independently of the flash driver in use.
-> However, we can't reasonably have *all* partition parsers run on all
-> flash (until they find a match), so let's overload the 'partitions'
-> subnode to support specifying which format(s) to try in the device tree.
-> 
-> Start by supporting Google's (Chrome OS) FMAP structure.
-> 
-> There have been others interested in extending devicetree support to
-> other parsers, like the bcm47xxpart parser:
-> 
->   http://patchwork.ozlabs.org/patch/475986/
-> 
-> and the AFS (ARM Flash Structure?) parser:
-> 
->   http://patchwork.ozlabs.org/patch/537827/
-> 
-> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On 12/06/2015 06:33 PM, Rob Herring wrote:
+> On Sun, Dec 6, 2015 at 8:21 PM, Guenter Roeck <linux@roeck-us.net> wrote:
+>> On 12/06/2015 03:54 PM, Benjamin Herrenschmidt wrote:
+>>>
+>>> On Sun, 2015-12-06 at 14:28 -0600, Rob Herring wrote:
+>>>>
+>>>>
+>>>> Do you plan to respin the OF parts at least soon? There's another
+>>>> problem Guenter found that of_fdt_unflatten_tree is not re-entrant due
+>>>> to "depth" being static and this series fixes that. So I'd rather
+>>>> apply this and avoid adding a mutex if possible.
+>>>
+>>>
+>>> Gavin is on vacation until next year.
+>>>
+>>
+>> That is a bit more than the timeline I am looking for.
+>>
+>> Rob, any chance to accept my patch for now ? After all, it can be
+>> reverted after the rework is complete, and it would be easier
+>> to apply to earlier kernels.
+>
+> Yes, will do. It's only 4.1 and later that it should be marked for stable?
+>
 
-Looks good to me. If you had lots of partitions, I'd agree with comments 
-that they should be separate files, but I doubt we'll have many 10s of 
-them. Plus all we really need here is a list of compatible strings. 
+Yes, I think so. Earlier kernels would need a manual backport.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-> ---
->  .../devicetree/bindings/mtd/partition.txt          | 75 ++++++++++++++++++++--
->  1 file changed, 69 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
-> index 28ae56f5c972..1bf9a7243993 100644
-> --- a/Documentation/devicetree/bindings/mtd/partition.txt
-> +++ b/Documentation/devicetree/bindings/mtd/partition.txt
-> @@ -1,29 +1,56 @@
-> -Representing flash partitions in devicetree
-> +Flash partitions in device tree
-> +===============================
->  
-> -Partitions can be represented by sub-nodes of an mtd device. This can be used
-> +Flash devices can be partitioned into one or more functional ranges (e.g.,
-> +"boot code", "nvram", and "kernel") in at least two distinct ways:
-> +
-> + (A) a fixed flash layout at production time or
-> + (B) with an on-flash partition table, such as RedBoot, that describes the
-> +     geometry and naming/purpose of each functional region
-> +
-> +The former typically requires an operating system to learn about the
-> +partitioning from some kind of metadata provided by the bootloader/firmware.
-> +Such partitions can be described using the method in "Section A: Fixed Partitions".
-> +
-> +The latter is somewhat analogous to partition tables used on block devices
-> +(e.g., MBR or GPT), except that there is less standardization for flash
-> +devices, and it is not always safe or efficient to attempt to search for all of
-> +them on every flash device in the system, particularly since many of them allow
-> +their data structures to be placed anywhere on the flash, and so require
-> +scanning the entire flash device to find them.
-> +
-> +To assist system software in locating these partition tables, we provide a
-> +binding to describe which partition format(s) may be used on a given flash,
-> +found below in "Section B: On-Flash Partition Tables".
-> +
-> +
-> +Section A: Fixed Partitions
-> +---------------------------
-> +
-> +Partitions can be represented by sub-nodes of a flash device. This can be used
->  on platforms which have strong conventions about which portions of a flash are
->  used for what purposes, but which don't use an on-flash partition table such
->  as RedBoot.
->  
-> -The partition table should be a subnode of the mtd node and should be named
-> +The partition table should be a subnode of the flash node and should be named
->  'partitions'. This node should have the following property:
->  - compatible : (required) must be "partitions"
->  Partitions are then defined in subnodes of the partitions node.
->  
-> -For backwards compatibility partitions as direct subnodes of the mtd device are
-> +For backwards compatibility partitions as direct subnodes of the flash device are
->  supported. This use is discouraged.
->  NOTE: also for backwards compatibility, direct subnodes that have a compatible
->  string are not considered partitions, as they may be used for other bindings.
->  
->  #address-cells & #size-cells must both be present in the partitions subnode of the
-> -mtd device. There are two valid values for both:
-> +flash device. There are two valid values for both:
->  <1>: for partitions that require a single 32-bit cell to represent their
->       size/address (aka the value is below 4 GiB)
->  <2>: for partitions that require two 32-bit cells to represent their
->       size/address (aka the value is 4 GiB or greater).
->  
->  Required properties:
-> -- reg : The partition's offset and size within the mtd bank.
-> +- reg : The partition's offset and size within the flash
->  
->  Optional properties:
->  - label : The label / name for this partition.  If omitted, the label is taken
-> @@ -89,3 +116,39 @@ flash@2 {
->  		};
->  	};
->  };
-> +
-> +
-> +Section B: On-Flash Partition Tables
-> +------------------------------------
-> +
-> +System designers use a variety of on-flash data structures to describe the
-> +layout of the flash. Because it's not always optimal for system software to
-> +scan for every sort of data structure that might be used, one can specify which
-> +structure(s) might be used on a given flash using the 'partitions' subnode of
-> +the flash node.
-> +
-> +Node name: partitions
-> +Properties:
-> + - compatible: (required) used to define which partition format(s) may be in
-> +   use on this flash may contain one or more of the strings defined in the
-> +   following subsections
-> +
-> +
-> +Google's FMAP (Flash MAP)
-> +#########################
-> +
-> +Often used to describe the boot flash on Chrome OS devices. Specified here:
-> +
-> +  https://github.com/dhendrix/flashmap/blob/wiki/FmapSpec.md
-> +
-> +Properties:
-> +- compatible: (required) must include "google,fmap"
-> +
-> +
-> +Examples:
-> +
-> +flash@0 {
-> +	partitions {
-> +		compatible = "google,fmap";
-> +	};
-> +};
-> -- 
-> 2.6.0.rc2.230.g3dd15c0
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Guenter
