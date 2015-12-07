@@ -1,86 +1,46 @@
-From: Damien Riegel <damien.riegel@savoirfairelinux.com>
-Subject: Re: [PATCH v7 2/6] mfd: syscon: add a DT property to set value width
-Date: Mon, 7 Dec 2015 14:42:18 -0500
-Message-ID: <20151207194218.GB6030@localhost>
-References: <1448899191-13891-1-git-send-email-damien.riegel@savoirfairelinux.com>
- <1448899191-13891-3-git-send-email-damien.riegel@savoirfairelinux.com>
- <20151207094020.GF3384@x1>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v7 0/5] mfd: tps65912: Driver rewrite with DT support
+Date: Mon, 7 Dec 2015 13:58:47 -0600
+Message-ID: <5665E4F7.1070707@ti.com>
+References: <1447869580-10416-1-git-send-email-afd@ti.com>
+ <20151124162624.GI807@x1> <20151204120240.GW26072@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20151207094020.GF3384@x1>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-watchdog@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, kernel@savoirfairelinux.com, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org, Samuel Ortiz <sameo@linux.intel.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20151204120240.GW26072@sirena.org.uk>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBEZWMgMDcsIDIwMTUgYXQgMDk6NDA6MjBBTSArMDAwMCwgTGVlIEpvbmVzIHdyb3Rl
-Ogo+IE9uIE1vbiwgMzAgTm92IDIwMTUsIERhbWllbiBSaWVnZWwgd3JvdGU6Cj4gCj4gPiBDdXJy
-ZW50bHkgc3lzY29uIGhhcyBhIGZpeGVkIGNvbmZpZ3VyYXRpb24gb2YgMzIgYml0cyBmb3IgcmVn
-aXN0ZXIgYW5kCj4gPiB2YWx1ZXMgd2lkdGhzLiBJbiBzb21lIGNhc2VzLCBpdCB3b3VsZCBiZSBk
-ZXNpcmFibGUgdG8gYmUgYWJsZSB0bwo+ID4gY3VzdG9taXplIHRoZSB2YWx1ZSB3aWR0aC4KPiA+
-IAo+ID4gRm9yIGV4YW1wbGUsIGNlcnRhaW4gYm9hcmRzIChsaWtlIHRoZSBvbmVzIG1hbnVmYWN0
-dXJlZCBieSBUZWNobm9sb2dpYwo+ID4gU3lzdGVtcykgaGF2ZSBhIEZQR0EgdGhhdCBpcyBtZW1v
-cnktbWFwcGVkLCBidXQgaXRzIHJlZ2lzdGVycyBhcmUgb25seQo+ID4gMTYtYml0IHdpZGUuCj4g
-PiAKPiA+IFRoaXMgcGF0Y2ggYWRkcyBhbiBvcHRpb25hbCAicmVnLWlvLXdpZHRoIiBEVCBiaW5k
-aW5nIGZvciBzeXNjb24gdGhhdAo+ID4gYWxsb3dzIHRvIGNoYW5nZSB0aGUgd2lkdGggZm9yIHRo
-ZSBkYXRhIGJ1cyAoaS5lLiB2YWxfYml0cykuIElmIHRoaXMKPiA+IHByb3BlcnR5IGlzIHByb3Zp
-ZGVkLCBpdCB3aWxsIGFsc28gc2V0IHRoZSByZWdpc3RlciBzdHJpZGUgdG8KPiA+IHJlZy1pby13
-aWR0aCdzIHZhbHVlLiBJZiBub3QgcHJvdmlkZWQsIHRoZSBkZWZhdWx0IGNvbmZpZ3VyYXRpb24g
-aXMKPiA+IHVzZWQuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IERhbWllbiBSaWVnZWwgPGRhbWll
-bi5yaWVnZWxAc2F2b2lyZmFpcmVsaW51eC5jb20+Cj4gPiAtLS0KPiA+ICBEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N5c2Nvbi50eHQgfCAgNCArKysrCj4gPiAgZHJpdmVy
-cy9tZmQvc3lzY29uLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMTMgKysrKysrKysr
-KysrKwo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygrKQo+IAo+IEFwcGxpZWQs
-IHRoYW5rcy4KPiAKSGkgTGVlLAoKR29vZCB0byBzZWUgdGhpcyBwYXRjaCBhcHBsaWVkLiBXaGF0
-J3MgZ29pbmcgb24gbm93IHdpdGggdGhlIG90aGVyCnBhdGNoZXMgb2YgdGhpcyBzZXJpZSA/IEhv
-dyBzaG91bGQgSSBoYW5kbGUgdGhlbSA/CgpUaGFua3MsCkRhbWllbgoKPiA+IGRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N5c2Nvbi50eHQgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N5c2Nvbi50eHQKPiA+IGluZGV4IGZl
-ODE1MGIuLjQwOGY3NjggMTAwNjQ0Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvbWZkL3N5c2Nvbi50eHQKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9tZmQvc3lzY29uLnR4dAo+ID4gQEAgLTEzLDYgKzEzLDEwIEBAIFJlcXVpcmVk
-IHByb3BlcnRpZXM6Cj4gPiAgLSBjb21wYXRpYmxlOiBTaG91bGQgY29udGFpbiAic3lzY29uIi4K
-PiA+ICAtIHJlZzogdGhlIHJlZ2lzdGVyIHJlZ2lvbiBjYW4gYmUgYWNjZXNzZWQgZnJvbSBzeXNj
-b24KPiA+ICAKPiA+ICtPcHRpb25hbCBwcm9wZXJ0eToKPiA+ICstIHJlZy1pby13aWR0aDogdGhl
-IHNpemUgKGluIGJ5dGVzKSBvZiB0aGUgSU8gYWNjZXNzZXMgdGhhdCBzaG91bGQgYmUKPiA+ICsg
-IHBlcmZvcm1lZCBvbiB0aGUgZGV2aWNlLgo+ID4gKwo+ID4gIEV4YW1wbGVzOgo+ID4gIGdwcjog
-aW9tdXhjLWdwckAwMjBlMDAwMCB7Cj4gPiAgCWNvbXBhdGlibGUgPSAiZnNsLGlteDZxLWlvbXV4
-Yy1ncHIiLCAic3lzY29uIjsKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC9zeXNjb24uYyBi
-L2RyaXZlcnMvbWZkL3N5c2Nvbi5jCj4gPiBpbmRleCAxNzZiZjBmLi5iN2FhYmVlIDEwMDY0NAo+
-ID4gLS0tIGEvZHJpdmVycy9tZmQvc3lzY29uLmMKPiA+ICsrKyBiL2RyaXZlcnMvbWZkL3N5c2Nv
-bi5jCj4gPiBAQCAtNDcsNiArNDcsNyBAQCBzdGF0aWMgc3RydWN0IHN5c2NvbiAqb2Zfc3lzY29u
-X3JlZ2lzdGVyKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApCj4gPiAgCXN0cnVjdCBzeXNjb24gKnN5
-c2NvbjsKPiA+ICAJc3RydWN0IHJlZ21hcCAqcmVnbWFwOwo+ID4gIAl2b2lkIF9faW9tZW0gKmJh
-c2U7Cj4gPiArCXUzMiByZWdfaW9fd2lkdGg7Cj4gPiAgCWludCByZXQ7Cj4gPiAgCXN0cnVjdCBy
-ZWdtYXBfY29uZmlnIHN5c2Nvbl9jb25maWcgPSBzeXNjb25fcmVnbWFwX2NvbmZpZzsKPiA+ICAK
-PiA+IEBAIC02OSw2ICs3MCwxOCBAQCBzdGF0aWMgc3RydWN0IHN5c2NvbiAqb2Zfc3lzY29uX3Jl
-Z2lzdGVyKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApCj4gPiAgCSBlbHNlIGlmIChvZl9wcm9wZXJ0
-eV9yZWFkX2Jvb2wobnAsICJsaXR0bGUtZW5kaWFuIikpCj4gPiAgCQlzeXNjb25fY29uZmlnLnZh
-bF9mb3JtYXRfZW5kaWFuID0gUkVHTUFQX0VORElBTl9MSVRUTEU7Cj4gPiAgCj4gPiArCS8qCj4g
-PiArCSAqIHNlYXJjaCBmb3IgcmVnLWlvLXdpZHRoIHByb3BlcnR5IGluIERULiBJZiBpdCBpcyBu
-b3QgcHJvdmlkZWQsCj4gPiArCSAqIGRlZmF1bHQgdG8gNCBieXRlcy4gcmVnbWFwX2luaXRfbW1p
-byB3aWxsIHJldHVybiBhbiBlcnJvciBpZiB2YWx1ZXMKPiA+ICsJICogYXJlIGludmFsaWQgc28g
-dGhlcmUgaXMgbm8gbmVlZCB0byBjaGVjayB0aGVtIGhlcmUuCj4gPiArCSAqLwo+ID4gKwlyZXQg
-PSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgInJlZy1pby13aWR0aCIsICZyZWdfaW9fd2lkdGgp
-Owo+ID4gKwlpZiAocmV0KQo+ID4gKwkJcmVnX2lvX3dpZHRoID0gNDsKPiA+ICsKPiA+ICsJc3lz
-Y29uX2NvbmZpZy5yZWdfc3RyaWRlID0gcmVnX2lvX3dpZHRoOwo+ID4gKwlzeXNjb25fY29uZmln
-LnZhbF9iaXRzID0gcmVnX2lvX3dpZHRoICogODsKPiA+ICsKPiA+ICAJcmVnbWFwID0gcmVnbWFw
-X2luaXRfbW1pbyhOVUxMLCBiYXNlLCAmc3lzY29uX2NvbmZpZyk7Cj4gPiAgCWlmIChJU19FUlIo
-cmVnbWFwKSkgewo+ID4gIAkJcHJfZXJyKCJyZWdtYXAgaW5pdCBmYWlsZWRcbiIpOwo+IAo+IC0t
-IAo+IExlZSBKb25lcwo+IExpbmFybyBTVE1pY3JvZWxlY3Ryb25pY3MgTGFuZGluZyBUZWFtIExl
-YWQKPiBMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKPiBG
-b2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On 12/04/2015 06:02 AM, Mark Brown wrote:
+> On Tue, Nov 24, 2015 at 04:26:24PM +0000, Lee Jones wrote:
+>> On Wed, 18 Nov 2015, Andrew F. Davis wrote:
+>
+>>>   Documentation/devicetree/bindings/mfd/tps65912.txt |  50 ++
+>>>   drivers/gpio/Kconfig                               |   2 +-
+>>>   drivers/gpio/gpio-tps65912.c                       | 317 ++++-----
+>>>   drivers/mfd/Kconfig                                |  20 +-
+>>>   drivers/mfd/Makefile                               |   3 +-
+>>>   drivers/mfd/tps65912-core.c                        | 290 ++++-----
+>>>   drivers/mfd/tps65912-i2c.c                         | 219 +++----
+>>>   drivers/mfd/tps65912-irq.c                         | 217 -------
+>>>   drivers/mfd/tps65912-spi.c                         | 219 +++----
+>>>   drivers/regulator/Kconfig                          |   2 +-
+>>>   drivers/regulator/tps65912-regulator.c             | 710 +++++----------------
+>>>   include/linux/mfd/tps65912.h                       | 208 +++---
+>
+>> Just waiting for the regulator Ack now, right?
+>
+> No, you also need to work out what to do about the GPIO driver not
+> building in -next due to interface changes in gpiolib.
+>
+
+As all of this driver should be taken though the MFD tree how
+can this gpiolib change be handled? If we have gpio.parent it
+will not build on MFD, with gpio.dev it will fail to build when
+the changes are merged from the gpio subsystem. As the change
+has not been merged into linux-next as far a I can tell maybe
+this should be taken as is, then when the gpiolib change is
+made this can be changed with all the other drivers?
