@@ -1,80 +1,87 @@
-From: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Subject: [PATCH 7/8] ARM: dts: imx7d: cl-som-imx7: add fec2 support
-Date: Mon,  7 Dec 2015 09:14:38 +0200
-Message-ID: <1449472479-2521-8-git-send-email-ilya@compulab.co.il>
-References: <1449472479-2521-1-git-send-email-ilya@compulab.co.il>
+From: "Yankejian (Hackim Yim)" <yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH net-next 2/2] net: hns: enet specisies a reference to dsaf
+ (config and documents)
+Date: Mon, 7 Dec 2015 15:14:13 +0800
+Message-ID: <566531C5.4050208@huawei.com>
+References: <1449295856-31068-1-git-send-email-yankejian@huawei.com>
+ <1449295856-31068-3-git-send-email-yankejian@huawei.com>
+ <23027215.8RIhViTVaB@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449472479-2521-1-git-send-email-ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+In-Reply-To: <23027215.8RIhViTVaB@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, liguozhu-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lisheng011-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haifeng.wei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for the 2-nd Freescale Ethernet Controller (FEC2).
 
-Signed-off-by: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
----
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 34 +++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index 30bbdcd..77b6587 100644
---- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-+++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -62,9 +62,26 @@
- 		ethphy0: ethernet-phy@0 {
- 			reg = <0>;
- 		};
-+
-+		ethphy1: ethernet-phy@1 {
-+			reg = <1>;
-+		};
- 	};
- };
- 
-+&fec2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet2>;
-+	assigned-clocks = <&clks IMX7D_ENET2_TIME_ROOT_SRC>,
-+			  <&clks IMX7D_ENET2_TIME_ROOT_CLK>;
-+	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
-+	assigned-clock-rates = <0>, <100000000>;
-+	phy-mode = "rgmii";
-+	phy-handle = <&ethphy1>;
-+	fsl,magic-packet;
-+	status = "okay";
-+};
-+
- &i2c2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
-@@ -221,6 +238,23 @@
- 			>;
- 		};
- 
-+		pinctrl_enet2: enet2grp {
-+			fsl,pins = <
-+				MX7D_PAD_EPDC_GDSP__ENET2_RGMII_TXC		0x1
-+				MX7D_PAD_EPDC_SDCE2__ENET2_RGMII_TD0		0x1
-+				MX7D_PAD_EPDC_SDCE3__ENET2_RGMII_TD1		0x1
-+				MX7D_PAD_EPDC_GDCLK__ENET2_RGMII_TD2		0x1
-+				MX7D_PAD_EPDC_GDOE__ENET2_RGMII_TD3		0x1
-+				MX7D_PAD_EPDC_GDRL__ENET2_RGMII_TX_CTL		0x1
-+				MX7D_PAD_EPDC_SDCE1__ENET2_RGMII_RXC		0x1
-+				MX7D_PAD_EPDC_SDCLK__ENET2_RGMII_RD0		0x1
-+				MX7D_PAD_EPDC_SDLE__ENET2_RGMII_RD1		0x1
-+				MX7D_PAD_EPDC_SDOE__ENET2_RGMII_RD2		0x1
-+				MX7D_PAD_EPDC_SDSHR__ENET2_RGMII_RD3		0x1
-+				MX7D_PAD_EPDC_SDCE0__ENET2_RGMII_RX_CTL		0x1
-+			>;
-+		};
-+
- 		pinctrl_i2c2: i2c2grp {
- 			fsl,pins = <
- 				MX7D_PAD_I2C2_SDA__I2C2_SDA		0x4000007f
--- 
-1.9.1
+On 2015/12/6 6:19, Arnd Bergmann wrote:
+> On Saturday 05 December 2015 14:10:56 yankejian wrote:
+>> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
+>> index 80411b2..ecacfa4 100644
+>> --- a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
+>> +++ b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
+>> @@ -4,8 +4,6 @@ Required properties:
+>>  - compatible: should be "hisilicon,hns-dsaf-v1" or "hisilicon,hns-dsaf-v2".
+>>    "hisilicon,hns-dsaf-v1" is for hip05.
+>>    "hisilicon,hns-dsaf-v2" is for Hi1610 and Hi1612.
+>> -- dsa-name: dsa fabric name who provide this interface.
+>> -  should be "dsafX", X is the dsaf id.
+>>  - mode: dsa fabric mode string. only support one of dsaf modes like these:
+>>                 "2port-64vf",
+>>                 "6port-16rss",
+>> @@ -26,9 +24,8 @@ Required properties:
+>>  
+>>  Example:
+>>  
+>> -dsa: dsa@c7000000 {
+>> +dsaf0: dsa@c7000000 {
+>>         compatible = "hisilicon,hns-dsaf-v1";
+>> -       dsa_name = "dsaf0";
+>>         mode = "6port-16rss";
+>>         interrupt-parent = <&mbigen_dsa>;
+>>         reg = <0x0 0xC0000000 0x0 0x420000
+>> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
+>> index 41d19be..e6a9d1c 100644
+>> --- a/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
+>> +++ b/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
+>> @@ -4,8 +4,9 @@ Required properties:
+>>  - compatible: "hisilicon,hns-nic-v1" or "hisilicon,hns-nic-v2".
+>>    "hisilicon,hns-nic-v1" is for hip05.
+>>    "hisilicon,hns-nic-v2" is for Hi1610 and Hi1612.
+>> -- ae-name: accelerator name who provides this interface,
+>> -  is simply a name referring to the name of name in the accelerator node.
+>> +- ae-handle: accelerator engine handle for hns,
+>> +  specifies a reference to the associating hardware driver node.
+>> +  see Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
+>>  - port-id: is the index of port provided by DSAF (the accelerator). DSAF can
+>>    connect to 8 PHYs. Port 0 to 1 are both used for adminstration purpose. They
+>>    are called debug ports.
+>> @@ -41,7 +42,7 @@ Example:
+>>  
+>>
+> This looks like an incompatible change, as you add and remove
+> required properties. Is there a way to support both the old and
+> the new style?
+>
+> 	Arnd
+>
+> .
+
+Hi Arnd,
+Thanks for your suggestions.  it must be set the same strings in dsaf node and every enet node before.
+it seems inappropriate. as Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> 's suggestions, that would solve associating
+enet with a particular dsaf. so we discus the solution with Yisen Zhuang <yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>.
+we decide to use the new way instead of the old one.
+
+Best regards,
+yankejian
+
+>
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
