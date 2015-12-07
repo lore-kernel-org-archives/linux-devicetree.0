@@ -1,92 +1,51 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: arRe: [PATCH net-next 2/2] net: hns: enet specisies a reference to dsaf (config and documents)
-Date: Mon, 07 Dec 2015 10:40:04 +0100
-Message-ID: <1503684.BNZUVaD74W@wuerfel>
-References: <1449295856-31068-1-git-send-email-yankejian@huawei.com> <23027215.8RIhViTVaB@wuerfel> <566531C5.4050208@huawei.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V4 11/16] Documentation: DT: bindings: Update NVIDIA PMC
+ for Tegra210
+Date: Mon, 7 Dec 2015 09:54:15 +0000
+Message-ID: <56655747.9070009@nvidia.com>
+References: <1449241037-22193-1-git-send-email-jonathanh@nvidia.com>
+ <1449241037-22193-12-git-send-email-jonathanh@nvidia.com>
+ <20151206003106.GA12441@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <566531C5.4050208@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Yankejian (Hackim Yim)" <yankejian@huawei.com>
-Cc: davem@davemloft.net, fengguang.wu@intel.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, salil.mehta@huawei.com, Yisen.Zhuang@huawei.com, liguozhu@huawei.com, lisheng011@huawei.com, huangdaode@hisilicon.com, xuwei5@hisilicon.com, haifeng.wei@huawei.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151206003106.GA12441@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 07 December 2015 15:14:13 Yankejian wrote:
-> On 2015/12/6 6:19, Arnd Bergmann wrote:
-> > On Saturday 05 December 2015 14:10:56 yankejian wrote:
-> >> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
-> >> index 80411b2..ecacfa4 100644
-> >> --- a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
-> >> +++ b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
-> >> @@ -4,8 +4,6 @@ Required properties:
-> >>  - compatible: should be "hisilicon,hns-dsaf-v1" or "hisilicon,hns-dsaf-v2".
-> >>    "hisilicon,hns-dsaf-v1" is for hip05.
-> >>    "hisilicon,hns-dsaf-v2" is for Hi1610 and Hi1612.
-> >> -- dsa-name: dsa fabric name who provide this interface.
-> >> -  should be "dsafX", X is the dsaf id.
-> >>  - mode: dsa fabric mode string. only support one of dsaf modes like these:
-> >>                 "2port-64vf",
-> >>                 "6port-16rss",
-> >> @@ -26,9 +24,8 @@ Required properties:
-> >>  
-> >>  Example:
-> >>  
-> >> -dsa: dsa@c7000000 {
-> >> +dsaf0: dsa@c7000000 {
-> >>         compatible = "hisilicon,hns-dsaf-v1";
-> >> -       dsa_name = "dsaf0";
-> >>         mode = "6port-16rss";
-> >>         interrupt-parent = <&mbigen_dsa>;
-> >>         reg = <0x0 0xC0000000 0x0 0x420000
-> >> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
-> >> index 41d19be..e6a9d1c 100644
-> >> --- a/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
-> >> +++ b/Documentation/devicetree/bindings/net/hisilicon-hns-nic.txt
-> >> @@ -4,8 +4,9 @@ Required properties:
-> >>  - compatible: "hisilicon,hns-nic-v1" or "hisilicon,hns-nic-v2".
-> >>    "hisilicon,hns-nic-v1" is for hip05.
-> >>    "hisilicon,hns-nic-v2" is for Hi1610 and Hi1612.
-> >> -- ae-name: accelerator name who provides this interface,
-> >> -  is simply a name referring to the name of name in the accelerator node.
-> >> +- ae-handle: accelerator engine handle for hns,
-> >> +  specifies a reference to the associating hardware driver node.
-> >> +  see Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
-> >>  - port-id: is the index of port provided by DSAF (the accelerator). DSAF can
-> >>    connect to 8 PHYs. Port 0 to 1 are both used for adminstration purpose. They
-> >>    are called debug ports.
-> >> @@ -41,7 +42,7 @@ Example:
-> >>  
-> >>
-> > This looks like an incompatible change, as you add and remove
-> > required properties. Is there a way to support both the old and
-> > the new style?
-> >
-> >       Arnd
-> >
-> > .
+
+On 06/12/15 00:31, Rob Herring wrote:
+> On Fri, Dec 04, 2015 at 02:57:12PM +0000, Jon Hunter wrote:
+>> ---
+>>  Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt | 5 +++--
+>>  1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+>> index 02c27004d4a8..838e1a69ec0a 100644
+>> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+>> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+>> @@ -9,8 +9,9 @@ Required properties:
+>>  - compatible : For Tegra20, must contain "nvidia,tegra20-pmc".  For Tegra30,
+>>    must contain "nvidia,tegra30-pmc".  For Tegra114, must contain
+>>    "nvidia,tegra114-pmc".  For Tegra124, must contain "nvidia,tegra124-pmc".
+>> -  Otherwise, must contain "nvidia,<chip>-pmc", plus at least one of the
+>> -  above, where <chip> is tegra132.
+>> +  For Tegra210, must contain "nvidia,tegra210-pmc". Otherwise, must contain
+>> +  "nvidia,<chip>-pmc", plus at least one of the above, where <chip> is
+>> +  tegra132.
 > 
-> Hi Arnd,
-> Thanks for your suggestions.  it must be set the same strings in dsaf node and every enet node before.
-> it seems inappropriate. as Rob Herring <robh@kernel.org> 's suggestions, that would solve associating
-> enet with a particular dsaf. so we discus the solution with Yisen Zhuang <yisen.zhuang@huawei.com>.
-> we decide to use the new way instead of the old one.
+> Can you reorg this some so the compatible strings are a list rather than 
+> a paragraph of text. I find the last sentence a bit confusing as well. 
+> Seems like <chip> should be a list rather than just tegra132.
 
-I agree the new form looks better than the original way, but I'm worried
-about the migration path. You don't explain in the patch description
-how you want to ensure that nothing breaks for existing systems.
+Yes no problem.
 
-We generally try to avoid doing incompatible changes altogether and
-prefer to keep backwards compatibility, unless we can prove that no
-other systems exist that would get impacted by the change.
-
-Are you sure that nobody ships a DTB file for this hardware with their
-firmware that would now require an incompatible update which in turn
-breaks old kernels?
-
-Are you sure that there is no hardware using the same dsa hardware
-with out-of-tree dts files that need to make the same change but might
-not be aware of the change?
-
-	Arnd
+Thanks
+Jon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
