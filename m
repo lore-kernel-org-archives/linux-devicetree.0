@@ -1,89 +1,86 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH linux-next 0/5] mtd: spi-nor: add driver for Atmel QSPI
- controller
-Date: Mon, 7 Dec 2015 11:34:41 -0800
-Message-ID: <20151207193441.GO120110@google.com>
-References: <cover.1449494420.git.cyrille.pitchen@atmel.com>
+From: Damien Riegel <damien.riegel@savoirfairelinux.com>
+Subject: Re: [PATCH v7 2/6] mfd: syscon: add a DT property to set value width
+Date: Mon, 7 Dec 2015 14:42:18 -0500
+Message-ID: <20151207194218.GB6030@localhost>
+References: <1448899191-13891-1-git-send-email-damien.riegel@savoirfairelinux.com>
+ <1448899191-13891-3-git-send-email-damien.riegel@savoirfairelinux.com>
+ <20151207094020.GF3384@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1449494420.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Bean Huo =?utf-8?B?6ZyN5paM5paM?= <beanhuo-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20151207094020.GF3384@x1>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-watchdog@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, kernel@savoirfairelinux.com, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-+ Bean Huo
-
-Hi Cyrille,
-
-On Mon, Dec 07, 2015 at 03:09:09PM +0100, Cyrille Pitchen wrote:
-> Hi all,
-> 
-> this series of patches adds support to the Atmel QSPI controller available
-> on sama5d2 SoCs. It was tested on a sama5d2 xplained ultra board with a 
-> Micron n25q128a13 QSPI memory and a at25df321a SPI memory.
-> 
-> In order to use the Micron memory in its Quad SPI mode, the spi-nor
-> framework needed to be patched to fix the support of Quad/Dual SPI
-> protocols with some memory manufacturers such as Spansion, Micron and
-> Macronix. There are many comments in the source code to explain the
-> implementation choices based on the datasheets from memory manufacturers.
-> 
-> 
-> This series was based and tested on linux-next-20151207
-> 
-> 1 - Atmel QSPI + Micron n25q128a13 (atmel-quadspi.c driver)
-> 
-> SPI 1-1-1: This mode was tested replacing SPI_NOR_QUAD by SPI_NOR_FAST as
->            argument to spi_nor_scan() called from atmel_qspi_probe().
-> 
-> SPI 1-1-4: Bootloaders (at91bootstrap/uboot) don't enable the Quad SPI
->            mode of the Micron memory. When probed from Linux, the memory
->            uses its Extended SPI mode and replies to the regular Read ID
->            (0x9f) command.
-> 
-> SPI 4-4-4: The romcode enabled the Quad SPI mode the of Micron memory
->            before loading the at91bootstrap. When probed from Linux, the
->            memory uses its Quad SPI mode and no longer replies to the
->            regular Read ID (0x9f) command but instead to the Read ID
->            Multiple I/O (0xaf) command. The memory expects ALL commands
->            to use the SPI 4-4-4 protocol.
-
-I'll admit I'm a little fuzzy on the differences between dual and quad
-modes on various flash manufacturers. Can you help clear it up for me?
-I think some of the comments on patch 2 help too, but I'll just comment
-here for now.
-
-It looks like the current driver has problems regarding the non 1-x-y
-modes (e.g., 4-4-4), right? But I see that spi-nor.c never tries to
-send a 4_4_4 command; it only sets read_opcode to
-SPINOR_OP_READ_1_1_{1,2,4}. So is this an oversight in patches like
-Bean's patch?
-
-    commit 548cd3ab54da ("mtd: spi-nor: Add quad I/O support for Micron
-    SPI NOR")
-
-Why would we even need to enable quad modes like that, if we're not
-going to send the 4-4-4 opcodes?
-
-My next question (if my understanding is roughly correct) is, do we need
-the 4-4-4 modes, and what risks come with them? I understand we can
-shorten the command and address phases, but does that alone yield much
-performance benefit? And I think the risk is that a given system might
-not be prepared for the flash to be in a 4-4-4 mode, if the boot code
-tries to use 1-x-y commands.
-
-Also, I see a lot of good comments in patch 2 about Spansion vs.
-Macronix vs. Micron memories. I wonder if previous developers have
-completely tested their patches, or if they're just reading the
-datasheets... so, what kind have testing have you done? Do you have
-samples of all these flash to test?
-
-Regards,
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBEZWMgMDcsIDIwMTUgYXQgMDk6NDA6MjBBTSArMDAwMCwgTGVlIEpvbmVzIHdyb3Rl
+Ogo+IE9uIE1vbiwgMzAgTm92IDIwMTUsIERhbWllbiBSaWVnZWwgd3JvdGU6Cj4gCj4gPiBDdXJy
+ZW50bHkgc3lzY29uIGhhcyBhIGZpeGVkIGNvbmZpZ3VyYXRpb24gb2YgMzIgYml0cyBmb3IgcmVn
+aXN0ZXIgYW5kCj4gPiB2YWx1ZXMgd2lkdGhzLiBJbiBzb21lIGNhc2VzLCBpdCB3b3VsZCBiZSBk
+ZXNpcmFibGUgdG8gYmUgYWJsZSB0bwo+ID4gY3VzdG9taXplIHRoZSB2YWx1ZSB3aWR0aC4KPiA+
+IAo+ID4gRm9yIGV4YW1wbGUsIGNlcnRhaW4gYm9hcmRzIChsaWtlIHRoZSBvbmVzIG1hbnVmYWN0
+dXJlZCBieSBUZWNobm9sb2dpYwo+ID4gU3lzdGVtcykgaGF2ZSBhIEZQR0EgdGhhdCBpcyBtZW1v
+cnktbWFwcGVkLCBidXQgaXRzIHJlZ2lzdGVycyBhcmUgb25seQo+ID4gMTYtYml0IHdpZGUuCj4g
+PiAKPiA+IFRoaXMgcGF0Y2ggYWRkcyBhbiBvcHRpb25hbCAicmVnLWlvLXdpZHRoIiBEVCBiaW5k
+aW5nIGZvciBzeXNjb24gdGhhdAo+ID4gYWxsb3dzIHRvIGNoYW5nZSB0aGUgd2lkdGggZm9yIHRo
+ZSBkYXRhIGJ1cyAoaS5lLiB2YWxfYml0cykuIElmIHRoaXMKPiA+IHByb3BlcnR5IGlzIHByb3Zp
+ZGVkLCBpdCB3aWxsIGFsc28gc2V0IHRoZSByZWdpc3RlciBzdHJpZGUgdG8KPiA+IHJlZy1pby13
+aWR0aCdzIHZhbHVlLiBJZiBub3QgcHJvdmlkZWQsIHRoZSBkZWZhdWx0IGNvbmZpZ3VyYXRpb24g
+aXMKPiA+IHVzZWQuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IERhbWllbiBSaWVnZWwgPGRhbWll
+bi5yaWVnZWxAc2F2b2lyZmFpcmVsaW51eC5jb20+Cj4gPiAtLS0KPiA+ICBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N5c2Nvbi50eHQgfCAgNCArKysrCj4gPiAgZHJpdmVy
+cy9tZmQvc3lzY29uLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMTMgKysrKysrKysr
+KysrKwo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygrKQo+IAo+IEFwcGxpZWQs
+IHRoYW5rcy4KPiAKSGkgTGVlLAoKR29vZCB0byBzZWUgdGhpcyBwYXRjaCBhcHBsaWVkLiBXaGF0
+J3MgZ29pbmcgb24gbm93IHdpdGggdGhlIG90aGVyCnBhdGNoZXMgb2YgdGhpcyBzZXJpZSA/IEhv
+dyBzaG91bGQgSSBoYW5kbGUgdGhlbSA/CgpUaGFua3MsCkRhbWllbgoKPiA+IGRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N5c2Nvbi50eHQgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N5c2Nvbi50eHQKPiA+IGluZGV4IGZl
+ODE1MGIuLjQwOGY3NjggMTAwNjQ0Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvbWZkL3N5c2Nvbi50eHQKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9tZmQvc3lzY29uLnR4dAo+ID4gQEAgLTEzLDYgKzEzLDEwIEBAIFJlcXVpcmVk
+IHByb3BlcnRpZXM6Cj4gPiAgLSBjb21wYXRpYmxlOiBTaG91bGQgY29udGFpbiAic3lzY29uIi4K
+PiA+ICAtIHJlZzogdGhlIHJlZ2lzdGVyIHJlZ2lvbiBjYW4gYmUgYWNjZXNzZWQgZnJvbSBzeXNj
+b24KPiA+ICAKPiA+ICtPcHRpb25hbCBwcm9wZXJ0eToKPiA+ICstIHJlZy1pby13aWR0aDogdGhl
+IHNpemUgKGluIGJ5dGVzKSBvZiB0aGUgSU8gYWNjZXNzZXMgdGhhdCBzaG91bGQgYmUKPiA+ICsg
+IHBlcmZvcm1lZCBvbiB0aGUgZGV2aWNlLgo+ID4gKwo+ID4gIEV4YW1wbGVzOgo+ID4gIGdwcjog
+aW9tdXhjLWdwckAwMjBlMDAwMCB7Cj4gPiAgCWNvbXBhdGlibGUgPSAiZnNsLGlteDZxLWlvbXV4
+Yy1ncHIiLCAic3lzY29uIjsKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC9zeXNjb24uYyBi
+L2RyaXZlcnMvbWZkL3N5c2Nvbi5jCj4gPiBpbmRleCAxNzZiZjBmLi5iN2FhYmVlIDEwMDY0NAo+
+ID4gLS0tIGEvZHJpdmVycy9tZmQvc3lzY29uLmMKPiA+ICsrKyBiL2RyaXZlcnMvbWZkL3N5c2Nv
+bi5jCj4gPiBAQCAtNDcsNiArNDcsNyBAQCBzdGF0aWMgc3RydWN0IHN5c2NvbiAqb2Zfc3lzY29u
+X3JlZ2lzdGVyKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApCj4gPiAgCXN0cnVjdCBzeXNjb24gKnN5
+c2NvbjsKPiA+ICAJc3RydWN0IHJlZ21hcCAqcmVnbWFwOwo+ID4gIAl2b2lkIF9faW9tZW0gKmJh
+c2U7Cj4gPiArCXUzMiByZWdfaW9fd2lkdGg7Cj4gPiAgCWludCByZXQ7Cj4gPiAgCXN0cnVjdCBy
+ZWdtYXBfY29uZmlnIHN5c2Nvbl9jb25maWcgPSBzeXNjb25fcmVnbWFwX2NvbmZpZzsKPiA+ICAK
+PiA+IEBAIC02OSw2ICs3MCwxOCBAQCBzdGF0aWMgc3RydWN0IHN5c2NvbiAqb2Zfc3lzY29uX3Jl
+Z2lzdGVyKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApCj4gPiAgCSBlbHNlIGlmIChvZl9wcm9wZXJ0
+eV9yZWFkX2Jvb2wobnAsICJsaXR0bGUtZW5kaWFuIikpCj4gPiAgCQlzeXNjb25fY29uZmlnLnZh
+bF9mb3JtYXRfZW5kaWFuID0gUkVHTUFQX0VORElBTl9MSVRUTEU7Cj4gPiAgCj4gPiArCS8qCj4g
+PiArCSAqIHNlYXJjaCBmb3IgcmVnLWlvLXdpZHRoIHByb3BlcnR5IGluIERULiBJZiBpdCBpcyBu
+b3QgcHJvdmlkZWQsCj4gPiArCSAqIGRlZmF1bHQgdG8gNCBieXRlcy4gcmVnbWFwX2luaXRfbW1p
+byB3aWxsIHJldHVybiBhbiBlcnJvciBpZiB2YWx1ZXMKPiA+ICsJICogYXJlIGludmFsaWQgc28g
+dGhlcmUgaXMgbm8gbmVlZCB0byBjaGVjayB0aGVtIGhlcmUuCj4gPiArCSAqLwo+ID4gKwlyZXQg
+PSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgInJlZy1pby13aWR0aCIsICZyZWdfaW9fd2lkdGgp
+Owo+ID4gKwlpZiAocmV0KQo+ID4gKwkJcmVnX2lvX3dpZHRoID0gNDsKPiA+ICsKPiA+ICsJc3lz
+Y29uX2NvbmZpZy5yZWdfc3RyaWRlID0gcmVnX2lvX3dpZHRoOwo+ID4gKwlzeXNjb25fY29uZmln
+LnZhbF9iaXRzID0gcmVnX2lvX3dpZHRoICogODsKPiA+ICsKPiA+ICAJcmVnbWFwID0gcmVnbWFw
+X2luaXRfbW1pbyhOVUxMLCBiYXNlLCAmc3lzY29uX2NvbmZpZyk7Cj4gPiAgCWlmIChJU19FUlIo
+cmVnbWFwKSkgewo+ID4gIAkJcHJfZXJyKCJyZWdtYXAgaW5pdCBmYWlsZWRcbiIpOwo+IAo+IC0t
+IAo+IExlZSBKb25lcwo+IExpbmFybyBTVE1pY3JvZWxlY3Ryb25pY3MgTGFuZGluZyBUZWFtIExl
+YWQKPiBMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKPiBG
+b2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
+bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
