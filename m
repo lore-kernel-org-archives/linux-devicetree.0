@@ -1,51 +1,38 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: [PATCH v2 2/5] stmmac: Correct documentation on stmmac clocks.
-Date: Mon,  7 Dec 2015 09:38:41 +0800
-Message-ID: <1449452324-53858-4-git-send-email-preid@electromag.com.au>
-References: <1449452324-53858-1-git-send-email-preid@electromag.com.au>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1449452324-53858-1-git-send-email-preid@electromag.com.au>
-Sender: netdev-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, peppe.cavallaro@st.com, davem@davemloft.net, devicetree@vger.kernel.org, netdev@vger.kernel.org
-Cc: Phil Reid <preid@electromag.com.au>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v7 45/50] drivers/of: Avoid recursively calling
+ unflatten_dt_node()
+Date: Sun, 6 Dec 2015 18:21:00 -0800
+Message-ID: <5664ED0C.6060706@roeck-us.net>
+References: <1446642770-4681-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1446642770-4681-46-git-send-email-gwshan@linux.vnet.ibm.com>
+ <CAL_Jsq+BnPEKkRgQX4+e0MA9dKLVLhy8rVF25Fr9yXL2jp+WLA@mail.gmail.com>
+ <1449446087.21036.1.camel@kernel.crashing.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1449446087.21036.1.camel@kernel.crashing.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robherring2@gmail.com>, Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, aik@ozlabs.ru, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Pantelis Antoniou <panto@antoniou-consulting.com>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-devm_get_clk looks in clock-name property for matching clock.
-the ptp_ref_clk property is ignored.
+On 12/06/2015 03:54 PM, Benjamin Herrenschmidt wrote:
+> On Sun, 2015-12-06 at 14:28 -0600, Rob Herring wrote:
+>>
+>> Do you plan to respin the OF parts at least soon? There's another
+>> problem Guenter found that of_fdt_unflatten_tree is not re-entrant due
+>> to "depth" being static and this series fixes that. So I'd rather
+>> apply this and avoid adding a mutex if possible.
+>
+> Gavin is on vacation until next year.
+>
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Phil Reid <preid@electromag.com.au>
----
- Documentation/devicetree/bindings/net/stmmac.txt | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+That is a bit more than the timeline I am looking for.
 
-diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-index cb6288e..90af2e0 100644
---- a/Documentation/devicetree/bindings/net/stmmac.txt
-+++ b/Documentation/devicetree/bindings/net/stmmac.txt
-@@ -35,15 +35,14 @@ Optional properties:
- - reset-names: Should contain the reset signal name "stmmaceth", if a
- 	reset phandle is given
- - max-frame-size: See ethernet.txt file in the same directory
--- clocks: If present, the first clock should be the GMAC main clock and
--  the second clock should be peripheral's register interface clock. Further
--  clocks may be specified in derived bindings.
--- clock-names: One name for each entry in the clocks property, the
--  first one should be "stmmaceth" and the second one should be "pclk".
--- clk_ptp_ref: this is the PTP reference clock; in case of the PTP is
--  available this clock is used for programming the Timestamp Addend Register.
--  If not passed then the system clock will be used and this is fine on some
--  platforms.
-+- clocks: If present, the first clock should be the GMAC main clock
-+  The optional second clock should be peripheral's register interface clock.
-+  The third optional clock should be the ptp reference clock. 
-+  Further clocks may be specified in derived bindings.
-+- clock-names: One name for each entry in the clocks property.
-+  The first one should be "stmmaceth".
-+  The optional second one should be "pclk".
-+  The optional third one should be "clk_ptp_ref".
- - snps,burst_len: The AXI burst lenth value of the AXI BUS MODE register.
- - tx-fifo-depth: See ethernet.txt file in the same directory
- - rx-fifo-depth: See ethernet.txt file in the same directory
--- 
-1.8.3.1
+Rob, any chance to accept my patch for now ? After all, it can be
+reverted after the rework is complete, and it would be easier
+to apply to earlier kernels.
+
+Thanks,
+Guenter
