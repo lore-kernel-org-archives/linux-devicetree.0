@@ -1,219 +1,77 @@
 From: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Subject: [PATCH 1/8] ARM: dts: imx7d: cl-som-imx7: add basic module support
-Date: Mon,  7 Dec 2015 09:14:32 +0200
-Message-ID: <1449472479-2521-2-git-send-email-ilya@compulab.co.il>
-References: <1449472479-2521-1-git-send-email-ilya@compulab.co.il>
+Subject: [PATCH 0/8] Add support for CL-SOM-iMX7 and SBC-iMX7
+Date: Mon,  7 Dec 2015 09:14:31 +0200
+Message-ID: <1449472479-2521-1-git-send-email-ilya@compulab.co.il>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449472479-2521-1-git-send-email-ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patch series adds support for CompuLab CL-SOM-iMX7 and
+SBC-iMX7 boards.
+
 CL-SOM-iMX7 is a miniature System-on-Module (SoM) based on
-Freescale i.MX7 System-on-Chip family.
+Freescale i.MX7 ARM Cortex-A7 System-on-Chip.
+
+SBC-iMX7 is a single board computer, implemented with the
+CL-SOM-iMX7 System-on-Module providing most of the functions,
+and SB-SOM-iMX7 carrier board providing additional peripheral
+functions and connectors.
+
+The SBC-iMX7 provides following features:
+
+CPU:		Freescale i.MX 7Dual ARM Cortex-A7, 1GHz NEON SIMD and VFPv4 or
+		Freescale i.MX 7Solo ARM Cortex-A7, 800MHz NEON SIMD and VFPv4
+
+RAM:		DDR3, 256MB - 2GB
+
+Storage:	NAND flash, 128MB - 1GB or eMMC flash, 4GB - 32GB
+		SPI flash, 2MB
+		Standard full-size SD socket
+
+Ethernet:	Up to 2x 10/100/1000Mbps Ethernet ports (MAC+PHY)
+
+WiFi/BT:	Dual-band 2x2 802.11a/b/g/n WiFi interface (TI WiLink 8 WL1837 chipset)
+
+Analog Audio:	Audio codec with analog stereo output, stereo input and microphone support
+
+More details can be found here:
 
 http://www.compulab.co.il/products/computer-on-modules/cl-som-imx7-freescale-i-mx-7-system-on-module/
 
-Add basic DT support for standalone module (without a carrier board):
+http://www.compulab.co.il/products/sbcs/sbc-imx7-freescale-i-mx-7-single-board-computer/
+
+This series provides basic DT support including following features:
 
 * Memory configuration
+* eMMC
+* 2x Gigabit Ethernet ports (FEC1 and FEC2)
 * I2C2 bus
-* PMIC
+  * EEPROM
+  * PCA9555 GPIO extender
+  * PMIC
 * UART1
+* USB OTG port
 
-Signed-off-by: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/fsl.txt |   4 +
- arch/arm/boot/dts/Makefile                    |   1 +
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts       | 150 ++++++++++++++++++++++++++
- 3 files changed, 155 insertions(+)
+Ilya Ledvich (8):
+  ARM: dts: imx7d: cl-som-imx7: add basic module support
+  ARM: dts: imx7d: cl-som-imx7: add usb otg support
+  ARM: dts: imx7d: cl-som-imx7: add eMMC support
+  ARM: dts: imx7d: cl-som-imx7: add fec1 support
+  ARM: dts: imx7d: cl-som-imx7: add eeprom support
+  ARM: dts: imx7d: cl-som-imx7: add gpio extender support
+  ARM: dts: imx7d: cl-som-imx7: add fec2 support
+  ARM: dts: imx7d: sbc-imx7: add basic board support
+
+ Documentation/devicetree/bindings/arm/fsl.txt |   8 +
+ arch/arm/boot/dts/Makefile                    |   2 +
+ arch/arm/boot/dts/imx7d-cl-som-imx7.dts       | 294 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx7d-sbc-imx7.dts          |  43 ++++
+ 4 files changed, 347 insertions(+)
  create mode 100644 arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+ create mode 100644 arch/arm/boot/dts/imx7d-sbc-imx7.dts
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-index 34c88b0..30b0ba1 100644
---- a/Documentation/devicetree/bindings/arm/fsl.txt
-+++ b/Documentation/devicetree/bindings/arm/fsl.txt
-@@ -53,6 +53,10 @@ i.MX6 Quad SABRE Automotive Board
- Required root node properties:
-     - compatible = "fsl,imx6q-sabreauto", "fsl,imx6q";
- 
-+i.MX7D CL-SOM-iMX7 Board
-+Required root node properties:
-+    - compatible = "compulab,cl-som-imx7", "fsl,imx7d";
-+
- Generic i.MX boards
- -------------------
- 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 30bbc37..83ed521 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -350,6 +350,7 @@ dtb-$(CONFIG_SOC_IMX6SX) += \
- dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-14x14-evk.dtb
- dtb-$(CONFIG_SOC_IMX7D) += \
-+	imx7d-cl-som-imx7.dtb \
- 	imx7d-sdb.dtb
- dtb-$(CONFIG_SOC_LS1021A) += \
- 	ls1021a-qds.dtb \
-diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-new file mode 100644
-index 0000000..6fa6580
---- /dev/null
-+++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -0,0 +1,150 @@
-+/*
-+ * Support for CompuLab CL-SOM-iMX7 System-on-Module
-+ *
-+ * Copyright (C) 2015 CompuLab Ltd. - http://www.compulab.co.il/
-+ * Author: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2 as published by
-+ * the Free Software Foundation.
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/input/input.h>
-+#include "imx7d.dtsi"
-+
-+/ {
-+	model = "CompuLab CL-SOM-iMX7";
-+	compatible = "compulab,cl-som-imx7", "fsl,imx7d";
-+
-+	memory {
-+		reg = <0x80000000 0x10000000>; /* 256 MB - minimal configuration */
-+	};
-+};
-+
-+&cpu0 {
-+	arm-supply = <&sw1a_reg>;
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+
-+	pmic: pfuze3000@08 {
-+		compatible = "fsl,pfuze3000";
-+		reg = <0x08>;
-+
-+		regulators {
-+			sw1a_reg: sw1a {
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1475000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			/* use sw1c_reg to align with pfuze100/pfuze200 */
-+			sw1c_reg: sw1b {
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1475000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			sw2_reg: sw2 {
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <1850000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3a_reg: sw3 {
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <1650000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			swbst_reg: swbst {
-+				regulator-min-microvolt = <5000000>;
-+				regulator-max-microvolt = <5150000>;
-+			};
-+
-+			snvs_reg: vsnvs {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vref_reg: vrefddr {
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vgen1_reg: vldo1 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen2_reg: vldo2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+			};
-+
-+			vgen3_reg: vccsd {
-+				regulator-min-microvolt = <2850000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen4_reg: v33 {
-+				regulator-min-microvolt = <2850000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen5_reg: vldo3 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen6_reg: vldo4 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	assigned-clocks = <&clks IMX7D_UART1_ROOT_SRC>;
-+	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	cl-som-imx7 {
-+		pinctrl_i2c2: i2c2grp {
-+			fsl,pins = <
-+				MX7D_PAD_I2C2_SDA__I2C2_SDA		0x4000007f
-+				MX7D_PAD_I2C2_SCL__I2C2_SCL		0x4000007f
-+			>;
-+		};
-+
-+		pinctrl_uart1: uart1grp {
-+			fsl,pins = <
-+				MX7D_PAD_UART1_TX_DATA__UART1_DCE_TX	0x79
-+				MX7D_PAD_UART1_RX_DATA__UART1_DCE_RX	0x79
-+			>;
-+		};
-+	};
-+};
 -- 
 1.9.1
 
