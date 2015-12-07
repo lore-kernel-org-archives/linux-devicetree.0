@@ -1,66 +1,69 @@
-From: Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>
-Subject: Re: [PATCH v5 4/4] MAINTAINERS: Add Liviu Dudau as maintainer for ARM
- HDLCD driver.
-Date: Mon, 7 Dec 2015 13:19:35 +0100
-Message-ID: <56657957.3010202@suse.cz>
-References: <1449490265-6752-1-git-send-email-Liviu.Dudau@arm.com>
- <1449490265-6752-5-git-send-email-Liviu.Dudau@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449490265-6752-5-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, DRI devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH v3] of: fix build failure
+Date: Mon,  7 Dec 2015 17:50:49 +0530
+Message-ID: <1449490849-1833-1-git-send-email-sudipm.mukherjee@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/07/2015, 01:11 PM, Liviu Dudau wrote:
-> Update MAINTAINERS file for HDLCD driver.
-> 
-> Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-> Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> Cc: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-> Cc: Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>
+We are having build failure with linux-next for sparc allmodconfig with
+the error messages:
 
-Please drop all of us who edited MAINTAINERS in the last decade from
-your CC list in next submissions. Naturally, we do not care about your
-changes in MAINTAINERS at all.
+undefined reference to 'of_io_request_and_map'
 
-get_maintainers perhaps should not return 'git log' people for the
-MAINTAINERS file?
+CONFIG_OF is defined for sparc so it is expected that we have a
+definition of of_io_request_and_map() but of/address.c is only compiled
+if it is !SPARC. In other words, CONFIG_OF_ADDRESS is not defined for
+sparc so we get the build failure.
 
-> Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-> ---
->  MAINTAINERS | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index cba790b..8a637e3 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -820,6 +820,12 @@ S:	Maintained
->  F:	drivers/net/arcnet/
->  F:	include/uapi/linux/if_arcnet.h
->  
-> +ARM HDLCD DRM DRIVER
-> +M:	Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-> +S:	Maintained
-> +F:	drivers/gpu/drm/arm/
-> +F:	Documentation/devicetree/bindings/display/arm,hdlcd.txt
-> +
->  ARM MFM AND FLOPPY DRIVERS
->  M:	Ian Molton <spyro-pTmfFsKkaRw@public.gmane.org>
->  S:	Maintained
-> 
+Signed-off-by: Sudip Mukherjee <sudip@vectorindia.org>
+---
 
-thanks,
+v1: had a complicated set of #ifdefs
+v2: i messed up and resulted in build failure of some other arch where
+CONFIG_OF is not defined.
+v3: tested with allmodconfig of x86_64, defconfig of alpha and mips.
+
+ include/linux/of_address.h | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 507daad..02b1265 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -112,8 +112,6 @@ static inline bool of_dma_is_coherent(struct device_node *np)
+ extern int of_address_to_resource(struct device_node *dev, int index,
+ 				  struct resource *r);
+ void __iomem *of_iomap(struct device_node *node, int index);
+-void __iomem *of_io_request_and_map(struct device_node *device,
+-					int index, const char *name);
+ #else
+ 
+ #include <linux/io.h>
+@@ -128,13 +126,20 @@ static inline void __iomem *of_iomap(struct device_node *device, int index)
+ {
+ 	return NULL;
+ }
++#endif
++
++#ifdef CONFIG_OF_ADDRESS
++void __iomem *of_io_request_and_map(struct device_node *device,
++				    int index, const char *name);
++#else
++#include <linux/io.h>
+ 
+ static inline void __iomem *of_io_request_and_map(struct device_node *device,
+-					int index, const char *name)
++						  int index, const char *name)
+ {
+ 	return IOMEM_ERR_PTR(-EINVAL);
+ }
+-#endif
++#endif /* CONFIG_OF_ADDRESS */
+ 
+ #if defined(CONFIG_OF_ADDRESS) && defined(CONFIG_PCI)
+ extern const __be32 *of_get_pci_address(struct device_node *dev, int bar_no,
 -- 
-js
-suse labs
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
