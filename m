@@ -1,54 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/6] dt: lpc32xx: pwm: update documentation of LPC32xx
- PWM device
-Date: Mon, 7 Dec 2015 08:42:20 -0600
-Message-ID: <20151207144220.GA7414@rob-hp-laptop>
-References: <1449401522-22590-1-git-send-email-vz@mleia.com>
- <1449401522-22590-3-git-send-email-vz@mleia.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 5/5] stmmac: socfpga: Provide dt node to config ptp clk source.
+Date: Mon, 07 Dec 2015 15:37:41 +0100
+Message-ID: <6323766.k1xXTMgHKY@wuerfel>
+References: <1449452324-53858-1-git-send-email-preid@electromag.com.au> <2600741.aLNrbYNOOu@wuerfel> <56658AE5.7020108@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1449401522-22590-3-git-send-email-vz@mleia.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Roland Stigge <stigge@antcom.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <56658AE5.7020108@electromag.com.au>
+Sender: netdev-owner@vger.kernel.org
+To: Phil Reid <preid@electromag.com.au>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, peppe.cavallaro@st.com, davem@davemloft.net, devicetree@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 06, 2015 at 01:31:58PM +0200, Vladimir Zapolskiy wrote:
-> NXP LPC32xx SoC has two separate PWM controller devices, update device
-> tree binding documentation to reflect this fact.
+On Monday 07 December 2015 21:34:29 Phil Reid wrote:
+> On 7/12/2015 5:05 PM, Arnd Bergmann wrote:
+> > On Monday 07 December 2015 09:38:44 Phil Reid wrote:
+> >> Signed-off-by: Phil Reid <preid@electromag.com.au>
+> >> ---
+> >>   Documentation/devicetree/bindings/net/socfpga-dwmac.txt | 2 ++
+> >>   drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c     | 9 +++++++++
+> >>   2 files changed, 11 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+> >> index 3a9d679..72d82d6 100644
+> >> --- a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+> >> +++ b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+> >> @@ -11,6 +11,8 @@ Required properties:
+> >>                    designware version numbers documented in stmmac.txt
+> >>    - altr,sysmgr-syscon : Should be the phandle to the system manager node that
+> >>      encompasses the glue register, the register offset, and the register shift.
+> >> + - altr,f2h_ptp_ref_clk use f2h_ptp_ref_clk instead of default eosc1 clock
+> >> +   for ptp ref clk. This affects all emacs as the clock is common.
+> >>
+> >
+> > Is this feature specific to the Altera glue logic, or would it be possible
+> > to do the same thing on another dwmac implementation?
+> >
+> I think it is specific to Altera's glue logic. It selects either a clock connected
+> directly to the ARM HPS core or a clock routed from Altera FPGA fabric.
+> Control register is in the altera sysmgr.
 > 
-> The change makes previous PWM device node description incompatible
-> with the new version.
 > 
-> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Ok, makes sense.
 
-> ---
-> Changes from v1 to v2:
-> - removed '0x' from a device node address and use lower case hex chars.
-> 
->  Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
-> index 1ab1abc..74b5bc5 100644
-> --- a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
-> +++ b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
-> @@ -8,5 +8,10 @@ Examples:
->  
->  pwm@4005c000 {
->  	compatible = "nxp,lpc3220-pwm";
-> -	reg = <0x4005c000 0x8>;
-> +	reg = <0x4005c000 0x4>;
-> +};
-> +
-> +pwm@4005c004 {
-> +	compatible = "nxp,lpc3220-pwm";
-> +	reg = <0x4005c004 0x4>;
->  };
-> -- 
-> 2.1.4
-> 
+	Arnd
