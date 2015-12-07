@@ -1,124 +1,107 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH v10 16/17] drm: bridge: analogix/dp: add edid modes parse in
- get_modes method
-Date: Mon,  7 Dec 2015 14:40:58 +0800
-Message-ID: <1449470458-31605-1-git-send-email-ykk@rock-chips.com>
-References: <1449470239-30667-1-git-send-email-ykk@rock-chips.com>
+From: xuejiancheng <xuejiancheng@huawei.com>
+Subject: Re: [PATCH v2 4/9] ARM: dts: add dts files for hi3519-demb board
+Date: Mon, 7 Dec 2015 14:37:06 +0800
+Message-ID: <56652912.80308@huawei.com>
+References: <1449110668-23647-1-git-send-email-xuejiancheng@huawei.com>
+ <1728470.0OiiXMcl88@wuerfel> <5660FA2E.6040601@huawei.com>
+ <3047121.2z9SCS5Au2@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1449470239-30667-1-git-send-email-ykk@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Inki Dae <inki.dae@samsung.com>, Mark Yao <mark.yao@rock-chips.com>, Jingoo Han <jingoohan1@gmail.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, javier@osg.samsung.com, emil.l.velikov@gmail.com, Seung-Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kishon Vijay Abraham I <kishon@ti.com>, linux-rockchip@lists.infradead.org, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, ajaynumb@gmail.com, Andy Yan <andy.yan@rock-chips.com>, Thierry Reding <treding@nvidia.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3047121.2z9SCS5Au2@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, suwenping@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yanhaifeng@hisilicon.com, gaofei@hisilicon.com, ml.yang@hisilicon.com, yanghongwei@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-RGlzcGxheSBQb3J0IG1vbml0b3IgY291bGQgc3VwcG9ydCBraW5kcyBvZiBtb2RlIHdoaWNoIGlu
-ZGljYXRlCmluIG1vbml0b3IgZWRpZCwgbm90IGp1c3Qgb25lIHNpbmdsZSBkaXNwbGF5IHJlc29s
-dXRpb24gd2hpY2gKZGVmaW5lZCBpbiBwYW5lbCBvciBkZXZpdmV0cmVlIHByb3BlcnR5IGRpc3Bs
-YXkgdGltaW5nLgoKTm90ZTogR3VzdGF2byBQYWRvdmFuIHRyeSB0byByZW1vdmUgdGhlIGNvbnRy
-b2xsZXIgYW5kIHBoeQpwb3dlciBvbiBmdW5jdGlvbiBpbiBiaW5kIHRpbWUgYXQgYmVsbG93IGNv
-bW1pdDoKCWRybS9leHlub3M6IGRvIG5vdCBzdGFydCBlbmFibGluZyBEUCBhdCBiaW5kKCkgcGhh
-c2UKCkJ1dCBmb3Igbm93IGRyaXZlciBuZWVkIHRvIHJlYWQgZWRpZCBtZXNzYWdlIGluIC5nZXRf
-bW9kZXMoKQpmdW5jdGlvbiwgc28gY29udHJvbGxlciBtdXN0IGJlIGluaXRlZCBpbiBiaW5kIHRp
-bWUsIHNvIHdlCm5lZWQgdG8gYWRkIGNvbnRyb2xsZXIgaW5pdCBiYWNrLgoKU2lnbmVkLW9mZi1i
-eTogWWFraXIgWWFuZyA8eWtrQHJvY2stY2hpcHMuY29tPgpUZXN0ZWQtYnk6IEphdmllciBNYXJ0
-aW5leiBDYW5pbGxhcyA8amF2aWVyQG9zZy5zYW1zdW5nLmNvbT4KLS0tCkNoYW5nZXMgaW4gdjEw
-OiBOb25lCkNoYW5nZXMgaW4gdjk6IE5vbmUKQ2hhbmdlcyBpbiB2ODogTm9uZQpDaGFuZ2VzIGlu
-IHY3OiBOb25lCkNoYW5nZXMgaW4gdjY6IE5vbmUKQ2hhbmdlcyBpbiB2NTogTm9uZQpDaGFuZ2Vz
-IGluIHY0OgotIENhbGwgZHJtX3BhbmVsX3ByZXBhcmUoKSBpbiAuZ2V0X21vZGVzIGZ1bmN0aW9u
-LCBlbnN1cmUgcGFuZWwgc2hvdWxkCiAgcG93ZXIgb24gYmVmb3JlIGRyaXZlciB0cnkgdG8gcmVh
-ZCBlZGlkIG1lc3NhZ2UuCgpDaGFuZ2VzIGluIHYzOgotIEFkZCBlZGlkIG1vZGVzIHBhcnNlIHN1
-cHBvcnQKCkNoYW5nZXMgaW4gdjI6IE5vbmUKCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FuYWxv
-Z2l4L2FuYWxvZ2l4X2RwX2NvcmUuYyB8IDI2ICsrKysrKysrLS0tLQogZHJpdmVycy9ncHUvZHJt
-L2JyaWRnZS9hbmFsb2dpeC9hbmFsb2dpeF9kcF9jb3JlLmggfCA0NiArKysrKysrKysrKy0tLS0t
-LS0tLS0tCiAyIGZpbGVzIGNoYW5nZWQsIDQyIGluc2VydGlvbnMoKyksIDMwIGRlbGV0aW9ucygt
-KQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhf
-ZHBfY29yZS5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbmFsb2dpeC9hbmFsb2dpeF9kcF9j
-b3JlLmMKaW5kZXggMGY0MmQ3My4uYWExYTliZSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJt
-L2JyaWRnZS9hbmFsb2dpeC9hbmFsb2dpeF9kcF9jb3JlLmMKKysrIGIvZHJpdmVycy9ncHUvZHJt
-L2JyaWRnZS9hbmFsb2dpeC9hbmFsb2dpeF9kcF9jb3JlLmMKQEAgLTEwNyw3ICsxMDcsNyBAQCBz
-dGF0aWMgdW5zaWduZWQgY2hhciBhbmFsb2dpeF9kcF9jYWxjX2VkaWRfY2hlY2tfc3VtKHVuc2ln
-bmVkIGNoYXIgKmVkaWRfZGF0YSkKIAogc3RhdGljIGludCBhbmFsb2dpeF9kcF9yZWFkX2VkaWQo
-c3RydWN0IGFuYWxvZ2l4X2RwX2RldmljZSAqZHApCiB7Ci0JdW5zaWduZWQgY2hhciBlZGlkW0VE
-SURfQkxPQ0tfTEVOR1RIICogMl07CisJdW5zaWduZWQgY2hhciAqZWRpZCA9IGRwLT5lZGlkOwog
-CXVuc2lnbmVkIGludCBleHRlbmRfYmxvY2sgPSAwOwogCXVuc2lnbmVkIGNoYXIgc3VtOwogCXVu
-c2lnbmVkIGNoYXIgdGVzdF92ZWN0b3I7CkBAIC05MDEsMTIgKzkwMSw2IEBAIHN0YXRpYyB2b2lk
-IGFuYWxvZ2l4X2RwX2NvbW1pdChzdHJ1Y3QgYW5hbG9naXhfZHBfZGV2aWNlICpkcCkKIAkJCURS
-TV9FUlJPUigiZmFpbGVkIHRvIGRpc2FibGUgdGhlIHBhbmVsXG4iKTsKIAl9CiAKLQlyZXQgPSBh
-bmFsb2dpeF9kcF9oYW5kbGVfZWRpZChkcCk7Ci0JaWYgKHJldCkgewotCQlkZXZfZXJyKGRwLT5k
-ZXYsICJ1bmFibGUgdG8gaGFuZGxlIGVkaWRcbiIpOwotCQlyZXR1cm47Ci0JfQotCiAJcmV0ID0g
-YW5hbG9naXhfZHBfc2V0X2xpbmtfdHJhaW4oZHAsIGRwLT52aWRlb19pbmZvLm1heF9sYW5lX2Nv
-dW50LAogCQkJCQkgZHAtPnZpZGVvX2luZm8ubWF4X2xpbmtfcmF0ZSk7CiAJaWYgKHJldCkgewpA
-QCAtOTQ3LDggKzk0MSwyNCBAQCBFWFBPUlRfU1lNQk9MX0dQTChhbmFsb2dpeF9kcF9kZXRlY3Qp
-OwogaW50IGFuYWxvZ2l4X2RwX2dldF9tb2RlcyhzdHJ1Y3QgZGV2aWNlICpkZXYpCiB7CiAJc3Ry
-dWN0IGFuYWxvZ2l4X2RwX2RldmljZSAqZHAgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKKwlzdHJ1
-Y3QgZWRpZCAqZWRpZCA9IChzdHJ1Y3QgZWRpZCAqKWRwLT5lZGlkOwogCWludCBudW1fbW9kZXMg
-PSAwOwogCisJaWYgKGRwLT5wbGF0X2RhdGEgJiYgZHAtPnBsYXRfZGF0YS0+cGFuZWwpIHsKKwkJ
-aWYgKGRybV9wYW5lbF9wcmVwYXJlKGRwLT5wbGF0X2RhdGEtPnBhbmVsKSkgeworCQkJRFJNX0VS
-Uk9SKCJmYWlsZWQgdG8gc2V0dXAgdGhlIHBhbmVsXG4iKTsKKwkJCXJldHVybiAtRUlOVkFMOwor
-CQl9CisJfQorCisJaWYgKGFuYWxvZ2l4X2RwX2hhbmRsZV9lZGlkKGRwKSkgeworCQlkZXZfZXJy
-KGRwLT5kZXYsICJ1bmFibGUgdG8gaGFuZGxlIGVkaWRcbiIpOworCQlyZXR1cm4gLUVJTlZBTDsK
-Kwl9CisKKwlkcm1fbW9kZV9jb25uZWN0b3JfdXBkYXRlX2VkaWRfcHJvcGVydHkoZHAtPmNvbm5l
-Y3RvciwgZWRpZCk7CisJbnVtX21vZGVzICs9IGRybV9hZGRfZWRpZF9tb2RlcyhkcC0+Y29ubmVj
-dG9yLCBlZGlkKTsKKwogCWlmIChkcC0+cGxhdF9kYXRhLT5wYW5lbCkKIAkJbnVtX21vZGVzICs9
-IGRybV9wYW5lbF9nZXRfbW9kZXMoZHAtPnBsYXRfZGF0YS0+cGFuZWwpOwogCkBAIC0xMzA5LDYg
-KzEzMTksOCBAQCBpbnQgYW5hbG9naXhfZHBfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVj
-dCBkcm1fZGV2aWNlICpkcm1fZGV2LAogCiAJcGh5X3Bvd2VyX29uKGRwLT5waHkpOwogCisJYW5h
-bG9naXhfZHBfaW5pdF9kcChkcCk7CisKIAlyZXQgPSBkZXZtX3JlcXVlc3RfaXJxKCZwZGV2LT5k
-ZXYsIGRwLT5pcnEsIGFuYWxvZ2l4X2RwX2lycV9oYW5kbGVyLAogCQkJICAgICAgIGlycV9mbGFn
-cywgImFuYWxvZ2l4LWRwIiwgZHApOwogCWlmIChyZXQpIHsKZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3B1L2RybS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhfZHBfY29yZS5oIGIvZHJpdmVycy9ncHUv
-ZHJtL2JyaWRnZS9hbmFsb2dpeC9hbmFsb2dpeF9kcF9jb3JlLmgKaW5kZXggZDNjN2UwYS4uMmJk
-MmUwZCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbmFsb2dpeC9hbmFsb2dp
-eF9kcF9jb3JlLmgKKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbmFsb2dpeC9hbmFsb2dp
-eF9kcF9jb3JlLmgKQEAgLTIwLDYgKzIwLDI4IEBACiAjZGVmaW5lIE1BWF9DUl9MT09QIDUKICNk
-ZWZpbmUgTUFYX0VRX0xPT1AgNQogCisvKiBJMkMgRURJRCBDaGlwIElELCBTbGF2ZSBBZGRyZXNz
-ICovCisjZGVmaW5lIEkyQ19FRElEX0RFVklDRV9BRERSCQkJMHg1MAorI2RlZmluZSBJMkNfRV9F
-RElEX0RFVklDRV9BRERSCQkJMHgzMAorCisjZGVmaW5lIEVESURfQkxPQ0tfTEVOR1RICQkJMHg4
-MAorI2RlZmluZSBFRElEX0hFQURFUl9QQVRURVJOCQkJMHgwMAorI2RlZmluZSBFRElEX0VYVEVO
-U0lPTl9GTEFHCQkJMHg3ZQorI2RlZmluZSBFRElEX0NIRUNLU1VNCQkJCTB4N2YKKworLyogRFBf
-TUFYX0xBTkVfQ09VTlQgKi8KKyNkZWZpbmUgRFBDRF9FTkhBTkNFRF9GUkFNRV9DQVAoeCkJCSgo
-KHgpID4+IDcpICYgMHgxKQorI2RlZmluZSBEUENEX01BWF9MQU5FX0NPVU5UKHgpCQkJKCh4KSAm
-IDB4MWYpCisKKy8qIERQX0xBTkVfQ09VTlRfU0VUICovCisjZGVmaW5lIERQQ0RfTEFORV9DT1VO
-VF9TRVQoeCkJCQkoKHgpICYgMHgxZikKKworLyogRFBfVFJBSU5JTkdfTEFORTBfU0VUICovCisj
-ZGVmaW5lIERQQ0RfUFJFX0VNUEhBU0lTX1NFVCh4KQkJKCgoeCkgJiAweDMpIDw8IDMpCisjZGVm
-aW5lIERQQ0RfUFJFX0VNUEhBU0lTX0dFVCh4KQkJKCgoeCkgPj4gMykgJiAweDMpCisjZGVmaW5l
-IERQQ0RfVk9MVEFHRV9TV0lOR19TRVQoeCkJCSgoKHgpICYgMHgzKSA8PCAwKQorI2RlZmluZSBE
-UENEX1ZPTFRBR0VfU1dJTkdfR0VUKHgpCQkoKCh4KSA+PiAwKSAmIDB4MykKKwogZW51bSBsaW5r
-X3JhdGVfdHlwZSB7CiAJTElOS19SQVRFXzFfNjJHQlBTID0gRFBfTElOS19CV18xXzYyLAogCUxJ
-TktfUkFURV8yXzcwR0JQUyA9IERQX0xJTktfQldfMl83LApAQCAtMTYxLDYgKzE4Myw3IEBAIHN0
-cnVjdCBhbmFsb2dpeF9kcF9kZXZpY2UgewogCWludAkJCWRwbXNfbW9kZTsKIAlpbnQJCQlocGRf
-Z3BpbzsKIAlib29sICAgICAgICAgICAgICAgICAgICBuZWVkX2ZvcmNlX2hwZDsKKwl1bnNpZ25l
-ZCBjaGFyICAgICAgICAgICBlZGlkW0VESURfQkxPQ0tfTEVOR1RIICogMl07CiAKIAlzdHJ1Y3Qg
-YW5hbG9naXhfZHBfcGxhdF9kYXRhICpwbGF0X2RhdGE7CiB9OwpAQCAtMjYwLDI3ICsyODMsNCBA
-QCBpbnQgYW5hbG9naXhfZHBfaXNfdmlkZW9fc3RyZWFtX29uKHN0cnVjdCBhbmFsb2dpeF9kcF9k
-ZXZpY2UgKmRwKTsKIHZvaWQgYW5hbG9naXhfZHBfY29uZmlnX3ZpZGVvX3NsYXZlX21vZGUoc3Ry
-dWN0IGFuYWxvZ2l4X2RwX2RldmljZSAqZHApOwogdm9pZCBhbmFsb2dpeF9kcF9lbmFibGVfc2Ny
-YW1ibGluZyhzdHJ1Y3QgYW5hbG9naXhfZHBfZGV2aWNlICpkcCk7CiB2b2lkIGFuYWxvZ2l4X2Rw
-X2Rpc2FibGVfc2NyYW1ibGluZyhzdHJ1Y3QgYW5hbG9naXhfZHBfZGV2aWNlICpkcCk7Ci0KLS8q
-IEkyQyBFRElEIENoaXAgSUQsIFNsYXZlIEFkZHJlc3MgKi8KLSNkZWZpbmUgSTJDX0VESURfREVW
-SUNFX0FERFIJCQkweDUwCi0jZGVmaW5lIEkyQ19FX0VESURfREVWSUNFX0FERFIJCQkweDMwCi0K
-LSNkZWZpbmUgRURJRF9CTE9DS19MRU5HVEgJCQkweDgwCi0jZGVmaW5lIEVESURfSEVBREVSX1BB
-VFRFUk4JCQkweDAwCi0jZGVmaW5lIEVESURfRVhURU5TSU9OX0ZMQUcJCQkweDdlCi0jZGVmaW5l
-IEVESURfQ0hFQ0tTVU0JCQkJMHg3ZgotCi0vKiBEUF9NQVhfTEFORV9DT1VOVCAqLwotI2RlZmlu
-ZSBEUENEX0VOSEFOQ0VEX0ZSQU1FX0NBUCh4KQkJKCgoeCkgPj4gNykgJiAweDEpCi0jZGVmaW5l
-IERQQ0RfTUFYX0xBTkVfQ09VTlQoeCkJCQkoKHgpICYgMHgxZikKLQotLyogRFBfTEFORV9DT1VO
-VF9TRVQgKi8KLSNkZWZpbmUgRFBDRF9MQU5FX0NPVU5UX1NFVCh4KQkJCSgoeCkgJiAweDFmKQot
-Ci0vKiBEUF9UUkFJTklOR19MQU5FMF9TRVQgKi8KLSNkZWZpbmUgRFBDRF9QUkVfRU1QSEFTSVNf
-U0VUKHgpCQkoKCh4KSAmIDB4MykgPDwgMykKLSNkZWZpbmUgRFBDRF9QUkVfRU1QSEFTSVNfR0VU
-KHgpCQkoKCh4KSA+PiAzKSAmIDB4MykKLSNkZWZpbmUgRFBDRF9WT0xUQUdFX1NXSU5HX1NFVCh4
-KQkJKCgoeCkgJiAweDMpIDw8IDApCi0jZGVmaW5lIERQQ0RfVk9MVEFHRV9TV0lOR19HRVQoeCkJ
-CSgoKHgpID4+IDApICYgMHgzKQotCiAjZW5kaWYgLyogX0FOQUxPR0lYX0RQX0NPUkVfSCAqLwot
-LSAKMS45LjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+On 2015/12/4 18:49, Arnd Bergmann wrote:
+> On Friday 04 December 2015 10:27:58 xuejiancheng wrote:
+>>>
+>>>> +            sysctrl: system-controller@12020000 {
+>>>> +                    compatible =3D "hisilicon,sysctrl";
+>>>> +                    reg =3D <0x12020000 0x1000>;
+>>>> +                    reboot-offset =3D <0x4>;
+>>>> +            };
+>>>
+>>> Is this one identical to the one in hip04?
+>>>
+>>> If not, pick a new unique compatible string
+>>
+>> Yes. It's compatible with the one in hip04.
+>=20
+> Ok, we should add a compatible string for that then, as the hip04 app=
+arently
+> has a slightly different layout from hip01.
+>=20
+> Can you add a separate patch to clarify the existing hisilicon,sysctr=
+l nodes?
+>=20
+> It look like hi3620 accidentally uses the same string as hip04 alread=
+y
+> but is actually a bit different.
+>=20
+> Maybe split out the sysctrl binding from
+> Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt, as it =
+has
+> you already have a couple of those, and it's not clear how they relat=
+e
+> to one another.
+>=20
+> If we introduce a string for all hip04 compatible sysctrl devices, we=
+ should
+> document that and use it consistently, so hi3519 becomes
+>=20
+> 	compatible =3D "hisilicon,hi3519-sysctrl", "hisilicon,hip04-sysctrl"=
+, "hisilicon,sysctrl";
+>=20
+> but I'd clarify in the binding documentation that "hisilicon,sysctrl"=
+ should
+> only be used for hip04 and hi3519 but not the others.
+>=20
+> As this seems to be a standard part, we can also think about making a
+> high-level driver for in in drivers/soc rather than relying on the sy=
+scon
+> driver which we tend to use more for one-off devices with random regi=
+ster
+> layouts.
+>=20
+   Sorry. I didn't understand your meaning well and maybe I gave you a =
+wrong description.
+Please allow me to clarify it again.
+   The "sysctrl" nodes here is just used for the "reboot" function. It =
+is corresponding to
+the driver "drivers/power/reset/hisi-reboot.c". The compatible string i=
+n the driver is
+"hisilicon,sysctrl".
+   The layout of this block is also different from the one in HiP04.
+
+>>>> +
+>>>> +            crg: crg@12010000 {
+>>>> +                    compatible =3D "hisilicon,hi3519-crg";
+>>>
+>>>
+>>> what is a "crg"? Is there a standard name for these?
+>>
+>> The "crg" means Clock and Reset Generator. It's a block which suppli=
+es clock
+>> and reset signals for other modules in the chip. I used "hi3519-cloc=
+k"
+>> in last version patch. Rob Herring suggested that it's better to use=
+ "hi3519-crg"
+>> as the compatible string if it's a whole block.
+>>
+>> what about writing like this=EF=BC=9F
+>>
+>> crg: clock-reset-controller@12010000 {
+>>         compatible =3D "hisilicon,hi3519-crg";
+>>         }
+>>
+>=20
+> Ok, that's better.
+>=20
+> 	Arnd
+>=20
+> .
+>=20
