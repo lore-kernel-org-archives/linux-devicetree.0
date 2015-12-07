@@ -1,81 +1,68 @@
-From: =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
-Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
-Date: Mon, 7 Dec 2015 17:41:04 +0900
-Message-ID: <56654620.1040208@daenzer.net>
-References: <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
- <20151204162956.GA14978@rob-hp-laptop>
- <1449247305.8275.104.camel@pengutronix.de>
- <CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
- <1449251760.8275.116.camel@pengutronix.de>
- <CAL_Jsq+oaJxD3vbDWzn_4ghpqi=RZ1o+8nOcepWYjzcu5Hwpjg@mail.gmail.com>
- <20151204203101.GD8644@n2100.arm.linux.org.uk>
- <CAKb7UviPhoiY-YP2aBHm0BHbeEjSF2wTguQScVXMBve-kZc16Q@mail.gmail.com>
- <20151204220533.GE8644@n2100.arm.linux.org.uk>
- <CAKb7UvgzYMxPxtt8iPars13n4sAJ5Z4Hva1KHO+k4yNumDb+DQ@mail.gmail.com>
- <20151205101208.GP10243@phenom.ffwll.local>
+From: Hu Vincent <Mingkai.Hu@freescale.com>
+Subject: RE: [PATCH v2] dts/ls2080a: Update PCIe compatible
+Date: Mon, 7 Dec 2015 08:44:19 +0000
+Message-ID: <BY2PR03MB3169DD34DF302BCF7A60FF284090@BY2PR03MB316.namprd03.prod.outlook.com>
+References: <1449224417-20753-1-git-send-email-Mingkai.Hu@freescale.com>
+ <20151204162243.GA12415@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20151205101208.GP10243@phenom.ffwll.local>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel@ffwll.ch>, Ilia Mirkin <imirkin@alum.mit.edu>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dri-devel <dri-devel@lists.freedesktop.org>, patchwork-lst@pengutronix.de, "kernel@pengutronix.de" <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20151204162243.GA12415@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Li Leo <LeoLi@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Lian M.H." <Minghuan.Lian@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDUuMTIuMjAxNSAxOToxMiwgRGFuaWVsIFZldHRlciB3cm90ZToKPiBPbiBGcmksIERlYyAw
-NCwgMjAxNSBhdCAwNTo0MzozM1BNIC0wNTAwLCBJbGlhIE1pcmtpbiB3cm90ZToKPj4gT24gRnJp
-LCBEZWMgNCwgMjAxNSBhdCA1OjA1IFBNLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXgKPj4gPGxp
-bnV4QGFybS5saW51eC5vcmcudWs+IHdyb3RlOgo+Pj4gT24gRnJpLCBEZWMgMDQsIDIwMTUgYXQg
-MDM6NDI6NDdQTSAtMDUwMCwgSWxpYSBNaXJraW4gd3JvdGU6Cj4+Pj4gT24gRnJpLCBEZWMgNCwg
-MjAxNSBhdCAzOjMxIFBNLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXgKPj4+PiA8bGludXhAYXJt
-LmxpbnV4Lm9yZy51az4gd3JvdGU6Cj4+Pj4+IE1vcmVvdmVyLCBEUkkzIGlzIG5vdCB5ZXQgYXZh
-aWxhYmxlIGZvciBHYWxsaXVtLCBzbyBpZiB3ZSdyZSB0YWxraW5nCj4+Pj4+IGFib3V0IFhvcmcs
-IHRoZW4gZnVuY3Rpb25hbCBEUkkyIGlzIGEgcmVxdWlyZW1lbnQsIGFuZCB0aGF0IF9uZWVkc18K
-Pj4+Pj4gdG8gaGF2ZSBhIHNpbmdsZSBkZXZpY2UgZm9yIHRoZSByZW5kZXJpbmcgaW5zdGFuY2Vz
-LiAgWG9yZyBoYXMgbm8gd2F5Cj4+Pj4+IHRvIHBhc3MgbXVsdGlwbGUgcmVuZGVyIG5vZGVzIHRv
-IGNsaWVudCBvdmVyIERSSTIuCj4+Pj4KPj4+PiBKdXN0IHRvIGNvcnJlY3QuLi4gRFJJMyBoYXMg
-YmVlbiBhdmFpbGFibGUgb24gZ2FsbGl1bSBbYXQgbGVhc3QgaW4gdGhlCj4+Pj4gY29udGV4dCBv
-ZiBzdC9tZXNhXSBiYXNpY2FsbHkgc2luY2UgRFJJMyB3YXMgaW50cm9kdWNlZC4gTm90IHN1cmUg
-d2hhdAo+Pj4+IGlzc3VlIHlvdSdyZSBmaWdodGluZyB3aXRoLCBidXQgaXQncyBkZWZpbml0ZWx5
-IG5vdCBhIGdhbGxpdW0KPj4+PiBsaW1pdGF0aW9uLi4uIGNvdWxkIGJlIHNvbWV0aGluZyByZWxh
-dGVkIHRvIHBsYXRmb3JtIGRldmljZXMuCj4+Pgo+Pj4gV2VsbCwgbXkgc3RhdGVtZW50IGlzIGJh
-c2VkIG9uIHRoZSBmYWN0IHRoYXQgdGhlcmUncyBub3RoaW5nIGluCj4+PiBzcmMvZ2FsbGl1bS9z
-dGF0ZS10cmFja2VyL2RyaSB3aGljaCBoaW50cyBhdCBiZWluZyBEUkkzLiAgTWF5YmUgaXQncwo+
-Pj4gaW1wbGVtZW50ZWQgZGlmZmVyZW50bHksIEkgZG9uJ3Qga25vdy4KClRoZSBEUkkgc3RhdGUg
-dHJhY2tlciBjb2RlIGluIHNyYy9nYWxsaXVtL3N0YXRlX3RyYWNrZXJzL2RyaS8gc3VwcG9ydHMK
-RFJJMS0zLiBUaGVyZSdzIGFsbW9zdCBubyBleHBsaWNpdCBtZW50aW9uIG9mIERSSTMgaW4gaXQg
-YmVjYXVzZSBEUkkzCmFuZCBEUkkyIHdvcmsgbW9zdGx5IHRoZSBzYW1lIGFzIGZhciBhcyB0aGlz
-IGNvZGUgaXMgY29uY2VybmVkLgoKCj4+PiBJIHRoaW5rIGl0J3MgYSBEUkkzIGxpbWl0YXRpb24u
-ICBUaGUgaXNzdWUgd2l0aCB0aGUgRFJJMyBkZXNpZ24gaXMgdGhhdDoKPj4+Cj4+PiAqIFRoZSBj
-bGllbnQgaGFzIGFjY2VzcyB0byB0aGUgR1BVIHJlbmRlciBub2RlcyBvbmx5LCBidXQgbm90IHRo
-ZQo+Pj4gICBjb3JyZXNwb25kaW5nIEtNUyBub2RlLgo+Pj4gKiBCdWZmZXJzIGluIERSSTMgYXJl
-IGFsbG9jYXRlZCBmcm9tIHRoZSBHUFUgcmVuZGVyIG5vZGVzLgo+Pj4gKiBUaGUgWG9yZyBQcmVz
-ZW50IHByb3RvY29sIGlzIHRoZW4gdXNlZCB0byBtYW5hZ2UgdGhlIHZibGFuawo+Pj4gICBzeW5j
-aG9uaXNhdGlvbiBhbmQgcGFnZSBmbGlwcy4KPj4+Cj4+PiBOb3csIHRoZSBLTVMgc2Nhbm91dCBo
-YXJkd2FyZSB0eXBpY2FsbHkgZG9lcyBub3Qgc3VwcG9ydCBhbnkga2luZCBvZgo+Pj4gc2NhdHRl
-ci1nYXRoZXI6IHRoZSBidWZmZXJzIGl0IGhhcyBtdXN0IGJlIGNvbnRpZ3VvdXMuICBUaGVzZSBj
-YW4gYmUKPj4+IGFsbG9jYXRlZCBmcm9tIHRoZSBLTVMgRFJNIGRldmljZS4KPj4+Cj4+PiBIb3dl
-dmVyLCB0aGUgRFJJMyBjbGllbnQgaGFzIG5vIGFjY2VzcyB0byB0aGUgS01TIERSTSBkZXZpY2Ug
-dG8gYWxsb2NhdGUKPj4+IGxpbmVhciBidWZmZXJzIGZyb20sIGFuZCBHUFVzIHR5cGljYWxseSBk
-b24ndCBoYXZlIGR1bWIgYnVmZmVyIHN1cHBvcnQuCj4+PiBIZW5jZSwgdGhlIGNsaWVudCBjYW4n
-dCBwYXNzIGEgc3VpdGFibGUgYnVmZmVyIHRvIHRoZSBwcmVzZW50IGxheWVyLgo+IAo+IE9oIHJp
-Z2h0LCBidWZmZXIgYWxsb2MgaWYgeW91IGhhdmUgc3BlY2lhbCBjb25zdHJhaW50cyB3b24ndCB3
-b3JrIHdpdGgKPiBEUkkzIGFzLWlzLiBGb3IgdGhhdCB3ZSBwcm9iYWJseSBuZWVkIHNvbWV0aGlu
-ZyBsaWtlIERSSTIgZm9yIGJ1ZmZlciBhbGxvYwo+ICsgUHJlc2VudCAobGlrZSBEUkkzIGRvZXMp
-IGZvciBmbGlwcGluZyB0aGVtLgoKRldJVywgdGhhdCdzIGJhc2ljYWxseSBwb3NzaWJsZSBhbHJl
-YWR5LiBFLmcuIHRoZSBHYWxsaXVtIG5pbmUgc3RhdGUKdHJhY2tlciBjYW4gdXNlIFByZXNlbnQg
-ZXZlbiB3aXRoIERSSTIuCgoKLS0gCkVhcnRobGluZyBNaWNoZWwgRMOkbnplciAgICAgICAgICAg
-ICAgIHwgICAgICAgICAgICAgICBodHRwOi8vd3d3LmFtZC5jb20KTGlicmUgc29mdHdhcmUgZW50
-aHVzaWFzdCAgICAgICAgICAgICB8ICAgICAgICAgICAgIE1lc2EgYW5kIFggZGV2ZWxvcGVyCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Saturday, December 05, 2015 12:23 AM
+> To: Hu Mingkai-B21284
+> Cc: arm@kernel.org; devicetree@vger.kernel.org; Li Yang-Leo-R58472;
+> linux-arm-kernel@lists.infradead.org; Lian Minghuan-B31939
+> Subject: Re: [PATCH v2] dts/ls2080a: Update PCIe compatible
+> 
+> On Fri, Dec 04, 2015 at 06:20:17PM +0800, Mingkai Hu wrote:
+> > From: Minghuan Lian <Minghuan.Lian@freescale.com>
+> >
+> > The patch adds LS2085a to PCIe compatible to fix the compatibility
+> > issue when using firmware with LS2085a compatible property.
+> >
+> > Signed-off-by: Minghuan Lian <Minghuan.Lian@freescale.com>
+> > Signed-off-by: Mingkai Hu <Mingkai.Hu@freescale.com>
+> > ---
+> > v2 change:
+> >  - Rebased to latest kernel base
+> 
+> How about implementing my comments on v1, too?
+> 
+
+Hi Rob,
+
+Do you mean to change the combinations in layerscape-pci.txt as follows?
+
+> --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> @@ -15,6 +15,7 @@ Required properties:
+>  - compatible: should contain the platform identifier such as:
+>          "fsl,ls1021a-pcie", "snps,dw-pcie"
+> -        "fsl,ls2080a-pcie", "snps,dw-pcie"
+> +        "fsl,ls2080a-pcie", "fsl,ls2085a-pcie", "snps,dw-pcie"
+
+
+And the ls2085a was released first, but the dts file is for ls2080a (fsl-ls2080a.dtsi),
+So I prefer to put the ls2080a as the first compatible string. How about your suggestion?
+
+Thanks,
+Mingkai
