@@ -1,33 +1,125 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 4/7] mtd: add of_match_mtd_parser() and
- of_mtd_match_mtd_parser() helpers
-Date: Mon, 7 Dec 2015 10:13:08 -0800
-Message-ID: <20151207181308.GN120110@google.com>
-References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
- <1449292763-129421-5-git-send-email-computersforpeace@gmail.com>
- <CAL_JsqLV1mDpW9tD0XjWRxZSSsYuDiqHbuADQmBUtACgYiHJ+w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLV1mDpW9tD0XjWRxZSSsYuDiqHbuADQmBUtACgYiHJ+w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 2/6] ARM: shmobile: r8a7790 dtsi: Add L2 cache-controller nodes
+Date: Mon,  7 Dec 2015 19:24:15 +0100
+Message-ID: <1449512659-16688-3-git-send-email-geert+renesas@glider.be>
+References: <1449512659-16688-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1449512659-16688-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lina Iyer <lina.iyer@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 06, 2015 at 08:45:40PM -0600, Rob Herring wrote:
-> On Fri, Dec 4, 2015 at 11:19 PM, Brian Norris
-> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >  drivers/of/of_mtd.c            | 33 +++++++++++++++++++++++++++++++++
-> 
-> BTW, this file should be moved to drivers/mtd/ at some point.
+Add device nodes for the L2 caches, and link the CPU nodes to them.
 
-How about s/at some point/now/ ? I can send a separate patch. It also
-seems like these should just get linked into the 'mtd' module (when
-CONFIG_OF=y) instead of having a tiny module for just a few functions.
+The L2 cache for the Cortex-A15 CPU cores is 2 MiB large (organized as
+128 KiB x 16 ways), and requires the following settings:
+  - Tag RAM latency: 3 cycles,
+  - Data RAM latency: 4 cycles,
+  - Data RAM setup: 1 cycle.
 
-Why did files like this get placed here anyway? Is there a reason that
-there are things like of_net and of_pci here too?
+The L2 cache for the Cortex-A7 CPU cores is 512 KiB large (organized as
+64 KiB x 8 ways).
 
-Brian
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+What are the DT bindings for Cortex-A15/A7 L2 cache controllers?
+
+v2:
+  - Drop (incorrect) optional cache-{size,sets,{block,line}-size}
+    properties, as this information is auto-detected,
+  - Integrate linking CPUs to L2 caches into this patch,
+  - Extracted from series "[PATCH/RFC 00/15] ARM: shmobile: R-Car: Add
+    SYSC PM Domain DT Support".
+---
+ arch/arm/boot/dts/r8a7790.dtsi | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index 6cfd0dc79bbec067..ef5d46faef0c5975 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -52,6 +52,7 @@
+ 			voltage-tolerance = <1>; /* 1% */
+ 			clocks = <&cpg_clocks R8A7790_CLK_Z>;
+ 			clock-latency = <300000>; /* 300 us */
++			next-level-cache = <&L2_CA15>;
+ 
+ 			/* kHz - uV - OPPs unknown yet */
+ 			operating-points = <1400000 1000000>,
+@@ -67,6 +68,7 @@
+ 			compatible = "arm,cortex-a15";
+ 			reg = <1>;
+ 			clock-frequency = <1300000000>;
++			next-level-cache = <&L2_CA15>;
+ 		};
+ 
+ 		cpu2: cpu@2 {
+@@ -74,6 +76,7 @@
+ 			compatible = "arm,cortex-a15";
+ 			reg = <2>;
+ 			clock-frequency = <1300000000>;
++			next-level-cache = <&L2_CA15>;
+ 		};
+ 
+ 		cpu3: cpu@3 {
+@@ -81,6 +84,7 @@
+ 			compatible = "arm,cortex-a15";
+ 			reg = <3>;
+ 			clock-frequency = <1300000000>;
++			next-level-cache = <&L2_CA15>;
+ 		};
+ 
+ 		cpu4: cpu@4 {
+@@ -88,6 +92,7 @@
+ 			compatible = "arm,cortex-a7";
+ 			reg = <0x100>;
+ 			clock-frequency = <780000000>;
++			next-level-cache = <&L2_CA7>;
+ 		};
+ 
+ 		cpu5: cpu@5 {
+@@ -95,6 +100,7 @@
+ 			compatible = "arm,cortex-a7";
+ 			reg = <0x101>;
+ 			clock-frequency = <780000000>;
++			next-level-cache = <&L2_CA7>;
+ 		};
+ 
+ 		cpu6: cpu@6 {
+@@ -102,6 +108,7 @@
+ 			compatible = "arm,cortex-a7";
+ 			reg = <0x102>;
+ 			clock-frequency = <780000000>;
++			next-level-cache = <&L2_CA7>;
+ 		};
+ 
+ 		cpu7: cpu@7 {
+@@ -109,9 +116,24 @@
+ 			compatible = "arm,cortex-a7";
+ 			reg = <0x103>;
+ 			clock-frequency = <780000000>;
++			next-level-cache = <&L2_CA7>;
+ 		};
+ 	};
+ 
++	L2_CA15: cache-controller@0 {
++		compatible = "cache";
++		arm,data-latency = <4 4 1>;
++		arm,tag-latency = <3 3 3>;
++		cache-unified;
++		cache-level = <2>;
++	};
++
++	L2_CA7: cache-controller@1 {
++		compatible = "cache";
++		cache-unified;
++		cache-level = <2>;
++	};
++
+ 	gic: interrupt-controller@f1001000 {
+ 		compatible = "arm,gic-400";
+ 		#interrupt-cells = <3>;
+-- 
+1.9.1
+
