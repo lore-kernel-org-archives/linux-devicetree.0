@@ -1,61 +1,81 @@
-From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
-Subject: Re: [PATCH 2/2] input: gt801_2plus1 - Add initial
- support for Goodix GT801 2+1
-Date: Mon, 7 Dec 2015 09:34:43 +0100 (CET)
-Message-ID: <alpine.DEB.2.02.1512070933400.2037@localhost6.localdomain6>
-References: <201512071608.oGt2n0Wn%fengguang.wu@intel.com>
-Reply-To: julia.lawall-L2FTfq7BK8M@public.gmane.org
+From: =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
+Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
+Date: Mon, 7 Dec 2015 17:41:04 +0900
+Message-ID: <56654620.1040208@daenzer.net>
+References: <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
+ <20151204162956.GA14978@rob-hp-laptop>
+ <1449247305.8275.104.camel@pengutronix.de>
+ <CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
+ <1449251760.8275.116.camel@pengutronix.de>
+ <CAL_Jsq+oaJxD3vbDWzn_4ghpqi=RZ1o+8nOcepWYjzcu5Hwpjg@mail.gmail.com>
+ <20151204203101.GD8644@n2100.arm.linux.org.uk>
+ <CAKb7UviPhoiY-YP2aBHm0BHbeEjSF2wTguQScVXMBve-kZc16Q@mail.gmail.com>
+ <20151204220533.GE8644@n2100.arm.linux.org.uk>
+ <CAKb7UvgzYMxPxtt8iPars13n4sAJ5Z4Hva1KHO+k4yNumDb+DQ@mail.gmail.com>
+ <20151205101208.GP10243@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-sunxi+bncBDZJXP7F6YLRBJEJSWZQKGQE6G5JARI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <201512071608.oGt2n0Wn%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20151205101208.GP10243@phenom.ffwll.local>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>, Ilia Mirkin <imirkin@alum.mit.edu>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dri-devel <dri-devel@lists.freedesktop.org>, patchwork-lst@pengutronix.de, "kernel@pengutronix.de" <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-It looks like braces may be mising.  Please check.
-
-julia
-
-On Mon, 7 Dec 2015, kbuild test robot wrote:
-
-> Hi Priit,
-> 
-> [auto build test WARNING on mripard/sunxi/for-next]
-> [also build test WARNING on next-20151203]
-> [cannot apply to input/next v4.4-rc4]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Priit-Laes/input-Driver-for-Goodix-GT801-2-1-touchscreen/20151207-152831
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux.git sunxi/for-next
-> :::::: branch date: 46 minutes ago
-> :::::: commit date: 46 minutes ago
-> 
-> >> drivers/input/touchscreen/gt801_2plus1.c:119:3-30: code aligned with following code on line 120
-> 
-> git remote add linux-review https://github.com/0day-ci/linux
-> git remote update linux-review
-> git checkout d66df313f96e04572821e49cada65cb5c1bea9e2
-> vim +119 drivers/input/touchscreen/gt801_2plus1.c
-> 
-> d66df313 Priit Laes 2015-12-07  113  		return;
-> d66df313 Priit Laes 2015-12-07  114  
-> d66df313 Priit Laes 2015-12-07  115  	/* Build touch map */
-> d66df313 Priit Laes 2015-12-07  116  	touch_num = 0;
-> d66df313 Priit Laes 2015-12-07  117  	for (i = 0; (touch_raw != 0) && (i < ts->max_touch_num); i++) {
-> d66df313 Priit Laes 2015-12-07  118  		if (touch_raw & 1)
-> d66df313 Priit Laes 2015-12-07 @119  			touch_map[touch_num++] = i;
-> d66df313 Priit Laes 2015-12-07 @120  			touch_raw >>= 1;
-> d66df313 Priit Laes 2015-12-07  121  	}
-> d66df313 Priit Laes 2015-12-07  122  
-> d66df313 Priit Laes 2015-12-07  123  	/* Calculate checksum */
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> 
+T24gMDUuMTIuMjAxNSAxOToxMiwgRGFuaWVsIFZldHRlciB3cm90ZToKPiBPbiBGcmksIERlYyAw
+NCwgMjAxNSBhdCAwNTo0MzozM1BNIC0wNTAwLCBJbGlhIE1pcmtpbiB3cm90ZToKPj4gT24gRnJp
+LCBEZWMgNCwgMjAxNSBhdCA1OjA1IFBNLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXgKPj4gPGxp
+bnV4QGFybS5saW51eC5vcmcudWs+IHdyb3RlOgo+Pj4gT24gRnJpLCBEZWMgMDQsIDIwMTUgYXQg
+MDM6NDI6NDdQTSAtMDUwMCwgSWxpYSBNaXJraW4gd3JvdGU6Cj4+Pj4gT24gRnJpLCBEZWMgNCwg
+MjAxNSBhdCAzOjMxIFBNLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXgKPj4+PiA8bGludXhAYXJt
+LmxpbnV4Lm9yZy51az4gd3JvdGU6Cj4+Pj4+IE1vcmVvdmVyLCBEUkkzIGlzIG5vdCB5ZXQgYXZh
+aWxhYmxlIGZvciBHYWxsaXVtLCBzbyBpZiB3ZSdyZSB0YWxraW5nCj4+Pj4+IGFib3V0IFhvcmcs
+IHRoZW4gZnVuY3Rpb25hbCBEUkkyIGlzIGEgcmVxdWlyZW1lbnQsIGFuZCB0aGF0IF9uZWVkc18K
+Pj4+Pj4gdG8gaGF2ZSBhIHNpbmdsZSBkZXZpY2UgZm9yIHRoZSByZW5kZXJpbmcgaW5zdGFuY2Vz
+LiAgWG9yZyBoYXMgbm8gd2F5Cj4+Pj4+IHRvIHBhc3MgbXVsdGlwbGUgcmVuZGVyIG5vZGVzIHRv
+IGNsaWVudCBvdmVyIERSSTIuCj4+Pj4KPj4+PiBKdXN0IHRvIGNvcnJlY3QuLi4gRFJJMyBoYXMg
+YmVlbiBhdmFpbGFibGUgb24gZ2FsbGl1bSBbYXQgbGVhc3QgaW4gdGhlCj4+Pj4gY29udGV4dCBv
+ZiBzdC9tZXNhXSBiYXNpY2FsbHkgc2luY2UgRFJJMyB3YXMgaW50cm9kdWNlZC4gTm90IHN1cmUg
+d2hhdAo+Pj4+IGlzc3VlIHlvdSdyZSBmaWdodGluZyB3aXRoLCBidXQgaXQncyBkZWZpbml0ZWx5
+IG5vdCBhIGdhbGxpdW0KPj4+PiBsaW1pdGF0aW9uLi4uIGNvdWxkIGJlIHNvbWV0aGluZyByZWxh
+dGVkIHRvIHBsYXRmb3JtIGRldmljZXMuCj4+Pgo+Pj4gV2VsbCwgbXkgc3RhdGVtZW50IGlzIGJh
+c2VkIG9uIHRoZSBmYWN0IHRoYXQgdGhlcmUncyBub3RoaW5nIGluCj4+PiBzcmMvZ2FsbGl1bS9z
+dGF0ZS10cmFja2VyL2RyaSB3aGljaCBoaW50cyBhdCBiZWluZyBEUkkzLiAgTWF5YmUgaXQncwo+
+Pj4gaW1wbGVtZW50ZWQgZGlmZmVyZW50bHksIEkgZG9uJ3Qga25vdy4KClRoZSBEUkkgc3RhdGUg
+dHJhY2tlciBjb2RlIGluIHNyYy9nYWxsaXVtL3N0YXRlX3RyYWNrZXJzL2RyaS8gc3VwcG9ydHMK
+RFJJMS0zLiBUaGVyZSdzIGFsbW9zdCBubyBleHBsaWNpdCBtZW50aW9uIG9mIERSSTMgaW4gaXQg
+YmVjYXVzZSBEUkkzCmFuZCBEUkkyIHdvcmsgbW9zdGx5IHRoZSBzYW1lIGFzIGZhciBhcyB0aGlz
+IGNvZGUgaXMgY29uY2VybmVkLgoKCj4+PiBJIHRoaW5rIGl0J3MgYSBEUkkzIGxpbWl0YXRpb24u
+ICBUaGUgaXNzdWUgd2l0aCB0aGUgRFJJMyBkZXNpZ24gaXMgdGhhdDoKPj4+Cj4+PiAqIFRoZSBj
+bGllbnQgaGFzIGFjY2VzcyB0byB0aGUgR1BVIHJlbmRlciBub2RlcyBvbmx5LCBidXQgbm90IHRo
+ZQo+Pj4gICBjb3JyZXNwb25kaW5nIEtNUyBub2RlLgo+Pj4gKiBCdWZmZXJzIGluIERSSTMgYXJl
+IGFsbG9jYXRlZCBmcm9tIHRoZSBHUFUgcmVuZGVyIG5vZGVzLgo+Pj4gKiBUaGUgWG9yZyBQcmVz
+ZW50IHByb3RvY29sIGlzIHRoZW4gdXNlZCB0byBtYW5hZ2UgdGhlIHZibGFuawo+Pj4gICBzeW5j
+aG9uaXNhdGlvbiBhbmQgcGFnZSBmbGlwcy4KPj4+Cj4+PiBOb3csIHRoZSBLTVMgc2Nhbm91dCBo
+YXJkd2FyZSB0eXBpY2FsbHkgZG9lcyBub3Qgc3VwcG9ydCBhbnkga2luZCBvZgo+Pj4gc2NhdHRl
+ci1nYXRoZXI6IHRoZSBidWZmZXJzIGl0IGhhcyBtdXN0IGJlIGNvbnRpZ3VvdXMuICBUaGVzZSBj
+YW4gYmUKPj4+IGFsbG9jYXRlZCBmcm9tIHRoZSBLTVMgRFJNIGRldmljZS4KPj4+Cj4+PiBIb3dl
+dmVyLCB0aGUgRFJJMyBjbGllbnQgaGFzIG5vIGFjY2VzcyB0byB0aGUgS01TIERSTSBkZXZpY2Ug
+dG8gYWxsb2NhdGUKPj4+IGxpbmVhciBidWZmZXJzIGZyb20sIGFuZCBHUFVzIHR5cGljYWxseSBk
+b24ndCBoYXZlIGR1bWIgYnVmZmVyIHN1cHBvcnQuCj4+PiBIZW5jZSwgdGhlIGNsaWVudCBjYW4n
+dCBwYXNzIGEgc3VpdGFibGUgYnVmZmVyIHRvIHRoZSBwcmVzZW50IGxheWVyLgo+IAo+IE9oIHJp
+Z2h0LCBidWZmZXIgYWxsb2MgaWYgeW91IGhhdmUgc3BlY2lhbCBjb25zdHJhaW50cyB3b24ndCB3
+b3JrIHdpdGgKPiBEUkkzIGFzLWlzLiBGb3IgdGhhdCB3ZSBwcm9iYWJseSBuZWVkIHNvbWV0aGlu
+ZyBsaWtlIERSSTIgZm9yIGJ1ZmZlciBhbGxvYwo+ICsgUHJlc2VudCAobGlrZSBEUkkzIGRvZXMp
+IGZvciBmbGlwcGluZyB0aGVtLgoKRldJVywgdGhhdCdzIGJhc2ljYWxseSBwb3NzaWJsZSBhbHJl
+YWR5LiBFLmcuIHRoZSBHYWxsaXVtIG5pbmUgc3RhdGUKdHJhY2tlciBjYW4gdXNlIFByZXNlbnQg
+ZXZlbiB3aXRoIERSSTIuCgoKLS0gCkVhcnRobGluZyBNaWNoZWwgRMOkbnplciAgICAgICAgICAg
+ICAgIHwgICAgICAgICAgICAgICBodHRwOi8vd3d3LmFtZC5jb20KTGlicmUgc29mdHdhcmUgZW50
+aHVzaWFzdCAgICAgICAgICAgICB8ICAgICAgICAgICAgIE1lc2EgYW5kIFggZGV2ZWxvcGVyCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
