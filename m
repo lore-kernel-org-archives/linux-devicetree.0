@@ -1,53 +1,92 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 6/6] arm64: renesas: r8a7795: Add L2 cache-controller nodes
-Date: Mon, 7 Dec 2015 21:18:05 +0100
-Message-ID: <CAMuHMdWrXiYkcFwSkgbEfQRXvT2FsSTbqD72vtiedmeEZZKxLg@mail.gmail.com>
-References: <1449512659-16688-1-git-send-email-geert+renesas@glider.be>
-	<1449512659-16688-7-git-send-email-geert+renesas@glider.be>
-	<5665D4C7.1050705@arm.com>
-	<20151207190355.GE28024@leverpostej>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v9 3/8] ARM: dt: Binding documentation for imx25
+ touchscreen controller
+Date: Mon, 7 Dec 2015 14:45:46 -0600
+Message-ID: <20151207204546.GA30936@rob-hp-laptop>
+References: <1449431542-1892-1-git-send-email-mpa@pengutronix.de>
+ <1449431542-1892-4-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151207190355.GE28024@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1449431542-1892-4-git-send-email-mpa@pengutronix.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: Shawn Guo <shawnguo@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee.jones@linaro.org>, Denis Carikli <denis@eukrea.com>, Eric =?iso-8859-1?Q?B=E9nard?= <eric@eukrea.com>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hartmut Knaack <knaack.h@gmx.de>, Fabio Estevam <festevam@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Sun, Dec 06, 2015 at 08:52:16PM +0100, Markus Pargmann wrote:
+> This is the touchscreen conversion queue binding documentation. It uses
+> the shared imx25 ADC.
+> 
+> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+> ---
+> 
+> Notes:
+>     Changes in v9:
+>      - Updated binding descriptions
+>     
+>     Changes in v5:
+>      - Fix signed/unsigned comparison
+>      - Fix unused variable settling_time by putting it in the correct argument list
+>      - Use continous conversion queue with the repeat feature and a proper
+>        repeat-wait. Previously the touchscreen caused massive number of interrupts.
+> 
+>  .../bindings/input/touchscreen/fsl-mx25-tcq.txt    | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/fsl-mx25-tcq.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/fsl-mx25-tcq.txt b/Documentation/devicetree/bindings/input/touchscreen/fsl-mx25-tcq.txt
+> new file mode 100644
+> index 000000000000..d45e50872114
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/fsl-mx25-tcq.txt
+> @@ -0,0 +1,35 @@
+> +Freescale mx25 TS conversion queue module
+> +
+> +mx25 touchscreen conversion queue module which controls the ADC unit of the
+> +mx25 for attached touchscreens.
+> +
+> +Required properties:
+> + - compatible: Should be "fsl,imx25-tcq".
+> + - reg: Memory range of the device.
+> + - interrupts: Should be the interrupt number associated with this module within
+> +   the tscadc unit (<0>).
+> + - interrupt-parent: Should be a phandle to the tscadc unit.
+> + - fsl,wires: Should be '<4>' or '<5>'
+> +
+> +Optional properties:
+> + - fsl,pen-debounce: Pen debounce time in nanoseconds.
 
-On Mon, Dec 7, 2015 at 8:03 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Mon, Dec 07, 2015 at 06:49:43PM +0000, Sudeep Holla wrote:
->> On 07/12/15 18:24, Geert Uytterhoeven wrote:
->> >+    L2_CA57: cache-controller@0 {
->> >+            compatible = "cache";
->> >+            arm,data-latency = <4 4 1>;
->> >+            arm,tag-latency = <3 3 3>;
->>
->> Interesting, only PL2xx/3xx cache controller driver reads this from the
->> DT and configures the controller. The integrated L2 found in
->> A15/A7/A57/A53 needs doesn't make use of these values from the DT.
->
-> These properties seem to be from l2cc.txt, which really only corresponds
-> to PL210/PL220/PL310 (and variants) and isn't as generic as it sounds.
->
-> I don't see that these are necessary at all.
+This and ...
 
-The datasheet does mention the data/tag RAM latencies/setup values, so
-I put them in DT using the properties I could fine.
+> + - fsl,pen-threshold: Pen-down threshold for the touchscreen. This is a value
+> +   between 1 and 4096. It is the ratio between the internal reference voltage
+> +   and the measured voltage after the plate was precharged. Resistence between
+> +   plates and therefore the voltage decreases with pressure so that a smaller
+> +   value is equivalent to a higher pressure.
+> + - fsl,settling-time: Settling time in nanoseconds. The settling time is before
+> +   the actual touch detection to wait for an even charge distribution in the
+> +   plate.
 
-Gr{oetje,eeting}s,
+... this still need units (-ns) appended to the property name.
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +This device includes two conversion queues which can be added as subnodes.
+> +The first queue is for the touchscreen, the second for general purpose ADC.
+> +
+> +Example:
+> +	tsc: tcq@50030400 {
+> +		compatible = "fsl,imx25-tcq";
+> +		reg = <0x50030400 0x60>;
+> +		interrupt-parent = <&tscadc>;
+> +		interrupts = <0>;
+> +		fsl,wires = <4>;
+> +	};
+> -- 
+> 2.6.2
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
