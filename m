@@ -1,41 +1,61 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 1/1] stmmac: socfpga: Provide dt node to config ptp clk
- source.
-Date: Sun, 06 Dec 2015 23:04:10 -0500 (EST)
-Message-ID: <20151206.230410.527597426769762516.davem@davemloft.net>
-References: <1449452324-53858-1-git-send-email-preid@electromag.com.au>
-	<1449452324-53858-3-git-send-email-preid@electromag.com.au>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH] arm64: dts: mt8173: Add nor flash node
+Date: Mon, 7 Dec 2015 12:09:35 +0800
+Message-ID: <CAGS+omCuB3VGcPk3fezakdVDnFB3GAmMD+wZ_6nGdv+uHoB40g@mail.gmail.com>
+References: <1449460394-31601-1-git-send-email-bayi.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1449452324-53858-3-git-send-email-preid@electromag.com.au>
-Sender: netdev-owner@vger.kernel.org
-To: preid@electromag.com.au
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, peppe.cavallaro@st.com, devicetree@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1449460394-31601-1-git-send-email-bayi.cheng@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bayi Cheng <bayi.cheng@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Brian Norris <computersforpeace@gmail.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mtd@lists.infradead.org, srv_heupstream <srv_heupstream@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Phil Reid <preid@electromag.com.au>
-Date: Mon,  7 Dec 2015 09:38:40 +0800
+Bayi,
 
-> @@ -116,6 +118,9 @@ static int socfpga_dwmac_parse_data(struct socfpga_dwmac *dwmac, struct device *
->  		return -EINVAL;
->  	}
->  
-> +	dwmac->f2h_ptp_ref_clk = of_property_read_bool(np, "f2h_ptp_ref_clk");
+On Mon, Dec 7, 2015 at 11:53 AM, Bayi Cheng <bayi.cheng@mediatek.com> wrote:
+> Add Mediatek nor flash node
+>
+> Signed-off-by: Bayi Cheng <bayi.cheng@mediatek.com>
+> Acked-by: Brian Norris <computersforpeace@gmail.com>
+> ---
+> Previous version of this patch is
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-November/386005.html
+> Drop flash node from mt8173.dtsi accroding review comment
+
+Is there a flash on mt8173-evb that can be accessed by the nor_flash ?
+If so, can you include flash@0 node in the mt8173-evb.dts.
+
+-Dan
+
+>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 4dd5f93..af08e97 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -387,6 +387,17 @@
+>                         status = "disabled";
+>                 };
+>
+> +               nor_flash: spi@1100d000 {
+> +                       compatible = "mediatek,mt8173-nor";
+> +                       reg = <0 0x1100d000 0 0xe0>;
+> +                       clocks = <&pericfg CLK_PERI_SPI>,
+> +                                <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
+> +                       clock-names = "spi", "sf";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       status = "disabled";
+> +               };
 > +
-> +
-
-Too many empty lines.
-
->  	np_splitter = of_parse_phandle(np, "altr,emac-splitter", 0);
->  	if (np_splitter) {
->  		if (of_address_to_resource(np_splitter, 0, &res_splitter)) {
-> @@ -171,6 +176,11 @@ static int socfpga_dwmac_setup(struct socfpga_dwmac *dwmac)
->  	ctrl &= ~(SYSMGR_EMACGRP_CTRL_PHYSEL_MASK << reg_shift);
->  	ctrl |= val << reg_shift;
->  
-> +	if(dwmac->f2h_ptp_ref_clk) 
-
-Improperly formatted, there must be a space between the 'if' and the
-openning parenthesis of the condition.
+>                 i2c3: i2c@11010000 {
+>                         compatible = "mediatek,mt8173-i2c";
+>                         reg = <0 0x11010000 0 0x70>,
+> --
+> 1.8.1.1.dirty
+>
