@@ -1,54 +1,41 @@
-From: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] arm64: dts: mt8173: Add nor flash node
-Date: Mon, 7 Dec 2015 11:53:14 +0800
-Message-ID: <1449460394-31601-1-git-send-email-bayi.cheng@mediatek.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 1/1] stmmac: socfpga: Provide dt node to config ptp clk
+ source.
+Date: Sun, 06 Dec 2015 23:04:10 -0500 (EST)
+Message-ID: <20151206.230410.527597426769762516.davem@davemloft.net>
+References: <1449452324-53858-1-git-send-email-preid@electromag.com.au>
+	<1449452324-53858-3-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1449452324-53858-3-git-send-email-preid@electromag.com.au>
+Sender: netdev-owner@vger.kernel.org
+To: preid@electromag.com.au
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, peppe.cavallaro@st.com, devicetree@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add Mediatek nor flash node
+From: Phil Reid <preid@electromag.com.au>
+Date: Mon,  7 Dec 2015 09:38:40 +0800
 
-Signed-off-by: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Acked-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-Previous version of this patch is
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-November/386005.html
-Drop flash node from mt8173.dtsi accroding review comment
+> @@ -116,6 +118,9 @@ static int socfpga_dwmac_parse_data(struct socfpga_dwmac *dwmac, struct device *
+>  		return -EINVAL;
+>  	}
+>  
+> +	dwmac->f2h_ptp_ref_clk = of_property_read_bool(np, "f2h_ptp_ref_clk");
+> +
+> +
 
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Too many empty lines.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 4dd5f93..af08e97 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -387,6 +387,17 @@
- 			status = "disabled";
- 		};
- 
-+		nor_flash: spi@1100d000 {
-+			compatible = "mediatek,mt8173-nor";
-+			reg = <0 0x1100d000 0 0xe0>;
-+			clocks = <&pericfg CLK_PERI_SPI>,
-+				 <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
-+			clock-names = "spi", "sf";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		i2c3: i2c@11010000 {
- 			compatible = "mediatek,mt8173-i2c";
- 			reg = <0 0x11010000 0 0x70>,
--- 
-1.8.1.1.dirty
+>  	np_splitter = of_parse_phandle(np, "altr,emac-splitter", 0);
+>  	if (np_splitter) {
+>  		if (of_address_to_resource(np_splitter, 0, &res_splitter)) {
+> @@ -171,6 +176,11 @@ static int socfpga_dwmac_setup(struct socfpga_dwmac *dwmac)
+>  	ctrl &= ~(SYSMGR_EMACGRP_CTRL_PHYSEL_MASK << reg_shift);
+>  	ctrl |= val << reg_shift;
+>  
+> +	if(dwmac->f2h_ptp_ref_clk) 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Improperly formatted, there must be a space between the 'if' and the
+openning parenthesis of the condition.
