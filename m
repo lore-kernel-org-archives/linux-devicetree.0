@@ -1,76 +1,48 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v2 6/6] arm64: renesas: r8a7795: Add L2 cache-controller
- nodes
-Date: Mon, 7 Dec 2015 18:49:43 +0000
-Message-ID: <5665D4C7.1050705@arm.com>
-References: <1449512659-16688-1-git-send-email-geert+renesas@glider.be>
- <1449512659-16688-7-git-send-email-geert+renesas@glider.be>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 4/7] mtd: add of_match_mtd_parser() and
+ of_mtd_match_mtd_parser() helpers
+Date: Mon, 7 Dec 2015 13:00:30 -0600
+Message-ID: <CAL_JsqJ_dN6tDhjmB29Li6zxTcOcNRbr8Hw2MfnUAT3uWDgzuQ@mail.gmail.com>
+References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
+ <1449292763-129421-5-git-send-email-computersforpeace@gmail.com>
+ <CAL_JsqLV1mDpW9tD0XjWRxZSSsYuDiqHbuADQmBUtACgYiHJ+w@mail.gmail.com> <20151207181308.GN120110@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1449512659-16688-7-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Lina Iyer <lina.iyer@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151207181308.GN120110-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 07/12/15 18:24, Geert Uytterhoeven wrote:
-> Add device nodes for the L2 caches, and link the CPU node to its L2
-> cache node.
+On Mon, Dec 7, 2015 at 12:13 PM, Brian Norris
+<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Sun, Dec 06, 2015 at 08:45:40PM -0600, Rob Herring wrote:
+>> On Fri, Dec 4, 2015 at 11:19 PM, Brian Norris
+>> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> >  drivers/of/of_mtd.c            | 33 +++++++++++++++++++++++++++++++++
+>>
+>> BTW, this file should be moved to drivers/mtd/ at some point.
 >
-> The L2 cache for the Cortex-A57 CPU cores is 2 MiB large (organized as
-> 128 KiB x 16 ways), and requires the following settings:
->    - Tag RAM latency: 3 cycles,
->    - Data RAM latency: 4 cycles,
->    - Data RAM setup: 1 cycles,
->
-> The L2 cache for the Cortex-A53 CPU cores is 512 KiB large (organized as
-> 32 KiB x 16 ways).
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> What are the DT bindings for Cortex-A57/A53 L2 cache controllers?
->
+> How about s/at some point/now/ ?
 
-There's no special binding specific to cpus. Yes the generic binding
-should be fine as we don't have to deal with their configuration in the
-kernel and assumed to be all preconfigured by early secure boot code.
+Great.
 
-> v2:
->    - New.
-> ---
->   arch/arm64/boot/dts/renesas/r8a7795.dtsi | 15 +++++++++++++++
->   1 file changed, 15 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> index 816400c1bee604db..30063546c7e9bbea 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> @@ -35,9 +35,24 @@
->   			compatible = "arm,cortex-a57", "arm,armv8";
->   			reg = <0x0>;
->   			device_type = "cpu";
-> +			next-level-cache = <&L2_CA57>;
->   		};
->   	};
->
-> +	L2_CA57: cache-controller@0 {
-> +		compatible = "cache";
-> +		arm,data-latency = <4 4 1>;
-> +		arm,tag-latency = <3 3 3>;
+> I can send a separate patch. It also
+> seems like these should just get linked into the 'mtd' module (when
+> CONFIG_OF=y) instead of having a tiny module for just a few functions.
 
-Interesting, only PL2xx/3xx cache controller driver reads this from the
-DT and configures the controller. The integrated L2 found in
-A15/A7/A57/A53 needs doesn't make use of these values from the DT.
+Agreed.
 
-I assume these values are tested and configured by boot loaders before
-entering Linux. I am not objecting to their presence here but I am
-mentioning that it's mostly of no use for Linux as software running at
-higher EL might not allow these configuration to be modified.
+> Why did files like this get placed here anyway? Is there a reason that
+> there are things like of_net and of_pci here too?
 
--- 
-Regards,
-Sudeep
+Things started out here, but as the number of subsystems and
+associated bindings grew it became evident that binding specific
+things should go with the subsystems. I also have a secret goal to
+eliminate drivers/of. Don't tell anyone.
+
+of_net should probably move, just no one has had the itch to do it.
+PCI is a bit special and somewhat tied into the rest of the core.
+
+Rob
