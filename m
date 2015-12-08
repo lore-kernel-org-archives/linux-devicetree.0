@@ -1,65 +1,283 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH net 1/2] net: cadence: macb: Disable USRIO register on
- some platforms
-Date: Tue, 8 Dec 2015 10:21:35 +0100
-Message-ID: <CAA3gFWtDiza1V3_eM84JxseHRDJMH_NF4Rx=-dOPD-Usp=pVNA@mail.gmail.com>
-References: <1449485914-12883-1-git-send-email-narmstrong@baylibre.com>
-	<1449485914-12883-2-git-send-email-narmstrong@baylibre.com>
-	<20151207193215.GI29051@jcartwri.amer.corp.natinst.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 1/3] usb: misc: generic_onboard_hub: add generic onboard
+ USB HUB driver
+Date: Tue, 8 Dec 2015 17:18:55 +0800
+Message-ID: <20151208091854.GA16881@shlinux2>
+References: <1449538670-7954-1-git-send-email-peter.chen@freescale.com>
+ <1449538670-7954-2-git-send-email-peter.chen@freescale.com>
+ <87poyhmyrc.fsf@saruman.tx.rr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151207193215.GI29051@jcartwri.amer.corp.natinst.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Josh Cartwright <joshc@ni.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, "David S. Miller" <davem@davemloft.net>, Harini Katakam <harini.katakam@xilinx.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-kernel@vger.kernel.org, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87poyhmyrc.fsf-HgARHv6XitJaoMGHk7MhZQC/G2K4zDHf@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Josh,
+On Mon, Dec 07, 2015 at 08:59:19PM -0600, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
+> > diff --git a/drivers/usb/misc/Makefile b/drivers/usb/misc/Makefile
+> > index 45fd4ac..da52e9a 100644
+> > --- a/drivers/usb/misc/Makefile
+> > +++ b/drivers/usb/misc/Makefile
+> > @@ -29,3 +29,4 @@ obj-$(CONFIG_USB_CHAOSKEY)		+= chaoskey.o
+> >  
+> >  obj-$(CONFIG_USB_SISUSBVGA)		+= sisusbvga/
+> >  obj-$(CONFIG_USB_LINK_LAYER_TEST)	+= lvstest.o
+> > +obj-$(CONFIG_USB_ONBOARD_HUB)		+= generic_onboard_hub.o
+> > diff --git a/drivers/usb/misc/generic_onboard_hub.c b/drivers/usb/misc/generic_onboard_hub.c
+> > new file mode 100644
+> > index 0000000..df722a0
+> > --- /dev/null
+> > +++ b/drivers/usb/misc/generic_onboard_hub.c
+> > @@ -0,0 +1,162 @@
+> > +/*
+> > + * usb_hub_generic.c	The generic onboard USB HUB driver
+> > + *
+> > + * Copyright (C) 2015 Freescale Semiconductor, Inc.
+> > + * Author: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > + *
+> > + * This program is free software: you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2  of
+> > + * the License as published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + *
+> > + * You should have received a copy of the GNU General Public License
+> > + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> > + */
+> > +
+> > +/*
+> > + * This driver is only for the USB HUB devices which need to control
+> > + * their external pins(clock, reset, etc), and these USB HUB devices
+> > + * are soldered at the board.
+> > + */
+> > +
+> > +#define DEBUG
+> 
+> nope
+> 
 
-2015-12-07 20:32 GMT+01:00 Josh Cartwright <joshc@ni.com>:
-> On Mon, Dec 07, 2015 at 11:58:33AM +0100, Neil Armstrong wrote:
->> On some platforms, the macb integration does not use the USRIO
->> register to configure the (R)MII port and clocks.
->> When the register is not implemented and the MACB error signal
->> is connected to the bus error, reading or writing to the USRIO
->> register can trigger some Imprecise External Aborts on ARM platforms.
->> ---
->
-> Does this make sense to even be a separate bool device tree property?
->
-> This sort of configuration is typically done by:
->    1. Creating a new 'caps' bit; relevant codepaths check that bit
->    2. Creating a new "compatible" string for your platform's macb
->       instance
->    3. Creating a new 'struct macb_config' instance for your platform,
->       setting any relevant caps bits when it is selected.
->
->   Josh
+Will change.
 
-I see the point, but according to the User Guide :
->User I/O Register
-> The MACB design provides up to 16 inputs and 16 outputs,
-> for which the state of the I/O may
-> be read or set under the control of the processor interface.
-> If the user I/O is disabled as a configuration option, this address space is defined
-> as reserved, and hence will be a read-only register of value 0x0.
+> > +#include <linux/clk.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/gpio.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_gpio.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regulator/consumer.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/usb/generic_onboard_hub.h>
+> 
+> <linux/platform_data/generic_onboard_hub.h> ?
+> 
 
-On the design I worked on, the macb_user_* signals were commented,
-thus disabling this register.
+Yes, you are right, I did not know it
 
-The implementation is not mandatory, and the "generic" macb compatible
-"cdns,macb" should disable
-usage of USRIO register by default and be only used for platform
-specific macb instances...
+> > +struct usb_hub_generic_data {
+> > +	struct clk *clk;
+> 
+> seriously ? Is this really all ? What about that reset line below ?
 
-Is it OK if I add a new 'caps' bit and use it for the "generic" macb instance ?
+The clock is PHY input clock on the HUB, this clock may from SoC's PLL.
+> 
+> In fact, that reset line should be using a generic reset-gpio.c instead
+> of a raw gpio.
+> 
 
-For the device tree property, it should be safe to have the generic
-instances of macb and gem to
-rely on these properties instead of hardcoded instances.
-(it's the biggest aim of device tree, no ? no more hardcoded 'caps' bit ?)
-The "no-usrio" and other should eventually map 'caps' bits along the
-generic instances.
+This reset gpio is not at mainline, I don't know what's reason
 
-Neil
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-July/186693.html
+
+Philipp, do you know the reason?
+
+> > +static int usb_hub_generic_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	struct usb_hub_generic_platform_data *pdata = dev->platform_data;
+> > +	struct usb_hub_generic_data *hub_data;
+> > +	int reset_pol = 0, duration_us = 50, ret = 0;
+> > +	struct gpio_desc *gpiod_reset = NULL;
+> > +
+> > +	hub_data = devm_kzalloc(dev, sizeof(*hub_data), GFP_KERNEL);
+> > +	if (!hub_data)
+> > +		return -ENOMEM;
+> > +
+> > +	if (dev->of_node) {
+> > +		struct device_node *node = dev->of_node;
+> > +
+> > +		hub_data->clk = devm_clk_get(dev, "external_clk");
+> > +		if (IS_ERR(hub_data->clk)) {
+> > +			dev_dbg(dev, "Can't get external clock: %ld\n",
+> > +					PTR_ERR(hub_data->clk));
+> 
+> how about setting clock to NULL to here ? then you don't need IS_ERR()
+> checks anywhere else.
+> 
+> > +		}
+> 
+> braces shouldn't be used here, if you add NULL trick above,
+> however... then you can keep them.
+> 
+
+Braces aren't needed, it may not too much useful to using NULL
+as a indicator for error pointer.
+
+> > +		/*
+> > +		 * Try to get the information for HUB reset, the
+> > +		 * default setting like below:
+> > +		 *
+> > +		 * - Reset state is low
+> > +		 * - The duration is 50us
+> > +		 */
+> > +		if (of_find_property(node, "hub-reset-active-high", NULL))
+> > +			reset_pol = 1;
+> 
+> you see, this is definitely *not* generic. You should write a generic
+> reset-gpio.c reset controller and describe the polarity on the gpio
+> binding. This driver *always* uses reset_assert(); reset_deassert(); and
+> reset-gpio implements though by gpiod_set_value() correctly.
+> 
+> Polarity _must_ be described elsewhere in DT.
+> 
+> > +		of_property_read_u32(node, "hub-reset-duration-us",
+> > +			&duration_us);
+> 
+> likewise, this should be described as a debounce time for the GPIO.
+> 
+
+Yes, if we are a reset gpio driver.
+
+> > +		gpiod_reset = devm_gpiod_get_optional(dev, "hub-reset",
+> > +			reset_pol ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW);
+> > +		ret = PTR_ERR_OR_ZERO(gpiod_reset);
+> > +		if (ret) {
+> > +			dev_err(dev, "Failed to get reset gpio, err = %d\n",
+> > +				ret);
+> > +			return ret;
+> > +		}
+> > +	} else if (pdata) {
+> > +		hub_data->clk = pdata->ext_clk;
+> > +		duration_us = pdata->gpio_reset_duration_us;
+> > +		reset_pol = pdata->gpio_reset_polarity;
+> > +
+> > +		if (gpio_is_valid(pdata->gpio_reset)) {
+> > +			ret = devm_gpio_request_one(
+> > +				dev, pdata->gpio_reset, reset_pol
+> > +				? GPIOF_OUT_INIT_HIGH : GPIOF_OUT_INIT_LOW,
+> > +				dev_name(dev));
+> > +			if (!ret)
+> > +				gpiod_reset = gpio_to_desc(pdata->gpio_reset);
+> > +		}
+> > +	}
+> > +
+> > +	if (!IS_ERR(hub_data->clk)) {
+> > +		ret = clk_prepare_enable(hub_data->clk);
+> > +		if (ret) {
+> > +			dev_err(dev,
+> > +				"Can't enable external clock: %d\n",
+> > +				ret);
+> > +			return ret;
+> > +		}
+> > +	}
+> > +
+> > +	if (gpiod_reset) {
+> > +		/* Sanity check */
+> > +		if (duration_us > 1000000)
+> > +			duration_us = 50;
+> 
+> this check makes no sense whatsoever. What I *really* need over 1s of
+> debounce ?
+
+Ok, I will delete this check.
+
+> 
+> > +		usleep_range(duration_us, duration_us + 100);
+> > +		gpiod_set_value(gpiod_reset, reset_pol ? 0 : 1);
+> 
+> wrong. You should _not_ have polarity checks here. You should have
+> already initialized the gpio as ACTIVE_HIGH or ACTIVE_LOW and gpiolib
+> will handle the polarity for you.
+
+Yes, you are right. I did not understand ACTIVE_LOW for gpio flag
+before.
+
+> 
+> > +	}
+> > +
+> > +	dev_set_drvdata(dev, hub_data);
+> > +	return ret;
+> > +}
+> > +
+> > +static int usb_hub_generic_remove(struct platform_device *pdev)
+> > +{
+> > +	struct usb_hub_generic_data *hub_data = platform_get_drvdata(pdev);
+> > +
+> > +	if (!IS_ERR(hub_data->clk))
+> > +		clk_disable_unprepare(hub_data->clk);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +#ifdef CONFIG_OF
+> > +static const struct of_device_id usb_hub_generic_dt_ids[] = {
+> > +	{.compatible = "generic-onboard-hub"},
+> > +	{ },
+> > +};
+> > +MODULE_DEVICE_TABLE(of, usb_hub_generic_dt_ids);
+> > +#endif
+> > +
+> > +static struct platform_driver usb_hub_generic_driver = {
+> > +	.probe = usb_hub_generic_probe,
+> > +	.remove = usb_hub_generic_remove,
+> > +	.driver = {
+> > +		.name = "usb_hub_generic_onboard",
+> > +		.of_match_table = usb_hub_generic_dt_ids,
+> > +	 },
+> > +};
+> > +
+> > +static int __init usb_hub_generic_init(void)
+> > +{
+> > +	return platform_driver_register(&usb_hub_generic_driver);
+> > +}
+> > +subsys_initcall(usb_hub_generic_init);
+> > +
+> > +static void __exit usb_hub_generic_exit(void)
+> > +{
+> > +	platform_driver_unregister(&usb_hub_generic_driver);
+> > +}
+> > +module_exit(usb_hub_generic_exit);
+> 
+> module_platform_driver();
+
+I want this driver to be called before module init's.
+
+> 
+> > +MODULE_AUTHOR("Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>");
+> > +MODULE_DESCRIPTION("Generic Onboard USB HUB driver");
+> > +MODULE_LICENSE("GPL");
+> 
+> comment header says GPL v2 only, this is GPL v2+. Which is correct ?
+> 
+
+I will change it to GPL v2, thanks.
+
+
+-- 
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
