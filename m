@@ -1,204 +1,291 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v10 0/17] Add Analogix Core Display Port Driver
-Date: Tue, 08 Dec 2015 16:33:39 +0100
-Message-ID: <1982691.ZDuzTFTUUe@diego>
-References: <1449470239-30667-1-git-send-email-ykk@rock-chips.com>
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] usb: misc: generic_onboard_hub: add generic onboard
+ USB HUB driver
+Date: Tue, 8 Dec 2015 08:36:00 -0700
+Message-ID: <CANLsYkwfLSQKEw1a-Y_dguu-yutnTeQv73cMxPFooMjzTv4n1A@mail.gmail.com>
+References: <1449538670-7954-1-git-send-email-peter.chen@freescale.com>
+	<1449538670-7954-2-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1449470239-30667-1-git-send-email-ykk@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Yakir Yang <ykk@rock-chips.com>, Thierry Reding <treding@nvidia.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, javier@osg.samsung.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Jingoo Han <jingoohan1@gmail.com>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, ajaynumb@gmail.com, Andy Yan <andy.yan@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449538670-7954-2-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgWWFraXIsCgpBbSBNb250YWcsIDcuIERlemVtYmVyIDIwMTUsIDE0OjM3OjE5IHNjaHJpZWIg
-WWFraXIgWWFuZzoKPiAgICBUaGUgU2Ftc3VuZyBFeHlub3MgZURQIGNvbnRyb2xsZXIgYW5kIFJv
-Y2tjaGlwIFJLMzI4OCBlRFAgY29udHJvbGxlcgo+IHNoYXJlIHRoZSBzYW1lIElQLCBzbyBhIGxv
-dCBvZiBwYXJ0cyBjYW4gYmUgcmUtdXNlZC4gSSBzcGxpdCB0aGUgY29tbW9uCj4gY29kZSBpbnRv
-IGJyaWRnZSBkaXJlY3RvcnksIHRoZW4gcmszMjg4IGFuZCBleHlub3Mgb25seSBuZWVkIHRvIGtl
-ZXAKPiBzb21lIHBsYXRmb3JtIGNvZGUuIENhdXNlIEkgY2FuJ3QgZmluZCB0aGUgZXhhY3QgSVAg
-bmFtZSBvZiBleHlub3MgZHAKPiBjb250cm9sbGVyLCBzbyBJIGRlY2lkZSB0byBuYW1lIGRwIGNv
-cmUgZHJpdmVyIHdpdGggImFuYWxvZ2l4IiB3aGljaCBJCj4gZmluZCBpbiByazMyODggZURQIFRS
-TQoKWy4uLl0KCj4gQ2hhbmdlcyBpbiB2MTA6Cj4gLSBDb3JyZWN0IHRoZSBST0NLQ0hJUF9BTkFM
-T0dJWF9EUCBpbmRlbnRhdGlvbiBpbiBLY29uZmlnIHRvIHRhYnMgaGVyZQo+IChIZWlrbykgLSBG
-aXggdGhlIHdyb25nIG1hY3JvIHZhbHVlIG9mCj4gR1JGX0VEUF9SRUZfQ0xLX1NFTF9JTlRFUl9I
-SVdPUkRfTUFTSyBCSVQoNCkgLT4gQklUKDIwKQo+IC0gUmVtb3ZlIHRoZSBzdXJwbHVzICJwbGF0
-X2RhdGEiIGNoZWNrLiAoSGVpa28pCj4gLSAgICAgICBzd2l0Y2ggKGRwLT5wbGF0X2RhdGEgJiYg
-ZHAtPnBsYXRfZGF0YS0+ZGV2X3R5cGUpIHsKPiArICAgICAgIHN3aXRjaCAoZHAtPnBsYXRfZGF0
-YS0+ZGV2X3R5cGUpIHsKPiAtIFJldmVydCBwYXJ0cyBvZiBHdXN0YXZvIFBhZG92YW4ncyBjaGFu
-Z2VzIGluIGNvbW1pdDoKPiAJZHJtL2V4eW5vczogZG8gbm90IHN0YXJ0IGVuYWJsaW5nIERQIGF0
-IGJpbmQoKSBwaGFzZQo+ICAgQWRkIGRwIHBoeSBwb3dlcm9uIGZ1bmN0aW9uIGluIGJpbmQgdGlt
-ZS4KClRoZSBob3RwbHVnIGlzc3VlIGlzIHN0aWxsIHByZXNlbnQsIGJ1dCBJIHRoaW5rIEkgZm91
-bmQgdGhlIGNhdXNlLiBXaGVuCnRoZSBmaXJzdCBkZXRlY3QgY2FsbCBoYXBwZW5zLCB0aGUgZGlz
-cGxheSBzaW1wbHkgaXMgc3RpbGwgb2ZmLiBJIGp1c3QgZGlkCnNvbWUgdmVyeSBiYXNpYyB0cmFj
-aW5nIFswXSBhbmQgaXQgc2VlbXMgdGhlIGRpc3BsYXkgc2ltcGx5IGlzIG5vdCBlbmFibGVkCndo
-ZW4gaXQgaXMgc3VwcG9zZWQgdG8gZ2V0IGRldGVjdGVkLgoKQW5kIGl0IHNlZW1zIGluamVjdGlu
-ZyBhIGRybV9wYW5lbF9wcmVwYXJlIGVhcmx5IGZvciBfdGVzdGluZ18gWzFdIHJlYWxseQpkaWQg
-bWFrZSB0aGUgaG90cGx1ZyB3b3JrIG9uIGJvdGggbXkgamVycnkgYW5kIG1pbm5pZS4KClNvIEkg
-Z3Vlc3Mgd2Ugc2hvdWxkIHNvbWVob3cgbWFrZSBzdXJlIHRoZSBwYW5lbCBpcyBhY3R1YWxseSBw
-b3dlcmVkIHdoZW4KZGV0ZWN0aW9uIGlzIHJ1bm5pbmcuIEFsdGhvdWdoIEknbSBub3Qgc3VyZSB5
-ZXQsIGhvdyB0aGF0IHNob3VsZCBsb29rIGxpa2UuCgoKSW50dWl0aW9uIHN1Z2dlc3RzLCBtYWtp
-bmcgZHJtX3BhbmVsIGNhbGxzIG5lc3RhYmxlIChzaW1pbGFyIHRvCmNsa19wcmVwYXJlL3VucHJl
-cGFyZSwgZXRjKSBhbmQgc2ltcGx5IHdyYXBwaW5nIHRoZSBkZXRlY3Rpb24gY29kZQppbiBhIHBy
-ZXBhcmUtdW5wcmVwYXJlIGNhbGxzLCBidXQgSSdtIG5vdCBzdXJlIGlmIFRoaWVycnkgbWlnaHQg
-aGF2ZSBvdGhlcgppZGVhcyA7LSkKCgpBbHNvIG15ICJsb2ciIGJlbG93IHN1Z2dlc3RzIHNvbWUg
-c29ydCBvZiBtaXNtYXRjaCBiZXR3ZWVuCnByZXBhcmUvdW5wcmVwYXJlIGNhbGxzLCBhcyB0aGVy
-ZSBhcmUgYSBsb3QgbW9yZSBvZiB0aGUgcHJlcGFyZS1zaWRlLgoKCkFuZCB0aGUgbG9ja2luZyBp
-c3N1ZSBhbHNvIHNlZW1zIHRvIGJlIHN0aWxsIHRoZXJlIFsyXS4KCgpIZWlrbwoKClswXQpbICAg
-IDIuNzk3MzgzXSBhbmFsb2dpeF9kcF9yZXNldApbICAgIDIuODAwNzA5XSBhbmFsb2dpeF9kcF9p
-bml0X2hwZApbICAgIDIuODAzOTYwXSBhbmFsb2dpeF9kcF9pbml0X3ZpZGVvClsgICAgMi44MDc2
-NTNdIHJvY2tjaGlwLWRybSBkaXNwbGF5LXN1YnN5c3RlbTogYm91bmQgZmY5NzAwMDAuZHAgKG9w
-cyByb2NrY2hpcF9kcF9jb21wb25lbnRfb3BzKQpbICAgIDIuODE3MTc2XSBbZHJtXSBTdXBwb3J0
-cyB2YmxhbmsgdGltZXN0YW1wIGNhY2hpbmcgUmV2IDIgKDIxLjEwLjIwMTMpLgpbICAgIDIuODIz
-Nzk5XSBbZHJtXSBObyBkcml2ZXIgc3VwcG9ydCBmb3IgdmJsYW5rIHRpbWVzdGFtcCBxdWVyeS4K
-WyAgICAyLjgyOTk0N10gYW5hbG9naXhfZHBfZGV0ZWN0ClsgICAgMi44MzMwMTVdIGFuYWxvZ2l4
-X2RwX2dldF9wbHVnX2luX3N0YXR1czogaHBkIHN0YXR1cyAwCi4uLgpbICAgIDIuODkzNDI1XSBh
-bmFsb2dpeF9kcF9nZXRfcGx1Z19pbl9zdGF0dXM6IGhwZCBzdGF0dXMgMApbICAgIDIuODkzNDU2
-XSByb2NrY2hpcC1kcCBmZjk3MDAwMC5kcDogZmFpbGVkIHRvIGdldCBocGQgcGx1ZyBzdGF0dXMs
-IHRyeSB0byBmb3JjZSBocGQKWyAgICAyLjg5MzQ1OF0gYW5hbG9naXhfZHBfZm9yY2VfaHBkClsg
-ICAgMi44OTM0NjRdIGFuYWxvZ2l4X2RwX2dldF9wbHVnX2luX3N0YXR1czogaHBkIHN0YXR1cyAx
-MTIKWyAgICAyLjg5MzQ3MF0gcGFuZWxfc2ltcGxlX3ByZXBhcmUKWyAgICAyLjk1MjE4M10gcm9j
-a2NoaXAtZHAgZmY5NzAwMDAuZHA6IEVESUQgZGF0YSBkb2VzIG5vdCBpbmNsdWRlIGFueSBleHRl
-bnNpb25zLgpbICAgIDIuOTYxNzI3XSBwYW5lbF9zaW1wbGVfZ2V0X21vZGVzClsgICAgMy40MzIx
-NTRdIGFuYWxvZ2l4X2RwX2RldGVjdApbICAgIDMuNDMyMTU4XSBhbmFsb2dpeF9kcF9nZXRfcGx1
-Z19pbl9zdGF0dXM6IGhwZCBzdGF0dXMgMTIwClsgICAgMy40MzIxNjBdIHBhbmVsX3NpbXBsZV9w
-cmVwYXJlClsgICAgMy40MzM3MzFdIHJvY2tjaGlwLWRwIGZmOTcwMDAwLmRwOiBFRElEIGRhdGEg
-ZG9lcyBub3QgaW5jbHVkZSBhbnkgZXh0ZW5zaW9ucy4KWyAgICAzLjQ0MzI2OF0gcGFuZWxfc2lt
-cGxlX2dldF9tb2RlcwpbICAgIDMuNDQ0NjY4XSBwYW5lbF9zaW1wbGVfcHJlcGFyZQpbICAgIDMu
-NDQ0NzU1XSBhbmFsb2dpeF9kcF9yZXNldApbICAgIDMuNDQ1MDc4XSBhbmFsb2dpeF9kcF9pbml0
-X2hwZApbICAgIDMuNDQ1MDk2XSBwYW5lbF9zaW1wbGVfZGlzYWJsZQpbICAgIDMuNDU1MzQ5XSBh
-bmFsb2dpeF9kcF9pbml0X3ZpZGVvClsgICAgMy41NTgzMjNdIHJvY2tjaGlwLWRwIGZmOTcwMDAw
-LmRwOiBUaW1lb3V0IG9mIHZpZGVvIHN0cmVhbWNsayBvawpbICAgIDMuNTU4MzI2XSByb2NrY2hp
-cC1kcCBmZjk3MDAwMC5kcDogdW5hYmxlIHRvIGNvbmZpZyB2aWRlbwpbICAgIDMuNTU4MzI4XSBw
-YW5lbF9zaW1wbGVfZW5hYmxlClsgICAgMy41NzM5MTVdIGFuYWxvZ2l4X2RwX2RldGVjdApbICAg
-IDMuNTczOTE5XSBhbmFsb2dpeF9kcF9nZXRfcGx1Z19pbl9zdGF0dXM6IGhwZCBzdGF0dXMgNzIK
-WyAgICAzLjU3MzkyMV0gcGFuZWxfc2ltcGxlX3ByZXBhcmUKCgpbMV0KZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9hbmFsb2dpeF9kcC1yb2NrY2hpcC5jIGIvZHJpdmVycy9n
-cHUvZHJtL3JvY2tjaGlwL2FuYWxvZ2l4X2RwLXJvY2tjaGlwLmMKaW5kZXggMzk5MDk1MS4uMGMy
-ZGNhNSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2FuYWxvZ2l4X2RwLXJv
-Y2tjaGlwLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2FuYWxvZ2l4X2RwLXJvY2tj
-aGlwLmMKQEAgLTM5OSw2ICszOTksOCBAQCBzdGF0aWMgaW50IHJvY2tjaGlwX2RwX3Byb2JlKHN0
-cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCiAKICAgICAgICBkcC0+cGxhdF9kYXRhLnBhbmVs
-ID0gcGFuZWw7CiAKK2RybV9wYW5lbF9wcmVwYXJlKGRwLT5wbGF0X2RhdGEucGFuZWwpOworCiAg
-ICAgICAgLyoKICAgICAgICAgKiBXZSBqdXN0IHVzZSB0aGUgZHJ2ZGF0YSB1bnRpbCBkcml2ZXIg
-cnVuIGludG8gY29tcG9uZW50CiAgICAgICAgICogYWRkIGZ1bmN0aW9uLCBhbmQgdGhlbiB3ZSB3
-b3VsZCBzZXQgZHJ2ZGF0YSB0byBudWxsLCBzbwoKClsyXQpbICAgMTEuOTcxMjc3XSBwYW5lbF9z
-aW1wbGVfZ2V0X21vZGVzClsgIE9LICBdIFN0YXJ0ZWQgTFNCOiBYIGRpc3BsYXkgbWFuYWdlciBm
-b3IgS0RFLgpbICBPSyAgXSBTdGFydGVkIExTQjogU3BlZWNoIERpc3BhdGNoZXIuClsgICAxMi4w
-MDcxMjBdIHBhbmVsX3NpbXBsZV9kaXNhYmxlClsgICAxMi4wMTIzMjNdIApbICAgMTIuMDEzODIw
-XSA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0K
-WyAgIDEyLjAxOTk5M10gWyBJTkZPOiBwb3NzaWJsZSBjaXJjdWxhciBsb2NraW5nIGRlcGVuZGVu
-Y3kgZGV0ZWN0ZWQgXQpbICAgMTIuMDI2MjUwXSA0LjQuMC1yYzMrICMyNzU1IE5vdCB0YWludGVk
-ClsgICAxMi4wMzAxNjVdIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0KWyAgMTIuMDM2NDE3XSBYb3JnLzc5MyBpcyB0cnlpbmcgdG8gYWNxdWly
-ZSBsb2NrOgpbICAgMTIuMDQwODU1XSAgKCgmZHAtPmhvdHBsdWdfd29yaykpeysuKy4uLn1bICAg
-MTIuMDQwODcwXSAKWyAgIDEyLjA0MDg3MF0gYnV0IHRhc2sgaXMgYWxyZWFkeSBob2xkaW5nIGxv
-Y2s6ClsgICAxMi4wNDA4NzFdICAoY3J0Y193d19jbGFzc19tdXRleCl7Ky4rLisufSwgYXQ6IFs8
-YzAzODM2MDA+XSBkcm1fbW9kZXNldF9sb2NrKzB4ODQvMHgxMDQKWyAgIDEyLjA0MDg4MV0gClsg
-ICAxMi4wNDA4ODFdIHdoaWNoIGxvY2sgYWxyZWFkeSBkZXBlbmRzIG9uIHRoZSBuZXcgbG9jay4K
-WyAgIDEyLjA0MDg4MV0gClsgICAxMi4wNDA4ODJdIApbICAgMTIuMDQwODgyXSB0aGUgZXhpc3Rp
-bmcgZGVwZW5kZW5jeSBjaGFpbiAoaW4gcmV2ZXJzZSBvcmRlcikgaXM6ClsgICAxMi4wNDA4ODNd
-IApbICAgMTIuMDQwODgzXSAtPiAjMiAoY3J0Y193d19jbGFzc19tdXRleCl7Ky4rLisufToKWyAg
-IDEyLjA0MDg4N10gICAgICAgIFs8YzA3NTYzNzQ+XSBtdXRleF9sb2NrX25lc3RlZCsweDc4LzB4
-NDFjClsgICAxMi4wNDA4OTNdICAgICAgICBbPGMwMzgzNjVjPl0gZHJtX21vZGVzZXRfbG9jaysw
-eGUwLzB4MTA0ClsgICAxMi4wNDA4OTZdICAgICAgICBbPGMwMzc3ODg4Pl0gZHJtX21vZGVfZ2V0
-Y29ubmVjdG9yKzB4MTY4LzB4MzhjClsgICAxMi4wNDA5MDJdICAgICAgICBbPGMwMzZhZTU4Pl0g
-ZHJtX2lvY3RsKzB4Mjc0LzB4NDA4ClsgICAxMi4wNDA5MDddICAgICAgICBbPGMwMTdjYmM4Pl0g
-ZG9fdmZzX2lvY3RsKzB4NjcwLzB4NzUwClsgICAxMi4wNDA5MTFdICAgICAgICBbPGMwMTdjZDA0
-Pl0gU3lTX2lvY3RsKzB4NWMvMHg4NApbICAgMTIuMDQwOTE0XSAgICAgICAgWzxjMDAwZmY4MD5d
-IHJldF9mYXN0X3N5c2NhbGwrMHgwLzB4MWMKWyAgIDEyLjA0MDkyMF0gClsgICAxMi4wNDA5MjBd
-IC0+ICMxICgmZGV2LT5tb2RlX2NvbmZpZy5tdXRleCl7Ky4rLisufToKWyAgIDEyLjA0MDkyNF0g
-ICAgICAgIFs8YzA3NTYzNzQ+XSBtdXRleF9sb2NrX25lc3RlZCsweDc4LzB4NDFjClsgICAxMi4w
-NDA5MjhdICAgICAgICBbPGMwMzViM2I0Pl0gZHJtX2hlbHBlcl9ocGRfaXJxX2V2ZW50KzB4NDAv
-MHgxNTAKWyAgIDEyLjA0MDkzNF0gICAgICAgIFs8YzAzOGUwYjA+XSBhbmFsb2dpeF9kcF9ob3Rw
-bHVnKzB4MjQvMHgyOApbICAgMTIuMDQwOTM4XSAgICAgICAgWzxjMDA0NTBjND5dIHByb2Nlc3Nf
-b25lX3dvcmsrMHgzMjgvMHg2NjgKWyAgIDEyLjA0MDk0Ml0gICAgICAgIFs8YzAwNDYzMzQ+XSB3
-b3JrZXJfdGhyZWFkKzB4MmNjLzB4NDFjClsgICAxMi4wNDA5NDVdICAgICAgICBbPGMwMDRiYmU4
-Pl0ga3RocmVhZCsweGY0LzB4MTBjClsgICAxMi4wNDA5NTBdICAgICAgICBbPGMwMDEwMDEwPl0g
-cmV0X2Zyb21fZm9yaysweDE0LzB4MjQKWyAgIDEyLjA0MDk1NF0gClsgICAxMi4wNDA5NTRdIC0+
-ICMwICgoJmRwLT5ob3RwbHVnX3dvcmspKXsrLisuLi59OgpbICAgMTIuMDQwOTU4XSAgICAgICAg
-WzxjMDA3ZjRhYz5dIGxvY2tfYWNxdWlyZSsweDE3OC8weDIxOApbICAgMTIuMDQwOTYzXSAgICAg
-ICAgWzxjMDA0MzdkMD5dIGZsdXNoX3dvcmsrMHg0Yy8weDIyYwpbICAgMTIuMDQwOTY2XSAgICAg
-ICAgWzxjMDM4ZTQ1Yz5dIGFuYWxvZ2l4X2RwX2JyaWRnZV9kaXNhYmxlKzB4NzQvMHhmMApbICAg
-MTIuMDQwOTcwXSAgICAgICAgWzxjMDM4NWVmND5dIGRybV9icmlkZ2VfZGlzYWJsZSsweDM0LzB4
-MzgKWyAgIDEyLjA0MDk3M10gICAgICAgIFs8YzAzNTkwNDQ+XSBkcm1fY3J0Y19oZWxwZXJfc2V0
-X21vZGUrMHgyMDAvMHg0MjQKWyAgIDEyLjA0MDk3N10gICAgICAgIFs8YzAzNTlhMzg+XSBkcm1f
-Y3J0Y19oZWxwZXJfc2V0X2NvbmZpZysweDZjMC8weDk4OApbICAgMTIuMDQwOTgxXSAgICAgICAg
-WzxjMDM3M2JhOD5dIGRybV9tb2RlX3NldF9jb25maWdfaW50ZXJuYWwrMHg2MC8weGRjClsgICAx
-Mi4wNDA5ODRdICAgICAgICBbPGMwMzc4OTM4Pl0gZHJtX21vZGVfc2V0Y3J0YysweDNjYy8weDQ3
-NApbICAgMTIuMDQwOTg4XSAgICAgICAgWzxjMDM2YWU1OD5dIGRybV9pb2N0bCsweDI3NC8weDQw
-OApbICAgMTIuMDQwOTkxXSAgICAgICAgWzxjMDE3Y2JjOD5dIGRvX3Zmc19pb2N0bCsweDY3MC8w
-eDc1MApbICAgMTIuMDQwOTk0XSAgICAgICAgWzxjMDE3Y2QwND5dIFN5U19pb2N0bCsweDVjLzB4
-ODQKWyAgIDEyLjA0MDk5N10gICAgICAgIFs8YzAwMGZmODA+XSByZXRfZmFzdF9zeXNjYWxsKzB4
-MC8weDFjClsgICAxMi4wNDEwMDFdIApbICAgMTIuMDQxMDAxXSBvdGhlciBpbmZvIHRoYXQgbWln
-aHQgaGVscCB1cyBkZWJ1ZyB0aGlzOgpbICAgMTIuMDQxMDAxXSAKWyAgIDEyLjA0MTAwMl0gQ2hh
-aW4gZXhpc3RzIG9mOgpbICAgMTIuMDQxMDAyXSAgICgmZHAtPmhvdHBsdWdfd29yaykgLS0+ICZk
-ZXYtPm1vZGVfY29uZmlnLm11dGV4IC0tPiBjcnRjX3d3X2NsYXNzX211dGV4ClsgICAxMi4wNDEw
-MDddIApbICAgMTIuMDQxMDA4XSAgUG9zc2libGUgdW5zYWZlIGxvY2tpbmcgc2NlbmFyaW86Clsg
-ICAxMi4wNDEwMDhdIApbICAgMTIuMDQxMDA5XSAgICAgICAgQ1BVMCAgICAgICAgICAgICAgICAg
-ICAgQ1BVMQpbICAgMTIuMDQxMDEwXSAgICAgICAgLS0tLSAgICAgICAgICAgICAgICAgICAgLS0t
-LQpbICAgMTIuMDQxMDExXSAgIGxvY2soY3J0Y193d19jbGFzc19tdXRleCk7ClsgICAxMi4wNDEw
-MTNdICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsb2NrKCZkZXYtPm1vZGVfY29uZmln
-Lm11dGV4KTsKWyAgIDEyLjA0MTAxNl0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxv
-Y2soY3J0Y193d19jbGFzc19tdXRleCk7ClsgICAxMi4wNDEwMThdICAgbG9jaygoJmRwLT5ob3Rw
-bHVnX3dvcmspKTsKWyAgIDEyLjA0MTAyMF0gClsgICAxMi4wNDEwMjBdICAqKiogREVBRExPQ0sg
-KioqClsgICAxMi4wNDEwMjBdIApbICAgMTIuMDQxMDIzXSAzIGxvY2tzIGhlbGQgYnkgWG9yZy83
-OTM6ClsgICAxMi4wNDEwMjNdICAjMDogICgmZGV2LT5tb2RlX2NvbmZpZy5tdXRleCl7Ky4rLisu
-fSwgYXQ6IFs8YzAzODNkNDg+XSBkcm1fbW9kZXNldF9sb2NrX2FsbCsweDUwLzB4ZDgKWyAgIDEy
-LjA0MTAzMF0gICMxOiAgKGNydGNfd3dfY2xhc3NfYWNxdWlyZSl7Ky4rLisufSwgYXQ6IFs8YzAz
-ODNkNTg+XSBkcm1fbW9kZXNldF9sb2NrX2FsbCsweDYwLzB4ZDgKWyAgIDEyLjA0MTAzN10gICMy
-OiAgKGNydGNfd3dfY2xhc3NfbXV0ZXgpeysuKy4rLn0sIGF0OiBbPGMwMzgzNjAwPl0gZHJtX21v
-ZGVzZXRfbG9jaysweDg0LzB4MTA0ClsgICAxMi4wNDEwNDRdIApbICAgMTIuMDQxMDQ0XSBzdGFj
-ayBiYWNrdHJhY2U6ClsgICAxMi4wNDEwNDhdIENQVTogMyBQSUQ6IDc5MyBDb21tOiBYb3JnIE5v
-dCB0YWludGVkIDQuNC4wLXJjMysgIzI3NTUKWyAgIDEyLjA0MTA0OV0gSGFyZHdhcmUgbmFtZTog
-Um9ja2NoaXAgKERldmljZSBUcmVlKQpbICAgMTIuMDQxMDU5XSBbPGMwMDE5OTE0Pl0gKHVud2lu
-ZF9iYWNrdHJhY2UpIGZyb20gWzxjMDAxNGJjYz5dIChzaG93X3N0YWNrKzB4MjAvMHgyNCkKWyAg
-IDEyLjA0MTA2Nl0gWzxjMDAxNGJjYz5dIChzaG93X3N0YWNrKSBmcm9tIFs8YzAyYzQ0ODQ+XSAo
-ZHVtcF9zdGFjaysweDg0LzB4YjgpClsgICAxMi4wNDEwNzJdIFs8YzAyYzQ0ODQ+XSAoZHVtcF9z
-dGFjaykgZnJvbSBbPGMwMDdhMmI4Pl0gKHByaW50X2NpcmN1bGFyX2J1ZysweDI3OC8weDJjYykK
-WyAgIDEyLjA0MTA3OF0gWzxjMDA3YTJiOD5dIChwcmludF9jaXJjdWxhcl9idWcpIGZyb20gWzxj
-MDA3ZTg1MD5dIChfX2xvY2tfYWNxdWlyZSsweDE0YTAvMHgxYWVjKQpbICAgMTIuMDQxMDgyXSBb
-PGMwMDdlODUwPl0gKF9fbG9ja19hY3F1aXJlKSBmcm9tIFs8YzAwN2Y0YWM+XSAobG9ja19hY3F1
-aXJlKzB4MTc4LzB4MjE4KQpbICAgMTIuMDQxMDg2XSBbPGMwMDdmNGFjPl0gKGxvY2tfYWNxdWly
-ZSkgZnJvbSBbPGMwMDQzN2QwPl0gKGZsdXNoX3dvcmsrMHg0Yy8weDIyYykKWyAgIDEyLjA0MTA5
-MV0gWzxjMDA0MzdkMD5dIChmbHVzaF93b3JrKSBmcm9tIFs8YzAzOGU0NWM+XSAoYW5hbG9naXhf
-ZHBfYnJpZGdlX2Rpc2FibGUrMHg3NC8weGYwKQpbICAgMTIuMDQxMDk3XSBbPGMwMzhlNDVjPl0g
-KGFuYWxvZ2l4X2RwX2JyaWRnZV9kaXNhYmxlKSBmcm9tIFs8YzAzODVlZjQ+XSAoZHJtX2JyaWRn
-ZV9kaXNhYmxlKzB4MzQvMHgzOCkKWyAgIDEyLjA0MTEwMl0gWzxjMDM4NWVmND5dIChkcm1fYnJp
-ZGdlX2Rpc2FibGUpIGZyb20gWzxjMDM1OTA0ND5dIChkcm1fY3J0Y19oZWxwZXJfc2V0X21vZGUr
-MHgyMDAvMHg0MjQpClsgICAxMi4wNDExMDhdIFs8YzAzNTkwNDQ+XSAoZHJtX2NydGNfaGVscGVy
-X3NldF9tb2RlKSBmcm9tIFs8YzAzNTlhMzg+XSAoZHJtX2NydGNfaGVscGVyX3NldF9jb25maWcr
-MHg2YzAvMHg5ODgpClsgICAxMi4wNDExMTRdIFs8YzAzNTlhMzg+XSAoZHJtX2NydGNfaGVscGVy
-X3NldF9jb25maWcpIGZyb20gWzxjMDM3M2JhOD5dIChkcm1fbW9kZV9zZXRfY29uZmlnX2ludGVy
-bmFsKzB4NjAvMHhkYykKWyAgIDEyLjA0MTExOV0gWzxjMDM3M2JhOD5dIChkcm1fbW9kZV9zZXRf
-Y29uZmlnX2ludGVybmFsKSBmcm9tIFs8YzAzNzg5Mzg+XSAoZHJtX21vZGVfc2V0Y3J0YysweDNj
-Yy8weDQ3NCkKWyAgIDEyLjA0MTEyNF0gWzxjMDM3ODkzOD5dIChkcm1fbW9kZV9zZXRjcnRjKSBm
-cm9tIFs8YzAzNmFlNTg+XSAoZHJtX2lvY3RsKzB4Mjc0LzB4NDA4KQpbICAgMTIuMDQxMTI5XSBb
-PGMwMzZhZTU4Pl0gKGRybV9pb2N0bCkgZnJvbSBbPGMwMTdjYmM4Pl0gKGRvX3Zmc19pb2N0bCsw
-eDY3MC8weDc1MCkKWyAgIDEyLjA0MTEzNF0gWzxjMDE3Y2JjOD5dIChkb192ZnNfaW9jdGwpIGZy
-b20gWzxjMDE3Y2QwND5dIChTeVNfaW9jdGwrMHg1Yy8weDg0KQpbICAgMTIuMDQxMTM4XSBbPGMw
-MTdjZDA0Pl0gKFN5U19pb2N0bCkgZnJvbSBbPGMwMDBmZjgwPl0gKHJldF9mYXN0X3N5c2NhbGwr
-MHgwLzB4MWMpClsgICAxMi4wNDEyMTBdIHBhbmVsX3NpbXBsZV91bnByZXBhcmUKWyAgIDEyLjA0
-MTM1OV0gcGFuZWxfc2ltcGxlX3ByZXBhcmUKWyAgIDEyLjEwMTYzOF0gYW5hbG9naXhfZHBfcmVz
-ZXQKWyAgIDEyLjEwMTg3OV0gYW5hbG9naXhfZHBfaW5pdF9ocGQKWyAgIDEyLjEwMTg5N10gcGFu
-ZWxfc2ltcGxlX2Rpc2FibGUKWyAgIDEyLjEwODU0M10gYW5hbG9naXhfZHBfaXJxX2hhbmRsZXI6
-IGlycS10eXBlIDAKWyAgIDEyLjExMDQ1Ml0gcm9ja2NoaXAtZHAgZmY5NzAwMDAuZHA6IExpbmsg
-VHJhaW5pbmcgQ2xvY2sgUmVjb3Zlcnkgc3VjY2VzcwpbICAgMTIuMTExOTAwXSByb2NrY2hpcC1k
-cCBmZjk3MDAwMC5kcDogTGluayBUcmFpbmluZyBzdWNjZXNzIQpbICAgMTIuMTEzMzg0XSBhbmFs
-b2dpeF9kcF9pbml0X3ZpZGVvClsgICAxMi4yMTU4MjVdIHJvY2tjaGlwLWRwIGZmOTcwMDAwLmRw
-OiBUaW1lb3V0IG9mIHZpZGVvIHN0cmVhbWNsayBvawpbICAgMTIuMjE1ODI5XSByb2NrY2hpcC1k
-cCBmZjk3MDAwMC5kcDogdW5hYmxlIHRvIGNvbmZpZyB2aWRlbwpbICAgMTIuMjE1ODMyXSBwYW5l
-bF9zaW1wbGVfZW5hYmxlCixhdDogWzxjMDA0Mzc4ND5dIGZsdXNoX3dvcmsrMHgwLzB4MjJjCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 7 December 2015 at 18:37, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> Current USB HUB driver lacks of platform interfaces to configure
+> external signal on HUB chip, eg, the PHY input clock and gpio reset
+> pin for HUB, these kinds of HUBs are usually soldered at the board,
+> and they are not hot-plug USB devices.
+>
+> With this patch, the user can configure the HUB's pins at platform
+> part (through dts or platform), and these configuration will be
+> effective before the USB bus can be used, we use subsys_initcall
+> for this driver.
+>
+> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  MAINTAINERS                             |   7 ++
+>  drivers/usb/misc/Kconfig                |   9 ++
+>  drivers/usb/misc/Makefile               |   1 +
+>  drivers/usb/misc/generic_onboard_hub.c  | 162 ++++++++++++++++++++++++++++++++
+>  include/linux/usb/generic_onboard_hub.h |  11 +++
+>  5 files changed, 190 insertions(+)
+>  create mode 100644 drivers/usb/misc/generic_onboard_hub.c
+>  create mode 100644 include/linux/usb/generic_onboard_hub.h
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e9caa4b..cc1981e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11121,6 +11121,13 @@ S:     Maintained
+>  F:     Documentation/usb/ohci.txt
+>  F:     drivers/usb/host/ohci*
+>
+> +USB Generic Onboard HUB Driver
+> +M:     Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> +T:     git git://git.kernel.org/pub/scm/linux/kernel/git/peter.chen/usb.git
+> +L:     linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> +S:     Maintained
+> +F:     drivers/usb/misc/generic_onboard_hub.c
+> +
+>  USB OTG FSM (Finite State Machine)
+>  M:     Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/peter.chen/usb.git
+> diff --git a/drivers/usb/misc/Kconfig b/drivers/usb/misc/Kconfig
+> index f7a7fc2..8921cae 100644
+> --- a/drivers/usb/misc/Kconfig
+> +++ b/drivers/usb/misc/Kconfig
+> @@ -268,3 +268,12 @@ config USB_CHAOSKEY
+>
+>           To compile this driver as a module, choose M here: the
+>           module will be called chaoskey.
+> +
+> +config USB_ONBOARD_HUB
+> +       tristate "Generic USB Onboard HUB"
+> +       help
+> +         Say Y here if your board has an onboard HUB, and this hub needs
+> +         to control its PHY clock and reset pin through external signals.
+> +         If you are not sure, say N.
+> +
+> +         To compile this driver as a module, choose M here.
+> diff --git a/drivers/usb/misc/Makefile b/drivers/usb/misc/Makefile
+> index 45fd4ac..da52e9a 100644
+> --- a/drivers/usb/misc/Makefile
+> +++ b/drivers/usb/misc/Makefile
+> @@ -29,3 +29,4 @@ obj-$(CONFIG_USB_CHAOSKEY)            += chaoskey.o
+>
+>  obj-$(CONFIG_USB_SISUSBVGA)            += sisusbvga/
+>  obj-$(CONFIG_USB_LINK_LAYER_TEST)      += lvstest.o
+> +obj-$(CONFIG_USB_ONBOARD_HUB)          += generic_onboard_hub.o
+> diff --git a/drivers/usb/misc/generic_onboard_hub.c b/drivers/usb/misc/generic_onboard_hub.c
+> new file mode 100644
+> index 0000000..df722a0
+> --- /dev/null
+> +++ b/drivers/usb/misc/generic_onboard_hub.c
+> @@ -0,0 +1,162 @@
+> +/*
+> + * usb_hub_generic.c   The generic onboard USB HUB driver
+> + *
+> + * Copyright (C) 2015 Freescale Semiconductor, Inc.
+> + * Author: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> + *
+> + * This program is free software: you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2  of
+> + * the License as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +/*
+> + * This driver is only for the USB HUB devices which need to control
+> + * their external pins(clock, reset, etc), and these USB HUB devices
+> + * are soldered at the board.
+> + */
+> +
+> +#define DEBUG
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/gpio.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/slab.h>
+> +#include <linux/usb/generic_onboard_hub.h>
+> +
+> +struct usb_hub_generic_data {
+> +       struct clk *clk;
+> +};
+> +
+> +static int usb_hub_generic_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +       struct usb_hub_generic_platform_data *pdata = dev->platform_data;
+> +       struct usb_hub_generic_data *hub_data;
+> +       int reset_pol = 0, duration_us = 50, ret = 0;
+> +       struct gpio_desc *gpiod_reset = NULL;
+> +
+> +       hub_data = devm_kzalloc(dev, sizeof(*hub_data), GFP_KERNEL);
+> +       if (!hub_data)
+> +               return -ENOMEM;
+> +
+> +       if (dev->of_node) {
+> +               struct device_node *node = dev->of_node;
+> +
+> +               hub_data->clk = devm_clk_get(dev, "external_clk");
+> +               if (IS_ERR(hub_data->clk)) {
+> +                       dev_dbg(dev, "Can't get external clock: %ld\n",
+> +                                       PTR_ERR(hub_data->clk));
+> +               }
+
+Is the intended behaviour to keep going here event when there is an
+error?  Can the "hub_data" really work without a clock?
+
+> +
+> +               /*
+> +                * Try to get the information for HUB reset, the
+> +                * default setting like below:
+> +                *
+> +                * - Reset state is low
+> +                * - The duration is 50us
+> +                */
+> +               if (of_find_property(node, "hub-reset-active-high", NULL))
+> +                       reset_pol = 1;
+> +
+> +               of_property_read_u32(node, "hub-reset-duration-us",
+> +                       &duration_us);
+> +
+> +               gpiod_reset = devm_gpiod_get_optional(dev, "hub-reset",
+> +                       reset_pol ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW);
+> +               ret = PTR_ERR_OR_ZERO(gpiod_reset);
+> +               if (ret) {
+> +                       dev_err(dev, "Failed to get reset gpio, err = %d\n",
+> +                               ret);
+> +                       return ret;
+> +               }
+> +       } else if (pdata) {
+> +               hub_data->clk = pdata->ext_clk;
+> +               duration_us = pdata->gpio_reset_duration_us;
+> +               reset_pol = pdata->gpio_reset_polarity;
+> +
+> +               if (gpio_is_valid(pdata->gpio_reset)) {
+> +                       ret = devm_gpio_request_one(
+> +                               dev, pdata->gpio_reset, reset_pol
+> +                               ? GPIOF_OUT_INIT_HIGH : GPIOF_OUT_INIT_LOW,
+> +                               dev_name(dev));
+> +                       if (!ret)
+> +                               gpiod_reset = gpio_to_desc(pdata->gpio_reset);
+> +               }
+> +       }
+> +
+> +       if (!IS_ERR(hub_data->clk)) {
+> +               ret = clk_prepare_enable(hub_data->clk);
+> +               if (ret) {
+> +                       dev_err(dev,
+> +                               "Can't enable external clock: %d\n",
+> +                               ret);
+> +                       return ret;
+> +               }
+> +       }
+> +
+> +       if (gpiod_reset) {
+> +               /* Sanity check */
+> +               if (duration_us > 1000000)
+> +                       duration_us = 50;
+> +               usleep_range(duration_us, duration_us + 100);
+> +               gpiod_set_value(gpiod_reset, reset_pol ? 0 : 1);
+
+What are these hard-coded values?  Shouldn't this be taken from the
+DT?  If not then some comments explaining the values would be
+appreciated.
+
+> +       }
+> +
+> +       dev_set_drvdata(dev, hub_data);
+> +       return ret;
+> +}
+> +
+> +static int usb_hub_generic_remove(struct platform_device *pdev)
+> +{
+> +       struct usb_hub_generic_data *hub_data = platform_get_drvdata(pdev);
+> +
+> +       if (!IS_ERR(hub_data->clk))
+> +               clk_disable_unprepare(hub_data->clk);
+> +
+> +       return 0;
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id usb_hub_generic_dt_ids[] = {
+> +       {.compatible = "generic-onboard-hub"},
+> +       { },
+> +};
+> +MODULE_DEVICE_TABLE(of, usb_hub_generic_dt_ids);
+> +#endif
+> +
+> +static struct platform_driver usb_hub_generic_driver = {
+> +       .probe = usb_hub_generic_probe,
+> +       .remove = usb_hub_generic_remove,
+> +       .driver = {
+> +               .name = "usb_hub_generic_onboard",
+> +               .of_match_table = usb_hub_generic_dt_ids,
+> +        },
+> +};
+> +
+> +static int __init usb_hub_generic_init(void)
+> +{
+> +       return platform_driver_register(&usb_hub_generic_driver);
+> +}
+> +subsys_initcall(usb_hub_generic_init);
+> +
+> +static void __exit usb_hub_generic_exit(void)
+> +{
+> +       platform_driver_unregister(&usb_hub_generic_driver);
+> +}
+> +module_exit(usb_hub_generic_exit);
+> +
+> +MODULE_AUTHOR("Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>");
+> +MODULE_DESCRIPTION("Generic Onboard USB HUB driver");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/usb/generic_onboard_hub.h b/include/linux/usb/generic_onboard_hub.h
+> new file mode 100644
+> index 0000000..1b70ccc
+> --- /dev/null
+> +++ b/include/linux/usb/generic_onboard_hub.h
+> @@ -0,0 +1,11 @@
+> +#ifndef __LINUX_USB_GENERIC_HUB_H
+> +#define __LINUX_USB_GENERIC_HUB_H
+> +
+> +struct usb_hub_generic_platform_data {
+> +       int gpio_reset;
+> +       int gpio_reset_polarity;
+> +       int gpio_reset_duration_us;
+> +       struct clk *ext_clk;
+> +};
+
+Please document this structure in accordance with kernel documentation
+standards.
+
+> +
+> +#endif /* __LINUX_USB_GENERIC_HUB_H */
+> --
+> 1.9.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
