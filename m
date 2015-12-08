@@ -1,172 +1,129 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v9 1/3] dt-bindings: binding for jz4780-{nand,bch}
-Date: Tue, 8 Dec 2015 15:17:17 +0100
-Message-ID: <20151208151717.6197165d@bbrezillon>
-References: <1449144142-24004-1-git-send-email-harvey.hunt@imgtec.com>
-	<1449144142-24004-2-git-send-email-harvey.hunt@imgtec.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v7 2/6] mfd: syscon: add a DT property to set value width
+Date: Tue, 8 Dec 2015 14:18:56 +0000
+Message-ID: <20151208141856.GA14365@x1>
+References: <1448899191-13891-1-git-send-email-damien.riegel@savoirfairelinux.com>
+ <1448899191-13891-3-git-send-email-damien.riegel@savoirfairelinux.com>
+ <20151207094020.GF3384@x1>
+ <20151207194218.GB6030@localhost>
+ <20151208135040.GH3384@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449144142-24004-2-git-send-email-harvey.hunt@imgtec.com>
+Content-Disposition: inline
+In-Reply-To: <20151208135040.GH3384@x1>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Harvey Hunt <harvey.hunt@imgtec.com>
-Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, linux-kernel@vger.kernel.org, Alex Smith <alex.smith@imgtec.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+To: Damien Riegel <damien.riegel@savoirfairelinux.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Samuel Ortiz <sameo@linux.intel.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, kernel@savoirfairelinux.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 3 Dec 2015 12:02:20 +0000
-Harvey Hunt <harvey.hunt@imgtec.com> wrote:
+On Tue, 08 Dec 2015, Lee Jones wrote:
 
-> From: Alex Smith <alex.smith@imgtec.com>
-> 
-> Add DT bindings for NAND devices connected to the NEMC on JZ4780 SoCs,
-> as well as the hardware BCH controller, used by the jz4780_{nand,bch}
-> drivers.
-> 
-> Signed-off-by: Alex Smith <alex.smith@imgtec.com>
-> Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-> Cc: David Woodhouse <dwmw2@infradead.org>
-> Cc: Brian Norris <computersforpeace@gmail.com>
-> Cc: linux-mtd@lists.infradead.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Harvey Hunt <harvey.hunt@imgtec.com>
+> On Mon, 07 Dec 2015, Damien Riegel wrote:
+>=20
+> > On Mon, Dec 07, 2015 at 09:40:20AM +0000, Lee Jones wrote:
+> > > On Mon, 30 Nov 2015, Damien Riegel wrote:
+> > >=20
+> > > > Currently syscon has a fixed configuration of 32 bits for regis=
+ter and
+> > > > values widths. In some cases, it would be desirable to be able =
+to
+> > > > customize the value width.
+> > > >=20
+> > > > For example, certain boards (like the ones manufactured by Tech=
+nologic
+> > > > Systems) have a FPGA that is memory-mapped, but its registers a=
+re only
+> > > > 16-bit wide.
+> > > >=20
+> > > > This patch adds an optional "reg-io-width" DT binding for sysco=
+n that
+> > > > allows to change the width for the data bus (i.e. val_bits). If=
+ this
+> > > > property is provided, it will also set the register stride to
+> > > > reg-io-width's value. If not provided, the default configuratio=
+n is
+> > > > used.
+> > > >=20
+> > > > Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.co=
+m>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/mfd/syscon.txt |  4 ++++
+> > > >  drivers/mfd/syscon.c                             | 13 ++++++++=
++++++
+> > > >  2 files changed, 17 insertions(+)
+> > >=20
+> > > Applied, thanks.
+> > >=20
+> > Hi Lee,
+> >=20
+> > Good to see this patch applied. What's going on now with the other
+> > patches of this serie ? How should I handle them ?
+>=20
+> Are there any build dependencies between them?
 
-FWIW:
+Looks like Arnd already replied.
 
-Reviewed-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+I really should refresh my mail before replying. :)
 
-> ---
-> v8 -> v9:
->  - Document that partitions are represented as a child node of a NAND chip.
-> 
-> v7 -> v8:
->  - Describe how NAND chips are now child nodes of the NAND controller.
-> 
-> v6 -> v7:
->  - Add nand-ecc-mode to DT bindings.
->  - Add nand-on-flash-bbt to DT bindings.
-> 
-> v5 -> v6:
->  - No change.
-> 
-> v4 -> v5:
->  - Rename ingenic,bch-device to ingenic,bch-controller to fit with
->    existing convention.
-> 
-> v3 -> v4:
->  - No change
-> 
-> v2 -> v3:
->  - Rebase to 4.0-rc6
->  - Changed ingenic,ecc-size to common nand-ecc-step-size
->  - Changed ingenic,ecc-strength to common nand-ecc-strength
->  - Changed ingenic,busy-gpio to common rb-gpios
->  - Changed ingenic,wp-gpio to common wp-gpios
-> 
-> v1 -> v2:
->  - Rebase to 4.0-rc3
-> 
->  .../bindings/mtd/ingenic,jz4780-nand.txt           | 86 ++++++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> new file mode 100644
-> index 0000000..29ea585
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> @@ -0,0 +1,86 @@
-> +* Ingenic JZ4780 NAND/BCH
-> +
-> +This file documents the device tree bindings for NAND flash devices on the
-> +JZ4780. NAND devices are connected to the NEMC controller (described in
-> +memory-controllers/ingenic,jz4780-nemc.txt), and thus NAND device nodes must
-> +be children of the NEMC node.
-> +
-> +Required NAND controller device properties:
-> +- compatible: Should be set to "ingenic,jz4780-nand".
-> +- reg: For each bank with a NAND chip attached, should specify a bank number,
-> +  an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
-> +
-> +Optional NAND controller device properties:
-> +- ingenic,bch-controller: To make use of the hardware BCH controller, this
-> +  property must contain a phandle for the BCH controller node. The required
-> +  properties for this node are described below. If this is not specified,
-> +  software BCH will be used instead.
-> +
-> +Optional children nodes:
-> +- Individual NAND chips are children of the NAND controller node.
-> +
-> +Required children node properties:
-> +- reg: An integer ranging from 1 to 6 representing the CS line to use.
-> +
-> +Optional children node properties:
-> +- nand-ecc-step-size: ECC block size in bytes.
-> +- nand-ecc-strength: ECC strength (max number of correctable bits).
-> +- nand-ecc-mode: String, operation mode of the NAND ecc mode. "hw" by default
-> +- nand-on-flash-bbt: boolean to enable on flash bbt option, if not present false
-> +- rb-gpios: GPIO specifier for the busy pin.
-> +- wp-gpios: GPIO specifier for the write protect pin.
-> +
-> +Optional child node of NAND chip nodes:
-> +- partitions: see Documentation/devicetree/bindings/mtd/partition.txt
-> +
-> +Example:
-> +
-> +nemc: nemc@13410000 {
-> +	...
-> +
-> +	nandc: nand-controller@1 {
-> +		compatible = "ingenic,jz4780-nand";
-> +		reg = <1 0 0x1000000>;	/* Bank 1 */
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ingenic,bch-controller = <&bch>;
-> +
-> +		nand@1 {
-> +			reg = <1>;
-> +
-> +			nand-ecc-step-size = <1024>;
-> +			nand-ecc-strength = <24>;
-> +			nand-ecc-mode = "hw";
-> +			nand-on-flash-bbt;
-> +
-> +			rb-gpios = <&gpa 20 GPIO_ACTIVE_LOW>;
-> +			wp-gpios = <&gpf 22 GPIO_ACTIVE_LOW>;
-> +
-> +			partitions {
-> +				#address-cells = <2>;
-> +				#size-cells = <2>;
-> +				...
-> +			}
-> +		};
-> +	};
-> +};
-> +
-> +The BCH controller is a separate SoC component used for error correction on
-> +NAND devices. The following is a description of the device properties for a
-> +BCH controller.
-> +
-> +Required BCH properties:
-> +- compatible: Should be set to "ingenic,jz4780-bch".
-> +- reg: Should specify the BCH controller registers location and length.
-> +- clocks: Clock for the BCH controller.
-> +
-> +Example:
-> +
-> +bch: bch@134d0000 {
-> +	compatible = "ingenic,jz4780-bch";
-> +	reg = <0x134d0000 0x10000>;
-> +
-> +	clocks = <&cgu JZ4780_CLK_BCH>;
-> +};
+> > > > diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b=
+/Documentation/devicetree/bindings/mfd/syscon.txt
+> > > > index fe8150b..408f768 100644
+> > > > --- a/Documentation/devicetree/bindings/mfd/syscon.txt
+> > > > +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+> > > > @@ -13,6 +13,10 @@ Required properties:
+> > > >  - compatible: Should contain "syscon".
+> > > >  - reg: the register region can be accessed from syscon
+> > > > =20
+> > > > +Optional property:
+> > > > +- reg-io-width: the size (in bytes) of the IO accesses that sh=
+ould be
+> > > > +  performed on the device.
+> > > > +
+> > > >  Examples:
+> > > >  gpr: iomuxc-gpr@020e0000 {
+> > > >  	compatible =3D "fsl,imx6q-iomuxc-gpr", "syscon";
+> > > > diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> > > > index 176bf0f..b7aabee 100644
+> > > > --- a/drivers/mfd/syscon.c
+> > > > +++ b/drivers/mfd/syscon.c
+> > > > @@ -47,6 +47,7 @@ static struct syscon *of_syscon_register(stru=
+ct device_node *np)
+> > > >  	struct syscon *syscon;
+> > > >  	struct regmap *regmap;
+> > > >  	void __iomem *base;
+> > > > +	u32 reg_io_width;
+> > > >  	int ret;
+> > > >  	struct regmap_config syscon_config =3D syscon_regmap_config;
+> > > > =20
+> > > > @@ -69,6 +70,18 @@ static struct syscon *of_syscon_register(str=
+uct device_node *np)
+> > > >  	 else if (of_property_read_bool(np, "little-endian"))
+> > > >  		syscon_config.val_format_endian =3D REGMAP_ENDIAN_LITTLE;
+> > > > =20
+> > > > +	/*
+> > > > +	 * search for reg-io-width property in DT. If it is not provi=
+ded,
+> > > > +	 * default to 4 bytes. regmap_init_mmio will return an error =
+if values
+> > > > +	 * are invalid so there is no need to check them here.
+> > > > +	 */
+> > > > +	ret =3D of_property_read_u32(np, "reg-io-width", &reg_io_widt=
+h);
+> > > > +	if (ret)
+> > > > +		reg_io_width =3D 4;
+> > > > +
+> > > > +	syscon_config.reg_stride =3D reg_io_width;
+> > > > +	syscon_config.val_bits =3D reg_io_width * 8;
+> > > > +
+> > > >  	regmap =3D regmap_init_mmio(NULL, base, &syscon_config);
+> > > >  	if (IS_ERR(regmap)) {
+> > > >  		pr_err("regmap init failed\n");
+> > >=20
+>=20
 
-
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
