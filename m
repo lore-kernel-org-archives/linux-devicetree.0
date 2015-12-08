@@ -1,51 +1,100 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH 0/7] Exynos: MFC driver: reserved memory cleanup and IOMMU
- support
-Date: Tue, 08 Dec 2015 09:35:30 +0100
-Message-ID: <56669652.5000708@samsung.com>
-References: <1449490142-27502-1-git-send-email-m.szyprowski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <1449490142-27502-1-git-send-email-m.szyprowski@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Andrzej Hajda <a.hajda@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Sudip Mukherjee <sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4] of: fix declaration of of_io_request_and_map
+Date: Tue,  8 Dec 2015 14:17:55 +0530
+Message-ID: <1449564475-10724-1-git-send-email-sudipm.mukherjee@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sudip Mukherjee <sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+We are having build failure with linux-next for sparc allmodconfig with
+the error messages:
 
-On 2015-12-07 13:08, Marek Szyprowski wrote:
-> This patchset finally perform cleanup of custom code in s5p-mfc codec
-> driver. The first part is removal of custom, driver specific code for
-> intializing and handling of reserved memory. Instead, a generic code for
-> reserved memory regions is used. Then, once it is done, the proper setup
-> of DMA parameters (max segment size) is applied for all multimedia
-> devices found on Exynos SoCs to let them properly handle shared buffers
-> mapped into contiguous DMA address space. The last patch adds support
-> for IOMMU to MFC driver. Some additional code is needed because of
-> specific requirements of MFC device firmware (see patch 7 for more
-> details). When no IOMMU is available, the code fallbacks to generic
-> reserved memory regions.
->
-> After applying this patchset, MFC device works correctly when IOMMU is
-> either enabled or disabled.
->
-> Patches have been tested on top of linux-next from 20151207. I would
-> prefer to merge patches 1-2 via Samsung tree and patches 3-7 via media
-> tree (there are no compile-time dependencies between patches 1-2 and
-> 3-7). Patches have been tested on Odroid U3 (Exynos 4412 based) and
-> Odroid XU3 (Exynos 5422 based) boards.
+drivers/built-in.o: In function `meson6_timer_init':
+meson6_timer.c:(.init.text+0x5fe8): undefined reference to `of_io_request_and_map'
+drivers/built-in.o: In function `mtk_timer_init':
+mtk_timer.c:(.init.text+0x6af0): undefined reference to `of_io_request_and_map'
+drivers/built-in.o: In function `asm9260_timer_init':
+asm9260_timer.c:(.init.text+0x6c48): undefined reference to `of_io_request_and_map'
 
-One more notice: this is an updated version of the old patch initially
-posted here:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2013-August/189259.html
+CONFIG_OF is defined for sparc so it is expected that we have a
+definition of of_io_request_and_map() but of/address.c is only compiled
+if it is !SPARC. In other words, CONFIG_OF_ADDRESS is not defined for
+sparc so we get the build failure.
 
-The main change since that is adaptation for generic reserved memory
-bindings, which have been merged a while ago and added support for IOMMU.
+Fixes: e572f844ca66 ("clocksource/drivers/meson6: Add the COMPILE_TEST option")
+Fixes: bec8c4617611 ("clocksource/drivers/mediatek: Add the COMPILE_TEST option")
+Fixes: 4a373b45f94a ("clocksource/drivers/asm9260: Add the COMPILE_TEST option")
+Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Sudip Mukherjee <sudip-ofJRbWXBVFamYgehrs7/Lw@public.gmane.org>
+---
 
-Best regards
+v1: had a complicated set of #ifdefs
+v2: i messed up and resulted in build failure of some other arch where
+CONFIG_OF is not defined.
+v3: tested with allmodconfig of x86_64, defconfig of alpha and mips.
+v4: changed subject and commit message. And the of_io_request_and_map()
+is moved under existing #ifdef instead of defining one more section.
+
+
+ include/linux/of_address.h | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 507daad..4d6c50a 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -36,6 +36,8 @@ extern struct device_node *of_find_matching_node_by_address(
+ 					const struct of_device_id *matches,
+ 					u64 base_address);
+ extern void __iomem *of_iomap(struct device_node *device, int index);
++void __iomem *of_io_request_and_map(struct device_node *device,
++				    int index, const char *name);
+ 
+ /* Extract an address from a device, returns the region size and
+  * the address space flags too. The PCI version uses a BAR number
+@@ -58,6 +60,14 @@ extern int of_dma_get_range(struct device_node *np, u64 *dma_addr,
+ extern bool of_dma_is_coherent(struct device_node *np);
+ #else /* CONFIG_OF_ADDRESS */
+ 
++#include <linux/io.h>
++
++static inline void __iomem *of_io_request_and_map(struct device_node *device,
++						  int index, const char *name)
++{
++	return IOMEM_ERR_PTR(-EINVAL);
++}
++
+ static inline u64 of_translate_address(struct device_node *np,
+ 				       const __be32 *addr)
+ {
+@@ -112,8 +122,6 @@ static inline bool of_dma_is_coherent(struct device_node *np)
+ extern int of_address_to_resource(struct device_node *dev, int index,
+ 				  struct resource *r);
+ void __iomem *of_iomap(struct device_node *node, int index);
+-void __iomem *of_io_request_and_map(struct device_node *device,
+-					int index, const char *name);
+ #else
+ 
+ #include <linux/io.h>
+@@ -128,12 +136,6 @@ static inline void __iomem *of_iomap(struct device_node *device, int index)
+ {
+ 	return NULL;
+ }
+-
+-static inline void __iomem *of_io_request_and_map(struct device_node *device,
+-					int index, const char *name)
+-{
+-	return IOMEM_ERR_PTR(-EINVAL);
+-}
+ #endif
+ 
+ #if defined(CONFIG_OF_ADDRESS) && defined(CONFIG_PCI)
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
