@@ -1,58 +1,63 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] ARM: tegra: Fix suspend hang on Tegra124 Chromebooks
-Date: Tue, 8 Dec 2015 10:26:49 +0000
-Message-ID: <1449570409-30244-1-git-send-email-jonathanh@nvidia.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] Documentation: devicetree: add epson rx6110
+ binding
+Date: Tue, 08 Dec 2015 11:29:26 +0100
+Message-ID: <1449570566.3691.31.camel@pengutronix.de>
+References: <1449568461-26016-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449568461-26016-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enabling CPUFreq support for Tegra124 Chromebooks is causing the Tegra124
-to hang when resuming from suspend.
+Am Dienstag, den 08.12.2015, 10:54 +0100 schrieb Steffen Trumtrar:
+> Add the binding documentation for the Epson RX6110 RTC.
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-When CPUFreq is enabled, the CPU clock is changed from the PLLX clock to
-the DFLL clock during kernel boot. When resuming from suspend the CPU
-clock is temporarily changed back to the PLLX clock before switching back
-to the DFLL. If the DFLL is operating at a much lower frequency than the
-PLLX when we enter suspend, and so the CPU voltage rail is at a voltage
-too low for the CPUs to operate at the PLLX frequency, then the device
-will hang.
+Reviewed-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Please note that the PLLX is used in the resume sequence to switch the CPU
-clock from the very slow 32K clock to a faster clock during early resume
-to speed up the resume sequence before the DFLL is resumed.
+although I'd like a small change to be made below:
 
-Ideally, we should fix this by setting the suspend frequency so that it
-matches the PLLX frequency, however, that would be a bigger change. For
-now simply disable CPUFreq support for Tegra124 Chromebooks to avoid the
-hang when resuming from suspend.
+> ---
+> Changes since v2:
+> 	- removed the size field in i2c binding
+> 
+>  .../devicetree/bindings/rtc/epson,rx6110.txt       | 39 ++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/epson,rx6110.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/epson,rx6110.txt b/Documentation/devicetree/bindings/rtc/epson,rx6110.txt
+> new file mode 100644
+> index 000000000000..71353542a59d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/epson,rx6110.txt
+> @@ -0,0 +1,39 @@
+> +Epson RX6110 Real Time Clock
+> +============================
+> +
+> +The Epson RX6110 can be used with SPI or I2C busses. The kind of
+> +bus depends on the SPISEL pin and can not be configured via software.
+> +
+> +I2C mode
+> +--------
+> +
+> +Required properties:
+> +  - compatible: should be: "epson,rx6110"
+> +  - reg : offset of the register set of the device
 
-Fixes: 9a0baee960a7 ("ARM: tegra: Enable CPUFreq support for Tegra124
-		      Chromebooks")
+That should be the I2C address of the device, as in:
+	git grep "reg.*I2C address" Documentation/
 
-Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
+regards
+Philipp
 
-Please note that this fix is required for v4.4
-
- arch/arm/boot/dts/tegra124-nyan.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/tegra124-nyan.dtsi b/arch/arm/boot/dts/tegra124-nyan.dtsi
-index 40c23a0b7cfc..ec1aa64ded68 100644
---- a/arch/arm/boot/dts/tegra124-nyan.dtsi
-+++ b/arch/arm/boot/dts/tegra124-nyan.dtsi
-@@ -399,7 +399,7 @@
- 
- 	/* CPU DFLL clock */
- 	clock@0,70110000 {
--		status = "okay";
-+		status = "disabled";
- 		vdd-cpu-supply = <&vdd_cpu>;
- 		nvidia,i2c-fs-rate = <400000>;
- 	};
--- 
-2.1.4
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
