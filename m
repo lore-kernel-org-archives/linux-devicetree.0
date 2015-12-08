@@ -1,73 +1,51 @@
 From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: [PATCH v3 7/9] ARM: dts: Add USART1 pin config to STM32F429 boards
-Date: Tue,  8 Dec 2015 13:45:09 +0100
-Message-ID: <1449578711-6141-8-git-send-email-mcoquelin.stm32@gmail.com>
+Subject: [PATCH v3 1/9] ARM: Kconfig: Introduce MACH_STM32F429 flag
+Date: Tue,  8 Dec 2015 13:45:03 +0100
+Message-ID: <1449578711-6141-2-git-send-email-mcoquelin.stm32@gmail.com>
 References: <1449578711-6141-1-git-send-email-mcoquelin.stm32@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1449578711-6141-1-git-send-email-mcoquelin.stm32@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, afaerber@suse.de, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com
+Cc: devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, linux-kernel@vger.kernel.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch selects USART1 pin configuration on PA9/PA10 pins
-for both Eval and Disco boards.
+This patch introduces the MACH_STM32F429 to make possible to only select
+STM32F429 pinctrl driver.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+By default, all the MACH_STM32Fxxx flags will be set with STM32 defconfig.
+
 Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
 ---
- arch/arm/boot/dts/stm32429i-eval.dts  |  2 ++
- arch/arm/boot/dts/stm32f429-disco.dts |  2 ++
- arch/arm/boot/dts/stm32f429.dtsi      | 13 +++++++++++++
- 3 files changed, 17 insertions(+)
+ arch/arm/Kconfig | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
-index 6964fc9..71fe17a 100644
---- a/arch/arm/boot/dts/stm32429i-eval.dts
-+++ b/arch/arm/boot/dts/stm32429i-eval.dts
-@@ -71,5 +71,7 @@
- };
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 0365cbb..4d2fcba 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -967,6 +967,11 @@ config ARCH_STM32
+ 	help
+ 	  Support for STMicroelectronics STM32 processors.
  
- &usart1 {
-+	pinctrl-0 = <&usart1_pins_a>;
-+	pinctrl-names = "default";
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
-index f0b731d..e3ce796 100644
---- a/arch/arm/boot/dts/stm32f429-disco.dts
-+++ b/arch/arm/boot/dts/stm32f429-disco.dts
-@@ -71,5 +71,7 @@
- };
- 
- &usart1 {
-+	pinctrl-0 = <&usart1_pins_a>;
-+	pinctrl-names = "default";
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index 62d2b3d..1cf713e 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -263,6 +263,19 @@
- 				clocks = <&rcc 0 266>;
- 				st,bank-name = "GPIOK";
- 			};
++config MACH_STM32F429
++	bool "STMicrolectronics STM32F429"
++	depends on ARCH_STM32
++	default y
 +
-+			usart1_pins_a: usart1@0 {
-+				pins1 {
-+					pinmux = <STM32F429_PA9_FUNC_USART1_TX>;
-+					bias-disable;
-+					drive-push-pull;
-+					slew-rate = <0>;
-+				};
-+				pins2 {
-+					pinmux = <STM32F429_PA10_FUNC_USART1_RX>;
-+					bias-disable;
-+				};
-+			};
- 		};
- 
- 		rcc: rcc@40023810 {
+ # Definitions to make life easier
+ config ARCH_ACORN
+ 	bool
 -- 
 1.9.1
