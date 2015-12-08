@@ -1,7 +1,7 @@
 From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: imx6qdl-udoo.dtsi: fix onboard USB HUB property
-Date: Tue, 8 Dec 2015 09:37:50 +0800
-Message-ID: <1449538670-7954-4-git-send-email-peter.chen@freescale.com>
+Subject: [PATCH 2/3] doc: dt-binding: generic onboard USB HUB
+Date: Tue, 8 Dec 2015 09:37:49 +0800
+Message-ID: <1449538670-7954-3-git-send-email-peter.chen@freescale.com>
 References: <1449538670-7954-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,57 +12,48 @@ To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbk
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The current dts describes USB HUB's property at USB controller's
-entry, it is improper. Fix it by using a generic USB HUB entry.
+Add dt-binding documentation for generic onboard USB HUB.
 
 Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-udoo.dtsi | 25 ++++++-------------------
- 1 file changed, 6 insertions(+), 19 deletions(-)
+ .../bindings/usb/generic-onboard-hub.txt           | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/generic-onboard-hub.txt
 
-diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-index 1211da8..9416d75 100644
---- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-@@ -18,21 +18,12 @@
- 		reg = <0x10000000 0x40000000>;
- 	};
- 
--	regulators {
--		compatible = "simple-bus";
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		reg_usb_h1_vbus: regulator@0 {
--			compatible = "regulator-fixed";
--			reg = <0>;
--			regulator-name = "usb_h1_vbus";
--			regulator-min-microvolt = <5000000>;
--			regulator-max-microvolt = <5000000>;
--			enable-active-high;
--			startup-delay-us = <2>; /* USB2415 requires a POR of 1 us minimum */
--			gpio = <&gpio7 12 0>;
--		};
+diff --git a/Documentation/devicetree/bindings/usb/generic-onboard-hub.txt b/Documentation/devicetree/bindings/usb/generic-onboard-hub.txt
+new file mode 100644
+index 0000000..ea92205
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/generic-onboard-hub.txt
+@@ -0,0 +1,28 @@
++Generic Onboard USB HUB
++
++Required properties:
++- compatible: should be "generic-onboard-hub"
++
++Optional properties:
++- clocks: the input clock for HUB.
++
++- clock-names: Should be "external_clk"
++
++- hub-reset-gpios: Should specify the GPIO for reset.
++
++- hub-reset-active-high: the active reset signal is high, if this property is
++  not set, the active reset signal is low.
++
++- hub-reset-duration-us: the duration for assert reset signal, the time unit
++  is microsecond.
++
++Example:
++
 +	usb_hub1 {
 +		compatible = "generic-onboard-hub";
 +		clocks = <&clks IMX6QDL_CLK_CKO>;
 +		clock-names = "external_clk";
 +		hub-reset-gpios = <&gpio7 12 0>;
++		hub-reset-active-high;
 +		hub-reset-duration-us = <2>;
- 	};
- };
- 
-@@ -119,10 +110,6 @@
- };
- 
- &usbh1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_usbh>;
--	vbus-supply = <&reg_usb_h1_vbus>;
--	clocks = <&clks 201>;
- 	status = "okay";
- };
- 
++	};
 -- 
 1.9.1
 
