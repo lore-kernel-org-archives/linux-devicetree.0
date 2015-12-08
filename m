@@ -1,38 +1,84 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH net 2/2] bindings: net: macb: add no-usrio optional
- property
-Date: Tue, 8 Dec 2015 09:26:31 -0600
-Message-ID: <20151208152631.GA30181@rob-hp-laptop>
-References: <1449485914-12883-1-git-send-email-narmstrong@baylibre.com>
- <1449485914-12883-3-git-send-email-narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 3/4] dt-bindings: exynos-dp: update ports node binding
+ for panel
+Date: Tue, 8 Dec 2015 09:29:12 -0600
+Message-ID: <20151208152912.GA31338@rob-hp-laptop>
+References: <1449492758-19989-1-git-send-email-inki.dae@samsung.com>
+ <1449492758-19989-4-git-send-email-inki.dae@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1449485914-12883-3-git-send-email-narmstrong@baylibre.com>
-Sender: netdev-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, "David S. Miller" <davem@davemloft.net>, Harini Katakam <harini.katakam@xilinx.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1449492758-19989-4-git-send-email-inki.dae@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Inki Dae <inki.dae@samsung.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, k.kozlowski@samsung.com, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, kgene.kim@samsung.com, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 07, 2015 at 11:58:34AM +0100, Neil Armstrong wrote:
-> Add the no-usrio optional property to disable usage of the USRIO
-> register on platforms not implementing it.
-> ---
->  Documentation/devicetree/bindings/net/macb.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-> index b5d7976..a15ee54 100644
-> --- a/Documentation/devicetree/bindings/net/macb.txt
-> +++ b/Documentation/devicetree/bindings/net/macb.txt
-> @@ -19,6 +19,9 @@ Required properties:
->  	Optional elements: 'tx_clk'
->  - clocks: Phandles to input clocks.
->  
-> +Optional properties:
-> +- no-usrio: Indicates the platform integration does not implement the USRIO register.
-
-Add a vendor prefix please.
-
-Rob
+T24gTW9uLCBEZWMgMDcsIDIwMTUgYXQgMDk6NTI6MzdQTSArMDkwMCwgSW5raSBEYWUgd3JvdGU6
+Cj4gVGhpcyBwYXRjaCB1cGRhdGVzIGEgcG9ydHMgbm9kZSBiaW5kaW5nIGZvciBwYW5lbC4KPiAK
+PiBXaXRoIHRoaXMsIGRwIG5vZGUgY2FuIGhhdmUgYSBwb3J0cyBub2RlIHdoaWNoIGRlc2NyaWJl
+cwo+IGEgcmVtb3RlIGVuZHBvaW50IG5vZGUgdGhhdCBjYW4gYmUgY29ubmVjdGVkIHRvIHBhbmVs
+IG9yIGJyaWRnZQo+IG5vZGUuCj4gCj4gQ2hhbmdlbG9nIHYyOgo+IC0gcmVtb3ZlIHVubmVjZXNz
+YXJ5IHByb3BlcnRpZXMgYW5kIG51bWJlcmluZy4KPiAtIHVwZGF0ZSBkZXNjcmlwdGlvbiBhYm91
+dCBlRFAgZGV2aWNlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IElua2kgRGFlIDxpbmtpLmRhZUBzYW1z
+dW5nLmNvbT4KPiBSZXZpZXdlZC1ieTogSmF2aWVyIE1hcnRpbmV6IENhbmlsbGFzIDxqYXZpZXJA
+b3NnLnNhbXN1bmcuY29tPgoKQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+
+Cgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9leHlub3MvZXh5bm9zX2RwLnR4dCAgICAg
+ICAgICB8IDQxICsrKysrKysrKysrKysrKysrKystLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDM3IGlu
+c2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V4eW5vcy9leHlub3NfZHAudHh0IGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZXh5bm9zL2V4eW5vc19kcC50
+eHQKPiBpbmRleCA2NDY5M2YyLi4yMmVmZWJhIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2V4eW5vcy9leHlub3NfZHAudHh0Cj4gKysrIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZXh5bm9zL2V4eW5vc19k
+cC50eHQKPiBAQCAtMSwzICsxLDIwIEBACj4gK0RldmljZS1UcmVlIGJpbmRpbmdzIGZvciBTYW1z
+dW5nIEV4eW5vcyBFbWJlZGRlZCBEaXNwbGF5UG9ydCBUcmFuc21pdHRlcihlRFApCj4gKwo+ICtE
+aXNwbGF5UG9ydCBpcyBpbmR1c3RyeSBzdGFuZGFyZCB0byBhY2NvbW1vZGF0ZSB0aGUgZ3Jvd2lu
+ZyBib2FyZCBhZG9wdGlvbgo+ICtvZiBkaWdpdGFsIGRpc3BsYXkgdGVjaG5vbG9neSB3aXRoaW4g
+dGhlIFBDIGFuZCBDRSBpbmR1c3RyaWVzLgo+ICtJdCBjb25zb2xpZGF0ZXMgdGhlIGludGVybmFs
+IGFuZCBleHRlcm5hbCBjb25uZWN0aW9uIG1ldGhvZHMgdG8gcmVkdWNlIGRldmljZQo+ICtjb21w
+bGV4aXR5IGFuZCBjb3N0LiBJdCBhbHNvIHN1cHBvcnRzIG5lY2Vzc2FyeSBmZWF0dXJlcyBmb3Ig
+aW1wb3J0YW50IGNyb3NzCj4gK2luZHVzdHJ5IGFwcGxpY2F0aW9ucyBhbmQgcHJvdmlkZXMgcGVy
+Zm9ybWFuY2Ugc2NhbGFiaWxpdHkgdG8gZW5hYmxlIHRoZSBuZXh0Cj4gK2dlbmVyYXRpb24gb2Yg
+ZGlzcGxheXMgdGhhdCBmZWF0dXJlIGhpZ2hlciBjb2xvciBkZXB0aHMsIHJlZnJlc2ggcmF0ZXMs
+IGFuZAo+ICtkaXNwbGF5IHJlc29sdXRpb25zLgo+ICsKPiArZURQIChlbWJlZGRlZCBkaXNwbGF5
+IHBvcnQpIGRldmljZSBpcyBjb21wbGlhbnQgd2l0aCBFbWJlZGRlZCBEaXNwbGF5UG9ydAo+ICtz
+dGFuZGFyZCBhcyBmb2xsb3dzLAo+ICstIERpc3BsYXlQb3J0IHN0YW5kYXJkIDEuMWEgZm9yIEV4
+eW5vczUyNTAgYW5kIEV4eW5vczUyNjAuCj4gKy0gRGlzcGxheVBvcnQgc3RhbmRhcmQgMS4zIGZv
+ciBFeHlub3M1NDIycyBhbmQgRXh5bm9zNTgwMC4KPiArCj4gK2VEUCByZXNpZGVzIGJldHdlZW4g
+RklNRCBhbmQgcGFuZWwgb3IgRklNRCBhbmQgYnJpZGdlIHN1Y2ggYXMgTFZEUy4KPiArCj4gIFRo
+ZSBFeHlub3MgZGlzcGxheSBwb3J0IGludGVyZmFjZSBzaG91bGQgYmUgY29uZmlndXJlZCBiYXNl
+ZCBvbgo+ICB0aGUgdHlwZSBvZiBwYW5lbCBjb25uZWN0ZWQgdG8gaXQuCj4gIAo+IEBAIC02Niw4
+ICs4MywxNSBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzIGZvciBkcC1jb250cm9sbGVyOgo+ICAJCUhv
+dHBsdWcgZGV0ZWN0IEdQSU8uCj4gIAkJCUluZGljYXRlcyB3aGljaCBHUElPIHNob3VsZCBiZSB1
+c2VkIGZvciBob3RwbHVnCj4gIAkJCWRldGVjdGlvbgo+IC0JLXZpZGVvIGludGVyZmFjZXM6IERl
+dmljZSBub2RlIGNhbiBjb250YWluIHZpZGVvIGludGVyZmFjZSBwb3J0Cj4gLQkJCSAgICBub2Rl
+cyBhY2NvcmRpbmcgdG8gWzFdLgo+ICtWaWRlbyBpbnRlcmZhY2VzOgo+ICsgIERldmljZSBub2Rl
+IGNhbiBjb250YWluIHZpZGVvIGludGVyZmFjZSBwb3J0IG5vZGVzIGFjY29yZGluZyB0byBbMV0u
+Cj4gKyAgVGhlIGZvbGxvd2luZyBhcmUgcHJvcGVydGllcyBzcGVjaWZpYyB0byB0aG9zZSBub2Rl
+czoKPiArCj4gKyAgZW5kcG9pbnQgbm9kZSBjb25uZWN0ZWQgdG8gYnJpZGdlIG9yIHBhbmVsIG5v
+ZGU6Cj4gKyAgIC0gcmVtb3RlLWVuZHBvaW50OiBzcGVjaWZpZXMgdGhlIGVuZHBvaW50IGluIHBh
+bmVsIG9yIGJyaWRnZSBub2RlLgo+ICsJCSAgICAgIFRoaXMgbm9kZSBpcyByZXF1aXJlZCBpbiBh
+bGwga2luZHMgb2YgZXh5bm9zIGRwCj4gKwkJICAgICAgdG8gcmVwcmVzZW50IHRoZSBjb25uZWN0
+aW9uIGJldHdlZW4gZHAgYW5kIGJyaWRnZQo+ICsJCSAgICAgIG9yIGRwIGFuZCBwYW5lbC4KPiAg
+Cj4gIFsxXTogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWlu
+dGVyZmFjZXMudHh0Cj4gIAo+IEBAIC0xMTEsOSArMTM1LDE4IEBAIEJvYXJkIFNwZWNpZmljIHBv
+cnRpb246Cj4gIAkJfTsKPiAgCj4gIAkJcG9ydHMgewo+IC0JCQlwb3J0QDAgewo+ICsJCQlwb3J0
+IHsKPiAgCQkJCWRwX291dDogZW5kcG9pbnQgewo+IC0JCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwm
+YnJpZGdlX2luPjsKPiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRwX2luPjsKPiArCQkJCX07
+Cj4gKwkJCX07Cj4gKwkJfTsKPiArCj4gKwkJcGFuZWwgewo+ICsJCQkuLi4KPiArCQkJcG9ydCB7
+Cj4gKwkJCQlkcF9pbjogZW5kcG9pbnQgewo+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHBf
+b3V0PjsKPiAgCQkJCX07Cj4gIAkJCX07Cj4gIAkJfTsKPiAtLSAKPiAxLjkuMQo+IApfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
