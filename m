@@ -1,67 +1,88 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] ASoC: img: Add driver for Pistachio internal DAC
-Date: Tue, 8 Dec 2015 19:00:05 +0000
-Message-ID: <20151208190005.GY5727@sirena.org.uk>
-References: <1449594324-2597-1-git-send-email-Damien.Horsley@imgtec.com>
- <1449594324-2597-3-git-send-email-Damien.Horsley@imgtec.com>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH V4 12/16] Documentation: DT: bindings: Add power domain info for NVIDIA PMC
+Date: Tue, 08 Dec 2015 11:07:06 -0800
+Message-ID: <7h4mfslpyd.fsf@deeprootsystems.com>
+References: <1449241037-22193-1-git-send-email-jonathanh@nvidia.com>
+	<1449241037-22193-13-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="9QtXyXGM8HCrXlir"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1449594324-2597-3-git-send-email-Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1449241037-22193-13-git-send-email-jonathanh@nvidia.com> (Jon
+	Hunter's message of "Fri, 4 Dec 2015 14:57:13 +0000")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rafael Wysocki <rjw@rjwysocki.net>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vince Hsu <vinceh@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Jon Hunter <jonathanh@nvidia.com> writes:
 
---9QtXyXGM8HCrXlir
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Dec 08, 2015 at 05:05:24PM +0000, Damien Horsley wrote:
-
-> +static int pistachio_internal_dac_set_mute(struct snd_kcontrol *kcontrol,
-> +				  struct snd_ctl_elem_value *ucontrol)
-> +{
-> +	struct snd_soc_codec *codec = snd_soc_kcontrol_codec(kcontrol);
-> +	struct pistachio_internal_dac *dac = snd_soc_codec_get_drvdata(codec);
-> +	u32 reg;
+> Add power-domain binding documentation for the NVIDIA PMC driver in
+> order to support generic power-domains.
+>
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+>
+> ---
+>
+> Please note that I have been debating whether I add this
+> "nvidia,powergate-clock-disable" property or just leave the clocks
+> disabled by default. Some downstream kernels leave the clocks enabled
+> for the audio power-domain because the clocks required for powering up
+> the power-domain are needed by all modules within the power-domain.
+> However are the same time there are other power-domains that may need
+> to be on, but not always clocked and so having the ability to specify if
+> the clocks should be disabled seems useful. However, I can also remove
+> this and just have the appropriate devices turn on the clocks as well.
+> ---
+>  .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 61 ++++++++++++++++++++++
+>  1 file changed, 61 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+> index 838e1a69ec0a..8e4641db51a9 100644
+> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+> @@ -1,5 +1,7 @@
+>  NVIDIA Tegra Power Management Controller (PMC)
+>  
+> +== Power Management Controller Node ==
 > +
-> +	dac->mute = ucontrol->value.integer.value[0];
+>  The PMC block interacts with an external Power Management Unit. The PMC
+>  mostly controls the entry and exit of the system from different sleep
+>  modes. It provides power-gating controllers for SoC and CPU power-islands.
+> @@ -69,6 +71,10 @@ Optional properties for hardware-triggered thermal reset (inside 'i2c-thermtrip'
+>                       Defaults to 0. Valid values are described in section 12.5.2
+>                       "Pinmux Support" of the Tegra4 Technical Reference Manual.
+>  
+> +Optional nodes:
+> +- pm-domains : This node contains a hierarchy of PM domain nodes, which should
+> +	       match the power-domains on the Tegra SoC.
 > +
-> +	if (dac->mute)
-> +		reg = PISTACHIO_INTERNAL_DAC_CTRL_MUTE_MASK;
-> +	else
-> +		reg = 0;
+>  Example:
+>  
+>  / SoC dts including file
+> @@ -114,3 +120,58 @@ pmc@7000f400 {
+>  	};
+>  	...
+>  };
 > +
-> +	regmap_update_bits(dac->regmap, PISTACHIO_INTERNAL_DAC_CTRL,
-> +			PISTACHIO_INTERNAL_DAC_CTRL_MUTE_MASK, reg);
 > +
-> +	return 0;
-> +}
+> +== PM Domain Nodes ==
+> +
+> +Each of the PM domain nodes represents a power-domain on the Tegra SoC
+> +that can be power-gated by the PMC and should be named appropriately.
+> +
+> +Required properties:
+> +  - clocks: Must contain an entry for each clock required by the PMC for
+> +    controlling a power-gate. See ../clocks/clock-bindings.txt for details.
 
-Shouldn't this just be a standard SOC_SINGLE() now?  We've got a regmap.
-Otherwise this looks good.
+We've had this discussiona for a couple of other SoCs, so I need to
+ask...
 
---9QtXyXGM8HCrXlir
-Content-Type: application/pgp-signature; name="signature.asc"
+Presumably these are not device clocks that a runtime PM enabled driver
+should be managing for a device, right?  IOW, We want to make sure that the
+PM domain isn't managing clocks for drivers that should be doing it.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+I understand there are legitimate reasons for the PM domain to manage
+clocks in addition to device drivers (e.g. for synchronous reset), but
+just want to be sure it's not a shortcut for having a proper driver.
 
-iQEcBAEBCAAGBQJWZyi1AAoJECTWi3JdVIfQNgkH/A79T4Olc1ZhHbUlIiaJXBuU
-m2PWGTCJ/y+yjbD6tCSfhSfQ3hs+nDhij/HiMKjYrr3DnUg3w1/eL4ND9a5bEqrr
-wCfpfF9EMEanqgch7C5zCksrDRDJVIU77I3AnvGiC0OVrauPnbT0nkpjnqEzSZDo
-xBRQcVUT5jshPD9VtD2Ps4EYiw3YInosrn0CCXykchbUIoLfNkF9lrSrSCB/8aR+
-v24tT9m+SNRgfk1VH1lT4nI+kHKvxkZXoz+PJVYFbyGBg48jnvYMJoEICj1ZJQyq
-mqoqKnlV1OJdfPhVRgCcLaHBFmMS46BGhq5PgSpc3glihVuWi6KI8TNv8h/GjU4=
-=ih2Z
------END PGP SIGNATURE-----
-
---9QtXyXGM8HCrXlir--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kevin
