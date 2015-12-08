@@ -1,60 +1,49 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 4/4] ARM: dts: Use OF graph for DP to panel connection in
- exynos5800-peach-pi
-Date: Tue, 08 Dec 2015 10:47:16 +0900
-Message-ID: <566636A4.1050908@samsung.com>
-References: <1449492758-19989-1-git-send-email-inki.dae@samsung.com>
- <1449492758-19989-5-git-send-email-inki.dae@samsung.com>
- <5666283A.5@samsung.com> <56663384.8060708@osg.samsung.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: shmobile: r8a7778: tidyup #sound-dai-cells settings
+Date: Tue, 8 Dec 2015 11:00:50 +0900
+Message-ID: <20151208020046.GB20031@verge.net.au>
+References: <1449505537-15428-1-git-send-email-geert+renesas@glider.be>
+ <878u557qff.wl%kuninori.morimoto.gx@renesas.com>
+ <20151208003724.GG10799@verge.net.au>
+ <874mft7mrh.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <56663384.8060708@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, Inki Dae <inki.dae@samsung.com>, dri-devel@lists.freedesktop.org
-Cc: airlied@linux.ie, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <874mft7mrh.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08.12.2015 10:33, Javier Martinez Canillas wrote:
-> Hello Krzysztof,
+On Tue, Dec 08, 2015 at 01:30:12AM +0000, Kuninori Morimoto wrote:
 > 
-> On 12/07/2015 09:45 PM, Krzysztof Kozlowski wrote:
->> On 07.12.2015 21:52, Inki Dae wrote:
->>> From: Javier Martinez Canillas <javier@osg.samsung.com>
->>>
->>> The DT binding for the Exynos DRM Display Port (DP) driver isn't consistent
->>> since it uses a phandle to describe the connection between the DP port and
->>> the display panel but uses the OF graph ports and endpoints to describe the
->>> connection betwen the DP port, a bridge chip and the panel.
->>>
->>> The Exynos DP driver and the DT binding have been changed to allow also to
->>> describe the DP port to panel connection using ports / endpoints (OF graph)
->>> so this patch changes the Exynos5800 Peach Pi DT to make it consistent with
->>> the Exynos5420 Peach Pit that has a eDP to LVDS chip and uses OF graph too.
->>>
->>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
->>> Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
->>> Reviewed-by: Inki Dae <inki.dae@samsung.com>
->>> ---
->>>  arch/arm/boot/dts/exynos5800-peach-pi.dts | 15 ++++++++++++++-
->>>  1 file changed, 14 insertions(+), 1 deletion(-)
->>>
->>
->> Looks sensible:
->> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->>
->> Dependencies are not mentioned, does it depend on patch 1?
->>
+> Hi Simon
 > 
-> Yes, it depends on patch 1/4 so it should be merged through the Exynos DRM
-> tree to maintain bisectability. Inki's patch maintains the DT ABI backward
-> compatibility though so another option is to wait until the DRM change hit
-> mainline and then pick $SUBJECT.
+> > > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> > > 
+> > > Renesas sound driver needs #sound-dai-cells settings, but, this usage
+> > > is a little bit confusable. It came from ALSA SoC historical reasons.
+> > > The sound DAI naming method is different between Single/Multi DAI in
+> > > the ALSA framework, and it is used for sound card matching.
+> > > And this #sound-dai-cells has relationship to it.
+> > > Current SoC dtsi has #sound-dai-cells = <1> as default settings
+> > > (= it is assuming that board/platform has multi DAI), and
+> > > board/platform side needs to overwrite it if board/platform was single
+> > > DAI. This style is more confusable for users.
+> > > This patch removes SoC side default settings, and force to set it by
+> > > board/platform side.
+> > > 
+> > > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> > > ---
+> > > This patch is based on Geert's
+> > > ARM: shmobile: bockw dts: Override #sound-dai-cells to zero
+> > 
+> > Is Geert's patch necessary with this patch?
+> 
+> I think best order (for git bisect) is
+> 
+> 	1. Geert's patch
+> 	2. My patch
 
-Thanks. We could also use a tag with DRM changes for samsung-soc but
-since I already flushed my queue for v4.5 I think it would be an
-overkill. From my point of view it can safely go through exynos-drm tree.
-
-Best regards,
-Krzysztof
+Thanks, I will make it so.
