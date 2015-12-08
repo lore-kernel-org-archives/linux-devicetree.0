@@ -1,101 +1,38 @@
-From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [linux-sunxi][PATCH 2/2] ARM: dts: sun4i: Add rikomagic mk802+ board
-Date: Tue,  8 Dec 2015 19:48:54 +0100
-Message-ID: <1449600534-5098-3-git-send-email-codekipper@gmail.com>
-References: <1449600534-5098-1-git-send-email-codekipper@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449600534-5098-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Tim Bird <tim.bird@sonymobile.com>
+Subject: Re: [PATCH] power: qcom_smbb: Add otg regulator for control of vbus
+Date: Tue, 8 Dec 2015 10:49:41 -0800
+Message-ID: <56672645.9090909@sonymobile.com>
+References: <1445548337-14612-1-git-send-email-tim.bird@sonymobile.com>
+ <20151205160717.GA30410@earth>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151205160717.GA30410@earth>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tbird20d@gmail.com" <tbird20d@gmail.com>, =?UTF-8?Q?Andersson=2c_Bj=c3=b6rn?= <Bjorn.Andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-The Rikomagic mk802+ is an Allwinner A10 based hdmi tv-stick, it features
-1G RAM, 4G nand, a mini-hdmi female connector, USB-A receptacle, mini-usb
-receptacle (OTG), USB-wifi and an internal microphone. Like the original
-mk802, it does not use any pmic.
 
-Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                |  1 +
- arch/arm/boot/dts/sun4i-a10-mk802-1gb.dts | 50 +++++++++++++++++++++++++++++++
- 2 files changed, 51 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun4i-a10-mk802-1gb.dts
+On 12/05/2015 08:07 AM, Sebastian Reichel wrote:
+> Hi Tim,
+> 
+> On Thu, Oct 22, 2015 at 02:12:17PM -0700, Tim Bird wrote:
+>> Add a regulator to control the OTG chargepath switch.  The OTG
+>> switch gets its power from pm8941_5vs1, and that should be expressed
+>> as an usb_otg_in-supply property in the DT node for the charger driver.
+>> The regulator name is "otg".  This is used by USB code to control VBUS
+>> direction.
+> 
+> I could not find a newer version of this patch with the comments
+> from Mark being fixed. Did I miss anything?
+No.  I thought I had sent out the follow-up for this, but
+apparently I did not.  I'm re-testing it now, and plan to
+send it out today.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index ee8a1dc..f1cb0f8 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -600,6 +600,7 @@ dtb-$(CONFIG_MACH_SUN4I) += \
- 	sun4i-a10-marsboard.dtb \
- 	sun4i-a10-mini-xplus.dtb \
- 	sun4i-a10-mk802.dtb \
-+	sun4i-a10-mk802-1gb.dtb \
- 	sun4i-a10-mk802ii.dtb \
- 	sun4i-a10-olinuxino-lime.dtb \
- 	sun4i-a10-pcduino.dtb \
-diff --git a/arch/arm/boot/dts/sun4i-a10-mk802-1gb.dts b/arch/arm/boot/dts/sun4i-a10-mk802-1gb.dts
-new file mode 100644
-index 0000000..eb77633
---- /dev/null
-+++ b/arch/arm/boot/dts/sun4i-a10-mk802-1gb.dts
-@@ -0,0 +1,50 @@
-+/*
-+ * Copyright 2015 Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun4i-a10-mk802.dtsi"
-+
-+/ {
-+	model = "Rikomagic MK802+";
-+	compatible = "rikomagic,mk802-1gb", "allwinner,sun4i-a10";
-+
-+};
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sorry about that.  I got sidetracked in the last month on some
+other USB issues (not the host side, which is what requires
+this patch).
+ -- Tim
