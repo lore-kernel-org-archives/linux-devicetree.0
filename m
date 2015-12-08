@@ -1,8 +1,8 @@
 From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Subject: Re: [PATCH v3 1/2] Documentation: devicetree: add epson rx6110
  binding
-Date: Tue, 08 Dec 2015 11:29:26 +0100
-Message-ID: <1449570566.3691.31.camel@pengutronix.de>
+Date: Tue, 08 Dec 2015 11:29:47 +0100
+Message-ID: <1449570587.18374.0.camel@pengutronix.de>
 References: <1449568461-26016-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -51,11 +51,12 @@ although I'd like a small change to be made below:
 > +  - compatible: should be: "epson,rx6110"
 > +  - reg : offset of the register set of the device
 
-That should be the I2C address of the device, as in:
+That should be the I2C address of the device:
 	git grep "reg.*I2C address" Documentation/
 
 regards
 Philipp
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
