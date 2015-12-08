@@ -1,45 +1,51 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 4/4] ARM: dts: sun8i: Add Orange Pi Plus support
-Date: Tue, 8 Dec 2015 09:33:00 +0100
-Message-ID: <20151208083300.GO27957@lukather>
-References: <1449264283-25360-1-git-send-email-jenskuske@gmail.com>
- <1449264283-25360-5-git-send-email-jenskuske@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH 0/7] Exynos: MFC driver: reserved memory cleanup and IOMMU
+ support
+Date: Tue, 08 Dec 2015 09:35:30 +0100
+Message-ID: <56669652.5000708@samsung.com>
+References: <1449490142-27502-1-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="4ZQ/M1iA+qg8otEW"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBPNLTKZQKGQEUQSSMBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1449264283-25360-5-git-send-email-jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <1449490142-27502-1-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Andrzej Hajda <a.hajda@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---4ZQ/M1iA+qg8otEW
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hello,
 
-On Fri, Dec 04, 2015 at 10:24:43PM +0100, Jens Kuske wrote:
-> The Orange Pi Plus is a SBC based on the Allwinner H3 SoC
-> with 8GB eMMC, multiple USB ports through a USB hub chip, SATA through
-> a USB-SATA bridge, one uSD slot, a 10/100/1000M ethernet port,
-> WiFi, HDMI, headphone jack, IR receiver, a microphone, a CSI connector
-> and a 40-pin GPIO header.
-> 
-> Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On 2015-12-07 13:08, Marek Szyprowski wrote:
+> This patchset finally perform cleanup of custom code in s5p-mfc codec
+> driver. The first part is removal of custom, driver specific code for
+> intializing and handling of reserved memory. Instead, a generic code for
+> reserved memory regions is used. Then, once it is done, the proper setup
+> of DMA parameters (max segment size) is applied for all multimedia
+> devices found on Exynos SoCs to let them properly handle shared buffers
+> mapped into contiguous DMA address space. The last patch adds support
+> for IOMMU to MFC driver. Some additional code is needed because of
+> specific requirements of MFC device firmware (see patch 7 for more
+> details). When no IOMMU is available, the code fallbacks to generic
+> reserved memory regions.
+>
+> After applying this patchset, MFC device works correctly when IOMMU is
+> either enabled or disabled.
+>
+> Patches have been tested on top of linux-next from 20151207. I would
+> prefer to merge patches 1-2 via Samsung tree and patches 3-7 via media
+> tree (there are no compile-time dependencies between patches 1-2 and
+> 3-7). Patches have been tested on Odroid U3 (Exynos 4412 based) and
+> Odroid XU3 (Exynos 5422 based) boards.
 
-Applied, thanks!
-Maxime
+One more notice: this is an updated version of the old patch initially
+posted here:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-August/189259.html
 
+The main change since that is adaptation for generic reserved memory
+bindings, which have been merged a while ago and added support for IOMMU.
+
+Best regards
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---4ZQ/M1iA+qg8otEW--
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
