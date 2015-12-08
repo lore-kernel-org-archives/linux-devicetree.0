@@ -1,45 +1,46 @@
 From: Rob Herring <robh+dt@kernel.org>
 Subject: Re: [RFC][PATCH] misc: Introduce reboot_reason driver
-Date: Tue, 8 Dec 2015 16:26:39 -0600
-Message-ID: <CAL_JsqKMsG79TiB7nAOd8rB5m3VqwJYdQU0xiwvzvaqMyCk1BQ@mail.gmail.com>
+Date: Tue, 8 Dec 2015 16:43:47 -0600
+Message-ID: <CAL_JsqLSrjjGGuXiCoZvJ2Kf291_a2D3Qdf6U6cAYOYQdTij_Q@mail.gmail.com>
 References: <1449610162-30543-1-git-send-email-john.stultz@linaro.org>
+ <1858873.xsM5XHIlTX@wuerfel> <20151208221510.GH4000@usrtlx11787.corpusers.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449610162-30543-1-git-send-email-john.stultz@linaro.org>
+In-Reply-To: <20151208221510.GH4000@usrtlx11787.corpusers.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinay Simha BN <simhavcs@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, John Stultz <john.stultz@linaro.org>, lkml <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinay Simha BN <simhavcs@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 8, 2015 at 3:29 PM, John Stultz <john.stultz@linaro.org> wrote:
-> This patch adds a basic driver to allow for commands like
-> "reboot bootloader" and "reboot recovery" to communicate this
-> reboot-reason to the bootloader.
+On Tue, Dec 8, 2015 at 4:15 PM, Bjorn Andersson
+<bjorn.andersson@sonymobile.com> wrote:
+> On Tue 08 Dec 13:52 PST 2015, Arnd Bergmann wrote:
 >
-> This is commonly done on Android devices, in order to reboot
-> the device into fastboot or recovery mode. It also supports
-> custom OEM specific commands, via "reboot oem-<value>".
+>> On Tuesday 08 December 2015 13:29:22 John Stultz wrote:
 
-What are some examples of OEM specific commands?
+[...]
 
-> This driver pulls the phys memory address from DT as well as
-> the magic reason values that are written to the address for
-> each mode.
+>> > +static int __init reboot_reason_init(void)
+>> > +{
+>> > +   return platform_driver_register(&reboot_reason_driver);
+>> > +}
+>> > +arch_initcall(reboot_reason_init);
+>>
+>> Why this early? If it can be a normal device_initcall, you can use
+>> module_platform_driver().
+>>
+>
+> Not represented in this patch is that several Android vendors uses this
+> mechanism to communicate a panic() to the boot loader; to let the system
+> enter some sort of memory dump state.
 
-Starting with what does the h/w look like, this is typically
-implemented with some sort of persistent register(s) either in the SOC
-or PMIC. So I think persistent memory/registers is what we need to
-describe in DT. Perhaps this could be tied into pstore (an overkill
-for a single register, but useful if you already have pstore support
-for persistent memory)? The 2nd part is which register to use and the
-mapping of values to reboot reason. Do these vary within SOC families?
-If not, then we should just hardcode them in the reboot drivers which
-are already vendor specific.
+They could also just parse pstore and look for a panic(). Or the
+bootloader should set the reason to enter memory dump and the kernel
+should clear it once it is up enough to handle resets. You have a
+window of time already that a panic will hang. Only a watchdog will
+help there and that would need a different solution.
 
-Also, while trying to standardize the values for reboot reason
-probably won't work short term, we should define something so people
-will start using it. We also should consider any implications with
-PSCI.
+Are panics in early boot really common outside of development?
 
 Rob
