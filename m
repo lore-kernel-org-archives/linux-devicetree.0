@@ -1,64 +1,108 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH net-next 1/2] net: hns: enet specisies a reference to
- dsaf
-Date: Tue, 08 Dec 2015 10:10:47 -0800
-Message-ID: <56671D27.5070700@gmail.com>
-References: <1449302356-54658-1-git-send-email-yankejian@huawei.com> <1449302356-54658-2-git-send-email-yankejian@huawei.com>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v2 3/5] ARM: bcm2835: add rpi power domain driver
+Date: Tue, 08 Dec 2015 10:19:26 -0800
+Message-ID: <7hvb88ls5t.fsf@deeprootsystems.com>
+References: <1449251148-19344-1-git-send-email-eric@anholt.net>
+	<1449251148-19344-4-git-send-email-eric@anholt.net>
+	<7hmvtln87l.fsf@deeprootsystems.com>
+	<87fuzdiwcl.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449302356-54658-2-git-send-email-yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: yankejian <yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Yisen.Zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, liguozhu-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, lisheng011-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, haifeng.wei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <87fuzdiwcl.fsf@eliezer.anholt.net> (Eric Anholt's message of
+	"Mon, 07 Dec 2015 17:04:58 -0800")
+Sender: linux-pm-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexander Aring <alex.aring@gmail.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Subject: s/specisies/specifies/?
+Hi Eric,
 
-On 04/12/15 23:59, yankejian wrote:
-> enet is associating with dasf. before this patch, the association is
-> the same strings between ae-name and dsa-name. in a general way, enet
-> specifies a reference to dsaf should be a good idea. so this patch
-> deletes the ae-name in enet, and adds parsing the ae-handle
-> from DT to set the associating with dsaf.
-> 
-> Signed-off-by: yankejian <yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> ---
-[snip]
+Eric Anholt <eric@anholt.net> writes:
 
-> diff --git a/drivers/net/ethernet/hisilicon/hns/hnae.c b/drivers/net/ethernet/hisilicon/hns/hnae.c
-> index b364529..3bfe36f 100644
-> --- a/drivers/net/ethernet/hisilicon/hns/hnae.c
-> +++ b/drivers/net/ethernet/hisilicon/hns/hnae.c
-> @@ -95,21 +95,17 @@ static struct hnae_buf_ops hnae_bops = {
->  static int __ae_match(struct device *dev, const void *data)
->  {
->  	struct hnae_ae_dev *hdev = cls_to_ae_dev(dev);
-> -	const char *ae_id = data;
->  
-> -	if (!strncmp(ae_id, hdev->name, AE_NAME_SIZE))
-> -		return 1;
-> -
-> -	return 0;
-> +	return hdev->dev->of_node == data;
->  }
->  
-> -static struct hnae_ae_dev *find_ae(const char *ae_id)
-> +static struct hnae_ae_dev *find_ae(const struct device_node *ae_node)
->  {
->  	struct device *dev;
->  
-> -	WARN_ON(!ae_id);
-> +	WARN_ON(!ae_node);
->  
-> -	dev = class_find_device(hnae_class, NULL, ae_id, __ae_match);
-> +	dev = class_find_device(hnae_class, NULL, ae_node, __ae_match);
+> Kevin Hilman <khilman@kernel.org> writes:
+>
+>> Eric Anholt <eric@anholt.net> writes:
+>>
+>>> From: Alexander Aring <alex.aring@gmail.com>
+>>>
+>>> This patch adds support for several power domains on Raspberry Pi,
+>>> including USB (so it can be enabled even if the bootloader didn't do
+>>> it), and graphics.
+>>>
+>>> This patch is the combined work of Eric Anholt (who wrote USB support
+>>> inside of the Raspberry Pi firmware driver, and wrote the non-USB
+>>> domain support) and Alexander Aring (who separated the original USB
+>>> work out from the firmware driver).
+>>>
+>>> Signed-off-by: Alexander Aring <alex.aring@gmail.com>
+>>> Signed-off-by: Eric Anholt <eric@anholt.net>
+>>> ---
+>>>
+>>> v2: Add support for power domains other than USB, using the new
+>>>     firmware interface, reword commit message (changes by Eric)
+>>
+>> [...]
+>>
+>>> +/*
+>>> + * Firmware indices for the old power domains interface.  Only a few
+>>> + * of them were actually implemented.
+>>> + */
+>>> +#define RPI_OLD_POWER_DOMAIN_USB		3
+>>> +#define RPI_OLD_POWER_DOMAIN_V3D		10
+>>> +
+>>
+>> Is "old" the right word here?  Are there firmware versions that could be
+>> used instead?  What happens when the firwmware is updated next time?
+>
+> Old is a good word.  It's the old interface.
 
-of_find_net_device_by_node might be used for this maybe?
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sure, but "old" is relative and based on experience, folks come to
+regret those kinds of names.
+
+> As for what happens when the firmware is updated: Nothing.  The firmware
+> is updated all the time, and it maintains backwards compatibility.
+> Unless you mean "what happens when a newer, fancier power domain
+> interface is created and we need a name for the newer one" and the
+> answer is "this is a define entirely within the driver, and we can just
+> rename it when we want to."
+
+Sure, it's very contained in this driver, so it's ultimately up to you.
+It's not something worth blocking this about, I just wanted to be sure
+since I'm not very familiar with how the rpi firmware evolves.
+
+>> [...]
+>>
+>>> +	/*
+>>> +	 * Use the old firmware interface for USB power, so that we
+>>> +	 * can turn it on even if the firmware hasn't been updated.
+>>> +	 */
+>>> +	rpi_init_old_power_domain(rpi_domains, RPI_POWER_DOMAIN_USB,
+>>> +				  RPI_OLD_POWER_DOMAIN_USB, "USB");
+>>
+>> This seems a bit restrictive.
+>>
+>> To me, it seems that determining "old" or "new" (or revision of fw
+>> interface to use) should be described in DT, not hard-coded in the power
+>> domain driver.
+>>
+>> What about an additional DT property to describe that? or possibly
+>> another cell in the domain which could be used to optionally set
+>> old/legacy.
+>
+> As the author and maintainer of the code, I don't feel it's restrictive.
+> The firmware protocol is defined and is guaranteed to continue to exist,
+> it's only useful for this platform, and defining a new set of custom
+> devicetree properties for it would only obfuscate the implementation.
+> DT is a useful tool for separating out the between-board differences for
+> the same piece of hardware across multiple implementations at different
+> addresses, while this is neither hardware nor in multiple
+> implementations at different addresses.
+
+That being said, firmware revisions are also very often something that
+qualifies as a difference between boards.
+
+Anyways, as I said above, I think this is a potential future problem,
+but it's not a big deal to me since it's very self contained.
+
+Kevin
