@@ -1,81 +1,91 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: [RESEND PATCH] modpost: don't add a trailing wildcard for OF module aliases
-Date: Tue,  8 Dec 2015 19:13:32 -0300
-Message-ID: <1449612813-27004-1-git-send-email-javier@osg.samsung.com>
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: Re: [RFC][PATCH] misc: Introduce reboot_reason driver
+Date: Tue, 8 Dec 2015 14:15:10 -0800
+Message-ID: <20151208221510.GH4000@usrtlx11787.corpusers.net>
+References: <1449610162-30543-1-git-send-email-john.stultz@linaro.org>
+ <1858873.xsM5XHIlTX@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1858873.xsM5XHIlTX@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Android Kernel Team <kernel-team-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit ac551828993ee ("modpost: i2c aliases need no trailing wildcard")
-removed the wildcard at the end of the I2C module aliases because I2C
-devices have no IDs so the aliases are just arbitrary device names.
+On Tue 08 Dec 13:52 PST 2015, Arnd Bergmann wrote:
 
-This is also true for OF modaliases since a compatible string is used
-to define a specific IP hardware block. So the modalias should match a
-specific compatible string and not attempt to match a compatible string
-whose name matches the beginning of another one.
+> On Tuesday 08 December 2015 13:29:22 John Stultz wrote:
+> 
+[..]
+> > +static int reboot_reason(struct notifier_block *nb, unsigned long action,
+> > +								void *data)
+> > +{
+> > +	char *cmd = (char *)data;
+> > +	long reason = reasons[NONE];
+> > +
+> > +	if (!reboot_reason_addr)
+> > +		return NOTIFY_DONE;
+> > +
+> > +	if (cmd != NULL) {
+> > +		if (!strncmp(cmd, "bootloader", 10))
+> > +			reason = reasons[BOOTLOADER];
+> > +		else if (!strncmp(cmd, "recovery", 8))
+> > +			reason = reasons[RECOVERY];
+> > +		else if (!strncmp(cmd, "oem-", 4)) {
+> > +			unsigned long code;
+> > +
+> > +			if (!kstrtoul(cmd+4, 0, &code))
+> > +				reason = reasons[OEM] | (code & 0xff);
+> > +		}
+> > +	}
+> > +
+> > +	if (reason != -1)
+> > +		writel(reason, reboot_reason_addr);
+> > +	return NOTIFY_DONE;
+> > +}
+> 
+> Will this reboot the machine?
+> 
 
-For example, the following driver module:
+It will store the magic in IMEM, that is then read by the boot loader
+after the reboot to make it trigger alternative boot flows - e.g. the
+recovery/update path or enter fastboot mode.
 
-$ modinfo cros_ec_keyb | grep alias
-alias:          platform:cros-ec-keyb
-alias:          of:N*T*Cgoogle,cros-ec-keyb*
+> > +	/* Install the notifier */
+> > +	restart_nb.notifier_call = reboot_reason;
+> > +	restart_nb.priority = 256;
+> > +	if (register_restart_handler(&restart_nb)) {
+> 
+> If not, you should use register_reboot_notifier() rather than
+> register_restart_handler(). The former gets called to do something
+> just before rebooting, while the latter attempts to actually reboot
+> the machine.
+> 
 
-will be tried to be loaded for an alias of:N*T*Cgoogle,cros-ec-keyb-v2
-but there could be a different driver that supports the device for that
-compatible string so it's better to remove the trailing wildcard for OF.
+It should be a reboot_notifier, sorry for missing this in my answer.
 
-Also, remove the word "always" from the add_wildcard() function comment
-since that was carried from the time where a wildcard was always added
-at the end of the module alias for all the devices.
+> > +static int __init reboot_reason_init(void)
+> > +{
+> > +	return platform_driver_register(&reboot_reason_driver);
+> > +}
+> > +arch_initcall(reboot_reason_init);
+> 
+> Why this early? If it can be a normal device_initcall, you can use
+> module_platform_driver().
+> 
 
-Suggested-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Reviewed-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Not represented in this patch is that several Android vendors uses this
+mechanism to communicate a panic() to the boot loader; to let the system
+enter some sort of memory dump state.
 
----
-Hello,
+Adding support for that would be convenient and mandate the early,
+otherwise it's just userspace that will trigger this so module would be
+fine.
 
-I sent this patch before [0] but was never picked. MAINTAINERS doesn't
-say who should manage patches to file2alias so maybe I didn't add the
-right person to the cc list.
-
-Documentation/development-process/5.Posting says that if there is no
-obvious maintainer, then Andrew Morton is often the patch target so
-I'm re-sending to him.
-
-Best regards,
-Javier
-
- scripts/mod/file2alias.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-index 5b96206e9aab..65eaab8b7798 100644
---- a/scripts/mod/file2alias.c
-+++ b/scripts/mod/file2alias.c
-@@ -125,7 +125,7 @@ do {                                                            \
-                 sprintf(str + strlen(str), "*");                \
- } while(0)
- 
--/* Always end in a wildcard, for future extension */
-+/* End in a wildcard, for future extension */
- static inline void add_wildcard(char *str)
- {
- 	int len = strlen(str);
-@@ -704,7 +704,6 @@ static int do_of_entry (const char *filename, void *symval, char *alias)
- 		if (isspace (*tmp))
- 			*tmp = '_';
- 
--	add_wildcard(alias);
- 	return 1;
- }
- ADD_TO_DEVTABLE("of", of_device_id, do_of_entry);
--- 
-2.4.3
-
+Regards,
+Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
