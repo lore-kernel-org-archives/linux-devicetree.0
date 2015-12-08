@@ -1,43 +1,61 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH resend 4/6] ARM: dts: sun4i: Add VE (Video
- Engine) module clock node
-Date: Tue, 8 Dec 2015 11:06:55 +0100
-Message-ID: <20151208100655.GS27957@lukather>
-References: <1449321407-4531-1-git-send-email-wens@csie.org>
- <1449321407-4531-5-git-send-email-wens@csie.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Haibo Chen <haibo.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v5 0/4] Add i.mx7d adc driver support
+Date: Tue, 8 Dec 2015 18:26:19 +0800
+Message-ID: <1449570383-25716-1-git-send-email-haibo.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YvpO9wCO44Ze8QQC"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBQGXTKZQKGQETIMI6PA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1449321407-4531-5-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: haibo.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---YvpO9wCO44Ze8QQC
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+This patch set add imx7d adc driver support.
 
-On Sat, Dec 05, 2015 at 09:16:45PM +0800, Chen-Yu Tsai wrote:
-> The video engine has its own module clock, which also includes a
-> reset control for it.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Changes in v5:
+-call imx7d_adc_power_down() in driver probe when iio_device_register() failed
+-handle with adc channel conversion timeout in imx7d_adc_isr()
 
-Applied, thanks!
-Maxime
+Changes in v4:
+-sort the include head file alphabetically
+-really just clear the bit 31 of register REG_ADC_CH_A\B\C\D_CFG1 
+ in function imx7d_adc_sample_rate_set()
+-add document in imx7d_adc_isr() to clarify the clear operation
+-add function imx7d_adc_power_down()
+-adjust the format of the code and add some small changes
+
+Changes in v3:
+-move down the irq request in probe()
+-remove the property 'num-channels' in dts
+-remove some unused head file
+-add clear register operation in imx7d_adc_isr()
+
+Changes in v2:
+-prefix defines with IMX7D_ for all the register
+-use BIT macro to define a single bit
+-remove the dma_en from struct adc_feature which is not support currently
+-use static const array to replace the switch case code
+
+Haibo Chen (4):
+  iio: adc: add IMX7D ADC driver support
+  Documentation: add the binding file for Freescale imx7d ADC driver
+  ARM: dts: imx7d.dtsi: add ADC support
+  ARM: dts: imx7d-sdb: add ADC support
+
+ .../devicetree/bindings/iio/adc/imx7d-adc.txt      |  22 +
+ arch/arm/boot/dts/imx7d-sdb.dts                    |  10 +
+ arch/arm/boot/dts/imx7d.dtsi                       |  18 +
+ drivers/iio/adc/Kconfig                            |   9 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/imx7d_adc.c                        | 589 +++++++++++++++++++++
+ 6 files changed, 649 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/imx7d-adc.txt
+ create mode 100644 drivers/iio/adc/imx7d_adc.c
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---YvpO9wCO44Ze8QQC--
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
