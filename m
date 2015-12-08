@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 06/13] ARM: shmobile: gose dts: Add serial port config to chosen/stdout-path
-Date: Tue,  8 Dec 2015 18:54:11 +0100
-Message-ID: <1449597258-32623-7-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 11/13] ARM: shmobile: marzen dts: Add serial port config to chosen/stdout-path
+Date: Tue,  8 Dec 2015 18:54:16 +0100
+Message-ID: <1449597258-32623-12-git-send-email-geert+renesas@glider.be>
 References: <1449597258-32623-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1449597258-32623-1-git-send-email-geert+renesas@glider.be>
@@ -12,22 +12,22 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/r8a7793-gose.dts | 2 +-
+ arch/arm/boot/dts/r8a7779-marzen.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
-index d842ce77b7c896e5..3e3122490650d140 100644
---- a/arch/arm/boot/dts/r8a7793-gose.dts
-+++ b/arch/arm/boot/dts/r8a7793-gose.dts
-@@ -24,7 +24,7 @@
+diff --git a/arch/arm/boot/dts/r8a7779-marzen.dts b/arch/arm/boot/dts/r8a7779-marzen.dts
+index fe396c8d58db7986..2193ba07d5334760 100644
+--- a/arch/arm/boot/dts/r8a7779-marzen.dts
++++ b/arch/arm/boot/dts/r8a7779-marzen.dts
+@@ -25,7 +25,7 @@
  
  	chosen {
- 		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
--		stdout-path = &scif0;
+ 		bootargs = "ignore_loglevel root=/dev/nfs ip=on";
+-		stdout-path = &scif2;
 +		stdout-path = "serial0:115200n8";
  	};
  
- 	memory@40000000 {
+ 	memory {
 -- 
 1.9.1
 
