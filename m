@@ -1,32 +1,63 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: DTS: am33xx: Use the new DT bindings for the eDMA3
-Date: Mon, 7 Dec 2015 16:19:43 -0800
-Message-ID: <20151208001943.GT23396@atomide.com>
-References: <1449225915-28879-1-git-send-email-peter.ujfalusi@ti.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: shmobile: r8a7778: tidyup #sound-dai-cells settings
+Date: Tue, 8 Dec 2015 09:37:28 +0900
+Message-ID: <20151208003724.GG10799@verge.net.au>
+References: <1449505537-15428-1-git-send-email-geert+renesas@glider.be>
+ <878u557qff.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1449225915-28879-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <878u557qff.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [151204 02:46]:
-> +
-> +			ti,tptcs = <&edma_tptc0 7>, <&edma_tptc1 5>,
-> +				   <&edma_tptc2 0>;
-> +
-> +			ti,edma-memcpy-channels = /bits/ 16 <20 21>;
+On Tue, Dec 08, 2015 at 12:10:59AM +0000, Kuninori Morimoto wrote:
+> 
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> 
+> Renesas sound driver needs #sound-dai-cells settings, but, this usage
+> is a little bit confusable. It came from ALSA SoC historical reasons.
+> The sound DAI naming method is different between Single/Multi DAI in
+> the ALSA framework, and it is used for sound card matching.
+> And this #sound-dai-cells has relationship to it.
+> Current SoC dtsi has #sound-dai-cells = <1> as default settings
+> (= it is assuming that board/platform has multi DAI), and
+> board/platform side needs to overwrite it if board/platform was single
+> DAI. This style is more confusable for users.
+> This patch removes SoC side default settings, and force to set it by
+> board/platform side.
+> 
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> ---
+> This patch is based on Geert's
+> ARM: shmobile: bockw dts: Override #sound-dai-cells to zero
 
-Is this safe to change to just ti,edma-memcpy-channels = <20 21> as
-suggested by Arnd?
+Is Geert's patch necessary with this patch?
 
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  arch/arm/boot/dts/r8a7778.dtsi | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7778.dtsi b/arch/arm/boot/dts/r8a7778.dtsi
+> index 4f8e078..b140627 100644
+> --- a/arch/arm/boot/dts/r8a7778.dtsi
+> +++ b/arch/arm/boot/dts/r8a7778.dtsi
+> @@ -236,7 +236,12 @@
+>  	};
+>  
+>  	rcar_sound: sound@ffd90000 {
+> -		#sound-dai-cells = <1>;
+> +		/*
+> +		 * #sound-dai-cells is required
+> +		 *
+> +		 * Single DAI : #sound-dai-cells = <0>;         <&rcar_sound>;
+> +		 * Multi  DAI : #sound-dai-cells = <1>;         <&rcar_sound N>;
+> +		 */
+>  		compatible = "renesas,rcar_sound-r8a7778", "renesas,rcar_sound-gen1";
+>  		reg =	<0xffd90000 0x1000>,	/* SRU */
+>  			<0xffd91000 0x240>,	/* SSI */
+> -- 
+> 1.9.1
+> 
