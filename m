@@ -1,221 +1,687 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v5 2/4] drm: Add support for ARM's HDLCD controller.
-Date: Tue, 8 Dec 2015 16:52:41 +0000
-Message-ID: <20151208165241.GN972@e106497-lin.cambridge.arm.com>
-References: <1449490265-6752-1-git-send-email-Liviu.Dudau@arm.com>
- <1449490265-6752-3-git-send-email-Liviu.Dudau@arm.com>
- <56670477.5000301@arm.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: Add SolidRun Armada 388 Clearfog A1 DT file
+Date: Tue, 08 Dec 2015 17:57:45 +0100
+Message-ID: <87egew98ty.fsf@free-electrons.com>
+References: <E1a5hDy-0002rC-Oe@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <56670477.5000301@arm.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <E1a5hDy-0002rC-Oe-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org> (Russell King's
+	message of "Sun, 06 Dec 2015 21:52:06 +0000")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBEZWMgMDgsIDIwMTUgYXQgMDQ6MjU6MjdQTSArMDAwMCwgUm9iaW4gTXVycGh5IHdy
-b3RlOgo+IEhpIExpdml1LAo+IAo+IE9uIDA3LzEyLzE1IDEyOjExLCBMaXZpdSBEdWRhdSB3cm90
-ZToKPiA+VGhlIEhETENEIGNvbnRyb2xsZXIgaXMgYSBkaXNwbGF5IGNvbnRyb2xsZXIgdGhhdCBz
-dXBwb3J0cyByZXNvbHV0aW9ucwo+ID51cCB0byA0MDk2eDQwOTYgcGl4ZWxzLiBJdCBpcyBwcmVz
-ZW50IG9uIHZhcmlvdXMgZGV2ZWxvcG1lbnQgYm9hcmRzCj4gPnByb2R1Y2VkIGJ5IEFSTSBMdGQg
-YW5kIGVtdWxhdGVkIGJ5IHRoZSBsYXRlc3QgRmFzdCBNb2RlbHMgZnJvbSB0aGUKPiA+Y29tcGFu
-eS4KPiA+Cj4gPiBDYzogRGF2aWQgQWlybGllIDxhaXJsaWVkQGxpbnV4LmllPgo+ID4gQ2M6IFJv
-YmluIE11cnBoeSA8cm9iaW4ubXVycGh5QGFybS5jb20+Cj4gCj4gSSd2ZSBnaXZlbiB0aGlzIGEg
-c3BpbiBvbiBteSBKdW5vLCBhbmQgdGhlIGZpcnN0IHRoaW5nIG9mIG5vdGUgaXMgdGhpczoKPiAK
-PiBoZGxjZCA3ZmY2MDAwMC5oZGxjZDogbWFzdGVyIGJpbmQgZmFpbGVkOiAtNTE3Cj4gaGRsY2Qg
-N2ZmNTAwMDAuaGRsY2Q6IG1hc3RlciBiaW5kIGZhaWxlZDogLTUxNwo+IHNjcGlfcHJvdG9jb2wg
-c2NwaTogU0NQIFByb3RvY29sIDEuMCBGaXJtd2FyZSAxLjkuMCB2ZXJzaW9uCj4gW2RybV0gZm91
-bmQgQVJNIEhETENEIHZlcnNpb24gcjBwMAo+IHRkYTk5OHggMC0wMDcwOiBGYWxsaW5nIGJhY2sg
-dG8gZmlyc3QgQ1JUQwo+IHVzYiAxLTE6IG5ldyBoaWdoLXNwZWVkIFVTQiBkZXZpY2UgbnVtYmVy
-IDIgdXNpbmcgZWhjaS1wbGF0Zm9ybQo+IHRkYTk5OHggMC0wMDcwOiBmb3VuZCBUREExOTk4OAo+
-IGhkbGNkIDdmZjYwMDAwLmhkbGNkOiBib3VuZCAwLTAwNzAgKG9wcyB0ZGE5OTh4X29wcykKPiBb
-ZHJtXSBTdXBwb3J0cyB2YmxhbmsgdGltZXN0YW1wIGNhY2hpbmcgUmV2IDIgKDIxLjEwLjIwMTMp
-Lgo+IFtkcm1dIE5vIGRyaXZlciBzdXBwb3J0IGZvciB2YmxhbmsgdGltZXN0YW1wIHF1ZXJ5Lgo+
-IC0tLS0tLS0tLS0tLVsgY3V0IGhlcmUgXS0tLS0tLS0tLS0tLQo+IFdBUk5JTkc6IGF0IGRyaXZl
-cnMvZ3B1L2RybS9kcm1fYXRvbWljX2hlbHBlci5jOjY4Mgo+IE1vZHVsZXMgbGlua2VkIGluOgo+
-IAo+IENQVTogMiBQSUQ6IDk4IENvbW06IGt3b3JrZXIvdTEyOjMgVGFpbnRlZDogRyAgICAgICAg
-VyAgICAgICA0LjQuMC1yYzIrICM4NDYKPiBIYXJkd2FyZSBuYW1lOiBBUk0gSnVubyBkZXZlbG9w
-bWVudCBib2FyZCAocjEpIChEVCkKPiBXb3JrcXVldWU6IGRlZmVyd3EgZGVmZXJyZWRfcHJvYmVf
-d29ya19mdW5jCj4gdGFzazogZmZmZmZlMDA3ZWNiMzcwMCB0aTogZmZmZmZlMDk0MDljODAwMCB0
-YXNrLnRpOiBmZmZmZmUwOTQwOWM4MDAwCj4gUEMgaXMgYXQgZHJtX2F0b21pY19oZWxwZXJfdXBk
-YXRlX2xlZ2FjeV9tb2Rlc2V0X3N0YXRlKzB4MWU4LzB4MWYwCj4gTFIgaXMgYXQgZHJtX2F0b21p
-Y19oZWxwZXJfY29tbWl0X21vZGVzZXRfZGlzYWJsZXMrMHgxYTgvMHgzODgKPiBwYyA6IFs8ZmZm
-ZmZlMDAwMDRhNDQ2OD5dIGxyIDogWzxmZmZmZmUwMDAwNGE1OWI4Pl0gcHN0YXRlOiAyMDAwMDA0
-NQo+IHNwIDogZmZmZmZlMDk0MDljYjU2MAo+IHgyOTogZmZmZmZlMDk0MDljYjU2MCB4Mjg6IGZm
-ZmZmZTA5NDBiZjI4MDAKPiB4Mjc6IGZmZmZmZTA5NDAwNzAwMDAgeDI2OiAwMDAwMDAwMDAwMDAw
-MDAxCj4geDI1OiBmZmZmZmUwMDAwYmU0YjUwIHgyNDogZmZmZmZlMDAwMDdhZTgyMAo+IHgyMzog
-ZmZmZmZlMDAwMGJlNGI1MCB4MjI6IGZmZmZmZTA5NDBiZDEwMDAKPiB4MjE6IGZmZmZmZTA5NDBi
-ZDEwMDAgeDIwOiAwMDAwMDAwMDAwMDAwMDAwCj4geDE5OiBmZmZmZmUwOTQwOTY4MDAwIHgxODog
-ZmZmZmZlMDk0MGM4MDkxYwo+IHgxNzogMDAwMDAwMDAwMDAwMDAwNyB4MTY6IDAwMDAwMDAwMDAw
-MDAwMDEKPiB4MTU6IGZmZmZmZTA5NDBjODAxNmYgeDE0OiAwMDAwMDAzYzAwMDAwMDAwCj4geDEz
-OiAwMDAwMDAwMDAwMDAwMDAwIHgxMjogMDAwMDA0YzkwMDAwMDRiNAo+IHgxMTogMDAwMDA0YjEw
-MDAwMDRjOSB4MTA6IDAwMDAwNGIwMDAwMDA0YjAKPiB4OSA6IDAwMDAwMDAwMDAwMDA2ZjQgeDgg
-OiAwMDAwMDZhNDAwMDAwNjU0Cj4geDcgOiAwMDAwMDZmNDAwMDAwNjQwIHg2IDogZmZmZmZlMDk0
-MDk2NjQ4MAo+IHg1IDogZmZmZmZlMDk0MDk2ODIwMCB4NCA6IDAwMDAwMDAwMDAwMDAwMDEKPiB4
-MyA6IGZmZmZmZTA5NDA5NjZhODAgeDIgOiAwMDAwMDAwMDAwMDAwMDAwCj4geDEgOiBmZmZmZmUw
-OTQwYmQwOTAwIHgwIDogZmZmZmZlMDk0MGJkMDk2MAo+IAo+IC0tLVsgZW5kIHRyYWNlIGJkYjZh
-ZjY5YjI5YmY3ZWEgXS0tLQo+IENhbGwgdHJhY2U6Cj4gWzxmZmZmZmUwMDAwNGE0NDY4Pl0KPiBk
-cm1fYXRvbWljX2hlbHBlcl91cGRhdGVfbGVnYWN5X21vZGVzZXRfc3RhdGUrMHgxZTgvMHgxZjAK
-PiBbPGZmZmZmZTAwMDA0YTU5Yjg+XSBkcm1fYXRvbWljX2hlbHBlcl9jb21taXRfbW9kZXNldF9k
-aXNhYmxlcysweDFhOC8weDM4OAo+IFs8ZmZmZmZlMDAwMDRhNWM3MD5dIGRybV9hdG9taWNfaGVs
-cGVyX2NvbW1pdCsweGQ4LzB4MTQwCj4gWzxmZmZmZmUwMDAwNGNjY2UwPl0gaGRsY2RfYXRvbWlj
-X2NvbW1pdCsweDEwLzB4MTgKPiBbPGZmZmZmZTAwMDA0YzllZjg+XSBkcm1fYXRvbWljX2NvbW1p
-dCsweDQwLzB4NzAKPiBbPGZmZmZmZTAwMDA0YTY5YjA+XSByZXN0b3JlX2ZiZGV2X21vZGUrMHgy
-NzAvMHgyYjAKPiBbPGZmZmZmZTAwMDA0YThkNjQ+XSBkcm1fZmJfaGVscGVyX3Jlc3RvcmVfZmJk
-ZXZfbW9kZV91bmxvY2tlZCsweDM0LzB4OTAKPiBbPGZmZmZmZTAwMDA0YThkZWM+XSBkcm1fZmJf
-aGVscGVyX3NldF9wYXIrMHgyYy8weDYwCj4gWzxmZmZmZmUwMDAwNDJmMDEwPl0gZmJjb25faW5p
-dCsweDRkMC8weDUyMAo+IFs8ZmZmZmZlMDAwMDQ2ZWM5Yz5dIHZpc3VhbF9pbml0KzB4YWMvMHgx
-MDgKPiBbPGZmZmZmZTAwMDA0NzA2MGM+XSBkb19iaW5kX2Nvbl9kcml2ZXIrMHgxZDQvMHgzZTgK
-PiBbPGZmZmZmZTAwMDA0NzBjMTQ+XSBkb190YWtlX292ZXJfY29uc29sZSsweDE3NC8weDFlOAo+
-IFs8ZmZmZmZlMDAwMDQyYzM4Yz5dIGRvX2ZiY29uX3Rha2VvdmVyKzB4NzQvMHgxMDAKPiBbPGZm
-ZmZmZTAwMDA0MzEzYjQ+XSBmYmNvbl9ldmVudF9ub3RpZnkrMHg3N2MvMHg3ZDgKPiBbPGZmZmZm
-ZTAwMDAwZGM3MDA+XSBub3RpZmllcl9jYWxsX2NoYWluKzB4NTAvMHg5MAo+IFs8ZmZmZmZlMDAw
-MDBkY2FkYz5dIF9fYmxvY2tpbmdfbm90aWZpZXJfY2FsbF9jaGFpbisweDRjLzB4OTAKPiBbPGZm
-ZmZmZTAwMDAwZGNiMzQ+XSBibG9ja2luZ19ub3RpZmllcl9jYWxsX2NoYWluKzB4MTQvMHgyMAo+
-IFs8ZmZmZmZlMDAwMDQzNTIwND5dIGZiX25vdGlmaWVyX2NhbGxfY2hhaW4rMHgxYy8weDI4Cj4g
-WzxmZmZmZmUwMDAwNDM3MDEwPl0gcmVnaXN0ZXJfZnJhbWVidWZmZXIrMHgxYzAvMHgyYjgKPiBb
-PGZmZmZmZTAwMDA0YTkwYTQ+XSBkcm1fZmJfaGVscGVyX2luaXRpYWxfY29uZmlnKzB4Mjg0LzB4
-M2U4Cj4gWzxmZmZmZmUwMDAwNGE5OTFjPl0gZHJtX2ZiZGV2X2NtYV9pbml0KzB4OTQvMHgxNDgK
-PiBbPGZmZmZmZTAwMDA0Y2NmYzQ+XSBoZGxjZF9kcm1fYmluZCsweDFkNC8weDQxOAo+IFs8ZmZm
-ZmZlMDAwMDRkMTVmMD5dIHRyeV90b19icmluZ191cF9tYXN0ZXIucGFydC4yKzB4YzgvMHgxMTAK
-PiBbPGZmZmZmZTAwMDA0ZDE4MjA+XSBjb21wb25lbnRfYWRkKzB4OTAvMHgxMDgKPiBbPGZmZmZm
-ZTAwMDA0Y2U2YTg+XSB0ZGE5OTh4X3Byb2JlKzB4MTgvMHgyMAo+IFs8ZmZmZmZlMDAwMDVhNmQy
-ND5dIGkyY19kZXZpY2VfcHJvYmUrMHgxNjQvMHgyMjgKPiBbPGZmZmZmZTAwMDA0ZDY5OGM+XSBk
-cml2ZXJfcHJvYmVfZGV2aWNlKzB4MWVjLzB4MmYwCj4gWzxmZmZmZmUwMDAwNGQ2YmMwPl0gX19k
-ZXZpY2VfYXR0YWNoX2RyaXZlcisweDkwLzB4ZDgKPiBbPGZmZmZmZTAwMDA0ZDRiODg+XSBidXNf
-Zm9yX2VhY2hfZHJ2KzB4NTgvMHg5OAo+IFs8ZmZmZmZlMDAwMDRkNjZlND5dIF9fZGV2aWNlX2F0
-dGFjaCsweGM0LzB4MTQ4Cj4gWzxmZmZmZmUwMDAwNGQ2YzU4Pl0gZGV2aWNlX2luaXRpYWxfcHJv
-YmUrMHgxMC8weDE4Cj4gWzxmZmZmZmUwMDAwNGQ1YjljPl0gYnVzX3Byb2JlX2RldmljZSsweDk0
-LzB4YTAKPiBbPGZmZmZmZTAwMDA0ZDYwMjA+XSBkZWZlcnJlZF9wcm9iZV93b3JrX2Z1bmMrMHg3
-MC8weGE4Cj4gWzxmZmZmZmUwMDAwMGQ1YjcwPl0gcHJvY2Vzc19vbmVfd29yaysweDEzOC8weDM3
-OAo+IFs8ZmZmZmZlMDAwMDBkNWVkND5dIHdvcmtlcl90aHJlYWQrMHgxMjQvMHg0OTgKPiBbPGZm
-ZmZmZTAwMDAwZGJiNTQ+XSBrdGhyZWFkKzB4ZGMvMHhmMAo+IFs8ZmZmZmZlMDAwMDA5Mzk4MD5d
-IHJldF9mcm9tX2ZvcmsrMHgxMC8weDUwCj4gQ29uc29sZTogc3dpdGNoaW5nIHRvIGNvbG91ciBm
-cmFtZSBidWZmZXIgZGV2aWNlIDE1MHgxMDAKPiAKPiB3aGljaCBmb3IgcmVmZXJlbmNlLCBpcyB0
-aGUgZmlyc3Qgb25lIGluIHRoYXQgZnVuY3Rpb246Cj4gCj4gCS4uLgo+IAkvKiBjbGVhciBvdXQg
-ZXhpc3RpbmcgbGlua3MgYW5kIHVwZGF0ZSBkcG1zICovCj4gCWZvcl9lYWNoX2Nvbm5lY3Rvcl9p
-bl9zdGF0ZShvbGRfc3RhdGUsIGNvbm5lY3Rvciwgb2xkX2Nvbm5fc3RhdGUsIGkpIHsKPiAJCWlm
-IChjb25uZWN0b3ItPmVuY29kZXIpIHsKPiAJCQlXQVJOX09OKCFjb25uZWN0b3ItPmVuY29kZXIt
-PmNydGMpOwo+IAkJCS4uLgo+IAo+IFRoYXQncyBvbiA0LjQtcmMyIHdpdGggdGhpcyBzZXJpZXMg
-cGx1cyB0aGUgMyB0ZGE5OTh4IHBhdGNoZXMgZnJvbSBSdXNzZWxsJ3MKPiBwYXRjaCBzeXN0ZW0g
-YXBwbGllZC4gSXMgdGhlcmUgc29tZXRoaW5nIGVsc2UgSSdtIG1pc3Npbmcgb3IgZG9lcyB0aGlz
-IG5lZWQKPiBsb29raW5nIGF0IChjb3VsZCBpdCBiZSByZWxhdGVkIHRvIHRoYXQgaW5pdGlhbCBw
-cm9iZSBkZWZlcnJhbCk/CgpZZWFoLCB5b3UgYWxzbyBuZWVkIFRoaWVycnkgUmVkaW5nJ3MgcGF0
-Y2ggdG8gbm90IHNldCB0aGUgY29ubmVjdG9yLT5lbmNvZGVyIGluCmRyaXZlcnMuCgpodHRwOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE1LU5vdmVtYmVyLzA5
-NDU3Ni5odG1sCgoKCj4gCj4gPlNpZ25lZC1vZmYtYnk6IExpdml1IER1ZGF1IDxMaXZpdS5EdWRh
-dUBhcm0uY29tPgo+ID5BY2tlZC1ieTogRGFuaWVsIFZldHRlciA8ZGFuaWVsLnZldHRlckBmZnds
-bC5jaD4KPiA+LS0tCj4gPiAgZHJpdmVycy9ncHUvZHJtL0tjb25maWcgICAgICAgICAgfCAgIDIg
-Kwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZSAgICAgICAgIHwgICAxICsKPiA+ICBkcml2
-ZXJzL2dwdS9kcm0vYXJtL0tjb25maWcgICAgICB8ICAyOSArKwo+ID4gIGRyaXZlcnMvZ3B1L2Ry
-bS9hcm0vTWFrZWZpbGUgICAgIHwgICAyICsKPiA+ICBkcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNk
-X2NydGMuYyB8IDMyOSArKysrKysrKysrKysrKysrKysrKysrCj4gPiAgZHJpdmVycy9ncHUvZHJt
-L2FybS9oZGxjZF9kcnYuYyAgfCA1ODAgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrCj4gPiAgZHJpdmVycy9ncHUvZHJtL2FybS9oZGxjZF9kcnYuaCAgfCAgNDIgKysrCj4g
-PiAgZHJpdmVycy9ncHUvZHJtL2FybS9oZGxjZF9yZWdzLmggfCAgODcgKysrKysrCj4gPiAgOCBm
-aWxlcyBjaGFuZ2VkLCAxMDcyIGluc2VydGlvbnMoKykKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9ncHUvZHJtL2FybS9LY29uZmlnCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
-cnMvZ3B1L2RybS9hcm0vTWFrZWZpbGUKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9n
-cHUvZHJtL2FybS9oZGxjZF9jcnRjLmMKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9n
-cHUvZHJtL2FybS9oZGxjZF9kcnYuYwo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
-dS9kcm0vYXJtL2hkbGNkX2Rydi5oCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1
-L2RybS9hcm0vaGRsY2RfcmVncy5oCj4gCj4gWy4uLl0KPiAKPiA+K3N0YXRpYyBpbnQgaGRsY2Rf
-c2V0X3B4bF9mbXQoc3RydWN0IGRybV9jcnRjICpjcnRjKQo+ID4rewo+ID4rCXVuc2lnbmVkIGlu
-dCBidHBwLCBkZWZhdWx0X2NvbG9yID0gMHgwMDAwMDAwMDsKPiA+KwlzdHJ1Y3QgaGRsY2RfZHJt
-X3ByaXZhdGUgKmhkbGNkID0gY3J0Y190b19oZGxjZF9wcml2KGNydGMpOwo+ID4rCXVpbnQzMl90
-IHBpeGVsX2Zvcm1hdDsKPiA+KwlzdHJ1Y3Qgc2ltcGxlZmJfZm9ybWF0ICpmb3JtYXQgPSBOVUxM
-Owo+ID4rCWludCBpOwo+ID4rCj4gPisjaWZkZWYgQ09ORklHX0RSTV9IRExDRF9TSE9XX1VOREVS
-UlVOCj4gPisJZGVmYXVsdF9jb2xvciA9IDB4MDBmZjAwMDA7CS8qIHNob3cgdW5kZXJydW5zIGlu
-IHJlZCAqLwo+ID4rI2VuZGlmCj4gPisKPiA+KwlwaXhlbF9mb3JtYXQgPSBjcnRjLT5wcmltYXJ5
-LT5zdGF0ZS0+ZmItPnBpeGVsX2Zvcm1hdDsKPiA+Kwo+ID4rCWZvciAoaSA9IDA7IGkgPCBBUlJB
-WV9TSVpFKHN1cHBvcnRlZF9mb3JtYXRzKTsgaSsrKSB7Cj4gPisJCWlmIChzdXBwb3J0ZWRfZm9y
-bWF0c1tpXS5mb3VyY2MgPT0gcGl4ZWxfZm9ybWF0KQo+ID4rCQkJZm9ybWF0ID0gJnN1cHBvcnRl
-ZF9mb3JtYXRzW2ldOwo+ID4rCX0KPiA+Kwo+ID4rCWlmIChXQVJOX09OKCFmb3JtYXQpKSB7Cj4g
-PisJCXJldHVybiAwOwo+ID4rCX0KPiAKPiBuaXQ6IHVubmVjZXNzYXJ5IGJyYWNlcy4KPiAKPiA+
-KwkvKiBIRExDRCB1c2VzICdieXRlcyBwZXIgcGl4ZWwnLCB6ZXJvIG1lYW5zIDEgYnl0ZSAqLwo+
-ID4rCWJ0cHAgPSAoZm9ybWF0LT5iaXRzX3Blcl9waXhlbCArIDcpIC8gODsKPiA+KwloZGxjZF93
-cml0ZShoZGxjZCwgSERMQ0RfUkVHX1BJWEVMX0ZPUk1BVCwgKGJ0cHAgLSAxKSA8PCAzKTsKPiA+
-Kwo+ID4rCS8qCj4gPisJICogVGhlIGZvcm1hdCBvZiB0aGUgSERMQ0RfUkVHXzxjb2xvcj5fU0VM
-RUNUIHJlZ2lzdGVyIGlzOgo+ID4rCSAqICAgLSBiaXRzWzIzOjE2XSAtIGRlZmF1bHQgdmFsdWUg
-Zm9yIHRoYXQgY29sb3IgY29tcG9uZW50Cj4gPisJICogICAtIGJpdHNbMTE6OF0gIC0gbnVtYmVy
-IG9mIGJpdHMgdG8gZXh0cmFjdCBmb3IgZWFjaCBjb2xvciBjb21wb25lbnQKPiA+KwkgKiAgIC0g
-Yml0c1s0OjBdICAgLSBpbmRleCBvZiB0aGUgbG93ZXN0IGJpdCB0byBleHRyYWN0Cj4gPisJICoK
-PiA+KwkgKiBUaGUgZGVmYXVsdCBjb2xvciB2YWx1ZSBpcyB1c2VkIHdoZW4gYml0c1sxMTo4XSBh
-cmUgemVybywgd2hlbiB0aGUKPiA+KwkgKiBwaXhlbCBpcyBvdXRzaWRlIHRoZSB2aXNpYmxlIGZy
-YW1lIGFyZWEgb3Igd2hlbiB0aGVyZSBpcyBhCj4gPisJICogYnVmZmVyIHVuZGVycnVuLgo+ID4r
-CSAqLwo+ID4rCWhkbGNkX3dyaXRlKGhkbGNkLCBIRExDRF9SRUdfUkVEX1NFTEVDVCwgZGVmYXVs
-dF9jb2xvciB8Cj4gPisJCWZvcm1hdC0+cmVkLm9mZnNldCB8IChmb3JtYXQtPnJlZC5sZW5ndGgg
-JiAweGYpIDw8IDgpOwo+ID4rCWhkbGNkX3dyaXRlKGhkbGNkLCBIRExDRF9SRUdfR1JFRU5fU0VM
-RUNULCBkZWZhdWx0X2NvbG9yIHwKPiA+KwkJZm9ybWF0LT5ncmVlbi5vZmZzZXQgfCAoZm9ybWF0
-LT5ncmVlbi5sZW5ndGggJiAweGYpIDw8IDgpOwo+ID4rCWhkbGNkX3dyaXRlKGhkbGNkLCBIRExD
-RF9SRUdfQkxVRV9TRUxFQ1QsIGRlZmF1bHRfY29sb3IgfAo+ID4rCQlmb3JtYXQtPmJsdWUub2Zm
-c2V0IHwgKGZvcm1hdC0+Ymx1ZS5sZW5ndGggJiAweGYpIDw8IDgpOwo+IAo+IFRoZXNlIHdvdWxk
-IHNlZW0gdG8gYmUgcHV0dGluZyBiaXRzIDIzOjE2IGZyb20gZGVmYXVsdF9jb2xvciBpbnRvIHRo
-ZQo+IGRlZmF1bHQgZmllbGQgb2YgZXZlcnkgcmVnaXN0ZXIsIGFuZCBpbmRlZWQgdW5kZXJydW5z
-IHNob3cgdXAgYXMgYSB2ZXJ5Cj4gd2hpdGUtbG9va2luZyBzaGFkZSBvZiByZWQgZm9yIG1lIDsp
-CgpPb29wcywgSSBiZXR0ZXIgY2hhbmdlIHRoYXQuIENvdWxkIHlvdSB0ZWxsIG1lIGhvdyB5b3Ug
-dHJpZ2dlciB1bmRlcnJ1bnMKaW4geW91ciBzZXR1cD8KCj4gCj4gPisJcmV0dXJuIDA7Cj4gPit9
-Cj4gCj4gWy4uLl0KPiAKPiA+K3N0YXRpYyB2b2lkIGhkbGNkX2ZiX291dHB1dF9wb2xsX2NoYW5n
-ZWQoc3RydWN0IGRybV9kZXZpY2UgKmRybSkKPiA+K3sKPiA+KwlzdHJ1Y3QgaGRsY2RfZHJtX3By
-aXZhdGUgKmhkbGNkID0gZHJtLT5kZXZfcHJpdmF0ZTsKPiA+Kwo+ID4rCWlmIChoZGxjZC0+ZmJk
-ZXYpIHsKPiA+KwkJZHJtX2ZiZGV2X2NtYV9ob3RwbHVnX2V2ZW50KGhkbGNkLT5mYmRldik7Cj4g
-PisJfQo+IAo+IG5pdDogYnJhY2VzLgo+IAo+ID4rfQo+IAo+IFsuLi5dCj4gCj4gPitzdGF0aWMg
-aXJxcmV0dXJuX3QgaGRsY2RfaXJxKGludCBpcnEsIHZvaWQgKmFyZykKPiA+K3sKPiA+KwlzdHJ1
-Y3QgZHJtX2RldmljZSAqZHJtID0gYXJnOwo+ID4rCXN0cnVjdCBoZGxjZF9kcm1fcHJpdmF0ZSAq
-aGRsY2QgPSBkcm0tPmRldl9wcml2YXRlOwo+ID4rCXVuc2lnbmVkIGxvbmcgaXJxX3N0YXR1czsK
-PiA+Kwo+ID4rCWlycV9zdGF0dXMgPSBoZGxjZF9yZWFkKGhkbGNkLCBIRExDRF9SRUdfSU5UX1NU
-QVRVUyk7Cj4gPisKPiA+KyNpZmRlZiBDT05GSUdfREVCVUdfRlMKPiA+KwlpZiAoaXJxX3N0YXR1
-cyAmIEhETENEX0lOVEVSUlVQVF9VTkRFUlJVTikgewo+ID4rCQlhdG9taWNfaW5jKCZoZGxjZC0+
-YnVmZmVyX3VuZGVycnVuX2NvdW50KTsKPiA+Kwl9Cj4gPisJaWYgKGlycV9zdGF0dXMgJiBIRExD
-RF9JTlRFUlJVUFRfRE1BX0VORCkgewo+ID4rCQlhdG9taWNfaW5jKCZoZGxjZC0+ZG1hX2VuZF9j
-b3VudCk7Cj4gPisJfQo+ID4rCWlmIChpcnFfc3RhdHVzICYgSERMQ0RfSU5URVJSVVBUX0JVU19F
-UlJPUikgewo+ID4rCQlhdG9taWNfaW5jKCZoZGxjZC0+YnVzX2Vycm9yX2NvdW50KTsKPiA+Kwl9
-Cj4gPisJaWYgKGlycV9zdGF0dXMgJiBIRExDRF9JTlRFUlJVUFRfVlNZTkMpIHsKPiA+KwkJYXRv
-bWljX2luYygmaGRsY2QtPnZzeW5jX2NvdW50KTsKPiA+Kwl9Cj4gCj4gbml0OiBicmFjZXMgYWdh
-aW4gKGl0J3Mgb25seSBiZWNhdXNlIEknbSB0b28gbGF6eSB0byByZW1vdmUgdGhlIG5ld2JpZQo+
-IGNoZWNrcGF0Y2ggY29tbWl0IGhvb2ssIGFuZCBhIG1hbnVhbCBtZXJnZSBvZiB0aGlzIGludG8g
-bXkgU01NVSBkZXYgdHJlZQo+IG1hZGUgdGhhdCB0aHJvdyBhIGZpdCkKPiAKPiA+KyNlbmRpZgo+
-ID4rCWlmIChpcnFfc3RhdHVzICYgSERMQ0RfSU5URVJSVVBUX1ZTWU5DKSB7Cj4gPisJCWJvb2wg
-ZXZlbnRzX3NlbnQgPSBmYWxzZTsKPiA+KwkJdW5zaWduZWQgbG9uZyBmbGFnczsKPiA+KwkJc3Ry
-dWN0IGRybV9wZW5kaW5nX3ZibGFua19ldmVudAkqZSwgKnQ7Cj4gPisKPiA+KwkJZHJtX2NydGNf
-aGFuZGxlX3ZibGFuaygmaGRsY2QtPmNydGMpOwo+ID4rCj4gPisJCXNwaW5fbG9ja19pcnFzYXZl
-KCZkcm0tPmV2ZW50X2xvY2ssIGZsYWdzKTsKPiA+KwkJbGlzdF9mb3JfZWFjaF9lbnRyeV9zYWZl
-KGUsIHQsICZoZGxjZC0+ZXZlbnRfbGlzdCwgYmFzZS5saW5rKSB7Cj4gPisJCQlsaXN0X2RlbCgm
-ZS0+YmFzZS5saW5rKTsKPiA+KwkJCWRybV9jcnRjX3NlbmRfdmJsYW5rX2V2ZW50KCZoZGxjZC0+
-Y3J0YywgZSk7Cj4gPisJCQlldmVudHNfc2VudCA9IHRydWU7Cj4gPisJCX0KPiA+KwkJaWYgKGV2
-ZW50c19zZW50KQo+ID4rCQkJZHJtX2NydGNfdmJsYW5rX3B1dCgmaGRsY2QtPmNydGMpOwo+ID4r
-CQlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZkcm0tPmV2ZW50X2xvY2ssIGZsYWdzKTsKPiA+Kwl9
-Cj4gPisKPiA+KwkvKiBhY2tub3dsZWRnZSBpbnRlcnJ1cHQocykgKi8KPiA+KwloZGxjZF93cml0
-ZShoZGxjZCwgSERMQ0RfUkVHX0lOVF9DTEVBUiwgaXJxX3N0YXR1cyk7Cj4gPisKPiA+KwlyZXR1
-cm4gSVJRX0hBTkRMRUQ7Cj4gPit9Cj4gCj4gT3RoZXIgdGhhbiB0aGF0IHRob3VnaCwgaXQgc2Vl
-bXMgdG8gZG8gdGhlIGpvYi4gSSBnZXQgYSB1c2FibGUgZnJhbWVidWZmZXIKPiBjb25zb2xlIGFu
-ZCBjYW4gYm9vdCB0byBhbiBYIGRlc2t0b3Agd2l0aCBhdCBsZWFzdCB0aGUgYW5jaWVudCAxNjAw
-eDEyMDAgRFZJCj4gbW9uaXRvciBJIGhhdmUgaGFuZHkgLSB0aGUgMTkyMHgxMDgwIEhETUkgb25l
-IHNlZW1zIHRvIGdldCByZWNvZ25pc2VkIE9LIGJ1dAo+IHRoZSBtb25pdG9yIGl0c2VsZiBkb2Vz
-bid0IGxpa2UgdGhlIHNpZ25hbCBhbmQganVzdCBsb2NrcyB1cCB1bnRpbCBJIHVucGx1Zwo+IGl0
-LCBhbHRob3VnaCBJIGtub3cgdGhhdCdzIG1vcmUgb2YgYSBjbG9jayBkcml2ZXIvZmlybXdhcmUg
-aXNzdWUuCgpJIGhhdmUgYSBUViB0aGF0IGRvZXMgdGhlIHNhbWUuIFllcywgdGhlIFNDUEkgY2xv
-Y2sgdGhhdCB3YXMgcGlja2VkIGZvciB0aGlzCnJlc29sdXRpb24gaXMgYSBzdGFuZGFyZCBvbmUs
-IGJ1dCBJIGJldCB0aGF0IHRoZXNlIG1vbml0b3JzIGFyZSBzbGlnaHRseSBvdXQKb2Ygc3BlYy4g
-QXQgbGVhc3QgbXkgVFYgbGlzdHMgdHdvIG9wdGlvbnMgZm9yIDEwODBwOiBvbmUgd2l0aCAxNDVN
-SHogcGl4ZWwKY2xvY2sgYW5kIGFub3RoZXIgd2l0aCAxNDUuMzgyTUh6LiBCdXQgTGludXggZGVj
-aWRlcyB0byBnbyBpbnRlcmxhY2VkIGFueXdheSwKc28gSSBjYW4ndCB0ZXN0IHdpdGhvdXQgYSBo
-YWNrIGluIHRkYTk5OHhfZHJ2LmMuCgpUaGFua3MgZm9yIHRlc3RpbmcgdGhpcy4KCkJlc3QgcmVn
-YXJkcywKTGl2aXUKCj4gCj4gUm9iaW4uCj4gCgotLSAKPT09PT09PT09PT09PT09PT09PT0KfCBJ
-IHdvdWxkIGxpa2UgdG8gfAp8IGZpeCB0aGUgd29ybGQsICB8CnwgYnV0IHRoZXkncmUgbm90IHwK
-fCBnaXZpbmcgbWUgdGhlICAgfAogXCBzb3VyY2UgY29kZSEgIC8KICAtLS0tLS0tLS0tLS0tLS0K
-ICAgIMKvXF8o44OEKV8vwq8KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+Hi Russell,
+=20
+ On dim., d=C3=A9c. 06 2015, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>=
+ wrote:
+
+> Add support for the SolidRun Armada 388 Clearfog A1 board.  This boar=
+d
+> has an Armada 388 microsom, dedicated gigabit ethernet, six switched
+> gigabit ethernet ports, SFP cage, two Mini-PCIe/mSATA slots, a m.2 SA=
+TA
+> slot, and a MikroBUS connector to allow MikroBUS modules to be added.
+>
+> This DT file adds support for all board facilities with the exception
+> of full SFP support.
+>
+> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+
+I made some tests it on the Clearfog v2.0 I have: Ethernet (CON8 and
+J11), i2c (using i2cdetect), USB stick on CON7.
+
+=46or this one I tried to use an USB3 stick, but it was enumerated usin=
+g
+the High Speed profile and not the Super Speed one. But I think it is
+because of the Serdes configuration done in U-Boot.
+
+
+so Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+and applied on mvebu/dt.
+
+Thanks,
+
+Gregory
+
+> ---
+> v2, without the mac-address properties.
+>
+>  arch/arm/boot/dts/Makefile                         |   1 +
+>  arch/arm/boot/dts/armada-388-clearfog.dts          | 456 +++++++++++=
+++++++++++
+>  .../arm/boot/dts/armada-38x-solidrun-microsom.dtsi | 115 ++++++
+>  3 files changed, 572 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/armada-388-clearfog.dts
+>  create mode 100644 arch/arm/boot/dts/armada-38x-solidrun-microsom.dt=
+si
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 30bbc3746130..7e6a0532c656 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -748,6 +748,7 @@ dtb-$(CONFIG_MACH_ARMADA_38X) +=3D \
+>  	armada-385-db-ap.dtb \
+>  	armada-385-linksys-caiman.dtb \
+>  	armada-385-linksys-cobra.dtb \
+> +	armada-388-clearfog.dtb \
+>  	armada-388-db.dtb \
+>  	armada-388-gp.dtb \
+>  	armada-388-rd.dtb
+> diff --git a/arch/arm/boot/dts/armada-388-clearfog.dts b/arch/arm/boo=
+t/dts/armada-388-clearfog.dts
+> new file mode 100644
+> index 000000000000..c6e180eb3b11
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/armada-388-clearfog.dts
+> @@ -0,0 +1,456 @@
+> +/*
+> + * Device Tree file for SolidRun Clearfog revision A1 rev 2.0 (88F68=
+28)
+> + *
+> + *  Copyright (C) 2015 Russell King
+> + *
+> + * This board is in development; the contents of this file work with
+> + * the A1 rev 2.0 of the board, which does not represent final
+> + * production board.  Things will change, don't expect this file to
+> + * remain compatible info the future.
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dua=
+l
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License
+> + *     version 2 as published by the Free Software Foundation.
+> + *
+> + *     This file is distributed in the hope that it will be useful
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty o=
+f
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentatio=
+n
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom th=
+e
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall b=
+e
+> + *     included in all copies or substantial portions of the Softwar=
+e.
+> + *
+> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTI=
+ES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +#include "armada-388.dtsi"
+> +#include "armada-38x-solidrun-microsom.dtsi"
+> +
+> +/ {
+> +	model =3D "SolidRun Clearfog A1";
+> +	compatible =3D "solidrun,clearfog-a1", "marvell,armada388",
+> +		"marvell,armada385", "marvell,armada380";
+> +
+> +	aliases {
+> +		/* So that mvebu u-boot can update the MAC addresses */
+> +		ethernet1 =3D &eth0;
+> +		ethernet2 =3D &eth1;
+> +		ethernet3 =3D &eth2;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path =3D "serial0:115200n8";
+> +	};
+> +
+> +	reg_3p3v: regulator-3p3v {
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "3P3V";
+> +		regulator-min-microvolt =3D <3300000>;
+> +		regulator-max-microvolt =3D <3300000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	soc {
+> +		internal-regs {
+> +			ethernet@30000 {
+> +				phy-mode =3D "sgmii";
+> +				status =3D "okay";
+> +
+> +				fixed-link {
+> +					speed =3D <1000>;
+> +					full-duplex;
+> +				};
+> +			};
+> +
+> +			ethernet@34000 {
+> +				phy-mode =3D "sgmii";
+> +				status =3D "okay";
+> +
+> +				fixed-link {
+> +					speed =3D <1000>;
+> +					full-duplex;
+> +				};
+> +			};
+> +
+> +			i2c@11000 {
+> +				/* Is there anything on this? */
+> +				clock-frequency =3D <100000>;
+> +				pinctrl-0 =3D <&i2c0_pins>;
+> +				pinctrl-names =3D "default";
+> +				status =3D "okay";
+> +
+> +				/*
+> +				 * PCA9655 GPIO expander, up to 1MHz clock.
+> +				 *  0-CON3 CLKREQ#
+> +				 *  1-CON3 PERST#
+> +				 *  2-CON2 PERST#
+> +				 *  3-CON3 W_DISABLE
+> +				 *  4-CON2 CLKREQ#
+> +				 *  5-USB3 overcurrent
+> +				 *  6-USB3 power
+> +				 *  7-CON2 W_DISABLE
+> +				 *  8-JP4 P1
+> +				 *  9-JP4 P4
+> +				 * 10-JP4 P5
+> +				 * 11-m.2 DEVSLP
+> +				 * 12-SFP_LOS
+> +				 * 13-SFP_TX_FAULT
+> +				 * 14-SFP_TX_DISABLE
+> +				 * 15-SFP_MOD_DEF0
+> +				 */
+> +				expander0: gpio-expander@20 {
+> +					/*
+> +					 * This is how it should be:
+> +					 * compatible =3D "onnn,pca9655",
+> +					 *	 "nxp,pca9555";
+> +					 * but you can't do this because of
+> +					 * the way I2C works.
+> +					 */
+> +					compatible =3D "nxp,pca9555";
+> +					gpio-controller;
+> +					#gpio-cells =3D <2>;
+> +					reg =3D <0x20>;
+> +
+> +					pcie1_0_clkreq {
+> +						gpio-hog;
+> +						gpios =3D <0 GPIO_ACTIVE_LOW>;
+> +						input;
+> +						line-name =3D "pcie1.0-clkreq";
+> +					};
+> +					pcie1_0_w_disable {
+> +						gpio-hog;
+> +						gpios =3D <3 GPIO_ACTIVE_LOW>;
+> +						output-low;
+> +						line-name =3D "pcie1.0-w-disable";
+> +					};
+> +					pcie2_0_clkreq {
+> +						gpio-hog;
+> +						gpios =3D <4 GPIO_ACTIVE_LOW>;
+> +						input;
+> +						line-name =3D "pcie2.0-clkreq";
+> +					};
+> +					pcie2_0_w_disable {
+> +						gpio-hog;
+> +						gpios =3D <7 GPIO_ACTIVE_LOW>;
+> +						output-low;
+> +						line-name =3D "pcie2.0-w-disable";
+> +					};
+> +					usb3_ilimit {
+> +						gpio-hog;
+> +						gpios =3D <5 GPIO_ACTIVE_LOW>;
+> +						input;
+> +						line-name =3D "usb3-current-limit";
+> +					};
+> +					usb3_power {
+> +						gpio-hog;
+> +						gpios =3D <6 GPIO_ACTIVE_HIGH>;
+> +						output-high;
+> +						line-name =3D "usb3-power";
+> +					};
+> +					m2_devslp {
+> +						gpio-hog;
+> +						gpios =3D <11 GPIO_ACTIVE_HIGH>;
+> +						output-low;
+> +						line-name =3D "m.2 devslp";
+> +					};
+> +					sfp_los {
+> +						/* SFP loss of signal */
+> +						gpio-hog;
+> +						gpios =3D <12 GPIO_ACTIVE_HIGH>;
+> +						input;
+> +						line-name =3D "sfp-los";
+> +					};
+> +					sfp_tx_fault {
+> +						/* SFP laser fault */
+> +						gpio-hog;
+> +						gpios =3D <13 GPIO_ACTIVE_HIGH>;
+> +						input;
+> +						line-name =3D "sfp-tx-fault";
+> +					};
+> +					sfp_tx_disable {
+> +						/* SFP transmit disable */
+> +						gpio-hog;
+> +						gpios =3D <14 GPIO_ACTIVE_HIGH>;
+> +						output-low;
+> +						line-name =3D "sfp-tx-disable";
+> +					};
+> +					sfp_mod_def0 {
+> +						/* SFP module present */
+> +						gpio-hog;
+> +						gpios =3D <15 GPIO_ACTIVE_LOW>;
+> +						input;
+> +						line-name =3D "sfp-mod-def0";
+> +					};
+> +				};
+> +
+> +				/* The MCP3021 is 100kHz clock only */
+> +				mikrobus_adc: mcp3021@4c {
+> +					compatible =3D "microchip,mcp3021";
+> +					reg =3D <0x4c>;
+> +				};
+> +
+> +				/* Also something at 0x64 */
+> +			};
+> +
+> +			i2c@11100 {
+> +				/*
+> +				 * Routed to SFP, mikrobus, and PCIe.
+> +				 * SFP limits this to 100kHz, and requires
+> +				 *  an AT24C01A/02/04 with address pins tied
+> +				 *  low, which takes addresses 0x50 and 0x51.
+> +				 * Mikrobus doesn't specify beyond an I2C
+> +				 *  bus being present.
+> +				 * PCIe uses ARP to assign addresses, or
+> +				 *  0x63-0x64.
+> +				 */
+> +				clock-frequency =3D <100000>;
+> +				pinctrl-0 =3D <&clearfog_i2c1_pins>;
+> +				pinctrl-names =3D "default";
+> +				status =3D "okay";
+> +			};
+> +
+> +			mdio@72004 {
+> +				pinctrl-0 =3D <&mdio_pins>;
+> +				pinctrl-names =3D "default";
+> +
+> +				phy_dedicated: ethernet-phy@0 {
+> +					/*
+> +					 * Annoyingly, the marvell phy driver
+> +					 * configures the LED register, rather
+> +					 * than preserving reset-loaded setting.
+> +					 * We undo that rubbish here.
+> +					 */
+> +					marvell,reg-init =3D <3 16 0 0x101e>;
+> +					reg =3D <0>;
+> +				};
+> +			};
+> +
+> +			pinctrl@18000 {
+> +				clearfog_dsa0_clk_pins: clearfog-dsa0-clk-pins {
+> +					marvell,pins =3D "mpp46";
+> +					marvell,function =3D "ref";
+> +				};
+> +				clearfog_dsa0_pins: clearfog-dsa0-pins {
+> +					marvell,pins =3D "mpp23", "mpp41";
+> +					marvell,function =3D "gpio";
+> +				};
+> +				clearfog_i2c1_pins: i2c1-pins {
+> +					/* SFP, PCIe, mSATA, mikrobus */
+> +					marvell,pins =3D "mpp26", "mpp27";
+> +					marvell,function =3D "i2c1";
+> +				};
+> +				clearfog_sdhci_cd_pins: clearfog-sdhci-cd-pins {
+> +					marvell,pins =3D "mpp20";
+> +					marvell,function =3D "gpio";
+> +				};
+> +				clearfog_sdhci_pins: clearfog-sdhci-pins {
+> +					marvell,pins =3D "mpp21", "mpp28",
+> +						       "mpp37", "mpp38",
+> +						       "mpp39", "mpp40";
+> +					marvell,function =3D "sd0";
+> +				};
+> +				clearfog_spi1_cs_pins: spi1-cs-pins {
+> +					marvell,pins =3D "mpp55";
+> +					marvell,function =3D "spi1";
+> +				};
+> +				mikro_pins: mikro-pins {
+> +					/* int: mpp22 rst: mpp29 */
+> +					marvell,pins =3D "mpp22", "mpp29";
+> +					marvell,function =3D "gpio";
+> +				};
+> +				mikro_spi_pins: mikro-spi-pins {
+> +					marvell,pins =3D "mpp43";
+> +					marvell,function =3D "spi1";
+> +				};
+> +				mikro_uart_pins: mikro-uart-pins {
+> +					marvell,pins =3D "mpp24", "mpp25";
+> +					marvell,function =3D "ua1";
+> +				};
+> +				rear_button_pins: rear-button-pins {
+> +					marvell,pins =3D "mpp34";
+> +					marvell,function =3D "gpio";
+> +				};
+> +			};
+> +
+> +			sata@a8000 {
+> +				/* pinctrl? */
+> +				status =3D "okay";
+> +			};
+> +
+> +			sata@e0000 {
+> +				/* pinctrl? */
+> +				status =3D "okay";
+> +			};
+> +
+> +			sdhci@d8000 {
+> +				bus-width =3D <4>;
+> +				cd-gpios =3D <&gpio0 20 GPIO_ACTIVE_LOW>;
+> +				no-1-8-v;
+> +				pinctrl-0 =3D <&clearfog_sdhci_pins
+> +					     &clearfog_sdhci_cd_pins>;
+> +				pinctrl-names =3D "default";
+> +				status =3D "okay";
+> +				vmmc =3D <&reg_3p3v>;
+> +				wp-inverted;
+> +			};
+> +
+> +			serial@12100 {
+> +				/* mikrobus uart */
+> +				pinctrl-0 =3D <&mikro_uart_pins>;
+> +				pinctrl-names =3D "default";
+> +				status =3D "okay";
+> +			};
+> +
+> +			spi@10680 {
+> +				/*
+> +				 * We don't seem to have the W25Q32 on the
+> +				 * A1 Rev 2.0 boards, so disable SPI.
+> +				 * CS0: W25Q32 (doesn't appear to be present)
+> +				 * CS1:
+> +				 * CS2: mikrobus
+> +				 */
+> +				pinctrl-0 =3D <&spi1_pins
+> +					     &clearfog_spi1_cs_pins
+> +					     &mikro_spi_pins>;
+> +				pinctrl-names =3D "default";
+> +				status =3D "okay";
+> +
+> +				spi-flash@0 {
+> +					#address-cells =3D <1>;
+> +					#size-cells =3D <0>;
+> +					compatible =3D "w25q32", "jedec,spi-nor";
+> +					reg =3D <0>; /* Chip select 0 */
+> +					spi-max-frequency =3D <3000000>;
+> +					status =3D "disabled";
+> +				};
+> +			};
+> +
+> +			usb@58000 {
+> +				/* CON3, nearest  power. */
+> +				status =3D "okay";
+> +			};
+> +
+> +			usb3@f0000 {
+> +				/* CON2, nearest CPU, USB2 only. */
+> +				status =3D "okay";
+> +			};
+> +
+> +			usb3@f8000 {
+> +				/* CON7 */
+> +				status =3D "okay";
+> +			};
+> +		};
+> +
+> +		pcie-controller {
+> +			status =3D "okay";
+> +			/*
+> +			 * The two PCIe units are accessible through
+> +			 * the mini-PCIe connectors on the board.
+> +			 */
+> +			pcie@2,0 {
+> +				/* Port 1, Lane 0. CON3, nearest power. */
+> +				reset-gpios =3D <&expander0 1 GPIO_ACTIVE_LOW>;
+> +				status =3D "okay";
+> +			};
+> +			pcie@3,0 {
+> +				/* Port 2, Lane 0. CON2, nearest CPU. */
+> +				reset-gpios =3D <&expander0 2 GPIO_ACTIVE_LOW>;
+> +				status =3D "okay";
+> +			};
+> +		};
+> +	};
+> +
+> +	dsa@0 {
+> +		compatible =3D "marvell,dsa";
+> +		dsa,ethernet =3D <&eth1>;
+> +		dsa,mii-bus =3D <&mdio>;
+> +		pinctrl-0 =3D <&clearfog_dsa0_clk_pins &clearfog_dsa0_pins>;
+> +		pinctrl-names =3D "default";
+> +		#address-cells =3D <2>;
+> +		#size-cells =3D <0>;
+> +
+> +		switch@0 {
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +			reg =3D <4 0>;
+> +
+> +			port@0 {
+> +				reg =3D <0>;
+> +				label =3D "lan1";
+> +			};
+> +
+> +			port@1 {
+> +				reg =3D <1>;
+> +				label =3D "lan2";
+> +			};
+> +
+> +			port@2 {
+> +				reg =3D <2>;
+> +				label =3D "lan3";
+> +			};
+> +
+> +			port@3 {
+> +				reg =3D <3>;
+> +				label =3D "lan4";
+> +			};
+> +
+> +			port@4 {
+> +				reg =3D <4>;
+> +				label =3D "lan5";
+> +			};
+> +
+> +			port@5 {
+> +				reg =3D <5>;
+> +				label =3D "cpu";
+> +			};
+> +
+> +			port@6 {
+> +				/* 88E1512 external phy */
+> +				reg =3D <6>;
+> +				label =3D "lan6";
+> +				fixed-link {
+> +					speed =3D <1000>;
+> +					full-duplex;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible =3D "gpio-keys";
+> +		pinctrl-0 =3D <&rear_button_pins>;
+> +		pinctrl-names =3D "default";
+> +
+> +		button_0 {
+> +			/* The rear SW3 button */
+> +			label =3D "Rear Button";
+> +			gpios =3D <&gpio1 2 GPIO_ACTIVE_LOW>;
+> +			linux,can-disable;
+> +			linux,code =3D <BTN_0>;
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/armada-38x-solidrun-microsom.dtsi b/ar=
+ch/arm/boot/dts/armada-38x-solidrun-microsom.dtsi
+> new file mode 100644
+> index 000000000000..3f792a563c05
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/armada-38x-solidrun-microsom.dtsi
+> @@ -0,0 +1,115 @@
+> +/*
+> + * Device Tree file for SolidRun Armada 38x Microsom
+> + *
+> + *  Copyright (C) 2015 Russell King
+> + *
+> + * This board is in development; the contents of this file work with
+> + * the A1 rev 2.0 of the board, which does not represent final
+> + * production board.  Things will change, don't expect this file to
+> + * remain compatible info the future.
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dua=
+l
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License
+> + *     version 2 as published by the Free Software Foundation.
+> + *
+> + *     This file is distributed in the hope that it will be useful
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty o=
+f
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentatio=
+n
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom th=
+e
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall b=
+e
+> + *     included in all copies or substantial portions of the Softwar=
+e.
+> + *
+> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTI=
+ES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/ {
+> +	memory {
+> +		device_type =3D "memory";
+> +		reg =3D <0x00000000 0x10000000>; /* 256 MB */
+> +	};
+> +
+> +	soc {
+> +		ranges =3D <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
+> +			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000
+> +			  MBUS_ID(0x09, 0x19) 0 0xf1100000 0x10000
+> +			  MBUS_ID(0x09, 0x15) 0 0xf1110000 0x10000>;
+> +
+> +		internal-regs {
+> +			ethernet@70000 {
+> +				pinctrl-0 =3D <&ge0_rgmii_pins>;
+> +				pinctrl-names =3D "default";
+> +				phy =3D <&phy_dedicated>;
+> +				phy-mode =3D "rgmii-id";
+> +				status =3D "okay";
+> +			};
+> +
+> +			mdio@72004 {
+> +				/*
+> +				 * Add the phy clock here, so the phy can be
+> +				 * accessed to read its IDs prior to binding
+> +				 * with the driver.
+> +				 */
+> +				pinctrl-0 =3D <&mdio_pins &microsom_phy_clk_pins>;
+> +				pinctrl-names =3D "default";
+> +
+> +				phy_dedicated: ethernet-phy@0 {
+> +					/*
+> +					 * Annoyingly, the marvell phy driver
+> +					 * configures the LED register, rather
+> +					 * than preserving reset-loaded setting.
+> +					 * We undo that rubbish here.
+> +					 */
+> +					marvell,reg-init =3D <3 16 0 0x101e>;
+> +					reg =3D <0>;
+> +				};
+> +			};
+> +
+> +			pinctrl@18000 {
+> +				microsom_phy_clk_pins: microsom-phy-clk-pins {
+> +					marvell,pins =3D "mpp45";
+> +					marvell,function =3D "ref";
+> +				};
+> +			};
+> +
+> +			rtc@a3800 {
+> +				/*
+> +				 * If the rtc doesn't work, run "date reset"
+> +				 * twice in u-boot.
+> +				 */
+> +				status =3D "okay";
+> +			};
+> +
+> +			serial@12000 {
+> +				pinctrl-0 =3D <&uart0_pins>;
+> +				pinctrl-names =3D "default";
+> +				status =3D "okay";
+> +			};
+> +		};
+> +	};
+> +};
+> --=20
+> 2.1.0
+>
+
+--=20
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
