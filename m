@@ -1,60 +1,58 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] ARM: DTS: am33xx: Use the new DT bindings for the eDMA3
-Date: Tue, 08 Dec 2015 11:25:11 +0100
-Message-ID: <2433527.Up3lk3Mgej@wuerfel>
-References: <1449225915-28879-1-git-send-email-peter.ujfalusi@ti.com> <4387766.cHF7OBX0cm@wuerfel> <5666AF51.9080306@ti.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] ARM: tegra: Fix suspend hang on Tegra124 Chromebooks
+Date: Tue, 8 Dec 2015 10:26:49 +0000
+Message-ID: <1449570409-30244-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5666AF51.9080306-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 08 December 2015 12:22:09 Peter Ujfalusi wrote:
-> On 12/08/2015 11:51 AM, Arnd Bergmann wrote:
-> > On Tuesday 08 December 2015 09:42:26 Peter Ujfalusi wrote:
-> >> On 12/04/2015 11:51 PM, Tony Lindgren wrote:
-> >>>>
-> >>>> Please just drop the /bits/ 16 and use normal cells.
-> >>>
-> >>> Yeah agreed, makes things less confusing for sure 
-> >>
-> >> 4.4 will be the first kernel where we will have the new eDMA bindings. I have
-> >> chosen to use 16bit array for specifying the channels used for memcpy
-> >> (ti,edma-memcpy-channels) and for the reserving paRAM slots
-> >> (ti,edma-reserved-slot-ranges). As of now we have maximum of 64 channels and
-> >> 512 paRAM slots. 16bit is more than enough to store this information and it
-> >> even gives us enough room if ever in the future these numbers are going to
-> >> increase (which  they are not).
-> >>
-> >> But in order to change them to 32bit the driver needs to be changed as well.
-> >> Currently we do not have drivers (in 4.4) using the new bindings, 4.4 is not
-> >> yet out, so it might be possible to change the binding document and the driver
-> >> to use 32bit arrays. The driver internally uses 16bit type for these which I'm
-> >> not going to change, but the code parsing the DT needs to be adjusted for the
-> >> new data type.
-> >>
-> >> If Vinod is willing to take update for the DT binding of eDMA for 4.4-rc, I
-> >> can cook up the patch(es) to do so.
-> > 
-> > I hadn't realized that it was already in 4.4-rc. The change should be trivial
-> > enough though, so I'd still do it. If Vinod would rather not change it now,
-> > it's not overly important though.
-> 
-> But this change must be done before we have actual users of these properties,
-> which is the am33xx, am437x and the da850 conversion series I have sent recently.
-> We might want to have this changed for 4.4 since it is going to be an LTS
-> release...
+Enabling CPUFreq support for Tegra124 Chromebooks is causing the Tegra124
+to hang when resuming from suspend.
 
-Yes, that's what I meant: We either get the patch into 4.4 by creating a
-branch for Vinod to pull with this change, and base all other changes in your
-4.5 series on the same branch, or we don't change it at all.
+When CPUFreq is enabled, the CPU clock is changed from the PLLX clock to
+the DFLL clock during kernel boot. When resuming from suspend the CPU
+clock is temporarily changed back to the PLLX clock before switching back
+to the DFLL. If the DFLL is operating at a much lower frequency than the
+PLLX when we enter suspend, and so the CPU voltage rail is at a voltage
+too low for the CPUs to operate at the PLLX frequency, then the device
+will hang.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please note that the PLLX is used in the resume sequence to switch the CPU
+clock from the very slow 32K clock to a faster clock during early resume
+to speed up the resume sequence before the DFLL is resumed.
+
+Ideally, we should fix this by setting the suspend frequency so that it
+matches the PLLX frequency, however, that would be a bigger change. For
+now simply disable CPUFreq support for Tegra124 Chromebooks to avoid the
+hang when resuming from suspend.
+
+Fixes: 9a0baee960a7 ("ARM: tegra: Enable CPUFreq support for Tegra124
+		      Chromebooks")
+
+Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+
+Please note that this fix is required for v4.4
+
+ arch/arm/boot/dts/tegra124-nyan.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/tegra124-nyan.dtsi b/arch/arm/boot/dts/tegra124-nyan.dtsi
+index 40c23a0b7cfc..ec1aa64ded68 100644
+--- a/arch/arm/boot/dts/tegra124-nyan.dtsi
++++ b/arch/arm/boot/dts/tegra124-nyan.dtsi
+@@ -399,7 +399,7 @@
+ 
+ 	/* CPU DFLL clock */
+ 	clock@0,70110000 {
+-		status = "okay";
++		status = "disabled";
+ 		vdd-cpu-supply = <&vdd_cpu>;
+ 		nvidia,i2c-fs-rate = <400000>;
+ 	};
+-- 
+2.1.4
