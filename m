@@ -1,55 +1,124 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: [PATCH 2/3] dt-bindings: add Silicon Image SiI8620 bridge bindings
-Date: Tue, 08 Dec 2015 14:49:05 +0100
-Message-ID: <1449582546-18667-3-git-send-email-a.hajda@samsung.com>
-References: <1449582546-18667-1-git-send-email-a.hajda@samsung.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 2/6] mfd: syscon: add a DT property to set value width
+Date: Tue, 8 Dec 2015 13:50:40 +0000
+Message-ID: <20151208135040.GH3384@x1>
+References: <1448899191-13891-1-git-send-email-damien.riegel@savoirfairelinux.com>
+ <1448899191-13891-3-git-send-email-damien.riegel@savoirfairelinux.com>
+ <20151207094020.GF3384@x1>
+ <20151207194218.GB6030@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1449582546-18667-1-git-send-email-a.hajda@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151207194218.GB6030@localhost>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-U2lJODYyMCB0cmFuc21pdHRlciBjb252ZXJ0cyBlVE1EUy9IRE1JIHNpZ25hbCB0byBNSEwgMy4w
-LiBJdCBpcyBjb250cm9sbGVkCnZpYSBJMkMgYnVzLgoKU2lnbmVkLW9mZi1ieTogQW5kcnplaiBI
-YWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KLS0tCiAuLi4vYmluZGluZ3MvdmlkZW8vYnJpZGdl
-L3NpbC1zaWk4NjIwLnR4dCAgICAgICAgICB8IDM0ICsrKysrKysrKysrKysrKysrKysrKysKIDEg
-ZmlsZSBjaGFuZ2VkLCAzNCBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JyaWRnZS9zaWwtc2lpODYyMC50eHQK
-CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYnJp
-ZGdlL3NpbC1zaWk4NjIwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92
-aWRlby9icmlkZ2Uvc2lsLXNpaTg2MjAudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAw
-MDAwMDAuLjI5ZjNmMzUKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvdmlkZW8vYnJpZGdlL3NpbC1zaWk4NjIwLnR4dApAQCAtMCwwICsxLDM0IEBA
-CitTaWxpY29uIEltYWdlIFNpSTg2MjAgYnJpZGdlIGJpbmRpbmdzCisKK1JlcXVpcmVkIHByb3Bl
-cnRpZXM6CisJLSBjb21wYXRpYmxlOiAic2lsLHNpaTg2MjAiCisJLSByZWc6IGkyYyBhZGRyZXNz
-IG9mIHRoZSBicmlkZ2UKKwktIGN2Y2MxMC1zdXBwbHk6IERpZ2l0YWwgQ29yZSBTdXBwbHkgVm9s
-dGFnZSAoMS4wVikKKwktIGlvdmNjMTgtc3VwcGx5OiBJL08gU3VwcGx5IFZvbHRhZ2UgKDEuOFYp
-CisJLSBpbnQtZ3Bpb3M6IGdwaW8gc3BlY2lmaWVyIG9mIElOVCBwaW4KKwktIHJlc2V0LWdwaW9z
-OiBncGlvIHNwZWNpZmllciBvZiBSRVNFVCBwaW4KKwktIGNsb2NrcywgY2xvY2stbmFtZXM6IHNw
-ZWNpZmljYXRpb24gYW5kIG5hbWUgb2YgInh0YWwiIGNsb2NrCisJLSB2aWRlbyBpbnRlcmZhY2Vz
-OiBEZXZpY2Ugbm9kZSBjYW4gY29udGFpbiB2aWRlbyBpbnRlcmZhY2UgcG9ydAorCQkJICAgIG5v
-ZGUgZm9yIEhETUkgZW5jb2RlciBhY2NvcmRpbmcgdG8gWzFdLgorCitbMV06IERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dAorCitFeGFt
-cGxlOgorCXNpaTg2MjBAMzkgeworCQlyZWcgPSA8MHgzOT47CisJCWNvbXBhdGlibGUgPSAic2ls
-LHNpaTg2MjAiOworCQljdmNjMTAtc3VwcGx5ID0gPCZsZG8zNl9yZWc+OworCQlpb3ZjYzE4LXN1
-cHBseSA9IDwmbGRvMzRfcmVnPjsKKwkJaW50LWdwaW8gPSA8JmdwZjAgMiAwPjsKKwkJcmVzZXQt
-Z3BpbyA9IDwmZ3B2NyAwIDA+OworCQljbG9ja3MgPSA8JnBtdV9zeXN0ZW1fY29udHJvbGxlciAw
-PjsKKwkJY2xvY2stbmFtZXMgPSAieHRhbCI7CisJCWFzc2lnbmVkLWNsb2NrcyA9IDwmcG11X3N5
-c3RlbV9jb250cm9sbGVyIDA+OworCQlhc3NpZ25lZC1jbG9jay1wYXJlbnRzID0gPCZ4eHRpPjsK
-KworCQlwb3J0IHsKKwkJCW1obF90b19oZG1pOiBlbmRwb2ludCB7CisJCQkJcmVtb3RlLWVuZHBv
-aW50ID0gPCZoZG1pX3RvX21obD47CisJCQl9OworCQl9OworCX07Ci0tIAoxLjkuMQoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Mon, 07 Dec 2015, Damien Riegel wrote:
+
+> On Mon, Dec 07, 2015 at 09:40:20AM +0000, Lee Jones wrote:
+> > On Mon, 30 Nov 2015, Damien Riegel wrote:
+> >=20
+> > > Currently syscon has a fixed configuration of 32 bits for registe=
+r and
+> > > values widths. In some cases, it would be desirable to be able to
+> > > customize the value width.
+> > >=20
+> > > For example, certain boards (like the ones manufactured by Techno=
+logic
+> > > Systems) have a FPGA that is memory-mapped, but its registers are=
+ only
+> > > 16-bit wide.
+> > >=20
+> > > This patch adds an optional "reg-io-width" DT binding for syscon =
+that
+> > > allows to change the width for the data bus (i.e. val_bits). If t=
+his
+> > > property is provided, it will also set the register stride to
+> > > reg-io-width's value. If not provided, the default configuration =
+is
+> > > used.
+> > >=20
+> > > Signed-off-by: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/mfd/syscon.txt |  4 ++++
+> > >  drivers/mfd/syscon.c                             | 13 ++++++++++=
++++
+> > >  2 files changed, 17 insertions(+)
+> >=20
+> > Applied, thanks.
+> >=20
+> Hi Lee,
+>=20
+> Good to see this patch applied. What's going on now with the other
+> patches of this serie ? How should I handle them ?
+
+Are there any build dependencies between them?
+
+> > > diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/D=
+ocumentation/devicetree/bindings/mfd/syscon.txt
+> > > index fe8150b..408f768 100644
+> > > --- a/Documentation/devicetree/bindings/mfd/syscon.txt
+> > > +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+> > > @@ -13,6 +13,10 @@ Required properties:
+> > >  - compatible: Should contain "syscon".
+> > >  - reg: the register region can be accessed from syscon
+> > > =20
+> > > +Optional property:
+> > > +- reg-io-width: the size (in bytes) of the IO accesses that shou=
+ld be
+> > > +  performed on the device.
+> > > +
+> > >  Examples:
+> > >  gpr: iomuxc-gpr@020e0000 {
+> > >  	compatible =3D "fsl,imx6q-iomuxc-gpr", "syscon";
+> > > diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> > > index 176bf0f..b7aabee 100644
+> > > --- a/drivers/mfd/syscon.c
+> > > +++ b/drivers/mfd/syscon.c
+> > > @@ -47,6 +47,7 @@ static struct syscon *of_syscon_register(struct=
+ device_node *np)
+> > >  	struct syscon *syscon;
+> > >  	struct regmap *regmap;
+> > >  	void __iomem *base;
+> > > +	u32 reg_io_width;
+> > >  	int ret;
+> > >  	struct regmap_config syscon_config =3D syscon_regmap_config;
+> > > =20
+> > > @@ -69,6 +70,18 @@ static struct syscon *of_syscon_register(struc=
+t device_node *np)
+> > >  	 else if (of_property_read_bool(np, "little-endian"))
+> > >  		syscon_config.val_format_endian =3D REGMAP_ENDIAN_LITTLE;
+> > > =20
+> > > +	/*
+> > > +	 * search for reg-io-width property in DT. If it is not provide=
+d,
+> > > +	 * default to 4 bytes. regmap_init_mmio will return an error if=
+ values
+> > > +	 * are invalid so there is no need to check them here.
+> > > +	 */
+> > > +	ret =3D of_property_read_u32(np, "reg-io-width", &reg_io_width)=
+;
+> > > +	if (ret)
+> > > +		reg_io_width =3D 4;
+> > > +
+> > > +	syscon_config.reg_stride =3D reg_io_width;
+> > > +	syscon_config.val_bits =3D reg_io_width * 8;
+> > > +
+> > >  	regmap =3D regmap_init_mmio(NULL, base, &syscon_config);
+> > >  	if (IS_ERR(regmap)) {
+> > >  		pr_err("regmap init failed\n");
+> >=20
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdo=
+g" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
