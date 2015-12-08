@@ -1,45 +1,41 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v2] of/address: replace printk() with pr_debug() / pr_err()
-Date: Wed,  9 Dec 2015 01:07:48 +0900
-Message-ID: <1449590868-19070-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH] of/address: replace printk(KERN_ERR ...) with pr_err(...)
+Date: Wed, 9 Dec 2015 01:09:32 +0900
+Message-ID: <CAK7LNAQr+9gv84S0=S_WZNQ_+8F1VcZx_o2Df3Pjj=ovF0KsAg@mail.gmail.com>
+References: <1448864059-12319-1-git-send-email-yamada.masahiro@socionext.com>
+	<CAL_JsqJNsQtGe9cUJVj_iqzsRfB+CyCxACNW6FBDDE28T3tm_w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJNsQtGe9cUJVj_iqzsRfB+CyCxACNW6FBDDE28T3tm_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Trivial changes suggested by checkpatch.pl.
+Hi Rob,
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+2015-12-07 5:40 GMT+09:00 Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On Mon, Nov 30, 2015 at 12:14 AM, Masahiro Yamada
+> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+>> A trivial change suggested by checkpatch.pl.
+>
+> You might as well all levels while you are at it. Looks like that is
+> only one more:
+>
+> drivers/of/address.c:   printk(KERN_DEBUG "%s", s);
+>
 
-Changes in v2:
-  - Fix printk(KERN_DEBUG ...) too
+OK, I have just posted v2.
 
- drivers/of/address.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 9582c57..65fafbb 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -23,7 +23,7 @@ static int __of_address_to_resource(struct device_node *dev,
- #ifdef DEBUG
- static void of_dump_addr(const char *s, const __be32 *addr, int na)
- {
--	printk(KERN_DEBUG "%s", s);
-+	pr_debug("%s", s);
- 	while (na--)
- 		printk(" %08x", be32_to_cpu(*(addr++)));
- 	printk("\n");
-@@ -597,7 +597,7 @@ static u64 __of_translate_address(struct device_node *dev,
- 		pbus = of_match_bus(parent);
- 		pbus->count_cells(dev, &pna, &pns);
- 		if (!OF_CHECK_COUNTS(pna, pns)) {
--			printk(KERN_ERR "prom_parse: Bad cell count for %s\n",
-+			pr_err("prom_parse: Bad cell count for %s\n",
- 			       of_node_full_name(dev));
- 			break;
- 		}
+
+
+
 -- 
-1.9.1
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
