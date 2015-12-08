@@ -1,44 +1,99 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: renesas_usbhs: add fallback compatibility string
-Date: Tue, 8 Dec 2015 16:49:40 +0900
-Message-ID: <20151208074932.GA5663@verge.net.au>
-References: <1449553911-21412-1-git-send-email-horms+renesas@verge.net.au>
- <1449553911-21412-2-git-send-email-horms+renesas@verge.net.au>
- <87egex5vfl.wl%kuninori.morimoto.gx@renesas.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] clk: sunxi: Extend the simple gates and
+ handle the Allwinner H3
+Date: Tue, 8 Dec 2015 08:53:54 +0100
+Message-ID: <20151208075354.GJ27957@lukather>
+References: <20151206100412.1a74b71da8e9ca28c6e61589@free.fr>
+ <20151207143102.GA29097@rob-hp-laptop>
+ <20151208074226.17c75247f9eed69c9cac1d2d@free.fr>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="NgG1H2o5aFKkgPy/"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBE4ZTKZQKGQEWYMTA6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <87egex5vfl.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20151208074226.17c75247f9eed69c9cac1d2d-GANU6spQydw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 08, 2015 at 06:05:51AM +0000, Kuninori Morimoto wrote:
-> 
-> Hi Simon
-> 
-> > Add fallback compatibility string.
-> > This is in keeping with the fallback scheme being adopted wherever
-> > appropriate for drivers for Renesas SoCs.
-> > 
-> > Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-> > ---
-> (snip)
-> > +	{
-> > +		.compatible = "renesas,usbhs",
-> > +		.data = (void *)USBHS_TYPE_RCAR_GEN2,
-> > +	},
-> >  	{ },
-> >  };
-> 
-> I think this is too much. This driver is used not only from R-Car Gen2.
-> It will work as normal mode if .data was 0.
-> see usbhs_parse_dt()
+--NgG1H2o5aFKkgPy/
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Are you suggesting that we remove USBHS_TYPE_RCAR_GEN2 from the driver?
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Jean-Francois,
+
+On Tue, Dec 08, 2015 at 07:42:26AM +0100, Jean-Francois Moine wrote:
+> On Mon, 7 Dec 2015 08:31:02 -0600
+> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> 
+> > On Sun, Dec 06, 2015 at 10:04:12AM +0100, Jean-Francois Moine wrote:
+> > > The H3 has a clock gate definition similar to the other Allwinner SoCs,
+> > > but with a different parent clock for each single gate.
+> > > 
+> > > Adding the names of the parent clocks in both the source and output clocks
+> > > permits the use of the simple-gates driver to define the bus gates
+> > > of all known Allwinner SoCs.
+> > > 
+> > > Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+> > > ---
+> > > This patch replaces a part of Jens Kuske's patch
+> > > 	[PATCH v5 1/4] clk: sunxi: Add H3 clocks support
+> > > ---
+> > >  Documentation/devicetree/bindings/clock/sunxi.txt | 25 +++++++++++++++++++++++
+> > >  drivers/clk/sunxi/clk-simple-gates.c              | 14 ++++++++++++-
+> > >  2 files changed, 38 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+> > > index 8a47b77..5736e6d 100644
+> > > --- a/Documentation/devicetree/bindings/clock/sunxi.txt
+> > > +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+> > > @@ -70,6 +70,7 @@ Required properties:
+> > >  	"allwinner,sun8i-a23-usb-clk" - for usb gates + resets on A23
+> > >  	"allwinner,sun9i-a80-usb-mod-clk" - for usb gates + resets on A80
+> > >  	"allwinner,sun9i-a80-usb-phy-clk" - for usb phy gates + resets on A80
+> > > +	"allwinner,sunxi-gates-clk" - simple gates
+> > >  
+> > >  Required properties for all clocks:
+> > >  - reg : shall be the control register address for the clock.
+> > > @@ -93,6 +94,12 @@ The "allwinner,sun9i-a80-mmc-config-clk" clock also requires:
+> > >  - #reset-cells : shall be set to 1
+> > >  - resets : shall be the reset control phandle for the mmc block.
+> > >  
+> > > +The "allwinner,sunxi-gates-clk" clock also requires:
+> > > +- clock-names : corresponding names of the parent clocks
+> > > +when the output clocks have different parents.
+> > > +These names must be 4 characters long and must appear as a prefix in
+> > > +the names of the output clocks. See example.
+> > > +
+> > 
+> > I don't think you should be encoding relationships of clocks using the 
+> > name strings. We describe relationships in DT via parent/child or 
+> > phandles.
+> 
+> As you know, in the H3, each of the 49 output clock has one of the 4
+> main clocks as its source.
+> There are 3 options for defining the source of each clock:
+> 1- all definitions are in the DT,
+> 2- some definitions are in the DT, some other ones are hard-coded,
+> 3- all definitions are hard-coded.
+
+Look, we all agreed on a solution that raised all objections, but
+yours.
+
+I'm going to take Jens patch.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--NgG1H2o5aFKkgPy/--
