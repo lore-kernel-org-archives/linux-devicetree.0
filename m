@@ -1,187 +1,172 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 1/3] usb: misc: generic_onboard_hub: add generic onboard
- USB HUB driver
-Date: Tue, 8 Dec 2015 07:55:05 -0600
-Message-ID: <87k2opm4ee.fsf@saruman.tx.rr.com>
-References: <1449538670-7954-1-git-send-email-peter.chen@freescale.com>
- <1449538670-7954-2-git-send-email-peter.chen@freescale.com>
- <87poyhmyrc.fsf@saruman.tx.rr.com> <20151208091854.GA16881@shlinux2>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v9 1/3] dt-bindings: binding for jz4780-{nand,bch}
+Date: Tue, 8 Dec 2015 15:17:17 +0100
+Message-ID: <20151208151717.6197165d@bbrezillon>
+References: <1449144142-24004-1-git-send-email-harvey.hunt@imgtec.com>
+	<1449144142-24004-2-git-send-email-harvey.hunt@imgtec.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2378278076755098551=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20151208091854.GA16881@shlinux2>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Chen <peter.chen@freescale.com>, p.zabel@pengutronix.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, festevam@gmail.com, pawel.moll@arm.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, patryk@kowalczyk.ws, robh+dt@kernel.org, stern@rowland.harvard.edu, kernel@pengutronix.de, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1449144142-24004-2-git-send-email-harvey.hunt@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Harvey Hunt <harvey.hunt@imgtec.com>
+Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, linux-kernel@vger.kernel.org, Alex Smith <alex.smith@imgtec.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---===============2378278076755098551==
-Content-Type: multipart/signed; boundary="=-=-="; micalg=pgp-sha1;
-	protocol="application/pgp-signature"
+On Thu, 3 Dec 2015 12:02:20 +0000
+Harvey Hunt <harvey.hunt@imgtec.com> wrote:
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+> From: Alex Smith <alex.smith@imgtec.com>
+> 
+> Add DT bindings for NAND devices connected to the NEMC on JZ4780 SoCs,
+> as well as the hardware BCH controller, used by the jz4780_{nand,bch}
+> drivers.
+> 
+> Signed-off-by: Alex Smith <alex.smith@imgtec.com>
+> Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+> Cc: David Woodhouse <dwmw2@infradead.org>
+> Cc: Brian Norris <computersforpeace@gmail.com>
+> Cc: linux-mtd@lists.infradead.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Harvey Hunt <harvey.hunt@imgtec.com>
+
+FWIW:
+
+Reviewed-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+
+> ---
+> v8 -> v9:
+>  - Document that partitions are represented as a child node of a NAND chip.
+> 
+> v7 -> v8:
+>  - Describe how NAND chips are now child nodes of the NAND controller.
+> 
+> v6 -> v7:
+>  - Add nand-ecc-mode to DT bindings.
+>  - Add nand-on-flash-bbt to DT bindings.
+> 
+> v5 -> v6:
+>  - No change.
+> 
+> v4 -> v5:
+>  - Rename ingenic,bch-device to ingenic,bch-controller to fit with
+>    existing convention.
+> 
+> v3 -> v4:
+>  - No change
+> 
+> v2 -> v3:
+>  - Rebase to 4.0-rc6
+>  - Changed ingenic,ecc-size to common nand-ecc-step-size
+>  - Changed ingenic,ecc-strength to common nand-ecc-strength
+>  - Changed ingenic,busy-gpio to common rb-gpios
+>  - Changed ingenic,wp-gpio to common wp-gpios
+> 
+> v1 -> v2:
+>  - Rebase to 4.0-rc3
+> 
+>  .../bindings/mtd/ingenic,jz4780-nand.txt           | 86 ++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+> new file mode 100644
+> index 0000000..29ea585
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+> @@ -0,0 +1,86 @@
+> +* Ingenic JZ4780 NAND/BCH
+> +
+> +This file documents the device tree bindings for NAND flash devices on the
+> +JZ4780. NAND devices are connected to the NEMC controller (described in
+> +memory-controllers/ingenic,jz4780-nemc.txt), and thus NAND device nodes must
+> +be children of the NEMC node.
+> +
+> +Required NAND controller device properties:
+> +- compatible: Should be set to "ingenic,jz4780-nand".
+> +- reg: For each bank with a NAND chip attached, should specify a bank number,
+> +  an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
+> +
+> +Optional NAND controller device properties:
+> +- ingenic,bch-controller: To make use of the hardware BCH controller, this
+> +  property must contain a phandle for the BCH controller node. The required
+> +  properties for this node are described below. If this is not specified,
+> +  software BCH will be used instead.
+> +
+> +Optional children nodes:
+> +- Individual NAND chips are children of the NAND controller node.
+> +
+> +Required children node properties:
+> +- reg: An integer ranging from 1 to 6 representing the CS line to use.
+> +
+> +Optional children node properties:
+> +- nand-ecc-step-size: ECC block size in bytes.
+> +- nand-ecc-strength: ECC strength (max number of correctable bits).
+> +- nand-ecc-mode: String, operation mode of the NAND ecc mode. "hw" by default
+> +- nand-on-flash-bbt: boolean to enable on flash bbt option, if not present false
+> +- rb-gpios: GPIO specifier for the busy pin.
+> +- wp-gpios: GPIO specifier for the write protect pin.
+> +
+> +Optional child node of NAND chip nodes:
+> +- partitions: see Documentation/devicetree/bindings/mtd/partition.txt
+> +
+> +Example:
+> +
+> +nemc: nemc@13410000 {
+> +	...
+> +
+> +	nandc: nand-controller@1 {
+> +		compatible = "ingenic,jz4780-nand";
+> +		reg = <1 0 0x1000000>;	/* Bank 1 */
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ingenic,bch-controller = <&bch>;
+> +
+> +		nand@1 {
+> +			reg = <1>;
+> +
+> +			nand-ecc-step-size = <1024>;
+> +			nand-ecc-strength = <24>;
+> +			nand-ecc-mode = "hw";
+> +			nand-on-flash-bbt;
+> +
+> +			rb-gpios = <&gpa 20 GPIO_ACTIVE_LOW>;
+> +			wp-gpios = <&gpf 22 GPIO_ACTIVE_LOW>;
+> +
+> +			partitions {
+> +				#address-cells = <2>;
+> +				#size-cells = <2>;
+> +				...
+> +			}
+> +		};
+> +	};
+> +};
+> +
+> +The BCH controller is a separate SoC component used for error correction on
+> +NAND devices. The following is a description of the device properties for a
+> +BCH controller.
+> +
+> +Required BCH properties:
+> +- compatible: Should be set to "ingenic,jz4780-bch".
+> +- reg: Should specify the BCH controller registers location and length.
+> +- clocks: Clock for the BCH controller.
+> +
+> +Example:
+> +
+> +bch: bch@134d0000 {
+> +	compatible = "ingenic,jz4780-bch";
+> +	reg = <0x134d0000 0x10000>;
+> +
+> +	clocks = <&cgu JZ4780_CLK_BCH>;
+> +};
 
 
-Hi,
 
-Peter Chen <peter.chen@freescale.com> writes:
->> seriously ? Is this really all ? What about that reset line below ?
->
-> The clock is PHY input clock on the HUB, this clock may from SoC's
-> PLL.
-
-oh, you might have misunderstood my comment. I'm saying that there is
-more than one thing you could cache in your private structure. That's
-all.
-
->> > +static int usb_hub_generic_probe(struct platform_device *pdev)
->> > +{
->> > +	struct device *dev =3D &pdev->dev;
->> > +	struct usb_hub_generic_platform_data *pdata =3D dev->platform_data;
->> > +	struct usb_hub_generic_data *hub_data;
->> > +	int reset_pol =3D 0, duration_us =3D 50, ret =3D 0;
->> > +	struct gpio_desc *gpiod_reset =3D NULL;
->> > +
->> > +	hub_data =3D devm_kzalloc(dev, sizeof(*hub_data), GFP_KERNEL);
->> > +	if (!hub_data)
->> > +		return -ENOMEM;
->> > +
->> > +	if (dev->of_node) {
->> > +		struct device_node *node =3D dev->of_node;
->> > +
->> > +		hub_data->clk =3D devm_clk_get(dev, "external_clk");
->> > +		if (IS_ERR(hub_data->clk)) {
->> > +			dev_dbg(dev, "Can't get external clock: %ld\n",
->> > +					PTR_ERR(hub_data->clk));
->>=20
->> how about setting clock to NULL to here ? then you don't need IS_ERR()
->> checks anywhere else.
->>=20
->> > +		}
->>=20
->> braces shouldn't be used here, if you add NULL trick above,
->> however... then you can keep them.
->>=20
->
-> Braces aren't needed, it may not too much useful to using NULL
-> as a indicator for error pointer.
-
-heh, it's not about using it as an error pointer. I'm merely trying to
-make clk optional. NULL is a valid clk, meaning you won't get NULL
-pointer dereferences when passing it along clk_*() calls (if you find
-any, it's likely a bug in CCF), so NULL can be used to cope with
-optional clocks:
-
-         clk =3D clk_get(dev, "foo");
-         if (IS_ERR(clk)) {
-         	if (PTR_ERR(clk) =3D=3D -EPROBE_DEFER)
-                	return -EPROBE_DEFER;
-                else
-                	clk =3D NULL;
-         }
-
->> > +		/*
->> > +		 * Try to get the information for HUB reset, the
->> > +		 * default setting like below:
->> > +		 *
->> > +		 * - Reset state is low
->> > +		 * - The duration is 50us
->> > +		 */
->> > +		if (of_find_property(node, "hub-reset-active-high", NULL))
->> > +			reset_pol =3D 1;
->>=20
->> you see, this is definitely *not* generic. You should write a generic
->> reset-gpio.c reset controller and describe the polarity on the gpio
->> binding. This driver *always* uses reset_assert(); reset_deassert(); and
->> reset-gpio implements though by gpiod_set_value() correctly.
->>=20
->> Polarity _must_ be described elsewhere in DT.
->>=20
->> > +		of_property_read_u32(node, "hub-reset-duration-us",
->> > +			&duration_us);
->>=20
->> likewise, this should be described as a debounce time for the GPIO.
->>=20
->
-> Yes, if we are a reset gpio driver.
-
-even if you use a raw GPIO, polarity and duration must come through DT.
-
->> > +		usleep_range(duration_us, duration_us + 100);
->> > +		gpiod_set_value(gpiod_reset, reset_pol ? 0 : 1);
->>=20
->> wrong. You should _not_ have polarity checks here. You should have
->> already initialized the gpio as ACTIVE_HIGH or ACTIVE_LOW and gpiolib
->> will handle the polarity for you.
->
-> Yes, you are right. I did not understand ACTIVE_LOW for gpio flag
-> before.
-
-with open source code, that's a rather poor excuse, Peter.
-
->> > +static int __init usb_hub_generic_init(void)
->> > +{
->> > +	return platform_driver_register(&usb_hub_generic_driver);
->> > +}
->> > +subsys_initcall(usb_hub_generic_init);
->> > +
->> > +static void __exit usb_hub_generic_exit(void)
->> > +{
->> > +	platform_driver_unregister(&usb_hub_generic_driver);
->> > +}
->> > +module_exit(usb_hub_generic_exit);
->>=20
->> module_platform_driver();
->
-> I want this driver to be called before module init's.
-
-why ?
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWZuE6AAoJEIaOsuA1yqREPUcP+wRaVBU0fqFhOBhtgm9StdpC
-ufymP2hbCqXLm/2l9nAoTeyX0cFuv6EIOJ0S924G0WurKZyRkFpfSMpk3x8y+8gH
-I9rjLWn1YaCWmJ6z6dsEiXSo7VrjJNfA4jBKUxiruTcw1y+vZ8yj9/eAFXXfYc1I
-VL54qxWf7pZIzJL1Ehax5dwP+Y0HvKnq6+JTgGFqbQdKIUopyX7M3E8r6HVtqkV4
-hFS/r9VQ+tHU5/Xii6Jfa1JZOCL8Aq/qyjPadC9syJo93IbcVMXdP7+rwEf+7Xjp
-yXwtBLlWbf1ct7Ll1sIkW/wSHXpgwNrhIRoZbq51z4zgl995MklsA35ZPZhissld
-Cj8GBK3F2TFoy0xJmZ1KJAotGXKN4Iqeoe5uVgup4+e2vsepb35QLeiGFKdRYrPQ
-XxwdKX8L07twVrXjkN9u4Pj+nwaAPinamqa/a9DkYDoafjuCy6Y+eDe1VpdnMoZb
-JbeF7W4A8PDGTxsaL/O2ZPtJzwsC37yrYM0ruEvFX0RXXy1yG48t+tnA45dMbSZH
-eEJOrsLigwel7+I936pzbHFf83Jwqxk/cXi/CMyhjTmgnK5RgZftqKYDuF1GFXT6
-mfnXOAzssKCrz6PVlNMcP9WT6OPhyglcGwqv3YuOuyAvaBwx9GWxL5tPzF2mGV1G
-Svf3YH//Y5wqoFg+Ml+X
-=UGl0
------END PGP SIGNATURE-----
---=-=-=--
-
-
---===============2378278076755098551==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============2378278076755098551==--
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
