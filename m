@@ -1,55 +1,79 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [4.4-rc][PATCH v2] ARM: dts: am4372: fix clock source for arm twd
- and global timers
-Date: Tue, 8 Dec 2015 19:41:39 +0200
-Message-ID: <56671653.4030002@ti.com>
-References: <1448898998-32749-1-git-send-email-grygorii.strashko@ti.com>
- <20151203163551.GQ23396@atomide.com> <5660843E.3000801@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5660843E.3000801-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, t-kristo-l0cyMroinI0@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: nsekhar-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 00/13] ARM: shmobile: dts: Update console parameters
+Date: Tue,  8 Dec 2015 18:54:05 +0100
+Message-ID: <1449597258-32623-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony, Felipe, Tero,
-On 12/03/2015 08:04 PM, Grygorii Strashko wrote:
-> On 12/03/2015 06:35 PM, Tony Lindgren wrote:
->> * Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org> [151130 07:58]:
->>> ARM TWD and Global timer are clocked by PERIPHCLK which is MPU_CLK/2.
->>> But now they are clocked by dpll_mpu_m2_ck == MPU_CLK and, as result.
->>> Timekeeping core misbehaves. For example, execution of command
->>> "sleep 5" will take 10 sec instead of 5.
->>>
->>> Hence, fix it by adding mpu_periphclk ("fixed-factor-clock") and use
->>> it for clocking ARM TWD and Global timer (same way as on OMAP4).
->>>
->>> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
->>> Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
->>> Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
->>> Fixes:commit 8cbd4c2f6a99 ("arm: boot: dts: am4372: add ARM timers and SCU nodes")
->>> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
->>
->> Is this fix alone enough or do you still need to disable other the ARM
->> timers in the board specific dts file?
->>
->
-> This one is independent and it's required for -rc, because ARM TWD timer will be selected
-> now for am43xx even if http://www.spinics.net/lists/arm-kernel/msg459649.html
-> is not merged yet ;) in case of omap2plus_defconfig build.
->
->
+	Hi Simon, Magnus,
 
-Are there any comments objection?
-Could this patch be merged as part of -rc cycle?
+This patch series updates the console parameters in the DTSes for
+various Renesas ARM boards.
+
+  - For all of them, the serial port config is added to
+    chosen/stdout-path, as per current best practices,
+  - On some boards (armadillo, bockw, kzm9d, kzm9g), "console="
+    parameters are removed from the kernel command lines, as they're no
+    longer needed for DT-only platforms,
+  - On some boards (genmai, kzm9g), the console alias is changed to
+    "serial0", for consistency with other boards (the first serial port
+    is always called "serial0", unless labeled otherwise); this does
+    mean the device changes its name to /dev/ttySC0 in userspace, which
+    also happened on R-Car Gen2 before,
+  - On kzm9d, a console alias is added.
+	    
+Tested on r8a73a4/ape6evm, r8a7740/armadillo, r8a7778/bockw,
+r8a7779/marzen, r8a7791/koelsch, and sh73a0/kzm9g.
+
+Thanks for applying!
+
+Geert Uytterhoeven (13):
+  ARM: shmobile: alt dts: Add serial port config to chosen/stdout-path
+  ARM: shmobile: ape6evm dts: Add serial port config to
+    chosen/stdout-path
+  ARM: shmobile: armadillo800eva dts: Update console parameters
+  ARM: shmobile: bockw dts: Update console parameters
+  ARM: shmobile: genmai dts: Update console parameters
+  ARM: shmobile: gose dts: Add serial port config to chosen/stdout-path
+  ARM: shmobile: koelsch dts: Add serial port config to
+    chosen/stdout-path
+  ARM: shmobile: kzm9d dts: Update console parameters
+  ARM: shmobile: kzm9g dts: Update console parameters
+  ARM: shmobile: lager dts: Add serial port config to chosen/stdout-path
+  ARM: shmobile: marzen dts: Add serial port config to
+    chosen/stdout-path
+  ARM: shmobile: porter dts: Add serial port config to
+    chosen/stdout-path
+  ARM: shmobile: silk dts: Add serial port config to chosen/stdout-path
+
+ arch/arm/boot/dts/emev2-kzm9d.dts             | 8 ++++++--
+ arch/arm/boot/dts/r7s72100-genmai.dts         | 4 ++--
+ arch/arm/boot/dts/r8a73a4-ape6evm.dts         | 2 +-
+ arch/arm/boot/dts/r8a7740-armadillo800eva.dts | 8 ++++----
+ arch/arm/boot/dts/r8a7778-bockw.dts           | 4 ++--
+ arch/arm/boot/dts/r8a7779-marzen.dts          | 2 +-
+ arch/arm/boot/dts/r8a7790-lager.dts           | 2 +-
+ arch/arm/boot/dts/r8a7791-koelsch.dts         | 2 +-
+ arch/arm/boot/dts/r8a7791-porter.dts          | 2 +-
+ arch/arm/boot/dts/r8a7793-gose.dts            | 2 +-
+ arch/arm/boot/dts/r8a7794-alt.dts             | 2 +-
+ arch/arm/boot/dts/r8a7794-silk.dts            | 2 +-
+ arch/arm/boot/dts/sh73a0-kzm9g.dts            | 8 ++++----
+ 13 files changed, 26 insertions(+), 22 deletions(-)
 
 -- 
-regards,
--grygorii
+1.9.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
