@@ -1,63 +1,79 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 2/3] doc: dt-binding: generic onboard USB HUB
-Date: Tue, 8 Dec 2015 09:37:49 +0800
-Message-ID: <1449538670-7954-3-git-send-email-peter.chen@freescale.com>
-References: <1449538670-7954-1-git-send-email-peter.chen@freescale.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH 4/4] ARM: dts: Use OF graph for DP to panel connection in
+ exynos5800-peach-pi
+Date: Mon, 7 Dec 2015 22:44:05 -0300
+Message-ID: <566635E5.9070404@osg.samsung.com>
+References: <1449492758-19989-1-git-send-email-inki.dae@samsung.com>
+ <1449492758-19989-5-git-send-email-inki.dae@samsung.com>
+ <56658C78.8090509@osg.samsung.com>
+ <CAAQKjZMgse2n0TcjLiBxDn6ddTNSaRKMxoBqU7u8u002W=hRWQ@mail.gmail.com>
+ <566628EF.5090202@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449538670-7954-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <566628EF.5090202@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Inki Dae <daeinki@gmail.com>
+Cc: DRI mailing list <dri-devel@lists.freedesktop.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add dt-binding documentation for generic onboard USB HUB.
+Hello Krzysztof,
 
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- .../bindings/usb/generic-onboard-hub.txt           | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/generic-onboard-hub.txt
+On 12/07/2015 09:48 PM, Krzysztof Kozlowski wrote:
+> On 08.12.2015 00:36, Inki Dae wrote:
+>> Hi Javier,
+>>
+>> 2015-12-07 22:41 GMT+09:00 Javier Martinez Canillas <javier@osg.samsung.com>:
+>>> Hello Inki,
+>>>
+>>> On 12/07/2015 09:52 AM, Inki Dae wrote:
+>>>> From: Javier Martinez Canillas <javier@osg.samsung.com>
+>>>>
+>>>
+>>> Thanks a lot for posting this patch.
+>>>
+>>>> The DT binding for the Exynos DRM Display Port (DP) driver isn't consistent
+>>>> since it uses a phandle to describe the connection between the DP port and
+>>>> the display panel but uses the OF graph ports and endpoints to describe the
+>>>> connection betwen the DP port, a bridge chip and the panel.
+>>>>
+>>>> The Exynos DP driver and the DT binding have been changed to allow also to
+>>>> describe the DP port to panel connection using ports / endpoints (OF graph)
+>>>> so this patch changes the Exynos5800 Peach Pi DT to make it consistent with
+>>>> the Exynos5420 Peach Pit that has a eDP to LVDS chip and uses OF graph too.
+>>>>
+>>>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>>>> Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>>>
+>>> This tag was not in my original patch, it's true that I tested
+>>> it but will someone believe me? ;)
+>>
+>> Oops. I confused you spread Reviewed-by and Tested-by here and there.
+>> Don't worry about that. Will remove it if you don't give me Tested-by.
+>> :)
+> 
+> Actually authorship (the "From") in this case means Tested-by. Author
+> always tests the patch so it would look weird if we start adding
+> tested-by to our own patches, right?
+>
 
-diff --git a/Documentation/devicetree/bindings/usb/generic-onboard-hub.txt b/Documentation/devicetree/bindings/usb/generic-onboard-hub.txt
-new file mode 100644
-index 0000000..ea92205
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/generic-onboard-hub.txt
-@@ -0,0 +1,28 @@
-+Generic Onboard USB HUB
-+
-+Required properties:
-+- compatible: should be "generic-onboard-hub"
-+
-+Optional properties:
-+- clocks: the input clock for HUB.
-+
-+- clock-names: Should be "external_clk"
-+
-+- hub-reset-gpios: Should specify the GPIO for reset.
-+
-+- hub-reset-active-high: the active reset signal is high, if this property is
-+  not set, the active reset signal is low.
-+
-+- hub-reset-duration-us: the duration for assert reset signal, the time unit
-+  is microsecond.
-+
-+Example:
-+
-+	usb_hub1 {
-+		compatible = "generic-onboard-hub";
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+		clock-names = "external_clk";
-+		hub-reset-gpios = <&gpio7 12 0>;
-+		hub-reset-active-high;
-+		hub-reset-duration-us = <2>;
-+	};
+Exactly, that's what I tried to say. It's implied that the
+author tested her/his own patch in the best possible way.
+ 
+> Dear Inki,
+> However the patch misses your SoB. You touched and sent it so please
+> extend the SoB chain-of-blame.
+>
+
+Right, I missed that.
+
+> Best regards,
+> Krzysztof
+> 
+
+Best regards,
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
