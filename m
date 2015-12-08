@@ -1,50 +1,78 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] rcar_jpu: add fallback compatibility string
-Date: Tue, 8 Dec 2015 15:39:09 +0300
-Message-ID: <5666CF6D.70802@cogentembedded.com>
-References: <1449553349-20458-1-git-send-email-horms+renesas@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1449553349-20458-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: [PATCH v3 0/9] Add STM32 pinctrl/GPIO driver
+Date: Tue,  8 Dec 2015 13:45:02 +0100
+Message-ID: <1449578711-6141-1-git-send-email-mcoquelin.stm32@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, afaerber@suse.de, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi Linus, all,
 
-On 12/8/2015 8:42 AM, Simon Horman wrote:
+This is the second round of STM32 pinctrl series, which improves DT
+bindings declaration and documentation, and also fixes some commit fixup
+issues. The series also contains two more patches, adding GPIO LEDs
+support as a user of this driver.
 
-> Add fallback compatibility string.
-> This is in keeping with the fallback scheme being adopted wherever
-> appropriate for drivers for Renesas SoCs.
->
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> ---
->   Documentation/devicetree/bindings/media/renesas,jpu.txt | 13 +++++++------
->   drivers/media/platform/rcar_jpu.c                       |  1 +
->   2 files changed, 8 insertions(+), 6 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/media/renesas,jpu.txt b/Documentation/devicetree/bindings/media/renesas,jpu.txt
-> index 0cb94201bf92..c96de75f0089 100644
-> --- a/Documentation/devicetree/bindings/media/renesas,jpu.txt
-> +++ b/Documentation/devicetree/bindings/media/renesas,jpu.txt
-> @@ -5,11 +5,12 @@ and decoding function conforming to the JPEG baseline process, so that the JPU
->   can encode image data and decode JPEG data quickly.
->
->   Required properties:
-> -  - compatible: should containg one of the following:
-> -			- "renesas,jpu-r8a7790" for R-Car H2
-> -			- "renesas,jpu-r8a7791" for R-Car M2-W
-> -			- "renesas,jpu-r8a7792" for R-Car V2H
-> -			- "renesas,jpu-r8a7793" for R-Car M2-N
-> +- compatible: "renesas,jpu-<soctype>", "renesas,jpu" as fallback.
+The STM32 family has 16 pins per GPIO bank, and the number of bank varies
+depending on the model.
 
-    Not "renesas,rcar[-gen2]-jpu"?
+Pins can be multiplexed either in GPIO mode, alternate function (up to 15
+functions per pin) or analog (for ADC/DAC).
 
-[...]
+Changes since v2:
+-----------------
+ - Rebase on v4.4-rc1
+ - Declare leds also for Eval board
+ - Set green led as heartbeat
+ - Collect some acks
 
-MBR, Sergei
+Changes since v1:
+-----------------
+ - Add GPIO LEDs support in DT and defconfig
+ - Changes pinmux DT bindings from macros to raw values (Daniel)
+ - Improve DT bindings documentation (Daniel)
+ - Fix some commit fixup and rebase issues.
 
+Kind regards,
+Maxime
+
+Maxime Coquelin (9):
+  ARM: Kconfig: Introduce MACH_STM32F429 flag
+  Documentation: dt-bindings: Document STM32 pinctrl driver DT bindings
+  includes: dt-bindings: Add STM32F429 pinctrl DT bindings
+  pinctrl: Add STM32 MCUs support
+  ARM: mach-stm32: Select pinctrl
+  ARM: dts: Add pinctrl node to STM32F429
+  ARM: dts: Add USART1 pin config to STM32F429 boards
+  ARM: dts: Add leds support to STM32F429 boards
+  ARM: config: Enable GPIO Led driver in stm32_defconfig
+
+ .../bindings/pinctrl/st,stm32-pinctrl.txt          |  126 ++
+ arch/arm/Kconfig                                   |    6 +
+ arch/arm/boot/dts/stm32429i-eval.dts               |   19 +
+ arch/arm/boot/dts/stm32f429-disco.dts              |   13 +
+ arch/arm/boot/dts/stm32f429.dtsi                   |  110 ++
+ arch/arm/configs/stm32_defconfig                   |    1 +
+ drivers/pinctrl/Kconfig                            |    1 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/stm32/Kconfig                      |   16 +
+ drivers/pinctrl/stm32/Makefile                     |    5 +
+ drivers/pinctrl/stm32/pinctrl-stm32.c              |  856 +++++++++++
+ drivers/pinctrl/stm32/pinctrl-stm32.h              |   43 +
+ drivers/pinctrl/stm32/pinctrl-stm32f429.c          | 1598 ++++++++++++++++++++
+ include/dt-bindings/pinctrl/pinctrl-stm32.h        |   12 +
+ include/dt-bindings/pinctrl/stm32f429-pinfunc.h    | 1241 +++++++++++++++
+ 15 files changed, 4048 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+ create mode 100644 drivers/pinctrl/stm32/Kconfig
+ create mode 100644 drivers/pinctrl/stm32/Makefile
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32.c
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32.h
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32f429.c
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-stm32.h
+ create mode 100644 include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+
+-- 
+1.9.1
