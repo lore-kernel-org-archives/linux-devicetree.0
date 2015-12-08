@@ -1,117 +1,133 @@
-From: =?gb2312?B?QmVhbiBIdW8gu/Sx87HzIChiZWFuaHVvKQ==?=
-	<beanhuo@micron.com>
-Subject: RE: [PATCH linux-next 0/5] mtd: spi-nor: add driver for Atmel QSPI
- controller
-Date: Tue, 8 Dec 2015 06:21:00 +0000
-Message-ID: <A765B125120D1346A63912DDE6D8B6310BF53437@NTXXIAMBX02.xacn.micron.com>
-References: <cover.1449494420.git.cyrille.pitchen@atmel.com>
- <20151207193441.GO120110@google.com>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH] clk: sunxi: Extend the simple gates and
+ handle the Allwinner H3
+Date: Tue, 8 Dec 2015 07:42:26 +0100
+Message-ID: <20151208074226.17c75247f9eed69c9cac1d2d@free.fr>
+References: <20151206100412.1a74b71da8e9ca28c6e61589@free.fr>
+	<20151207143102.GA29097@rob-hp-laptop>
+Reply-To: moinejf-GANU6spQydw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151207193441.GO120110@google.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "nicolas.ferre@atmel.com" <nicolas.ferre@atmel.com>, "marex@denx.de" <marex@denx.de>, "vigneshr@ti.com" <vigneshr@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCV6DL6LYMNBBWXXTGZQKGQE6WQDA4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20151207143102.GA29097@rob-hp-laptop>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCcmlhbiBOb3JyaXMgW21haWx0
-bzpjb21wdXRlcnNmb3JwZWFjZUBnbWFpbC5jb21dDQo+IFNlbnQ6IFR1ZXNkYXksIERlY2VtYmVy
-IDA4LCAyMDE1IDM6MzUgQU0NCj4gVG86IEN5cmlsbGUgUGl0Y2hlbg0KPiBDYzogbGludXgtbXRk
-QGxpc3RzLmluZnJhZGVhZC5vcmc7IG5pY29sYXMuZmVycmVAYXRtZWwuY29tOyBtYXJleEBkZW54
-LmRlOw0KPiB2aWduZXNockB0aS5jb207IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+
-IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtl
-cm5lbC5vcmc7DQo+IHJvYmgrZHRAa2VybmVsLm9yZzsgcGF3ZWwubW9sbEBhcm0uY29tOyBtYXJr
-LnJ1dGxhbmRAYXJtLmNvbTsNCj4gaWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs7IGdhbGFr
-QGNvZGVhdXJvcmEub3JnOyBCZWFuIEh1byC79LHzsfMNCj4gKGJlYW5odW8pDQo+IFN1YmplY3Q6
-IFJlOiBbUEFUQ0ggbGludXgtbmV4dCAwLzVdIG10ZDogc3BpLW5vcjogYWRkIGRyaXZlciBmb3Ig
-QXRtZWwgUVNQSQ0KPiBjb250cm9sbGVyDQo+IA0KPiArIEJlYW4gSHVvDQo+IA0KPiBIaSBDeXJp
-bGxlLA0KPiANCj4gT24gTW9uLCBEZWMgMDcsIDIwMTUgYXQgMDM6MDk6MDlQTSArMDEwMCwgQ3ly
-aWxsZSBQaXRjaGVuIHdyb3RlOg0KPiA+IEhpIGFsbCwNCj4gPg0KPiA+IHRoaXMgc2VyaWVzIG9m
-IHBhdGNoZXMgYWRkcyBzdXBwb3J0IHRvIHRoZSBBdG1lbCBRU1BJIGNvbnRyb2xsZXINCj4gPiBh
-dmFpbGFibGUgb24gc2FtYTVkMiBTb0NzLiBJdCB3YXMgdGVzdGVkIG9uIGEgc2FtYTVkMiB4cGxh
-aW5lZCB1bHRyYQ0KPiA+IGJvYXJkIHdpdGggYSBNaWNyb24gbjI1cTEyOGExMyBRU1BJIG1lbW9y
-eSBhbmQgYSBhdDI1ZGYzMjFhIFNQSQ0KPiBtZW1vcnkuDQo+ID4NCj4gPiBJbiBvcmRlciB0byB1
-c2UgdGhlIE1pY3JvbiBtZW1vcnkgaW4gaXRzIFF1YWQgU1BJIG1vZGUsIHRoZSBzcGktbm9yDQo+
-ID4gZnJhbWV3b3JrIG5lZWRlZCB0byBiZSBwYXRjaGVkIHRvIGZpeCB0aGUgc3VwcG9ydCBvZiBR
-dWFkL0R1YWwgU1BJDQo+ID4gcHJvdG9jb2xzIHdpdGggc29tZSBtZW1vcnkgbWFudWZhY3R1cmVy
-cyBzdWNoIGFzIFNwYW5zaW9uLCBNaWNyb24gYW5kDQo+ID4gTWFjcm9uaXguIFRoZXJlIGFyZSBt
-YW55IGNvbW1lbnRzIGluIHRoZSBzb3VyY2UgY29kZSB0byBleHBsYWluIHRoZQ0KPiA+IGltcGxl
-bWVudGF0aW9uIGNob2ljZXMgYmFzZWQgb24gdGhlIGRhdGFzaGVldHMgZnJvbSBtZW1vcnkNCj4g
-bWFudWZhY3R1cmVycy4NCj4gPg0KPiA+DQo+ID4gVGhpcyBzZXJpZXMgd2FzIGJhc2VkIGFuZCB0
-ZXN0ZWQgb24gbGludXgtbmV4dC0yMDE1MTIwNw0KPiA+DQo+ID4gMSAtIEF0bWVsIFFTUEkgKyBN
-aWNyb24gbjI1cTEyOGExMyAoYXRtZWwtcXVhZHNwaS5jIGRyaXZlcikNCj4gPg0KPiA+IFNQSSAx
-LTEtMTogVGhpcyBtb2RlIHdhcyB0ZXN0ZWQgcmVwbGFjaW5nIFNQSV9OT1JfUVVBRCBieQ0KPiBT
-UElfTk9SX0ZBU1QgYXMNCj4gPiAgICAgICAgICAgIGFyZ3VtZW50IHRvIHNwaV9ub3Jfc2Nhbigp
-IGNhbGxlZCBmcm9tIGF0bWVsX3FzcGlfcHJvYmUoKS4NCj4gPg0KPiA+IFNQSSAxLTEtNDogQm9v
-dGxvYWRlcnMgKGF0OTFib290c3RyYXAvdWJvb3QpIGRvbid0IGVuYWJsZSB0aGUgUXVhZCBTUEkN
-Cj4gPiAgICAgICAgICAgIG1vZGUgb2YgdGhlIE1pY3JvbiBtZW1vcnkuIFdoZW4gcHJvYmVkIGZy
-b20gTGludXgsIHRoZQ0KPiBtZW1vcnkNCj4gPiAgICAgICAgICAgIHVzZXMgaXRzIEV4dGVuZGVk
-IFNQSSBtb2RlIGFuZCByZXBsaWVzIHRvIHRoZSByZWd1bGFyIFJlYWQgSUQNCj4gPiAgICAgICAg
-ICAgICgweDlmKSBjb21tYW5kLg0KPiA+DQo+ID4gU1BJIDQtNC00OiBUaGUgcm9tY29kZSBlbmFi
-bGVkIHRoZSBRdWFkIFNQSSBtb2RlIHRoZSBvZiBNaWNyb24gbWVtb3J5DQo+ID4gICAgICAgICAg
-ICBiZWZvcmUgbG9hZGluZyB0aGUgYXQ5MWJvb3RzdHJhcC4gV2hlbiBwcm9iZWQgZnJvbSBMaW51
-eCwNCj4gdGhlDQo+ID4gICAgICAgICAgICBtZW1vcnkgdXNlcyBpdHMgUXVhZCBTUEkgbW9kZSBh
-bmQgbm8gbG9uZ2VyIHJlcGxpZXMgdG8gdGhlDQo+ID4gICAgICAgICAgICByZWd1bGFyIFJlYWQg
-SUQgKDB4OWYpIGNvbW1hbmQgYnV0IGluc3RlYWQgdG8gdGhlIFJlYWQgSUQNCj4gPiAgICAgICAg
-ICAgIE11bHRpcGxlIEkvTyAoMHhhZikgY29tbWFuZC4gVGhlIG1lbW9yeSBleHBlY3RzIEFMTA0K
-PiBjb21tYW5kcw0KPiA+ICAgICAgICAgICAgdG8gdXNlIHRoZSBTUEkgNC00LTQgcHJvdG9jb2wu
-DQo+IA0KPiBJJ2xsIGFkbWl0IEknbSBhIGxpdHRsZSBmdXp6eSBvbiB0aGUgZGlmZmVyZW5jZXMg
-YmV0d2VlbiBkdWFsIGFuZCBxdWFkIG1vZGVzIG9uDQo+IHZhcmlvdXMgZmxhc2ggbWFudWZhY3R1
-cmVycy4gQ2FuIHlvdSBoZWxwIGNsZWFyIGl0IHVwIGZvciBtZT8NCg0KRm9yIE1pY3JvbiBTUEkg
-Tk9SIHNwaSBxdWFkIG1vZGUsIG1lYW5zIHRoYXQgUWF1ZCBJL08gcHJvdG90b2NvbCwgaXQgZm9s
-bG93cyBJL08NCkJ1cyB3aWR0aCBpcyBjb21tYW5kLWFkZHJlc3MtRGF0YSA0LTQtNCwgYXQgdGhp
-cyB0aW1lLCBEUTAsRFExLERRMixEUTMNCmFyZSBhbGwgdXNlZCB0byB0cmFuc2ZlciBhZGRyZXNz
-L2NvbW1hbmQvZGF0YS4gRm9yIHRoaXMgbWF5YmUgbm90IHRoZSBzYW1lIGJldHdlZW4NCmRpZmZl
-cmVudCBmbGFzaCBtYW51ZmFjdHVyZXMuIEZvciBleGFtcGxlLCBmb3IgU3BhbnNpb24gUXNwaSBO
-T1IsIGl0cyBhbGwgaW5zdHJ1Y3Rpb25zIGFyZQ0KdHJhbnNmZXJyZWQgZnJvbSBob3N0IHRvIG1l
-bW9yeSBhcyBhIHNpbmdsZSBiaXQgc2VyaWFsIHNlcXVlbmNlIG9uIHRoZSBEUTAgc2lnbmFsLCBl
-dmVuIHVuZGVyDQpRdWFkIG1vZGUuICBEdWFsIG1vZGUgdGhlIHNhbWUgYXMgUWF1ZCBtb2RlIHNj
-ZW5hcmlvLg0KDQpmb3IgU1BJIE5PUiAxLTEtNCwgbWVhbnMgY29tbWFuZCBhbmQgYWRkcmVzcyBh
-cmUgdHJhbnNmZXJyZWQgb24gdGhlIERRMCwNCmJ1dCBmb3IgZGF0YSwgYmVpbmcgdHJhbnNmZXJy
-ZWQgb24gRFEwLERRMSxEUTIsRFEzLkZvciB0aGlzLCBpdCBpcyB0aGUgc2FtZQ0KYmV0d2VlbiBk
-aWZmZXJlbnQgZmxhc2ggbWFudWZhY3R1cmVycy4gT2YgY291cnNlLCBhdCB0aGlzIG1vbWVudCwg
-U1BJIE5PUg0Kc2hvdWxkIHdvcmsgdW5kZXIgZXh0ZW5kZWQgSS9PIG1vZGUuDQoNCj4gSSB0aGlu
-ayBzb21lIG9mIHRoZSBjb21tZW50cyBvbiBwYXRjaCAyIGhlbHAgdG9vLCBidXQgSSdsbCBqdXN0
-IGNvbW1lbnQgaGVyZQ0KPiBmb3Igbm93Lg0KPiBJdCBsb29rcyBsaWtlIHRoZSBjdXJyZW50IGRy
-aXZlciBoYXMgcHJvYmxlbXMgcmVnYXJkaW5nIHRoZSBub24gMS14LXkgbW9kZXMNCj4gKGUuZy4s
-IDQtNC00KSwgcmlnaHQ/IEJ1dCBJIHNlZSB0aGF0IHNwaS1ub3IuYyBuZXZlciB0cmllcyB0byBz
-ZW5kIGEgNF80XzQNCj4gY29tbWFuZDsgaXQgb25seSBzZXRzIHJlYWRfb3Bjb2RlIHRvIFNQSU5P
-Ul9PUF9SRUFEXzFfMV97MSwyLDR9LiBTbyBpcw0KPiB0aGlzIGFuIG92ZXJzaWdodCBpbiBwYXRj
-aGVzIGxpa2UgQmVhbidzIHBhdGNoPw0KDQpGb3IgU1BJTk9SX09QX1JFQURfMV8xX3sxLDIsNH0g
-Y29tbWFuZHMsIFNwaSBOT1IgYWN0dWFsbHkgd29ya3MgdW5kZXINCkV4dGVuZGVkIEkvTyBtb2Rl
-LCBub3QgUXVhZCBtb2RlLiBUaGV5IGp1c3QgcHVzaCBTcGkgTk9SIG91dHB1dCBkYXRhIGJ5IFF1
-YWQgbW9kZSwNCkNvbW1hbmQgYW5kIGFkZHJlc3Mgc3RpbGwgZm9sbG93aW5nIGV4dGVuZGVkIEkv
-TyBtb2RlLg0KRm9yIDQtNC00IEkvTyBwcm90b2NvbCwgU1BJIE5PUiBzaG91bGQgY2hhbmdlIHRv
-IFF1YWQgbW9kZShqdXN0IGFzIG15IHBhdGNoKSwgDQpvZiBjb3Vyc2UsIFNQSSBjb250cm9sbGVy
-IHNob3VsZCBzdXBwb3J0IHRoaXMuIGZvciBNaWNyb24gUXNwaSBOT1IsIHVuZGVyIHF1YWQgbW9k
-ZSwNCmFsbCBjb21tYW5kcy9hZGRyZXNzL2RhdGEgYXJlIHRyYW5zZmVycmVkIG9uIERRMCxEUTEs
-RFEyLERRMyBzaWduYWxzLiBObyBtYXR0ZXIgd2hhdA0Ka2luZCBvZiBjb21tYW5kLiANCg0KDQo+
-ICAgICBjb21taXQgNTQ4Y2QzYWI1NGRhICgibXRkOiBzcGktbm9yOiBBZGQgcXVhZCBJL08gc3Vw
-cG9ydCBmb3IgTWljcm9uDQo+ICAgICBTUEkgTk9SIikNCj4gDQo+IFdoeSB3b3VsZCB3ZSBldmVu
-IG5lZWQgdG8gZW5hYmxlIHF1YWQgbW9kZXMgbGlrZSB0aGF0LCBpZiB3ZSdyZSBub3QgZ29pbmcN
-Cj4gdG8gc2VuZCB0aGUgNC00LTQgb3Bjb2Rlcz8NCkkgdGhpbmssIGluIG9yZGVyIHRvIGhpZ2gg
-c3BlZWQgU1BJIE5PUiwgYWZ0ZXIgZW5hYmxlIHF1YWQgbW9kZSwgDQpTUElOT1JfT1BfUkVBRF8x
-XzFfezEsMiw0fSBjb21tYW5kcyBkb24ndCBuZWVkIGFueSBtb3JlLCBub3JtYWwgcmVhZCBjb21t
-YW5kICgweDAzKQ0KQ2FuIGltcGxlbWVudCBhcyB0aGVtLg0KDQo+IE15IG5leHQgcXVlc3Rpb24g
-KGlmIG15IHVuZGVyc3RhbmRpbmcgaXMgcm91Z2hseSBjb3JyZWN0KSBpcywgZG8gd2UgbmVlZCB0
-aGUNCj4gNC00LTQgbW9kZXMsIGFuZCB3aGF0IHJpc2tzIGNvbWUgd2l0aCB0aGVtPyBJIHVuZGVy
-c3RhbmQgd2UgY2FuIHNob3J0ZW4NCj4gdGhlIGNvbW1hbmQgYW5kIGFkZHJlc3MgcGhhc2VzLCBi
-dXQgZG9lcyB0aGF0IGFsb25lIHlpZWxkIG11Y2gNCj4gcGVyZm9ybWFuY2UgYmVuZWZpdD8gQW5k
-IEkgdGhpbmsgdGhlIHJpc2sgaXMgdGhhdCBhIGdpdmVuIHN5c3RlbSBtaWdodCBub3QgYmUNCj4g
-cHJlcGFyZWQgZm9yIHRoZSBmbGFzaCB0byBiZSBpbiBhIDQtNC00IG1vZGUsIGlmIHRoZSBib290
-IGNvZGUgdHJpZXMgdG8gdXNlIDEteC15DQo+IGNvbW1hbmRzLg0KDQpBcyBmYXIgYXMgbXkgY3Vy
-cmVudCBleHBlcmllbmNlIGFuZCBrbm93bGVkZ2UsIHRoaXMgc3RpbGwgbmVlZCB0byBiZSBlbmFi
-bGVkLCBlc3BlY2lhbGx5IGZvcg0KZmFzdCBib290LCBhbmQgc29tZSBJT1QgZGV2aWNlcyB0byBz
-dG9yZSBpbmZvIGludG8gU1BJIE5PUi4NCkZvciB0aGlzIHBhdGNoZXMsIG15IGN1cnJlbnQgY29u
-Y2VybiBpcyB0aGF0IGhvc3Qgc2lkZSBob3cgdG8gZ2V0IGRpZmZlcmVudCBJL08gcHJvdG9jb2wg
-Y2hhbmdlcywNCmFuZCBkaXN0aW5ndWlzaCBiZXR3ZWVuIGRpZmZlcmVudCBmbGFzaCBtYW51ZmFj
-dHVyZXJzIEkvTyBtb2RlLg0KDQo+IEFsc28sIEkgc2VlIGEgbG90IG9mIGdvb2QgY29tbWVudHMg
-aW4gcGF0Y2ggMiBhYm91dCBTcGFuc2lvbiB2cy4NCj4gTWFjcm9uaXggdnMuIE1pY3JvbiBtZW1v
-cmllcy4gSSB3b25kZXIgaWYgcHJldmlvdXMgZGV2ZWxvcGVycyBoYXZlDQo+IGNvbXBsZXRlbHkg
-dGVzdGVkIHRoZWlyIHBhdGNoZXMsIG9yIGlmIHRoZXkncmUganVzdCByZWFkaW5nIHRoZSBkYXRh
-c2hlZXRzLi4uIHNvLA0KPiB3aGF0IGtpbmQgaGF2ZSB0ZXN0aW5nIGhhdmUgeW91IGRvbmU/IERv
-IHlvdSBoYXZlIHNhbXBsZXMgb2YgYWxsIHRoZXNlIGZsYXNoDQo+IHRvIHRlc3Q/DQo+IFJlZ2Fy
-ZHMsDQo+IEJyaWFuDQo=
+On Mon, 7 Dec 2015 08:31:02 -0600
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+
+> On Sun, Dec 06, 2015 at 10:04:12AM +0100, Jean-Francois Moine wrote:
+> > The H3 has a clock gate definition similar to the other Allwinner SoCs,
+> > but with a different parent clock for each single gate.
+> >=20
+> > Adding the names of the parent clocks in both the source and output clo=
+cks
+> > permits the use of the simple-gates driver to define the bus gates
+> > of all known Allwinner SoCs.
+> >=20
+> > Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+> > ---
+> > This patch replaces a part of Jens Kuske's patch
+> > 	[PATCH v5 1/4] clk: sunxi: Add H3 clocks support
+> > ---
+> >  Documentation/devicetree/bindings/clock/sunxi.txt | 25 +++++++++++++++=
+++++++++
+> >  drivers/clk/sunxi/clk-simple-gates.c              | 14 ++++++++++++-
+> >  2 files changed, 38 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Docume=
+ntation/devicetree/bindings/clock/sunxi.txt
+> > index 8a47b77..5736e6d 100644
+> > --- a/Documentation/devicetree/bindings/clock/sunxi.txt
+> > +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+> > @@ -70,6 +70,7 @@ Required properties:
+> >  	"allwinner,sun8i-a23-usb-clk" - for usb gates + resets on A23
+> >  	"allwinner,sun9i-a80-usb-mod-clk" - for usb gates + resets on A80
+> >  	"allwinner,sun9i-a80-usb-phy-clk" - for usb phy gates + resets on A80
+> > +	"allwinner,sunxi-gates-clk" - simple gates
+> > =20
+> >  Required properties for all clocks:
+> >  - reg : shall be the control register address for the clock.
+> > @@ -93,6 +94,12 @@ The "allwinner,sun9i-a80-mmc-config-clk" clock also =
+requires:
+> >  - #reset-cells : shall be set to 1
+> >  - resets : shall be the reset control phandle for the mmc block.
+> > =20
+> > +The "allwinner,sunxi-gates-clk" clock also requires:
+> > +- clock-names : corresponding names of the parent clocks
+> > +when the output clocks have different parents.
+> > +These names must be 4 characters long and must appear as a prefix in
+> > +the names of the output clocks. See example.
+> > +
+>=20
+> I don't think you should be encoding relationships of clocks using the=20
+> name strings. We describe relationships in DT via parent/child or=20
+> phandles.
+
+As you know, in the H3, each of the 49 output clock has one of the 4
+main clocks as its source.
+There are 3 options for defining the source of each clock:
+1- all definitions are in the DT,
+2- some definitions are in the DT, some other ones are hard-coded,
+3- all definitions are hard-coded.
+
+The 2nd option is the one proposed by Jens
+	https://lkml.org/lkml/2015/12/4/689
+In the code, the clock index gives the source clock.
+This means that this code is H3 specific and that it cannot be reused
+for an other SoC.
+
+So, instead of putting some information in the DT, the 3rd option could
+be done without too much overhead with a DT:
+
+	bus_gates: clk@01c20060 {
+		#clock-cells =3D <1>;
+		compatible =3D "allwinner,sun8i-h3-bus-gates-clk";
+		reg =3D <0x01c20060 0x14>;
+		clocks =3D <&ahb1>, <&ahb2>, <&apb1>, <&apb2>;
+		clock-names =3D "ahb1", "ahb2", "apb1", "apb2";
+		/* no clock-indices, nor clock-output-names,
+		 * these ones are hard-coded */
+};
+
+But, this option, as the previous one, implies new code for each new
+SoC.
+
+I better like the 1st option (reusable/generic code).
+This one may be done in many ways:
+
+1.1- define a source phandle of each output clock.
+    There were many proposals for such definitions, the simplest being
+    mine:
+	https://lkml.org/lkml/2015/10/22/109
+    but this asked for a long list in 'clocks', and Maxime did not like
+    that.
+
+1.2- use a container per source clock
+	https://lkml.org/lkml/2015/10/23/?663
+
+1.3- use a part of the name of the output clock as the source reference.
+    Current proposal, which seemed to suit Maxime
+	https://lkml.org/lkml/2015/10/26/647
+
+1.4- have you any other idea?
+
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
