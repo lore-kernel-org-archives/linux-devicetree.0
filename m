@@ -1,50 +1,46 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] ARM: DTS: Amlogic: Add TWD support to Meson8b
-Date: Tue,  8 Dec 2015 14:24:48 +0100
-Message-ID: <1449581088-23491-1-git-send-email-carlo@caione.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: [PATCH 0/3] drm/bridge: add Silicon Image SiI8620 driver
+Date: Tue, 08 Dec 2015 14:49:03 +0100
+Message-ID: <1449582546-18667-1-git-send-email-a.hajda@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-
-Add support for the ARM TWD Timer and Watchdog to the Amlogic Meson8b
-device tree.
-
-Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/meson8b.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index ee352bf..4860854 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -51,6 +51,18 @@
- / {
- 	interrupt-parent = <&gic>;
- 
-+	timer@c4300600 {
-+		compatible = "arm,cortex-a5-twd-timer";
-+		reg = <0xc4300600 0x20>;
-+		interrupts = <1 13 0xf08>;
-+	};
-+
-+	watchdog@c4300620 {
-+		compatible = "arm,cortex-a5-twd-wdt";
-+		reg = <0xc4300620 0x20>;
-+		interrupts = <1 14 0xf08>;
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgpUaGlzIHBhdGNoc2V0IGFkZHMgTUhMIGJyaWRnZSBkcml2ZXIgZm9yIFNpbGljb24gSW1h
+Z2UgU2lJODYyMCBjaGlwLgpUaGUgY2hpcCBpcyBxdWl0ZSBwb3dlcmZ1bCwgc3VwcG9ydHMgTUhM
+IHZlcnNpb25zIHVwIHRvIDMuMC4gSXQgaXMgcHJlc2VudAppbiBtdWx0aXBsZSBtb2JpbGUgZGV2
+aWNlcy4KCkkgaGF2ZSBwdXQgY29tbW9uIE1ITCBkZWZpbml0aW9ucyBpbnRvIGluY2x1ZGUvbGlu
+dXgvbWhsLmggaGVhZGVyIGZpbGUsCnNpbWlsYXJpbHkgdG8gaW5jbHVkZS9saW51eC9oZG1pLmgu
+CgpUaGUgcGF0Y2hzZXQgaXMgYmFzZWQgb24gbGF0ZXN0IGV4eW5vcy1kcm0tbmV4dCBicmFuY2gu
+CgpSZWdhcmRzCkFuZHJ6ZWoKCgpBbmRyemVqIEhhamRhICgzKToKICB2aWRlbzogYWRkIGhlYWRl
+ciBmaWxlIGZvciBNb2JpbGUgSGlnaC1EZWZpbml0aW9uIExpbmsgKE1ITCkgaW50ZXJmYWNlCiAg
+ZHQtYmluZGluZ3M6IGFkZCBTaWxpY29uIEltYWdlIFNpSTg2MjAgYnJpZGdlIGJpbmRpbmdzCiAg
+ZHJtL2JyaWRnZTogYWRkIFNpbGljb24gSW1hZ2UgU2lJODYyMCBkcml2ZXIKCiAuLi4vYmluZGlu
+Z3MvdmlkZW8vYnJpZGdlL3NpbC1zaWk4NjIwLnR4dCAgICAgICAgICB8ICAgMzQgKwogZHJpdmVy
+cy9ncHUvZHJtL2JyaWRnZS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgfCAgICA3ICsKIGRy
+aXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgIHwgICAgMSAr
+CiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpbC1zaWk4NjIwLmMgICAgICAgICAgICAgICB8IDE1
+NjcgKysrKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lsLXNpaTg2
+MjAuaCAgICAgICAgICAgICAgIHwgMTUxNyArKysrKysrKysrKysrKysrKysrCiBpbmNsdWRlL2xp
+bnV4L21obC5oICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAyOTIgKysrKwogNiBm
+aWxlcyBjaGFuZ2VkLCAzNDE4IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYnJpZGdlL3NpbC1zaWk4NjIwLnR4
+dAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lsLXNpaTg2MjAu
+YwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lsLXNpaTg2MjAu
+aAogY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgvbWhsLmgKCi0tIAoxLjkuMQoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
