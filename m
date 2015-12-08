@@ -1,160 +1,81 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: Re: [RFC][PATCH] misc: Introduce reboot_reason driver
-Date: Tue, 8 Dec 2015 14:07:22 -0800
-Message-ID: <20151208220722.GG4000@usrtlx11787.corpusers.net>
-References: <1449610162-30543-1-git-send-email-john.stultz@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: [RESEND PATCH] modpost: don't add a trailing wildcard for OF module aliases
+Date: Tue,  8 Dec 2015 19:13:32 -0300
+Message-ID: <1449612813-27004-1-git-send-email-javier@osg.samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1449610162-30543-1-git-send-email-john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Android Kernel Team <kernel-team-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 08 Dec 13:29 PST 2015, John Stultz wrote:
+Commit ac551828993ee ("modpost: i2c aliases need no trailing wildcard")
+removed the wildcard at the end of the I2C module aliases because I2C
+devices have no IDs so the aliases are just arbitrary device names.
 
-> This patch adds a basic driver to allow for commands like
-> "reboot bootloader" and "reboot recovery" to communicate this
-> reboot-reason to the bootloader.
-> 
-> This is commonly done on Android devices, in order to reboot
-> the device into fastboot or recovery mode. It also supports
-> custom OEM specific commands, via "reboot oem-<value>".
-> 
-> This driver pulls the phys memory address from DT as well as
-> the magic reason values that are written to the address for
-> each mode.
-> 
-> For an example, this patch also adds the DT support for
-> the nexus7 device via its dts (which is not yet upstream).
-> 
-> Thoughts and feedback would be appreciated!
-> 
+This is also true for OF modaliases since a compatible string is used
+to define a specific IP hardware block. So the modalias should match a
+specific compatible string and not attempt to match a compatible string
+whose name matches the beginning of another one.
 
-Good to see some work on this, I want it too :)
+For example, the following driver module:
 
-I do however think this is Qualcomm specific in its implementation, so
-adding Andy and linux-arm-msm.
+$ modinfo cros_ec_keyb | grep alias
+alias:          platform:cros-ec-keyb
+alias:          of:N*T*Cgoogle,cros-ec-keyb*
 
-[..]
-> diff --git a/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts b/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
-> index 5183d18..ee5dcb7 100644
-> --- a/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
-> +++ b/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
-> @@ -282,6 +282,15 @@
->  			};
->  		};
->  
-> +		reboot_reason: reboot_reason@2a03f65c {
-> +			compatible		= "reboot_reason";
-> +			reg			= <0x2A03F65C 0x4>;
-> +			reason,none		= <0x77665501>;
-> +			reason,bootloader	= <0x77665500>;
-> +			reason,recovery		= <0x77665502>;
-> +			reason,oem		= <0x6f656d00>;
-> +		};
-> +
+will be tried to be loaded for an alias of:N*T*Cgoogle,cros-ec-keyb-v2
+but there could be a different driver that supports the device for that
+compatible string so it's better to remove the trailing wildcard for OF.
 
-This address refers to IMEM, which is shared with a number of other
-uses. So I think we should have a simple-mfd (and syscon) with this
-within.
+Also, remove the word "always" from the add_wildcard() function comment
+since that was carried from the time where a wildcard was always added
+at the end of the module alias for all the devices.
 
+Suggested-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Reviewed-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 
-I like the fact that you don't hard code the magics in the
-implementation, as I've seen additions from multiple places - so perhaps
-it should be made even more flexible.
+---
+Hello,
 
-OMAP seems to use strings here instead of magics, but the delivery
-mechanism looks to be the same. But I think of this as Qualcomm
-specific.
+I sent this patch before [0] but was never picked. MAINTAINERS doesn't
+say who should manage patches to file2alias so maybe I didn't add the
+right person to the cc list.
 
->  		gpio-keys {
->  			compatible = "gpio-keys";
->  			power {
-[..]
-> diff --git a/drivers/misc/reboot_reason.c b/drivers/misc/reboot_reason.c
-[..]
-> +
-> +static int reboot_reason(struct notifier_block *nb, unsigned long action,
-> +								void *data)
-> +{
-> +	char *cmd = (char *)data;
-> +	long reason = reasons[NONE];
-> +
-> +	if (!reboot_reason_addr)
-> +		return NOTIFY_DONE;
-> +
-> +	if (cmd != NULL) {
-> +		if (!strncmp(cmd, "bootloader", 10))
-> +			reason = reasons[BOOTLOADER];
-> +		else if (!strncmp(cmd, "recovery", 8))
-> +			reason = reasons[RECOVERY];
-> +		else if (!strncmp(cmd, "oem-", 4)) {
-> +			unsigned long code;
-> +
-> +			if (!kstrtoul(cmd+4, 0, &code))
-> +				reason = reasons[OEM] | (code & 0xff);
-> +		}
-> +	}
+Documentation/development-process/5.Posting says that if there is no
+obvious maintainer, then Andrew Morton is often the patch target so
+I'm re-sending to him.
 
-In the case where we didn't find a match you should write the "normal"
-reason here, otherwise I think you will end up in recovery when recovery
-issues a reboot (in Android that is).
+Best regards,
+Javier
 
-> +
-> +	if (reason != -1)
-> +		writel(reason, reboot_reason_addr);
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static int reboot_reason_probe(struct platform_device *pdev)
-> +{
-> +	struct resource *res;
-> +	u32 val;
-> +	int i;
-> +
-> +	/* initialize the reasons */
-> +	for (i = 0; i < MAX_REASONS; i++)
-> +		reasons[i] = -1;
-> +
-> +	/* Try to grab the reason io address */
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	reboot_reason_addr = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(reboot_reason_addr))
-> +		return PTR_ERR(reboot_reason_addr);
-> +
+ scripts/mod/file2alias.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Please acquire this memory from a syscon (preferably the the parent
-simple-mfd).
+diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+index 5b96206e9aab..65eaab8b7798 100644
+--- a/scripts/mod/file2alias.c
++++ b/scripts/mod/file2alias.c
+@@ -125,7 +125,7 @@ do {                                                            \
+                 sprintf(str + strlen(str), "*");                \
+ } while(0)
+ 
+-/* Always end in a wildcard, for future extension */
++/* End in a wildcard, for future extension */
+ static inline void add_wildcard(char *str)
+ {
+ 	int len = strlen(str);
+@@ -704,7 +704,6 @@ static int do_of_entry (const char *filename, void *symval, char *alias)
+ 		if (isspace (*tmp))
+ 			*tmp = '_';
+ 
+-	add_wildcard(alias);
+ 	return 1;
+ }
+ ADD_TO_DEVTABLE("of", of_device_id, do_of_entry);
+-- 
+2.4.3
 
-> +	/* initialize specified reasons from DT */
-> +	if (!of_property_read_u32(pdev->dev.of_node, "reason,none", &val))
-> +		reasons[NONE] = val;
-> +	if (!of_property_read_u32(pdev->dev.of_node, "reason,bootloader", &val))
-> +		reasons[BOOTLOADER] = val;
-> +	if (!of_property_read_u32(pdev->dev.of_node, "reason,recovery", &val))
-> +		reasons[RECOVERY] = val;
-> +	if (!of_property_read_u32(pdev->dev.of_node, "reason,oem", &val))
-> +		reasons[OEM] = val;
-
-I would like for this to be less hard coded.
-
-> +
-> +	/* Install the notifier */
-> +	restart_nb.notifier_call = reboot_reason;
-> +	restart_nb.priority = 256;
-> +	if (register_restart_handler(&restart_nb)) {
-> +		dev_err(&pdev->dev,
-> +			"failed to setup restart handler.\n");
-> +	}
-> +	return 0;
-> +}
-> +
-
-Regards,
-Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
