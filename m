@@ -1,80 +1,100 @@
 From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 2/3] doc: dt-binding: generic onboard USB HUB
-Date: Tue, 8 Dec 2015 17:20:46 +0800
-Message-ID: <20151208092045.GB16881@shlinux2>
+Subject: Re: [PATCH 1/3] usb: misc: generic_onboard_hub: add generic onboard
+ USB HUB driver
+Date: Tue, 8 Dec 2015 17:26:56 +0800
+Message-ID: <20151208092655.GC16881@shlinux2>
 References: <1449538670-7954-1-git-send-email-peter.chen@freescale.com>
- <1449538670-7954-3-git-send-email-peter.chen@freescale.com>
- <CAOMZO5DfBW3hxp5odbefLQCmkocPy=LypVW5HJWzDkF__WD_sg@mail.gmail.com>
+ <1449538670-7954-2-git-send-email-peter.chen@freescale.com>
+ <20151208061905.GM11966@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAOMZO5DfBW3hxp5odbefLQCmkocPy=LypVW5HJWzDkF__WD_sg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Patryk Kowalczyk <patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151208061905.GM11966-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 08, 2015 at 12:30:59AM -0200, Fabio Estevam wrote:
-> On Mon, Dec 7, 2015 at 11:37 PM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > Add dt-binding documentation for generic onboard USB HUB.
-> >
-> > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> >  .../bindings/usb/generic-onboard-hub.txt           | 28 ++++++++++++++++++++++
-> >  1 file changed, 28 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/usb/generic-onboard-hub.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/usb/generic-onboard-hub.txt b/Documentation/devicetree/bindings/usb/generic-onboard-hub.txt
-> > new file mode 100644
-> > index 0000000..ea92205
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/usb/generic-onboard-hub.txt
-> > @@ -0,0 +1,28 @@
-> > +Generic Onboard USB HUB
+On Tue, Dec 08, 2015 at 07:19:05AM +0100, Sascha Hauer wrote:
+> > +	hub_data = devm_kzalloc(dev, sizeof(*hub_data), GFP_KERNEL);
+> > +	if (!hub_data)
+> > +		return -ENOMEM;
 > > +
-> > +Required properties:
-> > +- compatible: should be "generic-onboard-hub"
+> > +	if (dev->of_node) {
+> > +		struct device_node *node = dev->of_node;
 > > +
-> > +Optional properties:
-> > +- clocks: the input clock for HUB.
-> > +
-> > +- clock-names: Should be "external_clk"
-> > +
-> > +- hub-reset-gpios: Should specify the GPIO for reset.
-> > +
-> > +- hub-reset-active-high: the active reset signal is high, if this property is
-> > +  not set, the active reset signal is low.
-> > +
-> > +- hub-reset-duration-us: the duration for assert reset signal, the time unit
-> > +  is microsecond.
-> > +
-> > +Example:
-> > +
-> > +       usb_hub1 {
-> > +               compatible = "generic-onboard-hub";
-> > +               clocks = <&clks IMX6QDL_CLK_CKO>;
-> > +               clock-names = "external_clk";
-> > +               hub-reset-gpios = <&gpio7 12 0>;
-> > +               hub-reset-active-high;
+> > +		hub_data->clk = devm_clk_get(dev, "external_clk");
 > 
-> I think you could drop the 'hub-reset-active-high' property and do
-> like this instead:
+> Please drop such _clk suffixes. The context already makes it clear that
+> it's a clock.
 > 
-> hub-reset-gpios = <&gpio7 12 GPIO_ACTIVE_HIGH>;
-> 
-> or
-> 
-> hub-reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
 
-Yes, you are right, would you have a test to see if can work for
-udoo board?
+Will change.
+
+> > +		if (IS_ERR(hub_data->clk)) {
+> > +			dev_dbg(dev, "Can't get external clock: %ld\n",
+> > +					PTR_ERR(hub_data->clk));
+> > +		}
+> > +
+> > +		/*
+> > +		 * Try to get the information for HUB reset, the
+> > +		 * default setting like below:
+> > +		 *
+> > +		 * - Reset state is low
+> > +		 * - The duration is 50us
+> > +		 */
+> > +		if (of_find_property(node, "hub-reset-active-high", NULL))
+> > +			reset_pol = 1;
+> > +
+> > +		of_property_read_u32(node, "hub-reset-duration-us",
+> > +			&duration_us);
+> > +
+> > +		gpiod_reset = devm_gpiod_get_optional(dev, "hub-reset",
+> > +			reset_pol ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW);
+> > +		ret = PTR_ERR_OR_ZERO(gpiod_reset);
+> > +		if (ret) {
+> > +			dev_err(dev, "Failed to get reset gpio, err = %d\n",
+> > +				ret);
+> > +			return ret;
+> > +		}
+> > +	} else if (pdata) {
+> > +		hub_data->clk = pdata->ext_clk;
+> 
+> Passing clocks in platform_data is a no go. clocks must always be
+> retrieved with clk_get.
+
+Yes, you are right.
+
+> 
+> > +		duration_us = pdata->gpio_reset_duration_us;
+> > +		reset_pol = pdata->gpio_reset_polarity;
+> > +
+> > +		if (gpio_is_valid(pdata->gpio_reset)) {
+> > +			ret = devm_gpio_request_one(
+> > +				dev, pdata->gpio_reset, reset_pol
+> > +				? GPIOF_OUT_INIT_HIGH : GPIOF_OUT_INIT_LOW,
+> > +				dev_name(dev));
+> > +			if (!ret)
+> > +				gpiod_reset = gpio_to_desc(pdata->gpio_reset);
+> 
+> If the gpio is valid then being unable to get it is an error.
+
+I can't catch you, if the gpio is invalid, its descriptor will be NULL,
+then, the code will not do any gpio operation.
+
+> 
+> Do you need this platform_data stuff at all?
+> 
+
+If not, how can I cover the platform which does not use dts, but still
+uses these kinds of HUBs?
 
 -- 
 
 Best Regards,
 Peter Chen
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
