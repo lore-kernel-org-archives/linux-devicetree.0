@@ -1,59 +1,111 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 4/4] ARM: dts: Use OF graph for DP to panel connection in
- exynos5800-peach-pi
-Date: Tue, 08 Dec 2015 09:48:47 +0900
-Message-ID: <566628EF.5090202@samsung.com>
-References: <1449492758-19989-1-git-send-email-inki.dae@samsung.com>
- <1449492758-19989-5-git-send-email-inki.dae@samsung.com>
- <56658C78.8090509@osg.samsung.com>
- <CAAQKjZMgse2n0TcjLiBxDn6ddTNSaRKMxoBqU7u8u002W=hRWQ@mail.gmail.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH v2 3/5] ARM: bcm2835: add rpi power domain driver
+Date: Mon, 07 Dec 2015 17:04:58 -0800
+Message-ID: <87fuzdiwcl.fsf@eliezer.anholt.net>
+References: <1449251148-19344-1-git-send-email-eric@anholt.net> <1449251148-19344-4-git-send-email-eric@anholt.net> <7hmvtln87l.fsf@deeprootsystems.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <CAAQKjZMgse2n0TcjLiBxDn6ddTNSaRKMxoBqU7u8u002W=hRWQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Inki Dae <daeinki@gmail.com>, Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, DRI mailing list <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene.kim@samsung.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <7hmvtln87l.fsf@deeprootsystems.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Kevin Hilman <khilman@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexander Aring <alex.aring@gmail.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDguMTIuMjAxNSAwMDozNiwgSW5raSBEYWUgd3JvdGU6Cj4gSGkgSmF2aWVyLAo+IAo+IDIw
-MTUtMTItMDcgMjI6NDEgR01UKzA5OjAwIEphdmllciBNYXJ0aW5leiBDYW5pbGxhcyA8amF2aWVy
-QG9zZy5zYW1zdW5nLmNvbT46Cj4+IEhlbGxvIElua2ksCj4+Cj4+IE9uIDEyLzA3LzIwMTUgMDk6
-NTIgQU0sIElua2kgRGFlIHdyb3RlOgo+Pj4gRnJvbTogSmF2aWVyIE1hcnRpbmV6IENhbmlsbGFz
-IDxqYXZpZXJAb3NnLnNhbXN1bmcuY29tPgo+Pj4KPj4KPj4gVGhhbmtzIGEgbG90IGZvciBwb3N0
-aW5nIHRoaXMgcGF0Y2guCj4+Cj4+PiBUaGUgRFQgYmluZGluZyBmb3IgdGhlIEV4eW5vcyBEUk0g
-RGlzcGxheSBQb3J0IChEUCkgZHJpdmVyIGlzbid0IGNvbnNpc3RlbnQKPj4+IHNpbmNlIGl0IHVz
-ZXMgYSBwaGFuZGxlIHRvIGRlc2NyaWJlIHRoZSBjb25uZWN0aW9uIGJldHdlZW4gdGhlIERQIHBv
-cnQgYW5kCj4+PiB0aGUgZGlzcGxheSBwYW5lbCBidXQgdXNlcyB0aGUgT0YgZ3JhcGggcG9ydHMg
-YW5kIGVuZHBvaW50cyB0byBkZXNjcmliZSB0aGUKPj4+IGNvbm5lY3Rpb24gYmV0d2VuIHRoZSBE
-UCBwb3J0LCBhIGJyaWRnZSBjaGlwIGFuZCB0aGUgcGFuZWwuCj4+Pgo+Pj4gVGhlIEV4eW5vcyBE
-UCBkcml2ZXIgYW5kIHRoZSBEVCBiaW5kaW5nIGhhdmUgYmVlbiBjaGFuZ2VkIHRvIGFsbG93IGFs
-c28gdG8KPj4+IGRlc2NyaWJlIHRoZSBEUCBwb3J0IHRvIHBhbmVsIGNvbm5lY3Rpb24gdXNpbmcg
-cG9ydHMgLyBlbmRwb2ludHMgKE9GIGdyYXBoKQo+Pj4gc28gdGhpcyBwYXRjaCBjaGFuZ2VzIHRo
-ZSBFeHlub3M1ODAwIFBlYWNoIFBpIERUIHRvIG1ha2UgaXQgY29uc2lzdGVudCB3aXRoCj4+PiB0
-aGUgRXh5bm9zNTQyMCBQZWFjaCBQaXQgdGhhdCBoYXMgYSBlRFAgdG8gTFZEUyBjaGlwIGFuZCB1
-c2VzIE9GIGdyYXBoIHRvby4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBKYXZpZXIgTWFydGluZXog
-Q2FuaWxsYXMgPGphdmllckBvc2cuc2Ftc3VuZy5jb20+Cj4+PiBUZXN0ZWQtYnk6IEphdmllciBN
-YXJ0aW5leiBDYW5pbGxhcyA8amF2aWVyQG9zZy5zYW1zdW5nLmNvbT4KPj4KPj4gVGhpcyB0YWcg
-d2FzIG5vdCBpbiBteSBvcmlnaW5hbCBwYXRjaCwgaXQncyB0cnVlIHRoYXQgSSB0ZXN0ZWQKPj4g
-aXQgYnV0IHdpbGwgc29tZW9uZSBiZWxpZXZlIG1lPyA7KQo+IAo+IE9vcHMuIEkgY29uZnVzZWQg
-eW91IHNwcmVhZCBSZXZpZXdlZC1ieSBhbmQgVGVzdGVkLWJ5IGhlcmUgYW5kIHRoZXJlLgo+IERv
-bid0IHdvcnJ5IGFib3V0IHRoYXQuIFdpbGwgcmVtb3ZlIGl0IGlmIHlvdSBkb24ndCBnaXZlIG1l
-IFRlc3RlZC1ieS4KPiA6KQoKQWN0dWFsbHkgYXV0aG9yc2hpcCAodGhlICJGcm9tIikgaW4gdGhp
-cyBjYXNlIG1lYW5zIFRlc3RlZC1ieS4gQXV0aG9yCmFsd2F5cyB0ZXN0cyB0aGUgcGF0Y2ggc28g
-aXQgd291bGQgbG9vayB3ZWlyZCBpZiB3ZSBzdGFydCBhZGRpbmcKdGVzdGVkLWJ5IHRvIG91ciBv
-d24gcGF0Y2hlcywgcmlnaHQ/CgpEZWFyIElua2ksCkhvd2V2ZXIgdGhlIHBhdGNoIG1pc3NlcyB5
-b3VyIFNvQi4gWW91IHRvdWNoZWQgYW5kIHNlbnQgaXQgc28gcGxlYXNlCmV4dGVuZCB0aGUgU29C
-IGNoYWluLW9mLWJsYW1lLgoKQmVzdCByZWdhcmRzLApLcnp5c3p0b2YKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+--=-=-=
+Content-Type: text/plain
+
+Kevin Hilman <khilman@kernel.org> writes:
+
+> Eric Anholt <eric@anholt.net> writes:
+>
+>> From: Alexander Aring <alex.aring@gmail.com>
+>>
+>> This patch adds support for several power domains on Raspberry Pi,
+>> including USB (so it can be enabled even if the bootloader didn't do
+>> it), and graphics.
+>>
+>> This patch is the combined work of Eric Anholt (who wrote USB support
+>> inside of the Raspberry Pi firmware driver, and wrote the non-USB
+>> domain support) and Alexander Aring (who separated the original USB
+>> work out from the firmware driver).
+>>
+>> Signed-off-by: Alexander Aring <alex.aring@gmail.com>
+>> Signed-off-by: Eric Anholt <eric@anholt.net>
+>> ---
+>>
+>> v2: Add support for power domains other than USB, using the new
+>>     firmware interface, reword commit message (changes by Eric)
+>
+> [...]
+>
+>> +/*
+>> + * Firmware indices for the old power domains interface.  Only a few
+>> + * of them were actually implemented.
+>> + */
+>> +#define RPI_OLD_POWER_DOMAIN_USB		3
+>> +#define RPI_OLD_POWER_DOMAIN_V3D		10
+>> +
+>
+> Is "old" the right word here?  Are there firmware versions that could be
+> used instead?  What happens when the firwmware is updated next time?
+
+Old is a good word.  It's the old interface.
+
+As for what happens when the firmware is updated: Nothing.  The firmware
+is updated all the time, and it maintains backwards compatibility.
+Unless you mean "what happens when a newer, fancier power domain
+interface is created and we need a name for the newer one" and the
+answer is "this is a define entirely within the driver, and we can just
+rename it when we want to."
+
+> [...]
+>
+>> +	/*
+>> +	 * Use the old firmware interface for USB power, so that we
+>> +	 * can turn it on even if the firmware hasn't been updated.
+>> +	 */
+>> +	rpi_init_old_power_domain(rpi_domains, RPI_POWER_DOMAIN_USB,
+>> +				  RPI_OLD_POWER_DOMAIN_USB, "USB");
+>
+> This seems a bit restrictive.
+>
+> To me, it seems that determining "old" or "new" (or revision of fw
+> interface to use) should be described in DT, not hard-coded in the power
+> domain driver.
+>
+> What about an additional DT property to describe that? or possibly
+> another cell in the domain which could be used to optionally set
+> old/legacy.
+
+As the author and maintainer of the code, I don't feel it's restrictive.
+The firmware protocol is defined and is guaranteed to continue to exist,
+it's only useful for this platform, and defining a new set of custom
+devicetree properties for it would only obfuscate the implementation.
+DT is a useful tool for separating out the between-board differences for
+the same piece of hardware across multiple implementations at different
+addresses, while this is neither hardware nor in multiple
+implementations at different addresses.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJWZiy6AAoJELXWKTbR/J7ov6IP/1FajlbsOFQaVWZuQ3ndn7Q3
+vGuRb4SL3jmILSc0nCd6Cdx5G7eOJE2CQniPrq/Aoo8PPaLQsjm5jZGblqT7z5w9
+WeS48sWyGIoCXFO+ehFRrL5POovuTyGm21CB34JJChOSC5JIoufmtzS2T5DJDh3M
+rXgzPbMB77L/i+5CvWod5/vZrIV7mugZIxcii5tdZJqE8x0kz6SMFxMrimix8NDq
+cmHMx7ZHRzdGajTNurAWhNC/tUJF/mkxujTokG2HLW6p19pmajZFXeZrLGyVcR9W
+9Q0EypqQXsM76XSFhO3wqWwLai0QZAQdIMrzJWsYo3RfVvK8yg6xC/gn9RajBzwR
+Xhbh/kUUkz1LC33e/FlsfzBosCk1pSPg6XstnN8qnewq0jGEGLuKLSsKGkY4Mgi2
+5F+lHfp3wyDWVaCcRQH42gFrwI+sVpK+FS6f7KUQtUZL9L8C2RZXdGQAdOpnWKS1
+kN8U2c5ZEGmz8DLxtLkLoBcokYE15KfgQbjXGyWqUMsjO0wXQbXDkt6u0c/UJ0L8
+KE5vVIXaAYHtG2KjvUTYojSKXP3dJ6ELUGNpsnq8BhKqOpIqaGaI/nN0hrdymL0H
+mcNH4opuIQIHYbEj9F+ZIwkZ2ASjE6gkSBiNXJJxUHO5/A8BADCqYaVIkXk5iHrj
+M7v3hqZn7P612Iu1jLWd
+=Cwec
+-----END PGP SIGNATURE-----
+--=-=-=--
