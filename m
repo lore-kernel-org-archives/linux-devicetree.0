@@ -1,49 +1,90 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: shmobile: r8a7778: tidyup #sound-dai-cells settings
-Date: Tue, 8 Dec 2015 11:00:50 +0900
-Message-ID: <20151208020046.GB20031@verge.net.au>
-References: <1449505537-15428-1-git-send-email-geert+renesas@glider.be>
- <878u557qff.wl%kuninori.morimoto.gx@renesas.com>
- <20151208003724.GG10799@verge.net.au>
- <874mft7mrh.wl%kuninori.morimoto.gx@renesas.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH 4/4] ARM: dts: Use OF graph for DP to panel connection in
+ exynos5800-peach-pi
+Date: Tue, 08 Dec 2015 11:09:09 +0900
+Message-ID: <56663BC5.3070505@samsung.com>
+References: <1449492758-19989-1-git-send-email-inki.dae@samsung.com>
+ <1449492758-19989-5-git-send-email-inki.dae@samsung.com>
+ <56658C78.8090509@osg.samsung.com>
+ <CAAQKjZMgse2n0TcjLiBxDn6ddTNSaRKMxoBqU7u8u002W=hRWQ@mail.gmail.com>
+ <566628EF.5090202@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <874mft7mrh.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <566628EF.5090202@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Inki Dae <daeinki@gmail.com>, Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: DRI mailing list <dri-devel@lists.freedesktop.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 08, 2015 at 01:30:12AM +0000, Kuninori Morimoto wrote:
-> 
-> Hi Simon
-> 
-> > > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> > > 
-> > > Renesas sound driver needs #sound-dai-cells settings, but, this usage
-> > > is a little bit confusable. It came from ALSA SoC historical reasons.
-> > > The sound DAI naming method is different between Single/Multi DAI in
-> > > the ALSA framework, and it is used for sound card matching.
-> > > And this #sound-dai-cells has relationship to it.
-> > > Current SoC dtsi has #sound-dai-cells = <1> as default settings
-> > > (= it is assuming that board/platform has multi DAI), and
-> > > board/platform side needs to overwrite it if board/platform was single
-> > > DAI. This style is more confusable for users.
-> > > This patch removes SoC side default settings, and force to set it by
-> > > board/platform side.
-> > > 
-> > > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> > > ---
-> > > This patch is based on Geert's
-> > > ARM: shmobile: bockw dts: Override #sound-dai-cells to zero
-> > 
-> > Is Geert's patch necessary with this patch?
-> 
-> I think best order (for git bisect) is
-> 
-> 	1. Geert's patch
-> 	2. My patch
 
-Thanks, I will make it so.
+
+2015=EB=85=84 12=EC=9B=94 08=EC=9D=BC 09:48=EC=97=90 Krzysztof Kozlowsk=
+i =EC=9D=B4(=EA=B0=80) =EC=93=B4 =EA=B8=80:
+> On 08.12.2015 00:36, Inki Dae wrote:
+>> Hi Javier,
+>>
+>> 2015-12-07 22:41 GMT+09:00 Javier Martinez Canillas <javier@osg.sams=
+ung.com>:
+>>> Hello Inki,
+>>>
+>>> On 12/07/2015 09:52 AM, Inki Dae wrote:
+>>>> From: Javier Martinez Canillas <javier@osg.samsung.com>
+>>>>
+>>>
+>>> Thanks a lot for posting this patch.
+>>>
+>>>> The DT binding for the Exynos DRM Display Port (DP) driver isn't c=
+onsistent
+>>>> since it uses a phandle to describe the connection between the DP =
+port and
+>>>> the display panel but uses the OF graph ports and endpoints to des=
+cribe the
+>>>> connection betwen the DP port, a bridge chip and the panel.
+>>>>
+>>>> The Exynos DP driver and the DT binding have been changed to allow=
+ also to
+>>>> describe the DP port to panel connection using ports / endpoints (=
+OF graph)
+>>>> so this patch changes the Exynos5800 Peach Pi DT to make it consis=
+tent with
+>>>> the Exynos5420 Peach Pit that has a eDP to LVDS chip and uses OF g=
+raph too.
+>>>>
+>>>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>>>> Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>>>
+>>> This tag was not in my original patch, it's true that I tested
+>>> it but will someone believe me? ;)
+>>
+>> Oops. I confused you spread Reviewed-by and Tested-by here and there=
+=2E
+>> Don't worry about that. Will remove it if you don't give me Tested-b=
+y.
+>> :)
+>=20
+> Actually authorship (the "From") in this case means Tested-by. Author
+> always tests the patch so it would look weird if we start adding
+> tested-by to our own patches, right?
+>=20
+> Dear Inki,
+> However the patch misses your SoB. You touched and sent it so please
+> extend the SoB chain-of-blame.
+
+Right. Missed.
+
+Thanks,
+Inki Dae
+
+>=20
+> Best regards,
+> Krzysztof
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+>=20
