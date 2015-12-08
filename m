@@ -1,93 +1,59 @@
-From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: [PATCH v3 1/3] dt-bindings: add Marvell PMU documentation
-Date: Tue, 08 Dec 2015 10:43:23 +0000
-Message-ID: <E1a6Fjv-0004mp-O6@rmk-PC.arm.linux.org.uk>
+From: biao huang <biao.huang@mediatek.com>
+Subject: Re: [PATCH 2/5] dt-bindings: mediatek: Modify pinctrl bindings for
+ mt2701
+Date: Tue, 8 Dec 2015 18:56:53 +0800
+Message-ID: <1449572213.15850.3.camel@mhfsdcap03>
+References: <1448527472-20651-1-git-send-email-biao.huang@mediatek.com>
+	 <1448527472-20651-3-git-send-email-biao.huang@mediatek.com>
+	 <20151127203800.GA9092@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20151127203800.GA9092@rob-hp-laptop>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the required DT binding documentation for the Marvell PMU driver.
+On Sat, 2015-11-28 at 04:38 +0800, Rob Herring wrote:
+> On Thu, Nov 26, 2015 at 04:44:29PM +0800, Biao Huang wrote:
+> > Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+> > ---
+> >  .../devicetree/bindings/pinctrl/pinctrl-mt65xx.txt |    9 +++++----
+> >  1 file changed, 5 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+> > index 0480bc3..ca6a27a 100644
+> > --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+> > +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+> > @@ -4,10 +4,11 @@ The Mediatek's Pin controller is used to control SoC pins.
+> >  
+> >  Required properties:
+> >  - compatible: value should be one of the following.
+> > -    (a) "mediatek,mt8135-pinctrl", compatible with mt8135 pinctrl.
+> > -    (b) "mediatek,mt8173-pinctrl", compatible with mt8173 pinctrl.
+> > -    (c) "mediatek,mt6397-pinctrl", compatible with mt6397 pinctrl.
+> > -    (d) "mediatek,mt8127-pinctrl", compatible with mt8127 pinctrl.
+> > +    (a) "mediatek,mt2701-pinctrl", compatible with mt2701 pinctrl.
+> > +    (b) "mediatek,mt6397-pinctrl", compatible with mt6397 pinctrl.
+> > +    (c) "mediatek,mt8135-pinctrl", compatible with mt8135 pinctrl.
+> > +    (d) "mediatek,mt8173-pinctrl", compatible with mt8173 pinctrl.
+> > +    (e) "mediatek,mt8127-pinctrl", compatible with mt8127 pinctrl.
+> 
+> If you were trying to sort these, they still aren't quite sorted. There 
+> is no point in sorting if you number (or letter) them because you will 
+> have to update many lines on any change. So drop the (a), (b), (c), etc.
+> 
+> Rob
+> 
+Thanks for your comments, I'll modify this in next patch. And patch v2
+will be sent in next week.
+> >  - pins-are-numbered: Specify the subnodes are using numbered pinmux to
+> >    specify pins.
+> >  - gpio-controller : Marks the device node as a gpio controller.
+> > -- 
+> > 1.7.9.5
+> > 
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
----
- Documentation/devicetree/bindings/soc/dove/pmu.txt | 56 ++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/dove/pmu.txt
 
-diff --git a/Documentation/devicetree/bindings/soc/dove/pmu.txt b/Documentation/devicetree/bindings/soc/dove/pmu.txt
-new file mode 100644
-index 000000000000..edd40b796b74
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/dove/pmu.txt
-@@ -0,0 +1,56 @@
-+Device Tree bindings for Marvell PMU
-+
-+Required properties:
-+ - compatible: value should be "marvell,dove-pmu".
-+    May also include "simple-bus" if there are child devices, in which
-+    case the ranges node is required.
-+ - reg: two base addresses and sizes of the PM controller and PMU.
-+ - interrupts: single interrupt number for the PMU interrupt
-+ - interrupt-controller: must be specified as the PMU itself is an
-+    interrupt controller.
-+ - #interrupt-cells: must be 1.
-+ - #reset-cells: must be 1.
-+ - domains: sub-node containing domain descriptions
-+
-+Optional properties:
-+ - ranges: defines the address mapping for child devices, as per the
-+   standard property of this name.  Required when compatible includes
-+   "simple-bus".
-+
-+Power domain descriptions are listed as child nodes of the "domains"
-+sub-node.  Each domain has the following properties:
-+
-+Required properties:
-+ - #power-domain-cells: must be 0.
-+
-+Optional properties:
-+ - marvell,pmu_pwr_mask: specifies the mask value for PMU power register
-+ - marvell,pmu_iso_mask: specifies the mask value for PMU isolation register
-+ - resets: points to the reset manager (PMU node) and reset index.
-+
-+Example:
-+
-+	pmu: power-management@d0000 {
-+		compatible = "marvell,dove-pmu";
-+		reg = <0xd0000 0x8000>, <0xd8000 0x8000>;
-+		interrupts = <33>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		#reset-cells = <1>;
-+
-+		domains {
-+			vpu_domain: vpu-domain {
-+				#power-domain-cells = <0>;
-+				marvell,pmu_pwr_mask = <0x00000008>;
-+				marvell,pmu_iso_mask = <0x00000001>;
-+				resets = <&pmu 16>;
-+			};
-+
-+			gpu_domain: gpu-domain {
-+				#power-domain-cells = <0>;
-+				marvell,pmu_pwr_mask = <0x00000004>;
-+				marvell,pmu_iso_mask = <0x00000002>;
-+				resets = <&pmu 18>;
-+			};
-+		};
-+	};
--- 
-2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
