@@ -1,468 +1,277 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v3] bus: uniphier-system-bus: add UniPhier System Bus driver
-Date: Wed,  9 Dec 2015 01:21:58 +0900
-Message-ID: <1449591718-21753-1-git-send-email-yamada.masahiro@socionext.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] drm: Add support for ARM's HDLCD controller.
+Date: Tue, 8 Dec 2015 16:25:27 +0000
+Message-ID: <56670477.5000301@arm.com>
+References: <1449490265-6752-1-git-send-email-Liviu.Dudau@arm.com>
+ <1449490265-6752-3-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arm@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, arnd@arndb.de, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449490265-6752-3-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>, DRI devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The UniPhier System Bus is an external that connects on-board devices
-to the UniPhier SoC.  Each bank (chip select) is dynamically mapped
-to the CPU-viewed address base via the bus controller.  The bus
-controller must be configured before any access to the bus.
+Hi Liviu,
 
-This driver parses the "ranges" property of the System Bus node and
-initialized the bus controller.  After the bus becomes ready, devices
-below it are populated.
+On 07/12/15 12:11, Liviu Dudau wrote:
+> The HDLCD controller is a display controller that supports resolutions
+> up to 4096x4096 pixels. It is present on various development boards
+> produced by ARM Ltd and emulated by the latest Fast Models from the
+> company.
+ >
+ > Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+ > Cc: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 
-Note:
-Each bank can be mapped anywhere in the supported address space;
-there is nothing preventing us from assigning bank 0 on 0x42000000,
-0x43000000, or anywhere as long as such region is not used by others.
-So, the "ranges" is just one possible software configuration, which
-does not seem to fit in device tree because device tree is a hardware
-description language.  However, of_translate_address() requires
-"ranges" in every bus node between CPUs and device mapped on the CPU
-address space.  In other words, "ranges" properties must be statically
-defined in device tree.  After some discussion, I decided the dynamic
-address reassignment by the driver is too bothersome.  Instead, the
-device tree should provide a reasonable translation setup that the OS
-can rely on.
+I've given this a spin on my Juno, and the first thing of note is this:
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
+hdlcd 7ff60000.hdlcd: master bind failed: -517
+hdlcd 7ff50000.hdlcd: master bind failed: -517
+scpi_protocol scpi: SCP Protocol 1.0 Firmware 1.9.0 version
+[drm] found ARM HDLCD version r0p0
+tda998x 0-0070: Falling back to first CRTC
+usb 1-1: new high-speed USB device number 2 using ehci-platform
+tda998x 0-0070: found TDA19988
+hdlcd 7ff60000.hdlcd: bound 0-0070 (ops tda998x_ops)
+[drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+[drm] No driver support for vblank timestamp query.
+------------[ cut here ]------------
+WARNING: at drivers/gpu/drm/drm_atomic_helper.c:682
+Modules linked in:
 
-Changes in v3:
-  - Minor fix of git-log
-  - Add Rob's Acked-by
+CPU: 2 PID: 98 Comm: kworker/u12:3 Tainted: G        W       4.4.0-rc2+ #846
+Hardware name: ARM Juno development board (r1) (DT)
+Workqueue: deferwq deferred_probe_work_func
+task: fffffe007ecb3700 ti: fffffe09409c8000 task.ti: fffffe09409c8000
+PC is at drm_atomic_helper_update_legacy_modeset_state+0x1e8/0x1f0
+LR is at drm_atomic_helper_commit_modeset_disables+0x1a8/0x388
+pc : [<fffffe00004a4468>] lr : [<fffffe00004a59b8>] pstate: 20000045
+sp : fffffe09409cb560
+x29: fffffe09409cb560 x28: fffffe0940bf2800
+x27: fffffe0940070000 x26: 0000000000000001
+x25: fffffe0000be4b50 x24: fffffe00007ae820
+x23: fffffe0000be4b50 x22: fffffe0940bd1000
+x21: fffffe0940bd1000 x20: 0000000000000000
+x19: fffffe0940968000 x18: fffffe0940c8091c
+x17: 0000000000000007 x16: 0000000000000001
+x15: fffffe0940c8016f x14: 0000003c00000000
+x13: 0000000000000000 x12: 000004c9000004b4
+x11: 000004b1000004c9 x10: 000004b0000004b0
+x9 : 00000000000006f4 x8 : 000006a400000654
+x7 : 000006f400000640 x6 : fffffe0940966480
+x5 : fffffe0940968200 x4 : 0000000000000001
+x3 : fffffe0940966a80 x2 : 0000000000000000
+x1 : fffffe0940bd0900 x0 : fffffe0940bd0960
 
-Changes in v2:
-  - Re-design the binding, driver implementation
-    Switch to a single node, populate children after the bus is setup
+---[ end trace bdb6af69b29bf7ea ]---
+Call trace:
+[<fffffe00004a4468>] 
+drm_atomic_helper_update_legacy_modeset_state+0x1e8/0x1f0
+[<fffffe00004a59b8>] drm_atomic_helper_commit_modeset_disables+0x1a8/0x388
+[<fffffe00004a5c70>] drm_atomic_helper_commit+0xd8/0x140
+[<fffffe00004ccce0>] hdlcd_atomic_commit+0x10/0x18
+[<fffffe00004c9ef8>] drm_atomic_commit+0x40/0x70
+[<fffffe00004a69b0>] restore_fbdev_mode+0x270/0x2b0
+[<fffffe00004a8d64>] drm_fb_helper_restore_fbdev_mode_unlocked+0x34/0x90
+[<fffffe00004a8dec>] drm_fb_helper_set_par+0x2c/0x60
+[<fffffe000042f010>] fbcon_init+0x4d0/0x520
+[<fffffe000046ec9c>] visual_init+0xac/0x108
+[<fffffe000047060c>] do_bind_con_driver+0x1d4/0x3e8
+[<fffffe0000470c14>] do_take_over_console+0x174/0x1e8
+[<fffffe000042c38c>] do_fbcon_takeover+0x74/0x100
+[<fffffe00004313b4>] fbcon_event_notify+0x77c/0x7d8
+[<fffffe00000dc700>] notifier_call_chain+0x50/0x90
+[<fffffe00000dcadc>] __blocking_notifier_call_chain+0x4c/0x90
+[<fffffe00000dcb34>] blocking_notifier_call_chain+0x14/0x20
+[<fffffe0000435204>] fb_notifier_call_chain+0x1c/0x28
+[<fffffe0000437010>] register_framebuffer+0x1c0/0x2b8
+[<fffffe00004a90a4>] drm_fb_helper_initial_config+0x284/0x3e8
+[<fffffe00004a991c>] drm_fbdev_cma_init+0x94/0x148
+[<fffffe00004ccfc4>] hdlcd_drm_bind+0x1d4/0x418
+[<fffffe00004d15f0>] try_to_bring_up_master.part.2+0xc8/0x110
+[<fffffe00004d1820>] component_add+0x90/0x108
+[<fffffe00004ce6a8>] tda998x_probe+0x18/0x20
+[<fffffe00005a6d24>] i2c_device_probe+0x164/0x228
+[<fffffe00004d698c>] driver_probe_device+0x1ec/0x2f0
+[<fffffe00004d6bc0>] __device_attach_driver+0x90/0xd8
+[<fffffe00004d4b88>] bus_for_each_drv+0x58/0x98
+[<fffffe00004d66e4>] __device_attach+0xc4/0x148
+[<fffffe00004d6c58>] device_initial_probe+0x10/0x18
+[<fffffe00004d5b9c>] bus_probe_device+0x94/0xa0
+[<fffffe00004d6020>] deferred_probe_work_func+0x70/0xa8
+[<fffffe00000d5b70>] process_one_work+0x138/0x378
+[<fffffe00000d5ed4>] worker_thread+0x124/0x498
+[<fffffe00000dbb54>] kthread+0xdc/0xf0
+[<fffffe0000093980>] ret_from_fork+0x10/0x50
+Console: switching to colour frame buffer device 150x100
 
- .../bindings/bus/uniphier-system-bus.txt           |  65 +++++
- MAINTAINERS                                        |   1 +
- drivers/bus/Kconfig                                |   8 +
- drivers/bus/Makefile                               |   1 +
- drivers/bus/uniphier-system-bus.c                  | 283 +++++++++++++++++++++
- 5 files changed, 358 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/bus/uniphier-system-bus.txt
- create mode 100644 drivers/bus/uniphier-system-bus.c
+which for reference, is the first one in that function:
 
-diff --git a/Documentation/devicetree/bindings/bus/uniphier-system-bus.txt b/Documentation/devicetree/bindings/bus/uniphier-system-bus.txt
-new file mode 100644
-index 0000000..5ec47c0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/uniphier-system-bus.txt
-@@ -0,0 +1,65 @@
-+UniPhier System Bus
-+
-+The UniPhier System Bus is an external bus that connects on-board devices to
-+the UniPhier SoC.  It is a simple (semi-)parallel bus with address, data, and
-+some control signals.  It supports up to 8 banks (chip selects).
-+
-+Before any access to the bus, the bus controller must be configured; the bus
-+controller registers provide the control for the address translation from the
-+the System Bus to the parent bus.  The needed setup includes the base address,
-+the size, and some timing parameters of each bank.
-+
-+Required properties:
-+- compatible: should be "socionext,uniphier-system-bus".
-+- reg: offset and length of the register set for the bus controller device.
-+- #address-cells: should be 2.  The first cell is the bank number (chip select).
-+  The second cell is the address offset within the bank.
-+- #size-cells: should be 1.
-+- ranges: should provide a proper address translation from the System Bus to
-+  the parent bus.
-+
-+Note:
-+The address region(s) that can be assigned for the System Bus is implementation
-+defined.  Some SoCs can use 0x00000000-0x0fffffff and 0x40000000-0x4fffffff,
-+while other SoCs can only use 0x40000000-0x4fffffff.  There might be additional
-+limitations depending on SoCs and the boot mode.  The address translation is
-+arbitrary as long as the banks are assigned in the supported address space with
-+the required alignment and they do not overlap one another.
-+For example, it is possible to map:
-+  bank 0 to 0x42000000-0x43ffffff, bank 5 to 0x46000000-0x46ffffff
-+It is also possible to map:
-+  bank 0 to 0x48000000-0x49ffffff, bank 5 to 0x44000000-0x44ffffff
-+There is no reason to stick to a particular translation mapping, but the
-+"ranges" property should provide a "reasonable" default that is known to work.
-+The software should initialize the bus controller according to it.
-+
-+Example:
-+
-+	system-bus {
-+		compatible = "socionext,uniphier-system-bus";
-+		reg = <0x58c00000 0x400>;
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges = <1 0x00000000 0x42000000 0x02000000
-+			  5 0x00000000 0x46000000 0x01000000>;
-+
-+		ethernet@1,01f00000 {
-+			compatible = "smsc,lan9115";
-+			reg = <1 0x01f00000 0x1000>;
-+			interrupts = <0 48 4>
-+			phy-mode = "mii";
-+		};
-+
-+		uart@5,00200000 {
-+			compatible = "ns16550a";
-+			reg = <5 0x00200000 0x20>;
-+			interrupts = <0 49 4>
-+			clock-frequency = <12288000>;
-+		};
-+	};
-+
-+In this example,
-+ - the Ethernet device is connected at the offset 0x01f00000 of CS1 and
-+   mapped to 0x43f00000 of the parent bus.
-+ - the UART device is connected at the offset 0x00200000 of CS5 and
-+   mapped to 0x46200000 of the parent bus.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8278a10..8342520 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1643,6 +1643,7 @@ F:	arch/arm/include/asm/hardware/cache-uniphier.h
- F:	arch/arm/mach-uniphier/
- F:	arch/arm/mm/cache-uniphier.c
- F:	arch/arm64/boot/dts/socionext/
-+F:	drivers/bus/uniphier-system-bus.c
- F:	drivers/clk/uniphier/
- F:	drivers/i2c/busses/i2c-uniphier*
- F:	drivers/pinctrl/uniphier/
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index 116b363..9a92c07 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -131,6 +131,14 @@ config SUNXI_RSB
- 	  with various RSB based devices, such as AXP223, AXP8XX PMICs,
- 	  and AC100/AC200 ICs.
- 
-+config UNIPHIER_SYSTEM_BUS
-+	tristate "UniPhier System Bus driver"
-+	depends on ARCH_UNIPHIER && OF
-+	default y
-+	help
-+	  Support for UniPhier System Bus, a simple external bus.  This is
-+	  needed to use on-board devices connected to UniPhier SoCs.
-+
- config VEXPRESS_CONFIG
- 	bool "Versatile Express configuration bus"
- 	default y if ARCH_VEXPRESS
-diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
-index fcb9f97..ccff007 100644
---- a/drivers/bus/Makefile
-+++ b/drivers/bus/Makefile
-@@ -17,4 +17,5 @@ obj-$(CONFIG_OMAP_INTERCONNECT)	+= omap_l3_smx.o omap_l3_noc.o
- obj-$(CONFIG_OMAP_OCP2SCP)	+= omap-ocp2scp.o
- obj-$(CONFIG_SUNXI_RSB)		+= sunxi-rsb.o
- obj-$(CONFIG_SIMPLE_PM_BUS)	+= simple-pm-bus.o
-+obj-$(CONFIG_UNIPHIER_SYSTEM_BUS)	+= uniphier-system-bus.o
- obj-$(CONFIG_VEXPRESS_CONFIG)	+= vexpress-config.o
-diff --git a/drivers/bus/uniphier-system-bus.c b/drivers/bus/uniphier-system-bus.c
-new file mode 100644
-index 0000000..9864b8c
---- /dev/null
-+++ b/drivers/bus/uniphier-system-bus.c
-@@ -0,0 +1,283 @@
-+/*
-+ * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro@socionext.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/log2.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/sort.h>
-+
-+/* System Bus Controller registers */
-+#define UNIPHIER_SBC_BASE	0x100	/* base address of bank0 space */
-+#define    UNIPHIER_SBC_BASE_BE		BIT(0)	/* bank_enable */
-+#define UNIPHIER_SBC_CTRL0	0x200	/* timing parameter 0 of bank0 */
-+#define UNIPHIER_SBC_CTRL1	0x204	/* timing parameter 1 of bank0 */
-+#define UNIPHIER_SBC_CTRL2	0x208	/* timing parameter 2 of bank0 */
-+#define UNIPHIER_SBC_CTRL3	0x20c	/* timing parameter 3 of bank0 */
-+#define UNIPHIER_SBC_CTRL4	0x300	/* timing parameter 4 of bank0 */
-+
-+#define UNIPHIER_SBC_STRIDE	0x10	/* register stride to next bank */
-+#define UNIPHIER_SBC_NR_BANKS	8	/* number of banks (chip select) */
-+#define UNIPHIER_SBC_BASE_DUMMY	0xffffffff	/* data to squash bank 0, 1 */
-+
-+struct uniphier_system_bus_bank {
-+	u32 base;
-+	u32 end;
-+};
-+
-+struct uniphier_system_bus_priv {
-+	struct device *dev;
-+	void __iomem *membase;
-+	struct uniphier_system_bus_bank bank[UNIPHIER_SBC_NR_BANKS];
-+};
-+
-+static void uniphier_system_bus_set_reg(struct uniphier_system_bus_priv *priv)
-+{
-+	void __iomem *base_reg = priv->membase + UNIPHIER_SBC_BASE;
-+	u32 base, end, mask, val;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(priv->bank); i++) {
-+		base = priv->bank[i].base;
-+		end = priv->bank[i].end;
-+
-+		if (base == end) {
-+			/*
-+			 * If SBC_BASE0 or SBC_BASE1 is set to zero, the access
-+			 * to anywhere in the system bus space is routed to
-+			 * bank 0 (if boot swap if off) or bank 1 (if boot swap
-+			 * if on).  It means that CPUs cannot get access to
-+			 * bank 2 or later.  In other words, bank 0/1 cannot
-+			 * be disabled even if its bank_enable bits is cleared.
-+			 * This seems odd, but it is how this hardware goes.
-+			 * As a workaround, dummy data (0xffffffff) should be
-+			 * set when the bank 0/1 is unused.  As for bank 2 and
-+			 * later, they can be simply disable by clearing the
-+			 * bank_enable bit.
-+			 */
-+			if (i < 2)
-+				val = UNIPHIER_SBC_BASE_DUMMY;
-+			else
-+				val = 0;
-+		} else {
-+			mask = base ^ (end - 1);
-+
-+			val = base & 0xfffe0000;
-+			val |= (~mask >> 16) & 0xfffe;
-+			val |= UNIPHIER_SBC_BASE_BE;
-+		}
-+		dev_dbg(priv->dev, "SBC_BASE[%d] = 0x%08x\n", i, val);
-+
-+		writel(val, base_reg + UNIPHIER_SBC_STRIDE * i);
-+	}
-+}
-+
-+static void uniphier_system_bus_check_boot_swap(
-+					struct uniphier_system_bus_priv *priv)
-+{
-+	void __iomem *base_reg = priv->membase + UNIPHIER_SBC_BASE;
-+	int is_swapped;
-+
-+	is_swapped = !(readl(base_reg) & UNIPHIER_SBC_BASE_BE);
-+
-+	dev_dbg(priv->dev, "Boot Swap: %s\n", is_swapped ? "on" : "off");
-+
-+	if (is_swapped)
-+		swap(priv->bank[0], priv->bank[1]);
-+}
-+
-+static int uniphier_system_bus_add_bank(struct uniphier_system_bus_priv *priv,
-+					int bank, u32 addr, u64 paddr, u32 size)
-+{
-+	u64 end, mask;
-+
-+	dev_dbg(priv->dev,
-+		"range found: bank = %d, addr = %08x, paddr = %08llx, size = %08x\n",
-+		bank, addr, paddr, size);
-+
-+	if (bank >= ARRAY_SIZE(priv->bank)) {
-+		dev_err(priv->dev, "unsupported bank number %d\n", bank);
-+		return -EINVAL;
-+	}
-+
-+	if (priv->bank[bank].base || priv->bank[bank].end) {
-+		dev_err(priv->dev,
-+			"range for bank %d has already been specified\n", bank);
-+		return -EINVAL;
-+	}
-+
-+	if (paddr > U32_MAX) {
-+		dev_err(priv->dev, "base address %llx is too high\n", paddr);
-+		return -EINVAL;
-+	}
-+
-+	end = paddr + size;
-+
-+	if (addr > paddr) {
-+		dev_err(priv->dev,
-+			"base %08x cannot be mapped to %08llx of parent\n",
-+			addr, paddr);
-+		return -EINVAL;
-+	}
-+	paddr -= addr;
-+
-+	paddr = round_down(paddr, 0x00020000);
-+	end = round_up(end, 0x00020000);
-+
-+	if (end > U32_MAX) {
-+		dev_err(priv->dev, "end address %08llx is too high\n", end);
-+		return -EINVAL;
-+	}
-+	mask = paddr ^ (end - 1);
-+	mask = roundup_pow_of_two(mask);
-+
-+	paddr = round_down(paddr, mask);
-+	end = round_up(end, mask);
-+
-+	priv->bank[bank].base = paddr;
-+	priv->bank[bank].end = end;
-+
-+	dev_dbg(priv->dev, "range added: bank = %d, addr = %08x, end = %08x\n",
-+		bank, priv->bank[bank].base, priv->bank[bank].end);
-+
-+	return 0;
-+}
-+
-+static int uniphier_system_bus_sort_cmp(const void *a, const void *b)
-+{
-+	return ((struct uniphier_system_bus_bank *)a)->base
-+		- ((struct uniphier_system_bus_bank *)b)->base;
-+}
-+
-+static int uniphier_system_bus_check_overlap(
-+					struct uniphier_system_bus_priv tmp)
-+{
-+	int i;
-+
-+	sort(&tmp.bank, ARRAY_SIZE(tmp.bank), sizeof(tmp.bank[0]),
-+	     uniphier_system_bus_sort_cmp, NULL);
-+
-+	for (i = 0; i < ARRAY_SIZE(tmp.bank) - 1; i++)
-+		if (tmp.bank[i].end > tmp.bank[i + 1].base) {
-+			dev_err(tmp.dev,
-+				"region overlap between %08x-%08x and %08x-%08x\n",
-+				tmp.bank[i].base, tmp.bank[i].end,
-+				tmp.bank[i + 1].base, tmp.bank[i + 1].end);
-+			return -EINVAL;
-+		}
-+
-+	return 0;
-+}
-+
-+static int uniphier_system_bus_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct uniphier_system_bus_priv *priv;
-+	struct resource *regs;
-+	const __be32 *ranges;
-+	u32 cells, addr, size;
-+	u64 paddr;
-+	int pna, bank, rlen, rone, ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->membase = devm_ioremap_resource(dev, regs);
-+	if (IS_ERR(priv->membase))
-+		return PTR_ERR(priv->membase);
-+
-+	priv->dev = dev;
-+
-+	pna = of_n_addr_cells(dev->of_node);
-+
-+	ret = of_property_read_u32(dev->of_node, "#address-cells", &cells);
-+	if (ret) {
-+		dev_err(dev, "failed to get #address-cells\n");
-+		return ret;
-+	}
-+	if (cells != 2) {
-+		dev_err(dev, "#address-cells must be 2\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = of_property_read_u32(dev->of_node, "#size-cells", &cells);
-+	if (ret) {
-+		dev_err(dev, "failed to get #size-cells\n");
-+		return ret;
-+	}
-+	if (cells != 1) {
-+		dev_err(dev, "#size-cells must be 1\n");
-+		return -EINVAL;
-+	}
-+
-+	ranges = of_get_property(dev->of_node, "ranges", &rlen);
-+	if (!ranges) {
-+		dev_err(dev, "failed to get ranges property\n");
-+		return -ENOENT;
-+	}
-+
-+	rlen /= sizeof(*ranges);
-+	rone = pna + 2;
-+
-+	for (; rlen >= rone; rlen -= rone) {
-+		bank = be32_to_cpup(ranges++);
-+		addr = be32_to_cpup(ranges++);
-+		paddr = of_translate_address(dev->of_node, ranges);
-+		if (paddr == OF_BAD_ADDR)
-+			return -EINVAL;
-+		ranges += pna;
-+		size = be32_to_cpup(ranges++);
-+
-+		ret = uniphier_system_bus_add_bank(priv, bank, addr,
-+						   paddr, size);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = uniphier_system_bus_check_overlap(*priv);
-+	if (ret)
-+		return ret;
-+
-+	uniphier_system_bus_check_boot_swap(priv);
-+
-+	uniphier_system_bus_set_reg(priv);
-+
-+	/* Now, the bus is configured.  Populate platform_devices below it */
-+	return of_platform_populate(dev->of_node, of_default_bus_match_table,
-+				    NULL, dev);
-+}
-+
-+static const struct of_device_id uniphier_system_bus_match[] = {
-+	{ .compatible = "socionext,uniphier-system-bus" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, uniphier_system_bus_match);
-+
-+static struct platform_driver uniphier_system_bus_driver = {
-+	.probe		= uniphier_system_bus_probe,
-+	.driver = {
-+		.name	= "uniphier-system-bus",
-+		.of_match_table = uniphier_system_bus_match,
-+	},
-+};
-+module_platform_driver(uniphier_system_bus_driver);
-+
-+MODULE_AUTHOR("Masahiro Yamada <yamada.masahiro@socionext.com>");
-+MODULE_DESCRIPTION("UniPhier System Bus driver");
-+MODULE_LICENSE("GPL");
--- 
-1.9.1
+	...
+	/* clear out existing links and update dpms */
+	for_each_connector_in_state(old_state, connector, old_conn_state, i) {
+		if (connector->encoder) {
+			WARN_ON(!connector->encoder->crtc);
+			...
+
+That's on 4.4-rc2 with this series plus the 3 tda998x patches from 
+Russell's patch system applied. Is there something else I'm missing or 
+does this need looking at (could it be related to that initial probe 
+deferral)?
+
+> Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+> Acked-by: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>
+> ---
+>   drivers/gpu/drm/Kconfig          |   2 +
+>   drivers/gpu/drm/Makefile         |   1 +
+>   drivers/gpu/drm/arm/Kconfig      |  29 ++
+>   drivers/gpu/drm/arm/Makefile     |   2 +
+>   drivers/gpu/drm/arm/hdlcd_crtc.c | 329 ++++++++++++++++++++++
+>   drivers/gpu/drm/arm/hdlcd_drv.c  | 580 +++++++++++++++++++++++++++++++++++++++
+>   drivers/gpu/drm/arm/hdlcd_drv.h  |  42 +++
+>   drivers/gpu/drm/arm/hdlcd_regs.h |  87 ++++++
+>   8 files changed, 1072 insertions(+)
+>   create mode 100644 drivers/gpu/drm/arm/Kconfig
+>   create mode 100644 drivers/gpu/drm/arm/Makefile
+>   create mode 100644 drivers/gpu/drm/arm/hdlcd_crtc.c
+>   create mode 100644 drivers/gpu/drm/arm/hdlcd_drv.c
+>   create mode 100644 drivers/gpu/drm/arm/hdlcd_drv.h
+>   create mode 100644 drivers/gpu/drm/arm/hdlcd_regs.h
+
+[...]
+
+> +static int hdlcd_set_pxl_fmt(struct drm_crtc *crtc)
+> +{
+> +	unsigned int btpp, default_color = 0x00000000;
+> +	struct hdlcd_drm_private *hdlcd = crtc_to_hdlcd_priv(crtc);
+> +	uint32_t pixel_format;
+> +	struct simplefb_format *format = NULL;
+> +	int i;
+> +
+> +#ifdef CONFIG_DRM_HDLCD_SHOW_UNDERRUN
+> +	default_color = 0x00ff0000;	/* show underruns in red */
+> +#endif
+> +
+> +	pixel_format = crtc->primary->state->fb->pixel_format;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(supported_formats); i++) {
+> +		if (supported_formats[i].fourcc == pixel_format)
+> +			format = &supported_formats[i];
+> +	}
+> +
+> +	if (WARN_ON(!format)) {
+> +		return 0;
+> +	}
+
+nit: unnecessary braces.
+
+> +	/* HDLCD uses 'bytes per pixel', zero means 1 byte */
+> +	btpp = (format->bits_per_pixel + 7) / 8;
+> +	hdlcd_write(hdlcd, HDLCD_REG_PIXEL_FORMAT, (btpp - 1) << 3);
+> +
+> +	/*
+> +	 * The format of the HDLCD_REG_<color>_SELECT register is:
+> +	 *   - bits[23:16] - default value for that color component
+> +	 *   - bits[11:8]  - number of bits to extract for each color component
+> +	 *   - bits[4:0]   - index of the lowest bit to extract
+> +	 *
+> +	 * The default color value is used when bits[11:8] are zero, when the
+> +	 * pixel is outside the visible frame area or when there is a
+> +	 * buffer underrun.
+> +	 */
+> +	hdlcd_write(hdlcd, HDLCD_REG_RED_SELECT, default_color |
+> +		format->red.offset | (format->red.length & 0xf) << 8);
+> +	hdlcd_write(hdlcd, HDLCD_REG_GREEN_SELECT, default_color |
+> +		format->green.offset | (format->green.length & 0xf) << 8);
+> +	hdlcd_write(hdlcd, HDLCD_REG_BLUE_SELECT, default_color |
+> +		format->blue.offset | (format->blue.length & 0xf) << 8);
+
+These would seem to be putting bits 23:16 from default_color into the 
+default field of every register, and indeed underruns show up as a very 
+white-looking shade of red for me ;)
+
+> +	return 0;
+> +}
+
+[...]
+
+> +static void hdlcd_fb_output_poll_changed(struct drm_device *drm)
+> +{
+> +	struct hdlcd_drm_private *hdlcd = drm->dev_private;
+> +
+> +	if (hdlcd->fbdev) {
+> +		drm_fbdev_cma_hotplug_event(hdlcd->fbdev);
+> +	}
+
+nit: braces.
+
+> +}
+
+[...]
+
+> +static irqreturn_t hdlcd_irq(int irq, void *arg)
+> +{
+> +	struct drm_device *drm = arg;
+> +	struct hdlcd_drm_private *hdlcd = drm->dev_private;
+> +	unsigned long irq_status;
+> +
+> +	irq_status = hdlcd_read(hdlcd, HDLCD_REG_INT_STATUS);
+> +
+> +#ifdef CONFIG_DEBUG_FS
+> +	if (irq_status & HDLCD_INTERRUPT_UNDERRUN) {
+> +		atomic_inc(&hdlcd->buffer_underrun_count);
+> +	}
+> +	if (irq_status & HDLCD_INTERRUPT_DMA_END) {
+> +		atomic_inc(&hdlcd->dma_end_count);
+> +	}
+> +	if (irq_status & HDLCD_INTERRUPT_BUS_ERROR) {
+> +		atomic_inc(&hdlcd->bus_error_count);
+> +	}
+> +	if (irq_status & HDLCD_INTERRUPT_VSYNC) {
+> +		atomic_inc(&hdlcd->vsync_count);
+> +	}
+
+nit: braces again (it's only because I'm too lazy to remove the newbie 
+checkpatch commit hook, and a manual merge of this into my SMMU dev tree 
+made that throw a fit)
+
+> +#endif
+> +	if (irq_status & HDLCD_INTERRUPT_VSYNC) {
+> +		bool events_sent = false;
+> +		unsigned long flags;
+> +		struct drm_pending_vblank_event	*e, *t;
+> +
+> +		drm_crtc_handle_vblank(&hdlcd->crtc);
+> +
+> +		spin_lock_irqsave(&drm->event_lock, flags);
+> +		list_for_each_entry_safe(e, t, &hdlcd->event_list, base.link) {
+> +			list_del(&e->base.link);
+> +			drm_crtc_send_vblank_event(&hdlcd->crtc, e);
+> +			events_sent = true;
+> +		}
+> +		if (events_sent)
+> +			drm_crtc_vblank_put(&hdlcd->crtc);
+> +		spin_unlock_irqrestore(&drm->event_lock, flags);
+> +	}
+> +
+> +	/* acknowledge interrupt(s) */
+> +	hdlcd_write(hdlcd, HDLCD_REG_INT_CLEAR, irq_status);
+> +
+> +	return IRQ_HANDLED;
+> +}
+
+Other than that though, it seems to do the job. I get a usable 
+framebuffer console and can boot to an X desktop with at least the 
+ancient 1600x1200 DVI monitor I have handy - the 1920x1080 HDMI one 
+seems to get recognised OK but the monitor itself doesn't like the 
+signal and just locks up until I unplug it, although I know that's more 
+of a clock driver/firmware issue.
+
+Robin.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
