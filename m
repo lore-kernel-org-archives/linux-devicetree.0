@@ -1,66 +1,47 @@
-From: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: [PATCH 1/2] usb: renesas_usbhs: add fallback compatibility string
-Date: Tue,  8 Dec 2015 14:51:50 +0900
-Message-ID: <1449553911-21412-2-git-send-email-horms+renesas@verge.net.au>
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH 2/2] usb: renesas_usbhs: add device tree support for r8a779[23]
+Date: Tue,  8 Dec 2015 14:51:51 +0900
+Message-ID: <1449553911-21412-3-git-send-email-horms+renesas@verge.net.au>
 References: <1449553911-21412-1-git-send-email-horms+renesas@verge.net.au>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449553911-21412-1-git-send-email-horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1449553911-21412-1-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Add fallback compatibility string.
-This is in keeping with the fallback scheme being adopted wherever
-appropriate for drivers for Renesas SoCs.
+Simply document new compatibility string.
+As a previous patch adds a generic R-Car Gen2 compatibility string
+there appears to be no need for a driver updates.
 
-Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Also add names for SoCs.
+
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 ---
- Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 4 ++--
- drivers/usb/renesas_usbhs/common.c                      | 4 ++++
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-index 7d48f63db44e..8c50df8441c9 100644
+index 8c50df8441c9..b31f036d2171 100644
 --- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
 +++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-@@ -1,7 +1,7 @@
- Renesas Electronics USBHS driver
+@@ -2,10 +2,12 @@ Renesas Electronics USBHS driver
  
  Required properties:
--  - compatible: Must contain one of the following:
-+  - compatible: "renesas,usbhs-<soctype>", "renesas,rcar-usbhs" as fallback.
- 	- "renesas,usbhs-r8a7790"
- 	- "renesas,usbhs-r8a7791"
- 	- "renesas,usbhs-r8a7794"
-@@ -22,7 +22,7 @@ Optional properties:
- 
- Example:
- 	usbhs: usb@e6590000 {
--		compatible = "renesas,usbhs-r8a7790";
-+		compatible = "renesas,usbhs-r8a7790", "renesas,rcar-usbhs";
- 		reg = <0 0xe6590000 0 0x100>;
- 		interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
-diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
-index d82fa36c3465..2a9d4f405f30 100644
---- a/drivers/usb/renesas_usbhs/common.c
-+++ b/drivers/usb/renesas_usbhs/common.c
-@@ -481,6 +481,10 @@ static const struct of_device_id usbhs_of_match[] = {
- 		.compatible = "renesas,usbhs-r8a7795",
- 		.data = (void *)USBHS_TYPE_RCAR_GEN2,
- 	},
-+	{
-+		.compatible = "renesas,usbhs",
-+		.data = (void *)USBHS_TYPE_RCAR_GEN2,
-+	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, usbhs_of_match);
+   - compatible: "renesas,usbhs-<soctype>", "renesas,rcar-usbhs" as fallback.
+-	- "renesas,usbhs-r8a7790"
+-	- "renesas,usbhs-r8a7791"
+-	- "renesas,usbhs-r8a7794"
+-	- "renesas,usbhs-r8a7795"
++	- "renesas,usbhs-r8a7790" (R-Car H2)
++	- "renesas,usbhs-r8a7791" (R-Car M2-W)
++	- "renesas,usbhs-r8a7792" (R-Car V2H)
++	- "renesas,usbhs-r8a7793" (R-Car M2-N)
++	- "renesas,usbhs-r8a7794" (R-Car E2)
++	- "renesas,usbhs-r8a7795" (R-Car H3)
+   - reg: Base address and length of the register for the USBHS
+   - interrupts: Interrupt specifier for the USBHS
+   - clocks: A list of phandle + clock specifier pairs
 -- 
 2.1.4
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
