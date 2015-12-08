@@ -1,48 +1,73 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] ARM: DTS: am33xx: Use the new DT bindings for the eDMA3
-Date: Tue, 08 Dec 2015 10:51:50 +0100
-Message-ID: <4387766.cHF7OBX0cm@wuerfel>
-References: <1449225915-28879-1-git-send-email-peter.ujfalusi@ti.com> <20151204215115.GP23396@atomide.com> <566689E2.7060907@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v3 1/2] Documentation: devicetree: add epson rx6110 binding
+Date: Tue,  8 Dec 2015 10:54:20 +0100
+Message-ID: <1449568461-26016-1-git-send-email-s.trumtrar@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <566689E2.7060907-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 08 December 2015 09:42:26 Peter Ujfalusi wrote:
-> On 12/04/2015 11:51 PM, Tony Lindgren wrote:
-> >>
-> >> Please just drop the /bits/ 16 and use normal cells.
-> > 
-> > Yeah agreed, makes things less confusing for sure 
-> 
-> 4.4 will be the first kernel where we will have the new eDMA bindings. I have
-> chosen to use 16bit array for specifying the channels used for memcpy
-> (ti,edma-memcpy-channels) and for the reserving paRAM slots
-> (ti,edma-reserved-slot-ranges). As of now we have maximum of 64 channels and
-> 512 paRAM slots. 16bit is more than enough to store this information and it
-> even gives us enough room if ever in the future these numbers are going to
-> increase (which  they are not).
-> 
-> But in order to change them to 32bit the driver needs to be changed as well.
-> Currently we do not have drivers (in 4.4) using the new bindings, 4.4 is not
-> yet out, so it might be possible to change the binding document and the driver
-> to use 32bit arrays. The driver internally uses 16bit type for these which I'm
-> not going to change, but the code parsing the DT needs to be adjusted for the
-> new data type.
-> 
-> If Vinod is willing to take update for the DT binding of eDMA for 4.4-rc, I
-> can cook up the patch(es) to do so.
+Add the binding documentation for the Epson RX6110 RTC.
 
-I hadn't realized that it was already in 4.4-rc. The change should be trivial
-enough though, so I'd still do it. If Vinod would rather not change it now,
-it's not overly important though.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+Changes since v2:
+	- removed the size field in i2c binding
 
-	Arnd
+ .../devicetree/bindings/rtc/epson,rx6110.txt       | 39 ++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/epson,rx6110.txt
+
+diff --git a/Documentation/devicetree/bindings/rtc/epson,rx6110.txt b/Documentation/devicetree/bindings/rtc/epson,rx6110.txt
+new file mode 100644
+index 000000000000..71353542a59d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/epson,rx6110.txt
+@@ -0,0 +1,39 @@
++Epson RX6110 Real Time Clock
++============================
++
++The Epson RX6110 can be used with SPI or I2C busses. The kind of
++bus depends on the SPISEL pin and can not be configured via software.
++
++I2C mode
++--------
++
++Required properties:
++  - compatible: should be: "epson,rx6110"
++  - reg : offset of the register set of the device
++
++Example:
++
++	rtc: rtc@32 {
++		compatible = "epson,rx6110"
++		reg = <0x32>;
++	};
++
++SPI mode
++--------
++
++Required properties:
++  - compatible: should be: "epson,rx6110"
++  - reg: chip select number
++  - spi-cs-high: RX6110 needs chipselect high
++  - spi-cpha: RX6110 works with SPI shifted clock phase
++  - spi-cpol: RX6110 works with SPI inverse clock polarity
++
++Example:
++
++	rtc: rtc@3 {
++		compatible = "epson,rx6110"
++		reg = <3>
++		spi-cs-high;
++		spi-cpha;
++		spi-cpol;
++	};
+-- 
+2.6.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
