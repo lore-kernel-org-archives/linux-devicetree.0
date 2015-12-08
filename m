@@ -1,84 +1,69 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH 4/4] ARM: dts: Use OF graph for DP to panel connection in
- exynos5800-peach-pi
-Date: Tue, 08 Dec 2015 11:13:33 +0900
-Message-ID: <56663CCD.5090207@samsung.com>
-References: <1449492758-19989-1-git-send-email-inki.dae@samsung.com>
- <1449492758-19989-5-git-send-email-inki.dae@samsung.com>
- <5666283A.5@samsung.com> <56663384.8060708@osg.samsung.com>
- <566636A4.1050908@samsung.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] doc: dt-binding: generic onboard USB HUB
+Date: Tue, 8 Dec 2015 00:30:59 -0200
+Message-ID: <CAOMZO5DfBW3hxp5odbefLQCmkocPy=LypVW5HJWzDkF__WD_sg@mail.gmail.com>
+References: <1449538670-7954-1-git-send-email-peter.chen@freescale.com>
+	<1449538670-7954-3-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <566636A4.1050908@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, dri-devel@lists.freedesktop.org
-Cc: airlied@linux.ie, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449538670-7954-3-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Patryk Kowalczyk <patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Dec 7, 2015 at 11:37 PM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> Add dt-binding documentation for generic onboard USB HUB.
+>
+> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  .../bindings/usb/generic-onboard-hub.txt           | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/generic-onboard-hub.txt
+>
+> diff --git a/Documentation/devicetree/bindings/usb/generic-onboard-hub.txt b/Documentation/devicetree/bindings/usb/generic-onboard-hub.txt
+> new file mode 100644
+> index 0000000..ea92205
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/generic-onboard-hub.txt
+> @@ -0,0 +1,28 @@
+> +Generic Onboard USB HUB
+> +
+> +Required properties:
+> +- compatible: should be "generic-onboard-hub"
+> +
+> +Optional properties:
+> +- clocks: the input clock for HUB.
+> +
+> +- clock-names: Should be "external_clk"
+> +
+> +- hub-reset-gpios: Should specify the GPIO for reset.
+> +
+> +- hub-reset-active-high: the active reset signal is high, if this property is
+> +  not set, the active reset signal is low.
+> +
+> +- hub-reset-duration-us: the duration for assert reset signal, the time unit
+> +  is microsecond.
+> +
+> +Example:
+> +
+> +       usb_hub1 {
+> +               compatible = "generic-onboard-hub";
+> +               clocks = <&clks IMX6QDL_CLK_CKO>;
+> +               clock-names = "external_clk";
+> +               hub-reset-gpios = <&gpio7 12 0>;
+> +               hub-reset-active-high;
 
+I think you could drop the 'hub-reset-active-high' property and do
+like this instead:
 
-2015=EB=85=84 12=EC=9B=94 08=EC=9D=BC 10:47=EC=97=90 Krzysztof Kozlowsk=
-i =EC=9D=B4(=EA=B0=80) =EC=93=B4 =EA=B8=80:
-> On 08.12.2015 10:33, Javier Martinez Canillas wrote:
->> Hello Krzysztof,
->>
->> On 12/07/2015 09:45 PM, Krzysztof Kozlowski wrote:
->>> On 07.12.2015 21:52, Inki Dae wrote:
->>>> From: Javier Martinez Canillas <javier@osg.samsung.com>
->>>>
->>>> The DT binding for the Exynos DRM Display Port (DP) driver isn't c=
-onsistent
->>>> since it uses a phandle to describe the connection between the DP =
-port and
->>>> the display panel but uses the OF graph ports and endpoints to des=
-cribe the
->>>> connection betwen the DP port, a bridge chip and the panel.
->>>>
->>>> The Exynos DP driver and the DT binding have been changed to allow=
- also to
->>>> describe the DP port to panel connection using ports / endpoints (=
-OF graph)
->>>> so this patch changes the Exynos5800 Peach Pi DT to make it consis=
-tent with
->>>> the Exynos5420 Peach Pit that has a eDP to LVDS chip and uses OF g=
-raph too.
->>>>
->>>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
->>>> Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
->>>> Reviewed-by: Inki Dae <inki.dae@samsung.com>
->>>> ---
->>>>  arch/arm/boot/dts/exynos5800-peach-pi.dts | 15 ++++++++++++++-
->>>>  1 file changed, 14 insertions(+), 1 deletion(-)
->>>>
->>>
->>> Looks sensible:
->>> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->>>
->>> Dependencies are not mentioned, does it depend on patch 1?
->>>
->>
->> Yes, it depends on patch 1/4 so it should be merged through the Exyn=
-os DRM
->> tree to maintain bisectability. Inki's patch maintains the DT ABI ba=
-ckward
->> compatibility though so another option is to wait until the DRM chan=
-ge hit
->> mainline and then pick $SUBJECT.
->=20
-> Thanks. We could also use a tag with DRM changes for samsung-soc but
-> since I already flushed my queue for v4.5 I think it would be an
-> overkill. From my point of view it can safely go through exynos-drm t=
-ree.
+hub-reset-gpios = <&gpio7 12 GPIO_ACTIVE_HIGH>;
 
-I will pick it up to exynos-drm tree. :)
+or
 
-Thanks,
-Inki Dae
-
->=20
-> Best regards,
-> Krzysztof
->=20
->=20
+hub-reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
