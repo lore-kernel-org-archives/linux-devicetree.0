@@ -1,100 +1,110 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH net 1/2] net: cadence: macb: Disable USRIO register on
- some platforms
-Date: Tue, 8 Dec 2015 10:38:36 +0100
-Message-ID: <5666A51C.5060309@atmel.com>
-References: <1449485914-12883-1-git-send-email-narmstrong@baylibre.com>
- <1449485914-12883-2-git-send-email-narmstrong@baylibre.com>
- <20151207193215.GI29051@jcartwri.amer.corp.natinst.com>
- <CAA3gFWtDiza1V3_eM84JxseHRDJMH_NF4Rx=-dOPD-Usp=pVNA@mail.gmail.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 1/3] usb: misc: generic_onboard_hub: add generic onboard
+ USB HUB driver
+Date: Tue, 8 Dec 2015 17:36:18 +0800
+Message-ID: <20151208093617.GD16881@shlinux2>
+References: <1449538670-7954-2-git-send-email-peter.chen@freescale.com>
+ <201512081150.hIfZ22cp%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAA3gFWtDiza1V3_eM84JxseHRDJMH_NF4Rx=-dOPD-Usp=pVNA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>
-Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Harini Katakam <harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201512081150.hIfZ22cp%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Le 08/12/2015 10:21, Neil Armstrong a =C3=A9crit :
-> Hi Josh,
->=20
-> 2015-12-07 20:32 GMT+01:00 Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>:
->> On Mon, Dec 07, 2015 at 11:58:33AM +0100, Neil Armstrong wrote:
->>> On some platforms, the macb integration does not use the USRIO
->>> register to configure the (R)MII port and clocks.
->>> When the register is not implemented and the MACB error signal
->>> is connected to the bus error, reading or writing to the USRIO
->>> register can trigger some Imprecise External Aborts on ARM platform=
-s.
->>> ---
->>
->> Does this make sense to even be a separate bool device tree property=
-?
->>
->> This sort of configuration is typically done by:
->>    1. Creating a new 'caps' bit; relevant codepaths check that bit
->>    2. Creating a new "compatible" string for your platform's macb
->>       instance
->>    3. Creating a new 'struct macb_config' instance for your platform=
-,
->>       setting any relevant caps bits when it is selected.
->>
->>   Josh
->=20
-> I see the point, but according to the User Guide :
->> User I/O Register
->> The MACB design provides up to 16 inputs and 16 outputs,
->> for which the state of the I/O may
->> be read or set under the control of the processor interface.
->> If the user I/O is disabled as a configuration option, this address =
-space is defined
->> as reserved, and hence will be a read-only register of value 0x0.
->=20
-> On the design I worked on, the macb_user_* signals were commented,
-> thus disabling this register.
->=20
-> The implementation is not mandatory, and the "generic" macb compatibl=
-e
-> "cdns,macb" should disable
-> usage of USRIO register by default and be only used for platform
-> specific macb instances...
->=20
-> Is it OK if I add a new 'caps' bit and use it for the "generic" macb =
-instance ?
+On Tue, Dec 08, 2015 at 11:16:31AM +0800, kbuild test robot wrote:
+> Hi Peter,
+> 
+> [auto build test ERROR on usb/usb-testing]
+> [also build test ERROR on v4.4-rc4 next-20151207]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Peter-Chen/USB-add-generic-onboard-USB-HUB-driver/20151208-094428
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+> config: tile-allmodconfig (attached as .config)
+> reproduce:
+>         wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=tile 
+> 
+> All error/warnings (new ones prefixed by >>):
+> 
+>    drivers/usb/misc/generic_onboard_hub.c: In function 'usb_hub_generic_probe':
+> >> drivers/usb/misc/generic_onboard_hub.c:76:3: error: implicit declaration of function 'devm_gpiod_get_optional'
+> >> drivers/usb/misc/generic_onboard_hub.c:77:16: error: 'GPIOD_OUT_HIGH' undeclared (first use in this function)
+>    drivers/usb/misc/generic_onboard_hub.c:77:16: note: each undeclared identifier is reported only once for each function it appears in
+> >> drivers/usb/misc/generic_onboard_hub.c:77:33: error: 'GPIOD_OUT_LOW' undeclared (first use in this function)
+> >> drivers/usb/misc/generic_onboard_hub.c:95:5: error: implicit declaration of function 'gpio_to_desc'
+> >> drivers/usb/misc/generic_onboard_hub.c:95:17: warning: assignment makes pointer from integer without a cast [enabled by default]
+> >> drivers/usb/misc/generic_onboard_hub.c:114:3: error: implicit declaration of function 'gpiod_set_value'
+>    cc1: some warnings being treated as errors
+> 
+> vim +/devm_gpiod_get_optional +76 drivers/usb/misc/generic_onboard_hub.c
+> 
+>     70			if (of_find_property(node, "hub-reset-active-high", NULL))
+>     71				reset_pol = 1;
+>     72	
+>     73			of_property_read_u32(node, "hub-reset-duration-us",
+>     74				&duration_us);
+>     75	
+>   > 76			gpiod_reset = devm_gpiod_get_optional(dev, "hub-reset",
+>   > 77				reset_pol ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW);
+>     78			ret = PTR_ERR_OR_ZERO(gpiod_reset);
+>     79			if (ret) {
+>     80				dev_err(dev, "Failed to get reset gpio, err = %d\n",
+>     81					ret);
+>     82				return ret;
+>     83			}
+>     84		} else if (pdata) {
+>     85			hub_data->clk = pdata->ext_clk;
+>     86			duration_us = pdata->gpio_reset_duration_us;
+>     87			reset_pol = pdata->gpio_reset_polarity;
+>     88	
+>     89			if (gpio_is_valid(pdata->gpio_reset)) {
+>     90				ret = devm_gpio_request_one(
+>     91					dev, pdata->gpio_reset, reset_pol
+>     92					? GPIOF_OUT_INIT_HIGH : GPIOF_OUT_INIT_LOW,
+>     93					dev_name(dev));
+>     94				if (!ret)
+>   > 95					gpiod_reset = gpio_to_desc(pdata->gpio_reset);
+>     96			}
+>     97		}
+>     98	
+>     99		if (!IS_ERR(hub_data->clk)) {
+>    100			ret = clk_prepare_enable(hub_data->clk);
+>    101			if (ret) {
+>    102				dev_err(dev,
+>    103					"Can't enable external clock: %d\n",
+>    104					ret);
+>    105				return ret;
+>    106			}
+>    107		}
+>    108	
+>    109		if (gpiod_reset) {
+>    110			/* Sanity check */
+>    111			if (duration_us > 1000000)
+>    112				duration_us = 50;
+>    113			usleep_range(duration_us, duration_us + 100);
+>  > 114			gpiod_set_value(gpiod_reset, reset_pol ? 0 : 1);
+>    115		}
+>    116	
+>    117		dev_set_drvdata(dev, hub_data);
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
-I would say no as some platform may already use this compatibility
-string. So If you need a different capability set, please create a new
-compatible string and use this one.
+I will add <linux/gpio/consumer.h> at header file list.
 
-> For the device tree property, it should be safe to have the generic
-> instances of macb and gem to
-> rely on these properties instead of hardcoded instances.
-> (it's the biggest aim of device tree, no ? no more hardcoded 'caps' b=
-it ?)
-> The "no-usrio" and other should eventually map 'caps' bits along the
-> generic instances.
 
-It has been decided a log time ago to use these capabilities and to hav=
-e
-mixed approach to the actual configuration of the IP:
-- from the compatibility string
-- from the configuration registers.
+-- 
 
-I may be sometimes challenging to figure out where the final property
-comes from but it has proven to be pretty well adapted to any kind of
-situation.
-
-So let's continue with this and not insert additional properties to thi=
-s
-binding.
-
-Best regards,
---=20
-Nicolas Ferre
+Best Regards,
+Peter Chen
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
