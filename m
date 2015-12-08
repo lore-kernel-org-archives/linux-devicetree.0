@@ -1,100 +1,57 @@
-From: Sudip Mukherjee <sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4] of: fix declaration of of_io_request_and_map
-Date: Tue,  8 Dec 2015 14:17:55 +0530
-Message-ID: <1449564475-10724-1-git-send-email-sudipm.mukherjee@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sudip Mukherjee <sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v4 1/5] PCI: designware: add memory barrier after enabling
+ region
+Date: Tue, 8 Dec 2015 11:01:04 +0200
+Message-ID: <56669C50.9060700@linaro.org>
+References: <1449149725-27607-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1449149725-27607-2-git-send-email-stanimir.varbanov@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1449149725-27607-2-git-send-email-stanimir.varbanov@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnd Bergmann <arnd@arndb.de>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-We are having build failure with linux-next for sparc allmodconfig with
-the error messages:
+On 12/03/2015 03:35 PM, Stanimir Varbanov wrote:
+> Add 'write memory' barrier after enable region in PCIE_ATU_CR2
+> register. The barrier is needed to ensure that the region enable
+> request has been reached it's destination at time when we
+> read/write to PCI configuration space.
+> 
+> Without this barrier PCI device enumeration during kernel boot
+> is not reliable, and reading configuration space for particular
+> PCI device on the bus returns zero aka no device.
 
-drivers/built-in.o: In function `meson6_timer_init':
-meson6_timer.c:(.init.text+0x5fe8): undefined reference to `of_io_request_and_map'
-drivers/built-in.o: In function `mtk_timer_init':
-mtk_timer.c:(.init.text+0x6af0): undefined reference to `of_io_request_and_map'
-drivers/built-in.o: In function `asm9260_timer_init':
-asm9260_timer.c:(.init.text+0x6c48): undefined reference to `of_io_request_and_map'
+Anand, Jingoo, what is your opinion?
 
-CONFIG_OF is defined for sparc so it is expected that we have a
-definition of of_io_request_and_map() but of/address.c is only compiled
-if it is !SPARC. In other words, CONFIG_OF_ADDRESS is not defined for
-sparc so we get the build failure.
+> 
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> ---
+>  drivers/pci/host/pcie-designware.c |    5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+> index 02a7452bdf23..ed4dc2e2553b 100644
+> --- a/drivers/pci/host/pcie-designware.c
+> +++ b/drivers/pci/host/pcie-designware.c
+> @@ -164,6 +164,11 @@ static void dw_pcie_prog_outbound_atu(struct pcie_port *pp, int index,
+>  	dw_pcie_writel_rc(pp, upper_32_bits(pci_addr), PCIE_ATU_UPPER_TARGET);
+>  	dw_pcie_writel_rc(pp, type, PCIE_ATU_CR1);
+>  	dw_pcie_writel_rc(pp, PCIE_ATU_ENABLE, PCIE_ATU_CR2);
+> +	/*
+> +	 * ensure that the ATU enable has been happaned before accessing
+> +	 * pci configuration/io spaces through dw_pcie_cfg_[read|write].
+> +	 */
+> +	wmb();
+>  }
+>  
+>  static struct irq_chip dw_msi_irq_chip = {
+> 
 
-Fixes: e572f844ca66 ("clocksource/drivers/meson6: Add the COMPILE_TEST option")
-Fixes: bec8c4617611 ("clocksource/drivers/mediatek: Add the COMPILE_TEST option")
-Fixes: 4a373b45f94a ("clocksource/drivers/asm9260: Add the COMPILE_TEST option")
-Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Sudip Mukherjee <sudip-ofJRbWXBVFamYgehrs7/Lw@public.gmane.org>
----
 
-v1: had a complicated set of #ifdefs
-v2: i messed up and resulted in build failure of some other arch where
-CONFIG_OF is not defined.
-v3: tested with allmodconfig of x86_64, defconfig of alpha and mips.
-v4: changed subject and commit message. And the of_io_request_and_map()
-is moved under existing #ifdef instead of defining one more section.
-
-
- include/linux/of_address.h | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
-
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index 507daad..4d6c50a 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -36,6 +36,8 @@ extern struct device_node *of_find_matching_node_by_address(
- 					const struct of_device_id *matches,
- 					u64 base_address);
- extern void __iomem *of_iomap(struct device_node *device, int index);
-+void __iomem *of_io_request_and_map(struct device_node *device,
-+				    int index, const char *name);
- 
- /* Extract an address from a device, returns the region size and
-  * the address space flags too. The PCI version uses a BAR number
-@@ -58,6 +60,14 @@ extern int of_dma_get_range(struct device_node *np, u64 *dma_addr,
- extern bool of_dma_is_coherent(struct device_node *np);
- #else /* CONFIG_OF_ADDRESS */
- 
-+#include <linux/io.h>
-+
-+static inline void __iomem *of_io_request_and_map(struct device_node *device,
-+						  int index, const char *name)
-+{
-+	return IOMEM_ERR_PTR(-EINVAL);
-+}
-+
- static inline u64 of_translate_address(struct device_node *np,
- 				       const __be32 *addr)
- {
-@@ -112,8 +122,6 @@ static inline bool of_dma_is_coherent(struct device_node *np)
- extern int of_address_to_resource(struct device_node *dev, int index,
- 				  struct resource *r);
- void __iomem *of_iomap(struct device_node *node, int index);
--void __iomem *of_io_request_and_map(struct device_node *device,
--					int index, const char *name);
- #else
- 
- #include <linux/io.h>
-@@ -128,12 +136,6 @@ static inline void __iomem *of_iomap(struct device_node *device, int index)
- {
- 	return NULL;
- }
--
--static inline void __iomem *of_io_request_and_map(struct device_node *device,
--					int index, const char *name)
--{
--	return IOMEM_ERR_PTR(-EINVAL);
--}
- #endif
- 
- #if defined(CONFIG_OF_ADDRESS) && defined(CONFIG_PCI)
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards,
+Stan
