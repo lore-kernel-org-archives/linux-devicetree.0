@@ -1,34 +1,32 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v5 05/11] ARM: STi: STiH407: Provide CPU with clocking information
-Date: Tue,  8 Dec 2015 14:31:58 +0000
-Message-ID: <1449585124-15596-6-git-send-email-lee.jones@linaro.org>
+Subject: [PATCH v5 11/11] MAINTAINERS: Add ST's CPUFreq driver to the STI file list
+Date: Tue,  8 Dec 2015 14:32:04 +0000
+Message-ID: <1449585124-15596-12-git-send-email-lee.jones@linaro.org>
 References: <1449585124-15596-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 In-Reply-To: <1449585124-15596-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-pm-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: kernel@stlinux.com, maxime.coquelin@st.com, viresh.kumar@linaro.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net, devicetree@vger.kernel.org, ajitpal.singh@st.com, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- arch/arm/boot/dts/stih407-family.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index 9fa1e58..af9233b 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -31,6 +31,10 @@
- 					    1200000 0
- 					    800000  0
- 					    500000  0>;
-+
-+			clocks = <&clk_m_a9>;
-+			clock-names = "cpu";
-+			clock-latency = <100000>;
- 		};
- 		cpu@1 {
- 			device_type = "cpu";
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e9caa4b..ebc0562 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1562,6 +1562,7 @@ F:	arch/arm/boot/dts/sti*
+ F:	drivers/char/hw_random/st-rng.c
+ F:	drivers/clocksource/arm_global_timer.c
+ F:	drivers/clocksource/clksrc_st_lpc.c
++F:	drivers/cpufreq/sti-cpufreq.c
+ F:	drivers/i2c/busses/i2c-st.c
+ F:	drivers/media/rc/st_rc.c
+ F:	drivers/media/platform/sti/c8sectpfe/
 -- 
 1.9.1
+
