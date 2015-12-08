@@ -1,108 +1,372 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v2 3/5] ARM: bcm2835: add rpi power domain driver
-Date: Tue, 08 Dec 2015 10:19:26 -0800
-Message-ID: <7hvb88ls5t.fsf@deeprootsystems.com>
-References: <1449251148-19344-1-git-send-email-eric@anholt.net>
-	<1449251148-19344-4-git-send-email-eric@anholt.net>
-	<7hmvtln87l.fsf@deeprootsystems.com>
-	<87fuzdiwcl.fsf@eliezer.anholt.net>
+From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH 1/2] ARM: dts: sun7i: Add Itead Ibox support
+Date: Tue,  8 Dec 2015 19:29:03 +0100
+Message-ID: <1449599344-15544-1-git-send-email-codekipper@gmail.com>
+Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <87fuzdiwcl.fsf@eliezer.anholt.net> (Eric Anholt's message of
-	"Mon, 07 Dec 2015 17:04:58 -0800")
-Sender: linux-pm-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexander Aring <alex.aring@gmail.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBB4WCTSZQKGQES2N37QI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eric,
+From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Eric Anholt <eric@anholt.net> writes:
+The Itead Ibox is a multi board device based on the Allwinner A20 SoC.
+It contains the A20 Itead Core module and a base board for the external
+interfaces.
 
-> Kevin Hilman <khilman@kernel.org> writes:
->
->> Eric Anholt <eric@anholt.net> writes:
->>
->>> From: Alexander Aring <alex.aring@gmail.com>
->>>
->>> This patch adds support for several power domains on Raspberry Pi,
->>> including USB (so it can be enabled even if the bootloader didn't do
->>> it), and graphics.
->>>
->>> This patch is the combined work of Eric Anholt (who wrote USB support
->>> inside of the Raspberry Pi firmware driver, and wrote the non-USB
->>> domain support) and Alexander Aring (who separated the original USB
->>> work out from the firmware driver).
->>>
->>> Signed-off-by: Alexander Aring <alex.aring@gmail.com>
->>> Signed-off-by: Eric Anholt <eric@anholt.net>
->>> ---
->>>
->>> v2: Add support for power domains other than USB, using the new
->>>     firmware interface, reword commit message (changes by Eric)
->>
->> [...]
->>
->>> +/*
->>> + * Firmware indices for the old power domains interface.  Only a few
->>> + * of them were actually implemented.
->>> + */
->>> +#define RPI_OLD_POWER_DOMAIN_USB		3
->>> +#define RPI_OLD_POWER_DOMAIN_V3D		10
->>> +
->>
->> Is "old" the right word here?  Are there firmware versions that could be
->> used instead?  What happens when the firwmware is updated next time?
->
-> Old is a good word.  It's the old interface.
+The core module comes with 4GB NAND and 1GB DDR RAM.
 
-Sure, but "old" is relative and based on experience, folks come to
-regret those kinds of names.
+The base board to which the core board is connected provides 3 USB 2.0 Host
+ports, 1 USB 2.0 OTG, 1 uSD slot, 10/100 Ethernet port, HDMI, IR receiver,
+SPDIF and a 32-pin GPIO header. This header expands the features of core
+board by exposing the VGA pins, audio In/Out pins, SATA, SPI, I2C, UARTS,
+USB-OTG and power.
 
-> As for what happens when the firmware is updated: Nothing.  The firmware
-> is updated all the time, and it maintains backwards compatibility.
-> Unless you mean "what happens when a newer, fancier power domain
-> interface is created and we need a name for the newer one" and the
-> answer is "this is a define entirely within the driver, and we can just
-> rename it when we want to."
+As there is an A10 version of the Itead Core Module and at least one other
+base board to support then this patch partitions the device tree files with
+some consideration that these variants may be added later.
 
-Sure, it's very contained in this driver, so it's ultimately up to you.
-It's not something worth blocking this about, I just wanted to be sure
-since I'm not very familiar with how the rpi firmware evolves.
+Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                     |   1 +
+ arch/arm/boot/dts/sun7i-a20-itead-core.dtsi    |  83 ++++++++++++++++++
+ arch/arm/boot/dts/sun7i-a20-itead-ibox.dts     |  98 ++++++++++++++++++++++
+ arch/arm/boot/dts/sunxi-itead-core-common.dtsi | 111 +++++++++++++++++++++++++
+ 4 files changed, 293 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-itead-core.dtsi
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+ create mode 100644 arch/arm/boot/dts/sunxi-itead-core-common.dtsi
 
->> [...]
->>
->>> +	/*
->>> +	 * Use the old firmware interface for USB power, so that we
->>> +	 * can turn it on even if the firmware hasn't been updated.
->>> +	 */
->>> +	rpi_init_old_power_domain(rpi_domains, RPI_POWER_DOMAIN_USB,
->>> +				  RPI_OLD_POWER_DOMAIN_USB, "USB");
->>
->> This seems a bit restrictive.
->>
->> To me, it seems that determining "old" or "new" (or revision of fw
->> interface to use) should be described in DT, not hard-coded in the power
->> domain driver.
->>
->> What about an additional DT property to describe that? or possibly
->> another cell in the domain which could be used to optionally set
->> old/legacy.
->
-> As the author and maintainer of the code, I don't feel it's restrictive.
-> The firmware protocol is defined and is guaranteed to continue to exist,
-> it's only useful for this platform, and defining a new set of custom
-> devicetree properties for it would only obfuscate the implementation.
-> DT is a useful tool for separating out the between-board differences for
-> the same piece of hardware across multiple implementations at different
-> addresses, while this is neither hardware nor in multiple
-> implementations at different addresses.
-
-That being said, firmware revisions are also very often something that
-qualifies as a difference between boards.
-
-Anyways, as I said above, I think this is a potential future problem,
-but it's not a big deal to me since it's very self contained.
-
-Kevin
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index cc7309b..ee8a1dc 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -637,6 +637,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-cubieboard2.dtb \
+ 	sun7i-a20-cubietruck.dtb \
+ 	sun7i-a20-hummingbird.dtb \
++	sun7i-a20-itead-ibox.dtb \
+ 	sun7i-a20-i12-tvbox.dtb \
+ 	sun7i-a20-icnova-swac.dtb \
+ 	sun7i-a20-m3.dtb \
+diff --git a/arch/arm/boot/dts/sun7i-a20-itead-core.dtsi b/arch/arm/boot/dts/sun7i-a20-itead-core.dtsi
+new file mode 100644
+index 0000000..b50be89
+--- /dev/null
++++ b/arch/arm/boot/dts/sun7i-a20-itead-core.dtsi
+@@ -0,0 +1,83 @@
++/*
++ * Copyright 2015 - Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include "sun7i-a20.dtsi"
++#include "sunxi-itead-core-common.dtsi"
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins_a>;
++	status = "okay";
++
++	axp209: pmic@34 {
++		reg = <0x34>;
++		interrupt-parent = <&nmi_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++	};
++};
++
++#include "axp209.dtsi"
++
++&reg_dcdc2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-cpu";
++};
++
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-int-dll";
++};
++
++&reg_ldo1 {
++	regulator-name = "vdd-rtc";
++};
++
++&reg_ldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "avcc";
++};
+diff --git a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+new file mode 100644
+index 0000000..90ff677
+--- /dev/null
++++ b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+@@ -0,0 +1,98 @@
++/*
++ * Copyright 2015 - Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun7i-a20-itead-core.dtsi"
++
++/ {
++	model = "Itead Ibox A20";
++	compatible = "itead,itead_ibox_a20", "allwinner,sun7i-a20";
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&led_pins_itead_core>;
++
++		green {
++			label = "itead_core:green:usr";
++			gpios = <&pio 7 20 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++
++		blue {
++			label = "itead_core:blue:usr";
++			gpios = <&pio 7 21 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++	};
++};
++
++&ahci {
++	status = "okay";
++};
++
++&gmac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&gmac_pins_mii_a>;
++	phy = <&phy1>;
++	phy-mode = "mii";
++	status = "okay";
++
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++	};
++};
++
++&ir0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ir0_rx_pins_a>;
++	status = "okay";
++};
++
++&pio {
++	led_pins_itead_core: led_pins@0 {
++		allwinner,pins = "PH20","PH21";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_20_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
+diff --git a/arch/arm/boot/dts/sunxi-itead-core-common.dtsi b/arch/arm/boot/dts/sunxi-itead-core-common.dtsi
+new file mode 100644
+index 0000000..383cf3b
+--- /dev/null
++++ b/arch/arm/boot/dts/sunxi-itead-core-common.dtsi
+@@ -0,0 +1,111 @@
++/*
++ * Copyright 2015 - Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include "sunxi-common-regulators.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
++
++/ {
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&ahci {
++	target-supply = <&reg_ahci_5v>;
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins_a>;
++	status = "okay";
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
++	cd-inverted;
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++&reg_ahci_5v {
++	pinctrl-0 = <&ahci_pwr_pin_a>;
++	gpio = <&pio 1 8 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++};
++
++&reg_usb1_vbus {
++	status = "okay";
++};
++
++&reg_usb2_vbus {
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&usbphy {
++	usb1_vbus-supply = <&reg_usb1_vbus>;
++	usb2_vbus-supply = <&reg_usb2_vbus>;
++	status = "okay";
++};
+-- 
+2.6.3
