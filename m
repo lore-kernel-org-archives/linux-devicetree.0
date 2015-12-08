@@ -1,70 +1,61 @@
-From: =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
-Subject: Re: [PATCH 02/12] drm/etnaviv: add devicetree bindings
-Date: Tue, 8 Dec 2015 18:12:44 +0900
-Message-ID: <56669F0C.5030804@daenzer.net>
-References: <1449237604-19064-3-git-send-email-l.stach@pengutronix.de>
- <20151204162956.GA14978@rob-hp-laptop>
- <1449247305.8275.104.camel@pengutronix.de>
- <CAL_JsqLcwk=h10zNvt1o=EKJZ58QvMyWnsTCNfkht-055X8Taw@mail.gmail.com>
- <1449251760.8275.116.camel@pengutronix.de>
- <CAL_Jsq+oaJxD3vbDWzn_4ghpqi=RZ1o+8nOcepWYjzcu5Hwpjg@mail.gmail.com>
- <20151204203101.GD8644@n2100.arm.linux.org.uk>
- <CAKb7UviPhoiY-YP2aBHm0BHbeEjSF2wTguQScVXMBve-kZc16Q@mail.gmail.com>
- <20151204220533.GE8644@n2100.arm.linux.org.uk>
- <CAKb7UvgzYMxPxtt8iPars13n4sAJ5Z4Hva1KHO+k4yNumDb+DQ@mail.gmail.com>
- <20151205101208.GP10243@phenom.ffwll.local> <56654620.1040208@daenzer.net>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v5 3/4] ARM: dts: sunxi: Add Allwinner H3 DTSI
+Date: Tue, 8 Dec 2015 10:19:49 +0100
+Message-ID: <20151208101949.4c596117eb3b6b4551dd0cea@free.fr>
+References: <1449264283-25360-1-git-send-email-jenskuske@gmail.com>
+	<1449264283-25360-4-git-send-email-jenskuske@gmail.com>
+	<20151207091257.070723b67db726d9f05c6550@free.fr>
+	<5665D38E.4050406@gmail.com>
+	<20151208090658.e471fcde7fd5e79c69706115@free.fr>
+	<20151208083224.GN27957@lukather>
+Reply-To: moinejf-GANU6spQydw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <56654620.1040208@daenzer.net>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel@ffwll.ch>, Ilia Mirkin <imirkin@alum.mit.edu>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, dri-devel <dri-devel@lists.freedesktop.org>, patchwork-lst@pengutronix.de, "kernel@pengutronix.de" <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCV6DL6LYMNBBOOBTKZQKGQEUX3OZ4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20151208083224.GN27957@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDcuMTIuMjAxNSAxNzo0MSwgTWljaGVsIETDpG56ZXIgd3JvdGU6Cj4gT24gMDUuMTIuMjAx
-NSAxOToxMiwgRGFuaWVsIFZldHRlciB3cm90ZToKPj4gT24gRnJpLCBEZWMgMDQsIDIwMTUgYXQg
-MDU6NDM6MzNQTSAtMDUwMCwgSWxpYSBNaXJraW4gd3JvdGU6Cj4+PiBPbiBGcmksIERlYyA0LCAy
-MDE1IGF0IDU6MDUgUE0sIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eAo+Pj4gPGxpbnV4QGFybS5s
-aW51eC5vcmcudWs+IHdyb3RlOgo+Pj4+IE9uIEZyaSwgRGVjIDA0LCAyMDE1IGF0IDAzOjQyOjQ3
-UE0gLTA1MDAsIElsaWEgTWlya2luIHdyb3RlOgo+Pj4+PiBPbiBGcmksIERlYyA0LCAyMDE1IGF0
-IDM6MzEgUE0sIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eAo+Pj4+PiA8bGludXhAYXJtLmxpbnV4
-Lm9yZy51az4gd3JvdGU6Cj4+Pj4+PiBNb3Jlb3ZlciwgRFJJMyBpcyBub3QgeWV0IGF2YWlsYWJs
-ZSBmb3IgR2FsbGl1bSwgc28gaWYgd2UncmUgdGFsa2luZwo+Pj4+Pj4gYWJvdXQgWG9yZywgdGhl
-biBmdW5jdGlvbmFsIERSSTIgaXMgYSByZXF1aXJlbWVudCwgYW5kIHRoYXQgX25lZWRzXwo+Pj4+
-Pj4gdG8gaGF2ZSBhIHNpbmdsZSBkZXZpY2UgZm9yIHRoZSByZW5kZXJpbmcgaW5zdGFuY2VzLiAg
-WG9yZyBoYXMgbm8gd2F5Cj4+Pj4+PiB0byBwYXNzIG11bHRpcGxlIHJlbmRlciBub2RlcyB0byBj
-bGllbnQgb3ZlciBEUkkyLgo+Pj4+Pgo+Pj4+PiBKdXN0IHRvIGNvcnJlY3QuLi4gRFJJMyBoYXMg
-YmVlbiBhdmFpbGFibGUgb24gZ2FsbGl1bSBbYXQgbGVhc3QgaW4gdGhlCj4+Pj4+IGNvbnRleHQg
-b2Ygc3QvbWVzYV0gYmFzaWNhbGx5IHNpbmNlIERSSTMgd2FzIGludHJvZHVjZWQuIE5vdCBzdXJl
-IHdoYXQKPj4+Pj4gaXNzdWUgeW91J3JlIGZpZ2h0aW5nIHdpdGgsIGJ1dCBpdCdzIGRlZmluaXRl
-bHkgbm90IGEgZ2FsbGl1bQo+Pj4+PiBsaW1pdGF0aW9uLi4uIGNvdWxkIGJlIHNvbWV0aGluZyBy
-ZWxhdGVkIHRvIHBsYXRmb3JtIGRldmljZXMuCj4+Pj4KPj4+PiBXZWxsLCBteSBzdGF0ZW1lbnQg
-aXMgYmFzZWQgb24gdGhlIGZhY3QgdGhhdCB0aGVyZSdzIG5vdGhpbmcgaW4KPj4+PiBzcmMvZ2Fs
-bGl1bS9zdGF0ZS10cmFja2VyL2RyaSB3aGljaCBoaW50cyBhdCBiZWluZyBEUkkzLiAgTWF5YmUg
-aXQncwo+Pj4+IGltcGxlbWVudGVkIGRpZmZlcmVudGx5LCBJIGRvbid0IGtub3cuCj4gCj4gVGhl
-IERSSSBzdGF0ZSB0cmFja2VyIGNvZGUgaW4gc3JjL2dhbGxpdW0vc3RhdGVfdHJhY2tlcnMvZHJp
-LyBzdXBwb3J0cwo+IERSSTEtMy4gVGhlcmUncyBhbG1vc3Qgbm8gZXhwbGljaXQgbWVudGlvbiBv
-ZiBEUkkzIGluIGl0IGJlY2F1c2UgRFJJMwo+IGFuZCBEUkkyIHdvcmsgbW9zdGx5IHRoZSBzYW1l
-IGFzIGZhciBhcyB0aGlzIGNvZGUgaXMgY29uY2VybmVkLgoKQWxzbyBub3RlIHRoYXQgdGhlcmUn
-cyBubyByZXF1aXJlbWVudCBmb3IgdGhlIHJlbmRlcmVyIGRldmljZSBub2RlIHRvIGJlCm9wZW5l
-ZCB2aWEgdGhlIERSSTMgcHJvdG9jb2wuIEUuZy4gdGhlIERSSV9QUklNRSBpbXBsZW1lbnRhdGlv
-biBmb3IgRFJJMwppbiBNZXNhIG9wZW5zIHRoZSByZW5kZXJlciBkZXZpY2UgaXRzZWxmLCBjcmVh
-dGVzIGEgc2hhcmVkIHNjYW5vdXQgaW1hZ2UKZnJvbSBpdCwgZ2V0cyBhIGRtYS1idWYgZmlsZSBk
-ZXNjcmlwdG9yIGZvciB0aGF0LCBjcmVhdGVzIGEgcGl4bWFwIGZyb20KdGhhdCB2aWEgRFJJMyBh
-bmQgcHJlc2VudHMgdGhhdCBwaXhtYXAgdmlhIFByZXNlbnQuCgoKLS0gCkVhcnRobGluZyBNaWNo
-ZWwgRMOkbnplciAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICBodHRwOi8vd3d3LmFtZC5j
-b20KTGlicmUgc29mdHdhcmUgZW50aHVzaWFzdCAgICAgICAgICAgICB8ICAgICAgICAgICAgIE1l
-c2EgYW5kIFggZGV2ZWxvcGVyCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+On Tue, 8 Dec 2015 09:32:24 +0100
+Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+
+> If the H3 display block is done the same way than the A10 (and later)
+> one on this aspect, then the TCON has two channels with two different
+> streaming (or functional, you pick the name) clocks. The channel 0 is
+> usually used for RGB, the channel 1 for HDMI, composite and VGA.
+>=20
+> Maybe they just added different bus gates for those two different
+> channels, and moved HDMI to the channel 0.
+>=20
+> Anyway, that can always be changed later on if we have more clue on
+> what's going on.
+
+I don't know about the other Allwinner chips, and your DRM driver for
+these ones cannot be reused for the H3 because its display engine
+(DE.2) is completely different.
+
+The DE2 runs at 432MHz and treats both LCDs. The TCON1 runs at a fixed
+rate, 200MHz, and the streaming rates are defined by the HDMI (LCD0) and
+TCON0 (LCD1) clocks.
+
+BTW, I hope to submit a H3 DRM driver before new year.
+
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
