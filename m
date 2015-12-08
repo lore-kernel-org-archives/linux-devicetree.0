@@ -1,43 +1,33 @@
 From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: [PATCH v3 5/9] ARM: mach-stm32: Select pinctrl
-Date: Tue,  8 Dec 2015 13:45:07 +0100
-Message-ID: <1449578711-6141-6-git-send-email-mcoquelin.stm32@gmail.com>
+Subject: [PATCH v3 9/9] ARM: config: Enable GPIO Led driver in stm32_defconfig
+Date: Tue,  8 Dec 2015 13:45:11 +0100
+Message-ID: <1449578711-6141-10-git-send-email-mcoquelin.stm32@gmail.com>
 References: <1449578711-6141-1-git-send-email-mcoquelin.stm32@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 In-Reply-To: <1449578711-6141-1-git-send-email-mcoquelin.stm32@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-gpio-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
-Cc: devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, linux-kernel@vger.kernel.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, afaerber@suse.de, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com
 List-Id: devicetree@vger.kernel.org
 
 Acked-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
 ---
- arch/arm/Kconfig | 1 +
+ arch/arm/configs/stm32_defconfig | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 4d2fcba..365714b 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -963,6 +963,7 @@ config ARCH_STM32
- 	select ARCH_HAS_RESET_CONTROLLER
- 	select ARMV7M_SYSTICK
- 	select CLKSRC_STM32
-+	select PINCTRL
- 	select RESET_CONTROLLER
- 	help
- 	  Support for STMicroelectronics STM32 processors.
+diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
+index 4725fab..92ade2e 100644
+--- a/arch/arm/configs/stm32_defconfig
++++ b/arch/arm/configs/stm32_defconfig
+@@ -52,6 +52,7 @@ CONFIG_SERIAL_STM32_CONSOLE=y
+ # CONFIG_USB_SUPPORT is not set
+ CONFIG_NEW_LEDS=y
+ CONFIG_LEDS_CLASS=y
++CONFIG_LEDS_GPIO=y
+ CONFIG_LEDS_TRIGGERS=y
+ CONFIG_LEDS_TRIGGER_HEARTBEAT=y
+ # CONFIG_FILE_LOCKING is not set
 -- 
 1.9.1
+
