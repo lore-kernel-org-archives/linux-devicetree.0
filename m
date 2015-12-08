@@ -1,277 +1,355 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] drm: Add support for ARM's HDLCD controller.
-Date: Tue, 8 Dec 2015 16:25:27 +0000
-Message-ID: <56670477.5000301@arm.com>
-References: <1449490265-6752-1-git-send-email-Liviu.Dudau@arm.com>
- <1449490265-6752-3-git-send-email-Liviu.Dudau@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449490265-6752-3-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>, DRI devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Damien Riegel <damien.riegel@savoirfairelinux.com>
+Subject: [PATCH v8] watchdog: ts4800: add driver for TS-4800 watchdog
+Date: Tue,  8 Dec 2015 11:37:28 -0500
+Message-ID: <1449592648-22701-1-git-send-email-damien.riegel@savoirfairelinux.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, kernel@savoirfairelinux.com, Damien Riegel <damien.riegel@savoirfairelinux.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Liviu,
+This watchdog is instantiated in a FPGA that is memory mapped. It is
+made of only one register, called the feed register. Writing to this
+register will re-arm the watchdog for a given time (and enable it if it
+was disable). It can be disabled by writing a special value into it.
 
-On 07/12/15 12:11, Liviu Dudau wrote:
-> The HDLCD controller is a display controller that supports resolutions
-> up to 4096x4096 pixels. It is present on various development boards
-> produced by ARM Ltd and emulated by the latest Fast Models from the
-> company.
- >
- > Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
- > Cc: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+It is part of a syscon block, and the watchdog register offset in this
+block varies from board to board. This offset is passed in the syscon
+property after the phandle to the syscon node.
 
-I've given this a spin on my Juno, and the first thing of note is this:
+Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+---
+Changes in v8:
+ - Split the serie into two parts: watchdog and dts as there are no
+   build dependencies between the two
+ - Added Reviewed-by Guenter Roeck and Acked-by by Rob Herring (for
+   the dts bindings).
 
-hdlcd 7ff60000.hdlcd: master bind failed: -517
-hdlcd 7ff50000.hdlcd: master bind failed: -517
-scpi_protocol scpi: SCP Protocol 1.0 Firmware 1.9.0 version
-[drm] found ARM HDLCD version r0p0
-tda998x 0-0070: Falling back to first CRTC
-usb 1-1: new high-speed USB device number 2 using ehci-platform
-tda998x 0-0070: found TDA19988
-hdlcd 7ff60000.hdlcd: bound 0-0070 (ops tda998x_ops)
-[drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-[drm] No driver support for vblank timestamp query.
-------------[ cut here ]------------
-WARNING: at drivers/gpu/drm/drm_atomic_helper.c:682
-Modules linked in:
+Changes in v7:
+ - syscon: change bus-width DT property to reg-io-width
+ - watchdog: add dependency on HAS_IOMEM (spotted by a 0-day build) 
 
-CPU: 2 PID: 98 Comm: kworker/u12:3 Tainted: G        W       4.4.0-rc2+ #846
-Hardware name: ARM Juno development board (r1) (DT)
-Workqueue: deferwq deferred_probe_work_func
-task: fffffe007ecb3700 ti: fffffe09409c8000 task.ti: fffffe09409c8000
-PC is at drm_atomic_helper_update_legacy_modeset_state+0x1e8/0x1f0
-LR is at drm_atomic_helper_commit_modeset_disables+0x1a8/0x388
-pc : [<fffffe00004a4468>] lr : [<fffffe00004a59b8>] pstate: 20000045
-sp : fffffe09409cb560
-x29: fffffe09409cb560 x28: fffffe0940bf2800
-x27: fffffe0940070000 x26: 0000000000000001
-x25: fffffe0000be4b50 x24: fffffe00007ae820
-x23: fffffe0000be4b50 x22: fffffe0940bd1000
-x21: fffffe0940bd1000 x20: 0000000000000000
-x19: fffffe0940968000 x18: fffffe0940c8091c
-x17: 0000000000000007 x16: 0000000000000001
-x15: fffffe0940c8016f x14: 0000003c00000000
-x13: 0000000000000000 x12: 000004c9000004b4
-x11: 000004b1000004c9 x10: 000004b0000004b0
-x9 : 00000000000006f4 x8 : 000006a400000654
-x7 : 000006f400000640 x6 : fffffe0940966480
-x5 : fffffe0940968200 x4 : 0000000000000001
-x3 : fffffe0940966a80 x2 : 0000000000000000
-x1 : fffffe0940bd0900 x0 : fffffe0940bd0960
+Changes in v6:
+ - vendor prefix: reorder to sort alphabetically (wrong order since v3)
+ - split commit adding device tree into two patches: one for the doc, one for
+   the bindings
 
----[ end trace bdb6af69b29bf7ea ]---
-Call trace:
-[<fffffe00004a4468>] 
-drm_atomic_helper_update_legacy_modeset_state+0x1e8/0x1f0
-[<fffffe00004a59b8>] drm_atomic_helper_commit_modeset_disables+0x1a8/0x388
-[<fffffe00004a5c70>] drm_atomic_helper_commit+0xd8/0x140
-[<fffffe00004ccce0>] hdlcd_atomic_commit+0x10/0x18
-[<fffffe00004c9ef8>] drm_atomic_commit+0x40/0x70
-[<fffffe00004a69b0>] restore_fbdev_mode+0x270/0x2b0
-[<fffffe00004a8d64>] drm_fb_helper_restore_fbdev_mode_unlocked+0x34/0x90
-[<fffffe00004a8dec>] drm_fb_helper_set_par+0x2c/0x60
-[<fffffe000042f010>] fbcon_init+0x4d0/0x520
-[<fffffe000046ec9c>] visual_init+0xac/0x108
-[<fffffe000047060c>] do_bind_con_driver+0x1d4/0x3e8
-[<fffffe0000470c14>] do_take_over_console+0x174/0x1e8
-[<fffffe000042c38c>] do_fbcon_takeover+0x74/0x100
-[<fffffe00004313b4>] fbcon_event_notify+0x77c/0x7d8
-[<fffffe00000dc700>] notifier_call_chain+0x50/0x90
-[<fffffe00000dcadc>] __blocking_notifier_call_chain+0x4c/0x90
-[<fffffe00000dcb34>] blocking_notifier_call_chain+0x14/0x20
-[<fffffe0000435204>] fb_notifier_call_chain+0x1c/0x28
-[<fffffe0000437010>] register_framebuffer+0x1c0/0x2b8
-[<fffffe00004a90a4>] drm_fb_helper_initial_config+0x284/0x3e8
-[<fffffe00004a991c>] drm_fbdev_cma_init+0x94/0x148
-[<fffffe00004ccfc4>] hdlcd_drm_bind+0x1d4/0x418
-[<fffffe00004d15f0>] try_to_bring_up_master.part.2+0xc8/0x110
-[<fffffe00004d1820>] component_add+0x90/0x108
-[<fffffe00004ce6a8>] tda998x_probe+0x18/0x20
-[<fffffe00005a6d24>] i2c_device_probe+0x164/0x228
-[<fffffe00004d698c>] driver_probe_device+0x1ec/0x2f0
-[<fffffe00004d6bc0>] __device_attach_driver+0x90/0xd8
-[<fffffe00004d4b88>] bus_for_each_drv+0x58/0x98
-[<fffffe00004d66e4>] __device_attach+0xc4/0x148
-[<fffffe00004d6c58>] device_initial_probe+0x10/0x18
-[<fffffe00004d5b9c>] bus_probe_device+0x94/0xa0
-[<fffffe00004d6020>] deferred_probe_work_func+0x70/0xa8
-[<fffffe00000d5b70>] process_one_work+0x138/0x378
-[<fffffe00000d5ed4>] worker_thread+0x124/0x498
-[<fffffe00000dbb54>] kthread+0xdc/0xf0
-[<fffffe0000093980>] ret_from_fork+0x10/0x50
-Console: switching to colour frame buffer device 150x100
+Changes in v5:
+ - watchdog: changed iteration stop condition in set_timeout to be less
+   error prone
 
-which for reference, is the first one in that function:
+Changes in v4:
+ - syscon: rewrite DT property reading to be clearer
+ - watchdog: made fixes suggested by Guenter (now uses
+   watchdog_init_timeout, u32 instead of u16, fixed error checking in
+   probe, cleaned set_timeout)
 
-	...
-	/* clear out existing links and update dpms */
-	for_each_connector_in_state(old_state, connector, old_conn_state, i) {
-		if (connector->encoder) {
-			WARN_ON(!connector->encoder->crtc);
-			...
+Changes in v3:
+ - Rebased on v4.3
+ - Changed vendor prefix from "ts" to "technologic"
+ - Added a DT option to generic syscon driver to allow regmap configuration
+ - Dropped custom mfd driver, use generic syscon driver instead.
 
-That's on 4.4-rc2 with this series plus the 3 tda998x patches from 
-Russell's patch system applied. Is there something else I'm missing or 
-does this need looking at (could it be related to that initial probe 
-deferral)?
+Changes in v2:
+ - Added a mfd driver to handle syscon registers
+ - The watchdog driver now uses the regmap (created by the mfd driver)
+   to access the feed register
+ - Remove watchdog's dependency on SOC_IMX51
 
-> Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-> Acked-by: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>
-> ---
->   drivers/gpu/drm/Kconfig          |   2 +
->   drivers/gpu/drm/Makefile         |   1 +
->   drivers/gpu/drm/arm/Kconfig      |  29 ++
->   drivers/gpu/drm/arm/Makefile     |   2 +
->   drivers/gpu/drm/arm/hdlcd_crtc.c | 329 ++++++++++++++++++++++
->   drivers/gpu/drm/arm/hdlcd_drv.c  | 580 +++++++++++++++++++++++++++++++++++++++
->   drivers/gpu/drm/arm/hdlcd_drv.h  |  42 +++
->   drivers/gpu/drm/arm/hdlcd_regs.h |  87 ++++++
->   8 files changed, 1072 insertions(+)
->   create mode 100644 drivers/gpu/drm/arm/Kconfig
->   create mode 100644 drivers/gpu/drm/arm/Makefile
->   create mode 100644 drivers/gpu/drm/arm/hdlcd_crtc.c
->   create mode 100644 drivers/gpu/drm/arm/hdlcd_drv.c
->   create mode 100644 drivers/gpu/drm/arm/hdlcd_drv.h
->   create mode 100644 drivers/gpu/drm/arm/hdlcd_regs.h
+ .../devicetree/bindings/watchdog/ts4800-wdt.txt    |  25 +++
+ drivers/watchdog/Kconfig                           |  10 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/ts4800_wdt.c                      | 215 +++++++++++++++++++++
+ 4 files changed, 251 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/ts4800-wdt.txt
+ create mode 100644 drivers/watchdog/ts4800_wdt.c
 
-[...]
-
-> +static int hdlcd_set_pxl_fmt(struct drm_crtc *crtc)
-> +{
-> +	unsigned int btpp, default_color = 0x00000000;
-> +	struct hdlcd_drm_private *hdlcd = crtc_to_hdlcd_priv(crtc);
-> +	uint32_t pixel_format;
-> +	struct simplefb_format *format = NULL;
-> +	int i;
-> +
-> +#ifdef CONFIG_DRM_HDLCD_SHOW_UNDERRUN
-> +	default_color = 0x00ff0000;	/* show underruns in red */
-> +#endif
-> +
-> +	pixel_format = crtc->primary->state->fb->pixel_format;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(supported_formats); i++) {
-> +		if (supported_formats[i].fourcc == pixel_format)
-> +			format = &supported_formats[i];
-> +	}
-> +
-> +	if (WARN_ON(!format)) {
-> +		return 0;
-> +	}
-
-nit: unnecessary braces.
-
-> +	/* HDLCD uses 'bytes per pixel', zero means 1 byte */
-> +	btpp = (format->bits_per_pixel + 7) / 8;
-> +	hdlcd_write(hdlcd, HDLCD_REG_PIXEL_FORMAT, (btpp - 1) << 3);
-> +
-> +	/*
-> +	 * The format of the HDLCD_REG_<color>_SELECT register is:
-> +	 *   - bits[23:16] - default value for that color component
-> +	 *   - bits[11:8]  - number of bits to extract for each color component
-> +	 *   - bits[4:0]   - index of the lowest bit to extract
-> +	 *
-> +	 * The default color value is used when bits[11:8] are zero, when the
-> +	 * pixel is outside the visible frame area or when there is a
-> +	 * buffer underrun.
-> +	 */
-> +	hdlcd_write(hdlcd, HDLCD_REG_RED_SELECT, default_color |
-> +		format->red.offset | (format->red.length & 0xf) << 8);
-> +	hdlcd_write(hdlcd, HDLCD_REG_GREEN_SELECT, default_color |
-> +		format->green.offset | (format->green.length & 0xf) << 8);
-> +	hdlcd_write(hdlcd, HDLCD_REG_BLUE_SELECT, default_color |
-> +		format->blue.offset | (format->blue.length & 0xf) << 8);
-
-These would seem to be putting bits 23:16 from default_color into the 
-default field of every register, and indeed underruns show up as a very 
-white-looking shade of red for me ;)
-
-> +	return 0;
-> +}
-
-[...]
-
-> +static void hdlcd_fb_output_poll_changed(struct drm_device *drm)
-> +{
-> +	struct hdlcd_drm_private *hdlcd = drm->dev_private;
-> +
-> +	if (hdlcd->fbdev) {
-> +		drm_fbdev_cma_hotplug_event(hdlcd->fbdev);
-> +	}
-
-nit: braces.
-
-> +}
-
-[...]
-
-> +static irqreturn_t hdlcd_irq(int irq, void *arg)
-> +{
-> +	struct drm_device *drm = arg;
-> +	struct hdlcd_drm_private *hdlcd = drm->dev_private;
-> +	unsigned long irq_status;
-> +
-> +	irq_status = hdlcd_read(hdlcd, HDLCD_REG_INT_STATUS);
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +	if (irq_status & HDLCD_INTERRUPT_UNDERRUN) {
-> +		atomic_inc(&hdlcd->buffer_underrun_count);
-> +	}
-> +	if (irq_status & HDLCD_INTERRUPT_DMA_END) {
-> +		atomic_inc(&hdlcd->dma_end_count);
-> +	}
-> +	if (irq_status & HDLCD_INTERRUPT_BUS_ERROR) {
-> +		atomic_inc(&hdlcd->bus_error_count);
-> +	}
-> +	if (irq_status & HDLCD_INTERRUPT_VSYNC) {
-> +		atomic_inc(&hdlcd->vsync_count);
-> +	}
-
-nit: braces again (it's only because I'm too lazy to remove the newbie 
-checkpatch commit hook, and a manual merge of this into my SMMU dev tree 
-made that throw a fit)
-
-> +#endif
-> +	if (irq_status & HDLCD_INTERRUPT_VSYNC) {
-> +		bool events_sent = false;
-> +		unsigned long flags;
-> +		struct drm_pending_vblank_event	*e, *t;
-> +
-> +		drm_crtc_handle_vblank(&hdlcd->crtc);
-> +
-> +		spin_lock_irqsave(&drm->event_lock, flags);
-> +		list_for_each_entry_safe(e, t, &hdlcd->event_list, base.link) {
-> +			list_del(&e->base.link);
-> +			drm_crtc_send_vblank_event(&hdlcd->crtc, e);
-> +			events_sent = true;
-> +		}
-> +		if (events_sent)
-> +			drm_crtc_vblank_put(&hdlcd->crtc);
-> +		spin_unlock_irqrestore(&drm->event_lock, flags);
-> +	}
-> +
-> +	/* acknowledge interrupt(s) */
-> +	hdlcd_write(hdlcd, HDLCD_REG_INT_CLEAR, irq_status);
-> +
-> +	return IRQ_HANDLED;
-> +}
-
-Other than that though, it seems to do the job. I get a usable 
-framebuffer console and can boot to an X desktop with at least the 
-ancient 1600x1200 DVI monitor I have handy - the 1920x1080 HDMI one 
-seems to get recognised OK but the monitor itself doesn't like the 
-signal and just locks up until I unplug it, although I know that's more 
-of a clock driver/firmware issue.
-
-Robin.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/watchdog/ts4800-wdt.txt b/Documentation/devicetree/bindings/watchdog/ts4800-wdt.txt
+new file mode 100644
+index 0000000..8f6caad
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/ts4800-wdt.txt
+@@ -0,0 +1,25 @@
++Technologic Systems Watchdog
++
++Required properties:
++- compatible: must be "technologic,ts4800-wdt"
++- syscon: phandle / integer array that points to the syscon node which
++          describes the FPGA's syscon registers.
++          - phandle to FPGA's syscon
++          - offset to the watchdog register
++
++Optional property:
++- timeout-sec: contains the watchdog timeout in seconds.
++
++Example:
++
++syscon: syscon@b0010000 {
++	compatible = "syscon", "simple-mfd";
++	reg = <0xb0010000 0x3d>;
++	reg-io-width = <2>;
++
++	wdt@e {
++		compatible = "technologic,ts4800-wdt";
++		syscon = <&syscon 0xe>;
++		timeout-sec = <10>;
++	};
++}
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 79e1aa1..bb624d2 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -426,6 +426,16 @@ config NUC900_WATCHDOG
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called nuc900_wdt.
+ 
++config TS4800_WATCHDOG
++	tristate "TS-4800 Watchdog"
++	depends on HAS_IOMEM && OF
++	select WATCHDOG_CORE
++	select MFD_SYSCON
++	help
++	  Technologic Systems TS-4800 has watchdog timer implemented in
++	  an external FPGA. Say Y here if you want to support for the
++	  watchdog timer on TS-4800 board.
++
+ config TS72XX_WATCHDOG
+ 	tristate "TS-72XX SBC Watchdog"
+ 	depends on MACH_TS72XX
+diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+index 0c616e3..3863ce0 100644
+--- a/drivers/watchdog/Makefile
++++ b/drivers/watchdog/Makefile
+@@ -53,6 +53,7 @@ obj-$(CONFIG_RN5T618_WATCHDOG) += rn5t618_wdt.o
+ obj-$(CONFIG_COH901327_WATCHDOG) += coh901327_wdt.o
+ obj-$(CONFIG_STMP3XXX_RTC_WATCHDOG) += stmp3xxx_rtc_wdt.o
+ obj-$(CONFIG_NUC900_WATCHDOG) += nuc900_wdt.o
++obj-$(CONFIG_TS4800_WATCHDOG) += ts4800_wdt.o
+ obj-$(CONFIG_TS72XX_WATCHDOG) += ts72xx_wdt.o
+ obj-$(CONFIG_IMX2_WDT) += imx2_wdt.o
+ obj-$(CONFIG_UX500_WATCHDOG) += ux500_wdt.o
+diff --git a/drivers/watchdog/ts4800_wdt.c b/drivers/watchdog/ts4800_wdt.c
+new file mode 100644
+index 0000000..2b8de86
+--- /dev/null
++++ b/drivers/watchdog/ts4800_wdt.c
+@@ -0,0 +1,215 @@
++/*
++ * Watchdog driver for TS-4800 based boards
++ *
++ * Copyright (c) 2015 - Savoir-faire Linux
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2. This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#include <linux/kernel.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/watchdog.h>
++
++static bool nowayout = WATCHDOG_NOWAYOUT;
++module_param(nowayout, bool, 0);
++MODULE_PARM_DESC(nowayout,
++	"Watchdog cannot be stopped once started (default="
++	__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
++
++/* possible feed values */
++#define TS4800_WDT_FEED_2S       0x1
++#define TS4800_WDT_FEED_10S      0x2
++#define TS4800_WDT_DISABLE       0x3
++
++struct ts4800_wdt {
++	struct watchdog_device  wdd;
++	struct regmap           *regmap;
++	u32                     feed_offset;
++	u32                     feed_val;
++};
++
++/*
++ * TS-4800 supports the following timeout values:
++ *
++ *   value desc
++ *   ---------------------
++ *     0    feed for 338ms
++ *     1    feed for 2.706s
++ *     2    feed for 10.824s
++ *     3    disable watchdog
++ *
++ * Keep the regmap/timeout map ordered by timeout
++ */
++static const struct {
++	const int timeout;
++	const int regval;
++} ts4800_wdt_map[] = {
++	{ 2,  TS4800_WDT_FEED_2S },
++	{ 10, TS4800_WDT_FEED_10S },
++};
++
++#define MAX_TIMEOUT_INDEX       (ARRAY_SIZE(ts4800_wdt_map) - 1)
++
++static void ts4800_write_feed(struct ts4800_wdt *wdt, u32 val)
++{
++	regmap_write(wdt->regmap, wdt->feed_offset, val);
++}
++
++static int ts4800_wdt_start(struct watchdog_device *wdd)
++{
++	struct ts4800_wdt *wdt = watchdog_get_drvdata(wdd);
++
++	ts4800_write_feed(wdt, wdt->feed_val);
++	return 0;
++}
++
++static int ts4800_wdt_stop(struct watchdog_device *wdd)
++{
++	struct ts4800_wdt *wdt = watchdog_get_drvdata(wdd);
++
++	ts4800_write_feed(wdt, TS4800_WDT_DISABLE);
++	return 0;
++}
++
++static int ts4800_wdt_set_timeout(struct watchdog_device *wdd,
++				  unsigned int timeout)
++{
++	struct ts4800_wdt *wdt = watchdog_get_drvdata(wdd);
++	int i;
++
++	for (i = 0; i < MAX_TIMEOUT_INDEX; i++) {
++		if (ts4800_wdt_map[i].timeout >= timeout)
++			break;
++	}
++
++	wdd->timeout = ts4800_wdt_map[i].timeout;
++	wdt->feed_val = ts4800_wdt_map[i].regval;
++
++	return 0;
++}
++
++static const struct watchdog_ops ts4800_wdt_ops = {
++	.owner = THIS_MODULE,
++	.start = ts4800_wdt_start,
++	.stop = ts4800_wdt_stop,
++	.set_timeout = ts4800_wdt_set_timeout,
++};
++
++static const struct watchdog_info ts4800_wdt_info = {
++	.options = WDIOF_SETTIMEOUT | WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING,
++	.identity = "TS-4800 Watchdog",
++};
++
++static int ts4800_wdt_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct device_node *syscon_np;
++	struct watchdog_device *wdd;
++	struct ts4800_wdt *wdt;
++	u32 reg;
++	int ret;
++
++	syscon_np = of_parse_phandle(np, "syscon", 0);
++	if (!syscon_np) {
++		dev_err(&pdev->dev, "no syscon property\n");
++		return -ENODEV;
++	}
++
++	ret = of_property_read_u32_index(np, "syscon", 1, &reg);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "no offset in syscon\n");
++		return ret;
++	}
++
++	/* allocate memory for watchdog struct */
++	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
++	if (!wdt)
++		return -ENOMEM;
++
++	/* set regmap and offset to know where to write */
++	wdt->feed_offset = reg;
++	wdt->regmap = syscon_node_to_regmap(syscon_np);
++	if (IS_ERR(wdt->regmap)) {
++		dev_err(&pdev->dev, "cannot get parent's regmap\n");
++		return PTR_ERR(wdt->regmap);
++	}
++
++	/* Initialize struct watchdog_device */
++	wdd = &wdt->wdd;
++	wdd->parent = &pdev->dev;
++	wdd->info = &ts4800_wdt_info;
++	wdd->ops = &ts4800_wdt_ops;
++	wdd->min_timeout = ts4800_wdt_map[0].timeout;
++	wdd->max_timeout = ts4800_wdt_map[MAX_TIMEOUT_INDEX].timeout;
++
++	watchdog_set_drvdata(wdd, wdt);
++	watchdog_set_nowayout(wdd, nowayout);
++	watchdog_init_timeout(wdd, 0, &pdev->dev);
++
++	/*
++	 * As this watchdog supports only a few values, ts4800_wdt_set_timeout
++	 * must be called to initialize timeout and feed_val with valid values.
++	 * Default to maximum timeout if none, or an invalid one, is provided in
++	 * device tree.
++	 */
++	if (!wdd->timeout)
++		wdd->timeout = wdd->max_timeout;
++	ts4800_wdt_set_timeout(wdd, wdd->timeout);
++
++	/*
++	 * The feed register is write-only, so it is not possible to determine
++	 * watchdog's state. Disable it to be in a known state.
++	 */
++	ts4800_wdt_stop(wdd);
++
++	ret = watchdog_register_device(wdd);
++	if (ret) {
++		dev_err(&pdev->dev,
++			"failed to register watchdog device\n");
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, wdt);
++
++	dev_info(&pdev->dev,
++		 "initialized (timeout = %d sec, nowayout = %d)\n",
++		 wdd->timeout, nowayout);
++
++	return 0;
++}
++
++static int ts4800_wdt_remove(struct platform_device *pdev)
++{
++	struct ts4800_wdt *wdt = platform_get_drvdata(pdev);
++
++	watchdog_unregister_device(&wdt->wdd);
++
++	return 0;
++}
++
++static const struct of_device_id ts4800_wdt_of_match[] = {
++	{ .compatible = "technologic,ts4800-wdt", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, ts4800_wdt_of_match);
++
++static struct platform_driver ts4800_wdt_driver = {
++	.probe		= ts4800_wdt_probe,
++	.remove		= ts4800_wdt_remove,
++	.driver		= {
++		.name	= "ts4800_wdt",
++		.of_match_table = ts4800_wdt_of_match,
++	},
++};
++
++module_platform_driver(ts4800_wdt_driver);
++
++MODULE_AUTHOR("Damien Riegel <damien.riegel@savoirfairelinux.com>");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:ts4800_wdt");
+-- 
+2.5.0
