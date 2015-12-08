@@ -1,64 +1,93 @@
-From: Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH v3 1/3] dt-bindings: add Marvell core PLL and clock divider
- PMU documentation
-Date: Tue, 08 Dec 2015 10:38:00 +0000
-Message-ID: <E1a6Fei-0004de-1W@rmk-PC.arm.linux.org.uk>
+From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: [PATCH v3 1/3] dt-bindings: add Marvell PMU documentation
+Date: Tue, 08 Dec 2015 10:43:23 +0000
+Message-ID: <E1a6Fjv-0004mp-O6@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-clk-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>
-Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the Marvell clock divider driver, which is used
-to source clocks for the AXI bus, video decoder, GPU and LCD blocks.
+Add the required DT binding documentation for the Marvell PMU driver.
 
-Acked-by: Andrew Lunn <andrew@lunn.ch>
-Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 ---
- .../bindings/clock/dove-divider-clock.txt          | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/dove-divider-clock.txt
+ Documentation/devicetree/bindings/soc/dove/pmu.txt | 56 ++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/dove/pmu.txt
 
-diff --git a/Documentation/devicetree/bindings/clock/dove-divider-clock.txt b/Documentation/devicetree/bindings/clock/dove-divider-clock.txt
+diff --git a/Documentation/devicetree/bindings/soc/dove/pmu.txt b/Documentation/devicetree/bindings/soc/dove/pmu.txt
 new file mode 100644
-index 000000000000..e3eb0f657c5e
+index 000000000000..edd40b796b74
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/dove-divider-clock.txt
-@@ -0,0 +1,28 @@
-+PLL divider based Dove clocks
-+
-+Marvell Dove has a 2GHz PLL, which feeds into a set of dividers to provide
-+high speed clocks for a number of peripherals.  These dividers are part of
-+the PMU, and thus this node should be a child of the PMU node.
-+
-+The following clocks are provided:
-+
-+ID	Clock
-+-------------
-+0	AXI bus clock
-+1	GPU clock
-+2	VMeta clock
-+3	LCD clock
++++ b/Documentation/devicetree/bindings/soc/dove/pmu.txt
+@@ -0,0 +1,56 @@
++Device Tree bindings for Marvell PMU
 +
 +Required properties:
-+- compatible : shall be "marvell,dove-divider-clock"
-+- reg : shall be the register address of the Core PLL and Clock Divider
-+   Control 0 register.  This will cover that register, as well as the
-+   Core PLL and Clock Divider Control 1 register.  Thus, it will have
-+   a size of 8.
-+- #clock-cells : from common clock binding; shall be set to 1
++ - compatible: value should be "marvell,dove-pmu".
++    May also include "simple-bus" if there are child devices, in which
++    case the ranges node is required.
++ - reg: two base addresses and sizes of the PM controller and PMU.
++ - interrupts: single interrupt number for the PMU interrupt
++ - interrupt-controller: must be specified as the PMU itself is an
++    interrupt controller.
++ - #interrupt-cells: must be 1.
++ - #reset-cells: must be 1.
++ - domains: sub-node containing domain descriptions
 +
-+divider_clk: core-clock@0064 {
-+	compatible = "marvell,dove-divider-clock";
-+	reg = <0x0064 0x8>;
-+	#clock-cells = <1>;
-+};
++Optional properties:
++ - ranges: defines the address mapping for child devices, as per the
++   standard property of this name.  Required when compatible includes
++   "simple-bus".
++
++Power domain descriptions are listed as child nodes of the "domains"
++sub-node.  Each domain has the following properties:
++
++Required properties:
++ - #power-domain-cells: must be 0.
++
++Optional properties:
++ - marvell,pmu_pwr_mask: specifies the mask value for PMU power register
++ - marvell,pmu_iso_mask: specifies the mask value for PMU isolation register
++ - resets: points to the reset manager (PMU node) and reset index.
++
++Example:
++
++	pmu: power-management@d0000 {
++		compatible = "marvell,dove-pmu";
++		reg = <0xd0000 0x8000>, <0xd8000 0x8000>;
++		interrupts = <33>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		#reset-cells = <1>;
++
++		domains {
++			vpu_domain: vpu-domain {
++				#power-domain-cells = <0>;
++				marvell,pmu_pwr_mask = <0x00000008>;
++				marvell,pmu_iso_mask = <0x00000001>;
++				resets = <&pmu 16>;
++			};
++
++			gpu_domain: gpu-domain {
++				#power-domain-cells = <0>;
++				marvell,pmu_pwr_mask = <0x00000004>;
++				marvell,pmu_iso_mask = <0x00000002>;
++				resets = <&pmu 18>;
++			};
++		};
++	};
 -- 
 2.1.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
