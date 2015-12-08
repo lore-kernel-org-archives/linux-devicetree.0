@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 03/13] ARM: shmobile: armadillo800eva dts: Update console parameters
-Date: Tue,  8 Dec 2015 18:54:08 +0100
-Message-ID: <1449597258-32623-4-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 09/13] ARM: shmobile: kzm9g dts: Update console parameters
+Date: Tue,  8 Dec 2015 18:54:14 +0100
+Message-ID: <1449597258-32623-10-git-send-email-geert+renesas@glider.be>
 References: <1449597258-32623-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1449597258-32623-1-git-send-email-geert+renesas@glider.be>
@@ -18,37 +18,41 @@ Add the serial port config to chosen/stdout-path.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/r8a7740-armadillo800eva.dts | 8 ++++----
+ arch/arm/boot/dts/sh73a0-kzm9g.dts | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-index 78a21f2828dff6d1..296a0d1c1fe266c7 100644
---- a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-+++ b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-@@ -20,12 +20,12 @@
- 	compatible = "renesas,armadillo800eva", "renesas,r8a7740";
+diff --git a/arch/arm/boot/dts/sh73a0-kzm9g.dts b/arch/arm/boot/dts/sh73a0-kzm9g.dts
+index aa8bae3b8fcff6d6..554b275b1de50929 100644
+--- a/arch/arm/boot/dts/sh73a0-kzm9g.dts
++++ b/arch/arm/boot/dts/sh73a0-kzm9g.dts
+@@ -22,7 +22,7 @@
+ 	compatible = "renesas,kzm9g", "renesas,sh73a0";
  
  	aliases {
--		serial1 = &scifa1;
-+		serial0 = &scifa1;
+-		serial4 = &scifa4;
++		serial0 = &scifa4;
+ 	};
+ 
+ 	cpus {
+@@ -39,8 +39,8 @@
  	};
  
  	chosen {
--		bootargs = "console=tty0 console=ttySC1,115200 earlyprintk=sh-sci.1,115200 ignore_loglevel root=/dev/nfs ip=dhcp rw";
--		stdout-path = &scifa1;
-+		bootargs = "earlyprintk ignore_loglevel root=/dev/nfs ip=dhcp rw";
+-		bootargs = "console=tty0 console=ttySC4,115200 root=/dev/nfs ip=dhcp ignore_loglevel rw";
+-		stdout-path = &scifa4;
++		bootargs = "root=/dev/nfs ip=dhcp ignore_loglevel rw";
 +		stdout-path = "serial0:115200n8";
  	};
  
  	memory {
-@@ -232,7 +232,7 @@
- 		renesas,function = "gether";
+@@ -345,7 +345,7 @@
+ 		};
  	};
  
--	scifa1_pins: serial1 {
-+	scifa1_pins: serial0 {
- 		renesas,groups = "scifa1_data";
- 		renesas,function = "scifa1";
+-	scifa4_pins: serial4 {
++	scifa4_pins: serial0 {
+ 		renesas,groups = "scifa4_data", "scifa4_ctrl";
+ 		renesas,function = "scifa4";
  	};
 -- 
 1.9.1
