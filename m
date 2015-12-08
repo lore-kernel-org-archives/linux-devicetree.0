@@ -1,103 +1,82 @@
-From: xuejiancheng <xuejiancheng@huawei.com>
-Subject: Re: [PATCH v2 1/9] clk: hi3519: add dt-binding document and header
- file
-Date: Tue, 8 Dec 2015 17:45:25 +0800
-Message-ID: <5666A6B5.6020101@huawei.com>
-References: <1449110364-23464-1-git-send-email-xuejiancheng@huawei.com>
- <21651844.ONg7WdRZpk@wuerfel> <56653CBF.30801@huawei.com>
- <2735980.8lIUhgbJzL@wuerfel>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/3] doc: dt-binding: generic onboard USB HUB
+Date: Tue, 08 Dec 2015 10:45:44 +0100
+Message-ID: <2137754.fyz9D1aof4@wuerfel>
+References: <1449538670-7954-1-git-send-email-peter.chen@freescale.com> <CAOMZO5DfBW3hxp5odbefLQCmkocPy=LypVW5HJWzDkF__WD_sg@mail.gmail.com> <20151208092045.GB16881@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2735980.8lIUhgbJzL@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, robh+dt@kernel.org
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, mturquette@baylibre.com, sboyd@codeaurora.org, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151208092045.GB16881@shlinux2>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Patryk Kowalczyk <patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 08 December 2015 17:20:46 Peter Chen wrote:
+> On Tue, Dec 08, 2015 at 12:30:59AM -0200, Fabio Estevam wrote:
+> > On Mon, Dec 7, 2015 at 11:37 PM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > > Add dt-binding documentation for generic onboard USB HUB.
+> > >
+> > > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > ---
+> > >  .../bindings/usb/generic-onboard-hub.txt           | 28 ++++++++++++++++++++++
+> > >  1 file changed, 28 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/usb/generic-onboard-hub.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/usb/generic-onboard-hub.txt b/Documentation/devicetree/bindings/usb/generic-onboard-hub.txt
+> > > new file mode 100644
+> > > index 0000000..ea92205
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/usb/generic-onboard-hub.txt
+> > > @@ -0,0 +1,28 @@
+> > > +Generic Onboard USB HUB
+> > > +
+> > > +Required properties:
+> > > +- compatible: should be "generic-onboard-hub"
+> > > +
+> > > +Optional properties:
+> > > +- clocks: the input clock for HUB.
+> > > +
+> > > +- clock-names: Should be "external_clk"
 
+Make this just "external", or remove the name and use it as an anonymous clock.
 
-On 2015/12/7 17:36, Arnd Bergmann wrote:
-> On Monday 07 December 2015 16:01:03 xuejiancheng wrote:
->> On 2015/12/4 18:56, Arnd Bergmann wrote:
->>> On Friday 04 December 2015 11:21:28 xuejiancheng wrote:
->>>> Hi Arnd,
->>>>
->>>> On 2015/12/3 17:44, Arnd Bergmann wrote:
->>>>> On Thursday 03 December 2015 10:39:24 Jiancheng Xue wrote:
->>>>>> +#ifndef __DTS_HI3519_CLOCK_H
->>>>>> +#define __DTS_HI3519_CLOCK_H
->>>>>
->>>>> Please try to avoid adding headers like this if you can at all.
->>>>>
->>>>> I might ask you to merge the header file in one merge window
->>>>> otherwise and submit the platform code one kernel later, as they
->>>>> tendn to cause us needless dependencies otherwise.
->>>>>
->>>>
->>>> Sorry. In v1, Rob suggested putting binding doc and header files in
->>>> a separate patch. The clock driver indeed depends on the header.
->>>>
->>>> I will put the header and the clock driver in a patch, and keep the
->>>> binding doc in another patch.
->>>
->>> Having split patches is better, I was really commenting on the fact
->>> that ideally you would not have a header file at all. If we merge
->>> the header through arm-soc, then you won't be able to merge the
->>> clk driver easily, and if you merge the header through the clk
->>> maintainer, I'm can't take your dts files.
->>
->> Thank you for your comments. Because the clocks in the crg module have
->> different types and random layouts. If this header file is removed,
->> the clock driver and the dts files will get very complicated.
->>
->> Could you help me acknowledge it if I put the header file and clock driver
->> in a patch?
->>
->> Could you give me some suggestions If I want to keep this header file?
-> 
-> If this is another clock controller that has a random register layout,
-> then adding the header file is the least problematic solution indeed.
+> > > +- hub-reset-gpios: Should specify the GPIO for reset.
+> > > +
+> > > +- hub-reset-active-high: the active reset signal is high, if this property is
+> > > +  not set, the active reset signal is low.
+> > > +
+> > > +- hub-reset-duration-us: the duration for assert reset signal, the time unit
+> > > +  is microsecond.
 
-Is it OK if I put the header file and the clock driver in a patch?
+Remove the "hub-" prefix here.
 
-If it's not OK, could you tell me how should I separate the patches?
+> > > +Example:
+> > > +
+> > > +       usb_hub1 {
+> > > +               compatible = "generic-onboard-hub";
+> > > +               clocks = <&clks IMX6QDL_CLK_CKO>;
+> > > +               clock-names = "external_clk";
+> > > +               hub-reset-gpios = <&gpio7 12 0>;
+> > > +               hub-reset-active-high;
+> > 
+> > I think you could drop the 'hub-reset-active-high' property and do
+> > like this instead:
+> > 
+> > hub-reset-gpios = <&gpio7 12 GPIO_ACTIVE_HIGH>;
+> > 
+> > or
+> > 
+> > hub-reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+> 
+> Yes, you are right, would you have a test to see if can work for
+> udoo board?
 
-Thank you.
+Yes, it should be done like this.
 
-> 
->>>>> Where do those numbers come from? They are not consecutive, so it sounds
->>>>> like they are directly from the data sheet and won't be needed in the driver.
->>>>> If that's true, just use the numbers directly, as you do for everything
->>>>> else.
->>>>
->>>> The numbers are defined by myself, not directly from the data sheet. Some numbers
->>>> are reserved for device nodes which will be added later. So they are not consecutive now.
->>>
->>> I don't understand. How do you decide which numbers to reserve? If the
->>> numbers are completely arbitrary and you have no idea what other clocks
->>> there are, you can simply have consecutive numbers here and do the driver
->>> accordingly.
->>
->> The clocks are divided into several groups according to their types. The clocks in
->> a group are expected to have consecutive numbers. So some numbers are reserved for
->> every group in this file, just like in some existing headers. Other clocks will be
->> added when other peripherals drivers are submitted. They will use the reserve numbers
->> and be inserted into existing groups.
->>
->> Of course it is not required to reserve numbers for later added clocks.
-> 
-> Are you able to enumerate all the clocks then? If all clocks that are
-> supported by this clock controllers have names in the data sheet, I
-> would prefer to just list them all now rather than only enter the ones
-> we already need, to avoid having future merge conflicts.
-> 
-> Then we just need to add code to support those clocks when we need them,
-> but that can be done in parallel to adding the DT nodes and the driver,
-> rather than strongly serializing the patch flow on the header file patches.
-> 
-> 	Arnd
-> 
-> .
-> 
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
