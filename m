@@ -1,33 +1,74 @@
 From: Damien Riegel <damien.riegel@savoirfairelinux.com>
-Subject: [PATCH v8 1/3] of: add vendor prefix for Technologic Systems
-Date: Tue,  8 Dec 2015 11:41:36 -0500
-Message-ID: <1449592898-24049-2-git-send-email-damien.riegel@savoirfairelinux.com>
-References: <1449592898-24049-1-git-send-email-damien.riegel@savoirfairelinux.com>
+Subject: [PATCH v8 0/3] Add board support for TS-4800
+Date: Tue,  8 Dec 2015 11:41:35 -0500
+Message-ID: <1449592898-24049-1-git-send-email-damien.riegel@savoirfairelinux.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449592898-24049-1-git-send-email-damien.riegel@savoirfairelinux.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, kernel@savoirfairelinux.com, Lee Jones <lee.jones@linaro.org>, Damien Riegel <damien.riegel@savoirfairelinux.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+This patch serie adds support for TS-4800 board. This board,                                                                              
+manufactured by Technologic Systems, is based on an IMX515.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 82d2ac9..d3a206d 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -215,6 +215,7 @@ stericsson	ST-Ericsson
- synology	Synology, Inc.
- tbs	TBS Technologies
- tcl	Toby Churchill Ltd.
-+technologic	Technologic Systems
- thine	THine Electronics, Inc.
- ti	Texas Instruments
- tlm	Trusted Logic Mobility
+The first stage bootloader, called TS-BOOTROM, enables the watchdog,
+so a watchdog driver is required to prevent board from rebooting. It is
+handled in a separate patchset.
+
+The current device tree is minimal but it allows to get a shell on the
+board.
+
+Changes in v8:
+ - Split the serie into two parts, watchdog and dts, because there are
+   no build dependencies between the two, and the syscon patch has been
+   separately applied in Lee Jones' tree.
+ - As a consequence, I dropped the patch which enabled the watchdog in
+   imx_v6_v7_defconfig to ease the integration.
+
+Changes in v7:
+ - syscon: change bus-width DT property to reg-io-width
+ - watchdog: add dependency on HAS_IOMEM (spotted by a 0-day build) 
+
+Changes in v6:
+ - vendor prefix: reorder to sort alphabetically (wrong order since v3)
+ - split commit adding device tree into two patches: one for the doc, one for
+   the bindings
+
+Changes in v5:
+ - watchdog: changed iteration stop condition in set_timeout to be less
+   error prone
+
+Changes in v4:
+ - syscon: rewrite DT property reading to be clearer
+ - watchdog: made fixes suggested by Guenter (now uses
+   watchdog_init_timeout, u32 instead of u16, fixed error checking in
+   probe, cleaned set_timeout)
+
+Changes in v3:
+ - Rebased on v4.3
+ - Changed vendor prefix from "ts" to "technologic"
+ - Added a DT option to generic syscon driver to allow regmap configuration
+ - Dropped custom mfd driver, use generic syscon driver instead.
+
+Changes in v2:
+ - Added a mfd driver to handle syscon registers
+ - The watchdog driver now uses the regmap (created by the mfd driver)
+   to access the feed register
+ - Remove watchdog's dependency on SOC_IMX51
+
+
+Damien Riegel (3):
+  of: add vendor prefix for Technologic Systems
+  of: documentation: add bindings documentation for TS-4800
+  ARM: dts: TS-4800: add basic device tree
+
+ .../devicetree/bindings/arm/technologic.txt        |   6 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/boot/dts/Makefile                         |   3 +-
+ arch/arm/boot/dts/imx51-ts4800.dts                 | 190 +++++++++++++++++++++
+ 4 files changed, 199 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/technologic.txt
+ create mode 100644 arch/arm/boot/dts/imx51-ts4800.dts
+
 -- 
 2.5.0
