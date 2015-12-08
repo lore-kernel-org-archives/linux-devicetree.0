@@ -1,211 +1,115 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5/8 v3] thermal: rcar: enable to use thermal-zone on DT
-Date: Tue, 8 Dec 2015 09:20:10 -0600
-Message-ID: <20151208152010.GA25452@rob-hp-laptop>
-References: <87y4d6672t.wl%kuninori.morimoto.gx@renesas.com>
- <87r3iy66za.wl%kuninori.morimoto.gx@renesas.com>
+Subject: Re: [PATCH v2 next 1/2] dts: hisi: fixes no syscon error when init
+ mdio
+Date: Tue, 8 Dec 2015 09:25:14 -0600
+Message-ID: <20151208152514.GA27037@rob-hp-laptop>
+References: <1449476707-224320-1-git-send-email-yankejian@huawei.com>
+ <1449476707-224320-2-git-send-email-yankejian@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <87r3iy66za.wl%kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <1449476707-224320-2-git-send-email-yankejian@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Simon <horms@verge.net.au>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: yankejian <yankejian@huawei.com>
+Cc: davem@davemloft.net, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, wangkefeng.wang@huawei.com, dingtianhong@huawei.com, liguozhu@huawei.com, Yisen.Zhuang@huawei.com, sboyd@codeaurora.org, haojian.zhuang@linaro.org, wangzhou1@hisilicon.com, bintian.wang@huawei.com, long.wanglong@huawei.com, leo.yan@linaro.org, haifeng.wei@huawei.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linuxarm@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 07, 2015 at 07:44:09AM +0000, Kuninori Morimoto wrote:
+On Mon, Dec 07, 2015 at 04:25:06PM +0800, yankejian wrote:
+> Signed-nux start up, we get the log below:
+> "Hi-HNS_MDIO 803c0000.mdio: no syscon hisilicon,peri-c-subctrl
+>  mdio_bus mdio@803c0000: mdio sys ctl reg has not maped       "
 > 
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> the source code about the subctrl is dealled with syscon, but dts doesn't.
+
+The source...
+
+s/dealled/dealt/
+
+> it cause such fault. so this patch adds the syscon info on dts files to
+> fixes it. and it adds documentation for the devicetree bindings used by
+
+Capitalization please.
+
+> DT files of Hisilicon Hip05-D02 development board.
 > 
-> This patch enables to use thermal-zone on DT if it was call as
-> "renesas,rcar-thermal-gen2".
-> Previous style is still supported by "renesas,rcar-thermal".
-> 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> Signed-off-by: yankejian <yankejian@huawei.com>
 > ---
-> v2 -> v3
+> change log:
+> v2:
+>  1) updates the related documented in the binding as well
+>  2) use the normal naming conventions using '-' instead of '_'
 > 
->  - compatible "renesas,rcar-thermal-gen2" -> "renesas,rcar-gen2-thermal"
+> v1:
+>  initial version
+> ---
+>  .../devicetree/bindings/arm/hisilicon/hisilicon.txt      | 16 ++++++++++++++++
+>  arch/arm64/boot/dts/hisilicon/hip05.dtsi                 |  5 +++++
+>  arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi             |  4 ++--
+>  3 files changed, 23 insertions(+), 2 deletions(-)
 > 
->  .../devicetree/bindings/thermal/rcar-thermal.txt   | 37 +++++++++++++++++-
-
-For the binding:
-
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/thermal/rcar_thermal.c                     | 44 +++++++++++++++++++---
->  2 files changed, 74 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-> index 332e625..601a54d 100644
-> --- a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-> @@ -1,8 +1,9 @@
->  * Renesas R-Car Thermal
+> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> index 6ac7c00..9f05767 100644
+> --- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> +++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> @@ -187,6 +187,22 @@ Example:
+>  		reg = <0xb0000000 0x10000>;
+>  	};
 >  
->  Required properties:
-> -- compatible		: "renesas,thermal-<soctype>", "renesas,rcar-thermal"
-> -			  as fallback.
-> +- compatible		: "renesas,thermal-<soctype>",
-> +			   "renesas,rcar-gen2-thermal" (with thermal-zone) or
-> +			   "renesas,rcar-thermal" (without thermal-zone) as fallback.
->  			  Examples with soctypes are:
->  			    - "renesas,thermal-r8a73a4" (R-Mobile APE6)
->  			    - "renesas,thermal-r8a7779" (R-Car H1)
-> @@ -36,3 +37,35 @@ thermal@e61f0000 {
->  		0xe61f0300 0x38>;
->  	interrupts = <0 69 IRQ_TYPE_LEVEL_HIGH>;
->  };
+> +Hisilicon HiP05 PERISUB system controller
 > +
-> +Example (with thermal-zone):
+> +Required properties:
+> +- compatible : "hisilicon,peri-c-subctrl", "syscon";
+> +- reg : Register address and size
 > +
-> +thermal-zones {
-> +	cpu_thermal: cpu-thermal {
-> +		polling-delay-passive	= <1000>;
-> +		polling-delay		= <5000>;
+> +The HiP05 PERISUB system controller is shared by peripheral controllers in
+> +HiP05 Soc to implement some basic configurations. the peripheral
+> +controllers include mdio, ddr, iic, uart, timer and so on.
 > +
-> +		thermal-sensors = <&thermal>;
-> +
-> +		trips {
-> +			cpu-crit {
-> +				temperature	= <1150000>;
-> +				hysteresis	= <0>;
-> +				type		= "critical";
-> +			};
-> +		};
-> +		cooling-maps {
-> +		};
+> +Example:
+> +	/* for HiP05 PCIe-SAS system */
+> +	peri-c-subctrl: sub-ctrl-c@80000000 {
+
+s/sub-ctrl-c/syscon/
+
+
+> +		compatible = "hisilicon,peri-c-subctrl", "syscon";
+> +		reg = <0x0 0x80000000 0x0 0x10000>;
 > +	};
-> +};
+>  -----------------------------------------------------------------------
+>  Hisilicon CPU controller
+>  
+> diff --git a/arch/arm64/boot/dts/hisilicon/hip05.dtsi b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
+> index 4ff16d0..5fec740 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hip05.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
+> @@ -246,6 +246,11 @@
+>  			clock-frequency = <200000000>;
+>  		};
+>  
+> +		peri_c_subctrl: sub-ctrl-c@80000000 {
+> +			compatible = "hisilicon,peri-c-subctrl", "syscon";
+> +			reg = < 0x0 0x80000000 0x0 0x10000>;
+> +		};
 > +
-> +thermal: thermal@e61f0000 {
-> +	compatible =	"renesas,thermal-r8a7790",
-> +			"renesas,rcar-gen2-thermal",
-> +			"renesas,rcar-thermal";
-> +	reg = <0 0xe61f0000 0 0x14>, <0 0xe61f0100 0 0x38>;
-> +	interrupts = <0 69 IRQ_TYPE_LEVEL_HIGH>;
-> +	clocks = <&mstp5_clks R8A7790_CLK_THERMAL>;
-> +	power-domains = <&cpg_clocks>;
-> +	#thermal-sensor-cells = <0>;
-> +};
-> diff --git a/drivers/thermal/rcar_thermal.c b/drivers/thermal/rcar_thermal.c
-> index 52493b4..a8c88f4 100644
-> --- a/drivers/thermal/rcar_thermal.c
-> +++ b/drivers/thermal/rcar_thermal.c
-> @@ -23,6 +23,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
->  #include <linux/module.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/reboot.h>
-> @@ -81,8 +82,10 @@ struct rcar_thermal_priv {
->  # define rcar_force_update_temp(priv)	0
->  #endif
+>  		uart0: uart@80300000 {
+>  			compatible = "snps,dw-apb-uart";
+>  			reg = <0x0 0x80300000 0x0 0x10000>;
+> diff --git a/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi b/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi
+> index 606dd5a..da7b6e6 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi
+> @@ -10,8 +10,8 @@ soc0: soc@000000000 {
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+>  		compatible = "hisilicon,hns-mdio";
+> -		reg = <0x0 0x803c0000 0x0 0x10000
+> -		       0x0 0x80000000 0x0 0x10000>;
+> +		reg = <0x0 0x803c0000 0x0 0x10000>;
+> +		subctrl-vbase = <&peri_c_subctrl>;
 >  
-> +#define USE_OF_THERMAL	1
->  static const struct of_device_id rcar_thermal_dt_ids[] = {
->  	{ .compatible = "renesas,rcar-thermal", },
-> +	{ .compatible = "renesas,rcar-gen2-thermal", .data = (void *)USE_OF_THERMAL },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, rcar_thermal_dt_ids);
-> @@ -206,9 +209,8 @@ err_out_unlock:
->  	return ret;
->  }
->  
-> -static int rcar_thermal_get_temp(struct thermal_zone_device *zone, int *temp)
-> +static int rcar_thermal_get_current_temp(struct rcar_thermal_priv *priv, int *temp)
->  {
-> -	struct rcar_thermal_priv *priv = rcar_zone_to_priv(zone);
->  	int tmp;
->  
->  	if (!rcar_has_irq_support(priv) || rcar_force_update_temp(priv)) {
-> @@ -233,6 +235,20 @@ static int rcar_thermal_get_temp(struct thermal_zone_device *zone, int *temp)
->  	return 0;
->  }
->  
-> +static int rcar_thermal_of_get_temp(void *data, int *temp)
-> +{
-> +	struct rcar_thermal_priv *priv = data;
-> +
-> +	return rcar_thermal_get_current_temp(priv, temp);
-> +}
-> +
-> +static int rcar_thermal_get_temp(struct thermal_zone_device *zone, int *temp)
-> +{
-> +	struct rcar_thermal_priv *priv = rcar_zone_to_priv(zone);
-> +
-> +	return rcar_thermal_get_current_temp(priv, temp);
-> +}
-> +
->  static int rcar_thermal_get_trip_type(struct thermal_zone_device *zone,
->  				      int trip, enum thermal_trip_type *type)
->  {
-> @@ -289,6 +305,10 @@ static int rcar_thermal_notify(struct thermal_zone_device *zone,
->  	return 0;
->  }
->  
-> +static const struct thermal_zone_of_device_ops rcar_thermal_zone_of_ops = {
-> +	.get_temp	= rcar_thermal_of_get_temp,
-> +};
-> +
->  static struct thermal_zone_device_ops rcar_thermal_zone_ops = {
->  	.get_temp	= rcar_thermal_get_temp,
->  	.get_trip_type	= rcar_thermal_get_trip_type,
-> @@ -325,14 +345,20 @@ static void rcar_thermal_work(struct work_struct *work)
->  
->  	priv = container_of(work, struct rcar_thermal_priv, work.work);
->  
-> -	rcar_thermal_get_temp(priv->zone, &cctemp);
-> +	ret = rcar_thermal_get_current_temp(priv, &cctemp);
-> +	if (ret < 0)
-> +		return;
-> +
->  	ret = rcar_thermal_update_temp(priv);
->  	if (ret < 0)
->  		return;
->  
->  	rcar_thermal_irq_enable(priv);
->  
-> -	rcar_thermal_get_temp(priv->zone, &nctemp);
-> +	ret = rcar_thermal_get_current_temp(priv, &nctemp);
-> +	if (ret < 0)
-> +		return;
-> +
->  	if (nctemp != cctemp)
->  		thermal_zone_device_update(priv->zone);
->  }
-> @@ -410,6 +436,8 @@ static int rcar_thermal_probe(struct platform_device *pdev)
->  	struct rcar_thermal_priv *priv;
->  	struct device *dev = &pdev->dev;
->  	struct resource *res, *irq;
-> +	const struct of_device_id *of_id = of_match_device(rcar_thermal_dt_ids, dev);
-> +	unsigned long of_data = (unsigned long)of_id->data;
->  	int mres = 0;
->  	int i;
->  	int ret = -ENODEV;
-> @@ -470,7 +498,13 @@ static int rcar_thermal_probe(struct platform_device *pdev)
->  		if (ret < 0)
->  			goto error_unregister;
->  
-> -		priv->zone = thermal_zone_device_register("rcar_thermal",
-> +		if (of_data == USE_OF_THERMAL)
-> +			priv->zone = thermal_zone_of_sensor_register(
-> +						dev, i, priv,
-> +						&rcar_thermal_zone_of_ops);
-> +		else
-> +			priv->zone = thermal_zone_device_register(
-> +						"rcar_thermal",
->  						1, 0, priv,
->  						&rcar_thermal_zone_ops, NULL, 0,
->  						idle);
+>  		soc0_phy0: ethernet-phy@0 {
+>  			reg = <0x0>;
 > -- 
 > 1.9.1
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
