@@ -1,59 +1,61 @@
-From: biao huang <biao.huang@mediatek.com>
-Subject: Re: [PATCH 2/5] dt-bindings: mediatek: Modify pinctrl bindings for
- mt2701
-Date: Tue, 8 Dec 2015 18:56:53 +0800
-Message-ID: <1449572213.15850.3.camel@mhfsdcap03>
-References: <1448527472-20651-1-git-send-email-biao.huang@mediatek.com>
-	 <1448527472-20651-3-git-send-email-biao.huang@mediatek.com>
-	 <20151127203800.GA9092@rob-hp-laptop>
+From: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] stmmac: create of compatible mdio bus for stmacc
+ driver
+Date: Tue, 8 Dec 2015 11:53:31 +0100
+Message-ID: <20151208105331.GF22271@distanz.ch>
+References: <1449551582-6599-1-git-send-email-preid@electromag.com.au>
+ <1449551582-6599-2-git-send-email-preid@electromag.com.au>
+ <2819989.unjINxCo2S@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20151127203800.GA9092@rob-hp-laptop>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2819989.unjINxCo2S@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, vbridger-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2015-11-28 at 04:38 +0800, Rob Herring wrote:
-> On Thu, Nov 26, 2015 at 04:44:29PM +0800, Biao Huang wrote:
-> > Signed-off-by: Biao Huang <biao.huang@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/pinctrl/pinctrl-mt65xx.txt |    9 +++++----
-> >  1 file changed, 5 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
-> > index 0480bc3..ca6a27a 100644
-> > --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
-> > +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
-> > @@ -4,10 +4,11 @@ The Mediatek's Pin controller is used to control SoC pins.
+On 2015-12-08 at 10:35:05 +0100, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Tuesday 08 December 2015 13:12:59 Phil Reid wrote:
+> 
+> > @@ -201,6 +201,25 @@ int stmmac_mdio_register(struct net_device *ndev)
+> >  	struct stmmac_mdio_bus_data *mdio_bus_data = priv->plat->mdio_bus_data;
+> >  	int addr, found;
 > >  
-> >  Required properties:
-> >  - compatible: value should be one of the following.
-> > -    (a) "mediatek,mt8135-pinctrl", compatible with mt8135 pinctrl.
-> > -    (b) "mediatek,mt8173-pinctrl", compatible with mt8173 pinctrl.
-> > -    (c) "mediatek,mt6397-pinctrl", compatible with mt6397 pinctrl.
-> > -    (d) "mediatek,mt8127-pinctrl", compatible with mt8127 pinctrl.
-> > +    (a) "mediatek,mt2701-pinctrl", compatible with mt2701 pinctrl.
-> > +    (b) "mediatek,mt6397-pinctrl", compatible with mt6397 pinctrl.
-> > +    (c) "mediatek,mt8135-pinctrl", compatible with mt8135 pinctrl.
-> > +    (d) "mediatek,mt8173-pinctrl", compatible with mt8173 pinctrl.
-> > +    (e) "mediatek,mt8127-pinctrl", compatible with mt8127 pinctrl.
+> > +#ifdef CONFIG_OF
+> > +	struct device_node *mdio_node = NULL;
+> > +	struct device_node *child_node = NULL;
+> > +
+> > +	for_each_child_of_node(priv->device->of_node, child_node) {
+> > +		if (of_device_is_compatible(child_node, "snps,dwmac-mdio")) {
+> > +			mdio_node = child_node;
+> > +			break;
+> > +		}
+> > +	}
 > 
-> If you were trying to sort these, they still aren't quite sorted. There 
-> is no point in sorting if you number (or letter) them because you will 
-> have to update many lines on any change. So drop the (a), (b), (c), etc.
+> Can you use "if (IS_ENABLED(CONFIG_OF))" here instead of a preprocessor "#if"?
 > 
-> Rob
+> > @@ -231,7 +250,11 @@ int stmmac_mdio_register(struct net_device *ndev)
+> >  	new_bus->irq = irqlist;
+> >  	new_bus->phy_mask = mdio_bus_data->phy_mask;
+> >  	new_bus->parent = priv->device;
+> > +#ifdef CONFIG_OF
+> > +	err = of_mdiobus_register(new_bus, mdio_node);
+> > +#else
+> >  	err = mdiobus_register(new_bus);
+> > +#endif
 > 
-Thanks for your comments, I'll modify this in next patch. And patch v2
-will be sent in next week.
-> >  - pins-are-numbered: Specify the subnodes are using numbered pinmux to
-> >    specify pins.
-> >  - gpio-controller : Marks the device node as a gpio controller.
-> > -- 
-> > 1.7.9.5
-> > 
+> This looks like it should be done in the header file. Can you make
+> a separate patch that changes the header file declaring of_mdiobus_register
+> to make it a static inline function calling mdiobus_register() if CONFIG_OF
+> is disabled?
 
-
+This is already the case since commit 23a456f0 ("net: mdio:
+of_mdiobus_register(): fall back to mdiobus_register() for !CONFIG_OF"),
+so just calling of_mdiobus_register() regardless of CONFIG_OF is
+sufficient here.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
