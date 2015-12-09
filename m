@@ -1,103 +1,51 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH for 4.4 2/2] dmaengine: edma: DT: Change reserved slot array from 16bit to 32bit type
-Date: Wed, 9 Dec 2015 10:18:11 +0200
-Message-ID: <1449649091-9848-3-git-send-email-peter.ujfalusi@ti.com>
-References: <1449649091-9848-1-git-send-email-peter.ujfalusi@ti.com>
+From: Rameshwar Sahu <rsahu@apm.com>
+Subject: Re: [PATCH v2 0/3] dmaengine: Add supports for APM X-Gene SoC CRC32C
+ accerlerator driver
+Date: Wed, 9 Dec 2015 13:55:55 +0530
+Message-ID: <CAFd313yzBgWhTD2+Lz+RsdziAuc2kdZPS1L2FExET5sLirs_DQ@mail.gmail.com>
+References: <rsahu@apm.com>
+	<1447665169-14003-1-git-send-email-rsahu@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449649091-9848-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, arnd@arndb.de, tony@atomide.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, balbi@ti.com, linux-kernel@vger.kernel.org, nsekhar@ti.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1447665169-14003-1-git-send-email-rsahu@apm.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net, Vinod Koul <vinod.koul@intel.com>, dan.j.williams@intel.com
+Cc: dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, linux-crypto@vger.kernel.org, Rameshwar Prasad Sahu <rsahu@apm.com>, Kaustubh Gondkar <kgondkar@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-This change makes the DT file to be easier to read since the reserved slots
-array does not need the '/bits/ 16' to be specified, which might confuse
-some people.
+Hi,
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- Documentation/devicetree/bindings/dma/ti-edma.txt |  5 ++--
- drivers/dma/edma.c                                | 31 ++++++++++++++++++-----
- 2 files changed, 27 insertions(+), 9 deletions(-)
+On Mon, Nov 16, 2015 at 2:42 PM,  <rsahu@apm.com> wrote:
+> From: Rameshwar Prasad Sahu <rsahu@apm.com>
+>
+> This patch implements support for APM X-Gene SoC CRC32C h/w accelerator driver
+> and adds CRC32C computations support in dmaengine framework. APM X-Gene SoC has
+> DMA engine capable of performing CRC32C computations.
+>
+> v2 changes:
+>         1. Added helper function in dmaengine framework
+>         2. Documented CRC32C support in Documentations/dmaengine/provider.txt
+>         3. Fixed algo name
+>         4. Fixed coding style issues
+>
+> Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+> ---
+>
+> Rameshwar Prasad Sahu (3):
+>   dmaengine: Add support for new feature CRC32C computations
+>   dmaengine: xgene-dma: Add support for CRC32C computations via DMA
+>     engine
+>   Crypto: Add support for APM X-Gene SoC CRC32C h/w accelerator driver
+>
+>  Documentation/dmaengine/provider.txt |    3 +
+>  drivers/crypto/Kconfig               |    8 +
+>  drivers/crypto/Makefile              |    1 +
+>  drivers/crypto/xgene-crc32c.c        |  234 +++++++++++++++++++++++++
+>  drivers/dma/dmaengine.c              |    2 +
+>  drivers/dma/xgene-dma.c              |  314 ++++++++++++++++++++++++++++++++--
+>  include/linux/dmaengine.h            |   13 ++
+>  7 files changed, 560 insertions(+), 15 deletions(-)
+>  create mode 100755 drivers/crypto/xgene-crc32c.c
 
-diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
-index ae8b8f1d6e69..079b42a81d7c 100644
---- a/Documentation/devicetree/bindings/dma/ti-edma.txt
-+++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
-@@ -56,9 +56,8 @@ edma: edma@49000000 {
- 
- 	/* Channel 20 and 21 is allocated for memcpy */
- 	ti,edma-memcpy-channels = <20 21>;
--	/* The following PaRAM slots are reserved: 35-45 and 100-110 */
--	ti,edma-reserved-slot-ranges = /bits/ 16 <35 10>,
--				       /bits/ 16 <100 10>;
-+	/* The following PaRAM slots are reserved: 35-44 and 100-109 */
-+	ti,edma-reserved-slot-ranges = <35 10>, <100 10>;
- };
- 
- edma_tptc0: tptc@49800000 {
-diff --git a/drivers/dma/edma.c b/drivers/dma/edma.c
-index 89fc17f3a6ff..a0f217349c07 100644
---- a/drivers/dma/edma.c
-+++ b/drivers/dma/edma.c
-@@ -2015,31 +2015,50 @@ static struct edma_soc_info *edma_setup_info_from_dt(struct device *dev,
- 				&sz);
- 	if (prop) {
- 		const char pname[] = "ti,edma-reserved-slot-ranges";
-+		u32 (*tmp)[2];
- 		s16 (*rsv_slots)[2];
--		size_t nelm = sz / sizeof(*rsv_slots);
-+		size_t nelm = sz / sizeof(*tmp);
- 		struct edma_rsv_info *rsv_info;
-+		int i;
- 
- 		if (!nelm)
- 			return info;
- 
-+		tmp = kcalloc(nelm, sizeof(*tmp), GFP_KERNEL);
-+		if (!tmp)
-+			return ERR_PTR(-ENOMEM);
-+
- 		rsv_info = devm_kzalloc(dev, sizeof(*rsv_info), GFP_KERNEL);
--		if (!rsv_info)
-+		if (!rsv_info) {
-+			kfree(tmp);
- 			return ERR_PTR(-ENOMEM);
-+		}
- 
- 		rsv_slots = devm_kcalloc(dev, nelm + 1, sizeof(*rsv_slots),
- 					 GFP_KERNEL);
--		if (!rsv_slots)
-+		if (!rsv_slots) {
-+			kfree(tmp);
- 			return ERR_PTR(-ENOMEM);
-+		}
- 
--		ret = of_property_read_u16_array(dev->of_node, pname,
--						 (u16 *)rsv_slots, nelm * 2);
--		if (ret)
-+		ret = of_property_read_u32_array(dev->of_node, pname,
-+						 (u32 *)tmp, nelm * 2);
-+		if (ret) {
-+			kfree(tmp);
- 			return ERR_PTR(ret);
-+		}
- 
-+		for (i = 0; i < nelm; i++) {
-+			rsv_slots[i][0] = tmp[i][0];
-+			rsv_slots[i][1] = tmp[i][1];
-+		}
- 		rsv_slots[nelm][0] = -1;
- 		rsv_slots[nelm][1] = -1;
-+
- 		info->rsv = rsv_info;
- 		info->rsv->rsv_slots = (const s16 (*)[2])rsv_slots;
-+
-+		kfree(tmp);
- 	}
- 
- 	return info;
--- 
-2.6.3
+Any comments on above patch ??
