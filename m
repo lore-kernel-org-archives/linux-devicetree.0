@@ -1,72 +1,134 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [PATCH v2 1/3] dt-binding: power: Add otg regulator binding
-Date: Wed, 9 Dec 2015 11:59:15 -0800
-Message-ID: <20151209195915.GJ4000@usrtlx11787.corpusers.net>
-References: <1449621618-11900-1-git-send-email-tim.bird@sonymobile.com>
- <20151209041153.GA29549@rob-hp-laptop>
- <566824AD.4080003@sonymobile.com>
- <CAL_JsqL0BjD6A1quSZOYmLNeRZAYo1UwSsTPPvMUbC1pSwM6CQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH for 4.4 1/2] dmaengine: edma: DT: Change memcpy channel
+ array from 16bit to 32bit type
+Date: Wed, 9 Dec 2015 14:02:00 -0600
+Message-ID: <20151209200200.GA22525@rob-hp-laptop>
+References: <1449649091-9848-1-git-send-email-peter.ujfalusi@ti.com>
+ <1449649091-9848-2-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqL0BjD6A1quSZOYmLNeRZAYo1UwSsTPPvMUbC1pSwM6CQ@mail.gmail.com>
+In-Reply-To: <1449649091-9848-2-git-send-email-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "Bird, Tim" <Tim.Bird@sonymobile.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "sre@kernel.org" <sre@kernel.org>, "dbaryshkov@gmail.com" <dbaryshkov@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "agross@codeaurora.org" <agross@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tbird20d@gmail.com" <tbird20d@gmail.com>, "Cavin, Courtney" <Courtney.Cavin@sonymobile.com>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: vinod.koul@intel.com, arnd@arndb.de, tony@atomide.com, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, balbi@ti.com, linux-kernel@vger.kernel.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed 09 Dec 06:36 PST 2015, Rob Herring wrote:
+On Wed, Dec 09, 2015 at 10:18:10AM +0200, Peter Ujfalusi wrote:
+> This change makes the DT file to be easier to read since the memcpy
+> channels array does not need the '/bits/ 16' to be specified, which might
+> confuse some people.
 
-> On Wed, Dec 9, 2015 at 6:55 AM, Tim Bird <tim.bird@sonymobile.com> wrote:
-> > On 12/08/2015 08:11 PM, Rob Herring wrote:
-> >> On Tue, Dec 08, 2015 at 04:40:16PM -0800, Tim Bird wrote:
-> >>> Add a binding for the regulator which controls the OTG chargepath switch.
-> >>> The OTG switch gets its power from pm8941_5vs1, and that should be
-> >>> expressed as a usb-otg-in-supply property in the DT node for the
-> >>> charger driver.  The regulator name is "otg".
+Why? I don't see the point of this change and plus you are breaking 
+compatibility with the change. There was little reason to do 16-bit 
+values to start with, but that's now the ABI.
+ 
+Rob
+
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  Documentation/devicetree/bindings/dma/ti-edma.txt |  5 ++---
+>  drivers/dma/edma.c                                | 22 ++++++++++------------
+>  include/linux/platform_data/edma.h                |  2 +-
+>  3 files changed, 13 insertions(+), 16 deletions(-)
 > 
-> [...]
+> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
+> index d3d0a4fb1c73..ae8b8f1d6e69 100644
+> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
+> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
+> @@ -22,8 +22,7 @@ Required properties:
+>  Optional properties:
+>  - ti,hwmods:	Name of the hwmods associated to the eDMA CC
+>  - ti,edma-memcpy-channels: List of channels allocated to be used for memcpy, iow
+> -		these channels will be SW triggered channels. The list must
+> -		contain 16 bits numbers, see example.
+> +		these channels will be SW triggered channels. See example.
+>  - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be used by
+>  		the driver, they are allocated to be used by for example the
+>  		DSP. See example.
+> @@ -56,7 +55,7 @@ edma: edma@49000000 {
+>  	ti,tptcs = <&edma_tptc0 7>, <&edma_tptc1 7>, <&edma_tptc2 0>;
+>  
+>  	/* Channel 20 and 21 is allocated for memcpy */
+> -	ti,edma-memcpy-channels = /bits/ 16 <20 21>;
+> +	ti,edma-memcpy-channels = <20 21>;
+>  	/* The following PaRAM slots are reserved: 35-45 and 100-110 */
+>  	ti,edma-reserved-slot-ranges = /bits/ 16 <35 10>,
+>  				       /bits/ 16 <100 10>;
+> diff --git a/drivers/dma/edma.c b/drivers/dma/edma.c
+> index 2af8f32bba0b..89fc17f3a6ff 100644
+> --- a/drivers/dma/edma.c
+> +++ b/drivers/dma/edma.c
+> @@ -1752,16 +1752,14 @@ static enum dma_status edma_tx_status(struct dma_chan *chan,
+>  	return ret;
+>  }
+>  
+> -static bool edma_is_memcpy_channel(int ch_num, u16 *memcpy_channels)
+> +static bool edma_is_memcpy_channel(int ch_num, s32 *memcpy_channels)
+>  {
+> -	s16 *memcpy_ch = memcpy_channels;
+> -
+>  	if (!memcpy_channels)
+>  		return false;
+> -	while (*memcpy_ch != -1) {
+> -		if (*memcpy_ch == ch_num)
+> +	while (*memcpy_channels != -1) {
+> +		if (*memcpy_channels == ch_num)
+>  			return true;
+> -		memcpy_ch++;
+> +		memcpy_channels++;
+>  	}
+>  	return false;
+>  }
+> @@ -1775,7 +1773,7 @@ static void edma_dma_init(struct edma_cc *ecc, bool legacy_mode)
+>  {
+>  	struct dma_device *s_ddev = &ecc->dma_slave;
+>  	struct dma_device *m_ddev = NULL;
+> -	s16 *memcpy_channels = ecc->info->memcpy_channels;
+> +	s32 *memcpy_channels = ecc->info->memcpy_channels;
+>  	int i, j;
+>  
+>  	dma_cap_zero(s_ddev->cap_mask);
+> @@ -1996,16 +1994,16 @@ static struct edma_soc_info *edma_setup_info_from_dt(struct device *dev,
+>  	prop = of_find_property(dev->of_node, "ti,edma-memcpy-channels", &sz);
+>  	if (prop) {
+>  		const char pname[] = "ti,edma-memcpy-channels";
+> -		size_t nelm = sz / sizeof(s16);
+> -		s16 *memcpy_ch;
+> +		size_t nelm = sz / sizeof(s32);
+> +		s32 *memcpy_ch;
+>  
+> -		memcpy_ch = devm_kcalloc(dev, nelm + 1, sizeof(s16),
+> +		memcpy_ch = devm_kcalloc(dev, nelm + 1, sizeof(s32),
+>  					 GFP_KERNEL);
+>  		if (!memcpy_ch)
+>  			return ERR_PTR(-ENOMEM);
+>  
+> -		ret = of_property_read_u16_array(dev->of_node, pname,
+> -						 (u16 *)memcpy_ch, nelm);
+> +		ret = of_property_read_u32_array(dev->of_node, pname,
+> +						 (u32 *)memcpy_ch, nelm);
+>  		if (ret)
+>  			return ERR_PTR(ret);
+>  
+> diff --git a/include/linux/platform_data/edma.h b/include/linux/platform_data/edma.h
+> index 105700e62ea1..0a533f94438f 100644
+> --- a/include/linux/platform_data/edma.h
+> +++ b/include/linux/platform_data/edma.h
+> @@ -76,7 +76,7 @@ struct edma_soc_info {
+>  	struct edma_rsv_info	*rsv;
+>  
+>  	/* List of channels allocated for memcpy, terminated with -1 */
+> -	s16			*memcpy_channels;
+> +	s32			*memcpy_channels;
+>  
+>  	s8	(*queue_priority_mapping)[2];
+>  	const s16	(*xbar_chans)[2];
+> -- 
+> 2.6.3
 > 
-> >>> +child nodes:
-> >>> +- otg:
-> >>> +  Usage: optional
-> >>> +  Description: This node defines a regulator used to control the direction
-> >>> +               of VBUS voltage - specifically: whether to supply voltage
-> >>> +               to VBUS for host mode operation of the OTG port, or allow
-> >>> +               input voltage from external VBUS for charging.  In the
-> >>> +               hardware, the supply for this regulator comes from
-> >>> +               usb-otg-in-supply.
-> >>
-> >> Doesn't this regulator need to have a name defined?
-> >
-> > I'm not sure what you mean.  The regulator name is "otg", defined by the DT node
-> > name. The code requires that the DT node name be "otg", and defines a regulator
-> > with the same name.
-> >
-> > As far as I know, you have to define a DT label for the node, in order
-> > to reference this regulator with a phandle.  Is that what you are referring to?
-> > I usually use "chg_otg" as the label.  Are you asking that this be reflected
-> > in the example?
-> 
-> You need a regulator-name property. Also, should should define valid
-> values for regulator-min-microvolt and regulator-max-microvolt.
-> 
-
-The regulator has a name, derived from the node name, and this is
-significant. If the developer wants an additional human readable name
-for some reason they can use the optional regulator-name property.
-
-The regulator is a simple switch and as such inherits voltage properties
-from its supply. It should therefor not have any specified voltage
-range.
-
-> Thinking about this some more, the node name should be generic, so
-> just "regulator". The label does not need to be generic.
-> 
-
-The name of the node is significant, as it's used for matching the
-regulator to an implementation.
-
-Regards,
-Bjorn
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
