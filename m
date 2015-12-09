@@ -1,39 +1,62 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v4 1/4] stmmac: create of compatible mdio bus for
- stmacc driver
-Date: Tue, 08 Dec 2015 21:37:42 -0500 (EST)
-Message-ID: <20151208.213742.651430572988328138.davem@davemloft.net>
-References: <1449625269-46078-2-git-send-email-preid@electromag.com.au>
-	<201512091033.svvb9HL7%fengguang.wu@intel.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] usb: renesas_usbhs: add fallback compatibility string
+Date: Wed, 9 Dec 2015 11:37:57 +0900
+Message-ID: <20151209023757.GE17706@verge.net.au>
+References: <1449553911-21412-1-git-send-email-horms+renesas@verge.net.au>
+ <1449553911-21412-2-git-send-email-horms+renesas@verge.net.au>
+ <5666EAB0.6000109@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <201512091033.svvb9HL7%fengguang.wu@intel.com>
-Sender: netdev-owner@vger.kernel.org
-To: lkp@intel.com
-Cc: preid@electromag.com.au, kbuild-all@01.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, peppe.cavallaro@st.com, vbridger@opensource.altera.com, devicetree@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5666EAB0.6000109-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: kbuild test robot <lkp@intel.com>
-Date: Wed, 9 Dec 2015 10:15:17 +0800
+On Tue, Dec 08, 2015 at 05:35:28PM +0300, Sergei Shtylyov wrote:
+> On 12/08/2015 08:51 AM, Simon Horman wrote:
+> 
+> >Add fallback compatibility string.
+> >This is in keeping with the fallback scheme being adopted wherever
+> >appropriate for drivers for Renesas SoCs.
+> >
+> >Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+> >---
+> >  Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 4 ++--
+> >  drivers/usb/renesas_usbhs/common.c                      | 4 ++++
+> >  2 files changed, 6 insertions(+), 2 deletions(-)
+> >
+> >diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+> >index 7d48f63db44e..8c50df8441c9 100644
+> >--- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+> >+++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+> >@@ -1,7 +1,7 @@
+> >  Renesas Electronics USBHS driver
+> >
+> >  Required properties:
+> >-  - compatible: Must contain one of the following:
+> >+  - compatible: "renesas,usbhs-<soctype>", "renesas,rcar-usbhs" as fallback.
+> >  	- "renesas,usbhs-r8a7790"
+> >  	- "renesas,usbhs-r8a7791"
+> >  	- "renesas,usbhs-r8a7794"
+> [...]
+> >diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
+> >index d82fa36c3465..2a9d4f405f30 100644
+> >--- a/drivers/usb/renesas_usbhs/common.c
+> >+++ b/drivers/usb/renesas_usbhs/common.c
+> >@@ -481,6 +481,10 @@ static const struct of_device_id usbhs_of_match[] = {
+> >  		.compatible = "renesas,usbhs-r8a7795",
+> >  		.data = (void *)USBHS_TYPE_RCAR_GEN2,
+> >  	},
+> >+	{
+> >+		.compatible = "renesas,usbhs",
+> 
+>    You just documented "renesas,rcar-usbhs".
 
-> Hi Phil,
-> 
-> [auto build test ERROR on net-next/master]
-> [also build test ERROR on v4.4-rc4 next-20151208]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Phil-Reid/stmmac-create-of-compatible-mdio-bus-for-stmacc-driver/20151209-094242
-> config: x86_64-randconfig-b0-12090825 (attached as .config)
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=x86_64 
-> 
-> All errors (new ones prefixed by >>):
-> 
->    drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c: In function 'stmmac_mdio_register':
->>> drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c:226:17: error: 'struct stmmac_mdio_bus_data' has no member named 'reset_gpio'
->        mdio_bus_data->reset_gpio = -1;
->                     ^
-
-Yeah this member is only visible when CONFIG_OF.
+Thanks. I meant to use "renesas,rcar-usbhs" throughout the patch.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
