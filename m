@@ -1,211 +1,215 @@
 From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH linux-next (v2) 2/3] mtd: brcmnand: Request and enable the
- clock if present
-Date: Wed, 9 Dec 2015 13:02:15 -0800
-Message-ID: <566896D7.7060706@gmail.com>
+Subject: Re: [PATCH linux-next (v2) 3/3] mtd: brcmnand: Add support for the
+ BCM6368
+Date: Wed, 9 Dec 2015 13:04:54 -0800
+Message-ID: <56689776.20107@gmail.com>
 References: <566891DA.1050208@simon.arlott.org.uk>
- <56689231.5060907@simon.arlott.org.uk>
+ <5668928A.50601@simon.arlott.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56689231.5060907-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
+In-Reply-To: <5668928A.50601-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 09/12/2015 12:42, Simon Arlott a =C3=A9crit :
-> Attempt to enable a clock named "nand" as some SoCs have a clock for =
-the
-> controller that needs to be enabled.
+Le 09/12/2015 12:43, Simon Arlott a =C3=A9crit :
+> The BCM6368 has a NAND interrupt register with combined status and en=
+able
+> registers.
+>=20
+> As the BCM6328, BCM6362 and BCM6368 all use v2.1 controllers, the fir=
+st
+> variant that will work with this driver is the BCM63268 using a v4.0
+> controller.
+>=20
+> Set up the device by disabling and acking all interrupts, then handle
+> the CTRL_READY interrupt.
 >=20
 > Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
 
 Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
 > ---
-> Resend, no changes.
+> Changed "nand-intr-base" reg name to "nand-int-base".
 >=20
->  drivers/mtd/nand/brcmnand/brcmnand.c | 64 ++++++++++++++++++++++++++=
-++--------
->  1 file changed, 50 insertions(+), 14 deletions(-)
+>  drivers/mtd/nand/brcmnand/Makefile       |   1 +
+>  drivers/mtd/nand/brcmnand/bcm6368_nand.c | 145 +++++++++++++++++++++=
+++++++++++
+>  2 files changed, 146 insertions(+)
+>  create mode 100644 drivers/mtd/nand/brcmnand/bcm6368_nand.c
 >=20
-> diff --git a/drivers/mtd/nand/brcmnand/brcmnand.c b/drivers/mtd/nand/=
-brcmnand/brcmnand.c
-> index 190a99a..dca8162 100644
-> --- a/drivers/mtd/nand/brcmnand/brcmnand.c
-> +++ b/drivers/mtd/nand/brcmnand/brcmnand.c
-> @@ -11,6 +11,7 @@
->   * GNU General Public License for more details.
->   */
-> =20
-> +#include <linux/clk.h>
->  #include <linux/version.h>
->  #include <linux/module.h>
->  #include <linux/init.h>
-> @@ -122,6 +123,9 @@ struct brcmnand_controller {
->  	/* Some SoCs provide custom interrupt status register(s) */
->  	struct brcmnand_soc	*soc;
-> =20
-> +	/* Some SoCs have a gateable clock for the controller */
-> +	struct clk		*clk;
+> diff --git a/drivers/mtd/nand/brcmnand/Makefile b/drivers/mtd/nand/br=
+cmnand/Makefile
+> index 3b1fbfd..b28ffb59 100644
+> --- a/drivers/mtd/nand/brcmnand/Makefile
+> +++ b/drivers/mtd/nand/brcmnand/Makefile
+> @@ -2,5 +2,6 @@
+>  # more specific iproc_nand.o, for instance
+>  obj-$(CONFIG_MTD_NAND_BRCMNAND)		+=3D iproc_nand.o
+>  obj-$(CONFIG_MTD_NAND_BRCMNAND)		+=3D bcm63138_nand.o
+> +obj-$(CONFIG_MTD_NAND_BRCMNAND)		+=3D bcm6368_nand.o
+>  obj-$(CONFIG_MTD_NAND_BRCMNAND)		+=3D brcmstb_nand.o
+>  obj-$(CONFIG_MTD_NAND_BRCMNAND)		+=3D brcmnand.o
+> diff --git a/drivers/mtd/nand/brcmnand/bcm6368_nand.c b/drivers/mtd/n=
+and/brcmnand/bcm6368_nand.c
+> new file mode 100644
+> index 0000000..7f5359b
+> --- /dev/null
+> +++ b/drivers/mtd/nand/brcmnand/bcm6368_nand.c
+> @@ -0,0 +1,145 @@
+> +/*
+> + * Copyright 2015 Simon Arlott
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + *
+> + * Derived from bcm63138_nand.c:
+> + * Copyright =C2=A9 2015 Broadcom Corporation
+> + *
+> + * Derived from bcm963xx_4.12L.06B_consumer/shared/opensource/includ=
+e/bcm963xx/63268_map_part.h:
+> + * Copyright 2000-2010 Broadcom Corporation
+> + *
+> + * Derived from bcm963xx_4.12L.06B_consumer/shared/opensource/flash/=
+nandflash.c:
+> + * Copyright 2000-2010 Broadcom Corporation
+> + */
 > +
->  	int			cmd_pending;
->  	bool			dma_pending;
->  	struct completion	done;
-> @@ -2127,10 +2131,24 @@ int brcmnand_probe(struct platform_device *pd=
-ev, struct brcmnand_soc *soc)
->  	if (IS_ERR(ctrl->nand_base))
->  		return PTR_ERR(ctrl->nand_base);
-> =20
-> +	/* Enable clock before using NAND registers */
-> +	ctrl->clk =3D devm_clk_get(dev, "nand");
-> +	if (!IS_ERR(ctrl->clk)) {
-> +		ret =3D clk_prepare_enable(ctrl->clk);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		ret =3D PTR_ERR(ctrl->clk);
-> +		if (ret =3D=3D -EPROBE_DEFER)
-> +			return ret;
+> +#include <linux/device.h>
+> +#include <linux/io.h>
+> +#include <linux/ioport.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
 > +
-> +		ctrl->clk =3D NULL;
+> +#include "brcmnand.h"
+> +
+> +struct bcm6368_nand_soc {
+> +	struct brcmnand_soc soc;
+> +	void __iomem *base;
+> +};
+> +
+> +#define BCM6368_NAND_INT		0x00
+> +#define  BCM6368_NAND_STATUS_SHIFT	0
+> +#define  BCM6368_NAND_STATUS_MASK	(0xfff << BCM6368_NAND_STATUS_SHIF=
+T)
+> +#define  BCM6368_NAND_ENABLE_SHIFT	16
+> +#define  BCM6368_NAND_ENABLE_MASK	(0xffff << BCM6368_NAND_ENABLE_SHI=
+=46T)
+> +#define BCM6368_NAND_BASE_ADDR0	0x04
+> +#define BCM6368_NAND_BASE_ADDR1	0x0c
+> +
+> +enum {
+> +	BCM6368_NP_READ		=3D BIT(0),
+> +	BCM6368_BLOCK_ERASE	=3D BIT(1),
+> +	BCM6368_COPY_BACK	=3D BIT(2),
+> +	BCM6368_PAGE_PGM	=3D BIT(3),
+> +	BCM6368_CTRL_READY	=3D BIT(4),
+> +	BCM6368_DEV_RBPIN	=3D BIT(5),
+> +	BCM6368_ECC_ERR_UNC	=3D BIT(6),
+> +	BCM6368_ECC_ERR_CORR	=3D BIT(7),
+> +};
+> +
+> +static bool bcm6368_nand_intc_ack(struct brcmnand_soc *soc)
+> +{
+> +	struct bcm6368_nand_soc *priv =3D
+> +			container_of(soc, struct bcm6368_nand_soc, soc);
+> +	void __iomem *mmio =3D priv->base + BCM6368_NAND_INT;
+> +	u32 val =3D brcmnand_readl(mmio);
+> +
+> +	if (val & (BCM6368_CTRL_READY << BCM6368_NAND_STATUS_SHIFT)) {
+> +		/* Ack interrupt */
+> +		val &=3D ~BCM6368_NAND_STATUS_MASK;
+> +		val |=3D BCM6368_CTRL_READY << BCM6368_NAND_STATUS_SHIFT;
+> +		brcmnand_writel(val, mmio);
+> +		return true;
 > +	}
 > +
->  	/* Initialize NAND revision */
->  	ret =3D brcmnand_revision_init(ctrl);
->  	if (ret)
-> -		return ret;
-> +		goto err;
-> =20
->  	/*
->  	 * Most chips have this cache at a fixed offset within 'nand' block=
-=2E
-> @@ -2139,8 +2157,10 @@ int brcmnand_probe(struct platform_device *pde=
-v, struct brcmnand_soc *soc)
->  	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "nand-ca=
-che");
->  	if (res) {
->  		ctrl->nand_fc =3D devm_ioremap_resource(dev, res);
-> -		if (IS_ERR(ctrl->nand_fc))
-> -			return PTR_ERR(ctrl->nand_fc);
-> +		if (IS_ERR(ctrl->nand_fc)) {
-> +			ret =3D PTR_ERR(ctrl->nand_fc);
-> +			goto err;
-> +		}
->  	} else {
->  		ctrl->nand_fc =3D ctrl->nand_base +
->  				ctrl->reg_offsets[BRCMNAND_FC_BASE];
-> @@ -2150,8 +2170,10 @@ int brcmnand_probe(struct platform_device *pde=
-v, struct brcmnand_soc *soc)
->  	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "flash-d=
-ma");
->  	if (res) {
->  		ctrl->flash_dma_base =3D devm_ioremap_resource(dev, res);
-> -		if (IS_ERR(ctrl->flash_dma_base))
-> -			return PTR_ERR(ctrl->flash_dma_base);
-> +		if (IS_ERR(ctrl->flash_dma_base)) {
-> +			ret =3D PTR_ERR(ctrl->flash_dma_base);
-> +			goto err;
-> +		}
-> =20
->  		flash_dma_writel(ctrl, FLASH_DMA_MODE, 1); /* linked-list */
->  		flash_dma_writel(ctrl, FLASH_DMA_ERROR_STATUS, 0);
-> @@ -2160,13 +2182,16 @@ int brcmnand_probe(struct platform_device *pd=
-ev, struct brcmnand_soc *soc)
->  		ctrl->dma_desc =3D dmam_alloc_coherent(dev,
->  						     sizeof(*ctrl->dma_desc),
->  						     &ctrl->dma_pa, GFP_KERNEL);
-> -		if (!ctrl->dma_desc)
-> -			return -ENOMEM;
-> +		if (!ctrl->dma_desc) {
-> +			ret =3D -ENOMEM;
-> +			goto err;
-> +		}
-> =20
->  		ctrl->dma_irq =3D platform_get_irq(pdev, 1);
->  		if ((int)ctrl->dma_irq < 0) {
->  			dev_err(dev, "missing FLASH_DMA IRQ\n");
-> -			return -ENODEV;
-> +			ret =3D -ENODEV;
-> +			goto err;
->  		}
-> =20
->  		ret =3D devm_request_irq(dev, ctrl->dma_irq,
-> @@ -2175,7 +2200,7 @@ int brcmnand_probe(struct platform_device *pdev=
-, struct brcmnand_soc *soc)
->  		if (ret < 0) {
->  			dev_err(dev, "can't allocate IRQ %d: error %d\n",
->  					ctrl->dma_irq, ret);
-> -			return ret;
-> +			goto err;
->  		}
-> =20
->  		dev_info(dev, "enabling FLASH_DMA\n");
-> @@ -2199,7 +2224,8 @@ int brcmnand_probe(struct platform_device *pdev=
-, struct brcmnand_soc *soc)
->  	ctrl->irq =3D platform_get_irq(pdev, 0);
->  	if ((int)ctrl->irq < 0) {
->  		dev_err(dev, "no IRQ defined\n");
-> -		return -ENODEV;
-> +		ret =3D -ENODEV;
-> +		goto err;
->  	}
-> =20
->  	/*
-> @@ -2223,7 +2249,7 @@ int brcmnand_probe(struct platform_device *pdev=
-, struct brcmnand_soc *soc)
->  	if (ret < 0) {
->  		dev_err(dev, "can't allocate IRQ %d: error %d\n",
->  			ctrl->irq, ret);
-> -		return ret;
-> +		goto err;
->  	}
-> =20
->  	for_each_available_child_of_node(dn, child) {
-> @@ -2233,7 +2259,8 @@ int brcmnand_probe(struct platform_device *pdev=
-, struct brcmnand_soc *soc)
->  			host =3D devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
->  			if (!host) {
->  				of_node_put(child);
-> -				return -ENOMEM;
-> +				ret =3D -ENOMEM;
-> +				goto err;
->  			}
->  			host->pdev =3D pdev;
->  			host->ctrl =3D ctrl;
-> @@ -2249,10 +2276,17 @@ int brcmnand_probe(struct platform_device *pd=
-ev, struct brcmnand_soc *soc)
->  	}
-> =20
->  	/* No chip-selects could initialize properly */
-> -	if (list_empty(&ctrl->host_list))
-> -		return -ENODEV;
-> +	if (list_empty(&ctrl->host_list)) {
-> +		ret =3D -ENODEV;
-> +		goto err;
+> +	return false;
+> +}
+> +
+> +static void bcm6368_nand_intc_set(struct brcmnand_soc *soc, bool en)
+> +{
+> +	struct bcm6368_nand_soc *priv =3D
+> +			container_of(soc, struct bcm6368_nand_soc, soc);
+> +	void __iomem *mmio =3D priv->base + BCM6368_NAND_INT;
+> +	u32 val =3D brcmnand_readl(mmio);
+> +
+> +	/* Don't ack any interrupts */
+> +	val &=3D ~BCM6368_NAND_STATUS_MASK;
+> +
+> +	if (en)
+> +		val |=3D BCM6368_CTRL_READY << BCM6368_NAND_ENABLE_SHIFT;
+> +	else
+> +		val &=3D ~(BCM6368_CTRL_READY << BCM6368_NAND_ENABLE_SHIFT);
+> +
+> +	brcmnand_writel(val, mmio);
+> +}
+> +
+> +static int bcm6368_nand_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct bcm6368_nand_soc *priv;
+> +	struct brcmnand_soc *soc;
+> +	struct resource *res;
+> +
+> +	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +	soc =3D &priv->soc;
+> +
+> +	res =3D platform_get_resource_byname(pdev,
+> +		IORESOURCE_MEM, "nand-int-base");
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	priv->base =3D devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(priv->base))
+> +		return PTR_ERR(priv->base);
+> +
+> +	soc->ctlrdy_ack =3D bcm6368_nand_intc_ack;
+> +	soc->ctlrdy_set_enabled =3D bcm6368_nand_intc_set;
+> +
+> +	/* Disable and ack all interrupts  */
+> +	brcmnand_writel(0, priv->base + BCM6368_NAND_INT);
+> +	brcmnand_writel(BCM6368_NAND_STATUS_MASK,
+> +			priv->base + BCM6368_NAND_INT);
+> +
+> +	return brcmnand_probe(pdev, soc);
+> +}
+> +
+> +static const struct of_device_id bcm6368_nand_of_match[] =3D {
+> +	{ .compatible =3D "brcm,nand-bcm6368" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, bcm6368_nand_of_match);
+> +
+> +static struct platform_driver bcm6368_nand_driver =3D {
+> +	.probe			=3D bcm6368_nand_probe,
+> +	.remove			=3D brcmnand_remove,
+> +	.driver =3D {
+> +		.name		=3D "bcm6368_nand",
+> +		.pm		=3D &brcmnand_pm_ops,
+> +		.of_match_table	=3D bcm6368_nand_of_match,
 > +	}
-> =20
->  	return 0;
+> +};
+> +module_platform_driver(bcm6368_nand_driver);
 > +
-> +err:
-> +	clk_disable_unprepare(ctrl->clk);
-> +	return ret;
-> +
->  }
->  EXPORT_SYMBOL_GPL(brcmnand_probe);
-> =20
-> @@ -2264,6 +2298,8 @@ int brcmnand_remove(struct platform_device *pde=
-v)
->  	list_for_each_entry(host, &ctrl->host_list, node)
->  		nand_release(&host->mtd);
-> =20
-> +	clk_disable_unprepare(ctrl->clk);
-> +
->  	dev_set_drvdata(&pdev->dev, NULL);
-> =20
->  	return 0;
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Simon Arlott");
+> +MODULE_DESCRIPTION("NAND driver for BCM6368");
 >=20
 
 
