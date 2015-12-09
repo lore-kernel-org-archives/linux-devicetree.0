@@ -1,217 +1,253 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] of/address: replace printk() with pr_debug() / pr_err()
-Date: Wed, 9 Dec 2015 14:03:16 +0200
-Message-ID: <CAHp75VeN3hX4Dus6LLaie5c3xkdgQQc55fCOoAQ15JNib9La=A@mail.gmail.com>
-References: <1449590868-19070-1-git-send-email-yamada.masahiro@socionext.com>
-	<1449591386.3315.2.camel@perches.com>
-	<1449594231.13275.2.camel@perches.com>
-	<CAL_JsqJ0oftptSxyAcGOnQ3XA9v55B2n=8DiWBcErcLKgfsppg@mail.gmail.com>
-	<1449619439.18646.20.camel@perches.com>
+From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Subject: RE: [PATCH] drivers: ata: Move vendor specific sata port phy oob
+ settings to device-tree
+Date: Wed, 9 Dec 2015 12:07:13 +0000
+Message-ID: <3802E9A6666DF54886E2B9CBF743BA9825DEB585@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1447410743-36086-1-git-send-email-anuragku@xilinx.com>
+ <20151113143206.GA8215@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449619439.18646.20.camel-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-ide-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "tj@kernel.org" <tj@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Michal Simek <michals@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, Srikanth Vemula <svemula@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 9, 2015 at 2:03 AM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
-> On Tue, 2015-12-08 at 15:28 -0600, Rob Herring wrote:
->> On Tue, Dec 8, 2015 at 11:03 AM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
->> > On Tue, 2015-12-08 at 08:16 -0800, Joe Perches wrote:
->> > > On Wed, 2015-12-09 at 01:07 +0900, Masahiro Yamada wrote:
->> > > > Trivial changes suggested by checkpatch.pl.
->> > > []
->> > > > diff --git a/drivers/of/address.c b/drivers/of/address.c
->> > > []
->> > > > @@ -23,7 +23,7 @@ static int __of_address_to_resource(struct device_node *dev,
->> > > >  #ifdef DEBUG
->> > > >  static void of_dump_addr(const char *s, const __be32 *addr, int na)
->> > > >  {
->> > > > -   printk(KERN_DEBUG "%s", s);
->> > > > +   pr_debug("%s", s);
->> > > >     while (na--)
->> > > >             printk(" %08x", be32_to_cpu(*(addr++)));
->> > > >     printk("\n");
-> []
->> > static void of_dumpaddr(const char *s, const __be32 *addr, int na)
->> > {
->> >         print_hex_dump_debug(s, DUMP_PREFIX_NONE, 16, 1,
->> >                              addr, na * sizeof(__be32), false);
->> > }
->>
->> Except that it doesn't do the endian swapping. Looking closer at this,
->> we should just drop this hunk. So I will take v1.
->
-> Maybe endian conversions should be added to hex_dump_debug like:
-> (probably doesn't apply.  Evolution 3.18 is horrible)
+Hi Rob,
+        Do you have any further comments on this  or shall we proceed with this patch .
+Thanks,
+Anurag Kumar V
 
-Overall the idea is not bad I think, though few comments below.
-Besides that, please, update test_hexdump (wrt my update to the test
-suite [1]) to go through BE test cases.
+> -----Original Message-----
+> From: Anurag Kumar Vulisha
+> Sent: Tuesday, November 17, 2015 7:54 PM
+> To: 'Rob Herring'
+> Cc: pawel.moll@arm.com; mark.rutland@arm.com;
+> ijc+devicetree@hellion.org.uk; galak@codeaurora.org; tj@kernel.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> ide@vger.kernel.org; Michal Simek; Punnaiah Choudary Kalluri; Anirudha
+> Sarangi; Srikanth Vemula
+> Subject: RE: [PATCH] drivers: ata: Move vendor specific sata port phy oob
+> settings to device-tree
+>
+> Hi Rob,
+>
+>
+> Thanks for reviewing the patch
+>
+> > -----Original Message-----
+> > From: Rob Herring [mailto:robh@kernel.org]
+> > Sent: Friday, November 13, 2015 8:02 PM
+> > To: Anurag Kumar Vulisha
+> > Cc: pawel.moll@arm.com; mark.rutland@arm.com;
+> > ijc+devicetree@hellion.org.uk; galak@codeaurora.org; tj@kernel.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> > ide@vger.kernel.org; Michal Simek; Punnaiah Choudary Kalluri; Anirudha
+> > Sarangi; Srikanth Vemula; Anurag Kumar Vulisha
+> > Subject: Re: [PATCH] drivers: ata: Move vendor specific sata port phy
+> > oob settings to device-tree
+> >
+> > On Fri, Nov 13, 2015 at 04:02:23PM +0530, Anurag Kumar Vulisha wrote:
+> > > In SATA, speed negotiation happens with  OOB(Out of Band) signals.
+> > > These OOB signal timing values are configured through vendor
+> > > specific registers in the SATA controller. These OOB timings depends
+> > > on the generator and detector clock frequency, which varies from
+> > > board to board (ex: ep108, zcu102 and zc1751 has different clock
+> frequencies).
+> >
+> > Could you calculate the timings based on the frequency instead?
+> >
+>
+> We can calculate the OOB timing settings based on frequency, but it requires
+> complex calculations and floating point operations  in the sata driver , which is
+> running in kernel mode. To my knowledge it is not recommended to do
+> floating  operations inside kernel mode(Please correct me if I wrong ) .
+> Because of this reason we are reading those values from  device tree.
+>
+> > > Since to make ahci_ceva driver generic, it would be better to move
+> > > these settings to the device-tree node and read them from driver.
+> > >
+> > > This patch does the same.
+> > >
+> > > Signed-off-by: Anurag Kumar Vulisha <anuragku@xilinx.com>
+> > > ---
+> > >  .../devicetree/bindings/ata/ahci-ceva.txt          |   38 +++++++++
+> > >  drivers/ata/ahci_ceva.c                            |   84 ++++++++++++++------
+> > >  2 files changed, 99 insertions(+), 23 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/ata/ahci-ceva.txt
+> > > b/Documentation/devicetree/bindings/ata/ahci-ceva.txt
+> > > index 7ca8b97..66fcd10 100644
+> > > --- a/Documentation/devicetree/bindings/ata/ahci-ceva.txt
+> > > +++ b/Documentation/devicetree/bindings/ata/ahci-ceva.txt
+> > > @@ -5,6 +5,36 @@ Required properties:
+> > >    - compatible: Compatibility string. Must be 'ceva,ahci-1v84'.
+> > >    - clocks: Input clock specifier. Refer to common clock bindings.
+> > >    - interrupts: Interrupt specifier. Refer to interrupt binding.
+> > > +    - ceva,p0-cominit-params: OOB timing value for COMINIT
+> > > + parameter for
+> > port 0.
+> > > +    - ceva,p1-cominit-params: OOB timing value for COMINIT
+> > > + parameter for
+> > port 1.
+> >
+> > This doesn't really scale when you have more than 2 ports. Given that
+> > you know the length for each port, just make it a single property (i.e.
+> > an array of ports).
+> >
+> The ceva sata controller that we are using  has support for 2 ports only and
+> each port can Invidually configured to have different timing settings based on
+> frequency. So for ease of use we  thought of having separate DT parameters
+> for port 0 and 1 .
+>
+> > > +                         The fields for the above parameter must be as shown
+> > below:
+> > > +                         ceva,phy-cominit-params = /bits/ 8 <CIBGMN
+> > CIBGMX CIBGN CINMP>;
+> > > +                         CINMP : COMINIT Negate Minimum Period.
+> > > +                         CIBGN : COMINIT Burst Gap Nominal.
+> > > +                         CIBGMX: COMINIT Burst Gap Maximum.
+> > > +                         CIBGMN: COMINIT Burst Gap Minimum.
+> > > +    - ceva,p0-comwake-params: OOB timing value for COMWAKE
+> > parameter for port 0.
+> > > +    - ceva,p1-comwake-params: OOB timing value for COMWAKE
+> > parameter for port 1.
+> > > +                         The fields for the above parameter must be as shown
+> > below:
+> > > +                         ceva,phy-comwake-params = /bits/ 8 <CWBGMN
+> > CWBGMX CWBGN CWNMP>;
+> > > +                         CWBGMN: COMWAKE Burst Gap Minimum.
+> > > +                         CWBGMX: COMWAKE Burst Gap Maximum.
+> > > +                         CWBGN: COMWAKE Burst Gap Nominal.
+> > > +                         CWNMP: COMWAKE Negate Minimum Period.
+> > > +    - ceva,p0-burst-params: Burst timing value for COM parameter
+> > > + for port
+> > 0.
+> > > +    - ceva,p1-burst-params: Burst timing value for COM parameter
+> > > + for port
+> > 1.
+> > > +                         The fields for the above parameter must be as shown
+> > below:
+> > > +                 ceva,phy-burst-params = /bits/ 8 <BMX BNM SFD
+> > PTST>;
+> > > +                         BMX: COM Burst Maximum.
+> > > +                         BNM: COM Burst Nominal.
+> > > +                         SFD: Signal Failure Detection value.
+> > > +                         PTST: Partial to Slumber timer value.
+> > > +    - ceva,p0-retry-params: Retry interval timing value for port 0.
+> > > +    - ceva,p1-retry-params: Retry interval timing value for port 1.
+> > > +                         The fields for the above parameter must be as shown
+> > below:
+> > > +                         ceva,phy-retry-params = /bits/ 16 <RIT RCT>;
+> > > +                         RIT:  Retry Interval Timer.
+> > > +                         RCT:  Rate Change Timer.
+> > >
+> > >  Optional properties:
+> > >    - ceva,broken-gen2: limit to gen1 speed instead of gen2.
+> > > @@ -17,4 +47,12 @@ Examples:
+> > >           interrupts = <0 133 4>;
+> > >           clocks = <&clkc SATA_CLK_ID>;
+> > >           ceva,broken-gen2;
+> > > +         ceva,p0-cominit-params = /bits/ 8 <0x0F 0x25 0x18 0x29>;
+> > > +         ceva,p0-comwake-params = /bits/ 8 <0x04 0x0B 0x08 0x0F>;
+> > > +         ceva,p0-burst-params = /bits/ 8 <0x0A 0x08 0x4A 0x06>;
+> > > +         ceva,p0-retry-params = /bits/ 16 <0x0216 0x7F06>;
+> > > +         ceva,p1-cominit-params = /bits/ 8 <0x0F 0x25 0x18 0x29>;
+> > > +         ceva,p1-comwake-params = /bits/ 8 <0x04 0x0B 0x08 0x0F>;
+> > > +         ceva,p1-burst-params = /bits/ 8 <0x0A 0x08 0x4A 0x06>;
+> > > +         ceva,p1-retry-params = /bits/ 16 <0x0216 0x7F06>;
+> > >   };
+> > > diff --git a/drivers/ata/ahci_ceva.c b/drivers/ata/ahci_ceva.c index
+> > > 207649d..59de2ca 100644
+> > > --- a/drivers/ata/ahci_ceva.c
+> > > +++ b/drivers/ata/ahci_ceva.c
+> > > @@ -50,21 +50,6 @@
+> > >  #define PPCFG_PSS_EN     (1 << 29)
+> > >  #define PPCFG_ESDF_EN    (1 << 31)
+> > >
+> > > -#define PP2C_CIBGMN      0x0F
+> > > -#define PP2C_CIBGMX      (0x25 << 8)
+> > > -#define PP2C_CIBGN       (0x18 << 16)
+> > > -#define PP2C_CINMP       (0x29 << 24)
+> > > -
+> > > -#define PP3C_CWBGMN      0x04
+> > > -#define PP3C_CWBGMX      (0x0B << 8)
+> > > -#define PP3C_CWBGN       (0x08 << 16)
+> > > -#define PP3C_CWNMP       (0x0F << 24)
+> > > -
+> > > -#define PP4C_BMX 0x0a
+> > > -#define PP4C_BNM (0x08 << 8)
+> > > -#define PP4C_SFD (0x4a << 16)
+> > > -#define PP4C_PTST        (0x06 << 24)
+> > > -
+> > >  #define PP5C_RIT 0x60216
+> > >  #define PP5C_RCT (0x7f0 << 20)
+> > >
+> > > @@ -87,6 +72,11 @@
+> > >
+> > >  struct ceva_ahci_priv {
+> > >   struct platform_device *ahci_pdev;
+> > > + /* Port Phy2Cfg Register */
+> > > + u32 pp2c[NR_PORTS];
+> > > + u32 pp3c[NR_PORTS];
+> > > + u32 pp4c[NR_PORTS];
+> > > + u32 pp5c[NR_PORTS];
+> > >   int flags;
+> > >  };
+> > >
+> > > @@ -131,20 +121,16 @@ static void ahci_ceva_setup(struct
+> > > ahci_host_priv
+> > *hpriv)
+> > >           writel(tmp, mmio + AHCI_VEND_PPCFG);
+> > >
+> > >           /* Phy Control OOB timing parameters COMINIT */
+> > > -         tmp = PP2C_CIBGMN | PP2C_CIBGMX | PP2C_CIBGN |
+> > PP2C_CINMP;
+> > > -         writel(tmp, mmio + AHCI_VEND_PP2C);
+> > > +         writel(cevapriv->pp2c[i], mmio + AHCI_VEND_PP2C);
+> > >
+> > >           /* Phy Control OOB timing parameters COMWAKE */
+> > > -         tmp = PP3C_CWBGMN | PP3C_CWBGMX | PP3C_CWBGN |
+> > PP3C_CWNMP;
+> > > -         writel(tmp, mmio + AHCI_VEND_PP3C);
+> > > +         writel(cevapriv->pp3c[i], mmio + AHCI_VEND_PP3C);
+> > >
+> > >           /* Phy Control Burst timing setting */
+> > > -         tmp = PP4C_BMX | PP4C_BNM | PP4C_SFD | PP4C_PTST;
+> > > -         writel(tmp, mmio + AHCI_VEND_PP4C);
+> > > +         writel(cevapriv->pp4c[i], mmio + AHCI_VEND_PP4C);
+> > >
+> > >           /* Rate Change Timer and Retry Interval Timer setting */
+> > > -         tmp = PP5C_RIT | PP5C_RCT;
+> > > -         writel(tmp, mmio + AHCI_VEND_PP5C);
+> > > +         writel(cevapriv->pp5c[i], mmio + AHCI_VEND_PP5C);
+> > >
+> > >           /* Rx Watermark setting  */
+> > >           tmp = PTC_RX_WM_VAL | PTC_RSVD;
+> > > @@ -187,6 +173,58 @@ static int ceva_ahci_probe(struct
+> > > platform_device
+> > *pdev)
+> > >   if (of_property_read_bool(np, "ceva,broken-gen2"))
+> > >           cevapriv->flags = CEVA_FLAG_BROKEN_GEN2;
+> > >
+> > > + /* Read OOB timing value for COMINIT from device-tree */
+> > > + if (of_property_read_u8_array(np, "ceva,p0-cominit-params",
+> > > +                                 (u8 *)&cevapriv->pp2c[0], 4) < 0) {
+> > > +         dev_warn(dev, "ceva,p0-cominit-params property not
+> > defined\n");
+> >
+> > I'd really like to move all the error prints into the of_property_*
+> > functions instead, but then we'd probably need *_optional variants to
+> > avoid spewing to the console.
+>
+>  We will try to implement this later.
+>
+> Thanks,
+> Anurag Kumar V
 
-[1] http://www.spinics.net/lists/kernel/msg2139337.html
-
-> ---
->  include/linux/printk.h |  7 +++++++
->  lib/hexdump.c          | 56 +++++++++++++++++++++++++++++++++++---------------
->  2 files changed, 47 insertions(+), 16 deletions(-)
->
-> diff --git a/include/linux/printk.h b/include/linux/printk.h
-> index 9729565..4be190c 100644
-> --- a/include/linux/printk.h
-> +++ b/include/linux/printk.h
-> @@ -424,6 +424,13 @@ enum {
->         DUMP_PREFIX_ADDRESS,
->         DUMP_PREFIX_OFFSET
->  };
-> +
-> +enum {
-> +       DUMP_TYPE_CPU = 0,
-
-Do we need explicit enum for that? Documentation update anyway is required.
-
-> +       DUMP_TYPE_LE = BIT(30),
-> +       DUMP_TYPE_BE = BIT(31)
-> +};
-> +
->  extern int hex_dump_to_buffer(const void *buf, size_t len, int rowsize,
->                               int groupsize, char *linebuf, size_t linebuflen,
->                               bool ascii);
-> diff --git a/lib/hexdump.c b/lib/hexdump.c
-> index 992457b..49113aa 100644
-> --- a/lib/hexdump.c
-> +++ b/lib/hexdump.c
-> @@ -81,6 +81,7 @@ EXPORT_SYMBOL(bin2hex);
->   * @len: number of bytes in the @buf
->   * @rowsize: number of bytes to print per line; must be 16 or 32
->   * @groupsize: number of bytes to print at a time (1, 2, 4, 8; default = 1)
-> + *             OR'd with DUMP_TYPE_BE or DUMP_TYPE_LE for endian conversions
->   * @linebuf: where to put the converted data
->   * @linebuflen: total size of @linebuf, including space for terminating NUL
->   * @ascii: include ASCII after the hex output
-> @@ -114,19 +115,20 @@ int hex_dump_to_buffer(const void *buf, size_t len, int rowsize, int groupsize,
->         int j, lx = 0;
->         int ascii_column;
->         int ret;
-> +       int actual_groupsize = groupsize & ~(DUMP_TYPE_LE | DUMP_TYPE_BE);
-
-I would rather prefer to have function parameter to be renamed.
-
-E.g. gsflags ?
-
->
->         if (rowsize != 16 && rowsize != 32)
->                 rowsize = 16;
->
->         if (len > rowsize)              /* limit to one line at a time */
->                 len = rowsize;
-> -       if (!is_power_of_2(groupsize) || groupsize > 8)
-> -               groupsize = 1;
-> -       if ((len % groupsize) != 0)     /* no mixed size output */
-> -               groupsize = 1;
-> +       if (!is_power_of_2(actual_groupsize) || actual_groupsize > 8)
-> +               actual_groupsize = 1;
-> +       if ((len % actual_groupsize) != 0)      /* no mixed size output */
-> +               actual_groupsize = 1;
->
-> -       ngroups = len / groupsize;
-> -       ascii_column = rowsize * 2 + rowsize / groupsize + 1;
-> +       ngroups = len / actual_groupsize;
-> +       ascii_column = rowsize * 2 + rowsize / actual_groupsize + 1;
->
->         if (!linebuflen)
->                 goto overflow1;
-> @@ -134,35 +136,56 @@ int hex_dump_to_buffer(const void *buf, size_t len, int rowsize, int groupsize,
->         if (!len)
->                 goto nil;
->
-> -       if (groupsize == 8) {
-> +       if (actual_groupsize == 8) {
->                 const u64 *ptr8 = buf;
->
->                 for (j = 0; j < ngroups; j++) {
-> +                       u64 val;
-> +
-> +                       if (groupsize & DUMP_TYPE_LE)
-> +                               val = get_unaligned_le64(ptr8 + j);
-> +                       else if (groupsize & DUMP_TYPE_BE)
-> +                               val = get_unaligned_be64(ptr8 + j);
-> +                       else
-> +                               val = get_unaligned(ptr8 + j);
->                         ret = snprintf(linebuf + lx, linebuflen - lx,
-> -                                      "%s%16.16llx", j ? " " : "",
-> -                                      get_unaligned(ptr8 + j));
-> +                                      "%s%16.16llx", j ? " " : "", val);
->                         if (ret >= linebuflen - lx)
->                                 goto overflow1;
->                         lx += ret;
->                 }
-> -       } else if (groupsize == 4) {
-> +       } else if (actual_groupsize == 4) {
->                 const u32 *ptr4 = buf;
->
->                 for (j = 0; j < ngroups; j++) {
-> +                       u32 val;
-> +
-> +                       if (groupsize & DUMP_TYPE_LE)
-> +                               val = get_unaligned_le32(ptr4 + j);
-> +                       else if (groupsize & DUMP_TYPE_BE)
-> +                               val = get_unaligned_be32(ptr4 + j);
-> +                       else
-> +                               val = get_unaligned(ptr4 + j);
->                         ret = snprintf(linebuf + lx, linebuflen - lx,
-> -                                      "%s%8.8x", j ? " " : "",
-> -                                      get_unaligned(ptr4 + j));
-> +                                      "%s%8.8x", j ? " " : "", val);
->                         if (ret >= linebuflen - lx)
->                                 goto overflow1;
->                         lx += ret;
->                 }
-> -       } else if (groupsize == 2) {
-> +       } else if (actual_groupsize == 2) {
->                 const u16 *ptr2 = buf;
->
->                 for (j = 0; j < ngroups; j++) {
-> +                       u16 val;
-> +
-> +                       if (groupsize & DUMP_TYPE_LE)
-> +                               val = get_unaligned_le16(ptr2 + j);
-> +                       else if (groupsize & DUMP_TYPE_BE)
-> +                               val = get_unaligned_be16(ptr2 + j);
-> +                       else
-> +                               val = get_unaligned(ptr2 + j);
->                         ret = snprintf(linebuf + lx, linebuflen - lx,
-> -                                      "%s%4.4x", j ? " " : "",
-> -                                      get_unaligned(ptr2 + j));
-> +                                      "%s%4.4x", j ? " " : "", val);
->                         if (ret >= linebuflen - lx)
->                                 goto overflow1;
->                         lx += ret;
-> @@ -203,7 +226,8 @@ nil:
->  overflow2:
->         linebuf[lx++] = '\0';
->  overflow1:
-> -       return ascii ? ascii_column + len : (groupsize * 2 + 1) * ngroups - 1;
-> +       return ascii ? ascii_column + len
-> +                    : (actual_groupsize * 2 + 1) * ngroups - 1;
->  }
->  EXPORT_SYMBOL(hex_dump_to_buffer);
->
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
 
 
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
 
--- 
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
