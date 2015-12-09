@@ -1,91 +1,52 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v4 1/5] PCI: designware: add memory barrier after
- enabling region
-Date: Wed, 9 Dec 2015 10:23:59 +0000
-Message-ID: <20151209102359.GF8644@n2100.arm.linux.org.uk>
-References: <1449149725-27607-1-git-send-email-stanimir.varbanov@linaro.org>
- <1449149725-27607-2-git-send-email-stanimir.varbanov@linaro.org>
- <56669C50.9060700@linaro.org>
- <CAHM4w1k_EAt+xBBYyG3B7W9Fegc4j+uRq5t_biUsxOGt+k+xUA@mail.gmail.com>
+From: "Yankejian (Hackim Yim)" <yankejian@huawei.com>
+Subject: Re: arRe: [PATCH net-next 2/2] net: hns: enet specisies a reference
+ to dsaf (config and documents)
+Date: Wed, 9 Dec 2015 18:23:48 +0800
+Message-ID: <56680134.90504@huawei.com>
+References: <1449295856-31068-1-git-send-email-yankejian@huawei.com>
+ <1503684.BNZUVaD74W@wuerfel> <5667F379.2010108@huawei.com>
+ <4902591.DhWVhdI4KP@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHM4w1k_EAt+xBBYyG3B7W9Fegc4j+uRq5t_biUsxOGt+k+xUA@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Pratyush Anand <pratyush.anand@gmail.com>
-Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4902591.DhWVhdI4KP@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, lisheng011@huawei.com, salil.mehta@huawei.com, liguozhu@huawei.com, haifeng.wei@huawei.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, devicetree@vger.kernel.org, robh+dt@kernel.org, huangdaode@hisilicon.com, galak@codeaurora.org, netdev@vger.kernel.org, fengguang.wu@intel.com, Yisen.Zhuang@huawei.com, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 09, 2015 at 10:10:05AM +0530, Pratyush Anand wrote:
-> On Tue, Dec 8, 2015 at 2:31 PM, Stanimir Varbanov
-> <stanimir.varbanov@linaro.org> wrote:
-> >
-> > On 12/03/2015 03:35 PM, Stanimir Varbanov wrote:
-> > > Add 'write memory' barrier after enable region in PCIE_ATU_CR2
-> > > register. The barrier is needed to ensure that the region enable
-> > > request has been reached it's destination at time when we
-> > > read/write to PCI configuration space.
-> > >
-> > > Without this barrier PCI device enumeration during kernel boot
-> > > is not reliable, and reading configuration space for particular
-> > > PCI device on the bus returns zero aka no device.
-> >
-> > Anand, Jingoo, what is your opinion?
-> >
-> > >
-> > > Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> > > ---
-> > >  drivers/pci/host/pcie-designware.c |    5 +++++
-> > >  1 file changed, 5 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
-> > > index 02a7452bdf23..ed4dc2e2553b 100644
-> > > --- a/drivers/pci/host/pcie-designware.c
-> > > +++ b/drivers/pci/host/pcie-designware.c
-> > > @@ -164,6 +164,11 @@ static void dw_pcie_prog_outbound_atu(struct pcie_port *pp, int index,
-> > >       dw_pcie_writel_rc(pp, upper_32_bits(pci_addr), PCIE_ATU_UPPER_TARGET);
-> > >       dw_pcie_writel_rc(pp, type, PCIE_ATU_CR1);
-> > >       dw_pcie_writel_rc(pp, PCIE_ATU_ENABLE, PCIE_ATU_CR2);
-> > > +     /*
-> > > +      * ensure that the ATU enable has been happaned before accessing
-> > > +      * pci configuration/io spaces through dw_pcie_cfg_[read|write].
-> > > +      */
-> > > +     wmb();
-> > >  }
-> > >
-> 
-> 
-> My understnading is that since writel() of dw_pcie_writel_rc() in
-> above code and readl(), writel() of dw_pcie_cfg_[read|write]() (which
-> will follow) goes through same device (ie PCIe host here). So, it is
-> guaranteed that 1st writel() will be executed before later
-> readl()/writel(). If that is true then we do not need any explicit
-> barrier here.
-> 
-> Arnd, Russel: whats your opinion here.
-              ^l
 
-writel() has a barrier _before_ the access but not after.
 
-The fact is that there's nothing which guarantees that the write will hit
-the hardware in a timely manner (forget any rules about PCI config space,
-the PCI ordering rules apply to the PCI bus, not to the ARM buses.)
+On 2015/12/9 18:00, Arnd Bergmann wrote:
+> On Wednesday 09 December 2015 17:25:13 Yankejian wrote:
+>>  thanks a lot for pointing it out.
+>>
+>>  It is great regret that this change breaks compatibility with old dtbs.
+>>  this is a new driver which is run on developing boards, and all the
+>>  clients' boards are developing boards. So we provide them a method to
+>>  update the firmware on the board, once we update the dtsi and kernel,
+>>  we require our clients to update the existed firmware and kernel.
+>>  Therefore, these changes is actually under control. Shall we treat this
+>>  by this way?
+> Ok, if you can show that the incompatible change is safe to do, that's
+> fine. Just put the explanation above into the patch description to
+> document that you have considered the effects of the change, and
+> to ensure that it gets done atomically.
+>
+> Also, you have to merge the two patches into one to allow bisection,
+> or do a series of three patches that need to be applied in order:
+>
+> 1. add ae-handle property
+> 2. change driver to use that property
+> 3. remove ae-name property
+>
+> 	Arnd
+>
+> .
+>
+Ok, thanks for your good advices.
+i will change it in V2 PATCH.
 
-If you need this write to have hit the hardware before continuing, you
-need to read back from the same register.
-
-I'm just looking at this driver, trying to decipher what it's doing.  It
-_looks_ to me like it's reprogramming one of the outbound windows (IO?)
-so that configuration space can be accessed.  Doesn't this have the
-effect of disabling access to the IO segment of the PCI bus from the
-host CPU?
-
-What protections are there against other CPUs in the system issuing a
-PCI I/O read/write while this outbound window is programmed as
-configuration space?
-
--- 
-RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Bset Regards
+yankejian
