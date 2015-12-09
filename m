@@ -1,283 +1,632 @@
-From: Simon Arlott <simon@fire.lp0.eu>
-Subject: [PATCH linux-next 2/2] power: bcm6358-power: Add BCM6358 power domain
- controller support
-Date: Wed, 9 Dec 2015 22:30:22 +0000
-Message-ID: <5668AB7E.4080209@simon.arlott.org.uk>
-References: <5668AB4F.7030100@simon.arlott.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <5668AB4F.7030100@simon.arlott.org.uk>
-Sender: linux-pm-owner@vger.kernel.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jonas Gorski <jogo@openwrt.org>, linux-pm@vger.kernel.org, Mark Brown <broonie@kernel.org>, MIPS Mailing List <linux-mips@linux-mips.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
+From: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 2/2] arm: pxa27x: support for ICP DAS LP-8x4x w/ DT
+Date: Thu, 10 Dec 2015 01:28:08 +0300
+Message-ID: <1449700088-28076-3-git-send-email-ynvich@gmail.com>
+References: <1387309071-22382-1-git-send-email-ynvich@gmail.com>
+ <1449700088-28076-1-git-send-email-ynvich@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449700088-28076-1-git-send-email-ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The BCM6358 contains power domains controlled with a register. Power
-domains are indexed by bits in the register. Power domain bits can be
-interleaved with other status bits and clocks in the same register.
+ICP DAS calls LP-8x4x 'programmable automation controller'. It is
+an industrial computer based on PXA270 SoC. They ship it with a 2.6.19
+kernel and proprietary kernel module and userspace library to access
+its industrial IO.
 
-Newer SoCs with dedicated power domain registers are active low.
+This patch allows to boot a modern kernel with device tree on
+the device. It adds support for:
+* MMC card interface on PXA270
+* USB 1.1 port on PXA270
+* 2 NOR flash devices
+* 2 onboard ethernet Davicom DM9000 devices
+* 3 serial UART ports on PXA270
+* front panel red LED
+* 64bit 1-wire system ID chip
+* 16 kiB EEPROM (reading)
 
-Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+Support for these devices will be added in separate patches, since
+they are not currently supported by the kernel:
+* DS1302 RTC
+* 512kiB SRAM
+* FPGA irq chip
+* 3 built-in 16550A serial UART ports
+* industrial IO parallel bus
+* 10 position rotary switch
+* 8 pin DIP switch
+* 16 kiB EEPROM (writing)
+* serial interface for digital and analog industrial IO modules on
+  parallel bus (all I-87xxx modules)
+* digital and analog industrial IO modules for parallel bus:
+  ** I-8024 4 port analog output
+  ** I-8041 32 port digital output
+  ** I-8042 16 port digital output/16 port digital input
+
+Not supported for now:
+* VGA interface on PXA270 for lack of dts binding
+* the rest of parallel bus (I-8xxx) modules for lack of hardware
+* GPIO reset for lack of relevance (watchdog reset is working)
+
+Newer LP-8x4x devices have twice as much flash and a different
+partition structure otherwise being the same. When each device
+is provided with a correct device tree, all of them can be booted
+using the same kernel.
+
+Signed-off-by: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+CC: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+CC: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+CC: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 ---
- MAINTAINERS                   |   1 +
- drivers/power/Kconfig         |  11 +++
- drivers/power/Makefile        |   1 +
- drivers/power/bcm6358-power.c | 198 ++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 211 insertions(+)
- create mode 100644 drivers/power/bcm6358-power.c
+   v3..v4
+   * support for newer flavor w/ 96Mb flash memory
+   * use 'partitions' subnodes
+   * move device-specific tweaking to device .dts file and drop
+     patches to pxa27x.dtsi 
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0370aba..5546a53 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2391,6 +2391,7 @@ F:	drivers/clk/bcm/clk-bcm6345*
- F:	drivers/irqchip/irq-bcm63*
- F:	drivers/irqchip/irq-bcm7*
- F:	drivers/irqchip/irq-brcmstb*
-+F:	drivers/power/bcm6358*
- F:	drivers/reset/bcm/reset-bcm6345*
- F:	include/linux/bcm63xx_wdt.h
- 
-diff --git a/drivers/power/Kconfig b/drivers/power/Kconfig
-index 1ddd13c..3d6f842 100644
---- a/drivers/power/Kconfig
-+++ b/drivers/power/Kconfig
-@@ -506,3 +506,14 @@ endif # POWER_SUPPLY
- 
- source "drivers/power/reset/Kconfig"
- source "drivers/power/avs/Kconfig"
-+
-+config BCM6358_POWER
-+	bool "BCM6358 power domain support"
-+	depends on BMIPS_GENERIC && PM && OF
-+	select PM_GENERIC_DOMAINS
-+	select PM_GENERIC_DOMAINS_OF
-+	default BMIPS_GENERIC
-+	help
-+	  Say Y here to enable support for power domains on the BCM6358.
-+	  Required to ensure that power is enabled for SoC peripheral
-+	  devices, and that power is disabled to unused devices.
-diff --git a/drivers/power/Makefile b/drivers/power/Makefile
-index 0e4eab5..0b72dd2 100644
---- a/drivers/power/Makefile
-+++ b/drivers/power/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_GENERIC_ADC_BATTERY)	+= generic-adc-battery.o
- obj-$(CONFIG_PDA_POWER)		+= pda_power.o
- obj-$(CONFIG_APM_POWER)		+= apm_power.o
- obj-$(CONFIG_AXP20X_POWER)	+= axp20x_usb_power.o
-+obj-$(CONFIG_BCM6358_POWER)	+= bcm6358-power.o
- obj-$(CONFIG_MAX8925_POWER)	+= max8925_power.o
- obj-$(CONFIG_WM831X_BACKUP)	+= wm831x_backup.o
- obj-$(CONFIG_WM831X_POWER)	+= wm831x_power.o
-diff --git a/drivers/power/bcm6358-power.c b/drivers/power/bcm6358-power.c
+   v2..v3
+   * added extbus which maps synchronous, static, and variable-latency
+     I/O (VLIO) interfaces of PXA27x SoC as suggested by Arnd Bergmann
+   * map is placed into platform include
+   * configured existing kernel drivers to support:
+     - front panel LED using gpio-leds
+     - 64bit 1-wire system ID chip using w1-gpio
+     - 16 kiB EEPROM using at24 over i2c-gpio
+   * number change (06/16 -> 08/21)
+
+   v1..v2
+   * drop left-over extern declaration
+   * use of_have_populated_dt() instead of a static variable
+   * drop wildcards in compatible
+   * drop machine-special machine description
+   * number changed from 9 to 6 (dropped patches)
+
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/boot/dts/Makefile                         |   3 +
+ arch/arm/boot/dts/pxa27x-lp8x4x-i105.dts           |  50 ++++
+ arch/arm/boot/dts/pxa27x-lp8x4x.dts                | 260 +++++++++++++++++++++
+ arch/arm/configs/lp8x4x_defconfig                  | 176 ++++++++++++++
+ 5 files changed, 490 insertions(+)
+ create mode 100644 arch/arm/boot/dts/pxa27x-lp8x4x-i105.dts
+ create mode 100644 arch/arm/boot/dts/pxa27x-lp8x4x.dts
+ create mode 100644 arch/arm/configs/lp8x4x_defconfig
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 55df1d4..2f1b078 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -109,6 +109,7 @@ honeywell	Honeywell
+ hp	Hewlett Packard
+ i2se	I2SE GmbH
+ ibm	International Business Machines (IBM)
++icpdas	ICP DAS CO., LTD.
+ idt	Integrated Device Technologies, Inc.
+ iom	Iomega Corporation
+ img	Imagination Technologies Ltd.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 30bbc37..ed182ea 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -499,6 +499,9 @@ dtb-$(CONFIG_ARCH_ORION5X) += \
+ 	orion5x-rd88f5182-nas.dtb
+ dtb-$(CONFIG_ARCH_PRIMA2) += \
+ 	prima2-evb.dtb
++dtb-$(CONFIG_MACH_PXA27X_DT) += \
++	pxa27x-lp8x4x.dtb \
++	pxa27x-lp8x4x-i105.dtb
+ dtb-$(CONFIG_ARCH_QCOM) += \
+ 	qcom-apq8064-cm-qs600.dtb \
+ 	qcom-apq8064-ifc6410.dtb \
+diff --git a/arch/arm/boot/dts/pxa27x-lp8x4x-i105.dts b/arch/arm/boot/dts/pxa27x-lp8x4x-i105.dts
 new file mode 100644
-index 0000000..f4654d7
+index 0000000..903f5c7
 --- /dev/null
-+++ b/drivers/power/bcm6358-power.c
-@@ -0,0 +1,198 @@
-+/*
-+ * Copyright 2015 Simon Arlott
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
++++ b/arch/arm/boot/dts/pxa27x-lp8x4x-i105.dts
+@@ -0,0 +1,50 @@
++/* Device tree for ICP DAS LP-8x4x i105 flavor */
 +
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/pm_domain.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
++#include "pxa27x-lp8x4x.dts"
 +
-+#define BITS 32
++/ {
++	extbus {
++		flash@0 {
++			compatible = "cfi-flash";
++			reg = <0 0 0x04000000>;
++			bank-width = <4>;
++			device-width = <2>;
 +
-+struct bcm6358_power;
++			partitions {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				fs@0 {
++					label = "u-boot";
++					reg = <0 0x40000>;
++				};
++				fs@40000 {
++					label = "settings";
++					reg = <0x40000 0x40000>;
++				};
++				fs@80000 {
++					label = "device_tree";
++					reg = <0x80000 0x40000>;
++				};
++				fs@c0000 {
++					label = "kernel";
++					reg = <0xc0000 0x2c0000>;
++				};
++				fs@300000 {
++					label = "root_fs";
++					reg = <0x380000 0x3c80000>;
++				};
++			};
++		};
 +
-+struct bcm6358_power_dev {
-+	struct generic_pm_domain genpd;
-+	struct bcm6358_power *power;
-+	u32 bit;
++		flash@1 {
++			compatible = "cfi-flash";
++			reg = <1 0x0 0x02000000>;
++			bank-width = <2>;
++			device-width = <1>;
++			partitions {
++				#address-cells = <1>;
++				#size-cells = <1>;
++			};
++		};
++	};
 +};
+diff --git a/arch/arm/boot/dts/pxa27x-lp8x4x.dts b/arch/arm/boot/dts/pxa27x-lp8x4x.dts
+new file mode 100644
+index 0000000..bbb5b75
+--- /dev/null
++++ b/arch/arm/boot/dts/pxa27x-lp8x4x.dts
+@@ -0,0 +1,260 @@
++/* Device tree for ICP DAS LP-8x4x */
++/dts-v1/;
 +
-+struct bcm6358_power {
-+	struct regmap *map;
-+	u32 offset;
-+	bool active_low;
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include "pxa27x.dtsi"
 +
-+	struct bcm6358_power_dev dev[BITS];
-+	struct genpd_onecell_data genpd_data;
-+	struct generic_pm_domain *genpd[BITS];
++/ {
++	model = "ICP DAS LP-8x4x programmable automation controller";
++	compatible = "marvell,pxa270";
++
++	aliases {
++		ethernet0 = &eth0;
++		ethernet1 = &eth1;
++	};
++
++	memory {
++		reg = <0xa0000000 0x08000000>;
++	};
++
++	regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		vmmc: regulator@0 {
++			compatible = "regulator-fixed";
++			reg = <0>;
++			regulator-name = "vmmc";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-always-on;
++		};
++	};
++
++	pxabus {
++		pxairq: interrupt-controller@40d00000 {
++			marvell,intc-priority;
++			marvell,intc-nr-irqs = <34>;
++		};
++
++		gpio: gpio@40e00000 {
++			interrupts = <8>, <9>, <10>;
++			interrupt-names = "gpio0", "gpio1", "gpio_mux";
++		};
++
++		uart@40100000 {
++			status = "okay";
++		};
++
++		uart@40200000 {
++			status = "okay";
++		};
++
++		uart@40700000 {
++			status = "okay";
++		};
++
++		mmc0: mmc@41100000 {
++			vmmc-supply = <&vmmc>;
++			status = "okay";
++		};
++
++		usb0: ohci@4c000000 {
++			marvell,port-mode = <3>;
++			marvell,oc-mode-perport;
++			marvell,enable-port1;
++			status = "okay";
++		};
++
++		leds {
++			compatible = "gpio-leds";
++
++			status {
++				gpios = <&gpio 84 1>;
++				linux,default-trigger = "heartbeat";
++			};
++		};
++
++		i2c: i2c-gpio {
++			compatible = "i2c-gpio";
++			gpios = <&gpio 22 0 /* sda */
++				 &gpio 12 0 /* scl */>;
++			i2c-gpio,delay-us = <1>;
++			i2c-gpio,timeout-ms = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			eeprom@50 {
++				compatible = "atmel,24c128";
++				reg = <0x50>;
++				pagesize = <64>;
++			};
++		};
++
++		w1: w1-gpio {
++			compatible = "w1-gpio";
++			gpios = <&gpio 83 0>;
++		};
++	};
++
++	extbus {
++		/*
++		 * PXA27x synchrous, static and
++		 * variable-latency IO interfaces
++		 */
++		compatible = "simple-bus";
++
++		#address-cells = <2>; /* first cell is nCS, second is address */
++		#size-cells = <1>;
++		ranges = <0 0 0 0x04000000
++			  1 0 0x04000000 0x04000000
++			  2 0 0x08000000 0x04000000
++			  3 0 0x0c000000 0x04000000
++			  4 0 0x10000000 0x04000000
++			  5 0 0x14000000 0x04000000>;
++
++		flash@0 {
++			compatible = "cfi-flash";
++			reg = <0 0 0x02000000>;
++			bank-width = <4>;
++			device-width = <2>;
++
++			partitions {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				fs@0 {
++					label = "u-boot";
++					reg = <0 0x40000>;
++				};
++				fs@40000 {
++					label = "settings";
++					reg = <0x40000 0x40000>;
++				};
++				fs@80000 {
++					label = "device_tree";
++					reg = <0x80000 0x40000>;
++				};
++				fs@c0000 {
++					label = "kernel";
++					reg = <0xc0000 0x240000>;
++				};
++				fs@300000 {
++					label = "root_fs";
++					reg = <0x300000 0x1d00000>;
++				};
++			};
++		};
++
++		flash@1 {
++			compatible = "cfi-flash";
++			reg = <1 0x0 0x01000000>;
++			bank-width = <2>;
++			device-width = <1>;
++			partitions {
++				#address-cells = <1>;
++				#size-cells = <1>;
++			};
++		};
++
++		netio@3 {
++			compatible = "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 3 0 0x02000000>;
++			interrupt-parent = <&gpio>;
++
++			eth0: eth@0 {
++				compatible = "davicom,dm9000";
++				reg = <0x0 0x2
++				       0x4000 0x2>;
++				interrupts = <9 IRQ_TYPE_EDGE_RISING>;
++				status = "okay";
++			};
++
++			eth1: eth@1000000 {
++				compatible = "davicom,dm9000";
++				reg = <0x1000000 0x2
++				       0x1004000 0x2>;
++				interrupts = <82 IRQ_TYPE_EDGE_RISING>;
++				status = "okay";
++			};
++		};
++
++		fpga@5 {
++			compatible = "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 5 0x3000000 0x10000>;
++			interrupt-parent = <&fpgairq>;
++
++			rtc@901c {
++				compatible = "dallas,rtc-ds1302";
++				reg = <0x901c 0x1>;
++				status = "okay";
++			};
++
++			sram@a000 {
++				compatible = "icpdas,sram-lp8x4x";
++				reg = <0xa000 0x1000
++				       0x901e 0x1>;
++
++				partitions {
++					#address-cells = <1>;
++					#size-cells = <1>;
++				};
++			};
++
++			fpgairq: irq@9006 {
++				compatible = "icpdas,irq-lp8x4x";
++				reg = <0x9006 0x16>;
++				interrupt-parent = <&gpio>;
++				interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
++				#interrupt-cells = <1>;
++				interrupt-controller;
++				status = "okay";
++			};
++
++			uart@9050 {
++				compatible = "icpdas,uart-lp8x4x";
++				reg = <0x9050 0x10
++				       0x9030 0x02>;
++				interrupts = <13>;
++				status = "okay";
++			};
++
++			uart@9060 {
++				compatible = "icpdas,uart-lp8x4x";
++				reg = <0x9060 0x10
++				       0x9032 0x02>;
++				interrupts = <14>;
++				status = "okay";
++			};
++
++			uart@9070 {
++				compatible = "icpdas,uart-lp8x4x";
++				reg = <0x9070 0x10
++				       0x9034 0x02>;
++				interrupts = <15>;
++				status = "okay";
++			};
++
++			backplane {
++				compatible = "icpdas,backplane-lp8x4x";
++				reg = <0x0 0x2
++				       0x1000 0x10
++				       0x2000 0x10
++				       0x3000 0x10
++				       0x4000 0x10
++				       0x5000 0x10
++				       0x6000 0x10
++				       0x7000 0x10
++				       0x8000 0x10
++				       0x9002 0x2
++				       0x9004 0x2
++				       0x9046 0x2>;
++				eeprom-gpios = <&gpio 4 0>;
++			};
++		};
++	};
 +};
-+
-+static int bcm6358_power_get_state(struct bcm6358_power_dev *pmd,
-+	bool *is_on)
-+{
-+	struct bcm6358_power *power = pmd->power;
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read(power->map, power->offset, &val);
-+	if (ret) {
-+		*is_on = false;
-+		return ret;
-+	}
-+
-+	if (power->active_low)
-+		*is_on = !(val & pmd->bit);
-+	else
-+		*is_on = (val & pmd->bit);
-+	return 0;
-+}
-+
-+static int bcm6358_power_set_state(struct bcm6358_power_dev *pmd,
-+	bool on)
-+{
-+	struct bcm6358_power *power = pmd->power;
-+	u32 val;
-+
-+	if (power->active_low)
-+		val = on ? 0 : pmd->bit;
-+	else
-+		val = on ? pmd->bit : 0;
-+
-+	return regmap_update_bits(power->map, power->offset, pmd->bit, val);
-+}
-+
-+static int bcm6358_power_power_on(struct generic_pm_domain *genpd)
-+{
-+	struct bcm6358_power_dev *pmd = container_of(genpd,
-+		struct bcm6358_power_dev, genpd);
-+
-+	return bcm6358_power_set_state(pmd, true);
-+}
-+
-+static int bcm6358_power_power_off(struct generic_pm_domain *genpd)
-+{
-+	struct bcm6358_power_dev *pmd = container_of(genpd,
-+		struct bcm6358_power_dev, genpd);
-+
-+	return bcm6358_power_set_state(pmd, false);
-+}
-+
-+static int __init bcm6358_power_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct bcm6358_power *power;
-+	unsigned int pmdomains = 0;
-+	int ret, i;
-+
-+	power = devm_kzalloc(dev, sizeof(*power), GFP_KERNEL);
-+	if (!power)
-+		return -ENOMEM;
-+
-+	power->map = syscon_regmap_lookup_by_phandle(np, "regmap");
-+	if (IS_ERR(power->map)) {
-+		ret = PTR_ERR(power->map);
-+		dev_err(dev, "failed to get regmap: %d\n", ret);
-+		return ret;
-+	}
-+
-+	if (of_property_read_u32(np, "offset", &power->offset)) {
-+		dev_err(dev, "missing register offset\n");
-+		return -EINVAL;
-+	}
-+
-+	power->active_low = of_property_read_bool(np, "active-low");
-+
-+	power->genpd_data.domains = power->genpd;
-+	power->genpd_data.num_domains = BITS;
-+
-+	/* power->genpd_data is sparse, indexed by bit,
-+	 * maximum pm domains checked using i
-+	 */
-+	for (i = 0; i < power->genpd_data.num_domains; i++) {
-+		struct bcm6358_power_dev *pmd = &power->dev[i];
-+		u32 bit;
-+		bool is_on;
-+
-+		if (of_property_read_u32_index(np, "power-domain-indices",
-+				i, &bit))
-+			goto out;
-+
-+		if (of_property_read_string_index(np, "power-domain-names",
-+				i, &pmd->genpd.name))
-+			goto out;
-+
-+		if (bit >= power->genpd_data.num_domains) {
-+			dev_err(dev,
-+				"power domain bit %u out of range\n", bit);
-+			continue;
-+		}
-+
-+		if (power->genpd[bit]) {
-+			dev_err(dev,
-+				"power domain bit %u already exists\n", bit);
-+			continue;
-+		}
-+
-+		pmd->power = power;
-+		pmd->bit = BIT(bit);
-+
-+		ret = bcm6358_power_get_state(pmd, &is_on);
-+		if (ret)
-+			dev_warn(dev, "unable to get current state for %s\n",
-+				pmd->genpd.name);
-+
-+		pmd->genpd.power_on = bcm6358_power_power_on;
-+		pmd->genpd.power_off = bcm6358_power_power_off;
-+
-+		pm_genpd_init(&pmd->genpd, NULL, !is_on);
-+		power->genpd[bit] = &pmd->genpd;
-+		pmdomains++;
-+	}
-+
-+out:
-+	if (!pmdomains)
-+		return -ENODEV;
-+
-+	ret = of_genpd_add_provider_onecell(np, &power->genpd_data);
-+	if (ret) {
-+		dev_err(dev, "failed to register genpd driver: %d\n", ret);
-+		return ret;
-+	}
-+
-+	dev_info(dev, "registered %u power domains\n", pmdomains);
-+	return 0;
-+}
-+
-+static const struct of_device_id bcm6358_power_ids[] __initconst = {
-+	{ .compatible = "brcm,bcm6358-power-controller" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, bcm6358_power_ids);
-+
-+static struct platform_driver bcm6358_power_driver __refdata = {
-+	.probe  = bcm6358_power_probe,
-+	.driver = {
-+		.name = "bcm6358-power-controller",
-+	.of_match_table = bcm6358_power_ids,
-+	},
-+};
-+
-+module_platform_driver(bcm6358_power_driver);
-+
-+MODULE_DESCRIPTION("BCM6358 Power domain controller driver");
-+MODULE_AUTHOR("Simon Arlott");
-+MODULE_LICENSE("GPL");
+diff --git a/arch/arm/configs/lp8x4x_defconfig b/arch/arm/configs/lp8x4x_defconfig
+new file mode 100644
+index 0000000..0eb87df
+--- /dev/null
++++ b/arch/arm/configs/lp8x4x_defconfig
+@@ -0,0 +1,176 @@
++# CONFIG_LOCALVERSION_AUTO is not set
++# CONFIG_SWAP is not set
++CONFIG_SYSVIPC=y
++CONFIG_NO_HZ=y
++CONFIG_HIGH_RES_TIMERS=y
++CONFIG_RCU_BOOST=y
++CONFIG_LOG_BUF_SHIFT=14
++CONFIG_NAMESPACES=y
++# CONFIG_UTS_NS is not set
++# CONFIG_IPC_NS is not set
++CONFIG_CC_OPTIMIZE_FOR_SIZE=y
++# CONFIG_UID16 is not set
++# CONFIG_SHMEM is not set
++CONFIG_EMBEDDED=y
++# CONFIG_COMPAT_BRK is not set
++CONFIG_SLOB=y
++CONFIG_JUMP_LABEL=y
++CONFIG_MODULES=y
++CONFIG_MODULE_UNLOAD=y
++CONFIG_MODVERSIONS=y
++# CONFIG_LBDAF is not set
++CONFIG_BLK_CMDLINE_PARSER=y
++CONFIG_PARTITION_ADVANCED=y
++# CONFIG_EFI_PARTITION is not set
++# CONFIG_IOSCHED_DEADLINE is not set
++CONFIG_ARCH_PXA=y
++CONFIG_MACH_PXA27X_DT=y
++# CONFIG_ARM_THUMB is not set
++CONFIG_PREEMPT=y
++CONFIG_AEABI=y
++# CONFIG_COMPACTION is not set
++# CONFIG_CROSS_MEMORY_ATTACH is not set
++CONFIG_ZBOOT_ROM_TEXT=0x0
++CONFIG_ZBOOT_ROM_BSS=0x0
++CONFIG_CMDLINE="init=/sbin/init root=/dev/mmcblk0p1 rw rootfstype=ext4 console=ttyS0,115200 mem=128M rootwait"
++# CONFIG_SUSPEND is not set
++CONFIG_NET=y
++CONFIG_PACKET=y
++CONFIG_UNIX=y
++CONFIG_INET=y
++CONFIG_IP_PNP=y
++CONFIG_IP_PNP_BOOTP=y
++CONFIG_BRIDGE=m
++CONFIG_BRIDGE_VLAN_FILTERING=y
++CONFIG_VLAN_8021Q=m
++CONFIG_VLAN_8021Q_GVRP=y
++CONFIG_VLAN_8021Q_MVRP=y
++# CONFIG_WIRELESS is not set
++CONFIG_DEVTMPFS=y
++CONFIG_DEVTMPFS_MOUNT=y
++# CONFIG_FW_LOADER is not set
++CONFIG_MTD=y
++CONFIG_MTD_CMDLINE_PARTS=y
++CONFIG_MTD_BLOCK=y
++CONFIG_MTD_CFI=y
++CONFIG_MTD_CFI_ADV_OPTIONS=y
++CONFIG_MTD_CFI_GEOMETRY=y
++CONFIG_MTD_CFI_INTELEXT=y
++CONFIG_MTD_PHYSMAP_OF=y
++CONFIG_MTD_SRAM_LP8X4X=y
++CONFIG_PROC_DEVICETREE=y
++CONFIG_BLK_DEV_LOOP=y
++CONFIG_BLK_DEV_LOOP_MIN_COUNT=2
++CONFIG_EEPROM_AT24=m
++CONFIG_LP8X4X_BUS=m
++CONFIG_SCSI=y
++# CONFIG_SCSI_PROC_FS is not set
++CONFIG_BLK_DEV_SD=y
++# CONFIG_SCSI_LOWLEVEL is not set
++CONFIG_NETDEVICES=y
++CONFIG_BONDING=m
++CONFIG_MACVLAN=m
++CONFIG_MACVTAP=m
++CONFIG_TUN=m
++# CONFIG_NET_VENDOR_ARC is not set
++# CONFIG_NET_CADENCE is not set
++# CONFIG_NET_VENDOR_BROADCOM is not set
++# CONFIG_NET_VENDOR_CIRRUS is not set
++CONFIG_DM9000=y
++CONFIG_DM9000_FORCE_SIMPLE_PHY_POLL=y
++# CONFIG_NET_VENDOR_FARADAY is not set
++# CONFIG_NET_VENDOR_INTEL is not set
++# CONFIG_NET_VENDOR_MARVELL is not set
++# CONFIG_NET_VENDOR_MICREL is not set
++# CONFIG_NET_VENDOR_NATSEMI is not set
++# CONFIG_NET_VENDOR_SEEQ is not set
++# CONFIG_NET_VENDOR_SMSC is not set
++# CONFIG_NET_VENDOR_STMICRO is not set
++# CONFIG_NET_VENDOR_VIA is not set
++# CONFIG_NET_VENDOR_WIZNET is not set
++CONFIG_PPP=m
++CONFIG_PPP_BSDCOMP=m
++CONFIG_PPP_DEFLATE=m
++CONFIG_PPPOE=m
++CONFIG_PPP_ASYNC=m
++CONFIG_PPP_SYNC_TTY=m
++CONFIG_SLIP=m
++CONFIG_SLIP_COMPRESSED=y
++# CONFIG_WLAN is not set
++CONFIG_INPUT_MOUSEDEV_SCREEN_X=800
++CONFIG_INPUT_MOUSEDEV_SCREEN_Y=600
++CONFIG_INPUT_EVDEV=y
++# CONFIG_INPUT_KEYBOARD is not set
++# CONFIG_INPUT_MOUSE is not set
++# CONFIG_SERIO is not set
++# CONFIG_DEVKMEM is not set
++CONFIG_SERIAL_8250=y
++# CONFIG_SERIAL_8250_DEPRECATED_OPTIONS is not set
++CONFIG_SERIAL_8250_CONSOLE=y
++CONFIG_SERIAL_8250_NR_UARTS=40
++CONFIG_SERIAL_8250_RUNTIME_UARTS=40
++CONFIG_SERIAL_8250_EXTENDED=y
++CONFIG_SERIAL_8250_MANY_PORTS=y
++CONFIG_SERIAL_8250_SHARE_IRQ=y
++CONFIG_SERIAL_8250_PXA=y
++CONFIG_SERIAL_8250_LP8X4X=m
++CONFIG_HW_RANDOM=y
++CONFIG_I2C=m
++# CONFIG_I2C_COMPAT is not set
++CONFIG_I2C_GPIO=m
++CONFIG_W1=m
++CONFIG_W1_MASTER_GPIO=m
++CONFIG_W1_SLAVE_SMEM=m
++# CONFIG_HWMON is not set
++CONFIG_WATCHDOG=y
++CONFIG_SA1100_WATCHDOG=m
++CONFIG_REGULATOR=y
++CONFIG_REGULATOR_FIXED_VOLTAGE=y
++CONFIG_FB=y
++CONFIG_FB_PXA=y
++CONFIG_FRAMEBUFFER_CONSOLE=y
++CONFIG_LOGO=y
++CONFIG_USB=m
++CONFIG_USB_OHCI_HCD=m
++CONFIG_USB_ACM=m
++CONFIG_USB_PRINTER=m
++CONFIG_USB_STORAGE=m
++CONFIG_USB_SERIAL=m
++CONFIG_MMC=y
++CONFIG_MMC_PXA=y
++CONFIG_NEW_LEDS=y
++CONFIG_LEDS_CLASS=y
++CONFIG_LEDS_GPIO=y
++CONFIG_LEDS_TRIGGERS=y
++CONFIG_LEDS_TRIGGER_HEARTBEAT=y
++CONFIG_RTC_CLASS=y
++CONFIG_RTC_DRV_DS1302=y
++CONFIG_RTC_DRV_PXA=m
++# CONFIG_IOMMU_SUPPORT is not set
++CONFIG_DMA_ENGINE=y
++CONFIG_DMA_VIRTUAL_CHANNELS=y
++CONFIG_DMA_OF=y
++CONFIG_PXA_DMA=y
++CONFIG_EXT2_FS=m
++CONFIG_EXT3_FS=y
++CONFIG_EXT4_FS=y
++CONFIG_REISERFS_FS=m
++CONFIG_ISO9660_FS=m
++CONFIG_MSDOS_FS=y
++CONFIG_VFAT_FS=y
++CONFIG_NTFS_FS=m
++CONFIG_NTFS_RW=y
++CONFIG_JFFS2_FS=y
++CONFIG_JFFS2_COMPRESSION_OPTIONS=y
++CONFIG_NFS_FS=y
++CONFIG_NFS_V4=y
++CONFIG_ROOT_NFS=y
++CONFIG_CIFS=m
++CONFIG_CIFS_STATS=y
++CONFIG_CODA_FS=m
++CONFIG_NLS_DEFAULT="cp855"
++CONFIG_NLS_CODEPAGE_437=y
++CONFIG_NLS_CODEPAGE_855=y
++CONFIG_NLS_ISO8859_1=y
++CONFIG_NLS_UTF8=y
++CONFIG_PRINTK_TIME=y
 -- 
-2.1.4
+2.6.2
 
--- 
-Simon Arlott
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
