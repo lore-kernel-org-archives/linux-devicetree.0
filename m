@@ -1,72 +1,78 @@
-From: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH 1/3] usb: misc: generic_onboard_hub: add generic onboard
- USB HUB driver
-Date: Wed, 9 Dec 2015 09:29:44 +0000
-Message-ID: <CY1PR0301MB199537D4B971E52589C7C54481E80@CY1PR0301MB1995.namprd03.prod.outlook.com>
-References: <1449538670-7954-1-git-send-email-peter.chen@freescale.com>
-	 <1449538670-7954-2-git-send-email-peter.chen@freescale.com>
-	 <CANLsYkwfLSQKEw1a-Y_dguu-yutnTeQv73cMxPFooMjzTv4n1A@mail.gmail.com>
-	 <20151209085021.GF941@shlinux2> <1449651460.3118.22.camel@pengutronix.de>
-	 <20151209085959.GG941@shlinux2> <1449652391.3118.24.camel@pengutronix.de>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v3 2/9] Documentation: dt-bindings: Document STM32 pinctrl
+ driver DT bindings
+Date: Wed, 9 Dec 2015 10:37:40 +0100
+Message-ID: <CALszF6Ct5omDxbysmD=7MHYDT5-EowKH+L+sqSbp29R9tHfkdA@mail.gmail.com>
+References: <1449578711-6141-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1449578711-6141-3-git-send-email-mcoquelin.stm32@gmail.com>
+	<20151209034137.GA15954@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449652391.3118.24.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?utf-8?B?UGF3ZcWCIE1vbGw=?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org" <patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org" <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20151209034137.GA15954@rob-hp-laptop>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCkJlc3QgcmVnYXJkcywNClBldGVyIENoZW4NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2Ut
-LS0tLQ0KPiBGcm9tOiBMdWNhcyBTdGFjaCBbbWFpbHRvOmwuc3RhY2hAcGVuZ3V0cm9uaXguZGVd
-DQo+IFNlbnQ6IFdlZG5lc2RheSwgRGVjZW1iZXIgMDksIDIwMTUgNToxMyBQTQ0KPiBUbzogQ2hl
-biBQZXRlci1CMjkzOTcgPFBldGVyLkNoZW5AZnJlZXNjYWxlLmNvbT4NCj4gQ2M6IE1hdGhpZXUg
-UG9pcmllciA8bWF0aGlldS5wb2lyaWVyQGxpbmFyby5vcmc+OyBNYXJrIFJ1dGxhbmQNCj4gPG1h
-cmsucnV0bGFuZEBhcm0uY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGZlc3RldmFt
-QGdtYWlsLmNvbTsNCj4gUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT47IFBh
-d2XFgiBNb2xsIDxwYXdlbC5tb2xsQGFybS5jb20+Ow0KPiBHcmVnIEtIIDxncmVna2hAbGludXhm
-b3VuZGF0aW9uLm9yZz47IGxpbnV4LXVzYkB2Z2VyLmtlcm5lbC5vcmc7DQo+IHBhdHJ5a0Brb3dh
-bGN6eWsud3M7IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Ow0KPiBzdGVybkByb3ds
-YW5kLmhhcnZhcmQuZWR1OyBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IFNoYXduIEd1bw0KPiA8c2hh
-d25ndW9Aa2VybmVsLm9yZz47IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0K
-PiBTdWJqZWN0OiBSZTogW1BBVENIIDEvM10gdXNiOiBtaXNjOiBnZW5lcmljX29uYm9hcmRfaHVi
-OiBhZGQgZ2VuZXJpYw0KPiBvbmJvYXJkIFVTQiBIVUIgZHJpdmVyDQo+IA0KPiBBbSBNaXR0d29j
-aCwgZGVuIDA5LjEyLjIwMTUsIDE3OjAwICswODAwIHNjaHJpZWIgUGV0ZXIgQ2hlbjoNCj4gPiBP
-biBXZWQsIERlYyAwOSwgMjAxNSBhdCAwOTo1Nzo0MEFNICswMTAwLCBMdWNhcyBTdGFjaCB3cm90
-ZToNCj4gPiA+IEFtIE1pdHR3b2NoLCBkZW4gMDkuMTIuMjAxNSwgMTY6NTAgKzA4MDAgc2Nocmll
-YiBQZXRlciBDaGVuOg0KPiA+ID4gPiBPbiBUdWUsIERlYyAwOCwgMjAxNSBhdCAwODozNjowMEFN
-IC0wNzAwLCBNYXRoaWV1IFBvaXJpZXIgd3JvdGU6DQo+ID4gPiA+ID4gT24gNyBEZWNlbWJlciAy
-MDE1IGF0IDE4OjM3LCBQZXRlciBDaGVuIDxwZXRlci5jaGVuQGZyZWVzY2FsZS5jb20+DQo+IHdy
-b3RlOg0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKyAgICAgICBpZiAoZGV2LT5vZl9ub2Rl
-KSB7DQo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgc3RydWN0IGRldmljZV9ub2RlICpub2Rl
-ID0gZGV2LT5vZl9ub2RlOw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAg
-ICAgIGh1Yl9kYXRhLT5jbGsgPSBkZXZtX2Nsa19nZXQoZGV2LCAiZXh0ZXJuYWxfY2xrIik7DQo+
-ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgaWYgKElTX0VSUihodWJfZGF0YS0+Y2xrKSkgew0K
-PiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2X2RiZyhkZXYsICJDYW4ndCBn
-ZXQgZXh0ZXJuYWwgY2xvY2s6ICVsZFxuIiwNCj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICBQVFJfRVJSKGh1Yl9kYXRhLT5jbGspKTsNCj4gPiA+ID4g
-PiA+ICsgICAgICAgICAgICAgICB9DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBJcyB0aGUgaW50ZW5k
-ZWQgYmVoYXZpb3VyIHRvIGtlZXAgZ29pbmcgaGVyZSBldmVudCB3aGVuIHRoZXJlIGlzDQo+ID4g
-PiA+ID4gYW4gZXJyb3I/ICBDYW4gdGhlICJodWJfZGF0YSIgcmVhbGx5IHdvcmsgd2l0aG91dCBh
-IGNsb2NrPw0KPiA+ID4gPg0KPiA+ID4gPiBZZXMsIHNvbWUgSFVCIG1heSB3b3JrIHdpdGggZml4
-ZWQgMjRNIE9TQyBhdCB0aGUgYm9hcmQsIGJ1dCB0aGV5DQo+ID4gPiA+IG5lZWQgdG8gcmVzZXQg
-dGhyb3VnaCBleHRlcm5hbCBJTywgc28gdGhlIGNsb2NrIGlzIG5vdCBuZWVkIGF0DQo+ID4gPiA+
-IHRoaXMgY2FzZSwgYnV0IHJlc2V0IHBpbiBpcyBtYW5kYXRvcnkuDQo+ID4gPiA+DQo+ID4gPiBJ
-ZiB0aGUgaHViIGFsd2F5cyByZXF1aXJlcyBhIGNsb2NrIGl0IG11c3Qgbm90IGJlIG9wdGlvbmFs
-LiBJZiB5b3UNCj4gPiA+IGhhdmUgYSBmaXhlZCAyNE1IeiBjbG9jayBvbiBib2FyZCBhZGQgdGhp
-cyB0byB0aGUgRFQgYXMgYQ0KPiA+ID4gZml4ZWQtY2xvY2sgYW5kIHVzZSBpdCBhcyBhbiBpbnB1
-dCB0byB0aGUgaHViLg0KPiA+ID4NCj4gPg0KPiA+IFRoaXMgZml4ZWQgMjRNSHogY2xvY2sgbWF5
-IGZyb20gYSBmaXhlZCBjcnlzdGFsIG9uIGJvYXJkLCBpdCBpcyBhbHdheXMNCj4gPiBvbiwgbm8g
-c29mdHdhcmUgbmVlZCB0byBjb250cm9sIGl0LCBpbXg1MS1iYmcgYm9hcmQgaXMgYW4gZXhhbXBs
-ZS4NCj4gPg0KPiBBbmQgdGhhdCdzIHdoIGl0IGlzIGEgZml4ZWQtY2xvY2suIFBsZWFzZSBsb29r
-IGl0IHVwIGluIHRoZSBEVCBiaW5kaW5nDQo+IGRvY3VtZW50YXRpb24uDQoNClllcywgSSBzZWUg
-c2ltaWxhciB0aGluZ3MgYXJlIGRlc2NyaWJlZCBhdCBbMV0sIGJ1dCB3aHkgd2UgbmVlZCB0aGlz
-DQphZGRpdGlvbmFsIGVudHJ5IGF0IGR0cyBmb3IgdGhpcyBjYXNlLCAgaXQgaXMgYWx3YXlzIG9u
-LCBubyBzb2Z0d2FyZQ0KaXMgbmVlZGVkLg0KIA0KWzFdIERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9jbG9jay9jbG9jay1iaW5kaW5ncy50eHQNCiANClBldGVyDQoNCg==
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Rob,
+
+2015-12-09 4:41 GMT+01:00 Rob Herring <robh@kernel.org>:
+> On Tue, Dec 08, 2015 at 01:45:04PM +0100, Maxime Coquelin wrote:
+>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>> ---
+>>  .../bindings/pinctrl/st,stm32-pinctrl.txt          | 126 +++++++++++++++++++++
+>>  1 file changed, 126 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+>> new file mode 100644
+>> index 0000000..7b4800c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+>> @@ -0,0 +1,126 @@
+>> +* STM32 GPIO and Pin Mux/Config controller
+>> +
+>> +STMicroelectronics's STM32 MCUs intregrate a GPIO and Pin mux/config hardware
+>> +controller. It controls the input/output settings on the available pins and
+>> +also provides ability to multiplex and configure the output of various on-chip
+>> +controllers onto these pads.
+>> +
+>> +Pin controller node:
+>> +Required properies:
+>> + - compatible: value should be one of the following:
+>> +   (a) "st,stm32f429-pinctrl"
+>> + - #address-cells: The value of this property must be 1
+>> + - #size-cells       : The value of this property must be 1
+>> + - ranges    : defines mapping between pin controller node (parent) to
+>> +   gpio-bank node (children).
+>> + - pins-are-numbered: Specify the subnodes are using numbered pinmux to
+>> +   specify pins.
+>> +
+>> +GPIO controller/bank node:
+>> +Required properties:
+>> + - gpio-controller : Indicates this device is a GPIO controller
+>> + - #gpio-cells         : Should be two.
+>> +                     The first cell is the pin number
+>> +                     The second one is the polarity:
+>> +                             - 0 for active high
+>> +                             - 1 for active low
+>> + - reg                 : The gpio address range, relative to the pinctrl range
+>> + - clocks      : clock that drives this bank
+>> + - st,bank-name        : Should be a name string for this bank as specified in
+>> +   the datasheet
+>
+> How do you intend to use this? We should come up with something generic
+> or drop it.
+Good point.
+It is used to have a meaningful name set in gpio_chip's label.
+I see two alternatives:
+ 1. replace "st,bank-name" with label
+ 2. use aliases, and construct label in driver with something like:
+     kasprintf(GFP_KERNEL, "GPIO%c", 'A' + of_alias_get_id(np, "gpio"));
+
+What do you prefer?
+Do you have other ideas?
+
+Thanks,
+Maxime
