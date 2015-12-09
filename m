@@ -1,46 +1,52 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [RFC][PATCH] misc: Introduce reboot_reason driver
-Date: Wed, 9 Dec 2015 09:59:58 +0100
-Message-ID: <20151209085958.GT11966@pengutronix.de>
-References: <1449610162-30543-1-git-send-email-john.stultz@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH for 4.4 0/2] DT/dmaengine: edma: Convert 16bit arrays to 32bit
+Date: Wed, 09 Dec 2015 10:00:13 +0100
+Message-ID: <7691711.qMGLSkELz4@wuerfel>
+References: <1449649091-9848-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1449610162-30543-1-git-send-email-john.stultz@linaro.org>
+In-Reply-To: <1449649091-9848-1-git-send-email-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinay Simha BN <simhavcs@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, devicetree@vger.kernel.org, Android Kernel Team <kernel-team@android.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, vinod.koul@intel.com, tony@atomide.com, devicetree@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, balbi@ti.com, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi John,
-
-On Tue, Dec 08, 2015 at 01:29:22PM -0800, John Stultz wrote:
-> This patch adds a basic driver to allow for commands like
-> "reboot bootloader" and "reboot recovery" to communicate this
-> reboot-reason to the bootloader.
+On Wednesday 09 December 2015 10:18:09 Peter Ujfalusi wrote:
+> Hi,
 > 
-> This is commonly done on Android devices, in order to reboot
-> the device into fastboot or recovery mode. It also supports
-> custom OEM specific commands, via "reboot oem-<value>".
+> Based on the discussion regarding to (convert am33xx to use the new eDMA
+> bindings):
+> https://www.mail-archive.com/linux-omap@vger.kernel.org/msg122117.html
 > 
-> This driver pulls the phys memory address from DT as well as
-> the magic reason values that are written to the address for
-> each mode.
+> This two patch will convert the new eDMA binding to not use 16bit arrays for
+> memcpy channel selection and for marking slots reserved.
+> The '/bits/ 16' seams to be causing confusion so it is probably better to just
+> use standard type for the arrays.
 > 
-> For an example, this patch also adds the DT support for
-> the nexus7 device via its dts (which is not yet upstream).
+> The new bindings for the eDMA is introduced for 4.4 and we do not have users of
+> it, which means that we can still change it w/o the risk of breaking anything
+> and we do not need to maintain the compatibility with 16bit arrays.
 > 
-> Thoughts and feedback would be appreciated!
+> The changes in the eDMA driver is local to the DT parsing and should not
+> conflict with other changes (like the filter function mapping support). Hrm,
+> there might be trivial conflict in the include/linux/platform_data/edma.h with
+> the "dmaengine 'universal' API".
 
-I wonder if 'reason' is the correct word. This driver says nothing about
-the reason why we reboot, but more what we should do next. Maybe
-something like purpose, scope or intention is more appropriate?
+Both patches
 
-Sascha
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> Tony, Arnd, Vinod: Can you agree on the practicalities on how these patches are
+> going to be handled? I would like to send the updated am33xx/am437x conversion
+> for 4.5 based on these changes.
+
+I'd suggest you send a pull request with these two patches on top of 4.4-rc1,
+and then either Vinod or I send it to Linus, and you base your other changes
+on top of the same branch.
+
+I think Vinod's tree is slightly more fitting for the 4.4 merge, but if he
+prefers me to take them instead, I will.
+
+	Arnd
