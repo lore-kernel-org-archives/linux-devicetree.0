@@ -1,74 +1,39 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH 2/3] dt-bindings: add Silicon Image SiI8620 bridge bindings
-Date: Wed, 09 Dec 2015 10:58:39 +0100
-Message-ID: <5667FB4F.4000006@samsung.com>
-References: <1449582546-18667-1-git-send-email-a.hajda@samsung.com>
- <1449582546-18667-3-git-send-email-a.hajda@samsung.com>
- <20151209034747.GA19896@rob-hp-laptop>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: arRe: [PATCH net-next 2/2] net: hns: enet specisies a reference to dsaf (config and documents)
+Date: Wed, 09 Dec 2015 11:00:21 +0100
+Message-ID: <4902591.DhWVhdI4KP@wuerfel>
+References: <1449295856-31068-1-git-send-email-yankejian@huawei.com> <1503684.BNZUVaD74W@wuerfel> <5667F379.2010108@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20151209034747.GA19896@rob-hp-laptop>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, Kyungmin Park <kyungmin.park@samsung.com>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5667F379.2010108@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: "Yankejian (Hackim Yim)" <yankejian@huawei.com>, mark.rutland@arm.com, lisheng011@huawei.com, salil.mehta@huawei.com, liguozhu@huawei.com, haifeng.wei@huawei.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, devicetree@vger.kernel.org, robh+dt@kernel.org, huangdaode@hisilicon.com, galak@codeaurora.org, netdev@vger.kernel.org, fengguang.wu@intel.com, Yisen.Zhuang@huawei.com, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKVGhhbmtzIGZvciByZXZpZXcuCgoKT24gMTIvMDkvMjAxNSAwNDo0NyBBTSwgUm9i
-IEhlcnJpbmcgd3JvdGU6Cj4gT24gVHVlLCBEZWMgMDgsIDIwMTUgYXQgMDI6NDk6MDVQTSArMDEw
-MCwgQW5kcnplaiBIYWpkYSB3cm90ZToKPj4gU2lJODYyMCB0cmFuc21pdHRlciBjb252ZXJ0cyBl
-VE1EUy9IRE1JIHNpZ25hbCB0byBNSEwgMy4wLiBJdCBpcyBjb250cm9sbGVkCj4+IHZpYSBJMkMg
-YnVzLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcu
-Y29tPgo+PiAtLS0KPj4gIC4uLi9iaW5kaW5ncy92aWRlby9icmlkZ2Uvc2lsLXNpaTg2MjAudHh0
-ICAgICAgICAgIHwgMzQgKysrKysrKysrKysrKysrKysrKysrKwo+PiAgMSBmaWxlIGNoYW5nZWQs
-IDM0IGluc2VydGlvbnMoKykKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYnJpZGdlL3NpbC1zaWk4NjIwLnR4dAo+Pgo+PiBkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JyaWRnZS9z
-aWwtc2lpODYyMC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8v
-YnJpZGdlL3NpbC1zaWk4NjIwLnR4dAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAw
-MDAwMDAwLi4yOWYzZjM1Cj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JyaWRnZS9zaWwtc2lpODYyMC50eHQKPj4gQEAgLTAs
-MCArMSwzNCBAQAo+PiArU2lsaWNvbiBJbWFnZSBTaUk4NjIwIGJyaWRnZSBiaW5kaW5ncwo+IEJy
-aWRnaW5nIHdoYXQgdG8gd2hhdD8KCkhETUkvTUhMLCBJIHdpbGwgYWRkIGl0IGluIG5leHQgaXRl
-cmF0aW9uLgoKPgo+PiArCj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiArCS0gY29tcGF0aWJs
-ZTogInNpbCxzaWk4NjIwIgo+PiArCS0gcmVnOiBpMmMgYWRkcmVzcyBvZiB0aGUgYnJpZGdlCj4+
-ICsJLSBjdmNjMTAtc3VwcGx5OiBEaWdpdGFsIENvcmUgU3VwcGx5IFZvbHRhZ2UgKDEuMFYpCj4+
-ICsJLSBpb3ZjYzE4LXN1cHBseTogSS9PIFN1cHBseSBWb2x0YWdlICgxLjhWKQo+PiArCS0gaW50
-LWdwaW9zOiBncGlvIHNwZWNpZmllciBvZiBJTlQgcGluCj4gQXNzdW1pbmcgSU5UIG1lYW5zIGlu
-dGVycnVwdCwgdGhpcyBzaG91bGQgdXNlIGludGVycnVwdHMgcHJvcGVydHkuCgpPSy4KCj4KPj4g
-KwktIHJlc2V0LWdwaW9zOiBncGlvIHNwZWNpZmllciBvZiBSRVNFVCBwaW4KPj4gKwktIGNsb2Nr
-cywgY2xvY2stbmFtZXM6IHNwZWNpZmljYXRpb24gYW5kIG5hbWUgb2YgInh0YWwiIGNsb2NrCj4+
-ICsJLSB2aWRlbyBpbnRlcmZhY2VzOiBEZXZpY2Ugbm9kZSBjYW4gY29udGFpbiB2aWRlbyBpbnRl
-cmZhY2UgcG9ydAo+PiArCQkJICAgIG5vZGUgZm9yIEhETUkgZW5jb2RlciBhY2NvcmRpbmcgdG8g
-WzFdLgo+PiArCj4+ICtbMV06IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRp
-YS92aWRlby1pbnRlcmZhY2VzLnR4dAo+PiArCj4+ICtFeGFtcGxlOgo+PiArCXNpaTg2MjBAMzkg
-ewo+PiArCQlyZWcgPSA8MHgzOT47Cj4+ICsJCWNvbXBhdGlibGUgPSAic2lsLHNpaTg2MjAiOwo+
-PiArCQljdmNjMTAtc3VwcGx5ID0gPCZsZG8zNl9yZWc+Owo+PiArCQlpb3ZjYzE4LXN1cHBseSA9
-IDwmbGRvMzRfcmVnPjsKPj4gKwkJaW50LWdwaW8gPSA8JmdwZjAgMiAwPjsKPj4gKwkJcmVzZXQt
-Z3BpbyA9IDwmZ3B2NyAwIDA+Owo+PiArCQljbG9ja3MgPSA8JnBtdV9zeXN0ZW1fY29udHJvbGxl
-ciAwPjsKPj4gKwkJY2xvY2stbmFtZXMgPSAieHRhbCI7Cj4+ICsJCWFzc2lnbmVkLWNsb2NrcyA9
-IDwmcG11X3N5c3RlbV9jb250cm9sbGVyIDA+Owo+PiArCQlhc3NpZ25lZC1jbG9jay1wYXJlbnRz
-ID0gPCZ4eHRpPjsKPiBUaGVzZSBhcmVuJ3QgbGlzdGVkIGluIHRoZSBkb2MuCgpJIHdpbGwgcmVt
-b3ZlIHRoZW0uCgo+Cj4+ICsKPj4gKwkJcG9ydCB7Cj4+ICsJCQltaGxfdG9faGRtaTogZW5kcG9p
-bnQgewo+PiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV90b19taGw+Owo+PiArCQkJfTsK
-Pj4gKwkJfTsKPiBJJ2QgbGlrZSB0byBzZWUgdGhpcyBoYXZlIGEgcG9ydCB0byBhIGNvbm5lY3Rv
-ciBub2RlLCB0b28uIFBvc3NpYmx5Cj4gdGhhdCBjYW4gY29tZSBsYXRlci4KCk1ITCBzdGFuZGFy
-ZCBpcyBjb25uZWN0b3IgYWdub3N0aWMsIHVzdWFsbHkgTUhMIHdpcmVzIGFyZSByb3V0ZWQKdmlh
-IG11bHRpLWZ1bmN0aW9uIG1pY3JvVVNCIGNvbm5lY3Rvciwgd2hpY2ggY2FuIHNlcnZlIGFsc28g
-Zm9yClVTQi9jaGFyZ2luZy9VQVJULi4uLgpUaGVyZSBpcyBhZGRpdGlvbmFsIGxvZ2ljIHRvIGRl
-dGVybWluZSB3aGljaCBjYWJsZSBpcyBjdXJyZW50bHkKY29ubmVjdGVkLCB1c3VhbGx5CmltcGxl
-bWVudGVkIGJ5IGV4dGNvbiBkcml2ZXIuCkkgYW0gbm90IHN1cmUgaWYvaG93IGl0IHNob3VsZCBi
-ZSByZXByZXNlbnRlZCBpbiBEVC4gV2hhdCBkbyB5b3UgdGhpbmsKYWJvdXQgaXQ/CgpSZWdhcmRz
-CkFuZHJ6ZWoKCj4KPiBSb2IKPgo+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbAo=
+On Wednesday 09 December 2015 17:25:13 Yankejian wrote:
+>  thanks a lot for pointing it out.
+> 
+>  It is great regret that this change breaks compatibility with old dtbs.
+>  this is a new driver which is run on developing boards, and all the
+>  clients' boards are developing boards. So we provide them a method to
+>  update the firmware on the board, once we update the dtsi and kernel,
+>  we require our clients to update the existed firmware and kernel.
+>  Therefore, these changes is actually under control. Shall we treat this
+>  by this way?
+
+Ok, if you can show that the incompatible change is safe to do, that's
+fine. Just put the explanation above into the patch description to
+document that you have considered the effects of the change, and
+to ensure that it gets done atomically.
+
+Also, you have to merge the two patches into one to allow bisection,
+or do a series of three patches that need to be applied in order:
+
+1. add ae-handle property
+2. change driver to use that property
+3. remove ae-name property
+
+	Arnd
