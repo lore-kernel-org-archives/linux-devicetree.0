@@ -1,94 +1,67 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 02/14] drm/etnaviv: add devicetree bindings
-Date: Wed, 9 Dec 2015 14:14:14 -0600
-Message-ID: <20151209201414.GA31697@rob-hp-laptop>
-References: <1449661707-30532-1-git-send-email-l.stach@pengutronix.de>
- <1449661707-30532-2-git-send-email-l.stach@pengutronix.de>
+From: Rasmus Villemoes <linux-qQsb+v5E8BnlAoU/VqSP6n9LOBIZ5rWg@public.gmane.org>
+Subject: Re: [PATCH v2] of/address: replace printk() with pr_debug() / pr_err()
+Date: Wed, 09 Dec 2015 21:17:37 +0100
+Message-ID: <87si3b8jha.fsf@rasmusvillemoes.dk>
+References: <1449590868-19070-1-git-send-email-yamada.masahiro@socionext.com>
+	<1449591386.3315.2.camel@perches.com>
+	<1449594231.13275.2.camel@perches.com>
+	<CAL_JsqJ0oftptSxyAcGOnQ3XA9v55B2n=8DiWBcErcLKgfsppg@mail.gmail.com>
+	<1449619439.18646.20.camel@perches.com>
+	<CAHp75VeN3hX4Dus6LLaie5c3xkdgQQc55fCOoAQ15JNib9La=A@mail.gmail.com>
+	<1449689319.25389.28.camel@perches.com>
+	<CAHp75VdHrG_uk9K7B=q8+ZnjNehJ2AY=-RsMGByxn62Uh_-sRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1449661707-30532-2-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <CAHp75VdHrG_uk9K7B=q8+ZnjNehJ2AY=-RsMGByxn62Uh_-sRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+	(Andy Shevchenko's message of "Wed, 9 Dec 2015 22:02:26 +0200")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 09, 2015 at 12:48:15PM +0100, Lucas Stach wrote:
-> Etnaviv follows the same priciple as imx-drm to have a virtual
-> master device node to bind all the individual GPU cores together
-> into one DRM device.
-> 
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On Wed, Dec 09 2015, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> On Wed, Dec 9, 2015 at 9:28 PM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
+>> ---
+>>  include/linux/printk.h |  7 +++++++
+>>  lib/hexdump.c          | 39 +++++++++++++++++++++++++++++++--------
+>>  2 files changed, 38 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/include/linux/printk.h b/include/linux/printk.h
+>> index 9729565..4be190c 100644
+>> --- a/include/linux/printk.h
+>> +++ b/include/linux/printk.h
+>> @@ -424,6 +424,13 @@ enum {
+>>         DUMP_PREFIX_ADDRESS,
+>>         DUMP_PREFIX_OFFSET
+>>  };
+>> +
+>> +enum {
+>> +       DUMP_TYPE_CPU = 0,
+>
+> And still open this, do we need it? I think you may just mention in
+> the documentation that default behaviour is CPU like.
 
-> ---
-> v2: Add note why a more specific compatible isn't needed for
-> GPU core nodes.
-> ---
->  .../bindings/display/etnaviv/etnaviv-drm.txt       | 49 ++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-> new file mode 100644
-> index 000000000000..01254f40b11b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
-> @@ -0,0 +1,49 @@
-> +Etnaviv DRM master device
-> +================================
-> +
-> +The Etnaviv DRM master device is a virtual device needed to list all
-> +Vivante GPU cores that comprise the GPU subsystem.
-> +
-> +Required properties:
-> +- compatible: Should be one of
-> +    "fsl,imx-gpu-subsystem"
-> +    "marvell,dove-gpu-subsystem"
-> +- cores: Should contain a list of phandles pointing to Vivante GPU devices
-> +
-> +example:
-> +
-> +gpu-subsystem {
-> +	compatible = "fsl,imx-gpu-subsystem";
-> +	cores = <&gpu_2d>, <&gpu_3d>;
-> +};
-> +
-> +
-> +Vivante GPU core devices
-> +====================
-> +
-> +Required properties:
-> +- compatible: Should be "vivante,gc"
-> +  A more specific compatible is not needed, as the cores contain chip
-> +  identification registers at fixed locations, which provide all the
-> +  necessary information to the driver.
-> +- reg: should be register base and length as documented in the
-> +  datasheet
-> +- interrupts: Should contain the cores interrupt line
-> +- clocks: should contain one clock for entry in clock-names
-> +  see Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +- clock-names:
-> +   - "bus":    AXI/register clock
-> +   - "core":   GPU core clock
-> +   - "shader": Shader clock (only required if GPU has feature PIPE_3D)
-> +
-> +example:
-> +
-> +gpu_3d: gpu@00130000 {
-> +	compatible = "vivante,gc";
-> +	reg = <0x00130000 0x4000>;
-> +	interrupts = <0 9 IRQ_TYPE_LEVEL_HIGH>;
-> +	clocks = <&clks IMX6QDL_CLK_GPU3D_AXI>,
-> +	         <&clks IMX6QDL_CLK_GPU3D_CORE>,
-> +	         <&clks IMX6QDL_CLK_GPU3D_SHADER>;
-> +	clock-names = "bus", "core", "shader";
-> +};
-> -- 
-> 2.6.2
-> 
+I think it's best to have a name for the default. In this case it's
+unlikely to ever be relevant, but in general one could imagine stuff
+like
+
+#ifdef THIS_OR_THAT
+#define MY_DUMP_TYPE DUMP_TYPE_LE
+#else
+#define MY_DUMP_TYPE DUMP_TYPE_CPU
+#endif
+
+which is a lot more readable than if the latter was a naked 0.
+
+The feature seems fine to me. It's always been somewhat annoying that
+grouping changes the order of the byte values on little-endian machines
+(so grouping is actually a wrong name for it; it's more like "treat the
+bytes an array of u16/u32/u64"), and one can now get around that by
+specifying DUMP_TYPE_BE.
+
+Rasmus
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
