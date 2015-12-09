@@ -1,210 +1,75 @@
-From: Simon Arlott <simon@fire.lp0.eu>
-Subject: [PATCH linux-next (v2) 3/3] mtd: brcmnand: Add support for the
- BCM6368
-Date: Wed, 9 Dec 2015 20:43:54 +0000
-Message-ID: <5668928A.50601@simon.arlott.org.uk>
-References: <566891DA.1050208@simon.arlott.org.uk>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [GIT PULL] DeviceTree fixes for 4.4
+Date: Wed, 9 Dec 2015 15:01:13 -0600
+Message-ID: <CAL_Jsq+ZcJth9YedqswMZaLFtSidOVEWawO8MhMefhr38sJCjQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <566891DA.1050208@simon.arlott.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, linux-mtd@lists.infradead.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Kamal Dasu <kdasu.kdev@gmail.com>, Jonas Gorski <jogo@openwrt.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The BCM6368 has a NAND interrupt register with combined status and enab=
-le
-registers.
+Hi Linus,
 
-As the BCM6328, BCM6362 and BCM6368 all use v2.1 controllers, the first
-variant that will work with this driver is the BCM63268 using a v4.0
-controller.
+Please pull DT fixes for 4.4. I think this should be all for 4.4.
 
-Set up the device by disabling and acking all interrupts, then handle
-the CTRL_READY interrupt.
+Rob
 
-Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
----
-Changed "nand-intr-base" reg name to "nand-int-base".
+The following changes since commit 31ade3b83e1821da5fbb2f11b5b3d4ab2ec39db8:
 
- drivers/mtd/nand/brcmnand/Makefile       |   1 +
- drivers/mtd/nand/brcmnand/bcm6368_nand.c | 145 +++++++++++++++++++++++=
-++++++++
- 2 files changed, 146 insertions(+)
- create mode 100644 drivers/mtd/nand/brcmnand/bcm6368_nand.c
+  Linux 4.4-rc3 (2015-11-29 18:58:26 -0800)
 
-diff --git a/drivers/mtd/nand/brcmnand/Makefile b/drivers/mtd/nand/brcm=
-nand/Makefile
-index 3b1fbfd..b28ffb59 100644
---- a/drivers/mtd/nand/brcmnand/Makefile
-+++ b/drivers/mtd/nand/brcmnand/Makefile
-@@ -2,5 +2,6 @@
- # more specific iproc_nand.o, for instance
- obj-$(CONFIG_MTD_NAND_BRCMNAND)		+=3D iproc_nand.o
- obj-$(CONFIG_MTD_NAND_BRCMNAND)		+=3D bcm63138_nand.o
-+obj-$(CONFIG_MTD_NAND_BRCMNAND)		+=3D bcm6368_nand.o
- obj-$(CONFIG_MTD_NAND_BRCMNAND)		+=3D brcmstb_nand.o
- obj-$(CONFIG_MTD_NAND_BRCMNAND)		+=3D brcmnand.o
-diff --git a/drivers/mtd/nand/brcmnand/bcm6368_nand.c b/drivers/mtd/nan=
-d/brcmnand/bcm6368_nand.c
-new file mode 100644
-index 0000000..7f5359b
---- /dev/null
-+++ b/drivers/mtd/nand/brcmnand/bcm6368_nand.c
-@@ -0,0 +1,145 @@
-+/*
-+ * Copyright 2015 Simon Arlott
-+ *
-+ * This program is free software; you can redistribute it and/or modif=
-y
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ * Derived from bcm63138_nand.c:
-+ * Copyright =C2=A9 2015 Broadcom Corporation
-+ *
-+ * Derived from bcm963xx_4.12L.06B_consumer/shared/opensource/include/=
-bcm963xx/63268_map_part.h:
-+ * Copyright 2000-2010 Broadcom Corporation
-+ *
-+ * Derived from bcm963xx_4.12L.06B_consumer/shared/opensource/flash/na=
-ndflash.c:
-+ * Copyright 2000-2010 Broadcom Corporation
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+#include "brcmnand.h"
-+
-+struct bcm6368_nand_soc {
-+	struct brcmnand_soc soc;
-+	void __iomem *base;
-+};
-+
-+#define BCM6368_NAND_INT		0x00
-+#define  BCM6368_NAND_STATUS_SHIFT	0
-+#define  BCM6368_NAND_STATUS_MASK	(0xfff << BCM6368_NAND_STATUS_SHIFT)
-+#define  BCM6368_NAND_ENABLE_SHIFT	16
-+#define  BCM6368_NAND_ENABLE_MASK	(0xffff << BCM6368_NAND_ENABLE_SHIFT=
-)
-+#define BCM6368_NAND_BASE_ADDR0	0x04
-+#define BCM6368_NAND_BASE_ADDR1	0x0c
-+
-+enum {
-+	BCM6368_NP_READ		=3D BIT(0),
-+	BCM6368_BLOCK_ERASE	=3D BIT(1),
-+	BCM6368_COPY_BACK	=3D BIT(2),
-+	BCM6368_PAGE_PGM	=3D BIT(3),
-+	BCM6368_CTRL_READY	=3D BIT(4),
-+	BCM6368_DEV_RBPIN	=3D BIT(5),
-+	BCM6368_ECC_ERR_UNC	=3D BIT(6),
-+	BCM6368_ECC_ERR_CORR	=3D BIT(7),
-+};
-+
-+static bool bcm6368_nand_intc_ack(struct brcmnand_soc *soc)
-+{
-+	struct bcm6368_nand_soc *priv =3D
-+			container_of(soc, struct bcm6368_nand_soc, soc);
-+	void __iomem *mmio =3D priv->base + BCM6368_NAND_INT;
-+	u32 val =3D brcmnand_readl(mmio);
-+
-+	if (val & (BCM6368_CTRL_READY << BCM6368_NAND_STATUS_SHIFT)) {
-+		/* Ack interrupt */
-+		val &=3D ~BCM6368_NAND_STATUS_MASK;
-+		val |=3D BCM6368_CTRL_READY << BCM6368_NAND_STATUS_SHIFT;
-+		brcmnand_writel(val, mmio);
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
-+static void bcm6368_nand_intc_set(struct brcmnand_soc *soc, bool en)
-+{
-+	struct bcm6368_nand_soc *priv =3D
-+			container_of(soc, struct bcm6368_nand_soc, soc);
-+	void __iomem *mmio =3D priv->base + BCM6368_NAND_INT;
-+	u32 val =3D brcmnand_readl(mmio);
-+
-+	/* Don't ack any interrupts */
-+	val &=3D ~BCM6368_NAND_STATUS_MASK;
-+
-+	if (en)
-+		val |=3D BCM6368_CTRL_READY << BCM6368_NAND_ENABLE_SHIFT;
-+	else
-+		val &=3D ~(BCM6368_CTRL_READY << BCM6368_NAND_ENABLE_SHIFT);
-+
-+	brcmnand_writel(val, mmio);
-+}
-+
-+static int bcm6368_nand_probe(struct platform_device *pdev)
-+{
-+	struct device *dev =3D &pdev->dev;
-+	struct bcm6368_nand_soc *priv;
-+	struct brcmnand_soc *soc;
-+	struct resource *res;
-+
-+	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+	soc =3D &priv->soc;
-+
-+	res =3D platform_get_resource_byname(pdev,
-+		IORESOURCE_MEM, "nand-int-base");
-+	if (!res)
-+		return -EINVAL;
-+
-+	priv->base =3D devm_ioremap_resource(dev, res);
-+	if (IS_ERR(priv->base))
-+		return PTR_ERR(priv->base);
-+
-+	soc->ctlrdy_ack =3D bcm6368_nand_intc_ack;
-+	soc->ctlrdy_set_enabled =3D bcm6368_nand_intc_set;
-+
-+	/* Disable and ack all interrupts  */
-+	brcmnand_writel(0, priv->base + BCM6368_NAND_INT);
-+	brcmnand_writel(BCM6368_NAND_STATUS_MASK,
-+			priv->base + BCM6368_NAND_INT);
-+
-+	return brcmnand_probe(pdev, soc);
-+}
-+
-+static const struct of_device_id bcm6368_nand_of_match[] =3D {
-+	{ .compatible =3D "brcm,nand-bcm6368" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, bcm6368_nand_of_match);
-+
-+static struct platform_driver bcm6368_nand_driver =3D {
-+	.probe			=3D bcm6368_nand_probe,
-+	.remove			=3D brcmnand_remove,
-+	.driver =3D {
-+		.name		=3D "bcm6368_nand",
-+		.pm		=3D &brcmnand_pm_ops,
-+		.of_match_table	=3D bcm6368_nand_of_match,
-+	}
-+};
-+module_platform_driver(bcm6368_nand_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Simon Arlott");
-+MODULE_DESCRIPTION("NAND driver for BCM6368");
---=20
-2.1.4
+are available in the git repository at:
 
---=20
-Simon Arlott
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+tags/devicetree-fixes-for-4.4-rc4
+
+for you to fetch changes up to eaddb5725357e9f05ffe5d271630f8197d089da4:
+
+  of/irq: move of_msi_map_rid declaration to the correct ifdef section
+(2015-12-09 09:23:28 -0600)
+
+----------------------------------------------------------------
+DeviceTree fixes for 4.4-rc4:
+
+- Fix incorrect warning about overlapping memory regions
+
+- Export of_irq_find_parent again which was made static in 4.4, but has
+  users pending for 4.5.
+
+- Fix of_msi_map_rid declaration location
+
+- Fix re-entrancy for of_fdt_unflatten_tree
+
+- Clean-up of phys_addr_t printks
+
+----------------------------------------------------------------
+Carlo Caione (1):
+      of/irq: Export of_irq_find_parent again
+
+Dmitry V. Krivenok (1):
+      of: do not use 0x in front of %pa
+
+Guenter Roeck (1):
+      of/fdt: Add mutex protection for calls to __unflatten_device_tree()
+
+Masahiro Yamada (1):
+      of/address: fix typo in comment block of of_translate_one()
+
+Michael Ellerman (1):
+      of: Fix comparison of reserved memory regions
+
+Rob Herring (1):
+      of/irq: move of_msi_map_rid declaration to the correct ifdef section
+
+ drivers/of/address.c         |  5 +++--
+ drivers/of/fdt.c             |  7 ++++++-
+ drivers/of/irq.c             |  3 ++-
+ drivers/of/of_reserved_mem.c |  8 +++++++-
+ include/linux/of_irq.h       | 19 ++++++++++++-------
+ 5 files changed, 30 insertions(+), 12 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
