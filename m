@@ -1,59 +1,74 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 1/5] PCI: designware: add memory barrier after enabling region
-Date: Wed, 09 Dec 2015 10:52:27 +0100
-Message-ID: <1975309.Hla8QhEqf4@wuerfel>
-References: <1449149725-27607-1-git-send-email-stanimir.varbanov@linaro.org> <56669C50.9060700@linaro.org> <CAHM4w1k_EAt+xBBYyG3B7W9Fegc4j+uRq5t_biUsxOGt+k+xUA@mail.gmail.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 2/3] dt-bindings: add Silicon Image SiI8620 bridge bindings
+Date: Wed, 09 Dec 2015 10:58:39 +0100
+Message-ID: <5667FB4F.4000006@samsung.com>
+References: <1449582546-18667-1-git-send-email-a.hajda@samsung.com>
+ <1449582546-18667-3-git-send-email-a.hajda@samsung.com>
+ <20151209034747.GA19896@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHM4w1k_EAt+xBBYyG3B7W9Fegc4j+uRq5t_biUsxOGt+k+xUA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pratyush Anand <pratyush.anand@gmail.com>
-Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20151209034747.GA19896@rob-hp-laptop>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, Kyungmin Park <kyungmin.park@samsung.com>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 09 December 2015 10:10:05 Pratyush Anand wrote:
-> On Tue, Dec 8, 2015 at 2:31 PM, Stanimir Varbanov
-> > > Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> > > ---
-> > >  drivers/pci/host/pcie-designware.c |    5 +++++
-> > >  1 file changed, 5 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
-> > > index 02a7452bdf23..ed4dc2e2553b 100644
-> > > --- a/drivers/pci/host/pcie-designware.c
-> > > +++ b/drivers/pci/host/pcie-designware.c
-> > > @@ -164,6 +164,11 @@ static void dw_pcie_prog_outbound_atu(struct pcie_port *pp, int index,
-> > >       dw_pcie_writel_rc(pp, upper_32_bits(pci_addr), PCIE_ATU_UPPER_TARGET);
-> > >       dw_pcie_writel_rc(pp, type, PCIE_ATU_CR1);
-> > >       dw_pcie_writel_rc(pp, PCIE_ATU_ENABLE, PCIE_ATU_CR2);
-> > > +     /*
-> > > +      * ensure that the ATU enable has been happaned before accessing
-> > > +      * pci configuration/io spaces through dw_pcie_cfg_[read|write].
-> > > +      */
-> > > +     wmb();
-> > >  }
-> > >
-> 
-> 
-> My understnading is that since writel() of dw_pcie_writel_rc() in
-> above code and readl(), writel() of dw_pcie_cfg_[read|write]() (which
-> will follow) goes through same device (ie PCIe host here). So, it is
-> guaranteed that 1st writel() will be executed before later
-> readl()/writel(). If that is true then we do not need any explicit
-> barrier here.
-> 
-> Arnd, Russel: whats your opinion here.
-
-I think the ordering is only enforced if the two register accesses are
-on the same device as seen from the bus, and it's possible that the
-RC registers and the config space registers are not considered the
-same thing here.
-
-For config write, this is not a problem, because the config space write
-has a wmb() that enforces ordering, but it's possible that the config
-space read may hit the device in parallel with the PCIE_ATU_ENABLE
-write.
-
-	Arnd
+SGkgUm9iLAoKVGhhbmtzIGZvciByZXZpZXcuCgoKT24gMTIvMDkvMjAxNSAwNDo0NyBBTSwgUm9i
+IEhlcnJpbmcgd3JvdGU6Cj4gT24gVHVlLCBEZWMgMDgsIDIwMTUgYXQgMDI6NDk6MDVQTSArMDEw
+MCwgQW5kcnplaiBIYWpkYSB3cm90ZToKPj4gU2lJODYyMCB0cmFuc21pdHRlciBjb252ZXJ0cyBl
+VE1EUy9IRE1JIHNpZ25hbCB0byBNSEwgMy4wLiBJdCBpcyBjb250cm9sbGVkCj4+IHZpYSBJMkMg
+YnVzLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcu
+Y29tPgo+PiAtLS0KPj4gIC4uLi9iaW5kaW5ncy92aWRlby9icmlkZ2Uvc2lsLXNpaTg2MjAudHh0
+ICAgICAgICAgIHwgMzQgKysrKysrKysrKysrKysrKysrKysrKwo+PiAgMSBmaWxlIGNoYW5nZWQs
+IDM0IGluc2VydGlvbnMoKykKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYnJpZGdlL3NpbC1zaWk4NjIwLnR4dAo+Pgo+PiBkaWZm
+IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JyaWRnZS9z
+aWwtc2lpODYyMC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8v
+YnJpZGdlL3NpbC1zaWk4NjIwLnR4dAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAw
+MDAwMDAwLi4yOWYzZjM1Cj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JyaWRnZS9zaWwtc2lpODYyMC50eHQKPj4gQEAgLTAs
+MCArMSwzNCBAQAo+PiArU2lsaWNvbiBJbWFnZSBTaUk4NjIwIGJyaWRnZSBiaW5kaW5ncwo+IEJy
+aWRnaW5nIHdoYXQgdG8gd2hhdD8KCkhETUkvTUhMLCBJIHdpbGwgYWRkIGl0IGluIG5leHQgaXRl
+cmF0aW9uLgoKPgo+PiArCj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiArCS0gY29tcGF0aWJs
+ZTogInNpbCxzaWk4NjIwIgo+PiArCS0gcmVnOiBpMmMgYWRkcmVzcyBvZiB0aGUgYnJpZGdlCj4+
+ICsJLSBjdmNjMTAtc3VwcGx5OiBEaWdpdGFsIENvcmUgU3VwcGx5IFZvbHRhZ2UgKDEuMFYpCj4+
+ICsJLSBpb3ZjYzE4LXN1cHBseTogSS9PIFN1cHBseSBWb2x0YWdlICgxLjhWKQo+PiArCS0gaW50
+LWdwaW9zOiBncGlvIHNwZWNpZmllciBvZiBJTlQgcGluCj4gQXNzdW1pbmcgSU5UIG1lYW5zIGlu
+dGVycnVwdCwgdGhpcyBzaG91bGQgdXNlIGludGVycnVwdHMgcHJvcGVydHkuCgpPSy4KCj4KPj4g
+KwktIHJlc2V0LWdwaW9zOiBncGlvIHNwZWNpZmllciBvZiBSRVNFVCBwaW4KPj4gKwktIGNsb2Nr
+cywgY2xvY2stbmFtZXM6IHNwZWNpZmljYXRpb24gYW5kIG5hbWUgb2YgInh0YWwiIGNsb2NrCj4+
+ICsJLSB2aWRlbyBpbnRlcmZhY2VzOiBEZXZpY2Ugbm9kZSBjYW4gY29udGFpbiB2aWRlbyBpbnRl
+cmZhY2UgcG9ydAo+PiArCQkJICAgIG5vZGUgZm9yIEhETUkgZW5jb2RlciBhY2NvcmRpbmcgdG8g
+WzFdLgo+PiArCj4+ICtbMV06IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRp
+YS92aWRlby1pbnRlcmZhY2VzLnR4dAo+PiArCj4+ICtFeGFtcGxlOgo+PiArCXNpaTg2MjBAMzkg
+ewo+PiArCQlyZWcgPSA8MHgzOT47Cj4+ICsJCWNvbXBhdGlibGUgPSAic2lsLHNpaTg2MjAiOwo+
+PiArCQljdmNjMTAtc3VwcGx5ID0gPCZsZG8zNl9yZWc+Owo+PiArCQlpb3ZjYzE4LXN1cHBseSA9
+IDwmbGRvMzRfcmVnPjsKPj4gKwkJaW50LWdwaW8gPSA8JmdwZjAgMiAwPjsKPj4gKwkJcmVzZXQt
+Z3BpbyA9IDwmZ3B2NyAwIDA+Owo+PiArCQljbG9ja3MgPSA8JnBtdV9zeXN0ZW1fY29udHJvbGxl
+ciAwPjsKPj4gKwkJY2xvY2stbmFtZXMgPSAieHRhbCI7Cj4+ICsJCWFzc2lnbmVkLWNsb2NrcyA9
+IDwmcG11X3N5c3RlbV9jb250cm9sbGVyIDA+Owo+PiArCQlhc3NpZ25lZC1jbG9jay1wYXJlbnRz
+ID0gPCZ4eHRpPjsKPiBUaGVzZSBhcmVuJ3QgbGlzdGVkIGluIHRoZSBkb2MuCgpJIHdpbGwgcmVt
+b3ZlIHRoZW0uCgo+Cj4+ICsKPj4gKwkJcG9ydCB7Cj4+ICsJCQltaGxfdG9faGRtaTogZW5kcG9p
+bnQgewo+PiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV90b19taGw+Owo+PiArCQkJfTsK
+Pj4gKwkJfTsKPiBJJ2QgbGlrZSB0byBzZWUgdGhpcyBoYXZlIGEgcG9ydCB0byBhIGNvbm5lY3Rv
+ciBub2RlLCB0b28uIFBvc3NpYmx5Cj4gdGhhdCBjYW4gY29tZSBsYXRlci4KCk1ITCBzdGFuZGFy
+ZCBpcyBjb25uZWN0b3IgYWdub3N0aWMsIHVzdWFsbHkgTUhMIHdpcmVzIGFyZSByb3V0ZWQKdmlh
+IG11bHRpLWZ1bmN0aW9uIG1pY3JvVVNCIGNvbm5lY3Rvciwgd2hpY2ggY2FuIHNlcnZlIGFsc28g
+Zm9yClVTQi9jaGFyZ2luZy9VQVJULi4uLgpUaGVyZSBpcyBhZGRpdGlvbmFsIGxvZ2ljIHRvIGRl
+dGVybWluZSB3aGljaCBjYWJsZSBpcyBjdXJyZW50bHkKY29ubmVjdGVkLCB1c3VhbGx5CmltcGxl
+bWVudGVkIGJ5IGV4dGNvbiBkcml2ZXIuCkkgYW0gbm90IHN1cmUgaWYvaG93IGl0IHNob3VsZCBi
+ZSByZXByZXNlbnRlZCBpbiBEVC4gV2hhdCBkbyB5b3UgdGhpbmsKYWJvdXQgaXQ/CgpSZWdhcmRz
+CkFuZHJ6ZWoKCj4KPiBSb2IKPgo+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo=
