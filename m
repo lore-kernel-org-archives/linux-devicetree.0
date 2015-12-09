@@ -1,48 +1,44 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v5 08/11] ARM: STi: Register CPUFreq device
-Date: Wed, 9 Dec 2015 08:09:46 +0530
-Message-ID: <20151209023946.GU3692@ubuntu>
-References: <1449585124-15596-1-git-send-email-lee.jones@linaro.org>
- <1449585124-15596-9-git-send-email-lee.jones@linaro.org>
+From: Phil Reid <preid@electromag.com.au>
+Subject: Re: [PATCH v4 1/4] stmmac: create of compatible mdio bus for stmacc
+ driver
+Date: Wed, 9 Dec 2015 10:47:29 +0800
+Message-ID: <56679641.7060101@electromag.com.au>
+References: <201512091033.svvb9HL7%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1449585124-15596-9-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, linux-pm@vger.kernel.org, rjw@rjwysocki.net, devicetree@vger.kernel.org, ajitpal.singh@st.com
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <201512091033.svvb9HL7%fengguang.wu@intel.com>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, peppe.cavallaro@st.com, davem@davemloft.net, vbridger@opensource.altera.com, devicetree@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08-12-15, 14:32, Lee Jones wrote:
-> +/**
-> + * SMP Operations
-> + */
+On 9/12/2015 10:15 AM, kbuild test robot wrote:
 
-Why do you need a documentation style comment here?
+>
+> url:    https://github.com/0day-ci/linux/commits/Phil-Reid/stmmac-create-of-compatible-mdio-bus-for-stmacc-driver/20151209-094242
+> config: x86_64-randconfig-b0-12090825 (attached as .config)
+> reproduce:
+>          # save the attached .config to linux build tree
+>          make ARCH=x86_64
+>
+> All errors (new ones prefixed by >>):
+>
+>     drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c: In function 'stmmac_mdio_register':
+>>> drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c:226:17: error: 'struct stmmac_mdio_bus_data' has no member named 'reset_gpio'
+>         mdio_bus_data->reset_gpio = -1;
+>                      ^
 
->  static void write_pen_release(int val)
->  {
->  	pen_release = val;
-> @@ -161,3 +166,11 @@ struct smp_operations __initdata sti_smp_ops = {
->  	.smp_secondary_init	= sti_secondary_init,
->  	.smp_boot_secondary	= sti_boot_secondary,
->  };
-> +
-> +/**
-> + * CPUFreq Registration
-> + */
+G'day Arnd,
 
-Here too.
+I got the above error from kbuild test robot. When changing to if (IS_ENABLED(CONFIG_OF)).
+This was existing code that I moved into this conditional.
+reset_gpio member only exists when CONFIG_OF is defined.
+So it looks like I need to move that code back to the #if.
+unless you have an alternate suggestion.
 
-> +void init_cpufreq(void)
-> +{
-> +	platform_device_register_simple("sti-cpufreq", -1, NULL, 0);
-> +}
 
-I don't think you need this, as you can do all the stuff you want from
-the module_init() function in the driver. You just have to make sure
-that your driver is only compilable and workable on the right STi platform.
-
--- 
-viresh
+--
+Regards
+Phil Reid
