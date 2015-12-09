@@ -1,88 +1,64 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 4/4] stmmac: socfpga: Provide dt node to config ptp
- clk source.
-Date: Tue, 8 Dec 2015 21:24:58 -0600
-Message-ID: <20151209032458.GA8702@rob-hp-laptop>
-References: <1449551582-6599-1-git-send-email-preid@electromag.com.au>
- <1449551582-6599-5-git-send-email-preid@electromag.com.au>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] usb: renesas_usbhs: add device tree support for
+ r8a779[23]
+Date: Tue, 8 Dec 2015 21:29:09 -0600
+Message-ID: <20151209032909.GA11551@rob-hp-laptop>
+References: <1449553911-21412-1-git-send-email-horms+renesas@verge.net.au>
+ <1449553911-21412-3-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1449551582-6599-5-git-send-email-preid@electromag.com.au>
-Sender: netdev-owner@vger.kernel.org
-To: Phil Reid <preid@electromag.com.au>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, peppe.cavallaro@st.com, davem@davemloft.net, vbridger@opensource.altera.com, devicetree@vger.kernel.org, netdev@vger.kernel.org
+In-Reply-To: <1449553911-21412-3-git-send-email-horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 08, 2015 at 01:13:02PM +0800, Phil Reid wrote:
-> Provides an options to use the ptp clock routed from the Altera FPGA
-> fabric. Instead of the defalt eosc1 clock connected to the ARM HPS core.
-> This setting affects all emacs in the core as the ptp clock is common.
+On Tue, Dec 08, 2015 at 02:51:51PM +0900, Simon Horman wrote:
+> Simply document new compatibility string.
+> As a previous patch adds a generic R-Car Gen2 compatibility string
+> there appears to be no need for a driver updates.
 > 
-> Signed-off-by: Phil Reid <preid@electromag.com.au>
+> Also add names for SoCs.
+> 
+> Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 > ---
->  Documentation/devicetree/bindings/net/socfpga-dwmac.txt | 2 ++
->  drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c     | 9 +++++++++
->  2 files changed, 11 insertions(+)
+>  Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-> index 3a9d679..72d82d6 100644
-> --- a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-> +++ b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-> @@ -11,6 +11,8 @@ Required properties:
->  		  designware version numbers documented in stmmac.txt
->   - altr,sysmgr-syscon : Should be the phandle to the system manager node that
->     encompasses the glue register, the register offset, and the register shift.
-> + - altr,f2h_ptp_ref_clk use f2h_ptp_ref_clk instead of default eosc1 clock
-> +   for ptp ref clk. This affects all emacs as the clock is common.
+> diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+> index 8c50df8441c9..b31f036d2171 100644
+> --- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+> +++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+> @@ -2,10 +2,12 @@ Renesas Electronics USBHS driver
 >  
->  Optional properties:
->  altr,emac-splitter: Should be the phandle to the emac splitter soft IP node if
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-> index 401383b..f0d797a 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-> @@ -32,6 +32,7 @@
->  #define SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RMII 0x2
->  #define SYSMGR_EMACGRP_CTRL_PHYSEL_WIDTH 2
->  #define SYSMGR_EMACGRP_CTRL_PHYSEL_MASK 0x00000003
-> +#define SYSMGR_EMACGRP_CTRL_PTP_REF_CLK_MASK 0x00000010
->  
->  #define EMAC_SPLITTER_CTRL_REG			0x0
->  #define EMAC_SPLITTER_CTRL_SPEED_MASK		0x3
-> @@ -47,6 +48,7 @@ struct socfpga_dwmac {
->  	struct regmap *sys_mgr_base_addr;
->  	struct reset_control *stmmac_rst;
->  	void __iomem *splitter_base;
-> +	bool f2h_ptp_ref_clk;
->  };
->  
->  static void socfpga_dwmac_fix_mac_speed(void *priv, unsigned int speed)
-> @@ -116,6 +118,8 @@ static int socfpga_dwmac_parse_data(struct socfpga_dwmac *dwmac, struct device *
->  		return -EINVAL;
->  	}
->  
-> +	dwmac->f2h_ptp_ref_clk = of_property_read_bool(np, "altr,f2h_ptp_ref_clk");
-> +
->  	np_splitter = of_parse_phandle(np, "altr,emac-splitter", 0);
->  	if (np_splitter) {
->  		if (of_address_to_resource(np_splitter, 0, &res_splitter)) {
-> @@ -171,6 +175,11 @@ static int socfpga_dwmac_setup(struct socfpga_dwmac *dwmac)
->  	ctrl &= ~(SYSMGR_EMACGRP_CTRL_PHYSEL_MASK << reg_shift);
->  	ctrl |= val << reg_shift;
->  
-> +	if (dwmac->f2h_ptp_ref_clk)
-> +		ctrl |= SYSMGR_EMACGRP_CTRL_PTP_REF_CLK_MASK << (reg_shift / 2);
-> +	else
-> +		ctrl &= ~(SYSMGR_EMACGRP_CTRL_PTP_REF_CLK_MASK << (reg_shift / 2));
-> +
->  	regmap_write(sys_mgr_base_addr, reg_offset, ctrl);
->  	return 0;
->  }
+>  Required properties:
+>    - compatible: "renesas,usbhs-<soctype>", "renesas,rcar-usbhs" as fallback.
+> -	- "renesas,usbhs-r8a7790"
+> -	- "renesas,usbhs-r8a7791"
+> -	- "renesas,usbhs-r8a7794"
+> -	- "renesas,usbhs-r8a7795"
+> +	- "renesas,usbhs-r8a7790" (R-Car H2)
+> +	- "renesas,usbhs-r8a7791" (R-Car M2-W)
+> +	- "renesas,usbhs-r8a7792" (R-Car V2H)
+> +	- "renesas,usbhs-r8a7793" (R-Car M2-N)
+> +	- "renesas,usbhs-r8a7794" (R-Car E2)
+> +	- "renesas,usbhs-r8a7795" (R-Car H3)
+>    - reg: Base address and length of the register for the USBHS
+>    - interrupts: Interrupt specifier for the USBHS
+>    - clocks: A list of phandle + clock specifier pairs
 > -- 
-> 1.8.3.1
+> 2.1.4
 > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
