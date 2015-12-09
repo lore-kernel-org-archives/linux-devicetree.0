@@ -1,126 +1,43 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V4 12/16] Documentation: DT: bindings: Add power domain
- info for NVIDIA PMC
-Date: Wed, 9 Dec 2015 12:33:30 +0000
-Message-ID: <56681F9A.6080200@nvidia.com>
-References: <1449241037-22193-1-git-send-email-jonathanh@nvidia.com>
- <1449241037-22193-13-git-send-email-jonathanh@nvidia.com>
- <7h4mfslpyd.fsf@deeprootsystems.com> <56681D53.9090600@nvidia.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v7 0/5] mfd: tps65912: Driver rewrite with DT support
+Date: Wed, 9 Dec 2015 13:35:00 +0100
+Message-ID: <CACRpkdZU3RrXmPr1fDzCMumhQ8nWEf126iC1rDu=xiLFj7DU+A@mail.gmail.com>
+References: <1447869580-10416-1-git-send-email-afd@ti.com>
+	<20151124162624.GI807@x1>
+	<20151204120240.GW26072@sirena.org.uk>
+	<5665E4F7.1070707@ti.com>
+	<20151208191657.GA5727@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56681D53.9090600-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20151208191657.GA5727@sirena.org.uk>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "Andrew F. Davis" <afd@ti.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Dec 8, 2015 at 8:16 PM, Mark Brown <broonie@kernel.org> wrote:
+> On Mon, Dec 07, 2015 at 01:58:47PM -0600, Andrew F. Davis wrote:
+>
+>> As all of this driver should be taken though the MFD tree how
+>> can this gpiolib change be handled? If we have gpio.parent it
+>> will not build on MFD, with gpio.dev it will fail to build when
+>> the changes are merged from the gpio subsystem. As the change
+>> has not been merged into linux-next as far a I can tell maybe
+>> this should be taken as is, then when the gpiolib change is
+>> made this can be changed with all the other drivers?
+>
+> Do a cross tree merge in one direction or the other between MFD and GPIO.
 
-On 09/12/15 12:23, Jon Hunter wrote:
-> 
-> On 08/12/15 19:07, Kevin Hilman wrote:
->> Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> writes:
->>
->>> Add power-domain binding documentation for the NVIDIA PMC driver in
->>> order to support generic power-domains.
->>>
->>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>
->>> ---
->>>
->>> Please note that I have been debating whether I add this
->>> "nvidia,powergate-clock-disable" property or just leave the clocks
->>> disabled by default. Some downstream kernels leave the clocks enabled
->>> for the audio power-domain because the clocks required for powering up
->>> the power-domain are needed by all modules within the power-domain.
->>> However are the same time there are other power-domains that may need
->>> to be on, but not always clocked and so having the ability to specify if
->>> the clocks should be disabled seems useful. However, I can also remove
->>> this and just have the appropriate devices turn on the clocks as well.
->>> ---
->>>  .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 61 ++++++++++++++++++++++
->>>  1 file changed, 61 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
->>> index 838e1a69ec0a..8e4641db51a9 100644
->>> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
->>> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
->>> @@ -1,5 +1,7 @@
->>>  NVIDIA Tegra Power Management Controller (PMC)
->>>  
->>> +== Power Management Controller Node ==
->>> +
->>>  The PMC block interacts with an external Power Management Unit. The PMC
->>>  mostly controls the entry and exit of the system from different sleep
->>>  modes. It provides power-gating controllers for SoC and CPU power-islands.
->>> @@ -69,6 +71,10 @@ Optional properties for hardware-triggered thermal reset (inside 'i2c-thermtrip'
->>>                       Defaults to 0. Valid values are described in section 12.5.2
->>>                       "Pinmux Support" of the Tegra4 Technical Reference Manual.
->>>  
->>> +Optional nodes:
->>> +- pm-domains : This node contains a hierarchy of PM domain nodes, which should
->>> +	       match the power-domains on the Tegra SoC.
->>> +
->>>  Example:
->>>  
->>>  / SoC dts including file
->>> @@ -114,3 +120,58 @@ pmc@7000f400 {
->>>  	};
->>>  	...
->>>  };
->>> +
->>> +
->>> +== PM Domain Nodes ==
->>> +
->>> +Each of the PM domain nodes represents a power-domain on the Tegra SoC
->>> +that can be power-gated by the PMC and should be named appropriately.
->>> +
->>> +Required properties:
->>> +  - clocks: Must contain an entry for each clock required by the PMC for
->>> +    controlling a power-gate. See ../clocks/clock-bindings.txt for details.
->>
->> We've had this discussiona for a couple of other SoCs, so I need to
->> ask...
->>
->> Presumably these are not device clocks that a runtime PM enabled driver
->> should be managing for a device, right?  IOW, We want to make sure that the
->> PM domain isn't managing clocks for drivers that should be doing it.
->>
->> I understand there are legitimate reasons for the PM domain to manage
->> clocks in addition to device drivers (e.g. for synchronous reset), but
->> just want to be sure it's not a shortcut for having a proper driver.
-> 
-> So some clocks may also be used by devices, but they are needed as part
-> of the power ungating/gating sequence. The general power-up sequence for
-> tegra is ...
-> 
-> 1. Enable the power-domain
-> 2. Enable the clock(s)
-> 3. Remove signal clamps
-> 4. De-assert reset(s)
-> 5. Disable clocks (optional)
-> 
-> You may say we should only handle #1 above for the powering up sequence,
-> but we can't do this. The reason is that there is one bit for each
-> power-domain that controls the signaling clamps and so we need to turn
-> on all the clocks specified in the TRM before we do this. Once we have
-> done this and released the reset(s), we can then disable the clocks
-> again (shown above an optional as it is not mandatory from a design
-> perspective) and then the devices in the power-domain should enable the
-> clocks they need as and when they want them.
-> 
-> Please note that I 100% agree that all clocks required by a device are
-> handled by the device and we do not implement any short-cuts here. The
-> only question I had was if there are clocks that may be bus clocks in
-> the power-domain that are required by all device in the power-domain.
-> However, may be this should be represented as a bus driver and all the
-> devices are children of it?
+If Lee makes an immutable branch with this stuff on it I can
+pull that in and put a fix on top of it (like I recently did with
+the ASoC AC97 codec). I have "only" renamed
+the .dev field of struct gpio_chip to .parent but I'm bombing
+out another 150 or so patches today, ridding all GPIO drivers
+in the kernel of container_of().
 
-Although the "nvidia,powergate-disable-clocks" optional property I had
-proposed could be seen as a bit of a short-cut, it is true :-)
+A bit painful but nothing to what tglx has gone through for
+refactoring IRQ chips...
 
-May be I should make the disabling of clocks again mandatory for the
-power-up sequence.
-
-Jon
+Yours,
+Linus Walleij
