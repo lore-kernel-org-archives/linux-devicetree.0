@@ -1,62 +1,71 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH] arm64: dts: mt8173: Add nor flash node
-Date: Wed, 9 Dec 2015 11:28:28 +0100
-Message-ID: <5668024C.7020509@gmail.com>
-References: <1449460394-31601-1-git-send-email-bayi.cheng@mediatek.com>
- <CAGS+omCuB3VGcPk3fezakdVDnFB3GAmMD+wZ_6nGdv+uHoB40g@mail.gmail.com>
- <1449462852.9118.25.camel@mhfsdcap03> <1449463619.9118.31.camel@mhfsdcap03>
- <CAGS+omBycHuNaMy5vuEf0ZSRTniCS50qEdAY0=L1_1Wno4EBTQ@mail.gmail.com>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v4 1/5] PCI: designware: add memory barrier after enabling
+ region
+Date: Wed, 9 Dec 2015 12:29:38 +0200
+Message-ID: <56680292.60905@linaro.org>
+References: <1449149725-27607-1-git-send-email-stanimir.varbanov@linaro.org>
+ <56669C50.9060700@linaro.org>
+ <CAHM4w1k_EAt+xBBYyG3B7W9Fegc4j+uRq5t_biUsxOGt+k+xUA@mail.gmail.com>
+ <1975309.Hla8QhEqf4@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGS+omBycHuNaMy5vuEf0ZSRTniCS50qEdAY0=L1_1Wno4EBTQ@mail.gmail.com>
+In-Reply-To: <1975309.Hla8QhEqf4@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Kurtz <djkurtz@chromium.org>, bayi cheng <bayi.cheng@mediatek.com>
-Cc: "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Arnd Bergmann <arnd@arndb.de>, Pratyush Anand <pratyush.anand@gmail.com>
+Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 07/12/15 09:19, Daniel Kurtz wrote:
-> Bayi,
->
-> On Mon, Dec 7, 2015 at 12:46 PM, bayi cheng <bayi.cheng@mediatek.com> wrote:
->> On Mon, 2015-12-07 at 12:34 +0800, bayi cheng wrote:
->>> On Mon, 2015-12-07 at 12:09 +0800, Daniel Kurtz wrote:
->>>> Bayi,
+On 12/09/2015 11:52 AM, Arnd Bergmann wrote:
+> On Wednesday 09 December 2015 10:10:05 Pratyush Anand wrote:
+>> On Tue, Dec 8, 2015 at 2:31 PM, Stanimir Varbanov
+>>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>>>> ---
+>>>>  drivers/pci/host/pcie-designware.c |    5 +++++
+>>>>  1 file changed, 5 insertions(+)
 >>>>
->>>> On Mon, Dec 7, 2015 at 11:53 AM, Bayi Cheng <bayi.cheng@mediatek.com> wrote:
->>>>> Add Mediatek nor flash node
->>>>>
->>>>> Signed-off-by: Bayi Cheng <bayi.cheng@mediatek.com>
->>>>> Acked-by: Brian Norris <computersforpeace@gmail.com>
->>>>> ---
->>>>> Previous version of this patch is
->>>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-November/386005.html
->>>>> Drop flash node from mt8173.dtsi accroding review comment
+>>>> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+>>>> index 02a7452bdf23..ed4dc2e2553b 100644
+>>>> --- a/drivers/pci/host/pcie-designware.c
+>>>> +++ b/drivers/pci/host/pcie-designware.c
+>>>> @@ -164,6 +164,11 @@ static void dw_pcie_prog_outbound_atu(struct pcie_port *pp, int index,
+>>>>       dw_pcie_writel_rc(pp, upper_32_bits(pci_addr), PCIE_ATU_UPPER_TARGET);
+>>>>       dw_pcie_writel_rc(pp, type, PCIE_ATU_CR1);
+>>>>       dw_pcie_writel_rc(pp, PCIE_ATU_ENABLE, PCIE_ATU_CR2);
+>>>> +     /*
+>>>> +      * ensure that the ATU enable has been happaned before accessing
+>>>> +      * pci configuration/io spaces through dw_pcie_cfg_[read|write].
+>>>> +      */
+>>>> +     wmb();
+>>>>  }
 >>>>
->>>> Is there a flash on mt8173-evb that can be accessed by the nor_flash ?
->>>> If so, can you include flash@0 node in the mt8173-evb.dts.
->>>>
->>>> -Dan
->>>>
->>> Hi Daniel, Thanks for your comments! you are right, there is a flash on
->>> mt8173-evb which can be accessed by the nor_flash, and I will include
->>> flash@0 node in mt8173-evb.dts (kernel v3.18) too.
->>>
->>> Bayi
 >>
->> Hi Dan, I have reworked a EVB board for spi nor verify, we replaced the
->> spi nand flash with spi nor flash on EVB board,
->> and our shipping EVB board haven't support spi nor flash, So I will not
->> include flash@0 node in the mt8173-evb.dts. I am sorry to made you
->> confused!
->
-> Thanks for confirming.
->
-> Reviewed-by: Daniel Kurtz <djkurtz@chromium. org>
->
+>>
+>> My understnading is that since writel() of dw_pcie_writel_rc() in
+>> above code and readl(), writel() of dw_pcie_cfg_[read|write]() (which
+>> will follow) goes through same device (ie PCIe host here). So, it is
+>> guaranteed that 1st writel() will be executed before later
+>> readl()/writel(). If that is true then we do not need any explicit
+>> barrier here.
+>>
+>> Arnd, Russel: whats your opinion here.
+> 
+> I think the ordering is only enforced if the two register accesses are
+> on the same device as seen from the bus, and it's possible that the
+> RC registers and the config space registers are not considered the
+> same thing here.
+> 
+> For config write, this is not a problem, because the config space write
+> has a wmb() that enforces ordering, but it's possible that the config
+> space read may hit the device in parallel with the PCIE_ATU_ENABLE
+> write.
 
-Added to v4.5-next/dts
-Thanks a lot.
+Hmm, just a matter of fact - as I described in the patch description
+this wmb() fixed an issue with pcie device enumeration (I came down to
+pci_bus_read_dev_vendor_id() returns zero) i.e. exactly a pci
+configuration space read.
+
+-- 
+regards,
+Stan
