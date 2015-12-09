@@ -1,57 +1,117 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 1/3] usb: misc: generic_onboard_hub: add generic onboard
- USB HUB driver
-Date: Wed, 9 Dec 2015 17:00:00 +0800
-Message-ID: <20151209085959.GG941@shlinux2>
-References: <1449538670-7954-1-git-send-email-peter.chen@freescale.com>
- <1449538670-7954-2-git-send-email-peter.chen@freescale.com>
- <CANLsYkwfLSQKEw1a-Y_dguu-yutnTeQv73cMxPFooMjzTv4n1A@mail.gmail.com>
- <20151209085021.GF941@shlinux2>
- <1449651460.3118.22.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1449651460.3118.22.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?utf-8?B?UGF3ZcWC?= Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Jeffy Chen <jeffy.chen@rock-chips.com>
+Subject: [PATCH v1 1/8] pinctrl: rockchip: add support for the rk3228
+Date: Wed,  9 Dec 2015 17:04:06 +0800
+Message-ID: <1449651853-1667-2-git-send-email-jeffy.chen@rock-chips.com>
+References: <1449651853-1667-1-git-send-email-jeffy.chen@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1449651853-1667-1-git-send-email-jeffy.chen@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 09, 2015 at 09:57:40AM +0100, Lucas Stach wrote:
-> Am Mittwoch, den 09.12.2015, 16:50 +0800 schrieb Peter Chen:
-> > On Tue, Dec 08, 2015 at 08:36:00AM -0700, Mathieu Poirier wrote:
-> > > On 7 December 2015 at 18:37, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > > > +
-> > > > +       if (dev->of_node) {
-> > > > +               struct device_node *node = dev->of_node;
-> > > > +
-> > > > +               hub_data->clk = devm_clk_get(dev, "external_clk");
-> > > > +               if (IS_ERR(hub_data->clk)) {
-> > > > +                       dev_dbg(dev, "Can't get external clock: %ld\n",
-> > > > +                                       PTR_ERR(hub_data->clk));
-> > > > +               }
-> > > 
-> > > Is the intended behaviour to keep going here event when there is an
-> > > error?  Can the "hub_data" really work without a clock?
-> > 
-> > Yes, some HUB may work with fixed 24M OSC at the board, but they need to
-> > reset through external IO, so the clock is not need at this case, but
-> > reset pin is mandatory.
-> > 
-> If the hub always requires a clock it must not be optional. If you have
-> a fixed 24MHz clock on board add this to the DT as a fixed-clock and use
-> it as an input to the hub.
-> 
+The pinctrl of rk3228 is much the same as rk3288's, but
+without pmu.
 
-This fixed 24MHz clock may from a fixed crystal on board, it is always
-on, no software need to control it, imx51-bbg board is an example.
+Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 
+---
+
+ .../bindings/pinctrl/rockchip,pinctrl.txt          |  3 +-
+ drivers/pinctrl/pinctrl-rockchip.c                 | 53 ++++++++++++++++++++++
+ 2 files changed, 55 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+index 391ef4b..0cd701b 100644
+--- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+@@ -21,7 +21,8 @@ defined as gpio sub-nodes of the pinmux controller.
+ Required properties for iomux controller:
+   - compatible: one of "rockchip,rk2928-pinctrl", "rockchip,rk3066a-pinctrl"
+ 		       "rockchip,rk3066b-pinctrl", "rockchip,rk3188-pinctrl"
+-		       "rockchip,rk3288-pinctrl", "rockchip,rk3368-pinctrl"
++		       "rockchip,rk3228-pinctrl", "rockchip,rk3288-pinctrl"
++		       "rockchip,rk3368-pinctrl"
+   - rockchip,grf: phandle referencing a syscon providing the
+ 	 "general register files"
+ 
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index a065112..faab36e 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -614,6 +614,40 @@ static void rk3288_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
+ 	}
+ }
+ 
++#define RK3228_PULL_OFFSET		0x100
++
++static void rk3228_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
++				    int pin_num, struct regmap **regmap,
++				    int *reg, u8 *bit)
++{
++	struct rockchip_pinctrl *info = bank->drvdata;
++
++	*regmap = info->regmap_base;
++	*reg = RK3228_PULL_OFFSET;
++	*reg += bank->bank_num * RK3188_PULL_BANK_STRIDE;
++	*reg += ((pin_num / RK3188_PULL_PINS_PER_REG) * 4);
++
++	*bit = (pin_num % RK3188_PULL_PINS_PER_REG);
++	*bit *= RK3188_PULL_BITS_PER_PIN;
++}
++
++#define RK3228_DRV_GRF_OFFSET		0x200
++
++static void rk3228_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
++				    int pin_num, struct regmap **regmap,
++				    int *reg, u8 *bit)
++{
++	struct rockchip_pinctrl *info = bank->drvdata;
++
++	*regmap = info->regmap_base;
++	*reg = RK3228_DRV_GRF_OFFSET;
++	*reg += bank->bank_num * RK3288_DRV_BANK_STRIDE;
++	*reg += ((pin_num / RK3288_DRV_PINS_PER_REG) * 4);
++
++	*bit = (pin_num % RK3288_DRV_PINS_PER_REG);
++	*bit *= RK3288_DRV_BITS_PER_PIN;
++}
++
+ #define RK3368_PULL_GRF_OFFSET		0x100
+ #define RK3368_PULL_PMU_OFFSET		0x10
+ 
+@@ -2143,6 +2177,23 @@ static struct rockchip_pin_ctrl rk3188_pin_ctrl = {
+ 		.pull_calc_reg		= rk3188_calc_pull_reg_and_bit,
+ };
+ 
++static struct rockchip_pin_bank rk3228_pin_banks[] = {
++	PIN_BANK(0, 32, "gpio0"),
++	PIN_BANK(1, 32, "gpio1"),
++	PIN_BANK(2, 32, "gpio2"),
++	PIN_BANK(3, 32, "gpio3"),
++};
++
++static struct rockchip_pin_ctrl rk3228_pin_ctrl = {
++		.pin_banks		= rk3228_pin_banks,
++		.nr_banks		= ARRAY_SIZE(rk3228_pin_banks),
++		.label			= "RK3228-GPIO",
++		.type			= RK3288,
++		.grf_mux_offset		= 0x0,
++		.pull_calc_reg		= rk3228_calc_pull_reg_and_bit,
++		.drv_calc_reg		= rk3228_calc_drv_reg_and_bit,
++};
++
+ static struct rockchip_pin_bank rk3288_pin_banks[] = {
+ 	PIN_BANK_IOMUX_FLAGS(0, 24, "gpio0", IOMUX_SOURCE_PMU,
+ 					     IOMUX_SOURCE_PMU,
+@@ -2220,6 +2271,8 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
+ 		.data = (void *)&rk3066b_pin_ctrl },
+ 	{ .compatible = "rockchip,rk3188-pinctrl",
+ 		.data = (void *)&rk3188_pin_ctrl },
++	{ .compatible = "rockchip,rk3228-pinctrl",
++		.data = (void *)&rk3228_pin_ctrl },
+ 	{ .compatible = "rockchip,rk3288-pinctrl",
+ 		.data = (void *)&rk3288_pin_ctrl },
+ 	{ .compatible = "rockchip,rk3368-pinctrl",
 -- 
-
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
