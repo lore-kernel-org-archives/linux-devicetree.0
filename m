@@ -1,106 +1,61 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 4/8] dt-bindings: add documentation of rk3228 clock
- controller
-Date: Wed, 9 Dec 2015 14:12:00 -0600
-Message-ID: <20151209201200.GA29732@rob-hp-laptop>
-References: <1449651853-1667-1-git-send-email-jeffy.chen@rock-chips.com>
- <1449651853-1667-5-git-send-email-jeffy.chen@rock-chips.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH for 4.4 0/2] DT/dmaengine: edma: Convert 16bit arrays to
+ 32bit
+Date: Wed, 9 Dec 2015 12:12:27 -0800
+Message-ID: <20151209201226.GB23396@atomide.com>
+References: <1449649091-9848-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1449651853-1667-5-git-send-email-jeffy.chen@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffy Chen <jeffy.chen@rock-chips.com>
-Cc: heiko@sntech.de, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Xing Zheng <zhengxing@rock-chips.com>
+In-Reply-To: <1449649091-9848-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 09, 2015 at 05:04:09PM +0800, Jeffy Chen wrote:
-> Add the devicetree binding for the cru on the rk3228 which quite similar
-> structured as previous clock controllers.
+* Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [151209 00:19]:
+> Hi,
 > 
-> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+> Based on the discussion regarding to (convert am33xx to use the new eDMA
+> bindings):
+> https://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg122117.html
+> 
+> This two patch will convert the new eDMA binding to not use 16bit arrays for
+> memcpy channel selection and for marking slots reserved.
+> The '/bits/ 16' seams to be causing confusion so it is probably better to just
+> use standard type for the arrays.
+> 
+> The new bindings for the eDMA is introduced for 4.4 and we do not have users of
+> it, which means that we can still change it w/o the risk of breaking anything
+> and we do not need to maintain the compatibility with 16bit arrays.
+> 
+> The changes in the eDMA driver is local to the DT parsing and should not
+> conflict with other changes (like the filter function mapping support). Hrm,
+> there might be trivial conflict in the include/linux/platform_data/edma.h with
+> the "dmaengine 'universal' API".
+> 
+> Tony, Arnd, Vinod: Can you agree on the practicalities on how these patches are
+> going to be handled? I would like to send the updated am33xx/am437x conversion
+> for 4.5 based on these changes.
 
-Seems like there is a lot of duplication across Rockchip cru bindings. 
-Perhaps they should be combined? Otherwise:
+Yes this should go into v4.4 as discussed, otherwise it will be a mess.
+For both, please feel free to add:
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 
-> ---
-> 
->  .../bindings/clock/rockchip,rk3228-cru.txt         | 58 ++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3228-cru.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3228-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3228-cru.txt
-> new file mode 100644
-> index 0000000..f323048
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/rockchip,rk3228-cru.txt
-> @@ -0,0 +1,58 @@
-> +* Rockchip RK3228 Clock and Reset Unit
-> +
-> +The RK3228 clock controller generates and supplies clock to various
-> +controllers within the SoC and also implements a reset controller for SoC
-> +peripherals.
-> +
-> +Required Properties:
-> +
-> +- compatible: should be "rockchip,rk3228-cru"
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +- #clock-cells: should be 1.
-> +- #reset-cells: should be 1.
-> +
-> +Optional Properties:
-> +
-> +- rockchip,grf: phandle to the syscon managing the "general register files"
-> +  If missing pll rates are not changeable, due to the missing pll lock status.
-> +
-> +Each clock is assigned an identifier and client nodes can use this identifier
-> +to specify the clock which they consume. All available clocks are defined as
-> +preprocessor macros in the dt-bindings/clock/rk3228-cru.h headers and can be
-> +used in device tree sources. Similar macros exist for the reset sources in
-> +these files.
-> +
-> +External clocks:
-> +
-> +There are several clocks that are generated outside the SoC. It is expected
-> +that they are defined using standard clock bindings with following
-> +clock-output-names:
-> + - "xin24m" - crystal input - required,
-> + - "ext_i2s" - external I2S clock - optional,
-> + - "ext_gmac" - external GMAC clock - optional
-> + - "ext_hsadc" - external HSADC clock - optional
-> + - "phy_50m_out" - output clock of the pll in the mac phy
-> +
-> +Example: Clock controller node:
-> +
-> +	cru: cru@20000000 {
-> +		compatible = "rockchip,rk3228-cru";
-> +		reg = <0x20000000 0x1000>;
-> +		rockchip,grf = <&grf>;
-> +
-> +		#clock-cells = <1>;
-> +		#reset-cells = <1>;
-> +	};
-> +
-> +Example: UART controller node that consumes the clock generated by the clock
-> +  controller:
-> +
-> +	uart0: serial@10110000 {
-> +		compatible = "snps,dw-apb-uart";
-> +		reg = <0x10110000 0x100>;
-> +		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-> +		reg-shift = <2>;
-> +		reg-io-width = <4>;
-> +		clocks = <&cru SCLK_UART0>;
-> +	};
-> -- 
-> 2.1.4
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I suggest Vinod sets up an immutable branch against v4.4-rc1 with just these
+two patches. Then it can get merged into whichever branch needs it, I
+certainly will need it as most of my v4.5 branches are v4.4-rc1 or -rc2
+based.
+
+Then the immutable branch can be merged into v4.4 by Vinod or Arnd.
+
+Regards,
+
+Tony
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
