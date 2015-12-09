@@ -1,195 +1,1898 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH v2 03/14] drm/etnaviv: add etnaviv UAPI header
-Date: Wed,  9 Dec 2015 12:48:16 +0100
-Message-ID: <1449661707-30532-3-git-send-email-l.stach@pengutronix.de>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v2 05/14] drm/etnaviv: add GPU core driver
+Date: Wed,  9 Dec 2015 12:48:18 +0100
+Message-ID: <1449661707-30532-5-git-send-email-l.stach@pengutronix.de>
 References: <1449661707-30532-1-git-send-email-l.stach@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1449661707-30532-1-git-send-email-l.stach@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Andrew Lunn <andrew@lunn.ch>
-Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, kernel@pengutronix.de, Gregory Clement <gregory.clement@free-electrons.com>, Russell King <rmk+kernel@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449661707-30532-1-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogVGhlIGV0bmF2aXYgYXV0aG9ycyA8ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-Zz4KClRoaXMgYWRkcyB0aGUgaGVhZGVyIGRlZmluaW5nIHRoZSB1c2VyL2tlcm5lbCBBUEkgZm9y
-IHRoZQpldG5hdml2IERSTSBkcml2ZXIuCgpTaWduZWQtb2ZmLWJ5OiBDaHJpc3RpYW4gR21laW5l
-ciA8Y2hyaXN0aWFuLmdtZWluZXJAZ21haWwuY29tPgpTaWduZWQtb2ZmLWJ5OiBSdXNzZWxsIEtp
-bmcgPHJtaytrZXJuZWxAYXJtLmxpbnV4Lm9yZy51az4KU2lnbmVkLW9mZi1ieTogTHVjYXMgU3Rh
-Y2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+Ci0tLQp2MjogQ2hhbmdlIGluY2x1ZGUgcGF0aCB0
-byBwbGFpbiAiZHJtLmgiCi0tLQogaW5jbHVkZS91YXBpL2RybS9ldG5hdml2X2RybS5oIHwgMjIx
-ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdl
-ZCwgMjIxIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL3VhcGkvZHJt
-L2V0bmF2aXZfZHJtLmgKCmRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkvZHJtL2V0bmF2aXZfZHJt
-LmggYi9pbmNsdWRlL3VhcGkvZHJtL2V0bmF2aXZfZHJtLmgKbmV3IGZpbGUgbW9kZSAxMDA2NDQK
-aW5kZXggMDAwMDAwMDAwMDAwLi42NWQwMDk2ZTE5NTMKLS0tIC9kZXYvbnVsbAorKysgYi9pbmNs
-dWRlL3VhcGkvZHJtL2V0bmF2aXZfZHJtLmgKQEAgLTAsMCArMSwyMjEgQEAKKy8qCisgKiBDb3B5
-cmlnaHQgKEMpIDIwMTUgRXRuYXZpdiBQcm9qZWN0CisgKgorICogVGhpcyBwcm9ncmFtIGlzIGZy
-ZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vciBtb2RpZnkgaXQKKyAq
-IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgdmVyc2lv
-biAyIGFzIHB1Ymxpc2hlZCBieQorICogdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbi4KKyAq
-CisgKiBUaGlzIHByb2dyYW0gaXMgZGlzdHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxs
-IGJlIHVzZWZ1bCwgYnV0IFdJVEhPVVQKKyAqIEFOWSBXQVJSQU5UWTsgd2l0aG91dCBldmVuIHRo
-ZSBpbXBsaWVkIHdhcnJhbnR5IG9mIE1FUkNIQU5UQUJJTElUWSBvcgorICogRklUTkVTUyBGT1Ig
-QSBQQVJUSUNVTEFSIFBVUlBPU0UuICBTZWUgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNl
-IGZvcgorICogbW9yZSBkZXRhaWxzLgorICoKKyAqIFlvdSBzaG91bGQgaGF2ZSByZWNlaXZlZCBh
-IGNvcHkgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGFsb25nIHdpdGgKKyAqIHRo
-aXMgcHJvZ3JhbS4gIElmIG5vdCwgc2VlIDxodHRwOi8vd3d3LmdudS5vcmcvbGljZW5zZXMvPi4K
-KyAqLworCisjaWZuZGVmIF9fRVROQVZJVl9EUk1fSF9fCisjZGVmaW5lIF9fRVROQVZJVl9EUk1f
-SF9fCisKKyNpbmNsdWRlICJkcm0uaCIKKworLyogUGxlYXNlIG5vdGUgdGhhdCBtb2RpZmljYXRp
-b25zIHRvIGFsbCBzdHJ1Y3RzIGRlZmluZWQgaGVyZSBhcmUKKyAqIHN1YmplY3QgdG8gYmFja3dh
-cmRzLWNvbXBhdGliaWxpdHkgY29uc3RyYWludHM6CisgKiAgMSkgRG8gbm90IHVzZSBwb2ludGVy
-cywgdXNlIF9fdTY0IGluc3RlYWQgZm9yIDMyIGJpdCAvIDY0IGJpdAorICogICAgIHVzZXIva2Vy
-bmVsIGNvbXBhdGliaWxpdHkKKyAqICAyKSBLZWVwIGZpZWxkcyBhbGlnbmVkIHRvIHRoZWlyIHNp
-emUKKyAqICAzKSBCZWNhdXNlIG9mIGhvdyBkcm1faW9jdGwoKSB3b3Jrcywgd2UgY2FuIGFkZCBu
-ZXcgZmllbGRzIGF0CisgKiAgICAgdGhlIGVuZCBvZiBhbiBpb2N0bCBpZiBzb21lIGNhcmUgaXMg
-dGFrZW46IGRybV9pb2N0bCgpIHdpbGwKKyAqICAgICB6ZXJvIG91dCB0aGUgbmV3IGZpZWxkcyBh
-dCB0aGUgdGFpbCBvZiB0aGUgaW9jdGwsIHNvIGEgemVybworICogICAgIHZhbHVlIHNob3VsZCBo
-YXZlIGEgYmFja3dhcmRzIGNvbXBhdGlibGUgbWVhbmluZy4gIEFuZCBmb3IKKyAqICAgICBvdXRw
-dXQgcGFyYW1zLCB1c2Vyc3BhY2Ugd29uJ3Qgc2VlIHRoZSBuZXdseSBhZGRlZCBvdXRwdXQKKyAq
-ICAgICBmaWVsZHMuLiBzbyB0aGF0IGhhcyB0byBiZSBzb21laG93IG9rLgorICovCisKKy8qIHRp
-bWVvdXRzIGFyZSBzcGVjaWZpZWQgaW4gY2xvY2stbW9ub3RvbmljIGFic29sdXRlIHRpbWVzICh0
-byBzaW1wbGlmeQorICogcmVzdGFydGluZyBpbnRlcnJ1cHRlZCBpb2N0bHMpLiAgVGhlIGZvbGxv
-d2luZyBzdHJ1Y3QgaXMgbG9naWNhbGx5IHRoZQorICogc2FtZSBhcyAnc3RydWN0IHRpbWVzcGVj
-JyBidXQgMzIvNjRiIEFCSSBzYWZlLgorICovCitzdHJ1Y3QgZHJtX2V0bmF2aXZfdGltZXNwZWMg
-eworCV9fczY0IHR2X3NlYzsgICAgICAgICAgLyogc2Vjb25kcyAqLworCV9fczY0IHR2X25zZWM7
-ICAgICAgICAgLyogbmFub3NlY29uZHMgKi8KK307CisKKyNkZWZpbmUgRVROQVZJVl9QQVJBTV9H
-UFVfTU9ERUwgICAgICAgICAgICAgICAgICAgICAweDAxCisjZGVmaW5lIEVUTkFWSVZfUEFSQU1f
-R1BVX1JFVklTSU9OICAgICAgICAgICAgICAgICAgMHgwMgorI2RlZmluZSBFVE5BVklWX1BBUkFN
-X0dQVV9GRUFUVVJFU18wICAgICAgICAgICAgICAgIDB4MDMKKyNkZWZpbmUgRVROQVZJVl9QQVJB
-TV9HUFVfRkVBVFVSRVNfMSAgICAgICAgICAgICAgICAweDA0CisjZGVmaW5lIEVUTkFWSVZfUEFS
-QU1fR1BVX0ZFQVRVUkVTXzIgICAgICAgICAgICAgICAgMHgwNQorI2RlZmluZSBFVE5BVklWX1BB
-UkFNX0dQVV9GRUFUVVJFU18zICAgICAgICAgICAgICAgIDB4MDYKKyNkZWZpbmUgRVROQVZJVl9Q
-QVJBTV9HUFVfRkVBVFVSRVNfNCAgICAgICAgICAgICAgICAweDA3CisKKyNkZWZpbmUgRVROQVZJ
-Vl9QQVJBTV9HUFVfU1RSRUFNX0NPVU5UICAgICAgICAgICAgICAweDEwCisjZGVmaW5lIEVUTkFW
-SVZfUEFSQU1fR1BVX1JFR0lTVEVSX01BWCAgICAgICAgICAgICAgMHgxMQorI2RlZmluZSBFVE5B
-VklWX1BBUkFNX0dQVV9USFJFQURfQ09VTlQgICAgICAgICAgICAgIDB4MTIKKyNkZWZpbmUgRVRO
-QVZJVl9QQVJBTV9HUFVfVkVSVEVYX0NBQ0hFX1NJWkUgICAgICAgICAweDEzCisjZGVmaW5lIEVU
-TkFWSVZfUEFSQU1fR1BVX1NIQURFUl9DT1JFX0NPVU5UICAgICAgICAgMHgxNAorI2RlZmluZSBF
-VE5BVklWX1BBUkFNX0dQVV9QSVhFTF9QSVBFUyAgICAgICAgICAgICAgIDB4MTUKKyNkZWZpbmUg
-RVROQVZJVl9QQVJBTV9HUFVfVkVSVEVYX09VVFBVVF9CVUZGRVJfU0laRSAweDE2CisjZGVmaW5l
-IEVUTkFWSVZfUEFSQU1fR1BVX0JVRkZFUl9TSVpFICAgICAgICAgICAgICAgMHgxNworI2RlZmlu
-ZSBFVE5BVklWX1BBUkFNX0dQVV9JTlNUUlVDVElPTl9DT1VOVCAgICAgICAgIDB4MTgKKyNkZWZp
-bmUgRVROQVZJVl9QQVJBTV9HUFVfTlVNX0NPTlNUQU5UUyAgICAgICAgICAgICAweDE5CisKKyNk
-ZWZpbmUgRVROQV9NQVhfUElQRVMgNAorCitzdHJ1Y3QgZHJtX2V0bmF2aXZfcGFyYW0geworCV9f
-dTMyIHBpcGU7ICAgICAgICAgICAvKiBpbiAqLworCV9fdTMyIHBhcmFtOyAgICAgICAgICAvKiBp
-biwgRVROQVZJVl9QQVJBTV94ICovCisJX191NjQgdmFsdWU7ICAgICAgICAgIC8qIG91dCAoZ2V0
-X3BhcmFtKSBvciBpbiAoc2V0X3BhcmFtKSAqLworfTsKKworLyoKKyAqIEdFTSBidWZmZXJzOgor
-ICovCisKKyNkZWZpbmUgRVROQV9CT19DQUNIRV9NQVNLICAgMHgwMDBmMDAwMAorLyogY2FjaGUg
-bW9kZXMgKi8KKyNkZWZpbmUgRVROQV9CT19DQUNIRUQgICAgICAgMHgwMDAxMDAwMAorI2RlZmlu
-ZSBFVE5BX0JPX1dDICAgICAgICAgICAweDAwMDIwMDAwCisjZGVmaW5lIEVUTkFfQk9fVU5DQUNI
-RUQgICAgIDB4MDAwNDAwMDAKKy8qIG1hcCBmbGFncyAqLworI2RlZmluZSBFVE5BX0JPX0ZPUkNF
-X01NVSAgICAweDAwMTAwMDAwCisKK3N0cnVjdCBkcm1fZXRuYXZpdl9nZW1fbmV3IHsKKwlfX3U2
-NCBzaXplOyAgICAgICAgICAgLyogaW4gKi8KKwlfX3UzMiBmbGFnczsgICAgICAgICAgLyogaW4s
-IG1hc2sgb2YgRVROQV9CT194ICovCisJX191MzIgaGFuZGxlOyAgICAgICAgIC8qIG91dCAqLwor
-fTsKKworc3RydWN0IGRybV9ldG5hdml2X2dlbV9pbmZvIHsKKwlfX3UzMiBoYW5kbGU7ICAgICAg
-ICAgLyogaW4gKi8KKwlfX3UzMiBwYWQ7CisJX191NjQgb2Zmc2V0OyAgICAgICAgIC8qIG91dCwg
-b2Zmc2V0IHRvIHBhc3MgdG8gbW1hcCgpICovCit9OworCisjZGVmaW5lIEVUTkFfUFJFUF9SRUFE
-ICAgICAgICAweDAxCisjZGVmaW5lIEVUTkFfUFJFUF9XUklURSAgICAgICAweDAyCisjZGVmaW5l
-IEVUTkFfUFJFUF9OT1NZTkMgICAgICAweDA0CisKK3N0cnVjdCBkcm1fZXRuYXZpdl9nZW1fY3B1
-X3ByZXAgeworCV9fdTMyIGhhbmRsZTsgICAgICAgICAvKiBpbiAqLworCV9fdTMyIG9wOyAgICAg
-ICAgICAgICAvKiBpbiwgbWFzayBvZiBFVE5BX1BSRVBfeCAqLworCXN0cnVjdCBkcm1fZXRuYXZp
-dl90aW1lc3BlYyB0aW1lb3V0OyAgIC8qIGluICovCit9OworCitzdHJ1Y3QgZHJtX2V0bmF2aXZf
-Z2VtX2NwdV9maW5pIHsKKwlfX3UzMiBoYW5kbGU7ICAgICAgICAgLyogaW4gKi8KKwlfX3UzMiBm
-bGFnczsgICAgICAgICAgLyogaW4sIHBsYWNlaG9sZGVyIGZvciBub3csIG5vIGRlZmluZWQgdmFs
-dWVzICovCit9OworCisvKgorICogQ21kc3RyZWFtIFN1Ym1pc3Npb246CisgKi8KKworLyogVGhl
-IHZhbHVlIHdyaXR0ZW4gaW50byB0aGUgY21kc3RyZWFtIGlzIGxvZ2ljYWxseToKKyAqIHJlbG9j
-YnVmLT5ncHVhZGRyICsgcmVsb2Nfb2Zmc2V0CisgKgorICogTk9URSB0aGF0IHJlbG9jJ3MgbXVz
-dCBiZSBzb3J0ZWQgYnkgb3JkZXIgb2YgaW5jcmVhc2luZyBzdWJtaXRfb2Zmc2V0LAorICogb3Ro
-ZXJ3aXNlIEVJTlZBTC4KKyAqLworc3RydWN0IGRybV9ldG5hdml2X2dlbV9zdWJtaXRfcmVsb2Mg
-eworCV9fdTMyIHN1Ym1pdF9vZmZzZXQ7ICAvKiBpbiwgb2Zmc2V0IGZyb20gc3VibWl0X2JvICov
-CisJX191MzIgcmVsb2NfaWR4OyAgICAgIC8qIGluLCBpbmRleCBvZiByZWxvY19ibyBidWZmZXIg
-Ki8KKwlfX3U2NCByZWxvY19vZmZzZXQ7ICAgLyogaW4sIG9mZnNldCBmcm9tIHN0YXJ0IG9mIHJl
-bG9jX2JvICovCit9OworCisvKiBFYWNoIGJ1ZmZlciByZWZlcmVuY2VkIGVsc2V3aGVyZSBpbiB0
-aGUgY21kc3RyZWFtIHN1Ym1pdCAoaWUuIHRoZQorICogY21kc3RyZWFtIGJ1ZmZlcihzKSB0aGVt
-c2VsdmVzIG9yIHJlbG9jIGVudHJpZXMpIGhhcyBvbmUgKGFuZCBvbmx5CisgKiBvbmUpIGVudHJ5
-IGluIHRoZSBzdWJtaXQtPmJvc1tdIHRhYmxlLgorICoKKyAqIEFzIGEgb3B0aW1pemF0aW9uLCB0
-aGUgY3VycmVudCBidWZmZXIgKGdwdSB2aXJ0dWFsIGFkZHJlc3MpIGNhbiBiZQorICogcGFzc2Vk
-IGJhY2sgdGhyb3VnaCB0aGUgJ3ByZXN1bWVkJyBmaWVsZC4gIElmIG9uIGEgc3Vic2VxdWVudCBy
-ZWxvYywKKyAqIHVzZXJzcGFjZSBwYXNzZXMgYmFjayBhICdwcmVzdW1lZCcgYWRkcmVzcyB0aGF0
-IGlzIHN0aWxsIHZhbGlkLAorICogdGhlbiBwYXRjaGluZyB0aGUgY21kc3RyZWFtIGZvciB0aGlz
-IGVudHJ5IGlzIHNraXBwZWQuICBUaGlzIGNhbgorICogYXZvaWQga2VybmVsIG5lZWRpbmcgdG8g
-bWFwL2FjY2VzcyB0aGUgY21kc3RyZWFtIGJvIGluIHRoZSBjb21tb24KKyAqIGNhc2UuCisgKi8K
-KyNkZWZpbmUgRVROQV9TVUJNSVRfQk9fUkVBRCAgICAgICAgICAgICAweDAwMDEKKyNkZWZpbmUg
-RVROQV9TVUJNSVRfQk9fV1JJVEUgICAgICAgICAgICAweDAwMDIKK3N0cnVjdCBkcm1fZXRuYXZp
-dl9nZW1fc3VibWl0X2JvIHsKKwlfX3UzMiBmbGFnczsgICAgICAgICAgLyogaW4sIG1hc2sgb2Yg
-RVROQV9TVUJNSVRfQk9feCAqLworCV9fdTMyIGhhbmRsZTsgICAgICAgICAvKiBpbiwgR0VNIGhh
-bmRsZSAqLworCV9fdTY0IHByZXN1bWVkOyAgICAgICAvKiBpbi9vdXQsIHByZXN1bWVkIGJ1ZmZl
-ciBhZGRyZXNzICovCit9OworCisvKiBFYWNoIGNtZHN0cmVhbSBzdWJtaXQgY29uc2lzdHMgb2Yg
-YSB0YWJsZSBvZiBidWZmZXJzIGludm9sdmVkLCBhbmQKKyAqIG9uZSBvciBtb3JlIGNtZHN0cmVh
-bSBidWZmZXJzLiAgVGhpcyBhbGxvd3MgZm9yIGNvbmRpdGlvbmFsIGV4ZWN1dGlvbgorICogKGNv
-bnRleHQtcmVzdG9yZSksIGFuZCBJQiBidWZmZXJzIG5lZWRlZCBmb3IgcGVyIHRpbGUvYmluIGRy
-YXcgY21kcy4KKyAqLworI2RlZmluZSBFVE5BX1BJUEVfM0QgICAgICAweDAwCisjZGVmaW5lIEVU
-TkFfUElQRV8yRCAgICAgIDB4MDEKKyNkZWZpbmUgRVROQV9QSVBFX1ZHICAgICAgMHgwMgorc3Ry
-dWN0IGRybV9ldG5hdml2X2dlbV9zdWJtaXQgeworCV9fdTMyIGZlbmNlOyAgICAgICAgICAvKiBv
-dXQgKi8KKwlfX3UzMiBwaXBlOyAgICAgICAgICAgLyogaW4gKi8KKwlfX3UzMiBleGVjX3N0YXRl
-OyAgICAgLyogaW4sIGluaXRpYWwgZXhlY3V0aW9uIHN0YXRlIChFVE5BX1BJUEVfeCkgKi8KKwlf
-X3UzMiBucl9ib3M7ICAgICAgICAgLyogaW4sIG51bWJlciBvZiBzdWJtaXRfYm8ncyAqLworCV9f
-dTMyIG5yX3JlbG9jczsgICAgICAvKiBpbiwgbnVtYmVyIG9mIHN1Ym1pdF9yZWxvYydzICovCisJ
-X191MzIgc3RyZWFtX3NpemU7ICAgIC8qIGluLCBjbWRzdHJlYW0gc2l6ZSAqLworCV9fdTY0IGJv
-czsgICAgICAgICAgICAvKiBpbiwgcHRyIHRvIGFycmF5IG9mIHN1Ym1pdF9ibydzICovCisJX191
-NjQgcmVsb2NzOyAgICAgICAgIC8qIGluLCBwdHIgdG8gYXJyYXkgb2Ygc3VibWl0X3JlbG9jJ3Mg
-Ki8KKwlfX3U2NCBzdHJlYW07ICAgICAgICAgLyogaW4sIHB0ciB0byBjbWRzdHJlYW0gKi8KK307
-CisKKy8qIFRoZSBub3JtYWwgd2F5IHRvIHN5bmNocm9uaXplIHdpdGggdGhlIEdQVSBpcyBqdXN0
-IHRvIENQVV9QUkVQIG9uCisgKiBhIGJ1ZmZlciBpZiB5b3UgbmVlZCB0byBhY2Nlc3MgaXQgZnJv
-bSB0aGUgQ1BVIChvdGhlciBjbWRzdHJlYW0KKyAqIHN1Ym1pc3Npb24gZnJvbSBzYW1lIG9yIG90
-aGVyIGNvbnRleHRzLCBQQUdFX0ZMSVAgaW9jdGwsIGV0YywgYWxsCisgKiBoYW5kbGUgdGhlIHJl
-cXVpcmVkIHN5bmNocm9uaXphdGlvbiB1bmRlciB0aGUgaG9vZCkuICBUaGlzIGlvY3RsCisgKiBt
-YWlubHkganVzdCBleGlzdHMgYXMgYSB3YXkgdG8gaW1wbGVtZW50IHRoZSBnYWxsaXVtIHBpcGVf
-ZmVuY2UKKyAqIEFQSXMgd2l0aG91dCByZXF1aXJpbmcgYSBkdW1teSBibyB0byBzeW5jaHJvbml6
-ZSBvbi4KKyAqLworI2RlZmluZSBFVE5BX1dBSVRfTk9OQkxPQ0sgICAgICAweDAxCitzdHJ1Y3Qg
-ZHJtX2V0bmF2aXZfd2FpdF9mZW5jZSB7CisJX191MzIgcGlwZTsgICAgICAgICAgIC8qIGluICov
-CisJX191MzIgZmVuY2U7ICAgICAgICAgIC8qIGluICovCisJX191MzIgZmxhZ3M7ICAgICAgICAg
-IC8qIGluLCBtYXNrIG9mIEVUTkFfV0FJVF94ICovCisJX191MzIgcGFkOworCXN0cnVjdCBkcm1f
-ZXRuYXZpdl90aW1lc3BlYyB0aW1lb3V0OyAgIC8qIGluICovCit9OworCisjZGVmaW5lIEVUTkFf
-VVNFUlBUUl9SRUFECTB4MDEKKyNkZWZpbmUgRVROQV9VU0VSUFRSX1dSSVRFCTB4MDIKK3N0cnVj
-dCBkcm1fZXRuYXZpdl9nZW1fdXNlcnB0ciB7CisJX191NjQgdXNlcl9wdHI7CS8qIGluLCBwYWdl
-IGFsaWduZWQgdXNlciBwb2ludGVyICovCisJX191NjQgdXNlcl9zaXplOwkvKiBpbiwgcGFnZSBh
-bGlnbmVkIHVzZXIgc2l6ZSAqLworCV9fdTMyIGZsYWdzOwkJLyogaW4sIGZsYWdzICovCisJX191
-MzIgaGFuZGxlOwkvKiBvdXQsIG5vbi16ZXJvIGhhbmRsZSAqLworfTsKKworc3RydWN0IGRybV9l
-dG5hdml2X2dlbV93YWl0IHsKKwlfX3UzMiBwaXBlOwkJCQkvKiBpbiAqLworCV9fdTMyIGhhbmRs
-ZTsJCQkJLyogaW4sIGJvIHRvIGJlIHdhaXRlZCBmb3IgKi8KKwlfX3UzMiBmbGFnczsJCQkJLyog
-aW4sIG1hc2sgb2YgRVROQV9XQUlUX3ggICovCisJX191MzIgcGFkOworCXN0cnVjdCBkcm1fZXRu
-YXZpdl90aW1lc3BlYyB0aW1lb3V0OwkvKiBpbiAqLworfTsKKworI2RlZmluZSBEUk1fRVROQVZJ
-Vl9HRVRfUEFSQU0gICAgICAgICAgMHgwMAorLyogcGxhY2Vob2xkZXI6CisjZGVmaW5lIERSTV9F
-VE5BVklWX1NFVF9QQVJBTSAgICAgICAgICAweDAxCisgKi8KKyNkZWZpbmUgRFJNX0VUTkFWSVZf
-R0VNX05FVyAgICAgICAgICAgIDB4MDIKKyNkZWZpbmUgRFJNX0VUTkFWSVZfR0VNX0lORk8gICAg
-ICAgICAgIDB4MDMKKyNkZWZpbmUgRFJNX0VUTkFWSVZfR0VNX0NQVV9QUkVQICAgICAgIDB4MDQK
-KyNkZWZpbmUgRFJNX0VUTkFWSVZfR0VNX0NQVV9GSU5JICAgICAgIDB4MDUKKyNkZWZpbmUgRFJN
-X0VUTkFWSVZfR0VNX1NVQk1JVCAgICAgICAgIDB4MDYKKyNkZWZpbmUgRFJNX0VUTkFWSVZfV0FJ
-VF9GRU5DRSAgICAgICAgIDB4MDcKKyNkZWZpbmUgRFJNX0VUTkFWSVZfR0VNX1VTRVJQVFIgICAg
-ICAgIDB4MDgKKyNkZWZpbmUgRFJNX0VUTkFWSVZfR0VNX1dBSVQgICAgICAgICAgIDB4MDkKKyNk
-ZWZpbmUgRFJNX0VUTkFWSVZfTlVNX0lPQ1RMUyAgICAgICAgIDB4MGEKKworI2RlZmluZSBEUk1f
-SU9DVExfRVROQVZJVl9HRVRfUEFSQU0gICAgRFJNX0lPV1IoRFJNX0NPTU1BTkRfQkFTRSArIERS
-TV9FVE5BVklWX0dFVF9QQVJBTSwgc3RydWN0IGRybV9ldG5hdml2X3BhcmFtKQorI2RlZmluZSBE
-Uk1fSU9DVExfRVROQVZJVl9HRU1fTkVXICAgICAgRFJNX0lPV1IoRFJNX0NPTU1BTkRfQkFTRSAr
-IERSTV9FVE5BVklWX0dFTV9ORVcsIHN0cnVjdCBkcm1fZXRuYXZpdl9nZW1fbmV3KQorI2RlZmlu
-ZSBEUk1fSU9DVExfRVROQVZJVl9HRU1fSU5GTyAgICAgRFJNX0lPV1IoRFJNX0NPTU1BTkRfQkFT
-RSArIERSTV9FVE5BVklWX0dFTV9JTkZPLCBzdHJ1Y3QgZHJtX2V0bmF2aXZfZ2VtX2luZm8pCisj
-ZGVmaW5lIERSTV9JT0NUTF9FVE5BVklWX0dFTV9DUFVfUFJFUCBEUk1fSU9XKERSTV9DT01NQU5E
-X0JBU0UgKyBEUk1fRVROQVZJVl9HRU1fQ1BVX1BSRVAsIHN0cnVjdCBkcm1fZXRuYXZpdl9nZW1f
-Y3B1X3ByZXApCisjZGVmaW5lIERSTV9JT0NUTF9FVE5BVklWX0dFTV9DUFVfRklOSSBEUk1fSU9X
-KERSTV9DT01NQU5EX0JBU0UgKyBEUk1fRVROQVZJVl9HRU1fQ1BVX0ZJTkksIHN0cnVjdCBkcm1f
-ZXRuYXZpdl9nZW1fY3B1X2ZpbmkpCisjZGVmaW5lIERSTV9JT0NUTF9FVE5BVklWX0dFTV9TVUJN
-SVQgICBEUk1fSU9XUihEUk1fQ09NTUFORF9CQVNFICsgRFJNX0VUTkFWSVZfR0VNX1NVQk1JVCwg
-c3RydWN0IGRybV9ldG5hdml2X2dlbV9zdWJtaXQpCisjZGVmaW5lIERSTV9JT0NUTF9FVE5BVklW
-X1dBSVRfRkVOQ0UgICBEUk1fSU9XKERSTV9DT01NQU5EX0JBU0UgKyBEUk1fRVROQVZJVl9XQUlU
-X0ZFTkNFLCBzdHJ1Y3QgZHJtX2V0bmF2aXZfd2FpdF9mZW5jZSkKKyNkZWZpbmUgRFJNX0lPQ1RM
-X0VUTkFWSVZfR0VNX1VTRVJQVFIgIERSTV9JT1dSKERSTV9DT01NQU5EX0JBU0UgKyBEUk1fRVRO
-QVZJVl9HRU1fVVNFUlBUUiwgc3RydWN0IGRybV9ldG5hdml2X2dlbV91c2VycHRyKQorI2RlZmlu
-ZSBEUk1fSU9DVExfRVROQVZJVl9HRU1fV0FJVCAgICAgRFJNX0lPVyhEUk1fQ09NTUFORF9CQVNF
-ICsgRFJNX0VUTkFWSVZfR0VNX1dBSVQsIHN0cnVjdCBkcm1fZXRuYXZpdl9nZW1fd2FpdCkKKwor
-I2VuZGlmIC8qIF9fRVROQVZJVl9EUk1fSF9fICovCi0tIAoyLjYuMgoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+From: The etnaviv authors <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+
+This adds the GPU core driver part of the etnaviv DRM driver.
+
+Signed-off-by: Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 1644 +++++++++++++++++++++++++++++++++
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.h |  209 +++++
+ 2 files changed, 1853 insertions(+)
+ create mode 100644 drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+ create mode 100644 drivers/gpu/drm/etnaviv/etnaviv_gpu.h
+
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+new file mode 100644
+index 000000000000..d39093dc37e6
+--- /dev/null
++++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+@@ -0,0 +1,1644 @@
++/*
++ * Copyright (C) 2015 Etnaviv Project
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 as published by
++ * the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <linux/component.h>
++#include <linux/fence.h>
++#include <linux/moduleparam.h>
++#include <linux/of_device.h>
++#include "etnaviv_dump.h"
++#include "etnaviv_gpu.h"
++#include "etnaviv_gem.h"
++#include "etnaviv_mmu.h"
++#include "etnaviv_iommu.h"
++#include "etnaviv_iommu_v2.h"
++#include "common.xml.h"
++#include "state.xml.h"
++#include "state_hi.xml.h"
++#include "cmdstream.xml.h"
++
++static const struct platform_device_id gpu_ids[] = {
++	{ .name = "etnaviv-gpu,2d" },
++	{ },
++};
++
++static bool etnaviv_dump_core = true;
++module_param_named(dump_core, etnaviv_dump_core, bool, 0600);
++
++/*
++ * Driver functions:
++ */
++
++int etnaviv_gpu_get_param(struct etnaviv_gpu *gpu, u32 param, u64 *value)
++{
++	switch (param) {
++	case ETNAVIV_PARAM_GPU_MODEL:
++		*value = gpu->identity.model;
++		break;
++
++	case ETNAVIV_PARAM_GPU_REVISION:
++		*value = gpu->identity.revision;
++		break;
++
++	case ETNAVIV_PARAM_GPU_FEATURES_0:
++		*value = gpu->identity.features;
++		break;
++
++	case ETNAVIV_PARAM_GPU_FEATURES_1:
++		*value = gpu->identity.minor_features0;
++		break;
++
++	case ETNAVIV_PARAM_GPU_FEATURES_2:
++		*value = gpu->identity.minor_features1;
++		break;
++
++	case ETNAVIV_PARAM_GPU_FEATURES_3:
++		*value = gpu->identity.minor_features2;
++		break;
++
++	case ETNAVIV_PARAM_GPU_FEATURES_4:
++		*value = gpu->identity.minor_features3;
++		break;
++
++	case ETNAVIV_PARAM_GPU_STREAM_COUNT:
++		*value = gpu->identity.stream_count;
++		break;
++
++	case ETNAVIV_PARAM_GPU_REGISTER_MAX:
++		*value = gpu->identity.register_max;
++		break;
++
++	case ETNAVIV_PARAM_GPU_THREAD_COUNT:
++		*value = gpu->identity.thread_count;
++		break;
++
++	case ETNAVIV_PARAM_GPU_VERTEX_CACHE_SIZE:
++		*value = gpu->identity.vertex_cache_size;
++		break;
++
++	case ETNAVIV_PARAM_GPU_SHADER_CORE_COUNT:
++		*value = gpu->identity.shader_core_count;
++		break;
++
++	case ETNAVIV_PARAM_GPU_PIXEL_PIPES:
++		*value = gpu->identity.pixel_pipes;
++		break;
++
++	case ETNAVIV_PARAM_GPU_VERTEX_OUTPUT_BUFFER_SIZE:
++		*value = gpu->identity.vertex_output_buffer_size;
++		break;
++
++	case ETNAVIV_PARAM_GPU_BUFFER_SIZE:
++		*value = gpu->identity.buffer_size;
++		break;
++
++	case ETNAVIV_PARAM_GPU_INSTRUCTION_COUNT:
++		*value = gpu->identity.instruction_count;
++		break;
++
++	case ETNAVIV_PARAM_GPU_NUM_CONSTANTS:
++		*value = gpu->identity.num_constants;
++		break;
++
++	default:
++		DBG("%s: invalid param: %u", dev_name(gpu->dev), param);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static void etnaviv_hw_specs(struct etnaviv_gpu *gpu)
++{
++	if (gpu->identity.minor_features0 &
++	    chipMinorFeatures0_MORE_MINOR_FEATURES) {
++		u32 specs[2];
++
++		specs[0] = gpu_read(gpu, VIVS_HI_CHIP_SPECS);
++		specs[1] = gpu_read(gpu, VIVS_HI_CHIP_SPECS_2);
++
++		gpu->identity.stream_count =
++			(specs[0] & VIVS_HI_CHIP_SPECS_STREAM_COUNT__MASK)
++				>> VIVS_HI_CHIP_SPECS_STREAM_COUNT__SHIFT;
++		gpu->identity.register_max =
++			(specs[0] & VIVS_HI_CHIP_SPECS_REGISTER_MAX__MASK)
++				>> VIVS_HI_CHIP_SPECS_REGISTER_MAX__SHIFT;
++		gpu->identity.thread_count =
++			(specs[0] & VIVS_HI_CHIP_SPECS_THREAD_COUNT__MASK)
++				>> VIVS_HI_CHIP_SPECS_THREAD_COUNT__SHIFT;
++		gpu->identity.vertex_cache_size =
++			(specs[0] & VIVS_HI_CHIP_SPECS_VERTEX_CACHE_SIZE__MASK)
++				>> VIVS_HI_CHIP_SPECS_VERTEX_CACHE_SIZE__SHIFT;
++		gpu->identity.shader_core_count =
++			(specs[0] & VIVS_HI_CHIP_SPECS_SHADER_CORE_COUNT__MASK)
++				>> VIVS_HI_CHIP_SPECS_SHADER_CORE_COUNT__SHIFT;
++		gpu->identity.pixel_pipes =
++			(specs[0] & VIVS_HI_CHIP_SPECS_PIXEL_PIPES__MASK)
++				>> VIVS_HI_CHIP_SPECS_PIXEL_PIPES__SHIFT;
++		gpu->identity.vertex_output_buffer_size =
++			(specs[0] & VIVS_HI_CHIP_SPECS_VERTEX_OUTPUT_BUFFER_SIZE__MASK)
++				>> VIVS_HI_CHIP_SPECS_VERTEX_OUTPUT_BUFFER_SIZE__SHIFT;
++
++		gpu->identity.buffer_size =
++			(specs[1] & VIVS_HI_CHIP_SPECS_2_BUFFER_SIZE__MASK)
++				>> VIVS_HI_CHIP_SPECS_2_BUFFER_SIZE__SHIFT;
++		gpu->identity.instruction_count =
++			(specs[1] & VIVS_HI_CHIP_SPECS_2_INSTRUCTION_COUNT__MASK)
++				>> VIVS_HI_CHIP_SPECS_2_INSTRUCTION_COUNT__SHIFT;
++		gpu->identity.num_constants =
++			(specs[1] & VIVS_HI_CHIP_SPECS_2_NUM_CONSTANTS__MASK)
++				>> VIVS_HI_CHIP_SPECS_2_NUM_CONSTANTS__SHIFT;
++	}
++
++	/* Fill in the stream count if not specified */
++	if (gpu->identity.stream_count == 0) {
++		if (gpu->identity.model >= 0x1000)
++			gpu->identity.stream_count = 4;
++		else
++			gpu->identity.stream_count = 1;
++	}
++
++	/* Convert the register max value */
++	if (gpu->identity.register_max)
++		gpu->identity.register_max = 1 << gpu->identity.register_max;
++	else if (gpu->identity.model == 0x0400)
++		gpu->identity.register_max = 32;
++	else
++		gpu->identity.register_max = 64;
++
++	/* Convert thread count */
++	if (gpu->identity.thread_count)
++		gpu->identity.thread_count = 1 << gpu->identity.thread_count;
++	else if (gpu->identity.model == 0x0400)
++		gpu->identity.thread_count = 64;
++	else if (gpu->identity.model == 0x0500 ||
++		 gpu->identity.model == 0x0530)
++		gpu->identity.thread_count = 128;
++	else
++		gpu->identity.thread_count = 256;
++
++	if (gpu->identity.vertex_cache_size == 0)
++		gpu->identity.vertex_cache_size = 8;
++
++	if (gpu->identity.shader_core_count == 0) {
++		if (gpu->identity.model >= 0x1000)
++			gpu->identity.shader_core_count = 2;
++		else
++			gpu->identity.shader_core_count = 1;
++	}
++
++	if (gpu->identity.pixel_pipes == 0)
++		gpu->identity.pixel_pipes = 1;
++
++	/* Convert virtex buffer size */
++	if (gpu->identity.vertex_output_buffer_size) {
++		gpu->identity.vertex_output_buffer_size =
++			1 << gpu->identity.vertex_output_buffer_size;
++	} else if (gpu->identity.model == 0x0400) {
++		if (gpu->identity.revision < 0x4000)
++			gpu->identity.vertex_output_buffer_size = 512;
++		else if (gpu->identity.revision < 0x4200)
++			gpu->identity.vertex_output_buffer_size = 256;
++		else
++			gpu->identity.vertex_output_buffer_size = 128;
++	} else {
++		gpu->identity.vertex_output_buffer_size = 512;
++	}
++
++	switch (gpu->identity.instruction_count) {
++	case 0:
++		if ((gpu->identity.model == 0x2000 &&
++		     gpu->identity.revision == 0x5108) ||
++		    gpu->identity.model == 0x880)
++			gpu->identity.instruction_count = 512;
++		else
++			gpu->identity.instruction_count = 256;
++		break;
++
++	case 1:
++		gpu->identity.instruction_count = 1024;
++		break;
++
++	case 2:
++		gpu->identity.instruction_count = 2048;
++		break;
++
++	default:
++		gpu->identity.instruction_count = 256;
++		break;
++	}
++
++	if (gpu->identity.num_constants == 0)
++		gpu->identity.num_constants = 168;
++}
++
++static void etnaviv_hw_identify(struct etnaviv_gpu *gpu)
++{
++	u32 chipIdentity;
++
++	chipIdentity = gpu_read(gpu, VIVS_HI_CHIP_IDENTITY);
++
++	/* Special case for older graphic cores. */
++	if (VIVS_HI_CHIP_IDENTITY_FAMILY(chipIdentity) ==  0x01) {
++		gpu->identity.model    = 0x500; /* gc500 */
++		gpu->identity.revision = VIVS_HI_CHIP_IDENTITY_REVISION(chipIdentity);
++	} else {
++
++		gpu->identity.model = gpu_read(gpu, VIVS_HI_CHIP_MODEL);
++		gpu->identity.revision = gpu_read(gpu, VIVS_HI_CHIP_REV);
++
++		/*
++		 * !!!! HACK ALERT !!!!
++		 * Because people change device IDs without letting software
++		 * know about it - here is the hack to make it all look the
++		 * same.  Only for GC400 family.
++		 */
++		if ((gpu->identity.model & 0xff00) == 0x0400 &&
++		    gpu->identity.model != 0x0420) {
++			gpu->identity.model = gpu->identity.model & 0x0400;
++		}
++
++		/* Another special case */
++		if (gpu->identity.model == 0x300 &&
++		    gpu->identity.revision == 0x2201) {
++			u32 chipDate = gpu_read(gpu, VIVS_HI_CHIP_DATE);
++			u32 chipTime = gpu_read(gpu, VIVS_HI_CHIP_TIME);
++
++			if (chipDate == 0x20080814 && chipTime == 0x12051100) {
++				/*
++				 * This IP has an ECO; put the correct
++				 * revision in it.
++				 */
++				gpu->identity.revision = 0x1051;
++			}
++		}
++	}
++
++	dev_info(gpu->dev, "model: GC%x, revision: %x\n",
++		 gpu->identity.model, gpu->identity.revision);
++
++	gpu->identity.features = gpu_read(gpu, VIVS_HI_CHIP_FEATURE);
++
++	/* Disable fast clear on GC700. */
++	if (gpu->identity.model == 0x700)
++		gpu->identity.features &= ~chipFeatures_FAST_CLEAR;
++
++	if ((gpu->identity.model == 0x500 && gpu->identity.revision < 2) ||
++	    (gpu->identity.model == 0x300 && gpu->identity.revision < 0x2000)) {
++
++		/*
++		 * GC500 rev 1.x and GC300 rev < 2.0 doesn't have these
++		 * registers.
++		 */
++		gpu->identity.minor_features0 = 0;
++		gpu->identity.minor_features1 = 0;
++		gpu->identity.minor_features2 = 0;
++		gpu->identity.minor_features3 = 0;
++	} else
++		gpu->identity.minor_features0 =
++				gpu_read(gpu, VIVS_HI_CHIP_MINOR_FEATURE_0);
++
++	if (gpu->identity.minor_features0 &
++	    chipMinorFeatures0_MORE_MINOR_FEATURES) {
++		gpu->identity.minor_features1 =
++				gpu_read(gpu, VIVS_HI_CHIP_MINOR_FEATURE_1);
++		gpu->identity.minor_features2 =
++				gpu_read(gpu, VIVS_HI_CHIP_MINOR_FEATURE_2);
++		gpu->identity.minor_features3 =
++				gpu_read(gpu, VIVS_HI_CHIP_MINOR_FEATURE_3);
++	}
++
++	/* GC600 idle register reports zero bits where modules aren't present */
++	if (gpu->identity.model == chipModel_GC600) {
++		gpu->idle_mask = VIVS_HI_IDLE_STATE_TX |
++				 VIVS_HI_IDLE_STATE_RA |
++				 VIVS_HI_IDLE_STATE_SE |
++				 VIVS_HI_IDLE_STATE_PA |
++				 VIVS_HI_IDLE_STATE_SH |
++				 VIVS_HI_IDLE_STATE_PE |
++				 VIVS_HI_IDLE_STATE_DE |
++				 VIVS_HI_IDLE_STATE_FE;
++	} else {
++		gpu->idle_mask = ~VIVS_HI_IDLE_STATE_AXI_LP;
++	}
++
++	etnaviv_hw_specs(gpu);
++}
++
++static void etnaviv_gpu_load_clock(struct etnaviv_gpu *gpu, u32 clock)
++{
++	gpu_write(gpu, VIVS_HI_CLOCK_CONTROL, clock |
++		  VIVS_HI_CLOCK_CONTROL_FSCALE_CMD_LOAD);
++	gpu_write(gpu, VIVS_HI_CLOCK_CONTROL, clock);
++}
++
++static int etnaviv_hw_reset(struct etnaviv_gpu *gpu)
++{
++	u32 control, idle;
++	unsigned long timeout;
++	bool failed = true;
++
++	/* TODO
++	 *
++	 * - clock gating
++	 * - puls eater
++	 * - what about VG?
++	 */
++
++	/* We hope that the GPU resets in under one second */
++	timeout = jiffies + msecs_to_jiffies(1000);
++
++	while (time_is_after_jiffies(timeout)) {
++		control = VIVS_HI_CLOCK_CONTROL_DISABLE_DEBUG_REGISTERS |
++			  VIVS_HI_CLOCK_CONTROL_FSCALE_VAL(0x40);
++
++		/* enable clock */
++		etnaviv_gpu_load_clock(gpu, control);
++
++		/* Wait for stable clock.  Vivante's code waited for 1ms */
++		usleep_range(1000, 10000);
++
++		/* isolate the GPU. */
++		control |= VIVS_HI_CLOCK_CONTROL_ISOLATE_GPU;
++		gpu_write(gpu, VIVS_HI_CLOCK_CONTROL, control);
++
++		/* set soft reset. */
++		control |= VIVS_HI_CLOCK_CONTROL_SOFT_RESET;
++		gpu_write(gpu, VIVS_HI_CLOCK_CONTROL, control);
++
++		/* wait for reset. */
++		msleep(1);
++
++		/* reset soft reset bit. */
++		control &= ~VIVS_HI_CLOCK_CONTROL_SOFT_RESET;
++		gpu_write(gpu, VIVS_HI_CLOCK_CONTROL, control);
++
++		/* reset GPU isolation. */
++		control &= ~VIVS_HI_CLOCK_CONTROL_ISOLATE_GPU;
++		gpu_write(gpu, VIVS_HI_CLOCK_CONTROL, control);
++
++		/* read idle register. */
++		idle = gpu_read(gpu, VIVS_HI_IDLE_STATE);
++
++		/* try reseting again if FE it not idle */
++		if ((idle & VIVS_HI_IDLE_STATE_FE) == 0) {
++			dev_dbg(gpu->dev, "FE is not idle\n");
++			continue;
++		}
++
++		/* read reset register. */
++		control = gpu_read(gpu, VIVS_HI_CLOCK_CONTROL);
++
++		/* is the GPU idle? */
++		if (((control & VIVS_HI_CLOCK_CONTROL_IDLE_3D) == 0) ||
++		    ((control & VIVS_HI_CLOCK_CONTROL_IDLE_2D) == 0)) {
++			dev_dbg(gpu->dev, "GPU is not idle\n");
++			continue;
++		}
++
++		failed = false;
++		break;
++	}
++
++	if (failed) {
++		idle = gpu_read(gpu, VIVS_HI_IDLE_STATE);
++		control = gpu_read(gpu, VIVS_HI_CLOCK_CONTROL);
++
++		dev_err(gpu->dev, "GPU failed to reset: FE %sidle, 3D %sidle, 2D %sidle\n",
++			idle & VIVS_HI_IDLE_STATE_FE ? "" : "not ",
++			control & VIVS_HI_CLOCK_CONTROL_IDLE_3D ? "" : "not ",
++			control & VIVS_HI_CLOCK_CONTROL_IDLE_2D ? "" : "not ");
++
++		return -EBUSY;
++	}
++
++	/* We rely on the GPU running, so program the clock */
++	control = VIVS_HI_CLOCK_CONTROL_DISABLE_DEBUG_REGISTERS |
++		  VIVS_HI_CLOCK_CONTROL_FSCALE_VAL(0x40);
++
++	/* enable clock */
++	etnaviv_gpu_load_clock(gpu, control);
++
++	return 0;
++}
++
++static void etnaviv_gpu_hw_init(struct etnaviv_gpu *gpu)
++{
++	u16 prefetch;
++
++	if (gpu->identity.model == chipModel_GC320 &&
++	    gpu_read(gpu, VIVS_HI_CHIP_TIME) != 0x2062400 &&
++	    (gpu->identity.revision == 0x5007 ||
++	     gpu->identity.revision == 0x5220)) {
++		u32 mc_memory_debug;
++
++		mc_memory_debug = gpu_read(gpu, VIVS_MC_DEBUG_MEMORY) & ~0xff;
++
++		if (gpu->identity.revision == 0x5007)
++			mc_memory_debug |= 0x0c;
++		else
++			mc_memory_debug |= 0x08;
++
++		gpu_write(gpu, VIVS_MC_DEBUG_MEMORY, mc_memory_debug);
++	}
++
++	/*
++	 * Update GPU AXI cache atttribute to "cacheable, no allocate".
++	 * This is necessary to prevent the iMX6 SoC locking up.
++	 */
++	gpu_write(gpu, VIVS_HI_AXI_CONFIG,
++		  VIVS_HI_AXI_CONFIG_AWCACHE(2) |
++		  VIVS_HI_AXI_CONFIG_ARCACHE(2));
++
++	/* GC2000 rev 5108 needs a special bus config */
++	if (gpu->identity.model == 0x2000 && gpu->identity.revision == 0x5108) {
++		u32 bus_config = gpu_read(gpu, VIVS_MC_BUS_CONFIG);
++		bus_config &= ~(VIVS_MC_BUS_CONFIG_FE_BUS_CONFIG__MASK |
++				VIVS_MC_BUS_CONFIG_TX_BUS_CONFIG__MASK);
++		bus_config |= VIVS_MC_BUS_CONFIG_FE_BUS_CONFIG(1) |
++			      VIVS_MC_BUS_CONFIG_TX_BUS_CONFIG(0);
++		gpu_write(gpu, VIVS_MC_BUS_CONFIG, bus_config);
++	}
++
++	/* set base addresses */
++	gpu_write(gpu, VIVS_MC_MEMORY_BASE_ADDR_RA, gpu->memory_base);
++	gpu_write(gpu, VIVS_MC_MEMORY_BASE_ADDR_FE, gpu->memory_base);
++	gpu_write(gpu, VIVS_MC_MEMORY_BASE_ADDR_TX, gpu->memory_base);
++	gpu_write(gpu, VIVS_MC_MEMORY_BASE_ADDR_PEZ, gpu->memory_base);
++	gpu_write(gpu, VIVS_MC_MEMORY_BASE_ADDR_PE, gpu->memory_base);
++
++	/* setup the MMU page table pointers */
++	etnaviv_iommu_domain_restore(gpu, gpu->mmu->domain);
++
++	/* Start command processor */
++	prefetch = etnaviv_buffer_init(gpu);
++
++	gpu_write(gpu, VIVS_HI_INTR_ENBL, ~0U);
++	gpu_write(gpu, VIVS_FE_COMMAND_ADDRESS,
++		  gpu->buffer->paddr - gpu->memory_base);
++	gpu_write(gpu, VIVS_FE_COMMAND_CONTROL,
++		  VIVS_FE_COMMAND_CONTROL_ENABLE |
++		  VIVS_FE_COMMAND_CONTROL_PREFETCH(prefetch));
++}
++
++int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
++{
++	int ret, i;
++	struct iommu_domain *iommu;
++	enum etnaviv_iommu_version version;
++	bool mmuv2;
++
++	ret = pm_runtime_get_sync(gpu->dev);
++	if (ret < 0)
++		return ret;
++
++	etnaviv_hw_identify(gpu);
++
++	if (gpu->identity.model == 0) {
++		dev_err(gpu->dev, "Unknown GPU model\n");
++		pm_runtime_put_autosuspend(gpu->dev);
++		return -ENXIO;
++	}
++
++	ret = etnaviv_hw_reset(gpu);
++	if (ret)
++		goto fail;
++
++	/* Setup IOMMU.. eventually we will (I think) do this once per context
++	 * and have separate page tables per context.  For now, to keep things
++	 * simple and to get something working, just use a single address space:
++	 */
++	mmuv2 = gpu->identity.minor_features1 & chipMinorFeatures1_MMU_VERSION;
++	dev_dbg(gpu->dev, "mmuv2: %d\n", mmuv2);
++
++	if (!mmuv2) {
++		iommu = etnaviv_iommu_domain_alloc(gpu);
++		version = ETNAVIV_IOMMU_V1;
++	} else {
++		iommu = etnaviv_iommu_v2_domain_alloc(gpu);
++		version = ETNAVIV_IOMMU_V2;
++	}
++
++	if (!iommu) {
++		ret = -ENOMEM;
++		goto fail;
++	}
++
++	/* TODO: we will leak here memory - fix it! */
++
++	gpu->mmu = etnaviv_iommu_new(gpu, iommu, version);
++	if (!gpu->mmu) {
++		ret = -ENOMEM;
++		goto fail;
++	}
++
++	/* Create buffer: */
++	gpu->buffer = etnaviv_gpu_cmdbuf_new(gpu, PAGE_SIZE, 0);
++	if (!gpu->buffer) {
++		ret = -ENOMEM;
++		dev_err(gpu->dev, "could not create command buffer\n");
++		goto fail;
++	}
++	if (gpu->buffer->paddr - gpu->memory_base > 0x80000000) {
++		ret = -EINVAL;
++		dev_err(gpu->dev,
++			"command buffer outside valid memory window\n");
++		goto free_buffer;
++	}
++
++	/* Setup event management */
++	spin_lock_init(&gpu->event_spinlock);
++	init_completion(&gpu->event_free);
++	for (i = 0; i < ARRAY_SIZE(gpu->event); i++) {
++		gpu->event[i].used = false;
++		complete(&gpu->event_free);
++	}
++
++	/* Now program the hardware */
++	mutex_lock(&gpu->lock);
++	etnaviv_gpu_hw_init(gpu);
++	mutex_unlock(&gpu->lock);
++
++	pm_runtime_mark_last_busy(gpu->dev);
++	pm_runtime_put_autosuspend(gpu->dev);
++
++	return 0;
++
++free_buffer:
++	etnaviv_gpu_cmdbuf_free(gpu->buffer);
++	gpu->buffer = NULL;
++fail:
++	pm_runtime_mark_last_busy(gpu->dev);
++	pm_runtime_put_autosuspend(gpu->dev);
++
++	return ret;
++}
++
++#ifdef CONFIG_DEBUG_FS
++struct dma_debug {
++	u32 address[2];
++	u32 state[2];
++};
++
++static void verify_dma(struct etnaviv_gpu *gpu, struct dma_debug *debug)
++{
++	u32 i;
++
++	debug->address[0] = gpu_read(gpu, VIVS_FE_DMA_ADDRESS);
++	debug->state[0]   = gpu_read(gpu, VIVS_FE_DMA_DEBUG_STATE);
++
++	for (i = 0; i < 500; i++) {
++		debug->address[1] = gpu_read(gpu, VIVS_FE_DMA_ADDRESS);
++		debug->state[1]   = gpu_read(gpu, VIVS_FE_DMA_DEBUG_STATE);
++
++		if (debug->address[0] != debug->address[1])
++			break;
++
++		if (debug->state[0] != debug->state[1])
++			break;
++	}
++}
++
++int etnaviv_gpu_debugfs(struct etnaviv_gpu *gpu, struct seq_file *m)
++{
++	struct dma_debug debug;
++	u32 dma_lo, dma_hi, axi, idle;
++	int ret;
++
++	seq_printf(m, "%s Status:\n", dev_name(gpu->dev));
++
++	ret = pm_runtime_get_sync(gpu->dev);
++	if (ret < 0)
++		return ret;
++
++	dma_lo = gpu_read(gpu, VIVS_FE_DMA_LOW);
++	dma_hi = gpu_read(gpu, VIVS_FE_DMA_HIGH);
++	axi = gpu_read(gpu, VIVS_HI_AXI_STATUS);
++	idle = gpu_read(gpu, VIVS_HI_IDLE_STATE);
++
++	verify_dma(gpu, &debug);
++
++	seq_puts(m, "\tfeatures\n");
++	seq_printf(m, "\t minor_features0: 0x%08x\n",
++		   gpu->identity.minor_features0);
++	seq_printf(m, "\t minor_features1: 0x%08x\n",
++		   gpu->identity.minor_features1);
++	seq_printf(m, "\t minor_features2: 0x%08x\n",
++		   gpu->identity.minor_features2);
++	seq_printf(m, "\t minor_features3: 0x%08x\n",
++		   gpu->identity.minor_features3);
++
++	seq_puts(m, "\tspecs\n");
++	seq_printf(m, "\t stream_count:  %d\n",
++			gpu->identity.stream_count);
++	seq_printf(m, "\t register_max: %d\n",
++			gpu->identity.register_max);
++	seq_printf(m, "\t thread_count: %d\n",
++			gpu->identity.thread_count);
++	seq_printf(m, "\t vertex_cache_size: %d\n",
++			gpu->identity.vertex_cache_size);
++	seq_printf(m, "\t shader_core_count: %d\n",
++			gpu->identity.shader_core_count);
++	seq_printf(m, "\t pixel_pipes: %d\n",
++			gpu->identity.pixel_pipes);
++	seq_printf(m, "\t vertex_output_buffer_size: %d\n",
++			gpu->identity.vertex_output_buffer_size);
++	seq_printf(m, "\t buffer_size: %d\n",
++			gpu->identity.buffer_size);
++	seq_printf(m, "\t instruction_count: %d\n",
++			gpu->identity.instruction_count);
++	seq_printf(m, "\t num_constants: %d\n",
++			gpu->identity.num_constants);
++
++	seq_printf(m, "\taxi: 0x%08x\n", axi);
++	seq_printf(m, "\tidle: 0x%08x\n", idle);
++	idle |= ~gpu->idle_mask & ~VIVS_HI_IDLE_STATE_AXI_LP;
++	if ((idle & VIVS_HI_IDLE_STATE_FE) == 0)
++		seq_puts(m, "\t FE is not idle\n");
++	if ((idle & VIVS_HI_IDLE_STATE_DE) == 0)
++		seq_puts(m, "\t DE is not idle\n");
++	if ((idle & VIVS_HI_IDLE_STATE_PE) == 0)
++		seq_puts(m, "\t PE is not idle\n");
++	if ((idle & VIVS_HI_IDLE_STATE_SH) == 0)
++		seq_puts(m, "\t SH is not idle\n");
++	if ((idle & VIVS_HI_IDLE_STATE_PA) == 0)
++		seq_puts(m, "\t PA is not idle\n");
++	if ((idle & VIVS_HI_IDLE_STATE_SE) == 0)
++		seq_puts(m, "\t SE is not idle\n");
++	if ((idle & VIVS_HI_IDLE_STATE_RA) == 0)
++		seq_puts(m, "\t RA is not idle\n");
++	if ((idle & VIVS_HI_IDLE_STATE_TX) == 0)
++		seq_puts(m, "\t TX is not idle\n");
++	if ((idle & VIVS_HI_IDLE_STATE_VG) == 0)
++		seq_puts(m, "\t VG is not idle\n");
++	if ((idle & VIVS_HI_IDLE_STATE_IM) == 0)
++		seq_puts(m, "\t IM is not idle\n");
++	if ((idle & VIVS_HI_IDLE_STATE_FP) == 0)
++		seq_puts(m, "\t FP is not idle\n");
++	if ((idle & VIVS_HI_IDLE_STATE_TS) == 0)
++		seq_puts(m, "\t TS is not idle\n");
++	if (idle & VIVS_HI_IDLE_STATE_AXI_LP)
++		seq_puts(m, "\t AXI low power mode\n");
++
++	if (gpu->identity.features & chipFeatures_DEBUG_MODE) {
++		u32 read0 = gpu_read(gpu, VIVS_MC_DEBUG_READ0);
++		u32 read1 = gpu_read(gpu, VIVS_MC_DEBUG_READ1);
++		u32 write = gpu_read(gpu, VIVS_MC_DEBUG_WRITE);
++
++		seq_puts(m, "\tMC\n");
++		seq_printf(m, "\t read0: 0x%08x\n", read0);
++		seq_printf(m, "\t read1: 0x%08x\n", read1);
++		seq_printf(m, "\t write: 0x%08x\n", write);
++	}
++
++	seq_puts(m, "\tDMA ");
++
++	if (debug.address[0] == debug.address[1] &&
++	    debug.state[0] == debug.state[1]) {
++		seq_puts(m, "seems to be stuck\n");
++	} else if (debug.address[0] == debug.address[1]) {
++		seq_puts(m, "adress is constant\n");
++	} else {
++		seq_puts(m, "is runing\n");
++	}
++
++	seq_printf(m, "\t address 0: 0x%08x\n", debug.address[0]);
++	seq_printf(m, "\t address 1: 0x%08x\n", debug.address[1]);
++	seq_printf(m, "\t state 0: 0x%08x\n", debug.state[0]);
++	seq_printf(m, "\t state 1: 0x%08x\n", debug.state[1]);
++	seq_printf(m, "\t last fetch 64 bit word: 0x%08x 0x%08x\n",
++		   dma_lo, dma_hi);
++
++	ret = 0;
++
++	pm_runtime_mark_last_busy(gpu->dev);
++	pm_runtime_put_autosuspend(gpu->dev);
++
++	return ret;
++}
++#endif
++
++/*
++ * Power Management:
++ */
++static int enable_clk(struct etnaviv_gpu *gpu)
++{
++	if (gpu->clk_core)
++		clk_prepare_enable(gpu->clk_core);
++	if (gpu->clk_shader)
++		clk_prepare_enable(gpu->clk_shader);
++
++	return 0;
++}
++
++static int disable_clk(struct etnaviv_gpu *gpu)
++{
++	if (gpu->clk_core)
++		clk_disable_unprepare(gpu->clk_core);
++	if (gpu->clk_shader)
++		clk_disable_unprepare(gpu->clk_shader);
++
++	return 0;
++}
++
++static int enable_axi(struct etnaviv_gpu *gpu)
++{
++	if (gpu->clk_bus)
++		clk_prepare_enable(gpu->clk_bus);
++
++	return 0;
++}
++
++static int disable_axi(struct etnaviv_gpu *gpu)
++{
++	if (gpu->clk_bus)
++		clk_disable_unprepare(gpu->clk_bus);
++
++	return 0;
++}
++
++/*
++ * Hangcheck detection for locked gpu:
++ */
++static void recover_worker(struct work_struct *work)
++{
++	struct etnaviv_gpu *gpu = container_of(work, struct etnaviv_gpu,
++					       recover_work);
++	unsigned long flags;
++	unsigned int i;
++
++	dev_err(gpu->dev, "hangcheck recover!\n");
++
++	if (pm_runtime_get_sync(gpu->dev) < 0)
++		return;
++
++	mutex_lock(&gpu->lock);
++
++	/* Only catch the first event, or when manually re-armed */
++	if (etnaviv_dump_core) {
++		etnaviv_core_dump(gpu);
++		etnaviv_dump_core = false;
++	}
++
++	etnaviv_hw_reset(gpu);
++
++	/* complete all events, the GPU won't do it after the reset */
++	spin_lock_irqsave(&gpu->event_spinlock, flags);
++	for (i = 0; i < ARRAY_SIZE(gpu->event); i++) {
++		if (!gpu->event[i].used)
++			continue;
++		fence_signal(gpu->event[i].fence);
++		gpu->event[i].fence = NULL;
++		gpu->event[i].used = false;
++		complete(&gpu->event_free);
++		/*
++		 * Decrement the PM count for each stuck event. This is safe
++		 * even in atomic context as we use ASYNC RPM here.
++		 */
++		pm_runtime_put_autosuspend(gpu->dev);
++	}
++	spin_unlock_irqrestore(&gpu->event_spinlock, flags);
++	gpu->completed_fence = gpu->active_fence;
++
++	etnaviv_gpu_hw_init(gpu);
++	gpu->switch_context = true;
++
++	mutex_unlock(&gpu->lock);
++	pm_runtime_mark_last_busy(gpu->dev);
++	pm_runtime_put_autosuspend(gpu->dev);
++
++	/* Retire the buffer objects in a work */
++	etnaviv_queue_work(gpu->drm, &gpu->retire_work);
++}
++
++static void hangcheck_timer_reset(struct etnaviv_gpu *gpu)
++{
++	DBG("%s", dev_name(gpu->dev));
++	mod_timer(&gpu->hangcheck_timer,
++		  round_jiffies_up(jiffies + DRM_ETNAVIV_HANGCHECK_JIFFIES));
++}
++
++static void hangcheck_handler(unsigned long data)
++{
++	struct etnaviv_gpu *gpu = (struct etnaviv_gpu *)data;
++	u32 fence = gpu->completed_fence;
++	bool progress = false;
++
++	if (fence != gpu->hangcheck_fence) {
++		gpu->hangcheck_fence = fence;
++		progress = true;
++	}
++
++	if (!progress) {
++		u32 dma_addr = gpu_read(gpu, VIVS_FE_DMA_ADDRESS);
++		int change = dma_addr - gpu->hangcheck_dma_addr;
++
++		if (change < 0 || change > 16) {
++			gpu->hangcheck_dma_addr = dma_addr;
++			progress = true;
++		}
++	}
++
++	if (!progress && fence_after(gpu->active_fence, fence)) {
++		dev_err(gpu->dev, "hangcheck detected gpu lockup!\n");
++		dev_err(gpu->dev, "     completed fence: %u\n", fence);
++		dev_err(gpu->dev, "     active fence: %u\n",
++			gpu->active_fence);
++		etnaviv_queue_work(gpu->drm, &gpu->recover_work);
++	}
++
++	/* if still more pending work, reset the hangcheck timer: */
++	if (fence_after(gpu->active_fence, gpu->hangcheck_fence))
++		hangcheck_timer_reset(gpu);
++}
++
++static void hangcheck_disable(struct etnaviv_gpu *gpu)
++{
++	del_timer_sync(&gpu->hangcheck_timer);
++	cancel_work_sync(&gpu->recover_work);
++}
++
++/* fence object management */
++struct etnaviv_fence {
++	struct etnaviv_gpu *gpu;
++	struct fence base;
++};
++
++static inline struct etnaviv_fence *to_etnaviv_fence(struct fence *fence)
++{
++	return container_of(fence, struct etnaviv_fence, base);
++}
++
++static const char *etnaviv_fence_get_driver_name(struct fence *fence)
++{
++	return "etnaviv";
++}
++
++static const char *etnaviv_fence_get_timeline_name(struct fence *fence)
++{
++	struct etnaviv_fence *f = to_etnaviv_fence(fence);
++
++	return dev_name(f->gpu->dev);
++}
++
++static bool etnaviv_fence_enable_signaling(struct fence *fence)
++{
++	return true;
++}
++
++static bool etnaviv_fence_signaled(struct fence *fence)
++{
++	struct etnaviv_fence *f = to_etnaviv_fence(fence);
++
++	return fence_completed(f->gpu, f->base.seqno);
++}
++
++static void etnaviv_fence_release(struct fence *fence)
++{
++	struct etnaviv_fence *f = to_etnaviv_fence(fence);
++
++	kfree_rcu(f, base.rcu);
++}
++
++static const struct fence_ops etnaviv_fence_ops = {
++	.get_driver_name = etnaviv_fence_get_driver_name,
++	.get_timeline_name = etnaviv_fence_get_timeline_name,
++	.enable_signaling = etnaviv_fence_enable_signaling,
++	.signaled = etnaviv_fence_signaled,
++	.wait = fence_default_wait,
++	.release = etnaviv_fence_release,
++};
++
++static struct fence *etnaviv_gpu_fence_alloc(struct etnaviv_gpu *gpu)
++{
++	struct etnaviv_fence *f;
++
++	f = kzalloc(sizeof(*f), GFP_KERNEL);
++	if (!f)
++		return NULL;
++
++	f->gpu = gpu;
++
++	fence_init(&f->base, &etnaviv_fence_ops, &gpu->fence_spinlock,
++		   gpu->fence_context, ++gpu->next_fence);
++
++	return &f->base;
++}
++
++int etnaviv_gpu_fence_sync_obj(struct etnaviv_gem_object *etnaviv_obj,
++	unsigned int context, bool exclusive)
++{
++	struct reservation_object *robj = etnaviv_obj->resv;
++	struct reservation_object_list *fobj;
++	struct fence *fence;
++	int i, ret;
++
++	if (!exclusive) {
++		ret = reservation_object_reserve_shared(robj);
++		if (ret)
++			return ret;
++	}
++
++	/*
++	 * If we have any shared fences, then the exclusive fence
++	 * should be ignored as it will already have been signalled.
++	 */
++	fobj = reservation_object_get_list(robj);
++	if (!fobj || fobj->shared_count == 0) {
++		/* Wait on any existing exclusive fence which isn't our own */
++		fence = reservation_object_get_excl(robj);
++		if (fence && fence->context != context) {
++			ret = fence_wait(fence, true);
++			if (ret)
++				return ret;
++		}
++	}
++
++	if (!exclusive || !fobj)
++		return 0;
++
++	for (i = 0; i < fobj->shared_count; i++) {
++		fence = rcu_dereference_protected(fobj->shared[i],
++						reservation_object_held(robj));
++		if (fence->context != context) {
++			ret = fence_wait(fence, true);
++			if (ret)
++				return ret;
++		}
++	}
++
++	return 0;
++}
++
++/*
++ * event management:
++ */
++
++static unsigned int event_alloc(struct etnaviv_gpu *gpu)
++{
++	unsigned long ret, flags;
++	unsigned int i, event = ~0U;
++
++	ret = wait_for_completion_timeout(&gpu->event_free,
++					  msecs_to_jiffies(10 * 10000));
++	if (!ret)
++		dev_err(gpu->dev, "wait_for_completion_timeout failed");
++
++	spin_lock_irqsave(&gpu->event_spinlock, flags);
++
++	/* find first free event */
++	for (i = 0; i < ARRAY_SIZE(gpu->event); i++) {
++		if (gpu->event[i].used == false) {
++			gpu->event[i].used = true;
++			event = i;
++			break;
++		}
++	}
++
++	spin_unlock_irqrestore(&gpu->event_spinlock, flags);
++
++	return event;
++}
++
++static void event_free(struct etnaviv_gpu *gpu, unsigned int event)
++{
++	unsigned long flags;
++
++	spin_lock_irqsave(&gpu->event_spinlock, flags);
++
++	if (gpu->event[event].used == false) {
++		dev_warn(gpu->dev, "event %u is already marked as free",
++			 event);
++		spin_unlock_irqrestore(&gpu->event_spinlock, flags);
++	} else {
++		gpu->event[event].used = false;
++		spin_unlock_irqrestore(&gpu->event_spinlock, flags);
++
++		complete(&gpu->event_free);
++	}
++}
++
++/*
++ * Cmdstream submission/retirement:
++ */
++
++struct etnaviv_cmdbuf *etnaviv_gpu_cmdbuf_new(struct etnaviv_gpu *gpu, u32 size,
++	size_t nr_bos)
++{
++	struct etnaviv_cmdbuf *cmdbuf;
++	size_t sz = size_vstruct(nr_bos, sizeof(cmdbuf->bo[0]),
++				 sizeof(*cmdbuf));
++
++	cmdbuf = kzalloc(sz, GFP_KERNEL);
++	if (!cmdbuf)
++		return NULL;
++
++	cmdbuf->vaddr = dma_alloc_writecombine(gpu->dev, size, &cmdbuf->paddr,
++					       GFP_KERNEL);
++	if (!cmdbuf->vaddr) {
++		kfree(cmdbuf);
++		return NULL;
++	}
++
++	cmdbuf->gpu = gpu;
++	cmdbuf->size = size;
++
++	return cmdbuf;
++}
++
++void etnaviv_gpu_cmdbuf_free(struct etnaviv_cmdbuf *cmdbuf)
++{
++	dma_free_writecombine(cmdbuf->gpu->dev, cmdbuf->size,
++			      cmdbuf->vaddr, cmdbuf->paddr);
++	kfree(cmdbuf);
++}
++
++static void retire_worker(struct work_struct *work)
++{
++	struct etnaviv_gpu *gpu = container_of(work, struct etnaviv_gpu,
++					       retire_work);
++	u32 fence = gpu->completed_fence;
++	struct etnaviv_cmdbuf *cmdbuf, *tmp;
++	unsigned int i;
++
++	mutex_lock(&gpu->lock);
++	list_for_each_entry_safe(cmdbuf, tmp, &gpu->active_cmd_list, node) {
++		if (!fence_is_signaled(cmdbuf->fence))
++			break;
++
++		list_del(&cmdbuf->node);
++		fence_put(cmdbuf->fence);
++
++		for (i = 0; i < cmdbuf->nr_bos; i++) {
++			struct etnaviv_gem_object *etnaviv_obj = cmdbuf->bo[i];
++
++			atomic_dec(&etnaviv_obj->gpu_active);
++			/* drop the refcount taken in etnaviv_gpu_submit */
++			etnaviv_gem_put_iova(gpu, &etnaviv_obj->base);
++		}
++
++		etnaviv_gpu_cmdbuf_free(cmdbuf);
++	}
++
++	gpu->retired_fence = fence;
++
++	mutex_unlock(&gpu->lock);
++
++	wake_up_all(&gpu->fence_event);
++}
++
++int etnaviv_gpu_wait_fence_interruptible(struct etnaviv_gpu *gpu,
++	u32 fence, struct timespec *timeout)
++{
++	int ret;
++
++	if (fence_after(fence, gpu->next_fence)) {
++		DRM_ERROR("waiting on invalid fence: %u (of %u)\n",
++				fence, gpu->next_fence);
++		return -EINVAL;
++	}
++
++	if (!timeout) {
++		/* No timeout was requested: just test for completion */
++		ret = fence_completed(gpu, fence) ? 0 : -EBUSY;
++	} else {
++		unsigned long remaining = etnaviv_timeout_to_jiffies(timeout);
++
++		ret = wait_event_interruptible_timeout(gpu->fence_event,
++						fence_completed(gpu, fence),
++						remaining);
++		if (ret == 0) {
++			DBG("timeout waiting for fence: %u (retired: %u completed: %u)",
++				fence, gpu->retired_fence,
++				gpu->completed_fence);
++			ret = -ETIMEDOUT;
++		} else if (ret != -ERESTARTSYS) {
++			ret = 0;
++		}
++	}
++
++	return ret;
++}
++
++/*
++ * Wait for an object to become inactive.  This, on it's own, is not race
++ * free: the object is moved by the retire worker off the active list, and
++ * then the iova is put.  Moreover, the object could be re-submitted just
++ * after we notice that it's become inactive.
++ *
++ * Although the retirement happens under the gpu lock, we don't want to hold
++ * that lock in this function while waiting.
++ */
++int etnaviv_gpu_wait_obj_inactive(struct etnaviv_gpu *gpu,
++	struct etnaviv_gem_object *etnaviv_obj, struct timespec *timeout)
++{
++	unsigned long remaining;
++	long ret;
++
++	if (!timeout)
++		return !is_active(etnaviv_obj) ? 0 : -EBUSY;
++
++	remaining = etnaviv_timeout_to_jiffies(timeout);
++
++	ret = wait_event_interruptible_timeout(gpu->fence_event,
++					       !is_active(etnaviv_obj),
++					       remaining);
++	if (ret > 0) {
++		struct etnaviv_drm_private *priv = gpu->drm->dev_private;
++
++		/* Synchronise with the retire worker */
++		flush_workqueue(priv->wq);
++		return 0;
++	} else if (ret == -ERESTARTSYS) {
++		return -ERESTARTSYS;
++	} else {
++		return -ETIMEDOUT;
++	}
++}
++
++int etnaviv_gpu_pm_get_sync(struct etnaviv_gpu *gpu)
++{
++	return pm_runtime_get_sync(gpu->dev);
++}
++
++void etnaviv_gpu_pm_put(struct etnaviv_gpu *gpu)
++{
++	pm_runtime_mark_last_busy(gpu->dev);
++	pm_runtime_put_autosuspend(gpu->dev);
++}
++
++/* add bo's to gpu's ring, and kick gpu: */
++int etnaviv_gpu_submit(struct etnaviv_gpu *gpu,
++	struct etnaviv_gem_submit *submit, struct etnaviv_cmdbuf *cmdbuf)
++{
++	struct fence *fence;
++	unsigned int event, i;
++	int ret;
++
++	ret = etnaviv_gpu_pm_get_sync(gpu);
++	if (ret < 0)
++		return ret;
++
++	mutex_lock(&gpu->lock);
++
++	/*
++	 * TODO
++	 *
++	 * - flush
++	 * - data endian
++	 * - prefetch
++	 *
++	 */
++
++	event = event_alloc(gpu);
++	if (unlikely(event == ~0U)) {
++		DRM_ERROR("no free event\n");
++		ret = -EBUSY;
++		goto out_unlock;
++	}
++
++	fence = etnaviv_gpu_fence_alloc(gpu);
++	if (!fence) {
++		event_free(gpu, event);
++		ret = -ENOMEM;
++		goto out_unlock;
++	}
++
++	gpu->event[event].fence = fence;
++	submit->fence = fence->seqno;
++	gpu->active_fence = submit->fence;
++
++	if (gpu->lastctx != cmdbuf->ctx) {
++		gpu->mmu->need_flush = true;
++		gpu->switch_context = true;
++		gpu->lastctx = cmdbuf->ctx;
++	}
++
++	etnaviv_buffer_queue(gpu, event, cmdbuf);
++
++	cmdbuf->fence = fence;
++	list_add_tail(&cmdbuf->node, &gpu->active_cmd_list);
++
++	/* We're committed to adding this command buffer, hold a PM reference */
++	pm_runtime_get_noresume(gpu->dev);
++
++	for (i = 0; i < submit->nr_bos; i++) {
++		struct etnaviv_gem_object *etnaviv_obj = submit->bos[i].obj;
++		u32 iova;
++
++		/* Each cmdbuf takes a refcount on the iova */
++		etnaviv_gem_get_iova(gpu, &etnaviv_obj->base, &iova);
++		cmdbuf->bo[i] = etnaviv_obj;
++		atomic_inc(&etnaviv_obj->gpu_active);
++
++		if (submit->bos[i].flags & ETNA_SUBMIT_BO_WRITE)
++			reservation_object_add_excl_fence(etnaviv_obj->resv,
++							  fence);
++		else
++			reservation_object_add_shared_fence(etnaviv_obj->resv,
++							    fence);
++	}
++	cmdbuf->nr_bos = submit->nr_bos;
++	hangcheck_timer_reset(gpu);
++	ret = 0;
++
++out_unlock:
++	mutex_unlock(&gpu->lock);
++
++	etnaviv_gpu_pm_put(gpu);
++
++	return ret;
++}
++
++/*
++ * Init/Cleanup:
++ */
++static irqreturn_t irq_handler(int irq, void *data)
++{
++	struct etnaviv_gpu *gpu = data;
++	irqreturn_t ret = IRQ_NONE;
++
++	u32 intr = gpu_read(gpu, VIVS_HI_INTR_ACKNOWLEDGE);
++
++	if (intr != 0) {
++		int event;
++
++		pm_runtime_mark_last_busy(gpu->dev);
++
++		dev_dbg(gpu->dev, "intr 0x%08x\n", intr);
++
++		if (intr & VIVS_HI_INTR_ACKNOWLEDGE_AXI_BUS_ERROR) {
++			dev_err(gpu->dev, "AXI bus error\n");
++			intr &= ~VIVS_HI_INTR_ACKNOWLEDGE_AXI_BUS_ERROR;
++		}
++
++		while ((event = ffs(intr)) != 0) {
++			struct fence *fence;
++
++			event -= 1;
++
++			intr &= ~(1 << event);
++
++			dev_dbg(gpu->dev, "event %u\n", event);
++
++			fence = gpu->event[event].fence;
++			gpu->event[event].fence = NULL;
++			fence_signal(fence);
++
++			/*
++			 * Events can be processed out of order.  Eg,
++			 * - allocate and queue event 0
++			 * - allocate event 1
++			 * - event 0 completes, we process it
++			 * - allocate and queue event 0
++			 * - event 1 and event 0 complete
++			 * we can end up processing event 0 first, then 1.
++			 */
++			if (fence_after(fence->seqno, gpu->completed_fence))
++				gpu->completed_fence = fence->seqno;
++
++			event_free(gpu, event);
++
++			/*
++			 * We need to balance the runtime PM count caused by
++			 * each submission.  Upon submission, we increment
++			 * the runtime PM counter, and allocate one event.
++			 * So here, we put the runtime PM count for each
++			 * completed event.
++			 */
++			pm_runtime_put_autosuspend(gpu->dev);
++		}
++
++		/* Retire the buffer objects in a work */
++		etnaviv_queue_work(gpu->drm, &gpu->retire_work);
++
++		ret = IRQ_HANDLED;
++	}
++
++	return ret;
++}
++
++static int etnaviv_gpu_clk_enable(struct etnaviv_gpu *gpu)
++{
++	int ret;
++
++	ret = enable_clk(gpu);
++	if (ret)
++		return ret;
++
++	ret = enable_axi(gpu);
++	if (ret) {
++		disable_clk(gpu);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int etnaviv_gpu_clk_disable(struct etnaviv_gpu *gpu)
++{
++	int ret;
++
++	ret = disable_axi(gpu);
++	if (ret)
++		return ret;
++
++	ret = disable_clk(gpu);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int etnaviv_gpu_hw_suspend(struct etnaviv_gpu *gpu)
++{
++	if (gpu->buffer) {
++		unsigned long timeout;
++
++		/* Replace the last WAIT with END */
++		etnaviv_buffer_end(gpu);
++
++		/*
++		 * We know that only the FE is busy here, this should
++		 * happen quickly (as the WAIT is only 200 cycles).  If
++		 * we fail, just warn and continue.
++		 */
++		timeout = jiffies + msecs_to_jiffies(100);
++		do {
++			u32 idle = gpu_read(gpu, VIVS_HI_IDLE_STATE);
++
++			if ((idle & gpu->idle_mask) == gpu->idle_mask)
++				break;
++
++			if (time_is_before_jiffies(timeout)) {
++				dev_warn(gpu->dev,
++					 "timed out waiting for idle: idle=0x%x\n",
++					 idle);
++				break;
++			}
++
++			udelay(5);
++		} while (1);
++	}
++
++	return etnaviv_gpu_clk_disable(gpu);
++}
++
++#ifdef CONFIG_PM
++static int etnaviv_gpu_hw_resume(struct etnaviv_gpu *gpu)
++{
++	u32 clock;
++	int ret;
++
++	ret = mutex_lock_killable(&gpu->lock);
++	if (ret)
++		return ret;
++
++	clock = VIVS_HI_CLOCK_CONTROL_DISABLE_DEBUG_REGISTERS |
++		VIVS_HI_CLOCK_CONTROL_FSCALE_VAL(0x40);
++
++	etnaviv_gpu_load_clock(gpu, clock);
++	etnaviv_gpu_hw_init(gpu);
++
++	gpu->switch_context = true;
++
++	mutex_unlock(&gpu->lock);
++
++	return 0;
++}
++#endif
++
++static int etnaviv_gpu_bind(struct device *dev, struct device *master,
++	void *data)
++{
++	struct drm_device *drm = data;
++	struct etnaviv_drm_private *priv = drm->dev_private;
++	struct etnaviv_gpu *gpu = dev_get_drvdata(dev);
++	int ret;
++
++#ifdef CONFIG_PM
++	ret = pm_runtime_get_sync(gpu->dev);
++#else
++	ret = etnaviv_gpu_clk_enable(gpu);
++#endif
++	if (ret < 0)
++		return ret;
++
++	gpu->drm = drm;
++	gpu->fence_context = fence_context_alloc(1);
++	spin_lock_init(&gpu->fence_spinlock);
++
++	INIT_LIST_HEAD(&gpu->active_cmd_list);
++	INIT_WORK(&gpu->retire_work, retire_worker);
++	INIT_WORK(&gpu->recover_work, recover_worker);
++	init_waitqueue_head(&gpu->fence_event);
++
++	setup_timer(&gpu->hangcheck_timer, hangcheck_handler,
++			(unsigned long)gpu);
++
++	priv->gpu[priv->num_gpus++] = gpu;
++
++	pm_runtime_mark_last_busy(gpu->dev);
++	pm_runtime_put_autosuspend(gpu->dev);
++
++	return 0;
++}
++
++static void etnaviv_gpu_unbind(struct device *dev, struct device *master,
++	void *data)
++{
++	struct etnaviv_gpu *gpu = dev_get_drvdata(dev);
++
++	DBG("%s", dev_name(gpu->dev));
++
++	hangcheck_disable(gpu);
++
++#ifdef CONFIG_PM
++	pm_runtime_get_sync(gpu->dev);
++	pm_runtime_put_sync_suspend(gpu->dev);
++#else
++	etnaviv_gpu_hw_suspend(gpu);
++#endif
++
++	if (gpu->buffer) {
++		etnaviv_gpu_cmdbuf_free(gpu->buffer);
++		gpu->buffer = NULL;
++	}
++
++	if (gpu->mmu) {
++		etnaviv_iommu_destroy(gpu->mmu);
++		gpu->mmu = NULL;
++	}
++
++	gpu->drm = NULL;
++}
++
++static const struct component_ops gpu_ops = {
++	.bind = etnaviv_gpu_bind,
++	.unbind = etnaviv_gpu_unbind,
++};
++
++static const struct of_device_id etnaviv_gpu_match[] = {
++	{
++		.compatible = "vivante,gc"
++	},
++	{ /* sentinel */ }
++};
++
++static int etnaviv_gpu_platform_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct etnaviv_gpu *gpu;
++	int err = 0;
++
++	gpu = devm_kzalloc(dev, sizeof(*gpu), GFP_KERNEL);
++	if (!gpu)
++		return -ENOMEM;
++
++	gpu->dev = &pdev->dev;
++	mutex_init(&gpu->lock);
++
++	/*
++	 * Set the GPU base address to the start of physical memory.  This
++	 * ensures that if we have up to 2GB, the v1 MMU can address the
++	 * highest memory.  This is important as command buffers may be
++	 * allocated outside of this limit.
++	 */
++	gpu->memory_base = PHYS_OFFSET;
++
++	/* Map registers: */
++	gpu->mmio = etnaviv_ioremap(pdev, NULL, dev_name(gpu->dev));
++	if (IS_ERR(gpu->mmio))
++		return PTR_ERR(gpu->mmio);
++
++	/* Get Interrupt: */
++	gpu->irq = platform_get_irq(pdev, 0);
++	if (gpu->irq < 0) {
++		err = gpu->irq;
++		dev_err(dev, "failed to get irq: %d\n", err);
++		goto fail;
++	}
++
++	err = devm_request_irq(&pdev->dev, gpu->irq, irq_handler, 0,
++			       dev_name(gpu->dev), gpu);
++	if (err) {
++		dev_err(dev, "failed to request IRQ%u: %d\n", gpu->irq, err);
++		goto fail;
++	}
++
++	/* Get Clocks: */
++	gpu->clk_bus = devm_clk_get(&pdev->dev, "bus");
++	DBG("clk_bus: %p", gpu->clk_bus);
++	if (IS_ERR(gpu->clk_bus))
++		gpu->clk_bus = NULL;
++
++	gpu->clk_core = devm_clk_get(&pdev->dev, "core");
++	DBG("clk_core: %p", gpu->clk_core);
++	if (IS_ERR(gpu->clk_core))
++		gpu->clk_core = NULL;
++
++	gpu->clk_shader = devm_clk_get(&pdev->dev, "shader");
++	DBG("clk_shader: %p", gpu->clk_shader);
++	if (IS_ERR(gpu->clk_shader))
++		gpu->clk_shader = NULL;
++
++	/* TODO: figure out max mapped size */
++	dev_set_drvdata(dev, gpu);
++
++	/*
++	 * We treat the device as initially suspended.  The runtime PM
++	 * autosuspend delay is rather arbitary: no measurements have
++	 * yet been performed to determine an appropriate value.
++	 */
++	pm_runtime_use_autosuspend(gpu->dev);
++	pm_runtime_set_autosuspend_delay(gpu->dev, 200);
++	pm_runtime_enable(gpu->dev);
++
++	err = component_add(&pdev->dev, &gpu_ops);
++	if (err < 0) {
++		dev_err(&pdev->dev, "failed to register component: %d\n", err);
++		goto fail;
++	}
++
++	return 0;
++
++fail:
++	return err;
++}
++
++static int etnaviv_gpu_platform_remove(struct platform_device *pdev)
++{
++	component_del(&pdev->dev, &gpu_ops);
++	pm_runtime_disable(&pdev->dev);
++	return 0;
++}
++
++#ifdef CONFIG_PM
++static int etnaviv_gpu_rpm_suspend(struct device *dev)
++{
++	struct etnaviv_gpu *gpu = dev_get_drvdata(dev);
++	u32 idle, mask;
++
++	/* If we have outstanding fences, we're not idle */
++	if (gpu->completed_fence != gpu->active_fence)
++		return -EBUSY;
++
++	/* Check whether the hardware (except FE) is idle */
++	mask = gpu->idle_mask & ~VIVS_HI_IDLE_STATE_FE;
++	idle = gpu_read(gpu, VIVS_HI_IDLE_STATE) & mask;
++	if (idle != mask)
++		return -EBUSY;
++
++	return etnaviv_gpu_hw_suspend(gpu);
++}
++
++static int etnaviv_gpu_rpm_resume(struct device *dev)
++{
++	struct etnaviv_gpu *gpu = dev_get_drvdata(dev);
++	int ret;
++
++	ret = etnaviv_gpu_clk_enable(gpu);
++	if (ret)
++		return ret;
++
++	/* Re-initialise the basic hardware state */
++	if (gpu->drm && gpu->buffer) {
++		ret = etnaviv_gpu_hw_resume(gpu);
++		if (ret) {
++			etnaviv_gpu_clk_disable(gpu);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++#endif
++
++static const struct dev_pm_ops etnaviv_gpu_pm_ops = {
++	SET_RUNTIME_PM_OPS(etnaviv_gpu_rpm_suspend, etnaviv_gpu_rpm_resume,
++			   NULL)
++};
++
++struct platform_driver etnaviv_gpu_driver = {
++	.driver = {
++		.name = "etnaviv-gpu",
++		.owner = THIS_MODULE,
++		.pm = &etnaviv_gpu_pm_ops,
++		.of_match_table = etnaviv_gpu_match,
++	},
++	.probe = etnaviv_gpu_platform_probe,
++	.remove = etnaviv_gpu_platform_remove,
++	.id_table = gpu_ids,
++};
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
+new file mode 100644
+index 000000000000..c75d50359ab0
+--- /dev/null
++++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
+@@ -0,0 +1,209 @@
++/*
++ * Copyright (C) 2015 Etnaviv Project
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 as published by
++ * the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifndef __ETNAVIV_GPU_H__
++#define __ETNAVIV_GPU_H__
++
++#include <linux/clk.h>
++#include <linux/regulator/consumer.h>
++
++#include "etnaviv_drv.h"
++
++struct etnaviv_gem_submit;
++
++struct etnaviv_chip_identity {
++	/* Chip model. */
++	u32 model;
++
++	/* Revision value.*/
++	u32 revision;
++
++	/* Supported feature fields. */
++	u32 features;
++
++	/* Supported minor feature fields. */
++	u32 minor_features0;
++
++	/* Supported minor feature 1 fields. */
++	u32 minor_features1;
++
++	/* Supported minor feature 2 fields. */
++	u32 minor_features2;
++
++	/* Supported minor feature 3 fields. */
++	u32 minor_features3;
++
++	/* Number of streams supported. */
++	u32 stream_count;
++
++	/* Total number of temporary registers per thread. */
++	u32 register_max;
++
++	/* Maximum number of threads. */
++	u32 thread_count;
++
++	/* Number of shader cores. */
++	u32 shader_core_count;
++
++	/* Size of the vertex cache. */
++	u32 vertex_cache_size;
++
++	/* Number of entries in the vertex output buffer. */
++	u32 vertex_output_buffer_size;
++
++	/* Number of pixel pipes. */
++	u32 pixel_pipes;
++
++	/* Number of instructions. */
++	u32 instruction_count;
++
++	/* Number of constants. */
++	u32 num_constants;
++
++	/* Buffer size */
++	u32 buffer_size;
++};
++
++struct etnaviv_event {
++	bool used;
++	struct fence *fence;
++};
++
++struct etnaviv_cmdbuf;
++
++struct etnaviv_gpu {
++	struct drm_device *drm;
++	struct device *dev;
++	struct mutex lock;
++	struct etnaviv_chip_identity identity;
++	struct etnaviv_file_private *lastctx;
++	bool switch_context;
++
++	/* 'ring'-buffer: */
++	struct etnaviv_cmdbuf *buffer;
++
++	/* bus base address of memory  */
++	u32 memory_base;
++
++	/* event management: */
++	struct etnaviv_event event[30];
++	struct completion event_free;
++	spinlock_t event_spinlock;
++
++	/* list of currently in-flight command buffers */
++	struct list_head active_cmd_list;
++
++	u32 idle_mask;
++
++	/* Fencing support */
++	u32 next_fence;
++	u32 active_fence;
++	u32 completed_fence;
++	u32 retired_fence;
++	wait_queue_head_t fence_event;
++	unsigned int fence_context;
++	spinlock_t fence_spinlock;
++
++	/* worker for handling active-list retiring: */
++	struct work_struct retire_work;
++
++	void __iomem *mmio;
++	int irq;
++
++	struct etnaviv_iommu *mmu;
++
++	/* Power Control: */
++	struct clk *clk_bus;
++	struct clk *clk_core;
++	struct clk *clk_shader;
++
++	/* Hang Detction: */
++#define DRM_ETNAVIV_HANGCHECK_PERIOD 500 /* in ms */
++#define DRM_ETNAVIV_HANGCHECK_JIFFIES msecs_to_jiffies(DRM_ETNAVIV_HANGCHECK_PERIOD)
++	struct timer_list hangcheck_timer;
++	u32 hangcheck_fence;
++	u32 hangcheck_dma_addr;
++	struct work_struct recover_work;
++};
++
++struct etnaviv_cmdbuf {
++	/* device this cmdbuf is allocated for */
++	struct etnaviv_gpu *gpu;
++	/* user context key, must be unique between all active users */
++	struct etnaviv_file_private *ctx;
++	/* cmdbuf properties */
++	void *vaddr;
++	dma_addr_t paddr;
++	u32 size;
++	u32 user_size;
++	/* fence after which this buffer is to be disposed */
++	struct fence *fence;
++	/* target exec state */
++	u32 exec_state;
++	/* per GPU in-flight list */
++	struct list_head node;
++	/* BOs attached to this command buffer */
++	unsigned int nr_bos;
++	struct etnaviv_gem_object *bo[0];
++};
++
++static inline void gpu_write(struct etnaviv_gpu *gpu, u32 reg, u32 data)
++{
++	etnaviv_writel(data, gpu->mmio + reg);
++}
++
++static inline u32 gpu_read(struct etnaviv_gpu *gpu, u32 reg)
++{
++	return etnaviv_readl(gpu->mmio + reg);
++}
++
++static inline bool fence_completed(struct etnaviv_gpu *gpu, u32 fence)
++{
++	return fence_after_eq(gpu->completed_fence, fence);
++}
++
++static inline bool fence_retired(struct etnaviv_gpu *gpu, u32 fence)
++{
++	return fence_after_eq(gpu->retired_fence, fence);
++}
++
++int etnaviv_gpu_get_param(struct etnaviv_gpu *gpu, u32 param, u64 *value);
++
++int etnaviv_gpu_init(struct etnaviv_gpu *gpu);
++
++#ifdef CONFIG_DEBUG_FS
++int etnaviv_gpu_debugfs(struct etnaviv_gpu *gpu, struct seq_file *m);
++#endif
++
++int etnaviv_gpu_fence_sync_obj(struct etnaviv_gem_object *etnaviv_obj,
++	unsigned int context, bool exclusive);
++
++void etnaviv_gpu_retire(struct etnaviv_gpu *gpu);
++int etnaviv_gpu_wait_fence_interruptible(struct etnaviv_gpu *gpu,
++	u32 fence, struct timespec *timeout);
++int etnaviv_gpu_wait_obj_inactive(struct etnaviv_gpu *gpu,
++	struct etnaviv_gem_object *etnaviv_obj, struct timespec *timeout);
++int etnaviv_gpu_submit(struct etnaviv_gpu *gpu,
++	struct etnaviv_gem_submit *submit, struct etnaviv_cmdbuf *cmdbuf);
++struct etnaviv_cmdbuf *etnaviv_gpu_cmdbuf_new(struct etnaviv_gpu *gpu,
++					      u32 size, size_t nr_bos);
++void etnaviv_gpu_cmdbuf_free(struct etnaviv_cmdbuf *cmdbuf);
++int etnaviv_gpu_pm_get_sync(struct etnaviv_gpu *gpu);
++void etnaviv_gpu_pm_put(struct etnaviv_gpu *gpu);
++
++extern struct platform_driver etnaviv_gpu_driver;
++
++#endif /* __ETNAVIV_GPU_H__ */
+-- 
+2.6.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
