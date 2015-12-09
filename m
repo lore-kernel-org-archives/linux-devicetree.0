@@ -1,54 +1,50 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [GIT PULL for 4.4] DT/dmaengine: edma: Update for the new bindings
-Date: Wed, 9 Dec 2015 13:10:18 +0200
-Message-ID: <56680C1A.3050009@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 08/11] ARM: STi: Register CPUFreq device
+Date: Wed, 9 Dec 2015 11:25:36 +0000
+Message-ID: <20151209112536.GB17876@x1>
+References: <1449585124-15596-1-git-send-email-lee.jones@linaro.org>
+ <1449585124-15596-9-git-send-email-lee.jones@linaro.org>
+ <3682335.fAt9xNcJFr@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, Vinod Koul <vinod.koul@intel.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, "Nori, Sekhar" <nsekhar@ti.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <3682335.fAt9xNcJFr@wuerfel>
+Sender: linux-pm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@stlinux.com, linux-pm@vger.kernel.org, viresh.kumar@linaro.org, rjw@rjwysocki.net, ajitpal.singh@st.com, maxime.coquelin@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd, Vinod,
+On Wed, 09 Dec 2015, Arnd Bergmann wrote:
 
-As Arnd suggested, the two patch from the following series:
-https://www.mail-archive.com/linux-omap@vger.kernel.org/msg122201.html
+> On Tuesday 08 December 2015 14:32:01 Lee Jones wrote:
+> > @@ -161,3 +166,11 @@ struct smp_operations __initdata sti_smp_ops =3D=
+ {
+> >         .smp_secondary_init     =3D sti_secondary_init,
+> >         .smp_boot_secondary     =3D sti_boot_secondary,
+> >  };
+> > +
+> > +/**
+> > + * CPUFreq Registration
+> > + */
+> > +void init_cpufreq(void)
+> > +{
+> > +       platform_device_register_simple("sti-cpufreq", -1, NULL, 0)=
+;
+> > +}
+> >=20
+>=20
+> Can you please do this under drivers/cpufreq somewhere?
+>=20
+> I really don't want to any more of these in platform code. Requiring =
+a
+> device to be created just to probe the driver is really silly.
 
-plus Acked-by from Arnd is available for pull if you prefer that way.
+Already on it.  Bear with.
 
-
-Regards,
-P=C3=A9ter
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-The following changes since commit 8005c49d9aea74d382f474ce11afbbc7d713=
-0bec:
-
-  Linux 4.4-rc1 (2015-11-15 17:00:27 -0800)
-
-are available in the git repository at:
-
-  https://github.com/omap-audio/linux-audio.git for-4.4/peter/edma_bind=
-ing_update
-
-for you to fetch changes up to af9089852e0ecd6ae7336992d29b04d7d82b404a=
-:
-
-  dmaengine: edma: DT: Change reserved slot array from 16bit to 32bit t=
-ype (2015-12-09 11:56:56 +0200)
-
-----------------------------------------------------------------
-Peter Ujfalusi (2):
-      dmaengine: edma: DT: Change memcpy channel array from 16bit to 32=
-bit type
-      dmaengine: edma: DT: Change reserved slot array from 16bit to 32b=
-it type
-
- Documentation/devicetree/bindings/dma/ti-edma.txt | 10 ++++------
- drivers/dma/edma.c                                | 53 +++++++++++++++=
-++++++++++++++++++++------------------
- include/linux/platform_data/edma.h                |  2 +-
- 3 files changed, 40 insertions(+), 25 deletions(-)
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
