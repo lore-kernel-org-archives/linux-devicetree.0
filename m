@@ -1,71 +1,68 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH v4 1/5] PCI: designware: add memory barrier after enabling
- region
-Date: Wed, 9 Dec 2015 12:29:38 +0200
-Message-ID: <56680292.60905@linaro.org>
-References: <1449149725-27607-1-git-send-email-stanimir.varbanov@linaro.org>
- <56669C50.9060700@linaro.org>
- <CAHM4w1k_EAt+xBBYyG3B7W9Fegc4j+uRq5t_biUsxOGt+k+xUA@mail.gmail.com>
- <1975309.Hla8QhEqf4@wuerfel>
+From: "Yankejian (Hackim Yim)" <yankejian@huawei.com>
+Subject: Re: [PATCH net-next 1/2] net: hns: enet specisies a reference to dsaf
+Date: Wed, 9 Dec 2015 18:39:59 +0800
+Message-ID: <566804FF.5000607@huawei.com>
+References: <1449302356-54658-1-git-send-email-yankejian@huawei.com>
+ <1449302356-54658-2-git-send-email-yankejian@huawei.com>
+ <56671D27.5070700@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1975309.Hla8QhEqf4@wuerfel>
+In-Reply-To: <56671D27.5070700@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Pratyush Anand <pratyush.anand@gmail.com>
-Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+To: Florian Fainelli <f.fainelli@gmail.com>, davem@davemloft.net, arnd@arndb.de, fengguang.wu@intel.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, catalin.marinas@arm.com, will.deacon@arm.com, salil.mehta@huawei.com, Yisen.Zhuang@huawei.com, liguozhu@huawei.com, lisheng011@huawei.com, huangdaode@hisilicon.com, xuwei5@hisilicon.com
+Cc: devicetree@vger.kernel.org, haifeng.wei@huawei.com, netdev@vger.kernel.org, linuxarm@huawei.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/09/2015 11:52 AM, Arnd Bergmann wrote:
-> On Wednesday 09 December 2015 10:10:05 Pratyush Anand wrote:
->> On Tue, Dec 8, 2015 at 2:31 PM, Stanimir Varbanov
->>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
->>>> ---
->>>>  drivers/pci/host/pcie-designware.c |    5 +++++
->>>>  1 file changed, 5 insertions(+)
->>>>
->>>> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
->>>> index 02a7452bdf23..ed4dc2e2553b 100644
->>>> --- a/drivers/pci/host/pcie-designware.c
->>>> +++ b/drivers/pci/host/pcie-designware.c
->>>> @@ -164,6 +164,11 @@ static void dw_pcie_prog_outbound_atu(struct pcie_port *pp, int index,
->>>>       dw_pcie_writel_rc(pp, upper_32_bits(pci_addr), PCIE_ATU_UPPER_TARGET);
->>>>       dw_pcie_writel_rc(pp, type, PCIE_ATU_CR1);
->>>>       dw_pcie_writel_rc(pp, PCIE_ATU_ENABLE, PCIE_ATU_CR2);
->>>> +     /*
->>>> +      * ensure that the ATU enable has been happaned before accessing
->>>> +      * pci configuration/io spaces through dw_pcie_cfg_[read|write].
->>>> +      */
->>>> +     wmb();
->>>>  }
->>>>
->>
->>
->> My understnading is that since writel() of dw_pcie_writel_rc() in
->> above code and readl(), writel() of dw_pcie_cfg_[read|write]() (which
->> will follow) goes through same device (ie PCIe host here). So, it is
->> guaranteed that 1st writel() will be executed before later
->> readl()/writel(). If that is true then we do not need any explicit
->> barrier here.
->>
->> Arnd, Russel: whats your opinion here.
-> 
-> I think the ordering is only enforced if the two register accesses are
-> on the same device as seen from the bus, and it's possible that the
-> RC registers and the config space registers are not considered the
-> same thing here.
-> 
-> For config write, this is not a problem, because the config space write
-> has a wmb() that enforces ordering, but it's possible that the config
-> space read may hit the device in parallel with the PCIE_ATU_ENABLE
-> write.
 
-Hmm, just a matter of fact - as I described in the patch description
-this wmb() fixed an issue with pcie device enumeration (I came down to
-pci_bus_read_dev_vendor_id() returns zero) i.e. exactly a pci
-configuration space read.
 
--- 
-regards,
-Stan
+On 2015/12/9 2:10, Florian Fainelli wrote:
+> Subject: s/specisies/specifies/?
+
+Thanks for pointing it out. i will change it in next patchset.
+
+Best Regards,
+yankejian
+
+> On 04/12/15 23:59, yankejian wrote:
+>> enet is associating with dasf. before this patch, the association is
+>> the same strings between ae-name and dsa-name. in a general way, enet
+>> specifies a reference to dsaf should be a good idea. so this patch
+>> deletes the ae-name in enet, and adds parsing the ae-handle
+>> from DT to set the associating with dsaf.
+>>
+>> Signed-off-by: yankejian <yankejian@huawei.com>
+>> ---
+> [snip]
+>
+>> diff --git a/drivers/net/ethernet/hisilicon/hns/hnae.c b/drivers/net/ethernet/hisilicon/hns/hnae.c
+>> index b364529..3bfe36f 100644
+>> --- a/drivers/net/ethernet/hisilicon/hns/hnae.c
+>> +++ b/drivers/net/ethernet/hisilicon/hns/hnae.c
+>> @@ -95,21 +95,17 @@ static struct hnae_buf_ops hnae_bops = {
+>>  static int __ae_match(struct device *dev, const void *data)
+>>  {
+>>  	struct hnae_ae_dev *hdev = cls_to_ae_dev(dev);
+>> -	const char *ae_id = data;
+>>  
+>> -	if (!strncmp(ae_id, hdev->name, AE_NAME_SIZE))
+>> -		return 1;
+>> -
+>> -	return 0;
+>> +	return hdev->dev->of_node == data;
+>>  }
+>>  
+>> -static struct hnae_ae_dev *find_ae(const char *ae_id)
+>> +static struct hnae_ae_dev *find_ae(const struct device_node *ae_node)
+>>  {
+>>  	struct device *dev;
+>>  
+>> -	WARN_ON(!ae_id);
+>> +	WARN_ON(!ae_node);
+>>  
+>> -	dev = class_find_device(hnae_class, NULL, ae_id, __ae_match);
+>> +	dev = class_find_device(hnae_class, NULL, ae_node, __ae_match);
+> of_find_net_device_by_node might be used for this maybe?
+it needs return hnae_ae_dev so we didn't decide to use of_find_net_device_by_node.
+Thanks
