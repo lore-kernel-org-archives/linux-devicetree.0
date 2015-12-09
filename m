@@ -1,82 +1,51 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: Re: [PATCH] net/macb: add support for resetting PHY using GPIO
-Date: Wed, 9 Dec 2015 10:27:34 -0800
-Message-ID: <CAAtXAHcHGC+5HJrCNTPhwhLSMmOPtMrjCYBRQxbzGq3GrML8Yw@mail.gmail.com>
-References: <1449683383-5022-1-git-send-email-gregory.clement@free-electrons.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v2 0/4] PCI: rcar, rcar-gen2: More Gen2 compatibility
+ strings
+Date: Wed, 9 Dec 2015 12:37:43 -0600
+Message-ID: <20151209183743.GH31930@localhost>
+References: <1449096700-23304-1-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449683383-5022-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1449096700-23304-1-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gregory,
+On Thu, Dec 03, 2015 at 07:51:36AM +0900, Simon Horman wrote:
+> Hi,
+> 
+> this short series adds generic gen2 and SoC-specific r8a7793 compatibility
+> strings to the rcar PCI and rcar-gen2 PCIE drivers. The intention is to
+> provide a complete set of compatibility strings for known Gen2 SoCs.
+> 
+> Key Changes in v2:
+> * Include "rcar-" in generic bindings
+> 
+> Simon Horman (4):
+>   PCI: rcar-gen2: add gen2 fallback compatibility string
+>   PCI: rcar-gen2: add device tree support for r8a7793
+>   PCI: rcar: add gen2 fallback compatibility string
+>   PCI: rcar: add device tree support for r8a7793
+> 
+>  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 12 ++++++++++--
+>  Documentation/devicetree/bindings/pci/rcar-pci.txt      | 14 +++++++++++---
+>  drivers/pci/host/pci-rcar-gen2.c                        |  1 +
+>  drivers/pci/host/pcie-rcar.c                            |  1 +
+>  4 files changed, 23 insertions(+), 5 deletions(-)
 
-so far dealt with this in u-boot. The power down the PHY part makes
-sense, though. Minor nit down inline.
-Will need to test on hardware (Zynq).
+I applied these:
 
-On Wed, Dec 9, 2015 at 9:49 AM, Gregory CLEMENT
-<gregory.clement@free-electrons.com> wrote:
-> With device tree it is no more possible to reset the PHY at board
-> level. Furthermore, doing in the driver allow to power down the PHY when
-> the network interface is no more used.
->
-> The patch introduces a new optional property "phy-reset-gpio" inspired
-> from the one use for the FEC.
->
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
->  Documentation/devicetree/bindings/net/macb.txt |  3 +++
->  drivers/net/ethernet/cadence/macb.c            | 26 ++++++++++++++++++++++++++
->  drivers/net/ethernet/cadence/macb.h            |  1 +
->  3 files changed, 30 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-> index b5d7976..546d34d 100644
-> --- a/Documentation/devicetree/bindings/net/macb.txt
-> +++ b/Documentation/devicetree/bindings/net/macb.txt
-> @@ -19,6 +19,9 @@ Required properties:
->         Optional elements: 'tx_clk'
->  - clocks: Phandles to input clocks.
->
-> +Optional properties:
-> +- phy-reset-gpio : Should specify the gpio for phy reset
-> +
->  Examples:
->
->         macb0: ethernet@fffc4000 {
-> diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
-> index 88c1e1a..e630c56 100644
-> --- a/drivers/net/ethernet/cadence/macb.c
-> +++ b/drivers/net/ethernet/cadence/macb.c
-> @@ -30,6 +30,7 @@
->  #include <linux/of_device.h>
->  #include <linux/of_mdio.h>
->  #include <linux/of_net.h>
-> +#include <linux/of_gpio.h>
->
->  #include "macb.h"
->
-> @@ -2733,6 +2734,28 @@ static int at91ether_init(struct platform_device *pdev)
->         return 0;
->  }
->
-> +#ifdef CONFIG_OF
-> +static void macb_reset_phy(struct macb *bp, struct device_node *np, int state)
-> +{
-> +       if (!np)
-> +               return;
-> +
-> +       bp->reset_gpio = of_get_named_gpio(np, "phy-reset-gpio", 0);
+>   PCI: rcar-gen2: add gen2 fallback compatibility string
+>   PCI: rcar: add gen2 fallback compatibility string
 
-Any reason to do of_get_named() all the time instead of using the one
-you stored in bp->reset_gpio?
-You could move it to probe and then just use the stored value here ...
-not sure if it buys much ;-)
+to pci/host-rcar for v4.5, thanks!
 
-Cheers,
+I haven't applied the R8A7793 binding documentation updates yet, but
+I'll be happy to do so given a short description of why they're
+useful (since they don't update a DT or the driver).  Or they could be
+merged via a DT tree.
 
-Moritz
+Bjorn
