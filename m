@@ -1,54 +1,82 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [RFC][PATCH] misc: Introduce reboot_reason driver
-Date: Wed, 9 Dec 2015 09:53:07 +0100
-Message-ID: <20151209085307.GS11966@pengutronix.de>
-References: <1449610162-30543-1-git-send-email-john.stultz@linaro.org>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 1/3] usb: misc: generic_onboard_hub: add generic onboard
+ USB HUB driver
+Date: Wed, 9 Dec 2015 16:50:22 +0800
+Message-ID: <20151209085021.GF941@shlinux2>
+References: <1449538670-7954-1-git-send-email-peter.chen@freescale.com>
+ <1449538670-7954-2-git-send-email-peter.chen@freescale.com>
+ <CANLsYkwfLSQKEw1a-Y_dguu-yutnTeQv73cMxPFooMjzTv4n1A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1449610162-30543-1-git-send-email-john.stultz@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinay Simha BN <simhavcs@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, devicetree@vger.kernel.org, Android Kernel Team <kernel-team@android.com>
+In-Reply-To: <CANLsYkwfLSQKEw1a-Y_dguu-yutnTeQv73cMxPFooMjzTv4n1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?utf-8?B?UGF3ZcWC?= Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi John,
+On Tue, Dec 08, 2015 at 08:36:00AM -0700, Mathieu Poirier wrote:
+> On 7 December 2015 at 18:37, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > +
+> > +       if (dev->of_node) {
+> > +               struct device_node *node = dev->of_node;
+> > +
+> > +               hub_data->clk = devm_clk_get(dev, "external_clk");
+> > +               if (IS_ERR(hub_data->clk)) {
+> > +                       dev_dbg(dev, "Can't get external clock: %ld\n",
+> > +                                       PTR_ERR(hub_data->clk));
+> > +               }
+> 
+> Is the intended behaviour to keep going here event when there is an
+> error?  Can the "hub_data" really work without a clock?
 
-Only a small comment
+Yes, some HUB may work with fixed 24M OSC at the board, but they need to
+reset through external IO, so the clock is not need at this case, but
+reset pin is mandatory.
 
-On Tue, Dec 08, 2015 at 01:29:22PM -0800, John Stultz wrote:
-> +static int reboot_reason_probe(struct platform_device *pdev)
-> +{
-> +	struct resource *res;
-> +	u32 val;
-> +	int i;
-> +
-> +	/* initialize the reasons */
-> +	for (i = 0; i < MAX_REASONS; i++)
-> +		reasons[i] = -1;
-> +
-> +	/* Try to grab the reason io address */
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	reboot_reason_addr = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(reboot_reason_addr))
-> +		return PTR_ERR(reboot_reason_addr);
-> +
-> +	/* initialize specified reasons from DT */
-> +	if (!of_property_read_u32(pdev->dev.of_node, "reason,none", &val))
-> +		reasons[NONE] = val;
+> > +       }
+> > +
+> > +       if (gpiod_reset) {
+> > +               /* Sanity check */
+> > +               if (duration_us > 1000000)
+> > +                       duration_us = 50;
+> > +               usleep_range(duration_us, duration_us + 100);
+> > +               gpiod_set_value(gpiod_reset, reset_pol ? 0 : 1);
+> 
+> What are these hard-coded values?  Shouldn't this be taken from the
+> DT?  If not then some comments explaining the values would be
+> appreciated.
 
-can be simplified to:
+Yes, I did it wrongly, thanks.
 
-	of_property_read_u32(pdev->dev.of_node, "reason,none", &reasons[NONE]);
+> > diff --git a/include/linux/usb/generic_onboard_hub.h b/include/linux/usb/generic_onboard_hub.h
+> > new file mode 100644
+> > index 0000000..1b70ccc
+> > --- /dev/null
+> > +++ b/include/linux/usb/generic_onboard_hub.h
+> > @@ -0,0 +1,11 @@
+> > +#ifndef __LINUX_USB_GENERIC_HUB_H
+> > +#define __LINUX_USB_GENERIC_HUB_H
+> > +
+> > +struct usb_hub_generic_platform_data {
+> > +       int gpio_reset;
+> > +       int gpio_reset_polarity;
+> > +       int gpio_reset_duration_us;
+> > +       struct clk *ext_clk;
+> > +};
+> 
+> Please document this structure in accordance with kernel documentation
+> standards.
+> 
 
-No need to check first, &reasons[NONE] will only be modified when the
-property exists.
-
-Sascha
+Thanks, it should be.
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
