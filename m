@@ -1,326 +1,40 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 09/14] drm/etnaviv: add GPU core dump functionality
-Date: Wed,  9 Dec 2015 12:48:22 +0100
-Message-ID: <1449661707-30532-9-git-send-email-l.stach@pengutronix.de>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH v2 14/14] ARM: dts: enable GPU for SolidRun's Cubox
+Date: Wed,  9 Dec 2015 12:48:27 +0100
+Message-ID: <1449661707-30532-14-git-send-email-l.stach@pengutronix.de>
 References: <1449661707-30532-1-git-send-email-l.stach@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449661707-30532-1-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1449661707-30532-1-git-send-email-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Andrew Lunn <andrew@lunn.ch>
+Cc: devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, kernel@pengutronix.de, Gregory Clement <gregory.clement@free-electrons.com>, Russell King <rmk+kernel@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: The etnaviv authors <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-
-This adds functionality to allow post-portem GPU analysis.
-
-Signed-off-by: Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- drivers/gpu/drm/etnaviv/etnaviv_dump.c | 227 +++++++++++++++++++++++++++++++++
- drivers/gpu/drm/etnaviv/etnaviv_dump.h |  54 ++++++++
- 2 files changed, 281 insertions(+)
- create mode 100644 drivers/gpu/drm/etnaviv/etnaviv_dump.c
- create mode 100644 drivers/gpu/drm/etnaviv/etnaviv_dump.h
-
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_dump.c b/drivers/gpu/drm/etnaviv/etnaviv_dump.c
-new file mode 100644
-index 000000000000..bf8fa859e8be
---- /dev/null
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_dump.c
-@@ -0,0 +1,227 @@
-+/*
-+ * Copyright (C) 2015 Etnaviv Project
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2 as published by
-+ * the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/devcoredump.h>
-+#include "etnaviv_dump.h"
-+#include "etnaviv_gem.h"
-+#include "etnaviv_gpu.h"
-+#include "etnaviv_mmu.h"
-+#include "state.xml.h"
-+#include "state_hi.xml.h"
-+
-+struct core_dump_iterator {
-+	void *start;
-+	struct etnaviv_dump_object_header *hdr;
-+	void *data;
-+};
-+
-+static const unsigned short etnaviv_dump_registers[] = {
-+	VIVS_HI_AXI_STATUS,
-+	VIVS_HI_CLOCK_CONTROL,
-+	VIVS_HI_IDLE_STATE,
-+	VIVS_HI_AXI_CONFIG,
-+	VIVS_HI_INTR_ENBL,
-+	VIVS_HI_CHIP_IDENTITY,
-+	VIVS_HI_CHIP_FEATURE,
-+	VIVS_HI_CHIP_MODEL,
-+	VIVS_HI_CHIP_REV,
-+	VIVS_HI_CHIP_DATE,
-+	VIVS_HI_CHIP_TIME,
-+	VIVS_HI_CHIP_MINOR_FEATURE_0,
-+	VIVS_HI_CACHE_CONTROL,
-+	VIVS_HI_AXI_CONTROL,
-+	VIVS_PM_POWER_CONTROLS,
-+	VIVS_PM_MODULE_CONTROLS,
-+	VIVS_PM_MODULE_STATUS,
-+	VIVS_PM_PULSE_EATER,
-+	VIVS_MC_MMU_FE_PAGE_TABLE,
-+	VIVS_MC_MMU_TX_PAGE_TABLE,
-+	VIVS_MC_MMU_PE_PAGE_TABLE,
-+	VIVS_MC_MMU_PEZ_PAGE_TABLE,
-+	VIVS_MC_MMU_RA_PAGE_TABLE,
-+	VIVS_MC_DEBUG_MEMORY,
-+	VIVS_MC_MEMORY_BASE_ADDR_RA,
-+	VIVS_MC_MEMORY_BASE_ADDR_FE,
-+	VIVS_MC_MEMORY_BASE_ADDR_TX,
-+	VIVS_MC_MEMORY_BASE_ADDR_PEZ,
-+	VIVS_MC_MEMORY_BASE_ADDR_PE,
-+	VIVS_MC_MEMORY_TIMING_CONTROL,
-+	VIVS_MC_BUS_CONFIG,
-+	VIVS_FE_DMA_STATUS,
-+	VIVS_FE_DMA_DEBUG_STATE,
-+	VIVS_FE_DMA_ADDRESS,
-+	VIVS_FE_DMA_LOW,
-+	VIVS_FE_DMA_HIGH,
-+	VIVS_FE_AUTO_FLUSH,
-+};
-+
-+static void etnaviv_core_dump_header(struct core_dump_iterator *iter,
-+	u32 type, void *data_end)
-+{
-+	struct etnaviv_dump_object_header *hdr = iter->hdr;
-+
-+	hdr->magic = cpu_to_le32(ETDUMP_MAGIC);
-+	hdr->type = cpu_to_le32(type);
-+	hdr->file_offset = cpu_to_le32(iter->data - iter->start);
-+	hdr->file_size = cpu_to_le32(data_end - iter->data);
-+
-+	iter->hdr++;
-+	iter->data += hdr->file_size;
-+}
-+
-+static void etnaviv_core_dump_registers(struct core_dump_iterator *iter,
-+	struct etnaviv_gpu *gpu)
-+{
-+	struct etnaviv_dump_registers *reg = iter->data;
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(etnaviv_dump_registers); i++, reg++) {
-+		reg->reg = etnaviv_dump_registers[i];
-+		reg->value = gpu_read(gpu, etnaviv_dump_registers[i]);
-+	}
-+
-+	etnaviv_core_dump_header(iter, ETDUMP_BUF_REG, reg);
-+}
-+
-+static void etnaviv_core_dump_mmu(struct core_dump_iterator *iter,
-+	struct etnaviv_gpu *gpu, size_t mmu_size)
-+{
-+	etnaviv_iommu_dump(gpu->mmu, iter->data);
-+
-+	etnaviv_core_dump_header(iter, ETDUMP_BUF_MMU, iter->data + mmu_size);
-+}
-+
-+static void etnaviv_core_dump_mem(struct core_dump_iterator *iter, u32 type,
-+	void *ptr, size_t size, u64 iova)
-+{
-+	memcpy(iter->data, ptr, size);
-+
-+	iter->hdr->iova = cpu_to_le64(iova);
-+
-+	etnaviv_core_dump_header(iter, type, iter->data + size);
-+}
-+
-+void etnaviv_core_dump(struct etnaviv_gpu *gpu)
-+{
-+	struct core_dump_iterator iter;
-+	struct etnaviv_vram_mapping *vram;
-+	struct etnaviv_gem_object *obj;
-+	struct etnaviv_cmdbuf *cmd;
-+	unsigned int n_obj, n_bomap_pages;
-+	size_t file_size, mmu_size;
-+	__le64 *bomap, *bomap_start;
-+
-+	mmu_size = etnaviv_iommu_dump_size(gpu->mmu);
-+
-+	/* We always dump registers, mmu, ring and end marker */
-+	n_obj = 4;
-+	n_bomap_pages = 0;
-+	file_size = ARRAY_SIZE(etnaviv_dump_registers) *
-+			sizeof(struct etnaviv_dump_registers) +
-+		    mmu_size + gpu->buffer->size;
-+
-+	/* Add in the active command buffers */
-+	list_for_each_entry(cmd, &gpu->active_cmd_list, node) {
-+		file_size += cmd->size;
-+		n_obj++;
-+	}
-+
-+	/* Add in the active buffer objects */
-+	list_for_each_entry(vram, &gpu->mmu->mappings, mmu_node) {
-+		if (!vram->use)
-+			continue;
-+
-+		obj = vram->object;
-+		file_size += obj->base.size;
-+		n_bomap_pages += obj->base.size >> PAGE_SHIFT;
-+		n_obj++;
-+	}
-+
-+	/* If we have any buffer objects, add a bomap object */
-+	if (n_bomap_pages) {
-+		file_size += n_bomap_pages * sizeof(__le64);
-+		n_obj++;
-+	}
-+
-+	/* Add the size of the headers */
-+	file_size += sizeof(*iter.hdr) * n_obj;
-+
-+	/* Allocate the file in vmalloc memory, it's likely to be big */
-+	iter.start = vmalloc(file_size);
-+	if (!iter.start) {
-+		dev_warn(gpu->dev, "failed to allocate devcoredump file\n");
-+		return;
-+	}
-+
-+	/* Point the data member after the headers */
-+	iter.hdr = iter.start;
-+	iter.data = &iter.hdr[n_obj];
-+
-+	memset(iter.hdr, 0, iter.data - iter.start);
-+
-+	etnaviv_core_dump_registers(&iter, gpu);
-+	etnaviv_core_dump_mmu(&iter, gpu, mmu_size);
-+	etnaviv_core_dump_mem(&iter, ETDUMP_BUF_RING, gpu->buffer->vaddr,
-+			      gpu->buffer->size, gpu->buffer->paddr);
-+
-+	list_for_each_entry(cmd, &gpu->active_cmd_list, node)
-+		etnaviv_core_dump_mem(&iter, ETDUMP_BUF_CMD, cmd->vaddr,
-+				      cmd->size, cmd->paddr);
-+
-+	/* Reserve space for the bomap */
-+	if (n_bomap_pages) {
-+		bomap_start = bomap = iter.data;
-+		memset(bomap, 0, sizeof(*bomap) * n_bomap_pages);
-+		etnaviv_core_dump_header(&iter, ETDUMP_BUF_BOMAP,
-+					 bomap + n_bomap_pages);
-+	} else {
-+		/* Silence warning */
-+		bomap_start = bomap = NULL;
-+	}
-+
-+	list_for_each_entry(vram, &gpu->mmu->mappings, mmu_node) {
-+		struct page **pages;
-+		void *vaddr;
-+
-+		if (vram->use == 0)
-+			continue;
-+
-+		obj = vram->object;
-+
-+		pages = etnaviv_gem_get_pages(obj);
-+		if (pages) {
-+			int j;
-+
-+			iter.hdr->data[0] = bomap - bomap_start;
-+
-+			for (j = 0; j < obj->base.size >> PAGE_SHIFT; j++)
-+				*bomap++ = cpu_to_le64(page_to_phys(*pages++));
-+		}
-+
-+		iter.hdr->iova = cpu_to_le64(vram->iova);
-+
-+		vaddr = etnaviv_gem_vaddr(&obj->base);
-+		if (vaddr && !IS_ERR(vaddr))
-+			memcpy(iter.data, vaddr, obj->base.size);
-+
-+		etnaviv_core_dump_header(&iter, ETDUMP_BUF_BO, iter.data +
-+					 obj->base.size);
-+	}
-+
-+	etnaviv_core_dump_header(&iter, ETDUMP_BUF_END, iter.data);
-+
-+	dev_coredumpv(gpu->dev, iter.start, iter.data - iter.start, GFP_KERNEL);
-+}
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_dump.h b/drivers/gpu/drm/etnaviv/etnaviv_dump.h
-new file mode 100644
-index 000000000000..97f2f8db9133
---- /dev/null
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_dump.h
-@@ -0,0 +1,54 @@
-+/*
-+ * Copyright (C) 2015 Etnaviv Project
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2 as published by
-+ * the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ *
-+ * Etnaviv devcoredump file definitions
-+ */
-+#ifndef ETNAVIV_DUMP_H
-+#define ETNAVIV_DUMP_H
-+
-+#include <linux/types.h>
-+
-+enum {
-+	ETDUMP_MAGIC = 0x414e5445,
-+	ETDUMP_BUF_REG = 0,
-+	ETDUMP_BUF_MMU,
-+	ETDUMP_BUF_RING,
-+	ETDUMP_BUF_CMD,
-+	ETDUMP_BUF_BOMAP,
-+	ETDUMP_BUF_BO,
-+	ETDUMP_BUF_END,
-+};
-+
-+struct etnaviv_dump_object_header {
-+	__le32 magic;
-+	__le32 type;
-+	__le32 file_offset;
-+	__le32 file_size;
-+	__le64 iova;
-+	__le32 data[2];
-+};
-+
-+/* Registers object, an array of these */
-+struct etnaviv_dump_registers {
-+	__le32 reg;
-+	__le32 value;
-+};
-+
-+#ifdef __KERNEL__
-+struct etnaviv_gpu;
-+void etnaviv_core_dump(struct etnaviv_gpu *gpu);
-+#endif
-+
-+#endif
--- 
-2.6.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogUnVzc2VsbCBLaW5nIDxybWsra2VybmVsQGFybS5saW51eC5vcmcudWs+CgpFbmFibGUg
+dGhlIEdQVSBmb3IgU29saWRSdW4ncyBDdWJveC4KClNpZ25lZC1vZmYtYnk6IFJ1c3NlbGwgS2lu
+ZyA8cm1rK2tlcm5lbEBhcm0ubGludXgub3JnLnVrPgpTaWduZWQtb2ZmLWJ5OiBMdWNhcyBTdGFj
+aCA8bC5zdGFjaEBwZW5ndXRyb25peC5kZT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9kb3ZlLWN1
+Ym94LmR0cyB8IDggKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKykKCmRp
+ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9kb3ZlLWN1Ym94LmR0cyBiL2FyY2gvYXJtL2Jv
+b3QvZHRzL2RvdmUtY3Vib3guZHRzCmluZGV4IGU2ZmEyNTFlMTdiOS4uYWYzY2I2MzMxMzVmIDEw
+MDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9kb3ZlLWN1Ym94LmR0cworKysgYi9hcmNoL2Fy
+bS9ib290L2R0cy9kb3ZlLWN1Ym94LmR0cwpAQCAtNjIsNiArNjIsMTAgQEAKIAkJcGluY3RybC0w
+ID0gPCZwbXhfZ3Bpb18xOT47CiAJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CiAJfTsKKwor
+CWdwdS1zdWJzeXN0ZW0geworCQlzdGF0dXMgPSAib2theSI7CisJfTsKIH07CiAKICZ1YXJ0MCB7
+IHN0YXR1cyA9ICJva2F5IjsgfTsKQEAgLTc0LDYgKzc4LDEwIEBACiAJcmVnID0gPDE+OwogfTsK
+IAorJmdwdSB7CisJc3RhdHVzID0gIm9rYXkiOworfTsKKwogJmkyYzAgewogCXN0YXR1cyA9ICJv
+a2F5IjsKIAljbG9jay1mcmVxdWVuY3kgPSA8MTAwMDAwPjsKLS0gCjIuNi4yCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
