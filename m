@@ -1,28 +1,53 @@
-From: =?UTF-8?Q?Agust=C3=AD_Fontquerni?= <af-VIneJrwqLopBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/2] ARM: dts: Use MMC pwrseq instead regulators for IGEP
- WiFi init
-Date: Wed, 9 Dec 2015 15:26:08 +0100
-Message-ID: <CAJt7sisg7YRf2=PS9f+HuhtOEQYAkqWxVRjYb64m_R1HaROiXQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-binding: power: Add otg regulator binding
+Date: Wed, 9 Dec 2015 08:36:11 -0600
+Message-ID: <CAL_JsqL0BjD6A1quSZOYmLNeRZAYo1UwSsTPPvMUbC1pSwM6CQ@mail.gmail.com>
+References: <1449621618-11900-1-git-send-email-tim.bird@sonymobile.com>
+ <20151209041153.GA29549@rob-hp-laptop> <566824AD.4080003@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?Q?Agust=C3=AD_Fontquerni_i_Gorchs?= <afontquerni-VIneJrwqLopBDgjK7y7TUQ@public.gmane.org>, Pau Pajuel <ppajuel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <566824AD.4080003@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Tim Bird <tim.bird@sonymobile.com>
+Cc: "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "sre@kernel.org" <sre@kernel.org>, "dbaryshkov@gmail.com" <dbaryshkov@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "agross@codeaurora.org" <agross@codeaurora.org>, =?UTF-8?Q?Andersson=2C_Bj=C3=B6rn?= <Bjorn.Andersson@sonymobile.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tbird20d@gmail.com" <tbird20d@gmail.com>, Courtney Cavin <Courtney.Cavin@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-> I guess will be interesting cc'ing the ISEE people. Added Agusti and Pau.
+On Wed, Dec 9, 2015 at 6:55 AM, Tim Bird <tim.bird@sonymobile.com> wrote:
+> On 12/08/2015 08:11 PM, Rob Herring wrote:
+>> On Tue, Dec 08, 2015 at 04:40:16PM -0800, Tim Bird wrote:
+>>> Add a binding for the regulator which controls the OTG chargepath switch.
+>>> The OTG switch gets its power from pm8941_5vs1, and that should be
+>>> expressed as a usb-otg-in-supply property in the DT node for the
+>>> charger driver.  The regulator name is "otg".
+
+[...]
+
+>>> +child nodes:
+>>> +- otg:
+>>> +  Usage: optional
+>>> +  Description: This node defines a regulator used to control the direction
+>>> +               of VBUS voltage - specifically: whether to supply voltage
+>>> +               to VBUS for host mode operation of the OTG port, or allow
+>>> +               input voltage from external VBUS for charging.  In the
+>>> +               hardware, the supply for this regulator comes from
+>>> +               usb-otg-in-supply.
+>>
+>> Doesn't this regulator need to have a name defined?
 >
-> Thanks,
->     Enric
+> I'm not sure what you mean.  The regulator name is "otg", defined by the DT node
+> name. The code requires that the DT node name be "otg", and defines a regulator
+> with the same name.
+>
+> As far as I know, you have to define a DT label for the node, in order
+> to reference this regulator with a phandle.  Is that what you are referring to?
+> I usually use "chg_otg" as the label.  Are you asking that this be reflected
+> in the example?
 
-Thank you.
+You need a regulator-name property. Also, should should define valid
+values for regulator-min-microvolt and regulator-max-microvolt.
 
-Ack.
-We will try with new versions (wilink8)
+Thinking about this some more, the node name should be generic, so
+just "regulator". The label does not need to be generic.
 
-Agusti
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
