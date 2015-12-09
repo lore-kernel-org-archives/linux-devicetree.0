@@ -1,60 +1,94 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH for 4.4 0/2] DT/dmaengine: edma: Convert 16bit arrays to
- 32bit
-Date: Wed, 9 Dec 2015 12:12:27 -0800
-Message-ID: <20151209201226.GB23396@atomide.com>
-References: <1449649091-9848-1-git-send-email-peter.ujfalusi@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 02/14] drm/etnaviv: add devicetree bindings
+Date: Wed, 9 Dec 2015 14:14:14 -0600
+Message-ID: <20151209201414.GA31697@rob-hp-laptop>
+References: <1449661707-30532-1-git-send-email-l.stach@pengutronix.de>
+ <1449661707-30532-2-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1449649091-9848-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1449661707-30532-2-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [151209 00:19]:
-> Hi,
+On Wed, Dec 09, 2015 at 12:48:15PM +0100, Lucas Stach wrote:
+> Etnaviv follows the same priciple as imx-drm to have a virtual
+> master device node to bind all the individual GPU cores together
+> into one DRM device.
 > 
-> Based on the discussion regarding to (convert am33xx to use the new eDMA
-> bindings):
-> https://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg122117.html
+> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> ---
+> v2: Add note why a more specific compatible isn't needed for
+> GPU core nodes.
+> ---
+>  .../bindings/display/etnaviv/etnaviv-drm.txt       | 49 ++++++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
 > 
-> This two patch will convert the new eDMA binding to not use 16bit arrays for
-> memcpy channel selection and for marking slots reserved.
-> The '/bits/ 16' seams to be causing confusion so it is probably better to just
-> use standard type for the arrays.
+> diff --git a/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
+> new file mode 100644
+> index 000000000000..01254f40b11b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/etnaviv/etnaviv-drm.txt
+> @@ -0,0 +1,49 @@
+> +Etnaviv DRM master device
+> +================================
+> +
+> +The Etnaviv DRM master device is a virtual device needed to list all
+> +Vivante GPU cores that comprise the GPU subsystem.
+> +
+> +Required properties:
+> +- compatible: Should be one of
+> +    "fsl,imx-gpu-subsystem"
+> +    "marvell,dove-gpu-subsystem"
+> +- cores: Should contain a list of phandles pointing to Vivante GPU devices
+> +
+> +example:
+> +
+> +gpu-subsystem {
+> +	compatible = "fsl,imx-gpu-subsystem";
+> +	cores = <&gpu_2d>, <&gpu_3d>;
+> +};
+> +
+> +
+> +Vivante GPU core devices
+> +====================
+> +
+> +Required properties:
+> +- compatible: Should be "vivante,gc"
+> +  A more specific compatible is not needed, as the cores contain chip
+> +  identification registers at fixed locations, which provide all the
+> +  necessary information to the driver.
+> +- reg: should be register base and length as documented in the
+> +  datasheet
+> +- interrupts: Should contain the cores interrupt line
+> +- clocks: should contain one clock for entry in clock-names
+> +  see Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +- clock-names:
+> +   - "bus":    AXI/register clock
+> +   - "core":   GPU core clock
+> +   - "shader": Shader clock (only required if GPU has feature PIPE_3D)
+> +
+> +example:
+> +
+> +gpu_3d: gpu@00130000 {
+> +	compatible = "vivante,gc";
+> +	reg = <0x00130000 0x4000>;
+> +	interrupts = <0 9 IRQ_TYPE_LEVEL_HIGH>;
+> +	clocks = <&clks IMX6QDL_CLK_GPU3D_AXI>,
+> +	         <&clks IMX6QDL_CLK_GPU3D_CORE>,
+> +	         <&clks IMX6QDL_CLK_GPU3D_SHADER>;
+> +	clock-names = "bus", "core", "shader";
+> +};
+> -- 
+> 2.6.2
 > 
-> The new bindings for the eDMA is introduced for 4.4 and we do not have users of
-> it, which means that we can still change it w/o the risk of breaking anything
-> and we do not need to maintain the compatibility with 16bit arrays.
-> 
-> The changes in the eDMA driver is local to the DT parsing and should not
-> conflict with other changes (like the filter function mapping support). Hrm,
-> there might be trivial conflict in the include/linux/platform_data/edma.h with
-> the "dmaengine 'universal' API".
-> 
-> Tony, Arnd, Vinod: Can you agree on the practicalities on how these patches are
-> going to be handled? I would like to send the updated am33xx/am437x conversion
-> for 4.5 based on these changes.
-
-Yes this should go into v4.4 as discussed, otherwise it will be a mess.
-For both, please feel free to add:
-
-Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-
-I suggest Vinod sets up an immutable branch against v4.4-rc1 with just these
-two patches. Then it can get merged into whichever branch needs it, I
-certainly will need it as most of my v4.5 branches are v4.4-rc1 or -rc2
-based.
-
-Then the immutable branch can be merged into v4.4 by Vinod or Arnd.
-
-Regards,
-
-Tony
-
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
