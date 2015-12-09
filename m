@@ -1,147 +1,61 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: [PATCH v4 1/4] stmmac: create of compatible mdio bus for stmacc driver
-Date: Wed,  9 Dec 2015 09:41:06 +0800
-Message-ID: <1449625269-46078-2-git-send-email-preid@electromag.com.au>
-References: <1449625269-46078-1-git-send-email-preid@electromag.com.au>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1449625269-46078-1-git-send-email-preid@electromag.com.au>
-Sender: netdev-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, peppe.cavallaro@st.com, davem@davemloft.net, vbridger@opensource.altera.com, devicetree@vger.kernel.org, netdev@vger.kernel.org
-Cc: Phil Reid <preid@electromag.com.au>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [RESEND PATCH] modpost: don't add a trailing wildcard for OF
+ module aliases
+Date: Tue, 8 Dec 2015 23:00:13 -0300
+Message-ID: <56678B2D.1040905@osg.samsung.com>
+References: <1449612813-27004-1-git-send-email-javier@osg.samsung.com>
+ <20151208151149.50ee68b41c5b9bc833eb0c2b@linux-foundation.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151208151149.50ee68b41c5b9bc833eb0c2b-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rusty Russell <rusty-8n+1lVoiYb80n/F98K4Iww@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The DSA driver needs to be passed a reference to an mdio bus. Typically
-the mac is configured to use a fixed link but the mdio bus still needs
-to be registered so that it con configure the switch.
-This patch follows the same process as the altera tse ethernet driver for
-creation of the mdio bus.
+Hello Andrew,
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Phil Reid <preid@electromag.com.au>
----
- Documentation/devicetree/bindings/net/stmmac.txt   |  8 +++++
- drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c  | 39 ++++++++++++++--------
- .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |  2 +-
- 3 files changed, 34 insertions(+), 15 deletions(-)
+On 12/08/2015 08:11 PM, Andrew Morton wrote:
+> On Tue,  8 Dec 2015 19:13:32 -0300 Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> wrote:
 
-diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-index f34fc3c..fd5ddf8 100644
---- a/Documentation/devicetree/bindings/net/stmmac.txt
-+++ b/Documentation/devicetree/bindings/net/stmmac.txt
-@@ -47,6 +47,7 @@ Optional properties:
- - snps,burst_len: The AXI burst lenth value of the AXI BUS MODE register.
- - tx-fifo-depth: See ethernet.txt file in the same directory
- - rx-fifo-depth: See ethernet.txt file in the same directory
-+- mdio: with compatible = "snps,dwmac-mdio", create and register mdio bus.
+[snip]
+
+>>
+>> I sent this patch before [0] but was never picked. MAINTAINERS doesn't
+>> say who should manage patches to file2alias so maybe I didn't add the
+>> right person to the cc list.
+> 
+> z:/usr/src/git26> perl scripts/get_maintainer.pl -f scripts/mod 
+> Rusty Russell <rusty-8n+1lVoiYb80n/F98K4Iww@public.gmane.org> (commit_signer:18/27=67%)
+>
+
+Yes, I use get_maintainer.pl but usually with the --no-git-fallback since
+the --git-fallback option tends to be too noisy and people complain that
+are cc'ed on random patches just because they touched a file in the past.
+
+IOW, there is no way to know only by looking at get_maintainer.pl output
+if Rusty has only made a lot of changes to that repo or if he acts as a
+maintainer (i.e: picks patches and send pull requests).
+
+For these cases, is good to have a proper entry in MAINTAINERS.
  
- Examples:
- 
-@@ -65,4 +66,11 @@ Examples:
- 		tx-fifo-depth = <16384>;
- 		clocks = <&clock>;
- 		clock-names = "stmmaceth";
-+		mdio0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "snps,dwmac-mdio";
-+			phy1: ethernet-phy@0 {
-+			};
-+		};
- 	};
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-index bba670c..0fcecb2 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-@@ -29,7 +29,7 @@
- #include <linux/slab.h>
- #include <linux/of.h>
- #include <linux/of_gpio.h>
--
-+#include <linux/of_mdio.h>
- #include <asm/io.h>
- 
- #include "stmmac.h"
-@@ -200,10 +200,32 @@ int stmmac_mdio_register(struct net_device *ndev)
- 	struct stmmac_priv *priv = netdev_priv(ndev);
- 	struct stmmac_mdio_bus_data *mdio_bus_data = priv->plat->mdio_bus_data;
- 	int addr, found;
-+	struct device_node *mdio_node = NULL;
-+	struct device_node *child_node = NULL;
- 
- 	if (!mdio_bus_data)
- 		return 0;
- 
-+	if (IS_ENABLED(CONFIG_OF)) {
-+		for_each_child_of_node(priv->device->of_node, child_node) {
-+			if (of_device_is_compatible(child_node,
-+						    "snps,dwmac-mdio")) {
-+				mdio_node = child_node;
-+				break;
-+			}
-+		}
-+
-+		if (mdio_node) {
-+			netdev_dbg(ndev, "FOUND MDIO subnode\n");
-+		} else {
-+			netdev_err(ndev, "NO MDIO subnode\n");
-+			return 0;
-+		}
-+
-+		if (priv->device->of_node)
-+			mdio_bus_data->reset_gpio = -1;
-+	}
-+
- 	new_bus = mdiobus_alloc();
- 	if (new_bus == NULL)
- 		return -ENOMEM;
-@@ -216,11 +238,6 @@ int stmmac_mdio_register(struct net_device *ndev)
- 		irqlist = priv->mii_irq;
- 	}
- 
--#ifdef CONFIG_OF
--	if (priv->device->of_node)
--		mdio_bus_data->reset_gpio = -1;
--#endif
--
- 	new_bus->name = "stmmac";
- 	new_bus->read = &stmmac_mdio_read;
- 	new_bus->write = &stmmac_mdio_write;
-@@ -231,7 +248,8 @@ int stmmac_mdio_register(struct net_device *ndev)
- 	new_bus->irq = irqlist;
- 	new_bus->phy_mask = mdio_bus_data->phy_mask;
- 	new_bus->parent = priv->device;
--	err = mdiobus_register(new_bus);
-+
-+	err = of_mdiobus_register(new_bus, mdio_node);
- 	if (err != 0) {
- 		pr_err("%s: Cannot register as MDIO bus\n", new_bus->name);
- 		goto bus_register_fail;
-@@ -284,13 +302,6 @@ int stmmac_mdio_register(struct net_device *ndev)
- 		}
- 	}
- 
--	if (!found) {
--		pr_warn("%s: No PHY found\n", ndev->name);
--		mdiobus_unregister(new_bus);
--		mdiobus_free(new_bus);
--		return -ENODEV;
--	}
--
- 	priv->mii = new_bus;
- 
- 	return 0;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index d02691b..6863420 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -146,7 +146,7 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
- 	if (of_property_read_u32(np, "snps,phy-addr", &plat->phy_addr) == 0)
- 		dev_warn(&pdev->dev, "snps,phy-addr property is deprecated\n");
- 
--	if (plat->phy_node || plat->phy_bus_name)
-+	if (plat->phy_bus_name)
- 		plat->mdio_bus_data = NULL;
- 	else
- 		plat->mdio_bus_data =
+>> Documentation/development-process/5.Posting says that if there is no
+>> obvious maintainer, then Andrew Morton is often the patch target so
+>> I'm re-sending to him.
+> 
+> Yep.  If I don't handle the particular patch, I know who does ;)
+>
+
+I see that you picked the patch already, thanks a lot for your help!
+
+Best regards,
 -- 
-1.8.3.1
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
