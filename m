@@ -1,30 +1,36 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 4/5] pinctrl: mediatek: Add Pinctrl/GPIO/EINT driver for mt2701
-Date: Wed, 9 Dec 2015 23:52:01 +0100
-Message-ID: <CACRpkda2vgrVEisH=akc5aj6h4LW+mBTqgbAiF3E=3zcu6A28A@mail.gmail.com>
-References: <1448527472-20651-1-git-send-email-biao.huang@mediatek.com>
-	<1448527472-20651-5-git-send-email-biao.huang@mediatek.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v1 4/8] dt-bindings: add documentation of rk3228 clock controller
+Date: Thu, 10 Dec 2015 00:11:38 +0100
+Message-ID: <26848197.iMXfor9NuY@phil>
+References: <1449651853-1667-1-git-send-email-jeffy.chen@rock-chips.com> <1449651853-1667-5-git-send-email-jeffy.chen@rock-chips.com> <20151209201200.GA29732@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448527472-20651-5-git-send-email-biao.huang@mediatek.com>
+In-Reply-To: <20151209201200.GA29732@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Biao Huang <biao.huang@mediatek.com>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, srv_heupstream@mediatek.com
+To: Rob Herring <robh@kernel.org>
+Cc: Jeffy Chen <jeffy.chen@rock-chips.com>, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Xing Zheng <zhengxing@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 26, 2015 at 9:44 AM, Biao Huang <biao.huang@mediatek.com> wrote:
+Hi Rob,
 
-> Add mt2701 support using mediatek common pinctrl driver.
-> MT2701 have some special pins need an extra setting register
-> than other ICs, so adding this support to common code.
->
-> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+Am Mittwoch, 9. Dezember 2015, 14:12:00 schrieb Rob Herring:
+> On Wed, Dec 09, 2015 at 05:04:09PM +0800, Jeffy Chen wrote:
+> > Add the devicetree binding for the cru on the rk3228 which quite similar
+> > structured as previous clock controllers.
+> > 
+> > Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+> 
+> Seems like there is a lot of duplication across Rockchip cru bindings. 
+> Perhaps they should be combined?
 
-This looks uncontroversial, but I would like to have some of the
-other Mediatek driver authors send their Ack/Review tags,
-so Hongzhou & Yingjoe: can you review this and the other
-patch to the pin control driver?
+You're right and I've put that on my list for the near future.
 
-Yours,
-Linus Walleij
+
+> Otherwise:
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+
+Thanks
+Heiko
