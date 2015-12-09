@@ -1,78 +1,59 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v3 2/9] Documentation: dt-bindings: Document STM32 pinctrl
- driver DT bindings
-Date: Wed, 9 Dec 2015 10:37:40 +0100
-Message-ID: <CALszF6Ct5omDxbysmD=7MHYDT5-EowKH+L+sqSbp29R9tHfkdA@mail.gmail.com>
-References: <1449578711-6141-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<1449578711-6141-3-git-send-email-mcoquelin.stm32@gmail.com>
-	<20151209034137.GA15954@rob-hp-laptop>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 1/5] PCI: designware: add memory barrier after enabling region
+Date: Wed, 09 Dec 2015 10:52:27 +0100
+Message-ID: <1975309.Hla8QhEqf4@wuerfel>
+References: <1449149725-27607-1-git-send-email-stanimir.varbanov@linaro.org> <56669C50.9060700@linaro.org> <CAHM4w1k_EAt+xBBYyG3B7W9Fegc4j+uRq5t_biUsxOGt+k+xUA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20151209034137.GA15954@rob-hp-laptop>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHM4w1k_EAt+xBBYyG3B7W9Fegc4j+uRq5t_biUsxOGt+k+xUA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pratyush Anand <pratyush.anand@gmail.com>
+Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wednesday 09 December 2015 10:10:05 Pratyush Anand wrote:
+> On Tue, Dec 8, 2015 at 2:31 PM, Stanimir Varbanov
+> > > Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> > > ---
+> > >  drivers/pci/host/pcie-designware.c |    5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+> > > index 02a7452bdf23..ed4dc2e2553b 100644
+> > > --- a/drivers/pci/host/pcie-designware.c
+> > > +++ b/drivers/pci/host/pcie-designware.c
+> > > @@ -164,6 +164,11 @@ static void dw_pcie_prog_outbound_atu(struct pcie_port *pp, int index,
+> > >       dw_pcie_writel_rc(pp, upper_32_bits(pci_addr), PCIE_ATU_UPPER_TARGET);
+> > >       dw_pcie_writel_rc(pp, type, PCIE_ATU_CR1);
+> > >       dw_pcie_writel_rc(pp, PCIE_ATU_ENABLE, PCIE_ATU_CR2);
+> > > +     /*
+> > > +      * ensure that the ATU enable has been happaned before accessing
+> > > +      * pci configuration/io spaces through dw_pcie_cfg_[read|write].
+> > > +      */
+> > > +     wmb();
+> > >  }
+> > >
+> 
+> 
+> My understnading is that since writel() of dw_pcie_writel_rc() in
+> above code and readl(), writel() of dw_pcie_cfg_[read|write]() (which
+> will follow) goes through same device (ie PCIe host here). So, it is
+> guaranteed that 1st writel() will be executed before later
+> readl()/writel(). If that is true then we do not need any explicit
+> barrier here.
+> 
+> Arnd, Russel: whats your opinion here.
 
-2015-12-09 4:41 GMT+01:00 Rob Herring <robh@kernel.org>:
-> On Tue, Dec 08, 2015 at 01:45:04PM +0100, Maxime Coquelin wrote:
->> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
->> ---
->>  .../bindings/pinctrl/st,stm32-pinctrl.txt          | 126 +++++++++++++++++++++
->>  1 file changed, 126 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
->> new file mode 100644
->> index 0000000..7b4800c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
->> @@ -0,0 +1,126 @@
->> +* STM32 GPIO and Pin Mux/Config controller
->> +
->> +STMicroelectronics's STM32 MCUs intregrate a GPIO and Pin mux/config hardware
->> +controller. It controls the input/output settings on the available pins and
->> +also provides ability to multiplex and configure the output of various on-chip
->> +controllers onto these pads.
->> +
->> +Pin controller node:
->> +Required properies:
->> + - compatible: value should be one of the following:
->> +   (a) "st,stm32f429-pinctrl"
->> + - #address-cells: The value of this property must be 1
->> + - #size-cells       : The value of this property must be 1
->> + - ranges    : defines mapping between pin controller node (parent) to
->> +   gpio-bank node (children).
->> + - pins-are-numbered: Specify the subnodes are using numbered pinmux to
->> +   specify pins.
->> +
->> +GPIO controller/bank node:
->> +Required properties:
->> + - gpio-controller : Indicates this device is a GPIO controller
->> + - #gpio-cells         : Should be two.
->> +                     The first cell is the pin number
->> +                     The second one is the polarity:
->> +                             - 0 for active high
->> +                             - 1 for active low
->> + - reg                 : The gpio address range, relative to the pinctrl range
->> + - clocks      : clock that drives this bank
->> + - st,bank-name        : Should be a name string for this bank as specified in
->> +   the datasheet
->
-> How do you intend to use this? We should come up with something generic
-> or drop it.
-Good point.
-It is used to have a meaningful name set in gpio_chip's label.
-I see two alternatives:
- 1. replace "st,bank-name" with label
- 2. use aliases, and construct label in driver with something like:
-     kasprintf(GFP_KERNEL, "GPIO%c", 'A' + of_alias_get_id(np, "gpio"));
+I think the ordering is only enforced if the two register accesses are
+on the same device as seen from the bus, and it's possible that the
+RC registers and the config space registers are not considered the
+same thing here.
 
-What do you prefer?
-Do you have other ideas?
+For config write, this is not a problem, because the config space write
+has a wmb() that enforces ordering, but it's possible that the config
+space read may hit the device in parallel with the PCIE_ATU_ENABLE
+write.
 
-Thanks,
-Maxime
+	Arnd
