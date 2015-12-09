@@ -1,53 +1,54 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v5 08/11] ARM: STi: Register CPUFreq device
-Date: Wed, 9 Dec 2015 14:49:07 +0530
-Message-ID: <20151209091907.GF28374@ubuntu>
-References: <1449585124-15596-1-git-send-email-lee.jones@linaro.org>
- <1449585124-15596-9-git-send-email-lee.jones@linaro.org>
- <3682335.fAt9xNcJFr@wuerfel>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/2] ARM: dts: sun4i: mk802 variant patches
+Date: Wed, 9 Dec 2015 10:20:32 +0100
+Message-ID: <20151209092032.GX27957@lukather>
+References: <1449600534-5098-1-git-send-email-codekipper@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Y48FV0AvvvAm5Iyr"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBGXFT6ZQKGQEJ7LS24Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <3682335.fAt9xNcJFr@wuerfel>
-Sender: linux-pm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@stlinux.com, linux-pm@vger.kernel.org, rjw@rjwysocki.net, ajitpal.singh@st.com, maxime.coquelin@st.com
+In-Reply-To: <1449600534-5098-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09-12-15, 10:15, Arnd Bergmann wrote:
-> On Tuesday 08 December 2015 14:32:01 Lee Jones wrote:
-> > @@ -161,3 +166,11 @@ struct smp_operations __initdata sti_smp_ops = {
-> >         .smp_secondary_init     = sti_secondary_init,
-> >         .smp_boot_secondary     = sti_boot_secondary,
-> >  };
-> > +
-> > +/**
-> > + * CPUFreq Registration
-> > + */
-> > +void init_cpufreq(void)
-> > +{
-> > +       platform_device_register_simple("sti-cpufreq", -1, NULL, 0);
-> > +}
-> > 
+--Y48FV0AvvvAm5Iyr
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+Hi,
+
+On Tue, Dec 08, 2015 at 07:48:52PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
-> Can you please do this under drivers/cpufreq somewhere?
-> 
-> I really don't want to any more of these in platform code. Requiring a
-> device to be created just to probe the driver is really silly.
+> This patch series splits the mk802 dts into common include file which
+> can be shared with the mk802+ device. The only difference that I can
+> see between this and the original device is that it has an internal
+> microphone.
 
-He is actually creating two device right now..
+Internal microphone that is not represented in the DT :)
 
-- create sti-cpufreq device
-  - so that sti-cpufreq driver get probed
-    - And fix OPPs here first and then create cpufreq-dt device
-      - so that cpufreq-dt driver get probed
+> With that in mind we can either leave things as they are and enable
+> the capture to the original mk802 dts or apply this patch to distinguish
+> between the two devices.
 
-:)
+Since there's exactly no difference between the two DTs, is there a
+point at merging these patches?
 
-I already recommended him that he can replace the first two points by
-doing things from module_init() instead. And then create cpufreq-dt
-device.
+Thanks,
+Maxime
 
 -- 
-viresh
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--Y48FV0AvvvAm5Iyr--
