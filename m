@@ -1,53 +1,86 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] of/address: replace printk() with pr_debug() / pr_err()
-Date: Wed, 9 Dec 2015 22:36:58 +0200
-Message-ID: <CAHp75VcXGA1kFt6+g8QAu6VDnF24eff+CNVu_wy8zBn68XpHmg@mail.gmail.com>
-References: <1449590868-19070-1-git-send-email-yamada.masahiro@socionext.com>
-	<1449591386.3315.2.camel@perches.com>
-	<1449594231.13275.2.camel@perches.com>
-	<CAL_JsqJ0oftptSxyAcGOnQ3XA9v55B2n=8DiWBcErcLKgfsppg@mail.gmail.com>
-	<1449619439.18646.20.camel@perches.com>
-	<CAHp75VeN3hX4Dus6LLaie5c3xkdgQQc55fCOoAQ15JNib9La=A@mail.gmail.com>
-	<1449689319.25389.28.camel@perches.com>
-	<CAHp75VdHrG_uk9K7B=q8+ZnjNehJ2AY=-RsMGByxn62Uh_-sRA@mail.gmail.com>
-	<87si3b8jha.fsf@rasmusvillemoes.dk>
+From: Simon Arlott <simon@fire.lp0.eu>
+Subject: [PATCH linux-next (v2) 1/3] mtd: brcmnand: Add brcm,bcm6368-nand
+ device tree binding
+Date: Wed, 9 Dec 2015 20:40:58 +0000
+Message-ID: <566891DA.1050208@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87si3b8jha.fsf@rasmusvillemoes.dk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Joe Perches <joe@perches.com>, Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, linux-mtd@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Kamal Dasu <kdasu.kdev@gmail.com>, Jonas Gorski <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 9, 2015 at 10:17 PM, Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
-> On Wed, Dec 09 2015, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
->> On Wed, Dec 9, 2015 at 9:28 PM, Joe Perches <joe@perches.com> wrote:
+Add device tree binding for NAND on the BCM6368.
 
->>> +enum {
->>> +       DUMP_TYPE_CPU = 0,
->>
->> And still open this, do we need it? I think you may just mention in
->> the documentation that default behaviour is CPU like.
->
-> I think it's best to have a name for the default. In this case it's
-> unlikely to ever be relevant, but in general one could imagine stuff
-> like
->
-> #ifdef THIS_OR_THAT
-> #define MY_DUMP_TYPE DUMP_TYPE_LE
-> #else
-> #define MY_DUMP_TYPE DUMP_TYPE_CPU
-> #endif
->
-> which is a lot more readable than if the latter was a naked 0.
+The BCM6368 has a NAND interrupt register with combined status and enable
+registers. It also requires a clock, so add an optional clock to the
+common brcmnand binding.
 
-Point taken.
+Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+---
+Changed "nand-intr-base" reg name to "nand-int-base".
 
-Though _CPU suggests user to think if it's equivalent to BE or LE. I'm
-wondering if _NATIVE is better?
+ .../devicetree/bindings/mtd/brcm,brcmnand.txt      | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+index 4ff7128..ebfa6fc 100644
+--- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
++++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+@@ -45,6 +45,8 @@ Required properties:
+ - #size-cells      : <0>
+ 
+ Optional properties:
++- clock                     : reference to the clock for the NAND controller
++- clock-names               : "nand" (required for the above clock)
+ - brcm,nand-has-wp          : Some versions of this IP include a write-protect
+                               (WP) control bit. It is always available on >=
+                               v7.0. Use this property to describe the rare
+@@ -72,6 +74,12 @@ we define additional 'compatible' properties and associated register resources w
+        and enable registers
+      - reg-names: (required) "nand-int-base"
+ 
++   * "brcm,nand-bcm6368"
++     - compatible: should contain "brcm,nand-bcm<soc>", "brcm,nand-bcm6368"
++     - reg: (required) the 'NAND_INTR_BASE' register range, with combined status
++       and enable registers, and boot address registers
++     - reg-names: (required) "nand-int-base"
++
+    * "brcm,nand-iproc"
+      - reg: (required) the "IDM" register range, for interrupt enable and APB
+        bus access endianness configuration, and the "EXT" register range,
+@@ -148,3 +156,27 @@ nand@f0442800 {
+ 		};
+ 	};
+ };
++
++nand@10000200 {
++	compatible = "brcm,nand-bcm63168", "brcm,nand-bcm6368",
++		"brcm,brcmnand-v4.0", "brcm,brcmnand";
++	reg = <0x10000200 0x180>,
++	      <0x10000600 0x200>,
++	      <0x100000b0 0x10>;
++	reg-names = "nand", "nand-cache", "nand-intr-base";
++	interrupt-parent = <&periph_intc>;
++	interrupts = <50>;
++	clocks = <&periph_clk 20>;
++	clock-names = "nand";
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	nand0: nandcs@0 {
++		compatible = "brcm,nandcs";
++		reg = <0>;
++		nand-on-flash-bbt;
++		nand-ecc-strength = <1>;
++		nand-ecc-step-size = <512>;
++	};
++};
+-- 
+2.1.4
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Simon Arlott
