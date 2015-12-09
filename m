@@ -1,103 +1,51 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v10 08/17] dt-bindings: add document for rockchip variant
- of analogix_dp
-Date: Wed, 9 Dec 2015 09:05:46 +0800
-Message-ID: <56677E6A.5020705@rock-chips.com>
-References: <1449470239-30667-1-git-send-email-ykk@rock-chips.com>
- <1449470374-31191-1-git-send-email-ykk@rock-chips.com>
- <20151208150356.GA14750@rob-hp-laptop>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH for-4.4 2/2] doc: dt: mtd: partitions: add compatible
+ property to "partitions" node
+Date: Tue, 8 Dec 2015 17:12:56 -0800
+Message-ID: <20151209011256.GV120110@google.com>
+References: <1449194529-145705-1-git-send-email-computersforpeace@gmail.com>
+ <1449194529-145705-2-git-send-email-computersforpeace@gmail.com>
+ <CAOiHx=kP8hT-UH=tfUZYYpr__i458-ZL3bOhcAJb8hmSbqBdCA@mail.gmail.com>
+ <20151207175835.GM120110@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20151208150356.GA14750@rob-hp-laptop>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, javier@osg.samsung.com, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jingoo Han <jingoohan1@gmail.com>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, ajaynumb@gmail.com, Andy Yan <andy.yan@rock-chips.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20151207175835.GM120110@google.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Jonas Gorski <jogo@openwrt.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Suchanek <hramrach@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Simon Arlott <simon@fire.lp0.eu>, Rob Herring <robh+dt@kernel.org>, MTD Maling List <linux-mtd@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gMTIvMDgvMjAxNSAxMTowMyBQTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24g
-TW9uLCBEZWMgMDcsIDIwMTUgYXQgMDI6Mzk6MzRQTSArMDgwMCwgWWFraXIgWWFuZyB3cm90ZToK
-Pj4gUm9ja2NoaXAgRFAgZHJpdmVyIGlzIGEgaGVscGVyIGRyaXZlciBvZiBhbmFsb2dpeF9kcCBj
-b2RlciBkcml2ZXIsCj4+IHNvIG1vc3Qgb2YgdGhlIERUIHByb3BlcnR5IHNob3VsZCBiZSBkZXNj
-cmlwZWQgaW4gYW5hbG9naXhfZHAgZG9jdW1lbnQuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IFlha2ly
-IFlhbmcgPHlra0Byb2NrLWNoaXBzLmNvbT4KPj4gUmV2aWV3ZWQtYnk6IEhlaWtvIFN0dWVibmVy
-IDxoZWlrb0BzbnRlY2guZGU+Cj4gSSBhbHJlYWR5IGFja2VkIHRoZSBwcmV2aW91cyB2MTAgeW91
-IHNlbnQuCj4KPiBBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KCkFoLCBJ
-IHJlbWVtYmVyIGl0LCBzb3JyeSBhYm91dCB0aGUgbWlzdGFrZW4gOi1ECgpUaGFua3MKLSBZYWtp
-cgoKPgo+PiAtLS0KPj4gQ2hhbmdlcyBpbiB2MTA6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2OToKPj4g
-LSBEb2N1bWVudCBtb3JlIGRldGFpbHMgZm9yICdwb3J0cycgcHJvcGVydHkuCj4+Cj4+IENoYW5n
-ZXMgaW4gdjg6Cj4+IC0gTW9kaWZ5IHRoZSBjb21taXQgc3ViamVjdCBuYW1lLiAoSGVpa28pCj4+
-Cj4+IENoYW5nZXMgaW4gdjc6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2NjogTm9uZQo+PiBDaGFuZ2Vz
-IGluIHY1Ogo+PiAtIFNwbGl0IGJpbmRpbmcgZG9jJ3MgZnJvbSBkcml2ZXIgY2hhbmdlcy4gKFJv
-YikKPj4gLSBBZGQgZURQIGhvdHBsdWcgcGluY3RybCBwcm9wZXJ0eS4gKEhlaWtvKQo+Pgo+PiBD
-aGFuZ2VzIGluIHY0OiBOb25lCj4+IENoYW5nZXMgaW4gdjM6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2
-MjogTm9uZQo+Pgo+PiAgIC4uLi9kaXNwbGF5L3JvY2tjaGlwL2FuYWxvZ2l4X2RwLXJvY2tjaGlw
-LnR4dCAgICAgIHwgOTEgKysrKysrKysrKysrKysrKysrKysrKwo+PiAgIDEgZmlsZSBjaGFuZ2Vk
-LCA5MSBpbnNlcnRpb25zKCspCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2FuYWxvZ2l4X2RwLXJvY2tjaGlw
-LnR4dAo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvcm9ja2NoaXAvYW5hbG9naXhfZHAtcm9ja2NoaXAudHh0IGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvYW5hbG9naXhfZHAtcm9ja2No
-aXAudHh0Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAuLmRhZTg2YzQK
-Pj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9yb2NrY2hpcC9hbmFsb2dpeF9kcC1yb2NrY2hpcC50eHQKPj4gQEAgLTAsMCAr
-MSw5MSBAQAo+PiArUm9ja2NoaXAgUkszMjg4IHNwZWNpZmljIGV4dGVuc2lvbnMgdG8gdGhlIEFu
-YWxvZ2l4IERpc3BsYXkgUG9ydAo+PiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0K
-Pj4gKwo+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4gKy0gY29tcGF0aWJsZTogInJvY2tjaGlw
-LHJrMzI4OC1lZHAiOwo+PiArCj4+ICstIHJlZzogcGh5c2ljYWwgYmFzZSBhZGRyZXNzIG9mIHRo
-ZSBjb250cm9sbGVyIGFuZCBsZW5ndGgKPj4gKwo+PiArLSBjbG9ja3M6IGZyb20gY29tbW9uIGNs
-b2NrIGJpbmRpbmc6IGhhbmRsZSB0byBkcCBjbG9jay4KPj4gKwkgIG9mIG1lbW9yeSBtYXBwZWQg
-cmVnaW9uLgo+PiArCj4+ICstIGNsb2NrLW5hbWVzOiBmcm9tIGNvbW1vbiBjbG9jayBiaW5kaW5n
-Ogo+PiArCSAgICAgICBSZXF1aXJlZCBlbGVtZW50czogImRwIiAicGNsayIKPj4gKwo+PiArLSBy
-ZXNldHM6IE11c3QgY29udGFpbiBhbiBlbnRyeSBmb3IgZWFjaCBlbnRyeSBpbiByZXNldC1uYW1l
-cy4KPj4gKwkgIFNlZSAuLi9yZXNldC9yZXNldC50eHQgZm9yIGRldGFpbHMuCj4+ICsKPj4gKy0g
-cGluY3RybC1uYW1lczogTmFtZXMgY29ycmVzcG9uZGluZyB0byB0aGUgY2hpcCBob3RwbHVnIHBp
-bmN0cmwgc3RhdGVzLgo+PiArLSBwaW5jdHJsLTA6IHBpbi1jb250cm9sIG1vZGUuIHNob3VsZCBi
-ZSA8JmVkcF9ocGQ+Cj4+ICsKPj4gKy0gcmVzZXQtbmFtZXM6IE11c3QgaW5jbHVkZSB0aGUgbmFt
-ZSAiZHAiCj4+ICsKPj4gKy0gcm9ja2NoaXAsZ3JmOiB0aGlzIHNvYyBzaG91bGQgc2V0IEdSRiBy
-ZWdzLCBzbyBuZWVkIGdldCBncmYgaGVyZS4KPj4gKwo+PiArLSBwb3J0czogdGhlcmUgYXJlIDIg
-cG9ydCBub2RlcyB3aXRoIGVuZHBvaW50IGRlZmluaXRpb25zIGFzIGRlZmluZWQgaW4KPj4gKyAg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMu
-dHh0Lgo+PiArICAgIFBvcnQgMDogY29udGFpbmVkIDIgZW5kcG9pbnRzLCBjb25uZWN0aW5nIHRv
-IHRoZSBvdXB1dCBvZiB2b3AuCj4+ICsgICAgUG9ydCAxOiBjb250YWluZWQgMSBlbmRwb2ludCwg
-Y29ubmVjdGluZyB0byB0aGUgaW5wdXQgb2YgcGFuZWwuCj4+ICsKPj4gK0ZvciB0aGUgYmVsb3cg
-cHJvcGVydGllcywgcGxlYXNlIHJlZmVyIHRvIEFuYWxvZ2l4IERQIGJpbmRpbmcgZG9jdW1lbnQ6
-Cj4+ICsgKiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9hbmFs
-b2dpeF9kcC50eHQKPj4gKy0gcGh5cyAocmVxdWlyZWQpCj4+ICstIHBoeS1uYW1lcyAocmVxdWly
-ZWQpCj4+ICstIGhwZC1ncGlvcyAob3B0aW9uYWwpCj4+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-Cj4+ICsKPj4gK0V4YW1wbGU6Cj4+ICsJZHAtY29udHJvbGxlcjogZHBAZmY5NzAwMDAgewo+PiAr
-CQljb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzI4OC1kcCI7Cj4+ICsJCXJlZyA9IDwweGZmOTcw
-MDAwIDB4NDAwMD47Cj4+ICsJCWludGVycnVwdHMgPSA8R0lDX1NQSSA5OCBJUlFfVFlQRV9MRVZF
-TF9ISUdIPjsKPj4gKwkJY2xvY2tzID0gPCZjcnUgU0NMS19FRFA+LCA8JmNydSBQQ0xLX0VEUF9D
-VFJMPjsKPj4gKwkJY2xvY2stbmFtZXMgPSAiZHAiLCAicGNsayI7Cj4+ICsJCXBoeXMgPSA8JmRw
-X3BoeT47Cj4+ICsJCXBoeS1uYW1lcyA9ICJkcCI7Cj4+ICsKPj4gKwkJcm9ja2NoaXAsZ3JmID0g
-PCZncmY+Owo+PiArCQlyZXNldHMgPSA8JmNydSAxMTE+Owo+PiArCQlyZXNldC1uYW1lcyA9ICJk
-cCI7Cj4+ICsKPj4gKwkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPj4gKwkJcGluY3RybC0w
-ID0gPCZlZHBfaHBkPjsKPj4gKwo+PiArCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+PiArCj4+ICsJ
-CXBvcnRzIHsKPj4gKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiArCQkJI3NpemUtY2VsbHMg
-PSA8MD47Cj4+ICsJCQllZHBfaW46IHBvcnRAMCB7Cj4+ICsJCQkJcmVnID0gPDA+Owo+PiArCQkJ
-CSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiArCQkJCSNzaXplLWNlbGxzID0gPDA+Owo+PiArCQkJ
-CWVkcF9pbl92b3BiOiBlbmRwb2ludEAwIHsKPj4gKwkJCQkJcmVnID0gPDA+Owo+PiArCQkJCQly
-ZW1vdGUtZW5kcG9pbnQgPSA8JnZvcGJfb3V0X2VkcD47Cj4+ICsJCQkJfTsKPj4gKwkJCQllZHBf
-aW5fdm9wbDogZW5kcG9pbnRAMSB7Cj4+ICsJCQkJCXJlZyA9IDwxPjsKPj4gKwkJCQkJcmVtb3Rl
-LWVuZHBvaW50ID0gPCZ2b3BsX291dF9lZHA+Owo+PiArCQkJCX07Cj4+ICsJCQl9Owo+PiArCj4+
-ICsJCQllZHBfb3V0OiBwb3J0QDEgewo+PiArCQkJCXJlZyA9IDwxPjsKPj4gKwkJCQkjYWRkcmVz
-cy1jZWxscyA9IDwxPjsKPj4gKwkJCQkjc2l6ZS1jZWxscyA9IDwwPjsKPj4gKwkJCQllZHBfb3V0
-X3BhbmVsOiBlbmRwb2ludCB7Cj4+ICsJCQkJCXJlZyA9IDwwPjsKPj4gKwkJCQkJcmVtb3RlLWVu
-ZHBvaW50ID0gPCZwYW5lbF9pbl9lZHA+Cj4+ICsJCQkJfTsKPj4gKwkJCX07Cj4+ICsJCX07Cj4+
-ICsJfTsKPj4gKwo+PiArCXBpbmN0cmwgewo+PiArCQllZHAgewo+PiArCQkJZWRwX2hwZDogZWRw
-LWhwZCB7Cj4+ICsJCQkJcm9ja2NoaXAscGlucyA9IDw3IDExIFJLX0ZVTkNfMiAmcGNmZ19wdWxs
-X25vbmU+Owo+PiArCQkJfTsKPj4gKwkJfTsKPj4gKwl9Owo+PiAtLSAKPj4gMS45LjEKPj4KPj4K
-Pgo+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Mon, Dec 07, 2015 at 09:58:35AM -0800, Brian Norris wrote:
+> On Sat, Dec 05, 2015 at 12:45:36PM +0100, Jonas Gorski wrote:
+> > On Fri, Dec 4, 2015 at 3:02 AM, Brian Norris
+> > <computersforpeace@gmail.com> wrote:
+> > >         // proposed
+> > >         partitions {
+> > >                 compatible = "partitions";
+> > 
+> > "partitions" sounds mode like a device_type thing than a compatible
+> > name, maybe "fixed-partitions"? IMHO that would describe better what
+> > these are, and doesn't invite to think using compatible =
+> > "arm,arm-flash-structure", "partitions"; is a good idea.
+> 
+> "fixed-partitions" sounds OK to me. If no objections, I'll apply these
+> patches, with (approximately) a:
+> 
+> s/"partitions"/"fixed-partitions"/
+
+Pushed to linux-mtd.git with the above change.
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
