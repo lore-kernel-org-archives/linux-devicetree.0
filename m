@@ -1,50 +1,135 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 08/11] ARM: STi: Register CPUFreq device
-Date: Wed, 9 Dec 2015 11:25:36 +0000
-Message-ID: <20151209112536.GB17876@x1>
-References: <1449585124-15596-1-git-send-email-lee.jones@linaro.org>
- <1449585124-15596-9-git-send-email-lee.jones@linaro.org>
- <3682335.fAt9xNcJFr@wuerfel>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v1 1/8] pinctrl: rockchip: add support for the rk3228
+Date: Wed, 09 Dec 2015 12:30:10 +0100
+Message-ID: <2989163.WWcXAyahsV@diego>
+References: <1449651853-1667-1-git-send-email-jeffy.chen@rock-chips.com> <1449651853-1667-2-git-send-email-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3682335.fAt9xNcJFr@wuerfel>
-Sender: linux-pm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@stlinux.com, linux-pm@vger.kernel.org, viresh.kumar@linaro.org, rjw@rjwysocki.net, ajitpal.singh@st.com, maxime.coquelin@st.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1449651853-1667-2-git-send-email-jeffy.chen@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jeffy Chen <jeffy.chen@rock-chips.com>
+Cc: linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 09 Dec 2015, Arnd Bergmann wrote:
+Hi Jeffy,
 
-> On Tuesday 08 December 2015 14:32:01 Lee Jones wrote:
-> > @@ -161,3 +166,11 @@ struct smp_operations __initdata sti_smp_ops =3D=
- {
-> >         .smp_secondary_init     =3D sti_secondary_init,
-> >         .smp_boot_secondary     =3D sti_boot_secondary,
-> >  };
-> > +
-> > +/**
-> > + * CPUFreq Registration
-> > + */
-> > +void init_cpufreq(void)
-> > +{
-> > +       platform_device_register_simple("sti-cpufreq", -1, NULL, 0)=
-;
-> > +}
-> >=20
->=20
-> Can you please do this under drivers/cpufreq somewhere?
->=20
-> I really don't want to any more of these in platform code. Requiring =
-a
-> device to be created just to probe the driver is really silly.
+Am Mittwoch, 9. Dezember 2015, 17:04:06 schrieb Jeffy Chen:
+> The pinctrl of rk3228 is much the same as rk3288's, but
+> without pmu.
+> 
+> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 
-Already on it.  Bear with.
+After verifying the offset and register-layout values with the TRM
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+
+
+I just love how that still seems to fit for new socs ;-)
+
+
+Thanks
+Heiko
+
+
+> ---
+> 
+>  .../bindings/pinctrl/rockchip,pinctrl.txt          |  3 +-
+>  drivers/pinctrl/pinctrl-rockchip.c                 | 53
+> ++++++++++++++++++++++ 2 files changed, 55 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+> b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt index
+> 391ef4b..0cd701b 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+> @@ -21,7 +21,8 @@ defined as gpio sub-nodes of the pinmux controller.
+>  Required properties for iomux controller:
+>    - compatible: one of "rockchip,rk2928-pinctrl",
+> "rockchip,rk3066a-pinctrl" "rockchip,rk3066b-pinctrl",
+> "rockchip,rk3188-pinctrl"
+> -		       "rockchip,rk3288-pinctrl", "rockchip,rk3368-pinctrl"
+> +		       "rockchip,rk3228-pinctrl", "rockchip,rk3288-pinctrl"
+> +		       "rockchip,rk3368-pinctrl"
+>    - rockchip,grf: phandle referencing a syscon providing the
+>  	 "general register files"
+> 
+> diff --git a/drivers/pinctrl/pinctrl-rockchip.c
+> b/drivers/pinctrl/pinctrl-rockchip.c index a065112..faab36e 100644
+> --- a/drivers/pinctrl/pinctrl-rockchip.c
+> +++ b/drivers/pinctrl/pinctrl-rockchip.c
+> @@ -614,6 +614,40 @@ static void rk3288_calc_drv_reg_and_bit(struct
+> rockchip_pin_bank *bank, }
+>  }
+> 
+> +#define RK3228_PULL_OFFSET		0x100
+> +
+> +static void rk3228_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
+> +				    int pin_num, struct regmap **regmap,
+> +				    int *reg, u8 *bit)
+> +{
+> +	struct rockchip_pinctrl *info = bank->drvdata;
+> +
+> +	*regmap = info->regmap_base;
+> +	*reg = RK3228_PULL_OFFSET;
+> +	*reg += bank->bank_num * RK3188_PULL_BANK_STRIDE;
+> +	*reg += ((pin_num / RK3188_PULL_PINS_PER_REG) * 4);
+> +
+> +	*bit = (pin_num % RK3188_PULL_PINS_PER_REG);
+> +	*bit *= RK3188_PULL_BITS_PER_PIN;
+> +}
+> +
+> +#define RK3228_DRV_GRF_OFFSET		0x200
+> +
+> +static void rk3228_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
+> +				    int pin_num, struct regmap **regmap,
+> +				    int *reg, u8 *bit)
+> +{
+> +	struct rockchip_pinctrl *info = bank->drvdata;
+> +
+> +	*regmap = info->regmap_base;
+> +	*reg = RK3228_DRV_GRF_OFFSET;
+> +	*reg += bank->bank_num * RK3288_DRV_BANK_STRIDE;
+> +	*reg += ((pin_num / RK3288_DRV_PINS_PER_REG) * 4);
+> +
+> +	*bit = (pin_num % RK3288_DRV_PINS_PER_REG);
+> +	*bit *= RK3288_DRV_BITS_PER_PIN;
+> +}
+> +
+>  #define RK3368_PULL_GRF_OFFSET		0x100
+>  #define RK3368_PULL_PMU_OFFSET		0x10
+> 
+> @@ -2143,6 +2177,23 @@ static struct rockchip_pin_ctrl rk3188_pin_ctrl = {
+>  		.pull_calc_reg		= rk3188_calc_pull_reg_and_bit,
+>  };
+> 
+> +static struct rockchip_pin_bank rk3228_pin_banks[] = {
+> +	PIN_BANK(0, 32, "gpio0"),
+> +	PIN_BANK(1, 32, "gpio1"),
+> +	PIN_BANK(2, 32, "gpio2"),
+> +	PIN_BANK(3, 32, "gpio3"),
+> +};
+> +
+> +static struct rockchip_pin_ctrl rk3228_pin_ctrl = {
+> +		.pin_banks		= rk3228_pin_banks,
+> +		.nr_banks		= ARRAY_SIZE(rk3228_pin_banks),
+> +		.label			= "RK3228-GPIO",
+> +		.type			= RK3288,
+> +		.grf_mux_offset		= 0x0,
+> +		.pull_calc_reg		= rk3228_calc_pull_reg_and_bit,
+> +		.drv_calc_reg		= rk3228_calc_drv_reg_and_bit,
+> +};
+> +
+>  static struct rockchip_pin_bank rk3288_pin_banks[] = {
+>  	PIN_BANK_IOMUX_FLAGS(0, 24, "gpio0", IOMUX_SOURCE_PMU,
+>  					     IOMUX_SOURCE_PMU,
+> @@ -2220,6 +2271,8 @@ static const struct of_device_id
+> rockchip_pinctrl_dt_match[] = { .data = (void *)&rk3066b_pin_ctrl },
+>  	{ .compatible = "rockchip,rk3188-pinctrl",
+>  		.data = (void *)&rk3188_pin_ctrl },
+> +	{ .compatible = "rockchip,rk3228-pinctrl",
+> +		.data = (void *)&rk3228_pin_ctrl },
+>  	{ .compatible = "rockchip,rk3288-pinctrl",
+>  		.data = (void *)&rk3288_pin_ctrl },
+>  	{ .compatible = "rockchip,rk3368-pinctrl",
