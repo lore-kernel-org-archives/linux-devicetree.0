@@ -1,71 +1,90 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] of/irq: move of_msi_map_rid declaration to the correct ifdef section
-Date: Wed,  9 Dec 2015 09:24:01 -0600
-Message-ID: <1449674641-24094-1-git-send-email-robh@kernel.org>
+From: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Generic DT binding for IPIs
+Date: Wed, 9 Dec 2015 15:27:51 +0000
+Message-ID: <56684877.3020708@imgtec.com>
+References: <561E2BE6.2090807@imgtec.com> <5628BE00.4020106@imgtec.com>
+ <20151022115551.GI3953@io.lakedaemon.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151022115551.GI3953-fahSIxCzskDQ+YiMSub0/l6hYfS7NtTn@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lisa Parratt <Lisa.Parratt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In checking fixes for of_irq_find_parent declaration location, I found
-that of_msi_map_rid is also wrong. of_msi_map_rid is not implemented for
-Sparc, so it should not be in the Sparc specific section of the header.
-Move it to just depend on OF_IRQ.
+Hi,
 
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- include/linux/of_irq.h | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+On 10/22/2015 12:55 PM, Jason Cooper wrote:
+> On Thu, Oct 22, 2015 at 11:44:16AM +0100, Qais Yousef wrote:
+>> Is there anything more I can do to get more attention about this? I
+>> think Marc's suggestion is more generic and future proof, if I send
+>> RFC patches for that would this be better?
+> Please do.
 
-diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index f648acf..1e0deb8 100644
---- a/include/linux/of_irq.h
-+++ b/include/linux/of_irq.h
-@@ -53,6 +53,7 @@ extern struct irq_domain *of_msi_get_domain(struct device *dev,
- extern struct irq_domain *of_msi_map_get_device_domain(struct device *dev,
- 						       u32 rid);
- extern void of_msi_configure(struct device *dev, struct device_node *np);
-+u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in);
- #else
- static inline int of_irq_count(struct device_node *dev)
- {
-@@ -90,6 +91,11 @@ static inline struct irq_domain *of_msi_map_get_device_domain(struct device *dev
- static inline void of_msi_configure(struct device *dev, struct device_node *np)
- {
- }
-+static inline u32 of_msi_map_rid(struct device *dev,
-+				 struct device_node *msi_np, u32 rid_in)
-+{
-+	return rid_in;
-+}
- #endif
- 
- #if defined(CONFIG_OF_IRQ) || defined(CONFIG_SPARC)
-@@ -99,7 +105,6 @@ static inline void of_msi_configure(struct device *dev, struct device_node *np)
-  * so declare it here regardless of the CONFIG_OF_IRQ setting.
-  */
- extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
--u32 of_msi_map_rid(struct device *dev, struct device_node *msi_np, u32 rid_in);
- 
- #else /* !CONFIG_OF && !CONFIG_SPARC */
- static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
-@@ -107,12 +112,6 @@ static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
- {
- 	return 0;
- }
--
--static inline u32 of_msi_map_rid(struct device *dev,
--				 struct device_node *msi_np, u32 rid_in)
--{
--	return rid_in;
--}
- #endif /* !CONFIG_OF */
- 
- #endif /* __OF_IRQ_H */
--- 
-2.5.0
+Unfortunately I haven't had a chance to get around writing the patches yet.
+I came up with a different description though that I thought maybe worth sharing
+to see if there's any opinion about it before the actual work being done.
+
+To summarise, the problem I am trying to solve is that we have a type of
+coprocessors which share the interrupt controller with Linux, hence the IPI
+mechanism this controller uses. I've been working with Thomas on implementing
+a generic API to allocate IPIs for coprocesors and a way for drivers to send
+these IPIs [1].
+
+To complement this new API, we need a mechanism to describe this in
+device tree so a driver that wants to allocate an IPI can have this done
+automatically for it like we handle interrupts.
+
+What I have in mind is:
+
+      coproc {
+              ipi-parent = <&gic>;
+
+              ipis = <CPU_VALUE IPI_SPEC>;
+              ipi-names = "in";
+      };
+
+This will allocate an IPI to go to cpu @CPU_VALUE passing @IPI_SPEC as
+parameters to the controller. Which means we need a new ipi-cells to
+define how many cells are in ipis property. Note the new ipi-parent too.
+
+I think this is better than interrupt-sink and interrupt-source [2] as we
+give the driver the flexibility to give a meaning to what this IPI is.
+One thing I found confusing about interrupt-source and interrupt-sink is
+from what perspective are we viewing that, host system or firmware..
+
+ipis property also is similar to interrupts, so using it would be easier
+(I think).
+
+If we have 2 coprocessors that want to communicate using IPIs that are
+managed by the host we use ipi-refs property to refer to IPIs defined in
+another node.
+
+      coproc1 {
+              ipis = <CPU1>, <CPU2>, <CPU2>;
+              ipi-names = "in", "coproc2data", "coproc2ctrl";
+      };
+
+      coproc2 {
+              ipi-refs = <&coproc1 "in">, <&coproc1 "coproc2data">, <&coproc1 "corpoc2ctrl">;
+              ipi-refs-names = "tocorproc1", "indata", "inctrl";
+      };
+
+This will cause 3 IPIs to be allocated. One is going to CPU1 and two are
+going to CPU2. ipi-names should be similar to how interrupt-names work.
+
+A node can possibly both allocate IPIs and reference other allocated ones.
+
+Thoughts?
+
+Thanks,
+Qais
+
+[1]https://lkml.org/lkml/2015/12/8/243
+[2]https://lkml.org/lkml/2015/10/14/211
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
