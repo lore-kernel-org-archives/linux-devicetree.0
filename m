@@ -1,88 +1,201 @@
-From: Alison Chaiken <alison_chaiken@mentor.com>
-Subject: [PATCH v2 1/2] ARM: dts: imx6qdl-sabreauto: assert GPIO at boot in
- order to connect NOR
-Date: Tue, 8 Dec 2015 15:48:39 -0800
-Message-ID: <1449618520-3432-2-git-send-email-alison_chaiken@mentor.com>
-References: <20151207082440.GY11966@pengutronix.de>
- <1449618520-3432-1-git-send-email-alison_chaiken@mentor.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v2] of/address: replace printk() with pr_debug() /
+ pr_err()
+Date: Tue, 08 Dec 2015 16:03:59 -0800
+Message-ID: <1449619439.18646.20.camel@perches.com>
+References: <1449590868-19070-1-git-send-email-yamada.masahiro@socionext.com>
+	 <1449591386.3315.2.camel@perches.com>
+	 <1449594231.13275.2.camel@perches.com>
+	 <CAL_JsqJ0oftptSxyAcGOnQ3XA9v55B2n=8DiWBcErcLKgfsppg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1449618520-3432-1-git-send-email-alison_chaiken@mentor.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, alison@she-devel.com, rowand.list@gmail.com, kernel@pengutronix.de, shawnguo@kernel.org, alison_chaiken@mentor.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJ0oftptSxyAcGOnQ3XA9v55B2n=8DiWBcErcLKgfsppg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-PAD_EIM_D18 must be pulled low at boot in order for the parallel NOR
-connected to the EIM switch to probe properly.  Otherwise the imx-weim
-device will register properly, but cfi_qry_present() will return
-"U-V-]" rather than "Q-R-Y".  Employ the gpio-initval mechanism in
-GPIO5 node in the SabreAuto device-tree in order to set the pin.
+On Tue, 2015-12-08 at 15:28 -0600, Rob Herring wrote:
+> On Tue, Dec 8, 2015 at 11:03 AM, Joe Perches <joe@perches.com> wrote:
+> > On Tue, 2015-12-08 at 08:16 -0800, Joe Perches wrote:
+> > > On Wed, 2015-12-09 at 01:07 +0900, Masahiro Yamada wrote:
+> > > > Trivial changes suggested by checkpatch.pl.
+> > > []
+> > > > diff --git a/drivers/of/address.c b/drivers/of/address.c
+> > > []
+> > > > @@ -23,7 +23,7 @@ static int __of_address_to_resource(struct de=
+vice_node *dev,
+> > > > =A0#ifdef DEBUG
+> > > > =A0static void of_dump_addr(const char *s, const __be32 *addr, =
+int na)
+> > > > =A0{
+> > > > -=A0=A0=A0printk(KERN_DEBUG "%s", s);
+> > > > +=A0=A0=A0pr_debug("%s", s);
+> > > > =A0=A0=A0=A0while (na--)
+> > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0printk(" %08x", be32_to_cpu=
+(*(addr++)));
+> > > > =A0=A0=A0=A0printk("\n");
+[]
+> > static void of_dumpaddr(const char *s, const __be32 *addr, int na)
+> > {
+> > =A0=A0=A0=A0=A0=A0=A0=A0print_hex_dump_debug(s, DUMP_PREFIX_NONE, 1=
+6, 1,
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0addr, na * sizeof(__be32), false);
+> > }
+>=20
+> Except that it doesn't do the endian swapping. Looking closer at this=
+,
+> we should just drop this hunk. So I will take v1.
 
-Signed-off-by: Alison Chaiken <alison_chaiken@mentor.com>
+Maybe endian conversions should be added to hex_dump_debug like:
+(probably doesn't apply. =A0Evolution 3.18 is horrible)
 ---
- arch/arm/boot/dts/imx6qdl-sabreauto-eim-nor.dtsi | 43 ++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6qdl-sabreauto-eim-nor.dtsi
+=A0include/linux/printk.h |=A0=A07 +++++++
+=A0lib/hexdump.c=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0| 56 ++++++++++++++++++++=
++++++++++++++++---------------
+=A02 files changed, 47 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto-eim-nor.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto-eim-nor.dtsi
-new file mode 100644
-index 0000000..66a9aa2
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6qdl-sabreauto-eim-nor.dtsi
-@@ -0,0 +1,43 @@
-+/*
-+ * Copyright 2012 Freescale Semiconductor, Inc.
-+ * Copyright 2011 Linaro Ltd.
-+ * Copyright (c) 2012-2015 Mentor Graphics Inc.
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index 9729565..4be190c 100644
+--- a/include/linux/printk.h
++++ b/include/linux/printk.h
+@@ -424,6 +424,13 @@ enum {
+=A0	DUMP_PREFIX_ADDRESS,
+=A0	DUMP_PREFIX_OFFSET
+=A0};
 +
-+&weim {
-+	status = "okay";
++enum {
++	DUMP_TYPE_CPU =3D 0,
++	DUMP_TYPE_LE =3D BIT(30),
++	DUMP_TYPE_BE =3D BIT(31)
 +};
 +
-+&gpio5 {
-+	p4 {
-+		/* Select NOR or I2C3 via setting of port-expander
-+		 * steering logic.
-+		 * Low: Attach p-NOR line D18.
-+		 * High: Attach I2C3 line SDA.
-+		 */
-+		gpio-initval;
-+		gpios = <4 GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "SelNORorI2C3";
-+	};
-+};
+=A0extern int hex_dump_to_buffer(const void *buf, size_t len, int rowsi=
+ze,
+=A0			=A0=A0=A0=A0=A0=A0int groupsize, char *linebuf, size_t linebuflen=
+,
+=A0			=A0=A0=A0=A0=A0=A0bool ascii);
+diff --git a/lib/hexdump.c b/lib/hexdump.c
+index 992457b..49113aa 100644
+--- a/lib/hexdump.c
++++ b/lib/hexdump.c
+@@ -81,6 +81,7 @@ EXPORT_SYMBOL(bin2hex);
+=A0 * @len: number of bytes in the @buf
+=A0 * @rowsize: number of bytes to print per line; must be 16 or 32
+=A0 * @groupsize: number of bytes to print at a time (1, 2, 4, 8; defau=
+lt =3D 1)
++ *=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0OR'd with DUMP_TYPE_BE or DUM=
+P_TYPE_LE for endian conversions
+=A0 * @linebuf: where to put the converted data
+=A0 * @linebuflen: total size of @linebuf, including space for terminat=
+ing NUL
+=A0 * @ascii: include ASCII after the hex output
+@@ -114,19 +115,20 @@ int hex_dump_to_buffer(const void *buf, size_t le=
+n, int rowsize, int groupsize,
+=A0	int j, lx =3D 0;
+=A0	int ascii_column;
+=A0	int ret;
++	int actual_groupsize =3D groupsize & ~(DUMP_TYPE_LE | DUMP_TYPE_BE);
+=A0
+=A0	if (rowsize !=3D 16 && rowsize !=3D 32)
+=A0		rowsize =3D 16;
+=A0
+=A0	if (len > rowsize)		/* limit to one line at a time */
+=A0		len =3D rowsize;
+-	if (!is_power_of_2(groupsize) || groupsize > 8)
+-		groupsize =3D 1;
+-	if ((len % groupsize) !=3D 0)	/* no mixed size output */
+-		groupsize =3D 1;
++	if (!is_power_of_2(actual_groupsize) || actual_groupsize > 8)
++		actual_groupsize =3D 1;
++	if ((len % actual_groupsize) !=3D 0)	/* no mixed size output */
++		actual_groupsize =3D 1;
+=A0
+-	ngroups =3D len / groupsize;
+-	ascii_column =3D rowsize * 2 + rowsize / groupsize + 1;
++	ngroups =3D len / actual_groupsize;
++	ascii_column =3D rowsize * 2 + rowsize / actual_groupsize + 1;
+=A0
+=A0	if (!linebuflen)
+=A0		goto overflow1;
+@@ -134,35 +136,56 @@ int hex_dump_to_buffer(const void *buf, size_t le=
+n, int rowsize, int groupsize,
+=A0	if (!len)
+=A0		goto nil;
+=A0
+-	if (groupsize =3D=3D 8) {
++	if (actual_groupsize =3D=3D 8) {
+=A0		const u64 *ptr8 =3D buf;
+=A0
+=A0		for (j =3D 0; j < ngroups; j++) {
++			u64 val;
 +
-+&i2c3 {
-+	status = "disabled";
-+};
++			if (groupsize & DUMP_TYPE_LE)
++				val =3D get_unaligned_le64(ptr8 + j);
++			else if (groupsize & DUMP_TYPE_BE)
++				val =3D get_unaligned_be64(ptr8 + j);
++			else
++				val =3D get_unaligned(ptr8 + j);
+=A0			ret =3D snprintf(linebuf + lx, linebuflen - lx,
+-				=A0=A0=A0=A0=A0=A0=A0"%s%16.16llx", j ? " " : "",
+-				=A0=A0=A0=A0=A0=A0=A0get_unaligned(ptr8 + j));
++				=A0=A0=A0=A0=A0=A0=A0"%s%16.16llx", j ? " " : "", val);
+=A0			if (ret >=3D linebuflen - lx)
+=A0				goto overflow1;
+=A0			lx +=3D ret;
+=A0		}
+-	} else if (groupsize =3D=3D 4) {
++	} else if (actual_groupsize =3D=3D 4) {
+=A0		const u32 *ptr4 =3D buf;
+=A0
+=A0		for (j =3D 0; j < ngroups; j++) {
++			u32 val;
 +
-+/* the following devices have pinmux conflicts with NOR */
-+&uart3 {
-+	status = "disabled";
-+};
++			if (groupsize & DUMP_TYPE_LE)
++				val =3D get_unaligned_le32(ptr4 + j);
++			else if (groupsize & DUMP_TYPE_BE)
++				val =3D get_unaligned_be32(ptr4 + j);
++			else
++				val =3D get_unaligned(ptr4 + j);
+=A0			ret =3D snprintf(linebuf + lx, linebuflen - lx,
+-				=A0=A0=A0=A0=A0=A0=A0"%s%8.8x", j ? " " : "",
+-				=A0=A0=A0=A0=A0=A0=A0get_unaligned(ptr4 + j));
++				=A0=A0=A0=A0=A0=A0=A0"%s%8.8x", j ? " " : "", val);
+=A0			if (ret >=3D linebuflen - lx)
+=A0				goto overflow1;
+=A0			lx +=3D ret;
+=A0		}
+-	} else if (groupsize =3D=3D 2) {
++	} else if (actual_groupsize =3D=3D 2) {
+=A0		const u16 *ptr2 =3D buf;
+=A0
+=A0		for (j =3D 0; j < ngroups; j++) {
++			u16 val;
 +
-+&ecspi1 {
-+	status = "disabled";
-+};
--- 
-2.6.2
++			if (groupsize & DUMP_TYPE_LE)
++				val =3D get_unaligned_le16(ptr2 + j);
++			else if (groupsize & DUMP_TYPE_BE)
++				val =3D get_unaligned_be16(ptr2 + j);
++			else
++				val =3D get_unaligned(ptr2 + j);
+=A0			ret =3D snprintf(linebuf + lx, linebuflen - lx,
+-				=A0=A0=A0=A0=A0=A0=A0"%s%4.4x", j ? " " : "",
+-				=A0=A0=A0=A0=A0=A0=A0get_unaligned(ptr2 + j));
++				=A0=A0=A0=A0=A0=A0=A0"%s%4.4x", j ? " " : "", val);
+=A0			if (ret >=3D linebuflen - lx)
+=A0				goto overflow1;
+=A0			lx +=3D ret;
+@@ -203,7 +226,8 @@ nil:
+=A0overflow2:
+=A0	linebuf[lx++] =3D '\0';
+=A0overflow1:
+-	return ascii ? ascii_column + len : (groupsize * 2 + 1) * ngroups - 1=
+;
++	return ascii ? ascii_column + len
++		=A0=A0=A0=A0=A0: (actual_groupsize * 2 + 1) * ngroups - 1;
+=A0}
+=A0EXPORT_SYMBOL(hex_dump_to_buffer);
+=A0
