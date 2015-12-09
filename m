@@ -1,39 +1,92 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: arRe: [PATCH net-next 2/2] net: hns: enet specisies a reference to dsaf (config and documents)
-Date: Wed, 09 Dec 2015 11:00:21 +0100
-Message-ID: <4902591.DhWVhdI4KP@wuerfel>
-References: <1449295856-31068-1-git-send-email-yankejian@huawei.com> <1503684.BNZUVaD74W@wuerfel> <5667F379.2010108@huawei.com>
+Subject: Re: [RFC][PATCH] misc: Introduce reboot_reason driver
+Date: Wed, 09 Dec 2015 11:07:25 +0100
+Message-ID: <10759786.VG6jMebqAj@wuerfel>
+References: <1449610162-30543-1-git-send-email-john.stultz@linaro.org> <20151208220722.GG4000@usrtlx11787.corpusers.net> <CALAqxLXqoEb7VjDpGM8JgKtb=dKgWcpaKbgGzGTOCBu44w-Dfw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5667F379.2010108@huawei.com>
+In-Reply-To: <CALAqxLXqoEb7VjDpGM8JgKtb=dKgWcpaKbgGzGTOCBu44w-Dfw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: "Yankejian (Hackim Yim)" <yankejian@huawei.com>, mark.rutland@arm.com, lisheng011@huawei.com, salil.mehta@huawei.com, liguozhu@huawei.com, haifeng.wei@huawei.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, devicetree@vger.kernel.org, robh+dt@kernel.org, huangdaode@hisilicon.com, galak@codeaurora.org, netdev@vger.kernel.org, fengguang.wu@intel.com, Yisen.Zhuang@huawei.com, davem@davemloft.net
+To: John Stultz <john.stultz@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinay Simha BN <simhavcs@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>, agross@codeaurora.org, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 09 December 2015 17:25:13 Yankejian wrote:
->  thanks a lot for pointing it out.
+On Tuesday 08 December 2015 16:22:40 John Stultz wrote:
+> >> diff --git a/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts b/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
+> >> index 5183d18..ee5dcb7 100644
+> >> --- a/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
+> >> +++ b/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
+> >> @@ -282,6 +282,15 @@
+> >>                       };
+> >>               };
+> >>
+> >> +             reboot_reason: reboot_reason@2a03f65c {
+> >> +                     compatible              = "reboot_reason";
+> >> +                     reg                     = <0x2A03F65C 0x4>;
+> >> +                     reason,none             = <0x77665501>;
+> >> +                     reason,bootloader       = <0x77665500>;
+> >> +                     reason,recovery         = <0x77665502>;
+> >> +                     reason,oem              = <0x6f656d00>;
+> >> +             };
+> >> +
+> >
+> > This address refers to IMEM, which is shared with a number of other
+> > uses. So I think we should have a simple-mfd (and syscon) with this
+> > within.
 > 
->  It is great regret that this change breaks compatibility with old dtbs.
->  this is a new driver which is run on developing boards, and all the
->  clients' boards are developing boards. So we provide them a method to
->  update the firmware on the board, once we update the dtsi and kernel,
->  we require our clients to update the existed firmware and kernel.
->  Therefore, these changes is actually under control. Shall we treat this
->  by this way?
+> Errr.. I'm going to have to read up there. I'm not super familiar with
+> any of those drivers, so I'll try to see how exactly they would map in
+> here.
 
-Ok, if you can show that the incompatible change is safe to do, that's
-fine. Just put the explanation above into the patch description to
-document that you have considered the effects of the change, and
-to ensure that it gets done atomically.
+Is this an SRAM? We already have a generic SRAM binding, and I think this
+would fit in there.
 
-Also, you have to merge the two patches into one to allow bisection,
-or do a series of three patches that need to be applied in order:
+> > I like the fact that you don't hard code the magics in the
+> > implementation, as I've seen additions from multiple places - so perhaps
+> > it should be made even more flexible.
+> >
+> > OMAP seems to use strings here instead of magics, but the delivery
+> > mechanism looks to be the same. But I think of this as Qualcomm
+> > specific.
+> 
+> Yea. This is good feedback. EFI bootloaders have their own
+> implementations as well.  I suspect we'll need a few different driver
+> "types" to handle these differences, ie: value vs string.
+> 
+> I'll maybe extend the compatible string to make it clear that this is
+> a "value" style, and we can extend it with a string type later if
+> folks care?
 
-1. add ae-handle property
-2. change driver to use that property
-3. remove ae-name property
+If the two known implementations are already fundamentally different,
+there is a good chance that other vendors have found some more ways
+to do the same thing, so we might need to do this as a framework,
+or merge it into an existing framework.
+
+Maybe it can be done in the same driver that also handles rebooting
+the machine? Those are typically in drivers/power/reset or
+in drivers/watchdog/ for machines that use the watchdog as the only
+way to reboot the machine. We can have additional device specific
+properties along with the reboot method (e.g. a reference to the
+SRAM or some syscon node) and add common code in another file if
+we need it.
+
+> >> +     /* initialize specified reasons from DT */
+> >> +     if (!of_property_read_u32(pdev->dev.of_node, "reason,none", &val))
+> >> +             reasons[NONE] = val;
+> >> +     if (!of_property_read_u32(pdev->dev.of_node, "reason,bootloader", &val))
+> >> +             reasons[BOOTLOADER] = val;
+> >> +     if (!of_property_read_u32(pdev->dev.of_node, "reason,recovery", &val))
+> >> +             reasons[RECOVERY] = val;
+> >> +     if (!of_property_read_u32(pdev->dev.of_node, "reason,oem", &val))
+> >> +             reasons[OEM] = val;
+> >
+> > I would like for this to be less hard coded.
+> 
+> Any tips here on how to do so?
+
+If we move this logic into the qcom reset driver in
+drivers/power/reset/msm-poweroff.c, we should be good.
 
 	Arnd
