@@ -1,44 +1,43 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v6 06/10] ARM: STi: STiH407: Link CPU with its voltage supply
-Date: Wed,  9 Dec 2015 15:58:13 +0000
-Message-ID: <1449676697-25432-7-git-send-email-lee.jones@linaro.org>
-References: <1449676697-25432-1-git-send-email-lee.jones@linaro.org>
+From: Damien Horsley <Damien.Horsley@imgtec.com>
+Subject: [PATCH V3 0/2] Add support for Pistachio internal DAC
+Date: Wed, 9 Dec 2015 16:30:07 +0000
+Message-ID: <1449678609-5592-1-git-send-email-Damien.Horsley@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1449676697-25432-1-git-send-email-lee.jones@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-pm@vger.kernel.org, viresh.kumar@linaro.org, rjw@rjwysocki.net, Lee Jones <lee.jones@linaro.org>, ajitpal.singh@st.com, maxime.coquelin@st.com
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "Damien.Horsley" <Damien.Horsley@imgtec.com>, James Hartley <james.hartley@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-Used for Voltage Scaling using CPUFreq.
+From: "Damien.Horsley" <Damien.Horsley@imgtec.com>
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- arch/arm/boot/dts/stih407-family.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Add binding document and driver for Pistachio internal DAC
 
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index af9233b..d0e639cd 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -35,6 +35,7 @@
- 			clocks = <&clk_m_a9>;
- 			clock-names = "cpu";
- 			clock-latency = <100000>;
-+			cpu0-supply = <&pwm_regulator>;
- 		};
- 		cpu@1 {
- 			device_type = "cpu";
+Changes in V3:
+	Mute control definition changed to SOC_SINGLE
+	Codec driver probe function added to associate regmap with codec
+
+Damien.Horsley (2):
+  ASoC: img: Add binding document for Pistachio internal DAC
+  ASoC: img: Add driver for Pistachio internal DAC
+
+ .../bindings/sound/img,pistachio-internal-dac.txt  |  18 ++
+ sound/soc/img/Kconfig                              |   8 +
+ sound/soc/img/Makefile                             |   2 +
+ sound/soc/img/pistachio-internal-dac.c             | 287 +++++++++++++++++++++
+ 4 files changed, 315 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/img,pistachio-internal-dac.txt
+ create mode 100644 sound/soc/img/pistachio-internal-dac.c
+
 -- 
-1.9.1
+2.1.4
