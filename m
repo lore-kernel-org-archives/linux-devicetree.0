@@ -1,133 +1,114 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 1/8] pinctrl: rockchip: add support for the rk3228
-Date: Wed, 9 Dec 2015 14:09:05 -0600
-Message-ID: <20151209200905.GA28970@rob-hp-laptop>
-References: <1449651853-1667-1-git-send-email-jeffy.chen@rock-chips.com>
- <1449651853-1667-2-git-send-email-jeffy.chen@rock-chips.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v2] of/address: replace printk() with pr_debug() /
+ pr_err()
+Date: Wed, 09 Dec 2015 12:09:28 -0800
+Message-ID: <1449691768.25389.51.camel@perches.com>
+References: <1449590868-19070-1-git-send-email-yamada.masahiro@socionext.com>
+	 <1449591386.3315.2.camel@perches.com>
+	 <1449594231.13275.2.camel@perches.com>
+	 <CAL_JsqJ0oftptSxyAcGOnQ3XA9v55B2n=8DiWBcErcLKgfsppg@mail.gmail.com>
+	 <1449619439.18646.20.camel@perches.com>
+	 <CAHp75VeN3hX4Dus6LLaie5c3xkdgQQc55fCOoAQ15JNib9La=A@mail.gmail.com>
+	 <1449689319.25389.28.camel@perches.com>
+	 <CAHp75VdHrG_uk9K7B=q8+ZnjNehJ2AY=-RsMGByxn62Uh_-sRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1449651853-1667-2-git-send-email-jeffy.chen@rock-chips.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jeffy Chen <jeffy.chen@rock-chips.com>
-Cc: heiko@sntech.de, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VdHrG_uk9K7B=q8+ZnjNehJ2AY=-RsMGByxn62Uh_-sRA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 09, 2015 at 05:04:06PM +0800, Jeffy Chen wrote:
-> The pinctrl of rk3228 is much the same as rk3288's, but
-> without pmu.
-> 
-> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
-> 
-> ---
-> 
->  .../bindings/pinctrl/rockchip,pinctrl.txt          |  3 +-
+On Wed, 2015-12-09 at 22:02 +0200, Andy Shevchenko wrote:
+> On Wed, Dec 9, 2015 at 9:28 PM, Joe Perches <joe@perches.com> wrote:
+[]
+> > > > diff --git a/lib/hexdump.c b/lib/hexdump.c
+> > > > index 992457b..49113aa 100644
+> > > > --- a/lib/hexdump.c
+> > > > +++ b/lib/hexdump.c
+> > > > @@ -81,6 +81,7 @@ EXPORT_SYMBOL(bin2hex);
+> > > > =A0 * @len: number of bytes in the @buf
+> > > > =A0 * @rowsize: number of bytes to print per line; must be 16 o=
+r 32
+> > > > =A0 * @groupsize: number of bytes to print at a time (1, 2, 4, =
+8; default =3D 1)
+> > > > + *=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0OR'd with DUMP_TYPE_B=
+E or DUMP_TYPE_LE for endian conversions
+> > > > =A0 * @linebuf: where to put the converted data
+> > > > =A0 * @linebuflen: total size of @linebuf, including space for =
+terminating NUL
+> > > > =A0 * @ascii: include ASCII after the hex output
+> > > > @@ -114,19 +115,20 @@ int hex_dump_to_buffer(const void *buf, s=
+ize_t len, int rowsize, int groupsize,
+> > > > =A0=A0=A0=A0=A0=A0=A0=A0int j, lx =3D 0;
+> > > > =A0=A0=A0=A0=A0=A0=A0=A0int ascii_column;
+> > > > =A0=A0=A0=A0=A0=A0=A0=A0int ret;
+> > > > +=A0=A0=A0=A0=A0=A0=A0int actual_groupsize =3D groupsize & ~(DU=
+MP_TYPE_LE | DUMP_TYPE_BE);
+> > >=20
+> > > I would rather prefer to have function parameter to be renamed.
+> > >=20
+> > > E.g. gsflags ?
+> > >=20
+> >=20
+> > Well, it's a bit simpler changelog.
+>=20
+> Generally I'm fine with this version, though take into account above =
+and below.
+>=20
+> > ---
+> > =A0include/linux/printk.h |=A0=A07 +++++++
+> > =A0lib/hexdump.c=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0| 39 ++++++++++++++++=
++++++++++++++++--------
+> > =A02 files changed, 38 insertions(+), 8 deletions(-)
+> >=20
+> > diff --git a/include/linux/printk.h b/include/linux/printk.h
+> > index 9729565..4be190c 100644
+> > --- a/include/linux/printk.h
+> > +++ b/include/linux/printk.h
+> > @@ -424,6 +424,13 @@ enum {
+> > =A0=A0=A0=A0=A0=A0=A0=A0DUMP_PREFIX_ADDRESS,
+> > =A0=A0=A0=A0=A0=A0=A0=A0DUMP_PREFIX_OFFSET
+> > =A0};
+> > +
+> > +enum {
+> > +=A0=A0=A0=A0=A0=A0=A0DUMP_TYPE_CPU =3D 0,
+>=20
+> And still open this, do we need it? I think you may just mention in
+> the documentation that default behaviour is CPU like.
 
-For the binding:
+The only documentation I'm aware of is the kernel-doc
 
-Acked-by: Rob Herring <robh@kernel.org>
+> > +=A0=A0=A0=A0=A0=A0=A0DUMP_TYPE_LE =3D BIT(30),
+> > +=A0=A0=A0=A0=A0=A0=A0DUMP_TYPE_BE =3D BIT(31)
+> > +};
+> > +
+> > =A0extern int hex_dump_to_buffer(const void *buf, size_t len, int r=
+owsize,
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0int groupsize, char *linebuf, size_t linebuflen,
+>=20
+> Here as well to change.
 
->  drivers/pinctrl/pinctrl-rockchip.c                 | 53 ++++++++++++++++++++++
->  2 files changed, 55 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
-> index 391ef4b..0cd701b 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
-> @@ -21,7 +21,8 @@ defined as gpio sub-nodes of the pinmux controller.
->  Required properties for iomux controller:
->    - compatible: one of "rockchip,rk2928-pinctrl", "rockchip,rk3066a-pinctrl"
->  		       "rockchip,rk3066b-pinctrl", "rockchip,rk3188-pinctrl"
-> -		       "rockchip,rk3288-pinctrl", "rockchip,rk3368-pinctrl"
-> +		       "rockchip,rk3228-pinctrl", "rockchip,rk3288-pinctrl"
-> +		       "rockchip,rk3368-pinctrl"
->    - rockchip,grf: phandle referencing a syscon providing the
->  	 "general register files"
->  
-> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-> index a065112..faab36e 100644
-> --- a/drivers/pinctrl/pinctrl-rockchip.c
-> +++ b/drivers/pinctrl/pinctrl-rockchip.c
-> @@ -614,6 +614,40 @@ static void rk3288_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
->  	}
->  }
->  
-> +#define RK3228_PULL_OFFSET		0x100
-> +
-> +static void rk3228_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
-> +				    int pin_num, struct regmap **regmap,
-> +				    int *reg, u8 *bit)
-> +{
-> +	struct rockchip_pinctrl *info = bank->drvdata;
-> +
-> +	*regmap = info->regmap_base;
-> +	*reg = RK3228_PULL_OFFSET;
-> +	*reg += bank->bank_num * RK3188_PULL_BANK_STRIDE;
-> +	*reg += ((pin_num / RK3188_PULL_PINS_PER_REG) * 4);
-> +
-> +	*bit = (pin_num % RK3188_PULL_PINS_PER_REG);
-> +	*bit *= RK3188_PULL_BITS_PER_PIN;
-> +}
-> +
-> +#define RK3228_DRV_GRF_OFFSET		0x200
-> +
-> +static void rk3228_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
-> +				    int pin_num, struct regmap **regmap,
-> +				    int *reg, u8 *bit)
-> +{
-> +	struct rockchip_pinctrl *info = bank->drvdata;
-> +
-> +	*regmap = info->regmap_base;
-> +	*reg = RK3228_DRV_GRF_OFFSET;
-> +	*reg += bank->bank_num * RK3288_DRV_BANK_STRIDE;
-> +	*reg += ((pin_num / RK3288_DRV_PINS_PER_REG) * 4);
-> +
-> +	*bit = (pin_num % RK3288_DRV_PINS_PER_REG);
-> +	*bit *= RK3288_DRV_BITS_PER_PIN;
-> +}
-> +
->  #define RK3368_PULL_GRF_OFFSET		0x100
->  #define RK3368_PULL_PMU_OFFSET		0x10
->  
-> @@ -2143,6 +2177,23 @@ static struct rockchip_pin_ctrl rk3188_pin_ctrl = {
->  		.pull_calc_reg		= rk3188_calc_pull_reg_and_bit,
->  };
->  
-> +static struct rockchip_pin_bank rk3228_pin_banks[] = {
-> +	PIN_BANK(0, 32, "gpio0"),
-> +	PIN_BANK(1, 32, "gpio1"),
-> +	PIN_BANK(2, 32, "gpio2"),
-> +	PIN_BANK(3, 32, "gpio3"),
-> +};
-> +
-> +static struct rockchip_pin_ctrl rk3228_pin_ctrl = {
-> +		.pin_banks		= rk3228_pin_banks,
-> +		.nr_banks		= ARRAY_SIZE(rk3228_pin_banks),
-> +		.label			= "RK3228-GPIO",
-> +		.type			= RK3288,
-> +		.grf_mux_offset		= 0x0,
-> +		.pull_calc_reg		= rk3228_calc_pull_reg_and_bit,
-> +		.drv_calc_reg		= rk3228_calc_drv_reg_and_bit,
-> +};
-> +
->  static struct rockchip_pin_bank rk3288_pin_banks[] = {
->  	PIN_BANK_IOMUX_FLAGS(0, 24, "gpio0", IOMUX_SOURCE_PMU,
->  					     IOMUX_SOURCE_PMU,
-> @@ -2220,6 +2271,8 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
->  		.data = (void *)&rk3066b_pin_ctrl },
->  	{ .compatible = "rockchip,rk3188-pinctrl",
->  		.data = (void *)&rk3188_pin_ctrl },
-> +	{ .compatible = "rockchip,rk3228-pinctrl",
-> +		.data = (void *)&rk3228_pin_ctrl },
->  	{ .compatible = "rockchip,rk3288-pinctrl",
->  		.data = (void *)&rk3288_pin_ctrl },
->  	{ .compatible = "rockchip,rk3368-pinctrl",
-> -- 
-> 2.1.4
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Right, thanks.
+
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0bool ascii);
+> > diff --git a/lib/hexdump.c b/lib/hexdump.c
+> > index 992457b..5b1eda70 100644
+> > --- a/lib/hexdump.c
+> > +++ b/lib/hexdump.c
+> > @@ -80,7 +80,8 @@ EXPORT_SYMBOL(bin2hex);
+> > =A0 * @buf: data blob to dump
+> > =A0 * @len: number of bytes in the @buf
+> > =A0 * @rowsize: number of bytes to print per line; must be 16 or 32
+> > - * @groupsize: number of bytes to print at a time (1, 2, 4, 8; def=
+ault =3D 1)
+> > + * @groupflags: number of bytes to print at a time (1, 2, 4, 8; de=
+fault =3D 1)
+> > + *=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0OR with DUMP_TYPE_BE o=
+r DUMP_TYPE_LE for endian conversions
+>=20
+> Maybe specify "bitwise OR with.." ?
