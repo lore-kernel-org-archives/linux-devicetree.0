@@ -1,55 +1,71 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC][PATCH] misc: Introduce reboot_reason driver
-Date: Thu, 10 Dec 2015 14:24:11 -0600
-Message-ID: <CAL_Jsq+s1Lk9s=dvSAe-rerSc1aUO39tkBnsrkoNqJoET3VNjw@mail.gmail.com>
-References: <1449610162-30543-1-git-send-email-john.stultz@linaro.org>
- <10759786.VG6jMebqAj@wuerfel> <CALAqxLV8imuRw5bx=9nub3LxB75kDYR5nusP6CT9JFuwh5C0AA@mail.gmail.com>
- <1721197.gFcIQMjGvs@wuerfel> <CALAqxLUKRFgg4pc-sJfOD_mDv8Afn-tzGuhNJzprheq4CEXUcw@mail.gmail.com>
+From: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 2/3] ARM: dts: sun7i: Olimex A20-SOM-EVB: Enable
+ mmc3 (baseboard SD socket)
+Date: Thu, 10 Dec 2015 21:32:00 +0100
+Message-ID: <1449779521-754-3-git-send-email-merker@debian.org>
+References: <1449779521-754-1-git-send-email-merker@debian.org>
+Reply-To: merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CALAqxLUKRFgg4pc-sJfOD_mDv8Afn-tzGuhNJzprheq4CEXUcw@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, lkml <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinay Simha BN <simhavcs@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>, Andy Gross <agross@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Return-path: <linux-sunxi+bncBDP2XNNJ7IFBBAGDU6ZQKGQE73XLCRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1449779521-754-1-git-send-email-merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 10, 2015 at 12:56 PM, John Stultz <john.stultz@linaro.org> wrote:
-> On Thu, Dec 10, 2015 at 6:52 AM, Arnd Bergmann <arnd@arndb.de> wrote:
->> On Wednesday 09 December 2015 17:19:52 John Stultz wrote:
->>>
->>> If the concern is that since DT is basically ABI, one might not want
->>> to have such a wide interface that specifies all the different
->>> reasons, I can understand that. Though I'm really not sure how else we
->>> would be able to specify the device supported the reboot reason logic
->>> w/o having something in the DT (since some device may use the same soc
->>> w/  the same reboot logic may use a different bootloader which doesn't
->>> support the reason methods). At that point if we don't describe the
->>> method clearly, it ends up being something closer to just a quirks
->>> list which we'd have to map internally to behavior, which doesn't seem
->>> great.
->>>
->>> Should we run into hardware that the proposed driver doesn't handle,
->>> we can introduce a new driver for those specific semantics, but this
->>> way we can share at least most of the logic, no?
->>
->> I think we need a layered approach, with some high-level code to
->> store the boot reason, but then support firmware specific backends
->> to that. If we just need a phandle for an SRAM partition and an offset
->> within it, that can be done by the high-level driver, but not
->> any of the more sophisticated communication methods.
->
-> Hrm. This feels to me like over-design, though. We already have the
-> restart notifiers to hook into, which provide the command string. So
-> its just a matter of parsing the string and writing the appropriate
-> magic in the appropriate way (to memory, registers, efi, whatever).
-> The amount of code we'd be dealing with to have a front end and 3-4
-> back-ends, vs having 3-4 separate drivers seems like it would almost
-> be the same. So why try to make a more complicated infrastructure?
+The Olimex A20-SOM-EVB is an evaluation board for the Olimex
+A20-SOM system-on-module. The baseboard provides a full-size SD
+socket (connected to mmc3) in addition to the micro-SD socket on
+the SOM itself (which is connected to mmc0).
 
-The fact that we are using notifiers for reset reason and triggering
-is probably some indication that some infrastructure is needed. But I
-don't think you need to do that here as long as it is all kernel
-internals. We'll make the 2nd guy do it. ;)
+Enable the mmc3 controller in the dts.
 
-Rob
+Signed-off-by: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+index 6562a6bc..6a3d95d 100644
+--- a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
++++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+@@ -176,6 +176,16 @@
+ 	status = "okay";
+ };
+ 
++&mmc3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc3_pins_a>, <&mmc3_cd_pin_olimex_som_evb>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 7 0 GPIO_ACTIVE_HIGH>; /* PH0 */
++	cd-inverted;
++	status = "okay";
++};
++
+ &ohci0 {
+ 	status = "okay";
+ };
+@@ -198,6 +208,13 @@
+ 		allwinner,drive = <SUN4I_PINCTRL_20_MA>;
+ 		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 	};
++
++	mmc3_cd_pin_olimex_som_evb: mmc3_cd_pin@0 {
++		allwinner,pins = "PH0";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++	};
+ };
+ 
+ &reg_ahci_5v {
+-- 
+2.1.4
