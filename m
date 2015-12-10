@@ -1,150 +1,96 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v6 08/10] cpufreq: st: Provide runtime initialised driver
- for ST's platforms
-Date: Thu, 10 Dec 2015 08:25:18 +0000
-Message-ID: <20151210082518.GD17876@x1>
-References: <1449676697-25432-1-git-send-email-lee.jones@linaro.org>
- <1449676697-25432-9-git-send-email-lee.jones@linaro.org>
- <20151210020737.GB29459@ubuntu>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: [PATCH v10.1 15/19] drm: bridge: analogix/dp: move hpd detect to
+ connector detect function
+Date: Thu, 10 Dec 2015 16:50:08 +0800
+Message-ID: <1449737408-12920-1-git-send-email-ykk@rock-chips.com>
+References: <1449470239-30667-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151210020737.GB29459@ubuntu>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, linux-pm@vger.kernel.org, rjw@rjwysocki.net, devicetree@vger.kernel.org, ajitpal.singh@st.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1449470239-30667-1-git-send-email-ykk@rock-chips.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Inki Dae <inki.dae@samsung.com>, Mark Yao <mark.yao@rock-chips.com>, Jingoo Han <jingoohan1@gmail.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, javier@osg.samsung.com, emil.l.velikov@gmail.com, Seung-Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kishon Vijay Abraham I <kishon@ti.com>, linux-rockchip@lists.infradead.org, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, ajaynumb@gmail.com, Andy Yan <andy.yan@rock-chips.com>, Thierry Reding <treding@nvidia.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 10 Dec 2015, Viresh Kumar wrote:
-
-> On 09-12-15, 15:58, Lee Jones wrote:
-> > +/*
-> > + * Only match on "suitable for ALL versions" entries
-> > + *
-> > + * This will be used with the BIT() macro.  It sets the
-> > + * top bit of a 32bit value and is equal to 0x80000000.
-> > + */
-> > +#define DEFAULT_VERSION		31
->=20
-> Okay, I misread it in the earlier version. This looks fine.
->=20
-> > +static int sti_cpufreq_set_opp_info(void)
-> > +{
->=20
-> > +	sprintf(name, "pcode%d", pcode);
->=20
-> I would use snprintf here, in case I haven't counted the string
-> properly. That should guarantee that we don't access the anything els=
-e
-> than the 'name' array.
-
-Not sure it's a big problem, unless the PCODE is read incorrectly from
-h/w, but okay.
-
-> > +	ret =3D dev_pm_opp_set_prop_name(dev, name);
-> > +	if (ret) {
-> > +		dev_err(dev, "Failed to set prop name\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	version[0] =3D BIT(major);
-> > +	version[1] =3D BIT(minor);
-> > +	version[2] =3D BIT(substrate);
-> > +
-> > +	ret =3D dev_pm_opp_set_supported_hw(dev, version, VERSION_ELEMENT=
-S);
-> > +	if (ret) {
-> > +		dev_err(dev, "Failed to set supported hardware\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	dev_err(dev, "pcode: %d major: %d minor: %d substrate: %d\n",
-> > +		pcode, major, minor, substrate);
-> > +	dev_err(dev, "version[0]: %x version[1]: %x version[2]: %x\n",
-> > +		version[0], version[1], version[2]);
->=20
-> These aren't errors.. dev_info ?
-
-This is left-over from testing.  Will change.
-
-> > +	return 0;
-> > +}
-> > +
->=20
-> > +static int sti_cpufreq_init(void)
-> > +{
-> > +	int ret;
-> > +
-> > +	ddata.cpu =3D get_cpu_device(0);
-> > +	if (!ddata.cpu) {
-> > +		dev_err(ddata.cpu, "Failed to get device for CPU0\n");
-> > +		goto skip_voltage_scaling;
-> > +	}
-> > +
-> > +	if (!of_get_property(ddata.cpu->of_node, "operating-points-v2", N=
-ULL)) {
-> > +		dev_err(ddata.cpu, "OPP-v2 not supported\n");
->=20
-> Should be:
->                 dev_dbg(ddata.cpu, "OPP-v2 not supported, skip voltag=
-e scaling\n");
-
-It's at least a dev_warn().  I do want this to appear on the bootlog.
-
-> > +		goto skip_voltage_scaling;
-> > +	}
-> > +
-> > +	ret =3D sti_cpufreq_fetch_syscon_regsiters();
-> > +	if (ret)
-> > +		goto skip_voltage_scaling;
-> > +
-> > +	ret =3D sti_cpufreq_set_opp_info();
-> > +	if (ret)
->=20
-> Shouldn't this be !ret ? You should have jumped on success here.
-
-Good spot.  Last minute change.  Will fix.
-
-> > +		goto register_cpufreq_dt;
-> > +
-> > +skip_voltage_scaling:
-> > +	dev_err(ddata.cpu, "Not doing voltage scaling\n");
->=20
-> This doesn't look nice as you are adding unnecessary jumps to just
-> save on a print message. And because of the earlier suggestion you ca=
-n
-> do:
-
-Actually it only adds one extra goto.  The other three are required
-regardless.  And it saves on one whole print and prevents the other
-two prints from becoming multi-line.  I think a single goto is worth
-skipping that amount of non-sense and it is the latter which is the
-greater evil.
-
-I've seen what both methods looks like and chose this one for a
-reason.=20
-
-> 	ret =3D sti_cpufreq_set_opp_info();
-> 	if (ret)
->                 dev_err(ddata.cpu, "Skip voltage scaling\n");
->=20
-> > +
-> > +register_cpufreq_dt:
-> > +	platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
-> > +
-> > +	return 0;
-> > +}
-> > +module_init(sti_cpufreq_init);
-> > +
-> > +MODULE_DESCRIPTION("STMicroelectronics CPUFreq/OPP driver");
-> > +MODULE_AUTHOR("Ajitpal Singh <ajitpal.singh@st.com>");
-> > +MODULE_AUTHOR("Lee Jones <lee.jones@linaro.org>");
-> > +MODULE_LICENSE("GPL v2");
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+VGhpcyBjaGFuZ2UganVzdCBtYWtlIGEgbGl0dGxlIGNsZWFuIHRvIG1ha2UgY29kZSBtb3JlIGxp
+a2UKZHJtIGNvcmUgZXhwZWN0LCBtb3ZlIGhkcCBkZXRlY3QgY29kZSBmcm9tIGJyaWRnZS0+ZW5h
+YmxlKCksCmFuZCBwbGFjZSB0aGVtIGludG8gY29ubmVjdG9yLT5kZXRlY3QoKS4KCk5vdGU6IEd1
+c3Rhdm8gUGFkb3ZhbiB0cnkgdG8gcmVtb3ZlIHRoZSBjb250cm9sbGVyIGFuZCBwaHkKcG93ZXIg
+b24gZnVuY3Rpb24gaW4gYmluZCB0aW1lIGF0IGJlbGxvdyBjb21taXQ6Cglkcm0vZXh5bm9zOiBk
+byBub3Qgc3RhcnQgZW5hYmxpbmcgRFAgYXQgYmluZCgpIHBoYXNlCgpCdXQgZm9yIG5vdyB0aGUg
+Y29ubmVjdG9yIHN0YXR1cyBkb24ndCBoYXJkY29kZSB0byBjb25uZWN0ZWQsCm5lZWQgdG8gb3Bl
+cmF0ZSBkcCBwaHkgaW4gLmRldGVjdCBmdW5jdGlvbiwgc28gd2UgbmVlZCB0byByZXZlcnQKcGFy
+dHMgaWYgR3VzdGF2byBQYWRvdmFuJ3MgY2hhbmdlcywgYWRkIHBoeSBwb3dlcm9uCmZ1bmN0aW9u
+IGluIGJpbmQgdGltZS4KClNpZ25lZC1vZmYtYnk6IFlha2lyIFlhbmcgPHlra0Byb2NrLWNoaXBz
+LmNvbT4KVGVzdGVkLWJ5OiBKYXZpZXIgTWFydGluZXogQ2FuaWxsYXMgPGphdmllckBvc2cuc2Ft
+c3VuZy5jb20+Ci0tLQpDaGFuZ2VzIGluIHYxMC4xOgotIE1vdmUgdGhlIHBhbmVsIHByZXBhcmUg
+ZnJvbSBnZXRfbW9kZXMgdGltZSB0byBiaW5kIHRpbWUsIGFuZCBtb3ZlCiAgdGhlIHBhbmVsIHVu
+cHJlcGFyZSBmcm9tIGJyaWRnZS0+ZGlzYWJsZSB0byB1bmJpbmQgdGltZS4gKEhlaWtvKQoKQ2hh
+bmdlcyBpbiB2MTA6Ci0gUmV2ZXJ0IHBhcnRzIG9mIEd1c3Rhdm8gUGFkb3ZhbidzIGNoYW5nZXMg
+aW4gY29tbWl0OgoJZHJtL2V4eW5vczogZG8gbm90IHN0YXJ0IGVuYWJsaW5nIERQIGF0IGJpbmQo
+KSBwaGFzZQogIEFkZCBkcCBwaHkgcG93ZXJvbiBmdW5jdGlvbiBpbiBiaW5kIHRpbWUuCgpDaGFu
+Z2VzIGluIHY5OiBOb25lCkNoYW5nZXMgaW4gdjg6IE5vbmUKQ2hhbmdlcyBpbiB2NzogTm9uZQpD
+aGFuZ2VzIGluIHY2OiBOb25lCkNoYW5nZXMgaW4gdjU6IE5vbmUKQ2hhbmdlcyBpbiB2NDoKLSBU
+YWtlIEppbmdvbyBzdWdnZXN0LCBhZGQgY29tbWl0IG1lc3NhZ2VzLgoKQ2hhbmdlcyBpbiB2MzoK
+LSBtb3ZlIGRwIGhwZCBkZXRlY3QgdG8gY29ubmVjdG9yIGRldGVjdCBmdW5jdGlvbi4KCkNoYW5n
+ZXMgaW4gdjI6IE5vbmUKCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FuYWxvZ2l4L2FuYWxvZ2l4
+X2RwX2NvcmUuYyB8IDM4ICsrKysrKysrKysrKy0tLS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAy
+MCBpbnNlcnRpb25zKCspLCAxOCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
+dS9kcm0vYnJpZGdlL2FuYWxvZ2l4L2FuYWxvZ2l4X2RwX2NvcmUuYyBiL2RyaXZlcnMvZ3B1L2Ry
+bS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhfZHBfY29yZS5jCmluZGV4IDAwYWVlNDQuLjZhMTMx
+NjcgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhf
+ZHBfY29yZS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhf
+ZHBfY29yZS5jCkBAIC05MDEsMTIgKzkwMSw2IEBAIHN0YXRpYyB2b2lkIGFuYWxvZ2l4X2RwX2Nv
+bW1pdChzdHJ1Y3QgYW5hbG9naXhfZHBfZGV2aWNlICpkcCkKIAkJCURSTV9FUlJPUigiZmFpbGVk
+IHRvIGRpc2FibGUgdGhlIHBhbmVsXG4iKTsKIAl9CiAKLQlyZXQgPSBhbmFsb2dpeF9kcF9kZXRl
+Y3RfaHBkKGRwKTsKLQlpZiAocmV0KSB7Ci0JCS8qIENhYmxlIGhhcyBiZWVuIGRpc2Nvbm5lY3Rl
+ZCwgd2UncmUgZG9uZSAqLwotCQlyZXR1cm47Ci0JfQotCiAJcmV0ID0gYW5hbG9naXhfZHBfaGFu
+ZGxlX2VkaWQoZHApOwogCWlmIChyZXQpIHsKIAkJZGV2X2VycihkcC0+ZGV2LCAidW5hYmxlIHRv
+IGhhbmRsZSBlZGlkXG4iKTsKQEAgLTk0MSw2ICs5MzUsMTEgQEAgc3RhdGljIHZvaWQgYW5hbG9n
+aXhfZHBfY29tbWl0KHN0cnVjdCBhbmFsb2dpeF9kcF9kZXZpY2UgKmRwKQogCiBlbnVtIGRybV9j
+b25uZWN0b3Jfc3RhdHVzIGFuYWxvZ2l4X2RwX2RldGVjdChzdHJ1Y3QgZGV2aWNlICpkZXYsIGJv
+b2wgZm9yY2UpCiB7CisJc3RydWN0IGFuYWxvZ2l4X2RwX2RldmljZSAqZHAgPSBkZXZfZ2V0X2Ry
+dmRhdGEoZGV2KTsKKworCWlmIChhbmFsb2dpeF9kcF9kZXRlY3RfaHBkKGRwKSkKKwkJcmV0dXJu
+IGNvbm5lY3Rvcl9zdGF0dXNfZGlzY29ubmVjdGVkOworCiAJcmV0dXJuIGNvbm5lY3Rvcl9zdGF0
+dXNfY29ubmVjdGVkOwogfQogRVhQT1JUX1NZTUJPTF9HUEwoYW5hbG9naXhfZHBfZGV0ZWN0KTsK
+QEAgLTEwMDYsMTMgKzEwMDUsNiBAQCBzdGF0aWMgdm9pZCBhbmFsb2dpeF9kcF9icmlkZ2VfZW5h
+YmxlKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UpCiAKIAlwbV9ydW50aW1lX2dldF9zeW5jKGRw
+LT5kZXYpOwogCi0JaWYgKGRwLT5wbGF0X2RhdGEtPnBhbmVsKSB7Ci0JCWlmIChkcm1fcGFuZWxf
+cHJlcGFyZShkcC0+cGxhdF9kYXRhLT5wYW5lbCkpIHsKLQkJCURSTV9FUlJPUigiZmFpbGVkIHRv
+IHNldHVwIHRoZSBwYW5lbFxuIik7Ci0JCQlyZXR1cm47Ci0JCX0KLQl9Ci0KIAlpZiAoZHAtPnBs
+YXRfZGF0YS0+cG93ZXJfb24pCiAJCWRwLT5wbGF0X2RhdGEtPnBvd2VyX29uKGRwLT5wbGF0X2Rh
+dGEpOwogCkBAIC0xMDQ1LDExICsxMDM3LDYgQEAgc3RhdGljIHZvaWQgYW5hbG9naXhfZHBfYnJp
+ZGdlX2Rpc2FibGUoc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSkKIAlpZiAoZHAtPnBsYXRfZGF0
+YS0+cG93ZXJfb2ZmKQogCQlkcC0+cGxhdF9kYXRhLT5wb3dlcl9vZmYoZHAtPnBsYXRfZGF0YSk7
+CiAKLQlpZiAoZHAtPnBsYXRfZGF0YS0+cGFuZWwpIHsKLQkJaWYgKGRybV9wYW5lbF91bnByZXBh
+cmUoZHAtPnBsYXRfZGF0YS0+cGFuZWwpKQotCQkJRFJNX0VSUk9SKCJmYWlsZWQgdG8gdHVybm9m
+ZiB0aGUgcGFuZWxcbiIpOwotCX0KLQogCXBtX3J1bnRpbWVfcHV0X3N5bmMoZHAtPmRldik7CiAK
+IAlkcC0+ZHBtc19tb2RlID0gRFJNX01PREVfRFBNU19PRkY7CkBAIC0xMzA3LDYgKzEyOTQsMTUg
+QEAgaW50IGFuYWxvZ2l4X2RwX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZHJtX2Rl
+dmljZSAqZHJtX2RldiwKIAogCXBtX3J1bnRpbWVfZW5hYmxlKGRldik7CiAKKwlwaHlfcG93ZXJf
+b24oZHAtPnBoeSk7CisKKwlpZiAoZHAtPnBsYXRfZGF0YS0+cGFuZWwpIHsKKwkJaWYgKGRybV9w
+YW5lbF9wcmVwYXJlKGRwLT5wbGF0X2RhdGEtPnBhbmVsKSkgeworCQkJRFJNX0VSUk9SKCJmYWls
+ZWQgdG8gc2V0dXAgdGhlIHBhbmVsXG4iKTsKKwkJCXJldHVybiAtRUJVU1k7CisJCX0KKwl9CisK
+IAlyZXQgPSBkZXZtX3JlcXVlc3RfaXJxKCZwZGV2LT5kZXYsIGRwLT5pcnEsIGFuYWxvZ2l4X2Rw
+X2lycV9oYW5kbGVyLAogCQkJICAgICAgIGlycV9mbGFncywgImFuYWxvZ2l4LWRwIiwgZHApOwog
+CWlmIChyZXQpIHsKQEAgLTEzNDAsNiArMTMzNiwxMiBAQCB2b2lkIGFuYWxvZ2l4X2RwX3VuYmlu
+ZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKIAlzdHJ1Y3QgYW5h
+bG9naXhfZHBfZGV2aWNlICpkcCA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOwogCiAJYW5hbG9naXhf
+ZHBfYnJpZGdlX2Rpc2FibGUoZHAtPmJyaWRnZSk7CisKKwlpZiAoZHAtPnBsYXRfZGF0YS0+cGFu
+ZWwpIHsKKwkJaWYgKGRybV9wYW5lbF91bnByZXBhcmUoZHAtPnBsYXRfZGF0YS0+cGFuZWwpKQor
+CQkJRFJNX0VSUk9SKCJmYWlsZWQgdG8gdHVybm9mZiB0aGUgcGFuZWxcbiIpOworCX0KKwogCXBt
+X3J1bnRpbWVfZGlzYWJsZSgmcGRldi0+ZGV2KTsKIH0KIEVYUE9SVF9TWU1CT0xfR1BMKGFuYWxv
+Z2l4X2RwX3VuYmluZCk7Ci0tIAoxLjkuMQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
