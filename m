@@ -1,59 +1,29 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] usb: renesas_usbhs: add fallback compatibility
- strings
-Date: Thu, 10 Dec 2015 14:59:38 +0300
-Message-ID: <5669692A.8070206@cogentembedded.com>
-References: <1449726033-17117-1-git-send-email-horms+renesas@verge.net.au>
- <1449726033-17117-2-git-send-email-horms+renesas@verge.net.au>
+From: Sushaanth Srirangapathi <sushaanth.s@ti.com>
+Subject: Re: [PATCH 0/6] ARM: DTS: da850: eDMA new bindings and MMC/SPI DMA
+ support
+Date: Thu, 10 Dec 2015 17:50:35 +0530
+Message-ID: <56696E13.2000004@ti.com>
+References: <1449237210-16381-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449726033-17117-2-git-send-email-horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1449237210-16381-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>, nsekhar@ti.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, khilman@deeprootsystems.com
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 12/10/2015 8:40 AM, Simon Horman wrote:
-
-> Add fallback compatibility strings for R-Car Gen2 and Gen3.
-> This is in keeping with the fallback scheme being adopted wherever
-> appropriate for drivers for Renesas SoCs.
+On Friday 04 December 2015 07:23 PM, Peter Ujfalusi wrote:
+> Hi,
 >
-> Also add SoC names.
->
-> Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-> ---
-> v2
-> * Add R-Car Gen2 and Gen3 fallback compatibility strings rather than
->    a single compatibility string for all of R-Car.
-> ---
->   .../devicetree/bindings/usb/renesas_usbhs.txt          | 18 +++++++++++++-----
->   drivers/usb/renesas_usbhs/common.c                     |  9 +++++++++
->   2 files changed, 22 insertions(+), 5 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> index 7d48f63db44e..b959059826cd 100644
-> --- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> +++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-[...]
-> @@ -22,7 +30,7 @@ Optional properties:
->
->   Example:
->   	usbhs: usb@e6590000 {
-> -		compatible = "renesas,usbhs-r8a7790";
-> +		compatible = "renesas,usbhs-r8a7790", "renesas,rcar-usbhs";
+> Switch to use the new eDMA bindings and enable DMA for MMC0, SPI1.
+> Add node for MMC1.
 
-    You forgot "gen2-" here.
+Tested MMC0 and SPI1 for DMA transfer using these patches on DA850 EVM.
+You can add:
 
-[...]
+Tested-by: Sushaanth Srirangapathi <sushaanth.s@ti.com>
 
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Sushaanth
