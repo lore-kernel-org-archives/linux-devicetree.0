@@ -1,180 +1,232 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] rtc: add driver for RX6110SA real time clock
-Date: Thu, 10 Dec 2015 12:01:19 +0100
-Message-ID: <20151210110119.GD20212@pengutronix.de>
-References: <1449568461-26016-1-git-send-email-s.trumtrar@pengutronix.de>
- <1449568461-26016-2-git-send-email-s.trumtrar@pengutronix.de>
- <1449570621.18374.1.camel@pengutronix.de>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v5 2/4] drm: Add support for ARM's HDLCD controller.
+Date: Thu, 10 Dec 2015 11:46:30 +0000
+Message-ID: <56696616.20805@arm.com>
+References: <1449490265-6752-1-git-send-email-Liviu.Dudau@arm.com>
+ <1449490265-6752-3-git-send-email-Liviu.Dudau@arm.com>
+ <56670477.5000301@arm.com>
+ <20151208165241.GN972@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1449570621.18374.1.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20151208165241.GN972@e106497-lin.cambridge.arm.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-On Tue, Dec 08, 2015 at 11:30:21AM +0100, Philipp Zabel wrote:
-> Am Dienstag, den 08.12.2015, 10:54 +0100 schrieb Steffen Trumtrar:
-> > The RX6110 comes in two different variants: SPI and I2C.
-> > This driver only supports the SPI variant.
-> > 
-> > If the need ever arises to also support the I2C variant, this driver
-> > could easily be refactored to support both cases.
-> > 
-> > Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> Reviewed-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> I have a few suggestions:
-> 
-> [...]
-> > diff --git a/drivers/rtc/rtc-rx6110.c b/drivers/rtc/rtc-rx6110.c
-> > new file mode 100644
-> > index 000000000000..aa9d89d5d2de
-> > --- /dev/null
-> > +++ b/drivers/rtc/rtc-rx6110.c
-> > @@ -0,0 +1,438 @@
-> > +/*
-> > + * Driver for the Epson RTC module RX-6110 SA
-> > + *
-> > + * Copyright(C) 2015 Pengutronix, Steffen Trumtrar <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > + * Copyright(C) SEIKO EPSON CORPORATION 2013. All rights reserved.
-> > + *
-> > + * This driver software is distributed as is, without any warranty of any kind,
-> > + * either express or implied as further specified in the GNU Public License.
-> > + * This software may be used and distributed according to the terms of the GNU
-> > + * Public License, version 2 as published by the Free Software Foundation.
-> > + * See the file COPYING in the main directory of this archive for more details.
-> > + *
-> > + * You should have received a copy of the GNU General Public License along with
-> > + * this program. If not, see <http://www.gnu.org/licenses/>.
-> > + */
-> > +
-> > +#include <linux/bcd.h>
-> > +#include <linux/init.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> 
-> > +#include <linux/of.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/of_gpio.h>
-> 
-> I think these three can be dropped.
-> 
-
-Okay.
-
-> > +#include <linux/regmap.h>
-> > +#include <linux/rtc.h>
-> > +#include <linux/spi/spi.h>
-> > +
-> > +/* RX-6110 Register definitions */
-> [...]
-> > +
-> > +static struct spi_driver rx6110_driver;
-> 
-> Several drivers do this. Instead of the forward declaration and using
-> rx6110_driver.driver.name in devm_rtc_device_register below, why not
-> just have a #define RX6110_DRIVER_NAME "rx6110-rtc" and reuse that?
-> Actually, I think the "-rtc" suffix is superfluous in the rtc name.
-> I'd just use "rx6110" as a parameter to devm_rtc_device_register.
->
-
-Yeah, why not. The define seems to be a cleaner solution than the
-forward declaration. Changed.
-
-> > +struct rx6110_data {
-> > +	struct rtc_device *rtc;
-> > +	struct regmap *regmap;
-> > +};
-> [...]
-> > +/**
-> > + * rx6110_init - initialize the rx6110 registers
-> > + *
-> > + * @rx6110: pointer to the rx6110 struct in use
-> > + *
-> > + */
-> > +static int rx6110_init(struct rx6110_data *rx6110)
-> > +{
-> > +	struct rtc_device *rtc = rx6110->rtc;
-> > +	int ext;
-> > +	int flags;
-> > +	int ctrl;
-> 
-> ctrl is unused, except in the dev_dbg to print 0 below.
-> 
-> > +	int ret;
-> > +
-> > +	/* set reserved register 0x17 with specified value of 0xB8 */
-> > +	ret = regmap_write(rx6110->regmap, RX6110_REG_RES1, 0xB8);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	/* set reserved register 0x30 with specified value of 0x00 */
-> > +	ret = regmap_write(rx6110->regmap, RX6110_REG_RES2, 0x00);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	/* set reserved register 0x31 with specified value of 0x10 */
-> > +	ret = regmap_write(rx6110->regmap, RX6110_REG_RES3, 0x10);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = regmap_write(rx6110->regmap, RX6110_REG_IRQ, 0x0);
-> > +	if (ret)
-> > +		return ret;
-> 
-> Maybe combine those using regmap_multi_reg_write? Not sure if the
-> sequence can be reordered to also include the writes below.
->
-
-Never heard of it, but it sounds like a good idea.
-
-(...)
-
-> > +/**
-> > + * rx6110_probe - initialize rtc driver
-> > + * @spi: pointer to spi device
-> > + */
-> > +static int rx6110_probe(struct spi_device *spi)
-> > +{
-> > +	struct rx6110_data *rx6110;
-> > +	int err;
-> > +
-> > +	if ((spi->bits_per_word && spi->bits_per_word != 8)
-> > +	    || (spi->max_speed_hz > 2000000)
-> > +	    || (spi->mode != (SPI_CS_HIGH | SPI_CPOL | SPI_CPHA))) {
-> > +		dev_warn(&spi->dev, "SPI settings: bits_per_word: %d, max_speed_hz: %d, mode: %xh\n",
-> > +			spi->bits_per_word, spi->max_speed_hz, spi->mode);
-> > +		dev_warn(&spi->dev, "driving device in an unsupported mode");
-> > +	}
-> > +
-> > +	rx6110 = devm_kzalloc(&spi->dev, sizeof(*rx6110), GFP_KERNEL);
-> > +	if (!rx6110)
-> > +		return -ENOMEM;
-> > +
-> > +	rx6110->regmap = devm_regmap_init_spi(spi, &regmap_spi_config);
-> > +	if (IS_ERR(rx6110->regmap)) {
-> > +		dev_err(&spi->dev, "regmap init failed for rtc rx6110\n");
-> 
-> Maybe print the error code.
-> 
-
-Done.
-
-Thanks,
-Steffen
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMDgvMTIvMTUgMTY6NTIsIExpdml1IER1ZGF1IHdyb3RlOgo+IE9uIFR1ZSwgRGVjIDA4LCAy
+MDE1IGF0IDA0OjI1OjI3UE0gKzAwMDAsIFJvYmluIE11cnBoeSB3cm90ZToKPj4gSGkgTGl2aXUs
+Cj4+Cj4+IE9uIDA3LzEyLzE1IDEyOjExLCBMaXZpdSBEdWRhdSB3cm90ZToKPj4+IFRoZSBIRExD
+RCBjb250cm9sbGVyIGlzIGEgZGlzcGxheSBjb250cm9sbGVyIHRoYXQgc3VwcG9ydHMgcmVzb2x1
+dGlvbnMKPj4+IHVwIHRvIDQwOTZ4NDA5NiBwaXhlbHMuIEl0IGlzIHByZXNlbnQgb24gdmFyaW91
+cyBkZXZlbG9wbWVudCBib2FyZHMKPj4+IHByb2R1Y2VkIGJ5IEFSTSBMdGQgYW5kIGVtdWxhdGVk
+IGJ5IHRoZSBsYXRlc3QgRmFzdCBNb2RlbHMgZnJvbSB0aGUKPj4+IGNvbXBhbnkuCj4+Pgo+Pj4g
+Q2M6IERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4KPj4+IENjOiBSb2JpbiBNdXJwaHkg
+PHJvYmluLm11cnBoeUBhcm0uY29tPgo+Pgo+PiBJJ3ZlIGdpdmVuIHRoaXMgYSBzcGluIG9uIG15
+IEp1bm8sIGFuZCB0aGUgZmlyc3QgdGhpbmcgb2Ygbm90ZSBpcyB0aGlzOgo+Pgo+PiBoZGxjZCA3
+ZmY2MDAwMC5oZGxjZDogbWFzdGVyIGJpbmQgZmFpbGVkOiAtNTE3Cj4+IGhkbGNkIDdmZjUwMDAw
+LmhkbGNkOiBtYXN0ZXIgYmluZCBmYWlsZWQ6IC01MTcKPj4gc2NwaV9wcm90b2NvbCBzY3BpOiBT
+Q1AgUHJvdG9jb2wgMS4wIEZpcm13YXJlIDEuOS4wIHZlcnNpb24KPj4gW2RybV0gZm91bmQgQVJN
+IEhETENEIHZlcnNpb24gcjBwMAo+PiB0ZGE5OTh4IDAtMDA3MDogRmFsbGluZyBiYWNrIHRvIGZp
+cnN0IENSVEMKPj4gdXNiIDEtMTogbmV3IGhpZ2gtc3BlZWQgVVNCIGRldmljZSBudW1iZXIgMiB1
+c2luZyBlaGNpLXBsYXRmb3JtCj4+IHRkYTk5OHggMC0wMDcwOiBmb3VuZCBUREExOTk4OAo+PiBo
+ZGxjZCA3ZmY2MDAwMC5oZGxjZDogYm91bmQgMC0wMDcwIChvcHMgdGRhOTk4eF9vcHMpCj4+IFtk
+cm1dIFN1cHBvcnRzIHZibGFuayB0aW1lc3RhbXAgY2FjaGluZyBSZXYgMiAoMjEuMTAuMjAxMyku
+Cj4+IFtkcm1dIE5vIGRyaXZlciBzdXBwb3J0IGZvciB2YmxhbmsgdGltZXN0YW1wIHF1ZXJ5Lgo+
+PiAtLS0tLS0tLS0tLS1bIGN1dCBoZXJlIF0tLS0tLS0tLS0tLS0KPj4gV0FSTklORzogYXQgZHJp
+dmVycy9ncHUvZHJtL2RybV9hdG9taWNfaGVscGVyLmM6NjgyCj4+IE1vZHVsZXMgbGlua2VkIGlu
+Ogo+Pgo+PiBDUFU6IDIgUElEOiA5OCBDb21tOiBrd29ya2VyL3UxMjozIFRhaW50ZWQ6IEcgICAg
+ICAgIFcgICAgICAgNC40LjAtcmMyKyAjODQ2Cj4+IEhhcmR3YXJlIG5hbWU6IEFSTSBKdW5vIGRl
+dmVsb3BtZW50IGJvYXJkIChyMSkgKERUKQo+PiBXb3JrcXVldWU6IGRlZmVyd3EgZGVmZXJyZWRf
+cHJvYmVfd29ya19mdW5jCj4+IHRhc2s6IGZmZmZmZTAwN2VjYjM3MDAgdGk6IGZmZmZmZTA5NDA5
+YzgwMDAgdGFzay50aTogZmZmZmZlMDk0MDljODAwMAo+PiBQQyBpcyBhdCBkcm1fYXRvbWljX2hl
+bHBlcl91cGRhdGVfbGVnYWN5X21vZGVzZXRfc3RhdGUrMHgxZTgvMHgxZjAKPj4gTFIgaXMgYXQg
+ZHJtX2F0b21pY19oZWxwZXJfY29tbWl0X21vZGVzZXRfZGlzYWJsZXMrMHgxYTgvMHgzODgKPj4g
+cGMgOiBbPGZmZmZmZTAwMDA0YTQ0Njg+XSBsciA6IFs8ZmZmZmZlMDAwMDRhNTliOD5dIHBzdGF0
+ZTogMjAwMDAwNDUKPj4gc3AgOiBmZmZmZmUwOTQwOWNiNTYwCj4+IHgyOTogZmZmZmZlMDk0MDlj
+YjU2MCB4Mjg6IGZmZmZmZTA5NDBiZjI4MDAKPj4geDI3OiBmZmZmZmUwOTQwMDcwMDAwIHgyNjog
+MDAwMDAwMDAwMDAwMDAwMQo+PiB4MjU6IGZmZmZmZTAwMDBiZTRiNTAgeDI0OiBmZmZmZmUwMDAw
+N2FlODIwCj4+IHgyMzogZmZmZmZlMDAwMGJlNGI1MCB4MjI6IGZmZmZmZTA5NDBiZDEwMDAKPj4g
+eDIxOiBmZmZmZmUwOTQwYmQxMDAwIHgyMDogMDAwMDAwMDAwMDAwMDAwMAo+PiB4MTk6IGZmZmZm
+ZTA5NDA5NjgwMDAgeDE4OiBmZmZmZmUwOTQwYzgwOTFjCj4+IHgxNzogMDAwMDAwMDAwMDAwMDAw
+NyB4MTY6IDAwMDAwMDAwMDAwMDAwMDEKPj4geDE1OiBmZmZmZmUwOTQwYzgwMTZmIHgxNDogMDAw
+MDAwM2MwMDAwMDAwMAo+PiB4MTM6IDAwMDAwMDAwMDAwMDAwMDAgeDEyOiAwMDAwMDRjOTAwMDAw
+NGI0Cj4+IHgxMTogMDAwMDA0YjEwMDAwMDRjOSB4MTA6IDAwMDAwNGIwMDAwMDA0YjAKPj4geDkg
+OiAwMDAwMDAwMDAwMDAwNmY0IHg4IDogMDAwMDA2YTQwMDAwMDY1NAo+PiB4NyA6IDAwMDAwNmY0
+MDAwMDA2NDAgeDYgOiBmZmZmZmUwOTQwOTY2NDgwCj4+IHg1IDogZmZmZmZlMDk0MDk2ODIwMCB4
+NCA6IDAwMDAwMDAwMDAwMDAwMDEKPj4geDMgOiBmZmZmZmUwOTQwOTY2YTgwIHgyIDogMDAwMDAw
+MDAwMDAwMDAwMAo+PiB4MSA6IGZmZmZmZTA5NDBiZDA5MDAgeDAgOiBmZmZmZmUwOTQwYmQwOTYw
+Cj4+Cj4+IC0tLVsgZW5kIHRyYWNlIGJkYjZhZjY5YjI5YmY3ZWEgXS0tLQo+PiBDYWxsIHRyYWNl
+Ogo+PiBbPGZmZmZmZTAwMDA0YTQ0Njg+XQo+PiBkcm1fYXRvbWljX2hlbHBlcl91cGRhdGVfbGVn
+YWN5X21vZGVzZXRfc3RhdGUrMHgxZTgvMHgxZjAKPj4gWzxmZmZmZmUwMDAwNGE1OWI4Pl0gZHJt
+X2F0b21pY19oZWxwZXJfY29tbWl0X21vZGVzZXRfZGlzYWJsZXMrMHgxYTgvMHgzODgKPj4gWzxm
+ZmZmZmUwMDAwNGE1YzcwPl0gZHJtX2F0b21pY19oZWxwZXJfY29tbWl0KzB4ZDgvMHgxNDAKPj4g
+WzxmZmZmZmUwMDAwNGNjY2UwPl0gaGRsY2RfYXRvbWljX2NvbW1pdCsweDEwLzB4MTgKPj4gWzxm
+ZmZmZmUwMDAwNGM5ZWY4Pl0gZHJtX2F0b21pY19jb21taXQrMHg0MC8weDcwCj4+IFs8ZmZmZmZl
+MDAwMDRhNjliMD5dIHJlc3RvcmVfZmJkZXZfbW9kZSsweDI3MC8weDJiMAo+PiBbPGZmZmZmZTAw
+MDA0YThkNjQ+XSBkcm1fZmJfaGVscGVyX3Jlc3RvcmVfZmJkZXZfbW9kZV91bmxvY2tlZCsweDM0
+LzB4OTAKPj4gWzxmZmZmZmUwMDAwNGE4ZGVjPl0gZHJtX2ZiX2hlbHBlcl9zZXRfcGFyKzB4MmMv
+MHg2MAo+PiBbPGZmZmZmZTAwMDA0MmYwMTA+XSBmYmNvbl9pbml0KzB4NGQwLzB4NTIwCj4+IFs8
+ZmZmZmZlMDAwMDQ2ZWM5Yz5dIHZpc3VhbF9pbml0KzB4YWMvMHgxMDgKPj4gWzxmZmZmZmUwMDAw
+NDcwNjBjPl0gZG9fYmluZF9jb25fZHJpdmVyKzB4MWQ0LzB4M2U4Cj4+IFs8ZmZmZmZlMDAwMDQ3
+MGMxND5dIGRvX3Rha2Vfb3Zlcl9jb25zb2xlKzB4MTc0LzB4MWU4Cj4+IFs8ZmZmZmZlMDAwMDQy
+YzM4Yz5dIGRvX2ZiY29uX3Rha2VvdmVyKzB4NzQvMHgxMDAKPj4gWzxmZmZmZmUwMDAwNDMxM2I0
+Pl0gZmJjb25fZXZlbnRfbm90aWZ5KzB4NzdjLzB4N2Q4Cj4+IFs8ZmZmZmZlMDAwMDBkYzcwMD5d
+IG5vdGlmaWVyX2NhbGxfY2hhaW4rMHg1MC8weDkwCj4+IFs8ZmZmZmZlMDAwMDBkY2FkYz5dIF9f
+YmxvY2tpbmdfbm90aWZpZXJfY2FsbF9jaGFpbisweDRjLzB4OTAKPj4gWzxmZmZmZmUwMDAwMGRj
+YjM0Pl0gYmxvY2tpbmdfbm90aWZpZXJfY2FsbF9jaGFpbisweDE0LzB4MjAKPj4gWzxmZmZmZmUw
+MDAwNDM1MjA0Pl0gZmJfbm90aWZpZXJfY2FsbF9jaGFpbisweDFjLzB4MjgKPj4gWzxmZmZmZmUw
+MDAwNDM3MDEwPl0gcmVnaXN0ZXJfZnJhbWVidWZmZXIrMHgxYzAvMHgyYjgKPj4gWzxmZmZmZmUw
+MDAwNGE5MGE0Pl0gZHJtX2ZiX2hlbHBlcl9pbml0aWFsX2NvbmZpZysweDI4NC8weDNlOAo+PiBb
+PGZmZmZmZTAwMDA0YTk5MWM+XSBkcm1fZmJkZXZfY21hX2luaXQrMHg5NC8weDE0OAo+PiBbPGZm
+ZmZmZTAwMDA0Y2NmYzQ+XSBoZGxjZF9kcm1fYmluZCsweDFkNC8weDQxOAo+PiBbPGZmZmZmZTAw
+MDA0ZDE1ZjA+XSB0cnlfdG9fYnJpbmdfdXBfbWFzdGVyLnBhcnQuMisweGM4LzB4MTEwCj4+IFs8
+ZmZmZmZlMDAwMDRkMTgyMD5dIGNvbXBvbmVudF9hZGQrMHg5MC8weDEwOAo+PiBbPGZmZmZmZTAw
+MDA0Y2U2YTg+XSB0ZGE5OTh4X3Byb2JlKzB4MTgvMHgyMAo+PiBbPGZmZmZmZTAwMDA1YTZkMjQ+
+XSBpMmNfZGV2aWNlX3Byb2JlKzB4MTY0LzB4MjI4Cj4+IFs8ZmZmZmZlMDAwMDRkNjk4Yz5dIGRy
+aXZlcl9wcm9iZV9kZXZpY2UrMHgxZWMvMHgyZjAKPj4gWzxmZmZmZmUwMDAwNGQ2YmMwPl0gX19k
+ZXZpY2VfYXR0YWNoX2RyaXZlcisweDkwLzB4ZDgKPj4gWzxmZmZmZmUwMDAwNGQ0Yjg4Pl0gYnVz
+X2Zvcl9lYWNoX2RydisweDU4LzB4OTgKPj4gWzxmZmZmZmUwMDAwNGQ2NmU0Pl0gX19kZXZpY2Vf
+YXR0YWNoKzB4YzQvMHgxNDgKPj4gWzxmZmZmZmUwMDAwNGQ2YzU4Pl0gZGV2aWNlX2luaXRpYWxf
+cHJvYmUrMHgxMC8weDE4Cj4+IFs8ZmZmZmZlMDAwMDRkNWI5Yz5dIGJ1c19wcm9iZV9kZXZpY2Ur
+MHg5NC8weGEwCj4+IFs8ZmZmZmZlMDAwMDRkNjAyMD5dIGRlZmVycmVkX3Byb2JlX3dvcmtfZnVu
+YysweDcwLzB4YTgKPj4gWzxmZmZmZmUwMDAwMGQ1YjcwPl0gcHJvY2Vzc19vbmVfd29yaysweDEz
+OC8weDM3OAo+PiBbPGZmZmZmZTAwMDAwZDVlZDQ+XSB3b3JrZXJfdGhyZWFkKzB4MTI0LzB4NDk4
+Cj4+IFs8ZmZmZmZlMDAwMDBkYmI1ND5dIGt0aHJlYWQrMHhkYy8weGYwCj4+IFs8ZmZmZmZlMDAw
+MDA5Mzk4MD5dIHJldF9mcm9tX2ZvcmsrMHgxMC8weDUwCj4+IENvbnNvbGU6IHN3aXRjaGluZyB0
+byBjb2xvdXIgZnJhbWUgYnVmZmVyIGRldmljZSAxNTB4MTAwCj4+Cj4+IHdoaWNoIGZvciByZWZl
+cmVuY2UsIGlzIHRoZSBmaXJzdCBvbmUgaW4gdGhhdCBmdW5jdGlvbjoKPj4KPj4gCS4uLgo+PiAJ
+LyogY2xlYXIgb3V0IGV4aXN0aW5nIGxpbmtzIGFuZCB1cGRhdGUgZHBtcyAqLwo+PiAJZm9yX2Vh
+Y2hfY29ubmVjdG9yX2luX3N0YXRlKG9sZF9zdGF0ZSwgY29ubmVjdG9yLCBvbGRfY29ubl9zdGF0
+ZSwgaSkgewo+PiAJCWlmIChjb25uZWN0b3ItPmVuY29kZXIpIHsKPj4gCQkJV0FSTl9PTighY29u
+bmVjdG9yLT5lbmNvZGVyLT5jcnRjKTsKPj4gCQkJLi4uCj4+Cj4+IFRoYXQncyBvbiA0LjQtcmMy
+IHdpdGggdGhpcyBzZXJpZXMgcGx1cyB0aGUgMyB0ZGE5OTh4IHBhdGNoZXMgZnJvbSBSdXNzZWxs
+J3MKPj4gcGF0Y2ggc3lzdGVtIGFwcGxpZWQuIElzIHRoZXJlIHNvbWV0aGluZyBlbHNlIEknbSBt
+aXNzaW5nIG9yIGRvZXMgdGhpcyBuZWVkCj4+IGxvb2tpbmcgYXQgKGNvdWxkIGl0IGJlIHJlbGF0
+ZWQgdG8gdGhhdCBpbml0aWFsIHByb2JlIGRlZmVycmFsKT8KPgo+IFllYWgsIHlvdSBhbHNvIG5l
+ZWQgVGhpZXJyeSBSZWRpbmcncyBwYXRjaCB0byBub3Qgc2V0IHRoZSBjb25uZWN0b3ItPmVuY29k
+ZXIgaW4KPiBkcml2ZXJzLgo+Cj4gaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZl
+cy9kcmktZGV2ZWwvMjAxNS1Ob3ZlbWJlci8wOTQ1NzYuaHRtbAoKQWgsIHJpZ2h0LCBJIGRvbid0
+IHRoaW5rIHRoYXQgb25lIHdhcyBzcGVjaWZpY2FsbHkgY2FsbGVkIG91dCBhbnl3aGVyZSwgCmJ1
+dCBpdCBkb2VzIGluZGVlZCBtYWtlIHRoZSBzcGxhdCBnbyBhd2F5LCB0aGFua3MhCgo+Pgo+Pj4g
+U2lnbmVkLW9mZi1ieTogTGl2aXUgRHVkYXUgPExpdml1LkR1ZGF1QGFybS5jb20+Cj4+PiBBY2tl
+ZC1ieTogRGFuaWVsIFZldHRlciA8ZGFuaWVsLnZldHRlckBmZndsbC5jaD4KPj4+IC0tLQo+Pj4g
+ICBkcml2ZXJzL2dwdS9kcm0vS2NvbmZpZyAgICAgICAgICB8ICAgMiArCj4+PiAgIGRyaXZlcnMv
+Z3B1L2RybS9NYWtlZmlsZSAgICAgICAgIHwgICAxICsKPj4+ICAgZHJpdmVycy9ncHUvZHJtL2Fy
+bS9LY29uZmlnICAgICAgfCAgMjkgKysKPj4+ICAgZHJpdmVycy9ncHUvZHJtL2FybS9NYWtlZmls
+ZSAgICAgfCAgIDIgKwo+Pj4gICBkcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNkX2NydGMuYyB8IDMy
+OSArKysrKysrKysrKysrKysrKysrKysrCj4+PiAgIGRyaXZlcnMvZ3B1L2RybS9hcm0vaGRsY2Rf
+ZHJ2LmMgIHwgNTgwICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+Pj4g
+ICBkcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNkX2Rydi5oICB8ICA0MiArKysKPj4+ICAgZHJpdmVy
+cy9ncHUvZHJtL2FybS9oZGxjZF9yZWdzLmggfCAgODcgKysrKysrCj4+PiAgIDggZmlsZXMgY2hh
+bmdlZCwgMTA3MiBpbnNlcnRpb25zKCspCj4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L2dwdS9kcm0vYXJtL0tjb25maWcKPj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1
+L2RybS9hcm0vTWFrZWZpbGUKPj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
+bS9hcm0vaGRsY2RfY3J0Yy5jCj4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
+cm0vYXJtL2hkbGNkX2Rydi5jCj4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
+cm0vYXJtL2hkbGNkX2Rydi5oCj4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
+cm0vYXJtL2hkbGNkX3JlZ3MuaAo+Pgo+PiBbLi4uXQo+Pgo+Pj4gK3N0YXRpYyBpbnQgaGRsY2Rf
+c2V0X3B4bF9mbXQoc3RydWN0IGRybV9jcnRjICpjcnRjKQo+Pj4gK3sKPj4+ICsJdW5zaWduZWQg
+aW50IGJ0cHAsIGRlZmF1bHRfY29sb3IgPSAweDAwMDAwMDAwOwo+Pj4gKwlzdHJ1Y3QgaGRsY2Rf
+ZHJtX3ByaXZhdGUgKmhkbGNkID0gY3J0Y190b19oZGxjZF9wcml2KGNydGMpOwo+Pj4gKwl1aW50
+MzJfdCBwaXhlbF9mb3JtYXQ7Cj4+PiArCXN0cnVjdCBzaW1wbGVmYl9mb3JtYXQgKmZvcm1hdCA9
+IE5VTEw7Cj4+PiArCWludCBpOwo+Pj4gKwo+Pj4gKyNpZmRlZiBDT05GSUdfRFJNX0hETENEX1NI
+T1dfVU5ERVJSVU4KPj4+ICsJZGVmYXVsdF9jb2xvciA9IDB4MDBmZjAwMDA7CS8qIHNob3cgdW5k
+ZXJydW5zIGluIHJlZCAqLwo+Pj4gKyNlbmRpZgo+Pj4gKwo+Pj4gKwlwaXhlbF9mb3JtYXQgPSBj
+cnRjLT5wcmltYXJ5LT5zdGF0ZS0+ZmItPnBpeGVsX2Zvcm1hdDsKPj4+ICsKPj4+ICsJZm9yIChp
+ID0gMDsgaSA8IEFSUkFZX1NJWkUoc3VwcG9ydGVkX2Zvcm1hdHMpOyBpKyspIHsKPj4+ICsJCWlm
+IChzdXBwb3J0ZWRfZm9ybWF0c1tpXS5mb3VyY2MgPT0gcGl4ZWxfZm9ybWF0KQo+Pj4gKwkJCWZv
+cm1hdCA9ICZzdXBwb3J0ZWRfZm9ybWF0c1tpXTsKPj4+ICsJfQo+Pj4gKwo+Pj4gKwlpZiAoV0FS
+Tl9PTighZm9ybWF0KSkgewo+Pj4gKwkJcmV0dXJuIDA7Cj4+PiArCX0KPj4KPj4gbml0OiB1bm5l
+Y2Vzc2FyeSBicmFjZXMuCj4+Cj4+PiArCS8qIEhETENEIHVzZXMgJ2J5dGVzIHBlciBwaXhlbCcs
+IHplcm8gbWVhbnMgMSBieXRlICovCj4+PiArCWJ0cHAgPSAoZm9ybWF0LT5iaXRzX3Blcl9waXhl
+bCArIDcpIC8gODsKPj4+ICsJaGRsY2Rfd3JpdGUoaGRsY2QsIEhETENEX1JFR19QSVhFTF9GT1JN
+QVQsIChidHBwIC0gMSkgPDwgMyk7Cj4+PiArCj4+PiArCS8qCj4+PiArCSAqIFRoZSBmb3JtYXQg
+b2YgdGhlIEhETENEX1JFR188Y29sb3I+X1NFTEVDVCByZWdpc3RlciBpczoKPj4+ICsJICogICAt
+IGJpdHNbMjM6MTZdIC0gZGVmYXVsdCB2YWx1ZSBmb3IgdGhhdCBjb2xvciBjb21wb25lbnQKPj4+
+ICsJICogICAtIGJpdHNbMTE6OF0gIC0gbnVtYmVyIG9mIGJpdHMgdG8gZXh0cmFjdCBmb3IgZWFj
+aCBjb2xvciBjb21wb25lbnQKPj4+ICsJICogICAtIGJpdHNbNDowXSAgIC0gaW5kZXggb2YgdGhl
+IGxvd2VzdCBiaXQgdG8gZXh0cmFjdAo+Pj4gKwkgKgo+Pj4gKwkgKiBUaGUgZGVmYXVsdCBjb2xv
+ciB2YWx1ZSBpcyB1c2VkIHdoZW4gYml0c1sxMTo4XSBhcmUgemVybywgd2hlbiB0aGUKPj4+ICsJ
+ICogcGl4ZWwgaXMgb3V0c2lkZSB0aGUgdmlzaWJsZSBmcmFtZSBhcmVhIG9yIHdoZW4gdGhlcmUg
+aXMgYQo+Pj4gKwkgKiBidWZmZXIgdW5kZXJydW4uCj4+PiArCSAqLwo+Pj4gKwloZGxjZF93cml0
+ZShoZGxjZCwgSERMQ0RfUkVHX1JFRF9TRUxFQ1QsIGRlZmF1bHRfY29sb3IgfAo+Pj4gKwkJZm9y
+bWF0LT5yZWQub2Zmc2V0IHwgKGZvcm1hdC0+cmVkLmxlbmd0aCAmIDB4ZikgPDwgOCk7Cj4+PiAr
+CWhkbGNkX3dyaXRlKGhkbGNkLCBIRExDRF9SRUdfR1JFRU5fU0VMRUNULCBkZWZhdWx0X2NvbG9y
+IHwKPj4+ICsJCWZvcm1hdC0+Z3JlZW4ub2Zmc2V0IHwgKGZvcm1hdC0+Z3JlZW4ubGVuZ3RoICYg
+MHhmKSA8PCA4KTsKPj4+ICsJaGRsY2Rfd3JpdGUoaGRsY2QsIEhETENEX1JFR19CTFVFX1NFTEVD
+VCwgZGVmYXVsdF9jb2xvciB8Cj4+PiArCQlmb3JtYXQtPmJsdWUub2Zmc2V0IHwgKGZvcm1hdC0+
+Ymx1ZS5sZW5ndGggJiAweGYpIDw8IDgpOwo+Pgo+PiBUaGVzZSB3b3VsZCBzZWVtIHRvIGJlIHB1
+dHRpbmcgYml0cyAyMzoxNiBmcm9tIGRlZmF1bHRfY29sb3IgaW50byB0aGUKPj4gZGVmYXVsdCBm
+aWVsZCBvZiBldmVyeSByZWdpc3RlciwgYW5kIGluZGVlZCB1bmRlcnJ1bnMgc2hvdyB1cCBhcyBh
+IHZlcnkKPj4gd2hpdGUtbG9va2luZyBzaGFkZSBvZiByZWQgZm9yIG1lIDspCj4KPiBPb29wcywg
+SSBiZXR0ZXIgY2hhbmdlIHRoYXQuIENvdWxkIHlvdSB0ZWxsIG1lIGhvdyB5b3UgdHJpZ2dlciB1
+bmRlcnJ1bnMKPiBpbiB5b3VyIHNldHVwPwoKSSBjaGVhdCBhbmQgcHV0IHRoZSBTTU1VIGludG8g
+YSBzdGF0ZSB3aGVyZSBpdCB3b24ndCBhbGxvdyBhbnl0aGluZyAKdGhyb3VnaCBhdCBhbGwsIHNv
+IGl0J3MgdGhlIHVsdGltYXRlICd1bmRlcnJ1bicuCgo+Pgo+Pj4gKwlyZXR1cm4gMDsKPj4+ICt9
+Cj4+Cj4+IFsuLi5dCj4+Cj4+PiArc3RhdGljIHZvaWQgaGRsY2RfZmJfb3V0cHV0X3BvbGxfY2hh
+bmdlZChzdHJ1Y3QgZHJtX2RldmljZSAqZHJtKQo+Pj4gK3sKPj4+ICsJc3RydWN0IGhkbGNkX2Ry
+bV9wcml2YXRlICpoZGxjZCA9IGRybS0+ZGV2X3ByaXZhdGU7Cj4+PiArCj4+PiArCWlmIChoZGxj
+ZC0+ZmJkZXYpIHsKPj4+ICsJCWRybV9mYmRldl9jbWFfaG90cGx1Z19ldmVudChoZGxjZC0+ZmJk
+ZXYpOwo+Pj4gKwl9Cj4+Cj4+IG5pdDogYnJhY2VzLgo+Pgo+Pj4gK30KPj4KPj4gWy4uLl0KPj4K
+Pj4+ICtzdGF0aWMgaXJxcmV0dXJuX3QgaGRsY2RfaXJxKGludCBpcnEsIHZvaWQgKmFyZykKPj4+
+ICt7Cj4+PiArCXN0cnVjdCBkcm1fZGV2aWNlICpkcm0gPSBhcmc7Cj4+PiArCXN0cnVjdCBoZGxj
+ZF9kcm1fcHJpdmF0ZSAqaGRsY2QgPSBkcm0tPmRldl9wcml2YXRlOwo+Pj4gKwl1bnNpZ25lZCBs
+b25nIGlycV9zdGF0dXM7Cj4+PiArCj4+PiArCWlycV9zdGF0dXMgPSBoZGxjZF9yZWFkKGhkbGNk
+LCBIRExDRF9SRUdfSU5UX1NUQVRVUyk7Cj4+PiArCj4+PiArI2lmZGVmIENPTkZJR19ERUJVR19G
+Uwo+Pj4gKwlpZiAoaXJxX3N0YXR1cyAmIEhETENEX0lOVEVSUlVQVF9VTkRFUlJVTikgewo+Pj4g
+KwkJYXRvbWljX2luYygmaGRsY2QtPmJ1ZmZlcl91bmRlcnJ1bl9jb3VudCk7Cj4+PiArCX0KPj4+
+ICsJaWYgKGlycV9zdGF0dXMgJiBIRExDRF9JTlRFUlJVUFRfRE1BX0VORCkgewo+Pj4gKwkJYXRv
+bWljX2luYygmaGRsY2QtPmRtYV9lbmRfY291bnQpOwo+Pj4gKwl9Cj4+PiArCWlmIChpcnFfc3Rh
+dHVzICYgSERMQ0RfSU5URVJSVVBUX0JVU19FUlJPUikgewo+Pj4gKwkJYXRvbWljX2luYygmaGRs
+Y2QtPmJ1c19lcnJvcl9jb3VudCk7Cj4+PiArCX0KPj4+ICsJaWYgKGlycV9zdGF0dXMgJiBIRExD
+RF9JTlRFUlJVUFRfVlNZTkMpIHsKPj4+ICsJCWF0b21pY19pbmMoJmhkbGNkLT52c3luY19jb3Vu
+dCk7Cj4+PiArCX0KPj4KPj4gbml0OiBicmFjZXMgYWdhaW4gKGl0J3Mgb25seSBiZWNhdXNlIEkn
+bSB0b28gbGF6eSB0byByZW1vdmUgdGhlIG5ld2JpZQo+PiBjaGVja3BhdGNoIGNvbW1pdCBob29r
+LCBhbmQgYSBtYW51YWwgbWVyZ2Ugb2YgdGhpcyBpbnRvIG15IFNNTVUgZGV2IHRyZWUKPj4gbWFk
+ZSB0aGF0IHRocm93IGEgZml0KQo+Pgo+Pj4gKyNlbmRpZgo+Pj4gKwlpZiAoaXJxX3N0YXR1cyAm
+IEhETENEX0lOVEVSUlVQVF9WU1lOQykgewo+Pj4gKwkJYm9vbCBldmVudHNfc2VudCA9IGZhbHNl
+Owo+Pj4gKwkJdW5zaWduZWQgbG9uZyBmbGFnczsKPj4+ICsJCXN0cnVjdCBkcm1fcGVuZGluZ192
+YmxhbmtfZXZlbnQJKmUsICp0Owo+Pj4gKwo+Pj4gKwkJZHJtX2NydGNfaGFuZGxlX3ZibGFuaygm
+aGRsY2QtPmNydGMpOwo+Pj4gKwo+Pj4gKwkJc3Bpbl9sb2NrX2lycXNhdmUoJmRybS0+ZXZlbnRf
+bG9jaywgZmxhZ3MpOwo+Pj4gKwkJbGlzdF9mb3JfZWFjaF9lbnRyeV9zYWZlKGUsIHQsICZoZGxj
+ZC0+ZXZlbnRfbGlzdCwgYmFzZS5saW5rKSB7Cj4+PiArCQkJbGlzdF9kZWwoJmUtPmJhc2UubGlu
+ayk7Cj4+PiArCQkJZHJtX2NydGNfc2VuZF92YmxhbmtfZXZlbnQoJmhkbGNkLT5jcnRjLCBlKTsK
+Pj4+ICsJCQlldmVudHNfc2VudCA9IHRydWU7Cj4+PiArCQl9Cj4+PiArCQlpZiAoZXZlbnRzX3Nl
+bnQpCj4+PiArCQkJZHJtX2NydGNfdmJsYW5rX3B1dCgmaGRsY2QtPmNydGMpOwo+Pj4gKwkJc3Bp
+bl91bmxvY2tfaXJxcmVzdG9yZSgmZHJtLT5ldmVudF9sb2NrLCBmbGFncyk7Cj4+PiArCX0KPj4+
+ICsKPj4+ICsJLyogYWNrbm93bGVkZ2UgaW50ZXJydXB0KHMpICovCj4+PiArCWhkbGNkX3dyaXRl
+KGhkbGNkLCBIRExDRF9SRUdfSU5UX0NMRUFSLCBpcnFfc3RhdHVzKTsKPj4+ICsKPj4+ICsJcmV0
+dXJuIElSUV9IQU5ETEVEOwo+Pj4gK30KPj4KPj4gT3RoZXIgdGhhbiB0aGF0IHRob3VnaCwgaXQg
+c2VlbXMgdG8gZG8gdGhlIGpvYi4gSSBnZXQgYSB1c2FibGUgZnJhbWVidWZmZXIKPj4gY29uc29s
+ZSBhbmQgY2FuIGJvb3QgdG8gYW4gWCBkZXNrdG9wIHdpdGggYXQgbGVhc3QgdGhlIGFuY2llbnQg
+MTYwMHgxMjAwIERWSQo+PiBtb25pdG9yIEkgaGF2ZSBoYW5keSAtIHRoZSAxOTIweDEwODAgSERN
+SSBvbmUgc2VlbXMgdG8gZ2V0IHJlY29nbmlzZWQgT0sgYnV0Cj4+IHRoZSBtb25pdG9yIGl0c2Vs
+ZiBkb2Vzbid0IGxpa2UgdGhlIHNpZ25hbCBhbmQganVzdCBsb2NrcyB1cCB1bnRpbCBJIHVucGx1
+Zwo+PiBpdCwgYWx0aG91Z2ggSSBrbm93IHRoYXQncyBtb3JlIG9mIGEgY2xvY2sgZHJpdmVyL2Zp
+cm13YXJlIGlzc3VlLgo+Cj4gSSBoYXZlIGEgVFYgdGhhdCBkb2VzIHRoZSBzYW1lLiBZZXMsIHRo
+ZSBTQ1BJIGNsb2NrIHRoYXQgd2FzIHBpY2tlZCBmb3IgdGhpcwo+IHJlc29sdXRpb24gaXMgYSBz
+dGFuZGFyZCBvbmUsIGJ1dCBJIGJldCB0aGF0IHRoZXNlIG1vbml0b3JzIGFyZSBzbGlnaHRseSBv
+dXQKPiBvZiBzcGVjLiBBdCBsZWFzdCBteSBUViBsaXN0cyB0d28gb3B0aW9ucyBmb3IgMTA4MHA6
+IG9uZSB3aXRoIDE0NU1IeiBwaXhlbAo+IGNsb2NrIGFuZCBhbm90aGVyIHdpdGggMTQ1LjM4Mk1I
+ei4gQnV0IExpbnV4IGRlY2lkZXMgdG8gZ28gaW50ZXJsYWNlZCBhbnl3YXksCj4gc28gSSBjYW4n
+dCB0ZXN0IHdpdGhvdXQgYSBoYWNrIGluIHRkYTk5OHhfZHJ2LmMuCgpZZWFoLCB0aGUgZmFjdCB0
+aGF0IGl0IGdvZXMgdW5yZXNwb25zaXZlIGJ5IGNvbnRpbnVhbGx5IHRyeWluZyB0byBzeW5jIAp3
+aXRoIHRoZSBzaWduYWwgcmF0aGVyIHRoYW4ganVzdCBnaXZpbmcgdXAgYW5kIGRpc3BsYXlpbmcg
+dGhlICdvdXQgb2YgCnJhbmdlJyBtZXNzYWdlIHN1Z2dlc3RzIHRoYXQncyB0aGUgY2FzZS4gT2Rk
+bHksIHRoYXQgb25lIGRpZCB1c2VkIHRvIAp3b3JrIGZpbmUgd2l0aCB0aGUgb2xkIGhhcmQtY29k
+ZWQgU0NQIGNsb2NrLiBPaCB3ZWxsLgoKUm9iaW4uCgo+IFRoYW5rcyBmb3IgdGVzdGluZyB0aGlz
+Lgo+Cj4gQmVzdCByZWdhcmRzLAo+IExpdml1Cj4KPj4KPj4gUm9iaW4uCj4+Cj4KCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
