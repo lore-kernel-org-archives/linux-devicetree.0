@@ -1,42 +1,47 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 00/28] MIPS Boston board support
-Date: Thu, 10 Dec 2015 17:26:31 +0100
-Message-ID: <CACRpkdb2YhSbaYUXh4Dz7juObHxmWLc8Gj6UmkJ=Nv69UNfaPA@mail.gmail.com>
-References: <1448900513-20856-1-git-send-email-paul.burton@imgtec.com>
-        <20151130163413.GB1929@sirena.org.uk>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/3] ARM: dts: sun9i: cubieboard4: Enable
+ misc. peripherals
+Date: Thu, 10 Dec 2015 18:04:55 +0100
+Message-ID: <20151210170455.GD27957@lukather>
+References: <1449754591-3999-1-git-send-email-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20151130163413.GB1929@sirena.org.uk>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Mark Brown <broonie@kernel.org>
-Cc: Paul Burton <paul.burton@imgtec.com>, Linux MIPS <linux-mips@linux-mips.org>, Arnd Bergmann <arnd@arndb.de>, Joshua Kinard <kumba@gentoo.org>, Alessandro Zummo <a.zummo@towertech.it>, Jiri Slaby <jslaby@suse.com>, Bjorn Helgaas <bhelgaas@google.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Kumar Gala <galak@codeaurora.org>, Yijing Wang <wangyijing@huawei.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, John Crispin <blogic@openwrt.org>, Jayachandran C <jchandra@broadcom.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Ray Jui <rjui@broadcom.com>, Richard Cochran <richardcochran@gmail.com>, Tejun Heo <tj@kernel.org>, Michal
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7U7nS7UhGMyosb9W"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBOHBU2ZQKGQERGLSQ7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1449754591-3999-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 30, 2015 at 5:34 PM, Mark Brown <broonie@kernel.org> wrote:
-> On Mon, Nov 30, 2015 at 04:21:25PM +0000, Paul Burton wrote:
->> This series introduces support for the Imagination Technologies MIPS
->> Boston development board. Boston is an FPGA-based development board
->> akin to the much older Malta board, built around a Xilinx FPGA running
->> a MIPS CPU & other logic including a PCIe root port connected to an
->> Intel EG20T Platform Controller Hub. This provides a base set of
->> peripherals including SATA, USB, SD/MMC, ethernet, I2C & GPIOs. PCIe
->> slots are also present for expansion.
->
-> This is an insanely big CC list :(
->
-> What are the interdependencies here - does this really need to be one
-> patch series or can the individual driver changes go in separately?
+--7U7nS7UhGMyosb9W
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-I took the two GPIO patches and ran off with them at least.
+On Thu, Dec 10, 2015 at 09:36:28PM +0800, Chen-Yu Tsai wrote:
+> Hi Maxime,
+> 
+> Here are some patches enabling some peripherals on the Cubieboard4.
+> 
+> Patch 1 enables the LEDs.
+> 
+> Patch 2 enables the IR receiver.
+> 
+> Patch 3 enables the RSB controller.
 
-Yours,
-Linus Walleij
+Applied all three, thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--7U7nS7UhGMyosb9W--
