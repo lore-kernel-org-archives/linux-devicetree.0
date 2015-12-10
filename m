@@ -1,7 +1,7 @@
 From: <atull@opensource.altera.com>
-Subject: [PATCH v14 2/7] fpga: add bindings document for fpga area
-Date: Thu, 10 Dec 2015 17:37:04 -0600
-Message-ID: <1449790629-5517-3-git-send-email-atull@opensource.altera.com>
+Subject: [PATCH v14 1/7] fpga: add usage documentation for fpga area
+Date: Thu, 10 Dec 2015 17:37:03 -0600
+Message-ID: <1449790629-5517-2-git-send-email-atull@opensource.altera.com>
 References: <1449790629-5517-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,79 +14,312 @@ List-Id: devicetree@vger.kernel.org
 
 From: Alan Tull <atull@opensource.altera.com>
 
-New bindings document for FPGA Area for reprogramming
-FPGA's under Device Tree control
+Add a document spelling out usage of the FPGA Area for
+reprogramming FPGA's under Device Tree control.
 
 Signed-off-by: Alan Tull <atull@opensource.altera.com>
+
 ---
-v9:  initial version added to this patchset
+v9:  Initial version of this patch in patchset
 v10: s/fpga/FPGA/g
-     replace DT overlay example with slightly more complicated example
+     improve formatting
+     some rewriting
      move to staging/simple-fpga-bus
 v11: No change in this patch for v11 of the patch set
-v12: Moved out of staging.
-     Changed to use FPGA bridges framework instead of resets
-     for bridges.
-v13: bridge@0xff20000 -> bridge@ff200000, etc
-     Leave out directly talking about overlays
-     Remove regs and clocks directly under simple-fpga-bus in example
-     Use common "firmware-name" binding instead of "fpga-firmware"
-v14: Use firmware-name in bindings description
-     Call it FPGA Area
-     Remove bindings that specify FPGA Manager and FPGA Bridges
+v12: Moved out of staging
+     Small changes due to using FPGA bridge framework and not
+     representing the bridges as resets.
+v13: Fix some nits
+v14: fpga-area instead of simple-fpga-bus
 ---
- .../devicetree/bindings/fpga/fpga-area.txt         |   70 ++++++++++++++++++++
- 1 file changed, 70 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fpga/fpga-area.txt
+ Documentation/fpga/fpga-area.txt |  299 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 299 insertions(+)
+ create mode 100644 Documentation/fpga/fpga-area.txt
 
-diff --git a/Documentation/devicetree/bindings/fpga/fpga-area.txt b/Documentation/devicetree/bindings/fpga/fpga-area.txt
+diff --git a/Documentation/fpga/fpga-area.txt b/Documentation/fpga/fpga-area.txt
 new file mode 100644
-index 0000000..d656e35
+index 0000000..f031522
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/fpga/fpga-area.txt
-@@ -0,0 +1,70 @@
++++ b/Documentation/fpga/fpga-area.txt
+@@ -0,0 +1,299 @@
 +FPGA Area
-+=========
 +
-+A FPGA Area details information about a section of an FPGA including the FPGA
-+image needed to program it and the hardware contained in this section of the
-+FPGA once it is programmed.
++Alan Tull 2015
 +
-+A FPGA Area corresponds to the whole FPGA in the case of full reconfiguration
-+or a section of a FPGA in the case of partial reconfiguration.
++Overview
++========
 +
-+Required properties:
-+- compatible : should contain "fpga-area"
-+- #address-cells, #size-cells, ranges: must be present to handle address space
-+  mapping for children.
++An FPGA Area details information about a section of an FPGA including the FPGA
++image needed to program it and the hardware contained once it is programmed.
 +
-+Optional properties:
-+- firmware-name : should contain the name of a FPGA image file located on the
-+  firmware search path.
-+- partial-reconfig : boolean property should be defined if partial
-+  reconfiguration of the FPGA is to be done, otherwise full reconfiguration
-+  is done.
++Loading a Device Tree overlay which contains an FPGA Area will cause the
++FPGA to be programmed and the children of the FPGA Area will get probed.
 +
-+Example:
++There may be FPGA Bridges involved to prevent spurious data from going out onto
++the processor bus during FPGA programming.  If so, the FPGA Area will need to
++disable and enable bridges that will only affect the child devices that are
++below the FPGA Area.  In the case of partial reconfiguration, bridges will
++be required within the FPGA design such that the active sections of the
++FPGA are on the bus while sections that are not programmed or being
++reprogrammed at the moment are isolated.
 +
++Removing the overlay will result in the child devices getting removed and the
++bridges disabled.  Note that in the case of partial reconfiguration the rest of
++the FPGA continues to function as normal while this is happening.
++
++Below are more details on the structuring of the Device Tree for this.
++
++Terminology
++===========
++
++Full Reconfiguration
++ * The entire FPGA is reprogrammed.
++
++Partial Reconfiguration (PR)
++ * Part of the FPGA is reprogrammed while the rest of the FPGA is live and
++   active.  Not all FPGA's support this.
++
++Associated Blocks
++=================
++
++FPGA Manager Framework
++ * An FPGA Manager is a hardware block that programs an FPGA under the control
++   of a host processor.
++ * The FPGA Manager Framework provides drivers and functions to program an
++   FPGA.
++
++FPGA Bridge Framework
++ * Provides drivers and functions to control bridges that enable/disable
++   data to the FPGA.
++ * FPGA bridges should be disabled while the FPGA is being programmed to
++   prevent spurious data on the bus.
++ * FPGA bridges are not needed in implementations where the FPGA Manager
++   handles this.
++
++Device Tree
++===========
++
++For the purposes of this document, I'm dividing the Device Tree (DT) into two parts,
++each with its own requirements.  The two parts are:
++ * The live DT prior to the overlay being added
++ * The overlay containing an FPGA Area
++
++The live DT will contain:
++ * FPGA Manager
++ * FPGA Bridges as children of the FPGA Manager (optional, architecture specific)
++
++The live Device Tree must contain an FPGA Manager to handle programming the FPGA.
++If FPGA Bridges need to be involved, they show up in the DT as direct children
++of the FPGA Manager.  During full reconfiguration, the FPGA Area will disable
++any bridges that are direct children of the manager during full reconfiguration
++and will re-enable them afterwards.
++
++The insertion point in the live tree will also need the "simple-bus"
++compatibility string to enable populating the child nodes for the overlay.
++That includes the nodes for the FPGA Manager and controlling FPGA Bridges
++as explained below.
++
++The Device Tree Overlay will contain:
++ * "target-path"
++   The insertion point where the the contents of the overlay will go into the
++   live tree.
++ * "ranges"
++ * "firmware-name"
++   Specifies the name of the FPGA image file on the firmware search
++   path.  The search path is described in the firmware class documentation.
++ * "partial-reconfig"
++   This binding is a boolean and should be present if partial reconfiguration
++   is to be done.
++ * child nodes corresponding to hardware that will be loaded in this
++   region of the FPGA.
++
++Supported use models
++====================
++
++Here's a list of the superset of supported use models.  We may need to add
++more.  Some uses are specific to one FPGA or another.
++
++ * No FPGA Bridges
++   In this case, the FPGA Manager which programs the FPGA also handles the
++   bridges and no FPGA Bridge devices are needed for full reconfiguration.
++
++   The DT overlay will specify the FPGA Manager as the overlay target.
++
++ * Full reconfiguration with bridges
++   In the case, there are several bridges between the processor and FPGA,
++   that need to be disabled during full reconfiguration.
++   The DT before the overlay is applied will have an FPGA Manager.  The
++   immediate children of the manager will be the FPGA Bridges that need to be
++   disabled during FPGA programming.
++
++   The DT overlay will specify one of those bridges as the overlay target,
++   typically the bridge that allows memory mapped register access ("the
++   controlling bridge").
++
++ * Partial reconfiguration with bridges in the FPGA
++   In this case, the FPGA can have more than one section that will be
++   reprogrammed separately.  Other sections may be active on the bus while FPGA
++   is being programmed.  To manage this, FPGA Bridges need to exist on the FPGA
++   that can freeze all the buses going to one FPGA area while the buses are
++   enabled for other sections.
++
++Controlling Bridge
++==================
++
++It is possible that there are multiple FPGA Bridges connecting the processor
++and FPGA.  In a text based hierarchy, it is difficult to show this properly
++so what we do is consider the bridge that handles register access to be
++the controlling bridge.  The overlay is targeted to be inserted under the
++controlling bridge.  Other bridges are on the same level of the device tree
++as the controlling bridge, i.e. all are children of the FPGA Manager.  The
++ranges property handles mapping memory ranges through multiple bridges.
++
++Sequence
++========
++
++Load the DT overlay.  One way to do that from user space is to use Pantelis
++Antoniou's DT-Overlay configfs interface.  In that case the sequence from
++userspace is:
++
++ $ mkdir /config/device-tree/overlays/1
++ $ echo "some_overlay.dtb.o" > /config/device-tree/overlays/1/path
++
++This causes the FPGA Area to be probed and will do the following:
++ 1. Disable the FPGA bridges.
++ 2. Use the the FPGA manager core to program the FPGA.
++ 3. Enable the FPGA bridges.
++ 4. Call of_platform_populate resulting in device drivers getting probed.
++
++Removing the overlay is done by:
++
++ $ rmdir /config/device-tree/overlays/1
++
++This causes the child nodes to be removed and then the bridges are disabled.
++
++Device Tree Examples
++====================
++
++The intention of this section is to give some simple examples, focusing on
++the placement of the elements detailed above in, especially:
++ * FPGA Managers
++ * FPGA Bridges in some cases
++ * FPGA Areas and associated properties
++ * simple-bus
++ * ranges
++ * target-path
++
++Please note the "simple-bus" compatible string added for FPGA Managers and for
++FPGA Bridges where the overlay is targeted for insertion.  This is required for
++populating the child nodes.
++
++Device Tree Example: Partial Reconfiguration with no Bridges
++============================================================
++
++Live Device Tree contains:
++	fpgamgr@0 {
++		compatible = "altr,socfpga-a10-fpga-mgr", "simple-bus";
++		clocks = <&l4_mp_clk>;
++		resets = <&rst FPGAMGR_RESET>;
++		reset-names = "fpgamgr";
++		reg = <0xffd03000 0x1000
++		       0xffcfe400 0x1000>;
++
++		#address-cells = <0x1>;
++		#size-cells = <0x1>;
++		ranges;
++	};
++
++DT Overlay contains:
 +/dts-v1/;
 +/plugin/;
 +/ {
 +	fragment@0 {
-+		target-path="/soc/fpgamgr@0/bridge@0";
++		target-path="/soc/fpgamgr@0";  /* targeted to the manager */
 +		__overlay__ {
 +			#address-cells = <1>;
 +	                #size-cells = <1>;
 +
-+			bridge@ff200000 {
++			area@0 {
++				compatible = "fpga-area";
++
++				#address-cells = <1>;
++				#size-cells = <1>;
++				ranges = <0x10010 0xff210010 0x10>;
++
++				firmware-name = "fit_pr_v1.rbf";
++				partial-reconfig;
++
++				gpio@0x100010010 {
++					compatible = "altr,pio-1.0";
++					reg = <0x10010 0x10>;
++					altr,ngpio = <4>;
++					#gpio-cells = <0x2>;
++					gpio-controller;
++				};
++			};
++		};
++	};
++};
++
++
++Device Tree Example: Full Reconfiguration with Bridges
++======================================================
++
++Live Device Tree contains:
++	fpgamgr@0 {
++		compatible = "altr,socfpga-fpga-mgr", "simple-bus";
++		reg = <0xFF706000 0x1000
++		       0xFFB90000 0x1000>;
++		interrupts = <0 175 4>;
++
++		#address-cells = <0x1>;
++		#size-cells = <0x1>;
++		ranges;
++
++		bridge@0 {
++			/* both the manager and the controlling bridge have
++			 * the added simple-bus compatible to allow child
++			 * devices to be populated. */
++			compatible = "altr,socfpga-lwhps2fpga-bridge",
++				     "simple-bus";
++			resets = <&rst LWHPS2FPGA_RESET>;
++			reset-names = "lwhps2fpga";
++			clocks = <&l4_main_clk>;
++			#address-cells = <0x1>;
++			#size-cells = <0x1>;
++			ranges;
++		};
++
++		bridge@1 {
++			/* In the case of full reconfiguration, both bridge@0
++			 * and bridge@1 will be disabled during FPGA
++			 * programming and enabled afterwards. */
++			compatible = "altr,socfpga-hps2fpga-bridge";
++			resets = <&rst HPS2FPGA_RESET>;
++			reset-names = "hps2fpga";
++			clocks = <&l4_main_clk>;
++		};
++	};
++
++DT Overlay contains:
++/dts-v1/;
++/plugin/;
++/ {
++	fragment@0 {
++		target-path="/soc/fpgamgr@0/bridge@0"; /* controlling bridge */
++		__overlay__ {
++			#address-cells = <1>;
++	                #size-cells = <1>;
++
++			area@0 {
 +				compatible = "fpga-area";
 +
 +				#address-cells = <2>;
 +				#size-cells = <1>;
-+
++				/* Note that two ranges are mapped due to the
++				 * two bridges. */
 +				ranges = <0 0x00000000 0xc0000000 0x00010000>,
-+					 <1 0x00020000 0xff220000 0x00000008>,
-+					 <1 0x00010040 0xff210040 0x00000020>;
++					 <1 0x00020000 0xff220000 0x00000008>;
 +
 +				firmware-name = "soc_system.rbf";
 +
@@ -96,19 +329,12 @@ index 0000000..d656e35
 +					reg = <0 0x00000000 0x00010000>;
 +				};
 +
-+				jtag_uart: serial@100020000 {
++				jtag_uart: serial@0x100020000 {
 +					compatible = "altr,juart-1.0";
 +					reg = <1 0x00020000 0x00000008>;
 +					interrupt-parent = <&intc>;
 +					interrupts = <0 42 4>;
-+				};
-+
-+				led_pio: gpio@100010040 {
-+					compatible = "altr,pio-1.0";
-+					reg = <1 0x00010040 0x00000020>;
-+					altr,gpio-bank-width = <4>;
-+					#gpio-cells = <2>;
-+					gpio-controller;
++					clocks = <&osc2>;
 +				};
 +			};
 +		};
