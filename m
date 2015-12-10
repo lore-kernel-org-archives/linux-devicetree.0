@@ -1,69 +1,57 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [RFC][PATCH] misc: Introduce reboot_reason driver
-Date: Wed, 9 Dec 2015 17:32:02 -0800
-Message-ID: <CALAqxLXATE4TCGTu+NcDYFTvQ3YTS_m0baCa_AeJp-j4POtSQA@mail.gmail.com>
-References: <1449610162-30543-1-git-send-email-john.stultz@linaro.org>
-	<20151208220722.GG4000@usrtlx11787.corpusers.net>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v2 02/19] PM / devfreq: exynos: Add documentation for
+ generic exynos bus frequency driver
+Date: Thu, 10 Dec 2015 10:33:01 +0900
+Message-ID: <5668D64D.5040005@samsung.com>
+References: <1449634091-1842-1-git-send-email-cw00.choi@samsung.com>
+ <1449634091-1842-3-git-send-email-cw00.choi@samsung.com>
+ <5668C9BE.7050900@samsung.com> <5668CC37.1090300@samsung.com>
+ <5668D49C.80809@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20151208220722.GG4000@usrtlx11787.corpusers.net>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinay Simha BN <simhavcs@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>, Andy Gross <agross@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <5668D49C.80809@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, myungjoo.ham@samsung.com, kgene@kernel.org
+Cc: kyungmin.park@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, tjakobi@math.uni-bielefeld.de, linux.amoon@gmail.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 8, 2015 at 2:07 PM, Bjorn Andersson
-<bjorn.andersson@sonymobile.com> wrote:
-> On Tue 08 Dec 13:29 PST 2015, John Stultz wrote:
->> diff --git a/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts b/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
->> index 5183d18..ee5dcb7 100644
->> --- a/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
->> +++ b/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
->> @@ -282,6 +282,15 @@
->>                       };
->>               };
+On 2015=EB=85=84 12=EC=9B=94 10=EC=9D=BC 10:25, Krzysztof Kozlowski wro=
+te:
+> On 10.12.2015 09:49, Chanwoo Choi wrote:
+>> Hi,
 >>
->> +             reboot_reason: reboot_reason@2a03f65c {
->> +                     compatible              = "reboot_reason";
->> +                     reg                     = <0x2A03F65C 0x4>;
->> +                     reason,none             = <0x77665501>;
->> +                     reason,bootloader       = <0x77665500>;
->> +                     reason,recovery         = <0x77665502>;
->> +                     reason,oem              = <0x6f656d00>;
->> +             };
->> +
->
-> This address refers to IMEM, which is shared with a number of other
-> uses. So I think we should have a simple-mfd (and syscon) with this
-> within.
+> (...)
+>=20
+>>>
+>>>> +
+>>>> +	bus_dmc: bus_dmc {
+>>>> +		compatible =3D "samsung,exynos-bus";
+>>>> +		clocks =3D <&cmu_dmc CLK_DIV_DMC>;
+>>>> +		clock-names =3D "bus";
+>>>> +		operating-points-v2 =3D <&bus_dmc_opp_table>;
+>>>> +		status =3D "disabled";
+>>>> +	};
+>>>> +
+>>>> +	bus_dmc_opp_table: opp_table0 {
+>>>> +		compatible =3D "operating-points-v2";
+>>>> +		opp-shared;
+>>>> +
+>>>> +		opp00 {
+>>>
+>>> Maybe use convention with frequency, like:
+>>> 	opp@50000000
+>>> This also used in opp.txt examples.
+>>
+>> In the Documentations/devicetree/bindings/opp/opp.txt,
+>> the example uses the 'opp@0x'. I check the opp.txt of Linux 4.4-rc4.
+>=20
+> Yes, it was changed by Viresh in "PM / OPP: Rename OPP nodes as
+> opp@<opp-hz>". You can find the most actual bindings in linux-next.
 
-So talking with Arnd some more it looked like IMEM was really just
-SRAM. Is that not the case, or is there something else special about
-it?  Does it really need simple-mfd and syscon? I'm still fuzzy on how
-to use those for this.
+OK. I'll.
 
->> +     /* initialize specified reasons from DT */
->> +     if (!of_property_read_u32(pdev->dev.of_node, "reason,none", &val))
->> +             reasons[NONE] = val;
->> +     if (!of_property_read_u32(pdev->dev.of_node, "reason,bootloader", &val))
->> +             reasons[BOOTLOADER] = val;
->> +     if (!of_property_read_u32(pdev->dev.of_node, "reason,recovery", &val))
->> +             reasons[RECOVERY] = val;
->> +     if (!of_property_read_u32(pdev->dev.of_node, "reason,oem", &val))
->> +             reasons[OEM] = val;
->
-> I would like for this to be less hard coded.
+Best Regards,
+Chanwoo Choi
 
-So thinking of this more. Is having something like:
-
-cmds = "default", "bootloader", "recovery";
-vals  = <0xmagic1>, <0xmagic2>, <0xmagic3>;
-
-what you're thinking about?
-
-This wouldn't quite handle the "oem-N" options as simply, but they
-could define each oem- case explicitly in the DT to support it.
-
-thanks
--john
