@@ -1,34 +1,106 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [RFC][PATCH] misc: Introduce reboot_reason driver
-Date: Thu, 10 Dec 2015 13:43:16 -0800
-Message-ID: <CALAqxLVKhQT4Ba3JFVKpV79PnAsjYDARRO8M5U5=3Jjx45h6WQ@mail.gmail.com>
-References: <1449610162-30543-1-git-send-email-john.stultz@linaro.org>
-	<10759786.VG6jMebqAj@wuerfel>
-	<CALAqxLV8imuRw5bx=9nub3LxB75kDYR5nusP6CT9JFuwh5C0AA@mail.gmail.com>
-	<1721197.gFcIQMjGvs@wuerfel>
-	<CALAqxLUKRFgg4pc-sJfOD_mDv8Afn-tzGuhNJzprheq4CEXUcw@mail.gmail.com>
-	<CAL_Jsq+s1Lk9s=dvSAe-rerSc1aUO39tkBnsrkoNqJoET3VNjw@mail.gmail.com>
+From: Simon Arlott <simon@fire.lp0.eu>
+Subject: [PATCH linux-next (v2) 1/2] clk: Add brcm,bcm6345-gate-clk device
+ tree binding
+Date: Thu, 10 Dec 2015 21:49:21 +0000
+Message-ID: <5669F361.60405@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+s1Lk9s=dvSAe-rerSc1aUO39tkBnsrkoNqJoET3VNjw@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, lkml <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinay Simha BN <simhavcs@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>, Andy Gross <agross@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, linux-mips@linux-mips.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonas Gorski <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 10, 2015 at 12:24 PM, Rob Herring <robh+dt@kernel.org> wrote:
-> The fact that we are using notifiers for reset reason and triggering
-> is probably some indication that some infrastructure is needed. But I
-> don't think you need to do that here as long as it is all kernel
-> internals. We'll make the 2nd guy do it. ;)
+Add device tree binding for the BCM6345's gated clocks.
 
-:)
+The BCM6345 contains clocks gated with a register. Clocks are indexed
+by bits in the register and are active high. Most MIPS-based BCM63xx
+SoCs have a clock gating set of registers, but some have clock gate bits
+interleaved with other status bits and configurable clocks in the same
+register.
 
-Though, just so I understand better, what is problematic w/ the reset
-notifiers? They provide the reboot command argument, which is the core
-of what is needed. It actually seemed like it was almost designed with
-this problem in mind.
+Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+---
+v2: Added clock-indices, clock-output-names (from clock-bindings.txt),
+    these are required properties.
 
-thanks
--john
+v1: Renamed from BCM63xx to BCM6345.
+
+ .../bindings/clock/brcm,bcm6345-gate-clk.txt       | 62 ++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm6345-gate-clk.txt
+
+diff --git a/Documentation/devicetree/bindings/clock/brcm,bcm6345-gate-clk.txt b/Documentation/devicetree/bindings/clock/brcm,bcm6345-gate-clk.txt
+new file mode 100644
+index 0000000..a6e264c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/brcm,bcm6345-gate-clk.txt
+@@ -0,0 +1,62 @@
++Broadcom BCM6345 clocks
++
++This binding uses the common clock binding:
++	Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++The BCM6345 contains clocks gated with a register. Clocks are indexed
++by bits in the register and are active high. Most MIPS-based BCM63xx
++SoCs have a clock gating set of registers, but some have clock gate bits
++interleaved with other status bits and configurable clocks in the same
++register.
++
++Required properties:
++- compatible:         Should be "brcm,bcm<soc>-gate-clk", "brcm,bcm6345-gate-clk"
++- #clock-cells:       Should be <1>.
++- regmap:             The register map phandle
++- offset:             Offset in the register map for the clock register (in bytes)
++- clocks:             The external oscillator clock phandle
++- clock-indices:      The bits in the register used for gated clocks.
++- clock-output-names: Should be a list of strings of clock output signal
++                      names indexed by the clock indices.
++
++Example:
++
++periph_clk: periph_clk {
++	compatible = "brcm,bcm63168-gate-clk", "brcm,bcm6345-gate-clk";
++	regmap = <&periph_cntl>;
++	offset = <0x4>;
++
++	#clock-cells = <1>;
++	clock-indices =
++		<1>,          <2>,        <3>,       <4>,     <5>,
++		<6>,          <7>,        <8>,       <9>,     <10>,
++		<11>,         <12>,       <13>,      <14>,    <15>,
++		<16>,         <17>,       <18>,      <19>,    <20>,
++		<27>,         <31>;
++	clock-output-names =
++		"vdsl_qproc", "vdsl_afe", "vdsl",    "mips",  "wlan_ocp",
++		"dect",       "fap0",     "fap1",    "sar",   "robosw",
++		"pcm",        "usbd",     "usbh",    "ipsec", "spi",
++		"hsspi",      "pcie",     "phymips", "gmac",  "nand",
++		"tbus",       "robosw250";
++};
++
++timer_clk: timer_clk {
++	compatible = "brcm,bcm63168-gate-clk", "brcm,bcm6345-gate-clk";
++	regmap = <&timer_cntl>;
++	offset = <0x4>;
++
++	#clock-cells = <1>;
++	clock-indices = <17>, <18>;
++	clock-output-names = "uto_extin", "usb_ref";
++};
++
++ehci0: usb@10002500 {
++	compatible = "brcm,bcm63168-ehci", "brcm,bcm6345-ehci", "generic-ehci";
++	reg = <0x10002500 0x100>;
++	big-endian;
++	interrupt-parent = <&periph_intc>;
++	interrupts = <10>;
++	clocks = <&periph_clk 13>, <&timer_clk 18>;
++	phys = <&usbh>;
++};
+-- 
+2.1.4
+
+-- 
+Simon Arlott
