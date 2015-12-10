@@ -1,53 +1,102 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 4/9] pinctrl: Add support STM32 MCUs
-Date: Thu, 10 Dec 2015 18:08:19 +0100
-Message-ID: <CACRpkda4eSHu57Tw6F-kmxY_EOSEhpRiowQN9o4LbPVgE_Xvkw@mail.gmail.com>
-References: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<1445102604-11502-5-git-send-email-mcoquelin.stm32@gmail.com>
-	<CALszF6Cd=yei0m2Zs=+k=KT5RUzdesGWPK7PAQPdj_-Ouan=2A@mail.gmail.com>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH 1/2] extcon: arizona: Add device bindings for the micd configurations
+Date: Thu, 10 Dec 2015 17:08:18 +0000
+Message-ID: <1449767299-29691-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CALszF6Cd=yei0m2Zs=+k=KT5RUzdesGWPK7PAQPdj_-Ouan=2A@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Patrice CHOTARD <patrice.chotard@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: cw00.choi@samsung.com
+Cc: myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 1, 2015 at 10:53 AM, Maxime Coquelin
-<mcoquelin.stm32@gmail.com> wrote:
-> 2015-10-17 19:23 GMT+02:00 Maxime Coquelin <mcoquelin.stm32@gmail.com>:
->> This patch adds pinctrl and GPIO support to STMicroelectronic's STM32
->> family of MCUs.
->>
->> While it only supports STM32F429 for now, it has been designed to enable
->> support of other MCUs of the family (e.g. STM32F746).
->>
->> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
->> ---
->>  drivers/pinctrl/Kconfig                   |    1 +
->>  drivers/pinctrl/Makefile                  |    1 +
->>  drivers/pinctrl/stm32/Kconfig             |   16 +
->>  drivers/pinctrl/stm32/Makefile            |    5 +
->>  drivers/pinctrl/stm32/pinctrl-stm32.c     |  856 +++++++++++++++
->>  drivers/pinctrl/stm32/pinctrl-stm32.h     |   43 +
->>  drivers/pinctrl/stm32/pinctrl-stm32f429.c | 1598 +++++++++++++++++++++++++++++
->>  7 files changed, 2520 insertions(+)
->>  create mode 100644 drivers/pinctrl/stm32/Kconfig
->>  create mode 100644 drivers/pinctrl/stm32/Makefile
->>  create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32.c
->>  create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32.h
->>  create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32f429.c
->>
->
-> Gentle reminder, do you know when you will be able to review this driver?
+Add device bindings to support configuring the jack detection
+configurations. Each configuration needs to specify the connection of
+the mic det pins, which micbias should be used and the value of the
+micd polarity GPIO required to activate that configuration.
 
-I'm a bit overloaded so reviewing of large chunks of code takes time.
+Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+---
+ drivers/extcon/extcon-arizona.c | 53 +++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 51 insertions(+), 2 deletions(-)
 
-It would be great if I could have some Reviewed-by tags from someone
-else who's familiar with pin control.
-
-Patrice: do you have a chance to review this driver and help us?
-
-Yours,
-Linus Walleij
+diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
+index 8647533..edbf2e1 100644
+--- a/drivers/extcon/extcon-arizona.c
++++ b/drivers/extcon/extcon-arizona.c
+@@ -1201,7 +1201,54 @@ static void arizona_micd_set_level(struct arizona *arizona, int index,
+ 	regmap_update_bits(arizona->regmap, reg, mask, level);
+ }
+ 
+-static int arizona_extcon_device_get_pdata(struct arizona *arizona)
++static int arizona_extcon_get_micd_configs(struct device *dev,
++					   struct arizona *arizona)
++{
++	const char * const prop = "wlf,micd-configs";
++	const int entries_per_config = 3;
++	struct arizona_micd_config *micd_configs;
++	int nconfs, ret;
++	int i, j;
++	u32 *vals;
++
++	nconfs = device_property_read_u32_array(arizona->dev, prop, NULL, 0);
++	if (nconfs <= 0)
++		return 0;
++
++	vals = kcalloc(nconfs, sizeof(u32), GFP_KERNEL);
++	if (!vals)
++		return -ENOMEM;
++
++	ret = device_property_read_u32_array(arizona->dev, prop, vals, nconfs);
++	if (ret < 0)
++		goto out;
++
++	nconfs /= entries_per_config;
++
++	micd_configs = devm_kzalloc(dev,
++				    nconfs * sizeof(struct arizona_micd_range),
++				    GFP_KERNEL);
++	if (!micd_configs) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	for (i = 0, j = 0; i < nconfs; ++i) {
++		micd_configs[i].src = vals[j++] ? ARIZONA_ACCDET_SRC : 0;
++		micd_configs[i].bias = vals[j++];
++		micd_configs[i].gpio = vals[j++];
++	}
++
++	arizona->pdata.micd_configs = micd_configs;
++	arizona->pdata.num_micd_configs = nconfs;
++
++out:
++	kfree(vals);
++	return ret;
++}
++
++static int arizona_extcon_device_get_pdata(struct device *dev,
++					   struct arizona *arizona)
+ {
+ 	struct arizona_pdata *pdata = &arizona->pdata;
+ 	unsigned int val = ARIZONA_ACCDET_MODE_HPL;
+@@ -1249,6 +1296,8 @@ static int arizona_extcon_device_get_pdata(struct arizona *arizona)
+ 	pdata->jd_gpio5_nopull = device_property_read_bool(arizona->dev,
+ 						"wlf,use-jd2-nopull");
+ 
++	arizona_extcon_get_micd_configs(dev, arizona);
++
+ 	return 0;
+ }
+ 
+@@ -1270,7 +1319,7 @@ static int arizona_extcon_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	if (!dev_get_platdata(arizona->dev))
+-		arizona_extcon_device_get_pdata(arizona);
++		arizona_extcon_device_get_pdata(&pdev->dev, arizona);
+ 
+ 	info->micvdd = devm_regulator_get(&pdev->dev, "MICVDD");
+ 	if (IS_ERR(info->micvdd)) {
+-- 
+2.1.4
