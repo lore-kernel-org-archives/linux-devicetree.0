@@ -1,48 +1,55 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 0/6] pinctrl: meson: enable support for external GPIO interrupts
-Date: Thu, 10 Dec 2015 18:31:25 +0100
-Message-ID: <CACRpkdZ+kmyRKR9RwcLzAXWsUDGVniAhoidEp-kbwhoVEDhPvQ@mail.gmail.com>
-References: <1448987062-31225-1-git-send-email-carlo@caione.org>
+Subject: Re: [PATCH v7 5/5] gpio: tps65912: Add GPIO driver for the TPS65912 PMIC
+Date: Thu, 10 Dec 2015 18:34:35 +0100
+Message-ID: <CACRpkdZxZy=ZgeW-DwpNwC4KF+RvzQjYB=acVe47Wj7ALQ8Rig@mail.gmail.com>
+References: <1447869580-10416-1-git-send-email-afd@ti.com>
+	<1447869580-10416-6-git-send-email-afd@ti.com>
+	<CACRpkdbV+FzEXC_6HqRMRONY5fHoUWzg0HdoXq_s2N-RYphpVA@mail.gmail.com>
+	<565DF7BD.6010204@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448987062-31225-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <565DF7BD.6010204-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 1, 2015 at 5:24 PM, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
+On Tue, Dec 1, 2015 at 8:40 PM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
+> On 11/30/2015 02:26 AM, Linus Walleij wrote:
+>>
+>> On Wed, Nov 18, 2015 at 6:59 PM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
+>>
+>>> This patch adds support for the TPS65912 PMIC GPIOs.
+>>>
+>>> TPS65912 has five configurable GPIOs that can be used for several
+>>> purposes.
+>>>
+>>> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+>>> Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>>
+>> (...)
+>>>
+>>> +       gpio->tps = dev_get_drvdata(pdev->dev.parent);
+>>> +       gpio->gpio_chip = template_chip;
+>>> +       gpio->gpio_chip.dev = tps->dev;
+>>
+>>
+>> This is now renamed .parent in linux-next. It needs to be changed if the
+>> code should compile after merge.
+>>
+>
+> Are you able to make this change when you pick this up or would you
+> like me to resend this?
 
-> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
->
-> In Meson SoCs we have 8 independent GPIO interrupts that can be programmed to
-> use any of the GPIOs in the chip as interrupt source.
->
-> These GPIOs are managed by GIC but they can be conditioned (and enabled) by
-> some registers external to the GIC.
->
-> GPIOs |--[mux1 or mux2]--[polarity]--[filter]--[edge_select]--> GIC
->
-> Changelog:
->
-> * V2:
->     - Introduced .irq_request_resources() and .irq_release_resources()
->     - s/virq/irq/ and s/pin/hwirq/
->     - Moved to the new irq_fwspec
->
-> * V3:
->     - EXPORT_SYMBOL_GPL for of_irq_find_parent()
->     - split GPIO management and irqchip side
->     - the GIC IRQs list is not kept as set of fwspecs. it's now a regular
->       integer array.
->     - irq_of_phandle_args_to_fwspec discarded
+I guess all these need to be applied together?
 
-I don't know where this patch set is standing but I get the impression that it
-still needs revising so waiting for a v4.
+It's probably best if Lee apply all and provide them on an immutable
+branch, and I
+will apply fixes on top after pulling that in.
 
-Given the complex nature of the IRQs I will probably want Marc to provide
-his Review/ACK before applying.
+I recently did exactly that with an AC97 driver from ALSA SoC.
 
 Yours,
 Linus Walleij
