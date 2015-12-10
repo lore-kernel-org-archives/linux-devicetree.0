@@ -1,68 +1,42 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: l2x0: make it possible to disable outer sync
- from DT
-Date: Thu, 10 Dec 2015 14:32:26 +0000
-Message-ID: <20151210142942.GB495@leverpostej>
-References: <1449756855-19473-1-git-send-email-linus.walleij@linaro.org>
+From: Damien Horsley <Damien.Horsley@imgtec.com>
+Subject: [PATCH V4 0/2] Add driver for Pistachio internal DAC
+Date: Thu, 10 Dec 2015 14:40:10 +0000
+Message-ID: <1449758412-31249-1-git-send-email-Damien.Horsley@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1449756855-19473-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "Damien.Horsley" <Damien.Horsley@imgtec.com>, James Hartley <james.hartley@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 10, 2015 at 03:14:15PM +0100, Linus Walleij wrote:
-> Some RealView platforms have broken outer_sync, see:
-> http://marc.info/?l=linux-kernel&m=144846940516899&w=2
-> 
-> We got rid of the custom barriers from the machine by disabling
-> outer sync, but that was just for the boardfile case. We have
-> to be able to do the same in the device tree case.
-> 
-> Since __l2c_init() is cloning and copying the L2C vtable,
-> we pass an argument to this function to optionally numb
-> the outer sync operation if desired, before initializing
-> the cache.
-> 
-> After this we can set up the cache correctly on the RealView
-> PB11MPCore, and it boots rock solid with the cache enabled.
-> Before this, spurious crashes would occur if we try to set
-> up the cache properly.
-> 
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/l2cc.txt |  1 +
->  arch/arm/mm/cache-l2x0.c                       | 13 ++++++++++---
->  2 files changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-> index d181b7c4c522..aae7387acbdb 100644
-> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
-> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-> @@ -75,6 +75,7 @@ Optional properties:
->    specified to indicate that such transforms are precluded.
->  - arm,parity-enable : enable parity checking on the L2 cache (L220 or PL310).
->  - arm,parity-disable : disable parity checking on the L2 cache (L220 or PL310).
-> +- arm,outer-sync-disable : disable the outer sync operation on the L2 cache.
+From: "Damien.Horsley" <Damien.Horsley@imgtec.com>
 
-I'm not sure what this means from a HW perspective. The "outer sync"
-operation is Linux terminology and doesn't show up in the TRM for L220.
+Add binding document and driver for Pistachio internal DAC
 
-What is the (integration? HW?) bug that we're trying to avoid the effect
-of? It sounds like we should be describing that.
+Changes in V4:
+	Renamed Mute control and change definition to inverted
 
-We should at least have a better definition of what this means we must
-avoid.
+Damien.Horsley (2):
+  ASoC: img: Add binding document for Pistachio internal DAC
+  ASoC: img: Add driver for Pistachio internal DAC
 
-Thanks
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../bindings/sound/img,pistachio-internal-dac.txt  |  18 ++
+ sound/soc/img/Kconfig                              |   8 +
+ sound/soc/img/Makefile                             |   2 +
+ sound/soc/img/pistachio-internal-dac.c             | 287 +++++++++++++++++++++
+ 4 files changed, 315 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/img,pistachio-internal-dac.txt
+ create mode 100644 sound/soc/img/pistachio-internal-dac.c
+
+-- 
+2.1.4
