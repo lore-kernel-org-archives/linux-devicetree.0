@@ -1,150 +1,115 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2 03/19] ARM: dts: Add DMC bus node for Exynos3250
-Date: Thu, 10 Dec 2015 11:21:13 +0900
-Message-ID: <5668E199.7010001@samsung.com>
-References: <1449634091-1842-1-git-send-email-cw00.choi@samsung.com>
- <1449634091-1842-4-git-send-email-cw00.choi@samsung.com>
- <5668CADE.8090706@samsung.com> <5668D0B6.1030902@samsung.com>
- <5668D34B.1010602@samsung.com> <5668DCDB.8020609@samsung.com>
- <5668DDBF.2070305@samsung.com> <5668E0D6.7000200@samsung.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH linux-next (v2) 1/3] mtd: brcmnand: Add brcm,bcm6368-nand
+ device tree binding
+Date: Wed, 9 Dec 2015 18:30:01 -0800
+Message-ID: <20151210023001.GI144338@google.com>
+References: <566891DA.1050208@simon.arlott.org.uk>
+ <566896B6.9010204@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <5668E0D6.7000200@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com, kgene@kernel.org
-Cc: kyungmin.park@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, tjakobi@math.uni-bielefeld.de, linux.amoon@gmail.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <566896B6.9010204@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Simon Arlott <simon@fire.lp0.eu>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, linux-mtd@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, bcm-kernel-feedback-list@broadcom.com, Kamal Dasu <kdasu.kdev@gmail.com>, Jonas Gorski <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10.12.2015 11:17, Chanwoo Choi wrote:
-> On 2015=EB=85=84 12=EC=9B=94 10=EC=9D=BC 11:04, Krzysztof Kozlowski w=
-rote:
->> On 10.12.2015 11:00, Chanwoo Choi wrote:
->>> On 2015=EB=85=84 12=EC=9B=94 10=EC=9D=BC 10:20, Krzysztof Kozlowski=
- wrote:
->>>> On 10.12.2015 10:09, Chanwoo Choi wrote:
->>>>> On 2015=EB=85=84 12=EC=9B=94 10=EC=9D=BC 09:44, Krzysztof Kozlows=
-ki wrote:
->>>>>> On 09.12.2015 13:07, Chanwoo Choi wrote:
->>>>>>> This patch adds the DMC (Dynamic Memory Controller) bus node fo=
-r Exynos3250 SoC.
->>>>>>> The DMC is an AMBA AXI-compliant slave to interface external JE=
-DEC standard
->>>>>>> SDRAM devices. The bus includes the OPP tables and the source c=
-lock for DMC
->>>>>>> block.
->>>>>>>
->>>>>>> Following list specifies the detailed relation between the cloc=
-k and DMC block:
->>>>>>> - The source clock of DMC block : div_dmc
->>>>>>>
->>>>>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->>>>>>> ---
->>>>>>>  arch/arm/boot/dts/exynos3250.dtsi | 34 +++++++++++++++++++++++=
-+++++++++++
->>>>>>>  1 file changed, 34 insertions(+)
->>>>>>>
->>>>>>> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/=
-dts/exynos3250.dtsi
->>>>>>> index 2f30d632f1cc..7214c5e42150 100644
->>>>>>> --- a/arch/arm/boot/dts/exynos3250.dtsi
->>>>>>> +++ b/arch/arm/boot/dts/exynos3250.dtsi
->>>>>>> @@ -687,6 +687,40 @@
->>>>>>>  			clock-names =3D "ppmu";
->>>>>>>  			status =3D "disabled";
->>>>>>>  		};
->>>>>>> +
->>>>>>> +		bus_dmc: bus_dmc {
->>>>>>> +			compatible =3D "samsung,exynos-bus";
->>>>>>> +			clocks =3D <&cmu_dmc CLK_DIV_DMC>;
->>>>>>> +			clock-names =3D "bus";
->>>>>>> +			operating-points-v2 =3D <&bus_dmc_opp_table>;
->>>>>>> +			status =3D "disabled";
->>>>>>> +		};
->>>>>>> +
->>>>>>> +		bus_dmc_opp_table: opp_table1 {
->>>>>>
->>>>>> This is the firsy opp_table, right? So:
->>>>>> s/opp_table1/opp_table0/
->>>>>
->>>>> Right. It is first opp_table in exynos3250.dtsi.
->>>>> But, I'm considering the OPP table of CPU freqeuncy as opp_table0=
-=2E
->>>>> So, I have the plan that support the operation-points-v2 for Exyn=
-os3250 CPU.
->>>>
->>>> Ok
->>>>
->>>>>
->>>>>>
->>>>>>> +			compatible =3D "operating-points-v2";
->>>>>>> +			opp-shared;
->>>>>>> +
->>>>>>> +			opp00 {
->>>>>>> +				opp-hz =3D /bits/ 64 <50000000>;
->>>>>>> +				opp-microvolt =3D <800000>;
->>>>>>> +			};
->>>>>>> +			opp01 {
->>>>>>> +				opp-hz =3D /bits/ 64 <100000000>;
->>>>>>> +				opp-microvolt =3D <800000>;
->>>>>>> +			};
->>>>>>> +			opp02 {
->>>>>>> +				opp-hz =3D /bits/ 64 <134000000>;
->>>>>>> +				opp-microvolt =3D <800000>;
->>>>>>
->>>>>> Why 134, not 133 MHz?
->>>>>
->>>>> When I used the 133000000, the source clock is changed to 100Mhz =
-instead of 133MHz.
->>>>> I add following test result on exynos3250-rinato board.
->>>>>
->>>>> Case1.
->>>>> When I use the 134 MHz, the source clock is changed to 133MHz
->>>>> : exynos-bus soc:bus_dmc: old_freq(200000000) -> new_freq (134000=
-000) (real: 133333334)
->>>>>
->>>>> Case2.
->>>>> When I use the 133 MHz, the source clock is changed to 100MHz
->>>>> : exynos-bus soc:bus_dmc: old_freq(200000000) -> new_freq (133000=
-000) (real: 100000000)
->>>>
->>>> Now I remember that issue. You could use here directly 133333334 b=
-ut
->>>> that also would look a little bit weird... so 134 is ok for me. Co=
-uld
->>>> just add a comment that desired frequency is actually "133 MHz"?
->>>
->>> Do you prefer among following example?
->>>
->>> Example1.
->>> 	opp02 {
->>> 		/* The desired frequency is 133MHz because
->>> 		 * clock change has the dependency on clock driver.
->>> 		 * When set rate as 134MHz, the clock driver would
->>> 		 * change the 133MHz actually instead of 134MHz.
->>> 		 */
->>> 		opp-hz =3D /bits/ 64 <134000000>;
->>> 		opp-microvolt =3D <800000>;
->>> 	};
->>>
->>> Example2.
->>> 	opp02 {
->>> 		opp-hz =3D /bits/ 64 <133333334>;
->>> 		opp-microvolt =3D <800000>;
->>> 	};
->>
->> I would prefer the second one (133333334) but I don't have strong
->> feelings about it.
+On Wed, Dec 09, 2015 at 01:01:42PM -0800, Florian Fainelli wrote:
+> Le 09/12/2015 12:40, Simon Arlott a =E9crit :
+> > Add device tree binding for NAND on the BCM6368.
+> >=20
+> > The BCM6368 has a NAND interrupt register with combined status and =
+enable
+> > registers. It also requires a clock, so add an optional clock to th=
+e
+> > common brcmnand binding.
+> >=20
 >=20
-> If you ok, I want to maintain the original approach as following:
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+
+Applied this and patches 2 and 3 to l2-mtd.git, with one small fix,
+below.
+
+> > Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+> > ---
+> > Changed "nand-intr-base" reg name to "nand-int-base".
+> >=20
+> >  .../devicetree/bindings/mtd/brcm,brcmnand.txt      | 32 ++++++++++=
+++++++++++++
+> >  1 file changed, 32 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.tx=
+t b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> > index 4ff7128..ebfa6fc 100644
+> > --- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> > +++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> > @@ -45,6 +45,8 @@ Required properties:
+> >  - #size-cells      : <0>
+> > =20
+> >  Optional properties:
+> > +- clock                     : reference to the clock for the NAND =
+controller
+> > +- clock-names               : "nand" (required for the above clock=
+)
+> >  - brcm,nand-has-wp          : Some versions of this IP include a w=
+rite-protect
+> >                                (WP) control bit. It is always avail=
+able on >=3D
+> >                                v7.0. Use this property to describe =
+the rare
+> > @@ -72,6 +74,12 @@ we define additional 'compatible' properties and=
+ associated register resources w
+> >         and enable registers
+> >       - reg-names: (required) "nand-int-base"
+> > =20
+> > +   * "brcm,nand-bcm6368"
+> > +     - compatible: should contain "brcm,nand-bcm<soc>", "brcm,nand=
+-bcm6368"
+> > +     - reg: (required) the 'NAND_INTR_BASE' register range, with c=
+ombined status
+> > +       and enable registers, and boot address registers
+> > +     - reg-names: (required) "nand-int-base"
+> > +
+> >     * "brcm,nand-iproc"
+> >       - reg: (required) the "IDM" register range, for interrupt ena=
+ble and APB
+> >         bus access endianness configuration, and the "EXT" register=
+ range,
+> > @@ -148,3 +156,27 @@ nand@f0442800 {
+> >  		};
+> >  	};
+> >  };
+> > +
+> > +nand@10000200 {
+> > +	compatible =3D "brcm,nand-bcm63168", "brcm,nand-bcm6368",
+> > +		"brcm,brcmnand-v4.0", "brcm,brcmnand";
+> > +	reg =3D <0x10000200 0x180>,
+> > +	      <0x10000600 0x200>,
+> > +	      <0x100000b0 0x10>;
+> > +	reg-names =3D "nand", "nand-cache", "nand-intr-base";
+
+s/intr/int/
+
+> > +	interrupt-parent =3D <&periph_intc>;
+> > +	interrupts =3D <50>;
+> > +	clocks =3D <&periph_clk 20>;
+> > +	clock-names =3D "nand";
+> > +
+> > +	#address-cells =3D <1>;
+> > +	#size-cells =3D <0>;
+> > +
+> > +	nand0: nandcs@0 {
+> > +		compatible =3D "brcm,nandcs";
+> > +		reg =3D <0>;
+> > +		nand-on-flash-bbt;
+> > +		nand-ecc-strength =3D <1>;
+> > +		nand-ecc-step-size =3D <512>;
+> > +	};
+> > +};
+> >=20
 >=20
-> 	opp02 {
-> 		opp-hz =3D /bits/ 64 <134000000>;
-> 		opp-microvolt =3D <800000>;
-> 	};
-
-OK
-
-Best regards,
-Krzysztof
+>=20
+> --=20
+> Florian
