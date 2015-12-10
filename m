@@ -1,75 +1,34 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH linux-next (v3) 1/2] reset: Add brcm,bcm6345-reset device
- tree binding
-Date: Fri, 11 Dec 2015 00:36:46 +0300
-Message-ID: <5669F06E.3060506@cogentembedded.com>
-References: <5669EE86.8030406@simon.arlott.org.uk>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [RFC][PATCH] misc: Introduce reboot_reason driver
+Date: Thu, 10 Dec 2015 13:43:16 -0800
+Message-ID: <CALAqxLVKhQT4Ba3JFVKpV79PnAsjYDARRO8M5U5=3Jjx45h6WQ@mail.gmail.com>
+References: <1449610162-30543-1-git-send-email-john.stultz@linaro.org>
+	<10759786.VG6jMebqAj@wuerfel>
+	<CALAqxLV8imuRw5bx=9nub3LxB75kDYR5nusP6CT9JFuwh5C0AA@mail.gmail.com>
+	<1721197.gFcIQMjGvs@wuerfel>
+	<CALAqxLUKRFgg4pc-sJfOD_mDv8Afn-tzGuhNJzprheq4CEXUcw@mail.gmail.com>
+	<CAL_Jsq+s1Lk9s=dvSAe-rerSc1aUO39tkBnsrkoNqJoET3VNjw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5669EE86.8030406@simon.arlott.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Arlott <simon@fire.lp0.eu>, Philipp Zabel <p.zabel@pengutronix.de>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: linux-kernel@vger.kernel.org, MIPS Mailing List <linux-mips@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jonas Gorski <jogo@openwrt.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+s1Lk9s=dvSAe-rerSc1aUO39tkBnsrkoNqJoET3VNjw@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, lkml <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinay Simha BN <simhavcs@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>, Andy Gross <agross@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Thu, Dec 10, 2015 at 12:24 PM, Rob Herring <robh+dt@kernel.org> wrote:
+> The fact that we are using notifiers for reset reason and triggering
+> is probably some indication that some infrastructure is needed. But I
+> don't think you need to do that here as long as it is all kernel
+> internals. We'll make the 2nd guy do it. ;)
 
-On 12/11/2015 12:28 AM, Simon Arlott wrote:
+:)
 
-> Add device tree binding for the BCM6345 soft reset controller.
->
-> The BCM6345 contains a soft-reset controller activated by setting
-> a bit (that must previously have been cleared).
->
-> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
-> ---
-> v3: Resend. Example has changed because usbh now has two compatible
->      strings and uses a power domain instead of a regulator.
->
-> v2: Renamed to bcm6345, removed "mask" property.
->      Acked-by: Rob Herring <robh@kernel.org>
->
->   .../bindings/reset/brcm,bcm6345-reset.txt          | 33 ++++++++++++++++++++++
->   1 file changed, 33 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.txt
->
-> diff --git a/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.txt b/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.txt
-> new file mode 100644
-> index 0000000..0313040
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.txt
-> @@ -0,0 +1,33 @@
-> +Broadcom BCM6345 reset controller
-> +
-> +The BCM6345 contains a basic soft reset controller in the perf register
-> +set which resets components using a bit in a register.
-> +
-> +Please also refer to reset.txt in this directory for common reset
-> +controller binding usage.
-> +
-> +Required properties:
-> +- compatible:	Should be "brcm,bcm<soc>-reset", "brcm,bcm6345-reset"
-> +- regmap:	The register map phandle
-> +- offset:	Offset in the register map for the reset register (in bytes)
-> +- #reset-cells:	Must be set to 1
-> +
-> +Example:
-> +
-> +periph_soft_rst: reset-controller {
-> +	compatible = "brcm,bcm63168-reset", "brcm,bcm6345-reset";
-> +	regmap = <&periph_cntl>;
-> +	offset = <0x10>;
-> +
-> +	#reset-cells = <1>;
-> +};
-> +
-> +usbh: usbphy@10002700 {
+Though, just so I understand better, what is problematic w/ the reset
+notifiers? They provide the reboot command argument, which is the core
+of what is needed. It actually seemed like it was almost designed with
+this problem in mind.
 
-    "usb-phy" please to be more in line with ePAPR standardized "ethernet-phy" 
-node name.
-
-[...]
-
-MBR, Sergei
+thanks
+-john
