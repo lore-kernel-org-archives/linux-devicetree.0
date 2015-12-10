@@ -1,113 +1,84 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/2] ARM: l2x0: make it possible to disable outer sync from DT
-Date: Thu, 10 Dec 2015 15:14:15 +0100
-Message-ID: <1449756855-19473-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: Re: [RFC PATCH 2/8] Documentation: arm: define DT cpu capacity
+ bindings
+Date: Thu, 10 Dec 2015 14:14:44 +0000
+Message-ID: <566988D4.50406@arm.com>
+References: <1448288921-30307-1-git-send-email-juri.lelli@arm.com>
+ <1448288921-30307-3-git-send-email-juri.lelli@arm.com>
+ <20151124020631.GA15165@rob-hp-laptop> <20151124105423.GM26372@e106622-lin>
+ <CAKfTPtAww=r6H2Jrgu+8jDsYohPj7HD=_sdAP2utEEH-YLVsaA@mail.gmail.com>
+ <20151201112044.GV20439@e106622-lin>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20151201112044.GV20439@e106622-lin>
+Sender: linux-pm-owner@vger.kernel.org
+To: Juri Lelli <juri.lelli@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.wall>
 List-Id: devicetree@vger.kernel.org
 
-Some RealView platforms have broken outer_sync, see:
-http://marc.info/?l=linux-kernel&m=144846940516899&w=2
+On 01/12/15 11:20, Juri Lelli wrote:
+> Hi Vincent,
+> 
+> On 30/11/15 10:59, Vincent Guittot wrote:
+>> Hi Juri,
+>>
+>> On 24 November 2015 at 11:54, Juri Lelli <juri.lelli@arm.com> wrote:
 
-We got rid of the custom barriers from the machine by disabling
-outer sync, but that was just for the boardfile case. We have
-to be able to do the same in the device tree case.
+[...]
 
-Since __l2c_init() is cloning and copying the L2C vtable,
-we pass an argument to this function to optionally numb
-the outer sync operation if desired, before initializing
-the cache.
+>>>>> +==========================================
+>>>>> +3 - capacity-scale
+>>>>> +==========================================
+>>>>> +
+>>>>> +CPUs capacities are defined with respect to capacity-scale property in the cpus
+>>>>> +node [1]. The property is optional; if not defined a 1024 capacity-scale is
+>>>>> +assumed. This property defines both the highest CPU capacity present in the
+>>>>> +system and granularity of CPU capacity values.
+>>>>
+>>>> I don't really see the point of this vs. having an absolute scale.
+>>>>
+>>>
+>>> IMHO, we need this for several reasons, one being to address one of your
+>>> concerns below: vendors are free to choose their scale without being
+>>> forced to publish absolute data. Another reason is that it might make
+>>> life easier in certain cases; for example, someone could implement a
+>>> system with a few clusters of, say, A57s, but some run at half the clock
+>>> of the others (e.g., you have a 1.2GHz cluster and a 600MHz cluster); in
+>>> this case I think it is just easier to define capacity-scale as 1200 and
+>>> capacities as 1200 and 600. Last reason that I can think of right now is
+>>> that we don't probably want to bound ourself to some particular range
+>>> from the beginning, as that range might be enough now, but it could
+>>> change in the future (as in, right now [1-1024] looks fine for
+>>> scheduling purposes, but that might change).
+>>
+>> Like Rob, i don't really see the benefit of this optional
+>> capacity-scale property. Parsing the capacity of all cpu nodes should
+>> give you a range as well.
+>> IMHO, this property looks like an optimization of the code that will
+>> parse the dt more than a HW description
+>>
+> 
+> I agree that we can come up with the same information just looking at
+> the biggest capacity value of all CPUs and treat that value as
+> capacity-scale. I just thought that having that explicit made things
+> clearer, as it could be not easy to immediately see from a DT with many
+> CPUs which is the biggest capacity value. But, yes, we could remove that
+> anyway.
 
-After this we can set up the cache correctly on the RealView
-PB11MPCore, and it boots rock solid with the cache enabled.
-Before this, spurious crashes would occur if we try to set
-up the cache properly.
++1! This capacity-scale complicates things unnecessarily. It was hard
+for me to understand the meaning of it. Your 2. example sets
+'capacity-scale = <2>' but also 'capacity = <2>' for cpu[01] and
+'capacity = <1>' for cpu[23]. This can be easily replaced by 'capacity =
+<1024>' for cpu[01] and 'capacity = <512>' for cpu[23]. Much more
+readable, as it was mentioned already in this thread.
 
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/l2cc.txt |  1 +
- arch/arm/mm/cache-l2x0.c                       | 13 ++++++++++---
- 2 files changed, 11 insertions(+), 3 deletions(-)
+I understand that we don't want to limit the range of capacity values in
+the dt file to [1..1024] nor enforce that the cpu w/ the highest
+capacity has to have the value of 1024 in the dt file so the scheduler
+has to scale accordingly if we want to limit capacity to its supported
+capacity range (like with EAS [1..1024]).
 
-diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-index d181b7c4c522..aae7387acbdb 100644
---- a/Documentation/devicetree/bindings/arm/l2cc.txt
-+++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-@@ -75,6 +75,7 @@ Optional properties:
-   specified to indicate that such transforms are precluded.
- - arm,parity-enable : enable parity checking on the L2 cache (L220 or PL310).
- - arm,parity-disable : disable parity checking on the L2 cache (L220 or PL310).
-+- arm,outer-sync-disable : disable the outer sync operation on the L2 cache.
- - prefetch-data : Data prefetch. Value: <0> (forcibly disable), <1>
-   (forcibly enable), property absent (retain settings set by firmware)
- - prefetch-instr : Instruction prefetch. Value: <0> (forcibly disable),
-diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-index 3f3008e5c662..9f9d54271aad 100644
---- a/arch/arm/mm/cache-l2x0.c
-+++ b/arch/arm/mm/cache-l2x0.c
-@@ -790,7 +790,7 @@ static const struct l2c_init_data l2c310_init_fns __initconst = {
- };
- 
- static int __init __l2c_init(const struct l2c_init_data *data,
--			     u32 aux_val, u32 aux_mask, u32 cache_id)
-+			     u32 aux_val, u32 aux_mask, u32 cache_id, bool nosync)
- {
- 	struct outer_cache_fns fns;
- 	unsigned way_size_bits, ways;
-@@ -866,6 +866,10 @@ static int __init __l2c_init(const struct l2c_init_data *data,
- 	fns.configure = outer_cache.configure;
- 	if (data->fixup)
- 		data->fixup(l2x0_base, cache_id, &fns);
-+	if (nosync) {
-+		pr_info("L2C: disabling outer sync\n");
-+		fns.sync = NULL;
-+	}
- 
- 	/*
- 	 * Check if l2x0 controller is already enabled.  If we are booting
-@@ -925,7 +929,7 @@ void __init l2x0_init(void __iomem *base, u32 aux_val, u32 aux_mask)
- 	if (data->save)
- 		data->save(l2x0_base);
- 
--	__l2c_init(data, aux_val, aux_mask, cache_id);
-+	__l2c_init(data, aux_val, aux_mask, cache_id, false);
- }
- 
- #ifdef CONFIG_OF
-@@ -1724,6 +1728,7 @@ int __init l2x0_of_init(u32 aux_val, u32 aux_mask)
- 	struct resource res;
- 	u32 cache_id, old_aux;
- 	u32 cache_level = 2;
-+	bool nosync = false;
- 
- 	np = of_find_matching_node(NULL, l2x0_ids);
- 	if (!np)
-@@ -1762,6 +1767,8 @@ int __init l2x0_of_init(u32 aux_val, u32 aux_mask)
- 	if (cache_level != 2)
- 		pr_err("L2C: device tree specifies invalid cache level\n");
- 
-+	nosync = of_property_read_bool(np, "arm,outer-sync-disable");
-+
- 	/* Read back current (default) hardware configuration */
- 	if (data->save)
- 		data->save(l2x0_base);
-@@ -1776,6 +1783,6 @@ int __init l2x0_of_init(u32 aux_val, u32 aux_mask)
- 	else
- 		cache_id = readl_relaxed(l2x0_base + L2X0_CACHE_ID);
- 
--	return __l2c_init(data, aux_val, aux_mask, cache_id);
-+	return __l2c_init(data, aux_val, aux_mask, cache_id, nosync);
- }
- #endif
--- 
-2.4.3
+[...]
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
