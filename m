@@ -1,83 +1,233 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 3/7] doc: dt: mtd: partition: add on-flash format
- binding
-Date: Thu, 10 Dec 2015 12:43:24 -0800
-Message-ID: <20151210204324.GK144338@google.com>
-References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
- <1449292763-129421-4-git-send-email-computersforpeace@gmail.com>
- <CAOiHx=nz2bdA_R610ozsQHhccdcrHVVCamTtne5ReHrA-FcaaQ@mail.gmail.com>
- <CAOMqctTbUNd0GtY07YJuxem9HkU1WZ-NtO556=Yg2QrsF49Xjw@mail.gmail.com>
- <20151207013628.GC20139@voom.fritz.box>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 2/3] arm64: dts: Add Hi6220 gpio configuration nodes
+Date: Thu, 10 Dec 2015 14:48:03 -0600
+Message-ID: <CAL_JsqKUQ4wbGwC3=MOr=-nNAWeYX4+0KRes9utPQv7bDyxuww@mail.gmail.com>
+References: <1446692547-78129-1-git-send-email-zhongkaihua@huawei.com> <1446692547-78129-2-git-send-email-zhongkaihua@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151207013628.GC20139-RXTfZT5YzpxwFLYp8hBm2A@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1446692547-78129-2-git-send-email-zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Yiping Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wang Fei <w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 07, 2015 at 12:36:28PM +1100, David Gibson wrote:
-> On Sat, Dec 05, 2015 at 10:33:30PM +0100, Michal Suchanek wrote:
-> > On 5 December 2015 at 12:39, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
-> > > On Sat, Dec 5, 2015 at 6:19 AM, Brian Norris
-> > > <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > 
-> > >> +
-> > >> +Examples:
-> > >> +
-> > >> +flash@0 {
-> > >> +       partitions {
-> > >> +               compatible = "google,fmap";
-> > >> +       };
-> > >> +};
-> > >
-> > > I wonder if this wouldn't be better served in a separate binding doc
-> > > with its compatible name as the filename, like we do with
-> > > driver^Whardware blocks, especially if we want to add more parsers.
-> > 
-> > 
-> > I find that *very* counter productive for bindings that go to the same
-> > node. You have a description of a node, and then suddenly there you
-> > have another file with another description of the same node. Totally
-> > awesome.
-> 
-> I can't actually work out from that if you're agreeing with the
-> original post or the first reply.
+On Wed, Nov 4, 2015 at 9:02 PM, Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+> arm64: dts: Add Hi6220 gpio configuration nodes
+>
+> Signed-off-by: Kaihua Zhong <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 
-Perhaps I'm biased, but I think he was agreeing with the first reply.
-(Particularly, "I find that *very* counter productive" uses the word
-"that" to refer to "separate binding doc[s]".)
+[...]
 
-> > Also how do you plan to write partitioning schemes with parameters
-> > like with non-zero offset of the partition table.
+> diff --git a/arch/arm64/boot/dts/hisilicon/hikey-gpio.dtsi b/arch/arm64/boot/dts/hisilicon/hikey-gpio.dtsi
+> new file mode 100644
+> index 0000000..6eabf40
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/hisilicon/hikey-gpio.dtsi
+> @@ -0,0 +1,195 @@
+> +/*
+> + * gpio dts file for Hisilicon HiKey development board
+> + *
+> + */
+> +/ {
+> +       gpio_rstout_n:gpio_rstout_n {
+> +               gpios;
+> +       };
+> +       gpio_pmu_peri_en:gpio_pmu_peri_en {
+> +               gpios;
+> +       };
+> +       gpio_sysclk0_en:gpio_sysclk0_en {
+> +               gpios;
+> +       };
+> +       gpio_jtag_tdo:gpio_jtag_tdo {
+> +               gpios;
+> +       };
+> +       /* LCB: PWR_HOLD_GPIO0_0 */
+> +       gpio_pwr_hold:gpio_pwr_hold {
+> +               gpios = <&gpio0 0 0>;
+> +       };
+> +       /* LCB: DSI_SEL_GPIO0_1 */
+> +       gpio_dsi_sel:gpio_dsi_sel {
+> +               gpios = <&gpio0 1 0>;
+> +       };
+> +       /* LCB: USB_HUB_RESET_N_GPIO0_2 */
+> +       gpio_usb_hub_reset_n:gpio_usb_hub_reset_n {
+> +               gpios = <&gpio0 2 0>;
+> +       };
+> +       /* LCB: USB_SEL_GPIO0_3 */
+> +       gpio_usb_sel:gpio_usb_sel {
+> +               gpios = <&gpio0 3 0>;
+> +       };
+> +       /* LCB: HDMI_PD_GPIO0_4 */
+> +       gpio_hdmi_pd:gpio_hdmi_pd {
+> +               gpios = <&gpio0 4 0>;
+> +       };
+> +       /* LCB: WL_REG_ON_GPIO0_5 */
+> +       gpio_wl_en:gpio_wl_en {
+> +               gpios = <&gpio0 5 0>;
+> +       };
+> +       /* LCB: PWRON_DET_GPIO0_6 */
+> +       gpio_pwron_det:gpio_pwron_det {
+> +               gpios = <&gpio0 6 0>;
+> +       };
+> +       /* LCB: 5V_HUB_EN_GPIO0_7 */
+> +       gpio_usb_dev_det:gpio_usb_dev_det {
+> +               gpios = <&gpio0 7 0>;
+> +       };
+> +       /* LCB: SD_DET_GPIO1_0 */
+> +       gpio_sd_det:gpio_sd_det {
+> +               gpios = <&gpio1 0 0>;
+> +       };
+> +       /* LCB: HDMI_INT_GPIO1_1 */
+> +       gpio_hdmi_int:gpio_hdmi_int {
+> +               gpios = <&gpio1 1 0>;
+> +       };
+> +       /* LCB: PMU_IRQ_N_GPIO1_2 */
+> +       gpio_pmu_irq_n:gpio_pmu_irq_n {
+> +               gpios = <&gpio1 2 0>;
+> +       };
+> +       /* LCB: WL_HOST_WAKE_GPIO1_3 */
+> +       gpio_wl_host_wake:gpio_wl_host_wake {
+> +               gpios = <&gpio1 3 0>;
+> +       };
+> +       gpio_nfc_int:gpio_nfc_int {
+> +               gpios = <&gpio1 4 0>;
+> +       };
+> +       gpio_unused_001:gpio_unused_001 {
+> +               gpios = <&gpio1 5 0>;
+> +       };
+> +       /* LCB: BT_REG_ON_GPIO1_7 */
+> +       gpio_bt_reg_on:gpio_bt_reg_on {
+> +               gpios = <&gpio1 7 0>;
+> +       };
+> +       /* LCB: GPIO2_0, J2 */
+> +       gpio_j2_2_0:gpio_j2_2_0 {
+> +               gpios = <&gpio2 0 0>;
+> +       };
+> +       /* LCB: GPIO2_1, J2 */
+> +       gpio_j2_2_1:gpio_j2_2_1 {
+> +               gpios = <&gpio2 1 0>;
+> +       };
+> +       /* LCB: GPIO2_2, J2 */
+> +       gpio_j2_2_2:gpio_j2_2_2 {
+> +               gpios = <&gpio2 2 0>;
+> +       };
+> +       /* LCB: GPIO2_3, J2 */
+> +       gpio_j2_2_3:gpio_j2_2_3 {
+> +               gpios = <&gpio2 3 0>;
+> +       };
+> +       /* LCB: GPIO2_4, J2 */
+> +       gpio_j2_2_4:gpio_j2_2_4 {
+> +               gpios = <&gpio2 4 0>;
+> +       };
+> +       /* LCB: USB_ID_DET_GPIO2_5 */
+> +       gpio_usb_id_det:gpio_usb_id_det {
+> +               gpios = <&gpio2 5 0>;
+> +       };
+> +       /* LCB: USB_VBUS_DET_GPIO2_6 */
+> +       gpio_vbus_det:gpio_vbus_det {
+> +               gpios = <&gpio2 6 0>;
+> +       };
+> +       /* LCB: GPIO2_7, J2 */
+> +       gpio_j2_2_7:gpio_j2_2_7 {
+> +               gpios = <&gpio2 7 0>;
+> +       };
+> +       gpio_rf_reset0:gpio_rf_reset0 {
+> +               gpios;
+> +       };
+> +       gpio_rf_reset1:gpio_rf_reset1 {
+> +               gpios;
+> +       };
+> +       gpio_pmu_ssi:gpio_pmu_ssi {
+> +               gpios;
+> +       };
+> +       gpio_unused_002:gpio_unused_002 {
+> +               gpios;
+> +       };
+> +       gpio_hkadc_ssi:gpio_hkadc_ssi {
+> +               gpios;
+> +       };
+> +       gpio_codec_clk:gpio_codec_clk {
+> +               gpios;
+> +       };
+> +       gpio_bt_xclk:gpio_bt_xclk {
+> +               gpios;
+> +       };
+> +       gpio_bt_xfs:gpio_bt_xfs {
+> +               gpios;
+> +       };
+> +       gpio_bt_di:gpio_bt_di {
+> +               gpios;
+> +       };
+> +       gpio_bt_do:gpio_bt_do {
+> +               gpios;
+> +       };
+> +       gpio_usim0_clk:gpio_usim0_clk {
+> +               gpios;
+> +       };
+> +       gpio_usim0_data:gpio_usim0_data {
+> +               gpios;
+> +       };
+> +       gpio_usim0_rst:gpio_usim0_rst {
+> +               gpios;
+> +       };
+> +       gpio_emmc_clk:gpio_emmc_clk {
+> +               gpios;
+> +       };
+> +       gpio_emmc_cmd:gpio_emmc_cmd {
+> +               gpios;
+> +       };
+> +       gpio_emmc_data0:gpio_emmc_data0 {
+> +               gpios;
+> +       };
+> +       gpio_emmc_data1:gpio_emmc_data1 {
+> +               gpios;
+> +       };
+> +       gpio_emmc_data2:gpio_emmc_data2 {
+> +               gpios;
+> +       };
+> +       gpio_emmc_data3:gpio_emmc_data3 {
+> +               gpios;
+> +       };
+> +       gpio_emmc_data4:gpio_emmc_data4 {
+> +               gpios;
+> +       };
+> +       gpio_emmc_data5:gpio_emmc_data5 {
+> +               gpios;
+> +       };
+> +       gpio_emmc_data6:gpio_emmc_data6 {
+> +               gpios;
+> +       };
+> +       gpio_emmc_data7:gpio_emmc_data7 {
+> +               gpios;
+> +       };
+> +       gpio_emmc_rst_n:gpio_emmc_rst_n {
+> +               gpios;
+> +       };
+> +       gpio_unused_006:gpio_unused_006 {
+> +               gpios;
+> +       };
+> +       gpio_unused_007:gpio_unused_007 {
+> +               gpios;
+> +       };
+> +       gpio_rf_ssi0:gpio_rf_ssi0 {
+> +               gpios;
+> +       };
+> +       gpio_rf_tcvr_on0:gpio_rf_tcvr_on0 {
+> +               gpios;
+> +       };
+> +       gpio_rf_mipi_clk0:gpio_rf_mipi_clk0 {
+> +               gpios;
+> +       };
 
-If you are directing this question at me: I don't have a specific plan
-for it. MTD parsers don't currently take external input for this; many
-scan the whole device, but some might also have conventions built into
-the parser itself too, so this just gets hooked based on "compatible".
-But if the need arose, I would hope we could work out a common binding.
+All these should be dropped. GPIO connections should go to the device
+nodes they are attached to. There are some cases that don't really
+have a device connection, but need a defined function/use. We don't
+have a defined way to do that yet in DT.
 
-> Presumably with properties in the patitions node.  Not seeing the
-> problem here.
-
-I believe Michal is bringing up the (important, IMO) point that if
-distinct partition types are being described in the same node, then any
-use of additional properties *must* be closely coordinated. We can't
-have two parsers "foo" and "bar" defining conflicting uses of the same
-property in the same node, like this:
-
-	partitions {
-		compatible = "foo", "bar";
-		property-baz = ...; // e.g., reg = <...>;
-	};
-
-where if "foo" is not found, we fall back to "bar". But what if "foo"
-and "bar" use "property-baz" differently?
-
-Having everything in one doc would help ensure that the entire
-"partitions" binding is considered as a whole when extending it, in my
-(and an in my interpretation of Michal's) opinion.
-
-Brian
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
