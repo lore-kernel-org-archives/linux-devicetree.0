@@ -1,28 +1,43 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PICKME 0/2] cpufreq: New ST driver
-Date: Thu, 10 Dec 2015 22:38:32 +0100
-Message-ID: <2896628.JCDQCVfIaC@vostro.rjw.lan>
-References: <1449740537-12619-1-git-send-email-lee.jones@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1449740537-12619-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, viresh.kumar@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, ajitpal.singh@st.com
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 3/3] arm64: dts: hikey: add label properties to UARTs
+Date: Thu, 10 Dec 2015 15:21:13 -0600
+Message-ID: <1449782473-20880-4-git-send-email-robh@kernel.org>
+References: <1449782473-20880-1-git-send-email-robh@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449782473-20880-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, December 10, 2015 09:42:15 AM Lee Jones wrote:
-> Hi Rafael,
-> 
-> Would you be kind enough to pick these 2 patches up please.
-> The have the required Acks.
+Add label properties to provide a way to identify UARTs based on their
+board or connector name. This follows naming convention in 96boards CE
+spec. Ports without external connections are not labelled.
 
-I can do that.
+Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Do they depend on anything special?
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index 8d43a0f..8185251 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -32,3 +32,10 @@
+ 		reg = <0x0 0x0 0x0 0x40000000>;
+ 	};
+ };
++
++&uart2 {
++	label = "LS-UART0";
++};
++&uart3 {
++	label = "LS-UART1";
++};
+-- 
+2.5.0
 
-Thanks,
-Rafael
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
