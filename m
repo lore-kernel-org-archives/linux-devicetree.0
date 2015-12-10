@@ -1,74 +1,42 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] extcon-usb-gpio: add enable pin support
-Date: Fri, 11 Dec 2015 02:07:05 +0300
-Message-ID: <4393960.B6dD3UkQy3@wasted.cogentembedded.com>
+From: <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 2/3] ARM: imx: select HAVE_ARM_ARCH_TIMER if selected i.MX7D
+Date: Fri, 11 Dec 2015 07:12:11 +0800
+Message-ID: <1449789132-18976-2-git-send-email-Frank.Li@freescale.com>
+References: <1449789132-18976-1-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449789132-18976-1-git-send-email-Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sometimes  there's a real  OTG chip behind the USB ID signal mapped to a GPIO
-pin: in my case it's Maxim Integrated MAX3355E which  integrates Vbus charge
-pump and comparators and passes  thru the ID  signal  from an OTG connector.
-This chip also has the SHDN# pin which  should be  driven high for the normal
-operation  and low to  save power;  it  is connected to a GPIO pin as well on,
-hence  we'll have  to  teach the driver to parse the new optional device tree
-property, "enable-gpio"...
+From: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+i.MX7D Supported ARCH Timer.
 
+Signed-off-by: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
-The patch is against the 'extcon-next' branch of the 'extcon.git' repo.
+ arch/arm/mach-imx/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
- Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt |    3 +++
- drivers/extcon/extcon-usb-gpio.c                             |    5 +++++
- 2 files changed, 8 insertions(+)
+diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+index 0ac180f..061dea4 100644
+--- a/arch/arm/mach-imx/Kconfig
++++ b/arch/arm/mach-imx/Kconfig
+@@ -563,6 +563,7 @@ config SOC_IMX7D
+ 	select ARM_GIC
+ 	select HAVE_IMX_ANATOP
+ 	select HAVE_IMX_MMDC
++	select HAVE_ARM_ARCH_TIMER
+ 	help
+ 		This enables support for Freescale i.MX7 Dual processor.
+ 
+-- 
+2.5.2
 
-Index: extcon/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-===================================================================
---- extcon.orig/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-+++ extcon/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-@@ -7,6 +7,9 @@ Required properties:
- - compatible: Should be "linux,extcon-usb-gpio"
- - id-gpio: gpio for USB ID pin. See gpio binding.
- 
-+Optional properties:
-+- enable-gpio: gpio for the enable pin. See gpio binding.
-+
- Example: Examples of extcon-usb-gpio node in dra7-evm.dts as listed below:
- 	extcon_usb1 {
- 		compatible = "linux,extcon-usb-gpio";
-Index: extcon/drivers/extcon/extcon-usb-gpio.c
-===================================================================
---- extcon.orig/drivers/extcon/extcon-usb-gpio.c
-+++ extcon/drivers/extcon/extcon-usb-gpio.c
-@@ -33,6 +33,7 @@ struct usb_extcon_info {
- 	struct device *dev;
- 	struct extcon_dev *edev;
- 
-+	struct gpio_desc *enable_gpiod;
- 	struct gpio_desc *id_gpiod;
- 	int id_irq;
- 
-@@ -99,6 +100,8 @@ static int usb_extcon_probe(struct platf
- 		return -ENOMEM;
- 
- 	info->dev = dev;
-+	info->enable_gpiod = devm_gpiod_get_optional(&pdev->dev, "enable",
-+						     GPIOD_OUT_HIGH);
- 	info->id_gpiod = devm_gpiod_get(&pdev->dev, "id", GPIOD_IN);
- 	if (IS_ERR(info->id_gpiod)) {
- 		dev_err(dev, "failed to get ID GPIO\n");
-@@ -155,6 +158,8 @@ static int usb_extcon_remove(struct plat
- 
- 	cancel_delayed_work_sync(&info->wq_detcable);
- 
-+	gpiod_set_value_cansleep(info->enable_gpiod, 0);
-+
- 	return 0;
- }
- 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
