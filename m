@@ -1,7 +1,7 @@
 From: Cory Tusar <cory.tusar@pid1solutions.com>
-Subject: [PATCH v4 4/5] misc: eeprom_93xx46: Add quirks to support Atmel AT93C46D device.
-Date: Wed,  9 Dec 2015 23:00:54 -0500
-Message-ID: <1449720055-25965-5-git-send-email-cory.tusar@pid1solutions.com>
+Subject: [PATCH v4 3/5] misc: eeprom_93xx46: Implement eeprom_93xx46 DT bindings.
+Date: Wed,  9 Dec 2015 23:00:53 -0500
+Message-ID: <1449720055-25965-4-git-send-email-cory.tusar@pid1solutions.com>
 References: <1449720055-25965-1-git-send-email-cory.tusar@pid1solutions.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1449720055-25965-1-git-send-email-cory.tusar@pid1solutions.com>
@@ -10,245 +10,95 @@ To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree
 Cc: jic23@kernel.org, vz@mleia.com, broonie@kernel.org, afd@ti.com, andrew@lunn.ch, Chris.Healy@zii.aero, Keith.Vennel@zii.aero, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Cory Tusar <cory.tusar@pid1solutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Atmel devices in this family have some quirks not found in other similar
-chips - they do not support a sequential read of the entire EEPROM
-contents, and the control word sent at the start of each operation
-varies in bit length.
-
-This commit adds quirk support to the driver and modifies the read
-implementation to support non-sequential reads for consistency with
-other misc/eeprom drivers.
-
-Tested on a custom Freescale VF610-based platform, with an AT93C46D
-device attached via dspi2.  The spi-gpio driver was used to allow the
-necessary non-byte-sized transfers.
+This commit implements bindings in the eeprom_93xx46 driver allowing
+device word size and read-only attributes to be specified via
+devicetree.
 
 Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
 Tested-by: Chris Healy <chris.healy@zii.aero>
 ---
- drivers/misc/eeprom/eeprom_93xx46.c | 126 ++++++++++++++++++++++++++----------
- include/linux/eeprom_93xx46.h       |   6 ++
- 2 files changed, 97 insertions(+), 35 deletions(-)
+ drivers/misc/eeprom/eeprom_93xx46.c | 49 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
 diff --git a/drivers/misc/eeprom/eeprom_93xx46.c b/drivers/misc/eeprom/eeprom_93xx46.c
-index cc27e11..d50bc17 100644
+index e1bf0a5..cc27e11 100644
 --- a/drivers/misc/eeprom/eeprom_93xx46.c
 +++ b/drivers/misc/eeprom/eeprom_93xx46.c
-@@ -27,6 +27,15 @@
- #define ADDR_ERAL	0x20
- #define ADDR_EWEN	0x30
- 
-+struct eeprom_93xx46_devtype_data {
-+	unsigned int quirks;
-+};
-+
-+static const struct eeprom_93xx46_devtype_data atmel_at93c46d_data = {
-+	.quirks = EEPROM_93XX46_QUIRK_SINGLE_WORD_READ |
-+		  EEPROM_93XX46_QUIRK_INSTRUCTION_LENGTH,
-+};
-+
- struct eeprom_93xx46_dev {
- 	struct spi_device *spi;
- 	struct eeprom_93xx46_platform_data *pdata;
-@@ -35,6 +44,16 @@ struct eeprom_93xx46_dev {
- 	int addrlen;
- };
- 
-+static inline bool has_quirk_single_word_read(struct eeprom_93xx46_dev *edev)
-+{
-+	return edev->pdata->quirks & EEPROM_93XX46_QUIRK_SINGLE_WORD_READ;
-+}
-+
-+static inline bool has_quirk_instruction_length(struct eeprom_93xx46_dev *edev)
-+{
-+	return edev->pdata->quirks & EEPROM_93XX46_QUIRK_INSTRUCTION_LENGTH;
-+}
-+
- static ssize_t
- eeprom_93xx46_bin_read(struct file *filp, struct kobject *kobj,
- 		       struct bin_attribute *bin_attr,
-@@ -42,58 +61,73 @@ eeprom_93xx46_bin_read(struct file *filp, struct kobject *kobj,
- {
- 	struct eeprom_93xx46_dev *edev;
- 	struct device *dev;
--	struct spi_message m;
--	struct spi_transfer t[2];
--	int bits, ret;
--	u16 cmd_addr;
-+	ssize_t ret = 0;
- 
- 	dev = container_of(kobj, struct device, kobj);
- 	edev = dev_get_drvdata(dev);
- 
--	cmd_addr = OP_READ << edev->addrlen;
-+	mutex_lock(&edev->lock);
- 
--	if (edev->addrlen == 7) {
--		cmd_addr |= off & 0x7f;
--		bits = 10;
--	} else {
--		cmd_addr |= (off >> 1) & 0x3f;
--		bits = 9;
--	}
-+	if (edev->pdata->prepare)
-+		edev->pdata->prepare(edev);
- 
--	dev_dbg(&edev->spi->dev, "read cmd 0x%x, %d Hz\n",
--		cmd_addr, edev->spi->max_speed_hz);
-+	while (count) {
-+		struct spi_message m;
-+		struct spi_transfer t[2] = { { 0 } };
-+		u16 cmd_addr = OP_READ << edev->addrlen;
-+		size_t nbytes = count;
-+		int bits;
-+		int err;
-+
-+		if (edev->addrlen == 7) {
-+			cmd_addr |= off & 0x7f;
-+			bits = 10;
-+			if (has_quirk_single_word_read(edev))
-+				nbytes = 1;
-+		} else {
-+			cmd_addr |= (off >> 1) & 0x3f;
-+			bits = 9;
-+			if (has_quirk_single_word_read(edev))
-+				nbytes = 2;
-+		}
- 
--	spi_message_init(&m);
--	memset(t, 0, sizeof(t));
-+		dev_dbg(&edev->spi->dev, "read cmd 0x%x, %d Hz\n",
-+			cmd_addr, edev->spi->max_speed_hz);
- 
--	t[0].tx_buf = (char *)&cmd_addr;
--	t[0].len = 2;
--	t[0].bits_per_word = bits;
--	spi_message_add_tail(&t[0], &m);
-+		spi_message_init(&m);
- 
--	t[1].rx_buf = buf;
--	t[1].len = count;
--	t[1].bits_per_word = 8;
--	spi_message_add_tail(&t[1], &m);
-+		t[0].tx_buf = (char *)&cmd_addr;
-+		t[0].len = 2;
-+		t[0].bits_per_word = bits;
-+		spi_message_add_tail(&t[0], &m);
- 
--	mutex_lock(&edev->lock);
-+		t[1].rx_buf = buf;
-+		t[1].len = count;
-+		t[1].bits_per_word = 8;
-+		spi_message_add_tail(&t[1], &m);
- 
--	if (edev->pdata->prepare)
--		edev->pdata->prepare(edev);
-+		err = spi_sync(edev->spi, &m);
-+		/* have to wait at least Tcsl ns */
-+		ndelay(250);
- 
--	ret = spi_sync(edev->spi, &m);
--	/* have to wait at least Tcsl ns */
--	ndelay(250);
--	if (ret) {
--		dev_err(&edev->spi->dev, "read %zu bytes at %d: err. %d\n",
--			count, (int)off, ret);
-+		if (err) {
-+			dev_err(&edev->spi->dev, "read %zu bytes at %d: err. %d\n",
-+				nbytes, (int)off, err);
-+			ret = err;
-+			break;
-+		}
-+
-+		buf += nbytes;
-+		off += nbytes;
-+		count -= nbytes;
-+		ret += nbytes;
- 	}
- 
- 	if (edev->pdata->finish)
- 		edev->pdata->finish(edev);
- 
- 	mutex_unlock(&edev->lock);
--	return ret ? : count;
-+	return ret;
+@@ -13,6 +13,8 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/slab.h>
+ #include <linux/spi/spi.h>
+ #include <linux/sysfs.h>
+@@ -294,12 +296,58 @@ static ssize_t eeprom_93xx46_store_erase(struct device *dev,
  }
+ static DEVICE_ATTR(erase, S_IWUSR, NULL, eeprom_93xx46_store_erase);
  
- static int eeprom_93xx46_ew(struct eeprom_93xx46_dev *edev, int is_on)
-@@ -112,7 +146,13 @@ static int eeprom_93xx46_ew(struct eeprom_93xx46_dev *edev, int is_on)
- 		bits = 9;
- 	}
- 
--	dev_dbg(&edev->spi->dev, "ew cmd 0x%04x\n", cmd_addr);
-+	if (has_quirk_instruction_length(edev)) {
-+		cmd_addr <<= 2;
-+		bits += 2;
++static const struct of_device_id eeprom_93xx46_of_table[] = {
++	{ .compatible = "eeprom-93xx46", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, eeprom_93xx46_of_table);
++
++static int eeprom_93xx46_probe_dt(struct spi_device *spi)
++{
++	struct device_node *np = spi->dev.of_node;
++	struct eeprom_93xx46_platform_data *pd;
++	u32 tmp;
++	int ret;
++
++	pd = devm_kzalloc(&spi->dev, sizeof(*pd), GFP_KERNEL);
++	if (!pd)
++		return -ENOMEM;
++
++	ret = of_property_read_u32(np, "data-size", &tmp);
++	if (ret < 0) {
++		dev_err(&spi->dev, "data-size property not found\n");
++		return ret;
 +	}
 +
-+	dev_dbg(&edev->spi->dev, "ew%s cmd 0x%04x, %d bits\n",
-+			is_on ? "en" : "ds", cmd_addr, bits);
- 
- 	spi_message_init(&m);
- 	memset(&t, 0, sizeof(t));
-@@ -247,6 +287,13 @@ static int eeprom_93xx46_eral(struct eeprom_93xx46_dev *edev)
- 		bits = 9;
- 	}
- 
-+	if (has_quirk_instruction_length(edev)) {
-+		cmd_addr <<= 2;
-+		bits += 2;
++	if (tmp == 8) {
++		pd->flags |= EE_ADDR8;
++	} else if (tmp == 16) {
++		pd->flags |= EE_ADDR16;
++	} else {
++		dev_err(&spi->dev, "invalid data-size (%d)\n", tmp);
++		return -EINVAL;
 +	}
 +
-+	dev_dbg(&edev->spi->dev, "eral cmd 0x%04x, %d bits\n", cmd_addr, bits);
++	if (of_property_read_bool(np, "read-only"))
++		pd->flags |= EE_READONLY;
 +
- 	spi_message_init(&m);
- 	memset(&t, 0, sizeof(t));
- 
-@@ -298,12 +345,15 @@ static DEVICE_ATTR(erase, S_IWUSR, NULL, eeprom_93xx46_store_erase);
- 
- static const struct of_device_id eeprom_93xx46_of_table[] = {
- 	{ .compatible = "eeprom-93xx46", },
-+	{ .compatible = "atmel,at93c46d", .data = &atmel_at93c46d_data, },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, eeprom_93xx46_of_table);
- 
- static int eeprom_93xx46_probe_dt(struct spi_device *spi)
++	spi->dev.platform_data = pd;
++
++	return 0;
++}
++
+ static int eeprom_93xx46_probe(struct spi_device *spi)
  {
-+	const struct of_device_id *of_id =
-+		of_match_device(eeprom_93xx46_of_table, &spi->dev);
- 	struct device_node *np = spi->dev.of_node;
  	struct eeprom_93xx46_platform_data *pd;
- 	u32 tmp;
-@@ -331,6 +381,12 @@ static int eeprom_93xx46_probe_dt(struct spi_device *spi)
- 	if (of_property_read_bool(np, "read-only"))
- 		pd->flags |= EE_READONLY;
+ 	struct eeprom_93xx46_dev *edev;
+ 	int err;
  
-+	if (of_id->data) {
-+		const struct eeprom_93xx46_devtype_data *data = of_id->data;
-+
-+		pd->quirks = data->quirks;
++	if (spi->dev.of_node) {
++		err = eeprom_93xx46_probe_dt(spi);
++		if (err < 0)
++			return err;
 +	}
 +
- 	spi->dev.platform_data = pd;
- 
- 	return 0;
-diff --git a/include/linux/eeprom_93xx46.h b/include/linux/eeprom_93xx46.h
-index 0679181..92fa4c3 100644
---- a/include/linux/eeprom_93xx46.h
-+++ b/include/linux/eeprom_93xx46.h
-@@ -9,6 +9,12 @@ struct eeprom_93xx46_platform_data {
- #define EE_ADDR16	0x02		/* 16 bit addr. cfg */
- #define EE_READONLY	0x08		/* forbid writing */
- 
-+	unsigned int	quirks;
-+/* Single word read transfers only; no sequential read. */
-+#define EEPROM_93XX46_QUIRK_SINGLE_WORD_READ		(1 << 0)
-+/* Instructions such as EWEN are (addrlen + 2) in length. */
-+#define EEPROM_93XX46_QUIRK_INSTRUCTION_LENGTH		(1 << 1)
-+
- 	/*
- 	 * optional hooks to control additional logic
- 	 * before and after spi transfer.
+ 	pd = spi->dev.platform_data;
+ 	if (!pd) {
+ 		dev_err(&spi->dev, "missing platform data\n");
+@@ -370,6 +418,7 @@ static int eeprom_93xx46_remove(struct spi_device *spi)
+ static struct spi_driver eeprom_93xx46_driver = {
+ 	.driver = {
+ 		.name	= "93xx46",
++		.of_match_table = of_match_ptr(eeprom_93xx46_of_table),
+ 	},
+ 	.probe		= eeprom_93xx46_probe,
+ 	.remove		= eeprom_93xx46_remove,
 -- 
 2.4.10
