@@ -1,163 +1,44 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v2 12/19] ARM: dts: Add bus nodes using VDD_INT for
- Exynos3250
-Date: Thu, 10 Dec 2015 11:30:20 +0900
-Message-ID: <5668E3BC.7020901@samsung.com>
-References: <1449634091-1842-1-git-send-email-cw00.choi@samsung.com>
- <1449634091-1842-13-git-send-email-cw00.choi@samsung.com>
- <5668DED7.3020403@samsung.com>
+From: biao huang <biao.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 4/5] pinctrl: mediatek: Add Pinctrl/GPIO/EINT driver for
+ mt2701
+Date: Thu, 10 Dec 2015 10:34:52 +0800
+Message-ID: <1449714892.17341.3.camel@mhfsdcap03>
+References: <1448527472-20651-1-git-send-email-biao.huang@mediatek.com>
+ <1448527472-20651-5-git-send-email-biao.huang@mediatek.com>
+ <CACRpkda2vgrVEisH=akc5aj6h4LW+mBTqgbAiF3E=3zcu6A28A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <5668DED7.3020403@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, myungjoo.ham@samsung.com, kgene@kernel.org
-Cc: kyungmin.park@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, tjakobi@math.uni-bielefeld.de, linux.amoon@gmail.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CACRpkda2vgrVEisH=akc5aj6h4LW+mBTqgbAiF3E=3zcu6A28A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015=EB=85=84 12=EC=9B=94 10=EC=9D=BC 11:09, Krzysztof Kozlowski wro=
-te:
-> On 09.12.2015 13:08, Chanwoo Choi wrote:
->> This patch adds the bus nodes using VDD_INT for Exynos3250 SoC.
->> Exynos3250 has following AXI buses to translate data between
->> DRAM and sub-blocks.
->>
->> Following list specifies the detailed relation between DRAM and sub-=
-blocks:
->> - ACLK400 clock for MCUISP
->> - ACLK266 clock for ISP
->> - ACLK200 clock for FSYS
->> - ACLK160 clock for LCD0
->> - ACLK100 clock for PERIL
->> - GDL clock for LEFTBUS
->> - GDR clock for RIGHTBUS
->> - SCLK_MFC clock for MFC
->>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> ---
->>  arch/arm/boot/dts/exynos3250.dtsi | 160 +++++++++++++++++++++++++++=
-+++++++++++
->>  1 file changed, 160 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/e=
-xynos3250.dtsi
->> index 7214c5e42150..46dee1951ec1 100644
->> --- a/arch/arm/boot/dts/exynos3250.dtsi
->> +++ b/arch/arm/boot/dts/exynos3250.dtsi
->> @@ -721,6 +721,166 @@
->>  				opp-microvolt =3D <875000>;
->>  			};
->>  		};
->> +
->> +		bus_leftbus: bus_leftbus {
->> +			compatible =3D "samsung,exynos-bus";
->> +			clocks =3D <&cmu CLK_DIV_GDL>;
->> +			clock-names =3D "bus";
->> +			operating-points-v2 =3D <&bus_leftbus_opp_table>;
->> +			status =3D "disabled";
->> +		};
->> +
->> +		bus_rightbus: bus_rightbus {
->> +			compatible =3D "samsung,exynos-bus";
->> +			clocks =3D <&cmu CLK_DIV_GDR>;
->> +			clock-names =3D "bus";
->> +			operating-points-v2 =3D <&bus_leftbus_opp_table>;
->> +			status =3D "disabled";
->> +		};
->> +
->> +		bus_lcd0: bus_lcd0 {
->> +			compatible =3D "samsung,exynos-bus";
->> +			clocks =3D <&cmu CLK_DIV_ACLK_160>;
->> +			clock-names =3D "bus";
->> +			operating-points-v2 =3D <&bus_leftbus_opp_table>;
->> +			status =3D "disabled";
->> +		};
->> +
->> +		bus_fsys: bus_fsys {
->> +			compatible =3D "samsung,exynos-bus";
->> +			clocks =3D <&cmu CLK_DIV_ACLK_200>;
->> +			clock-names =3D "bus";
->> +			operating-points-v2 =3D <&bus_leftbus_opp_table>;
->> +			status =3D "disabled";
->> +		};
->> +
->> +		bus_mcuisp: bus_mcuisp {
->> +			compatible =3D "samsung,exynos-bus";
->> +			clocks =3D <&cmu CLK_DIV_ACLK_400_MCUISP>;
->> +			clock-names =3D "bus";
->> +			operating-points-v2 =3D <&bus_mcuisp_opp_table>;
->> +			status =3D "disabled";
->> +		};
->> +
->> +		bus_isp: bus_isp {
->> +			compatible =3D "samsung,exynos-bus";
->> +			clocks =3D <&cmu CLK_DIV_ACLK_266>;
->> +			clock-names =3D "bus";
->> +			operating-points-v2 =3D <&bus_isp_opp_table>;
->> +			status =3D "disabled";
->> +		};
->> +
->> +		bus_peril: bus_peril {
->> +			compatible =3D "samsung,exynos-bus";
->> +			clocks =3D <&cmu CLK_DIV_ACLK_100>;
->> +			clock-names =3D "bus";
->> +			operating-points-v2 =3D <&bus_peril_opp_table>;
->> +			status =3D "disabled";
->> +		};
->> +
->> +		bus_mfc: bus_mfc {
->> +			compatible =3D "samsung,exynos-bus";
->> +			clocks =3D <&cmu CLK_SCLK_MFC>;
->> +			clock-names =3D "bus";
->> +			operating-points-v2 =3D <&bus_leftbus_opp_table>;
->> +			status =3D "disabled";
->> +		};
->> +
->> +		bus_leftbus_opp_table: opp_table2 {
->> +			compatible =3D "operating-points-v2";
->> +			opp-shared;
->> +
->> +			opp00 {
->> +				opp-hz =3D /bits/ 64 <50000000>;
->> +				opp-microvolt =3D <900000>;
->> +			};
->> +			opp01 {
->> +				opp-hz =3D /bits/ 64 <80000000>;
->> +				opp-microvolt =3D <900000>;
->> +			};
->> +			opp02 {
->> +				opp-hz =3D /bits/ 64 <100000000>;
->> +				opp-microvolt =3D <1000000>;
->> +			};
->> +			opp03 {
->> +				opp-hz =3D /bits/ 64 <134000000>;
->> +				opp-microvolt =3D <1000000>;
->> +			};
->> +			opp04 {
->> +				opp-hz =3D /bits/ 64 <200000000>;
->> +				opp-microvolt =3D <1000000>;
->> +			};
->> +		};
->> +
->> +		bus_mcuisp_opp_table: opp_table3 {
->> +			compatible =3D "operating-points-v2";
->> +			opp-shared;
->> +
->> +			opp00 {
->> +				opp-hz =3D /bits/ 64 <50000000>;
->> +				opp-microvolt =3D <900000>;
->=20
-> The voltages for all these INT-block tables have exactly the same val=
-ue
-> which of course makes sense because this is the same regulator. Howev=
-er
-> the opp-microvolt property is an optional property. Do you have to
-> provide it in each OPP?
-
-I couldn't check whether opp-microvolt property is optional or not.
-You're right. Except for the opp-microvolt property of parent device,
-I'll remove it on dts file.
-
-Best Regards,
-Chanwoo Choi
+On Wed, 2015-12-09 at 23:52 +0100, Linus Walleij wrote:
+> On Thu, Nov 26, 2015 at 9:44 AM, Biao Huang <biao.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> 
+> > Add mt2701 support using mediatek common pinctrl driver.
+> > MT2701 have some special pins need an extra setting register
+> > than other ICs, so adding this support to common code.
+> >
+> > Signed-off-by: Biao Huang <biao.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> This looks uncontroversial, but I would like to have some of the
+> other Mediatek driver authors send their Ack/Review tags,
+> so Hongzhou & Yingjoe: can you review this and the other
+> patch to the pin control driver?
+The v2 patch will be sent in next week, and there are some changes in
+mt2701 drivers. And I'll add Hongzhou & Yingjoe to review these patches.
+> 
+> Yours,
+> Linus Walleij
