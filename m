@@ -1,40 +1,50 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH] net/macb: add support for resetting PHY using GPIO
-Date: Thu, 10 Dec 2015 08:37:56 +0100
-Message-ID: <20151210073756.GA11966@pengutronix.de>
-References: <1449683383-5022-1-git-send-email-gregory.clement@free-electrons.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v2 2/7] ARM: dts: exynos4412-odroid*: enable MFC device
+Date: Thu, 10 Dec 2015 16:44:02 +0900
+Message-ID: <56692D42.2090809@samsung.com>
+References: <1449669502-24601-1-git-send-email-m.szyprowski@samsung.com>
+ <1449669502-24601-3-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1449683383-5022-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: netdev-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: "David S. Miller" <davem@davemloft.net>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <1449669502-24601-3-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Andrzej Hajda <a.hajda@samsung.com>, Kukjin Kim <kgene@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Gregory,
-
-On Wed, Dec 09, 2015 at 06:49:43PM +0100, Gregory CLEMENT wrote:
-> With device tree it is no more possible to reset the PHY at board
-> level. Furthermore, doing in the driver allow to power down the PHY when
-> the network interface is no more used.
+On 09.12.2015 22:58, Marek Szyprowski wrote:
+> Enable support for Multimedia Codec (MFC) device for all Exynos4412-based
+> Odroid boards.
 > 
-> The patch introduces a new optional property "phy-reset-gpio" inspired
-> from the one use for the FEC.
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> index edf0fc8..5825abf 100644
+> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> @@ -18,6 +18,24 @@
+>  		stdout-path = &serial_1;
+>  	};
+>  
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		mfc_left: region@77000000 {
+> +			compatible = "shared-dma-pool";
+> +			reusable;
+> +			reg = <0x77000000 0x1000000>;
 
-I don't think it's a good idea to further extend the usage of this
-binding. The driver should use the phy-handle property and
-of_phy_connect() which gives you a proper device node for the phy. Then
-the phy device node should get the reset gpio. I know it's more work,
-but doing it like this gives you additional goodies like proper handling
-of the max-speed property, a fixed-link if necessary and picking the
-correct phy if there are muliple phys on the bus.
+Doesn't this exceed the memory of Odroid X?
 
-Sascha
+For other Exynos4412 boards the length is 0x800000. I am curious: any
+particular reason for the difference?
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Best regards,
+Krzysztof
