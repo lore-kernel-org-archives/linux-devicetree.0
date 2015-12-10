@@ -1,60 +1,68 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-binding: power: Add otg regulator binding
-Date: Thu, 10 Dec 2015 14:27:12 +0000
-Message-ID: <20151210142712.GM5727@sirena.org.uk>
-References: <1449621618-11900-1-git-send-email-tim.bird@sonymobile.com>
- <20151209041153.GA29549@rob-hp-laptop>
- <566824AD.4080003@sonymobile.com>
- <CAL_JsqL0BjD6A1quSZOYmLNeRZAYo1UwSsTPPvMUbC1pSwM6CQ@mail.gmail.com>
- <566867F1.7000906@sonymobile.com>
- <20151209222044.GB32712@earth>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: l2x0: make it possible to disable outer sync
+ from DT
+Date: Thu, 10 Dec 2015 14:32:26 +0000
+Message-ID: <20151210142942.GB495@leverpostej>
+References: <1449756855-19473-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4mwMARuvUPcmqDvg"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20151209222044.GB32712@earth>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Tim Bird <tim.bird@sonymobile.com>, Rob Herring <robh@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "dbaryshkov@gmail.com" <dbaryshkov@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "agross@codeaurora.org" <agross@codeaurora.org>, =?iso-8859-1?Q?Andersson=2C_Bj=F6rn?= <Bjorn.Andersson@sonymobile.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tbird20d@gmail.com" <tbird20d@gmail.com>, "Cavin, Courtney" <Courtney.Cavin@sonymobile.com>
+In-Reply-To: <1449756855-19473-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Dec 10, 2015 at 03:14:15PM +0100, Linus Walleij wrote:
+> Some RealView platforms have broken outer_sync, see:
+> http://marc.info/?l=linux-kernel&m=144846940516899&w=2
+> 
+> We got rid of the custom barriers from the machine by disabling
+> outer sync, but that was just for the boardfile case. We have
+> to be able to do the same in the device tree case.
+> 
+> Since __l2c_init() is cloning and copying the L2C vtable,
+> we pass an argument to this function to optionally numb
+> the outer sync operation if desired, before initializing
+> the cache.
+> 
+> After this we can set up the cache correctly on the RealView
+> PB11MPCore, and it boots rock solid with the cache enabled.
+> Before this, spurious crashes would occur if we try to set
+> up the cache properly.
+> 
+> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/l2cc.txt |  1 +
+>  arch/arm/mm/cache-l2x0.c                       | 13 ++++++++++---
+>  2 files changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+> index d181b7c4c522..aae7387acbdb 100644
+> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
+> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+> @@ -75,6 +75,7 @@ Optional properties:
+>    specified to indicate that such transforms are precluded.
+>  - arm,parity-enable : enable parity checking on the L2 cache (L220 or PL310).
+>  - arm,parity-disable : disable parity checking on the L2 cache (L220 or PL310).
+> +- arm,outer-sync-disable : disable the outer sync operation on the L2 cache.
 
---4mwMARuvUPcmqDvg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I'm not sure what this means from a HW perspective. The "outer sync"
+operation is Linux terminology and doesn't show up in the TRM for L220.
 
-On Wed, Dec 09, 2015 at 11:20:45PM +0100, Sebastian Reichel wrote:
-> On Wed, Dec 09, 2015 at 09:42:09AM -0800, Tim Bird wrote:
+What is the (integration? HW?) bug that we're trying to avoid the effect
+of? It sounds like we should be describing that.
 
-> > There are other switches in the charger block that are not
-> > exposed yet.  This one handles the the OTG (vbus) charge pathway.
-> > Others handle other charge pathways (some of which are used on phones
-> > and some are not - they're used, e.g., on the dragonboard).  I'd
-> > rather not give it a generic name, because eventually the driver
-> > should expose those other switches as something as well.
+We should at least have a better definition of what this means we must
+avoid.
 
-> otg_regulator: regulator@0 { }
-> other_regulator: regulator@1 { }
-
-No, if this is a device with multiple regulators we have a standard way
-of exposing that - have a regulators subnode with a collection of named
-regulator subnodes in that.  There's support for parsing this in the
-framework.
-
---4mwMARuvUPcmqDvg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWaYu/AAoJECTWi3JdVIfQcJIH/3iyiwMi/QHF0jc342SF1UI0
-1g+ug8yi76eysy7VGgmsHNnmi1xT7DnK3FhWkCTmZiZ9r4IE24/94KrUv8ksd/E7
-e/fl78RGKOmfeCtwnbKV8XAJpW8UAQNB3byMK4dUjJhGixQ5BSArsuYKPSVOE+/1
-07zO8hQ95qeIe8tYXAiY9KBvPn+xjqRuFfqESJrH6gNGkDFB+toM6e6RuSeIoBBp
-AUvE/nGcy6Sg30Kvb6pGNy2sgWhPuo+uTlrIitgIBTqZyA1P/IZ6FTjoWjai/3aA
-wU0kzoF6gc7jYpxvX8UfXnQj8cArLc25k4OWqSLqjVKeZk/A01QA6Yx/F2BEnQc=
-=VgqW
------END PGP SIGNATURE-----
-
---4mwMARuvUPcmqDvg--
+Thanks
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
