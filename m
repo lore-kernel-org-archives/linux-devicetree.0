@@ -1,67 +1,46 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH 3/4] dmaengine: qcom_bam_dma: use correct pipe FIFO size
-Date: Thu, 10 Dec 2015 15:18:33 +0200
-Message-ID: <56697BA9.5050805@linaro.org>
-References: <1448961299-15161-1-git-send-email-stanimir.varbanov@linaro.org>
- <1448961299-15161-4-git-send-email-stanimir.varbanov@linaro.org>
- <20151201172307.GA26687@Agamemnon.attlocal.net> <565F1FDB.4020106@linaro.org>
- <20151202172255.GA9599@Agamemnon.attlocal.net>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 2/3] ARM: dts: sun9i: cubieboard4: Enable
+ consumer IR receiver
+Date: Thu, 10 Dec 2015 21:36:30 +0800
+Message-ID: <1449754591-3999-3-git-send-email-wens@csie.org>
+References: <1449754591-3999-1-git-send-email-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20151202172255.GA9599@Agamemnon.attlocal.net>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Archit Taneja <architt@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBZP7UWZQKGQEJO372DA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1449754591-3999-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/02/2015 07:22 PM, Andy Gross wrote:
-> On Wed, Dec 02, 2015 at 06:44:11PM +0200, Stanimir Varbanov wrote:
->> On 12/01/2015 07:23 PM, Andy Gross wrote:
->>> On Tue, Dec 01, 2015 at 11:14:58AM +0200, Stanimir Varbanov wrote:
->>>> The pipe fifo size register must instruct the bam hw
->>>> how many hw descriptors can be pushed to fifo. Currently
->>>> we isntruct the hw with 32KBytes but wrap the tail in
->>>> bam_start_dma in BAM_P_EVNT_REG on 4095 i.e. 32760. This
->>>> leads to stalled transactions when the tail wraps.
->>>>
->>>> Fix this by use the correct fifo size in BAM_P_FIFO_SIZES
->>>> register i.e. 32K - 8.
->>>>
->>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
->>>> ---
->>>>  drivers/dma/qcom_bam_dma.c |    2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/dma/qcom_bam_dma.c b/drivers/dma/qcom_bam_dma.c
->>>> index 0f06f3b7a72b..6d290de9ab2b 100644
->>>> --- a/drivers/dma/qcom_bam_dma.c
->>>> +++ b/drivers/dma/qcom_bam_dma.c
->>>> @@ -458,7 +458,7 @@ static void bam_chan_init_hw(struct bam_chan *bchan,
->>>>  	 */
->>>>  	writel_relaxed(ALIGN(bchan->fifo_phys, sizeof(struct bam_desc_hw)),
->>>>  			bam_addr(bdev, bchan->id, BAM_P_DESC_FIFO_ADDR));
->>>> -	writel_relaxed(BAM_DESC_FIFO_SIZE,
->>>> +	writel_relaxed(BAM_MAX_DATA_SIZE,
->>>>  			bam_addr(bdev, bchan->id, BAM_P_FIFO_SIZES));
->>>
->>> This is just using the #define.  That is ok, but if you use this instead of the
->>> BAM_P_FIFO_SIZES then you need to fix your comment.  Or actually use the
->>> register value.... otherwise looks fine.
->>
->> I did not follow your comment, but the intension of the patch is to set
->> the proper FIFO size in BAM_P_FIFO_SIZES register, i.e. 32K - 8.
-> 
-> Sorry, I mixed up the usage and was thinking there was something you read out
-> that told you the size.  That's not how it works, unfortunately.  The
-> MAX_DATA_SIZE is fine, but the name is a little misleading.  Perhaps just
-> BAM_FIFO_SIZE?
+The Cubieboard4 has a consumer IR receiver. Enable it in the DT.
 
-OK I can rename BAM_MAX_DATA_SIZE to BAM_FIFO_SIZE, and use it when
-setting BAM_P_FIFO_SIZES register. Is that fine to you?
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-
+diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+index 8791d49bed2d..8c26b556e82a 100644
+--- a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
++++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+@@ -114,6 +114,10 @@
+ 	status = "okay";
+ };
+ 
++&r_ir {
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
 -- 
-regards,
-Stan
+2.6.2
