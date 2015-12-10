@@ -1,64 +1,49 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V3 0/5] PM / OPP: opp-supported-hw and <prop>-name
- bindings
-Date: Thu, 10 Dec 2015 08:58:33 +0000
-Message-ID: <20151210085833.GE17876@x1>
-References: <cover.1447209519.git.viresh.kumar@linaro.org>
+From: xuejiancheng <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 4/9] ARM: dts: add dts files for hi3519-demb board
+Date: Thu, 10 Dec 2015 16:59:14 +0800
+Message-ID: <56693EE2.20501@huawei.com>
+References: <1449110668-23647-1-git-send-email-xuejiancheng@huawei.com>
+ <5533669.m0KDLq8XOc@wuerfel> <56691C65.6090808@huawei.com>
+ <2721289.3GUub5trUg@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1447209519.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, robh+dt@kernel.org, sboyd@codeaurora.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, nm@ti.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2721289.3GUub5trUg@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 11 Nov 2015, Viresh Kumar wrote:
 
-> Hi Rafael,
->=20
-> Rob only needs to Ack the modified 2/5 patch and then you can safely
-> apply this series.
->=20
-> The first patch enables us to select only a subset of OPPs from the
-> bigger table, based on what version of the hardware we are running on=
-=2E
->=20
-> The second one enables us to select slightly different values for
-> multiple properties, based on what kind of hardware they are running =
-on.
->=20
-> The third one removes an (unused) binding, which is replaced by the
-> second patch with a better solution.
->=20
-> The fourth patch is based on what Stephen suggested (and then reviewe=
-d)
-> in the earlier series, and the 5th one updates the existing users of
-> these bindings for it.
->=20
-> V2->V3:
-> - dropped turbo/suspend named properties
-> - Applied all the Acks
->=20
-> Viresh Kumar (5):
->   PM / OPP: Add "opp-supported-hw" binding
->   PM / OPP: Add {opp-microvolt|opp-microamp}-<name> binding
->   PM / OPP: Remove 'operating-points-names' binding
->   PM / OPP: Rename OPP nodes as opp@<opp-hz>
->   ARM: dts: exynos4412: Rename OPP nodes as opp@<opp-hz>
 
-Tested-by: Lee Jones <lee.jones@linaro.org>
+On 2015/12/10 16:04, Arnd Bergmann wrote:
+> On Thursday 10 December 2015 14:32:05 xuejiancheng wrote:
+>>>
+>>> This is not what I meant. You have to use "syscon" as the most generic
+>>> "compatible" value here, but should add a machine specific string
+>>> as a more specific one. "hisilicon,sysctrl" is not appropriate because
+>>> it does not identify the IP block uniquely, you can only use that
+>>> in combination with another more specific string.
+>>
+>> OK. I will use "hisilicon,hi3519-syscon" and "syscon" as the compatible value
+>> for the sysctrl node in hi3519.dtsi.
+>>
+> 
+> Why hisilicon,hi3519-syscon instead of hisilicon,hi3519-sysctrl?
 
->  Documentation/devicetree/bindings/opp/opp.txt | 132 ++++++++++++++++=
-++--------
->  arch/arm/boot/dts/exynos4412.dtsi             |  28 +++---
->  2 files changed, 107 insertions(+), 53 deletions(-)
->=20
+> Is this not called a sysctrl at all in the datasheet then?
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+It is OK to use hisilicon,hi3519-sysctrl.
+
+I thought syscon was more commonly used as abbr. of system-controller in the kernel code.
+
+> 	Arnd
+> 
+> .
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
