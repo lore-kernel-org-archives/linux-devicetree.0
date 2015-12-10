@@ -1,104 +1,107 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH] net/macb: add support for resetting PHY using GPIO
-Date: Thu, 10 Dec 2015 16:08:08 +0100
-Message-ID: <871tau8hpj.fsf@free-electrons.com>
-References: <1449683383-5022-1-git-send-email-gregory.clement@free-electrons.com>
-	<20151210073756.GA11966@pengutronix.de>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [PATCH v2 09/19] PM / devfreq: exynos: Update documentation for
+ bus devices using passive governor
+Date: Fri, 11 Dec 2015 00:10:13 +0900
+Message-ID: <CAGTfZH0T8ufrBKT3vKoivk5Vn_AUHnB+or0QRgr=D77q7puAJA@mail.gmail.com>
+References: <1449634091-1842-1-git-send-email-cw00.choi@samsung.com>
+	<1449634091-1842-10-git-send-email-cw00.choi@samsung.com>
+	<20151210142109.GA32109@rob-hp-laptop>
+Reply-To: cw00.choi@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20151210073756.GA11966@pengutronix.de> (Sascha Hauer's message
-	of "Thu, 10 Dec 2015 08:37:56 +0100")
-Sender: netdev-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: "David S. Miller" <davem@davemloft.net>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20151210142109.GA32109@rob-hp-laptop>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, tjakobi@math.uni-bielefeld.de, linux.amoon@gmail.com, linux-kernel <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sascha,
-=20
- On jeu., d=C3=A9c. 10 2015, Sascha Hauer <s.hauer@pengutronix.de> wrot=
-e:
-
-> Hi Gregory,
+On Thu, Dec 10, 2015 at 11:21 PM, Rob Herring <robh@kernel.org> wrote:
+> On Wed, Dec 09, 2015 at 01:08:01PM +0900, Chanwoo Choi wrote:
+>> This patch updates the documentation for passive bus devices and adds the
+>> detailed example of Exynos3250.
+>>
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> ---
+>>  .../devicetree/bindings/devfreq/exynos-bus.txt     | 244 ++++++++++++++++++++-
+>>  1 file changed, 241 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+>> index 54a1f9c46c88..c4fdc70f8eac 100644
+>> --- a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+>> +++ b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+>> @@ -13,18 +13,23 @@ SoC has the different sub-blocks. So, this difference should be specified
+>>  in devicetree file instead of each device driver. In result, this driver
+>>  is able to support the bus frequency for all Exynos SoCs.
+>>
+>> -Required properties for bus device:
+>> +Required properties for all bus devices:
+>>  - compatible: Should be "samsung,exynos-bus".
+>>  - clock-names : the name of clock used by the bus, "bus".
+>>  - clocks : phandles for clock specified in "clock-names" property.
+>>  - #clock-cells: should be 1.
+>>  - operating-points-v2: the OPP table including frequency/voltage information
+>>    to support DVFS (Dynamic Voltage/Frequency Scaling) feature.
+>> +
+>> +Required properties for only parent bus device:
+>>  - vdd-supply: the regulator to provide the buses with the voltage.
+>>  - devfreq-events: the devfreq-event device to monitor the curret utilization
+>>    of buses.
+>>
+>> -Optional properties for bus device:
+>> +Required properties for only passive bus device:
+>> +- devfreq: the parent bus device.
+>> +
+>> +Optional properties for only parent bus device:
+>>  - exynos,saturation-ratio: the percentage value which is used to calibrate
+>>                     the performance count againt total cycle count.
+>>
+>> @@ -33,7 +38,20 @@ Example1:
+>>       power line (regulator). The MIF (Memory Interface) AXI bus is used to
+>>       transfer data between DRAM and CPU and uses the VDD_MIF regualtor.
+>>
+>> -     - power line(VDD_MIF) --> bus for DMC (Dynamic Memory Controller) block
+>> +     - MIF (Memory Interface) block
+>> +     : VDD_MIF |--- DMC (Dynamic Memory Controller)
+>> +
+>> +     - INT (Internal) block
+>> +     : VDD_INT |--- LEFTBUS (parent device)
+>> +               |--- PERIL
+>> +               |--- MFC
+>> +               |--- G3D
+>> +               |--- RIGHTBUS
+>> +               |--- FSYS
+>> +               |--- LCD0
+>> +               |--- PERIR
+>> +               |--- ISP
+>> +               |--- CAM
 >
-> On Wed, Dec 09, 2015 at 06:49:43PM +0100, Gregory CLEMENT wrote:
->> With device tree it is no more possible to reset the PHY at board
->> level. Furthermore, doing in the driver allow to power down the PHY =
-when
->> the network interface is no more used.
->>=20
->> The patch introduces a new optional property "phy-reset-gpio" inspir=
-ed
->> from the one use for the FEC.
->
-> I don't think it's a good idea to further extend the usage of this
-> binding. The driver should use the phy-handle property and
-> of_phy_connect() which gives you a proper device node for the phy. Th=
-en
-> the phy device node should get the reset gpio. I know it's more work,
+> This still has the same problem as before. I would expect that the bus
+> hierarchy in the dts match the hierarchy here. You just have flat nodes
+> in the example below. So all IP blocks affected by frequency scaling
+> should be under the bus node defining the OPPs. Something like this:
 
-So you suggest to pass from this binding:
-macb1: ethernet@fc028000 {
-	phy-mode =3D "rmii";
-	status =3D "okay";
-	#address-cells =3D <1>;
-	#size-cells =3D <0>;
-	status =3D "okay";
-	phy-reset-gpio =3D <&pioE 6 GPIO_ACTIVE_HIGH>;
+The each bus of sub-block has not h/w dependency among sub-blocks
+and has the owned source clock / OPP table. Just they share the same
+power line. So, I think that flat nodes in the example below is not problem.
 
-	ethernet-phy@1 {
-		reg =3D <0x1>;
-		interrupt-parent =3D <&pioB>;
-		interrupts =3D <31 IRQ_TYPE_EDGE_FALLING>;
-
-	};
-};
-
-to this binding
-macb1: ethernet@fc028000 {
-	phy-mode =3D "rmii";
-	status =3D "okay";
-	#address-cells =3D <1>;
-	#size-cells =3D <0>;
-	status =3D "okay";
-
-	ethernet-phy@1 {
-		reg =3D <0x1>;
-		interrupt-parent =3D <&pioB>;
-		interrupts =3D <31 IRQ_TYPE_EDGE_FALLING>;
-                phy-reset-gpio =3D <&pioE 6 GPIO_ACTIVE_HIGH>;
-	};
-};
-
-> but doing it like this gives you additional goodies like proper handl=
-ing
-> of the max-speed property, a fixed-link if necessary and picking the
-
-Currently there is phy_connect_direct so we can already handle the
-preperty of the phy.
-
-> correct phy if there are muliple phys on the bus.
-
-but I agree with this one.
-
-Gregory
+Because of using the same power line, the sub-blocks would be tied
+by devfreq framework only for the behavior of bus frequency scaling .
 
 >
-> Sascha
->
-> --=20
-> Pengutronix e.K.                           |                         =
-    |
-> Industrial Linux Solutions                 | http://www.pengutronix.d=
-e/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0=
-    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5=
-555 |
-
---=20
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+> soc {
+>         compatible = "simple-bus";
+>         bus {
+>                 compatible = "my-awesome-dvfs-bus"; /* simple-bus too if
+> no setup needed first */
+>                 reg = <0x0 0x0>; // Bus control registers
+>                 clocks = <&ccm BUS_CLK>;
+>                 operating-points-v2 = <&opp>;
+>                 device@0 {
+>                         compatible = "my-awesome-device-1";
+>                 };
+>                 device@1 {
+>                         compatible = "my-awesome-device-2";
+>                 };
+>         };
+> };
