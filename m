@@ -1,545 +1,152 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v1 7/8] ARM: dts: rockchip: add core rk3228 dtsi
-Date: Thu, 10 Dec 2015 01:32:03 +0100
-Message-ID: <24573164.okRNXjvZ1B@phil>
-References: <1449651853-1667-1-git-send-email-jeffy.chen@rock-chips.com> <1449651853-1667-8-git-send-email-jeffy.chen@rock-chips.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v2 02/19] PM / devfreq: exynos: Add documentation for
+ generic exynos bus frequency driver
+Date: Thu, 10 Dec 2015 09:39:26 +0900
+Message-ID: <5668C9BE.7050900@samsung.com>
+References: <1449634091-1842-1-git-send-email-cw00.choi@samsung.com>
+ <1449634091-1842-3-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449651853-1667-8-git-send-email-jeffy.chen@rock-chips.com>
+In-reply-to: <1449634091-1842-3-git-send-email-cw00.choi@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffy Chen <jeffy.chen@rock-chips.com>
-Cc: linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+To: Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com, kgene@kernel.org
+Cc: kyungmin.park@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, tjakobi@math.uni-bielefeld.de, linux.amoon@gmail.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jeffy,
-
-Am Mittwoch, 9. Dezember 2015, 17:04:12 schrieb Jeffy Chen:
-> Initial release for rk3228 shared dtsi.
+On 09.12.2015 13:07, Chanwoo Choi wrote:
+> This patch adds the documentation for generic exynos bus frequency
+> driver.
 > 
-> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 > ---
+>  .../devicetree/bindings/devfreq/exynos-bus.txt     | 94 ++++++++++++++++++++++
+>  1 file changed, 94 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/devfreq/exynos-bus.txt
 > 
->  arch/arm/boot/dts/rk3228.dtsi | 478 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 478 insertions(+)
->  create mode 100644 arch/arm/boot/dts/rk3228.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/rk3228.dtsi b/arch/arm/boot/dts/rk3228.dtsi
+> diff --git a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
 > new file mode 100644
-> index 0000000..d6b3e40
+> index 000000000000..54a1f9c46c88
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/rk3228.dtsi
-> @@ -0,0 +1,478 @@
-> +/*
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
+> +++ b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+> @@ -0,0 +1,94 @@
+> +* Generic Exynos Bus frequency device
 > +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/pinctrl/rockchip.h>
-> +#include <dt-bindings/clock/rk3228-cru.h>
-> +#include "skeleton.dtsi"
-> +
-> +/ {
-> +	compatible = "rockchip,rk3228";
-> +
-> +	interrupt-parent = <&gic>;
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +		serial1 = &uart1;
-> +		serial2 = &uart2;
-> +	};
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x60000000 0x40000000>;
-> +	};
+> +The Samsung Exynos SoC have many buses for data transfer between DRAM
+> +and sub-blocks in SoC. Almost Exynos SoC have the common architecture
+> +for buses. Generally, the each bus of Exynos SoC includes the source clock
+> +and power line and then is able to change the clock according to the usage
+> +of each buses on runtime. When gathering the usage of each buses on runtime,
+> +thie driver uses the PPMU (Platform Performance Monitoring Unit) which
 
-The amount of memory is a property of the board
+s/thie/the/
+
+> +is able to measure the current load of sub-blocks.
+> +
+> +There are a little different composition among Exynos SoC because each Exynos
+> +SoC has the different sub-blocks. So, this difference should be specified
+> +in devicetree file instead of each device driver. In result, this driver
+> +is able to support the bus frequency for all Exynos SoCs.
+> +
+> +Required properties for bus device:
+> +- compatible: Should be "samsung,exynos-bus".
+> +- clock-names : the name of clock used by the bus, "bus".
+> +- clocks : phandles for clock specified in "clock-names" property.
+> +- #clock-cells: should be 1.
+
+This is a clock consumer, right? So the clock-cells is not valid here.
+
+> +- operating-points-v2: the OPP table including frequency/voltage information
+> +  to support DVFS (Dynamic Voltage/Frequency Scaling) feature.
+> +- vdd-supply: the regulator to provide the buses with the voltage.
+> +- devfreq-events: the devfreq-event device to monitor the curret utilization
+
+s/curret/current/
+
+> +  of buses.
+> +
+> +Optional properties for bus device:
+> +- exynos,saturation-ratio: the percentage value which is used to calibrate
+> +                   the performance count againt total cycle count.
+
+s/againt/against/
 
 > +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
+> +Example1:
+> +	Show the AXI buses of Exynos3250 SoC. Exynos3250 divides the buses to
+> +	power line (regulator). The MIF (Memory Interface) AXI bus is used to
+> +	transfer data between DRAM and CPU and uses the VDD_MIF regualtor.
+> +
+> +	- power line(VDD_MIF) --> bus for DMC (Dynamic Memory Controller) block
+> +
+> +	- MIF bus's frequency/voltage table
+> +	-----------------------
+> +	|Lv| Freq   | Voltage |
+> +	-----------------------
+> +	|L1| 50000  |800000   |
+> +	|L2| 100000 |800000   |
+> +	|L3| 134000 |800000   |
+> +	|L4| 200000 |800000   |
+> +	|L5| 400000 |875000   |
+> +	-----------------------
+> +
+> +Example2 :
+> +	The bus of DMC (Dynamic Memory Controller) block in exynos3250.dtsi
+> +	are listed below:
 
-no enable-method?
-
-As the rk3228 also does not have a pmu, does the newly created
-"rockchip,rk3036-smp" work for you?
-
-> +
-> +		cpu0: cpu@f00 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0xf00>;
-> +			resets = <&cru SRST_CORE0>;
-> +			operating-points = <
-> +				/* KHz    uV */
-> +				 816000 1000000
-> +			>;
-> +			clock-latency = <40000>;
-> +			clocks = <&cru ARMCLK>;
-> +		};
-> +
-> +		cpu1: cpu@f01 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0xf01>;
-> +			resets = <&cru SRST_CORE1>;
-> +		};
-> +
-> +		cpu2: cpu@f02 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0xf02>;
-> +			resets = <&cru SRST_CORE2>;
-> +		};
-> +
-> +		cpu3: cpu@f03 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0xf03>;
-> +			resets = <&cru SRST_CORE3>;
-> +		};
-> +	};
-> +
-> +	amba {
-> +		compatible = "arm,amba-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		pdma: pdma@110f0000 {
-> +			compatible = "arm,pl330", "arm,primecell";
-> +			reg = <0x110f0000 0x4000>;
-> +			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
-> +			#dma-cells = <1>;
-> +			clocks = <&cru ACLK_DMAC>;
-> +			clock-names = "apb_pclk";
-> +		};
-> +	};
-> +
-> +	arm-pmu {
-> +		compatible = "arm,cortex-a7-pmu";
-> +		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv7-timer";
-> +		arm,cpu-registers-not-fw-configured;
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-> +		clock-frequency = <24000000>;
-> +	};
-> +
-> +	hdmiphy_phy: hdmiphy_phy {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <594000000>;
-> +		clock-output-names = "hdmiphy_phy";
-> +		#clock-cells = <0>;
-> +	};
-> +
-> +	phy_50m_out: phy_50m_out {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <50000000>;
-> +		clock-output-names = "phy_50m_out";
-> +		#clock-cells = <0>;
-> +	};
-> +
-> +	usb480m_phy0: usb480m_phy0 {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <480000000>;
-> +		clock-output-names = "usb480m_phy0";
-> +		#clock-cells = <0>;
-> +	};
-> +
-> +	usb480m_phy1: usb480m_phy1 {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <480000000>;
-> +		clock-output-names = "usb480m_phy1";
-> +		#clock-cells = <0>;
-> +	};
-
-these clocks starting with hdmiphy clock come from IPs in the soc, so the
-relevant drivers should provide them (see my patch series for the picophy,
-or how rk808 and hym8563 do it) - especially as these clocks might get
-turned off in the IP-block itself.
-
-The clock framework can handle orphans, so just leave these out for now
-please.
-
+s/are/is/ (one bus is listed)
 
 > +
-> +	xin24m: oscillator {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <24000000>;
-> +		clock-output-names = "xin24m";
-> +		#clock-cells = <0>;
-> +	};
-> +
-> +	cru: clock-controller@110e0000 {
-> +		compatible = "rockchip,rk3228-cru";
-> +		reg = <0x110e0000 0x1000>;
-> +		rockchip,grf = <&grf>;
-> +		#clock-cells = <1>;
-> +		#reset-cells = <1>;
-> +		assigned-clocks = <&cru PLL_GPLL>;
-> +		assigned-clock-rates = <594000000>;
-> +	};
-> +
-> +	gic: interrupt-controller@32010000 {
-
-please order by register address, so gic should move quite
-a bit lower.
-
-> +		compatible = "arm,gic-400";
-> +		interrupt-controller;
-> +		#interrupt-cells = <3>;
-> +		#address-cells = <0>;
-> +
-> +		reg = <0x32011000 0x1000>,
-> +		      <0x32012000 0x1000>;
-
-please also provide the vgic registers and interrupt.
-
-
-> +	};
-> +
-> +	grf: syscon@11000000 {
-> +		compatible = "syscon";
-> +		reg = <0x11000000 0x1000>;
-> +	};
-> +
-> +	timer: timer@110c0000 {
-> +		compatible = "rockchip,rk3288-timer";
-> +		reg = <0x110c0000 0x20>;
-> +		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&xin24m>, <&cru PCLK_TIMER>;
-> +		clock-names = "timer", "pclk";
-> +	};
-> +
-> +	emmc: dwmmc@30020000 {
-> +		compatible = "rockchip,rk3288-dw-mshc";
-> +		clock-frequency = <37500000>;
-> +		clock-freq-min-max = <400000 37500000>;
-> +		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
-> +		<&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
-> +		clock-names = "biu", "ciu", "ciu_drv", "ciu_sample";
-> +		fifo-depth = <0x100>;
-> +		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-> +		reg = <0x30020000 0x4000>;
-> +		broken-cd;
-> +		bus-width = <8>;
-> +		cap-mmc-highspeed;
-> +		mmc-ddr-1_8v;
-> +		disable-wp;
-> +		non-removable;
-> +		num-slots = <1>;
-> +		default-sample-phase = <158>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
-
-please separate board and core properties.
-broken-cd, cap-*, mmc-ddr-1_8v, disable-wp, non-removable
-are per-board properties as they depend on what is connected to
-the controller.
-
+> +	bus_dmc: bus_dmc {
+> +		compatible = "samsung,exynos-bus";
+> +		clocks = <&cmu_dmc CLK_DIV_DMC>;
+> +		clock-names = "bus";
+> +		operating-points-v2 = <&bus_dmc_opp_table>;
 > +		status = "disabled";
 > +	};
 > +
-> +	pwm0: pwm@110b0000 {
-> +		compatible = "rockchip,rk3288-pwm";
-> +		reg = <0x110b0000 0x10>;
-> +		#pwm-cells = <3>;
-> +		clocks = <&cru PCLK_PWM>;
-> +		clock-names = "pwm";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pwm0_pin>;
-> +		status = "disabled";
-> +	};
+> +	bus_dmc_opp_table: opp_table0 {
+> +		compatible = "operating-points-v2";
+> +		opp-shared;
 > +
-> +	pwm1: pwm@110b0010 {
-> +		compatible = "rockchip,rk3288-pwm";
-> +		reg = <0x110b0010 0x10>;
-> +		#pwm-cells = <3>;
-> +		clocks = <&cru PCLK_PWM>;
-> +		clock-names = "pwm";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pwm1_pin>;
-> +		status = "disabled";
-> +	};
-> +
-> +	pwm2: pwm@110b0020 {
-> +		compatible = "rockchip,rk3288-pwm";
-> +		reg = <0x110b0020 0x10>;
-> +		#pwm-cells = <3>;
-> +		clocks = <&cru PCLK_PWM>;
-> +		clock-names = "pwm";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pwm2_pin>;
-> +		status = "disabled";
-> +	};
-> +
-> +	pwm3: pwm@110b0030 {
-> +		compatible = "rockchip,rk3288-pwm";
-> +		reg = <0x110b0030 0x10>;
-> +		#pwm-cells = <2>;
-> +		clocks = <&cru PCLK_PWM>;
-> +		clock-names = "pwm";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pwm3_pin>;
-> +		status = "disabled";
-> +	};
-> +
-> +	uart0: serial@11010000 {
-> +		compatible = "snps,dw-apb-uart";
-> +		reg = <0x11010000 0x100>;
-> +		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-> +		reg-shift = <2>;
-> +		reg-io-width = <4>;
-> +		clock-frequency = <24000000>;
-> +		clocks = <&cru SCLK_UART0>, <&cru PCLK_UART0>;
-> +		clock-names = "baudclk", "apb_pclk";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
-> +		status = "disabled";
-> +	};
-> +
-> +	uart1: serial@11020000 {
-> +		compatible = "snps,dw-apb-uart";
-> +		reg = <0x11020000 0x100>;
-> +		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-> +		reg-shift = <2>;
-> +		reg-io-width = <4>;
-> +		clock-frequency = <24000000>;
-> +		clocks = <&cru SCLK_UART1>, <&cru PCLK_UART1>;
-> +		clock-names = "baudclk", "apb_pclk";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&uart1_xfer>;
-> +		status = "disabled";
-> +	};
-> +
-> +	uart2: serial@11030000 {
-> +		compatible = "snps,dw-apb-uart";
-> +		reg = <0x11030000 0x100>;
-> +		interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
-> +		reg-shift = <2>;
-> +		reg-io-width = <4>;
-> +		clock-frequency = <24000000>;
-> +		clocks = <&cru SCLK_UART2>, <&cru PCLK_UART2>;
-> +		clock-names = "baudclk", "apb_pclk";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&uart2_xfer>;
-> +		status = "disabled";
-> +	};
-> +
-> +
-> +	pinctrl: pinctrl {
-> +		compatible = "rockchip,rk3228-pinctrl";
-> +		rockchip,grf = <&grf>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		gpio0: gpio0@11110000 {
-> +			compatible = "rockchip,gpio-bank";
-> +			reg = <0x11110000 0x100>;
-> +			interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cru PCLK_GPIO0>;
-> +
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
+> +		opp00 {
+
+Maybe use convention with frequency, like:
+	opp@50000000
+This also used in opp.txt examples.
+
+
+> +			opp-hz = /bits/ 64 <50000000>;
+> +			opp-microvolt = <800000>;
 > +		};
-> +
-> +		gpio1: gpio1@11120000 {
-> +			compatible = "rockchip,gpio-bank";
-> +			reg = <0x11120000 0x100>;
-> +			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cru PCLK_GPIO1>;
-> +
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <100000000>;
+> +			opp-microvolt = <800000>;
 > +		};
-> +
-> +		gpio2: gpio2@11130000 {
-> +			compatible = "rockchip,gpio-bank";
-> +			reg = <0x11130000 0x100>;
-> +			interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cru PCLK_GPIO2>;
-> +
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
+> +		opp02 {
+> +			opp-hz = /bits/ 64 <134000000>;
+> +			opp-microvolt = <800000>;
 > +		};
-> +
-> +		gpio3: gpio3@11140000 {
-> +			compatible = "rockchip,gpio-bank";
-> +			reg = <0x11140000 0x100>;
-> +			interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cru PCLK_GPIO3>;
-> +
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
+> +		opp03 {
+> +			opp-hz = /bits/ 64 <200000000>;
+> +			opp-microvolt = <800000>;
 > +		};
-> +
-> +		pcfg_pull_up: pcfg-pull-up {
-> +			bias-pull-up;
-> +		};
-> +
-> +		pcfg_pull_down: pcfg-pull-down {
-> +			bias-pull-down;
-> +		};
-> +
-> +		pcfg_pull_none: pcfg-pull-none {
-> +			bias-disable;
-> +		};
-> +
-> +		emmc {
-> +			emmc_clk: emmc-clk {
-> +				rockchip,pins = <2 7 RK_FUNC_2 &pcfg_pull_none>;
-> +			};
-> +
-> +			emmc_cmd: emmc-cmd {
-> +				rockchip,pins = <1 22 RK_FUNC_2 &pcfg_pull_none>;
-> +			};
-> +
-> +			emmc_bus8: emmc-bus8 {
-> +				rockchip,pins = <1 24 RK_FUNC_2 &pcfg_pull_none>,
-> +						<1 25 RK_FUNC_2 &pcfg_pull_none>,
-> +						<1 26 RK_FUNC_2 &pcfg_pull_none>,
-> +						<1 27 RK_FUNC_2 &pcfg_pull_none>,
-> +						<1 28 RK_FUNC_2 &pcfg_pull_none>,
-> +						<1 29 RK_FUNC_2 &pcfg_pull_none>,
-> +						<1 30 RK_FUNC_2 &pcfg_pull_none>,
-> +						<1 31 RK_FUNC_2 &pcfg_pull_none>;
-> +			};
-> +		};
-> +
-> +		pwm0 {
-> +			pwm0_pin: pwm0-pin {
-> +				rockchip,pins = <3 21 RK_FUNC_1 &pcfg_pull_none>;
-> +			};
-> +		};
-> +
-> +		pwm1 {
-> +			pwm1_pin: pwm1-pin {
-> +				rockchip,pins = <0 30 RK_FUNC_2 &pcfg_pull_none>;
-> +			};
-> +		};
-> +
-> +		pwm2 {
-> +			pwm2_pin: pwm2-pin {
-> +				rockchip,pins = <1 12 RK_FUNC_2 &pcfg_pull_none>;
-> +			};
-> +		};
-> +
-> +		pwm3 {
-> +			pwm3_pin: pwm3-pin {
-> +				rockchip,pins = <1 11 RK_FUNC_2 &pcfg_pull_none>;
-> +			};
-> +		};
-> +
-> +		uart0 {
-> +			uart0_xfer: uart0-xfer {
-> +				rockchip,pins = <2 26 RK_FUNC_1 &pcfg_pull_none>,
-> +						<2 27 RK_FUNC_1 &pcfg_pull_none>;
-> +			};
-> +
-> +			uart0_cts: uart0-cts {
-> +				rockchip,pins = <2 29 RK_FUNC_1 &pcfg_pull_none>;
-> +			};
-> +
-> +			uart0_rts: uart0-rts {
-> +				rockchip,pins = <0 17 RK_FUNC_1 &pcfg_pull_none>;
-> +			};
-> +		};
-> +
-> +		uart1 {
-> +			uart1_xfer: uart1-xfer {
-> +				rockchip,pins = <1 9 RK_FUNC_1 &pcfg_pull_none>,
-> +						<1 10 RK_FUNC_1 &pcfg_pull_none>;
-> +			};
-> +
-> +			uart1_cts: uart1-cts {
-> +				rockchip,pins = <1 8 RK_FUNC_1 &pcfg_pull_none>;
-> +			};
-> +
-> +			uart1_rts: uart1-rts {
-> +				rockchip,pins = <1 11 RK_FUNC_1 &pcfg_pull_none>;
-> +			};
-> +		};
-> +
-> +		uart2 {
-> +			uart2_xfer: uart2-xfer {
-> +				rockchip,pins = <1 18 RK_FUNC_2 &pcfg_pull_none>,
-> +						<1 19 RK_FUNC_2 &pcfg_pull_none>;
-> +			};
-> +
-> +			uart2_cts: uart2-cts {
-> +				rockchip,pins = <0 25 RK_FUNC_1 &pcfg_pull_none>;
-> +			};
-> +
-> +			uart2_rts: uart2-rts {
-> +				rockchip,pins = <0 24 RK_FUNC_1 &pcfg_pull_none>;
-> +			};
+> +		opp04 {
+> +			opp-hz = /bits/ 64 <400000000>;
+> +			opp-microvolt = <875000>;
 > +		};
 > +	};
-> +};
+> +
+> +	Usage case to handle the frequency and voltage of bus on runtime
+> +	in exynos3250-rinato.dts are listed below:
+
+s/are/is/
+
+> +
+> +	&bus_dmc {
+> +		devfreq-events = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
+> +		vdd-supply = <&buck1_reg>;	/* VDD_MIF */
+> +		status = "okay";
+> +	};
 > 
