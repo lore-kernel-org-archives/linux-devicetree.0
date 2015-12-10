@@ -1,46 +1,68 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 4/9] ARM: dts: add dts files for hi3519-demb board
-Date: Thu, 10 Dec 2015 10:13:20 +0100
-Message-ID: <1499414.DqYuOANrii@wuerfel>
-References: <1449110668-23647-1-git-send-email-xuejiancheng@huawei.com> <2721289.3GUub5trUg@wuerfel> <56693EE2.20501@huawei.com>
+From: Tomas Winkler <tomasw@gmail.com>
+Subject: Re: [RFC][PATCH] misc: Introduce reboot_reason driver
+Date: Thu, 10 Dec 2015 11:20:06 +0200
+Message-ID: <CA+i0qc7EsvkLtdnMvPbqiFiD9P28EkaEKq1T2syjuz+P=KozRQ@mail.gmail.com>
+References: <1449610162-30543-1-git-send-email-john.stultz@linaro.org>
+	<20151208220722.GG4000@usrtlx11787.corpusers.net>
+	<CALAqxLXATE4TCGTu+NcDYFTvQ3YTS_m0baCa_AeJp-j4POtSQA@mail.gmail.com>
+	<27901180.P9mpafrzx5@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56693EE2.20501@huawei.com>
+In-Reply-To: <27901180.P9mpafrzx5@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: xuejiancheng <xuejiancheng@huawei.com>
-Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, suwenping@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yanhaifeng@hisilicon.com, gaofei@hisilicon.com, ml.yang@hisilicon.com, yanghongwei@hisilicon.com
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: John Stultz <john.stultz@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinay Simha BN <simhavcs@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>, Andy Gross <agross@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 10 December 2015 16:59:14 xuejiancheng wrote:
-> On 2015/12/10 16:04, Arnd Bergmann wrote:
-> > On Thursday 10 December 2015 14:32:05 xuejiancheng wrote:
-> >>>
-> >>> This is not what I meant. You have to use "syscon" as the most generic
-> >>> "compatible" value here, but should add a machine specific string
-> >>> as a more specific one. "hisilicon,sysctrl" is not appropriate because
-> >>> it does not identify the IP block uniquely, you can only use that
-> >>> in combination with another more specific string.
-> >>
-> >> OK. I will use "hisilicon,hi3519-syscon" and "syscon" as the compatible value
-> >> for the sysctrl node in hi3519.dtsi.
-> >>
-> > 
-> > Why hisilicon,hi3519-syscon instead of hisilicon,hi3519-sysctrl?
-> 
-> > Is this not called a sysctrl at all in the datasheet then?
-> 
-> It is OK to use hisilicon,hi3519-sysctrl.
-> 
-> I thought syscon was more commonly used as abbr. of system-controller in the kernel code.
-> 
-> 
+On Thu, Dec 10, 2015 at 11:05 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Wednesday 09 December 2015 17:32:02 John Stultz wrote:
+>> On Tue, Dec 8, 2015 at 2:07 PM, Bjorn Andersson
+>> <bjorn.andersson@sonymobile.com> wrote:
+>> > On Tue 08 Dec 13:29 PST 2015, John Stultz wrote:
+>> >> diff --git a/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts b/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
+>> >> index 5183d18..ee5dcb7 100644
+>> >> --- a/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
+>> >> +++ b/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
+>> >> @@ -282,6 +282,15 @@
+>> >>                       };
+>> >>               };
+>> >>
+>> >> +             reboot_reason: reboot_reason@2a03f65c {
+>> >> +                     compatible              = "reboot_reason";
+>> >> +                     reg                     = <0x2A03F65C 0x4>;
+>> >> +                     reason,none             = <0x77665501>;
+>> >> +                     reason,bootloader       = <0x77665500>;
+>> >> +                     reason,recovery         = <0x77665502>;
+>> >> +                     reason,oem              = <0x6f656d00>;
+>> >> +             };
+>> >> +
+>> >
+>> > This address refers to IMEM, which is shared with a number of other
+>> > uses. So I think we should have a simple-mfd (and syscon) with this
+>> > within.
+>>
+>> So talking with Arnd some more it looked like IMEM was really just
+>> SRAM. Is that not the case, or is there something else special about
+>> it?  Does it really need simple-mfd and syscon? I'm still fuzzy on how
+>> to use those for this.
+>
+> If it's SRAM, we should use the SRAM binding and not make it a syscon
+> device. What we can have however, is a mostly somewhat reboot-reason
+> driver that is able to access an SRAM device or something else,
+> depending on what the platform and/or bootloader has.
+>
+> HTC's Nexus 9 apparently uses a section of normal RAM for communication
+> between bootloader and kernel, so we'd also need a way to hook into
+> a driver for that.
+>
+>         Arnd
 
-"syscon" is the generic name for the framework in the kernel.
-This has nothing to do with how chip designers call their devices,
-and the DT should always match what the datasheet says, not what
-a random operating system calls things, even if it's the only OS
-you care about.
+Intel uses EFI variables for that on  some AOS platforms. There is a
+need for persistent storage abstraction and generalize the reboot
+reasons strings.
+Second, I wonder why this is submitted under drivers/misc when it
+doesn't bind the misc API.
 
-	Arnd
+Thanks
+Tomas
