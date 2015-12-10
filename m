@@ -1,69 +1,229 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 1/2] usb: renesas_usbhs: add fallback compatibility
- strings
-Date: Fri, 11 Dec 2015 10:09:15 +0900
-Message-ID: <20151211010911.GC9927@verge.net.au>
-References: <1449726033-17117-1-git-send-email-horms+renesas@verge.net.au>
- <1449726033-17117-2-git-send-email-horms+renesas@verge.net.au>
- <877fkmbw9p.wl%kuninori.morimoto.gx@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <877fkmbw9p.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
+From: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: imx7d: cl-som-imx7: add basic module support
+Date: Thu, 10 Dec 2015 16:01:37 +0200
+Message-ID: <1449756097-2921-1-git-send-email-grinberg@compulab.co.il>
+References: <20151208151401.GA20042@rob-hp-laptop>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151208151401.GA20042@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 10, 2015 at 07:28:06AM +0000, Kuninori Morimoto wrote:
-> 
-> Hi Simon
-> 
-> Thank you for your patch
-> 
-> > Add fallback compatibility strings for R-Car Gen2 and Gen3.
-> > This is in keeping with the fallback scheme being adopted wherever
-> > appropriate for drivers for Renesas SoCs.
-> > 
-> > Also add SoC names.
-> > 
-> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> > ---
-> (snip)
-> >  Required properties:
-> >    - compatible: Must contain one of the following:
-> > -	- "renesas,usbhs-r8a7790"
-> > -	- "renesas,usbhs-r8a7791"
-> > -	- "renesas,usbhs-r8a7794"
-> > -	- "renesas,usbhs-r8a7795"
-> > +
-> > +	- "renesas,usbhs-r8a7790" for r8a7790 (R-Car H2) compatible device
-> > +	- "renesas,usbhs-r8a7791" for r8a7791 (R-Car M2-W) compatible device
-> > +	- "renesas,usbhs-r8a7794" for r8a7794 (R-Car E2) compatible device
-> > +	- "renesas,usbhs-r8a7795" for r8a7795 (R-Car H3) compatible device
-> > +	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 compatibile device
-> > +	- "renesas,rcar-gen3-usbhs" for R-Car Gen3 compatibile device
-> > +
-> > +	When compatible with the generic version, nodes must list the
-> > +	SoC-specific version corresponding to the platform first followed
-> > +	by the generic version.
-> 
-> I think these can be separated ?
-> 
->  1. document update for "renesas,usbhs-r8a77xx"
->  2. add new "rcar-genX" (this patch)
+From: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 
-Sure, will do.
+CL-SOM-iMX7 is a miniature System-on-Module (SoM) based on
+Freescale i.MX7 System-on-Chip family.
 
-> >  Example:
-> >  	usbhs: usb@e6590000 {
-> > -		compatible = "renesas,usbhs-r8a7790";
-> > +		compatible = "renesas,usbhs-r8a7790", "renesas,rcar-usbhs";
-> 
-> I think you want
-> 
->  -		compatible = "renesas,usbhs-r8a7790", "renesas,rcar-usbhs";
->  +		compatible = "renesas,usbhs-r8a7790", "renesas,rcar-gen2-usbhs";
+http://www.compulab.co.il/products/computer-on-modules/cl-som-imx7-freescale-i-mx-7-system-on-module/
 
-Thanks, I will fix that.
+Add basic DT support for standalone module (without a carrier board):
+
+* Memory configuration
+* I2C2 bus
+* PMIC
+* UART1
+
+Signed-off-by: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Signed-off-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+
+v2: use generic node name for pmic (Thanks Rob).
+
+ Documentation/devicetree/bindings/arm/fsl.txt |   4 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/imx7d-cl-som-imx7.dts       | 150 ++++++++++++++++++++++++++
+ 3 files changed, 155 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+
+diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+index 34c88b0..30b0ba1 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.txt
++++ b/Documentation/devicetree/bindings/arm/fsl.txt
+@@ -53,6 +53,10 @@ i.MX6 Quad SABRE Automotive Board
+ Required root node properties:
+     - compatible = "fsl,imx6q-sabreauto", "fsl,imx6q";
+ 
++i.MX7D CL-SOM-iMX7 Board
++Required root node properties:
++    - compatible = "compulab,cl-som-imx7", "fsl,imx7d";
++
+ Generic i.MX boards
+ -------------------
+ 
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 30bbc37..83ed521 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -350,6 +350,7 @@ dtb-$(CONFIG_SOC_IMX6SX) += \
+ dtb-$(CONFIG_SOC_IMX6UL) += \
+ 	imx6ul-14x14-evk.dtb
+ dtb-$(CONFIG_SOC_IMX7D) += \
++	imx7d-cl-som-imx7.dtb \
+ 	imx7d-sdb.dtb
+ dtb-$(CONFIG_SOC_LS1021A) += \
+ 	ls1021a-qds.dtb \
+diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+new file mode 100644
+index 0000000..ba05198
+--- /dev/null
++++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+@@ -0,0 +1,150 @@
++/*
++ * Support for CompuLab CL-SOM-iMX7 System-on-Module
++ *
++ * Copyright (C) 2015 CompuLab Ltd. - http://www.compulab.co.il/
++ * Author: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 as published by
++ * the Free Software Foundation.
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/input/input.h>
++#include "imx7d.dtsi"
++
++/ {
++	model = "CompuLab CL-SOM-iMX7";
++	compatible = "compulab,cl-som-imx7", "fsl,imx7d";
++
++	memory {
++		reg = <0x80000000 0x10000000>; /* 256 MB - minimal configuration */
++	};
++};
++
++&cpu0 {
++	arm-supply = <&sw1a_reg>;
++};
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++
++	pmic: pmic@8 {
++		compatible = "fsl,pfuze3000";
++		reg = <0x08>;
++
++		regulators {
++			sw1a_reg: sw1a {
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1475000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <6250>;
++			};
++
++			/* use sw1c_reg to align with pfuze100/pfuze200 */
++			sw1c_reg: sw1b {
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1475000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <6250>;
++			};
++
++			sw2_reg: sw2 {
++				regulator-min-microvolt = <1500000>;
++				regulator-max-microvolt = <1850000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw3a_reg: sw3 {
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <1650000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			swbst_reg: swbst {
++				regulator-min-microvolt = <5000000>;
++				regulator-max-microvolt = <5150000>;
++			};
++
++			snvs_reg: vsnvs {
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vref_reg: vrefddr {
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vgen1_reg: vldo1 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen2_reg: vldo2 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++			};
++
++			vgen3_reg: vccsd {
++				regulator-min-microvolt = <2850000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen4_reg: v33 {
++				regulator-min-microvolt = <2850000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen5_reg: vldo3 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen6_reg: vldo4 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++		};
++	};
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	assigned-clocks = <&clks IMX7D_UART1_ROOT_SRC>;
++	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
++	status = "okay";
++};
++
++&iomuxc {
++	cl-som-imx7 {
++		pinctrl_i2c2: i2c2grp {
++			fsl,pins = <
++				MX7D_PAD_I2C2_SDA__I2C2_SDA		0x4000007f
++				MX7D_PAD_I2C2_SCL__I2C2_SCL		0x4000007f
++			>;
++		};
++
++		pinctrl_uart1: uart1grp {
++			fsl,pins = <
++				MX7D_PAD_UART1_TX_DATA__UART1_DCE_TX	0x79
++				MX7D_PAD_UART1_RX_DATA__UART1_DCE_RX	0x79
++			>;
++		};
++	};
++};
+-- 
+2.4.10
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
