@@ -1,166 +1,170 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 3/3] arm: dts: rockchip: move the public part to rk3288-evb
- common
-Date: Thu, 10 Dec 2015 13:46:39 +0800
-Message-ID: <1449726399-12507-3-git-send-email-zyw@rock-chips.com>
-References: <1449726399-12507-1-git-send-email-zyw@rock-chips.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v2 14/19] ARM: dts: Add bus nodes using VDD_INT for
+ Exynos4x12
+Date: Thu, 10 Dec 2015 14:57:44 +0900
+Message-ID: <56691458.9000000@samsung.com>
+References: <1449634091-1842-1-git-send-email-cw00.choi@samsung.com>
+ <1449634091-1842-15-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1449726399-12507-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1449634091-1842-15-git-send-email-cw00.choi@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com, kgene@kernel.org
+Cc: kyungmin.park@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, tjakobi@math.uni-bielefeld.de, linux.amoon@gmail.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Rk3288-evb-act8846 and rk3288-evb-rk808 are the power boards of
-rk3288-evb, they provide the same power supply interface to the
-motherboard. Sort out them, put the public part to rk3288-evb.dtsi,
-such as gmac and cpu-supply, leaving only the power section.
+On 09.12.2015 13:08, Chanwoo Choi wrote:
+> This patch adds the bus noes using VDD_INT for Exynos4x12 SoC.
+> Exynos4x12 has the following AXI buses to translate data between
+> DRAM and sub-blocks.
+> 
+> Following list specifies the detailed relation between DRAM and sub-blocks:
+> - ACLK100 clock for PERIL/PERIR/MFC(PCLK)
+> - ACLK160 clock for CAM/TV/LCD
+> : The minimum clock of ACLK160 should be over 160MHz.
+>   When drop the clock under 160MHz, show the broken image.
+> - ACLK133 clock for FSYS
+> - GDL clock for LEFTBUS
+> - GDR clock for RIGHTBUS
+> - SCLK_MFC clock for MFC
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4x12.dtsi | 112 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 112 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
+> index 3bcf0939755e..8bc4aee156b5 100644
+> --- a/arch/arm/boot/dts/exynos4x12.dtsi
+> +++ b/arch/arm/boot/dts/exynos4x12.dtsi
+> @@ -354,6 +354,118 @@
+>  			opp-microvolt = <950000>;
+>  		};
+>  	};
+> +
+> +	bus_leftbus: bus_leftbus {
+> +		compatible = "samsung,exynos-bus";
+> +		clocks = <&clock CLK_DIV_GDL>;
+> +		clock-names = "bus";
+> +		operating-points-v2 = <&bus_leftbus_opp_table>;
+> +		status = "disabled";
+> +	};
+> +
+> +	bus_rightbus: bus_rightbus {
+> +		compatible = "samsung,exynos-bus";
+> +		clocks = <&clock CLK_DIV_GDR>;
+> +		clock-names = "bus";
+> +		operating-points-v2 = <&bus_leftbus_opp_table>;
+> +		status = "disabled";
+> +	};
 
-Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+These two nodes are symmetrical. The MFC below and other buses in other
+DTS share opps. How about changing the binding so multiple clocks could
+be specified at once ("bus0", "bus1")? I think there is no need for a
+bus device for each clock.
 
----
+Best regards,
+Krzysztof
 
- arch/arm/boot/dts/rk3288-evb-act8846.dts |  4 ----
- arch/arm/boot/dts/rk3288-evb-rk808.dts   | 27 -----------------------
- arch/arm/boot/dts/rk3288-evb.dtsi        | 37 +++++++++++++++++++++++++++-----
- 3 files changed, 32 insertions(+), 36 deletions(-)
-
-diff --git a/arch/arm/boot/dts/rk3288-evb-act8846.dts b/arch/arm/boot/dts/rk3288-evb-act8846.dts
-index 7b768b7..e662147 100644
---- a/arch/arm/boot/dts/rk3288-evb-act8846.dts
-+++ b/arch/arm/boot/dts/rk3288-evb-act8846.dts
-@@ -65,10 +65,6 @@
- 	};
- };
- 
--&cpu0 {
--	cpu0-supply = <&vdd_cpu>;
--};
--
- &i2c0 {
- 	clock-frequency = <400000>;
- 
-diff --git a/arch/arm/boot/dts/rk3288-evb-rk808.dts b/arch/arm/boot/dts/rk3288-evb-rk808.dts
-index 18eb6cb..736b08b 100644
---- a/arch/arm/boot/dts/rk3288-evb-rk808.dts
-+++ b/arch/arm/boot/dts/rk3288-evb-rk808.dts
-@@ -43,17 +43,6 @@
- 
- / {
- 	compatible = "rockchip,rk3288-evb-rk808", "rockchip,rk3288";
--
--	ext_gmac: external-gmac-clock {
--		compatible = "fixed-clock";
--		clock-frequency = <125000000>;
--		clock-output-names = "ext_gmac";
--		#clock-cells = <0>;
--	};
--};
--
--&cpu0 {
--	cpu0-supply = <&vdd_cpu>;
- };
- 
- &i2c0 {
-@@ -244,19 +233,3 @@
- 		};
- 	};
- };
--
--&gmac {
--	phy-supply = <&vcc_phy>;
--	phy-mode = "rgmii";
--	clock_in_out = "input";
--	snps,reset-gpio = <&gpio4 7 0>;
--	snps,reset-active-low;
--	snps,reset-delays-us = <0 10000 1000000>;
--	assigned-clocks = <&cru SCLK_MAC>;
--	assigned-clock-parents = <&ext_gmac>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&rgmii_pins>;
--	tx_delay = <0x30>;
--	rx_delay = <0x10>;
--	status = "ok";
--};
-diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
-index f6d2e78..4faabdb 100644
---- a/arch/arm/boot/dts/rk3288-evb.dtsi
-+++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-@@ -89,6 +89,13 @@
- 		pwms = <&pwm0 0 1000000 PWM_POLARITY_INVERTED>;
- 	};
- 
-+	ext_gmac: external-gmac-clock {
-+		compatible = "fixed-clock";
-+		clock-frequency = <125000000>;
-+		clock-output-names = "ext_gmac";
-+		#clock-cells = <0>;
-+	};
-+
- 	gpio-keys {
- 		compatible = "gpio-keys";
- 		#address-cells = <1>;
-@@ -160,6 +167,10 @@
- 	};
- };
- 
-+&cpu0 {
-+	cpu0-supply = <&vdd_cpu>;
-+};
-+
- &emmc {
- 	broken-cd;
- 	bus-width = <8>;
-@@ -172,11 +183,6 @@
- 	status = "okay";
- };
- 
--&hdmi {
--	ddc-i2c-bus = <&i2c5>;
--	status = "okay";
--};
--
- &sdmmc {
- 	bus-width = <4>;
- 	cap-mmc-highspeed;
-@@ -191,6 +197,27 @@
- 	vqmmc-supply = <&vccio_sd>;
- };
- 
-+&gmac {
-+	phy-supply = <&vcc_phy>;
-+	phy-mode = "rgmii";
-+	clock_in_out = "input";
-+	snps,reset-gpio = <&gpio4 7 0>;
-+	snps,reset-active-low;
-+	snps,reset-delays-us = <0 10000 1000000>;
-+	assigned-clocks = <&cru SCLK_MAC>;
-+	assigned-clock-parents = <&ext_gmac>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rgmii_pins>;
-+	tx_delay = <0x30>;
-+	rx_delay = <0x10>;
-+	status = "ok";
-+};
-+
-+&hdmi {
-+	ddc-i2c-bus = <&i2c5>;
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	status = "okay";
- };
--- 
-2.6.3
+> +
+> +	bus_display: bus_display {
+> +		compatible = "samsung,exynos-bus";
+> +		clocks = <&clock CLK_ACLK160>;
+> +		clock-names = "bus";
+> +		operating-points-v2 = <&bus_display_opp_table>;
+> +		status = "disabled";
+> +	};
+> +
+> +	bus_fsys: bus_fsys {
+> +		compatible = "samsung,exynos-bus";
+> +		clocks = <&clock CLK_ACLK133>;
+> +		clock-names = "bus";
+> +		operating-points-v2 = <&bus_fsys_opp_table>;
+> +		status = "disabled";
+> +	};
+> +
+> +	bus_peri: bus_peri {
+> +		compatible = "samsung,exynos-bus";
+> +		clocks = <&clock CLK_ACLK100>;
+> +		clock-names = "bus";
+> +		operating-points-v2 = <&bus_peri_opp_table>;
+> +		status = "disabled";
+> +	};
+> +
+> +	bus_mfc: bus_mfc {
+> +		compatible = "samsung,exynos-bus";
+> +		clocks = <&clock CLK_SCLK_MFC>;
+> +		clock-names = "bus";
+> +		operating-points-v2 = <&bus_leftbus_opp_table>;
+> +		status = "disabled";
+> +	};
+> +
+> +	bus_leftbus_opp_table: opp_table3 {
+> +		compatible = "operating-points-v2";
+> +		opp-shared;
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <100000000>;
+> +			opp-microvolt = <900000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <134000000>;
+> +			opp-microvolt = <925000>;
+> +		};
+> +		opp02 {
+> +			opp-hz = /bits/ 64 <160000000>;
+> +			opp-microvolt = <950000>;
+> +		};
+> +		opp03 {
+> +			opp-hz = /bits/ 64 <200000000>;
+> +			opp-microvolt = <1000000>;
+> +		};
+> +	};
+> +
+> +	bus_display_opp_table: opp_table4 {
+> +		compatible = "operating-points-v2";
+> +		opp-shared;
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <160000000>;
+> +			opp-microvolt = <950000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <200000000>;
+> +			opp-microvolt = <1000000>;
+> +		};
+> +	};
+> +
+> +	bus_fsys_opp_table: opp_table5 {
+> +		compatible = "operating-points-v2";
+> +		opp-shared;
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <100000000>;
+> +			opp-microvolt = <900000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <134000000>;
+> +			opp-microvolt = <925000>;
+> +		};
+> +	};
+> +
+> +	bus_peri_opp_table: opp_table6 {
+> +		compatible = "operating-points-v2";
+> +		opp-shared;
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <50000000>;
+> +			opp-microvolt = <900000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <100000000>;
+> +			opp-microvolt = <925000>;
+> +		};
+> +	};
+>  };
+>  
+>  &combiner {
+> 
