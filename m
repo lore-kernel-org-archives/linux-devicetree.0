@@ -1,332 +1,112 @@
-From: Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v11] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
- PCIe Host Controller
-Date: Thu, 10 Dec 2015 14:10:34 +0000
-Message-ID: <8520D5D51A55D047800579B09414719825869A85@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1448798633-12697-1-git-send-email-bharatku@xilinx.com>
- <20151209231921.GI31930@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2] ARM: l2x0: make it possible to disable outer sync from DT
+Date: Thu, 10 Dec 2015 15:14:15 +0100
+Message-ID: <1449756855-19473-1-git-send-email-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151209231921.GI31930@localhost>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "tinamdar-qTEPVZfXA3Y@public.gmane.org" <tinamdar-qTEPVZfXA3Y@public.gmane.org>, "treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "m-karicheri2-l0cyMroinI0@public.gmane.org" <m-karicheri2-l0cyMroinI0@public.gmane.org>, "hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org" <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, "marc.zyngier-5wv7dgnIgG8@public.gmane.org" <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "dhdang-qTEPVZfXA3Y@public.gmane.org" <dhdang-qTEPVZfXA3Y@public.gmane.org>, "sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel@lists.
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [PATCH v11] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
-> PCIe Host Controller
-> > +
-> It's a bit sloppy here to return 0, 1, or -EINVAL from a function declared to
-> return "bool".  A bool function should return "true" or "false".
-> 
-> I think the best thing is to split this into two functions:
-> 
->   static bool nwl_pcie_link_up(struct nwl_pcie *pcie)
->   {
->     if (readl(pcie->pcireg_base + PS_LINKUP_OFFSET) &
-> PCIE_PHY_LINKUP_BIT)
->       return true;
->     return false;
->   }
-> 
->   static bool nwl_phy_link_up(struct nwl_pcie *pcie)
->   {
->     if (readl(pcie->pcireg_base + PS_LINKUP_OFFSET) &
-> PHY_RDY_LINKUP_BIT)
->       return true;
->     return false;
->   }
-> 
-> Then there's no possibility of a caller passing an invalid "check_link_up"
-> argument, so you don't have to worry about an -EINVAL return.
+Some RealView platforms have broken outer_sync, see:
+http://marc.info/?l=linux-kernel&m=144846940516899&w=2
 
-Yes, agreed will address it in next patch
-> 
-> > +}
-> > +
-> > +static bool nwl_pcie_valid_device(struct pci_bus *bus, unsigned int
-> > +devfn) {
-> > +	struct nwl_pcie *pcie = bus->sysdata;
-> > +
-> > +	/* Check link,before accessing downstream ports */
-> > +	if (bus->number != pcie->root_busno) {
-> > +		if (!nwl_pcie_link_up(pcie, PCIE_USER_LINKUP))
-> > +			return false;
-> > +	}
-> > +
-> > +	/* Only one device down on each root port */
-> > +	if (bus->number == pcie->root_busno && devfn > 0)
-> > +		return false;
-> > +
-> > +	/*
-> > +	 * Do not read more than one device on the bus directly attached
-> > +	 * to root port.
-> > +	 */
-> > +	if (bus->primary == pcie->root_busno && devfn > 0)
-> 
-> Why is this?  Do you have some restriction on the PCIe topology below the
-> Root Port?  If there's a spec-compliant link coming from the Root Port, it
-> seems like any legal PCIe device could be attached, including a multifunction
-> device.
-> 
-Primary refers to root port itself, this check is not for devices downstream on link. 
+We got rid of the custom barriers from the machine by disabling
+outer sync, but that was just for the boardfile case. We have
+to be able to do the same in the device tree case.
 
-> > +		return false;
-> > +
-> > +	return true;
-> > +}
-> > + * nwl_setup_sspl - Set Slot Power limit
-> > + *
-> > + * @pcie: PCIe port information
-> > + */
-> > +static int nwl_setup_sspl(struct nwl_pcie *pcie)
-> 
-> This function needs a little explanation because it doesn't really make any
-> sense when compared with the PCIe spec.  The spec says the Slot Power
-> Limit Value is HwInit, which means it's supposed to be initialized by firmware
-> or hardware, and it should be read-only by the time we get here.
-> I think the value there should reflect parameters of the hardware design; we
-> wouldn't want a user to write an arbitrary limit that would tell a card it can
-> pull more power than the slot can supply.
-> 
-> But I saw another driver recently (pcie-snpsdev.c) that's doing something
-> similar, so there must be something else going on here.  In any case, a
-> comment here about exactly *what* is going on would be much appreciated.
+Since __l2c_init() is cloning and copying the L2C vtable,
+we pass an argument to this function to optionally numb
+the outer sync operation if desired, before initializing
+the cache.
 
-The spec says the following:
-The Set_Slot_Power_Limit Message includes a one DW data payload. The data payload is copied
-from the Slot Capabilities register of the Downstream Port and is written into the Device
-Capabilities register of the Upstream Port on the other side of the Link. Bits 9:8 of the data payload
-map to the Slot Power Limit Scale field and bits 7:0 map to the Slot Power Limit Value field. Bits
-31:10 of the data payload must be set to all 0's by the Transmitter and ignored by the Receiver. This
-Message is sent automatically by the Downstream Port (of a Root Complex or a Switch) when one
-of the following events occurs:
--> On a Configuration Write to the Slot Capabilities register (see Section 7.8.9) when the Data Link
-Layer reports DL_Up status.
-->  Anytime when a Link transitions from a non-DL_Up status to a DL_Up status (see
-Section 2.9.2).
+After this we can set up the cache correctly on the RealView
+PB11MPCore, and it boots rock solid with the cache enabled.
+Before this, spurious crashes would occur if we try to set
+up the cache properly.
 
-Captured Slot Power Limit Value (Upstream Ports only) - In
-combination with the Slot Power Limit Scale value, specifies the
-upper limit on power supplied by slot.
-Power limit (in Watts) calculated by multiplying the value in this
-field by the value in the Slot Power Limit Scale field.
-This value is set by the Set_Slot_Power_Limit Message or
-hardwired to 0000 0000b (see Section 6.9). The default value is
-0000 0000b.> 
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/l2cc.txt |  1 +
+ arch/arm/mm/cache-l2x0.c                       | 13 ++++++++++---
+ 2 files changed, 11 insertions(+), 3 deletions(-)
 
-"With Set_Slot_Power_Limit Message also this value is set"
+diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+index d181b7c4c522..aae7387acbdb 100644
+--- a/Documentation/devicetree/bindings/arm/l2cc.txt
++++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+@@ -75,6 +75,7 @@ Optional properties:
+   specified to indicate that such transforms are precluded.
+ - arm,parity-enable : enable parity checking on the L2 cache (L220 or PL310).
+ - arm,parity-disable : disable parity checking on the L2 cache (L220 or PL310).
++- arm,outer-sync-disable : disable the outer sync operation on the L2 cache.
+ - prefetch-data : Data prefetch. Value: <0> (forcibly disable), <1>
+   (forcibly enable), property absent (retain settings set by firmware)
+ - prefetch-instr : Instruction prefetch. Value: <0> (forcibly disable),
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index 3f3008e5c662..9f9d54271aad 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -790,7 +790,7 @@ static const struct l2c_init_data l2c310_init_fns __initconst = {
+ };
+ 
+ static int __init __l2c_init(const struct l2c_init_data *data,
+-			     u32 aux_val, u32 aux_mask, u32 cache_id)
++			     u32 aux_val, u32 aux_mask, u32 cache_id, bool nosync)
+ {
+ 	struct outer_cache_fns fns;
+ 	unsigned way_size_bits, ways;
+@@ -866,6 +866,10 @@ static int __init __l2c_init(const struct l2c_init_data *data,
+ 	fns.configure = outer_cache.configure;
+ 	if (data->fixup)
+ 		data->fixup(l2x0_base, cache_id, &fns);
++	if (nosync) {
++		pr_info("L2C: disabling outer sync\n");
++		fns.sync = NULL;
++	}
+ 
+ 	/*
+ 	 * Check if l2x0 controller is already enabled.  If we are booting
+@@ -925,7 +929,7 @@ void __init l2x0_init(void __iomem *base, u32 aux_val, u32 aux_mask)
+ 	if (data->save)
+ 		data->save(l2x0_base);
+ 
+-	__l2c_init(data, aux_val, aux_mask, cache_id);
++	__l2c_init(data, aux_val, aux_mask, cache_id, false);
+ }
+ 
+ #ifdef CONFIG_OF
+@@ -1724,6 +1728,7 @@ int __init l2x0_of_init(u32 aux_val, u32 aux_mask)
+ 	struct resource res;
+ 	u32 cache_id, old_aux;
+ 	u32 cache_level = 2;
++	bool nosync = false;
+ 
+ 	np = of_find_matching_node(NULL, l2x0_ids);
+ 	if (!np)
+@@ -1762,6 +1767,8 @@ int __init l2x0_of_init(u32 aux_val, u32 aux_mask)
+ 	if (cache_level != 2)
+ 		pr_err("L2C: device tree specifies invalid cache level\n");
+ 
++	nosync = of_property_read_bool(np, "arm,outer-sync-disable");
++
+ 	/* Read back current (default) hardware configuration */
+ 	if (data->save)
+ 		data->save(l2x0_base);
+@@ -1776,6 +1783,6 @@ int __init l2x0_of_init(u32 aux_val, u32 aux_mask)
+ 	else
+ 		cache_id = readl_relaxed(l2x0_base + L2X0_CACHE_ID);
+ 
+-	return __l2c_init(data, aux_val, aux_mask, cache_id);
++	return __l2c_init(data, aux_val, aux_mask, cache_id, nosync);
+ }
+ #endif
+-- 
+2.4.3
 
-> > +{
-> > +	unsigned int status;
-> > +			mdelay(2);
-> 
-> Arnd suggested a sleep instead of delay here, but I didn't see a response.
-> See http://lkml.kernel.org/r/2677327.lnRZhqx5GI@wuerfel
-Agreed, will address in next patch.
-> 
-> > +			status = nwl_bridge_readl(pcie, TX_PCIE_MSG)
-> > +						  & MSG_DONE_BIT;
-> > +			if (status) {
-> > +				status = nwl_bridge_readl(pcie,
-> TX_PCIE_MSG)
-> > +						  & MSG_DONE_STATUS_BIT;
-> > +				if (status == SLVERR) {
-> > +					dev_err(pcie->dev, "AXI slave
-> error");
-> > +					retval = SLVERR;
-> > +				} else if (status == DECERR) {
-> > +					dev_err(pcie->dev, "AXI Decode
-> error");
-> > +					retval = DECERR;
-> > +				}
-> 
-> I think both these cases (SLVERR and DECERR) are impossible:
-> 
->   #define MSG_DONE_STATUS_BIT                     (BIT(25) | BIT(24))
->   #define SLVERR                                  0x02
->   #define DECERR                                  0x03
-> 
-> MSG_DONE_STATUS_BIT is 0x3000000, so after masking status with it, the
-> result can never be 0x02 or 0x03.
-> 
-> 
-Agreed, will address in next patch.
-> > +			} else {
-> > +				retval = 1;
-> > +			}
-> 
-> You only set "retval = 1" here in the case when "status == 0", which means
-> you'll exit the loop, so this would be slightly simpler as:
-> 
->   status = nwl_bridge_readl(pcie, TX_PCIE_MSG) & MSG_DONE_BIT;
->   if (!status)
->     return 1;
-> 
->   status = nwl_bridge_readl(pcie, TX_PCIE_MSG) &
-> MSG_DONE_STATUS_BIT;
->   ...
-> 
-> It's not clear to me whether you need to re-read TX_PCIE_MSG here.
-
-MSG_DONE_BIT qualifies MSG_DONE_STATUS_BIT; so value of MSG_DONE_STATUS_BIT is valid only when MSG_DONE_BIT = 1
-> 
-> > +		}
-> > +	} while (status);
-> > +
-> > +	return retval;
-> > 
-> > +	for (i = 0; i < 4; i++) {
-> > +		irq = irq_find_mapping(pcie->legacy_irq_domain, i + 1);
-> > +		if (irq > 0)
-> > +			irq_dispose_mapping(irq);
-> > +	}
-> > +	if (pcie->legacy_irq_domain)
-> > +		irq_domain_remove(pcie->legacy_irq_domain);
-> 
-> Something seems wrong here.  I don't know when irq_dispose_mapping() is
-> required, but it's not used consistently in drivers/pci, and it should be.
-> Currently, only pci-tegra.c, pcie-xilinx.c, and this new driver use it.  Tegra uses
-> it only for MSIs, and Xilinx seems to use it for both MSIs and INTx.  What's
-> right?
-Its not related to MSI or INTx, its related to domain, for freeing irq descriptor associated with irq.
-
-> > +
-> > +	nwl_msi_free_irq_domain(pcie);
-> > +}
-> > +
-> > +	}
-> > +
-> > +	pcie->legacy_irq_domain =
-> irq_domain_add_linear(legacy_intc_node, 4,
-> 
-> This "4", the one in nwl_pcie_free_irq_domain(), and the one in
-> nwl_pcie_leg_handler() should all be replaced by a #define so we know they
-> all refer to the same thing.
-> 
-> I see that xilinx_pcie_init_irq_domain() and
-> dra7xx_pcie_init_irq_domain() have a similar issue, and it'd be nice to fix
-> them, too (in a separate patch, of course).
-> Agreed, will address in next patch.
-> > +
-> 	&legacy_domain_ops,
-> > +	/* Check for msii_present bit */
-> > +	ret = nwl_bridge_readl(pcie, I_MSII_CAPABILITIES) & MSII_PRESENT;
-> > +	if (!ret) {
-> > +		dev_err(pcie->dev, "MSI not present\n");
-> > +		ret = -EIO;
-> > +		goto err;
-> 
-> These error paths leak msi->bitmap.
-Agreed, will address in next patch.
-> > +	}
-> > +
-> > +	/* Disable high range msi interrupts */
-> 
-> The comments before each line make the code harder to read.  Something
-> like this might be useful:
- Agreed, will address in next patch.
->   /*
->    * For high range MSI interrupts: disable, clear any pending, register
->    * the handler, and enable.
->    */
-> 
-> I think you could move the platform_get_irq_byname() calls up so they're
-> not in the middle of the hardware twiddling code.  That would also help the
-> code read better.
-Agreed, will address in next patch.
-> > +	nwl_bridge_writel(pcie, (u32)~MSGF_MSI_SR_HI_MASK,
-> > +MSGF_MSI_MASK_HI);
-> > +
-> > +	/* Clear pending high range msi interrupts */
-> > +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie,
-> MSGF_MSI_STATUS_HI) &
-> > +			  MSGF_MSI_SR_HI_MASK, MSGF_MSI_STATUS_HI);
-> > +	/* Get msi_1 IRQ number */
-> > +	msi->irq_msi1 = platform_get_irq_byname(pdev, "msi1");
-> > +	if (msi->irq_msi1 < 0) {
-> > +		dev_err(&pdev->dev, "failed to get IRQ#%d\n", msi-
-> >irq_msi1);
-> > +		goto err;
-> 
-> "ret" contains "I_MSII_CAPABILITIES & MSII_PRESENT", so I think this and
-> the subsequent error paths return junk.
-> 
-Agreed will update retval accordingly.
-> > +}
-> > +
-> > +	do {
-> > +		err = nwl_pcie_link_up(pcie, PHY_RDY_LINKUP);
-> > +		if (err != 1) {
-> 
-> nwl_pcie_link_up() is defined to return "bool", so you should use it that way,
-> e.g., save the result in something like "link_up" and test as "if (!link_up)"
-> instead of testing a bool against "1".
-Agreed, will address in next patch.
-> 
-> > +			check_link_up++;
-> > +			if (check_link_up > LINKUP_ITER_CHECK)
-> > +				return -ENODEV;
-> > +			msleep(1000);
-> > +		}
-> > +	} while (!err);
-> > +
-> > +	/* Check for ECAM present bit */
-> 
-> Superfluous comment.
-Agreed, will address in next patch.
-> > +	ecam_val = nwl_bridge_readl(pcie, E_ECAM_CAPABILITIES) &
-> > +
-> > +	/* Enable ECAM */
-> 
-> This comment is useful, but the ones below are distracting because you can
-> read the same thing from the code.
-Agreed, will address in next patch.
-> > +	nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, E_ECAM_CONTROL)
-> |
-> Remove the comment; it's obvious from the code.
-Agreed, will address in next patch.
-> > +	pcie->link_up = nwl_pcie_link_up(pcie, PCIE_USER_LINKUP);
-> > +	if (!pcie->link_up)
-> > +		dev_info(pcie->dev, "Link is DOWN\n");
-> > +	else
-> > +		dev_info(pcie->dev, "Link is UP\n");
-> 
-> Avoid the negation with:
-> 
->   if (pcie->link_up)
->     dev_info(pcie->dev, "Link is UP\n");
->   else
->     dev_info(pcie->dev, "Link is DOWN\n");
-> 
-> or
-> 
->   dev_info(pcie->dev, "Link is %s\n", pcie->link_up ? "UP" : "DOWN");
-Agreed, will address in next patch.
-> > +
-> > +	/* Disable all misc interrupts */
-> > +static const struct of_device_id nwl_pcie_of_match[] = {
-> > +	{ .compatible = "xlnx,nwl-pcie-2.11", },
-> > +	{}
-> > +};
-> > +	pcie = devm_kzalloc(&pdev->dev, sizeof(*pcie), GFP_KERNEL);
-> > +	if (!pcie)
-> > +		return -ENOMEM;
-> > +
-> > +	err = nwl_pcie_parse_dt(pcie, pdev);
-> > +	if (err) {
-> > +		dev_err(pcie->dev, "Parsing DT failed\n");
-> > +		return err;
-> 
-> This leaks the nwl_pcie struct you just allocated.  And all the subsequent
-> error paths do too, of course.
-> 
-Its resource-managed kzalloc(), kernel will take care of it.
-> 
-Bharat
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
