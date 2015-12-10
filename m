@@ -1,50 +1,52 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v11] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
- PCIe Host Controller
-Date: Thu, 10 Dec 2015 11:25:08 -0600
-Message-ID: <20151210172508.GA367@localhost>
-References: <1448798633-12697-1-git-send-email-bharatku@xilinx.com>
- <20151209231921.GI31930@localhost>
- <5669236D.30805@xilinx.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 0/6] pinctrl: meson: enable support for external GPIO interrupts
+Date: Thu, 10 Dec 2015 18:31:25 +0100
+Message-ID: <CACRpkdZ+kmyRKR9RwcLzAXWsUDGVniAhoidEp-kbwhoVEDhPvQ@mail.gmail.com>
+References: <1448987062-31225-1-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5669236D.30805@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sorenb@xilinx.com, bhelgaas@google.com, arnd@arndb.de, tinamdar@apm.com, treding@nvidia.com, rjui@broadcom.com, Minghuan.Lian@freescale.com, m-karicheri2@ti.com, hauke@hauke-m.de, marc.zyngier@arm.com, dhdang@apm.com, sbranden@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, Ravi Kiran Gummaluri <rgummal@xilinx.com>, Paul Burton <paul.burton@imgtec.com>, Thierry Reding <thierry.reding@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448987062-31225-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 10, 2015 at 08:02:05AM +0100, Michal Simek wrote:
-> Hi Bjorn,
-> 
-> On 10.12.2015 00:19, Bjorn Helgaas wrote:
-> > [+cc Michal, Paul, Thierry, Stephen, Alexandre (see irq_dispose_mapping questions below)]
-> > 
-> > On Sun, Nov 29, 2015 at 05:33:53PM +0530, Bharat Kumar Gogada wrote:
-> >> Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
-> >>
-> >> Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
-> >> Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
-> >> Acked-by: Rob Herring <robh@kernel.org>
-> > 
-> > This needs either a MAINTAINERS update or an ack from Michal (whose
-> > MAINTAINERS entry matches anything containing "xilinx").
-> 
-> We have done it in this way because driver owners are changing time to
-> time and my entry cover it that I can pass it to appropriate person who
-> is responsible for it.
-> 
-> For this Maintainers part here is my:
-> Acked-by: Michal Simek <michal.simek@xilinx.com>
+On Tue, Dec 1, 2015 at 5:24 PM, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
 
-Thanks.
+> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+>
+> In Meson SoCs we have 8 independent GPIO interrupts that can be programmed to
+> use any of the GPIOs in the chip as interrupt source.
+>
+> These GPIOs are managed by GIC but they can be conditioned (and enabled) by
+> some registers external to the GIC.
+>
+> GPIOs |--[mux1 or mux2]--[polarity]--[filter]--[edge_select]--> GIC
+>
+> Changelog:
+>
+> * V2:
+>     - Introduced .irq_request_resources() and .irq_release_resources()
+>     - s/virq/irq/ and s/pin/hwirq/
+>     - Moved to the new irq_fwspec
+>
+> * V3:
+>     - EXPORT_SYMBOL_GPL for of_irq_find_parent()
+>     - split GPIO management and irqchip side
+>     - the GIC IRQs list is not kept as set of fwspecs. it's now a regular
+>       integer array.
+>     - irq_of_phandle_args_to_fwspec discarded
 
-For things under drivers/pci/host, I ask for an ack from the
-individual maintainer before applying patches.  As-is (without a
-MAINTAINERS update) I'll be looking for acks from you, Michal, for all
-future changes to pcie-xilinx-nwl.c.  If you want something else, we
-need a MAINTAINERS change.
+I don't know where this patch set is standing but I get the impression that it
+still needs revising so waiting for a v4.
 
-Bjorn
+Given the complex nature of the IRQs I will probably want Marc to provide
+his Review/ACK before applying.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
