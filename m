@@ -1,42 +1,75 @@
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/3] DT labels for connector device mapping
-Date: Thu, 10 Dec 2015 16:36:19 -0500
-Message-ID: <5669F053.4080509@linaro.org>
-References: <1449782473-20880-1-git-send-email-robh@kernel.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH linux-next (v3) 1/2] reset: Add brcm,bcm6345-reset device
+ tree binding
+Date: Fri, 11 Dec 2015 00:36:46 +0300
+Message-ID: <5669F06E.3060506@cogentembedded.com>
+References: <5669EE86.8030406@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449782473-20880-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5669EE86.8030406@simon.arlott.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Arlott <simon@fire.lp0.eu>, Philipp Zabel <p.zabel@pengutronix.de>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: linux-kernel@vger.kernel.org, MIPS Mailing List <linux-mips@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jonas Gorski <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/10/2015 04:21 PM, Rob Herring wrote:
-> Having a common connector interface across different platforms can be 
-> problematic for determining which SOC device is connected to which 
-> connector pins. The standard DT property "label" is intended to provide 
-> a human readable name for a device and can be used to provide this 
-> information. Then userspace can can read the label to determine the 
-> device mapping. For example:
+Hello.
+
+On 12/11/2015 12:28 AM, Simon Arlott wrote:
+
+> Add device tree binding for the BCM6345 soft reset controller.
 >
-> for f in $(ls -d /sys/class/tty/tty*); do
->   label=$(cat $f/device/of_node/label)
->   if [ "$label" = "LS-UART1" ]; then
->     # you've found UART1, so do something with it.
->     # $f/dev is the major:minor for the /dev node
->   fi
-> done
+> The BCM6345 contains a soft-reset controller activated by setting
+> a bit (that must previously have been cleared).
 >
-> This series adds labels on hikey and dragonboard 410c devices for the 
-> low speed and high speed connectors. Not tested at all.
+> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+> ---
+> v3: Resend. Example has changed because usbh now has two compatible
+>      strings and uses a power domain instead of a regulator.
+>
+> v2: Renamed to bcm6345, removed "mask" property.
+>      Acked-by: Rob Herring <robh@kernel.org>
+>
+>   .../bindings/reset/brcm,bcm6345-reset.txt          | 33 ++++++++++++++++++++++
+>   1 file changed, 33 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.txt
+>
+> diff --git a/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.txt b/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.txt
+> new file mode 100644
+> index 0000000..0313040
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.txt
+> @@ -0,0 +1,33 @@
+> +Broadcom BCM6345 reset controller
+> +
+> +The BCM6345 contains a basic soft reset controller in the perf register
+> +set which resets components using a bit in a register.
+> +
+> +Please also refer to reset.txt in this directory for common reset
+> +controller binding usage.
+> +
+> +Required properties:
+> +- compatible:	Should be "brcm,bcm<soc>-reset", "brcm,bcm6345-reset"
+> +- regmap:	The register map phandle
+> +- offset:	Offset in the register map for the reset register (in bytes)
+> +- #reset-cells:	Must be set to 1
+> +
+> +Example:
+> +
+> +periph_soft_rst: reset-controller {
+> +	compatible = "brcm,bcm63168-reset", "brcm,bcm6345-reset";
+> +	regmap = <&periph_cntl>;
+> +	offset = <0x10>;
+> +
+> +	#reset-cells = <1>;
+> +};
+> +
+> +usbh: usbphy@10002700 {
 
-should we then use the line-name property on the GPIOs to have a common naming
-convention across all 96Boards boards?
+    "usb-phy" please to be more in line with ePAPR standardized "ethernet-phy" 
+node name.
 
+[...]
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+MBR, Sergei
