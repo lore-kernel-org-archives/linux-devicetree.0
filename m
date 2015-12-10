@@ -1,60 +1,32 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2 2/7] ARM: dts: exynos4412-odroid*: enable MFC device
-Date: Thu, 10 Dec 2015 16:45:21 +0900
-Message-ID: <56692D91.70506@samsung.com>
-References: <1449669502-24601-1-git-send-email-m.szyprowski@samsung.com>
- <1449669502-24601-3-git-send-email-m.szyprowski@samsung.com>
- <56692D42.2090809@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 4/9] ARM: dts: add dts files for hi3519-demb board
+Date: Thu, 10 Dec 2015 09:04:10 +0100
+Message-ID: <2721289.3GUub5trUg@wuerfel>
+References: <1449110668-23647-1-git-send-email-xuejiancheng@huawei.com> <5533669.m0KDLq8XOc@wuerfel> <56691C65.6090808@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <56692D42.2090809@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Andrzej Hajda <a.hajda@samsung.com>, Kukjin Kim <kgene@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56691C65.6090808@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: xuejiancheng <xuejiancheng@huawei.com>
+Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, suwenping@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yanhaifeng@hisilicon.com, gaofei@hisilicon.com, ml.yang@hisilicon.com, yanghongwei@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On 10.12.2015 16:44, Krzysztof Kozlowski wrote:
-> On 09.12.2015 22:58, Marek Szyprowski wrote:
->> Enable support for Multimedia Codec (MFC) device for all Exynos4412-based
+On Thursday 10 December 2015 14:32:05 xuejiancheng wrote:
+> > 
+> > This is not what I meant. You have to use "syscon" as the most generic
+> > "compatible" value here, but should add a machine specific string
+> > as a more specific one. "hisilicon,sysctrl" is not appropriate because
+> > it does not identify the IP block uniquely, you can only use that
+> > in combination with another more specific string.
+> 
+> OK. I will use "hisilicon,hi3519-syscon" and "syscon" as the compatible value
+> for the sysctrl node in hi3519.dtsi.
+> 
 
-... and one more finding: I think the abbreviation is Multi Format Codec.
+Why hisilicon,hi3519-syscon instead of hisilicon,hi3519-sysctrl?
 
-BR,
-Krzysztof
+Is this not called a sysctrl at all in the datasheet then?
 
->> Odroid boards.
->>
->> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> ---
->>  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 24 ++++++++++++++++++++++++
->>  1 file changed, 24 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
->> index edf0fc8..5825abf 100644
->> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
->> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
->> @@ -18,6 +18,24 @@
->>  		stdout-path = &serial_1;
->>  	};
->>  
->> +	reserved-memory {
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		ranges;
->> +
->> +		mfc_left: region@77000000 {
->> +			compatible = "shared-dma-pool";
->> +			reusable;
->> +			reg = <0x77000000 0x1000000>;
-> 
-> Doesn't this exceed the memory of Odroid X?
-> 
-> For other Exynos4412 boards the length is 0x800000. I am curious: any
-> particular reason for the difference?
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
+	Arnd
