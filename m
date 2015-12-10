@@ -1,57 +1,116 @@
-From: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Subject: [PATCH v4 1/5] misc: eeprom_93xx46: Fix 16-bit read and write accesses.
-Date: Wed,  9 Dec 2015 23:00:51 -0500
-Message-ID: <1449720055-25965-2-git-send-email-cory.tusar@pid1solutions.com>
+From: Cory Tusar <cory.tusar@pid1solutions.com>
+Subject: [PATCH v4 5/5] misc: eeprom_93xx46: Add support for a GPIO 'select' line.
+Date: Wed,  9 Dec 2015 23:00:55 -0500
+Message-ID: <1449720055-25965-6-git-send-email-cory.tusar@pid1solutions.com>
 References: <1449720055-25965-1-git-send-email-cory.tusar@pid1solutions.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449720055-25965-1-git-send-email-cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, afd-l0cyMroinI0@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Chris.Healy-c8ZVq/bFV1I@public.gmane.org, Keith.Vennel-c8ZVq/bFV1I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1449720055-25965-1-git-send-email-cory.tusar@pid1solutions.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, gregkh@linuxfoundation.org
+Cc: jic23@kernel.org, vz@mleia.com, broonie@kernel.org, afd@ti.com, andrew@lunn.ch, Chris.Healy@zii.aero, Keith.Vennel@zii.aero, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Cory Tusar <cory.tusar@pid1solutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Compatible at93xx46 devices from both Microchip and Atmel expect a
-word-based address, regardless of whether the device is strapped for 8-
-or 16-bit operation.  However, the offset parameter passed in when
-reading or writing at a specific location is always specified in terms
-of bytes.
+This commit adds support to the eeprom_93x46 driver allowing a GPIO line
+to function as a 'select' or 'enable' signal prior to accessing the
+EEPROM.
 
-This commit fixes 16-bit read and write accesses by shifting the offset
-parameter to account for this difference between a byte offset and a
-word-based address.
-
-Signed-off-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Tested-by: Chris Healy <chris.healy-c8ZVq/bFV1I@public.gmane.org>
+Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
+Tested-by: Chris Healy <chris.healy@zii.aero>
 ---
- drivers/misc/eeprom/eeprom_93xx46.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/misc/eeprom/eeprom_93xx46.c | 35 +++++++++++++++++++++++++++++++++++
+ include/linux/eeprom_93xx46.h       |  3 +++
+ 2 files changed, 38 insertions(+)
 
 diff --git a/drivers/misc/eeprom/eeprom_93xx46.c b/drivers/misc/eeprom/eeprom_93xx46.c
-index ff63f05..e1bf0a5 100644
+index d50bc17..d28fac2 100644
 --- a/drivers/misc/eeprom/eeprom_93xx46.c
 +++ b/drivers/misc/eeprom/eeprom_93xx46.c
-@@ -54,7 +54,7 @@ eeprom_93xx46_bin_read(struct file *filp, struct kobject *kobj,
- 		cmd_addr |= off & 0x7f;
- 		bits = 10;
- 	} else {
--		cmd_addr |= off & 0x3f;
-+		cmd_addr |= (off >> 1) & 0x3f;
- 		bits = 9;
- 	}
+@@ -10,11 +10,13 @@
  
-@@ -155,7 +155,7 @@ eeprom_93xx46_write_word(struct eeprom_93xx46_dev *edev,
- 		bits = 10;
- 		data_len = 1;
- 	} else {
--		cmd_addr |= off & 0x3f;
-+		cmd_addr |= (off >> 1) & 0x3f;
- 		bits = 9;
- 		data_len = 2;
- 	}
+ #include <linux/delay.h>
+ #include <linux/device.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/of_gpio.h>
+ #include <linux/slab.h>
+ #include <linux/spi/spi.h>
+ #include <linux/sysfs.h>
+@@ -343,6 +345,20 @@ static ssize_t eeprom_93xx46_store_erase(struct device *dev,
+ }
+ static DEVICE_ATTR(erase, S_IWUSR, NULL, eeprom_93xx46_store_erase);
+ 
++static void select_assert(void *context)
++{
++	struct eeprom_93xx46_dev *edev = context;
++
++	gpiod_set_value_cansleep(edev->pdata->select, 1);
++}
++
++static void select_deassert(void *context)
++{
++	struct eeprom_93xx46_dev *edev = context;
++
++	gpiod_set_value_cansleep(edev->pdata->select, 0);
++}
++
+ static const struct of_device_id eeprom_93xx46_of_table[] = {
+ 	{ .compatible = "eeprom-93xx46", },
+ 	{ .compatible = "atmel,at93c46d", .data = &atmel_at93c46d_data, },
+@@ -357,6 +373,8 @@ static int eeprom_93xx46_probe_dt(struct spi_device *spi)
+ 	struct device_node *np = spi->dev.of_node;
+ 	struct eeprom_93xx46_platform_data *pd;
+ 	u32 tmp;
++	int gpio;
++	enum of_gpio_flags of_flags;
+ 	int ret;
+ 
+ 	pd = devm_kzalloc(&spi->dev, sizeof(*pd), GFP_KERNEL);
+@@ -381,6 +399,23 @@ static int eeprom_93xx46_probe_dt(struct spi_device *spi)
+ 	if (of_property_read_bool(np, "read-only"))
+ 		pd->flags |= EE_READONLY;
+ 
++	gpio = of_get_named_gpio_flags(np, "select-gpios", 0, &of_flags);
++	if (gpio_is_valid(gpio)) {
++		unsigned long flags =
++			of_flags == OF_GPIO_ACTIVE_LOW ? GPIOF_ACTIVE_LOW : 0;
++
++		ret = devm_gpio_request_one(&spi->dev, gpio, flags,
++					    "eeprom_93xx46_select");
++		if (ret)
++			return ret;
++
++		pd->select = gpio_to_desc(gpio);
++		pd->prepare = select_assert;
++		pd->finish = select_deassert;
++
++		gpiod_direction_output(pd->select, 0);
++	}
++
+ 	if (of_id->data) {
+ 		const struct eeprom_93xx46_devtype_data *data = of_id->data;
+ 
+diff --git a/include/linux/eeprom_93xx46.h b/include/linux/eeprom_93xx46.h
+index 92fa4c3..03f3435 100644
+--- a/include/linux/eeprom_93xx46.h
++++ b/include/linux/eeprom_93xx46.h
+@@ -3,6 +3,8 @@
+  * platform description for 93xx46 EEPROMs.
+  */
+ 
++#include <linux/of_gpio.h>
++
+ struct eeprom_93xx46_platform_data {
+ 	unsigned char	flags;
+ #define EE_ADDR8	0x01		/*  8 bit addr. cfg */
+@@ -21,4 +23,5 @@ struct eeprom_93xx46_platform_data {
+ 	 */
+ 	void (*prepare)(void *);
+ 	void (*finish)(void *);
++	struct gpio_desc *select;
+ };
 -- 
 2.4.10
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
