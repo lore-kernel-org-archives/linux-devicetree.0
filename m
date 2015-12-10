@@ -1,137 +1,43 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] MAINTAINERS: Add missing platform maintainers for dts files
-Date: Thu, 10 Dec 2015 17:38:23 -0600
-Message-ID: <1449790703-12054-1-git-send-email-robh@kernel.org>
+From: <atull@opensource.altera.com>
+Subject: [PATCH v14 3/7] add sysfs document for fpga bridge class
+Date: Thu, 10 Dec 2015 17:37:05 -0600
+Message-ID: <1449790629-5517-4-git-send-email-atull@opensource.altera.com>
+References: <1449790629-5517-1-git-send-email-atull@opensource.altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1449790629-5517-1-git-send-email-atull@opensource.altera.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Barry Song <baohua@kernel.org>, Wei Xu <xuwei5@hisilicon.com>, Santosh Shilimkar <ssantosh@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, David Brown <davidb@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Eric Miao <eric.y.miao@gmail.com>, Viresh Kumar <vireshk@kernel.org>, Shiraz Hashim <shiraz.linux.kernel@gmail.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, gregkh@linuxfoundation.org, monstr@monstr.eu, michal.simek@xilinx.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, Alan Tull <atull@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-Platform dts files need to be reviewed primarily by the platform
-maintainers as dts files typically go in thru their trees. Add the missing
-paths where there are existing maintainers listed.
+From: Alan Tull <atull@opensource.altera.com>
 
-Signed-off-by: Rob Herring <robh@kernel.org>
+Add documentation for new FPGA bridge class's sysfs interface.
+
+Signed-off-by: Alan Tull <atull@opensource.altera.com>
 ---
- MAINTAINERS | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ Documentation/ABI/testing/sysfs-class-fpga-bridge |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-bridge
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 69c8a9c..415b731 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -950,6 +950,8 @@ M:	Rob Herring <robh@kernel.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	arch/arm/mach-highbank/
-+F:	arch/arm/boot/dts/highbank.dts
-+F:	arch/arm/boot/dts/ecx-*.dts*
- 
- ARM/CAVIUM NETWORKS CNS3XXX MACHINE SUPPORT
- M:	Krzysztof Halasa <khalasa@piap.pl>
-@@ -1025,6 +1027,7 @@ M:	Barry Song <baohua@kernel.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/baohua/linux.git
- S:	Maintained
-+F:	arch/arm/boot/dts/prima2*
- F:	arch/arm/mach-prima2/
- F:	drivers/clk/sirf/
- F:	drivers/clocksource/timer-prima2.c
-@@ -1126,6 +1129,10 @@ W:	http://www.hisilicon.com
- S:	Supported
- T:	git git://github.com/hisilicon/linux-hisi.git
- F:	arch/arm/mach-hisi/
-+F:	arch/arm/boot/dts/hi3*
-+F:	arch/arm/boot/dts/hip*
-+F:	arch/arm/boot/dts/hisi*
-+F:	arch/arm64/boot/dts/hisilicon/
- 
- ARM/HP JORNADA 7XX MACHINE SUPPORT
- M:	Kristoffer Ericson <kristoffer.ericson@gmail.com>
-@@ -1202,6 +1209,7 @@ M:	Santosh Shilimkar <ssantosh@kernel.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	arch/arm/mach-keystone/
-+F:	arch/arm/boot/dts/k2*
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git
- 
- ARM/TEXAS INSTRUMENT KEYSTONE CLOCK FRAMEWORK
-@@ -1270,6 +1278,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	arch/arm/mach-berlin/
- F:	arch/arm/boot/dts/berlin*
-+F:	arch/arm64/boot/dts/marvell/berlin*
- 
- 
- ARM/Marvell Dove/MV78xx0/Orion SOC support
-@@ -1406,7 +1415,9 @@ M:	David Brown <davidb@codeaurora.org>
- L:	linux-arm-msm@vger.kernel.org
- L:	linux-soc@vger.kernel.org
- S:	Maintained
-+F:	arch/arm/boot/dts/qcom-*
- F:	arch/arm/mach-qcom/
-+F:	arch/arm64/boot/dts/qcom/*
- F:	drivers/soc/qcom/
- F:	drivers/tty/serial/msm_serial.h
- F:	drivers/tty/serial/msm_serial.c
-@@ -1456,6 +1467,8 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- L:	linux-samsung-soc@vger.kernel.org (moderated for non-subscribers)
- S:	Maintained
- F:	arch/arm/boot/dts/s3c*
-+F:	arch/arm/boot/dts/s5p*
-+F:	arch/arm/boot/dts/samsung*
- F:	arch/arm/boot/dts/exynos*
- F:	arch/arm64/boot/dts/exynos/
- F:	arch/arm/plat-samsung/
-@@ -1536,6 +1549,7 @@ S:	Maintained
- F:	arch/arm/mach-socfpga/
- F:	arch/arm/boot/dts/socfpga*
- F:	arch/arm/configs/socfpga_defconfig
-+F:	arch/arm64/boot/dts/altera/
- W:	http://www.rocketboards.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/dinguyen/linux.git
- 
-@@ -1680,7 +1694,7 @@ M:	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	arch/arm/boot/dts/vexpress*
--F:	arch/arm64/boot/dts/arm/vexpress*
-+F:	arch/arm64/boot/dts/arm/
- F:	arch/arm/mach-vexpress/
- F:	*/*/vexpress*
- F:	*/*/*/vexpress*
-@@ -2300,6 +2314,7 @@ F:	arch/arm/mach-bcm/
- F:	arch/arm/boot/dts/bcm113*
- F:	arch/arm/boot/dts/bcm216*
- F:	arch/arm/boot/dts/bcm281*
-+F:	arch/arm64/boot/dts/broadcom/
- F:	arch/arm/configs/bcm_defconfig
- F:	drivers/mmc/host/sdhci-bcm-kona.c
- F:	drivers/clocksource/bcm_kona_timer.c
-@@ -8627,6 +8642,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- T:	git git://github.com/hzhuang1/linux.git
- T:	git git://github.com/rjarzmik/linux.git
- S:	Maintained
-+F:	arch/arm/boot/dts/pxa*
- F:	arch/arm/mach-pxa/
- F:	drivers/dma/pxa*
- F:	drivers/pcmcia/pxa2xx*
-@@ -8649,6 +8665,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- T:	git git://github.com/hzhuang1/linux.git
- T:	git git://git.linaro.org/people/ycmiao/pxa-linux.git
- S:	Maintained
-+F:	arch/arm/boot/dts/mmp*
- F:	arch/arm/mach-mmp/
- 
- PXA MMCI DRIVER
-@@ -10068,6 +10085,7 @@ L:	spear-devel@list.st.com
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- W:	http://www.st.com/spear
- S:	Maintained
-+F:	arch/arm/boot/dts/spear*
- F:	arch/arm/mach-spear/
- 
- SPEAR CLOCK FRAMEWORK SUPPORT
+diff --git a/Documentation/ABI/testing/sysfs-class-fpga-bridge b/Documentation/ABI/testing/sysfs-class-fpga-bridge
+new file mode 100644
+index 0000000..e45d952
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-class-fpga-bridge
+@@ -0,0 +1,11 @@
++What:		/sys/class/fpga_bridge/<bridge>/name
++Date:		December 2015
++KernelVersion:	4.4
++Contact:	Alan Tull <atull@opensource.altera.com>
++Description:	Name of low level FPGA bridge driver.
++
++What:		/sys/class/fpga_bridge/<bridge>/state
++Date:		December 2015
++KernelVersion:	4.4
++Contact:	Alan Tull <atull@opensource.altera.com>
++Description:	Show bridge state as "enabled" or "disabled"
 -- 
-2.5.0
+1.7.9.5
