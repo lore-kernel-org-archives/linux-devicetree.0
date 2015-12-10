@@ -1,47 +1,63 @@
-From: Juri Lelli <juri.lelli@arm.com>
-Subject: Re: [RFC PATCH 8/8] arm64: add sysfs cpu_capacity attribute
-Date: Thu, 10 Dec 2015 18:01:59 +0000
-Message-ID: <20151210180159.GF14571@e106622-lin>
-References: <1448288921-30307-1-git-send-email-juri.lelli@arm.com>
- <1448288921-30307-9-git-send-email-juri.lelli@arm.com>
- <566988E8.3010308@arm.com>
- <20151210155940.GN5727@sirena.org.uk>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [RFC][PATCH] misc: Introduce reboot_reason driver
+Date: Thu, 10 Dec 2015 10:56:55 -0800
+Message-ID: <CALAqxLUKRFgg4pc-sJfOD_mDv8Afn-tzGuhNJzprheq4CEXUcw@mail.gmail.com>
+References: <1449610162-30543-1-git-send-email-john.stultz@linaro.org>
+	<10759786.VG6jMebqAj@wuerfel>
+	<CALAqxLV8imuRw5bx=9nub3LxB75kDYR5nusP6CT9JFuwh5C0AA@mail.gmail.com>
+	<1721197.gFcIQMjGvs@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151210155940.GN5727@sirena.org.uk>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1721197.gFcIQMjGvs@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinay Simha BN <simhavcs@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>, Andy Gross <agross@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Dec 10, 2015 at 6:52 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Wednesday 09 December 2015 17:19:52 John Stultz wrote:
+>>
+>> If the concern is that since DT is basically ABI, one might not want
+>> to have such a wide interface that specifies all the different
+>> reasons, I can understand that. Though I'm really not sure how else we
+>> would be able to specify the device supported the reboot reason logic
+>> w/o having something in the DT (since some device may use the same soc
+>> w/  the same reboot logic may use a different bootloader which doesn't
+>> support the reason methods). At that point if we don't describe the
+>> method clearly, it ends up being something closer to just a quirks
+>> list which we'd have to map internally to behavior, which doesn't seem
+>> great.
+>>
+>> Should we run into hardware that the proposed driver doesn't handle,
+>> we can introduce a new driver for those specific semantics, but this
+>> way we can share at least most of the logic, no?
+>
+> I think we need a layered approach, with some high-level code to
+> store the boot reason, but then support firmware specific backends
+> to that. If we just need a phandle for an SRAM partition and an offset
+> within it, that can be done by the high-level driver, but not
+> any of the more sophisticated communication methods.
 
-On 10/12/15 15:59, Mark Brown wrote:
-> On Thu, Dec 10, 2015 at 02:15:04PM +0000, Dietmar Eggemann wrote:
-> > On 23/11/15 14:28, Juri Lelli wrote:
-> 
-> > > The new attribute shows up as:
-> 
-> > >  /sys/devices/system/cpu/cpu*/cpu_capacity
-> 
-> > This sysfs interface is not really needed for arm or arm64. People can
-> > build the dt blob if they want to change the values. Less code to carry
-> > ... Let's focus on the core functionality, which is parsing cpu capacity
-> > from dt file to task scheduler for heterogeneous systems.
-> 
-> That does make the tuning process much more cumbersome - users have to
-> rebuild and reboot to tweak the numbers rather than just tweaking the
-> numbers and rerunning the benchmark (which seems like something people
-> would want to automate).
+Hrm. This feels to me like over-design, though. We already have the
+restart notifiers to hook into, which provide the command string. So
+its just a matter of parsing the string and writing the appropriate
+magic in the appropriate way (to memory, registers, efi, whatever).
+The amount of code we'd be dealing with to have a front end and 3-4
+back-ends, vs having 3-4 separate drivers seems like it would almost
+be the same. So why try to make a more complicated infrastructure?
 
-IMHO, this is not a tuning interface. It is an alternative interface,
-w.r.t. DTs, that we could use to provide default capacity values to the
-kernel. I'm proposing both here as they make both sense to me. Then we
-might dedice for which one to go (or if we need some other way) or to
-keep both for flexibility.
+Simply renaming this driver to reboot_reason_sram.c or something makes
+it easy to add reboot_reason_efi.c later.
 
-Best,
+The other part is, while there are many bits of hardware that have
+done varied things in the past, I'm not sure how hard we should try to
+design a super-infrastructure to support all these different solutions
+if no one is pushing them upstream. I'd rather design for what people
+are working to merge (admittedly, that's a bit selfish of a statement
+here ;), and then hope future hardware chooses to use the same
+mechanism, or adapt the infrastructure as folks try to merge new
+approaches.
 
-- Juri
+thanks
+-john
