@@ -1,71 +1,56 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] usb: renesas_usbhs: add device tree support for r8a779[23]
-Date: Thu, 10 Dec 2015 10:33:36 +0100
-Message-ID: <CAMuHMdVNi9OKmJBq5-H83WVN_N+wK4b1TSSg2hwTosWi0mMSew@mail.gmail.com>
-References: <1449726033-17117-1-git-send-email-horms+renesas@verge.net.au>
-	<1449726033-17117-3-git-send-email-horms+renesas@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449726033-17117-3-git-send-email-horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PICKME 0/2] cpufreq: New ST driver
+Date: Thu, 10 Dec 2015 09:42:15 +0000
+Message-ID: <1449740537-12619-1-git-send-email-lee.jones@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: kernel@stlinux.com, maxime.coquelin@st.com, viresh.kumar@linaro.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net, devicetree@vger.kernel.org, ajitpal.singh@st.com, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+Hi Rafael,
 
-On Thu, Dec 10, 2015 at 6:40 AM, Simon Horman
-<horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> Simply document new compatibility string.
-> As a previous patch adds a generic R-Car Gen2 compatibility string
-> there appears to be no need for a driver updates.
->
-> Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> index b959059826cd..efb3199a2a80 100644
-> --- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> +++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> @@ -5,6 +5,8 @@ Required properties:
->
->         - "renesas,usbhs-r8a7790" for r8a7790 (R-Car H2) compatible device
->         - "renesas,usbhs-r8a7791" for r8a7791 (R-Car M2-W) compatible device
-> +       - "renesas,usbhs-r8a7792" for r8a7792 (R-Car V2H) compatible device
-> +       - "renesas,usbhs-r8a7793" for r8a7793 (R-Car M2-N) compatible device
->         - "renesas,usbhs-r8a7794" for r8a7794 (R-Car E2) compatible device
->         - "renesas,usbhs-r8a7795" for r8a7795 (R-Car H3) compatible device
->         - "renesas,rcar-gen2-usbhs" for R-Car Gen2 compatibile device
+Would you be kind enough to pick these 2 patches up please.
+The have the required Acks.
 
-I see a possible issue here:
+Kind regards,
+Lee
 
-Old r8a7791 dtsi just has "renesas,usbhs-r8a7791", so it works with the current
-driver, as the driver matches against "renesas,usbhs-r8a7791".
+This is a re-write of the original submission, hence why the
+change-log is omitted.  Basically almost everything has changed.
+We are now using the new OPP framework and generic bindings
+written by Viresh.
+  
+There are 'ARM' patches in the set which are not necessarily
+related to CPUFreq, but are required to get it to work. Anyone
+who is not interested in general STi DT changes can safely
+ignore these.
+  
+v5 => v6:
+ - Converted Kconfig and header comment to describe new driver
+ - Complete re-write, using new Generic OPP framework
+ - Supply description for "suitable for ALL versions" DEFINE
+ - Pedantically re-ordered the #include files
+ - Removed platform device registration in arch/arm/mach-sti
 
-Existing (out-of-tree) r8a7792 dtsi may have followed existing practices,
-and just have "renesas,usbhs-r8a7792".
-This won't work with the new driver, as the driver doesn't match again
-"renesas,usbhs-r8a7792". The same applies to r8a7793.
+v4 => v5:
+ - Converted driver away from being a platform device
+  
+v1 => v2 => v3 => v4:
+ - Moot
 
-Do we care about this
-  - in upstream? Probably not.
-  - in the BSP? It seems to have r8a7790/r8a7791 usbhs only, though.
+Lee Jones (2):
+  cpufreq: st: Provide runtime initialised driver for ST's platforms
+  dt: cpufreq: st: Provide bindings for ST's CPUFreq implementation
 
-Gr{oetje,eeting}s,
+ .../devicetree/bindings/cpufreq/cpufreq-st.txt     |  91 +++++++
+ drivers/cpufreq/Kconfig.arm                        |  10 +
+ drivers/cpufreq/Makefile                           |   1 +
+ drivers/cpufreq/sti-cpufreq.c                      | 294 +++++++++++++++++++++
+ 4 files changed, 396 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-st.txt
+ create mode 100644 drivers/cpufreq/sti-cpufreq.c
 
-                        Geert
+-- 
+1.9.1
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
