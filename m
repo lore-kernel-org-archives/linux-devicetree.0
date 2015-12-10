@@ -1,56 +1,116 @@
 From: <atull@opensource.altera.com>
-Subject: [PATCH v14 0/7] fpga area and fpga bridge framework
-Date: Thu, 10 Dec 2015 17:37:02 -0600
-Message-ID: <1449790629-5517-1-git-send-email-atull@opensource.altera.com>
+Subject: [PATCH v14 4/7] ARM: socfpga: add bindings document for fpga bridge drivers
+Date: Thu, 10 Dec 2015 17:37:06 -0600
+Message-ID: <1449790629-5517-5-git-send-email-atull@opensource.altera.com>
+References: <1449790629-5517-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1449790629-5517-1-git-send-email-atull@opensource.altera.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>
-Cc: Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, gregkh@linuxfoundation.org, monstr@monstr.eu, michal.simek@xilinx.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, Alan Tull <atull@opensource.altera.com>
+Cc: Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, gregkh@linuxfoundation.org, monstr@monstr.eu, michal.simek@xilinx.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, Alan Tull <atull@opensource.altera.com>, Matthew Gerlach <mgerlach@altera.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Alan Tull <atull@opensource.altera.com>
 
-For v14 I'm dropping the concept of "simple-fpga-bus" for "fpga-area"
-with reworked bindings.
+Add bindings documentation for Altera SOCFPGA bridges:
+ * fpga2sdram
+ * fpga2hps
+ * hps2fpga
+ * lwhps2fpga
 
-An FPGA Area describes a section of an FPGA including the FPGA image needed to
-program it and the hardware contained once it is programmed.  The intent is
-to support Device Tree controlled programming of FPGA's.
-
-Alan Tull (7):
-  fpga: add usage documentation for fpga area
-  fpga: add bindings document for fpga area
-  add sysfs document for fpga bridge class
-  ARM: socfpga: add bindings document for fpga bridge drivers
-  fpga: add fpga bridge framework
-  fpga: fpga-area: support device tree control for FPGA programming
-  ARM: socfpga: fpga bridge driver support
-
- Documentation/ABI/testing/sysfs-class-fpga-bridge  |   11 +
- .../bindings/fpga/altera-fpga2sdram-bridge.txt     |   15 +
- .../bindings/fpga/altera-hps2fpga-bridge.txt       |   43 +++
- .../devicetree/bindings/fpga/fpga-area.txt         |   70 ++++
- Documentation/fpga/fpga-area.txt                   |  299 +++++++++++++++
- drivers/fpga/Kconfig                               |   21 ++
- drivers/fpga/Makefile                              |    7 +
- drivers/fpga/altera-fpga2sdram.c                   |  174 +++++++++
- drivers/fpga/altera-hps2fpga.c                     |  213 +++++++++++
- drivers/fpga/fpga-area.c                           |  313 ++++++++++++++++
- drivers/fpga/fpga-bridge.c                         |  388 ++++++++++++++++++++
- include/linux/fpga/fpga-bridge.h                   |   56 +++
- 12 files changed, 1610 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-bridge
+Signed-off-by: Alan Tull <atull@opensource.altera.com>
+Signed-off-by: Matthew Gerlach <mgerlach@altera.com>
+Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+---
+v2:  separate into 2 documents for the 2 drivers
+v12: bump version to line up with simple-fpga-bus version
+     remove Linux specific notes such as references to sysfs
+     move non-DT specific documentation elsewhere
+     remove bindings that would have been used to pass configuration
+     clean up formatting
+v13: Remove 'label' property
+     Change property from init-val to bridge-enable
+     Fix email address
+v14: Add resets
+     Change order of bridges to put lw bridge (controlling bridge) first
+---
+ .../bindings/fpga/altera-fpga2sdram-bridge.txt     |   15 +++++++
+ .../bindings/fpga/altera-hps2fpga-bridge.txt       |   43 ++++++++++++++++++++
+ 2 files changed, 58 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
  create mode 100644 Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
- create mode 100644 Documentation/devicetree/bindings/fpga/fpga-area.txt
- create mode 100644 Documentation/fpga/fpga-area.txt
- create mode 100644 drivers/fpga/altera-fpga2sdram.c
- create mode 100644 drivers/fpga/altera-hps2fpga.c
- create mode 100644 drivers/fpga/fpga-area.c
- create mode 100644 drivers/fpga/fpga-bridge.c
- create mode 100644 include/linux/fpga/fpga-bridge.h
 
+diff --git a/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+new file mode 100644
+index 0000000..81e2f06
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+@@ -0,0 +1,15 @@
++Altera FPGA To SDRAM Bridge Driver
++
++Required properties:
++- compatible		: Should contain "altr,socfpga-fpga2sdram-bridge"
++
++Optional properties:
++- bridge-enable		: 0 if driver should disable bridge at startup
++			  1 if driver should enable bridge at startup
++			  Default is to leave bridge in current state.
++
++Example:
++	fpga2sdram_br: fpgabridge@3 {
++		compatible = "altr,socfpga-fpga2sdram-bridge";
++		bridge-enable = <0>;
++	};
+diff --git a/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+new file mode 100644
+index 0000000..16db3b0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+@@ -0,0 +1,43 @@
++Altera FPGA/HPS Bridge Driver
++
++Required properties:
++- compatible	: Should contain one of:
++		  "altr,socfpga-lwhps2fpga-bridge",
++		  "altr,socfpga-hps2fpga-bridge", or
++		  "altr,socfpga-fpga2hps-bridge"
++- reset-names	: Should contain one of:
++		  "lwhps2fpga",
++		  "hps2fpga", or
++		  "fpga2hps"
++- resets	: Phandle and reset specifier for the reset listed in
++		  reset-names
++- clocks	: Clocks used by this module.
++
++Optional properties:
++- bridge-enable	: 0 if driver should disable bridge at startup.
++		  1 if driver should enable bridge at startup.
++		  Default is to leave bridge in its current state.
++
++Example:
++	hps_fpgabridge0: fpgabridge@0 {
++		compatible = "altr,socfpga-lwhps2fpga-bridge";
++		resets = <&rst LWHPS2FPGA_RESET>;
++		reset-names = "lwhps2fpga";
++		clocks = <&l4_main_clk>;
++		bridge-enable = <0>;
++	};
++
++	hps_fpgabridge1: fpgabridge@1 {
++		compatible = "altr,socfpga-hps2fpga-bridge";
++		resets = <&rst HPS2FPGA_RESET>;
++		reset-names = "hps2fpga";
++		clocks = <&l4_main_clk>;
++		bridge-enable = <1>;
++	};
++
++	hps_fpgabridge2: fpgabridge@2 {
++		compatible = "altr,socfpga-fpga2hps-bridge";
++		resets = <&rst FPGA2HPS_RESET>;
++		reset-names = "fpga2hps";
++		clocks = <&l4_main_clk>;
++	};
 -- 
 1.7.9.5
