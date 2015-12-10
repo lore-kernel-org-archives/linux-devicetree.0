@@ -1,137 +1,200 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: [PATCH v5 3/4] stmmac: Fix calculations for ptp counters when clock input = 50Mhz.
-Date: Wed,  9 Dec 2015 16:39:40 +0800
-Message-ID: <1449650381-82074-4-git-send-email-preid@electromag.com.au>
-References: <1449650381-82074-1-git-send-email-preid@electromag.com.au>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1449650381-82074-1-git-send-email-preid@electromag.com.au>
-Sender: netdev-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, peppe.cavallaro@st.com, davem@davemloft.net, vbridger@opensource.altera.com, devicetree@vger.kernel.org, netdev@vger.kernel.org
-Cc: Phil Reid <preid@electromag.com.au>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v2 09/19] PM / devfreq: exynos: Update documentation for
+ bus devices using passive governor
+Date: Thu, 10 Dec 2015 10:36:48 +0900
+Message-ID: <5668D730.6070404@samsung.com>
+References: <1449634091-1842-1-git-send-email-cw00.choi@samsung.com>
+ <1449634091-1842-10-git-send-email-cw00.choi@samsung.com>
+ <5668D5DD.5090202@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <5668D5DD.5090202@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, myungjoo.ham@samsung.com, kgene@kernel.org
+Cc: kyungmin.park@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, tjakobi@math.uni-bielefeld.de, linux.amoon@gmail.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-stmmac_config_sub_second_increment set the sub second increment to 20ns.
-Driver is configured to use the fine adjustment method where the sub second
-register is incremented when the acculumator incremented by the addend
-register wraps overflows. This accumulator is update on every ptp clk
-cycle. If a ptp clk with a period of greater than 20ns was used the
-sub second register would not get updated correctly.
+On 2015=EB=85=84 12=EC=9B=94 10=EC=9D=BC 10:31, Krzysztof Kozlowski wro=
+te:
+> On 09.12.2015 13:08, Chanwoo Choi wrote:
+>> This patch updates the documentation for passive bus devices and add=
+s the
+>> detailed example of Exynos3250.
+>>
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> ---
+>>  .../devicetree/bindings/devfreq/exynos-bus.txt     | 244 ++++++++++=
+++++++++++-
+>>  1 file changed, 241 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/devfreq/exynos-bus.tx=
+t b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+>> index 54a1f9c46c88..c4fdc70f8eac 100644
+>> --- a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+>> +++ b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+>> @@ -13,18 +13,23 @@ SoC has the different sub-blocks. So, this diffe=
+rence should be specified
+>>  in devicetree file instead of each device driver. In result, this d=
+river
+>>  is able to support the bus frequency for all Exynos SoCs.
+>> =20
+>> -Required properties for bus device:
+>> +Required properties for all bus devices:
+>>  - compatible: Should be "samsung,exynos-bus".
+>>  - clock-names : the name of clock used by the bus, "bus".
+>>  - clocks : phandles for clock specified in "clock-names" property.
+>>  - #clock-cells: should be 1.
+>>  - operating-points-v2: the OPP table including frequency/voltage in=
+formation
+>>    to support DVFS (Dynamic Voltage/Frequency Scaling) feature.
+>> +
+>> +Required properties for only parent bus device:
+>=20
+> Maybe:
+> "Required properties only for parent bus devices:"
 
-Instead set the sub sec increment to twice the period of the ptp clk.
-This result in the addend register being set mid range and overflow
-the accumlator every 2 clock cycles.
+OK. I'll modify it.
 
-Signed-off-by: Phil Reid <preid@electromag.com.au>
----
- drivers/net/ethernet/stmicro/stmmac/common.h          |  2 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c |  9 ++++++---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c     | 19 ++++++++-----------
- 3 files changed, 15 insertions(+), 15 deletions(-)
+>=20
+> In this binding documentation file the idea of "parent" is not
+> explained. I now it is related to passive devfreq governor but lookin=
+g
+> at the binding itself it is a new idea, not covered here.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index f4518bc..1e19c8f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -439,7 +439,7 @@ struct stmmac_ops {
- /* PTP and HW Timer helpers */
- struct stmmac_hwtimestamp {
- 	void (*config_hw_tstamping) (void __iomem *ioaddr, u32 data);
--	void (*config_sub_second_increment) (void __iomem *ioaddr);
-+	u32 (*config_sub_second_increment) (void __iomem *ioaddr, u32 clk_rate);
- 	int (*init_systime) (void __iomem *ioaddr, u32 sec, u32 nsec);
- 	int (*config_addend) (void __iomem *ioaddr, u32 addend);
- 	int (*adjust_systime) (void __iomem *ioaddr, u32 sec, u32 nsec,
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
-index 76ad214..a77f689 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
-@@ -33,22 +33,25 @@ static void stmmac_config_hw_tstamping(void __iomem *ioaddr, u32 data)
- 	writel(data, ioaddr + PTP_TCR);
- }
- 
--static void stmmac_config_sub_second_increment(void __iomem *ioaddr)
-+static u32 stmmac_config_sub_second_increment(void __iomem *ioaddr,
-+					      u32 ptp_clock)
- {
- 	u32 value = readl(ioaddr + PTP_TCR);
- 	unsigned long data;
- 
- 	/* Convert the ptp_clock to nano second
--	 * formula = (1/ptp_clock) * 1000000000
-+	 * formula = (2/ptp_clock) * 1000000000
- 	 * where, ptp_clock = 50MHz.
- 	 */
--	data = (1000000000ULL / 50000000);
-+	data = (2000000000ULL / ptp_clock);
- 
- 	/* 0.465ns accuracy */
- 	if (!(value & PTP_TCR_TSCTRLSSR))
- 		data = (data * 1000) / 465;
- 
- 	writel(data, ioaddr + PTP_SSIR);
-+
-+	return data;
- }
- 
- static int stmmac_init_systime(void __iomem *ioaddr, u32 sec, u32 nsec)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 3c6549a..2231a01 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -53,6 +53,7 @@
- #include "stmmac.h"
- #include <linux/reset.h>
- #include <linux/of_mdio.h>
-+#include "dwmac1000.h"
- 
- #define STMMAC_ALIGN(x)	L1_CACHE_ALIGN(x)
- 
-@@ -185,7 +186,7 @@ static void stmmac_clk_csr_set(struct stmmac_priv *priv)
- 			priv->clk_csr = STMMAC_CSR_100_150M;
- 		else if ((clk_rate >= CSR_F_150M) && (clk_rate < CSR_F_250M))
- 			priv->clk_csr = STMMAC_CSR_150_250M;
--		else if ((clk_rate >= CSR_F_250M) && (clk_rate <= CSR_F_300M))
-+		else if ((clk_rate >= CSR_F_250M) && (clk_rate < CSR_F_300M))
- 			priv->clk_csr = STMMAC_CSR_250_300M;
- 	}
- }
-@@ -435,6 +436,7 @@ static int stmmac_hwtstamp_ioctl(struct net_device *dev, struct ifreq *ifr)
- 	u32 ts_master_en = 0;
- 	u32 ts_event_en = 0;
- 	u32 value = 0;
-+	u32 sec_inc;
- 
- 	if (!(priv->dma_cap.time_stamp || priv->adv_ts)) {
- 		netdev_alert(priv->dev, "No support for HW time stamping\n");
-@@ -598,24 +600,19 @@ static int stmmac_hwtstamp_ioctl(struct net_device *dev, struct ifreq *ifr)
- 			 tstamp_all | ptp_v2 | ptp_over_ethernet |
- 			 ptp_over_ipv6_udp | ptp_over_ipv4_udp | ts_event_en |
- 			 ts_master_en | snap_type_sel);
--
- 		priv->hw->ptp->config_hw_tstamping(priv->ioaddr, value);
- 
- 		/* program Sub Second Increment reg */
--		priv->hw->ptp->config_sub_second_increment(priv->ioaddr);
-+		sec_inc = priv->hw->ptp->config_sub_second_increment(
-+			priv->ioaddr, priv->clk_ptp_rate);
-+		temp = div_u64(1000000000ULL, sec_inc);
- 
- 		/* calculate default added value:
- 		 * formula is :
- 		 * addend = (2^32)/freq_div_ratio;
--		 * where, freq_div_ratio = clk_ptp_ref_i/50MHz
--		 * hence, addend = ((2^32) * 50MHz)/clk_ptp_ref_i;
--		 * NOTE: clk_ptp_ref_i should be >= 50MHz to
--		 *       achieve 20ns accuracy.
--		 *
--		 * 2^x * y == (y << x), hence
--		 * 2^32 * 50000000 ==> (50000000 << 32)
-+		 * where, freq_div_ratio = 1e9ns/sec_inc
- 		 */
--		temp = (u64) (50000000ULL << 32);
-+		temp = (u64)(temp << 32);
- 		priv->default_addend = div_u64(temp, priv->clk_ptp_rate);
- 		priv->hw->ptp->config_addend(priv->ioaddr,
- 					     priv->default_addend);
--- 
-1.8.3.1
+OK. I'll add the detailed description of 'parent' and
+correlation between 'parent' and 'passive' device.
+
+>=20
+>>  - vdd-supply: the regulator to provide the buses with the voltage.
+>>  - devfreq-events: the devfreq-event device to monitor the curret ut=
+ilization
+>>    of buses.
+>> =20
+>> -Optional properties for bus device:
+>> +Required properties for only passive bus device:
+>=20
+> "Required properties only for passive bus devices:"
+
+OK. I'll modify it.
+
+>=20
+>> +- devfreq: the parent bus device.
+>> +
+>> +Optional properties for only parent bus device:
+>>  - exynos,saturation-ratio: the percentage value which is used to ca=
+librate
+>>                     the performance count againt total cycle count.
+>> =20
+>> @@ -33,7 +38,20 @@ Example1:
+>>  	power line (regulator). The MIF (Memory Interface) AXI bus is used=
+ to
+>>  	transfer data between DRAM and CPU and uses the VDD_MIF regualtor.
+>> =20
+>> -	- power line(VDD_MIF) --> bus for DMC (Dynamic Memory Controller) =
+block
+>> +	- MIF (Memory Interface) block
+>> +	: VDD_MIF |--- DMC (Dynamic Memory Controller)
+>> +
+>> +	- INT (Internal) block
+>> +	: VDD_INT |--- LEFTBUS (parent device)
+>> +		  |--- PERIL
+>> +		  |--- MFC
+>> +		  |--- G3D
+>> +		  |--- RIGHTBUS
+>> +		  |--- FSYS
+>> +		  |--- LCD0
+>> +		  |--- PERIR
+>> +		  |--- ISP
+>> +		  |--- CAM
+>> =20
+>>  	- MIF bus's frequency/voltage table
+>>  	-----------------------
+>> @@ -46,6 +64,24 @@ Example1:
+>>  	|L5| 400000 |875000   |
+>>  	-----------------------
+>> =20
+>> +	- INT bus's frequency/voltage table
+>> +	----------------------------------------------------------
+>> +	|Block|LEFTBUS|RIGHTBUS|MCUISP |ISP    |PERIL  ||VDD_INT |
+>> +	| name|       |LCD0    |       |       |       ||        |
+>> +	|     |       |FSYS    |       |       |       ||        |
+>> +	|     |       |MFC     |       |       |       ||        |
+>> +	----------------------------------------------------------
+>> +	|Mode |*parent|passive |passive|passive|passive||        |
+>> +	----------------------------------------------------------
+>> +	|Lv   |Frequency                               ||Voltage |
+>> +	----------------------------------------------------------
+>> +	|L1   |50000  |50000   |50000  |50000  |50000  ||900000  |
+>> +	|L2   |80000  |80000   |80000  |80000  |80000  ||900000  |
+>> +	|L3   |100000 |100000  |100000 |100000 |100000 ||1000000 |
+>> +	|L4   |134000 |134000  |200000 |200000 |       ||1000000 |
+>> +	|L5   |200000 |200000  |400000 |300000 |       ||1000000 |
+>> +	----------------------------------------------------------
+>> +
+>>  Example2 :
+>>  	The bus of DMC (Dynamic Memory Controller) block in exynos3250.dts=
+i
+>>  	are listed below:
+>> @@ -84,6 +120,167 @@ Example2 :
+>>  		};
+>>  	};
+>> =20
+>> +	bus_leftbus: bus_leftbus {
+>> +		compatible =3D "samsung,exynos-bus";
+>> +		clocks =3D <&cmu CLK_DIV_GDL>;
+>> +		clock-names =3D "bus";
+>> +		operating-points-v2 =3D <&bus_leftbus_opp_table>;
+>> +		status =3D "disabled";
+>> +	};
+>> +
+>> +	bus_rightbus: bus_rightbus {
+>> +		compatible =3D "samsung,exynos-bus";
+>> +		clocks =3D <&cmu CLK_DIV_GDR>;
+>> +		clock-names =3D "bus";
+>> +		operating-points-v2 =3D <&bus_leftbus_opp_table>;
+>> +		status =3D "disabled";
+>> +	};
+>> +
+>> +	bus_lcd0: bus_lcd0 {
+>> +		compatible =3D "samsung,exynos-bus";
+>> +		clocks =3D <&cmu CLK_DIV_ACLK_160>;
+>> +		clock-names =3D "bus";
+>> +		operating-points-v2 =3D <&bus_leftbus_opp_table>;
+>> +		status =3D "disabled";
+>> +	};
+>> +
+>> +	bus_fsys: bus_fsys {
+>> +		compatible =3D "samsung,exynos-bus";
+>> +		clocks =3D <&cmu CLK_DIV_ACLK_200>;
+>> +		clock-names =3D "bus";
+>> +		operating-points-v2 =3D <&bus_leftbus_opp_table>;
+>> +		status =3D "disabled";
+>> +	};
+>> +
+>> +	bus_mcuisp: bus_mcuisp {
+>> +		compatible =3D "samsung,exynos-bus";
+>> +		clocks =3D <&cmu CLK_DIV_ACLK_400_MCUISP>;
+>> +		clock-names =3D "bus";
+>> +		operating-points-v2 =3D <&bus_mcuisp_opp_table>;
+>> +		status =3D "disabled";
+>> +	};
+>> +
+>> +	bus_isp: bus_isp {
+>> +		compatible =3D "samsung,exynos-bus";
+>> +		clocks =3D <&cmu CLK_DIV_ACLK_266>;
+>> +		clock-names =3D "bus";
+>> +		operating-points-v2 =3D <&bus_isp_opp_table>;
+>> +		status =3D "disabled";
+>> +	};
+>> +
+>> +	bus_peril: bus_perir {
+>=20
+>=20
+> Peril or perir?
+
+peril is correct. I'll fix it.
+
+Best Regards,
+Chanwoo Choi
