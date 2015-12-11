@@ -1,33 +1,58 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: sunxi: allwinner,sun4i-a10-lradc-keys
- binding: typo fix
-Date: Fri, 11 Dec 2015 11:54:01 +0800
-Message-ID: <CAGb2v65T=-iPqcyHDUfKX5LFstjcc7XGYfaqkViMpqc_jYAD5A@mail.gmail.com>
-References: <1449779521-754-1-git-send-email-merker@debian.org>
- <1449779521-754-4-git-send-email-merker@debian.org> <20151211034524.GA6166@rob-hp-laptop>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/3] usb: renesas_usbhs: add SoC names to
+ compatibility string documentation
+Date: Thu, 10 Dec 2015 21:54:28 -0600
+Message-ID: <20151211035428.GA11940@rob-hp-laptop>
+References: <1449799947-19866-1-git-send-email-horms+renesas@verge.net.au>
+ <1449799947-19866-2-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB5ERVGZQKGQE73YYWSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20151211034524.GA6166@rob-hp-laptop>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1449799947-19866-2-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 11, 2015 at 11:45 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Dec 10, 2015 at 09:32:01PM +0100, Karsten Merker wrote:
->> Trivial typo fix ("mut" -> "must") in the sunxi LRADC-keys binding
->> documentation.
->>
->> Signed-off-by: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On Fri, Dec 11, 2015 at 11:12:25AM +0900, Simon Horman wrote:
+> This extends the documentation of compatibility strings a little to
+> include the SoC names.
+> 
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Acked-by: Rob Herring <robh@kernel.org>
+
+> ---
+> v3
+> * Split into separate patch
+> ---
+>  Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+> index 7d48f63db44e..a14c0bb561d5 100644
+> --- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+> +++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+> @@ -2,10 +2,10 @@ Renesas Electronics USBHS driver
+>  
+>  Required properties:
+>    - compatible: Must contain one of the following:
+> -	- "renesas,usbhs-r8a7790"
+> -	- "renesas,usbhs-r8a7791"
+> -	- "renesas,usbhs-r8a7794"
+> -	- "renesas,usbhs-r8a7795"
+> +	- "renesas,usbhs-r8a7790" for r8a7790 (R-Car H2) compatible device
+> +	- "renesas,usbhs-r8a7791" for r8a7791 (R-Car M2-W) compatible device
+> +	- "renesas,usbhs-r8a7794" for r8a7794 (R-Car E2) compatible device
+> +	- "renesas,usbhs-r8a7795" for r8a7795 (R-Car H3) compatible device
+>    - reg: Base address and length of the register for the USBHS
+>    - interrupts: Interrupt specifier for the USBHS
+>    - clocks: A list of phandle + clock specifier pairs
+> -- 
+> 2.1.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
