@@ -1,39 +1,85 @@
 From: Andy Gross <andy.gross@linaro.org>
-Subject: [Patch v4 0/2] Add SMEM nodes for APQ8084 and MSM8916
-Date: Fri, 11 Dec 2015 00:13:03 -0600
-Message-ID: <1449814385-11970-1-git-send-email-andy.gross@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+Subject: [Patch v4 2/2] arm: dts: Add APQ8084 SMEM nodes
+Date: Fri, 11 Dec 2015 00:13:05 -0600
+Message-ID: <1449814385-11970-3-git-send-email-andy.gross@linaro.org>
+References: <1449814385-11970-1-git-send-email-andy.gross@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1449814385-11970-1-git-send-email-andy.gross@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-msm@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andy Gross <andy.gross@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andy Gross <agross@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds the SMEM nodes for the APQ8084 and MSM8916 platforms.  These
-patches were originally part of:
-https://lkml.org/lkml/headers/2015/9/24/561
+From: Andy Gross <agross@codeaurora.org>
 
-I split these two patches out because these were the only DTS patches that
-required modifications.  The rest have been accepted.  I continued to add the
-previous change log for continuity sake.
+This patch adds all the required nodes to support SMEM on APQ8084
 
-Changes since v3:
-- Moved smem node outside of soc and fixed up the rpm-msg-ram
+Signed-off-by: Andy Gross <agross@codeaurora.org>
+Acked-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+---
+ arch/arm/boot/dts/qcom-apq8084.dtsi | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-Changes since v2:
-- Fixed some missed review comments
-- Corrected the SMD RPM example binding indentation
-
-Changes since v1:
-- Fixed various review comments
-- Removed MSM8974 patches as there was already an outstanding patch
-
-Andy Gross (2):
-  arm64: dts: qcom: Add MSM8916 SMEM nodes
-  arm: dts: Add APQ8084 SMEM nodes
-
- arch/arm/boot/dts/qcom-apq8084.dtsi   | 36 ++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 41 +++++++++++++++++++++++++++++++++++
- 2 files changed, 77 insertions(+)
-
+diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
+index fcffeca..3d3b394 100644
+--- a/arch/arm/boot/dts/qcom-apq8084.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
+@@ -10,6 +10,17 @@
+ 	compatible = "qcom,apq8084";
+ 	interrupt-parent = <&intc>;
+ 
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		smem_mem: smem_region@fa00000 {
++			reg = <0xfa00000 0x200000>;
++			no-map;
++		};
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -89,6 +100,15 @@
+ 		clock-frequency = <19200000>;
+ 	};
+ 
++	smem {
++		compatible = "qcom,smem";
++
++		qcom,rpm-msg-ram = <&rpm_msg_ram>;
++		memory-region = <&smem_mem>;
++
++		hwlocks = <&tcsr_mutex 3>;
++	};
++
+ 	soc: soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -225,6 +245,22 @@
+ 			reg = <0xfc400000 0x4000>;
+ 		};
+ 
++		tcsr_mutex_regs: syscon@fd484000 {
++			compatible = "syscon";
++			reg = <0xfd484000 0x2000>;
++		};
++
++		tcsr_mutex: hwlock {
++			compatible = "qcom,tcsr-mutex";
++			syscon = <&tcsr_mutex_regs 0 0x80>;
++			#hwlock-cells = <1>;
++		};
++
++		rpm_msg_ram: memory@fc428000 {
++			compatible = "qcom,rpm-msg-ram";
++			reg = <0xfc428000 0x4000>;
++		};
++
+ 		tlmm: pinctrl@fd510000 {
+ 			compatible = "qcom,apq8084-pinctrl";
+ 			reg = <0xfd510000 0x4000>;
 -- 
 1.9.1
