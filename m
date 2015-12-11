@@ -1,125 +1,40 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 12/12] ARM: dts: imx6: add Vivante GPU nodes
-Date: Fri, 11 Dec 2015 15:02:59 +0800
-Message-ID: <20151211070258.GA11252@tiger>
-References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
- <1449237604-19064-13-git-send-email-l.stach@pengutronix.de>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v3 16/20] ARM: dts: Add bus nodes using VDD_MIF for
+ Exynos4210
+Date: Fri, 11 Dec 2015 16:04:01 +0900
+Message-ID: <566A7561.4020306@samsung.com>
+References: <1449810479-14763-1-git-send-email-cw00.choi@samsung.com>
+ <1449810479-14763-17-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1449237604-19064-13-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1449810479-14763-17-git-send-email-cw00.choi@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com, kgene@kernel.org
+Cc: kyungmin.park@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, tjakobi@math.uni-bielefeld.de, linux.amoon@gmail.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 04, 2015 at 03:00:04PM +0100, Lucas Stach wrote:
-> This adds the device nodes for 2D, 3D and VG GPU cores.
+On 11.12.2015 14:07, Chanwoo Choi wrote:
+> This patch adds the bus nodes for Exynos4210 SoC. Exynos4210 SoC has
+> one power line for all buses to translate data between DRAM and sub-blocks.
 > 
-> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Following list specifies the detailed relation between DRAM and sub-blocks:
+> - DMC/ACP clock for DMC (Dynamic Memory Controller)
+> - ACLK200 clock for LCD0
+> - ACLK100 clock for PERIL/PERIR/MFC(PCLK)
+> - ACLK160 clock for CAM/TV/LCD0/LCD1
+> - ACLK133 clock for FSYS/GPS
+> - GDL/GDR clock for LEFTBUS/RIGHTBUS
+> - SCLK_MFC clock for MFC
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 > ---
->  arch/arm/boot/dts/imx6dl.dtsi  |  5 +++++
->  arch/arm/boot/dts/imx6q.dtsi   | 15 +++++++++++++++
->  arch/arm/boot/dts/imx6qdl.dtsi | 22 ++++++++++++++++++++++
->  3 files changed, 42 insertions(+)
+>  arch/arm/boot/dts/exynos4210.dtsi | 159 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 159 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
-> index 4b0ec0703825..51c517a5cafd 100644
-> --- a/arch/arm/boot/dts/imx6dl.dtsi
-> +++ b/arch/arm/boot/dts/imx6dl.dtsi
-> @@ -104,6 +104,11 @@
->  		compatible = "fsl,imx-display-subsystem";
->  		ports = <&ipu1_di0>, <&ipu1_di1>;
->  	};
-> +
-> +	gpu-subsystem {
-> +		compatible = "fsl,imx-gpu-subsystem";
-> +		cores = <&gpu_2d>, <&gpu_3d>;
-> +	};
->  };
->  
->  &gpt {
-> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-> index 399103b8e2c9..77d618b2870c 100644
-> --- a/arch/arm/boot/dts/imx6q.dtsi
-> +++ b/arch/arm/boot/dts/imx6q.dtsi
-> @@ -153,6 +153,16 @@
->  			status = "disabled";
->  		};
->  
-> +		gpu_vg: gpu@02204000 {
-> +			compatible = "vivante,gc";
-> +			reg = <0x02204000 0x4000>;
-> +			interrupts = <0 11 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clks IMX6QDL_CLK_OPENVG_AXI>,
-> +				 <&clks IMX6QDL_CLK_GPU2D_CORE>;
-> +			clock-names = "bus", "core";
-> +			power-domains = <&gpc 1>;
 
-Shouldn't property 'power-domains' be mentioned a bit in bindings doc?
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-> +		};
-> +
->  		ipu2: ipu@02800000 {
->  			#address-cells = <1>;
->  			#size-cells = <0>;
-> @@ -225,6 +235,11 @@
->  		compatible = "fsl,imx-display-subsystem";
->  		ports = <&ipu1_di0>, <&ipu1_di1>, <&ipu2_di0>, <&ipu2_di1>;
->  	};
-> +
-> +	gpu-subsystem {
-> +		compatible = "fsl,imx-gpu-subsystem";
-> +		cores = <&gpu_2d>, <&gpu_3d>, <&gpu_vg>;
-> +	};
->  };
->  
->  &hdmi {
-> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-> index 2b6cc8bf3c5c..018975b867e1 100644
-> --- a/arch/arm/boot/dts/imx6qdl.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-> @@ -119,6 +119,28 @@
->  			status = "disabled";
->  		};
->  
-> +
-> +		gpu_2d: gpu@00134000 {
-> +			compatible = "vivante,gc";
-> +			reg = <0x00134000 0x4000>;
-> +			interrupts = <0 10 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clks IMX6QDL_CLK_GPU2D_AXI>,
-> +				 <&clks IMX6QDL_CLK_GPU2D_CORE>;
-> +			clock-names = "bus", "core";
-> +			power-domains = <&gpc 1>;
-> +		};
-> +
-> +		gpu_3d: gpu@00130000 {
-> +			compatible = "vivante,gc";
-> +			reg = <0x00130000 0x4000>;
-> +			interrupts = <0 9 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clks IMX6QDL_CLK_GPU3D_AXI>,
-> +				 <&clks IMX6QDL_CLK_GPU3D_CORE>,
-> +				 <&clks IMX6QDL_CLK_GPU3D_SHADER>;
-> +			clock-names = "bus", "core", "shader";
-> +			power-domains = <&gpc 1>;
-> +		};
-> +
-
-Please keep these added nodes sorted in unit-address.
-
-Shawn
-
->  		hdmi: hdmi@0120000 {
->  			#address-cells = <1>;
->  			#size-cells = <0>;
-> -- 
-> 2.6.2
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
