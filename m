@@ -1,194 +1,324 @@
-From: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] ARM: bcm2835: add rpi power domain driver
-Date: Fri, 11 Dec 2015 19:13:30 +0100
-Message-ID: <566B124A.4010401@lategoodbye.de>
-References: <1449251148-19344-1-git-send-email-eric@anholt.net>
- <1449251148-19344-4-git-send-email-eric@anholt.net>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] reset: Add shared reset_control_[de]assert
+ variants
+Date: Fri, 11 Dec 2015 19:21:24 +0100
+Message-ID: <566B1424.2060700@redhat.com>
+References: <1449848520-27379-1-git-send-email-hdegoede@redhat.com>
+ <1449853825.3419.50.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449251148-19344-4-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449853825.3419.50.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Josh Triplett <josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org>, Rashika Kheria <rashika.kheria-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eric,
+Hi,
 
-Am 04.12.2015 um 18:45 schrieb Eric Anholt:
-> From: Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On 11-12-15 18:10, Philipp Zabel wrote:
+> Hi Hans,
 >
-> This patch adds support for several power domains on Raspberry Pi,
-> including USB (so it can be enabled even if the bootloader didn't do
-> it), and graphics.
+> thanks for moving this forward.
+
+Thanks for the quick review, I've a couple of (simple) questions
+about your review remarks once those are cleared up I'll post a new version
+(of just this patch).
+
+> Am Freitag, den 11.12.2015, 16:41 +0100 schrieb Hans de Goede:
+>> Add reset_control_deassert_shared / reset_control_assert_shared
+>> functions which are intended for use by drivers for hw blocks which
+>> (may) share a reset line with another driver / hw block.
+>>
+>> Unlike the regular reset_control_[de]assert functions these functions
+>> keep track of how often deassert_shared / assert_shared have been called
+>> and keep the line deasserted as long as deassert has been called more
+>> times than assert.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>> Changes in v2:
+>> -This is a new patch in v2 of this patch-set
+>> ---
+>>   drivers/reset/core.c             | 121 ++++++++++++++++++++++++++++++++++++---
+>>   include/linux/reset-controller.h |   2 +
+>>   include/linux/reset.h            |   2 +
+>>   3 files changed, 116 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+>> index 9ab9290..8c3436c 100644
+>> --- a/drivers/reset/core.c
+>> +++ b/drivers/reset/core.c
+>> @@ -22,16 +22,29 @@ static DEFINE_MUTEX(reset_controller_list_mutex);
+>>   static LIST_HEAD(reset_controller_list);
+>>
+>>   /**
+>> + * struct reset_line - a reset line
+>> + * @list:         list entry for the reset controllers reset line list
+>> + * @id:           ID of the reset line in the reset controller device
+>> + * @refcnt:       Number of reset_control structs referencing this device
+>> + * @deassert_cnt: Number of times this reset line has been deasserted
+>> + */
+>> +struct reset_line {
+>> +	struct list_head list;
+>> +	unsigned int id;
+>> +	unsigned int refcnt;
+>> +	unsigned int deassert_cnt;
+>> +};
 >
-> This patch is the combined work of Eric Anholt (who wrote USB support
-> inside of the Raspberry Pi firmware driver, and wrote the non-USB
-> domain support) and Alexander Aring (who separated the original USB
-> work out from the firmware driver).
+> I'd move rcdev into reset_line, too. That way the description is
+> complete, and we don't duplicate rcdev when there are multiple
+> reset_controls pointing here.
+
+Ack.
+
+>> +/**
+>>    * struct reset_control - a reset control
+>>    * @rcdev: a pointer to the reset controller device
+>>    *         this reset control belongs to
+>> - * @id: ID of the reset controller in the reset
+>> - *      controller device
+>> + * @line:  reset line for this reset control
+>>    */
+>>   struct reset_control {
+>>   	struct reset_controller_dev *rcdev;
+>> +	struct reset_line *line;
+>>   	struct device *dev;
+>> -	unsigned int id;
+>>   };
+>>
+>>   /**
+> [...]
+>> @@ -119,13 +134,55 @@ EXPORT_SYMBOL_GPL(reset_control_assert);
+>>   int reset_control_deassert(struct reset_control *rstc)
+>>   {
 >
-> Signed-off-by: Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-> ---
+> Maybe WARN_ON(rstc->line->refcnt > 1) ?
+
+I assume you mean deasser_cnt ? Seems reasonable with that change.
+
+>>   	if (rstc->rcdev->ops->deassert)
+>> -		return rstc->rcdev->ops->deassert(rstc->rcdev, rstc->id);
+>> +		return rstc->rcdev->ops->deassert(rstc->rcdev, rstc->line->id);
+>>
+>>   	return -ENOTSUPP;
+>>   }
+>>   EXPORT_SYMBOL_GPL(reset_control_deassert);
+>>
+>>   /**
+>> + * reset_control_assert_shared - asserts a shared reset line
+>> + * @rstc: reset controller
+>> + *
+>> + * Assert a shared reset line, this functions decreases the deassert count
+>> + * of the line by one and asserts it if, and only if, the deassert count
+>> + * reaches 0.
 >
-> v2: Add support for power domains other than USB, using the new
->      firmware interface, reword commit message (changes by Eric)
+> "After calling this function the shared reset line may be asserted, or
+>   it may still be deasserted, as long as other users keep it so."
+
+I take it this is to replace the text about "deassert count" ?
+
+>> + */
+>> +int reset_control_assert_shared(struct reset_control *rstc)
+>> +{
+>> +	if (!rstc->rcdev->ops->assert)
+>> +		return -ENOTSUPP;
 >
->   arch/arm/mach-bcm/Kconfig                   |  10 ++
->   arch/arm/mach-bcm/Makefile                  |   1 +
->   arch/arm/mach-bcm/raspberrypi-power.c       | 269 ++++++++++++++++++++++++++++
->   include/dt-bindings/arm/raspberrypi-power.h |  41 +++++
->   4 files changed, 321 insertions(+)
->   create mode 100644 arch/arm/mach-bcm/raspberrypi-power.c
->   create mode 100644 include/dt-bindings/arm/raspberrypi-power.h
+> WARN_ON(rstc->line->deassert_cnt == 0)
 >
-> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-> index 8c53c55..0f23bad 100644
-> --- a/arch/arm/mach-bcm/Kconfig
-> +++ b/arch/arm/mach-bcm/Kconfig
-> @@ -134,6 +134,16 @@ config ARCH_BCM2835
->   	  This enables support for the Broadcom BCM2835 SoC. This SoC is
->   	  used in the Raspberry Pi and Roku 2 devices.
+> Actually, what to do in this case? Assume ops->assert was called, or do
+> it again to be sure? Certainly we don't want to wrap deassert_cnt, or
+> the next deassert_shared will do nothing.
 >
-> +config RASPBERRYPI_POWER
-> +	bool "Raspberry Pi power domain driver"
-> +	depends on ARCH_BCM2835 || COMPILE_TEST
-> +	depends on RASPBERRYPI_FIRMWARE
-> +	select PM_GENERIC_DOMAINS if PM
-> +	select PM_GENERIC_DOMAINS_OF if PM
-> +	help
-> +	  This enables support for the RPi power domains which can be enabled
-> +	  or disabled via the RPi firmware.
-> +
->   config ARCH_BCM_63XX
->   	bool "Broadcom BCM63xx DSL SoC" if ARCH_MULTI_V7
->   	depends on MMU
-> diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
-> index 892261f..fec2d6b 100644
-> --- a/arch/arm/mach-bcm/Makefile
-> +++ b/arch/arm/mach-bcm/Makefile
-> @@ -36,6 +36,7 @@ endif
+>> +	rstc->line->deassert_cnt--;
+>> +	if (rstc->line->deassert_cnt)
 >
->   # BCM2835
->   obj-$(CONFIG_ARCH_BCM2835)	+= board_bcm2835.o
-> +obj-$(CONFIG_RASPBERRYPI_POWER)	+= raspberrypi-power.o
+> deassert_cnt isn't protected by any lock.
+
+Right, good catch. I believe the best way to fix this is to change deassert_cnt
+into an atomic_t and use atomic_dec_return / atomic_int_return,
+
+Downside of using an atomic_t is that doing the WARN_ON you are asking for above
+will not be race free, then, but since it is a should never happen scenario I
+guess we do not care about the check not being 100% race free. Or we can even
+just leave out the check ?
+
+
 >
->   # BCM5301X
->   obj-$(CONFIG_ARCH_BCM_5301X)	+= bcm_5301x.o
-> diff --git a/arch/arm/mach-bcm/raspberrypi-power.c b/arch/arm/mach-bcm/raspberrypi-power.c
-> new file mode 100644
-> index 0000000..3444301
-> --- /dev/null
-> +++ b/arch/arm/mach-bcm/raspberrypi-power.c
-> @@ -0,0 +1,269 @@
-> +/*
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * Authors:
-> + * (C) 2015 Pengutronix, Alexander Aring <aar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> + * Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+>> +		return 0;
+>> +
+>> +	return rstc->rcdev->ops->assert(rstc->rcdev, rstc->line->id);
+>> +}
+>> +EXPORT_SYMBOL_GPL(reset_control_assert_shared);
+>> +
+>> +/**
+>> + * reset_control_deassert_shared - deasserts a shared reset line
+>> + * @rstc: reset controller
+>> + *
+>> + * Assert a shared reset line, this functions increases the deassert count
+>
+> Deassert
 
-shouldn't be the copyright before license?
+Ack.
 
-> + */
-> + [...]
-> +
-> +static int rpi_power_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *fw_np;
-> +	struct device *dev = &pdev->dev;
-> +	struct rpi_power_domains *rpi_domains;
-> +	int ret, i;
-> +
-> +	rpi_domains = devm_kzalloc(dev, sizeof(*rpi_domains), GFP_KERNEL);
-> +	if (!rpi_domains)
-> +		return -ENOMEM;
-> +
-> +	rpi_domains->xlate.domains =
-> +		devm_kzalloc(dev, sizeof(*rpi_domains->xlate.domains) *
-> +			     RPI_POWER_DOMAIN_COUNT, GFP_KERNEL);
-> +	if (!rpi_domains->xlate.domains)
-> +		return -ENOMEM;
-> +
-> +	rpi_domains->xlate.num_domains = RPI_POWER_DOMAIN_COUNT;
-> +
-> +	fw_np = of_parse_phandle(pdev->dev.of_node, "firmware", 0);
-> +	if (!fw_np) {
-> +		dev_err(&pdev->dev, "no firmware node\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	rpi_domains->fw = rpi_firmware_get(fw_np);
-> +	of_node_put(fw_np);
-> +	if (!rpi_domains->fw)
-> +		return -EPROBE_DEFER;
-> +
-> +	rpi_domains->has_new_interface =
-> +		rpi_has_new_domain_support(rpi_domains);
-> +
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_I2C0, "I2C0");
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_I2C1, "I2C1");
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_I2C2, "I2C2");
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_VIDEO_SCALER,
-> +			      "VIDEO_SCALER");
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_VPU1, "VPU1");
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_HDMI, "HDMI");
-> +
-> +	/*
-> +	 * Use the old firmware interface for USB power, so that we
-> +	 * can turn it on even if the firmware hasn't been updated.
-> +	 */
-> +	rpi_init_old_power_domain(rpi_domains, RPI_POWER_DOMAIN_USB,
-> +				  RPI_OLD_POWER_DOMAIN_USB, "USB");
-> +
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_VEC, "VEC");
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_JPEG, "JPEG");
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_H264, "H264");
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_V3D, "V3D");
+>> + * of the line by one and deasserts the reset line (if it was not already
+>> + * deasserted).
+>
+> "After calling this function, the shared reset line is guaranteed to be
+>   deasserted."
 
-After this line i would expect the following:
+Same question as above.
 
-rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_ISP, "ISP");
+>> + */
+>> +int reset_control_deassert_shared(struct reset_control *rstc)
+>> +{
+>> +	if (!rstc->rcdev->ops->deassert)
+>> +		return -ENOTSUPP;
+>> +
+>> +	rstc->line->deassert_cnt++;
+>> +	if (rstc->line->deassert_cnt != 1)
+>> +		return 0;
+>> +
+>> +	return rstc->rcdev->ops->deassert(rstc->rcdev, rstc->line->id);
+>> +}
+>> +EXPORT_SYMBOL_GPL(reset_control_deassert_shared);
+>> +
+>> +/**
+>>    * reset_control_status - returns a negative errno if not supported, a
+>>    * positive value if the reset line is asserted, or zero if the reset
+>>    * line is not asserted.
+>> @@ -134,12 +191,47 @@ EXPORT_SYMBOL_GPL(reset_control_deassert);
+>>   int reset_control_status(struct reset_control *rstc)
+>>   {
+>>   	if (rstc->rcdev->ops->status)
+>> -		return rstc->rcdev->ops->status(rstc->rcdev, rstc->id);
+>> +		return rstc->rcdev->ops->status(rstc->rcdev, rstc->line->id);
+>>
+>>   	return -ENOTSUPP;
+>>   }
+>>   EXPORT_SYMBOL_GPL(reset_control_status);
+>>
+>> +static struct reset_line *reset_line_get(struct reset_controller_dev *rcdev,
+>> +					 unsigned int index)
+>> +{
+>> +	struct reset_line *line;
+>
+> lockdep_assert_held here and in reset_line_put would document that these
+> functions are called under reset_(controller_)list_mutex.
 
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_UNICAM0, "UNICAM0");
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_UNICAM1, "UNICAM1");
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_CCP2RX, "CCP2RX");
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_CSI2, "CSI2");
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_CPI, "CPI");
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_DSI0, "DSI0");
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_DSI1, "DSI1");
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_TRANSPOSER,
-> +			      "TRANPOSER");
+Ok, I will add these.
 
-s/TRANPOSER/TRANSPOSER ?
+>> +	list_for_each_entry(line, &rcdev->reset_line_head, list) {
+>> +		if (line->id == index) {
+>> +			line->refcnt++;
+>> +			return line;
+>> +		}
+>> +	}
+>> +
+>> +	line = kzalloc(sizeof(*line), GFP_KERNEL);
+>> +	if (!line)
+>> +		return NULL;
+>> +
+>> +	list_add(&line->list, &rcdev->reset_line_head);
+>> +	line->id = index;
+>> +	line->refcnt = 1;
+>> +
+>> +	return line;
+>> +}
+>> +
+>> +static void reset_line_put(struct reset_line *line)
+>> +{
+>> +	if (!line)
+>> +		return;
+>> +
+>> +	if (--line->refcnt)
+>> +		return;
+>> +
+>> +	list_del(&line->list);
+>> +	kfree(line);
+>> +}
+>> +
+>>   /**
+>>    * of_reset_control_get_by_index - Lookup and obtain a reference to a reset
+>>    * controller by index.
+>> @@ -155,6 +247,7 @@ struct reset_control *of_reset_control_get_by_index(struct device_node *node,
+>>   {
+>>   	struct reset_control *rstc = ERR_PTR(-EPROBE_DEFER);
+>>   	struct reset_controller_dev *r, *rcdev;
+>> +	struct reset_line *line;
+>>   	struct of_phandle_args args;
+>>   	int rstc_id;
+>>   	int ret;
+>> @@ -186,16 +279,22 @@ struct reset_control *of_reset_control_get_by_index(struct device_node *node,
+>>   	}
+>>
+>>   	try_module_get(rcdev->owner);
+>> +
+>> +	/* reset_controller_list_mutex also protects the reset_line list */
+>
+> Let's rename it to reset_list_mutex, then.
 
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_CCP2TX, "CCP2TX");
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_CDP, "CDP");
-> +	rpi_init_power_domain(rpi_domains, RPI_POWER_DOMAIN_ARM, "ARM");
-> +
-> +	ret = of_genpd_add_provider_onecell(dev->of_node, &rpi_domains->xlate);
-> +	if (ret < 0)
-> +		goto exit_pm;
-> +
-> +	platform_set_drvdata(pdev, rpi_domains);
-> +
-> +	return 0;
-> +
-> +exit_pm:
-> +	for (i = 0; i < rpi_domains->xlate.num_domains; i++)
-> +		pm_genpd_exit(rpi_domains->xlate.domains[i]);
-> +
-> +	return ret;
-> +}
-> +
+Ack.
 
-Best regards
-Stefan
+>> +	line = reset_line_get(rcdev, rstc_id);
+>> +
+>>   	mutex_unlock(&reset_controller_list_mutex);
+>>
+>>   	rstc = kzalloc(sizeof(*rstc), GFP_KERNEL);
+>> -	if (!rstc) {
+>> +	if (!line || !rstc) {
+>> +		kfree(rstc);
+>> +		reset_line_put(line);
+>>   		module_put(rcdev->owner);
+>>   		return ERR_PTR(-ENOMEM);
+>>   	}
+>>
+>>   	rstc->rcdev = rcdev;
+>> -	rstc->id = rstc_id;
+>> +	rstc->line = line;
+>>
+>>   	return rstc;
+>>   }
+>> @@ -259,6 +358,10 @@ void reset_control_put(struct reset_control *rstc)
+>>   	if (IS_ERR(rstc))
+>>   		return;
+>>
+>> +	mutex_lock(&reset_controller_list_mutex);
+>> +	reset_line_put(rstc->line);
+>> +	mutex_unlock(&reset_controller_list_mutex);
+>> +
+>>   	module_put(rstc->rcdev->owner);
+>>   	kfree(rstc);
+>>   }
+>> diff --git a/include/linux/reset-controller.h b/include/linux/reset-controller.h
+>> index ce6b962..7f2cbd1 100644
+>> --- a/include/linux/reset-controller.h
+>> +++ b/include/linux/reset-controller.h
+>> @@ -31,6 +31,7 @@ struct of_phandle_args;
+>>    * @ops: a pointer to device specific struct reset_control_ops
+>>    * @owner: kernel module of the reset controller driver
+>>    * @list: internal list of reset controller devices
+>> + * @reset_line_head: head of internal list of reset lines
+>
+> "list of requested reset lines" or "list of reset lines in use" to make
+> clear the list only contains entries for the requested controls?
 
+Ok, will fix.
+
+>>    * @of_node: corresponding device tree node as phandle target
+>>    * @of_reset_n_cells: number of cells in reset line specifiers
+>>    * @of_xlate: translation function to translate from specifier as found in the
+> [...]
+>
+> best regards
+> Philipp
+>
+
+Regards,
+
+Hans
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
