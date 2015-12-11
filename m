@@ -1,65 +1,29 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH 1/2] dt-bindings: GPIO: Add generic serializer binding
-Date: Fri, 11 Dec 2015 13:46:23 -0600
-Message-ID: <1449863184-29668-2-git-send-email-afd@ti.com>
-References: <1449863184-29668-1-git-send-email-afd@ti.com>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 6/6] staging: board: armadillo800eva: Use "arm,pl390"
+Date: Fri, 11 Dec 2015 11:28:30 -0500
+Message-ID: <20151211162830.GA9306@kroah.com>
+References: <1448023017-21816-1-git-send-email-geert+renesas@glider.be>
+ <1448023017-21816-7-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449863184-29668-1-git-send-email-afd@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1448023017-21816-7-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add binding for generic parallel-in/serial-out shift register devices
-used as GPIO.
+On Fri, Nov 20, 2015 at 01:36:57PM +0100, Geert Uytterhoeven wrote:
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> ---
+> Must be applied together with "ARM: shmobile: r8a7740 dtsi: Use
+> "arm,pl390" for GIC"!
+> 
+> Greg: Can you please provide your ack? Thanks!
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
----
- .../devicetree/bindings/gpio/gpio-pisosr.txt       | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pisosr.txt
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-pisosr.txt b/Documentation/devicetree/bindings/gpio/gpio-pisosr.txt
-new file mode 100644
-index 0000000..e69e8ec
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-pisosr.txt
-@@ -0,0 +1,34 @@
-+Generic Parallel-in/Serial-out Shift Register GPIO Driver
-+
-+This binding describes generic parallel-in/serial-out shift register
-+devices that can be used for GPI (General Purpose Input). This includes
-+SN74165 serial-out shift registers and the SN65HVS88x series of
-+industrial serializers.
-+
-+Required properties:
-+ - compatible		: Should be "pisosr-gpio".
-+ - gpio-controller	: Marks the device node as a GPIO controller.
-+ - #gpio-cells		: Should be two. For consumer use see gpio.txt.
-+
-+Optional properties:
-+ - ngpios		: Number of GPIO lines, default is 8.
-+ - load-gpios		: GPIO pin specifier attached to load enable, this
-+			  pin is pulsed before reading from the device to
-+			  load input pin values into the the device.
-+
-+For other required and optional properties of SPI slave
-+nodes please refer to ../spi/spi-bus.txt.
-+
-+Example:
-+
-+	sn65hvs882@0 {
-+		compatible = "pisosr-gpio";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		load-gpios = <&gpio2 23 GPIO_ACTIVE_LOW>;
-+
-+		reg = <0>;
-+		spi-max-frequency = <1000000>;
-+		spi-cpol;
-+	};
--- 
-2.6.4
+Acked-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
