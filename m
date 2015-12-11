@@ -1,56 +1,94 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 6/7] mfd: dt-bindings: add device tree bindings for
- Hi3519 sysctrl
-Date: Fri, 11 Dec 2015 10:37:05 -0600
-Message-ID: <20151211163705.GA6298@rob-hp-laptop>
-References: <1449819921-18464-1-git-send-email-xuejiancheng@huawei.com>
- <1449819921-18464-7-git-send-email-xuejiancheng@huawei.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/9] Documentation: dt-bindings: Document STM32 pinctrl
+ driver DT bindings
+Date: Fri, 11 Dec 2015 10:48:08 -0600
+Message-ID: <CAL_JsqKPgSrbdyPx4qCRB8ycZ2+xNNgT9Gu0YD_OU-kDGAVRPA@mail.gmail.com>
+References: <1449578711-6141-1-git-send-email-mcoquelin.stm32@gmail.com>
+ <1449578711-6141-3-git-send-email-mcoquelin.stm32@gmail.com>
+ <20151209034137.GA15954@rob-hp-laptop> <CALszF6Ct5omDxbysmD=7MHYDT5-EowKH+L+sqSbp29R9tHfkdA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1449819921-18464-7-git-send-email-xuejiancheng@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jiancheng Xue <xuejiancheng@huawei.com>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CALszF6Ct5omDxbysmD=7MHYDT5-EowKH+L+sqSbp29R9tHfkdA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 11, 2015 at 03:45:20PM +0800, Jiancheng Xue wrote:
-> Add device tree bindings for Hi3519 system controller.
-> 
-> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
+On Wed, Dec 9, 2015 at 3:37 AM, Maxime Coquelin
+<mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Rob,
+>
+> 2015-12-09 4:41 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+>> On Tue, Dec 08, 2015 at 01:45:04PM +0100, Maxime Coquelin wrote:
+>>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>>  .../bindings/pinctrl/st,stm32-pinctrl.txt          | 126 +++++++++++++++++++++
+>>>  1 file changed, 126 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+>>> new file mode 100644
+>>> index 0000000..7b4800c
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+>>> @@ -0,0 +1,126 @@
+>>> +* STM32 GPIO and Pin Mux/Config controller
+>>> +
+>>> +STMicroelectronics's STM32 MCUs intregrate a GPIO and Pin mux/config hardware
+>>> +controller. It controls the input/output settings on the available pins and
+>>> +also provides ability to multiplex and configure the output of various on-chip
+>>> +controllers onto these pads.
+>>> +
+>>> +Pin controller node:
+>>> +Required properies:
+>>> + - compatible: value should be one of the following:
+>>> +   (a) "st,stm32f429-pinctrl"
+>>> + - #address-cells: The value of this property must be 1
+>>> + - #size-cells       : The value of this property must be 1
+>>> + - ranges    : defines mapping between pin controller node (parent) to
+>>> +   gpio-bank node (children).
+>>> + - pins-are-numbered: Specify the subnodes are using numbered pinmux to
+>>> +   specify pins.
+>>> +
+>>> +GPIO controller/bank node:
+>>> +Required properties:
+>>> + - gpio-controller : Indicates this device is a GPIO controller
+>>> + - #gpio-cells         : Should be two.
+>>> +                     The first cell is the pin number
+>>> +                     The second one is the polarity:
+>>> +                             - 0 for active high
+>>> +                             - 1 for active low
+>>> + - reg                 : The gpio address range, relative to the pinctrl range
+>>> + - clocks      : clock that drives this bank
+>>> + - st,bank-name        : Should be a name string for this bank as specified in
+>>> +   the datasheet
+>>
+>> How do you intend to use this? We should come up with something generic
+>> or drop it.
+> Good point.
+> It is used to have a meaningful name set in gpio_chip's label.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Who cares about the gpio_chip name?
 
-> ---
->  Documentation/devicetree/bindings/mfd/hi3519.txt | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/hi3519.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/hi3519.txt b/Documentation/devicetree/bindings/mfd/hi3519.txt
-> new file mode 100644
-> index 0000000..4b1c294
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/hi3519.txt
-> @@ -0,0 +1,14 @@
-> +* Hisilicon Hi3519 System Controller Block
-> +
-> +This bindings use the following binding:
-> +Dcumentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +Required properties:
-> +- compatible: "hislicon,hi3519-sysctrl".
-> +- reg: the register region of this block
-> +
-> +Examples:
-> +sysctrl: system-controller@12010000 {
-> +	compatible = "hisilicon,hi3519-sysctrl", "syscon";
-> +	reg = <0x12010000 0x1000>;
-> +};
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I see two alternatives:
+>  1. replace "st,bank-name" with label
+>  2. use aliases, and construct label in driver with something like:
+>      kasprintf(GFP_KERNEL, "GPIO%c", 'A' + of_alias_get_id(np, "gpio"));
+>
+> What do you prefer?
+
+I prefer to not need it. Of these 2 though, probably using label.
+However, I'm not convinced to say yes, we should use that because it
+will only encourage others to do the same.
+
+> Do you have other ideas?
+
+We do need names on individual lines though. I'd rather not complicate
+things by having labels for both unless we can define the need for it.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
