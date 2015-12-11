@@ -1,61 +1,131 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v11] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
- PCIe Host Controller
-Date: Fri, 11 Dec 2015 09:33:06 +0000
-Message-ID: <566A9852.7060109@arm.com>
-References: <1448798633-12697-1-git-send-email-bharatku@xilinx.com> <20151209231921.GI31930@localhost> <8520D5D51A55D047800579B09414719825869A85@XAP-PVEXMBX01.xlnx.xilinx.com> <20151210201817.GB367@localhost>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH] net/macb: add support for resetting PHY using GPIO
+Date: Fri, 11 Dec 2015 10:40:22 +0100
+Message-ID: <87wpsl727t.fsf@free-electrons.com>
+References: <1449683383-5022-1-git-send-email-gregory.clement@free-electrons.com>
+	<20151210073756.GA11966@pengutronix.de>
+	<871tau8hpj.fsf@free-electrons.com>
+	<20151211084630.GW11966@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20151210201817.GB367@localhost>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>, Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "dhdang@apm.com" <dhdang@apm.com>, "sbranden@broadcom.com" <sbranden@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infrade>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151211084630.GW11966@pengutronix.de> (Sascha Hauer's message
+	of "Fri, 11 Dec 2015 09:46:30 +0100")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/12/15 20:18, Bjorn Helgaas wrote:
-> [+cc Marc for irq_dispose_mapping() question]
+Hi Sascha,
+=20
+ On ven., d=C3=A9c. 11 2015, Sascha Hauer <s.hauer@pengutronix.de> wrot=
+e:
 
->>>> +		}
->>>> +	} while (status);
->>>> +
->>>> +	return retval;
->>>>
->>>> +	for (i = 0; i < 4; i++) {
->>>> +		irq = irq_find_mapping(pcie->legacy_irq_domain, i + 1);
->>>> +		if (irq > 0)
->>>> +			irq_dispose_mapping(irq);
->>>> +	}
->>>> +	if (pcie->legacy_irq_domain)
->>>> +		irq_domain_remove(pcie->legacy_irq_domain);
->>>
->>> Something seems wrong here.  I don't know when irq_dispose_mapping() is
->>> required, but it's not used consistently in drivers/pci, and it should be.
->>> Currently, only pci-tegra.c, pcie-xilinx.c, and this new driver use it.  Tegra uses
->>> it only for MSIs, and Xilinx seems to use it for both MSIs and INTx.  What's
->>> right?
->> Its not related to MSI or INTx, its related to domain, for freeing irq descriptor associated with irq.
-> 
-> So are you saying that other drivers in drivers/pci/host should be
-> using irq_dispose_mapping(), but they aren't?
-> 
-> Marc, can you chime in here?
+> On Thu, Dec 10, 2015 at 04:08:08PM +0100, Gregory CLEMENT wrote:
+>> Hi Sascha,
+>> =20
+>>  On jeu., d=C3=A9c. 10 2015, Sascha Hauer <s.hauer@pengutronix.de> w=
+rote:
+>>=20
+>> > Hi Gregory,
+>> >
+>> > On Wed, Dec 09, 2015 at 06:49:43PM +0100, Gregory CLEMENT wrote:
+>> >> With device tree it is no more possible to reset the PHY at board
+>> >> level. Furthermore, doing in the driver allow to power down the P=
+HY when
+>> >> the network interface is no more used.
+>> >>=20
+>> >> The patch introduces a new optional property "phy-reset-gpio" ins=
+pired
+>> >> from the one use for the FEC.
+>> >
+>> > I don't think it's a good idea to further extend the usage of this
+>> > binding. The driver should use the phy-handle property and
+>> > of_phy_connect() which gives you a proper device node for the phy.=
+ Then
+>> > the phy device node should get the reset gpio. I know it's more wo=
+rk,
+>>=20
+>> So you suggest to pass from this binding:
+>> macb1: ethernet@fc028000 {
+>> 	phy-mode =3D "rmii";
+>> 	status =3D "okay";
+>> 	#address-cells =3D <1>;
+>> 	#size-cells =3D <0>;
+>> 	status =3D "okay";
+>> 	phy-reset-gpio =3D <&pioE 6 GPIO_ACTIVE_HIGH>;
+>>=20
+>> 	ethernet-phy@1 {
+>> 		reg =3D <0x1>;
+>> 		interrupt-parent =3D <&pioB>;
+>> 		interrupts =3D <31 IRQ_TYPE_EDGE_FALLING>;
+>>=20
+>> 	};
+>> };
+>>=20
+>> to this binding
+>> macb1: ethernet@fc028000 {
+>> 	phy-mode =3D "rmii";
+>> 	status =3D "okay";
+>> 	#address-cells =3D <1>;
+>> 	#size-cells =3D <0>;
+>> 	status =3D "okay";
+>>=20
+>> 	ethernet-phy@1 {
+>> 		reg =3D <0x1>;
+>> 		interrupt-parent =3D <&pioB>;
+>> 		interrupts =3D <31 IRQ_TYPE_EDGE_FALLING>;
+>>                 phy-reset-gpio =3D <&pioE 6 GPIO_ACTIVE_HIGH>;
+>> 	};
+>> };
+>
+> s/phy-reset-gpio/reset-gpios/, but yes.
 
-This indeed looks like be a bug in most drivers. Having a mapping left
-when freeing the domain has a couple of side effects:
-- We leak virtual interrupt numbers
-- If the domain is backed by a radix tree, we leak the tree as well (but
-irq_domain_remove will shout if that's the case).
+So I took this way. But I had several issues. The first one was that to
+be able to create a phy device it must first be detected by
+get_phy_device from of_mdiobus_register_phy.  But in order to be
+detected it must answer during the scan of the mii bus. That means we
+can't bind the gpio to the device in order to use it because when we
+need to manage the reset gpio the device is not yet created.
 
-So I think using irq_dispose_mapping is the right thing to do, and that
-we should fix the other drivers (and maybe provide a convenient helper
-to that effect).
+So I see 2 options:
 
-I'll try to come up with something.
+- leaving the phy-reset-gpios property in the ethernet node. Thanks to
+  this we can use the gpiod functions, and it is still possible to use
+  manage the power management.
+
+- using a reset-gpios property inside the phy node. But then the only
+  solution to get a reference on it, will be to use
+  of_get_named_gpio. All the gpiod functions need a reference to the
+  device that we won't have at this point. Also we will only be able to
+  power up the reset, but we won't have any reference to it latter.
 
 Thanks,
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Gregory
+
+>
+> I had assumed you do not use a phy description in the device tree at =
+all
+> since the macb driver doesn't use of_phy_connect(). Apparently there =
+are
+> other possibilities to connect the phy device nodes with the phys
+>
+> Sascha
+>
+> --=20
+> Pengutronix e.K.                           |                         =
+    |
+> Industrial Linux Solutions                 | http://www.pengutronix.d=
+e/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0=
+    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5=
+555 |
+
+--=20
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
