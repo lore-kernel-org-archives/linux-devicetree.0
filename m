@@ -1,40 +1,45 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: sunxi: allwinner,sun4i-a10-lradc-keys
- binding: typo fix
-Date: Fri, 11 Dec 2015 11:55:45 +0800
-Message-ID: <CAGb2v64FkFkJU=ySX8-g6km-K4p7cGquBFNCCC+5Yv24vyBjvw@mail.gmail.com>
-References: <1449779521-754-1-git-send-email-merker@debian.org>
- <1449779521-754-4-git-send-email-merker@debian.org> <20151211034524.GA6166@rob-hp-laptop>
- <CAGb2v65T=-iPqcyHDUfKX5LFstjcc7XGYfaqkViMpqc_jYAD5A@mail.gmail.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/3] usb: renesas_usbhs: add fallback compatibility
+ strings
+Date: Thu, 10 Dec 2015 21:56:24 -0600
+Message-ID: <20151211035624.GA12611@rob-hp-laptop>
+References: <1449799947-19866-1-git-send-email-horms+renesas@verge.net.au>
+ <1449799947-19866-3-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBWESVGZQKGQEJFFWKYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGb2v65T=-iPqcyHDUfKX5LFstjcc7XGYfaqkViMpqc_jYAD5A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1449799947-19866-3-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 11, 2015 at 11:54 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> On Fri, Dec 11, 2015 at 11:45 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Thu, Dec 10, 2015 at 09:32:01PM +0100, Karsten Merker wrote:
->>> Trivial typo fix ("mut" -> "must") in the sunxi LRADC-keys binding
->>> documentation.
->>>
->>> Signed-off-by: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
->>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
-> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+On Fri, Dec 11, 2015 at 11:12:26AM +0900, Simon Horman wrote:
+> Add fallback compatibility strings for R-Car Gen2 and Gen3.
+> This is in keeping with the fallback scheme being adopted wherever
+> appropriate for drivers for Renesas SoCs.
+> 
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 
-You should send this patch to the input subsystem maintainer and input
-mailing list (with all the acks gathered in this thread).
+Binding looks okay, but one possible typo.
 
-ChenYu
+Acked-by: Rob Herring <robh@kernel.org>
+
+> --- a/drivers/usb/renesas_usbhs/common.c
+> +++ b/drivers/usb/renesas_usbhs/common.c
+> @@ -481,6 +481,15 @@ static const struct of_device_id usbhs_of_match[] = {
+>  		.compatible = "renesas,usbhs-r8a7795",
+>  		.data = (void *)USBHS_TYPE_RCAR_GEN2,
+>  	},
+> +	{
+> +		.compatible = "renesas,rcar-gen2-usbhs",
+> +		.data = (void *)USBHS_TYPE_RCAR_GEN2,
+> +	},
+> +	{
+> +		/* Gen3 is compatible with Gen2 */
+> +		.compatible = "renesas,rcar-gen3-usbhs",
+> +		.data = (void *)USBHS_TYPE_RCAR_GEN2,
+
+This supposed to be GEN3?
+
