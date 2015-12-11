@@ -1,209 +1,104 @@
-Return-Path: <yankejian@huawei.com>
-Subject: Re: [PATCH RESEND net-next 3/3] arm64: hip05-d02: Document devicetree
- bindings for Hisilicon D02 Board
-References: <1449302088-53037-1-git-send-email-yankejian@huawei.com>
- <1449302088-53037-4-git-send-email-yankejian@huawei.com>
- <20151207131617.GA25170@rob-hp-laptop>
-From: "Yankejian (Hackim Yim)" <yankejian@huawei.com>
-Message-ID: <56663261.8050101@huawei.com>
-Date: Tue, 8 Dec 2015 09:29:05 +0800
 MIME-Version: 1.0
-In-Reply-To: <20151207131617.GA25170@rob-hp-laptop>
-Content-Type: multipart/alternative;
-	boundary="------------040504000407030303050402"
-To: Rob Herring <robh@kernel.org>
-Cc: davem@davemloft.net, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, wangkefeng.wang@huawei.com, dingtianhong@huawei.com, liguozhu@huawei.com, Yisen.Zhuang@huawei.com, sboyd@codeaurora.org, haojian.zhuang@linaro.org, wangzhou1@hisilicon.com, bintian.wang@huawei.com, long.wanglong@huawei.com, leo.yan@linaro.org, haifeng.wei@huawei.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linuxarm@huawei.com
+In-Reply-To: <alpine.DEB.2.02.1512111158170.15210@linuxheads99>
+References: <1449790629-5517-1-git-send-email-atull@opensource.altera.com>
+	<1449790629-5517-2-git-send-email-atull@opensource.altera.com>
+	<20151211150505.GA27164@rob-hp-laptop>
+	<alpine.DEB.2.02.1512111158170.15210@linuxheads99>
+Date: Fri, 11 Dec 2015 13:18:50 -0600
+Message-ID: <CAL_JsqL=_pii2a5CWKXLngCK6k-Oo9GbL8exdrxfUGtMYbDOmA@mail.gmail.com>
+Subject: Re: [PATCH v14 1/7] fpga: add usage documentation for fpga area
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+To: atull <atull@opensource.altera.com>
+Cc: Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, Dinh Nguyen <dinguyen@opensource.altera.com>
 List-ID: <devicetree@vger.kernel.org>
 
---------------040504000407030303050402
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-
-
-
-On 2015/12/7 21:16, Rob Herring wrote:
-> On Sat, Dec 05, 2015 at 03:54:48PM +0800, yankejian wrote:
->> This patch adds documentation for the devicetree bindings used by the
->> DT files of Hisilicon Hip05-D02 development board.
+On Fri, Dec 11, 2015 at 12:33 PM, atull <atull@opensource.altera.com> wrote:
+> On Fri, 11 Dec 2015, Rob Herring wrote:
+>
+> Hi Rob,
+>
+>> > +Device Tree Example: Partial Reconfiguration with no Bridges
+>> > +============================================================
+>> > +
+>> > +Live Device Tree contains:
+>> > +   fpgamgr@0 {
 >>
->> Signed-off-by: yankejian <yankejian@huawei.com>
->> ---
->>  .../devicetree/bindings/arm/hisilicon/hisilicon.txt      | 16 ++++++++++++++++
->>  1 file changed, 16 insertions(+)
+>> Unit address should be ffd03000 here.
+>
+> I'll clean up the addresses (and add that to my checklist!).
+>
 >>
->> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
->> index 6ac7c00..5318d78 100644
->> --- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
->> +++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
->> @@ -187,6 +187,22 @@ Example:
->>  		reg = <0xb0000000 0x10000>;
->>  	};
->>  
->> +Hisilicon HiP05 PERISUB system controller
->> +
->> +Required properties:
->> +- compatible : "hisilicon,peri-c-subctrl", "syscon";
-> This should be more specific and have the SOC name in it.
-Hi Rob,
-the design is recommended to be used for hip05 and later SOCs, so we try to use hisilicon instead.
-thanks for your suggestions.
-
-Best Regards,
-yankejian
-
-
->> +- reg : Register address and size
->> +
->> +The HiP05 PERISUB system controller is shared by peripheral controllers in
->> +HiP05 Soc to implement some basic configurations. the peripheral
->> + controllers include mdio, ddr, iic, uart, timer and so on.
->> +
->> +Example:
->> +	/* for HiP05 PCIe-SAS system */
->> +	pcie_sas: system_controller@0xb0000000 {
->> +		compatible = "hisilicon,pcie-sas-subctrl", "syscon";
-> The example doesn't match.
-
-Thanks for this. I have changed this in PATCH V2 already floated.
-
-Best Regards
-yankejian
-
->> +		reg = <0xb0000000 0x10000>;
->> +	};
->>  -----------------------------------------------------------------------
->>  Hisilicon CPU controller
->>  
->> -- 
->> 1.9.1
+>> > +           compatible = "altr,socfpga-a10-fpga-mgr", "simple-bus";
 >>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> This should not have simple-bus. This would be broken in the case of
+>> applying the overlay before booting the kernel. You don't want the
+>> devices probed before the fpgamgr has programmed them.
+>>
+>
+> I debugged this and had to add the simple-bus's to see my child devices
+> probe.  Otherwise I can apply the overlay, but when I call
+> of_platform_populate, no child nodes get populated.
+> In drivers/of/platform.c's of_platform_notify(), the OF_POPULATED_BUS
+> flag has to be set for the parent (implying it was set for its parents
+> or it wouldn't be set).  The child nodes do not get populated unless
+> the insertion point and all the ancestors of the insertion point are
+> simple-bus's.
+
+That's probably an oddity in how overlays are applied. We may not want the core to populate the devices, but require that the FPGA mgr does that.
+
+> So the issue of applying the overlay before booting the kernel:
+> if FPGA Area gets probed before its children get populated, then
+> I'm K since FPGA Area is responsible for programming the FPGA.
+>
+> I can rework this to have a virtualized fpgabus that has the fpgamgr
+> and bridges as its children if that is more correct.  I actually
+> worked this up several different ways so I have the code.  I still
+> would like to keep the FPGA Area because that gives me a module that
+> gets probed that can be in charge of programming the FPGA.  If I were
+> to rid of FPGA Area and just have an overlay of "firmware-name" plus
+> child nodes, then I have to add a notifier to the fpgabus.  This I
+> can do (and have done and seen it work) so if that is preferable,
+> that's what v15 of this can easily be.
+>
+> In that case, the target path for the overlay could be the fpgabus.
+> The fpgabus would need to also be a simple-bus but not the manager
+> or bridges.
+>
+> So if I have a fpgabus, the live tree would be:
+>         fpgabus@0 {
+>                 compatible = "altr,fpga-bus", "simple-bus";
+>                 #address-cells = <0x1>;
+>                 #size-cells = <0x1>;
+>                 ranges;
+>
+>                 fpgamgr@ff706000 {
+>                         compatible = "altr,socfpga-fpga-mgr";
+>                         reg = <0xff706000 0x1000
+>                                0xffb90000 0x1000>;
+>                         interrupts = <0 175 4>;
+>                 };
+>
+>                 bridge@0 {
+>                         compatible = "altr,socfpga-lwhps2fpga-bridge";
+>                         resets = <&rst LWHPS2FPGA_RESET>;
+>                         reset-names = "lwhps2fpga";
+>                         clocks = <&l4_main_clk>;
+>                         #address-cells = <0x1>;
+>                         #size-cells = <0x1>;
+>                         ranges;
+>                 };
+>
+>                 bridge@1 {
+>                         compatible = "altr,socfpga-hps2fpga-bridge";
+>                         resets = <&rst HPS2FPGA_RESET>;
+>                         reset-names = "hps2fpga";
+>                         clocks = <&l4_main_clk>;
+>                 };
+>         };
+>
+> Alan
 > --
-> To unsubscribe from this list: send the line "unsubscribe netdev" in
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
 > the body of a message to majordomo@vger.kernel.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
-> .
->
-
-
---------------040504000407030303050402
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-
-<html>
-  <head>
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    <br>
-    <br>
-    <div class="moz-cite-prefix">On 2015/12/7 21:16, Rob Herring wrote:<br>
-    </div>
-    <blockquote cite="mid:20151207131617.GA25170@rob-hp-laptop"
-      type="cite">
-      <pre wrap="">On Sat, Dec 05, 2015 at 03:54:48PM +0800, yankejian wrote:
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">This patch adds documentation for the devicetree bindings used by the
-DT files of Hisilicon Hip05-D02 development board.
-
-Signed-off-by: yankejian <a class="moz-txt-link-rfc2396E" href="mailto:yankejian@huawei.com">&lt;yankejian@huawei.com&gt;</a>
----
- .../devicetree/bindings/arm/hisilicon/hisilicon.txt      | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-index 6ac7c00..5318d78 100644
---- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-+++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-@@ -187,6 +187,22 @@ Example:
- 		reg = &lt;0xb0000000 0x10000&gt;;
- 	};
- 
-+Hisilicon HiP05 PERISUB system controller
-+
-+Required properties:
-+- compatible : "hisilicon,peri-c-subctrl", "syscon";
-</pre>
-      </blockquote>
-      <pre wrap="">
-This should be more specific and have the SOC name in it.
-</pre>
-    </blockquote>
-    Hi Rob,<br>
-    <span id="im-content_1449454073269" class="im-content"><font
-        style="FONT-SIZE: 14px" face="微软雅黑">the design is recommended to
-        be used for hip05 and later SOCs, so we try to use hisilicon
-        instead.<br>
-        thanks for your suggestions.<br>
-        <br>
-        Best Regards,<br>
-        yankejian<br>
-      </font></span><br>
-    <br>
-    <blockquote cite="mid:20151207131617.GA25170@rob-hp-laptop"
-      type="cite">
-      <pre wrap="">
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+- reg : Register address and size
-+
-+The HiP05 PERISUB system controller is shared by peripheral controllers in
-+HiP05 Soc to implement some basic configurations. the peripheral
-+ controllers include mdio, ddr, iic, uart, timer and so on.
-+
-+Example:
-+	/* for HiP05 PCIe-SAS system */
-+	pcie_sas: system_controller@0xb0000000 {
-+		compatible = "hisilicon,pcie-sas-subctrl", "syscon";
-</pre>
-      </blockquote>
-      <pre wrap="">
-The example doesn't match.
-</pre>
-    </blockquote>
-    <br>
-    Thanks for this. I have changed this in PATCH V2 already floated.
-    <br>
-    <br>
-    Best Regards
-    <br>
-    yankejian<br>
-    <br>
-    <blockquote cite="mid:20151207131617.GA25170@rob-hp-laptop"
-      type="cite">
-      <pre wrap="">
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+		reg = &lt;0xb0000000 0x10000&gt;;
-+	};
- -----------------------------------------------------------------------
- Hisilicon CPU controller
- 
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to <a class="moz-txt-link-abbreviated" href="mailto:majordomo@vger.kernel.org">majordomo@vger.kernel.org</a>
-More majordomo info at  <a class="moz-txt-link-freetext" href="http://vger.kernel.org/majordomo-info.html">http://vger.kernel.org/majordomo-info.html</a>
-</pre>
-      </blockquote>
-      <pre wrap="">--
-To unsubscribe from this list: send the line "unsubscribe netdev" in
-the body of a message to <a class="moz-txt-link-abbreviated" href="mailto:majordomo@vger.kernel.org">majordomo@vger.kernel.org</a>
-More majordomo info at  <a class="moz-txt-link-freetext" href="http://vger.kernel.org/majordomo-info.html">http://vger.kernel.org/majordomo-info.html</a>
-
-.
-
-</pre>
-    </blockquote>
-    <br>
-  </body>
-</html>
-
---------------040504000407030303050402--
