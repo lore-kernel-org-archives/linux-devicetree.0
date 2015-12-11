@@ -1,112 +1,95 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH linux-next (v2) 1/2] clk: Add brcm,bcm6345-gate-clk
- device tree binding
-Date: Thu, 10 Dec 2015 21:48:59 -0600
-Message-ID: <20151211034859.GA7982@rob-hp-laptop>
-References: <5669F361.60405@simon.arlott.org.uk>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH] dts/ls2080a: Update PCIe compatible
+Date: Thu, 10 Dec 2015 21:48:26 -0600
+Message-ID: <1449805706.15946.283.camel@freescale.com>
+References: <1448345075-6801-1-git-send-email-Mingkai.Hu@freescale.com>
+ <20151124202203.GA32297@rob-hp-laptop>
+ <BN3PR0301MB1249CD4A615CCD7308FB067184050@BN3PR0301MB1249.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5669F361.60405@simon.arlott.org.uk>
-Sender: linux-clk-owner@vger.kernel.org
-To: Simon Arlott <simon@fire.lp0.eu>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, linux-mips@linux-mips.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonas Gorski <jogo@openwrt.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <BN3PR0301MB1249CD4A615CCD7308FB067184050@BN3PR0301MB1249.namprd03.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hu Vincent <Mingkai.Hu@freescale.com>, Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Li Leo <LeoLi@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Lian M.H." <Minghuan.Lian@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 10, 2015 at 09:49:21PM +0000, Simon Arlott wrote:
-> Add device tree binding for the BCM6345's gated clocks.
+On Wed, 2015-11-25 at 05:01 +0000, Hu Vincent wrote:
 > 
-> The BCM6345 contains clocks gated with a register. Clocks are indexed
-> by bits in the register and are active high. Most MIPS-based BCM63xx
-> SoCs have a clock gating set of registers, but some have clock gate bits
-> interleaved with other status bits and configurable clocks in the same
-> register.
+> > -----Original Message-----
+> > From: Rob Herring [mailto:robh@kernel.org]
+> > Sent: Wednesday, November 25, 2015 4:22 AM
+> > To: Hu Mingkai-B21284
+> > Cc: arm@kernel.org; linux-arm-kernel@lists.infradead.org;
+> > devicetree@vger.kernel.org; Li Yang-Leo-R58472; Lian Minghuan-B31939
+> > Subject: Re: [PATCH] dts/ls2080a: Update PCIe compatible
+> > 
+> > On Tue, Nov 24, 2015 at 02:04:35PM +0800, Mingkai Hu wrote:
+> > > From: Minghuan Lian <Minghuan.Lian@freescale.com>
+> > > 
+> > > The patch adds LS2085a to PCIe compatible to fix the compatibility
+> > > issue when using firmware with LS2085a compatible property.
+> > > 
+> > > Signed-off-by: Minghuan Lian <Minghuan.Lian@freescale.com>
+> > > Signed-off-by: Mingkai Hu <Mingkai.Hu@freescale.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/pci/layerscape-pci.txt |  1 +
+> > >  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi           | 12
+> > ++++++++----
+> > >  2 files changed, 9 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> > > b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> > > index e376785..4600007 100644
+> > > --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> > > +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> > > @@ -15,6 +15,7 @@ Required properties:
+> > >  - compatible: should contain the platform identifier such as:
+> > >          "fsl,ls1021a-pcie", "snps,dw-pcie"
+> > >          "fsl,ls2080a-pcie", "snps,dw-pcie"
+> > > +        "fsl,ls2085a-pcie", "snps,dw-pcie"
+> > >  - reg: base addresses and lengths of the PCIe controller
+> > >  - interrupts: A list of interrupt outputs of the controller. Must
+> > contain an
+> > >    entry for each entry in the interrupt-names property.
+> > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> > > b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> > > index e81cd48..3821bb1 100644
+> > > --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> > > @@ -383,7 +383,8 @@
+> > >  		};
+> > > 
+> > >  		pcie@3400000 {
+> > > -			compatible = "fsl,ls2080a-pcie", "snps,dw
+> > > -pcie";
+> > > +			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a
+> > > -pcie",
+> > > +				     "snps,dw-pcie";
+> > 
+> > This doesn't match the doc as to what are valid combinations. The order
+> > here seems backwards too. ls2085a is older?
+> > 
 > 
-> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
+> Yes, ls2085a was released earlier. You mean the older one comes first? Like:
+> 
+> compatible = "fsl,ls2085a-pcie", "fsl,ls2080a-pcie",
+> 		 "snps,dw-pcie";
 
-Acked-by: Rob Herring <robh@kernel.org>
+No, the more specific one should come first (regardless of when each chip is
+older), so the patch is correct as is.
 
-> ---
-> v2: Added clock-indices, clock-output-names (from clock-bindings.txt),
->     these are required properties.
-> 
-> v1: Renamed from BCM63xx to BCM6345.
-> 
->  .../bindings/clock/brcm,bcm6345-gate-clk.txt       | 62 ++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm6345-gate-clk.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/brcm,bcm6345-gate-clk.txt b/Documentation/devicetree/bindings/clock/brcm,bcm6345-gate-clk.txt
-> new file mode 100644
-> index 0000000..a6e264c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/brcm,bcm6345-gate-clk.txt
-> @@ -0,0 +1,62 @@
-> +Broadcom BCM6345 clocks
-> +
-> +This binding uses the common clock binding:
-> +	Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +The BCM6345 contains clocks gated with a register. Clocks are indexed
-> +by bits in the register and are active high. Most MIPS-based BCM63xx
-> +SoCs have a clock gating set of registers, but some have clock gate bits
-> +interleaved with other status bits and configurable clocks in the same
-> +register.
-> +
-> +Required properties:
-> +- compatible:         Should be "brcm,bcm<soc>-gate-clk", "brcm,bcm6345-gate-clk"
-> +- #clock-cells:       Should be <1>.
-> +- regmap:             The register map phandle
-> +- offset:             Offset in the register map for the clock register (in bytes)
-> +- clocks:             The external oscillator clock phandle
-> +- clock-indices:      The bits in the register used for gated clocks.
-> +- clock-output-names: Should be a list of strings of clock output signal
-> +                      names indexed by the clock indices.
-> +
-> +Example:
-> +
-> +periph_clk: periph_clk {
-> +	compatible = "brcm,bcm63168-gate-clk", "brcm,bcm6345-gate-clk";
-> +	regmap = <&periph_cntl>;
-> +	offset = <0x4>;
-> +
-> +	#clock-cells = <1>;
-> +	clock-indices =
-> +		<1>,          <2>,        <3>,       <4>,     <5>,
-> +		<6>,          <7>,        <8>,       <9>,     <10>,
-> +		<11>,         <12>,       <13>,      <14>,    <15>,
-> +		<16>,         <17>,       <18>,      <19>,    <20>,
-> +		<27>,         <31>;
-> +	clock-output-names =
-> +		"vdsl_qproc", "vdsl_afe", "vdsl",    "mips",  "wlan_ocp",
-> +		"dect",       "fap0",     "fap1",    "sar",   "robosw",
-> +		"pcm",        "usbd",     "usbh",    "ipsec", "spi",
-> +		"hsspi",      "pcie",     "phymips", "gmac",  "nand",
-> +		"tbus",       "robosw250";
-> +};
-> +
-> +timer_clk: timer_clk {
-> +	compatible = "brcm,bcm63168-gate-clk", "brcm,bcm6345-gate-clk";
-> +	regmap = <&timer_cntl>;
-> +	offset = <0x4>;
-> +
-> +	#clock-cells = <1>;
-> +	clock-indices = <17>, <18>;
-> +	clock-output-names = "uto_extin", "usb_ref";
-> +};
-> +
-> +ehci0: usb@10002500 {
-> +	compatible = "brcm,bcm63168-ehci", "brcm,bcm6345-ehci", "generic-ehci";
-> +	reg = <0x10002500 0x100>;
-> +	big-endian;
-> +	interrupt-parent = <&periph_intc>;
-> +	interrupts = <10>;
-> +	clocks = <&periph_clk 13>, <&timer_clk 18>;
-> +	phys = <&usbh>;
-> +};
-> -- 
-> 2.1.4
-> 
-> -- 
-> Simon Arlott
+BTW, the changelog doesn't describe the severity of the problem, but without
+this change I see a hang in the PCIe controller probe because U-Boot is unable
+to mark disabled controllers as disabled.
+
+-Scott
