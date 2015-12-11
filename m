@@ -1,84 +1,93 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 4/5] ARM: dts: DRA7: add entry for qspi mmap region
-Date: Fri, 11 Dec 2015 09:09:35 -0600
-Message-ID: <20151211150935.GA15654@rob-hp-laptop>
-References: <1449807000-6457-1-git-send-email-vigneshr@ti.com>
- <1449807000-6457-5-git-send-email-vigneshr@ti.com>
+Subject: Re: [PATCH v3 2/7] clk: hisilicon: add dt-binding document for
+ Hi3519 CRG
+Date: Fri, 11 Dec 2015 09:19:09 -0600
+Message-ID: <20151211151909.GA21272@rob-hp-laptop>
+References: <1449819921-18464-1-git-send-email-xuejiancheng@huawei.com>
+ <1449819921-18464-3-git-send-email-xuejiancheng@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1449807000-6457-5-git-send-email-vigneshr@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Brian Norris <computersforpeace@gmail.com>, Mark Brown <broonie@kernel.org>, Russell King <linux@arm.linux.org.uk>, hramrach@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org
+In-Reply-To: <1449819921-18464-3-git-send-email-xuejiancheng@huawei.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jiancheng Xue <xuejiancheng@huawei.com>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 11, 2015 at 09:39:59AM +0530, Vignesh R wrote:
-> Add qspi memory mapped region entries for DRA7xx based SoCs. Also,
-> update the binding documents for the controller to document this change.
+On Fri, Dec 11, 2015 at 03:45:16PM +0800, Jiancheng Xue wrote:
+> add dt-binding document for Hi3519 CRG block
 > 
-> Signed-off-by: Vignesh R <vigneshr@ti.com>
-
-Acked-by: Rob Herring <robh@kernel.org>
-
+> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
 > ---
+>  .../devicetree/bindings/clock/hi3519-crg.txt       | 46 ++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/hi3519-crg.txt
 > 
-> v5: use syscon to access scm register.
-> 
->  Documentation/devicetree/bindings/spi/ti_qspi.txt | 17 +++++++++++++++++
->  arch/arm/boot/dts/dra7.dtsi                       |  6 ++++--
->  2 files changed, 21 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/ti_qspi.txt b/Documentation/devicetree/bindings/spi/ti_qspi.txt
-> index 601a360531a5..809c3f334316 100644
-> --- a/Documentation/devicetree/bindings/spi/ti_qspi.txt
-> +++ b/Documentation/devicetree/bindings/spi/ti_qspi.txt
-> @@ -15,6 +15,10 @@ Recommended properties:
->  - spi-max-frequency: Definition as per
->                       Documentation/devicetree/bindings/spi/spi-bus.txt
->  
-> +Optional properties:
-> +- syscon-chipselects: Handle to system control region contains QSPI
-> +		      chipselect register and offset of that register.
+> diff --git a/Documentation/devicetree/bindings/clock/hi3519-crg.txt b/Documentation/devicetree/bindings/clock/hi3519-crg.txt
+> new file mode 100644
+> index 0000000..e0d30a4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/hi3519-crg.txt
+> @@ -0,0 +1,46 @@
+> +* Hisilicon Hi3519 Clock and Reset Generator(CRG)
 > +
->  Example:
->  
->  qspi: qspi@4b300000 {
-> @@ -26,3 +30,16 @@ qspi: qspi@4b300000 {
->  	spi-max-frequency = <25000000>;
->  	ti,hwmods = "qspi";
->  };
+> +The Hi3519 CRG module provides clock and reset signals to various
+> +controllers within the SoC.
 > +
-> +For dra7xx:
-> +qspi: qspi@4b300000 {
-> +	compatible = "ti,dra7xxx-qspi";
-> +	reg = <0x4b300000 0x100>,
-> +	      <0x5c000000 0x4000000>,
-> +	reg-names = "qspi_base", "qspi_mmap";
-> +	syscon-chipselects = <&scm_conf 0x558>;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	spi-max-frequency = <48000000>;
-> +	ti,hwmods = "qspi";
+> +This binding uses the following bindings:
+> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +    Documentation/devicetree/bindings/reset/reset.txt
+> +
+> +Required Properties:
+> +
+> +- compatible: should be one of the following.
+> +  - "hisilicon,hi3519-crg" - controller compatible with Hi3519 SoC.
+> +
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +
+> +- #clock-cells: should be 1.
+> +
+> +Each clock is assigned an identifier and client nodes use this identifier
+> +to specify the clock which they consume.
+> +
+> +All these identifier could be found in <dt-bindings/clock/hi3519-clock.h>.
+
+This header should be part of this patch.
+
+> +
+> +- #reset-cells: should be 2.
+> +
+> +A reset signal can be controlled by writing a bit register in the CRG module.
+> +The reset specifier consists of two cells. The first cell represents the
+> +register offset relative to the base address. The second cell represents the
+> +bit index in the register.
+> +
+> +Example: CRG nodes
+> +CRG: clock-reset-controller {
+
+clock-reset-controller@12010000
+
+> +	compatible = "hisilicon,hi3519-crg";
+> +        reg = <0x12010000 0x10000>;
+> +        #clock-cells = <1>;
+> +        #reset-cells = <2>;
 > +};
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index fe99231cbde5..be91c7781c07 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -1153,8 +1153,10 @@
->  
->  		qspi: qspi@4b300000 {
->  			compatible = "ti,dra7xxx-qspi";
-> -			reg = <0x4b300000 0x100>;
-> -			reg-names = "qspi_base";
-> +			reg = <0x4b300000 0x100>,
-> +			      <0x5c000000 0x4000000>;
-> +			reg-names = "qspi_base", "qspi_mmap";
-> +			syscon-chipselects = <&scm_conf 0x558>;
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  			ti,hwmods = "qspi";
+> +
+> +Example: consumer nodes
+> +i2c0: i2c@0x12110000 {
+
+Drop '0x'
+
+> +	compatible = "hisilicon,hi3519-i2c";
+> +        reg = <0x12110000 0x1000>;
+> +        clocks = <&CRG HI3519_I2C0_RST>;*/
+> +        resets = <&CRG 0xE4 0>;
+
+lowercase hex please
+
+> +};
 > -- 
-> 2.6.3
+> 1.9.1
 > 
