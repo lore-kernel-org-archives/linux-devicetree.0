@@ -1,75 +1,126 @@
-From: Pratyush Anand <pratyush.anand@gmail.com>
-Subject: Re: [PATCH v4 1/5] PCI: designware: add memory barrier after enabling region
-Date: Fri, 11 Dec 2015 09:35:10 +0530
-Message-ID: <CAHM4w1m-NiwyCLz9tikbOcNtCmVu0Vd9FhmKKSuMi5ChzfDafA@mail.gmail.com>
-References: <1449149725-27607-1-git-send-email-stanimir.varbanov@linaro.org>
-	<1449149725-27607-2-git-send-email-stanimir.varbanov@linaro.org>
-	<56669C50.9060700@linaro.org>
-	<CAHM4w1k_EAt+xBBYyG3B7W9Fegc4j+uRq5t_biUsxOGt+k+xUA@mail.gmail.com>
-	<20151209102359.GF8644@n2100.arm.linux.org.uk>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH] extcon-usb-gpio: add enable pin support
+Date: Fri, 11 Dec 2015 13:05:43 +0900
+Message-ID: <566A4B97.7080801@samsung.com>
+References: <4393960.B6dD3UkQy3@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20151209102359.GF8644@n2100.arm.linux.org.uk>
-Sender: linux-pci-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-reply-to: <4393960.B6dD3UkQy3@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 9, 2015 at 3:53 PM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
+Hi Sergei,
 
-[...]
+On 2015=EB=85=84 12=EC=9B=94 11=EC=9D=BC 08:07, Sergei Shtylyov wrote:
+> Sometimes  there's a real  OTG chip behind the USB ID signal mapped t=
+o a GPIO
+> pin: in my case it's Maxim Integrated MAX3355E which  integrates Vbus=
+ charge
+> pump and comparators and passes  thru the ID  signal  from an OTG con=
+nector.
 
->> > >       dw_pcie_writel_rc(pp, PCIE_ATU_ENABLE, PCIE_ATU_CR2);
->> > > +     /*
->> > > +      * ensure that the ATU enable has been happaned before accessing
->> > > +      * pci configuration/io spaces through dw_pcie_cfg_[read|write].
->> > > +      */
->> > > +     wmb();
->> > >  }
->> > >
->>
->>
->> My understnading is that since writel() of dw_pcie_writel_rc() in
->> above code and readl(), writel() of dw_pcie_cfg_[read|write]() (which
->> will follow) goes through same device (ie PCIe host here). So, it is
->> guaranteed that 1st writel() will be executed before later
->> readl()/writel(). If that is true then we do not need any explicit
->> barrier here.
->>
->> Arnd, Russel: whats your opinion here.
->               ^l
+s/thru/through ?
 
-Sorry :(
+> This chip also has the SHDN# pin which  should be  driven high for th=
+e normal
+> operation  and low to  save power;  it  is connected to a GPIO pin as=
+ well on,
+> hence  we'll have  to  teach the driver to parse the new optional dev=
+ice tree
+> property, "enable-gpio"...
 
->
-> writel() has a barrier _before_ the access but not after.
->
-> The fact is that there's nothing which guarantees that the write will hit
-> the hardware in a timely manner (forget any rules about PCI config space,
-> the PCI ordering rules apply to the PCI bus, not to the ARM buses.)
->
-> If you need this write to have hit the hardware before continuing, you
-> need to read back from the same register.
+This patch description includes the double space between words. Also, I=
+ think
+you need to write the patch description again for formal style.
 
-OK, so better to replace wmb() with read back of control register.
+This patch adds the specific 'enable-gpio' pin to express the SHDN#pin =
+for MAX3355E.
+I think it is not regular and standard case because maybe USB specifica=
+tion
+don't include the SHDN#pin information. I think it not appropriate way.
+Instead, you better to make the MAX3355 extcon driver to support this c=
+ase.
 
->
-> I'm just looking at this driver, trying to decipher what it's doing.  It
-> _looks_ to me like it's reprogramming one of the outbound windows (IO?)
-> so that configuration space can be accessed.  Doesn't this have the
-> effect of disabling access to the IO segment of the PCI bus from the
-> host CPU?
->
-> What protections are there against other CPUs in the system issuing a
-> PCI I/O read/write while this outbound window is programmed as
-> configuration space?
+Thanks,
+Chanwoo=20
 
+>=20
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>=20
+> ---
+> The patch is against the 'extcon-next' branch of the 'extcon.git' rep=
+o.
+>=20
+>  Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt |    3 =
++++
+>  drivers/extcon/extcon-usb-gpio.c                             |    5 =
++++++
+>  2 files changed, 8 insertions(+)
+>=20
+> Index: extcon/Documentation/devicetree/bindings/extcon/extcon-usb-gpi=
+o.txt
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- extcon.orig/Documentation/devicetree/bindings/extcon/extcon-usb-g=
+pio.txt
+> +++ extcon/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.t=
+xt
+> @@ -7,6 +7,9 @@ Required properties:
+>  - compatible: Should be "linux,extcon-usb-gpio"
+>  - id-gpio: gpio for USB ID pin. See gpio binding.
+> =20
+> +Optional properties:
+> +- enable-gpio: gpio for the enable pin. See gpio binding.
+> +
+>  Example: Examples of extcon-usb-gpio node in dra7-evm.dts as listed =
+below:
+>  	extcon_usb1 {
+>  		compatible =3D "linux,extcon-usb-gpio";
+> Index: extcon/drivers/extcon/extcon-usb-gpio.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- extcon.orig/drivers/extcon/extcon-usb-gpio.c
+> +++ extcon/drivers/extcon/extcon-usb-gpio.c
+> @@ -33,6 +33,7 @@ struct usb_extcon_info {
+>  	struct device *dev;
+>  	struct extcon_dev *edev;
+> =20
+> +	struct gpio_desc *enable_gpiod;
+>  	struct gpio_desc *id_gpiod;
+>  	int id_irq;
+> =20
+> @@ -99,6 +100,8 @@ static int usb_extcon_probe(struct platf
+>  		return -ENOMEM;
+> =20
+>  	info->dev =3D dev;
+> +	info->enable_gpiod =3D devm_gpiod_get_optional(&pdev->dev, "enable"=
+,
+> +						     GPIOD_OUT_HIGH);
+>  	info->id_gpiod =3D devm_gpiod_get(&pdev->dev, "id", GPIOD_IN);
+>  	if (IS_ERR(info->id_gpiod)) {
+>  		dev_err(dev, "failed to get ID GPIO\n");
+> @@ -155,6 +158,8 @@ static int usb_extcon_remove(struct plat
+> =20
+>  	cancel_delayed_work_sync(&info->wq_detcable);
+> =20
+> +	gpiod_set_value_cansleep(info->enable_gpiod, 0);
+> +
+>  	return 0;
+>  }
+> =20
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
+l" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+>=20
+>=20
 
-Yes, that is an issue with this driver. Most of the host controller
-has 4 or more viewpoints, and it is very easy to handle for them. But
-there are few which has only two viewpoints. Do not know how to solve
-it, so that it works for all.
-
-~Pratyush
