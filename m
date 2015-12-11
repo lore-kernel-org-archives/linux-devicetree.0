@@ -1,67 +1,24 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH linux-next 1/2] power: Add brcm,bcm6358-power-controller
- device tree binding
-Date: Thu, 10 Dec 2015 20:58:44 -0600
-Message-ID: <20151211025844.GA5251@rob-hp-laptop>
-References: <5668AB4F.7030100@simon.arlott.org.uk>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PICKME 0/2] cpufreq: New ST driver
+Date: Fri, 11 Dec 2015 08:49:00 +0530
+Message-ID: <20151211031900.GM3612@ubuntu>
+References: <1449740537-12619-1-git-send-email-lee.jones@linaro.org>
+ <2896628.JCDQCVfIaC@vostro.rjw.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5668AB4F.7030100@simon.arlott.org.uk>
+In-Reply-To: <2896628.JCDQCVfIaC@vostro.rjw.lan>
 Sender: linux-pm-owner@vger.kernel.org
-To: Simon Arlott <simon@fire.lp0.eu>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jonas Gorski <jogo@openwrt.org>, linux-pm@vger.kernel.org, Mark Brown <broonie@kernel.org>, MIPS Mailing List <linux-mips@linux-mips.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, ajitpal.singh@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 09, 2015 at 10:29:35PM +0000, Simon Arlott wrote:
-> The BCM6358 contains power domains controlled with a register. Power
-> domains are indexed by bits in the register. Power domain bits can be
-> interleaved with other status bits and clocks in the same register.
-> 
-> Newer SoCs with dedicated power domain registers are active low.
-> 
-> Signed-off-by: Simon Arlott <simon@fire.lp0.eu>
-> ---
->  .../power/brcm,bcm6358-power-controller.txt        | 53 ++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/brcm,bcm6358-power-controller.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/brcm,bcm6358-power-controller.txt b/Documentation/devicetree/bindings/power/brcm,bcm6358-power-controller.txt
-> new file mode 100644
-> index 0000000..556c323
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/brcm,bcm6358-power-controller.txt
-> @@ -0,0 +1,53 @@
-> +Broadcom BCM6358 Power domain controller
-> +
-> +This binding uses the power domain bindings:
-> +        Documentation/devicetree/bindings/power/power_domain.txt
-> +
-> +The BCM6358 contains power domains controlled with a register. Power
-> +domains are indexed by bits in the register. Power domain bits can be
-> +interleaved with other status bits and clocks in the same register.
-> +
-> +Newer SoCs with dedicated power domain registers are active low.
-> +
-> +Required properties:
-> +- compatible:           Should be "brcm,bcm<soc>-power-controller", "brcm,bcm6358-power-controller"
-> +- #power-domain-cells:  Should be <1>.
-> +- regmap:               The register map phandle
-> +- offset:               Offset in the register map for the power domain register (in bytes)
-> +- power-domain-indices: The bits in the register used for power domains.
+On 10-12-15, 22:38, Rafael J. Wysocki wrote:
+> Do they depend on anything special?
 
-You should drop this and make the cell values be the register offsets.
+My opp-binding-parsing patches which you applied to bleeding-edge.
+Yes, Lee should have mentioned that explicitly.
 
-> +- power-domain-names:   Should be a list of strings of power domain names
-> +                        indexed by the power domain indices.
-
-This isn't really needed anyway.
-
-> +
-> +Optional properties:
-> +- active-low:           Specify that the bits are active low.
-
-This should be implied by the compatible property.
-
-Rob
+-- 
+viresh
