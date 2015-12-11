@@ -1,53 +1,59 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] Input: add touchscreen bindings for TS-4800
-Date: Thu, 10 Dec 2015 21:39:54 -0600
-Message-ID: <20151211033954.GA638@rob-hp-laptop>
-References: <1449763872-572-1-git-send-email-damien.riegel@savoirfairelinux.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] extcon: arizona: Update device tree binding for mic
+ detect configurations
+Date: Thu, 10 Dec 2015 21:44:32 -0600
+Message-ID: <20151211034432.GA3159@rob-hp-laptop>
+References: <1449767299-29691-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1449767299-29691-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1449763872-572-1-git-send-email-damien.riegel@savoirfairelinux.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Damien Riegel <damien.riegel@savoirfairelinux.com>
-Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kernel@savoirfairelinux.com
+In-Reply-To: <1449767299-29691-2-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 10, 2015 at 11:11:11AM -0500, Damien Riegel wrote:
-> Add bindings for the TS-4800 touchscreen.
+On Thu, Dec 10, 2015 at 05:08:19PM +0000, Charles Keepax wrote:
+> Update the device tree binding documentation to include documentation for
+> the wlf,micd-configs property that is used to specify the configurations
+> for headset polarity detection (CTIA / OTMP).
 > 
-> Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
+> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 
-Generally, there are other properties needed from the common touchscreen 
-binding. You don't need any of those here?
-
-Otherwise,
-
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 > ---
->  .../devicetree/bindings/input/touchscreen/ts4800-ts.txt      | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/ts4800-ts.txt
+>  Documentation/devicetree/bindings/extcon/extcon-arizona.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/ts4800-ts.txt b/Documentation/devicetree/bindings/input/touchscreen/ts4800-ts.txt
-> new file mode 100644
-> index 0000000..63282fa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/ts4800-ts.txt
-> @@ -0,0 +1,12 @@
-> +* TS-4800 Touchscreen bindings
-> +
-> +Required properties:
-> +- compatible: must be "technologic,ts4800-ts"
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +- syscon: phandle / integers array that points to the syscon node which
-> +          describes the FPGA's syscon registers.
-> +          - phandle to FPGA's syscon
-> +          - offset to the touchscreen register
-> +          - offset to the touchscreen enable bit
-> +
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> index 238e10e..fd9b898 100644
+> --- a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> +++ b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> @@ -37,5 +37,13 @@ Optional properties:
+>      milliseconds.
+>    - wlf,micd-force-micbias : Force MICBIAS continuously on during microphone
+>      detection.
+> +  - wlf,micd-configs : Headset polarity configurations (generally used for
+> +    detection of CTIA / OMTP headsets), the field can be of variable length
+> +    but should always be a multiple of 3 cells long, each three cell group
+> +    represents one polarity configuration.
+> +    The first cell defines the accessory detection pin, zero will use MICDET1
+> +    and all other values will use MICDET2.
+> +    The second cell represents the MICBIAS to be used.
+> +    The third cell represents the value of the micd-pol-gpio pin.
+>  
+>    - wlf,gpsw : Settings for the general purpose switch
 > -- 
-> 2.5.0
+> 2.1.4
 > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
