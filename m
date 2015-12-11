@@ -1,128 +1,64 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH] net/macb: add support for resetting PHY using GPIO
-Date: Fri, 11 Dec 2015 11:21:30 +0100
-Message-ID: <20151211102130.GA11966@pengutronix.de>
-References: <1449683383-5022-1-git-send-email-gregory.clement@free-electrons.com>
- <20151210073756.GA11966@pengutronix.de>
- <871tau8hpj.fsf@free-electrons.com>
- <20151211084630.GW11966@pengutronix.de>
- <87wpsl727t.fsf@free-electrons.com>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH 1/2] mfd: arizona: Add device tree binding to specify mono outputs
+Date: Fri, 11 Dec 2015 10:28:22 +0000
+Message-ID: <1449829703-600-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87wpsl727t.fsf@free-electrons.com>
-Sender: netdev-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: "David S. Miller" <davem@davemloft.net>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 11, 2015 at 10:40:22AM +0100, Gregory CLEMENT wrote:
-> Hi Sascha,
-> =20
->  On ven., d=E9c. 11 2015, Sascha Hauer <s.hauer@pengutronix.de> wrote=
-:
->=20
-> > On Thu, Dec 10, 2015 at 04:08:08PM +0100, Gregory CLEMENT wrote:
-> >> Hi Sascha,
-> >> =20
-> >>  On jeu., d=E9c. 10 2015, Sascha Hauer <s.hauer@pengutronix.de> wr=
-ote:
-> >>=20
-> >> > Hi Gregory,
-> >> >
-> >> > On Wed, Dec 09, 2015 at 06:49:43PM +0100, Gregory CLEMENT wrote:
-> >> >> With device tree it is no more possible to reset the PHY at boa=
-rd
-> >> >> level. Furthermore, doing in the driver allow to power down the=
- PHY when
-> >> >> the network interface is no more used.
-> >> >>=20
-> >> >> The patch introduces a new optional property "phy-reset-gpio" i=
-nspired
-> >> >> from the one use for the FEC.
-> >> >
-> >> > I don't think it's a good idea to further extend the usage of th=
-is
-> >> > binding. The driver should use the phy-handle property and
-> >> > of_phy_connect() which gives you a proper device node for the ph=
-y. Then
-> >> > the phy device node should get the reset gpio. I know it's more =
-work,
-> >>=20
-> >> So you suggest to pass from this binding:
-> >> macb1: ethernet@fc028000 {
-> >> 	phy-mode =3D "rmii";
-> >> 	status =3D "okay";
-> >> 	#address-cells =3D <1>;
-> >> 	#size-cells =3D <0>;
-> >> 	status =3D "okay";
-> >> 	phy-reset-gpio =3D <&pioE 6 GPIO_ACTIVE_HIGH>;
-> >>=20
-> >> 	ethernet-phy@1 {
-> >> 		reg =3D <0x1>;
-> >> 		interrupt-parent =3D <&pioB>;
-> >> 		interrupts =3D <31 IRQ_TYPE_EDGE_FALLING>;
-> >>=20
-> >> 	};
-> >> };
-> >>=20
-> >> to this binding
-> >> macb1: ethernet@fc028000 {
-> >> 	phy-mode =3D "rmii";
-> >> 	status =3D "okay";
-> >> 	#address-cells =3D <1>;
-> >> 	#size-cells =3D <0>;
-> >> 	status =3D "okay";
-> >>=20
-> >> 	ethernet-phy@1 {
-> >> 		reg =3D <0x1>;
-> >> 		interrupt-parent =3D <&pioB>;
-> >> 		interrupts =3D <31 IRQ_TYPE_EDGE_FALLING>;
-> >>                 phy-reset-gpio =3D <&pioE 6 GPIO_ACTIVE_HIGH>;
-> >> 	};
-> >> };
-> >
-> > s/phy-reset-gpio/reset-gpios/, but yes.
->=20
-> So I took this way. But I had several issues. The first one was that =
-to
-> be able to create a phy device it must first be detected by
-> get_phy_device from of_mdiobus_register_phy.  But in order to be
-> detected it must answer during the scan of the mii bus. That means we
-> can't bind the gpio to the device in order to use it because when we
-> need to manage the reset gpio the device is not yet created.
->=20
-> So I see 2 options:
->=20
-> - leaving the phy-reset-gpios property in the ethernet node. Thanks t=
-o
->   this we can use the gpiod functions, and it is still possible to us=
-e
->   manage the power management.
->=20
-> - using a reset-gpios property inside the phy node. But then the only
->   solution to get a reference on it, will be to use
->   of_get_named_gpio. All the gpiod functions need a reference to the
->   device that we won't have at this point. Also we will only be able =
-to
->   power up the reset, but we won't have any reference to it latter.
+Add device tree bindings to support specifying outputs from the chip as
+mono outputs. Whilst we are doing it change the out_mono pdata from a
+bool to an int, because Sparse gets upset about using ARRAY_SIZE on
+bools.
 
-Have you seen fwnode_get_named_gpiod()? This seems to be the right
-function for the job.
+Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+---
+ drivers/mfd/arizona-core.c        | 10 ++++++++++
+ include/linux/mfd/arizona/pdata.h |  2 +-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-I think we should get the binding right. The code can be changed easier
-than the binding later.
+diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+index b9489a0..4bb4866 100644
+--- a/drivers/mfd/arizona-core.c
++++ b/drivers/mfd/arizona-core.c
+@@ -861,6 +861,16 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
+ 		count++;
+ 	}
+ 
++	count = 0;
++	of_property_for_each_u32(arizona->dev->of_node, "wlf,out-mono", prop,
++				 cur, val) {
++		if (count == ARRAY_SIZE(pdata->out_mono))
++			break;
++
++		pdata->out_mono[count] = !!val;
++		count++;
++	}
++
+ 	return 0;
+ }
+ 
+diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
+index 57b45ca..64faeef 100644
+--- a/include/linux/mfd/arizona/pdata.h
++++ b/include/linux/mfd/arizona/pdata.h
+@@ -171,7 +171,7 @@ struct arizona_pdata {
+ 	int inmode[ARIZONA_MAX_INPUT];
+ 
+ 	/** Mode for outputs */
+-	bool out_mono[ARIZONA_MAX_OUTPUT];
++	int out_mono[ARIZONA_MAX_OUTPUT];
+ 
+ 	/** PDM speaker mute setting */
+ 	unsigned int spk_mute[ARIZONA_MAX_PDM_SPK];
+-- 
+2.1.4
 
-Sascha
-
---=20
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
