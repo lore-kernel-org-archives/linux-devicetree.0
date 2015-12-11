@@ -1,83 +1,61 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH linux-next 4/5] Documentation: atmel-quadspi: add binding
- file for Atmel QSPI driver
-Date: Fri, 11 Dec 2015 10:26:08 +0100
-Message-ID: <566A96B0.2010808@atmel.com>
-References: <cover.1449494420.git.cyrille.pitchen@atmel.com>
- <caec561f882521b3896530404ecb2bbad9950435.1449494420.git.cyrille.pitchen@atmel.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v11] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
+ PCIe Host Controller
+Date: Fri, 11 Dec 2015 09:33:06 +0000
+Message-ID: <566A9852.7060109@arm.com>
+References: <1448798633-12697-1-git-send-email-bharatku@xilinx.com> <20151209231921.GI31930@localhost> <8520D5D51A55D047800579B09414719825869A85@XAP-PVEXMBX01.xlnx.xilinx.com> <20151210201817.GB367@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <caec561f882521b3896530404ecb2bbad9950435.1449494420.git.cyrille.pitchen@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@atmel.com>, computersforpeace@gmail.com, linux-mtd@lists.infradead.org, marex@denx.de
-Cc: vigneshr@ti.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20151210201817.GB367@localhost>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>, Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "dhdang@apm.com" <dhdang@apm.com>, "sbranden@broadcom.com" <sbranden@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infrade>
 List-Id: devicetree@vger.kernel.org
 
-Le 07/12/2015 15:09, Cyrille Pitchen a =E9crit :
-> This patch documents the DT bindings for the driver of the Atmel QSPI
-> controller embedded inside sama5d2x SoCs.
->=20
-> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+On 10/12/15 20:18, Bjorn Helgaas wrote:
+> [+cc Marc for irq_dispose_mapping() question]
 
-The change is very small from previous one and moreover accepted by Rob=
-=2E
-So, for sure:
+>>>> +		}
+>>>> +	} while (status);
+>>>> +
+>>>> +	return retval;
+>>>>
+>>>> +	for (i = 0; i < 4; i++) {
+>>>> +		irq = irq_find_mapping(pcie->legacy_irq_domain, i + 1);
+>>>> +		if (irq > 0)
+>>>> +			irq_dispose_mapping(irq);
+>>>> +	}
+>>>> +	if (pcie->legacy_irq_domain)
+>>>> +		irq_domain_remove(pcie->legacy_irq_domain);
+>>>
+>>> Something seems wrong here.  I don't know when irq_dispose_mapping() is
+>>> required, but it's not used consistently in drivers/pci, and it should be.
+>>> Currently, only pci-tegra.c, pcie-xilinx.c, and this new driver use it.  Tegra uses
+>>> it only for MSIs, and Xilinx seems to use it for both MSIs and INTx.  What's
+>>> right?
+>> Its not related to MSI or INTx, its related to domain, for freeing irq descriptor associated with irq.
+> 
+> So are you saying that other drivers in drivers/pci/host should be
+> using irq_dispose_mapping(), but they aren't?
+> 
+> Marc, can you chime in here?
 
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+This indeed looks like be a bug in most drivers. Having a mapping left
+when freeing the domain has a couple of side effects:
+- We leak virtual interrupt numbers
+- If the domain is backed by a radix tree, we leak the tree as well (but
+irq_domain_remove will shout if that's the case).
 
+So I think using irq_dispose_mapping is the right thing to do, and that
+we should fix the other drivers (and maybe provide a convenient helper
+to that effect).
 
-> ---
->  .../devicetree/bindings/mtd/atmel-quadspi.txt      | 32 ++++++++++++=
-++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/atmel-quads=
-pi.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt =
-b/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
-> new file mode 100644
-> index 000000000000..e81f20f9faf1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/atmel-quadspi.txt
-> @@ -0,0 +1,32 @@
-> +* Atmel Quad Serial Peripheral Interface (QSPI)
-> +
-> +Required properties:
-> +- compatible:     Should be "atmel,sama5d2-qspi".
-> +- reg:            Should contain the locations and lengths of the ba=
-se registers
-> +                  and the mapped memory.
-> +- reg-names:      Should contain the resource reg names:
-> +                  - qspi_base: configuration register address space
-> +                  - qspi_mmap: memory mapped address space
-> +- interrupts:     Should contain the interrupt for the device.
-> +- clocks:         The phandle of the clock needed by the QSPI contro=
-ller.
-> +- #address-cells: Should be <1>.
-> +- #size-cells:    Should be <0>.
-> +
-> +Example:
-> +
-> +spi@f0020000 {
-> +	compatible =3D "atmel,sama5d2-qspi";
-> +	reg =3D <0xf0020000 0x100>, <0xd0000000 0x8000000>;
-> +	reg-names =3D "qpsi_base", "qspi_mmap";
-> +	interrupts =3D <52 IRQ_TYPE_LEVEL_HIGH 7>;
-> +	clocks =3D <&spi0_clk>;
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <0>;
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&pinctrl_spi0_default>;
-> +	status =3D "okay";
-> +
-> +	m25p80@0 {
-> +		...
-> +	};
-> +};
->=20
+I'll try to come up with something.
 
+Thanks,
 
---=20
-Nicolas Ferre
+	M.
+-- 
+Jazz is not dead. It just smells funny...
