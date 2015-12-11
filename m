@@ -1,52 +1,90 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: sun7i: Olimex A20-SOM-EVB:
- Add LRADC keys
-Date: Fri, 11 Dec 2015 09:22:07 +0100
-Message-ID: <20151211082207.GK27957@lukather>
-References: <1449779521-754-1-git-send-email-merker@debian.org>
- <1449779521-754-2-git-send-email-merker@debian.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Y3hCyKCCnioDaTIs"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBMMPVKZQKGQECZR6VDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1449779521-754-2-git-send-email-merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH RESEND v3 0/9] Add STM32 pinctrl/GPIO driver
+Date: Fri, 11 Dec 2015 09:24:57 +0100
+Message-ID: <1449822306-9035-1-git-send-email-mcoquelin.stm32@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: patrice.chotard-qxv4g6HH51o@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---Y3hCyKCCnioDaTIs
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hi Linus, Patrice,
 
-Hi,
+I resend the series for Patrice to review it.
 
-On Thu, Dec 10, 2015 at 09:31:59PM +0100, Karsten Merker wrote:
-> The Olimex A20-SOM-EVB is an evaluation board for the Olimex
-> A20-SOM system-on-module.  It provides a set of android-style
-> buttons (labeled "VOL+", "VOL-", "MENU", "SEARCH", "HOME", "ESC"
-> and "ENTER") which are connected to a low-resolution ADC via a
-> resistor network.
-> 
-> This patch adds appropriate button definitions to the board
-> dts. The voltages assigned to the keys are specified in the
-> board schematics published by the manufacturer.
-> 
-> Signed-off-by: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-
-Applied 1 and 2, thanks!
+Thanks,
 Maxime
 
+
+
+This is the third round of STM32 pinctrl series, which improves DT
+bindings declaration and documentation, and also fixes some commit fixup
+issues. The series also contains two more patches, adding GPIO LEDs
+support as a user of this driver.
+
+The STM32 family has 16 pins per GPIO bank, and the number of bank varies
+depending on the model.
+
+Pins can be multiplexed either in GPIO mode, alternate function (up to 15
+functions per pin) or analog (for ADC/DAC).
+
+Changes since v2:
+-----------------
+ - Rebase on v4.4-rc1
+ - Declare leds also for Eval board
+ - Set green led as heartbeat
+ - Collect some acks
+
+Changes since v1:
+-----------------
+ - Add GPIO LEDs support in DT and defconfig
+ - Changes pinmux DT bindings from macros to raw values (Daniel)
+ - Improve DT bindings documentation (Daniel)
+ - Fix some commit fixup and rebase issues.
+
+Kind regards,
+Maxime
+
+Maxime Coquelin (9):
+  ARM: Kconfig: Introduce MACH_STM32F429 flag
+  Documentation: dt-bindings: Document STM32 pinctrl driver DT bindings
+  includes: dt-bindings: Add STM32F429 pinctrl DT bindings
+  pinctrl: Add STM32 MCUs support
+  ARM: mach-stm32: Select pinctrl
+  ARM: dts: Add pinctrl node to STM32F429
+  ARM: dts: Add USART1 pin config to STM32F429 boards
+  ARM: dts: Add leds support to STM32F429 boards
+  ARM: config: Enable GPIO Led driver in stm32_defconfig
+
+ .../bindings/pinctrl/st,stm32-pinctrl.txt          |  126 ++
+ arch/arm/Kconfig                                   |    6 +
+ arch/arm/boot/dts/stm32429i-eval.dts               |   19 +
+ arch/arm/boot/dts/stm32f429-disco.dts              |   13 +
+ arch/arm/boot/dts/stm32f429.dtsi                   |  110 ++
+ arch/arm/configs/stm32_defconfig                   |    1 +
+ drivers/pinctrl/Kconfig                            |    1 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/stm32/Kconfig                      |   16 +
+ drivers/pinctrl/stm32/Makefile                     |    5 +
+ drivers/pinctrl/stm32/pinctrl-stm32.c              |  856 +++++++++++
+ drivers/pinctrl/stm32/pinctrl-stm32.h              |   43 +
+ drivers/pinctrl/stm32/pinctrl-stm32f429.c          | 1598 ++++++++++++++++++++
+ include/dt-bindings/pinctrl/pinctrl-stm32.h        |   12 +
+ include/dt-bindings/pinctrl/stm32f429-pinfunc.h    | 1241 +++++++++++++++
+ 15 files changed, 4048 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+ create mode 100644 drivers/pinctrl/stm32/Kconfig
+ create mode 100644 drivers/pinctrl/stm32/Makefile
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32.c
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32.h
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32f429.c
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-stm32.h
+ create mode 100644 include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---Y3hCyKCCnioDaTIs--
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
