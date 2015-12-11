@@ -1,47 +1,40 @@
-From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH v9 10/60] OF/PCI: Add IORESOURCE_MEM_64 for 64-bit resource
-Date: Thu, 10 Dec 2015 21:06:06 -0800
-Message-ID: <1449810416-2950-11-git-send-email-yinghai@kernel.org>
-References: <1449810416-2950-1-git-send-email-yinghai@kernel.org>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH] MAINTAINERS: Add missing platform maintainers for dts files
+Date: Fri, 11 Dec 2015 06:50:12 +0100
+Message-ID: <87vb85ilez.fsf@belgarion.home>
+References: <1449790703-12054-1-git-send-email-robh@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449810416-2950-1-git-send-email-yinghai@kernel.org>
+In-Reply-To: <1449790703-12054-1-git-send-email-robh@kernel.org> (Rob
+	Herring's message of "Thu, 10 Dec 2015 17:38:23 -0600")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, David Miller <davem@davemloft.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Wei Yang <weiyang@linux.vnet.ibm.com>, TJ <linux@iam.tj>, Yijing Wang <wangyijing@huawei.com>, Khalid Aziz <khalid.aziz@oracle.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Barry Song <baohua@kernel.org>, Wei Xu <xuwei5@hisilicon.com>, Santosh Shilimkar <ssantosh@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kumar Gala <galak@codeaurora.org>, Andy Gross <agross@codeaurora.org>, David Brown <davidb@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, Viresh Kumar <vireshk@kernel.org>, Shiraz
 List-Id: devicetree@vger.kernel.org
 
-For device resource PREF bit setting under bridge 64-bit pref resource,
-we need to make sure only set PREF for 64bit resource, so set
-IORESOUCE_MEM_64 for 64bit resource during OF device resource flags
-parsing.
+Rob Herring <robh@kernel.org> writes:
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=96261
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=96241
-Signed-off-by: Yinghai Lu <yinghai@kernel.org>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Tested-by: Khalid Aziz <khalid.aziz@oracle.com>
----
- drivers/of/address.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> Platform dts files need to be reviewed primarily by the platform
+> maintainers as dts files typically go in thru their trees. Add the missing
+> paths where there are existing maintainers listed.
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  MAINTAINERS | 20 +++++++++++++++++++-
+...
+> @@ -8627,6 +8642,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+>  T:	git git://github.com/hzhuang1/linux.git
+>  T:	git git://github.com/rjarzmik/linux.git
+>  S:	Maintained
+> +F:	arch/arm/boot/dts/pxa*
+>  F:	arch/arm/mach-pxa/
+>  F:	drivers/dma/pxa*
+>  F:	drivers/pcmcia/pxa2xx*
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 9582c57..95c39c8 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -128,9 +128,11 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
- 		flags |= IORESOURCE_IO;
- 		break;
- 	case 0x02: /* 32 bits */
--	case 0x03: /* 64 bits */
- 		flags |= IORESOURCE_MEM;
- 		break;
-+	case 0x03: /* 64 bits */
-+		flags |= IORESOURCE_MEM | IORESOURCE_MEM_64;
-+		break;
- 	}
- 	if (w & 0x40000000)
- 		flags |= IORESOURCE_PREFETCH;
+Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
+
+Cheers.
+
 -- 
-1.8.4.5
+Robert
