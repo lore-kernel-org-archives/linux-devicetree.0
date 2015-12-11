@@ -1,43 +1,54 @@
-From: Biao Huang <biao.huang@mediatek.com>
-Subject: [PATCH v2 1/5] ARM: mediatek: Add MT2701 config options for mediatek SoCs.
-Date: Fri, 11 Dec 2015 17:07:48 +0800
-Message-ID: <1449824872-18314-2-git-send-email-biao.huang@mediatek.com>
-References: <1449824872-18314-1-git-send-email-biao.huang@mediatek.com>
+From: Biao Huang <biao.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/5] pinctrl: mediatek: add pinctrl/GPIO/EINT driver for
+ mt2701
+Date: Fri, 11 Dec 2015 17:07:47 +0800
+Message-ID: <1449824872-18314-1-git-send-email-biao.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449824872-18314-1-git-send-email-biao.huang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, srv_heupstream@mediatek.com, yingjoe.chen@mediatek.com, hongzhou.yang@mediatek.com, erin.lo@mediatek.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark
+ Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Erin Lo <erin.lo@mediatek.com>
+Change in v2:
+1. add special pinmux setting for some pins.
+2. fix mt2701 direction control issue
+3. resort dt-bindings
 
-The upcoming MTK pinctrl driver have a big pin table for each SoC
-and we don't want to bloat the kernel binary if we don't need it.
-Add config options so we can build for one SoC only. Add MT2701.
+Biao Huang (4):
+  dt-bindings: mediatek: Modify pinctrl bindings for mt2701
+  pinctrl: dt bindings: Add pinfunc header file for mt2701
+  pinctrl: mediatek: Add Pinctrl/GPIO/EINT driver for mt2701
+  arm: dts: Add pinctrl/GPIO/EINT node for mt2701
 
-Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
----
- arch/arm/mach-mediatek/Kconfig |    4 ++++
- 1 file changed, 4 insertions(+)
+Erin Lo (1):
+  ARM: mediatek: Add MT2701 config options for mediatek SoCs.
 
-diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
-index aeece17..37dd438 100644
---- a/arch/arm/mach-mediatek/Kconfig
-+++ b/arch/arm/mach-mediatek/Kconfig
-@@ -9,6 +9,10 @@ menuconfig ARCH_MEDIATEK
- 
- if ARCH_MEDIATEK
- 
-+config MACH_MT2701
-+	bool "MediaTek MT2701 SoCs support"
-+	default ARCH_MEDIATEK
-+
- config MACH_MT6589
- 	bool "MediaTek MT6589 SoCs support"
- 	default ARCH_MEDIATEK
+ .../devicetree/bindings/pinctrl/pinctrl-mt65xx.txt |    9 +-
+ arch/arm/boot/dts/mt2701-pinfunc.h                 |  735 +++++++
+ arch/arm/boot/dts/mt2701.dtsi                      |   19 +
+ arch/arm/mach-mediatek/Kconfig                     |    4 +
+ drivers/pinctrl/mediatek/Kconfig                   |    6 +
+ drivers/pinctrl/mediatek/Makefile                  |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt2701.c          |  590 +++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.c      |   14 +
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.h      |   12 +-
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt2701.h      | 2323 ++++++++++++++++++++
+ 10 files changed, 3708 insertions(+), 5 deletions(-)
+ create mode 100644 arch/arm/boot/dts/mt2701-pinfunc.h
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt2701.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt2701.h
+
 -- 
 1.7.9.5
