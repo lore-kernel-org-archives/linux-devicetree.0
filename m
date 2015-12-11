@@ -1,85 +1,63 @@
-From: Jiancheng Xue <xuejiancheng@huawei.com>
-Subject: [PATCH v3 2/7] clk: hisilicon: add dt-binding document for Hi3519 CRG
-Date: Fri, 11 Dec 2015 15:45:16 +0800
-Message-ID: <1449819921-18464-3-git-send-email-xuejiancheng@huawei.com>
-References: <1449819921-18464-1-git-send-email-xuejiancheng@huawei.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v3 01/20] PM / devfreq: exynos: Add generic exynos bus
+ frequency driver
+Date: Fri, 11 Dec 2015 17:03:24 +0900
+Message-ID: <566A834C.3040103@samsung.com>
+References: <1449810479-14763-1-git-send-email-cw00.choi@samsung.com>
+ <1449810479-14763-2-git-send-email-cw00.choi@samsung.com>
+ <566A80D5.2070703@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1449819921-18464-1-git-send-email-xuejiancheng@huawei.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com
-Cc: suwenping@hisilicon.com, devicetree@vger.kernel.org, yanhaifeng@hisilicon.com, linux-kernel@vger.kernel.org, xuejiancheng@hisilicon.com, gaofei@hisilicon.com, Jiancheng Xue <xuejiancheng@huawei.com>, ml.yang@hisilicon.com, yanghongwei@hisilicon.com, zhangzhenxing@hisilicon.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <566A80D5.2070703@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com, kgene@kernel.org
+Cc: kyungmin.park@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, tjakobi@math.uni-bielefeld.de, linux.amoon@gmail.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-add dt-binding document for Hi3519 CRG block
+On 11.12.2015 16:52, Chanwoo Choi wrote:
+> Dear MyungJoo,
+>=20
+> Almost device tree patches in this series are reviewed by Exynos main=
+tainer.
+> Could you please review this series?
 
-Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
----
- .../devicetree/bindings/clock/hi3519-crg.txt       | 46 ++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/hi3519-crg.txt
+Are there any objections to merging DT patches through Samsung-soc?
 
-diff --git a/Documentation/devicetree/bindings/clock/hi3519-crg.txt b/Documentation/devicetree/bindings/clock/hi3519-crg.txt
-new file mode 100644
-index 0000000..e0d30a4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/hi3519-crg.txt
-@@ -0,0 +1,46 @@
-+* Hisilicon Hi3519 Clock and Reset Generator(CRG)
-+
-+The Hi3519 CRG module provides clock and reset signals to various
-+controllers within the SoC.
-+
-+This binding uses the following bindings:
-+    Documentation/devicetree/bindings/clock/clock-bindings.txt
-+    Documentation/devicetree/bindings/reset/reset.txt
-+
-+Required Properties:
-+
-+- compatible: should be one of the following.
-+  - "hisilicon,hi3519-crg" - controller compatible with Hi3519 SoC.
-+
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+
-+- #clock-cells: should be 1.
-+
-+Each clock is assigned an identifier and client nodes use this identifier
-+to specify the clock which they consume.
-+
-+All these identifier could be found in <dt-bindings/clock/hi3519-clock.h>.
-+
-+- #reset-cells: should be 2.
-+
-+A reset signal can be controlled by writing a bit register in the CRG module.
-+The reset specifier consists of two cells. The first cell represents the
-+register offset relative to the base address. The second cell represents the
-+bit index in the register.
-+
-+Example: CRG nodes
-+CRG: clock-reset-controller {
-+	compatible = "hisilicon,hi3519-crg";
-+        reg = <0x12010000 0x10000>;
-+        #clock-cells = <1>;
-+        #reset-cells = <2>;
-+};
-+
-+Example: consumer nodes
-+i2c0: i2c@0x12110000 {
-+	compatible = "hisilicon,hi3519-i2c";
-+        reg = <0x12110000 0x1000>;
-+        clocks = <&CRG HI3519_I2C0_RST>;*/
-+        resets = <&CRG 0xE4 0>;
-+};
--- 
-1.9.1
+Looking at the code, there are no dependencies between DT and drivers,
+right?
+
+Best regards,
+Krzysztof
+
+>=20
+> Best Regards,
+> Chanwoo Choi
+>=20
+> On 2015=EB=85=84 12=EC=9B=94 11=EC=9D=BC 14:07, Chanwoo Choi wrote:
+>> This patch adds the generic exynos bus frequency driver for AMBA AXI=
+ bus
+>> of sub-blocks in exynos SoC with DEVFREQ framework. The Samsung Exyn=
+os SoC
+>> have the common architecture for bus between DRAM and sub-blocks in =
+SoC.
+>> This driver can support the generic bus frequency driver for Exynos =
+SoCs.
+>>
+>> In devicetree, Each bus block has a bus clock, regulator, operation-=
+point
+>> and devfreq-event devices which measure the utilization of each bus =
+block.
+>>
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> [linux.amoon: Tested on Odroid U3]
+>> Tested-by: Anand Moon <linux.amoon@gmail.com>
+>> ---
+>>  drivers/devfreq/Kconfig             |  15 ++
+>>  drivers/devfreq/Makefile            |   1 +
+>>  drivers/devfreq/exynos/Makefile     |   1 +
+>>  drivers/devfreq/exynos/exynos-bus.c | 449 +++++++++++++++++++++++++=
++++++++++++
+>>  4 files changed, 466 insertions(+)
+>>  create mode 100644 drivers/devfreq/exynos/exynos-bus.c
