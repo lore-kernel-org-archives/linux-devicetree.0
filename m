@@ -1,45 +1,26 @@
-From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] arm: dts: apq8064: add shared memory node
-Date: Fri, 11 Dec 2015 13:23:44 -0600
-Message-ID: <20151211192344.GA4022@Agamemnon.attlocal.net>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: Re: [PATCH 1/4] ARM: dts: qcom: apq8064-ifc6410 Use hardware flow
+ control for GSBI6
+Date: Fri, 11 Dec 2015 13:24:53 -0600
+Message-ID: <20151211192453.GB4022@Agamemnon.attlocal.net>
 References: <1449858409-13296-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1449858789-13605-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1449858598-13429-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1449858789-13605-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1449858598-13429-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 11, 2015 at 06:33:09PM +0000, Srinivas Kandagatla wrote:
-> This patch adds support to qcom,smem device.
+On Fri, Dec 11, 2015 at 06:29:58PM +0000, Srinivas Kandagatla wrote:
+> From: "Ivan T. Ivanov" <ivan.ivanov@linaro.org>
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/boot/dts/qcom-apq8064.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
+> GSBI6 UART module is connected to BT chip, which uses
+> hardware flow control lines. Enable them on SoC side.
 > 
-> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-> index 829028a..40dd6b4 100644
-> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-> @@ -682,5 +682,11 @@
->  			#hwlock-cells = <1>;
->  		};
->  
-> +		smem {
-> +			compatible = "qcom,smem";
-> +			memory-region = <&smem>;
-> +			hwlocks = <&sfpb_mutex 3>;
-> +		};
-> +
+> Signed-off-by: Ivan T. Ivanov <ivan.ivanov@linaro.org>
 
-smem needs to be outside the soc as there is no reg entry.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Looks fine to me. Thanks for the patch.
