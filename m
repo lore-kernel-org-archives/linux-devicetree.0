@@ -1,93 +1,54 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/7] clk: hisilicon: add dt-binding document for
- Hi3519 CRG
-Date: Fri, 11 Dec 2015 09:19:09 -0600
-Message-ID: <20151211151909.GA21272@rob-hp-laptop>
+Subject: Re: [PATCH v3 3/7] ARM: hisi: add dt_machine definition for Hi3519
+Date: Fri, 11 Dec 2015 09:21:06 -0600
+Message-ID: <20151211152106.GB21272@rob-hp-laptop>
 References: <1449819921-18464-1-git-send-email-xuejiancheng@huawei.com>
- <1449819921-18464-3-git-send-email-xuejiancheng@huawei.com>
+ <1449819921-18464-4-git-send-email-xuejiancheng@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1449819921-18464-3-git-send-email-xuejiancheng@huawei.com>
-Sender: linux-clk-owner@vger.kernel.org
+In-Reply-To: <1449819921-18464-4-git-send-email-xuejiancheng@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Jiancheng Xue <xuejiancheng@huawei.com>
 Cc: mturquette@baylibre.com, sboyd@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 11, 2015 at 03:45:16PM +0800, Jiancheng Xue wrote:
-> add dt-binding document for Hi3519 CRG block
+On Fri, Dec 11, 2015 at 03:45:17PM +0800, Jiancheng Xue wrote:
+> add dt_machine definition for hi3519.
 > 
 > Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
 > ---
->  .../devicetree/bindings/clock/hi3519-crg.txt       | 46 ++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/hi3519-crg.txt
+>  arch/arm/mach-hisi/hisilicon.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/hi3519-crg.txt b/Documentation/devicetree/bindings/clock/hi3519-crg.txt
-> new file mode 100644
-> index 0000000..e0d30a4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/hi3519-crg.txt
-> @@ -0,0 +1,46 @@
-> +* Hisilicon Hi3519 Clock and Reset Generator(CRG)
+> diff --git a/arch/arm/mach-hisi/hisilicon.c b/arch/arm/mach-hisi/hisilicon.c
+> index 8cc6215..010d8a2 100644
+> --- a/arch/arm/mach-hisi/hisilicon.c
+> +++ b/arch/arm/mach-hisi/hisilicon.c
+> @@ -81,3 +81,12 @@ static const char *const hip01_compat[] __initconst = {
+>  DT_MACHINE_START(HIP01, "Hisilicon HIP01 (Flattened Device Tree)")
+>  	.dt_compat      = hip01_compat,
+>  MACHINE_END
 > +
-> +The Hi3519 CRG module provides clock and reset signals to various
-> +controllers within the SoC.
-> +
-> +This binding uses the following bindings:
-> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +    Documentation/devicetree/bindings/reset/reset.txt
-> +
-> +Required Properties:
-> +
-> +- compatible: should be one of the following.
-> +  - "hisilicon,hi3519-crg" - controller compatible with Hi3519 SoC.
-> +
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +
-> +- #clock-cells: should be 1.
-> +
-> +Each clock is assigned an identifier and client nodes use this identifier
-> +to specify the clock which they consume.
-> +
-> +All these identifier could be found in <dt-bindings/clock/hi3519-clock.h>.
-
-This header should be part of this patch.
-
-> +
-> +- #reset-cells: should be 2.
-> +
-> +A reset signal can be controlled by writing a bit register in the CRG module.
-> +The reset specifier consists of two cells. The first cell represents the
-> +register offset relative to the base address. The second cell represents the
-> +bit index in the register.
-> +
-> +Example: CRG nodes
-> +CRG: clock-reset-controller {
-
-clock-reset-controller@12010000
-
-> +	compatible = "hisilicon,hi3519-crg";
-> +        reg = <0x12010000 0x10000>;
-> +        #clock-cells = <1>;
-> +        #reset-cells = <2>;
+> +static const char *const hi3519_compat[] __initconst = {
+> +	"hisilicon,hi3519",
+> +	NULL,
 > +};
+
+You should just have 1 mach desc with multiple compatible strings to 
+match against, not 1 mach desc per compatible string.
+
+Rob
+
 > +
-> +Example: consumer nodes
-> +i2c0: i2c@0x12110000 {
-
-Drop '0x'
-
-> +	compatible = "hisilicon,hi3519-i2c";
-> +        reg = <0x12110000 0x1000>;
-> +        clocks = <&CRG HI3519_I2C0_RST>;*/
-> +        resets = <&CRG 0xE4 0>;
-
-lowercase hex please
-
-> +};
+> +DT_MACHINE_START(HI3519_DT, "Hisilicon Hi3519")
+> +	.dt_compat	= hi3519_compat,
+> +MACHINE_END
 > -- 
 > 1.9.1
 > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
