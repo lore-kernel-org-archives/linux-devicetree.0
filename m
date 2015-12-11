@@ -1,97 +1,262 @@
-From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 0/7] mtd: partitions: add of_match_table support
-Date: Fri, 11 Dec 2015 17:18:36 +0100
-Message-ID: <CAOMqctSbrnnUF62LHyJBZTJO3gFKVE81Mcpqyb3Z-5=v5SqLYA@mail.gmail.com>
-References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
- <CAMuHMdUJXHs_OhT0da+kzc=D4MOFUT9BB3eJ+7a_p6DYx-PKBA@mail.gmail.com>
- <20151210205449.GL144338@google.com> <CAMuHMdV-uethsChWVZGSx1JNcAofODmg14ppGYJP2ewfwhEv1Q@mail.gmail.com>
- <CAOMqctQVMCEa_k4xMW1qooEpe8X1-NhUOjD6pp0qJpDP_H+8hw@mail.gmail.com> <CAMuHMdV2feXKWkJzRkMUBiAUCxp4LwaRgg+aPYwm0sUnKzm0Rg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 7/7] ARM: dts: add dts files for Hi3519
+Date: Fri, 11 Dec 2015 10:28:47 -0600
+Message-ID: <20151211162847.GC21272@rob-hp-laptop>
+References: <1449819921-18464-1-git-send-email-xuejiancheng@huawei.com>
+ <1449819921-18464-8-git-send-email-xuejiancheng@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdV2feXKWkJzRkMUBiAUCxp4LwaRgg+aPYwm0sUnKzm0Rg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, David Hendricks <dhendrix-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1449819921-18464-8-git-send-email-xuejiancheng@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jiancheng Xue <xuejiancheng@huawei.com>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On 11 December 2015 at 17:00, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> Hi Michal,
->
-> On Fri, Dec 11, 2015 at 4:34 PM, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On 11 December 2015 at 09:44, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->>> On Thu, Dec 10, 2015 at 9:54 PM, Brian Norris
->>> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> On Sat, Dec 05, 2015 at 11:15:54AM +0100, Geert Uytterhoeven wrote:
->>>>> On Sat, Dec 5, 2015 at 6:19 AM, Brian Norris
->>>>> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>> > There have been several discussions [1] about adding a device tree binding for
->>>>> > associating flash devices with the partition parser(s) that are used on the
->>>>> > flash. There are a few reasons:
->>>>> >
->>>>> >  (1) drivers shouldn't have to be encoding platform knowledge by listing what
->>>>> >      parsers might be used on a given system (this is the currently all that's
->>>>> >      supported)
->>>>> >  (2) we can't just scan for all supported parsers (like the block system does), since
->>>>> >      there is a wide diversity of "formats" (no standardization), and it is not
->>>>> >      always safe or efficient to attempt to do so, particularly since many of
->>>>> >      them allow their data structures to be placed anywhere on the flash, and
->>>>> >      so require scanning the entire flash device to find them.
->>>>>
->>>>> I read the second reason, but would it be useful to (partially) merge
->>>>> block/partitions/ and drivers/mtd/partitions/, so I can use e.g. msdos
->>>>> partitions
->>>>> on an mtd device??
->>>>
->>>> I kinda agree with Michal: is there a good use case?
->>>
->>> I don't have an immediate use case.
->>> Just looking at it from a high-level viewpoint.
->>>
->>>> Really, MTD partitioning is not a highly-scalable design. Particularly,
->>>> it's not typically that well-suited to large (read: unreliable) NAND
->>>> flash, where fixing partitions at the raw flash level mostly serves to
->>>> restrict UBI's ability to wear-level across the device. For that sort of
->>>> case, it's best if people are using UBI volumes on a (mostly?)
->>>> unpartitioned MTD, instead of using MTD partitions as the main
->>>> separation mechanism. Also, most partition designs (either MTD or block)
->>>> aren't very robust against bitflips, read disturb, etc.
->>>>
->>>> IOW, I wouldn't expect MBR or GPT to work well on large raw NAND flash,
->>>> and so I don't plan to do that sort of work myself. If you can provide
->>>> some better argument for it, and some nice maintainable code to go with
->>>> it, then of course it could be considered :)
->>>
->>> There's also NOR FLASH (e.g. SPI-NOR), which is what most boards I'm
->>> working on have.
->>>
->>
->> Yes, you can dump the content of a NOR flash to a file, attach a loop
->> device to it, and if block devices had the ability to use flash
->> partitioning access the different partitions.
->>
->> Maybe it would be more useful to use some kind of mtdloop, though.
->> There might even be one already. I never needed it.
->
-> That's the inverse, which looks like a solid use case to me ;-)
-> E.g. for investigation or virtualization.
->
-> You can do this already in userspace with kpartx, though.
->
+On Fri, Dec 11, 2015 at 03:45:21PM +0800, Jiancheng Xue wrote:
+> add dts files for Hi3519
+> 
+> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
+> ---
+>  arch/arm/boot/dts/Makefile        |   2 +
+>  arch/arm/boot/dts/hi3519-demb.dts |  42 +++++++++++
+>  arch/arm/boot/dts/hi3519.dtsi     | 142 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 186 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/hi3519-demb.dts
+>  create mode 100644 arch/arm/boot/dts/hi3519.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 30bbc37..1ff3ed9 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -135,6 +135,8 @@ dtb-$(CONFIG_ARCH_EXYNOS5) += \
+>  	exynos5800-peach-pi.dtb
+>  dtb-$(CONFIG_ARCH_HI3xxx) += \
+>  	hi3620-hi4511.dtb
+> +dtb-$(CONFIG_ARCH_HISI) += \
+> +	hi3519-demb.dtb
+>  dtb-$(CONFIG_ARCH_HIX5HD2) += \
+>  	hisi-x5hd2-dkb.dtb
+>  dtb-$(CONFIG_ARCH_HIGHBANK) += \
+> diff --git a/arch/arm/boot/dts/hi3519-demb.dts b/arch/arm/boot/dts/hi3519-demb.dts
+> new file mode 100644
+> index 0000000..6991ab6
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/hi3519-demb.dts
+> @@ -0,0 +1,42 @@
+> +/*
+> + * Copyright (c) 2015 HiSilicon Technologies Co., Ltd.
+> + *
+> + * This program is free software; you can redistribute  it and/or modify it
+> + * under  the terms of  the GNU General  Public License as published by the
+> + * Free Software Foundation;  either version 2 of the  License, or (at your
+> + * option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + *
+> + */
+> +
+> +/dts-v1/;
+> +#include "hi3519.dtsi"
+> +
+> +/ {
+> +	model = "HiSilicon HI3519 DEMO Board";
+> +	compatible = "hisilicon,hi3519";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x80000000 0x40000000>;
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +&dual_timer0 {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/hi3519.dtsi b/arch/arm/boot/dts/hi3519.dtsi
+> new file mode 100644
+> index 0000000..50b736e
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/hi3519.dtsi
+> @@ -0,0 +1,142 @@
+> +/*
+> + * Copyright (c) 2015 HiSilicon Technologies Co., Ltd.
+> + *
+> + * This program is free software; you can redistribute  it and/or modify it
+> + * under  the terms of  the GNU General  Public License as published by the
+> + * Free Software Foundation;  either version 2 of the  License, or (at your
+> + * option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + *
+> + */
+> +
+> +#include "skeleton.dtsi"
 
-What kind of partitioning does kpartx support? I do not see that
-documented anywhere.
+Don't include skeleton.dtsi. We've decided it was a bad idea.
 
-Anyway, it seems there is no mtdblock so in case of non-ecc (or
-hidden-ecc) flashes you could use losetup -P and block2mtd on each
-partition to look at the dumped flash content or even prepare flash
-images. So long as the kernel supports the partitioning scheme used on
-the flash.
+> +#include <dt-bindings/clock/hi3519-clock.h>
+> +/ {
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu@0 {
 
-Thanks
+Single core system? Add the other cpu nodes if not. Adding them doesn't 
+have to be in sync with SMP kernel support.
 
-Michal
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a7";
+> +			reg = <0>;
+> +		};
+> +	};
+> +
+> +	gic: interrupt-controller@10300000 {
+> +		compatible = "arm,cortex-a7-gic";
+> +		#interrupt-cells = <3>;
+> +		interrupt-controller;
+> +		reg = <0x10301000 0x1000>, <0x10302000 0x1000>;
+> +	};
+> +
+> +	soc {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "simple-bus";
+> +		interrupt-parent = <&gic>;
+> +		ranges;
+
+Looks like everything is in 0x12xxxxxx range, so you should add actual 
+translation here if that's the case.
+
+> +
+> +		amba {
+
+Is this actually a separate bus in the physical design of the chip?
+
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			compatible = "arm,amba-bus";
+
+Just simple-bus. "arm,amba-bus" is not any type of bus, nor is it 
+documented.
+
+> +			ranges;
+> +
+> +			uart0: serial@12100000 {
+> +				compatible = "arm,pl011", "arm,primecell";
+> +				reg = <0x12100000 0x1000>;
+> +				interrupts = <0 4 4>;
+> +				clocks = <&crg HI3519_UART0_CLK>;
+> +				clock-names = "apb_pclk";
+> +				status = "disable";
+> +			};
+> +
+> +			uart1: serial@12101000 {
+> +				compatible = "arm,pl011", "arm,primecell";
+> +				reg = <0x12101000 0x1000>;
+> +				interrupts = <0 5 4>;
+> +				clocks = <&crg HI3519_UART1_CLK>;
+> +				clock-names = "apb_pclk";
+> +				status = "disable";
+> +			};
+> +
+> +			uart2: serial@12102000 {
+> +				compatible = "arm,pl011", "arm,primecell";
+> +				reg = <0x12102000 0x1000>;
+> +				interrupts = <0 6 4>;
+> +				clocks = <&crg HI3519_UART2_CLK>;
+> +				clock-names = "apb_pclk";
+> +				status = "disable";
+> +			};
+> +
+> +			uart3: serial@12103000 {
+> +				compatible = "arm,pl011", "arm,primecell";
+> +				reg = <0x12103000 0x1000>;
+> +				interrupts = <0 7 4>;
+> +				clocks = <&crg HI3519_UART3_CLK>;
+> +				clock-names = "apb_pclk";
+> +				status = "disable";
+> +			};
+> +
+> +			uart4: serial@12104000 {
+> +				compatible = "arm,pl011", "arm,primecell";
+> +				reg = <0x12104000 0x1000>;
+> +				interrupts = <0 8 4>;
+> +				clocks = <&crg HI3519_UART4_CLK>;
+> +				clock-names = "apb_pclk";
+> +				status = "disable";
+> +			};
+> +
+> +			dual_timer0: timer@12000000 {
+> +				compatible = "arm,sp804", "arm,primecell";
+> +				interrupts = <0 64 4>, <0 65 4>;
+> +				reg = <0x12000000 0x1000>;
+> +				clocks = <&crg HI3519_FIXED_3M>;
+> +				status = "disable";
+> +			};
+> +
+> +			dual_timer1: timer@12001000 {
+> +				compatible = "arm,sp804", "arm,primecell";
+> +				interrupts = <0 66 4>, <0 67 4>;
+> +				reg = <0x12001000 0x1000>;
+> +				clocks = <&crg HI3519_FIXED_3M>;
+> +				status = "disable";
+> +			};
+> +
+> +			dual_timer2: timer@12002000 {
+> +				compatible = "arm,sp804", "arm,primecell";
+> +				interrupts = <0 68 4>, <0 69 4>;
+> +				reg = <0x12002000 0x1000>;
+> +				clocks = <&crg HI3519_FIXED_3M>;
+> +				status = "disable";
+> +			};
+> +		};
+> +
+> +		sysctrl: system-controller@12020000 {
+> +			compatible = "hisilicon,hi3519-sysctrl", "syscon";
+> +			reg = <0x12020000 0x1000>;
+> +		};
+> +
+> +		reboot {
+> +			compatible = "syscon-reboot";
+> +			regmap = <&sysctrl>;
+> +			offset = <0x4>;
+> +			mask = <0xdeadbeef>;
+> +		};
+> +
+> +		crg: clock-reset-controller@12010000 {
+> +			compatible = "hisilicon,hi3519-crg";
+> +			#clock-cells = <1>;
+> +			#reset-cells = <2>;
+> +			reg = <0x12010000 0x10000>;
+> +		};
+> +	};
+> +};
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
