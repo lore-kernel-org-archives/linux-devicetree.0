@@ -1,187 +1,67 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH resend 2/6] clk: sunxi: Add VE (Video Engine) module clock
- driver for sun[457]i
-Date: Fri, 11 Dec 2015 12:09:43 +0800
-Message-ID: <CAGb2v67i1rqeA4JALfT2+zYWrOxc30L8xeW5Su-qZkVTMM2xOQ@mail.gmail.com>
-References: <1449321407-4531-1-git-send-email-wens@csie.org>
- <1449321407-4531-3-git-send-email-wens@csie.org> <20151208100235.GQ27957@lukather>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH v5 0/5] Add memory mapped read support for ti-qspi
+Date: Fri, 11 Dec 2015 09:39:55 +0530
+Message-ID: <1449807000-6457-1-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20151208100235.GQ27957@lukather>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Emilio Lopez <emilio@elopez.com.ar>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Brian Norris <computersforpeace@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, hramrach@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, Vignesh R <vigneshr@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 8, 2015 at 6:02 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> Hi,
->
-> On Sat, Dec 05, 2015 at 09:16:43PM +0800, Chen-Yu Tsai wrote:
->> The video engine has its own special module clock, consisting of a clock
->> gate, configurable dividers, and a reset control.
->>
->> On later (sun[68]i) families, the reset control is moved out of this
->> piece of hardware and grouped with reset controls of other peripherals.
->>
->> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->> ---
->>  Documentation/devicetree/bindings/clock/sunxi.txt |   4 +
->>  drivers/clk/sunxi/Makefile                        |   1 +
->>  drivers/clk/sunxi/clk-a10-ve.c                    | 171 ++++++++++++++++++++++
->>  3 files changed, 176 insertions(+)
->>  create mode 100644 drivers/clk/sunxi/clk-a10-ve.c
->>
->> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
->> index ef0b452806b1..14496056319f 100644
->> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
->> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
->> @@ -74,6 +74,7 @@ Required properties:
->>       "allwinner,sun8i-h3-usb-clk" - for usb gates + resets on H3
->>       "allwinner,sun9i-a80-usb-mod-clk" - for usb gates + resets on A80
->>       "allwinner,sun9i-a80-usb-phy-clk" - for usb phy gates + resets on A80
->> +     "allwinner,sun4i-a10-ve-clk" - for the Video Engine clock
->>
->>  Required properties for all clocks:
->>  - reg : shall be the control register address for the clock.
->> @@ -93,6 +94,9 @@ Required properties for all clocks:
->>  And "allwinner,*-usb-clk" clocks also require:
->>  - reset-cells : shall be set to 1
->>
->> +The "allwinner,sun4i-a10-ve-clk" clock also requires:
->> +- reset-cells : shall be set to 0
->> +
->>  The "allwinner,sun9i-a80-mmc-config-clk" clock also requires:
->>  - #reset-cells : shall be set to 1
->>  - resets : shall be the reset control phandle for the mmc block.
->> diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
->> index 103efab05ca8..78db91ad5af6 100644
->> --- a/drivers/clk/sunxi/Makefile
->> +++ b/drivers/clk/sunxi/Makefile
->> @@ -7,6 +7,7 @@ obj-y += clk-a10-codec.o
->>  obj-y += clk-a10-hosc.o
->>  obj-y += clk-a10-mod1.o
->>  obj-y += clk-a10-pll2.o
->> +obj-y += clk-a10-ve.o
->>  obj-y += clk-a20-gmac.o
->>  obj-y += clk-mod0.o
->>  obj-y += clk-simple-gates.o
->> diff --git a/drivers/clk/sunxi/clk-a10-ve.c b/drivers/clk/sunxi/clk-a10-ve.c
->> new file mode 100644
->> index 000000000000..de0fdb656150
->> --- /dev/null
->> +++ b/drivers/clk/sunxi/clk-a10-ve.c
->> @@ -0,0 +1,171 @@
->> +/*
->> + * Copyright 2015 Chen-Yu Tsai
->> + *
->> + * Chen-Yu Tsai <wens@csie.org>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/reset-controller.h>
->> +#include <linux/slab.h>
->> +#include <linux/spinlock.h>
->> +
->> +static DEFINE_SPINLOCK(ve_lock);
->> +
->> +#define SUN4I_VE_ENABLE              31
->> +#define SUN4I_VE_DIVIDER_SHIFT       16
->> +#define SUN4I_VE_DIVIDER_WIDTH       3
->> +#define SUN4I_VE_RESET               0
->> +
->> +/**
->> + * sunxi_ve_reset... - reset bit in ve clk registers handling
->> + */
->> +
->> +struct ve_reset_data {
->> +     void __iomem                    *reg;
->> +     spinlock_t                      *lock;
->> +     struct reset_controller_dev     rcdev;
->> +};
->> +
->> +static int sunxi_ve_reset_assert(struct reset_controller_dev *rcdev,
->> +                              unsigned long id)
->> +{
->> +     struct ve_reset_data *data = container_of(rcdev,
->> +                                               struct ve_reset_data,
->> +                                               rcdev);
->> +     unsigned long flags;
->> +     u32 reg;
->> +
->> +     spin_lock_irqsave(data->lock, flags);
->> +
->> +     reg = readl(data->reg);
->> +     writel(reg & ~BIT(SUN4I_VE_RESET), data->reg);
->> +
->> +     spin_unlock_irqrestore(data->lock, flags);
->> +
->> +     return 0;
->> +}
->> +
->> +static int sunxi_ve_reset_deassert(struct reset_controller_dev *rcdev,
->> +                                unsigned long id)
->> +{
->> +     struct ve_reset_data *data = container_of(rcdev,
->> +                                               struct ve_reset_data,
->> +                                               rcdev);
->> +     unsigned long flags;
->> +     u32 reg;
->> +
->> +     spin_lock_irqsave(data->lock, flags);
->> +
->> +     reg = readl(data->reg);
->> +     writel(reg | BIT(SUN4I_VE_RESET), data->reg);
->> +
->> +     spin_unlock_irqrestore(data->lock, flags);
->> +
->> +     return 0;
->> +}
->
-> Is it me, or do we have this code duplicated everywhere now?
->
-> Maybe we should turn this into a small library.
+Changes since v4:
+Use syscon to access system control module register in ti-qspi driver.
 
-I agree.
+Changes since v3:
+Rework to introduce spi_flash_read_message struct.
+Support different opcode/addr/data formats as per Brian's suggestion
+here: https://lkml.org/lkml/2015/11/11/454
 
->> +static int sunxi_ve_of_xlate(struct reset_controller_dev *rcdev,
->> +                          const struct of_phandle_args *reset_spec)
->> +{
->> +    if (WARN_ON(reset_spec->args_count != 0))
->> +     return -EINVAL;
->> +
->> +    return 0;
->> +}
->
-> And this could be part of the reset controller framework too.
+Changes since v2:
+Remove mmap_lock_mutex.
+Optimize enable/disable of mmap mode.
 
-I looked around, and we seem to be the only one with #reset-cells = <0>.
+Changes since v1:
+Introduce API in SPI core that MTD flash driver can call for mmap read
+instead of directly calling spi-master driver callback. This API makes
+sure that SPI core msg queue is locked during mmap transfers.
+v1: https://lkml.org/lkml/2015/9/4/103
 
-> Anyway, both these comments can be fixed by a later patch. Can you
-> take care of this?
 
-Sure. I make some patches.
+Cover letter:
 
-> I've fixed the white space issue, and applied your patch.
->
-> (and added Jens Tested-by)
->
-> Thanks!
-> Maxime
+This patch series adds support for memory mapped read port of ti-qspi.
+ti-qspi has a special memory mapped port through which SPI flash
+memories can be accessed directly via SoC specific memory region.
 
-Thanks!
+First patch adds a method to pass flash specific information like read
+opcode, dummy bytes etc and to request mmap read. Second patch
+implements mmap read method in ti-qspi driver. Patch 3 adapts m25p80 to
+use mmap read method before trying normal SPI transfer. Patch 4 and 5
+add memory map region DT entries for DRA7xx and AM43xx SoCs.
 
-ChenYu
+This patch series is based on the discussions here:
+http://www.spinics.net/lists/linux-spi/msg04796.html
+
+Tested on DRA74 EVM and AM437x-SK.
+Read performance increases from ~100kB/s to ~2.5MB/s.
+
+Vignesh R (5):
+  spi: introduce accelerated read support for spi flash devices
+  spi: spi-ti-qspi: add mmap mode read support
+  mtd: devices: m25p80: add support for mmap read request
+  ARM: dts: DRA7: add entry for qspi mmap region
+  ARM: dts: AM4372: add entry for qspi mmap region
+
+ Documentation/devicetree/bindings/spi/ti_qspi.txt |  22 +++-
+ arch/arm/boot/dts/am4372.dtsi                     |   4 +-
+ arch/arm/boot/dts/dra7.dtsi                       |   6 +-
+ drivers/mtd/devices/m25p80.c                      |  20 ++++
+ drivers/spi/spi-ti-qspi.c                         | 139 +++++++++++++++++-----
+ drivers/spi/spi.c                                 |  45 +++++++
+ include/linux/spi/spi.h                           |  41 +++++++
+ 7 files changed, 243 insertions(+), 34 deletions(-)
+
+-- 
+2.6.3
