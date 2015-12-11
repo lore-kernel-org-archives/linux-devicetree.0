@@ -1,156 +1,37 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v3 20/20] ARM: dts: Add support of bus frequency for
- exynos4412-trats/odroidu3
-Date: Fri, 11 Dec 2015 16:20:50 +0900
-Message-ID: <566A7952.700@samsung.com>
-References: <1449810479-14763-1-git-send-email-cw00.choi@samsung.com>
- <1449810479-14763-21-git-send-email-cw00.choi@samsung.com>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v6 3/5] memory: mediatek: Add SMI driver
+Date: Fri, 11 Dec 2015 15:22:30 +0800
+Message-ID: <1449818550.14149.2.camel@mhfsdcap03>
+References: <1449568153-15643-1-git-send-email-yong.wu@mediatek.com>
+	 <1449568153-15643-4-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1449810479-14763-21-git-send-email-cw00.choi@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com, kgene@kernel.org
-Cc: kyungmin.park@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, tjakobi@math.uni-bielefeld.de, linux.amoon@gmail.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449568153-15643-4-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11.12.2015 14:07, Chanwoo Choi wrote:
-> THis patch adds the bus device tree nodes for both MIF (Memory) and INT
-> (Internal) block to enable the bus frequency.
+On Tue, 2015-12-08 at 17:49 +0800, Yong Wu wrote:
+> This patch add SMI(Smart Multimedia Interface) driver. This driver
+> is responsible to enable/disable iommu and control the power domain
+> and clocks of each local arbiter.
 > 
-> The DMC bus is parent device in MIF block using VDD_MIF and the LEFTBUS
-> bus is parent device in INT block using VDD_INT.
-> 
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> [linux.amoon: Tested on Odroid U3]
-> Tested-by: Anand Moon <linux.amoon@gmail.com>
+> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
->  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 47 ++++++++++++++++++++++++
->  arch/arm/boot/dts/exynos4412-trats2.dts         | 48 +++++++++++++++++++++++++
->  2 files changed, 95 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> index 7bd65026761e..b6818aec7cf9 100644
-> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> @@ -501,3 +501,50 @@
->  &watchdog {
->  	status = "okay";
->  };
-> +
-> +&bus_acp {
-> +	devfreq = <&bus_dmc>;
-> +	status = "okay";
-> +};
 
-I meant put them in proper place, respecting alphabetical order. The 'b'
-comes before 'w'.
+Hi Matthias,
+   Because drivers/memory/ don't have the maintainer, and our IOMMU,
+V4L2 and DRM rely on the SMI. From Joerg and Thierry[1], we need your
+help. Could you have a loot at our SMI while free?
+Look forward to any comment from you.
+Thanks.
 
-As for the new nodes (bus_XXX) your previous sorting (first parent, then
-passive) was also okay - it had sense. This is up to you. Just put
-everything not at the end of file.
+[1]http://lists.linuxfoundation.org/pipermail/iommu/2015-November/014981.html
 
-Best regards,
-Krzysztof
-
-
-> +
-> +&bus_c2c {
-> +	devfreq = <&bus_dmc>;
-> +	status = "okay";
-> +};
-> +
-> +&bus_dmc {
-> +	devfreq-events = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
-> +	vdd-supply = <&buck1_reg>;
-> +	status = "okay";
-> +};
-> +
-> +&bus_display {
-> +	devfreq = <&bus_leftbus>;
-> +	status = "okay";
-> +};
-> +
-> +&bus_fsys {
-> +	devfreq = <&bus_leftbus>;
-> +	status = "okay";
-> +};
-> +
-> +&bus_leftbus {
-> +	devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
-> +	vdd-supply = <&buck3_reg>;
-> +	status = "okay";
-> +};
-> +
-> +&bus_mfc {
-> +	devfreq = <&bus_leftbus>;
-> +	status = "okay";
-> +};
-> +
-> +&bus_peri {
-> +	devfreq = <&bus_leftbus>;
-> +	status = "okay";
-> +};
-> +
-> +&bus_rightbus {
-> +	devfreq = <&bus_leftbus>;
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-> index 92438eb6eec6..0b8aff3b8cb7 100644
-> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
-> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-> @@ -1251,3 +1251,51 @@
->  	vtmu-supply = <&ldo10_reg>;
->  	status = "okay";
->  };
-> +
-> +&bus_acp {
-> +	devfreq = <&bus_dmc>;
-> +	status = "okay";
-> +};
-> +
-> +&bus_c2c {
-> +	devfreq = <&bus_dmc>;
-> +	status = "okay";
-> +};
-> +
-> +&bus_dmc {
-> +	devfreq-events = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
-> +	vdd-supply = <&buck1_reg>;
-> +	status = "okay";
-> +};
-> +
-> +&bus_display {
-> +	devfreq = <&bus_leftbus>;
-> +	status = "okay";
-> +};
-> +
-> +
-> +&bus_fsys {
-> +	devfreq = <&bus_leftbus>;
-> +	status = "okay";
-> +};
-> +
-> +&bus_leftbus {
-> +	devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
-> +	vdd-supply = <&buck3_reg>;
-> +	status = "okay";
-> +};
-> +
-> +&bus_mfc {
-> +	devfreq = <&bus_leftbus>;
-> +	status = "okay";
-> +};
-> +
-> +&bus_peri {
-> +	devfreq = <&bus_leftbus>;
-> +	status = "okay";
-> +};
-> +
-> +&bus_rightbus {
-> +	devfreq = <&bus_leftbus>;
-> +	status = "okay";
-> +};
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
