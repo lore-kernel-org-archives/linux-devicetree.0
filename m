@@ -1,37 +1,39 @@
-From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v6 3/5] memory: mediatek: Add SMI driver
-Date: Fri, 11 Dec 2015 15:22:30 +0800
-Message-ID: <1449818550.14149.2.camel@mhfsdcap03>
-References: <1449568153-15643-1-git-send-email-yong.wu@mediatek.com>
-	 <1449568153-15643-4-git-send-email-yong.wu@mediatek.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v3 17/20] ARM: dts: Add exynos4412-ppmu-common dtsi to
+ delete duplicate PPMU node
+Date: Fri, 11 Dec 2015 16:25:58 +0900
+Message-ID: <566A7A86.7090607@samsung.com>
+References: <1449810479-14763-1-git-send-email-cw00.choi@samsung.com>
+ <1449810479-14763-18-git-send-email-cw00.choi@samsung.com>
+ <566A7817.3020302@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449568153-15643-4-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <566A7817.3020302@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, myungjoo.ham@samsung.com, kgene@kernel.org
+Cc: kyungmin.park@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, tjakobi@math.uni-bielefeld.de, linux.amoon@gmail.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-12-08 at 17:49 +0800, Yong Wu wrote:
-> This patch add SMI(Smart Multimedia Interface) driver. This driver
-> is responsible to enable/disable iommu and control the power domain
-> and clocks of each local arbiter.
-> 
-> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
+On 2015=EB=85=84 12=EC=9B=94 11=EC=9D=BC 16:15, Krzysztof Kozlowski wro=
+te:
+> On 11.12.2015 14:07, Chanwoo Choi wrote:
+>> This patch adds the exynos4412-ppmu-common.dtsi to duplicate PPMU no=
+de
+>=20
+> I think the goal of the patch was to remove duplication of nodes, not=
+ to
+> duplicate them. :)
 
-Hi Matthias,
-   Because drivers/memory/ don't have the maintainer, and our IOMMU,
-V4L2 and DRM rely on the SMI. From Joerg and Thierry[1], we need your
-help. Could you have a loot at our SMI while free?
-Look forward to any comment from you.
-Thanks.
+OK. I'll modify both subject and description of this patch.
 
-[1]http://lists.linuxfoundation.org/pipermail/iommu/2015-November/014981.html
+>=20
+> Except of that patch is okay:
+>=20
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[snip]
+
+Best Regards,
+Chanwoo Choi
