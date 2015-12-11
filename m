@@ -1,89 +1,71 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v2] net/macb: add support for resetting PHY using GPIO
-Date: Fri, 11 Dec 2015 11:34:53 +0100
-Message-ID: <1449830093-29433-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sascha Hauer <s.hauer@pengutronix.de>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+From: Bai Ping <b51503@freescale.com>
+Subject: [PATCH 3/3] ARM: imx: Identify imx6q rev2.0 as imx6qp
+Date: Fri, 11 Dec 2015 18:45:22 +0800
+Message-ID: <1449830722-26607-3-git-send-email-b51503@freescale.com>
+References: <1449830722-26607-1-git-send-email-b51503@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1449830722-26607-1-git-send-email-b51503@freescale.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-With device tree it is no more possible to reset the PHY at board
-level. Furthermore, doing in the driver allow to power down the PHY when
-the network interface is no more used.
+The i.MX6QP is a different SOC, but internally we treate
+it as i.MX6Q Rev_2.0 to maximum the code reusability. The chip
+silicon number we read from the ANADIG_DIGPROG is 0x630100. This
+patch add code to identify it as i.MX6QP Rev_1.0 when print out the
+silicon version.
 
-This reset can't be done at the PHY driver level. The PHY must be able to
-answer the to the mii bus scan to let the kernel creating a PHY device.
-
-The patch introduces a new optional property "phy-reset-gpios" inspired
-from the one use for the FEC.
-
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Signed-off-by: Bai Ping <b51503@freescale.com>
 ---
+ arch/arm/mach-imx/anatop.c     | 5 ++++-
+ arch/arm/mach-imx/mach-imx6q.c | 8 ++++++--
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
-Since the v1, I used the gpiod functions. It allows to simplify the
-code and to not introduce any #ifdef.
-
-I also rename the property in phy-reset-gpios, even if actually the
-gpiod will match both phy-reset-gpios and phy-reset-gpio.
-
-
- Documentation/devicetree/bindings/net/macb.txt | 3 +++
- drivers/net/ethernet/cadence/macb.c            | 8 ++++++++
- drivers/net/ethernet/cadence/macb.h            | 1 +
- 3 files changed, 12 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-index b5d7976..4a7fb6c 100644
---- a/Documentation/devicetree/bindings/net/macb.txt
-+++ b/Documentation/devicetree/bindings/net/macb.txt
-@@ -19,6 +19,9 @@ Required properties:
- 	Optional elements: 'tx_clk'
- - clocks: Phandles to input clocks.
+diff --git a/arch/arm/mach-imx/anatop.c b/arch/arm/mach-imx/anatop.c
+index 231bb25..9622763 100644
+--- a/arch/arm/mach-imx/anatop.c
++++ b/arch/arm/mach-imx/anatop.c
+@@ -129,7 +129,10 @@ void __init imx_init_revision_from_anatop(void)
  
-+Optional properties:
-+- phy-reset-gpios : Should specify the gpio for phy reset
-+
- Examples:
+ 	switch (digprog & 0xff) {
+ 	case 0:
+-		revision = IMX_CHIP_REVISION_1_0;
++		if (digprog >> 8 & 0x01)
++			revision = IMX_CHIP_REVISION_2_0;
++		else
++			revision = IMX_CHIP_REVISION_1_0;
+ 		break;
+ 	case 1:
+ 		revision = IMX_CHIP_REVISION_1_1;
+diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
+index 3878494b..cb27d56 100644
+--- a/arch/arm/mach-imx/mach-imx6q.c
++++ b/arch/arm/mach-imx/mach-imx6q.c
+@@ -266,8 +266,11 @@ static void __init imx6q_init_machine(void)
+ {
+ 	struct device *parent;
  
- 	macb0: ethernet@fffc4000 {
-diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
-index 88c1e1a..71fbda3 100644
---- a/drivers/net/ethernet/cadence/macb.c
-+++ b/drivers/net/ethernet/cadence/macb.c
-@@ -2900,6 +2900,10 @@ static int macb_probe(struct platform_device *pdev)
- 	else
- 		macb_get_hwaddr(bp);
+-	imx_print_silicon_rev(cpu_is_imx6dl() ? "i.MX6DL" : "i.MX6Q",
+-			      imx_get_soc_revision());
++	if (cpu_is_imx6q() && imx_get_soc_revision() == IMX_CHIP_REVISION_2_0)
++		imx_print_silicon_rev("i.MX6QP", IMX_CHIP_REVISION_1_0);
++	else
++		imx_print_silicon_rev(cpu_is_imx6dl() ? "i.MX6DL" : "i.MX6Q",
++				imx_get_soc_revision());
  
-+	/* Power up the PHY if there is a GPIO reset */
-+	bp->reset_gpio = devm_gpiod_get_optional(&bp->pdev->dev, "phy-reset",
-+						 GPIOD_OUT_HIGH);
-+
- 	err = of_get_phy_mode(np);
- 	if (err < 0) {
- 		pdata = dev_get_platdata(&pdev->dev);
-@@ -2966,6 +2970,10 @@ static int macb_remove(struct platform_device *pdev)
- 		mdiobus_unregister(bp->mii_bus);
- 		kfree(bp->mii_bus->irq);
- 		mdiobus_free(bp->mii_bus);
-+
-+		/* Shutdown the PHY if there is a GPIO reset */
-+		gpiod_set_value(bp->reset_gpio, 0);
-+
- 		unregister_netdev(dev);
- 		clk_disable_unprepare(bp->tx_clk);
- 		clk_disable_unprepare(bp->hclk);
-diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-index 6e1faea..b6ec421 100644
---- a/drivers/net/ethernet/cadence/macb.h
-+++ b/drivers/net/ethernet/cadence/macb.h
-@@ -824,6 +824,7 @@ struct macb {
- 	unsigned int		dma_burst_length;
+ 	parent = imx_soc_device_init();
+ 	if (parent == NULL)
+@@ -399,6 +402,7 @@ static void __init imx6q_init_irq(void)
+ static const char * const imx6q_dt_compat[] __initconst = {
+ 	"fsl,imx6dl",
+ 	"fsl,imx6q",
++	"fsl,imx6qp",
+ 	NULL,
+ };
  
- 	phy_interface_t		phy_interface;
-+	struct gpio_desc	*reset_gpio;
- 
- 	/* AT91RM9200 transmit */
- 	struct sk_buff *skb;			/* holds skb until xmit interrupt completes */
 -- 
-2.5.0
+1.9.1
+
