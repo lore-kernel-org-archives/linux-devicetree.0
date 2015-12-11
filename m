@@ -1,118 +1,77 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] PCI: rcar, rcar-gen2: More Gen2 compatibility strings
-Date: Fri, 11 Dec 2015 16:58:06 +0100
-Message-ID: <CAMuHMdVN5VtZHcC9T4dzpsW-f8FpcjmJeTX_HHqRs0X5HdJCOw@mail.gmail.com>
-References: <1449096700-23304-1-git-send-email-horms+renesas@verge.net.au>
-	<20151209183743.GH31930@localhost>
-	<20151211021434.GH9927@verge.net.au>
-	<20151211145916.GA21907@localhost>
+From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 3/7] doc: dt: mtd: partition: add on-flash format binding
+Date: Fri, 11 Dec 2015 16:58:00 +0100
+Message-ID: <CAOMqctQyS0dTAn6nifNzTFTqAZ3caJTj=yKnawP-A3Z4=Sv5rw@mail.gmail.com>
+References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
+ <1449292763-129421-4-git-send-email-computersforpeace@gmail.com>
+ <CAOiHx=nz2bdA_R610ozsQHhccdcrHVVCamTtne5ReHrA-FcaaQ@mail.gmail.com>
+ <CAOMqctTbUNd0GtY07YJuxem9HkU1WZ-NtO556=Yg2QrsF49Xjw@mail.gmail.com>
+ <20151207013628.GC20139@voom.fritz.box> <20151210204324.GK144338@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151211145916.GA21907@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151210204324.GK144338-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Hello,
 
-On Fri, Dec 11, 2015 at 3:59 PM, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Dec 11, 2015 at 11:14:34AM +0900, Simon Horman wrote:
->> On Wed, Dec 09, 2015 at 12:37:43PM -0600, Bjorn Helgaas wrote:
->> > On Thu, Dec 03, 2015 at 07:51:36AM +0900, Simon Horman wrote:
->> > > this short series adds generic gen2 and SoC-specific r8a7793 compatibility
->> > > strings to the rcar PCI and rcar-gen2 PCIE drivers. The intention is to
->> > > provide a complete set of compatibility strings for known Gen2 SoCs.
+On 10 December 2015 at 21:43, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Mon, Dec 07, 2015 at 12:36:28PM +1100, David Gibson wrote:
+>> On Sat, Dec 05, 2015 at 10:33:30PM +0100, Michal Suchanek wrote:
+>> > On 5 December 2015 at 12:39, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
+>> > > On Sat, Dec 5, 2015 at 6:19 AM, Brian Norris
+>> > > <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> >
+>> > >> +
+>> > >> +Examples:
+>> > >> +
+>> > >> +flash@0 {
+>> > >> +       partitions {
+>> > >> +               compatible = "google,fmap";
+>> > >> +       };
+>> > >> +};
 >> > >
->> > > Key Changes in v2:
->> > > * Include "rcar-" in generic bindings
->> > >
->> > > Simon Horman (4):
->> > >   PCI: rcar-gen2: add gen2 fallback compatibility string
->> > >   PCI: rcar-gen2: add device tree support for r8a7793
->> > >   PCI: rcar: add gen2 fallback compatibility string
->> > >   PCI: rcar: add device tree support for r8a7793
->> > >
->> > >  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 12 ++++++++++--
->> > >  Documentation/devicetree/bindings/pci/rcar-pci.txt      | 14 +++++++++++---
->> > >  drivers/pci/host/pci-rcar-gen2.c                        |  1 +
->> > >  drivers/pci/host/pcie-rcar.c                            |  1 +
->> > >  4 files changed, 23 insertions(+), 5 deletions(-)
+>> > > I wonder if this wouldn't be better served in a separate binding doc
+>> > > with its compatible name as the filename, like we do with
+>> > > driver^Whardware blocks, especially if we want to add more parsers.
 >> >
->> > I applied these:
 >> >
->> > >   PCI: rcar-gen2: add gen2 fallback compatibility string
->> > >   PCI: rcar: add gen2 fallback compatibility string
->> >
->> > to pci/host-rcar for v4.5, thanks!
->> >
->> > I haven't applied the R8A7793 binding documentation updates yet, but
->> > I'll be happy to do so given a short description of why they're
->> > useful (since they don't update a DT or the driver).  Or they could be
->> > merged via a DT tree.
+>> > I find that *very* counter productive for bindings that go to the same
+>> > node. You have a description of a node, and then suddenly there you
+>> > have another file with another description of the same node. Totally
+>> > awesome.
 >>
->> To clarify: you would like a description in the changelog?
+>> I can't actually work out from that if you're agreeing with the
+>> original post or the first reply.
 >
-> Yes, please.  The email discussion so far hasn't contained what I'm
-> looking for (if it had, I would have just inserted it and been done
-> with it).
+> Perhaps I'm biased, but I think he was agreeing with the first reply.
+> (Particularly, "I find that *very* counter productive" uses the word
+> "that" to refer to "separate binding doc[s]".)
 >
-> Apparently it has to do with the stable DT rules, which I don't know.
-> A concrete example would probably help clear it up.
+>
+> I believe Michal is bringing up the (important, IMO) point that if
+> distinct partition types are being described in the same node, then any
+> use of additional properties *must* be closely coordinated. We can't
+> have two parsers "foo" and "bar" defining conflicting uses of the same
+> property in the same node, like this:
+>
 
-The stable DT rules mean that an old DTS should keep on working with
-newer kernels.
+I have seen some MFD bindings which are described in multiple files
+with no crossreference whatsoever.
 
-Suppose we have two SoCs, that both contain "foo" modules, which look
-identical. Hence the DTS for both declares the devices to be compatible
-with "vendor,foo".
+If on-flash partition table bindings are going to be the same then
+people are not going to find there are even some on-flash partition
+table bindings (because the document describing the in-DT bindings is
+complete and exhaustive, right). Can't even imagine coordination.
 
-Later, we discover a difference between the two "foo" modules in the two
-SoCs (e.g. a feature present in one of them, or worse, a bug), which we
-need to handle in the driver. But how can we distinguish between them?
-We can change the compatible value in the DTS, but that means the user
-has to update the DTS when updating the kernel. For a new feature that
-may be deemed acceptable, for a bug fix that's not acceptable.
+When you have to grep the tree for docs anyway what's even the point
+of the Documentation directory?
 
-Hence we always use an SoC-specific compatible value, which may or may
-not be accompanied by a family-specific and/or generic compatible value.
-As long as everything can be handled the same, the driver will just match
-against the most generic compatible value used. But if needed later, the
-driver can be updated to match against a more specific compatible value,
-and can have special handling for  a module in a specific SoC.
+You can just grep the whole tree.
 
-So that's why we want to have compatible value in the DT bindings that
-are not necessarily used by the driver.
+Thanks
 
-In a perfect world, where all hardware is properly documented, or even
-Open Source, we wouldn't need this. There we could just declare a device
-compatible with what it really is, based on the module's internal version ID
-(ideally a git commit ID of its HDL source ;-).
-
-I hope the above explains it. If you have more questions, feel free to ask!
-
-> I've applied the parts that touch PCI.  I won't be offended if the
-> binding documentation patches go as-is via another tree.  It's just
-> that if *I'm* going to apply them, I'd like to understand better what
-> the benefit is.
-
-DT binding updates typically go through the subsystem maintainer,
-just like driver updates.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Michal
