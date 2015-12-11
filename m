@@ -1,262 +1,144 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v8 3/3] ARM: dts: TS-4800: add basic device tree
-Date: Fri, 11 Dec 2015 22:31:12 +0800
-Message-ID: <20151211143112.GL11252@tiger>
-References: <1449592898-24049-1-git-send-email-damien.riegel@savoirfairelinux.com>
- <1449592898-24049-4-git-send-email-damien.riegel@savoirfairelinux.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v14 2/7] fpga: add bindings document for fpga area
+Date: Fri, 11 Dec 2015 08:34:49 -0600
+Message-ID: <20151211143449.GA19387@rob-hp-laptop>
+References: <1449790629-5517-1-git-send-email-atull@opensource.altera.com>
+ <1449790629-5517-3-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1449592898-24049-4-git-send-email-damien.riegel@savoirfairelinux.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Damien Riegel <damien.riegel@savoirfairelinux.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, kernel@savoirfairelinux.com, Lee Jones <lee.jones@linaro.org>
+In-Reply-To: <1449790629-5517-3-git-send-email-atull@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: atull@opensource.altera.com
+Cc: Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, gregkh@linuxfoundation.org, monstr@monstr.eu, michal.simek@xilinx.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 08, 2015 at 11:41:38AM -0500, Damien Riegel wrote:
-> This device tree adds support for TS-4800 by Technologic Systems. This
-> board is based on MX51-babbage, but there are some subtle differences in
-> the pins used, and there is an additional FPGA that is memory-mapped.
+On Thu, Dec 10, 2015 at 05:37:04PM -0600, atull@opensource.altera.com wrote:
+> From: Alan Tull <atull@opensource.altera.com>
 > 
-> More details here:
->   http://wiki.embeddedarm.com/wiki/TS-4800
+> New bindings document for FPGA Area for reprogramming
+> FPGA's under Device Tree control
 > 
-> Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
-
-It looks pretty neat.  Some small comments are below.
-
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
 > ---
->  arch/arm/boot/dts/Makefile         |   3 +-
->  arch/arm/boot/dts/imx51-ts4800.dts | 190 +++++++++++++++++++++++++++++++++++++
->  2 files changed, 192 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/imx51-ts4800.dts
+> v9:  initial version added to this patchset
+> v10: s/fpga/FPGA/g
+>      replace DT overlay example with slightly more complicated example
+>      move to staging/simple-fpga-bus
+> v11: No change in this patch for v11 of the patch set
+> v12: Moved out of staging.
+>      Changed to use FPGA bridges framework instead of resets
+>      for bridges.
+> v13: bridge@0xff20000 -> bridge@ff200000, etc
+>      Leave out directly talking about overlays
+>      Remove regs and clocks directly under simple-fpga-bus in example
+>      Use common "firmware-name" binding instead of "fpga-firmware"
+> v14: Use firmware-name in bindings description
+>      Call it FPGA Area
+>      Remove bindings that specify FPGA Manager and FPGA Bridges
+> ---
+>  .../devicetree/bindings/fpga/fpga-area.txt         |   70 ++++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/fpga-area.txt
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index bb8fa02..41b9985 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -258,7 +258,8 @@ dtb-$(CONFIG_SOC_IMX51) += \
->  	imx51-apf51dev.dtb \
->  	imx51-babbage.dtb \
->  	imx51-digi-connectcore-jsk.dtb \
-> -	imx51-eukrea-mbimxsd51-baseboard.dtb
-> +	imx51-eukrea-mbimxsd51-baseboard.dtb \
-> +	imx51-ts4800.dtb
->  dtb-$(CONFIG_SOC_IMX53) += \
->  	imx53-ard.dtb \
->  	imx53-m53evk.dtb \
-> diff --git a/arch/arm/boot/dts/imx51-ts4800.dts b/arch/arm/boot/dts/imx51-ts4800.dts
+> diff --git a/Documentation/devicetree/bindings/fpga/fpga-area.txt b/Documentation/devicetree/bindings/fpga/fpga-area.txt
 > new file mode 100644
-> index 0000000..a0b2c6f
+> index 0000000..d656e35
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/imx51-ts4800.dts
-> @@ -0,0 +1,190 @@
-> +/*
-> + * Copyright 2015 Savoir-faire Linux
-> + *
-> + * This device tree is based on imx51-babbage.dts
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
+> +++ b/Documentation/devicetree/bindings/fpga/fpga-area.txt
+> @@ -0,0 +1,70 @@
+> +FPGA Area
+> +=========
+> +
+> +A FPGA Area details information about a section of an FPGA including the FPGA
+> +image needed to program it and the hardware contained in this section of the
+> +FPGA once it is programmed.
+> +
+> +A FPGA Area corresponds to the whole FPGA in the case of full reconfiguration
+> +or a section of a FPGA in the case of partial reconfiguration.
+> +
+> +Required properties:
+> +- compatible : should contain "fpga-area"
 
-GPL/X11 dual licences are suggested for the new addition of the dts
-files.  You can find a lot of examples in arch/arm/boot/dts.
+I'm not too sure about this. I think this needs to be FPGA specfic.
 
+> +- #address-cells, #size-cells, ranges: must be present to handle address space
+> +  mapping for children.
+> +
+> +Optional properties:
+> +- firmware-name : should contain the name of a FPGA image file located on the
+> +  firmware search path.
+> +- partial-reconfig : boolean property should be defined if partial
+> +  reconfiguration of the FPGA is to be done, otherwise full reconfiguration
+> +  is done.
+> +
+> +Example:
 > +
 > +/dts-v1/;
-> +#include "imx51.dtsi"
-> +
+> +/plugin/;
 > +/ {
-> +	model = "Technologic Systems TS-4800";
-> +	compatible = "technologic,imx51-ts4800", "fsl,imx51";
-> +
-> +	chosen {
-> +		stdout-path = &uart1;
-> +	};
-> +
-> +	memory {
-> +		reg = <0x90000000 0x10000000>;
-> +	};
-> +
-> +	soc {
-> +		fpga {
-> +			compatible = "simple-bus";
-> +			reg = <0xb0000000 0x1d000>;
+> +	fragment@0 {
+> +		target-path="/soc/fpgamgr@0/bridge@0";
+
+Does the bus really go thru the fpgamgr and then the bridge as this 
+implies? Or fpgamgr is a sideband controller? For example purposes, it 
+would be better to show this not as an overlay so I get the complete 
+picture.
+
+Unit addresses of 0 look a bit questionable as I'd expect these to be 
+addresses.
+
+> +		__overlay__ {
 > +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
+> +	                #size-cells = <1>;
 > +
-> +			syscon: syscon@b0010000 {
-> +				compatible = "syscon", "simple-mfd";
-> +				reg = <0xb0010000 0x3d>;
-> +				reg-io-width = <2>;
+> +			bridge@ff200000 {
+
+2 levels of bridge devices/buses?
+
+There is nothing programmable for this bridge? clocks, resets, etc.?
+
+> +				compatible = "fpga-area";
 > +
-> +				wdt@e {
-> +					compatible = "technologic,ts4800-wdt";
-> +					syscon = <&syscon 0xe>;
+> +				#address-cells = <2>;
+> +				#size-cells = <1>;
+> +
+> +				ranges = <0 0x00000000 0xc0000000 0x00010000>,
+> +					 <1 0x00020000 0xff220000 0x00000008>,
+> +					 <1 0x00010040 0xff210040 0x00000020>;
+> +
+> +				firmware-name = "soc_system.rbf";
+> +
+> +				onchip_memory2_0: memory@000000000 {
+> +					device_type = "memory";
+> +					compatible = "altr,onchipmem-15.1";
+> +					reg = <0 0x00000000 0x00010000>;
+> +				};
+> +
+> +				jtag_uart: serial@100020000 {
+> +					compatible = "altr,juart-1.0";
+> +					reg = <1 0x00020000 0x00000008>;
+> +					interrupt-parent = <&intc>;
+> +					interrupts = <0 42 4>;
+> +				};
+> +
+> +				led_pio: gpio@100010040 {
+> +					compatible = "altr,pio-1.0";
+> +					reg = <1 0x00010040 0x00000020>;
+> +					altr,gpio-bank-width = <4>;
+> +					#gpio-cells = <2>;
+> +					gpio-controller;
 > +				};
 > +			};
 > +		};
 > +	};
-> +
-> +	clocks {
-> +		ckih1 {
-> +			clock-frequency = <22579200>;
-> +		};
-> +
-> +		ckih2 {
-> +			clock-frequency = <24576000>;
-> +		};
-> +	};
 > +};
 > +
-> +&esdhc1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_esdhc1>;
-> +	cd-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
-> +	wp-gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
-> +	status = "okay";
-> +};
-> +
-> +&fec {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_fec>;
-> +	phy-mode = "mii";
-> +	phy-reset-gpios = <&gpio2 14 GPIO_ACTIVE_LOW>;
-> +	phy-reset-duration = <1>;
-> +	status = "okay";
-> +};
-> +
-> +&uart1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart1>;
-> +	status = "okay";
-> +};
-> +
-> +&uart2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart2>;
-> +	status = "okay";
-> +};
-> +
-> +&uart3 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart3>;
-> +	status = "okay";
-> +};
-> +
-> +&i2c2 {
-
-Move this node after &fec to get them sort alphabetically (iomuxc could
-be an exception).
-
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c2>;
-> +	status = "okay";
-> +
-> +	rtc: m41t00@68 {
-> +		compatible = "stm,m41t00";
-> +		reg = <0x68>;
-> +	};
-> +};
-> +
-> +
-> +&iomuxc {
-> +	imx51-ts4800 {
-> +
-
-With commit 5fcdf6a7ed95 (pinctrl: imx: Allow parsing DT without function
-nodes) in place, this container node can just be saved now.
-
-Shawn
-
-> +		pinctrl_ecspi1: ecspi1grp {
-> +			fsl,pins = <
-> +				MX51_PAD_CSPI1_MISO__ECSPI1_MISO	0x185
-> +				MX51_PAD_CSPI1_MOSI__ECSPI1_MOSI	0x185
-> +				MX51_PAD_CSPI1_SCLK__ECSPI1_SCLK	0x185
-> +				MX51_PAD_CSPI1_SS0__GPIO4_24		0x85 /* CS0 */
-> +			>;
-> +		};
-> +
-> +		pinctrl_esdhc1: esdhc1grp {
-> +			fsl,pins = <
-> +				MX51_PAD_SD1_CMD__SD1_CMD		0x400020d5
-> +				MX51_PAD_SD1_CLK__SD1_CLK		0x20d5
-> +				MX51_PAD_SD1_DATA0__SD1_DATA0		0x20d5
-> +				MX51_PAD_SD1_DATA1__SD1_DATA1		0x20d5
-> +				MX51_PAD_SD1_DATA2__SD1_DATA2		0x20d5
-> +				MX51_PAD_SD1_DATA3__SD1_DATA3		0x20d5
-> +				MX51_PAD_GPIO1_0__GPIO1_0		0x100
-> +				MX51_PAD_GPIO1_1__GPIO1_1		0x100
-> +			>;
-> +		};
-> +
-> +		pinctrl_fec: fecgrp {
-> +			fsl,pins = <
-> +				MX51_PAD_EIM_EB2__FEC_MDIO		0x000001f5
-> +				MX51_PAD_EIM_EB3__FEC_RDATA1		0x00000085
-> +				MX51_PAD_EIM_CS2__FEC_RDATA2		0x00000085
-> +				MX51_PAD_EIM_CS3__FEC_RDATA3		0x00000085
-> +				MX51_PAD_EIM_CS4__FEC_RX_ER		0x00000180
-> +				MX51_PAD_EIM_CS5__FEC_CRS		0x00000180
-> +				MX51_PAD_DISP2_DAT10__FEC_COL		0x00000180
-> +				MX51_PAD_DISP2_DAT11__FEC_RX_CLK		0x00000180
-> +				MX51_PAD_DISP2_DAT14__FEC_RDATA0		0x00002180
-> +				MX51_PAD_DISP2_DAT15__FEC_TDATA0		0x00002004
-> +				MX51_PAD_NANDF_CS2__FEC_TX_ER		0x00002004
-> +				MX51_PAD_DI2_PIN2__FEC_MDC		0x00002004
-> +				MX51_PAD_DISP2_DAT6__FEC_TDATA1		0x00002004
-> +				MX51_PAD_DISP2_DAT7__FEC_TDATA2		0x00002004
-> +				MX51_PAD_DISP2_DAT8__FEC_TDATA3		0x00002004
-> +				MX51_PAD_DISP2_DAT9__FEC_TX_EN		0x00002004
-> +				MX51_PAD_DISP2_DAT13__FEC_TX_CLK	0x00002180
-> +				MX51_PAD_DISP2_DAT12__FEC_RX_DV		0x000020a4
-> +				MX51_PAD_EIM_A20__GPIO2_14		0x00000085 /* Phy Reset */
-> +			>;
-> +		};
-> +
-> +		pinctrl_i2c2: i2c2grp {
-> +			fsl,pins = <
-> +				MX51_PAD_KEY_COL4__I2C2_SCL		0x400001ed
-> +				MX51_PAD_KEY_COL5__I2C2_SDA		0x400001ed
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart1: uart1grp {
-> +			fsl,pins = <
-> +				MX51_PAD_UART1_RXD__UART1_RXD		0x1c5
-> +				MX51_PAD_UART1_TXD__UART1_TXD		0x1c5
-> +				MX51_PAD_UART1_RTS__UART1_RTS		0x1c5
-> +				MX51_PAD_UART1_CTS__UART1_CTS		0x1c5
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart2: uart2grp {
-> +			fsl,pins = <
-> +				MX51_PAD_UART2_RXD__UART2_RXD		0x1c5
-> +				MX51_PAD_UART2_TXD__UART2_TXD		0x1c5
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart3: uart3grp {
-> +			fsl,pins = <
-> +				MX51_PAD_EIM_D25__UART3_RXD		0x1c5
-> +				MX51_PAD_EIM_D26__UART3_TXD		0x1c5
-> +				MX51_PAD_EIM_D27__UART3_RTS		0x1c5
-> +				MX51_PAD_EIM_D24__UART3_CTS		0x1c5
-> +			>;
-> +		};
-> +
-> +	};
-> +};
 > -- 
-> 2.5.0
+> 1.7.9.5
 > 
-> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
