@@ -1,105 +1,49 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH linux-next 1/2] irqchip: Add brcm,bcm6345-l1-intc device
- tree binding
-Date: Thu, 10 Dec 2015 20:46:42 -0600
-Message-ID: <20151211024642.GA31768@rob-hp-laptop>
-References: <56688E9D.8080307@simon.arlott.org.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 2/2] arm: pxa27x: support for ICP DAS LP-8x4x w/ DT
+Date: Thu, 10 Dec 2015 20:53:18 -0600
+Message-ID: <20151211025318.GA1000@rob-hp-laptop>
+References: <1387309071-22382-1-git-send-email-ynvich@gmail.com>
+ <1449700088-28076-1-git-send-email-ynvich@gmail.com>
+ <1449700088-28076-3-git-send-email-ynvich@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <56688E9D.8080307-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+In-Reply-To: <1449700088-28076-3-git-send-email-ynvich@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Ianovich <ynvich@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Daniel Mack <zonque@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Arnaud Ebalard <arno@natisbad.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 09, 2015 at 08:27:09PM +0000, Simon Arlott wrote:
-> Add device tree binding for the BCM6345 interrupt controller.
-> 
-> This controller is similar to the SMP-capable BCM7038 and
-> the BCM3380 but with packed interrupt registers.
-> 
-> Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+On Thu, Dec 10, 2015 at 01:28:08AM +0300, Sergei Ianovich wrote:
+> ICP DAS calls LP-8x4x 'programmable automation controller'. It is
+> an industrial computer based on PXA270 SoC. They ship it with a 2.6.19
+> kernel and proprietary kernel module and userspace library to access
+> its industrial IO.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+2 comments, otherwise:
 
-> ---
-> Corrected example device name to be "interrupt-controller".
-> 
->  .../interrupt-controller/brcm,bcm6345-l1-intc.txt  | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm6345-l1-intc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm6345-l1-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm6345-l1-intc.txt
+Acked-by: Rob Herring <robh@kernel.org>
+
+> diff --git a/arch/arm/boot/dts/pxa27x-lp8x4x.dts b/arch/arm/boot/dts/pxa27x-lp8x4x.dts
 > new file mode 100644
-> index 0000000..4040905
+> index 0000000..bbb5b75
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm6345-l1-intc.txt
-> @@ -0,0 +1,57 @@
-> +Broadcom BCM6345-style Level 1 interrupt controller
+> +++ b/arch/arm/boot/dts/pxa27x-lp8x4x.dts
+> @@ -0,0 +1,260 @@
+> +/* Device tree for ICP DAS LP-8x4x */
+> +/dts-v1/;
 > +
-> +This block is a first level interrupt controller that is typically connected
-> +directly to one of the HW INT lines on each CPU.
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+
+Pretty sure this does not have a GIC.
+
+> +#include "pxa27x.dtsi"
 > +
-> +Key elements of the hardware design include:
-> +
-> +- 32, 64 or 128 incoming level IRQ lines
-> +
-> +- Most onchip peripherals are wired directly to an L1 input
-> +
-> +- A separate instance of the register set for each CPU, allowing individual
-> +  peripheral IRQs to be routed to any CPU
-> +
-> +- Contains one or more enable/status word pairs per CPU
-> +
-> +- No atomic set/clear operations
-> +
-> +- No polarity/level/edge settings
-> +
-> +- No FIFO or priority encoder logic; software is expected to read all
-> +  2-4 status words to determine which IRQs are pending
-> +
-> +Required properties:
-> +
-> +- compatible: should be "brcm,bcm<soc>-l1-intc", "brcm,bcm6345-l1-intc"
-> +- reg: specifies the base physical address and size of the registers;
-> +  the number of supported IRQs is inferred from the size argument
-> +- interrupt-controller: identifies the node as an interrupt controller
-> +- #interrupt-cells: specifies the number of cells needed to encode an interrupt
-> +  source, should be 1.
-> +- interrupt-parent: specifies the phandle to the parent interrupt controller(s)
-> +  this one is cascaded from
-> +- interrupts: specifies the interrupt line(s) in the interrupt-parent controller
-> +  node; valid values depend on the type of parent interrupt controller
-> +
-> +If multiple reg ranges and interrupt-parent entries are present on an SMP
-> +system, the driver will allow IRQ SMP affinity to be set up through the
-> +/proc/irq/ interface.  In the simplest possible configuration, only one
-> +reg range and one interrupt-parent is needed.
-> +
-> +The driver operates in native CPU endian by default, there is no support for
-> +specifying an alternative endianness.
-> +
-> +Example:
-> +
-> +periph_intc: interrupt-controller@10000000 {
-> +        compatible = "brcm,bcm63168-l1-intc", "brcm,bcm6345-l1-intc";
-> +        reg = <0x10000020 0x20>,
-> +              <0x10000040 0x20>;
-> +
-> +        interrupt-controller;
-> +        #interrupt-cells = <1>;
-> +
-> +        interrupt-parent = <&cpu_intc>;
-> +        interrupts = <2>, <3>;
-> +};
-> -- 
-> 2.1.4
-> 
-> -- 
-> Simon Arlott
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +/ {
+> +	model = "ICP DAS LP-8x4x programmable automation controller";
+> +	compatible = "marvell,pxa270";
+
+You should have a compatible string for this board.
+
+Rob
