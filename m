@@ -1,149 +1,77 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v5 0/9] mfd: axp20x: Add support for RSB
- based AXP223
-Date: Fri, 11 Dec 2015 16:38:01 +0800
-Message-ID: <CAGb2v65f9tEpMALcKapGPYw72v-hYmfJA1B8nZyj5EW+g_9Byw@mail.gmail.com>
-References: <1448606610-32647-1-git-send-email-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [RFC PATCH 0/7] mtd: partitions: add of_match_table support
+Date: Fri, 11 Dec 2015 09:44:37 +0100
+Message-ID: <CAMuHMdV-uethsChWVZGSx1JNcAofODmg14ppGYJP2ewfwhEv1Q@mail.gmail.com>
+References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
+	<CAMuHMdUJXHs_OhT0da+kzc=D4MOFUT9BB3eJ+7a_p6DYx-PKBA@mail.gmail.com>
+	<20151210205449.GL144338@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBAMXVKZQKGQEM3ZPRZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1448606610-32647-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151210205449.GL144338-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, David Hendricks <dhendrix-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+Hi Brian,
 
-On Fri, Nov 27, 2015 at 2:43 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> Hi everyone,
+On Thu, Dec 10, 2015 at 9:54 PM, Brian Norris
+<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Sat, Dec 05, 2015 at 11:15:54AM +0100, Geert Uytterhoeven wrote:
+>> On Sat, Dec 5, 2015 at 6:19 AM, Brian Norris
+>> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> > There have been several discussions [1] about adding a device tree binding for
+>> > associating flash devices with the partition parser(s) that are used on the
+>> > flash. There are a few reasons:
+>> >
+>> >  (1) drivers shouldn't have to be encoding platform knowledge by listing what
+>> >      parsers might be used on a given system (this is the currently all that's
+>> >      supported)
+>> >  (2) we can't just scan for all supported parsers (like the block system does), since
+>> >      there is a wide diversity of "formats" (no standardization), and it is not
+>> >      always safe or efficient to attempt to do so, particularly since many of
+>> >      them allow their data structures to be placed anywhere on the flash, and
+>> >      so require scanning the entire flash device to find them.
+>>
+>> I read the second reason, but would it be useful to (partially) merge
+>> block/partitions/ and drivers/mtd/partitions/, so I can use e.g. msdos
+>> partitions
+>> on an mtd device??
 >
-> This is v5 of the AXP223 PMIC series. v5 cleans up the code before and
-> after the axp20x split, as suggested by Andy.
+> I kinda agree with Michal: is there a good use case?
 
-Any chance you could merge this series (patches 1~7) for 4.5?
+I don't have an immediate use case.
+Just looking at it from a high-level viewpoint.
 
-The DTS patches can't be merged without the driver updates, and we'd
-like to get both parts in.
+> Really, MTD partitioning is not a highly-scalable design. Particularly,
+> it's not typically that well-suited to large (read: unreliable) NAND
+> flash, where fixing partitions at the raw flash level mostly serves to
+> restrict UBI's ability to wear-level across the device. For that sort of
+> case, it's best if people are using UBI volumes on a (mostly?)
+> unpartitioned MTD, instead of using MTD partitions as the main
+> separation mechanism. Also, most partition designs (either MTD or block)
+> aren't very robust against bitflips, read disturb, etc.
+>
+> IOW, I wouldn't expect MBR or GPT to work well on large raw NAND flash,
+> and so I don't plan to do that sort of work myself. If you can provide
+> some better argument for it, and some nice maintainable code to go with
+> it, then of course it could be considered :)
 
-> Changes since v4:
->
->   - Get rid of second parameter of axp20x_match_device() (new patch 2)
->
->   - Match against dev->driver->of_match_table, so the entirety of
->     axp20x_match_device() can be kept in the core. (new patch 3)
->
->   - Move *_device_id tables to bottom of the driver, right above driver
->     declaration. (patch 4 & 6)
->
->   - Remove extra whitespaces while moving i2c specific code (patch 4)
->
->   - Remove leftover whitespace and code style issues in axp20x core
->     (new patch 5)
->
->   - Remove extra whitespaces in rsb specific code (patch 6)
->
-> Changes since v3:
->
->   - Removed settings for axp223 reg_rtc_ldo from board dts files that
->     are already in axp22x.dtsi. The name is kept.
->
->   - Dropped simplefb label and defconfig patches, as they are merged.
->
-> Changes since v2:
->
->   - s/It's/Its/ for the commit messages of patches 5 and 7
->
->   - Add Rob's Acked-by for patch 1
->
-> Changes since v1:
->
->   - Dropped NMI interrupt controller dts patch (Merged)
->
->   - Change MFD_AXP20X to represent the axp20x core, and drop MFD_AXP20X_CORE
->
->   - Keep the axp20x core bits named axp20x.c
->
->   - Add patch 7 to add AXP223 to sun8i-q8-common.dtsi
->
->   - Add patch 8 & 9 to update defconfigs
->
->   - Make axp20x drivers tristate and buildable as modules
->
->   - Drop "_sunxi" substring from identifiers in axp20x-rsb driver
->
->
-> This series adds support for the Reduced Serial Bus based AXP223 PMIC.
-> The AXP223 is functionally identical to the AXP221, which we already
-> support. Only some default values for the regulators are different.
-> The defaults fit their recommended application, paired with different
-> SoCs.
->
+There's also NOR FLASH (e.g. SPI-NOR), which is what most boards I'm
+working on have.
 
-Updated description:
+Gr{oetje,eeting}s,
 
-Patch 1 adds AXP223 to the list of supported chips in the DT binding.
+                        Geert
 
-Patch 2 gets rid of the extra "struct device *" parameter from
-axp20x_match_device().
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-Patch 3 makes axp20x_match_device() use dev->driver->of_match_table,
-so the function can be library-ized without modification.
-
-Patch 4 splits the axp20x mfd driver into 2 parts, a core library, and
-an I2C driver.
-
-Patch 5 cleans up some leftover whitespace issues in axp20x core.
-
-Patch 6 adds an RSB based driver for the AXP223.
-
-Patch 7 adds support for the AXP223 regulators
-
-Patch 8 enables the AXP223 PMIC and its regulators for the Sinlinx
-SinA33.
-
-Patch 9 enables the AXP223 PMIC and its regulators for A23/A33 based
-Q8 tablet devices.
-
-
-Regards
-ChenYu
-
->
-> Chen-Yu Tsai (9):
->   mfd: axp20x: Add AXP223 to list of supported PMICs in DT bindings
->   mfd: axp20x: Remove second struct device * parameter for
->     axp20x_match_device()
->   mfd: axp20x: use dev->driver->of_match_table in axp20x_match_device()
->   mfd: axp20x: Split the driver into core and i2c bits
->   mfd: axp20x: Whitespace, open parenthesis alignment code style fixes
->   mfd: axp20x: Add support for RSB based AXP223 PMIC
->   regulator: axp20x: Support new AXP223 PMIC
->   ARM: dts: sun8i: sinlinx-sina33: Add AXP223 PMIC device and regulator
->     nodes
->   ARM: dts: sun8i: q8-common: Add AXP223 PMIC device and regulator nodes
->
->  Documentation/devicetree/bindings/mfd/axp20x.txt |   7 +-
->  arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts   |  76 ++++++++++++++++-
->  arch/arm/boot/dts/sun8i-q8-common.dtsi           |  83 +++++++++++++++++-
->  drivers/mfd/Kconfig                              |  25 ++++--
->  drivers/mfd/Makefile                             |   2 +
->  drivers/mfd/axp20x-i2c.c                         | 102 +++++++++++++++++++++++
->  drivers/mfd/axp20x-rsb.c                         |  78 +++++++++++++++++
->  drivers/mfd/axp20x.c                             | 101 +++++-----------------
->  drivers/regulator/axp20x-regulator.c             |   3 +
->  include/linux/mfd/axp20x.h                       |  34 +++++++-
->  10 files changed, 418 insertions(+), 93 deletions(-)
->  create mode 100644 drivers/mfd/axp20x-i2c.c
->  create mode 100644 drivers/mfd/axp20x-rsb.c
->
-> --
-> 2.6.2
->
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
