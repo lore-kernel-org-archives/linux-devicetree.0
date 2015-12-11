@@ -1,65 +1,262 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/3] Device tree binding documentation for gpio-switch
-Date: Fri, 11 Dec 2015 08:06:22 -0600
-Message-ID: <CAL_JsqJ-dht=rCu2-Unm0yOdFfRoOSXd9fkO7eDeQmvWGkGfsQ@mail.gmail.com>
-References: <1449250275-23435-1-git-send-email-martyn.welch@collabora.co.uk>
- <1449250275-23435-2-git-send-email-martyn.welch@collabora.co.uk> <CACRpkdYZ-PK9Fb2uq+EMz5RTrtX-isxYkiNvWm2QqAh5WZhpOw@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v8 3/3] ARM: dts: TS-4800: add basic device tree
+Date: Fri, 11 Dec 2015 22:31:12 +0800
+Message-ID: <20151211143112.GL11252@tiger>
+References: <1449592898-24049-1-git-send-email-damien.riegel@savoirfairelinux.com>
+ <1449592898-24049-4-git-send-email-damien.riegel@savoirfairelinux.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYZ-PK9Fb2uq+EMz5RTrtX-isxYkiNvWm2QqAh5WZhpOw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Martyn Welch <martyn.welch@collabora.co.uk>, Alexandre Courbot <acourbot@nvidia.com>, Michael Welling <mwelling@ieee.org>, Markus Pargmann <mpa@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Johan Hovold <johan@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1449592898-24049-4-git-send-email-damien.riegel@savoirfairelinux.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Damien Riegel <damien.riegel@savoirfairelinux.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, kernel@savoirfairelinux.com, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 11, 2015 at 6:39 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Fri, Dec 4, 2015 at 6:31 PM, Martyn Welch
-> <martyn.welch@collabora.co.uk> wrote:
->
->> This patch adds documentation for the gpio-switch binding. This binding
->> provides a mechanism to bind named links to gpio, with the primary
->> purpose of enabling standardised access to switches that might be standard
->> across a group of devices but implemented differently on each device.
->>
->> Signed-off-by: Martyn Welch <martyn.welch@collabora.co.uk>
->
-> As mentioned in the comment to the second patch, this solves the
-> following generic problem:
->
-> Expose a GPIO line to userspace using a specific name
->
-> That means basically naming GPIO lines and marking them as
-> "not used by the operating system".
->
-> This is something that has been proposed before, and postponed
-> because the kernel lacks the right infrastructure.
+On Tue, Dec 08, 2015 at 11:41:38AM -0500, Damien Riegel wrote:
+> This device tree adds support for TS-4800 by Technologic Systems. This
+> board is based on MX51-babbage, but there are some subtle differences in
+> the pins used, and there is an additional FPGA that is memory-mapped.
+> 
+> More details here:
+>   http://wiki.embeddedarm.com/wiki/TS-4800
+> 
+> Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
 
-That doesn't necessarily mean we can't define a binding.
+It looks pretty neat.  Some small comments are below.
 
-> Markus Pargmann also did a series that add initial values to
-> hogs, which is the inverse usecase of this, where you want to
-> *output* something by default, then maybe also make it available
-> to userspace.
->
-> So what we need to see here is a patch series that does all of these
-> things:
->
-> - Name lines
->
-> - Sets them to initial values
->
-> - Mark them as read-only
->
-> - Mark them as "not used by the operating system" so that they
->   can be default-exported to userspace.
+> ---
+>  arch/arm/boot/dts/Makefile         |   3 +-
+>  arch/arm/boot/dts/imx51-ts4800.dts | 190 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 192 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/imx51-ts4800.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index bb8fa02..41b9985 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -258,7 +258,8 @@ dtb-$(CONFIG_SOC_IMX51) += \
+>  	imx51-apf51dev.dtb \
+>  	imx51-babbage.dtb \
+>  	imx51-digi-connectcore-jsk.dtb \
+> -	imx51-eukrea-mbimxsd51-baseboard.dtb
+> +	imx51-eukrea-mbimxsd51-baseboard.dtb \
+> +	imx51-ts4800.dtb
+>  dtb-$(CONFIG_SOC_IMX53) += \
+>  	imx53-ard.dtb \
+>  	imx53-m53evk.dtb \
+> diff --git a/arch/arm/boot/dts/imx51-ts4800.dts b/arch/arm/boot/dts/imx51-ts4800.dts
+> new file mode 100644
+> index 0000000..a0b2c6f
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx51-ts4800.dts
+> @@ -0,0 +1,190 @@
+> +/*
+> + * Copyright 2015 Savoir-faire Linux
+> + *
+> + * This device tree is based on imx51-babbage.dts
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
 
-No! This should not be a DT property.
+GPL/X11 dual licences are suggested for the new addition of the dts
+files.  You can find a lot of examples in arch/arm/boot/dts.
 
-Whether I want to control a GPIO in the kernel or userspace is not
-known and can change over time. It could simply depend on kernel
-config. There is also the case that a GPIO has no connection or kernel
-driver until some time later when a DT overlay for an expansion board
-is applied.
+> +
+> +/dts-v1/;
+> +#include "imx51.dtsi"
+> +
+> +/ {
+> +	model = "Technologic Systems TS-4800";
+> +	compatible = "technologic,imx51-ts4800", "fsl,imx51";
+> +
+> +	chosen {
+> +		stdout-path = &uart1;
+> +	};
+> +
+> +	memory {
+> +		reg = <0x90000000 0x10000000>;
+> +	};
+> +
+> +	soc {
+> +		fpga {
+> +			compatible = "simple-bus";
+> +			reg = <0xb0000000 0x1d000>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +
+> +			syscon: syscon@b0010000 {
+> +				compatible = "syscon", "simple-mfd";
+> +				reg = <0xb0010000 0x3d>;
+> +				reg-io-width = <2>;
+> +
+> +				wdt@e {
+> +					compatible = "technologic,ts4800-wdt";
+> +					syscon = <&syscon 0xe>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	clocks {
+> +		ckih1 {
+> +			clock-frequency = <22579200>;
+> +		};
+> +
+> +		ckih2 {
+> +			clock-frequency = <24576000>;
+> +		};
+> +	};
+> +};
+> +
+> +&esdhc1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_esdhc1>;
+> +	cd-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
+> +	wp-gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
+> +	status = "okay";
+> +};
+> +
+> +&fec {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_fec>;
+> +	phy-mode = "mii";
+> +	phy-reset-gpios = <&gpio2 14 GPIO_ACTIVE_LOW>;
+> +	phy-reset-duration = <1>;
+> +	status = "okay";
+> +};
+> +
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart1>;
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart2>;
+> +	status = "okay";
+> +};
+> +
+> +&uart3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart3>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c2 {
 
-Rob
+Move this node after &fec to get them sort alphabetically (iomuxc could
+be an exception).
+
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c2>;
+> +	status = "okay";
+> +
+> +	rtc: m41t00@68 {
+> +		compatible = "stm,m41t00";
+> +		reg = <0x68>;
+> +	};
+> +};
+> +
+> +
+> +&iomuxc {
+> +	imx51-ts4800 {
+> +
+
+With commit 5fcdf6a7ed95 (pinctrl: imx: Allow parsing DT without function
+nodes) in place, this container node can just be saved now.
+
+Shawn
+
+> +		pinctrl_ecspi1: ecspi1grp {
+> +			fsl,pins = <
+> +				MX51_PAD_CSPI1_MISO__ECSPI1_MISO	0x185
+> +				MX51_PAD_CSPI1_MOSI__ECSPI1_MOSI	0x185
+> +				MX51_PAD_CSPI1_SCLK__ECSPI1_SCLK	0x185
+> +				MX51_PAD_CSPI1_SS0__GPIO4_24		0x85 /* CS0 */
+> +			>;
+> +		};
+> +
+> +		pinctrl_esdhc1: esdhc1grp {
+> +			fsl,pins = <
+> +				MX51_PAD_SD1_CMD__SD1_CMD		0x400020d5
+> +				MX51_PAD_SD1_CLK__SD1_CLK		0x20d5
+> +				MX51_PAD_SD1_DATA0__SD1_DATA0		0x20d5
+> +				MX51_PAD_SD1_DATA1__SD1_DATA1		0x20d5
+> +				MX51_PAD_SD1_DATA2__SD1_DATA2		0x20d5
+> +				MX51_PAD_SD1_DATA3__SD1_DATA3		0x20d5
+> +				MX51_PAD_GPIO1_0__GPIO1_0		0x100
+> +				MX51_PAD_GPIO1_1__GPIO1_1		0x100
+> +			>;
+> +		};
+> +
+> +		pinctrl_fec: fecgrp {
+> +			fsl,pins = <
+> +				MX51_PAD_EIM_EB2__FEC_MDIO		0x000001f5
+> +				MX51_PAD_EIM_EB3__FEC_RDATA1		0x00000085
+> +				MX51_PAD_EIM_CS2__FEC_RDATA2		0x00000085
+> +				MX51_PAD_EIM_CS3__FEC_RDATA3		0x00000085
+> +				MX51_PAD_EIM_CS4__FEC_RX_ER		0x00000180
+> +				MX51_PAD_EIM_CS5__FEC_CRS		0x00000180
+> +				MX51_PAD_DISP2_DAT10__FEC_COL		0x00000180
+> +				MX51_PAD_DISP2_DAT11__FEC_RX_CLK		0x00000180
+> +				MX51_PAD_DISP2_DAT14__FEC_RDATA0		0x00002180
+> +				MX51_PAD_DISP2_DAT15__FEC_TDATA0		0x00002004
+> +				MX51_PAD_NANDF_CS2__FEC_TX_ER		0x00002004
+> +				MX51_PAD_DI2_PIN2__FEC_MDC		0x00002004
+> +				MX51_PAD_DISP2_DAT6__FEC_TDATA1		0x00002004
+> +				MX51_PAD_DISP2_DAT7__FEC_TDATA2		0x00002004
+> +				MX51_PAD_DISP2_DAT8__FEC_TDATA3		0x00002004
+> +				MX51_PAD_DISP2_DAT9__FEC_TX_EN		0x00002004
+> +				MX51_PAD_DISP2_DAT13__FEC_TX_CLK	0x00002180
+> +				MX51_PAD_DISP2_DAT12__FEC_RX_DV		0x000020a4
+> +				MX51_PAD_EIM_A20__GPIO2_14		0x00000085 /* Phy Reset */
+> +			>;
+> +		};
+> +
+> +		pinctrl_i2c2: i2c2grp {
+> +			fsl,pins = <
+> +				MX51_PAD_KEY_COL4__I2C2_SCL		0x400001ed
+> +				MX51_PAD_KEY_COL5__I2C2_SDA		0x400001ed
+> +			>;
+> +		};
+> +
+> +		pinctrl_uart1: uart1grp {
+> +			fsl,pins = <
+> +				MX51_PAD_UART1_RXD__UART1_RXD		0x1c5
+> +				MX51_PAD_UART1_TXD__UART1_TXD		0x1c5
+> +				MX51_PAD_UART1_RTS__UART1_RTS		0x1c5
+> +				MX51_PAD_UART1_CTS__UART1_CTS		0x1c5
+> +			>;
+> +		};
+> +
+> +		pinctrl_uart2: uart2grp {
+> +			fsl,pins = <
+> +				MX51_PAD_UART2_RXD__UART2_RXD		0x1c5
+> +				MX51_PAD_UART2_TXD__UART2_TXD		0x1c5
+> +			>;
+> +		};
+> +
+> +		pinctrl_uart3: uart3grp {
+> +			fsl,pins = <
+> +				MX51_PAD_EIM_D25__UART3_RXD		0x1c5
+> +				MX51_PAD_EIM_D26__UART3_TXD		0x1c5
+> +				MX51_PAD_EIM_D27__UART3_RTS		0x1c5
+> +				MX51_PAD_EIM_D24__UART3_CTS		0x1c5
+> +			>;
+> +		};
+> +
+> +	};
+> +};
+> -- 
+> 2.5.0
+> 
+> 
