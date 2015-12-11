@@ -1,69 +1,63 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/8] dt-bindings: Add a binding for Mediatek Video
- Processor
-Date: Fri, 11 Dec 2015 11:21:43 -0600
-Message-ID: <20151211172143.GA14623@rob-hp-laptop>
-References: <1449827743-22895-1-git-send-email-tiffany.lin@mediatek.com>
- <1449827743-22895-2-git-send-email-tiffany.lin@mediatek.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v7 02/14] drm/mediatek: Add DRM Driver for Mediatek SoC
+ MT8173.
+Date: Fri, 11 Dec 2015 18:23:51 +0100
+Message-ID: <1449854631.3419.61.camel@pengutronix.de>
+References: <1448917676-25584-1-git-send-email-p.zabel@pengutronix.de>
+	 <1448917676-25584-3-git-send-email-p.zabel@pengutronix.de>
+	 <566B0378.7050809@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1449827743-22895-2-git-send-email-tiffany.lin@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tiffany Lin <tiffany.lin@mediatek.com>
-Cc: daniel.thompson@linaro.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@iki.fi>, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, Fabien Dessenne <fabien.dessenne@st.com>, Arnd Bergmann <arnd@arndb.de>, Darren Etheridge <detheridge@ti.com>, Peter Griffin <peter.griffin@linaro.org>, Benoit Parrot <bparrot@ti.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <566B0378.7050809-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Cawa Cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Stone <daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 11, 2015 at 05:55:36PM +0800, Tiffany Lin wrote:
-> From: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
-> 
-> Add a DT binding documentation of Video Processor Unit for the
-> MT8173 SoC from Mediatek.
-> 
-> Signed-off-by: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
-> Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
+Hi Matthias,
 
-Acked-by: Rob Herring <robh@kernel.org>
+thanks for your reply. It would be helpful if you could trim the quoted
+text a bit when replying to a small part of a huge patch like this.
 
-> ---
->  .../devicetree/bindings/media/mediatek-vpu.txt     |   27 ++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek-vpu.txt
+Am Freitag, den 11.12.2015, 18:10 +0100 schrieb Matthias Brugger:
+> > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> > new file mode 100644
+> > index 0000000..a34c765
+> > --- /dev/null
+> > +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> > @@ -0,0 +1,562 @@
+> > +/*
+> > + * Copyright (c) 2015 MediaTek Inc.
+> > + * Author: YT SHEN <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#include <drm/drmP.h>
+> > +#include <drm/drm_atomic.h>
+> > +#include <drm/drm_atomic_helper.h>
+> > +#include <drm/drm_crtc_helper.h>
+> > +#include <drm/drm_gem.h>
+> > +#include <linux/component.h>
+> > +#include <linux/dma-iommu.h>
 > 
-> diff --git a/Documentation/devicetree/bindings/media/mediatek-vpu.txt b/Documentation/devicetree/bindings/media/mediatek-vpu.txt
-> new file mode 100644
-> index 0000000..3c3a424
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/mediatek-vpu.txt
-> @@ -0,0 +1,27 @@
-> +* Mediatek Video Processor Unit
-> +
-> +Video Processor Unit is a HW video controller. It controls HW Codec including
-> +H.264/VP8/VP9 Decode, H.264/VP8 Encode and Image Processor (scale/rotate/color convert).
-> +
-> +Required properties:
-> +  - compatible: "mediatek,mt8173-vpu"
-> +  - reg: Must contain an entry for each entry in reg-names.
-> +  - reg-names: Must include the following entries:
-> +    "tcm": tcm base
-> +    "cfg_reg": Main configuration registers base
-> +  - interrupts: interrupt number to the cpu.
-> +  - clocks : clock name from clock manager
-> +  - clock-names: must be main. It is the main clock of VPU
-> +  - iommus : phandle and IOMMU spcifier for the IOMMU that serves the VPU.
-> +
-> +Example:
-> +	vpu: vpu@10020000 {
-> +		compatible = "mediatek,mt8173-vpu";
-> +		reg = <0 0x10020000 0 0x30000>,
-> +		      <0 0x10050000 0 0x100>;
-> +		reg-names = "tcm", "cfg_reg";
-> +		interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&topckgen TOP_SCP_SEL>;
-> +		clock-names = "main";
-> +		iommus = <&iommu M4U_PORT_VENC_RCPU>;
-> +	};
-> -- 
-> 1.7.9.5
-> 
+> Do we need this include here?
+
+No, thank you for noticing. Will be removed in the next version.
+
+best regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
