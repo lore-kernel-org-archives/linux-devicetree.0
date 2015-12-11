@@ -1,241 +1,63 @@
-From: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 7/7] ARM: dts: add dts files for Hi3519
-Date: Fri, 11 Dec 2015 15:45:21 +0800
-Message-ID: <1449819921-18464-8-git-send-email-xuejiancheng@huawei.com>
-References: <1449819921-18464-1-git-send-email-xuejiancheng@huawei.com>
+From: Patrice Chotard <patrice.chotard@st.com>
+Subject: Re: [PATCH v2 4/9] pinctrl: Add support STM32 MCUs
+Date: Fri, 11 Dec 2015 09:20:50 +0100
+Message-ID: <566A8762.4040108@st.com>
+References: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
+ <1445102604-11502-5-git-send-email-mcoquelin.stm32@gmail.com>
+ <CALszF6Cd=yei0m2Zs=+k=KT5RUzdesGWPK7PAQPdj_-Ouan=2A@mail.gmail.com>
+ <CACRpkda4eSHu57Tw6F-kmxY_EOSEhpRiowQN9o4LbPVgE_Xvkw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449819921-18464-1-git-send-email-xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangzhenxing-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkda4eSHu57Tw6F-kmxY_EOSEhpRiowQN9o4LbPVgE_Xvkw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-add dts files for Hi3519
+Hi Linus
 
-Signed-off-by: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/Makefile        |   2 +
- arch/arm/boot/dts/hi3519-demb.dts |  42 +++++++++++
- arch/arm/boot/dts/hi3519.dtsi     | 142 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 186 insertions(+)
- create mode 100644 arch/arm/boot/dts/hi3519-demb.dts
- create mode 100644 arch/arm/boot/dts/hi3519.dtsi
+I will try to review it before end of next week
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 30bbc37..1ff3ed9 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -135,6 +135,8 @@ dtb-$(CONFIG_ARCH_EXYNOS5) += \
- 	exynos5800-peach-pi.dtb
- dtb-$(CONFIG_ARCH_HI3xxx) += \
- 	hi3620-hi4511.dtb
-+dtb-$(CONFIG_ARCH_HISI) += \
-+	hi3519-demb.dtb
- dtb-$(CONFIG_ARCH_HIX5HD2) += \
- 	hisi-x5hd2-dkb.dtb
- dtb-$(CONFIG_ARCH_HIGHBANK) += \
-diff --git a/arch/arm/boot/dts/hi3519-demb.dts b/arch/arm/boot/dts/hi3519-demb.dts
-new file mode 100644
-index 0000000..6991ab6
---- /dev/null
-+++ b/arch/arm/boot/dts/hi3519-demb.dts
-@@ -0,0 +1,42 @@
-+/*
-+ * Copyright (c) 2015 HiSilicon Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ *
-+ */
-+
-+/dts-v1/;
-+#include "hi3519.dtsi"
-+
-+/ {
-+	model = "HiSilicon HI3519 DEMO Board";
-+	compatible = "hisilicon,hi3519";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x40000000>;
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&dual_timer0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/hi3519.dtsi b/arch/arm/boot/dts/hi3519.dtsi
-new file mode 100644
-index 0000000..50b736e
---- /dev/null
-+++ b/arch/arm/boot/dts/hi3519.dtsi
-@@ -0,0 +1,142 @@
-+/*
-+ * Copyright (c) 2015 HiSilicon Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ *
-+ */
-+
-+#include "skeleton.dtsi"
-+#include <dt-bindings/clock/hi3519-clock.h>
-+/ {
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0>;
-+		};
-+	};
-+
-+	gic: interrupt-controller@10300000 {
-+		compatible = "arm,cortex-a7-gic";
-+		#interrupt-cells = <3>;
-+		interrupt-controller;
-+		reg = <0x10301000 0x1000>, <0x10302000 0x1000>;
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		interrupt-parent = <&gic>;
-+		ranges;
-+
-+		amba {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "arm,amba-bus";
-+			ranges;
-+
-+			uart0: serial@12100000 {
-+				compatible = "arm,pl011", "arm,primecell";
-+				reg = <0x12100000 0x1000>;
-+				interrupts = <0 4 4>;
-+				clocks = <&crg HI3519_UART0_CLK>;
-+				clock-names = "apb_pclk";
-+				status = "disable";
-+			};
-+
-+			uart1: serial@12101000 {
-+				compatible = "arm,pl011", "arm,primecell";
-+				reg = <0x12101000 0x1000>;
-+				interrupts = <0 5 4>;
-+				clocks = <&crg HI3519_UART1_CLK>;
-+				clock-names = "apb_pclk";
-+				status = "disable";
-+			};
-+
-+			uart2: serial@12102000 {
-+				compatible = "arm,pl011", "arm,primecell";
-+				reg = <0x12102000 0x1000>;
-+				interrupts = <0 6 4>;
-+				clocks = <&crg HI3519_UART2_CLK>;
-+				clock-names = "apb_pclk";
-+				status = "disable";
-+			};
-+
-+			uart3: serial@12103000 {
-+				compatible = "arm,pl011", "arm,primecell";
-+				reg = <0x12103000 0x1000>;
-+				interrupts = <0 7 4>;
-+				clocks = <&crg HI3519_UART3_CLK>;
-+				clock-names = "apb_pclk";
-+				status = "disable";
-+			};
-+
-+			uart4: serial@12104000 {
-+				compatible = "arm,pl011", "arm,primecell";
-+				reg = <0x12104000 0x1000>;
-+				interrupts = <0 8 4>;
-+				clocks = <&crg HI3519_UART4_CLK>;
-+				clock-names = "apb_pclk";
-+				status = "disable";
-+			};
-+
-+			dual_timer0: timer@12000000 {
-+				compatible = "arm,sp804", "arm,primecell";
-+				interrupts = <0 64 4>, <0 65 4>;
-+				reg = <0x12000000 0x1000>;
-+				clocks = <&crg HI3519_FIXED_3M>;
-+				status = "disable";
-+			};
-+
-+			dual_timer1: timer@12001000 {
-+				compatible = "arm,sp804", "arm,primecell";
-+				interrupts = <0 66 4>, <0 67 4>;
-+				reg = <0x12001000 0x1000>;
-+				clocks = <&crg HI3519_FIXED_3M>;
-+				status = "disable";
-+			};
-+
-+			dual_timer2: timer@12002000 {
-+				compatible = "arm,sp804", "arm,primecell";
-+				interrupts = <0 68 4>, <0 69 4>;
-+				reg = <0x12002000 0x1000>;
-+				clocks = <&crg HI3519_FIXED_3M>;
-+				status = "disable";
-+			};
-+		};
-+
-+		sysctrl: system-controller@12020000 {
-+			compatible = "hisilicon,hi3519-sysctrl", "syscon";
-+			reg = <0x12020000 0x1000>;
-+		};
-+
-+		reboot {
-+			compatible = "syscon-reboot";
-+			regmap = <&sysctrl>;
-+			offset = <0x4>;
-+			mask = <0xdeadbeef>;
-+		};
-+
-+		crg: clock-reset-controller@12010000 {
-+			compatible = "hisilicon,hi3519-crg";
-+			#clock-cells = <1>;
-+			#reset-cells = <2>;
-+			reg = <0x12010000 0x10000>;
-+		};
-+	};
-+};
--- 
-1.9.1
+Patrice
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+On 12/10/2015 06:08 PM, Linus Walleij wrote:
+> On Tue, Dec 1, 2015 at 10:53 AM, Maxime Coquelin
+> <mcoquelin.stm32@gmail.com> wrote:
+>> 2015-10-17 19:23 GMT+02:00 Maxime Coquelin <mcoquelin.stm32@gmail.com>:
+>>> This patch adds pinctrl and GPIO support to STMicroelectronic's STM32
+>>> family of MCUs.
+>>>
+>>> While it only supports STM32F429 for now, it has been designed to enable
+>>> support of other MCUs of the family (e.g. STM32F746).
+>>>
+>>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>>> ---
+>>>   drivers/pinctrl/Kconfig                   |    1 +
+>>>   drivers/pinctrl/Makefile                  |    1 +
+>>>   drivers/pinctrl/stm32/Kconfig             |   16 +
+>>>   drivers/pinctrl/stm32/Makefile            |    5 +
+>>>   drivers/pinctrl/stm32/pinctrl-stm32.c     |  856 +++++++++++++++
+>>>   drivers/pinctrl/stm32/pinctrl-stm32.h     |   43 +
+>>>   drivers/pinctrl/stm32/pinctrl-stm32f429.c | 1598 +++++++++++++++++++++++++++++
+>>>   7 files changed, 2520 insertions(+)
+>>>   create mode 100644 drivers/pinctrl/stm32/Kconfig
+>>>   create mode 100644 drivers/pinctrl/stm32/Makefile
+>>>   create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32.c
+>>>   create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32.h
+>>>   create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32f429.c
+>>>
+>> Gentle reminder, do you know when you will be able to review this driver?
+> I'm a bit overloaded so reviewing of large chunks of code takes time.
+>
+> It would be great if I could have some Reviewed-by tags from someone
+> else who's familiar with pin control.
+>
+> Patrice: do you have a chance to review this driver and help us?
+>
+> Yours,
+> Linus Walleij
+
