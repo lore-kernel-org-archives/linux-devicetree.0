@@ -1,98 +1,29 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: dts: ls1021a: add sata node to dts
-Date: Fri, 11 Dec 2015 22:41:19 +0800
-Message-ID: <20151211144119.GM11252@tiger>
-References: <1449040591-13618-1-git-send-email-Yuantian.Tang@freescale.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] MAINTAINERS: Add missing platform maintainers for dts files
+Date: Fri, 11 Dec 2015 15:41:48 +0100
+Message-ID: <1757938.8OWaE16eiQ@wuerfel>
+References: <1449790703-12054-1-git-send-email-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1449040591-13618-1-git-send-email-Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1449790703-12054-1-git-send-email-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Liviu Dudau <liviu.dudau@arm.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Florian Fainelli <f.fainelli@gmail.com>, Viresh Kumar <vireshk@kernel.org>, Wei Xu <xuwei5@hisilicon.com>, Kukjin Kim <kgene@kernel.org>, David Brown <davidb@codeaurora.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ray Jui <rjui@broadcom.com>, Andy Gross <agross@codeaurora.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, Barry Song <baohua@kernel.org>, Eric Miao <eric.y.miao@gmail.com>, Scott Branden <sbranden@broadcom.com>, Sudeep Holla <sudeep.holla@arm.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Shiraz
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 02, 2015 at 03:16:31PM +0800, Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
-> From: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Thursday 10 December 2015 17:38:23 Rob Herring wrote:
+> Platform dts files need to be reviewed primarily by the platform
+> maintainers as dts files typically go in thru their trees. Add the missing
+> paths where there are existing maintainers listed.
 > 
-> Added sata node to ls1021aqds and ls1021atwr board to support
-> sata function.
+> Signed-off-by: Rob Herring <robh@kernel.org>
 > 
-> Signed-off-by: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
-> v3:
-> 	- refine the title and commit message
-> 	- added a status property so that sata can be controlled
-> 	by board specific dts.
-> v2:
-> 	- put reg-names right after reg property
-> 
->  arch/arm/boot/dts/ls1021a-qds.dts |  4 ++++
->  arch/arm/boot/dts/ls1021a-twr.dts |  4 ++++
->  arch/arm/boot/dts/ls1021a.dtsi    | 11 +++++++++++
->  3 files changed, 19 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/ls1021a-qds.dts b/arch/arm/boot/dts/ls1021a-qds.dts
-> index 0521e68..803cc54 100644
-> --- a/arch/arm/boot/dts/ls1021a-qds.dts
-> +++ b/arch/arm/boot/dts/ls1021a-qds.dts
-> @@ -327,3 +327,7 @@
->  &uart1 {
->  	status = "okay";
->  };
-> +
-> +&sata {
-> +	status = "okay";
-> +};
 
-The labelled nodes are sorted alphabetically.  Please keep the new
-addition sorted too.
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-> diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
-> index fbb89d1..62dec7c 100644
-> --- a/arch/arm/boot/dts/ls1021a-twr.dts
-> +++ b/arch/arm/boot/dts/ls1021a-twr.dts
-> @@ -219,3 +219,7 @@
->  &uart1 {
->  	status = "okay";
->  };
-> +
-> +&sata {
-> +	status = "okay";
-> +};
+Do you want to collect the Acks and take this through your git tree, so should
+we pick it up into arm-soc?
 
-Ditto
-
-Shawn
-
-> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-> index 9430a99..da9bd7e 100644
-> --- a/arch/arm/boot/dts/ls1021a.dtsi
-> +++ b/arch/arm/boot/dts/ls1021a.dtsi
-> @@ -143,6 +143,17 @@
->  			status = "disabled";
->  		};
->  
-> +		sata: sata@3200000 {
-> +			compatible = "fsl,ls1021a-ahci";
-> +			reg = <0x0 0x3200000 0x0 0x10000>,
-> +			      <0x0 0x20220520 0x0 0x4>;
-> +			reg-names = "ahci", "sata-ecc";
-> +			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&platform_clk 1>;
-> +			dma-coherent;
-> +			status = "disabled";
-> +		};
-> +
->  		scfg: scfg@1570000 {
->  			compatible = "fsl,ls1021a-scfg", "syscon";
->  			reg = <0x0 0x1570000 0x0 0x10000>;
-> -- 
-> 2.1.0.27.g96db324
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
