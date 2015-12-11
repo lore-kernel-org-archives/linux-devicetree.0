@@ -1,89 +1,53 @@
-From: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: [PATCH v3 2/3] usb: renesas_usbhs: add fallback compatibility strings
-Date: Fri, 11 Dec 2015 11:12:26 +0900
-Message-ID: <1449799947-19866-3-git-send-email-horms+renesas@verge.net.au>
-References: <1449799947-19866-1-git-send-email-horms+renesas@verge.net.au>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449799947-19866-1-git-send-email-horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 0/4] PCI: rcar, rcar-gen2: More Gen2 compatibility
+ strings
+Date: Fri, 11 Dec 2015 11:14:34 +0900
+Message-ID: <20151211021434.GH9927@verge.net.au>
+References: <1449096700-23304-1-git-send-email-horms+renesas@verge.net.au>
+ <20151209183743.GH31930@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151209183743.GH31930@localhost>
+Sender: linux-sh-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add fallback compatibility strings for R-Car Gen2 and Gen3.
-This is in keeping with the fallback scheme being adopted wherever
-appropriate for drivers for Renesas SoCs.
+On Wed, Dec 09, 2015 at 12:37:43PM -0600, Bjorn Helgaas wrote:
+> On Thu, Dec 03, 2015 at 07:51:36AM +0900, Simon Horman wrote:
+> > Hi,
+> > 
+> > this short series adds generic gen2 and SoC-specific r8a7793 compatibility
+> > strings to the rcar PCI and rcar-gen2 PCIE drivers. The intention is to
+> > provide a complete set of compatibility strings for known Gen2 SoCs.
+> > 
+> > Key Changes in v2:
+> > * Include "rcar-" in generic bindings
+> > 
+> > Simon Horman (4):
+> >   PCI: rcar-gen2: add gen2 fallback compatibility string
+> >   PCI: rcar-gen2: add device tree support for r8a7793
+> >   PCI: rcar: add gen2 fallback compatibility string
+> >   PCI: rcar: add device tree support for r8a7793
+> > 
+> >  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 12 ++++++++++--
+> >  Documentation/devicetree/bindings/pci/rcar-pci.txt      | 14 +++++++++++---
+> >  drivers/pci/host/pci-rcar-gen2.c                        |  1 +
+> >  drivers/pci/host/pcie-rcar.c                            |  1 +
+> >  4 files changed, 23 insertions(+), 5 deletions(-)
+> 
+> I applied these:
+> 
+> >   PCI: rcar-gen2: add gen2 fallback compatibility string
+> >   PCI: rcar: add gen2 fallback compatibility string
+> 
+> to pci/host-rcar for v4.5, thanks!
+> 
+> I haven't applied the R8A7793 binding documentation updates yet, but
+> I'll be happy to do so given a short description of why they're
+> useful (since they don't update a DT or the driver).  Or they could be
+> merged via a DT tree.
 
-Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
----
-v3
-* Moved documentation of SoC names to a separate patch
-* Use correct fallback compatibility string in example
-
-v2
-* Add R-Car Gen2 and Gen3 fallback compatibility strings rather than
-  a single compatibility string for all of R-Car.
----
- Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 10 +++++++++-
- drivers/usb/renesas_usbhs/common.c                      |  9 +++++++++
- 2 files changed, 18 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-index a14c0bb561d5..c55cf77006d0 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-@@ -2,10 +2,18 @@ Renesas Electronics USBHS driver
- 
- Required properties:
-   - compatible: Must contain one of the following:
-+
- 	- "renesas,usbhs-r8a7790" for r8a7790 (R-Car H2) compatible device
- 	- "renesas,usbhs-r8a7791" for r8a7791 (R-Car M2-W) compatible device
- 	- "renesas,usbhs-r8a7794" for r8a7794 (R-Car E2) compatible device
- 	- "renesas,usbhs-r8a7795" for r8a7795 (R-Car H3) compatible device
-+	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 compatible device
-+	- "renesas,rcar-gen3-usbhs" for R-Car Gen3 compatible device
-+
-+	When compatible with the generic version, nodes must list the
-+	SoC-specific version corresponding to the platform first followed
-+	by the generic version.
-+
-   - reg: Base address and length of the register for the USBHS
-   - interrupts: Interrupt specifier for the USBHS
-   - clocks: A list of phandle + clock specifier pairs
-@@ -22,7 +30,7 @@ Optional properties:
- 
- Example:
- 	usbhs: usb@e6590000 {
--		compatible = "renesas,usbhs-r8a7790";
-+		compatible = "renesas,usbhs-r8a7790", "renesas,rcar-gen2-usbhs";
- 		reg = <0 0xe6590000 0 0x100>;
- 		interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
-diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
-index d82fa36c3465..db9a17bd8997 100644
---- a/drivers/usb/renesas_usbhs/common.c
-+++ b/drivers/usb/renesas_usbhs/common.c
-@@ -481,6 +481,15 @@ static const struct of_device_id usbhs_of_match[] = {
- 		.compatible = "renesas,usbhs-r8a7795",
- 		.data = (void *)USBHS_TYPE_RCAR_GEN2,
- 	},
-+	{
-+		.compatible = "renesas,rcar-gen2-usbhs",
-+		.data = (void *)USBHS_TYPE_RCAR_GEN2,
-+	},
-+	{
-+		/* Gen3 is compatible with Gen2 */
-+		.compatible = "renesas,rcar-gen3-usbhs",
-+		.data = (void *)USBHS_TYPE_RCAR_GEN2,
-+	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, usbhs_of_match);
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+To clarify: you would like a description in the changelog?
