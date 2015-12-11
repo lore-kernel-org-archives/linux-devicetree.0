@@ -1,24 +1,41 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 0/2] ARM: dts: uniphier: clean up DTSIs by factoring the common parts out
-Date: Sat, 12 Dec 2015 00:25:07 +0100
-Message-ID: <1607894.RCo1YJBxOY@wuerfel>
-References: <1449124437-18479-1-git-send-email-yamada.masahiro@socionext.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] ARM: dts: rockchip: add core rk3228 dtsi
+Date: Sat, 12 Dec 2015 00:42:05 +0100
+Message-ID: <12513641.smzfGNJzGr@diego>
+References: <1449797452-19389-1-git-send-email-jeffy.chen@rock-chips.com> <1449797452-19389-4-git-send-email-jeffy.chen@rock-chips.com> <1537775.lkITlqtJgh@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449124437-18479-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, arm@kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1537775.lkITlqtJgh@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 03 December 2015 15:33:55 Masahiro Yamada wrote:
-> Masahiro Yamada (2):
->   ARM: dts: uniphier: change IRQ number of UART3 of PH1-Pro4 SoC
->   ARM: dts: uniphier: factor out common nodes to uniphier-common32.dtsi
-> 
+Am Freitag, 11. Dezember 2015, 12:25:32 schrieb Heiko St=FCbner:
+> Hi Jeffy,
+>=20
+> Am Freitag, 11. Dezember 2015, 09:30:51 schrieb Jeffy Chen:
+> > Initial release for rk3228 shared dtsi.
+> >=20
+> > Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>=20
+> Booth dts look good now, just need to wait on Linus Walleij picking u=
+p the
+> pinctrl patch first.
 
-Applied both to next/dt, thanks!
+as the pinctrl change got picked up, I've now also applied the two dts=20
+patches. I've added the missing entry for=20
+Documentation/devicetree/bindings/arm/rockchip.txt myself now, please k=
+eep=20
+that in mind for future boards :-) .
 
-	Arnd
+
+Thanks
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
