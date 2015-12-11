@@ -1,75 +1,151 @@
-From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 0/7] mtd: partitions: add of_match_table support
-Date: Fri, 11 Dec 2015 16:34:10 +0100
-Message-ID: <CAOMqctQVMCEa_k4xMW1qooEpe8X1-NhUOjD6pp0qJpDP_H+8hw@mail.gmail.com>
-References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
- <CAMuHMdUJXHs_OhT0da+kzc=D4MOFUT9BB3eJ+7a_p6DYx-PKBA@mail.gmail.com>
- <20151210205449.GL144338@google.com> <CAMuHMdV-uethsChWVZGSx1JNcAofODmg14ppGYJP2ewfwhEv1Q@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 2/3] ehci-platform: Add support for
+ controllers with multiple reset lines
+Date: Fri, 11 Dec 2015 16:41:59 +0100
+Message-ID: <1449848520-27379-2-git-send-email-hdegoede@redhat.com>
+References: <1449848520-27379-1-git-send-email-hdegoede@redhat.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdV-uethsChWVZGSx1JNcAofODmg14ppGYJP2ewfwhEv1Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, David Hendricks <dhendrix-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBU65VOZQKGQE3GPGJZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1449848520-27379-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Josh Triplett <josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org>, Rashika Kheria <rashika.kheria-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11 December 2015 at 09:44, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> Hi Brian,
->
-> On Thu, Dec 10, 2015 at 9:54 PM, Brian Norris
-> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Sat, Dec 05, 2015 at 11:15:54AM +0100, Geert Uytterhoeven wrote:
->>> On Sat, Dec 5, 2015 at 6:19 AM, Brian Norris
->>> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> > There have been several discussions [1] about adding a device tree binding for
->>> > associating flash devices with the partition parser(s) that are used on the
->>> > flash. There are a few reasons:
->>> >
->>> >  (1) drivers shouldn't have to be encoding platform knowledge by listing what
->>> >      parsers might be used on a given system (this is the currently all that's
->>> >      supported)
->>> >  (2) we can't just scan for all supported parsers (like the block system does), since
->>> >      there is a wide diversity of "formats" (no standardization), and it is not
->>> >      always safe or efficient to attempt to do so, particularly since many of
->>> >      them allow their data structures to be placed anywhere on the flash, and
->>> >      so require scanning the entire flash device to find them.
->>>
->>> I read the second reason, but would it be useful to (partially) merge
->>> block/partitions/ and drivers/mtd/partitions/, so I can use e.g. msdos
->>> partitions
->>> on an mtd device??
->>
->> I kinda agree with Michal: is there a good use case?
->
-> I don't have an immediate use case.
-> Just looking at it from a high-level viewpoint.
->
->> Really, MTD partitioning is not a highly-scalable design. Particularly,
->> it's not typically that well-suited to large (read: unreliable) NAND
->> flash, where fixing partitions at the raw flash level mostly serves to
->> restrict UBI's ability to wear-level across the device. For that sort of
->> case, it's best if people are using UBI volumes on a (mostly?)
->> unpartitioned MTD, instead of using MTD partitions as the main
->> separation mechanism. Also, most partition designs (either MTD or block)
->> aren't very robust against bitflips, read disturb, etc.
->>
->> IOW, I wouldn't expect MBR or GPT to work well on large raw NAND flash,
->> and so I don't plan to do that sort of work myself. If you can provide
->> some better argument for it, and some nice maintainable code to go with
->> it, then of course it could be considered :)
->
-> There's also NOR FLASH (e.g. SPI-NOR), which is what most boards I'm
-> working on have.
->
+From: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
 
-Yes, you can dump the content of a NOR flash to a file, attach a loop
-device to it, and if block devices had the ability to use flash
-partitioning access the different partitions.
+At least the EHCI/OHCI found on the Allwinnner H3 SoC needs multiple
+reset lines, the controller will not initialize while the reset for
+its companion is still asserted, which means we need to de-assert
+2 resets for the controller to work.
 
-Maybe it would be more useful to use some kind of mtdloop, though.
-There might even be one already. I never needed it.
+Signed-off-by: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v2:
+-Use the new reset_control_[de]assert_shared reset-controller functions
+---
+ Documentation/devicetree/bindings/usb/usb-ehci.txt |  2 +-
+ drivers/usb/host/ehci-platform.c                   | 47 +++++++++++++---------
+ 2 files changed, 30 insertions(+), 19 deletions(-)
 
-Thanks
-
-Michal
+diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+index a12d601..0701812 100644
+--- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+@@ -18,7 +18,7 @@ Optional properties:
+  - clocks : a list of phandle + clock specifier pairs
+  - phys : phandle + phy specifier pair
+  - phy-names : "usb"
+- - resets : phandle + reset specifier pair
++ - resets : a list of phandle + reset specifier pairs
+ 
+ Example (Sequoia 440EPx):
+     ehci@e0000300 {
+diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+index bd7082f2..6fbf32a 100644
+--- a/drivers/usb/host/ehci-platform.c
++++ b/drivers/usb/host/ehci-platform.c
+@@ -39,11 +39,12 @@
+ 
+ #define DRIVER_DESC "EHCI generic platform driver"
+ #define EHCI_MAX_CLKS 3
++#define EHCI_MAX_RESETS 2
+ #define hcd_to_ehci_priv(h) ((struct ehci_platform_priv *)hcd_to_ehci(h)->priv)
+ 
+ struct ehci_platform_priv {
+ 	struct clk *clks[EHCI_MAX_CLKS];
+-	struct reset_control *rst;
++	struct reset_control *resets[EHCI_MAX_RESETS];
+ 	struct phy **phys;
+ 	int num_phys;
+ 	bool reset_on_resume;
+@@ -149,7 +150,7 @@ static int ehci_platform_probe(struct platform_device *dev)
+ 	struct usb_ehci_pdata *pdata = dev_get_platdata(&dev->dev);
+ 	struct ehci_platform_priv *priv;
+ 	struct ehci_hcd *ehci;
+-	int err, irq, phy_num, clk = 0;
++	int err, irq, phy_num, clk = 0, rst = 0;
+ 
+ 	if (usb_disabled())
+ 		return -ENODEV;
+@@ -232,18 +233,24 @@ static int ehci_platform_probe(struct platform_device *dev)
+ 				break;
+ 			}
+ 		}
+-	}
+ 
+-	priv->rst = devm_reset_control_get_optional(&dev->dev, NULL);
+-	if (IS_ERR(priv->rst)) {
+-		err = PTR_ERR(priv->rst);
+-		if (err == -EPROBE_DEFER)
+-			goto err_put_clks;
+-		priv->rst = NULL;
+-	} else {
+-		err = reset_control_deassert(priv->rst);
+-		if (err)
+-			goto err_put_clks;
++		for (rst = 0; rst < EHCI_MAX_RESETS; rst++) {
++			priv->resets[rst] =
++				of_reset_control_get_by_index(dev->dev.of_node,
++							      rst);
++			if (IS_ERR(priv->resets[rst])) {
++				err = PTR_ERR(priv->resets[rst]);
++				if (err == -EPROBE_DEFER)
++					goto err_reset;
++				priv->resets[rst] = NULL;
++				break;
++			}
++			err = reset_control_deassert_shared(priv->resets[rst]);
++			if (err) {
++				reset_control_put(priv->resets[rst]);
++				goto err_reset;
++			}
++		}
+ 	}
+ 
+ 	if (pdata->big_endian_desc)
+@@ -300,8 +307,10 @@ err_power:
+ 	if (pdata->power_off)
+ 		pdata->power_off(dev);
+ err_reset:
+-	if (priv->rst)
+-		reset_control_assert(priv->rst);
++	while (--rst >= 0) {
++		reset_control_assert_shared(priv->resets[rst]);
++		reset_control_put(priv->resets[rst]);
++	}
+ err_put_clks:
+ 	while (--clk >= 0)
+ 		clk_put(priv->clks[clk]);
+@@ -319,15 +328,17 @@ static int ehci_platform_remove(struct platform_device *dev)
+ 	struct usb_hcd *hcd = platform_get_drvdata(dev);
+ 	struct usb_ehci_pdata *pdata = dev_get_platdata(&dev->dev);
+ 	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
+-	int clk;
++	int clk, rst;
+ 
+ 	usb_remove_hcd(hcd);
+ 
+ 	if (pdata->power_off)
+ 		pdata->power_off(dev);
+ 
+-	if (priv->rst)
+-		reset_control_assert(priv->rst);
++	for (rst = 0; rst < EHCI_MAX_RESETS && priv->resets[rst]; rst++) {
++		reset_control_assert_shared(priv->resets[rst]);
++		reset_control_put(priv->resets[rst]);
++	}
+ 
+ 	for (clk = 0; clk < EHCI_MAX_CLKS && priv->clks[clk]; clk++)
+ 		clk_put(priv->clks[clk]);
+-- 
+2.5.0
