@@ -1,65 +1,171 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: sun7i: Add audio codec to
- Itead Ibox
-Date: Fri, 11 Dec 2015 12:00:04 +0100
-Message-ID: <20151211110004.GN27957@lukather>
-References: <1449599344-15544-1-git-send-email-codekipper@gmail.com>
- <1449599344-15544-2-git-send-email-codekipper@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx53: fix EIM_D27/29 pad UART2 configuration
+Date: Fri, 11 Dec 2015 19:04:20 +0800
+Message-ID: <20151211110420.GC11252@tiger>
+References: <1449496084-11122-1-git-send-email-linux-kernel-dev@beckhoff.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+rbkueAQrkWPpfRR"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBNOZVKZQKGQEFXTDBCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1449599344-15544-2-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1449496084-11122-1-git-send-email-linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Patrick =?iso-8859-1?Q?Br=FCnn?= <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---+rbkueAQrkWPpfRR
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Mon, Dec 07, 2015 at 02:48:04PM +0100, linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org=
+ wrote:
+> From: Patrick Br=FCnn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
+>=20
+> On Tue, Dec 1, 2015 at 20:52:25 PST, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org wrote:
+> > On Thu, Nov 26, 2015 at 11:59:15AM +0100, linux-kernel-dev@beckhoff=
+=2Ecom wrote:
+> >> MX53_PAD_EIM_D27__UART2_RXD_MUX and MX53_PAD_EIM_D29__UART2_RTS in=
+put_val must be configured as 0 instead of 1 to have UART2 muxed on EIM=
+ pins working
+> >
+> > I'm not sure why you think that.  But the i.MX53 Reference Manual i=
+n my hands doesn't agree with that.  It says ...
+> >>=20
+> >> Signed-off-by: Patrick Br=FCnn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
+> >> ---
+> >>  arch/arm/boot/dts/imx53-pinfunc.h | 4 ++--
+> >>  1 file changed, 2 insertions(+), 2 deletions(-)
+> >>=20
+> >> diff --git a/arch/arm/boot/dts/imx53-pinfunc.h b/arch/arm/boot/dts=
+/imx53-pinfunc.h
+> >> index aec406b..a4c973d 100644
+> >> --- a/arch/arm/boot/dts/imx53-pinfunc.h
+> >> +++ b/arch/arm/boot/dts/imx53-pinfunc.h
+> >> @@ -532,7 +532,7 @@
+> >>  #define MX53_PAD_EIM_D26__IPU_DISP1_DAT_22			0x144 0x48c 0x000 0x=
+7 0x0
+> >>  #define MX53_PAD_EIM_D27__EMI_WEIM_D_27				0x148 0x490 0x000 0x0 =
+0x0
+> >>  #define MX53_PAD_EIM_D27__GPIO3_27				0x148 0x490 0x000 0x1 0x0
+> >> -#define MX53_PAD_EIM_D27__UART2_RXD_MUX				0x148 0x490 0x880 0x2 =
+0x1
+> >> +#define MX53_PAD_EIM_D27__UART2_RXD_MUX				0x148 0x490 0x880 0x2 =
+0x0
+> >
+> > IOMUXC_UART2_IPP_UART_RXD_MUX_SELECT_INPUT DAISY field descriptions
+> >
+> > 000 - Selecting Pad: EIM_D26 for Mode: ALT2.
+> > 001 - Selecting Pad: EIM_D27 for Mode: ALT2.
+> > 010 - Selecting Pad: PATA_DMARQ for Mode: ALT3.
+> > 011 - Selecting Pad: PATA_BUFFER_EN for Mode: ALT3.
+> > 100 - Selecting Pad: GPIO_7 for Mode: ALT4.
+> > 101 - Selecting Pad: GPIO_8 for Mode: ALT4.
+>=20
+>=20
+> Thanks for the hint. I had a closer look at the reference manual and =
+our schematics. Of course, you are right. The defines are good as they =
+are, my patch was stupid.
+>=20
+> I just realized RXD and TXD are inverted on our hardware (CX9020 Embe=
+dded PC). Which requires a pinmux configuration like this:
+> EIM_D26->UART2_RXD
+> EIM_D27->UART2_TXD
+> EIM_D28->UART2_RTS
+> EIM_D29->UART2_CTS
+>=20
+> In my opinion the reference manual allows such a configuration, but I=
+ am not sure if it's appropriate for mainline.
+>=20
+> Would you accept a patch like the following:
 
-Hi,
+No, I'm not going to accept it.  But it doesn't mean you cannot define
+and use it in your own board DTS file.
 
-On Tue, Dec 08, 2015 at 07:29:04PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Shawn
 
-A commit log would be nice :)
-
+>=20
+> >8------------------------------------------------------8<
+> ARM: dts: imx53: add EIM pad config for UART2
+>=20
+> Add another pinmux configuration to mux UART2 on EIM pads:
+>=20
+> EIM_D26->UART2_RXD
+> EIM_D27->UART2_TXD
+> EIM_D28->UART2_RTS
+> EIM_D29->UART2_CTS
+>=20
+> Signed-off-by: Patrick Br=FCnn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
 > ---
->  arch/arm/boot/dts/sun7i-a20-itead-ibox.dts | 4 ++++
+>  arch/arm/boot/dts/imx53-pinfunc.h | 4 ++++
 >  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
-> index 90ff677..0950b59 100644
-> --- a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
-> +++ b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
-> @@ -70,6 +70,10 @@
->  	status = "okay";
->  };
->  
-> +&codec {
-> +	status = "okay";
-> +};
-> +
-
-This can be squashed in the previous patch.
-
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---+rbkueAQrkWPpfRR--
+>=20
+> diff --git a/arch/arm/boot/dts/imx53-pinfunc.h b/arch/arm/boot/dts/im=
+x53-pinfunc.h
+> index aec406b..7d26d16 100644
+> --- a/arch/arm/boot/dts/imx53-pinfunc.h
+> +++ b/arch/arm/boot/dts/imx53-pinfunc.h
+> @@ -525,6 +525,7 @@
+>  #define MX53_PAD_EIM_D26__EMI_WEIM_D_26                             =
+   0x144 0x48c 0x000 0x0 0x0
+>  #define MX53_PAD_EIM_D26__GPIO3_26                             0x144=
+ 0x48c 0x000 0x1 0x0
+>  #define MX53_PAD_EIM_D26__UART2_TXD_MUX                             =
+   0x144 0x48c 0x000 0x2 0x0
+> +#define MX53_PAD_EIM_D26__UART2_RXD_MUX                             =
+   0x144 0x48c 0x880 0x2 0x0
+>  #define MX53_PAD_EIM_D26__FIRI_RXD                             0x144=
+ 0x48c 0x80c 0x3 0x0
+>  #define MX53_PAD_EIM_D26__IPU_CSI0_D_1                         0x144=
+ 0x48c 0x000 0x4 0x0
+>  #define MX53_PAD_EIM_D26__IPU_DI1_PIN11                             =
+   0x144 0x48c 0x000 0x5 0x0
+> @@ -532,6 +533,7 @@
+>  #define MX53_PAD_EIM_D26__IPU_DISP1_DAT_22                     0x144=
+ 0x48c 0x000 0x7 0x0
+>  #define MX53_PAD_EIM_D27__EMI_WEIM_D_27                             =
+   0x148 0x490 0x000 0x0 0x0
+>  #define MX53_PAD_EIM_D27__GPIO3_27                             0x148=
+ 0x490 0x000 0x1 0x0
+> +#define MX53_PAD_EIM_D27__UART2_TXD_MUX                             =
+   0x148 0x490 0x000 0x2 0x0
+>  #define MX53_PAD_EIM_D27__UART2_RXD_MUX                             =
+   0x148 0x490 0x880 0x2 0x1
+>  #define MX53_PAD_EIM_D27__FIRI_TXD                             0x148=
+ 0x490 0x000 0x3 0x0
+>  #define MX53_PAD_EIM_D27__IPU_CSI0_D_0                         0x148=
+ 0x490 0x000 0x4 0x0
+> @@ -541,6 +543,7 @@
+>  #define MX53_PAD_EIM_D28__EMI_WEIM_D_28                             =
+   0x14c 0x494 0x000 0x0 0x0
+>  #define MX53_PAD_EIM_D28__GPIO3_28                             0x14c=
+ 0x494 0x000 0x1 0x0
+>  #define MX53_PAD_EIM_D28__UART2_CTS                            0x14c=
+ 0x494 0x000 0x2 0x0
+> +#define MX53_PAD_EIM_D28__UART2_RTS                            0x14c=
+ 0x494 0x87c 0x2 0x0
+>  #define MX53_PAD_EIM_D28__IPU_DISPB0_SER_DIO                   0x14c=
+ 0x494 0x82c 0x3 0x1
+>  #define MX53_PAD_EIM_D28__CSPI_MOSI                            0x14c=
+ 0x494 0x788 0x4 0x1
+>  #define MX53_PAD_EIM_D28__I2C1_SDA                             0x14c=
+ 0x494 0x818 0x5 0x1
+> @@ -548,6 +551,7 @@
+>  #define MX53_PAD_EIM_D28__IPU_DI0_PIN13                             =
+   0x14c 0x494 0x000 0x7 0x0
+>  #define MX53_PAD_EIM_D29__EMI_WEIM_D_29                             =
+   0x150 0x498 0x000 0x0 0x0
+>  #define MX53_PAD_EIM_D29__GPIO3_29                             0x150=
+ 0x498 0x000 0x1 0x0
+> +#define MX53_PAD_EIM_D29__UART2_CTS                            0x150=
+ 0x498 0x000 0x2 0x0
+>  #define MX53_PAD_EIM_D29__UART2_RTS                            0x150=
+ 0x498 0x87c 0x2 0x1
+>  #define MX53_PAD_EIM_D29__IPU_DISPB0_SER_RS                    0x150=
+ 0x498 0x000 0x3 0x0
+>  #define MX53_PAD_EIM_D29__CSPI_SS0                             0x150=
+ 0x498 0x78c 0x4 0x2
+> --
+> 1.9.1
+>=20
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
