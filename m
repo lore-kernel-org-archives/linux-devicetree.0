@@ -1,27 +1,28 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 3/3] arm64: dts: r8a7795: Add pmu device nodes
-Date: Sat, 12 Dec 2015 08:07:55 +0900
-Message-ID: <20151211230755.GE6496@verge.net.au>
-References: <1449236333-4410-1-git-send-email-dirk.behme@gmail.com>
- <1449236333-4410-3-git-send-email-dirk.behme@gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH] arm: dts: rockchip: Fix typo in rk32288 sdmmc card detect pin name
+Date: Sat, 12 Dec 2015 00:08:17 +0100
+Message-ID: <1649282.ILIgoNi0K6@diego>
+References: <1449845158-8284-1-git-send-email-mbrugger@suse.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1449236333-4410-3-git-send-email-dirk.behme@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Dirk Behme <dirk.behme@gmail.com>
-Cc: linux-sh@vger.kernel.org, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Yoshifumi Hosoya <yoshifumi.hosoya.wj@renesas.com>, Masaru Nagai <masaru.nagai.vx@renesas.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1449845158-8284-1-git-send-email-mbrugger@suse.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <mbrugger@suse.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, olof@lixom.net, lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 04, 2015 at 02:38:53PM +0100, Dirk Behme wrote:
-> From: Yoshifumi Hosoya <yoshifumi.hosoya.wj@renesas.com>
-> 
-> Enabling the performance monitor unit on r8a7795.
-> 
-> Signed-off-by: Masaru Nagai <masaru.nagai.vx@renesas.com>
-> Signed-off-by: Yoshifumi Hosoya <yoshifumi.hosoya.wj@renesas.com>
-> Sigend-off-by: Dirk Behme <dirk.behme@gmail.com>
+Hi Matthias,
 
-I took the liberty of correcting the spelling of "Signed" when
-queuing up this patch for v4.5.
+Am Freitag, 11. Dezember 2015, 15:45:58 schrieb Matthias Brugger:
+> The card detect pin is currently called sdmcc-cd.
+> This patch fixes the typo and renames the pin to sdmmc-cd.
+> 
+> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+
+applied to my dts32 branch for 4.5, after fixing the rk32288 in the subject
+
+
+Thanks
+Heiko
