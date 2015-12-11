@@ -1,54 +1,237 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 3/7] ARM: hisi: add dt_machine definition for Hi3519
-Date: Fri, 11 Dec 2015 09:21:06 -0600
-Message-ID: <20151211152106.GB21272@rob-hp-laptop>
-References: <1449819921-18464-1-git-send-email-xuejiancheng@huawei.com>
- <1449819921-18464-4-git-send-email-xuejiancheng@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1449819921-18464-4-git-send-email-xuejiancheng@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jiancheng Xue <xuejiancheng@huawei.com>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v4 1/2] phy-sun4i-usb: Use of_match_node to get model specific config data
+Date: Fri, 11 Dec 2015 16:32:17 +0100
+Message-ID: <1449847938-20836-1-git-send-email-hdegoede@redhat.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: "Reinder E.N. de Haan" <reinder-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 11, 2015 at 03:45:17PM +0800, Jiancheng Xue wrote:
-> add dt_machine definition for hi3519.
-> 
-> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
-> ---
->  arch/arm/mach-hisi/hisilicon.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/arch/arm/mach-hisi/hisilicon.c b/arch/arm/mach-hisi/hisilicon.c
-> index 8cc6215..010d8a2 100644
-> --- a/arch/arm/mach-hisi/hisilicon.c
-> +++ b/arch/arm/mach-hisi/hisilicon.c
-> @@ -81,3 +81,12 @@ static const char *const hip01_compat[] __initconst = {
->  DT_MACHINE_START(HIP01, "Hisilicon HIP01 (Flattened Device Tree)")
->  	.dt_compat      = hip01_compat,
->  MACHINE_END
-> +
-> +static const char *const hi3519_compat[] __initconst = {
-> +	"hisilicon,hi3519",
-> +	NULL,
-> +};
+Use of_match_node instead of calling of_device_is_compatible a ton of
+times to get model specific config data.
 
-You should just have 1 mach desc with multiple compatible strings to 
-match against, not 1 mach desc per compatible string.
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v3:
+-New patch in v3 of this patch-set
+Changes in v4:
+-Use of_device_get_match_data()
+-Add phyctl_offset to sun4i_usb_phy_cfg, get rid of model specific code
+ for phyctl-reg in sun4i_usb_phy_write()
+---
+ drivers/phy/phy-sun4i-usb.c | 121 +++++++++++++++++++++++++++++---------------
+ 1 file changed, 79 insertions(+), 42 deletions(-)
 
-Rob
+diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+index b12964b..35b1fa3 100644
+--- a/drivers/phy/phy-sun4i-usb.c
++++ b/drivers/phy/phy-sun4i-usb.c
+@@ -32,6 +32,7 @@
+ #include <linux/mutex.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
++#include <linux/of_device.h>
+ #include <linux/of_gpio.h>
+ #include <linux/phy/phy.h>
+ #include <linux/phy/phy-sun4i-usb.h>
+@@ -88,12 +89,23 @@
+ #define DEBOUNCE_TIME			msecs_to_jiffies(50)
+ #define POLL_TIME			msecs_to_jiffies(250)
+ 
++enum sun4i_usb_phy_type {
++	sun4i_a10_phy,
++	sun8i_a33_phy,
++};
++
++struct sun4i_usb_phy_cfg {
++	int num_phys;
++	enum sun4i_usb_phy_type type;
++	u32 disc_thresh;
++	u8 phyctl_offset;
++	bool dedicated_clocks;
++};
++
+ struct sun4i_usb_phy_data {
+ 	void __iomem *base;
++	const struct sun4i_usb_phy_cfg *cfg;
+ 	struct mutex mutex;
+-	int num_phys;
+-	u32 disc_thresh;
+-	bool has_a33_phyctl;
+ 	struct sun4i_usb_phy {
+ 		struct phy *phy;
+ 		void __iomem *pmu;
+@@ -159,17 +171,14 @@ static void sun4i_usb_phy_write(struct sun4i_usb_phy *phy, u32 addr, u32 data,
+ {
+ 	struct sun4i_usb_phy_data *phy_data = to_sun4i_usb_phy_data(phy);
+ 	u32 temp, usbc_bit = BIT(phy->index * 2);
+-	void *phyctl;
++	void *phyctl = phy_data->base + phy_data->cfg->phyctl_offset;
+ 	int i;
+ 
+ 	mutex_lock(&phy_data->mutex);
+ 
+-	if (phy_data->has_a33_phyctl) {
+-		phyctl = phy_data->base + REG_PHYCTL_A33;
++	if (phy_data->cfg->type == sun8i_a33_phy) {
+ 		/* A33 needs us to set phyctl to 0 explicitly */
+ 		writel(0, phyctl);
+-	} else {
+-		phyctl = phy_data->base + REG_PHYCTL_A10;
+ 	}
+ 
+ 	for (i = 0; i < len; i++) {
+@@ -249,7 +258,8 @@ static int sun4i_usb_phy_init(struct phy *_phy)
+ 	sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
+ 
+ 	/* Disconnect threshold adjustment */
+-	sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL, data->disc_thresh, 2);
++	sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
++			    data->cfg->disc_thresh, 2);
+ 
+ 	sun4i_usb_phy_passby(phy, 1);
+ 
+@@ -476,7 +486,7 @@ static struct phy *sun4i_usb_phy_xlate(struct device *dev,
+ {
+ 	struct sun4i_usb_phy_data *data = dev_get_drvdata(dev);
+ 
+-	if (args->args[0] >= data->num_phys)
++	if (args->args[0] >= data->cfg->num_phys)
+ 		return ERR_PTR(-ENODEV);
+ 
+ 	return data->phys[args->args[0]].phy;
+@@ -511,7 +521,6 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node;
+ 	struct phy_provider *phy_provider;
+-	bool dedicated_clocks;
+ 	struct resource *res;
+ 	int i, ret;
+ 
+@@ -522,29 +531,9 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+ 	mutex_init(&data->mutex);
+ 	INIT_DELAYED_WORK(&data->detect, sun4i_usb_phy0_id_vbus_det_scan);
+ 	dev_set_drvdata(dev, data);
+-
+-	if (of_device_is_compatible(np, "allwinner,sun5i-a13-usb-phy") ||
+-	    of_device_is_compatible(np, "allwinner,sun8i-a23-usb-phy") ||
+-	    of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy"))
+-		data->num_phys = 2;
+-	else
+-		data->num_phys = 3;
+-
+-	if (of_device_is_compatible(np, "allwinner,sun5i-a13-usb-phy") ||
+-	    of_device_is_compatible(np, "allwinner,sun7i-a20-usb-phy"))
+-		data->disc_thresh = 2;
+-	else
+-		data->disc_thresh = 3;
+-
+-	if (of_device_is_compatible(np, "allwinner,sun6i-a31-usb-phy") ||
+-	    of_device_is_compatible(np, "allwinner,sun8i-a23-usb-phy") ||
+-	    of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy"))
+-		dedicated_clocks = true;
+-	else
+-		dedicated_clocks = false;
+-
+-	if (of_device_is_compatible(np, "allwinner,sun8i-a33-usb-phy"))
+-		data->has_a33_phyctl = true;
++	data->cfg = of_device_get_match_data(dev);
++	if (!data->cfg)
++		return -EINVAL;
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy_ctrl");
+ 	data->base = devm_ioremap_resource(dev, res);
+@@ -590,7 +579,7 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	for (i = 0; i < data->num_phys; i++) {
++	for (i = 0; i < data->cfg->num_phys; i++) {
+ 		struct sun4i_usb_phy *phy = data->phys + i;
+ 		char name[16];
+ 
+@@ -602,7 +591,7 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+ 			phy->vbus = NULL;
+ 		}
+ 
+-		if (dedicated_clocks)
++		if (data->cfg->dedicated_clocks)
+ 			snprintf(name, sizeof(name), "usb%d_phy", i);
+ 		else
+ 			strlcpy(name, "usb_phy", sizeof(name));
+@@ -689,13 +678,61 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct sun4i_usb_phy_cfg sun4i_a10_cfg = {
++	.num_phys = 3,
++	.type = sun4i_a10_phy,
++	.disc_thresh = 3,
++	.phyctl_offset = REG_PHYCTL_A10,
++	.dedicated_clocks = false,
++};
++
++static const struct sun4i_usb_phy_cfg sun5i_a13_cfg = {
++	.num_phys = 2,
++	.type = sun4i_a10_phy,
++	.disc_thresh = 2,
++	.phyctl_offset = REG_PHYCTL_A10,
++	.dedicated_clocks = false,
++};
++
++static const struct sun4i_usb_phy_cfg sun6i_a31_cfg = {
++	.num_phys = 3,
++	.type = sun4i_a10_phy,
++	.disc_thresh = 3,
++	.phyctl_offset = REG_PHYCTL_A10,
++	.dedicated_clocks = true,
++};
++
++static const struct sun4i_usb_phy_cfg sun7i_a20_cfg = {
++	.num_phys = 3,
++	.type = sun4i_a10_phy,
++	.disc_thresh = 2,
++	.phyctl_offset = REG_PHYCTL_A10,
++	.dedicated_clocks = false,
++};
++
++static const struct sun4i_usb_phy_cfg sun8i_a23_cfg = {
++	.num_phys = 2,
++	.type = sun4i_a10_phy,
++	.disc_thresh = 3,
++	.phyctl_offset = REG_PHYCTL_A10,
++	.dedicated_clocks = true,
++};
++
++static const struct sun4i_usb_phy_cfg sun8i_a33_cfg = {
++	.num_phys = 2,
++	.type = sun8i_a33_phy,
++	.disc_thresh = 3,
++	.phyctl_offset = REG_PHYCTL_A33,
++	.dedicated_clocks = true,
++};
++
+ static const struct of_device_id sun4i_usb_phy_of_match[] = {
+-	{ .compatible = "allwinner,sun4i-a10-usb-phy" },
+-	{ .compatible = "allwinner,sun5i-a13-usb-phy" },
+-	{ .compatible = "allwinner,sun6i-a31-usb-phy" },
+-	{ .compatible = "allwinner,sun7i-a20-usb-phy" },
+-	{ .compatible = "allwinner,sun8i-a23-usb-phy" },
+-	{ .compatible = "allwinner,sun8i-a33-usb-phy" },
++	{ .compatible = "allwinner,sun4i-a10-usb-phy", .data = &sun4i_a10_cfg },
++	{ .compatible = "allwinner,sun5i-a13-usb-phy", .data = &sun5i_a13_cfg },
++	{ .compatible = "allwinner,sun6i-a31-usb-phy", .data = &sun6i_a31_cfg },
++	{ .compatible = "allwinner,sun7i-a20-usb-phy", .data = &sun7i_a20_cfg },
++	{ .compatible = "allwinner,sun8i-a23-usb-phy", .data = &sun8i_a23_cfg },
++	{ .compatible = "allwinner,sun8i-a33-usb-phy", .data = &sun8i_a33_cfg },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, sun4i_usb_phy_of_match);
+-- 
+2.5.0
 
-> +
-> +DT_MACHINE_START(HI3519_DT, "Hisilicon Hi3519")
-> +	.dt_compat	= hi3519_compat,
-> +MACHINE_END
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
