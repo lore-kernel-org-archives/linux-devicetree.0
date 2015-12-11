@@ -1,147 +1,75 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 2/2] phy-sun4i-usb: Add support for the host usb-phys found on the H3 SoC
-Date: Fri, 11 Dec 2015 16:32:18 +0100
-Message-ID: <1449847938-20836-2-git-send-email-hdegoede@redhat.com>
-References: <1449847938-20836-1-git-send-email-hdegoede@redhat.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449847938-20836-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: "Reinder E.N. de Haan" <reinder-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 0/7] mtd: partitions: add of_match_table support
+Date: Fri, 11 Dec 2015 16:34:10 +0100
+Message-ID: <CAOMqctQVMCEa_k4xMW1qooEpe8X1-NhUOjD6pp0qJpDP_H+8hw@mail.gmail.com>
+References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
+ <CAMuHMdUJXHs_OhT0da+kzc=D4MOFUT9BB3eJ+7a_p6DYx-PKBA@mail.gmail.com>
+ <20151210205449.GL144338@google.com> <CAMuHMdV-uethsChWVZGSx1JNcAofODmg14ppGYJP2ewfwhEv1Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdV-uethsChWVZGSx1JNcAofODmg14ppGYJP2ewfwhEv1Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, David Hendricks <dhendrix-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+On 11 December 2015 at 09:44, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> Hi Brian,
+>
+> On Thu, Dec 10, 2015 at 9:54 PM, Brian Norris
+> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Sat, Dec 05, 2015 at 11:15:54AM +0100, Geert Uytterhoeven wrote:
+>>> On Sat, Dec 5, 2015 at 6:19 AM, Brian Norris
+>>> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> > There have been several discussions [1] about adding a device tree binding for
+>>> > associating flash devices with the partition parser(s) that are used on the
+>>> > flash. There are a few reasons:
+>>> >
+>>> >  (1) drivers shouldn't have to be encoding platform knowledge by listing what
+>>> >      parsers might be used on a given system (this is the currently all that's
+>>> >      supported)
+>>> >  (2) we can't just scan for all supported parsers (like the block system does), since
+>>> >      there is a wide diversity of "formats" (no standardization), and it is not
+>>> >      always safe or efficient to attempt to do so, particularly since many of
+>>> >      them allow their data structures to be placed anywhere on the flash, and
+>>> >      so require scanning the entire flash device to find them.
+>>>
+>>> I read the second reason, but would it be useful to (partially) merge
+>>> block/partitions/ and drivers/mtd/partitions/, so I can use e.g. msdos
+>>> partitions
+>>> on an mtd device??
+>>
+>> I kinda agree with Michal: is there a good use case?
+>
+> I don't have an immediate use case.
+> Just looking at it from a high-level viewpoint.
+>
+>> Really, MTD partitioning is not a highly-scalable design. Particularly,
+>> it's not typically that well-suited to large (read: unreliable) NAND
+>> flash, where fixing partitions at the raw flash level mostly serves to
+>> restrict UBI's ability to wear-level across the device. For that sort of
+>> case, it's best if people are using UBI volumes on a (mostly?)
+>> unpartitioned MTD, instead of using MTD partitions as the main
+>> separation mechanism. Also, most partition designs (either MTD or block)
+>> aren't very robust against bitflips, read disturb, etc.
+>>
+>> IOW, I wouldn't expect MBR or GPT to work well on large raw NAND flash,
+>> and so I don't plan to do that sort of work myself. If you can provide
+>> some better argument for it, and some nice maintainable code to go with
+>> it, then of course it could be considered :)
+>
+> There's also NOR FLASH (e.g. SPI-NOR), which is what most boards I'm
+> working on have.
+>
 
-Note this commit only adds support for phys 1-3, phy 0, the otg phy, is
-not yet (fully) supported after this commit.
+Yes, you can dump the content of a NOR flash to a file, attach a loop
+device to it, and if block devices had the ability to use flash
+partitioning access the different partitions.
 
-Signed-off-by: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
-Changes in v2:
--Change break; after dev_err() to return, as intended, fixing a compiler
- warning (the dev_err case should never be reached)
-Changes in v3:
--Use of_match_node to get model specific config data
-Changes in v4:
--Adjust to v4 of "Use of_match_node to get model specific config data" patch
----
- .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  1 +
- drivers/phy/phy-sun4i-usb.c                        | 41 +++++++++++++++++-----
- 2 files changed, 33 insertions(+), 9 deletions(-)
+Maybe it would be more useful to use some kind of mtdloop, though.
+There might even be one already. I never needed it.
 
-diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-index 0cebf74..95736d7 100644
---- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-@@ -9,6 +9,7 @@ Required properties:
-   * allwinner,sun7i-a20-usb-phy
-   * allwinner,sun8i-a23-usb-phy
-   * allwinner,sun8i-a33-usb-phy
-+  * allwinner,sun8i-h3-usb-phy
- - reg : a list of offset + length pairs
- - reg-names :
-   * "phy_ctrl"
-diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-index 35b1fa3..bae54f7 100644
---- a/drivers/phy/phy-sun4i-usb.c
-+++ b/drivers/phy/phy-sun4i-usb.c
-@@ -47,6 +47,9 @@
- #define REG_PHYBIST			0x08
- #define REG_PHYTUNE			0x0c
- #define REG_PHYCTL_A33			0x10
-+#define REG_PHY_UNK_H3			0x20
-+
-+#define REG_PMU_UNK_H3			0x10
- 
- #define PHYCTL_DATA			BIT(7)
- 
-@@ -80,7 +83,7 @@
- #define PHY_DISCON_TH_SEL		0x2a
- #define PHY_SQUELCH_DETECT		0x3c
- 
--#define MAX_PHYS			3
-+#define MAX_PHYS			4
- 
- /*
-  * Note do not raise the debounce time, we must report Vusb high within 100ms
-@@ -92,6 +95,7 @@
- enum sun4i_usb_phy_type {
- 	sun4i_a10_phy,
- 	sun8i_a33_phy,
-+	sun8i_h3_phy,
- };
- 
- struct sun4i_usb_phy_cfg {
-@@ -239,6 +243,7 @@ static int sun4i_usb_phy_init(struct phy *_phy)
- 	struct sun4i_usb_phy *phy = phy_get_drvdata(_phy);
- 	struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
- 	int ret;
-+	u32 val;
- 
- 	ret = clk_prepare_enable(phy->clk);
- 	if (ret)
-@@ -250,16 +255,26 @@ static int sun4i_usb_phy_init(struct phy *_phy)
- 		return ret;
- 	}
- 
--	/* Enable USB 45 Ohm resistor calibration */
--	if (phy->index == 0)
--		sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
-+	if (data->cfg->type == sun8i_h3_phy) {
-+		if (phy->index == 0) {
-+			val = readl(data->base + REG_PHY_UNK_H3);
-+			writel(val & ~1, data->base + REG_PHY_UNK_H3);
-+		}
-+
-+		val = readl(phy->pmu + REG_PMU_UNK_H3);
-+		writel(val & ~2, phy->pmu + REG_PMU_UNK_H3);
-+	} else {
-+		/* Enable USB 45 Ohm resistor calibration */
-+		if (phy->index == 0)
-+			sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
- 
--	/* Adjust PHY's magnitude and rate */
--	sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
-+		/* Adjust PHY's magnitude and rate */
-+		sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
- 
--	/* Disconnect threshold adjustment */
--	sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
--			    data->cfg->disc_thresh, 2);
-+		/* Disconnect threshold adjustment */
-+		sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
-+				    data->cfg->disc_thresh, 2);
-+	}
- 
- 	sun4i_usb_phy_passby(phy, 1);
- 
-@@ -726,6 +741,13 @@ static const struct sun4i_usb_phy_cfg sun8i_a33_cfg = {
- 	.dedicated_clocks = true,
- };
- 
-+static const struct sun4i_usb_phy_cfg sun8i_h3_cfg = {
-+	.num_phys = 4,
-+	.type = sun8i_h3_phy,
-+	.disc_thresh = 3,
-+	.dedicated_clocks = true,
-+};
-+
- static const struct of_device_id sun4i_usb_phy_of_match[] = {
- 	{ .compatible = "allwinner,sun4i-a10-usb-phy", .data = &sun4i_a10_cfg },
- 	{ .compatible = "allwinner,sun5i-a13-usb-phy", .data = &sun5i_a13_cfg },
-@@ -733,6 +755,7 @@ static const struct of_device_id sun4i_usb_phy_of_match[] = {
- 	{ .compatible = "allwinner,sun7i-a20-usb-phy", .data = &sun7i_a20_cfg },
- 	{ .compatible = "allwinner,sun8i-a23-usb-phy", .data = &sun8i_a23_cfg },
- 	{ .compatible = "allwinner,sun8i-a33-usb-phy", .data = &sun8i_a33_cfg },
-+	{ .compatible = "allwinner,sun8i-h3-usb-phy", .data = &sun8i_h3_cfg },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, sun4i_usb_phy_of_match);
--- 
-2.5.0
+Thanks
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Michal
