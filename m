@@ -1,131 +1,165 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH] net/macb: add support for resetting PHY using GPIO
-Date: Fri, 11 Dec 2015 10:40:22 +0100
-Message-ID: <87wpsl727t.fsf@free-electrons.com>
-References: <1449683383-5022-1-git-send-email-gregory.clement@free-electrons.com>
-	<20151210073756.GA11966@pengutronix.de>
-	<871tau8hpj.fsf@free-electrons.com>
-	<20151211084630.GW11966@pengutronix.de>
+From: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/8] Add MT8173 Video Encoder Driver and VPU Driver
+Date: Fri, 11 Dec 2015 17:55:35 +0800
+Message-ID: <1449827743-22895-1-git-send-email-tiffany.lin@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151211084630.GW11966@pengutronix.de> (Sascha Hauer's message
-	of "Fri, 11 Dec 2015 09:46:30 +0100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: "David S. Miller" <davem@davemloft.net>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Mikhail Ulyanov <mikhail.ulyanov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+Cc: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Hsiao <daniel.hsiao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sascha,
-=20
- On ven., d=C3=A9c. 11 2015, Sascha Hauer <s.hauer@pengutronix.de> wrot=
-e:
+==============
+ Introduction
+==============
 
-> On Thu, Dec 10, 2015 at 04:08:08PM +0100, Gregory CLEMENT wrote:
->> Hi Sascha,
->> =20
->>  On jeu., d=C3=A9c. 10 2015, Sascha Hauer <s.hauer@pengutronix.de> w=
-rote:
->>=20
->> > Hi Gregory,
->> >
->> > On Wed, Dec 09, 2015 at 06:49:43PM +0100, Gregory CLEMENT wrote:
->> >> With device tree it is no more possible to reset the PHY at board
->> >> level. Furthermore, doing in the driver allow to power down the P=
-HY when
->> >> the network interface is no more used.
->> >>=20
->> >> The patch introduces a new optional property "phy-reset-gpio" ins=
-pired
->> >> from the one use for the FEC.
->> >
->> > I don't think it's a good idea to further extend the usage of this
->> > binding. The driver should use the phy-handle property and
->> > of_phy_connect() which gives you a proper device node for the phy.=
- Then
->> > the phy device node should get the reset gpio. I know it's more wo=
-rk,
->>=20
->> So you suggest to pass from this binding:
->> macb1: ethernet@fc028000 {
->> 	phy-mode =3D "rmii";
->> 	status =3D "okay";
->> 	#address-cells =3D <1>;
->> 	#size-cells =3D <0>;
->> 	status =3D "okay";
->> 	phy-reset-gpio =3D <&pioE 6 GPIO_ACTIVE_HIGH>;
->>=20
->> 	ethernet-phy@1 {
->> 		reg =3D <0x1>;
->> 		interrupt-parent =3D <&pioB>;
->> 		interrupts =3D <31 IRQ_TYPE_EDGE_FALLING>;
->>=20
->> 	};
->> };
->>=20
->> to this binding
->> macb1: ethernet@fc028000 {
->> 	phy-mode =3D "rmii";
->> 	status =3D "okay";
->> 	#address-cells =3D <1>;
->> 	#size-cells =3D <0>;
->> 	status =3D "okay";
->>=20
->> 	ethernet-phy@1 {
->> 		reg =3D <0x1>;
->> 		interrupt-parent =3D <&pioB>;
->> 		interrupts =3D <31 IRQ_TYPE_EDGE_FALLING>;
->>                 phy-reset-gpio =3D <&pioE 6 GPIO_ACTIVE_HIGH>;
->> 	};
->> };
->
-> s/phy-reset-gpio/reset-gpios/, but yes.
+The purpose of this RFC is to discuss the driver for a hw video codec
+embedded in the Mediatek's MT8173 SoCs. Mediatek Video Codec is able to
+handle video encoding of in a range of formats.
 
-So I took this way. But I had several issues. The first one was that to
-be able to create a phy device it must first be detected by
-get_phy_device from of_mdiobus_register_phy.  But in order to be
-detected it must answer during the scan of the mii bus. That means we
-can't bind the gpio to the device in order to use it because when we
-need to manage the reset gpio the device is not yet created.
+This RFC also include VPU driver. Mediatek Video Codec driver rely on
+VPU driver to load, communicate with VPU.
 
-So I see 2 options:
+Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI.
+MTK IOMMU and MTK SMI have not yet been merged, but we wanted to start
+discussion about the driver earlier so it could be merged sooner. The
+driver posted here is the initial version, so I suppose it will require
+more work.
 
-- leaving the phy-reset-gpios property in the ethernet node. Thanks to
-  this we can use the gpiod functions, and it is still possible to use
-  manage the power management.
+[1]http://lists.infradead.org/pipermail/linux-mediatek/2015-October/002525.html
 
-- using a reset-gpios property inside the phy node. But then the only
-  solution to get a reference on it, will be to use
-  of_get_named_gpio. All the gpiod functions need a reference to the
-  device that we won't have at this point. Also we will only be able to
-  power up the reset, but we won't have any reference to it latter.
+==================
+ Device interface
+==================
 
-Thanks,
+In principle the driver bases on memory-to-memory framework:
+it provides a single video node and each opened file handle gets its own
+private context with separate buffer queues. Each context consist of 2
+buffer queues: OUTPUT (for source buffers, i.e. raw video frames)
+and CAPTURE (for destination buffers, i.e. encoded video frames).
 
-Gregory
+The process of encoding video data from stream is a bit more complicated
+than typical memory-to-memory processing. We base on memory-to-memory
+framework and add the complicated part in our vb2 and v4l2 callback 
+functionss. So we can base on well done m2m memory-to-memory framework, 
+reduce duplicate code and make our driver code simple.
 
->
-> I had assumed you do not use a phy description in the device tree at =
-all
-> since the macb driver doesn't use of_phy_connect(). Apparently there =
-are
-> other possibilities to connect the phy device nodes with the phys
->
-> Sascha
->
-> --=20
-> Pengutronix e.K.                           |                         =
-    |
-> Industrial Linux Solutions                 | http://www.pengutronix.d=
-e/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0=
-    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5=
-555 |
+==============================
+ VPU (Video Processor Unit)
+==============================
+The VPU driver for hw video codec embedded in Mediatek's MT8173 SOCs.
+It is able to handle video decoding/encoding of in a range of formats.
+The driver provides with VPU firmware download, memory management and
+the communication interface between CPU and VPU.
+For VPU initialization, it will create virtual memory for CPU access and
+IOMMU address for vcodec hw device access. When a decode/encode instance
+opens a device node, vpu driver will download vpu firmware to the device.
+A decode/encode instant will decode/encode a frame using VPU 
+interface to interrupt vpu to handle decoding/encoding jobs.
 
---=20
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Please have a look at the code and comments will be very much appreciated.
+
+Change in v2:
+Vcodec Part
+1.Remove common and include directory in mtk-vcodec
+2.Refine vb2ops_venc_start_streaming and vb2ops_venc_stop_streaming and state machine
+3.Remove venc_if_init and venc_if_deinit
+4.Refine debug message
+5.Refine lab and vpu decription in mediatek-vcodec.txt
+
+VPU Part
+1. Modify VPU Kconfig
+2. Move encoder header files to other patch sets
+3. Remove marcos for extended virtual/iova address
+4. Change register and variable names
+5. Add a reference counter for VPU watchdog
+6. Remove one busy waiting in function vpu_ipi_send
+7. Operate VPU clock in VPU driver (not called by encoder drivers)
+8. Refine memory mapping, firmware download and extended memory allocation/free functions
+9. Release more allocated resources in driver remove function
+
+Andrew-CT Chen (2):
+  dt-bindings: Add a binding for Mediatek Video Processor
+  [Media] vcodec: mediatek: Add Mediatek V4L2 Video Encoder Driver
+
+Tiffany Lin (6):
+  arm64: dts: mediatek: Add node for Mediatek Video Processor Unit
+  [media] VPU: mediatek: support Mediatek VPU
+  dt-bindings: Add a binding for Mediatek Video Encoder
+  arm64: dts: mediatek: Add Video Encoder for MT8173
+  [media] vcodec: mediatek: Add Mediatek VP8 Video Encoder Driver
+  [media] vcodec: mediatek: Add Mediatek H264 Video Encoder Driver
+
+ .../devicetree/bindings/media/mediatek-vcodec.txt  |   58 +
+ .../devicetree/bindings/media/mediatek-vpu.txt     |   27 +
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           |   58 +
+ drivers/media/platform/Kconfig                     |   21 +
+ drivers/media/platform/Makefile                    |    4 +
+ drivers/media/platform/mtk-vcodec/Makefile         |   11 +
+ .../media/platform/mtk-vcodec/h264_enc/Makefile    |    8 +
+ .../platform/mtk-vcodec/h264_enc/venc_h264_if.c    |  495 ++++++
+ .../platform/mtk-vcodec/h264_enc/venc_h264_if.h    |  161 ++
+ .../platform/mtk-vcodec/h264_enc/venc_h264_vpu.c   |  316 ++++
+ .../platform/mtk-vcodec/h264_enc/venc_h264_vpu.h   |   30 +
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h |  412 +++++
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c | 1670 ++++++++++++++++++++
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.h |   45 +
+ .../media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c |  469 ++++++
+ .../media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c  |  122 ++
+ .../media/platform/mtk-vcodec/mtk_vcodec_intr.c    |  102 ++
+ .../media/platform/mtk-vcodec/mtk_vcodec_intr.h    |   29 +
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_pm.h  |   26 +
+ .../media/platform/mtk-vcodec/mtk_vcodec_util.c    |  106 ++
+ .../media/platform/mtk-vcodec/mtk_vcodec_util.h    |   85 +
+ drivers/media/platform/mtk-vcodec/venc_drv_base.h  |   62 +
+ drivers/media/platform/mtk-vcodec/venc_drv_if.c    |  108 ++
+ drivers/media/platform/mtk-vcodec/venc_drv_if.h    |  174 ++
+ drivers/media/platform/mtk-vcodec/venc_ipi_msg.h   |  212 +++
+ drivers/media/platform/mtk-vcodec/vp8_enc/Makefile |    8 +
+ .../platform/mtk-vcodec/vp8_enc/venc_vp8_if.c      |  384 +++++
+ .../platform/mtk-vcodec/vp8_enc/venc_vp8_if.h      |  141 ++
+ .../platform/mtk-vcodec/vp8_enc/venc_vp8_vpu.c     |  221 +++
+ .../platform/mtk-vcodec/vp8_enc/venc_vp8_vpu.h     |   28 +
+ drivers/media/platform/mtk-vpu/Makefile            |    1 +
+ drivers/media/platform/mtk-vpu/mtk_vpu.c           |  859 ++++++++++
+ drivers/media/platform/mtk-vpu/mtk_vpu.h           |  149 ++
+ 33 files changed, 6602 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek-vpu.txt
+ create mode 100644 drivers/media/platform/mtk-vcodec/Makefile
+ create mode 100644 drivers/media/platform/mtk-vcodec/h264_enc/Makefile
+ create mode 100644 drivers/media/platform/mtk-vcodec/h264_enc/venc_h264_if.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/h264_enc/venc_h264_if.h
+ create mode 100644 drivers/media/platform/mtk-vcodec/h264_enc/venc_h264_vpu.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/h264_enc/venc_h264_vpu.h
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.h
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_intr.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_intr.h
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_pm.h
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_util.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_util.h
+ create mode 100644 drivers/media/platform/mtk-vcodec/venc_drv_base.h
+ create mode 100644 drivers/media/platform/mtk-vcodec/venc_drv_if.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/venc_drv_if.h
+ create mode 100644 drivers/media/platform/mtk-vcodec/venc_ipi_msg.h
+ create mode 100644 drivers/media/platform/mtk-vcodec/vp8_enc/Makefile
+ create mode 100644 drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_if.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_if.h
+ create mode 100644 drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_vpu.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_vpu.h
+ create mode 100644 drivers/media/platform/mtk-vpu/Makefile
+ create mode 100644 drivers/media/platform/mtk-vpu/mtk_vpu.c
+ create mode 100644 drivers/media/platform/mtk-vpu/mtk_vpu.h
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
