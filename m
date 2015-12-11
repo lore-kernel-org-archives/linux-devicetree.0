@@ -1,28 +1,170 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH] arm64: dts: Fix typo in rk3368 card detect binding
-Date: Fri, 11 Dec 2015 15:35:04 +0100
-Message-ID: <8411276.uRATKJsWEo@diego>
-References: <1449840139-32420-1-git-send-email-mbrugger@suse.com>
+From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 2/4] Documentation, dt, arm64/arm: dt bindings for numa.
+Date: Fri, 11 Dec 2015 20:11:07 +0530
+Message-ID: <CAFpQJXXopH4_GjE=dX0+NPcfwzRgErEFVMkGd57K+4=YZPDVsw@mail.gmail.com>
+References: <1447780843-9223-1-git-send-email-gkulkarni@caviumnetworks.com>
+	<1447780843-9223-3-git-send-email-gkulkarni@caviumnetworks.com>
+	<20151211135307.GB20666@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449840139-32420-1-git-send-email-mbrugger@suse.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <mbrugger@suse.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, olof@lixom.net, lorenzo.pieralisi@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151211135307.GB20666@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Robert Richter <rrichter@>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
+On Fri, Dec 11, 2015 at 7:23 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> Hi,
+>
+> On Tue, Nov 17, 2015 at 10:50:41PM +0530, Ganapatrao Kulkarni wrote:
+>> DT bindings for numa mapping of memory, cores and IOs.
+>>
+>> Reviewed-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+>
+> Overall this looks good to me. However, I have a couple of concerns.
+thanks.
+>
+>> ---
+>>  Documentation/devicetree/bindings/arm/numa.txt | 272 +++++++++++++++++++++++++
+>>  1 file changed, 272 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/numa.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/numa.txt b/Documentation/devicetree/bindings/arm/numa.txt
+>> new file mode 100644
+>> index 0000000..b87bf4f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/numa.txt
+>> @@ -0,0 +1,272 @@
+>> +==============================================================================
+>> +NUMA binding description.
+>> +==============================================================================
+>> +
+>> +==============================================================================
+>> +1 - Introduction
+>> +==============================================================================
+>> +
+>> +Systems employing a Non Uniform Memory Access (NUMA) architecture contain
+>> +collections of hardware resources including processors, memory, and I/O buses,
+>> +that comprise what is commonly known as a NUMA node.
+>> +Processor accesses to memory within the local NUMA node is generally faster
+>> +than processor accesses to memory outside of the local NUMA node.
+>> +DT defines interfaces that allow the platform to convey NUMA node
+>> +topology information to OS.
+>> +
+>> +==============================================================================
+>> +2 - numa-node-id
+>> +==============================================================================
+>> +The device node property numa-node-id describes numa domains within a
+>> +machine. This property can be used in device nodes like cpu, memory, bus and
+>> +devices to map to respective numa nodes.
+>> +
+>> +numa-node-id property is a 32-bit integer which defines numa node id to which
+>> +this device node has numa domain association.
+>
+> I'd prefer if the above two paragraphs were replaced with:
+>
+>         For the purpose of identification, each NUMA node is associated
+>         with a unique token known as a node id. For the purpose of this
+>         binding a node id is a 32-bit integer.
+>
+>         A device node is associated with a NUMA node by the presence of
+>         a numa-node-id property which contains the node id of the
+>         device.
+ok, will do.
+>
+>> +
+>> +Example:
+>> +     /* numa node 0 */
+>> +     numa-node-id = <0>;
+>> +
+>> +     /* numa node 1 */
+>> +     numa-node-id = <1>;
+>> +
+>> +==============================================================================
+>> +3 - distance-map
+>> +==============================================================================
+>> +
+>> +The device tree node distance-map describes the relative
+>> +distance (memory latency) between all numa nodes.
+>
+> Is this not a combined approximation for latency and bandwidth?
+AFAIK, it is to represent inter-node memory access latency.
+>
+>> +- compatible : Should at least contain "numa,distance-map-v1".
+>
+> Please use "numa-distance-map-v1", as "numa" is not a vendor.
+ok
+>
+>> +- distance-matrix
+>> +  This property defines a matrix to describe the relative distances
+>> +  between all numa nodes.
+>> +  It is represented as a list of node pairs and their relative distance.
+>> +
+>> +  Note:
+>> +     1. Each entry represents distance from first node to second node.
+>> +     2. If both directions between 2 nodes have the same distance, only
+>> +            one entry is required.
+>
+> I still don't understand what direction means in this context. Are there
+> systems (of any architecture) which don't have symmetric distances?
+> Which accesses does this apply differently to?
+>
+> Given that, I think that it might be best to explicitly call out
+> distances as being equal, and leave any directionality for a later
+> revision of the binding when we have some semantics for directionality.
+agreed, given that there is no know system to substantiate dual direction,
+let us not explicit about direction.
+>
+>> +     2. distance-matrix shold have entries in lexicographical ascending order of nodes.
+>> +     3. There must be only one Device node distance-map and must reside in the root node.
+>> +
+>> +Example:
+>> +     4 nodes connected in mesh/ring topology as below,
+>> +
+>> +             0_______20______1
+>> +             |               |
+>> +             |               |
+>> +           20|               |20
+>> +             |               |
+>> +             |               |
+>> +             |_______________|
+>> +             3       20      2
+>> +
+>> +     if relative distance for each hop is 20,
+>> +     then inter node distance would be for this topology will be,
+>> +           0 -> 1 = 20
+>> +           1 -> 2 = 20
+>> +           2 -> 3 = 20
+>> +           3 -> 0 = 20
+>> +           0 -> 2 = 40
+>> +           1 -> 3 = 40
+>
+> How is this scaled relative to a local access?
+this is based on representing local distance with 10 and
+all inter-node latency being represented as multiple of 10.
 
-Am Freitag, 11. Dezember 2015, 14:22:19 schrieb Matthias Brugger:
-> The card detect pin is called sdmcc-cd.
-> This patch fixes the typo and renames the pin to sdmmc-cd.
-> 
-> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-
-applied to my arm64 dts branch, after fixing up the subject.
-
-
-Thanks
-Heiko
+>
+> Do we assume that a local access has value 1, e.g. each hop takes 20x a
+> local access in this example?
+The local distance is represented as 10, this is fixed and same as in ACPI.
+Inter-node distance can be any number greater than 10.
+this information can be added here to make it clear.
+>
+> Do we need a finer-grained scale (e.g. to allow us to represent a
+> distance of 2.5)? The ACPI SLIT spec seems to give local accesses a
+> value 10 implicitly to this end.
+yes, same as ACPI, local node is 10.
+>
+> Other than those points, I'm happy with this binding.
+>
+> Thanks,
+> Mark.
+>
+thanks
+Ganapat
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
