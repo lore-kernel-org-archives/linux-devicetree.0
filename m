@@ -1,62 +1,86 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: sunxi: allwinner,sun4i-a10-lradc-keys
- binding: typo fix
-Date: Thu, 10 Dec 2015 21:45:24 -0600
-Message-ID: <20151211034524.GA6166@rob-hp-laptop>
-References: <1449779521-754-1-git-send-email-merker@debian.org>
- <1449779521-754-4-git-send-email-merker@debian.org>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Subject: Re: [PATCH linux-next (v3) 1/2] reset: Add brcm,bcm6345-reset device
+ tree binding
+Date: Thu, 10 Dec 2015 21:47:22 -0600
+Message-ID: <20151211034722.GA6667@rob-hp-laptop>
+References: <5669EE86.8030406@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDJIP47K7MERBWUNVGZQKGQEBXOLN6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1449779521-754-4-git-send-email-merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+In-Reply-To: <5669EE86.8030406-qdVf85lJwsCyrPCCpiK2c/XRex20P6io@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 10, 2015 at 09:32:01PM +0100, Karsten Merker wrote:
-> Trivial typo fix ("mut" -> "must") in the sunxi LRADC-keys binding
-> documentation.
->=20
-> Signed-off-by: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
+On Thu, Dec 10, 2015 at 09:28:38PM +0000, Simon Arlott wrote:
+> Add device tree binding for the BCM6345 soft reset controller.
+> 
+> The BCM6345 contains a soft-reset controller activated by setting
+> a bit (that must previously have been cleared).
+> 
+> Signed-off-by: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt=
- b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-> index b9c32f6..4357e49 100644
-> --- a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-> +++ b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-> @@ -12,7 +12,7 @@ Each key is represented as a sub-node of "allwinner,sun=
-4i-a10-lradc-keys":
->  Required subnode-properties:
->  	- label: Descriptive name of the key.
->  	- linux,code: Keycode to emit.
-> -	- channel: Channel this key is attached to, mut be 0 or 1.
-> +	- channel: Channel this key is attached to, must be 0 or 1.
->  	- voltage: Voltage in =C2=B5V at lradc input when this key is pressed.
-> =20
->  Example:
-> --=20
-> 2.1.4
->=20
+> v3: Resend. Example has changed because usbh now has two compatible
+>     strings and uses a power domain instead of a regulator.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Not really all that important to this binding definition, so you can 
+keep my ack.
+
+> 
+> v2: Renamed to bcm6345, removed "mask" property.
+>     Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> 
+>  .../bindings/reset/brcm,bcm6345-reset.txt          | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.txt b/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.txt
+> new file mode 100644
+> index 0000000..0313040
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.txt
+> @@ -0,0 +1,33 @@
+> +Broadcom BCM6345 reset controller
+> +
+> +The BCM6345 contains a basic soft reset controller in the perf register
+> +set which resets components using a bit in a register.
+> +
+> +Please also refer to reset.txt in this directory for common reset
+> +controller binding usage.
+> +
+> +Required properties:
+> +- compatible:	Should be "brcm,bcm<soc>-reset", "brcm,bcm6345-reset"
+> +- regmap:	The register map phandle
+> +- offset:	Offset in the register map for the reset register (in bytes)
+> +- #reset-cells:	Must be set to 1
+> +
+> +Example:
+> +
+> +periph_soft_rst: reset-controller {
+> +	compatible = "brcm,bcm63168-reset", "brcm,bcm6345-reset";
+> +	regmap = <&periph_cntl>;
+> +	offset = <0x10>;
+> +
+> +	#reset-cells = <1>;
+> +};
+> +
+> +usbh: usbphy@10002700 {
+> +	compatible = "brcm,bcm63168-usbh", "brcm,bcm6328-usbh";
+> +	reg = <0x10002700 0x38>;
+> +	clocks = <&periph_clk 13>, <&timer_clk 18>;
+> +	resets = <&periph_soft_rst 6>;
+> +	power-domains = <&misc_iddq_ctrl 4>;
+> +	#phy-cells = <0>;
+> +};
+> +
+> -- 
+> 2.1.4
+> 
+> -- 
+> Simon Arlott
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
