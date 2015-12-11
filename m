@@ -1,45 +1,37 @@
 From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH v3 1/3] usb: renesas_usbhs: add SoC names to compatibility string documentation
-Date: Fri, 11 Dec 2015 11:12:25 +0900
-Message-ID: <1449799947-19866-2-git-send-email-horms+renesas@verge.net.au>
-References: <1449799947-19866-1-git-send-email-horms+renesas@verge.net.au>
+Subject: [PATCH v3 0/3] usb: renesas_usbhs: More compat strings
+Date: Fri, 11 Dec 2015 11:12:24 +0900
+Message-ID: <1449799947-19866-1-git-send-email-horms+renesas@verge.net.au>
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1449799947-19866-1-git-send-email-horms+renesas@verge.net.au>
 Sender: linux-sh-owner@vger.kernel.org
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-This extends the documentation of compatibility strings a little to
-include the SoC names.
+Hi,
 
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
----
-v3
-* Split into separate patch
----
- Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+this short series adds generic, and soc-specific r8a7792 and r8a7793 compat
+strings to the Renesas USBHS driver. The intention is to provide a complete
+set of compat strings for known R-Car SoCs.
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-index 7d48f63db44e..a14c0bb561d5 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-@@ -2,10 +2,10 @@ Renesas Electronics USBHS driver
- 
- Required properties:
-   - compatible: Must contain one of the following:
--	- "renesas,usbhs-r8a7790"
--	- "renesas,usbhs-r8a7791"
--	- "renesas,usbhs-r8a7794"
--	- "renesas,usbhs-r8a7795"
-+	- "renesas,usbhs-r8a7790" for r8a7790 (R-Car H2) compatible device
-+	- "renesas,usbhs-r8a7791" for r8a7791 (R-Car M2-W) compatible device
-+	- "renesas,usbhs-r8a7794" for r8a7794 (R-Car E2) compatible device
-+	- "renesas,usbhs-r8a7795" for r8a7795 (R-Car H3) compatible device
-   - reg: Base address and length of the register for the USBHS
-   - interrupts: Interrupt specifier for the USBHS
-   - clocks: A list of phandle + clock specifier pairs
+Changes since v2:
+* Split documentation of SoC names into separate patch
+* Use correct fallback compatibility string in example
+
+Changes since v1:
+* Add R-Car Gen2 and Gen3 fallback compatibility strings rather than
+  a single compatibility string for all of R-Car.
+
+Simon Horman (3):
+  usb: renesas_usbhs: add SoC names to compatibility string
+    documentation
+  usb: renesas_usbhs: add fallback compatibility strings
+  usb: renesas_usbhs: add device tree support for r8a779[23]
+
+ .../devicetree/bindings/usb/renesas_usbhs.txt        | 20 +++++++++++++++-----
+ drivers/usb/renesas_usbhs/common.c                   |  9 +++++++++
+ 2 files changed, 24 insertions(+), 5 deletions(-)
+
 -- 
 2.1.4
 
