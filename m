@@ -1,85 +1,52 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] extcon-usb-gpio: add enable pin support
-Date: Fri, 11 Dec 2015 21:33:18 +0300
-Message-ID: <566B16EE.5080206@cogentembedded.com>
-References: <4393960.B6dD3UkQy3@wasted.cogentembedded.com>
- <20151211035312.GA9088@rob-hp-laptop>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: mvebu: add kirkwood compatibles for cloudengine boards
+Date: Fri, 11 Dec 2015 19:34:10 +0100
+Message-ID: <CACRpkdYaj3fkmSXoURaJXOP_5srUOtObZzxHoZzkPrqKRP+trg@mail.gmail.com>
+References: <1448578854-6256-1-git-send-email-linus.walleij@linaro.org>
+	<CACRpkdaJW6KLdnF4D2kyXuFeEyeNrM_epRodVmT2fQTUcBKbbQ@mail.gmail.com>
+	<87a8pj8ww7.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151211035312.GA9088@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87a8pj8ww7.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 12/11/2015 06:53 AM, Rob Herring wrote:
-
->> Sometimes  there's a real  OTG chip behind the USB ID signal mapped to a GPIO
->> pin: in my case it's Maxim Integrated MAX3355E which  integrates Vbus charge
->> pump and comparators and passes  thru the ID  signal  from an OTG connector.
->> This chip also has the SHDN# pin which  should be  driven high for the normal
->> operation  and low to  save power;  it  is connected to a GPIO pin as well on,
->> hence  we'll have  to  teach the driver to parse the new optional device tree
->> property, "enable-gpio"...
+On Wed, Dec 9, 2015 at 4:27 PM, Gregory CLEMENT
+<gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi Linus,
 >
-> Some wierd spacing going on here.
-
-    I like my text properly filling up the given columns. What's the problem? :-)
-
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>
->> ---
->> The patch is against the 'extcon-next' branch of the 'extcon.git' repo.
->>
->>   Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt |    3 +++
->>   drivers/extcon/extcon-usb-gpio.c                             |    5 +++++
->>   2 files changed, 8 insertions(+)
->>
->> Index: extcon/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->> ===================================================================
->> --- extcon.orig/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->> +++ extcon/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->> @@ -7,6 +7,9 @@ Required properties:
->>   - compatible: Should be "linux,extcon-usb-gpio"
->>   - id-gpio: gpio for USB ID pin. See gpio binding.
->>
->> +Optional properties:
->> +- enable-gpio: gpio for the enable pin. See gpio binding.
+>  On mer., d=C3=A9c. 09 2015, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>=
+ wrote:
 >
-> Use -gpios as -gpio is deprecated.
-
-    Didn't know, thanks.
-
-[...]
->> Index: extcon/drivers/extcon/extcon-usb-gpio.c
->> ===================================================================
->> --- extcon.orig/drivers/extcon/extcon-usb-gpio.c
->> +++ extcon/drivers/extcon/extcon-usb-gpio.c
-[...]
->> @@ -99,6 +100,8 @@ static int usb_extcon_probe(struct platf
->>   		return -ENOMEM;
+>> On Fri, Nov 27, 2015 at 12:00 AM, Linus Walleij
+>> <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 >>
->>   	info->dev = dev;
->> +	info->enable_gpiod = devm_gpiod_get_optional(&pdev->dev, "enable",
->> +						     GPIOD_OUT_HIGH);
->>   	info->id_gpiod = devm_gpiod_get(&pdev->dev, "id", GPIOD_IN);
->>   	if (IS_ERR(info->id_gpiod)) {
->>   		dev_err(dev, "failed to get ID GPIO\n");
->> @@ -155,6 +158,8 @@ static int usb_extcon_remove(struct plat
+>>> This adds the compatible strings for Cloudengine PogoPlug E02 and
+>>> series 4. The former already has a devicetree in the kernel.
+>>>
+>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 >>
->>   	cancel_delayed_work_sync(&info->wq_detcable);
->>
->> +	gpiod_set_value_cansleep(info->enable_gpiod, 0);
+>> Kirkwood maintainers: are you queueing this patch with Rob's
+>> ACK?
+>
+> Actually I was waiting for a new version of the series with Adrew's
+> comment addressed in the 2nd patch before applying the whole series.
 
-> Shouldn't you support either polarity?
+OK I sent a new one of that earlier today, but I did not resend this on=
+e.
+I think it stand on its own though? The compatible string for the machi=
+ne
+was never target of review comments.
 
-    The gpiolib does that for me -- devm_gpiod_get_optional() should read the 
-polarity from DT.
-
-> Rob
-
-MBR, Sergei
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
