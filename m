@@ -1,95 +1,63 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH] net/macb: add support for resetting PHY using GPIO
-Date: Fri, 11 Dec 2015 09:46:30 +0100
-Message-ID: <20151211084630.GW11966@pengutronix.de>
-References: <1449683383-5022-1-git-send-email-gregory.clement@free-electrons.com>
- <20151210073756.GA11966@pengutronix.de>
- <871tau8hpj.fsf@free-electrons.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/3] Add support for monitoring gpio switches
+Date: Fri, 11 Dec 2015 10:08:00 +0100
+Message-ID: <CACRpkdb=it+U+3-0mvZ9Pf1cnYT_r1KkFiS=C4YDkqrjoRm+kQ@mail.gmail.com>
+References: <1449250275-23435-1-git-send-email-martyn.welch@collabora.co.uk>
+	<1449250275-23435-3-git-send-email-martyn.welch@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <871tau8hpj.fsf@free-electrons.com>
-Sender: netdev-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: "David S. Miller" <davem@davemloft.net>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1449250275-23435-3-git-send-email-martyn.welch@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Martyn Welch <martyn.welch@collabora.co.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 10, 2015 at 04:08:08PM +0100, Gregory CLEMENT wrote:
-> Hi Sascha,
-> =20
->  On jeu., d=E9c. 10 2015, Sascha Hauer <s.hauer@pengutronix.de> wrote=
-:
->=20
-> > Hi Gregory,
-> >
-> > On Wed, Dec 09, 2015 at 06:49:43PM +0100, Gregory CLEMENT wrote:
-> >> With device tree it is no more possible to reset the PHY at board
-> >> level. Furthermore, doing in the driver allow to power down the PH=
-Y when
-> >> the network interface is no more used.
-> >>=20
-> >> The patch introduces a new optional property "phy-reset-gpio" insp=
-ired
-> >> from the one use for the FEC.
-> >
-> > I don't think it's a good idea to further extend the usage of this
-> > binding. The driver should use the phy-handle property and
-> > of_phy_connect() which gives you a proper device node for the phy. =
-Then
-> > the phy device node should get the reset gpio. I know it's more wor=
-k,
->=20
-> So you suggest to pass from this binding:
-> macb1: ethernet@fc028000 {
-> 	phy-mode =3D "rmii";
-> 	status =3D "okay";
-> 	#address-cells =3D <1>;
-> 	#size-cells =3D <0>;
-> 	status =3D "okay";
-> 	phy-reset-gpio =3D <&pioE 6 GPIO_ACTIVE_HIGH>;
->=20
-> 	ethernet-phy@1 {
-> 		reg =3D <0x1>;
-> 		interrupt-parent =3D <&pioB>;
-> 		interrupts =3D <31 IRQ_TYPE_EDGE_FALLING>;
->=20
-> 	};
-> };
->=20
-> to this binding
-> macb1: ethernet@fc028000 {
-> 	phy-mode =3D "rmii";
-> 	status =3D "okay";
-> 	#address-cells =3D <1>;
-> 	#size-cells =3D <0>;
-> 	status =3D "okay";
->=20
-> 	ethernet-phy@1 {
-> 		reg =3D <0x1>;
-> 		interrupt-parent =3D <&pioB>;
-> 		interrupts =3D <31 IRQ_TYPE_EDGE_FALLING>;
->                 phy-reset-gpio =3D <&pioE 6 GPIO_ACTIVE_HIGH>;
-> 	};
-> };
+On Fri, Dec 4, 2015 at 6:31 PM, Martyn Welch
+<martyn.welch@collabora.co.uk> wrote:
 
-s/phy-reset-gpio/reset-gpios/, but yes.
+> Select Chromebooks have gpio attached to switches used to cause the
+> firmware to enter alternative modes of operation and/or control other
+> device characteristics (such as write protection on flash devices). This
+> patch adds a driver that exposes a read-only interface to allow these
+> signals to be read from user space.
+>
+> This functionality has been generalised to provide support for any device
+> with device tree support which needs to identify a gpio as being used for a
+> specific task.
+>
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.co.uk>
 
-I had assumed you do not use a phy description in the device tree at al=
-l
-since the macb driver doesn't use of_phy_connect(). Apparently there ar=
-e
-other possibilities to connect the phy device nodes with the phys
+If you want to do this thing, also propose a device tree binding document
+for "gpio-switch".
 
-Sascha
+But first (from Documentation/gpio/drivers-on-gpio.txt):
 
---=20
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
+- gpio-keys: drivers/input/keyboard/gpio_keys.c is used when your GPIO line
+  can generate interrupts in response to a key press. Also supports debounce.
+
+- gpio-keys-polled: drivers/input/keyboard/gpio_keys_polled.c is used when your
+  GPIO line cannot generate interrupts, so it needs to be periodically polled
+  by a timer.
+
+- extcon-gpio: drivers/extcon/extcon-gpio.c is used when you need to read an
+  external connector status, such as a headset line for an audio driver or an
+  HDMI connector. It will provide a better userspace sysfs interface than GPIO.
+
+So you mean none of these apply for this case?
+
+Second: what you want to do is export a number of GPIOs with certain names
+to userspace. This is something very generic and should be implemented
+as such, not as something Chromebook-specific.
+
+Patches like that has however already been suggested, and I have NACKed
+them because the GPIO sysfs ABI is insane, and that is why I am refactoring
+the world to create a proper chardev ABI for GPIO instead. See:
+http://marc.info/?l=linux-gpio&m=144550276512673&w=2
+
+So for the moment, NACK on this, please participate in creating the
+*right* ABI for GPIO instead of trying to shoehorn stuff into the dying
+sysfs ABI.
+
+Yours,
+Linus Walleij
