@@ -1,73 +1,27 @@
 From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: [PATCH v3 7/9] ARM: dts: Add USART1 pin config to STM32F429 boards
-Date: Fri, 11 Dec 2015 09:25:04 +0100
-Message-ID: <1449822306-9035-8-git-send-email-mcoquelin.stm32@gmail.com>
-References: <1449822306-9035-1-git-send-email-mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v2 4/9] pinctrl: Add support STM32 MCUs
+Date: Fri, 11 Dec 2015 09:26:46 +0100
+Message-ID: <CALszF6BhFxXf2WizWdWNhP5BDMLw3oP6KgbSfiB1e=hd8jShvg@mail.gmail.com>
+References: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1445102604-11502-5-git-send-email-mcoquelin.stm32@gmail.com>
+	<CALszF6Cd=yei0m2Zs=+k=KT5RUzdesGWPK7PAQPdj_-Ouan=2A@mail.gmail.com>
+	<CACRpkda4eSHu57Tw6F-kmxY_EOSEhpRiowQN9o4LbPVgE_Xvkw@mail.gmail.com>
+	<566A8762.4040108@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449822306-9035-1-git-send-email-mcoquelin.stm32@gmail.com>
+In-Reply-To: <566A8762.4040108@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: patrice.chotard@st.com, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, afaerber@suse.de, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com
+To: Patrice Chotard <patrice.chotard@st.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch selects USART1 pin configuration on PA9/PA10 pins
-for both Eval and Disco boards.
+2015-12-11 9:20 GMT+01:00 Patrice Chotard <patrice.chotard@st.com>:
+> Hi Linus
+>
+> I will try to review it before end of next week
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
----
- arch/arm/boot/dts/stm32429i-eval.dts  |  2 ++
- arch/arm/boot/dts/stm32f429-disco.dts |  2 ++
- arch/arm/boot/dts/stm32f429.dtsi      | 13 +++++++++++++
- 3 files changed, 17 insertions(+)
+Thanks Patrice, I resent the series.
 
-diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
-index 6964fc9..71fe17a 100644
---- a/arch/arm/boot/dts/stm32429i-eval.dts
-+++ b/arch/arm/boot/dts/stm32429i-eval.dts
-@@ -71,5 +71,7 @@
- };
- 
- &usart1 {
-+	pinctrl-0 = <&usart1_pins_a>;
-+	pinctrl-names = "default";
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
-index f0b731d..e3ce796 100644
---- a/arch/arm/boot/dts/stm32f429-disco.dts
-+++ b/arch/arm/boot/dts/stm32f429-disco.dts
-@@ -71,5 +71,7 @@
- };
- 
- &usart1 {
-+	pinctrl-0 = <&usart1_pins_a>;
-+	pinctrl-names = "default";
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index 62d2b3d..1cf713e 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -263,6 +263,19 @@
- 				clocks = <&rcc 0 266>;
- 				st,bank-name = "GPIOK";
- 			};
-+
-+			usart1_pins_a: usart1@0 {
-+				pins1 {
-+					pinmux = <STM32F429_PA9_FUNC_USART1_TX>;
-+					bias-disable;
-+					drive-push-pull;
-+					slew-rate = <0>;
-+				};
-+				pins2 {
-+					pinmux = <STM32F429_PA10_FUNC_USART1_RX>;
-+					bias-disable;
-+				};
-+			};
- 		};
- 
- 		rcc: rcc@40023810 {
--- 
-1.9.1
+Regards,
+Maxime
