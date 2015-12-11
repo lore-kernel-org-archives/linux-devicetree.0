@@ -1,60 +1,65 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: vf610: use reset values for L2 cache latencies
-Date: Fri, 11 Dec 2015 22:00:29 +0800
-Message-ID: <20151211140029.GI11252@tiger>
-References: <1448935166-2697-1-git-send-email-stefan@agner.ch>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/3] Device tree binding documentation for gpio-switch
+Date: Fri, 11 Dec 2015 08:06:22 -0600
+Message-ID: <CAL_JsqJ-dht=rCu2-Unm0yOdFfRoOSXd9fkO7eDeQmvWGkGfsQ@mail.gmail.com>
+References: <1449250275-23435-1-git-send-email-martyn.welch@collabora.co.uk>
+ <1449250275-23435-2-git-send-email-martyn.welch@collabora.co.uk> <CACRpkdYZ-PK9Fb2uq+EMz5RTrtX-isxYkiNvWm2QqAh5WZhpOw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1448935166-2697-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYZ-PK9Fb2uq+EMz5RTrtX-isxYkiNvWm2QqAh5WZhpOw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Martyn Welch <martyn.welch@collabora.co.uk>, Alexandre Courbot <acourbot@nvidia.com>, Michael Welling <mwelling@ieee.org>, Markus Pargmann <mpa@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 30, 2015 at 05:59:26PM -0800, Stefan Agner wrote:
-> Linux on Vybrid used several different L2 latencies so far, none
-> of them seem to be the right ones. According to the application note
-> AN4947 ("Understanding Vybrid Architecture"), the tag portion runs
-> on CPU clock and is inside the L2 cache controller, whereas the data
-> portion is stored in the external SRAM running on platform clock.
-> Hence it is likely that the correct value requires a higher data
-> latency then tag latency.
-> 
-> These are the values which have been used so far:
-> - The mainline values:
->   arm,data-latency = <1 1 1>;
->   arm,tag-latency = <2 2 2>;
->   Those values have lead to problems on higher clocks. They look
->   like a poor translation from the reset values (missing +1 offset
->   and a mix up between tag/latency values).
-> - The Linux 3.0 (SoC vendor BSP) values (converted to DT notation):
->   arm,data-latency = <4 2 3>
->   arm,tag-latency = <4 2 3>
->   The cache initialization function along with the value matches the
->   i.MX6 code from the same kernel, so it seems that those values have
->   just been copied.
-> - The Colibri values:
->   arm,data-latency = <2 1 2>;
->   arm,tag-latency = <3 2 3>;
->   Those were a mix between the values of the Linux 3.0 based BSP and
->   the mainline values above.
-> - The SoC Reset values (converted to DT notation):
->   arm,data-latency = <3 3 3>;
->   arm,tag-latency = <2 2 2>;
-> 
-> So far there is no official statement on what the correct values are.
-> See also the related Freescale community thread:
-> https://community.freescale.com/message/579785#579785
-> 
-> For now, the reset values seem to be the best bet. Remove all other
-> "bogus" values and use the reset value on vf610.dtsi level.
-> 
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+On Fri, Dec 11, 2015 at 6:39 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Fri, Dec 4, 2015 at 6:31 PM, Martyn Welch
+> <martyn.welch@collabora.co.uk> wrote:
+>
+>> This patch adds documentation for the gpio-switch binding. This binding
+>> provides a mechanism to bind named links to gpio, with the primary
+>> purpose of enabling standardised access to switches that might be standard
+>> across a group of devices but implemented differently on each device.
+>>
+>> Signed-off-by: Martyn Welch <martyn.welch@collabora.co.uk>
+>
+> As mentioned in the comment to the second patch, this solves the
+> following generic problem:
+>
+> Expose a GPIO line to userspace using a specific name
+>
+> That means basically naming GPIO lines and marking them as
+> "not used by the operating system".
+>
+> This is something that has been proposed before, and postponed
+> because the kernel lacks the right infrastructure.
 
-Applied, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+That doesn't necessarily mean we can't define a binding.
+
+> Markus Pargmann also did a series that add initial values to
+> hogs, which is the inverse usecase of this, where you want to
+> *output* something by default, then maybe also make it available
+> to userspace.
+>
+> So what we need to see here is a patch series that does all of these
+> things:
+>
+> - Name lines
+>
+> - Sets them to initial values
+>
+> - Mark them as read-only
+>
+> - Mark them as "not used by the operating system" so that they
+>   can be default-exported to userspace.
+
+No! This should not be a DT property.
+
+Whether I want to control a GPIO in the kernel or userspace is not
+known and can change over time. It could simply depend on kernel
+config. There is also the case that a GPIO has no connection or kernel
+driver until some time later when a DT overlay for an expansion board
+is applied.
+
+Rob
