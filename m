@@ -1,52 +1,30 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 2/3] usb: renesas_usbhs: add fallback compatibility
- strings
-Date: Fri, 11 Dec 2015 13:02:34 +0900
-Message-ID: <20151211040233.GA13336@verge.net.au>
-References: <1449799947-19866-1-git-send-email-horms+renesas@verge.net.au>
- <1449799947-19866-3-git-send-email-horms+renesas@verge.net.au>
- <20151211035624.GA12611@rob-hp-laptop>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: Re: [v3,1/6] pinctrl: qcom: ipq4019: Add IPQ4019 pinctrl support
+Date: Thu, 10 Dec 2015 22:03:00 -0600
+Message-ID: <20151211040300.GA804@Agamemnon.attlocal.net>
+References: <1447975173-29485-2-git-send-email-mmcclint@qca.qualcomm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20151211035624.GA12611@rob-hp-laptop>
-Sender: linux-sh-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
+In-Reply-To: <1447975173-29485-2-git-send-email-mmcclint@qca.qualcomm.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Matthew McClintock <mmcclint@qca.qualcomm.com>
+Cc: Andy Gross <agross@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Varadarajan Narayanan <varada@codeaurora.org>, linux-kernel@vger.kernel.org, qca-upstream.external@qca.qualcomm.com, Sricharan R <sricharan@codeaurora.org>, Mathieu Olivari <mathieu@codeaurora.org>, Matthew McClintock <mmcclint@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 10, 2015 at 09:56:24PM -0600, Rob Herring wrote:
-> On Fri, Dec 11, 2015 at 11:12:26AM +0900, Simon Horman wrote:
-> > Add fallback compatibility strings for R-Car Gen2 and Gen3.
-> > This is in keeping with the fallback scheme being adopted wherever
-> > appropriate for drivers for Renesas SoCs.
-> > 
-> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+On Thu, Nov 19, 2015 at 05:19:28PM -0600, Matthew McClintock wrote:
+> From: Varadarajan Narayanan <varada@codeaurora.org>
 > 
-> Binding looks okay, but one possible typo.
+> Add pinctrl driver support for IPQ4019 platform
 > 
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> Signed-off-by: Mathieu Olivari <mathieu@codeaurora.org>
+> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+> Signed-off-by: Matthew McClintock <mmcclint@codeaurora.org>
 > Acked-by: Rob Herring <robh@kernel.org>
-> 
-> > --- a/drivers/usb/renesas_usbhs/common.c
-> > +++ b/drivers/usb/renesas_usbhs/common.c
-> > @@ -481,6 +481,15 @@ static const struct of_device_id usbhs_of_match[] = {
-> >  		.compatible = "renesas,usbhs-r8a7795",
-> >  		.data = (void *)USBHS_TYPE_RCAR_GEN2,
-> >  	},
-> > +	{
-> > +		.compatible = "renesas,rcar-gen2-usbhs",
-> > +		.data = (void *)USBHS_TYPE_RCAR_GEN2,
-> > +	},
-> > +	{
-> > +		/* Gen3 is compatible with Gen2 */
-> > +		.compatible = "renesas,rcar-gen3-usbhs",
-> > +		.data = (void *)USBHS_TYPE_RCAR_GEN2,
-> 
-> This supposed to be GEN3?
 
-Confusingly the symbol is called GEN2 as it was there for Gen 2
-before Gen 3 came along and (so far) Gen 3 is compatible with Gen 2.
+Looks good.  Much better than before.
 
-I'd be happy to change the name but I think that would be best
-as an incremental change on top of this one.
+Reviewed-by: Andy Gross <andy.gross@linaro.org>
+
