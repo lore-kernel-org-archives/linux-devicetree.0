@@ -1,32 +1,29 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/4] pinctrl: rockchip: add support for the rk3228
-Date: Fri, 11 Dec 2015 19:11:12 +0100
-Message-ID: <CACRpkdY6U2aYZY6Sd_cyMVWNOL_LfU812g+jezGoFLjEi7HYKQ@mail.gmail.com>
-References: <1449797452-19389-1-git-send-email-jeffy.chen@rock-chips.com>
-	<1449797452-19389-2-git-send-email-jeffy.chen@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1449797452-19389-2-git-send-email-jeffy.chen@rock-chips.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jeffy Chen <jeffy.chen@rock-chips.com>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 0/2] arm64: dts: qcom: few i2c fixes
+Date: Fri, 11 Dec 2015 18:11:44 +0000
+Message-ID: <1449857504-11365-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 11, 2015 at 2:30 AM, Jeffy Chen <jeffy.chen@rock-chips.com> wrote:
+Hi Andy, 
 
-> The pinctrl of rk3228 is much the same as rk3288's, but
-> without pmu.
->
-> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> Acked-by: Rob Herring <robh@kernel.org>
->
-> ---
->
-> Changes in v2: None
+Here are two i2c dt fixes which I have been using for long time on Landing team tree.
 
-Same as I applied then, I also added the same Review/ACKs.
+Can you please consider fixes for v4.5.
 
-Yours,
-Linus Walleij
+Thanks,
+srini
+
+Srinivas Kandagatla (2):
+  arm64: dts: fix the i2c aliasing to match to schematics.
+  arm64: dts: set the default i2c pin drive strength to 16mA
+
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi  | 3 +++
+ arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 6 +++---
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+
+-- 
+1.9.1
