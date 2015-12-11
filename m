@@ -1,394 +1,77 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v14 1/7] fpga: add usage documentation for fpga area
-Date: Fri, 11 Dec 2015 09:05:05 -0600
-Message-ID: <20151211150505.GA27164@rob-hp-laptop>
-References: <1449790629-5517-1-git-send-email-atull@opensource.altera.com>
- <1449790629-5517-2-git-send-email-atull@opensource.altera.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: [PATCH v6 1/4] drm: arm: Add DT bindings documentation for HDLCD
+ driver.
+Date: Fri, 11 Dec 2015 15:04:44 +0000
+Message-ID: <1449846287-21398-2-git-send-email-Liviu.Dudau@arm.com>
+References: <1449846287-21398-1-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1449790629-5517-2-git-send-email-atull@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: atull@opensource.altera.com
-Cc: Moritz Fischer <moritz.fischer@ettus.com>, Josh Cartwright <joshc@ni.com>, gregkh@linuxfoundation.org, monstr@monstr.eu, michal.simek@xilinx.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, pantelis.antoniou@konsulko.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1449846287-21398-1-git-send-email-Liviu.Dudau@arm.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh@kernel.org>, Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: devicetree <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Punit Agrawal <punit.agrawal@arm.com>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>, Andrew Morton <akpm@linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 10, 2015 at 05:37:03PM -0600, atull@opensource.altera.com wrote:
-> From: Alan Tull <atull@opensource.altera.com>
-> 
-> Add a document spelling out usage of the FPGA Area for
-> reprogramming FPGA's under Device Tree control.
- 
-I'm not too sure about the split between this and the binding doc. This 
-one clears up a bit after reading the binding doc first and most of this 
-is about DT.
-
-> Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> 
-> ---
-> v9:  Initial version of this patch in patchset
-> v10: s/fpga/FPGA/g
->      improve formatting
->      some rewriting
->      move to staging/simple-fpga-bus
-> v11: No change in this patch for v11 of the patch set
-> v12: Moved out of staging
->      Small changes due to using FPGA bridge framework and not
->      representing the bridges as resets.
-> v13: Fix some nits
-> v14: fpga-area instead of simple-fpga-bus
-> ---
->  Documentation/fpga/fpga-area.txt |  299 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 299 insertions(+)
->  create mode 100644 Documentation/fpga/fpga-area.txt
-> 
-> diff --git a/Documentation/fpga/fpga-area.txt b/Documentation/fpga/fpga-area.txt
-> new file mode 100644
-> index 0000000..f031522
-> --- /dev/null
-> +++ b/Documentation/fpga/fpga-area.txt
-> @@ -0,0 +1,299 @@
-> +FPGA Area
-> +
-> +Alan Tull 2015
-> +
-> +Overview
-> +========
-> +
-> +An FPGA Area details information about a section of an FPGA including the FPGA
-> +image needed to program it and the hardware contained once it is programmed.
-> +
-> +Loading a Device Tree overlay which contains an FPGA Area will cause the
-> +FPGA to be programmed and the children of the FPGA Area will get probed.
-> +
-> +There may be FPGA Bridges involved to prevent spurious data from going out onto
-> +the processor bus during FPGA programming.  If so, the FPGA Area will need to
-> +disable and enable bridges that will only affect the child devices that are
-> +below the FPGA Area.  In the case of partial reconfiguration, bridges will
-> +be required within the FPGA design such that the active sections of the
-> +FPGA are on the bus while sections that are not programmed or being
-> +reprogrammed at the moment are isolated.
-> +
-> +Removing the overlay will result in the child devices getting removed and the
-> +bridges disabled.  Note that in the case of partial reconfiguration the rest of
-> +the FPGA continues to function as normal while this is happening.
-> +
-> +Below are more details on the structuring of the Device Tree for this.
-> +
-> +Terminology
-> +===========
-> +
-> +Full Reconfiguration
-> + * The entire FPGA is reprogrammed.
-> +
-> +Partial Reconfiguration (PR)
-> + * Part of the FPGA is reprogrammed while the rest of the FPGA is live and
-> +   active.  Not all FPGA's support this.
-> +
-> +Associated Blocks
-> +=================
-> +
-> +FPGA Manager Framework
-> + * An FPGA Manager is a hardware block that programs an FPGA under the control
-> +   of a host processor.
-> + * The FPGA Manager Framework provides drivers and functions to program an
-> +   FPGA.
-> +
-> +FPGA Bridge Framework
-> + * Provides drivers and functions to control bridges that enable/disable
-> +   data to the FPGA.
-> + * FPGA bridges should be disabled while the FPGA is being programmed to
-> +   prevent spurious data on the bus.
-> + * FPGA bridges are not needed in implementations where the FPGA Manager
-> +   handles this.
-> +
-> +Device Tree
-> +===========
-> +
-> +For the purposes of this document, I'm dividing the Device Tree (DT) into two parts,
-> +each with its own requirements.  The two parts are:
-> + * The live DT prior to the overlay being added
-> + * The overlay containing an FPGA Area
-> +
-> +The live DT will contain:
-> + * FPGA Manager
-> + * FPGA Bridges as children of the FPGA Manager (optional, architecture specific)
-> +
-> +The live Device Tree must contain an FPGA Manager to handle programming the FPGA.
-> +If FPGA Bridges need to be involved, they show up in the DT as direct children
-> +of the FPGA Manager.  During full reconfiguration, the FPGA Area will disable
-> +any bridges that are direct children of the manager during full reconfiguration
-> +and will re-enable them afterwards.
-> +
-> +The insertion point in the live tree will also need the "simple-bus"
-> +compatibility string to enable populating the child nodes for the overlay.
-> +That includes the nodes for the FPGA Manager and controlling FPGA Bridges
-> +as explained below.
-> +
-> +The Device Tree Overlay will contain:
-> + * "target-path"
-> +   The insertion point where the the contents of the overlay will go into the
-> +   live tree.
-> + * "ranges"
-> + * "firmware-name"
-> +   Specifies the name of the FPGA image file on the firmware search
-> +   path.  The search path is described in the firmware class documentation.
-> + * "partial-reconfig"
-> +   This binding is a boolean and should be present if partial reconfiguration
-> +   is to be done.
-> + * child nodes corresponding to hardware that will be loaded in this
-> +   region of the FPGA.
-> +
-> +Supported use models
-> +====================
-> +
-> +Here's a list of the superset of supported use models.  We may need to add
-> +more.  Some uses are specific to one FPGA or another.
-> +
-> + * No FPGA Bridges
-> +   In this case, the FPGA Manager which programs the FPGA also handles the
-> +   bridges and no FPGA Bridge devices are needed for full reconfiguration.
-> +
-> +   The DT overlay will specify the FPGA Manager as the overlay target.
-> +
-> + * Full reconfiguration with bridges
-> +   In the case, there are several bridges between the processor and FPGA,
-> +   that need to be disabled during full reconfiguration.
-> +   The DT before the overlay is applied will have an FPGA Manager.  The
-> +   immediate children of the manager will be the FPGA Bridges that need to be
-> +   disabled during FPGA programming.
-> +
-> +   The DT overlay will specify one of those bridges as the overlay target,
-> +   typically the bridge that allows memory mapped register access ("the
-> +   controlling bridge").
-> +
-> + * Partial reconfiguration with bridges in the FPGA
-> +   In this case, the FPGA can have more than one section that will be
-> +   reprogrammed separately.  Other sections may be active on the bus while FPGA
-> +   is being programmed.  To manage this, FPGA Bridges need to exist on the FPGA
-> +   that can freeze all the buses going to one FPGA area while the buses are
-> +   enabled for other sections.
-> +
-> +Controlling Bridge
-> +==================
-> +
-> +It is possible that there are multiple FPGA Bridges connecting the processor
-> +and FPGA.  In a text based hierarchy, it is difficult to show this properly
-> +so what we do is consider the bridge that handles register access to be
-> +the controlling bridge.  The overlay is targeted to be inserted under the
-> +controlling bridge.  Other bridges are on the same level of the device tree
-> +as the controlling bridge, i.e. all are children of the FPGA Manager.  The
-> +ranges property handles mapping memory ranges through multiple bridges.
-> +
-> +Sequence
-> +========
-> +
-> +Load the DT overlay.  One way to do that from user space is to use Pantelis
-> +Antoniou's DT-Overlay configfs interface.  In that case the sequence from
-> +userspace is:
-
-It will be a problem merging this series if you document things that are 
-not upstream yet.
-
-> +
-> + $ mkdir /config/device-tree/overlays/1
-> + $ echo "some_overlay.dtb.o" > /config/device-tree/overlays/1/path
-> +
-> +This causes the FPGA Area to be probed and will do the following:
-> + 1. Disable the FPGA bridges.
-> + 2. Use the the FPGA manager core to program the FPGA.
-> + 3. Enable the FPGA bridges.
-> + 4. Call of_platform_populate resulting in device drivers getting probed.
-> +
-> +Removing the overlay is done by:
-> +
-> + $ rmdir /config/device-tree/overlays/1
-> +
-> +This causes the child nodes to be removed and then the bridges are disabled.
-> +
-> +Device Tree Examples
-> +====================
-> +
-> +The intention of this section is to give some simple examples, focusing on
-> +the placement of the elements detailed above in, especially:
-> + * FPGA Managers
-> + * FPGA Bridges in some cases
-> + * FPGA Areas and associated properties
-> + * simple-bus
-> + * ranges
-> + * target-path
-> +
-> +Please note the "simple-bus" compatible string added for FPGA Managers and for
-> +FPGA Bridges where the overlay is targeted for insertion.  This is required for
-> +populating the child nodes.
-> +
-> +Device Tree Example: Partial Reconfiguration with no Bridges
-> +============================================================
-> +
-> +Live Device Tree contains:
-> +	fpgamgr@0 {
-
-Unit address should be ffd03000 here.
-
-> +		compatible = "altr,socfpga-a10-fpga-mgr", "simple-bus";
-
-This should not have simple-bus. This would be broken in the case of 
-applying the overlay before booting the kernel. You don't want the 
-devices probed before the fpgamgr has programmed them.
-
-> +		clocks = <&l4_mp_clk>;
-> +		resets = <&rst FPGAMGR_RESET>;
-> +		reset-names = "fpgamgr";
-> +		reg = <0xffd03000 0x1000
-> +		       0xffcfe400 0x1000>;
-> +
-> +		#address-cells = <0x1>;
-> +		#size-cells = <0x1>;
-> +		ranges;
-> +	};
-> +
-> +DT Overlay contains:
-> +/dts-v1/;
-> +/plugin/;
-> +/ {
-> +	fragment@0 {
-> +		target-path="/soc/fpgamgr@0";  /* targeted to the manager */
-> +		__overlay__ {
-> +			#address-cells = <1>;
-> +	                #size-cells = <1>;
-> +
-> +			area@0 {
-> +				compatible = "fpga-area";
-> +
-> +				#address-cells = <1>;
-> +				#size-cells = <1>;
-> +				ranges = <0x10010 0xff210010 0x10>;
-> +
-> +				firmware-name = "fit_pr_v1.rbf";
-> +				partial-reconfig;
-> +
-> +				gpio@0x100010010 {
-
-Remove 0x
-
-> +					compatible = "altr,pio-1.0";
-> +					reg = <0x10010 0x10>;
-> +					altr,ngpio = <4>;
-> +					#gpio-cells = <0x2>;
-> +					gpio-controller;
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +
-> +Device Tree Example: Full Reconfiguration with Bridges
-> +======================================================
-> +
-> +Live Device Tree contains:
-> +	fpgamgr@0 {
-
-unit address
-
-> +		compatible = "altr,socfpga-fpga-mgr", "simple-bus";
-> +		reg = <0xFF706000 0x1000
-> +		       0xFFB90000 0x1000>;
-
-lower case
-
-> +		interrupts = <0 175 4>;
-> +
-> +		#address-cells = <0x1>;
-> +		#size-cells = <0x1>;
-> +		ranges;
-> +
-> +		bridge@0 {
-
-Don't the outbound bridges have an address range associated with them? 
-Possibly, they should not be children of the fpgamgr unless the fpgamgr 
-itself is a bridge.
-
-> +			/* both the manager and the controlling bridge have
-> +			 * the added simple-bus compatible to allow child
-> +			 * devices to be populated. */
-
-Why? Once you have initialized the bridge, you call of_platform_populate 
-with this node as the starting point. The root does not need any 
-matching string.
-
-> +			compatible = "altr,socfpga-lwhps2fpga-bridge",
-> +				     "simple-bus";
-> +			resets = <&rst LWHPS2FPGA_RESET>;
-> +			reset-names = "lwhps2fpga";
-> +			clocks = <&l4_main_clk>;
-> +			#address-cells = <0x1>;
-> +			#size-cells = <0x1>;
-> +			ranges;
-> +		};
-> +
-> +		bridge@1 {
-> +			/* In the case of full reconfiguration, both bridge@0
-> +			 * and bridge@1 will be disabled during FPGA
-> +			 * programming and enabled afterwards. */
-> +			compatible = "altr,socfpga-hps2fpga-bridge";
-> +			resets = <&rst HPS2FPGA_RESET>;
-> +			reset-names = "hps2fpga";
-> +			clocks = <&l4_main_clk>;
-> +		};
-> +	};
-> +
-> +DT Overlay contains:
-> +/dts-v1/;
-> +/plugin/;
-> +/ {
-> +	fragment@0 {
-> +		target-path="/soc/fpgamgr@0/bridge@0"; /* controlling bridge */
-> +		__overlay__ {
-> +			#address-cells = <1>;
-> +	                #size-cells = <1>;
-> +
-> +			area@0 {
-> +				compatible = "fpga-area";
-> +
-> +				#address-cells = <2>;
-> +				#size-cells = <1>;
-> +				/* Note that two ranges are mapped due to the
-> +				 * two bridges. */
-> +				ranges = <0 0x00000000 0xc0000000 0x00010000>,
-> +					 <1 0x00020000 0xff220000 0x00000008>;
-
-0 and 1 are address bits or mean something else (chip select # is common 
-example)?
-
-> +
-> +				firmware-name = "soc_system.rbf";
-> +
-> +				onchip_memory2_0: memory@000000000 {
-
-Drop leading zeros (i.e. memory@0).
-
-> +					device_type = "memory";
-> +					compatible = "altr,onchipmem-15.1";
-> +					reg = <0 0x00000000 0x00010000>;
-> +				};
-> +
-> +				jtag_uart: serial@0x100020000 {
-
-Drop '0x'
-
-> +					compatible = "altr,juart-1.0";
-> +					reg = <1 0x00020000 0x00000008>;
-> +					interrupt-parent = <&intc>;
-> +					interrupts = <0 42 4>;
-> +					clocks = <&osc2>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> -- 
-> 1.7.9.5
-> 
+Q2M6IFBhd2VsIE1vbGwgPHBhd2VsLm1vbGxAYXJtLmNvbT4KQ2M6IE1hcmsgUnV0bGFuZCA8bWFy
+ay5ydXRsYW5kQGFybS5jb20+CkNjOiBJYW4gQ2FtcGJlbGwgPGlqYytkZXZpY2V0cmVlQGhlbGxp
+b24ub3JnLnVrPgpDYzogS3VtYXIgR2FsYSA8Z2FsYWtAY29kZWF1cm9yYS5vcmc+CgpTaWduZWQt
+b2ZmLWJ5OiBMaXZpdSBEdWRhdSA8TGl2aXUuRHVkYXVAYXJtLmNvbT4KQWNrZWQtYnk6IFJvYiBI
+ZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Ci0tLQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9hcm0saGRsY2QudHh0ICAgICAgfCA3OSArKysrKysrKysrKysrKysrKysrKysrCiAxIGZp
+bGUgY2hhbmdlZCwgNzkgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybSxoZGxjZC50eHQKCmRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hcm0saGRsY2Qu
+dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXJtLGhkbGNk
+LnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi43OGJjMjQyCi0tLSAvZGV2
+L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXJt
+LGhkbGNkLnR4dApAQCAtMCwwICsxLDc5IEBACitBUk0gSERMQ0QKKworVGhpcyBpcyBhIGRpc3Bs
+YXkgY29udHJvbGxlciBmb3VuZCBvbiBzZXZlcmFsIGRldmVsb3BtZW50IHBsYXRmb3JtcyBwcm9k
+dWNlZAorYnkgQVJNIEx0ZCBhbmQgaW4gbW9yZSBtb2Rlcm4gb2YgaXRzJyBGYXN0IE1vZGVscy4g
+VGhlIEhETENEIGlzIGFuIFJHQgorc3RyZWFtZXIgdGhhdCByZWFkcyB0aGUgZGF0YSBmcm9tIGEg
+ZnJhbWVidWZmZXIgYW5kIHNlbmRzIGl0IHRvIGEgc2luZ2xlCitkaWdpdGFsIGVuY29kZXIgKERW
+SSBvciBIRE1JKS4KKworUmVxdWlyZWQgcHJvcGVydGllczoKKyAgLSBjb21wYXRpYmxlOiAiYXJt
+LGhkbGNkIgorICAtIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhl
+IGNvbnRyb2xsZXIncyByZWdpc3RlcnMuCisgIC0gaW50ZXJydXB0czogT25lIGludGVycnVwdCB1
+c2VkIGJ5IHRoZSBkaXNwbGF5IGNvbnRyb2xsZXIgdG8gbm90aWZ5IHRoZQorICAgIGludGVycnVw
+dCBjb250cm9sbGVyIHdoZW4gYW55IG9mIHRoZSBpbnRlcnJ1cHQgc291cmNlcyBwcm9ncmFtbWVk
+IGluCisgICAgdGhlIGludGVycnVwdCBtYXNrIHJlZ2lzdGVyIGhhdmUgYWN0aXZhdGVkLgorICAt
+IGNsb2NrczogQSBsaXN0IG9mIHBoYW5kbGUgKyBjbG9jay1zcGVjaWZpZXIgcGFpcnMsIG9uZSBm
+b3IgZWFjaAorICAgIGVudHJ5IGluICdjbG9jay1uYW1lcycuCisgIC0gY2xvY2stbmFtZXM6IEEg
+bGlzdCBvZiBjbG9jayBuYW1lcy4gRm9yIEhETENEIGl0IHNob3VsZCBjb250YWluOgorICAgICAg
+LSAicHhsY2xrIiBmb3IgdGhlIGNsb2NrIGZlZWRpbmcgdGhlIG91dHB1dCBQTEwgb2YgdGhlIGNv
+bnRyb2xsZXIuCisKK1JlcXVpcmVkIHN1Yi1ub2RlczoKKyAgLSBwb3J0OiBUaGUgSERMQ0QgY29u
+bmVjdGlvbiB0byBhbiBlbmNvZGVyIGNoaXAuIFRoZSBjb25uZWN0aW9uIGlzIG1vZGVsZWQKKyAg
+ICB1c2luZyB0aGUgT0YgZ3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGluCisgICAgRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4KKworT3B0aW9uYWwgcHJvcGVydGll
+czoKKyAgLSBtZW1vcnktcmVnaW9uOiBwaGFuZGxlIHRvIGEgbm9kZSBkZXNjcmliaW5nIG1lbW9y
+eSAoc2VlCisgICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2VydmVkLW1l
+bW9yeS9yZXNlcnZlZC1tZW1vcnkudHh0KSB0byBiZQorICAgIHVzZWQgZm9yIHRoZSBmcmFtZWJ1
+ZmZlcjsgaWYgbm90IHByZXNlbnQsIHRoZSBmcmFtZWJ1ZmZlciBtYXkgYmUgbG9jYXRlZAorICAg
+IGFueXdoZXJlIGluIG1lbW9yeS4KKworCitFeGFtcGxlOgorCisvIHsKKwkuLi4KKworCWhkbGNk
+QDJiMDAwMDAwIHsKKwkJY29tcGF0aWJsZSA9ICJhcm0saGRsY2QiOworCQlyZWcgPSA8MCAweDJi
+MDAwMDAwIDAgMHgxMDAwPjsKKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDg1IElSUV9UWVBFX0xF
+VkVMX0hJR0g+OworCQljbG9ja3MgPSA8Jm9zY2NsazU+OworCQljbG9jay1uYW1lcyA9ICJweGxj
+bGsiOworCQlwb3J0IHsKKwkJCWhkbGNkX291dHB1dDogZW5kcG9pbnRAMCB7CisJCQkJcmVtb3Rl
+LWVuZHBvaW50ID0gPCZoZG1pX2VuY19pbnB1dD47CisJCQl9OworCQl9OworCX07CisKKwkvKiBI
+RE1JIGVuY29kZXIgb24gSTJDIGJ1cyAqLworCWkyY0A3ZmZhMDAwMCB7CisJCS4uLi4KKwkJaGRt
+aS10cmFuc21pdHRlckA3MCB7CisJCQljb21wYXRpYmxlID0gIi4uLi4uIjsKKwkJCXJlZyA9IDww
+eDcwPjsKKwkJCXBvcnRAMCB7CisJCQkJaGRtaV9lbmNfaW5wdXQ6IGVuZHBvaW50IHsKKwkJCQkJ
+cmVtb3RlLWVuZHBvaW50ID0gPCZoZGxjZF9vdXRwdXQ+OworCQkJCX07CisKKwkJCQloZG1pX2Vu
+Y19vdXRwdXQ6IGVuZHBvaW50IHsKKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pXzFfcG9y
+dD47CisJCQkJfTsKKwkJCX07CisJCX07CisKKwl9OworCisJaGRtaTE6IGNvbm5lY3RvckAxIHsK
+KwkJY29tcGF0aWJsZSA9ICJoZG1pLWNvbm5lY3RvciI7CisJCXR5cGUgPSAiYSI7CisJCXBvcnQg
+eworCQkJaGRtaV8xX3BvcnQ6IGVuZHBvaW50IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jmhk
+bWlfZW5jX291dHB1dD47CisJCQl9OworCQl9OworCX07CisKKwkuLi4KK307Ci0tIAoyLjYuNAoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
