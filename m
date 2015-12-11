@@ -1,24 +1,37 @@
-From: Andy Gross <andy.gross@linaro.org>
-Subject: Re: [PATCH 2/4] arm: dts: apq8064: add shared memory into dt
- reserved-memory
-Date: Fri, 11 Dec 2015 13:25:55 -0600
-Message-ID: <20151211192555.GD4022@Agamemnon.attlocal.net>
-References: <1449858409-13296-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1449858707-13517-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [PATCH 0/2] gpio: Add driver for SPI serializers
+Date: Fri, 11 Dec 2015 13:46:22 -0600
+Message-ID: <1449863184-29668-1-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1449858707-13517-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 11, 2015 at 06:31:47PM +0000, Srinivas Kandagatla wrote:
-> This patch adds the shared memory in the Device tree reserved memory
-> list so that kernel would not map it as normal memory.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Hello all,
 
-Looks fine to me.
+This series adds a GPI(General Purpose Input) driver for generic
+parallel-in/serial-out shift registers, such as the SN65HVS882
+that this driver was tested on. This should also work for the rest
+of the SN65HVS88x series as well as other 74x165 style devices.
+
+Thanks,
+Andrew
+
+Andrew F. Davis (2):
+  dt-bindings: GPIO: Add generic serializer binding
+  gpio: Add driver for SPI serializers
+
+ .../devicetree/bindings/gpio/gpio-pisosr.txt       |  34 ++++
+ drivers/gpio/Kconfig                               |   6 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-pisosr.c                         | 182 +++++++++++++++++++++
+ 4 files changed, 223 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pisosr.txt
+ create mode 100644 drivers/gpio/gpio-pisosr.c
+
+-- 
+2.6.4
+
