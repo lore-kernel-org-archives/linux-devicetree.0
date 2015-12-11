@@ -1,44 +1,95 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: ARM: dts: sun7i: Enable audio codec on MK808C
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH] net/macb: add support for resetting PHY using GPIO
 Date: Fri, 11 Dec 2015 09:46:30 +0100
-Message-ID: <20151211084630.GL27957@lukather>
-References: <1449599486-15716-1-git-send-email-codekipper@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Message-ID: <20151211084630.GW11966@pengutronix.de>
+References: <1449683383-5022-1-git-send-email-gregory.clement@free-electrons.com>
+ <20151210073756.GA11966@pengutronix.de>
+ <871tau8hpj.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IKC1RK7+nRZ8SZaO"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBZ42VKZQKGQE3XZHCHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1449599486-15716-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <871tau8hpj.fsf@free-electrons.com>
+Sender: netdev-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: "David S. Miller" <davem@davemloft.net>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
---IKC1RK7+nRZ8SZaO
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Thu, Dec 10, 2015 at 04:08:08PM +0100, Gregory CLEMENT wrote:
+> Hi Sascha,
+> =20
+>  On jeu., d=E9c. 10 2015, Sascha Hauer <s.hauer@pengutronix.de> wrote=
+:
+>=20
+> > Hi Gregory,
+> >
+> > On Wed, Dec 09, 2015 at 06:49:43PM +0100, Gregory CLEMENT wrote:
+> >> With device tree it is no more possible to reset the PHY at board
+> >> level. Furthermore, doing in the driver allow to power down the PH=
+Y when
+> >> the network interface is no more used.
+> >>=20
+> >> The patch introduces a new optional property "phy-reset-gpio" insp=
+ired
+> >> from the one use for the FEC.
+> >
+> > I don't think it's a good idea to further extend the usage of this
+> > binding. The driver should use the phy-handle property and
+> > of_phy_connect() which gives you a proper device node for the phy. =
+Then
+> > the phy device node should get the reset gpio. I know it's more wor=
+k,
+>=20
+> So you suggest to pass from this binding:
+> macb1: ethernet@fc028000 {
+> 	phy-mode =3D "rmii";
+> 	status =3D "okay";
+> 	#address-cells =3D <1>;
+> 	#size-cells =3D <0>;
+> 	status =3D "okay";
+> 	phy-reset-gpio =3D <&pioE 6 GPIO_ACTIVE_HIGH>;
+>=20
+> 	ethernet-phy@1 {
+> 		reg =3D <0x1>;
+> 		interrupt-parent =3D <&pioB>;
+> 		interrupts =3D <31 IRQ_TYPE_EDGE_FALLING>;
+>=20
+> 	};
+> };
+>=20
+> to this binding
+> macb1: ethernet@fc028000 {
+> 	phy-mode =3D "rmii";
+> 	status =3D "okay";
+> 	#address-cells =3D <1>;
+> 	#size-cells =3D <0>;
+> 	status =3D "okay";
+>=20
+> 	ethernet-phy@1 {
+> 		reg =3D <0x1>;
+> 		interrupt-parent =3D <&pioB>;
+> 		interrupts =3D <31 IRQ_TYPE_EDGE_FALLING>;
+>                 phy-reset-gpio =3D <&pioE 6 GPIO_ACTIVE_HIGH>;
+> 	};
+> };
 
-Hi,
+s/phy-reset-gpio/reset-gpios/, but yes.
 
-On Tue, Dec 08, 2015 at 07:31:26PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+I had assumed you do not use a phy description in the device tree at al=
+l
+since the macb driver doesn't use of_phy_connect(). Apparently there ar=
+e
+other possibilities to connect the phy device nodes with the phys
 
-Please make a commit log.
+Sascha
 
-Thanks,
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---IKC1RK7+nRZ8SZaO--
+--=20
+Pengutronix e.K.                           |                           =
+  |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
+  |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
+5 |
