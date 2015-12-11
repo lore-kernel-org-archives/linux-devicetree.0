@@ -1,229 +1,112 @@
-From: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: imx7d: cl-som-imx7: add basic module support
-Date: Thu, 10 Dec 2015 16:01:37 +0200
-Message-ID: <1449756097-2921-1-git-send-email-grinberg@compulab.co.il>
-References: <20151208151401.GA20042@rob-hp-laptop>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151208151401.GA20042@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+From: Jeffy Chen <jeffy.chen@rock-chips.com>
+Subject: [PATCH v2 4/4] ARM: dts: rockchip: add rk3228-evb board
+Date: Fri, 11 Dec 2015 09:30:52 +0800
+Message-ID: <1449797452-19389-5-git-send-email-jeffy.chen@rock-chips.com>
+References: <1449797452-19389-1-git-send-email-jeffy.chen@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1449797452-19389-1-git-send-email-jeffy.chen@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Initial release for rk3228 sdk board.
 
-CL-SOM-iMX7 is a miniature System-on-Module (SoM) based on
-Freescale i.MX7 System-on-Chip family.
+Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 
-http://www.compulab.co.il/products/computer-on-modules/cl-som-imx7-freescale-i-mx-7-system-on-module/
-
-Add basic DT support for standalone module (without a carrier board):
-
-* Memory configuration
-* I2C2 bus
-* PMIC
-* UART1
-
-Signed-off-by: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Signed-off-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
 
-v2: use generic node name for pmic (Thanks Rob).
+Changes in v2:
+Move board properties here.
 
- Documentation/devicetree/bindings/arm/fsl.txt |   4 +
- arch/arm/boot/dts/Makefile                    |   1 +
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts       | 150 ++++++++++++++++++++++++++
- 3 files changed, 155 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+ arch/arm/boot/dts/Makefile       |  1 +
+ arch/arm/boot/dts/rk3228-evb.dts | 66 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 67 insertions(+)
+ create mode 100644 arch/arm/boot/dts/rk3228-evb.dts
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-index 34c88b0..30b0ba1 100644
---- a/Documentation/devicetree/bindings/arm/fsl.txt
-+++ b/Documentation/devicetree/bindings/arm/fsl.txt
-@@ -53,6 +53,10 @@ i.MX6 Quad SABRE Automotive Board
- Required root node properties:
-     - compatible = "fsl,imx6q-sabreauto", "fsl,imx6q";
- 
-+i.MX7D CL-SOM-iMX7 Board
-+Required root node properties:
-+    - compatible = "compulab,cl-som-imx7", "fsl,imx7d";
-+
- Generic i.MX boards
- -------------------
- 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 30bbc37..83ed521 100644
+index 2d8b9e0..0223846 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -350,6 +350,7 @@ dtb-$(CONFIG_SOC_IMX6SX) += \
- dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-14x14-evk.dtb
- dtb-$(CONFIG_SOC_IMX7D) += \
-+	imx7d-cl-som-imx7.dtb \
- 	imx7d-sdb.dtb
- dtb-$(CONFIG_SOC_LS1021A) += \
- 	ls1021a-qds.dtb \
-diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+@@ -521,6 +521,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+ 	rk3066a-marsboard.dtb \
+ 	rk3066a-rayeager.dtb \
+ 	rk3188-radxarock.dtb \
++	rk3228-evb.dtb \
+ 	rk3288-evb-act8846.dtb \
+ 	rk3288-evb-rk808.dtb \
+ 	rk3288-firefly-beta.dtb \
+diff --git a/arch/arm/boot/dts/rk3228-evb.dts b/arch/arm/boot/dts/rk3228-evb.dts
 new file mode 100644
-index 0000000..ba05198
+index 0000000..e3898b8
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -0,0 +1,150 @@
++++ b/arch/arm/boot/dts/rk3228-evb.dts
+@@ -0,0 +1,66 @@
 +/*
-+ * Support for CompuLab CL-SOM-iMX7 System-on-Module
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
 + *
-+ * Copyright (C) 2015 CompuLab Ltd. - http://www.compulab.co.il/
-+ * Author: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
 + *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2 as published by
-+ * the Free Software Foundation.
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *  Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
 + */
 +
 +/dts-v1/;
 +
-+#include <dt-bindings/input/input.h>
-+#include "imx7d.dtsi"
++#include "rk3228.dtsi"
 +
 +/ {
-+	model = "CompuLab CL-SOM-iMX7";
-+	compatible = "compulab,cl-som-imx7", "fsl,imx7d";
++	model = "Rockchip RK3228 Evaluation board";
++	compatible = "rockchip,rk3228-evb", "rockchip,rk3228";
 +
 +	memory {
-+		reg = <0x80000000 0x10000000>; /* 256 MB - minimal configuration */
++		device_type = "memory";
++		reg = <0x60000000 0x40000000>;
 +	};
 +};
 +
-+&cpu0 {
-+	arm-supply = <&sw1a_reg>;
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+
-+	pmic: pmic@8 {
-+		compatible = "fsl,pfuze3000";
-+		reg = <0x08>;
-+
-+		regulators {
-+			sw1a_reg: sw1a {
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1475000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			/* use sw1c_reg to align with pfuze100/pfuze200 */
-+			sw1c_reg: sw1b {
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1475000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			sw2_reg: sw2 {
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <1850000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3a_reg: sw3 {
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <1650000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			swbst_reg: swbst {
-+				regulator-min-microvolt = <5000000>;
-+				regulator-max-microvolt = <5150000>;
-+			};
-+
-+			snvs_reg: vsnvs {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vref_reg: vrefddr {
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vgen1_reg: vldo1 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen2_reg: vldo2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+			};
-+
-+			vgen3_reg: vccsd {
-+				regulator-min-microvolt = <2850000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen4_reg: v33 {
-+				regulator-min-microvolt = <2850000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen5_reg: vldo3 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen6_reg: vldo4 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	assigned-clocks = <&clks IMX7D_UART1_ROOT_SRC>;
-+	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
++&emmc {
++	broken-cd;
++	cap-mmc-highspeed;
++	mmc-ddr-1_8v;
++	disable-wp;
++	non-removable;
 +	status = "okay";
 +};
 +
-+&iomuxc {
-+	cl-som-imx7 {
-+		pinctrl_i2c2: i2c2grp {
-+			fsl,pins = <
-+				MX7D_PAD_I2C2_SDA__I2C2_SDA		0x4000007f
-+				MX7D_PAD_I2C2_SCL__I2C2_SCL		0x4000007f
-+			>;
-+		};
-+
-+		pinctrl_uart1: uart1grp {
-+			fsl,pins = <
-+				MX7D_PAD_UART1_TX_DATA__UART1_DCE_TX	0x79
-+				MX7D_PAD_UART1_RX_DATA__UART1_DCE_RX	0x79
-+			>;
-+		};
-+	};
++&uart2 {
++	status = "okay";
 +};
 -- 
-2.4.10
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
