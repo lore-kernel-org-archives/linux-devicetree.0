@@ -1,63 +1,52 @@
-From: Patrice Chotard <patrice.chotard@st.com>
-Subject: Re: [PATCH v2 4/9] pinctrl: Add support STM32 MCUs
-Date: Fri, 11 Dec 2015 09:20:50 +0100
-Message-ID: <566A8762.4040108@st.com>
-References: <1445102604-11502-1-git-send-email-mcoquelin.stm32@gmail.com>
- <1445102604-11502-5-git-send-email-mcoquelin.stm32@gmail.com>
- <CALszF6Cd=yei0m2Zs=+k=KT5RUzdesGWPK7PAQPdj_-Ouan=2A@mail.gmail.com>
- <CACRpkda4eSHu57Tw6F-kmxY_EOSEhpRiowQN9o4LbPVgE_Xvkw@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: sun7i: Olimex A20-SOM-EVB:
+ Add LRADC keys
+Date: Fri, 11 Dec 2015 09:22:07 +0100
+Message-ID: <20151211082207.GK27957@lukather>
+References: <1449779521-754-1-git-send-email-merker@debian.org>
+ <1449779521-754-2-git-send-email-merker@debian.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkda4eSHu57Tw6F-kmxY_EOSEhpRiowQN9o4LbPVgE_Xvkw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Y3hCyKCCnioDaTIs"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBMMPVKZQKGQECZR6VDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1449779521-754-2-git-send-email-merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus
+--Y3hCyKCCnioDaTIs
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-I will try to review it before end of next week
+Hi,
 
-Patrice
+On Thu, Dec 10, 2015 at 09:31:59PM +0100, Karsten Merker wrote:
+> The Olimex A20-SOM-EVB is an evaluation board for the Olimex
+> A20-SOM system-on-module.  It provides a set of android-style
+> buttons (labeled "VOL+", "VOL-", "MENU", "SEARCH", "HOME", "ESC"
+> and "ENTER") which are connected to a low-resolution ADC via a
+> resistor network.
+> 
+> This patch adds appropriate button definitions to the board
+> dts. The voltages assigned to the keys are specified in the
+> board schematics published by the manufacturer.
+> 
+> Signed-off-by: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 
+Applied 1 and 2, thanks!
+Maxime
 
-
-On 12/10/2015 06:08 PM, Linus Walleij wrote:
-> On Tue, Dec 1, 2015 at 10:53 AM, Maxime Coquelin
-> <mcoquelin.stm32@gmail.com> wrote:
->> 2015-10-17 19:23 GMT+02:00 Maxime Coquelin <mcoquelin.stm32@gmail.com>:
->>> This patch adds pinctrl and GPIO support to STMicroelectronic's STM32
->>> family of MCUs.
->>>
->>> While it only supports STM32F429 for now, it has been designed to enable
->>> support of other MCUs of the family (e.g. STM32F746).
->>>
->>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
->>> ---
->>>   drivers/pinctrl/Kconfig                   |    1 +
->>>   drivers/pinctrl/Makefile                  |    1 +
->>>   drivers/pinctrl/stm32/Kconfig             |   16 +
->>>   drivers/pinctrl/stm32/Makefile            |    5 +
->>>   drivers/pinctrl/stm32/pinctrl-stm32.c     |  856 +++++++++++++++
->>>   drivers/pinctrl/stm32/pinctrl-stm32.h     |   43 +
->>>   drivers/pinctrl/stm32/pinctrl-stm32f429.c | 1598 +++++++++++++++++++++++++++++
->>>   7 files changed, 2520 insertions(+)
->>>   create mode 100644 drivers/pinctrl/stm32/Kconfig
->>>   create mode 100644 drivers/pinctrl/stm32/Makefile
->>>   create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32.c
->>>   create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32.h
->>>   create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32f429.c
->>>
->> Gentle reminder, do you know when you will be able to review this driver?
-> I'm a bit overloaded so reviewing of large chunks of code takes time.
->
-> It would be great if I could have some Reviewed-by tags from someone
-> else who's familiar with pin control.
->
-> Patrice: do you have a chance to review this driver and help us?
->
-> Yours,
-> Linus Walleij
-
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--Y3hCyKCCnioDaTIs--
