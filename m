@@ -1,51 +1,102 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/3] DT labels for connector device mapping
-Date: Thu, 10 Dec 2015 18:00:00 -0600
-Message-ID: <CAL_JsqL=29TSmrsYZhymOWYceNBon=vi9BaaYWX2whY7iRfDTg@mail.gmail.com>
-References: <1449782473-20880-1-git-send-email-robh@kernel.org> <5669F053.4080509@linaro.org>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] MAINTAINERS: Add missing platform maintainers for dts files
+Date: Fri, 11 Dec 2015 09:13:53 +0900
+Message-ID: <566A1541.5050201@samsung.com>
+References: <1449790703-12054-1-git-send-email-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5669F053.4080509-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-reply-to: <1449790703-12054-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shiraz Hashim <shiraz.linux.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 10, 2015 at 3:36 PM, Jorge Ramirez-Ortiz
-<jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 12/10/2015 04:21 PM, Rob Herring wrote:
->> Having a common connector interface across different platforms can be
->> problematic for determining which SOC device is connected to which
->> connector pins. The standard DT property "label" is intended to provide
->> a human readable name for a device and can be used to provide this
->> information. Then userspace can can read the label to determine the
->> device mapping. For example:
->>
->> for f in $(ls -d /sys/class/tty/tty*); do
->>   label=$(cat $f/device/of_node/label)
->>   if [ "$label" = "LS-UART1" ]; then
->>     # you've found UART1, so do something with it.
->>     # $f/dev is the major:minor for the /dev node
->>   fi
->> done
->>
->> This series adds labels on hikey and dragonboard 410c devices for the
->> low speed and high speed connectors. Not tested at all.
->
-> should we then use the line-name property on the GPIOs to have a common naming
-> convention across all 96Boards boards?
+On 11.12.2015 08:38, Rob Herring wrote:
+> Platform dts files need to be reviewed primarily by the platform
+> maintainers as dts files typically go in thru their trees. Add the missing
+> paths where there are existing maintainers listed.
+> 
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  MAINTAINERS | 20 +++++++++++++++++++-
+>  1 file changed, 19 insertions(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 69c8a9c..415b731 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -950,6 +950,8 @@ M:	Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>  L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+>  S:	Maintained
+>  F:	arch/arm/mach-highbank/
+> +F:	arch/arm/boot/dts/highbank.dts
+> +F:	arch/arm/boot/dts/ecx-*.dts*
+>  
+>  ARM/CAVIUM NETWORKS CNS3XXX MACHINE SUPPORT
+>  M:	Krzysztof Halasa <khalasa-NlWvg49iv0c@public.gmane.org>
+> @@ -1025,6 +1027,7 @@ M:	Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>  L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/baohua/linux.git
+>  S:	Maintained
+> +F:	arch/arm/boot/dts/prima2*
+>  F:	arch/arm/mach-prima2/
+>  F:	drivers/clk/sirf/
+>  F:	drivers/clocksource/timer-prima2.c
+> @@ -1126,6 +1129,10 @@ W:	http://www.hisilicon.com
+>  S:	Supported
+>  T:	git git://github.com/hisilicon/linux-hisi.git
+>  F:	arch/arm/mach-hisi/
+> +F:	arch/arm/boot/dts/hi3*
+> +F:	arch/arm/boot/dts/hip*
+> +F:	arch/arm/boot/dts/hisi*
+> +F:	arch/arm64/boot/dts/hisilicon/
+>  
+>  ARM/HP JORNADA 7XX MACHINE SUPPORT
+>  M:	Kristoffer Ericson <kristoffer.ericson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> @@ -1202,6 +1209,7 @@ M:	Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>  L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+>  S:	Maintained
+>  F:	arch/arm/mach-keystone/
+> +F:	arch/arm/boot/dts/k2*
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git
+>  
+>  ARM/TEXAS INSTRUMENT KEYSTONE CLOCK FRAMEWORK
+> @@ -1270,6 +1278,7 @@ L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+>  S:	Maintained
+>  F:	arch/arm/mach-berlin/
+>  F:	arch/arm/boot/dts/berlin*
+> +F:	arch/arm64/boot/dts/marvell/berlin*
+>  
+>  
+>  ARM/Marvell Dove/MV78xx0/Orion SOC support
+> @@ -1406,7 +1415,9 @@ M:	David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>  L:	linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>  L:	linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>  S:	Maintained
+> +F:	arch/arm/boot/dts/qcom-*
+>  F:	arch/arm/mach-qcom/
+> +F:	arch/arm64/boot/dts/qcom/*
+>  F:	drivers/soc/qcom/
+>  F:	drivers/tty/serial/msm_serial.h
+>  F:	drivers/tty/serial/msm_serial.c
+> @@ -1456,6 +1467,8 @@ L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+>  L:	linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (moderated for non-subscribers)
+>  S:	Maintained
+>  F:	arch/arm/boot/dts/s3c*
+> +F:	arch/arm/boot/dts/s5p*
+> +F:	arch/arm/boot/dts/samsung*
+>  F:	arch/arm/boot/dts/exynos*
+>  F:	arch/arm64/boot/dts/exynos/
+>  F:	arch/arm/plat-samsung/
 
-I left GPIOs out purpose, but they do need to be handled. I'm not
-certain that gpio-hogs is what we want to use here. The other cases
-have no s/w impact as label is ignored. The same is not true of
-gpio-hogs. Also, if we consider that we may want to describe GPIO
-connections to daughterboards with DT overlays, then we wound not want
-the gpio-hogs in the DT. That gets into a whole other set of issues
-needing a way to remap connector signals to have overlays which work
-across different base boards.
+Acked-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-Rob
+Best regards,
+Krzysztof
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
