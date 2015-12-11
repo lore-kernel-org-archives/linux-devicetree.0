@@ -1,29 +1,57 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] MAINTAINERS: Add missing platform maintainers for dts files
-Date: Fri, 11 Dec 2015 15:41:48 +0100
-Message-ID: <1757938.8OWaE16eiQ@wuerfel>
-References: <1449790703-12054-1-git-send-email-robh@kernel.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] extcon-usb-gpio: add enable pin support
+Date: Fri, 11 Dec 2015 17:44:45 +0300
+Message-ID: <566AE15D.1020506@cogentembedded.com>
+References: <4393960.B6dD3UkQy3@wasted.cogentembedded.com>
+ <566A4B97.7080801@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1449790703-12054-1-git-send-email-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Liviu Dudau <liviu.dudau@arm.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Florian Fainelli <f.fainelli@gmail.com>, Viresh Kumar <vireshk@kernel.org>, Wei Xu <xuwei5@hisilicon.com>, Kukjin Kim <kgene@kernel.org>, David Brown <davidb@codeaurora.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ray Jui <rjui@broadcom.com>, Andy Gross <agross@codeaurora.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, Barry Song <baohua@kernel.org>, Eric Miao <eric.y.miao@gmail.com>, Scott Branden <sbranden@broadcom.com>, Sudeep Holla <sudeep.holla@arm.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Shiraz
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <566A4B97.7080801@samsung.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 10 December 2015 17:38:23 Rob Herring wrote:
-> Platform dts files need to be reviewed primarily by the platform
-> maintainers as dts files typically go in thru their trees. Add the missing
-> paths where there are existing maintainers listed.
-> 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> 
+Hello.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+On 12/11/2015 07:05 AM, Chanwoo Choi wrote:
 
-Do you want to collect the Acks and take this through your git tree, so should
-we pick it up into arm-soc?
+>> Sometimes  there's a real  OTG chip behind the USB ID signal mapped to a GPIO
+>> pin: in my case it's Maxim Integrated MAX3355E which  integrates Vbus charge
+>> pump and comparators and passes  thru the ID  signal  from an OTG connector.
+>
+> s/thru/through ?
 
-	Arnd
+    "Thru" is valid English.
+
+>> This chip also has the SHDN# pin which  should be  driven high for the normal
+>> operation  and low to  save power;  it  is connected to a GPIO pin as well on,
+>> hence  we'll have  to  teach the driver to parse the new optional device tree
+>> property, "enable-gpio"...
+
+> This patch description includes the double space between words. Also, I think
+
+    So what?
+
+> you need to write the patch description again for formal style.
+
+    Not sure I understand you.
+
+> This patch adds the specific 'enable-gpio' pin to express the SHDN#pin for MAX3355E.
+> I think it is not regular and standard case because maybe USB specification
+> don't include the SHDN#pin information.
+
+    Certainly, it's not a USB pin.
+
+> I think it not appropriate way.
+> Instead, you better to make the MAX3355 extcon driver to support this case.
+
+    OK, just didn't want to duplicate most of this driver there...
+
+> Thanks,
+> Chanwoo
+
+MBR, Sergei
+
