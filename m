@@ -1,7 +1,7 @@
 From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 8/9] ARM: dts: Add leds support to STM32F429 boards
-Date: Fri, 11 Dec 2015 09:25:05 +0100
-Message-ID: <1449822306-9035-9-git-send-email-mcoquelin.stm32@gmail.com>
+Subject: [PATCH v3 9/9] ARM: config: Enable GPIO Led driver in stm32_defconfig
+Date: Fri, 11 Dec 2015 09:25:06 +0100
+Message-ID: <1449822306-9035-10-git-send-email-mcoquelin.stm32@gmail.com>
 References: <1449822306-9035-1-git-send-email-mcoquelin.stm32@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1449822306-9035-1-git-send-email-mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,62 +10,24 @@ To: patrice.chotard-qxv4g6HH51o@public.gmane.org, Linus Walleij <linus.walleij-Q
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/stm32429i-eval.dts  | 17 +++++++++++++++++
- arch/arm/boot/dts/stm32f429-disco.dts | 11 +++++++++++
- 2 files changed, 28 insertions(+)
+ arch/arm/configs/stm32_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
-index 71fe17a..e3921d9 100644
---- a/arch/arm/boot/dts/stm32429i-eval.dts
-+++ b/arch/arm/boot/dts/stm32429i-eval.dts
-@@ -64,6 +64,23 @@
- 	aliases {
- 		serial0 = &usart1;
- 	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		green {
-+			gpios = <&gpiog 6 1>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+		orange {
-+			gpios = <&gpiog 7 1>;
-+		};
-+		red {
-+			gpios = <&gpiog 10 1>;
-+		};
-+		blue {
-+			gpios = <&gpiog 12 1>;
-+		};
-+	};
- };
- 
- &clk_hse {
-diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
-index e3ce796..0140807 100644
---- a/arch/arm/boot/dts/stm32f429-disco.dts
-+++ b/arch/arm/boot/dts/stm32f429-disco.dts
-@@ -64,6 +64,17 @@
- 	aliases {
- 		serial0 = &usart1;
- 	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		red {
-+			gpios = <&gpiog 14 0>;
-+		};
-+		green {
-+			gpios = <&gpiog 13 0>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
- };
- 
- &clk_hse {
+diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
+index 4725fab..92ade2e 100644
+--- a/arch/arm/configs/stm32_defconfig
++++ b/arch/arm/configs/stm32_defconfig
+@@ -52,6 +52,7 @@ CONFIG_SERIAL_STM32_CONSOLE=y
+ # CONFIG_USB_SUPPORT is not set
+ CONFIG_NEW_LEDS=y
+ CONFIG_LEDS_CLASS=y
++CONFIG_LEDS_GPIO=y
+ CONFIG_LEDS_TRIGGERS=y
+ CONFIG_LEDS_TRIGGER_HEARTBEAT=y
+ # CONFIG_FILE_LOCKING is not set
 -- 
 1.9.1
 
