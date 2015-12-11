@@ -1,94 +1,96 @@
-From: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH 09/14] DEVICETREE: Add bindings for PIC32 usart driver
-Date: Fri, 11 Dec 2015 09:16:30 -0700
-Message-ID: <566AF6DE.9030803@microchip.com>
-References: <1448065205-15762-1-git-send-email-joshua.henderson@microchip.com>
- <1448065205-15762-10-git-send-email-joshua.henderson@microchip.com>
- <20151122215622.GA32221@rob-hp-laptop>
+From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 0/7] mtd: partitions: add of_match_table support
+Date: Fri, 11 Dec 2015 17:18:36 +0100
+Message-ID: <CAOMqctSbrnnUF62LHyJBZTJO3gFKVE81Mcpqyb3Z-5=v5SqLYA@mail.gmail.com>
+References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
+ <CAMuHMdUJXHs_OhT0da+kzc=D4MOFUT9BB3eJ+7a_p6DYx-PKBA@mail.gmail.com>
+ <20151210205449.GL144338@google.com> <CAMuHMdV-uethsChWVZGSx1JNcAofODmg14ppGYJP2ewfwhEv1Q@mail.gmail.com>
+ <CAOMqctQVMCEa_k4xMW1qooEpe8X1-NhUOjD6pp0qJpDP_H+8hw@mail.gmail.com> <CAMuHMdV2feXKWkJzRkMUBiAUCxp4LwaRgg+aPYwm0sUnKzm0Rg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151122215622.GA32221@rob-hp-laptop>
+In-Reply-To: <CAMuHMdV2feXKWkJzRkMUBiAUCxp4LwaRgg+aPYwm0sUnKzm0Rg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Andrei Pistirica <andrei.pistirica-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, David Hendricks <dhendrix-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rob,
-
-On 11/22/2015 02:56 PM, Rob Herring wrote:
-> On Fri, Nov 20, 2015 at 05:17:21PM -0700, Joshua Henderson wrote:
->> From: Andrei Pistirica <andrei.pistirica-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+On 11 December 2015 at 17:00, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> Hi Michal,
+>
+> On Fri, Dec 11, 2015 at 4:34 PM, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On 11 December 2015 at 09:44, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+>>> On Thu, Dec 10, 2015 at 9:54 PM, Brian Norris
+>>> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> On Sat, Dec 05, 2015 at 11:15:54AM +0100, Geert Uytterhoeven wrote:
+>>>>> On Sat, Dec 5, 2015 at 6:19 AM, Brian Norris
+>>>>> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>> > There have been several discussions [1] about adding a device tree binding for
+>>>>> > associating flash devices with the partition parser(s) that are used on the
+>>>>> > flash. There are a few reasons:
+>>>>> >
+>>>>> >  (1) drivers shouldn't have to be encoding platform knowledge by listing what
+>>>>> >      parsers might be used on a given system (this is the currently all that's
+>>>>> >      supported)
+>>>>> >  (2) we can't just scan for all supported parsers (like the block system does), since
+>>>>> >      there is a wide diversity of "formats" (no standardization), and it is not
+>>>>> >      always safe or efficient to attempt to do so, particularly since many of
+>>>>> >      them allow their data structures to be placed anywhere on the flash, and
+>>>>> >      so require scanning the entire flash device to find them.
+>>>>>
+>>>>> I read the second reason, but would it be useful to (partially) merge
+>>>>> block/partitions/ and drivers/mtd/partitions/, so I can use e.g. msdos
+>>>>> partitions
+>>>>> on an mtd device??
+>>>>
+>>>> I kinda agree with Michal: is there a good use case?
+>>>
+>>> I don't have an immediate use case.
+>>> Just looking at it from a high-level viewpoint.
+>>>
+>>>> Really, MTD partitioning is not a highly-scalable design. Particularly,
+>>>> it's not typically that well-suited to large (read: unreliable) NAND
+>>>> flash, where fixing partitions at the raw flash level mostly serves to
+>>>> restrict UBI's ability to wear-level across the device. For that sort of
+>>>> case, it's best if people are using UBI volumes on a (mostly?)
+>>>> unpartitioned MTD, instead of using MTD partitions as the main
+>>>> separation mechanism. Also, most partition designs (either MTD or block)
+>>>> aren't very robust against bitflips, read disturb, etc.
+>>>>
+>>>> IOW, I wouldn't expect MBR or GPT to work well on large raw NAND flash,
+>>>> and so I don't plan to do that sort of work myself. If you can provide
+>>>> some better argument for it, and some nice maintainable code to go with
+>>>> it, then of course it could be considered :)
+>>>
+>>> There's also NOR FLASH (e.g. SPI-NOR), which is what most boards I'm
+>>> working on have.
+>>>
 >>
->> Document the devicetree bindings for the USART peripheral found on
->> Microchip PIC32 class devices.
+>> Yes, you can dump the content of a NOR flash to a file, attach a loop
+>> device to it, and if block devices had the ability to use flash
+>> partitioning access the different partitions.
 >>
->> Signed-off-by: Andrei Pistirica <andrei.pistirica-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
->> Signed-off-by: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
->> ---
->>  .../bindings/serial/microchip,pic32-usart.txt      |   29 ++++++++++++++++++++
->>  1 file changed, 29 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/serial/microchip,pic32-usart.txt
->>
->> diff --git a/Documentation/devicetree/bindings/serial/microchip,pic32-usart.txt b/Documentation/devicetree/bindings/serial/microchip,pic32-usart.txt
->> new file mode 100644
->> index 0000000..c87321c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/serial/microchip,pic32-usart.txt
->> @@ -0,0 +1,29 @@
->> +* Microchip Universal Synchronous Asynchronous Receiver/Transmitter (USART)
->> +
->> +Required properties:
->> +- compatible: Should be "microchip,pic32-usart"
-> 
-> Again, should be more specific.
-> 
+>> Maybe it would be more useful to use some kind of mtdloop, though.
+>> There might even be one already. I never needed it.
+>
+> That's the inverse, which looks like a solid use case to me ;-)
+> E.g. for investigation or virtualization.
+>
+> You can do this already in userspace with kpartx, though.
+>
 
-Ack.  In addition, will replace all instances of USART with UART.
+What kind of partitioning does kpartx support? I do not see that
+documented anywhere.
 
->> +- reg: Should contain registers location and length
->> +- interrupts: Should contain interrupt
->> +- pinctrl: Should contain pinctrl for TX/RX/RTS/CTS
->> +
->> +Optional properties:
->> +- microchip,uart-has-rtscts : Indicate the uart has hardware flow control
->> +- rts-gpios: RTS pin for USP-based UART if microchip,uart-has-rtscts
->> +- cts-gpios: CTS pin for USP-based UART if microchip,uart-has-rtscts
-> 
-> This appears to just be copied for Sirf UART.
-> 
-> Doesn't *-gpios being present imply having h/w 
-> flow-control (i.e. microchip,uart-has-rtscts)?
-> 
-> Rob
+Anyway, it seems there is no mtdblock so in case of non-ecc (or
+hidden-ecc) flashes you could use losetup -P and block2mtd on each
+partition to look at the dumped flash content or even prepare flash
+images. So long as the kernel supports the partitioning scheme used on
+the flash.
 
-Agreed.  microchip,uart-has-rtscts will be dropped and it turns out we don't really need the rtc-gpios property.
+Thanks
 
-Josh
-
-> 
->> +
->> +Example:
->> +	usart0: serial@1f822000 {
->> +		compatible = "microchip,pic32-usart";
->> +		reg = <0x1f822000 0x50>;
->> +		interrupts = <UART1_FAULT DEFAULT_INT_PRI IRQ_TYPE_NONE>,
->> +			     <UART1_RECEIVE_DONE DEFAULT_INT_PRI IRQ_TYPE_NONE>,
->> +			     <UART1_TRANSFER_DONE DEFAULT_INT_PRI IRQ_TYPE_NONE>;
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <
->> +			&pinctrl_uart1
->> +			&pinctrl_uart1_cts
->> +			&pinctrl_uart1_rts>;
->> +		microchip,uart-has-rtscts;
->> +		cts-gpios = <&pioB 15 0>;
->> +		rts-gpios = <&pioD 1 0>;
->> +	};
->> -- 
->> 1.7.9.5
->>
-
+Michal
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
