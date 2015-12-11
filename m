@@ -1,39 +1,46 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 1/3] ARM: dts: imx: Add basic dts support for imx6qp
-Date: Fri, 11 Dec 2015 09:37:37 -0200
-Message-ID: <CAOMZO5C8mTotbpOmKkxKOXmBWc-N_zm7xn-fU5gFUgAFCiyokw@mail.gmail.com>
-References: <1449830722-26607-1-git-send-email-b51503@freescale.com>
+From: Bhupesh Sharma <bhupesh.sharma@freescale.com>
+Subject: [PATCH v2 0/2] ARM64: Enable SP805 WDT support for FSL LS2080A
+Date: Fri, 11 Dec 2015 17:17:45 +0530
+Message-ID: <1449834467-30283-1-git-send-email-bhupesh.sharma@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1449830722-26607-1-git-send-email-b51503@freescale.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Bai Ping <b51503@freescale.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, linux-clk@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arnd@arndb.de, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, olof@lixom.net, devicetree@vger.kernel.org, robh@kernel.org, will.deacon@arm.com
+Cc: LeoLi@freescale.com, bhupesh.sharma@freescale.com, Catalin.Marinas@arm.com, stuart.yoder@freescale.com, scottwood@freescale.com, bhupesh.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 11, 2015 at 8:45 AM, Bai Ping <b51503@freescale.com> wrote:
-> The i.MX6Qual Plus processor is an high performance SOC of i.MX6 family.
-> It has enhanced graphics performance and increased overall memory bandwidth
-> compared to i.MX6Q. Most of the design are same as i.MX6Qual/Dual, so code
-> for i.MX6Qual can be resued by this chip. The revision number is identied as
-> i.MX6Q Rev2.0, but actually it is a new chip, as we did many change to the
-> overall architecture.
->
-> This patch adds basic dts file for the new i.MX6Qual Plus processor.
->
-> Signed-off-by: Bai Ping <b51503@freescale.com>
-> ---
->  arch/arm/boot/dts/Makefile                |   2 +
->  arch/arm/boot/dts/imx6q.dtsi              |   2 +-
->  arch/arm/boot/dts/imx6qdl-sabresd.dtsi    |   1 +
->  arch/arm/boot/dts/imx6qp-sabreauto.dts    |  67 +++++++++++++
->  arch/arm/boot/dts/imx6qp-sabresd.dts      |  59 +++++++++++
->  arch/arm/boot/dts/imx6qp.dtsi             | 157 ++++++++++++++++++++++++++++++
->  include/dt-bindings/clock/imx6qdl-clock.h |  16 ++-
+This is the v2 of patchset which adds the support for SP805 WDT on FSL LS2080A
+and also adds the missing documentation of SP805 WDT device-tree bindings.
 
-Better split this in three patches:
+Rebased against arm-soc/next/dt
 
-- Add imx6qp SoC support
-- Add imx6qdl-sabresd support
-- Add imx6qp-sabreauto support
+Changes since v1:
+(v1 can be viewed here: http://www.spinics.net/lists/devicetree/msg102487.html)
+
+- Addressed Rob and Mark's comments regarding the mandatory CLK sources
+- Removed interrupt property from the bindings for now (as discussed
+  with Mark on IRC) till Will's patch proceeds further and enables
+  handling the WDOG interrupts for each core connected to the same PPI
+  line (http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/391616.html)
+
+Bhupesh Sharma (2):
+  Documentation: DT: Add entry for ARM SP805-WDT
+  dts/ls2080a: Update DTSI to add support of SP805 WDT
+
+ .../devicetree/bindings/watchdog/sp805-wdt.txt     |   29 ++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi     |   56 ++++++++++++++++++++
+ 2 files changed, 85 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+
+-- 
+1.7.9.5
