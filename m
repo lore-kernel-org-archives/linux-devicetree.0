@@ -1,114 +1,130 @@
-From: Dirk Behme <dirk.behme@gmail.com>
-Subject: [PATCH 2/2] arm64: dts: r8a7795: Add L2 cache-controller nodes
-Date: Sat, 12 Dec 2015 08:16:47 +0100
-Message-ID: <1449904607-4060-2-git-send-email-dirk.behme@gmail.com>
-References: <1449904607-4060-1-git-send-email-dirk.behme@gmail.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1449904607-4060-1-git-send-email-dirk.behme@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org, horms@verge.net.au, geert+renesas@glider.be
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dirk Behme <dirk.behme@gmail.com>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: [RFC PATCH 3/7] doc: dt: mtd: partition: add on-flash format
+ binding
+Date: Sat, 12 Dec 2015 16:51:05 +1100
+Message-ID: <20151212055105.GA17011@voom.fritz.box>
+References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
+ <1449292763-129421-4-git-send-email-computersforpeace@gmail.com>
+ <CAOiHx=nz2bdA_R610ozsQHhccdcrHVVCamTtne5ReHrA-FcaaQ@mail.gmail.com>
+ <CAOMqctTbUNd0GtY07YJuxem9HkU1WZ-NtO556=Yg2QrsF49Xjw@mail.gmail.com>
+ <20151207013628.GC20139@voom.fritz.box>
+ <20151210204324.GK144338@google.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/9DWx/yDrRhgMJTb"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151210204324.GK144338@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Michal Suchanek <hramrach@gmail.com>, Jonas Gorski <jogo@openwrt.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, devicetree-spec@vger.kernel.org, Simon Arlott <simon@fire.lp0.eu>, Linus Walleij <linus.walleij@linaro.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robh+dt@kernel.org>, MTD Maling List <linux-mtd@lists.infradead.org>, Hauke Mehrtens <hauke@hauke-m.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Add device nodes for the L2 caches, and link the CPU node to its L2
-cache node.
+--/9DWx/yDrRhgMJTb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The L2 cache for the Cortex-A57 CPU cores is 2 MiB large (organized as
-128 KiB x 16 ways).
+On Thu, Dec 10, 2015 at 12:43:24PM -0800, Brian Norris wrote:
+> On Mon, Dec 07, 2015 at 12:36:28PM +1100, David Gibson wrote:
+> > On Sat, Dec 05, 2015 at 10:33:30PM +0100, Michal Suchanek wrote:
+> > > On 5 December 2015 at 12:39, Jonas Gorski <jogo@openwrt.org> wrote:
+> > > > On Sat, Dec 5, 2015 at 6:19 AM, Brian Norris
+> > > > <computersforpeace@gmail.com> wrote:
+> > >=20
+> > > >> +
+> > > >> +Examples:
+> > > >> +
+> > > >> +flash@0 {
+> > > >> +       partitions {
+> > > >> +               compatible =3D "google,fmap";
+> > > >> +       };
+> > > >> +};
+> > > >
+> > > > I wonder if this wouldn't be better served in a separate binding doc
+> > > > with its compatible name as the filename, like we do with
+> > > > driver^Whardware blocks, especially if we want to add more parsers.
+> > >=20
+> > >=20
+> > > I find that *very* counter productive for bindings that go to the same
+> > > node. You have a description of a node, and then suddenly there you
+> > > have another file with another description of the same node. Totally
+> > > awesome.
+> >=20
+> > I can't actually work out from that if you're agreeing with the
+> > original post or the first reply.
+>=20
+> Perhaps I'm biased, but I think he was agreeing with the first reply.
+> (Particularly, "I find that *very* counter productive" uses the word
+> "that" to refer to "separate binding doc[s]".)
+>=20
+> > > Also how do you plan to write partitioning schemes with parameters
+> > > like with non-zero offset of the partition table.
+>=20
+> If you are directing this question at me: I don't have a specific plan
+> for it. MTD parsers don't currently take external input for this; many
+> scan the whole device, but some might also have conventions built into
+> the parser itself too, so this just gets hooked based on "compatible".
+> But if the need arose, I would hope we could work out a common binding.
+>=20
+> > Presumably with properties in the patitions node.  Not seeing the
+> > problem here.
+>=20
+> I believe Michal is bringing up the (important, IMO) point that if
+> distinct partition types are being described in the same node, then any
+> use of additional properties *must* be closely coordinated. We can't
+> have two parsers "foo" and "bar" defining conflicting uses of the same
+> property in the same node, like this:
+>=20
+> 	partitions {
+> 		compatible =3D "foo", "bar";
+> 		property-baz =3D ...; // e.g., reg =3D <...>;
+> 	};
+>=20
+> where if "foo" is not found, we fall back to "bar". But what if "foo"
+> and "bar" use "property-baz" differently?
 
-The L2 cache for the Cortex-A53 CPU cores is 512 KiB large (organized as
-32 KiB x 16 ways).
+Ah.. that is an excellent point, and leads me to realise that using
+compatible in this way is wrong.  The whole point of compatible is
+that the node is, well, compatible with *all* the things in the list,
+and therefore the things in the list are compatible with each other.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Dirk Behme <dirk.behme@gmail.com>
----
-Note: Geert: I picked your patch from
+Using it for a list of entirely different things to attempt in order
+is not correct.
 
-http://www.spinics.net/lists/arm-kernel/msg466628.html
 
-incoporated some review comments and rebased it against
+> Having everything in one doc would help ensure that the entire
+> "partitions" binding is considered as a whole when extending it, in my
+> (and an in my interpretation of Michal's) opinion.
+>=20
+> Brian
 
-https://git.kernel.org/cgit/linux/kernel/git/horms/renesas.git/log/?h=next renesas-next-20151211v2-v4.4-rc1 
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+--/9DWx/yDrRhgMJTb
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index 3633a2a..d63a70f 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -39,6 +39,7 @@
- 			compatible = "arm,cortex-a57", "arm,armv8";
- 			reg = <0x0>;
- 			device_type = "cpu";
-+			next-level-cache = <&L2_CA57>;
- 			enable-method = "psci";
- 		};
- 
-@@ -46,46 +47,61 @@
- 			compatible = "arm,cortex-a57","arm,armv8";
- 			reg = <0x1>;
- 			device_type = "cpu";
-+			next-level-cache = <&L2_CA57>;
- 			enable-method = "psci";
- 		};
- 		a57_2: cpu@2 {
- 			compatible = "arm,cortex-a57","arm,armv8";
- 			reg = <0x2>;
- 			device_type = "cpu";
-+			next-level-cache = <&L2_CA57>;
- 			enable-method = "psci";
- 		};
- 		a57_3: cpu@3 {
- 			compatible = "arm,cortex-a57","arm,armv8";
- 			reg = <0x3>;
- 			device_type = "cpu";
-+			next-level-cache = <&L2_CA57>;
- 			enable-method = "psci";
- 		};
- 		a53_0: cpu@100 {
- 			compatible = "arm,cortex-a53", "arm,armv8";
- 			reg = <0x100>;
- 			device_type = "cpu";
-+			next-level-cache = <&L2_CA53>;
- 			enable-method = "psci";
- 		};
- 		a53_1: cpu@101 {
- 			compatible = "arm,cortex-a53","arm,armv8";
- 			reg = <0x101>;
- 			device_type = "cpu";
-+			next-level-cache = <&L2_CA53>;
- 			enable-method = "psci";
- 		};
- 		a53_2: cpu@102 {
- 			compatible = "arm,cortex-a53","arm,armv8";
- 			reg = <0x102>;
- 			device_type = "cpu";
-+			next-level-cache = <&L2_CA53>;
- 			enable-method = "psci";
- 		};
- 		a53_3: cpu@103 {
- 			compatible = "arm,cortex-a53","arm,armv8";
- 			reg = <0x103>;
- 			device_type = "cpu";
-+			next-level-cache = <&L2_CA53>;
- 			enable-method = "psci";
- 		};
- 	};
- 
-+	L2_CA57: cache-controller@0 {
-+		compatible = "cache";
-+	};
-+
-+	L2_CA53: cache-controller@1 {
-+		compatible = "cache";
-+	};
-+
- 	extal_clk: extal {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
--- 
-2.6.4
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
+iQIcBAEBAgAGBQJWa7XJAAoJEGw4ysog2bOSBWoQALjYls+DpoYTVxJCSeQxE1Fk
+OKGQir1DdPa+/sufisuieOvw3vn5tPV96s13n82I+86G0V83Qi3PoYMpU+I8wOx7
+zR6UNI0VmyRWEDOrGKP62K+iCEqYEDTcyaf/lvGLP9XcDYLfar20DDTOmIrWt+7T
+5NcLx5EG93VxES99iyaYqKTODB85R4X0z9O9AewaE+qHQDjvrgL2yn74dmPMlE79
+CyUcEGEErPFOA5EgQOK69YDfUxdrPbL2uVFuyzuQSDapSgwxPSiVCdApxBZEp9wY
+Rvxn/7TIDAaua2tMKQvvhDk6Tt4figSFTV0199vKrPUqfy29w9JY0XdPR5mdM8zg
+bNjMuazbeTMzpIr7tdJWh+ipA/rTsdXTVmSbGnQIzkRlDFiRBg4M+T8ZbcWbDujz
+MNO91QoRYnzICNH+dN6+npPZJkoI52cxfUMi8qd/Lf3t6HmxS7cYe/ZOru49VS5c
+uWWFqJCGMaNMZ+xvrIYvlD/HGTFxus9SHaKgE804QaxSPc+W15+1x0sp1v95XW9o
+Y3oqUclqIX7i58iN2cYavbA4XwoLdENhLtvErMXNTjZ69UkBGU/ZNjT2NDZpanfv
+x27guz5PeF8tjHUJJuyD3+eIkhPEVIJOq/P8ShjmjM0nN714BnEH8auZGyF/O7D7
+RwlTJDiIb+g1cbekXl0D
+=YGRz
+-----END PGP SIGNATURE-----
+
+--/9DWx/yDrRhgMJTb--
