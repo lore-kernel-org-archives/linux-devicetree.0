@@ -1,61 +1,114 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 0/4] arm,arm64: uniphier: add a new driver, device tree updates
-Date: Sat, 12 Dec 2015 15:57:47 +0900
-Message-ID: <CAK7LNATcvAFr3joQ0xjZ+M+HEmPubXxj_v09r1VPfTnGtnRKpQ@mail.gmail.com>
-References: <1448357962-12259-1-git-send-email-yamada.masahiro@socionext.com>
-	<10682472.c84OiaBWfX@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <10682472.c84OiaBWfX@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: arm@kernel.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+From: Dirk Behme <dirk.behme@gmail.com>
+Subject: [PATCH 1/2] arm64: dts: r8a7795: Add Cortex-A53 CPU cores
+Date: Sat, 12 Dec 2015 08:16:46 +0100
+Message-ID: <1449904607-4060-1-git-send-email-dirk.behme@gmail.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org, horms@verge.net.au, geert+renesas@glider.be
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Dirk Behme <dirk.behme@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
 
+This patch adds Cortex-A53 CPU cores to r8a7795 SoC for a total of 8
+cores (4 x Cortex-A57 + 4 x Cortex-A53).
 
-Sorry for confusing you.
+Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+Signed-off-by: Dirk Behme <dirk.behme@gmail.com>
+---
+Note: This patch is picked from
 
-2015-12-12 9:12 GMT+09:00 Arnd Bergmann <arnd@arndb.de>:
-> On Tuesday 24 November 2015 18:39:18 Masahiro Yamada wrote:
->>
->> Here is another series for UniPhier SoC family:
->>
->>  - 1/4: add a new driver.  The UniPhier System Bus is an external bus
->>         where on-board devices are connected to the SoC.
->>         (please check if the binding specification is OK.)
->>
->>  - 2/4: device tree updates to use the driver added by 1/4
->>
->>  - 3/4: trivial rename of device node names
->>
->>  - 4/4: initial commit for ARMv8 SoC/Board device trees
->>
->> Please apply 2/4, 3/4/, 4/4 into the same branch because 4/4 depends on 2/4 and 3/4.
->> (4/4 creates symbolic links to ARM device trees.)
->
-> I'm a bit confused how this relates to the newer version ("[PATCH v5] bus:
-> uniphier-system-bus: add UniPhier System Bus driver"). The new version
-> only has one patch instead of four, so I'm not sure if the patches 2, 3
-> and 4 of this series still apply.
->
-> Can you clarify, or send the entire series again?
->
->         Arnd
+https://git.kernel.org/cgit/linux/kernel/git/horms/renesas-bsp.git/log/?h=v4.2/rcar-3.0.x
 
+and rebased against
 
-I'd like to retract this series.
-Please just disregard it.
+https://git.kernel.org/cgit/linux/kernel/git/horms/renesas.git/log/?h=next renesas-next-20151211v2-v4.4-rc1
 
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 46 +++++++++++++++++++++++++++-----
+ 1 file changed, 39 insertions(+), 7 deletions(-)
 
-Instead, please review this one:
-https://patchwork.kernel.org/patch/7714151/
-
-
-Thanks!
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index b9229a4..3633a2a 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -60,6 +60,30 @@
+ 			device_type = "cpu";
+ 			enable-method = "psci";
+ 		};
++		a53_0: cpu@100 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x100>;
++			device_type = "cpu";
++			enable-method = "psci";
++		};
++		a53_1: cpu@101 {
++			compatible = "arm,cortex-a53","arm,armv8";
++			reg = <0x101>;
++			device_type = "cpu";
++			enable-method = "psci";
++		};
++		a53_2: cpu@102 {
++			compatible = "arm,cortex-a53","arm,armv8";
++			reg = <0x102>;
++			device_type = "cpu";
++			enable-method = "psci";
++		};
++		a53_3: cpu@103 {
++			compatible = "arm,cortex-a53","arm,armv8";
++			reg = <0x103>;
++			device_type = "cpu";
++			enable-method = "psci";
++		};
+ 	};
+ 
+ 	extal_clk: extal {
+@@ -115,7 +139,7 @@
+ 			reg = <0x0 0xf1010000 0 0x1000>,
+ 			      <0x0 0xf1020000 0 0x2000>;
+ 			interrupts = <GIC_PPI 9
+-					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
++					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		};
+ 
+ 		gpio0: gpio@e6050000 {
+@@ -235,23 +259,31 @@
+ 			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
++				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-affinity = <&a57_0>,
+ 					     <&a57_1>,
+ 					     <&a57_2>,
+-					     <&a57_3>;
++					     <&a57_3>,
++					     <&a53_0>,
++					     <&a53_1>,
++					     <&a53_2>,
++					     <&a53_3>;
+ 		};
+ 
+ 		timer {
+ 			compatible = "arm,armv8-timer";
+ 			interrupts = <GIC_PPI 13
+-					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+ 				     <GIC_PPI 14
+-					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+ 				     <GIC_PPI 11
+-					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+ 				     <GIC_PPI 10
+-					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
++					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
+ 		};
+ 
+ 		cpg: clock-controller@e6150000 {
 -- 
-Best Regards
-Masahiro Yamada
+2.6.4
+
