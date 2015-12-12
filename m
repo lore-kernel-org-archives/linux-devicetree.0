@@ -1,40 +1,29 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 0/4] arm,arm64: uniphier: add a new driver, device tree updates
-Date: Sat, 12 Dec 2015 01:12:05 +0100
-Message-ID: <10682472.c84OiaBWfX@wuerfel>
-References: <1448357962-12259-1-git-send-email-yamada.masahiro@socionext.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH 0/4] arm: dts: qcom-apq8064: add smem and hwspinlock
+ support
+Date: Fri, 11 Dec 2015 16:22:00 -0800
+Message-ID: <20151212002200.GO4000@usrtlx11787.corpusers.net>
+References: <1449858409-13296-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448357962-12259-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: arm@kernel.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1449858409-13296-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 24 November 2015 18:39:18 Masahiro Yamada wrote:
-> 
-> Here is another series for UniPhier SoC family:
-> 
->  - 1/4: add a new driver.  The UniPhier System Bus is an external bus
->         where on-board devices are connected to the SoC.
->         (please check if the binding specification is OK.)
-> 
->  - 2/4: device tree updates to use the driver added by 1/4
-> 
->  - 3/4: trivial rename of device node names
-> 
->  - 4/4: initial commit for ARMv8 SoC/Board device trees
-> 
-> Please apply 2/4, 3/4/, 4/4 into the same branch because 4/4 depends on 2/4 and 3/4.
-> (4/4 creates symbolic links to ARM device trees.)
+On Fri 11 Dec 10:26 PST 2015, Srinivas Kandagatla wrote:
 
-I'm a bit confused how this relates to the newer version ("[PATCH v5] bus:
-uniphier-system-bus: add UniPhier System Bus driver"). The new version
-only has one patch instead of four, so I'm not sure if the patches 2, 3
-and 4 of this series still apply.
+> Hi Andy, 
+> 
+> Here are 3 patches for smem/hwspinlock which I have tested with QDSP on IFC6410.
+> Also a fix from Ivan which I think can be taken aswell.
+> 
 
-Can you clarify, or send the entire series again?
+As far as I can tell my patch for adding smem and hwmutex are already in
+linux-next, via Andy's tree. Am I missing something?
 
-	Arnd
+Regards,
+Bjorn
