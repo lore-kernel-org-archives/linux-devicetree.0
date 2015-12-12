@@ -1,130 +1,123 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [RFC PATCH 3/7] doc: dt: mtd: partition: add on-flash format
- binding
-Date: Sat, 12 Dec 2015 16:51:05 +1100
-Message-ID: <20151212055105.GA17011@voom.fritz.box>
-References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
- <1449292763-129421-4-git-send-email-computersforpeace@gmail.com>
- <CAOiHx=nz2bdA_R610ozsQHhccdcrHVVCamTtne5ReHrA-FcaaQ@mail.gmail.com>
- <CAOMqctTbUNd0GtY07YJuxem9HkU1WZ-NtO556=Yg2QrsF49Xjw@mail.gmail.com>
- <20151207013628.GC20139@voom.fritz.box>
- <20151210204324.GK144338@google.com>
+From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH v2] spi: dts: sun4i: Add support for
+ inter-word wait cycles using the SPI Wait Clock Register
+Date: Sat, 12 Dec 2015 11:19:40 +0200
+Message-ID: <1449911980.29015.7.camel@plaes.org>
+References: <1449873940-10167-1-git-send-email-mweseloh42@gmail.com>
+Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/9DWx/yDrRhgMJTb"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151210204324.GK144338@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: Michal Suchanek <hramrach@gmail.com>, Jonas Gorski <jogo@openwrt.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, devicetree-spec@vger.kernel.org, Simon Arlott <simon@fire.lp0.eu>, Linus Walleij <linus.walleij@linaro.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robh+dt@kernel.org>, MTD Maling List <linux-mtd@lists.infradead.org>, Hauke Mehrtens <hauke@hauke-m.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDJLTBEBXENBBTWNV6ZQKGQE2C3INAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1449873940-10167-1-git-send-email-mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 2015-12-11 at 23:45 +0100, Marcus Weseloh wrote:
 
---/9DWx/yDrRhgMJTb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[...]
+>=20
+> diff --git a/Documentation/devicetree/bindings/spi/spi-sun4i.txt b/Docume=
+ntation/devicetree/bindings/spi/spi-sun4i.txt
+> index de827f5..d6c55fc 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-sun4i.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-sun4i.txt
+> @@ -10,6 +10,10 @@ Required properties:
+> =C2=A0=C2=A0=C2=A0- "mod": the parent module clock
+> =C2=A0- clock-names: Must contain the clock names described just above
+> =C2=A0
+> +Optional properties for slave devices:
+> +- sun4i,spi-word-wait-ns: hardware based delay in nanoseconds between
+> +			=C2=A0=C2=A0transmission of words
 
-On Thu, Dec 10, 2015 at 12:43:24PM -0800, Brian Norris wrote:
-> On Mon, Dec 07, 2015 at 12:36:28PM +1100, David Gibson wrote:
-> > On Sat, Dec 05, 2015 at 10:33:30PM +0100, Michal Suchanek wrote:
-> > > On 5 December 2015 at 12:39, Jonas Gorski <jogo@openwrt.org> wrote:
-> > > > On Sat, Dec 5, 2015 at 6:19 AM, Brian Norris
-> > > > <computersforpeace@gmail.com> wrote:
-> > >=20
-> > > >> +
-> > > >> +Examples:
-> > > >> +
-> > > >> +flash@0 {
-> > > >> +       partitions {
-> > > >> +               compatible =3D "google,fmap";
-> > > >> +       };
-> > > >> +};
-> > > >
-> > > > I wonder if this wouldn't be better served in a separate binding doc
-> > > > with its compatible name as the filename, like we do with
-> > > > driver^Whardware blocks, especially if we want to add more parsers.
-> > >=20
-> > >=20
-> > > I find that *very* counter productive for bindings that go to the same
-> > > node. You have a description of a node, and then suddenly there you
-> > > have another file with another description of the same node. Totally
-> > > awesome.
-> >=20
-> > I can't actually work out from that if you're agreeing with the
-> > original post or the first reply.
->=20
-> Perhaps I'm biased, but I think he was agreeing with the first reply.
-> (Particularly, "I find that *very* counter productive" uses the word
-> "that" to refer to "separate binding doc[s]".)
->=20
-> > > Also how do you plan to write partitioning schemes with parameters
-> > > like with non-zero offset of the partition table.
->=20
-> If you are directing this question at me: I don't have a specific plan
-> for it. MTD parsers don't currently take external input for this; many
-> scan the whole device, but some might also have conventions built into
-> the parser itself too, so this just gets hooked based on "compatible".
-> But if the need arose, I would hope we could work out a common binding.
->=20
-> > Presumably with properties in the patitions node.  Not seeing the
-> > problem here.
->=20
-> I believe Michal is bringing up the (important, IMO) point that if
-> distinct partition types are being described in the same node, then any
-> use of additional properties *must* be closely coordinated. We can't
-> have two parsers "foo" and "bar" defining conflicting uses of the same
-> property in the same node, like this:
->=20
-> 	partitions {
-> 		compatible =3D "foo", "bar";
-> 		property-baz =3D ...; // e.g., reg =3D <...>;
-> 	};
->=20
-> where if "foo" is not found, we fall back to "bar". But what if "foo"
-> and "bar" use "property-baz" differently?
+Should be 'allwinner,spi-word-wait-ns'
 
-Ah.. that is an excellent point, and leads me to realise that using
-compatible in this way is wrong.  The whole point of compatible is
-that the node is, well, compatible with *all* the things in the list,
-and therefore the things in the list are compatible with each other.
+Vendor prefix do come from:
+Documentation/devicetree/bindings/vendor-prefixes.txt
 
-Using it for a list of entirely different things to attempt in order
-is not correct.
+> +
+> =C2=A0Example:
+> =C2=A0
+> =C2=A0spi1: spi@01c06000 {
+> @@ -21,4 +25,11 @@ spi1: spi@01c06000 {
+> =C2=A0	status =3D "disabled";
+> =C2=A0	#address-cells =3D <1>;
+> =C2=A0	#size-cells =3D <0>;
+> +
+> +	spi1_0 {
+> +		compatible =3D "example,dummy";
+> +		reg =3D <0>;
+> +		spi-max-frequency =3D <1000000>;
+> +		sun4i,spi-word-wait-ns =3D <12000>;
+> +	};
+> =C2=A0};
+> diff --git a/drivers/spi/spi-sun4i.c b/drivers/spi/spi-sun4i.c
+> index f60a6d6..8cfd96c 100644
+> --- a/drivers/spi/spi-sun4i.c
+> +++ b/drivers/spi/spi-sun4i.c
+> @@ -19,6 +19,7 @@
+> =C2=A0#include=20
+> =C2=A0#include=20
+> =C2=A0#include=20
+> +#include=20
+> =C2=A0
+> =C2=A0#include=20
+> =C2=A0
+> @@ -173,6 +174,9 @@ static int sun4i_spi_transfer_one(struct spi_master *=
+master,
+> =C2=A0	unsigned int tx_len =3D 0;
+> =C2=A0	int ret =3D 0;
+> =C2=A0	u32 reg;
+> +	u32 wait_ns =3D 0;
+> +	int wait_clk =3D 0;
+> +	int clk_ns =3D 0;
+> =C2=A0
+> =C2=A0	/* We don't support transfer larger than the FIFO */
+> =C2=A0	if (tfr->len > SUN4I_FIFO_DEPTH)
+> @@ -261,6 +265,25 @@ static int sun4i_spi_transfer_one(struct spi_master =
+*master,
+> =C2=A0
+> =C2=A0	sun4i_spi_write(sspi, SUN4I_CLK_CTL_REG, reg);
+> =C2=A0
+> +	/* Setup wait time beteen words */
+typo
 
-
-> Having everything in one doc would help ensure that the entire
-> "partitions" binding is considered as a whole when extending it, in my
-> (and an in my interpretation of Michal's) opinion.
+> +	of_property_read_u32(spi->dev.of_node, "sun4i,spi-word-wait-ns",
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0&wait_ns);
+> +	if (wait_ns) {
+> +		/* The wait time is set in SPI_CLK cycles. The SPI hardware
+> +		=C2=A0* needs 3 additional cycles to setup the wait counter, so
+> +		=C2=A0* the minimum delay time is 4 cycles.
+> +		=C2=A0*/
+> +		clk_ns =3D DIV_ROUND_UP(1000000000, tfr->speed_hz);
+> +		wait_clk =3D DIV_ROUND_UP(wait_ns, clk_ns) - 3;
+> +		if (wait_clk < 1) {
+> +			wait_clk =3D 1;
+> +			dev_info(&spi->dev,
+> +				=C2=A0"using minimum of 4 word wait cycles (%uns)",
+> +				=C2=A04 * clk_ns);
+> +		}
+> +	}
+> +	sun4i_spi_write(sspi, SUN4I_WAIT_REG, (u16)wait_clk);
+> +
+> =C2=A0	/* Setup the transfer now... */
+> =C2=A0	if (sspi->tx_buf)
+> =C2=A0		tx_len =3D tfr->len;
+> --=C2=A0
+> 1.9.1
 >=20
-> Brian
 
 --=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---/9DWx/yDrRhgMJTb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWa7XJAAoJEGw4ysog2bOSBWoQALjYls+DpoYTVxJCSeQxE1Fk
-OKGQir1DdPa+/sufisuieOvw3vn5tPV96s13n82I+86G0V83Qi3PoYMpU+I8wOx7
-zR6UNI0VmyRWEDOrGKP62K+iCEqYEDTcyaf/lvGLP9XcDYLfar20DDTOmIrWt+7T
-5NcLx5EG93VxES99iyaYqKTODB85R4X0z9O9AewaE+qHQDjvrgL2yn74dmPMlE79
-CyUcEGEErPFOA5EgQOK69YDfUxdrPbL2uVFuyzuQSDapSgwxPSiVCdApxBZEp9wY
-Rvxn/7TIDAaua2tMKQvvhDk6Tt4figSFTV0199vKrPUqfy29w9JY0XdPR5mdM8zg
-bNjMuazbeTMzpIr7tdJWh+ipA/rTsdXTVmSbGnQIzkRlDFiRBg4M+T8ZbcWbDujz
-MNO91QoRYnzICNH+dN6+npPZJkoI52cxfUMi8qd/Lf3t6HmxS7cYe/ZOru49VS5c
-uWWFqJCGMaNMZ+xvrIYvlD/HGTFxus9SHaKgE804QaxSPc+W15+1x0sp1v95XW9o
-Y3oqUclqIX7i58iN2cYavbA4XwoLdENhLtvErMXNTjZ69UkBGU/ZNjT2NDZpanfv
-x27guz5PeF8tjHUJJuyD3+eIkhPEVIJOq/P8ShjmjM0nN714BnEH8auZGyF/O7D7
-RwlTJDiIb+g1cbekXl0D
-=YGRz
------END PGP SIGNATURE-----
-
---/9DWx/yDrRhgMJTb--
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
