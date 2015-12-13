@@ -1,37 +1,37 @@
-From: Western Union Money Transfer Office <info-SYOtdDaUK6FpfZW5I2bhcw@public.gmane.org>
-Subject: Congratulation
-Date: Sat, 12 Dec 2015 19:38:10 +0100
-Message-ID: <201512121819.tBCIGx80007010@mx1.nbrc.ac.in>
-Reply-To: westernunion_officeng1-/E1597aS9LQAvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+From: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: [PATCH 0/5] ARM: dts: cm-t335: add peripheral support
+Date: Sun, 13 Dec 2015 10:55:34 +0200
+Message-ID: <1449996939-13901-1-git-send-email-uri.mashiach@compulab.co.il>
+References: <1445948100-16446-1-git-send-email-uri.mashiach@compulab.co.il>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Description: Mail message body
+In-Reply-To: <1445948100-16446-1-git-send-email-uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Recipients <info-SYOtdDaUK6FpfZW5I2bhcw@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Attention you have been awarded with the sum of $200,000 USD by
-the Western Union Money Transfer Office, As part of our Annual market
-promotions this Year @2015.
+Add support for the following CM-T335 module peripherals:
+USB, I2C controller, LCD/DVI, bluetooth
 
-Get back us for claim by filling the details stated here:
+Ilya Ledvich (1):
+  ARM: dts: cm-t335: add support for USB0
 
-1. Name:______
-2. Address________
-3. Country:_______
-4. Phone Number____
-5. Occupation:________
-6. Sex:_______________
-7. Age________________
+Uri Mashiach (4):
+  ARM: dts: cm-t335: add support for SBC-T335
+  ARM: dts: cm-t335: add support for I2C GPIO expander
+  ARM: dts: cm-t335: add support for DVI/LCD
+  ARM: dts: cm-t335: add support for bluetooth
 
-Name: Mr.Leo Sam
+ .../devicetree/bindings/arm/omap/omap.txt          |   3 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/am335x-cm-t335.dts               |  51 ++++-
+ arch/arm/boot/dts/am335x-sbc-t335.dts              | 219 +++++++++++++++++++++
+ 4 files changed, 273 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/am335x-sbc-t335.dts
 
-Contact Email: westernunion_officeng-/E1597aS9LQAvxtiuMwx3w@public.gmane.org
+-- 
+2.5.0
 
-Regard
-Mr.Leo Sam
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
