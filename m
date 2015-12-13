@@ -1,115 +1,79 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] spi: dts: sun4i: Add support for hardware-based wait
- time between words
-Date: Sun, 13 Dec 2015 19:29:37 -0600
-Message-ID: <20151214012937.GA12209@rob-hp-laptop>
-References: <1449873940-10167-1-git-send-email-mweseloh42@gmail.com>
- <1450047853-9005-1-git-send-email-mweseloh42@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 4/7] media: vb2-dma-contig: add helper for setting dma max seg size
+Date: Sun, 13 Dec 2015 21:57:40 +0200
+Message-ID: <3238962.HlGfVT9mcy@avalon>
+References: <1449669502-24601-1-git-send-email-m.szyprowski@samsung.com> <1449669502-24601-5-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1450047853-9005-1-git-send-email-mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1449669502-24601-5-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 14, 2015 at 12:04:11AM +0100, Marcus Weseloh wrote:
-> Adds a new property "spi-word-wait-ns" to the spi-bus binding that allows
-> SPI slave devices to set a hardware based wait time between the
-> transmission of words. Also modifies the sun4i SPI master driver to make
-> use of the new property. This specific SPI controller needs 3 clock
-> cycles to set up the delay, which makes the minimum non-zero wait time
-> on this hardware 4 clock cycles.
+Hi Marek,
+
+Thank you for the patch.
+
+On Wednesday 09 December 2015 14:58:19 Marek Szyprowski wrote:
+> Add a helper function for device drivers to set DMA's max_seg_size.
+> Setting it to largest possible value lets DMA-mapping API always create
+> contiguous mappings in DMA address space. This is essential for all
+> devices, which use dma-contig videobuf2 memory allocator and shared
+> buffers.
 > 
-> Signed-off-by: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > ---
-> Changes from v1:
->  * renamed the property for more clarity
->  * wait time is set in nanoseconds instead of number of clock cycles
->  * transparently handle the 3 setup clock cycles
+>  drivers/media/v4l2-core/videobuf2-dma-contig.c | 15 +++++++++++++++
+>  include/media/videobuf2-dma-contig.h           |  1 +
+>  2 files changed, 16 insertions(+)
 > 
-> Changes from v2:
->  * fixed typo in comment
->  * moved parameter to spi-bus binding, dropping the vendor prefix
->  * changed commit summary and description to reflect the changes
-> ---
->  Documentation/devicetree/bindings/spi/spi-bus.txt |  2 ++
->  drivers/spi/spi-sun4i.c                           | 23 +++++++++++++++++++++++
->  2 files changed, 25 insertions(+)
+> diff --git a/drivers/media/v4l2-core/videobuf2-dma-contig.c
+> b/drivers/media/v4l2-core/videobuf2-dma-contig.c index c331272..628518d
+> 100644
+> --- a/drivers/media/v4l2-core/videobuf2-dma-contig.c
+> +++ b/drivers/media/v4l2-core/videobuf2-dma-contig.c
+> @@ -742,6 +742,21 @@ void vb2_dma_contig_cleanup_ctx(void *alloc_ctx)
+>  }
+>  EXPORT_SYMBOL_GPL(vb2_dma_contig_cleanup_ctx);
 > 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> index bbaa857..2d6034f 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> @@ -61,6 +61,8 @@ contain the following properties.
->                        used for MOSI. Defaults to 1 if not present.
->  - spi-rx-bus-width - (optional) The bus width(number of data wires) that
->                        used for MISO. Defaults to 1 if not present.
-> +- spi-word-wait-ns - (optional) Hardware based delay between transmission of
-> +                      words in nanoseconds
+> +int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size)
+> +{
+> +	if (!dev->dma_parms) {
 
-Could be a software delay if the h/w doesn't support delays.
+When can this function be called with dev->dma_parms not NULL ?
 
->  Some SPI controllers and devices support Dual and Quad SPI transfer mode.
->  It allows data in the SPI system to be transferred in 2 wires(DUAL) or 4 wires(QUAD).
-> diff --git a/drivers/spi/spi-sun4i.c b/drivers/spi/spi-sun4i.c
-> index f60a6d6..73995a1 100644
-> --- a/drivers/spi/spi-sun4i.c
-> +++ b/drivers/spi/spi-sun4i.c
-> @@ -19,6 +19,7 @@
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/of.h>
->  
->  #include <linux/spi/spi.h>
->  
-> @@ -173,6 +174,9 @@ static int sun4i_spi_transfer_one(struct spi_master *master,
->  	unsigned int tx_len = 0;
->  	int ret = 0;
->  	u32 reg;
-> +	u32 wait_ns = 0;
-> +	int wait_clk = 0;
-> +	int clk_ns = 0;
->  
->  	/* We don't support transfer larger than the FIFO */
->  	if (tfr->len > SUN4I_FIFO_DEPTH)
-> @@ -261,6 +265,25 @@ static int sun4i_spi_transfer_one(struct spi_master *master,
->  
->  	sun4i_spi_write(sspi, SUN4I_CLK_CTL_REG, reg);
->  
-> +	/* Setup wait time between words */
-> +	of_property_read_u32(spi->dev.of_node, "spi-word-wait-ns",
-> +			     &wait_ns);
-
-Read this in probe and save the value rather than fetching every 
-transfer.
-
-> +	if (wait_ns) {
-> +		/* The wait time is set in SPI_CLK cycles. The SPI hardware
-> +		 * needs 3 additional cycles to setup the wait counter, so
-> +		 * the minimum delay time is 4 cycles.
-> +		 */
-> +		clk_ns = DIV_ROUND_UP(1000000000, tfr->speed_hz);
-> +		wait_clk = DIV_ROUND_UP(wait_ns, clk_ns) - 3;
-> +		if (wait_clk < 1) {
-> +			wait_clk = 1;
-> +			dev_info(&spi->dev,
-> +				 "using minimum of 4 word wait cycles (%uns)",
-> +				 4 * clk_ns);
-> +		}
+> +		dev->dma_parms = devm_kzalloc(dev, sizeof(dev->dma_parms),
+> +					      GFP_KERNEL);
+> +		if (!dev->dma_parms)
+> +			return -ENOMEM;
 > +	}
-> +	sun4i_spi_write(sspi, SUN4I_WAIT_REG, (u16)wait_clk);
+> +	if (dma_get_max_seg_size(dev) < size)
+> +		return dma_set_max_seg_size(dev, size);
 > +
->  	/* Setup the transfer now... */
->  	if (sspi->tx_buf)
->  		tx_len = tfr->len;
-> -- 
-> 1.9.1
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(vb2_dma_contig_set_max_seg_size);
+> +
+>  MODULE_DESCRIPTION("DMA-contig memory handling routines for videobuf2");
+>  MODULE_AUTHOR("Pawel Osciak <pawel@osciak.com>");
+>  MODULE_LICENSE("GPL");
+> diff --git a/include/media/videobuf2-dma-contig.h
+> b/include/media/videobuf2-dma-contig.h index c33dfa6..0e6ba64 100644
+> --- a/include/media/videobuf2-dma-contig.h
+> +++ b/include/media/videobuf2-dma-contig.h
+> @@ -26,6 +26,7 @@ vb2_dma_contig_plane_dma_addr(struct vb2_buffer *vb,
+> unsigned int plane_no)
 > 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  void *vb2_dma_contig_init_ctx(struct device *dev);
+>  void vb2_dma_contig_cleanup_ctx(void *alloc_ctx);
+> +int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size);
+> 
+>  extern const struct vb2_mem_ops vb2_dma_contig_memops;
+
+-- 
+Regards,
+
+Laurent Pinchart
