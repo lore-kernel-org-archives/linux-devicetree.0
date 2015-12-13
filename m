@@ -1,41 +1,38 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] Input: add touchscreen support for TS-4800
-Date: Sat, 12 Dec 2015 20:58:58 -0800
-Message-ID: <20151213045858.GB22780@dtor-ws>
-References: <1449763872-572-1-git-send-email-damien.riegel@savoirfairelinux.com>
- <1449763872-572-2-git-send-email-damien.riegel@savoirfairelinux.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 01/16] serial: sh-sci: Drop the interface clock
+Date: Sat, 12 Dec 2015 22:42:37 -0800
+Message-ID: <20151213064237.GA16326@kroah.com>
+References: <1447958173-543-1-git-send-email-geert+renesas@glider.be>
+ <1447958173-543-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1449763872-572-2-git-send-email-damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
+In-Reply-To: <1447958173-543-2-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-serial@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Damien,
+On Thu, Nov 19, 2015 at 07:35:58PM +0100, Geert Uytterhoeven wrote:
+> From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> 
+> As no platform defines an interface clock the SCI driver always falls
+> back to a clock named "peripheral_clk".
+>   - On SH platforms that clock is the base clock for the SCI functional
+>     clock and has the same frequency,
+>   - On ARM platforms that clock doesn't exist, and clk_get() will return
+>     the default clock for the device.
+> We can thus make the functional clock mandatory and drop the interface
+> clock.
+> 
+> EPROBE_DEFER is handled for clocks that may be referenced from DT (i.e.
+> "fck" and deprecated "sci_ick").
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Acked-by: Simon Horman <horms+renesas@verge.net.au>
+> [geert: Handle EPROBE_DEFER, reformat description, break long comment line]
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-On Thu, Dec 10, 2015 at 11:11:12AM -0500, Damien Riegel wrote:
-> On this board, the touchscreen, an ads7843, is not handled directly by
-> Linux but by a companion FPGA. This FPGA is memory-mapped and the IP
-> design is very similar to the mk712.
-
-...
-
-> +
-> +	poll_dev = devm_input_allocate_polled_device(&pdev->dev);
-> +	if (!poll_dev)
-> +		return -ENOMEM;
-
-I wonder how useful touchscreen implemented as polling device is. Isn't
-there an interrupt line for it?
-
-Thanks.
-
--- 
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
