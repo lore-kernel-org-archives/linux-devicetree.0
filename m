@@ -1,88 +1,25 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v2 4/7] media: vb2-dma-contig: add helper for setting dma
- max seg size
-Date: Mon, 14 Dec 2015 10:20:22 +0100
-Message-ID: <566E89D6.40603@samsung.com>
-References: <1449669502-24601-1-git-send-email-m.szyprowski@samsung.com>
- <1449669502-24601-5-git-send-email-m.szyprowski@samsung.com>
- <3238962.HlGfVT9mcy@avalon>
+From: MyungJoo Ham <myungjoo.ham@samsung.com>
+Subject: Re: [PATCH v4 06/20] PM / devfreq: Add devfreq_get_devfreq_by_phandle()
+Date: Mon, 14 Dec 2015 09:26:00 +0000 (GMT)
+Message-ID: <237987415.662701450085154234.JavaMail.weblogic@epmlwas07b>
+Reply-To: myungjoo.ham@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <3238962.HlGfVT9mcy@avalon>
+MIME-version: 1.0
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: =?utf-8?Q?=EC=B5=9C=EC=B0=AC=EC=9A=B0?= <cw00.choi@samsung.com>, =?utf-8?Q?=ED=81=AC=EC=89=AC=EC=8B=9C=ED=86=A0=ED=94=84?= <k.kozlowski@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>
+Cc: =?utf-8?Q?=EB=B0=95=EA=B2=BD=EB=AF=BC?= <kyungmin.park@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "tjakobi@math.uni-bielefeld.de" <tjakobi@math.uni-bielefeld.de>, "linux.amoon@gmail.com" <linux.amoon@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On 2015-12-13 20:57, Laurent Pinchart wrote:
-> Hi Marek,
->
-> Thank you for the patch.
->
-> On Wednesday 09 December 2015 14:58:19 Marek Szyprowski wrote:
->> Add a helper function for device drivers to set DMA's max_seg_size.
->> Setting it to largest possible value lets DMA-mapping API always create
->> contiguous mappings in DMA address space. This is essential for all
->> devices, which use dma-contig videobuf2 memory allocator and shared
->> buffers.
->>
->> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> ---
->>   drivers/media/v4l2-core/videobuf2-dma-contig.c | 15 +++++++++++++++
->>   include/media/videobuf2-dma-contig.h           |  1 +
->>   2 files changed, 16 insertions(+)
->>
->> diff --git a/drivers/media/v4l2-core/videobuf2-dma-contig.c
->> b/drivers/media/v4l2-core/videobuf2-dma-contig.c index c331272..628518d
->> 100644
->> --- a/drivers/media/v4l2-core/videobuf2-dma-contig.c
->> +++ b/drivers/media/v4l2-core/videobuf2-dma-contig.c
->> @@ -742,6 +742,21 @@ void vb2_dma_contig_cleanup_ctx(void *alloc_ctx)
->>   }
->>   EXPORT_SYMBOL_GPL(vb2_dma_contig_cleanup_ctx);
->>
->> +int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size)
->> +{
->> +	if (!dev->dma_parms) {
-> When can this function be called with dev->dma_parms not NULL ?
-
-When one loads a module with multimedia driver (which calls this 
-function), then
-unloads and loads it again. It is rather safe to have this check.
-
->> +		dev->dma_parms = devm_kzalloc(dev, sizeof(dev->dma_parms),
->> +					      GFP_KERNEL);
->> +		if (!dev->dma_parms)
->> +			return -ENOMEM;
->> +	}
->> +	if (dma_get_max_seg_size(dev) < size)
->> +		return dma_set_max_seg_size(dev, size);
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(vb2_dma_contig_set_max_seg_size);
->> +
->>   MODULE_DESCRIPTION("DMA-contig memory handling routines for videobuf2");
->>   MODULE_AUTHOR("Pawel Osciak <pawel@osciak.com>");
->>   MODULE_LICENSE("GPL");
->> diff --git a/include/media/videobuf2-dma-contig.h
->> b/include/media/videobuf2-dma-contig.h index c33dfa6..0e6ba64 100644
->> --- a/include/media/videobuf2-dma-contig.h
->> +++ b/include/media/videobuf2-dma-contig.h
->> @@ -26,6 +26,7 @@ vb2_dma_contig_plane_dma_addr(struct vb2_buffer *vb,
->> unsigned int plane_no)
->>
->>   void *vb2_dma_contig_init_ctx(struct device *dev);
->>   void vb2_dma_contig_cleanup_ctx(void *alloc_ctx);
->> +int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size);
->>
->>   extern const struct vb2_mem_ops vb2_dma_contig_memops;
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+PiAgIA0KPiAgVGhpcyBwYXRjaCBhZGRzIHRoZSBuZXcgZGV2ZnJlcV9nZXRfZGV2ZnJlcV9ieV9w
+aGFuZGxlKCkgT0YgaGVscGVyIGZ1bmN0aW9uDQo+IHdoaWNoIGNhbiBmaW5kIHRoZSBpbnN0YW5j
+ZSBvZiBkZXZmcmVxIGRldmljZSBieSB1c2luZyBwaGFuZGxlICgiZGV2ZnJlcSIpLg0KPiANCj4g
+U2lnbmVkLW9mZi1ieTogQ2hhbndvbyBDaG9pIDxjdzAwLmNob2lAc2Ftc3VuZy5jb20+DQo+IFts
+aW51eC5hbW9vbjogVGVzdGVkIG9uIE9kcm9pZCBVM10NCj4gVGVzdGVkLWJ5OiBBbmFuZCBNb29u
+IDxsaW51eC5hbW9vbkBnbWFpbC5jb20+DQoNClNpZ25lZC1vZmYtYnk6IE15dW5nSm9vIEhhbSA8
+bXl1bmdqb28uaGFtQHNhbXN1bmcuY29tPg0KDQo+IC0tLQ0KPiAgZHJpdmVycy9kZXZmcmVxL2Rl
+dmZyZXEuYyB8IDQ0ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+DQo+ICBpbmNsdWRlL2xpbnV4L2RldmZyZXEuaCAgIHwgIDkgKysrKysrKysrDQo+ICAyIGZpbGVz
+IGNoYW5nZWQsIDUzIGluc2VydGlvbnMoKykNCj4gDQo=
