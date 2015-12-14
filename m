@@ -1,95 +1,145 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v3 07/12] ARM: shmobile: r8a7779 dtsi: Rename the serial port clock to fck
-Date: Mon, 14 Dec 2015 19:58:01 +0100
-Message-ID: <1450119486-1285-8-git-send-email-geert+renesas@glider.be>
-References: <1450119486-1285-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450119486-1285-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 1/3] [media] mt9v032: Add reset and standby gpios
+Date: Mon, 14 Dec 2015 21:26:25 +0200
+Message-ID: <1538607.GEJzzOouog@avalon>
+References: <1450104113-6392-1-git-send-email-mpa@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1450104113-6392-1-git-send-email-mpa@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Hi Markus,
 
-The clock is really the device functional clock, not the interface
-clock. Rename it.
+Thank you for the patch.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Acked-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
-v3:
-  - No changes,
+On Monday 14 December 2015 15:41:51 Markus Pargmann wrote:
+> Add optional reset and standby gpios. The reset gpio is used to reset
+> the chip in power_on().
+>=20
+> The standby gpio is not used currently. It is just unset, so the chip=
+ is
+> not in standby.
+>=20
+> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/media/i2c/mt9v032.txt      |  2 ++
+>  drivers/media/i2c/mt9v032.c                        | 28 ++++++++++++=
++++++++
+>  2 files changed, 30 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
+> b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt index
+> 202565313e82..100f0ae43269 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
+> @@ -20,6 +20,8 @@ Optional Properties:
+>=20
+>  - link-frequencies: List of allowed link frequencies in Hz. Each fre=
+quency
+> is expressed as a 64-bit big-endian integer.
+> +- reset-gpios: GPIO handle which is connected to the reset pin of th=
+e chip.
+> +- standby-gpios: GPIO handle which is connected to the standby pin o=
+f the
+> chip.
+>=20
+>  For further reading on port node refer to
+>  Documentation/devicetree/bindings/media/video-interfaces.txt.
+> diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.=
+c
+> index a68ce94ee097..c1bc564a0979 100644
+> --- a/drivers/media/i2c/mt9v032.c
+> +++ b/drivers/media/i2c/mt9v032.c
+> @@ -14,6 +14,7 @@
+>=20
+>  #include <linux/clk.h>
+>  #include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/i2c.h>
+>  #include <linux/log2.h>
+>  #include <linux/mutex.h>
+> @@ -251,6 +252,8 @@ struct mt9v032 {
+>=20
+>  	struct regmap *regmap;
+>  	struct clk *clk;
+> +	struct gpio_desc *reset_gpio;
+> +	struct gpio_desc *standby_gpio;
+>=20
+>  	struct mt9v032_platform_data *pdata;
+>  	const struct mt9v032_model_info *model;
+> @@ -312,16 +315,31 @@ static int mt9v032_power_on(struct mt9v032 *mt9=
+v032)
+>  	struct regmap *map =3D mt9v032->regmap;
+>  	int ret;
+>=20
+> +	if (mt9v032->reset_gpio)
+> +		gpiod_set_value_cansleep(mt9v032->reset_gpio, 1);
+> +
 
-v2:
-  - Add Acked-by.
----
- arch/arm/boot/dts/r8a7779.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+gpiod_set_value_cansleep() already checks whether the gpiod is NULL, yo=
+u don't=20
+need to duplicate the check here.
 
-diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
-index 4afd8b12f8694c13..aa71cd234ac4dd3e 100644
---- a/arch/arm/boot/dts/r8a7779.dtsi
-+++ b/arch/arm/boot/dts/r8a7779.dtsi
-@@ -216,7 +216,7 @@
- 		reg = <0xffe40000 0x100>;
- 		interrupts = <0 88 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp0_clks R8A7779_CLK_SCIF0>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 		power-domains = <&cpg_clocks>;
- 		status = "disabled";
- 	};
-@@ -227,7 +227,7 @@
- 		reg = <0xffe41000 0x100>;
- 		interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp0_clks R8A7779_CLK_SCIF1>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 		power-domains = <&cpg_clocks>;
- 		status = "disabled";
- 	};
-@@ -238,7 +238,7 @@
- 		reg = <0xffe42000 0x100>;
- 		interrupts = <0 90 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp0_clks R8A7779_CLK_SCIF2>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 		power-domains = <&cpg_clocks>;
- 		status = "disabled";
- 	};
-@@ -249,7 +249,7 @@
- 		reg = <0xffe43000 0x100>;
- 		interrupts = <0 91 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp0_clks R8A7779_CLK_SCIF3>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 		power-domains = <&cpg_clocks>;
- 		status = "disabled";
- 	};
-@@ -260,7 +260,7 @@
- 		reg = <0xffe44000 0x100>;
- 		interrupts = <0 92 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp0_clks R8A7779_CLK_SCIF4>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 		power-domains = <&cpg_clocks>;
- 		status = "disabled";
- 	};
-@@ -271,7 +271,7 @@
- 		reg = <0xffe45000 0x100>;
- 		interrupts = <0 93 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp0_clks R8A7779_CLK_SCIF5>;
--		clock-names = "sci_ick";
-+		clock-names = "fck";
- 		power-domains = <&cpg_clocks>;
- 		status = "disabled";
- 	};
--- 
-1.9.1
+Apart from that,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+No need to resubmit I'll fix this when applying.
+
+>  	ret =3D clk_set_rate(mt9v032->clk, mt9v032->sysclk);
+>  	if (ret < 0)
+>  		return ret;
+>=20
+> +	/* System clock has to be enabled before releasing the reset */
+>  	ret =3D clk_prepare_enable(mt9v032->clk);
+>  	if (ret)
+>  		return ret;
+>=20
+>  	udelay(1);
+>=20
+> +	if (mt9v032->reset_gpio) {
+> +		gpiod_set_value_cansleep(mt9v032->reset_gpio, 0);
+> +
+> +		/* After releasing reset we need to wait 10 clock cycles
+> +		 * before accessing the sensor over I2C. As the minimum SYSCLK
+> +		 * frequency is 13MHz, waiting 1=B5s will be enough in the worst
+> +		 * case.
+> +		 */
+> +		udelay(1);
+> +	}
+> +
+>  	/* Reset the chip and stop data read out */
+>  	ret =3D regmap_write(map, MT9V032_RESET, 1);
+>  	if (ret < 0)
+> @@ -954,6 +972,16 @@ static int mt9v032_probe(struct i2c_client *clie=
+nt,
+>  	if (IS_ERR(mt9v032->clk))
+>  		return PTR_ERR(mt9v032->clk);
+>=20
+> +	mt9v032->reset_gpio =3D devm_gpiod_get_optional(&client->dev, "rese=
+t",
+> +						      GPIOD_OUT_HIGH);
+> +	if (IS_ERR(mt9v032->reset_gpio))
+> +		return PTR_ERR(mt9v032->reset_gpio);
+> +
+> +	mt9v032->standby_gpio =3D devm_gpiod_get_optional(&client->dev, "st=
+andby",
+> +							GPIOD_OUT_LOW);
+> +	if (IS_ERR(mt9v032->standby_gpio))
+> +		return PTR_ERR(mt9v032->standby_gpio);
+> +
+>  	mutex_init(&mt9v032->power_lock);
+>  	mt9v032->pdata =3D pdata;
+>  	mt9v032->model =3D (const void *)did->driver_data;
+
+--=20
+Regards,
+
+Laurent Pinchart
