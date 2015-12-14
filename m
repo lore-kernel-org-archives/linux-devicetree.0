@@ -1,62 +1,87 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4] ARM: dts: rockchip: add eFuse node for rk3066a SoCs
-Date: Mon, 14 Dec 2015 09:57:02 +0000
-Message-ID: <566E926E.7090903@linaro.org>
-References: <1447227272-1728-1-git-send-email-wxt@rock-chips.com> <1447227272-1728-4-git-send-email-wxt@rock-chips.com>
+From: Bhupesh SHARMA <bhupesh.linux@gmail.com>
+Subject: Re: [PATCH v2 1/2] Documentation: DT: Add entry for ARM SP805-WDT
+Date: Mon, 14 Dec 2015 15:30:10 +0530
+Message-ID: <CAFTCetRn17yk6g=iYZvat6SE=TApwcfPbt72JFjQfzU2bPrEwA@mail.gmail.com>
+References: <1449834467-30283-1-git-send-email-bhupesh.sharma@freescale.com>
+ <1449834467-30283-2-git-send-email-bhupesh.sharma@freescale.com>
+ <20151214010619.GA848@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447227272-1728-4-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20151214010619.GA848@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <will.deacon@arm.com>, stuart.yoder@freescale.com, Scott Wood <scottwood@freescale.com>, Olof Johansson <olof@lixom.net>, Leo Li <LeoLi@freescale.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Heiko,
+On Mon, Dec 14, 2015 at 6:36 AM, Rob Herring <robh@kernel.org> wrote:
+> On Fri, Dec 11, 2015 at 05:17:46PM +0530, Bhupesh Sharma wrote:
+>> This patch adds a devicetree binding documentation for ARM's
+>> SP805 WatchDog Timer.
+>>
+>> Signed-off-by: Bhupesh Sharma <bhupesh.sharma@freescale.com>
+>> ---
+>>  .../devicetree/bindings/watchdog/sp805-wdt.txt     |   29 ++++++++++++++++++++
+>>  1 file changed, 29 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+>> new file mode 100644
+>> index 0000000..45b5afc
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+>> @@ -0,0 +1,29 @@
+>> +* ARM SP805 Watchdog Timer (WDT) Controller
+>> +
+>> +SP805 WDT is a ARM Primecell Peripheral and has a standard-id register that
+>> +can be used to identify the peripheral type, vendor, and revision.
+>> +This value can be used for driver matching.
+>> +
+>> +As SP805 WDT is a primecell IP, it follows the base bindings specified in
+>> +'arm/primecell.txt'
+>> +
+>> +Required properties:
+>> +- compatible : Should be "arm,sp805-wdt", "arm,primecell"
+>> +- reg : Base address and size of the watchdog timer registers.
+>> +- clocks : From common clock binding.
+>> +           First clock is PCLK and the second is WDOGCLK.
+>> +           WDOGCLK can be equal to or be a sub-multiple of the PCLK frequency.
+>> +- clock-names : From common clock binding. Shall be "apb_pclk" for first clock.
+>
+> And for the 2nd clock?
 
-Can you take the DT patches in this series via your tree.
+Right. Although the current amba driver framework and the sp805_wdt
+driver doesn't handle
+the 2nd clock correctly, the documentation should specify the 2nd
+clock properly.
+Does the name "wdog_clk" seems appropriate for the same?
 
-I picked up nvmem patches from this series.
+>> +
+>> +Optional properties:
+>> +- interrupts : Should specify WDT interrupt number.
+>> +
+>> +Examples:
+>> +
+>> +             cluster1_core0_watchdog: wdt@c000000 {
+>> +                     compatible = "arm,sp805-wdt", "arm,primecell";
+>> +                     reg = <0x0 0xc000000 0x0 0x1000>;
+>> +                     clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+>> +                     clock-names = "apb_pclk", "wdog_clk";
+>> +             };
+>> +
+>> --
+>> 1.7.9.5
+>>
+>>
 
-thanks,
-srini
-
-On 11/11/15 07:34, Caesar Wang wrote:
-> This patch add the eFuse dt node for rk3066a SoCs.
->
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->
->   arch/arm/boot/dts/rk3066a.dtsi | 13 +++++++++++++
->   1 file changed, 13 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-> index 946f187..f61bb8a 100644
-> --- a/arch/arm/boot/dts/rk3066a.dtsi
-> +++ b/arch/arm/boot/dts/rk3066a.dtsi
-> @@ -153,6 +153,19 @@
->   		clock-names = "timer", "pclk";
->   	};
->
-> +	efuse: efuse@20010000 {
-> +		compatible = "rockchip,rockchip-efuse";
-> +		reg = <0x20010000 0x4000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		clocks = <&cru PCLK_EFUSE>;
-> +		clock-names = "pclk_efuse";
-> +
-> +		cpu_leakage: cpu_leakage {
-> +			reg = <0x17 0x1>;
-> +		};
-> +	};
-> +
->   	timer@20038000 {
->   		compatible = "snps,dw-apb-timer-osc";
->   		reg = <0x20038000 0x100>;
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Bhupesh
