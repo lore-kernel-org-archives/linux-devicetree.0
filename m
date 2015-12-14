@@ -1,52 +1,38 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH/RFC 0/7] ARM: dts: Add compatible property to "partitions" node
-Date: Mon, 14 Dec 2015 13:45:07 -0800
-Message-ID: <CAN8TOE9O_egvFevRj3WaUcJd8GMFAAQcWLHMtKe1gwCR14zDPg@mail.gmail.com>
-References: <1450120304-2760-1-git-send-email-geert+renesas@glider.be>
-	<20151214194613.GA126731@google.com>
-	<CAMuHMdW=wJEoi-+EWAKBjRwb+QFvk=iFur1yFqR=q0f4zwzb2Q@mail.gmail.com>
-	<20151214214312.GA86857@google.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: modify rk3288 jaq backlight-level
+Date: Mon, 14 Dec 2015 22:46:32 +0100
+Message-ID: <1868289.Tn7cSBTFBY@diego>
+References: <1449493869-32151-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20151214214312.GA86857@google.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449493869-32151-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-+ real linux-mtd mailing list
+Hi Caesar,
 
-On Mon, Dec 14, 2015 at 1:43 PM, Brian Norris
-<computersforpeace@gmail.com> wrote:
-> On Mon, Dec 14, 2015 at 10:20:19PM +0100, Geert Uytterhoeven wrote:
->> On Mon, Dec 14, 2015 at 8:46 PM, Brian Norris
->> <computersforpeace@gmail.com> wrote:
->> > On Mon, Dec 14, 2015 at 08:11:37PM +0100, Geert Uytterhoeven wrote:
->> >> As of commit e488ca9f8d4f62c2 ("doc: dt: mtd: partitions: add compatible
->> >> property to "partitions" node"), the "partitions" subnode of an SPI
->> >> FLASH device node must have a compatible property. The partitions are no
->> >> longer detected if it is not present.
->> >
->> > For all patches:
->> >
->> > Acked-by: Brian Norris <computersforpeace@gmail.com>
->> >
->> >> I marked this series as "RFC", as the abovementioned commit is not yet
->> >> upstream. Ideally, the users should be fixed first, to avoid breakage.
->>
->> It breaks bisectability in mainline.
->
-> The files you are fixing are not converted in mainline yet, are they?
->
->> > I'd differ on the last sentence. It's more important to straighten out
->> > the release features for 4.4 than to make sure that linux-next has
->> > perfect DTS files. So I'll submit whenever ready :)
->>
->> If the DTS changes go in first, bisectability is preserved.
->
-> Are you asking me to delay fixing the DT binding until 4.5, just because
-> your for-next branches can't be fixed? IOW, you want me to release the
-> bad DT binding for a whole cycle?
->
-> Brian
+Am Montag, 7. Dezember 2015, 21:11:08 schrieb Caesar Wang:
+> the panel which jaq use require the pwm duty cycle larger than 3%,
+> when the backlight status from power off to power on, otherwise the
+> backlight will flush, so we modify the second brightness-level to 8,
+> and when the backlight from power off to power on the pwm duty cycle
+> will larger than 3%.
+> 
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+I've merged the two patches and included them in my series for the veyron edp 
+devicetree changes [0].
+
+
+Heiko
+
+[0] https://github.com/mmind/linux-rockchip/commit/45e3abed0a86c7ee5cea0b35492b65890b928175
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
