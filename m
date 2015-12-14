@@ -1,108 +1,91 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 13/14] ARM: dts: dove: add DT GPU support
-Date: Mon, 14 Dec 2015 14:56:41 +0100
-Message-ID: <87twnlw2ue.fsf@free-electrons.com>
-References: <1449661707-30532-1-git-send-email-l.stach@pengutronix.de>
-	<1449661707-30532-13-git-send-email-l.stach@pengutronix.de>
-	<1450099862.3163.38.camel@pengutronix.de>
+From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 4/5] iommu/mediatek: Add mt8173 IOMMU driver
+Date: Mon, 14 Dec 2015 15:16:57 +0100
+Message-ID: <20151214141656.GG18805@8bytes.org>
+References: <1449568153-15643-1-git-send-email-yong.wu@mediatek.com>
+	<1449568153-15643-5-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450099862.3163.38.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> (Lucas Stach's message
-	of "Mon, 14 Dec 2015 14:31:02 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1449568153-15643-5-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lucas,
-=20
- On lun., d=C3=A9c. 14 2015, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote=
-:
+On Tue, Dec 08, 2015 at 05:49:12PM +0800, Yong Wu wrote:
+> +static int mtk_iommu_attach_device(struct iommu_domain *domain,
+> +				   struct device *dev)
+> +{
+> +	struct mtk_iommu_domain *dom = to_mtk_domain(domain);
+> +	struct mtk_iommu_client_priv *priv = dev->archdata.iommu;
+> +	struct mtk_iommu_data *data;
+> +	int ret;
+> +
+> +	if (!priv)
+> +		return -ENODEV;
+> +
+> +	data = dev_get_drvdata(priv->m4udev);
+> +	if (!data) {
+> +		/*
+> +		 * The DMA core will run earlier than this probe, and it will
+> +		 * create a default iommu domain for each a iommu device.
+> +		 * But here there is only one domain called the m4u domain
+> +		 * which all the multimedia HW share.
+> +		 * The default domain isn't needed here.
+> +		 */
 
-> Dove maintainers,
->
-> can you please tell me if you prefer the DT changes to go along with =
-the
-> rest of the etnaviv series through the DRM tree, or plan on picking t=
-his
-> separate?
+The iommu core creates one domain per iommu-group. In your case this
+means one default domain per iommu in the system.
 
-I prefer to take the DT change in the mvebu tree. I was waiting for
-acknowledgment on this series from the DRM maintainers to be sure that
-the binding was OK. However, the fact that Rob Herring already acked th=
-e
-binding is a good point for me.
+> +		iommu_domain_free(domain);
 
-Gregory
+This function is not supposed to free the domain passed to it.
 
+> +static int mtk_iommu_add_device(struct device *dev)
+> +{
+> +	struct iommu_group *group;
+> +
+> +	if (!dev->archdata.iommu) /* Not a iommu client device */
+> +		return -ENODEV;
+> +
+> +	group = iommu_group_get_for_dev(dev);
+> +	if (IS_ERR(group))
+> +		return PTR_ERR(group);
+> +
+> +	iommu_group_put(group);
+> +	return 0;
+> +}
 
->
-> Regards,
-> Lucas
->
-> Am Mittwoch, den 09.12.2015, 12:48 +0100 schrieb Lucas Stach:
->> From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
->>=20
->> Add DT support for the Vivante GC600 GPU on Marvell Dove platforms.
->> These nodes default to being disabled unless a platform decides they
->> should be enabled.
->>=20
->> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
->> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/dove.dtsi | 16 ++++++++++++++++
->>  1 file changed, 16 insertions(+)
->>=20
->> diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dt=
-si
->> index cd58c2e62757..ea1d999ca7a7 100644
->> --- a/arch/arm/boot/dts/dove.dtsi
->> +++ b/arch/arm/boot/dts/dove.dtsi
->> @@ -33,6 +33,12 @@
->>  		marvell,tauros2-cache-features =3D <0>;
->>  	};
->> =20
->> +	gpu-subsystem {
->> +		compatible =3D "marvell,dove-gpu-subsystem";
->> +		cores =3D <&gpu>;
->> +		status =3D "disabled";
->> +	};
->> +
->>  	i2c-mux {
->>  		compatible =3D "i2c-mux-pinctrl";
->>  		#address-cells =3D <1>;
->> @@ -776,6 +782,16 @@
->>  				#address-cells =3D <1>;
->>  				#size-cells =3D <1>;
->>  			};
->> +
->> +			gpu: gpu@840000 {
->> +				clocks =3D <&divider_clk 1>;
->> +				clock-names =3D "core";
->> +				compatible =3D "vivante,gc";
->> +				interrupts =3D <48>;
->> +				power-domains =3D <&gpu_domain>;
->> +				reg =3D <0x840000 0x4000>;
->> +				status =3D "disabled";
->> +			};
->>  		};
->>  	};
->>  };
->
-> --=20
-> Pengutronix e.K.             | Lucas Stach                 |
-> Industrial Linux Solutions   | http://www.pengutronix.de/  |
->
+[...]
 
---=20
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +static struct iommu_group *mtk_iommu_device_group(struct device *dev)
+> +{
+> +	struct mtk_iommu_data *data;
+> +	struct mtk_iommu_client_priv *priv;
+> +
+> +	priv = dev->archdata.iommu;
+> +	if (!priv)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	/* All the client devices are in the same m4u iommu-group */
+> +	data = dev_get_drvdata(priv->m4udev);
+> +	if (!data->m4u_group) {
+> +		data->m4u_group = iommu_group_alloc();
+> +		if (IS_ERR(data->m4u_group))
+> +			dev_err(dev, "Failed to allocate M4U IOMMU group\n");
+> +	}
+> +	return data->m4u_group;
+> +}
+
+This looks much better than before, thanks.
