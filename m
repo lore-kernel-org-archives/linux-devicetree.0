@@ -1,79 +1,60 @@
-Return-Path: <devicetree-owner@kernel.org>
-Received: from mout.kundenserver.de ([212.227.126.133]:58434 "EHLO
-	mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754028AbbLSPuJ (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Sat, 19 Dec 2015 10:50:09 -0500
-Date: Sat, 19 Dec 2015 16:49:36 +0100
-From: Karsten Merker <merker@debian.org>
-Subject: Re: [linux-sunxi] Re: [PATCH 1/4] ARM: dts: sun7i: Enable
- touchscreen on Wexler TAB7200 tablet
-Message-ID: <20151219154936.GA1845@excalibur.cnev.de>
-References: <1450428591-5597-1-git-send-email-mamlinav@gmail.com>
- <1450428710-5653-1-git-send-email-mamlinav@gmail.com>
- <20151218212525.GR30359@lukather>
+Return-Path: <>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [PATCH v3 2/5] Documentation: afe4404: Add DT bindings for the AFE4404 heart monitor
+Date: Mon, 14 Dec 2015 16:35:58 -0600
+Message-ID: <1450132561-5245-3-git-send-email-afd@ti.com>
+In-Reply-To: <1450132561-5245-1-git-send-email-afd@ti.com>
+References: <1450132561-5245-1-git-send-email-afd@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20151218212525.GR30359@lukather>
-Sender: devicetree-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Aleksei Mamlin <mamlinav@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, dev@linux-sunxi.org
+Content-Type: text/plain
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>
+Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Dec 18, 2015 at 10:25:25PM +0100, Maxime Ripard wrote:
-> On Fri, Dec 18, 2015 at 11:51:50AM +0300, Aleksei Mamlin wrote:
-> > Add a node for the Goodix GT911 touchscreen found on the Wexler TAB7200 tablet
-> > 
-> > Signed-off-by: Aleksei Mamlin <mamlinav@gmail.com>
-> > ---
-> >  arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
-> > index 239b5d2..ec3b837 100644
-> > --- a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
-> > +++ b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
-> > @@ -102,6 +102,18 @@
-> >  	pinctrl-names = "default";
-> >  	pinctrl-0 = <&i2c2_pins_a>;
-> >  	status = "okay";
-> > +
-> > +	gt911: touchscreen@5d {
-> > +		compatible = "goodix,gt911";
-> > +		reg = <0x5d>;
-> > +		interrupt-parent = <&pio>;
-> > +		interrupts = <7 21 IRQ_TYPE_EDGE_FALLING>; /* EINT21 (PH21) */
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&ts_reset_pin>;
-> > +		irq-gpios = <&pio 7 21 GPIO_ACTIVE_HIGH>; /* INT (PH21) */
-> 
-> It seems odd that you need both irq-gpios and interrupts. These two
-> are completely redundant, and you should even actually use only one in
-> your driver, since the second request_irq will fail.
+Add the TI afe4404 heart monitor DT bindings documentation.
+Create health directory created under iio.
 
-Hello,
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+---
+ .../devicetree/bindings/iio/health/afe4404.txt     | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/health/afe4404.txt
 
-there is a "specialty" on this type of touchscreen controller -
-the irq pin on the GT9xx series of chips has two distinct
-functions:
-
-The first is the regular function for signalling interrupts to
-the CPU, which is set up with the "interrupts" property.
-
-The second function comes into play when initializing the chip. 
-Without a special initialization procedure, the chip provides
-basic touchscreen functionality, but several advanced functions
-are unavailable.  To enable those advanced functions, the host
-needs to temporarily configure the irq pin as a (host-side)
-output and transmit a specific pattern on the reset and irq
-lines.  This method doesn't work on all systems, so the driver
-only attempts to reprogram the irq line on the host side as an
-output if it is explicitly declared with the irq-gpios property.
-
-Regards,
-Karsten
+diff --git a/Documentation/devicetree/bindings/iio/health/afe4404.txt b/Documentation/devicetree/bindings/iio/health/afe4404.txt
+new file mode 100644
+index 0000000..de69f20
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/health/afe4404.txt
+@@ -0,0 +1,30 @@
++Texas Instruments AFE4404 Heart rate and Pulse Oximeter
++
++Required properties:
++ - compatible		: Should be "ti,afe4404".
++ - reg			: I2C address of the device.
++ - tx-supply		: Regulator supply to transmitting LEDs.
++ - interrupt-parent	: Phandle to he parent interrupt controller.
++ - interrupts		: The interrupt line the device ADC_RDY pin is
++			  connected to. For details refer to,
++			  ../interrupt-controller/interrupts.txt.
++
++Optional properties:
++ - reset-gpios		: GPIO used to reset the device.
++			  For details refer to, ../gpio/gpio.txt.
++
++Example:
++
++&i2c2 {
++	heart_mon@58 {
++		compatible = "ti,afe4404";
++		reg = <0x58>;
++
++		tx-supply = <&vbat>;
++
++		interrupt-parent = <&gpio1>;
++		interrupts = <28 IRQ_TYPE_EDGE_RISING>;
++
++		reset-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
++	};
++};
 -- 
-Gem. Par. 28 Abs. 4 Bundesdatenschutzgesetz widerspreche ich der Nutzung
-sowie der Weitergabe meiner personenbezogenen Daten für Zwecke der
-Werbung sowie der Markt- oder Meinungsforschung.
+2.6.4
