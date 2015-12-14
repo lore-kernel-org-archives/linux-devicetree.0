@@ -1,58 +1,35 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH] ARM64: ZynqMP: DT: Fix GIC's 'reg' property
-Date: Mon, 14 Dec 2015 17:01:00 +0000
-Message-ID: <566EF5CC.4070000@arm.com>
-References: <1450110700-14152-1-git-send-email-soren.brinkmann@xilinx.com> <20151214164613.GH21356@leverpostej>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] ARM: dts: lpc18xx: add EEPROM memory node
+Date: Mon, 14 Dec 2015 18:13:15 +0100
+Message-ID: <CAGhQ9VxpoVZOc5-dbs6=G5bsh_5AdByXYL8NvDWaUFWRY2qpjA@mail.gmail.com>
+References: <1447790576-29410-1-git-send-email-ariel@vanguardiasur.com.ar>
+	<1447790576-29410-4-git-send-email-ariel@vanguardiasur.com.ar>
+	<566E947F.2030805@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151214164613.GH21356@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Soren Brinkmann <soren.brinkmann@xilinx.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Alistair Francis <alistair.francis@xilinx.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <566E947F.2030805-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Mark,
+Hi Srinivas.
 
-On 14/12/15 16:46, Mark Rutland wrote:
-> On Mon, Dec 14, 2015 at 08:31:40AM -0800, Soren Brinkmann wrote:
->> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
->> ---
->>  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
->> index 857eda5c7217..b5d1facadf16 100644
->> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
->> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
->> @@ -80,10 +80,10 @@
->>  		gic: interrupt-controller@f9010000 {
->>  			compatible = "arm,gic-400", "arm,cortex-a15-gic";
->>  			#interrupt-cells = <3>;
->> -			reg = <0x0 0xf9010000 0x10000>,
->> -			      <0x0 0xf902f000 0x2000>,
->> +			reg = <0x0 0xf9010000 0x1000>,
->> +			      <0x0 0xf9020000 0x20000>,
->>  			      <0x0 0xf9040000 0x20000>,
->> -			      <0x0 0xf906f000 0x2000>;
->> +			      <0x0 0xf9060000 0x20000>;
-> 
-> I'm confused. These sizes don't look right for GIC-400. Is this a custom
-> GIC?
+On 14 December 2015 at 11:05, Srinivas Kandagatla
+<srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Hi Joachim,
+>
+> Could you take this DT patches via your tree, I picked up the nvmem patches.
 
-Probably an implementation that obey the SBSA requirement of aliasing
-the first 4kB of the CPU interface on a 64kB page, and the second one on
-the following 64kB page. See the APM system for an example of such a
-thing. I'm more concerned about the GICH region (3rd one), which has no
-reason to be bigger than 4kB.
+Cool.
 
-> Did this ever work wit hteh old offsets and sizes?
+Yes, I will take the DT and defconfig patch.
 
-It probably dies when trying to use EOImode==1.
 
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+regards,
+Joachim Eastwood
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
