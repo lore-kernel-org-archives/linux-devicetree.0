@@ -1,63 +1,67 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH for-4.4 2/2] doc: dt: mtd: partitions: add compatible
- property to "partitions" node
-Date: Mon, 14 Dec 2015 15:49:14 +0100
-Message-ID: <CAMuHMdVGW-7dQ3vAqVpUN_S7=T7dVp+jkMJR7nyZ9ePd+NnsyQ@mail.gmail.com>
-References: <1449194529-145705-1-git-send-email-computersforpeace@gmail.com>
-	<1449194529-145705-2-git-send-email-computersforpeace@gmail.com>
-	<CAOiHx=kP8hT-UH=tfUZYYpr__i458-ZL3bOhcAJb8hmSbqBdCA@mail.gmail.com>
-	<20151207175835.GM120110@google.com>
-	<20151209011256.GV120110@google.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC][PATCH] misc: Introduce reboot_reason driver
+Date: Mon, 14 Dec 2015 09:22:41 -0600
+Message-ID: <CAL_Jsq+Mta5z6HSx+3AatGYmyhuWG=9C-Eoq=UYA9YEhsXwDLg@mail.gmail.com>
+References: <1449610162-30543-1-git-send-email-john.stultz@linaro.org>
+ <CAL_Jsq+s1Lk9s=dvSAe-rerSc1aUO39tkBnsrkoNqJoET3VNjw@mail.gmail.com>
+ <CALAqxLVKhQT4Ba3JFVKpV79PnAsjYDARRO8M5U5=3Jjx45h6WQ@mail.gmail.com> <1552521.IZhVsTdxHT@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151209011256.GV120110-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1552521.IZhVsTdxHT@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Android Kernel Team <kernel-team-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
-
-On Wed, Dec 9, 2015 at 2:12 AM, Brian Norris
-<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Mon, Dec 07, 2015 at 09:58:35AM -0800, Brian Norris wrote:
->> On Sat, Dec 05, 2015 at 12:45:36PM +0100, Jonas Gorski wrote:
->> > On Fri, Dec 4, 2015 at 3:02 AM, Brian Norris
->> > <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> > >         // proposed
->> > >         partitions {
->> > >                 compatible = "partitions";
->> >
->> > "partitions" sounds mode like a device_type thing than a compatible
->> > name, maybe "fixed-partitions"? IMHO that would describe better what
->> > these are, and doesn't invite to think using compatible =
->> > "arm,arm-flash-structure", "partitions"; is a good idea.
+On Thu, Dec 10, 2015 at 4:11 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Thursday 10 December 2015 13:43:16 John Stultz wrote:
+>> On Thu, Dec 10, 2015 at 12:24 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> > The fact that we are using notifiers for reset reason and triggering
+>> > is probably some indication that some infrastructure is needed. But I
+>> > don't think you need to do that here as long as it is all kernel
+>> > internals. We'll make the 2nd guy do it.
 >>
->> "fixed-partitions" sounds OK to me. If no objections, I'll apply these
->> patches, with (approximately) a:
 >>
->> s/"partitions"/"fixed-partitions"/
+>>
+>> Though, just so I understand better, what is problematic w/ the reset
+>> notifiers? They provide the reboot command argument, which is the core
+>> of what is needed. It actually seemed like it was almost designed with
+>> this problem in mind.
 >
-> Pushed to linux-mtd.git with the above change.
+> Notifiers in general are a bit of a kludge. We often use them in places
+> that have not been abstracted well enough yet, and they make it
+> less obvious what is actually going on when something happens, or
+> in what order things are called.
 
-Aarghl, hadn't seen this patch before.
+Exactly.
 
-This breaks the users that have already added the partitions subnodes
-(armada-xp-lenovo-ix4-300d.dts and a few shmobile).
+> I'm actually less worried about the notifier side here than about
+> the general problem of the communication channel. The reboot reason
+> is only one of a number of things that the kernel needs to communicate
+> to the boot loader. Other things may include:
 
-Will send patches to fix it...
+If only there was a standard interface for firmware variable storage...
 
-Gr{oetje,eeting}s,
+> - boot device
+> - location of the kernel
+> - command line
+> - properties of the /chosen DT node in general
+> - boot scripts
+> - ethernet MAC addresses
+> - bootloader console configuration
 
-                        Geert
+A major distinction here is many of these would be persistent (i.e. in
+flash). As much of this goes into to the DT anyway, a standard way for
+userspace to update the DT could solve this. That would not really
+work for handling a one time case unless you supported boot with an
+alternate DT.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+I've also seen storing of SD tuning parameters to avoid tuning at boot
+up. Although, the tuning doesn't add that much to the boot time
+relative to Android boot, so I don't really see the point.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
