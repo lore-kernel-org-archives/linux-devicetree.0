@@ -1,60 +1,55 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 2/3] [media] mt9v032: Do not unset master_mode
-Date: Mon, 14 Dec 2015 15:41:52 +0100
-Message-ID: <1450104113-6392-2-git-send-email-mpa@pengutronix.de>
-References: <1450104113-6392-1-git-send-email-mpa@pengutronix.de>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [Patch v5 1/2] media: v4l: ti-vpe: Add CAL v4l2 camera capture
+ driver
+Date: Mon, 14 Dec 2015 15:41:54 +0100
+Message-ID: <566ED532.6060308@xs4all.nl>
+References: <1447879632-22635-1-git-send-email-bparrot@ti.com>
+ <1447879632-22635-2-git-send-email-bparrot@ti.com>
+ <20151203111922.7b9bb226@recife.lan> <20151211221633.GF1517@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450104113-6392-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20151211221633.GF1517-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The power_on function of the driver resets the chip and sets the
-CHIP_CONTROL register to 0. This switches the operating mode to slave.
-The s_stream function sets the correct mode. But this caused problems on
-a board where the camera chip is operated as master. The camera started
-after a random amount of time streaming an image, I observed between 10
-and 300 seconds.
+On 12/11/2015 11:16 PM, Benoit Parrot wrote:
+> Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> wrote on Thu [2015-Dec-03 11:19:22 -0200]:
+>>> +static int cal_enum_framesizes(struct file *file, void *fh,
+>>> +			       struct v4l2_frmsizeenum *fsize)
+>>> +{
+>>> +	struct cal_ctx *ctx = video_drvdata(file);
+>>> +	const struct cal_fmt *fmt;
+>>> +	struct v4l2_subdev_frame_size_enum fse;
+>>> +	int ret;
+>>> +
+>>> +	ctx_dbg(2, ctx, "%s\n", __func__);
+>>
+>> This s a general note: do you really need tracing-like debug macros
+>> all around the code?
+>>
+>> You could easily check if the functions are called via trace.
+> 
+> True but that also mean to rebuild the kernel in order to
+> get to it since function tracing is usually not enabled
+> by default.
+> 
 
-The STRFM_OUT and STLN_OUT pins are not connected on this board which
-may cause some issues in slave mode. I could not find any documentation
-about this.
+You can enable debugging by doing:
 
-Keeping the chip in master mode after the reset helped to fix this
-issue for me.
+echo 2 >/sys/class/video4linux/video0/dev_debug
 
-Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- drivers/media/i2c/mt9v032.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+See also: Documentation/video4linux/v4l2-framework.txt, section "video device
+debugging" for more info.
 
-diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
-index c1bc564a0979..cc16acf001de 100644
---- a/drivers/media/i2c/mt9v032.c
-+++ b/drivers/media/i2c/mt9v032.c
-@@ -349,7 +349,8 @@ static int mt9v032_power_on(struct mt9v032 *mt9v032)
- 	if (ret < 0)
- 		return ret;
- 
--	return regmap_write(map, MT9V032_CHIP_CONTROL, 0);
-+	return regmap_write(map, MT9V032_CHIP_CONTROL,
-+			    MT9V032_CHIP_CONTROL_MASTER_MODE);
- }
- 
- static void mt9v032_power_off(struct mt9v032 *mt9v032)
-@@ -421,8 +422,7 @@ __mt9v032_get_pad_crop(struct mt9v032 *mt9v032, struct v4l2_subdev_pad_config *c
- 
- static int mt9v032_s_stream(struct v4l2_subdev *subdev, int enable)
- {
--	const u16 mode = MT9V032_CHIP_CONTROL_MASTER_MODE
--		       | MT9V032_CHIP_CONTROL_DOUT_ENABLE
-+	const u16 mode = MT9V032_CHIP_CONTROL_DOUT_ENABLE
- 		       | MT9V032_CHIP_CONTROL_SEQUENTIAL;
- 	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
- 	struct v4l2_rect *crop = &mt9v032->crop;
--- 
-2.6.2
+That's always available and basically does what you want.
+
+Regards,
+
+	Hans
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
