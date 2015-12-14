@@ -1,58 +1,37 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH 3/3] extcon: arizona: Add DT binding examples
-Date: Mon, 14 Dec 2015 10:37:13 +0000
-Message-ID: <1450089433-11398-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1450089433-11398-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] spi: dts: sun4i: Add support for
+ hardware-based wait time between words
+Date: Mon, 14 Dec 2015 10:57:49 +0000
+Message-ID: <20151214105749.GU5727@sirena.org.uk>
+References: <1449873940-10167-1-git-send-email-mweseloh42@gmail.com>
+ <1450047853-9005-1-git-send-email-mweseloh42@gmail.com>
+ <20151213230837.GT5727@sirena.org.uk>
+ <CAGNoLaOS94iHHSpFtYC-72TUvJj5dtrY7imW835OCRoCY8R4SA@mail.gmail.com>
+Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1450089433-11398-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: cw00.choi@samsung.com
-Cc: myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, robh@kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="0tLsAbKYoZ7gVvm3"
+Return-path: <linux-sunxi+bncBDQ2L75W5QGBBP6BXKZQKGQECDGPZZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGNoLaOS94iHHSpFtYC-72TUvJj5dtrY7imW835OCRoCY8R4SA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add an example for all elements of the Arizona extcon device tree
-binding.
+--0tLsAbKYoZ7gVvm3
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
----
- .../devicetree/bindings/extcon/extcon-arizona.txt  | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+On Mon, Dec 14, 2015 at 12:23:29AM +0100, Marcus Weseloh wrote:
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-index fd9b898..e27341f 100644
---- a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-+++ b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-@@ -47,3 +47,29 @@ Optional properties:
-     The third cell represents the value of the micd-pol-gpio pin.
- 
-   - wlf,gpsw : Settings for the general purpose switch
-+
-+Example:
-+
-+codec: wm8280@0 {
-+	compatible = "wlf,wm8280";
-+	reg = <0>;
-+	...
-+
-+	wlf,use-jd2;
-+	wlf,use-jd2-nopull;
-+	wlf,jd-invert;
-+
-+	wlf,micd-software-compare;
-+	wlf,micd-detect-debounce = <0>;
-+	wlf,micd-pol-gpio = <&codec 2 0>;
-+	wlf,micd-rate = <ARIZONA_MICD_TIME_8MS>;
-+	wlf,micd-dbtime = <4>;
-+	wlf,micd-timeout-ms = <100>;
-+	wlf,micd-force-micbias;
-+	wlf,micd-configs = <
-+		0 1 0 /* MICDET1 MICBIAS1 GPIO=low */
-+		1 2 1 /* MICDET2 MICBIAS2 GPIO=high */
-+	>;
-+
-+	wlf,gpsw = <0>;
-+};
--- 
-2.1.4
+> Should I resend the patch?
+
+No, it's OK.
+--0tLsAbKYoZ7gVvm3--
