@@ -1,65 +1,291 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH v4 04/20] ARM: dts: Add DMC bus frequency for
- exynos3250-rinato/monk
-Date: Mon, 14 Dec 2015 15:38:08 +0900
-Message-ID: <1450075104-13705-5-git-send-email-cw00.choi@samsung.com>
-References: <1450075104-13705-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1450075104-13705-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com, k.kozlowski@samsung.com, kgene@kernel.org
-Cc: kyungmin.park@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, tjakobi@math.uni-bielefeld.de, linux.amoon@gmail.com, cw00.choi@samsung.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+From: xuejiancheng <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 7/7] ARM: dts: add dts files for Hi3519
+Date: Mon, 14 Dec 2015 14:34:41 +0800
+Message-ID: <566E6301.6090701@huawei.com>
+References: <1449819921-18464-1-git-send-email-xuejiancheng@huawei.com>
+ <1449819921-18464-8-git-send-email-xuejiancheng@huawei.com>
+ <20151211162847.GC21272@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151211162847.GC21272@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangzhenxing-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the DMC (Dynamic Memory Controller) bus frequency node
-which includes the devfreq-events and regulator properties. The bus
-frequency support the DVFS (Dynamic Voltage Frequency Scaling) feature
-with ondemand governor.
+Hi Rob,
 
-The devfreq-events (ppmu_dmc0*) can monitor the utilization of DMC bus
-on runtime and the buck1_reg (VDD_MIF power line) supplies the power to
-the DMC block.
+On 2015/12/12 0:28, Rob Herring wrote:
+> On Fri, Dec 11, 2015 at 03:45:21PM +0800, Jiancheng Xue wrote:
+>> add dts files for Hi3519
+>>
+>> Signed-off-by: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/Makefile        |   2 +
+>>  arch/arm/boot/dts/hi3519-demb.dts |  42 +++++++++++
+>>  arch/arm/boot/dts/hi3519.dtsi     | 142 ++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 186 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/hi3519-demb.dts
+>>  create mode 100644 arch/arm/boot/dts/hi3519.dtsi
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 30bbc37..1ff3ed9 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -135,6 +135,8 @@ dtb-$(CONFIG_ARCH_EXYNOS5) += \
+>>  	exynos5800-peach-pi.dtb
+>>  dtb-$(CONFIG_ARCH_HI3xxx) += \
+>>  	hi3620-hi4511.dtb
+>> +dtb-$(CONFIG_ARCH_HISI) += \
+>> +	hi3519-demb.dtb
+>>  dtb-$(CONFIG_ARCH_HIX5HD2) += \
+>>  	hisi-x5hd2-dkb.dtb
+>>  dtb-$(CONFIG_ARCH_HIGHBANK) += \
+>> diff --git a/arch/arm/boot/dts/hi3519-demb.dts b/arch/arm/boot/dts/hi3519-demb.dts
+>> new file mode 100644
+>> index 0000000..6991ab6
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/hi3519-demb.dts
+>> @@ -0,0 +1,42 @@
+>> +/*
+>> + * Copyright (c) 2015 HiSilicon Technologies Co., Ltd.
+>> + *
+>> + * This program is free software; you can redistribute  it and/or modify it
+>> + * under  the terms of  the GNU General  Public License as published by the
+>> + * Free Software Foundation;  either version 2 of the  License, or (at your
+>> + * option) any later version.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License
+>> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+>> + *
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "hi3519.dtsi"
+>> +
+>> +/ {
+>> +	model = "HiSilicon HI3519 DEMO Board";
+>> +	compatible = "hisilicon,hi3519";
+>> +
+>> +	aliases {
+>> +		serial0 = &uart0;
+>> +	};
+>> +
+>> +	memory {
+>> +		device_type = "memory";
+>> +		reg = <0x80000000 0x40000000>;
+>> +	};
+>> +};
+>> +
+>> +&uart0 {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&dual_timer0 {
+>> +	status = "okay";
+>> +};
+>> diff --git a/arch/arm/boot/dts/hi3519.dtsi b/arch/arm/boot/dts/hi3519.dtsi
+>> new file mode 100644
+>> index 0000000..50b736e
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/hi3519.dtsi
+>> @@ -0,0 +1,142 @@
+>> +/*
+>> + * Copyright (c) 2015 HiSilicon Technologies Co., Ltd.
+>> + *
+>> + * This program is free software; you can redistribute  it and/or modify it
+>> + * under  the terms of  the GNU General  Public License as published by the
+>> + * Free Software Foundation;  either version 2 of the  License, or (at your
+>> + * option) any later version.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License
+>> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+>> + *
+>> + */
+>> +
+>> +#include "skeleton.dtsi"
+> 
+> Don't include skeleton.dtsi. We've decided it was a bad idea.
 
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- arch/arm/boot/dts/exynos3250-monk.dts   | 6 ++++++
- arch/arm/boot/dts/exynos3250-rinato.dts | 6 ++++++
- 2 files changed, 12 insertions(+)
+OK.
 
-diff --git a/arch/arm/boot/dts/exynos3250-monk.dts b/arch/arm/boot/dts/exynos3250-monk.dts
-index 443a35085846..456844a81189 100644
---- a/arch/arm/boot/dts/exynos3250-monk.dts
-+++ b/arch/arm/boot/dts/exynos3250-monk.dts
-@@ -156,6 +156,12 @@
- 	};
- };
- 
-+&bus_dmc {
-+	devfreq-events = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
-+	vdd-supply = <&buck1_reg>;
-+	status = "okay";
-+};
-+
- &cpu0 {
- 	cpu0-supply = <&buck2_reg>;
- };
-diff --git a/arch/arm/boot/dts/exynos3250-rinato.dts b/arch/arm/boot/dts/exynos3250-rinato.dts
-index 3e64d5dcdd60..d6bb990ce931 100644
---- a/arch/arm/boot/dts/exynos3250-rinato.dts
-+++ b/arch/arm/boot/dts/exynos3250-rinato.dts
-@@ -147,6 +147,12 @@
- 	};
- };
- 
-+&bus_dmc {
-+	devfreq-events = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
-+	vdd-supply = <&buck1_reg>;
-+	status = "okay";
-+};
-+
- &cpu0 {
- 	cpu0-supply = <&buck2_reg>;
- };
--- 
-1.9.1
+> 
+>> +#include <dt-bindings/clock/hi3519-clock.h>
+>> +/ {
+>> +	cpus {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		cpu@0 {
+> 
+> Single core system? Add the other cpu nodes if not. Adding them doesn't 
+> have to be in sync with SMP kernel support.
+
+Hi3519 includes an A7 core and an A17 core. But it will run in AMP mode.
+The A17 core is reserved for customers for special use. We can treat the
+system as a single core system here.
+
+> 
+>> +			device_type = "cpu";
+>> +			compatible = "arm,cortex-a7";
+>> +			reg = <0>;
+>> +		};
+>> +	};
+>> +
+>> +	gic: interrupt-controller@10300000 {
+>> +		compatible = "arm,cortex-a7-gic";
+>> +		#interrupt-cells = <3>;
+>> +		interrupt-controller;
+>> +		reg = <0x10301000 0x1000>, <0x10302000 0x1000>;
+>> +	};
+>> +
+>> +	soc {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		compatible = "simple-bus";
+>> +		interrupt-parent = <&gic>;
+>> +		ranges;
+> 
+> Looks like everything is in 0x12xxxxxx range, so you should add actual 
+> translation here if that's the case.
+
+Other device nodes will be added later which are not in 0x12xxxxxx range.
+
+> 
+>> +
+>> +		amba {
+> 
+> Is this actually a separate bus in the physical design of the chip?
+> 
+>> +			#address-cells = <1>;
+>> +			#size-cells = <1>;
+>> +			compatible = "arm,amba-bus";
+> 
+> Just simple-bus. "arm,amba-bus" is not any type of bus, nor is it 
+> documented.
+
+OK. I will modify this. Thank you!
+
+> 
+>> +			ranges;
+>> +
+>> +			uart0: serial@12100000 {
+>> +				compatible = "arm,pl011", "arm,primecell";
+>> +				reg = <0x12100000 0x1000>;
+>> +				interrupts = <0 4 4>;
+>> +				clocks = <&crg HI3519_UART0_CLK>;
+>> +				clock-names = "apb_pclk";
+>> +				status = "disable";
+>> +			};
+>> +
+>> +			uart1: serial@12101000 {
+>> +				compatible = "arm,pl011", "arm,primecell";
+>> +				reg = <0x12101000 0x1000>;
+>> +				interrupts = <0 5 4>;
+>> +				clocks = <&crg HI3519_UART1_CLK>;
+>> +				clock-names = "apb_pclk";
+>> +				status = "disable";
+>> +			};
+>> +
+>> +			uart2: serial@12102000 {
+>> +				compatible = "arm,pl011", "arm,primecell";
+>> +				reg = <0x12102000 0x1000>;
+>> +				interrupts = <0 6 4>;
+>> +				clocks = <&crg HI3519_UART2_CLK>;
+>> +				clock-names = "apb_pclk";
+>> +				status = "disable";
+>> +			};
+>> +
+>> +			uart3: serial@12103000 {
+>> +				compatible = "arm,pl011", "arm,primecell";
+>> +				reg = <0x12103000 0x1000>;
+>> +				interrupts = <0 7 4>;
+>> +				clocks = <&crg HI3519_UART3_CLK>;
+>> +				clock-names = "apb_pclk";
+>> +				status = "disable";
+>> +			};
+>> +
+>> +			uart4: serial@12104000 {
+>> +				compatible = "arm,pl011", "arm,primecell";
+>> +				reg = <0x12104000 0x1000>;
+>> +				interrupts = <0 8 4>;
+>> +				clocks = <&crg HI3519_UART4_CLK>;
+>> +				clock-names = "apb_pclk";
+>> +				status = "disable";
+>> +			};
+>> +
+>> +			dual_timer0: timer@12000000 {
+>> +				compatible = "arm,sp804", "arm,primecell";
+>> +				interrupts = <0 64 4>, <0 65 4>;
+>> +				reg = <0x12000000 0x1000>;
+>> +				clocks = <&crg HI3519_FIXED_3M>;
+>> +				status = "disable";
+>> +			};
+>> +
+>> +			dual_timer1: timer@12001000 {
+>> +				compatible = "arm,sp804", "arm,primecell";
+>> +				interrupts = <0 66 4>, <0 67 4>;
+>> +				reg = <0x12001000 0x1000>;
+>> +				clocks = <&crg HI3519_FIXED_3M>;
+>> +				status = "disable";
+>> +			};
+>> +
+>> +			dual_timer2: timer@12002000 {
+>> +				compatible = "arm,sp804", "arm,primecell";
+>> +				interrupts = <0 68 4>, <0 69 4>;
+>> +				reg = <0x12002000 0x1000>;
+>> +				clocks = <&crg HI3519_FIXED_3M>;
+>> +				status = "disable";
+>> +			};
+>> +		};
+>> +
+>> +		sysctrl: system-controller@12020000 {
+>> +			compatible = "hisilicon,hi3519-sysctrl", "syscon";
+>> +			reg = <0x12020000 0x1000>;
+>> +		};
+>> +
+>> +		reboot {
+>> +			compatible = "syscon-reboot";
+>> +			regmap = <&sysctrl>;
+>> +			offset = <0x4>;
+>> +			mask = <0xdeadbeef>;
+>> +		};
+>> +
+>> +		crg: clock-reset-controller@12010000 {
+>> +			compatible = "hisilicon,hi3519-crg";
+>> +			#clock-cells = <1>;
+>> +			#reset-cells = <2>;
+>> +			reg = <0x12010000 0x10000>;
+>> +		};
+>> +	};
+>> +};
+>> -- 
+>> 1.9.1
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> .
+> 
+Many Thanks.
+
+Jiancheng.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
