@@ -1,60 +1,67 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 3/4] ARM: dts: lpc18xx: add EEPROM memory node
-Date: Mon, 14 Dec 2015 10:05:51 +0000
-Message-ID: <566E947F.2030805@linaro.org>
-References: <1447790576-29410-1-git-send-email-ariel@vanguardiasur.com.ar> <1447790576-29410-4-git-send-email-ariel@vanguardiasur.com.ar>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2 0/3] Mediatek EFUSE Support
+Date: Mon, 14 Dec 2015 10:07:06 +0000
+Message-ID: <566E94CA.1050700@linaro.org>
+References: <1447930014-19579-1-git-send-email-andrew-ct.chen@mediatek.com> <CAGS+omA8XK6ksd7Ma8yAUbkSsHR6yQxjFrV+HGbd83UiH6T51g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447790576-29410-4-git-send-email-ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGS+omA8XK6ksd7Ma8yAUbkSsHR6yQxjFrV+HGbd83UiH6T51g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Kurtz <djkurtz@chromium.org>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joachim,
+Hi Andrew,
 
-Could you take this DT patches via your tree, I picked up the nvmem patches.
+On 14/12/15 04:27, Daniel Kurtz wrote:
+> Hi Srinivas,
+>
+> On Thu, Nov 19, 2015 at 6:46 PM, Andrew-CT Chen
+> <andrew-ct.chen@mediatek.com> wrote:
+>> This patch adds EFUSE support driver which is used by other drivers
+>> like thermal sensor and HDMI impedance.
+>>
+>> There are some efuses these fuses store things like calibration data,
+>> speed bins.. etc. Drivers like thermal sensor, HDMI impedance would
+>> read out this data for configuring the driver.
+>>
+>> Change in v2:
+>> 1. Rebase to 4.4-rc1
+>> 2. Modify the driver Makefile for more consistent with other drivers
+>> 3. Modify the compatible string to "mediatek,mt8173-efuse" and "mediatek,efuse"
+>
+> Do you still plan to queue this for v4.5?
+>
+Sorry guys, for the long delay in replying your pings, got busy with 
+regular office stuff :-)
 
-thanks,
+Yes, It should go in v4.5, I did send request with my sign-off to Greg,
+he should take it via char-misc tree.
+
+Thanks,
 srini
-
-
-On 17/11/15 20:02, Ariel D'Alessandro wrote:
-> Add node for the NXP LPC18xx EEPROM memory which can be found in
-> NXP LPC185x/3x and LPC435x/3x/2x/1x devices.
->
-> Signed-off-by: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-> ---
->   arch/arm/boot/dts/lpc18xx.dtsi | 12 ++++++++++++
->   1 file changed, 12 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/lpc18xx.dtsi b/arch/arm/boot/dts/lpc18xx.dtsi
-> index 52591d8..43e99cf 100644
-> --- a/arch/arm/boot/dts/lpc18xx.dtsi
-> +++ b/arch/arm/boot/dts/lpc18xx.dtsi
-> @@ -166,6 +166,18 @@
->   			status = "disabled";
->   		};
->
-> +		eeprom: eeprom@4000e000 {
-> +			compatible = "nxp,lpc1857-eeprom";
-> +			reg =	<0x4000e000 0x1000>,
-> +				<0x20040000 0x4000>;
-> +			reg-names = "reg", "mem";
-> +			clocks = <&ccu1 CLK_CPU_EEPROM>;
-> +			clock-names = "eeprom";
-> +			resets = <&rgu 27>;
-> +			interrupts = <4>;
-> +			status = "disabled";
-> +		};
-> +
->   		mac: ethernet@40010000 {
->   			compatible = "nxp,lpc1850-dwmac", "snps,dwmac-3.611", "snps,dwmac";
->   			reg = <0x40010000 0x2000>;
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>> Andrew-CT Chen (3):
+>>    dt-bindings: add document of mediatek efuse driver
+>>    nvmem: mediatek: Add Mediatek EFUSE driver
+>>    dts: arm64: Add EFUSE device node
+>>
+>>   .../devicetree/bindings/nvmem/mtk-efuse.txt        | 36 +++++++++
+>>   arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  5 ++
+>>   drivers/nvmem/Kconfig                              | 11 +++
+>>   drivers/nvmem/Makefile                             |  2 +
+>>   drivers/nvmem/mtk-efuse.c                          | 89 ++++++++++++++++++++++
+>>   5 files changed, 143 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/nvmem/mtk-efuse.txt
+>>   create mode 100644 drivers/nvmem/mtk-efuse.c
+>>
+>> --
+>> 1.9.1
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Please read the FAQ at  http://www.tux.org/lkml/
