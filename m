@@ -1,67 +1,134 @@
 From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC][PATCH] misc: Introduce reboot_reason driver
-Date: Mon, 14 Dec 2015 09:22:41 -0600
-Message-ID: <CAL_Jsq+Mta5z6HSx+3AatGYmyhuWG=9C-Eoq=UYA9YEhsXwDLg@mail.gmail.com>
-References: <1449610162-30543-1-git-send-email-john.stultz@linaro.org>
- <CAL_Jsq+s1Lk9s=dvSAe-rerSc1aUO39tkBnsrkoNqJoET3VNjw@mail.gmail.com>
- <CALAqxLVKhQT4Ba3JFVKpV79PnAsjYDARRO8M5U5=3Jjx45h6WQ@mail.gmail.com> <1552521.IZhVsTdxHT@wuerfel>
+Subject: Re: [PATCH 1/3] Device tree binding documentation for gpio-switch
+Date: Mon, 14 Dec 2015 09:45:48 -0600
+Message-ID: <CAL_JsqJXX71Bwbm21H3QAJxYDO60kyHgKVzXxxrH9ze6ZWYtXw@mail.gmail.com>
+References: <1449250275-23435-1-git-send-email-martyn.welch@collabora.co.uk>
+ <1449250275-23435-2-git-send-email-martyn.welch@collabora.co.uk>
+ <CACRpkdYZ-PK9Fb2uq+EMz5RTrtX-isxYkiNvWm2QqAh5WZhpOw@mail.gmail.com>
+ <CAL_JsqJ-dht=rCu2-Unm0yOdFfRoOSXd9fkO7eDeQmvWGkGfsQ@mail.gmail.com> <CACRpkdYvU6YG5yRCLsyS7sq816t3shWw51OTR2-fkp-FqSeESg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1552521.IZhVsTdxHT@wuerfel>
+In-Reply-To: <CACRpkdYvU6YG5yRCLsyS7sq816t3shWw51OTR2-fkp-FqSeESg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Android Kernel Team <kernel-team-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 10, 2015 at 4:11 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Thursday 10 December 2015 13:43:16 John Stultz wrote:
->> On Thu, Dec 10, 2015 at 12:24 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> > The fact that we are using notifiers for reset reason and triggering
->> > is probably some indication that some infrastructure is needed. But I
->> > don't think you need to do that here as long as it is all kernel
->> > internals. We'll make the 2nd guy do it.
+On Mon, Dec 14, 2015 at 8:28 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Dec 11, 2015 at 3:06 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Fri, Dec 11, 2015 at 6:39 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>> On Fri, Dec 4, 2015 at 6:31 PM, Martyn Welch
+>>> <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> wrote:
+
+[...]
+
+>>> Markus Pargmann also did a series that add initial values to
+>>> hogs, which is the inverse usecase of this, where you want to
+>>> *output* something by default, then maybe also make it available
+>>> to userspace.
+>>>
+>>> So what we need to see here is a patch series that does all of these
+>>> things:
+>>>
+>>> - Name lines
+>>>
+>>> - Sets them to initial values
+>>>
+>>> - Mark them as read-only
+>>>
+>>> - Mark them as "not used by the operating system" so that they
+>>>   can be default-exported to userspace.
 >>
+>> No! This should not be a DT property.
 >>
->>
->> Though, just so I understand better, what is problematic w/ the reset
->> notifiers? They provide the reboot command argument, which is the core
->> of what is needed. It actually seemed like it was almost designed with
->> this problem in mind.
+>> Whether I want to control a GPIO in the kernel or userspace is not
+>> known and can change over time. It could simply depend on kernel
+>> config. There is also the case that a GPIO has no connection or kernel
+>> driver until some time later when a DT overlay for an expansion board
+>> is applied.
 >
-> Notifiers in general are a bit of a kludge. We often use them in places
-> that have not been abstracted well enough yet, and they make it
-> less obvious what is actually going on when something happens, or
-> in what order things are called.
+> That's correct. So from a DT point of view, what really matters is
+> to give things a name, and the hogs and initvals syntax already
+> has a structure for this that is in use
+> (from Documentation/devicetree/bindings/gpio/gpio.txt):
+>
+>         qe_pio_a: gpio-controller@1400 {
+>                 compatible = "fsl,qe-pario-bank-a", "fsl,qe-pario-bank";
+>                 reg = <0x1400 0x18>;
+>                 gpio-controller;
+>                 #gpio-cells = <2>;
+>
+>                 line_b {
+>                         gpio-hog;
+>                         gpios = <6 0>;
+>                         output-low;
+>                         line-name = "foo-bar-gpio";
+>                 };
+>         };
+>
+> Markus use this also for initial values. That could easily be used in
+> a budget version like this:
+>
+>                 line_b {
+>                         /* Just naming */
+>                         gpios = <6 0>;
+>                         line-name = "foo-bar-gpio";
+>                 };
+>
+> That could grow kind of big though. Or maybe not? How many
+> GPIO lines are actually properly named in a typical system?
 
-Exactly.
+We should limit it to GPIOs with no connection to another node. For
+example, I don't want to see a SD card detect in the list as that
+should be in the SD host node. However, that is hard to enforce and
+can change over time. Removing it would break userspace potentially.
+Of course if the kernel starts own a signal that userspace used, then
+that potentially breaks userspace regardless of the DT changing. OTOH,
+using GPIOs in userspace is kind of use at your own risk.
 
-> I'm actually less worried about the notifier side here than about
-> the general problem of the communication channel. The reboot reason
-> is only one of a number of things that the kernel needs to communicate
-> to the boot loader. Other things may include:
+The only real differences between this and Martyn's proposal are the
+location of the nodes and having a compatible string. A compatible
+string may be good to have. It indicates type of signal, but not
+specific use. Similar to how gpio-key compatible defines the function,
+but not what key code, or gpio-led does not say what color LED. A
+compatible here could cover switches, mode/id/revision strapping
+signals, jumpers, presence detect, etc.
 
-If only there was a standard interface for firmware variable storage...
+> The problem is that naming is usually imposed by consumers (they
+> are the ones who know how the line is used).
+>
+> And then I do not mean naming it after the pin on the capsule
+> where it comes out as per the datasheet, but
+> naming it after the actual use.
 
-> - boot device
-> - location of the kernel
-> - command line
-> - properties of the /chosen DT node in general
-> - boot scripts
-> - ethernet MAC addresses
-> - bootloader console configuration
+Right. We need a way to query "I need the GPIO that does X" which
+works across boards.
 
-A major distinction here is many of these would be persistent (i.e. in
-flash). As much of this goes into to the DT anyway, a standard way for
-userspace to update the DT could solve this. That would not really
-work for handling a one time case unless you supported boot with an
-alternate DT.
+> Naming it after the hardware specs is something the operating
+> system can do, in Linux' case by the array char *names; inside the
+> struct gpio_chip and should not be part of the bindings IMO.
 
-I've also seen storing of SD tuning parameters to avoid tuning at boot
-up. Although, the tuning doesn't add that much to the boot time
-relative to Android boot, so I don't really see the point.
+Agreed. That just came up with STM32 gpio bindings[1].
+
+> I would rather imagine this is something used in a top-level board
+> file naming it: "header-2-22" for the 22nd pin on some second header
+> on my BeagleBone Black or something like that. And those may not
+> be so vast in numbers so they could be named using this pattern.
+
+Exactly. This is one of the cases I care about. However, this is not
+really a function, but it is SOC independent at least.
+
+We also have to consider how to handle add-on boards. We probably need
+a connector node which can remap connector signals to host signals in
+order to have overlays independent of the host board DT. For GPIOs
+this is probably a gpio-map property similar to interrupt-map. The
+complicated part will be connectors that require pinmux setup of the
+host.
 
 Rob
+
+[1] https://lkml.org/lkml/2015/12/11/600
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
