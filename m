@@ -1,67 +1,88 @@
-From: Dirk Behme <dirk.behme@gmail.com>
-Subject: [PATCH] arm64: dts: r8a7795: pmu: switch to Cortex specific device nodes
-Date: Mon, 14 Dec 2015 18:37:51 +0100
-Message-ID: <1450114671-10711-1-git-send-email-dirk.behme@gmail.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org, horms@verge.net.au, geert+renesas@glider.be
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sudeep.holla@arm.com, Dirk Behme <dirk.behme@gmail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 5/8] arm64: dts: mediatek: Add Video Encoder for MT8173
+Date: Mon, 14 Dec 2015 19:18:17 +0100
+Message-ID: <1598527.2ooU1eBZYB@linux-gy6r.site>
+References: <1449827743-22895-1-git-send-email-tiffany.lin@mediatek.com> <1449827743-22895-6-git-send-email-tiffany.lin@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1449827743-22895-6-git-send-email-tiffany.lin@mediatek.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Tiffany Lin <tiffany.lin@mediatek.com>
+Cc: daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Daniel Kurtz <djkurtz@chromium.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@iki.fi>, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, Fabien Dessenne <fabien.dessenne@st.com>, Arnd Bergmann <arnd@arndb.de>, Darren Etheridge <detheridge@ti.com>, Peter Griffin <peter.griffin@linaro.org>, Benoit Parrot <bparrot@ti.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Ja
 List-Id: devicetree@vger.kernel.org
 
-Instead of using the generic armv8-pmuv3 compatibility use the more
-specific Cortex A57 and A53 compatibility.
+On Friday 11 Dec 2015 17:55:40 Tiffany Lin wrote:
+> Add video encoder node for MT8173
+> 
+> Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi |   47
+> ++++++++++++++++++++++++++++++ 1 file changed, 47 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> b/arch/arm64/boot/dts/mediatek/mt8173.dtsi index b8c8ff0..a6b0fcf 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -545,6 +545,53 @@
+>  			#clock-cells = <1>;
+>  		};
+> 
+> +		larb3: larb@18001000 {
+> +			compatible = "mediatek,mt8173-smi-larb";
+> +			reg = <0 0x18001000 0 0x1000>;
+> +			mediatek,smi = <&smi_common>;
+> +			power-domains = <&scpsys MT8173_POWER_DOMAIN_VENC>;
+> +			clocks = <&vencsys CLK_VENC_CKE1>,
+> +				 <&vencsys CLK_VENC_CKE0>;
+> +			clock-names = "apb", "smi";
+> +		};
+> +
+> +		vcodec_enc: vcodec@18002000 {
+> +			compatible = "mediatek,mt8173-vcodec-enc";
+> +			reg = <0 0x18002000 0 0x1000>,	/* VENC_SYS */
+> +			      <0 0x19002000 0 0x1000>;	/* VENC_LT_SYS */
+> +			interrupts = <GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>,
+> +				     <GIC_SPI 202 IRQ_TYPE_LEVEL_LOW>;
+> +			larb = <&larb3>,
+> +			       <&larb5>;
 
-Signed-off-by: Dirk Behme <dirk.behme@gmail.com>
----
-Note: This patch applies on top of
+should be mediatek,larb or just larb for all instances of the larb's.
+See my other email about the bindings.
 
-https://patchwork.kernel.org/patch/7834201/
+Regards,
+Matthias
 
-https://patchwork.kernel.org/patch/7834211/
-
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index 30ebc08..590c510 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -287,21 +287,26 @@
- 			power-domains = <&cpg>;
- 		};
- 
--		pmu {
--			compatible = "arm,armv8-pmuv3";
-+		pmu_a57 {
-+			compatible = "arm,cortex-a57-pmu";
- 			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-+				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-affinity = <&a57_0>,
- 					     <&a57_1>,
- 					     <&a57_2>,
--					     <&a57_3>,
--					     <&a53_0>,
-+					     <&a57_3>;
-+
-+		};
-+
-+		pmu_a53 {
-+			compatible = "arm,cortex-a53-pmu";
-+			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-affinity = <&a53_0>,
- 					     <&a53_1>,
- 					     <&a53_2>,
- 					     <&a53_3>;
--- 
-2.6.4
-
+> +			iommus = <&iommu M4U_LARB3_ID M4U_PORT_VENC_RCPU>,
+> +				 <&iommu M4U_LARB3_ID M4U_PORT_VENC_REC>,
+> +				 <&iommu M4U_LARB3_ID M4U_PORT_VENC_BSDMA>,
+> +				 <&iommu M4U_LARB3_ID M4U_PORT_VENC_SV_COMV>,
+> +				 <&iommu M4U_LARB3_ID M4U_PORT_VENC_RD_COMV>,
+> +				 <&iommu M4U_LARB3_ID M4U_PORT_VENC_CUR_LUMA>,
+> +				 <&iommu M4U_LARB3_ID M4U_PORT_VENC_CUR_CHROMA>,
+> +				 <&iommu M4U_LARB3_ID M4U_PORT_VENC_REF_LUMA>,
+> +				 <&iommu M4U_LARB3_ID M4U_PORT_VENC_REF_CHROMA>,
+> +				 <&iommu M4U_LARB3_ID M4U_PORT_VENC_NBM_RDMA>,
+> +				 <&iommu M4U_LARB3_ID M4U_PORT_VENC_NBM_WDMA>,
+> +				 <&iommu M4U_LARB5_ID M4U_PORT_VENC_RCPU_SET2>,
+> +				 <&iommu M4U_LARB5_ID M4U_PORT_VENC_REC_FRM_SET2>,
+> +				 <&iommu M4U_LARB5_ID M4U_PORT_VENC_BSDMA_SET2>,
+> +				 <&iommu M4U_LARB5_ID M4U_PORT_VENC_SV_COMA_SET2>,
+> +				 <&iommu M4U_LARB5_ID M4U_PORT_VENC_RD_COMA_SET2>,
+> +				 <&iommu M4U_LARB5_ID M4U_PORT_VENC_CUR_LUMA_SET2>,
+> +				 <&iommu M4U_LARB5_ID M4U_PORT_VENC_CUR_CHROMA_SET2>,
+> +				 <&iommu M4U_LARB5_ID M4U_PORT_VENC_REF_LUMA_SET2>,
+> +				 <&iommu M4U_LARB5_ID M4U_PORT_VENC_REC_CHROMA_SET2>;
+> +			vpu = <&vpu>;
+> +			clocks = <&apmixedsys CLK_APMIXED_VENCPLL>,
+> +				 <&topckgen CLK_TOP_VENC_LT_SEL>,
+> +				 <&topckgen CLK_TOP_VCODECPLL_370P5>;
+> +			clock-names = "vencpll",
+> +				      "venc_lt_sel",
+> +				      "vcodecpll_370p5_ck";
+> +		};
+> +
+>  		vencltsys: clock-controller@19000000 {
+>  			compatible = "mediatek,mt8173-vencltsys", "syscon";
+>  			reg = <0 0x19000000 0 0x1000>;
