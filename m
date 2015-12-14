@@ -1,51 +1,54 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [RFC PATCH 0/7] mtd: partitions: add of_match_table support
-Date: Mon, 14 Dec 2015 11:15:26 +0100
-Message-ID: <CAMuHMdWSSHCYXPj_8sXTdc84k6c2oD2XUKLRoJZF2WwHcgk8vQ@mail.gmail.com>
-References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
-	<CAMuHMdUJXHs_OhT0da+kzc=D4MOFUT9BB3eJ+7a_p6DYx-PKBA@mail.gmail.com>
-	<20151210205449.GL144338@google.com>
-	<CAMuHMdV-uethsChWVZGSx1JNcAofODmg14ppGYJP2ewfwhEv1Q@mail.gmail.com>
-	<20151212013349.GA86087@google.com>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH v2 2/2] mfd: arizona: Update binding docs for selecting mono/stereo outputs
+Date: Mon, 14 Dec 2015 10:19:12 +0000
+Message-ID: <1450088352-10470-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+References: <1450088352-10470-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151212013349.GA86087-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, David Hendricks <dhendrix-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1450088352-10470-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+Update the device tree binding documentation to include the wlf,out-mono
+property that is used to specify whether each output is a mono or stereo
+output.
 
-On Sat, Dec 12, 2015 at 2:33 AM, Brian Norris
-<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Fri, Dec 11, 2015 at 09:44:37AM +0100, Geert Uytterhoeven wrote:
->> On Thu, Dec 10, 2015 at 9:54 PM, Brian Norris
->> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> > IOW, I wouldn't expect MBR or GPT to work well on large raw NAND flash,
->> > and so I don't plan to do that sort of work myself. If you can provide
->> > some better argument for it, and some nice maintainable code to go with
->> > it, then of course it could be considered :)
->>
->> There's also NOR FLASH (e.g. SPI-NOR), which is what most boards I'm
->> working on have.
->
-> OK. But these flash are often used for the boot firmware, no? And then,
-> does the boot code have to be provided at one end of the flash (e.g.,
-> bottom)? If so, then something like MBR or GPT will likely not apply,
-> since they reserve the first (and sometimes last) blocks of the medium.
+Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+---
 
-If the boot firmware is in the first few blocks, Amiga RDB or BSD disklabel
-come to the rescue...
+Changes since v1:
+ - Clarify which outputs correspond to which entry in the out-mono list.
 
-Gr{oetje,eeting}s,
+Thanks,
+Charles
 
-                        Geert
+ Documentation/devicetree/bindings/mfd/arizona.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+index 2b6ccdb..069e31d 100644
+--- a/Documentation/devicetree/bindings/mfd/arizona.txt
++++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+@@ -65,6 +65,12 @@ Optional properties:
+     that have not been specified are set to 0 by default. Entries are:
+     <IN1, IN2, IN3, IN4> (wm5102, wm5110, wm8280, wm8997)
+     <IN1A, IN2A, IN1B, IN2B> (wm8998, wm1814)
++  - wlf,out-mono : A list of boolean values indicating whether each output is
++    mono or stereo. Position within the list indicates the output affected
++    (eg. First entry in the list corresponds to output 1). A non-zero value
++    indicates a mono output. If present, the number of values should be less
++    than or equal to the number of outputs, if less values are supplied the
++    additional outputs will be treated as stereo.
+ 
+   - wlf,dmic-ref : DMIC reference voltage source for each input, can be
+     selected from either MICVDD or one of the MICBIAS's, defines
+-- 
+2.1.4
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
