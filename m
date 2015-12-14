@@ -1,79 +1,127 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: [PATCH v6 4/4] stmmac: socfpga: Provide dt node to config ptp clk source.
-Date: Mon, 14 Dec 2015 11:32:02 +0800
-Message-ID: <1450063922-19481-5-git-send-email-preid@electromag.com.au>
-References: <1450063922-19481-1-git-send-email-preid@electromag.com.au>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1450063922-19481-1-git-send-email-preid@electromag.com.au>
-Sender: netdev-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, peppe.cavallaro@st.com, davem@davemloft.net, vbridger@opensource.altera.com, devicetree@vger.kernel.org, netdev@vger.kernel.org
-Cc: Phil Reid <preid@electromag.com.au>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 1/2] extcon: arizona: Add device bindings for the micd
+ configurations
+Date: Mon, 14 Dec 2015 13:11:13 +0900
+Message-ID: <566E4161.5070307@samsung.com>
+References: <1449767299-29691-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1449767299-29691-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Provides an options to use the ptp clock routed from the Altera FPGA
-fabric. Instead of the defalt eosc1 clock connected to the ARM HPS core.
-This setting affects all emacs in the core as the ptp clock is common.
+Hi Charles,
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Phil Reid <preid@electromag.com.au>
----
- Documentation/devicetree/bindings/net/socfpga-dwmac.txt | 2 ++
- drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c     | 9 +++++++++
- 2 files changed, 11 insertions(+)
+On 2015=EB=85=84 12=EC=9B=94 11=EC=9D=BC 02:08, Charles Keepax wrote:
+> Add device bindings to support configuring the jack detection
+> configurations. Each configuration needs to specify the connection of
+> the mic det pins, which micbias should be used and the value of the
+> micd polarity GPIO required to activate that configuration.
+>=20
+> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+> ---
+>  drivers/extcon/extcon-arizona.c | 53 +++++++++++++++++++++++++++++++=
+++++++++--
+>  1 file changed, 51 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-=
+arizona.c
+> index 8647533..edbf2e1 100644
+> --- a/drivers/extcon/extcon-arizona.c
+> +++ b/drivers/extcon/extcon-arizona.c
+> @@ -1201,7 +1201,54 @@ static void arizona_micd_set_level(struct ariz=
+ona *arizona, int index,
+>  	regmap_update_bits(arizona->regmap, reg, mask, level);
+>  }
+> =20
+> -static int arizona_extcon_device_get_pdata(struct arizona *arizona)
+> +static int arizona_extcon_get_micd_configs(struct device *dev,
+> +					   struct arizona *arizona)
+> +{
+> +	const char * const prop =3D "wlf,micd-configs";
+> +	const int entries_per_config =3D 3;
+> +	struct arizona_micd_config *micd_configs;
+> +	int nconfs, ret;
+> +	int i, j;
+> +	u32 *vals;
+> +
+> +	nconfs =3D device_property_read_u32_array(arizona->dev, prop, NULL,=
+ 0);
+> +	if (nconfs <=3D 0)
+> +		return 0;
+> +
+> +	vals =3D kcalloc(nconfs, sizeof(u32), GFP_KERNEL);
+> +	if (!vals)
+> +		return -ENOMEM;
+> +
+> +	ret =3D device_property_read_u32_array(arizona->dev, prop, vals, nc=
+onfs);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	nconfs /=3D entries_per_config;
+> +
+> +	micd_configs =3D devm_kzalloc(dev,
+> +				    nconfs * sizeof(struct arizona_micd_range),
+> +				    GFP_KERNEL);
+> +	if (!micd_configs) {
+> +		ret =3D -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	for (i =3D 0, j =3D 0; i < nconfs; ++i) {
+> +		micd_configs[i].src =3D vals[j++] ? ARIZONA_ACCDET_SRC : 0;
+> +		micd_configs[i].bias =3D vals[j++];
+> +		micd_configs[i].gpio =3D vals[j++];
+> +	}
+> +
+> +	arizona->pdata.micd_configs =3D micd_configs;
+> +	arizona->pdata.num_micd_configs =3D nconfs;
+> +
+> +out:
+> +	kfree(vals);
+> +	return ret;
+> +}
+> +
+> +static int arizona_extcon_device_get_pdata(struct device *dev,
+> +					   struct arizona *arizona)
+>  {
+>  	struct arizona_pdata *pdata =3D &arizona->pdata;
+>  	unsigned int val =3D ARIZONA_ACCDET_MODE_HPL;
+> @@ -1249,6 +1296,8 @@ static int arizona_extcon_device_get_pdata(stru=
+ct arizona *arizona)
+>  	pdata->jd_gpio5_nopull =3D device_property_read_bool(arizona->dev,
+>  						"wlf,use-jd2-nopull");
+> =20
+> +	arizona_extcon_get_micd_configs(dev, arizona);
 
-diff --git a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-index 3a9d679..72d82d6 100644
---- a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-+++ b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-@@ -11,6 +11,8 @@ Required properties:
- 		  designware version numbers documented in stmmac.txt
-  - altr,sysmgr-syscon : Should be the phandle to the system manager node that
-    encompasses the glue register, the register offset, and the register shift.
-+ - altr,f2h_ptp_ref_clk use f2h_ptp_ref_clk instead of default eosc1 clock
-+   for ptp ref clk. This affects all emacs as the clock is common.
- 
- Optional properties:
- altr,emac-splitter: Should be the phandle to the emac splitter soft IP node if
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-index 401383b..f0d797a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-@@ -32,6 +32,7 @@
- #define SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RMII 0x2
- #define SYSMGR_EMACGRP_CTRL_PHYSEL_WIDTH 2
- #define SYSMGR_EMACGRP_CTRL_PHYSEL_MASK 0x00000003
-+#define SYSMGR_EMACGRP_CTRL_PTP_REF_CLK_MASK 0x00000010
- 
- #define EMAC_SPLITTER_CTRL_REG			0x0
- #define EMAC_SPLITTER_CTRL_SPEED_MASK		0x3
-@@ -47,6 +48,7 @@ struct socfpga_dwmac {
- 	struct regmap *sys_mgr_base_addr;
- 	struct reset_control *stmmac_rst;
- 	void __iomem *splitter_base;
-+	bool f2h_ptp_ref_clk;
- };
- 
- static void socfpga_dwmac_fix_mac_speed(void *priv, unsigned int speed)
-@@ -116,6 +118,8 @@ static int socfpga_dwmac_parse_data(struct socfpga_dwmac *dwmac, struct device *
- 		return -EINVAL;
- 	}
- 
-+	dwmac->f2h_ptp_ref_clk = of_property_read_bool(np, "altr,f2h_ptp_ref_clk");
-+
- 	np_splitter = of_parse_phandle(np, "altr,emac-splitter", 0);
- 	if (np_splitter) {
- 		if (of_address_to_resource(np_splitter, 0, &res_splitter)) {
-@@ -171,6 +175,11 @@ static int socfpga_dwmac_setup(struct socfpga_dwmac *dwmac)
- 	ctrl &= ~(SYSMGR_EMACGRP_CTRL_PHYSEL_MASK << reg_shift);
- 	ctrl |= val << reg_shift;
- 
-+	if (dwmac->f2h_ptp_ref_clk)
-+		ctrl |= SYSMGR_EMACGRP_CTRL_PTP_REF_CLK_MASK << (reg_shift / 2);
-+	else
-+		ctrl &= ~(SYSMGR_EMACGRP_CTRL_PTP_REF_CLK_MASK << (reg_shift / 2));
-+
- 	regmap_write(sys_mgr_base_addr, reg_offset, ctrl);
- 	return 0;
- }
--- 
-1.8.3.1
+You need to check out the return value of arizona_extcon_get_micd_confi=
+gs().
+If arizona_extcon_get_micd_configs() returns the error,=20
+arizona_extcon_device_get_pdata() don't handle the error case.
+
+> +
+>  	return 0;
+>  }
+> =20
+> @@ -1270,7 +1319,7 @@ static int arizona_extcon_probe(struct platform=
+_device *pdev)
+>  		return -ENOMEM;
+> =20
+>  	if (!dev_get_platdata(arizona->dev))
+> -		arizona_extcon_device_get_pdata(arizona);
+> +		arizona_extcon_device_get_pdata(&pdev->dev, arizona);
+> =20
+>  	info->micvdd =3D devm_regulator_get(&pdev->dev, "MICVDD");
+>  	if (IS_ERR(info->micvdd)) {
+>=20
+
+Except for above comment, Looks good to me.
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+
+Thanks,
+Chanwoo Choi
