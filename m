@@ -1,90 +1,62 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH 12/12] ARM: dts: imx6: add Vivante GPU nodes
-Date: Mon, 14 Dec 2015 10:52:25 +0100
-Message-ID: <1450086745.3163.3.camel@pengutronix.de>
-References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
- <1449237604-19064-13-git-send-email-l.stach@pengutronix.de>
- <20151211070258.GA11252@tiger>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] ARM: dts: rockchip: add eFuse node for rk3066a SoCs
+Date: Mon, 14 Dec 2015 09:57:02 +0000
+Message-ID: <566E926E.7090903@linaro.org>
+References: <1447227272-1728-1-git-send-email-wxt@rock-chips.com> <1447227272-1728-4-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20151211070258.GA11252@tiger>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Russell King <rmk+kernel@arm.linux.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1447227272-1728-4-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-QW0gRnJlaXRhZywgZGVuIDExLjEyLjIwMTUsIDE1OjAyICswODAwIHNjaHJpZWIgU2hhd24gR3Vv
-Ogo+IE9uIEZyaSwgRGVjIDA0LCAyMDE1IGF0IDAzOjAwOjA0UE0gKzAxMDAsIEx1Y2FzIFN0YWNo
-IHdyb3RlOgo+ID4gVGhpcyBhZGRzIHRoZSBkZXZpY2Ugbm9kZXMgZm9yIDJELCAzRCBhbmQgVkcg
-R1BVIGNvcmVzLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBSdXNzZWxsIEtpbmcgPHJtaytrZXJu
-ZWxAYXJtLmxpbnV4Lm9yZy51az4KPiA+IFNpZ25lZC1vZmYtYnk6IEx1Y2FzIFN0YWNoIDxsLnN0
-YWNoQHBlbmd1dHJvbml4LmRlPgo+ID4gLS0tCj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14NmRs
-LmR0c2kgIHwgIDUgKysrKysKPiA+ICBhcmNoL2FybS9ib290L2R0cy9pbXg2cS5kdHNpICAgfCAx
-NSArKysrKysrKysrKysrKysKPiA+ICBhcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLmR0c2kgfCAy
-MiArKysrKysrKysrKysrKysrKysrKysrCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCA0MiBpbnNlcnRp
-b25zKCspCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2ZGwuZHRz
-aSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZkbC5kdHNpCj4gPiBpbmRleCA0YjBlYzA3MDM4MjUu
-LjUxYzUxN2E1Y2FmZCAxMDA2NDQKPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZkbC5k
-dHNpCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2ZGwuZHRzaQo+ID4gQEAgLTEwNCw2
-ICsxMDQsMTEgQEAKPiA+ICAJCWNvbXBhdGlibGUgPSAiZnNsLGlteC1kaXNwbGF5LXN1YnN5c3Rl
-bSI7Cj4gPiAgCQlwb3J0cyA9IDwmaXB1MV9kaTA+LCA8JmlwdTFfZGkxPjsKPiA+ICAJfTsKPiA+
-ICsKPiA+ICsJZ3B1LXN1YnN5c3RlbSB7Cj4gPiArCQljb21wYXRpYmxlID0gImZzbCxpbXgtZ3B1
-LXN1YnN5c3RlbSI7Cj4gPiArCQljb3JlcyA9IDwmZ3B1XzJkPiwgPCZncHVfM2Q+Owo+ID4gKwl9
-Owo+ID4gIH07Cj4gPiAgCj4gPiAgJmdwdCB7Cj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
-dC9kdHMvaW14NnEuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLmR0c2kKPiA+IGluZGV4
-IDM5OTEwM2I4ZTJjOS4uNzdkNjE4YjI4NzBjIDEwMDY0NAo+ID4gLS0tIGEvYXJjaC9hcm0vYm9v
-dC9kdHMvaW14NnEuZHRzaQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnEuZHRzaQo+
-ID4gQEAgLTE1Myw2ICsxNTMsMTYgQEAKPiA+ICAJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ID4g
-IAkJfTsKPiA+ICAKPiA+ICsJCWdwdV92ZzogZ3B1QDAyMjA0MDAwIHsKPiA+ICsJCQljb21wYXRp
-YmxlID0gInZpdmFudGUsZ2MiOwo+ID4gKwkJCXJlZyA9IDwweDAyMjA0MDAwIDB4NDAwMD47Cj4g
-PiArCQkJaW50ZXJydXB0cyA9IDwwIDExIElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ID4gKwkJCWNs
-b2NrcyA9IDwmY2xrcyBJTVg2UURMX0NMS19PUEVOVkdfQVhJPiwKPiA+ICsJCQkJIDwmY2xrcyBJ
-TVg2UURMX0NMS19HUFUyRF9DT1JFPjsKPiA+ICsJCQljbG9jay1uYW1lcyA9ICJidXMiLCAiY29y
-ZSI7Cj4gPiArCQkJcG93ZXItZG9tYWlucyA9IDwmZ3BjIDE+Owo+IAo+IFNob3VsZG4ndCBwcm9w
-ZXJ0eSAncG93ZXItZG9tYWlucycgYmUgbWVudGlvbmVkIGEgYml0IGluIGJpbmRpbmdzIGRvYz8K
-PiAKSG0sIGl0J3MgYSBzdGFuZGFyZCBwcm9wZXJ0eSwgc28gSSBkb24ndCBrbm93IGlmIGl0J3Mg
-cmVxdWlyZWQuIEJ1dCBPVE9ICml0IGRvZXNuJ3QgaHVydCB0byBoYXZlIGl0LCBzbyB3aWxsIGFk
-ZCB0aGF0LgoKPiA+ICsJCX07Cj4gPiArCj4gPiAgCQlpcHUyOiBpcHVAMDI4MDAwMDAgewo+ID4g
-IAkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ID4gIAkJCSNzaXplLWNlbGxzID0gPDA+Owo+ID4g
-QEAgLTIyNSw2ICsyMzUsMTEgQEAKPiA+ICAJCWNvbXBhdGlibGUgPSAiZnNsLGlteC1kaXNwbGF5
-LXN1YnN5c3RlbSI7Cj4gPiAgCQlwb3J0cyA9IDwmaXB1MV9kaTA+LCA8JmlwdTFfZGkxPiwgPCZp
-cHUyX2RpMD4sIDwmaXB1Ml9kaTE+Owo+ID4gIAl9Owo+ID4gKwo+ID4gKwlncHUtc3Vic3lzdGVt
-IHsKPiA+ICsJCWNvbXBhdGlibGUgPSAiZnNsLGlteC1ncHUtc3Vic3lzdGVtIjsKPiA+ICsJCWNv
-cmVzID0gPCZncHVfMmQ+LCA8JmdwdV8zZD4sIDwmZ3B1X3ZnPjsKPiA+ICsJfTsKPiA+ICB9Owo+
-ID4gIAo+ID4gICZoZG1pIHsKPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2
-cWRsLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLmR0c2kKPiA+IGluZGV4IDJiNmNj
-OGJmM2M1Yy4uMDE4OTc1Yjg2N2UxIDEwMDY0NAo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMv
-aW14NnFkbC5kdHNpCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLmR0c2kKPiA+
-IEBAIC0xMTksNiArMTE5LDI4IEBACj4gPiAgCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiA+ICAJ
-CX07Cj4gPiAgCj4gPiArCj4gPiArCQlncHVfMmQ6IGdwdUAwMDEzNDAwMCB7Cj4gPiArCQkJY29t
-cGF0aWJsZSA9ICJ2aXZhbnRlLGdjIjsKPiA+ICsJCQlyZWcgPSA8MHgwMDEzNDAwMCAweDQwMDA+
-Owo+ID4gKwkJCWludGVycnVwdHMgPSA8MCAxMCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiA+ICsJ
-CQljbG9ja3MgPSA8JmNsa3MgSU1YNlFETF9DTEtfR1BVMkRfQVhJPiwKPiA+ICsJCQkJIDwmY2xr
-cyBJTVg2UURMX0NMS19HUFUyRF9DT1JFPjsKPiA+ICsJCQljbG9jay1uYW1lcyA9ICJidXMiLCAi
-Y29yZSI7Cj4gPiArCQkJcG93ZXItZG9tYWlucyA9IDwmZ3BjIDE+Owo+ID4gKwkJfTsKPiA+ICsK
-PiA+ICsJCWdwdV8zZDogZ3B1QDAwMTMwMDAwIHsKPiA+ICsJCQljb21wYXRpYmxlID0gInZpdmFu
-dGUsZ2MiOwo+ID4gKwkJCXJlZyA9IDwweDAwMTMwMDAwIDB4NDAwMD47Cj4gPiArCQkJaW50ZXJy
-dXB0cyA9IDwwIDkgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gPiArCQkJY2xvY2tzID0gPCZjbGtz
-IElNWDZRRExfQ0xLX0dQVTNEX0FYST4sCj4gPiArCQkJCSA8JmNsa3MgSU1YNlFETF9DTEtfR1BV
-M0RfQ09SRT4sCj4gPiArCQkJCSA8JmNsa3MgSU1YNlFETF9DTEtfR1BVM0RfU0hBREVSPjsKPiA+
-ICsJCQljbG9jay1uYW1lcyA9ICJidXMiLCAiY29yZSIsICJzaGFkZXIiOwo+ID4gKwkJCXBvd2Vy
-LWRvbWFpbnMgPSA8JmdwYyAxPjsKPiA+ICsJCX07Cj4gPiArCj4gCj4gUGxlYXNlIGtlZXAgdGhl
-c2UgYWRkZWQgbm9kZXMgc29ydGVkIGluIHVuaXQtYWRkcmVzcy4KPiAKVXJnaCwgcmlnaHQuCgpB
-cmUgeW91IG9rYXkgd2l0aCBtZXJnaW5nIHRoZSBEVCBjaGFuZ2VzIHRocm91Z2ggdGhlIERSTSB0
-cmVlLCBvciBkbyB5b3UKd2FudCB0byBwaWNrIHRoZW0gc2VwYXJhdGU/CgpSZWdhcmRzLApMdWNh
-cwotLSAKUGVuZ3V0cm9uaXggZS5LLiAgICAgICAgICAgICB8IEx1Y2FzIFN0YWNoICAgICAgICAg
-ICAgICAgICB8CkluZHVzdHJpYWwgTGludXggU29sdXRpb25zICAgfCBodHRwOi8vd3d3LnBlbmd1
-dHJvbml4LmRlLyAgfAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
-ZWwK
+Heiko,
+
+Can you take the DT patches in this series via your tree.
+
+I picked up nvmem patches from this series.
+
+thanks,
+srini
+
+On 11/11/15 07:34, Caesar Wang wrote:
+> This patch add the eFuse dt node for rk3066a SoCs.
+>
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>
+>   arch/arm/boot/dts/rk3066a.dtsi | 13 +++++++++++++
+>   1 file changed, 13 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
+> index 946f187..f61bb8a 100644
+> --- a/arch/arm/boot/dts/rk3066a.dtsi
+> +++ b/arch/arm/boot/dts/rk3066a.dtsi
+> @@ -153,6 +153,19 @@
+>   		clock-names = "timer", "pclk";
+>   	};
+>
+> +	efuse: efuse@20010000 {
+> +		compatible = "rockchip,rockchip-efuse";
+> +		reg = <0x20010000 0x4000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		clocks = <&cru PCLK_EFUSE>;
+> +		clock-names = "pclk_efuse";
+> +
+> +		cpu_leakage: cpu_leakage {
+> +			reg = <0x17 0x1>;
+> +		};
+> +	};
+> +
+>   	timer@20038000 {
+>   		compatible = "snps,dw-apb-timer-osc";
+>   		reg = <0x20038000 0x100>;
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
