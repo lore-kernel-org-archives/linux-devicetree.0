@@ -1,92 +1,113 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 4/7] media: vb2-dma-contig: add helper for setting dma max seg size
-Date: Mon, 14 Dec 2015 17:50:50 +0200
-Message-ID: <1604824.dB2dzDMl5I@avalon>
-References: <1449669502-24601-1-git-send-email-m.szyprowski@samsung.com> <3238962.HlGfVT9mcy@avalon> <566E89D6.40603@samsung.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] ASoC: sun4i-codec: Add support for
+ PA gpio pin
+Date: Mon, 14 Dec 2015 16:56:16 +0100
+Message-ID: <20151214155616.GL19456@lukather>
+References: <1449859439-30875-1-git-send-email-hdegoede@redhat.com>
+ <1449859439-30875-2-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <566E89D6.40603@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cy9Nn4fUvYST66Pl"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBK6NXOZQKGQEIZZZ6SA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1449859439-30875-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
+--cy9Nn4fUvYST66Pl
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On Monday 14 December 2015 10:20:22 Marek Szyprowski wrote:
-> On 2015-12-13 20:57, Laurent Pinchart wrote:
-> > On Wednesday 09 December 2015 14:58:19 Marek Szyprowski wrote:
-> >> Add a helper function for device drivers to set DMA's max_seg_size.
-> >> Setting it to largest possible value lets DMA-mapping API always create
-> >> contiguous mappings in DMA address space. This is essential for all
-> >> devices, which use dma-contig videobuf2 memory allocator and shared
-> >> buffers.
-> >> 
-> >> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> >> ---
-> >> 
-> >>   drivers/media/v4l2-core/videobuf2-dma-contig.c | 15 +++++++++++++++
-> >>   include/media/videobuf2-dma-contig.h           |  1 +
-> >>   2 files changed, 16 insertions(+)
-> >> 
-> >> diff --git a/drivers/media/v4l2-core/videobuf2-dma-contig.c
-> >> b/drivers/media/v4l2-core/videobuf2-dma-contig.c index c331272..628518d
-> >> 100644
-> >> --- a/drivers/media/v4l2-core/videobuf2-dma-contig.c
-> >> +++ b/drivers/media/v4l2-core/videobuf2-dma-contig.c
-> >> @@ -742,6 +742,21 @@ void vb2_dma_contig_cleanup_ctx(void *alloc_ctx)
-> >> 
-> >>   }
-> >>   EXPORT_SYMBOL_GPL(vb2_dma_contig_cleanup_ctx);
-> >> 
-> >> +int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int
-> >> size)
-> >> +{
-> >> +	if (!dev->dma_parms) {
-> > 
-> > When can this function be called with dev->dma_parms not NULL ?
+Hi,
+
+On Fri, Dec 11, 2015 at 07:43:57PM +0100, Hans de Goede wrote:
+> Add support for PA gpio pin for controlling an external amplifier as used
+> on some Allwinner boards.
 > 
-> When one loads a module with multimedia driver (which calls this
-> function), then unloads and loads it again. It is rather safe to have this
-> check.
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes in v2:
+> -Use a dapm speaker widget (SND_SOC_DAPM_SPK) to control the gpio
+> -Rename gpio in devicetree from pa-gpios to allwinner,pa-gpios
+> ---
+>  .../devicetree/bindings/sound/sun4i-codec.txt      |  3 ++
+>  sound/soc/sunxi/sun4i-codec.c                      | 35 ++++++++++++++++++++++
+>  2 files changed, 38 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/sun4i-codec.txt b/Documentation/devicetree/bindings/sound/sun4i-codec.txt
+> index c92966b..0dce690 100644
+> --- a/Documentation/devicetree/bindings/sound/sun4i-codec.txt
+> +++ b/Documentation/devicetree/bindings/sound/sun4i-codec.txt
+> @@ -14,6 +14,9 @@ Required properties:
+>     - "apb": the parent APB clock for this controller
+>     - "codec": the parent module clock
+>  
+> +Optional properties:
+> +- allwinner,pa-gpios: gpio to enable external amplifier
+> +
+>  Example:
+>  codec: codec@01c22c00 {
+>  	#sound-dai-cells = <0>;
+> diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-codec.c
+> index 519ccb3..e6cc6a1 100644
+> --- a/sound/soc/sunxi/sun4i-codec.c
+> +++ b/sound/soc/sunxi/sun4i-codec.c
+> @@ -28,6 +28,7 @@
+>  #include <linux/of_address.h>
+>  #include <linux/clk.h>
+>  #include <linux/regmap.h>
+> +#include <linux/gpio/consumer.h>
+>  
+>  #include <sound/core.h>
+>  #include <sound/pcm.h>
+> @@ -103,6 +104,7 @@ struct sun4i_codec {
+>  	struct regmap	*regmap;
+>  	struct clk	*clk_apb;
+>  	struct clk	*clk_module;
+> +	struct gpio_desc *gpio_pa;
+>  
+>  	struct snd_dmaengine_dai_dma_data	capture_dma_data;
+>  	struct snd_dmaengine_dai_dma_data	playback_dma_data;
+> @@ -709,6 +711,26 @@ static struct snd_soc_dai_link *sun4i_codec_create_link(struct device *dev,
+>  	return link;
+>  };
+>  
+> +static int sun4i_codec_spk_event(struct snd_soc_dapm_widget *w,
+> +				 struct snd_kcontrol *k, int event)
+> +{
+> +	struct sun4i_codec *scodec = snd_soc_card_get_drvdata(w->dapm->card);
+> +
+> +	if (scodec->gpio_pa)
+> +		gpiod_set_value_cansleep(scodec->gpio_pa,
+> +					 !!SND_SOC_DAPM_EVENT_ON(event));
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct snd_soc_dapm_widget sun4i_codec_card_dapm_widgets[] = {
+> +	SND_SOC_DAPM_SPK("Speaker", sun4i_codec_spk_event),
+> +};
+> +
+> +static const struct snd_soc_dapm_route sun4i_codec_card_dapm_routes[] = {
+> +	{ "Speaker", NULL, "Power Amplifier" },
+> +};
 
-Don't you have a much bigger problem in that case ? When you unload the module 
-the device will be unbound from the driver, causing the memory allocated by 
-devm_kzalloc to be freed. dev->dma_parms will then point to freed memory, 
-which will get reused by all subsequent calls to dma_get_max_seg_size(), 
-dma_get_max_seg_size() & co (including the ones in this function).
+Shouldn't it be tied to the HP outputs instead?
 
-> >> +		dev->dma_parms = devm_kzalloc(dev, sizeof(dev->dma_parms),
-> >> +					      GFP_KERNEL);
-> >> +		if (!dev->dma_parms)
-> >> +			return -ENOMEM;
-> >> +	}
-> >> +	if (dma_get_max_seg_size(dev) < size)
-> >> +		return dma_set_max_seg_size(dev, size);
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +EXPORT_SYMBOL_GPL(vb2_dma_contig_set_max_seg_size);
-> >> +
-> >>   MODULE_DESCRIPTION("DMA-contig memory handling routines for
-> >>   videobuf2");
-> >>   MODULE_AUTHOR("Pawel Osciak <pawel@osciak.com>");
-> >>   MODULE_LICENSE("GPL");
-> >> diff --git a/include/media/videobuf2-dma-contig.h
-> >> b/include/media/videobuf2-dma-contig.h index c33dfa6..0e6ba64 100644
-> >> --- a/include/media/videobuf2-dma-contig.h
-> >> +++ b/include/media/videobuf2-dma-contig.h
-> >> @@ -26,6 +26,7 @@ vb2_dma_contig_plane_dma_addr(struct vb2_buffer *vb,
-> >> unsigned int plane_no)
-> >>  void *vb2_dma_contig_init_ctx(struct device *dev);
-> >>  void vb2_dma_contig_cleanup_ctx(void *alloc_ctx);
-> >> +int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int
-> >> size);
-> >>  extern const struct vb2_mem_ops vb2_dma_contig_memops;
+Thanks!
+Maxime
 
 -- 
-Regards,
-
-Laurent Pinchart
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--cy9Nn4fUvYST66Pl--
