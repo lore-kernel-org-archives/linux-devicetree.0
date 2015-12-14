@@ -1,84 +1,89 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: l2x0: make it possible to disable outer sync
- from DT
-Date: Mon, 14 Dec 2015 13:32:38 +0000
-Message-ID: <20151214133237.GG6992@arm.com>
-References: <1449756855-19473-1-git-send-email-linus.walleij@linaro.org>
- <20151210142942.GB495@leverpostej>
- <CACRpkdayPdJDKPh=6vH5p5gWCu1uetBVdbEJz8Pvw79bujmQrg@mail.gmail.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 02/10] clockevents/drivers: add MPS2 Timer driver
+Date: Mon, 14 Dec 2015 14:36:18 +0100
+Message-ID: <566EC5D2.9050005@linaro.org>
+References: <1449048790-25859-1-git-send-email-vladimir.murzin@arm.com>
+ <1449048790-25859-3-git-send-email-vladimir.murzin@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdayPdJDKPh=6vH5p5gWCu1uetBVdbEJz8Pvw79bujmQrg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1449048790-25859-3-git-send-email-vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Mark.Rutland-5wv7dgnIgG8@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 14, 2015 at 02:30:53PM +0100, Linus Walleij wrote:
-> On Thu, Dec 10, 2015 at 3:32 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Thu, Dec 10, 2015 at 03:14:15PM +0100, Linus Walleij wrote:
-> >> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-> >> index d181b7c4c522..aae7387acbdb 100644
-> >> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
-> >> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-> >> @@ -75,6 +75,7 @@ Optional properties:
-> >>    specified to indicate that such transforms are precluded.
-> >>  - arm,parity-enable : enable parity checking on the L2 cache (L220 or PL310).
-> >>  - arm,parity-disable : disable parity checking on the L2 cache (L220 or PL310).
-> >> +- arm,outer-sync-disable : disable the outer sync operation on the L2 cache.
-> >
-> > I'm not sure what this means from a HW perspective. The "outer sync"
-> > operation is Linux terminology and doesn't show up in the TRM for L220.
-> >
-> > What is the (integration? HW?) bug that we're trying to avoid the effect
-> > of? It sounds like we should be describing that.
-> >
-> > We should at least have a better definition of what this means we must
-> > avoid.
-> 
-> So this code is a bit ancient, and we're trying to migrate it to device tree.
-> 
-> It was inspired by this board file patch from Arnd:
-> http://marc.info/?l=linux-arm-kernel&m=144846938616893&w=2
-> 
-> Then I go back and dig in the code and I find this:
-> 
-> commit 2503a5ecd86c002506001eba432c524ea009fe7f
-> Author: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> Date:   Thu Jul 1 13:21:47 2010 +0100
-> 
->     ARM: 6201/1: RealView: Do not use outer_sync() on ARM11MPCore
-> boards with L220
-> 
->     RealView boards with certain revisions of the L220 cache controller (ARM11*
->     processors only) may have issues (hardware deadlock) with the
-> recent changes to
->     the mb() barrier implementation (DSB followed by an L2 cache
-> sync). The patch
->     redefines the RealView ARM11MPCore mandatory barriers without the
-> outer_sync()
->     call.
-> 
->     Cc: <stable-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->     Tested-by: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
->     Signed-off-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
->     Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> 
-> And that is as much as it says.
-> 
-> It is working around a hardware lockup in some core tiles. Is it
-> enough if I add this
-> to the explanation or do we need to send Catalin or Will down in the archives
-> to read netlists? ;)
+On 12/02/2015 10:33 AM, Vladimir Murzin wrote:
+> MPS2 platform has simple 32 bits general purpose countdown timers.
+>
+> The driver uses the first detected timer as a clocksource and the res=
+t
+> of the timers as a clockevent
+>
+> Signed-off-by: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+> ---
 
-/me delegates to Rutland.
+[ ... ]
 
-Mark -- still want a better definition? ;)
+> +static void clockevent_mps2_writel(u32 val, struct clock_event_devic=
+e *c, u32 offset)
+> +{
+> +	writel(val, to_mps2_clkevt(c)->reg + offset);
+> +}
 
-Will
+Is it possible to use writel_relaxed here ?
+
+[ ... ]
+
+> +static int mps2_timer_set_periodic(struct clock_event_device *ce)
+> +{
+> +	u32 clock_count_per_tick =3D to_mps2_clkevt(ce)->clock_count_per_ti=
+ck;
+> +
+> +	clockevent_mps2_writel(clock_count_per_tick, ce, TIMER_RELOAD);
+> +	clockevent_mps2_writel(clock_count_per_tick, ce, TIMER_VALUE);
+> +	clockevent_mps2_writel(TIMER_CTRL_IE | TIMER_CTRL_ENABLE, ce, TIMER=
+_CTRL);
+> +
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t mps2_timer_interrupt(int irq, void *dev_id)
+> +{
+> +	struct clockevent_mps2 *ce =3D dev_id;
+> +	u32 status =3D readl(ce->reg + TIMER_INT);
+> +
+> +	if (!status) {
+> +		pr_warn("spuirous interrupt\n");
+
+typo: 'spurious'
+
+[ ... ]
+
+> +	ce =3D kzalloc(sizeof(struct clockevent_mps2), GFP_KERNEL);
+> +	if (!ce) {
+> +		ret =3D -ENOMEM;
+> +		pr_err("failed to allocate clockevent: %d\n", ret);
+
+There is already a stack trace in the kernel when an allocation fails.
+
+With the above fixed:
+
+Acked-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
