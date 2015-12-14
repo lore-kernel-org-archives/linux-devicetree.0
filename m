@@ -1,53 +1,40 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v2 01/16] serial: sh-sci: Drop the interface clock
-Date: Mon, 14 Dec 2015 17:16:28 +0900
-Message-ID: <20151214081628.GF9929@verge.net.au>
-References: <1447958173-543-1-git-send-email-geert+renesas@glider.be>
- <1447958173-543-2-git-send-email-geert+renesas@glider.be>
- <20151213064237.GA16326@kroah.com>
- <20151214081540.GD9929@verge.net.au>
+From: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/2] ASoC: atmel-pdmic: add driver for Atmel PDMIC
+Date: Mon, 14 Dec 2015 16:15:38 +0800
+Message-ID: <1450080940-4123-1-git-send-email-songjun.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151214081540.GD9929-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 14, 2015 at 05:15:40PM +0900, Simon Horman wrote:
-> Hi Greg,
-> 
-> On Sat, Dec 12, 2015 at 10:42:37PM -0800, Greg Kroah-Hartman wrote:
-> > On Thu, Nov 19, 2015 at 07:35:58PM +0100, Geert Uytterhoeven wrote:
-> > > From: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> > > 
-> > > As no platform defines an interface clock the SCI driver always falls
-> > > back to a clock named "peripheral_clk".
-> > >   - On SH platforms that clock is the base clock for the SCI functional
-> > >     clock and has the same frequency,
-> > >   - On ARM platforms that clock doesn't exist, and clk_get() will return
-> > >     the default clock for the device.
-> > > We can thus make the functional clock mandatory and drop the interface
-> > > clock.
-> > > 
-> > > EPROBE_DEFER is handled for clocks that may be referenced from DT (i.e.
-> > > "fck" and deprecated "sci_ick").
-> > > 
-> > > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> > > Acked-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-> > > [geert: Handle EPROBE_DEFER, reformat description, break long comment line]
-> > > Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> > 
-> > Acked-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> 
-> If its not too much trouble I would prefer if you took this into the serial
-> tree.
+The Pulse Density Modulation Inteface Controller driver
+includes two parts.
+1) Driver code to implement the PDMIC function.
+2) Device tree binding documentation, it describes how to add
+   the PDMIC in device tree.
 
-Sorry, I meant to can this email rather than sent it.
-Please ignore the above!!!
+
+Songjun Wu (2):
+  ASoC: atmel-pdmic: add the Pulse Density Modulation Interface
+    Controller
+  ASoC: atmel-pdmic: DT binding for PDMIC driver
+
+ .../devicetree/bindings/sound/atmel-pdmic.txt      |   55 ++
+ sound/soc/atmel/Kconfig                            |    9 +
+ sound/soc/atmel/Makefile                           |    2 +
+ sound/soc/atmel/atmel-pdmic.c                      |  745 ++++++++++++++++++++
+ sound/soc/atmel/atmel-pdmic.h                      |   80 +++
+ 5 files changed, 891 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/atmel-pdmic.txt
+ create mode 100644 sound/soc/atmel/atmel-pdmic.c
+ create mode 100644 sound/soc/atmel/atmel-pdmic.h
+
+-- 
+1.7.9.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
