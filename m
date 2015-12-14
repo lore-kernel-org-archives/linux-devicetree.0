@@ -1,41 +1,67 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2] extcon: add Maxim MAX3355 driver
-Date: Mon, 14 Dec 2015 20:36:10 +0300
-Message-ID: <566EFE0A.4000104@cogentembedded.com>
-References: <5045536.UEVncNCOZE@wasted.cogentembedded.com>
- <20151214012400.GA9506@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Dirk Behme <dirk.behme@gmail.com>
+Subject: [PATCH] arm64: dts: r8a7795: pmu: switch to Cortex specific device nodes
+Date: Mon, 14 Dec 2015 18:37:51 +0100
+Message-ID: <1450114671-10711-1-git-send-email-dirk.behme@gmail.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20151214012400.GA9506@rob-hp-laptop>
 Sender: linux-sh-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
+To: linux-sh@vger.kernel.org, horms@verge.net.au, geert+renesas@glider.be
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sudeep.holla@arm.com, Dirk Behme <dirk.behme@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Instead of using the generic armv8-pmuv3 compatibility use the more
+specific Cortex A57 and A53 compatibility.
 
-On 12/14/2015 04:24 AM, Rob Herring wrote:
+Signed-off-by: Dirk Behme <dirk.behme@gmail.com>
+---
+Note: This patch applies on top of
 
->> Maxim  Integrated MAX3355E chip integrates a  charge pump and comparators to
->> enable a system with an integrated USB OTG dual-role transceiver to function
->> as  an USB  OTG dual-role device.  In addition  to sensing/controlling Vbus,
->> the chip also passes thru the ID signal  from the USB  OTG connector.
->> On some Renesas boards,  this signal is  just fed into the SoC thru a GPIO
->> pin --  there's no real  OTG controller, only host and gadget USB controllers
->> sharing the same USB bus; however, we'd  like to allow host or gadget drivers
->> to be loaded depending on the cable type,  hence the need for the MAX3355
->> extcon driver. The Vbus status signals are also  wired to GPIOs (however, we
->> aren't currently interested in them),  the OFFVBUS# signal is controlled  by
->> the host controllers, there's  also the SHDN# signal wired to a GPIO, it
->> should be driven high for the  normal operation.
->
-> As multiple people have said, fix the spacing here.
+https://patchwork.kernel.org/patch/7834201/
 
-    You are the first to complain abou _this_ patch. If you don't have other 
-issues with this driver in which case you should have trimmed the reply at 
-this point), I'd like to keep my spacing as is. Thank you.
+https://patchwork.kernel.org/patch/7834211/
 
-MBR, Sergei
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index 30ebc08..590c510 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -287,21 +287,26 @@
+ 			power-domains = <&cpg>;
+ 		};
+ 
+-		pmu {
+-			compatible = "arm,armv8-pmuv3";
++		pmu_a57 {
++			compatible = "arm,cortex-a57-pmu";
+ 			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-affinity = <&a57_0>,
+ 					     <&a57_1>,
+ 					     <&a57_2>,
+-					     <&a57_3>,
+-					     <&a53_0>,
++					     <&a57_3>;
++
++		};
++
++		pmu_a53 {
++			compatible = "arm,cortex-a53-pmu";
++			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-affinity = <&a53_0>,
+ 					     <&a53_1>,
+ 					     <&a53_2>,
+ 					     <&a53_3>;
+-- 
+2.6.4
 
