@@ -1,58 +1,31 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH 8/8 v4] thermal: of-thermal: of_thermal_set_trip_temp()
- call thermal_zone_device_update()
-Date: Mon, 14 Dec 2015 13:11:04 -0800
-Message-ID: <20151214211103.GB10924@localhost.localdomain>
-References: <87vb895x9d.wl%kuninori.morimoto.gx@renesas.com>
- <87io495x3c.wl%kuninori.morimoto.gx@renesas.com>
+From: Dinh Nguyen <dinh.linux@gmail.com>
+Subject: Re: [PATCH v6 4/4] stmmac: socfpga: Provide dt node to config ptp clk source.
+Date: Mon, 14 Dec 2015 15:16:10 -0600
+Message-ID: <CADhT+wesDDATNR1dX8ynjKKfm3tUv7_TSyZ80kCgGcr9gYcfBg@mail.gmail.com>
+References: <1450063922-19481-1-git-send-email-preid@electromag.com.au>
+	<1450063922-19481-5-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87io495x3c.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Simon <horms@verge.net.au>, Zhang Rui <rui.zhang@intel.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1450063922-19481-5-git-send-email-preid@electromag.com.au>
+Sender: netdev-owner@vger.kernel.org
+To: Phil Reid <preid@electromag.com.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, David Miller <davem@davemloft.net>, "vbridger@opensource.altera.com" <vbridger@opensource.altera.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-Hey!
-
-On Tue, Dec 08, 2015 at 05:30:00AM +0000, Kuninori Morimoto wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> 
-> of_thermal_set_trip_temp() updates trip temperature. It should call
-> thermal_zone_device_update() immediately.
-> 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+On Sun, Dec 13, 2015 at 9:32 PM, Phil Reid <preid@electromag.com.au> wrote:
+> Provides an options to use the ptp clock routed from the Altera FPGA
+> fabric. Instead of the defalt eosc1 clock connected to the ARM HPS core.
+> This setting affects all emacs in the core as the ptp clock is common.
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Phil Reid <preid@electromag.com.au>
 > ---
-> v3 -> v4
-> 
->  - no change
-> 
->  drivers/thermal/of-thermal.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
-> index 42b7d42..a1dd7b1 100644
-> --- a/drivers/thermal/of-thermal.c
-> +++ b/drivers/thermal/of-thermal.c
-> @@ -334,6 +334,8 @@ static int of_thermal_set_trip_temp(struct thermal_zone_device *tz, int trip,
->  	/* thermal framework should take care of data->mask & (1 << trip) */
->  	data->trips[trip].temperature = temp;
->  
-> +	thermal_zone_device_update(tz);
-> +
+>  Documentation/devicetree/bindings/net/socfpga-dwmac.txt | 2 ++
+>  drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c     | 9 +++++++++
+>  2 files changed, 11 insertions(+)
+>
 
-Although I understand the need for this, I would prefer you move this change
-to thermal_core.c. The reasoning is to keep the same behavior for
-thermal zones created over of thermal and regular thermal zones.
+Acked-by: Dinh Nguyen <dinguyen@opensource.altera.com>
 
-BR,
-
->  	return 0;
->  }
->  
-> -- 
-> 1.9.1
-> 
+Dinh
