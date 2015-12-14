@@ -1,88 +1,28 @@
 From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: vf-colibri: split PWM pinctrl
-Date: Mon, 14 Dec 2015 10:18:01 +0800
-Message-ID: <20151214021801.GA25756@tiger>
+Subject: Re: [PATCH 2/2] ARM: dts: vf-colibri: add CAN support
+Date: Mon, 14 Dec 2015 10:26:25 +0800
+Message-ID: <20151214022624.GB25756@tiger>
 References: <1449094307-6011-1-git-send-email-stefan@agner.ch>
+ <1449094307-6011-2-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1449094307-6011-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+In-Reply-To: <1449094307-6011-2-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 02, 2015 at 02:11:46PM -0800, Stefan Agner wrote:
-> Split PWM pins into separate pinctrl nodes to allow overrides which
-> select pins individually. This is useful for carrier boards which use
-> only one pin for PWM and would like to use the other pin for a
-> different purpose.
+On Wed, Dec 02, 2015 at 02:11:47PM -0800, Stefan Agner wrote:
+> Add Colibri standard pinmux for FlexCAN controller instances. CAN
+> is not a standard Colibri feature, but the datasheet predefines
+> pins which provide CAN (compatible across some modules). Hence,
+> add the pinmux on module level.
 > 
 > Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> ---
->  arch/arm/boot/dts/vf-colibri.dtsi | 18 ++++++++++++++----
->  1 file changed, 14 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
-> index e5949b9..924b660 100644
-> --- a/arch/arm/boot/dts/vf-colibri.dtsi
-> +++ b/arch/arm/boot/dts/vf-colibri.dtsi
-> @@ -74,12 +74,12 @@
->  
->  &pwm0 {
->  	pinctrl-names = "default";
-> -	pinctrl-0 = <&pinctrl_pwm0>;
-> +	pinctrl-0 = <&pinctrl_pwm0_a &pinctrl_pwm0_c>;
->  };
->  
->  &pwm1 {
->  	pinctrl-names = "default";
-> -	pinctrl-0 = <&pinctrl_pwm1>;
-> +	pinctrl-0 = <&pinctrl_pwm1_b &pinctrl_pwm1_d>;
->  };
 
-It may make more sense to define these pwm nodes in the final board
-level dts with only defining the pins that are actually used on the
-board.
-
-Shawn
-
->  
->  &uart0 {
-> @@ -195,16 +195,26 @@
->  			>;
->  		};
->  
-> -		pinctrl_pwm0: pwm0grp {
-> +		pinctrl_pwm0_a: pwm0agrp {
->  			fsl,pins = <
->  				VF610_PAD_PTB0__FTM0_CH0		0x1182
-> +			>;
-> +		};
-> +
-> +		pinctrl_pwm0_c: pwm0cgrp {
-> +			fsl,pins = <
->  				VF610_PAD_PTB1__FTM0_CH1		0x1182
->  			>;
->  		};
->  
-> -		pinctrl_pwm1: pwm1grp {
-> +		pinctrl_pwm1_b: pwm1bgrp {
->  			fsl,pins = <
->  				VF610_PAD_PTB8__FTM1_CH0		0x1182
-> +			>;
-> +		};
-> +
-> +		pinctrl_pwm1_d: pwm1dgrp {
-> +			fsl,pins = <
->  				VF610_PAD_PTB9__FTM1_CH1		0x1182
->  			>;
->  		};
-> -- 
-> 2.6.2
-> 
-> 
+Applied, thanks.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
