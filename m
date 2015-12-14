@@ -1,148 +1,114 @@
-From: MyungJoo Ham <myungjoo.ham@samsung.com>
-Subject: Re: [PATCH v4 05/20] PM / devfreq: Add new passive governor
-Date: Mon, 14 Dec 2015 09:04:39 +0000 (GMT)
-Message-ID: <1874820122.661091450083873584.JavaMail.weblogic@epmlwas07b>
-Reply-To: myungjoo.ham@samsung.com
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] reset: Add shared
+ reset_control_[de]assert variants
+Date: Mon, 14 Dec 2015 10:12:19 +0100
+Message-ID: <1450084339.3407.16.camel@pengutronix.de>
+References: <1449848520-27379-1-git-send-email-hdegoede@redhat.com>
+	 <1449853825.3419.50.camel@pengutronix.de> <566B1424.2060700@redhat.com>
+Reply-To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-MIME-version: 1.0
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?utf-8?Q?=EC=B5=9C=EC=B0=AC=EC=9A=B0?= <cw00.choi@samsung.com>, =?utf-8?Q?=ED=81=AC=EC=89=AC=EC=8B=9C=ED=86=A0=ED=94=84?= <k.kozlowski@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>
-Cc: =?utf-8?Q?=EB=B0=95=EA=B2=BD=EB=AF=BC?= <kyungmin.park@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "tjakobi@math.uni-bielefeld.de" <tjakobi@math.uni-bielefeld.de>, "linux.amoon@gmail.com" <linux.amoon@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDUKXHHSSIJBB7MPXKZQKGQEKWLOPZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <566B1424.2060700-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Josh Triplett <josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org>, Rashika Kheria <rashika.kheria-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PiAgIA0KPiAgVGhpcyBwYXRjaCBhZGRzIHRoZSBuZXcgcGFzc2l2ZSBnb3Zlcm5vciBmb3IgREVW
-RlJFUSBmcmFtZXdvcmsuIFRoZSBmb2xsb3dpbmcNCj4gZ292ZXJub3JzIGFyZSBhbHJlYWR5IHBy
-ZXNlbnQgYW5kIHVzZWQgZm9yIERWRlMgKER5bmFtaWMgVm9sdGFnZSBhbmQgRnJlcXVlbmN5DQo+
-IFNjYWxpbmcpIGRyaXZlcnMuIFRoZSBmb2xsb3dpbmcgZ292ZXJub3JzIGFyZSBpbmRlcGVuZGVu
-dGx5IHVzZWQgZm9yIG9uZSBkZXZpY2UNCj4gZHJpdmVyIHdoaWNoIGRvbid0IGdpdmUgdGhlIGlu
-Zmx1ZW5jZSB0byBvdGhlciBkZXZpY2UgZHJ2aWVycyBhbmQgYWxzbyBkb24ndA0KPiByZWNlaXZl
-IHRoZSBlZmZlY3QgZnJvbSBvdGhlciBkZXZpY2UgZHJpdmVycy4NCj4gLSBvbmRlbWFuZCAvIHBl
-cmZvcm1hbmNlIC8gcG93ZXJzYXZlIC8gdXNlcnNwYWNlDQo+IA0KPiBUaGUgcGFzc2l2ZSBnb3Zl
-cm5vciBkZXBlbmRzIG9uIG9wZXJhdGlvbiBvZiBwYXJlbnQgZHJpdmVyIHdpdGggc3BlY2lmaWMN
-Cj4gZ292ZXJub3MgZXh0cmVtZWx5IGFuZCBpcyBub3QgYWJsZSB0byBkZWNpZGUgdGhlIG5ldyBm
-cmVxdWVuY3kgYnkgb25lc2VsZi4NCj4gQWNjb3JkaW5nIHRvIHRoZSBkZWNpZGVkIG5ldyBmcmVx
-dWVuY3kgb2YgcGFyZW50IGRyaXZlciB3aXRoIGdvdmVybm9yLA0KPiB0aGUgcGFzc2l2ZSBnb3Zl
-cm5vciB1c2VzIGl0IHRvIGRlY2lkZSB0aGUgYXBwcm9wcmlhdGUgZnJlcXVlbmN5IGZvciBvd24N
-Cj4gZGV2aWNlIGRyaXZlci4gVGhlIHBhc3NpdmUgZ292ZXJub3IgbXVzdCBuZWVkIHRoZSBmb2xs
-b3dpbmcgaW5mb3JtYXRpb24NCj4gZnJvbSBkZXZpY2UgdHJlZToNCj4gLSB0aGUgc291cmNlIGNs
-b2NrIGFuZCBPUFAgdGFibGVzDQo+IC0gdGhlIGluc3RhbmNlIG9mIHBhcmVudCBkZXZpY2UNCj4g
-DQo+IEZvciBleGFtZXBsZSwNCj4gdGhlcmUgYXJlIG9uZSBtb3JlIGRldmZyZXEgZGV2aWNlIGRy
-aXZlcnMgd2hpY2ggbmVlZCB0byBjaGFuZ2UgdGhlaXIgc291cmNlDQo+IGNsb2NrIGFjY29yZGlu
-ZyB0byB0aGVpciB1dGlsaXphdGlvbiBvbiBydW50aW1lLiBCdXQsIHRoZXkgc2hhcmUgdGhlIHNh
-bWUNCj4gcG93ZXIgbGluZSAoZS5nLiwgcmVndWxhdG9yKS4gU28sIHNwZWNpZmljIGRldmljZSBk
-cml2ZXIgaXMgb3BlcmF0ZWQgYXMgcGFyZW50DQo+IHdpdGggb25kZW1hbmQgZ292ZXJub3IgYW5k
-IHRoZW4gdGhlIHJlc3QgZGV2aWNlIGRyaXZlciB3aXRoIHBhc3NpdmUgZ292ZXJub3INCj4gaXMg
-aW5mbHVlbmNlZCBieSBwYXJlbnQgZGV2aWNlLg0KPiANCj4gU3VnZ2VzdGVkLWJ5OiBNeXVuZ2pv
-byBIYW0gPG15dW5nam9vLmhhbUBzYW1zdW5nLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogQ2hhbndv
-byBDaG9pIDxjdzAwLmNob2lAc2Ftc3VuZy5jb20+DQo+IFtsaW51eC5hbW9vbjogVGVzdGVkIG9u
-IE9kcm9pZCBVM10NCj4gVGVzdGVkLWJ5OiBBbmFuZCBNb29uIDxsaW51eC5hbW9vbkBnbWFpbC5j
-b20+DQo+IC0tLQ0KPiAgZHJpdmVycy9kZXZmcmVxL0tjb25maWcgICAgICAgICAgICB8ICAgOSAr
-KysrDQo+ICBkcml2ZXJzL2RldmZyZXEvTWFrZWZpbGUgICAgICAgICAgIHwgICAxICsNCj4gIGRy
-aXZlcnMvZGV2ZnJlcS9kZXZmcmVxLmMgICAgICAgICAgfCAgNDcgKysrKysrKysrKysrKysrKw0K
-PiAgZHJpdmVycy9kZXZmcmVxL2dvdmVybm9yX3Bhc3NpdmUuYyB8IDEwOCArKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrDQo+ICBpbmNsdWRlL2xpbnV4L2RldmZyZXEuaCAgICAg
-ICAgICAgIHwgIDE1ICsrKysrKw0KPiAgNSBmaWxlcyBjaGFuZ2VkLCAxODAgaW5zZXJ0aW9ucygr
-KQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZGV2ZnJlcS9nb3Zlcm5vcl9wYXNzaXZl
-LmMNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2RldmZyZXEvS2NvbmZpZyBiL2RyaXZlcnMv
-ZGV2ZnJlcS9LY29uZmlnDQo+IGluZGV4IDU1ZWM3NzRmNzk0Yy4uZDAzZjYzNWE5M2UxIDEwMDY0
-NA0KPiAtLS0gYS9kcml2ZXJzL2RldmZyZXEvS2NvbmZpZw0KPiArKysgYi9kcml2ZXJzL2RldmZy
-ZXEvS2NvbmZpZw0KPiBAQCAtNjQsNiArNjQsMTUgQEAgY29uZmlnIERFVkZSRVFfR09WX1VTRVJT
-UEFDRQ0KPiAgCSAgT3RoZXJ3aXNlLCB0aGUgZ292ZXJub3IgZG9lcyBub3QgY2hhbmdlIHRoZSBm
-cmVxdW5lY3kNCj4gIAkgIGdpdmVuIGF0IHRoZSBpbml0aWFsaXphdGlvbi4NCj4gIA0KPiArY29u
-ZmlnIERFVkZSRVFfR09WX1BBU1NJVkUNCj4gKwl0cmlzdGF0ZSAiUGFzc2l2ZSINCj4gKwloZWxw
-DQo+ICsJICBTZXRzIHRoZSBmcmVxdWVuY3kgYnkgb3RoZXIgZ292ZXJub3JzIChzaW1wbGVfb25k
-ZW1hbmQsIHBlcmZvcm1hbmNlLA0KPiArCSAgcG93ZXJzYXZlLCB1c2Vyc2FwY2UpIG9mIGEgcGFy
-ZW50IGRldmZyZXEgZGV2aWNlLiBUaGlzIGdvdmVybm9yDQo+ICsJICBhbHdheXMgaGFzIHRoZSBk
-ZXBlbmRlbmN5IG9uIHRoZSBjaG9zZW4gZnJlcXVlbmN5IGZyb20gcGFpcmVkDQo+ICsJICBnb3Zl
-cm5vci4gVGhpcyBnb3Zlcm5vciBkb2VzIG5vdCBjaGFuZ2UgdGhlIGZyZXF1ZW5jeSBieSBvbmVz
-ZWxmDQo+ICsJICB0aHJvdWdoIHN5c2ZzIGVudHJ5Lg0KDQoJU2V0cyB0aGUgZnJlcXVlbmN5IGJh
-c2VkIG9uIHRoZSBmcmVxdWVuY3kgb2YgaXRzIHBhcmVudCBkZXZmcmVxDQoJZGV2aWNlLiBUaGlz
-IGdvdmVybm9yIGRvZXMgbm90IGNoYW5nZSB0aGUgZnJlcXVlbmN5IGJ5IGl0c2VsZg0KCXRocm91
-Z2ggc3lzZnMgZW50cmllcy4NCg0KPiArDQo+ICBjb21tZW50ICJERVZGUkVRIERyaXZlcnMiDQo+
-ICANCj4gIGNvbmZpZyBBUk1fRVhZTk9TX0JVU19ERVZGUkVRDQo+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL2RldmZyZXEvTWFrZWZpbGUgYi9kcml2ZXJzL2RldmZyZXEvTWFrZWZpbGUNCj4gaW5kZXgg
-Mzc1ZWJiYjRmY2ZiLi5mODFjMzEzYjRiNzkgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZGV2ZnJl
-cS9NYWtlZmlsZQ0KPiArKysgYi9kcml2ZXJzL2RldmZyZXEvTWFrZWZpbGUNCltdDQo+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL2RldmZyZXEvZGV2ZnJlcS5jIGIvZHJpdmVycy9kZXZmcmVxL2RldmZy
-ZXEuYw0KPiBpbmRleCA5ODRjNWU5ZTdiZGQuLjE1ZTU4Nzc5ZTRjMCAxMDA2NDQNCj4gLS0tIGEv
-ZHJpdmVycy9kZXZmcmVxL2RldmZyZXEuYw0KPiArKysgYi9kcml2ZXJzL2RldmZyZXEvZGV2ZnJl
-cS5jDQo+IEBAIC0xOTAsNiArMTkwLDMxIEBAIHN0YXRpYyBzdHJ1Y3QgZGV2ZnJlcV9nb3Zlcm5v
-ciAqZmluZF9kZXZmcmVxX2dvdmVybm9yKGNvbnN0IGNoYXIgKm5hbWUpDQo+ICANCj4gIC8qIExv
-YWQgbW9uaXRvcmluZyBoZWxwZXIgZnVuY3Rpb25zIGZvciBnb3Zlcm5vcnMgdXNlICovDQo+ICAN
-Cj4gK3N0YXRpYyBpbnQgdXBkYXRlX2RldmZyZXFfcGFzc2l2ZShzdHJ1Y3QgZGV2ZnJlcSAqZGV2
-ZnJlcSwgdW5zaWduZWQgbG9uZyBmcmVxKQ0KPiArew0KPiArCXN0cnVjdCBkZXZmcmVxICpwYXNz
-aXZlOw0KPiArCXVuc2lnbmVkIGxvbmcgcmF0ZTsNCj4gKwlpbnQgcmV0Ow0KPiArDQo+ICsJbGlz
-dF9mb3JfZWFjaF9lbnRyeShwYXNzaXZlLCAmZGV2ZnJlcS0+cGFzc2l2ZV9kZXZfbGlzdCwgcGFz
-c2l2ZV9ub2RlKSB7DQo+ICsJCWlmICghcGFzc2l2ZS0+Z292ZXJub3IpDQo+ICsJCQljb250aW51
-ZTsNCj4gKwkJcmF0ZSA9IGZyZXE7DQo+ICsNCj4gKwkJcmV0ID0gcGFzc2l2ZS0+Z292ZXJub3It
-PmdldF90YXJnZXRfZnJlcShwYXNzaXZlLCAmcmF0ZSk7DQo+ICsJCWlmIChyZXQpDQo+ICsJCQly
-ZXR1cm4gcmV0Ow0KPiArDQo+ICsJCXJldCA9IHBhc3NpdmUtPnByb2ZpbGUtPnRhcmdldChwYXNz
-aXZlLT5kZXYucGFyZW50LCAmcmF0ZSwgMCk7DQo+ICsJCWlmIChyZXQpDQo+ICsJCQlyZXR1cm4g
-cmV0Ow0KPiArDQo+ICsJCXBhc3NpdmUtPnByZXZpb3VzX2ZyZXEgPSByYXRlOw0KPiArCX0NCj4g
-Kw0KPiArCXJldHVybiAwOw0KPiArfQ0KPiArDQo+ICAvKioNCj4gICAqIHVwZGF0ZV9kZXZmcmVx
-KCkgLSBSZWV2YWx1YXRlIHRoZSBkZXZpY2UgYW5kIGNvbmZpZ3VyZSBmcmVxdWVuY3kuDQo+ICAg
-KiBAZGV2ZnJlcToJdGhlIGRldmZyZXEgaW5zdGFuY2UuDQo+IEBAIC0yMzMsMTAgKzI1OCwxOCBA
-QCBpbnQgdXBkYXRlX2RldmZyZXEoc3RydWN0IGRldmZyZXEgKmRldmZyZXEpDQo+ICAJCWZsYWdz
-IHw9IERFVkZSRVFfRkxBR19MRUFTVF9VUFBFUl9CT1VORDsgLyogVXNlIExVQiAqLw0KPiAgCX0N
-Cj4gIA0KPiArCWlmICghbGlzdF9lbXB0eSgmZGV2ZnJlcS0+cGFzc2l2ZV9kZXZfbGlzdCkNCj4g
-KwkJJiYgZGV2ZnJlcS0+cHJldmlvdXNfZnJlcSA+IGZyZXEpDQo+ICsJCXVwZGF0ZV9kZXZmcmVx
-X3Bhc3NpdmUoZGV2ZnJlcSwgZnJlcSk7DQo+ICsNCg0KQ291bGQgeW91IHBsZWFzZSBjb21tZW50
-IHNvbWV3aGVyZSBhcHByb3ByaWF0ZQ0KdGhhdCB0aGUgZGVwZW5kZW50IGlzIGdvaW5nIHRvIGJl
-IGNoYW5nZWQNCmJlZm9yZSBpdHMgcGFyZW50IGlmIHRoZSBmcmVxdWVuY3kgaXMgZ29pbmcgZG93
-bi4NCihhbmQgYWZ0ZXIgaWYgZ29pbmcgdXApDQpBbmQgc3RhdGUgd2h5IGFzIHdlbGwuDQoNCkFu
-ZCwgaXMgdGhpcyB2aWFibGUgdW5pdmVyc2FsbHk/DQoNCj4gIAllcnIgPSBkZXZmcmVxLT5wcm9m
-aWxlLT50YXJnZXQoZGV2ZnJlcS0+ZGV2LnBhcmVudCwgJmZyZXEsIGZsYWdzKTsNCj4gIAlpZiAo
-ZXJyKQ0KPiAgCQlyZXR1cm4gZXJyOw0KPiAgDQo+ICsJaWYgKCFsaXN0X2VtcHR5KCZkZXZmcmVx
-LT5wYXNzaXZlX2Rldl9saXN0KQ0KPiArCQkmJiBkZXZmcmVxLT5wcmV2aW91c19mcmVxIDwgZnJl
-cSkNCj4gKwkJdXBkYXRlX2RldmZyZXFfcGFzc2l2ZShkZXZmcmVxLCBmcmVxKTsNCj4gKw0KPiAg
-CWlmIChkZXZmcmVxLT5wcm9maWxlLT5mcmVxX3RhYmxlKQ0KPiAgCQlpZiAoZGV2ZnJlcV91cGRh
-dGVfc3RhdHVzKGRldmZyZXEsIGZyZXEpKQ0KPiAgCQkJZGV2X2VycigmZGV2ZnJlcS0+ZGV2LA0K
-PiBAQCAtNDQyLDYgKzQ3NSwxMCBAQCBzdGF0aWMgdm9pZCBfcmVtb3ZlX2RldmZyZXEoc3RydWN0
-IGRldmZyZXEgKmRldmZyZXEpDQo+ICAJCXJldHVybjsNCj4gIAl9DQo+ICAJbGlzdF9kZWwoJmRl
-dmZyZXEtPm5vZGUpOw0KPiArCWxpc3RfZGVsKCZkZXZmcmVxLT5wYXNzaXZlX25vZGUpOw0KPiAr
-CWlmICghbGlzdF9lbXB0eSgmZGV2ZnJlcS0+cGFzc2l2ZV9kZXZfbGlzdCkpDQo+ICsJCWxpc3Rf
-ZGVsX2luaXQoJmRldmZyZXEtPnBhc3NpdmVfZGV2X2xpc3QpOw0KPiArDQo+ICAJbXV0ZXhfdW5s
-b2NrKCZkZXZmcmVxX2xpc3RfbG9jayk7DQo+ICANCj4gIAlpZiAoZGV2ZnJlcS0+Z292ZXJub3Ip
-DQo+IEBAIC01NTksNiArNTk2LDE2IEBAIHN0cnVjdCBkZXZmcmVxICpkZXZmcmVxX2FkZF9kZXZp
-Y2Uoc3RydWN0IGRldmljZSAqZGV2LA0KPiAgCQlnb3RvIGVycl9pbml0Ow0KPiAgCX0NCj4gIA0K
-PiArCWlmICghc3RybmNtcChkZXZmcmVxLT5nb3Zlcm5vcl9uYW1lLCAicGFzc2l2ZSIsIDcpKSB7
-DQo+ICsJCXN0cnVjdCBkZXZmcmVxICpwYXJlbnRfZGV2ZnJlcSA9DQo+ICsJCQkoKHN0cnVjdCBk
-ZXZmcmVxX3Bhc3NpdmVfZGF0YSAqKWRhdGEpLT5wYXJlbnQ7DQo+ICsNCj4gKwkJbGlzdF9hZGQo
-JmRldmZyZXEtPnBhc3NpdmVfbm9kZSwNCj4gKwkJCSZwYXJlbnRfZGV2ZnJlcS0+cGFzc2l2ZV9k
-ZXZfbGlzdCk7DQo+ICsJfSBlbHNlIHsNCj4gKwkJSU5JVF9MSVNUX0hFQUQoJmRldmZyZXEtPnBh
-c3NpdmVfZGV2X2xpc3QpOw0KPiArCX0NCj4gKw0KPiAgCXJldHVybiBkZXZmcmVxOw0KPiAgDQo+
-ICBlcnJfaW5pdDoNCg0KVGhpcyBjb2RlIGhhcyBiZWNvbWUgdG9vIG11Y2ggaW52YXNpdmUgdG8g
-ZGV2ZnJlcS5jDQp3aGlsZSBiZWluZyB0b28gc3BlY2lhbCBmb3IgdGhlIHBhc3NpdmUgZ292ZXJu
-b3IuDQoNCldoeSBkb24ndCB5b3UgYWRkIG5vdGlmaWVyIGNoYWluIHRvIGRldmZyZXEuYywgd2hp
-Y2ggY2FuIGJlIHVzZWQNCmJ5IGFueW9uZSBlbHNlIGFzIHdlbGwsIGFuZCB1c2UgdGhhdCBub3Rp
-ZmllciBmb3IgcGFzc2l2ZSBnb3Zlcm5vcj8NCllvdSBtYXkgcmVmZXIgdG8gImNwdWZyZXFfcmVn
-aXN0ZXJfbm90aWZpZXIoKSIgd2l0aCANCkNQVUZSRVFfVFJBTlNJVElPTl9OT1RJRklFUi4NCg0K
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9kZXZmcmVxL2dvdmVybm9yX3Bhc3NpdmUuYyBiL2RyaXZl
-cnMvZGV2ZnJlcS9nb3Zlcm5vcl9wYXNzaXZlLmMNCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCg0K
-VGhlbiwgdXRpbGl6aW5nIG5vdGlmaWVyLWJsb2NrIGF0IGdvdmVybm9yX3Bhc3NpdmUuYyBiZWNv
-bWVzIHBvc3NpYmxlLg0KDQpZb3Ugd2lsbCBhbHNvIGJlIGFibGUgdG8gd3JpdGUgYW55IGZyZXF1
-ZW5jeSBkZWNpZGluZyBjb2RlDQppbnNpZGUgZ292ZXJub3JfcGFzc2l2ZS5jIGFzIHdlbGwsIG5v
-dCBpbiBkZXZmcmVxLmMuDQoNCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvZGV2ZnJlcS5o
-IGIvaW5jbHVkZS9saW51eC9kZXZmcmVxLmgNCj4gaW5kZXggNmZhMDJhMjBlYjYzLi45NWM1NDU3
-OGExYjQgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvZGV2ZnJlcS5oDQo+ICsrKyBiL2lu
-Y2x1ZGUvbGludXgvZGV2ZnJlcS5oDQo+IEBAIC0xNzcsNiArMTc3LDkgQEAgc3RydWN0IGRldmZy
-ZXEgew0KPiAgCXVuc2lnbmVkIGludCAqdHJhbnNfdGFibGU7DQo+ICAJdW5zaWduZWQgbG9uZyAq
-dGltZV9pbl9zdGF0ZTsNCj4gIAl1bnNpZ25lZCBsb25nIGxhc3Rfc3RhdF91cGRhdGVkOw0KPiAr
-DQo+ICsJc3RydWN0IGxpc3RfaGVhZCBwYXNzaXZlX2Rldl9saXN0Ow0KPiArCXN0cnVjdCBsaXN0
-X2hlYWQgcGFzc2l2ZV9ub2RlOw0KPiAgfTsNCg0KWW91IHdpbGwgbmVlZCBvbmx5IG9uZSBub3Rp
-ZmllciBoZWFkIGhlcmUuDQoNCj4gIA0KPiAgI2lmIGRlZmluZWQoQ09ORklHX1BNX0RFVkZSRVEp
-DQo+IEBAIC0yNDEsNiArMjQ0LDE4IEBAIHN0cnVjdCBkZXZmcmVxX3NpbXBsZV9vbmRlbWFuZF9k
-YXRhIHsNCj4gIH07DQo+ICAjZW5kaWYNCj4gIA0KPiArLyoqDQo+ICsgKiBzdHJ1Y3QgZGV2ZnJl
-cV9wYXNzaXZlX2RhdGEgLSB2b2lkICpkYXRhIGZlZCB0byBzdHJ1Y3QgZGV2ZnJlcQ0KPiArICoJ
-YW5kIGRldmZyZXFfYWRkX2RldmljZQ0KPiArICogQHBhcmVudDoJCVRoZSBwYXJlbnQgZGV2ZnJl
-cSBkZXZpY2UuDQo+ICsgKg0KPiArICogSWYgdGhlIGZlZCBkZXZmcmVxX3Bhc3NpdmVfZGF0YSBw
-b2ludGVyIGlzIE5VTEwgdG8gdGhlIGdvdmVybm9yLA0KPiArICogdGhlIGdvdmVybm9yIHJldHVy
-biBFUlJPUi4NCj4gKyAqLw0KPiArc3RydWN0IGRldmZyZXFfcGFzc2l2ZV9kYXRhIHsNCj4gKwlz
-dHJ1Y3QgZGV2ZnJlcSAqcGFyZW50Ow0KPiArfTsNCj4gKw0KDQpQbGVhc2UgZW5jbG9zZSB0aGUg
-YWJvdmUgd2l0aCAjaWYNCg0KPiAgI2Vsc2UgLyogIUNPTkZJR19QTV9ERVZGUkVRICovDQo+ICBz
-dGF0aWMgaW5saW5lIHN0cnVjdCBkZXZmcmVxICpkZXZmcmVxX2FkZF9kZXZpY2Uoc3RydWN0IGRl
-dmljZSAqZGV2LA0KPiAgCQkJCQkgIHN0cnVjdCBkZXZmcmVxX2Rldl9wcm9maWxlICpwcm9maWxl
-LA0KPiAtLSANCj4gMS45LjENCj4gDQo=
+Hi Hans,
+
+Am Freitag, den 11.12.2015, 19:21 +0100 schrieb Hans de Goede:
+[...]
+> >> @@ -119,13 +134,55 @@ EXPORT_SYMBOL_GPL(reset_control_assert);
+> >>   int reset_control_deassert(struct reset_control *rstc)
+> >>   {
+> >
+> > Maybe WARN_ON(rstc->line->refcnt > 1) ?
+> 
+> I assume you mean deasser_cnt ? Seems reasonable with that change.
+
+I meant refcnt. Currently drivers sharing reset lines (refcnt > 1)
+and then using the non-shared reset control functions are bound to cause
+unexpected behaviour. Now we can detect this for the first time.
+
+> >>   	if (rstc->rcdev->ops->deassert)
+> >> -		return rstc->rcdev->ops->deassert(rstc->rcdev, rstc->id);
+> >> +		return rstc->rcdev->ops->deassert(rstc->rcdev, rstc->line->id);
+> >>
+> >>   	return -ENOTSUPP;
+> >>   }
+> >>   EXPORT_SYMBOL_GPL(reset_control_deassert);
+> >>
+> >>   /**
+> >> + * reset_control_assert_shared - asserts a shared reset line
+> >> + * @rstc: reset controller
+> >> + *
+> >> + * Assert a shared reset line, this functions decreases the deassert count
+> >> + * of the line by one and asserts it if, and only if, the deassert count
+> >> + * reaches 0.
+> >
+> > "After calling this function the shared reset line may be asserted, or
+> >   it may still be deasserted, as long as other users keep it so."
+> 
+> I take it this is to replace the text about "deassert count" ?
+
+I thought you might append something like it. I just imagine that when
+reading the documentation it might be helpful to also see the intended
+effect described, especially given that a call to an _assert_ function
+might leave the reset line in deasserted state, depending on the
+refcount.
+
+> >> + */
+> >> +int reset_control_assert_shared(struct reset_control *rstc)
+> >> +{
+> >> +	if (!rstc->rcdev->ops->assert)
+> >> +		return -ENOTSUPP;
+> >
+> > WARN_ON(rstc->line->deassert_cnt == 0)
+> >
+> > Actually, what to do in this case? Assume ops->assert was called, or do
+> > it again to be sure? Certainly we don't want to wrap deassert_cnt, or
+> > the next deassert_shared will do nothing.
+> >
+> >> +	rstc->line->deassert_cnt--;
+> >> +	if (rstc->line->deassert_cnt)
+> >
+> > deassert_cnt isn't protected by any lock.
+> 
+> Right, good catch. I believe the best way to fix this is to change deassert_cnt
+> into an atomic_t and use atomic_dec_return / atomic_int_return,
+
+Yes, that would work.
+
+> Downside of using an atomic_t is that doing the WARN_ON you are asking for above
+> will not be race free, then, but since it is a should never happen scenario I
+> guess we do not care about the check not being 100% race free. Or we can even
+> just leave out the check ?
+
+Since this is only a warning to notify driver developers we don't
+support shared resets (apart from the clock-like use)
+
+Not if we warn about refcnt instead of deassert_cnt above.
+
+[...]
+> >> + * of the line by one and deasserts the reset line (if it was not already
+> >> + * deasserted).
+> >
+> > "After calling this function, the shared reset line is guaranteed to be
+> >   deasserted."
+> 
+> Same question as above.
+
+Same imprecise answer. I'd like to see the expected state after calling
+this function in the description, in addition to the mechanism. This is
+more important for the assert function. After calling deassert, the
+reset line is deasserted, no reason to be surprised about that.
+
+regards
+Philipp
