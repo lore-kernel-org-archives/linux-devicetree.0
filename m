@@ -1,111 +1,50 @@
-From: MyungJoo Ham <myungjoo.ham@samsung.com>
-Subject: Re: [PATCH v4 07/20] PM / devfreq: Show the related information
- according to governor type
-Date: Mon, 14 Dec 2015 09:49:49 +0000 (GMT)
-Message-ID: <346992826.663931450086583548.JavaMail.weblogic@epmlwas07b>
-Reply-To: myungjoo.ham@samsung.com
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] reset: Add shared
+ reset_control_[de]assert variants
+Date: Mon, 14 Dec 2015 10:50:55 +0100
+Message-ID: <1450086655.3407.23.camel@pengutronix.de>
+References: <1449848520-27379-1-git-send-email-hdegoede@redhat.com>
+	 <20151214093607.GF19456@lukather>
+Reply-To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-MIME-version: 1.0
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?utf-8?Q?=EC=B5=9C=EC=B0=AC=EC=9A=B0?= <cw00.choi@samsung.com>, =?utf-8?Q?=ED=81=AC=EC=89=AC=EC=8B=9C=ED=86=A0=ED=94=84?= <k.kozlowski@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>
-Cc: =?utf-8?Q?=EB=B0=95=EA=B2=BD=EB=AF=BC?= <kyungmin.park@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "tjakobi@math.uni-bielefeld.de" <tjakobi@math.uni-bielefeld.de>, "linux.amoon@gmail.com" <linux.amoon@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDUKXHHSSIJBBCVCXKZQKGQEZECH6CY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20151214093607.GF19456@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Josh Triplett <josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org>, Rashika Kheria <rashika.kheria-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PiAgIA0KPiAgVGhpcyBwYXRjaCBtb2RpZmllcyB0aGUgZm9sbG93aW5nIHN5c2ZzIGVudHJ5IG9m
-IERFVkZSRVEgZnJhbWV3b3JrDQo+IGJlY2F1c2UgdGhlIGRldmZyZXEgZGV2aWNlIHVzaW5nIHBh
-c3NpdmUgZ292ZXJub3IgZG9uJ3QgbmVlZCB0aGUgc2FtZQ0KPiBpbmZvcm1hdGlvbiBvZiB0aGUg
-ZGV2ZnJlcSBkZXZpY2UgdXNpbmcgcmVzdCBnb3Zlcm5vci4NCj4gLSBwb2xsaW5nX2ludGVydmFs
-ICAgIDogcGFzc2l2ZSBnb3YgZG9uJ3QgdXNlIHRoZSBzYW1wbGluZyByYXRlLg0KPiAtIGF2YWls
-YWJsZV9nb3Zlcm5vcnMgOiBwYXNzaXZlIGdvdiBkb24ndCBiZSBjaGFuZ2VkIG9uIHJ1bnRpbWUg
-aW4gdGhpcyB2ZXJzaW9uLg0KPiAtIHRyYW5zX3N0YXQgICAgICAgICAgOiBwYXNzaXZlIGdvdmVy
-bm9yIGRvbid0IHN1cHBvcnQgdHJhbnNfc3RhdCBpbiB0aGlzIHZlcnNpb24uDQo+IA0KPiBTaWdu
-ZWQtb2ZmLWJ5OiBDaGFud29vIENob2kgPGN3MDAuY2hvaUBzYW1zdW5nLmNvbT4NCj4gW2xpbnV4
-LmFtb29uOiBUZXN0ZWQgb24gT2Ryb2lkIFUzXQ0KPiBUZXN0ZWQtYnk6IEFuYW5kIE1vb24gPGxp
-bnV4LmFtb29uQGdtYWlsLmNvbT4NCg0KWW91IGhhdmUgYSBtYWpvciB1cGRhdGUgdGhhdCBpcyBu
-b3QgbWVuZHRpb25lZCBpbiB0aGUgY29tbWl0IG1lc3NhZ2UuDQooYWRkIGdvdmVybm9yICJ0eXBl
-IikNCg0KPiAtLS0NCj4gIGRyaXZlcnMvZGV2ZnJlcS9kZXZmcmVxLmMgICAgICAgICAgICAgICAg
-IHwgMzEgKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLQ0KPiAgZHJpdmVycy9kZXZmcmVx
-L2dvdmVybm9yLmggICAgICAgICAgICAgICAgfCAgNyArKysrKysrDQo+ICBkcml2ZXJzL2RldmZy
-ZXEvZ292ZXJub3JfcGFzc2l2ZS5jICAgICAgICB8ICAxICsNCj4gIGRyaXZlcnMvZGV2ZnJlcS9n
-b3Zlcm5vcl9wZXJmb3JtYW5jZS5jICAgIHwgIDEgKw0KPiAgZHJpdmVycy9kZXZmcmVxL2dvdmVy
-bm9yX3Bvd2Vyc2F2ZS5jICAgICAgfCAgMSArDQo+ICBkcml2ZXJzL2RldmZyZXEvZ292ZXJub3Jf
-c2ltcGxlb25kZW1hbmQuYyB8ICAxICsNCj4gIGRyaXZlcnMvZGV2ZnJlcS9nb3Zlcm5vcl91c2Vy
-c3BhY2UuYyAgICAgIHwgIDEgKw0KPiAgaW5jbHVkZS9saW51eC9kZXZmcmVxLmggICAgICAgICAg
-ICAgICAgICAgfCAgMiArKw0KPiAgOCBmaWxlcyBjaGFuZ2VkLCAzOSBpbnNlcnRpb25zKCspLCA2
-IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZGV2ZnJlcS9kZXZmcmVx
-LmMgYi9kcml2ZXJzL2RldmZyZXEvZGV2ZnJlcS5jDQo+IGluZGV4IDc4ZWE0Y2RhYTgyYy4uMThh
-ZDk1NmZlYzkzIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2RldmZyZXEvZGV2ZnJlcS5jDQo+ICsr
-KyBiL2RyaXZlcnMvZGV2ZnJlcS9kZXZmcmVxLmMNCj4gQEAgLTU5Nyw3ICs1OTcsNyBAQCBzdHJ1
-Y3QgZGV2ZnJlcSAqZGV2ZnJlcV9hZGRfZGV2aWNlKHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gIAkJ
-Z290byBlcnJfaW5pdDsNCj4gIAl9DQo+ICANCj4gLQlpZiAoIXN0cm5jbXAoZGV2ZnJlcS0+Z292
-ZXJub3JfbmFtZSwgInBhc3NpdmUiLCA3KSkgew0KPiArCWlmIChkZXZmcmVxLT5nb3Zlcm5vci0+
-dHlwZSA9PSBERVZGUkVRX0dPVl9QQVNTSVZFKSB7DQo+ICAJCXN0cnVjdCBkZXZmcmVxICpwYXJl
-bnRfZGV2ZnJlcSA9DQo+ICAJCQkoKHN0cnVjdCBkZXZmcmVxX3Bhc3NpdmVfZGF0YSAqKWRhdGEp
-LT5wYXJlbnQ7DQoNCkFzIG1lbnRpb25lZCBpbiBhIHByZXZpb3VzIHJlcGx5LCB0aGlzIGNvZGUg
-bWF5IGJlIHJlbW92ZWQuDQoNCj4gIA0KPiBAQCAtOTYzLDEzICs5NjMsMjMgQEAgc3RhdGljIHNz
-aXplX3QgYXZhaWxhYmxlX2dvdmVybm9yc19zaG93KHN0cnVjdCBkZXZpY2UgKmQsDQo+ICAJCQkJ
-CXN0cnVjdCBkZXZpY2VfYXR0cmlidXRlICphdHRyLA0KPiAgCQkJCQljaGFyICpidWYpDQo+ICB7
-DQo+IC0Jc3RydWN0IGRldmZyZXFfZ292ZXJub3IgKnRtcF9nb3Zlcm5vcjsNCj4gKwlzdHJ1Y3Qg
-ZGV2ZnJlcSAqZGV2ZnJlcSA9IHRvX2RldmZyZXEoZCk7DQo+ICAJc3NpemVfdCBjb3VudCA9IDA7
-DQo+ICANCj4gIAltdXRleF9sb2NrKCZkZXZmcmVxX2xpc3RfbG9jayk7DQo+IC0JbGlzdF9mb3Jf
-ZWFjaF9lbnRyeSh0bXBfZ292ZXJub3IsICZkZXZmcmVxX2dvdmVybm9yX2xpc3QsIG5vZGUpDQo+
-ICsJaWYgKGRldmZyZXEtPmdvdmVybm9yLT50eXBlID09IERFVkZSRVFfR09WX1BBU1NJVkUpIHsN
-Cj4gIAkJY291bnQgKz0gc2NucHJpbnRmKCZidWZbY291bnRdLCAoUEFHRV9TSVpFIC0gY291bnQg
-LSAyKSwNCj4gLQkJCQkgICAiJXMgIiwgdG1wX2dvdmVybm9yLT5uYW1lKTsNCj4gKwkJCQkJICAg
-IiVzICIsIGRldmZyZXEtPmdvdmVybm9yLT5uYW1lKTsNCj4gKwl9IGVsc2Ugew0KPiArCQlzdHJ1
-Y3QgZGV2ZnJlcV9nb3Zlcm5vciAqdG1wX2dvdmVybm9yOw0KPiArDQo+ICsJCWxpc3RfZm9yX2Vh
-Y2hfZW50cnkodG1wX2dvdmVybm9yLCAmZGV2ZnJlcV9nb3Zlcm5vcl9saXN0LCBub2RlKSB7DQo+
-ICsJCQlpZiAodG1wX2dvdmVybm9yLT50eXBlID09IERFVkZSRVFfR09WX1BBU1NJVkUpDQo+ICsJ
-CQkJY29udGludWU7DQo+ICsJCQljb3VudCArPSBzY25wcmludGYoJmJ1Zltjb3VudF0sIChQQUdF
-X1NJWkUgLSBjb3VudCAtIDIpLA0KPiArCQkJCQkgICAiJXMgIiwgdG1wX2dvdmVybm9yLT5uYW1l
-KTsNCj4gKwkJfQ0KPiArCX0NCg0KVWggbm8uIEFzIGxvbmcgYXMgd2UgZG8gbm90IGhhdmUgYSBs
-aXN0IG9mIGFsbCBwb3NzaWJsZSBnb3Zlcm5vcnMNCmZvciBlYWNoIGRldmljZSwgbGV0J3Mgc3Rp
-Y2sgd2l0aCB3aGF0IHdlJ3ZlIGRlZmluZWQgaW4gQUJJIGRvY3VtZW50YXRpb246DQpzaG93IGFs
-bCBhdmFpbGFibGUgZ292ZXJub3JzICJpbiB0aGUgc3lzdGVtIi4NCg0KWW91IE1BWSBoYXZlIGEg
-ZGV2aWNlIHRoYXQgbWF5IHJ1biBib3RoIFBBU1NJVkUgYW5kIFVTRVJTUEFDRS4NCg0KPiAgCW11
-dGV4X3VubG9jaygmZGV2ZnJlcV9saXN0X2xvY2spOw0KPiAgDQo+ICAJLyogVHJ1bmNhdGUgdGhl
-IHRyYWlsaW5nIHNwYWNlICovDQo+IEBAIC0xMDA2LDYgKzEwMTYsMTEgQEAgc3RhdGljIERFVklD
-RV9BVFRSX1JPKHRhcmdldF9mcmVxKTsNCj4gIHN0YXRpYyBzc2l6ZV90IHBvbGxpbmdfaW50ZXJ2
-YWxfc2hvdyhzdHJ1Y3QgZGV2aWNlICpkZXYsDQo+ICAJCQkJICAgICBzdHJ1Y3QgZGV2aWNlX2F0
-dHJpYnV0ZSAqYXR0ciwgY2hhciAqYnVmKQ0KPiAgew0KPiArCXN0cnVjdCBkZXZmcmVxICpkZiA9
-IHRvX2RldmZyZXEoZGV2KTsNCj4gKw0KPiArCWlmIChkZi0+Z292ZXJub3ItPnR5cGUgPT0gREVW
-RlJFUV9HT1ZfUEFTU0lWRSkNCj4gKwkJcmV0dXJuIHNwcmludGYoYnVmLCAiTm90IFN1cHBvcnRl
-ZC5cbiIpOw0KPiArDQo+ICAJcmV0dXJuIHNwcmludGYoYnVmLCAiJWRcbiIsIHRvX2RldmZyZXEo
-ZGV2KS0+cHJvZmlsZS0+cG9sbGluZ19tcyk7DQo+ICB9DQoNCldoZW4gcG9sbGluZyBpbnRlcnZh
-bCBpcyBpcnJsZXZlbnQgd2l0aCB0aGUgZ292ZXJub3IsDQp5b3UgZG9uJ3QgbmVlZCB0byBwcmlu
-dCAiTm90IFN1cHBvcnRlZCIuIEluc3RlYWQsDQpwcmludGluZyAiMCIgaXMgZW5vdWdoLCAocG9s
-bGluZ19tcz0wID09IG5vIHBvbGxpbmcpDQp3aGljaCBpcyB3aGF0IGRldmZyZXEgaXMgZG9pbmcg
-bm93Lg0KDQo+ICANCj4gQEAgLTEwMjAsNiArMTAzNSw5IEBAIHN0YXRpYyBzc2l6ZV90IHBvbGxp
-bmdfaW50ZXJ2YWxfc3RvcmUoc3RydWN0IGRldmljZSAqZGV2LA0KPiAgCWlmICghZGYtPmdvdmVy
-bm9yKQ0KPiAgCQlyZXR1cm4gLUVJTlZBTDsNCj4gIA0KPiArCWlmIChkZi0+Z292ZXJub3ItPnR5
-cGUgPT0gREVWRlJFUV9HT1ZfUEFTU0lWRSkNCj4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ICsNCg0K
-UGxlYXNlIHNpbXBseSByZXR1cm4gLUVJTlZBTCB3aXRoIGdvdmVybm9yJ3MgZXZlbnRfaGFuZGxl
-ciB3aXRoIERFVkZSRVFfR09WX0lOVEVSVkFMDQooSSBzZWUgdGhlIHJldHVybiB2YWx1ZSBjaGVj
-a2luZyBpcyBtaXNzaW5nIGF0IGRmLT5nb3Zlcm5vci0+ZXZlbnRfaGFuZGxlcigpLg0KWW91IG1h
-eSB3YW50IHRvIGFkZCByZXR1cm4gdmFsdWUgY2hlY2tpbmcgdGhlcmUgdG8gcHJvcGVybHkgaGFu
-ZGxlIHdoYXQgeW91IHdhbnQuKQ0KDQo+ICAJcmV0ID0gc3NjYW5mKGJ1ZiwgIiV1IiwgJnZhbHVl
-KTsNCj4gIAlpZiAocmV0ICE9IDEpDQo+ICAJCXJldHVybiAtRUlOVkFMOw0KPiBAQCAtMTEzNywx
-MSArMTE1NSwxMiBAQCBzdGF0aWMgc3NpemVfdCB0cmFuc19zdGF0X3Nob3coc3RydWN0IGRldmlj
-ZSAqZGV2LA0KPiAgCWludCBpLCBqOw0KPiAgCXVuc2lnbmVkIGludCBtYXhfc3RhdGUgPSBkZXZm
-cmVxLT5wcm9maWxlLT5tYXhfc3RhdGU7DQo+ICANCj4gKwlpZiAobWF4X3N0YXRlID09IDAgfHwg
-ZGV2ZnJlcS0+Z292ZXJub3ItPnR5cGUgPT0gREVWRlJFUV9HT1ZfUEFTU0lWRSkNCj4gKwkJcmV0
-dXJuIHNwcmludGYoYnVmLCAiTm90IFN1cHBvcnRlZC5cbiIpOw0KPiArDQo+ICAJaWYgKCFkZXZm
-cmVxLT5zdG9wX3BvbGxpbmcgJiYNCj4gIAkJCWRldmZyZXFfdXBkYXRlX3N0YXR1cyhkZXZmcmVx
-LCBkZXZmcmVxLT5wcmV2aW91c19mcmVxKSkNCj4gIAkJcmV0dXJuIDA7DQo+IC0JaWYgKG1heF9z
-dGF0ZSA9PSAwKQ0KPiAtCQlyZXR1cm4gc3ByaW50ZihidWYsICJOb3QgU3VwcG9ydGVkLlxuIik7
-DQoNCldlIGhhdmUgbm8gcmVhc29uIHRvIGFsd2F5cyBkaXNhYmxlIHRoaXMgZm9yIFBBU1NJVkUu
-DQoNCj4gIA0KPiAgCWxlbiA9IHNwcmludGYoYnVmLCAiICAgICBGcm9tICA6ICAgVG9cbiIpOw0K
-PiAgCWxlbiArPSBzcHJpbnRmKGJ1ZiArIGxlbiwgIiAgICAgICAgICAgOiIpOw0KPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9kZXZmcmVxL2dvdmVybm9yLmggYi9kcml2ZXJzL2RldmZyZXEvZ292ZXJu
-b3IuaA0KPiBpbmRleCBmYWQ3ZDYzMjE5NzguLjQzNTEzYTU4ZjViZiAxMDA2NDQNCj4gLS0tIGEv
-ZHJpdmVycy9kZXZmcmVxL2dvdmVybm9yLmgNCj4gKysrIGIvZHJpdmVycy9kZXZmcmVxL2dvdmVy
-bm9yLmgNCj4gQEAgLTE4LDYgKzE4LDEzIEBADQo+ICANCj4gICNkZWZpbmUgdG9fZGV2ZnJlcShE
-RVYpCWNvbnRhaW5lcl9vZigoREVWKSwgc3RydWN0IGRldmZyZXEsIGRldikNCj4gIA0KPiArLyog
-RGV2ZnJlcSBnb3Zlcm5vciB0eXBlICovDQo+ICsjZGVmaW5lIERFVkZSRVFfR09WX09OREVNQU5E
-CQkJMHgxDQo+ICsjZGVmaW5lIERFVkZSRVFfR09WX1BFUkZPUk1BTkNFCQkJMHgyDQo+ICsjZGVm
-aW5lIERFVkZSRVFfR09WX1BPV0VSU0FWRQkJCTB4Mw0KPiArI2RlZmluZSBERVZGUkVRX0dPVl9V
-U0VSU1BBQ0UJCQkweDQNCj4gKyNkZWZpbmUgREVWRlJFUV9HT1ZfUEFTU0lWRQkJCTB4NA0KDQpV
-aC4uIGJvdGggVVNFUlNQQUNFIEFORCBQQVNTSVZFIGFyZSAweDQ/DQoNCg0K
+Am Montag, den 14.12.2015, 10:36 +0100 schrieb Maxime Ripard:
+> Hi,
+> 
+> On Fri, Dec 11, 2015 at 04:41:58PM +0100, Hans de Goede wrote:
+> > diff --git a/include/linux/reset.h b/include/linux/reset.h
+> > index c4c097d..1cca8ce 100644
+> > --- a/include/linux/reset.h
+> > +++ b/include/linux/reset.h
+> > @@ -11,6 +11,8 @@ int reset_control_reset(struct reset_control *rstc);
+> >  int reset_control_assert(struct reset_control *rstc);
+> >  int reset_control_deassert(struct reset_control *rstc);
+> >  int reset_control_status(struct reset_control *rstc);
+> > +int reset_control_assert_shared(struct reset_control *rstc);
+> > +int reset_control_deassert_shared(struct reset_control *rstc);
+> 
+> Shouldn't that be handled in reset_control_get directly?
+
+This is about different expectations of the caller.
+A driver calling reset_control_assert expects the reset line to be
+asserted after the call. A driver calling reset_control_assert_shared
+just signals that it doesn't care about the state of the reset line
+anymore.
+We could just as well call the two new functions
+reset_control_deassert_get and reset_control_deassert_put.
+
+regards
+Philipp
