@@ -1,31 +1,71 @@
-From: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] spi: dts: sun4i: Add support for hardware-based wait
- time between words
-Date: Mon, 14 Dec 2015 00:23:29 +0100
-Message-ID: <CAGNoLaOS94iHHSpFtYC-72TUvJj5dtrY7imW835OCRoCY8R4SA@mail.gmail.com>
-References: <1449873940-10167-1-git-send-email-mweseloh42@gmail.com>
-	<1450047853-9005-1-git-send-email-mweseloh42@gmail.com>
-	<20151213230837.GT5727@sirena.org.uk>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] Documentation: DT: Add entry for ARM SP805-WDT
+Date: Sun, 13 Dec 2015 19:06:19 -0600
+Message-ID: <20151214010619.GA848@rob-hp-laptop>
+References: <1449834467-30283-1-git-send-email-bhupesh.sharma@freescale.com>
+ <1449834467-30283-2-git-send-email-bhupesh.sharma@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151213230837.GT5727-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1449834467-30283-2-git-send-email-bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Catalin.Marinas-5wv7dgnIgG8@public.gmane.org, LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2015-12-14 0:08 GMT+01:00 Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> Please don't bury patches in reply to existing serieses, it makes it
-> hard to follow what's going on with regard to which versions are current
-> and so on.
+On Fri, Dec 11, 2015 at 05:17:46PM +0530, Bhupesh Sharma wrote:
+> This patch adds a devicetree binding documentation for ARM's
+> SP805 WatchDog Timer.
+> 
+> Signed-off-by: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  .../devicetree/bindings/watchdog/sp805-wdt.txt     |   29 ++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+> new file mode 100644
+> index 0000000..45b5afc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+> @@ -0,0 +1,29 @@
+> +* ARM SP805 Watchdog Timer (WDT) Controller
+> +
+> +SP805 WDT is a ARM Primecell Peripheral and has a standard-id register that
+> +can be used to identify the peripheral type, vendor, and revision.
+> +This value can be used for driver matching.
+> +
+> +As SP805 WDT is a primecell IP, it follows the base bindings specified in
+> +'arm/primecell.txt'
+> +
+> +Required properties:
+> +- compatible : Should be "arm,sp805-wdt", "arm,primecell"
+> +- reg : Base address and size of the watchdog timer registers.
+> +- clocks : From common clock binding.
+> +           First clock is PCLK and the second is WDOGCLK.
+> +           WDOGCLK can be equal to or be a sub-multiple of the PCLK frequency.
+> +- clock-names : From common clock binding. Shall be "apb_pclk" for first clock.
 
-Thanks for the pointer, I will send patches like you ask from now on.
-Should I resend the patch?
+And for the 2nd clock?
 
-Cheers,
-
-   Marcus
+> +
+> +Optional properties:
+> +- interrupts : Should specify WDT interrupt number.
+> +
+> +Examples:
+> +
+> +		cluster1_core0_watchdog: wdt@c000000 {
+> +			compatible = "arm,sp805-wdt", "arm,primecell";
+> +			reg = <0x0 0xc000000 0x0 0x1000>;
+> +			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+> +			clock-names = "apb_pclk", "wdog_clk";
+> +		};
+> +
+> -- 
+> 1.7.9.5
+> 
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
