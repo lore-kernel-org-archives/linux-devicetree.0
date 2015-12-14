@@ -1,25 +1,71 @@
-From: MyungJoo Ham <myungjoo.ham@samsung.com>
-Subject: Re: [PATCH v4 06/20] PM / devfreq: Add devfreq_get_devfreq_by_phandle()
-Date: Mon, 14 Dec 2015 09:26:00 +0000 (GMT)
-Message-ID: <237987415.662701450085154234.JavaMail.weblogic@epmlwas07b>
-Reply-To: myungjoo.ham@samsung.com
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] reset: Add shared
+ reset_control_[de]assert variants
+Date: Mon, 14 Dec 2015 10:36:07 +0100
+Message-ID: <20151214093607.GF19456@lukather>
+References: <1449848520-27379-1-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-MIME-version: 1.0
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?utf-8?Q?=EC=B5=9C=EC=B0=AC=EC=9A=B0?= <cw00.choi@samsung.com>, =?utf-8?Q?=ED=81=AC=EC=89=AC=EC=8B=9C=ED=86=A0=ED=94=84?= <k.kozlowski@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>
-Cc: =?utf-8?Q?=EB=B0=95=EA=B2=BD=EB=AF=BC?= <kyungmin.park@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "tjakobi@math.uni-bielefeld.de" <tjakobi@math.uni-bielefeld.de>, "linux.amoon@gmail.com" <linux.amoon@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Zi0sgQQBxRFxMTsj"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBCE3XKZQKGQE4SND3HY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1449848520-27379-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Josh Triplett <josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org>, Rashika Kheria <rashika.kheria-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PiAgIA0KPiAgVGhpcyBwYXRjaCBhZGRzIHRoZSBuZXcgZGV2ZnJlcV9nZXRfZGV2ZnJlcV9ieV9w
-aGFuZGxlKCkgT0YgaGVscGVyIGZ1bmN0aW9uDQo+IHdoaWNoIGNhbiBmaW5kIHRoZSBpbnN0YW5j
-ZSBvZiBkZXZmcmVxIGRldmljZSBieSB1c2luZyBwaGFuZGxlICgiZGV2ZnJlcSIpLg0KPiANCj4g
-U2lnbmVkLW9mZi1ieTogQ2hhbndvbyBDaG9pIDxjdzAwLmNob2lAc2Ftc3VuZy5jb20+DQo+IFts
-aW51eC5hbW9vbjogVGVzdGVkIG9uIE9kcm9pZCBVM10NCj4gVGVzdGVkLWJ5OiBBbmFuZCBNb29u
-IDxsaW51eC5hbW9vbkBnbWFpbC5jb20+DQoNClNpZ25lZC1vZmYtYnk6IE15dW5nSm9vIEhhbSA8
-bXl1bmdqb28uaGFtQHNhbXN1bmcuY29tPg0KDQo+IC0tLQ0KPiAgZHJpdmVycy9kZXZmcmVxL2Rl
-dmZyZXEuYyB8IDQ0ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-DQo+ICBpbmNsdWRlL2xpbnV4L2RldmZyZXEuaCAgIHwgIDkgKysrKysrKysrDQo+ICAyIGZpbGVz
-IGNoYW5nZWQsIDUzIGluc2VydGlvbnMoKykNCj4gDQo=
+--Zi0sgQQBxRFxMTsj
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+Hi,
+
+On Fri, Dec 11, 2015 at 04:41:58PM +0100, Hans de Goede wrote:
+> diff --git a/include/linux/reset.h b/include/linux/reset.h
+> index c4c097d..1cca8ce 100644
+> --- a/include/linux/reset.h
+> +++ b/include/linux/reset.h
+> @@ -11,6 +11,8 @@ int reset_control_reset(struct reset_control *rstc);
+>  int reset_control_assert(struct reset_control *rstc);
+>  int reset_control_deassert(struct reset_control *rstc);
+>  int reset_control_status(struct reset_control *rstc);
+> +int reset_control_assert_shared(struct reset_control *rstc);
+> +int reset_control_deassert_shared(struct reset_control *rstc);
+
+Shouldn't that be handled in reset_control_get directly?
+
+That would allow to share more code between the implementations, since
+it would just be a flag to test in the get and not duplicate the
+function definitions, and we could simply rely on the refcount to know
+if we have to actually assert / deassert the device, in all the cases
+(shared or not).
+
+That would also allow us to catch easily if we're going to be able a
+shared reset line or not, with the regular reset_control_get being
+exclusive, and reset_control_get_shared or reset_control_get(..,
+RESET_SHARED) being shared.
+
+It would also avoid ending up with the shared variant used in every
+generic driver eventually. We could just use the variant to see if we
+have to use the shared get or not, and the rest of the driver is left
+untouched, which is way less intrusive.
+
+Moreover, it's also pretty much the pattern used everywhere else
+(irqs, regulator, clocks, etc.), so it's going to be easier to review
+as well.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--Zi0sgQQBxRFxMTsj--
