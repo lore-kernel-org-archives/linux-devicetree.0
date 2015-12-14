@@ -1,114 +1,72 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] reset: Add shared
- reset_control_[de]assert variants
-Date: Mon, 14 Dec 2015 10:12:19 +0100
-Message-ID: <1450084339.3407.16.camel@pengutronix.de>
-References: <1449848520-27379-1-git-send-email-hdegoede@redhat.com>
-	 <1449853825.3419.50.camel@pengutronix.de> <566B1424.2060700@redhat.com>
-Reply-To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 2/2] mfd: arizona: Update binding docs for selecting
+ mono/stereo outputs
+Date: Mon, 14 Dec 2015 09:13:53 +0000
+Message-ID: <20151214091353.GR6058@localhost.localdomain>
+References: <1449829703-600-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1449829703-600-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <20151211173353.GA7664@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDUKXHHSSIJBB7MPXKZQKGQEKWLOPZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <566B1424.2060700-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Josh Triplett <josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org>, Rashika Kheria <rashika.kheria-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151211173353.GA7664@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
-
-Am Freitag, den 11.12.2015, 19:21 +0100 schrieb Hans de Goede:
-[...]
-> >> @@ -119,13 +134,55 @@ EXPORT_SYMBOL_GPL(reset_control_assert);
-> >>   int reset_control_deassert(struct reset_control *rstc)
-> >>   {
-> >
-> > Maybe WARN_ON(rstc->line->refcnt > 1) ?
+On Fri, Dec 11, 2015 at 11:33:53AM -0600, Rob Herring wrote:
+> On Fri, Dec 11, 2015 at 10:28:23AM +0000, Charles Keepax wrote:
+> > Update the device tree binding documentation to include the wlf,out-mono
+> > property that is used to specify whether each output is a mono or stereo
+> > output.
 > 
-> I assume you mean deasser_cnt ? Seems reasonable with that change.
+> You just added this binding and updating it already? While we may like 
+> kernel changes incremental, we don't like bindings evolving any more 
+> than necessary.
 
-I meant refcnt. Currently drivers sharing reset lines (refcnt > 1)
-and then using the non-shared reset control functions are bound to cause
-unexpected behaviour. Now we can detect this for the first time.
+The binding has been around for ages I have been working through
+updating it to actually include more of the functionality of the
+driver. The last set of changes where some initial work on the
+jack detection, this is a fairly self contained update that
+doesn't really relate to the jack detection.
 
-> >>   	if (rstc->rcdev->ops->deassert)
-> >> -		return rstc->rcdev->ops->deassert(rstc->rcdev, rstc->id);
-> >> +		return rstc->rcdev->ops->deassert(rstc->rcdev, rstc->line->id);
-> >>
-> >>   	return -ENOTSUPP;
-> >>   }
-> >>   EXPORT_SYMBOL_GPL(reset_control_deassert);
-> >>
-> >>   /**
-> >> + * reset_control_assert_shared - asserts a shared reset line
-> >> + * @rstc: reset controller
-> >> + *
-> >> + * Assert a shared reset line, this functions decreases the deassert count
-> >> + * of the line by one and asserts it if, and only if, the deassert count
-> >> + * reaches 0.
-> >
-> > "After calling this function the shared reset line may be asserted, or
-> >   it may still be deasserted, as long as other users keep it so."
+Its a fairly complex part so there is going to be quite a lot to
+the binding. I have basically been upstreaming them as much as
+possible in groups of similar functionality, as I have time to
+work on them.  I could try save the changes up out of tree and
+collect together into much larger chains, if you felt strongly
+about it? But I am not really clear that helps much. As I have to
+hang on to much more out of tree code, people using the part have
+to wait longer to have access to useful bindings in mainline and
+it makes the CC lists much longer so everyone needs to look at
+more email than they need to.
+
+>  
+> > Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/arizona.txt | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+> > index 2b6ccdb..489dd07 100644
+> > --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> > @@ -65,6 +65,10 @@ Optional properties:
+> >      that have not been specified are set to 0 by default. Entries are:
+> >      <IN1, IN2, IN3, IN4> (wm5102, wm5110, wm8280, wm8997)
+> >      <IN1A, IN2A, IN1B, IN2B> (wm8998, wm1814)
+> > +  - wlf,out-mono : A boolean indicating whether each output is mono or stereo.
+> > +    A non-zero value indicates a mono output. If present, the number of values
+> > +    should be less than or equal to the number of outputs, if less values are
+> > +    supplied the additional outputs will be treated as stereo.
 > 
-> I take it this is to replace the text about "deassert count" ?
+> How do you know which outputs are which with a variable number? 
 
-I thought you might append something like it. I just imagine that when
-reading the documentation it might be helpful to also see the intended
-effect described, especially given that a call to an _assert_ function
-might leave the reset line in deasserted state, depending on the
-refcount.
+Position in the array (ie. first entry is the first output, and
+so on). I will respin to update the comment to make this more
+clear.
 
-> >> + */
-> >> +int reset_control_assert_shared(struct reset_control *rstc)
-> >> +{
-> >> +	if (!rstc->rcdev->ops->assert)
-> >> +		return -ENOTSUPP;
-> >
-> > WARN_ON(rstc->line->deassert_cnt == 0)
-> >
-> > Actually, what to do in this case? Assume ops->assert was called, or do
-> > it again to be sure? Certainly we don't want to wrap deassert_cnt, or
-> > the next deassert_shared will do nothing.
-> >
-> >> +	rstc->line->deassert_cnt--;
-> >> +	if (rstc->line->deassert_cnt)
-> >
-> > deassert_cnt isn't protected by any lock.
-> 
-> Right, good catch. I believe the best way to fix this is to change deassert_cnt
-> into an atomic_t and use atomic_dec_return / atomic_int_return,
-
-Yes, that would work.
-
-> Downside of using an atomic_t is that doing the WARN_ON you are asking for above
-> will not be race free, then, but since it is a should never happen scenario I
-> guess we do not care about the check not being 100% race free. Or we can even
-> just leave out the check ?
-
-Since this is only a warning to notify driver developers we don't
-support shared resets (apart from the clock-like use)
-
-Not if we warn about refcnt instead of deassert_cnt above.
-
-[...]
-> >> + * of the line by one and deasserts the reset line (if it was not already
-> >> + * deasserted).
-> >
-> > "After calling this function, the shared reset line is guaranteed to be
-> >   deasserted."
-> 
-> Same question as above.
-
-Same imprecise answer. I'd like to see the expected state after calling
-this function in the description, in addition to the mechanism. This is
-more important for the assert function. After calling deassert, the
-reset line is deasserted, no reason to be surprised about that.
-
-regards
-Philipp
+Thanks,
+Charles
