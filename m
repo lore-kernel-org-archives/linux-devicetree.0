@@ -1,58 +1,61 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm64: dts: r8a7795: Add pmu device nodes
-Date: Mon, 14 Dec 2015 14:36:05 +0000
-Message-ID: <566ED3D5.1080301@arm.com>
-References: <1449236333-4410-1-git-send-email-dirk.behme@gmail.com>
- <1449236333-4410-3-git-send-email-dirk.behme@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v2 2/3] [media] mt9v032: Do not unset master_mode
+Date: Mon, 14 Dec 2015 15:41:52 +0100
+Message-ID: <1450104113-6392-2-git-send-email-mpa@pengutronix.de>
+References: <1450104113-6392-1-git-send-email-mpa@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449236333-4410-3-git-send-email-dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1450104113-6392-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yoshifumi Hosoya <yoshifumi.hosoya.wj-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Masaru Nagai <masaru.nagai.vx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The power_on function of the driver resets the chip and sets the
+CHIP_CONTROL register to 0. This switches the operating mode to slave.
+The s_stream function sets the correct mode. But this caused problems on
+a board where the camera chip is operated as master. The camera started
+after a random amount of time streaming an image, I observed between 10
+and 300 seconds.
 
+The STRFM_OUT and STLN_OUT pins are not connected on this board which
+may cause some issues in slave mode. I could not find any documentation
+about this.
 
-On 04/12/15 13:38, Dirk Behme wrote:
-> From: Yoshifumi Hosoya <yoshifumi.hosoya.wj-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
->
-> Enabling the performance monitor unit on r8a7795.
->
-> Signed-off-by: Masaru Nagai <masaru.nagai.vx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Yoshifumi Hosoya <yoshifumi.hosoya.wj-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> Sigend-off-by: Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> Note: This patch picked from
->
-> https://git.kernel.org/cgit/linux/kernel/git/horms/renesas-bsp.git/log/?h=v4.2/rcar-3.0.x
->
-> and rebased against
->
-> https://git.kernel.org/cgit/linux/kernel/git/geert/renesas-drivers.git/log/?h=topic/gen3-latest renesas-drivers-2015-12-01-v4.4-rc3
->
->   arch/arm64/boot/dts/renesas/r8a7795.dtsi | 12 ++++++++++++
->   1 file changed, 12 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> index 946a5bb..8113b71 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> @@ -247,6 +247,18 @@
->   			power-domains = <&cpg>;
->   		};
->
-> +		pmu {
-> +			compatible = "arm,armv8-pmuv3";
+Keeping the chip in master mode after the reset helped to fix this
+issue for me.
 
-You can add more specific compatible "arm,cortex-a57-pmu" if it's Cortex
-A57.
+Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ drivers/media/i2c/mt9v032.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
+index c1bc564a0979..cc16acf001de 100644
+--- a/drivers/media/i2c/mt9v032.c
++++ b/drivers/media/i2c/mt9v032.c
+@@ -349,7 +349,8 @@ static int mt9v032_power_on(struct mt9v032 *mt9v032)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return regmap_write(map, MT9V032_CHIP_CONTROL, 0);
++	return regmap_write(map, MT9V032_CHIP_CONTROL,
++			    MT9V032_CHIP_CONTROL_MASTER_MODE);
+ }
+ 
+ static void mt9v032_power_off(struct mt9v032 *mt9v032)
+@@ -421,8 +422,7 @@ __mt9v032_get_pad_crop(struct mt9v032 *mt9v032, struct v4l2_subdev_pad_config *c
+ 
+ static int mt9v032_s_stream(struct v4l2_subdev *subdev, int enable)
+ {
+-	const u16 mode = MT9V032_CHIP_CONTROL_MASTER_MODE
+-		       | MT9V032_CHIP_CONTROL_DOUT_ENABLE
++	const u16 mode = MT9V032_CHIP_CONTROL_DOUT_ENABLE
+ 		       | MT9V032_CHIP_CONTROL_SEQUENTIAL;
+ 	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
+ 	struct v4l2_rect *crop = &mt9v032->crop;
 -- 
-Regards,
-Sudeep
+2.6.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
