@@ -1,79 +1,90 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH/RFC 0/7] ARM: dts: Add compatible property to
- "partitions" node
-Date: Mon, 14 Dec 2015 11:46:13 -0800
-Message-ID: <20151214194613.GA126731@google.com>
-References: <1450120304-2760-1-git-send-email-geert+renesas@glider.be>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [RFC][PATCH] misc: Introduce reboot_reason driver
+Date: Mon, 14 Dec 2015 11:54:51 -0800
+Message-ID: <20151214195450.GQ4000@usrtlx11787.corpusers.net>
+References: <1449610162-30543-1-git-send-email-john.stultz@linaro.org>
+ <20151208220722.GG4000@usrtlx11787.corpusers.net>
+ <CALAqxLXATE4TCGTu+NcDYFTvQ3YTS_m0baCa_AeJp-j4POtSQA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1450120304-2760-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <CALAqxLXATE4TCGTu+NcDYFTvQ3YTS_m0baCa_AeJp-j4POtSQA@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: John Stultz <john.stultz@linaro.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinay Simha BN <simhavcs@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>, Andy Gross <agross@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 14, 2015 at 08:11:37PM +0100, Geert Uytterhoeven wrote:
-> 	Hi,
+On Wed 09 Dec 17:32 PST 2015, John Stultz wrote:
+
+> On Tue, Dec 8, 2015 at 2:07 PM, Bjorn Andersson
+> <bjorn.andersson@sonymobile.com> wrote:
+> > On Tue 08 Dec 13:29 PST 2015, John Stultz wrote:
+> >> diff --git a/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts b/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
+> >> index 5183d18..ee5dcb7 100644
+> >> --- a/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
+> >> +++ b/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
+> >> @@ -282,6 +282,15 @@
+> >>                       };
+> >>               };
+> >>
+> >> +             reboot_reason: reboot_reason@2a03f65c {
+> >> +                     compatible              = "reboot_reason";
+> >> +                     reg                     = <0x2A03F65C 0x4>;
+> >> +                     reason,none             = <0x77665501>;
+> >> +                     reason,bootloader       = <0x77665500>;
+> >> +                     reason,recovery         = <0x77665502>;
+> >> +                     reason,oem              = <0x6f656d00>;
+> >> +             };
+> >> +
+> >
+> > This address refers to IMEM, which is shared with a number of other
+> > uses. So I think we should have a simple-mfd (and syscon) with this
+> > within.
 > 
-> As of commit e488ca9f8d4f62c2 ("doc: dt: mtd: partitions: add compatible
-> property to "partitions" node"), the "partitions" subnode of an SPI
-> FLASH device node must have a compatible property. The partitions are no
-> longer detected if it is not present.
+> So talking with Arnd some more it looked like IMEM was really just
+> SRAM. Is that not the case, or is there something else special about
+> it?  Does it really need simple-mfd and syscon? I'm still fuzzy on how
+> to use those for this.
+> 
 
-For all patches:
+I'm pretty sure it's just SRAM, but I hadn't looked at that binding
+before, sounds like a conceptually better fit.
 
-Acked-by: Brian Norris <computersforpeace@gmail.com>
+The part that I was looking for was the convenience of having a regmap
+available for the uses that we will find later on, but I guess sram
+provides similar means of accessing various pieces of the memory.
 
-> I marked this series as "RFC", as the abovementioned commit is not yet
-> upstream. Ideally, the users should be fixed first, to avoid breakage.
+> >> +     /* initialize specified reasons from DT */
+> >> +     if (!of_property_read_u32(pdev->dev.of_node, "reason,none", &val))
+> >> +             reasons[NONE] = val;
+> >> +     if (!of_property_read_u32(pdev->dev.of_node, "reason,bootloader", &val))
+> >> +             reasons[BOOTLOADER] = val;
+> >> +     if (!of_property_read_u32(pdev->dev.of_node, "reason,recovery", &val))
+> >> +             reasons[RECOVERY] = val;
+> >> +     if (!of_property_read_u32(pdev->dev.of_node, "reason,oem", &val))
+> >> +             reasons[OEM] = val;
+> >
+> > I would like for this to be less hard coded.
+> 
+> So thinking of this more. Is having something like:
+> 
+> cmds = "default", "bootloader", "recovery";
+> vals  = <0xmagic1>, <0xmagic2>, <0xmagic3>;
+> 
+> what you're thinking about?
 
-I'd differ on the last sentence. It's more important to straighten out
-the release features for 4.4 than to make sure that linux-next has
-perfect DTS files. So I'll submit whenever ready :)
+As these are normally just ascii strings I was thinking we could have
+them as individual properties and then use for_each_property_of_node()
+on the implementation side. But it doesn't really matter.
 
-FWIW, I plan to submit my pullreq this week, hopefully by
-end-of-Wednesday. (There are other potential MTD fixes that haven't
-stabilized. I may just send them separately.)
+> 
+> This wouldn't quite handle the "oem-N" options as simply, but they
+> could define each oem- case explicitly in the DT to support it.
+> 
+
+If we have a reasonably dynamic way of defining these there's little to
+no reason to treat oem-N specially from the others.
 
 Regards,
-Brian
-
-> Tested on r8a7791/koelsch.
-> 
-> Thanks!
-> 
-> Geert Uytterhoeven (7):
->   ARM: dt: mvebu: ix4-300d: Add compatible property to "partitions" node
->   ARM: shmobile: bockw dts: Add compatible property to "partitions" node
->   ARM: shmobile: lager dts: Add compatible property to "partitions" node
->   ARM: shmobile: koelsch dts: Add compatible property to "partitions"
->     node
->   ARM: shmobile: porter dts: Add compatible property to "partitions"
->     node
->   ARM: shmobile: gose dts: Add compatible property to "partitions" node
->   ARM: shmobile: silk dts: Add compatible property to "partitions" node
-> 
->  arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts | 1 +
->  arch/arm/boot/dts/r8a7778-bockw.dts             | 1 +
->  arch/arm/boot/dts/r8a7790-lager.dts             | 1 +
->  arch/arm/boot/dts/r8a7791-koelsch.dts           | 1 +
->  arch/arm/boot/dts/r8a7791-porter.dts            | 1 +
->  arch/arm/boot/dts/r8a7793-gose.dts              | 1 +
->  arch/arm/boot/dts/r8a7794-silk.dts              | 1 +
->  7 files changed, 7 insertions(+)
-> 
-> -- 
-> 1.9.1
-> 
-> Gr{oetje,eeting}s,
-> 
-> 						Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
-> 							    -- Linus Torvalds
+Bjorn
