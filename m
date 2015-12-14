@@ -1,89 +1,128 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 02/10] clockevents/drivers: add MPS2 Timer driver
-Date: Mon, 14 Dec 2015 14:36:18 +0100
-Message-ID: <566EC5D2.9050005@linaro.org>
-References: <1449048790-25859-1-git-send-email-vladimir.murzin@arm.com>
- <1449048790-25859-3-git-send-email-vladimir.murzin@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449048790-25859-3-git-send-email-vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Mark.Rutland-5wv7dgnIgG8@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v10 2/8] ARM: dt: Binding documentation for imx25 GCQ
+Date: Mon, 14 Dec 2015 14:53:48 +0100
+Message-ID: <1450101234-2191-3-git-send-email-mpa@pengutronix.de>
+References: <1450101234-2191-1-git-send-email-mpa@pengutronix.de>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1450101234-2191-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, =?UTF-8?q?Eric=20B=C3=A9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/02/2015 10:33 AM, Vladimir Murzin wrote:
-> MPS2 platform has simple 32 bits general purpose countdown timers.
->
-> The driver uses the first detected timer as a clocksource and the res=
-t
-> of the timers as a clockevent
->
-> Signed-off-by: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-> ---
+The documentation describes the bindings for the imx25 GCQ unit which is
+essentially a generic conversion queue using the imx25 ADC.
 
-[ ... ]
+Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
 
-> +static void clockevent_mps2_writel(u32 val, struct clock_event_devic=
-e *c, u32 offset)
-> +{
-> +	writel(val, to_mps2_clkevt(c)->reg + offset);
-> +}
+Notes:
+    Changes in v9:
+     - Added the dt-bindings header to this patch instead of the driver
+    
+    Changes in v6:
+     - Changed bindings to use adc-refp and adc-refn. Also a bit of cleanup in the
+       setup routine.
+    
+    Changes in v5:
+     - Fixed locking
+     - Removed module owner
 
-Is it possible to use writel_relaxed here ?
+ .../devicetree/bindings/iio/adc/fsl,imx25-gcq.txt  | 58 ++++++++++++++++++++++
+ include/dt-bindings/iio/adc/fsl-imx25-gcq.h        | 18 +++++++
+ 2 files changed, 76 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/fsl,imx25-gcq.txt
+ create mode 100644 include/dt-bindings/iio/adc/fsl-imx25-gcq.h
 
-[ ... ]
-
-> +static int mps2_timer_set_periodic(struct clock_event_device *ce)
-> +{
-> +	u32 clock_count_per_tick =3D to_mps2_clkevt(ce)->clock_count_per_ti=
-ck;
-> +
-> +	clockevent_mps2_writel(clock_count_per_tick, ce, TIMER_RELOAD);
-> +	clockevent_mps2_writel(clock_count_per_tick, ce, TIMER_VALUE);
-> +	clockevent_mps2_writel(TIMER_CTRL_IE | TIMER_CTRL_ENABLE, ce, TIMER=
-_CTRL);
-> +
-> +	return 0;
-> +}
-> +
-> +static irqreturn_t mps2_timer_interrupt(int irq, void *dev_id)
-> +{
-> +	struct clockevent_mps2 *ce =3D dev_id;
-> +	u32 status =3D readl(ce->reg + TIMER_INT);
-> +
-> +	if (!status) {
-> +		pr_warn("spuirous interrupt\n");
-
-typo: 'spurious'
-
-[ ... ]
-
-> +	ce =3D kzalloc(sizeof(struct clockevent_mps2), GFP_KERNEL);
-> +	if (!ce) {
-> +		ret =3D -ENOMEM;
-> +		pr_err("failed to allocate clockevent: %d\n", ret);
-
-There is already a stack trace in the kernel when an allocation fails.
-
-With the above fixed:
-
-Acked-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/iio/adc/fsl,imx25-gcq.txt b/Documentation/devicetree/bindings/iio/adc/fsl,imx25-gcq.txt
+new file mode 100644
+index 000000000000..b0866d36a307
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/fsl,imx25-gcq.txt
+@@ -0,0 +1,58 @@
++Freescale i.MX25 ADC GCQ device
++
++This is a generic conversion queue device that can convert any of the
++analog inputs using the ADC unit of the i.MX25.
++
++Required properties:
++ - compatible: Should be "fsl,imx25-gcq".
++ - reg: Should be the register range of the module.
++ - interrupts: Should be the interrupt number of the module.
++   Typically this is <1>.
++ - interrupt-parent: phandle to the tsadc module of the i.MX25.
++ - #address-cells: Should be <1> (setting for the subnodes)
++ - #size-cells: Should be <0> (setting for the subnodes)
++
++Optional properties:
++ - vref-ext-supply: The regulator supplying the ADC reference voltage.
++   Required when at least one subnode uses the this reference.
++ - vref-xp-supply: The regulator supplying the ADC reference voltage on pin XP.
++   Required when at least one subnode uses this reference.
++ - vref-yp-supply: The regulator supplying the ADC reference voltage on pin YP.
++   Required when at least one subnode uses this reference.
++
++Sub-nodes:
++Optionally you can define subnodes which define the reference voltage
++for the analog inputs.
++
++Required properties for subnodes:
++ - reg: Should be the number of the analog input.
++     0: xp
++     1: yp
++     2: xn
++     3: yn
++     4: wiper
++     5: inaux0
++     6: inaux1
++     7: inaux2
++Optional properties for subnodes:
++ - fsl,adc-refp: specifies the positive reference input as defined in
++     <dt-bindings/iio/adc/fsl-imx25-gcq.h>
++ - fsl,adc-refn: specifies the negative reference input as defined in
++     <dt-bindings/iio/adc/fsl-imx25-gcq.h>
++
++Example:
++
++	adc: adc@50030800 {
++		compatible = "fsl,imx25-gcq";
++		reg = <0x50030800 0x60>;
++		interrupt-parent = <&tscadc>;
++		interrupts = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		inaux@5 {
++			reg = <5>;
++			fsl,adc-refp = <MX25_ADC_REFP_INT>;
++			fsl,adc-refn = <MX25_ADC_REFN_NGND>;
++		};
++	};
+diff --git a/include/dt-bindings/iio/adc/fsl-imx25-gcq.h b/include/dt-bindings/iio/adc/fsl-imx25-gcq.h
+new file mode 100644
+index 000000000000..87abdd4a7674
+--- /dev/null
++++ b/include/dt-bindings/iio/adc/fsl-imx25-gcq.h
+@@ -0,0 +1,18 @@
++/*
++ * This header provides constants for configuring the I.MX25 ADC
++ */
++
++#ifndef _DT_BINDINGS_IIO_ADC_FS_IMX25_GCQ_H
++#define _DT_BINDINGS_IIO_ADC_FS_IMX25_GCQ_H
++
++#define MX25_ADC_REFP_YP	0 /* YP voltage reference */
++#define MX25_ADC_REFP_XP	1 /* XP voltage reference */
++#define MX25_ADC_REFP_EXT	2 /* External voltage reference */
++#define MX25_ADC_REFP_INT	3 /* Internal voltage reference */
++
++#define MX25_ADC_REFN_XN	0 /* XN ground reference */
++#define MX25_ADC_REFN_YN	1 /* YN ground reference */
++#define MX25_ADC_REFN_NGND	2 /* Internal ground reference */
++#define MX25_ADC_REFN_NGND2	3 /* External ground reference */
++
++#endif
+-- 
+2.6.2
