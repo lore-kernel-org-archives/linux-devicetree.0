@@ -1,67 +1,51 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 0/3] Mediatek EFUSE Support
-Date: Mon, 14 Dec 2015 10:07:06 +0000
-Message-ID: <566E94CA.1050700@linaro.org>
-References: <1447930014-19579-1-git-send-email-andrew-ct.chen@mediatek.com> <CAGS+omA8XK6ksd7Ma8yAUbkSsHR6yQxjFrV+HGbd83UiH6T51g@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [RFC PATCH 0/7] mtd: partitions: add of_match_table support
+Date: Mon, 14 Dec 2015 11:15:26 +0100
+Message-ID: <CAMuHMdWSSHCYXPj_8sXTdc84k6c2oD2XUKLRoJZF2WwHcgk8vQ@mail.gmail.com>
+References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
+	<CAMuHMdUJXHs_OhT0da+kzc=D4MOFUT9BB3eJ+7a_p6DYx-PKBA@mail.gmail.com>
+	<20151210205449.GL144338@google.com>
+	<CAMuHMdV-uethsChWVZGSx1JNcAofODmg14ppGYJP2ewfwhEv1Q@mail.gmail.com>
+	<20151212013349.GA86087@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGS+omA8XK6ksd7Ma8yAUbkSsHR6yQxjFrV+HGbd83UiH6T51g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Kurtz <djkurtz@chromium.org>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151212013349.GA86087-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, David Hendricks <dhendrix-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+Hi Brian,
 
-On 14/12/15 04:27, Daniel Kurtz wrote:
-> Hi Srinivas,
->
-> On Thu, Nov 19, 2015 at 6:46 PM, Andrew-CT Chen
-> <andrew-ct.chen@mediatek.com> wrote:
->> This patch adds EFUSE support driver which is used by other drivers
->> like thermal sensor and HDMI impedance.
+On Sat, Dec 12, 2015 at 2:33 AM, Brian Norris
+<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, Dec 11, 2015 at 09:44:37AM +0100, Geert Uytterhoeven wrote:
+>> On Thu, Dec 10, 2015 at 9:54 PM, Brian Norris
+>> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> > IOW, I wouldn't expect MBR or GPT to work well on large raw NAND flash,
+>> > and so I don't plan to do that sort of work myself. If you can provide
+>> > some better argument for it, and some nice maintainable code to go with
+>> > it, then of course it could be considered :)
 >>
->> There are some efuses these fuses store things like calibration data,
->> speed bins.. etc. Drivers like thermal sensor, HDMI impedance would
->> read out this data for configuring the driver.
->>
->> Change in v2:
->> 1. Rebase to 4.4-rc1
->> 2. Modify the driver Makefile for more consistent with other drivers
->> 3. Modify the compatible string to "mediatek,mt8173-efuse" and "mediatek,efuse"
+>> There's also NOR FLASH (e.g. SPI-NOR), which is what most boards I'm
+>> working on have.
 >
-> Do you still plan to queue this for v4.5?
->
-Sorry guys, for the long delay in replying your pings, got busy with 
-regular office stuff :-)
+> OK. But these flash are often used for the boot firmware, no? And then,
+> does the boot code have to be provided at one end of the flash (e.g.,
+> bottom)? If so, then something like MBR or GPT will likely not apply,
+> since they reserve the first (and sometimes last) blocks of the medium.
 
-Yes, It should go in v4.5, I did send request with my sign-off to Greg,
-he should take it via char-misc tree.
+If the boot firmware is in the first few blocks, Amiga RDB or BSD disklabel
+come to the rescue...
 
-Thanks,
-srini
->>
->> Andrew-CT Chen (3):
->>    dt-bindings: add document of mediatek efuse driver
->>    nvmem: mediatek: Add Mediatek EFUSE driver
->>    dts: arm64: Add EFUSE device node
->>
->>   .../devicetree/bindings/nvmem/mtk-efuse.txt        | 36 +++++++++
->>   arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  5 ++
->>   drivers/nvmem/Kconfig                              | 11 +++
->>   drivers/nvmem/Makefile                             |  2 +
->>   drivers/nvmem/mtk-efuse.c                          | 89 ++++++++++++++++++++++
->>   5 files changed, 143 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/nvmem/mtk-efuse.txt
->>   create mode 100644 drivers/nvmem/mtk-efuse.c
->>
->> --
->> 1.9.1
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->> Please read the FAQ at  http://www.tux.org/lkml/
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
