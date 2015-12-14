@@ -1,115 +1,69 @@
-From: xuejiancheng <xuejiancheng@huawei.com>
-Subject: Re: [PATCH v3 2/7] clk: hisilicon: add dt-binding document for Hi3519
- CRG
-Date: Mon, 14 Dec 2015 09:45:58 +0800
-Message-ID: <566E1F56.3070800@huawei.com>
-References: <1449819921-18464-1-git-send-email-xuejiancheng@huawei.com>
- <1449819921-18464-3-git-send-email-xuejiancheng@huawei.com>
- <20151211151909.GA21272@rob-hp-laptop>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 2/2] extcon: arizona: Update device tree binding for mic
+ detect configurations
+Date: Mon, 14 Dec 2015 11:03:58 +0900
+Message-ID: <566E238E.4050007@samsung.com>
+References: <1449767299-29691-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1449767299-29691-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20151211151909.GA21272@rob-hp-laptop>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1449767299-29691-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Charles,
 
+On 2015=EB=85=84 12=EC=9B=94 11=EC=9D=BC 02:08, Charles Keepax wrote:
+> Update the device tree binding documentation to include documentation=
+ for
+> the wlf,micd-configs property that is used to specify the configurati=
+ons
+> for headset polarity detection (CTIA / OTMP).
+>=20
+> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+> ---
+>  Documentation/devicetree/bindings/extcon/extcon-arizona.txt | 8 ++++=
+++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-arizona.=
+txt b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> index 238e10e..fd9b898 100644
+> --- a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> +++ b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+> @@ -37,5 +37,13 @@ Optional properties:
+>      milliseconds.
+>    - wlf,micd-force-micbias : Force MICBIAS continuously on during mi=
+crophone
+>      detection.
+> +  - wlf,micd-configs : Headset polarity configurations (generally us=
+ed for
+> +    detection of CTIA / OMTP headsets), the field can be of variable=
+ length
+> +    but should always be a multiple of 3 cells long, each three cell=
+ group
+> +    represents one polarity configuration.
+> +    The first cell defines the accessory detection pin, zero will us=
+e MICDET1
+> +    and all other values will use MICDET2.
+> +    The second cell represents the MICBIAS to be used.
+> +    The third cell represents the value of the micd-pol-gpio pin.
 
-On 2015/12/11 23:19, Rob Herring wrote:
-> On Fri, Dec 11, 2015 at 03:45:16PM +0800, Jiancheng Xue wrote:
->> add dt-binding document for Hi3519 CRG block
->>
->> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
->> ---
->>  .../devicetree/bindings/clock/hi3519-crg.txt       | 46 ++++++++++++++++++++++
->>  1 file changed, 46 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/clock/hi3519-crg.txt
->>
->> diff --git a/Documentation/devicetree/bindings/clock/hi3519-crg.txt b/Documentation/devicetree/bindings/clock/hi3519-crg.txt
->> new file mode 100644
->> index 0000000..e0d30a4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/hi3519-crg.txt
->> @@ -0,0 +1,46 @@
->> +* Hisilicon Hi3519 Clock and Reset Generator(CRG)
->> +
->> +The Hi3519 CRG module provides clock and reset signals to various
->> +controllers within the SoC.
->> +
->> +This binding uses the following bindings:
->> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
->> +    Documentation/devicetree/bindings/reset/reset.txt
->> +
->> +Required Properties:
->> +
->> +- compatible: should be one of the following.
->> +  - "hisilicon,hi3519-crg" - controller compatible with Hi3519 SoC.
->> +
->> +- reg: physical base address of the controller and length of memory mapped
->> +  region.
->> +
->> +- #clock-cells: should be 1.
->> +
->> +Each clock is assigned an identifier and client nodes use this identifier
->> +to specify the clock which they consume.
->> +
->> +All these identifier could be found in <dt-bindings/clock/hi3519-clock.h>.
-> 
-> This header should be part of this patch.
+I think that you better to add the example using the 'wlf,micd-configs'
+to improve the understanding of using this property.
+because the number of 'wlf,micd-configs' value is not fixed.
 
-Because the header is also depended on by the clock driver. It's also a problem
-if I separate it from the clock driver patch.
+Also,
+How about do you add the real example for all arizona properties on sep=
+arate patch?
 
-Is it OK if I put this binding file into the clock driver patch?
-> 
->> +
->> +- #reset-cells: should be 2.
->> +
->> +A reset signal can be controlled by writing a bit register in the CRG module.
->> +The reset specifier consists of two cells. The first cell represents the
->> +register offset relative to the base address. The second cell represents the
->> +bit index in the register.
->> +
->> +Example: CRG nodes
->> +CRG: clock-reset-controller {
-> 
-> clock-reset-controller@12010000
+Thanks,
+Chanwoo Choi
 
-OK.
-
-> 
->> +	compatible = "hisilicon,hi3519-crg";
->> +        reg = <0x12010000 0x10000>;
->> +        #clock-cells = <1>;
->> +        #reset-cells = <2>;
->> +};
->> +
->> +Example: consumer nodes
->> +i2c0: i2c@0x12110000 {
-> 
-> Drop '0x'
-
-OK.
-
-> 
->> +	compatible = "hisilicon,hi3519-i2c";
->> +        reg = <0x12110000 0x1000>;
->> +        clocks = <&CRG HI3519_I2C0_RST>;*/
->> +        resets = <&CRG 0xE4 0>;
-> 
-> lowercase hex please
-
-OK.
-
-> 
->> +};
->> -- 
->> 1.9.1
->>
-> 
-> .
-> 
-
+> =20
+>    - wlf,gpsw : Settings for the general purpose switch
+>=20
