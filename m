@@ -1,120 +1,108 @@
-From: tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 4/8] dt-bindings: Add a binding for Mediatek Video
- Encoder
-Date: Mon, 14 Dec 2015 16:26:58 +0800
-Message-ID: <1450081618.5745.3.camel@mtksdaap41>
-References: <1449827743-22895-1-git-send-email-tiffany.lin@mediatek.com>
-	 <1449827743-22895-5-git-send-email-tiffany.lin@mediatek.com>
-	 <20151211172919.GA2896@rob-hp-laptop>
+From: MyungJoo Ham <myungjoo.ham@samsung.com>
+Subject: Re: [PATCH v4 01/20] PM / devfreq: exynos: Add generic exynos bus
+ frequency driver
+Date: Mon, 14 Dec 2015 08:28:48 +0000 (GMT)
+Message-ID: <989487615.658131450081722610.JavaMail.weblogic@epmlwas07b>
+Reply-To: myungjoo.ham@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151211172919.GA2896@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Mikhail Ulyanov <mikhail.ulyanov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+MIME-version: 1.0
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: =?utf-8?Q?=EC=B5=9C=EC=B0=AC=EC=9A=B0?= <cw00.choi@samsung.com>, =?utf-8?Q?=ED=81=AC=EC=89=AC=EC=8B=9C=ED=86=A0=ED=94=84?= <k.kozlowski@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>
+Cc: =?utf-8?Q?=EB=B0=95=EA=B2=BD=EB=AF=BC?= <kyungmin.park@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "tjakobi@math.uni-bielefeld.de" <tjakobi@math.uni-bielefeld.de>, "linux.amoon@gmail.com" <linux.amoon@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-12-11 at 11:29 -0600, Rob Herring wrote:
-> On Fri, Dec 11, 2015 at 05:55:39PM +0800, Tiffany Lin wrote:
-> > Add a DT binding documentation of Video Encoder for the
-> > MT8173 SoC from Mediatek.
-> > 
-> > Signed-off-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> A question and minor issue below, otherwise:
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> > ---
-> >  .../devicetree/bindings/media/mediatek-vcodec.txt  |   58 ++++++++++++++++++++
-> >  1 file changed, 58 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/mediatek-vcodec.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
-> > new file mode 100644
-> > index 0000000..510cd81
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
-> > @@ -0,0 +1,58 @@
-> > +Mediatek Video Codec
-> > +
-> > +Mediatek Video Codec is the video codec hw present in Mediatek SoCs which
-> > +supports high resolution encoding functionalities.
-> > +
-> > +Required properties:
-> > +- compatible : "mediatek,mt8173-vcodec-enc" for encoder
-> > +- reg : Physical base address of the video codec registers and length of
-> > +  memory mapped region.
-> > +- interrupts : interrupt number to the cpu.
-> > +- mediatek,larb : must contain the local arbiters in the current Socs.
-> > +- clocks : list of clock specifiers, corresponding to entries in
-> > +  the clock-names property;
-> > +- clock-names: must contain "vencpll", "venc_lt_sel", "vcodecpll_370p5_ck"
-> > +- iommus : list of iommus specifiers should be enabled for hw encode.
-> > +  There are 2 cells needed to enable/disable iommu.
-> > +  The first one is local arbiter index(larbid), and the other is port
-> > +  index(portid) within local arbiter. Specifies the larbid and portid
-> > +  as defined in dt-binding/memory/mt8173-larb-port.h.
-> > +- mediatek,vpu : the node of video processor unit
-> > +
-> > +Example:
-> > +vcodec_enc: vcodec@0x18002000 {
-> > +    compatible = "mediatek,mt8173-vcodec-enc";
-> > +    reg = <0 0x18002000 0 0x1000>,    /*VENC_SYS*/
-> > +          <0 0x19002000 0 0x1000>;    /*VENC_LT_SYS*/
-> > +    interrupts = <GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>,
-> > +           <GIC_SPI 202 IRQ_TYPE_LEVEL_LOW>;
-> > +    larb = <&larb3>,
-> > +           <&larb5>;
-> > +    iommus = <&iommu M4U_LARB3_ID M4U_PORT_VENC_RCPU>,
-> 
-> Is this the same iommu as the VPU? If so, you can't have a mixed number 
-> of cells.
-Yes, its same iommus as the VPU.
-Now we use two parameters for iommus.
-We will fix this in next version.
-
-> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_REC>,
-> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_BSDMA>,
-> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_SV_COMV>,
-> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_RD_COMV>,
-> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_CUR_LUMA>,
-> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_CUR_CHROMA>,
-> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_REF_LUMA>,
-> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_REF_CHROMA>,
-> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_NBM_RDMA>,
-> > +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_NBM_WDMA>,
-> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_RCPU_SET2>,
-> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_REC_FRM_SET2>,
-> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_BSDMA_SET2>,
-> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_SV_COMA_SET2>,
-> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_RD_COMA_SET2>,
-> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_CUR_LUMA_SET2>,
-> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_CUR_CHROMA_SET2>,
-> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_REF_LUMA_SET2>,
-> > +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_REC_CHROMA_SET2>;
-> > +    vpu = <&vpu>;
-> 
-> Need to update the example.
-Sorry, I didn't get it.
-Do you means update VPU binding document "media/mediatek-vpu.txt"?
-
-> 
-> > +    clocks = <&apmixedsys CLK_APMIXED_VENCPLL>,
-> > +             <&topckgen CLK_TOP_VENC_LT_SEL>,
-> > +             <&topckgen CLK_TOP_VCODECPLL_370P5>;
-> > +    clock-names = "vencpll",
-> > +                  "venc_lt_sel",
-> > +                  "vcodecpll_370p5_ck";
-> > +  };
-> > -- 
-> > 1.7.9.5
-> > 
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+PiAgIA0KPiAgVGhpcyBwYXRjaCBhZGRzIHRoZSBnZW5lcmljIGV4eW5vcyBidXMgZnJlcXVlbmN5
+IGRyaXZlciBmb3IgQU1CQSBBWEkgYnVzDQo+IG9mIHN1Yi1ibG9ja3MgaW4gZXh5bm9zIFNvQyB3
+aXRoIERFVkZSRVEgZnJhbWV3b3JrLiBUaGUgU2Ftc3VuZyBFeHlub3MgU29DDQo+IGhhdmUgdGhl
+IGNvbW1vbiBhcmNoaXRlY3R1cmUgZm9yIGJ1cyBiZXR3ZWVuIERSQU0gYW5kIHN1Yi1ibG9ja3Mg
+aW4gU29DLg0KPiBUaGlzIGRyaXZlciBjYW4gc3VwcG9ydCB0aGUgZ2VuZXJpYyBidXMgZnJlcXVl
+bmN5IGRyaXZlciBmb3IgRXh5bm9zIFNvQ3MuDQo+IA0KPiBJbiBkZXZpY2V0cmVlLCBFYWNoIGJ1
+cyBibG9jayBoYXMgYSBidXMgY2xvY2ssIHJlZ3VsYXRvciwgb3BlcmF0aW9uLXBvaW50DQo+IGFu
+ZCBkZXZmcmVxLWV2ZW50IGRldmljZXMgd2hpY2ggbWVhc3VyZSB0aGUgdXRpbGl6YXRpb24gb2Yg
+ZWFjaCBidXMgYmxvY2suDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBDaGFud29vIENob2kgPGN3MDAu
+Y2hvaUBzYW1zdW5nLmNvbT4NCj4gW2xpbnV4LmFtb29uOiBUZXN0ZWQgb24gT2Ryb2lkIFUzXQ0K
+PiBUZXN0ZWQtYnk6IEFuYW5kIE1vb24gPGxpbnV4LmFtb29uQGdtYWlsLmNvbT4NCj4gDQoNCkNo
+YW53b28sIGNvdWxkIHlvdSBwbGVhc2Ugc2hvdyBtZSB0ZXN0aW5nIHRoaXMgc2V0IG9mIHBhdGNo
+ZXMgaW4geW91ciBzaXRlPw0KUGxlYXNlIGxldCBtZSBrbm93IHdoZW4gaXMgb2sgdG8gdmlzaXQg
+eW91Lg0KKEkgZG8gbm90IGhhdmUgZXh5bm9zIG1hY2hpbmVzIHJpZ2h0IG5vdy4pDQoNCj4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvZGV2ZnJlcS9NYWtlZmlsZSBiL2RyaXZlcnMvZGV2ZnJlcS9NYWtl
+ZmlsZQ0KPiBpbmRleCA1MTM0ZjllZTk4M2QuLjM3NWViYmI0ZmNmYiAxMDA2NDQNCj4gLS0tIGEv
+ZHJpdmVycy9kZXZmcmVxL01ha2VmaWxlDQo+ICsrKyBiL2RyaXZlcnMvZGV2ZnJlcS9NYWtlZmls
+ZQ0KPiBAQCAtNiw2ICs2LDcgQEAgb2JqLSQoQ09ORklHX0RFVkZSRVFfR09WX1BPV0VSU0FWRSkJ
+Kz0gZ292ZXJub3JfcG93ZXJzYXZlLm8NCj4gIG9iai0kKENPTkZJR19ERVZGUkVRX0dPVl9VU0VS
+U1BBQ0UpCSs9IGdvdmVybm9yX3VzZXJzcGFjZS5vDQo+ICANCj4gICMgREVWRlJFUSBEcml2ZXJz
+DQo+ICtvYmotJChDT05GSUdfQVJDSF9FWFlOT1MpCQkrPSBleHlub3MvDQo+ICBvYmotJChDT05G
+SUdfQVJNX0VYWU5PUzRfQlVTX0RFVkZSRVEpCSs9IGV4eW5vcy8NCj4gIG9iai0kKENPTkZJR19B
+Uk1fRVhZTk9TNV9CVVNfREVWRlJFUSkJKz0gZXh5bm9zLw0KDQpDT05GSUdfQVJDSF9FWFlOT1Mg
+aXMgdHJ1ZSBpZg0KCUNPTkZJR19BUk1fRVhZTk9TNF9CVVNfREVWRlJFUSBpcyB0cnVlIA0KCW9y
+DQoJQ09ORklHX0FSTV9FWFlOT1M1X0JVU19ERVZGUkVRIGlzIHRydWUNClRodXMsIHRoZSB0d28g
+bGluZXMgYWZ0ZXIgeW91J3ZlIGFkZGVkIGhhdmUgYmVjb21lIHVzZWxlc3MuIChkZWFkIGNvZGUp
+DQoNClBsZWFzZSBkZWxldGUgdGhlbS4NCg0KW10NCj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9k
+cml2ZXJzL2RldmZyZXEvZXh5bm9zL2V4eW5vcy1idXMuYw0KW10NCj4gK3N0YXRpYyBpbnQgZXh5
+bm9zX2J1c190YXJnZXQoc3RydWN0IGRldmljZSAqZGV2LCB1bnNpZ25lZCBsb25nICpmcmVxLCB1
+MzIgZmxhZ3MpDQo+ICt7DQo+ICsJc3RydWN0IGV4eW5vc19idXMgKmJ1cyA9IGRldl9nZXRfZHJ2
+ZGF0YShkZXYpOw0KPiArCXN0cnVjdCBkZXZfcG1fb3BwICpuZXdfb3BwOw0KPiArCXVuc2lnbmVk
+IGxvbmcgb2xkX2ZyZXEsIG5ld19mcmVxLCBvbGRfdm9sdCwgbmV3X3ZvbHQ7DQo+ICsJaW50IHJl
+dCA9IDA7DQo+ICsNCj4gKwkvKiBHZXQgbmV3IG9wcC1idXMgaW5zdGFuY2UgYWNjb3JkaW5nIHRv
+IG5ldyBidXMgY2xvY2sgKi8NCj4gKwlyY3VfcmVhZF9sb2NrKCk7DQo+ICsJbmV3X29wcCA9IGRl
+dmZyZXFfcmVjb21tZW5kZWRfb3BwKGRldiwgZnJlcSwgZmxhZ3MpOw0KPiArCWlmIChJU19FUlJf
+T1JfTlVMTChuZXdfb3BwKSkgew0KPiArCQlkZXZfZXJyKGRldiwgImZhaWxlZCB0byBnZXQgcmVj
+b21tZWQgb3BwIGluc3RhbmNlXG4iKTsNCj4gKwkJcmN1X3JlYWRfdW5sb2NrKCk7DQo+ICsJCXJl
+dHVybiBQVFJfRVJSKG5ld19vcHApOw0KPiArCX0NCj4gKw0KPiArCW5ld19mcmVxID0gZGV2X3Bt
+X29wcF9nZXRfZnJlcShuZXdfb3BwKTsNCj4gKwluZXdfdm9sdCA9IGRldl9wbV9vcHBfZ2V0X3Zv
+bHRhZ2UobmV3X29wcCk7DQo+ICsJb2xkX2ZyZXEgPSBkZXZfcG1fb3BwX2dldF9mcmVxKGJ1cy0+
+Y3Vycl9vcHApOw0KPiArCW9sZF92b2x0ID0gZGV2X3BtX29wcF9nZXRfdm9sdGFnZShidXMtPmN1
+cnJfb3BwKTsNCj4gKwlyY3VfcmVhZF91bmxvY2soKTsNCj4gKw0KPiArCWlmIChvbGRfZnJlcSA9
+PSBuZXdfZnJlcSkNCj4gKwkJcmV0dXJuIDA7DQo+ICsNCj4gKwkvKiBDaGFuZ2Ugdm9sdGFnZSBh
+bmQgZnJlcXVlbmN5IGFjY29yZGluZyB0byBuZXcgT1BQIGxldmVsICovDQo+ICsJbXV0ZXhfbG9j
+aygmYnVzLT5sb2NrKTsNCj4gKw0KPiArCWlmIChvbGRfZnJlcSA8IG5ld19mcmVxKSB7DQo+ICsJ
+CXJldCA9IHJlZ3VsYXRvcl9zZXRfdm9sdGFnZShidXMtPnJlZ3VsYXRvciwgbmV3X3ZvbHQsIG5l
+d192b2x0KTsNCg0KU2V0dGluZyB0aGUgbWF4aW11bSB2b2x0IHNhbWUgYXMgdGhlIG1pbmltdW0g
+dm9sdCBpcyBub3QgcmVjb21tZW5kZWQuDQpFc3BlY2lhbGx5IGZvciBhbnkgRFZGUyBtZWNoYW5p
+c21zLCBJIHJlY29tbWVuZCB0byBzZXQgdmFsdWVzIGFzOg0KbWluX3ZvbHQgPSBtaW5pbXVtIHZv
+bHRhZ2UgdGhhdCBkb2VzIG5vdCBoYXJtIHRoZSBzdGFiaWxpdHkNCm1heF92b2x0ID0gbWF4aW11
+bSB2b2x0YWdlIHRoYXQgZG9lcyBub3QgYnJlYWsgdGhlIGNpcmN1aXQNCg0KUGxlYXNlIHJlZmVy
+IHRvIC9pbmNsdWRlL2xpbnV4L3JlZ3VsYXRvci9kcml2ZXIuaA0KIkBzZXRfdm9sdGFnZSIgY29t
+bWVudHMuDQoNCkZvciB0aGUgcmVzdCBvZiByZWd1bGF0b3Jfc2V0X3ZvbHRhZ2UgdXNhZ2VzLCBJ
+J2Qgc2F5IHRoZSBzYW1lLg0KDQpbXQ0KPiArc3RhdGljIGludCBleHlub3NfYnVzX2dldF9kZXZf
+c3RhdHVzKHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gKwkJCQkgICAgIHN0cnVjdCBkZXZmcmVxX2Rl
+dl9zdGF0dXMgKnN0YXQpDQo+ICt7DQo+ICsJc3RydWN0IGV4eW5vc19idXMgKmJ1cyA9IGRldl9n
+ZXRfZHJ2ZGF0YShkZXYpOw0KPiArCXN0cnVjdCBkZXZmcmVxX2V2ZW50X2RhdGEgZWRhdGE7DQo+
+ICsJaW50IHJldDsNCj4gKw0KPiArCXJjdV9yZWFkX2xvY2soKTsNCj4gKwlzdGF0LT5jdXJyZW50
+X2ZyZXF1ZW5jeSA9IGRldl9wbV9vcHBfZ2V0X2ZyZXEoYnVzLT5jdXJyX29wcCk7DQo+ICsJcmN1
+X3JlYWRfdW5sb2NrKCk7DQo+ICsNCj4gKwlyZXQgPSBleHlub3NfYnVzX2dldF9ldmVudChidXMs
+ICZlZGF0YSk7DQo+ICsJaWYgKHJldCA8IDApIHsNCj4gKwkJc3RhdC0+dG90YWxfdGltZSA9IHN0
+YXQtPmJ1c3lfdGltZSA9IDA7DQo+ICsJCWdvdG8gZXJyOw0KPiArCX0NCj4gKw0KPiArCXN0YXQt
+PmJ1c3lfdGltZSA9IChlZGF0YS5sb2FkX2NvdW50ICogMTAwKSAvIGJ1cy0+cmF0aW87DQo+ICsJ
+c3RhdC0+dG90YWxfdGltZSA9IGVkYXRhLnRvdGFsX2NvdW50Ow0KPiArDQo+ICsJZGV2X2RiZyhk
+ZXYsICJVc2FnZSBvZiBkZXZmcmVxLWV2ZW50IDogJWxkLyVsZFxuIiwgc3RhdC0+YnVzeV90aW1l
+LA0KPiArCQkJCQkJCXN0YXQtPnRvdGFsX3RpbWUpOw0KDQpUaGVzZSB0d28gdmFsdWVzIGFyZSB1
+bnNpZ25lZCBsb25nLg0KDQpbXQ0KPiArc3RhdGljIGludCBleHlub3NfYnVzX3BhcnNlX29mKHN0
+cnVjdCBkZXZpY2Vfbm9kZSAqbnAsDQo+ICsJCQkgICAgICBzdHJ1Y3QgZXh5bm9zX2J1cyAqYnVz
+KQ0KPiArew0KPiArCXN0cnVjdCBkZXZpY2UgKmRldiA9IGJ1cy0+ZGV2Ow0KPiArCXVuc2lnbmVk
+IGxvbmcgcmF0ZTsNCj4gKwlpbnQgaSwgcmV0LCBjb3VudCwgc2l6ZTsNCj4gKw0KPiArCS8qIEdl
+dCB0aGUgY2xvY2sgdG8gcHJvdmlkZSBlYWNoIGJ1cyB3aXRoIHNvdXJjZSBjbG9jayAqLw0KPiAr
+CWJ1cy0+Y2xrID0gZGV2bV9jbGtfZ2V0KGRldiwgImJ1cyIpOw0KPiArCWlmIChJU19FUlIoYnVz
+LT5jbGspKSB7DQo+ICsJCWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIGdldCBidXMgY2xvY2tcbiIp
+Ow0KPiArCQlyZXR1cm4gUFRSX0VSUihidXMtPmNsayk7DQo+ICsJfQ0KPiArDQo+ICsJcmV0ID0g
+Y2xrX3ByZXBhcmVfZW5hYmxlKGJ1cy0+Y2xrKTsNCj4gKwlpZiAocmV0IDwgMCkgew0KPiArCQlk
+ZXZfZXJyKGRldiwgImZhaWxlZCB0byBnZXQgZW5hYmxlIGNsb2NrXG4iKTsNCj4gKwkJcmV0dXJu
+IHJldDsNCj4gKwl9DQoNCltdDQoNCj4gK2Vycl9yZWd1bGF0b3I6DQo+ICsJcmVndWxhdG9yX2Rp
+c2FibGUoYnVzLT5yZWd1bGF0b3IpOw0KPiArZXJyX29wcDoNCj4gKwlkZXZfcG1fb3BwX29mX3Jl
+bW92ZV90YWJsZShkZXYpOw0KPiArDQo+ICsJcmV0dXJuIHJldDsNCg0KTm8gY2xrX2Rpc2FibGVf
+dW5wcmVwYXJlKCkgc29tZXdoZXJlIGluIHRoZSBlcnJvciBoYW5kbGluZyByb3V0aW5lcz8NCg0K
+W10NCg0KPiArI2lmZGVmIENPTkZJR19QTV9TTEVFUA0KPiArc3RhdGljIGludCBleHlub3NfYnVz
+X3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ICt7DQpbXQ0KPiArCQlyZXQgPSByZWd1bGF0
+b3JfZW5hYmxlKGJ1cy0+cmVndWxhdG9yKTsNCltdDQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBpbnQg
+ZXh5bm9zX2J1c19zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gK3sNCltdDQo+ICsJCXJl
+Z3VsYXRvcl9kaXNhYmxlKGJ1cy0+cmVndWxhdG9yKTsNCltdDQo+ICt9DQo+ICsjZW5kaWYNCg0K
+SXNuJ3QgdGhlcmUgYW55IHBvc3NpYmlsaXR5IHRoYXQgeW91IHNob3VsZCBub3QgZGlzYWJsZSBh
+dCBzdXNwZW5kIGNhbGxiYWNrcz8NCklmIEkgcmVtZW1iZXIgY29ycmVjdGx5LCB3ZSBzaG91bGQg
+bm90IGRpc2FibGUgVkRELUlOVC9WREQtTUlGIG9mIEV4eW5vczQ0MTINCmZvciBzdXNwZW5kLXRv
+LVJBTSBhbHRob3VnaCBpdCBpcyAibW9zdGx5IiBvayB0byBkbyBzbywgYnV0IG5vdCAiYWx3YXlz
+IiBvay4NCg0KSW4gc3VjaCBjYXNlcywgSSBndWVzcyBpdCBzaG91bGQgYmUgInNlbGVjdGl2ZWx5
+IiBkaXNhYmxlZCBmb3Igc3VzcGVuZC4NCihzb21lIHJlZ3VsYXRvcnMgc3VwcG9ydCBzcGVjaWFs
+ICJsb3cgcG93ZXIgaWYgc3VzcGVuZGVkIiBtb2RlcyBmb3Igc3VjaCBjYXNlcykNCg0KW10NCg==
