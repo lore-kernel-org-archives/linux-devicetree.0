@@ -1,125 +1,43 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 1/7] ARM: shmobile: r8a7778 dtsi: Add BRG support for SCIF
-Date: Mon, 14 Dec 2015 19:58:09 +0100
-Message-ID: <1450119495-1416-2-git-send-email-geert+renesas@glider.be>
-References: <1450119495-1416-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1450119495-1416-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-sh@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH/RFC 3/7] ARM: shmobile: lager dts: Add compatible property to "partitions" node
+Date: Mon, 14 Dec 2015 20:11:40 +0100
+Message-ID: <1450120304-2760-4-git-send-email-geert+renesas@glider.be>
+References: <1450120304-2760-1-git-send-email-geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1450120304-2760-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the device node for the external SCIF_CLK.
-The presence of the SCIF_CLK crystal and its clock frequency depends on
-the actual board.
+As of commit e488ca9f8d4f62c2 ("doc: dt: mtd: partitions: add compatible
+property to "partitions" node"), the "partitions" subnode of an SPI
+FLASH device node must have a compatible property. The partitions are no
+longer detected if it is not present.
 
-Add the two optional clock sources (S1 and SCIF_CLK for the internal
-resp. external clock) for the Baud Rate Generator for External Clock
-(BRG) to all SCIF device nodes.
-
-This increases the range and accuracy of supported baud rates on SCIF.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
-v2:
-  - New.
+The abovementioned commit is destined for v4.4.
 ---
- arch/arm/boot/dts/r8a7778.dtsi | 39 +++++++++++++++++++++++++++------------
- 1 file changed, 27 insertions(+), 12 deletions(-)
+ arch/arm/boot/dts/r8a7790-lager.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/r8a7778.dtsi b/arch/arm/boot/dts/r8a7778.dtsi
-index 3e9c9d2f28deaf20..a192355e740abb07 100644
---- a/arch/arm/boot/dts/r8a7778.dtsi
-+++ b/arch/arm/boot/dts/r8a7778.dtsi
-@@ -300,8 +300,9 @@
- 			     "renesas,scif";
- 		reg = <0xffe40000 0x100>;
- 		interrupts = <0 70 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&mstp0_clks R8A7778_CLK_SCIF0>;
--		clock-names = "fck";
-+		clocks = <&mstp0_clks R8A7778_CLK_SCIF0>,
-+			 <&cpg_clocks R8A7778_CLK_S1>, <&scif_clk>;
-+		clock-names = "fck", "brg_int", "scif_clk";
- 		power-domains = <&cpg_clocks>;
- 		status = "disabled";
- 	};
-@@ -311,8 +312,9 @@
- 			     "renesas,scif";
- 		reg = <0xffe41000 0x100>;
- 		interrupts = <0 71 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&mstp0_clks R8A7778_CLK_SCIF1>;
--		clock-names = "fck";
-+		clocks = <&mstp0_clks R8A7778_CLK_SCIF1>,
-+			 <&cpg_clocks R8A7778_CLK_S1>, <&scif_clk>;
-+		clock-names = "fck", "brg_int", "scif_clk";
- 		power-domains = <&cpg_clocks>;
- 		status = "disabled";
- 	};
-@@ -322,8 +324,9 @@
- 			     "renesas,scif";
- 		reg = <0xffe42000 0x100>;
- 		interrupts = <0 72 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&mstp0_clks R8A7778_CLK_SCIF2>;
--		clock-names = "fck";
-+		clocks = <&mstp0_clks R8A7778_CLK_SCIF2>,
-+			 <&cpg_clocks R8A7778_CLK_S1>, <&scif_clk>;
-+		clock-names = "fck", "brg_int", "scif_clk";
- 		power-domains = <&cpg_clocks>;
- 		status = "disabled";
- 	};
-@@ -333,8 +336,9 @@
- 			     "renesas,scif";
- 		reg = <0xffe43000 0x100>;
- 		interrupts = <0 73 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&mstp0_clks R8A7778_CLK_SCIF3>;
--		clock-names = "fck";
-+		clocks = <&mstp0_clks R8A7778_CLK_SCIF3>,
-+			 <&cpg_clocks R8A7778_CLK_S1>, <&scif_clk>;
-+		clock-names = "fck", "brg_int", "scif_clk";
- 		power-domains = <&cpg_clocks>;
- 		status = "disabled";
- 	};
-@@ -344,8 +348,9 @@
- 			     "renesas,scif";
- 		reg = <0xffe44000 0x100>;
- 		interrupts = <0 74 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&mstp0_clks R8A7778_CLK_SCIF4>;
--		clock-names = "fck";
-+		clocks = <&mstp0_clks R8A7778_CLK_SCIF4>,
-+			 <&cpg_clocks R8A7778_CLK_S1>, <&scif_clk>;
-+		clock-names = "fck", "brg_int", "scif_clk";
- 		power-domains = <&cpg_clocks>;
- 		status = "disabled";
- 	};
-@@ -355,8 +360,9 @@
- 			     "renesas,scif";
- 		reg = <0xffe45000 0x100>;
- 		interrupts = <0 75 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&mstp0_clks R8A7778_CLK_SCIF5>;
--		clock-names = "fck";
-+		clocks = <&mstp0_clks R8A7778_CLK_SCIF5>,
-+			 <&cpg_clocks R8A7778_CLK_S1>, <&scif_clk>;
-+		clock-names = "fck", "brg_int", "scif_clk";
- 		power-domains = <&cpg_clocks>;
- 		status = "disabled";
- 	};
-@@ -443,6 +449,15 @@
- 			clock-output-names = "extal";
- 		};
+diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+index 7773cb1f10317d85..cdc0414f5f0716dd 100644
+--- a/arch/arm/boot/dts/r8a7790-lager.dts
++++ b/arch/arm/boot/dts/r8a7790-lager.dts
+@@ -457,6 +457,7 @@
+ 		m25p,fast-read;
  
-+		/* External SCIF clock */
-+		scif_clk: scif {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			/* This value must be overridden by the board. */
-+			clock-frequency = <0>;
-+			status = "disabled";
-+		};
-+
- 		/* Special CPG clocks */
- 		cpg_clocks: cpg_clocks@ffc80000 {
- 			compatible = "renesas,r8a7778-cpg-clocks";
+ 		partitions {
++			compatible = "fixed-partitions";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 
 -- 
 1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
