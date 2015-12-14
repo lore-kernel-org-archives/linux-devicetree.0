@@ -1,90 +1,69 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [RFC][PATCH] misc: Introduce reboot_reason driver
-Date: Mon, 14 Dec 2015 11:54:51 -0800
-Message-ID: <20151214195450.GQ4000@usrtlx11787.corpusers.net>
-References: <1449610162-30543-1-git-send-email-john.stultz@linaro.org>
- <20151208220722.GG4000@usrtlx11787.corpusers.net>
- <CALAqxLXATE4TCGTu+NcDYFTvQ3YTS_m0baCa_AeJp-j4POtSQA@mail.gmail.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] ehci-platform: Add support for
+ controllers with multiple reset lines
+Date: Mon, 14 Dec 2015 21:11:32 +0100
+Message-ID: <1450123892.3407.86.camel@pengutronix.de>
+References: <1449848520-27379-1-git-send-email-hdegoede@redhat.com>
+	 <1449848520-27379-2-git-send-email-hdegoede@redhat.com>
+	 <1449853984.3419.52.camel@pengutronix.de> <566B15B7.40703@redhat.com>
+Reply-To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CALAqxLXATE4TCGTu+NcDYFTvQ3YTS_m0baCa_AeJp-j4POtSQA@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinay Simha BN <simhavcs@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>, Andy Gross <agross@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDUKXHHSSIJBB7GEXSZQKGQETNSZWMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <566B15B7.40703-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Josh Triplett <josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org>, Rashika Kheria <rashika.kheria-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 09 Dec 17:32 PST 2015, John Stultz wrote:
-
-> On Tue, Dec 8, 2015 at 2:07 PM, Bjorn Andersson
-> <bjorn.andersson@sonymobile.com> wrote:
-> > On Tue 08 Dec 13:29 PST 2015, John Stultz wrote:
-> >> diff --git a/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts b/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
-> >> index 5183d18..ee5dcb7 100644
-> >> --- a/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
-> >> +++ b/arch/arm/boot/dts/qcom-apq8064-nexus7-flo.dts
-> >> @@ -282,6 +282,15 @@
-> >>                       };
-> >>               };
-> >>
-> >> +             reboot_reason: reboot_reason@2a03f65c {
-> >> +                     compatible              = "reboot_reason";
-> >> +                     reg                     = <0x2A03F65C 0x4>;
-> >> +                     reason,none             = <0x77665501>;
-> >> +                     reason,bootloader       = <0x77665500>;
-> >> +                     reason,recovery         = <0x77665502>;
-> >> +                     reason,oem              = <0x6f656d00>;
-> >> +             };
-> >> +
+Am Freitag, den 11.12.2015, 19:28 +0100 schrieb Hans de Goede:
+[...]
+> >> diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> >> index a12d601..0701812 100644
+> >> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> >> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> >> @@ -18,7 +18,7 @@ Optional properties:
+> >>    - clocks : a list of phandle + clock specifier pairs
+> >>    - phys : phandle + phy specifier pair
+> >>    - phy-names : "usb"
+> >> - - resets : phandle + reset specifier pair
+> >> + - resets : a list of phandle + reset specifier pairs
 > >
-> > This address refers to IMEM, which is shared with a number of other
-> > uses. So I think we should have a simple-mfd (and syscon) with this
-> > within.
+> > Are there documented names for these resets?
 > 
-> So talking with Arnd some more it looked like IMEM was really just
-> SRAM. Is that not the case, or is there something else special about
-> it?  Does it really need simple-mfd and syscon? I'm still fuzzy on how
-> to use those for this.
+> This binding is a generic ehci controller binding, so even if
+> the names are documented for the allwinner SoC we should
+> not use names, just like the binding is deliberately not
+> using names for the clocks either to keep it generic, so
+> that we can reuse the binding + driver with many different SoCs.
+
+I know, I'm just interested in understanding why this is necessary ...
+
+> > Is the companion you
+> > mention the Port Control?
 > 
-
-I'm pretty sure it's just SRAM, but I hadn't looked at that binding
-before, sounds like a conceptually better fit.
-
-The part that I was looking for was the convenience of having a regmap
-available for the uses that we will find later on, but I guess sram
-provides similar means of accessing various pieces of the memory.
-
-> >> +     /* initialize specified reasons from DT */
-> >> +     if (!of_property_read_u32(pdev->dev.of_node, "reason,none", &val))
-> >> +             reasons[NONE] = val;
-> >> +     if (!of_property_read_u32(pdev->dev.of_node, "reason,bootloader", &val))
-> >> +             reasons[BOOTLOADER] = val;
-> >> +     if (!of_property_read_u32(pdev->dev.of_node, "reason,recovery", &val))
-> >> +             reasons[RECOVERY] = val;
-> >> +     if (!of_property_read_u32(pdev->dev.of_node, "reason,oem", &val))
-> >> +             reasons[OEM] = val;
-> >
-> > I would like for this to be less hard coded.
+> Sort of, with USB-2, USB-1 compatibility is handled via a mux on the
+> datalines (controlled by the EHCI controller Port Control) which muxes
+> the lines to an USB-1 controller (typically either UHCI or OHCI) when the
+> device does not connect after USB-2 highspeed handshaking.
 > 
-> So thinking of this more. Is having something like:
+> This USB-1 controller (or controller_S_ in some case since the
+> USB-1 companions may have less root-ports per controller then the EHCI
+> has root-ports) is called the companion controller.
 > 
-> cmds = "default", "bootloader", "recovery";
-> vals  = <0xmagic1>, <0xmagic2>, <0xmagic3>;
-> 
-> what you're thinking about?
+> The 2 controllers are supposed to be 100% independent but on the H3
+> Allwinner has done something (not documented) which requires one to
+> deassert reset on both before you can talk to either one.
 
-As these are normally just ascii strings I was thinking we could have
-them as individual properties and then use for_each_property_of_node()
-on the implementation side. But it doesn't really matter.
+... so thank you for the explanation.
 
-> 
-> This wouldn't quite handle the "oem-N" options as simply, but they
-> could define each oem- case explicitly in the DT to support it.
-> 
+Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-If we have a reasonably dynamic way of defining these there's little to
-no reason to treat oem-N specially from the others.
-
-Regards,
-Bjorn
+regards
+Philipp
