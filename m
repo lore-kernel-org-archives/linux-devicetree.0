@@ -1,67 +1,79 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2] extcon: add Maxim MAX3355 driver
-Date: Tue, 15 Dec 2015 01:29:19 +0300
-Message-ID: <566F42BF.30109@cogentembedded.com>
-References: <5045536.UEVncNCOZE@wasted.cogentembedded.com>
- <20151214012400.GA9506@rob-hp-laptop> <566EFE0A.4000104@cogentembedded.com>
- <CAL_JsqJ2RQcJY27B=emzKT6HQ4XEp=XjSqufx5742yvFt3Wfxw@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: GPIO: Add generic serializer binding
+Date: Mon, 14 Dec 2015 16:36:41 -0600
+Message-ID: <CAL_Jsq+kYSJQd003RhYTeVFv6xLaSCxzZK7wnF2LVs502sWu4g@mail.gmail.com>
+References: <1449863184-29668-1-git-send-email-afd@ti.com> <1449863184-29668-2-git-send-email-afd@ti.com>
+ <CACRpkdaV_dxzWUQcJ8pwPUDQNJ8qLhCvLvE9tBYFcTTGMoumWQ@mail.gmail.com> <566EF12C.4060509@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJ2RQcJY27B=emzKT6HQ4XEp=XjSqufx5742yvFt3Wfxw@mail.gmail.com>
+In-Reply-To: <566EF12C.4060509@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 12/15/2015 01:21 AM, Rob Herring wrote:
-
->>>> Maxim  Integrated MAX3355E chip integrates a  charge pump and comparators
->>>> to
->>>> enable a system with an integrated USB OTG dual-role transceiver to
->>>> function
->>>> as  an USB  OTG dual-role device.  In addition  to sensing/controlling
->>>> Vbus,
->>>> the chip also passes thru the ID signal  from the USB  OTG connector.
->>>> On some Renesas boards,  this signal is  just fed into the SoC thru a
->>>> GPIO
->>>> pin --  there's no real  OTG controller, only host and gadget USB
->>>> controllers
->>>> sharing the same USB bus; however, we'd  like to allow host or gadget
->>>> drivers
->>>> to be loaded depending on the cable type,  hence the need for the MAX3355
->>>> extcon driver. The Vbus status signals are also  wired to GPIOs (however,
->>>> we
->>>> aren't currently interested in them),  the OFFVBUS# signal is controlled
->>>> by
->>>> the host controllers, there's  also the SHDN# signal wired to a GPIO, it
->>>> should be driven high for the  normal operation.
+On Mon, Dec 14, 2015 at 10:41 AM, Andrew F. Davis <afd@ti.com> wrote:
+> On 12/11/2015 03:48 PM, Linus Walleij wrote:
+>>
+>> On Fri, Dec 11, 2015 at 8:46 PM, Andrew F. Davis <afd@ti.com> wrote:
+>>
+>>> Add binding for generic parallel-in/serial-out shift register devices
+>>> used as GPIO.
 >>>
->>>
->>> As multiple people have said, fix the spacing here.
+>>> Signed-off-by: Andrew F. Davis <afd@ti.com>
 >>
 >>
->>     You are the first to complain abou _this_ patch. If you don't have other
->> issues with this driver in which case you should have trimmed the reply at
->> this point), I'd like to keep my spacing as is. Thank you.
+>>> +Generic Parallel-in/Serial-out Shift Register GPIO Driver
+>>> +
+>>> +This binding describes generic parallel-in/serial-out shift register
+>>> +devices that can be used for GPI (General Purpose Input). This includes
+>>> +SN74165 serial-out shift registers and the SN65HVS88x series of
+>>> +industrial serializers.
+>>> +
+>>> +Required properties:
+>>> + - compatible          : Should be "pisosr-gpio".
+>>
+>>
+>> I think it should also define compatible strings on the "vendor,device"
+>> format apart from the generic compatible. Sooner or later we may need
+>> to differentiate them and then that comes in handy.
+>>
 >
-> Your previous version was not "extcon-usb-gpio: add enable pin
-> support"[1] which has now been re-written to be max3355 specific?
+> Would it be better to wait until/if this issue arises? This driver
+> targets the generic features, as these parts are very generic and
+> have been produced by many companies since the 70s I'm not sure
+> if privileging any of them makes much sense.
+>
+> What I'm worried about looks to have happened with the gpio-74x164
+> driver, this is kind of the companion device to mine (74164 / 74165)
+> and should work with any 74164 compatible shift register (possibly 100s
+> of versions of them), but the compatible string that was added is
+> "fairchild,74hc595", a relatively new device by a single manufacturer.
+> The problem this has is then that boards will use this compatible string
+> even if the parts are not actually the Fairchild version, just to get
+> the match, when they should be using a generic string.
 
-    No, the MAX3355 driver pre-dates that version. First there was a driver, 
-then I tried to re-use the existing stuff (there was no extcon-usb-gpio at the 
-time of writing my driver), then had to return to the separate driver idea...
+I agree the generic version is fine (or find who made the first part
+;)). What "pisosr" is is not very obvious though. Having 74165 in the
+compatible would make it somewhat more obvious it is a standard logic
+part.
 
-> "So
-> what" and "I'd like to keep my spacing as is" aren't valid reasons.
-> Fix it, then I'll look at the rest again.
+>>> +Optional properties:
+>>> + - ngpios              : Number of GPIO lines, default is 8.
+>>
+>>
+>> If you didn't do "pisosr-gpio" but instead "foo,sn74165", maybe you
+>> don't need to have this in the device tree but instead it can be
+>> determined from the compatible string?
+>>
+>> In that case do that.
+>>
+>
+> These devices can be daisy-chained together, so three 8bit registers
+> look exactly like one 24bit register. The only way to know this is
+> from the physical wiring of the board, not from the part number.
 
-    I'll consider doing that if you care to explain what's the problem with my 
-spacing. TIA.
+Then you should say it must be multiple of 8 (or are there other lengths?).
 
-> Rob
-
-MBR, Sergei
+Rob
