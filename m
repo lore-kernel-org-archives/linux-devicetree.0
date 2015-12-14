@@ -1,72 +1,88 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 2/2] extcon: arizona: Update device tree binding for mic
- detect configurations
-Date: Mon, 14 Dec 2015 09:18:50 +0000
-Message-ID: <20151214091850.GS6058@localhost.localdomain>
-References: <1449767299-29691-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1449767299-29691-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <566E238E.4050007@samsung.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v2 4/7] media: vb2-dma-contig: add helper for setting dma
+ max seg size
+Date: Mon, 14 Dec 2015 10:20:22 +0100
+Message-ID: <566E89D6.40603@samsung.com>
+References: <1449669502-24601-1-git-send-email-m.szyprowski@samsung.com>
+ <1449669502-24601-5-git-send-email-m.szyprowski@samsung.com>
+ <3238962.HlGfVT9mcy@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <566E238E.4050007@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <3238962.HlGfVT9mcy@avalon>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 14, 2015 at 11:03:58AM +0900, Chanwoo Choi wrote:
-> Hi Charles,
->=20
-> On 2015=EB=85=84 12=EC=9B=94 11=EC=9D=BC 02:08, Charles Keepax wrote:
-> > Update the device tree binding documentation to include documentati=
-on for
-> > the wlf,micd-configs property that is used to specify the configura=
-tions
-> > for headset polarity detection (CTIA / OTMP).
-> >=20
-> > Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> > ---
-> >  Documentation/devicetree/bindings/extcon/extcon-arizona.txt | 8 ++=
-++++++
-> >  1 file changed, 8 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/extcon/extcon-arizon=
-a.txt b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-> > index 238e10e..fd9b898 100644
-> > --- a/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-> > +++ b/Documentation/devicetree/bindings/extcon/extcon-arizona.txt
-> > @@ -37,5 +37,13 @@ Optional properties:
-> >      milliseconds.
-> >    - wlf,micd-force-micbias : Force MICBIAS continuously on during =
-microphone
-> >      detection.
-> > +  - wlf,micd-configs : Headset polarity configurations (generally =
-used for
-> > +    detection of CTIA / OMTP headsets), the field can be of variab=
-le length
-> > +    but should always be a multiple of 3 cells long, each three ce=
-ll group
-> > +    represents one polarity configuration.
-> > +    The first cell defines the accessory detection pin, zero will =
-use MICDET1
-> > +    and all other values will use MICDET2.
-> > +    The second cell represents the MICBIAS to be used.
-> > +    The third cell represents the value of the micd-pol-gpio pin.
->=20
-> I think that you better to add the example using the 'wlf,micd-config=
-s'
-> to improve the understanding of using this property.
-> because the number of 'wlf,micd-configs' value is not fixed.
->=20
-> Also,
-> How about do you add the real example for all arizona properties on s=
-eparate patch?
+Hello,
 
-Yeah that seems sensible I will do a patch to add an example to
-this file.
+On 2015-12-13 20:57, Laurent Pinchart wrote:
+> Hi Marek,
+>
+> Thank you for the patch.
+>
+> On Wednesday 09 December 2015 14:58:19 Marek Szyprowski wrote:
+>> Add a helper function for device drivers to set DMA's max_seg_size.
+>> Setting it to largest possible value lets DMA-mapping API always create
+>> contiguous mappings in DMA address space. This is essential for all
+>> devices, which use dma-contig videobuf2 memory allocator and shared
+>> buffers.
+>>
+>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>> ---
+>>   drivers/media/v4l2-core/videobuf2-dma-contig.c | 15 +++++++++++++++
+>>   include/media/videobuf2-dma-contig.h           |  1 +
+>>   2 files changed, 16 insertions(+)
+>>
+>> diff --git a/drivers/media/v4l2-core/videobuf2-dma-contig.c
+>> b/drivers/media/v4l2-core/videobuf2-dma-contig.c index c331272..628518d
+>> 100644
+>> --- a/drivers/media/v4l2-core/videobuf2-dma-contig.c
+>> +++ b/drivers/media/v4l2-core/videobuf2-dma-contig.c
+>> @@ -742,6 +742,21 @@ void vb2_dma_contig_cleanup_ctx(void *alloc_ctx)
+>>   }
+>>   EXPORT_SYMBOL_GPL(vb2_dma_contig_cleanup_ctx);
+>>
+>> +int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size)
+>> +{
+>> +	if (!dev->dma_parms) {
+> When can this function be called with dev->dma_parms not NULL ?
 
-Thanks,
-Charles
+When one loads a module with multimedia driver (which calls this 
+function), then
+unloads and loads it again. It is rather safe to have this check.
+
+>> +		dev->dma_parms = devm_kzalloc(dev, sizeof(dev->dma_parms),
+>> +					      GFP_KERNEL);
+>> +		if (!dev->dma_parms)
+>> +			return -ENOMEM;
+>> +	}
+>> +	if (dma_get_max_seg_size(dev) < size)
+>> +		return dma_set_max_seg_size(dev, size);
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(vb2_dma_contig_set_max_seg_size);
+>> +
+>>   MODULE_DESCRIPTION("DMA-contig memory handling routines for videobuf2");
+>>   MODULE_AUTHOR("Pawel Osciak <pawel@osciak.com>");
+>>   MODULE_LICENSE("GPL");
+>> diff --git a/include/media/videobuf2-dma-contig.h
+>> b/include/media/videobuf2-dma-contig.h index c33dfa6..0e6ba64 100644
+>> --- a/include/media/videobuf2-dma-contig.h
+>> +++ b/include/media/videobuf2-dma-contig.h
+>> @@ -26,6 +26,7 @@ vb2_dma_contig_plane_dma_addr(struct vb2_buffer *vb,
+>> unsigned int plane_no)
+>>
+>>   void *vb2_dma_contig_init_ctx(struct device *dev);
+>>   void vb2_dma_contig_cleanup_ctx(void *alloc_ctx);
+>> +int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size);
+>>
+>>   extern const struct vb2_mem_ops vb2_dma_contig_memops;
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
