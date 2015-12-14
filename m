@@ -1,381 +1,825 @@
-Return-Path: <andyshrk@gmail.com>
+Return-Path: <>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [PATCH v3 5/5] iio: health: Add driver for the TI AFE4403 heart monitor
+Date: Mon, 14 Dec 2015 16:36:01 -0600
+Message-ID: <1450132561-5245-6-git-send-email-afd@ti.com>
+In-Reply-To: <1450132561-5245-1-git-send-email-afd@ti.com>
+References: <1450132561-5245-1-git-send-email-afd@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <CANbgqARHxXorh8Svuw7tHMT60=j35BEqhMnuCOB6u6-d0NPxEQ@mail.gmail.com>
-References: <1447840044-19689-1-git-send-email-andy.yan@rock-chips.com>
-	<20151118225904.GA5429@rob-hp-laptop>
-	<564D2331.8070503@rock-chips.com>
-	<2082288.pD4oKxtaXL@phil>
-	<564E7473.9080509@rock-chips.com>
-	<CAL_JsqLRbTz-dNcYctXmY=E_y3MZj7XWJC3PqDU=YYek09vnmg@mail.gmail.com>
-	<CANbgqARHxXorh8Svuw7tHMT60=j35BEqhMnuCOB6u6-d0NPxEQ@mail.gmail.com>
-Date: Tue, 1 Dec 2015 23:10:15 +0800
-Message-ID: <CANbgqARCYP0rfTPSJLNEnCdrb1+mCYYznnRVH6o8Bj5sWt9fDw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] dt-bindings: soc: add document for rockchip reboot
- notifier driver
-From: Andy Yan <andyshrk@gmail.com>
-Content-Type: multipart/alternative; boundary=047d7bdc1c0c1dc7850525d78e1e
-To: Rob Herring <robh@kernel.org>
-Cc: Andy Yan <andy.yan@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kevin Hilman <khilman@linaro.org>, Thierry Reding <treding@nvidia.com>, Caesar Wang <wxt@rock-chips.com>, Simon Glass <sjg@chromium.org>, Ben Chan <benchan@google.com>
+Content-Type: text/plain
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>
+Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew
 List-ID: <devicetree@vger.kernel.org>
 
---047d7bdc1c0c1dc7850525d78e1e
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Add driver for the TI AFE4403 heart rate monitor and pulse oximeter.
+This device detects reflected LED light fluctuations and presents an ADC
+value to the user space for further signal processing.
 
-Hi Rob=E3=80=81Heiko=EF=BC=9A
+Data sheet located here:
+http://www.ti.com/product/AFE4403/datasheet
 
-2015-11-23 21:15 GMT+08:00 Andy Yan <andyshrk@gmail.com>:
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+---
+ .../ABI/testing/sysfs-bus-iio-health-afe4403       |  52 ++
+ drivers/iio/health/Kconfig                         |  12 +
+ drivers/iio/health/Makefile                        |   1 +
+ drivers/iio/health/afe4403.c                       | 696 +++++++++++++++++++++
+ 4 files changed, 761 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-health-afe4403
+ create mode 100644 drivers/iio/health/afe4403.c
 
-> Hi Rob=EF=BC=9A
->
-> 2015-11-20 9:58 GMT+08:00 Rob Herring <robh@kernel.org>:
->
->> On Thu, Nov 19, 2015 at 7:16 PM, Andy Yan <andy.yan@rock-chips.com>
->> wrote:
->> > On 2015=E5=B9=B411=E6=9C=8819=E6=97=A5 12:35, Heiko Stuebner wrote:
->> >> Am Donnerstag, 19. November 2015, 09:17:37 schrieb Andy Yan:
->> >>> On 2015=E5=B9=B411=E6=9C=8819=E6=97=A5 06:59, Rob Herring wrote:
->> >>>> On Wed, Nov 18, 2015 at 05:53:30PM +0800, Andy Yan wrote:
->> >>>>>
->> >>>>> Add devicetree binding document for rockchip reboot nofifier drive=
-r
->> >>>>
->> >>>> Just reading the subject this is way too specific to the Linux driv=
-er
->> >>>> needs rather than a h/w description. Please don't create fake DT
->> nodes
->> >>>> just to bind to drivers. Whatever &pmu is is probably what should
->> have
->> >>>> the DT node. Let the driver for it create child devices if you need
->> >>>> that.
->> >>>
->> >>>       This is note a fake DT nodes, we really need it to tell the
->> driver
->> >>>        which register to use to store the reboot mode. Because
->> rockchip
->> >>>        use different register file to store the reboot mode on
->> different
->> >>>        platform, on rk3066,rk3188, rk3288,it use  one of the PMU
->> >>> register, on
->> >>>        the incoming RK3036, it use one of the GRF register, and it u=
-se
->> >>> one  of
->> >>>        the PMUGRF register for arm64 platform rk3368. On the other
->> hand,
->> >>> the
->> >>>        PMU/GRF/PMUGRF register file are mapped as "syscon", then
->> >>> referenced
->> >>>        by other DT nodes by phandle. So maybe let it as a separate D=
-T
->> >>> node here
->> >>>        is better.
->> >>
->> >> or alternatively we could do something similar to what the bl-switche=
-r
->> >> cupfreq-driver does. Take a look at
->> >>
->> >> drivers/cpufreq/arm_big_little.c
->> >> drivers/clk/clk-mb86s7x.c
->> >>
->> >> We already have the core restart-handler code in the clock-tree, so
->> could
->> >> maybe simply do the
->> >>         platform_device_register_simple("rockchip-reboot", -1, NULL,
->> 0);
->> >> in that common code?
->> >>
->> >> Though I'm not yet sure how to get the platform-data. I guess one
->> option
->> >> would
->> >> be to do things like the 3288 suspend code does
->> >> (arch/arm/mach-rockchip/pm.c
->> >> at the bottom), by having the per-soc-data in the driver and then
->> matching
->> >> against the pmu. Because the pmu is not part of the clock controller
->> >> binding
->> >> (and probably also shouldn't be).
->> >>
->> >    Thanks for your suggestion.
->> >     I have read the code you list above, if we implement the reboot
->> notifier
->> >     driver like this, the driver need to add much more code to find th=
-e
->> > platform
->> >     data(like arch/arm/mach-rockhcip/pm.c), what's more, if we have a
->> new
->> > soc
->> >     in the future and the soc use a different register here, we need
->> modify
->> > the
->> >     driver to add a new platform data again, this will bring additiona=
-l
->> > work.
->> >
->> >     Use the DT node pass the register will make the driver code simple
->> and
->> > clear.
->> >     Is there any hurt to put this information in the DT?
->>
->> Add the data you need to the PMU node. Then the PMU driver can get it
->> and pass to the child driver.
->>
->> Rob
->> --
->>
->>
->     Do you mean I should implement the DT node like this=EF=BC=9F
->
->    diff --git a/arch/arm/boot/dts/rk3xxx.dtsi
-> b/arch/arm/boot/dts/rk3xxx.dtsi
-> index 7b14d7a..1735d09 100644
-> --- a/arch/arm/boot/dts/rk3xxx.dtsi
-> +++ b/arch/arm/boot/dts/rk3xxx.dtsi
-> @@ -103,12 +103,6 @@
->                 };
->         };
->
-> -       reboot {
-> -               compatible =3D "rockchip,reboot";
-> -               rockchip,regmap =3D <&pmu>;
-> -               offset =3D <0x40>;
-> -       };
-> -
->         xin24m: oscillator {
->                 compatible =3D "fixed-clock";
->                 clock-frequency =3D <24000000>;
-> @@ -249,7 +243,11 @@
->
->         pmu: pmu@20004000 {
->                 compatible =3D "rockchip,rk3066-pmu", "syscon";
-> -               reg =3D <0x20004000 0x100>;
-> +              reg =3D <0x20004000 0x100>;
-> +              reboot {
-> +                       compatible =3D "rockchip,reboot";
-> +                       offset =3D <0x40>;
-> +               };
->         };
->
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-> b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-> index cd02229..8a9837a 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-> @@ -202,12 +202,6 @@
->                 method =3D "smc";
->         };
->
-> -       reboot {
-> -               compatible =3D "rockchip,reboot";
-> -               rockchip,regmap =3D <&pmugrf>;
-> -               offset =3D <0x200>;
-> -       };
-> -
->         timer {
->                 compatible =3D "arm,armv8-timer";
->                 interrupts =3D <GIC_PPI 13
-> @@ -493,6 +487,10 @@
->         pmugrf: syscon@ff738000 {
->                 compatible =3D "rockchip,rk3368-pmugrf", "syscon";
->                 reg =3D <0x0 0xff738000 0x0 0x1000>;
-> +              reboot {
-> +                       compatible =3D "rockchip,reboot";
-> +                       offset =3D <0x200>;
-> +               };
->         };
->
->
-
-  Is there any further suggestion for this? If not, I will send the V4 with
-the DT node as a subnode in PMU or PMUGRF.
-
-Andy
-
---047d7bdc1c0c1dc7850525d78e1e
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div>Hi Rob=E3=80=81Heiko=EF=BC=9A<br></div><div class=3D"=
-gmail_extra"><br></div><div class=3D"gmail_quote">2015-11-23 21:15 GMT+08:0=
-0 Andy Yan <span dir=3D"ltr">&lt;<a href=3D"mailto:andyshrk@gmail.com" targ=
-et=3D"_blank">andyshrk@gmail.com</a>&gt;</span>:<br><blockquote class=3D"gm=
-ail_quote" style=3D"margin:0px 0px 0px 0.8ex;padding-left:1ex;border-left-c=
-olor:rgb(204,204,204);border-left-width:1px;border-left-style:solid"><div d=
-ir=3D"ltr"><div>Hi Rob=EF=BC=9A<br></div><div><div class=3D"h5"><div class=
-=3D"gmail_extra"><br></div><div class=3D"gmail_quote">2015-11-20 9:58 GMT+0=
-8:00 Rob Herring <span dir=3D"ltr">&lt;<a href=3D"mailto:robh@kernel.org" t=
-arget=3D"_blank">robh@kernel.org</a>&gt;</span>:<br><blockquote class=3D"gm=
-ail_quote" style=3D"margin:0px 0px 0px 0.8ex;padding-left:1ex;border-left-c=
-olor:rgb(204,204,204);border-left-width:1px;border-left-style:solid"><span>=
-On Thu, Nov 19, 2015 at 7:16 PM, Andy Yan &lt;<a href=3D"mailto:andy.yan@ro=
-ck-chips.com" target=3D"_blank">andy.yan@rock-chips.com</a>&gt; wrote:<br>
-&gt; On 2015=E5=B9=B411=E6=9C=8819=E6=97=A5 12:35, Heiko Stuebner wrote:<br=
->
-</span><span>&gt;&gt; Am Donnerstag, 19. November 2015, 09:17:37 schrieb An=
-dy Yan:<br>
-</span><div><div>&gt;&gt;&gt; On 2015=E5=B9=B411=E6=9C=8819=E6=97=A5 06:59,=
- Rob Herring wrote:<br>
-&gt;&gt;&gt;&gt; On Wed, Nov 18, 2015 at 05:53:30PM +0800, Andy Yan wrote:<=
-br>
-&gt;&gt;&gt;&gt;&gt;<br>
-&gt;&gt;&gt;&gt;&gt; Add devicetree binding document for rockchip reboot no=
-fifier driver<br>
-&gt;&gt;&gt;&gt;<br>
-&gt;&gt;&gt;&gt; Just reading the subject this is way too specific to the L=
-inux driver<br>
-&gt;&gt;&gt;&gt; needs rather than a h/w description. Please don&#39;t crea=
-te fake DT nodes<br>
-&gt;&gt;&gt;&gt; just to bind to drivers. Whatever &amp;pmu is is probably =
-what should have<br>
-&gt;&gt;&gt;&gt; the DT node. Let the driver for it create child devices if=
- you need<br>
-&gt;&gt;&gt;&gt; that.<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0This is note a fake DT nodes, we rea=
-lly need it to tell the driver<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 which register to use to store the =
-reboot mode. Because rockchip<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 use different register file to stor=
-e the reboot mode on different<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 platform, on rk3066,rk3188, rk3288,=
-it use=C2=A0 one of the PMU<br>
-&gt;&gt;&gt; register, on<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 the incoming RK3036, it use one of =
-the GRF register, and it use<br>
-&gt;&gt;&gt; one=C2=A0 of<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 the PMUGRF register for arm64 platf=
-orm rk3368. On the other hand,<br>
-&gt;&gt;&gt; the<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 PMU/GRF/PMUGRF register file are ma=
-pped as &quot;syscon&quot;, then<br>
-&gt;&gt;&gt; referenced<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 by other DT nodes by phandle. So ma=
-ybe let it as a separate DT<br>
-&gt;&gt;&gt; node here<br>
-&gt;&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 is better.<br>
-&gt;&gt;<br>
-&gt;&gt; or alternatively we could do something similar to what the bl-swit=
-cher<br>
-&gt;&gt; cupfreq-driver does. Take a look at<br>
-&gt;&gt;<br>
-&gt;&gt; drivers/cpufreq/arm_big_little.c<br>
-&gt;&gt; drivers/clk/clk-mb86s7x.c<br>
-&gt;&gt;<br>
-&gt;&gt; We already have the core restart-handler code in the clock-tree, s=
-o could<br>
-&gt;&gt; maybe simply do the<br>
-&gt;&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0platform_device_register_simple(&=
-quot;rockchip-reboot&quot;, -1, NULL, 0);<br>
-&gt;&gt; in that common code?<br>
-&gt;&gt;<br>
-&gt;&gt; Though I&#39;m not yet sure how to get the platform-data. I guess =
-one option<br>
-&gt;&gt; would<br>
-&gt;&gt; be to do things like the 3288 suspend code does<br>
-&gt;&gt; (arch/arm/mach-rockchip/pm.c<br>
-&gt;&gt; at the bottom), by having the per-soc-data in the driver and then =
-matching<br>
-&gt;&gt; against the pmu. Because the pmu is not part of the clock controll=
-er<br>
-&gt;&gt; binding<br>
-&gt;&gt; (and probably also shouldn&#39;t be).<br>
-&gt;&gt;<br>
-</div></div><span>&gt;=C2=A0 =C2=A0 Thanks for your suggestion.<br>
-&gt;=C2=A0 =C2=A0 =C2=A0I have read the code you list above, if we implemen=
-t the reboot notifier<br>
-&gt;=C2=A0 =C2=A0 =C2=A0driver like this, the driver need to add much more =
-code to find the<br>
-&gt; platform<br>
-&gt;=C2=A0 =C2=A0 =C2=A0data(like arch/arm/mach-rockhcip/pm.c), what&#39;s =
-more, if we have a new<br>
-&gt; soc<br>
-&gt;=C2=A0 =C2=A0 =C2=A0in the future and the soc use a different register =
-here, we need modify<br>
-&gt; the<br>
-&gt;=C2=A0 =C2=A0 =C2=A0driver to add a new platform data again, this will =
-bring additional<br>
-&gt; work.<br>
-&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0Use the DT node pass the register will make the dri=
-ver code simple and<br>
-&gt; clear.<br>
-&gt;=C2=A0 =C2=A0 =C2=A0Is there any hurt to put this information in the DT=
-?<br>
-<br>
-</span>Add the data you need to the PMU node. Then the PMU driver can get i=
-t<br>
-and pass to the child driver.<br>
-<span><font color=3D"#888888"><br>
-Rob<br>
-</font></span><div><div>--<br>
-<br></div></div></blockquote><div>=C2=A0</div></div></div></div><div class=
-=3D"gmail_extra">=C2=A0=C2=A0=C2=A0 Do you=C2=A0mean I should implement the=
- DT node like this=EF=BC=9F</div><div class=3D"gmail_extra"><br></div><div =
-class=3D"gmail_extra">=C2=A0=C2=A0 diff --git a/arch/arm/boot/dts/rk3xxx.dt=
-si b/arch/arm/boot/dts/rk3xxx.dtsi<br>index 7b14d7a..1735d09 100644<br>--- =
-a/arch/arm/boot/dts/rk3xxx.dtsi<br>+++ b/arch/arm/boot/dts/rk3xxx.dtsi<br>@=
-@ -103,12 +103,6 @@<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 };<br>=C2=A0<br>-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reboo=
-t {<br>-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 compatible =3D &quot;rockchip,reboot&quot;;<br>-=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 rockchip,regmap =3D &lt;&amp;pmu&gt;;<br>-=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 offset =3D &lt;0x=
-40&gt;;<br>-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };<br>-<br>=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 xin24m: oscillator {<br>=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compa=
-tible =3D &quot;fixed-clock&quot;;<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clock-frequency =3D =
-&lt;24000000&gt;;<br>@@ -249,7 +243,11 @@<br>=C2=A0<br>=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 pmu: pmu@20004000 {<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =
-=3D &quot;rockchip,rk3066-pmu&quot;, &quot;syscon&quot;;<br>-=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
-g =3D &lt;0x20004000 0x100&gt;;<br>+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0reg =3D &lt;0x20004000 0x100&g=
-t;;=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 <br><span>+=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reboot {<br>+=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D &quot;ro=
-ckchip,reboot&quot;;<br></span>+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 offset =3D &lt;0x40&gt;;<br>+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };<br>=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };</div><div class=3D"gmail_extra"><br></div=
-><div class=3D"gmail_extra">diff --git a/arch/arm64/boot/dts/rockchip/rk336=
-8.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi<br>index cd02229..8a9837a=
- 100644<br>--- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi<br>+++ b/arch/arm=
-64/boot/dts/rockchip/rk3368.dtsi<br>@@ -202,12 +202,6 @@<br>=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- method =3D &quot;smc&quot;;<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-};<br>=C2=A0<br>-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reboot {<br>-=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 compatible =3D &quot;rockchip,reboot&quot;;<br>-=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rockchip,re=
-gmap =3D &lt;&amp;pmugrf&gt;;<br>-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 offset =3D &lt;0x200&gt;;<br>=
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };<br>-<br>=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 timer {<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D &quot;arm,armv=
-8-timer&quot;;<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 interrupts =3D &lt;GIC_PPI 13<br>@@ -493,=
-6 +487,10 @@<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmugrf: syscon@f=
-f738000 {<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D &quot;rockchip,rk3368-pmugrf&=
-quot;, &quot;syscon&quot;;<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D &lt;0x0 0xff738000 0x=
-0 0x1000&gt;;<span><br>+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0reboot {<br>+=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D &quot;rockchip,reboot&quot;;<=
-br></span>+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 offse=
-t =3D &lt;0x200&gt;;<br>+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 };<br>=C2=A0<br></div></div>
-</blockquote></div><p><br></p><div>=C2=A0 Is there any further suggestion f=
-or this? If not, I will send the V4 with the DT node as a subnode in PMU or=
- PMUGRF.</div><div><br></div><div>Andy</div><div class=3D"gmail_extra"><br>=
-</div></div>
-
---047d7bdc1c0c1dc7850525d78e1e--
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio-health-afe4403 b/Documentation/ABI/testing/sysfs-bus-iio-health-afe4403
+new file mode 100644
+index 0000000..325efcb
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-bus-iio-health-afe4403
+@@ -0,0 +1,52 @@
++What:		/sys/bus/iio/devices/iio:deviceX/tia_resistanceY
++		/sys/bus/iio/devices/iio:deviceX/tia_capacitanceY
++Date:		December 2015
++KernelVersion:
++Contact:	Andrew F. Davis <afd@ti.com>
++Description:
++		Get and set the resistance and the capacitance settings for the
++		Transimpedance Amplifier. Y is 1 for Rf1 and Cf1, Y is 2 for
++		Rf2 and Cf2 values.
++		Valid Resistance settings are 500000, 250000, 100000, 50000,
++		25000, 10000, 1000000, and 0 Ohms.
++		Valid capacitance settings are 5, 10, 20, 25, 30, 35, 45, 50, 55,
++		60, 70, 75, 80, 85, 95, 100, 155, 160, 170, 175, 180, 185, 195,
++		200, 205, 210, 220, 225, 230, 235, 245, and 250 picoFarads.
++
++What:		/sys/bus/iio/devices/iio:deviceX/tia_separate_en
++Date:		December 2015
++KernelVersion:
++Contact:	Andrew F. Davis <afd@ti.com>
++Description:
++		Enable or disable separate settings for the TransImpedance
++		Amplifier above, when disabled both values are set by the
++		first channel.
++
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_ledY_raw
++		/sys/bus/iio/devices/iio:deviceX/in_intensity_ledY_ambient_raw
++Date:		December 2015
++KernelVersion:
++Contact:	Andrew F. Davis <afd@ti.com>
++Description:
++		Get measured values from the ADC for these stages. Y is the
++		specific LED number. The values are expressed in 24-bit twos
++		complement.
++
++What:		/sys/bus/iio/devices/iio:deviceX/in_intensity_ledY-ledY_ambient_raw
++Date:		December 2015
++KernelVersion:
++Contact:	Andrew F. Davis <afd@ti.com>
++Description:
++		Get differential values from the ADC for these stages. Y is the
++		specific LED number. The values are expressed in 24-bit twos
++		complement for the specified LEDs.
++
++What:		/sys/bus/iio/devices/iio:deviceX/out_current_ledY_raw
++Date:		December 2015
++KernelVersion:
++Contact:	Andrew F. Davis <afd@ti.com>
++Description:
++		Get and set the LED current for the specified LED. Y is the
++		specific LED number.
++		Values range from 0 -> 255. Current is calculated by
++		current = (value / 256) * 50mA
+diff --git a/drivers/iio/health/Kconfig b/drivers/iio/health/Kconfig
+index 526e7af..e338df4 100644
+--- a/drivers/iio/health/Kconfig
++++ b/drivers/iio/health/Kconfig
+@@ -7,6 +7,18 @@ menu "Health"
+ 
+ menu "Heart Rate Monitors"
+ 
++config AFE4403
++	tristate "TI AFE4403 Heart Rate Monitor"
++	depends on SPI_MASTER
++	select IIO_BUFFER
++	select IIO_TRIGGERED_BUFFER
++	help
++	  Say yes to choose the Texas Instruments AFE4403
++	  heart rate monitor and low-cost pulse oximeter.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called afe4403.
++
+ config AFE4404
+ 	tristate "TI AFE4404 Heart Rate Monitor"
+ 	depends on I2C
+diff --git a/drivers/iio/health/Makefile b/drivers/iio/health/Makefile
+index c108c8d..81822ad 100644
+--- a/drivers/iio/health/Makefile
++++ b/drivers/iio/health/Makefile
+@@ -3,4 +3,5 @@
+ #
+ # When adding new entries keep the list in alphabetical order
+ 
++obj-$(CONFIG_AFE4403) += afe4403.o
+ obj-$(CONFIG_AFE4404) += afe4404.o
+diff --git a/drivers/iio/health/afe4403.c b/drivers/iio/health/afe4403.c
+new file mode 100644
+index 0000000..551bc8b
+--- /dev/null
++++ b/drivers/iio/health/afe4403.c
+@@ -0,0 +1,696 @@
++/*
++ * AFE4403 Heart Rate Monitors and Low-Cost Pulse Oximeters
++ *
++ * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
++ *	Andrew F. Davis <afd@ti.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * General Public License for more details.
++ */
++
++#include <linux/device.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/interrupt.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of_gpio.h>
++#include <linux/regmap.h>
++#include <linux/spi/spi.h>
++#include <linux/slab.h>
++#include <linux/sysfs.h>
++#include <linux/regulator/consumer.h>
++
++#include <linux/iio/iio.h>
++#include <linux/iio/sysfs.h>
++#include <linux/iio/buffer.h>
++#include <linux/iio/trigger.h>
++#include <linux/iio/triggered_buffer.h>
++#include <linux/iio/trigger_consumer.h>
++
++#include "afe440x.h"
++
++#define AFE4403_DRIVER_NAME		"afe4403"
++
++/* AFE4403 Registers */
++#define AFE4403_TIAGAIN			0x20
++#define AFE4403_TIA_AMB_GAIN		0x21
++
++/* AFE4403 GAIN register fields */
++#define AFE4403_TIAGAIN_RES_MASK	GENMASK(2, 0)
++#define AFE4403_TIAGAIN_RES_SHIFT	0
++#define AFE4403_TIAGAIN_CAP_MASK	GENMASK(7, 3)
++#define AFE4403_TIAGAIN_CAP_SHIFT	3
++
++/* AFE4403 LEDCNTRL register fields */
++#define AFE4403_LEDCNTRL_LED1_MASK		GENMASK(15, 8)
++#define AFE4403_LEDCNTRL_LED1_SHIFT		8
++#define AFE4403_LEDCNTRL_LED2_MASK		GENMASK(7, 0)
++#define AFE4403_LEDCNTRL_LED2_SHIFT		0
++#define AFE4403_LEDCNTRL_LED_RANGE_MASK		GENMASK(17, 16)
++#define AFE4403_LEDCNTRL_LED_RANGE_SHIFT	16
++
++/* AFE4403 CONTROL2 register fields */
++#define AFE4403_CONTROL2_PWR_DWN_TX	BIT(2)
++#define AFE4403_CONTROL2_EN_SLOW_DIAG	BIT(8)
++#define AFE4403_CONTROL2_DIAG_OUT_TRI	BIT(10)
++#define AFE4403_CONTROL2_TX_BRDG_MOD	BIT(11)
++#define AFE4403_CONTROL2_TX_REF_MASK	GENMASK(18, 17)
++#define AFE4403_CONTROL2_TX_REF_SHIFT	17
++
++/* AFE4404 NULL fields */
++#define NULL_MASK	0
++#define NULL_SHIFT	0
++
++/* AFE4403 LEDCNTRL values */
++#define AFE4403_LEDCNTRL_RANGE_TX_HALF	0x1
++#define AFE4403_LEDCNTRL_RANGE_TX_FULL	0x2
++#define AFE4403_LEDCNTRL_RANGE_TX_OFF	0x3
++
++/* AFE4403 CONTROL2 values */
++#define AFE4403_CONTROL2_TX_REF_025	0x0
++#define AFE4403_CONTROL2_TX_REF_050	0x1
++#define AFE4403_CONTROL2_TX_REF_100	0x2
++#define AFE4403_CONTROL2_TX_REF_075	0x3
++
++/* AFE4403 CONTROL3 values */
++#define AFE4403_CONTROL3_CLK_DIV_2	0x0
++#define AFE4403_CONTROL3_CLK_DIV_4	0x2
++#define AFE4403_CONTROL3_CLK_DIV_6	0x3
++#define AFE4403_CONTROL3_CLK_DIV_8	0x4
++#define AFE4403_CONTROL3_CLK_DIV_12	0x5
++#define AFE4403_CONTROL3_CLK_DIV_1	0x7
++
++/* AFE4403 TIAGAIN_CAP values */
++#define AFE4403_TIAGAIN_CAP_5_P		0x0
++#define AFE4403_TIAGAIN_CAP_10_P	0x1
++#define AFE4403_TIAGAIN_CAP_20_P	0x2
++#define AFE4403_TIAGAIN_CAP_30_P	0x3
++#define AFE4403_TIAGAIN_CAP_55_P	0x8
++#define AFE4403_TIAGAIN_CAP_155_P	0x10
++
++/* AFE4403 TIAGAIN_RES values */
++#define AFE4403_TIAGAIN_RES_500_K	0x0
++#define AFE4403_TIAGAIN_RES_250_K	0x1
++#define AFE4403_TIAGAIN_RES_100_K	0x2
++#define AFE4403_TIAGAIN_RES_50_K	0x3
++#define AFE4403_TIAGAIN_RES_25_K	0x4
++#define AFE4403_TIAGAIN_RES_10_K	0x5
++#define AFE4403_TIAGAIN_RES_1_M		0x6
++#define AFE4403_TIAGAIN_RES_NONE	0x7
++
++enum afe4403_chan_id {
++	LED1,
++	ALED1,
++	LED2,
++	ALED2,
++	LED1_ALED1,
++	LED2_ALED2,
++	ILED1,
++	ILED2,
++};
++
++static const struct afe440x_reg_info reg_info[] = {
++	AFE440X_REG_INFO(LED1, AFE440X_LED1VAL, 0, NULL),
++	AFE440X_REG_INFO(ALED1, AFE440X_ALED1VAL, 0, NULL),
++	AFE440X_REG_INFO(LED2, AFE440X_LED2VAL, 0, NULL),
++	AFE440X_REG_INFO(ALED2, AFE440X_ALED2VAL, 0, NULL),
++	AFE440X_REG_INFO(LED1_ALED1, AFE440X_LED1_ALED1VAL, 0, NULL),
++	AFE440X_REG_INFO(LED2_ALED2, AFE440X_LED2_ALED2VAL, 0, NULL),
++	AFE440X_REG_INFO(ILED1, AFE440X_LEDCNTRL, 0, AFE4403_LEDCNTRL_LED1),
++	AFE440X_REG_INFO(ILED2, AFE440X_LEDCNTRL, 0, AFE4403_LEDCNTRL_LED2),
++};
++
++static const struct iio_chan_spec afe4403_channels[] = {
++	/* ADC values */
++	AFE440X_INTENSITY_CHAN(LED1, "led1", 0),
++	AFE440X_INTENSITY_CHAN(ALED1, "led1_ambient", 0),
++	AFE440X_INTENSITY_CHAN(LED2, "led2", 0),
++	AFE440X_INTENSITY_CHAN(ALED2, "led2_ambient", 0),
++	AFE440X_INTENSITY_CHAN(LED1_ALED1, "led1-led1_ambient", 0),
++	AFE440X_INTENSITY_CHAN(LED2_ALED2, "led2-led2_ambient", 0),
++	/* LED current */
++	AFE440X_CURRENT_CHAN(ILED1, "led1"),
++	AFE440X_CURRENT_CHAN(ILED2, "led2"),
++};
++
++static const struct afe440x_reg_lookup afe4403_res_table[] = {
++	{ 500000 }, { 250000 }, { 100000 }, { 50000 },
++	{ 25000 }, { 10000 }, { 1000000 }, { 0 },
++};
++
++static const struct afe440x_reg_lookup afe4403_cap_table[] = {
++	{ 5 }, { 10 }, { 20 }, { 25 }, { 30 }, { 35 }, { 45 },
++	{ 50 }, { 55 }, { 60 }, { 70 }, { 75 }, { 80 }, { 85 },
++	{ 95 }, { 100 }, { 155 }, { 160 }, { 170 }, { 175 }, { 180 },
++	{ 185 }, { 195 }, { 200 }, { 205 }, { 210 }, { 220 }, { 225 },
++	{ 230 }, { 235 }, { 245 }, { 250 },
++};
++
++static ssize_t afe440x_show_register(struct device *dev,
++				     struct device_attribute *attr,
++				     char *buf)
++{
++	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
++	struct afe440x_data *afe440x = iio_device_get_drvdata(indio_dev);
++	struct afe440x_attr *afe440x_attr = to_afe440x_attr(attr);
++	unsigned int reg_val, type;
++	int vals[2];
++	int ret, val_len;
++
++	ret = regmap_read(afe440x->regmap, afe440x_attr->reg, &reg_val);
++	if (ret)
++		return ret;
++
++	reg_val >>= afe440x_attr->shift;
++	reg_val &= afe440x_attr->mask;
++
++	switch (afe440x_attr->type) {
++	case SIMPLE:
++		type = IIO_VAL_INT;
++		val_len = 1;
++		vals[0] = reg_val;
++		break;
++	case RESISTANCE:
++		type = IIO_VAL_INT_PLUS_MICRO;
++		val_len = 2;
++		if (reg_val < ARRAY_SIZE(afe4403_res_table)) {
++			vals[0] = afe4403_res_table[reg_val].integer;
++			vals[1] = afe4403_res_table[reg_val].fract;
++			break;
++		}
++		return -EINVAL;
++	case CAPACITANCE:
++		type = IIO_VAL_INT_PLUS_MICRO;
++		val_len = 2;
++		if (reg_val < ARRAY_SIZE(afe4403_cap_table)) {
++			vals[0] = afe4403_cap_table[reg_val].integer;
++			vals[1] = afe4403_cap_table[reg_val].fract;
++			break;
++		}
++		return -EINVAL;
++	default:
++		return -EINVAL;
++	}
++
++	return iio_format_value(buf, type, val_len, vals);
++}
++
++static ssize_t afe440x_store_register(struct device *dev,
++				      struct device_attribute *attr,
++				      const char *buf, size_t count)
++{
++	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
++	struct afe440x_data *afe440x = iio_device_get_drvdata(indio_dev);
++	struct afe440x_attr *afe440x_attr = to_afe440x_attr(attr);
++	unsigned int reg_val;
++	int val, integer, fract, ret;
++
++	ret = iio_str_to_fixpoint(buf, 100000, &integer, &fract);
++	if (ret)
++		return ret;
++
++	ret = regmap_read(afe440x->regmap, afe440x_attr->reg, &reg_val);
++	if (ret)
++		return ret;
++
++	switch (afe440x_attr->type) {
++	case SIMPLE:
++		val = integer;
++		break;
++	case RESISTANCE:
++		for (val = 0; val < ARRAY_SIZE(afe4403_res_table); val++)
++			if (afe4403_res_table[val].integer == integer &&
++			    afe4403_res_table[val].fract == fract)
++				break;
++		if (val == ARRAY_SIZE(afe4403_res_table))
++			return -EINVAL;
++		break;
++	case CAPACITANCE:
++		for (val = 0; val < ARRAY_SIZE(afe4403_cap_table); val++)
++			if (afe4403_cap_table[val].integer == integer &&
++			    afe4403_cap_table[val].fract == fract)
++				break;
++		if (val == ARRAY_SIZE(afe4403_cap_table))
++			return -EINVAL;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	reg_val &= ~afe440x_attr->mask;
++	reg_val |= ((val << afe440x_attr->shift) & afe440x_attr->mask);
++
++	ret = regmap_write(afe440x->regmap, afe440x_attr->reg, reg_val);
++	if (ret)
++		return ret;
++
++	return count;
++}
++
++static AFE440X_ATTR(tia_separate_en, AFE4403_TIAGAIN, AFE440X_TIAGAIN_ENSEPGAIN, SIMPLE);
++
++static AFE440X_ATTR(tia_resistance1, AFE4403_TIAGAIN, AFE4403_TIAGAIN_RES, RESISTANCE);
++static AFE440X_ATTR(tia_capacitance1, AFE4403_TIAGAIN, AFE4403_TIAGAIN_CAP, CAPACITANCE);
++
++static AFE440X_ATTR(tia_resistance2, AFE4403_TIA_AMB_GAIN, AFE4403_TIAGAIN_RES, RESISTANCE);
++static AFE440X_ATTR(tia_capacitance2, AFE4403_TIA_AMB_GAIN, AFE4403_TIAGAIN_RES, CAPACITANCE);
++
++static struct attribute *afe440x_attributes[] = {
++	&afe440x_attr_tia_separate_en.dev_attr.attr,
++	&afe440x_attr_tia_resistance1.dev_attr.attr,
++	&afe440x_attr_tia_capacitance1.dev_attr.attr,
++	&afe440x_attr_tia_resistance2.dev_attr.attr,
++	&afe440x_attr_tia_capacitance2.dev_attr.attr,
++	NULL
++};
++
++static const struct attribute_group afe440x_attribute_group = {
++	.attrs = afe440x_attributes
++};
++
++static int afe440x_read_raw(struct iio_dev *indio_dev,
++			    struct iio_chan_spec const *chan,
++			    int *val, int *val2, long mask)
++{
++	struct afe440x_data *afe440x = iio_device_get_drvdata(indio_dev);
++	int ret;
++
++	switch (chan->type) {
++	case IIO_INTENSITY:
++		switch (mask) {
++		case IIO_CHAN_INFO_RAW:
++			ret = regmap_read(afe440x->regmap,
++					  reg_info[chan->address].reg, val);
++			if (ret)
++				return ret;
++			return IIO_VAL_INT;
++		case IIO_CHAN_INFO_OFFSET:
++			ret = regmap_read(afe440x->regmap,
++					  reg_info[chan->address].offreg, val);
++			if (ret)
++				return ret;
++			*val &= reg_info[chan->address].mask;
++			*val >>= reg_info[chan->address].shift;
++			return IIO_VAL_INT;
++		}
++		break;
++	case IIO_CURRENT:
++		switch (mask) {
++		case IIO_CHAN_INFO_RAW:
++			ret = regmap_read(afe440x->regmap,
++					  reg_info[chan->address].reg, val);
++			if (ret)
++				return ret;
++			*val &= reg_info[chan->address].mask;
++			*val >>= reg_info[chan->address].shift;
++			return IIO_VAL_INT;
++		case IIO_CHAN_INFO_SCALE:
++			*val = 0;
++			*val2 = 800000;
++			return IIO_VAL_INT_PLUS_MICRO;
++		}
++		break;
++	default:
++		break;
++	}
++
++	return -EINVAL;
++}
++
++static int afe440x_write_raw(struct iio_dev *indio_dev,
++			     struct iio_chan_spec const *chan,
++			     int val, int val2, long mask)
++{
++	struct afe440x_data *afe440x = iio_device_get_drvdata(indio_dev);
++	unsigned int reg_val;
++	int ret;
++
++	switch (chan->type) {
++	case IIO_INTENSITY:
++		switch (mask) {
++		case IIO_CHAN_INFO_OFFSET:
++			ret = regmap_read(afe440x->regmap,
++					  reg_info[chan->address].offreg,
++					  &reg_val);
++			if (ret)
++				return ret;
++			reg_val &= ~reg_info[chan->address].mask;
++			reg_val |= ((val << reg_info[chan->address].shift) &
++					reg_info[chan->address].mask);
++			return regmap_write(afe440x->regmap,
++					    reg_info[chan->address].offreg,
++					    reg_val);
++		}
++		break;
++	case IIO_CURRENT:
++		switch (mask) {
++		case IIO_CHAN_INFO_RAW:
++			ret = regmap_read(afe440x->regmap,
++					  reg_info[chan->address].reg,
++					  &reg_val);
++			if (ret)
++				return ret;
++			reg_val &= ~reg_info[chan->address].mask;
++			reg_val |= ((val << reg_info[chan->address].shift) &
++					reg_info[chan->address].mask);
++			return regmap_write(afe440x->regmap,
++					    reg_info[chan->address].reg,
++					    reg_val);
++		}
++		break;
++	default:
++		break;
++	}
++
++	return -EINVAL;
++}
++
++static const struct iio_info afe440x_iio_info = {
++	.attrs = &afe440x_attribute_group,
++	.read_raw = afe440x_read_raw,
++	.write_raw = afe440x_write_raw,
++	.driver_module = THIS_MODULE,
++};
++
++static irqreturn_t afe440x_trigger_handler(int irq, void *private)
++{
++	struct iio_poll_func *pf = private;
++	struct iio_dev *indio_dev = pf->indio_dev;
++	struct afe440x_data *afe440x = iio_device_get_drvdata(indio_dev);
++	int ret, bit, i = 0;
++	s32 buffer[12];
++	u8 tx[4] = {AFE440X_CONTROL0, 0x0, 0x0, AFE440X_CONTROL0_READ};
++	u8 rx[3];
++
++	/* Enable reading from the device */
++	ret = spi_write(afe440x->spi, tx, 4);
++	if (ret)
++		goto err;
++
++	for_each_set_bit(bit, indio_dev->active_scan_mask,
++			 indio_dev->masklength) {
++		ret = spi_write_then_read(afe440x->spi,
++					  &reg_info[bit].reg, 1, rx, 3);
++		if (ret)
++			goto err;
++
++		buffer[i++] = (rx[0] << 16) |
++				(rx[1] << 8) |
++				(rx[2]);
++	}
++
++	/* Disable reading from the device */
++	tx[3] = AFE440X_CONTROL0_WRITE;
++	ret = spi_write(afe440x->spi, tx, 4);
++	if (ret)
++		goto err;
++
++	iio_push_to_buffers_with_timestamp(indio_dev, buffer, pf->timestamp);
++err:
++	iio_trigger_notify_done(indio_dev->trig);
++
++	return IRQ_HANDLED;
++}
++
++static const struct iio_trigger_ops afe440x_trigger_ops = {
++	.owner = THIS_MODULE,
++};
++
++#define AFE4403_TIMING_PAIRS			\
++	{ AFE440X_LED2STC,	0x000050 },	\
++	{ AFE440X_LED2ENDC,	0x0003e7 },	\
++	{ AFE440X_LED1LEDSTC,	0x0007d0 },	\
++	{ AFE440X_LED1LEDENDC,	0x000bb7 },	\
++	{ AFE440X_ALED2STC,	0x000438 },	\
++	{ AFE440X_ALED2ENDC,	0x0007cf },	\
++	{ AFE440X_LED1STC,	0x000820 },	\
++	{ AFE440X_LED1ENDC,	0x000bb7 },	\
++	{ AFE440X_LED2LEDSTC,	0x000000 },	\
++	{ AFE440X_LED2LEDENDC,	0x0003e7 },	\
++	{ AFE440X_ALED1STC,	0x000c08 },	\
++	{ AFE440X_ALED1ENDC,	0x000f9f },	\
++	{ AFE440X_LED2CONVST,	0x0003ef },	\
++	{ AFE440X_LED2CONVEND,	0x0007cf },	\
++	{ AFE440X_ALED2CONVST,	0x0007d7 },	\
++	{ AFE440X_ALED2CONVEND,	0x000bb7 },	\
++	{ AFE440X_LED1CONVST,	0x000bbf },	\
++	{ AFE440X_LED1CONVEND,	0x009c3f },	\
++	{ AFE440X_ALED1CONVST,	0x000fa7 },	\
++	{ AFE440X_ALED1CONVEND,	0x001387 },	\
++	{ AFE440X_ADCRSTSTCT0,	0x0003e8 },	\
++	{ AFE440X_ADCRSTENDCT0,	0x0003eb },	\
++	{ AFE440X_ADCRSTSTCT1,	0x0007d0 },	\
++	{ AFE440X_ADCRSTENDCT1,	0x0007d3 },	\
++	{ AFE440X_ADCRSTSTCT2,	0x000bb8 },	\
++	{ AFE440X_ADCRSTENDCT2,	0x000bbb },	\
++	{ AFE440X_ADCRSTSTCT3,	0x000fa0 },	\
++	{ AFE440X_ADCRSTENDCT3,	0x000fa3 },	\
++	{ AFE440X_PRPCOUNT,	0x009c3f },	\
++	{ AFE440X_PDNCYCLESTC,	0x001518 },	\
++	{ AFE440X_PDNCYCLEENDC,	0x00991f }
++
++static const struct reg_sequence afe4403_reg_sequences[] = {
++	AFE4403_TIMING_PAIRS,
++	{ AFE440X_CONTROL1, AFE440X_CONTROL1_TIMEREN | 0x000007},
++	{ AFE4403_TIA_AMB_GAIN, AFE4403_TIAGAIN_RES_1_M },
++	{ AFE440X_LEDCNTRL, (0x14 << AFE4403_LEDCNTRL_LED1_SHIFT) |
++			    (0x14 << AFE4403_LEDCNTRL_LED2_SHIFT) },
++	{ AFE440X_CONTROL2, AFE4403_CONTROL2_TX_REF_050 <<
++			    AFE4403_CONTROL2_TX_REF_SHIFT },
++};
++
++static const struct regmap_range afe4403_yes_ranges[] = {
++	regmap_reg_range(AFE440X_LED2VAL, AFE440X_LED1_ALED1VAL),
++};
++
++static const struct regmap_access_table afe4403_volatile_table = {
++	.yes_ranges = afe4403_yes_ranges,
++	.n_yes_ranges = ARRAY_SIZE(afe4403_yes_ranges),
++};
++
++static const struct regmap_config afe4403_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 24,
++
++	.max_register = AFE440X_PDNCYCLEENDC,
++	.cache_type = REGCACHE_RBTREE,
++	.volatile_table = &afe4403_volatile_table,
++};
++
++#ifdef CONFIG_OF
++static const struct of_device_id afe4403_of_match[] = {
++	{ .compatible = "ti,afe4403", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, afe4403_of_match);
++#endif
++
++static int afe440x_suspend(struct device *dev)
++{
++	struct afe440x_data *afe440x = dev_get_drvdata(dev);
++	int ret;
++
++	ret = regmap_update_bits(afe440x->regmap, AFE440X_CONTROL2,
++				 AFE440X_CONTROL2_PDN_AFE,
++				 AFE440X_CONTROL2_PDN_AFE);
++	if (ret)
++		return ret;
++
++	ret = regulator_disable(afe440x->regulator);
++	if (ret) {
++		dev_err(dev, "Unable to disable regulator\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int afe440x_resume(struct device *dev)
++{
++	struct afe440x_data *afe440x = dev_get_drvdata(dev);
++	int ret;
++
++	ret = regmap_update_bits(afe440x->regmap, AFE440X_CONTROL2,
++				 AFE440X_CONTROL2_PDN_AFE, 0);
++	if (ret)
++		return ret;
++
++	ret = regulator_enable(afe440x->regulator);
++	if (ret) {
++		dev_err(dev, "Unable to enable regulator\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++SIMPLE_DEV_PM_OPS(afe440x_pm_ops, afe440x_suspend, afe440x_resume);
++
++static int afe440x_iio_setup(struct afe440x_data *afe440x,
++			     const struct afe440x_info *afe440x_info)
++{
++	struct iio_dev *indio_dev;
++	int ret;
++
++	indio_dev = devm_iio_device_alloc(afe440x->dev, 0);
++	if (!indio_dev) {
++		dev_err(afe440x->dev, "Unable to allocate IIO device\n");
++		return -ENOMEM;
++	}
++
++	iio_device_set_drvdata(indio_dev, afe440x);
++
++	indio_dev->modes = INDIO_DIRECT_MODE;
++	indio_dev->dev.parent = afe440x->dev;
++	indio_dev->channels = afe440x_info->channels;
++	indio_dev->num_channels = afe440x_info->num_channels;
++	indio_dev->name = afe440x_info->name;
++	indio_dev->info = afe440x_info->info;
++
++	if (afe440x->irq > 0) {
++		afe440x->trig = devm_iio_trigger_alloc(afe440x->dev,
++						       "%s-dev%d",
++						       indio_dev->name,
++						       indio_dev->id);
++		if (!afe440x->trig) {
++			dev_err(afe440x->dev, "Unable to allocate IIO trigger\n");
++			return -ENOMEM;
++		}
++
++		iio_trigger_set_drvdata(afe440x->trig, indio_dev);
++
++		afe440x->trig->ops = &afe440x_trigger_ops;
++		afe440x->trig->dev.parent = afe440x->dev;
++
++		ret = iio_trigger_register(afe440x->trig);
++		if (ret) {
++			dev_err(afe440x->dev, "Unable to register IIO trigger\n");
++			return ret;
++		}
++
++		ret = devm_request_threaded_irq(afe440x->dev, afe440x->irq,
++						iio_trigger_generic_data_rdy_poll,
++						NULL, IRQF_ONESHOT,
++						afe440x_info->name,
++						afe440x->trig);
++		if (ret) {
++			dev_err(afe440x->dev, "Unable to request IRQ\n");
++			return ret;
++		}
++	}
++
++	ret = iio_triggered_buffer_setup(indio_dev, &iio_pollfunc_store_time,
++					 &afe440x_trigger_handler, NULL);
++	if (ret) {
++		dev_err(afe440x->dev, "Unable to setup buffer\n");
++		return ret;
++	}
++
++	ret = devm_iio_device_register(afe440x->dev, indio_dev);
++	if (ret) {
++		dev_err(afe440x->dev, "Unable to register IIO device\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static const struct afe440x_info afe4403_info = {
++	.name = AFE4403_DRIVER_NAME,
++	.channels = afe4403_channels,
++	.num_channels = ARRAY_SIZE(afe4403_channels),
++	.info = &afe440x_iio_info,
++};
++
++static int afe4403_probe(struct spi_device *spi)
++{
++	struct afe440x_data *afe440x;
++	int ret;
++
++	afe440x = devm_kzalloc(&spi->dev, sizeof(*afe440x), GFP_KERNEL);
++	if (!afe440x)
++		return -ENOMEM;
++
++	spi_set_drvdata(spi, afe440x);
++
++	afe440x->dev = &spi->dev;
++	afe440x->irq = spi->irq;
++
++	afe440x->spi = spi;
++
++	afe440x->regmap = devm_regmap_init_spi(spi, &afe4403_regmap_config);
++	if (IS_ERR(afe440x->regmap)) {
++		dev_err(afe440x->dev, "Unable to allocate register map\n");
++		return PTR_ERR(afe440x->regmap);
++	}
++
++	afe440x->regulator = devm_regulator_get(afe440x->dev, "tx_sup");
++	if (IS_ERR(afe440x->regulator)) {
++		dev_err(afe440x->dev, "Unable to get regulator\n");
++		return PTR_ERR(afe440x->regulator);
++	}
++	ret = regulator_enable(afe440x->regulator);
++	if (ret) {
++		dev_err(afe440x->dev, "Unable to enable regulator\n");
++		return ret;
++	}
++
++	ret = regmap_write(afe440x->regmap, AFE440X_CONTROL0,
++			   AFE440X_CONTROL0_SW_RESET);
++	if (ret) {
++		dev_err(afe440x->dev, "Unable to reset device\n");
++		return ret;
++	}
++
++	ret = regmap_register_patch(afe440x->regmap, afe4403_reg_sequences,
++				    ARRAY_SIZE(afe4403_reg_sequences));
++	if (ret) {
++		dev_err(afe440x->dev, "Unable to set register defaults\n");
++		return ret;
++	}
++
++	return afe440x_iio_setup(afe440x, &afe4403_info);
++}
++
++static int afe4403_remove(struct spi_device *spi)
++{
++	struct afe440x_data *afe440x = spi_get_drvdata(spi);
++	int ret;
++
++	ret = regulator_disable(afe440x->regulator);
++	if (ret) {
++		dev_err(afe440x->dev, "Unable to disable regulator\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static const struct spi_device_id afe4403_ids[] = {
++	{ "afe4403", 0 },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(spi, afe4403_ids);
++
++static struct spi_driver afe4403_spi_driver = {
++	.driver = {
++		.name = AFE4403_DRIVER_NAME,
++		.of_match_table = of_match_ptr(afe4403_of_match),
++		.pm = &afe440x_pm_ops,
++	},
++	.probe = afe4403_probe,
++	.remove = afe4403_remove,
++	.id_table = afe4403_ids,
++};
++module_spi_driver(afe4403_spi_driver);
++
++MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
++MODULE_DESCRIPTION("TI AFE4403 Heart Rate and Pulse Oximeter");
++MODULE_LICENSE("GPL");
+-- 
+2.6.4
