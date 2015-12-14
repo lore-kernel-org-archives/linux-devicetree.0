@@ -1,69 +1,121 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] ehci-platform: Add support for
- controllers with multiple reset lines
-Date: Mon, 14 Dec 2015 21:11:32 +0100
-Message-ID: <1450123892.3407.86.camel@pengutronix.de>
-References: <1449848520-27379-1-git-send-email-hdegoede@redhat.com>
-	 <1449848520-27379-2-git-send-email-hdegoede@redhat.com>
-	 <1449853984.3419.52.camel@pengutronix.de> <566B15B7.40703@redhat.com>
-Reply-To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDUKXHHSSIJBB7GEXSZQKGQETNSZWMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <566B15B7.40703-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Josh Triplett <josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org>, Rashika Kheria <rashika.kheria-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2 v2] ARM: l2x0: make it possible to disable outer sync from DT
+Date: Mon, 14 Dec 2015 21:53:05 +0100
+Message-ID: <1450126385-14517-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 11.12.2015, 19:28 +0100 schrieb Hans de Goede:
-[...]
-> >> diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
-> >> index a12d601..0701812 100644
-> >> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
-> >> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
-> >> @@ -18,7 +18,7 @@ Optional properties:
-> >>    - clocks : a list of phandle + clock specifier pairs
-> >>    - phys : phandle + phy specifier pair
-> >>    - phy-names : "usb"
-> >> - - resets : phandle + reset specifier pair
-> >> + - resets : a list of phandle + reset specifier pairs
-> >
-> > Are there documented names for these resets?
-> 
-> This binding is a generic ehci controller binding, so even if
-> the names are documented for the allwinner SoC we should
-> not use names, just like the binding is deliberately not
-> using names for the clocks either to keep it generic, so
-> that we can reuse the binding + driver with many different SoCs.
+According to commit 2503a5ecd86c002506001eba432c524ea009fe7f
+"ARM: 6201/1: RealView: Do not use outer_sync() on ARM11MPCore
+boards with L220" Some PB11MPCore RealView core tiles have broken
+outer_sync.
 
-I know, I'm just interested in understanding why this is necessary ...
+We got rid of the custom barriers from the machine by disabling
+outer sync, but that was just for the boardfile case. We have
+to be able to do the same in the device tree case.
 
-> > Is the companion you
-> > mention the Port Control?
-> 
-> Sort of, with USB-2, USB-1 compatibility is handled via a mux on the
-> datalines (controlled by the EHCI controller Port Control) which muxes
-> the lines to an USB-1 controller (typically either UHCI or OHCI) when the
-> device does not connect after USB-2 highspeed handshaking.
-> 
-> This USB-1 controller (or controller_S_ in some case since the
-> USB-1 companions may have less root-ports per controller then the EHCI
-> has root-ports) is called the companion controller.
-> 
-> The 2 controllers are supposed to be 100% independent but on the H3
-> Allwinner has done something (not documented) which requires one to
-> deassert reset on both before you can talk to either one.
+Since __l2c_init() is cloning and copying the L2C vtable,
+we pass an argument to this function to optionally numb
+the outer sync operation if desired, before initializing
+the cache.
 
-... so thank you for the explanation.
+After this we can set up the cache correctly on the RealView
+PB11MPCore. This was tested on a PB11MPCore known to have the
+issue. Before this, spurious crashes would occur if we try to
+set up the cache properly, after this it boots rock solid.
 
-Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v2->v3:
+- Update description, reference Catalins initial commit in the
+  commit blurb.
+---
+ Documentation/devicetree/bindings/arm/l2cc.txt |  3 +++
+ arch/arm/mm/cache-l2x0.c                       | 13 ++++++++++---
+ 2 files changed, 13 insertions(+), 3 deletions(-)
 
-regards
-Philipp
+diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+index d181b7c4c522..416864e9dc92 100644
+--- a/Documentation/devicetree/bindings/arm/l2cc.txt
++++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+@@ -75,6 +75,9 @@ Optional properties:
+   specified to indicate that such transforms are precluded.
+ - arm,parity-enable : enable parity checking on the L2 cache (L220 or PL310).
+ - arm,parity-disable : disable parity checking on the L2 cache (L220 or PL310).
++- arm,outer-sync-disable : disable the outer sync operation on the L2 cache.
++  Some core tiles, especially ARM PB11MPCore have a faulty L220 cache that
++  will randomly hang unless outer sync operations are disabled.
+ - prefetch-data : Data prefetch. Value: <0> (forcibly disable), <1>
+   (forcibly enable), property absent (retain settings set by firmware)
+ - prefetch-instr : Instruction prefetch. Value: <0> (forcibly disable),
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index 3f3008e5c662..9f9d54271aad 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -790,7 +790,7 @@ static const struct l2c_init_data l2c310_init_fns __initconst = {
+ };
+ 
+ static int __init __l2c_init(const struct l2c_init_data *data,
+-			     u32 aux_val, u32 aux_mask, u32 cache_id)
++			     u32 aux_val, u32 aux_mask, u32 cache_id, bool nosync)
+ {
+ 	struct outer_cache_fns fns;
+ 	unsigned way_size_bits, ways;
+@@ -866,6 +866,10 @@ static int __init __l2c_init(const struct l2c_init_data *data,
+ 	fns.configure = outer_cache.configure;
+ 	if (data->fixup)
+ 		data->fixup(l2x0_base, cache_id, &fns);
++	if (nosync) {
++		pr_info("L2C: disabling outer sync\n");
++		fns.sync = NULL;
++	}
+ 
+ 	/*
+ 	 * Check if l2x0 controller is already enabled.  If we are booting
+@@ -925,7 +929,7 @@ void __init l2x0_init(void __iomem *base, u32 aux_val, u32 aux_mask)
+ 	if (data->save)
+ 		data->save(l2x0_base);
+ 
+-	__l2c_init(data, aux_val, aux_mask, cache_id);
++	__l2c_init(data, aux_val, aux_mask, cache_id, false);
+ }
+ 
+ #ifdef CONFIG_OF
+@@ -1724,6 +1728,7 @@ int __init l2x0_of_init(u32 aux_val, u32 aux_mask)
+ 	struct resource res;
+ 	u32 cache_id, old_aux;
+ 	u32 cache_level = 2;
++	bool nosync = false;
+ 
+ 	np = of_find_matching_node(NULL, l2x0_ids);
+ 	if (!np)
+@@ -1762,6 +1767,8 @@ int __init l2x0_of_init(u32 aux_val, u32 aux_mask)
+ 	if (cache_level != 2)
+ 		pr_err("L2C: device tree specifies invalid cache level\n");
+ 
++	nosync = of_property_read_bool(np, "arm,outer-sync-disable");
++
+ 	/* Read back current (default) hardware configuration */
+ 	if (data->save)
+ 		data->save(l2x0_base);
+@@ -1776,6 +1783,6 @@ int __init l2x0_of_init(u32 aux_val, u32 aux_mask)
+ 	else
+ 		cache_id = readl_relaxed(l2x0_base + L2X0_CACHE_ID);
+ 
+-	return __l2c_init(data, aux_val, aux_mask, cache_id);
++	return __l2c_init(data, aux_val, aux_mask, cache_id, nosync);
+ }
+ #endif
+-- 
+2.4.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
