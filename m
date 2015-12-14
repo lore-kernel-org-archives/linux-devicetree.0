@@ -1,59 +1,80 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH for-4.4 2/2] doc: dt: mtd: partitions: add compatible
- property to "partitions" node
-Date: Mon, 14 Dec 2015 11:35:15 -0800
-Message-ID: <20151214193515.GC10460@google.com>
-References: <1449194529-145705-1-git-send-email-computersforpeace@gmail.com>
- <1449194529-145705-2-git-send-email-computersforpeace@gmail.com>
- <CAOiHx=kP8hT-UH=tfUZYYpr__i458-ZL3bOhcAJb8hmSbqBdCA@mail.gmail.com>
- <20151207175835.GM120110@google.com>
- <20151209011256.GV120110@google.com>
- <CAMuHMdVGW-7dQ3vAqVpUN_S7=T7dVp+jkMJR7nyZ9ePd+NnsyQ@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] [media] mt9v032: Do not unset master_mode
+Date: Mon, 14 Dec 2015 21:37:37 +0200
+Message-ID: <1690276.noBynuSFrz@avalon>
+References: <1450104113-6392-1-git-send-email-mpa@pengutronix.de> <1450104113-6392-2-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVGW-7dQ3vAqVpUN_S7=T7dVp+jkMJR7nyZ9ePd+NnsyQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1450104113-6392-2-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 14, 2015 at 03:49:14PM +0100, Geert Uytterhoeven wrote:
-> On Wed, Dec 9, 2015 at 2:12 AM, Brian Norris
-> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Mon, Dec 07, 2015 at 09:58:35AM -0800, Brian Norris wrote:
-> >> On Sat, Dec 05, 2015 at 12:45:36PM +0100, Jonas Gorski wrote:
-> >> > On Fri, Dec 4, 2015 at 3:02 AM, Brian Norris
-> >> > <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> > >         // proposed
-> >> > >         partitions {
-> >> > >                 compatible = "partitions";
-> >> >
-> >> > "partitions" sounds mode like a device_type thing than a compatible
-> >> > name, maybe "fixed-partitions"? IMHO that would describe better what
-> >> > these are, and doesn't invite to think using compatible =
-> >> > "arm,arm-flash-structure", "partitions"; is a good idea.
-> >>
-> >> "fixed-partitions" sounds OK to me. If no objections, I'll apply these
-> >> patches, with (approximately) a:
-> >>
-> >> s/"partitions"/"fixed-partitions"/
-> >
-> > Pushed to linux-mtd.git with the above change.
+Hi Markus,
+
+Thank you for the patch.
+
+On Monday 14 December 2015 15:41:52 Markus Pargmann wrote:
+> The power_on function of the driver resets the chip and sets the
+> CHIP_CONTROL register to 0. This switches the operating mode to slave.
+> The s_stream function sets the correct mode. But this caused problems on
+> a board where the camera chip is operated as master. The camera started
+> after a random amount of time streaming an image, I observed between 10
+> and 300 seconds.
 > 
-> Aarghl, hadn't seen this patch before.
+> The STRFM_OUT and STLN_OUT pins are not connected on this board which
+> may cause some issues in slave mode. I could not find any documentation
+> about this.
 > 
-> This breaks the users that have already added the partitions subnodes
-> (armada-xp-lenovo-ix4-300d.dts and a few shmobile).
+> Keeping the chip in master mode after the reset helped to fix this
+> issue for me.
+> 
+> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Sorry, I checked Linus' master and not linux-next :(
+Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 
-> Will send patches to fix it...
+and applied to my tree.
 
-Thanks.
+> ---
+>  drivers/media/i2c/mt9v032.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
+> index c1bc564a0979..cc16acf001de 100644
+> --- a/drivers/media/i2c/mt9v032.c
+> +++ b/drivers/media/i2c/mt9v032.c
+> @@ -349,7 +349,8 @@ static int mt9v032_power_on(struct mt9v032 *mt9v032)
+>  	if (ret < 0)
+>  		return ret;
+> 
+> -	return regmap_write(map, MT9V032_CHIP_CONTROL, 0);
+> +	return regmap_write(map, MT9V032_CHIP_CONTROL,
+> +			    MT9V032_CHIP_CONTROL_MASTER_MODE);
+>  }
+> 
+>  static void mt9v032_power_off(struct mt9v032 *mt9v032)
+> @@ -421,8 +422,7 @@ __mt9v032_get_pad_crop(struct mt9v032 *mt9v032, struct
+> v4l2_subdev_pad_config *c
+> 
+>  static int mt9v032_s_stream(struct v4l2_subdev *subdev, int enable)
+>  {
+> -	const u16 mode = MT9V032_CHIP_CONTROL_MASTER_MODE
+> -		       | MT9V032_CHIP_CONTROL_DOUT_ENABLE
+> +	const u16 mode = MT9V032_CHIP_CONTROL_DOUT_ENABLE
+> 
+>  		       | MT9V032_CHIP_CONTROL_SEQUENTIAL;
+> 
+>  	struct mt9v032 *mt9v032 = to_mt9v032(subdev);
+>  	struct v4l2_rect *crop = &mt9v032->crop;
 
-Brian
+-- 
+Regards,
+
+Laurent Pinchart
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
