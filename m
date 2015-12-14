@@ -1,54 +1,65 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH v2 2/2] mfd: arizona: Update binding docs for selecting mono/stereo outputs
-Date: Mon, 14 Dec 2015 10:19:12 +0000
-Message-ID: <1450088352-10470-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1450088352-10470-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH v2 1/2] mfd: arizona: Add device tree binding to specify mono outputs
+Date: Mon, 14 Dec 2015 10:19:11 +0000
+Message-ID: <1450088352-10470-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450088352-10470-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Update the device tree binding documentation to include the wlf,out-mono
-property that is used to specify whether each output is a mono or stereo
-output.
+Add device tree bindings to support specifying outputs from the chip as
+mono outputs. Whilst we are doing it change the out_mono pdata from a
+bool to an int, because Sparse gets upset about using ARRAY_SIZE on
+bools.
 
-Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 ---
 
-Changes since v1:
- - Clarify which outputs correspond to which entry in the out-mono list.
+No changes since v1.
 
 Thanks,
 Charles
 
- Documentation/devicetree/bindings/mfd/arizona.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/mfd/arizona-core.c        | 10 ++++++++++
+ include/linux/mfd/arizona/pdata.h |  2 +-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-index 2b6ccdb..069e31d 100644
---- a/Documentation/devicetree/bindings/mfd/arizona.txt
-+++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-@@ -65,6 +65,12 @@ Optional properties:
-     that have not been specified are set to 0 by default. Entries are:
-     <IN1, IN2, IN3, IN4> (wm5102, wm5110, wm8280, wm8997)
-     <IN1A, IN2A, IN1B, IN2B> (wm8998, wm1814)
-+  - wlf,out-mono : A list of boolean values indicating whether each output is
-+    mono or stereo. Position within the list indicates the output affected
-+    (eg. First entry in the list corresponds to output 1). A non-zero value
-+    indicates a mono output. If present, the number of values should be less
-+    than or equal to the number of outputs, if less values are supplied the
-+    additional outputs will be treated as stereo.
+diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+index b9489a0..4bb4866 100644
+--- a/drivers/mfd/arizona-core.c
++++ b/drivers/mfd/arizona-core.c
+@@ -861,6 +861,16 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
+ 		count++;
+ 	}
  
-   - wlf,dmic-ref : DMIC reference voltage source for each input, can be
-     selected from either MICVDD or one of the MICBIAS's, defines
++	count = 0;
++	of_property_for_each_u32(arizona->dev->of_node, "wlf,out-mono", prop,
++				 cur, val) {
++		if (count == ARRAY_SIZE(pdata->out_mono))
++			break;
++
++		pdata->out_mono[count] = !!val;
++		count++;
++	}
++
+ 	return 0;
+ }
+ 
+diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
+index 57b45ca..64faeef 100644
+--- a/include/linux/mfd/arizona/pdata.h
++++ b/include/linux/mfd/arizona/pdata.h
+@@ -171,7 +171,7 @@ struct arizona_pdata {
+ 	int inmode[ARIZONA_MAX_INPUT];
+ 
+ 	/** Mode for outputs */
+-	bool out_mono[ARIZONA_MAX_OUTPUT];
++	int out_mono[ARIZONA_MAX_OUTPUT];
+ 
+ 	/** PDM speaker mute setting */
+ 	unsigned int spk_mute[ARIZONA_MAX_PDM_SPK];
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
