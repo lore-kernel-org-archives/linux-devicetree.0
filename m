@@ -1,80 +1,61 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2 3/3] ARM: dts: imx6qdl-udoo.dtsi: fix onboard USB HUB property
-Date: Mon, 14 Dec 2015 15:26:14 +0800
-Message-ID: <1450077974-22762-4-git-send-email-peter.chen@freescale.com>
-References: <1450077974-22762-1-git-send-email-peter.chen@freescale.com>
+From: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] spi: dts: sun4i: Add support for
+ hardware-based wait time between words
+Date: Mon, 14 Dec 2015 08:31:55 +0100
+Message-ID: <CAGNoLaOckrgv5NP6eTOt8shj5f069DKFrxx+8afydqcAZH5HMw@mail.gmail.com>
+References: <1449873940-10167-1-git-send-email-mweseloh42@gmail.com>
+	<1450047853-9005-1-git-send-email-mweseloh42@gmail.com>
+	<20151214012937.GA12209@rob-hp-laptop>
+Reply-To: mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450077974-22762-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDFO74UEV4IRB3HAXGZQKGQEWOOWYSQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20151214012937.GA12209@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The current dts describes USB HUB's property at USB controller's
-entry, it is improper. Fix it by using a generic USB HUB entry.
+Hi,
 
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- arch/arm/boot/dts/imx6qdl-udoo.dtsi | 26 +++++++-------------------
- 1 file changed, 7 insertions(+), 19 deletions(-)
+2015-12-14 2:29 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On Mon, Dec 14, 2015 at 12:04:11AM +0100, Marcus Weseloh wrote:
+>> Adds a new property "spi-word-wait-ns" to the spi-bus binding that allows
+[...]
+>> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+>> index bbaa857..2d6034f 100644
+>> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+>> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+>> @@ -61,6 +61,8 @@ contain the following properties.
+>>                        used for MOSI. Defaults to 1 if not present.
+>>  - spi-rx-bus-width - (optional) The bus width(number of data wires) that
+>>                        used for MISO. Defaults to 1 if not present.
+>> +- spi-word-wait-ns - (optional) Hardware based delay between transmission of
+>> +                      words in nanoseconds
+>
+> Could be a software delay if the h/w doesn't support delays.
 
-diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-index 1211da8..64eabe2 100644
---- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-@@ -9,6 +9,8 @@
-  *
-  */
- 
-+#include <dt-bindings/gpio/gpio.h>
-+
- / {
- 	chosen {
- 		stdout-path = &uart2;
-@@ -18,21 +20,11 @@
- 		reg = <0x10000000 0x40000000>;
- 	};
- 
--	regulators {
--		compatible = "simple-bus";
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		reg_usb_h1_vbus: regulator@0 {
--			compatible = "regulator-fixed";
--			reg = <0>;
--			regulator-name = "usb_h1_vbus";
--			regulator-min-microvolt = <5000000>;
--			regulator-max-microvolt = <5000000>;
--			enable-active-high;
--			startup-delay-us = <2>; /* USB2415 requires a POR of 1 us minimum */
--			gpio = <&gpio7 12 0>;
--		};
-+	usb_hub1 {
-+		compatible = "generic-onboard-hub";
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+		reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
-+		reset-duration-us = <2>;
- 	};
- };
- 
-@@ -119,10 +111,6 @@
- };
- 
- &usbh1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_usbh>;
--	vbus-supply = <&reg_usb_h1_vbus>;
--	clocks = <&clks 201>;
- 	status = "okay";
- };
- 
--- 
-1.9.1
+Of course, I was still trapped in my sun4i specific thinking. Will
+remove the hardware reference.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[...]
+>> +     /* Setup wait time between words */
+>> +     of_property_read_u32(spi->dev.of_node, "spi-word-wait-ns",
+>> +                          &wait_ns);
+>
+> Read this in probe and save the value rather than fetching every
+> transfer.
+
+But this is a slave property I'm using here. If I read and store it in
+probe in the spi-sun4i driver, I won't have access to the slave node
+property, will I?
+
+Cheers,
+
+    Marcus
