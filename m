@@ -1,128 +1,107 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [RFC PATCH 3/7] doc: dt: mtd: partition: add on-flash format binding
-Date: Mon, 14 Dec 2015 11:22:46 +0100
-Message-ID: <CAMuHMdXA4-BZpvtCM8_9fYWLzoVsuCXDqvF3G4cVd50Cqsfv0g@mail.gmail.com>
-References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
-	<1449292763-129421-4-git-send-email-computersforpeace@gmail.com>
-	<CAOiHx=nz2bdA_R610ozsQHhccdcrHVVCamTtne5ReHrA-FcaaQ@mail.gmail.com>
-	<CAOMqctTbUNd0GtY07YJuxem9HkU1WZ-NtO556=Yg2QrsF49Xjw@mail.gmail.com>
-	<20151207013628.GC20139@voom.fritz.box>
-	<20151210204324.GK144338@google.com>
-	<20151212055105.GA17011@voom.fritz.box>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v3 0/5] Add reboot notifier driver for rockchip platform
+Date: Mon, 14 Dec 2015 18:30:31 +0800
+Message-ID: <566E9A47.8010004@rock-chips.com>
+References: <1447840044-19689-1-git-send-email-andy.yan@rock-chips.com>
+ <45323116.BWNAaZT5p4@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151212055105.GA17011-RXTfZT5YzpxwFLYp8hBm2A@public.gmane.org>
+In-Reply-To: <45323116.BWNAaZT5p4@diego>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, benchan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 12, 2015 at 6:51 AM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Thu, Dec 10, 2015 at 12:43:24PM -0800, Brian Norris wrote:
->> On Mon, Dec 07, 2015 at 12:36:28PM +1100, David Gibson wrote:
->> > On Sat, Dec 05, 2015 at 10:33:30PM +0100, Michal Suchanek wrote:
->> > > On 5 December 2015 at 12:39, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
->> > > > On Sat, Dec 5, 2015 at 6:19 AM, Brian Norris
->> > > > <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> > >
->> > > >> +
->> > > >> +Examples:
->> > > >> +
->> > > >> +flash@0 {
->> > > >> +       partitions {
->> > > >> +               compatible = "google,fmap";
->> > > >> +       };
->> > > >> +};
->> > > >
->> > > > I wonder if this wouldn't be better served in a separate binding doc
->> > > > with its compatible name as the filename, like we do with
->> > > > driver^Whardware blocks, especially if we want to add more parsers.
->> > >
->> > >
->> > > I find that *very* counter productive for bindings that go to the same
->> > > node. You have a description of a node, and then suddenly there you
->> > > have another file with another description of the same node. Totally
->> > > awesome.
->> >
->> > I can't actually work out from that if you're agreeing with the
->> > original post or the first reply.
+Hi John:
+
+On 2015=E5=B9=B412=E6=9C=8812=E6=97=A5 05:29, Heiko St=C3=BCbner wrote:
+> Am Mittwoch, 18. November 2015, 17:47:24 schrieb Andy Yan:
+>> rockchip platform have a protocol to pass the kernel reboot
+>> mode to bootloader by some special registers when system reboot.
+>> By this way the bootloader can take different action according
+>> to the different kernel reboot mode, for example, command
+>> "reboot loader" will reboot the board to rockusb mode, this is
+>> a very convenient way to get the board enter download mode.
+>> And Android system also use this protocol to pass "recovery"=E3=80=81
+>> =E2=80=9Cfastboot=E2=80=9D reboot mode to bootloader. In upstream la=
+nd, We found
+>> tegra platform also use this mechanism.
 >>
->> Perhaps I'm biased, but I think he was agreeing with the first reply.
->> (Particularly, "I find that *very* counter productive" uses the word
->> "that" to refer to "separate binding doc[s]".)
->>
->> > > Also how do you plan to write partitioning schemes with parameters
->> > > like with non-zero offset of the partition table.
->>
->> If you are directing this question at me: I don't have a specific plan
->> for it. MTD parsers don't currently take external input for this; many
->> scan the whole device, but some might also have conventions built into
->> the parser itself too, so this just gets hooked based on "compatible".
->> But if the need arose, I would hope we could work out a common binding.
->>
->> > Presumably with properties in the patitions node.  Not seeing the
->> > problem here.
->>
->> I believe Michal is bringing up the (important, IMO) point that if
->> distinct partition types are being described in the same node, then any
->> use of additional properties *must* be closely coordinated. We can't
->> have two parsers "foo" and "bar" defining conflicting uses of the same
->> property in the same node, like this:
->>
->>       partitions {
->>               compatible = "foo", "bar";
->>               property-baz = ...; // e.g., reg = <...>;
->>       };
->>
->> where if "foo" is not found, we fall back to "bar". But what if "foo"
->> and "bar" use "property-baz" differently?
+>> Before this version, I have sent two Series, which can be found
+>> at [0] [1]
+>> [0] https://patchwork.kernel.org/patch/7140751/
+>> [1] https://patchwork.kernel.org/patch/7153531/
+> just so it doesn't get lost, this ties into a slightly more generic a=
+pproach,
+> John Stultz is doing for the android reboot reasons:
 >
-> Ah.. that is an excellent point, and leads me to realise that using
-> compatible in this way is wrong.  The whole point of compatible is
-> that the node is, well, compatible with *all* the things in the list,
-> and therefore the things in the list are compatible with each other.
+> http://thread.gmane.org/gmane.linux.kernel/2103447
 >
-> Using it for a list of entirely different things to attempt in order
-> is not correct.
+> The only difference is that we'd need to use the pmu syscon for it.
+>
+>
+     Very glad to see your work on this. And your work is more generic=20
+than my.
+      So hope we can share the code. As you can see, the rockchip=20
+platform use
+      a GRF or PMU register to store the reboot reason. So maybe we nee=
+d=20
+a phandle
+      in the DT node to describe it.
+>> Changes in v3:
+>>   - rename a pinctrl node in rk3288-veyron, the original name will b=
+e
+>>     used in the incoming reboot notifier driver
+>>   - add dt binding
+>>   - move from mach-rockchip to drivers/soc/rockchip, as the tegra do=
+es
+>>   - use dts pass the related register
+>>   - add DT node
+>>
+>> Changes in v2:
+>>    - check cpu dt node
+>>    - remove a unnecessary of_put_node in function rockchip_get_pmu_r=
+egmap
+>>    - fix a align issue
+>>    - use reboot_notifier instead of restart_handler
+>>
+>> Andy Yan (5):
+>>    ARM: dts: rockchip: rk3288-veyron: rename pinctrl node reboot to =
+reset
+>>    dt-bindings: soc: add document for rockchip reboot notifier drive=
+r
+>>    soc: rockchip: add reboot notifier driver
+>>    ARM: dts: rockchip: add reboot node
+>>    ARM64: dts: rockchip: add reboot node
+>>
+>>   .../bindings/soc/rockchip/rockchip-reboot.txt      | 18 ++++
+>>   arch/arm/boot/dts/rk3288-veyron.dtsi               |  2 +-
+>>   arch/arm/boot/dts/rk3288.dtsi                      |  6 ++
+>>   arch/arm/boot/dts/rk3xxx.dtsi                      |  6 ++
+>>   arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  6 ++
+>>   drivers/soc/rockchip/Kconfig                       |  7 ++
+>>   drivers/soc/rockchip/Makefile                      |  1 +
+>>   drivers/soc/rockchip/loader.h                      | 22 +++++
+>>   drivers/soc/rockchip/reboot.c                      | 98
+>> ++++++++++++++++++++++ 9 files changed, 165 insertions(+), 1 deletio=
+n(-)
+>>   create mode 100644
+>> Documentation/devicetree/bindings/soc/rockchip/rockchip-reboot.txt c=
+reate
+>> mode 100644 drivers/soc/rockchip/loader.h
+>>   create mode 100644 drivers/soc/rockchip/reboot.c
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 
-Isn't the idea behind a partition table that all partition information is
-stored on the device in a well-known format, so you don't need additional
-properties?
-
-If the only property needed is the partition table offset, it can be encoded
-in the unit-address, and the "reg" property:
-
-        partitions {
-
-                partition-table@xxxx {
-                        reg = <0xxxx ...>;
-                        ...
-                };
-
-                ...
-        };
-
-If you do need additional properties, you'll have to add separate partition
-table nodes.
-Where? Outside the "partitions" subnode?
-What with multiple partition tables
-  - some needing properties (outside "partitions"),
-  - others not (outside/inside "partitions"),
-  - others needing the offset (inside "partitions"?
-
-Gr{oetje,eeting}s,
-
-                        Geert
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
