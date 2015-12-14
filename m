@@ -1,52 +1,129 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] USB: add generic onboard USB HUB driver
-Date: Mon, 14 Dec 2015 09:26:55 -0200
-Message-ID: <CAOMZO5CfBKuJ584jwbg98s9tn+0Z7W0nOaZnUkm4cJUSvNGTZw@mail.gmail.com>
-References: <1450077974-22762-1-git-send-email-peter.chen@freescale.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 4/8] dt-bindings: Add a binding for Mediatek Video
+ Encoder
+Date: Mon, 14 Dec 2015 12:36:17 +0100
+Message-ID: <566EA9B1.5000102@gmail.com>
+References: <1449827743-22895-1-git-send-email-tiffany.lin@mediatek.com>
+ <1449827743-22895-5-git-send-email-tiffany.lin@mediatek.com>
+ <20151211172919.GA2896@rob-hp-laptop> <1450081618.5745.3.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450077974-22762-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Patryk Kowalczyk <patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1450081618.5745.3.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tiffany lin <tiffany.lin@mediatek.com>, Rob Herring <robh@kernel.org>
+Cc: daniel.thompson@linaro.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Daniel Kurtz <djkurtz@chromium.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@iki.fi>, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, Fabien Dessenne <fabien.dessenne@st.com>, Arnd Bergmann <arnd@arndb.de>, Darren Etheridge <detheridge@ti.com>, Peter Griffin <peter.griffin@linaro.org>, Benoit Parrot <bparrot@ti.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
 
-On Mon, Dec 14, 2015 at 5:26 AM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 
-> Hi all,
->
-> There is a known issue that the USB code can't handle USB HUB's
-> external pins well, in that case, it may cause some onboard
-> USB HUBs can't work since their PHY's clock or reset pin needs to
-> operate.
->
-> The user reported this issue at below:
-> http://www.spinics.net/lists/linux-usb/msg131502.html
->
-> In this patch set, I add a generic onboard USB HUB driver to
-> handle this problem, the external signals will be configured
-> before usb controller's initialization, it much likes we did
-> it at board code before.
->
-> The user needs to add this generic hub node at dts to support it.
->
-> @The udoo users, help to test please.
+On 14/12/15 09:26, tiffany lin wrote:
+> On Fri, 2015-12-11 at 11:29 -0600, Rob Herring wrote:
+>> On Fri, Dec 11, 2015 at 05:55:39PM +0800, Tiffany Lin wrote:
+>>> Add a DT binding documentation of Video Encoder for the
+>>> MT8173 SoC from Mediatek.
+>>>
+>>> Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
+>>
+>> A question and minor issue below, otherwise:
+>>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>>
+>>> ---
+>>>   .../devicetree/bindings/media/mediatek-vcodec.txt  |   58 ++++++++++++++++++++
+>>>   1 file changed, 58 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+>>> new file mode 100644
+>>> index 0000000..510cd81
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+>>> @@ -0,0 +1,58 @@
+>>> +Mediatek Video Codec
+>>> +
+>>> +Mediatek Video Codec is the video codec hw present in Mediatek SoCs which
+>>> +supports high resolution encoding functionalities.
+>>> +
+>>> +Required properties:
+>>> +- compatible : "mediatek,mt8173-vcodec-enc" for encoder
+>>> +- reg : Physical base address of the video codec registers and length of
+>>> +  memory mapped region.
+>>> +- interrupts : interrupt number to the cpu.
+>>> +- mediatek,larb : must contain the local arbiters in the current Socs.
 
-This is what I get with your series applied:
+This looks strange, shouldn't it be "larb" instead of "mediatek,larb".
+At least the example does not use the mediatek prefix.
 
-[    2.288300] usb 1-1: device descriptor read/64, error -71
-[    2.518083] usb 1-1: new full-speed USB device number 3 using ci_hdrc
-[    2.738078] usb 1-1: device descriptor read/64, error -71
-[    3.058078] usb 1-1: device descriptor read/64, error -71
-[    3.288079] usb 1-1: new full-speed USB device number 4 using ci_hdrc
-[    3.768069] usb 1-1: device not accepting address 4, error -71
-[    3.888084] usb 1-1: new full-speed USB device number 5 using ci_hdrc
-[    4.368067] usb 1-1: device not accepting address 5, error -71
-[    4.374117] usb usb1-port1: unable to enumerate USB device
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>> +- clocks : list of clock specifiers, corresponding to entries in
+>>> +  the clock-names property;
+>>> +- clock-names: must contain "vencpll", "venc_lt_sel", "vcodecpll_370p5_ck"
+>>> +- iommus : list of iommus specifiers should be enabled for hw encode.
+>>> +  There are 2 cells needed to enable/disable iommu.
+>>> +  The first one is local arbiter index(larbid), and the other is port
+>>> +  index(portid) within local arbiter. Specifies the larbid and portid
+>>> +  as defined in dt-binding/memory/mt8173-larb-port.h.
+>>> +- mediatek,vpu : the node of video processor unit
+
+Same here.
+
+Regards,
+Matthias
+
+>>> +
+>>> +Example:
+>>> +vcodec_enc: vcodec@0x18002000 {
+>>> +    compatible = "mediatek,mt8173-vcodec-enc";
+>>> +    reg = <0 0x18002000 0 0x1000>,    /*VENC_SYS*/
+>>> +          <0 0x19002000 0 0x1000>;    /*VENC_LT_SYS*/
+>>> +    interrupts = <GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>,
+>>> +           <GIC_SPI 202 IRQ_TYPE_LEVEL_LOW>;
+>>> +    larb = <&larb3>,
+>>> +           <&larb5>;
+>>> +    iommus = <&iommu M4U_LARB3_ID M4U_PORT_VENC_RCPU>,
+>>
+>> Is this the same iommu as the VPU? If so, you can't have a mixed number
+>> of cells.
+> Yes, its same iommus as the VPU.
+> Now we use two parameters for iommus.
+> We will fix this in next version.
+>
+>>> +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_REC>,
+>>> +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_BSDMA>,
+>>> +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_SV_COMV>,
+>>> +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_RD_COMV>,
+>>> +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_CUR_LUMA>,
+>>> +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_CUR_CHROMA>,
+>>> +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_REF_LUMA>,
+>>> +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_REF_CHROMA>,
+>>> +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_NBM_RDMA>,
+>>> +             <&iommu M4U_LARB3_ID M4U_PORT_VENC_NBM_WDMA>,
+>>> +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_RCPU_SET2>,
+>>> +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_REC_FRM_SET2>,
+>>> +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_BSDMA_SET2>,
+>>> +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_SV_COMA_SET2>,
+>>> +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_RD_COMA_SET2>,
+>>> +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_CUR_LUMA_SET2>,
+>>> +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_CUR_CHROMA_SET2>,
+>>> +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_REF_LUMA_SET2>,
+>>> +             <&iommu M4U_LARB5_ID M4U_PORT_VENC_REC_CHROMA_SET2>;
+>>> +    vpu = <&vpu>;
+>>
+>> Need to update the example.
+> Sorry, I didn't get it.
+> Do you means update VPU binding document "media/mediatek-vpu.txt"?
+>
+>>
+>>> +    clocks = <&apmixedsys CLK_APMIXED_VENCPLL>,
+>>> +             <&topckgen CLK_TOP_VENC_LT_SEL>,
+>>> +             <&topckgen CLK_TOP_VCODECPLL_370P5>;
+>>> +    clock-names = "vencpll",
+>>> +                  "venc_lt_sel",
+>>> +                  "vcodecpll_370p5_ck";
+>>> +  };
+>>> --
+>>> 1.7.9.5
+>>>
+>
+>
