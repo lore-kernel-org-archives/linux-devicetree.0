@@ -1,83 +1,47 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH 1/2] dt-bindings: GPIO: Add generic serializer binding
-Date: Mon, 14 Dec 2015 10:41:16 -0600
-Message-ID: <566EF12C.4060509@ti.com>
-References: <1449863184-29668-1-git-send-email-afd@ti.com>
- <1449863184-29668-2-git-send-email-afd@ti.com>
- <CACRpkdaV_dxzWUQcJ8pwPUDQNJ8qLhCvLvE9tBYFcTTGMoumWQ@mail.gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] ARM64: ZynqMP: DT: Fix GIC's 'reg' property
+Date: Mon, 14 Dec 2015 16:46:14 +0000
+Message-ID: <20151214164613.GH21356@leverpostej>
+References: <1450110700-14152-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaV_dxzWUQcJ8pwPUDQNJ8qLhCvLvE9tBYFcTTGMoumWQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1450110700-14152-1-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, marc.zyngier-5wv7dgnIgG8@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alistair Francis <alistair.francis-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/11/2015 03:48 PM, Linus Walleij wrote:
-> On Fri, Dec 11, 2015 at 8:46 PM, Andrew F. Davis <afd@ti.com> wrote:
->
->> Add binding for generic parallel-in/serial-out shift register devices
->> used as GPIO.
->>
->> Signed-off-by: Andrew F. Davis <afd@ti.com>
->
->> +Generic Parallel-in/Serial-out Shift Register GPIO Driver
->> +
->> +This binding describes generic parallel-in/serial-out shift register
->> +devices that can be used for GPI (General Purpose Input). This includes
->> +SN74165 serial-out shift registers and the SN65HVS88x series of
->> +industrial serializers.
->> +
->> +Required properties:
->> + - compatible          : Should be "pisosr-gpio".
->
-> I think it should also define compatible strings on the "vendor,device"
-> format apart from the generic compatible. Sooner or later we may need
-> to differentiate them and then that comes in handy.
->
+On Mon, Dec 14, 2015 at 08:31:40AM -0800, Soren Brinkmann wrote:
+> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> index 857eda5c7217..b5d1facadf16 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> @@ -80,10 +80,10 @@
+>  		gic: interrupt-controller@f9010000 {
+>  			compatible = "arm,gic-400", "arm,cortex-a15-gic";
+>  			#interrupt-cells = <3>;
+> -			reg = <0x0 0xf9010000 0x10000>,
+> -			      <0x0 0xf902f000 0x2000>,
+> +			reg = <0x0 0xf9010000 0x1000>,
+> +			      <0x0 0xf9020000 0x20000>,
+>  			      <0x0 0xf9040000 0x20000>,
+> -			      <0x0 0xf906f000 0x2000>;
+> +			      <0x0 0xf9060000 0x20000>;
 
-Would it be better to wait until/if this issue arises? This driver
-targets the generic features, as these parts are very generic and
-have been produced by many companies since the 70s I'm not sure
-if privileging any of them makes much sense.
+I'm confused. These sizes don't look right for GIC-400. Is this a custom
+GIC?
 
-What I'm worried about looks to have happened with the gpio-74x164
-driver, this is kind of the companion device to mine (74164 / 74165)
-and should work with any 74164 compatible shift register (possibly 100s
-of versions of them), but the compatible string that was added is
-"fairchild,74hc595", a relatively new device by a single manufacturer.
-The problem this has is then that boards will use this compatible string
-even if the parts are not actually the Fairchild version, just to get
-the match, when they should be using a generic string.
+Did this ever work wit hteh old offsets and sizes?
 
->> + - gpio-controller     : Marks the device node as a GPIO controller.
->> + - #gpio-cells         : Should be two. For consumer use see gpio.txt.
->> +
->> +Optional properties:
->> + - ngpios              : Number of GPIO lines, default is 8.
->
-> If you didn't do "pisosr-gpio" but instead "foo,sn74165", maybe you
-> don't need to have this in the device tree but instead it can be
-> determined from the compatible string?
->
-> In that case do that.
->
-
-These devices can be daisy-chained together, so three 8bit registers
-look exactly like one 24bit register. The only way to know this is
-from the physical wiring of the board, not from the part number.
-
-Thanks,
-Andrew
-
->> + - load-gpios          : GPIO pin specifier attached to load enable, this
->> +                         pin is pulsed before reading from the device to
->> +                         load input pin values into the the device.
->
-> OK seems necessary.
->
-> Yours,
-> Linus Walleij
->
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
