@@ -1,49 +1,108 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 02/10] clockevents/drivers: add MPS2 Timer driver
-Date: Mon, 14 Dec 2015 07:56:29 -0600
-Message-ID: <CAL_Jsq+MhvV5BFw+x3TWTDheSpgWHjHjO02+D4V4swr493HXrg@mail.gmail.com>
-References: <1449048790-25859-1-git-send-email-vladimir.murzin@arm.com> <1449048790-25859-3-git-send-email-vladimir.murzin@arm.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 13/14] ARM: dts: dove: add DT GPU support
+Date: Mon, 14 Dec 2015 14:56:41 +0100
+Message-ID: <87twnlw2ue.fsf@free-electrons.com>
+References: <1449661707-30532-1-git-send-email-l.stach@pengutronix.de>
+	<1449661707-30532-13-git-send-email-l.stach@pengutronix.de>
+	<1450099862.3163.38.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449048790-25859-3-git-send-email-vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1450099862.3163.38.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> (Lucas Stach's message
+	of "Mon, 14 Dec 2015 14:31:02 +0100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TbrhsbdSgBK9A@public.gmane.org>
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 2, 2015 at 3:33 AM, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org> wrote:
-> MPS2 platform has simple 32 bits general purpose countdown timers.
->
-> The driver uses the first detected timer as a clocksource and the rest
-> of the timers as a clockevent
->
-> Signed-off-by: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-> ---
->  drivers/clocksource/Kconfig      |    5 +
->  drivers/clocksource/Makefile     |    1 +
->  drivers/clocksource/mps2-timer.c |  277 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 283 insertions(+)
->  create mode 100644 drivers/clocksource/mps2-timer.c
->
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index 2eb5f0e..8bca09c 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -137,6 +137,11 @@ config CLKSRC_STM32
->         depends on OF && ARM && (ARCH_STM32 || COMPILE_TEST)
->         select CLKSRC_MMIO
->
-> +config CLKSRC_MPS2
-> +       bool "Clocksource for MPS2 SoCs" if COMPILE_TEST
-> +       depends on OF && ARM
+Hi Lucas,
+=20
+ On lun., d=C3=A9c. 14 2015, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote=
+:
 
-Does this really depend on both of these for COMPILE_TEST?
+> Dove maintainers,
+>
+> can you please tell me if you prefer the DT changes to go along with =
+the
+> rest of the etnaviv series through the DRM tree, or plan on picking t=
+his
+> separate?
 
-You need to select CLKSRC_OF rather than CLKSRC_MMIO as well.
+I prefer to take the DT change in the mvebu tree. I was waiting for
+acknowledgment on this series from the DRM maintainers to be sure that
+the binding was OK. However, the fact that Rob Herring already acked th=
+e
+binding is a good point for me.
 
-Rob
+Gregory
+
+
+>
+> Regards,
+> Lucas
+>
+> Am Mittwoch, den 09.12.2015, 12:48 +0100 schrieb Lucas Stach:
+>> From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+>>=20
+>> Add DT support for the Vivante GC600 GPU on Marvell Dove platforms.
+>> These nodes default to being disabled unless a platform decides they
+>> should be enabled.
+>>=20
+>> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+>> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/dove.dtsi | 16 ++++++++++++++++
+>>  1 file changed, 16 insertions(+)
+>>=20
+>> diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dt=
+si
+>> index cd58c2e62757..ea1d999ca7a7 100644
+>> --- a/arch/arm/boot/dts/dove.dtsi
+>> +++ b/arch/arm/boot/dts/dove.dtsi
+>> @@ -33,6 +33,12 @@
+>>  		marvell,tauros2-cache-features =3D <0>;
+>>  	};
+>> =20
+>> +	gpu-subsystem {
+>> +		compatible =3D "marvell,dove-gpu-subsystem";
+>> +		cores =3D <&gpu>;
+>> +		status =3D "disabled";
+>> +	};
+>> +
+>>  	i2c-mux {
+>>  		compatible =3D "i2c-mux-pinctrl";
+>>  		#address-cells =3D <1>;
+>> @@ -776,6 +782,16 @@
+>>  				#address-cells =3D <1>;
+>>  				#size-cells =3D <1>;
+>>  			};
+>> +
+>> +			gpu: gpu@840000 {
+>> +				clocks =3D <&divider_clk 1>;
+>> +				clock-names =3D "core";
+>> +				compatible =3D "vivante,gc";
+>> +				interrupts =3D <48>;
+>> +				power-domains =3D <&gpu_domain>;
+>> +				reg =3D <0x840000 0x4000>;
+>> +				status =3D "disabled";
+>> +			};
+>>  		};
+>>  	};
+>>  };
+>
+> --=20
+> Pengutronix e.K.             | Lucas Stach                 |
+> Industrial Linux Solutions   | http://www.pengutronix.de/  |
+>
+
+--=20
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
