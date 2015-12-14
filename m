@@ -1,35 +1,47 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 3/4] ARM: dts: lpc18xx: add EEPROM memory node
-Date: Mon, 14 Dec 2015 18:13:15 +0100
-Message-ID: <CAGhQ9VxpoVZOc5-dbs6=G5bsh_5AdByXYL8NvDWaUFWRY2qpjA@mail.gmail.com>
-References: <1447790576-29410-1-git-send-email-ariel@vanguardiasur.com.ar>
-	<1447790576-29410-4-git-send-email-ariel@vanguardiasur.com.ar>
-	<566E947F.2030805@linaro.org>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: Re: [PATCH v14 0/7] fpga area and fpga bridge framework
+Date: Mon, 14 Dec 2015 09:16:33 -0800
+Message-ID: <CAAtXAHcNqP4ftOUbFYK=0kmpY9XmPgQ1=xAejQUj90N4x4pFng@mail.gmail.com>
+References: <1449790629-5517-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <566E947F.2030805-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1449790629-5517-1-git-send-email-atull@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alan Tull <atull@opensource.altera.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Josh Cartwright <joshc@ni.com>, Greg KH <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Alan Tull <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Srinivas.
+Hi Alan,
 
-On 14 December 2015 at 11:05, Srinivas Kandagatla
-<srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Hi Joachim,
+On Thu, Dec 10, 2015 at 3:37 PM,  <atull@opensource.altera.com> wrote:
+> From: Alan Tull <atull@opensource.altera.com>
 >
-> Could you take this DT patches via your tree, I picked up the nvmem patches.
+> For v14 I'm dropping the concept of "simple-fpga-bus" for "fpga-area"
+> with reworked bindings.
 
-Cool.
+I had an offline discussion with Josh Cartwright about his concerns.
+He brought up a good
+point on w.r.t to the way FPGA Area (Bus) deals with things.
 
-Yes, I will take the DT and defconfig patch.
+Currently we only support complete status = "okay" vs "disabled" kind
+of overlays.
 
+If now you have say a UART in the FPGA that you don't want to go away
+and come back on reload,
+we don't have a good way of expressing this. Is there a good way to
+express non-mmio FPGA devices?
 
-regards,
-Joachim Eastwood
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I've been toying around with hacking up struct device to include a
+FPGA 'domain', and then, similar
+to power domains allow devices to register suspend() / resume() style
+callbacks (could call them pre_reload() or something like that ...)
+
+I haven't gotten around to think it through. At this point it's just
+an idea and I don't have real code to show.
+
+I realize the issue with that is we'd have to make changes to struct device.
+
+Cheers,
+
+Moritz
