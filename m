@@ -1,161 +1,115 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: Generic DT binding for IPIs
-Date: Mon, 14 Dec 2015 12:40:57 +1100
-Message-ID: <20151214014057.GM22783@voom.fritz.box>
-References: <561E2BE6.2090807@imgtec.com>
- <5628BE00.4020106@imgtec.com>
- <20151022115551.GI3953@io.lakedaemon.net>
- <56684877.3020708@imgtec.com>
- <CAL_Jsq+yv1UnBhrR+x+DEA41yETVANY9_-5W0DSQJVEQ4+Mx_w@mail.gmail.com>
- <56695201.2070807@imgtec.com>
- <20151211003902.GE20139@voom.fritz.box>
- <566AA9DD.6040404@imgtec.com>
+From: xuejiancheng <xuejiancheng@huawei.com>
+Subject: Re: [PATCH v3 2/7] clk: hisilicon: add dt-binding document for Hi3519
+ CRG
+Date: Mon, 14 Dec 2015 09:45:58 +0800
+Message-ID: <566E1F56.3070800@huawei.com>
+References: <1449819921-18464-1-git-send-email-xuejiancheng@huawei.com>
+ <1449819921-18464-3-git-send-email-xuejiancheng@huawei.com>
+ <20151211151909.GA21272@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8c07nsHwQobhlezh"
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <566AA9DD.6040404-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lisa Parratt <Lisa.Parratt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20151211151909.GA21272@rob-hp-laptop>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
 
---8c07nsHwQobhlezh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 11, 2015 at 10:47:57AM +0000, Qais Yousef wrote:
-> On 12/11/2015 12:39 AM, David Gibson wrote:
-> >On Thu, Dec 10, 2015 at 10:20:49AM +0000, Qais Yousef wrote:
-> >>
-> >>The IPIs have two properties that are different from a regular interrup=
-ts:
-> >>
-> >>     1. An IPI is not only received, it could also be sent.
-> >Any interrupt is sent by the device, received by an interrupt
-> >controller, so this isn't really anything fundamentally different.
->=20
-> No they're not fundamentally different. It's just the way they're created
-> and used.
->=20
-> >>     2. The IPI is dynamic. There's an actual allocation from a pool of
-> >>available
-> >>         IPIs happening when we ask for one to be reserved.
-> >It's not really clear to me what that means, and why it requires any
-> >particular different information in the device tree.
->=20
-> Maybe it would help to look at the new IPI reservation API?
->=20
->     https://lkml.org/lkml/2015/12/8/249
+On 2015/12/11 23:19, Rob Herring wrote:
+> On Fri, Dec 11, 2015 at 03:45:16PM +0800, Jiancheng Xue wrote:
+>> add dt-binding document for Hi3519 CRG block
+>>
+>> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
+>> ---
+>>  .../devicetree/bindings/clock/hi3519-crg.txt       | 46 ++++++++++++++++++++++
+>>  1 file changed, 46 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/hi3519-crg.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/hi3519-crg.txt b/Documentation/devicetree/bindings/clock/hi3519-crg.txt
+>> new file mode 100644
+>> index 0000000..e0d30a4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/hi3519-crg.txt
+>> @@ -0,0 +1,46 @@
+>> +* Hisilicon Hi3519 Clock and Reset Generator(CRG)
+>> +
+>> +The Hi3519 CRG module provides clock and reset signals to various
+>> +controllers within the SoC.
+>> +
+>> +This binding uses the following bindings:
+>> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> +    Documentation/devicetree/bindings/reset/reset.txt
+>> +
+>> +Required Properties:
+>> +
+>> +- compatible: should be one of the following.
+>> +  - "hisilicon,hi3519-crg" - controller compatible with Hi3519 SoC.
+>> +
+>> +- reg: physical base address of the controller and length of memory mapped
+>> +  region.
+>> +
+>> +- #clock-cells: should be 1.
+>> +
+>> +Each clock is assigned an identifier and client nodes use this identifier
+>> +to specify the clock which they consume.
+>> +
+>> +All these identifier could be found in <dt-bindings/clock/hi3519-clock.h>.
+> 
+> This header should be part of this patch.
 
-Hmm.. not as much as I might have hoped.
+Because the header is also depended on by the clock driver. It's also a problem
+if I separate it from the clock driver patch.
 
-=46rom the API, it looks like you're reserving IPIs to signal between
-different CPUs all of which are in Linux.  From your description here
-it sounds like the coproc is a separate specialized thing not running
-Linux (or at least, not the same Linux instance as the host OS which
-this device tree is for).
+Is it OK if I put this binding file into the clock driver patch?
+> 
+>> +
+>> +- #reset-cells: should be 2.
+>> +
+>> +A reset signal can be controlled by writing a bit register in the CRG module.
+>> +The reset specifier consists of two cells. The first cell represents the
+>> +register offset relative to the base address. The second cell represents the
+>> +bit index in the register.
+>> +
+>> +Example: CRG nodes
+>> +CRG: clock-reset-controller {
+> 
+> clock-reset-controller@12010000
 
-> >>The difference might be borderline..
-> >>
-> >>Do you have any rough idea on what a possible extension could look like?
-> >>Reusing means writing less code, which is always better of course :)
-> >>
-> >>By the way, on MIPS GIC, we can use interrupts property to describe an =
-IPI
-> >>the host system will receive. But to send one to the coprocessor, we ne=
-ed to
-> >>define an outgoing IPI.
-> >Ah, ok, so is what you're trying to describe here (from the host OS
-> >and CPU point of view) a purely outgoing signal to the coproc?
->=20
-> Yes.
+OK.
 
-Ok.  In that case 'interrupts' is definitely *not* the right way to
-describe this.  'interrupts' describes a signal going _from_ the node
-in which it appears, _to_ the (host) cpu.  Or at least to an interrupt
-controller which will generally forward it to the host cpu one way or
-another.
+> 
+>> +	compatible = "hisilicon,hi3519-crg";
+>> +        reg = <0x12010000 0x10000>;
+>> +        #clock-cells = <1>;
+>> +        #reset-cells = <2>;
+>> +};
+>> +
+>> +Example: consumer nodes
+>> +i2c0: i2c@0x12110000 {
+> 
+> Drop '0x'
 
+OK.
 
-> >>In this case, the firmware will be hardcoded to send an interrupt to a
-> >>specific hwirq, so one can then describe it in DT as a regular interrup=
-t to
-> >>the host system. Hardcoding is not ideal and less portable though.
-> >Or is the signal that goes to the coproc then somehow being translated
-> >into a host interrupt?  If that's so you should be able to represent
-> >the coproc as an interrupt controller or interrupt nexus.
-> >
->=20
-> I'm not sure I understood you completely but no, there's no translation
-> happening. When the IPI is allocated it would be routed
-> to the coproc. When the host wants to send a signal, it'll use the alloca=
-ted
-> hwirq value (indirectly via the virq) to write to a register, which will
-> cause an interrupt to be generated at the coproc.
+> 
+>> +	compatible = "hisilicon,hi3519-i2c";
+>> +        reg = <0x12110000 0x1000>;
+>> +        clocks = <&CRG HI3519_I2C0_RST>;*/
+>> +        resets = <&CRG 0xE4 0>;
+> 
+> lowercase hex please
 
-Where is this magic register located?  In the host cpu?  In the
-coproc?  In some special IPI controller?
+OK.
 
-> >>>>      };
-> >>>>
-> >>>>      coproc2 {
-> >>>>              ipi-refs =3D <&coproc1 "in">, <&coproc1 "coproc2data">,=
- <&coproc1
-> >>>>"corpoc2ctrl">;
-> >>>This isn't actually parseable. You need a known length of cells after =
-a phandle.
-> >>>
-> >>To clarify, what you're saying we can't pass strings, right?
-> >So, I'm not entirely sure what point Rob was making.  The above
-> >certainly isn't valid dts syntax - strings can't appear within
-> >the < > construct.  But if you make the obvious fix to:
-> >     ipi-refs =3D <&coproc1>, "in", <&coproc1>, "coproc2data";
-> >
-> >then it's certainly a parseable property format.  It's kind of clunky
-> >mixing integers and strings that way, but it's possible and there are
-> >existing bindings using properties in a similar format.
-> >
->=20
-> Ah OK thanks! I think this form would be handy to get the refs even if we
-> end up reusing the interrupts property to allocate an IPI.
->=20
-> So if reusing the interrupts property is the right thing to do, do you (or
-> anyone else) have a rough idea how this should look like?
+> 
+>> +};
+>> -- 
+>> 1.9.1
+>>
+> 
+> .
+> 
 
-So as noted above, I'm now sure that 'interrupts' is not the right
-thing.  I'm trying to understand the coprocs and the ipi mechanism a
-bit better to work out if there is something existing which would make
-sense, or if we do need something entirely new.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---8c07nsHwQobhlezh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWbh4pAAoJEGw4ysog2bOS2RMQALwcxxCdIi0qhCkpnvPHsa5x
-vwNT6jwtoyTH9DqFqy5rYXRkUCNcQUITmAqqBg+qYtGMaIAEVEUm3+206eyFij+c
-UYJisscffDn+IS6WjOiLq5nfJYZ/MKyR1QEO9GNL0PGh7GIysAk1LamVmgQOvPTA
-SRM5JQm9kFohWEEOto38TbdCIViUkzO1DOBY9pznQDsCL4RBc/NV7jvpHFcZkZRY
-4PDSg4CDj2X++G2Q2+Al9zQ4HlJWJaF4Z74Epmt+ODh6+mNYeUnPKse1dvzQJ8RI
-XnP1wP2D7t2iBEPHudwqc4nY1x4Hl279KuX0wsuTznuLQFtOJUdGsHzF0AEUhHxb
-f2X3cShaocZqb8aQVKTUE9qMevXm3gNd930xaFe7bE+c/A3ZE80MQkLZRxmr7DUE
-HIxhFgxSMICPRTE7AK4/5/WPhCG87dmDwgHi9dXH7mZXFsJTHqZcVOECMzBLuB8f
-1M58DV95zxOZ8dYSjxTmxRRaK3dcndqY+SaSG3pEx3HVypC7QGysv4dAn2EKoZ+W
-HqXFJrLLH8k+qE/ywhsGPd3L+wgwALrn7BoNnSt1fMx8T+YFrV/iy1b3dMzBe9H+
-5vL7FgoKAC8v1ucf6PcOItK8K572TRitvXwFnITlLHOLxs5wpfysZ1mACFJpMU8P
-y5aFthsxeq9WFRmm92n2
-=nh/h
------END PGP SIGNATURE-----
-
---8c07nsHwQobhlezh--
