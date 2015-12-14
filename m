@@ -1,31 +1,50 @@
-From: Dinh Nguyen <dinh.linux@gmail.com>
-Subject: Re: [PATCH v6 4/4] stmmac: socfpga: Provide dt node to config ptp clk source.
-Date: Mon, 14 Dec 2015 15:16:10 -0600
-Message-ID: <CADhT+wesDDATNR1dX8ynjKKfm3tUv7_TSyZ80kCgGcr9gYcfBg@mail.gmail.com>
-References: <1450063922-19481-1-git-send-email-preid@electromag.com.au>
-	<1450063922-19481-5-git-send-email-preid@electromag.com.au>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC 0/7] ARM: dts: Add compatible property to "partitions" node
+Date: Mon, 14 Dec 2015 22:20:19 +0100
+Message-ID: <CAMuHMdW=wJEoi-+EWAKBjRwb+QFvk=iFur1yFqR=q0f4zwzb2Q@mail.gmail.com>
+References: <1450120304-2760-1-git-send-email-geert+renesas@glider.be>
+	<20151214194613.GA126731@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1450063922-19481-5-git-send-email-preid@electromag.com.au>
-Sender: netdev-owner@vger.kernel.org
-To: Phil Reid <preid@electromag.com.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, David Miller <davem@davemloft.net>, "vbridger@opensource.altera.com" <vbridger@opensource.altera.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, netdev@vger.kernel.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20151214194613.GA126731@google.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mtd@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 13, 2015 at 9:32 PM, Phil Reid <preid@electromag.com.au> wrote:
-> Provides an options to use the ptp clock routed from the Altera FPGA
-> fabric. Instead of the defalt eosc1 clock connected to the ARM HPS core.
-> This setting affects all emacs in the core as the ptp clock is common.
->
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Phil Reid <preid@electromag.com.au>
-> ---
->  Documentation/devicetree/bindings/net/socfpga-dwmac.txt | 2 ++
->  drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c     | 9 +++++++++
->  2 files changed, 11 insertions(+)
->
+Hi Brian,
 
-Acked-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+On Mon, Dec 14, 2015 at 8:46 PM, Brian Norris
+<computersforpeace@gmail.com> wrote:
+> On Mon, Dec 14, 2015 at 08:11:37PM +0100, Geert Uytterhoeven wrote:
+>> As of commit e488ca9f8d4f62c2 ("doc: dt: mtd: partitions: add compatible
+>> property to "partitions" node"), the "partitions" subnode of an SPI
+>> FLASH device node must have a compatible property. The partitions are no
+>> longer detected if it is not present.
+>
+> For all patches:
+>
+> Acked-by: Brian Norris <computersforpeace@gmail.com>
+>
+>> I marked this series as "RFC", as the abovementioned commit is not yet
+>> upstream. Ideally, the users should be fixed first, to avoid breakage.
 
-Dinh
+It breaks bisectability in mainline.
+
+> I'd differ on the last sentence. It's more important to straighten out
+> the release features for 4.4 than to make sure that linux-next has
+> perfect DTS files. So I'll submit whenever ready :)
+
+If the DTS changes go in first, bisectability is preserved.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
