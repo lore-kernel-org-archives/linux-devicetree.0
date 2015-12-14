@@ -1,41 +1,86 @@
-From: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/2] ASoC: atmel-pdmic: add driver for Atmel PDMIC
-Date: Mon, 14 Dec 2015 16:15:38 +0800
-Message-ID: <1450080940-4123-1-git-send-email-songjun.wu@atmel.com>
+From: Songjun Wu <songjun.wu@atmel.com>
+Subject: [PATCH 2/2] ASoC: atmel-pdmic: DT binding for PDMIC driver
+Date: Mon, 14 Dec 2015 16:15:40 +0800
+Message-ID: <1450080940-4123-3-git-send-email-songjun.wu@atmel.com>
+References: <1450080940-4123-1-git-send-email-songjun.wu@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1450080940-4123-1-git-send-email-songjun.wu@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, nicolas.ferre@atmel.com
+Cc: linux-arm-kernel@lists.infradead.org, Songjun Wu <songjun.wu@atmel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Pulse Density Modulation Inteface Controller driver
-includes two parts.
-1) Driver code to implement the PDMIC function.
-2) Device tree binding documentation, it describes how to add
-   the PDMIC in device tree.
+DT binding documentation for this new ASoC driver.
 
+Signed-off-by: Songjun Wu <songjun.wu@atmel.com>
+---
 
-Songjun Wu (2):
-  ASoC: atmel-pdmic: add the Pulse Density Modulation Interface
-    Controller
-  ASoC: atmel-pdmic: DT binding for PDMIC driver
-
- .../devicetree/bindings/sound/atmel-pdmic.txt      |   55 ++
- sound/soc/atmel/Kconfig                            |    9 +
- sound/soc/atmel/Makefile                           |    2 +
- sound/soc/atmel/atmel-pdmic.c                      |  745 ++++++++++++++++++++
- sound/soc/atmel/atmel-pdmic.h                      |   80 +++
- 5 files changed, 891 insertions(+)
+ .../devicetree/bindings/sound/atmel-pdmic.txt      |   55 ++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/sound/atmel-pdmic.txt
- create mode 100644 sound/soc/atmel/atmel-pdmic.c
- create mode 100644 sound/soc/atmel/atmel-pdmic.h
 
+diff --git a/Documentation/devicetree/bindings/sound/atmel-pdmic.txt b/Documentation/devicetree/bindings/sound/atmel-pdmic.txt
+new file mode 100644
+index 0000000..e0875f1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/atmel-pdmic.txt
+@@ -0,0 +1,55 @@
++* Atmel PDMIC driver under ALSA SoC architecture
++
++Required properties:
++- compatible
++	Should be "atmel,sama5d2-pdmic".
++- reg
++	Should contain PDMIC registers location and length.
++- interrupts
++	Should contain the IRQ line for the PDMIC.
++- dmas
++	One DMA specifiers as described in atmel-dma.txt and dma.txt files.
++- dma-names
++	Must be "rx".
++- clock-names
++	Required elements:
++	- "pclk"	peripheral clock
++	- "gclk"	generated clock
++- clocks
++	Must contain an entry for each required entry in clock-names.
++	Please refer to clock-bindings.txt.
++- atmel,mic-min-freq
++	The minimal frequency that the micphone supports.
++- atmel,mic-max-freq
++	The maximal frequency that the micphone supports.
++
++Optional properties:
++- pinctrl-names, pinctrl-0
++	Please refer to pinctrl-bindings.txt.
++- atmel,model
++	The user-visible name of this sound card.
++	The default value is "PDMIC".
++- atmel,mic-offset
++	The offset that should be added.
++	The range is from -32768 to 32767.
++	The default value is 0.
++
++Example:
++	pdmic@f8018000 {
++				compatible = "atmel,sama5d2-pdmic";
++				reg = <0xf8018000 0x124>;
++				interrupts = <48 IRQ_TYPE_LEVEL_HIGH 7>;
++				dmas = <&dma0
++					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
++					| AT91_XDMAC_DT_PERID(50))>;
++				dma-names = "rx";
++				clocks = <&pdmic_clk>, <&pdmic_gclk>;
++				clock-names = "pclk", "gclk";
++
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_pdmic_default>;
++				atmel,model = "PDMIC @ sama5d2_xplained";
++				atmel,mic-min-freq = <1000000>;
++				atmel,mic-max-freq = <3246000>;
++				atmel,mic-offset = <0x0>;
++	};
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
