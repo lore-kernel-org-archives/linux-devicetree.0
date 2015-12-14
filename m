@@ -1,57 +1,73 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC 0/7] ARM: dts: Add compatible property to "partitions" node
-Date: Mon, 14 Dec 2015 20:11:37 +0100
-Message-ID: <1450120304-2760-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 7/9] ARM: shmobile: porter dts: Enable SCIF_CLK frequency and pins
+Date: Mon, 14 Dec 2015 19:58:22 +0100
+Message-ID: <1450119504-1517-8-git-send-email-geert+renesas@glider.be>
+References: <1450119504-1517-1-git-send-email-geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1450119504-1517-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-	Hi,
+Add and enable the external crystal for the SCIF_CLK and its pinctrl, to
+be used by the Baud Rate Generator for External Clock (BRG) on (H)SCIF.
 
-As of commit e488ca9f8d4f62c2 ("doc: dt: mtd: partitions: add compatible
-property to "partitions" node"), the "partitions" subnode of an SPI
-FLASH device node must have a compatible property. The partitions are no
-longer detected if it is not present.
+This increases the range and accuracy of supported baud rates.
 
-I marked this series as "RFC", as the abovementioned commit is not yet
-upstream. Ideally, the users should be fixed first, to avoid breakage.
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+---
+Untested, based on hardware manual.
 
-Tested on r8a7791/koelsch.
+Note that U-Boot doesn't use SCIF_CLK on porter, like salvator-x, but
+unlike all other supported R-Car Gen2 boards.
 
-Thanks!
+v2:
+  - New.
+---
+ arch/arm/boot/dts/r8a7791-porter.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Geert Uytterhoeven (7):
-  ARM: dt: mvebu: ix4-300d: Add compatible property to "partitions" node
-  ARM: shmobile: bockw dts: Add compatible property to "partitions" node
-  ARM: shmobile: lager dts: Add compatible property to "partitions" node
-  ARM: shmobile: koelsch dts: Add compatible property to "partitions"
-    node
-  ARM: shmobile: porter dts: Add compatible property to "partitions"
-    node
-  ARM: shmobile: gose dts: Add compatible property to "partitions" node
-  ARM: shmobile: silk dts: Add compatible property to "partitions" node
-
- arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts | 1 +
- arch/arm/boot/dts/r8a7778-bockw.dts             | 1 +
- arch/arm/boot/dts/r8a7790-lager.dts             | 1 +
- arch/arm/boot/dts/r8a7791-koelsch.dts           | 1 +
- arch/arm/boot/dts/r8a7791-porter.dts            | 1 +
- arch/arm/boot/dts/r8a7793-gose.dts              | 1 +
- arch/arm/boot/dts/r8a7794-silk.dts              | 1 +
- 7 files changed, 7 insertions(+)
-
+diff --git a/arch/arm/boot/dts/r8a7791-porter.dts b/arch/arm/boot/dts/r8a7791-porter.dts
+index 71ba7b6b3a337cd9..b93016896378c350 100644
+--- a/arch/arm/boot/dts/r8a7791-porter.dts
++++ b/arch/arm/boot/dts/r8a7791-porter.dts
+@@ -85,11 +85,19 @@
+ };
+ 
+ &pfc {
++	pinctrl-0 = <&scif_clk_pins>;
++	pinctrl-names = "default";
++
+ 	scif0_pins: serial0 {
+ 		renesas,groups = "scif0_data_d";
+ 		renesas,function = "scif0";
+ 	};
+ 
++	scif_clk_pins: scif_clk {
++		renesas,groups = "scif_clk";
++		renesas,function = "scif_clk";
++	};
++
+ 	ether_pins: ether {
+ 		renesas,groups = "eth_link", "eth_mdio", "eth_rmii";
+ 		renesas,function = "eth";
+@@ -148,6 +156,11 @@
+ 	status = "okay";
+ };
+ 
++&scif_clk {
++	clock-frequency = <14745600>;
++	status = "okay";
++};
++
+ &ether {
+ 	pinctrl-0 = <&ether_pins &phy1_pins>;
+ 	pinctrl-names = "default";
 -- 
 1.9.1
 
-Gr{oetje,eeting}s,
-
-						Geert
-
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
