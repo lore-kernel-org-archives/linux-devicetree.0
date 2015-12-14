@@ -1,50 +1,90 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] reset: Add shared
- reset_control_[de]assert variants
-Date: Mon, 14 Dec 2015 10:50:55 +0100
-Message-ID: <1450086655.3407.23.camel@pengutronix.de>
-References: <1449848520-27379-1-git-send-email-hdegoede@redhat.com>
-	 <20151214093607.GF19456@lukather>
-Reply-To: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH 12/12] ARM: dts: imx6: add Vivante GPU nodes
+Date: Mon, 14 Dec 2015 10:52:25 +0100
+Message-ID: <1450086745.3163.3.camel@pengutronix.de>
+References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
+ <1449237604-19064-13-git-send-email-l.stach@pengutronix.de>
+ <20151211070258.GA11252@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDUKXHHSSIJBBCVCXKZQKGQEZECH6CY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20151214093607.GF19456@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Josh Triplett <josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org>, Rashika Kheria <rashika.kheria-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20151211070258.GA11252@tiger>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Russell King <rmk+kernel@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, den 14.12.2015, 10:36 +0100 schrieb Maxime Ripard:
-> Hi,
-> 
-> On Fri, Dec 11, 2015 at 04:41:58PM +0100, Hans de Goede wrote:
-> > diff --git a/include/linux/reset.h b/include/linux/reset.h
-> > index c4c097d..1cca8ce 100644
-> > --- a/include/linux/reset.h
-> > +++ b/include/linux/reset.h
-> > @@ -11,6 +11,8 @@ int reset_control_reset(struct reset_control *rstc);
-> >  int reset_control_assert(struct reset_control *rstc);
-> >  int reset_control_deassert(struct reset_control *rstc);
-> >  int reset_control_status(struct reset_control *rstc);
-> > +int reset_control_assert_shared(struct reset_control *rstc);
-> > +int reset_control_deassert_shared(struct reset_control *rstc);
-> 
-> Shouldn't that be handled in reset_control_get directly?
-
-This is about different expectations of the caller.
-A driver calling reset_control_assert expects the reset line to be
-asserted after the call. A driver calling reset_control_assert_shared
-just signals that it doesn't care about the state of the reset line
-anymore.
-We could just as well call the two new functions
-reset_control_deassert_get and reset_control_deassert_put.
-
-regards
-Philipp
+QW0gRnJlaXRhZywgZGVuIDExLjEyLjIwMTUsIDE1OjAyICswODAwIHNjaHJpZWIgU2hhd24gR3Vv
+Ogo+IE9uIEZyaSwgRGVjIDA0LCAyMDE1IGF0IDAzOjAwOjA0UE0gKzAxMDAsIEx1Y2FzIFN0YWNo
+IHdyb3RlOgo+ID4gVGhpcyBhZGRzIHRoZSBkZXZpY2Ugbm9kZXMgZm9yIDJELCAzRCBhbmQgVkcg
+R1BVIGNvcmVzLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBSdXNzZWxsIEtpbmcgPHJtaytrZXJu
+ZWxAYXJtLmxpbnV4Lm9yZy51az4KPiA+IFNpZ25lZC1vZmYtYnk6IEx1Y2FzIFN0YWNoIDxsLnN0
+YWNoQHBlbmd1dHJvbml4LmRlPgo+ID4gLS0tCj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14NmRs
+LmR0c2kgIHwgIDUgKysrKysKPiA+ICBhcmNoL2FybS9ib290L2R0cy9pbXg2cS5kdHNpICAgfCAx
+NSArKysrKysrKysrKysrKysKPiA+ICBhcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLmR0c2kgfCAy
+MiArKysrKysrKysrKysrKysrKysrKysrCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCA0MiBpbnNlcnRp
+b25zKCspCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2ZGwuZHRz
+aSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZkbC5kdHNpCj4gPiBpbmRleCA0YjBlYzA3MDM4MjUu
+LjUxYzUxN2E1Y2FmZCAxMDA2NDQKPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZkbC5k
+dHNpCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2ZGwuZHRzaQo+ID4gQEAgLTEwNCw2
+ICsxMDQsMTEgQEAKPiA+ICAJCWNvbXBhdGlibGUgPSAiZnNsLGlteC1kaXNwbGF5LXN1YnN5c3Rl
+bSI7Cj4gPiAgCQlwb3J0cyA9IDwmaXB1MV9kaTA+LCA8JmlwdTFfZGkxPjsKPiA+ICAJfTsKPiA+
+ICsKPiA+ICsJZ3B1LXN1YnN5c3RlbSB7Cj4gPiArCQljb21wYXRpYmxlID0gImZzbCxpbXgtZ3B1
+LXN1YnN5c3RlbSI7Cj4gPiArCQljb3JlcyA9IDwmZ3B1XzJkPiwgPCZncHVfM2Q+Owo+ID4gKwl9
+Owo+ID4gIH07Cj4gPiAgCj4gPiAgJmdwdCB7Cj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
+dC9kdHMvaW14NnEuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLmR0c2kKPiA+IGluZGV4
+IDM5OTEwM2I4ZTJjOS4uNzdkNjE4YjI4NzBjIDEwMDY0NAo+ID4gLS0tIGEvYXJjaC9hcm0vYm9v
+dC9kdHMvaW14NnEuZHRzaQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnEuZHRzaQo+
+ID4gQEAgLTE1Myw2ICsxNTMsMTYgQEAKPiA+ICAJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ID4g
+IAkJfTsKPiA+ICAKPiA+ICsJCWdwdV92ZzogZ3B1QDAyMjA0MDAwIHsKPiA+ICsJCQljb21wYXRp
+YmxlID0gInZpdmFudGUsZ2MiOwo+ID4gKwkJCXJlZyA9IDwweDAyMjA0MDAwIDB4NDAwMD47Cj4g
+PiArCQkJaW50ZXJydXB0cyA9IDwwIDExIElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ID4gKwkJCWNs
+b2NrcyA9IDwmY2xrcyBJTVg2UURMX0NMS19PUEVOVkdfQVhJPiwKPiA+ICsJCQkJIDwmY2xrcyBJ
+TVg2UURMX0NMS19HUFUyRF9DT1JFPjsKPiA+ICsJCQljbG9jay1uYW1lcyA9ICJidXMiLCAiY29y
+ZSI7Cj4gPiArCQkJcG93ZXItZG9tYWlucyA9IDwmZ3BjIDE+Owo+IAo+IFNob3VsZG4ndCBwcm9w
+ZXJ0eSAncG93ZXItZG9tYWlucycgYmUgbWVudGlvbmVkIGEgYml0IGluIGJpbmRpbmdzIGRvYz8K
+PiAKSG0sIGl0J3MgYSBzdGFuZGFyZCBwcm9wZXJ0eSwgc28gSSBkb24ndCBrbm93IGlmIGl0J3Mg
+cmVxdWlyZWQuIEJ1dCBPVE9ICml0IGRvZXNuJ3QgaHVydCB0byBoYXZlIGl0LCBzbyB3aWxsIGFk
+ZCB0aGF0LgoKPiA+ICsJCX07Cj4gPiArCj4gPiAgCQlpcHUyOiBpcHVAMDI4MDAwMDAgewo+ID4g
+IAkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ID4gIAkJCSNzaXplLWNlbGxzID0gPDA+Owo+ID4g
+QEAgLTIyNSw2ICsyMzUsMTEgQEAKPiA+ICAJCWNvbXBhdGlibGUgPSAiZnNsLGlteC1kaXNwbGF5
+LXN1YnN5c3RlbSI7Cj4gPiAgCQlwb3J0cyA9IDwmaXB1MV9kaTA+LCA8JmlwdTFfZGkxPiwgPCZp
+cHUyX2RpMD4sIDwmaXB1Ml9kaTE+Owo+ID4gIAl9Owo+ID4gKwo+ID4gKwlncHUtc3Vic3lzdGVt
+IHsKPiA+ICsJCWNvbXBhdGlibGUgPSAiZnNsLGlteC1ncHUtc3Vic3lzdGVtIjsKPiA+ICsJCWNv
+cmVzID0gPCZncHVfMmQ+LCA8JmdwdV8zZD4sIDwmZ3B1X3ZnPjsKPiA+ICsJfTsKPiA+ICB9Owo+
+ID4gIAo+ID4gICZoZG1pIHsKPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2
+cWRsLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLmR0c2kKPiA+IGluZGV4IDJiNmNj
+OGJmM2M1Yy4uMDE4OTc1Yjg2N2UxIDEwMDY0NAo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMv
+aW14NnFkbC5kdHNpCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLmR0c2kKPiA+
+IEBAIC0xMTksNiArMTE5LDI4IEBACj4gPiAgCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiA+ICAJ
+CX07Cj4gPiAgCj4gPiArCj4gPiArCQlncHVfMmQ6IGdwdUAwMDEzNDAwMCB7Cj4gPiArCQkJY29t
+cGF0aWJsZSA9ICJ2aXZhbnRlLGdjIjsKPiA+ICsJCQlyZWcgPSA8MHgwMDEzNDAwMCAweDQwMDA+
+Owo+ID4gKwkJCWludGVycnVwdHMgPSA8MCAxMCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiA+ICsJ
+CQljbG9ja3MgPSA8JmNsa3MgSU1YNlFETF9DTEtfR1BVMkRfQVhJPiwKPiA+ICsJCQkJIDwmY2xr
+cyBJTVg2UURMX0NMS19HUFUyRF9DT1JFPjsKPiA+ICsJCQljbG9jay1uYW1lcyA9ICJidXMiLCAi
+Y29yZSI7Cj4gPiArCQkJcG93ZXItZG9tYWlucyA9IDwmZ3BjIDE+Owo+ID4gKwkJfTsKPiA+ICsK
+PiA+ICsJCWdwdV8zZDogZ3B1QDAwMTMwMDAwIHsKPiA+ICsJCQljb21wYXRpYmxlID0gInZpdmFu
+dGUsZ2MiOwo+ID4gKwkJCXJlZyA9IDwweDAwMTMwMDAwIDB4NDAwMD47Cj4gPiArCQkJaW50ZXJy
+dXB0cyA9IDwwIDkgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gPiArCQkJY2xvY2tzID0gPCZjbGtz
+IElNWDZRRExfQ0xLX0dQVTNEX0FYST4sCj4gPiArCQkJCSA8JmNsa3MgSU1YNlFETF9DTEtfR1BV
+M0RfQ09SRT4sCj4gPiArCQkJCSA8JmNsa3MgSU1YNlFETF9DTEtfR1BVM0RfU0hBREVSPjsKPiA+
+ICsJCQljbG9jay1uYW1lcyA9ICJidXMiLCAiY29yZSIsICJzaGFkZXIiOwo+ID4gKwkJCXBvd2Vy
+LWRvbWFpbnMgPSA8JmdwYyAxPjsKPiA+ICsJCX07Cj4gPiArCj4gCj4gUGxlYXNlIGtlZXAgdGhl
+c2UgYWRkZWQgbm9kZXMgc29ydGVkIGluIHVuaXQtYWRkcmVzcy4KPiAKVXJnaCwgcmlnaHQuCgpB
+cmUgeW91IG9rYXkgd2l0aCBtZXJnaW5nIHRoZSBEVCBjaGFuZ2VzIHRocm91Z2ggdGhlIERSTSB0
+cmVlLCBvciBkbyB5b3UKd2FudCB0byBwaWNrIHRoZW0gc2VwYXJhdGU/CgpSZWdhcmRzLApMdWNh
+cwotLSAKUGVuZ3V0cm9uaXggZS5LLiAgICAgICAgICAgICB8IEx1Y2FzIFN0YWNoICAgICAgICAg
+ICAgICAgICB8CkluZHVzdHJpYWwgTGludXggU29sdXRpb25zICAgfCBodHRwOi8vd3d3LnBlbmd1
+dHJvbml4LmRlLyAgfAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwK
