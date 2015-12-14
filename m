@@ -1,223 +1,130 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 3/5] soc: rockchip: add reboot notifier driver
-Date: Mon, 14 Dec 2015 12:39:44 +0100
-Message-ID: <10162108.nOThMrrbdf@wuerfel>
-References: <1447840044-19689-1-git-send-email-andy.yan@rock-chips.com> <1447840582-19850-1-git-send-email-andy.yan@rock-chips.com>
+From: Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 3/7] doc: dt: mtd: partition: add on-flash format binding
+Date: Mon, 14 Dec 2015 13:28:34 +0100
+Message-ID: <CAOMqctTPfLGZpdnTtv4PKJZHQwW8Zhz+s-P86ZM5uQZg7KEV5w@mail.gmail.com>
+References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
+ <1449292763-129421-4-git-send-email-computersforpeace@gmail.com>
+ <CAOiHx=nz2bdA_R610ozsQHhccdcrHVVCamTtne5ReHrA-FcaaQ@mail.gmail.com>
+ <CAOMqctTbUNd0GtY07YJuxem9HkU1WZ-NtO556=Yg2QrsF49Xjw@mail.gmail.com>
+ <20151207013628.GC20139@voom.fritz.box> <20151210204324.GK144338@google.com>
+ <20151212055105.GA17011@voom.fritz.box> <CAMuHMdXA4-BZpvtCM8_9fYWLzoVsuCXDqvF3G4cVd50Cqsfv0g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1447840582-19850-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, benchan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdXA4-BZpvtCM8_9fYWLzoVsuCXDqvF3G4cVd50Cqsfv0g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 18 November 2015 17:56:22 Andy Yan wrote:
-> rockchip platform have a protocol to pass the kernel reboot
-> mode to bootloader by some special registers when system reboot.
-> By this way the bootloader can take different action according
-> to the different kernel reboot mode, for example, command
-> "reboot loader" will reboot the board to rockusb mode, this is
-> a very convenient way to get the board enter download mode.
-> 
-> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+On 14 December 2015 at 11:22, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> On Sat, Dec 12, 2015 at 6:51 AM, David Gibson
+> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+>> On Thu, Dec 10, 2015 at 12:43:24PM -0800, Brian Norris wrote:
+>>> On Mon, Dec 07, 2015 at 12:36:28PM +1100, David Gibson wrote:
+>>> > On Sat, Dec 05, 2015 at 10:33:30PM +0100, Michal Suchanek wrote:
+>>> > > On 5 December 2015 at 12:39, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
+>>> > > > On Sat, Dec 5, 2015 at 6:19 AM, Brian Norris
+>>> > > > <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> > >
+>>> > > >> +
+>>> > > >> +Examples:
+>>> > > >> +
+>>> > > >> +flash@0 {
+>>> > > >> +       partitions {
+>>> > > >> +               compatible = "google,fmap";
+>>> > > >> +       };
+>>> > > >> +};
+>>> > > >
+>>> > > > I wonder if this wouldn't be better served in a separate binding doc
+>>> > > > with its compatible name as the filename, like we do with
+>>> > > > driver^Whardware blocks, especially if we want to add more parsers.
+>>> > >
+>>> > >
+>>> > > I find that *very* counter productive for bindings that go to the same
+>>> > > node. You have a description of a node, and then suddenly there you
+>>> > > have another file with another description of the same node. Totally
+>>> > > awesome.
+>>> >
+>>> > I can't actually work out from that if you're agreeing with the
+>>> > original post or the first reply.
+>>>
+>>> Perhaps I'm biased, but I think he was agreeing with the first reply.
+>>> (Particularly, "I find that *very* counter productive" uses the word
+>>> "that" to refer to "separate binding doc[s]".)
+>>>
+>>> > > Also how do you plan to write partitioning schemes with parameters
+>>> > > like with non-zero offset of the partition table.
+>>>
+>>> If you are directing this question at me: I don't have a specific plan
+>>> for it. MTD parsers don't currently take external input for this; many
+>>> scan the whole device, but some might also have conventions built into
+>>> the parser itself too, so this just gets hooked based on "compatible".
+>>> But if the need arose, I would hope we could work out a common binding.
+>>>
+>>> > Presumably with properties in the patitions node.  Not seeing the
+>>> > problem here.
+>>>
+>>> I believe Michal is bringing up the (important, IMO) point that if
+>>> distinct partition types are being described in the same node, then any
+>>> use of additional properties *must* be closely coordinated. We can't
+>>> have two parsers "foo" and "bar" defining conflicting uses of the same
+>>> property in the same node, like this:
+>>>
+>>>       partitions {
+>>>               compatible = "foo", "bar";
+>>>               property-baz = ...; // e.g., reg = <...>;
+>>>       };
+>>>
+>>> where if "foo" is not found, we fall back to "bar". But what if "foo"
+>>> and "bar" use "property-baz" differently?
+>>
+>> Ah.. that is an excellent point, and leads me to realise that using
+>> compatible in this way is wrong.  The whole point of compatible is
+>> that the node is, well, compatible with *all* the things in the list,
+>> and therefore the things in the list are compatible with each other.
+>>
+>> Using it for a list of entirely different things to attempt in order
+>> is not correct.
+>
+> Isn't the idea behind a partition table that all partition information is
+> stored on the device in a well-known format, so you don't need additional
+> properties?
+>
+> If the only property needed is the partition table offset, it can be encoded
+> in the unit-address, and the "reg" property:
+>
+>         partitions {
+>
+>                 partition-table@xxxx {
+>                         reg = <0xxxx ...>;
+>                         ...
+>                 };
+>
+>                 ...
+>         };
+>
+> If you do need additional properties, you'll have to add separate partition
+> table nodes.
+> Where? Outside the "partitions" subnode?
+> What with multiple partition tables
+>   - some needing properties (outside "partitions"),
+>   - others not (outside/inside "partitions"),
+>   - others needing the offset (inside "partitions"?
 
-Adding John Stultz to Cc
+Hello,
 
-I just saw this thread pop up again, and had to think of John's recent
-patch to unify this across platforms.
+IIRC there is RedBoot on-flash partition format support in kernel
+which has the partition table offset as compile time configuration
+parameter. Moving this to DT would make unified kernel for boards with
+different RedBoot table offsets possible.
 
-John, can you have a look at this driver too, and see how it fits in?
-I think this is yet another variant, using an MMIO register rather than
-RAM (as HTC / NVIDIA does) or SRAM (as Qualcomm does), but otherwise
-it conceptually fits in with what you had.
+I don't use any board with RedBoot so I would not know if there is
+other issue preventing such unified kernel.
 
-The driver goes through an existing syscon regmap as far as I can
-tell, rather than a memory area or its own device.
+It might be an actual use case for both the binding and the extra
+argument with current partitioning scheme, though.
 
-	Arnd
+Thanks
 
-> ---
-> 
-> Changes in v3:
->  - move from mach-rockchip to drivers/soc/rockchip, as the tegra does
->  - use dts pass the related register
-> 
-> Changes in v2:
->   - check cpu dt node
->   - remove a unnecessary of_put_node in function rockchip_get_pmu_regmap
->   - fix a align issue
->   - use reboot_notifier instead of restart_handler
-> 
->  drivers/soc/rockchip/Kconfig  |  7 ++++
->  drivers/soc/rockchip/Makefile |  1 +
->  drivers/soc/rockchip/loader.h | 22 ++++++++++
->  drivers/soc/rockchip/reboot.c | 98 +++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 128 insertions(+)
->  create mode 100644 drivers/soc/rockchip/loader.h
->  create mode 100644 drivers/soc/rockchip/reboot.c
-> 
-> diff --git a/drivers/soc/rockchip/Kconfig b/drivers/soc/rockchip/Kconfig
-> index 7140ff8..4edbc44 100644
-> --- a/drivers/soc/rockchip/Kconfig
-> +++ b/drivers/soc/rockchip/Kconfig
-> @@ -15,4 +15,11 @@ config ROCKCHIP_PM_DOMAINS
->  
->            If unsure, say N.
->  
-> +config ROCKCHIP_REBOOT
-> +	bool "Rockchip reboot notifier driver"
-> +	help
-> +	  Say y here will enable reboot notifier support.
-> +	  This will get reboot mode arguments from userspace and
-> +	  store it in special register.
-> +
->  endif
-> diff --git a/drivers/soc/rockchip/Makefile b/drivers/soc/rockchip/Makefile
-> index 3d73d06..9817496 100644
-> --- a/drivers/soc/rockchip/Makefile
-> +++ b/drivers/soc/rockchip/Makefile
-> @@ -2,3 +2,4 @@
->  # Rockchip Soc drivers
->  #
->  obj-$(CONFIG_ROCKCHIP_PM_DOMAINS) += pm_domains.o
-> +obj-$(CONFIG_ROCKCHIP_REBOOT) += reboot.o
-> diff --git a/drivers/soc/rockchip/loader.h b/drivers/soc/rockchip/loader.h
-> new file mode 100644
-> index 0000000..bf51baa
-> --- /dev/null
-> +++ b/drivers/soc/rockchip/loader.h
-> @@ -0,0 +1,22 @@
-> +#ifndef __MACH_ROCKCHIP_LOADER_H
-> +#define __MACH_ROCKCHIP_LOADER_H
-> +
-> +/*high 24 bits is tag, low 8 bits is type*/
-> +#define SYS_LOADER_REBOOT_FLAG   0x5242C300
-> +
-> +enum {
-> +	BOOT_NORMAL = 0, /* normal boot */
-> +	BOOT_LOADER,     /* enter loader rockusb mode */
-> +	BOOT_MASKROM,    /* enter maskrom rockusb mode (not support now) */
-> +	BOOT_RECOVER,    /* enter recover */
-> +	BOOT_NORECOVER,  /* do not enter recover */
-> +	BOOT_SECONDOS,   /* boot second OS (not support now)*/
-> +	BOOT_WIPEDATA,   /* enter recover and wipe data. */
-> +	BOOT_WIPEALL,    /* enter recover and wipe all data. */
-> +	BOOT_CHECKIMG,   /* check firmware img with backup part*/
-> +	BOOT_FASTBOOT,   /* enter fast boot mode */
-> +	BOOT_SECUREBOOT_DISABLE,
-> +	BOOT_CHARGING,   /* enter charge mode */
-> +	BOOT_MAX         /* MAX VALID BOOT TYPE.*/
-> +};
-> +#endif
-> diff --git a/drivers/soc/rockchip/reboot.c b/drivers/soc/rockchip/reboot.c
-> new file mode 100644
-> index 0000000..048aeb0b
-> --- /dev/null
-> +++ b/drivers/soc/rockchip/reboot.c
-> @@ -0,0 +1,98 @@
-> +/*
-> + * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reboot.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/syscon.h>
-> +#include "loader.h"
-> +
-> +struct rockchip_reboot {
-> +	struct device *dev;
-> +	struct regmap *map;
-> +	u32 offset;
-> +	struct notifier_block reboot_notifier;
-> +};
-> +
-> +static void rockchip_get_reboot_flag(const char *cmd, u32 *flag)
-> +{
-> +	*flag = SYS_LOADER_REBOOT_FLAG + BOOT_NORMAL;
-> +
-> +	if (cmd) {
-> +		if (!strcmp(cmd, "loader") || !strcmp(cmd, "bootloader"))
-> +			*flag = SYS_LOADER_REBOOT_FLAG + BOOT_LOADER;
-> +		else if (!strcmp(cmd, "recovery"))
-> +			*flag = SYS_LOADER_REBOOT_FLAG + BOOT_RECOVER;
-> +		else if (!strcmp(cmd, "charge"))
-> +			*flag = SYS_LOADER_REBOOT_FLAG + BOOT_CHARGING;
-> +		else if (!strcmp(cmd, "fastboot"))
-> +			*flag = SYS_LOADER_REBOOT_FLAG + BOOT_FASTBOOT;
-> +	}
-> +}
-> +
-> +static int rockchip_reboot_notify(struct notifier_block *this,
-> +				  unsigned long mode, void *cmd)
-> +{
-> +	struct rockchip_reboot *reboot;
-> +	u32 flag;
-> +
-> +	reboot = container_of(this, struct rockchip_reboot, reboot_notifier);
-> +	rockchip_get_reboot_flag(cmd, &flag);
-> +	regmap_write(reboot->map, reboot->offset, flag);
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static int __init rockchip_reboot_probe(struct platform_device *pdev)
-> +{
-> +	struct rockchip_reboot *reboot;
-> +	int ret;
-> +
-> +	reboot = devm_kzalloc(&pdev->dev, sizeof(*reboot), GFP_KERNEL);
-> +	if (!reboot)
-> +		return -ENOMEM;
-> +
-> +	reboot->dev = &pdev->dev;
-> +	reboot->map = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
-> +						      "rockchip,regmap");
-> +	if (IS_ERR(reboot->map))
-> +		return PTR_ERR(reboot->map);
-> +
-> +	if (of_property_read_u32(pdev->dev.of_node, "offset", &reboot->offset))
-> +		return -EINVAL;
-> +
-> +	reboot->reboot_notifier.notifier_call = rockchip_reboot_notify;
-> +	ret = register_reboot_notifier(&reboot->reboot_notifier);
-> +	if (ret)
-> +		dev_err(reboot->dev, "can't register reboot notifier\n");
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct of_device_id rockchip_reboot_of_match[] = {
-> +	{ .compatible = "rockchip,reboot" },
-> +	{}
-> +};
-> +
-> +static struct platform_driver rockchip_reboot_driver = {
-> +	.probe = rockchip_reboot_probe,
-> +	.driver = {
-> +		.name = "rockchip-reboot",
-> +		.of_match_table = rockchip_reboot_of_match,
-> +	},
-> +};
-> +module_platform_driver(rockchip_reboot_driver);
-> +
-> +MODULE_AUTHOR("Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org");
-> +MODULE_DESCRIPTION("Rockchip platform reboot notifier driver");
-> +MODULE_LICENSE("GPL");
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Michal
