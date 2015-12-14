@@ -1,28 +1,31 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v5 3/3] cpufreq: arm_big_little: Add support to register a cpufreq cooling device
-Date: Tue, 15 Dec 2015 00:55:15 +0100
-Message-ID: <2219150.3cuKNfHFD4@vostro.rjw.lan>
-References: <1447761983-12415-1-git-send-email-punit.agrawal@arm.com> <9hh8u5vph46.fsf@e105922-lin.cambridge.arm.com> <20151118140439.GH7336@ubuntu>
+From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Subject: Re: [PATCH V3] cpufreq: qoriq: Register cooling device based on device tree
+Date: Tue, 15 Dec 2015 00:58:26 +0100
+Message-ID: <1697588.dLcbZBRWO4@vostro.rjw.lan>
+References: <1448529671-48216-1-git-send-email-hongtao.jia@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20151118140439.GH7336@ubuntu>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Punit Agrawal <punit.agrawal@arm.com>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, edubezval@gmail.com, dawei.chien@mediatek.com, javi.merino@arm.com, Sudeep Holla <sudeep.holla@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448529671-48216-1-git-send-email-hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, November 18, 2015 07:34:39 PM Viresh Kumar wrote:
-> On 18-11-15, 13:33, Punit Agrawal wrote:
-> > Thanks for the Ack.
-> > 
-> > Will you or Rafael be picking up the series or do they need to go via
-> > arm-soc?
+On Thursday, November 26, 2015 05:21:11 PM Jia Hongtao wrote:
+> Register the qoriq cpufreq driver as a cooling device, based on the
+> thermal device tree framework. When temperature crosses the passive trip
+> point cpufreq is used to throttle CPUs.
 > 
-> Rafael will pick this up, it should go via PM tree.
+> Signed-off-by: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Reviewed-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Applied now, thanks!
+Applied, thanks!
 
 Rafael
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
