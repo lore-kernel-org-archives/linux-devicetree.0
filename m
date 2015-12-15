@@ -1,96 +1,81 @@
-From: <Yuantian.Tang@freescale.com>
-Subject: [PATCH v4] ARM: dts: ls1021a: add sata node to dts
-Date: Tue, 15 Dec 2015 15:14:14 +0800
-Message-ID: <1450163654-15836-1-git-send-email-Yuantian.Tang@freescale.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC 0/7] ARM: dts: Add compatible property to "partitions" node
+Date: Tue, 15 Dec 2015 09:01:45 +0100
+Message-ID: <CAMuHMdWPL_c_YVjuTH+bsh_DgaquYSTcZu01nZO74ue9VyBeFw@mail.gmail.com>
+References: <1450120304-2760-1-git-send-email-geert+renesas@glider.be>
+	<20151214194613.GA126731@google.com>
+	<CAMuHMdW=wJEoi-+EWAKBjRwb+QFvk=iFur1yFqR=q0f4zwzb2Q@mail.gmail.com>
+	<20151214214312.GA86857@google.com>
+	<CAN8TOE9O_egvFevRj3WaUcJd8GMFAAQcWLHMtKe1gwCR14zDPg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tang Yuantian <Yuantian.Tang@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAN8TOE9O_egvFevRj3WaUcJd8GMFAAQcWLHMtKe1gwCR14zDPg@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Tang Yuantian <Yuantian.Tang@freescale.com>
+Hi Brian,
 
-Added sata node to ls1021aqds and ls1021atwr board to support
-sata function.
+On Mon, Dec 14, 2015 at 10:45 PM, Brian Norris
+<computersforpeace@gmail.com> wrote:
+> + real linux-mtd mailing list
+>
+> On Mon, Dec 14, 2015 at 1:43 PM, Brian Norris
+> <computersforpeace@gmail.com> wrote:
+>> On Mon, Dec 14, 2015 at 10:20:19PM +0100, Geert Uytterhoeven wrote:
+>>> On Mon, Dec 14, 2015 at 8:46 PM, Brian Norris
+>>> <computersforpeace@gmail.com> wrote:
+>>> > On Mon, Dec 14, 2015 at 08:11:37PM +0100, Geert Uytterhoeven wrote:
+>>> >> As of commit e488ca9f8d4f62c2 ("doc: dt: mtd: partitions: add compatible
+>>> >> property to "partitions" node"), the "partitions" subnode of an SPI
+>>> >> FLASH device node must have a compatible property. The partitions are no
+>>> >> longer detected if it is not present.
+>>> >
+>>> > For all patches:
+>>> >
+>>> > Acked-by: Brian Norris <computersforpeace@gmail.com>
+>>> >
+>>> >> I marked this series as "RFC", as the abovementioned commit is not yet
+>>> >> upstream. Ideally, the users should be fixed first, to avoid breakage.
+>>>
+>>> It breaks bisectability in mainline.
+>>
+>> The files you are fixing are not converted in mainline yet, are they?
 
-Signed-off-by: Tang Yuantian <Yuantian.Tang@freescale.com>
----
-v4:
-	- sorted the node alphabetically
-v3:
-	- refine the title and commit message
-	- added a status property so that sata can be controlled
-	by board specific dts.
-v2:
-	- put reg-names right after reg property
+Sorry, too long after my morning coffee...
+Yes, you're right, they won't be in mainline before v4.5-rc1.
 
- arch/arm/boot/dts/ls1021a-qds.dts |  4 ++++
- arch/arm/boot/dts/ls1021a-twr.dts |  4 ++++
- arch/arm/boot/dts/ls1021a.dtsi    | 11 +++++++++++
- 3 files changed, 19 insertions(+)
+When I noticed the problem, I didn't see the cause immediately, so I did a
+bisect. Which didn't help much, as the problem only occurs when merging
+l2-mtd/master...
 
-diff --git a/arch/arm/boot/dts/ls1021a-qds.dts b/arch/arm/boot/dts/ls1021a-qds.dts
-index 0521e68..9408753 100644
---- a/arch/arm/boot/dts/ls1021a-qds.dts
-+++ b/arch/arm/boot/dts/ls1021a-qds.dts
-@@ -320,6 +320,10 @@
- 	status = "okay";
- };
- 
-+&sata {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
-index fbb89d1..d44f4d5 100644
---- a/arch/arm/boot/dts/ls1021a-twr.dts
-+++ b/arch/arm/boot/dts/ls1021a-twr.dts
-@@ -212,6 +212,10 @@
- 	status = "okay";
- };
- 
-+&sata {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 9430a99..da9bd7e 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -143,6 +143,17 @@
- 			status = "disabled";
- 		};
- 
-+		sata: sata@3200000 {
-+			compatible = "fsl,ls1021a-ahci";
-+			reg = <0x0 0x3200000 0x0 0x10000>,
-+			      <0x0 0x20220520 0x0 0x4>;
-+			reg-names = "ahci", "sata-ecc";
-+			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&platform_clk 1>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
- 		scfg: scfg@1570000 {
- 			compatible = "fsl,ls1021a-scfg", "syscon";
- 			reg = <0x0 0x1570000 0x0 0x10000>;
--- 
-2.1.0.27.g96db324
+>>> > I'd differ on the last sentence. It's more important to straighten out
+>>> > the release features for 4.4 than to make sure that linux-next has
+>>> > perfect DTS files. So I'll submit whenever ready :)
+>>>
+>>> If the DTS changes go in first, bisectability is preserved.
+
+Scrap, they can't go in first...
+
+>> Are you asking me to delay fixing the DT binding until 4.5, just because
+>> your for-next branches can't be fixed? IOW, you want me to release the
+>> bad DT binding for a whole cycle?
+
+No, please don't delay it to 4.5.
+
+But I'm afraid the for-next branches can't be fixed, as the DTS updates been in
+arm-soc/for-next for a while. I don't think the arm-soc maintainers can be
+bothered redoing all their merges, so we'll have to live with it...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
