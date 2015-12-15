@@ -1,59 +1,77 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [RFC PATCH 3/7] doc: dt: mtd: partition: add on-flash format binding
-Date: Tue, 15 Dec 2015 11:03:48 +0100
-Message-ID: <CAMuHMdVUMHEAGSwF=nvbncHEj6Co9f6CofeVqZbrWzhaprBvGQ@mail.gmail.com>
-References: <1449292763-129421-1-git-send-email-computersforpeace@gmail.com>
-	<1449292763-129421-4-git-send-email-computersforpeace@gmail.com>
-	<CAOiHx=nz2bdA_R610ozsQHhccdcrHVVCamTtne5ReHrA-FcaaQ@mail.gmail.com>
-	<CAOMqctTbUNd0GtY07YJuxem9HkU1WZ-NtO556=Yg2QrsF49Xjw@mail.gmail.com>
-	<20151207013628.GC20139@voom.fritz.box>
-	<20151210204324.GK144338@google.com>
-	<20151212055105.GA17011@voom.fritz.box>
-	<CAMuHMdXA4-BZpvtCM8_9fYWLzoVsuCXDqvF3G4cVd50Cqsfv0g@mail.gmail.com>
-	<20151215060056.GB3011@voom.redhat.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: at91/dt: sama5d2: add watchdog node
+Date: Tue, 15 Dec 2015 11:14:18 +0100
+Message-ID: <566FE7FA.6040300@atmel.com>
+References: <1446709170-24500-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151215060056.GB3011-1s0os16eZneny3qCrzbmXA@public.gmane.org>
+In-Reply-To: <1446709170-24500-1-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Suchanek <hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+Le 05/11/2015 08:39, Wenyou Yang a =E9crit :
+> Add watchdog node to support SAMA5D4 watchdog.
+>=20
+> Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-On Tue, Dec 15, 2015 at 7:00 AM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
->> If the only property needed is the partition table offset, it can be encoded
->> in the unit-address, and the "reg" property:
->>
->>         partitions {
->>
->>                 partition-table@xxxx {
->>                         reg = <0xxxx ...>;
->>                         ...
->>                 };
->>
->>                 ...
->>         };
->
-> Urgh.. and that's abusing the unit address.
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-Why? The partition is part of the FLASH. In this respect, it doesn't differ
-from other hardcoded partitions using the same DT syntax.
-It would just have a compatible value indicating it's a partition table.
+And stacked on top of at91-4.5-dt.
 
-Gr{oetje,eeting}s,
+Thanks!
 
-                        Geert
+> ---
+>=20
+>  arch/arm/boot/dts/at91-sama5d2_xplained.dts |    4 ++++
+>  arch/arm/boot/dts/sama5d2.dtsi              |    7 +++++++
+>  2 files changed, 11 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/b=
+oot/dts/at91-sama5d2_xplained.dts
+> index e07c2b2..de3ef02 100644
+> --- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+> +++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+> @@ -181,6 +181,10 @@
+>  				};
+>  			};
+> =20
+> +			watchdog@f8048040 {
+> +				status =3D "okay";
+> +			};
+> +
+>  			uart3: serial@fc008000 {
+>  				pinctrl-names =3D "default";
+>  				pinctrl-0 =3D <&pinctrl_uart3_default>;
+> diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5=
+d2.dtsi
+> index c1f0cba..c29ff70 100644
+> --- a/arch/arm/boot/dts/sama5d2.dtsi
+> +++ b/arch/arm/boot/dts/sama5d2.dtsi
+> @@ -929,6 +929,13 @@
+>  				clocks =3D <&h32ck>;
+>  			};
+> =20
+> +			watchdog@f8048040 {
+> +				compatible =3D "atmel,sama5d4-wdt";
+> +				reg =3D <0xf8048040 0x10>;
+> +				interrupts =3D <4 IRQ_TYPE_LEVEL_HIGH 7>;
+> +				status =3D "disabled";
+> +			};
+> +
+>  			sckc@f8048050 {
+>  				compatible =3D "atmel,at91sam9x5-sckc";
+>  				reg =3D <0xf8048050 0x4>;
+>=20
 
+
+--=20
+Nicolas Ferre
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
