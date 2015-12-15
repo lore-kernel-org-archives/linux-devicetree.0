@@ -1,91 +1,76 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] USB: add generic onboard USB HUB driver
-Date: Tue, 15 Dec 2015 14:28:42 +0800
-Message-ID: <20151215062821.GA11241@shlinux2>
-References: <1450077974-22762-1-git-send-email-peter.chen@freescale.com>
- <CAOMZO5CfBKuJ584jwbg98s9tn+0Z7W0nOaZnUkm4cJUSvNGTZw@mail.gmail.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] usb: renesas_usbhs: add fallback compatibility
+ strings
+Date: Tue, 15 Dec 2015 15:41:38 +0900
+Message-ID: <20151215064134.GA29842@verge.net.au>
+References: <1449799947-19866-1-git-send-email-horms+renesas@verge.net.au>
+ <1449799947-19866-3-git-send-email-horms+renesas@verge.net.au>
+ <566AC07B.6060201@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAOMZO5CfBKuJ584jwbg98s9tn+0Z7W0nOaZnUkm4cJUSvNGTZw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <566AC07B.6060201-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Patryk Kowalczyk <patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 14, 2015 at 09:26:55AM -0200, Fabio Estevam wrote:
-> Hi Peter,
+On Fri, Dec 11, 2015 at 03:24:27PM +0300, Sergei Shtylyov wrote:
+> Hello.
 > 
-> On Mon, Dec 14, 2015 at 5:26 AM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> On 12/11/2015 5:12 AM, Simon Horman wrote:
 > 
-> > Hi all,
+> >Add fallback compatibility strings for R-Car Gen2 and Gen3.
+> >This is in keeping with the fallback scheme being adopted wherever
+> >appropriate for drivers for Renesas SoCs.
 > >
-> > There is a known issue that the USB code can't handle USB HUB's
-> > external pins well, in that case, it may cause some onboard
-> > USB HUBs can't work since their PHY's clock or reset pin needs to
-> > operate.
+> >Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+> >---
+> >v3
+> >* Moved documentation of SoC names to a separate patch
+> >* Use correct fallback compatibility string in example
 > >
-> > The user reported this issue at below:
-> > http://www.spinics.net/lists/linux-usb/msg131502.html
+> >v2
+> >* Add R-Car Gen2 and Gen3 fallback compatibility strings rather than
+> >   a single compatibility string for all of R-Car.
+> >---
+> >  Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 10 +++++++++-
+> >  drivers/usb/renesas_usbhs/common.c                      |  9 +++++++++
+> >  2 files changed, 18 insertions(+), 1 deletion(-)
 > >
-> > In this patch set, I add a generic onboard USB HUB driver to
-> > handle this problem, the external signals will be configured
-> > before usb controller's initialization, it much likes we did
-> > it at board code before.
+> >diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+> >index a14c0bb561d5..c55cf77006d0 100644
+> >--- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+> >+++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+> >@@ -2,10 +2,18 @@ Renesas Electronics USBHS driver
 > >
-> > The user needs to add this generic hub node at dts to support it.
-> >
-> > @The udoo users, help to test please.
+> >  Required properties:
+> >    - compatible: Must contain one of the following:
 > 
-> This is what I get with your series applied:
+>    Really?
+
+Would "...one or more of the following" help?
+
+> >+
+> >  	- "renesas,usbhs-r8a7790" for r8a7790 (R-Car H2) compatible device
+> >  	- "renesas,usbhs-r8a7791" for r8a7791 (R-Car M2-W) compatible device
+> >  	- "renesas,usbhs-r8a7794" for r8a7794 (R-Car E2) compatible device
+> >  	- "renesas,usbhs-r8a7795" for r8a7795 (R-Car H3) compatible device
+> >+	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 compatible device
+> >+	- "renesas,rcar-gen3-usbhs" for R-Car Gen3 compatible device
+> >+
+> >+	When compatible with the generic version, nodes must list the
+> >+	SoC-specific version corresponding to the platform first followed
+> >+	by the generic version.
+> >+
 > 
-> [    2.288300] usb 1-1: device descriptor read/64, error -71
-> [    2.518083] usb 1-1: new full-speed USB device number 3 using ci_hdrc
-> [    2.738078] usb 1-1: device descriptor read/64, error -71
-> [    3.058078] usb 1-1: device descriptor read/64, error -71
-> [    3.288079] usb 1-1: new full-speed USB device number 4 using ci_hdrc
-> [    3.768069] usb 1-1: device not accepting address 4, error -71
-> [    3.888084] usb 1-1: new full-speed USB device number 5 using ci_hdrc
-> [    4.368067] usb 1-1: device not accepting address 5, error -71
-> [    4.374117] usb usb1-port1: unable to enumerate USB device
-
-Thanks, Fabio.
-
-I am afraid I forget to set gpio as output, would you please apply
-below patch against my original ones:
-
-diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-index 64eabe2..34b0708 100644
---- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-@@ -24,7 +24,7 @@
- 		compatible = "generic-onboard-hub";
- 		clocks = <&clks IMX6QDL_CLK_CKO>;
- 		reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
--		reset-duration-us = <2>;
-+		reset-duration-us = <10>;
- 	};
- };
- 
-diff --git a/drivers/usb/misc/generic_onboard_hub.c b/drivers/usb/misc/generic_onboard_hub.c
-index 7db5b78..2f0afa7 100644
---- a/drivers/usb/misc/generic_onboard_hub.c
-+++ b/drivers/usb/misc/generic_onboard_hub.c
-@@ -89,6 +89,8 @@ static int usb_hub_generic_probe(struct platform_device *pdev)
- 	of_property_read_u32(node, "reset-duration-us", &duration_us);
- 
- 	if (gpiod_reset) {
-+		gpiod_direction_output(gpiod_reset, 1);
-+
- 		gpiod_set_value(gpiod_reset, 1);
- 		usleep_range(duration_us, duration_us + 10);
- 		gpiod_set_value(gpiod_reset, 0);
-
--- 
-
-Best Regards,
-Peter Chen
+>    This kinda contradicts the above claim.
+> 
+> [...]
+> 
+> MBR, Sergei
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
