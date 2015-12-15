@@ -1,7 +1,7 @@
 From: Andre Przywara <andre.przywara@arm.com>
-Subject: [PATCH v2 2/4] arm64: dts: Foundation model: increase GICC region to allow EOImode=1
-Date: Tue, 15 Dec 2015 13:36:36 +0000
-Message-ID: <1450186598-24504-3-git-send-email-andre.przywara@arm.com>
+Subject: [PATCH v2 4/4] arm64: dts: add .dts for GICv3 Foundation model
+Date: Tue, 15 Dec 2015 13:36:38 +0000
+Message-ID: <1450186598-24504-5-git-send-email-andre.przywara@arm.com>
 References: <1450186598-24504-1-git-send-email-andre.przywara@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1450186598-24504-1-git-send-email-andre.przywara@arm.com>
@@ -10,27 +10,65 @@ To: rob.herring@linaro.org, Pawel Moll <pawel.moll@arm.com>, ijc+devicetree@hell
 Cc: catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The Foundation model GIC mapping is wrong, as the GICC region should
-be 8kB instead of 4kB (the model implements the GICv2 architecture).
-This defect prevents the driver from switching to EOImode==1.
+The ARMv8 Foundation model sports a command line parameter to use
+a GICv3 emulation instead of the default GICv2 interrupt controller.
+Add a new .dts file which reuses most of the definitions of the
+existing model while just adding the required properties for the
+GICv3 node.
+This allows the public Foundation model to run with a GICv3.
 
 Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 ---
- arch/arm64/boot/dts/arm/foundation-v8.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/arm/Makefile                |  2 +-
+ arch/arm64/boot/dts/arm/foundation-v8-gicv3.dts | 30 +++++++++++++++++++++++++
+ 2 files changed, 31 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/arm/foundation-v8-gicv3.dts
 
-diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dts b/arch/arm64/boot/dts/arm/foundation-v8.dts
-index 3c5595d..57ad9fe 100644
---- a/arch/arm64/boot/dts/arm/foundation-v8.dts
-+++ b/arch/arm64/boot/dts/arm/foundation-v8.dts
-@@ -78,7 +78,7 @@
- 		#address-cells = <2>;
- 		interrupt-controller;
- 		reg = <0x0 0x2c001000 0 0x1000>,
--		      <0x0 0x2c002000 0 0x1000>,
-+		      <0x0 0x2c002000 0 0x2000>,
- 		      <0x0 0x2c004000 0 0x2000>,
- 		      <0x0 0x2c006000 0 0x2000>;
- 		interrupts = <1 9 0xf04>;
+diff --git a/arch/arm64/boot/dts/arm/Makefile b/arch/arm64/boot/dts/arm/Makefile
+index bb3c072..46d342d 100644
+--- a/arch/arm64/boot/dts/arm/Makefile
++++ b/arch/arm64/boot/dts/arm/Makefile
+@@ -1,4 +1,4 @@
+-dtb-$(CONFIG_ARCH_VEXPRESS) += foundation-v8.dtb
++dtb-$(CONFIG_ARCH_VEXPRESS) += foundation-v8.dtb foundation-v8-gicv3.dtb
+ dtb-$(CONFIG_ARCH_VEXPRESS) += juno.dtb juno-r1.dtb
+ dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb
+ dtb-$(CONFIG_ARCH_VEXPRESS) += vexpress-v2f-1xv7-ca53x2.dtb
+diff --git a/arch/arm64/boot/dts/arm/foundation-v8-gicv3.dts b/arch/arm64/boot/dts/arm/foundation-v8-gicv3.dts
+new file mode 100644
+index 0000000..35588df
+--- /dev/null
++++ b/arch/arm64/boot/dts/arm/foundation-v8-gicv3.dts
+@@ -0,0 +1,30 @@
++/*
++ * ARM Ltd.
++ *
++ * ARMv8 Foundation model DTS (GICv3 configuration)
++ */
++
++#include "foundation-v8.dtsi"
++
++/ {
++	gic: interrupt-controller@2f000000 {
++		compatible = "arm,gic-v3";
++		#interrupt-cells = <3>;
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		interrupt-controller;
++		reg =	<0x0 0x2f000000 0x0 0x10000>,
++			<0x0 0x2f100000 0x0 0x200000>,
++			<0x0 0x2c000000 0x0 0x2000>,
++			<0x0 0x2c010000 0x0 0x2000>,
++			<0x0 0x2c02f000 0x0 0x2000>;
++		interrupts = <1 9 4>;
++
++		its: its@2f020000 {
++			compatible = "arm,gic-v3-its";
++			msi-controller;
++			reg = <0x0 0x2f020000 0x0 0x20000>;
++		};
++	};
++};
 -- 
 2.5.1
