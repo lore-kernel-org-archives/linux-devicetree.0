@@ -1,94 +1,204 @@
-From: Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH v3 3/5] soc: rockchip: add reboot notifier driver
-Date: Tue, 15 Dec 2015 18:42:36 +0100
-Message-ID: <20151215174234.GB24031@ulmo.nvidia.com>
-References: <1447840044-19689-1-git-send-email-andy.yan@rock-chips.com>
- <10162108.nOThMrrbdf@wuerfel>
- <20151215163120.GA24031@ulmo.nvidia.com>
- <3759218.6sItdW65UG@wuerfel>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="s/l3CgOIzMHHjg/5"
+From: Sergei Ianovich <ynvich@gmail.com>
+Subject: [PATCH v5] rtc: support DS1302 RTC on ICP DAS LP-8x4x
+Date: Tue, 15 Dec 2015 20:45:23 +0300
+Message-ID: <1450201525-9137-1-git-send-email-ynvich@gmail.com>
+References: <397668667-27328-3-git-send-email-ynvich@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3759218.6sItdW65UG@wuerfel>
-Content-Disposition: inline
+In-Reply-To: <397668667-27328-3-git-send-email-ynvich@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>, heiko@sntech.de, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@linaro.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, benchan@google.com, sjg@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, wxt@rock-chips.com, john.stultz@linaro.org
+To: linux-kernel@vger.kernel.org
+Cc: Sergei Ianovich <ynvich@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alessandro Zummo <a.zummo@towertech.it>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:REAL TIME CLOCK RTC SUBSYSTEM" <rtc-linux@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
---s/l3CgOIzMHHjg/5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
+CC: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+---
+   v4..v5
+   * drop THIS_MODULE from struct platform driver
+   * use "dallas" for vendor name per vendor-prefixes.txt
 
-On Tue, Dec 15, 2015 at 05:34:00PM +0100, Arnd Bergmann wrote:
-> On Tuesday 15 December 2015 17:31:22 Thierry Reding wrote:
-> > On Mon, Dec 14, 2015 at 12:39:44PM +0100, Arnd Bergmann wrote:
-> > > On Wednesday 18 November 2015 17:56:22 Andy Yan wrote:
-> > > > rockchip platform have a protocol to pass the kernel reboot
-> > > > mode to bootloader by some special registers when system reboot.
-> > > > By this way the bootloader can take different action according
-> > > > to the different kernel reboot mode, for example, command
-> > > > "reboot loader" will reboot the board to rockusb mode, this is
-> > > > a very convenient way to get the board enter download mode.
-> > > >=20
-> > > > Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-> > >=20
-> > > Adding John Stultz to Cc
-> > >=20
-> > > I just saw this thread pop up again, and had to think of John's recent
-> > > patch to unify this across platforms.
-> > >=20
-> > > John, can you have a look at this driver too, and see how it fits in?
-> > > I think this is yet another variant, using an MMIO register rather th=
-an
-> > > RAM (as HTC / NVIDIA does) or SRAM (as Qualcomm does), but otherwise
-> > > it conceptually fits in with what you had.
-> >=20
-> > FWIW, Tegra typically does use an MMIO register as well. See
-> > drivers/soc/tegra/pmc.c:tegra_pmc_restart_notify(). I don't know what
-> > HTC does, but if it's writing somewhere in RAM it isn't using the
-> > standard way of resetting the SoC. There's early boot ROM code which I
-> > think evaluates the PMC_SCRATCH0 register on Tegra to determine which
-> > mode to boot into. That's before even any firmware gets the chance of
-> > doing anything.
->=20
-> HTC apparently uses a separate RAM area to pass the reboot reason,
-> and they have a driver to store that, which is separate from the
-> driver that they use for actually rebooting the machine.
+   v3..v4
+   * move DTS bindings to a different patch
 
-I wasn't very clear, but the PMC_SCRATCH0 register is used to store the
-reset reason. It supports the recovery mode, which I think is really an
-Android thing, "bootloader" will typically cause the bootloader not to
-boot anything, and "forced-recovery" will go into a recovery mode that
-is used to bootstrap the device (usually by uploading a "miniloader"
-that initializes RAM, downloads a bootloader for booting or flashing an
-operating system, ...).
+   v2..v3
+   * use usleep_range instead of custom nsleep
+   * number change (07/16 -> 09/21)
 
-The write that resets the SoC is to a different register.
+   v0..v2
+   * use device tree
+   * use devm helpers where possible
 
-Thierry
+ .../devicetree/bindings/rtc/rtc-ds1302.txt         |  14 +++
+ drivers/rtc/Kconfig                                |   2 +-
+ drivers/rtc/rtc-ds1302.c                           | 100 ++++++++++++++++++++-
+ 3 files changed, 113 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-ds1302.txt
 
---s/l3CgOIzMHHjg/5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWcFEIAAoJEN0jrNd/PrOhwi8P/3n869TLbLoqgZOwDJky+2QS
-5Z0dy8nREw6Fi33SoT6NRopEPAqylnlKz9J5TOx6zzc86McKEJ6j5By0FaSrZreb
-H2rsMvtYTrfhb78IQLVwTjsF4CpO5vwWsQYy6uz2yZuZV6WxZgg1wmc98ycJ1pX0
-6LorEOJF80xjGVN1gNtZ0/ZXGirNqDoou7tEOTB/b2BXFApUhECdeEHOeFbnjyrm
-+kgtjbR8att97U26wSuWt0wy5btKUG94W3/q6eLRVd0Pd951MS6jhON31ff5GYjA
-lUsSI25EQAnN13kNuqhAZfFET5iltyl2Z5B3yEbdp+AWLswFURgCdX8ULXIMmQoP
-rJarA3Uh+PH3zwkhrJlFqHOCsat3tZXGOdiF7HndaqxpjHPvrKnyF2u5FeiKeid1
-Zv9U4/I0CJp+VfhsY+mCFww5ohKkJaXRBcaUBFO9OPTCg3m6syzHqEqRzD4HfgbT
-t8FaPEIvXrLxwwhs2LVCEIzhFkFgUyMhApSmtk9m2QHXsVUYCdO/R06WDZ+2mkOs
-sBmvGRMV7/BwekgPR8YBZX4dEdZXrBZMQS5uKhrBOhkfYhxt80yXQ88j/w3j8VhU
-dN/yk7onDUERrbKC7CgMQWtMEljrD2RxeiAS+FF1e7sThaeq5kZGdY6fEeZwngEw
-mhqEQufri+71nSpvgZNi
-=hN3U
------END PGP SIGNATURE-----
-
---s/l3CgOIzMHHjg/5--
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1302.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1302.txt
+new file mode 100644
+index 0000000..810613b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-ds1302.txt
+@@ -0,0 +1,14 @@
++* Dallas Semiconductor DS-1302 RTC
++
++Simple device which could be used to store date/time between reboots.
++
++Required properties:
++- compatible : Should be "dallas,rtc-ds1302"
++- reg : Should be address and size of IO memory region
++
++Examples:
++
++rtc@40900000 {
++	compatible = "dallas,rtc-ds1302";
++	reg = <0x1700901c 0x1>;
++};
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 2a52424..cf36483 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -803,7 +803,7 @@ config RTC_DRV_DS1286
+ 
+ config RTC_DRV_DS1302
+ 	tristate "Dallas DS1302"
+-	depends on SH_SECUREEDGE5410
++	depends on SH_SECUREEDGE5410 || (ARCH_PXA && HIGH_RES_TIMERS)
+ 	help
+ 	  If you say yes here you get support for the Dallas DS1302 RTC chips.
+ 
+diff --git a/drivers/rtc/rtc-ds1302.c b/drivers/rtc/rtc-ds1302.c
+index 6bef7a5..bd68214 100644
+--- a/drivers/rtc/rtc-ds1302.c
++++ b/drivers/rtc/rtc-ds1302.c
+@@ -50,7 +50,7 @@
+ #define ds1302_set_tx()
+ #define ds1302_set_rx()
+ 
+-static inline int ds1302_hw_init(void)
++static inline int ds1302_hw_init(struct platform_device *pdev)
+ {
+ 	return 0;
+ }
+@@ -86,6 +86,101 @@ static inline int ds1302_rxbit(void)
+ 	return !!(get_dp() & RTC_IODATA);
+ }
+ 
++#elif defined(CONFIG_ARCH_PXA) && defined(CONFIG_HIGH_RES_TIMERS)
++
++#include <linux/delay.h>
++#include <linux/of.h>
++
++#define	RTC_CE		0x01
++#define	RTC_CLK		0x02
++#define	RTC_nWE		0x04
++#define	RTC_IODATA	0x08
++
++static unsigned long ds1302_state;
++
++static void *mem;
++
++static inline int ds1302_hw_init(struct platform_device *pdev)
++{
++	struct resource *r;
++
++	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!r)
++		return -ENODEV;
++
++	mem = devm_ioremap_resource(&pdev->dev, r);
++	if (!mem)
++		return -EFAULT;
++
++	return 0;
++}
++
++static inline void ds1302_reset(void)
++{
++	ds1302_state = 0;
++	iowrite8(ds1302_state, mem);
++	usleep_range(4, 5);
++}
++
++static inline void ds1302_clock(void)
++{
++	usleep_range(1, 2);
++	ds1302_state |= RTC_CLK;
++	iowrite8(ds1302_state, mem);
++	usleep_range(1, 2);
++	ds1302_state &= ~RTC_CLK;
++	iowrite8(ds1302_state, mem);
++}
++
++static inline void ds1302_start(void)
++{
++	ds1302_state &= ~RTC_CLK;
++	ds1302_state |= RTC_CE;
++	iowrite8(ds1302_state, mem);
++	usleep_range(3, 4);
++}
++
++static inline void ds1302_stop(void)
++{
++	ds1302_state &= ~RTC_CE;
++	iowrite8(ds1302_state, mem);
++}
++
++static inline void ds1302_set_tx(void)
++{
++	ds1302_state &= ~RTC_nWE;
++	iowrite8(ds1302_state, mem);
++}
++
++static inline void ds1302_set_rx(void)
++{
++	ds1302_state |= RTC_nWE;
++	iowrite8(ds1302_state, mem);
++}
++
++static inline void ds1302_txbit(int bit)
++{
++	if (bit)
++		ds1302_state |= RTC_IODATA;
++	else
++		ds1302_state &= ~RTC_IODATA;
++	iowrite8(ds1302_state, mem);
++}
++
++static inline int ds1302_rxbit(void)
++{
++	return ioread8(mem) & 0x1;
++}
++
++#ifdef CONFIG_OF
++static const struct of_device_id ds1302_dt_ids[] = {
++	{ .compatible = "dallas,rtc-ds1302" },
++	{ }
++};
++
++MODULE_DEVICE_TABLE(of, ds1302_dt_ids);
++#endif
++
+ #else
+ #error "Add support for your platform"
+ #endif
+@@ -216,7 +311,7 @@ static int __init ds1302_rtc_probe(struct platform_device *pdev)
+ {
+ 	struct rtc_device *rtc;
+ 
+-	if (ds1302_hw_init()) {
++	if (ds1302_hw_init(pdev)) {
+ 		dev_err(&pdev->dev, "Failed to init communication channel");
+ 		return -EINVAL;
+ 	}
+@@ -244,6 +339,7 @@ static int __init ds1302_rtc_probe(struct platform_device *pdev)
+ static struct platform_driver ds1302_platform_driver = {
+ 	.driver		= {
+ 		.name	= DRV_NAME,
++		.of_match_table = of_match_ptr(ds1302_dt_ids),
+ 	},
+ };
+ 
+-- 
+2.6.2
