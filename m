@@ -1,61 +1,54 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 17/19] ARM: dts: armada: replace isil,irq2-can-wakeup-machine with wakeup-source property
-Date: Tue, 15 Dec 2015 17:56:05 +0100
-Message-ID: <8760zzvefu.fsf@free-electrons.com>
-References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
-	<1445422216-29375-18-git-send-email-sudeep.holla@arm.com>
-	<5670422D.7020404@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 2/2] arm: pxa27x: support for ICP DAS LP-8x4x w/ DT
+Date: Tue, 15 Dec 2015 18:02:19 +0100
+Message-ID: <1843454.zCnLJtF7B6@wuerfel>
+References: <1449700088-28076-3-git-send-email-ynvich@gmail.com> <7496839.vMjVcqPe8Q@wuerfel> <1450197727.21989.9.camel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5670422D.7020404@arm.com> (Sudeep Holla's message of "Tue, 15
-	Dec 2015 16:39:09 +0000")
+In-Reply-To: <1450197727.21989.9.camel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Sergei Ianovich <ynvich@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Daniel Mack <zonque@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Arnaud Ebalard <arno@natisbad.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sudeep,
-=20
- On mar., d=C3=A9c. 15 2015, Sudeep Holla <sudeep.holla@arm.com> wrote:
+On Tuesday 15 December 2015 19:42:07 Sergei Ianovich wrote:
+> On Tue, 2015-12-15 at 17:32 +0100, Arnd Bergmann wrote:
+> > On Tuesday 15 December 2015 19:27:50 Sergei Ianovich wrote:
+> > >  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+> > >  arch/arm/boot/dts/Makefile                         |   3 +
+> > >  arch/arm/boot/dts/pxa27x-lp8x4x-i105.dts           |  50 ++++
+> > >  arch/arm/boot/dts/pxa27x-lp8x4x.dts                | 259
+> > > +++++++++++++++++++++
+> > >  arch/arm/configs/lp8x4x_defconfig                  | 176
+> > > ++++++++++++++
+> > > 
+> > 
+> > I had not noticed earlier that you are adding a new defconfig file.
+> > PXA is
+> > already the platform with the most defconfig files, and I'd rather
+> > like
+> > to see that reduced than increased.
+> > 
+> > Is there a chance you could merge this one with some of the existing
+> > files
+> > into one configuration that handles them all?
+> 
+> There are several board-specific devices on LP8x4x: custom FPGA, custom
+> UART, custom IRQ on FPGA, custom parallel bus for industrial IO. The
+> defconfig file could alert potential users to this fact. If this is not
+> a sufficient reason to have a defconfig file, it can be dropped.
+> 
+> I use the full .config anyway 
 
-> On 21/10/15 11:10, Sudeep Holla wrote:
->> Though the driver will continue to check for and support the legacy
->> "isil,irq2-can-wakeup-machine" boolean property to wakeup source,
->> "wakeup-source" is the new standard binding.
->>
->> This patch replaces the legacy "isil,irq2-can-wakeup-machine" with t=
-he
->> unified "wakeup-source" property in order to avoid any futher copy-p=
-aste
->> duplication.
->>
->> Cc: Jason Cooper <jason@lakedaemon.net>
->> Cc: Andrew Lunn <andrew@lunn.ch>
->> Cc: Gregory Clement <gregory.clement@free-electrons.com>
->> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
->>
->
-> Ping, do you prefer taking via your tree or should I send to armsoc
-> directly ?
+I would like those drivers to be enabled in some defconfig, so we get
+compile-time coverage, but we generally stopped having one-config-per-board
+files.
 
-Sorry for the delay it was in my inbox since too many time. I didn't ge=
-t
-the time to check it. This looks ok for me, so I've just applied it on
-mvebu/dt,
+Maybe we can have a pxa_defconfig file that enables lots of boards
+and then we remove the individual configs? We don't have to remove
+them all at once, but it would make me very happy if we could at
+least kill off some of the ones that are not used regularly.
 
-Thanks,
-
-Gregory
-
->
-> --=20
-> Regards,
-> Sudeep
-
---=20
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+	Arnd
