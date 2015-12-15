@@ -1,95 +1,94 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 2/8] Documentation: arm: define DT cpu capacity
- bindings
-Date: Tue, 15 Dec 2015 17:28:37 +0000
-Message-ID: <20151215172837.GD8012@leverpostej>
-References: <20151210175820.GE14571@e106622-lin>
- <20151211174940.GQ5727@sirena.org.uk>
- <20151214123616.GC3308@e106622-lin>
- <20151214165928.GV5727@sirena.org.uk>
- <20151215122238.GG16007@e106622-lin>
- <20151215133951.GY5727@sirena.org.uk>
- <20151215140135.GI31299@leverpostej>
- <20151215150813.GZ5727@sirena.org.uk>
- <20151215153218.GA7228@leverpostej>
- <20151215171713.GA5727@sirena.org.uk>
+From: Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH v3 3/5] soc: rockchip: add reboot notifier driver
+Date: Tue, 15 Dec 2015 18:42:36 +0100
+Message-ID: <20151215174234.GB24031@ulmo.nvidia.com>
+References: <1447840044-19689-1-git-send-email-andy.yan@rock-chips.com>
+ <10162108.nOThMrrbdf@wuerfel>
+ <20151215163120.GA24031@ulmo.nvidia.com>
+ <3759218.6sItdW65UG@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="s/l3CgOIzMHHjg/5"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3759218.6sItdW65UG@wuerfel>
 Content-Disposition: inline
-In-Reply-To: <20151215171713.GA5727-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, morten.rasmussen-5wv7dgnIgG8@public.gmane.org, dietmar.eggemann-5wv7dgnIgG8@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>, heiko@sntech.de, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@linaro.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, benchan@google.com, sjg@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, wxt@rock-chips.com, john.stultz@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 15, 2015 at 05:17:13PM +0000, Mark Brown wrote:
-> On Tue, Dec 15, 2015 at 03:32:19PM +0000, Mark Rutland wrote:
-> > On Tue, Dec 15, 2015 at 03:08:13PM +0000, Mark Brown wrote:
-> > > On Tue, Dec 15, 2015 at 02:01:36PM +0000, Mark Rutland wrote:
-> 
-> > > > I really don't want to see a table of magic numbers in the kernel.
-> 
-> > > Right, there's pitfalls there too although not being part of an ABI
-> > > does make them more manageable.  
-> 
-> > I think that people are very likely to treat them exactly like an ABI,
-> > w.r.t. any regressions in performance that result from their addition,
-> > modification, or removal. That becomes really horrible when new CPUs
-> > appear.
-> 
-> Obviously people are going to get upset if we introduce performance
-> regressions - but that's true always, we can also introduce problems
-> with numbers people have put in DT.  It seems like it'd be harder to
-> manage regressions due to externally provided magic numbers since
-> there's inherently less information there.
+--s/l3CgOIzMHHjg/5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It's certainly still possible to have regressions in that case. Those
-regressions would be due to code changes in the kernel, given the DT
-didn't change.
+On Tue, Dec 15, 2015 at 05:34:00PM +0100, Arnd Bergmann wrote:
+> On Tuesday 15 December 2015 17:31:22 Thierry Reding wrote:
+> > On Mon, Dec 14, 2015 at 12:39:44PM +0100, Arnd Bergmann wrote:
+> > > On Wednesday 18 November 2015 17:56:22 Andy Yan wrote:
+> > > > rockchip platform have a protocol to pass the kernel reboot
+> > > > mode to bootloader by some special registers when system reboot.
+> > > > By this way the bootloader can take different action according
+> > > > to the different kernel reboot mode, for example, command
+> > > > "reboot loader" will reboot the board to rockusb mode, this is
+> > > > a very convenient way to get the board enter download mode.
+> > > >=20
+> > > > Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> > >=20
+> > > Adding John Stultz to Cc
+> > >=20
+> > > I just saw this thread pop up again, and had to think of John's recent
+> > > patch to unify this across platforms.
+> > >=20
+> > > John, can you have a look at this driver too, and see how it fits in?
+> > > I think this is yet another variant, using an MMIO register rather th=
+an
+> > > RAM (as HTC / NVIDIA does) or SRAM (as Qualcomm does), but otherwise
+> > > it conceptually fits in with what you had.
+> >=20
+> > FWIW, Tegra typically does use an MMIO register as well. See
+> > drivers/soc/tegra/pmc.c:tegra_pmc_restart_notify(). I don't know what
+> > HTC does, but if it's writing somewhere in RAM it isn't using the
+> > standard way of resetting the SoC. There's early boot ROM code which I
+> > think evaluates the PMC_SCRATCH0 register on Tegra to determine which
+> > mode to boot into. That's before even any firmware gets the chance of
+> > doing anything.
+>=20
+> HTC apparently uses a separate RAM area to pass the reboot reason,
+> and they have a driver to store that, which is separate from the
+> driver that they use for actually rebooting the machine.
 
-I'm not sure I follow w.r.t. "inherently less information", unless you
-mean trying to debug without access to that DTB?
+I wasn't very clear, but the PMC_SCRATCH0 register is used to store the
+reset reason. It supports the recovery mode, which I think is really an
+Android thing, "bootloader" will typically cause the bootloader not to
+boot anything, and "forced-recovery" will go into a recovery mode that
+is used to bootstrap the device (usually by uploading a "miniloader"
+that initializes RAM, downloads a bootloader for booting or flashing an
+operating system, ...).
 
-> > > One thing it's probably helpful to establish here is how much the
-> > > specific numbers are going to matter in the grand scheme of things.  If
-> > > the specific numbers *are* super important then nobody is going to want
-> > > to touch them as they'll be prone to getting tweaked.  If instead the
-> > > numbers just need to be ballpark accurate so the scheduler starts off in
-> > > roughly the right place and the specific numbers don't matter it's a lot
-> > > easier and having a table in the kernel until we think of something
-> > > better (if that ever happens) gets a lot easier.
-> 
-> > I agree that we first need to figure out the importance of these
-> > numbers. I disagree that our first step should be to add a table.
-> 
-> My point there is that if we're not that concerned about the specific
-> number something in kernel is safer.
+The write that resets the SoC is to a different register.
 
-I don't entirely disagree there. I think an in-kernel benchmark is
-likely safer.
+Thierry
 
-> > > My expectation is that we just need good enough, not perfect, and that
-> > > seems to match what Juri is saying about the expectation that most of
-> > > the fine tuning is done via other knobs.
-> 
-> > My expectation is that if a ballpark figure is good enough, it should be
-> > possible to implement something trivial like bogomips / loop_per_jiffy
-> > calculation.
-> 
-> That does have the issue that we need to scale with regard to the
-> frequency the benchmark gets run at.  That's not an insurmountable
-> obstacle but it's not completely trivial either.
+--s/l3CgOIzMHHjg/5
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If we change clock frequency, then regardless of where the information
-comes from we need to perform scaling, no?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-One nice thing about doing a benchmark to derive the numbers is that
-when the kernel is that when the frequency is fixed but the kernel
-cannot query it, the numbers will be representative.
+iQIcBAABCAAGBQJWcFEIAAoJEN0jrNd/PrOhwi8P/3n869TLbLoqgZOwDJky+2QS
+5Z0dy8nREw6Fi33SoT6NRopEPAqylnlKz9J5TOx6zzc86McKEJ6j5By0FaSrZreb
+H2rsMvtYTrfhb78IQLVwTjsF4CpO5vwWsQYy6uz2yZuZV6WxZgg1wmc98ycJ1pX0
+6LorEOJF80xjGVN1gNtZ0/ZXGirNqDoou7tEOTB/b2BXFApUhECdeEHOeFbnjyrm
++kgtjbR8att97U26wSuWt0wy5btKUG94W3/q6eLRVd0Pd951MS6jhON31ff5GYjA
+lUsSI25EQAnN13kNuqhAZfFET5iltyl2Z5B3yEbdp+AWLswFURgCdX8ULXIMmQoP
+rJarA3Uh+PH3zwkhrJlFqHOCsat3tZXGOdiF7HndaqxpjHPvrKnyF2u5FeiKeid1
+Zv9U4/I0CJp+VfhsY+mCFww5ohKkJaXRBcaUBFO9OPTCg3m6syzHqEqRzD4HfgbT
+t8FaPEIvXrLxwwhs2LVCEIzhFkFgUyMhApSmtk9m2QHXsVUYCdO/R06WDZ+2mkOs
+sBmvGRMV7/BwekgPR8YBZX4dEdZXrBZMQS5uKhrBOhkfYhxt80yXQ88j/w3j8VhU
+dN/yk7onDUERrbKC7CgMQWtMEljrD2RxeiAS+FF1e7sThaeq5kZGdY6fEeZwngEw
+mhqEQufri+71nSpvgZNi
+=hN3U
+-----END PGP SIGNATURE-----
 
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--s/l3CgOIzMHHjg/5--
