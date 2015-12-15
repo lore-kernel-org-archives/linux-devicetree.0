@@ -1,105 +1,166 @@
-From: Hu Vincent <Mingkai.Hu@freescale.com>
-Subject: RE: [PATCH v2] dts/ls2080a: Update PCIe compatible
-Date: Tue, 15 Dec 2015 02:05:06 +0000
-Message-ID: <BY2PR03MB3163EAB63391DB671C7E54784EE0@BY2PR03MB316.namprd03.prod.outlook.com>
-References: <1449224417-20753-1-git-send-email-Mingkai.Hu@freescale.com>
- <20151204162243.GA12415@rob-hp-laptop>
- <BY2PR03MB3160E6BF80C63C5DF0AB91F84EE0@BY2PR03MB316.namprd03.prod.outlook.com>
- <1450144975.15946.410.camel@freescale.com>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v6 3/5] memory: mediatek: Add SMI driver
+Date: Tue, 15 Dec 2015 10:38:23 +0800
+Message-ID: <1450147103.22854.23.camel@mhfsdcap03>
+References: <1449568153-15643-1-git-send-email-yong.wu@mediatek.com>
+	<1449568153-15643-4-git-send-email-yong.wu@mediatek.com>
+	<24171857.0SPpBlzoZl@linux-gy6r.site>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1450144975.15946.410.camel@freescale.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Scott Wood <scottwood@freescale.com>, Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Li Leo <LeoLi@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Lian M.H." <Minghuan.Lian@freescale.com>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <24171857.0SPpBlzoZl-FL1YVkE3Js+HtQ08XqlRiA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Wood Scott-B07421
-> Sent: Tuesday, December 15, 2015 10:03 AM
-> To: Hu Mingkai-B21284; Rob Herring
-> Cc: arm@kernel.org; devicetree@vger.kernel.org; Li Yang-Leo-R58472;
-> linux-arm-kernel@lists.infradead.org; Lian Minghuan-B31939
-> Subject: Re: [PATCH v2] dts/ls2080a: Update PCIe compatible
+On Mon, 2015-12-14 at 19:18 +0100, Matthias Brugger wrote:
+> On Tuesday 08 Dec 2015 17:49:11 Yong Wu wrote:
+> > This patch add SMI(Smart Multimedia Interface) driver. This driver
+> > is responsible to enable/disable iommu and control the power domain
+> > and clocks of each local arbiter.
+> > 
+> > Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >   Currently SMI offer mtk_smi_larb_get/put to enable the power-domain
+> > ,clocks and initialize the iommu configuration register for each a local
+> > arbiter, The reason is:
+> >   a) If a device would like to disable iommu, it also need call
+> > mtk_smi_larb_get/put to enable its power and clocks.
+> >   b) The iommu core don't support attach/detach a device within a
+> > iommu-group. So we cann't use iommu_attach_device(iommu_detach_device)
+> > instead
+> > of mtk_smi_larb_get/put.
+> > 
+[..]
+> > +static int
+> > +mtk_smi_enable(struct device *dev, struct clk *apb, struct clk *smi)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = pm_runtime_get_sync(dev);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	ret = clk_prepare_enable(apb);
+> > +	if (ret)
+> > +		goto err_put_pm;
+> > +
+> > +	ret = clk_prepare_enable(smi);
+> > +	if (ret)
+> > +		goto err_disable_apb;
+> > +
+> > +	return 0;
+> > +
+> > +err_disable_apb:
+> > +	clk_disable_unprepare(apb);
+> > +err_put_pm:
+> > +	pm_runtime_put_sync(dev);
+> > +	return ret;
+> > +}
+> > +
+> > +static void
+> > +mtk_smi_disable(struct device *dev, struct clk *apb, struct clk *smi)
+> > +{
+> > +	clk_disable_unprepare(smi);
+> > +	clk_disable_unprepare(apb);
+> > +	pm_runtime_put_sync(dev);
+> > +}
+> > +
+> > +static int mtk_smi_common_enable(struct mtk_smi_common *common)
+> > +{
+> > +	return mtk_smi_enable(common->dev, common->clk_apb, common->clk_smi);
+> > +}
+> > +
+> > +static void mtk_smi_common_disable(struct mtk_smi_common *common)
+> > +{
+> > +	mtk_smi_disable(common->dev, common->clk_apb, common->clk_smi);
+> > +}
+> > +
+> > +static int mtk_smi_larb_enable(struct mtk_smi_larb *larb)
+> > +{
+> > +	return mtk_smi_enable(larb->dev, larb->clk_apb, larb->clk_smi);
+> > +}
+> > +
+> > +static void mtk_smi_larb_disable(struct mtk_smi_larb *larb)
+> > +{
+> > +	mtk_smi_disable(larb->dev, larb->clk_apb, larb->clk_smi);
+> > +}
+> > +
 > 
-> On Mon, 2015-12-14 at 20:01 -0600, Hu Mingkai-B21284 wrote:
-> >
-> > > -----Original Message-----
-> > > From: Hu Mingkai-B21284
-> > > Sent: Monday, December 07, 2015 4:44 PM
-> > > To: 'Rob Herring'
-> > > Cc: arm@kernel.org; devicetree@vger.kernel.org; Li Yang-Leo-R58472;
-> > > linux-arm-kernel@lists.infradead.org; Lian Minghuan-B31939
-> > > Subject: RE: [PATCH v2] dts/ls2080a: Update PCIe compatible
-> > >
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: Rob Herring [mailto:robh@kernel.org]
-> > > > Sent: Saturday, December 05, 2015 12:23 AM
-> > > > To: Hu Mingkai-B21284
-> > > > Cc: arm@kernel.org; devicetree@vger.kernel.org; Li
-> > > > Yang-Leo-R58472; linux-arm-kernel@lists.infradead.org; Lian
-> > > > Minghuan-B31939
-> > > > Subject: Re: [PATCH v2] dts/ls2080a: Update PCIe compatible
-> > > >
-> > > > On Fri, Dec 04, 2015 at 06:20:17PM +0800, Mingkai Hu wrote:
-> > > > > From: Minghuan Lian <Minghuan.Lian@freescale.com>
-> > > > >
-> > > > > The patch adds LS2085a to PCIe compatible to fix the
-> > > > > compatibility issue when using firmware with LS2085a compatible
-> property.
-> > > > >
-> > > > > Signed-off-by: Minghuan Lian <Minghuan.Lian@freescale.com>
-> > > > > Signed-off-by: Mingkai Hu <Mingkai.Hu@freescale.com>
-> > > > > ---
-> > > > > v2 change:
-> > > > >  - Rebased to latest kernel base
-> > > >
-> > > > How about implementing my comments on v1, too?
-> > > >
-> > >
-> > > Hi Rob,
-> > >
-> > > Do you mean to change the combinations in layerscape-pci.txt as
-> follows?
-> > >
-> > > > --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> > > > +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> > > > @@ -15,6 +15,7 @@ Required properties:
-> > > >  - compatible: should contain the platform identifier such as:
-> > > >          "fsl,ls1021a-pcie", "snps,dw-pcie"
-> > > > -        "fsl,ls2080a-pcie", "snps,dw-pcie"
-> > > > +        "fsl,ls2080a-pcie", "fsl,ls2085a-pcie", "snps,dw-pcie"
-> > >
-> > >
-> > > And the ls2085a was released first, but the dts file is for ls2080a
-> > > (fsl- ls2080a.dtsi), So I prefer to put the ls2080a as the first
-> > > compatible string. How about your suggestion?
-> > >
-> >
-> > Hi Rob,
-> >
-> > I will keep the "fsl,ls2085a-pcie" as the first compatible string as
-> > discussed.
-> 
-> Do you mean "fsl,ls2080a-pcie"?
-> 
+> This is somehow over-engineered. Just use mtk_smi_enable and mtk_smi_disable 
+> instead of adding an extra indirection.
 
-Oops. Yes, it's "fsl,ls2080a-pcie ".
+I added this only for readable...then the code in mtk_smi_larb_get below
+may looks simple and readable.
 
-Thanks,
-Mingkai
+If I use mtk_smi_enable/disable directly, the code will be like our
+v5[1], is it OK?
+Maybe I don't need these help function here, and only add more comment
+based on v5.
+
+[1] 
+http://lists.linuxfoundation.org/pipermail/iommu/2015-October/014590.html
+
+> 
+> > +int mtk_smi_larb_get(struct device *larbdev)
+> > +{
+> > +	struct mtk_smi_larb *larb = dev_get_drvdata(larbdev);
+> > +	struct mtk_smi_common *common = dev_get_drvdata(larb->smi_common_dev);
+> > +	int ret;
+> > +
+> > +	ret = mtk_smi_common_enable(common);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = mtk_smi_larb_enable(larb);
+> > +	if (ret)
+> > +		goto err_put_smi;
+> > +
+> > +	/* Configure the iommu info */
+> > +	writel_relaxed(larb->mmu, larb->base + SMI_LARB_MMU_EN);
+> > +
+> > +	return 0;
+> > +
+> > +err_put_smi:
+> > +	mtk_smi_common_disable(common);
+> > +	return ret;
+> > +}
+> > +
+> > +void mtk_smi_larb_put(struct device *larbdev)
+> > +{
+> > +	struct mtk_smi_larb *larb = dev_get_drvdata(larbdev);
+> > +	struct mtk_smi_common *common = dev_get_drvdata(larb->smi_common_dev);
+> > +
+> > +	writel_relaxed(0, larb->base + SMI_LARB_MMU_EN);
+> > +	mtk_smi_larb_disable(larb);
+> > +	mtk_smi_common_disable(common);
+> > +}
+> > +
+> 
+> Looks strange that you just disable all MMUs while you only enable some of 
+> them at runtime. Unfortunately the datasheet I have lacks the SMI part, so I 
+> can just guess how the HW is working.
+> From the DTS it looks like as if a larb can be used by two different 
+> components (e.g. larb0 from ovl0 and rdma0). Wouldn't that produce a conflict?
+
+Thanks. It's really a problem.
+
+There are OVL0 and MDP in larb0, Both will call mtk_smi_larb_get/put, we
+cann't disable all the MMUs in whole the larb0 here.  This register
+should be reset to zero while the larb power domain turning off(rely on
+the power-domain ref count).
+I will delete this(keep this in our V5.)
+
+> 
+> Regards,
+> Matthias
