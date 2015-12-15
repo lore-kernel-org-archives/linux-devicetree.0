@@ -1,204 +1,99 @@
-From: Sergei Ianovich <ynvich@gmail.com>
-Subject: [PATCH v5] rtc: support DS1302 RTC on ICP DAS LP-8x4x
-Date: Tue, 15 Dec 2015 20:45:23 +0300
-Message-ID: <1450201525-9137-1-git-send-email-ynvich@gmail.com>
-References: <397668667-27328-3-git-send-email-ynvich@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC PATCH 2/8] Documentation: arm: define DT cpu capacity
+ bindings
+Date: Tue, 15 Dec 2015 17:45:16 +0000
+Message-ID: <20151215174516.GB5727@sirena.org.uk>
+References: <20151211174940.GQ5727@sirena.org.uk>
+ <20151214123616.GC3308@e106622-lin>
+ <20151214165928.GV5727@sirena.org.uk>
+ <20151215122238.GG16007@e106622-lin>
+ <20151215133951.GY5727@sirena.org.uk>
+ <20151215140135.GI31299@leverpostej>
+ <20151215150813.GZ5727@sirena.org.uk>
+ <20151215153218.GA7228@leverpostej>
+ <20151215171713.GA5727@sirena.org.uk>
+ <20151215172837.GD8012@leverpostej>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="RQipzlYdbiO9/NWI"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <397668667-27328-3-git-send-email-ynvich@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20151215172837.GD8012@leverpostej>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Sergei Ianovich <ynvich@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alessandro Zummo <a.zummo@towertech.it>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:REAL TIME CLOCK RTC SUBSYSTEM" <rtc-linux@googlegroups.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Juri Lelli <juri.lelli@arm.com>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
-CC: Alexandre Belloni <alexandre.belloni@free-electrons.com>
----
-   v4..v5
-   * drop THIS_MODULE from struct platform driver
-   * use "dallas" for vendor name per vendor-prefixes.txt
 
-   v3..v4
-   * move DTS bindings to a different patch
+--RQipzlYdbiO9/NWI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-   v2..v3
-   * use usleep_range instead of custom nsleep
-   * number change (07/16 -> 09/21)
+On Tue, Dec 15, 2015 at 05:28:37PM +0000, Mark Rutland wrote:
+> On Tue, Dec 15, 2015 at 05:17:13PM +0000, Mark Brown wrote:
 
-   v0..v2
-   * use device tree
-   * use devm helpers where possible
+> > Obviously people are going to get upset if we introduce performance
+> > regressions - but that's true always, we can also introduce problems
+> > with numbers people have put in DT.  It seems like it'd be harder to
+> > manage regressions due to externally provided magic numbers since
+> > there's inherently less information there.
 
- .../devicetree/bindings/rtc/rtc-ds1302.txt         |  14 +++
- drivers/rtc/Kconfig                                |   2 +-
- drivers/rtc/rtc-ds1302.c                           | 100 ++++++++++++++++++++-
- 3 files changed, 113 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-ds1302.txt
+> It's certainly still possible to have regressions in that case. Those
+> regressions would be due to code changes in the kernel, given the DT
+> didn't change.
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1302.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1302.txt
-new file mode 100644
-index 0000000..810613b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-ds1302.txt
-@@ -0,0 +1,14 @@
-+* Dallas Semiconductor DS-1302 RTC
-+
-+Simple device which could be used to store date/time between reboots.
-+
-+Required properties:
-+- compatible : Should be "dallas,rtc-ds1302"
-+- reg : Should be address and size of IO memory region
-+
-+Examples:
-+
-+rtc@40900000 {
-+	compatible = "dallas,rtc-ds1302";
-+	reg = <0x1700901c 0x1>;
-+};
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 2a52424..cf36483 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -803,7 +803,7 @@ config RTC_DRV_DS1286
- 
- config RTC_DRV_DS1302
- 	tristate "Dallas DS1302"
--	depends on SH_SECUREEDGE5410
-+	depends on SH_SECUREEDGE5410 || (ARCH_PXA && HIGH_RES_TIMERS)
- 	help
- 	  If you say yes here you get support for the Dallas DS1302 RTC chips.
- 
-diff --git a/drivers/rtc/rtc-ds1302.c b/drivers/rtc/rtc-ds1302.c
-index 6bef7a5..bd68214 100644
---- a/drivers/rtc/rtc-ds1302.c
-+++ b/drivers/rtc/rtc-ds1302.c
-@@ -50,7 +50,7 @@
- #define ds1302_set_tx()
- #define ds1302_set_rx()
- 
--static inline int ds1302_hw_init(void)
-+static inline int ds1302_hw_init(struct platform_device *pdev)
- {
- 	return 0;
- }
-@@ -86,6 +86,101 @@ static inline int ds1302_rxbit(void)
- 	return !!(get_dp() & RTC_IODATA);
- }
- 
-+#elif defined(CONFIG_ARCH_PXA) && defined(CONFIG_HIGH_RES_TIMERS)
-+
-+#include <linux/delay.h>
-+#include <linux/of.h>
-+
-+#define	RTC_CE		0x01
-+#define	RTC_CLK		0x02
-+#define	RTC_nWE		0x04
-+#define	RTC_IODATA	0x08
-+
-+static unsigned long ds1302_state;
-+
-+static void *mem;
-+
-+static inline int ds1302_hw_init(struct platform_device *pdev)
-+{
-+	struct resource *r;
-+
-+	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!r)
-+		return -ENODEV;
-+
-+	mem = devm_ioremap_resource(&pdev->dev, r);
-+	if (!mem)
-+		return -EFAULT;
-+
-+	return 0;
-+}
-+
-+static inline void ds1302_reset(void)
-+{
-+	ds1302_state = 0;
-+	iowrite8(ds1302_state, mem);
-+	usleep_range(4, 5);
-+}
-+
-+static inline void ds1302_clock(void)
-+{
-+	usleep_range(1, 2);
-+	ds1302_state |= RTC_CLK;
-+	iowrite8(ds1302_state, mem);
-+	usleep_range(1, 2);
-+	ds1302_state &= ~RTC_CLK;
-+	iowrite8(ds1302_state, mem);
-+}
-+
-+static inline void ds1302_start(void)
-+{
-+	ds1302_state &= ~RTC_CLK;
-+	ds1302_state |= RTC_CE;
-+	iowrite8(ds1302_state, mem);
-+	usleep_range(3, 4);
-+}
-+
-+static inline void ds1302_stop(void)
-+{
-+	ds1302_state &= ~RTC_CE;
-+	iowrite8(ds1302_state, mem);
-+}
-+
-+static inline void ds1302_set_tx(void)
-+{
-+	ds1302_state &= ~RTC_nWE;
-+	iowrite8(ds1302_state, mem);
-+}
-+
-+static inline void ds1302_set_rx(void)
-+{
-+	ds1302_state |= RTC_nWE;
-+	iowrite8(ds1302_state, mem);
-+}
-+
-+static inline void ds1302_txbit(int bit)
-+{
-+	if (bit)
-+		ds1302_state |= RTC_IODATA;
-+	else
-+		ds1302_state &= ~RTC_IODATA;
-+	iowrite8(ds1302_state, mem);
-+}
-+
-+static inline int ds1302_rxbit(void)
-+{
-+	return ioread8(mem) & 0x1;
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id ds1302_dt_ids[] = {
-+	{ .compatible = "dallas,rtc-ds1302" },
-+	{ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, ds1302_dt_ids);
-+#endif
-+
- #else
- #error "Add support for your platform"
- #endif
-@@ -216,7 +311,7 @@ static int __init ds1302_rtc_probe(struct platform_device *pdev)
- {
- 	struct rtc_device *rtc;
- 
--	if (ds1302_hw_init()) {
-+	if (ds1302_hw_init(pdev)) {
- 		dev_err(&pdev->dev, "Failed to init communication channel");
- 		return -EINVAL;
- 	}
-@@ -244,6 +339,7 @@ static int __init ds1302_rtc_probe(struct platform_device *pdev)
- static struct platform_driver ds1302_platform_driver = {
- 	.driver		= {
- 		.name	= DRV_NAME,
-+		.of_match_table = of_match_ptr(ds1302_dt_ids),
- 	},
- };
- 
--- 
-2.6.2
+> I'm not sure I follow w.r.t. "inherently less information", unless you
+> mean trying to debug without access to that DTB?
+
+If what the kernel knows about the system is that it's got a bunch of
+cores with numbers assigned to them then all it's really got is those
+numbers.  If something changes that causes problems for some systems
+(eg, because the numbers have been picked poorly but in a way that
+happened to work well with the old code) that's not a lot to go on, the
+more we know about the system the more likely it is that we'll be able
+to adjust the assumptions in whatever new thing we do that causes
+problems for any particular systems where we run into trouble.
+
+> > My point there is that if we're not that concerned about the specific
+> > number something in kernel is safer.
+
+> I don't entirely disagree there. I think an in-kernel benchmark is
+> likely safer.
+
+Yes, I think that something where we just observe the system performance
+at runtime is likely one of the best solutions if we can get something
+that gives reasonable results.
+
+> > That does have the issue that we need to scale with regard to the
+> > frequency the benchmark gets run at.  That's not an insurmountable
+> > obstacle but it's not completely trivial either.
+
+> If we change clock frequency, then regardless of where the information
+> comes from we need to perform scaling, no?
+
+Yes, it's just a question of making the benchmarking bit talk to the
+scaling bit so we know where we're at when we do the benchmark.  Like I
+say it should be doable.
+
+> One nice thing about doing a benchmark to derive the numbers is that
+> when the kernel is that when the frequency is fixed but the kernel
+> cannot query it, the numbers will be representative.
+
+Definitely.
+
+--RQipzlYdbiO9/NWI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWcFGrAAoJECTWi3JdVIfQ1mgH+gNbzplRXvGXj4rJDQs44+IH
+7BZTdfOzMhHBkp3yTRQSkRDOjZZqJxwW2VO2/u2eqopmw0DcK8dkL5NKWNJNbw4w
+uFvRdtT6gHKrmnk8M7Wt2m/OSgPcpccefc/CGIr5Aa1q++PffoCRhklmzQHgzNfn
+26dj1DsBojH+D0DZ8wEFYLfAYSgldjk3G/6ZXPTKbI0Tsd5SV/OsYj0qXi4ifhnE
+kP4PWaNiLJFs3/vBFday+Y3V4IiVUHG+mdmEFjHqgFOT8ejtJWJif4xNONrHUVJL
+wY1VMU68AHRAHj02whPcg4E9lMRLOfk9/F8jb15jpOPra3mvKOiInP4gJFyCdnE=
+=oZLz
+-----END PGP SIGNATURE-----
+
+--RQipzlYdbiO9/NWI--
