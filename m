@@ -1,43 +1,135 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v2 3/3] ARM: bcm2835: Add the auxiliary clocks to the device tree.
-Date: Tue, 15 Dec 2015 15:35:59 -0800
-Message-ID: <1450222559-22461-3-git-send-email-eric@anholt.net>
+Subject: [PATCH v2 2/3] clk: bcm2835: Add a driver for the auxiliary peripheral clock gates.
+Date: Tue, 15 Dec 2015 15:35:58 -0800
+Message-ID: <1450222559-22461-2-git-send-email-eric@anholt.net>
 References: <1450222559-22461-1-git-send-email-eric@anholt.net>
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1450222559-22461-1-git-send-email-eric@anholt.net>
-Sender: linux-clk-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-clk@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-These will be used for enabling UART1, SPI1, and SPI2.
+There are a pair of SPI masters and a mini UART that were last minute
+additions.  As a result, they didn't get integrated in the same way as
+the other gates off of the VPU clock in CPRMAN.
 
 Signed-off-by: Eric Anholt <eric@anholt.net>
 ---
 
 v2: Make the binding cover both the IRQ and clock enable registers.
+    Use devm_ allocation, ioremap, and and clock get functions.  Don't
+    return the error from of_clk_add_provider(), since that would
+    leave the clocks registered, but their registers unmapped.  Trim
+    includes.
 
- arch/arm/boot/dts/bcm2835.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/clk/bcm/Makefile          |  1 +
+ drivers/clk/bcm/clk-bcm2835-aux.c | 85 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 86 insertions(+)
+ create mode 100644 drivers/clk/bcm/clk-bcm2835-aux.c
 
-diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
-index aef64de..a27d40b 100644
---- a/arch/arm/boot/dts/bcm2835.dtsi
-+++ b/arch/arm/boot/dts/bcm2835.dtsi
-@@ -73,6 +73,13 @@
- 			clocks = <&clk_osc>;
- 		};
- 
-+		aux: aux@0x7e215000 {
-+			compatible = "brcm,bcm2835-aux";
-+			#clock-cells = <1>;
-+			reg = <0x7e215000 0x8>;
-+			clocks = <&clocks BCM2835_CLOCK_VPU>;
-+		};
+diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
+index 3fc9506..183484c 100644
+--- a/drivers/clk/bcm/Makefile
++++ b/drivers/clk/bcm/Makefile
+@@ -4,6 +4,7 @@ obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm281xx.o
+ obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm21664.o
+ obj-$(CONFIG_COMMON_CLK_IPROC)	+= clk-iproc-armpll.o clk-iproc-pll.o clk-iproc-asiu.o
+ obj-$(CONFIG_ARCH_BCM2835)	+= clk-bcm2835.o
++obj-$(CONFIG_ARCH_BCM2835)	+= clk-bcm2835-aux.o
+ obj-$(CONFIG_COMMON_CLK_IPROC)	+= clk-ns2.o
+ obj-$(CONFIG_ARCH_BCM_CYGNUS)	+= clk-cygnus.o
+ obj-$(CONFIG_ARCH_BCM_NSP)	+= clk-nsp.o
+diff --git a/drivers/clk/bcm/clk-bcm2835-aux.c b/drivers/clk/bcm/clk-bcm2835-aux.c
+new file mode 100644
+index 0000000..e4f89e2
+--- /dev/null
++++ b/drivers/clk/bcm/clk-bcm2835-aux.c
+@@ -0,0 +1,85 @@
++/*
++ * Copyright (C) 2015 Broadcom
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
- 		rng@7e104000 {
- 			compatible = "brcm,bcm2835-rng";
- 			reg = <0x7e104000 0x10>;
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/clk/bcm2835.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <dt-bindings/clock/bcm2835-aux.h>
++
++#define BCM2835_AUXIRQ		0x00
++#define BCM2835_AUXENB		0x04
++
++static int bcm2835_aux_clk_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct clk_onecell_data *onecell;
++	const char *parent;
++	struct clk *parent_clk;
++	struct resource *res;
++	void __iomem *reg, *gate;
++
++	parent_clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(parent_clk))
++		return PTR_ERR(parent_clk);
++	parent = __clk_get_name(parent_clk);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	reg = devm_ioremap_resource(dev, res);
++	if (!reg)
++		return -ENODEV;
++
++	onecell = devm_kmalloc(dev, sizeof(*onecell), GFP_KERNEL);
++	if (!onecell)
++		return -ENOMEM;
++	onecell->clk_num = BCM2835_AUX_CLOCK_COUNT;
++	onecell->clks = devm_kcalloc(dev, BCM2835_AUX_CLOCK_COUNT,
++				     sizeof(*onecell->clks), GFP_KERNEL);
++	if (!onecell->clks)
++		return -ENOMEM;
++
++	gate = reg + BCM2835_AUXENB;
++	onecell->clks[BCM2835_AUX_CLOCK_UART] =
++		clk_register_gate(dev, "aux_uart", parent, 0, gate, 0, 0, NULL);
++
++	onecell->clks[BCM2835_AUX_CLOCK_SPI1] =
++		clk_register_gate(dev, "aux_spi1", parent, 0, gate, 1, 0, NULL);
++
++	onecell->clks[BCM2835_AUX_CLOCK_SPI2] =
++		clk_register_gate(dev, "aux_spi2", parent, 0, gate, 2, 0, NULL);
++
++	of_clk_add_provider(pdev->dev.of_node, of_clk_src_onecell_get, onecell);
++
++	return 0;
++}
++
++static const struct of_device_id bcm2835_aux_clk_of_match[] = {
++	{ .compatible = "brcm,bcm2835-aux", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, bcm2835_aux_clk_of_match);
++
++static struct platform_driver bcm2835_aux_clk_driver = {
++	.driver = {
++		.name = "bcm2835-aux-clk",
++		.of_match_table = bcm2835_aux_clk_of_match,
++	},
++	.probe          = bcm2835_aux_clk_probe,
++};
++builtin_platform_driver(bcm2835_aux_clk_driver);
++
++MODULE_AUTHOR("Eric Anholt <eric@anholt.net>");
++MODULE_DESCRIPTION("BCM2835 auxiliary peripheral clock driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.6.2
-
