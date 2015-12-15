@@ -1,128 +1,36 @@
-From: Vladimir Murzin <vladimir.murzin@arm.com>
-Subject: Re: [PATCH v1 04/10] serial: mps2-uart: add MPS2 UART driver
-Date: Tue, 15 Dec 2015 12:40:37 +0000
-Message-ID: <56700A45.3070109@arm.com>
-References: <1449048790-25859-1-git-send-email-vladimir.murzin@arm.com>	<1449048790-25859-5-git-send-email-vladimir.murzin@arm.com> <CAHp75Vd98TEQ7TiD==t=RgYOqSinWgnyRjg7V=oPXmEx0nedLQ@mail.gmail.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx: Fix the assigned-clock mismatch issue on imx6q/dl
+Date: Tue, 15 Dec 2015 10:44:00 -0200
+Message-ID: <CAOMZO5D9_G_agDAuYg7JdE_9+2en2soPvBb41sA8_1_YQ3PLFg@mail.gmail.com>
+References: <1449648955-30835-1-git-send-email-b51503@freescale.com>
+	<20151214030750.GF25756@tiger>
+	<20151215085237.GB388@tiger>
+	<CAOMZO5BKFqMKpRiM6hV43Ko7YcGHPEChSi1GEBMzg3oGo6_Lnw@mail.gmail.com>
+	<567006C4.8050906@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vd98TEQ7TiD==t=RgYOqSinWgnyRjg7V=oPXmEx0nedLQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Rutland <Mark.Rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, ijc+devicetree <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jiri Slaby <jslaby@suse.cz>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <567006C4.8050906-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bai Ping <b51503-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/12/15 23:39, Andy Shevchenko wrote:
-> On Wed, Dec 2, 2015 at 11:33 AM, Vladimir Murzin
-> <vladimir.murzin@arm.com> wrote:
->> This driver adds support to the UART controller found on ARM MPS2
->> platform.
-> 
-> Just few comments (have neither time not big desire to do full review).
-> 
+On Tue, Dec 15, 2015 at 10:25 AM, Bai Ping <b51503-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 
-Still better than nothing ;) I'm mostly agree on points you had, so I've
-just left some I'm doubt about...
+>> It seems that even after this patch we still have a mismatch:
+>> assigned-clocks has 5 members and assigned-clock-parents has 4.
+>
+> I think if it is the last clock in the assigned-clock list, the
+> corresponding
+> 'assigned-clock-parents' and 'assigned-clock-rates'  entry can be omitted.
 
->> +
->> +static void mps2_uart_enable_ms(struct uart_port *port)
->> +{
->> +}
->> +
->> +static void mps2_uart_break_ctl(struct uart_port *port, int ctl)
->> +{
->> +}
-> 
-> Are those required to be present? If not, remove them until you have
-> alive code there.
+Yes, you are right. Confirmed with
+Documentation/devicetree/bindings/clock/clock-bindings.txt and your
+patch is correct, thanks:
 
-A quick grep shows that core calls mps2_uart_break_ctl()
-unconditionally, but, yes, it checks for presence of
-mps2_uart_enable_ms() before jumping there, so it is safe to remove latter.
-
->> +static irqreturn_t mps2_uart_oerrirq(int irq, void *data)
->> +{
->> +       irqreturn_t handled = IRQ_NONE;
->> +       struct uart_port *port = data;
->> +       u8 irqflag = mps2_uart_read8(port, UARTn_INT);
->> +
->> +       spin_lock(&port->lock);
->> +
->> +       if (irqflag & UARTn_INT_RX_OVERRUN) {
->> +               struct tty_port *tport = &port->state->port;
->> +
->> +               mps2_uart_write8(port, UARTn_INT_RX_OVERRUN, UARTn_INT);
->> +               tty_insert_flip_char(tport, 0, TTY_OVERRUN);
->> +               port->icount.overrun++;
->> +               handled = IRQ_HANDLED;
->> +       }
->> +
->> +       /* XXX: this shouldn't happen? */
-> 
-> If shouldn't why it's there? Otherwise better to explain which
-> conditions may lead to this.
-> 
-
-In practice I've never seen that happened and I think it never *should*
-happen since we check if there is room in TX buffer. However, I could be
-wrong here, so it is why that statement has question mark.
-
->> +       if (irqflag & UARTn_INT_TX_OVERRUN) {
->> +               mps2_uart_write8(port, UARTn_INT_TX_OVERRUN, UARTn_INT);
->> +               handled = IRQ_HANDLED;
->> +       }
->> +
->> +       spin_unlock(&port->lock);
->> +
->> +       return handled;
->> +}
->> +
-...
->> +static void mps2_uart_release_port(struct uart_port *port)
->> +{
->> +}
->> +
->> +static int mps2_uart_request_port(struct uart_port *port)
->> +{
->> +       return 0;
->> +}
->> +
-> 
-> Same question about empty stubs.
-
-Looks like they called unconditionally by the core.
-
->> +static int __init mps2_uart_init(void)
->> +{
->> +       int ret;
->> +
->> +       ret = uart_register_driver(&mps2_uart_driver);
->> +       if (ret)
->> +               return ret;
->> +
->> +       ret = platform_driver_register(&mps2_serial_driver);
->> +       if (ret)
->> +               uart_unregister_driver(&mps2_uart_driver);
->> +
->> +       pr_info("MPS2 UART driver initialized\n");
->> +
->> +       return ret;
->> +}
->> +module_init(mps2_uart_init);
->> +
->> +static void __exit mps2_uart_exit(void)
->> +{
->> +       platform_driver_unregister(&mps2_serial_driver);
->> +       uart_unregister_driver(&mps2_uart_driver);
->> +}
->> +module_exit(mps2_uart_exit);
-> 
-> module_platform_driver();
-> And move uart_*register calls to probe/remove.
-> 
-
-With this move we'll get uart_*register for every device probed, no?
-
-Thanks
-Vladimir
+Reviewed-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
