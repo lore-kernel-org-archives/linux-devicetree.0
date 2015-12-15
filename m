@@ -1,191 +1,166 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v3 1/9] phy: ti-pipe3: introduce local struct device* in probe
-Date: Tue, 15 Dec 2015 14:46:00 +0530
-Message-ID: <1450170968-11282-2-git-send-email-kishon@ti.com>
-References: <1450170968-11282-1-git-send-email-kishon@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] usb: gadget: renesas_usb3: add support for Renesas USB3.0 peripheral controller
+Date: Tue, 15 Dec 2015 10:30:08 +0100
+Message-ID: <7989573.HuGUrIYJy9@wuerfel>
+References: <1450162472-6664-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1450170968-11282-1-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rogerq@ti.com, nsekhar@ti.com, linux-pci@vger.kernel.org, linux-usb@vger.kernel.org, tony@atomide.com, t-kristo@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1450162472-6664-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: gregkh@linuxfoundation.org, balbi@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-No functional change. Introduce local struct device pointer in
-probe and replace using &pdev->dev/phy->dev with the local
-device pointer. This is in preparation to split ti_pipe3_probe
-and add separate functions for getting mem resource, getting
-sysctrl and getting clocks.
+On Tuesday 15 December 2015 15:54:32 Yoshihiro Shimoda wrote:
+> R-Car H3 has USB3.0 peripheral controllers. This controller's has the
+> following features:
+>  - Supports super, high and full speed
+>  - Contains 30 pipes for bulk or interrupt transfer
+>  - Contains dedicated DMA controller
+> 
+> This driver doesn't support the dedicated DMAC for now.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  This patch is based on the latest Felipe's usb.git / testing/next branch.
+>  (commit id = e9284de9fae69f1d5e57a4817bfc36dc5f3adf71)
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/phy/phy-ti-pipe3.c |   54 ++++++++++++++++++++++----------------------
- 1 file changed, 27 insertions(+), 27 deletions(-)
+Looks good overall, I've found a few small details:
 
-diff --git a/drivers/phy/phy-ti-pipe3.c b/drivers/phy/phy-ti-pipe3.c
-index 93bc112..c511105 100644
---- a/drivers/phy/phy-ti-pipe3.c
-+++ b/drivers/phy/phy-ti-pipe3.c
-@@ -319,40 +319,41 @@ static int ti_pipe3_probe(struct platform_device *pdev)
- 	struct platform_device *control_pdev;
- 	const struct of_device_id *match;
- 	struct clk *clk;
-+	struct device *dev = &pdev->dev;
- 
--	phy = devm_kzalloc(&pdev->dev, sizeof(*phy), GFP_KERNEL);
-+	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
- 	if (!phy)
- 		return -ENOMEM;
- 
--	phy->dev		= &pdev->dev;
-+	phy->dev		= dev;
- 
- 	if (!of_device_is_compatible(node, "ti,phy-pipe3-pcie")) {
--		match = of_match_device(ti_pipe3_id_table, &pdev->dev);
-+		match = of_match_device(ti_pipe3_id_table, dev);
- 		if (!match)
- 			return -EINVAL;
- 
- 		phy->dpll_map = (struct pipe3_dpll_map *)match->data;
- 		if (!phy->dpll_map) {
--			dev_err(&pdev->dev, "no DPLL data\n");
-+			dev_err(dev, "no DPLL data\n");
- 			return -EINVAL;
- 		}
- 
- 		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
- 						   "pll_ctrl");
--		phy->pll_ctrl_base = devm_ioremap_resource(&pdev->dev, res);
-+		phy->pll_ctrl_base = devm_ioremap_resource(dev, res);
- 		if (IS_ERR(phy->pll_ctrl_base))
- 			return PTR_ERR(phy->pll_ctrl_base);
- 
--		phy->sys_clk = devm_clk_get(phy->dev, "sysclk");
-+		phy->sys_clk = devm_clk_get(dev, "sysclk");
- 		if (IS_ERR(phy->sys_clk)) {
--			dev_err(&pdev->dev, "unable to get sysclk\n");
-+			dev_err(dev, "unable to get sysclk\n");
- 			return -EINVAL;
- 		}
- 	}
- 
--	phy->refclk = devm_clk_get(phy->dev, "refclk");
-+	phy->refclk = devm_clk_get(dev, "refclk");
- 	if (IS_ERR(phy->refclk)) {
--		dev_err(&pdev->dev, "unable to get refclk\n");
-+		dev_err(dev, "unable to get refclk\n");
- 		/* older DTBs have missing refclk in SATA PHY
- 		 * so don't bail out in case of SATA PHY.
- 		 */
-@@ -361,9 +362,9 @@ static int ti_pipe3_probe(struct platform_device *pdev)
- 	}
- 
- 	if (!of_device_is_compatible(node, "ti,phy-pipe3-sata")) {
--		phy->wkupclk = devm_clk_get(phy->dev, "wkupclk");
-+		phy->wkupclk = devm_clk_get(dev, "wkupclk");
- 		if (IS_ERR(phy->wkupclk)) {
--			dev_err(&pdev->dev, "unable to get wkupclk\n");
-+			dev_err(dev, "unable to get wkupclk\n");
- 			return PTR_ERR(phy->wkupclk);
- 		}
- 	} else {
-@@ -371,14 +372,14 @@ static int ti_pipe3_probe(struct platform_device *pdev)
- 		phy->dpll_reset_syscon = syscon_regmap_lookup_by_phandle(node,
- 							"syscon-pllreset");
- 		if (IS_ERR(phy->dpll_reset_syscon)) {
--			dev_info(&pdev->dev,
-+			dev_info(dev,
- 				 "can't get syscon-pllreset, sata dpll won't idle\n");
- 			phy->dpll_reset_syscon = NULL;
- 		} else {
- 			if (of_property_read_u32_index(node,
- 						       "syscon-pllreset", 1,
- 						       &phy->dpll_reset_reg)) {
--				dev_err(&pdev->dev,
-+				dev_err(dev,
- 					"couldn't get pllreset reg. offset\n");
- 				return -EINVAL;
- 			}
-@@ -387,30 +388,30 @@ static int ti_pipe3_probe(struct platform_device *pdev)
- 
- 	if (of_device_is_compatible(node, "ti,phy-pipe3-pcie")) {
- 
--		clk = devm_clk_get(phy->dev, "dpll_ref");
-+		clk = devm_clk_get(dev, "dpll_ref");
- 		if (IS_ERR(clk)) {
--			dev_err(&pdev->dev, "unable to get dpll ref clk\n");
-+			dev_err(dev, "unable to get dpll ref clk\n");
- 			return PTR_ERR(clk);
- 		}
- 		clk_set_rate(clk, 1500000000);
- 
--		clk = devm_clk_get(phy->dev, "dpll_ref_m2");
-+		clk = devm_clk_get(dev, "dpll_ref_m2");
- 		if (IS_ERR(clk)) {
--			dev_err(&pdev->dev, "unable to get dpll ref m2 clk\n");
-+			dev_err(dev, "unable to get dpll ref m2 clk\n");
- 			return PTR_ERR(clk);
- 		}
- 		clk_set_rate(clk, 100000000);
- 
--		clk = devm_clk_get(phy->dev, "phy-div");
-+		clk = devm_clk_get(dev, "phy-div");
- 		if (IS_ERR(clk)) {
--			dev_err(&pdev->dev, "unable to get phy-div clk\n");
-+			dev_err(dev, "unable to get phy-div clk\n");
- 			return PTR_ERR(clk);
- 		}
- 		clk_set_rate(clk, 100000000);
- 
--		phy->div_clk = devm_clk_get(phy->dev, "div-clk");
-+		phy->div_clk = devm_clk_get(dev, "div-clk");
- 		if (IS_ERR(phy->div_clk)) {
--			dev_err(&pdev->dev, "unable to get div-clk\n");
-+			dev_err(dev, "unable to get div-clk\n");
- 			return PTR_ERR(phy->div_clk);
- 		}
- 	} else {
-@@ -419,13 +420,13 @@ static int ti_pipe3_probe(struct platform_device *pdev)
- 
- 	control_node = of_parse_phandle(node, "ctrl-module", 0);
- 	if (!control_node) {
--		dev_err(&pdev->dev, "Failed to get control device phandle\n");
-+		dev_err(dev, "Failed to get control device phandle\n");
- 		return -EINVAL;
- 	}
- 
- 	control_pdev = of_find_device_by_node(control_node);
- 	if (!control_pdev) {
--		dev_err(&pdev->dev, "Failed to get control device\n");
-+		dev_err(dev, "Failed to get control device\n");
- 		return -EINVAL;
- 	}
- 
-@@ -434,7 +435,7 @@ static int ti_pipe3_probe(struct platform_device *pdev)
- 	omap_control_phy_power(phy->control_dev, 0);
- 
- 	platform_set_drvdata(pdev, phy);
--	pm_runtime_enable(phy->dev);
-+	pm_runtime_enable(dev);
- 
- 	/*
- 	 * Prevent auto-disable of refclk for SATA PHY due to Errata i783
-@@ -446,13 +447,12 @@ static int ti_pipe3_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	generic_phy = devm_phy_create(phy->dev, NULL, &ops);
-+	generic_phy = devm_phy_create(dev, NULL, &ops);
- 	if (IS_ERR(generic_phy))
- 		return PTR_ERR(generic_phy);
- 
- 	phy_set_drvdata(generic_phy, phy);
--	phy_provider = devm_of_phy_provider_register(phy->dev,
--			of_phy_simple_xlate);
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
- 	if (IS_ERR(phy_provider))
- 		return PTR_ERR(phy_provider);
- 
--- 
-1.7.9.5
+>  .../devicetree/bindings/usb/renesas_usb3.txt       |   23 +
+>  drivers/usb/gadget/udc/Kconfig                     |   11 +
+>  drivers/usb/gadget/udc/Makefile                    |    1 +
+>  drivers/usb/gadget/udc/renesas_usb3.c              | 1720 ++++++++++++++++++++
+>  drivers/usb/gadget/udc/renesas_usb3.h              |  284 ++++
+
+The header file is only used by one .c file, so just merge it all into that
+file.
+
+> +Required properties:
+> +  - compatible: Must contain one of the following:
+> +	- "renesas,usb3-peri-r8a7795"
+> +  - reg: Base address and length of the register for the USB3.0 Peripheral
+> +  - interrupts: Interrupt specifier for the USB3.0 Peripheral
+> +  - clocks: A list of phandle + clock specifier pairs
+
+The clock specifier contains the phandle, please rephrase the last line
+
+> diff --git a/drivers/usb/gadget/udc/renesas_usb3.c b/drivers/usb/gadget/udc/renesas_usb3.c
+> new file mode 100644
+> index 0000000..f302c89
+> --- /dev/null
+> +++ b/drivers/usb/gadget/udc/renesas_usb3.c
+> @@ -0,0 +1,1720 @@
+> +/*
+> + * Renesas USB3.0 Peripheral driver (USB gadget)
+> + *
+> + * Copyright (C) 2015  Renesas Electronics Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; version 2 of the License.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/slab.h>
+> +#include <linux/usb/ch9.h>
+> +#include <linux/usb/gadget.h>
+
+As the 0-say bot found, this needs #include <linux/sizes.h>
+
+> +static int renesas_usb3_ep_queue(struct usb_ep *_ep, struct usb_request *_req,
+> +				 gfp_t gfp_flags);
+> +static void usb3_start_pipen(struct renesas_usb3_ep *usb3_ep,
+> +			     struct renesas_usb3_request *usb3_req);
+
+Can you try to reorder the functions so you don't need forward declarations?
+
+> +static void usb3_write(struct renesas_usb3 *usb3, u32 data, u32 offs)
+> +{
+> +	iowrite32(data, usb3->reg + offs);
+> +}
+> +
+> +static u32 usb3_read(struct renesas_usb3 *usb3, u32 offs)
+> +{
+> +	return ioread32(usb3->reg + offs);
+> +}
+
+I think using readl() is more common than ioread32() if the driver cannot
+use IORESOURCE_IO but only IORESOURCE_MEM.
+
+On ARM, the two are the same, but on some architectures ioread32 is more
+expensive, so using the former is preferred.
+
+> +	for (i = 0; i < USB3_WAIT_NS; i++) {
+> +		if ((usb3_read(usb3, reg) & mask) == expected)
+> +			return 0;
+> +		ndelay(1);
+> +	}
+
+ndelay(1) is unusual, maybe use cpu_relax() instead, or document why
+you call ndelay()?
+
+> +static void usb3_init_phy(struct renesas_usb3 *usb3)
+> +{
+> +}
+
+If the function is empty, don't add or call it, it's easy to add if you
+need it later.
+
+> +static struct platform_driver renesas_usb3_driver = {
+> +	.remove =	__exit_p(renesas_usb3_remove),
+> +	.driver		= {
+> +		.name =	(char *)udc_name,
+> +		.of_match_table = of_match_ptr(usb3_of_match),
+> +	},
+> +};
+> +module_platform_driver_probe(renesas_usb3_driver, renesas_usb3_probe);
+
+module_platform_driver_probe() won't work if you get into deferred probing,
+I'd suggest using module_platform_driver() and not marking the remove
+function as __exit
+
+> +struct renesas_usb3;
+> +struct renesas_usb3_request {
+> +	struct usb_request	req;
+> +	struct list_head	queue;
+> +};
+
+There is already a list_head in struct usb_request. Could you use that?
+(I don't know, just asking because this looks odd)
+
+> +#define USB3_EP_NAME_SIZE	8
+> +struct renesas_usb3_ep {
+> +	struct usb_ep ep;
+> +	struct renesas_usb3 *usb3;
+> +	int num;
+> +	char ep_name[USB3_EP_NAME_SIZE];
+> +	struct list_head queue;
+> +	u32 rammap_val;
+> +	bool dir_in;
+> +	bool halt;
+> +	bool wedge;
+> +	bool started;
+> +};
+> +
+> +struct renesas_usb3_priv {
+> +	int ramsize_per_ramif;		/* unit = bytes */
+> +	int num_ramif;
+> +	int ramsize_per_pipe;		/* unit = bytes */
+> +	unsigned workaround_for_vbus:1;	/* if 1, don't check vbus signal */
+> +};
+
+You use 'bool' in one structure, and bit fields in the other.
+Maybe pick one of the two styles consistently.
+
+	Arnd
+
