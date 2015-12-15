@@ -1,91 +1,91 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: Re: [PATCH v14 0/7] fpga area and fpga bridge framework
-Date: Tue, 15 Dec 2015 10:15:54 -0800
-Message-ID: <CAAtXAHcLDjrnx=Ger0i24YesZA_RB16Y1ZXRd9dsLPWSVVTwGQ@mail.gmail.com>
-References: <1449790629-5517-1-git-send-email-atull@opensource.altera.com>
-	<CAAtXAHcNqP4ftOUbFYK=0kmpY9XmPgQ1=xAejQUj90N4x4pFng@mail.gmail.com>
-	<CANk1AXTqN6ExtXXgMXaTAM=aH+0J4D5b2_JSQ_9AuJCj79PR5Q@mail.gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 2/8] Documentation: arm: define DT cpu capacity
+ bindings
+Date: Tue, 15 Dec 2015 18:39:33 +0000
+Message-ID: <20151215183933.GC8568@leverpostej>
+References: <20151215140135.GI31299@leverpostej>
+ <20151215150813.GZ5727@sirena.org.uk>
+ <20151215153218.GA7228@leverpostej>
+ <20151215154651.GK16007@e106622-lin>
+ <20151215155737.GB7619@leverpostej>
+ <20151215162317.GB24286@e104818-lin.cambridge.arm.com>
+ <20151215164145.GA8012@leverpostej>
+ <CAKfTPtAuosPcL8bbQ27Y-vUE1h4QRY8hGESnm4YrxqRAQ3K=5g@mail.gmail.com>
+ <20151215171518.GC8012@leverpostej>
+ <CAKfTPtBzWcNHx+Fi7hUabNpPsd1thFAkPnLcpsnqbQp6Qq24cQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CANk1AXTqN6ExtXXgMXaTAM=aH+0J4D5b2_JSQ_9AuJCj79PR5Q@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Alan Tull <delicious.quinoa@gmail.com>
-Cc: Alan Tull <atull@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>, Josh Cartwright <joshc@ni.com>, Greg KH <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtBzWcNHx+Fi7hUabNpPsd1thFAkPnLcpsnqbQp6Qq24cQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Morten Rasmussen <morten.rasmussen-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dietmar Eggemann <dietmar.eggemann-5wv7dgnIgG8@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>linux-kernel <linux>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
+On Tue, Dec 15, 2015 at 06:47:20PM +0100, Vincent Guittot wrote:
+> On 15 December 2015 at 18:15, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On Tue, Dec 15, 2015 at 05:59:34PM +0100, Vincent Guittot wrote:
+> >> On 15 December 2015 at 17:41, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> >> > On Tue, Dec 15, 2015 at 04:23:18PM +0000, Catalin Marinas wrote:
+> >> >> On Tue, Dec 15, 2015 at 03:57:37PM +0000, Mark Rutland wrote:
+> >> >> > On Tue, Dec 15, 2015 at 03:46:51PM +0000, Juri Lelli wrote:
+> >> >> > > On 15/12/15 15:32, Mark Rutland wrote:
+> >> >> > > > On Tue, Dec 15, 2015 at 03:08:13PM +0000, Mark Brown wrote:
+> >> >> > > > > My expectation is that we just need good enough, not perfect, and that
+> >> >> > > > > seems to match what Juri is saying about the expectation that most of
+> >> >> > > > > the fine tuning is done via other knobs.
+> >> >> > > >
+> >> >> > > > My expectation is that if a ballpark figure is good enough, it should be
+> >> >> > > > possible to implement something trivial like bogomips / loop_per_jiffy
+> >> >> > > > calculation.
+> >> >> > >
+> >> >> > > I didn't really followed that, so I might be wrong here, but isn't
+> >> >> > > already happened a discussion about how we want/like to stop exposing
+> >> >> > > bogomips info or rely on it for anything but in kernel delay loops?
+> >> >> >
+> >> >> > I meant that we could have a benchmark of that level of complexity,
+> >> >> > rather than those specific values.
+> >> >>
+> >> >> Or we could simply let user space use whatever benchmarks or hard-coded
+> >> >> values it wants and set the capacity via sysfs (during boot). By
+> >> >> default, the kernel would assume all CPUs equal.
+> >> >
+> >> > I assume that a userspace override would be available regardless of
+> >> > whatever mechanism the kernel uses to determine relative
+> >> > performance/effinciency.
+> >>
+> >> Don't you think that if we let a complete latitude to the userspace
+> >> to set whatever it wants, it will be used to abuse the kernel (and the
+> >> scheduler in particular ) and that this will finish in a real mess to
+> >> understand what is wrong when a task is not placed where it should be.
+> >
+> > I'm not sure I follow what you mean by "abuse" here. Userspace currently
+> > can force the scheduler to make sub-optimal decisions in a number of
+> > ways, e.g.
+> >
+> > * Hot-unplugging the preferred CPUs
+> > * Changing a task's affinity mask
+> > * Setting the nice value of a task
+> > * Using rlimits and/or cgroups
+> > * Using a cpufreq governor
+> > * Fork-bombing
+> 
+> All these are parameters have a meaning (except the last one). By
+> abusing i mean setting the capacity of the most powerful cpu to 1 for
+> no good reason except to abuse the scheduler so the latter will not
+> put that much tasks on it just  because the current running use case
+> is more efficient if the big core is not used.
 
-On Mon, Dec 14, 2015 at 5:56 PM, Alan Tull <delicious.quinoa@gmail.com> wrote:
+Surely it's better to allow them to "abuse" the kernel in that manner
+than to place otherwise insane values into a DT? Especially if they can
+later change to a sane value?
 
->> I had an offline discussion with Josh Cartwright about his concerns.
->> He brought up a good
->> point on w.r.t to the way FPGA Area (Bus) deals with things.
->>
->> Currently we only support complete status = "okay" vs "disabled" kind
->> of overlays.
+For that particular case it's easy to hotplug out the big core, or to
+set the affinity of tasks to avoid it.
 
-> Maybe i don't understand what you are saying; could you write out a
-> sequence you want to be able to do?
-
-Let's say you have a UART in the FPGA. You want to reprogram the FPGA
-fabric that includes the UART (assuming proper resets etc happen)
-
-1) Driver gets notified of impending doom, keeps hands off of FPGA
-2) FPGA Manager reloads FPGA
-3) FPGA Manager lets driver know FPGA is back
-4) Driver can continue to function as always
-
-It wouldn't even have to be a UART, on some boards simple SPI lines or UART
-lines  go from the processor through the FPGA logic out to a pin.
-When you reload the FPGA for a short moment of time that doesn't work,
-while after the reload it works just fine. Maybe something like extcon could
-be used for that?
-
-> Is this a separate question/issue from the above?  Are you talking
-> about acceleration?
-
-I meant stuff like SPI that gets routed through the FPGA, sorry for
-being unclear ;-)
-
->>
->> I've been toying around with hacking up struct device to include a
->> FPGA 'domain', and then, similar
->> to power domains allow devices to register suspend() / resume() style
->> callbacks (could call them pre_reload() or something like that ...)
->>
->> I haven't gotten around to think it through. At this point it's just
->> an idea and I don't have real code to show.
->>
->> I realize the issue with that is we'd have to make changes to struct device.
->
-> That's interesting.  Usually a FPGA image has many devices in it, so
-> so way of making that dependency clear would be needed.  If any of the
-> devices involved are powered up, that FPGA image would need to be
-> loaded.
-
-Yeah. That's why I think the power domain model we have has a bunch of
-similarities.
-
-> Currently I'm trying to get some bindings approved for doing device
-> tree control of loading the FPGA and probing the devices.  My idea is
-> that these bindings could be useful for some use cases where we are
-> loading hardware onto the FPGA that needs to show up in the device
-> tree. Some of Rob's feedback is that my proposal may be
-> Altera-specific. If the bindings that I am proposing are useful for at
-> least some uses with Xilinx parts, that would be valuable feedback at
-> this point.  If they are Altera-specific, then I may need to add
-> "altr," to some of the compatible strings like "altr,fpga-bus" and
-> "altr,fpga-area".  My original intent was to implement something that
-> you could use also, so I hope that's not the future here.
->
-> So my question for you is: is this stuff useful for you?
-
-Definitely, I'm pretty happy with what you have so far!
-I think the points I mentioned above apply to Altera devices, too.
-Maybe we can solve this in two parts, and the first step is getting the
-loading bindings accepted ;-)
-
-Cheers,
-
-Moritz
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
