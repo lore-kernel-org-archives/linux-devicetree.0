@@ -1,338 +1,199 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v2] extcon: add Maxim MAX3355 driver
-Date: Tue, 15 Dec 2015 10:20:44 +0900
-Message-ID: <566F6AEC.1030903@samsung.com>
-References: <5045536.UEVncNCOZE@wasted.cogentembedded.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] net: emac: emac gigabit ethernet controller driver
+Date: Mon, 14 Dec 2015 17:39:09 -0800
+Message-ID: <566F6F3D.5050004@gmail.com>
+References: <1450138740-32562-1-git-send-email-gavidov@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-reply-to: <5045536.UEVncNCOZE@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1450138740-32562-1-git-send-email-gavidov@codeaurora.org>
+Sender: netdev-owner@vger.kernel.org
+To: Gilad Avidov <gavidov@codeaurora.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Cc: sdharia@codeaurora.org, shankerd@codeaurora.org, timur@codeaurora.org, gregkh@linuxfoundation.org, vikrams@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+On 14/12/15 16:19, Gilad Avidov wrote:
 
-On 2015=EB=85=84 12=EC=9B=94 12=EC=9D=BC 08:22, Sergei Shtylyov wrote:
-> Maxim  Integrated MAX3355E chip integrates a  charge pump and compara=
-tors to
-       ^^                                     ^^=20
-> enable a system with an integrated USB OTG dual-role transceiver to f=
-unction
-> as  an USB  OTG dual-role device.  In addition  to sensing/controllin=
-g Vbus,
-    ^^      ^^                     ^^           ^^
-> the chip also passes thru the ID signal  from the USB  OTG connector.
-                                         ^^
-> On some Renesas boards,  this signal is  just fed into the SoC thru a=
- GPIO
-                         ^^              ^^
-> pin --  there's no real  OTG controller, only host and gadget USB con=
-trollers
-        ^^               ^^
-> sharing the same USB bus; however, we'd  like to allow host or gadget=
- drivers
-                                         ^^
-> to be loaded depending on the cable type,  hence the need for the MAX=
-3355
-                                           ^^
-> extcon driver. The Vbus status signals are also  wired to GPIOs (howe=
-ver, we
-> aren't currently interested in them),  the OFFVBUS# signal is control=
-led  by
-                                       ^^                              =
-   ^^ =20
-> the host controllers, there's  also the SHDN# signal wired to a GPIO,=
- it
-                               ^^
-> should be driven high for the  normal operation.
-                               ^^
-As above '^' expression, you used the double space between words.
-You should fix it.
+[snip]
 
-Thanks,
-Chanwoo Choi
+> +			"sgmii_irq";
+> +		qcom,emac-gpio-mdc = <&msmgpio 123 0>;
+> +		qcom,emac-gpio-mdio = <&msmgpio 124 0>;
+> +		qcom,emac-tstamp-en;
+> +		qcom,emac-ptp-frac-ns-adj = <125000000 1>;
+> +		phy-addr = <0>;
 
+Please use the standard Ethernet PHY and MDIO device tree bindings to
+describe your MAC to PHY connection here, that includes using a
+phy-connection-type property to describe the (x)MII lanes.
 
->=20
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->=20
-> ---
-> The patch is against the 'extcon-next' branch of the 'extcon.git' rep=
-o.
->=20
-> Changes in version 2:
-> - added the USB gadget cable support;
-> - added the remove() driver method which drives SHDN# GPIO low to sav=
-e power;
-> - dropped vendor prefix from the ID GPIO property name;
-> - changed the GPIO property name suffix to "-gpios";
-> - switched to usign extcon_set_cable_state_() API;
-> - switched to using the gpiod/sleeping 'gpiolib' APIs;
-> - addded error messages to max3355_probe();
-> - added IRQF_NO_SUSPEND flasg to the devm_request_threaded_irq() call=
-;
-> - renamed 'ret' variable to 'err' in max3355_probe();
-> - expanded the Kconfig entry help text;
-> - added vendor name to the patch summary, the bindings document, the =
-Kconfig
->   entry, the driver heading comment, the module description, and the =
-change log;
-> - fixed up and reformatted the change log.
->=20
->  Documentation/devicetree/bindings/extcon/extcon-max3355.txt |   21 +
->  drivers/extcon/Kconfig                                      |    8=20
->  drivers/extcon/Makefile                                     |    1=20
->  drivers/extcon/extcon-max3355.c                             |  153 +=
-+++++++++++
->  4 files changed, 183 insertions(+)
->=20
-> Index: extcon/Documentation/devicetree/bindings/extcon/extcon-max3355=
-=2Etxt
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[snip]
+
+> +/* EMAC_MAC_CTRL */
+> +#define SINGLE_PAUSE_MODE                                   0x10000000
+> +#define DEBUG_MODE                                           0x8000000
+> +#define BROAD_EN                                             0x4000000
+> +#define MULTI_ALL                                            0x2000000
+> +#define RX_CHKSUM_EN                                         0x1000000
+> +#define HUGE                                                  0x800000
+> +#define SPEED_BMSK                                            0x300000
+> +#define SPEED_SHFT                                                  20
+> +#define SIMR                                                   0x80000
+> +#define TPAUSE                                                 0x10000
+> +#define PROM_MODE                                               0x8000
+> +#define VLAN_STRIP                                              0x4000
+> +#define PRLEN_BMSK                                              0x3c00
+> +#define PRLEN_SHFT                                                  10
+> +#define HUGEN                                                    0x200
+> +#define FLCHK                                                    0x100
+> +#define PCRCE                                                     0x80
+> +#define CRCE                                                      0x40
+> +#define FULLD                                                     0x20
+> +#define MAC_LP_EN                                                 0x10
+> +#define RXFC                                                       0x8
+> +#define TXFC                                                       0x4
+> +#define RXEN                                                       0x2
+> +#define TXEN                                                       0x1
+
+BIT(x)? which would avoid making this reverse christmas tree, I know
+this is the time of year though.
+
+[snip]
+
+> +/* DMA address */
+> +#define DMA_ADDR_HI_MASK                         0xffffffff00000000ULL
+> +#define DMA_ADDR_LO_MASK                         0x00000000ffffffffULL
+> +
+> +#define EMAC_DMA_ADDR_HI(_addr)                                      \
+> +		((u32)(((u64)(_addr) & DMA_ADDR_HI_MASK) >> 32))
+> +#define EMAC_DMA_ADDR_LO(_addr)                                      \
+> +		((u32)((u64)(_addr) & DMA_ADDR_LO_MASK))
+
+The kernel provides helpers for that: upper_32bits and lower_32bits().
+
+[snip]
+
+> +struct emac_skb_cb {
+> +	u32           tpd_idx;
+> +	unsigned long jiffies;
+> +};
+> +
+> +struct emac_tx_ts_cb {
+> +	u32 sec;
+> +	u32 ns;
+> +};
+> +
+> +#define EMAC_SKB_CB(skb)	((struct emac_skb_cb *)(skb)->cb)
+> +#define EMAC_TX_TS_CB(skb)	((struct emac_tx_ts_cb *)(skb)->cb)
+
+Should not these two have different offsets within skb->cb in case they
+both end-up being added to the same SKB?
+
+[snip]
+
+> +static void emac_mac_irq_enable(struct emac_adapter *adpt)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < EMAC_NUM_CORE_IRQ; i++) {
+> +		struct emac_irq			*irq = &adpt->irq[i];
+> +		const struct emac_irq_config	*irq_cfg = &emac_irq_cfg_tbl[i];
+> +
+> +		writel_relaxed(~DIS_INT, adpt->base + irq_cfg->status_reg);
+> +		writel_relaxed(irq->mask, adpt->base + irq_cfg->mask_reg);
+> +	}
+> +
+> +	wmb(); /* ensure that irq and ptp setting are flushed to HW */
+
+Would not using writel() make the appropriate thing here instead of
+using _relaxed which has no barrier?
+
+[snip]
+
+> +	mta = readl_relaxed(adpt->base + EMAC_HASH_TAB_REG0 + (reg << 2));
+> +	mta |= (0x1 << bit);
+> +	writel_relaxed(mta, adpt->base + EMAC_HASH_TAB_REG0 + (reg << 2));
+> +	wmb(); /* ensure that the mac address is flushed to HW */
+
+This is getting too much here, just use the correct I/O accessor for
+your platform, period.
+
+[snip]
+
+> +
+> +	/* enable RX/TX Flow Control */
+> +	switch (phy->cur_fc_mode) {
+> +	case EMAC_FC_FULL:
+> +		mac |= (TXFC | RXFC);
+> +		break;
+> +	case EMAC_FC_RX_PAUSE:
+> +		mac |= RXFC;
+> +		break;
+> +	case EMAC_FC_TX_PAUSE:
+> +		mac |= TXFC;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	/* setup link speed */
+> +	mac &= ~SPEED_BMSK;
+> +	switch (phy->link_speed) {
+> +	case EMAC_LINK_SPEED_1GB_FULL:
+> +		mac |= ((emac_mac_speed_1000 << SPEED_SHFT) & SPEED_BMSK);
+> +		csr1 |= FREQ_MODE;
+> +		break;
+> +	default:
+> +		mac |= ((emac_mac_speed_10_100 << SPEED_SHFT) & SPEED_BMSK);
+> +		csr1 &= ~FREQ_MODE;
+> +		break;
+> +	}
+> +
+> +	switch (phy->link_speed) {
+> +	case EMAC_LINK_SPEED_1GB_FULL:
+> +	case EMAC_LINK_SPEED_100_FULL:
+> +	case EMAC_LINK_SPEED_10_FULL:
+> +		mac |= FULLD;
+> +		break;
+> +	default:
+> +		mac &= ~FULLD;
+> +	}
+
+You should use the PHY library and implement an adjust_link callback
+which does exactly that above.
+[snip]
+
+> +static bool emac_tx_has_enough_descs(struct emac_tx_queue *tx_q,
+> +				     const struct sk_buff *skb)
+> +{
+> +	u32 num_required = 1;
+> +	int i;
+> +	u16 proto_hdr_len = 0;
+> +
+> +	if (skb_is_gso(skb)) {
+> +		proto_hdr_len = skb_transport_offset(skb) + tcp_hdrlen(skb);
+
+You cannot do this until you have looked at skb->protocol AFAIR.
+
+[snip]
+
+> diff --git a/drivers/net/ethernet/qualcomm/emac/emac-phy.c b/drivers/net/ethernet/qualcomm/emac/emac-phy.c
+> new file mode 100644
+> index 0000000..45571a5
 > --- /dev/null
-> +++ extcon/Documentation/devicetree/bindings/extcon/extcon-max3355.tx=
-t
-> @@ -0,0 +1,21 @@
-> +Maxim Integrated MAX3355 USB OTG chip
-> +-------------------------------------
-> +
-> +MAX3355 integrates a charge pump and comparators to enable a system =
-with an
-> +integrated USB OTG dual-role transceiver to function as a USB OTG du=
-al-role
-> +device.
-> +
-> +Required properties:
-> +- compatible: should be "maxim,max3355";
-> +- maxim,shdn-gpios: should contain a phandle and GPIO specifier for =
-the GPIO pin
-> +  connected to the MAX3355's SHDN# pin;
-> +- id-gpios: should contain a phandle and GPIO specifier for the GPIO=
- pin
-> +  connected to the MAX3355's ID_OUT pin.
-> +
-> +Example (Koelsch board):
-> +
-> +	usb-otg {
-> +		compatible =3D "maxim,max3355";
-> +		maxim,shdn-gpios =3D <&gpio2 4 GPIO_ACTIVE_LOW>;
-> +		id-gpios =3D <&gpio5 31 GPIO_ACTIVE_HIGH>;
-> +	};
-> Index: extcon/drivers/extcon/Kconfig
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --- extcon.orig/drivers/extcon/Kconfig
-> +++ extcon/drivers/extcon/Kconfig
-> @@ -52,6 +52,14 @@ config EXTCON_MAX14577
->  	  Maxim MAX14577/77836. The MAX14577/77836 MUIC is a USB port acces=
-sory
->  	  detector and switch.
-> =20
-> +config EXTCON_MAX3355
-> +	tristate "Maxim MAX3355 USB OTG EXTCON Support"
-> +	help
-> +	  If you say yes here you get support for the USB OTG role detectio=
-n by
-> +	  MAX3355. The MAX3355 chip integrates a charge pump and comparator=
-s to
-> +	  enable a system with an integrated USB OTG dual-role transceiver =
-to
-> +	  function as an USB OTG dual-role device.
-> +
->  config EXTCON_MAX77693
->  	tristate "Maxim MAX77693 EXTCON Support"
->  	depends on MFD_MAX77693 && INPUT
-> Index: extcon/drivers/extcon/Makefile
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --- extcon.orig/drivers/extcon/Makefile
-> +++ extcon/drivers/extcon/Makefile
-> @@ -8,6 +8,7 @@ obj-$(CONFIG_EXTCON_ARIZONA)	+=3D extcon-a
->  obj-$(CONFIG_EXTCON_AXP288)	+=3D extcon-axp288.o
->  obj-$(CONFIG_EXTCON_GPIO)	+=3D extcon-gpio.o
->  obj-$(CONFIG_EXTCON_MAX14577)	+=3D extcon-max14577.o
-> +obj-$(CONFIG_EXTCON_MAX3355)	+=3D extcon-max3355.o
->  obj-$(CONFIG_EXTCON_MAX77693)	+=3D extcon-max77693.o
->  obj-$(CONFIG_EXTCON_MAX77843)	+=3D extcon-max77843.o
->  obj-$(CONFIG_EXTCON_MAX8997)	+=3D extcon-max8997.o
-> Index: extcon/drivers/extcon/extcon-max3355.c
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --- /dev/null
-> +++ extcon/drivers/extcon/extcon-max3355.c
-> @@ -0,0 +1,153 @@
-> +/*
-> + * Maxim Integrated MAX3355 USB OTG chip extcon driver
-> + *
-> + * Copyright (C) 2014 Cogent Embedded, Inc.
-> + * Author: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> + *
-> + * This software is licensed under the terms of the GNU General Publ=
-ic
-> + * License version 2, as published by the Free Software Foundation, =
-and
-> + * may be copied, distributed, and modified under those terms.
-> + */
-> +
-> +#include <linux/extcon.h>
-> +#include <linux/gpio.h>
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/workqueue.h>
-> +
-> +struct max3355_data {
-> +	struct extcon_dev *edev;
-> +	struct gpio_desc *id_gpiod;
-> +	struct gpio_desc *shdn_gpiod;
-> +};
-> +
-> +static const unsigned int max3355_cable[] =3D {
-> +	EXTCON_USB,
-> +	EXTCON_USB_HOST,
-> +	EXTCON_NONE,
-> +};
-> +
-> +static irqreturn_t max3355_id_irq(int irq, void *dev_id)
-> +{
-> +	struct max3355_data *data =3D dev_id;
-> +	int id =3D gpiod_get_value_cansleep(data->id_gpiod);
-> +
-> +	if (id) {
-> +		/*
-> +		 * ID =3D 1 means USB HOST cable detached.
-> +		 * As we don't have event for USB peripheral cable attached,
-> +		 * we simulate USB peripheral attach here.
-> +		 */
-> +		extcon_set_cable_state_(data->edev, EXTCON_USB_HOST, false);
-> +		extcon_set_cable_state_(data->edev, EXTCON_USB, true);
-> +	} else {
-> +		/*
-> +		 * ID =3D 0 means USB HOST cable attached.
-> +		 * As we don't have event for USB peripheral cable detached,
-> +		 * we simulate USB peripheral detach here.
-> +		 */
-> +		extcon_set_cable_state_(data->edev, EXTCON_USB, false);
-> +		extcon_set_cable_state_(data->edev, EXTCON_USB_HOST, true);
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int max3355_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np =3D pdev->dev.of_node;
-> +	struct max3355_data *data;
-> +	struct gpio_desc *gpiod;
-> +	int irq, err;
-> +
-> +	data =3D devm_kzalloc(&pdev->dev, sizeof(struct max3355_data),
-> +			    GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	data->edev =3D devm_extcon_dev_allocate(&pdev->dev, max3355_cable);
-> +	if (IS_ERR(data->edev)) {
-> +		dev_err(&pdev->dev, "failed to allocate extcon device\n");
-> +		return PTR_ERR(data->edev);
-> +	}
-> +	data->edev->name =3D kstrdup(np->name, GFP_KERNEL);
-> +
-> +	gpiod =3D devm_gpiod_get(&pdev->dev, "id", GPIOD_IN);
-> +	if (IS_ERR(gpiod)) {
-> +		dev_err(&pdev->dev, "failed to get ID_OUT GPIO\n");
-> +		return PTR_ERR(gpiod);
-> +	}
-> +	data->id_gpiod =3D gpiod;
-> +
-> +	gpiod =3D devm_gpiod_get(&pdev->dev, "maxim,shdn", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(gpiod)) {
-> +		dev_err(&pdev->dev, "failed to get SHDN# GPIO\n");
-> +		return PTR_ERR(gpiod);
-> +	}
-> +	data->shdn_gpiod =3D gpiod;
-> +
-> +	err =3D devm_extcon_dev_register(&pdev->dev, data->edev);
-> +	if (err < 0) {
-> +		dev_err(&pdev->dev, "failed to register extcon device\n");
-> +		return err;
-> +	}
-> +
-> +	irq =3D gpiod_to_irq(data->id_gpiod);
-> +	if (irq < 0) {
-> +		dev_err(&pdev->dev, "failed to translate ID_OUT GPIO to IRQ\n");
-> +		return irq;
-> +	}
-> +
-> +	err =3D devm_request_threaded_irq(&pdev->dev, irq, NULL, max3355_id=
-_irq,
-> +					IRQF_ONESHOT | IRQF_NO_SUSPEND |
-> +					IRQF_TRIGGER_RISING |
-> +					IRQF_TRIGGER_FALLING,
-> +					pdev->name, data);
-> +	if (err < 0) {
-> +		dev_err(&pdev->dev, "failed to request ID_OUT IRQ\n");
-> +		return err;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, data);
-> +
-> +	/* Perform initial detection */
-> +	max3355_id_irq(irq, data);
-> +
-> +	return 0;
-> +}
-> +
-> +static int max3355_remove(struct platform_device *pdev)
-> +{
-> +	struct max3355_data *data =3D platform_get_drvdata(pdev);
-> +
-> +	gpiod_set_value_cansleep(data->shdn_gpiod, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id max3355_match_table[] =3D {
-> +	{ .compatible =3D "maxim,max3355", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, max3355_match_table);
-> +
-> +static struct platform_driver max3355_driver =3D {
-> +	.probe		=3D max3355_probe,
-> +	.remove		=3D max3355_remove,
-> +	.driver		=3D {
-> +		.name	=3D "extcon-max3355",
-> +		.of_match_table =3D max3355_match_table,
-> +		.owner	=3D THIS_MODULE,
-> +	},
-> +};
-> +
-> +module_platform_driver(max3355_driver);
-> +
-> +MODULE_AUTHOR("Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>"=
-);
-> +MODULE_DESCRIPTION("Maxim MAX3355 extcon driver");
-> +MODULE_LICENSE("GPL v2");
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
-l" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
->=20
->=20
+> +++ b/drivers/net/ethernet/qualcomm/emac/emac-phy.c
 
+[snip]
+
+This file implement a large amount of what the PHY library already does
+for you if you simply provided a MDIO bus implementation instead, please
+consider dropping 80% of this file content and using what is already
+there to help you.
+
+I stopped reading there because the driver is very large, I would really
+start submitting it in smaller piece that make it more readable, and
+dropping things that may not be necessary for now like RSS support,
+Wake-on-LAN etc. etc.
+-- 
+Florian
