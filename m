@@ -1,64 +1,42 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 0/9] phy: use syscon framework APIs to set ctrl mod reg
-Date: Tue, 15 Dec 2015 16:44:41 +0530
-Message-ID: <566FF621.2040307@ti.com>
-References: <1450170968-11282-1-git-send-email-kishon@ti.com>
- <725110094.6UkMkcy8u7@wuerfel>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx: Fix the assigned-clock mismatch issue on imx6q/dl
+Date: Tue, 15 Dec 2015 09:16:07 -0200
+Message-ID: <CAOMZO5BKFqMKpRiM6hV43Ko7YcGHPEChSi1GEBMzg3oGo6_Lnw@mail.gmail.com>
+References: <1449648955-30835-1-git-send-email-b51503@freescale.com>
+	<20151214030750.GF25756@tiger>
+	<20151215085237.GB388@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <725110094.6UkMkcy8u7@wuerfel>
+In-Reply-To: <20151215085237.GB388@tiger>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Bai Ping <b51503-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On Tue, Dec 15, 2015 at 6:52 AM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, Dec 14, 2015 at 11:07:50AM +0800, Shawn Guo wrote:
+>> On Wed, Dec 09, 2015 at 04:15:55PM +0800, Bai Ping wrote:
+>> > The 'assigned-clock-parents' and 'assigned-clock-rates' list
+>> > should corresponding to the 'assigned-clocks' property clock list.
+>> >
+>> > Signed-off-by: Bai Ping <b51503-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>>
+>> Applied, thanks.
+>
+> As this essentially a fix to ed339363de1b ("ARM: dts: imx6qdl-sabreauto:
+> Allow HDMI and LVDS to work simultaneously"), I'm going to send it as a
+> fix with copying stable.
 
-On Tuesday 15 December 2015 04:26 PM, Arnd Bergmann wrote:
-> On Tuesday 15 December 2015 14:45:59 Kishon Vijay Abraham I wrote:
->> This series is basically to deprecate using phy-omap-control and use
->> syscon APIs to program the control module registers.
->>
->> Changes from v2:
->> No changes.
->>
->> Changes from v1:
->> *) cleanup ti_pipe3_probe in multiple steps
->> *) other minor cleanups
->>
->> Changes from [1] in PHY patches include
->> *) cleanup ti_pipe3_probe
->> *) have mask, power_on and power_off values in usb_phy_data for
->>    omap-usb2 phy
->>
->> The patches have been pushed to
->>         git://git.ti.com/linux-phy/linux-phy.git syscon
->>
->> [1] -> https://lkml.org/lkml/2015/6/23/189
->>
->> All the testing was done both before applying the dt patches and after
->> applying the dt patches (dt patches will be posted shortly).
->>
-> 
-> Can you explain here what the conversion is good for? Why do you
-> prefer the syscon mapping over a high-level driver in this case?
+Actually the mismatch exists since 97dae8590fa314c ("ARM: dts:
+imx6qdl-sabreauto: Add audio support").
 
-phy-omap-control driver was added when there was no proper
-infrastructure for doing control module initializations. The
-phy-omap-control driver is not an 'actual' PHY driver and it
-was just a hack to do PHY related control module initializations.
-phy-omap-control is also getting unmanageable with the number of
-platforms each having number of modules (like USB, SATA, PCIe),
-using the same driver for control module initializations.
+> @Fabio,
+>
+> Do you agree with the fix?
 
-Now with SYSCON framework being added to the kernel, phy-omap-control
-shouldn't be needed and it also provides a uniform API across all the
-modules to program the control module.
-
-Thanks
-Kishon
+It seems that even after this patch we still have a mismatch:
+assigned-clocks has 5 members and assigned-clock-parents has 4.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
