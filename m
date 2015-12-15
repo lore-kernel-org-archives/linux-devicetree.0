@@ -1,35 +1,80 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] net: emac: emac gigabit ethernet controller driver
-Date: Tue, 15 Dec 2015 16:41:18 +0100
-Message-ID: <1579270.z2ZaCA4LQo@wuerfel>
-References: <1450138740-32562-1-git-send-email-gavidov@codeaurora.org> <1594472.ixZvj6PYdz@wuerfel> <56702EEC.8000506@codeaurora.org>
+From: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 2/8] Documentation: arm: define DT cpu capacity
+ bindings
+Date: Tue, 15 Dec 2015 15:46:51 +0000
+Message-ID: <20151215154651.GK16007@e106622-lin>
+References: <20151210153004.GA26758@sirena.org.uk>
+ <20151210175820.GE14571@e106622-lin>
+ <20151211174940.GQ5727@sirena.org.uk>
+ <20151214123616.GC3308@e106622-lin>
+ <20151214165928.GV5727@sirena.org.uk>
+ <20151215122238.GG16007@e106622-lin>
+ <20151215133951.GY5727@sirena.org.uk>
+ <20151215140135.GI31299@leverpostej>
+ <20151215150813.GZ5727@sirena.org.uk>
+ <20151215153218.GA7228@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56702EEC.8000506@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: Christopher Covington <cov@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Gilad Avidov <gavidov@codeaurora.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, gregkh@linuxfoundation.org, vikrams@codeaurora.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151215153218.GA7228@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, morten.rasmussen-5wv7dgnIgG8@public.gmane.org, dietmar.eggemann-5wv7dgnIgG8@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 15 December 2015 09:17:00 Timur Tabi wrote:
-> Arnd Bergmann wrote:
-> > We generally want to use readl/writel rather than the relaxed versions,
-> > unless it is in performance-critical code.
+On 15/12/15 15:32, Mark Rutland wrote:
+> On Tue, Dec 15, 2015 at 03:08:13PM +0000, Mark Brown wrote:
+> > On Tue, Dec 15, 2015 at 02:01:36PM +0000, Mark Rutland wrote:
+> > 
+> > > I really don't want to see a table of magic numbers in the kernel.
+> > 
+> > Right, there's pitfalls there too although not being part of an ABI
+> > does make them more manageable.  
 > 
-> What about if we have 20+ writes in a row, for example, when 
-> initializing a part?  I've seen code like this:
+> I think that people are very likely to treat them exactly like an ABI,
+> w.r.t. any regressions in performance that result from their addition,
+> modification, or removal. That becomes really horrible when new CPUs
+> appear.
 > 
->         writel_relaxed(...);
->         writel_relaxed(...);
->         writel_relaxed(...);
->         ...
->         writel(...); // HW now inited, so enable
 
-If that's in the probe() called from it function, just use writel() everywhere,
-a few extra microseconds won't kill the boot time. In general, if a user would
-notice the difference, use the relaxed version and add a comment to explain
-how you proved it's correct, otherwise stay with the default accessors.
+Yeah, and I guess the path towards out of three patches changing this
+values for a specifica platform (without exposing the same changes
+upstream) is not too far away.
 
-	Arnd
+> > One thing it's probably helpful to establish here is how much the
+> > specific numbers are going to matter in the grand scheme of things.  If
+> > the specific numbers *are* super important then nobody is going to want
+> > to touch them as they'll be prone to getting tweaked.  If instead the
+> > numbers just need to be ballpark accurate so the scheduler starts off in
+> > roughly the right place and the specific numbers don't matter it's a lot
+> > easier and having a table in the kernel until we think of something
+> > better (if that ever happens) gets a lot easier.
+> 
+> I agree that we first need to figure out the importance of these
+> numbers. I disagree that our first step should be to add a table.
+> 
+
+My take is that ballpark is fine, but it's a per platform/configuration
+ballpark that we need. Not a per core-type one.
+
+> > My expectation is that we just need good enough, not perfect, and that
+> > seems to match what Juri is saying about the expectation that most of
+> > the fine tuning is done via other knobs.
+> 
+> My expectation is that if a ballpark figure is good enough, it should be
+> possible to implement something trivial like bogomips / loop_per_jiffy
+> calculation.
+> 
+
+I didn't really followed that, so I might be wrong here, but isn't
+already happened a discussion about how we want/like to stop exposing
+bogomips info or rely on it for anything but in kernel delay loops?
+
+Thanks,
+
+- Juri
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
