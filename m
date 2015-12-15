@@ -1,62 +1,51 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] ARM: psci: Fix indentation in DT bindings
-Date: Tue, 15 Dec 2015 09:47:35 +0100
-Message-ID: <1450169255-669-1-git-send-email-geert+renesas@glider.be>
+From: Dirk Behme <dirk.behme@gmail.com>
+Subject: Re: [PATCH 2/3] arm64: dts: r8a7795: Add Cortex-A57 CPU cores
+Date: Tue, 15 Dec 2015 09:48:46 +0100
+Message-ID: <566FD3EE.8040908@gmail.com>
+References: <1449236333-4410-1-git-send-email-dirk.behme@gmail.com>
+ <1449236333-4410-2-git-send-email-dirk.behme@gmail.com>
+ <20151211230751.GD6496@verge.net.au>
+ <CANqRtoSeibffbaoVGV7Y_gyuXxCOu+1PmRf3imQ8OKhV6VoAMQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CANqRtoSeibffbaoVGV7Y_gyuXxCOu+1PmRf3imQ8OKhV6VoAMQ@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>
+Cc: SH-Linux <linux-sh@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Gaku Inami <gaku.inami.xw@bp.renesas.com>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Fix bogus indentation of the PSCI compatible values (each space was
-replaced by a TAB?).
+On 15.12.2015 09:38, Magnus Damm wrote:
+> Hi Simon,
+>
+> On Sat, Dec 12, 2015 at 8:07 AM, Simon Horman <horms@verge.net.au> wrote:
+>> On Fri, Dec 04, 2015 at 02:38:52PM +0100, Dirk Behme wrote:
+>>> From: Gaku Inami <gaku.inami.xw@bp.renesas.com>
+>>>
+>>> Add Cortex-A57 CPU cores to r8a7795 SoC for a total of 4 x Cortex-A57.
+>>>
+>>> Signed-off-by: Gaku Inami <gaku.inami.xw@bp.renesas.com>
+>>> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>>> Sigend-off-by: Dirk Behme <dirk.behme@gmail.com>
+>>
+>> Thanks, I have queued this up for v4.5.
+>
+> Thanks. May I ask if CPU hotplug is known to work?
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/bindings/arm/psci.txt | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/psci.txt b/Documentation/devicetree/bindings/arm/psci.txt
-index a9adab84e2feb785..fb3a1dd2a9880bda 100644
---- a/Documentation/devicetree/bindings/arm/psci.txt
-+++ b/Documentation/devicetree/bindings/arm/psci.txt
-@@ -23,17 +23,17 @@ Main node required properties:
- 
-  - compatible    : should contain at least one of:
- 
--				 * "arm,psci" : for implementations complying to PSCI versions prior to
--					0.2. For these cases function IDs must be provided.
-+     * "arm,psci" : for implementations complying to PSCI versions prior to
-+	0.2. For these cases function IDs must be provided.
- 
--				 * "arm,psci-0.2" : for implementations complying to PSCI 0.2. Function
--					IDs are not required and should be ignored by an OS with PSCI 0.2
--					support, but are permitted to be present for compatibility with
--					existing software when "arm,psci" is later in the compatible list.
-+     * "arm,psci-0.2" : for implementations complying to PSCI 0.2. Function
-+	IDs are not required and should be ignored by an OS with PSCI 0.2
-+	support, but are permitted to be present for compatibility with
-+	existing software when "arm,psci" is later in the compatible list.
- 
--				* "arm,psci-1.0" : for implementations complying to PSCI 1.0. PSCI 1.0 is
--					backward compatible with PSCI 0.2 with minor specification updates,
--					as defined in the PSCI specification[2].
-+    * "arm,psci-1.0" : for implementations complying to PSCI 1.0. PSCI 1.0 is
-+	backward compatible with PSCI 0.2 with minor specification updates,
-+	as defined in the PSCI specification[2].
- 
-  - method        : The method of calling the PSCI firmware. Permitted
-                    values are:
--- 
-1.9.1
+I didn't test that.
+
+
+> Also, which version
+> of the boot loader stack is required?
+
+
+I've the U-Boot / boot loader stack from BSP v3.0.2 on the board. I 
+haven't tested v3.0.3, yet.
+
+
+Best regards
+
+Dirk
+
