@@ -1,52 +1,38 @@
-From: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] arm: pxa27x: support for ICP DAS LP-8x4x w/ DT
-Date: Tue, 15 Dec 2015 20:24:41 +0300
-Message-ID: <1450200281.21989.24.camel@gmail.com>
-References: <1449700088-28076-3-git-send-email-ynvich@gmail.com>
-	 <7496839.vMjVcqPe8Q@wuerfel> <1450197727.21989.9.camel@gmail.com>
-	 <1843454.zCnLJtF7B6@wuerfel>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT
+ "/chosen/linux,atags" entry
+Date: Tue, 15 Dec 2015 12:24:52 -0500 (EST)
+Message-ID: <alpine.LFD.2.20.1512151222020.26920@knanqh.ubzr>
+References: <20150713131902.GH26485@atomide.com> <20151129180939.GE30871@n2100.arm.linux.org.uk> <alpine.LFD.2.20.1511291902100.22569@knanqh.ubzr> <201511300115.12478@pali> <20151130152352.GY2517@atomide.com> <20151130153933.GD29576@pali>
+ <alpine.LFD.2.20.1511301041090.22569@knanqh.ubzr> <20151215093325.GK13531@pali> <20151215122038.GI30871@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-231738316-1450200294=:26920"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1843454.zCnLJtF7B6@wuerfel>
+In-Reply-To: <20151215122038.GI30871-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: =?ISO-8859-15?Q?Pali_Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-12-15 at 18:02 +0100, Arnd Bergmann wrote:
-> On Tuesday 15 December 2015 19:42:07 Sergei Ianovich wrote:
-> > There are several board-specific devices on LP8x4x: custom FPGA,
-> > custom
-> > UART, custom IRQ on FPGA, custom parallel bus for industrial IO. The
-> > defconfig file could alert potential users to this fact. If this is
-> > not
-> > a sufficient reason to have a defconfig file, it can be dropped.
-> > 
-> > I use the full .config anyway 
+--8323328-231738316-1450200294=:26920
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
+
+On Tue, 15 Dec 2015, Russell King - ARM Linux wrote:
+
+> On Tue, Dec 15, 2015 at 10:33:25AM +0100, Pali Rohár wrote:
+> > So am I understand correctly that solution would be to hack
+> > arch/arm/mm/mmu.c to not overwrite page at PHYS_OFFSET?
 > 
-> I would like those drivers to be enabled in some defconfig, so we get
-> compile-time coverage, but we generally stopped having one-config-per-
-> board
-> files.
-> 
-> Maybe we can have a pxa_defconfig file that enables lots of boards
-> and then we remove the individual configs? We don't have to remove
-> them all at once, but it would make me very happy if we could at
-> least kill off some of the ones that are not used regularly.
+> That's completely unnecessary: there are enough platform hooks to cope
+> with whatever the platform requires.
 
-lp8x4x seems to be the first pxa board which requires DT.
+Indeed.  I didn't notice that mdesc->reserve() exists these days and is 
+perfect for this purpose as you say.
 
-We can create pxa27x-dt_defconfig which selects:
-1. PXA27X_DT
-2. PXA_FB and 8250_PXA to enable console
-3. MMC, MMC_PXA and EXT4_FS to enable boot from MMC
-4. all optional pxa stuff as modules
-5. all stuff on supported pxa boards as modules
 
-If #5 is extended when support for new boards is added, it should be
-possible to run any supported pxa27x board with pxa27x_defconfig.
+Nicolas
+--8323328-231738316-1450200294=:26920--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
