@@ -1,107 +1,78 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM64: ZynqMP: DT: Fix GIC's 'reg' property
-Date: Tue, 15 Dec 2015 01:14:50 -0800
-Message-ID: <20151215091450.GI3358@xsjsorenbubuntu>
-References: <1450110700-14152-1-git-send-email-soren.brinkmann@xilinx.com>
- <20151214164613.GH21356@leverpostej>
- <566EF5CC.4070000@arm.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v3 0/9] phy: use syscon framework APIs to set ctrl mod reg
+Date: Tue, 15 Dec 2015 14:45:59 +0530
+Message-ID: <1450170968-11282-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <566EF5CC.4070000-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alistair Francis <alistair.francis-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kishon-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-12-14 at 05:01PM +0000, Marc Zyngier wrote:
-> Mark,
->=20
-> On 14/12/15 16:46, Mark Rutland wrote:
-> > On Mon, Dec 14, 2015 at 08:31:40AM -0800, Soren Brinkmann wrote:
-> >> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> >> ---
-> >>  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 6 +++---
-> >>  1 file changed, 3 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/b=
-oot/dts/xilinx/zynqmp.dtsi
-> >> index 857eda5c7217..b5d1facadf16 100644
-> >> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> >> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> >> @@ -80,10 +80,10 @@
-> >>  		gic: interrupt-controller@f9010000 {
-> >>  			compatible =3D "arm,gic-400", "arm,cortex-a15-gic";
-> >>  			#interrupt-cells =3D <3>;
-> >> -			reg =3D <0x0 0xf9010000 0x10000>,
-> >> -			      <0x0 0xf902f000 0x2000>,
-> >> +			reg =3D <0x0 0xf9010000 0x1000>,
-> >> +			      <0x0 0xf9020000 0x20000>,
-> >>  			      <0x0 0xf9040000 0x20000>,
-> >> -			      <0x0 0xf906f000 0x2000>;
-> >> +			      <0x0 0xf9060000 0x20000>;
-> >=20
-> > I'm confused. These sizes don't look right for GIC-400. Is this a c=
-ustom
-> > GIC?
->=20
-> Probably an implementation that obey the SBSA requirement of aliasing
-> the first 4kB of the CPU interface on a 64kB page, and the second one=
- on
-> the following 64kB page. See the APM system for an example of such a
-> thing. I'm more concerned about the GICH region (3rd one), which has =
-no
-> reason to be bigger than 4kB.
+This series is basically to deprecate using phy-omap-control and use
+syscon APIs to program the control module registers.
 
-Xilinx didn't publish the memory map yet (at least I didn't see it in t=
-he
-public docs), so, let me give some excerpts:
+Changes from v2:
+No changes.
 
-GICD:
-GICD_CTLR 	0xF9010000 	32 	rw 	0x00000000 	Distributor Control Register
-=2E..
-GICD_CIDR3 	0xF9010FFC 	32 	ro 	0x000000B1 	Component ID3 Register
+Changes from v1:
+*) cleanup ti_pipe3_probe in multiple steps
+*) other minor cleanups
 
-GICC:
-GICC_CTLR 	0xF9020000 	32 	rw 	0x00000000 	CPU Interface Control Regist=
-er
-=2E..
-GICC_DIR 	0xF9030000 	32 	wo 	x 	Deactivate Interrupt Register
+Changes from [1] in PHY patches include
+*) cleanup ti_pipe3_probe
+*) have mask, power_on and power_off values in usb_phy_data for
+   omap-usb2 phy
 
-GICH:
-GICH_HCR 	0xF9040000 	32 	rw 	0x00000000 	Hypervisor Control Register
-=2E..
-GICH_LR3_Alias7 	0xF9050F0C 	32 	rw 	0x00000000 	List Register 3
+The patches have been pushed to
+	git://git.ti.com/linux-phy/linux-phy.git syscon
 
-GICV:
-GICV_CTLR 	0xF9060000 	32 	rw 	0x00000000 	Virtual Machine Control Regi=
-ster
-=2E..
-GICV_DIR 	0xF9070000 	32 	wo 	x 	VM Deactivate Interrupt Register
+[1] -> https://lkml.org/lkml/2015/6/23/189
 
+All the testing was done both before applying the dt patches and after
+applying the dt patches (dt patches will be posted shortly).
 
-Regarding the GICH area, it looks like it starts at 0xF9040000 and the
-alias blocks to access the other processor interfaces start at
-0xF9050000.
+Logs with SYSCON DT
 
->=20
-> > Did this ever work wit hteh old offsets and sizes?
->=20
-> It probably dies when trying to use EOImode=3D=3D1.
+DRA72 EVM : http://pastebin.ubuntu.com/14025205/
+DRA7 EVM  : http://pastebin.ubuntu.com/14025212/
+AM43XX EVM: http://pastebin.ubuntu.com/14025222/
+OMAP5 UEVM: http://pastebin.ubuntu.com/14025228/
 
-Without knowing what parts we really exercise, yes, the system comes up
-fine so far, but I recently found Linux boot hanging on QEMU and it
-seemed to be related to time not progressing (fast enough).
-I found a different DT using the values proposed here and that fixed th=
-e
-hang for me.
+Logs without SYSCON DT
 
-	Thanks,
-	S=C3=B6ren
+DRA72 EVM : http://pastebin.ubuntu.com/14025233/
+DRA7 EVM  : http://pastebin.ubuntu.com/14025238/
+AM43XX EVM: http://pastebin.ubuntu.com/14025329/
+OMAP5 UEVM: http://pastebin.ubuntu.com/14025248/
+
+The config I used: http://pastebin.ubuntu.com/14025336/
+
+Kishon Vijay Abraham I (9):
+  phy: ti-pipe3: introduce local struct device* in probe
+  phy: ti-pipe3: move clk initialization to a separate function
+  phy: ti-pipe3: move sysctrl initialization to a separate function
+  phy: ti-pipe3: move mem resource initialization to a separate
+    function
+  phy: ti-pipe3: use ti_pipe3_power_off to power off the PHY during
+    probe
+  phy: ti-pipe3: use *syscon* framework API to power on/off the PHY
+  phy: ti-pipe3: use *syscon* framework API to set PCS value of the PHY
+  phy: omap-usb2: use omap_usb_power_off to power off the PHY during
+    probe
+  phy: omap-usb2: use *syscon* framework API to power on/off the PHY
+
+ Documentation/devicetree/bindings/phy/ti-phy.txt |   20 +-
+ drivers/phy/phy-omap-usb2.c                      |   96 +++++--
+ drivers/phy/phy-ti-pipe3.c                       |  304 ++++++++++++++++------
+ include/linux/phy/omap_usb.h                     |   23 ++
+ 4 files changed, 340 insertions(+), 103 deletions(-)
+
+-- 
+1.7.9.5
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
