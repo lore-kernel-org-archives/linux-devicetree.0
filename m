@@ -1,33 +1,37 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/8 v5] enable to use thermal-zone on r8a7790/1
-Date: Tue, 15 Dec 2015 13:49:28 +0900
-Message-ID: <20151215044924.GC32397@verge.net.au>
-References: <87d1u8qzsy.wl%kuninori.morimoto.gx@renesas.com>
+Subject: Re: [PATCH 2/3] arm64: dts: r8a7795: Add Cortex-A57 CPU cores
+Date: Tue, 15 Dec 2015 14:12:44 +0900
+Message-ID: <20151215051243.GA29362@verge.net.au>
+References: <1449236333-4410-1-git-send-email-dirk.behme@gmail.com>
+ <1449236333-4410-2-git-send-email-dirk.behme@gmail.com>
+ <20151211230751.GD6496@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <87d1u8qzsy.wl%kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <20151211230751.GD6496@verge.net.au>
 Sender: linux-sh-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Dirk Behme <dirk.behme@gmail.com>
+Cc: linux-sh@vger.kernel.org, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Gaku Inami <gaku.inami.xw@bp.renesas.com>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 15, 2015 at 01:16:20AM +0000, Kuninori Morimoto wrote:
+On Sat, Dec 12, 2015 at 08:07:51AM +0900, Simon Horman wrote:
+> On Fri, Dec 04, 2015 at 02:38:52PM +0100, Dirk Behme wrote:
+> > From: Gaku Inami <gaku.inami.xw@bp.renesas.com>
+> > 
+> > Add Cortex-A57 CPU cores to r8a7795 SoC for a total of 4 x Cortex-A57.
+> > 
+> > Signed-off-by: Gaku Inami <gaku.inami.xw@bp.renesas.com>
+> > Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> > Sigend-off-by: Dirk Behme <dirk.behme@gmail.com>
 > 
-> Hi
-> 
-> These are v5 of thermal-zone support for r8a7790/r8a7791.
-> 
-> Kuninori Morimoto (8):
->       1) thermal: rcar: move rcar_thermal_dt_ids to upside
->       2) thermal: rcar: check every rcar_thermal_update_temp() return value
->       3) thermal: rcar: check irq possibility in rcar_thermal_irq_xxx()
->       4) thermal: rcar: rcar_thermal_get_temp() return error if strange temp
->       5) thermal: rcar: enable to use thermal-zone on DT
->       6) ARM: shmobile: r8a7790: enable to use thermal-zone
->       7) ARM: shmobile: r8a7791: enable to use thermal-zone
->       8) thermal: of-thermal: of_thermal_set_trip_temp() call thermal_zone_device_update()
+> Thanks, I have queued this up for v4.5.
 
-I have marked patches 6 and 7 as deferred pending acceptance of the driver
-changes.
+I meant to test this earlier but somehow it slopped my mind.
+
+With this patch applied I still only see one CPU brought up
+whereas I was expecting 4. Are more patches needed in order to
+get more CPUs operating?
+
+I am using renesas-devel-20151214-v4.4-rc5 + the cpg-mmsr driver (v6).
+I built the kernel using the defconfig.
