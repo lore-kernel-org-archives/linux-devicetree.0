@@ -1,16 +1,13 @@
 From: Hu Vincent <Mingkai.Hu@freescale.com>
-Subject: RE: [PATCH] dts/ls2080a: Update PCIe compatible
-Date: Tue, 15 Dec 2015 01:57:21 +0000
-Message-ID: <BY2PR03MB31680271828FEC0329A7B5C84EE0@BY2PR03MB316.namprd03.prod.outlook.com>
-References: <1448345075-6801-1-git-send-email-Mingkai.Hu@freescale.com>
- <20151124202203.GA32297@rob-hp-laptop>
- <BN3PR0301MB1249CD4A615CCD7308FB067184050@BN3PR0301MB1249.namprd03.prod.outlook.com>
- <1449805706.15946.283.camel@freescale.com>
+Subject: RE: [PATCH v2] dts/ls2080a: Update PCIe compatible
+Date: Tue, 15 Dec 2015 02:01:23 +0000
+Message-ID: <BY2PR03MB3160E6BF80C63C5DF0AB91F84EE0@BY2PR03MB316.namprd03.prod.outlook.com>
+References: <1449224417-20753-1-git-send-email-Mingkai.Hu@freescale.com>
+ <20151204162243.GA12415@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1449805706.15946.283.camel@freescale.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -21,93 +18,72 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Scott Wood <scottwood@freescale.com>, Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Li Leo <LeoLi@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Lian M.H." <Minghuan.Lian@freescale.com>
+To: Hu Vincent <Mingkai.Hu@freescale.com>, Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Lian M.H." <Minghuan.Lian@freescale.com>, "arm@kernel.org" <arm@kernel.org>, Scott Wood <scottwood@freescale.com>, Li Leo <LeoLi@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
 > -----Original Message-----
-> From: Wood Scott-B07421
-> Sent: Friday, December 11, 2015 11:48 AM
-> To: Hu Mingkai-B21284; Rob Herring
-> Cc: devicetree@vger.kernel.org; arm@kernel.org; Li Yang-Leo-R58472;
+> From: Hu Mingkai-B21284
+> Sent: Monday, December 07, 2015 4:44 PM
+> To: 'Rob Herring'
+> Cc: arm@kernel.org; devicetree@vger.kernel.org; Li Yang-Leo-R58472;
 > linux-arm-kernel@lists.infradead.org; Lian Minghuan-B31939
-> Subject: Re: [PATCH] dts/ls2080a: Update PCIe compatible
+> Subject: RE: [PATCH v2] dts/ls2080a: Update PCIe compatible
 > 
-> On Wed, 2015-11-25 at 05:01 +0000, Hu Vincent wrote:
-> >
-> > > -----Original Message-----
-> > > From: Rob Herring [mailto:robh@kernel.org]
-> > > Sent: Wednesday, November 25, 2015 4:22 AM
-> > > To: Hu Mingkai-B21284
-> > > Cc: arm@kernel.org; linux-arm-kernel@lists.infradead.org;
-> > > devicetree@vger.kernel.org; Li Yang-Leo-R58472; Lian Minghuan-B31939
-> > > Subject: Re: [PATCH] dts/ls2080a: Update PCIe compatible
-> > >
-> > > On Tue, Nov 24, 2015 at 02:04:35PM +0800, Mingkai Hu wrote:
-> > > > From: Minghuan Lian <Minghuan.Lian@freescale.com>
-> > > >
-> > > > The patch adds LS2085a to PCIe compatible to fix the compatibility
-> > > > issue when using firmware with LS2085a compatible property.
-> > > >
-> > > > Signed-off-by: Minghuan Lian <Minghuan.Lian@freescale.com>
-> > > > Signed-off-by: Mingkai Hu <Mingkai.Hu@freescale.com>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/pci/layerscape-pci.txt |  1 +
-> > > >  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi           | 12
-> > > ++++++++----
-> > > >  2 files changed, 9 insertions(+), 4 deletions(-)
-> > > >
-> > > > diff --git
-> > > > a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> > > > b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> > > > index e376785..4600007 100644
-> > > > --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> > > > +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> > > > @@ -15,6 +15,7 @@ Required properties:
-> > > >  - compatible: should contain the platform identifier such as:
-> > > >          "fsl,ls1021a-pcie", "snps,dw-pcie"
-> > > >          "fsl,ls2080a-pcie", "snps,dw-pcie"
-> > > > +        "fsl,ls2085a-pcie", "snps,dw-pcie"
-> > > >  - reg: base addresses and lengths of the PCIe controller
-> > > >  - interrupts: A list of interrupt outputs of the controller. Must
-> > > contain an
-> > > >    entry for each entry in the interrupt-names property.
-> > > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> > > > b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> > > > index e81cd48..3821bb1 100644
-> > > > --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> > > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> > > > @@ -383,7 +383,8 @@
-> > > >  		};
-> > > >
-> > > >  		pcie@3400000 {
-> > > > -			compatible = "fsl,ls2080a-pcie", "snps,dw
-> > > > -pcie";
-> > > > +			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a
-> > > > -pcie",
-> > > > +				     "snps,dw-pcie";
-> > >
-> > > This doesn't match the doc as to what are valid combinations. The
-> > > order here seems backwards too. ls2085a is older?
-> > >
-> >
-> > Yes, ls2085a was released earlier. You mean the older one comes first?
-> Like:
-> >
-> > compatible = "fsl,ls2085a-pcie", "fsl,ls2080a-pcie",
-> > 		 "snps,dw-pcie";
 > 
-> No, the more specific one should come first (regardless of when each chip
-> is older), so the patch is correct as is.
 > 
-> BTW, the changelog doesn't describe the severity of the problem, but
-> without this change I see a hang in the PCIe controller probe because U-
-> Boot is unable to mark disabled controllers as disabled.
+> > -----Original Message-----
+> > From: Rob Herring [mailto:robh@kernel.org]
+> > Sent: Saturday, December 05, 2015 12:23 AM
+> > To: Hu Mingkai-B21284
+> > Cc: arm@kernel.org; devicetree@vger.kernel.org; Li Yang-Leo-R58472;
+> > linux-arm-kernel@lists.infradead.org; Lian Minghuan-B31939
+> > Subject: Re: [PATCH v2] dts/ls2080a: Update PCIe compatible
+> >
+> > On Fri, Dec 04, 2015 at 06:20:17PM +0800, Mingkai Hu wrote:
+> > > From: Minghuan Lian <Minghuan.Lian@freescale.com>
+> > >
+> > > The patch adds LS2085a to PCIe compatible to fix the compatibility
+> > > issue when using firmware with LS2085a compatible property.
+> > >
+> > > Signed-off-by: Minghuan Lian <Minghuan.Lian@freescale.com>
+> > > Signed-off-by: Mingkai Hu <Mingkai.Hu@freescale.com>
+> > > ---
+> > > v2 change:
+> > >  - Rebased to latest kernel base
+> >
+> > How about implementing my comments on v1, too?
+> >
+> 
+> Hi Rob,
+> 
+> Do you mean to change the combinations in layerscape-pci.txt as follows?
+> 
+> > --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> > +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> > @@ -15,6 +15,7 @@ Required properties:
+> >  - compatible: should contain the platform identifier such as:
+> >          "fsl,ls1021a-pcie", "snps,dw-pcie"
+> > -        "fsl,ls2080a-pcie", "snps,dw-pcie"
+> > +        "fsl,ls2080a-pcie", "fsl,ls2085a-pcie", "snps,dw-pcie"
+> 
+> 
+> And the ls2085a was released first, but the dts file is for ls2080a (fsl-
+> ls2080a.dtsi), So I prefer to put the ls2080a as the first compatible
+> string. How about your suggestion?
 > 
 
-I agree with you. That's also the reason why I put the "fsl,ls2080a-pci" first.
+Hi Rob,
+
+I will keep the "fsl,ls2085a-pcie" as the first compatible string as discussed.
+And change the layerscape-pci.txt as follows:
+
+> > -        "fsl,ls2080a-pcie", "snps,dw-pcie"
+> > +        "fsl,ls2080a-pcie", "fsl,ls2085a-pcie", "snps,dw-pcie"
+
+What's your suggestion?
 
 Thanks,
 Mingkai
