@@ -1,92 +1,71 @@
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [RFC PATCH 2/8] Documentation: arm: define DT cpu capacity bindings
-Date: Tue, 15 Dec 2015 18:47:20 +0100
-Message-ID: <CAKfTPtBzWcNHx+Fi7hUabNpPsd1thFAkPnLcpsnqbQp6Qq24cQ@mail.gmail.com>
-References: <20151215122238.GG16007@e106622-lin> <20151215133951.GY5727@sirena.org.uk>
- <20151215140135.GI31299@leverpostej> <20151215150813.GZ5727@sirena.org.uk>
- <20151215153218.GA7228@leverpostej> <20151215154651.GK16007@e106622-lin>
- <20151215155737.GB7619@leverpostej> <20151215162317.GB24286@e104818-lin.cambridge.arm.com>
- <20151215164145.GA8012@leverpostej> <CAKfTPtAuosPcL8bbQ27Y-vUE1h4QRY8hGESnm4YrxqRAQ3K=5g@mail.gmail.com>
- <20151215171518.GC8012@leverpostej>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH v5 2/2] arm: pxa27x: support for ICP DAS LP-8x4x w/ DT
+Date: Tue, 15 Dec 2015 19:06:17 +0100
+Message-ID: <87a8pbio2u.fsf@belgarion.home>
+References: <1449700088-28076-3-git-send-email-ynvich@gmail.com>
+	<7496839.vMjVcqPe8Q@wuerfel> <1450197727.21989.9.camel@gmail.com>
+	<1843454.zCnLJtF7B6@wuerfel> <1450200281.21989.24.camel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20151215171518.GC8012@leverpostej>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Juri Lelli <juri.lelli@arm.com>, Peter Zijlstra <peterz@infradead.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Dietmar Eggemann <dietmar.eggemann@arm.com>, LAK <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Paul Walmsley <paul@pwsan.com>linux-kernel <linux>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1450200281.21989.24.camel@gmail.com> (Sergei Ianovich's message
+	of "Tue, 15 Dec 2015 20:24:41 +0300")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Ianovich <ynvich@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Daniel Mack <zonque@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Arnaud Ebalard <arno@natisbad.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15 December 2015 at 18:15, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Tue, Dec 15, 2015 at 05:59:34PM +0100, Vincent Guittot wrote:
->> On 15 December 2015 at 17:41, Mark Rutland <mark.rutland@arm.com> wrote:
->> > On Tue, Dec 15, 2015 at 04:23:18PM +0000, Catalin Marinas wrote:
->> >> On Tue, Dec 15, 2015 at 03:57:37PM +0000, Mark Rutland wrote:
->> >> > On Tue, Dec 15, 2015 at 03:46:51PM +0000, Juri Lelli wrote:
->> >> > > On 15/12/15 15:32, Mark Rutland wrote:
->> >> > > > On Tue, Dec 15, 2015 at 03:08:13PM +0000, Mark Brown wrote:
->> >> > > > > My expectation is that we just need good enough, not perfect, and that
->> >> > > > > seems to match what Juri is saying about the expectation that most of
->> >> > > > > the fine tuning is done via other knobs.
->> >> > > >
->> >> > > > My expectation is that if a ballpark figure is good enough, it should be
->> >> > > > possible to implement something trivial like bogomips / loop_per_jiffy
->> >> > > > calculation.
->> >> > >
->> >> > > I didn't really followed that, so I might be wrong here, but isn't
->> >> > > already happened a discussion about how we want/like to stop exposing
->> >> > > bogomips info or rely on it for anything but in kernel delay loops?
->> >> >
->> >> > I meant that we could have a benchmark of that level of complexity,
->> >> > rather than those specific values.
->> >>
->> >> Or we could simply let user space use whatever benchmarks or hard-coded
->> >> values it wants and set the capacity via sysfs (during boot). By
->> >> default, the kernel would assume all CPUs equal.
->> >
->> > I assume that a userspace override would be available regardless of
->> > whatever mechanism the kernel uses to determine relative
->> > performance/effinciency.
->>
->> Don't you think that if we let a complete latitude to the userspace
->> to set whatever it wants, it will be used to abuse the kernel (and the
->> scheduler in particular ) and that this will finish in a real mess to
->> understand what is wrong when a task is not placed where it should be.
->
-> I'm not sure I follow what you mean by "abuse" here. Userspace currently
-> can force the scheduler to make sub-optimal decisions in a number of
-> ways, e.g.
->
-> * Hot-unplugging the preferred CPUs
-> * Changing a task's affinity mask
-> * Setting the nice value of a task
-> * Using rlimits and/or cgroups
-> * Using a cpufreq governor
-> * Fork-bombing
+Sergei Ianovich <ynvich@gmail.com> writes:
 
-All these are parameters have a meaning (except the last one). By
-abusing i mean setting the capacity of the most powerful cpu to 1 for
-no good reason except to abuse the scheduler so the latter will not
-put that much tasks on it just  because the current running use case
-is more efficient if the big core is not used.
+> On Tue, 2015-12-15 at 18:02 +0100, Arnd Bergmann wrote:
+>> On Tuesday 15 December 2015 19:42:07 Sergei Ianovich wrote:
+>> > There are several board-specific devices on LP8x4x: custom FPGA,
+>> > custom
+>> > UART, custom IRQ on FPGA, custom parallel bus for industrial IO. The
+>> > defconfig file could alert potential users to this fact. If this is
+>> > not
+>> > a sufficient reason to have a defconfig file, it can be dropped.
+>> > 
+>> > I use the full .config anyway 
+>> 
+>> I would like those drivers to be enabled in some defconfig, so we get
+>> compile-time coverage, but we generally stopped having one-config-per-
+>> board
+>> files.
+>> 
+>> Maybe we can have a pxa_defconfig file that enables lots of boards
+>> and then we remove the individual configs? We don't have to remove
+>> them all at once, but it would make me very happy if we could at
+>> least kill off some of the ones that are not used regularly.
+Yeah, I'd be happy too, that would simplify also my life.
 
+Actually I was thinking of 2 defconfigs :
+ - one for platform_data based boards pxa2xx
+ - one for DT only boards pxa2xx
 
->
-> Practically all of these are prvileged operations. I would envisage the
-> userspace interface for "capacity" management to be similar.
->
->> We can probably provide a debug mode to help soc manufacturer to
->> define their capacity value but IMHO we should not let complete
->> latitude in normal operation
->
-> In normal operation userspace wouldn't mess with this, as with most of
-> the cases above. Userspace can already shooti tself in the foot.
->
->> In normal operation we need to give some methods to tweak the value to
->> reflect a memory bounded or integer calculation work  or other kind of
->> work that currently runs on the cpu but not more
->
-> You can already do that with the mechanisms above, to some extent. I'm
-> not sure I follow.
->
-> Mark.
+> lp8x4x seems to be the first pxa board which requires DT.
+Most probably AFAIK.
+
+> We can create pxa27x-dt_defconfig which selects:
+> 1. PXA27X_DT
+> 2. PXA_FB and 8250_PXA to enable console
+> 3. MMC, MMC_PXA and EXT4_FS to enable boot from MMC
+If you put MMC_PXA, one can argue why not any MTD device used on pxa devices,
+such as pxa2xx-flash or docg3/docg4, etc ... I won't argue, I'm just pondering
+about the right choice.
+
+> 4. all optional pxa stuff as modules
+> 5. all stuff on supported pxa boards as modules
+
+> If #5 is extended when support for new boards is added, it should be
+> possible to run any supported pxa27x board with pxa27x_defconfig.
+
+I'm very eager to see a patch on that. I can feed my Jenkins with it, it would
+greatly help me catch issues earlier. Moreover it would for free test it on
+lubbock, mainstone and mioa701. If there was one also for pxa3xx, I would launch
+it on zylonite cm-x300 ... (that's a bonus, I know :))
+
+Cheers.
+
+-- 
+Robert
