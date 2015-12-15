@@ -1,51 +1,67 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v5 2/2] arm: pxa27x: support for ICP DAS LP-8x4x w/ DT
-Date: Tue, 15 Dec 2015 21:01:35 +0100
-Message-ID: <8760zziiqo.fsf@belgarion.home>
-References: <1449700088-28076-3-git-send-email-ynvich@gmail.com>
-	<87a8pbio2u.fsf@belgarion.home> <1450205413.21989.44.camel@gmail.com>
-	<4511402.o53nMsg37l@wuerfel>
+From: Tim Bird <tim.bird@sonymobile.com>
+Subject: [PATCH v4 1/3] dt-binding: power: Add otg regulator binding
+Date: Tue, 15 Dec 2015 11:52:10 -0800
+Message-ID: <1450209132-20185-1-git-send-email-tim.bird@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4511402.o53nMsg37l@wuerfel> (Arnd Bergmann's message of "Tue, 15
-	Dec 2015 20:21:31 +0100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sergei Ianovich <ynvich@gmail.com>, linux-kernel@vger.kernel.org, Daniel Mack <zonque@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Arnaud Ebalard <arno@natisbad.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, sre@kernel.org, courtney.cavin@sonymobile.com, dbaryshkov@gmail.com, dwmw2@infradead.org, agross@codeaurora.org
+Cc: Bjorn.Andersson@sonymobile.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, tbird20d@gmail.com, tim.bird@sonymobile.com
 List-Id: devicetree@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> writes:
+Add a binding for the regulator which controls the OTG chargepath switch.
+The OTG switch gets its power from pm8941_5vs1, and that should be
+expressed as a usb_otg_in-supply property in the DT node for the
+charger driver.  The regulator name is "otg-vbus".
 
-> On Tuesday 15 December 2015 21:50:13 Sergei Ianovich wrote:
->> On Tue, 2015-12-15 at 19:06 +0100, Robert Jarzmik wrote:
->> Updated plan:
->> 1. MACH_PXA27X_DT
->> 2. PXA_FB and 8250_PXA to enable console
-What about gpio-pxa ? And maybe pinctrl-pxa27x (only in linux-next by now) ? Can
-a pxafb work without gpio-pxa ? Also usually for pxafb you have pwm and pwm_bl
-to see something.
+Signed-off-by: Tim Bird <tim.bird@sonymobile.com>
+---
+Changes since v3
+ - switch supply name to have underscores instead of dashes
+   - (switched back to match the name used in data sheets)
+ - switch regulator node name to otg-vbus
+Changes since v1
+ - switch supply name to have dashes instead of underscores
+ - remove superfluous DT explanations in the otg node description
+---
+ .../devicetree/bindings/power_supply/qcom_smbb.txt    | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
->> 3. MMC, MMC_PXA and EXT4_FS to enable boot from MMC
->> 3.1. MTD, MTD_CFI, MTD_PHYSMAP_OF and JFFS2_FS to enable boot from MTD
-Ok. Is pxa2xx-pcmcia out of scope ? I seem to remember we have several boards
-where pcmcia is the rootfs (even if that is a small mess right now I still have
-to work on). Or do we consider pcmcia as obsolete ?
-
->> 4. all optional pxa stuff as modules
->> 5. all stuff on supported pxa boards as modules
->> 6. supported boards should boot the kernel built with
->> `pxa27x-dt_defconfig` after `make olddefconfig`
->> 
->> It is probably a good idea to put this plan somewhere in Documentation/
->> and to have a comment about that in the defconfig itself.
->> 
->> Is the plan acceptable?
->
-> Sounds good to me.
-Sounds good to me too.
-
-Cheers.
-
+diff --git a/Documentation/devicetree/bindings/power_supply/qcom_smbb.txt b/Documentation/devicetree/bindings/power_supply/qcom_smbb.txt
+index 65b88fa..06f8a5d 100644
+--- a/Documentation/devicetree/bindings/power_supply/qcom_smbb.txt
++++ b/Documentation/devicetree/bindings/power_supply/qcom_smbb.txt
+@@ -105,6 +105,22 @@ PROPERTIES
+                regulation must be done externally to fully comply with
+                the JEITA safety guidelines if this flag is set.
+ 
++- usb_otg_in-supply:
++  Usage: optional
++  Value type: <phandle>
++  Description: Reference to the regulator supplying power to the USB_OTG_IN
++               pin.
++
++child nodes:
++- otg-vbus:
++  Usage: optional
++  Description: This node defines a regulator used to control the direction
++               of VBUS voltage - specifically: whether to supply voltage
++               to VBUS for host mode operation of the OTG port, or allow
++               input voltage from external VBUS for charging.  In the
++               hardware, the supply for this regulator comes from
++               usb_otg_in-supply.
++
+ EXAMPLE
+ charger@1000 {
+        compatible = "qcom,pm8941-charger";
+@@ -128,4 +144,7 @@ charger@1000 {
+ 
+        qcom,fast-charge-current-limit = <1000000>;
+        qcom,dc-charge-current-limit = <1000000>;
++       usb_otg_in-supply = <&pm8941_5vs1>;
++
++       otg-vbus {};
+ };
 -- 
-Robert
+2.6.3
