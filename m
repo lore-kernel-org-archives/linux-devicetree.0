@@ -1,49 +1,49 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2] extcon: add Maxim MAX3355 driver
-Date: Tue, 15 Dec 2015 13:12:17 +0100
-Message-ID: <CAMuHMdU0vbiXet1w3xgJa9g_VtbYfTqpFO6+sox5QA2Y8uKAAQ@mail.gmail.com>
-References: <5045536.UEVncNCOZE@wasted.cogentembedded.com>
-	<20151214012400.GA9506@rob-hp-laptop>
-	<566EFE0A.4000104@cogentembedded.com>
-	<CAL_JsqJ2RQcJY27B=emzKT6HQ4XEp=XjSqufx5742yvFt3Wfxw@mail.gmail.com>
-	<566F42BF.30109@cogentembedded.com>
-	<20151214234446.GA10671@kroah.com>
-	<566FF888.8060200@cogentembedded.com>
-	<CAMuHMdVTDUcrDu63cca564jDJ=o_eTFD-sKROwBziXBf-9f4uw@mail.gmail.com>
-	<566FFF8E.8060509@cogentembedded.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT
+ "/chosen/linux,atags" entry
+Date: Tue, 15 Dec 2015 12:20:38 +0000
+Message-ID: <20151215122038.GI30871@n2100.arm.linux.org.uk>
+References: <20150713131902.GH26485@atomide.com>
+ <20151129180939.GE30871@n2100.arm.linux.org.uk>
+ <alpine.LFD.2.20.1511291902100.22569@knanqh.ubzr>
+ <201511300115.12478@pali>
+ <20151130152352.GY2517@atomide.com>
+ <20151130153933.GD29576@pali>
+ <alpine.LFD.2.20.1511301041090.22569@knanqh.ubzr>
+ <20151215093325.GK13531@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <566FFF8E.8060509@cogentembedded.com>
+Content-Disposition: inline
+In-Reply-To: <20151215093325.GK13531@pali>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Greg KH <greg@kroah.com>, Rob Herring <robh@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Tony Lindgren <tony@atomide.com>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Laura Abbott <lauraa@codeaurora.org>, Sebastian Reichel <sre@debian.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robherring2@gmail.com>, Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, linux-omap@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+On Tue, Dec 15, 2015 at 10:33:25AM +0100, Pali Roh=E1r wrote:
+> So am I understand correctly that solution would be to hack
+> arch/arm/mm/mmu.c to not overwrite page at PHYS_OFFSET?
 
-On Tue, Dec 15, 2015 at 12:54 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> On 12/15/2015 2:28 PM, Geert Uytterhoeven wrote:
->>>> You are mixing 2 and 1 spaces between words, don't do that.
->>>
->>>     Care to just explain why?
->>
->> It makes the text difficult to read.
->
->    Are you serious? :-)
+That's completely unnecessary: there are enough platform hooks to cope
+with whatever the platform requires.
 
-Yes. No accidentally forgotten smileys on my side.
+If you want to reserve the memory, then you have the ->reserve callback=
+,
+where you can call:
 
-Spasiba! Da svidanja...
+	memblock_reserve(PHYS_OFFSET, PAGE_SIZE);
 
-Gr{oetje,eeting}s,
+if you wish to prevent the first page being overwritten.  You're then
+responsible for freeing this page later in the boot sequence, or you
+could just keep it around and refer to the atags in that page directly.
 
-                        Geert
+You could also just save_atags() in there, with a comment saying that
+this is a work-around for N900 which needs the ATAGs saved, and this
+is allowed in ->reserve as a special exception.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--=20
+RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
+=46TTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
