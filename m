@@ -1,71 +1,93 @@
-From: Bai Ping <b51503@freescale.com>
-Subject: [PATCH v2 5/5] ARM: imx: Add msl code support for imx6qp
-Date: Tue, 15 Dec 2015 14:07:53 +0800
-Message-ID: <1450159673-27314-6-git-send-email-b51503@freescale.com>
-References: <1450159673-27314-1-git-send-email-b51503@freescale.com>
+From: Dirk Behme <dirk.behme@gmail.com>
+Subject: Re: [PATCH 2/3] arm64: dts: r8a7795: Add Cortex-A57 CPU cores
+Date: Tue, 15 Dec 2015 07:31:31 +0100
+Message-ID: <566FB3C3.3060504@gmail.com>
+References: <1449236333-4410-1-git-send-email-dirk.behme@gmail.com>
+ <1449236333-4410-2-git-send-email-dirk.behme@gmail.com>
+ <20151211230751.GD6496@verge.net.au> <20151215051243.GA29362@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1450159673-27314-1-git-send-email-b51503@freescale.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de
-Cc: pawel.moll@arm.com, robh+dt@kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20151215051243.GA29362@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-sh@vger.kernel.org, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Gaku Inami <gaku.inami.xw@bp.renesas.com>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-The i.MX6QP is a different SOC, but internally we treate
-it as i.MX6Q Rev_2.0 to maximum the code reusability. The chip
-silicon number we read from the ANADIG_DIGPROG is 0x630100. This
-patch add code to identify it as i.MX6QP Rev_1.0 when print out the
-silicon version.
+On 15.12.2015 06:12, Simon Horman wrote:
+> On Sat, Dec 12, 2015 at 08:07:51AM +0900, Simon Horman wrote:
+>> On Fri, Dec 04, 2015 at 02:38:52PM +0100, Dirk Behme wrote:
+>>> From: Gaku Inami <gaku.inami.xw@bp.renesas.com>
+>>>
+>>> Add Cortex-A57 CPU cores to r8a7795 SoC for a total of 4 x Cortex-A57.
+>>>
+>>> Signed-off-by: Gaku Inami <gaku.inami.xw@bp.renesas.com>
+>>> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>>> Sigend-off-by: Dirk Behme <dirk.behme@gmail.com>
+>>
+>> Thanks, I have queued this up for v4.5.
+>
+> I meant to test this earlier but somehow it slopped my mind.
+>
+> With this patch applied I still only see one CPU brought up
+> whereas I was expecting 4. Are more patches needed in order to
+> get more CPUs operating?
 
-Signed-off-by: Bai Ping <b51503@freescale.com>
----
- arch/arm/mach-imx/anatop.c     | 5 ++++-
- arch/arm/mach-imx/mach-imx6q.c | 8 ++++++--
- 2 files changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/mach-imx/anatop.c b/arch/arm/mach-imx/anatop.c
-index 231bb25..9622763 100644
---- a/arch/arm/mach-imx/anatop.c
-+++ b/arch/arm/mach-imx/anatop.c
-@@ -129,7 +129,10 @@ void __init imx_init_revision_from_anatop(void)
- 
- 	switch (digprog & 0xff) {
- 	case 0:
--		revision = IMX_CHIP_REVISION_1_0;
-+		if (digprog >> 8 & 0x01)
-+			revision = IMX_CHIP_REVISION_2_0;
-+		else
-+			revision = IMX_CHIP_REVISION_1_0;
- 		break;
- 	case 1:
- 		revision = IMX_CHIP_REVISION_1_1;
-diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
-index 3878494b..cb27d56 100644
---- a/arch/arm/mach-imx/mach-imx6q.c
-+++ b/arch/arm/mach-imx/mach-imx6q.c
-@@ -266,8 +266,11 @@ static void __init imx6q_init_machine(void)
- {
- 	struct device *parent;
- 
--	imx_print_silicon_rev(cpu_is_imx6dl() ? "i.MX6DL" : "i.MX6Q",
--			      imx_get_soc_revision());
-+	if (cpu_is_imx6q() && imx_get_soc_revision() == IMX_CHIP_REVISION_2_0)
-+		imx_print_silicon_rev("i.MX6QP", IMX_CHIP_REVISION_1_0);
-+	else
-+		imx_print_silicon_rev(cpu_is_imx6dl() ? "i.MX6DL" : "i.MX6Q",
-+				imx_get_soc_revision());
- 
- 	parent = imx_soc_device_init();
- 	if (parent == NULL)
-@@ -399,6 +402,7 @@ static void __init imx6q_init_irq(void)
- static const char * const imx6q_dt_compat[] __initconst = {
- 	"fsl,imx6dl",
- 	"fsl,imx6q",
-+	"fsl,imx6qp",
- 	NULL,
- };
- 
--- 
-1.9.1
+Hmm, I don't think so (?).
+
+I tested this with
+
+https://github.com/dirkbehme/linux-renesas-rcar-gen3/commits/dirk/gen3-latest-update
+
+and got (including the A53 patch)
+
+...
+ASID allocator initialised with 65536 entries
+
+Detected PIPT I-cache on CPU1
+
+CPU1: Booted secondary processor [411fd073]
+
+Detected PIPT I-cache on CPU2
+
+CPU2: Booted secondary processor [411fd073]
+
+Detected PIPT I-cache on CPU3
+
+CPU3: Booted secondary processor [411fd073]
+
+Detected VIPT I-cache on CPU4
+
+CPU features: enabling workaround for ARM erratum 845719
+
+CPU4: Booted secondary processor [410fd034]
+
+Detected VIPT I-cache on CPU5
+
+CPU5: Booted secondary processor [410fd034]
+
+Detected VIPT I-cache on CPU6
+
+CPU6: Booted secondary processor [410fd034]
+
+Detected VIPT I-cache on CPU7
+
+CPU7: Booted secondary processor [410fd034]
+
+Brought up 8 CPUs
+
+SMP: Total of 8 processors activated.
+
+CPU: All CPU(s) started at EL1
+...
+
+This is based on last weeks renesas-drivers-2015-12-08-v4.4-rc4 and 
+besides the patches for SDHI/eMMC I don't think it contains anything 
+additional regarding the number of CPU cores.
+
+Best regards
+
+Dirk
 
