@@ -1,196 +1,107 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: Re: [PATCH v2 1/3] [media] mt9v032: Add reset and standby gpios
-Date: Tue, 15 Dec 2015 10:13:18 +0100
-Message-ID: <2909716.jMugkd1BEg@adelgunde>
-References: <1450104113-6392-1-git-send-email-mpa@pengutronix.de> <1538607.GEJzzOouog@avalon>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM64: ZynqMP: DT: Fix GIC's 'reg' property
+Date: Tue, 15 Dec 2015 01:14:50 -0800
+Message-ID: <20151215091450.GI3358@xsjsorenbubuntu>
+References: <1450110700-14152-1-git-send-email-soren.brinkmann@xilinx.com>
+ <20151214164613.GH21356@leverpostej>
+ <566EF5CC.4070000@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart11710089.RDNQYzyMTx"; micalg="pgp-sha256"; protocol="application/pgp-signature"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1538607.GEJzzOouog@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <566EF5CC.4070000-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alistair Francis <alistair.francis-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---nextPart11710089.RDNQYzyMTx
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-
-Hi,
-
-On Monday 14 December 2015 21:26:25 Laurent Pinchart wrote:
-> Hi Markus,
+On Mon, 2015-12-14 at 05:01PM +0000, Marc Zyngier wrote:
+> Mark,
 >=20
-> Thank you for the patch.
+> On 14/12/15 16:46, Mark Rutland wrote:
+> > On Mon, Dec 14, 2015 at 08:31:40AM -0800, Soren Brinkmann wrote:
+> >> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> >> ---
+> >>  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 6 +++---
+> >>  1 file changed, 3 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/b=
+oot/dts/xilinx/zynqmp.dtsi
+> >> index 857eda5c7217..b5d1facadf16 100644
+> >> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> >> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> >> @@ -80,10 +80,10 @@
+> >>  		gic: interrupt-controller@f9010000 {
+> >>  			compatible =3D "arm,gic-400", "arm,cortex-a15-gic";
+> >>  			#interrupt-cells =3D <3>;
+> >> -			reg =3D <0x0 0xf9010000 0x10000>,
+> >> -			      <0x0 0xf902f000 0x2000>,
+> >> +			reg =3D <0x0 0xf9010000 0x1000>,
+> >> +			      <0x0 0xf9020000 0x20000>,
+> >>  			      <0x0 0xf9040000 0x20000>,
+> >> -			      <0x0 0xf906f000 0x2000>;
+> >> +			      <0x0 0xf9060000 0x20000>;
+> >=20
+> > I'm confused. These sizes don't look right for GIC-400. Is this a c=
+ustom
+> > GIC?
 >=20
-> On Monday 14 December 2015 15:41:51 Markus Pargmann wrote:
-> > Add optional reset and standby gpios. The reset gpio is used to res=
-et
-> > the chip in power_on().
-> >=20
-> > The standby gpio is not used currently. It is just unset, so the ch=
-ip is
-> > not in standby.
-> >=20
-> > Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> > Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  .../devicetree/bindings/media/i2c/mt9v032.txt      |  2 ++
-> >  drivers/media/i2c/mt9v032.c                        | 28 ++++++++++=
-+++++++++
-> >  2 files changed, 30 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/mt9v032.tx=
-t
-> > b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt index
-> > 202565313e82..100f0ae43269 100644
-> > --- a/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
-> > +++ b/Documentation/devicetree/bindings/media/i2c/mt9v032.txt
-> > @@ -20,6 +20,8 @@ Optional Properties:
-> >=20
-> >  - link-frequencies: List of allowed link frequencies in Hz. Each f=
-requency
-> > is expressed as a 64-bit big-endian integer.
-> > +- reset-gpios: GPIO handle which is connected to the reset pin of =
-the chip.
-> > +- standby-gpios: GPIO handle which is connected to the standby pin=
- of the
-> > chip.
-> >=20
-> >  For further reading on port node refer to
-> >  Documentation/devicetree/bindings/media/video-interfaces.txt.
-> > diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v03=
-2.c
-> > index a68ce94ee097..c1bc564a0979 100644
-> > --- a/drivers/media/i2c/mt9v032.c
-> > +++ b/drivers/media/i2c/mt9v032.c
-> > @@ -14,6 +14,7 @@
-> >=20
-> >  #include <linux/clk.h>
-> >  #include <linux/delay.h>
-> > +#include <linux/gpio/consumer.h>
-> >  #include <linux/i2c.h>
-> >  #include <linux/log2.h>
-> >  #include <linux/mutex.h>
-> > @@ -251,6 +252,8 @@ struct mt9v032 {
-> >=20
-> >  =09struct regmap *regmap;
-> >  =09struct clk *clk;
-> > +=09struct gpio_desc *reset_gpio;
-> > +=09struct gpio_desc *standby_gpio;
-> >=20
-> >  =09struct mt9v032_platform_data *pdata;
-> >  =09const struct mt9v032_model_info *model;
-> > @@ -312,16 +315,31 @@ static int mt9v032_power_on(struct mt9v032 *m=
-t9v032)
-> >  =09struct regmap *map =3D mt9v032->regmap;
-> >  =09int ret;
-> >=20
-> > +=09if (mt9v032->reset_gpio)
-> > +=09=09gpiod_set_value_cansleep(mt9v032->reset_gpio, 1);
-> > +
->=20
-> gpiod_set_value_cansleep() already checks whether the gpiod is NULL, =
-you don't=20
-> need to duplicate the check here.
->=20
-> Apart from that,
->=20
-> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->=20
-> No need to resubmit I'll fix this when applying.
+> Probably an implementation that obey the SBSA requirement of aliasing
+> the first 4kB of the CPU interface on a 64kB page, and the second one=
+ on
+> the following 64kB page. See the APM system for an example of such a
+> thing. I'm more concerned about the GICH region (3rd one), which has =
+no
+> reason to be bigger than 4kB.
 
-Ok, thank you.
+Xilinx didn't publish the memory map yet (at least I didn't see it in t=
+he
+public docs), so, let me give some excerpts:
 
-Best Regards,
+GICD:
+GICD_CTLR 	0xF9010000 	32 	rw 	0x00000000 	Distributor Control Register
+=2E..
+GICD_CIDR3 	0xF9010FFC 	32 	ro 	0x000000B1 	Component ID3 Register
 
-Markus
+GICC:
+GICC_CTLR 	0xF9020000 	32 	rw 	0x00000000 	CPU Interface Control Regist=
+er
+=2E..
+GICC_DIR 	0xF9030000 	32 	wo 	x 	Deactivate Interrupt Register
+
+GICH:
+GICH_HCR 	0xF9040000 	32 	rw 	0x00000000 	Hypervisor Control Register
+=2E..
+GICH_LR3_Alias7 	0xF9050F0C 	32 	rw 	0x00000000 	List Register 3
+
+GICV:
+GICV_CTLR 	0xF9060000 	32 	rw 	0x00000000 	Virtual Machine Control Regi=
+ster
+=2E..
+GICV_DIR 	0xF9070000 	32 	wo 	x 	VM Deactivate Interrupt Register
+
+
+Regarding the GICH area, it looks like it starts at 0xF9040000 and the
+alias blocks to access the other processor interfaces start at
+0xF9050000.
 
 >=20
-> >  =09ret =3D clk_set_rate(mt9v032->clk, mt9v032->sysclk);
-> >  =09if (ret < 0)
-> >  =09=09return ret;
-> >=20
-> > +=09/* System clock has to be enabled before releasing the reset */=
-
-> >  =09ret =3D clk_prepare_enable(mt9v032->clk);
-> >  =09if (ret)
-> >  =09=09return ret;
-> >=20
-> >  =09udelay(1);
-> >=20
-> > +=09if (mt9v032->reset_gpio) {
-> > +=09=09gpiod_set_value_cansleep(mt9v032->reset_gpio, 0);
-> > +
-> > +=09=09/* After releasing reset we need to wait 10 clock cycles
-> > +=09=09 * before accessing the sensor over I2C. As the minimum SYSC=
-LK
-> > +=09=09 * frequency is 13MHz, waiting 1=B5s will be enough in the w=
-orst
-> > +=09=09 * case.
-> > +=09=09 */
-> > +=09=09udelay(1);
-> > +=09}
-> > +
-> >  =09/* Reset the chip and stop data read out */
-> >  =09ret =3D regmap_write(map, MT9V032_RESET, 1);
-> >  =09if (ret < 0)
-> > @@ -954,6 +972,16 @@ static int mt9v032_probe(struct i2c_client *cl=
-ient,
-> >  =09if (IS_ERR(mt9v032->clk))
-> >  =09=09return PTR_ERR(mt9v032->clk);
-> >=20
-> > +=09mt9v032->reset_gpio =3D devm_gpiod_get_optional(&client->dev, "=
-reset",
-> > +=09=09=09=09=09=09      GPIOD_OUT_HIGH);
-> > +=09if (IS_ERR(mt9v032->reset_gpio))
-> > +=09=09return PTR_ERR(mt9v032->reset_gpio);
-> > +
-> > +=09mt9v032->standby_gpio =3D devm_gpiod_get_optional(&client->dev,=
- "standby",
-> > +=09=09=09=09=09=09=09GPIOD_OUT_LOW);
-> > +=09if (IS_ERR(mt9v032->standby_gpio))
-> > +=09=09return PTR_ERR(mt9v032->standby_gpio);
-> > +
-> >  =09mutex_init(&mt9v032->power_lock);
-> >  =09mt9v032->pdata =3D pdata;
-> >  =09mt9v032->model =3D (const void *)did->driver_data;
+> > Did this ever work wit hteh old offsets and sizes?
 >=20
->=20
+> It probably dies when trying to use EOImode=3D=3D1.
 
-=2D-=20
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
+Without knowing what parts we really exercise, yes, the system comes up
+fine so far, but I recently found Linux boot hanging on QEMU and it
+seemed to be related to time not progressing (fast enough).
+I found a different DT using the values proposed here and that fixed th=
+e
+hang for me.
 
---nextPart11710089.RDNQYzyMTx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWb9muAAoJEEpcgKtcEGQQDJgP/1ULE7n71LIYlqWtDibLJzit
-T6rhl5DZpKRttqKLnDOZpYi1C4w61BMjwecrurP2Oe4ctSIOldG+vNt1Rry0Md8G
-zhAIRYkAAEt3l3+8XUgZl48QAvjoazQpQocwvU1ant2K5tetwoCvZ3Szd1ui4miL
-b6R5dlYzVMdzPLRhBgq3P6HXmzdyK5f+4BHtwC9ikBrjHja/ZCI5TPelDFSy5zJP
-cx7PNEnejzJOu67UXBGOV2mjM6VbAuoIRCXCUbDIYxUnAlnWxeNBtC9y1SlFpCUB
-0JVAs5GCH8ogi9Bx71nLnot2XUFvv2io7+/CAzIXLW2+8EhKXOyHspM1LCc2sUPz
-+qQVtrzQc/UqCHfJE1aHki3Duuq/HxdDNCDD/TY8toKura9CEddMsumi9BC6vgZb
-pfNv5pBYBdeyV7M5Xr4l6cfj8pmI2qfoZB4TP3HiiyhrULDkYeuStCeAvZFQ8rrw
-qbDD5ndHO0KNlyq31OGRq4vBsBCSnxzfLL9VL0GJ4M/6t393mM27/sMZmsVB5fhO
-9Gn1vpPf4Lk71+a7/JQmCBGwdJMIbUrwYYneGI9X6BZbIct9kffXv0/adsJD2lL7
-mACNj/HyeCdgZcpNhIVGFc+sYYNPvlJ/nBauZPOVbB8RvgJemaXVJkc7TUXqa2P7
-oMkZYHdcVse78EcZb02J
-=j2v9
------END PGP SIGNATURE-----
-
---nextPart11710089.RDNQYzyMTx--
+	Thanks,
+	S=C3=B6ren
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
