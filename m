@@ -1,49 +1,56 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] ARM: dts: dra7: Add dt node for the sycon pcie
-Date: Tue, 15 Dec 2015 16:22:20 +0300
-Message-ID: <5670140C.7010906@cogentembedded.com>
-References: <1450172346-11890-1-git-send-email-kishon@ti.com>
- <1450172346-11890-2-git-send-email-kishon@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450172346-11890-2-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+From: Andre Przywara <andre.przywara@arm.com>
+Subject: [PATCH v2 0/4] add support for GICv3 on the Foundation model
+Date: Tue, 15 Dec 2015 13:36:34 +0000
+Message-ID: <1450186598-24504-1-git-send-email-andre.przywara@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: rob.herring@linaro.org, Pawel Moll <pawel.moll@arm.com>, ijc+devicetree@hellion.org.uk, marc.zyngier@arm.com
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi,
 
-On 12/15/2015 12:39 PM, Kishon Vijay Abraham I wrote:
+this is v2 adressing the two comments that Marc had on the previous
+version.
+Changelog:
+- remove bogus affinity field from GICv3 maintenance interrupt
+- replace commit message for patch 2/4
+----------------
 
-> Add new device tree node for the control module register space where
-> PCIe registers are present.
->
-> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> ---
->   arch/arm/boot/dts/dra7.dtsi |    5 +++++
->   1 file changed, 5 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index fe99231..e38f63f 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -155,6 +155,11 @@
->   					compatible = "syscon";
->   					reg = <0x1c04 0x0020>;
->   				};
-> +
-> +				scm_conf_pcie: tisyscon@1c24 {
+The freely available ARM Foundation model [1] supports emulating a
+GICv3 interrupt controller (--gicv3).
+To provide the kernel with the proper information, prepare the
+existing model .dts to be split up and eventually create a new .dts
+file which can be used to boot a kernel using the GICv3 in the model.
 
-    Please use the generic node names as the ePAPR standard says.
+Patch 1/4 changes the common device tree to allow sharing most of the
+definitions later, while patch 2/4 is a drive-by-fix to add support
+for the recently enabled EOImode=1.
+Patch 3/4 splits the existing DT up to have a common .dtsi file and a
+stub foundation-v8.dts in preparation for the final patch 4/4, which
+adds a new foundation-v8-gicv3.dts that has the required GICv3 node.
 
-[...]
+Together with the GICv3 support of the bootwrapper this allows to boot
+Linux and make it use the GICv3 interrupt controller.
 
-MBR, Sergei
+Cheers,
+Andre.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1]: http://www.arm.com/products/tools/models/fast-models/foundation-model.php
+
+Andre Przywara (4):
+  arm64: dts: prepare foundation-v8.dts to cope with GICv3
+  arm64: dts: Foundation model: increase GICC region to allow EOImode=1
+  arm64: dts: split Foundation model dts to put the GIC separately
+  arm64: dts: add .dts for GICv3 Foundation model
+
+ arch/arm64/boot/dts/arm/Makefile                   |   2 +-
+ arch/arm64/boot/dts/arm/foundation-v8-gicv3.dts    |  30 +++
+ arch/arm64/boot/dts/arm/foundation-v8.dts          | 227 +--------------------
+ .../arm/{foundation-v8.dts => foundation-v8.dtsi}  |  98 ++++-----
+ 4 files changed, 78 insertions(+), 279 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/arm/foundation-v8-gicv3.dts
+ copy arch/arm64/boot/dts/arm/{foundation-v8.dts => foundation-v8.dtsi} (73%)
+
+-- 
+2.5.1
