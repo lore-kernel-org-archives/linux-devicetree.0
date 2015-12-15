@@ -1,52 +1,54 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/6] ARM: DTS: da850: Use the new DT bindings for the
- eDMA3
-Date: Tue, 15 Dec 2015 20:50:35 +0530
-Message-ID: <56702FC3.5050705@ti.com>
-References: <1449237210-16381-1-git-send-email-peter.ujfalusi@ti.com>
- <1449237210-16381-3-git-send-email-peter.ujfalusi@ti.com>
- <566FDF93.7050005@ti.com> <566FFD1C.4080000@ti.com> <56701A47.9090105@ti.com>
- <56701E2C.7060308@ti.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/9] phy: use syscon framework APIs to set ctrl mod reg
+Date: Tue, 15 Dec 2015 07:26:59 -0800
+Message-ID: <20151215152659.GQ23396@atomide.com>
+References: <1450170968-11282-1-git-send-email-kishon@ti.com>
+ <725110094.6UkMkcy8u7@wuerfel>
+ <566FF621.2040307@ti.com>
+ <11176831.mhgJlIuj0S@wuerfel>
+ <56700BC0.7020007@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56701E2C.7060308-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56700BC0.7020007-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 15 December 2015 07:35 PM, Peter Ujfalusi wrote:
-> On 12/15/2015 03:48 PM, Sekhar Nori wrote:
-
->>>> In future, if/when we gain QDMA support, the QDMA channels could be used
->>>> for memcopy.
->>>
->>> Well, in short there is no way to get the qDMA working in a different way
->>> either. qDMA channel is in essence using 'normal' eDMA channel. This means
->>> that we still need to reserve the eDMA channel to be used for memcpy, but
->>> instead of SW triggering it (as we do it right now), we would need to use the
->>> channel as qDMA and set things up accordingly. I don't really see the benefit
->>> for qDMA mode to be honest.
->>
->> I guess the only advantage is that they will not clash with peripheral
->> mode usage. But even then, some sort of reservation is needed. So I
->> guess QDMA is no better than the EDMA reserved channels?
+* Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> [151215 04:47]:
+> On Tuesday 15 December 2015 05:25 PM, Arnd Bergmann wrote:
+> >>>
+> >>> Can you explain here what the conversion is good for? Why do you
+> >>> prefer the syscon mapping over a high-level driver in this case?
+> >>
+> >> phy-omap-control driver was added when there was no proper
+> >> infrastructure for doing control module initializations. The
+> >> phy-omap-control driver is not an 'actual' PHY driver and it
+> >> was just a hack to do PHY related control module initializations.
+> >> phy-omap-control is also getting unmanageable with the number of
+> >> platforms each having number of modules (like USB, SATA, PCIe),
+> >> using the same driver for control module initializations.
+> >>
+> >> Now with SYSCON framework being added to the kernel, phy-omap-control
+> >> shouldn't be needed and it also provides a uniform API across all the
+> >> modules to program the control module.
+> > 
+> > Ok, so the "phy-control" devices were really just a few registers of
+> > a system controller device that does a lot of other things as well, right?
 > 
-> It will clash with the peripheral mode use since it needs to take one of the
-> eDMA channels. qDMA mode is basically differs from the mode we are using by
-> how the channel is triggered. Currently we start the memcpy with SW trigger.
+> right.
+> > 
+> > Can you put your description above into the cover-letter for the series,
+> > and the merge commit?
 
-Alright, so I was missing this detail. Thanks for clarifying it on IRC.
-The EDMA specification makes it look like 8 additional QDMA channels can
-be used over 32 DMA channels, but in reality they are not additional
-channels since TCC is only valid between 0-31.
+Just to confirm.. Seems like this series keeps USB working and the dts
+changes can be done later after the driver changes have been merged?
 
-So, I agree. QDMA does not buy us any parallel transfers.
+Regards,
 
-Thanks,
-Sekhar
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
