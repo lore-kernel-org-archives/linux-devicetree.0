@@ -1,54 +1,101 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 2/2] arm: pxa27x: support for ICP DAS LP-8x4x w/ DT
-Date: Tue, 15 Dec 2015 18:02:19 +0100
-Message-ID: <1843454.zCnLJtF7B6@wuerfel>
-References: <1449700088-28076-3-git-send-email-ynvich@gmail.com> <7496839.vMjVcqPe8Q@wuerfel> <1450197727.21989.9.camel@gmail.com>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] drm/panel: simple: Add support for Kyocera
+ TCG121XGLP panel
+Date: Tue, 15 Dec 2015 18:10:34 +0100
+Message-ID: <1450199434.3163.90.camel@pengutronix.de>
+References: <1449081671-25327-1-git-send-email-l.stach@pengutronix.de>
+	 <1449081671-25327-2-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1450197727.21989.9.camel@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Ianovich <ynvich@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Daniel Mack <zonque@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Arnaud Ebalard <arno@natisbad.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1449081671-25327-2-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 15 December 2015 19:42:07 Sergei Ianovich wrote:
-> On Tue, 2015-12-15 at 17:32 +0100, Arnd Bergmann wrote:
-> > On Tuesday 15 December 2015 19:27:50 Sergei Ianovich wrote:
-> > >  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
-> > >  arch/arm/boot/dts/Makefile                         |   3 +
-> > >  arch/arm/boot/dts/pxa27x-lp8x4x-i105.dts           |  50 ++++
-> > >  arch/arm/boot/dts/pxa27x-lp8x4x.dts                | 259
-> > > +++++++++++++++++++++
-> > >  arch/arm/configs/lp8x4x_defconfig                  | 176
-> > > ++++++++++++++
-> > > 
-> > 
-> > I had not noticed earlier that you are adding a new defconfig file.
-> > PXA is
-> > already the platform with the most defconfig files, and I'd rather
-> > like
-> > to see that reduced than increased.
-> > 
-> > Is there a chance you could merge this one with some of the existing
-> > files
-> > into one configuration that handles them all?
+This has been on the list for 2 weeks without a reaction, so please
+consider this a friendly ping.
+
+Regards,
+Lucas
+
+Am Mittwoch, den 02.12.2015, 19:41 +0100 schrieb Lucas Stach:
+> The Kyocera TCG121XGLP panel is an XGA LCD TFT panel connected through
+> LVDS, which can be supported by the simple panel driver.
 > 
-> There are several board-specific devices on LP8x4x: custom FPGA, custom
-> UART, custom IRQ on FPGA, custom parallel bus for industrial IO. The
-> defconfig file could alert potential users to this fact. If this is not
-> a sufficient reason to have a defconfig file, it can be dropped.
+> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  .../bindings/display/panel/kyo,tcg121xglp.txt      |  7 ++++++
+>  drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
+>  2 files changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/kyo,tcg121xglp.txt
 > 
-> I use the full .config anyway 
+> diff --git a/Documentation/devicetree/bindings/display/panel/kyo,tcg121xglp.txt b/Documentation/devicetree/bindings/display/panel/kyo,tcg121xglp.txt
+> new file mode 100644
+> index 000000000000..a8e940fe731e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/kyo,tcg121xglp.txt
+> @@ -0,0 +1,7 @@
+> +Kyocera Corporation 12.1" XGA (1024x768) TFT LCD panel
+> +
+> +Required properties:
+> +- compatible: should be "kyo,tcg121xglp"
+> +
+> +This binding is compatible with the simple-panel binding, which is specified
+> +in simple-panel.txt in this directory.
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index f97b73ec4713..1476bb90ac14 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -902,6 +902,30 @@ static const struct panel_desc innolux_zj070na_01p = {
+>  	},
+>  };
+>  
+> +static const struct display_timing kyo_tcg121xglp_timing = {
+> +	.pixelclock = { 52000000, 65000000, 71000000 },
+> +	.hactive = { 1024, 1024, 1024 },
+> +	.hfront_porch = { 2, 2, 2 },
+> +	.hback_porch = { 2, 2, 2 },
+> +	.hsync_len = { 86, 124, 244 },
+> +	.vactive = { 768, 768, 768 },
+> +	.vfront_porch = { 2, 2, 2 },
+> +	.vback_porch = { 2, 2, 2 },
+> +	.vsync_len = { 6, 34, 73 },
+> +	.flags = DISPLAY_FLAGS_DE_HIGH,
+> +};
+> +
+> +static const struct panel_desc kyo_tcg121xglp = {
+> +	.timings = &kyo_tcg121xglp_timing,
+> +	.num_timings = 1,
+> +	.bpc = 8,
+> +	.size = {
+> +		.width = 246,
+> +		.height = 184,
+> +	},
+> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
+> +};
+> +
+>  static const struct drm_display_mode lg_lb070wv8_mode = {
+>  	.clock = 33246,
+>  	.hdisplay = 800,
+> @@ -1167,6 +1191,9 @@ static const struct of_device_id platform_of_match[] = {
+>  		.compatible = "innolux,zj070na-01p",
+>  		.data = &innolux_zj070na_01p,
+>  	}, {
+> +		.compatible = "kyo,tcg121xglp",
+> +		.data = &kyo_tcg121xglp,
+> +	}, {
+>  		.compatible = "lg,lb070wv8",
+>  		.data = &lg_lb070wv8,
+>  	}, {
 
-I would like those drivers to be enabled in some defconfig, so we get
-compile-time coverage, but we generally stopped having one-config-per-board
-files.
+-- 
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
 
-Maybe we can have a pxa_defconfig file that enables lots of boards
-and then we remove the individual configs? We don't have to remove
-them all at once, but it would make me very happy if we could at
-least kill off some of the ones that are not used regularly.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
