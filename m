@@ -1,89 +1,89 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] doc: dt-binding: generic onboard USB HUB
-Date: Tue, 15 Dec 2015 21:21:09 +0100
-Message-ID: <CAPDyKFrj_eMNXdBPi25cE0VcO8OQp=NspG8yT+EfSFsbOebuwg@mail.gmail.com>
-References: <1449538670-7954-1-git-send-email-peter.chen@freescale.com>
-	<20151209032403.GA3716@rob-hp-laptop>
-	<20151209081223.GB941@shlinux2>
-	<4048406.zTEffj2eJ2@wuerfel>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 3/5] soc: rockchip: add reboot notifier driver
+Date: Tue, 15 Dec 2015 21:38:41 +0100
+Message-ID: <15127971.1juVbocOjP@wuerfel>
+References: <1447840044-19689-1-git-send-email-andy.yan@rock-chips.com>
+ <3759218.6sItdW65UG@wuerfel> <20151215174234.GB24031@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4048406.zTEffj2eJ2@wuerfel>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20151215174234.GB24031-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, benchan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 9 December 2015 at 09:55, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Wednesday 09 December 2015 16:12:24 Peter Chen wrote:
->> On Tue, Dec 08, 2015 at 09:24:03PM -0600, Rob Herring wrote:
->> > On Tue, Dec 08, 2015 at 10:58:48AM +0100, Arnd Bergmann wrote:
->> > > On Tuesday 08 December 2015 10:50:49 Philipp Zabel wrote:
->> > > > This something we don't have to define ad-hoc. The hub hangs off an USB
->> > > > controller, right? The "Open Firmware recommended practice: USB"
->> > > > document already describes how to represent USB devices in a generic
->> > > > manner:
->> > > > http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
->> > > >
->> > > > Is there a reason not to reuse this?
->> > > >
->> > > > The usb hub node would be a child of the usb controller node, and it
->> > > > could use
->> > > >         compatible = "usb,class9"; /* bDeviceClass 9 (Hub) */
->> > >
->> > > Good point, I had not thought of that when I looked at the patches.
->> > >
->> > > Yes, let's do this way. I don't know if we ever implemented the simple
->> > > patch to associate a USB device with a device_node, but if not, then
->> > > let's do it now for this driver. A lot of people have asked for it in
->> > > the past.
->> >
->> > Agreed. Also, some hubs have I2C buses as well, but I still think under
->> > the USB bus is the right place.
->> >
->> > However, one complication here is often (probably this case) these
->> > addtional signals need to be controlled before the device enumerates.
->> >
->>
->> Yes, I did not find a way to let the USB bus code handle it, so I had to
->> write a platform driver to do it
->
-> Looping in Ulf, he solved the same problem for SDIO devices recently,
-> and probably remembers the details best.
->
+On Tuesday 15 December 2015 18:42:36 Thierry Reding wrote:
+> On Tue, Dec 15, 2015 at 05:34:00PM +0100, Arnd Bergmann wrote:
+> > On Tuesday 15 December 2015 17:31:22 Thierry Reding wrote:
+> > > On Mon, Dec 14, 2015 at 12:39:44PM +0100, Arnd Bergmann wrote:
+> > > > On Wednesday 18 November 2015 17:56:22 Andy Yan wrote:
+> > > > > rockchip platform have a protocol to pass the kernel reboot
+> > > > > mode to bootloader by some special registers when system reboot.
+> > > > > By this way the bootloader can take different action according
+> > > > > to the different kernel reboot mode, for example, command
+> > > > > "reboot loader" will reboot the board to rockusb mode, this is
+> > > > > a very convenient way to get the board enter download mode.
+> > > > > 
+> > > > > Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > > > 
+> > > > Adding John Stultz to Cc
+> > > > 
+> > > > I just saw this thread pop up again, and had to think of John's recent
+> > > > patch to unify this across platforms.
+> > > > 
+> > > > John, can you have a look at this driver too, and see how it fits in?
+> > > > I think this is yet another variant, using an MMIO register rather than
+> > > > RAM (as HTC / NVIDIA does) or SRAM (as Qualcomm does), but otherwise
+> > > > it conceptually fits in with what you had.
+> > > 
+> > > FWIW, Tegra typically does use an MMIO register as well. See
+> > > drivers/soc/tegra/pmc.c:tegra_pmc_restart_notify(). I don't know what
+> > > HTC does, but if it's writing somewhere in RAM it isn't using the
+> > > standard way of resetting the SoC. There's early boot ROM code which I
+> > > think evaluates the PMC_SCRATCH0 register on Tegra to determine which
+> > > mode to boot into. That's before even any firmware gets the chance of
+> > > doing anything.
 
-Thanks Arnd!
 
-Yes, that was a kind of a long outstanding issue we have had for SDIO devices.
+I just checked the android lollipop tree, and I could not find a pmc_restart_notify
+function, only this file
 
-Several generic attempts was made to have a framework/library
-available to support so called "power sequences" for exactly the same
-reasons as above.
-Others and myself failed to get those attempts accepted.
+https://android.googlesource.com/kernel/tegra/+/android-tegra-flounder-3.10-lollipop-release/drivers/htc_debug/stability/reboot_params.c
 
-Instead, I invented a mmc subsystem specific DT based solution, the
-"mmc-pwrseq".
+with the device that stores into RAM. It looks like HTC ported over
+a driver that they were already using on some Qualcomm MSM8960 device,
+as in 
 
-DT documentation:
-Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-Documentation/devicetree/bindings/mmc/mmc.txt
+https://gitlab.com/MaC/android_kernel_htc_msm8960/blob/859977fc723f59a6b707df1d70e80826ee1dccc4/arch/arm/mach-msm/htc/htc_restart_handler.c
 
-Long story short: The mmc host device may contain a phandle to a
-mmc-pwrseq, which will describe the resources needed to power on/off
-the SDIO card.
+On Android marshmallow (Flounder), that file again does not exist, and
+I don't see how it's done.
 
-The code is available at:
-drivers/mmc/core/pwrseq*
+> > HTC apparently uses a separate RAM area to pass the reboot reason,
+> > and they have a driver to store that, which is separate from the
+> > driver that they use for actually rebooting the machine.
+> 
+> I wasn't very clear, but the PMC_SCRATCH0 register is used to store the
+> reset reason. It supports the recovery mode, which I think is really an
+> Android thing, "bootloader" will typically cause the bootloader not to
+> boot anything, and "forced-recovery" will go into a recovery mode that
+> is used to bootstrap the device (usually by uploading a "miniloader"
+> that initializes RAM, downloads a bootloader for booting or flashing an
+> operating system, ...).
+> 
+> The write that resets the SoC is to a different register.
 
-We didn't implement this as platform driver, but that was mostly
-because I initially wanted things to be simple. Although, nothing
-prevents us from converting to this as a follow up, which would make
-the solution a bit less "hacky".
+So is this scratch register interpreted by some maskrom code, or by code that
+can be provided by the OEM?
 
-Kind regards
-Uffe
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
