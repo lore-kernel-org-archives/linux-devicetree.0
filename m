@@ -1,64 +1,29 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: perf: Correct Cortex-A53/A57 compatible values
-Date: Tue, 15 Dec 2015 10:42:43 +0000
-Message-ID: <20151215104242.GC9452@arm.com>
-References: <1450168400-462-1-git-send-email-geert+renesas@glider.be>
- <20151215103659.GB31299@leverpostej>
+From: "Thomas" <topmag1-9Onoh4P/yGk@public.gmane.org>
+Subject: RE:plastic magnets'supplier/manufacturer
+Date: Tue, 15 Dec 2015 18:46:30 +0800
+Message-ID: <201512151846308553589@a.qppower.com>
+Reply-To: topmag1-9Onoh4P/yGk@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain;
+	charset="GB2312"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151215103659.GB31299@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 15, 2015 at 10:37:00AM +0000, Mark Rutland wrote:
-> On Tue, Dec 15, 2015 at 09:33:20AM +0100, Geert Uytterhoeven wrote:
-> > Use commas instead of periods.
-> > 
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> 
-> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-
-Cheers, Mark.
-
-Rob -- do you want to pick this up, or shall I queue it on my perf
-branch?
-
-Will
-
-> Mark.
-> 
-> > ---
-> >  Documentation/devicetree/bindings/arm/pmu.txt | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documentation/devicetree/bindings/arm/pmu.txt
-> > index 97ba45af04fc693f..a6cd14888bed9b29 100644
-> > --- a/Documentation/devicetree/bindings/arm/pmu.txt
-> > +++ b/Documentation/devicetree/bindings/arm/pmu.txt
-> > @@ -9,8 +9,8 @@ Required properties:
-> >  - compatible : should be one of
-> >  	"apm,potenza-pmu"
-> >  	"arm,armv8-pmuv3"
-> > -	"arm.cortex-a57-pmu"
-> > -	"arm.cortex-a53-pmu"
-> > +	"arm,cortex-a57-pmu"
-> > +	"arm,cortex-a53-pmu"
-> >  	"arm,cortex-a17-pmu"
-> >  	"arm,cortex-a15-pmu"
-> >  	"arm,cortex-a12-pmu"
-> > -- 
-> > 1.9.1
-> > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+RGVhciwNCg0KSG93IGFyZSB5b3U/TG9uZyB0aW1lIG5vdCBjb250YWN0IQ0KDQpXZSBoYXZlIG1l
+dCBvbiB0aGUgZXhoaWJpdGlvbiBiZWZvcmUsYW5kIHdlIHRhbGtlZCBhYm91dCB0aGUgbWFnbmV0
+IGl0ZW1zLkkgYW0gVGhvbWFzIGZyb20gVG9wbWFnLENoaW5hLg0KDQpUaGVzZSBkYXkgdGhlIE5k
+RmVCIHByaWNlIGJlY29tZXMgbW9yZSBhbmQgbW9yZSBsb3dlcixkbyB5b3UgaGF2ZSBhbnkgbmV3
+IGl0ZW1zIHVzZSB0aGUgbWFnbmV0cyBhbmQgcGxhc3RpYz8NCg0KTWF5YmUgd2UgY2FuIGhlbHAg
+eW91IGZvciB0aGUgbWFnbmV0IGFuZCBwbGFzdGljIGl0ZW1zLGlmIHlvdSBuZWVkLHBsZWFzZSBm
+ZWVsIGZyZWUgdG8gbGV0IHVzIGtub3cuDQoNClRoYW5rcw0KDQpUaG9tYXMgLS0tIFNhbGVzIEVu
+Z2luZWVyICANCk1vYmlsZTogMDA4Ni0xNTg4OTcwNjgzNw0KQWRkcmVzczogTmV3IFNhbnlvIE1v
+dG9yIEluZHVzdHJpYWwgUGFyaywgIEhhb3lpIFZpbGxpYWdlLCBTaGFqaW5nIFRvd24sIEJhb2Fu
+IERpc3RyaWN0LCBTaGVuemhlbiwgQ2hpbmEgNTE4MTA0DQpUZWw6PyAoODYpNzU1LTI5MDE5ODcx
+DQpGYXg6ICg4NikgNzU1LTI5NzM1OTg3DQpFbWFpbDogaW5mb0B0b3BtYWd0ZWNoLmNvbSZ0b3Bt
+YWcxQDE2My5jb20=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
