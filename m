@@ -1,69 +1,41 @@
-From: Bhupesh Sharma <bhupesh.sharma@freescale.com>
-Subject: [PATCH v3 1/2] Documentation: DT: Add entry for ARM SP805-WDT
-Date: Tue, 15 Dec 2015 20:00:24 +0530
-Message-ID: <1450189825-29065-2-git-send-email-bhupesh.sharma@freescale.com>
-References: <1450189825-29065-1-git-send-email-bhupesh.sharma@freescale.com>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] arm64: dts: berlin4ct: switch to Cortex-A53 specific pmu nodes
+Date: Tue, 15 Dec 2015 22:36:12 +0800
+Message-ID: <1450190172-1161-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1450189825-29065-1-git-send-email-bhupesh.sharma@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arnd@arndb.de, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, olof@lixom.net, devicetree@vger.kernel.org, robh@kernel.org, will.deacon@arm.com
-Cc: LeoLi@freescale.com, bhupesh.sharma@freescale.com, Catalin.Marinas@arm.com, stuart.yoder@freescale.com, scottwood@freescale.com, bhupesh.linux@gmail.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a devicetree binding documentation for ARM's
-SP805 WatchDog Timer.
+Commit ac82d1277215 ("arm64: perf: add Cortex-A53 support") adds the
+cortex A53 PMU support, thus instead of using the generic armv8-pmuv3
+compatibility use the more specific Cortex A53 compatibility.
 
-Signed-off-by: Bhupesh Sharma <bhupesh.sharma@freescale.com>
+Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- .../devicetree/bindings/watchdog/sp805-wdt.txt     |   29 ++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+ arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
-new file mode 100644
-index 0000000..45b5afc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
-@@ -0,0 +1,29 @@
-+* ARM SP805 Watchdog Timer (WDT) Controller
-+
-+SP805 WDT is a ARM Primecell Peripheral and has a standard-id register that
-+can be used to identify the peripheral type, vendor, and revision.
-+This value can be used for driver matching.
-+
-+As SP805 WDT is a primecell IP, it follows the base bindings specified in
-+'arm/primecell.txt'
-+
-+Required properties:
-+- compatible : Should be "arm,sp805-wdt", "arm,primecell"
-+- reg : Base address and size of the watchdog timer registers.
-+- clocks : From common clock binding.
-+           First clock is PCLK and the second is WDOGCLK.
-+           WDOGCLK can be equal to or be a sub-multiple of the PCLK frequency.
-+- clock-names : From common clock binding. Shall be "apb_pclk" for first clock.
-+
-+Optional properties:
-+- interrupts : Should specify WDT interrupt number.
-+
-+Examples:
-+
-+		cluster1_core0_watchdog: wdt@c000000 {
-+			compatible = "arm,sp805-wdt", "arm,primecell";
-+			reg = <0x0 0xc000000 0x0 0x1000>;
-+			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
-+			clock-names = "apb_pclk", "wdog_clk";
-+		};
-+
+diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+index 099ad93..e48d424 100644
+--- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
++++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+@@ -115,7 +115,7 @@
+ 	};
+ 
+ 	pmu {
+-		compatible = "arm,armv8-pmuv3";
++		compatible = "arm,cortex-a53-pmu";
+ 		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
 -- 
-1.7.9.5
+2.6.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
