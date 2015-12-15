@@ -1,62 +1,66 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] usb: renesas_usbhs: add fallback compatibility strings
-Date: Tue, 15 Dec 2015 12:00:17 +0100
-Message-ID: <CAMuHMdXMB4nsbaT8vo_sOd8mzSABLyk3+_sPHnm2q_p7vR-qHA@mail.gmail.com>
-References: <1449799947-19866-1-git-send-email-horms+renesas@verge.net.au>
-	<1449799947-19866-3-git-send-email-horms+renesas@verge.net.au>
-	<566AC07B.6060201@cogentembedded.com>
-	<20151215064134.GA29842@verge.net.au>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT "/chosen/linux,atags" entry
+Date: Tue, 15 Dec 2015 12:04:35 +0100
+Message-ID: <1684644.M9TF75k3RB@wuerfel>
+References: <20150713131902.GH26485@atomide.com> <alpine.LFD.2.20.1511301041090.22569@knanqh.ubzr> <20151215093325.GK13531@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151215064134.GA29842-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151215093325.GK13531@pali>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Laura Abbott <lauraa@codeaurora.org>, Sebastian Reichel <sre@debian.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robherring2@gmail.com>, Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, linux-omap@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 15, 2015 at 7:41 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
->> >diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
->> >index a14c0bb561d5..c55cf77006d0 100644
->> >--- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
->> >+++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
->> >@@ -2,10 +2,18 @@ Renesas Electronics USBHS driver
->> >
->> >  Required properties:
->> >    - compatible: Must contain one of the following:
->>
->>    Really?
->
-> Would "...one or more of the following" help?
+On Tuesday 15 December 2015 10:33:25 Pali Roh=E1r wrote:
+> On Monday 30 November 2015 11:09:42 Nicolas Pitre wrote:
+> > On Mon, 30 Nov 2015, Pali Roh=E1r wrote:
+> > > On Monday 30 November 2015 07:23:53 Tony Lindgren wrote:
+> > > > * Pali Roh=E1r <pali.rohar@gmail.com> [151129 16:16]:
+> > > > > On Monday 30 November 2015 01:09:17 Nicolas Pitre wrote:
+> > > > > > On Sun, 29 Nov 2015, Russell King - ARM Linux wrote:
+> > > In arch/arm/kernel/setup.c is function setup_arch() and it calls:
+> > >=20
+> > >   mdesc =3D setup_machine_fdt(__atags_pointer);
+> > >   if (!mdesc)
+> > >       mdesc =3D setup_machine_tags(__atags_pointer, __machine_arc=
+h_type);
+> > >=20
+> > > So it looks like that on atags address is stored either atags str=
+ucture
+> > > or DT structure... so it is truth kernel uncompress code put DT b=
+lob to
+> > > same offset where is expected atags structure?
+> >=20
+> > No.  It doesn't put it anywhere. Those functions read DT/ATAGs from=
+ the=20
+> > passed address.  But you know this address won't be the one you wan=
+t for=20
+> > the legacy ATAGs.
+> >=20
+> > What you should do is to add a init_early hook to your mdesc struct=
+ure=20
+> > and retrieve your ATAGs from there directly at PAGE_OFFSET + 0x100.
+> >=20
+> > Now I suspect paging_init() marks the point where the ATAGs will be=
+=20
+> > overwritten.  To prevent this, you might have to add an additional =
+tweak=20
+> > in arm_mm_memblock_reserve() similar to the one already present for=
+=20
+> > CONFIG_SA1111. Something like:
+> >=20
+> >       memblock_reserve(PHYS_OFFSET, PAGE_SIZE);
+> >=20
+> > And later on you can return that page back to the system.
+> >=20
+>=20
+> So am I understand correctly that solution would be to hack
+> arch/arm/mm/mmu.c to not overwrite page at PHYS_OFFSET?
 
-+1
+I would think we can just copy the data from PAGE_OFFSET + 0x100
+to a some other page from your init_early hook. IIRC you can't use
+kmalloc there, but memblock_alloc() should work.
 
->> >+
->> >     - "renesas,usbhs-r8a7790" for r8a7790 (R-Car H2) compatible device
->> >     - "renesas,usbhs-r8a7791" for r8a7791 (R-Car M2-W) compatible device
->> >     - "renesas,usbhs-r8a7794" for r8a7794 (R-Car E2) compatible device
->> >     - "renesas,usbhs-r8a7795" for r8a7795 (R-Car H3) compatible device
->> >+    - "renesas,rcar-gen2-usbhs" for R-Car Gen2 compatible device
->> >+    - "renesas,rcar-gen3-usbhs" for R-Car Gen3 compatible device
->> >+
->> >+    When compatible with the generic version, nodes must list the
->> >+    SoC-specific version corresponding to the platform first followed
->> >+    by the generic version.
->> >+
->>
->>    This kinda contradicts the above claim.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
