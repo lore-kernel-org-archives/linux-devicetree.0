@@ -1,106 +1,57 @@
-From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 4/7] media: vb2-dma-contig: add helper for setting dma
- max seg size
-Date: Tue, 15 Dec 2015 09:40:47 +0100
-Message-ID: <566FD20F.9080605@samsung.com>
-References: <1449669502-24601-1-git-send-email-m.szyprowski@samsung.com>
- <3238962.HlGfVT9mcy@avalon> <566E89D6.40603@samsung.com>
- <1604824.dB2dzDMl5I@avalon>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 6/6] arm64: renesas: r8a7795: Add L2 cache-controller nodes
+Date: Tue, 15 Dec 2015 09:45:06 +0100
+Message-ID: <CAMuHMdWELqMQ+CCENsGtdBx7n_YV=D6pJpo02jeQRe67jEehyQ@mail.gmail.com>
+References: <1449512659-16688-1-git-send-email-geert+renesas@glider.be>
+	<1449512659-16688-7-git-send-email-geert+renesas@glider.be>
+	<5665D4C7.1050705@arm.com>
+	<20151207190355.GE28024@leverpostej>
+	<CAMuHMdWrXiYkcFwSkgbEfQRXvT2FsSTbqD72vtiedmeEZZKxLg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1604824.dB2dzDMl5I@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWrXiYkcFwSkgbEfQRXvT2FsSTbqD72vtiedmeEZZKxLg@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Lina Iyer <lina.iyer@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hi Mark,
 
-On 2015-12-14 16:50, Laurent Pinchart wrote:
-> Hi Marek,
+On Mon, Dec 7, 2015 at 9:18 PM, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Mon, Dec 7, 2015 at 8:03 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+>> On Mon, Dec 07, 2015 at 06:49:43PM +0000, Sudeep Holla wrote:
+>>> On 07/12/15 18:24, Geert Uytterhoeven wrote:
+>>> >+    L2_CA57: cache-controller@0 {
+>>> >+            compatible = "cache";
+>>> >+            arm,data-latency = <4 4 1>;
+>>> >+            arm,tag-latency = <3 3 3>;
+>>>
+>>> Interesting, only PL2xx/3xx cache controller driver reads this from the
+>>> DT and configures the controller. The integrated L2 found in
+>>> A15/A7/A57/A53 needs doesn't make use of these values from the DT.
+>>
+>> These properties seem to be from l2cc.txt, which really only corresponds
+>> to PL210/PL220/PL310 (and variants) and isn't as generic as it sounds.
+>>
+>> I don't see that these are necessary at all.
 >
-> On Monday 14 December 2015 10:20:22 Marek Szyprowski wrote:
->> On 2015-12-13 20:57, Laurent Pinchart wrote:
->>> On Wednesday 09 December 2015 14:58:19 Marek Szyprowski wrote:
->>>> Add a helper function for device drivers to set DMA's max_seg_size.
->>>> Setting it to largest possible value lets DMA-mapping API always create
->>>> contiguous mappings in DMA address space. This is essential for all
->>>> devices, which use dma-contig videobuf2 memory allocator and shared
->>>> buffers.
->>>>
->>>> Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>> ---
->>>>
->>>>    drivers/media/v4l2-core/videobuf2-dma-contig.c | 15 +++++++++++++++
->>>>    include/media/videobuf2-dma-contig.h           |  1 +
->>>>    2 files changed, 16 insertions(+)
->>>>
->>>> diff --git a/drivers/media/v4l2-core/videobuf2-dma-contig.c
->>>> b/drivers/media/v4l2-core/videobuf2-dma-contig.c index c331272..628518d
->>>> 100644
->>>> --- a/drivers/media/v4l2-core/videobuf2-dma-contig.c
->>>> +++ b/drivers/media/v4l2-core/videobuf2-dma-contig.c
->>>> @@ -742,6 +742,21 @@ void vb2_dma_contig_cleanup_ctx(void *alloc_ctx)
->>>>
->>>>    }
->>>>    EXPORT_SYMBOL_GPL(vb2_dma_contig_cleanup_ctx);
->>>>
->>>> +int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int
->>>> size)
->>>> +{
->>>> +	if (!dev->dma_parms) {
->>> When can this function be called with dev->dma_parms not NULL ?
->> When one loads a module with multimedia driver (which calls this
->> function), then unloads and loads it again. It is rather safe to have this
->> check.
-> Don't you have a much bigger problem in that case ? When you unload the module
-> the device will be unbound from the driver, causing the memory allocated by
-> devm_kzalloc to be freed. dev->dma_parms will then point to freed memory,
-> which will get reused by all subsequent calls to dma_get_max_seg_size(),
-> dma_get_max_seg_size() & co (including the ones in this function).
+> The datasheet does mention the data/tag RAM latencies/setup values, so
+> I put them in DT using the properties I could fine.
 
-You are right. I've thought that devm resources are freed on device 
-release not
-driver remove. Then probably the safest fix is to change devm_kzalloc 
-back to
-kzalloc.
+Furthermore these values are different for different SoCs in the same family
+(e.g. r8a7790 vs. other R-Car Gen2 members), even though they seem to
+have the same Cortex-A15 cores.
 
->>>> +		dev->dma_parms = devm_kzalloc(dev, sizeof(dev->dma_parms),
->>>> +					      GFP_KERNEL);
->>>> +		if (!dev->dma_parms)
->>>> +			return -ENOMEM;
->>>> +	}
->>>> +	if (dma_get_max_seg_size(dev) < size)
->>>> +		return dma_set_max_seg_size(dev, size);
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(vb2_dma_contig_set_max_seg_size);
->>>> +
->>>>    MODULE_DESCRIPTION("DMA-contig memory handling routines for
->>>>    videobuf2");
->>>>    MODULE_AUTHOR("Pawel Osciak <pawel-FA/gS7QP4orQT0dZR+AlfA@public.gmane.org>");
->>>>    MODULE_LICENSE("GPL");
->>>> diff --git a/include/media/videobuf2-dma-contig.h
->>>> b/include/media/videobuf2-dma-contig.h index c33dfa6..0e6ba64 100644
->>>> --- a/include/media/videobuf2-dma-contig.h
->>>> +++ b/include/media/videobuf2-dma-contig.h
->>>> @@ -26,6 +26,7 @@ vb2_dma_contig_plane_dma_addr(struct vb2_buffer *vb,
->>>> unsigned int plane_no)
->>>>   void *vb2_dma_contig_init_ctx(struct device *dev);
->>>>   void vb2_dma_contig_cleanup_ctx(void *alloc_ctx);
->>>> +int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int
->>>> size);
->>>>   extern const struct vb2_mem_ops vb2_dma_contig_memops;
+So to me these look like properties we want to document in the DTS...
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
