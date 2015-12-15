@@ -1,77 +1,43 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: at91/dt: sama5d2: add watchdog node
-Date: Tue, 15 Dec 2015 11:14:18 +0100
-Message-ID: <566FE7FA.6040300@atmel.com>
-References: <1446709170-24500-1-git-send-email-wenyou.yang@atmel.com>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 12/12] ARM: dts: imx6: add Vivante GPU nodes
+Date: Tue, 15 Dec 2015 11:18:25 +0100
+Message-ID: <1450174705.3163.62.camel@pengutronix.de>
+References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
+	 <1449237604-19064-13-git-send-email-l.stach@pengutronix.de>
+	 <20151211070258.GA11252@tiger> <1450086745.3163.3.camel@pengutronix.de>
+	 <20151215082511.GA388@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1446709170-24500-1-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20151215082511.GA388@tiger>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Le 05/11/2015 08:39, Wenyou Yang a =E9crit :
-> Add watchdog node to support SAMA5D4 watchdog.
->=20
-> Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Am Dienstag, den 15.12.2015, 16:25 +0800 schrieb Shawn Guo:
+> On Mon, Dec 14, 2015 at 10:52:25AM +0100, Lucas Stach wrote:
+> > Are you okay with merging the DT changes through the DRM tree, or do you
+> > want to pick them separate?
+> 
+> To accelerate the merge process, I'm okay with merging the DT changes
+> through DRM tree, as long as DRM maintainers don't mind.
+> 
+As the Dove maintainers prefer to take the DT changes through their
+tree, I think we should do the same thing for i.MX.
 
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+I will send out the fixed patch together with the pull for the DRM and
+DT bindings bits, so you can pick it up for 4.5.
 
-And stacked on top of at91-4.5-dt.
+Regards,
+Lucas
 
-Thanks!
+-- 
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
 
-> ---
->=20
->  arch/arm/boot/dts/at91-sama5d2_xplained.dts |    4 ++++
->  arch/arm/boot/dts/sama5d2.dtsi              |    7 +++++++
->  2 files changed, 11 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/b=
-oot/dts/at91-sama5d2_xplained.dts
-> index e07c2b2..de3ef02 100644
-> --- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> +++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> @@ -181,6 +181,10 @@
->  				};
->  			};
-> =20
-> +			watchdog@f8048040 {
-> +				status =3D "okay";
-> +			};
-> +
->  			uart3: serial@fc008000 {
->  				pinctrl-names =3D "default";
->  				pinctrl-0 =3D <&pinctrl_uart3_default>;
-> diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5=
-d2.dtsi
-> index c1f0cba..c29ff70 100644
-> --- a/arch/arm/boot/dts/sama5d2.dtsi
-> +++ b/arch/arm/boot/dts/sama5d2.dtsi
-> @@ -929,6 +929,13 @@
->  				clocks =3D <&h32ck>;
->  			};
-> =20
-> +			watchdog@f8048040 {
-> +				compatible =3D "atmel,sama5d4-wdt";
-> +				reg =3D <0xf8048040 0x10>;
-> +				interrupts =3D <4 IRQ_TYPE_LEVEL_HIGH 7>;
-> +				status =3D "disabled";
-> +			};
-> +
->  			sckc@f8048050 {
->  				compatible =3D "atmel,at91sam9x5-sckc";
->  				reg =3D <0xf8048050 0x4>;
->=20
-
-
---=20
-Nicolas Ferre
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
