@@ -1,36 +1,51 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH 2/3] arm64: dts: r8a7795: Add Cortex-A57 CPU cores
-Date: Tue, 15 Dec 2015 17:38:24 +0900
-Message-ID: <CANqRtoSeibffbaoVGV7Y_gyuXxCOu+1PmRf3imQ8OKhV6VoAMQ@mail.gmail.com>
-References: <1449236333-4410-1-git-send-email-dirk.behme@gmail.com>
-	<1449236333-4410-2-git-send-email-dirk.behme@gmail.com>
-	<20151211230751.GD6496@verge.net.au>
+From: Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] arm64: perf: Correct Cortex-A53/A57 compatible values
+Date: Tue, 15 Dec 2015 09:39:17 +0100
+Message-ID: <566FD1B5.2070602@gmail.com>
+References: <1450168400-462-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20151211230751.GD6496@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Dirk Behme <dirk.behme@gmail.com>, SH-Linux <linux-sh@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Gaku Inami <gaku.inami.xw@bp.renesas.com>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1450168400-462-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
-
-On Sat, Dec 12, 2015 at 8:07 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Fri, Dec 04, 2015 at 02:38:52PM +0100, Dirk Behme wrote:
->> From: Gaku Inami <gaku.inami.xw@bp.renesas.com>
->>
->> Add Cortex-A57 CPU cores to r8a7795 SoC for a total of 4 x Cortex-A57.
->>
->> Signed-off-by: Gaku Inami <gaku.inami.xw@bp.renesas.com>
->> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
->> Sigend-off-by: Dirk Behme <dirk.behme@gmail.com>
+On 15.12.2015 09:33, Geert Uytterhoeven wrote:
+> Use commas instead of periods.
 >
-> Thanks, I have queued this up for v4.5.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-Thanks. May I ask if CPU hotplug is known to work? Also, which version
-of the boot loader stack is required?
+Acked-by: Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Best,
+Thanks!
 
-/ magnus
+Dirk
+
+> ---
+>   Documentation/devicetree/bindings/arm/pmu.txt | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documentation/devicetree/bindings/arm/pmu.txt
+> index 97ba45af04fc693f..a6cd14888bed9b29 100644
+> --- a/Documentation/devicetree/bindings/arm/pmu.txt
+> +++ b/Documentation/devicetree/bindings/arm/pmu.txt
+> @@ -9,8 +9,8 @@ Required properties:
+>   - compatible : should be one of
+>   	"apm,potenza-pmu"
+>   	"arm,armv8-pmuv3"
+> -	"arm.cortex-a57-pmu"
+> -	"arm.cortex-a53-pmu"
+> +	"arm,cortex-a57-pmu"
+> +	"arm,cortex-a53-pmu"
+>   	"arm,cortex-a17-pmu"
+>   	"arm,cortex-a15-pmu"
+>   	"arm,cortex-a12-pmu"
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
