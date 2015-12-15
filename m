@@ -1,162 +1,62 @@
-From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v6 4/5] iommu/mediatek: Add mt8173 IOMMU driver
-Date: Tue, 15 Dec 2015 11:28:52 +0800
-Message-ID: <1450150132.22854.57.camel@mhfsdcap03>
-References: <1449568153-15643-1-git-send-email-yong.wu@mediatek.com>
-	<1449568153-15643-5-git-send-email-yong.wu@mediatek.com>
-	<20151214141656.GG18805@8bytes.org>
+From: Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH v6 1/2] Documentation: bridge: Add documentation for ps8640 DT
+ properties
+Date: Tue, 15 Dec 2015 11:30:09 +0800
+Message-ID: <1450150210-21951-1-git-send-email-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20151214141656.GG18805-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, Andy Yan <andy.yan@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-12-14 at 15:16 +0100, Joerg Roedel wrote:
-> On Tue, Dec 08, 2015 at 05:49:12PM +0800, Yong Wu wrote:
-> > +static int mtk_iommu_attach_device(struct iommu_domain *domain,
-> > +				   struct device *dev)
-> > +{
-> > +	struct mtk_iommu_domain *dom = to_mtk_domain(domain);
-> > +	struct mtk_iommu_client_priv *priv = dev->archdata.iommu;
-> > +	struct mtk_iommu_data *data;
-> > +	int ret;
-> > +
-> > +	if (!priv)
-> > +		return -ENODEV;
-> > +
-> > +	data = dev_get_drvdata(priv->m4udev);
-> > +	if (!data) {
-> > +		/*
-> > +		 * The DMA core will run earlier than this probe, and it will
-> > +		 * create a default iommu domain for each a iommu device.
-> > +		 * But here there is only one domain called the m4u domain
-> > +		 * which all the multimedia HW share.
-> > +		 * The default domain isn't needed here.
-> > +		 */
-> 
-> The iommu core creates one domain per iommu-group. In your case this
-> means one default domain per iommu in the system.
-
-Yes. The iommu core will create one domain per iommu-group.
-see the next "if" here.
-
-But the domain here is created by the current DMA64. It's from this
-function do_iommu_attach which will be called too early and will help
-create a default domain for each a iommu device.(my codebase is
-v4.4-rc1).
-
-
-//=====the next "if"===========
-} else if (!data->m4u_dom) {
-	/*
-	 * While a device is added into a iommu group, the iommu core
-	 * will create a default domain for each a iommu group.
-	 * This default domain is reserved as the m4u domain and is
-	 * initiated here.
-	 */
-	data->m4u_dom = dom;
-	if (domain->type == IOMMU_DOMAIN_DMA) {
-		ret = iommu_dma_init_domain(domain, 0,
-					    DMA_BIT_MASK(32));
-		if (ret)
-			goto err_uninit_dom;
-	}
-
-	ret = mtk_iommu_domain_finalise(data);
-	if (ret)
-		goto err_uninit_dom;
-} 
-//======================
-
-> 
-> > +		iommu_domain_free(domain);
-> 
-> This function is not supposed to free the domain passed to it.
-
-As above this domain is created in the do_iommu_attach which will help
-create a default domain for each a iommu device.
-We don't need this default domain!
-
-If we don't free it here, there will be a memory leak.
-
->From Robin's comment, He will improve the sequence of the
-__iommu_setup_dma_ops in the future.
-
-/*
- * TODO: Right now __iommu_setup_dma_ops() gets called too early to do
- * everything it needs to - the device is only partially created and the
- * IOMMU driver hasn't seen it yet, so it can't have a group. Thus we
- * need this delayed attachment dance. Once IOMMU probe ordering is
-sorted
- * to move the arch_setup_dma_ops() call later, all the notifier bits
-below
- * become unnecessary, and will go away.
- */
-
-/*
- * Best case: The device is either part of a group which was
- * already attached to a domain in a previous call, or it's
- * been put in a default DMA domain by the IOMMU core.
- */
-
-   But there is no this patch currently, so I add iommu_domain_free
-here.
- 
-   "free the domain" here looks really not good. Then I delete the
-iommu_domain_free here(allow this memory leak right now), is it ok?
-(It will also works after Robin's change in the future.)
-
-> 
-> > +static int mtk_iommu_add_device(struct device *dev)
-> > +{
-> > +	struct iommu_group *group;
-> > +
-> > +	if (!dev->archdata.iommu) /* Not a iommu client device */
-> > +		return -ENODEV;
-> > +
-> > +	group = iommu_group_get_for_dev(dev);
-> > +	if (IS_ERR(group))
-> > +		return PTR_ERR(group);
-> > +
-> > +	iommu_group_put(group);
-> > +	return 0;
-> > +}
-> 
-> [...]
-> 
-> > +static struct iommu_group *mtk_iommu_device_group(struct device *dev)
-> > +{
-> > +	struct mtk_iommu_data *data;
-> > +	struct mtk_iommu_client_priv *priv;
-> > +
-> > +	priv = dev->archdata.iommu;
-> > +	if (!priv)
-> > +		return ERR_PTR(-ENODEV);
-> > +
-> > +	/* All the client devices are in the same m4u iommu-group */
-> > +	data = dev_get_drvdata(priv->m4udev);
-> > +	if (!data->m4u_group) {
-> > +		data->m4u_group = iommu_group_alloc();
-> > +		if (IS_ERR(data->m4u_group))
-> > +			dev_err(dev, "Failed to allocate M4U IOMMU group\n");
-> > +	}
-> > +	return data->m4u_group;
-> > +}
-> 
-> This looks much better than before, thanks.
-
-Thanks.
-
-> 
+QWRkIGRvY3VtZW50YXRpb24gZm9yIERUIHByb3BlcnRpZXMgc3VwcG9ydGVkIGJ5CnBzODY0MCBE
+U0ktZURQIGNvbnZlcnRlci4KClNpZ25lZC1vZmYtYnk6IEppdGFvIFNoaSA8aml0YW8uc2hpQG1l
+ZGlhdGVrLmNvbT4KQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+ClJldmll
+d2VkLWJ5OiBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRlPgotLS0KQ2hhbmdl
+cyBzaW5jZSB2NQotbm8gY2hhbmdlcwotLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvYnJpZGdlL3BzODY0MC50eHQgIHwgICA0MyArKysrKysrKysrKysrKysrKysrKwogMSBmaWxl
+IGNoYW5nZWQsIDQzIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcHM4NjQwLnR4dAoKZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9w
+czg2NDAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJp
+ZGdlL3BzODY0MC50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uYTNlMDk3
+MQotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L2JyaWRnZS9wczg2NDAudHh0CkBAIC0wLDAgKzEsNDMgQEAKK3BzODY0MC1icmlkZ2Ug
+YmluZGluZ3MKKworUmVxdWlyZWQgcHJvcGVydGllczoKKwktIGNvbXBhdGlibGU6ICJwYXJhZGUs
+cHM4NjQwIgorCS0gcmVnOiBmaXJzdCBwYWdlIGFkZHJlc3Mgb2YgdGhlIGJyaWRnZS4KKwktIHNs
+ZWVwLWdwaW9zOiBPRiBkZXZpY2UtdHJlZSBncGlvIHNwZWNpZmljYXRpb24gZm9yIFBEXyBwaW4u
+CisJLSByZXNldC1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZpY2F0aW9uIGZvciBy
+ZXNldCBwaW4uCisJLSBtb2RlLXNlbC1ncGlvczogT0YgZGV2aWNlLXRyZWUgZ3BpbyBzcGVjaWZp
+Y2F0aW9uIGZvciBtb2RlLXNlbCBwaW4uCisJLSB2ZGQxMi1zdXBwbHk6IE9GIGRldmljZS10cmVl
+IHJlZ3VsYXRvciBzcGVjaWZpY2F0aW9uIGZvciAxLjJWIHBvd2VyLgorCS0gdmRkMzMtc3VwcGx5
+OiBPRiBkZXZpY2UtdHJlZSByZWd1bGF0b3Igc3BlY2lmaWNhdGlvbiBmb3IgMy4zViBwb3dlci4K
+KwktIHBvcnRzOiBUaGUgZGV2aWNlIG5vZGUgY2FuIGNvbnRhaW4gdmlkZW8gaW50ZXJmYWNlIHBv
+cnQgbm9kZXMgcGVyCisJCSB0aGUgdmlkZW8taW50ZXJmYWNlcyBiaW5kWzFdLiBGb3IgcG9ydEAw
+LHNldCB0aGUgcmVnID0gPDA+IGFzCisJCSBwczg2NDAgZHNpIGluIGFuZCBwb3J0QDEsc2V0IHRo
+ZSByZWcgPSA8MT4gYXMgcHM4NjQwIGVEUCBvdXQuCisKK1sxXTogRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0CisKK0V4YW1wbGU6CisJ
+ZWRwLWJyaWRnZUAxOCB7CisJCWNvbXBhdGlibGUgPSAicGFyYWRlLHBzODY0MCI7CisJCXJlZyA9
+IDwweDE4PjsKKwkJc2xlZXAtZ3Bpb3MgPSA8JnBpbyAxMTYgR1BJT19BQ1RJVkVfSElHSD47CisJ
+CXJlc2V0LWdwaW9zID0gPCZwaW8gMTE1IEdQSU9fQUNUSVZFX0hJR0g+OworCQltb2RlLXNlbC1n
+cGlvcyA9IDwmcGlvIDkyIEdQSU9fQUNUSVZFX0hJR0g+OworCQl2ZGQxMi1zdXBwbHkgPSA8JnBz
+ODY0MF9maXhlZF8xdjI+OworCQl2ZGQzMy1zdXBwbHkgPSA8Jm10NjM5N192Z3AyX3JlZz47CisK
+KwkJcG9ydHMgeworCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCQkjc2l6ZS1jZWxscyA9IDww
+PjsKKwkJCXBvcnRAMCB7CisJCQkJcmVnID0gPDA+OworCQkJCXBzODY0MF9pbjogZW5kcG9pbnQg
+eworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaTBfb3V0PjsKKwkJCQl9OworCQkJfTsKKwkJ
+CXBvcnRAMSB7CisJCQkJcmVnID0gPDE+OworCQkJCXBzODY0MF9vdXQ6IGVuZHBvaW50IHsKKwkJ
+CQkJcmVtb3RlLWVuZHBvaW50ID0gPCZwYW5lbF9pbj47CisJCQkJfTsKKwkJCX07CisJCX07CisJ
+fTsKLS0gCjEuNy45LjUKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
