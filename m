@@ -1,51 +1,35 @@
-From: Dirk Behme <dirk.behme@gmail.com>
-Subject: Re: [PATCH 2/3] arm64: dts: r8a7795: Add Cortex-A57 CPU cores
-Date: Tue, 15 Dec 2015 09:48:46 +0100
-Message-ID: <566FD3EE.8040908@gmail.com>
-References: <1449236333-4410-1-git-send-email-dirk.behme@gmail.com>
- <1449236333-4410-2-git-send-email-dirk.behme@gmail.com>
- <20151211230751.GD6496@verge.net.au>
- <CANqRtoSeibffbaoVGV7Y_gyuXxCOu+1PmRf3imQ8OKhV6VoAMQ@mail.gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] ARM: dts: imx: Fix the assigned-clock mismatch issue on
+ imx6q/dl
+Date: Tue, 15 Dec 2015 16:52:37 +0800
+Message-ID: <20151215085237.GB388@tiger>
+References: <1449648955-30835-1-git-send-email-b51503@freescale.com>
+ <20151214030750.GF25756@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CANqRtoSeibffbaoVGV7Y_gyuXxCOu+1PmRf3imQ8OKhV6VoAMQ@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>
-Cc: SH-Linux <linux-sh@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Gaku Inami <gaku.inami.xw@bp.renesas.com>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151214030750.GF25756@tiger>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bai Ping <b51503@freescale.com>, Fabio Estevam <fabio.estevam@freescale.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 15.12.2015 09:38, Magnus Damm wrote:
-> Hi Simon,
->
-> On Sat, Dec 12, 2015 at 8:07 AM, Simon Horman <horms@verge.net.au> wrote:
->> On Fri, Dec 04, 2015 at 02:38:52PM +0100, Dirk Behme wrote:
->>> From: Gaku Inami <gaku.inami.xw@bp.renesas.com>
->>>
->>> Add Cortex-A57 CPU cores to r8a7795 SoC for a total of 4 x Cortex-A57.
->>>
->>> Signed-off-by: Gaku Inami <gaku.inami.xw@bp.renesas.com>
->>> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
->>> Sigend-off-by: Dirk Behme <dirk.behme@gmail.com>
->>
->> Thanks, I have queued this up for v4.5.
->
-> Thanks. May I ask if CPU hotplug is known to work?
+On Mon, Dec 14, 2015 at 11:07:50AM +0800, Shawn Guo wrote:
+> On Wed, Dec 09, 2015 at 04:15:55PM +0800, Bai Ping wrote:
+> > The 'assigned-clock-parents' and 'assigned-clock-rates' list
+> > should corresponding to the 'assigned-clocks' property clock list.
+> > 
+> > Signed-off-by: Bai Ping <b51503@freescale.com>
+> 
+> Applied, thanks.
 
+As this essentially a fix to ed339363de1b ("ARM: dts: imx6qdl-sabreauto:
+Allow HDMI and LVDS to work simultaneously"), I'm going to send it as a
+fix with copying stable.
 
-I didn't test that.
+@Fabio,
 
+Do you agree with the fix?
 
-> Also, which version
-> of the boot loader stack is required?
-
-
-I've the U-Boot / boot loader stack from BSP v3.0.2 on the board. I 
-haven't tested v3.0.3, yet.
-
-
-Best regards
-
-Dirk
-
+Shawn
