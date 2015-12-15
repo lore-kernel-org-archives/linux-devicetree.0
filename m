@@ -1,166 +1,147 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] usb: gadget: renesas_usb3: add support for Renesas USB3.0 peripheral controller
-Date: Tue, 15 Dec 2015 10:30:08 +0100
-Message-ID: <7989573.HuGUrIYJy9@wuerfel>
-References: <1450162472-6664-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT
+ "/chosen/linux,atags" entry
+Date: Tue, 15 Dec 2015 10:33:25 +0100
+Message-ID: <20151215093325.GK13531@pali>
+References: <20150713131902.GH26485@atomide.com>
+ <20151129180939.GE30871@n2100.arm.linux.org.uk>
+ <alpine.LFD.2.20.1511291902100.22569@knanqh.ubzr>
+ <201511300115.12478@pali>
+ <20151130152352.GY2517@atomide.com>
+ <20151130153933.GD29576@pali>
+ <alpine.LFD.2.20.1511301041090.22569@knanqh.ubzr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1450162472-6664-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: gregkh@linuxfoundation.org, balbi@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.20.1511301041090.22569@knanqh.ubzr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Laura Abbott <lauraa@codeaurora.org>, Sebastian Reichel <sre@debian.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robherring2@gmail.com>, Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, linux-omap@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 15 December 2015 15:54:32 Yoshihiro Shimoda wrote:
-> R-Car H3 has USB3.0 peripheral controllers. This controller's has the
-> following features:
->  - Supports super, high and full speed
->  - Contains 30 pipes for bulk or interrupt transfer
->  - Contains dedicated DMA controller
-> 
-> This driver doesn't support the dedicated DMAC for now.
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  This patch is based on the latest Felipe's usb.git / testing/next branch.
->  (commit id = e9284de9fae69f1d5e57a4817bfc36dc5f3adf71)
+On Monday 30 November 2015 11:09:42 Nicolas Pitre wrote:
+> On Mon, 30 Nov 2015, Pali Roh=C3=A1r wrote:
+>=20
+> > On Monday 30 November 2015 07:23:53 Tony Lindgren wrote:
+> > > * Pali Roh=C3=A1r <pali.rohar@gmail.com> [151129 16:16]:
+> > > > On Monday 30 November 2015 01:09:17 Nicolas Pitre wrote:
+> > > > > On Sun, 29 Nov 2015, Russell King - ARM Linux wrote:
+> > > > > > On Sat, Nov 28, 2015 at 12:34:23PM -0500, Nicolas Pitre wro=
+te:
+> > > > > > > Good. And Arnd likes the idea too. So we might be converg=
+ing at
+> > > > > > > last which is a good thing.
+> > > > > >=20
+> > > > > > I disagree with the idea that there is convergence.  There =
+might be
+> > > > > > convergence towards an idea, but... Here's a mail extract, =
+from
+> > > > > > July 7th, from earlier in this very thread:
+> > > > > >=20
+> > > > > > Pali:
+> > > > > > > Me:
+> > > > > > > > Are the ATAGs at a fixed address on the N900?
+> > > > > > >=20
+> > > > > > > Yes, in board-rx51.c is:
+> > > > > > >=20
+> > > > > > > .atag_offset    =3D 0x100
+> > > > > > >=20
+> > > > > > > and Nokia Bootloader (proprietary) store them to that add=
+ress.
+> > > > > > >=20
+> > > > > > > > Can that be handled in
+> > > > > > > > some kind of legacy file for the N900 which calls save_=
+atags()
+> > > > > > > > on it, so we don't end up introducing yet more stuff th=
+at we
+> > > > > > > > have to maintain into the distant future?  If not, what=
+ about
+> > > > > > > > copying a known working atag structure into a legacy fi=
+le for
+> > > > > > > > the N900?
+> > > > > > >=20
+> > > > > > > I already asked question if it is possible to read ATAGs =
+from DT
+> > > > > > > booted kernel. And somebody (do not remember who) wrote t=
+o ML,
+> > > > > > > that it is not possible and it can be done in that uncomp=
+ress
+> > > > > > > code.
+> > > > >=20
+> > > > > Who is that somebody? If ever it happened to be me then objec=
+tion is
+> > > > > withdrawn. Otherwise that somebody should come forth and spea=
+k up
+> > > > > again.
+> > > > >=20
+> > > >=20
+> > > > ... do not remember ... this discussion were in more email thre=
+ads and=20
+> > > > takes more then one year... sorry but my memory is not excellen=
+t
+> > >=20
+> > > Yes this certainly seems like the best solution. I think we got i=
+nto
+> > > the atags-to-dt track as some of the atags are already being tran=
+slated.
+> > >=20
+> > > In this case there's no need to translate them AFAIK. You can jus=
+t
+> > > parse them and have them available for the user space. So as long=
+ as
+> > > nothing trashes the atags at the atag_offset, you should be able =
+to
+> > > call a function to parse them in the n900 specific init_machine.
+> > >=20
+> > > Regards,
+> > >=20
+> > > Tony
+> >=20
+> > In arch/arm/kernel/setup.c is function setup_arch() and it calls:
+> >=20
+> >   mdesc =3D setup_machine_fdt(__atags_pointer);
+> >   if (!mdesc)
+> >       mdesc =3D setup_machine_tags(__atags_pointer, __machine_arch_=
+type);
+> >=20
+> > So it looks like that on atags address is stored either atags struc=
+ture
+> > or DT structure... so it is truth kernel uncompress code put DT blo=
+b to
+> > same offset where is expected atags structure?
+>=20
+> No.  It doesn't put it anywhere. Those functions read DT/ATAGs from t=
+he=20
+> passed address.  But you know this address won't be the one you want =
+for=20
+> the legacy ATAGs.
+>=20
+> What you should do is to add a init_early hook to your mdesc structur=
+e=20
+> and retrieve your ATAGs from there directly at PAGE_OFFSET + 0x100.
+>=20
+> Now I suspect paging_init() marks the point where the ATAGs will be=20
+> overwritten.  To prevent this, you might have to add an additional tw=
+eak=20
+> in arm_mm_memblock_reserve() similar to the one already present for=20
+> CONFIG_SA1111. Something like:
+>=20
+> 	memblock_reserve(PHYS_OFFSET, PAGE_SIZE);
+>=20
+> And later on you can return that page back to the system.
+>=20
+>=20
+> Nicolas
 
-Looks good overall, I've found a few small details:
+So am I understand correctly that solution would be to hack
+arch/arm/mm/mmu.c to not overwrite page at PHYS_OFFSET?
 
->  .../devicetree/bindings/usb/renesas_usb3.txt       |   23 +
->  drivers/usb/gadget/udc/Kconfig                     |   11 +
->  drivers/usb/gadget/udc/Makefile                    |    1 +
->  drivers/usb/gadget/udc/renesas_usb3.c              | 1720 ++++++++++++++++++++
->  drivers/usb/gadget/udc/renesas_usb3.h              |  284 ++++
+And should be this just when when we detect Nokia N900 in DT? Or for al=
+l
+OMAP2 boards? Or all ARM boards?
 
-The header file is only used by one .c file, so just merge it all into that
-file.
-
-> +Required properties:
-> +  - compatible: Must contain one of the following:
-> +	- "renesas,usb3-peri-r8a7795"
-> +  - reg: Base address and length of the register for the USB3.0 Peripheral
-> +  - interrupts: Interrupt specifier for the USB3.0 Peripheral
-> +  - clocks: A list of phandle + clock specifier pairs
-
-The clock specifier contains the phandle, please rephrase the last line
-
-> diff --git a/drivers/usb/gadget/udc/renesas_usb3.c b/drivers/usb/gadget/udc/renesas_usb3.c
-> new file mode 100644
-> index 0000000..f302c89
-> --- /dev/null
-> +++ b/drivers/usb/gadget/udc/renesas_usb3.c
-> @@ -0,0 +1,1720 @@
-> +/*
-> + * Renesas USB3.0 Peripheral driver (USB gadget)
-> + *
-> + * Copyright (C) 2015  Renesas Electronics Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; version 2 of the License.
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/err.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/slab.h>
-> +#include <linux/usb/ch9.h>
-> +#include <linux/usb/gadget.h>
-
-As the 0-say bot found, this needs #include <linux/sizes.h>
-
-> +static int renesas_usb3_ep_queue(struct usb_ep *_ep, struct usb_request *_req,
-> +				 gfp_t gfp_flags);
-> +static void usb3_start_pipen(struct renesas_usb3_ep *usb3_ep,
-> +			     struct renesas_usb3_request *usb3_req);
-
-Can you try to reorder the functions so you don't need forward declarations?
-
-> +static void usb3_write(struct renesas_usb3 *usb3, u32 data, u32 offs)
-> +{
-> +	iowrite32(data, usb3->reg + offs);
-> +}
-> +
-> +static u32 usb3_read(struct renesas_usb3 *usb3, u32 offs)
-> +{
-> +	return ioread32(usb3->reg + offs);
-> +}
-
-I think using readl() is more common than ioread32() if the driver cannot
-use IORESOURCE_IO but only IORESOURCE_MEM.
-
-On ARM, the two are the same, but on some architectures ioread32 is more
-expensive, so using the former is preferred.
-
-> +	for (i = 0; i < USB3_WAIT_NS; i++) {
-> +		if ((usb3_read(usb3, reg) & mask) == expected)
-> +			return 0;
-> +		ndelay(1);
-> +	}
-
-ndelay(1) is unusual, maybe use cpu_relax() instead, or document why
-you call ndelay()?
-
-> +static void usb3_init_phy(struct renesas_usb3 *usb3)
-> +{
-> +}
-
-If the function is empty, don't add or call it, it's easy to add if you
-need it later.
-
-> +static struct platform_driver renesas_usb3_driver = {
-> +	.remove =	__exit_p(renesas_usb3_remove),
-> +	.driver		= {
-> +		.name =	(char *)udc_name,
-> +		.of_match_table = of_match_ptr(usb3_of_match),
-> +	},
-> +};
-> +module_platform_driver_probe(renesas_usb3_driver, renesas_usb3_probe);
-
-module_platform_driver_probe() won't work if you get into deferred probing,
-I'd suggest using module_platform_driver() and not marking the remove
-function as __exit
-
-> +struct renesas_usb3;
-> +struct renesas_usb3_request {
-> +	struct usb_request	req;
-> +	struct list_head	queue;
-> +};
-
-There is already a list_head in struct usb_request. Could you use that?
-(I don't know, just asking because this looks odd)
-
-> +#define USB3_EP_NAME_SIZE	8
-> +struct renesas_usb3_ep {
-> +	struct usb_ep ep;
-> +	struct renesas_usb3 *usb3;
-> +	int num;
-> +	char ep_name[USB3_EP_NAME_SIZE];
-> +	struct list_head queue;
-> +	u32 rammap_val;
-> +	bool dir_in;
-> +	bool halt;
-> +	bool wedge;
-> +	bool started;
-> +};
-> +
-> +struct renesas_usb3_priv {
-> +	int ramsize_per_ramif;		/* unit = bytes */
-> +	int num_ramif;
-> +	int ramsize_per_pipe;		/* unit = bytes */
-> +	unsigned workaround_for_vbus:1;	/* if 1, don't check vbus signal */
-> +};
-
-You use 'bool' in one structure, and bit fields in the other.
-Maybe pick one of the two styles consistently.
-
-	Arnd
-
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
