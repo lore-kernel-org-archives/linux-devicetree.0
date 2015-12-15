@@ -1,56 +1,52 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC PATCH 2/8] Documentation: arm: define DT cpu capacity
- bindings
-Date: Tue, 15 Dec 2015 16:41:45 +0000
-Message-ID: <20151215164145.GA8012@leverpostej>
-References: <20151214123616.GC3308@e106622-lin>
- <20151214165928.GV5727@sirena.org.uk>
- <20151215122238.GG16007@e106622-lin>
- <20151215133951.GY5727@sirena.org.uk>
- <20151215140135.GI31299@leverpostej>
- <20151215150813.GZ5727@sirena.org.uk>
- <20151215153218.GA7228@leverpostej>
- <20151215154651.GK16007@e106622-lin>
- <20151215155737.GB7619@leverpostej>
- <20151215162317.GB24286@e104818-lin.cambridge.arm.com>
+From: Sergei Ianovich <ynvich@gmail.com>
+Subject: Re: [PATCH v5 2/2] arm: pxa27x: support for ICP DAS LP-8x4x w/ DT
+Date: Tue, 15 Dec 2015 19:42:07 +0300
+Message-ID: <1450197727.21989.9.camel@gmail.com>
+References: <1449700088-28076-3-git-send-email-ynvich@gmail.com>
+	 <1450196875-6739-1-git-send-email-ynvich@gmail.com>
+	 <7496839.vMjVcqPe8Q@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151215162317.GB24286@e104818-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Juri Lelli <juri.lelli@arm.com>, peterz@infradead.org, Linus Walleij <linus.walleij@linaro.org>, will.deacon@arm.com, morten.rasmussen@arm.com, lorenzo.pieralisi@arm.com, vincent.guittot@linaro.org, linux-pm@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux@arm.linux.org.uk, dietmar.eggemann@arm.com, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Paul Walmsley <paul@pwsan.com>, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, Olof Johansson <olof@lixom.net>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7496839.vMjVcqPe8Q@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, Daniel Mack <zonque@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Arnaud Ebalard <arno@natisbad.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 15, 2015 at 04:23:18PM +0000, Catalin Marinas wrote:
-> On Tue, Dec 15, 2015 at 03:57:37PM +0000, Mark Rutland wrote:
-> > On Tue, Dec 15, 2015 at 03:46:51PM +0000, Juri Lelli wrote:
-> > > On 15/12/15 15:32, Mark Rutland wrote:
-> > > > On Tue, Dec 15, 2015 at 03:08:13PM +0000, Mark Brown wrote:
-> > > > > My expectation is that we just need good enough, not perfect, and that
-> > > > > seems to match what Juri is saying about the expectation that most of
-> > > > > the fine tuning is done via other knobs.
-> > > > 
-> > > > My expectation is that if a ballpark figure is good enough, it should be
-> > > > possible to implement something trivial like bogomips / loop_per_jiffy
-> > > > calculation.
-> > > 
-> > > I didn't really followed that, so I might be wrong here, but isn't
-> > > already happened a discussion about how we want/like to stop exposing
-> > > bogomips info or rely on it for anything but in kernel delay loops?
-> > 
-> > I meant that we could have a benchmark of that level of complexity,
-> > rather than those specific values.
-> 
-> Or we could simply let user space use whatever benchmarks or hard-coded
-> values it wants and set the capacity via sysfs (during boot). By
-> default, the kernel would assume all CPUs equal.
+On Tue, 2015-12-15 at 17:32 +0100, Arnd Bergmann wrote:
+> On Tuesday 15 December 2015 19:27:50 Sergei Ianovich wrote:
+> > =C2=A0.../devicetree/bindings/vendor-prefixes.txt=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A01 +
+> > =C2=A0arch/arm/boot/dts/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A0=C2=A03 +
+> > =C2=A0arch/arm/boot/dts/pxa27x-lp8x4x-i105.dts=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A050 ++++
+> > =C2=A0arch/arm/boot/dts/pxa27x-lp8x4x.dts=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| =
+259
+> > +++++++++++++++++++++
+> > =C2=A0arch/arm/configs/lp8x4x_defconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0| 176
+> > ++++++++++++++
+> >=20
+>=20
+> I had not noticed earlier that you are adding a new defconfig file.
+> PXA is
+> already the platform with the most defconfig files, and I'd rather
+> like
+> to see that reduced than increased.
+>=20
+> Is there a chance you could merge this one with some of the existing
+> files
+> into one configuration that handles them all?
 
-I assume that a userspace override would be available regardless of
-whatever mechanism the kernel uses to determine relative
-performance/effinciency.
+There are several board-specific devices on LP8x4x: custom FPGA, custom
+UART, custom IRQ on FPGA, custom parallel bus for industrial IO. The
+defconfig file could alert potential users to this fact. If this is not
+a sufficient reason to have a defconfig file, it can be dropped.
 
-I am not opposed to that mechanism being "assume equal".
-
-Mark.
+I use the full .config anyway :)
