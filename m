@@ -1,71 +1,98 @@
-From: Christopher Covington <cov@codeaurora.org>
-Subject: Re: [PATCH] net: emac: emac gigabit ethernet controller driver
-Date: Tue, 15 Dec 2015 09:30:16 -0500
-Message-ID: <567023F8.80302@codeaurora.org>
-References: <1450138740-32562-1-git-send-email-gavidov@codeaurora.org> <566F6F3D.5050004@gmail.com>
+From: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v3 2/2] dts/ls2080a: Update DTSI to add support of SP805 WDT
+Date: Tue, 15 Dec 2015 20:00:25 +0530
+Message-ID: <1450189825-29065-3-git-send-email-bhupesh.sharma@freescale.com>
+References: <1450189825-29065-1-git-send-email-bhupesh.sharma@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <566F6F3D.5050004@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Gilad Avidov <gavidov@codeaurora.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc: sdharia@codeaurora.org, shankerd@codeaurora.org, timur@codeaurora.org, gregkh@linuxfoundation.org, vikrams@codeaurora.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1450189825-29065-1-git-send-email-bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Catalin.Marinas-5wv7dgnIgG8@public.gmane.org, bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org, LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
+This patch updates the LS2080a DTSI (DTS Include) file to add
+support for eight SP805 Watchdog units which can be used to
+reset the eight Cortex-A57 cores available on LS2080A.
 
-Thanks for taking the time to review this code. We'll probably take
-additional time to review and implement most of your suggestions but I
-was confused by your two comments below.
+Signed-off-by: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi |   56 ++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-On 12/14/2015 08:39 PM, Florian Fainelli wrote:
-> On 14/12/15 16:19, Gilad Avidov wrote:
-
->> +static void emac_mac_irq_enable(struct emac_adapter *adpt)
->> +{
->> +	int i;
->> +
->> +	for (i = 0; i < EMAC_NUM_CORE_IRQ; i++) {
->> +		struct emac_irq			*irq = &adpt->irq[i];
->> +		const struct emac_irq_config	*irq_cfg = &emac_irq_cfg_tbl[i];
->> +
->> +		writel_relaxed(~DIS_INT, adpt->base + irq_cfg->status_reg);
->> +		writel_relaxed(irq->mask, adpt->base + irq_cfg->mask_reg);
->> +	}
->> +
->> +	wmb(); /* ensure that irq and ptp setting are flushed to HW */
-> 
-> Would not using writel() make the appropriate thing here instead of
-> using _relaxed which has no barrier?
-
-It appears to me that the barrier in writel() comes before the access
-[1]. The barrier in this code comes after the accesses. In addition to
-the ordering, if you're suggesting all writel_relaxed be switched out,
-that would seem to add 7 unnecessary barriers, which could adversely
-affect performance.
-
-1. http://lxr.free-electrons.com/source/arch/arm64/include/asm/io.h#L130
-
-> [snip]
-> 
->> +	mta = readl_relaxed(adpt->base + EMAC_HASH_TAB_REG0 + (reg << 2));
->> +	mta |= (0x1 << bit);
->> +	writel_relaxed(mta, adpt->base + EMAC_HASH_TAB_REG0 + (reg << 2));
->> +	wmb(); /* ensure that the mac address is flushed to HW */
-> 
-> This is getting too much here, just use the correct I/O accessor for
-> your platform, period.
-
-Based on your previous comment, I'm guessing you're suggesting using
-readl() and writel() here instead of *_relaxed and an explicit wmb().
-Again it's not clear to me why swapping the barrier-access ordering and
-adding an additional barrier would result in more correct code.
-
-Thanks,
-Christopher Covington
-
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+index e81cd48..7b0f411 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+@@ -193,6 +193,62 @@
+ 			interrupts = <0 32 0x4>; /* Level high type */
+ 		};
+ 
++		cluster1_core0_watchdog: wdt@c000000 {
++			compatible = "arm,sp805-wdt", "arm,primecell";
++			reg = <0x0 0xc000000 0x0 0x1000>;
++			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
++			clock-names = "apb_pclk", "wdog_clk";
++		};
++
++		cluster1_core1_watchdog: wdt@c010000 {
++			compatible = "arm,sp805-wdt", "arm,primecell";
++			reg = <0x0 0xc010000 0x0 0x1000>;
++			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
++			clock-names = "apb_pclk", "wdog_clk";
++		};
++
++		cluster2_core0_watchdog: wdt@c100000 {
++			compatible = "arm,sp805-wdt", "arm,primecell";
++			reg = <0x0 0xc100000 0x0 0x1000>;
++			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
++			clock-names = "apb_pclk", "wdog_clk";
++		};
++
++		cluster2_core1_watchdog: wdt@c110000 {
++			compatible = "arm,sp805-wdt", "arm,primecell";
++			reg = <0x0 0xc110000 0x0 0x1000>;
++			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
++			clock-names = "apb_pclk", "wdog_clk";
++		};
++
++		cluster3_core0_watchdog: wdt@c200000 {
++			compatible = "arm,sp805-wdt", "arm,primecell";
++			reg = <0x0 0xc200000 0x0 0x1000>;
++			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
++			clock-names = "apb_pclk", "wdog_clk";
++		};
++
++		cluster3_core1_watchdog: wdt@c210000 {
++			compatible = "arm,sp805-wdt", "arm,primecell";
++			reg = <0x0 0xc210000 0x0 0x1000>;
++			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
++			clock-names = "apb_pclk", "wdog_clk";
++		};
++
++		cluster4_core0_watchdog: wdt@c300000 {
++			compatible = "arm,sp805-wdt", "arm,primecell";
++			reg = <0x0 0xc300000 0x0 0x1000>;
++			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
++			clock-names = "apb_pclk", "wdog_clk";
++		};
++
++		cluster4_core1_watchdog: wdt@c310000 {
++			compatible = "arm,sp805-wdt", "arm,primecell";
++			reg = <0x0 0xc310000 0x0 0x1000>;
++			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
++			clock-names = "apb_pclk", "wdog_clk";
++		};
++
+ 		fsl_mc: fsl-mc@80c000000 {
+ 			compatible = "fsl,qoriq-mc";
+ 			reg = <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
 -- 
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.7.9.5
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
