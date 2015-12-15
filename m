@@ -1,85 +1,87 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v2 1/3] clk: bcm2835: Add bindings for the auxiliary peripheral clock gates.
-Date: Tue, 15 Dec 2015 15:35:57 -0800
-Message-ID: <1450222559-22461-1-git-send-email-eric@anholt.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-clk@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org, Eric Anholt <eric@anholt.net>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] ARM: bcm2835: add rpi power domain driver
+Date: Tue, 15 Dec 2015 15:55:17 -0800
+Message-ID: <87oadrmfmi.fsf@eliezer.anholt.net>
+References: <1450215622-27394-1-git-send-email-eric@anholt.net> <1450215622-27394-3-git-send-email-eric@anholt.net> <567093CD.1020208@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <567093CD.1020208-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-These will be used for enabling UART1, SPI1, and SPI2.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
----
+Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 
-v2: Make the binding cover both the IRQ and clock enable registers.
+> On 15/12/15 13:40, Eric Anholt wrote:
+>> From: Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>=20
+>> This patch adds support for several power domains on Raspberry Pi,
+>> including USB (so it can be enabled even if the bootloader didn't do
+>> it), and graphics.
+>>=20
+>> This patch is the combined work of Eric Anholt (who wrote USB support
+>> inside of the Raspberry Pi firmware driver, and wrote the non-USB
+>> domain support) and Alexander Aring (who separated the original USB
+>> work out from the firmware driver).
+>>=20
+>> Signed-off-by: Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+>> ---
+>>=20
+>> v2: Add support for power domains other than USB, using the new
+>>     firmware interface, reword commit message (changes by Eric)
+>>=20
+>> v3: Restructure as a builtin driver, and drop
+>>     of_genpd_add_provider_onecell error handling to avoid
+>>     pm_genpd_exit() dependency until that API can be settled.  Clean
+>>     up copyright header, add missing ISP initialization, and fix typo
+>>     in transposer's name.
+>>=20
+>>  arch/arm/mach-bcm/Kconfig                   |  10 ++
+>>  arch/arm/mach-bcm/Makefile                  |   1 +
+>>  arch/arm/mach-bcm/raspberrypi-power.c       | 247 +++++++++++++++++++++=
++++++++
+>>  include/dt-bindings/arm/raspberrypi-power.h |  41 +++++
+>>  4 files changed, 299 insertions(+)
+>>  create mode 100644 arch/arm/mach-bcm/raspberrypi-power.c
+>
+> What motivated the location of this power domain driver in
+> arch/arm/mach-bcm? Should not we have this in drivers/power/ or
+> somewhere in drivers/ at the very least?
 
- .../bindings/clock/brcm,bcm2835-aux-clock.txt      | 31 ++++++++++++++++++++++
- include/dt-bindings/clock/bcm2835-aux.h            | 17 ++++++++++++
- 2 files changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm2835-aux-clock.txt
- create mode 100644 include/dt-bindings/clock/bcm2835-aux.h
+ls stronly suggests that power contains drivers for power supplies and
+batteries, not power domains.  There are 6 power domain drivers in
+arch/arm, 3 in drivers/clk, and 3 in drivers/soc.
 
-diff --git a/Documentation/devicetree/bindings/clock/brcm,bcm2835-aux-clock.txt b/Documentation/devicetree/bindings/clock/brcm,bcm2835-aux-clock.txt
-new file mode 100644
-index 0000000..7a837d2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/brcm,bcm2835-aux-clock.txt
-@@ -0,0 +1,31 @@
-+Broadcom BCM2835 auxiliary peripheral support
-+
-+This binding uses the common clock binding:
-+    Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+The auxiliary peripherals (UART, SPI1, and SPI2) have a small register
-+area controlling clock gating to the peripherals, and providing an IRQ
-+status register.
-+
-+Required properties:
-+- compatible:	Should be "brcm,bcm2835-aux"
-+- #clock-cells:	Should be <1>. The permitted clock-specifier values can be
-+		  found in include/dt-bindings/clock/bcm2835-aux.h
-+- reg:		Specifies base physical address and size of the registers
-+- clocks:	The parent clock phandle
-+
-+Example:
-+
-+	clocks: cprman@7e101000 {
-+		compatible = "brcm,bcm2835-cprman";
-+		#clock-cells = <1>;
-+		reg = <0x7e101000 0x2000>;
-+		clocks = <&clk_osc>;
-+	};
-+
-+	aux: aux@0x7e215004 {
-+		compatible = "brcm,bcm2835-aux";
-+		#clock-cells = <1>;
-+		reg = <0x7e215000 0x8>;
-+		clocks = <&clocks BCM2835_CLOCK_VPU>;
-+	};
-diff --git a/include/dt-bindings/clock/bcm2835-aux.h b/include/dt-bindings/clock/bcm2835-aux.h
-new file mode 100644
-index 0000000..d91156e
---- /dev/null
-+++ b/include/dt-bindings/clock/bcm2835-aux.h
-@@ -0,0 +1,17 @@
-+/*
-+ * Copyright (C) 2015 Broadcom Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#define BCM2835_AUX_CLOCK_UART		0
-+#define BCM2835_AUX_CLOCK_SPI1		1
-+#define BCM2835_AUX_CLOCK_SPI2		2
-+#define BCM2835_AUX_CLOCK_COUNT		3
--- 
-2.6.2
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJWcKhlAAoJELXWKTbR/J7oUFoQAJDrZ706sJWLuIqRUwoQmxUP
+KJAB/9iUdeIeHJVtVGpOo6Fce9WyHcMYM98t5ZdKt3/ZD4GUA3HY1QAsoFB/op/z
+/ZsjzDPFi7LlgWPRJb/ZD7vrYku7MYlHsHNGaHR1JjPaYTBH4g7UnfJD4BaUG6Ct
+4Jm0jReNKdIhbBcSsqkE8LDqNNeTqAC64tFjcN6S7esIuNdjbA49BWP0rpglsDvN
+wmequkyXs9kG8GpTwdlvOxuZB1kZWIlMFcDAPsY5uUkb8d9mhrXmfoKaRmYLiQZe
+PDFQvsvByR3S1iBczGK5z83hN4imeBmvTZ/WURgQSmxYn85l5NbQsSKNR+Vvu8uM
+ZBxsrRnnt1ZKzk2wFzOpKAJli0vXwX8m3f52Wo51XfRz1XFRJH+msxDpXwuJzsYC
+fhuhF8iWufpj1Jvk7ZOBNuX/mTzpPH7n1tllXFRrTqAAGADT/wtqAmoxa5lqxKrL
+sQ3EdyWojNoH5bMsfxsPT/O9+WBjFl6EGJ1iT/OLkJgxptSQ14MjNyyDcwjj8Luc
+91jkBgEHIhabTjovjBlrc1QR1Mb7PPlHeE2zeq5dnYHV/BmTWDLXW5Kzq+isrR5B
+tMq2W2C1VYwujQqjNBsDXj5ar70ve4PUyjcigvhJdjRDukJkCtHOBNRzFG87k4EQ
+inJcYnrpO82zf0b91saf
+=sX4c
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
