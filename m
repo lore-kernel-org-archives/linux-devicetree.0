@@ -1,54 +1,63 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/9] phy: use syscon framework APIs to set ctrl mod reg
-Date: Tue, 15 Dec 2015 07:26:59 -0800
-Message-ID: <20151215152659.GQ23396@atomide.com>
-References: <1450170968-11282-1-git-send-email-kishon@ti.com>
- <725110094.6UkMkcy8u7@wuerfel>
- <566FF621.2040307@ti.com>
- <11176831.mhgJlIuj0S@wuerfel>
- <56700BC0.7020007@ti.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 2/8] Documentation: arm: define DT cpu capacity
+ bindings
+Date: Tue, 15 Dec 2015 15:32:19 +0000
+Message-ID: <20151215153218.GA7228@leverpostej>
+References: <20151124020631.GA15165@rob-hp-laptop>
+ <20151210153004.GA26758@sirena.org.uk>
+ <20151210175820.GE14571@e106622-lin>
+ <20151211174940.GQ5727@sirena.org.uk>
+ <20151214123616.GC3308@e106622-lin>
+ <20151214165928.GV5727@sirena.org.uk>
+ <20151215122238.GG16007@e106622-lin>
+ <20151215133951.GY5727@sirena.org.uk>
+ <20151215140135.GI31299@leverpostej>
+ <20151215150813.GZ5727@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <56700BC0.7020007-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20151215150813.GZ5727-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, morten.rasmussen-5wv7dgnIgG8@public.gmane.org, dietmar.eggemann-5wv7dgnIgG8@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> [151215 04:47]:
-> On Tuesday 15 December 2015 05:25 PM, Arnd Bergmann wrote:
-> >>>
-> >>> Can you explain here what the conversion is good for? Why do you
-> >>> prefer the syscon mapping over a high-level driver in this case?
-> >>
-> >> phy-omap-control driver was added when there was no proper
-> >> infrastructure for doing control module initializations. The
-> >> phy-omap-control driver is not an 'actual' PHY driver and it
-> >> was just a hack to do PHY related control module initializations.
-> >> phy-omap-control is also getting unmanageable with the number of
-> >> platforms each having number of modules (like USB, SATA, PCIe),
-> >> using the same driver for control module initializations.
-> >>
-> >> Now with SYSCON framework being added to the kernel, phy-omap-control
-> >> shouldn't be needed and it also provides a uniform API across all the
-> >> modules to program the control module.
-> > 
-> > Ok, so the "phy-control" devices were really just a few registers of
-> > a system controller device that does a lot of other things as well, right?
+On Tue, Dec 15, 2015 at 03:08:13PM +0000, Mark Brown wrote:
+> On Tue, Dec 15, 2015 at 02:01:36PM +0000, Mark Rutland wrote:
 > 
-> right.
-> > 
-> > Can you put your description above into the cover-letter for the series,
-> > and the merge commit?
+> > I really don't want to see a table of magic numbers in the kernel.
+> 
+> Right, there's pitfalls there too although not being part of an ABI
+> does make them more manageable.  
 
-Just to confirm.. Seems like this series keeps USB working and the dts
-changes can be done later after the driver changes have been merged?
+I think that people are very likely to treat them exactly like an ABI,
+w.r.t. any regressions in performance that result from their addition,
+modification, or removal. That becomes really horrible when new CPUs
+appear.
 
-Regards,
+> One thing it's probably helpful to establish here is how much the
+> specific numbers are going to matter in the grand scheme of things.  If
+> the specific numbers *are* super important then nobody is going to want
+> to touch them as they'll be prone to getting tweaked.  If instead the
+> numbers just need to be ballpark accurate so the scheduler starts off in
+> roughly the right place and the specific numbers don't matter it's a lot
+> easier and having a table in the kernel until we think of something
+> better (if that ever happens) gets a lot easier.
 
-Tony
+I agree that we first need to figure out the importance of these
+numbers. I disagree that our first step should be to add a table.
+
+> My expectation is that we just need good enough, not perfect, and that
+> seems to match what Juri is saying about the expectation that most of
+> the fine tuning is done via other knobs.
+
+My expectation is that if a ballpark figure is good enough, it should be
+possible to implement something trivial like bogomips / loop_per_jiffy
+calculation.
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
