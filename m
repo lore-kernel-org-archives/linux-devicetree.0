@@ -1,70 +1,50 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: mvebu: add kirkwood compatibles for cloudengine boards
-Date: Tue, 15 Dec 2015 17:20:52 +0100
-Message-ID: <87mvtbvg2j.fsf@free-electrons.com>
-References: <1448578854-6256-1-git-send-email-linus.walleij@linaro.org>
-	<20151127201702.GA32398@rob-hp-laptop>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [RFC PATCH 2/8] Documentation: arm: define DT cpu capacity
+ bindings
+Date: Tue, 15 Dec 2015 16:23:18 +0000
+Message-ID: <20151215162317.GB24286@e104818-lin.cambridge.arm.com>
+References: <20151211174940.GQ5727@sirena.org.uk>
+ <20151214123616.GC3308@e106622-lin>
+ <20151214165928.GV5727@sirena.org.uk>
+ <20151215122238.GG16007@e106622-lin>
+ <20151215133951.GY5727@sirena.org.uk>
+ <20151215140135.GI31299@leverpostej>
+ <20151215150813.GZ5727@sirena.org.uk>
+ <20151215153218.GA7228@leverpostej>
+ <20151215154651.GK16007@e106622-lin>
+ <20151215155737.GB7619@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151127201702.GA32398@rob-hp-laptop> (Rob Herring's message of
-	"Fri, 27 Nov 2015 14:17:02 -0600")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151215155737.GB7619@leverpostej>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Juri Lelli <juri.lelli@arm.com>, peterz@infradead.org, Linus Walleij <linus.walleij@linaro.org>, will.deacon@arm.com, morten.rasmussen@arm.com, lorenzo.pieralisi@arm.com, vincent.guittot@linaro.org, linux-pm@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux@arm.linux.org.uk, dietmar.eggemann@arm.com, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Paul Walmsley <paul@pwsan.com>, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, Olof Johansson <olof@lixom.net>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
- 
- On ven., nov. 27 2015, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+On Tue, Dec 15, 2015 at 03:57:37PM +0000, Mark Rutland wrote:
+> On Tue, Dec 15, 2015 at 03:46:51PM +0000, Juri Lelli wrote:
+> > On 15/12/15 15:32, Mark Rutland wrote:
+> > > On Tue, Dec 15, 2015 at 03:08:13PM +0000, Mark Brown wrote:
+> > > > My expectation is that we just need good enough, not perfect, and that
+> > > > seems to match what Juri is saying about the expectation that most of
+> > > > the fine tuning is done via other knobs.
+> > > 
+> > > My expectation is that if a ballpark figure is good enough, it should be
+> > > possible to implement something trivial like bogomips / loop_per_jiffy
+> > > calculation.
+> > 
+> > I didn't really followed that, so I might be wrong here, but isn't
+> > already happened a discussion about how we want/like to stop exposing
+> > bogomips info or rely on it for anything but in kernel delay loops?
+> 
+> I meant that we could have a benchmark of that level of complexity,
+> rather than those specific values.
 
-> On Fri, Nov 27, 2015 at 12:00:54AM +0100, Linus Walleij wrote:
->> This adds the compatible strings for Cloudengine PogoPlug E02 and
->> series 4. The former already has a devicetree in the kernel.
->> 
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-Applied on mvebu/dt
-
-Thanks,
-
-Gregory
-
->
->> ---
->>  Documentation/devicetree/bindings/arm/marvell,kirkwood.txt | 2 ++
->>  1 file changed, 2 insertions(+)
->> 
->> diff --git a/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt b/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
->> index 5171ad8f48ff..ab0c9cdf388e 100644
->> --- a/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
->> +++ b/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
->> @@ -24,6 +24,8 @@ board. Currently known boards are:
->>  "buffalo,lswxl"
->>  "buffalo,lsxhl"
->>  "buffalo,lsxl"
->> +"cloudengines,pogo02"
->> +"cloudengines,pogoplugv4"
->>  "dlink,dns-320"
->>  "dlink,dns-320-a1"
->>  "dlink,dns-325"
->> -- 
->> 2.4.3
->> 
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Or we could simply let user space use whatever benchmarks or hard-coded
+values it wants and set the capacity via sysfs (during boot). By
+default, the kernel would assume all CPUs equal.
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Catalin
