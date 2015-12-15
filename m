@@ -1,49 +1,70 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v7 0/5] mfd: tps65912: Driver rewrite with DT support
-Date: Tue, 15 Dec 2015 10:16:12 -0600
-Message-ID: <56703CCC.5060608@ti.com>
-References: <1447869580-10416-1-git-send-email-afd@ti.com>
- <20151124162624.GI807@x1> <20151204120240.GW26072@sirena.org.uk>
- <5665E4F7.1070707@ti.com> <20151208191657.GA5727@sirena.org.uk>
- <CACRpkdZU3RrXmPr1fDzCMumhQ8nWEf126iC1rDu=xiLFj7DU+A@mail.gmail.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: mvebu: add kirkwood compatibles for cloudengine boards
+Date: Tue, 15 Dec 2015 17:20:52 +0100
+Message-ID: <87mvtbvg2j.fsf@free-electrons.com>
+References: <1448578854-6256-1-git-send-email-linus.walleij@linaro.org>
+	<20151127201702.GA32398@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZU3RrXmPr1fDzCMumhQ8nWEf126iC1rDu=xiLFj7DU+A@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151127201702.GA32398@rob-hp-laptop> (Rob Herring's message of
+	"Fri, 27 Nov 2015 14:17:02 -0600")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/09/2015 06:35 AM, Linus Walleij wrote:
-> On Tue, Dec 8, 2015 at 8:16 PM, Mark Brown <broonie@kernel.org> wrote:
->> On Mon, Dec 07, 2015 at 01:58:47PM -0600, Andrew F. Davis wrote:
->>
->>> As all of this driver should be taken though the MFD tree how
->>> can this gpiolib change be handled? If we have gpio.parent it
->>> will not build on MFD, with gpio.dev it will fail to build when
->>> the changes are merged from the gpio subsystem. As the change
->>> has not been merged into linux-next as far a I can tell maybe
->>> this should be taken as is, then when the gpiolib change is
->>> made this can be changed with all the other drivers?
->>
->> Do a cross tree merge in one direction or the other between MFD and GPIO.
->
-> If Lee makes an immutable branch with this stuff on it I can
-> pull that in and put a fix on top of it (like I recently did with
-> the ASoC AC97 codec). I have "only" renamed
-> the .dev field of struct gpio_chip to .parent but I'm bombing
-> out another 150 or so patches today, ridding all GPIO drivers
-> in the kernel of container_of().
->
-> A bit painful but nothing to what tglx has gone through for
-> refactoring IRQ chips...
->
+Hi Linus,
+ 
+ On ven., nov. 27 2015, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-Is there anything I can do to help this along? This series
-and the tps65086 series have been blocked for months on
-trivial issues. (Not sure why the tps65086 hasn't been taken,
-it doesn't have this problem, I'd be OK with this getting
-stalled for a bit longer if someone could look at the other
-one)
+> On Fri, Nov 27, 2015 at 12:00:54AM +0100, Linus Walleij wrote:
+>> This adds the compatible strings for Cloudengine PogoPlug E02 and
+>> series 4. The former already has a devicetree in the kernel.
+>> 
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Applied on mvebu/dt
+
+Thanks,
+
+Gregory
+
+>
+>> ---
+>>  Documentation/devicetree/bindings/arm/marvell,kirkwood.txt | 2 ++
+>>  1 file changed, 2 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt b/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
+>> index 5171ad8f48ff..ab0c9cdf388e 100644
+>> --- a/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
+>> +++ b/Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
+>> @@ -24,6 +24,8 @@ board. Currently known boards are:
+>>  "buffalo,lswxl"
+>>  "buffalo,lsxhl"
+>>  "buffalo,lsxl"
+>> +"cloudengines,pogo02"
+>> +"cloudengines,pogoplugv4"
+>>  "dlink,dns-320"
+>>  "dlink,dns-320-a1"
+>>  "dlink,dns-325"
+>> -- 
+>> 2.4.3
+>> 
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
