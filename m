@@ -1,39 +1,72 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v3 3/4] ARM: dts: dra7: Use "ti,dra7x-usb2-phy2" compatible string for USB2 PHY2
-Date: Tue, 15 Dec 2015 15:09:05 +0530
-Message-ID: <1450172346-11890-4-git-send-email-kishon@ti.com>
-References: <1450172346-11890-1-git-send-email-kishon@ti.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 3/3] arm64: dts: r8a7795: Add pmu device nodes
+Date: Tue, 15 Dec 2015 09:50:32 +0000
+Message-ID: <566FE268.70802@arm.com>
+References: <1449236333-4410-1-git-send-email-dirk.behme@gmail.com>
+ <1449236333-4410-3-git-send-email-dirk.behme@gmail.com>
+ <566ED3D5.1080301@arm.com>
+ <CAMuHMdU940q78hpDjJEHkeyqRRPTWLxqR46K69DCTMOJHBbKcA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1450172346-11890-1-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, tony@atomide.com
-Cc: bcousson@baylibre.com, kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, rogerq@ti.com, nsekhar@ti.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-usb@vger.kernel.org, t-kristo@ti.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdU940q78hpDjJEHkeyqRRPTWLxqR46K69DCTMOJHBbKcA@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Dirk Behme <dirk.behme@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Yoshifumi Hosoya <yoshifumi.hosoya.wj@renesas.com>, Masaru Nagai <masaru.nagai.vx@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-The USB2 PHY2 has a different register map compared to USB2 PHY1
-to power on/off the PHY. In order to handle it, use the new compatible
-string "ti,dra7x-usb2-phy2" for the second instance of USB2 PHY.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- arch/arm/boot/dts/dra7.dtsi |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 156d735..41545f9 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -1299,7 +1299,8 @@
- 			};
- 
- 			usb2_phy2: phy@4a085000 {
--				compatible = "ti,omap-usb2";
-+				compatible = "ti,dra7x-usb2-phy2",
-+					     "ti,omap-usb2";
- 				reg = <0x4a085000 0x400>;
- 				ctrl-module = <&omap_control_usb2phy2>;
- 				clocks = <&usb_phy2_always_on_clk32k>,
+On 15/12/15 08:33, Geert Uytterhoeven wrote:
+> On Mon, Dec 14, 2015 at 3:36 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>> On 04/12/15 13:38, Dirk Behme wrote:
+>>>
+>>> From: Yoshifumi Hosoya <yoshifumi.hosoya.wj@renesas.com>
+>>>
+>>> Enabling the performance monitor unit on r8a7795.
+>>>
+>>> Signed-off-by: Masaru Nagai <masaru.nagai.vx@renesas.com>
+>>> Signed-off-by: Yoshifumi Hosoya <yoshifumi.hosoya.wj@renesas.com>
+>>> Sigend-off-by: Dirk Behme <dirk.behme@gmail.com>
+>>> ---
+>>> Note: This patch picked from
+>>>
+>>>
+>>> https://git.kernel.org/cgit/linux/kernel/git/horms/renesas-bsp.git/log/?h=v4.2/rcar-3.0.x
+>>>
+>>> and rebased against
+>>>
+>>>
+>>> https://git.kernel.org/cgit/linux/kernel/git/geert/renesas-drivers.git/log/?h=topic/gen3-latest
+>>> renesas-drivers-2015-12-01-v4.4-rc3
+>>>
+>>>    arch/arm64/boot/dts/renesas/r8a7795.dtsi | 12 ++++++++++++
+>>>    1 file changed, 12 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>>> b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>>> index 946a5bb..8113b71 100644
+>>> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>>> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>>> @@ -247,6 +247,18 @@
+>>>                          power-domains = <&cpg>;
+>>>                  };
+>>>
+>>> +               pmu {
+>>> +                       compatible = "arm,armv8-pmuv3";
+>>
+>>
+>> You can add more specific compatible "arm,cortex-a57-pmu" if it's Cortex
+>> A57.
+>
+> Except that one is not documented.
+>
+> Oh, it is. Someone mistyped the commas. Patch sent.
+>
+
+Ah right, nice catch. Thanks for the patch.
+
 -- 
-1.7.9.5
+Regards,
+Sudeep
