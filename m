@@ -1,76 +1,87 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 0/9] phy: use syscon framework APIs to set ctrl mod reg
-Date: Tue, 15 Dec 2015 18:16:56 +0530
-Message-ID: <56700BC0.7020007@ti.com>
-References: <1450170968-11282-1-git-send-email-kishon@ti.com>
- <725110094.6UkMkcy8u7@wuerfel> <566FF621.2040307@ti.com>
- <11176831.mhgJlIuj0S@wuerfel>
+From: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v1 02/10] clockevents/drivers: add MPS2 Timer driver
+Date: Tue, 15 Dec 2015 12:47:59 +0000
+Message-ID: <56700BFF.90001@arm.com>
+References: <1449048790-25859-1-git-send-email-vladimir.murzin@arm.com> <1449048790-25859-3-git-send-email-vladimir.murzin@arm.com> <566EC5D2.9050005@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <11176831.mhgJlIuj0S@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rogerq@ti.com, nsekhar@ti.com, linux-pci@vger.kernel.org, linux-usb@vger.kernel.org, tony@atomide.com, t-kristo@ti.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <566EC5D2.9050005-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Mark.Rutland-5wv7dgnIgG8@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Tuesday 15 December 2015 05:25 PM, Arnd Bergmann wrote:
-> On Tuesday 15 December 2015 16:44:41 Kishon Vijay Abraham I wrote:
->> Hi Arnd,
+On 14/12/15 13:36, Daniel Lezcano wrote:
+> On 12/02/2015 10:33 AM, Vladimir Murzin wrote:
+>> MPS2 platform has simple 32 bits general purpose countdown timers.
 >>
->> On Tuesday 15 December 2015 04:26 PM, Arnd Bergmann wrote:
->>> On Tuesday 15 December 2015 14:45:59 Kishon Vijay Abraham I wrote:
->>>> This series is basically to deprecate using phy-omap-control and use
->>>> syscon APIs to program the control module registers.
->>>>
->>>> Changes from v2:
->>>> No changes.
->>>>
->>>> Changes from v1:
->>>> *) cleanup ti_pipe3_probe in multiple steps
->>>> *) other minor cleanups
->>>>
->>>> Changes from [1] in PHY patches include
->>>> *) cleanup ti_pipe3_probe
->>>> *) have mask, power_on and power_off values in usb_phy_data for
->>>>    omap-usb2 phy
->>>>
->>>> The patches have been pushed to
->>>>         git://git.ti.com/linux-phy/linux-phy.git syscon
->>>>
->>>> [1] -> https://lkml.org/lkml/2015/6/23/189
->>>>
->>>> All the testing was done both before applying the dt patches and after
->>>> applying the dt patches (dt patches will be posted shortly).
->>>>
->>>
->>> Can you explain here what the conversion is good for? Why do you
->>> prefer the syscon mapping over a high-level driver in this case?
+>> The driver uses the first detected timer as a clocksource and the rest
+>> of the timers as a clockevent
 >>
->> phy-omap-control driver was added when there was no proper
->> infrastructure for doing control module initializations. The
->> phy-omap-control driver is not an 'actual' PHY driver and it
->> was just a hack to do PHY related control module initializations.
->> phy-omap-control is also getting unmanageable with the number of
->> platforms each having number of modules (like USB, SATA, PCIe),
->> using the same driver for control module initializations.
->>
->> Now with SYSCON framework being added to the kernel, phy-omap-control
->> shouldn't be needed and it also provides a uniform API across all the
->> modules to program the control module.
+>> Signed-off-by: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+>> ---
 > 
-> Ok, so the "phy-control" devices were really just a few registers of
-> a system controller device that does a lot of other things as well, right?
-
-right.
+> [ ... ]
 > 
-> Can you put your description above into the cover-letter for the series,
-> and the merge commit?
+>> +static void clockevent_mps2_writel(u32 val, struct clock_event_device
+>> *c, u32 offset)
+>> +{
+>> +    writel(val, to_mps2_clkevt(c)->reg + offset);
+>> +}
+> 
+> Is it possible to use writel_relaxed here ?
 
-Sure.
+I think it is possible. I'll update that part.
+
+> 
+> [ ... ]
+> 
+>> +static int mps2_timer_set_periodic(struct clock_event_device *ce)
+>> +{
+>> +    u32 clock_count_per_tick = to_mps2_clkevt(ce)->clock_count_per_tick;
+>> +
+>> +    clockevent_mps2_writel(clock_count_per_tick, ce, TIMER_RELOAD);
+>> +    clockevent_mps2_writel(clock_count_per_tick, ce, TIMER_VALUE);
+>> +    clockevent_mps2_writel(TIMER_CTRL_IE | TIMER_CTRL_ENABLE, ce,
+>> TIMER_CTRL);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static irqreturn_t mps2_timer_interrupt(int irq, void *dev_id)
+>> +{
+>> +    struct clockevent_mps2 *ce = dev_id;
+>> +    u32 status = readl(ce->reg + TIMER_INT);
+>> +
+>> +    if (!status) {
+>> +        pr_warn("spuirous interrupt\n");
+> 
+> typo: 'spurious'
+> 
+> [ ... ]
+> 
+>> +    ce = kzalloc(sizeof(struct clockevent_mps2), GFP_KERNEL);
+>> +    if (!ce) {
+>> +        ret = -ENOMEM;
+>> +        pr_err("failed to allocate clockevent: %d\n", ret);
+> 
+> There is already a stack trace in the kernel when an allocation fails.
+> 
+> With the above fixed:
+> 
+> Acked-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> 
+
+All above fixed locally.
 
 Thanks
-Kishon
+Vladimir
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
