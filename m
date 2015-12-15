@@ -1,36 +1,76 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx: Fix the assigned-clock mismatch issue on imx6q/dl
-Date: Tue, 15 Dec 2015 10:44:00 -0200
-Message-ID: <CAOMZO5D9_G_agDAuYg7JdE_9+2en2soPvBb41sA8_1_YQ3PLFg@mail.gmail.com>
-References: <1449648955-30835-1-git-send-email-b51503@freescale.com>
-	<20151214030750.GF25756@tiger>
-	<20151215085237.GB388@tiger>
-	<CAOMZO5BKFqMKpRiM6hV43Ko7YcGHPEChSi1GEBMzg3oGo6_Lnw@mail.gmail.com>
-	<567006C4.8050906@freescale.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3 0/9] phy: use syscon framework APIs to set ctrl mod reg
+Date: Tue, 15 Dec 2015 18:16:56 +0530
+Message-ID: <56700BC0.7020007@ti.com>
+References: <1450170968-11282-1-git-send-email-kishon@ti.com>
+ <725110094.6UkMkcy8u7@wuerfel> <566FF621.2040307@ti.com>
+ <11176831.mhgJlIuj0S@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <567006C4.8050906-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bai Ping <b51503-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <11176831.mhgJlIuj0S@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rogerq@ti.com, nsekhar@ti.com, linux-pci@vger.kernel.org, linux-usb@vger.kernel.org, tony@atomide.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 15, 2015 at 10:25 AM, Bai Ping <b51503-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+Hi,
 
->> It seems that even after this patch we still have a mismatch:
->> assigned-clocks has 5 members and assigned-clock-parents has 4.
->
-> I think if it is the last clock in the assigned-clock list, the
-> corresponding
-> 'assigned-clock-parents' and 'assigned-clock-rates'  entry can be omitted.
+On Tuesday 15 December 2015 05:25 PM, Arnd Bergmann wrote:
+> On Tuesday 15 December 2015 16:44:41 Kishon Vijay Abraham I wrote:
+>> Hi Arnd,
+>>
+>> On Tuesday 15 December 2015 04:26 PM, Arnd Bergmann wrote:
+>>> On Tuesday 15 December 2015 14:45:59 Kishon Vijay Abraham I wrote:
+>>>> This series is basically to deprecate using phy-omap-control and use
+>>>> syscon APIs to program the control module registers.
+>>>>
+>>>> Changes from v2:
+>>>> No changes.
+>>>>
+>>>> Changes from v1:
+>>>> *) cleanup ti_pipe3_probe in multiple steps
+>>>> *) other minor cleanups
+>>>>
+>>>> Changes from [1] in PHY patches include
+>>>> *) cleanup ti_pipe3_probe
+>>>> *) have mask, power_on and power_off values in usb_phy_data for
+>>>>    omap-usb2 phy
+>>>>
+>>>> The patches have been pushed to
+>>>>         git://git.ti.com/linux-phy/linux-phy.git syscon
+>>>>
+>>>> [1] -> https://lkml.org/lkml/2015/6/23/189
+>>>>
+>>>> All the testing was done both before applying the dt patches and after
+>>>> applying the dt patches (dt patches will be posted shortly).
+>>>>
+>>>
+>>> Can you explain here what the conversion is good for? Why do you
+>>> prefer the syscon mapping over a high-level driver in this case?
+>>
+>> phy-omap-control driver was added when there was no proper
+>> infrastructure for doing control module initializations. The
+>> phy-omap-control driver is not an 'actual' PHY driver and it
+>> was just a hack to do PHY related control module initializations.
+>> phy-omap-control is also getting unmanageable with the number of
+>> platforms each having number of modules (like USB, SATA, PCIe),
+>> using the same driver for control module initializations.
+>>
+>> Now with SYSCON framework being added to the kernel, phy-omap-control
+>> shouldn't be needed and it also provides a uniform API across all the
+>> modules to program the control module.
+> 
+> Ok, so the "phy-control" devices were really just a few registers of
+> a system controller device that does a lot of other things as well, right?
 
-Yes, you are right. Confirmed with
-Documentation/devicetree/bindings/clock/clock-bindings.txt and your
-patch is correct, thanks:
+right.
+> 
+> Can you put your description above into the cover-letter for the series,
+> and the merge commit?
 
-Reviewed-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sure.
+
+Thanks
+Kishon
