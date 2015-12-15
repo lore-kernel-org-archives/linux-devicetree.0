@@ -1,57 +1,91 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC PATCH 2/8] Documentation: arm: define DT cpu capacity
- bindings
-Date: Tue, 15 Dec 2015 18:10:03 +0000
-Message-ID: <20151215181002.GA8568@leverpostej>
-References: <20151214123616.GC3308@e106622-lin>
- <20151214165928.GV5727@sirena.org.uk>
- <20151215122238.GG16007@e106622-lin>
- <20151215133951.GY5727@sirena.org.uk>
- <20151215140135.GI31299@leverpostej>
- <20151215150813.GZ5727@sirena.org.uk>
- <20151215153218.GA7228@leverpostej>
- <20151215171713.GA5727@sirena.org.uk>
- <20151215172837.GD8012@leverpostej>
- <20151215174516.GB5727@sirena.org.uk>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: Re: [PATCH v14 0/7] fpga area and fpga bridge framework
+Date: Tue, 15 Dec 2015 10:15:54 -0800
+Message-ID: <CAAtXAHcLDjrnx=Ger0i24YesZA_RB16Y1ZXRd9dsLPWSVVTwGQ@mail.gmail.com>
+References: <1449790629-5517-1-git-send-email-atull@opensource.altera.com>
+	<CAAtXAHcNqP4ftOUbFYK=0kmpY9XmPgQ1=xAejQUj90N4x4pFng@mail.gmail.com>
+	<CANk1AXTqN6ExtXXgMXaTAM=aH+0J4D5b2_JSQ_9AuJCj79PR5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151215174516.GB5727@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Juri Lelli <juri.lelli@arm.com>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CANk1AXTqN6ExtXXgMXaTAM=aH+0J4D5b2_JSQ_9AuJCj79PR5Q@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alan Tull <delicious.quinoa@gmail.com>
+Cc: Alan Tull <atull@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>, Josh Cartwright <joshc@ni.com>, Greg KH <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 15, 2015 at 05:45:16PM +0000, Mark Brown wrote:
-> On Tue, Dec 15, 2015 at 05:28:37PM +0000, Mark Rutland wrote:
-> > On Tue, Dec 15, 2015 at 05:17:13PM +0000, Mark Brown wrote:
-> 
-> > > Obviously people are going to get upset if we introduce performance
-> > > regressions - but that's true always, we can also introduce problems
-> > > with numbers people have put in DT.  It seems like it'd be harder to
-> > > manage regressions due to externally provided magic numbers since
-> > > there's inherently less information there.
-> 
-> > It's certainly still possible to have regressions in that case. Those
-> > regressions would be due to code changes in the kernel, given the DT
-> > didn't change.
-> 
-> > I'm not sure I follow w.r.t. "inherently less information", unless you
-> > mean trying to debug without access to that DTB?
-> 
-> If what the kernel knows about the system is that it's got a bunch of
-> cores with numbers assigned to them then all it's really got is those
-> numbers.  If something changes that causes problems for some systems
-> (eg, because the numbers have been picked poorly but in a way that
-> happened to work well with the old code) that's not a lot to go on, the
-> more we know about the system the more likely it is that we'll be able
-> to adjust the assumptions in whatever new thing we do that causes
-> problems for any particular systems where we run into trouble.
+Hi Alan,
 
-Regardless of where the numbers live (DT or kernel), all we have are
-numbers. I can see that changing the in-kernel numbers would be possible
-when modifyign the DT is not, but I don't see how that gives you more
-information.
+On Mon, Dec 14, 2015 at 5:56 PM, Alan Tull <delicious.quinoa@gmail.com> wrote:
 
-Mark.
+>> I had an offline discussion with Josh Cartwright about his concerns.
+>> He brought up a good
+>> point on w.r.t to the way FPGA Area (Bus) deals with things.
+>>
+>> Currently we only support complete status = "okay" vs "disabled" kind
+>> of overlays.
+
+> Maybe i don't understand what you are saying; could you write out a
+> sequence you want to be able to do?
+
+Let's say you have a UART in the FPGA. You want to reprogram the FPGA
+fabric that includes the UART (assuming proper resets etc happen)
+
+1) Driver gets notified of impending doom, keeps hands off of FPGA
+2) FPGA Manager reloads FPGA
+3) FPGA Manager lets driver know FPGA is back
+4) Driver can continue to function as always
+
+It wouldn't even have to be a UART, on some boards simple SPI lines or UART
+lines  go from the processor through the FPGA logic out to a pin.
+When you reload the FPGA for a short moment of time that doesn't work,
+while after the reload it works just fine. Maybe something like extcon could
+be used for that?
+
+> Is this a separate question/issue from the above?  Are you talking
+> about acceleration?
+
+I meant stuff like SPI that gets routed through the FPGA, sorry for
+being unclear ;-)
+
+>>
+>> I've been toying around with hacking up struct device to include a
+>> FPGA 'domain', and then, similar
+>> to power domains allow devices to register suspend() / resume() style
+>> callbacks (could call them pre_reload() or something like that ...)
+>>
+>> I haven't gotten around to think it through. At this point it's just
+>> an idea and I don't have real code to show.
+>>
+>> I realize the issue with that is we'd have to make changes to struct device.
+>
+> That's interesting.  Usually a FPGA image has many devices in it, so
+> so way of making that dependency clear would be needed.  If any of the
+> devices involved are powered up, that FPGA image would need to be
+> loaded.
+
+Yeah. That's why I think the power domain model we have has a bunch of
+similarities.
+
+> Currently I'm trying to get some bindings approved for doing device
+> tree control of loading the FPGA and probing the devices.  My idea is
+> that these bindings could be useful for some use cases where we are
+> loading hardware onto the FPGA that needs to show up in the device
+> tree. Some of Rob's feedback is that my proposal may be
+> Altera-specific. If the bindings that I am proposing are useful for at
+> least some uses with Xilinx parts, that would be valuable feedback at
+> this point.  If they are Altera-specific, then I may need to add
+> "altr," to some of the compatible strings like "altr,fpga-bus" and
+> "altr,fpga-area".  My original intent was to implement something that
+> you could use also, so I hope that's not the future here.
+>
+> So my question for you is: is this stuff useful for you?
+
+Definitely, I'm pretty happy with what you have so far!
+I think the points I mentioned above apply to Altera devices, too.
+Maybe we can solve this in two parts, and the first step is getting the
+loading bindings accepted ;-)
+
+Cheers,
+
+Moritz
