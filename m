@@ -1,42 +1,49 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 12/12] ARM: dts: imx6: add Vivante GPU nodes
-Date: Tue, 15 Dec 2015 11:18:25 +0100
-Message-ID: <1450174705.3163.62.camel@pengutronix.de>
-References: <1449237604-19064-1-git-send-email-l.stach@pengutronix.de>
-	 <1449237604-19064-13-git-send-email-l.stach@pengutronix.de>
-	 <20151211070258.GA11252@tiger> <1450086745.3163.3.camel@pengutronix.de>
-	 <20151215082511.GA388@tiger>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] arm64: perf: Correct Cortex-A53/A57 compatible values
+Date: Tue, 15 Dec 2015 10:37:00 +0000
+Message-ID: <20151215103659.GB31299@leverpostej>
+References: <1450168400-462-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151215082511.GA388@tiger>
+Content-Disposition: inline
+In-Reply-To: <1450168400-462-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 15.12.2015, 16:25 +0800 schrieb Shawn Guo:
-> On Mon, Dec 14, 2015 at 10:52:25AM +0100, Lucas Stach wrote:
-> > Are you okay with merging the DT changes through the DRM tree, or do you
-> > want to pick them separate?
+On Tue, Dec 15, 2015 at 09:33:20AM +0100, Geert Uytterhoeven wrote:
+> Use commas instead of periods.
 > 
-> To accelerate the merge process, I'm okay with merging the DT changes
-> through DRM tree, as long as DRM maintainers don't mind.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+
+Mark.
+
+> ---
+>  Documentation/devicetree/bindings/arm/pmu.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-As the Dove maintainers prefer to take the DT changes through their
-tree, I think we should do the same thing for i.MX.
-
-I will send out the fixed patch together with the pull for the DRM and
-DT bindings bits, so you can pick it up for 4.5.
-
-Regards,
-Lucas
-
--- 
-Pengutronix e.K.             | Lucas Stach                 |
-Industrial Linux Solutions   | http://www.pengutronix.de/  |
-
+> diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documentation/devicetree/bindings/arm/pmu.txt
+> index 97ba45af04fc693f..a6cd14888bed9b29 100644
+> --- a/Documentation/devicetree/bindings/arm/pmu.txt
+> +++ b/Documentation/devicetree/bindings/arm/pmu.txt
+> @@ -9,8 +9,8 @@ Required properties:
+>  - compatible : should be one of
+>  	"apm,potenza-pmu"
+>  	"arm,armv8-pmuv3"
+> -	"arm.cortex-a57-pmu"
+> -	"arm.cortex-a53-pmu"
+> +	"arm,cortex-a57-pmu"
+> +	"arm,cortex-a53-pmu"
+>  	"arm,cortex-a17-pmu"
+>  	"arm,cortex-a15-pmu"
+>  	"arm,cortex-a12-pmu"
+> -- 
+> 1.9.1
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
