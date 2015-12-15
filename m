@@ -1,51 +1,161 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V4 16/16] ARM64: tegra: select PM_GENERIC_DOMAINS
-Date: Tue, 15 Dec 2015 20:54:47 +0100
-Message-ID: <CAPDyKFrcuK4iCo7Tg1Q_XjB7Y-+=s-ax1vzK4UEu9FfPnuProw@mail.gmail.com>
-References: <1449241037-22193-1-git-send-email-jonathanh@nvidia.com>
-	<1449241037-22193-17-git-send-email-jonathanh@nvidia.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 07/14] DEVICETREE: Add bindings for PIC32 pin control
+ and GPIO
+Date: Tue, 15 Dec 2015 13:58:49 -0600
+Message-ID: <20151215195849.GA5008@rob-hp-laptop>
+References: <1450133093-7053-1-git-send-email-joshua.henderson@microchip.com>
+ <1450133093-7053-8-git-send-email-joshua.henderson@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449241037-22193-17-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1450133093-7053-8-git-send-email-joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 4 December 2015 at 15:57, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> Enable PM_GENERIC_DOMAINS for tegra 64-bit devices. To ensure that devices
-> dependent upon a particular power-domain are only probed when that power
-> domain has been powered up, requires that PM is made mandatory for tegra
-> 64-bit devices and so select this option for tegra as well.
->
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Mon, Dec 14, 2015 at 03:42:09PM -0700, Joshua Henderson wrote:
+> Document the devicetree bindings for PINCTRL and GPIO found on Microchip
+> PIC32 class devices.
+> 
+> Signed-off-by: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
 > ---
->  arch/arm64/Kconfig.platforms | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-> index 9806324fa215..e0b5bd0aff0f 100644
-> --- a/arch/arm64/Kconfig.platforms
-> +++ b/arch/arm64/Kconfig.platforms
-> @@ -93,6 +93,8 @@ config ARCH_TEGRA
->         select GENERIC_CLOCKEVENTS
->         select HAVE_CLK
->         select PINCTRL
-> +       select PM
-> +       select PM_GENERIC_DOMAINS
-
-If you still want to allow ARCH_TEGRA to run without PM, you should
-probably change to:
-
-select PM_GENERIC_DOMAINS if PM
-
->         select RESET_CONTROLLER
->         help
->           This enables support for the NVIDIA Tegra SoC family.
-> --
-> 2.1.4
->
-
-Kind regards
-Uffe
+>  .../bindings/gpio/microchip,pic32-gpio.txt         |   49 ++++++++++++++++
+>  .../bindings/pinctrl/microchip,pic32-pinctrl.txt   |   60 ++++++++++++++++++++
+>  2 files changed, 109 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt b/Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt
+> new file mode 100644
+> index 0000000..ef37528
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt
+> @@ -0,0 +1,49 @@
+> +* Microchip PIC32 GPIO devices (PIO).
+> +
+> +Required properties:
+> + - compatible: "microchip,pic32mzda-gpio"
+> + - reg: Base address and length for the device.
+> + - interrupts: The port interrupt shared by all pins.
+> + - gpio-controller: Marks the port as GPIO controller.
+> + - #gpio-cells: Two. The first cell is the pin number and
+> +   the second cell is used to specify the gpio polarity as defined in
+> +   defined in <dt-bindings/gpio/gpio.h>:
+> +      0 = GPIO_ACTIVE_HIGH
+> +      1 = GPIO_ACTIVE_LOW
+> +      2 = GPIO_OPEN_DRAIN
+> + - interrupt-controller: Marks the device node as an interrupt controller.
+> + - #interrupt-cells: Two. The first cell is the GPIO number and second cell
+> +   is used to specify the trigger type as defined in
+> +   <dt-bindings/interrupt-controller/irq.h>:
+> +      IRQ_TYPE_EDGE_RISING
+> +      IRQ_TYPE_EDGE_FALLING
+> +      IRQ_TYPE_EDGE_BOTH
+> + - clocks: Clock specifier (see clock bindings for details).
+> + - microchip,gpio-bank: Specifies which bank a controller owns.
+> + - gpio-ranges: Interaction with the PINCTRL subsystem.
+> +
+> +Example:
+> +
+> +/* PORTA */
+> +gpio0: gpio0@1f860000 {
+> +	compatible = "microchip,pic32mzda-gpio";
+> +	reg = <0x1f860000 0x100>;
+> +	interrupts = <118 IRQ_TYPE_LEVEL_HIGH>;
+> +	#gpio-cells = <2>;
+> +	gpio-controller;
+> +	interrupt-controller;
+> +	#interrupt-cells = <2>;
+> +	clocks = <&PBCLK4>;
+> +	microchip,gpio-bank = <0>;
+> +	gpio-ranges = <&pic32_pinctrl 0 0 16>;
+> +};
+> +
+> +keys {
+> +	...
+> +
+> +	button@sw1 {
+> +		label = "ESC";
+> +		linux,code = <1>;
+> +		gpios = <&gpio0 12 0>;
+> +	};
+> +};
+> diff --git a/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt
+> new file mode 100644
+> index 0000000..4b5efa5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt
+> @@ -0,0 +1,60 @@
+> +* Microchip PIC32 Pin Controller
+> +
+> +Please refer to pinctrl-bindings.txt, ../gpio/gpio.txt, and
+> +../interrupt-controller/interrupts.txt for generic information regarding
+> +pin controller, GPIO, and interrupt bindings.
+> +
+> +PIC32 'pin configuration node' is a node of a group of pins which can be
+> +used for a specific device or function. This node represents configuraions of
+> +pins, optional function, and optional mux related configuration.
+> +
+> +Required properties for pin controller node:
+> + - compatible: "microchip,pic32mada-pinctrl"
+> + - reg: Address range of the pinctrl registers.
+> + - clocks: Clock specifier (see clock bindings for details)
+> +
+> +Required properties for pin configuration sub-nodes:
+> + - pins: List of pins to which the configuration applies.
+> +
+> +Optional properties for pin configuration sub-nodes:
+> +----------------------------------------------------
+> + - function: Mux function for the specified pins.
+> + - bias-pull-up: Enable weak pull-up.
+> + - bias-pull-down: Enable weak pull-down.
+> + - input-enable: Set the pin as an input.
+> + - output-low: Set the pin as an output level low.
+> + - output-high: Set the pin as an output level high.
+> + - microchip,digital: Enable digital I/O.
+> + - microchip,analog: Enable analog I/O.
+> +
+> +Example:
+> +
+> +pic32_pinctrl: pinctrl@1f801400{
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	compatible = "microchip,pic32mzda-pinctrl";
+> +	reg = <0x1f801400 0x400>;
+> +	clocks = <&PBCLK1>;
+> +
+> +	pinctrl_uart2: pinctrl_uart2 {
+> +		uart2-tx {
+> +			pins = "G9";
+> +			function = "U2TX";
+> +			microchip,digital;
+> +			output-low;
+> +		};
+> +		uart2-rx {
+> +			pins = "B0";
+> +			function = "U2RX";
+> +			microchip,digital;
+> +			input-enable;
+> +		};
+> +	};
+> +};
+> +
+> +uart2: serial@1f822200 {
+> +	compatible = "microchip,pic32mzda-uart";
+> +	reg = <0x1f822200 0x50>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart2>;
+> +};
+> -- 
+> 1.7.9.5
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
