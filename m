@@ -1,85 +1,45 @@
-From: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Subject: Re: [Patch v5 1/2] media: v4l: ti-vpe: Add CAL v4l2 camera capture
- driver
-Date: Tue, 15 Dec 2015 13:52:45 -0200
-Message-ID: <20151215135245.4d78f8a8@recife.lan>
-References: <1447879632-22635-1-git-send-email-bparrot@ti.com>
-	<1447879632-22635-2-git-send-email-bparrot@ti.com>
-	<20151203111922.7b9bb226@recife.lan>
-	<20151211221633.GF1517@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC PATCH 2/8] Documentation: arm: define DT cpu capacity
+ bindings
+Date: Tue, 15 Dec 2015 15:57:37 +0000
+Message-ID: <20151215155737.GB7619@leverpostej>
+References: <20151210175820.GE14571@e106622-lin>
+ <20151211174940.GQ5727@sirena.org.uk>
+ <20151214123616.GC3308@e106622-lin>
+ <20151214165928.GV5727@sirena.org.uk>
+ <20151215122238.GG16007@e106622-lin>
+ <20151215133951.GY5727@sirena.org.uk>
+ <20151215140135.GI31299@leverpostej>
+ <20151215150813.GZ5727@sirena.org.uk>
+ <20151215153218.GA7228@leverpostej>
+ <20151215154651.GK16007@e106622-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151211221633.GF1517@ti.com>
+Content-Disposition: inline
+In-Reply-To: <20151215154651.GK16007@e106622-lin>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Parrot <bparrot@ti.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
+To: Juri Lelli <juri.lelli@arm.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Em Fri, 11 Dec 2015 16:16:33 -0600
-Benoit Parrot <bparrot@ti.com> escreveu:
-
-> Mauro Carvalho Chehab <mchehab@osg.samsung.com> wrote on Thu [2015-Dec-03 11:19:22 -0200]:
-> > Em Wed, 18 Nov 2015 14:47:11 -0600
-> > Benoit Parrot <bparrot@ti.com> escreveu:
+On Tue, Dec 15, 2015 at 03:46:51PM +0000, Juri Lelli wrote:
+> On 15/12/15 15:32, Mark Rutland wrote:
+> > On Tue, Dec 15, 2015 at 03:08:13PM +0000, Mark Brown wrote:
+> > > My expectation is that we just need good enough, not perfect, and that
+> > > seems to match what Juri is saying about the expectation that most of
+> > > the fine tuning is done via other knobs.
 > > 
-> > > The Camera Adaptation Layer (CAL) is a block which consists of a dual
-> > > port CSI2/MIPI camera capture engine.
-> > > Port #0 can handle CSI2 camera connected to up to 4 data lanes.
-> > > Port #1 can handle CSI2 camera connected to up to 2 data lanes.
-> > > The driver implements the required API/ioctls to be V4L2 compliant.
-> > > Driver supports the following:
-> > >     - V4L2 API using DMABUF/MMAP buffer access based on videobuf2 api
-> > >     - Asynchronous sensor sub device registration
+> > My expectation is that if a ballpark figure is good enough, it should be
+> > possible to implement something trivial like bogomips / loop_per_jiffy
+> > calculation.
 > > 
-> > Please see the comments I did for the git pull request. Additionally,
-> > see below.
 > 
-> Yes I'll take care of the comments about the MAINTAINERS mods and patch order.
-> 
-> However I do have a few question on your comments, see below.
+> I didn't really followed that, so I might be wrong here, but isn't
+> already happened a discussion about how we want/like to stop exposing
+> bogomips info or rely on it for anything but in kernel delay loops?
 
-(removed the code that was already agreed or that Hans commented)
+I meant that we could have a benchmark of that level of complexity,
+rather than those specific values.
 
-> > > 
-> > > +/* register field read/write helpers */
-> > > +static inline int get_field(u32 value, u32 mask, int shift)
-> > > +{
-> > > +	return (value & (mask << shift)) >> shift;
-> > > +}
-> > 
-> > Please use the macros defined at bitmap.h instead of writing your own
-> > version of it.
-> 
-> Not exactly sure what you meant here. 
-> 
-> Did you mean bitops.h instead as in change read_field() and write_field()
-> to use __ffs or something like that?
-> 
-> If that is the case then I would have to change all of the bit mask and shift
-> macros in cal_regs.h before I do that I want to make sure we are on the same
-> page.
-
-Yes, i mean include/linux/bitops.h.
-
-There are several things that you dould use to simplify it using some
-definitions there (and not only __ffs).
-
-See those macros, for example:
-
-#define BIT_MASK(nr)		(1UL << ((nr) % BITS_PER_LONG))
-
-/*
- * Create a contiguous bitmask starting at bit position @l and ending at
- * position @h. For example
- * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
- */
-#define GENMASK(h, l) \
-	(((~0UL) << (l)) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
-
-#define GENMASK_ULL(h, l) \
-	(((~0ULL) << (l)) & (~0ULL >> (BITS_PER_LONG_LONG - 1 - (h))))
-
-Regards,
-Mauro
+Mark.
