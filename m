@@ -1,52 +1,36 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] USB: add generic onboard USB HUB driver
-Date: Tue, 15 Dec 2015 16:33:26 +0800
-Message-ID: <20151215083259.GA13809@shlinux2>
-References: <1450077974-22762-1-git-send-email-peter.chen@freescale.com>
- <3023844.AYbAYqvHUZ@wuerfel>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH 2/3] arm64: dts: r8a7795: Add Cortex-A57 CPU cores
+Date: Tue, 15 Dec 2015 17:38:24 +0900
+Message-ID: <CANqRtoSeibffbaoVGV7Y_gyuXxCOu+1PmRf3imQ8OKhV6VoAMQ@mail.gmail.com>
+References: <1449236333-4410-1-git-send-email-dirk.behme@gmail.com>
+	<1449236333-4410-2-git-send-email-dirk.behme@gmail.com>
+	<20151211230751.GD6496@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3023844.AYbAYqvHUZ@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20151211230751.GD6496@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Dirk Behme <dirk.behme@gmail.com>, SH-Linux <linux-sh@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Gaku Inami <gaku.inami.xw@bp.renesas.com>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 14, 2015 at 10:35:19AM +0100, Arnd Bergmann wrote:
-> On Monday 14 December 2015 15:26:11 Peter Chen wrote:
-> > Hi all,
-> > 
-> > There is a known issue that the USB code can't handle USB HUB's
-> > external pins well, in that case, it may cause some onboard
-> > USB HUBs can't work since their PHY's clock or reset pin needs to
-> > operate.
-> > 
-> > The user reported this issue at below:
-> > http://www.spinics.net/lists/linux-usb/msg131502.html
-> > 
-> > In this patch set, I add a generic onboard USB HUB driver to
-> > handle this problem, the external signals will be configured
-> > before usb controller's initialization, it much likes we did
-> > it at board code before.
-> > 
-> > The user needs to add this generic hub node at dts to support it.
-> > 
-> > @The udoo users, help to test please.
-> 
-> I still think need to do this properly by representing the hub
-> device as a USB device, using power sequencing code like MMC does.
-> 
-> 	Arnd
+Hi Simon,
 
-I will try to have a patch set for general onboard USB device.
+On Sat, Dec 12, 2015 at 8:07 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Fri, Dec 04, 2015 at 02:38:52PM +0100, Dirk Behme wrote:
+>> From: Gaku Inami <gaku.inami.xw@bp.renesas.com>
+>>
+>> Add Cortex-A57 CPU cores to r8a7795 SoC for a total of 4 x Cortex-A57.
+>>
+>> Signed-off-by: Gaku Inami <gaku.inami.xw@bp.renesas.com>
+>> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>> Sigend-off-by: Dirk Behme <dirk.behme@gmail.com>
+>
+> Thanks, I have queued this up for v4.5.
 
--- 
+Thanks. May I ask if CPU hotplug is known to work? Also, which version
+of the boot loader stack is required?
 
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best,
+
+/ magnus
