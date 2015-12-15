@@ -1,43 +1,72 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx: Fix the assigned-clock mismatch issue on imx6q/dl
-Date: Tue, 15 Dec 2015 09:16:07 -0200
-Message-ID: <CAOMZO5BKFqMKpRiM6hV43Ko7YcGHPEChSi1GEBMzg3oGo6_Lnw@mail.gmail.com>
-References: <1449648955-30835-1-git-send-email-b51503@freescale.com>
-	<20151214030750.GF25756@tiger>
-	<20151215085237.GB388@tiger>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2] extcon: add Maxim MAX3355 driver
+Date: Tue, 15 Dec 2015 14:24:56 +0300
+Message-ID: <566FF888.8060200@cogentembedded.com>
+References: <5045536.UEVncNCOZE@wasted.cogentembedded.com>
+ <20151214012400.GA9506@rob-hp-laptop> <566EFE0A.4000104@cogentembedded.com>
+ <CAL_JsqJ2RQcJY27B=emzKT6HQ4XEp=XjSqufx5742yvFt3Wfxw@mail.gmail.com>
+ <566F42BF.30109@cogentembedded.com> <20151214234446.GA10671@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151215085237.GB388@tiger>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bai Ping <b51503-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20151214234446.GA10671@kroah.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Greg KH <greg@kroah.com>
+Cc: Rob Herring <robh@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 15, 2015 at 6:52 AM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Dec 14, 2015 at 11:07:50AM +0800, Shawn Guo wrote:
->> On Wed, Dec 09, 2015 at 04:15:55PM +0800, Bai Ping wrote:
->> > The 'assigned-clock-parents' and 'assigned-clock-rates' list
->> > should corresponding to the 'assigned-clocks' property clock list.
->> >
->> > Signed-off-by: Bai Ping <b51503-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Hello.
+
+On 12/15/2015 2:44 AM, Greg KH wrote:
+
+>>>>>> Maxim  Integrated MAX3355E chip integrates a  charge pump and comparators
+>>>>>> to
+>>>>>> enable a system with an integrated USB OTG dual-role transceiver to
+>>>>>> function
+>>>>>> as  an USB  OTG dual-role device.  In addition  to sensing/controlling
+>>>>>> Vbus,
+>>>>>> the chip also passes thru the ID signal  from the USB  OTG connector.
+>>>>>> On some Renesas boards,  this signal is  just fed into the SoC thru a
+>>>>>> GPIO
+>>>>>> pin --  there's no real  OTG controller, only host and gadget USB
+>>>>>> controllers
+>>>>>> sharing the same USB bus; however, we'd  like to allow host or gadget
+>>>>>> drivers
+>>>>>> to be loaded depending on the cable type,  hence the need for the MAX3355
+>>>>>> extcon driver. The Vbus status signals are also  wired to GPIOs (however,
+>>>>>> we
+>>>>>> aren't currently interested in them),  the OFFVBUS# signal is controlled
+>>>>>> by
+>>>>>> the host controllers, there's  also the SHDN# signal wired to a GPIO, it
+>>>>>> should be driven high for the  normal operation.
+>>>>>
+>>>>>
+>>>>> As multiple people have said, fix the spacing here.
+>>>>
+>>>>
+>>>>     You are the first to complain abou _this_ patch. If you don't have other
+>>>> issues with this driver in which case you should have trimmed the reply at
+>>>> this point), I'd like to keep my spacing as is. Thank you.
+>>>
+>>> Your previous version was not "extcon-usb-gpio: add enable pin
+>>> support"[1] which has now been re-written to be max3355 specific?
 >>
->> Applied, thanks.
+>>     No, the MAX3355 driver pre-dates that version. First there was a driver,
+>> then I tried to re-use the existing stuff (there was no extcon-usb-gpio at
+>> the time of writing my driver), then had to return to the separate driver
+>> idea...
+>>
+>>> "So
+>>> what" and "I'd like to keep my spacing as is" aren't valid reasons.
+>>> Fix it, then I'll look at the rest again.
+>>
+>>     I'll consider doing that if you care to explain what's the problem with
+>> my spacing. TIA.
 >
-> As this essentially a fix to ed339363de1b ("ARM: dts: imx6qdl-sabreauto:
-> Allow HDMI and LVDS to work simultaneously"), I'm going to send it as a
-> fix with copying stable.
+> You are mixing 2 and 1 spaces between words, don't do that.
 
-Actually the mismatch exists since 97dae8590fa314c ("ARM: dts:
-imx6qdl-sabreauto: Add audio support").
+    Care to just explain why?
 
-> @Fabio,
->
-> Do you agree with the fix?
+MBR, Sergei
 
-It seems that even after this patch we still have a mismatch:
-assigned-clocks has 5 members and assigned-clock-parents has 4.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
