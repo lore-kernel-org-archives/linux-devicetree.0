@@ -1,82 +1,80 @@
-From: Sergei Ianovich <ynvich@gmail.com>
-Subject: Re: [PATCH v5 2/2] arm: pxa27x: support for ICP DAS LP-8x4x w/ DT
-Date: Tue, 15 Dec 2015 21:50:13 +0300
-Message-ID: <1450205413.21989.44.camel@gmail.com>
-References: <1449700088-28076-3-git-send-email-ynvich@gmail.com>
-	 <7496839.vMjVcqPe8Q@wuerfel> <1450197727.21989.9.camel@gmail.com>
-	 <1843454.zCnLJtF7B6@wuerfel> <1450200281.21989.24.camel@gmail.com>
-	 <87a8pbio2u.fsf@belgarion.home>
+From: Greg KH <greg@kroah.com>
+Subject: Re: [PATCH v2] extcon: add Maxim MAX3355 driver
+Date: Tue, 15 Dec 2015 10:51:56 -0800
+Message-ID: <20151215185156.GD16129@kroah.com>
+References: <5045536.UEVncNCOZE@wasted.cogentembedded.com>
+ <20151214012400.GA9506@rob-hp-laptop>
+ <566EFE0A.4000104@cogentembedded.com>
+ <CAL_JsqJ2RQcJY27B=emzKT6HQ4XEp=XjSqufx5742yvFt3Wfxw@mail.gmail.com>
+ <566F42BF.30109@cogentembedded.com>
+ <20151214234446.GA10671@kroah.com>
+ <566FF888.8060200@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87a8pbio2u.fsf@belgarion.home>
+Content-Disposition: inline
+In-Reply-To: <566FF888.8060200@cogentembedded.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Daniel Mack <zonque@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Arnaud Ebalard <arno@natisbad.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Rob Herring <robh@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-12-15 at 19:06 +0100, Robert Jarzmik wrote:
->=C2=A0
-> > > Maybe we can have a pxa_defconfig file that enables lots of board=
-s
-> > > and then we remove the individual configs? We don't have to remov=
-e
-> > > them all at once, but it would make me very happy if we could at
-> > > least kill off some of the ones that are not used regularly.
-> Yeah, I'd be happy too, that would simplify also my life.
->=20
-> Actually I was thinking of 2 defconfigs :
-> =C2=A0- one for platform_data based boards pxa2xx
-> =C2=A0- one for DT only boards pxa2xx
+On Tue, Dec 15, 2015 at 02:24:56PM +0300, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 12/15/2015 2:44 AM, Greg KH wrote:
+> 
+> >>>>>>Maxim  Integrated MAX3355E chip integrates a  charge pump and comparators
+> >>>>>>to
+> >>>>>>enable a system with an integrated USB OTG dual-role transceiver to
+> >>>>>>function
+> >>>>>>as  an USB  OTG dual-role device.  In addition  to sensing/controlling
+> >>>>>>Vbus,
+> >>>>>>the chip also passes thru the ID signal  from the USB  OTG connector.
+> >>>>>>On some Renesas boards,  this signal is  just fed into the SoC thru a
+> >>>>>>GPIO
+> >>>>>>pin --  there's no real  OTG controller, only host and gadget USB
+> >>>>>>controllers
+> >>>>>>sharing the same USB bus; however, we'd  like to allow host or gadget
+> >>>>>>drivers
+> >>>>>>to be loaded depending on the cable type,  hence the need for the MAX3355
+> >>>>>>extcon driver. The Vbus status signals are also  wired to GPIOs (however,
+> >>>>>>we
+> >>>>>>aren't currently interested in them),  the OFFVBUS# signal is controlled
+> >>>>>>by
+> >>>>>>the host controllers, there's  also the SHDN# signal wired to a GPIO, it
+> >>>>>>should be driven high for the  normal operation.
+> >>>>>
+> >>>>>
+> >>>>>As multiple people have said, fix the spacing here.
+> >>>>
+> >>>>
+> >>>>    You are the first to complain abou _this_ patch. If you don't have other
+> >>>>issues with this driver in which case you should have trimmed the reply at
+> >>>>this point), I'd like to keep my spacing as is. Thank you.
+> >>>
+> >>>Your previous version was not "extcon-usb-gpio: add enable pin
+> >>>support"[1] which has now been re-written to be max3355 specific?
+> >>
+> >>    No, the MAX3355 driver pre-dates that version. First there was a driver,
+> >>then I tried to re-use the existing stuff (there was no extcon-usb-gpio at
+> >>the time of writing my driver), then had to return to the separate driver
+> >>idea...
+> >>
+> >>>"So
+> >>>what" and "I'd like to keep my spacing as is" aren't valid reasons.
+> >>>Fix it, then I'll look at the rest again.
+> >>
+> >>    I'll consider doing that if you care to explain what's the problem with
+> >>my spacing. TIA.
+> >
+> >You are mixing 2 and 1 spaces between words, don't do that.
+> 
+>    Care to just explain why?
 
-I sincerely hope that dealing with ancient platform_data defconfigs is
-out of the scope this patch.
+Because the rules of typography and grammer do not allow this.
 
-> > lp8x4x seems to be the first pxa board which requires DT.
-> Most probably AFAIK.
->=20
-> > We can create pxa27x-dt_defconfig which selects:
-> > 1. PXA27X_DT
-> > 2. PXA_FB and 8250_PXA to enable console
-> > 3. MMC, MMC_PXA and EXT4_FS to enable boot from MMC
-> If you put MMC_PXA, one can argue why not any MTD device used on pxa
-> devices,
-> such as pxa2xx-flash or docg3/docg4, etc ... I won't argue, I'm just
-> pondering
-> about the right choice.
+Are you really arguing this?  If so, it's trivial for us to just ignore
+your patches if you insist on this.
 
-Great point. We should enable MTD for sure. There is no PXA-specific MT=
-D
-drivers, however. That's why MTD failed the grep test.
-
-> > 4. all optional pxa stuff as modules
-> > 5. all stuff on supported pxa boards as modules
->=20
-> > If #5 is extended when support for new boards is added, it should b=
-e
-> > possible to run any supported pxa27x board with pxa27x_defconfig.
->=20
-> I'm very eager to see a patch on that. I can feed my Jenkins with it,
-> it would
-> greatly help me catch issues earlier. Moreover it would for free test
-> it on
-> lubbock, mainstone and mioa701. If there was one also for pxa3xx, I
-> would launch
-> it on zylonite cm-x300 ... (that's a bonus, I know :))
->=20
-
-Updated plan:
-1. MACH_PXA27X_DT
-2. PXA_FB and 8250_PXA to enable console
-3. MMC, MMC_PXA and EXT4_FS to enable boot from MMC
-3.1. MTD, MTD_CFI, MTD_PHYSMAP_OF and JFFS2_FS to enable boot from MTD
-4. all optional pxa stuff as modules
-5. all stuff on supported pxa boards as modules
-6. supported boards should boot the kernel built with
-`pxa27x-dt_defconfig` after `make olddefconfig`
-
-It is probably a good idea to put this plan somewhere in Documentation/
-and to have a comment about that in the defconfig itself.
-
-Is the plan acceptable?
+greg k-h
