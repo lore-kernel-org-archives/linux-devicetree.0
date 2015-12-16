@@ -1,58 +1,101 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH] usb: gadget: renesas_usb3: add support for Renesas USB3.0
- peripheral controller
-Date: Wed, 16 Dec 2015 02:26:26 +0000
-Message-ID: <SG2PR06MB0919D7F6AC941F8B1456AF26D8EF0@SG2PR06MB0919.apcprd06.prod.outlook.com>
-References: <1450162472-6664-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <7989573.HuGUrIYJy9@wuerfel>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [PATCH 2/3] doc: dt-binding: generic onboard USB HUB
+Date: Wed, 16 Dec 2015 10:46:32 +0800
+Message-ID: <20151216024631.GA23482@shlinux2>
+References: <1449538670-7954-1-git-send-email-peter.chen@freescale.com>
+ <20151209032403.GA3716@rob-hp-laptop>
+ <20151209081223.GB941@shlinux2> <4048406.zTEffj2eJ2@wuerfel>
+ <CAPDyKFrj_eMNXdBPi25cE0VcO8OQp=NspG8yT+EfSFsbOebuwg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Language: ja-JP
-Sender: linux-sh-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "balbi@ti.com" <balbi@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFrj_eMNXdBPi25cE0VcO8OQp=NspG8yT+EfSFsbOebuwg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, =?utf-8?B?UGF3ZcWC?= Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, patryk@kowalczyk.ws, Alan Stern <stern@rowland.harvard.edu>, Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd again,
-
-> From: Yoshihiro Shimoda
-> Sent: Wednesday, December 16, 2015 10:43 AM
-< snip >
-> > > +static void usb3_write(struct renesas_usb3 *usb3, u32 data, u32 offs)
-> > > +{
-> > > +	iowrite32(data, usb3->reg + offs);
-> > > +}
-> > > +
-> > > +static u32 usb3_read(struct renesas_usb3 *usb3, u32 offs)
-> > > +{
-> > > +	return ioread32(usb3->reg + offs);
-> > > +}
+On Tue, Dec 15, 2015 at 09:21:09PM +0100, Ulf Hansson wrote:
+> On 9 December 2015 at 09:55, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Wednesday 09 December 2015 16:12:24 Peter Chen wrote:
+> >> On Tue, Dec 08, 2015 at 09:24:03PM -0600, Rob Herring wrote:
+> >> > On Tue, Dec 08, 2015 at 10:58:48AM +0100, Arnd Bergmann wrote:
+> >> > > On Tuesday 08 December 2015 10:50:49 Philipp Zabel wrote:
+> >> > > > This something we don't have to define ad-hoc. The hub hangs off an USB
+> >> > > > controller, right? The "Open Firmware recommended practice: USB"
+> >> > > > document already describes how to represent USB devices in a generic
+> >> > > > manner:
+> >> > > > http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
+> >> > > >
+> >> > > > Is there a reason not to reuse this?
+> >> > > >
+> >> > > > The usb hub node would be a child of the usb controller node, and it
+> >> > > > could use
+> >> > > >         compatible = "usb,class9"; /* bDeviceClass 9 (Hub) */
+> >> > >
+> >> > > Good point, I had not thought of that when I looked at the patches.
+> >> > >
+> >> > > Yes, let's do this way. I don't know if we ever implemented the simple
+> >> > > patch to associate a USB device with a device_node, but if not, then
+> >> > > let's do it now for this driver. A lot of people have asked for it in
+> >> > > the past.
+> >> >
+> >> > Agreed. Also, some hubs have I2C buses as well, but I still think under
+> >> > the USB bus is the right place.
+> >> >
+> >> > However, one complication here is often (probably this case) these
+> >> > addtional signals need to be controlled before the device enumerates.
+> >> >
+> >>
+> >> Yes, I did not find a way to let the USB bus code handle it, so I had to
+> >> write a platform driver to do it
 > >
-> > I think using readl() is more common than ioread32() if the driver cannot
-> > use IORESOURCE_IO but only IORESOURCE_MEM.
+> > Looping in Ulf, he solved the same problem for SDIO devices recently,
+> > and probably remembers the details best.
 > >
-> > On ARM, the two are the same, but on some architectures ioread32 is more
-> > expensive, so using the former is preferred.
 > 
-> I will use {read,write}l() instead of io{read,write}32().
-> Also I will change io{read,write}32_rep() functions too.
+> Thanks Arnd!
+> 
+> Yes, that was a kind of a long outstanding issue we have had for SDIO devices.
+> 
+> Several generic attempts was made to have a framework/library
+> available to support so called "power sequences" for exactly the same
+> reasons as above.
+> Others and myself failed to get those attempts accepted.
+> 
+> Instead, I invented a mmc subsystem specific DT based solution, the
+> "mmc-pwrseq".
+> 
+> DT documentation:
+> Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+> Documentation/devicetree/bindings/mmc/mmc.txt
+> 
+> Long story short: The mmc host device may contain a phandle to a
+> mmc-pwrseq, which will describe the resources needed to power on/off
+> the SDIO card.
+> 
+> The code is available at:
+> drivers/mmc/core/pwrseq*
+> 
+> We didn't implement this as platform driver, but that was mostly
+> because I initially wanted things to be simple. Although, nothing
+> prevents us from converting to this as a follow up, which would make
+> the solution a bit less "hacky".
+> 
 
-Oops. If I used {read,write}sl() instead of io{read,write}32_rep(),
-build error happened in x86 environment.
+Thanks for your information, Ulf.
 
-  CC [M]  drivers/usb/gadget/udc/renesas_usb3.o
-./drivers/usb/gadget/udc/renesas_usb3.c: In function 'usb3_write_pipe':
-./drivers/usb/gadget/udc/renesas_usb3.c:879:3: error: implicit declaration of function 'writesl' [-Werror=implicit-function-declaration]
-   writesl(usb3->reg + fifo_reg, buf, len / 4);
-   ^
-./drivers/usb/gadget/udc/renesas_usb3.c: In function 'usb3_read_pipe':
-./drivers/usb/gadget/udc/renesas_usb3.c:923:3: error: implicit declaration of function 'readsl' [-Werror=implicit-function-declaration]
-   readsl(usb3->reg + fifo_reg, buf, len / 4);
+-- 
 
-So, I will keep to use io{read,write}32(_rep) functions.
-
-Best regards,
-Yoshihiro Shimoda
-
+Best Regards,
+Peter Chen
