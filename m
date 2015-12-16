@@ -1,207 +1,89 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 3/3] [media] mt9v032: Add V4L2 controls for AEC and AGC
-Date: Wed, 16 Dec 2015 09:47:58 +0200
-Message-ID: <290053152.GcUooHzFZY@avalon>
-References: <1450104113-6392-1-git-send-email-mpa@pengutronix.de> <1450104113-6392-3-git-send-email-mpa@pengutronix.de>
+From: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5] serial: support for 16550A serial ports on LP-8x4x
+Date: Wed, 16 Dec 2015 11:04:57 +0300
+Message-ID: <1450253097.21989.78.camel@gmail.com>
+References: <1397668667-27328-1-git-send-email-ynvich@gmail.com>
+	 <1450213494-21884-1-git-send-email-ynvich@gmail.com>
+	 <1970812.j9fZPC5F1b@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1450104113-6392-3-git-send-email-mpa@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1970812.j9fZPC5F1b@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Cox <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>open list:
 List-Id: devicetree@vger.kernel.org
 
-Hi Markus,
+On Tue, 2015-12-15 at 22:51 +0100, Arnd Bergmann wrote:
+> On Wednesday 16 December 2015 00:04:45 Sergei Ianovich wrote:
+> > index 0000000..5f9a4c1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/serial/lp8x4x-serial.txt
+> > @@ -0,0 +1,35 @@
+> > +UART ports on ICP DAS LP-8x4x
+> > +
+> > +ICP DAS LP-8x4x contains three additional serial ports interfaced
+> > via
+> > +Analog Devices ADM213EA chips in addition to 3 serial ports on PXA
+> > CPU.
+> > +
+> > +Required properties:
+> > +- compatible : should be "icpdas,uart-lp8x4x"
+>=20
+> Compatible strings should not include a 'x' wildcard like this, bette=
+r
+> use
+> the specific chip name.
+>=20
+> Also, it sounds like you named them after the board vendor, which
+> sounds
+> wrong as the vendor part of the compatible string should be the
+> whoever
+> made that part (analog?)
 
-Thank you for the patch.
+The chips themselves are standard, they would work with 8250_core if
+properly connected. However, they are not connected normally. Al least
+some of their config pins are wired to a different address region. So
+the driver is board-specific.
 
-On Monday 14 December 2015 15:41:53 Markus Pargmann wrote:
-> This patch adds V4L2 controls for Auto Exposure Control and Auto Gain
-> Control settings. These settings include low pass filter, update
-> frequency of these settings and the update interval for those units.
-> 
-> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+'x' wildcards in the name of the board seem important. There are device=
+s
+made by the same vendor without 8 or 4 in their name. Those devices
+either are not shipped with linux or are base on a x86 platform.
 
-Please see below for a few comments. If you agree about them there's no need 
-to resubmit, I'll fix the patch when applying.
+Does this justify the choice of the compatible string?
 
-> ---
->  drivers/media/i2c/mt9v032.c | 153 ++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 152 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
-> index cc16acf001de..6cbc3b87eda9 100644
-> --- a/drivers/media/i2c/mt9v032.c
-> +++ b/drivers/media/i2c/mt9v032.c
+> > +- reg : should provide 16 byte man IO memory region and 1 byte
+> > region for
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0termios
+> > +
+> > +- interrupts : should provide interrupt
+> > +
+> > +- interrupt-parent : should provide a link to interrupt controller
+> > either
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0explicitly or imp=
+licitly from a parent node
+>=20
+> interrupt-parent should be an optional property, or you can leave it
+> out,
+> as this is a standard property that can always be there when there is=
+=20
+> interrupts.
 
-[snip]
+ok
 
->  enum mt9v032_model {
-> @@ -162,6 +169,8 @@ struct mt9v032_model_data {
->  	unsigned int min_shutter;
->  	unsigned int max_shutter;
->  	unsigned int pclk_reg;
-> +	unsigned int aec_max_shutter_reg;
-> +	const struct v4l2_ctrl_config * const aec_max_shutter_v4l2_ctrl;
->  };
-> 
->  struct mt9v032_model_info {
-> @@ -175,6 +184,9 @@ static const struct mt9v032_model_version
-> mt9v032_versions[] = { { MT9V034_CHIP_ID_REV1, "MT9V024/MT9V034 rev1" },
->  };
-> 
-> +static const struct v4l2_ctrl_config mt9v032_aec_max_shutter_width;
-> +static const struct v4l2_ctrl_config mt9v034_aec_max_shutter_width;
+> > +Examples (from pxa27x-lp8x4x.dts):
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0uart@9050 {
+>=20
+> By convention, the name should be 'serial', not 'uart'.
 
-We can avoid forward declarations by moving the mt9v032_model_data array 
-further down in the driver.
-
->  static const struct mt9v032_model_data mt9v032_model_data[] = {
->  	{
->  		/* MT9V022, MT9V032 revisions 1/2/3 */
-
-[snip]
-
-> @@ 647,6 +663,33 @@ static int mt9v032_set_selection(struct v4l2_subdev
-> *subdev, */
-> 
->  #define V4L2_CID_TEST_PATTERN_COLOR	(V4L2_CID_USER_BASE | 0x1001)
-> +/*
-> + * Value between 1 and 64 to set the desired bin. This is effectively a
-> measure + * of how bright the image is supposed to be. Both AGC and AEC try
-> to reach + * this.
-> + */
-> +#define V4L2_CID_AEGC_DESIRED_BIN		(V4L2_CID_USER_BASE | 0x1002)
-> +/*
-> + * LPF is the low pass filter capability of the chip. Both AEC and AGC have
-> + * this setting. This limits the speed in which AGC/AEC adjust their
-> settings.
-> + * Possible values are 0-2. 0 means no LPF. For 1 and 2 this equation is
-> used:
-> + * 	if |(Calculated new exp - current exp)| > (current exp / 4)
-> + * 		next exp = Calculated new exp
-> + * 	else
-> + * 		next exp = Current exp + ((Calculated new exp - current exp) / 
-2^LPF)
-
-Over 80 columns, you can fix it by just reducing the indentation by one tab.
-
-> + */
-> +#define V4L2_CID_AEC_LPF		(V4L2_CID_USER_BASE | 0x1003)
-> +#define V4L2_CID_AGC_LPF		(V4L2_CID_USER_BASE | 0x1004)
-> +/*
-> + * Value between 0 and 15. This is the number of frames being skipped
-> before
-> + * updating the auto exposure/gain.
-> + */
-> +#define V4L2_CID_AEC_UPDATE_INTERVAL	(V4L2_CID_USER_BASE | 0x1005)
-> +#define V4L2_CID_AGC_UPDATE_INTERVAL	(V4L2_CID_USER_BASE | 0x1006)
-> +/*
-> + * Maximum shutter width used for AEC.
-> + */
-> +#define V4L2_CID_AEC_MAX_SHUTTER_WIDTH	(V4L2_CID_USER_BASE | 0x1007)
-
-[snip]
-
-> @@ -745,6 +810,84 @@ static const struct v4l2_ctrl_config
-> mt9v032_test_pattern_color = { .flags		= 0,
->  };
-> 
-> +static const struct v4l2_ctrl_config mt9v032_aegc_controls[] = {
-> +	{
-> +		.ops		= &mt9v032_ctrl_ops,
-> +		.id		= V4L2_CID_AEGC_DESIRED_BIN,
-> +		.type		= V4L2_CTRL_TYPE_INTEGER,
-> +		.name		= "aec_agc_desired_bin",
-
-I forgot to reply to your e-mail asking what proper controls names would be, 
-sorry.
-
-V4L2 control names contain spaces and use uppercase as needed. This one could 
-be "AEC/AGC Desired Bin" for instance.
-
-> +		.min		= 1,
-> +		.max		= 64,
-> +		.step		= 1,
-> +		.def		= 58,
-> +		.flags		= 0,
-> +	}, {
-> +		.ops		= &mt9v032_ctrl_ops,
-> +		.id		= V4L2_CID_AEC_LPF,
-> +		.type		= V4L2_CTRL_TYPE_INTEGER,
-> +		.name		= "aec_lpf",
-> +		.min		= 0,
-> +		.max		= 2,
-> +		.step		= 1,
-> +		.def		= 0,
-> +		.flags		= 0,
-> +	}, {
-> +		.ops		= &mt9v032_ctrl_ops,
-> +		.id		= V4L2_CID_AGC_LPF,
-> +		.type		= V4L2_CTRL_TYPE_INTEGER,
-> +		.name		= "agc_lpf",
-> +		.min		= 0,
-> +		.max		= 2,
-> +		.step		= 1,
-> +		.def		= 2,
-> +		.flags		= 0,
-> +	}, {
-> +		.ops		= &mt9v032_ctrl_ops,
-> +		.id		= V4L2_CID_AEC_UPDATE_INTERVAL,
-> +		.type		= V4L2_CTRL_TYPE_INTEGER,
-> +		.name		= "aec_update_interval",
-> +		.min		= 0,
-> +		.max		= 16,
-> +		.step		= 1,
-> +		.def		= 2,
-> +		.flags		= 0,
-> +	}, {
-> +		.ops		= &mt9v032_ctrl_ops,
-> +		.id		= V4L2_CID_AGC_UPDATE_INTERVAL,
-> +		.type		= V4L2_CTRL_TYPE_INTEGER,
-> +		.name		= "agc_update_interval",
-> +		.min		= 0,
-> +		.max		= 16,
-> +		.step		= 1,
-> +		.def		= 2,
-> +		.flags		= 0,
-> +	}
-> +};
-> +
-> +static const struct v4l2_ctrl_config mt9v032_aec_max_shutter_width = {
-> +	.ops		= &mt9v032_ctrl_ops,
-> +	.id		= V4L2_CID_AEC_MAX_SHUTTER_WIDTH,
-> +	.type		= V4L2_CTRL_TYPE_INTEGER,
-> +	.name		= "aec_max_shutter_width",
-> +	.min		= 1,
-> +	.max		= MT9V032_TOTAL_SHUTTER_WIDTH_MAX,
-
-According the the MT9V032 datasheet I have, the maximum value is 2047 while 
-MT9V032_TOTAL_SHUTTER_WIDTH_MAX is defined as 32767. Do you have any 
-information that would hint for an error in the datasheet ?
-
-> +	.step		= 1,
-> +	.def		= MT9V032_TOTAL_SHUTTER_WIDTH_DEF,
-> +	.flags		= 0,
-> +};
-> +
-> +static const struct v4l2_ctrl_config mt9v034_aec_max_shutter_width = {
-> +	.ops		= &mt9v032_ctrl_ops,
-> +	.id		= V4L2_CID_AEC_MAX_SHUTTER_WIDTH,
-> +	.type		= V4L2_CTRL_TYPE_INTEGER,
-> +	.name		= "aec_max_shutter_width",
-> +	.min		= 1,
-> +	.max		= MT9V034_TOTAL_SHUTTER_WIDTH_MAX,
-> +	.step		= 1,
-> +	.def		= MT9V032_TOTAL_SHUTTER_WIDTH_DEF,
-> +	.flags		= 0,
-> +};
-
-[snip]
-
--- 
-Regards,
-
-Laurent Pinchart
+ok
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
