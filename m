@@ -1,269 +1,644 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v3] extcon: add Maxim MAX3355 driver
-Date: Wed, 16 Dec 2015 21:07:33 +0300
-Message-ID: <2473780.4IzuWX8hE2@wasted.cogentembedded.com>
+From: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH V3] ARM: dts: imx6q-icore-rqs: Add Engicam IMX6 Q7
+ initial support
+Date: Wed, 16 Dec 2015 19:12:05 +0100
+Message-ID: <20151216181159.GC20121@panicking>
+References: <20151116112931.GA10464@panicking>
+ <1447673895.3144.16.camel@pengutronix.de>
+ <20151116114127.GB10464@panicking>
+ <1447674695.3144.21.camel@pengutronix.de>
+ <20151116115421.GC10464@panicking>
+ <20151116172318.GA513@panicking>
+ <1447752697.3144.47.camel@pengutronix.de>
+ <20151118151030.GA11558@panicking>
+ <20151211083512.GB11252@tiger>
+ <20151214084456.GA4305@panicking>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151214084456.GA4305@panicking>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Maxim Integrated MAX3355E chip integrates a charge pump and comparators to
-enable a system with an integrated USB OTG dual-role transceiver to
-function as an USB OTG dual-role device. In addition to sensing/controlling
-Vbus, the chip also passes thru the ID signal from the USB OTG connector.
-On some Renesas boards, this signal is just fed into the SoC thru a GPIO
-pin -- there's no real OTG controller, only host and gadget USB controllers
-sharing the same USB bus; however, we'd like to allow host or gadget
-drivers to be loaded depending on the cable type, hence the need for the
-MAX3355 extcon driver. The Vbus status signals are also wired to GPIOs
-(however, we aren't currently interested in them), the OFFVBUS# signal is
-controlled by the host controllers, there's also the SHDN# signal wired to
-a GPIO, it should be driven high for the normal operation.
+Hi
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+I have address most of the changes but I have problem when I remove
+the group of pinctrl as you suggest
 
----
-Changes in version 3:
-- reformatted the change log.
+On Mon, Dec 14, 2015 at 09:44:56AM +0100, Michael Trimarchi wrote:
+> Hi
+> 
+> On Fri, Dec 11, 2015 at 04:36:17PM +0800, Shawn Guo wrote:
+> > On Wed, Nov 18, 2015 at 04:10:34PM +0100, Michael Trimarchi wrote:
+> > > www.engicam.com/en/products/embedded/som/standard/i-core-rqs-m6s-dl-d-q
+> > > 
+> > > Signed-off-by: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > ---
+> > > I'm not quite sure how ethernet tuning parameter
+> > > are working in other setup and this seems the
+> > > correct way to use it
+> > > 
+> > > Changes in v3:
+> > > 	- add sgtl audio support
+> > > 	- add ethernet gigabit tuning
+> > > 	- use hub reset only in usbhub and not
+> > > 	  in otg vbus
+> > > 
+> > > Changes in v2:
+> > > 	- add the board in alphabetic order
+> > > 	- remove cpu operating point
+> > > 	- remove simple-bus and adjust regulaotor
+> > > 	- add gpios to correct pinctrl
+> > > 	- remove no mainline binding of gpc
+> > > 
+> > >  arch/arm/boot/dts/Makefile               |   1 +
+> > >  arch/arm/boot/dts/imx6q-icore-rqs.dts    |  45 ++++
+> > >  arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi | 382 +++++++++++++++++++++++++++++++
+> > >  3 files changed, 428 insertions(+)
+> > >  create mode 100644 arch/arm/boot/dts/imx6q-icore-rqs.dts
+> > >  create mode 100644 arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
+> > > 
+> > > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > > index bb8fa02..7e8f29c 100644
+> > > --- a/arch/arm/boot/dts/Makefile
+> > > +++ b/arch/arm/boot/dts/Makefile
+> > > @@ -312,6 +312,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+> > >  	imx6q-gw551x.dtb \
+> > >  	imx6q-gw552x.dtb \
+> > >  	imx6q-hummingboard.dtb \
+> > > +	imx6q-icore-rqs.dtb \
+> > >  	imx6q-nitrogen6x.dtb \
+> > >  	imx6q-phytec-pbab01.dtb \
+> > >  	imx6q-rex-pro.dtb \
+> > > diff --git a/arch/arm/boot/dts/imx6q-icore-rqs.dts b/arch/arm/boot/dts/imx6q-icore-rqs.dts
+> > > new file mode 100644
+> > > index 0000000..8f14edf
+> > > --- /dev/null
+> > > +++ b/arch/arm/boot/dts/imx6q-icore-rqs.dts
+> > > @@ -0,0 +1,45 @@
+> > > +/*
+> > > + * Copyright (C) 2015 Amarula Solutions B.V.
+> > > + *
+> > > + * This program is free software; you can redistribute it and/or modify
+> > > + * it under the terms of the GNU General Public License version 2 as
+> > > + * published by the Free Software Foundation.
+> > > + */
+> > 
+> > Suggest to use GPL/X11 dual licences, so that non-Linux can use it too.
+> > You can find a lot of examples in arch/arm/boot/dts.
+> > 
+> 
+> Ok
+> 
+> > > +
+> > > +/dts-v1/;
+> > > +
+> > > +#include "imx6q.dtsi"
+> > > +#include "imx6qdl-icore-rqs.dtsi"
+> > > +
+> > > +/ {
+> > > +	model = "Engicam i.CoreM6 Quad SOM";
+> > > +	compatible = "fsl,imx6-icore-rqs", "fsl,imx6q";
+> > 
+> > This is not a board from Freescale, so 'fsl,' is not a appropriate for
+> > the board compatible imx6q-icore-rqs.
+> > 
+> 
+> let use eng,imx6-icore-rqs
+> 
 
-Changes in version 2:
-- added the USB gadget cable support;
-- added the remove() driver method which drives SHDN# GPIO low to save power;
-- dropped vendor prefix from the ID GPIO property name;
-- changed the GPIO property name suffix to "-gpios";
-- switched to usign extcon_set_cable_state_() API;
-- switched to using the gpiod/sleeping 'gpiolib' APIs;
-- addded error messages to max3355_probe();
-- added IRQF_NO_SUSPEND flasg to the devm_request_threaded_irq() call;
-- renamed 'ret' variable to 'err' in max3355_probe();
-- expanded the Kconfig entry help text;
-- added vendor name to the patch summary, the bindings document, the Kconfig
-  entry, the driver heading comment, the module description, and the change log;
-- fixed up and reformatted the change log.
+That I have fixed
 
- Documentation/devicetree/bindings/extcon/extcon-max3355.txt |   21 +
- drivers/extcon/Kconfig                                      |    8 
- drivers/extcon/Makefile                                     |    1 
- drivers/extcon/extcon-max3355.c                             |  153 ++++++++++++
- 4 files changed, 183 insertions(+)
+> > > +
+> > > +	sound {
+> > > +		compatible = "fsl,imx-audio-sgtl5000";
+> > > +		model = "imx-audio-sgtl5000";
+> > > +		ssi-controller = <&ssi1>;
+> > > +		audio-codec = <&codec>;
+> > > +		audio-routing =
+> > > +			"MIC_IN", "Mic Jack",
+> > > +			"Mic Jack", "Mic Bias",
+> > > +			"Headphone Jack", "HP_OUT";
+> > > +		mux-int-port = <1>;
+> > > +		mux-ext-port = <4>;
+> > > +	};
+> > > +};
+> > > +
+> > > +&sata {
+> > > +	status = "okay";
+> > > +};
+> > 
+> > Please sort them labelled nodes alphabetically.
+> > 
+> 
+> ok
+> 
 
-Index: renesas/Documentation/devicetree/bindings/extcon/extcon-max3355.txt
-===================================================================
---- /dev/null
-+++ renesas/Documentation/devicetree/bindings/extcon/extcon-max3355.txt
-@@ -0,0 +1,21 @@
-+Maxim Integrated MAX3355 USB OTG chip
-+-------------------------------------
-+
-+MAX3355 integrates a charge pump and comparators to enable a system with an
-+integrated USB OTG dual-role transceiver to function as a USB OTG dual-role
-+device.
-+
-+Required properties:
-+- compatible: should be "maxim,max3355";
-+- maxim,shdn-gpios: should contain a phandle and GPIO specifier for the GPIO pin
-+  connected to the MAX3355's SHDN# pin;
-+- id-gpios: should contain a phandle and GPIO specifier for the GPIO pin
-+  connected to the MAX3355's ID_OUT pin.
-+
-+Example (Koelsch board):
-+
-+	usb-otg {
-+		compatible = "maxim,max3355";
-+		maxim,shdn-gpios = <&gpio2 4 GPIO_ACTIVE_LOW>;
-+		id-gpios = <&gpio5 31 GPIO_ACTIVE_HIGH>;
-+	};
-Index: renesas/drivers/extcon/Kconfig
-===================================================================
---- renesas.orig/drivers/extcon/Kconfig
-+++ renesas/drivers/extcon/Kconfig
-@@ -52,6 +52,14 @@ config EXTCON_MAX14577
- 	  Maxim MAX14577/77836. The MAX14577/77836 MUIC is a USB port accessory
- 	  detector and switch.
- 
-+config EXTCON_MAX3355
-+	tristate "Maxim MAX3355 USB OTG EXTCON Support"
-+	help
-+	  If you say yes here you get support for the USB OTG role detection by
-+	  MAX3355. The MAX3355 chip integrates a charge pump and comparators to
-+	  enable a system with an integrated USB OTG dual-role transceiver to
-+	  function as an USB OTG dual-role device.
-+
- config EXTCON_MAX77693
- 	tristate "Maxim MAX77693 EXTCON Support"
- 	depends on MFD_MAX77693 && INPUT
-Index: renesas/drivers/extcon/Makefile
-===================================================================
---- renesas.orig/drivers/extcon/Makefile
-+++ renesas/drivers/extcon/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_EXTCON_ARIZONA)	+= extcon-a
- obj-$(CONFIG_EXTCON_AXP288)	+= extcon-axp288.o
- obj-$(CONFIG_EXTCON_GPIO)	+= extcon-gpio.o
- obj-$(CONFIG_EXTCON_MAX14577)	+= extcon-max14577.o
-+obj-$(CONFIG_EXTCON_MAX3355)	+= extcon-max3355.o
- obj-$(CONFIG_EXTCON_MAX77693)	+= extcon-max77693.o
- obj-$(CONFIG_EXTCON_MAX77843)	+= extcon-max77843.o
- obj-$(CONFIG_EXTCON_MAX8997)	+= extcon-max8997.o
-Index: renesas/drivers/extcon/extcon-max3355.c
-===================================================================
---- /dev/null
-+++ renesas/drivers/extcon/extcon-max3355.c
-@@ -0,0 +1,153 @@
-+/*
-+ * Maxim Integrated MAX3355 USB OTG chip extcon driver
-+ *
-+ * Copyright (C) 2014 Cogent Embedded, Inc.
-+ * Author: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ */
-+
-+#include <linux/extcon.h>
-+#include <linux/gpio.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_gpio.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/workqueue.h>
-+
-+struct max3355_data {
-+	struct extcon_dev *edev;
-+	struct gpio_desc *id_gpiod;
-+	struct gpio_desc *shdn_gpiod;
-+};
-+
-+static const unsigned int max3355_cable[] = {
-+	EXTCON_USB,
-+	EXTCON_USB_HOST,
-+	EXTCON_NONE,
-+};
-+
-+static irqreturn_t max3355_id_irq(int irq, void *dev_id)
-+{
-+	struct max3355_data *data = dev_id;
-+	int id = gpiod_get_value_cansleep(data->id_gpiod);
-+
-+	if (id) {
-+		/*
-+		 * ID = 1 means USB HOST cable detached.
-+		 * As we don't have event for USB peripheral cable attached,
-+		 * we simulate USB peripheral attach here.
-+		 */
-+		extcon_set_cable_state_(data->edev, EXTCON_USB_HOST, false);
-+		extcon_set_cable_state_(data->edev, EXTCON_USB, true);
-+	} else {
-+		/*
-+		 * ID = 0 means USB HOST cable attached.
-+		 * As we don't have event for USB peripheral cable detached,
-+		 * we simulate USB peripheral detach here.
-+		 */
-+		extcon_set_cable_state_(data->edev, EXTCON_USB, false);
-+		extcon_set_cable_state_(data->edev, EXTCON_USB_HOST, true);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int max3355_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct max3355_data *data;
-+	struct gpio_desc *gpiod;
-+	int irq, err;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(struct max3355_data),
-+			    GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->edev = devm_extcon_dev_allocate(&pdev->dev, max3355_cable);
-+	if (IS_ERR(data->edev)) {
-+		dev_err(&pdev->dev, "failed to allocate extcon device\n");
-+		return PTR_ERR(data->edev);
-+	}
-+	data->edev->name = kstrdup(np->name, GFP_KERNEL);
-+
-+	gpiod = devm_gpiod_get(&pdev->dev, "id", GPIOD_IN);
-+	if (IS_ERR(gpiod)) {
-+		dev_err(&pdev->dev, "failed to get ID_OUT GPIO\n");
-+		return PTR_ERR(gpiod);
-+	}
-+	data->id_gpiod = gpiod;
-+
-+	gpiod = devm_gpiod_get(&pdev->dev, "maxim,shdn", GPIOD_OUT_HIGH);
-+	if (IS_ERR(gpiod)) {
-+		dev_err(&pdev->dev, "failed to get SHDN# GPIO\n");
-+		return PTR_ERR(gpiod);
-+	}
-+	data->shdn_gpiod = gpiod;
-+
-+	err = devm_extcon_dev_register(&pdev->dev, data->edev);
-+	if (err < 0) {
-+		dev_err(&pdev->dev, "failed to register extcon device\n");
-+		return err;
-+	}
-+
-+	irq = gpiod_to_irq(data->id_gpiod);
-+	if (irq < 0) {
-+		dev_err(&pdev->dev, "failed to translate ID_OUT GPIO to IRQ\n");
-+		return irq;
-+	}
-+
-+	err = devm_request_threaded_irq(&pdev->dev, irq, NULL, max3355_id_irq,
-+					IRQF_ONESHOT | IRQF_NO_SUSPEND |
-+					IRQF_TRIGGER_RISING |
-+					IRQF_TRIGGER_FALLING,
-+					pdev->name, data);
-+	if (err < 0) {
-+		dev_err(&pdev->dev, "failed to request ID_OUT IRQ\n");
-+		return err;
-+	}
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	/* Perform initial detection */
-+	max3355_id_irq(irq, data);
-+
-+	return 0;
-+}
-+
-+static int max3355_remove(struct platform_device *pdev)
-+{
-+	struct max3355_data *data = platform_get_drvdata(pdev);
-+
-+	gpiod_set_value_cansleep(data->shdn_gpiod, 0);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id max3355_match_table[] = {
-+	{ .compatible = "maxim,max3355", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, max3355_match_table);
-+
-+static struct platform_driver max3355_driver = {
-+	.probe		= max3355_probe,
-+	.remove		= max3355_remove,
-+	.driver		= {
-+		.name	= "extcon-max3355",
-+		.of_match_table = max3355_match_table,
-+		.owner	= THIS_MODULE,
-+	},
-+};
-+
-+module_platform_driver(max3355_driver);
-+
-+MODULE_AUTHOR("Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>");
-+MODULE_DESCRIPTION("Maxim MAX3355 extcon driver");
-+MODULE_LICENSE("GPL v2");
+You mean sata and i2c?
 
+
+> > > +
+> > > +&i2c3 {
+> > > +	codec: sgtl5000@0a {
+> > > +		compatible = "fsl,sgtl5000";
+> > > +		reg = <0x0a>;
+> > > +		clocks = <&clks IMX6QDL_CLK_CKO>;
+> > > +		VDDA-supply = <&reg_2p5v>;
+> > > +		VDDIO-supply = <&reg_3p3v>;
+> > > +		VDDD-supply = <&reg_1p8v>;
+> > > +	};
+> > > +};
+> > > diff --git a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
+> > > new file mode 100644
+> > > index 0000000..c57a830
+> > > --- /dev/null
+> > > +++ b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
+> > > @@ -0,0 +1,382 @@
+> > > +/*
+> > > + * Copyright 2015 Amarula Solutions B.V.
+> > > + *
+> > > + * The code contained herein is licensed under the GNU General Public
+> > > + * License. You may obtain a copy of the GNU General Public License
+> > > + * Version 2 or later at the following locations:
+> > > + *
+> > > + * http://www.opensource.org/licenses/gpl-license.html
+> > > + * http://www.gnu.org/copyleft/gpl.html
+> > > + */
+> > > +#include <dt-bindings/gpio/gpio.h>
+> > > +#include <dt-bindings/clock/imx6qdl-clock.h>
+> > > +
+> > > +/ {
+> > > +	memory {
+> > > +		reg = <0x10000000 0x80000000>;
+> > > +	};
+> > > +
+> > > +	reg_1p8v: 1p8v {
+> > 
+> > Can we name these regulator nodes a bit better, something like
+> > 'regulator-1pv8'?
+> > 
+> 
+> ok
+> 
+> > > +		compatible = "regulator-fixed";
+> > > +		regulator-name = "1P8V";
+> > > +		regulator-min-microvolt = <1800000>;
+> > > +		regulator-max-microvolt = <1800000>;
+> > > +		regulator-boot-on;
+> > > +		regulator-always-on;
+> > > +	};
+> > > +
+> > > +	reg_2p5v: 2p5v {
+> > > +		compatible = "regulator-fixed";
+> > > +		regulator-name = "2P5V";
+> > > +		regulator-min-microvolt = <2500000>;
+> > > +		regulator-max-microvolt = <2500000>;
+> > > +		regulator-boot-on;
+> > > +		regulator-always-on;
+> > > +	};
+> > > +
+> > > +	reg_3p3v: 3p3v {
+> > > +		compatible = "regulator-fixed";
+> > > +		regulator-name = "3P3V";
+> > > +		regulator-min-microvolt = <3300000>;
+> > > +		regulator-max-microvolt = <3300000>;
+> > > +		regulator-boot-on;
+> > > +		regulator-always-on;
+> > > +	};
+> > > +
+> > > +	reg_sd3_vmmc: sd3_vmmc {
+> > 
+> > It's more idiomatic to use minus than underscore in node name.
+> > 
+> 
+> ok
+> 
+> > > +		compatible = "regulator-fixed";
+> > > +		regulator-name = "P3V3_SD3_SWITCHED";
+> > > +		regulator-min-microvolt = <3300000>;
+> > > +		regulator-max-microvolt = <3300000>;
+> > > +		gpio = <&gpio1 4 GPIO_ACTIVE_LOW>;
+> > > +		enable-active-high;
+> > > +	};
+> > > +
+> > > +	reg_sd4_vmmc: sd4_vmmc {
+> > > +		compatible = "regulator-fixed";
+> > > +		regulator-name = "P3V3_SD4_SWITCHED";
+> > > +		regulator-min-microvolt = <3300000>;
+> > > +		regulator-max-microvolt = <3300000>;
+> > > +		regulator-boot-on;
+> > > +		regulator-always-on;
+> > > +	};
+> > > +
+> > > +	reg_usb_h1_vbus: usb_h1_vbus {
+> > > +		compatible = "regulator-fixed";
+> > > +		regulator-name = "usb_h1_vbus";
+> > > +		regulator-min-microvolt = <5000000>;
+> > > +		regulator-max-microvolt = <5000000>;
+> > > +		regulator-boot-on;
+> > > +		regulator-always-on;
+> > > +	};
+> > > +
+> > > +	reg_usb_otg_vbus: usb_otg_vbus {
+> > > +		compatible = "regulator-fixed";
+> > > +		regulator-name = "usb_otg_vbus";
+> > > +		regulator-min-microvolt = <5000000>;
+> > > +		regulator-max-microvolt = <5000000>;
+> > > +		regulator-boot-on;
+> > > +		regulator-always-on;
+> > > +	};
+> > > +
+> > > +	usb_hub: usb-hub {
+> > > +		pinctrl-names = "default";
+> > > +		pinctrl-0 = <&pinctrl_usbhub>;
+> > > +		compatible = "smsc,usb3503a";
+> > 
+> > Let 'compatible' be the top of the property list.
+> >
+> 
+> ok
+> 
+> > > +		reset-gpios = <&gpio1 6 GPIO_ACTIVE_LOW>;
+> > > +		clocks = <&clks IMX6QDL_CLK_LVDS2_GATE>;
+> > > +		clock-names = "refclk";
+> > > +	};
+> > 
+> > How is this device get connected?  The most common case is via I2C bus.
+> > In that case, the node shouldn't be here but under I2C node.
+> > 
+> 
+> It's correct, the connection is completly defined and it's not connected
+> to i2c according from what I know. I will double check
+> 
+
+It's fine as it is
+
+> > > +};
+> > > +
+> > > +&iomuxc {
+> > 
+> > Suggest move iomuxc node to the bottom to make the file a bit easier to
+> > read.
+> > 
+> 
+> Ok
+> 
+> 
+> > > +	imx6qdl-icore-rqs {
+> > > +
+> > 
+> > With commit 5fcdf6a7ed95 (pinctrl: imx: Allow parsing DT without function
+> > nodes) in place, we can now save this container.
+> > 
+
+If I save this I can not register usb. Group is not found
+
+[    2.768476] imx6q-pinctrl 20e0000.iomuxc: unable to find group for node usdhc1grp-1
+[    2.768844] imx6q-pinctrl 20e0000.iomuxc: unable to find group for node usdhc1grp-1
+[    2.768932] sdhci-esdhc-imx: probe of 2190000.usdhc failed with error -22
+[    2.768994] imx6q-pinctrl 20e0000.iomuxc: unable to find group for node usdhc3grp-2
+[    2.769240] imx6q-pinctrl 20e0000.iomuxc: unable to find group for node usdhc3grp-2
+[    2.769322] sdhci-esdhc-imx: probe of 2198000.usdhc failed with error -22
+[    2.769381] imx6q-pinctrl 20e0000.iomuxc: unable to find group for node usdhc4grp-1
+[    2.769621] imx6q-pinctrl 20e0000.iomuxc: unable to find group for node usdhc4grp-1
+[    2.769701] sdhci-esdhc-imx: probe of 219c000.usdhc failed with error -22
+
+Michael
+
+> > > +		pinctrl_audmux_4: audmux-4 {
+> > 
+> 
+> I will take a look of that commit
+> 
+> > The suffix numbering makes no sense in this case.  The following example
+> > should be good enough.
+> > 
+> > 		pinctrl_audmux: audmux {
+> > 
+> > > +			fsl,pins = <
+> > > +				MX6QDL_PAD_DISP0_DAT20__AUD4_TXC  0x130b0
+> > > +				MX6QDL_PAD_DISP0_DAT21__AUD4_TXD  0x110b0
+> > > +				MX6QDL_PAD_DISP0_DAT22__AUD4_TXFS 0x130b0
+> > > +				MX6QDL_PAD_DISP0_DAT23__AUD4_RXD  0x130b0
+> > > +			>;
+> > > +		};
+> > > +
+> > > +		pinctrl_enet_3: enetgrp-3 {
+> > > +			fsl,pins = <
+> > > +				MX6QDL_PAD_ENET_MDIO__ENET_MDIO       0x1b0b0
+> > > +				MX6QDL_PAD_ENET_MDC__ENET_MDC         0x1b0b0
+> > > +				MX6QDL_PAD_RGMII_TXC__RGMII_TXC       0x1b0b0
+> > > +				MX6QDL_PAD_RGMII_TD0__RGMII_TD0       0x1b0b0
+> > > +				MX6QDL_PAD_RGMII_TD1__RGMII_TD1       0x1b0b0
+> > > +				MX6QDL_PAD_RGMII_TD2__RGMII_TD2       0x1b0b0
+> > > +				MX6QDL_PAD_RGMII_TD3__RGMII_TD3       0x1b0b0
+> > > +				MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL 0x1b0b0
+> > > +				MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK  0x1b0b0
+> > > +				MX6QDL_PAD_RGMII_RXC__RGMII_RXC       0x1b0b0
+> > > +				MX6QDL_PAD_RGMII_RD0__RGMII_RD0       0x1b0b0
+> > > +				MX6QDL_PAD_RGMII_RD1__RGMII_RD1       0x1b0b0
+> > > +				MX6QDL_PAD_RGMII_RD2__RGMII_RD2       0x1b0b0
+> > > +				MX6QDL_PAD_RGMII_RD3__RGMII_RD3       0x1b0b0
+> > > +				MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL 0x1b0b0
+> > > +				MX6QDL_PAD_ENET_TX_EN__ENET_TX_EN     0x1b0b0
+> > > +			>;
+> > > +		};
+> > > +
+> > > +		pinctrl_i2c1_1: i2c1grp-1 {
+> > > +			fsl,pins = <
+> > > +				MX6QDL_PAD_EIM_D21__I2C1_SCL 0x4001b8b1
+> > > +				MX6QDL_PAD_EIM_D28__I2C1_SDA 0x4001b8b1
+> > > +			>;
+> > > +		};
+> > > +
+> > > +		pinctrl_i2c2_2: i2c2grp-2 {
+> > > +			fsl,pins = <
+> > > +				MX6QDL_PAD_KEY_COL3__I2C2_SCL 0x4001b8b1
+> > > +				MX6QDL_PAD_KEY_ROW3__I2C2_SDA 0x4001b8b1
+> > > +			>;
+> > > +		};
+> > > +
+> > > +		pinctrl_i2c3_4: i2c3grp-4 {
+> > > +			fsl,pins = <
+> > > +				MX6QDL_PAD_GPIO_5__I2C3_SCL  0x4001b8b1
+> > > +				MX6QDL_PAD_EIM_D18__I2C3_SDA 0x4001b8b1
+> > > +				MX6QDL_PAD_GPIO_0__CCM_CLKO1    0x130b0
+> > > +			>;
+> > > +		};
+> > > +
+> > > +		pinctrl_pcie: pciegrp {
+> > > +			fsl,pins = <
+> > > +				MX6QDL_PAD_EIM_D29__GPIO3_IO29 0x1f059	/* PCIe Reset */
+> > > +			>;
+> > > +		};
+> > > +
+> > > +		pinctrl_uart4_1: uart4grp-1 {
+> > > +			fsl,pins = <
+> > > +				MX6QDL_PAD_KEY_COL0__UART4_TX_DATA 0x1b0b1
+> > > +				MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA 0x1b0b1
+> > > +			>;
+> > > +		};
+> > > +
+> > > +		pinctrl_usbhub: usbhubgrp {
+> > > +			fsl,pins = <
+> > > +				MX6QDL_PAD_GPIO_6__GPIO1_IO06  0x1f059	/* HUB USB Reset */
+> > > +			>;
+> > > +		};
+> > > +
+> > > +		pinctrl_usbotg_2: usbotggrp-2 {
+> > > +			fsl,pins = <
+> > > +				MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID 0x17059
+> > > +			>;
+> > > +		};
+> > > +
+> > > +		pinctrl_usdhc1_1: usdhc1grp-1 {
+> > > +			fsl,pins = <
+> > > +				MX6QDL_PAD_SD1_CMD__SD1_CMD    0x17071
+> > > +				MX6QDL_PAD_SD1_CLK__SD1_CLK    0x10071
+> > > +				MX6QDL_PAD_SD1_DAT0__SD1_DATA0 0x17071
+> > > +				MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17071
+> > > +				MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17071
+> > > +				MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17071
+> > > +			>;
+> > > +		};
+> > > +
+> > > +		pinctrl_usdhc3_2: usdhc3grp-2 {
+> > > +			fsl,pins = <
+> > > +				MX6QDL_PAD_SD3_CMD__SD3_CMD    0x17070
+> > > +				MX6QDL_PAD_SD3_CLK__SD3_CLK    0x10070
+> > > +				MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x17070
+> > > +				MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x17070
+> > > +				MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x17070
+> > > +				MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x17070
+> > > +				MX6QDL_PAD_GPIO_1__GPIO1_IO01  0x1f059	/* CD */
+> > > +				MX6QDL_PAD_GPIO_4__GPIO1_IO04  0x1f059	/* PWR */
+> > > +			>;
+> > > +		};
+> > > +
+> > > +		pinctrl_usdhc3_2_100mhz: usdhc3grp-2_100mhz {
+> > > +			fsl,pins = <
+> > > +				MX6QDL_PAD_SD3_CMD__SD3_CMD    0x170B1
+> > > +				MX6QDL_PAD_SD3_CLK__SD3_CLK    0x100B1
+> > > +				MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x170B1
+> > > +				MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x170B1
+> > > +				MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x170B1
+> > > +				MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x170B1
+> > > +			>;
+> > > +		};
+> > > +
+> > > +		pinctrl_usdhc3_2_200mhz: usdhc3grp-2_200mhz {
+> > > +			fsl,pins = <
+> > > +				MX6QDL_PAD_SD3_CMD__SD3_CMD    0x170F9
+> > > +				MX6QDL_PAD_SD3_CLK__SD3_CLK    0x100F9
+> > > +				MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x170F9
+> > > +				MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x170F9
+> > > +				MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x170F9
+> > > +				MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x170F9
+> > > +			>;
+> > > +		};
+> > > +
+> > > +		pinctrl_usdhc4_1: usdhc4grp-1 {
+> > > +			fsl,pins = <
+> > > +				MX6QDL_PAD_SD4_CMD__SD4_CMD    0x17070
+> > > +				MX6QDL_PAD_SD4_CLK__SD4_CLK    0x10070
+> > > +				MX6QDL_PAD_SD4_DAT0__SD4_DATA0 0x17070
+> > > +				MX6QDL_PAD_SD4_DAT1__SD4_DATA1 0x17070
+> > > +				MX6QDL_PAD_SD4_DAT2__SD4_DATA2 0x17070
+> > > +				MX6QDL_PAD_SD4_DAT3__SD4_DATA3 0x17070
+> > > +				MX6QDL_PAD_SD4_DAT4__SD4_DATA4 0x17070
+> > > +				MX6QDL_PAD_SD4_DAT5__SD4_DATA5 0x17070
+> > > +				MX6QDL_PAD_SD4_DAT6__SD4_DATA6 0x17070
+> > > +				MX6QDL_PAD_SD4_DAT7__SD4_DATA7 0x17070
+> > > +			>;
+> > > +		};
+> > > +
+> > > +		pinctrl_usdhc4_1_100mhz: usdhc4grp-1_100mhz {
+> > > +			fsl,pins = <
+> > > +				MX6QDL_PAD_SD4_CMD__SD4_CMD    0x170B1
+> > > +				MX6QDL_PAD_SD4_CLK__SD4_CLK    0x100B1
+> > > +				MX6QDL_PAD_SD4_DAT0__SD4_DATA0 0x170B1
+> > > +				MX6QDL_PAD_SD4_DAT1__SD4_DATA1 0x170B1
+> > > +				MX6QDL_PAD_SD4_DAT2__SD4_DATA2 0x170B1
+> > > +				MX6QDL_PAD_SD4_DAT3__SD4_DATA3 0x170B1
+> > > +				MX6QDL_PAD_SD4_DAT4__SD4_DATA4 0x170B1
+> > > +				MX6QDL_PAD_SD4_DAT5__SD4_DATA5 0x170B1
+> > > +				MX6QDL_PAD_SD4_DAT6__SD4_DATA6 0x170B1
+> > > +				MX6QDL_PAD_SD4_DAT7__SD4_DATA7 0x170B1
+> > > +			>;
+> > > +		};
+> > > +
+> > > +		pinctrl_usdhc4_1_200mhz: usdhc4grp-2_200mhz {
+> > > +			fsl,pins = <
+> > > +				MX6QDL_PAD_SD4_CMD__SD4_CMD    0x170F9
+> > > +				MX6QDL_PAD_SD4_CLK__SD4_CLK    0x100F9
+> > > +				MX6QDL_PAD_SD4_DAT0__SD4_DATA0 0x170F9
+> > > +				MX6QDL_PAD_SD4_DAT1__SD4_DATA1 0x170F9
+> > > +				MX6QDL_PAD_SD4_DAT2__SD4_DATA2 0x170F9
+> > > +				MX6QDL_PAD_SD4_DAT3__SD4_DATA3 0x170F9
+> > > +				MX6QDL_PAD_SD4_DAT4__SD4_DATA4 0x170F9
+> > > +				MX6QDL_PAD_SD4_DAT5__SD4_DATA5 0x170F9
+> > > +				MX6QDL_PAD_SD4_DAT6__SD4_DATA6 0x170F9
+> > > +				MX6QDL_PAD_SD4_DAT7__SD4_DATA7 0x170F9
+> > > +			>;
+> > > +		};
+> > > +	};
+> > > +};
+> > > +
+> > > +&clks {
+> > > +	assigned-clocks = <&clks IMX6QDL_CLK_LVDS2_SEL>;
+> > > +	assigned-clock-parents = <&clks IMX6QDL_CLK_OSC>;
+> > > +};
+> > > +
+> > > +&audmux {
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&pinctrl_audmux_4>;
+> > > +	status = "okay";
+> > > +};
+> > > +
+> > > +&fec {
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&pinctrl_enet_3>;
+> > > +	phy-handle = <&eth_phy>;
+> > > +	phy-mode = "rgmii";
+> > > +	status = "okay";
+> > > +	mdio {
+> > > +		eth_phy: ethernet-phy {
+> > > +			rxc-skew-ps = <1140>;
+> > > +			txc-skew-ps = <1140>;
+> > > +			txen-skew-ps = <600>;
+> > > +			rxdv-skew-ps = <240>;
+> > > +			rxd0-skew-ps = <420>;
+> > > +			rxd1-skew-ps = <600>;
+> > > +			rxd2-skew-ps = <420>;
+> > > +			rxd3-skew-ps = <240>;
+> > > +			txd0-skew-ps = <60>;
+> > > +			txd1-skew-ps = <60>;
+> > > +			txd2-skew-ps = <60>;
+> > > +			txd3-skew-ps = <240>;
+> > > +		};
+> > > +	};
+> > > +};
+> > > +
+> > > +&i2c1 {
+> > > +	status = "okay";
+> > 
+> > Let 'status' be the last property.
+> > 
+> 
+> Ok
+> 
+> I will repost again
+> 
+> Michael
+> 
+> > Shawn
+> > 
+> > > +	clock-frequency = <100000>;
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&pinctrl_i2c1_1>;
+> > > +};
+> > > +
+> > > +&i2c2 {
+> > > +	clock-frequency = <100000>;
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&pinctrl_i2c2_2>;
+> > > +	status = "okay";
+> > > +};
+> > > +
+> > > +&i2c3 {
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&pinctrl_i2c3_4>;
+> > > +	status = "okay";
+> > > +};
+> > > +
+> > > +&pcie {
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&pinctrl_pcie>;
+> > > +	reset-gpio = <&gpio3 29 GPIO_ACTIVE_LOW>;
+> > > +	status = "okay";
+> > > +};
+> > > +
+> > > +&ssi1 {
+> > > +	fsl,mode = "i2s-slave";
+> > > +	status = "okay";
+> > > +};
+> > > +
+> > > +&uart4 {
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&pinctrl_uart4_1>;
+> > > +	status = "okay";
+> > > +};
+> > > +
+> > > +&usbh1 {
+> > > +	vbus-supply = <&reg_usb_h1_vbus>;
+> > > +	disable-over-current;
+> > > +	clocks = <&clks IMX6QDL_CLK_USBOH3>;
+> > > +	status = "okay";
+> > > +};
+> > > +
+> > > +&usbotg {
+> > > +	vbus-supply = <&reg_usb_otg_vbus>;
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&pinctrl_usbotg_2>;
+> > > +	disable-over-current;
+> > > +	status = "okay";
+> > > +};
+> > > +
+> > > +&usdhc1 {
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&pinctrl_usdhc1_1>;
+> > > +	no-1-8-v;
+> > > +	status = "okay";
+> > > +};
+> > > +
+> > > +&usdhc3 {
+> > > +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+> > > +	pinctrl-0 = <&pinctrl_usdhc3_2>;
+> > > +	pinctrl-1 = <&pinctrl_usdhc3_2_100mhz>;
+> > > +	pinctrl-2 = <&pinctrl_usdhc3_2_200mhz>;
+> > > +	vmcc-supply = <&reg_sd3_vmmc>;
+> > > +	cd-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
+> > > +	bus-witdh=<4>;
+> > > +	no-1-8-v;
+> > > +	status = "okay";
+> > > +};
+> > > +
+> > > +&usdhc4 {
+> > > +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+> > > +	pinctrl-0 = <&pinctrl_usdhc4_1>;
+> > > +	pinctrl-1 = <&pinctrl_usdhc4_1_100mhz>;
+> > > +	pinctrl-2 = <&pinctrl_usdhc4_1_200mhz>;
+> > > +	vmcc-supply = <&reg_sd4_vmmc>;
+> > > +	bus-witdh=<8>;
+> > > +	no-1-8-v;
+> > > +	non-removable;
+> > > +	status = "okay";
+> > > +};
+> > > -- 
+> > > 2.6.3
+> > > 
+> > > -- 
+> > > | Michael Nazzareno Trimarchi                     Amarula Solutions BV |
+> > > | COO  -  Founder                                      Cruquiuskade 47 |
+> > > | +31(0)851119172                                 Amsterdam 1018 AM NL |
+> > > |                  [`as] http://www.amarulasolutions.com               |
+> > > 
+> 
+> -- 
+> | Michael Nazzareno Trimarchi                     Amarula Solutions BV |
+> | COO  -  Founder                                      Cruquiuskade 47 |
+> | +31(0)851119172                                 Amsterdam 1018 AM NL |
+> |                  [`as] http://www.amarulasolutions.com               |
+
+-- 
+| Michael Nazzareno Trimarchi                     Amarula Solutions BV |
+| COO  -  Founder                                      Cruquiuskade 47 |
+| +31(0)851119172                                 Amsterdam 1018 AM NL |
+|                  [`as] http://www.amarulasolutions.com               |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
