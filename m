@@ -1,100 +1,260 @@
 From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH 1/5] clk: rockchip: rk3036: include downstream muxes into fractional dividers
-Date: Wed, 16 Dec 2015 16:27:17 +0800
-Message-ID: <1450254441-3243-2-git-send-email-wxt@rock-chips.com>
+Subject: [PATCH 5/5] ARM: config: Add the rk3036 configure for kylin board
+Date: Wed, 16 Dec 2015 16:27:21 +0800
+Message-ID: <1450254441-3243-6-git-send-email-wxt@rock-chips.com>
 References: <1450254441-3243-1-git-send-email-wxt@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1450254441-3243-1-git-send-email-wxt@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: heiko@sntech.de, mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: leozwang@google.com, keescook@google.com, leecam@google.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Caesar Wang <wxt@rock-chips.com>, Xing Zheng <zhengxing@rock-chips.com>
+Cc: leozwang@google.com, keescook@google.com, leecam@google.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Caesar Wang <wxt@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Use the newly introduced possibility to combine the fractional dividers
-with their downstream muxes for all fractional dividers on currently
-supported RK3036 SoCs.
+Add RK3036-specific configuration for Kylin board.
 
-Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
 Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+
 ---
 
- drivers/clk/rockchip/clk-rk3036.c | 35 ++++++++++++++++++-----------------
- 1 file changed, 18 insertions(+), 17 deletions(-)
+ arch/arm/configs/rk3036_kylin_defconfig | 230 ++++++++++++++++++++++++++++++++
+ 1 file changed, 230 insertions(+)
+ create mode 100644 arch/arm/configs/rk3036_kylin_defconfig
 
-diff --git a/drivers/clk/rockchip/clk-rk3036.c b/drivers/clk/rockchip/clk-rk3036.c
-index 75553af..dc01a2a 100644
---- a/drivers/clk/rockchip/clk-rk3036.c
-+++ b/drivers/clk/rockchip/clk-rk3036.c
-@@ -227,21 +227,21 @@ static struct rockchip_clk_branch rk3036_clk_branches[] __initdata = {
- 	COMPOSITE_NOMUX(0, "uart2_src", "uart_pll_clk", 0,
- 			RK2928_CLKSEL_CON(13), 0, 7, DFLAGS,
- 			RK2928_CLKGATE_CON(1), 8, GFLAGS),
--	COMPOSITE_FRAC(0, "uart0_frac", "uart0_src", CLK_SET_RATE_PARENT,
-+	COMPOSITE_FRACMUX(0, "uart0_frac", "uart0_src", CLK_SET_RATE_PARENT,
- 			RK2928_CLKSEL_CON(17), 0,
--			RK2928_CLKGATE_CON(1), 9, GFLAGS),
--	COMPOSITE_FRAC(0, "uart1_frac", "uart1_src", CLK_SET_RATE_PARENT,
--			RK2928_CLKSEL_CON(18), 0,
--			RK2928_CLKGATE_CON(1), 11, GFLAGS),
--	COMPOSITE_FRAC(0, "uart2_frac", "uart2_src", CLK_SET_RATE_PARENT,
--			RK2928_CLKSEL_CON(19), 0,
--			RK2928_CLKGATE_CON(1), 13, GFLAGS),
-+			RK2928_CLKGATE_CON(1), 9, GFLAGS,
- 	MUX(SCLK_UART0, "sclk_uart0", mux_uart0_p, CLK_SET_RATE_PARENT,
--			RK2928_CLKSEL_CON(13), 8, 2, MFLAGS),
-+			RK2928_CLKSEL_CON(13), 8, 2, MFLAGS)),
-+	COMPOSITE_FRACMUX(0, "uart1_frac", "uart1_src", CLK_SET_RATE_PARENT,
-+			RK2928_CLKSEL_CON(18), 0,
-+			RK2928_CLKGATE_CON(1), 11, GFLAGS,
- 	MUX(SCLK_UART1, "sclk_uart1", mux_uart1_p, CLK_SET_RATE_PARENT,
--			RK2928_CLKSEL_CON(14), 8, 2, MFLAGS),
-+			RK2928_CLKSEL_CON(14), 8, 2, MFLAGS)),
-+	COMPOSITE_FRACMUX(0, "uart2_frac", "uart2_src", CLK_SET_RATE_PARENT,
-+			RK2928_CLKSEL_CON(19), 0,
-+			RK2928_CLKGATE_CON(1), 13, GFLAGS,
- 	MUX(SCLK_UART2, "sclk_uart2", mux_uart2_p, CLK_SET_RATE_PARENT,
--			RK2928_CLKSEL_CON(15), 8, 2, MFLAGS),
-+			RK2928_CLKSEL_CON(15), 8, 2, MFLAGS)),
- 
- 	COMPOSITE(0, "aclk_vcodec", mux_pll_src_3plls_p, 0,
- 			RK2928_CLKSEL_CON(32), 14, 2, MFLAGS, 8, 5, DFLAGS,
-@@ -289,11 +289,11 @@ static struct rockchip_clk_branch rk3036_clk_branches[] __initdata = {
- 	COMPOSITE(0, "i2s_src", mux_pll_src_3plls_p, 0,
- 			RK2928_CLKSEL_CON(3), 14, 2, MFLAGS, 0, 7, DFLAGS,
- 			RK2928_CLKGATE_CON(0), 9, GFLAGS),
--	COMPOSITE_FRAC(0, "i2s_frac", "i2s_src", CLK_SET_RATE_PARENT,
-+	COMPOSITE_FRACMUX(0, "i2s_frac", "i2s_src", CLK_SET_RATE_PARENT,
- 			RK2928_CLKSEL_CON(7), 0,
--			RK2928_CLKGATE_CON(0), 10, GFLAGS),
-+			RK2928_CLKGATE_CON(0), 10, GFLAGS,
- 	MUX(0, "i2s_pre", mux_i2s_pre_p, CLK_SET_RATE_PARENT,
--			RK2928_CLKSEL_CON(3), 8, 2, MFLAGS),
-+			RK2928_CLKSEL_CON(3), 8, 2, MFLAGS)),
- 	COMPOSITE_NODIV(SCLK_I2S_OUT, "i2s_clkout", mux_i2s_clkout_p, 0,
- 			RK2928_CLKSEL_CON(3), 12, 1, MFLAGS,
- 			RK2928_CLKGATE_CON(0), 13, GFLAGS),
-@@ -303,11 +303,11 @@ static struct rockchip_clk_branch rk3036_clk_branches[] __initdata = {
- 	COMPOSITE(0, "spdif_src", mux_pll_src_3plls_p, 0,
- 			RK2928_CLKSEL_CON(5), 10, 2, MFLAGS, 0, 7, DFLAGS,
- 			RK2928_CLKGATE_CON(2), 10, GFLAGS),
--	COMPOSITE_FRAC(0, "spdif_frac", "spdif_src", 0,
-+	COMPOSITE_FRACMUX(0, "spdif_frac", "spdif_src", 0,
- 			RK2928_CLKSEL_CON(9), 0,
--			RK2928_CLKGATE_CON(2), 12, GFLAGS),
-+			RK2928_CLKGATE_CON(2), 12, GFLAGS,
- 	MUX(SCLK_SPDIF, "sclk_spdif", mux_spdif_p, 0,
--			RK2928_CLKSEL_CON(5), 8, 2, MFLAGS),
-+			RK2928_CLKSEL_CON(5), 8, 2, MFLAGS)),
- 
- 	GATE(SCLK_OTGPHY0, "sclk_otgphy0", "xin12m", CLK_IGNORE_UNUSED,
- 			RK2928_CLKGATE_CON(1), 5, GFLAGS),
-@@ -414,6 +414,7 @@ static const char *const rk3036_critical_clocks[] __initconst = {
- 	"aclk_peri",
- 	"hclk_peri",
- 	"pclk_peri",
-+	"uart_pll_clk",
- };
- 
- static void __init rk3036_clk_init(struct device_node *np)
+diff --git a/arch/arm/configs/rk3036_kylin_defconfig b/arch/arm/configs/rk3036_kylin_defconfig
+new file mode 100644
+index 0000000..692c393
+--- /dev/null
++++ b/arch/arm/configs/rk3036_kylin_defconfig
+@@ -0,0 +1,230 @@
++CONFIG_CROSS_COMPILE="arm-linux-gnueabi-"
++# CONFIG_LOCALVERSION_AUTO is not set
++CONFIG_DEFAULT_HOSTNAME="radxarock"
++CONFIG_SYSVIPC=y
++# CONFIG_USELIB is not set
++CONFIG_AUDIT=y
++CONFIG_IRQ_DOMAIN_DEBUG=y
++CONFIG_BLK_DEV_INITRD=y
++CONFIG_CC_OPTIMIZE_FOR_SIZE=y
++CONFIG_PERF_EVENTS=y
++# CONFIG_COMPAT_BRK is not set
++CONFIG_SLAB=y
++CONFIG_JUMP_LABEL=y
++CONFIG_MODULES=y
++CONFIG_MODULE_FORCE_LOAD=y
++CONFIG_MODULE_UNLOAD=y
++CONFIG_PARTITION_ADVANCED=y
++# CONFIG_IOSCHED_CFQ is not set
++CONFIG_ARCH_ROCKCHIP=y
++CONFIG_PL310_ERRATA_588369=y
++CONFIG_PL310_ERRATA_727915=y
++CONFIG_ARM_ERRATA_720789=y
++CONFIG_ARM_ERRATA_754322=y
++CONFIG_SMP=y
++CONFIG_NR_CPUS=2
++CONFIG_PREEMPT_VOLUNTARY=y
++CONFIG_AEABI=y
++CONFIG_HIGHMEM=y
++# CONFIG_COMPACTION is not set
++CONFIG_DEFAULT_MMAP_MIN_ADDR=65536
++CONFIG_CLEANCACHE=y
++CONFIG_FRONTSWAP=y
++CONFIG_ZBOOT_ROM_TEXT=0x0
++CONFIG_ARM_APPENDED_DTB=y
++CONFIG_ARM_ATAG_DTB_COMPAT=y
++CONFIG_ARM_ATAG_DTB_COMPAT_CMDLINE_EXTEND=y
++CONFIG_CPU_FREQ=y
++CONFIG_CPU_FREQ_DEFAULT_GOV_CONSERVATIVE=y
++CONFIG_CPU_FREQ_GOV_POWERSAVE=y
++CONFIG_CPUFREQ_DT=y
++CONFIG_CPU_IDLE=y
++CONFIG_VFP=y
++CONFIG_NEON=y
++# CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
++CONFIG_PM_WAKELOCKS=y
++CONFIG_PM_DEBUG=y
++CONFIG_NET=y
++CONFIG_PACKET=y
++CONFIG_UNIX=y
++CONFIG_INET=y
++# CONFIG_INET_XFRM_MODE_TRANSPORT is not set
++# CONFIG_INET_XFRM_MODE_TUNNEL is not set
++# CONFIG_INET_XFRM_MODE_BEET is not set
++# CONFIG_INET_LRO is not set
++# CONFIG_INET_DIAG is not set
++# CONFIG_IPV6 is not set
++CONFIG_CFG80211_WEXT=y
++CONFIG_RFKILL=y
++CONFIG_DEVTMPFS=y
++CONFIG_DEVTMPFS_MOUNT=y
++# CONFIG_FIRMWARE_IN_KERNEL is not set
++CONFIG_BLK_DEV_LOOP=y
++CONFIG_BLK_DEV_RAM=y
++CONFIG_BLK_DEV_RAM_COUNT=1
++CONFIG_BLK_DEV_RAM_SIZE=16384
++CONFIG_SRAM=y
++CONFIG_SCSI=y
++# CONFIG_SCSI_PROC_FS is not set
++CONFIG_BLK_DEV_SD=y
++# CONFIG_SCSI_LOWLEVEL is not set
++CONFIG_NETDEVICES=y
++# CONFIG_NET_CADENCE is not set
++# CONFIG_NET_VENDOR_BROADCOM is not set
++# CONFIG_NET_VENDOR_CIRRUS is not set
++# CONFIG_NET_VENDOR_FARADAY is not set
++# CONFIG_NET_VENDOR_INTEL is not set
++# CONFIG_NET_VENDOR_MARVELL is not set
++# CONFIG_NET_VENDOR_MICREL is not set
++# CONFIG_NET_VENDOR_NATSEMI is not set
++# CONFIG_NET_VENDOR_SAMSUNG is not set
++# CONFIG_NET_VENDOR_SEEQ is not set
++# CONFIG_NET_VENDOR_SMSC is not set
++CONFIG_STMMAC_ETH=y
++# CONFIG_NET_VENDOR_VIA is not set
++# CONFIG_NET_VENDOR_WIZNET is not set
++CONFIG_SMSC_PHY=y
++# CONFIG_INPUT_MOUSEDEV_PSAUX is not set
++CONFIG_INPUT_MOUSEDEV_SCREEN_X=800
++CONFIG_INPUT_MOUSEDEV_SCREEN_Y=600
++CONFIG_INPUT_EVDEV=y
++# CONFIG_KEYBOARD_ATKBD is not set
++CONFIG_KEYBOARD_GPIO=y
++CONFIG_KEYBOARD_GPIO_POLLED=y
++# CONFIG_INPUT_MOUSE is not set
++CONFIG_INPUT_TOUCHSCREEN=y
++CONFIG_INPUT_MISC=y
++# CONFIG_SERIO is not set
++# CONFIG_LEGACY_PTYS is not set
++# CONFIG_DEVKMEM is not set
++CONFIG_SERIAL_8250=y
++CONFIG_SERIAL_8250_CONSOLE=y
++CONFIG_SERIAL_8250_DW=y
++# CONFIG_HW_RANDOM is not set
++CONFIG_I2C_CHARDEV=y
++CONFIG_I2C_GPIO=y
++CONFIG_I2C_RK3X=y
++CONFIG_GPIO_DWAPB=y
++CONFIG_POWER_SUPPLY=y
++CONFIG_POWER_RESET=y
++CONFIG_SENSORS_IIO_HWMON=y
++CONFIG_THERMAL=y
++CONFIG_CPU_THERMAL=y
++CONFIG_WATCHDOG=y
++CONFIG_SOFT_WATCHDOG=y
++CONFIG_MFD_RK808=y
++CONFIG_MFD_TPS65910=y
++CONFIG_REGULATOR_DEBUG=y
++CONFIG_REGULATOR_FIXED_VOLTAGE=y
++CONFIG_REGULATOR_ACT8865=y
++CONFIG_REGULATOR_FAN53555=y
++CONFIG_REGULATOR_RK808=y
++CONFIG_DRM=y
++CONFIG_DRM_ROCKCHIP=y
++CONFIG_ROCKCHIP_DW_HDMI=y
++CONFIG_ROCKCHIP_INNO_HDMI=y
++CONFIG_DRM_PANEL_SIMPLE=y
++CONFIG_FB_MODE_HELPERS=y
++CONFIG_BACKLIGHT_LCD_SUPPORT=y
++CONFIG_LCD_CLASS_DEVICE=y
++CONFIG_BACKLIGHT_CLASS_DEVICE=y
++# CONFIG_BACKLIGHT_GENERIC is not set
++CONFIG_BACKLIGHT_PWM=y
++CONFIG_SOUND=y
++CONFIG_SND=y
++CONFIG_SND_SOC=y
++CONFIG_SND_SOC_ROCKCHIP=y
++CONFIG_SND_SOC_ROCKCHIP_I2S=y
++CONFIG_SND_SIMPLE_CARD=y
++CONFIG_USB=y
++CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
++CONFIG_USB_OTG=y
++CONFIG_USB_MON=y
++CONFIG_USB_STORAGE=y
++CONFIG_USB_DWC2=y
++CONFIG_USB_DWC2_PLATFORM=y
++CONFIG_NOP_USB_XCEIV=y
++CONFIG_USB_ULPI=y
++CONFIG_USB_GADGET=y
++CONFIG_USB_G_ANDROID=y
++CONFIG_MMC=y
++CONFIG_MMC_BLOCK_MINORS=32
++CONFIG_MMC_DW=y
++CONFIG_MMC_DW_ROCKCHIP=y
++CONFIG_NEW_LEDS=y
++CONFIG_LEDS_CLASS=y
++CONFIG_LEDS_GPIO=y
++CONFIG_LEDS_TRIGGERS=y
++CONFIG_LEDS_TRIGGER_TIMER=y
++CONFIG_LEDS_TRIGGER_ONESHOT=y
++CONFIG_LEDS_TRIGGER_HEARTBEAT=y
++CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
++CONFIG_RTC_CLASS=y
++CONFIG_RTC_DRV_HYM8563=y
++CONFIG_RTC_DRV_RK808=y
++CONFIG_DMADEVICES=y
++CONFIG_DMADEVICES_DEBUG=y
++CONFIG_DMADEVICES_VDEBUG=y
++CONFIG_PL330_DMA=y
++CONFIG_ASYNC_TX_DMA=y
++CONFIG_STAGING=y
++CONFIG_R8188EU=y
++CONFIG_R8723AU=y
++CONFIG_ASHMEM=y
++CONFIG_ANDROID_TIMED_GPIO=y
++CONFIG_ANDROID_LOW_MEMORY_KILLER=y
++CONFIG_SYNC=y
++CONFIG_SW_SYNC=y
++CONFIG_SW_SYNC_USER=y
++CONFIG_ION=y
++CONFIG_ION_DUMMY=y
++CONFIG_COMMON_CLK_RK808=y
++CONFIG_ROCKCHIP_IOMMU=y
++CONFIG_IIO=y
++CONFIG_ROCKCHIP_SARADC=y
++CONFIG_INV_MPU6050_IIO=y
++CONFIG_AK8975=y
++CONFIG_PWM=y
++CONFIG_PWM_ROCKCHIP=y
++CONFIG_PHY_ROCKCHIP_USB=y
++CONFIG_ANDROID=y
++CONFIG_ANDROID_BINDER_IPC=y
++CONFIG_EXT2_FS=y
++CONFIG_EXT3_FS=y
++# CONFIG_EXT3_FS_XATTR is not set
++CONFIG_EXT4_FS=y
++CONFIG_EXT4_FS_SECURITY=y
++# CONFIG_DNOTIFY is not set
++CONFIG_MSDOS_FS=y
++CONFIG_VFAT_FS=y
++CONFIG_TMPFS=y
++# CONFIG_NETWORK_FILESYSTEMS is not set
++CONFIG_NLS_CODEPAGE_437=y
++CONFIG_NLS_CODEPAGE_850=y
++CONFIG_NLS_CODEPAGE_852=y
++CONFIG_NLS_ASCII=y
++CONFIG_NLS_ISO8859_1=y
++CONFIG_NLS_ISO8859_15=y
++CONFIG_NLS_UTF8=y
++CONFIG_PRINTK_TIME=y
++CONFIG_DYNAMIC_DEBUG=y
++CONFIG_DEBUG_INFO=y
++# CONFIG_ENABLE_WARN_DEPRECATED is not set
++# CONFIG_ENABLE_MUST_CHECK is not set
++CONFIG_FRAME_WARN=2048
++CONFIG_DEBUG_FS=y
++CONFIG_DEBUG_KERNEL=y
++# CONFIG_SCHED_DEBUG is not set
++CONFIG_TIMER_STATS=y
++CONFIG_KGDB=y
++CONFIG_DEBUG_LL=y
++CONFIG_DEBUG_RK29_UART2=y
++CONFIG_DEBUG_UART_8250_WORD=y
++CONFIG_EARLY_PRINTK=y
++CONFIG_SECURITY=y
++CONFIG_SECURITY_NETWORK=y
++CONFIG_SECURITY_SELINUX=y
++CONFIG_SECURITY_SELINUX_DISABLE=y
++# CONFIG_SECURITY_SELINUX_AVC_STATS is not set
++CONFIG_CRYPTO_ANSI_CPRNG=y
++# CONFIG_CRYPTO_HW is not set
 -- 
 1.9.1
