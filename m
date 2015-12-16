@@ -1,45 +1,32 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v4 3/5] PCI: qcom: Add Qualcomm PCIe controller driver
-Date: Wed, 16 Dec 2015 15:17:25 -0600
-Message-ID: <20151216211725.GA27791@localhost>
-References: <1449149725-27607-1-git-send-email-stanimir.varbanov@linaro.org>
- <1449149725-27607-4-git-send-email-stanimir.varbanov@linaro.org>
- <566FCE27.2050705@mm-sol.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 2/5] clk: rockchip: rk3036: enable the CLK_IGNORE_UNUSED flag for aclk_vio
+Date: Wed, 16 Dec 2015 22:24:50 +0100
+Message-ID: <1859046.avFUcYTcgb@diego>
+References: <1450254441-3243-1-git-send-email-wxt@rock-chips.com> <1450254441-3243-3-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <566FCE27.2050705@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1450254441-3243-3-git-send-email-wxt@rock-chips.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, leozwang@google.com, keescook@google.com, leecam@google.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yakir Yang <ykk@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stan,
-
-On Tue, Dec 15, 2015 at 10:24:07AM +0200, Stanimir Varbanov wrote:
-> On 12/03/2015 03:35 PM, Stanimir Varbanov wrote:
-> > From: Stanimir Varbanov <svarbanov@mm-sol.com>
-> > 
-> > The PCIe driver reuse the Designware common code for host
-> > and MSI initialization, and also program the Qualcomm
-> > application specific registers.
-> > 
-> > Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> > Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> > ---
-> >  MAINTAINERS                  |    7 +
-> >  drivers/pci/host/Kconfig     |   10 +
-> >  drivers/pci/host/Makefile    |    1 +
-> >  drivers/pci/host/pcie-qcom.c |  624 ++++++++++++++++++++++++++++++++++++++++++
-> >  4 files changed, 642 insertions(+)
-> >  create mode 100644 drivers/pci/host/pcie-qcom.c
+Am Mittwoch, 16. Dezember 2015, 16:27:18 schrieb Caesar Wang:
+> From: Yakir Yang <ykk@rock-chips.com>
 > 
-> Hi Bjorn, any chance to get this merged in 4.5 ?
+> ACLK_VIO is the noc bus clock for display module, display cann't
+> read data from ddr without this clock enabled.
+> 
+> Due to it shouldn't belong to any driver, but we need it enabled,
+> so just mark it as the CLK_IGNORE_UNUSED flag.
+> 
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 
-The driver looks good overall, so I think 4.5 is very possible.  It
-doesn't look like there's really a consensus on the memory barrier
-thing yet, and I assume the testing reports include that first patch,
-so it'd be good to get that resolved first.
+applied to my clk-branch for 4.5
 
-Bjorn
+
+Thanks
+Heiko
