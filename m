@@ -1,80 +1,42 @@
 From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH 0/5] Kylin-board is based on RK3036 SOCs, add the initiation
-Date: Wed, 16 Dec 2015 16:27:16 +0800
-Message-ID: <1450254441-3243-1-git-send-email-wxt@rock-chips.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
+Subject: [PATCH 2/5] clk: rockchip: rk3036: enable the CLK_IGNORE_UNUSED flag for aclk_vio
+Date: Wed, 16 Dec 2015 16:27:18 +0800
+Message-ID: <1450254441-3243-3-git-send-email-wxt@rock-chips.com>
+References: <1450254441-3243-1-git-send-email-wxt@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1450254441-3243-1-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: heiko@sntech.de, mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: leozwang@google.com, keescook@google.com, leecam@google.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Caesar Wang <wxt@rock-chips.com>
+Cc: leozwang@google.com, keescook@google.com, leecam@google.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yakir Yang <ykk@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-version for working.
+From: Yakir Yang <ykk@rock-chips.com>
 
-This series pacthes have the following decriptions:
+ACLK_VIO is the noc bus clock for display module, display cann't
+read data from ddr without this clock enabled.
 
-PATCH[1/5]:
-clk: rockchip: rk3036: include downstream muxes into fractional dividers
+Due to it shouldn't belong to any driver, but we need it enabled,
+so just mark it as the CLK_IGNORE_UNUSED flag.
 
-This patch is depend on Heiko's series pacthes.
-
-a8a1de6 clk: rockchip: include downstream muxes into fractional dividers
-(https://patchwork.kernel.org/patch/7053071/)
-ab40856 clk: rockchip: handle mux dependency of fractional dividers
-(https://patchwork.kernel.org/patch/7053051/)
-c4c5582 clk: add flag for clocks that need to be enabled on rate changes
-(https://patchwork.kernel.org/patch/7053041/)
+Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 ---
 
-PATCH[2/5]:
-0a68e13 clk: rockchip: rk3036: enable the CLK_IGNORE_UNUSED flag for aclk_vio
-The aclk_vio is marked as the ignore_unused since it's the noc clock.
-let will fix the display issue.
----
+ drivers/clk/rockchip/clk-rk3036.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-PATCH[3/5]:
-183a5eb ARM: dts: rockchip: update the core dts for rk3036
-Update the rk3036 core dtsi, add the hdmi, lcdc, sdmmc, sdio .... node info
-for rk3036, in general the function is verified by the UARL[0].
-
-UARL[0]:https://github.com/rockchip-linux/kernel/ -b develop-v4.1
----
-
-PATCH[4/5]:
-962e1ad ARM: dts: rockchip: add the kylin board for rk3036
-Add the rk3036-kylin dts for Kylin-board.
----
-
-PATCH[5/5]:
-d96f13a ARM: config: Add the rk3036 configure for kylin board
-Add the defconfig for Kylin-board to better to know about that.
-
-Note: I don't plan to upstream for this patch. :)
----
-
-The game is just beginning ....
-
-
-
-Caesar Wang (4):
-  clk: rockchip: rk3036: include downstream muxes into fractional
-    dividers
-  ARM: dts: rockchip: update the core dts for rk3036
-  ARM: dts: rockchip: add the kylin board for rk3036
-  ARM: config: Add the rk3036 configure for kylin board
-
-Yakir Yang (1):
-  clk: rockchip: rk3036: enable the CLK_IGNORE_UNUSED flag for aclk_vio
-
- Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
- arch/arm/boot/dts/Makefile                         |   1 +
- arch/arm/boot/dts/rk3036-kylin.dts                 | 302 +++++++++++++++++++++
- arch/arm/boot/dts/rk3036.dtsi                      | 225 ++++++++++++++-
- arch/arm/configs/rk3036_kylin_defconfig            | 230 ++++++++++++++++
- drivers/clk/rockchip/clk-rk3036.c                  |  37 +--
- 6 files changed, 777 insertions(+), 22 deletions(-)
- create mode 100644 arch/arm/boot/dts/rk3036-kylin.dts
- create mode 100644 arch/arm/configs/rk3036_kylin_defconfig
-
+diff --git a/drivers/clk/rockchip/clk-rk3036.c b/drivers/clk/rockchip/clk-rk3036.c
+index dc01a2a..b2cb5af 100644
+--- a/drivers/clk/rockchip/clk-rk3036.c
++++ b/drivers/clk/rockchip/clk-rk3036.c
+@@ -358,7 +358,7 @@ static struct rockchip_clk_branch rk3036_clk_branches[] __initdata = {
+ 	GATE(PCLK_HDMI, "pclk_hdmi", "pclk_cpu", 0, RK2928_CLKGATE_CON(3), 8, GFLAGS),
+ 
+ 	/* aclk_vio gates */
+-	GATE(ACLK_VIO, "aclk_vio", "aclk_disp1_pre", 0, RK2928_CLKGATE_CON(6), 13, GFLAGS),
++	GATE(ACLK_VIO, "aclk_vio", "aclk_disp1_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(6), 13, GFLAGS),
+ 	GATE(ACLK_LCDC, "aclk_lcdc", "aclk_disp1_pre", 0, RK2928_CLKGATE_CON(9), 6, GFLAGS),
+ 
+ 	GATE(HCLK_VIO_BUS, "hclk_vio_bus", "hclk_disp_pre", 0, RK2928_CLKGATE_CON(6), 12, GFLAGS),
 -- 
 1.9.1
-
