@@ -1,75 +1,80 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V4 16/16] ARM64: tegra: select PM_GENERIC_DOMAINS
-Date: Wed, 16 Dec 2015 11:40:19 +0000
-Message-ID: <56714DA3.80707@nvidia.com>
-References: <1449241037-22193-1-git-send-email-jonathanh@nvidia.com>
- <1449241037-22193-17-git-send-email-jonathanh@nvidia.com>
- <CAPDyKFrcuK4iCo7Tg1Q_XjB7Y-+=s-ax1vzK4UEu9FfPnuProw@mail.gmail.com>
- <567131A2.6030303@nvidia.com>
- <CAPDyKFpZoZZapqanFyUzT_jZ6DLBnGXOXEyDHosWpphAjzhy7A@mail.gmail.com>
+From: dawei chien <dawei.chien@mediatek.com>
+Subject: Re: [PATCH v5 2/3] arm64: dts: mt8173: Add thermal zone node.
+Date: Wed, 16 Dec 2015 20:12:31 +0800
+Message-ID: <1450267951.7981.22.camel@mtksdaap41>
+References: <1450238356-36319-1-git-send-email-dawei.chien@mediatek.com>
+	 <1450238356-36319-3-git-send-email-dawei.chien@mediatek.com>
+	 <CAGS+omDDfJb9dfWWPaMKs=MkO4Pf3RF9SUD==i7sgHsrDhFDxA@mail.gmail.com>
+	 <1450260553.7981.14.camel@mtksdaap41>
+	 <CAGS+omCWJo6Q933tRigMsxPvOmD3-cxe337_spAMKhYSUdTUKw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFpZoZZapqanFyUzT_jZ6DLBnGXOXEyDHosWpphAjzhy7A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAGS+omCWJo6Q933tRigMsxPvOmD3-cxe337_spAMKhYSUdTUKw@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Daniel Kurtz <djkurtz@chromium.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Punit Agrawal <punit.agrawal@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On 16/12/15 09:47, Ulf Hansson wrote:
-> On 16 December 2015 at 10:40, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> Hi Ulf,
->>
->> On 15/12/15 19:54, Ulf Hansson wrote:
->>> On 4 December 2015 at 15:57, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->>>> Enable PM_GENERIC_DOMAINS for tegra 64-bit devices. To ensure that devices
->>>> dependent upon a particular power-domain are only probed when that power
->>>> domain has been powered up, requires that PM is made mandatory for tegra
->>>> 64-bit devices and so select this option for tegra as well.
->>>>
->>>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>>  arch/arm64/Kconfig.platforms | 2 ++
->>>>  1 file changed, 2 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
->>>> index 9806324fa215..e0b5bd0aff0f 100644
->>>> --- a/arch/arm64/Kconfig.platforms
->>>> +++ b/arch/arm64/Kconfig.platforms
->>>> @@ -93,6 +93,8 @@ config ARCH_TEGRA
->>>>         select GENERIC_CLOCKEVENTS
->>>>         select HAVE_CLK
->>>>         select PINCTRL
->>>> +       select PM
->>>> +       select PM_GENERIC_DOMAINS
->>>
->>> If you still want to allow ARCH_TEGRA to run without PM, you should
->>> probably change to:
->>>
->>> select PM_GENERIC_DOMAINS if PM
->>
->> Per the changelog this is deliberate. If we allow !PM, then there is a
->> potential that you could probe a device when the power domain is not
->> powered on. I understand that some SoCs turn on all the power-domains
->> when !PM but this will not work for tegra because we don't register the
->> power domain until later in the boot and so we are relying upon probe
->> deferral to defer the probe of devices that use power-domains.
+On Wed, 2015-12-16 at 19:22 +0800, Daniel Kurtz wrote:
+> On Wed, Dec 16, 2015 at 6:09 PM, dawei chien <dawei.chien@mediatek.com> wrote:
+> > On Wed, 2015-12-16 at 16:34 +0800, Daniel Kurtz wrote:
+> >> On Wed, Dec 16, 2015 at 11:59 AM, Dawei Chien <dawei.chien@mediatek.com> wrote:
+> >> >
+> >> > This adds thermal zone node to Mediatek MT8173 dtsi file.
+> >> >
+> >> > Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
+> >> > ---
+> >> > This patch is base on patchset:
+> >> > https://lkml.org/lkml/2015/11/30/239
+> >> > ---
+> >> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi |   43 ++++++++++++++++++++++++++++++
+> >> >  1 file changed, 43 insertions(+)
+> >> >
+> >> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> >> > index fda805d..4114cee 100644
+> >> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> >> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> >> > @@ -188,6 +188,49 @@
+> >> >                 clock-output-names = "cpum_ck";
+> >> >         };
+> >> >
+> >> > +       thermal-zones {
+> >> > +               cpu_thermal: cpu_thermal {
+> >> > +                       polling-delay-passive = <1000>; /* milliseconds */
+> >> > +                       polling-delay = <1000>; /* milliseconds */
+> >> > +
+> >> > +                       thermal-sensors = <&thermal 0>;
+> >>
+> >> This should be <&thermal> with the MTK temp sensor node in
+> >> https://lkml.org/lkml/2015/11/30/239 patch series.
+> >>
+> >> -Dan
+> >
+> > Hi Dan,
+> > Sascha's thermal driver V12 only register sensor id as 0, so we need to
+> > register sensor id as 0 to device tree as well.
+> >
+> > Either <&thermal 0> or <&thermal>, sensor id should be 0 for two cases.
+> > I try this two case, function all work fine for two cases. May I have
+> > any misunderstand? Please kindly give your comment.
+> > I will re-send this patch again once you tell me the reason, thank you.
 > 
-> So what you are saying is that adding the PM domain support, will fix
-> some devices to become successfully probed as they were broken before?
+> In the new patchset, Sascha changed it to:
+> #thermal-sensor-cells = <0>;
+> 
+> Which means the <&thermal> phandle no longer has any arguments.
+> 
+> Thanks!
+> -Dan
+Hi Dan,
+Thank you for your comment. Yes, I don't need to add sensor id since new
+driver add thermal-sensor-cell as 0.
+(Even I checked function OK to this patch with new patchset)
 
-Not exactly. There is a legacy tegra_powergate_sequence_power_up() that
-has been used to date to get around this. However, by migrating to GENPD
-we really need to make PM mandatory, otherwise you could attempt to
-probe a device in a power domain that is not powered. In other words,
-you are probing blindly. I know some SoCs do this, but that does not
-seem very robust.
+I will re-send this patch soon, thank you.
 
-Cheers
-Jon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+BR,
+Dawei
+
