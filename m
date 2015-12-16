@@ -1,416 +1,262 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v6 4/9] mfd: axp20x: Split the driver into core
- and i2c bits
-Date: Thu, 17 Dec 2015 00:32:13 +0800
-Message-ID: <1450283538-25067-5-git-send-email-wens@csie.org>
-References: <1450283538-25067-1-git-send-email-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBHVEY2ZQKGQE4UKOXSA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1450283538-25067-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-9oqZluOz41k@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH resend] pinctrl: sunxi: Add A80 special pin controller
+Date: Thu, 17 Dec 2015 00:39:42 +0800
+Message-ID: <1450283982-25295-1-git-send-email-wens@csie.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Chen-Yu Tsai <wens@wens.tw>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>
 List-Id: devicetree@vger.kernel.org
 
-The axp20x driver assumes the device is i2c based. This is not the
-case with later chips, which use a proprietary 2 wire serial bus
-by Allwinner called "Reduced Serial Bus".
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
 
-This patch follows the example of mfd/wm831x and splits it into
-an interface independent core, and an i2c specific glue layer.
-MFD_AXP20X and the new MFD_AXP20X_I2C are changed to tristate
-symbols, allowing the driver to be built as modules.
+Like the previous designs, the A80 has a special pin controller for the
+critical pins, like the PMIC bus.
 
-Whitespace and other style errors in the moved i2c specific code
-have been fixed. Included but unused header files are removed as
-well.
+Add a driver for this controller.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+[wens: Add A80 compatible strings to bindings doc; fix pin function
+       names based on v1.3 datasheet; constify of_device_id table]
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/mfd/Kconfig        |  14 ++++---
- drivers/mfd/Makefile       |   1 +
- drivers/mfd/axp20x-i2c.c   | 102 +++++++++++++++++++++++++++++++++++++++++++++
- drivers/mfd/axp20x.c       |  88 +++++++-------------------------------
- include/linux/mfd/axp20x.h |  33 ++++++++++++++-
- 5 files changed, 158 insertions(+), 80 deletions(-)
- create mode 100644 drivers/mfd/axp20x-i2c.c
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 4d92df6ef9fe..804cd3dcce32 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -91,14 +91,18 @@ config MFD_BCM590XX
- 	  Support for the BCM590xx PMUs from Broadcom
+Linus, can we have this one included for 4.5?
+
+Thanks
+
+---
+ .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   2 +
+ drivers/pinctrl/sunxi/Kconfig                      |   5 +
+ drivers/pinctrl/sunxi/Makefile                     |   1 +
+ drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c        | 181 +++++++++++++++++++++
+ 4 files changed, 189 insertions(+)
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+index b321b26780dc..b3b6c2f210d7 100644
+--- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+@@ -18,6 +18,8 @@ Required properties:
+   "allwinner,sun8i-a23-r-pinctrl"
+   "allwinner,sun8i-a33-pinctrl"
+   "allwinner,sun8i-a83t-pinctrl"
++  "allwinner,sun9i-a80-pinctrl"
++  "allwinner,sun9i-a80-r-pinctrl"
  
- config MFD_AXP20X
--	bool "X-Powers AXP20X"
-+	tristate
- 	select MFD_CORE
--	select REGMAP_I2C
- 	select REGMAP_IRQ
--	depends on I2C=y
+ - reg: Should contain the register physical address and length for the
+   pin controller.
+diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
+index e68fd951129a..0252b3fa41ce 100644
+--- a/drivers/pinctrl/sunxi/Kconfig
++++ b/drivers/pinctrl/sunxi/Kconfig
+@@ -55,4 +55,9 @@ config PINCTRL_SUN9I_A80
+ 	def_bool MACH_SUN9I
+ 	select PINCTRL_SUNXI_COMMON
+ 
++config PINCTRL_SUN9I_A80_R
++	def_bool MACH_SUN9I
++	depends on RESET_CONTROLLER
++	select PINCTRL_SUNXI_COMMON
 +
-+config MFD_AXP20X_I2C
-+	tristate "X-Powers AXP series PMICs with I2C"
-+	select MFD_AXP20X
-+	select REGMAP_I2C
-+	depends on I2C
- 	help
--	  If you say Y here you get support for the X-Powers AXP202, AXP209 and
--	  AXP288 power management IC (PMIC).
-+	  If you say Y here you get support for the X-Powers AXP series power
-+	  management ICs (PMICs) controlled with I2C.
- 	  This driver include only the core APIs. You have to select individual
- 	  components like regulators or the PEK (Power Enable Key) under the
- 	  corresponding menus.
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index a8b76b81b467..a6913007d667 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -107,6 +107,7 @@ obj-$(CONFIG_PMIC_DA9052)	+= da9052-core.o
- obj-$(CONFIG_MFD_DA9052_SPI)	+= da9052-spi.o
- obj-$(CONFIG_MFD_DA9052_I2C)	+= da9052-i2c.o
- obj-$(CONFIG_MFD_AXP20X)	+= axp20x.o
-+obj-$(CONFIG_MFD_AXP20X_I2C)	+= axp20x-i2c.o
- 
- obj-$(CONFIG_MFD_LP3943)	+= lp3943.o
- obj-$(CONFIG_MFD_LP8788)	+= lp8788.o lp8788-irq.o
-diff --git a/drivers/mfd/axp20x-i2c.c b/drivers/mfd/axp20x-i2c.c
+ endif
+diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
+index e08029034510..0b4b827f314b 100644
+--- a/drivers/pinctrl/sunxi/Makefile
++++ b/drivers/pinctrl/sunxi/Makefile
+@@ -14,3 +14,4 @@ obj-$(CONFIG_PINCTRL_SUN8I_A23_R)	+= pinctrl-sun8i-a23-r.o
+ obj-$(CONFIG_PINCTRL_SUN8I_A33)		+= pinctrl-sun8i-a33.o
+ obj-$(CONFIG_PINCTRL_SUN8I_A83T)	+= pinctrl-sun8i-a83t.o
+ obj-$(CONFIG_PINCTRL_SUN9I_A80)		+= pinctrl-sun9i-a80.o
++obj-$(CONFIG_PINCTRL_SUN9I_A80_R)	+= pinctrl-sun9i-a80-r.o
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c
 new file mode 100644
-index 000000000000..b54205677bb2
+index 000000000000..42547ffa20a8
 --- /dev/null
-+++ b/drivers/mfd/axp20x-i2c.c
-@@ -0,0 +1,102 @@
++++ b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c
+@@ -0,0 +1,181 @@
 +/*
-+ * axp20x-i2c.c - I2C driver for the X-Powers' Power Management ICs
++ * Allwinner A80 SoCs special pins pinctrl driver.
 + *
-+ * AXP20x typically comprises an adaptive USB-Compatible PWM charger, BUCK DC-DC
-+ * converters, LDOs, multiple 12-bit ADCs of voltage, current and temperature
-+ * as well as configurable GPIOs.
++ * Copyright (C) 2014 Maxime Ripard
++ * Maxime Ripard <maxime.ripard@free-electrons.com>
 + *
-+ * This driver supports the I2C variants.
-+ *
-+ * Author: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
 + */
 +
-+#include <linux/acpi.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
 +#include <linux/module.h>
-+#include <linux/mfd/axp20x.h>
++#include <linux/platform_device.h>
 +#include <linux/of.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
++#include <linux/of_device.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/reset.h>
 +
-+static int axp20x_i2c_probe(struct i2c_client *i2c,
-+			    const struct i2c_device_id *id)
++#include "pinctrl-sunxi.h"
++
++static const struct sunxi_desc_pin sun9i_a80_r_pins[] = {
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 0),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x3, "s_uart"),	/* TX */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 0)),	/* PL_EINT0 */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 1),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x3, "s_uart"),	/* RX */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 1)),	/* PL_EINT1 */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 2),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x3, "s_jtag"),	/* TMS */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 2)),	/* PL_EINT2 */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 3),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x3, "s_jtag"),	/* TCK */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 3)),	/* PL_EINT3 */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 4),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x3, "s_jtag"),	/* TDO */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 4)),	/* PL_EINT4 */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 5),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x3, "s_jtag"),	/* TDI */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 5)),	/* PL_EINT5 */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 6),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x3, "s_cir_rx"),
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 6)),	/* PL_EINT6 */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 7),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x3, "1wire"),
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 7)),	/* PL_EINT7 */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 8),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "s_ps2"),		/* SCK1 */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 8)),	/* PL_EINT8 */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 9),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "s_ps2"),		/* SDA1 */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 9)),	/* PL_EINT9 */
++
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 0),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 0)),	/* PM_EINT0 */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 1),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 1)),	/* PM_EINT1 */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 2),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 2)),	/* PM_EINT2 */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 3),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 3)),	/* PM_EINT3 */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 4),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x3, "s_i2s1"),	/* LRCKR */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 4)),	/* PM_EINT4 */
++
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 8),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x3, "s_i2c1"),	/* SCK */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 8)),	/* PM_EINT8 */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 9),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x3, "s_i2c1"),	/* SDA */
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 9)),	/* PM_EINT9 */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 10),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "s_i2s0"),	/* MCLK */
++		  SUNXI_FUNCTION(0x3, "s_i2s1")),	/* MCLK */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 11),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "s_i2s0"),	/* BCLK */
++		  SUNXI_FUNCTION(0x3, "s_i2s1")),	/* BCLK */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 12),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "s_i2s0"),	/* LRCK */
++		  SUNXI_FUNCTION(0x3, "s_i2s1")),	/* LRCK */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 13),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "s_i2s0"),	/* DIN */
++		  SUNXI_FUNCTION(0x3, "s_i2s1")),	/* DIN */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 14),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "s_i2s0"),	/* DOUT */
++		  SUNXI_FUNCTION(0x3, "s_i2s1")),	/* DOUT */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 15),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 15)),	/* PM_EINT15 */
++
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(N, 0),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "s_i2c0"),	/* SCK */
++		  SUNXI_FUNCTION(0x3, "s_rsb")),	/* SCK */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN(N, 1),
++		  SUNXI_FUNCTION(0x0, "gpio_in"),
++		  SUNXI_FUNCTION(0x1, "gpio_out"),
++		  SUNXI_FUNCTION(0x2, "s_i2c0"),	/* SDA */
++		  SUNXI_FUNCTION(0x3, "s_rsb")),	/* SDA */
++};
++
++static const struct sunxi_pinctrl_desc sun9i_a80_r_pinctrl_data = {
++	.pins = sun9i_a80_r_pins,
++	.npins = ARRAY_SIZE(sun9i_a80_r_pins),
++	.pin_base = PL_BASE,
++	.irq_banks = 2,
++};
++
++static int sun9i_a80_r_pinctrl_probe(struct platform_device *pdev)
 +{
-+	struct axp20x_dev *axp20x;
-+	int ret;
-+
-+	axp20x = devm_kzalloc(&i2c->dev, sizeof(*axp20x), GFP_KERNEL);
-+	if (!axp20x)
-+		return -ENOMEM;
-+
-+	axp20x->dev = &i2c->dev;
-+	axp20x->irq = i2c->irq;
-+	dev_set_drvdata(axp20x->dev, axp20x);
-+
-+	ret = axp20x_match_device(axp20x);
-+	if (ret)
-+		return ret;
-+
-+	axp20x->regmap = devm_regmap_init_i2c(i2c, axp20x->regmap_cfg);
-+	if (IS_ERR(axp20x->regmap)) {
-+		ret = PTR_ERR(axp20x->regmap);
-+		dev_err(&i2c->dev, "regmap init failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return axp20x_device_probe(axp20x);
++	return sunxi_pinctrl_init(pdev,
++				  &sun9i_a80_r_pinctrl_data);
 +}
 +
-+static int axp20x_i2c_remove(struct i2c_client *i2c)
-+{
-+	struct axp20x_dev *axp20x = i2c_get_clientdata(i2c);
-+
-+	return axp20x_device_remove(axp20x);
-+}
-+
-+static const struct of_device_id axp20x_i2c_of_match[] = {
-+	{ .compatible = "x-powers,axp152", .data = (void *)AXP152_ID },
-+	{ .compatible = "x-powers,axp202", .data = (void *)AXP202_ID },
-+	{ .compatible = "x-powers,axp209", .data = (void *)AXP209_ID },
-+	{ .compatible = "x-powers,axp221", .data = (void *)AXP221_ID },
-+	{ },
++static const struct of_device_id sun9i_a80_r_pinctrl_match[] = {
++	{ .compatible = "allwinner,sun9i-a80-r-pinctrl", },
++	{}
 +};
-+MODULE_DEVICE_TABLE(of, axp20x_i2c_of_match);
++MODULE_DEVICE_TABLE(of, sun9i_a80_r_pinctrl_match);
 +
-+/*
-+ * This is useless for OF-enabled devices, but it is needed by I2C subsystem
-+ */
-+static const struct i2c_device_id axp20x_i2c_id[] = {
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(i2c, axp20x_i2c_id);
-+
-+static const struct acpi_device_id axp20x_i2c_acpi_match[] = {
-+	{
-+		.id = "INT33F4",
-+		.driver_data = AXP288_ID,
++static struct platform_driver sun9i_a80_r_pinctrl_driver = {
++	.probe	= sun9i_a80_r_pinctrl_probe,
++	.driver	= {
++		.name		= "sun9i-a80-r-pinctrl",
++		.owner		= THIS_MODULE,
++		.of_match_table	= sun9i_a80_r_pinctrl_match,
 +	},
-+	{ },
 +};
-+MODULE_DEVICE_TABLE(acpi, axp20x_i2c_acpi_match);
++module_platform_driver(sun9i_a80_r_pinctrl_driver);
 +
-+static struct i2c_driver axp20x_i2c_driver = {
-+	.driver = {
-+		.name	= "axp20x-i2c",
-+		.of_match_table	= of_match_ptr(axp20x_i2c_of_match),
-+		.acpi_match_table = ACPI_PTR(axp20x_i2c_acpi_match),
-+	},
-+	.probe		= axp20x_i2c_probe,
-+	.remove		= axp20x_i2c_remove,
-+	.id_table	= axp20x_i2c_id,
-+};
-+
-+module_i2c_driver(axp20x_i2c_driver);
-+
-+MODULE_DESCRIPTION("PMIC MFD I2C driver for AXP20X");
-+MODULE_AUTHOR("Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>");
++MODULE_AUTHOR("Maxime Ripard <maxime.ripard@free-electrons.com");
++MODULE_DESCRIPTION("Allwinner A80 R_PIO pinctrl driver");
 +MODULE_LICENSE("GPL");
-diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-index 3e186f2dcac3..631ad64ddf69 100644
---- a/drivers/mfd/axp20x.c
-+++ b/drivers/mfd/axp20x.c
-@@ -5,6 +5,8 @@
-  * converters, LDOs, multiple 12-bit ADCs of voltage, current and temperature
-  * as well as configurable GPIOs.
-  *
-+ * This file contains the interface independent core functions.
-+ *
-  * Author: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-  *
-  * This program is free software; you can redistribute it and/or modify
-@@ -13,18 +15,15 @@
-  */
- 
- #include <linux/err.h>
--#include <linux/i2c.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/pm_runtime.h>
- #include <linux/regmap.h>
--#include <linux/slab.h>
- #include <linux/regulator/consumer.h>
- #include <linux/mfd/axp20x.h>
- #include <linux/mfd/core.h>
- #include <linux/of_device.h>
--#include <linux/of_irq.h>
- #include <linux/acpi.h>
- 
- #define AXP20X_OFF	0x80
-@@ -376,32 +375,6 @@ static const struct regmap_irq axp288_regmap_irqs[] = {
- 	INIT_REGMAP_IRQ(AXP288, BC_USB_CHNG,            5, 1),
- };
- 
--static const struct of_device_id axp20x_of_match[] = {
--	{ .compatible = "x-powers,axp152", .data = (void *) AXP152_ID },
--	{ .compatible = "x-powers,axp202", .data = (void *) AXP202_ID },
--	{ .compatible = "x-powers,axp209", .data = (void *) AXP209_ID },
--	{ .compatible = "x-powers,axp221", .data = (void *) AXP221_ID },
--	{ },
--};
--MODULE_DEVICE_TABLE(of, axp20x_of_match);
--
--/*
-- * This is useless for OF-enabled devices, but it is needed by I2C subsystem
-- */
--static const struct i2c_device_id axp20x_i2c_id[] = {
--	{ },
--};
--MODULE_DEVICE_TABLE(i2c, axp20x_i2c_id);
--
--static const struct acpi_device_id axp20x_acpi_match[] = {
--	{
--		.id = "INT33F4",
--		.driver_data = AXP288_ID,
--	},
--	{ },
--};
--MODULE_DEVICE_TABLE(acpi, axp20x_acpi_match);
--
- static const struct regmap_irq_chip axp152_regmap_irq_chip = {
- 	.name			= "axp152_irq_chip",
- 	.status_base		= AXP152_IRQ1_STATE,
-@@ -606,7 +579,7 @@ static void axp20x_power_off(void)
- 		     AXP20X_OFF);
- }
- 
--static int axp20x_match_device(struct axp20x_dev *axp20x)
-+int axp20x_match_device(struct axp20x_dev *axp20x)
- {
- 	struct device *dev = axp20x->dev;
- 	const struct acpi_device_id *acpi_id;
-@@ -663,38 +636,18 @@ static int axp20x_match_device(struct axp20x_dev *axp20x)
- 
- 	return 0;
- }
-+EXPORT_SYMBOL(axp20x_match_device);
- 
--static int axp20x_i2c_probe(struct i2c_client *i2c,
--			 const struct i2c_device_id *id)
-+int axp20x_device_probe(struct axp20x_dev *axp20x)
- {
--	struct axp20x_dev *axp20x;
- 	int ret;
- 
--	axp20x = devm_kzalloc(&i2c->dev, sizeof(*axp20x), GFP_KERNEL);
--	if (!axp20x)
--		return -ENOMEM;
--
--	axp20x->i2c_client = i2c;
--	axp20x->dev = &i2c->dev;
--	dev_set_drvdata(axp20x->dev, axp20x);
--
--	ret = axp20x_match_device(axp20x);
--	if (ret)
--		return ret;
--
--	axp20x->regmap = devm_regmap_init_i2c(i2c, axp20x->regmap_cfg);
--	if (IS_ERR(axp20x->regmap)) {
--		ret = PTR_ERR(axp20x->regmap);
--		dev_err(&i2c->dev, "regmap init failed: %d\n", ret);
--		return ret;
--	}
--
--	ret = regmap_add_irq_chip(axp20x->regmap, i2c->irq,
-+	ret = regmap_add_irq_chip(axp20x->regmap, axp20x->irq,
- 				  IRQF_ONESHOT | IRQF_SHARED, -1,
- 				  axp20x->regmap_irq_chip,
- 				  &axp20x->regmap_irqc);
- 	if (ret) {
--		dev_err(&i2c->dev, "failed to add irq chip: %d\n", ret);
-+		dev_err(axp20x->dev, "failed to add irq chip: %d\n", ret);
- 		return ret;
- 	}
- 
-@@ -702,8 +655,8 @@ static int axp20x_i2c_probe(struct i2c_client *i2c,
- 			axp20x->nr_cells, NULL, 0, NULL);
- 
- 	if (ret) {
--		dev_err(&i2c->dev, "failed to add MFD devices: %d\n", ret);
--		regmap_del_irq_chip(i2c->irq, axp20x->regmap_irqc);
-+		dev_err(axp20x->dev, "failed to add MFD devices: %d\n", ret);
-+		regmap_del_irq_chip(axp20x->irq, axp20x->regmap_irqc);
- 		return ret;
- 	}
- 
-@@ -712,38 +665,25 @@ static int axp20x_i2c_probe(struct i2c_client *i2c,
- 		pm_power_off = axp20x_power_off;
- 	}
- 
--	dev_info(&i2c->dev, "AXP20X driver loaded\n");
-+	dev_info(axp20x->dev, "AXP20X driver loaded\n");
- 
- 	return 0;
- }
-+EXPORT_SYMBOL(axp20x_device_probe);
- 
--static int axp20x_i2c_remove(struct i2c_client *i2c)
-+int axp20x_device_remove(struct axp20x_dev *axp20x)
- {
--	struct axp20x_dev *axp20x = i2c_get_clientdata(i2c);
--
- 	if (axp20x == axp20x_pm_power_off) {
- 		axp20x_pm_power_off = NULL;
- 		pm_power_off = NULL;
- 	}
- 
- 	mfd_remove_devices(axp20x->dev);
--	regmap_del_irq_chip(axp20x->i2c_client->irq, axp20x->regmap_irqc);
-+	regmap_del_irq_chip(axp20x->irq, axp20x->regmap_irqc);
- 
- 	return 0;
- }
--
--static struct i2c_driver axp20x_i2c_driver = {
--	.driver = {
--		.name	= "axp20x",
--		.of_match_table	= of_match_ptr(axp20x_of_match),
--		.acpi_match_table = ACPI_PTR(axp20x_acpi_match),
--	},
--	.probe		= axp20x_i2c_probe,
--	.remove		= axp20x_i2c_remove,
--	.id_table	= axp20x_i2c_id,
--};
--
--module_i2c_driver(axp20x_i2c_driver);
-+EXPORT_SYMBOL(axp20x_device_remove);
- 
- MODULE_DESCRIPTION("PMIC MFD core driver for AXP20X");
- MODULE_AUTHOR("Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>");
-diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
-index b24c771cebd5..00697c6ad8b0 100644
---- a/include/linux/mfd/axp20x.h
-+++ b/include/linux/mfd/axp20x.h
-@@ -396,7 +396,7 @@ enum axp288_irqs {
- 
- struct axp20x_dev {
- 	struct device			*dev;
--	struct i2c_client		*i2c_client;
-+	int				irq;
- 	struct regmap			*regmap;
- 	struct regmap_irq_chip_data	*regmap_irqc;
- 	long				variant;
-@@ -462,4 +462,35 @@ static inline int axp20x_read_variable_width(struct regmap *regmap,
- 	return result;
- }
- 
-+/**
-+ * axp20x_match_device(): Setup axp20x variant related fields
-+ *
-+ * @axp20x: axp20x device to setup (.dev field must be set)
-+ * @dev: device associated with this axp20x device
-+ *
-+ * This lets the axp20x core configure the mfd cells and register maps
-+ * for later use.
-+ */
-+int axp20x_match_device(struct axp20x_dev *axp20x);
-+
-+/**
-+ * axp20x_device_probe(): Probe a configured axp20x device
-+ *
-+ * @axp20x: axp20x device to probe (must be configured)
-+ *
-+ * This function lets the axp20x core register the axp20x mfd devices
-+ * and irqchip. The axp20x device passed in must be fully configured
-+ * with axp20x_match_device, its irq set, and regmap created.
-+ */
-+int axp20x_device_probe(struct axp20x_dev *axp20x);
-+
-+/**
-+ * axp20x_device_probe(): Remove a axp20x device
-+ *
-+ * @axp20x: axp20x device to remove
-+ *
-+ * This tells the axp20x core to remove the associated mfd devices
-+ */
-+int axp20x_device_remove(struct axp20x_dev *axp20x);
-+
- #endif /* __LINUX_MFD_AXP20X_H */
 -- 
 2.6.4
+
