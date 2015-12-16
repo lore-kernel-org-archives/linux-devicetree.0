@@ -1,87 +1,54 @@
 From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH v2 2/8] irq: bcm2836: Add SMP support for the 2836
-Date: Wed, 16 Dec 2015 15:55:09 -0800
-Message-ID: <1450310115-22163-3-git-send-email-eric@anholt.net>
-References: <1450310115-22163-1-git-send-email-eric@anholt.net>
+Subject: [PATCH v2 0/8] Raspberry Pi 2 support.
+Date: Wed, 16 Dec 2015 15:55:07 -0800
+Message-ID: <1450310115-22163-1-git-send-email-eric@anholt.net>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450310115-22163-1-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Andrea Merello <andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Andrea Merello <andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+This is a major rewrite of the previous Raspberry Pi 2 submission.
+SMP support is now included, and the DT includes are cleaned up to
+avoid massive duplication.
 
-The firmware sets the secondaries spinning waiting for a non-NULL
-value to show up in the last IPI mailbox.
+The branch (based on 4.4-rc5, to get the USB regression fixes) can be
+found at:
 
-The original SMP port from the downstream tree was done by Andrea, and
-Eric cleaned it up/rewrote it a few times from there.
+https://github.com/anholt/linux/tree/bcm2836-4.4
 
-Signed-off-by: Andrea Merello <andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
----
- drivers/irqchip/irq-bcm2836.c | 27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+Andrea Merello (1):
+  irq: bcm2836: Add SMP support for the 2836
 
-diff --git a/drivers/irqchip/irq-bcm2836.c b/drivers/irqchip/irq-bcm2836.c
-index 6ec125e..c5ef4df 100644
---- a/drivers/irqchip/irq-bcm2836.c
-+++ b/drivers/irqchip/irq-bcm2836.c
-@@ -53,14 +53,16 @@
- /* Same status bits as above, but for FIQ. */
- #define LOCAL_FIQ_PENDING0		0x070
- /*
-- * Mailbox0 write-to-set bits.  There are 16 mailboxes, 4 per CPU, and
-+ * Mailbox write-to-set bits.  There are 16 mailboxes, 4 per CPU, and
-  * these bits are organized by mailbox number and then CPU number.  We
-  * use mailbox 0 for IPIs.  The mailbox's interrupt is raised while
-  * any bit is set.
-  */
- #define LOCAL_MAILBOX0_SET0		0x080
--/* Mailbox0 write-to-clear bits. */
-+#define LOCAL_MAILBOX3_SET0		0x08c
-+/* Mailbox write-to-clear bits. */
- #define LOCAL_MAILBOX0_CLR0		0x0c0
-+#define LOCAL_MAILBOX3_CLR0		0x0cc
- 
- #define LOCAL_IRQ_CNTPSIRQ	0
- #define LOCAL_IRQ_CNTPNSIRQ	1
-@@ -226,6 +228,26 @@ static const struct irq_domain_ops bcm2836_arm_irqchip_intc_ops = {
- 	.xlate = irq_domain_xlate_onecell
- };
- 
-+#ifdef CONFIG_SMP
-+int __init bcm2836_smp_boot_secondary(unsigned int cpu,
-+				      struct task_struct *idle)
-+{
-+	unsigned long secondary_startup_phys =
-+		(unsigned long)virt_to_phys((void *)secondary_startup);
-+
-+	dsb();
-+	writel(secondary_startup_phys,
-+	       intc.base + LOCAL_MAILBOX3_SET0 + 16 * cpu);
-+
-+	return 0;
-+}
-+
-+static const struct smp_operations bcm2836_smp_ops __initconst = {
-+	.smp_boot_secondary	= bcm2836_smp_boot_secondary,
-+};
-+
-+#endif
-+
- static void
- bcm2836_arm_irqchip_smp_init(void)
- {
-@@ -237,6 +259,7 @@ bcm2836_arm_irqchip_smp_init(void)
- 	register_cpu_notifier(&bcm2836_arm_irqchip_cpu_notifier);
- 
- 	set_smp_cross_call(bcm2836_arm_irqchip_send_ipi);
-+	smp_set_ops(&bcm2836_smp_ops);
- #endif
- }
- 
+Eric Anholt (7):
+  irq: bcm2836: Fix initialization of the LOCAL_IRQ_CNT*IRQ timers
+  dt-bindings: Add root properties for Raspberry Pi 2
+  ARM: bcm2835: Split the DT for peripherals from the DT for the CPU
+  ARM: bcm2835: Move the CPU/peripheral include out of common RPi DT.
+  ARM: bcm2835: Add devicetree for bcm2836 and Raspberry Pi 2 B
+  ARM: bcm2835: Add a compat string for bcm2836 machine probe
+  ARM: bcm2835: Add Kconfig support for bcm2836
+
+ .../devicetree/bindings/arm/bcm/brcm,bcm2835.txt   |   4 +
+ arch/arm/Kconfig.debug                             |  10 +-
+ arch/arm/boot/dts/Makefile                         |   3 +-
+ arch/arm/boot/dts/bcm2835-rpi-a-plus.dts           |   1 +
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts           |   1 +
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts           |   1 +
+ arch/arm/boot/dts/bcm2835-rpi-b.dts                |   1 +
+ arch/arm/boot/dts/bcm2835-rpi.dtsi                 |   2 -
+ arch/arm/boot/dts/bcm2835.dtsi                     | 194 +--------------------
+ ...{bcm2835-rpi-b-plus.dts => bcm2836-rpi-2-b.dts} |   9 +-
+ arch/arm/boot/dts/bcm2836.dtsi                     |  77 ++++++++
+ arch/arm/boot/dts/{bcm2835.dtsi => bcm283x.dtsi}   |   7 +-
+ arch/arm/mach-bcm/Kconfig                          |   8 +-
+ arch/arm/mach-bcm/board_bcm2835.c                  |   5 +
+ drivers/irqchip/irq-bcm2836.c                      |  53 +++++-
+ 15 files changed, 168 insertions(+), 208 deletions(-)
+ copy arch/arm/boot/dts/{bcm2835-rpi-b-plus.dts => bcm2836-rpi-2-b.dts} (72%)
+ create mode 100644 arch/arm/boot/dts/bcm2836.dtsi
+ copy arch/arm/boot/dts/{bcm2835.dtsi => bcm283x.dtsi} (96%)
+
 -- 
 2.6.2
 
