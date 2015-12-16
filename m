@@ -1,301 +1,76 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: Re: [PATCH v2 3/3] [media] mt9v032: Add V4L2 controls for AEC and AGC
-Date: Wed, 16 Dec 2015 11:14:28 +0100
-Message-ID: <2570493.HaAAxn7ErG@adelgunde>
-References: <1450104113-6392-1-git-send-email-mpa@pengutronix.de> <1450104113-6392-3-git-send-email-mpa@pengutronix.de> <290053152.GcUooHzFZY@avalon>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5] serial: support for 16550A serial ports on LP-8x4x
+Date: Wed, 16 Dec 2015 11:26:38 +0100
+Message-ID: <3230140.YE724HtqOd@wuerfel>
+References: <1397668667-27328-1-git-send-email-ynvich@gmail.com> <1970812.j9fZPC5F1b@wuerfel> <1450253097.21989.78.camel@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart43950959.ZmiIeT8nBD"; micalg="pgp-sha256"; protocol="application/pgp-signature"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <290053152.GcUooHzFZY@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1450253097.21989.78.camel@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Ianovich <ynvich@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Scott Wood <scottwood@freescale.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Paul Burton <paul.burton@imgtec.com>, Joachim Eastwood <manabian@gmail.com>, Mans Rullgard <mans@mansr.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Peter Hurley <peter@hurleysoftware.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>open list:
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday 16 December 2015 11:04:57 Sergei Ianovich wrote:
+> On Tue, 2015-12-15 at 22:51 +0100, Arnd Bergmann wrote:
+> > On Wednesday 16 December 2015 00:04:45 Sergei Ianovich wrote:
+> > > index 0000000..5f9a4c1
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/serial/lp8x4x-serial.txt
+> > > @@ -0,0 +1,35 @@
+> > > +UART ports on ICP DAS LP-8x4x
+> > > +
+> > > +ICP DAS LP-8x4x contains three additional serial ports interfaced
+> > > via
+> > > +Analog Devices ADM213EA chips in addition to 3 serial ports on PXA
+> > > CPU.
+> > > +
+> > > +Required properties:
+> > > +- compatible : should be "icpdas,uart-lp8x4x"
+> > 
+> > Compatible strings should not include a 'x' wildcard like this, better
+> > use
+> > the specific chip name.
+> > 
+> > Also, it sounds like you named them after the board vendor, which
+> > sounds
+> > wrong as the vendor part of the compatible string should be the
+> > whoever
+> > made that part (analog?)
+> 
+> The chips themselves are standard, they would work with 8250_core if
+> properly connected. However, they are not connected normally. Al least
+> some of their config pins are wired to a different address region. So
+> the driver is board-specific.
 
---nextPart43950959.ZmiIeT8nBD
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="us-ascii"
+Ok, I see.
 
-Hi Laurent,
+> 'x' wildcards in the name of the board seem important. There are devices
+> made by the same vendor without 8 or 4 in their name. Those devices
+> either are not shipped with linux or are base on a x86 platform.
+> 
+> Does this justify the choice of the compatible string?
 
-On Wednesday 16 December 2015 09:47:58 Laurent Pinchart wrote:
-> Hi Markus,
->=20
-> Thank you for the patch.
->=20
-> On Monday 14 December 2015 15:41:53 Markus Pargmann wrote:
-> > This patch adds V4L2 controls for Auto Exposure Control and Auto Ga=
-in
-> > Control settings. These settings include low pass filter, update
-> > frequency of these settings and the update interval for those units=
-.
-> >=20
-> > Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
->=20
-> Please see below for a few comments. If you agree about them there's =
-no need=20
-> to resubmit, I'll fix the patch when applying.
+What I meant was that you should use the specific numbers of one machine,
+precisely for the reason you list above.
 
-Most of them are fine, I commented on the open ones.
+If there is e.g. a LP-8040 and a LP-8141 today, and you use lp8x4x in
+the compatible string to cover both, this will no longer work when the
+vendor comes out with a LP8047 that is completely different.
 
->=20
-> > ---
-> >  drivers/media/i2c/mt9v032.c | 153 ++++++++++++++++++++++++++++++++=
-++++++++-
-> >  1 file changed, 152 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v03=
-2.c
-> > index cc16acf001de..6cbc3b87eda9 100644
-> > --- a/drivers/media/i2c/mt9v032.c
-> > +++ b/drivers/media/i2c/mt9v032.c
->=20
-> [snip]
->=20
-> >  enum mt9v032_model {
-> > @@ -162,6 +169,8 @@ struct mt9v032_model_data {
-> >  =09unsigned int min_shutter;
-> >  =09unsigned int max_shutter;
-> >  =09unsigned int pclk_reg;
-> > +=09unsigned int aec_max_shutter_reg;
-> > +=09const struct v4l2_ctrl_config * const aec_max_shutter_v4l2_ctrl=
-;
-> >  };
-> >=20
-> >  struct mt9v032_model_info {
-> > @@ -175,6 +184,9 @@ static const struct mt9v032_model_version
-> > mt9v032_versions[] =3D { { MT9V034_CHIP_ID_REV1, "MT9V024/MT9V034 r=
-ev1" },
-> >  };
-> >=20
-> > +static const struct v4l2_ctrl_config mt9v032_aec_max_shutter_width=
-;
-> > +static const struct v4l2_ctrl_config mt9v034_aec_max_shutter_width=
-;
->=20
-> We can avoid forward declarations by moving the mt9v032_model_data ar=
-ray=20
-> further down in the driver.
->=20
-> >  static const struct mt9v032_model_data mt9v032_model_data[] =3D {
-> >  =09{
-> >  =09=09/* MT9V022, MT9V032 revisions 1/2/3 */
->=20
-> [snip]
->=20
-> > @@ 647,6 +663,33 @@ static int mt9v032_set_selection(struct v4l2_su=
-bdev
-> > *subdev, */
-> >=20
-> >  #define V4L2_CID_TEST_PATTERN_COLOR=09(V4L2_CID_USER_BASE | 0x1001=
-)
-> > +/*
-> > + * Value between 1 and 64 to set the desired bin. This is effectiv=
-ely a
-> > measure + * of how bright the image is supposed to be. Both AGC and=
- AEC try
-> > to reach + * this.
-> > + */
-> > +#define V4L2_CID_AEGC_DESIRED_BIN=09=09(V4L2_CID_USER_BASE | 0x100=
-2)
-> > +/*
-> > + * LPF is the low pass filter capability of the chip. Both AEC and=
- AGC have
-> > + * this setting. This limits the speed in which AGC/AEC adjust the=
-ir
-> > settings.
-> > + * Possible values are 0-2. 0 means no LPF. For 1 and 2 this equat=
-ion is
-> > used:
-> > + * =09if |(Calculated new exp - current exp)| > (current exp / 4)
-> > + * =09=09next exp =3D Calculated new exp
-> > + * =09else
-> > + * =09=09next exp =3D Current exp + ((Calculated new exp - current=
- exp) /=20
-> 2^LPF)
->=20
-> Over 80 columns, you can fix it by just reducing the indentation by o=
-ne tab.
->=20
-> > + */
-> > +#define V4L2_CID_AEC_LPF=09=09(V4L2_CID_USER_BASE | 0x1003)
-> > +#define V4L2_CID_AGC_LPF=09=09(V4L2_CID_USER_BASE | 0x1004)
-> > +/*
-> > + * Value between 0 and 15. This is the number of frames being skip=
-ped
-> > before
-> > + * updating the auto exposure/gain.
-> > + */
-> > +#define V4L2_CID_AEC_UPDATE_INTERVAL=09(V4L2_CID_USER_BASE | 0x100=
-5)
-> > +#define V4L2_CID_AGC_UPDATE_INTERVAL=09(V4L2_CID_USER_BASE | 0x100=
-6)
-> > +/*
-> > + * Maximum shutter width used for AEC.
-> > + */
-> > +#define V4L2_CID_AEC_MAX_SHUTTER_WIDTH=09(V4L2_CID_USER_BASE | 0x1=
-007)
->=20
-> [snip]
->=20
-> > @@ -745,6 +810,84 @@ static const struct v4l2_ctrl_config
-> > mt9v032_test_pattern_color =3D { .flags=09=09=3D 0,
-> >  };
-> >=20
-> > +static const struct v4l2_ctrl_config mt9v032_aegc_controls[] =3D {=
+Instead, what you should do is to use the compatible string to identify
+one particular board (e.g. the first one that used this setup), and
+then list the other ones as compatible with this. You can also add the
+other board names in addition, e.g.
 
-> > +=09{
-> > +=09=09.ops=09=09=3D &mt9v032_ctrl_ops,
-> > +=09=09.id=09=09=3D V4L2_CID_AEGC_DESIRED_BIN,
-> > +=09=09.type=09=09=3D V4L2_CTRL_TYPE_INTEGER,
-> > +=09=09.name=09=09=3D "aec_agc_desired_bin",
->=20
-> I forgot to reply to your e-mail asking what proper controls names wo=
-uld be,=20
-> sorry.
->=20
-> V4L2 control names contain spaces and use uppercase as needed. This o=
-ne could=20
-> be "AEC/AGC Desired Bin" for instance.
+compatible = "icpdas,uart-lp8041", "icpdas,uart-lp8040";
 
-Ah I see. I was just wondering as v4l2-ctl showed everything with lower=
-case
-letters and underscores. But with a closer look it seems something betw=
-een
-driver and v4l2-ctl translates them from uppercase/spaces to
-lowercase/underscores. So yes that's fine then and makes sense.
+for a lp8041 that is compatible with the lp8040. If it turns out later
+that they are not entirely compatible, we can work around this in the
+driver by checking for the lp8041 string that will be matched first, while
+the lp8040 can be used by the driver to match the entire family of
+compatible machines (no need to list every one in the driver).
 
->=20
-> > +=09=09.min=09=09=3D 1,
-> > +=09=09.max=09=09=3D 64,
-> > +=09=09.step=09=09=3D 1,
-> > +=09=09.def=09=09=3D 58,
-> > +=09=09.flags=09=09=3D 0,
-> > +=09}, {
-> > +=09=09.ops=09=09=3D &mt9v032_ctrl_ops,
-> > +=09=09.id=09=09=3D V4L2_CID_AEC_LPF,
-> > +=09=09.type=09=09=3D V4L2_CTRL_TYPE_INTEGER,
-> > +=09=09.name=09=09=3D "aec_lpf",
-> > +=09=09.min=09=09=3D 0,
-> > +=09=09.max=09=09=3D 2,
-> > +=09=09.step=09=09=3D 1,
-> > +=09=09.def=09=09=3D 0,
-> > +=09=09.flags=09=09=3D 0,
-> > +=09}, {
-> > +=09=09.ops=09=09=3D &mt9v032_ctrl_ops,
-> > +=09=09.id=09=09=3D V4L2_CID_AGC_LPF,
-> > +=09=09.type=09=09=3D V4L2_CTRL_TYPE_INTEGER,
-> > +=09=09.name=09=09=3D "agc_lpf",
-> > +=09=09.min=09=09=3D 0,
-> > +=09=09.max=09=09=3D 2,
-> > +=09=09.step=09=09=3D 1,
-> > +=09=09.def=09=09=3D 2,
-> > +=09=09.flags=09=09=3D 0,
-> > +=09}, {
-> > +=09=09.ops=09=09=3D &mt9v032_ctrl_ops,
-> > +=09=09.id=09=09=3D V4L2_CID_AEC_UPDATE_INTERVAL,
-> > +=09=09.type=09=09=3D V4L2_CTRL_TYPE_INTEGER,
-> > +=09=09.name=09=09=3D "aec_update_interval",
-> > +=09=09.min=09=09=3D 0,
-> > +=09=09.max=09=09=3D 16,
-> > +=09=09.step=09=09=3D 1,
-> > +=09=09.def=09=09=3D 2,
-> > +=09=09.flags=09=09=3D 0,
-> > +=09}, {
-> > +=09=09.ops=09=09=3D &mt9v032_ctrl_ops,
-> > +=09=09.id=09=09=3D V4L2_CID_AGC_UPDATE_INTERVAL,
-> > +=09=09.type=09=09=3D V4L2_CTRL_TYPE_INTEGER,
-> > +=09=09.name=09=09=3D "agc_update_interval",
-> > +=09=09.min=09=09=3D 0,
-> > +=09=09.max=09=09=3D 16,
-> > +=09=09.step=09=09=3D 1,
-> > +=09=09.def=09=09=3D 2,
-> > +=09=09.flags=09=09=3D 0,
-> > +=09}
-> > +};
-> > +
-> > +static const struct v4l2_ctrl_config mt9v032_aec_max_shutter_width=
- =3D {
-> > +=09.ops=09=09=3D &mt9v032_ctrl_ops,
-> > +=09.id=09=09=3D V4L2_CID_AEC_MAX_SHUTTER_WIDTH,
-> > +=09.type=09=09=3D V4L2_CTRL_TYPE_INTEGER,
-> > +=09.name=09=09=3D "aec_max_shutter_width",
-> > +=09.min=09=09=3D 1,
-> > +=09.max=09=09=3D MT9V032_TOTAL_SHUTTER_WIDTH_MAX,
->=20
-> According the the MT9V032 datasheet I have, the maximum value is 2047=
- while=20
-> MT9V032_TOTAL_SHUTTER_WIDTH_MAX is defined as 32767. Do you have any=20=
-
-> information that would hint for an error in the datasheet ?
-
-The register is defined as having 15 bits. I simply assumed that the al=
-ready
-defined TOTAL_SHUTTER_WIDTH_MAX would apply for this register as well. =
-At least
-it should end up controlling the same property of the chip. I didn't te=
-st this
-on mt9v032 but on mt9v024.
-
-Thanks,
-
-Markus
-
->=20
-> > +=09.step=09=09=3D 1,
-> > +=09.def=09=09=3D MT9V032_TOTAL_SHUTTER_WIDTH_DEF,
-> > +=09.flags=09=09=3D 0,
-> > +};
-> > +
-> > +static const struct v4l2_ctrl_config mt9v034_aec_max_shutter_width=
- =3D {
-> > +=09.ops=09=09=3D &mt9v032_ctrl_ops,
-> > +=09.id=09=09=3D V4L2_CID_AEC_MAX_SHUTTER_WIDTH,
-> > +=09.type=09=09=3D V4L2_CTRL_TYPE_INTEGER,
-> > +=09.name=09=09=3D "aec_max_shutter_width",
-> > +=09.min=09=09=3D 1,
-> > +=09.max=09=09=3D MT9V034_TOTAL_SHUTTER_WIDTH_MAX,
-> > +=09.step=09=09=3D 1,
-> > +=09.def=09=09=3D MT9V032_TOTAL_SHUTTER_WIDTH_DEF,
-> > +=09.flags=09=09=3D 0,
-> > +};
->=20
-> [snip]
->=20
->=20
-
-=2D-=20
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
-
---nextPart43950959.ZmiIeT8nBD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWcTmJAAoJEEpcgKtcEGQQCiIQAJk3UNAvSB2SVTTSCPtBMn6h
-mjNnGQY5DejCisEb8PdUsdwhyDc/QyNbnuE6K9MnmmHMXt6vKB8ebmoDr4HRBePj
-knnaegSpE+B7EwlDlyDjNAY9KRJQNIK81BTo+UTdnAOmf0ywILXvyZ9+3Kp8Szqe
-opShZFKDpBIYWmWZ9Y8fTm1wIUtqt/bOYEigxfnMleHqOu/ft3r94LHQLct6kt4w
-hA7GJ4yszGRVOjQg5Vy6iPR2InEFyu3az4PX+x2lH6QoTEWiMjEL8+wgkOc6xk0i
-FcmepWwlRnhCjTLRIsKtBdDPO1p2r0w5WoL/UpQc1TQy86gtQxtCqPhzRaOTX8np
-NwxBc882JmTzTT6Buo4vyf7G9z3YNbXq5st8F8CUnFnu3XfdCcBxyg6orQpNyJkJ
-GfkQk9BjMzep0BOGMJhlPx2ZfGI738fkWIZXOBRWareAQWmgFmqTDTwB6x1cE3n5
-KlqPdiCSFx50HhhwuydEVhjVx3ryyuEbipMUITMqnF0shx4wK10t44nt617nNg72
-Ow5bQTC+JlwPrjI5sTZ40DMgeRzLY1wESg68etLLTGSHhFuJLKhztzWJ9eKqu67q
-9bwQlGr19tNIy0o2RE1nFwtZITMQqJaX8b3U3RWsCqlGQBdz5y0AahLlJq1OVrB9
-KgQtuRQN0MTZKX8QXPuq
-=kkUp
------END PGP SIGNATURE-----
-
---nextPart43950959.ZmiIeT8nBD--
+	Arnd
