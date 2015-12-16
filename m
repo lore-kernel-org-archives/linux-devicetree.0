@@ -1,59 +1,80 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH] usb: gadget: renesas_usb3: add support for Renesas USB3.0 peripheral controller
-Date: Wed, 16 Dec 2015 09:49:34 -0600
-Message-ID: <87wpsefl69.fsf@saruman.tx.rr.com>
-References: <1450162472-6664-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <7989573.HuGUrIYJy9@wuerfel>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 0/6] pwm: lpc32xx: fixes in the LPC32xx PWM driver
+Date: Wed, 16 Dec 2015 17:02:47 +0100
+Message-ID: <20151216160247.GJ28947@ulmo>
+References: <1449401522-22590-1-git-send-email-vz@mleia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-="; micalg=pgp-sha1;
-	protocol="application/pgp-signature"
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <7989573.HuGUrIYJy9@wuerfel>
-Sender: linux-sh-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="x0KprKst+ZOYEj2z"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1449401522-22590-1-git-send-email-vz@mleia.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Roland Stigge <stigge@antcom.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+
+--x0KprKst+ZOYEj2z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
+On Sun, Dec 06, 2015 at 01:31:56PM +0200, Vladimir Zapolskiy wrote:
+> The changeset fixes a number of issues within current implementation
+> of LPC32xx PWM controller driver, namely
+> - the SoC has two independent PWM controllers with one channel each,
+> - runtime warnings from common clock framework,
+> - overflow in duty cycle calculation may result in disabled PWM,
+> - unsupported period values are not accepted.
+>=20
+> Correction of PWM channels requires a correspondent change in
+> arch/arm/boot/dts/lpc32xx.dtsi, it has been already sent for review.
+>=20
+> Changes from v1 to v2:
+> - corrected style of examples in documentation,
+> - improved commit messages
+>=20
+> Version v1 can be found here:
+>   http://comments.gmane.org/gmane.linux.pwm/2828
+>   http://www.spinics.net/lists/devicetree/msg105398.html
+>=20
+> Vladimir Zapolskiy (6):
+>   dt: lpc32xx: pwm: correct LPC32xx PWM device node example
+>   dt: lpc32xx: pwm: update documentation of LPC32xx PWM device
+>   pwm: lpc32xx: correct number of PWM channels from 2 to 1
+>   pwm: lpc32xx: fix warnings from common clock framework
+>   pwm: lpc32xx: fix and simplify duty cycle and period calculations
+>   pwm: lpc32xx: return ERANGE, if requested period is not supported
+>=20
+>  .../devicetree/bindings/pwm/lpc32xx-pwm.txt        |  9 +++-
+>  drivers/pwm/pwm-lpc32xx.c                          | 59 ++++++++--------=
+------
+>  2 files changed, 29 insertions(+), 39 deletions(-)
 
-Hi,
+All patches applied, thanks.
 
-Arnd Bergmann <arnd@arndb.de> writes:
->> +struct renesas_usb3;
->> +struct renesas_usb3_request {
->> +	struct usb_request	req;
->> +	struct list_head	queue;
->> +};
->
-> There is already a list_head in struct usb_request. Could you use that?
-> (I don't know, just asking because this looks odd)
+Thierry
 
-no, no. Don't do that. The list_head in usb_request is for use by the
-gadget drivers and the gadget drivers only.
-
-=2D-=20
-balbi
-
---=-=-=
+--x0KprKst+ZOYEj2z
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2
 
-iQIcBAEBAgAGBQJWcYgPAAoJEIaOsuA1yqREpyoP/RqwNfttuepxwlFZT6HPQ/Yb
-4tsUau3lDz9DasWSD0S/aFCz2Jw2rJHWvcLh9YsEBCpn9jzc3al2wkF9pr0GFKtu
-hczDtxStN4R6G6GC6apfAi8+0DTaEVxWFFS+IgAH7jpXMNHsW3aMipTUdVMh4oKn
-GcihTxU3eYgyfQq01j4h/JyJcbuXwkDTVmmlazjKVAg424S6fJkOUZJn7oelzc+A
-B+nzqXlYuh05SprqmUYcw7mjJtcrQE+y2YnC32Qt2r2fcW6f+nP5Re8Ty47SV6MH
-PNIS+aDMiKQ8tA7Zx3gCcb26WVxVdH7KK11nG3Mp8XkoPwHUu27dDlgaXy+qGdLZ
-++L2c0H+6TVGxRg9ueQjuTJTrxFFKWqru6eIYsI5MXK9s83lRwBeqpCEZ9Fad9bq
-xIXFzXsVW8xoaS+N1Fr2qveQt2IERJ7wJlCqBLSr/MxuE32CrgfCVuckBCeZ/ARw
-4vgpNuKLnOR5cDGSCt41Q3mzzedErp3hdT5K4+efcAxKFOMLSSjNrgAEmxPcDJtV
-rk6XB5cMrSJOkBgXAknzPG9GJH8k0HizDnYnzu+FB3o1oNgRe0F9DRTMkOsEJyIP
-ilk51SYrGoc1j7oOpRkD1n4G4RjDZPfQWA5lKoH4ZJp09manyGr2Uk8mU54TJKKs
-icWUSmqc+7VqWvlD/X9z
-=A0lP
+iQIcBAABCAAGBQJWcYsnAAoJEN0jrNd/PrOhccgP/1gVffNe51ZPwfur2DAMkut7
+SL/SE2fT3EoWYAldunjOg5WyJ9jkPkzt/RhXn7hIj1h+2sJfv2k/kmr4IZvA5Hvg
+1JMzco8Bjk5tw+iFqVyZZe8Ru4K3v5aRCl+W2VcajvPPItPpeygp6bv8UTI/MBW5
+PeSBB6E+PzkOVT02o9bvtgLZO+G3NjSRFMAmrK8dW2/Ks+fiK7H9LCdMx+4GfCXY
+5HbAHwO2cXDNttgsdvcYD+kr9axExoXCBl6fuaJ9PqeTzB4vjuEplbA/qmHxrVvs
+3/AmNQm6XyOhd4Iv2u/+C2WkUJwh/DX1n7qVZxZCFGA/Pzc+vwDYKhhyW7+6DyNH
+keWgWnBDmBGcBvKASlECi3FmaVKNW/0QNqhsAmK2vQQ7mbP7o9SLhKeYWBHDss3w
+jxxx1Oidog3dS5sBqCFxVWdz7nnNPSgQuG0cfKJKT9EpqPSM/qqTeQK4JjwvWKcw
+Ytmg3o8PrKt/r4iwgOuLlrRoZMV1/4704WkkZdQq73+P68kVWPEdTs2YtTgXVak5
+eR0X+l6Dnjg4uu8QxiZaL95GH/oiCQkS4xaXwbaIDVG40wMFZe4Hm6bTJZrSZpGO
+0RBkBkMSwsHZKat6isvrEJy4B0OJ/erVkqGZvjTT+XBqie6sjfFHu3fLKtIWw5jl
+b9LMlIMlPtSS0Cy6Ex+i
+=Qjmm
 -----END PGP SIGNATURE-----
---=-=-=--
+
+--x0KprKst+ZOYEj2z--
