@@ -1,118 +1,207 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v4 3/5] dt/bindings: qcom_nandc: Add DT bindings
-Date: Wed, 16 Dec 2015 07:33:06 +0100
-Message-ID: <20151216073306.302f3614@bbrezillon>
-References: <1438578498-32254-1-git-send-email-architt@codeaurora.org>
-	<1439959746-25498-1-git-send-email-architt@codeaurora.org>
-	<1439959746-25498-4-git-send-email-architt@codeaurora.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 3/3] [media] mt9v032: Add V4L2 controls for AEC and AGC
+Date: Wed, 16 Dec 2015 09:47:58 +0200
+Message-ID: <290053152.GcUooHzFZY@avalon>
+References: <1450104113-6392-1-git-send-email-mpa@pengutronix.de> <1450104113-6392-3-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1439959746-25498-4-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: linux-mtd@lists.infradead.org, dehrenberg@google.com, cernekee@gmail.com, computersforpeace@gmail.com, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, agross@codeaurora.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1450104113-6392-3-git-send-email-mpa@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Archit,
+Hi Markus,
 
-Sorry for the late review, but there are a few things I think should be
-addressed.
+Thank you for the patch.
 
-On Wed, 19 Aug 2015 10:19:04 +0530
-Archit Taneja <architt@codeaurora.org> wrote:
+On Monday 14 December 2015 15:41:53 Markus Pargmann wrote:
+> This patch adds V4L2 controls for Auto Exposure Control and Auto Gain
+> Control settings. These settings include low pass filter, update
+> frequency of these settings and the update interval for those units.
+> 
+> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
 
-> Add DT bindings document for the Qualcomm NAND controller driver.
-> 
-> Cc: devicetree@vger.kernel.org
-> 
-> v4:
-> - No changes
-> 
-> v3:
-> - Don't use '0x' when specifying nand controller address space
-> - Add optional property for on-flash bbt usage
-> 
-> Acked-by: Andy Gross <agross@codeaurora.org>
-> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+Please see below for a few comments. If you agree about them there's no need 
+to resubmit, I'll fix the patch when applying.
+
 > ---
->  .../devicetree/bindings/mtd/qcom_nandc.txt         | 49 ++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+>  drivers/media/i2c/mt9v032.c | 153 ++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 152 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-> new file mode 100644
-> index 0000000..1de4643
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-> @@ -0,0 +1,49 @@
-> +* Qualcomm NAND controller
+> diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
+> index cc16acf001de..6cbc3b87eda9 100644
+> --- a/drivers/media/i2c/mt9v032.c
+> +++ b/drivers/media/i2c/mt9v032.c
+
+[snip]
+
+>  enum mt9v032_model {
+> @@ -162,6 +169,8 @@ struct mt9v032_model_data {
+>  	unsigned int min_shutter;
+>  	unsigned int max_shutter;
+>  	unsigned int pclk_reg;
+> +	unsigned int aec_max_shutter_reg;
+> +	const struct v4l2_ctrl_config * const aec_max_shutter_v4l2_ctrl;
+>  };
+> 
+>  struct mt9v032_model_info {
+> @@ -175,6 +184,9 @@ static const struct mt9v032_model_version
+> mt9v032_versions[] = { { MT9V034_CHIP_ID_REV1, "MT9V024/MT9V034 rev1" },
+>  };
+> 
+> +static const struct v4l2_ctrl_config mt9v032_aec_max_shutter_width;
+> +static const struct v4l2_ctrl_config mt9v034_aec_max_shutter_width;
+
+We can avoid forward declarations by moving the mt9v032_model_data array 
+further down in the driver.
+
+>  static const struct mt9v032_model_data mt9v032_model_data[] = {
+>  	{
+>  		/* MT9V022, MT9V032 revisions 1/2/3 */
+
+[snip]
+
+> @@ 647,6 +663,33 @@ static int mt9v032_set_selection(struct v4l2_subdev
+> *subdev, */
+> 
+>  #define V4L2_CID_TEST_PATTERN_COLOR	(V4L2_CID_USER_BASE | 0x1001)
+> +/*
+> + * Value between 1 and 64 to set the desired bin. This is effectively a
+> measure + * of how bright the image is supposed to be. Both AGC and AEC try
+> to reach + * this.
+> + */
+> +#define V4L2_CID_AEGC_DESIRED_BIN		(V4L2_CID_USER_BASE | 0x1002)
+> +/*
+> + * LPF is the low pass filter capability of the chip. Both AEC and AGC have
+> + * this setting. This limits the speed in which AGC/AEC adjust their
+> settings.
+> + * Possible values are 0-2. 0 means no LPF. For 1 and 2 this equation is
+> used:
+> + * 	if |(Calculated new exp - current exp)| > (current exp / 4)
+> + * 		next exp = Calculated new exp
+> + * 	else
+> + * 		next exp = Current exp + ((Calculated new exp - current exp) / 
+2^LPF)
+
+Over 80 columns, you can fix it by just reducing the indentation by one tab.
+
+> + */
+> +#define V4L2_CID_AEC_LPF		(V4L2_CID_USER_BASE | 0x1003)
+> +#define V4L2_CID_AGC_LPF		(V4L2_CID_USER_BASE | 0x1004)
+> +/*
+> + * Value between 0 and 15. This is the number of frames being skipped
+> before
+> + * updating the auto exposure/gain.
+> + */
+> +#define V4L2_CID_AEC_UPDATE_INTERVAL	(V4L2_CID_USER_BASE | 0x1005)
+> +#define V4L2_CID_AGC_UPDATE_INTERVAL	(V4L2_CID_USER_BASE | 0x1006)
+> +/*
+> + * Maximum shutter width used for AEC.
+> + */
+> +#define V4L2_CID_AEC_MAX_SHUTTER_WIDTH	(V4L2_CID_USER_BASE | 0x1007)
+
+[snip]
+
+> @@ -745,6 +810,84 @@ static const struct v4l2_ctrl_config
+> mt9v032_test_pattern_color = { .flags		= 0,
+>  };
+> 
+> +static const struct v4l2_ctrl_config mt9v032_aegc_controls[] = {
+> +	{
+> +		.ops		= &mt9v032_ctrl_ops,
+> +		.id		= V4L2_CID_AEGC_DESIRED_BIN,
+> +		.type		= V4L2_CTRL_TYPE_INTEGER,
+> +		.name		= "aec_agc_desired_bin",
+
+I forgot to reply to your e-mail asking what proper controls names would be, 
+sorry.
+
+V4L2 control names contain spaces and use uppercase as needed. This one could 
+be "AEC/AGC Desired Bin" for instance.
+
+> +		.min		= 1,
+> +		.max		= 64,
+> +		.step		= 1,
+> +		.def		= 58,
+> +		.flags		= 0,
+> +	}, {
+> +		.ops		= &mt9v032_ctrl_ops,
+> +		.id		= V4L2_CID_AEC_LPF,
+> +		.type		= V4L2_CTRL_TYPE_INTEGER,
+> +		.name		= "aec_lpf",
+> +		.min		= 0,
+> +		.max		= 2,
+> +		.step		= 1,
+> +		.def		= 0,
+> +		.flags		= 0,
+> +	}, {
+> +		.ops		= &mt9v032_ctrl_ops,
+> +		.id		= V4L2_CID_AGC_LPF,
+> +		.type		= V4L2_CTRL_TYPE_INTEGER,
+> +		.name		= "agc_lpf",
+> +		.min		= 0,
+> +		.max		= 2,
+> +		.step		= 1,
+> +		.def		= 2,
+> +		.flags		= 0,
+> +	}, {
+> +		.ops		= &mt9v032_ctrl_ops,
+> +		.id		= V4L2_CID_AEC_UPDATE_INTERVAL,
+> +		.type		= V4L2_CTRL_TYPE_INTEGER,
+> +		.name		= "aec_update_interval",
+> +		.min		= 0,
+> +		.max		= 16,
+> +		.step		= 1,
+> +		.def		= 2,
+> +		.flags		= 0,
+> +	}, {
+> +		.ops		= &mt9v032_ctrl_ops,
+> +		.id		= V4L2_CID_AGC_UPDATE_INTERVAL,
+> +		.type		= V4L2_CTRL_TYPE_INTEGER,
+> +		.name		= "agc_update_interval",
+> +		.min		= 0,
+> +		.max		= 16,
+> +		.step		= 1,
+> +		.def		= 2,
+> +		.flags		= 0,
+> +	}
+> +};
 > +
-> +Required properties:
-> +- compatible:		should be "qcom,ebi2-nand" for IPQ806x
-> +- reg:			MMIO address range
-> +- clocks:		must contain core clock and always on clock
-> +- clock-names:		must contain "core" for the core clock and "aon" for the
-> +			always on clock
-> +- dmas:			DMA specifier, consisting of a phandle to the ADM DMA
-> +			controller node and the channel number to be used for
-> +			NAND. Refer to dma.txt and qcom_adm.txt for more details
-> +- dma-names:		must be "rxtx"
-> +- qcom,cmd-crci:	must contain the ADM command type CRCI block instance
-> +			number specified for the NAND controller on the given
-> +			platform
-> +- qcom,data-crci:	must contain the ADM data type CRCI block instance
-> +			number specified for the NAND controller on the given
-> +			platform
+> +static const struct v4l2_ctrl_config mt9v032_aec_max_shutter_width = {
+> +	.ops		= &mt9v032_ctrl_ops,
+> +	.id		= V4L2_CID_AEC_MAX_SHUTTER_WIDTH,
+> +	.type		= V4L2_CTRL_TYPE_INTEGER,
+> +	.name		= "aec_max_shutter_width",
+> +	.min		= 1,
+> +	.max		= MT9V032_TOTAL_SHUTTER_WIDTH_MAX,
+
+According the the MT9V032 datasheet I have, the maximum value is 2047 while 
+MT9V032_TOTAL_SHUTTER_WIDTH_MAX is defined as 32767. Do you have any 
+information that would hint for an error in the datasheet ?
+
+> +	.step		= 1,
+> +	.def		= MT9V032_TOTAL_SHUTTER_WIDTH_DEF,
+> +	.flags		= 0,
+> +};
 > +
-> +Optional properties:
-> +- nand-bus-width:	bus width. Must be 8 or 16. If not present, 8 is chosen
-> +			as default
-> +
-> +- nand-ecc-strength:	number of bits to correct per ECC step. Must be 4 or 8
-> +			bits. If not present, 4 is chosen as default
-> +- nand-on-flash-bbt:	Create/use on-flash bad block table
-> +
-> +The device tree may optionally contain sub-nodes describing partitions of the
-> +address space. See partition.txt for more detail.
-> +
-> +Example:
-> +
-> +nand@1ac00000 {
-> +	compatible = "qcom,ebi2-nandc";
-> +	reg = <0x1ac00000 0x800>;
-> +
-> +	clocks = <&gcc EBI2_CLK>,
-> +		 <&gcc EBI2_AON_CLK>;
-> +	clock-names = "core", "aon";
-> +
-> +	dmas = <&adm_dma 3>;
-> +	dma-names = "rxtx";
-> +	qcom,cmd-crci = <15>;
-> +	qcom,data-crci = <3>;
-> +
-> +	partition@0 {
-> +	...
-> +	};
+> +static const struct v4l2_ctrl_config mt9v034_aec_max_shutter_width = {
+> +	.ops		= &mt9v032_ctrl_ops,
+> +	.id		= V4L2_CID_AEC_MAX_SHUTTER_WIDTH,
+> +	.type		= V4L2_CTRL_TYPE_INTEGER,
+> +	.name		= "aec_max_shutter_width",
+> +	.min		= 1,
+> +	.max		= MT9V034_TOTAL_SHUTTER_WIDTH_MAX,
+> +	.step		= 1,
+> +	.def		= MT9V032_TOTAL_SHUTTER_WIDTH_DEF,
+> +	.flags		= 0,
 > +};
 
-
-According to the registers layout defined in your driver, your NAND
-controller can address multiple chips (NAND_DEV_SEL register). Since DT
-bindings are supposed to be as stable as possible, I would recommend
-separating the NAND controller and NAND chip declaration (as done here
-[1] and here [2]).
-
-Best Regards,
-
-Boris
-
-[1]http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-[2]http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
-
+[snip]
 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Regards,
+
+Laurent Pinchart
