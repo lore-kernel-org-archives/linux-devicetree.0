@@ -1,64 +1,59 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH v3 2/7] ARM: dts: exynos4412-odroid*: enable MFC device
-Date: Wed, 16 Dec 2015 16:37:24 +0100
-Message-ID: <1450280249-24681-3-git-send-email-m.szyprowski@samsung.com>
-References: <1450280249-24681-1-git-send-email-m.szyprowski@samsung.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <1450280249-24681-1-git-send-email-m.szyprowski@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Andrzej Hajda <a.hajda@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH] usb: gadget: renesas_usb3: add support for Renesas USB3.0 peripheral controller
+Date: Wed, 16 Dec 2015 09:49:34 -0600
+Message-ID: <87wpsefl69.fsf@saruman.tx.rr.com>
+References: <1450162472-6664-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <7989573.HuGUrIYJy9@wuerfel>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-="; micalg=pgp-sha1;
+	protocol="application/pgp-signature"
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <7989573.HuGUrIYJy9@wuerfel>
+Sender: linux-sh-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable support for Multimedia Codec (MFC) device for all Exynos4412-based
-Odroid boards.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-index 395c3ca9601e..349e6cc51283 100644
---- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-@@ -18,6 +18,24 @@
- 		stdout-path = &serial_1;
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		mfc_left: region@51000000 {
-+			compatible = "shared-dma-pool";
-+			no-map;
-+			reg = <0x51000000 0x800000>;
-+		};
-+
-+		mfc_right: region@43000000 {
-+			compatible = "shared-dma-pool";
-+			no-map;
-+			reg = <0x43000000 0x800000>;
-+		};
-+	};
-+
- 	firmware@0204F000 {
- 		compatible = "samsung,secure-firmware";
- 		reg = <0x0204F000 0x1000>;
-@@ -447,6 +465,12 @@
- 	clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
- };
- 
-+&mfc {
-+	memory-region = <&mfc_left>, <&mfc_right>;
-+	memory-region-names = "left", "right";
-+	status = "okay";
-+};
-+
- &mixer {
- 	status = "okay";
- };
--- 
-1.9.2
+Hi,
+
+Arnd Bergmann <arnd@arndb.de> writes:
+>> +struct renesas_usb3;
+>> +struct renesas_usb3_request {
+>> +	struct usb_request	req;
+>> +	struct list_head	queue;
+>> +};
+>
+> There is already a list_head in struct usb_request. Could you use that?
+> (I don't know, just asking because this looks odd)
+
+no, no. Don't do that. The list_head in usb_request is for use by the
+gadget drivers and the gadget drivers only.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWcYgPAAoJEIaOsuA1yqREpyoP/RqwNfttuepxwlFZT6HPQ/Yb
+4tsUau3lDz9DasWSD0S/aFCz2Jw2rJHWvcLh9YsEBCpn9jzc3al2wkF9pr0GFKtu
+hczDtxStN4R6G6GC6apfAi8+0DTaEVxWFFS+IgAH7jpXMNHsW3aMipTUdVMh4oKn
+GcihTxU3eYgyfQq01j4h/JyJcbuXwkDTVmmlazjKVAg424S6fJkOUZJn7oelzc+A
+B+nzqXlYuh05SprqmUYcw7mjJtcrQE+y2YnC32Qt2r2fcW6f+nP5Re8Ty47SV6MH
+PNIS+aDMiKQ8tA7Zx3gCcb26WVxVdH7KK11nG3Mp8XkoPwHUu27dDlgaXy+qGdLZ
+++L2c0H+6TVGxRg9ueQjuTJTrxFFKWqru6eIYsI5MXK9s83lRwBeqpCEZ9Fad9bq
+xIXFzXsVW8xoaS+N1Fr2qveQt2IERJ7wJlCqBLSr/MxuE32CrgfCVuckBCeZ/ARw
+4vgpNuKLnOR5cDGSCt41Q3mzzedErp3hdT5K4+efcAxKFOMLSSjNrgAEmxPcDJtV
+rk6XB5cMrSJOkBgXAknzPG9GJH8k0HizDnYnzu+FB3o1oNgRe0F9DRTMkOsEJyIP
+ilk51SYrGoc1j7oOpRkD1n4G4RjDZPfQWA5lKoH4ZJp09manyGr2Uk8mU54TJKKs
+icWUSmqc+7VqWvlD/X9z
+=A0lP
+-----END PGP SIGNATURE-----
+--=-=-=--
