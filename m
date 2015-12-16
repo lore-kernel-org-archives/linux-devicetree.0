@@ -1,61 +1,76 @@
 From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v6 0/6] Add mipi dsi support for rk3288
-Date: Wed, 16 Dec 2015 18:10:10 +0800
-Message-ID: <1450260616-21160-1-git-send-email-zyw@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Subject: [PATCH v6 6/6] ARM: dts: rockchip: add support mipi panel tv080wum-nl0
+Date: Wed, 16 Dec 2015 18:10:16 +0800
+Message-ID: <1450260616-21160-7-git-send-email-zyw@rock-chips.com>
+References: <1450260616-21160-1-git-send-email-zyw@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1450260616-21160-1-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: heiko@sntech.de, linux-rockchip@lists.infradead.org, mark.yao@rock-chips.com, treding@nvidia.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Cc: Chris Zhong <zyw@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-ClRoZSByazMyODggTUlQSSBEU0kgaXMgYSBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgRFNJIGhv
-c3QgY29udHJvbGxlcgpJUC4gVGhpcyBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciBhIFN5bm9wc3lz
-IERlc2lnbldhcmUgTUlQSSBEU0kgaG9zdApjb250cm9sbGVyIERSTSBkcml2ZXIuCgpUaGUgTUlQ
-SSBEU0kgZmVhdHVyZSBpcyB0ZXN0ZWQgb24gcmszMjg4IGV2YiBib2FyZCwgYmFja3BvcnQgdGhl
-bSB0bwpjaHJvbWUgb3Mga2VybmVsIGNocm9tZV92My4xNCwgYW5kIGl0IGNhbiBkaXNwbGF5IG5v
-cm1hbGx5LgoKVGhpcyBwYXRjaHNldCBpcyBiYXNlIG9uIHRoZSBwYXRjaHNldCBmcm9tIFlpbmcu
-bGl1QGZyZWVzY2FsZS5jb20uCjxodHRwOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2RyaS1kZXZl
-bC9tc2c3NzE4MS5odG1sPgoKQWNjb3JkaW5nIHRvIHRoZSBzdWdnZXN0aW9uIGZyb20gVGhpZXJy
-eSwgSSBoYXZlIGdldCByaWQgb2YgdGhlIGJyaWRnZSwKYW5kIHJlZ2lzdGVyIHRoZSBlbmNvZGVy
-ICYgY29ubmVjdGVyIGluIGRybS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jLgoKCkNoYW5nZXMgaW4g
-djY6Ci0gdXBkYXRlIHRoZSBkb2N1bWVudCwgc2luY2UgdGhlIGJyaWRnZSBkZXZpY2UgaGFzIGJl
-ZW4gZGVsZXRlZC4KLSBEbyBub3QgdXNlIGJyaWRnZSBkcml2ZXIgKFRoaWVycnkgUmVkaW5nKQot
-IE9wdGltaXphdGlvbiB0aGUgcGh5IGluaXQgc2VxdWVuY2UKCkNoYW5nZXMgaW4gdjU6Ci0gbW9k
-aWZ5IHRoZSBjbGsgbmFtZSB0byBTQ0xLX01JUElEU0lfMjRNCi0gYWRkIGEgYmxhbmsgbGluZSBi
-ZWZvciBsY2RfZW4KCkNoYW5nZXMgaW4gdjQ6Ci0gdXNlIGNsa19yb3VuZF9yYXRlIHRvIGNoZWNr
-IHRoZSBjbG9jayByYXRlIGluIHZvcF9jcnRjX21vZGVfZml4dXAKCkNoYW5nZXMgaW4gdjM6Ci0g
-bW92ZSBkd19taXBpX2RzaV9yb2NrY2hpcC50eHQgdG8gYmluZGluZ3MvZGlzcGxheS9yb2NrY2hp
-cC8KCkNocmlzIFpob25nICg1KToKICBkcm0vcm9ja2NoaXA6IHJldHVybiBhIHRydWUgY2xvY2sg
-cmF0ZSB0byBhZGp1c3RlZF9tb2RlCiAgRG9jdW1lbnRhdGlvbjogZHQtYmluZGluZ3M6IEFkZCBi
-aW5kaW5ncyBmb3IgcmszMjg4IERXIE1JUEkgRFNJIGRyaXZlcgogIGRybTogcm9ja2NoaXA6IFN1
-cHBvcnQgU3lub3BzeXMgRFcgTUlQSSBEU0kKICBBUk06IGR0czogcm9ja2NoaXA6IGFkZCByazMy
-ODggbWlwaV9kc2kgbm9kZXMKICBBUk06IGR0czogcm9ja2NoaXA6IGFkZCBzdXBwb3J0IG1pcGkg
-cGFuZWwgdHYwODB3dW0tbmwwCgpMaXUgWWluZyAoMSk6CiAgZHJtL2RzaTogQWRkIGEgaGVscGVy
-IHRvIGdldCBiaXRzIHBlciBwaXhlbCBvZiBNSVBJIERTSSBwaXhlbCBmb3JtYXQKCiAuLi4vZGlz
-cGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50eHQgICAgICB8ICAgNjAgKwogYXJj
-aC9hcm0vYm9vdC9kdHMvcmszMjg4LWV2Yi5kdHNpICAgICAgICAgICAgICAgICAgfCAgIDIwICst
-CiBhcmNoL2FybS9ib290L2R0cy9yazMyODguZHRzaSAgICAgICAgICAgICAgICAgICAgICB8ICAg
-MzkgKwogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL0tjb25maWcgICAgICAgICAgICAgICAgICAg
-fCAgIDEwICsKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9NYWtlZmlsZSAgICAgICAgICAgICAg
-ICAgIHwgICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYyAgICAg
-ICAgICAgICB8IDEyMDAgKysrKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9yb2Nr
-Y2hpcC9yb2NrY2hpcF9kcm1fdm9wLmMgICAgICAgIHwgICAgOCArCiBpbmNsdWRlL2RybS9kcm1f
-bWlwaV9kc2kuaCAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMTQgKwogOCBmaWxlcyBjaGFu
-Z2VkLCAxMzUxIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19t
-aXBpX2RzaV9yb2NrY2hpcC50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
-cm9ja2NoaXAvZHctbWlwaS1kc2kuYwoKLS0gCjIuNi4zCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+This tv080wum-nl0 panel is a mipi panel, it can use in MIPI_TX socket
+of rk3288 evb board.
+
+Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+
+---
+
+Changes in v6: None
+Changes in v5:
+- add a blank line befor lcd_en
+
+Changes in v4: None
+Changes in v3: None
+
+ arch/arm/boot/dts/rk3288-evb.dtsi | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
+index f6d2e78..2014992 100644
+--- a/arch/arm/boot/dts/rk3288-evb.dtsi
++++ b/arch/arm/boot/dts/rk3288-evb.dtsi
+@@ -47,7 +47,7 @@
+ 		reg = <0x0 0x80000000>;
+ 	};
+ 
+-	backlight {
++	backlight: backlight {
+ 		compatible = "pwm-backlight";
+ 		brightness-levels = <
+ 			  0   1   2   3   4   5   6   7
+@@ -177,6 +177,20 @@
+ 	status = "okay";
+ };
+ 
++&mipi_dsi {
++	status = "okay";
++	panel {
++		compatible ="boe,tv080wum-nl0";
++		reg = <0>;
++
++		enable-gpios = <&gpio7 3 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&lcd_en>;
++		backlight = <&backlight>;
++		status = "okay";
++	};
++};
++
+ &sdmmc {
+ 	bus-width = <4>;
+ 	cap-mmc-highspeed;
+@@ -247,6 +261,10 @@
+ 		bl_en: bl-en {
+ 			rockchip,pins = <7 2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
++
++		lcd_en: lcd-en {
++			rockchip,pins = <7 3 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
+ 	};
+ 
+ 	buttons {
+-- 
+2.6.3
