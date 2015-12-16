@@ -1,7 +1,7 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v2 4/8] ARM: bcm2835: Split the DT for peripherals from the DT for the CPU
-Date: Wed, 16 Dec 2015 15:55:11 -0800
-Message-ID: <1450310115-22163-5-git-send-email-eric@anholt.net>
+Subject: [PATCH v2 5/8] ARM: bcm2835: Move the CPU/peripheral include out of common RPi DT.
+Date: Wed, 16 Dec 2015 15:55:12 -0800
+Message-ID: <1450310115-22163-6-git-send-email-eric@anholt.net>
 References: <1450310115-22163-1-git-send-email-eric@anholt.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1450310115-22163-1-git-send-email-eric@anholt.net>
@@ -10,256 +10,67 @@ To: linux-rpi-kernel@lists.infradead.org
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-The set of peripherals remained constant across bcm2835 (Raspberry Pi
-1) and bcm2836 (Raspberry Pi 2), but the CPU was swapped out.  Split
-the files so that we can include just peripheral setup in 2836.
+For Raspberry Pi 2, we want to use the same general pin assignment
+bits, but need to use bcm2836.dtsi for the CPU instead.
 
 Signed-off-by: Eric Anholt <eric@anholt.net>
 ---
- arch/arm/boot/dts/bcm2835.dtsi                   | 194 +----------------------
- arch/arm/boot/dts/{bcm2835.dtsi => bcm283x.dtsi} |   7 +-
- 2 files changed, 6 insertions(+), 195 deletions(-)
- copy arch/arm/boot/dts/{bcm2835.dtsi => bcm283x.dtsi} (96%)
+ arch/arm/boot/dts/bcm2835-rpi-a-plus.dts | 1 +
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts | 1 +
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 1 +
+ arch/arm/boot/dts/bcm2835-rpi-b.dts      | 1 +
+ arch/arm/boot/dts/bcm2835-rpi.dtsi       | 2 --
+ 5 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
-index aef64de..b83b326 100644
---- a/arch/arm/boot/dts/bcm2835.dtsi
-+++ b/arch/arm/boot/dts/bcm2835.dtsi
-@@ -1,206 +1,14 @@
--#include <dt-bindings/pinctrl/bcm2835.h>
--#include <dt-bindings/clock/bcm2835.h>
--#include "skeleton.dtsi"
-+#include "bcm283x.dtsi"
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
+index b2bff43..228614f 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
+@@ -1,4 +1,5 @@
+ /dts-v1/;
++#include "bcm2835.dtsi"
+ #include "bcm2835-rpi.dtsi"
  
  / {
- 	compatible = "brcm,bcm2835";
--	model = "BCM2835";
--	interrupt-parent = <&intc>;
--
--	chosen {
--		bootargs = "earlyprintk console=ttyAMA0";
--	};
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+index 668442b..ef54050 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+@@ -1,4 +1,5 @@
+ /dts-v1/;
++#include "bcm2835.dtsi"
+ #include "bcm2835-rpi.dtsi"
  
- 	soc {
--		compatible = "simple-bus";
--		#address-cells = <1>;
--		#size-cells = <1>;
- 		ranges = <0x7e000000 0x20000000 0x02000000>;
- 		dma-ranges = <0x40000000 0x00000000 0x20000000>;
- 
--		timer@7e003000 {
--			compatible = "brcm,bcm2835-system-timer";
--			reg = <0x7e003000 0x1000>;
--			interrupts = <1 0>, <1 1>, <1 2>, <1 3>;
--			/* This could be a reference to BCM2835_CLOCK_TIMER,
--			 * but we don't have the driver using the common clock
--			 * support yet.
--			 */
--			clock-frequency = <1000000>;
--		};
--
--		dma: dma@7e007000 {
--			compatible = "brcm,bcm2835-dma";
--			reg = <0x7e007000 0xf00>;
--			interrupts = <1 16>,
--				     <1 17>,
--				     <1 18>,
--				     <1 19>,
--				     <1 20>,
--				     <1 21>,
--				     <1 22>,
--				     <1 23>,
--				     <1 24>,
--				     <1 25>,
--				     <1 26>,
--				     <1 27>,
--				     <1 28>;
--
--			#dma-cells = <1>;
--			brcm,dma-channel-mask = <0x7f35>;
--		};
--
--		intc: interrupt-controller@7e00b200 {
--			compatible = "brcm,bcm2835-armctrl-ic";
--			reg = <0x7e00b200 0x200>;
--			interrupt-controller;
--			#interrupt-cells = <2>;
--		};
--
--		watchdog@7e100000 {
--			compatible = "brcm,bcm2835-pm-wdt";
--			reg = <0x7e100000 0x28>;
--		};
--
--		clocks: cprman@7e101000 {
--			compatible = "brcm,bcm2835-cprman";
--			#clock-cells = <1>;
--			reg = <0x7e101000 0x2000>;
--
--			/* CPRMAN derives everything from the platform's
--			 * oscillator.
--			 */
--			clocks = <&clk_osc>;
--		};
--
--		rng@7e104000 {
--			compatible = "brcm,bcm2835-rng";
--			reg = <0x7e104000 0x10>;
--		};
--
--		mailbox: mailbox@7e00b800 {
--			compatible = "brcm,bcm2835-mbox";
--			reg = <0x7e00b880 0x40>;
--			interrupts = <0 1>;
--			#mbox-cells = <0>;
--		};
--
--		gpio: gpio@7e200000 {
--			compatible = "brcm,bcm2835-gpio";
--			reg = <0x7e200000 0xb4>;
--			/*
--			 * The GPIO IP block is designed for 3 banks of GPIOs.
--			 * Each bank has a GPIO interrupt for itself.
--			 * There is an overall "any bank" interrupt.
--			 * In order, these are GIC interrupts 17, 18, 19, 20.
--			 * Since the BCM2835 only has 2 banks, the 2nd bank
--			 * interrupt output appears to be mirrored onto the
--			 * 3rd bank's interrupt signal.
--			 * So, a bank0 interrupt shows up on 17, 20, and
--			 * a bank1 interrupt shows up on 18, 19, 20!
--			 */
--			interrupts = <2 17>, <2 18>, <2 19>, <2 20>;
--
--			gpio-controller;
--			#gpio-cells = <2>;
--
--			interrupt-controller;
--			#interrupt-cells = <2>;
--		};
--
--		uart0: uart@7e201000 {
--			compatible = "brcm,bcm2835-pl011", "arm,pl011", "arm,primecell";
--			reg = <0x7e201000 0x1000>;
--			interrupts = <2 25>;
--			clocks = <&clocks BCM2835_CLOCK_UART>,
--				 <&clocks BCM2835_CLOCK_VPU>;
--			clock-names = "uartclk", "apb_pclk";
--			arm,primecell-periphid = <0x00241011>;
--		};
--
--		i2s: i2s@7e203000 {
--			compatible = "brcm,bcm2835-i2s";
--			reg = <0x7e203000 0x20>,
--			      <0x7e101098 0x02>;
--
--			dmas = <&dma 2>,
--			       <&dma 3>;
--			dma-names = "tx", "rx";
--			status = "disabled";
--		};
--
--		spi: spi@7e204000 {
--			compatible = "brcm,bcm2835-spi";
--			reg = <0x7e204000 0x1000>;
--			interrupts = <2 22>;
--			clocks = <&clocks BCM2835_CLOCK_VPU>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--			status = "disabled";
--		};
--
--		i2c0: i2c@7e205000 {
--			compatible = "brcm,bcm2835-i2c";
--			reg = <0x7e205000 0x1000>;
--			interrupts = <2 21>;
--			clocks = <&clocks BCM2835_CLOCK_VPU>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--			status = "disabled";
--		};
--
--		sdhci: sdhci@7e300000 {
--			compatible = "brcm,bcm2835-sdhci";
--			reg = <0x7e300000 0x100>;
--			interrupts = <2 30>;
--			clocks = <&clocks BCM2835_CLOCK_EMMC>;
--			status = "disabled";
--		};
--
--		i2c1: i2c@7e804000 {
--			compatible = "brcm,bcm2835-i2c";
--			reg = <0x7e804000 0x1000>;
--			interrupts = <2 21>;
--			clocks = <&clocks BCM2835_CLOCK_VPU>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--			status = "disabled";
--		};
--
--		i2c2: i2c@7e805000 {
--			compatible = "brcm,bcm2835-i2c";
--			reg = <0x7e805000 0x1000>;
--			interrupts = <2 21>;
--			clocks = <&clocks BCM2835_CLOCK_VPU>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--			status = "disabled";
--		};
--
--		usb@7e980000 {
--			compatible = "brcm,bcm2835-usb";
--			reg = <0x7e980000 0x10000>;
--			interrupts = <1 9>;
--		};
--
- 		arm-pmu {
- 			compatible = "arm,arm1176-pmu";
- 		};
- 	};
--
--	clocks {
--		compatible = "simple-bus";
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		/* The oscillator is the root of the clock tree. */
--		clk_osc: clock@3 {
--			compatible = "fixed-clock";
--			reg = <3>;
--			#clock-cells = <0>;
--			clock-output-names = "osc";
--			clock-frequency = <19200000>;
--		};
--
--	};
- };
-diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-similarity index 96%
-copy from arch/arm/boot/dts/bcm2835.dtsi
-copy to arch/arm/boot/dts/bcm283x.dtsi
-index aef64de..bf74e8a 100644
---- a/arch/arm/boot/dts/bcm2835.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -2,6 +2,11 @@
- #include <dt-bindings/clock/bcm2835.h>
- #include "skeleton.dtsi"
- 
-+/* This include file covers the common peripherals and configuration between
-+ * bcm2835 and bcm2836 implementations, leaving the CPU configuration to
-+ * bcm2835.dtsi and bcm2836.dtsi.
-+ */
-+
  / {
- 	compatible = "brcm,bcm2835";
- 	model = "BCM2835";
-@@ -15,8 +20,6 @@
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--		ranges = <0x7e000000 0x20000000 0x02000000>;
--		dma-ranges = <0x40000000 0x00000000 0x20000000>;
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+index eab8b591..86f1f2f 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+@@ -1,4 +1,5 @@
+ /dts-v1/;
++#include "bcm2835.dtsi"
+ #include "bcm2835-rpi.dtsi"
  
- 		timer@7e003000 {
- 			compatible = "brcm,bcm2835-system-timer";
+ / {
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+index ff6b2d1..4859e9d 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+@@ -1,4 +1,5 @@
+ /dts-v1/;
++#include "bcm2835.dtsi"
+ #include "bcm2835-rpi.dtsi"
+ 
+ / {
+diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+index 3572f03..3afb9fe 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
++++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+@@ -1,5 +1,3 @@
+-#include "bcm2835.dtsi"
+-
+ / {
+ 	memory {
+ 		reg = <0 0x10000000>;
 -- 
 2.6.2
