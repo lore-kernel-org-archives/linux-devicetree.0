@@ -1,58 +1,67 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH v11 17/19] drm: bridge: analogix/dp: expand the look time for
- waiting AUX CH reply
-Date: Wed, 16 Dec 2015 11:57:37 +0800
-Message-ID: <1450238257-3274-1-git-send-email-ykk@rock-chips.com>
-References: <1450236018-1118-1-git-send-email-ykk@rock-chips.com>
+From: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v5 1/3] thermal: mediatek: Add cpu dynamic power cooling model.
+Date: Wed, 16 Dec 2015 11:59:14 +0800
+Message-ID: <1450238356-36319-2-git-send-email-dawei.chien@mediatek.com>
+References: <1450238356-36319-1-git-send-email-dawei.chien@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1450236018-1118-1-git-send-email-ykk@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Inki Dae <inki.dae@samsung.com>, Mark Yao <mark.yao@rock-chips.com>, Jingoo Han <jingoohan1@gmail.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kishon Vijay Abraham I <kishon@ti.com>, javier@osg.samsung.com, Rob Herring <robh+dt@kernel.org>, Andy Yan <andy.yan@rock-chips.com>, Thierry Reding <treding@nvidia.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1450238356-36319-1-git-send-email-dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-QWZ0ZXIgdGVzdCBvbiByb2NrY2hpb3AgcGxhdGZvcm0sIGkgZm91bmQgc29tZXRpbXMgZHJpdmVy
-IHdvdWxkIGZhaWxlZAphdCByZWFkaW5nIEVESUQgbWVzc2FnZS4gQWZ0ZXIgZGVidWdnaW5nIG1v
-cmUsIGkgZm91bmQgdGhhdCBpdCdzIG9rYXkKdG8gcmVhZF9hIGJ5dGUgZnJvbSBpMmMsIGJ1dCBp
-dCB3b3VsZCBmYWlsZWQgYXQgQVVYIHRyYW5zY2F0aW9uIGlmIHdlCnRyeSB0byByZWFkeSBtdWx0
-aS1ieXRlcyBmcm9tIGkyYy4KCkRyaXZlciBqdXN0IGNhbid0IHJlY2VpdmVkIHRoZSBBVVggQ0gg
-cmVwbHkgY29tbWFuZCwgZXZlbiBubyBBVVggZXJyb3IKY29kZS4gSSBtYXkgZ3Vlc3MgdGhhdCB0
-aGUgQVVYIHdhaXQgdGltZSBpcyBub3QgZW5vdWdoLCBzbyBJIHRyeSB0bwpleHBhbmQgdGhlIEFV
-WCB3YWl0IHRpbWUsIGFuZCBpIGRvIHNlZSB0aGlzIGNvdWxkIGZpeCB0aGUgRURJRCByZWFkCmZh
-aWxlZCBhdCByb2NrY2hpcCBwbGF0Zm9ybS4KCkFuZCBJIHRob3VnaHQgdGhhdCBleHBhbmQgdGhl
-IHdhaXQgdGltZSB3b24ndCBodXJ0IEV4eW5vcyBwbGF0Zm9ybSB0b28KbXVjaCwgY2F1c2UgRXh5
-bm9zIGRpZG4ndCBoYXZlIHRoaXMgcHJvYmxlbSwgdGhlbiBkcml2ZXIgd291bGQgcmVjZWl2ZWQK
-dGhlIHJlcGx5IGNvbW1hbmQgdmVyeSBzb29uLCBzbyBubyBtb3JlIGFkZGl0aW9uYWwgd2FpdCB0
-aW1lIHdvdWxkIGJyaW5nCnRvIEV4eW5vcyBwbGF0Zm9ybS4KClNpZ25lZC1vZmYtYnk6IFlha2ly
-IFlhbmcgPHlra0Byb2NrLWNoaXBzLmNvbT4KLS0tCkNoYW5nZXMgaW4gdjExOiBOb25lCkNoYW5n
-ZXMgaW4gdjEwOiBOb25lCkNoYW5nZXMgaW4gdjk6IE5vbmUKQ2hhbmdlcyBpbiB2ODogTm9uZQpD
-aGFuZ2VzIGluIHY3OiBOb25lCkNoYW5nZXMgaW4gdjY6IE5vbmUKQ2hhbmdlcyBpbiB2NTogTm9u
-ZQpDaGFuZ2VzIGluIHY0OiBOb25lCkNoYW5nZXMgaW4gdjM6IE5vbmUKQ2hhbmdlcyBpbiB2Mjog
-Tm9uZQoKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhfZHBfcmVnLmMg
-fCAyICstCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKCmRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FuYWxvZ2l4L2FuYWxvZ2l4X2RwX3Jl
-Zy5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbmFsb2dpeC9hbmFsb2dpeF9kcF9yZWcuYwpp
-bmRleCBjN2UyOTU5Li5kYzM3NmJkIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdl
-L2FuYWxvZ2l4L2FuYWxvZ2l4X2RwX3JlZy5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
-YW5hbG9naXgvYW5hbG9naXhfZHBfcmVnLmMKQEAgLTQ4Miw3ICs0ODIsNyBAQCBpbnQgYW5hbG9n
-aXhfZHBfc3RhcnRfYXV4X3RyYW5zYWN0aW9uKHN0cnVjdCBhbmFsb2dpeF9kcF9kZXZpY2UgKmRw
-KQogCXJlZyA9IHJlYWRsKGRwLT5yZWdfYmFzZSArIEFOQUxPR0lYX0RQX0lOVF9TVEEpOwogCXdo
-aWxlICghKHJlZyAmIFJQTFlfUkVDRUlWKSkgewogCQl0aW1lb3V0X2xvb3ArKzsKLQkJaWYgKERQ
-X1RJTUVPVVRfTE9PUF9DT1VOVCA8IHRpbWVvdXRfbG9vcCkgeworCQlpZiAoRFBfVElNRU9VVF9M
-T09QX0NPVU5UICogMTAgPCB0aW1lb3V0X2xvb3ApIHsKIAkJCWRldl9lcnIoZHAtPmRldiwgIkFV
-WCBDSCBjb21tYW5kIHJlcGx5IGZhaWxlZCFcbiIpOwogCQkJcmV0dXJuIC1FVElNRURPVVQ7CiAJ
-CX0KLS0gCjEuOS4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
-ZWwK
+MT8173 cpufreq driver select of_cpufreq_power_cooling_register registering
+cooling devices with dynamic power coefficient.
+
+Signed-off-by: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+This patch is base on patchset:
+https://lkml.org/lkml/2015/11/17/251
+---
+ drivers/cpufreq/mt8173-cpufreq.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/cpufreq/mt8173-cpufreq.c b/drivers/cpufreq/mt8173-cpufreq.c
+index 83001dc..d00bab5 100644
+--- a/drivers/cpufreq/mt8173-cpufreq.c
++++ b/drivers/cpufreq/mt8173-cpufreq.c
+@@ -263,17 +263,24 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+ 	return 0;
+ }
+ 
++#define DYNAMIC_POWER "dynamic-power-coefficient"
++
+ static void mtk_cpufreq_ready(struct cpufreq_policy *policy)
+ {
+ 	struct mtk_cpu_dvfs_info *info = policy->driver_data;
+ 	struct device_node *np = of_node_get(info->cpu_dev->of_node);
++	u32 capacitance = 0;
+ 
+ 	if (WARN_ON(!np))
+ 		return;
+ 
+ 	if (of_find_property(np, "#cooling-cells", NULL)) {
+-		info->cdev = of_cpufreq_cooling_register(np,
+-							 policy->related_cpus);
++		of_property_read_u32(np, DYNAMIC_POWER, &capacitance);
++
++		info->cdev = of_cpufreq_power_cooling_register(np,
++						policy->related_cpus,
++						capacitance,
++						NULL);
+ 
+ 		if (IS_ERR(info->cdev)) {
+ 			dev_err(info->cpu_dev,
+-- 
+1.7.9.5
