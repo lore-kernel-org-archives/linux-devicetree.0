@@ -1,100 +1,101 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v6 5/6] ARM: dts: rockchip: add rk3288 mipi_dsi nodes
-Date: Wed, 16 Dec 2015 18:10:15 +0800
-Message-ID: <1450260616-21160-6-git-send-email-zyw@rock-chips.com>
-References: <1450260616-21160-1-git-send-email-zyw@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450260616-21160-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
-Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Martyn Welch <martyn.welch@collabora.co.uk>
+Subject: Re: [PATCH 2/3] Add support for monitoring gpio switches
+Date: Wed, 16 Dec 2015 10:11:46 +0000
+Message-ID: <567138E2.80505@collabora.co.uk>
+References: <1449250275-23435-1-git-send-email-martyn.welch@collabora.co.uk>	<1449250275-23435-3-git-send-email-martyn.welch@collabora.co.uk> <CACRpkdb=it+U+3-0mvZ9Pf1cnYT_r1KkFiS=C4YDkqrjoRm+kQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdb=it+U+3-0mvZ9Pf1cnYT_r1KkFiS=C4YDkqrjoRm+kQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a mipi_dsi node, and also add mipi_dsi endpoints to vopb and vopl
-output port nodes.
 
-Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
----
+On 11/12/15 09:08, Linus Walleij wrote:
+> On Fri, Dec 4, 2015 at 6:31 PM, Martyn Welch
+> <martyn.welch@collabora.co.uk> wrote:
+>
+>> Select Chromebooks have gpio attached to switches used to cause the
+>> firmware to enter alternative modes of operation and/or control other
+>> device characteristics (such as write protection on flash devices). This
+>> patch adds a driver that exposes a read-only interface to allow these
+>> signals to be read from user space.
+>>
+>> This functionality has been generalised to provide support for any device
+>> with device tree support which needs to identify a gpio as being used for a
+>> specific task.
+>>
+>> Signed-off-by: Martyn Welch <martyn.welch@collabora.co.uk>
+>
+> If you want to do this thing, also propose a device tree binding document
+> for "gpio-switch".
+>
+> But first (from Documentation/gpio/drivers-on-gpio.txt):
+>
+> - gpio-keys: drivers/input/keyboard/gpio_keys.c is used when your GPIO line
+>    can generate interrupts in response to a key press. Also supports debounce.
+>
 
-Changes in v6: None
-Changes in v5:
-- modify the clk name to SCLK_MIPIDSI_24M
+This one generates input events from gpio. I'm not looking to generate 
+events.
 
-Changes in v4: None
-Changes in v3: None
+> - gpio-keys-polled: drivers/input/keyboard/gpio_keys_polled.c is used when your
+>    GPIO line cannot generate interrupts, so it needs to be periodically polled
+>    by a timer.
+>
 
- arch/arm/boot/dts/rk3288.dtsi | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+Ditto (but using a polled mechanism rather than interrupts)
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index a9270f7..1086761 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -817,6 +817,10 @@
- 				reg = <1>;
- 				remote-endpoint = <&hdmi_in_vopb>;
- 			};
-+			vopb_out_mipi: endpoint@2 {
-+				reg = <2>;
-+				remote-endpoint = <&mipi_in_vopb>;
-+			};
- 		};
- 	};
- 
-@@ -853,6 +857,10 @@
- 				reg = <1>;
- 				remote-endpoint = <&hdmi_in_vopl>;
- 			};
-+			vopl_out_mipi: endpoint@2 {
-+				reg = <2>;
-+				remote-endpoint = <&mipi_in_vopl>;
-+			};
- 		};
- 	};
- 
-@@ -954,6 +962,37 @@
- 		status = "disabled";
- 	};
- 
-+	mipi_dsi: mipi@ff960000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "rockchip,rk3288-mipi-dsi", "snps,dw-mipi-dsi";
-+		reg = <0xff960000 0x4000>;
-+		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_MIPIDSI_24M>, <&cru PCLK_MIPI_DSI0>;
-+		clock-names = "ref", "pclk";
-+		rockchip,grf = <&grf>;
-+		status = "disabled";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+
-+			mipi_in: port {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				mipi_in_vopb: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&vopb_out_mipi>;
-+				};
-+				mipi_in_vopl: endpoint@1 {
-+					reg = <1>;
-+					remote-endpoint = <&vopl_out_mipi>;
-+				};
-+			};
-+		};
-+	};
-+
- 	gic: interrupt-controller@ffc01000 {
- 		compatible = "arm,gic-400";
- 		interrupt-controller;
--- 
-2.6.3
+> - extcon-gpio: drivers/extcon/extcon-gpio.c is used when you need to read an
+>    external connector status, such as a headset line for an audio driver or an
+>    HDMI connector. It will provide a better userspace sysfs interface than GPIO.
+>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This appears to be exclusively for monitoring insertion events, or am I 
+missing something?
+
+> So you mean none of these apply for this case?
+>
+
+No, I'm looking for a mechanism to identify GPIO as connected to a 
+specific signal, which is provided across multiple devices, but which 
+might be implemented subtly differently on different platforms (i.e. 
+active high/low) and on different GPIO lines.
+
+> Second: what you want to do is export a number of GPIOs with certain names
+> to userspace. This is something very generic and should be implemented
+> as such, not as something Chromebook-specific.
+>
+
+I'd agree that my first implementation was ChromeBook specific, but I'm 
+fairly sure that my last attempt wasn't. I've mentioned ChromeBooks as 
+an example of an existing use case.
+
+> Patches like that has however already been suggested, and I have NACKed
+> them because the GPIO sysfs ABI is insane, and that is why I am refactoring
+> the world to create a proper chardev ABI for GPIO instead. See:
+> http://marc.info/?l=linux-gpio&m=144550276512673&w=2
+>
+
+I can certainly understand the rationale for the changes that you are 
+proposing, though do worry that it does make it a bit tougher to use 
+from scripting languages. I see that the question of how to provide 
+functionality equivalent to the above was raised and no answer was 
+forthcoming. Is there a plan for supporting the identification of a GPIO 
+line serving a specific purpose?
+
+What is the status of the mentioned patch series?
+
+Martyn
+
+> So for the moment, NACK on this, please participate in creating the
+> *right* ABI for GPIO instead of trying to shoehorn stuff into the dying
+> sysfs ABI.
+>
+> Yours,
+> Linus Walleij
+>
