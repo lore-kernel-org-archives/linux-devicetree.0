@@ -1,262 +1,205 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH resend] pinctrl: sunxi: Add A80 special pin controller
-Date: Thu, 17 Dec 2015 00:39:42 +0800
-Message-ID: <1450283982-25295-1-git-send-email-wens@csie.org>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Chen-Yu Tsai <wens@wens.tw>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>
+From: Patrice Chotard <patrice.chotard@st.com>
+Subject: Re: [PATCH v3 4/9] pinctrl: Add STM32 MCUs support
+Date: Wed, 16 Dec 2015 17:55:09 +0100
+Message-ID: <5671976D.2050706@st.com>
+References: <1449822306-9035-1-git-send-email-mcoquelin.stm32@gmail.com>
+ <1449822306-9035-5-git-send-email-mcoquelin.stm32@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1449822306-9035-5-git-send-email-mcoquelin.stm32@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, afaerber@suse.de, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Hi Maxime
 
-Like the previous designs, the A80 has a special pin controller for the
-critical pins, like the PMIC bus.
 
-Add a driver for this controller.
+On 12/11/2015 09:25 AM, Maxime Coquelin wrote:
+> This patch adds pinctrl and GPIO support to STMicroelectronic's STM32
+> family of MCUs.
+>
+> While it only supports STM32F429 for now, it has been designed to enable
+> support of other MCUs of the family (e.g. STM32F746).
+>
+> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> ---
+>   drivers/pinctrl/Kconfig                   |    1 +
+>   drivers/pinctrl/Makefile                  |    1 +
+>   drivers/pinctrl/stm32/Kconfig             |   16 +
+>   drivers/pinctrl/stm32/Makefile            |    5 +
+>   drivers/pinctrl/stm32/pinctrl-stm32.c     |  856 +++++++++++++++
+>   drivers/pinctrl/stm32/pinctrl-stm32.h     |   43 +
+>   drivers/pinctrl/stm32/pinctrl-stm32f429.c | 1598 +++++++++++++++++++++++++++++
+>   7 files changed, 2520 insertions(+)
+>   create mode 100644 drivers/pinctrl/stm32/Kconfig
+>   create mode 100644 drivers/pinctrl/stm32/Makefile
+>   create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32.c
+>   create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32.h
+>   create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32f429.c
+>
 
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-[wens: Add A80 compatible strings to bindings doc; fix pin function
-       names based on v1.3 datasheet; constify of_device_id table]
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
+[...]
 
-Linus, can we have this one included for 4.5?
+> +
+> +static int stm32_pctrl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+> +				      struct device_node *node,
+> +				      struct pinctrl_map **map,
+> +				      unsigned *reserved_maps,
+> +				      unsigned *num_maps)
+> +{
+> +	struct stm32_pinctrl *pctl;
+> +	struct stm32_pinctrl_group *grp;
+> +	struct property *pins;
+> +	u32 pinfunc, pin, func;
+> +	unsigned long *configs;
+> +	unsigned int num_configs;
+> +	bool has_config = 0;
+> +	unsigned reserve = 0;
+> +	int num_pins, num_funcs, maps_per_pin, i, err;
+> +
+> +	pctl = pinctrl_dev_get_drvdata(pctldev);
+> +
+> +	pins = of_find_property(node, "pinmux", NULL);
+> +	if (!pins) {
+> +		dev_err(pctl->dev, "missing pins property in node %s .\n",
+> +				node->name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	err = pinconf_generic_parse_dt_config(node, pctldev, &configs,
+> +		&num_configs);
+> +	if (num_configs)
+> +		has_config = 1;
+> +
+> +	num_pins = pins->length / sizeof(u32);
+> +	num_funcs = num_pins;
+> +	maps_per_pin = 0;
+> +	if (num_funcs)
+> +		maps_per_pin++;
+> +	if (has_config && num_pins >= 1)
+> +		maps_per_pin++;
+> +
+> +	if (!num_pins || !maps_per_pin)
+> +		return -EINVAL;
+> +
+> +	reserve = num_pins * maps_per_pin;
+> +
+> +	err = pinctrl_utils_reserve_map(pctldev, map,
+> +			reserved_maps, num_maps, reserve);
+> +	if (err < 0)
+> +		goto fail;
+> +
+> +	for (i = 0; i < num_pins; i++) {
+> +		err = of_property_read_u32_index(node, "pinmux",
+> +				i, &pinfunc);
+> +		if (err)
+> +			goto fail;
 
-Thanks
+as a "goto fail" doesn't do more than a return, here do directly "return 
+err;"
 
----
- .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   2 +
- drivers/pinctrl/sunxi/Kconfig                      |   5 +
- drivers/pinctrl/sunxi/Makefile                     |   1 +
- drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c        | 181 +++++++++++++++++++++
- 4 files changed, 189 insertions(+)
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c
+> +
+> +		pin = STM32_GET_PIN_NO(pinfunc);
+> +		func = STM32_GET_PIN_FUNC(pinfunc);
+> +
+> +		if (pin >= pctl->match_data->npins) {
+> +			dev_err(pctl->dev, "invalid pin number.\n");
+> +			err = -EINVAL;
+> +			goto fail;
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
-index b321b26780dc..b3b6c2f210d7 100644
---- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
-@@ -18,6 +18,8 @@ Required properties:
-   "allwinner,sun8i-a23-r-pinctrl"
-   "allwinner,sun8i-a33-pinctrl"
-   "allwinner,sun8i-a83t-pinctrl"
-+  "allwinner,sun9i-a80-pinctrl"
-+  "allwinner,sun9i-a80-r-pinctrl"
- 
- - reg: Should contain the register physical address and length for the
-   pin controller.
-diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
-index e68fd951129a..0252b3fa41ce 100644
---- a/drivers/pinctrl/sunxi/Kconfig
-+++ b/drivers/pinctrl/sunxi/Kconfig
-@@ -55,4 +55,9 @@ config PINCTRL_SUN9I_A80
- 	def_bool MACH_SUN9I
- 	select PINCTRL_SUNXI_COMMON
- 
-+config PINCTRL_SUN9I_A80_R
-+	def_bool MACH_SUN9I
-+	depends on RESET_CONTROLLER
-+	select PINCTRL_SUNXI_COMMON
-+
- endif
-diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
-index e08029034510..0b4b827f314b 100644
---- a/drivers/pinctrl/sunxi/Makefile
-+++ b/drivers/pinctrl/sunxi/Makefile
-@@ -14,3 +14,4 @@ obj-$(CONFIG_PINCTRL_SUN8I_A23_R)	+= pinctrl-sun8i-a23-r.o
- obj-$(CONFIG_PINCTRL_SUN8I_A33)		+= pinctrl-sun8i-a33.o
- obj-$(CONFIG_PINCTRL_SUN8I_A83T)	+= pinctrl-sun8i-a83t.o
- obj-$(CONFIG_PINCTRL_SUN9I_A80)		+= pinctrl-sun9i-a80.o
-+obj-$(CONFIG_PINCTRL_SUN9I_A80_R)	+= pinctrl-sun9i-a80-r.o
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c
-new file mode 100644
-index 000000000000..42547ffa20a8
---- /dev/null
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c
-@@ -0,0 +1,181 @@
-+/*
-+ * Allwinner A80 SoCs special pins pinctrl driver.
-+ *
-+ * Copyright (C) 2014 Maxime Ripard
-+ * Maxime Ripard <maxime.ripard@free-electrons.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/reset.h>
-+
-+#include "pinctrl-sunxi.h"
-+
-+static const struct sunxi_desc_pin sun9i_a80_r_pins[] = {
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 0),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_uart"),	/* TX */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 0)),	/* PL_EINT0 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 1),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_uart"),	/* RX */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 1)),	/* PL_EINT1 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 2),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_jtag"),	/* TMS */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 2)),	/* PL_EINT2 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 3),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_jtag"),	/* TCK */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 3)),	/* PL_EINT3 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 4),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_jtag"),	/* TDO */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 4)),	/* PL_EINT4 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 5),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_jtag"),	/* TDI */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 5)),	/* PL_EINT5 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 6),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_cir_rx"),
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 6)),	/* PL_EINT6 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 7),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "1wire"),
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 7)),	/* PL_EINT7 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 8),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_ps2"),		/* SCK1 */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 8)),	/* PL_EINT8 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 9),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_ps2"),		/* SDA1 */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 9)),	/* PL_EINT9 */
-+
-+	/* Hole */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 0),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 0)),	/* PM_EINT0 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 1),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 1)),	/* PM_EINT1 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 2),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 2)),	/* PM_EINT2 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 3),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 3)),	/* PM_EINT3 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 4),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_i2s1"),	/* LRCKR */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 4)),	/* PM_EINT4 */
-+
-+	/* Hole */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 8),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_i2c1"),	/* SCK */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 8)),	/* PM_EINT8 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 9),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_i2c1"),	/* SDA */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 9)),	/* PM_EINT9 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 10),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_i2s0"),	/* MCLK */
-+		  SUNXI_FUNCTION(0x3, "s_i2s1")),	/* MCLK */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 11),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_i2s0"),	/* BCLK */
-+		  SUNXI_FUNCTION(0x3, "s_i2s1")),	/* BCLK */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 12),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_i2s0"),	/* LRCK */
-+		  SUNXI_FUNCTION(0x3, "s_i2s1")),	/* LRCK */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 13),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_i2s0"),	/* DIN */
-+		  SUNXI_FUNCTION(0x3, "s_i2s1")),	/* DIN */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 14),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_i2s0"),	/* DOUT */
-+		  SUNXI_FUNCTION(0x3, "s_i2s1")),	/* DOUT */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(M, 15),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 15)),	/* PM_EINT15 */
-+
-+	/* Hole */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(N, 0),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_i2c0"),	/* SCK */
-+		  SUNXI_FUNCTION(0x3, "s_rsb")),	/* SCK */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(N, 1),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_i2c0"),	/* SDA */
-+		  SUNXI_FUNCTION(0x3, "s_rsb")),	/* SDA */
-+};
-+
-+static const struct sunxi_pinctrl_desc sun9i_a80_r_pinctrl_data = {
-+	.pins = sun9i_a80_r_pins,
-+	.npins = ARRAY_SIZE(sun9i_a80_r_pins),
-+	.pin_base = PL_BASE,
-+	.irq_banks = 2,
-+};
-+
-+static int sun9i_a80_r_pinctrl_probe(struct platform_device *pdev)
-+{
-+	return sunxi_pinctrl_init(pdev,
-+				  &sun9i_a80_r_pinctrl_data);
-+}
-+
-+static const struct of_device_id sun9i_a80_r_pinctrl_match[] = {
-+	{ .compatible = "allwinner,sun9i-a80-r-pinctrl", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, sun9i_a80_r_pinctrl_match);
-+
-+static struct platform_driver sun9i_a80_r_pinctrl_driver = {
-+	.probe	= sun9i_a80_r_pinctrl_probe,
-+	.driver	= {
-+		.name		= "sun9i-a80-r-pinctrl",
-+		.owner		= THIS_MODULE,
-+		.of_match_table	= sun9i_a80_r_pinctrl_match,
-+	},
-+};
-+module_platform_driver(sun9i_a80_r_pinctrl_driver);
-+
-+MODULE_AUTHOR("Maxime Ripard <maxime.ripard@free-electrons.com");
-+MODULE_DESCRIPTION("Allwinner A80 R_PIO pinctrl driver");
-+MODULE_LICENSE("GPL");
--- 
-2.6.4
+ditto, return -EINVAL
 
+> +		}
+> +
+> +		if (!stm32_pctrl_is_function_valid(pctl, pin, func)) {
+> +			dev_err(pctl->dev, "invalid function.\n");
+> +			err = -EINVAL;
+> +			goto fail;
+
+ditto
+
+> +		}
+> +
+> +		grp = stm32_pctrl_find_group_by_pin(pctl, pin);
+> +		if (!grp) {
+> +			dev_err(pctl->dev, "unable to match pin %d to group\n",
+> +					pin);
+> +			return -EINVAL;
+> +		}
+> +
+> +		err = stm32_pctrl_dt_node_to_map_func(pctl, pin, func, grp, map,
+> +				reserved_maps, num_maps);
+> +		if (err < 0)
+> +			goto fail;
+
+ditto
+
+> +
+> +		if (has_config) {
+> +			err = pinctrl_utils_add_map_configs(pctldev, map,
+> +					reserved_maps, num_maps, grp->name,
+> +					configs, num_configs,
+> +					PIN_MAP_TYPE_CONFIGS_GROUP);
+> +			if (err < 0)
+> +				goto fail;
+
+ditto
+
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +fail:
+> +	return err;
+> +}
+> +
+
+[...]
+
+> +
+> +static int stm32_pmx_set_mux(struct pinctrl_dev *pctldev,
+> +			    unsigned function,
+> +			    unsigned group)
+> +{
+> +	bool ret;
+> +	const struct stm32_desc_function *desc;
+> +	struct stm32_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
+> +	struct stm32_pinctrl_group *g = pctl->groups + group;
+> +	struct pinctrl_gpio_range *range;
+> +	struct stm32_gpio_bank *bank;
+> +	u32 mode, alt;
+> +	int pin;
+> +
+> +	ret = stm32_pctrl_is_function_valid(pctl, g->pin, function);
+> +	if (!ret) {
+> +		dev_err(pctl->dev, "invalid function %d on group %d .\n",
+> +				function, group);
+> +		return -EINVAL;
+> +	}
+> +
+> +	desc = stm32_pctrl_find_function_by_pin(pctl, g->pin, function);
+> +	if (!desc)
+> +		return -EINVAL;
+
+stm32_pctrl_find_function_by_pin() is useless, desc is never used
+
+stm32_pctrl_is_function_valid(), above, already checks that function exists for the requested pins
+
+> +
+> +	range = pinctrl_find_gpio_range_from_pin(pctldev, g->pin);
+> +	bank = gpio_range_to_bank(range);
+> +	pin = stm32_gpio_pin(g->pin);
+> +
+> +	mode = stm32_gpio_get_mode(function);
+> +	alt = stm32_gpio_get_alt(function);
+> +
+> +	stm32_pmx_set_mode(bank, pin, mode, alt);
+> +
+> +	return 0;
+> +}
+> +
+>
