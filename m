@@ -1,46 +1,272 @@
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Subject: Re: [PATCH 1/2] devicetree: sound: add binding for WM8974 codec
-Date: Wed, 16 Dec 2015 13:54:20 +0000
-Message-ID: <yw1xk2oeebxv.fsf@unicorn.mansr.com>
-References: <1450270975-17955-1-git-send-email-mans@mansr.com>
-	<yw1xoadqeczx.fsf@unicorn.mansr.com>
-	<20151216134411.GM5727@sirena.org.uk>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 5/5] ARM: config: Add the rk3036 configure for kylin board
+Date: Wed, 16 Dec 2015 14:54:27 +0100
+Message-ID: <5029778.hNE1v3yOrC@diego>
+References: <1450254441-3243-1-git-send-email-wxt@rock-chips.com> <1450254441-3243-6-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151216134411.GM5727@sirena.org.uk> (Mark Brown's message of
-	"Wed, 16 Dec 2015 13:44:11 +0000")
+In-Reply-To: <1450254441-3243-6-git-send-email-wxt@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, leozwang@google.com, keescook@google.com, leecam@google.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Mark Brown <broonie@kernel.org> writes:
+Hi Caesar,
 
-> On Wed, Dec 16, 2015 at 01:31:30PM +0000, M=E5ns Rullg=E5rd wrote:
->
->> This is the 1/1 you were missing.
->
-> I need the patch in a form I can apply.
+Am Mittwoch, 16. Dezember 2015, 16:27:21 schrieb Caesar Wang:
+> Add RK3036-specific configuration for Kylin board.
+> 
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 
-I assumed your email client had some way of displaying the message I
-replied to.  Guess I was wrong.
+I don't think we generally do per-board defconfigs in the mainline kernel 
+anymore. If you are missing specific functionality, please add them as patch 
+to the multi_v7_defconfig (ideally as module).
 
->> Am I the only one who is annoyed by scripts/get_maintainer.pl not
->> returning all the addresses it should in cases like this?  Is there =
-some
->> trick I'm missing?
->
-> You can't blindly rely on get_maintainers, it's prone to both false
-> positives (CCing too many people, especially if you enable git matchi=
-ng
-> when it often starts spamming people who are just doing global cleanu=
-ps)
-> and false negatives (if you don't enable git matching and it misses
-> people who care about a specific driver).
 
-So in short, I'm supposed to magically divine who wants to see what.
+Heiko
 
---=20
-M=E5ns Rullg=E5rd
+> 
+> ---
+> 
+>  arch/arm/configs/rk3036_kylin_defconfig | 230
+> ++++++++++++++++++++++++++++++++ 1 file changed, 230 insertions(+)
+>  create mode 100644 arch/arm/configs/rk3036_kylin_defconfig
+> 
+> diff --git a/arch/arm/configs/rk3036_kylin_defconfig
+> b/arch/arm/configs/rk3036_kylin_defconfig new file mode 100644
+> index 0000000..692c393
+> --- /dev/null
+> +++ b/arch/arm/configs/rk3036_kylin_defconfig
+> @@ -0,0 +1,230 @@
+> +CONFIG_CROSS_COMPILE="arm-linux-gnueabi-"
+> +# CONFIG_LOCALVERSION_AUTO is not set
+> +CONFIG_DEFAULT_HOSTNAME="radxarock"
+> +CONFIG_SYSVIPC=y
+> +# CONFIG_USELIB is not set
+> +CONFIG_AUDIT=y
+> +CONFIG_IRQ_DOMAIN_DEBUG=y
+> +CONFIG_BLK_DEV_INITRD=y
+> +CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+> +CONFIG_PERF_EVENTS=y
+> +# CONFIG_COMPAT_BRK is not set
+> +CONFIG_SLAB=y
+> +CONFIG_JUMP_LABEL=y
+> +CONFIG_MODULES=y
+> +CONFIG_MODULE_FORCE_LOAD=y
+> +CONFIG_MODULE_UNLOAD=y
+> +CONFIG_PARTITION_ADVANCED=y
+> +# CONFIG_IOSCHED_CFQ is not set
+> +CONFIG_ARCH_ROCKCHIP=y
+> +CONFIG_PL310_ERRATA_588369=y
+> +CONFIG_PL310_ERRATA_727915=y
+> +CONFIG_ARM_ERRATA_720789=y
+> +CONFIG_ARM_ERRATA_754322=y
+> +CONFIG_SMP=y
+> +CONFIG_NR_CPUS=2
+> +CONFIG_PREEMPT_VOLUNTARY=y
+> +CONFIG_AEABI=y
+> +CONFIG_HIGHMEM=y
+> +# CONFIG_COMPACTION is not set
+> +CONFIG_DEFAULT_MMAP_MIN_ADDR=65536
+> +CONFIG_CLEANCACHE=y
+> +CONFIG_FRONTSWAP=y
+> +CONFIG_ZBOOT_ROM_TEXT=0x0
+> +CONFIG_ARM_APPENDED_DTB=y
+> +CONFIG_ARM_ATAG_DTB_COMPAT=y
+> +CONFIG_ARM_ATAG_DTB_COMPAT_CMDLINE_EXTEND=y
+> +CONFIG_CPU_FREQ=y
+> +CONFIG_CPU_FREQ_DEFAULT_GOV_CONSERVATIVE=y
+> +CONFIG_CPU_FREQ_GOV_POWERSAVE=y
+> +CONFIG_CPUFREQ_DT=y
+> +CONFIG_CPU_IDLE=y
+> +CONFIG_VFP=y
+> +CONFIG_NEON=y
+> +# CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
+> +CONFIG_PM_WAKELOCKS=y
+> +CONFIG_PM_DEBUG=y
+> +CONFIG_NET=y
+> +CONFIG_PACKET=y
+> +CONFIG_UNIX=y
+> +CONFIG_INET=y
+> +# CONFIG_INET_XFRM_MODE_TRANSPORT is not set
+> +# CONFIG_INET_XFRM_MODE_TUNNEL is not set
+> +# CONFIG_INET_XFRM_MODE_BEET is not set
+> +# CONFIG_INET_LRO is not set
+> +# CONFIG_INET_DIAG is not set
+> +# CONFIG_IPV6 is not set
+> +CONFIG_CFG80211_WEXT=y
+> +CONFIG_RFKILL=y
+> +CONFIG_DEVTMPFS=y
+> +CONFIG_DEVTMPFS_MOUNT=y
+> +# CONFIG_FIRMWARE_IN_KERNEL is not set
+> +CONFIG_BLK_DEV_LOOP=y
+> +CONFIG_BLK_DEV_RAM=y
+> +CONFIG_BLK_DEV_RAM_COUNT=1
+> +CONFIG_BLK_DEV_RAM_SIZE=16384
+> +CONFIG_SRAM=y
+> +CONFIG_SCSI=y
+> +# CONFIG_SCSI_PROC_FS is not set
+> +CONFIG_BLK_DEV_SD=y
+> +# CONFIG_SCSI_LOWLEVEL is not set
+> +CONFIG_NETDEVICES=y
+> +# CONFIG_NET_CADENCE is not set
+> +# CONFIG_NET_VENDOR_BROADCOM is not set
+> +# CONFIG_NET_VENDOR_CIRRUS is not set
+> +# CONFIG_NET_VENDOR_FARADAY is not set
+> +# CONFIG_NET_VENDOR_INTEL is not set
+> +# CONFIG_NET_VENDOR_MARVELL is not set
+> +# CONFIG_NET_VENDOR_MICREL is not set
+> +# CONFIG_NET_VENDOR_NATSEMI is not set
+> +# CONFIG_NET_VENDOR_SAMSUNG is not set
+> +# CONFIG_NET_VENDOR_SEEQ is not set
+> +# CONFIG_NET_VENDOR_SMSC is not set
+> +CONFIG_STMMAC_ETH=y
+> +# CONFIG_NET_VENDOR_VIA is not set
+> +# CONFIG_NET_VENDOR_WIZNET is not set
+> +CONFIG_SMSC_PHY=y
+> +# CONFIG_INPUT_MOUSEDEV_PSAUX is not set
+> +CONFIG_INPUT_MOUSEDEV_SCREEN_X=800
+> +CONFIG_INPUT_MOUSEDEV_SCREEN_Y=600
+> +CONFIG_INPUT_EVDEV=y
+> +# CONFIG_KEYBOARD_ATKBD is not set
+> +CONFIG_KEYBOARD_GPIO=y
+> +CONFIG_KEYBOARD_GPIO_POLLED=y
+> +# CONFIG_INPUT_MOUSE is not set
+> +CONFIG_INPUT_TOUCHSCREEN=y
+> +CONFIG_INPUT_MISC=y
+> +# CONFIG_SERIO is not set
+> +# CONFIG_LEGACY_PTYS is not set
+> +# CONFIG_DEVKMEM is not set
+> +CONFIG_SERIAL_8250=y
+> +CONFIG_SERIAL_8250_CONSOLE=y
+> +CONFIG_SERIAL_8250_DW=y
+> +# CONFIG_HW_RANDOM is not set
+> +CONFIG_I2C_CHARDEV=y
+> +CONFIG_I2C_GPIO=y
+> +CONFIG_I2C_RK3X=y
+> +CONFIG_GPIO_DWAPB=y
+> +CONFIG_POWER_SUPPLY=y
+> +CONFIG_POWER_RESET=y
+> +CONFIG_SENSORS_IIO_HWMON=y
+> +CONFIG_THERMAL=y
+> +CONFIG_CPU_THERMAL=y
+> +CONFIG_WATCHDOG=y
+> +CONFIG_SOFT_WATCHDOG=y
+> +CONFIG_MFD_RK808=y
+> +CONFIG_MFD_TPS65910=y
+> +CONFIG_REGULATOR_DEBUG=y
+> +CONFIG_REGULATOR_FIXED_VOLTAGE=y
+> +CONFIG_REGULATOR_ACT8865=y
+> +CONFIG_REGULATOR_FAN53555=y
+> +CONFIG_REGULATOR_RK808=y
+> +CONFIG_DRM=y
+> +CONFIG_DRM_ROCKCHIP=y
+> +CONFIG_ROCKCHIP_DW_HDMI=y
+> +CONFIG_ROCKCHIP_INNO_HDMI=y
+> +CONFIG_DRM_PANEL_SIMPLE=y
+> +CONFIG_FB_MODE_HELPERS=y
+> +CONFIG_BACKLIGHT_LCD_SUPPORT=y
+> +CONFIG_LCD_CLASS_DEVICE=y
+> +CONFIG_BACKLIGHT_CLASS_DEVICE=y
+> +# CONFIG_BACKLIGHT_GENERIC is not set
+> +CONFIG_BACKLIGHT_PWM=y
+> +CONFIG_SOUND=y
+> +CONFIG_SND=y
+> +CONFIG_SND_SOC=y
+> +CONFIG_SND_SOC_ROCKCHIP=y
+> +CONFIG_SND_SOC_ROCKCHIP_I2S=y
+> +CONFIG_SND_SIMPLE_CARD=y
+> +CONFIG_USB=y
+> +CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
+> +CONFIG_USB_OTG=y
+> +CONFIG_USB_MON=y
+> +CONFIG_USB_STORAGE=y
+> +CONFIG_USB_DWC2=y
+> +CONFIG_USB_DWC2_PLATFORM=y
+> +CONFIG_NOP_USB_XCEIV=y
+> +CONFIG_USB_ULPI=y
+> +CONFIG_USB_GADGET=y
+> +CONFIG_USB_G_ANDROID=y
+> +CONFIG_MMC=y
+> +CONFIG_MMC_BLOCK_MINORS=32
+> +CONFIG_MMC_DW=y
+> +CONFIG_MMC_DW_ROCKCHIP=y
+> +CONFIG_NEW_LEDS=y
+> +CONFIG_LEDS_CLASS=y
+> +CONFIG_LEDS_GPIO=y
+> +CONFIG_LEDS_TRIGGERS=y
+> +CONFIG_LEDS_TRIGGER_TIMER=y
+> +CONFIG_LEDS_TRIGGER_ONESHOT=y
+> +CONFIG_LEDS_TRIGGER_HEARTBEAT=y
+> +CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
+> +CONFIG_RTC_CLASS=y
+> +CONFIG_RTC_DRV_HYM8563=y
+> +CONFIG_RTC_DRV_RK808=y
+> +CONFIG_DMADEVICES=y
+> +CONFIG_DMADEVICES_DEBUG=y
+> +CONFIG_DMADEVICES_VDEBUG=y
+> +CONFIG_PL330_DMA=y
+> +CONFIG_ASYNC_TX_DMA=y
+> +CONFIG_STAGING=y
+> +CONFIG_R8188EU=y
+> +CONFIG_R8723AU=y
+> +CONFIG_ASHMEM=y
+> +CONFIG_ANDROID_TIMED_GPIO=y
+> +CONFIG_ANDROID_LOW_MEMORY_KILLER=y
+> +CONFIG_SYNC=y
+> +CONFIG_SW_SYNC=y
+> +CONFIG_SW_SYNC_USER=y
+> +CONFIG_ION=y
+> +CONFIG_ION_DUMMY=y
+> +CONFIG_COMMON_CLK_RK808=y
+> +CONFIG_ROCKCHIP_IOMMU=y
+> +CONFIG_IIO=y
+> +CONFIG_ROCKCHIP_SARADC=y
+> +CONFIG_INV_MPU6050_IIO=y
+> +CONFIG_AK8975=y
+> +CONFIG_PWM=y
+> +CONFIG_PWM_ROCKCHIP=y
+> +CONFIG_PHY_ROCKCHIP_USB=y
+> +CONFIG_ANDROID=y
+> +CONFIG_ANDROID_BINDER_IPC=y
+> +CONFIG_EXT2_FS=y
+> +CONFIG_EXT3_FS=y
+> +# CONFIG_EXT3_FS_XATTR is not set
+> +CONFIG_EXT4_FS=y
+> +CONFIG_EXT4_FS_SECURITY=y
+> +# CONFIG_DNOTIFY is not set
+> +CONFIG_MSDOS_FS=y
+> +CONFIG_VFAT_FS=y
+> +CONFIG_TMPFS=y
+> +# CONFIG_NETWORK_FILESYSTEMS is not set
+> +CONFIG_NLS_CODEPAGE_437=y
+> +CONFIG_NLS_CODEPAGE_850=y
+> +CONFIG_NLS_CODEPAGE_852=y
+> +CONFIG_NLS_ASCII=y
+> +CONFIG_NLS_ISO8859_1=y
+> +CONFIG_NLS_ISO8859_15=y
+> +CONFIG_NLS_UTF8=y
+> +CONFIG_PRINTK_TIME=y
+> +CONFIG_DYNAMIC_DEBUG=y
+> +CONFIG_DEBUG_INFO=y
+> +# CONFIG_ENABLE_WARN_DEPRECATED is not set
+> +# CONFIG_ENABLE_MUST_CHECK is not set
+> +CONFIG_FRAME_WARN=2048
+> +CONFIG_DEBUG_FS=y
+> +CONFIG_DEBUG_KERNEL=y
+> +# CONFIG_SCHED_DEBUG is not set
+> +CONFIG_TIMER_STATS=y
+> +CONFIG_KGDB=y
+> +CONFIG_DEBUG_LL=y
+> +CONFIG_DEBUG_RK29_UART2=y
+> +CONFIG_DEBUG_UART_8250_WORD=y
+> +CONFIG_EARLY_PRINTK=y
+> +CONFIG_SECURITY=y
+> +CONFIG_SECURITY_NETWORK=y
+> +CONFIG_SECURITY_SELINUX=y
+> +CONFIG_SECURITY_SELINUX_DISABLE=y
+> +# CONFIG_SECURITY_SELINUX_AVC_STATS is not set
+> +CONFIG_CRYPTO_ANSI_CPRNG=y
+> +# CONFIG_CRYPTO_HW is not set
