@@ -1,67 +1,58 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 12/19] ARM: dts: exynos: replace legacy *,wakeup property
- with wakeup-source
-Date: Wed, 16 Dec 2015 10:32:56 +0000
-Message-ID: <56713DD8.1050001@arm.com>
-References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
- <1445422216-29375-13-git-send-email-sudeep.holla@arm.com>
- <56704141.8070308@arm.com> <5670A2F2.5060009@samsung.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v2 3/3] ARM: bcm2835: Add the auxiliary clocks to the
+ device tree.
+Date: Wed, 16 Dec 2015 11:35:32 +0100
+Message-ID: <56713E74.3040907@i2se.com>
+References: <1450222559-22461-1-git-send-email-eric@anholt.net>
+ <1450222559-22461-3-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5670A2F2.5060009-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1450222559-22461-3-git-send-email-eric@anholt.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>, linux-clk@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Mike Turquette <mturquette@baylibre.com>, Lee Jones <lee@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Eric,
 
-
-On 15/12/15 23:32, Krzysztof Kozlowski wrote:
-> On 16.12.2015 01:35, Sudeep Holla wrote:
->>
->>
->> On 21/10/15 11:10, Sudeep Holla wrote:
->>> Though the keyboard and other driver will continue to support the legacy
->>> "gpio-key,wakeup", "linux-keypad,wakeup" boolean property to enable the
->>> wakeup source, "wakeup-source" is the new standard binding.
->>>
->>> This patch replaces all the legacy wakeup properties with the unified
->>> "wakeup-source" property in order to avoid any futher copy-paste
->>> duplication.
->>>
->>> Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>
->> Ping, do you prefer taking via your tree or should I send to armsoc
->> directly ?
+Am 16.12.2015 um 00:35 schrieb Eric Anholt:
+> These will be used for enabling UART1, SPI1, and SPI2.
 >
-> Usually it depends on the dependencies... but:
-> 1. I just received this patch - 12/19.
+> Signed-off-by: Eric Anholt <eric@anholt.net>
+> ---
+>
+> v2: Make the binding cover both the IRQ and clock enable registers.
+>
+>  arch/arm/boot/dts/bcm2835.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+> index aef64de..a27d40b 100644
+> --- a/arch/arm/boot/dts/bcm2835.dtsi
+> +++ b/arch/arm/boot/dts/bcm2835.dtsi
+> @@ -73,6 +73,13 @@
+>  			clocks = <&clk_osc>;
+>  		};
+>  
+> +		aux: aux@0x7e215000 {
+> +			compatible = "brcm,bcm2835-aux";
+> +			#clock-cells = <1>;
+> +			reg = <0x7e215000 0x8>;
+> +			clocks = <&clocks BCM2835_CLOCK_VPU>;
+> +		};
+> +
 
-Sorry for that. The initial idea was to show all the changes but merge
-the binding and dependencies first, so didn't cc all.
+just a nit. Since the nodes should be ordered by address this should
+better go between|||i2c0 and sdhci.
 
-> 2. No cover letter, no other patches, no explanation about any
-> dependencies or other related changes. Nothing. Just one patch.
+Thanks
 
-Yes this was initially posted as part of the series, but only
-dependencies were merged for v4.4
+Stefan
 
-> 3. The patch mentions new standard binding. Was the new binding already
-> merged? Or is it part of these series? What about backward compatibility?
+|
+>  		rng@7e104000 {
+>  			compatible = "brcm,bcm2835-rng";
+>  			reg = <0x7e104000 0x10>;
 
-Not a brand new binding, but made existing one a standard so that we
-don't continue to be creative and generate more bindings for the same
-thing. Yes binding and dependent patches are already in mainline. And
-yes backward compatibility is maintained as mentioned in the commit
-message.
-
--- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
