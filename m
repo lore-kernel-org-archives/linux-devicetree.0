@@ -1,60 +1,38 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] devicetree: add vendor prefix for Kyocera Corporation
-Date: Wed, 16 Dec 2015 16:15:03 +0100
-Message-ID: <20151216151503.GA28947@ulmo>
-References: <1449081671-25327-1-git-send-email-l.stach@pengutronix.de>
+From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 4/5] iommu/mediatek: Add mt8173 IOMMU driver
+Date: Wed, 16 Dec 2015 16:15:15 +0100
+Message-ID: <20151216151514.GI18805@8bytes.org>
+References: <1449568153-15643-1-git-send-email-yong.wu@mediatek.com>
+	<1449568153-15643-5-git-send-email-yong.wu@mediatek.com>
+	<20151214141656.GG18805@8bytes.org>
+	<1450150132.22854.57.camel@mhfsdcap03> <5670098E.40601@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1449081671-25327-1-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+In-Reply-To: <5670098E.40601-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Dec 15, 2015 at 12:37:34PM +0000, Robin Murphy wrote:
+> The potential issue I *do* see, looking more closely, is that
+> iommu_group_get_for_dev() is setting group->domain but not calling
+> the attach_dev callback, which looks wrong...
 
---LZvS9be/3tNcYl/X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Attaching the device happens from iommu_group_add_device(), which is
+called from iommu_group_get_for_dev() right after the domains are
+allocated/initialized.
 
-On Wed, Dec 02, 2015 at 07:41:10PM +0100, Lucas Stach wrote:
-> KYO is the stock ticker symbol of Kyocera Corporation.
->=20
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
 
-Both patches applied, thanks.
-
-Thierry
-
---LZvS9be/3tNcYl/X
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWcX/zAAoJEN0jrNd/PrOhqjMP/2MJZkqsFVtsysbS9dXrP2DW
-4jNMlXvhBHmhrrU0IEPI9Gm6sLrbsel1Voi7Fk65UV3CbTQmMXchzCXOfX5T8ird
-nu83seGEE2Q+iSW3Hlx8NnAXbihb+4PLYYqZEppqmksC2FQtbUSN3JL3G4wibSlC
-wQ0NSykJ3FyVi6Ft5Due9OnLDADDy9OlnuA+zaYUXuRAifZACMXaXuOpBEB0F29Z
-Sgqp7gcUrkUh6ZVk1JftGvqGLoeOIxlWkzxgIeKIXNl5zpDx9IX2ibB7drSKVRqQ
-SlCOrdwSYSIq8mcl1E1EsI1LC+sd4ziAdWrsAaqY7AmXttLq3ofdb2XJENchUQFu
-3IRe+1brIYeUXUdRU6kXKdq++U+8e6y1xkDfOqcswNb5oWxCATyoz3OijDW1ojDs
-WqT4ydDaBIRsJCNgiHRHQ7rbVz8dZIN1NJsiYgx89aP4Kw0q4yxW3/nsPmZBlXpN
-ud6X/jRAv6YQX7WGkIZHjjv5L89h1MCY73W704Z1Nb4G8dWCfN72zBj59bbOkUmE
-WJongC5W5e9gDDpvH+LDX8Qod7E07gEnGiTMXxjAderPC0BzYU+py4NoQPBteuqe
-0QYT4sRnh2iwhG0viuWithU8DrLubtIlDRL+HUVDRmlDNaD905Qg2FIGSczcjoMQ
-gpFc09cUfdEJIYzBOrdB
-=2azP
------END PGP SIGNATURE-----
-
---LZvS9be/3tNcYl/X--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Joerg
