@@ -1,91 +1,41 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH -next] of: Move of_io_request_and_map prototype to correct context
-Date: Tue, 15 Dec 2015 20:34:59 -0800
-Message-ID: <1450240499-17474-1-git-send-email-linux@roeck-us.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Guenter Roeck <linux@roeck-us.net>, Daniel Lezcano <daniel.lezcano@linaro.org>
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH v4 0/3] usb: renesas_usbhs: More compat strings
+Date: Wed, 16 Dec 2015 13:51:49 +0900
+Message-ID: <1450241512-24699-1-git-send-email-horms+renesas@verge.net.au>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-of_io_request_and_map() is defined in of/address.c, which is compiled
-if CONFIG_OF_ADDRESS is configured. However, it is defined in the context
-of CONFIG_OF. This results in the following build errors for
-sparc:allmodconfig (which defines CONFIG_OF but not CONFIG_OF_ADDRESS).
 
-drivers/built-in.o: In function `meson6_timer_init':
-	meson6_timer.c:(.init.text+0x62a8):
-		undefined reference to `of_io_request_and_map'
-drivers/built-in.o: In function `mtk_timer_init':
-	mtk_timer.c:(.init.text+0x6e70):
-		undefined reference to `of_io_request_and_map'
-drivers/built-in.o: In function `asm9260_timer_init':
-	asm9260_timer.c:(.init.text+0x6fcc):
-		undefined reference to `of_io_request_and_map'
+Hi,
 
-Move function prototype and dummy function into the CONFIG_OF_ADDRESS
-conditional to fix the problem.
+this short series adds generic, and soc-specific r8a7792 and r8a7793 compat
+strings to the Renesas USBHS driver. The intention is to provide a complete
+set of compat strings for known R-Car SoCs.
 
-Exposed by commit bec8c4617611 ("clocksource/drivers/mediatek: Add the
-COMPILE_TEST option").
+Changes since v3:
+* State that one or more compat string should be used
 
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- include/linux/of_address.h | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+Changes since v2:
+* Split documentation of SoC names into separate patch
+* Use correct fallback compatibility string in example
 
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index 507daad0bc8d..b5324c0553bd 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -56,6 +56,8 @@ extern struct of_pci_range *of_pci_range_parser_one(
- extern int of_dma_get_range(struct device_node *np, u64 *dma_addr,
- 				u64 *paddr, u64 *size);
- extern bool of_dma_is_coherent(struct device_node *np);
-+void __iomem *of_io_request_and_map(struct device_node *device,
-+					int index, const char *name);
- #else /* CONFIG_OF_ADDRESS */
- 
- static inline u64 of_translate_address(struct device_node *np,
-@@ -106,18 +108,22 @@ static inline bool of_dma_is_coherent(struct device_node *np)
- {
- 	return false;
- }
-+
-+#include <linux/io.h>
-+
-+static inline void __iomem *of_io_request_and_map(struct device_node *device,
-+					int index, const char *name)
-+{
-+	return IOMEM_ERR_PTR(-EINVAL);
-+}
- #endif /* CONFIG_OF_ADDRESS */
- 
- #ifdef CONFIG_OF
- extern int of_address_to_resource(struct device_node *dev, int index,
- 				  struct resource *r);
- void __iomem *of_iomap(struct device_node *node, int index);
--void __iomem *of_io_request_and_map(struct device_node *device,
--					int index, const char *name);
- #else
- 
--#include <linux/io.h>
--
- static inline int of_address_to_resource(struct device_node *dev, int index,
- 					 struct resource *r)
- {
-@@ -129,11 +135,6 @@ static inline void __iomem *of_iomap(struct device_node *device, int index)
- 	return NULL;
- }
- 
--static inline void __iomem *of_io_request_and_map(struct device_node *device,
--					int index, const char *name)
--{
--	return IOMEM_ERR_PTR(-EINVAL);
--}
- #endif
- 
- #if defined(CONFIG_OF_ADDRESS) && defined(CONFIG_PCI)
+Changes since v1:
+* Add R-Car Gen2 and Gen3 fallback compatibility strings rather than
+a single compatibility string for all of R-Car.
+
+Simon Horman (3):
+  usb: renesas_usbhs: add SoC names to compatibility string
+    documentation
+  usb: renesas_usbhs: add fallback compatibility strings
+  usb: renesas_usbhs: add device tree support for r8a779[23]
+
+ .../devicetree/bindings/usb/renesas_usbhs.txt      | 22 ++++++++++++++++------
+ drivers/usb/renesas_usbhs/common.c                 |  9 +++++++++
+ 2 files changed, 25 insertions(+), 6 deletions(-)
+
 -- 
 2.1.4
+
