@@ -1,59 +1,96 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] devicetree: sound: add binding for WM8974 codec
-Date: Wed, 16 Dec 2015 13:44:11 +0000
-Message-ID: <20151216134411.GM5727@sirena.org.uk>
-References: <1450270975-17955-1-git-send-email-mans@mansr.com>
- <yw1xoadqeczx.fsf@unicorn.mansr.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v2 6/8] [Media] vcodec: mediatek: Add Mediatek V4L2 Video
+ Encoder Driver
+Date: Wed, 16 Dec 2015 14:47:52 +0100
+Message-ID: <56716B88.7090301@xs4all.nl>
+References: <1449827743-22895-1-git-send-email-tiffany.lin@mediatek.com>
+ <1449827743-22895-7-git-send-email-tiffany.lin@mediatek.com>
+ <566EBAFC.3010408@xs4all.nl> <1450187460.21350.35.camel@mtksdaap41>
+ <567020F1.1000204@cisco.com> <1450271857.6730.26.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="J055lv7UDsGihh+u"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <yw1xoadqeczx.fsf-OEaqT8BN2ezZK2NkWkPsZwC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1450271857.6730.26.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tiffany lin <tiffany.lin@mediatek.com>, Hans Verkuil <hansverk@cisco.com>
+Cc: daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@iki.fi>, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, Fabien Dessenne <fabien.dessenne@st.com>, Arnd Bergmann <arnd@arndb.de>, Darren Etheridge <detheridge@ti.com>, Peter Griffin <peter.griffin@linaro.org>, Benoit Parrot <bparrot@ti.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Y
 List-Id: devicetree@vger.kernel.org
 
+On 12/16/15 14:17, tiffany lin wrote:
+> Hi Hans,
+> 
+> 
+> On Tue, 2015-12-15 at 15:17 +0100, Hans Verkuil wrote:
+>>
+>> On 12/15/15 14:51, tiffany lin wrote:
+>>> We are not familiar with v4l2-compliance utility, we will check how to
+>>> use it.
+>>
+>> It's part of v4l-utils.git (http://git.linuxtv.org/v4l-utils.git/). There is a
+>> fairly decent man page. It does exhaustive compliance tests for V4L2 devices.
+>>
+>> That said, the support for memory-to-memory codec devices is not great, so I wouldn't
+>> trust any failures it reports when using the streaming tests (i.e. the --stream*
+>> options). By default just run 'v4l2-compliance -d /dev/videoX' to do the compliance
+>> test.
+>>
+>> Note: before I accept this driver I do want to see that compliance test output!
+>>
+> Got it. We will provide it in next version.
+> Now our driver is developed and run base on kernel v3.18.
+> V4L2 and vb2 have some difference between Linux 4.4-rc1 and 3.18 kernel.
+> Is it ok we provided test output base on v3.18 or we need to base on
+> 4.4-rc1?
 
---J055lv7UDsGihh+u
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm actually not sure if the latest v4l2-compliance test suite will work with a 3.18
+kernel. so either you have to go back to an older version of v4l2-compliance that
+works with 3.18 (go back to commit 4a57509a8334aca6ca8e81cd3beb08d5be397dac, that
+might do the trick) or (and that's what I recommend) go with the latest kernel.
 
-On Wed, Dec 16, 2015 at 01:31:30PM +0000, M=E5ns Rullg=E5rd wrote:
+For the media tree that is http://git.linuxtv.org/media_tree.git/log/.
 
-> This is the 1/1 you were missing.
+The final version of the patch has to be against that kernel anyway.
 
-I need the patch in a form I can apply.
+>>>>> +}
+>>>>> +
+>>>>> +int m2mctx_venc_queue_init(void *priv, struct vb2_queue *src_vq,
+>>>>> +			   struct vb2_queue *dst_vq)
+>>>>> +{
+>>>>> +	struct mtk_vcodec_ctx *ctx = priv;
+>>>>> +	int ret;
+>>>>> +
+>>>>> +	src_vq->type		= V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
+>>>>> +	src_vq->io_modes	= VB2_DMABUF | VB2_MMAP | VB2_USERPTR;
+>>>>
+>>>> You're using videobuf2-dma-contig, so VB2_USERPTR is generally useless in that
+>>>> case. I would drop it.
+>>>>
+>>> Sorry, I don't get it. 
+>>> We are using videobuf2-dma-contig, but we also using VB2_USERPTR.
+>>
+>> ???? In that case the user pointer you pass in must point to physically contiguous
+>> memory. Which means you got it through some magic. Typically what should be used
+>> are dmabuf handles to pass buffers around between different subsystems.
+>>
+>> The use of VB2_USERPTR for that purpose is deprecated.
+>>
+>> Or am I misunderstanding you as well?
+>>
+> Our encoder support all three modes.
+> In case that A driver + Encode driver flow, OUTPUT buffer will be
+> VB2_DMABUF from A driver.
+> In case that read YCbCr frame data from file and encode them to bit
+> stream flow, we use VB2_USERPTR and VB2_MMAP.
+> In VB2_USERPTR case, videobuf2-dma-contig will help us get continuous
+> dma address.
+> Our chip has IOMMU and M4U that help us get continuous phy address for
+> encode HW.
+> 
+> http://lists.infradead.org/pipermail/linux-mediatek/2015-October/002525.html
 
-> Am I the only one who is annoyed by scripts/get_maintainer.pl not
-> returning all the addresses it should in cases like this?  Is there some
-> trick I'm missing?
+Ah, OK. Have you tested this with malloc()ed buffers? Just asking :-)
 
-You can't blindly rely on get_maintainers, it's prone to both false
-positives (CCing too many people, especially if you enable git matching
-when it often starts spamming people who are just doing global cleanups)
-and false negatives (if you don't enable git matching and it misses
-people who care about a specific driver).
+Regards,
 
---J055lv7UDsGihh+u
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWcWqqAAoJECTWi3JdVIfQXqYH/3HwKjjQioFWQNyotxgpNLx5
-NoF1RJP2GMZW+jEbUwRqbN+mHTsjXvsSP1b9me6UEYdx0IwLS5hI8S8Qr/ko2Pp0
-PI3bRFea0BCxju0DY1erANcrV7vNZEuWnKFwWD7MSCe23QcMycrU6XAGW5OjItgD
-4Vqh7EfwGg5KWUWzCD52zb3+GkxFPrIVhyf4SqG6G/V/cF6Ftf6oswU/e5xszNaP
-ZJXBhvZi4TzgVxngQ3d8uOzJCKld51KQig/WC2+GYWMm7KsBHUf2+z+SVsbTNt4s
-EI31+k2NqVQ8rcm1C4fyCOWsAb6D7VnZndP1zjZIUQSl+envQniJClwweWLSrAk=
-=t3cC
------END PGP SIGNATURE-----
-
---J055lv7UDsGihh+u--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Hans
