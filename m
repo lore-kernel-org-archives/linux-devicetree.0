@@ -1,64 +1,58 @@
-From: Dawei Chien <dawei.chien@mediatek.com>
-Subject: [PATCH v5 3/3] arm64: dts: mt8173: Add dynamic power node.
-Date: Wed, 16 Dec 2015 11:59:16 +0800
-Message-ID: <1450238356-36319-4-git-send-email-dawei.chien@mediatek.com>
-References: <1450238356-36319-1-git-send-email-dawei.chien@mediatek.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: [PATCH v11 17/19] drm: bridge: analogix/dp: expand the look time for
+ waiting AUX CH reply
+Date: Wed, 16 Dec 2015 11:57:37 +0800
+Message-ID: <1450238257-3274-1-git-send-email-ykk@rock-chips.com>
+References: <1450236018-1118-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1450238356-36319-1-git-send-email-dawei.chien@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Dawei Chien <dawei.chien@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Punit Agrawal <punit.agrawal@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1450236018-1118-1-git-send-email-ykk@rock-chips.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Inki Dae <inki.dae@samsung.com>, Mark Yao <mark.yao@rock-chips.com>, Jingoo Han <jingoohan1@gmail.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kishon Vijay Abraham I <kishon@ti.com>, javier@osg.samsung.com, Rob Herring <robh+dt@kernel.org>, Andy Yan <andy.yan@rock-chips.com>, Thierry Reding <treding@nvidia.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This device node is for calculating dynamic power in mW.
-Since mt8173 has two clusters, there are two dynamic power
-coefficient as well.
-
-Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
----
-This patch is base on patchset:
-https://lkml.org/lkml/2015/11/17/251
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi |    4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 4114cee..33fabe4 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -71,6 +71,7 @@
- 			#cooling-cells = <2>;
- 			#cooling-min-level = <0>;
- 			#cooling-max-level = <7>;
-+			dynamic-power-coefficient = <263>;
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -95,6 +96,7 @@
- 			#cooling-cells = <2>;
- 			#cooling-min-level = <0>;
- 			#cooling-max-level = <7>;
-+			dynamic-power-coefficient = <263>;
- 		};
- 
- 		cpu2: cpu@100 {
-@@ -119,6 +121,7 @@
- 			#cooling-cells = <2>;
- 			#cooling-min-level = <0>;
- 			#cooling-max-level = <7>;
-+			dynamic-power-coefficient = <530>;
- 		};
- 
- 		cpu3: cpu@101 {
-@@ -143,6 +146,7 @@
- 			#cooling-cells = <2>;
- 			#cooling-min-level = <0>;
- 			#cooling-max-level = <7>;
-+			dynamic-power-coefficient = <530>;
- 		};
- 
- 		idle-states {
--- 
-1.7.9.5
+QWZ0ZXIgdGVzdCBvbiByb2NrY2hpb3AgcGxhdGZvcm0sIGkgZm91bmQgc29tZXRpbXMgZHJpdmVy
+IHdvdWxkIGZhaWxlZAphdCByZWFkaW5nIEVESUQgbWVzc2FnZS4gQWZ0ZXIgZGVidWdnaW5nIG1v
+cmUsIGkgZm91bmQgdGhhdCBpdCdzIG9rYXkKdG8gcmVhZF9hIGJ5dGUgZnJvbSBpMmMsIGJ1dCBp
+dCB3b3VsZCBmYWlsZWQgYXQgQVVYIHRyYW5zY2F0aW9uIGlmIHdlCnRyeSB0byByZWFkeSBtdWx0
+aS1ieXRlcyBmcm9tIGkyYy4KCkRyaXZlciBqdXN0IGNhbid0IHJlY2VpdmVkIHRoZSBBVVggQ0gg
+cmVwbHkgY29tbWFuZCwgZXZlbiBubyBBVVggZXJyb3IKY29kZS4gSSBtYXkgZ3Vlc3MgdGhhdCB0
+aGUgQVVYIHdhaXQgdGltZSBpcyBub3QgZW5vdWdoLCBzbyBJIHRyeSB0bwpleHBhbmQgdGhlIEFV
+WCB3YWl0IHRpbWUsIGFuZCBpIGRvIHNlZSB0aGlzIGNvdWxkIGZpeCB0aGUgRURJRCByZWFkCmZh
+aWxlZCBhdCByb2NrY2hpcCBwbGF0Zm9ybS4KCkFuZCBJIHRob3VnaHQgdGhhdCBleHBhbmQgdGhl
+IHdhaXQgdGltZSB3b24ndCBodXJ0IEV4eW5vcyBwbGF0Zm9ybSB0b28KbXVjaCwgY2F1c2UgRXh5
+bm9zIGRpZG4ndCBoYXZlIHRoaXMgcHJvYmxlbSwgdGhlbiBkcml2ZXIgd291bGQgcmVjZWl2ZWQK
+dGhlIHJlcGx5IGNvbW1hbmQgdmVyeSBzb29uLCBzbyBubyBtb3JlIGFkZGl0aW9uYWwgd2FpdCB0
+aW1lIHdvdWxkIGJyaW5nCnRvIEV4eW5vcyBwbGF0Zm9ybS4KClNpZ25lZC1vZmYtYnk6IFlha2ly
+IFlhbmcgPHlra0Byb2NrLWNoaXBzLmNvbT4KLS0tCkNoYW5nZXMgaW4gdjExOiBOb25lCkNoYW5n
+ZXMgaW4gdjEwOiBOb25lCkNoYW5nZXMgaW4gdjk6IE5vbmUKQ2hhbmdlcyBpbiB2ODogTm9uZQpD
+aGFuZ2VzIGluIHY3OiBOb25lCkNoYW5nZXMgaW4gdjY6IE5vbmUKQ2hhbmdlcyBpbiB2NTogTm9u
+ZQpDaGFuZ2VzIGluIHY0OiBOb25lCkNoYW5nZXMgaW4gdjM6IE5vbmUKQ2hhbmdlcyBpbiB2Mjog
+Tm9uZQoKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhfZHBfcmVnLmMg
+fCAyICstCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKCmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FuYWxvZ2l4L2FuYWxvZ2l4X2RwX3Jl
+Zy5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbmFsb2dpeC9hbmFsb2dpeF9kcF9yZWcuYwpp
+bmRleCBjN2UyOTU5Li5kYzM3NmJkIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdl
+L2FuYWxvZ2l4L2FuYWxvZ2l4X2RwX3JlZy5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
+YW5hbG9naXgvYW5hbG9naXhfZHBfcmVnLmMKQEAgLTQ4Miw3ICs0ODIsNyBAQCBpbnQgYW5hbG9n
+aXhfZHBfc3RhcnRfYXV4X3RyYW5zYWN0aW9uKHN0cnVjdCBhbmFsb2dpeF9kcF9kZXZpY2UgKmRw
+KQogCXJlZyA9IHJlYWRsKGRwLT5yZWdfYmFzZSArIEFOQUxPR0lYX0RQX0lOVF9TVEEpOwogCXdo
+aWxlICghKHJlZyAmIFJQTFlfUkVDRUlWKSkgewogCQl0aW1lb3V0X2xvb3ArKzsKLQkJaWYgKERQ
+X1RJTUVPVVRfTE9PUF9DT1VOVCA8IHRpbWVvdXRfbG9vcCkgeworCQlpZiAoRFBfVElNRU9VVF9M
+T09QX0NPVU5UICogMTAgPCB0aW1lb3V0X2xvb3ApIHsKIAkJCWRldl9lcnIoZHAtPmRldiwgIkFV
+WCBDSCBjb21tYW5kIHJlcGx5IGZhaWxlZCFcbiIpOwogCQkJcmV0dXJuIC1FVElNRURPVVQ7CiAJ
+CX0KLS0gCjEuOS4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwK
