@@ -1,134 +1,80 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v4 3/5] dt/bindings: qcom_nandc: Add DT bindings
-Date: Wed, 16 Dec 2015 13:41:14 +0530
-Message-ID: <56711CA2.4000402@codeaurora.org>
-References: <1438578498-32254-1-git-send-email-architt@codeaurora.org>
- <1439959746-25498-1-git-send-email-architt@codeaurora.org>
- <1439959746-25498-4-git-send-email-architt@codeaurora.org>
- <20151216073306.302f3614@bbrezillon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20151216073306.302f3614@bbrezillon>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: linux-mtd@lists.infradead.org, dehrenberg@google.com, cernekee@gmail.com, computersforpeace@gmail.com, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, agross@codeaurora.org
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [PATCH 0/5] Kylin-board is based on RK3036 SOCs, add the initiation
+Date: Wed, 16 Dec 2015 16:27:16 +0800
+Message-ID: <1450254441-3243-1-git-send-email-wxt@rock-chips.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: heiko@sntech.de, mturquette@baylibre.com, sboyd@codeaurora.org
+Cc: leozwang@google.com, keescook@google.com, leecam@google.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Caesar Wang <wxt@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+version for working.
 
-On 12/16/2015 12:03 PM, Boris Brezillon wrote:
-> Hi Archit,
->
-> Sorry for the late review, but there are a few things I think should be
-> addressed.
->
-> On Wed, 19 Aug 2015 10:19:04 +0530
-> Archit Taneja <architt@codeaurora.org> wrote:
->
->> Add DT bindings document for the Qualcomm NAND controller driver.
->>
->> Cc: devicetree@vger.kernel.org
->>
->> v4:
->> - No changes
->>
->> v3:
->> - Don't use '0x' when specifying nand controller address space
->> - Add optional property for on-flash bbt usage
->>
->> Acked-by: Andy Gross <agross@codeaurora.org>
->> Signed-off-by: Archit Taneja <architt@codeaurora.org>
->> ---
->>   .../devicetree/bindings/mtd/qcom_nandc.txt         | 49 ++++++++++++++++++++++
->>   1 file changed, 49 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mtd/qcom_nandc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
->> new file mode 100644
->> index 0000000..1de4643
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
->> @@ -0,0 +1,49 @@
->> +* Qualcomm NAND controller
->> +
->> +Required properties:
->> +- compatible:		should be "qcom,ebi2-nand" for IPQ806x
->> +- reg:			MMIO address range
->> +- clocks:		must contain core clock and always on clock
->> +- clock-names:		must contain "core" for the core clock and "aon" for the
->> +			always on clock
->> +- dmas:			DMA specifier, consisting of a phandle to the ADM DMA
->> +			controller node and the channel number to be used for
->> +			NAND. Refer to dma.txt and qcom_adm.txt for more details
->> +- dma-names:		must be "rxtx"
->> +- qcom,cmd-crci:	must contain the ADM command type CRCI block instance
->> +			number specified for the NAND controller on the given
->> +			platform
->> +- qcom,data-crci:	must contain the ADM data type CRCI block instance
->> +			number specified for the NAND controller on the given
->> +			platform
->> +
->> +Optional properties:
->> +- nand-bus-width:	bus width. Must be 8 or 16. If not present, 8 is chosen
->> +			as default
->> +
->> +- nand-ecc-strength:	number of bits to correct per ECC step. Must be 4 or 8
->> +			bits. If not present, 4 is chosen as default
->> +- nand-on-flash-bbt:	Create/use on-flash bad block table
->> +
->> +The device tree may optionally contain sub-nodes describing partitions of the
->> +address space. See partition.txt for more detail.
->> +
->> +Example:
->> +
->> +nand@1ac00000 {
->> +	compatible = "qcom,ebi2-nandc";
->> +	reg = <0x1ac00000 0x800>;
->> +
->> +	clocks = <&gcc EBI2_CLK>,
->> +		 <&gcc EBI2_AON_CLK>;
->> +	clock-names = "core", "aon";
->> +
->> +	dmas = <&adm_dma 3>;
->> +	dma-names = "rxtx";
->> +	qcom,cmd-crci = <15>;
->> +	qcom,data-crci = <3>;
->> +
->> +	partition@0 {
->> +	...
->> +	};
->> +};
->
->
-> According to the registers layout defined in your driver, your NAND
-> controller can address multiple chips (NAND_DEV_SEL register). Since DT
-> bindings are supposed to be as stable as possible, I would recommend
-> separating the NAND controller and NAND chip declaration (as done here
-> [1] and here [2]).
+This series pacthes have the following decriptions:
 
-Yes, the controller does support multiple chips, but the driver only
-supports one chip for now.
+PATCH[1/5]:
+clk: rockchip: rk3036: include downstream muxes into fractional dividers
 
-I'll make changes such that the driver works in accordance to the DT
-bindings format you shared.
+This patch is depend on Heiko's series pacthes.
 
-Thanks for the review.
+a8a1de6 clk: rockchip: include downstream muxes into fractional dividers
+(https://patchwork.kernel.org/patch/7053071/)
+ab40856 clk: rockchip: handle mux dependency of fractional dividers
+(https://patchwork.kernel.org/patch/7053051/)
+c4c5582 clk: add flag for clocks that need to be enabled on rate changes
+(https://patchwork.kernel.org/patch/7053041/)
+---
 
-Archit
+PATCH[2/5]:
+0a68e13 clk: rockchip: rk3036: enable the CLK_IGNORE_UNUSED flag for aclk_vio
+The aclk_vio is marked as the ignore_unused since it's the noc clock.
+let will fix the display issue.
+---
+
+PATCH[3/5]:
+183a5eb ARM: dts: rockchip: update the core dts for rk3036
+Update the rk3036 core dtsi, add the hdmi, lcdc, sdmmc, sdio .... node info
+for rk3036, in general the function is verified by the UARL[0].
+
+UARL[0]:https://github.com/rockchip-linux/kernel/ -b develop-v4.1
+---
+
+PATCH[4/5]:
+962e1ad ARM: dts: rockchip: add the kylin board for rk3036
+Add the rk3036-kylin dts for Kylin-board.
+---
+
+PATCH[5/5]:
+d96f13a ARM: config: Add the rk3036 configure for kylin board
+Add the defconfig for Kylin-board to better to know about that.
+
+Note: I don't plan to upstream for this patch. :)
+---
+
+The game is just beginning ....
 
 
->
-> Best Regards,
->
-> Boris
->
-> [1]http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> [2]http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/mtd/sunxi-nand.txt
->
->
+
+Caesar Wang (4):
+  clk: rockchip: rk3036: include downstream muxes into fractional
+    dividers
+  ARM: dts: rockchip: update the core dts for rk3036
+  ARM: dts: rockchip: add the kylin board for rk3036
+  ARM: config: Add the rk3036 configure for kylin board
+
+Yakir Yang (1):
+  clk: rockchip: rk3036: enable the CLK_IGNORE_UNUSED flag for aclk_vio
+
+ Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/rk3036-kylin.dts                 | 302 +++++++++++++++++++++
+ arch/arm/boot/dts/rk3036.dtsi                      | 225 ++++++++++++++-
+ arch/arm/configs/rk3036_kylin_defconfig            | 230 ++++++++++++++++
+ drivers/clk/rockchip/clk-rk3036.c                  |  37 +--
+ 6 files changed, 777 insertions(+), 22 deletions(-)
+ create mode 100644 arch/arm/boot/dts/rk3036-kylin.dts
+ create mode 100644 arch/arm/configs/rk3036_kylin_defconfig
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
-Forum, hosted by The Linux Foundation
+1.9.1
+
