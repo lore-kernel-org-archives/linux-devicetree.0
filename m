@@ -1,45 +1,62 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [PATCH v5 2/3] arm64: dts: mt8173: Add thermal zone node.
-Date: Wed, 16 Dec 2015 16:34:05 +0800
-Message-ID: <CAGS+omDDfJb9dfWWPaMKs=MkO4Pf3RF9SUD==i7sgHsrDhFDxA@mail.gmail.com>
-References: <1450238356-36319-1-git-send-email-dawei.chien@mediatek.com> <1450238356-36319-3-git-send-email-dawei.chien@mediatek.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] usb: gadget: renesas_usb3: add support for Renesas USB3.0 peripheral controller
+Date: Wed, 16 Dec 2015 09:55:20 +0100
+Message-ID: <1682829.86QFiIiJjD@wuerfel>
+References: <1450162472-6664-1-git-send-email-yoshihiro.shimoda.uh@renesas.com> <7989573.HuGUrIYJy9@wuerfel> <SG2PR06MB0919D7F6AC941F8B1456AF26D8EF0@SG2PR06MB0919.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1450238356-36319-3-git-send-email-dawei.chien@mediatek.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Dawei Chien <dawei.chien@mediatek.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Punit Agrawal <punit.agrawal@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <SG2PR06MB0919D7F6AC941F8B1456AF26D8EF0-ESzmfEwOt/zNQ8RBPPB5A20DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 16, 2015 at 11:59 AM, Dawei Chien <dawei.chien@mediatek.com> wrote:
->
-> This adds thermal zone node to Mediatek MT8173 dtsi file.
->
-> Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
-> ---
-> This patch is base on patchset:
-> https://lkml.org/lkml/2015/11/30/239
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi |   43 ++++++++++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index fda805d..4114cee 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -188,6 +188,49 @@
->                 clock-output-names = "cpum_ck";
->         };
->
-> +       thermal-zones {
-> +               cpu_thermal: cpu_thermal {
-> +                       polling-delay-passive = <1000>; /* milliseconds */
-> +                       polling-delay = <1000>; /* milliseconds */
-> +
-> +                       thermal-sensors = <&thermal 0>;
+On Wednesday 16 December 2015 02:26:26 Yoshihiro Shimoda wrote:
+> Hi Arnd again,
+> 
+> > From: Yoshihiro Shimoda
+> > Sent: Wednesday, December 16, 2015 10:43 AM
+> < snip >
+> > > > +static void usb3_write(struct renesas_usb3 *usb3, u32 data, u32 offs)
+> > > > +{
+> > > > +	iowrite32(data, usb3->reg + offs);
+> > > > +}
+> > > > +
+> > > > +static u32 usb3_read(struct renesas_usb3 *usb3, u32 offs)
+> > > > +{
+> > > > +	return ioread32(usb3->reg + offs);
+> > > > +}
+> > >
+> > > I think using readl() is more common than ioread32() if the driver cannot
+> > > use IORESOURCE_IO but only IORESOURCE_MEM.
+> > >
+> > > On ARM, the two are the same, but on some architectures ioread32 is more
+> > > expensive, so using the former is preferred.
+> > 
+> > I will use {read,write}l() instead of io{read,write}32().
+> > Also I will change io{read,write}32_rep() functions too.
+> 
+> Oops. If I used {read,write}sl() instead of io{read,write}32_rep(),
+> build error happened in x86 environment.
+> 
+>   CC [M]  drivers/usb/gadget/udc/renesas_usb3.o
+> ./drivers/usb/gadget/udc/renesas_usb3.c: In function 'usb3_write_pipe':
+> ./drivers/usb/gadget/udc/renesas_usb3.c:879:3: error: implicit declaration of function 'writesl' [-Werror=implicit-function-declaration]
+>    writesl(usb3->reg + fifo_reg, buf, len / 4);
+>    ^
+> ./drivers/usb/gadget/udc/renesas_usb3.c: In function 'usb3_read_pipe':
+> ./drivers/usb/gadget/udc/renesas_usb3.c:923:3: error: implicit declaration of function 'readsl' [-Werror=implicit-function-declaration]
+>    readsl(usb3->reg + fifo_reg, buf, len / 4);
+> 
+> So, I will keep to use io{read,write}32(_rep) functions.
 
-This should be <&thermal> with the MTK temp sensor node in
-https://lkml.org/lkml/2015/11/30/239 patch series.
+Sounds ok. I actually thought we had added readsl to all architectures, but apparently
+we only changed some architectures that needed it in the past.
 
--Dan
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
