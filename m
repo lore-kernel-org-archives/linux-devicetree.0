@@ -1,75 +1,57 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v4 3/5] PCI: qcom: Add Qualcomm PCIe controller driver
-Date: Wed, 16 Dec 2015 15:53:04 -0600
-Message-ID: <20151216215304.GB27791@localhost>
-References: <1449149725-27607-1-git-send-email-stanimir.varbanov@linaro.org>
- <1449149725-27607-4-git-send-email-stanimir.varbanov@linaro.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] USB: add generic onboard USB HUB driver
+Date: Wed, 16 Dec 2015 16:59:39 -0600
+Message-ID: <CAL_Jsq+KAF6FGyOyC0JzODsSVoK4+V6umpj=cANywgui_wOKMg@mail.gmail.com>
+References: <1450077974-22762-1-git-send-email-peter.chen@freescale.com> <3023844.AYbAYqvHUZ@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1449149725-27607-4-git-send-email-stanimir.varbanov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Stanimir Varbanov <svarbanov@mm-sol.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3023844.AYbAYqvHUZ@wuerfel>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 03, 2015 at 03:35:22PM +0200, Stanimir Varbanov wrote:
-> From: Stanimir Varbanov <svarbanov@mm-sol.com>
-> 
-> The PCIe driver reuse the Designware common code for host
-> and MSI initialization, and also program the Qualcomm
-> application specific registers.
-> 
-> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> ---
->  MAINTAINERS                  |    7 +
->  drivers/pci/host/Kconfig     |   10 +
->  drivers/pci/host/Makefile    |    1 +
->  drivers/pci/host/pcie-qcom.c |  624 ++++++++++++++++++++++++++++++++++++++++++
+On Mon, Dec 14, 2015 at 3:35 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Monday 14 December 2015 15:26:11 Peter Chen wrote:
+>> Hi all,
+>>
+>> There is a known issue that the USB code can't handle USB HUB's
+>> external pins well, in that case, it may cause some onboard
+>> USB HUBs can't work since their PHY's clock or reset pin needs to
+>> operate.
+>>
+>> The user reported this issue at below:
+>> http://www.spinics.net/lists/linux-usb/msg131502.html
+>>
+>> In this patch set, I add a generic onboard USB HUB driver to
+>> handle this problem, the external signals will be configured
+>> before usb controller's initialization, it much likes we did
+>> it at board code before.
+>>
+>> The user needs to add this generic hub node at dts to support it.
+>>
+>> @The udoo users, help to test please.
+>
+> I still think need to do this properly by representing the hub
+> device as a USB device, using power sequencing code like MMC does.
 
-> +#define PCIE20_CAP				0x70
-> +#define PCIE20_CAP_LINKCTRLSTATUS		(PCIE20_CAP + 0x10)
-> +#define PCIE20_CAP_LINKCTRLSTATUS_LINK_UP	BIT(29)
+I agree on doing it properly, but am not sure that pwrseq binding for
+MMC is proper. The pwrseq binding is fairly limited and working around
+the driver model IMO. Hubs may also need I2C setup which I don't think
+could be done generically other than some defined sequence of i2c
+transactions. The current project I'm working on needs to use I2C to
+configure the hub to use HSIC mode for example. I really think we need
+a pre-probe driver hook to handle this. That would allow device
+specific setup to live in the driver.
 
-This looks like it could be referring to a standard PCIe Capability;
-could you use the existing PCI_EXP_LNKSTA and PCI_EXP_LNKSTA_DLLLA
-symbols here?  And readw() instead of readl()?
+Perhaps a more simple approach would be just forcing driver probe if a
+DT node is present. I'm not all that familiar with USB drivers, but
+presumably there is some setup before probe like setting the USB
+device address. We'd have to allow doing that later during probe.
 
-> +static int qcom_pcie_enable_link_training(struct qcom_pcie *pcie)
-> +{
-> +	struct device *dev = pcie->dev;
-> +	u32 val;
-> +	int ret;
-> +
-> +	/* enable link training */
-> +	val = readl(pcie->elbi + PCIE20_ELBI_SYS_CTRL);
-> +	val |= PCIE20_ELBI_SYS_CTRL_LT_ENABLE;
-> +	writel(val, pcie->elbi + PCIE20_ELBI_SYS_CTRL);
-> +
-> +	/* wait for up to 100ms for the link to come up */
-> +	ret = readl_poll_timeout(pcie->elbi + PCIE20_ELBI_SYS_STTS, val,
-> +				 val & XMLH_LINK_UP, LINKUP_DELAY_US,
-> +				 LINKUP_TIMEOUT_US);
-> +
-> +	if (ret < 0 || !dw_pcie_link_up(&pcie->pp)) {
-> +		dev_err(dev, "link initialization failed\n");
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	return 0;
-> +}
-
-This looks a lot like the *_establish_link() functions in other
-DesignWare-based drivers.  Can you make it look even more similar,
-e.g., by renaming it to qcom_pcie_establish_link() and maybe moving
-some of the PHY functionality here?
-
-readl_poll_timeout() is nice and avoids the hand-coded timeout loop
-the other drivers use.  But is there benefit in checking for
-XMLH_LINK_UP, or could you simply poll dw_pcie_link_up() like the
-others do?  If it's sufficient, I'd prefer using dw_pcie_link_up()
-by itself because it's a little more generic.
-
-Bjorn
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
