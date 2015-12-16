@@ -1,80 +1,71 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 0/6] pwm: lpc32xx: fixes in the LPC32xx PWM driver
-Date: Wed, 16 Dec 2015 17:02:47 +0100
-Message-ID: <20151216160247.GJ28947@ulmo>
-References: <1449401522-22590-1-git-send-email-vz@mleia.com>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH v7 02/14] drm/mediatek: Add DRM Driver for Mediatek SoC
+ MT8173.
+Date: Thu, 17 Dec 2015 00:10:04 +0800
+Message-ID: <CAGS+omCFYc2B+8bWy8kT-j2LzieYnPErP+xp7qyB81aGObHUGw@mail.gmail.com>
+References: <1448917676-25584-1-git-send-email-p.zabel@pengutronix.de>
+ <1448917676-25584-3-git-send-email-p.zabel@pengutronix.de>
+ <CAGS+omCeJU77tkjf4YGPiH9SZDo7aA4Cpbgih8RvvtSJVEKrnQ@mail.gmail.com>
+ <1450259579.3421.17.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="x0KprKst+ZOYEj2z"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1449401522-22590-1-git-send-email-vz@mleia.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Roland Stigge <stigge@antcom.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1450259579.3421.17.camel@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Paul Bolle <pebolle@tiscali.nl>, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Jie Qiu <jie.qiu@mediatek.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Cawa Cheng <cawa.cheng@mediatek.com>, dri-devel <dri-devel@lists.freedesktop.org>, Tomasz Figa <tfiga@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, YT Shen <yt.shen@mediatek.com>, Sasha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
---x0KprKst+ZOYEj2z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Dec 06, 2015 at 01:31:56PM +0200, Vladimir Zapolskiy wrote:
-> The changeset fixes a number of issues within current implementation
-> of LPC32xx PWM controller driver, namely
-> - the SoC has two independent PWM controllers with one channel each,
-> - runtime warnings from common clock framework,
-> - overflow in duty cycle calculation may result in disabled PWM,
-> - unsupported period values are not accepted.
->=20
-> Correction of PWM channels requires a correspondent change in
-> arch/arm/boot/dts/lpc32xx.dtsi, it has been already sent for review.
->=20
-> Changes from v1 to v2:
-> - corrected style of examples in documentation,
-> - improved commit messages
->=20
-> Version v1 can be found here:
->   http://comments.gmane.org/gmane.linux.pwm/2828
->   http://www.spinics.net/lists/devicetree/msg105398.html
->=20
-> Vladimir Zapolskiy (6):
->   dt: lpc32xx: pwm: correct LPC32xx PWM device node example
->   dt: lpc32xx: pwm: update documentation of LPC32xx PWM device
->   pwm: lpc32xx: correct number of PWM channels from 2 to 1
->   pwm: lpc32xx: fix warnings from common clock framework
->   pwm: lpc32xx: fix and simplify duty cycle and period calculations
->   pwm: lpc32xx: return ERANGE, if requested period is not supported
->=20
->  .../devicetree/bindings/pwm/lpc32xx-pwm.txt        |  9 +++-
->  drivers/pwm/pwm-lpc32xx.c                          | 59 ++++++++--------=
-------
->  2 files changed, 29 insertions(+), 39 deletions(-)
-
-All patches applied, thanks.
-
-Thierry
-
---x0KprKst+ZOYEj2z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWcYsnAAoJEN0jrNd/PrOhccgP/1gVffNe51ZPwfur2DAMkut7
-SL/SE2fT3EoWYAldunjOg5WyJ9jkPkzt/RhXn7hIj1h+2sJfv2k/kmr4IZvA5Hvg
-1JMzco8Bjk5tw+iFqVyZZe8Ru4K3v5aRCl+W2VcajvPPItPpeygp6bv8UTI/MBW5
-PeSBB6E+PzkOVT02o9bvtgLZO+G3NjSRFMAmrK8dW2/Ks+fiK7H9LCdMx+4GfCXY
-5HbAHwO2cXDNttgsdvcYD+kr9axExoXCBl6fuaJ9PqeTzB4vjuEplbA/qmHxrVvs
-3/AmNQm6XyOhd4Iv2u/+C2WkUJwh/DX1n7qVZxZCFGA/Pzc+vwDYKhhyW7+6DyNH
-keWgWnBDmBGcBvKASlECi3FmaVKNW/0QNqhsAmK2vQQ7mbP7o9SLhKeYWBHDss3w
-jxxx1Oidog3dS5sBqCFxVWdz7nnNPSgQuG0cfKJKT9EpqPSM/qqTeQK4JjwvWKcw
-Ytmg3o8PrKt/r4iwgOuLlrRoZMV1/4704WkkZdQq73+P68kVWPEdTs2YtTgXVak5
-eR0X+l6Dnjg4uu8QxiZaL95GH/oiCQkS4xaXwbaIDVG40wMFZe4Hm6bTJZrSZpGO
-0RBkBkMSwsHZKat6isvrEJy4B0OJ/erVkqGZvjTT+XBqie6sjfFHu3fLKtIWw5jl
-b9LMlIMlPtSS0Cy6Ex+i
-=Qjmm
------END PGP SIGNATURE-----
-
---x0KprKst+ZOYEj2z--
+SGkgUGhpbGlwcCwKCk9uIFdlZCwgRGVjIDE2LCAyMDE1IGF0IDU6NTIgUE0sIFBoaWxpcHAgWmFi
+ZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOgo+IEhpIERhbmllbCwKPgo+IEFtIERp
+ZW5zdGFnLCBkZW4gMTUuMTIuMjAxNSwgMDI6NTcgKzA4MDAgc2NocmllYiBEYW5pZWwgS3VydHo6
+Cj4+IEhJIFBoaWxpcHAsCj4+Cj4+IFRoaXMgZHJpdmVyIGlzIGxvb2tpbmcgcmVhbGx5IGdvb2Qu
+Cj4+Cj4+IEJ1dCwgc3RpbGwgc29tZSB0aGluZ3MgdG8gdGhpbmsgYWJvdXQgKG1vc3RseSBzbWFs
+bCkgaW5saW5lIGJlbG93Li4uCj4KPiBNb3N0IG9mIG15IGFuc3dlcnMgYmVsb3cgc2VlbSB0byBi
+ZSAib2siIG9yIHNvbWUgZm9ybSB0aGVyZW9mLCBidXQgSQo+IGhhdmUgb25lIG9yIHR3byBxdWVz
+dGlvbnMgcmVnYXJkaW5nIHRoZSBsYXllcl9jb25maWcgYW5kIGNydGNfcmVzZXQKPiBzdWdnZXN0
+aW9ucy4KCkFuc3dlcnMgdG8geW91ciBxdWVzdGlvbnMgYmVsb3cuLi4KCj4KPiBbLi4uXQo+PiA+
+ICtzdGF0aWMgdm9pZCBtdGtfb3ZsX2xheWVyX2NvbmZpZyh2b2lkIF9faW9tZW0gKm92bF9iYXNl
+LCB1bnNpZ25lZCBpbnQgaWR4LAo+PiA+ICsgICAgICAgICAgICAgICBzdHJ1Y3QgbXRrX3BsYW5l
+X3N0YXRlICpzdGF0ZSkKPj4gPiArewo+PiA+ICsgICAgICAgc3RydWN0IG10a19wbGFuZV9wZW5k
+aW5nX3N0YXRlICpwZW5kaW5nID0gJnN0YXRlLT5wZW5kaW5nOwo+PiA+ICsgICAgICAgdW5zaWdu
+ZWQgaW50IGFkZHIgPSBwZW5kaW5nLT5hZGRyOwo+PiA+ICsgICAgICAgdW5zaWduZWQgaW50IHBp
+dGNoID0gcGVuZGluZy0+cGl0Y2ggJiAweGZmZmY7Cj4+ID4gKyAgICAgICB1bnNpZ25lZCBpbnQg
+Zm10ID0gcGVuZGluZy0+Zm9ybWF0Owo+PiA+ICsgICAgICAgdW5zaWduZWQgaW50IG9mZnNldCA9
+IChwZW5kaW5nLT55IDw8IDE2KSB8IHBlbmRpbmctPng7Cj4+ID4gKyAgICAgICB1bnNpZ25lZCBp
+bnQgc3JjX3NpemUgPSAocGVuZGluZy0+aGVpZ2h0IDw8IDE2KSB8IHBlbmRpbmctPndpZHRoOwo+
+PiA+ICsgICAgICAgdW5zaWduZWQgaW50IGNvbjsKPj4gPiArCj4+ID4gKyAgICAgICBjb24gPSBo
+YXNfcmJfc3dhcHBlZChmbXQpIDw8IDI0IHwgb3ZsX2ZtdF9jb252ZXJ0KGZtdCkgPDwgMTI7Cj4+
+Cj4+IENhbGwgdGhlc2UgY29udmVyc2lvbiByb3V0aW5lcyBlYXJsaWVyIChkdXJpbmcgYXRvbWlj
+X2NoZWNrKSBhbmQganVzdCBhZGQgdGhlCj4+IHJlc3VsdGluZyAiY29uIiB2YWx1ZSB0byBwZW5k
+aW5nLgo+Cj4gWW91IG1lYW4gdG8gYWRkIGEgLmxheWVyX2F0b21pY19jaGVjayBjYWxsYmFjayB0
+byB0aGUgbXRrX2RkcF9jb21wIG9wcz8KCkkgZGlkbid0IGhhdmUgYW55IHBhcnRpY3VsYXIgaW1w
+bGVtZW50YXRpb24gaW4gbWluZC4KQnV0LCB5ZWFoLi4uIG1heWJlIGEgbmV3ICJjaGVjayIgY2Fs
+bGJhY2sgdG8gcHJlLWNvbXB1dGUgYW5kIGZvcm1hbGx5CmNoZWNrIHRoZSBwcm92aWRlZCBzdGF0
+ZS4KVGhpcyBtaWdodCBiZSBvdmVya2lsbCB0aG91Z2ggaWYgaXQgZW5kcyB1cCBhZGRpbmcgYSBs
+b3Qgb2Ygb3ZlcmhlYWQKZm9yIHRoZXNlIHZhbHVlcyB3aGljaCBjYW4gbmV2ZXIgcmVhbGx5IGZh
+aWwgYW55d2F5LgoKPiBbLi4uXQoKPiBIb3cgYWJvdXQgdGhpczoKPgo+IHN0YXRpYyB2b2lkIG10
+a19kcm1fY3J0Y19yZXNldChzdHJ1Y3QgZHJtX2NydGMgKmNydGMpCj4gewo+ICAgICAgICAgc3Ry
+dWN0IG10a19jcnRjX3N0YXRlICpzdGF0ZTsKPgo+ICAgICAgICAgaWYgKGNydGMtPnN0YXRlKSB7
+Cj4gICAgICAgICAgICAgICAgIGlmIChjcnRjLT5zdGF0ZS0+bW9kZV9ibG9iKQo+ICAgICAgICAg
+ICAgICAgICAgICAgICAgIGRybV9wcm9wZXJ0eV91bnJlZmVyZW5jZV9ibG9iKGNydGMtPnN0YXRl
+LT5tb2RlX2Jsb2IpOwo+Cj4gICAgICAgICAgICAgICAgIHN0YXRlID0gdG9fbXRrX2NydGNfc3Rh
+dGUoY3J0Yy0+c3RhdGUpOwo+ICAgICAgICAgICAgICAgICBtZW1zZXQoc3RhdGUsIDAsIHNpemVv
+Zigqc3RhdGUpKTsKPiAgICAgICAgIH0gZWxzZSB7Cj4gICAgICAgICAgICAgICAgIHN0YXRlID0g
+a3phbGxvYyhzaXplb2YoKnN0YXRlKSwgR0ZQX0tFUk5FTCk7Cj4gICAgICAgICAgICAgICAgIGlm
+ICghc3RhdGUpCj4gICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuOwo+ICAgICAgICAgICAg
+ICAgICBjcnRjLT5zdGF0ZSA9ICZzdGF0ZS0+YmFzZTsKPiAgICAgICAgIH0KPgo+ICAgICAgICAg
+c3RhdGUtPmJhc2UuY3J0YyA9IGNydGM7Cj4gfQoKbGd0bQoKPiBbLi4uXQoKPiBUaGFua3MgZm9y
+IHRoZSByZXZpZXchCgpUaGFua3MgZm9yIHRoZSBwYXRjaGVzISEKCj4KPiByZWdhcmRzCj4gUGhp
+bGlwcAo+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
