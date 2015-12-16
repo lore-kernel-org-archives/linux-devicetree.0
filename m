@@ -1,79 +1,45 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH v2 1/8] irq: bcm2836: Fix initialization of the LOCAL_IRQ_CNT*IRQ timers
-Date: Wed, 16 Dec 2015 15:55:08 -0800
-Message-ID: <1450310115-22163-2-git-send-email-eric@anholt.net>
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH v2 3/8] dt-bindings: Add root properties for Raspberry Pi 2
+Date: Wed, 16 Dec 2015 15:55:10 -0800
+Message-ID: <1450310115-22163-4-git-send-email-eric@anholt.net>
 References: <1450310115-22163-1-git-send-email-eric@anholt.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450310115-22163-1-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1450310115-22163-1-git-send-email-eric@anholt.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-rpi-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Scott Branden <sbranden@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Marc Zyngier <marc.zyngier@arm.com>, Ray Jui <rjui@broadcom.com>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The irqchip's register area includes the the setup for the timer's
-scaling factors, and for the platform we want a fixed configuration of
-these registers.
-
-Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Signed-off-by: Eric Anholt <eric@anholt.net>
 ---
- drivers/irqchip/irq-bcm2836.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/irqchip/irq-bcm2836.c b/drivers/irqchip/irq-bcm2836.c
-index f687082..6ec125e 100644
---- a/drivers/irqchip/irq-bcm2836.c
-+++ b/drivers/irqchip/irq-bcm2836.c
-@@ -21,6 +21,9 @@
- #include <linux/irqdomain.h>
- #include <asm/exception.h>
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
+index c78576b..11d3056 100644
+--- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
++++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
+@@ -26,6 +26,10 @@ Raspberry Pi Model B+
+ Required root node properties:
+ compatible = "raspberrypi,model-b-plus", "brcm,bcm2835";
  
-+#define LOCAL_CONTROL			0x000
-+#define LOCAL_PRESCALER			0x008
++Raspberry Pi 2 Model B
++Required root node properties:
++compatible = "raspberrypi,2-model-b", "brcm,bcm2836";
 +
- /*
-  * The low 2 bits identify the CPU that the GPU IRQ goes to, and the
-  * next 2 bits identify the CPU that the GPU FIQ goes to.
-@@ -237,6 +240,27 @@ bcm2836_arm_irqchip_smp_init(void)
- #endif
- }
- 
-+/*
-+ * The LOCAL_IRQ_CNT* timer firings are based off of the external
-+ * oscillator with some scaling.  The firmware sets up CNTFRQ to
-+ * report 19.2Mhz, but doesn't set up the scaling registers.
-+ */
-+static void bcm2835_init_local_timer_frequency(void)
-+{
-+	/*
-+	 * Set the timer to source from the 19.2Mhz crystal clock (bit
-+	 * 8 unset), and only increment by 1 instead of 2 (bit 9
-+	 * unset).
-+	 */
-+	writel(0, intc.base + LOCAL_CONTROL);
-+
-+	/*
-+	 * Set the timer prescaler to 1:1 (timer freq = input freq *
-+	 * 2**31 / prescaler)
-+	 */
-+	writel(0x80000000, intc.base + LOCAL_PRESCALER);
-+}
-+
- static int __init bcm2836_arm_irqchip_l1_intc_of_init(struct device_node *node,
- 						      struct device_node *parent)
- {
-@@ -246,6 +270,8 @@ static int __init bcm2836_arm_irqchip_l1_intc_of_init(struct device_node *node,
- 			node->full_name);
- 	}
- 
-+	bcm2835_init_local_timer_frequency();
-+
- 	intc.domain = irq_domain_add_linear(node, LAST_IRQ + 1,
- 					    &bcm2836_arm_irqchip_intc_ops,
- 					    NULL);
+ Raspberry Pi Compute Module
+ Required root node properties:
+ compatible = "raspberrypi,compute-module", "brcm,bcm2835";
 -- 
 2.6.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
