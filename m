@@ -1,48 +1,100 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v10 0/17] Add Analogix Core Display Port Driver
-Date: Wed, 16 Dec 2015 08:50:10 +0800
-Message-ID: <5670B542.4060402@rock-chips.com>
-References: <1449470239-30667-1-git-send-email-ykk@rock-chips.com>
- <4659407.pYb0RRCQQX@diego>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH v3 2/4] ARM: bcm2835: add rpi power domain driver
+Date: Tue, 15 Dec 2015 16:53:31 -0800
+Message-ID: <87mvtbkyd0.fsf@eliezer.anholt.net>
+References: <1450215622-27394-1-git-send-email-eric@anholt.net> <1450215622-27394-3-git-send-email-eric@anholt.net> <567093CD.1020208@gmail.com> <87oadrmfmi.fsf@eliezer.anholt.net> <5670AAB2.1080102@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <4659407.pYb0RRCQQX@diego>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, javier@osg.samsung.com, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Jingoo Han <jingoohan1@gmail.com>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, ajaynumb@gmail.com, Andy Yan <andy.yan@rock-chips.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <5670AAB2.1080102@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexander Aring <alex.aring@gmail.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpa28sCgpPbiAxMi8xNS8yMDE1IDA4OjA2IEFNLCBIZWlrbyBTdMO8Ym5lciB3cm90ZToK
-PiBIaSBZYWtpciwKPgo+IEFtIE1vbnRhZywgNy4gRGV6ZW1iZXIgMjAxNSwgMTQ6Mzc6MTkgc2No
-cmllYiBZYWtpciBZYW5nOgo+PiAgICAgVGhlIFNhbXN1bmcgRXh5bm9zIGVEUCBjb250cm9sbGVy
-IGFuZCBSb2NrY2hpcCBSSzMyODggZURQIGNvbnRyb2xsZXIKPj4gc2hhcmUgdGhlIHNhbWUgSVAs
-IHNvIGEgbG90IG9mIHBhcnRzIGNhbiBiZSByZS11c2VkLiBJIHNwbGl0IHRoZSBjb21tb24KPj4g
-Y29kZSBpbnRvIGJyaWRnZSBkaXJlY3RvcnksIHRoZW4gcmszMjg4IGFuZCBleHlub3Mgb25seSBu
-ZWVkIHRvIGtlZXAKPj4gc29tZSBwbGF0Zm9ybSBjb2RlLiBDYXVzZSBJIGNhbid0IGZpbmQgdGhl
-IGV4YWN0IElQIG5hbWUgb2YgZXh5bm9zIGRwCj4+IGNvbnRyb2xsZXIsIHNvIEkgZGVjaWRlIHRv
-IG5hbWUgZHAgY29yZSBkcml2ZXIgd2l0aCAiYW5hbG9naXgiIHdoaWNoIEkKPj4gZmluZCBpbiBy
-azMyODggZURQIFRSTQo+IHNvIGl0IGxvb2tzIGxpa2UgdGhlIGhvdHBsdWcgd29ya3MgbmljZWx5
-IG5vdy4gSSB3YXMgYWJsZSB0byB0ZXN0IGl0Cj4gc3VjZXNzZnVsbHkgb24gYm90aCBhIEplcnJ5
-IGFuZCBhIE1pbm5pZSBkZXZpY2Ugd2l0aG91dCBuZWVkaW5nIHRvIGZvcmNlCj4gaG90cGx1ZyA6
-LSkgLgo+Cj4gQXMgSSBuZWVkZWQgdG8gYWRhcHQgc29tZSBwYXRjaGVzIHdoZW4gYXBwbHlpbmcg
-dGhlIGxhc3Rlc3Qgb25lcywgSSB0aGluayBpdAo+IHdvdWxkIGJlIGdvb2QgZm9yIGEgZnVsbCBz
-ZW5kIG9mIHRoZSBsYXRlc3QgdmVyc2lvbiBhcyB2MTEuCgpHb3QgaXQsIHdpbGwgc2VuZCBzb29u
-ICA7KQoKPiBXaGVuIGdvaW5nIG92ZXIgdGhlIHBhdGNoZXMgYmVmb3JlIHNlbmRpbmcsIHBsZWFz
-ZSBhbHNvIGZpeCB0aGUgaW5kZW50YXRpb24KPiBpc3N1ZXMgaW4gYW5hbG9naXhfZHBfY29yZS5o
-IC0gYm90aCBuZXdseSBhZGRlZCBlbGVtZW50cyB0byBhbmFsb2dpeF9kcF9kZXZpY2UKPiB1c2Ug
-c3BhY2VzIGJldHdlZW4gdHlwZSBhbmQgbmFtZSwgd2hlcmUgdGhlIHJlc3QgdXNlcyB0YWJzLgo+
-IFtUaGlzIHNob3VsZCBvZiBjb3Vyc2UgYmUgZml4ZWQgaW4gdGhlIHBhdGNoZXMgYWRkaW5nIHRo
-ZXNlIGxpbmVzIDotKSBdCgpEb25lLAoKVGhhbmtzLAotIFlha2lyCgo+Cj4gSGVpa28KPgo+Cj4K
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+Florian Fainelli <f.fainelli@gmail.com> writes:
+
+> On 15/12/15 15:55, Eric Anholt wrote:
+>> Florian Fainelli <f.fainelli@gmail.com> writes:
+>>=20
+>>> On 15/12/15 13:40, Eric Anholt wrote:
+>>>> From: Alexander Aring <alex.aring@gmail.com>
+>>>>
+>>>> This patch adds support for several power domains on Raspberry Pi,
+>>>> including USB (so it can be enabled even if the bootloader didn't do
+>>>> it), and graphics.
+>>>>
+>>>> This patch is the combined work of Eric Anholt (who wrote USB support
+>>>> inside of the Raspberry Pi firmware driver, and wrote the non-USB
+>>>> domain support) and Alexander Aring (who separated the original USB
+>>>> work out from the firmware driver).
+>>>>
+>>>> Signed-off-by: Alexander Aring <alex.aring@gmail.com>
+>>>> Signed-off-by: Eric Anholt <eric@anholt.net>
+>>>> ---
+>>>>
+>>>> v2: Add support for power domains other than USB, using the new
+>>>>     firmware interface, reword commit message (changes by Eric)
+>>>>
+>>>> v3: Restructure as a builtin driver, and drop
+>>>>     of_genpd_add_provider_onecell error handling to avoid
+>>>>     pm_genpd_exit() dependency until that API can be settled.  Clean
+>>>>     up copyright header, add missing ISP initialization, and fix typo
+>>>>     in transposer's name.
+>>>>
+>>>>  arch/arm/mach-bcm/Kconfig                   |  10 ++
+>>>>  arch/arm/mach-bcm/Makefile                  |   1 +
+>>>>  arch/arm/mach-bcm/raspberrypi-power.c       | 247 +++++++++++++++++++=
++++++++++
+>>>>  include/dt-bindings/arm/raspberrypi-power.h |  41 +++++
+>>>>  4 files changed, 299 insertions(+)
+>>>>  create mode 100644 arch/arm/mach-bcm/raspberrypi-power.c
+>>>
+>>> What motivated the location of this power domain driver in
+>>> arch/arm/mach-bcm? Should not we have this in drivers/power/ or
+>>> somewhere in drivers/ at the very least?
+>>=20
+>> ls stronly suggests that power contains drivers for power supplies and
+>> batteries, not power domains.  There are 6 power domain drivers in
+>> arch/arm, 3 in drivers/clk, and 3 in drivers/soc.
+>
+> If we ever have to support a different architecture which happens to use
+> a similar power domain, then we want it to be in a location which makes
+> it easy for sharing it in the first place. As it stands today, it does
+> not seem useful to me to have this code in arch/arm/mach-bcm/ at all.
+>
+> Maybe there is room from a drivers/power/domains/ of some kind?
+
+The great thing about git is that moving code is easy, even after it's
+first committed.
+
+The subsystem maintainer didn't comment on the code's location in v1 or
+v2, and I think they probably have the final say on that.  Whatever they
+want, where there is currently a genpd driver, is fine with me.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJWcLYMAAoJELXWKTbR/J7oFWkP/AysmMpnZbd/TmvxChALCmgp
+8uIOntF3rdz7pezsudgDsq3dByptvfvHhKStYFoTBssYbn23KfYj5ceKMfySWV9j
+GW4XjqRkx9j66xa6jFY8/6QsxasCTGqHGJp0qgFLCOT5MxTh6eJD0AQH3BW1ckdX
+sY2LHy9OrYRaT21czYgMMj0NuFKlAOeJV4G5Rmmh3QYQPdoisIQxPU51W/mDMqDg
++dZk1AUoSo3YMHgpJw8tVxAqo+jslDfERy7j9m5eEBPNHcNw/d3R5mrYUpH/T65L
+WqrLMADTZrvtd2BrsrzgXVHaOmVgcQFFB5KhJLvT7CCLrapyitJtqklV4nOnPuV3
++QxWVvjCGAKlXDEFSK157CsoI2O575y9RZP1iNRrUp0+hGwzbmwJZm4Ms0St6PRu
+6qiR3V+4A4gAWijKnEipfY84mfsSg+JlHZvMu8gig8hjpoKxqHn3LjRo5tWj9qrE
+XZH/q3NvHhylGbNGT+0dYKgRxrxBnR32YhPD0GAUgKdZ1CEIl2XfKkpWJ2hPHv3Z
+zzsIz7gtEwZxgfcKNRB2wzWz55XgQ7Ljz0NXhzK/5taV8Qgy1RDUTe8253A/dS+e
+lxz/R8z+B0OXdtmDGjlDUSWSr7u9CXnmwwFp7JPtJSYY7VfUJOdlcd9XFngayj9W
+dEcd4nUnRq33YygLpoXK
+=AsRa
+-----END PGP SIGNATURE-----
+--=-=-=--
