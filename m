@@ -1,52 +1,73 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3] net/macb: add support for resetting PHY using GPIO
-Date: Wed, 16 Dec 2015 20:10:14 +0100
-Message-ID: <6382531.CWmTLTEYMq@wuerfel>
-References: <1450290690-32369-1-git-send-email-gregory.clement@free-electrons.com>
+From: "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] USB: add generic onboard USB HUB driver
+Date: Wed, 16 Dec 2015 21:05:35 +0100
+Message-ID: <5671C40F.3000000@maciej.szmigiero.name>
+References: <1450077974-22762-1-git-send-email-peter.chen@freescale.com>	<CAOMZO5CfBKuJ584jwbg98s9tn+0Z7W0nOaZnUkm4cJUSvNGTZw@mail.gmail.com>	<20151215062821.GA11241@shlinux2>	<CAOMZO5DiRzfy5dULh0C7qU2KUM-i8fBh6W5rS9zOTHJJK6fqwg@mail.gmail.com>	<20151216041058.GC23482@shlinux2> <CAOMZO5An3CK-a3NQtOF3nnPc8vzu2+SKnfJ=iOuAhjCBvZwToQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450290690-32369-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <CAOMZO5An3CK-a3NQtOF3nnPc8vzu2+SKnfJ=iOuAhjCBvZwToQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Patryk Kowalczyk <patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 16 December 2015 19:31:30 Gregory CLEMENT wrote:
-> diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
-> index 88c1e1a..35661aa 100644
-> --- a/drivers/net/ethernet/cadence/macb.c
-> +++ b/drivers/net/ethernet/cadence/macb.c
-> @@ -28,6 +28,7 @@
->  #include <linux/phy.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
-> +#include <linux/of_gpio.h>
->  #include <linux/of_mdio.h>
->  #include <linux/of_net.h>
+Hi Fabio,
+Hi Peter,
 
-Is this the patch that is already in linux-next?
+On 16.12.2015 11:11, Fabio Estevam wrote:
+> Hi Peter,
+> 
+> On Wed, Dec 16, 2015 at 2:11 AM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> 
+>> Thanks, Fabio, but I am curious how things like that? The USBOH3 clock
+>> is not opened, the usb driver will hang when it tries to access
+>> registers. If this clock is always on, then, why the system will
+>> hang later?
+> 
+> I found the issue with your patch. You missed to add the pinctrl node.
+> 
+> With the change below USB is functional in Udoo:
+> 
+> --- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+> @@ -22,6 +22,8 @@
+> 
+>         usb_hub1 {
+>                 compatible = "generic-onboard-hub";
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&pinctrl_usbh>;
+>                 clocks = <&clks IMX6QDL_CLK_CKO>;
+>                 reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+>                 reset-duration-us = <2>;
+> 
 
-I needed an additional
+Thanks for your work, I didn't notice it previously (sorry).
 
-#include <linux/gpio/consumer.h>
+I can confirm, too that with Peter's patches and the above change
+the USB support works again on my UDOO DualLite board.
 
-to avoid this build error on randconfig builds without GPIOLIB:
+However, I noticed that when you have host USB support configured to be
+build as modules then (due to its location under "if USB") it is only
+possible to compile generic onboard USB HUB as module, too.
 
-    drivers/net/ethernet/cadence/macb.c: In function 'macb_probe':
-    drivers/net/ethernet/cadence/macb.c:2908:19: error: implicit declaration of function 'devm_gpiod_get_optional' [-Werror=implicit-function-declaration]
-      bp->reset_gpio = devm_gpiod_get_optional(&bp->pdev->dev, "phy-reset",
-                       ^
-    drivers/net/ethernet/cadence/macb.c:2909:8: error: 'GPIOD_OUT_HIGH' undeclared (first use in this function)
-            GPIOD_OUT_HIGH);
-            ^
-    drivers/net/ethernet/cadence/macb.c:2909:8: note: each undeclared identifier is reported only once for each function it appears in
-    drivers/net/ethernet/cadence/macb.c: In function 'macb_remove':
-    drivers/net/ethernet/cadence/macb.c:2979:3: error: implicit declaration of function 'gpiod_set_value' [-Werror=implicit-function-declaration]
+Then this module would need to be loaded before loading USB support
+(or quickly after it), otherwise USB enumeration would time out after
+few secs and loading it later wouldn't help.
 
+Currently, this driver doesn't really need any USB host support and
+is able to be compiled-in successfully regardless of USB host support
+configuration with just small change to Makefile and Kconfig.
 
-	Arnd
+However I don't know if it is a design goal to not use USB host support
+or just a current development status, but if it doesn't really need it
+then it would be great if it could be selected to be build-in into kernel
+regardless of host USB support setting.
+
+Best regards,
+Maciej Szmigiero
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
