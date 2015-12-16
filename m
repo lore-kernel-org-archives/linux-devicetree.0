@@ -1,106 +1,188 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: GPIO: Add generic serializer binding
-Date: Wed, 16 Dec 2015 10:29:37 -0600
-Message-ID: <CAL_JsqJbg-VsZjg6QuN5SUvDXGR1DnShmhLvp3b_bipVn1q74A@mail.gmail.com>
-References: <1449863184-29668-1-git-send-email-afd@ti.com> <1449863184-29668-2-git-send-email-afd@ti.com>
- <CACRpkdaV_dxzWUQcJ8pwPUDQNJ8qLhCvLvE9tBYFcTTGMoumWQ@mail.gmail.com>
- <566EF12C.4060509@ti.com> <CAL_Jsq+kYSJQd003RhYTeVFv6xLaSCxzZK7wnF2LVs502sWu4g@mail.gmail.com>
- <566F4E9B.8090202@ti.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v6 6/9] mfd: axp20x: Add support for RSB based
+ AXP223 PMIC
+Date: Thu, 17 Dec 2015 00:32:15 +0800
+Message-ID: <1450283538-25067-7-git-send-email-wens@csie.org>
+References: <1450283538-25067-1-git-send-email-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <566F4E9B.8090202-l0cyMroinI0@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBHNEY2ZQKGQE4ZS3LVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1450283538-25067-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-9oqZluOz41k@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 14, 2015 at 5:19 PM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
-> On 12/14/2015 04:36 PM, Rob Herring wrote:
->>
->> On Mon, Dec 14, 2015 at 10:41 AM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
->>>
->>> On 12/11/2015 03:48 PM, Linus Walleij wrote:
->>>>
->>>>
->>>> On Fri, Dec 11, 2015 at 8:46 PM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
+The AXP223 is a new PMIC commonly paired with Allwinner A23/A33 SoCs.
+It is functionally identical to AXP221; only the regulator default
+voltage/status and the external host interface are different.
 
-[...]
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ drivers/mfd/Kconfig        | 11 +++++++
+ drivers/mfd/Makefile       |  1 +
+ drivers/mfd/axp20x-rsb.c   | 78 ++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/mfd/axp20x.c       |  2 ++
+ include/linux/mfd/axp20x.h |  1 +
+ 5 files changed, 93 insertions(+)
+ create mode 100644 drivers/mfd/axp20x-rsb.c
 
->>>>> + - compatible          : Should be "pisosr-gpio".
->>>>
->>>>
->>>>
->>>> I think it should also define compatible strings on the "vendor,device"
->>>> format apart from the generic compatible. Sooner or later we may need
->>>> to differentiate them and then that comes in handy.
->>>>
->>>
->>> Would it be better to wait until/if this issue arises? This driver
->>> targets the generic features, as these parts are very generic and
->>> have been produced by many companies since the 70s I'm not sure
->>> if privileging any of them makes much sense.
->>>
->>> What I'm worried about looks to have happened with the gpio-74x164
->>> driver, this is kind of the companion device to mine (74164 / 74165)
->>> and should work with any 74164 compatible shift register (possibly 100s
->>> of versions of them), but the compatible string that was added is
->>> "fairchild,74hc595", a relatively new device by a single manufacturer.
->>> The problem this has is then that boards will use this compatible string
->>> even if the parts are not actually the Fairchild version, just to get
->>> the match, when they should be using a generic string.
->>
->>
->> I agree the generic version is fine (or find who made the first part
->> ;)). What "pisosr" is is not very obvious though. Having 74165 in the
->> compatible would make it somewhat more obvious it is a standard logic
->> part.
->>
->
-> A quick search shows shift-registers being made from vacuum tubes for
-> the Colossus! Those might work with this driver if you could match the
-> voltage to an SPI bus... :)
->
-> I agree about the name not being very good, but I'm not sure about
-> 74165 ether as it is also just a single part number. The idea was to
-> have a non-part number compatible string for any shift-register you
-> can hook to the SPI line. That way when we have boards with a sn65x882
-> or something we wont have to call it a 74165. But I guess that's why
-> it's a "compatible:" string, and not "is-a:" string.
-
-If there are a couple then I think it is okay. If there are 10s then
-maybe not. Perhaps logic-pisosr or discrete-pisosr?
-
->>>>> +Optional properties:
->>>>> + - ngpios              : Number of GPIO lines, default is 8.
->>>>
->>>>
->>>>
->>>> If you didn't do "pisosr-gpio" but instead "foo,sn74165", maybe you
->>>> don't need to have this in the device tree but instead it can be
->>>> determined from the compatible string?
->>>>
->>>> In that case do that.
->>>>
->>>
->>> These devices can be daisy-chained together, so three 8bit registers
->>> look exactly like one 24bit register. The only way to know this is
->>> from the physical wiring of the board, not from the part number.
->>
->>
->> Then you should say it must be multiple of 8 (or are there other
->> lengths?).
->>
->
-> Some are 4bit, you can even just hook a single flip-flop to the SPI bus for
-> a single bit (or multiples) of input.
-
-One would hope you would just connect the CS signal directly to that
-input for 1-bit... I guess you could be out of GPIOs and only have a
-free output only CS signal.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 804cd3dcce32..13c565103e96 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -107,6 +107,17 @@ config MFD_AXP20X_I2C
+ 	  components like regulators or the PEK (Power Enable Key) under the
+ 	  corresponding menus.
+ 
++config MFD_AXP20X_RSB
++	tristate "X-Powers AXP series PMICs with RSB"
++	select MFD_AXP20X
++	depends on SUNXI_RSB
++	help
++	  If you say Y here you get support for the X-Powers AXP series power
++	  management ICs (PMICs) controlled with RSB.
++	  This driver include only the core APIs. You have to select individual
++	  components like regulators or the PEK (Power Enable Key) under the
++	  corresponding menus.
++
+ config MFD_CROS_EC
+ 	tristate "ChromeOS Embedded Controller"
+ 	select MFD_CORE
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index a6913007d667..caea6637d5e8 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -108,6 +108,7 @@ obj-$(CONFIG_MFD_DA9052_SPI)	+= da9052-spi.o
+ obj-$(CONFIG_MFD_DA9052_I2C)	+= da9052-i2c.o
+ obj-$(CONFIG_MFD_AXP20X)	+= axp20x.o
+ obj-$(CONFIG_MFD_AXP20X_I2C)	+= axp20x-i2c.o
++obj-$(CONFIG_MFD_AXP20X_RSB)	+= axp20x-rsb.o
+ 
+ obj-$(CONFIG_MFD_LP3943)	+= lp3943.o
+ obj-$(CONFIG_MFD_LP8788)	+= lp8788.o lp8788-irq.o
+diff --git a/drivers/mfd/axp20x-rsb.c b/drivers/mfd/axp20x-rsb.c
+new file mode 100644
+index 000000000000..76ff02b96df0
+--- /dev/null
++++ b/drivers/mfd/axp20x-rsb.c
+@@ -0,0 +1,78 @@
++/*
++ * axp20x-rsb.c - RSB driver for the X-Powers' Power Management ICs
++ *
++ * AXP20x typically comprises an adaptive USB-Compatible PWM charger, BUCK DC-DC
++ * converters, LDOs, multiple 12-bit ADCs of voltage, current and temperature
++ * as well as configurable GPIOs.
++ *
++ * This driver supports the RSB variants.
++ *
++ * Author: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/acpi.h>
++#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/mfd/axp20x.h>
++#include <linux/of.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++#include <linux/sunxi-rsb.h>
++
++static int axp20x_rsb_probe(struct sunxi_rsb_device *rdev)
++{
++	struct axp20x_dev *axp20x;
++	int ret;
++
++	axp20x = devm_kzalloc(&rdev->dev, sizeof(*axp20x), GFP_KERNEL);
++	if (!axp20x)
++		return -ENOMEM;
++
++	axp20x->dev = &rdev->dev;
++	axp20x->irq = rdev->irq;
++	sunxi_rsb_device_set_drvdata(rdev, axp20x);
++
++	ret = axp20x_match_device(axp20x);
++	if (ret)
++		return ret;
++
++	axp20x->regmap = devm_regmap_init_sunxi_rsb(rdev, axp20x->regmap_cfg);
++	if (IS_ERR(axp20x->regmap)) {
++		ret = PTR_ERR(axp20x->regmap);
++		dev_err(&rdev->dev, "regmap init failed: %d\n", ret);
++		return ret;
++	}
++
++	return axp20x_device_probe(axp20x);
++}
++
++static int axp20x_rsb_remove(struct sunxi_rsb_device *rdev)
++{
++	struct axp20x_dev *axp20x = sunxi_rsb_device_get_drvdata(rdev);
++
++	return axp20x_device_remove(axp20x);
++}
++
++static const struct of_device_id axp20x_rsb_of_match[] = {
++	{ .compatible = "x-powers,axp223", .data = (void *)AXP223_ID },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, axp20x_rsb_of_match);
++
++static struct sunxi_rsb_driver axp20x_rsb_driver = {
++	.driver = {
++		.name	= "axp20x-rsb",
++		.of_match_table	= of_match_ptr(axp20x_rsb_of_match),
++	},
++	.probe	= axp20x_rsb_probe,
++	.remove	= axp20x_rsb_remove,
++};
++module_sunxi_rsb_driver(axp20x_rsb_driver);
++
++MODULE_DESCRIPTION("PMIC MFD sunXi RSB driver for AXP20X");
++MODULE_AUTHOR("Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+index 54a00168da26..968d77fb95d8 100644
+--- a/drivers/mfd/axp20x.c
++++ b/drivers/mfd/axp20x.c
+@@ -33,6 +33,7 @@ static const char * const axp20x_model_names[] = {
+ 	"AXP202",
+ 	"AXP209",
+ 	"AXP221",
++	"AXP223",
+ 	"AXP288",
+ };
+ 
+@@ -616,6 +617,7 @@ int axp20x_match_device(struct axp20x_dev *axp20x)
+ 		axp20x->regmap_irq_chip = &axp20x_regmap_irq_chip;
+ 		break;
+ 	case AXP221_ID:
++	case AXP223_ID:
+ 		axp20x->nr_cells = ARRAY_SIZE(axp22x_cells);
+ 		axp20x->cells = axp22x_cells;
+ 		axp20x->regmap_cfg = &axp22x_regmap_config;
+diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
+index 00697c6ad8b0..d82e7d51372b 100644
+--- a/include/linux/mfd/axp20x.h
++++ b/include/linux/mfd/axp20x.h
+@@ -18,6 +18,7 @@ enum {
+ 	AXP202_ID,
+ 	AXP209_ID,
+ 	AXP221_ID,
++	AXP223_ID,
+ 	AXP288_ID,
+ 	NR_AXP20X_VARIANTS,
+ };
+-- 
+2.6.4
