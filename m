@@ -1,71 +1,74 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [PATCH v7 02/14] drm/mediatek: Add DRM Driver for Mediatek SoC
- MT8173.
-Date: Thu, 17 Dec 2015 00:10:04 +0800
-Message-ID: <CAGS+omCFYc2B+8bWy8kT-j2LzieYnPErP+xp7qyB81aGObHUGw@mail.gmail.com>
-References: <1448917676-25584-1-git-send-email-p.zabel@pengutronix.de>
- <1448917676-25584-3-git-send-email-p.zabel@pengutronix.de>
- <CAGS+omCeJU77tkjf4YGPiH9SZDo7aA4Cpbgih8RvvtSJVEKrnQ@mail.gmail.com>
- <1450259579.3421.17.camel@pengutronix.de>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v3 0/3] usb: renesas_usbhs: More compat strings
+Date: Wed, 16 Dec 2015 10:23:25 -0600
+Message-ID: <87lh8ufjlu.fsf@saruman.tx.rr.com>
+References: <1449799947-19866-1-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1450259579.3421.17.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Paul Bolle <pebolle@tiscali.nl>, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Jie Qiu <jie.qiu@mediatek.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Cawa Cheng <cawa.cheng@mediatek.com>, dri-devel <dri-devel@lists.freedesktop.org>, Tomasz Figa <tfiga@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, YT Shen <yt.shen@mediatek.com>, Sasha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>
+Content-Type: multipart/signed; boundary="=-=-="; micalg=pgp-sha1;
+	protocol="application/pgp-signature"
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1449799947-19866-1-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcCwKCk9uIFdlZCwgRGVjIDE2LCAyMDE1IGF0IDU6NTIgUE0sIFBoaWxpcHAgWmFi
-ZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOgo+IEhpIERhbmllbCwKPgo+IEFtIERp
-ZW5zdGFnLCBkZW4gMTUuMTIuMjAxNSwgMDI6NTcgKzA4MDAgc2NocmllYiBEYW5pZWwgS3VydHo6
-Cj4+IEhJIFBoaWxpcHAsCj4+Cj4+IFRoaXMgZHJpdmVyIGlzIGxvb2tpbmcgcmVhbGx5IGdvb2Qu
-Cj4+Cj4+IEJ1dCwgc3RpbGwgc29tZSB0aGluZ3MgdG8gdGhpbmsgYWJvdXQgKG1vc3RseSBzbWFs
-bCkgaW5saW5lIGJlbG93Li4uCj4KPiBNb3N0IG9mIG15IGFuc3dlcnMgYmVsb3cgc2VlbSB0byBi
-ZSAib2siIG9yIHNvbWUgZm9ybSB0aGVyZW9mLCBidXQgSQo+IGhhdmUgb25lIG9yIHR3byBxdWVz
-dGlvbnMgcmVnYXJkaW5nIHRoZSBsYXllcl9jb25maWcgYW5kIGNydGNfcmVzZXQKPiBzdWdnZXN0
-aW9ucy4KCkFuc3dlcnMgdG8geW91ciBxdWVzdGlvbnMgYmVsb3cuLi4KCj4KPiBbLi4uXQo+PiA+
-ICtzdGF0aWMgdm9pZCBtdGtfb3ZsX2xheWVyX2NvbmZpZyh2b2lkIF9faW9tZW0gKm92bF9iYXNl
-LCB1bnNpZ25lZCBpbnQgaWR4LAo+PiA+ICsgICAgICAgICAgICAgICBzdHJ1Y3QgbXRrX3BsYW5l
-X3N0YXRlICpzdGF0ZSkKPj4gPiArewo+PiA+ICsgICAgICAgc3RydWN0IG10a19wbGFuZV9wZW5k
-aW5nX3N0YXRlICpwZW5kaW5nID0gJnN0YXRlLT5wZW5kaW5nOwo+PiA+ICsgICAgICAgdW5zaWdu
-ZWQgaW50IGFkZHIgPSBwZW5kaW5nLT5hZGRyOwo+PiA+ICsgICAgICAgdW5zaWduZWQgaW50IHBp
-dGNoID0gcGVuZGluZy0+cGl0Y2ggJiAweGZmZmY7Cj4+ID4gKyAgICAgICB1bnNpZ25lZCBpbnQg
-Zm10ID0gcGVuZGluZy0+Zm9ybWF0Owo+PiA+ICsgICAgICAgdW5zaWduZWQgaW50IG9mZnNldCA9
-IChwZW5kaW5nLT55IDw8IDE2KSB8IHBlbmRpbmctPng7Cj4+ID4gKyAgICAgICB1bnNpZ25lZCBp
-bnQgc3JjX3NpemUgPSAocGVuZGluZy0+aGVpZ2h0IDw8IDE2KSB8IHBlbmRpbmctPndpZHRoOwo+
-PiA+ICsgICAgICAgdW5zaWduZWQgaW50IGNvbjsKPj4gPiArCj4+ID4gKyAgICAgICBjb24gPSBo
-YXNfcmJfc3dhcHBlZChmbXQpIDw8IDI0IHwgb3ZsX2ZtdF9jb252ZXJ0KGZtdCkgPDwgMTI7Cj4+
-Cj4+IENhbGwgdGhlc2UgY29udmVyc2lvbiByb3V0aW5lcyBlYXJsaWVyIChkdXJpbmcgYXRvbWlj
-X2NoZWNrKSBhbmQganVzdCBhZGQgdGhlCj4+IHJlc3VsdGluZyAiY29uIiB2YWx1ZSB0byBwZW5k
-aW5nLgo+Cj4gWW91IG1lYW4gdG8gYWRkIGEgLmxheWVyX2F0b21pY19jaGVjayBjYWxsYmFjayB0
-byB0aGUgbXRrX2RkcF9jb21wIG9wcz8KCkkgZGlkbid0IGhhdmUgYW55IHBhcnRpY3VsYXIgaW1w
-bGVtZW50YXRpb24gaW4gbWluZC4KQnV0LCB5ZWFoLi4uIG1heWJlIGEgbmV3ICJjaGVjayIgY2Fs
-bGJhY2sgdG8gcHJlLWNvbXB1dGUgYW5kIGZvcm1hbGx5CmNoZWNrIHRoZSBwcm92aWRlZCBzdGF0
-ZS4KVGhpcyBtaWdodCBiZSBvdmVya2lsbCB0aG91Z2ggaWYgaXQgZW5kcyB1cCBhZGRpbmcgYSBs
-b3Qgb2Ygb3ZlcmhlYWQKZm9yIHRoZXNlIHZhbHVlcyB3aGljaCBjYW4gbmV2ZXIgcmVhbGx5IGZh
-aWwgYW55d2F5LgoKPiBbLi4uXQoKPiBIb3cgYWJvdXQgdGhpczoKPgo+IHN0YXRpYyB2b2lkIG10
-a19kcm1fY3J0Y19yZXNldChzdHJ1Y3QgZHJtX2NydGMgKmNydGMpCj4gewo+ICAgICAgICAgc3Ry
-dWN0IG10a19jcnRjX3N0YXRlICpzdGF0ZTsKPgo+ICAgICAgICAgaWYgKGNydGMtPnN0YXRlKSB7
-Cj4gICAgICAgICAgICAgICAgIGlmIChjcnRjLT5zdGF0ZS0+bW9kZV9ibG9iKQo+ICAgICAgICAg
-ICAgICAgICAgICAgICAgIGRybV9wcm9wZXJ0eV91bnJlZmVyZW5jZV9ibG9iKGNydGMtPnN0YXRl
-LT5tb2RlX2Jsb2IpOwo+Cj4gICAgICAgICAgICAgICAgIHN0YXRlID0gdG9fbXRrX2NydGNfc3Rh
-dGUoY3J0Yy0+c3RhdGUpOwo+ICAgICAgICAgICAgICAgICBtZW1zZXQoc3RhdGUsIDAsIHNpemVv
-Zigqc3RhdGUpKTsKPiAgICAgICAgIH0gZWxzZSB7Cj4gICAgICAgICAgICAgICAgIHN0YXRlID0g
-a3phbGxvYyhzaXplb2YoKnN0YXRlKSwgR0ZQX0tFUk5FTCk7Cj4gICAgICAgICAgICAgICAgIGlm
-ICghc3RhdGUpCj4gICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuOwo+ICAgICAgICAgICAg
-ICAgICBjcnRjLT5zdGF0ZSA9ICZzdGF0ZS0+YmFzZTsKPiAgICAgICAgIH0KPgo+ICAgICAgICAg
-c3RhdGUtPmJhc2UuY3J0YyA9IGNydGM7Cj4gfQoKbGd0bQoKPiBbLi4uXQoKPiBUaGFua3MgZm9y
-IHRoZSByZXZpZXchCgpUaGFua3MgZm9yIHRoZSBwYXRjaGVzISEKCj4KPiByZWdhcmRzCj4gUGhp
-bGlwcAo+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+
+Hi,
+
+Simon Horman <horms+renesas@verge.net.au> writes:
+> Hi,
+>
+> this short series adds generic, and soc-specific r8a7792 and r8a7793 comp=
+at
+> strings to the Renesas USBHS driver. The intention is to provide a comple=
+te
+> set of compat strings for known R-Car SoCs.
+>
+> Changes since v2:
+> * Split documentation of SoC names into separate patch
+> * Use correct fallback compatibility string in example
+>
+> Changes since v1:
+> * Add R-Car Gen2 and Gen3 fallback compatibility strings rather than
+>   a single compatibility string for all of R-Car.
+>
+> Simon Horman (3):
+>   usb: renesas_usbhs: add SoC names to compatibility string
+>     documentation
+>   usb: renesas_usbhs: add fallback compatibility strings
+>   usb: renesas_usbhs: add device tree support for r8a779[23]
+
+since patch 2 got a few comments, I'll wait a new series. While
+resending, please collect all Acks to ease my life a bit ;-)
+
+cheers
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWcY/+AAoJEIaOsuA1yqREg8EP/RMuQ0Pj33dWUY9E+6JpEiV8
+5EjqusLpQ6+rnlSNBE8zHCrg26gdCUSlDgFKJo/wtIYib7BOh5Mx87PB/G55GWZl
+lDDFKBPftZbCYTcTV9mhTbyWe/H3kzLYBBP9ruR3YJc5F8JQpTl55ZJ341rFSLrL
+rD2dCqTIPFT1TIqwKiWYNayHbJg5sNR6+EL5OV/c1d1aSPrqmhenhu4kGAwXuKXo
+/2Li0yAJTqf3JTeMt+8VfoVEnhCd3bLGsTFm2Ill4cb9LLIN9b68jpS/f58wgby/
+1jpUS0qjf0CMBzEN4gWd8AXcE6U2AenWDR+GoPIllYEh4A8NrjQdatpY88StT7XP
+Lh+RwxIl+CHfFRiu3nio2/oVZNAIMujVYLBvLss5aQSvaOM3clwhXZxuteVgKYis
+qtubW9o+odkcVox/H+iGIoM3Ezfwhra3FfOPMU9GdZrRl4cg8zvzI/lMnC1M7Bbt
+/5vgOZzqVYzKF5Rbfuberke32DOe3ABBfi0fTpp6Nk2RTQmU4q/b7slD8KEJtjnA
+J9Ea0o7WG+PLt+eeAgQcqDftWxX33XINjpjmQ5X2pRaEOojdyEmir7jk+qf6eet5
+7zfSInlyTo5PvgB7qaIuFL/1BQX9e/j4fK6EKIVtMfKvWPCSlPbtPY/wJW0YLkAV
+g/vXqDot7p7as+EMbPX6
+=mjJY
+-----END PGP SIGNATURE-----
+--=-=-=--
