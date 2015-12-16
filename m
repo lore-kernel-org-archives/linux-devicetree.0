@@ -1,41 +1,71 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] USB: add generic onboard USB HUB driver
-Date: Thu, 17 Dec 2015 00:13:07 +0100
-Message-ID: <1827708.e1pfN6rEID@wuerfel>
-References: <1450077974-22762-1-git-send-email-peter.chen@freescale.com> <3023844.AYbAYqvHUZ@wuerfel> <CAL_Jsq+KAF6FGyOyC0JzODsSVoK4+V6umpj=cANywgui_wOKMg@mail.gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 12/19] ARM: dts: exynos: replace legacy *,wakeup property
+ with wakeup-source
+Date: Thu, 17 Dec 2015 08:38:03 +0900
+Message-ID: <5671F5DB.305@samsung.com>
+References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
+ <1445422216-29375-13-git-send-email-sudeep.holla@arm.com>
+ <56704141.8070308@arm.com> <5670A2F2.5060009@samsung.com>
+ <56713DD8.1050001@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+KAF6FGyOyC0JzODsSVoK4+V6umpj=cANywgui_wOKMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <56713DD8.1050001@arm.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>
+Cc: linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 16 December 2015 16:59:39 Rob Herring wrote:
-> On Mon, Dec 14, 2015 at 3:35 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Monday 14 December 2015 15:26:11 Peter Chen wrote:
->
-> I agree on doing it properly, but am not sure that pwrseq binding for
-> MMC is proper. The pwrseq binding is fairly limited and working around
-> the driver model IMO. Hubs may also need I2C setup which I don't think
-> could be done generically other than some defined sequence of i2c
-> transactions. The current project I'm working on needs to use I2C to
-> configure the hub to use HSIC mode for example. I really think we need
-> a pre-probe driver hook to handle this. That would allow device
-> specific setup to live in the driver.
+On 16.12.2015 19:32, Sudeep Holla wrote:
 > 
-> Perhaps a more simple approach would be just forcing driver probe if a
-> DT node is present. I'm not all that familiar with USB drivers, but
-> presumably there is some setup before probe like setting the USB
-> device address. We'd have to allow doing that later during probe.
+> 
+> On 15/12/15 23:32, Krzysztof Kozlowski wrote:
+>> On 16.12.2015 01:35, Sudeep Holla wrote:
+>>>
+>>>
+>>> On 21/10/15 11:10, Sudeep Holla wrote:
+>>>> Though the keyboard and other driver will continue to support the
+>>>> legacy
+>>>> "gpio-key,wakeup", "linux-keypad,wakeup" boolean property to enable the
+>>>> wakeup source, "wakeup-source" is the new standard binding.
+>>>>
+>>>> This patch replaces all the legacy wakeup properties with the unified
+>>>> "wakeup-source" property in order to avoid any futher copy-paste
+>>>> duplication.
+>>>>
+>>>> Cc: Kukjin Kim <kgene@kernel.org>
+>>>> Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>>>
+>>> Ping, do you prefer taking via your tree or should I send to armsoc
+>>> directly ?
+>>
+>> Usually it depends on the dependencies... but:
+>> 1. I just received this patch - 12/19.
+> 
+> Sorry for that. The initial idea was to show all the changes but merge
+> the binding and dependencies first, so didn't cc all.
+> 
+>> 2. No cover letter, no other patches, no explanation about any
+>> dependencies or other related changes. Nothing. Just one patch.
+> 
+> Yes this was initially posted as part of the series, but only
+> dependencies were merged for v4.4
+> 
+>> 3. The patch mentions new standard binding. Was the new binding already
+>> merged? Or is it part of these series? What about backward compatibility?
+> 
+> Not a brand new binding, but made existing one a standard so that we
+> don't continue to be creative and generate more bindings for the same
+> thing. Yes binding and dependent patches are already in mainline. And
+> yes backward compatibility is maintained as mentioned in the commit
+> message.
 
-Yes, good idea. I was also advocating that approach for MMC at some
-point, but the power sequencing made it in the end.
+That explains everything, thanks. We'll take it through samsung-soc,
+just give me some time for review.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+As for other patch - the s5pv210 - I did not get it directly but I think
+I can find it on list subscription archives.
+
+Best regards,
+Krzysztof
