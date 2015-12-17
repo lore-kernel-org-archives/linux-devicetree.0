@@ -1,39 +1,87 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v6 0/3] thermal: mediatek: Add cpu dynamic power cooling
- model.
-Date: Thu, 17 Dec 2015 07:22:31 +0530
-Message-ID: <20151217015231.GC3496@ubuntu>
-References: <1450272556-29770-1-git-send-email-dawei.chien@mediatek.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [GIT PULL 0/9] ARM: EXYNOS: Pull request for v4.5
+Date: Thu, 17 Dec 2015 11:04:18 +0900
+Message-ID: <56721822.7020608@samsung.com>
+References: <1449020386-20250-1-git-send-email-k.kozlowski@samsung.com>
+ <56721326.30004@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1450272556-29770-1-git-send-email-dawei.chien@mediatek.com>
+In-reply-to: <56721326.30004@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dawei Chien <dawei.chien@mediatek.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Punit Agrawal <punit.agrawal@arm.com>
+To: linux-samsung-soc@vger.kernel.org, arm@kernel.org, Kukjin Kim <kgene@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@linaro.org>
+Cc: Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 16-12-15, 21:29, Dawei Chien wrote:
-> Use Intelligent Power Allocation (IPA) technical to add dynamic power model
-> for binding CPU thermal zone. The power allocator governor allocates power
-> budget to control CPU temperature.
+On 17.12.2015 10:43, Krzysztof Kozlowski wrote:
+> On 02.12.2015 10:39, Krzysztof Kozlowski wrote:
+>> Hi Kukjin,
+>>
+>> A lot of stuff for v4.5 with 3 dependencies split into
+>> separate tags. The need for dependency is explained both
+>> in merge-commit and in description of a tag which is using
+>> the dependency.
 > 
-> Power Allocator governor is able to keep SOC temperature within a defined
-> temperature range to avoid SOC overheat and keep it's performance.
-> mt8173-cpufreq.c need to register its' own power model with power allocator
-> thermal governor, so that power allocator governor can allocates suitable
-> power budget to control CPU temperature.
+> Hi everyone,
 > 
-> Binding document is refer to this patchset
-> https://lkml.org/lkml/2015/11/30/239
+> It's been like two weeks... we are after v4.4-rc5 and Christmas season
+> is coming... there are some dependencies here and even more stuff waits
+> out of queue for this pull request (moving SROM and PMU to drivers/soc,
+> cpufreq for Exynos542x).
 > 
-> Change since V5:
-> 1. Remove thermal sensor ID from phandles
+> What I want to say is that I am really not sure whether further waiting
+> is beneficial...
+> All these patches have been boiling in linux-next for some time (through
+> my tree).
+> 
+> 
+> Are there any comments about this pull request? Ordering of branches?
+> Weird looking tags? Bugs? etc.? Anything waits in your tree Kukjin?
+> 
+> 
+> Maybe this could be pulled directly by arm-soc folks?
+> 
 
-Though you should have included this in the new version, but still
+Actually in the same time I sent this mail I got an ack from Kukjin (his
+Business Trip to China extended further than planned), so:
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Arnd, Kevin and Olof,
+Could you pull this for v4.5 or share your comments?
 
--- 
-viresh
+
+The number of tags is not that scary... just some dependencies split
+across 3 tags.
+
+
+Best regards,
+Krzysztof
+
+
+
+> 
+>>
+>> The order goes like (but of course dependencies
+>> could be pulled all at once at beginning):
+>> 1. tags/samsung-dt-syscon-restart-4.5
+>> 2. tags/samsung-soc-4.5
+>> 3. tags/samsung-clk-arm64-symbols-4.5
+>> 4. tags/samsung-soc64-4.5
+>> 5. tags/samsung-drivers-4.5
+>> 6. tags/samsung-clk-exynos4-4.5
+>> 7. tags/samsung-dt-4.5
+>> 8. tags/samsung-dt64-4.5
+>> 9. tags/samsung-defconfig-4.5
+>>
+>> I split dependencies to three tags so clock or other folks could
+>> easily grab them if needed.
+>>
+>> Please share your comments or pull as early as possible as we have here
+>> some more dependencies than usual.
+>>
+>>
+>> Kind regards,
+>> Krzysztof
+>>
+> 
+> 
