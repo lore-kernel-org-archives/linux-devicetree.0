@@ -1,149 +1,33 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v2 6/8] ARM: bcm2835: Add devicetree for bcm2836 and Raspberry Pi 2 B
-Date: Wed, 16 Dec 2015 15:55:13 -0800
-Message-ID: <1450310115-22163-7-git-send-email-eric@anholt.net>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 0/8] Raspberry Pi 2 support.
+Date: Thu, 17 Dec 2015 01:03:59 +0100
+Message-ID: <21040591.KakM5Gl6ZZ@wuerfel>
 References: <1450310115-22163-1-git-send-email-eric@anholt.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1450310115-22163-1-git-send-email-eric@anholt.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rpi-kernel@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Eric Anholt <eric@anholt.net>
+To: Eric Anholt <eric@anholt.net>
+Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The Pi 2 B ends up like a Pi 1 B+, with the same peripherals and
-pinout, but the CPU and memory layout changed to use the 2836.
+On Wednesday 16 December 2015 15:55:07 Eric Anholt wrote:
+> This is a major rewrite of the previous Raspberry Pi 2 submission.
+> SMP support is now included, and the DT includes are cleaned up to
+> avoid massive duplication.
+> 
+> The branch (based on 4.4-rc5, to get the USB regression fixes) can be
+> found at:
+> 
+> https://github.com/anholt/linux/tree/bcm2836-4.4
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
----
- arch/arm/boot/dts/bcm2836-rpi-2-b.dts | 35 ++++++++++++++++
- arch/arm/boot/dts/bcm2836.dtsi        | 77 +++++++++++++++++++++++++++++++++++
- 2 files changed, 112 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm2836-rpi-2-b.dts
- create mode 100644 arch/arm/boot/dts/bcm2836.dtsi
+Looks all good to me, but when we get the pull request, I'd strongly
+prefer to have that based on -rc3 or earlier.
 
-diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-new file mode 100644
-index 0000000..ff94666
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-@@ -0,0 +1,35 @@
-+/dts-v1/;
-+#include "bcm2836.dtsi"
-+#include "bcm2835-rpi.dtsi"
-+
-+/ {
-+	compatible = "raspberrypi,2-model-b", "brcm,bcm2836";
-+	model = "Raspberry Pi 2 Model B";
-+
-+	memory {
-+		reg = <0 0x40000000>;
-+	};
-+
-+	leds {
-+		act {
-+			gpios = <&gpio 47 0>;
-+		};
-+
-+		pwr {
-+			label = "PWR";
-+			gpios = <&gpio 35 0>;
-+			default-state = "keep";
-+			linux,default-trigger = "default-on";
-+		};
-+	};
-+};
-+
-+&gpio {
-+	pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
-+
-+	/* I2S interface */
-+	i2s_alt0: i2s_alt0 {
-+		brcm,pins = <18 19 20 21>;
-+		brcm,function = <BCM2835_FSEL_ALT0>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/bcm2836.dtsi b/arch/arm/boot/dts/bcm2836.dtsi
-new file mode 100644
-index 0000000..6693118
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm2836.dtsi
-@@ -0,0 +1,77 @@
-+#include "bcm283x.dtsi"
-+
-+/ {
-+	compatible = "brcm,bcm2836";
-+
-+	soc {
-+		ranges = <0x7e000000 0x3f000000 0x1000000>,
-+			 <0x40000000 0x40000000 0x00001000>;
-+		dma-ranges = <0xc0000000 0x00000000 0x3f000000>;
-+
-+		local_intc: local_intc {
-+			compatible = "brcm,bcm2836-l1-intc";
-+			reg = <0x40000000 0x100>;
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			interrupt-parent = <&local_intc>;
-+		};
-+
-+		arm-pmu {
-+			compatible = "arm,cortex-a7-pmu";
-+			interrupt-parent = <&local_intc>;
-+			interrupts = <9>;
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv7-timer";
-+		interrupt-parent = <&local_intc>;
-+		interrupts = <0>, // PHYS_SECURE_PPI
-+			     <1>, // PHYS_NONSECURE_PPI
-+			     <3>, // VIRT_PPI
-+			     <2>; // HYP_PPI
-+		always-on;
-+	};
-+
-+	cpus: cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		v7_cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0xf00>;
-+			clock-frequency = <800000000>;
-+		};
-+
-+		v7_cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0xf01>;
-+			clock-frequency = <800000000>;
-+		};
-+
-+		v7_cpu2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0xf02>;
-+			clock-frequency = <800000000>;
-+		};
-+
-+		v7_cpu3: cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0xf03>;
-+			clock-frequency = <800000000>;
-+		};
-+	};
-+};
-+
-+/* Make the BCM2835-style global interrupt controller be a child of the
-+ * CPU-local interrupt controller.
-+ */
-+&intc {
-+	compatible = "brcm,bcm2836-armctrl-ic";
-+	interrupt-parent = <&local_intc>;
-+	interrupts = <8>;
-+};
--- 
-2.6.2
+What commit is the USB regression fix you refer to above? Is that in a
+branch that is -rc3 based? Maybe you can rebase the changes on top
+of that branch, to minimize the amount of backmerges?
+
+	Arnd
