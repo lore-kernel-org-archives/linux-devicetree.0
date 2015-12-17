@@ -1,36 +1,85 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 4/5] ARM: dts: DRA7: add entry for qspi mmap region
-Date: Thu, 17 Dec 2015 10:45:58 -0800
-Message-ID: <20151217184557.GC23396@atomide.com>
-References: <1449807000-6457-1-git-send-email-vigneshr@ti.com>
- <1449807000-6457-5-git-send-email-vigneshr@ti.com>
- <20151211150935.GA15654@rob-hp-laptop>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH v3 0/4] Raspberry Pi power domains
+Date: Thu, 17 Dec 2015 11:03:47 -0800
+Message-ID: <878u4sx5gs.fsf@eliezer.anholt.net>
+References: <1450215622-27394-1-git-send-email-eric@anholt.net> <CAPDyKFp=ykY4dFTxeq+et6z5ek-UYGnBOFG7Po0pSUL7jSYc8g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151211150935.GA15654@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, hramrach-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFp=ykY4dFTxeq+et6z5ek-UYGnBOFG7Po0pSUL7jSYc8g@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-rpi-kernel@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexander Aring <alex.aring@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-* Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [151211 07:10]:
-> On Fri, Dec 11, 2015 at 09:39:59AM +0530, Vignesh R wrote:
-> > Add qspi memory mapped region entries for DRA7xx based SoCs. Also,
-> > update the binding documents for the controller to document this change.
-> > 
-> > Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--=-=-=
+Content-Type: text/plain
 
-Vignes, are patches 4 and 5 safe to apply separately already or
-do things break if we do that?
+Ulf Hansson <ulf.hansson@linaro.org> writes:
 
-Regards,
+> On 15 December 2015 at 22:40, Eric Anholt <eric@anholt.net> wrote:
+>> Since the pm_genpd_exit() patch is still going through review, and
+>> other drivers in the tree just ignore the error cases, Ulf offered to
+>> merge the series as a builtin driver not depending on that interface.
+>> We still avoid dangling pointer references, by just continuing with
+>> probing if of_genpd_add_provider_onecell() fails.  We can easily go
+>> back and update the driver when a pm_genpd_exit() lands.
+>>
+>> Alexander Aring (3):
+>>   ARM: bcm2835: add rpi power domain driver
+>>   dt-bindings: add rpi power domain driver bindings
+>>   ARM: bcm2835: Add the Raspberry Pi power domain driver to the DT.
+>>
+>> Eric Anholt (1):
+>>   ARM: bcm2835: Define two new packets from the latest firmware.
+>>
+>>  .../bindings/arm/bcm/raspberrypi,bcm2835-power.txt |  47 ++++
+>>  arch/arm/boot/dts/bcm2835-rpi.dtsi                 |  11 +
+>>  arch/arm/boot/dts/bcm2835.dtsi                     |   2 +-
+>>  arch/arm/mach-bcm/Kconfig                          |  10 +
+>>  arch/arm/mach-bcm/Makefile                         |   1 +
+>>  arch/arm/mach-bcm/raspberrypi-power.c              | 247 +++++++++++++++++++++
+>>  include/dt-bindings/arm/raspberrypi-power.h        |  41 ++++
+>>  include/soc/bcm2835/raspberrypi-firmware.h         |   2 +
+>>  8 files changed, 360 insertions(+), 1 deletion(-)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-power.txt
+>>  create mode 100644 arch/arm/mach-bcm/raspberrypi-power.c
+>>  create mode 100644 include/dt-bindings/arm/raspberrypi-power.h
+>>
+>> --
+>> 2.6.2
+>>
+>
+> Besides a nitpick for patch2, I would also reverse the order of patch3
+> and patch2. DT docs should go in before the actual parsing of the new
+> bindings/compatibles.
+>
+> Anyway, for the hole series, you may add my:
+>
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Would your tree be pulling the series (since it's power domains), or
+should I (since it's SOC stuff)?
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJWcwcTAAoJELXWKTbR/J7oiygP/A1NUbzjgZaDiVUGl9alRcQj
+AncL5FQt67qKpC3KMug+OkttV8tjDtoVrS4Ygcr7sZwDm9LoTHJi9ljmrFoXvuI8
+FG27XRShoOWSf1NS5NRmw5b6WAJIVQalDEVz5YtgGZ6ayrO/16VjIcMqBmVIiRvx
+ACNGTCyGDu3rTH18/FZOuKTX/m7YCI+sJ5gXugB8LaIHjrsvaOilv3WGrZEtdTKz
+fie+hnZnQsHKnm0VVw+mpoXQJEVe8obPoPFxu23pw0wCax+s/i+So0gvR88aw7hw
+5wXQIXGgVn/RBUNAeKusbTn1gHgtLuWGZ7Wckdb7BSSbG9epEXucOPDNqpLSZVSw
+OTWng9qHluuWTBlyJ8GoNHbBpuBswRfA/4ymoY2CoNhpQ5orgWx/MZWq7N1Am4vV
+0X9hpEcya8tAwJWJk/IOspuC7+HVuyFMYs5efzq5ZzfT0O2oLKvrWsu08cUNJ5wA
+P3SNII/jg75LAtlcuaU7yPA28f6GHSvazq9XCSQkoEOkuIT59vRkn1TkQGbj4mIE
+/cSJnDYNcpXR0zvCSVvUzg2hWy6dVMZAQIROc9S/5f687Ef+TKLvemHS8EOng+6a
+d+DfheR1Vx+TmNie1drwenPcJgHXq8JWObg6WlHlWwMTEduDBwMNmJAjD+p7qGt2
+UIxmvex0Y9vj7Alwiz5G
+=+v9T
+-----END PGP SIGNATURE-----
+--=-=-=--
