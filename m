@@ -1,61 +1,54 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 0/8] Raspberry Pi 2 support.
-Date: Thu, 17 Dec 2015 11:26:35 +0100
-Message-ID: <3363412.hB2NWDcUxf@wuerfel>
-References: <1450310115-22163-1-git-send-email-eric@anholt.net> <874mfhsyem.fsf@eliezer.anholt.net> <567276F9.5070903@i2se.com>
+From: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4] spi: dts: sun4i: Add support for wait
+ time between word transmissions
+Date: Thu, 17 Dec 2015 12:22:49 +0100
+Message-ID: <CAGNoLaN=HJ-OR6oFiGWC58DG+w1A9qeEVyGBRb1vdf9BRNW=Rg@mail.gmail.com>
+References: <1450080676-6704-1-git-send-email-mweseloh42@gmail.com>
+	<20151216103927.GS19456@lukather>
+Reply-To: mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <567276F9.5070903-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDFO74UEV4IRBCNWZKZQKGQEF5Y3K7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20151216103927.GS19456@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 17 December 2015 09:48:57 Stefan Wahren wrote:
-> Am 17.12.2015 um 01:37 schrieb Eric Anholt:
-> > Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
-> >
-> >> On Wednesday 16 December 2015 15:55:07 Eric Anholt wrote:
-> >>> This is a major rewrite of the previous Raspberry Pi 2 submission.
-> >>> SMP support is now included, and the DT includes are cleaned up to
-> >>> avoid massive duplication.
-> >>>
-> >>> The branch (based on 4.4-rc5, to get the USB regression fixes) can be
-> >>> found at:
-> >>>
-> >>> https://github.com/anholt/linux/tree/bcm2836-4.4
-> >> Looks all good to me, but when we get the pull request, I'd strongly
-> >> prefer to have that based on -rc3 or earlier.
-> >>
-> >> What commit is the USB regression fix you refer to above? Is that in a
-> >> branch that is -rc3 based? Maybe you can rebase the changes on top
-> >> of that branch, to minimize the amount of backmerges?
-> > Top 4 commits of drivers/usb/dwc2 for 4.4-rc5 (possibly not all of them
-> > are required, but it's what I've been using).  
-> >
-> 
-> Unfortunately all 4 of them are required:
-> 
-> d0464bcf12af ("usb: dwc2: Make PHY optional")
-> 
-> 6c2dad69163f ("usb: dwc2: Return errors from PHY")
-> 
-> 8aa90cf2a286 ("usb: dwc2: make otg clk optional")
-> 
-> f74875dc3613 ("usb: dwc2: fix kernel oops during driver probe")
+Hi Maxime,
 
-Ok, that's good. They are all based on -rc1, so you you can just rebase
-on top of f74875dc3613, which was pulled by GregKH.
+2015-12-16 11:39 GMT+01:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> It looks mostly fine, however, please try to make only one thing in
+> one patch.
+>
+> In this case, it would mean having one patch to add the DT property
+> and support in the SPI core in a first one, and then add support for
+> it in your driver.
 
-> But they should apply to -rc3 too.
+Will do.
 
-Please don't rebase them, use the commits that got merged, otherwise we'd
-get duplicate commits and that would be worse than the backmerge.
+> I also have a minor comment below....
+[...]
+>> +     if (spi->word_wait_ns) {
+>> +             clk_ns = DIV_ROUND_UP(1000000000, tfr->speed_hz);
+>> +             wait_clk = DIV_ROUND_UP(spi->word_wait_ns, clk_ns) - 3;
+>> +             if (wait_clk < 1) {
+>> +                     wait_clk = 1;
+>> +                     dev_info(&spi->dev,
+>> +                              "using minimum of 4 word wait cycles (%uns)",
+>> +                              4 * clk_ns);
+>
+> Logging it at the info loglevel seems a bit too high. debug seems more
+> appropriate.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I will change it to debug and send a new version.
+
+Thanks for the review!
+
+Marcus
