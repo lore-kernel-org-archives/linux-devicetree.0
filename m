@@ -1,81 +1,51 @@
-From: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 2/2] spi: sun4i: Add support for wait time
- between word transmissions
-Date: Thu, 17 Dec 2015 12:40:27 +0100
-Message-ID: <1450352427-25350-3-git-send-email-mweseloh42@gmail.com>
-References: <1450352427-25350-1-git-send-email-mweseloh42@gmail.com>
-Reply-To: mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] Documentation: dt-bindings: Add option to
+ workaround STE.VALID in Broadcom Vulcan
+Date: Thu, 17 Dec 2015 11:51:03 +0000
+Message-ID: <20151217115102.GC11456@arm.com>
+References: <1450346376-30920-1-git-send-email-pmallapp@broadcom.com>
+ <1450346376-30920-2-git-send-email-pmallapp@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDFO74UEV4IRB5V6ZKZQKGQEOKFUDNI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1450352427-25350-1-git-send-email-mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1450346376-30920-2-git-send-email-pmallapp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Prem Mallappa <pmallapp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Modifies the sun4i SPI master driver to make use of the
-"spi-word-wait-ns" property. This specific SPI controller needs 3 clock
-cycles to set up the delay, which makes the minimum non-zero wait time
-on this hardware 4 clock cycles.
+[adding devicetree since I'd like an Ack from them if possible]
 
-Signed-off-by: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/spi/spi-sun4i.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+On Thu, Dec 17, 2015 at 03:29:36PM +0530, Prem Mallappa wrote:
+> Signed-off-by: Prem Mallappa <pmallapp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-diff --git a/drivers/spi/spi-sun4i.c b/drivers/spi/spi-sun4i.c
-index f60a6d6..3b4f5f4 100644
---- a/drivers/spi/spi-sun4i.c
-+++ b/drivers/spi/spi-sun4i.c
-@@ -19,6 +19,7 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
-+#include <linux/of.h>
- 
- #include <linux/spi/spi.h>
- 
-@@ -173,6 +174,8 @@ static int sun4i_spi_transfer_one(struct spi_master *master,
- 	unsigned int tx_len = 0;
- 	int ret = 0;
- 	u32 reg;
-+	int wait_clk = 0;
-+	int clk_ns = 0;
- 
- 	/* We don't support transfer larger than the FIFO */
- 	if (tfr->len > SUN4I_FIFO_DEPTH)
-@@ -261,6 +264,25 @@ static int sun4i_spi_transfer_one(struct spi_master *master,
- 
- 	sun4i_spi_write(sspi, SUN4I_CLK_CTL_REG, reg);
- 
-+	/*
-+	 * Setup wait time between words.
-+	 *
-+	 * Wait time is set in SPI_CLK cycles. The SPI hardware needs 3
-+	 * additional cycles to setup the wait counter, so the minimum delay
-+	 * time is 4 cycles.
-+	 */
-+	if (spi->word_wait_ns) {
-+		clk_ns = DIV_ROUND_UP(1000000000, tfr->speed_hz);
-+		wait_clk = DIV_ROUND_UP(spi->word_wait_ns, clk_ns) - 3;
-+		if (wait_clk < 1) {
-+			wait_clk = 1;
-+			dev_dbg(&spi->dev,
-+				"using minimum of 4 word wait cycles (%uns)",
-+				4 * clk_ns);
-+		}
-+	}
-+	sun4i_spi_write(sspi, SUN4I_WAIT_REG, (u16)wait_clk);
-+
- 	/* Setup the transfer now... */
- 	if (sspi->tx_buf)
- 		tx_len = tfr->len;
--- 
-1.9.1
+Please can you add a commit message for this?
+
+> ---
+>  Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt
+> index 947863a..9c1218e 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt
+> @@ -43,6 +43,11 @@ the PCIe specification.
+>  - hisilicon,broken-prefetch-cmd
+>                      : Avoid sending CMD_PREFETCH_* commands to the SMMU.
+>  
+> +- broadcom,broken-ste-valid-check
+> +                    : Broadcom specific, h/w peeks into more than just 
+> +		      STE.VALID bit in "Bypass" mode. Enabling this, 
+> +		      populates needed bits.
+
+This should really describe more about what happens, I think. For example,
+
+"Enable ATS and Stage-2 AArch64 translation in bypass STEs, since some
+ hardware requires this in order for an STE to be treated as valid."
+
+Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
