@@ -1,146 +1,94 @@
-From: Marc Titinger <mtitinger-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 19/26] devicetree: bindings: Document qcom,msm-id and qcom,board-id
-Date: Thu, 17 Dec 2015 17:58:47 +0100
-Message-ID: <1450371534-10923-20-git-send-email-mtitinger+renesas@baylibre.com>
-References: <1450371534-10923-1-git-send-email-mtitinger+renesas@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450371534-10923-1-git-send-email-mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-In-Reply-To: <20151216222941.GB3342-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-References: <20151216222941.GB3342-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: [PATCH V10 0/7] dma: add Qualcomm Technologies HIDMA driver
+Date: Thu, 17 Dec 2015 12:01:15 -0500
+Message-ID: <1450371684-23415-1-git-send-email-okaya@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: dmaengine@vger.kernel.org, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
+Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+The Qualcomm Technologies HIDMA device has been designed
+to support virtualization technology. The driver has been
+divided into two to follow the hardware design.
 
-The top level qcom,msm-id and qcom,board-id are utilized by bootloaders
-on Qualcomm MSM platforms to determine which device tree should be
-utilized and passed to the kernel.
+1. HIDMA Management driver
+2. HIDMA Channel driver
 
-Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Signed-off-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/msm/ids.txt | 65 +++++++++++++++++++++++
- include/dt-bindings/arm/qcom-ids.h                | 33 ++++++++++++
- 2 files changed, 98 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/msm/ids.txt
- create mode 100644 include/dt-bindings/arm/qcom-ids.h
+Each HIDMA HW consists of multiple channels. These channels
+share some set of common parameters. These parameters are
+initialized by the management driver during power up.
+Same management driver is used for monitoring the execution
+of the channels. Management driver can change the performance
+behavior dynamically such as bandwidth allocation and
+prioritization in the future.
 
-diff --git a/Documentation/devicetree/bindings/arm/msm/ids.txt b/Documentation/devicetree/bindings/arm/msm/ids.txt
-new file mode 100644
-index 0000000..9ee8428
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/msm/ids.txt
-@@ -0,0 +1,65 @@
-+* MSM-ID
-+
-+The qcom,msm-id entry specifies the MSM chipset and hardware revision.  It can
-+optionally be an array of these to indicate multiple hardware that use the same
-+device tree.  It is expected that the bootloader will use this information at
-+boot-up to decide which device tree to use when given multiple device trees,
-+some of which may not be compatible with the actual hardware.  It is the
-+bootloader's responsibility to pass the correct device tree to the kernel.
-+
-+PROPERTIES
-+
-+- qcom,msm-id:
-+	Usage: required
-+	Value type: <prop-encoded-array> (<chipset_id, rev_id> [, <c2, r2> ..])
-+	Definition:
-+		The "chipset_id" consists of three fields as below:
-+
-+		bits 0-15  = The unique MSM chipset id.
-+		bits 16-31 = Reserved.  Should be 0
-+
-+		chipset_id is an exact match value
-+
-+		The "rev_id" is a chipset specific 32-bit id that represents
-+		the version of the chipset.
-+
-+		The rev_id is a best match id.  The bootloader will look for
-+		the closest possible patch.
-+
-+* BOARD-ID
-+
-+The qcom,board-id entry specifies the board type and revision information.  It
-+can optionally be an array of these to indicate multiple boards that use the
-+same device tree.  It is expected that the bootloader will use this information
-+at boot-up to decide which device tree to use when given multiple device trees,
-+some of which may not be compatible with the actual hardware.  It is the
-+bootloader's responsibility to pass the correct device tree to the kernel.
-+
-+PROPERTIES
-+
-+- qcom,board-id:
-+	Usage: required
-+	Value type: <prop-encoded-array> (<board_id, subtype_id> [, <b2, s2> ..])
-+	Definition:
-+		The "board_id" consists of three fields as below:
-+
-+		bits 31-24 = Unusued.
-+		bits 23-16 = Platform Version Major
-+		bits 15-8  = Platfrom Version Minor
-+		bits 7-0   = Platform Type
-+
-+		Platform Type field is an exact match value.  The Platform
-+		Major/Minor field is a best match.  The bootloader will look
-+		for the closest possible match.
-+
-+		The "subtype_id" is unique to a Platform Type/Chipset ID.  For
-+		a given Platform Type, there will typically only be a single
-+		board and the subtype_id will be 0.  However in some cases board
-+		variants may need to be distinquished by different subtype_id
-+		values.
-+
-+		subtype_id is an exact match value.
-+
-+EXAMPLE:
-+	qcom,board-id = <15 2>;
-+	qcom,msm-id = <0x1007e 0>;
-diff --git a/include/dt-bindings/arm/qcom-ids.h b/include/dt-bindings/arm/qcom-ids.h
-new file mode 100644
-index 0000000..a18f34e
---- /dev/null
-+++ b/include/dt-bindings/arm/qcom-ids.h
-@@ -0,0 +1,33 @@
-+/* Copyright (c) 2015, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#ifndef __DT_BINDINGS_QCOM_IDS_H
-+#define __DT_BINDINGS_QCOM_IDS_H
-+
-+/* qcom,msm-id */
-+#define QCOM_ID_MSM8916		206
-+#define QCOM_ID_APQ8016		247
-+#define QCOM_ID_MSM8216		248
-+#define QCOM_ID_MSM8116		249
-+#define QCOM_ID_MSM8616		250
-+
-+/* qcom,board-id */
-+#define QCOM_BRD_ID(a, major, minor) \
-+	(((major & 0xff) << 16) | ((minor & 0xff) << 8) | QCOM_BRD_ID_##a)
-+
-+#define QCOM_BRD_ID_MTP		8
-+#define QCOM_BRD_ID_DRAGONBRD	10
-+#define QCOM_BRD_ID_SBC		24
-+
-+#define QCOM_BRD_SUBTYPE_DEFAULT		0
-+#define QCOM_BRD_SUBTYPE_MTP8916_SMB1360	1
-+
-+#endif
+The management driver is executed in hypervisor context and
+is the main management entity for all channels provided by
+the device.
+
+Changes from V9: (https://lkml.org/lkml/2015/12/11/584)
+* none
+
+Changes from V9: (https://lkml.org/lkml/2015/12/11/585)
+* split device tree documentation from code
+* correct syntax error in device tree documentation
+* describe max value of the weight
+* document that array and weight attributes are array
+* add object hierarchy support
+* move sysfs priority and weight files into chanops directory.
+
+Changes from V9: (https://lkml.org/lkml/2015/12/11/588)
+* add object hierarchy support
+* rename event-channel to channel-index
+* create a sysfs entry for channel-index
+* add pm_runtime_get/sync around hidma_ll_isenabled
+
+Changes from V9: (https://lkml.org/lkml/2015/12/11/586)
+* rename TRE chidx to idx to not mix with the channel id.
+
+Changes from V9: (https://lkml.org/lkml/2015/12/11/587)
+* none
+
+Sinan Kaya (7):
+  dma: qcom_bam_dma: move to qcom directory
+  dma: hidma: Add Device Tree support
+  dma: add Qualcomm Technologies HIDMA management driver
+  dma: add Qualcomm Technologies HIDMA channel driver
+  dma: qcom_hidma: implement lower level hardware interface
+  dma: qcom_hidma: add debugfs hooks
+  dma: qcom_hidma: add support for object hierarchy
+
+ Documentation/ABI/testing/sysfs-platform-hidma     |   9 +
+ .../ABI/testing/sysfs-platform-hidma-mgmt          |  97 +++
+ .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    |  79 ++
+ drivers/dma/Kconfig                                |  11 +-
+ drivers/dma/Makefile                               |   2 +-
+ drivers/dma/qcom/Kconfig                           |  29 +
+ drivers/dma/qcom/Makefile                          |   4 +
+ drivers/dma/{qcom_bam_dma.c => qcom/bam_dma.c}     |   4 +-
+ drivers/dma/qcom/hidma.c                           | 868 +++++++++++++++++++
+ drivers/dma/qcom/hidma.h                           | 163 ++++
+ drivers/dma/qcom/hidma_dbg.c                       | 219 +++++
+ drivers/dma/qcom/hidma_ll.c                        | 927 +++++++++++++++++++++
+ drivers/dma/qcom/hidma_mgmt.c                      | 317 +++++++
+ drivers/dma/qcom/hidma_mgmt.h                      |  39 +
+ drivers/dma/qcom/hidma_mgmt_sys.c                  | 295 +++++++
+ 15 files changed, 3051 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-hidma
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-hidma-mgmt
+ create mode 100644 Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+ create mode 100644 drivers/dma/qcom/Kconfig
+ create mode 100644 drivers/dma/qcom/Makefile
+ rename drivers/dma/{qcom_bam_dma.c => qcom/bam_dma.c} (99%)
+ create mode 100644 drivers/dma/qcom/hidma.c
+ create mode 100644 drivers/dma/qcom/hidma.h
+ create mode 100644 drivers/dma/qcom/hidma_dbg.c
+ create mode 100644 drivers/dma/qcom/hidma_ll.c
+ create mode 100644 drivers/dma/qcom/hidma_mgmt.c
+ create mode 100644 drivers/dma/qcom/hidma_mgmt.h
+ create mode 100644 drivers/dma/qcom/hidma_mgmt_sys.c
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
