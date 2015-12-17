@@ -1,87 +1,51 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v3] net/macb: add support for resetting PHY using GPIO
-Date: Thu, 17 Dec 2015 09:39:32 +0100
-Message-ID: <874mfhtqnv.fsf@free-electrons.com>
-References: <1450290690-32369-1-git-send-email-gregory.clement@free-electrons.com>
-	<6382531.CWmTLTEYMq@wuerfel>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v2 0/8] Raspberry Pi 2 support.
+Date: Thu, 17 Dec 2015 09:48:57 +0100
+Message-ID: <567276F9.5070903@i2se.com>
+References: <1450310115-22163-1-git-send-email-eric@anholt.net>
+ <21040591.KakM5Gl6ZZ@wuerfel> <874mfhsyem.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6382531.CWmTLTEYMq@wuerfel> (Arnd Bergmann's message of "Wed, 16
-	Dec 2015 20:10:14 +0100")
+In-Reply-To: <874mfhsyem.fsf@eliezer.anholt.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Russell King <linux@arm.linux.org.uk>
+To: Eric Anholt <eric@anholt.net>, Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Scott Branden <sbranden@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Marc Zyngier <marc.zyngier@arm.com>, Ray Jui <rjui@broadcom.com>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-=20
- On mer., d=C3=A9c. 16 2015, Arnd Bergmann <arnd@arndb.de> wrote:
-
-> On Wednesday 16 December 2015 19:31:30 Gregory CLEMENT wrote:
->> diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ether=
-net/cadence/macb.c
->> index 88c1e1a..35661aa 100644
->> --- a/drivers/net/ethernet/cadence/macb.c
->> +++ b/drivers/net/ethernet/cadence/macb.c
->> @@ -28,6 +28,7 @@
->>  #include <linux/phy.h>
->>  #include <linux/of.h>
->>  #include <linux/of_device.h>
->> +#include <linux/of_gpio.h>
->>  #include <linux/of_mdio.h>
->>  #include <linux/of_net.h>
+Am 17.12.2015 um 01:37 schrieb Eric Anholt:
+> Arnd Bergmann <arnd@arndb.de> writes:
 >
-> Is this the patch that is already in linux-next?
-
-I've just checked and it is the v2 which is in linux-next. David applie=
-d
-it on Monday in his next branche but I was not aware of it.
-
-David,
-
-if I remebered well you do not remove patch from yout branch.  So would
-you agree to take a follow-up patch on top of 5833e0526820 "net/macb:
-add support for resetting PHY using GPIO" ?
-
-I will fix the error found by Arnd and also use a better device tree
-binding (more future proof).
-
-Thanks,
-
-Gregory
-
+>> On Wednesday 16 December 2015 15:55:07 Eric Anholt wrote:
+>>> This is a major rewrite of the previous Raspberry Pi 2 submission.
+>>> SMP support is now included, and the DT includes are cleaned up to
+>>> avoid massive duplication.
+>>>
+>>> The branch (based on 4.4-rc5, to get the USB regression fixes) can be
+>>> found at:
+>>>
+>>> https://github.com/anholt/linux/tree/bcm2836-4.4
+>> Looks all good to me, but when we get the pull request, I'd strongly
+>> prefer to have that based on -rc3 or earlier.
+>>
+>> What commit is the USB regression fix you refer to above? Is that in a
+>> branch that is -rc3 based? Maybe you can rebase the changes on top
+>> of that branch, to minimize the amount of backmerges?
+> Top 4 commits of drivers/usb/dwc2 for 4.4-rc5 (possibly not all of them
+> are required, but it's what I've been using).  
 >
-> I needed an additional
->
-> #include <linux/gpio/consumer.h>
->
-> to avoid this build error on randconfig builds without GPIOLIB:
->
->     drivers/net/ethernet/cadence/macb.c: In function 'macb_probe':
->     drivers/net/ethernet/cadence/macb.c:2908:19: error: implicit decl=
-aration of function 'devm_gpiod_get_optional' [-Werror=3Dimplicit-funct=
-ion-declaration]
->       bp->reset_gpio =3D devm_gpiod_get_optional(&bp->pdev->dev, "phy=
--reset",
->                        ^
->     drivers/net/ethernet/cadence/macb.c:2909:8: error: 'GPIOD_OUT_HIG=
-H' undeclared (first use in this function)
->             GPIOD_OUT_HIGH);
->             ^
->     drivers/net/ethernet/cadence/macb.c:2909:8: note: each undeclared=
- identifier is reported only once for each function it appears in
->     drivers/net/ethernet/cadence/macb.c: In function 'macb_remove':
->     drivers/net/ethernet/cadence/macb.c:2979:3: error: implicit decla=
-ration of function 'gpiod_set_value' [-Werror=3Dimplicit-function-decla=
-ration]
->
->
-> 	Arnd
 
---=20
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Unfortunately all 4 of them are required:
+
+d0464bcf12af ("usb: dwc2: Make PHY optional")
+
+6c2dad69163f ("usb: dwc2: Return errors from PHY")
+
+8aa90cf2a286 ("usb: dwc2: make otg clk optional")
+
+f74875dc3613 ("usb: dwc2: fix kernel oops during driver probe")
+
+But they should apply to -rc3 too.
+
+Stefan
