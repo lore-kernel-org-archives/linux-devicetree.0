@@ -1,52 +1,53 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v4 3/5] PCI: qcom: Add Qualcomm PCIe controller driver
-Date: Thu, 17 Dec 2015 15:15:25 -0600
-Message-ID: <20151217211525.GA4129@localhost>
-References: <1449149725-27607-1-git-send-email-stanimir.varbanov@linaro.org>
- <1449149725-27607-4-git-send-email-stanimir.varbanov@linaro.org>
- <20151216215304.GB27791@localhost>
- <5672B633.6030503@linaro.org>
+From: Damien Riegel <damien.riegel@savoirfairelinux.com>
+Subject: [PATCH 1/2] ARM: dts: TS-4800: drop uart rts/cts pin reservations
+Date: Thu, 17 Dec 2015 16:16:52 -0500
+Message-ID: <1450387013-3532-1-git-send-email-damien.riegel@savoirfairelinux.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5672B633.6030503@linaro.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Damien Riegel <damien.riegel@savoirfairelinux.com>, Rob Herring <robh+dt@kernel.org>, kernel@savoirfairelinux.com, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 17, 2015 at 03:18:43PM +0200, Stanimir Varbanov wrote:
-> Bjorn, thanks for the comments!
-> 
-> On 12/16/2015 11:53 PM, Bjorn Helgaas wrote:
-> > On Thu, Dec 03, 2015 at 03:35:22PM +0200, Stanimir Varbanov wrote:
-> >> From: Stanimir Varbanov <svarbanov@mm-sol.com>
-> >>
-> >> The PCIe driver reuse the Designware common code for host
-> >> and MSI initialization, and also program the Qualcomm
-> >> application specific registers.
-> >>
-> >> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> >> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> >> ---
-> >>  MAINTAINERS                  |    7 +
-> >>  drivers/pci/host/Kconfig     |   10 +
-> >>  drivers/pci/host/Makefile    |    1 +
-> >>  drivers/pci/host/pcie-qcom.c |  624 ++++++++++++++++++++++++++++++++++++++++++
-> > 
-> >> +#define PCIE20_CAP				0x70
-> >> +#define PCIE20_CAP_LINKCTRLSTATUS		(PCIE20_CAP + 0x10)
-> >> +#define PCIE20_CAP_LINKCTRLSTATUS_LINK_UP	BIT(29)
-> > 
-> > This looks like it could be referring to a standard PCIe Capability;
-> > could you use the existing PCI_EXP_LNKSTA and PCI_EXP_LNKSTA_DLLLA
-> > symbols here?  And readw() instead of readl()?
-> 
-> Yes, that is possible but I still need to keep PCIE20_CAP capabilities
-> offset.
+These pins are actually not routed for UARTs, they should not be
+reserved.
 
-Great, thanks!  I think that will help keep generic PCIe things from
-looking like they're special implementation-specific things.
+Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
+---
+ arch/arm/boot/dts/imx51-ts4800.dts | 4 ----
+ 1 file changed, 4 deletions(-)
 
-Bjorn
+diff --git a/arch/arm/boot/dts/imx51-ts4800.dts b/arch/arm/boot/dts/imx51-ts4800.dts
+index f1317f7..64ac55c 100644
+--- a/arch/arm/boot/dts/imx51-ts4800.dts
++++ b/arch/arm/boot/dts/imx51-ts4800.dts
+@@ -157,8 +157,6 @@
+ 		fsl,pins = <
+ 			MX51_PAD_UART1_RXD__UART1_RXD		0x1c5
+ 			MX51_PAD_UART1_TXD__UART1_TXD		0x1c5
+-			MX51_PAD_UART1_RTS__UART1_RTS		0x1c5
+-			MX51_PAD_UART1_CTS__UART1_CTS		0x1c5
+ 		>;
+ 	};
+ 
+@@ -173,8 +171,6 @@
+ 		fsl,pins = <
+ 			MX51_PAD_EIM_D25__UART3_RXD		0x1c5
+ 			MX51_PAD_EIM_D26__UART3_TXD		0x1c5
+-			MX51_PAD_EIM_D27__UART3_RTS		0x1c5
+-			MX51_PAD_EIM_D24__UART3_CTS		0x1c5
+ 		>;
+ 	};
+ };
+-- 
+2.5.0
