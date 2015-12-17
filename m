@@ -1,91 +1,71 @@
-From: Juri Lelli <juri.lelli@arm.com>
-Subject: Re: [RFC PATCH 2/8] Documentation: arm: define DT cpu capacity
- bindings
-Date: Thu, 17 Dec 2015 09:07:36 +0000
-Message-ID: <20151217090736.GC3083@pablo>
-References: <20151214123616.GC3308@e106622-lin>
- <20151214165928.GV5727@sirena.org.uk>
- <20151215122238.GG16007@e106622-lin>
- <20151215133951.GY5727@sirena.org.uk>
- <20151215140135.GI31299@leverpostej>
- <20151215150813.GZ5727@sirena.org.uk>
- <20151215153218.GA7228@leverpostej>
- <20151215171713.GA5727@sirena.org.uk>
- <20151215172837.GD8012@leverpostej>
- <20151215174516.GB5727@sirena.org.uk>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v6 0/6] Add mipi dsi support for rk3288
+Date: Thu, 17 Dec 2015 10:29:53 +0100
+Message-ID: <3523259.ZRgH1Shd9Y@diego>
+References: <1450260616-21160-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151215174516.GB5727@sirena.org.uk>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1450260616-21160-1-git-send-email-zyw@rock-chips.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, treding@nvidia.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 15/12/15 17:45, Mark Brown wrote:
-> On Tue, Dec 15, 2015 at 05:28:37PM +0000, Mark Rutland wrote:
-> > On Tue, Dec 15, 2015 at 05:17:13PM +0000, Mark Brown wrote:
-> 
-> > > Obviously people are going to get upset if we introduce performance
-> > > regressions - but that's true always, we can also introduce problems
-> > > with numbers people have put in DT.  It seems like it'd be harder to
-> > > manage regressions due to externally provided magic numbers since
-> > > there's inherently less information there.
-> 
-> > It's certainly still possible to have regressions in that case. Those
-> > regressions would be due to code changes in the kernel, given the DT
-> > didn't change.
-> 
-> > I'm not sure I follow w.r.t. "inherently less information", unless you
-> > mean trying to debug without access to that DTB?
-> 
-> If what the kernel knows about the system is that it's got a bunch of
-> cores with numbers assigned to them then all it's really got is those
-> numbers.  If something changes that causes problems for some systems
-> (eg, because the numbers have been picked poorly but in a way that
-> happened to work well with the old code) that's not a lot to go on, the
-> more we know about the system the more likely it is that we'll be able
-> to adjust the assumptions in whatever new thing we do that causes
-> problems for any particular systems where we run into trouble.
-> 
-> > > My point there is that if we're not that concerned about the specific
-> > > number something in kernel is safer.
-> 
-> > I don't entirely disagree there. I think an in-kernel benchmark is
-> > likely safer.
-> 
-> Yes, I think that something where we just observe the system performance
-> at runtime is likely one of the best solutions if we can get something
-> that gives reasonable results.
-> 
-> > > That does have the issue that we need to scale with regard to the
-> > > frequency the benchmark gets run at.  That's not an insurmountable
-> > > obstacle but it's not completely trivial either.
-> 
-> > If we change clock frequency, then regardless of where the information
-> > comes from we need to perform scaling, no?
-> 
-> Yes, it's just a question of making the benchmarking bit talk to the
-> scaling bit so we know where we're at when we do the benchmark.  Like I
-> say it should be doable.
-> 
-> > One nice thing about doing a benchmark to derive the numbers is that
-> > when the kernel is that when the frequency is fixed but the kernel
-> > cannot query it, the numbers will be representative.
-> 
-> Definitely.
-
-OK, let's see how a dynamic approach could look like. As said, since it
-was actually our first thought too, I already have a possible
-implementation of such a thing. I'll be OOO until early Jan, but I'll
-try to rebase what I have and post it here as soon as I'm back; and then
-we see which solution looks better.
-
-Thanks a lot for the feedback!
-
-Best,
-
-- Juri
+SGkgQ2hyaXMsCgpBbSBNaXR0d29jaCwgMTYuIERlemVtYmVyIDIwMTUsIDE4OjEwOjEwIHNjaHJp
+ZWIgQ2hyaXMgWmhvbmc6Cj4gVGhlIHJrMzI4OCBNSVBJIERTSSBpcyBhIFN5bm9wc3lzIERlc2ln
+bldhcmUgTUlQSSBEU0kgaG9zdCBjb250cm9sbGVyCj4gSVAuIFRoaXMgc2VyaWVzIGFkZHMgc3Vw
+cG9ydCBmb3IgYSBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgRFNJIGhvc3QKPiBjb250cm9sbGVy
+IERSTSBkcml2ZXIuCj4gCj4gVGhlIE1JUEkgRFNJIGZlYXR1cmUgaXMgdGVzdGVkIG9uIHJrMzI4
+OCBldmIgYm9hcmQsIGJhY2twb3J0IHRoZW0gdG8KPiBjaHJvbWUgb3Mga2VybmVsIGNocm9tZV92
+My4xNCwgYW5kIGl0IGNhbiBkaXNwbGF5IG5vcm1hbGx5Lgo+IAo+IFRoaXMgcGF0Y2hzZXQgaXMg
+YmFzZSBvbiB0aGUgcGF0Y2hzZXQgZnJvbSBZaW5nLmxpdUBmcmVlc2NhbGUuY29tLgo+IDxodHRw
+Oi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2RyaS1kZXZlbC9tc2c3NzE4MS5odG1sPgo+IAo+IEFj
+Y29yZGluZyB0byB0aGUgc3VnZ2VzdGlvbiBmcm9tIFRoaWVycnksIEkgaGF2ZSBnZXQgcmlkIG9m
+IHRoZSBicmlkZ2UsCj4gYW5kIHJlZ2lzdGVyIHRoZSBlbmNvZGVyICYgY29ubmVjdGVyIGluIGRy
+bS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jLgoKZnJvbSBteSBwb2ludCBpdCBsb29rcyBnb29kIChh
+bHRob3VnaCBJIGNhbm5vdCByZWFsbHkgc3BlYWsgb24gdGhlIGRybS1yZWxhdGVkIAppbnRlcm5h
+bHMpLgoKQnV0IEkgZG8gdGhpbmsgd2UnbGwgYmUgZG9pbmcgYXRvbWljIG1vZGVzZXR0aW5nIGNv
+bnZlcnNpb24gZmlyc3QgKGxhc3QgCnZlcnNpb24gcG9zdGVkIGZyb20gTWFyayB0b2RheSksIHNv
+IHlvdSBzaG91bGQgcHJvYmFibHkgbWFrZSBzdXJlIHlvdXIgZHNpIApkcml2ZXIgc3RpbGwgd29y
+a3MgYWZ0ZXIgdGhhdCBjb252ZXJzaW9uIGFuZCBtYWtlIGNoYW5nZXMgaWYgbmVlZGVkLgoKCkhl
+aWtvCgo+IAo+IAo+IENoYW5nZXMgaW4gdjY6Cj4gLSB1cGRhdGUgdGhlIGRvY3VtZW50LCBzaW5j
+ZSB0aGUgYnJpZGdlIGRldmljZSBoYXMgYmVlbiBkZWxldGVkLgo+IC0gRG8gbm90IHVzZSBicmlk
+Z2UgZHJpdmVyIChUaGllcnJ5IFJlZGluZykKPiAtIE9wdGltaXphdGlvbiB0aGUgcGh5IGluaXQg
+c2VxdWVuY2UKPiAKPiBDaGFuZ2VzIGluIHY1Ogo+IC0gbW9kaWZ5IHRoZSBjbGsgbmFtZSB0byBT
+Q0xLX01JUElEU0lfMjRNCj4gLSBhZGQgYSBibGFuayBsaW5lIGJlZm9yIGxjZF9lbgo+IAo+IENo
+YW5nZXMgaW4gdjQ6Cj4gLSB1c2UgY2xrX3JvdW5kX3JhdGUgdG8gY2hlY2sgdGhlIGNsb2NrIHJh
+dGUgaW4gdm9wX2NydGNfbW9kZV9maXh1cAo+IAo+IENoYW5nZXMgaW4gdjM6Cj4gLSBtb3ZlIGR3
+X21pcGlfZHNpX3JvY2tjaGlwLnR4dCB0byBiaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwLwo+IAo+
+IENocmlzIFpob25nICg1KToKPiAgIGRybS9yb2NrY2hpcDogcmV0dXJuIGEgdHJ1ZSBjbG9jayBy
+YXRlIHRvIGFkanVzdGVkX21vZGUKPiAgIERvY3VtZW50YXRpb246IGR0LWJpbmRpbmdzOiBBZGQg
+YmluZGluZ3MgZm9yIHJrMzI4OCBEVyBNSVBJIERTSSBkcml2ZXIKPiAgIGRybTogcm9ja2NoaXA6
+IFN1cHBvcnQgU3lub3BzeXMgRFcgTUlQSSBEU0kKPiAgIEFSTTogZHRzOiByb2NrY2hpcDogYWRk
+IHJrMzI4OCBtaXBpX2RzaSBub2Rlcwo+ICAgQVJNOiBkdHM6IHJvY2tjaGlwOiBhZGQgc3VwcG9y
+dCBtaXBpIHBhbmVsIHR2MDgwd3VtLW5sMAo+IAo+IExpdSBZaW5nICgxKToKPiAgIGRybS9kc2k6
+IEFkZCBhIGhlbHBlciB0byBnZXQgYml0cyBwZXIgcGl4ZWwgb2YgTUlQSSBEU0kgcGl4ZWwgZm9y
+bWF0Cj4gCj4gIC4uLi9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4dCAg
+ICAgIHwgICA2MCArCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC1ldmIuZHRzaSAgICAgICAg
+ICAgICAgICAgIHwgICAyMCArLQo+ICBhcmNoL2FybS9ib290L2R0cy9yazMyODguZHRzaSAgICAg
+ICAgICAgICAgICAgICAgICB8ICAgMzkgKwo+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvS2Nv
+bmZpZyAgICAgICAgICAgICAgICAgICB8ICAgMTAgKwo+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2No
+aXAvTWFrZWZpbGUgICAgICAgICAgICAgICAgICB8ICAgIDEgKwo+ICBkcml2ZXJzL2dwdS9kcm0v
+cm9ja2NoaXAvZHctbWlwaS1kc2kuYyAgICAgICAgICAgICB8IDEyMDAKPiArKysrKysrKysrKysr
+KysrKysrKyBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX3ZvcC5jICAgICAg
+ICB8ICAKPiAgOCArCj4gIGluY2x1ZGUvZHJtL2RybV9taXBpX2RzaS5oICAgICAgICAgICAgICAg
+ICAgICAgICAgIHwgICAxNCArCj4gIDggZmlsZXMgY2hhbmdlZCwgMTM1MSBpbnNlcnRpb25zKCsp
+LCAxIGRlbGV0aW9uKC0pCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NAo+IERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4
+dAo+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1k
+c2kuYwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
