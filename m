@@ -1,61 +1,35 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: imx7d: add arch timer
-Date: Thu, 17 Dec 2015 12:45:07 -0800
-Message-ID: <024b6540b3ebd5f132d171ba40c6e727@agner.ch>
-References: <1449789132-18976-1-git-send-email-Frank.Li@freescale.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH] net/macb: Update device tree binding for resetting PHY
+ using GPIO
+Date: Thu, 17 Dec 2015 15:53:45 -0500 (EST)
+Message-ID: <20151217.155345.1947787110373074406.davem@davemloft.net>
+References: <874mfhtqnv.fsf@free-electrons.com>
+	<1450345864-10907-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449789132-18976-1-git-send-email-Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1450345864-10907-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015-12-10 15:12, Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
-> From: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Date: Thu, 17 Dec 2015 10:51:04 +0100
+
+> Instead of being at the MAC level the reset gpio preperty is moved at the
+> PHY child node level. It is still managed by the MAC, but from the point
+> of view of the binding it make more sense to be part of the PHY node.
 > 
-> add cortex a7 arch timer.
-> uboot v2016.01-rc2 supported psci basic support.
-> smp can be supported by psci
-
-This sounds a bit overly simplified log message. I am not very into this
-PSCI topic, is this a prerequisit for the ARM arch timers? Maybe you
-could elaborate that a bit more.
-
-Also, I would prefer full sentences and commonly used spellings such as
-Cortex-A7, U-Boot etc...
-
---
-Stefan
-
+> This commit also fixes a build errors if GPIOLIB is not selected.
 > 
-> Signed-off-by: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx7d.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
-> index 489604a..a621af6 100644
-> --- a/arch/arm/boot/dts/imx7d.dtsi
-> +++ b/arch/arm/boot/dts/imx7d.dtsi
-> @@ -119,6 +119,15 @@
->  		clock-output-names = "osc";
->  	};
->  
-> +	timer {
-> +		compatible = "arm,armv7-timer";
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-> +		interrupt-parent = <&intc>;
-> +	};
-> +
->  	etr@30086000 {
->  		compatible = "arm,coresight-tmc", "arm,primecell";
->  		reg = <0x30086000 0x1000>;
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Applied to net-next, thanks.
+
+Please be explicit in your patch postings what tree you are targetting
+a change at.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
