@@ -1,146 +1,66 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] watchdog: imx2_wdt: add external reset support via
- 'ext-reset-output' dt prop
-Date: Thu, 17 Dec 2015 07:32:02 -0800
-Message-ID: <5672D572.9080104@roeck-us.net>
-References: <1446758362-11702-1-git-send-email-akshay.bhat@timesys.com>
- <1446758362-11702-2-git-send-email-akshay.bhat@timesys.com>
- <20151105222325.GA26159@roeck-us.net>
- <CAJ+vNU2fSxRJ7YvxOfNzoEoiKgzv-dHj=+eksKxH48ekHiUw2Q@mail.gmail.com>
- <20151106220249.GA19791@roeck-us.net> <565F4244.7090502@timesys.com>
- <CAJ+vNU00Bf97HUqkkW9KqOUzHXh482R9O1gasz6ju3Pn-_5chA@mail.gmail.com>
- <CAJ+vNU2qHQPSJ1KWp_3f3vAdeuOcF0ooZHmHsdafabZLXJv=Bw@mail.gmail.com>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v4 1/5] PCI: designware: add memory barrier after enabling
+ region
+Date: Thu, 17 Dec 2015 17:45:37 +0200
+Message-ID: <5672D8A1.2080407@linaro.org>
+References: <1449149725-27607-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1449149725-27607-2-git-send-email-stanimir.varbanov@linaro.org>
+ <56669C50.9060700@linaro.org>
+ <CAHM4w1k_EAt+xBBYyG3B7W9Fegc4j+uRq5t_biUsxOGt+k+xUA@mail.gmail.com>
+ <20151209102359.GF8644@n2100.arm.linux.org.uk>
+ <CAHM4w1m-NiwyCLz9tikbOcNtCmVu0Vd9FhmKKSuMi5ChzfDafA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJ+vNU2qHQPSJ1KWp_3f3vAdeuOcF0ooZHmHsdafabZLXJv=Bw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAHM4w1m-NiwyCLz9tikbOcNtCmVu0Vd9FhmKKSuMi5ChzfDafA@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Pratyush Anand <pratyush.anand@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/17/2015 07:02 AM, Tim Harvey wrote:
-> On Wed, Dec 2, 2015 at 12:54 PM, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org> wrote:
+On 12/11/2015 06:05 AM, Pratyush Anand wrote:
+> On Wed, Dec 9, 2015 at 3:53 PM, Russell King - ARM Linux
+> <linux@arm.linux.org.uk> wrote:
+> 
+> [...]
+> 
+>>>>>       dw_pcie_writel_rc(pp, PCIE_ATU_ENABLE, PCIE_ATU_CR2);
+>>>>> +     /*
+>>>>> +      * ensure that the ATU enable has been happaned before accessing
+>>>>> +      * pci configuration/io spaces through dw_pcie_cfg_[read|write].
+>>>>> +      */
+>>>>> +     wmb();
+>>>>>  }
+>>>>>
+>>>
+>>>
+>>> My understnading is that since writel() of dw_pcie_writel_rc() in
+>>> above code and readl(), writel() of dw_pcie_cfg_[read|write]() (which
+>>> will follow) goes through same device (ie PCIe host here). So, it is
+>>> guaranteed that 1st writel() will be executed before later
+>>> readl()/writel(). If that is true then we do not need any explicit
+>>> barrier here.
+>>>
+>>> Arnd, Russel: whats your opinion here.
+>>               ^l
+> 
+> Sorry :(
+> 
 >>
->> On Wed, Dec 2, 2015 at 11:11 AM, Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org> wrote:
->>>
->>>
->>> On 11/06/2015 05:02 PM, Guenter Roeck wrote:
->>>>
->>>> On Fri, Nov 06, 2015 at 11:53:42AM -0800, Tim Harvey wrote:
->>>>>
->>>>> On Thu, Nov 5, 2015 at 2:23 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
->>>>>>
->>>>>> On Thu, Nov 05, 2015 at 04:19:21PM -0500, Akshay Bhat wrote:
->>>>>>>
->>>>>>> From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
->>>>>>>
->>>>>>> The IMX6 watchdog supports assertion of a signal (WDOG_B) which
->>>>>>> can be pinmux'd to an external pin. This is typically used for boards
->>>>>>> that
->>>>>>> have PMIC's in control of the IMX6 power rails. In fact, failure to use
->>>>>>> such an external reset on boards with external PMIC's can result in
->>>>>>> various
->>>>>>> hangs due to the IMX6 not being fully reset [1] as well as the board
->>>>>>> failing
->>>>>>> to reset because its PMIC has not been reset to provide adequate
->>>>>>> voltage for
->>>>>>> the CPU when coming out of reset at 800Mhz.
->>>>>>>
->>>>>>> This uses a new device-tree property 'ext-reset-output' to indicate the
->>>>>>> board has such a reset and to cause the watchdog to be configured to
->>>>>>> assert
->>>>>>> WDOG_B instead of an internal reset both on a watchdog timeout and in
->>>>>>> system_restart.
->>>>>>>
->>>>>>> [1]
->>>>>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/333689.html
->>>>>>>
->>>>>>> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>>>>>> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
->>>>>>> ---
->>>>>>>    .../devicetree/bindings/watchdog/fsl-imx-wdt.txt     |  2 ++
->>>>>>>    drivers/watchdog/imx2_wdt.c                          | 20
->>>>>>> ++++++++++++++++++--
->>>>>>>    2 files changed, 20 insertions(+), 2 deletions(-)
->>>>>>>
->>>>>>> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
->>>>>>> b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
->>>>>>> index 8dab6fd..9b89b3a 100644
->>>>>>> --- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
->>>>>>> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
->>>>>>> @@ -9,6 +9,8 @@ Optional property:
->>>>>>
->>>>>>
->>>>>> properties ?
->>>>>>
->>>>>>>    - big-endian: If present the watchdog device's registers are
->>>>>>> implemented
->>>>>>>      in big endian mode, otherwise in native mode(same with CPU), for
->>>>>>> more
->>>>>>>      detail please see:
->>>>>>> Documentation/devicetree/bindings/regmap/regmap.txt.
->>>>>>> +- ext-reset-output: If present the watchdog device is configured to
->>>>>>> assert its
->>>>>>
->>>>>>
->>>>>> Should that have a vendor prefix ? Also, not sure if "-output"
->>>>>> has any real value in the property name. "fsl,external-reset", maybe ?
->>>>>
->>>>>
->>>>> Hi Guenter,
->>>>>
->>>>> I don't see why a vendor prefix is necessary - its a feature of the
->>>>> IMX6 watchdog supported by this driver to be able to trigger an
->>>>> internal chip-level reset and/or an external signal that can be hooked
->>>>> to additional hardware.
->>>>>
->>>> Sounded like vendor specific to me, but then I am not a devicetree
->>>> maintainer,
->>>> so I am not an authority on the subject.
->>>
->>>
->>> Devicetree maintainers,
->>>
->>> Any thoughts?
->>>
->>> Tim,
->>>
->>> After looking at all the other watchdog drivers, it does not appear that
->>> there is any other processor which uses a similar feature. Since imx is the
->>> only processor that appears to support this feature, it might make sense in
->>> making this vendor specific. If in the future it is found more processors
->>> support a similar functionality, it can be revisited and moved out from
->>> being vendor specific?
->>>
+>> writel() has a barrier _before_ the access but not after.
 >>
->> I'm certainly no expert on device-tree policy. I understand your
->> point, but realize that the driver in question is imx2_wdt.c
->> (compatible = "fsl,imx21-wdt"). This is an IP block inside the silicon
->> of only Freescale chips, so its not like a future omap chip would be
->> using this driver - only fsl devices. So why would it need a 'vendor'
->> property any more than its other properties?
+>> The fact is that there's nothing which guarantees that the write will hit
+>> the hardware in a timely manner (forget any rules about PCI config space,
+>> the PCI ordering rules apply to the PCI bus, not to the ARM buses.)
 >>
->> Regards,
->>
->> Tim
->
-> Wim,
->
-> Does the lack of response mean overwhelming approval?
->
-> I haven't heard any valid complaints - what does it take to get this approved?
->
+>> If you need this write to have hit the hardware before continuing, you
+>> need to read back from the same register.
+> 
+> OK, so better to replace wmb() with read back of control register.
 
-Tim,
+Would the patch be acceptable if I replace wmb with read?
 
-Do you have an Ack from a devicetree maintainer ? I don't recall seeing one.
-
-Thanks,
-Guenter
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+regards,
+Stan
