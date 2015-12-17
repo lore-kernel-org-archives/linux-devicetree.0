@@ -1,75 +1,69 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH v3 0/5] Add reboot notifier driver for rockchip platform
-Date: Wed, 16 Dec 2015 17:16:01 -0800
-Message-ID: <CALAqxLW2HD35kfy2RypvVEYPCuRit8YU=-tqgCev41jksRc7gQ@mail.gmail.com>
-References: <1447840044-19689-1-git-send-email-andy.yan@rock-chips.com>
-	<45323116.BWNAaZT5p4@diego>
-	<566E9A47.8010004@rock-chips.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [GIT PULL 0/9] ARM: EXYNOS: Pull request for v4.5
+Date: Thu, 17 Dec 2015 10:43:02 +0900
+Message-ID: <56721326.30004@samsung.com>
+References: <1449020386-20250-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <566E9A47.8010004@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, wxt@rock-chips.com, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, sjg@chromium.org, lkml <linux-kernel@vger.kernel.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, treding@nvidia.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, benchan@google.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1449020386-20250-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, arm@kernel.org, Kukjin Kim <kgene@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@linaro.org>
+Cc: Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 14, 2015 at 2:30 AM, Andy Yan <andy.yan@rock-chips.com> wro=
-te:
-> On 2015=E5=B9=B412=E6=9C=8812=E6=97=A5 05:29, Heiko St=C3=BCbner wrot=
-e:
->> Am Mittwoch, 18. November 2015, 17:47:24 schrieb Andy Yan:
->>>
->>> rockchip platform have a protocol to pass the kernel reboot
->>> mode to bootloader by some special registers when system reboot.
->>> By this way the bootloader can take different action according
->>> to the different kernel reboot mode, for example, command
->>> "reboot loader" will reboot the board to rockusb mode, this is
->>> a very convenient way to get the board enter download mode.
->>> And Android system also use this protocol to pass "recovery"=E3=80=81
->>> =E2=80=9Cfastboot=E2=80=9D reboot mode to bootloader. In upstream l=
-and, We found
->>> tegra platform also use this mechanism.
->>>
->>> Before this version, I have sent two Series, which can be found
->>> at [0] [1]
->>> [0] https://patchwork.kernel.org/patch/7140751/
->>> [1] https://patchwork.kernel.org/patch/7153531/
->>
->> just so it doesn't get lost, this ties into a slightly more generic
->> approach,
->> John Stultz is doing for the android reboot reasons:
->>
->> http://thread.gmane.org/gmane.linux.kernel/2103447
->>
->> The only difference is that we'd need to use the pmu syscon for it.
->>
->>
->     Very glad to see your work on this. And your work is more generic=
- than
-> my.
->      So hope we can share the code. As you can see, the rockchip plat=
-form
-> use
->      a GRF or PMU register to store the reboot reason. So maybe we ne=
-ed a
-> phandle
->      in the DT node to describe it.
+On 02.12.2015 10:39, Krzysztof Kozlowski wrote:
+> Hi Kukjin,
+> 
+> A lot of stuff for v4.5 with 3 dependencies split into
+> separate tags. The need for dependency is explained both
+> in merge-commit and in description of a tag which is using
+> the dependency.
 
-Yea. I need to figure out the best way to represent these various metho=
-ds in DT.
+Hi everyone,
 
-Apologies for not being super responsive here. Been a bit heads down
-trying to finish up some items before holiday break.
+It's been like two weeks... we are after v4.4-rc5 and Christmas season
+is coming... there are some dependencies here and even more stuff waits
+out of queue for this pull request (moving SROM and PMU to drivers/soc,
+cpufreq for Exynos542x).
 
-=46rom some of Arnd's comments, it sounds like we may need a larger
-generic subsystem for kernel to firmware communications here.  So more
-then likely I'll not have a chance to take another swing at this after
-the new year.
+What I want to say is that I am really not sure whether further waiting
+is beneficial...
+All these patches have been boiling in linux-next for some time (through
+my tree).
 
-So if in the meantime you want to try to take my code and rework it,
-or extend your code in a similar way, I'll not take any offence. :)
 
-thanks
--john
+Are there any comments about this pull request? Ordering of branches?
+Weird looking tags? Bugs? etc.? Anything waits in your tree Kukjin?
+
+
+Maybe this could be pulled directly by arm-soc folks?
+
+
+Best regards,
+Krzysztof
+
+> 
+> The order goes like (but of course dependencies
+> could be pulled all at once at beginning):
+> 1. tags/samsung-dt-syscon-restart-4.5
+> 2. tags/samsung-soc-4.5
+> 3. tags/samsung-clk-arm64-symbols-4.5
+> 4. tags/samsung-soc64-4.5
+> 5. tags/samsung-drivers-4.5
+> 6. tags/samsung-clk-exynos4-4.5
+> 7. tags/samsung-dt-4.5
+> 8. tags/samsung-dt64-4.5
+> 9. tags/samsung-defconfig-4.5
+> 
+> I split dependencies to three tags so clock or other folks could
+> easily grab them if needed.
+> 
+> Please share your comments or pull as early as possible as we have here
+> some more dependencies than usual.
+> 
+> 
+> Kind regards,
+> Krzysztof
+> 
