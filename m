@@ -1,62 +1,106 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH v2 2/8] irq: bcm2836: Add SMP support for the 2836
-Date: Thu, 17 Dec 2015 07:17:42 +0200
-Message-ID: <20151217051742.GV2318@tarshish>
-References: <1450310115-22163-1-git-send-email-eric@anholt.net>
- <1450310115-22163-3-git-send-email-eric@anholt.net>
+From: tiffany lin <tiffany.lin@mediatek.com>
+Subject: Re: [PATCH v2 6/8] [Media] vcodec: mediatek: Add Mediatek V4L2
+ Video Encoder Driver
+Date: Thu, 17 Dec 2015 13:52:27 +0800
+Message-ID: <1450331547.7283.4.camel@mtksdaap41>
+References: <1449827743-22895-1-git-send-email-tiffany.lin@mediatek.com>
+	 <1449827743-22895-7-git-send-email-tiffany.lin@mediatek.com>
+	 <566EBAFC.3010408@xs4all.nl> <1450187460.21350.35.camel@mtksdaap41>
+	 <567020F1.1000204@cisco.com> <1450271857.6730.26.camel@mtksdaap41>
+	 <56716B88.7090301@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1450310115-22163-3-git-send-email-eric@anholt.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Eric Anholt <eric@anholt.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Scott Branden <sbranden@broadcom.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Ray Jui <rjui@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, Andrea Merello <andrea.merello@gmail.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56716B88.7090301@xs4all.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Hans Verkuil <hansverk@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@iki.fi>, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, Fabien Dessenne <fabien.dessenne@st.com>, Arnd Bergmann <arnd@arndb.de>, Darren Etheridge <detheridge@ti.com>, Peter Griffin <peter.griffin@linaro.org>, Benoit Parrot <bparrot@ti.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eric,
+On Wed, 2015-12-16 at 14:47 +0100, Hans Verkuil wrote:
+> On 12/16/15 14:17, tiffany lin wrote:
+> > Hi Hans,
+> > 
+> > 
+> > On Tue, 2015-12-15 at 15:17 +0100, Hans Verkuil wrote:
+> >>
+> >> On 12/15/15 14:51, tiffany lin wrote:
+> >>> We are not familiar with v4l2-compliance utility, we will check how to
+> >>> use it.
+> >>
+> >> It's part of v4l-utils.git (http://git.linuxtv.org/v4l-utils.git/). There is a
+> >> fairly decent man page. It does exhaustive compliance tests for V4L2 devices.
+> >>
+> >> That said, the support for memory-to-memory codec devices is not great, so I wouldn't
+> >> trust any failures it reports when using the streaming tests (i.e. the --stream*
+> >> options). By default just run 'v4l2-compliance -d /dev/videoX' to do the compliance
+> >> test.
+> >>
+> >> Note: before I accept this driver I do want to see that compliance test output!
+> >>
+> > Got it. We will provide it in next version.
+> > Now our driver is developed and run base on kernel v3.18.
+> > V4L2 and vb2 have some difference between Linux 4.4-rc1 and 3.18 kernel.
+> > Is it ok we provided test output base on v3.18 or we need to base on
+> > 4.4-rc1?
+> 
+> I'm actually not sure if the latest v4l2-compliance test suite will work with a 3.18
+> kernel. so either you have to go back to an older version of v4l2-compliance that
+> works with 3.18 (go back to commit 4a57509a8334aca6ca8e81cd3beb08d5be397dac, that
+> might do the trick) or (and that's what I recommend) go with the latest kernel.
+> 
+> For the media tree that is http://git.linuxtv.org/media_tree.git/log/.
+> 
+> The final version of the patch has to be against that kernel anyway.
+> 
+Got it. Thanks for your help, we will try it. ^_^
 
-On Wed, Dec 16, 2015 at 03:55:09PM -0800, Eric Anholt wrote:
-> @@ -226,6 +228,26 @@ static const struct irq_domain_ops bcm2836_arm_irqchip_intc_ops = {
->  	.xlate = irq_domain_xlate_onecell
->  };
->  
-> +#ifdef CONFIG_SMP
+> >>>>> +}
+> >>>>> +
+> >>>>> +int m2mctx_venc_queue_init(void *priv, struct vb2_queue *src_vq,
+> >>>>> +			   struct vb2_queue *dst_vq)
+> >>>>> +{
+> >>>>> +	struct mtk_vcodec_ctx *ctx = priv;
+> >>>>> +	int ret;
+> >>>>> +
+> >>>>> +	src_vq->type		= V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
+> >>>>> +	src_vq->io_modes	= VB2_DMABUF | VB2_MMAP | VB2_USERPTR;
+> >>>>
+> >>>> You're using videobuf2-dma-contig, so VB2_USERPTR is generally useless in that
+> >>>> case. I would drop it.
+> >>>>
+> >>> Sorry, I don't get it. 
+> >>> We are using videobuf2-dma-contig, but we also using VB2_USERPTR.
+> >>
+> >> ???? In that case the user pointer you pass in must point to physically contiguous
+> >> memory. Which means you got it through some magic. Typically what should be used
+> >> are dmabuf handles to pass buffers around between different subsystems.
+> >>
+> >> The use of VB2_USERPTR for that purpose is deprecated.
+> >>
+> >> Or am I misunderstanding you as well?
+> >>
+> > Our encoder support all three modes.
+> > In case that A driver + Encode driver flow, OUTPUT buffer will be
+> > VB2_DMABUF from A driver.
+> > In case that read YCbCr frame data from file and encode them to bit
+> > stream flow, we use VB2_USERPTR and VB2_MMAP.
+> > In VB2_USERPTR case, videobuf2-dma-contig will help us get continuous
+> > dma address.
+> > Our chip has IOMMU and M4U that help us get continuous phy address for
+> > encode HW.
+> > 
+> > http://lists.infradead.org/pipermail/linux-mediatek/2015-October/002525.html
+> 
+> Ah, OK. Have you tested this with malloc()ed buffers? Just asking :-)
+> 
+Yes. Actually we tested this with new()ed buffers. I think it default
+call malloc.
 
-Why not put this section under the existing '#ifdef CONFIG_SMP' just a few 
-lines above?
+> Regards,
+> 
+> 	Hans
 
-> +int __init bcm2836_smp_boot_secondary(unsigned int cpu,
-> +				      struct task_struct *idle)
-> +{
-> +	unsigned long secondary_startup_phys =
-> +		(unsigned long)virt_to_phys((void *)secondary_startup);
-> +
-> +	dsb();
-> +	writel(secondary_startup_phys,
-> +	       intc.base + LOCAL_MAILBOX3_SET0 + 16 * cpu);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct smp_operations bcm2836_smp_ops __initconst = {
-> +	.smp_boot_secondary	= bcm2836_smp_boot_secondary,
-> +};
-> +
-> +#endif
-
-baruch
-
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
+best regards,
+Tiffany
