@@ -1,51 +1,57 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH v2 0/8] Raspberry Pi 2 support.
-Date: Wed, 16 Dec 2015 16:37:37 -0800
-Message-ID: <874mfhsyem.fsf@eliezer.anholt.net>
-References: <1450310115-22163-1-git-send-email-eric@anholt.net> <21040591.KakM5Gl6ZZ@wuerfel>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH v3 2/4] ARM: bcm2835: add rpi power domain driver
+Date: Wed, 16 Dec 2015 16:39:26 -0800
+Message-ID: <87zix9rjr5.fsf@eliezer.anholt.net>
+References: <1450215622-27394-1-git-send-email-eric@anholt.net> <1450215622-27394-3-git-send-email-eric@anholt.net> <567093CD.1020208@gmail.com> <87oadrmfmi.fsf@eliezer.anholt.net> <5670AAB2.1080102@gmail.com> <87mvtbkyd0.fsf@eliezer.anholt.net> <20151216011110.GA13147@earth> <CAJKOXPes85hu6Jnd5p6dqhgdBGF4kmZuJQekM73O83DuZvcyoQ@mail.gmail.com> <CAPDyKFqPk5XPPYMYe6HZc=b8-b-Y2VB6mQfZP8_TS8KOFZjsUw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
 	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <21040591.KakM5Gl6ZZ@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFqPk5XPPYMYe6HZc=b8-b-Y2VB6mQfZP8_TS8KOFZjsUw@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Sebastian Reichel <sre@ring0.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Alexander Aring <alex.aring@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Lee Jones <lee@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 --=-=-=
 Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
 
-Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
+Ulf Hansson <ulf.hansson@linaro.org> writes:
 
-> On Wednesday 16 December 2015 15:55:07 Eric Anholt wrote:
->> This is a major rewrite of the previous Raspberry Pi 2 submission.
->> SMP support is now included, and the DT includes are cleaned up to
->> avoid massive duplication.
->>=20
->> The branch (based on 4.4-rc5, to get the USB regression fixes) can be
->> found at:
->>=20
->> https://github.com/anholt/linux/tree/bcm2836-4.4
+> On 16 December 2015 at 02:27, Krzysztof Kozlowski
+> <k.kozlowski@samsung.com> wrote:
+>> 2015-12-16 10:11 GMT+09:00 Sebastian Reichel <sre@ring0.de>:
+>>> Hi,
+>>>
+>>> On Tue, Dec 15, 2015 at 04:53:31PM -0800, Eric Anholt wrote:
+>>>> >> There are 6 power domain drivers in
+>>>> >> arch/arm, 3 in drivers/clk, and 3 in drivers/soc.
+>>>> >
+>>>> > If we ever have to support a different architecture which happens to use
+>>>> > a similar power domain, then we want it to be in a location which makes
+>>>> > it easy for sharing it in the first place. As it stands today, it does
+>>>> > not seem useful to me to have this code in arch/arm/mach-bcm/ at all.
+>>>> >
+>>>> > Maybe there is room from a drivers/power/domains/ of some kind?
+>>>
+>>> I like the idea, but let's include generic power domain maintainers
+>>> in this discussion, as I suggested here (I got a power domain driver
+>>> patch for drivers/power just a few days ago):
+>>>
+>>> https://lkml.org/lkml/2015/12/15/815
+>>>
+>>> Also somebody would have to step up to maintain that directory.
+>>
+>> This could go into drivers/soc. We put there a lot of mach-specific
+>> stuff which we want to make a little more generic (like generic enough
+>> multiplatform, multiarchitecture etc). Rockchip has its own power
+>> domains there. Dove and Mediatek seem as well but I am not sure. Some
+>> other architectures keep this still in arm/mach (exynos, ux500, zx,
+>> imx, s34c64xx, shmobile) but this looks more of like a legacy choice.
 >
-> Looks all good to me, but when we get the pull request, I'd strongly
-> prefer to have that based on -rc3 or earlier.
->
-> What commit is the USB regression fix you refer to above? Is that in a
-> branch that is -rc3 based? Maybe you can rebase the changes on top
-> of that branch, to minimize the amount of backmerges?
+> Agree, drivers/soc is good.
 
-Top 4 commits of drivers/usb/dwc2 for 4.4-rc5 (possibly not all of them
-are required, but it's what I've been using).  I've been using
-cherry-picks of them on top of my various branches for testing, but pi2
-was going to be rebased so many times in the process of cleanup that I
-put it underneath my development branch instead.
-
-I've been doing pull requests for my stuff on -rc1 tags.  It sucks for
-bisecting any breakage I produce when I can't boot that directly, but I
-don't see a good way to avoid this kind of pain other than getting some
-Pis into kernel-ci.org so we can catch regressions earlier.
+OK, I've resent with a move to drivers/soc/bcm/.
 
 --=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
@@ -53,22 +59,18 @@ Content-Type: application/pgp-signature; name="signature.asc"
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBCgAGBQJWcgPRAAoJELXWKTbR/J7ozK4P/jq3vnSb1oJjfNhqCbDe8IPp
-35BDIFGoYD72UKn7MNQ+7KyAb3thqRi2cU4fiXOND8gjTHvm9B+wIi493ZZuBpNu
-tkxHihK8O6+wV/kFISNvZocZ9eRn0S2igpdTB4GI4tAepz1EfMPeE7nRnHIE4UwN
-AJGkaWsAGHEWunGANuHUKKhoLZmRO2jSZhqt+y6G8ixuAUAtZ6s01Bvz6y9856r9
-yV6ndnYAjaS57yQKzn4eJhT8DzLU+S8QNKNzEbX1qxHUNiXO/RLj9h+xJbeCbVIp
-Lz9C8JoaCDiOT+yC3En0J40BeRMufjBiLEE747HhuzhaqkC8VZfgmuqhVCUVzse1
-IjK7E30HanFDgZepRlTTy1Va3aap1OzAem0eOuKMOaBs4JQiabo84B9bKfbg7jOx
-6Hr55nAYCfGXrwZp09Txrhz3Ewj69tHDFFZICXqQZViyWPHISLgp2npW3mNTInqU
-bNqZ8OvvMJxfRwB13AzsKaqjU7UugvX8N4Nqd9T2VDdOfwPb1QAezVUwyiz1cvne
-WzWvlNcTXCySk8oMiiQ7WHW+BC4aehjdx7+CLGQBahvfwQH+9PLwKW3S9s/Jm0+t
-QfdAW0RYar8hoACf06/xtRGzqx3QN+3UjDbYHxvHZ0rttTDBALTmtJxMivy6wxx0
-10HRzbmaLM//PxP+oatP
-=+Zm1
+iQIcBAEBCgAGBQJWcgQ+AAoJELXWKTbR/J7oubQQAKbCOi3iC5BGy1g3/rUlSiMm
+5uTsfOe5ltjX2DDcXdRZTubpad5kDt95JY2e9lzdOH+ua1xkTwKOEOUYRCK4YjfJ
+dnvJcfOAoqtvMrbs8y78QJBv/o/eiuDZfbFFUBv2iKWJ+nsORSQI7728laoUObbs
+XWEptek7VZuG3hs2xTdcFd5/U7ho0hNOj17dUBQg2AABFcO9kflBryv/ngTwMqSl
+he3uLoiIobj/bTUcLNFnXYXwk+3AOnjP8amsGfRuoberuhLRFZNkYEd3TimvoSv6
+fyx05Agvabusmpq8s++3bMTorVc5HpI5XmMKR1+NTcpcSv1wqvXebpSZl+ArTNsZ
+qjUC+GcEas0URTb9v+IwDTGhdJz3OJ5MtSJoZtsyN08QDLwhm9lzxc2sUDC4+5CT
+fe6YO6n2JSiqrs+sRRAUa0u3QiU3BliWR1Am7bgqjijP8K8cVMvX2PXwTTey0svL
+MRj4FwVuqJm6666FCedQiDtaLMnvVsENEygdhvacrj3bA208Sy7xUS6v0QsBMQiJ
+JDjy4h6lnGh0MeXdMU9pcoRVwOc183zff1b2Ef6rp7N4/FXzdqr+Yg0oUikZMtX4
+VRYjZi7RDc2OiUDiXxFVdryf3ubHQBnwoeLnvF0UTB1QY0+hoDUbs7SWKFUs1j8Y
+K+wXndvXn2d3BaUD/zKf
+=Moa+
 -----END PGP SIGNATURE-----
 --=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
