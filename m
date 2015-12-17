@@ -1,106 +1,97 @@
-From: tiffany lin <tiffany.lin@mediatek.com>
-Subject: Re: [PATCH v2 6/8] [Media] vcodec: mediatek: Add Mediatek V4L2
- Video Encoder Driver
-Date: Thu, 17 Dec 2015 13:52:27 +0800
-Message-ID: <1450331547.7283.4.camel@mtksdaap41>
-References: <1449827743-22895-1-git-send-email-tiffany.lin@mediatek.com>
-	 <1449827743-22895-7-git-send-email-tiffany.lin@mediatek.com>
-	 <566EBAFC.3010408@xs4all.nl> <1450187460.21350.35.camel@mtksdaap41>
-	 <567020F1.1000204@cisco.com> <1450271857.6730.26.camel@mtksdaap41>
-	 <56716B88.7090301@xs4all.nl>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] USB: add generic onboard USB HUB driver
+Date: Thu, 17 Dec 2015 14:57:58 +0800
+Message-ID: <20151217065756.GB3793@shlinux2>
+References: <1450077974-22762-1-git-send-email-peter.chen@freescale.com>
+ <CAOMZO5CfBKuJ584jwbg98s9tn+0Z7W0nOaZnUkm4cJUSvNGTZw@mail.gmail.com>
+ <20151215062821.GA11241@shlinux2>
+ <CAOMZO5DiRzfy5dULh0C7qU2KUM-i8fBh6W5rS9zOTHJJK6fqwg@mail.gmail.com>
+ <20151216041058.GC23482@shlinux2>
+ <CAOMZO5An3CK-a3NQtOF3nnPc8vzu2+SKnfJ=iOuAhjCBvZwToQ@mail.gmail.com>
+ <5671C40F.3000000@maciej.szmigiero.name>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56716B88.7090301@xs4all.nl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Hans Verkuil <hansverk@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@iki.fi>, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, Fabien Dessenne <fabien.dessenne@st.com>, Arnd Bergmann <arnd@arndb.de>, Darren Etheridge <detheridge@ti.com>, Peter Griffin <peter.griffin@linaro.org>, Benoit Parrot <bparrot@ti.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5671C40F.3000000-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
+Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Patryk Kowalczyk <patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-12-16 at 14:47 +0100, Hans Verkuil wrote:
-> On 12/16/15 14:17, tiffany lin wrote:
-> > Hi Hans,
+On Wed, Dec 16, 2015 at 09:05:35PM +0100, Maciej S. Szmigiero wrote:
+> Hi Fabio,
+> Hi Peter,
+> 
+> On 16.12.2015 11:11, Fabio Estevam wrote:
+> > Hi Peter,
 > > 
+> > On Wed, Dec 16, 2015 at 2:11 AM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 > > 
-> > On Tue, 2015-12-15 at 15:17 +0100, Hans Verkuil wrote:
-> >>
-> >> On 12/15/15 14:51, tiffany lin wrote:
-> >>> We are not familiar with v4l2-compliance utility, we will check how to
-> >>> use it.
-> >>
-> >> It's part of v4l-utils.git (http://git.linuxtv.org/v4l-utils.git/). There is a
-> >> fairly decent man page. It does exhaustive compliance tests for V4L2 devices.
-> >>
-> >> That said, the support for memory-to-memory codec devices is not great, so I wouldn't
-> >> trust any failures it reports when using the streaming tests (i.e. the --stream*
-> >> options). By default just run 'v4l2-compliance -d /dev/videoX' to do the compliance
-> >> test.
-> >>
-> >> Note: before I accept this driver I do want to see that compliance test output!
-> >>
-> > Got it. We will provide it in next version.
-> > Now our driver is developed and run base on kernel v3.18.
-> > V4L2 and vb2 have some difference between Linux 4.4-rc1 and 3.18 kernel.
-> > Is it ok we provided test output base on v3.18 or we need to base on
-> > 4.4-rc1?
-> 
-> I'm actually not sure if the latest v4l2-compliance test suite will work with a 3.18
-> kernel. so either you have to go back to an older version of v4l2-compliance that
-> works with 3.18 (go back to commit 4a57509a8334aca6ca8e81cd3beb08d5be397dac, that
-> might do the trick) or (and that's what I recommend) go with the latest kernel.
-> 
-> For the media tree that is http://git.linuxtv.org/media_tree.git/log/.
-> 
-> The final version of the patch has to be against that kernel anyway.
-> 
-Got it. Thanks for your help, we will try it. ^_^
-
-> >>>>> +}
-> >>>>> +
-> >>>>> +int m2mctx_venc_queue_init(void *priv, struct vb2_queue *src_vq,
-> >>>>> +			   struct vb2_queue *dst_vq)
-> >>>>> +{
-> >>>>> +	struct mtk_vcodec_ctx *ctx = priv;
-> >>>>> +	int ret;
-> >>>>> +
-> >>>>> +	src_vq->type		= V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
-> >>>>> +	src_vq->io_modes	= VB2_DMABUF | VB2_MMAP | VB2_USERPTR;
-> >>>>
-> >>>> You're using videobuf2-dma-contig, so VB2_USERPTR is generally useless in that
-> >>>> case. I would drop it.
-> >>>>
-> >>> Sorry, I don't get it. 
-> >>> We are using videobuf2-dma-contig, but we also using VB2_USERPTR.
-> >>
-> >> ???? In that case the user pointer you pass in must point to physically contiguous
-> >> memory. Which means you got it through some magic. Typically what should be used
-> >> are dmabuf handles to pass buffers around between different subsystems.
-> >>
-> >> The use of VB2_USERPTR for that purpose is deprecated.
-> >>
-> >> Or am I misunderstanding you as well?
-> >>
-> > Our encoder support all three modes.
-> > In case that A driver + Encode driver flow, OUTPUT buffer will be
-> > VB2_DMABUF from A driver.
-> > In case that read YCbCr frame data from file and encode them to bit
-> > stream flow, we use VB2_USERPTR and VB2_MMAP.
-> > In VB2_USERPTR case, videobuf2-dma-contig will help us get continuous
-> > dma address.
-> > Our chip has IOMMU and M4U that help us get continuous phy address for
-> > encode HW.
+> >> Thanks, Fabio, but I am curious how things like that? The USBOH3 clock
+> >> is not opened, the usb driver will hang when it tries to access
+> >> registers. If this clock is always on, then, why the system will
+> >> hang later?
 > > 
-> > http://lists.infradead.org/pipermail/linux-mediatek/2015-October/002525.html
+> > I found the issue with your patch. You missed to add the pinctrl node.
+> > 
+> > With the change below USB is functional in Udoo:
+> > 
+> > --- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+> > +++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+> > @@ -22,6 +22,8 @@
+> > 
+> >         usb_hub1 {
+> >                 compatible = "generic-onboard-hub";
+> > +               pinctrl-names = "default";
+> > +               pinctrl-0 = <&pinctrl_usbh>;
+> >                 clocks = <&clks IMX6QDL_CLK_CKO>;
+> >                 reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+> >                 reset-duration-us = <2>;
+> > 
 > 
-> Ah, OK. Have you tested this with malloc()ed buffers? Just asking :-)
+> Thanks for your work, I didn't notice it previously (sorry).
 > 
-Yes. Actually we tested this with new()ed buffers. I think it default
-call malloc.
+> I can confirm, too that with Peter's patches and the above change
+> the USB support works again on my UDOO DualLite board.
+> 
+> However, I noticed that when you have host USB support configured to be
+> build as modules then (due to its location under "if USB") it is only
+> possible to compile generic onboard USB HUB as module, too.
+> 
+> Then this module would need to be loaded before loading USB support
+> (or quickly after it), otherwise USB enumeration would time out after
+> few secs and loading it later wouldn't help.
 
-> Regards,
-> 
-> 	Hans
+Thanks for testing it, it maybe this hardware limitation.
+The USB device should be back to work whenever do hardware reset,
+otherwise, this reset is not clean.
 
-best regards,
-Tiffany
+> 
+> Currently, this driver doesn't really need any USB host support and
+> is able to be compiled-in successfully regardless of USB host support
+> configuration with just small change to Makefile and Kconfig.
+> 
+> However I don't know if it is a design goal to not use USB host support
+> or just a current development status, but if it doesn't really need it
+> then it would be great if it could be selected to be build-in into kernel
+> regardless of host USB support setting.
+> 
+
+Yes, you are right, this driver is totally unrelated with ANY usb, but
+it intends to handle general USB device which needs to have platform
+control, and USB device is on the USB bus. Currently, if you are
+USB stuff, you must depends of host or gadget support.
+
+For this special hardware, you may have to define module load sequence
+for your loadable support, it the current develop stage, maybe it can
+be changed in future, I don't know when.
+
+-- 
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
