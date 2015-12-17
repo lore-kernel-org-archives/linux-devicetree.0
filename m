@@ -1,35 +1,50 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH] net/macb: Update device tree binding for resetting PHY
- using GPIO
-Date: Thu, 17 Dec 2015 15:53:45 -0500 (EST)
-Message-ID: <20151217.155345.1947787110373074406.davem@davemloft.net>
-References: <874mfhtqnv.fsf@free-electrons.com>
-	<1450345864-10907-1-git-send-email-gregory.clement@free-electrons.com>
+From: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/8 v5] enable to use thermal-zone on r8a7790/1
+Date: Thu, 17 Dec 2015 13:08:11 -0800
+Message-ID: <20151217210809.GE7999@localhost.localdomain>
+References: <87d1u8qzsy.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450345864-10907-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87d1u8qzsy.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Magnus <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Date: Thu, 17 Dec 2015 10:51:04 +0100
-
-> Instead of being at the MAC level the reset gpio preperty is moved at the
-> PHY child node level. It is still managed by the MAC, but from the point
-> of view of the binding it make more sense to be part of the PHY node.
+On Tue, Dec 15, 2015 at 01:16:20AM +0000, Kuninori Morimoto wrote:
 > 
-> This commit also fixes a build errors if GPIOLIB is not selected.
+> Hi
 > 
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> These are v5 of thermal-zone support for r8a7790/r8a7791.
+> 
+> Kuninori Morimoto (8):
+>       1) thermal: rcar: move rcar_thermal_dt_ids to upside
+>       2) thermal: rcar: check every rcar_thermal_update_temp() return value
+>       3) thermal: rcar: check irq possibility in rcar_thermal_irq_xxx()
+>       4) thermal: rcar: rcar_thermal_get_temp() return error if strange temp
 
-Applied to net-next, thanks.
+Applied the four above
 
-Please be explicit in your patch postings what tree you are targetting
-a change at.
+>       5) thermal: rcar: enable to use thermal-zone on DT
+
+This one requires further discussion.
+
+>       6) ARM: shmobile: r8a7790: enable to use thermal-zone
+>       7) ARM: shmobile: r8a7791: enable to use thermal-zone
+
+These two will go on other tree, but depend on 5. So, still on hold.
+
+>       8) thermal: of-thermal: of_thermal_set_trip_temp() call thermal_zone_device_update()
+> 
+
+Applied number 8 too.
+
+
+BR,
+
+Eduardo 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
