@@ -1,56 +1,38 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] Documentation: dt-bindings: Add option to
- workaround STE.VALID in Broadcom Vulcan
-Date: Thu, 17 Dec 2015 12:00:26 +0000
-Message-ID: <20151217120026.GC13389@leverpostej>
-References: <1450346376-30920-1-git-send-email-pmallapp@broadcom.com>
- <1450346376-30920-2-git-send-email-pmallapp@broadcom.com>
- <20151217115102.GC11456@arm.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] arm64: perf: Correct Cortex-A53/A57 compatible values
+Date: Thu, 17 Dec 2015 12:19:56 +0000
+Message-ID: <20151217121955.GE11456@arm.com>
+References: <1450168400-462-1-git-send-email-geert+renesas@glider.be>
+ <20151215103659.GB31299@leverpostej>
+ <20151215104242.GC9452@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20151217115102.GC11456-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20151215104242.GC9452-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Prem Mallappa <pmallapp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 17, 2015 at 11:51:03AM +0000, Will Deacon wrote:
-> [adding devicetree since I'd like an Ack from them if possible]
-> 
-> On Thu, Dec 17, 2015 at 03:29:36PM +0530, Prem Mallappa wrote:
-> > Signed-off-by: Prem Mallappa <pmallapp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> 
-> Please can you add a commit message for this?
-> 
-> > ---
-> >  Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt | 5 +++++
-> >  1 file changed, 5 insertions(+)
+On Tue, Dec 15, 2015 at 10:42:42AM +0000, Will Deacon wrote:
+> On Tue, Dec 15, 2015 at 10:37:00AM +0000, Mark Rutland wrote:
+> > On Tue, Dec 15, 2015 at 09:33:20AM +0100, Geert Uytterhoeven wrote:
+> > > Use commas instead of periods.
+> > > 
+> > > Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 > > 
-> > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt
-> > index 947863a..9c1218e 100644
-> > --- a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt
-> > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt
-> > @@ -43,6 +43,11 @@ the PCIe specification.
-> >  - hisilicon,broken-prefetch-cmd
-> >                      : Avoid sending CMD_PREFETCH_* commands to the SMMU.
-> >  
-> > +- broadcom,broken-ste-valid-check
-> > +                    : Broadcom specific, h/w peeks into more than just 
-> > +		      STE.VALID bit in "Bypass" mode. Enabling this, 
-> > +		      populates needed bits.
+> > Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 > 
-> This should really describe more about what happens, I think. For example,
+> Cheers, Mark.
 > 
-> "Enable ATS and Stage-2 AArch64 translation in bypass STEs, since some
->  hardware requires this in order for an STE to be treated as valid."
+> Rob -- do you want to pick this up, or shall I queue it on my perf
+> branch?
 
-We certainly need to define the "needed bits".
+Since it's so trivial and also has Mark's ack, I've queued this in the
+ARM perf tree.
 
-Assuming your example cover all of those, it sounds fine to me.
-
-Mark.
+Will
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
