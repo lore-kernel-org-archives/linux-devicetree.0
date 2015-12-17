@@ -1,75 +1,59 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] USB: add generic onboard USB HUB driver
-Date: Thu, 17 Dec 2015 11:13:28 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1512171103080.1675-100000@iolanthe.rowland.org>
-References: <CAL_Jsq+KAF6FGyOyC0JzODsSVoK4+V6umpj=cANywgui_wOKMg@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v4 2/4] ARM: bcm2835: add rpi power domain driver
+Date: Thu, 17 Dec 2015 17:28:20 +0100
+Message-ID: <CAPDyKFp5JfHmNw+ryoAnu-0XANcxW_pyNL_GUFUw7sBQmU+WDA@mail.gmail.com>
+References: <1450312009-1791-1-git-send-email-eric@anholt.net>
+	<1450312009-1791-3-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+KAF6FGyOyC0JzODsSVoK4+V6umpj=cANywgui_wOKMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1450312009-1791-3-git-send-email-eric@anholt.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>
+Cc: linux-rpi-kernel@lists.infradead.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexander Aring <alex.aring@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 16 Dec 2015, Rob Herring wrote:
+On 17 December 2015 at 01:26, Eric Anholt <eric@anholt.net> wrote:
+> From: Alexander Aring <alex.aring@gmail.com>
+>
+> This patch adds support for several power domains on Raspberry Pi,
+> including USB (so it can be enabled even if the bootloader didn't do
+> it), and graphics.
+>
+> This patch is the combined work of Eric Anholt (who wrote USB support
+> inside of the Raspberry Pi firmware driver, and wrote the non-USB
+> domain support) and Alexander Aring (who separated the original USB
+> work out from the firmware driver).
+>
+> Signed-off-by: Alexander Aring <alex.aring@gmail.com>
+> Signed-off-by: Eric Anholt <eric@anholt.net>
+> ---
+>
+> v2: Add support for power domains other than USB, using the new
+>     firmware interface, reword commit message (changes by Eric)
+>
+> v3: Restructure as a builtin driver, and drop
+>     of_genpd_add_provider_onecell error handling to avoid
+>     pm_genpd_exit() dependency until that API can be settled.  Clean
+>     up copyright header, add missing ISP initialization, and fix typo
+>     in transposer's name.
+>
+> v4: Move to drivers/soc/bcm/, move include to dt-bindings/soc/, set up
+>     Makefile for the drivers/soc/bcm following clk/'s model.
+>
+>  drivers/soc/Kconfig                         |   1 +
+>  drivers/soc/Makefile                        |   1 +
+>  drivers/soc/bcm/Kconfig                     |   9 +
+>  drivers/soc/bcm/Makefile                    |   1 +
+>  drivers/soc/bcm/raspberrypi-power.c         | 247 ++++++++++++++++++++++++++++
+>  include/dt-bindings/soc/raspberrypi-power.h |  41 +++++
 
-> On Mon, Dec 14, 2015 at 3:35 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Monday 14 December 2015 15:26:11 Peter Chen wrote:
-> >> Hi all,
-> >>
-> >> There is a known issue that the USB code can't handle USB HUB's
-> >> external pins well, in that case, it may cause some onboard
-> >> USB HUBs can't work since their PHY's clock or reset pin needs to
-> >> operate.
-> >>
-> >> The user reported this issue at below:
-> >> http://www.spinics.net/lists/linux-usb/msg131502.html
-> >>
-> >> In this patch set, I add a generic onboard USB HUB driver to
-> >> handle this problem, the external signals will be configured
-> >> before usb controller's initialization, it much likes we did
-> >> it at board code before.
-> >>
-> >> The user needs to add this generic hub node at dts to support it.
-> >>
-> >> @The udoo users, help to test please.
-> >
-> > I still think need to do this properly by representing the hub
-> > device as a USB device, using power sequencing code like MMC does.
-> 
-> I agree on doing it properly, but am not sure that pwrseq binding for
-> MMC is proper. The pwrseq binding is fairly limited and working around
-> the driver model IMO. Hubs may also need I2C setup which I don't think
-> could be done generically other than some defined sequence of i2c
-> transactions. The current project I'm working on needs to use I2C to
-> configure the hub to use HSIC mode for example. I really think we need
-> a pre-probe driver hook to handle this. That would allow device
-> specific setup to live in the driver.
-> 
-> Perhaps a more simple approach would be just forcing driver probe if a
-> DT node is present. I'm not all that familiar with USB drivers, but
-> presumably there is some setup before probe like setting the USB
-> device address. We'd have to allow doing that later during probe.
+There is currently a directory which I think may be better.
+include/dt-bindings/power/*
 
-It's not clear (to me, anyway) how this is meant to work.  USB is a
-completely discoverable bus: There is no way to represent devices
-statically; they have to be discovered.  But a device can't be
-discovered unless it is functional, so if an onboard hub (or any other
-sort of USB device) requires power, clocks, or something similar in
-order to function, it won't be discovered.  There won't be any device
-structure to probe, and "forcing driver probe" won't accomplish
-anything.
+Besides this nitpick, I think this looks good. You may add my:
 
-It seems to me that the only way something like this could be made to
-work is if the necessary actions are keyed off the host controller (and
-in particular, _not_ the hub driver), presumably at the time the
-controller is probed.  With anything else, you run the risk that the
-necessary resources won't get enabled before they are needed.
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-Alan Stern
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards
+Uffe
