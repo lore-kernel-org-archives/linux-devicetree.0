@@ -1,56 +1,52 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v3 0/4] Raspberry Pi power domains
-Date: Thu, 17 Dec 2015 22:08:33 +0100
-Message-ID: <CAPDyKFokMdtcwG=0cDP3zKnnLrAxKDGWffWouvyVK0r53nxktg@mail.gmail.com>
-References: <1450215622-27394-1-git-send-email-eric@anholt.net>
-	<CAPDyKFp=ykY4dFTxeq+et6z5ek-UYGnBOFG7Po0pSUL7jSYc8g@mail.gmail.com>
-	<878u4sx5gs.fsf@eliezer.anholt.net>
-	<2899341.Os5E8ounKE@wuerfel>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v4 3/5] PCI: qcom: Add Qualcomm PCIe controller driver
+Date: Thu, 17 Dec 2015 15:15:25 -0600
+Message-ID: <20151217211525.GA4129@localhost>
+References: <1449149725-27607-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1449149725-27607-4-git-send-email-stanimir.varbanov@linaro.org>
+ <20151216215304.GB27791@localhost>
+ <5672B633.6030503@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2899341.Os5E8ounKE@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Eric Anholt <eric@anholt.net>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-rpi-kernel@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexander Aring <alex.aring@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5672B633.6030503@linaro.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-On 17 December 2015 at 21:11, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Thursday 17 December 2015 11:03:47 Eric Anholt wrote:
->> >>
->> >>  .../bindings/arm/bcm/raspberrypi,bcm2835-power.txt |  47 ++++
->> >>  arch/arm/boot/dts/bcm2835-rpi.dtsi                 |  11 +
->> >>  arch/arm/boot/dts/bcm2835.dtsi                     |   2 +-
->> >>  arch/arm/mach-bcm/Kconfig                          |  10 +
->> >>  arch/arm/mach-bcm/Makefile                         |   1 +
->> >>  arch/arm/mach-bcm/raspberrypi-power.c              | 247 +++++++++++++++++++++
->> >>  include/dt-bindings/arm/raspberrypi-power.h        |  41 ++++
->> >>  include/soc/bcm2835/raspberrypi-firmware.h         |   2 +
->> >>  8 files changed, 360 insertions(+), 1 deletion(-)
->> >>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-power.txt
->> >>  create mode 100644 arch/arm/mach-bcm/raspberrypi-power.c
->> >>  create mode 100644 include/dt-bindings/arm/raspberrypi-power.h
->> >>
->> >> --
->> >> 2.6.2
->> >>
->> >
->> > Besides a nitpick for patch2, I would also reverse the order of patch3
->> > and patch2. DT docs should go in before the actual parsing of the new
->> > bindings/compatibles.
->> >
->> > Anyway, for the hole series, you may add my:
->> >
->> > Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
->>
->> Would your tree be pulling the series (since it's power domains), or
->> should I (since it's SOC stuff)?
->>
->
-> All of the above files go through the arm-soc tree by default.
+On Thu, Dec 17, 2015 at 03:18:43PM +0200, Stanimir Varbanov wrote:
+> Bjorn, thanks for the comments!
+> 
+> On 12/16/2015 11:53 PM, Bjorn Helgaas wrote:
+> > On Thu, Dec 03, 2015 at 03:35:22PM +0200, Stanimir Varbanov wrote:
+> >> From: Stanimir Varbanov <svarbanov@mm-sol.com>
+> >>
+> >> The PCIe driver reuse the Designware common code for host
+> >> and MSI initialization, and also program the Qualcomm
+> >> application specific registers.
+> >>
+> >> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> >> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> >> ---
+> >>  MAINTAINERS                  |    7 +
+> >>  drivers/pci/host/Kconfig     |   10 +
+> >>  drivers/pci/host/Makefile    |    1 +
+> >>  drivers/pci/host/pcie-qcom.c |  624 ++++++++++++++++++++++++++++++++++++++++++
+> > 
+> >> +#define PCIE20_CAP				0x70
+> >> +#define PCIE20_CAP_LINKCTRLSTATUS		(PCIE20_CAP + 0x10)
+> >> +#define PCIE20_CAP_LINKCTRLSTATUS_LINK_UP	BIT(29)
+> > 
+> > This looks like it could be referring to a standard PCIe Capability;
+> > could you use the existing PCI_EXP_LNKSTA and PCI_EXP_LNKSTA_DLLLA
+> > symbols here?  And readw() instead of readl()?
+> 
+> Yes, that is possible but I still need to keep PCIE20_CAP capabilities
+> offset.
 
-That should work as I don't see any other dependency, unless
-Eric/Alexander think there is.
+Great, thanks!  I think that will help keep generic PCIe things from
+looking like they're special implementation-specific things.
 
-Kind regards
-Uffe
+Bjorn
