@@ -1,100 +1,61 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH v2 2/2] ASoC: atmel-classd: DT binding for PDMIC driver
-Date: Thu, 17 Dec 2015 11:06:05 +0100
-Message-ID: <5672890D.7050401@atmel.com>
-References: <1450345498-20130-1-git-send-email-songjun.wu@atmel.com>
- <1450345498-20130-2-git-send-email-songjun.wu@atmel.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 0/8] Raspberry Pi 2 support.
+Date: Thu, 17 Dec 2015 11:26:35 +0100
+Message-ID: <3363412.hB2NWDcUxf@wuerfel>
+References: <1450310115-22163-1-git-send-email-eric@anholt.net> <874mfhsyem.fsf@eliezer.anholt.net> <567276F9.5070903@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1450345498-20130-2-git-send-email-songjun.wu@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Songjun Wu <songjun.wu@atmel.com>, broonie@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <567276F9.5070903-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-It seems that the $subject is not correct.
+On Thursday 17 December 2015 09:48:57 Stefan Wahren wrote:
+> Am 17.12.2015 um 01:37 schrieb Eric Anholt:
+> > Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
+> >
+> >> On Wednesday 16 December 2015 15:55:07 Eric Anholt wrote:
+> >>> This is a major rewrite of the previous Raspberry Pi 2 submission.
+> >>> SMP support is now included, and the DT includes are cleaned up to
+> >>> avoid massive duplication.
+> >>>
+> >>> The branch (based on 4.4-rc5, to get the USB regression fixes) can be
+> >>> found at:
+> >>>
+> >>> https://github.com/anholt/linux/tree/bcm2836-4.4
+> >> Looks all good to me, but when we get the pull request, I'd strongly
+> >> prefer to have that based on -rc3 or earlier.
+> >>
+> >> What commit is the USB regression fix you refer to above? Is that in a
+> >> branch that is -rc3 based? Maybe you can rebase the changes on top
+> >> of that branch, to minimize the amount of backmerges?
+> > Top 4 commits of drivers/usb/dwc2 for 4.4-rc5 (possibly not all of them
+> > are required, but it's what I've been using).  
+> >
+> 
+> Unfortunately all 4 of them are required:
+> 
+> d0464bcf12af ("usb: dwc2: Make PHY optional")
+> 
+> 6c2dad69163f ("usb: dwc2: Return errors from PHY")
+> 
+> 8aa90cf2a286 ("usb: dwc2: make otg clk optional")
+> 
+> f74875dc3613 ("usb: dwc2: fix kernel oops during driver probe")
 
+Ok, that's good. They are all based on -rc1, so you you can just rebase
+on top of f74875dc3613, which was pulled by GregKH.
 
-Le 17/12/2015 10:44, Songjun Wu a =E9crit :
-> DT binding documentation for this new ASoC driver.
->=20
-> Signed-off-by: Songjun Wu <songjun.wu@atmel.com>
-> ---
->=20
-> Changes in v2: None
->=20
->  .../devicetree/bindings/sound/atmel-pdmic.txt      |   55 ++++++++++=
-++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/atmel-pdm=
-ic.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/sound/atmel-pdmic.txt =
-b/Documentation/devicetree/bindings/sound/atmel-pdmic.txt
-> new file mode 100644
-> index 0000000..e0875f1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/atmel-pdmic.txt
-> @@ -0,0 +1,55 @@
-> +* Atmel PDMIC driver under ALSA SoC architecture
-> +
-> +Required properties:
-> +- compatible
-> +	Should be "atmel,sama5d2-pdmic".
-> +- reg
-> +	Should contain PDMIC registers location and length.
-> +- interrupts
-> +	Should contain the IRQ line for the PDMIC.
-> +- dmas
-> +	One DMA specifiers as described in atmel-dma.txt and dma.txt files.
-> +- dma-names
-> +	Must be "rx".
-> +- clock-names
-> +	Required elements:
-> +	- "pclk"	peripheral clock
-> +	- "gclk"	generated clock
-> +- clocks
-> +	Must contain an entry for each required entry in clock-names.
-> +	Please refer to clock-bindings.txt.
-> +- atmel,mic-min-freq
-> +	The minimal frequency that the micphone supports.
-> +- atmel,mic-max-freq
-> +	The maximal frequency that the micphone supports.
-> +
-> +Optional properties:
-> +- pinctrl-names, pinctrl-0
-> +	Please refer to pinctrl-bindings.txt.
-> +- atmel,model
-> +	The user-visible name of this sound card.
-> +	The default value is "PDMIC".
-> +- atmel,mic-offset
-> +	The offset that should be added.
-> +	The range is from -32768 to 32767.
-> +	The default value is 0.
-> +
-> +Example:
-> +	pdmic@f8018000 {
-> +				compatible =3D "atmel,sama5d2-pdmic";
-> +				reg =3D <0xf8018000 0x124>;
-> +				interrupts =3D <48 IRQ_TYPE_LEVEL_HIGH 7>;
-> +				dmas =3D <&dma0
-> +					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-> +					| AT91_XDMAC_DT_PERID(50))>;
-> +				dma-names =3D "rx";
-> +				clocks =3D <&pdmic_clk>, <&pdmic_gclk>;
-> +				clock-names =3D "pclk", "gclk";
-> +
-> +				pinctrl-names =3D "default";
-> +				pinctrl-0 =3D <&pinctrl_pdmic_default>;
-> +				atmel,model =3D "PDMIC @ sama5d2_xplained";
-> +				atmel,mic-min-freq =3D <1000000>;
-> +				atmel,mic-max-freq =3D <3246000>;
-> +				atmel,mic-offset =3D <0x0>;
-> +	};
->=20
+> But they should apply to -rc3 too.
 
+Please don't rebase them, use the commits that got merged, otherwise we'd
+get duplicate commits and that would be worse than the backmerge.
 
---=20
-Nicolas Ferre
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
