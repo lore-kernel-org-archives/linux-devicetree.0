@@ -1,38 +1,46 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: perf: Correct Cortex-A53/A57 compatible values
-Date: Thu, 17 Dec 2015 12:19:56 +0000
-Message-ID: <20151217121955.GE11456@arm.com>
-References: <1450168400-462-1-git-send-email-geert+renesas@glider.be>
- <20151215103659.GB31299@leverpostej>
- <20151215104242.GC9452@arm.com>
+From: Sudip Mukherjee <sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4] of: fix declaration of of_io_request_and_map
+Date: Thu, 17 Dec 2015 18:05:06 +0530
+Message-ID: <20151217123506.GA19100@sudip-pc>
+References: <1449564475-10724-1-git-send-email-sudipm.mukherjee@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20151215104242.GC9452-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1449564475-10724-1-git-send-email-sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 15, 2015 at 10:42:42AM +0000, Will Deacon wrote:
-> On Tue, Dec 15, 2015 at 10:37:00AM +0000, Mark Rutland wrote:
-> > On Tue, Dec 15, 2015 at 09:33:20AM +0100, Geert Uytterhoeven wrote:
-> > > Use commas instead of periods.
-> > > 
-> > > Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> > 
-> > Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+On Tue, Dec 08, 2015 at 02:17:55PM +0530, Sudip Mukherjee wrote:
+> We are having build failure with linux-next for sparc allmodconfig with
+> the error messages:
 > 
-> Cheers, Mark.
+> drivers/built-in.o: In function `meson6_timer_init':
+> meson6_timer.c:(.init.text+0x5fe8): undefined reference to `of_io_request_and_map'
+> drivers/built-in.o: In function `mtk_timer_init':
+> mtk_timer.c:(.init.text+0x6af0): undefined reference to `of_io_request_and_map'
+> drivers/built-in.o: In function `asm9260_timer_init':
+> asm9260_timer.c:(.init.text+0x6c48): undefined reference to `of_io_request_and_map'
 > 
-> Rob -- do you want to pick this up, or shall I queue it on my perf
-> branch?
+> CONFIG_OF is defined for sparc so it is expected that we have a
+> definition of of_io_request_and_map() but of/address.c is only compiled
+> if it is !SPARC. In other words, CONFIG_OF_ADDRESS is not defined for
+> sparc so we get the build failure.
+> 
+> Fixes: e572f844ca66 ("clocksource/drivers/meson6: Add the COMPILE_TEST option")
+> Fixes: bec8c4617611 ("clocksource/drivers/mediatek: Add the COMPILE_TEST option")
+> Fixes: 4a373b45f94a ("clocksource/drivers/asm9260: Add the COMPILE_TEST option")
+> Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Sudip Mukherjee <sudip-ofJRbWXBVFamYgehrs7/Lw@public.gmane.org>
 
-Since it's so trivial and also has Mark's ack, I've queued this in the
-ARM perf tree.
+A gentle ping. We still have the build failure with next-20151217. Build
+log is at:
+https://travis-ci.org/sudipm-mukherjee/parport/jobs/97388466
 
-Will
+regards
+sudip
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
