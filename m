@@ -1,95 +1,74 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH v4 3/4] dt-bindings: add rpi power domain driver bindings
-Date: Wed, 16 Dec 2015 16:26:48 -0800
-Message-ID: <1450312009-1791-4-git-send-email-eric@anholt.net>
-References: <1450312009-1791-1-git-send-email-eric@anholt.net>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH v2 0/8] Raspberry Pi 2 support.
+Date: Wed, 16 Dec 2015 16:37:37 -0800
+Message-ID: <874mfhsyem.fsf@eliezer.anholt.net>
+References: <1450310115-22163-1-git-send-email-eric@anholt.net> <21040591.KakM5Gl6ZZ@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1450312009-1791-1-git-send-email-eric@anholt.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-rpi-kernel@lists.infradead.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Kevin Hilman <khilman@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Alexander Aring <alex.aring@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <21040591.KakM5Gl6ZZ@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Alexander Aring <alex.aring@gmail.com>
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-This patch adds devicetree tree bindings for the Raspberry Pi power
-domain driver.
+Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
 
-Signed-off-by: Alexander Aring <alex.aring@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Eric Anholt <eric@anholt.net>
----
+> On Wednesday 16 December 2015 15:55:07 Eric Anholt wrote:
+>> This is a major rewrite of the previous Raspberry Pi 2 submission.
+>> SMP support is now included, and the DT includes are cleaned up to
+>> avoid massive duplication.
+>>=20
+>> The branch (based on 4.4-rc5, to get the USB regression fixes) can be
+>> found at:
+>>=20
+>> https://github.com/anholt/linux/tree/bcm2836-4.4
+>
+> Looks all good to me, but when we get the pull request, I'd strongly
+> prefer to have that based on -rc3 or earlier.
+>
+> What commit is the USB regression fix you refer to above? Is that in a
+> branch that is -rc3 based? Maybe you can rebase the changes on top
+> of that branch, to minimize the amount of backmerges?
 
-v2: Add the new domains present in v2 to the list.
-v4: Move to soc/ instead of arm/, to follow the driver's move.
+Top 4 commits of drivers/usb/dwc2 for 4.4-rc5 (possibly not all of them
+are required, but it's what I've been using).  I've been using
+cherry-picks of them on top of my various branches for testing, but pi2
+was going to be rebased so many times in the process of cleanup that I
+put it underneath my development branch instead.
 
- .../bindings/soc/bcm/raspberrypi,bcm2835-power.txt | 47 ++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/bcm/raspberrypi,bcm2835-power.txt
+I've been doing pull requests for my stuff on -rc1 tags.  It sucks for
+bisecting any breakage I produce when I can't boot that directly, but I
+don't see a good way to avoid this kind of pain other than getting some
+Pis into kernel-ci.org so we can catch regressions earlier.
 
-diff --git a/Documentation/devicetree/bindings/soc/bcm/raspberrypi,bcm2835-power.txt b/Documentation/devicetree/bindings/soc/bcm/raspberrypi,bcm2835-power.txt
-new file mode 100644
-index 0000000..30942cf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/bcm/raspberrypi,bcm2835-power.txt
-@@ -0,0 +1,47 @@
-+Raspberry Pi power domain driver
-+
-+Required properties:
-+
-+- compatible:		Should be "raspberrypi,bcm2835-power".
-+- firmware:		Reference to the RPi firmware device node.
-+- #power-domain-cells:	Should be <1>, we providing multiple power domains.
-+
-+The valid defines for power domain are:
-+
-+ RPI_POWER_DOMAIN_I2C0
-+ RPI_POWER_DOMAIN_I2C1
-+ RPI_POWER_DOMAIN_I2C2
-+ RPI_POWER_DOMAIN_VIDEO_SCALER
-+ RPI_POWER_DOMAIN_VPU1
-+ RPI_POWER_DOMAIN_HDMI
-+ RPI_POWER_DOMAIN_USB
-+ RPI_POWER_DOMAIN_VEC
-+ RPI_POWER_DOMAIN_JPEG
-+ RPI_POWER_DOMAIN_H264
-+ RPI_POWER_DOMAIN_V3D
-+ RPI_POWER_DOMAIN_ISP
-+ RPI_POWER_DOMAIN_UNICAM0
-+ RPI_POWER_DOMAIN_UNICAM1
-+ RPI_POWER_DOMAIN_CCP2RX
-+ RPI_POWER_DOMAIN_CSI2
-+ RPI_POWER_DOMAIN_CPI
-+ RPI_POWER_DOMAIN_DSI0
-+ RPI_POWER_DOMAIN_DSI1
-+ RPI_POWER_DOMAIN_TRANSPOSER
-+ RPI_POWER_DOMAIN_CCP2TX
-+ RPI_POWER_DOMAIN_CDP
-+ RPI_POWER_DOMAIN_ARM
-+
-+Example:
-+
-+power: power {
-+	compatible = "raspberrypi,bcm2835-power";
-+	firmware = <&firmware>;
-+	#power-domain-cells = <1>;
-+};
-+
-+Example for using power domain:
-+
-+&usb {
-+       power-domains = <&power RPI_POWER_DOMAIN_USB>;
-+};
--- 
-2.6.2
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJWcgPRAAoJELXWKTbR/J7ozK4P/jq3vnSb1oJjfNhqCbDe8IPp
+35BDIFGoYD72UKn7MNQ+7KyAb3thqRi2cU4fiXOND8gjTHvm9B+wIi493ZZuBpNu
+tkxHihK8O6+wV/kFISNvZocZ9eRn0S2igpdTB4GI4tAepz1EfMPeE7nRnHIE4UwN
+AJGkaWsAGHEWunGANuHUKKhoLZmRO2jSZhqt+y6G8ixuAUAtZ6s01Bvz6y9856r9
+yV6ndnYAjaS57yQKzn4eJhT8DzLU+S8QNKNzEbX1qxHUNiXO/RLj9h+xJbeCbVIp
+Lz9C8JoaCDiOT+yC3En0J40BeRMufjBiLEE747HhuzhaqkC8VZfgmuqhVCUVzse1
+IjK7E30HanFDgZepRlTTy1Va3aap1OzAem0eOuKMOaBs4JQiabo84B9bKfbg7jOx
+6Hr55nAYCfGXrwZp09Txrhz3Ewj69tHDFFZICXqQZViyWPHISLgp2npW3mNTInqU
+bNqZ8OvvMJxfRwB13AzsKaqjU7UugvX8N4Nqd9T2VDdOfwPb1QAezVUwyiz1cvne
+WzWvlNcTXCySk8oMiiQ7WHW+BC4aehjdx7+CLGQBahvfwQH+9PLwKW3S9s/Jm0+t
+QfdAW0RYar8hoACf06/xtRGzqx3QN+3UjDbYHxvHZ0rttTDBALTmtJxMivy6wxx0
+10HRzbmaLM//PxP+oatP
+=+Zm1
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
