@@ -1,151 +1,49 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v7 2/4] Documentation, dt, arm64/arm: dt bindings for
- numa.
-Date: Thu, 17 Dec 2015 19:07:08 +0000
-Message-ID: <20151217190708.GA14030@leverpostej>
-References: <1447780843-9223-1-git-send-email-gkulkarni@caviumnetworks.com>
- <1447780843-9223-3-git-send-email-gkulkarni@caviumnetworks.com>
- <20151211135307.GB20666@leverpostej>
- <CAFpQJXXopH4_GjE=dX0+NPcfwzRgErEFVMkGd57K+4=YZPDVsw@mail.gmail.com>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH v3 0/5] Fix a trivial typo and support rk3228/rk3399 SoCs
+ for thermal driver.
+Date: Thu, 17 Dec 2015 12:09:28 -0800
+Message-ID: <20151217200927.GC7999@localhost.localdomain>
+References: <1449132523-18817-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAFpQJXXopH4_GjE=dX0+NPcfwzRgErEFVMkGd57K+4=YZPDVsw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Robert Richter <rrichter@>
+In-Reply-To: <1449132523-18817-1-git-send-email-wxt@rock-chips.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: huangtao@rock-chips.com, Heiko Stuebner <heiko@sntech.de>, dmitry.torokhov@gmail.com, dianders@chromium.org, linux-rockchip@lists.infradead.org, computersforpeace@gmail.com, Dan Carpenter <dan.carpenter@oracle.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jiri Kosina <trivial@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello,
 
-On Fri, Dec 11, 2015 at 08:11:07PM +0530, Ganapatrao Kulkarni wrote:
-> On Fri, Dec 11, 2015 at 7:23 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> > Hi,
-> >
-> > On Tue, Nov 17, 2015 at 10:50:41PM +0530, Ganapatrao Kulkarni wrote:
-> >> DT bindings for numa mapping of memory, cores and IOs.
-> >>
-> >> Reviewed-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> >> Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-> >
-> > Overall this looks good to me. However, I have a couple of concerns.
-> thanks.
-
-[...]
-
-> >> +==============================================================================
-> >> +2 - numa-node-id
-> >> +==============================================================================
-> >> +The device node property numa-node-id describes numa domains within a
-> >> +machine. This property can be used in device nodes like cpu, memory, bus and
-> >> +devices to map to respective numa nodes.
-> >> +
-> >> +numa-node-id property is a 32-bit integer which defines numa node id to which
-> >> +this device node has numa domain association.
-> >
-> > I'd prefer if the above two paragraphs were replaced with:
-> >
-> >         For the purpose of identification, each NUMA node is associated
-> >         with a unique token known as a node id. For the purpose of this
-> >         binding a node id is a 32-bit integer.
-> >
-> >         A device node is associated with a NUMA node by the presence of
-> >         a numa-node-id property which contains the node id of the
-> >         device.
-> ok, will do.
-
-[...]
-
-> >> +==============================================================================
-> >> +3 - distance-map
-> >> +==============================================================================
-> >> +
-> >> +The device tree node distance-map describes the relative
-> >> +distance (memory latency) between all numa nodes.
-> >
-> > Is this not a combined approximation for latency and bandwidth?
-> AFAIK, it is to represent inter-node memory access latency.
-> >
-> >> +- compatible : Should at least contain "numa,distance-map-v1".
-> >
-> > Please use "numa-distance-map-v1", as "numa" is not a vendor.
-> ok
-> >
-> >> +- distance-matrix
-> >> +  This property defines a matrix to describe the relative distances
-> >> +  between all numa nodes.
-> >> +  It is represented as a list of node pairs and their relative distance.
-> >> +
-> >> +  Note:
-> >> +     1. Each entry represents distance from first node to second node.
-> >> +     2. If both directions between 2 nodes have the same distance, only
-> >> +            one entry is required.
-> >
-> > I still don't understand what direction means in this context. Are there
-> > systems (of any architecture) which don't have symmetric distances?
-> > Which accesses does this apply differently to?
-> >
-> > Given that, I think that it might be best to explicitly call out
-> > distances as being equal, and leave any directionality for a later
-> > revision of the binding when we have some semantics for directionality.
-> agreed, given that there is no know system to substantiate dual direction,
-> let us not explicit about direction.
-
-Regarding your comment in [1], I was expecting a respin of this series
-with the above comments addressed. I will not provide an ack until I've
-seen that.
-
-Additional concerns below also apply.
-
-> >> +     2. distance-matrix shold have entries in lexicographical ascending order of nodes.
-> >> +     3. There must be only one Device node distance-map and must reside in the root node.
-> >> +
-> >> +Example:
-> >> +     4 nodes connected in mesh/ring topology as below,
-> >> +
-> >> +             0_______20______1
-> >> +             |               |
-> >> +             |               |
-> >> +           20|               |20
-> >> +             |               |
-> >> +             |               |
-> >> +             |_______________|
-> >> +             3       20      2
-> >> +
-> >> +     if relative distance for each hop is 20,
-> >> +     then inter node distance would be for this topology will be,
-> >> +           0 -> 1 = 20
-> >> +           1 -> 2 = 20
-> >> +           2 -> 3 = 20
-> >> +           3 -> 0 = 20
-> >> +           0 -> 2 = 40
-> >> +           1 -> 3 = 40
-> >
-> > How is this scaled relative to a local access?
-> this is based on representing local distance with 10 and
-> all inter-node latency being represented as multiple of 10.
+On Thu, Dec 03, 2015 at 04:48:38PM +0800, Caesar Wang wrote:
+> This series pacthes to support the next soc for this thermal driver.
+> I don't add the dts thermal data since these SoCs have *_not_* land
+> in this mainline. I believe these SoCs dts will land in this mainline
+> lately,
+> then I will add the thermal data for Heiko.
 > 
-> >
-> > Do we assume that a local access has value 1, e.g. each hop takes 20x a
-> > local access in this example?
-> The local distance is represented as 10, this is fixed and same as in ACPI.
-> Inter-node distance can be any number greater than 10.
-> this information can be added here to make it clear.
+> This series patches can apply into Eduardo branch.
+> https://git.kernel.org/cgit/linux/kernel/git/evalenti/linux-soc-thermal.git
+> 
+> Also, this series pacthes have built on github branch.
+> https://github.com/rockchip-linux/kernel/commits/develop4.4
+> 
+> PATCH[1/5]:
+> That's bit ugly typo, sorry for sending again :(.
+> 
+> PATCH[2/5]:
+> To fix a build warning came from Dan Carpenter report smatch check,
+> Thanks. :)
+> 
+> PATCH[3/5]:
+> Add the rk3228/rk3399 SoCs compatible for dt-bindings.
+> 
+> PATCH[4/5]:
+> Add the rk3228 SoCs for thermal driver.
+> 
+> PATCH[5/5]:
+> Add the rk3399 SoCs for thermal driver based on PATCH[4/5].
 
-This seems rather arbitrary.
+I applied all but 2/5.
 
-Why can we not define the local distance in the DT? I appreciate that
-the value is hard-coded for ACPI, but we don't have to copy that
-limitation.
-
-I'm not sure if asymmetric local distances matter.
-
-Thanks,
-Mark.
-
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/394634.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
