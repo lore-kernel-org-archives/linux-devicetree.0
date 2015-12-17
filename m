@@ -1,71 +1,109 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v6 0/6] Add mipi dsi support for rk3288
-Date: Thu, 17 Dec 2015 10:29:53 +0100
-Message-ID: <3523259.ZRgH1Shd9Y@diego>
-References: <1450260616-21160-1-git-send-email-zyw@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1450260616-21160-1-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, treding@nvidia.com, linux-arm-kernel@lists.infradead.org
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] net/macb: Update device tree binding for resetting PHY using GPIO
+Date: Thu, 17 Dec 2015 10:51:04 +0100
+Message-ID: <1450345864-10907-1-git-send-email-gregory.clement@free-electrons.com>
+References: <874mfhtqnv.fsf@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <874mfhtqnv.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQ2hyaXMsCgpBbSBNaXR0d29jaCwgMTYuIERlemVtYmVyIDIwMTUsIDE4OjEwOjEwIHNjaHJp
-ZWIgQ2hyaXMgWmhvbmc6Cj4gVGhlIHJrMzI4OCBNSVBJIERTSSBpcyBhIFN5bm9wc3lzIERlc2ln
-bldhcmUgTUlQSSBEU0kgaG9zdCBjb250cm9sbGVyCj4gSVAuIFRoaXMgc2VyaWVzIGFkZHMgc3Vw
-cG9ydCBmb3IgYSBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgRFNJIGhvc3QKPiBjb250cm9sbGVy
-IERSTSBkcml2ZXIuCj4gCj4gVGhlIE1JUEkgRFNJIGZlYXR1cmUgaXMgdGVzdGVkIG9uIHJrMzI4
-OCBldmIgYm9hcmQsIGJhY2twb3J0IHRoZW0gdG8KPiBjaHJvbWUgb3Mga2VybmVsIGNocm9tZV92
-My4xNCwgYW5kIGl0IGNhbiBkaXNwbGF5IG5vcm1hbGx5Lgo+IAo+IFRoaXMgcGF0Y2hzZXQgaXMg
-YmFzZSBvbiB0aGUgcGF0Y2hzZXQgZnJvbSBZaW5nLmxpdUBmcmVlc2NhbGUuY29tLgo+IDxodHRw
-Oi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2RyaS1kZXZlbC9tc2c3NzE4MS5odG1sPgo+IAo+IEFj
-Y29yZGluZyB0byB0aGUgc3VnZ2VzdGlvbiBmcm9tIFRoaWVycnksIEkgaGF2ZSBnZXQgcmlkIG9m
-IHRoZSBicmlkZ2UsCj4gYW5kIHJlZ2lzdGVyIHRoZSBlbmNvZGVyICYgY29ubmVjdGVyIGluIGRy
-bS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jLgoKZnJvbSBteSBwb2ludCBpdCBsb29rcyBnb29kIChh
-bHRob3VnaCBJIGNhbm5vdCByZWFsbHkgc3BlYWsgb24gdGhlIGRybS1yZWxhdGVkIAppbnRlcm5h
-bHMpLgoKQnV0IEkgZG8gdGhpbmsgd2UnbGwgYmUgZG9pbmcgYXRvbWljIG1vZGVzZXR0aW5nIGNv
-bnZlcnNpb24gZmlyc3QgKGxhc3QgCnZlcnNpb24gcG9zdGVkIGZyb20gTWFyayB0b2RheSksIHNv
-IHlvdSBzaG91bGQgcHJvYmFibHkgbWFrZSBzdXJlIHlvdXIgZHNpIApkcml2ZXIgc3RpbGwgd29y
-a3MgYWZ0ZXIgdGhhdCBjb252ZXJzaW9uIGFuZCBtYWtlIGNoYW5nZXMgaWYgbmVlZGVkLgoKCkhl
-aWtvCgo+IAo+IAo+IENoYW5nZXMgaW4gdjY6Cj4gLSB1cGRhdGUgdGhlIGRvY3VtZW50LCBzaW5j
-ZSB0aGUgYnJpZGdlIGRldmljZSBoYXMgYmVlbiBkZWxldGVkLgo+IC0gRG8gbm90IHVzZSBicmlk
-Z2UgZHJpdmVyIChUaGllcnJ5IFJlZGluZykKPiAtIE9wdGltaXphdGlvbiB0aGUgcGh5IGluaXQg
-c2VxdWVuY2UKPiAKPiBDaGFuZ2VzIGluIHY1Ogo+IC0gbW9kaWZ5IHRoZSBjbGsgbmFtZSB0byBT
-Q0xLX01JUElEU0lfMjRNCj4gLSBhZGQgYSBibGFuayBsaW5lIGJlZm9yIGxjZF9lbgo+IAo+IENo
-YW5nZXMgaW4gdjQ6Cj4gLSB1c2UgY2xrX3JvdW5kX3JhdGUgdG8gY2hlY2sgdGhlIGNsb2NrIHJh
-dGUgaW4gdm9wX2NydGNfbW9kZV9maXh1cAo+IAo+IENoYW5nZXMgaW4gdjM6Cj4gLSBtb3ZlIGR3
-X21pcGlfZHNpX3JvY2tjaGlwLnR4dCB0byBiaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwLwo+IAo+
-IENocmlzIFpob25nICg1KToKPiAgIGRybS9yb2NrY2hpcDogcmV0dXJuIGEgdHJ1ZSBjbG9jayBy
-YXRlIHRvIGFkanVzdGVkX21vZGUKPiAgIERvY3VtZW50YXRpb246IGR0LWJpbmRpbmdzOiBBZGQg
-YmluZGluZ3MgZm9yIHJrMzI4OCBEVyBNSVBJIERTSSBkcml2ZXIKPiAgIGRybTogcm9ja2NoaXA6
-IFN1cHBvcnQgU3lub3BzeXMgRFcgTUlQSSBEU0kKPiAgIEFSTTogZHRzOiByb2NrY2hpcDogYWRk
-IHJrMzI4OCBtaXBpX2RzaSBub2Rlcwo+ICAgQVJNOiBkdHM6IHJvY2tjaGlwOiBhZGQgc3VwcG9y
-dCBtaXBpIHBhbmVsIHR2MDgwd3VtLW5sMAo+IAo+IExpdSBZaW5nICgxKToKPiAgIGRybS9kc2k6
-IEFkZCBhIGhlbHBlciB0byBnZXQgYml0cyBwZXIgcGl4ZWwgb2YgTUlQSSBEU0kgcGl4ZWwgZm9y
-bWF0Cj4gCj4gIC4uLi9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4dCAg
-ICAgIHwgICA2MCArCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC1ldmIuZHRzaSAgICAgICAg
-ICAgICAgICAgIHwgICAyMCArLQo+ICBhcmNoL2FybS9ib290L2R0cy9yazMyODguZHRzaSAgICAg
-ICAgICAgICAgICAgICAgICB8ICAgMzkgKwo+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvS2Nv
-bmZpZyAgICAgICAgICAgICAgICAgICB8ICAgMTAgKwo+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2No
-aXAvTWFrZWZpbGUgICAgICAgICAgICAgICAgICB8ICAgIDEgKwo+ICBkcml2ZXJzL2dwdS9kcm0v
-cm9ja2NoaXAvZHctbWlwaS1kc2kuYyAgICAgICAgICAgICB8IDEyMDAKPiArKysrKysrKysrKysr
-KysrKysrKyBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX3ZvcC5jICAgICAg
-ICB8ICAKPiAgOCArCj4gIGluY2x1ZGUvZHJtL2RybV9taXBpX2RzaS5oICAgICAgICAgICAgICAg
-ICAgICAgICAgIHwgICAxNCArCj4gIDggZmlsZXMgY2hhbmdlZCwgMTM1MSBpbnNlcnRpb25zKCsp
-LCAxIGRlbGV0aW9uKC0pCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NAo+IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4
-dAo+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1k
-c2kuYwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Instead of being at the MAC level the reset gpio preperty is moved at the
+PHY child node level. It is still managed by the MAC, but from the point
+of view of the binding it make more sense to be part of the PHY node.
+
+This commit also fixes a build errors if GPIOLIB is not selected.
+
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/macb.txt |  8 ++++++--
+ drivers/net/ethernet/cadence/macb.c            | 15 ++++++++++++---
+ 2 files changed, 18 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
+index 4a7fb6c..38c8e84 100644
+--- a/Documentation/devicetree/bindings/net/macb.txt
++++ b/Documentation/devicetree/bindings/net/macb.txt
+@@ -19,8 +19,8 @@ Required properties:
+ 	Optional elements: 'tx_clk'
+ - clocks: Phandles to input clocks.
+ 
+-Optional properties:
+-- phy-reset-gpios : Should specify the gpio for phy reset
++Optional properties for PHY child node:
++- reset-gpios : Should specify the gpio for phy reset
+ 
+ Examples:
+ 
+@@ -32,4 +32,8 @@ Examples:
+ 		local-mac-address = [3a 0e 03 04 05 06];
+ 		clock-names = "pclk", "hclk", "tx_clk";
+ 		clocks = <&clkc 30>, <&clkc 30>, <&clkc 13>;
++		ethernet-phy@1 {
++			reg = <0x1>;
++			reset-gpios = <&pioE 6 1>;
++		};
+ 	};
+diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
+index 71fbda3..12370dd 100644
+--- a/drivers/net/ethernet/cadence/macb.c
++++ b/drivers/net/ethernet/cadence/macb.c
+@@ -19,6 +19,7 @@
+ #include <linux/init.h>
+ #include <linux/io.h>
+ #include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/interrupt.h>
+ #include <linux/netdevice.h>
+ #include <linux/etherdevice.h>
+@@ -28,6 +29,7 @@
+ #include <linux/phy.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/of_gpio.h>
+ #include <linux/of_mdio.h>
+ #include <linux/of_net.h>
+ 
+@@ -2813,6 +2815,7 @@ static int macb_probe(struct platform_device *pdev)
+ 					      = macb_clk_init;
+ 	int (*init)(struct platform_device *) = macb_init;
+ 	struct device_node *np = pdev->dev.of_node;
++	struct device_node *phy_node;
+ 	const struct macb_config *macb_config = NULL;
+ 	struct clk *pclk, *hclk, *tx_clk;
+ 	unsigned int queue_mask, num_queues;
+@@ -2901,8 +2904,14 @@ static int macb_probe(struct platform_device *pdev)
+ 		macb_get_hwaddr(bp);
+ 
+ 	/* Power up the PHY if there is a GPIO reset */
+-	bp->reset_gpio = devm_gpiod_get_optional(&bp->pdev->dev, "phy-reset",
+-						 GPIOD_OUT_HIGH);
++	phy_node =  of_get_next_available_child(np, NULL);
++	if (phy_node) {
++		int gpio = of_get_named_gpio(phy_node, "reset-gpios", 0);
++		if (gpio_is_valid(gpio))
++			bp->reset_gpio = gpio_to_desc(gpio);
++		gpiod_set_value(bp->reset_gpio, GPIOD_OUT_HIGH);
++	}
++	of_node_put(phy_node);
+ 
+ 	err = of_get_phy_mode(np);
+ 	if (err < 0) {
+@@ -2972,7 +2981,7 @@ static int macb_remove(struct platform_device *pdev)
+ 		mdiobus_free(bp->mii_bus);
+ 
+ 		/* Shutdown the PHY if there is a GPIO reset */
+-		gpiod_set_value(bp->reset_gpio, 0);
++		gpiod_set_value(bp->reset_gpio, GPIOD_OUT_LOW);
+ 
+ 		unregister_netdev(dev);
+ 		clk_disable_unprepare(bp->tx_clk);
+-- 
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
