@@ -1,33 +1,41 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 0/8] Raspberry Pi 2 support.
-Date: Thu, 17 Dec 2015 01:03:59 +0100
-Message-ID: <21040591.KakM5Gl6ZZ@wuerfel>
-References: <1450310115-22163-1-git-send-email-eric@anholt.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1450310115-22163-1-git-send-email-eric@anholt.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>
-Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH v4 1/4] ARM: bcm2835: Define two new packets from the latest firmware.
+Date: Wed, 16 Dec 2015 16:26:46 -0800
+Message-ID: <1450312009-1791-2-git-send-email-eric@anholt.net>
+References: <1450312009-1791-1-git-send-email-eric@anholt.net>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1450312009-1791-1-git-send-email-eric@anholt.net>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-rpi-kernel@lists.infradead.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexander Aring <alex.aring@gmail.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 16 December 2015 15:55:07 Eric Anholt wrote:
-> This is a major rewrite of the previous Raspberry Pi 2 submission.
-> SMP support is now included, and the DT includes are cleaned up to
-> avoid massive duplication.
-> 
-> The branch (based on 4.4-rc5, to get the USB regression fixes) can be
-> found at:
-> 
-> https://github.com/anholt/linux/tree/bcm2836-4.4
+These packets give us direct access to the firmware's power management
+code, as opposed to GET/SET_POWER_STATE packets that only had a couple
+of domains implemented.
 
-Looks all good to me, but when we get the pull request, I'd strongly
-prefer to have that based on -rc3 or earlier.
+Signed-off-by: Eric Anholt <eric@anholt.net>
+---
+ include/soc/bcm2835/raspberrypi-firmware.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-What commit is the USB regression fix you refer to above? Is that in a
-branch that is -rc3 based? Maybe you can rebase the changes on top
-of that branch, to minimize the amount of backmerges?
+diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bcm2835/raspberrypi-firmware.h
+index c07d74a..3fb3571 100644
+--- a/include/soc/bcm2835/raspberrypi-firmware.h
++++ b/include/soc/bcm2835/raspberrypi-firmware.h
+@@ -72,10 +72,12 @@ enum rpi_firmware_property_tag {
+ 	RPI_FIRMWARE_SET_ENABLE_QPU =                         0x00030012,
+ 	RPI_FIRMWARE_GET_DISPMANX_RESOURCE_MEM_HANDLE =       0x00030014,
+ 	RPI_FIRMWARE_GET_EDID_BLOCK =                         0x00030020,
++	RPI_FIRMWARE_GET_DOMAIN_STATE =                       0x00030030,
+ 	RPI_FIRMWARE_SET_CLOCK_STATE =                        0x00038001,
+ 	RPI_FIRMWARE_SET_CLOCK_RATE =                         0x00038002,
+ 	RPI_FIRMWARE_SET_VOLTAGE =                            0x00038003,
+ 	RPI_FIRMWARE_SET_TURBO =                              0x00038009,
++	RPI_FIRMWARE_SET_DOMAIN_STATE =                       0x00038030,
+ 
+ 	/* Dispmanx TAGS */
+ 	RPI_FIRMWARE_FRAMEBUFFER_ALLOCATE =                   0x00040001,
+-- 
+2.6.2
 
-	Arnd
