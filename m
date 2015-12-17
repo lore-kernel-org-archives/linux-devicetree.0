@@ -1,73 +1,116 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: lpc4337-ciaa: enable SCT-PWM
-Date: Thu, 17 Dec 2015 23:55:23 +0100
-Message-ID: <CAGhQ9Vzt6b3Bgcc6yoroQyDtbsw=QeDWRQCKKNdJ3ObCGWUfnQ@mail.gmail.com>
-References: <1448282225-2635-1-git-send-email-ariel@vanguardiasur.com.ar>
-	<1448282225-2635-3-git-send-email-ariel@vanguardiasur.com.ar>
-	<5655A977.1040408@vanguardiasur.com.ar>
-	<CAGhQ9Vxqpe4QQn1+d6bOCQH9q6evignVR_+U4NK7HqSNhBg4qA@mail.gmail.com>
-	<56715F4B.7050109@vanguardiasur.com.ar>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v1 1/6] ARM: dts: fix the correct pinctrl control for rk3036
+Date: Fri, 18 Dec 2015 00:28:27 +0100
+Message-ID: <1838222.r8GKl7OzB9@diego>
+References: <1450362112-8075-1-git-send-email-wxt@rock-chips.com> <1450362112-8075-2-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56715F4B.7050109-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1450362112-8075-2-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, leozwang@google.com, keescook@google.com, Xing Zheng <zhengxing@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On 16 December 2015 at 13:55, Ariel D'Alessandro
-<ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
-> Joachim,
->
-> El 14/12/15 a las 19:48, Joachim Eastwood escribi=C3=B3:
->> Hi Ariel,
->>
->> Sorry for the late reply. I have just started to put together my DT
->> for 4.5 branch now.
->>
->> On 25 November 2015 at 13:28, Ariel D'Alessandro
->> <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
->>> (+To: Joachim)
->>>
->>> El 23/11/15 a las 09:37, Ariel D'Alessandro escribi=C3=B3:
->>>> Enable the PWM based on the State Configurable Timer (SCT) include=
-d in
->>>> the LPC4337 SoC of the CIAA-NXP board.
->>>>
->>>> Signed-off-by: Ariel D'Alessandro <ariel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
->>>> ---
->>>>  arch/arm/boot/dts/lpc4337-ciaa.dts | 4 ++++
->>>>  1 file changed, 4 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/lpc4337-ciaa.dts b/arch/arm/boot/dt=
-s/lpc4337-ciaa.dts
->>>> index 03bdf77..1a23589 100644
->>>> --- a/arch/arm/boot/dts/lpc4337-ciaa.dts
->>>> +++ b/arch/arm/boot/dts/lpc4337-ciaa.dts
->>>> @@ -170,6 +170,10 @@
->>>>       pinctrl-0 =3D <&enet_rmii_pins>;
->>>>  };
->>>>
->>>> +&sct_pwm {
->>>> +     status =3D "okay";
->>>> +};
->>>> +
->>
->> Isn't this a bit useless without any pinmux setup?
->
-> Yes, it might be kind of useless. Do you think it shouldn't be enable=
-d then?
+Am Donnerstag, 17. Dezember 2015, 22:21:47 schrieb Caesar Wang:
+> The pinctrl gpio pull up/down is incorrect since the rk3036 SoCs
+> can't set the status in the internal.
+> 
+> We should keep the default status for enable the gpio status,
+> In fact, the pull_none is the disable the gpio pull up/down.
+> 
+> Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 
-It would be nice to have a board with sct-pwm enabled. Would it
-possible for you to assign a pin to it?
+>From the signed-off-by's I guess this change was created by Xing (author), 
+right?
 
 
-regards,
-Joachim Eastwood
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Heiko
+
+> ---
+> 
+>  arch/arm/boot/dts/rk3036.dtsi | 34 +++++++++++++++-------------------
+>  1 file changed, 15 insertions(+), 19 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+> index f8758bf..620e6e0 100644
+> --- a/arch/arm/boot/dts/rk3036.dtsi
+> +++ b/arch/arm/boot/dts/rk3036.dtsi
+> @@ -427,12 +427,8 @@
+>  			#interrupt-cells = <2>;
+>  		};
+> 
+> -		pcfg_pull_up: pcfg-pull-up {
+> -			bias-pull-up;
+> -		};
+> -
+> -		pcfg_pull_down: pcfg-pull-down {
+> -			bias-pull-down;
+> +		pcfg_pull_default: pcfg_pull_default {
+> +			bias-pull-pin-default;
+>  		};
+> 
+>  		pcfg_pull_none: pcfg-pull-none {
+> @@ -473,18 +469,18 @@
+>  			};
+> 
+>  			emmc_cmd: emmc-cmd {
+> -				rockchip,pins = <2 1 RK_FUNC_2 &pcfg_pull_none>;
+> +				rockchip,pins = <2 1 RK_FUNC_2 &pcfg_pull_default>;
+>  			};
+> 
+>  			emmc_bus8: emmc-bus8 {
+> -				rockchip,pins = <1 24 RK_FUNC_2 &pcfg_pull_none>,
+> -						<1 25 RK_FUNC_2 &pcfg_pull_none>,
+> -						<1 26 RK_FUNC_2 &pcfg_pull_none>,
+> -						<1 27 RK_FUNC_2 &pcfg_pull_none>,
+> -						<1 28 RK_FUNC_2 &pcfg_pull_none>,
+> -						<1 29 RK_FUNC_2 &pcfg_pull_none>,
+> -						<1 30 RK_FUNC_2 &pcfg_pull_none>,
+> -						<1 31 RK_FUNC_2 &pcfg_pull_none>;
+> +				rockchip,pins = <1 24 RK_FUNC_2 &pcfg_pull_default>,
+> +						<1 25 RK_FUNC_2 &pcfg_pull_default>,
+> +						<1 26 RK_FUNC_2 &pcfg_pull_default>,
+> +						<1 27 RK_FUNC_2 &pcfg_pull_default>,
+> +						<1 28 RK_FUNC_2 &pcfg_pull_default>,
+> +						<1 29 RK_FUNC_2 &pcfg_pull_default>,
+> +						<1 30 RK_FUNC_2 &pcfg_pull_default>,
+> +						<1 31 RK_FUNC_2 &pcfg_pull_default>;
+>  			};
+>  		};
+> 
+> @@ -522,12 +518,12 @@
+> 
+>  		uart0 {
+>  			uart0_xfer: uart0-xfer {
+> -				rockchip,pins = <0 16 RK_FUNC_1 &pcfg_pull_up>,
+> +				rockchip,pins = <0 16 RK_FUNC_1 &pcfg_pull_default>,
+>  						<0 17 RK_FUNC_1 &pcfg_pull_none>;
+>  			};
+> 
+>  			uart0_cts: uart0-cts {
+> -				rockchip,pins = <0 18 RK_FUNC_1 &pcfg_pull_up>;
+> +				rockchip,pins = <0 18 RK_FUNC_1 &pcfg_pull_default>;
+>  			};
+> 
+>  			uart0_rts: uart0-rts {
+> @@ -537,7 +533,7 @@
+> 
+>  		uart1 {
+>  			uart1_xfer: uart1-xfer {
+> -				rockchip,pins = <2 22 RK_FUNC_1 &pcfg_pull_none>,
+> +				rockchip,pins = <2 22 RK_FUNC_1 &pcfg_pull_default>,
+>  						<2 23 RK_FUNC_1 &pcfg_pull_none>;
+>  			};
+>  			/* no rts / cts for uart1 */
+> @@ -545,7 +541,7 @@
+> 
+>  		uart2 {
+>  			uart2_xfer: uart2-xfer {
+> -				rockchip,pins = <1 18 RK_FUNC_2 &pcfg_pull_none>,
+> +				rockchip,pins = <1 18 RK_FUNC_2 &pcfg_pull_default>,
+>  						<1 19 RK_FUNC_2 &pcfg_pull_none>;
+>  			};
+>  			/* no rts / cts for uart2 */
