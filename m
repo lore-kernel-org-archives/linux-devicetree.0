@@ -1,54 +1,62 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v9 0/4] Exynos SROMc configuration and Ethernet support for
- SMDK5410
-Date: Thu, 17 Dec 2015 14:16:09 +0900
-Message-ID: <56724519.80108@samsung.com>
-References: <cover.1447659546.git.p.fedin@samsung.com>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: [PATCH v2 2/8] irq: bcm2836: Add SMP support for the 2836
+Date: Thu, 17 Dec 2015 07:17:42 +0200
+Message-ID: <20151217051742.GV2318@tarshish>
+References: <1450310115-22163-1-git-send-email-eric@anholt.net>
+ <1450310115-22163-3-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <cover.1447659546.git.p.fedin@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Pavel Fedin <p.fedin@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1450310115-22163-3-git-send-email-eric@anholt.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Scott Branden <sbranden@broadcom.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Ray Jui <rjui@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, Andrea Merello <andrea.merello@gmail.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 16.11.2015 16:43, Pavel Fedin wrote:
-> This patch extends Exynos SROM controller driver with ability to configure
-> controller outputs and enables SMSC9115 Ethernet chip on SMDK5410 board,
-> which is connected via SROMc bank #3.
-> 
-> With this patchset, support for the whole existing SMDK range can be added.
-> Actually, only bank number is different.
-> 
-> This patchset also depends on Exynos 5410 pinctrl support, introduced by
-> patches 0003 and 0004 from this set:
-> [PATCH v4 0/5] ARM: EXYNOS: ODROID-XU DT and LEDs
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/330862.html
-> 
-> Pinctrl support is necessary in order to correctly configure
-> multifunctional pins of the Exynos chip.
-> 
+Hi Eric,
 
-Let me share the plan/status:
-1. Currently Kukjin Kim is out of office (he told me he will be back on
-Christmas).
-2. I asked arm-soc people to pull my previous pull requests.
+On Wed, Dec 16, 2015 at 03:55:09PM -0800, Eric Anholt wrote:
+> @@ -226,6 +228,26 @@ static const struct irq_domain_ops bcm2836_arm_irqchip_intc_ops = {
+>  	.xlate = irq_domain_xlate_onecell
+>  };
+>  
+> +#ifdef CONFIG_SMP
 
-3. I applied this patchset to my branch:
-next/stuff-late-not-split-per-branch
-https://git.kernel.org/cgit/linux/kernel/git/krzk/linux.git/log/?h=next/stuff-late-not-split-per-branch
+Why not put this section under the existing '#ifdef CONFIG_SMP' just a few 
+lines above?
 
-4. This branch is not pushed to linux-next. I will sort it out if my
-previous pull requests get in. I will be out of office for Christmas so
-depending on the timing of {arm-soc,Christmas,Kukjin} this may or may
-not go into v4.5 (yay...).
+> +int __init bcm2836_smp_boot_secondary(unsigned int cpu,
+> +				      struct task_struct *idle)
+> +{
+> +	unsigned long secondary_startup_phys =
+> +		(unsigned long)virt_to_phys((void *)secondary_startup);
+> +
+> +	dsb();
+> +	writel(secondary_startup_phys,
+> +	       intc.base + LOCAL_MAILBOX3_SET0 + 16 * cpu);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct smp_operations bcm2836_smp_ops __initconst = {
+> +	.smp_boot_secondary	= bcm2836_smp_boot_secondary,
+> +};
+> +
+> +#endif
 
-5. If it does not get into v4.5, I will rebase it and proceed further
-for v4.6.
+baruch
 
-If you have any questions, please let me know.
-
-Best regards,
-Krzysztof
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
