@@ -1,88 +1,67 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: I2C eeprom compatibles? (was Re: [PATCH/RFC 03/19] ARM:
- shmobile: gose: add i2c2 bus to device tree)
-Date: Fri, 18 Dec 2015 11:32:15 +0100
-Message-ID: <20151218103214.GA1532@katana>
-References: <1449802376-11301-1-git-send-email-horms+renesas@verge.net.au>
- <20151218030239.GB10973@verge.net.au>
- <20151218073531.GA1517@katana>
- <1839177.77Qt0RnI3v@wuerfel>
+From: Alexander Aring <alex.aring@gmail.com>
+Subject: Re: [PATCH v2 0/8] Raspberry Pi 2 support.
+Date: Fri, 18 Dec 2015 11:55:21 +0100
+Message-ID: <20151218105520.GA2764@omega>
+References: <1450310115-22163-1-git-send-email-eric@anholt.net>
+ <20151218100826.GB1145@omega>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1839177.77Qt0RnI3v@wuerfel>
-Sender: linux-sh-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+In-Reply-To: <20151218100826.GB1145@omega>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>
+Cc: linux-rpi-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Scott Branden <sbranden@broadcom.com>, Marc Zyngier <marc.zyngier@arm.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Dec 18, 2015 at 11:08:26AM +0100, Alexander Aring wrote:
+> Hi Eric,
+> 
+> On Wed, Dec 16, 2015 at 03:55:07PM -0800, Eric Anholt wrote:
+> > This is a major rewrite of the previous Raspberry Pi 2 submission.
+> > SMP support is now included, and the DT includes are cleaned up to
+> > avoid massive duplication.
+> > 
+> > The branch (based on 4.4-rc5, to get the USB regression fixes) can be
+> > found at:
+> > 
+> > https://github.com/anholt/linux/tree/bcm2836-4.4
+> > 
+> 
+> thanks. :-)
+> 
+> I tried it via booting with the RPi firmware and your branch, but it
+> doesn't boot on my side:
+> 
+> I get:
+> 
+> Uncompressing Linux... done, booting the kernel.
+> [    0.000000] Booting Linux on physical CPU 0x0
+> [    0.000000] Initializing cgroup subsys cpuset
+> [    0.000000] Initializing cgroup subsys cpu
+> [    0.000000] Initializing cgroup subsys cpuacct
+> [    0.000000] Linux version 4.4.0-rc5+ (alex@omega) (gcc version 4.9.2 (OSELAS.Toolchain-2014.12.1) ) #989 Fri Dec 18 10:54:40 CET 2015
+> [    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c53c7d
+> [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+> [    0.000000] Machine model: Raspberry Pi 2 Model B Rev 1.1
+> [    0.000000] bootconsole [earlycon0] enabled
+> [    0.000000] Truncating RAM at 0x00000000-0x3e000000 to -0x30000000
+> [    0.000000] Consider using a HIGHMEM enabled kernel.
+> [    0.000000] Memory policy: Data cache writeback
+> [    0.000000] BUG: mapping for 0x3f201000 at 0xf0201000 out of vmalloc space
+> [    0.000000] ------------[ cut here ]------------
+> [    0.000000] WARNING: CPU: 0 PID: 0 at arch/arm/kernel/devtree.c:149 arm_dt_init_cpu_maps+0x100/0x1a4()
+> [    0.000000] DT /cpu 2 nodes greater than max cores 1, capping them
+> [    0.000000] Modules linked in:
+> [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.4.0-rc5+ #989
+> [    0.000000] Hardware name: BCM2835
 
---M9NhX3UHpAaciwkO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Because this, I thought I boot with the wrong devicetree. But then I saw
+[0].
 
-On Fri, Dec 18, 2015 at 10:06:48AM +0100, Arnd Bergmann wrote:
-> On Friday 18 December 2015 08:35:32 Wolfram Sang wrote:
-> > >=20
-> > > It seems to me that we have some consensus around:
-> > >=20
-> > >       compatible =3D "renesas,r1ex24002", "24c02";
-> >=20
-> > Thinking again, "generic,24c02" or "generic-24c02" could also be an
-> > option.
-> >=20
-> > > Should this be added to Documentation/devicetree/bindings/eeprom/eepr=
-om.txt ?
-> > > Or documented elsewhere?
-> >=20
-> > Probably we need a DT maintainers advice here? I don't mind vendor
-> > specific compatibles being documented, but I'm reluctant to add all
-> > these compatibles for the myriads of I2C eeproms to the at24 driver. 99%
-> > are covered by the generic case.
-> >=20
-> > Adding DT to CC.
->=20
-> I'd rather use some vendor string in addition to 24c02. Isn't this origin=
-ally
-> an Atmel part? In that case, using "atmel,24c02" as the most generic stri=
-ng
-> would be appropriate,
+Can this not set to BCM2836 when I include "bcm2836.dtsi" and BCM2835,
+when I include "bcm2835.dtsi"?
 
-Yeah, the at24 driver is named after Atmel chips AFAIR. Having "atmel,*"
-as the generic fallback sounds like a good solution to me, too.
+- Alex
 
-> and IIRC the i2c framework will just match that with
-> the "24c02" entry in the i2c_device_id list.
-
-True, although this behaviour is often complained about. There have been
-attempts to make i2c/spi behave like the rest of the DT world and to
-deprecate the current way. It didn't happen because of lots gory details,
-however :/
-
-
---M9NhX3UHpAaciwkO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWc+CuAAoJEBQN5MwUoCm2IVEP/A6WBkDVerA3v8dvbXFGdlkP
-caFknBFInEvJsXHQK/tILCyPpkTJCTEoMf8eXmDqXG8lt3tZU9qR7w+9nvzT9oXR
-kvER+hd8//lFksL0NTOKp9E87jIzt2AdIWf2l39U/etmw5RZ9YW+sWH+AbdKG/Gc
-DHTQQR3079KbZl+m2179FzquVTvoA2M7L+5TrM7e+Odu4w29/FwvMJBGIZQvN43g
-HUjTszIvzp3aa2hLVWqxBzugRNw+OL6w5eXno55n6mNdfUMXvoItImW6u6jAmBsn
-uTCrXcH3hSLPZ/idLGdON1URaNOcfyucqOmUsX3AXRyeJSfe9nqPbU5aNlmrGhxY
-62+mT4igsi4+JKOrah58GUnpcOkCXRi56woA+INQRGgeFqD4gCYyrzt/PjHbtkcc
-JX5jN5W5qMzh5gTgoEyEZHjMQFCv8pTSwJiB4ANsMGAdiaNVFpba+QU6AVJ0Bcrj
-Rf/IT+IwYZZU3glKwJKHAQ/mFiGtoWFVVAg0/gXUfsfQmHI6DBhZLS1bZ/1bGokL
-P2iyHY9FStBKGo0WS8p03eyjfknlQCaldAl/JfmXq/m6mNYDYZkzK4GPOXCU93RV
-msg1tf9PNnipW/TYELG29v4RYQwMVfRDMxWeuQckOrAmsaixNj9KibHQM/lziM8N
-16/dG1+A10xn5N1PpkGl
-=bjZC
------END PGP SIGNATURE-----
-
---M9NhX3UHpAaciwkO--
+https://github.com/anholt/linux/blob/bcm2836-4.4/arch/arm/boot/dts/bcm283x.dtsi#L12
