@@ -1,49 +1,88 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 1/4] ARM: dts: dra7: Add dt node for the sycon pcie
-Date: Fri, 18 Dec 2015 15:51:54 +0530
-Message-ID: <5673DE42.9080407@ti.com>
-References: <1450172346-11890-1-git-send-email-kishon@ti.com>
- <1450172346-11890-2-git-send-email-kishon@ti.com>
- <5670140C.7010906@cogentembedded.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: I2C eeprom compatibles? (was Re: [PATCH/RFC 03/19] ARM:
+ shmobile: gose: add i2c2 bus to device tree)
+Date: Fri, 18 Dec 2015 11:32:15 +0100
+Message-ID: <20151218103214.GA1532@katana>
+References: <1449802376-11301-1-git-send-email-horms+renesas@verge.net.au>
+ <20151218030239.GB10973@verge.net.au>
+ <20151218073531.GA1517@katana>
+ <1839177.77Qt0RnI3v@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5670140C.7010906@cogentembedded.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, tony@atomide.com
-Cc: bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, rogerq@ti.com, nsekhar@ti.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-usb@vger.kernel.org, t-kristo@ti.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1839177.77Qt0RnI3v@wuerfel>
+Sender: linux-sh-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Tuesday 15 December 2015 06:52 PM, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 12/15/2015 12:39 PM, Kishon Vijay Abraham I wrote:
-> 
->> Add new device tree node for the control module register space where
->> PCIe registers are present.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>   arch/arm/boot/dts/dra7.dtsi |    5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
->> index fe99231..e38f63f 100644
->> --- a/arch/arm/boot/dts/dra7.dtsi
->> +++ b/arch/arm/boot/dts/dra7.dtsi
->> @@ -155,6 +155,11 @@
->>                       compatible = "syscon";
->>                       reg = <0x1c04 0x0020>;
->>                   };
->> +
->> +                scm_conf_pcie: tisyscon@1c24 {
-> 
->    Please use the generic node names as the ePAPR standard says.
+--M9NhX3UHpAaciwkO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-something like  scm_conf_pcie: syscon@1c24??
+On Fri, Dec 18, 2015 at 10:06:48AM +0100, Arnd Bergmann wrote:
+> On Friday 18 December 2015 08:35:32 Wolfram Sang wrote:
+> > >=20
+> > > It seems to me that we have some consensus around:
+> > >=20
+> > >       compatible =3D "renesas,r1ex24002", "24c02";
+> >=20
+> > Thinking again, "generic,24c02" or "generic-24c02" could also be an
+> > option.
+> >=20
+> > > Should this be added to Documentation/devicetree/bindings/eeprom/eepr=
+om.txt ?
+> > > Or documented elsewhere?
+> >=20
+> > Probably we need a DT maintainers advice here? I don't mind vendor
+> > specific compatibles being documented, but I'm reluctant to add all
+> > these compatibles for the myriads of I2C eeproms to the at24 driver. 99%
+> > are covered by the generic case.
+> >=20
+> > Adding DT to CC.
+>=20
+> I'd rather use some vendor string in addition to 24c02. Isn't this origin=
+ally
+> an Atmel part? In that case, using "atmel,24c02" as the most generic stri=
+ng
+> would be appropriate,
 
-Thanks
-Kishon
+Yeah, the at24 driver is named after Atmel chips AFAIR. Having "atmel,*"
+as the generic fallback sounds like a good solution to me, too.
+
+> and IIRC the i2c framework will just match that with
+> the "24c02" entry in the i2c_device_id list.
+
+True, although this behaviour is often complained about. There have been
+attempts to make i2c/spi behave like the rest of the DT world and to
+deprecate the current way. It didn't happen because of lots gory details,
+however :/
+
+
+--M9NhX3UHpAaciwkO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWc+CuAAoJEBQN5MwUoCm2IVEP/A6WBkDVerA3v8dvbXFGdlkP
+caFknBFInEvJsXHQK/tILCyPpkTJCTEoMf8eXmDqXG8lt3tZU9qR7w+9nvzT9oXR
+kvER+hd8//lFksL0NTOKp9E87jIzt2AdIWf2l39U/etmw5RZ9YW+sWH+AbdKG/Gc
+DHTQQR3079KbZl+m2179FzquVTvoA2M7L+5TrM7e+Odu4w29/FwvMJBGIZQvN43g
+HUjTszIvzp3aa2hLVWqxBzugRNw+OL6w5eXno55n6mNdfUMXvoItImW6u6jAmBsn
+uTCrXcH3hSLPZ/idLGdON1URaNOcfyucqOmUsX3AXRyeJSfe9nqPbU5aNlmrGhxY
+62+mT4igsi4+JKOrah58GUnpcOkCXRi56woA+INQRGgeFqD4gCYyrzt/PjHbtkcc
+JX5jN5W5qMzh5gTgoEyEZHjMQFCv8pTSwJiB4ANsMGAdiaNVFpba+QU6AVJ0Bcrj
+Rf/IT+IwYZZU3glKwJKHAQ/mFiGtoWFVVAg0/gXUfsfQmHI6DBhZLS1bZ/1bGokL
+P2iyHY9FStBKGo0WS8p03eyjfknlQCaldAl/JfmXq/m6mNYDYZkzK4GPOXCU93RV
+msg1tf9PNnipW/TYELG29v4RYQwMVfRDMxWeuQckOrAmsaixNj9KibHQM/lziM8N
+16/dG1+A10xn5N1PpkGl
+=bjZC
+-----END PGP SIGNATURE-----
+
+--M9NhX3UHpAaciwkO--
