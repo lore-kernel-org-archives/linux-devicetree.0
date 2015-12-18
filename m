@@ -1,79 +1,317 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] USB: add generic onboard USB HUB driver
-Date: Fri, 18 Dec 2015 10:38:14 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1512181030590.1682-100000@iolanthe.rowland.org>
-References: <CAL411-rK6qfkbQsSjvXH5VPAQAm4tMyD6fVTEgFQrpLHNGMXeA@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 03/14] DEVICETREE: Add PIC32 clock binding
+ documentation
+Date: Fri, 18 Dec 2015 09:44:44 -0600
+Message-ID: <20151218154444.GA27288@rob-hp-laptop>
+References: <1450133093-7053-1-git-send-email-joshua.henderson@microchip.com>
+ <1450133093-7053-4-git-send-email-joshua.henderson@microchip.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL411-rK6qfkbQsSjvXH5VPAQAm4tMyD6fVTEgFQrpLHNGMXeA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1450133093-7053-4-git-send-email-joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 18 Dec 2015, Peter Chen wrote:
-
-> On Fri, Dec 18, 2015 at 12:13 AM, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> wrote:
-
-> > It's not clear (to me, anyway) how this is meant to work.  USB is a
-> > completely discoverable bus: There is no way to represent devices
-> > statically; they have to be discovered.  But a device can't be
-> > discovered unless it is functional, so if an onboard hub (or any other
-> > sort of USB device) requires power, clocks, or something similar in
-> > order to function, it won't be discovered.  There won't be any device
-> > structure to probe, and "forcing driver probe" won't accomplish
-> > anything.
-> >
-> > It seems to me that the only way something like this could be made to
-> > work is if the necessary actions are keyed off the host controller (and
-> > in particular, _not_ the hub driver), presumably at the time the
-> > controller is probed.
+On Mon, Dec 14, 2015 at 03:42:05PM -0700, Joshua Henderson wrote:
+> From: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 > 
-> The reason why I put the code at hub driver is the onboard USB device
-> may be at 2nd level hub, at hub driver, we can know all devices under
-> this level hub.
-
-Maybe.  I'm not convinced.  See below.
-
-> > With anything else, you run the risk that the
-> > necessary resources won't get enabled before they are needed.
-> >
+> Document the devicetree bindings for the clock driver found on Microchip
+> PIC32 class devices.
 > 
-> Sorry, I can't understand what you mean
+> Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> Signed-off-by: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 
-Suppose you have a platform driver to manage the device's resources, 
-and the platform driver is in loadable module.  Suppose the device can 
-be detected even before the resources have been initialized, but it 
-can't work correctly.
+A couple of nits on the example, otherwise:
 
-Then what happens when the platform driver's module doesn't get loaded 
-until _after_ the device has been detected and after the device failed 
-to initialize?
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-
-> +static int hub_of_children_register(struct usb_device *hdev)
-> +{
-> +     struct device *dev;
+> ---
+>  .../devicetree/bindings/clock/microchip,pic32.txt  |  256 ++++++++++++++++++++
+>  1 file changed, 256 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/microchip,pic32.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/microchip,pic32.txt b/Documentation/devicetree/bindings/clock/microchip,pic32.txt
+> new file mode 100644
+> index 0000000..f50c653
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/microchip,pic32.txt
+> @@ -0,0 +1,256 @@
+> +Binding for a Clock hardware block found on
+> +certain Microchip PIC32 MCU devices.
 > +
-> +     if (hdev->parent)
-> +             dev = &hdev->dev;
-> +     else
-> +             dev = bus_to_hcd(hdev->bus)->self.controller;
+> +Microchip SoC clocks-node consists of few oscillators, PLL, multiplexer
+> +and few divider nodes.
 > +
-> +     if (!dev->of_node)
-> +             return 0;
-
-Suppose hdev->parent is not NULL (hdev isn't the root hub -- maybe it's
-a 2nd-level hub).  Then how did hdev->dev->of_node get set?
-
+> +We will find only the base address of the clock tree, this base
+> +address is common for some of the subnodes, not all. If no address is
+> +specified for any of subnode base address of the clock tree will be
+> +treated as its base. Each of subnodes follow the same common clock
+> +binding with some additional optional properties.
 > +
-> +     return of_platform_populate(dev->of_node, NULL, NULL, dev);
-> +} 
+> +	clocks_node {
+> +		reg = <>;
+> +
+> +		spll_node {
+> +			...
+> +		};
+> +
+> +		frcdiv_node {
+> +			...
+> +		};
+> +
+> +		sysclk_mux_node {
+> +			...
+> +		};
+> +
+> +		pbdiv_node {
+> +			...
+> +		};
+> +
+> +		refoclk_node {
+> +			...
+> +		};
+> +		...
+> +	};
+> +
+> +This binding uses the common clock binding[1].
+> +
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +Required properties:
+> +- compatible : should be one of "microchip,pic32mzda-clk",
+> +    "microchip,pic32mzda-sosc", "microchip,pic32mzda-frcdivclk",
+> +    "microchip,pic32mzda-syspll", "microchip,pic32mzda-sysclk-v2",
+> +    "microchip,pic32mzda-pbclk", "microchip,pic32mzda-refoclk".
+> +- reg : A Base address and length of the register set.
+> +- interrupts : source of interrupt.
+> +
+> +Optional properties (for subnodes):
+> +- #clock-cells: From common clock binding, should be 0.
+> +- microchip,clock-indices: in multiplexer node clock sources always aren't linear
+> +    and contiguous. This property helps define clock-sources with respect to
+> +    the mux clock node.
+> +- microchip,ignore-unused : ignore gate request even if the gated clock is unused.
+> +- microchip,status-bit-mask: bitmask for status check. This will be used to confirm
+> +    particular operation by clock sub-node is completed. It is dependent sub-node.
+> +- microchip,bit-mask: enable mask, similar to microchip,status-bit-mask.
+> +- microchip,slew-step: enable frequency slewing(stepping) during rate change;
+> +    applicable only to sys-clock subnode.
+> +
+> +Example:
+> +
+> +/* PIC32 specific clks */
+> +pic32_clktree {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	reg = <0x1f801200 0x200>;
+> +	compatible = "microchip,pic32mzda-clk";
+> +	ranges = <0 0x1f801200 0x200>;
+> +
+> +	/* secondary oscillator; external input on SOSCI pin */
+> +	SOSC:sosc_clk {
 
-Alan Stern
+For the ones with reg property, do clock@0 instead of sosc_clk.
 
+> +		#clock-cells = <0>;
+> +		compatible = "microchip,pic32mzda-sosc";
+> +		clock-frequency = <32768>;
+> +		reg = <0x000 0x10>, /* enable reg */
+> +		      <0x1d0 0x10>; /* status reg */
+> +		microchip,bit-mask = <0x02>; /* enable mask */
+> +		microchip,status-bit-mask = <0x10>; /* status-mask*/
+> +	};
+> +
+> +	FRCDIV:frcdiv_clk {
+> +		#clock-cells = <0>;
+> +		compatible = "microchip,pic32mzda-frcdivclk";
+> +		clocks = <&FRC>;
+> +		clock-output-names = "frcdiv_clk";
+> +	};
+> +
+> +	/* System PLL clock */
+> +	SYSPLL:spll_clk {
+> +		#clock-cells = <0>;
+> +		compatible = "microchip,pic32mzda-syspll";
+> +		reg = <0x020 0x10>, /* SPLL register */
+> +		      <0x1d0 0x10>; /* CLKSTAT register */
+> +		clocks = <&POSC>, <&FRC>;
+> +		clock-output-names = "sys_pll";
+> +		microchip,status-bit-mask = <0x80>; /* SPLLRDY */
+> +	};
+> +
+> +	/* system clock; mux with postdiv & slew */
+> +	SYSCLK:sys_clk {
+> +		#clock-cells = <0>;
+> +		compatible = "microchip,pic32mzda-sysclk-v2";
+> +		reg = <0x1c0 0x04>; /* SLEWCON */
+> +		clocks = <&FRCDIV>, <&SYSPLL>, <&POSC>, <&SOSC>,
+> +				<&LPRC>, <&FRCDIV>;
+> +		microchip,clock-indices = <0>, <1>, <2>, <4>, <5>, <7>;
+> +		clock-output-names = "sys_clk";
+> +	};
+> +
+> +	/* UPLL is integral part of USB PHY; UTMI clk for USBCORE */
+> +	UPLL:usb_phy_clk {
+> +		#clock-cells = <0>;
+> +		compatible = "fixed-clocks";
+> +		clock-frequency = <24000000>;
+> +		clock-output-names = "usbphy_clk";
+> +	};
+> +
+> +	/* Peripheral bus1 clock */
+> +	PBCLK1:pb1_clk {
+> +		reg = <0x140 0x10>;
+> +		#clock-cells = <0>;
+> +		compatible = "microchip,pic32mzda-pbclk";
+> +		clocks = <&SYSCLK>;
+> +		clock-output-names = "pb1_clk";
+> +		/* used by system modules, not gateable */
+> +		microchip,ignore-unused;
+> +	};
+> +
+> +	/* Peripheral bus2 clock */
+> +	PBCLK2:pb2_clk {
+> +		reg = <0x150 0x10>;
+> +		#clock-cells = <0>;
+> +		compatible = "microchip,pic32mzda-pbclk";
+> +		clocks = <&SYSCLK>;
+> +		clock-output-names = "pb2_clk";
+> +		/* avoid gating even if unused */
+> +		microchip,ignore-unused;
+> +	};
+> +
+> +	/* Peripheral bus3 clock */
+> +	PBCLK3:pb3_clk {
+> +		reg = <0x160 0x10>;
+> +		#clock-cells = <0>;
+> +		compatible = "microchip,pic32mzda-pbclk";
+> +		clocks = <&SYSCLK>;
+> +		clock-output-names = "pb3_clk";
+> +	};
+> +
+> +	/* Peripheral bus4 clock(I/O ports, GPIO) */
+> +	PBCLK4:pb4_clk {
+> +		reg = <0x170 0x10>;
+> +		#clock-cells = <0>;
+> +		compatible = "microchip,pic32mzda-pbclk";
+> +		clocks = <&SYSCLK>;
+> +		clock-output-names = "pb4_clk";
+> +	};
+> +
+> +	/* Peripheral bus clock */
+> +	PBCLK5:pb5_clk {
+> +		reg = <0x180 0x10>;
+> +		#clock-cells = <0>;
+> +		compatible = "microchip,pic32mzda-pbclk";
+> +		clocks = <&SYSCLK>;
+> +		clock-output-names = "pb5_clk";
+> +	};
+> +
+> +	/* Peripheral Bus6 clock; */
+> +	PBCLK6:pb6_clk {
+> +		reg = <0x190 0x10>;
+> +		compatible = "microchip,pic32mzda-pbclk";
+> +		clocks = <&SYSCLK>;
+> +		#clock-cells = <0>;
+> +	};
+> +
+> +	/* Peripheral bus7 clock */
+> +	PBCLK7:pb7_clk {
+> +		reg = <0x1A0 0x10>;
+
+lower case
+
+> +		#clock-cells = <0>;
+> +		compatible = "microchip,pic32mzda-pbclk";
+> +		/* CPU is driven by this clock; so named */
+> +		clock-output-names = "cpu_clk";
+> +		clocks = <&SYSCLK>;
+> +	};
+> +
+> +	/* Reference Oscillator clock for SPI/I2S */
+> +	REFCLKO1:refo1_clk {
+> +		reg = <0x080 0x20>;
+> +		#clock-cells = <0>;
+> +		compatible = "microchip,pic32mzda-refoclk";
+> +		clocks = <&SYSCLK>, <&PBCLK1>, <&POSC>, <&FRC>, <&LPRC>,
+> +			<&SOSC>, <&SYSPLL>, <&REFIx>, <&BFRC>;
+> +		microchip,clock-indices = <0>, <1>, <2>, <3>, <4>, <5>,
+> +						<7>, <8>, <9>;
+> +		clock-output-names = "refo1_clk";
+> +	};
+> +
+> +	/* Reference Oscillator clock for SQI */
+> +	REFCLKO2:refo2_clk {
+> +		reg = <0x0A0 0x20>;
+
+lower case
+
+> +		#clock-cells = <0>;
+> +		compatible = "microchip,pic32mzda-refoclk";
+> +		clocks = <&SYSCLK>, <&PBCLK1>, <&POSC>, <&FRC>, <&LPRC>,
+> +			<&SOSC>, <&SYSPLL>, <&REFIx>, <&BFRC>;
+> +		microchip,clock-indices = <0>, <1>, <2>, <3>, <4>, <5>,
+> +						<7>, <8>, <9>;
+> +		clock-output-names = "refo2_clk";
+> +	};
+> +
+> +	/* Reference Oscillator clock, ADC */
+> +	REFCLKO3:refo3_clk {
+> +		reg = <0x0C0 0x20>;
+
+lower case
+
+> +		compatible = "microchip,pic32mzda-refoclk";
+> +		clocks = <&SYSCLK>, <&PBCLK1>, <&POSC>, <&FRC>, <&LPRC>,
+> +			<&SOSC>, <&SYSPLL>, <&REFIx>, <&BFRC>;
+> +		microchip,clock-indices = <0>, <1>, <2>, <3>, <4>, <5>,
+> +						<7>, <8>, <9>;
+> +		#clock-cells = <0>;
+> +		clock-output-names = "refo3_clk";
+> +	};
+> +
+> +	/* Reference Oscillator clock */
+> +	REFCLKO4:refo4_clk {
+> +		reg = <0x0E0 0x20>;
+> +		compatible = "microchip,pic32mzda-refoclk";
+> +		clocks = <&SYSCLK>, <&PBCLK1>, <&POSC>, <&FRC>, <&LPRC>,
+> +				<&SOSC>, <&SYSPLL>, <&REFIx>, <&BFRC>;
+> +		microchip,clock-indices = <0>,<1>,<2>,<3>,<4>,<5>,<7>,
+> +						<8>,<9>;
+> +		#clock-cells = <0>;
+> +		clock-output-names = "refo4_clk";
+> +	};
+> +
+> +	/* Reference Oscillator clock, LCD */
+> +	REFCLKO5:refo5_clk {
+> +		reg = <0x100 0x20>;
+> +		compatible = "microchip,pic32mzda-refoclk";
+> +		clocks = <&SYSCLK>,<&PBCLK1>,<&POSC>,<&FRC>,<&LPRC>,
+> +			<&SOSC>,<&SYSPLL>,<&REFIx>,<&BFRC>;
+> +		microchip,clock-indices = <0>, <1>, <2>, <3>, <4>, <5>,
+> +					<7>, <8>,<9>;
+> +		#clock-cells = <0>;
+> +		clock-output-names = "refo5_clk";
+> +	};
+> +};
+> +
+> +The clock consumer should specify the desired clock by having the clocks in its
+> +"clock" phandle cell. For example for UART:
+> +
+> +uart2: serial@<> {
+> +	compatible = "microchip,pic32mzda-uart";
+> +	reg = <>;
+> +	interrupts = <>;
+> +	clocks = <&PBCLK2>;
+> +}
+> -- 
+> 1.7.9.5
+> 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
