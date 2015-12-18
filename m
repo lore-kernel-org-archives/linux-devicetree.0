@@ -1,12 +1,13 @@
 From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 1/3] ARM: sunxi: Introduce Allwinner for A83T support
-Date: Fri, 18 Dec 2015 21:30:49 +0800
-Message-ID: <1450445451-311-2-git-send-email-vishnupatekar0510@gmail.com>
+Subject: [PATCH v3 3/3] ARM: dts: sun8i: Add A83T HomletV2 Board
+ by Allwinner
+Date: Fri, 18 Dec 2015 21:30:51 +0800
+Message-ID: <1450445451-311-4-git-send-email-vishnupatekar0510@gmail.com>
 References: <1450445451-311-1-git-send-email-vishnupatekar0510@gmail.com>
 Reply-To: vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD64TFVR3YIBBKEV2CZQKGQE3EH3Z3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD64TFVR3YIBBMMV2CZQKGQEZNU3KHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1450445451-311-1-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,70 +20,105 @@ To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, corbet-T1hC0tSOHrs@public.g
 Cc: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner A83T is octa-core cortex-a7 based SoC.
-It's clock control unit and prcm, pinmux are different from previous sun8i
-series.
-Its processor cores are arragned in two clusters 4 cores each,
-similar to A80.
+H8Homlet Proto v2.0 Board is A83T Dev Board by Allwinner.
+It has UART, ethernet, USB, HDMI, etc ports on it.
+
+A83T patches are tested on this board.
+It has UART, ethernet, USB, HDMI, etc ports on it.
+
+For FEL mode it needs USB A-A(Male) cable. I used uart0 which
+is multiplexed to microsd pins PF2 and PF4.
+
+Enabled UART0 Header(PB9, PB10 pins).
 
 Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- Documentation/arm/sunxi/README                  | 1 -
- Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
- arch/arm/mach-sunxi/sunxi.c                     | 1 +
- drivers/clk/sunxi/clk-sunxi.c                   | 6 ++++++
- 4 files changed, 8 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/Makefile                         |  1 +
+ .../boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts  | 64 ++++++++++++++++++++++
+ 2 files changed, 65 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts
 
-diff --git a/Documentation/arm/sunxi/README b/Documentation/arm/sunxi/README
-index 430d279..e5a115f 100644
---- a/Documentation/arm/sunxi/README
-+++ b/Documentation/arm/sunxi/README
-@@ -72,6 +72,5 @@ SunXi family
- 
-     * Octa ARM Cortex-A7 based SoCs
-       - Allwinner A83T
--        + Not Supported
-         + Datasheet
-           http://dl.linux-sunxi.org/A83T/A83T_datasheet_Revision_1.1.pdf
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
-index bb9b0faa..7e79fcc 100644
---- a/Documentation/devicetree/bindings/arm/sunxi.txt
-+++ b/Documentation/devicetree/bindings/arm/sunxi.txt
-@@ -11,5 +11,6 @@ using one of the following compatible strings:
-   allwinner,sun7i-a20
-   allwinner,sun8i-a23
-   allwinner,sun8i-a33
-+  allwinner,sun8i-a83t
-   allwinner,sun8i-h3
-   allwinner,sun9i-a80
-diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
-index c2be98f..3c15619 100644
---- a/arch/arm/mach-sunxi/sunxi.c
-+++ b/arch/arm/mach-sunxi/sunxi.c
-@@ -69,6 +69,7 @@ MACHINE_END
- static const char * const sun8i_board_dt_compat[] = {
- 	"allwinner,sun8i-a23",
- 	"allwinner,sun8i-a33",
-+	"allwinner,sun8i-a83t",
- 	"allwinner,sun8i-h3",
- 	NULL,
- };
-diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-index 5ba2188..0d45253 100644
---- a/drivers/clk/sunxi/clk-sunxi.c
-+++ b/drivers/clk/sunxi/clk-sunxi.c
-@@ -1219,6 +1219,12 @@ CLK_OF_DECLARE(sun8i_a23_clk_init, "allwinner,sun8i-a23", sun6i_init_clocks);
- CLK_OF_DECLARE(sun8i_a33_clk_init, "allwinner,sun8i-a33", sun6i_init_clocks);
- CLK_OF_DECLARE(sun8i_h3_clk_init, "allwinner,sun8i-h3", sun6i_init_clocks);
- 
-+static void __init sun8i_a83t_init_clocks(struct device_node *node)
-+{
-+	sunxi_init_clocks(NULL, 0);
-+}
-+CLK_OF_DECLARE(sun8i_a83t_clk_init, "allwinner,sun8i-a83t", sun8i_a83t_init_clocks);
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index cc7309b..0f81c58 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -662,6 +662,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-a33-ippo-q8h-v1.2.dtb \
+ 	sun8i-a33-q8-tablet.dtb \
+ 	sun8i-a33-sinlinx-sina33.dtb \
++	sun8i-a83t-allwinner-h8homlet-v2.dtb \
+ 	sun8i-h3-orangepi-plus.dtb
+ dtb-$(CONFIG_MACH_SUN9I) += \
+ 	sun9i-a80-optimus.dtb \
+diff --git a/arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts b/arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts
+new file mode 100644
+index 0000000..342e1d3
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts
+@@ -0,0 +1,64 @@
++/*
++ * Copyright 2015 Vishnu Patekar
++ * Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
 +
- static void __init sun9i_init_clocks(struct device_node *node)
- {
- 	sunxi_init_clocks(NULL, 0);
++/dts-v1/;
++#include "sun8i-a83t.dtsi"
++
++/ {
++	model = "Allwinner A83T H8Homlet Proto Dev Board v2.0";
++	compatible = "allwinner,h8homlet-v2", "allwinner,sun8i-a83t";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_b>;
++	status = "okay";
++};
 -- 
 1.9.1
