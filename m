@@ -1,64 +1,49 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 0/9] phy: use syscon framework APIs to set ctrl mod reg
-Date: Fri, 18 Dec 2015 15:46:21 +0530
-Message-ID: <5673DCF5.1050603@ti.com>
-References: <1450170968-11282-1-git-send-email-kishon@ti.com>
- <725110094.6UkMkcy8u7@wuerfel> <566FF621.2040307@ti.com>
- <11176831.mhgJlIuj0S@wuerfel> <56700BC0.7020007@ti.com>
- <20151215152659.GQ23396@atomide.com>
+Subject: Re: [PATCH v3 1/4] ARM: dts: dra7: Add dt node for the sycon pcie
+Date: Fri, 18 Dec 2015 15:51:54 +0530
+Message-ID: <5673DE42.9080407@ti.com>
+References: <1450172346-11890-1-git-send-email-kishon@ti.com>
+ <1450172346-11890-2-git-send-email-kishon@ti.com>
+ <5670140C.7010906@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151215152659.GQ23396@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rogerq@ti.com, nsekhar@ti.com, linux-pci@vger.kernel.org, linux-usb@vger.kernel.org, t-kristo@ti.com
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <5670140C.7010906@cogentembedded.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, tony@atomide.com
+Cc: bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, rogerq@ti.com, nsekhar@ti.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-usb@vger.kernel.org, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Tuesday 15 December 2015 08:56 PM, Tony Lindgren wrote:
-> * Kishon Vijay Abraham I <kishon@ti.com> [151215 04:47]:
->> On Tuesday 15 December 2015 05:25 PM, Arnd Bergmann wrote:
->>>>>
->>>>> Can you explain here what the conversion is good for? Why do you
->>>>> prefer the syscon mapping over a high-level driver in this case?
->>>>
->>>> phy-omap-control driver was added when there was no proper
->>>> infrastructure for doing control module initializations. The
->>>> phy-omap-control driver is not an 'actual' PHY driver and it
->>>> was just a hack to do PHY related control module initializations.
->>>> phy-omap-control is also getting unmanageable with the number of
->>>> platforms each having number of modules (like USB, SATA, PCIe),
->>>> using the same driver for control module initializations.
->>>>
->>>> Now with SYSCON framework being added to the kernel, phy-omap-control
->>>> shouldn't be needed and it also provides a uniform API across all the
->>>> modules to program the control module.
->>>
->>> Ok, so the "phy-control" devices were really just a few registers of
->>> a system controller device that does a lot of other things as well, right?
->>
->> right.
->>>
->>> Can you put your description above into the cover-letter for the series,
->>> and the merge commit?
+On Tuesday 15 December 2015 06:52 PM, Sergei Shtylyov wrote:
+> Hello.
 > 
-> Just to confirm.. Seems like this series keeps USB working and the dts
-> changes can be done later after the driver changes have been merged?
+> On 12/15/2015 12:39 PM, Kishon Vijay Abraham I wrote:
+> 
+>> Add new device tree node for the control module register space where
+>> PCIe registers are present.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>   arch/arm/boot/dts/dra7.dtsi |    5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+>> index fe99231..e38f63f 100644
+>> --- a/arch/arm/boot/dts/dra7.dtsi
+>> +++ b/arch/arm/boot/dts/dra7.dtsi
+>> @@ -155,6 +155,11 @@
+>>                       compatible = "syscon";
+>>                       reg = <0x1c04 0x0020>;
+>>                   };
+>> +
+>> +                scm_conf_pcie: tisyscon@1c24 {
+> 
+>    Please use the generic node names as the ePAPR standard says.
 
-that's right Tony. Will merge this series by tomorrow if I don't get any review
-comments.
+something like  scm_conf_pcie: syscon@1c24??
 
 Thanks
 Kishon
-> 
-> Regards,
-> 
-> Tony
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
