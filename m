@@ -1,71 +1,58 @@
-From: Yoann Sculo <yoann@printk.fr>
-Subject: Re: [PATCH 3/4] ARM: dts: kirkwood: add Seagate GoFlex Home
-Date: Fri, 18 Dec 2015 10:32:45 +0100
-Message-ID: <5673D2BD.8070805@printk.fr>
-References: <1446675888-24495-1-git-send-email-luka.perkov@sartura.hr>
- <00000150d49a8745-1c2bc8d4-1333-46bb-bf0e-5508ef988c73-000000@email.amazonses.com>
- <563CCFE3.7080603@printk.fr>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [RFC PATCH 0/5] USB: add generic onboard USB driver
+Date: Fri, 18 Dec 2015 17:33:54 +0800
+Message-ID: <1450431239-16439-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <563CCFE3.7080603@printk.fr>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Luka Perkov <luka.perkov@sartura.hr>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: gregory.clement@free-electrons.com, andrew@lunn.ch, jason@lakedaemon.net
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Luka,
+Hi all,
 
-Did you have the time to look at those issues ?
+This is later patch set for generic onboard HUB dirver [1], since
+I find it can apply for all generic onboard USB devices, so I
+changed a little for it, it should be work for the use case found
+at imx6qdl udoo board, but several people have comments for its
+design, I mark RFC for disucssion, and see how to implement it
+properly.
 
-Yoann
+The purpose for this patch set is to let the USB handle platform
+parameters properly, since some usb devices need to pre-setup
+before it can be recognized by controller [2], some usb devices
+has more interfaces for others use, like i2c, gpios, etc.[3]
 
-Le 06/11/2015 17:05, Yoann Sculo a =E9crit :
-> Hi Luka,
->
-> I tested your patch on the GoFlex Home.
->
->> +    gpio-leds {
->> +        compatible =3D "gpio-leds";
->> +
->> +        health {
->> +            label =3D "status:green:health";
->> +            gpios =3D <&gpio1 14 1>;
->> +            linux,default-trigger =3D "default-on";
->> +        };
->> +        fault {
->> +            label =3D "status:orange:fault";
->> +            gpios =3D <&gpio1 15 1>;
->> +        };
->> +        misc {
->> +            label =3D "status:white:misc";
->> +            gpios =3D <&gpio1 8 1>;
->> +            linux,default-trigger =3D "ide-disk";
->> +        };
->> +    };
->
-> I noticed green and orange leds were working fine (0 =3D=3D off, 1 =3D=3D=
- on).
-> But white led polarity is inverted (1 =3D=3D off, 0 =3D=3D on).
->
->> +    partition@500000 {
->> +        label =3D "pogoplug";
->> +        reg =3D <0x0500000 0x2000000>;
->> +    };
->
-> I don't think pogoplug is the proper label for this partition. It seems
-> duplicated from "kirkwood-goflexnet.dts" I guess you could label it
-> "data" for instance.
->
-> Tested-by: Yoann Sculo <yoann@printk.fr>
->
-> Yoann
+Thanks.
+
+[1] http://www.spinics.net/lists/linux-usb/msg134082.html
+[2] http://www.spinics.net/lists/linux-usb/msg131502.html
+[3] http://marc.info/?l=linux-usb&m=142772952730243&w=2
+
+Peter Chen (5):
+  usb: hub: add device tree support for populating onboard usb device
+  doc: dt-binding: generic onboard USB device
+  usb: misc: generic_onboard_hub: add generic onboard USB device driver
+  usb: chipidea: host: let the hcd know's parent device node
+  ARM: dts: imx6qdl-udoo.dtsi: fix onboard USB HUB property
+
+ .../bindings/usb/generic-onboard-device.txt        |  31 +++++
+ MAINTAINERS                                        |   7 +
+ arch/arm/boot/dts/imx6qdl-udoo.dtsi                |  35 ++---
+ drivers/usb/chipidea/host.c                        |  18 ++-
+ drivers/usb/core/hub.c                             |  37 ++++++
+ drivers/usb/misc/Kconfig                           |  10 ++
+ drivers/usb/misc/Makefile                          |   1 +
+ drivers/usb/misc/generic_onboard_device.c          | 144 +++++++++++++++++++++
+ 8 files changed, 258 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/generic-onboard-device.txt
+ create mode 100644 drivers/usb/misc/generic_onboard_device.c
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
