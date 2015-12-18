@@ -1,59 +1,50 @@
-From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 4/4] ARM: dts: sun7i: Add PA gpio pin to Wexler
- TAB7200 tablet
-Date: Fri, 18 Dec 2015 11:52:45 +0300
-Message-ID: <1450428765-5779-1-git-send-email-mamlinav@gmail.com>
-References: <1450428591-5597-1-git-send-email-mamlinav@gmail.com>
-Reply-To: mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: I2C eeprom compatibles? (was Re: [PATCH/RFC 03/19] ARM: shmobile:
+ gose: add i2c2 bus to device tree)
+Date: Fri, 18 Dec 2015 10:06:48 +0100
+Message-ID: <1839177.77Qt0RnI3v@wuerfel>
+References: <1449802376-11301-1-git-send-email-horms+renesas@verge.net.au>
+ <20151218030239.GB10973@verge.net.au> <20151218073531.GA1517@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCENVD7YAEIOHEWPWMCRUBADJQLXW-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1450428591-5597-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20151218073531.GA1517@katana>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Linux-sh list <linux-sh@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa@sang-engineering.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-Add PA gpio pin for controlling power of two external amplifiers (NS4890) which are used on the Wexler TAB7200 tablet
+On Friday 18 December 2015 08:35:32 Wolfram Sang wrote:
+> > 
+> > It seems to me that we have some consensus around:
+> > 
+> >       compatible = "renesas,r1ex24002", "24c02";
+> 
+> Thinking again, "generic,24c02" or "generic-24c02" could also be an
+> option.
+> 
+> > Should this be added to Documentation/devicetree/bindings/eeprom/eeprom.txt ?
+> > Or documented elsewhere?
+> 
+> Probably we need a DT maintainers advice here? I don't mind vendor
+> specific compatibles being documented, but I'm reluctant to add all
+> these compatibles for the myriads of I2C eeproms to the at24 driver. 99%
+> are covered by the generic case.
+> 
+> Adding DT to CC.
 
-Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+I'd rather use some vendor string in addition to 24c02. Isn't this originally
+an Atmel part? In that case, using "atmel,24c02" as the most generic string
+would be appropriate, and IIRC the i2c framework will just match that with
+the "24c02" entry in the i2c_device_id list.
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
-index f47e5f1..2f6b21a 100644
---- a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
-@@ -74,6 +74,9 @@
- };
- 
- &codec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&codec_pa_pin>;
-+	allwinner,pa-gpios = <&pio 7 15 GPIO_ACTIVE_HIGH>; /* PH15 */
- 	status = "okay";
- };
- 
-@@ -176,6 +179,13 @@
- 		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 	};
- 
-+	codec_pa_pin: codec_pa_pin@0 {
-+		allwinner,pins = "PH15";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
- 	ts_reset_pin: ts_reset_pin@0 {
- 		allwinner,pins = "PB13";
- 		allwinner,function = "gpio_out";
--- 
-2.4.10
+	Arnd
