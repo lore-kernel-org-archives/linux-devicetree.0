@@ -1,90 +1,97 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 00/13] ARM: shmobile: dts: Update console parameters
-Date: Fri, 18 Dec 2015 15:05:38 +0100
-Message-ID: <CAMuHMdVzEpcZ11EckVW+5eG55UbLoWzsuGaza-Mp+XKZtRmNDA@mail.gmail.com>
-References: <1449597258-32623-1-git-send-email-geert+renesas@glider.be>
-	<20151210070239.GA17682@verge.net.au>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RESEND PATCH v7 2/4] Documentation, dt, arm64/arm: dt bindings
+ for numa.
+Date: Fri, 18 Dec 2015 14:18:26 +0000
+Message-ID: <20151218141826.GB30229@leverpostej>
+References: <1450413433-7467-1-git-send-email-gkulkarni@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151210070239.GA17682-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1450413433-7467-1-git-send-email-gkulkarni@caviumnetworks.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
+Cc: catalin.marinas@arm.com, Will.Deacon@arm.com, pawel.moll@arm.com, al.stone@linaro.org, Prasun.Kapoor@caviumnetworks.com, msalter@redhat.com, rfranz@cavium.com, lenb@kernel.org, devicetree@vger.kernel.org, steve.capper@linaro.org, arnd@arndb.de, ijc+devicetree@hellion.org.uk, marc.zyngier@arm.com, leif.lindholm@linaro.org, rrichter@cavium.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, ard.biesheuvel@linaro.org, rjw@rjwysocki.net, hanjun.guo@linaro.org, galak@codeaurora.org, gpkulkarni@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+Hi,
 
-On Thu, Dec 10, 2015 at 8:02 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> On Tue, Dec 08, 2015 at 06:54:05PM +0100, Geert Uytterhoeven wrote:
->> This patch series updates the console parameters in the DTSes for
->> various Renesas ARM boards.
->>
->>   - For all of them, the serial port config is added to
->>     chosen/stdout-path, as per current best practices,
->>   - On some boards (armadillo, bockw, kzm9d, kzm9g), "console="
->>     parameters are removed from the kernel command lines, as they're no
->>     longer needed for DT-only platforms,
->>   - On some boards (genmai, kzm9g), the console alias is changed to
->>     "serial0", for consistency with other boards (the first serial port
->>     is always called "serial0", unless labeled otherwise); this does
->>     mean the device changes its name to /dev/ttySC0 in userspace, which
->>     also happened on R-Car Gen2 before,
->>   - On kzm9d, a console alias is added.
->>
->> Tested on r8a73a4/ape6evm, r8a7740/armadillo, r8a7778/bockw,
->> r8a7779/marzen, r8a7791/koelsch, and sh73a0/kzm9g.
->>
->> Thanks for applying!
->>
->> Geert Uytterhoeven (13):
->>   ARM: shmobile: alt dts: Add serial port config to chosen/stdout-path
->>   ARM: shmobile: ape6evm dts: Add serial port config to
->>     chosen/stdout-path
->
-> alt and ape6evm tested ok.
-> I have queued up the changes for those boards.
->
->>   ARM: shmobile: armadillo800eva dts: Update console parameters
->
-> I would prefer not to take the serial1 -> serial0 portion of this change at
-> this time as it causes a user-space visible change: the console moves from
-> ttySC1 to ttySC0. I noticed this because I no longer made it all the way
-> to user-space which was expecting a console on ttySC1.
->
-> -- start before --
-> [    0.050000] e6c50000.serial: ttySC1 at MMIO 0xe6c50000 (irq = 25, base_baud = 0) is a scifa
-> [    0.780000] console [ttySC1] enabled
-> -- end before --
->
-> -- start after --
-> [    0.050000] e6c50000.serial: ttySC0 at MMIO 0xe6c50000 (irq = 25, base_baud = 0) is a scifa
-> [    0.780000] console [ttySC0] enabled
-> -- end after --
+> +==============================================================================
+> +2 - numa-node-id
+> +==============================================================================
+> +
+> +For the purpose of identification, each NUMA node is associated with a unique
+> +token known as a node id. For the purpose of this binding
+> +a node id is a 32-bit integer.
+> +
+> +A device node is associated with a NUMA node by the presence of a
+> +numa-node-id property which contains the node id of the device.
+> +
+> +Example:
+> +	/* numa node 0 */
+> +	numa-node-id = <0>;
+> +
+> +	/* numa node 1 */
+> +	numa-node-id = <1>;
+> +
+> +==============================================================================
+> +3 - distance-map
+> +==============================================================================
+> +
+> +The device tree node distance-map describes the relative
+> +distance(memory latency) between all numa nodes.
+> +
+> +- compatible : Should at least contain "numa-distance-map-v1".
 
-We made a similar change on koelsch, lager, and marzen (cfr. below) before,
-so I assumed this is OK?
+Thank you for updating these per my request.
 
->>   ARM: shmobile: marzen dts: Add serial port config to
->>     chosen/stdout-path
->
-> Changing &scif2 to serial0 creates a user-space visible change:
-> the console moves from ttySC2 to ttySC0.
+The fact that these have changed since the late posting [1] means that
+this is a new version of the patch rather than a resend. Please update
+the PATCHvX number when changes are made.
 
-Does it? Serial0 was already pointing to scif2 since Magnus' commit
-8025e3ff4ca972a0 ("ARM: shmobile: marzen: Board specific serial port order").
+You also need to update the driver for the new compatible string, so a
+new version of that is required.
 
-Gr{oetje,eeting}s,
+> +- distance-matrix
+> +  This property defines a matrix to describe the relative distances
+> +  between all numa nodes.
+> +  It is represented as a list of node pairs and their relative distance.
+> +
+> +  Note:
+> +	1. Each entry represents distance from first node to second node.
+> +	The distance are equal in either direction.
+> +	2. The distance from a node to self(local distance) is represented
+> +	with value 10 and all inter node distance should be represented with
+> +	value greater than 10.
+> +	3. distance-matrix shold have entries in lexicographical ascending
+> +	order of nodes.
+> +	4. There must be only one Device node distance-map and must reside in the root node.
 
-                        Geert
+I am still concerned that the local distance of 10 is completely
+arbitrary.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+Please:
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+* Add a new local-distance property to the distance-map node allowing a
+  uniform local distance to be described, and require this property to
+  be present.
+
+* Update the driver to account for that and the compatible string
+  change.
+
+* Send a complete PATCHv8 (or PATCHv$X where X > 7) series with a proper
+  changelog.
+
+Thanks,
+Mark.
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-November/385826.html
