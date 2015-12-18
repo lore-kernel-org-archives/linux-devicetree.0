@@ -1,50 +1,49 @@
-From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/3] ARM: dts: bcm5301x: Add I2C support to the DT
-Date: Fri, 18 Dec 2015 16:37:55 -0500
-Message-ID: <1450474676-10210-2-git-send-email-jonmason@broadcom.com>
+From: Jon Mason <jonmason@broadcom.com>
+Subject: [PATCH 3/3] arm: dts: bcm5301x: Add syscon based reboot in DT
+Date: Fri, 18 Dec 2015 16:37:56 -0500
+Message-ID: <1450474676-10210-3-git-send-email-jonmason@broadcom.com>
 References: <1450474676-10210-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450474676-10210-1-git-send-email-jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1450474676-10210-1-git-send-email-jonmason@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Hauke Mehrtens <hauke@hauke-m.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Add I2C support to the bcm5301x Device Tree.  Since no driver changes
-are needed to enable this hardware, only the device tree changes are
-required to make this functional.
+Add the ability to reboot via a reset of the processor.  This is
+achieved via a write of 0x39 to the CRU Reset Register.  Unfortunately,
+this only resets the core and not the other IP blocks.  So if possible,
+other methods should be used on the individual boards.
 
-Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Jon Mason <jonmason@broadcom.com>
 ---
- arch/arm/boot/dts/bcm5301x.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/bcm5301x.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
-index c31fafe..553b2ec 100644
+index 553b2ec..2a482ec 100644
 --- a/arch/arm/boot/dts/bcm5301x.dtsi
 +++ b/arch/arm/boot/dts/bcm5301x.dtsi
-@@ -218,6 +218,15 @@
- 		};
+@@ -246,6 +246,18 @@
+ 				     "sata2";
  	};
  
-+	i2c0: i2c@18009000 {
-+		compatible = "brcm,iproc-i2c";
-+		reg = <0x18009000 0x50>;
-+		interrupts = <GIC_SPI 121 IRQ_TYPE_NONE>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clock-frequency = <100000>;
++	cru: cru@1800c184 {
++		compatible = "syscon";
++		reg = <0x1800c184 0xc>;
 +	};
 +
- 	lcpll0: lcpll0@1800c100 {
- 		#clock-cells = <1>;
- 		compatible = "brcm,nsp-lcpll0";
++	reboot@1800c184 {
++		compatible ="syscon-reboot";
++		regmap = <&cru>;
++		offset = <0>;
++		mask = <0x39>;
++	};
++
+ 	nand: nand@18028000 {
+ 		compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1", "brcm,brcmnand";
+ 		reg = <0x18028000 0x600>, <0x1811a408 0x600>, <0x18028f00 0x20>;
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
