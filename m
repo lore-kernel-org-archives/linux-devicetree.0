@@ -1,279 +1,105 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v5] extcon: add Maxim MAX3355 driver
-Date: Sat, 19 Dec 2015 02:17:41 +0300
-Message-ID: <5948633.my3nAG6hRz@wasted.cogentembedded.com>
+From: "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] USB: add generic onboard USB HUB driver
+Date: Sat, 19 Dec 2015 00:48:40 +0100
+Message-ID: <56749B58.4040306@maciej.szmigiero.name>
+References: <1450077974-22762-1-git-send-email-peter.chen@freescale.com> <CAOMZO5CfBKuJ584jwbg98s9tn+0Z7W0nOaZnUkm4cJUSvNGTZw@mail.gmail.com> <20151215062821.GA11241@shlinux2> <CAOMZO5DiRzfy5dULh0C7qU2KUM-i8fBh6W5rS9zOTHJJK6fqwg@mail.gmail.com> <20151216041058.GC23482@shlinux2> <CAOMZO5An3CK-a3NQtOF3nnPc8vzu2+SKnfJ=iOuAhjCBvZwToQ@mail.gmail.com> <5671C40F.3000000@maciej.szmigiero.name> <20151217065756.GB3793@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151217065756.GB3793@shlinux2>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Patryk Kowalczyk <patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Maxim Integrated MAX3355E chip integrates a charge pump and comparators to
-enable a system with an integrated USB OTG dual-role transceiver to
-function as an USB OTG dual-role device. In addition to sensing/controlling
-Vbus, the chip also passes thru the ID signal from the USB OTG connector.
-On some Renesas boards, this signal is just fed into the SoC thru a GPIO
-pin -- there's no real OTG controller, only host and gadget USB controllers
-sharing the same USB bus; however, we'd like to allow host or gadget
-drivers to be loaded depending on the cable type, hence the need for the
-MAX3355 extcon driver. The Vbus status signals are also wired to GPIOs
-(however, we aren't currently interested in them), the OFFVBUS# signal is
-controlled by the host controllers, there's also the SHDN# signal wired to
-a GPIO, it should be driven high for the normal operation.
+On 17.12.2015 07:57, Peter Chen wrote:
+> On Wed, Dec 16, 2015 at 09:05:35PM +0100, Maciej S. Szmigiero wrote:
+>> Hi Fabio,
+>> Hi Peter,
+>>
+>> On 16.12.2015 11:11, Fabio Estevam wrote:
+>>> Hi Peter,
+>>>
+>>> On Wed, Dec 16, 2015 at 2:11 AM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+>>>
+>>>> Thanks, Fabio, but I am curious how things like that? The USBOH3 clock
+>>>> is not opened, the usb driver will hang when it tries to access
+>>>> registers. If this clock is always on, then, why the system will
+>>>> hang later?
+>>>
+>>> I found the issue with your patch. You missed to add the pinctrl node.
+>>>
+>>> With the change below USB is functional in Udoo:
+>>>
+>>> --- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+>>> +++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+>>> @@ -22,6 +22,8 @@
+>>>
+>>>         usb_hub1 {
+>>>                 compatible = "generic-onboard-hub";
+>>> +               pinctrl-names = "default";
+>>> +               pinctrl-0 = <&pinctrl_usbh>;
+>>>                 clocks = <&clks IMX6QDL_CLK_CKO>;
+>>>                 reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+>>>                 reset-duration-us = <2>;
+>>>
+>>
+>> Thanks for your work, I didn't notice it previously (sorry).
+>>
+>> I can confirm, too that with Peter's patches and the above change
+>> the USB support works again on my UDOO DualLite board.
+>>
+>> However, I noticed that when you have host USB support configured to be
+>> build as modules then (due to its location under "if USB") it is only
+>> possible to compile generic onboard USB HUB as module, too.
+>>
+>> Then this module would need to be loaded before loading USB support
+>> (or quickly after it), otherwise USB enumeration would time out after
+>> few secs and loading it later wouldn't help.
+> 
+> Thanks for testing it, it maybe this hardware limitation.
+> The USB device should be back to work whenever do hardware reset,
+> otherwise, this reset is not clean.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+I looked deeper into it and looks like the reset GPIO have to be
+explicitly configured as output and also the reset pulse duration
+have to be longer in order for hub the successfully reset and reattach
+to USB host (at least on the one UDOO board that I have).
 
----
-Changes in version 5:
-- removed unused variable in the probe() method;
-- removed reference to the Koelsch board from the binding document;
-- added Chanwoo Choi's ACK.
+The shortest working time seems to be 3000us - 2000us didn't work even
+when I changed GPIO pin mode to fast and drive strength to maximum.
 
-Changes in version 4:
-- stopped calling kstrdup() for the device name;
-- removed unneeded 'owner' field initializer;
-- moved devm_extcon_allocate() call further down in the probe() method;
-- extended the driver copyright;
-- indented the continuation lines in the binding document.
-
-Changes in version 3:
-- reformatted the change log.
-
-Changes in version 2:
-- added the USB gadget cable support;
-- added the remove() driver method which drives SHDN# GPIO low to save power;
-- dropped vendor prefix from the ID GPIO property name;
-- changed the GPIO property name suffix to "-gpios";
-- switched to usign extcon_set_cable_state_() API;
-- switched to using the gpiod/sleeping 'gpiolib' APIs;
-- addded error messages to max3355_probe();
-- added IRQF_NO_SUSPEND flasg to the devm_request_threaded_irq() call;
-- renamed 'ret' variable to 'err' in max3355_probe();
-- expanded the Kconfig entry help text;
-- added vendor name to the patch summary, the bindings document, the Kconfig
-  entry, the driver heading comment, the module description, and the change log;
-- fixed up and reformatted the change log.
-
- Documentation/devicetree/bindings/extcon/extcon-max3355.txt |   21 +
- drivers/extcon/Kconfig                                      |    8 
- drivers/extcon/Makefile                                     |    1 
- drivers/extcon/extcon-max3355.c                             |  150 ++++++++++++
- 4 files changed, 180 insertions(+)
-
-Index: extcon/Documentation/devicetree/bindings/extcon/extcon-max3355.txt
-===================================================================
---- /dev/null
-+++ extcon/Documentation/devicetree/bindings/extcon/extcon-max3355.txt
-@@ -0,0 +1,21 @@
-+Maxim Integrated MAX3355 USB OTG chip
-+-------------------------------------
-+
-+MAX3355 integrates a charge pump and comparators to enable a system with an
-+integrated USB OTG dual-role transceiver to function as a USB OTG dual-role
-+device.
-+
-+Required properties:
-+- compatible: should be "maxim,max3355";
-+- maxim,shdn-gpios: should contain a phandle and GPIO specifier for the GPIO pin
-+		    connected to the MAX3355's SHDN# pin;
-+- id-gpios: should contain a phandle and GPIO specifier for the GPIO pin
-+	    connected to the MAX3355's ID_OUT pin.
-+
-+Example:
-+
-+	usb-otg {
-+		compatible = "maxim,max3355";
-+		maxim,shdn-gpios = <&gpio2 4 GPIO_ACTIVE_LOW>;
-+		id-gpios = <&gpio5 31 GPIO_ACTIVE_HIGH>;
-+	};
-Index: extcon/drivers/extcon/Kconfig
-===================================================================
---- extcon.orig/drivers/extcon/Kconfig
-+++ extcon/drivers/extcon/Kconfig
-@@ -52,6 +52,14 @@ config EXTCON_MAX14577
- 	  Maxim MAX14577/77836. The MAX14577/77836 MUIC is a USB port accessory
- 	  detector and switch.
+Summing up, this change allows me to load generic_onboard_hub driver
+in any order with respect to USB host modules:
+--- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+@@ -26,7 +26,7 @@
+ 		pinctrl-0 = <&pinctrl_usbh>;
+ 		clocks = <&clks IMX6QDL_CLK_CKO>;
+ 		reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+-		reset-duration-us = <2>;
++		reset-duration-us = <3000>;
+ 	};
+ };
  
-+config EXTCON_MAX3355
-+	tristate "Maxim MAX3355 USB OTG EXTCON Support"
-+	help
-+	  If you say yes here you get support for the USB OTG role detection by
-+	  MAX3355. The MAX3355 chip integrates a charge pump and comparators to
-+	  enable a system with an integrated USB OTG dual-role transceiver to
-+	  function as an USB OTG dual-role device.
-+
- config EXTCON_MAX77693
- 	tristate "Maxim MAX77693 EXTCON Support"
- 	depends on MFD_MAX77693 && INPUT
-Index: extcon/drivers/extcon/Makefile
-===================================================================
---- extcon.orig/drivers/extcon/Makefile
-+++ extcon/drivers/extcon/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_EXTCON_ARIZONA)	+= extcon-a
- obj-$(CONFIG_EXTCON_AXP288)	+= extcon-axp288.o
- obj-$(CONFIG_EXTCON_GPIO)	+= extcon-gpio.o
- obj-$(CONFIG_EXTCON_MAX14577)	+= extcon-max14577.o
-+obj-$(CONFIG_EXTCON_MAX3355)	+= extcon-max3355.o
- obj-$(CONFIG_EXTCON_MAX77693)	+= extcon-max77693.o
- obj-$(CONFIG_EXTCON_MAX77843)	+= extcon-max77843.o
- obj-$(CONFIG_EXTCON_MAX8997)	+= extcon-max8997.o
-Index: extcon/drivers/extcon/extcon-max3355.c
-===================================================================
---- /dev/null
-+++ extcon/drivers/extcon/extcon-max3355.c
-@@ -0,0 +1,150 @@
-+/*
-+ * Maxim Integrated MAX3355 USB OTG chip extcon driver
-+ *
-+ * Copyright (C)  2014-2015 Cogent Embedded, Inc.
-+ * Author: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ */
-+
-+#include <linux/extcon.h>
-+#include <linux/gpio.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_gpio.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/workqueue.h>
-+
-+struct max3355_data {
-+	struct extcon_dev *edev;
-+	struct gpio_desc *id_gpiod;
-+	struct gpio_desc *shdn_gpiod;
-+};
-+
-+static const unsigned int max3355_cable[] = {
-+	EXTCON_USB,
-+	EXTCON_USB_HOST,
-+	EXTCON_NONE,
-+};
-+
-+static irqreturn_t max3355_id_irq(int irq, void *dev_id)
-+{
-+	struct max3355_data *data = dev_id;
-+	int id = gpiod_get_value_cansleep(data->id_gpiod);
-+
-+	if (id) {
-+		/*
-+		 * ID = 1 means USB HOST cable detached.
-+		 * As we don't have event for USB peripheral cable attached,
-+		 * we simulate USB peripheral attach here.
-+		 */
-+		extcon_set_cable_state_(data->edev, EXTCON_USB_HOST, false);
-+		extcon_set_cable_state_(data->edev, EXTCON_USB, true);
-+	} else {
-+		/*
-+		 * ID = 0 means USB HOST cable attached.
-+		 * As we don't have event for USB peripheral cable detached,
-+		 * we simulate USB peripheral detach here.
-+		 */
-+		extcon_set_cable_state_(data->edev, EXTCON_USB, false);
-+		extcon_set_cable_state_(data->edev, EXTCON_USB_HOST, true);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int max3355_probe(struct platform_device *pdev)
-+{
-+	struct max3355_data *data;
-+	struct gpio_desc *gpiod;
-+	int irq, err;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(struct max3355_data),
-+			    GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	gpiod = devm_gpiod_get(&pdev->dev, "id", GPIOD_IN);
-+	if (IS_ERR(gpiod)) {
-+		dev_err(&pdev->dev, "failed to get ID_OUT GPIO\n");
-+		return PTR_ERR(gpiod);
-+	}
-+	data->id_gpiod = gpiod;
-+
-+	gpiod = devm_gpiod_get(&pdev->dev, "maxim,shdn", GPIOD_OUT_HIGH);
-+	if (IS_ERR(gpiod)) {
-+		dev_err(&pdev->dev, "failed to get SHDN# GPIO\n");
-+		return PTR_ERR(gpiod);
-+	}
-+	data->shdn_gpiod = gpiod;
-+
-+	data->edev = devm_extcon_dev_allocate(&pdev->dev, max3355_cable);
-+	if (IS_ERR(data->edev)) {
-+		dev_err(&pdev->dev, "failed to allocate extcon device\n");
-+		return PTR_ERR(data->edev);
-+	}
-+
-+	err = devm_extcon_dev_register(&pdev->dev, data->edev);
-+	if (err < 0) {
-+		dev_err(&pdev->dev, "failed to register extcon device\n");
-+		return err;
-+	}
-+
-+	irq = gpiod_to_irq(data->id_gpiod);
-+	if (irq < 0) {
-+		dev_err(&pdev->dev, "failed to translate ID_OUT GPIO to IRQ\n");
-+		return irq;
-+	}
-+
-+	err = devm_request_threaded_irq(&pdev->dev, irq, NULL, max3355_id_irq,
-+					IRQF_ONESHOT | IRQF_NO_SUSPEND |
-+					IRQF_TRIGGER_RISING |
-+					IRQF_TRIGGER_FALLING,
-+					pdev->name, data);
-+	if (err < 0) {
-+		dev_err(&pdev->dev, "failed to request ID_OUT IRQ\n");
-+		return err;
-+	}
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	/* Perform initial detection */
-+	max3355_id_irq(irq, data);
-+
-+	return 0;
-+}
-+
-+static int max3355_remove(struct platform_device *pdev)
-+{
-+	struct max3355_data *data = platform_get_drvdata(pdev);
-+
-+	gpiod_set_value_cansleep(data->shdn_gpiod, 0);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id max3355_match_table[] = {
-+	{ .compatible = "maxim,max3355", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, max3355_match_table);
-+
-+static struct platform_driver max3355_driver = {
-+	.probe		= max3355_probe,
-+	.remove		= max3355_remove,
-+	.driver		= {
-+		.name	= "extcon-max3355",
-+		.of_match_table = max3355_match_table,
-+	},
-+};
-+
-+module_platform_driver(max3355_driver);
-+
-+MODULE_AUTHOR("Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>");
-+MODULE_DESCRIPTION("Maxim MAX3355 extcon driver");
-+MODULE_LICENSE("GPL v2");
+--- a/drivers/usb/misc/generic_onboard_hub.c
++++ b/drivers/usb/misc/generic_onboard_hub.c
+@@ -89,7 +89,7 @@ static int usb_hub_generic_probe(struct platform_device *pdev)
+ 	of_property_read_u32(node, "reset-duration-us", &duration_us);
+ 
+ 	if (gpiod_reset) {
+-		gpiod_set_value(gpiod_reset, 1);
++		gpiod_direction_output(gpiod_reset, 1);
+ 		usleep_range(duration_us, duration_us + 10);
+ 		gpiod_set_value(gpiod_reset, 0);
+ 	}
 
+
+Best regards,
+Maciej Szmigiero
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
