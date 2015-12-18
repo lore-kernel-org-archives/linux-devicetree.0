@@ -1,53 +1,277 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/2] arm64: dts: r8a7795: Add L2 cache-controller nodes
-Date: Fri, 18 Dec 2015 12:03:41 +0100
-Message-ID: <CAMuHMdXpgtPDMBUd_aJsxvh1oFF36i5AnTTSvh+1kmEzcWkGyg@mail.gmail.com>
-References: <1449904607-4060-1-git-send-email-dirk.behme@gmail.com>
-	<1449904607-4060-2-git-send-email-dirk.behme@gmail.com>
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH linux-next 1/5] mtd: spi-nor: properly detect the memory
+ when it boots in Quad or Dual mode
+Date: Fri, 18 Dec 2015 12:19:30 +0100
+Message-ID: <5673EBC2.901@atmel.com>
+References: <cover.1449494420.git.cyrille.pitchen@atmel.com>
+ <813edd1addf9a09b9f01031d3cb279c8cdfe97bb.1449494420.git.cyrille.pitchen@atmel.com>
+ <20151218015544.GG10460@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1449904607-4060-2-git-send-email-dirk.behme@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Dirk Behme <dirk.behme@gmail.com>
-Cc: Linux-sh list <linux-sh@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151218015544.GG10460-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dirk,
+Hi Brian,
 
-On Sat, Dec 12, 2015 at 8:16 AM, Dirk Behme <dirk.behme@gmail.com> wrote:
-> From: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Add device nodes for the L2 caches, and link the CPU node to its L2
-> cache node.
->
-> The L2 cache for the Cortex-A57 CPU cores is 2 MiB large (organized as
-> 128 KiB x 16 ways).
->
-> The L2 cache for the Cortex-A53 CPU cores is 512 KiB large (organized as
-> 32 KiB x 16 ways).
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Dirk Behme <dirk.behme@gmail.com>
-> ---
-> Note: Geert: I picked your patch from
->
-> http://www.spinics.net/lists/arm-kernel/msg466628.html
->
-> incoporated some review comments and rebased it against
->
-> https://git.kernel.org/cgit/linux/kernel/git/horms/renesas.git/log/?h=next renesas-next-20151211v2-v4.4-rc1
+I will be on vacation till 2016 January, 4th.
+I will try to answer your questions as soon as possible.
 
-This is more or less what I have locally, except that I kept the latency
-properties, pending discussion.
+Best regards,
 
-Gr{oetje,eeting}s,
+Cyrille
 
-                        Geert
+Le 18/12/2015 02:55, Brian Norris a =E9crit :
+> Hi Cyrille,
+>=20
+> On Mon, Dec 07, 2015 at 03:09:10PM +0100, Cyrille Pitchen wrote:
+>> The quad (or dual) mode of a spi-nor memory may be enabled at boot t=
+ime by
+>> non-volatile bits in some setting register. Also such a mode may hav=
+e
+>> already been enabled at early stage by some boot loader.
+>>
+>> Hence, we should not guess the spi-nor memory is always configured f=
+or the
+>> regular SPI 1-1-1 protocol.
+>>
+>> Micron and Macronix memories, once their Quad (or dual for Micron) m=
+ode
+>> enabled, no longer process the regular JEDEC Read ID (0x9f) command =
+but
+>> instead reply to a new command: JEDEC Read ID Multiple I/O (0xaf).
+>> Besides, in Quad mode both memory manufacturers expect ALL commands =
+to
+>> use the SPI 4-4-4 protocol. For Micron memories, enabling their Dual=
+ mode
+>> implies to use the SPI 2-2-2 protocol for ALL commands.
+>>
+>> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  drivers/mtd/spi-nor/spi-nor.c | 52 ++++++++++++++++++++++++++++++++=
++++++++----
+>>  include/linux/mtd/spi-nor.h   | 23 +++++++++++++++++--
+>>  2 files changed, 69 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi=
+-nor.c
+>> index 3b2460efc019..bf17736750c1 100644
+>> --- a/drivers/mtd/spi-nor/spi-nor.c
+>> +++ b/drivers/mtd/spi-nor/spi-nor.c
+>> @@ -73,6 +73,11 @@ struct flash_info {
+>> =20
+>>  #define JEDEC_MFR(info)	((info)->id[0])
+>> =20
+>> +struct read_id_config {
+>> +	enum read_mode		mode;
+>> +	enum spi_protocol	proto;
+>> +};
+>> +
+>>  static const struct flash_info *spi_nor_match_id(const char *name);
+>> =20
+>>  /*
+>> @@ -867,11 +872,16 @@ static const struct flash_info spi_nor_ids[] =3D=
+ {
+>>  	{ },
+>>  };
+>> =20
+>> -static const struct flash_info *spi_nor_read_id(struct spi_nor *nor=
+)
+>> +static const struct flash_info *spi_nor_read_id(struct spi_nor *nor=
+,
+>> +						enum read_mode mode)
+>=20
+> It's unclear what you're trying to do with the 'read_mode' enum now.
+> (Admittedly it may not be clear in the current code either, given the
+> confusion we already have over Micron support.)
+>=20
+> Would you care to document it better?
+>=20
+>>  {
+>> -	int			tmp;
+>> +	int			i, tmp;
+>>  	u8			id[SPI_NOR_MAX_ID_LEN];
+>>  	const struct flash_info	*info;
+>> +	static const struct read_id_config configs[] =3D {
+>> +		{SPI_NOR_QUAD, SPI_PROTO_4_4_4},
+>> +		{SPI_NOR_DUAL, SPI_PROTO_2_2_2}
+>> +	};
+>> =20
+>>  	tmp =3D nor->read_reg(nor, SPINOR_OP_RDID, id, SPI_NOR_MAX_ID_LEN)=
+;
+>>  	if (tmp < 0) {
+>> @@ -879,6 +889,34 @@ static const struct flash_info *spi_nor_read_id=
+(struct spi_nor *nor)
+>>  		return ERR_PTR(tmp);
+>>  	}
+>> =20
+>> +	/* Special case for Micron/Macronix qspi nor. */
+>> +	if ((id[0] =3D=3D 0xff && id[1] =3D=3D 0xff && id[2] =3D=3D 0xff) =
+||
+>> +	    (id[0] =3D=3D 0x00 && id[1] =3D=3D 0x00 && id[2] =3D=3D 0x00))
+>> +		for (i =3D 0; i < ARRAY_SIZE(configs); ++i) {
+>> +			if (configs[i].mode !=3D mode)
+>> +				continue;
+>> +
+>> +			/* Set this protocol for all commands. */
+>> +			nor->reg_proto =3D configs[i].proto;
+>> +			nor->read_proto =3D configs[i].proto;
+>> +			nor->write_proto =3D configs[i].proto;
+>> +			nor->erase_proto =3D configs[i].proto;
+>=20
+> Are these all fully independent? Do we really need 4 fields for this?
+>=20
+>> +
+>> +			/*
+>> +			 * Multiple I/O Read ID only returns the Manufacturer ID
+>> +			 * (1 byte) and the Device ID (2 bytes). So we reset the
+>> +			 * remaining bytes.
+>> +			 */
+>> +			memset(id, 0, sizeof(id));
+>> +			tmp =3D nor->read_reg(nor, SPINOR_OP_MIO_RDID, id, 3);
+>> +			if (tmp < 0) {
+>> +				dev_dbg(nor->dev,
+>> +					"error %d reading JEDEC ID Multi I/O\n",
+>> +					tmp);
+>> +				return ERR_PTR(tmp);
+>> +			}
+>> +		}
+>> +
+>>  	for (tmp =3D 0; tmp < ARRAY_SIZE(spi_nor_ids) - 1; tmp++) {
+>>  		info =3D &spi_nor_ids[tmp];
+>>  		if (info->id_len) {
+>> @@ -1178,11 +1216,17 @@ int spi_nor_scan(struct spi_nor *nor, const =
+char *name, enum read_mode mode)
+>>  	if (ret)
+>>  		return ret;
+>> =20
+>> +	/* Reset SPI protocol for all commands */
+>> +	nor->erase_proto =3D SPI_PROTO_1_1_1;
+>> +	nor->read_proto =3D SPI_PROTO_1_1_1;
+>> +	nor->write_proto =3D SPI_PROTO_1_1_1;
+>> +	nor->reg_proto =3D SPI_PROTO_1_1_1;
+>> +
+>>  	if (name)
+>>  		info =3D spi_nor_match_id(name);
+>>  	/* Try to auto-detect if chip name wasn't specified or not found *=
+/
+>>  	if (!info)
+>> -		info =3D spi_nor_read_id(nor);
+>> +		info =3D spi_nor_read_id(nor, mode);
+>>  	if (IS_ERR_OR_NULL(info))
+>>  		return -ENOENT;
+>> =20
+>> @@ -1193,7 +1237,7 @@ int spi_nor_scan(struct spi_nor *nor, const ch=
+ar *name, enum read_mode mode)
+>>  	if (name && info->id_len) {
+>>  		const struct flash_info *jinfo;
+>> =20
+>> -		jinfo =3D spi_nor_read_id(nor);
+>> +		jinfo =3D spi_nor_read_id(nor, mode);
+>>  		if (IS_ERR(jinfo)) {
+>>  			return PTR_ERR(jinfo);
+>>  		} else if (jinfo !=3D info) {
+>> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor=
+=2Eh
+>> index fac3f6f53981..c91986a99caf 100644
+>> --- a/include/linux/mtd/spi-nor.h
+>> +++ b/include/linux/mtd/spi-nor.h
+>> @@ -75,8 +75,9 @@
+>>  #define SPINOR_OP_BRWR		0x17	/* Bank register write */
+>> =20
+>>  /* Used for Micron flashes only. */
+>> -#define SPINOR_OP_RD_EVCR      0x65    /* Read EVCR register */
+>> -#define SPINOR_OP_WD_EVCR      0x61    /* Write EVCR register */
+>> +#define SPINOR_OP_MIO_RDID	0xaf	/* Multiple I/O Read JEDEC ID */
+>> +#define SPINOR_OP_RD_EVCR	0x65    /* Read EVCR register */
+>> +#define SPINOR_OP_WD_EVCR	0x61    /* Write EVCR register */
+>> =20
+>>  /* Status Register bits. */
+>>  #define SR_WIP			BIT(0)	/* Write in progress */
+>> @@ -105,6 +106,16 @@ enum read_mode {
+>>  	SPI_NOR_QUAD,
+>>  };
+>> =20
+>> +enum spi_protocol {
+>> +	SPI_PROTO_1_1_1,	/* SPI */
+>> +	SPI_PROTO_1_1_2,	/* Dual Output */
+>> +	SPI_PROTO_1_1_4,	/* Quad Output */
+>> +	SPI_PROTO_1_2_2,	/* Dual IO */
+>> +	SPI_PROTO_1_4_4,	/* Quad IO */
+>> +	SPI_PROTO_2_2_2,	/* Dual Command */
+>> +	SPI_PROTO_4_4_4,	/* Quad Command */
+>=20
+> Would it help at all to make this enum into something more like a
+> bitfield? So in some cases, rather than a bit switch block, we can ju=
+st
+> extract the "number of lines" from the integer value? e.g.:
+>=20
+> #define SNOR_PROTO(command, addr, data) \
+> 	(((command) << 0) | \
+> 	 ((addr) << 4) | \
+> 	 ((data) << 8)) // or some other kind of macro magic
+>=20
+> enum spi_nor_protocol {
+> 	SNOR_PROTO_1_1_1		=3D SNOR_PROTO(1, 1, 1),
+> 	SNOR_PROTO_1_1_2		=3D SNOR_PROTO(1, 1, 2),
+> 	...
+> };
+>=20
+> static inline int spi_nor_io_lines_command(enum spi_nor_protocol prot=
+o)
+> {
+> 	return proto & 0xf;
+> }
+>=20
+> (Similar for addr and data phases. Also, my naming might suck. Feel f=
+ree
+> to improve!)
+>=20
+> I don't think we should stomp on the SPI namespace with the
+> "SPI_PROTO_*" definitions. That's why I chose SNOR_PROTO_ and spi_nor=
+_
+> prefixes.
+>=20
+> Brian
+>=20
+>> +};
+>> +
+>>  #define SPI_NOR_MAX_CMD_SIZE	8
+>>  enum spi_nor_ops {
+>>  	SPI_NOR_OPS_READ =3D 0,
+>> @@ -132,6 +143,10 @@ enum spi_nor_option_flags {
+>>   * @flash_read:		the mode of the read
+>>   * @sst_write_second:	used by the SST write operation
+>>   * @flags:		flag options for the current SPI-NOR (SNOR_F_*)
+>> + * @erase_proto:	the SPI protocol used by erase operations
+>> + * @read_proto:		the SPI protocol used by read operations
+>> + * @write_proto:	the SPI protocol used by write operations
+>> + * @reg_proto		the SPI protocol used by read_reg/write_reg operatio=
+ns
+>>   * @cmd_buf:		used by the write_reg
+>>   * @prepare:		[OPTIONAL] do some preparations for the
+>>   *			read/write/erase/lock/unlock operations
+>> @@ -160,6 +175,10 @@ struct spi_nor {
+>>  	u8			read_opcode;
+>>  	u8			read_dummy;
+>>  	u8			program_opcode;
+>> +	enum spi_protocol	erase_proto;
+>> +	enum spi_protocol	read_proto;
+>> +	enum spi_protocol	write_proto;
+>> +	enum spi_protocol	reg_proto;
+>>  	enum read_mode		flash_read;
+>>  	bool			sst_write_second;
+>>  	u32			flags;
+>> --=20
+>> 1.8.2.2
+>>
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
