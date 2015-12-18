@@ -1,33 +1,78 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v5 3/5] PCI: qcom: Add Qualcomm PCIe controller driver
-Date: Fri, 18 Dec 2015 21:44:15 +0800
-Message-ID: <201512182111.1GLn2hxy%fengguang.wu@intel.com>
-References: <1450442339-18765-4-git-send-email-stanimir.varbanov@linaro.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 2/2] arm64: dts: r8a7795: Add L2 cache-controller nodes
+Date: Fri, 18 Dec 2015 13:46:56 +0000
+Message-ID: <56740E50.9060607@arm.com>
+References: <1449904607-4060-1-git-send-email-dirk.behme@gmail.com>
+ <1449904607-4060-2-git-send-email-dirk.behme@gmail.com>
+ <CAMuHMdXpgtPDMBUd_aJsxvh1oFF36i5AnTTSvh+1kmEzcWkGyg@mail.gmail.com>
+ <5673F46C.2070501@gmail.com>
+ <CAMuHMdUjjR1UuQDCwsV4U-tSR95W_Go_2u=BBehotCd9vQ9ZJA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1450442339-18765-4-git-send-email-stanimir.varbanov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@01.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUjjR1UuQDCwsV4U-tSR95W_Go_2u=BBehotCd9vQ9ZJA@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Dirk Behme <dirk.behme@gmail.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Linux-sh list <linux-sh@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stanimir,
-
-[auto build test WARNING on next-20151218]
-[also build test WARNING on v4.4-rc5]
-[cannot apply to pci/next robh/for-next v4.4-rc5 v4.4-rc4 v4.4-rc3]
-
-url:    https://github.com/0day-ci/linux/commits/Stanimir-Varbanov/Qualcomm-PCIe-driver-and-designware-fixes/20151218-205427
 
 
-coccinelle warnings: (new ones prefixed by >>)
+On 18/12/15 13:33, Geert Uytterhoeven wrote:
+> Hi Dirk,
+>
+> On Fri, Dec 18, 2015 at 12:56 PM, Dirk Behme <dirk.behme@gmail.com> wrote:
+>> On 18.12.2015 12:03, Geert Uytterhoeven wrote:
+>>> On Sat, Dec 12, 2015 at 8:16 AM, Dirk Behme <dirk.behme@gmail.com> wrote:
+>>>> From: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>>
+>>>> Add device nodes for the L2 caches, and link the CPU node to its L2
+>>>> cache node.
+>>>>
+>>>> The L2 cache for the Cortex-A57 CPU cores is 2 MiB large (organized as
+>>>> 128 KiB x 16 ways).
+>>>>
+>>>> The L2 cache for the Cortex-A53 CPU cores is 512 KiB large (organized as
+>>>> 32 KiB x 16 ways).
+>>>>
+>>>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>> Signed-off-by: Dirk Behme <dirk.behme@gmail.com>
+>>>> ---
+>>>> Note: Geert: I picked your patch from
+>>>>
+>>>> http://www.spinics.net/lists/arm-kernel/msg466628.html
+>>>>
+>>>> incoporated some review comments and rebased it against
+>>>>
+>>>> https://git.kernel.org/cgit/linux/kernel/git/horms/renesas.git/log/?h=next
+>>>> renesas-next-20151211v2-v4.4-rc1
+>>>
+>>> This is more or less what I have locally, except that I kept the latency
+>>> properties
+>>
+>> Hmm, maybe I missed anything, but the only part reading the latency I can
+>> find is
+>>
+>> arch/arm/mm/cache-l2x0.c
+>>
+>> [1] which isn't relevant for arm64?
+>
+> No driver using a property in DT is not a reason not to put the property in DT.
+> The r8a7995 datasheet does contain the latency values to use.
+>
 
->> drivers/pci/host/pcie-qcom.c:188:1-3: WARNING: PTR_ERR_OR_ZERO can be used
-   drivers/pci/host/pcie-qcom.c:220:1-3: WARNING: PTR_ERR_OR_ZERO can be used
+While I agree with that, I would avoid having these values for 2 reasons:
 
-Please review and possibly fold the followup patch.
+1. Others might blindly copy and expect these setting to done in Linux
+    or any non-secure OS using DT which is clearly not possible on ARM64
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+2. Going by your argument, we usually have much more in datasheets
+    which are not all in DT, so strictly speaking that's not a reason to
+    have it here.
+
+Again I am not against it, just an opinion.
+
+-- 
+Regards,
+Sudeep
