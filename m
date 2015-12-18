@@ -1,115 +1,112 @@
 From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 01/20] PM / devfreq: exynos: Add generic exynos bus
- frequency driver
-Date: Fri, 18 Dec 2015 09:43:34 +0900
-Message-ID: <567356B6.5030403@samsung.com>
-References: <1450075104-13705-1-git-send-email-cw00.choi@samsung.com>
- <1450075104-13705-2-git-send-email-cw00.choi@samsung.com>
- <566F8BF2.20606@samsung.com> <56735486.8020609@samsung.com>
+Subject: Re: [PATCH v3] extcon: add Maxim MAX3355 driver
+Date: Fri, 18 Dec 2015 10:04:13 +0900
+Message-ID: <56735B8D.7030705@samsung.com>
+References: <2473780.4IzuWX8hE2@wasted.cogentembedded.com>
+ <56721AFE.9020103@samsung.com> <56721F31.5060608@samsung.com>
+ <56732719.7020301@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <56735486.8020609-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-reply-to: <56732719.7020301-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org, linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015=EB=85=84 12=EC=9B=94 18=EC=9D=BC 09:34, Chanwoo Choi wrote:
-> Hi,
+On 2015=EB=85=84 12=EC=9B=94 18=EC=9D=BC 06:20, Sergei Shtylyov wrote:
+> Hello.
 >=20
-> On 2015=EB=85=84 12=EC=9B=94 15=EC=9D=BC 12:41, Krzysztof Kozlowski w=
-rote:
->> On 14.12.2015 15:38, Chanwoo Choi wrote:
->>> This patch adds the generic exynos bus frequency driver for AMBA AX=
-I bus
->>> of sub-blocks in exynos SoC with DEVFREQ framework. The Samsung Exy=
-nos SoC
->>> have the common architecture for bus between DRAM and sub-blocks in=
- SoC.
->>> This driver can support the generic bus frequency driver for Exynos=
- SoCs.
->>>
->>> In devicetree, Each bus block has a bus clock, regulator, operation=
--point
->>> and devfreq-event devices which measure the utilization of each bus=
- block.
->>>
->>> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>> [linux.amoon: Tested on Odroid U3]
->>> Tested-by: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> ---
->>>  drivers/devfreq/Kconfig             |  15 ++
->>>  drivers/devfreq/Makefile            |   1 +
->>>  drivers/devfreq/exynos/Makefile     |   1 +
->>>  drivers/devfreq/exynos/exynos-bus.c | 449 ++++++++++++++++++++++++=
-++++++++++++
->>>  4 files changed, 466 insertions(+)
->>>  create mode 100644 drivers/devfreq/exynos/exynos-bus.c
->>>
->>> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
->>> index 64281bb2f650..55ec774f794c 100644
->>> --- a/drivers/devfreq/Kconfig
->>> +++ b/drivers/devfreq/Kconfig
->>> @@ -66,6 +66,21 @@ config DEVFREQ_GOV_USERSPACE
->>> =20
->>>  comment "DEVFREQ Drivers"
->>> =20
->>> +config ARM_EXYNOS_BUS_DEVFREQ
->>> +	bool "ARM EXYNOS Generic Memory Bus DEVFREQ Driver"
->>> +	depends on ARCH_EXYNOS
->>> +	select DEVFREQ_GOV_SIMPLE_ONDEMAND
->>> +	select DEVFREQ_EVENT_EXYNOS_PPMU
->>> +	select PM_DEVFREQ_EVENT
->>> +	select PM_OPP
->>> +	help
->>> +	  This adds the common DEVFREQ driver for Exynos Memory bus. Exyn=
-os
->>> +	  Memory bus has one more group of memory bus (e.g, MIF and INT b=
-lock).
->>> +	  Each memory bus group could contain many memoby bus block. It r=
-eads
->>> +	  PPMU counters of memory controllers by using DEVFREQ-event devi=
-ce
->>> +	  and adjusts the operating frequencies and voltages with OPP sup=
-port.
->>> +	  This does not yet operate with optimal voltages.
->>> +
->>>  config ARM_EXYNOS4_BUS_DEVFREQ
->>>  	bool "ARM Exynos4210/4212/4412 Memory Bus DEVFREQ Driver"
->>>  	depends on (CPU_EXYNOS4210 || SOC_EXYNOS4212 || SOC_EXYNOS4412) &=
-& !ARCH_MULTIPLATFORM
->>> diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
->>> index 5134f9ee983d..375ebbb4fcfb 100644
->>> --- a/drivers/devfreq/Makefile
->>> +++ b/drivers/devfreq/Makefile
->>> @@ -6,6 +6,7 @@ obj-$(CONFIG_DEVFREQ_GOV_POWERSAVE)	+=3D governor_p=
-owersave.o
->>>  obj-$(CONFIG_DEVFREQ_GOV_USERSPACE)	+=3D governor_userspace.o
->>> =20
->>>  # DEVFREQ Drivers
->>> +obj-$(CONFIG_ARCH_EXYNOS)		+=3D exynos/
+> On 12/17/2015 05:34 AM, Chanwoo Choi wrote:
+>=20
+>>> On 2015=EB=85=84 12=EC=9B=94 17=EC=9D=BC 03:07, Sergei Shtylyov wro=
+te:
+>>>> Maxim Integrated MAX3355E chip integrates a charge pump and compar=
+ators to
+>>>> enable a system with an integrated USB OTG dual-role transceiver t=
+o
+>>>> function as an USB OTG dual-role device. In addition to sensing/co=
+ntrolling
+>>>> Vbus, the chip also passes thru the ID signal from the USB OTG con=
+nector.
+>>>> On some Renesas boards, this signal is just fed into the SoC thru =
+a GPIO
+>>>> pin -- there's no real OTG controller, only host and gadget USB co=
+ntrollers
+>>>> sharing the same USB bus; however, we'd like to allow host or gadg=
+et
+>>>> drivers to be loaded depending on the cable type, hence the need f=
+or the
+>>>> MAX3355 extcon driver. The Vbus status signals are also wired to G=
+PIOs
+>>>> (however, we aren't currently interested in them), the OFFVBUS# si=
+gnal is
+>>>> controlled by the host controllers, there's also the SHDN# signal =
+wired to
+>>>> a GPIO, it should be driven high for the normal operation.
+>>>>
+>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org=
+>
+>>>>
+>>>> ---
+>>>> Changes in version 3:
+>>>> - reformatted the change log.
+>>>>
+>>>> Changes in version 2:
+>>>> - added the USB gadget cable support;
+>>>> - added the remove() driver method which drives SHDN# GPIO low to =
+save power;
+>>>> - dropped vendor prefix from the ID GPIO property name;
+>>>> - changed the GPIO property name suffix to "-gpios";
+>>>> - switched to usign extcon_set_cable_state_() API;
+>>>> - switched to using the gpiod/sleeping 'gpiolib' APIs;
+>>>> - addded error messages to max3355_probe();
+>>>> - added IRQF_NO_SUSPEND flasg to the devm_request_threaded_irq() c=
+all;
+>>>> - renamed 'ret' variable to 'err' in max3355_probe();
+>>>> - expanded the Kconfig entry help text;
+>>>> - added vendor name to the patch summary, the bindings document, t=
+he Kconfig
+>>>>    entry, the driver heading comment, the module description, and =
+the change log;
+>>>> - fixed up and reformatted the change log.
+>>>>
+>>>>   Documentation/devicetree/bindings/extcon/extcon-max3355.txt |   =
+21 +
+>>>>   drivers/extcon/Kconfig                                      |   =
+ 8
+>>>>   drivers/extcon/Makefile                                     |   =
+ 1
+>>>>   drivers/extcon/extcon-max3355.c                             |  1=
+53 ++++++++++++
+>>>>   4 files changed, 183 insertions(+)
+>>>>
 >>
->> Why limiting it to ARCH_EXYNOS? Are there real dependencies on exyno=
-s
->> mach code? Or on ARM code?
->=20
-> There is no dependency.
->=20
+>> [snip]
 >>
->> If not, then this probably should be obj-y to allow compile testing.
->> Particular objects would be selected by ARM_EXYNOS_BUS_DEVFREQ.
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +static int max3355_remove(struct platform_device *pdev)
+>>>> +{
+>>>> +    struct max3355_data *data =3D platform_get_drvdata(pdev);
+>>>> +
+>>>> +    gpiod_set_value_cansleep(data->shdn_gpiod, 0);
+>>
+>> Don't need to handle the 'shdn' gpio on resume/suspend funtcion?
+>>
+>> But, if the interrput of id gpio is used for wakeup source,
+>> there is no reason to handle it for suspend mode.
 >=20
-> OK. I'll alter it as obj-y.
+>    You told me to pass IRQF_NO_SUSPEND to devm_request_threaded_irq()=
+, didn't you?
 
-As you commented, CONFIG_ARM_EXYNOS_BUS_DEVFREQ is more appropriate
-without exynos/ directory as following:
+Yes. You add the this flag on v4 patch. Looks good to me.
 
-+obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)   +=3D exynos-bus.o
-
-Best Regards,
+Thanks,
 Chanwoo Choi
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
