@@ -1,97 +1,151 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RESEND PATCH v7 2/4] Documentation, dt, arm64/arm: dt bindings
- for numa.
-Date: Fri, 18 Dec 2015 14:18:26 +0000
-Message-ID: <20151218141826.GB30229@leverpostej>
-References: <1450413433-7467-1-git-send-email-gkulkarni@caviumnetworks.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v4] extcon: add Maxim MAX3355 driver
+Date: Fri, 18 Dec 2015 17:33:30 +0300
+Message-ID: <5674193A.6080909@cogentembedded.com>
+References: <1767472.2Rx4LOCrWY@wasted.cogentembedded.com>
+ <56735DFD.1070608@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1450413433-7467-1-git-send-email-gkulkarni@caviumnetworks.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
-Cc: catalin.marinas@arm.com, Will.Deacon@arm.com, pawel.moll@arm.com, al.stone@linaro.org, Prasun.Kapoor@caviumnetworks.com, msalter@redhat.com, rfranz@cavium.com, lenb@kernel.org, devicetree@vger.kernel.org, steve.capper@linaro.org, arnd@arndb.de, ijc+devicetree@hellion.org.uk, marc.zyngier@arm.com, leif.lindholm@linaro.org, rrichter@cavium.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, ard.biesheuvel@linaro.org, rjw@rjwysocki.net, hanjun.guo@linaro.org, galak@codeaurora.org, gpkulkarni@gmail.com
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56735DFD.1070608@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello.
 
-> +==============================================================================
-> +2 - numa-node-id
-> +==============================================================================
-> +
-> +For the purpose of identification, each NUMA node is associated with a unique
-> +token known as a node id. For the purpose of this binding
-> +a node id is a 32-bit integer.
-> +
-> +A device node is associated with a NUMA node by the presence of a
-> +numa-node-id property which contains the node id of the device.
-> +
-> +Example:
-> +	/* numa node 0 */
-> +	numa-node-id = <0>;
-> +
-> +	/* numa node 1 */
-> +	numa-node-id = <1>;
-> +
-> +==============================================================================
-> +3 - distance-map
-> +==============================================================================
-> +
-> +The device tree node distance-map describes the relative
-> +distance(memory latency) between all numa nodes.
-> +
-> +- compatible : Should at least contain "numa-distance-map-v1".
+On 12/18/2015 4:14 AM, Chanwoo Choi wrote:
 
-Thank you for updating these per my request.
+> Except for just one comment below, Looks good to me.
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-The fact that these have changed since the late posting [1] means that
-this is a new version of the patch rather than a resend. Please update
-the PATCHvX number when changes are made.
+> I'll wait for a few days to get the review from DT maintainer
+> before applying it on extcon-next branch.
 
-You also need to update the driver for the new compatible string, so a
-new version of that is required.
+> On 2015=EB=85=84 12=EC=9B=94 18=EC=9D=BC 07:47, Sergei Shtylyov wrote=
+:
+>> Maxim Integrated MAX3355E chip integrates a charge pump and comparat=
+ors to
+>> enable a system with an integrated USB OTG dual-role transceiver to
+>> function as an USB OTG dual-role device. In addition to sensing/cont=
+rolling
+>> Vbus, the chip also passes thru the ID signal from the USB OTG conne=
+ctor.
+>> On some Renesas boards, this signal is just fed into the SoC thru a =
+GPIO
+>> pin -- there's no real OTG controller, only host and gadget USB cont=
+rollers
+>> sharing the same USB bus; however, we'd like to allow host or gadget
+>> drivers to be loaded depending on the cable type, hence the need for=
+ the
+>> MAX3355 extcon driver. The Vbus status signals are also wired to GPI=
+Os
+>> (however, we aren't currently interested in them), the OFFVBUS# sign=
+al is
+>> controlled by the host controllers, there's also the SHDN# signal wi=
+red to
+>> a GPIO, it should be driven high for the normal operation.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>
+>> ---
+>> The patch is against the 'extcon-next' branch of the 'extcon.git' re=
+po.
+>>
+>> Changes in version 4:
+>> - stopped calling kstrdup() for the device name;
+>> - removed unneeded 'owner' field initializer;
+>> - moved devm_extcon_allocate() call further down in the probe() meth=
+od;
+>> - extended the driver copyright;
+>> - indented the continuation lines in the binding document.
+>>
+>> Changes in version 3:
+>> - reformatted the change log.
+>>
+>> Changes in version 2:
+>> - added the USB gadget cable support;
+>> - added the remove() driver method which drives SHDN# GPIO low to sa=
+ve power;
+>> - dropped vendor prefix from the ID GPIO property name;
+>> - changed the GPIO property name suffix to "-gpios";
+>> - switched to usign extcon_set_cable_state_() API;
+>> - switched to using the gpiod/sleeping 'gpiolib' APIs;
+>> - addded error messages to max3355_probe();
+>> - added IRQF_NO_SUSPEND flasg to the devm_request_threaded_irq() cal=
+l;
+>> - renamed 'ret' variable to 'err' in max3355_probe();
+>> - expanded the Kconfig entry help text;
+>> - added vendor name to the patch summary, the bindings document, the=
+ Kconfig
+>>    entry, the driver heading comment, the module description, and th=
+e change log;
+>> - fixed up and reformatted the change log.
+>>
+>>   Documentation/devicetree/bindings/extcon/extcon-max3355.txt |   21=
+ +
+>>   drivers/extcon/Kconfig                                      |    8
+>>   drivers/extcon/Makefile                                     |    1
+>>   drivers/extcon/extcon-max3355.c                             |  151=
+ ++++++++++++
+>>   4 files changed, 181 insertions(+)
+>>
+>> Index: extcon/Documentation/devicetree/bindings/extcon/extcon-max335=
+5.txt
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> --- /dev/null
+>> +++ extcon/Documentation/devicetree/bindings/extcon/extcon-max3355.t=
+xt
+>> @@ -0,0 +1,21 @@
+>> +Maxim Integrated MAX3355 USB OTG chip
+>> +-------------------------------------
+>> +
+>> +MAX3355 integrates a charge pump and comparators to enable a system=
+ with an
+>> +integrated USB OTG dual-role transceiver to function as a USB OTG d=
+ual-role
+>> +device.
+>> +
+>> +Required properties:
+>> +- compatible: should be "maxim,max3355";
+>> +- maxim,shdn-gpios: should contain a phandle and GPIO specifier for=
+ the GPIO pin
+>> +		    connected to the MAX3355's SHDN# pin;
+>> +- id-gpios: should contain a phandle and GPIO specifier for the GPI=
+O pin
+>> +	    connected to the MAX3355's ID_OUT pin.
+>> +
+>> +Example (Koelsch board):
+>
+> You mean that "koelsch" board might be arch/arm/boot/dts/r8a7791-koel=
+sch.dts.
+> But, the max3355 dt node isn't really included in r8a7791-koelsch.dts=
+=2E
 
-> +- distance-matrix
-> +  This property defines a matrix to describe the relative distances
-> +  between all numa nodes.
-> +  It is represented as a list of node pairs and their relative distance.
-> +
-> +  Note:
-> +	1. Each entry represents distance from first node to second node.
-> +	The distance are equal in either direction.
-> +	2. The distance from a node to self(local distance) is represented
-> +	with value 10 and all inter node distance should be represented with
-> +	value greater than 10.
-> +	3. distance-matrix shold have entries in lexicographical ascending
-> +	order of nodes.
-> +	4. There must be only one Device node distance-map and must reside in the root node.
+    Of course, I couldn't post the device tree patch before the binding=
+ was=20
+accepted.
 
-I am still concerned that the local distance of 10 is completely
-arbitrary.
+> I recommend that you add the accurate information because the wrong
+> info causes the confusion. So, I'd like you to change it as following=
+:
+>
+> 	"Example (Koelsch board):" -> "Example:"
+>
+> After adding the max3355 dt node to Koelsch board on separate patch,
+> you modify this documentation for real usage case of max3355 dt node.
 
-Please:
+    No dire need to modify the documentation then. Should I still repos=
+t?
 
-* Add a new local-distance property to the distance-map node allowing a
-  uniform local distance to be described, and require this property to
-  be present.
+[...]
 
-* Update the driver to account for that and the compatible string
-  change.
+> Thanks,
+> Chanwoo Choi
 
-* Send a complete PATCHv8 (or PATCHv$X where X > 7) series with a proper
-  changelog.
-
-Thanks,
-Mark.
-
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-November/385826.html
+MBR, Sergei
