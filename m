@@ -1,79 +1,63 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RESEND PATCH v7 2/4] Documentation, dt, arm64/arm: dt bindings
- for numa.
-Date: Fri, 18 Dec 2015 18:03:47 +0000
-Message-ID: <20151218180346.GF30229@leverpostej>
-References: <1450413433-7467-1-git-send-email-gkulkarni@caviumnetworks.com>
- <20151218141826.GB30229@leverpostej>
- <CAFpQJXVmXkgD1FuMbU3rWg5MR3AEeneHAiG6XVfOs6m6e6=byQ@mail.gmail.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/5] mtd: nand: Fix support for NAND DMA prefetch
+Date: Fri, 18 Dec 2015 10:04:34 -0800
+Message-ID: <20151218180434.GJ10460@google.com>
+References: <1444930648-19313-1-git-send-email-fcooper@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAFpQJXVmXkgD1FuMbU3rWg5MR3AEeneHAiG6XVfOs6m6e6=byQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1444930648-19313-1-git-send-email-fcooper-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Robert Richter <rrichter@>
+To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 18, 2015 at 09:00:18PM +0530, Ganapatrao Kulkarni wrote:
-> Hi Mark,
+On Thu, Oct 15, 2015 at 12:37:23PM -0500, Franklin S Cooper Jr wrote:
+> NAND DMA prefetch has been broken for awhile and seems to have only
+> worked for SDMA based devices
 > 
-> On Fri, Dec 18, 2015 at 7:48 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> >> +- distance-matrix
-> >> +  This property defines a matrix to describe the relative distances
-> >> +  between all numa nodes.
-> >> +  It is represented as a list of node pairs and their relative distance.
-> >> +
-> >> +  Note:
-> >> +     1. Each entry represents distance from first node to second node.
-> >> +     The distance are equal in either direction.
-> >> +     2. The distance from a node to self(local distance) is represented
-> >> +     with value 10 and all inter node distance should be represented with
-> >> +     value greater than 10.
-> >> +     3. distance-matrix shold have entries in lexicographical ascending
-> >> +     order of nodes.
-> >> +     4. There must be only one Device node distance-map and must reside in the root node.
-> >
-> > I am still concerned that the local distance of 10 is completely
-> > arbitrary.
-> IMHO, i do not see any issue in having defined local distance to
-> arbitrary number(10).
-> inter node numa distance is relative number with respect to local distance
-> we have to fix local distance to some value, having it in dt to make
-> generic will not add
-> any additional value as compared to having the fixed local distance to 10.
+> This patchset fixes DMA prefetch to work on both EDMA and SDMA devices
+> 
+> Test on:
+> am335x gp evm
+> am437x gp evm
+> am37x gp evm
+> 
+> This patchset depends on Roger Quadros recent v4 GPMC/NAND patchset
+> https://github.com/rogerq/linux.git
+> branch: for-v4.4/gpmc-v4
 
-That's not quite true. The figure chosen for the local distance affects
-the granularity with which you can describe all distances.
+In what way does this depend on the other series? Can any of this be
+taken without it? If not, then perhaps it'd be good if Roger can roll
+this into his series? Just throwing out ideas. If you want to wait on
+Roger's series, that's fine.
 
-By using a local distance of 10 we can only encode distances in 10%
-chunks of that. Using a local distance of 100 we could encode in 1%
-chunks of that.
+FWIW, the MTD stuff all looks OK to me:
 
-I believe that for some systems we may need a granularity better than
-10%. Certainly for others we may not. Having an explicit property allows
-for the description of either, and should be sufficient for a reasonable
-period of time to come.
+Acked-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
->  #define LOCAL_DISTANCE          10
-> this macro which is defined in common code and used in many places in
-> common code as well in other arch specific codes.
-> If we add property to define local distance and it imply that local
-> distance can be changed to any value other than 10.
-> having this change demands common code changes wherever LOCAL_DISTANCE is used!.
-
-While certainly painful, occasionally such changes are necessary.
-
-Another option is to scale the input to the kernel's idea of a local
-distance (at the possible loss of some granularity).
-
-> I am not finding any reasoning to make local distance generic.
-
-I hope the above has answered some of that.
-
-Thanks,
-Mark.
+> Franklin S Cooper Jr (5):
+>   mtd: nand: omap2: Support parsing dma channel information from DT
+>   mtd: nand: omap2: Start dma request before enabling prefetch
+>   mtd: nand: omap2: Fix high memory dma prefetch transfer
+>   ARM: dts: am437x/am33xx/omap/dm816x: Add gpmc dma channel
+>   ARM: OMAP2+: Update GPMC and NAND DT binding documentation
+> 
+>  .../bindings/memory-controllers/omap-gpmc.txt      |  7 +++++-
+>  .../devicetree/bindings/mtd/gpmc-nand.txt          |  2 ++
+>  arch/arm/boot/dts/am33xx.dtsi                      |  2 ++
+>  arch/arm/boot/dts/am4372.dtsi                      |  2 ++
+>  arch/arm/boot/dts/dm816x.dtsi                      |  2 ++
+>  arch/arm/boot/dts/omap3.dtsi                       |  2 ++
+>  arch/arm/boot/dts/omap4.dtsi                       |  2 ++
+>  arch/arm/boot/dts/omap5.dtsi                       |  2 ++
+>  drivers/mtd/nand/omap2.c                           | 27 +++++++++-------------
+>  9 files changed, 31 insertions(+), 17 deletions(-)
+> 
+> -- 
+> 2.6.1
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
