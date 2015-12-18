@@ -1,42 +1,307 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/7] ARM: shmobile: dtsi: Add SCIF fallback compatibility
- strings
-Date: Fri, 18 Dec 2015 12:20:12 +0900
-Message-ID: <20151218032011.GA9704@verge.net.au>
-References: <1450119475-1183-1-git-send-email-geert+renesas@glider.be>
+From: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: [RESEND PATCH v7 2/4] Documentation, dt, arm64/arm: dt bindings for numa.
+Date: Fri, 18 Dec 2015 10:07:13 +0530
+Message-ID: <1450413433-7467-1-git-send-email-gkulkarni__17073.0465012186$1450414453$gmane$org@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1450119475-1183-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org
+Cc: gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 14, 2015 at 07:57:48PM +0100, Geert Uytterhoeven wrote:
-> 	Hi Simon, Magnus,
-> 
-> This patch series adds fallback compatibility strings for SCIF and HSCIF
-> to the DTS files for R-Car Gen1, Gen2, and Gen3, as defined in
-> "[PATCH v3 02/27] serial: sh-sci: Add fallback compatibility strings" of
-> series "[PATCH v3 00/27] serial: sh-sci: External Clock Support".
-> This will allow the sh-sci driver to match on family-specific compatible
-> values to enable BGR support later.
-> 
-> Note that fallback compatibility strings for SCIFA/SCIFB are not added
-> yet.
-> 
-> Dependencies:
->   - This series is against renesas-devel-20151214-v4.4-rc5,
->   - It can be applied independently, as soon as the aforementioned DT
->     binding patch has been accepted,
->   - Later series depend on this:
->       - "[PATCH v3 00/12] ARM: shmobile: dtsi: Rename the serial port
-> 	 clock to fck",
->       - "[PATCH v2 0/7] ARM: shmobile: dtsi: Add BRG support for (H)SCIF",
->       - "[PATCH v2 0/9] ARM: shmobile: dts: Enable SCIF_CLK frequency and
-> 	 pins".
+DT bindings for numa mapping of memory, cores and IOs.
 
-I have marked this and the above series as deferred pending
-acceptance of the driver changes.
+Reviewed-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/numa.txt | 273 +++++++++++++++++++++++++
+ 1 file changed, 273 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/numa.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/numa.txt b/Documentation/devicetree/bindings/arm/numa.txt
+new file mode 100644
+index 0000000..5bd893e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/numa.txt
+@@ -0,0 +1,273 @@
++==============================================================================
++NUMA binding description.
++==============================================================================
++
++==============================================================================
++1 - Introduction
++==============================================================================
++
++Systems employing a Non Uniform Memory Access (NUMA) architecture contain
++collections of hardware resources including processors, memory, and I/O buses,
++that comprise what is commonly known as a NUMA node.
++Processor accesses to memory within the local NUMA node is generally faster
++than processor accesses to memory outside of the local NUMA node.
++DT defines interfaces that allow the platform to convey NUMA node
++topology information to OS.
++
++==============================================================================
++2 - numa-node-id
++==============================================================================
++
++For the purpose of identification, each NUMA node is associated with a unique
++token known as a node id. For the purpose of this binding
++a node id is a 32-bit integer.
++
++A device node is associated with a NUMA node by the presence of a
++numa-node-id property which contains the node id of the device.
++
++Example:
++	/* numa node 0 */
++	numa-node-id = <0>;
++
++	/* numa node 1 */
++	numa-node-id = <1>;
++
++==============================================================================
++3 - distance-map
++==============================================================================
++
++The device tree node distance-map describes the relative
++distance(memory latency) between all numa nodes.
++
++- compatible : Should at least contain "numa-distance-map-v1".
++
++- distance-matrix
++  This property defines a matrix to describe the relative distances
++  between all numa nodes.
++  It is represented as a list of node pairs and their relative distance.
++
++  Note:
++	1. Each entry represents distance from first node to second node.
++	The distance are equal in either direction.
++	2. The distance from a node to self(local distance) is represented
++	with value 10 and all inter node distance should be represented with
++	value greater than 10.
++	3. distance-matrix shold have entries in lexicographical ascending
++	order of nodes.
++	4. There must be only one Device node distance-map and must reside in the root node.
++
++Example:
++	4 nodes connected in mesh/ring topology as below,
++
++		0_______20______1
++		|               |
++		|               |
++		20             20
++		|               |
++		|               |
++		|_______________|
++		3       20      2
++
++	if relative distance for each hop is 20,
++	then inter node distance would be,
++	      0 -> 1 = 20
++	      1 -> 2 = 20
++	      2 -> 3 = 20
++	      3 -> 0 = 20
++	      0 -> 2 = 40
++	      1 -> 3 = 40
++
++     and dt presentation for this distance matrix is,
++
++		distance-map {
++			 compatible = "numa-distance-map-v1";
++			 distance-matrix = <0 0  10>,
++					   <0 1  20>,
++					   <0 2  40>,
++					   <0 3  20>,
++					   <1 0  20>,
++					   <1 1  10>,
++					   <1 2  20>,
++					   <1 3  40>,
++					   <2 0  40>,
++					   <2 1  20>,
++					   <2 2  10>,
++					   <2 3  20>,
++					   <3 0  20>,
++					   <3 1  40>,
++					   <3 2  20>,
++					   <3 3  10>;
++		};
++
++
++==============================================================================
++4 - Example dts
++==============================================================================
++
++2 sockets system consists of 2 boards connected through ccn bus and
++each board having one socket/soc of 8 cpus, memory and pci bus.
++
++	memory@00c00000 {
++		device_type = "memory";
++		reg = <0x0 0x00c00000 0x0 0x80000000>;
++		/* node 0 */
++		numa-node-id = <0>;
++	};
++
++	memory@10000000000 {
++		device_type = "memory";
++		reg = <0x100 0x00000000 0x0 0x80000000>;
++		/* node 1 */
++		numa-node-id = <1>;
++	};
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		cpu@000 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x000>;
++			enable-method = "psci";
++			/* node 0 */
++			numa-node-id = <0>;
++		};
++		cpu@001 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x001>;
++			enable-method = "psci";
++			numa-node-id = <0>;
++		};
++		cpu@002 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x002>;
++			enable-method = "psci";
++			numa-node-id = <0>;
++		};
++		cpu@003 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x003>;
++			enable-method = "psci";
++			numa-node-id = <0>;
++		};
++		cpu@004 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x004>;
++			enable-method = "psci";
++			numa-node-id = <0>;
++		};
++		cpu@005 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x005>;
++			enable-method = "psci";
++			numa-node-id = <0>;
++		};
++		cpu@006 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x006>;
++			enable-method = "psci";
++			numa-node-id = <0>;
++		};
++		cpu@007 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x007>;
++			enable-method = "psci";
++			numa-node-id = <0>;
++		};
++		cpu@008 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x008>;
++			enable-method = "psci";
++			/* node 1 */
++			numa-node-id = <1>;
++		};
++		cpu@009 {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x009>;
++			enable-method = "psci";
++			numa-node-id = <1>;
++		};
++		cpu@00a {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x00a>;
++			enable-method = "psci";
++			numa-node-id = <1>;
++		};
++		cpu@00b {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x00b>;
++			enable-method = "psci";
++			numa-node-id = <1>;
++		};
++		cpu@00c {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x00c>;
++			enable-method = "psci";
++			numa-node-id = <1>;
++		};
++		cpu@00d {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x00d>;
++			enable-method = "psci";
++			numa-node-id = <1>;
++		};
++		cpu@00e {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x00e>;
++			enable-method = "psci";
++			numa-node-id = <1>;
++		};
++		cpu@00f {
++			device_type = "cpu";
++			compatible =  "arm,armv8";
++			reg = <0x0 0x00f>;
++			enable-method = "psci";
++			numa-node-id = <1>;
++		};
++	};
++
++	pcie0: pcie0@0x8480,00000000 {
++		compatible = "arm,armv8";
++		device_type = "pci";
++		bus-range = <0 255>;
++		#size-cells = <2>;
++		#address-cells = <3>;
++		reg = <0x8480 0x00000000 0 0x10000000>;  /* Configuration space */
++		ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000 0x70 0x00000000>;
++		/* node 0 */
++		numa-node-id = <0>;
++        };
++
++	pcie1: pcie1@0x9480,00000000 {
++		compatible = "arm,armv8";
++		device_type = "pci";
++		bus-range = <0 255>;
++		#size-cells = <2>;
++		#address-cells = <3>;
++		reg = <0x9480 0x00000000 0 0x10000000>;  /* Configuration space */
++		ranges = <0x03000000 0x9010 0x00000000 0x9010 0x00000000 0x70 0x00000000>;
++		/* node 1 */
++		numa-node-id = <1>;
++        };
++
++	distance-map {
++		compatible = "numa-distance-map-v1";
++		distance-matrix = <0 0 10>,
++				  <0 1 20>,
++				  <1 1 10>;
++	};
+-- 
+1.8.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
