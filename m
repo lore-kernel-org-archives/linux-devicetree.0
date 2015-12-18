@@ -1,7 +1,7 @@
 From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [RFC PATCH 1/5] usb: hub: add device tree support for populating onboard usb device
-Date: Fri, 18 Dec 2015 17:33:55 +0800
-Message-ID: <1450431239-16439-2-git-send-email-peter.chen@freescale.com>
+Subject: [RFC PATCH 4/5] usb: chipidea: host: let the hcd know's parent device node
+Date: Fri, 18 Dec 2015 17:33:58 +0800
+Message-ID: <1450431239-16439-5-git-send-email-peter.chen@freescale.com>
 References: <1450431239-16439-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,93 +12,59 @@ To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbk
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Although most of USB device is hot-plug's, there are still some
-USB devices are soldered on the board, and these kinds of devices
-maybe the upstream device at 1st or 2nd level hub's, so in order to
-detect all onboard devices, we put the detect device node code
-at hub's driver, and it will populate platform device under this HUB.
+Since the hcd (chipidea core device) has no device node, so
+if we want to describe the child node under the hcd, we had
+to put it under its parent's node (glue layer device), and
+in the code, we need to let the hcd knows glue layer's code,
+then the USB core can handle this node.
 
 Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/core/hub.c | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ drivers/usb/chipidea/host.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index 5e32ce7..889f188 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -26,6 +26,7 @@
- #include <linux/mutex.h>
- #include <linux/random.h>
- #include <linux/pm_qos.h>
-+#include <linux/of_platform.h>
+diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+index 3d24304..63a6aa4 100644
+--- a/drivers/usb/chipidea/host.c
++++ b/drivers/usb/chipidea/host.c
+@@ -109,15 +109,25 @@ static int host_start(struct ci_hdrc *ci)
+ 	struct ehci_hcd *ehci;
+ 	struct ehci_ci_priv *priv;
+ 	int ret;
++	struct device *dev = ci->dev;
  
- #include <asm/uaccess.h>
- #include <asm/byteorder.h>
-@@ -1334,6 +1335,34 @@ static int hub_post_reset(struct usb_interface *intf)
- 	return 0;
- }
+-	if (usb_disabled())
++	if (usb_disabled() || !dev)
+ 		return -ENODEV;
  
-+static int hub_of_children_register(struct usb_device *hdev)
-+{
-+	struct device *dev;
+-	hcd = usb_create_hcd(&ci_ehci_hc_driver, ci->dev, dev_name(ci->dev));
++	/*
++	 * USB Core will try to get child node under roothub,
++	 * but chipidea core has no of_node, and the child node
++	 * for controller is located at glue layer's node which
++	 * is chipidea core's parent.
++	 */
++	if (dev->parent && dev->parent->of_node)
++		dev->of_node = dev->parent->of_node;
 +
-+	if (hdev->parent)
-+		dev = &hdev->dev;
-+	else
-+		dev = bus_to_hcd(hdev->bus)->self.controller;
-+
-+	if (!dev->of_node)
-+		return 0;
-+
-+	return of_platform_populate(dev->of_node, NULL, NULL, dev);
-+}
-+
-+static void hub_of_children_unregister(struct usb_device *hdev)
-+{
-+	struct device *dev;
-+
-+	if (hdev->parent)
-+		dev = &hdev->dev;
-+	else
-+		dev = bus_to_hcd(hdev->bus)->self.controller;
-+
-+	if (dev->of_node)
-+		of_platform_depopulate(dev);
-+}
-+
- static int hub_configure(struct usb_hub *hub,
- 	struct usb_endpoint_descriptor *endpoint)
- {
-@@ -1677,6 +1706,7 @@ static void hub_disconnect(struct usb_interface *intf)
- 	usb_set_intfdata(intf, NULL);
- 	spin_unlock_irq(&device_state_lock);
++	hcd = usb_create_hcd(&ci_ehci_hc_driver, dev, dev_name(dev));
+ 	if (!hcd)
+ 		return -ENOMEM;
  
-+	hub_of_children_unregister(hdev);
- 	for (; port1 > 0; --port1)
- 		usb_hub_remove_port_device(hub, port1);
- 
-@@ -1701,6 +1731,7 @@ static int hub_probe(struct usb_interface *intf, const struct usb_device_id *id)
- 	struct usb_endpoint_descriptor *endpoint;
- 	struct usb_device *hdev;
- 	struct usb_hub *hub;
-+	int ret;
- 
- 	desc = intf->cur_altsetting;
- 	hdev = interface_to_usbdev(intf);
-@@ -1820,6 +1851,12 @@ descriptor_error:
- 	if (id->driver_info & HUB_QUIRK_CHECK_PORT_AUTOSUSPEND)
- 		hub->quirk_check_port_auto_suspend = 1;
- 
-+	ret = hub_of_children_register(hdev);
-+	if (ret) {
-+		dev_err(&hdev->dev, "Failed to register child device\n");
-+		return ret;
-+	}
-+
- 	if (hub_configure(hub, endpoint) >= 0)
- 		return 0;
- 
+-	dev_set_drvdata(ci->dev, ci);
++	dev_set_drvdata(dev, ci);
+ 	hcd->rsrc_start = ci->hw_bank.phys;
+ 	hcd->rsrc_len = ci->hw_bank.size;
+ 	hcd->regs = ci->hw_bank.abs;
+@@ -143,7 +153,7 @@ static int host_start(struct ci_hdrc *ci)
+ 		if (ci->platdata->flags & CI_HDRC_TURN_VBUS_EARLY_ON) {
+ 			ret = regulator_enable(ci->platdata->reg_vbus);
+ 			if (ret) {
+-				dev_err(ci->dev,
++				dev_err(dev,
+ 				"Failed to enable vbus regulator, ret=%d\n",
+ 									ret);
+ 				goto put_hcd;
 -- 
 1.9.1
 
