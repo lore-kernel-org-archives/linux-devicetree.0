@@ -1,67 +1,43 @@
-From: Alexander Aring <alex.aring@gmail.com>
-Subject: Re: [PATCH v2 0/8] Raspberry Pi 2 support.
-Date: Fri, 18 Dec 2015 11:55:21 +0100
-Message-ID: <20151218105520.GA2764@omega>
-References: <1450310115-22163-1-git-send-email-eric@anholt.net>
- <20151218100826.GB1145@omega>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/2] arm64: dts: r8a7795: Add Cortex-A53 CPU cores
+Date: Fri, 18 Dec 2015 12:02:42 +0100
+Message-ID: <CAMuHMdVVL9T6U8npb5kOLdP3PmS6Lhx0b9O3FKgxd2HQcUedFw@mail.gmail.com>
+References: <1449904607-4060-1-git-send-email-dirk.behme@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151218100826.GB1145@omega>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>
-Cc: linux-rpi-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Scott Branden <sbranden@broadcom.com>, Marc Zyngier <marc.zyngier@arm.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1449904607-4060-1-git-send-email-dirk.behme@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Dirk Behme <dirk.behme@gmail.com>
+Cc: Linux-sh list <linux-sh@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 18, 2015 at 11:08:26AM +0100, Alexander Aring wrote:
-> Hi Eric,
-> 
-> On Wed, Dec 16, 2015 at 03:55:07PM -0800, Eric Anholt wrote:
-> > This is a major rewrite of the previous Raspberry Pi 2 submission.
-> > SMP support is now included, and the DT includes are cleaned up to
-> > avoid massive duplication.
-> > 
-> > The branch (based on 4.4-rc5, to get the USB regression fixes) can be
-> > found at:
-> > 
-> > https://github.com/anholt/linux/tree/bcm2836-4.4
-> > 
-> 
-> thanks. :-)
-> 
-> I tried it via booting with the RPi firmware and your branch, but it
-> doesn't boot on my side:
-> 
-> I get:
-> 
-> Uncompressing Linux... done, booting the kernel.
-> [    0.000000] Booting Linux on physical CPU 0x0
-> [    0.000000] Initializing cgroup subsys cpuset
-> [    0.000000] Initializing cgroup subsys cpu
-> [    0.000000] Initializing cgroup subsys cpuacct
-> [    0.000000] Linux version 4.4.0-rc5+ (alex@omega) (gcc version 4.9.2 (OSELAS.Toolchain-2014.12.1) ) #989 Fri Dec 18 10:54:40 CET 2015
-> [    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c53c7d
-> [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
-> [    0.000000] Machine model: Raspberry Pi 2 Model B Rev 1.1
-> [    0.000000] bootconsole [earlycon0] enabled
-> [    0.000000] Truncating RAM at 0x00000000-0x3e000000 to -0x30000000
-> [    0.000000] Consider using a HIGHMEM enabled kernel.
-> [    0.000000] Memory policy: Data cache writeback
-> [    0.000000] BUG: mapping for 0x3f201000 at 0xf0201000 out of vmalloc space
-> [    0.000000] ------------[ cut here ]------------
-> [    0.000000] WARNING: CPU: 0 PID: 0 at arch/arm/kernel/devtree.c:149 arm_dt_init_cpu_maps+0x100/0x1a4()
-> [    0.000000] DT /cpu 2 nodes greater than max cores 1, capping them
-> [    0.000000] Modules linked in:
-> [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.4.0-rc5+ #989
-> [    0.000000] Hardware name: BCM2835
+Hi Dirk,
 
-Because this, I thought I boot with the wrong devicetree. But then I saw
-[0].
+On Sat, Dec 12, 2015 at 8:16 AM, Dirk Behme <dirk.behme@gmail.com> wrote:
+> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>
+> This patch adds Cortex-A53 CPU cores to r8a7795 SoC for a total of 8
+> cores (4 x Cortex-A57 + 4 x Cortex-A53).
+>
+> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> Signed-off-by: Dirk Behme <dirk.behme@gmail.com>
 
-Can this not set to BCM2836 when I include "bcm2836.dtsi" and BCM2835,
-when I include "bcm2835.dtsi"?
+Thanks, I can confirm this works.
 
-- Alex
+However, as the scheduler is not big.LITTLE aware (running processes are not
+migrated automatically to the faster CA57 cores when these are idle), it makes
+performance less deterministic.
 
-https://github.com/anholt/linux/blob/bcm2836-4.4/arch/arm/boot/dts/bcm283x.dtsi#L12
+Hence we would like to postpone this.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
