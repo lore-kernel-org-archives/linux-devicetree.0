@@ -1,46 +1,37 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v02 0/2] ARM: DTS: am33xx/am437x: Use the new eDMA
- bindings
-Date: Fri, 18 Dec 2015 10:48:02 +0530
-Message-ID: <20151218051801.GR1854@localhost>
-References: <1450359217-3038-1-git-send-email-peter.ujfalusi@ti.com>
- <20151217174844.GT23396@atomide.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v5 4/5] ARM: dts: DRA7: add entry for qspi mmap region
+Date: Fri, 18 Dec 2015 11:20:44 +0530
+Message-ID: <56739EB4.6040804@ti.com>
+References: <1449807000-6457-1-git-send-email-vigneshr@ti.com>
+ <1449807000-6457-5-git-send-email-vigneshr@ti.com>
+ <20151211150935.GA15654@rob-hp-laptop> <20151217184557.GC23396@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151217174844.GT23396@atomide.com>
+In-Reply-To: <20151217184557.GC23396@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, arnd@arndb.de, nsekhar@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, linux-omap@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>
+Cc: Brian Norris <computersforpeace@gmail.com>, Mark Brown <broonie@kernel.org>, Russell King <linux@arm.linux.org.uk>, "hramrach@gmail.com" <hramrach@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 17, 2015 at 09:48:44AM -0800, Tony Lindgren wrote:
-> * Peter Ujfalusi <peter.ujfalusi@ti.com> [151217 05:33]:
-> > Hi,
-> > 
-> > Changes since v1:
-> > - Updated to use the non 16bit arrays [1]
-> > - send the two patch as a series
-> > 
-> > [1]
-> > As it has been discussed earlier:
-> > https://www.mail-archive.com/linux-omap@vger.kernel.org/msg122117.html
-> > 
-> > the DT bindings has been changes compared to what we had in 4.4-rc1: the arrays
-> > now don't have the 16bit type.
-> > The changes are now merged to mainline and Vinod provided us a branch:
-> > 
-> > git://git.infradead.org/users/vkoul/slave-dma.git fix/edma
-> > 
-> > Which is based on 4.4-rc1 and only contains the two patch for changing the eDMA
-> > bindings.
+
+
+On 12/18/2015 12:15 AM, Tony Lindgren wrote:
+> * Rob Herring <robh@kernel.org> [151211 07:10]:
+>> On Fri, Dec 11, 2015 at 09:39:59AM +0530, Vignesh R wrote:
+>>> Add qspi memory mapped region entries for DRA7xx based SoCs. Also,
+>>> update the binding documents for the controller to document this change.
+>>>
+>>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+>>
+>> Acked-by: Rob Herring <robh@kernel.org>
 > 
-> Great, I'll merge the fix/edma also into omap-for-v4.5/dt and apply
-> your two patches.
+> Vignes, are patches 4 and 5 safe to apply separately already or
+> do things break if we do that?
 
-FWIW, fix/edma is in Linu's tree now and should be in -rc6
+Yes, 4 and 5 can be applied separately w/o driver changes.
 
-Thanks
 -- 
-~Vinod
+Regards
+Vignesh
