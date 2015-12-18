@@ -1,64 +1,45 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/3] ARM: dts: bcm5301x: Add TWD WD Support to DT
-Date: Sat, 19 Dec 2015 00:51:26 +0300
-Message-ID: <56747FDE.9040308@cogentembedded.com>
-References: <1450474676-10210-1-git-send-email-jonmason@broadcom.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V3] cpufreq: qoriq: Register cooling device based on device tree
+Date: Fri, 18 Dec 2015 23:32:33 +0100
+Message-ID: <3550740.QzZi28fbXg@wuerfel>
+References: <1448529671-48216-1-git-send-email-hongtao.jia@freescale.com> <1697588.dLcbZBRWO4@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1450474676-10210-1-git-send-email-jonmason@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: Hauke Mehrtens <hauke@hauke-m.de>, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1697588.dLcbZBRWO4-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Tuesday 15 December 2015 00:58:26 Rafael J. Wysocki wrote:
+> On Thursday, November 26, 2015 05:21:11 PM Jia Hongtao wrote:
+> > Register the qoriq cpufreq driver as a cooling device, based on the
+> > thermal device tree framework. When temperature crosses the passive trip
+> > point cpufreq is used to throttle CPUs.
+> > 
+> > Signed-off-by: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > Reviewed-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> Applied, thanks!
+> 
 
-On 12/19/2015 12:37 AM, Jon Mason wrote:
+I got a randconfig build error today:
 
-> Add support for the ARM TWD Watchdog to the bcm5301x device tree.  The
-> ARM TWD timer allocated the register space for the WDT, so this patch
-> necessitated shrinking that.  Also, the GIC masks were added for these.
->
-> Signed-off-by: Jon Mason <jonmason@broadcom.com>
-> ---
->   arch/arm/boot/dts/bcm5301x.dtsi | 15 ++++++++++++---
->   1 file changed, 12 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
-> index 65a1309..c31fafe 100644
-> --- a/arch/arm/boot/dts/bcm5301x.dtsi
-> +++ b/arch/arm/boot/dts/bcm5301x.dtsi
-> @@ -66,10 +66,19 @@
->   			clocks = <&periph_clk>;
->   		};
->
-> -		local-timer@20600 {
-> +		twd-timer@20600 {
+drivers/built-in.o: In function `qoriq_cpufreq_ready':
+debugfs.c:(.text+0x1f4688): undefined reference to `of_cpufreq_cooling_register'
 
-    Please just "timer". The node names should be very generic, according to 
-the ePAPR standard.
+CONFIG_OF=y
+CONFIG_QORIQ_CPUFREQ=y
+CONFIG_THERMAL=m
+CONFIG_THERMAL_OF=y
 
->   			compatible = "arm,cortex-a9-twd-timer";
-> -			reg = <0x20600 0x100>;
-> -			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
-> +			reg = <0x20600 0x20>;
-> +			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
-> +						  IRQ_TYPE_LEVEL_HIGH)>;
-> +			clocks = <&periph_clk>;
-> +		};
-> +
-> +		twd-watchdog@20620 {
+I think you need a 'depends on THERMAL' to prevent the driver from
+being built-in when THERMAL=m.
 
-    Please, just "watchdog".
-
-MBR, Sergei
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
