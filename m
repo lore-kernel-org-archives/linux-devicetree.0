@@ -1,44 +1,28 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V3] cpufreq: qoriq: Register cooling device based on device tree
-Date: Fri, 18 Dec 2015 23:32:33 +0100
-Message-ID: <3550740.QzZi28fbXg@wuerfel>
-References: <1448529671-48216-1-git-send-email-hongtao.jia@freescale.com> <1697588.dLcbZBRWO4@vostro.rjw.lan>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RESEND PATCH] mtd: mtk-nor: adjust sequence of trigger function
+ and assignment function
+Date: Fri, 18 Dec 2015 15:06:06 -0800
+Message-ID: <20151218230606.GV10460@google.com>
+References: <1450407760-30030-1-git-send-email-bayi.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1697588.dLcbZBRWO4-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1450407760-30030-1-git-send-email-bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+To: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 15 December 2015 00:58:26 Rafael J. Wysocki wrote:
-> On Thursday, November 26, 2015 05:21:11 PM Jia Hongtao wrote:
-> > Register the qoriq cpufreq driver as a cooling device, based on the
-> > thermal device tree framework. When temperature crosses the passive trip
-> > point cpufreq is used to throttle CPUs.
-> > 
-> > Signed-off-by: Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > Reviewed-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Fri, Dec 18, 2015 at 11:02:40AM +0800, Bayi Cheng wrote:
+> Move write data register before excute command to avoid
+> missing first byte write to nor flash
 > 
-> Applied, thanks!
-> 
+> Signed-off-by: Bayi Cheng <bayi.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+> the previous patch didn't drop the Change-Id
 
-I got a randconfig build error today:
-
-drivers/built-in.o: In function `qoriq_cpufreq_ready':
-debugfs.c:(.text+0x1f4688): undefined reference to `of_cpufreq_cooling_register'
-
-CONFIG_OF=y
-CONFIG_QORIQ_CPUFREQ=y
-CONFIG_THERMAL=m
-CONFIG_THERMAL_OF=y
-
-I think you need a 'depends on THERMAL' to prevent the driver from
-being built-in when THERMAL=m.
-
-	Arnd
+Applied to l2-mtd.git
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
