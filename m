@@ -1,77 +1,71 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: Re: [PATCH v6 0/6] Add mipi dsi support for rk3288
-Date: Fri, 18 Dec 2015 17:54:03 +0800
-Message-ID: <5673D7BB.50000@rock-chips.com>
-References: <1450260616-21160-1-git-send-email-zyw@rock-chips.com>
- <3523259.ZRgH1Shd9Y@diego>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v4 5/5] ARM: dts: ifc6410: enable pcie dt node for this
+ board
+Date: Fri, 18 Dec 2015 11:57:25 +0200
+Message-ID: <5673D885.30803@linaro.org>
+References: <1449149725-27607-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1449149725-27607-6-git-send-email-stanimir.varbanov@linaro.org>
+ <20151217215553.GA4000@usrtlx11787.corpusers.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <3523259.ZRgH1Shd9Y@diego>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, treding@nvidia.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20151217215553.GA4000@usrtlx11787.corpusers.net>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpa28KClRoYW5rcyBmb3IgeW91ciByZW1pbmRlci4KSSBoYXZlIHBvc3QgdGhlIHY2LjEg
-bWlwaSBwYXRjaCB3aXRoIHRoZSBhdG9taWMgc3VwcG9ydC4KPGh0dHBzOi8vcGF0Y2h3b3JrLmtl
-cm5lbC5vcmcvcGF0Y2gvNzg4MTc4MS8+CgpPbiAxMi8xNy8yMDE1IDA1OjI5IFBNLCBIZWlrbyBT
-dMO8Ym5lciB3cm90ZToKPiBIaSBDaHJpcywKPgo+IEFtIE1pdHR3b2NoLCAxNi4gRGV6ZW1iZXIg
-MjAxNSwgMTg6MTA6MTAgc2NocmllYiBDaHJpcyBaaG9uZzoKPj4gVGhlIHJrMzI4OCBNSVBJIERT
-SSBpcyBhIFN5bm9wc3lzIERlc2lnbldhcmUgTUlQSSBEU0kgaG9zdCBjb250cm9sbGVyCj4+IElQ
-LiBUaGlzIHNlcmllcyBhZGRzIHN1cHBvcnQgZm9yIGEgU3lub3BzeXMgRGVzaWduV2FyZSBNSVBJ
-IERTSSBob3N0Cj4+IGNvbnRyb2xsZXIgRFJNIGRyaXZlci4KPj4KPj4gVGhlIE1JUEkgRFNJIGZl
-YXR1cmUgaXMgdGVzdGVkIG9uIHJrMzI4OCBldmIgYm9hcmQsIGJhY2twb3J0IHRoZW0gdG8KPj4g
-Y2hyb21lIG9zIGtlcm5lbCBjaHJvbWVfdjMuMTQsIGFuZCBpdCBjYW4gZGlzcGxheSBub3JtYWxs
-eS4KPj4KPj4gVGhpcyBwYXRjaHNldCBpcyBiYXNlIG9uIHRoZSBwYXRjaHNldCBmcm9tIFlpbmcu
-bGl1QGZyZWVzY2FsZS5jb20uCj4+IDxodHRwOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2RyaS1k
-ZXZlbC9tc2c3NzE4MS5odG1sPgo+Pgo+PiBBY2NvcmRpbmcgdG8gdGhlIHN1Z2dlc3Rpb24gZnJv
-bSBUaGllcnJ5LCBJIGhhdmUgZ2V0IHJpZCBvZiB0aGUgYnJpZGdlLAo+PiBhbmQgcmVnaXN0ZXIg
-dGhlIGVuY29kZXIgJiBjb25uZWN0ZXIgaW4gZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMuCj4g
-ZnJvbSBteSBwb2ludCBpdCBsb29rcyBnb29kIChhbHRob3VnaCBJIGNhbm5vdCByZWFsbHkgc3Bl
-YWsgb24gdGhlIGRybS1yZWxhdGVkCj4gaW50ZXJuYWxzKS4KPgo+IEJ1dCBJIGRvIHRoaW5rIHdl
-J2xsIGJlIGRvaW5nIGF0b21pYyBtb2Rlc2V0dGluZyBjb252ZXJzaW9uIGZpcnN0IChsYXN0Cj4g
-dmVyc2lvbiBwb3N0ZWQgZnJvbSBNYXJrIHRvZGF5KSwgc28geW91IHNob3VsZCBwcm9iYWJseSBt
-YWtlIHN1cmUgeW91ciBkc2kKPiBkcml2ZXIgc3RpbGwgd29ya3MgYWZ0ZXIgdGhhdCBjb252ZXJz
-aW9uIGFuZCBtYWtlIGNoYW5nZXMgaWYgbmVlZGVkLgo+Cj4KPiBIZWlrbwo+Cj4+Cj4+IENoYW5n
-ZXMgaW4gdjY6Cj4+IC0gdXBkYXRlIHRoZSBkb2N1bWVudCwgc2luY2UgdGhlIGJyaWRnZSBkZXZp
-Y2UgaGFzIGJlZW4gZGVsZXRlZC4KPj4gLSBEbyBub3QgdXNlIGJyaWRnZSBkcml2ZXIgKFRoaWVy
-cnkgUmVkaW5nKQo+PiAtIE9wdGltaXphdGlvbiB0aGUgcGh5IGluaXQgc2VxdWVuY2UKPj4KPj4g
-Q2hhbmdlcyBpbiB2NToKPj4gLSBtb2RpZnkgdGhlIGNsayBuYW1lIHRvIFNDTEtfTUlQSURTSV8y
-NE0KPj4gLSBhZGQgYSBibGFuayBsaW5lIGJlZm9yIGxjZF9lbgo+Pgo+PiBDaGFuZ2VzIGluIHY0
-Ogo+PiAtIHVzZSBjbGtfcm91bmRfcmF0ZSB0byBjaGVjayB0aGUgY2xvY2sgcmF0ZSBpbiB2b3Bf
-Y3J0Y19tb2RlX2ZpeHVwCj4+Cj4+IENoYW5nZXMgaW4gdjM6Cj4+IC0gbW92ZSBkd19taXBpX2Rz
-aV9yb2NrY2hpcC50eHQgdG8gYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC8KPj4KPj4gQ2hyaXMg
-WmhvbmcgKDUpOgo+PiAgICBkcm0vcm9ja2NoaXA6IHJldHVybiBhIHRydWUgY2xvY2sgcmF0ZSB0
-byBhZGp1c3RlZF9tb2RlCj4+ICAgIERvY3VtZW50YXRpb246IGR0LWJpbmRpbmdzOiBBZGQgYmlu
-ZGluZ3MgZm9yIHJrMzI4OCBEVyBNSVBJIERTSSBkcml2ZXIKPj4gICAgZHJtOiByb2NrY2hpcDog
-U3VwcG9ydCBTeW5vcHN5cyBEVyBNSVBJIERTSQo+PiAgICBBUk06IGR0czogcm9ja2NoaXA6IGFk
-ZCByazMyODggbWlwaV9kc2kgbm9kZXMKPj4gICAgQVJNOiBkdHM6IHJvY2tjaGlwOiBhZGQgc3Vw
-cG9ydCBtaXBpIHBhbmVsIHR2MDgwd3VtLW5sMAo+Pgo+PiBMaXUgWWluZyAoMSk6Cj4+ICAgIGRy
-bS9kc2k6IEFkZCBhIGhlbHBlciB0byBnZXQgYml0cyBwZXIgcGl4ZWwgb2YgTUlQSSBEU0kgcGl4
-ZWwgZm9ybWF0Cj4+Cj4+ICAgLi4uL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2No
-aXAudHh0ICAgICAgfCAgIDYwICsKPj4gICBhcmNoL2FybS9ib290L2R0cy9yazMyODgtZXZiLmR0
-c2kgICAgICAgICAgICAgICAgICB8ICAgMjAgKy0KPj4gICBhcmNoL2FybS9ib290L2R0cy9yazMy
-ODguZHRzaSAgICAgICAgICAgICAgICAgICAgICB8ICAgMzkgKwo+PiAgIGRyaXZlcnMvZ3B1L2Ry
-bS9yb2NrY2hpcC9LY29uZmlnICAgICAgICAgICAgICAgICAgIHwgICAxMCArCj4+ICAgZHJpdmVy
-cy9ncHUvZHJtL3JvY2tjaGlwL01ha2VmaWxlICAgICAgICAgICAgICAgICAgfCAgICAxICsKPj4g
-ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYyAgICAgICAgICAgICB8IDEy
-MDAKPj4gKysrKysrKysrKysrKysrKysrKysgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tj
-aGlwX2RybV92b3AuYyAgICAgICAgfAo+PiAgIDggKwo+PiAgIGluY2x1ZGUvZHJtL2RybV9taXBp
-X2RzaS5oICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxNCArCj4+ICAgOCBmaWxlcyBjaGFu
-Z2VkLCAxMzUxIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPj4gICBjcmVhdGUgbW9kZSAx
-MDA2NDQKPj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2No
-aXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0Cj4+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
-L2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYwo+Cj4KPgoKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 12/17/2015 11:55 PM, Bjorn Andersson wrote:
+> On Thu 03 Dec 05:35 PST 2015, Stanimir Varbanov wrote:
+> 
+>> Enable pcie dt node and fill pcie dt node with regulator, pinctrl
+>> and reset gpio, to use the pcie on the ifc6410 board.
+>>
+>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>> ---
+>>  arch/arm/boot/dts/qcom-apq8064-ifc6410.dts |   26 ++++++++++++++++++++++++++
+>>  1 file changed, 26 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+>> index 11ac608b6d50..f203b94ee460 100644
+>> --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+>> +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+>> @@ -47,6 +47,18 @@
+>>  					bias-disable;
+>>  				};
+>>  			};
+>> +
+>> +			pcie_pins: pcie_pinmux {
+>> +				mux {
+>> +					pins = "gpio27";
+>> +					function = "gpio";
+>> +				};
+>> +				conf {
+>> +					pins = "gpio27";
+>> +					drive-strength = <12>;
+>> +					bias-disable;
+>> +				};
+>> +			};
+>>  		};
+>>  
+>>  		rpm@108000 {
+>> @@ -123,6 +135,10 @@
+>>  				pm8921_lvs1: lvs1 {
+>>  					bias-pull-down;
+>>  				};
+>> +
+>> +				pm8921_lvs6: lvs6 {
+>> +					bias-pull-down;
+>> +				};
+> 
+> Please don't duplicate the labels in the dts files.
+
+Sorry, I based those dts patches before [1] has been applied in -next. I
+will rebase this patch on top of [1]. Thanks!
+
+[1] "ARM: dts: qcom: apq8064: Declare all pm8921 regulators"
+
+-- 
+regards,
+Stan
