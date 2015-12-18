@@ -1,37 +1,60 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v5 4/5] ARM: dts: DRA7: add entry for qspi mmap region
-Date: Fri, 18 Dec 2015 11:20:44 +0530
-Message-ID: <56739EB4.6040804@ti.com>
-References: <1449807000-6457-1-git-send-email-vigneshr@ti.com>
- <1449807000-6457-5-git-send-email-vigneshr@ti.com>
- <20151211150935.GA15654@rob-hp-laptop> <20151217184557.GC23396@atomide.com>
+From: Bhupesh SHARMA <bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/2] ARM64: Enable SP805 WDT support for FSL LS2080A
+Date: Fri, 18 Dec 2015 11:52:07 +0530
+Message-ID: <CAFTCetRhHwgg1w=gYHL0T=8p-KVV1sq_jVK1CmHr3DF1Ng=UDQ@mail.gmail.com>
+References: <1450189825-29065-1-git-send-email-bhupesh.sharma@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151217184557.GC23396@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>
-Cc: Brian Norris <computersforpeace@gmail.com>, Mark Brown <broonie@kernel.org>, Russell King <linux@arm.linux.org.uk>, "hramrach@gmail.com" <hramrach@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1450189825-29065-1-git-send-email-bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Leo Li <LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob, Mark,
 
+On Tue, Dec 15, 2015 at 8:00 PM, Bhupesh Sharma
+<bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> This is the v3 of patchset which adds the support for SP805 WDT on FSL LS2080A
+> and also adds the missing documentation of SP805 WDT device-tree bindings.
 
-On 12/18/2015 12:15 AM, Tony Lindgren wrote:
-> * Rob Herring <robh@kernel.org> [151211 07:10]:
->> On Fri, Dec 11, 2015 at 09:39:59AM +0530, Vignesh R wrote:
->>> Add qspi memory mapped region entries for DRA7xx based SoCs. Also,
->>> update the binding documents for the controller to document this change.
->>>
->>> Signed-off-by: Vignesh R <vigneshr@ti.com>
->>
->> Acked-by: Rob Herring <robh@kernel.org>
-> 
-> Vignes, are patches 4 and 5 safe to apply separately already or
-> do things break if we do that?
+Any comments on this version, or does it seems fine for integration
+into the arm-soc tree.
 
-Yes, 4 and 5 can be applied separately w/o driver changes.
+Regards,
+Bhupesh
 
--- 
-Regards
-Vignesh
+>
+> Rebased against arm-soc/next/dt
+>
+> Changes since v2:
+> (v2 can be viewed here: http://permalink.gmane.org/gmane.linux.ports.arm.kernel/463141)
+> - Addressed Rob's comments regarding the second mandatory CLK source's
+>   (WDOGCLK) name in the bindings.
+>
+> Changes since v1:
+> (v1 can be viewed here: http://www.spinics.net/lists/devicetree/msg102487.html)
+>
+> - Addressed Rob and Mark's comments regarding the mandatory CLK sources
+> - Removed interrupt property from the bindings for now (as discussed
+>   with Mark on IRC) till Will's patch proceeds further and enables
+>   handling the WDOG interrupts for each core connected to the same PPI
+>   line (http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/391616.html)
+>
+> Bhupesh Sharma (2):
+>   Documentation: DT: Add entry for ARM SP805-WDT
+>   dts/ls2080a: Update DTSI to add support of SP805 WDT
+>
+>  .../devicetree/bindings/watchdog/sp805-wdt.txt     |   29 ++++++++++
+>  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi     |   56 ++++++++++++++++++++
+>  2 files changed, 85 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+>
+> --
+> 1.7.9.5
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
