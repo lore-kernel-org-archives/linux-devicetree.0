@@ -1,110 +1,47 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH 2/2] can: sja1000: of: add compatibility with Technologic
- Systems version
-Date: Fri, 18 Dec 2015 22:05:01 +0100
-Message-ID: <567474FD.8060002@pengutronix.de>
-References: <1450469845-12900-1-git-send-email-damien.riegel@savoirfairelinux.com>
- <1450469845-12900-2-git-send-email-damien.riegel@savoirfairelinux.com>
- <56746F8B.8030008@pengutronix.de> <20151218210231.GA6116@localhost>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] ARM: dts: sun4i: Enable onboard
+ codec used on the pov protab2-ips9 tablet
+Date: Fri, 18 Dec 2015 22:19:11 +0100
+Message-ID: <20151218211911.GP30359@lukather>
+References: <1449859439-30875-1-git-send-email-hdegoede@redhat.com>
+ <1449859439-30875-4-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="wS553UexLThcrXRBR3TNpQcWxVXNHn6s6"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20151218210231.GA6116@localhost>
-Sender: linux-can-owner@vger.kernel.org
-To: Damien Riegel <damien.riegel@savoirfairelinux.com>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wolfgang Grandegger <wg@grandegger.com>, kernel@savoirfairelinux.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="24/piotZLKF/SXqU"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB6PR2GZQKGQEZXHG7BI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1449859439-30875-4-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---wS553UexLThcrXRBR3TNpQcWxVXNHn6s6
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+--24/piotZLKF/SXqU
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On 12/18/2015 10:02 PM, Damien Riegel wrote:
-> On Fri, Dec 18, 2015 at 09:41:47PM +0100, Marc Kleine-Budde wrote:
->> On 12/18/2015 09:17 PM, Damien Riegel wrote:
->>> Technologic Systems provides an IP compatible with the SJA1000,
->>> instantiated in an FPGA. Because of some bus widths issue, access to
->>> registers is made through a "window" that works like this:
->>>
->>>     base + 0x0: address to read/write
->>>     base + 0x2: 8-bit register value
->>>
->>> This commit adds a new compatible device, "technologic,sja1000", with=
+On Fri, Dec 11, 2015 at 07:43:59PM +0100, Hans de Goede wrote:
+> The pov protab2-ips9 tablet uses the A10's integrated audio codec,
+> enable it.
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
->>> read and write functions using the window mechanism.
->>>
->>> Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
->>> ---
->>>  drivers/net/can/sja1000/sja1000_platform.c | 30 ++++++++++++++++++++=
-++++++++--
->>>  1 file changed, 28 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/net/can/sja1000/sja1000_platform.c b/drivers/net=
-/can/sja1000/sja1000_platform.c
->>> index 0552ed4..6cbf251 100644
->>> --- a/drivers/net/can/sja1000/sja1000_platform.c
->>> +++ b/drivers/net/can/sja1000/sja1000_platform.c
->>> @@ -70,6 +70,18 @@ static void sp_write_reg32(const struct sja1000_pr=
-iv *priv, int reg, u8 val)
->>>  	iowrite8(val, priv->reg_base + reg * 4);
->>>  }
->>> =20
->>> +static u8 ts4800_read_reg16(const struct sja1000_priv *priv, int reg=
-)
->>> +{
->>> +	sp_write_reg16(priv, 0,  reg);
->>> +	return sp_read_reg16(priv, 2);
->>
->> This is racy, please add a spinlock.
->>
->>> +}
->>> +
->>> +static void ts4800_write_reg16(const struct sja1000_priv *priv, int =
-reg, u8 val)
->>> +{
->>> +	sp_write_reg16(priv, 0, reg);
->>> +	sp_write_reg16(priv, 2, val);
->>
->> This is racy, too.
->>
->> Have a look at https://marc.info/?l=3Dlinux-can&m=3D137149497403825&w=3D=
-2
->=20
-> Thank you for the link. In my situation, I don't think there is a race
-> issue at the bus level, so a per-device spinlock should be enough. Woul=
-d
-> that be an acceptable patch? It would look a lot like the patch you
-> suggested in the thread you linked, just rebased on current version.
+Applied 3 and 4. Thanks!
 
-Yes, but for a device spinlock you probably have to remove "const" from
-the priv pointer.
+I have a bad network connection for the next two weeks though, so I'm
+not quite sure whether or not it will make it for 4.5.
 
-Marc
+Maxime
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---wS553UexLThcrXRBR3TNpQcWxVXNHn6s6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEcBAEBCgAGBQJWdHT9AAoJEP5prqPJtc/HHZAH/3QNBSewfzL9MV4t4jfQRQ/X
-CClVbeH51HeYV9GSyUwLY4C7xV10jTVCH4nYs7inSlQgVWTD/ki3LlIc/tEsxnd1
-MhNYwAEN59YxtLDMZcpcLTDDY8n/OcxW7cxKmgPtGURLvDv5YDxPEN/i1NWolRau
-ZHn4kd3KTOjTW3qwhPyinz/YWHHMOBdGeQBknRnWCiZH/vWdu+4eX7W3WBxDaSo+
-6mQKX7LjUHlUEu/UNLtgp0FBMsPCuC4WXiMhB2DFkws+bk54m5XKJ3LLa+WqH3JF
-TUV8ena0US27d7byssdZAP5K65q4i4srPK3LUQGXZrsqHNwlPmgtY5tAKBpOnl0=
-=kvbJ
------END PGP SIGNATURE-----
-
---wS553UexLThcrXRBR3TNpQcWxVXNHn6s6--
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--24/piotZLKF/SXqU--
