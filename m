@@ -1,235 +1,77 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [RFC PATCH 3/5] usb: misc: generic_onboard_hub: add generic onboard USB device driver
-Date: Fri, 18 Dec 2015 17:33:57 +0800
-Message-ID: <1450431239-16439-4-git-send-email-peter.chen@freescale.com>
-References: <1450431239-16439-1-git-send-email-peter.chen@freescale.com>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: Re: [PATCH v6 0/6] Add mipi dsi support for rk3288
+Date: Fri, 18 Dec 2015 17:54:03 +0800
+Message-ID: <5673D7BB.50000@rock-chips.com>
+References: <1450260616-21160-1-git-send-email-zyw@rock-chips.com>
+ <3523259.ZRgH1Shd9Y@diego>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450431239-16439-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <3523259.ZRgH1Shd9Y@diego>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, treding@nvidia.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Current USB device driver lacks of platform interfaces to configure
-external signal on HUB chip, eg, the PHY input clock and gpio reset
-pin for HUB, these kinds of devices are usually soldered at the board,
-and they are not hot-plug USB devices.
-
-With this patch, the user can configure the device's pins at device tree,
-and these configuration will be effective before the USB bus can be used,
-it can avoid unexpected signals at USB bus during this USB device hardware
-reset process, so we use subsys_initcall for this driver.
-
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- MAINTAINERS                               |   7 ++
- drivers/usb/misc/Kconfig                  |  10 +++
- drivers/usb/misc/Makefile                 |   1 +
- drivers/usb/misc/generic_onboard_device.c | 144 ++++++++++++++++++++++++++++++
- 4 files changed, 162 insertions(+)
- create mode 100644 drivers/usb/misc/generic_onboard_device.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9bff63c..9ea0955 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11140,6 +11140,13 @@ S:	Maintained
- F:	Documentation/usb/ohci.txt
- F:	drivers/usb/host/ohci*
- 
-+USB Generic Onboard Device Driver
-+M:	Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/peter.chen/usb.git
-+L:	linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+S:	Maintained
-+F:	drivers/usb/misc/generic_onboard_device.c
-+
- USB OTG FSM (Finite State Machine)
- M:	Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/peter.chen/usb.git
-diff --git a/drivers/usb/misc/Kconfig b/drivers/usb/misc/Kconfig
-index f7a7fc2..089e2c4 100644
---- a/drivers/usb/misc/Kconfig
-+++ b/drivers/usb/misc/Kconfig
-@@ -268,3 +268,13 @@ config USB_CHAOSKEY
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called chaoskey.
-+
-+config USB_ONBOARD_DEVICE
-+	tristate "Generic USB Onboard Device"
-+	help
-+	  depends on OF
-+	  Say Y here if your board has an onboard device, and this device
-+	  needs to control its PHY clock and reset pin through external
-+	  signals. If you are not sure, say N.
-+
-+	  To compile this driver as a module, choose M here.
-diff --git a/drivers/usb/misc/Makefile b/drivers/usb/misc/Makefile
-index 45fd4ac..60731bb 100644
---- a/drivers/usb/misc/Makefile
-+++ b/drivers/usb/misc/Makefile
-@@ -29,3 +29,4 @@ obj-$(CONFIG_USB_CHAOSKEY)		+= chaoskey.o
- 
- obj-$(CONFIG_USB_SISUSBVGA)		+= sisusbvga/
- obj-$(CONFIG_USB_LINK_LAYER_TEST)	+= lvstest.o
-+obj-$(CONFIG_USB_ONBOARD_DEVICE)	+= generic_onboard_device.o
-diff --git a/drivers/usb/misc/generic_onboard_device.c b/drivers/usb/misc/generic_onboard_device.c
-new file mode 100644
-index 0000000..0111bd9
---- /dev/null
-+++ b/drivers/usb/misc/generic_onboard_device.c
-@@ -0,0 +1,144 @@
-+/*
-+ * generic_onboard_device.c	The generic onboard USB device driver
-+ *
-+ * Copyright (C) 2015 Freescale Semiconductor, Inc.
-+ * Author: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-+ *
-+ * This program is free software: you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2  of
-+ * the License as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+/*
-+ * This driver is only for the USB HUB devices which need to control
-+ * their external pins(clock, reset, etc), and these USB HUB devices
-+ * are soldered at the board.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/slab.h>
-+
-+struct usb_generic_onboard_data {
-+	struct clk *clk;
-+};
-+
-+static int usb_generic_onboard_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct usb_generic_onboard_data *hub_data;
-+	int ret = -EINVAL;
-+	struct gpio_desc *gpiod_reset = NULL;
-+	struct device_node *node = dev->of_node;
-+	u32 duration_us = 50, clk_rate = 0;
-+
-+	/* Only support device tree now */
-+	if (!node)
-+		return ret;
-+
-+	hub_data = devm_kzalloc(dev, sizeof(*hub_data), GFP_KERNEL);
-+	if (!hub_data)
-+		return -ENOMEM;
-+
-+	hub_data->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(hub_data->clk)) {
-+		dev_dbg(dev, "Can't get clock: %ld\n",
-+			PTR_ERR(hub_data->clk));
-+		hub_data->clk = NULL;
-+	} else {
-+		ret = clk_prepare_enable(hub_data->clk);
-+		if (ret) {
-+			dev_err(dev,
-+				"Can't enable external clock: %d\n",
-+				ret);
-+			return ret;
-+		}
-+
-+		of_property_read_u32(node, "clock-frequency", &clk_rate);
-+		if (clk_rate) {
-+			ret = clk_set_rate(hub_data->clk, clk_rate);
-+			if (ret) {
-+				dev_err(dev, "Error setting clock rate\n");
-+				goto disable_clk;
-+			}
-+		}
-+	}
-+
-+	gpiod_reset = devm_gpiod_get_optional(dev, "reset", GPIOD_ASIS);
-+	ret = PTR_ERR_OR_ZERO(gpiod_reset);
-+	if (ret) {
-+		dev_err(dev, "Failed to get reset gpio, err = %d\n", ret);
-+		goto disable_clk;
-+	}
-+
-+	of_property_read_u32(node, "reset-duration-us", &duration_us);
-+
-+	if (gpiod_reset) {
-+		gpiod_direction_output(gpiod_reset, 1);
-+
-+		gpiod_set_value(gpiod_reset, 1);
-+		usleep_range(duration_us, duration_us + 10);
-+		gpiod_set_value(gpiod_reset, 0);
-+	}
-+
-+	dev_set_drvdata(dev, hub_data);
-+	return ret;
-+
-+disable_clk:
-+	clk_disable_unprepare(hub_data->clk);
-+	return ret;
-+}
-+
-+static int usb_generic_onboard_remove(struct platform_device *pdev)
-+{
-+	struct usb_generic_onboard_data *hub_data = platform_get_drvdata(pdev);
-+
-+	clk_disable_unprepare(hub_data->clk);
-+	return 0;
-+}
-+
-+static const struct of_device_id usb_generic_onboard_dt_ids[] = {
-+	{.compatible = "generic-onboard-device"},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, usb_generic_onboard_dt_ids);
-+
-+static struct platform_driver usb_generic_onboard_driver = {
-+	.probe = usb_generic_onboard_probe,
-+	.remove = usb_generic_onboard_remove,
-+	.driver = {
-+		.name = "usb_generic_onboard",
-+		.of_match_table = usb_generic_onboard_dt_ids,
-+	 },
-+};
-+
-+static int __init usb_generic_onboard_init(void)
-+{
-+	return platform_driver_register(&usb_generic_onboard_driver);
-+}
-+subsys_initcall(usb_generic_onboard_init);
-+
-+static void __exit usb_generic_onboard_exit(void)
-+{
-+	platform_driver_unregister(&usb_generic_onboard_driver);
-+}
-+module_exit(usb_generic_onboard_exit);
-+
-+MODULE_AUTHOR("Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>");
-+MODULE_DESCRIPTION("Generic Onboard USB HUB driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgSGVpa28KClRoYW5rcyBmb3IgeW91ciByZW1pbmRlci4KSSBoYXZlIHBvc3QgdGhlIHY2LjEg
+bWlwaSBwYXRjaCB3aXRoIHRoZSBhdG9taWMgc3VwcG9ydC4KPGh0dHBzOi8vcGF0Y2h3b3JrLmtl
+cm5lbC5vcmcvcGF0Y2gvNzg4MTc4MS8+CgpPbiAxMi8xNy8yMDE1IDA1OjI5IFBNLCBIZWlrbyBT
+dMO8Ym5lciB3cm90ZToKPiBIaSBDaHJpcywKPgo+IEFtIE1pdHR3b2NoLCAxNi4gRGV6ZW1iZXIg
+MjAxNSwgMTg6MTA6MTAgc2NocmllYiBDaHJpcyBaaG9uZzoKPj4gVGhlIHJrMzI4OCBNSVBJIERT
+SSBpcyBhIFN5bm9wc3lzIERlc2lnbldhcmUgTUlQSSBEU0kgaG9zdCBjb250cm9sbGVyCj4+IElQ
+LiBUaGlzIHNlcmllcyBhZGRzIHN1cHBvcnQgZm9yIGEgU3lub3BzeXMgRGVzaWduV2FyZSBNSVBJ
+IERTSSBob3N0Cj4+IGNvbnRyb2xsZXIgRFJNIGRyaXZlci4KPj4KPj4gVGhlIE1JUEkgRFNJIGZl
+YXR1cmUgaXMgdGVzdGVkIG9uIHJrMzI4OCBldmIgYm9hcmQsIGJhY2twb3J0IHRoZW0gdG8KPj4g
+Y2hyb21lIG9zIGtlcm5lbCBjaHJvbWVfdjMuMTQsIGFuZCBpdCBjYW4gZGlzcGxheSBub3JtYWxs
+eS4KPj4KPj4gVGhpcyBwYXRjaHNldCBpcyBiYXNlIG9uIHRoZSBwYXRjaHNldCBmcm9tIFlpbmcu
+bGl1QGZyZWVzY2FsZS5jb20uCj4+IDxodHRwOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2RyaS1k
+ZXZlbC9tc2c3NzE4MS5odG1sPgo+Pgo+PiBBY2NvcmRpbmcgdG8gdGhlIHN1Z2dlc3Rpb24gZnJv
+bSBUaGllcnJ5LCBJIGhhdmUgZ2V0IHJpZCBvZiB0aGUgYnJpZGdlLAo+PiBhbmQgcmVnaXN0ZXIg
+dGhlIGVuY29kZXIgJiBjb25uZWN0ZXIgaW4gZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMuCj4g
+ZnJvbSBteSBwb2ludCBpdCBsb29rcyBnb29kIChhbHRob3VnaCBJIGNhbm5vdCByZWFsbHkgc3Bl
+YWsgb24gdGhlIGRybS1yZWxhdGVkCj4gaW50ZXJuYWxzKS4KPgo+IEJ1dCBJIGRvIHRoaW5rIHdl
+J2xsIGJlIGRvaW5nIGF0b21pYyBtb2Rlc2V0dGluZyBjb252ZXJzaW9uIGZpcnN0IChsYXN0Cj4g
+dmVyc2lvbiBwb3N0ZWQgZnJvbSBNYXJrIHRvZGF5KSwgc28geW91IHNob3VsZCBwcm9iYWJseSBt
+YWtlIHN1cmUgeW91ciBkc2kKPiBkcml2ZXIgc3RpbGwgd29ya3MgYWZ0ZXIgdGhhdCBjb252ZXJz
+aW9uIGFuZCBtYWtlIGNoYW5nZXMgaWYgbmVlZGVkLgo+Cj4KPiBIZWlrbwo+Cj4+Cj4+IENoYW5n
+ZXMgaW4gdjY6Cj4+IC0gdXBkYXRlIHRoZSBkb2N1bWVudCwgc2luY2UgdGhlIGJyaWRnZSBkZXZp
+Y2UgaGFzIGJlZW4gZGVsZXRlZC4KPj4gLSBEbyBub3QgdXNlIGJyaWRnZSBkcml2ZXIgKFRoaWVy
+cnkgUmVkaW5nKQo+PiAtIE9wdGltaXphdGlvbiB0aGUgcGh5IGluaXQgc2VxdWVuY2UKPj4KPj4g
+Q2hhbmdlcyBpbiB2NToKPj4gLSBtb2RpZnkgdGhlIGNsayBuYW1lIHRvIFNDTEtfTUlQSURTSV8y
+NE0KPj4gLSBhZGQgYSBibGFuayBsaW5lIGJlZm9yIGxjZF9lbgo+Pgo+PiBDaGFuZ2VzIGluIHY0
+Ogo+PiAtIHVzZSBjbGtfcm91bmRfcmF0ZSB0byBjaGVjayB0aGUgY2xvY2sgcmF0ZSBpbiB2b3Bf
+Y3J0Y19tb2RlX2ZpeHVwCj4+Cj4+IENoYW5nZXMgaW4gdjM6Cj4+IC0gbW92ZSBkd19taXBpX2Rz
+aV9yb2NrY2hpcC50eHQgdG8gYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC8KPj4KPj4gQ2hyaXMg
+WmhvbmcgKDUpOgo+PiAgICBkcm0vcm9ja2NoaXA6IHJldHVybiBhIHRydWUgY2xvY2sgcmF0ZSB0
+byBhZGp1c3RlZF9tb2RlCj4+ICAgIERvY3VtZW50YXRpb246IGR0LWJpbmRpbmdzOiBBZGQgYmlu
+ZGluZ3MgZm9yIHJrMzI4OCBEVyBNSVBJIERTSSBkcml2ZXIKPj4gICAgZHJtOiByb2NrY2hpcDog
+U3VwcG9ydCBTeW5vcHN5cyBEVyBNSVBJIERTSQo+PiAgICBBUk06IGR0czogcm9ja2NoaXA6IGFk
+ZCByazMyODggbWlwaV9kc2kgbm9kZXMKPj4gICAgQVJNOiBkdHM6IHJvY2tjaGlwOiBhZGQgc3Vw
+cG9ydCBtaXBpIHBhbmVsIHR2MDgwd3VtLW5sMAo+Pgo+PiBMaXUgWWluZyAoMSk6Cj4+ICAgIGRy
+bS9kc2k6IEFkZCBhIGhlbHBlciB0byBnZXQgYml0cyBwZXIgcGl4ZWwgb2YgTUlQSSBEU0kgcGl4
+ZWwgZm9ybWF0Cj4+Cj4+ICAgLi4uL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2No
+aXAudHh0ICAgICAgfCAgIDYwICsKPj4gICBhcmNoL2FybS9ib290L2R0cy9yazMyODgtZXZiLmR0
+c2kgICAgICAgICAgICAgICAgICB8ICAgMjAgKy0KPj4gICBhcmNoL2FybS9ib290L2R0cy9yazMy
+ODguZHRzaSAgICAgICAgICAgICAgICAgICAgICB8ICAgMzkgKwo+PiAgIGRyaXZlcnMvZ3B1L2Ry
+bS9yb2NrY2hpcC9LY29uZmlnICAgICAgICAgICAgICAgICAgIHwgICAxMCArCj4+ICAgZHJpdmVy
+cy9ncHUvZHJtL3JvY2tjaGlwL01ha2VmaWxlICAgICAgICAgICAgICAgICAgfCAgICAxICsKPj4g
+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYyAgICAgICAgICAgICB8IDEy
+MDAKPj4gKysrKysrKysrKysrKysrKysrKysgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tj
+aGlwX2RybV92b3AuYyAgICAgICAgfAo+PiAgIDggKwo+PiAgIGluY2x1ZGUvZHJtL2RybV9taXBp
+X2RzaS5oICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxNCArCj4+ICAgOCBmaWxlcyBjaGFu
+Z2VkLCAxMzUxIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPj4gICBjcmVhdGUgbW9kZSAx
+MDA2NDQKPj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2No
+aXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0Cj4+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYwo+Cj4KPgoKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
