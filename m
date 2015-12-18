@@ -1,67 +1,68 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [PATCH v2 2/4] ASoC: sun4i-codec: Add support
- for PA gpio pin
-Date: Fri, 18 Dec 2015 21:53:41 +0100
-Message-ID: <20151218205341.GO30359@lukather>
-References: <1449859439-30875-1-git-send-email-hdegoede@redhat.com>
- <1449859439-30875-2-git-send-email-hdegoede@redhat.com>
- <20151214155616.GL19456@lukather>
- <566EE953.3050702@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Damien Riegel <damien.riegel@savoirfairelinux.com>
+Subject: Re: [PATCH 2/2] can: sja1000: of: add compatibility with Technologic
+ Systems version
+Date: Fri, 18 Dec 2015 16:02:31 -0500
+Message-ID: <20151218210231.GA6116@localhost>
+References: <1450469845-12900-1-git-send-email-damien.riegel@savoirfairelinux.com>
+ <1450469845-12900-2-git-send-email-damien.riegel@savoirfairelinux.com>
+ <56746F8B.8030008@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3snK74p7ddXn3Qrx"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBVXE2GZQKGQECNKLG4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <566EE953.3050702-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <56746F8B.8030008@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wolfgang Grandegger <wg@grandegger.com>, kernel@savoirfairelinux.com
 List-Id: devicetree@vger.kernel.org
 
---3snK74p7ddXn3Qrx
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Mon, Dec 14, 2015 at 05:07:47PM +0100, Hans de Goede wrote:
-> >>+static int sun4i_codec_spk_event(struct snd_soc_dapm_widget *w,
-> >>+				 struct snd_kcontrol *k, int event)
-> >>+{
-> >>+	struct sun4i_codec *scodec = snd_soc_card_get_drvdata(w->dapm->card);
-> >>+
-> >>+	if (scodec->gpio_pa)
-> >>+		gpiod_set_value_cansleep(scodec->gpio_pa,
-> >>+					 !!SND_SOC_DAPM_EVENT_ON(event));
-> >>+
-> >>+	return 0;
-> >>+}
-> >>+
-> >>+static const struct snd_soc_dapm_widget sun4i_codec_card_dapm_widgets[] = {
-> >>+	SND_SOC_DAPM_SPK("Speaker", sun4i_codec_spk_event),
-> >>+};
-> >>+
-> >>+static const struct snd_soc_dapm_route sun4i_codec_card_dapm_routes[] = {
-> >>+	{ "Speaker", NULL, "Power Amplifier" },
-> >>+};
-> >
-> >Shouldn't it be tied to the HP outputs instead?
+On Fri, Dec 18, 2015 at 09:41:47PM +0100, Marc Kleine-Budde wrote:
+> On 12/18/2015 09:17 PM, Damien Riegel wrote:
+> > Technologic Systems provides an IP compatible with the SJA1000,
+> > instantiated in an FPGA. Because of some bus widths issue, access to
+> > registers is made through a "window" that works like this:
+> > 
+> >     base + 0x0: address to read/write
+> >     base + 0x2: 8-bit register value
+> > 
+> > This commit adds a new compatible device, "technologic,sja1000", with
+> > read and write functions using the window mechanism.
+> > 
+> > Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
+> > ---
+> >  drivers/net/can/sja1000/sja1000_platform.c | 30 ++++++++++++++++++++++++++++--
+> >  1 file changed, 28 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/net/can/sja1000/sja1000_platform.c b/drivers/net/can/sja1000/sja1000_platform.c
+> > index 0552ed4..6cbf251 100644
+> > --- a/drivers/net/can/sja1000/sja1000_platform.c
+> > +++ b/drivers/net/can/sja1000/sja1000_platform.c
+> > @@ -70,6 +70,18 @@ static void sp_write_reg32(const struct sja1000_priv *priv, int reg, u8 val)
+> >  	iowrite8(val, priv->reg_base + reg * 4);
+> >  }
+> >  
+> > +static u8 ts4800_read_reg16(const struct sja1000_priv *priv, int reg)
+> > +{
+> > +	sp_write_reg16(priv, 0,  reg);
+> > +	return sp_read_reg16(priv, 2);
 > 
-> You're right, the HP outputs are the final outputs, and since this is
-> for enabling an external amplifier you're right. Since Mark has already
-> merged this patch I will do a follow up patch to fix this.
+> This is racy, please add a spinlock.
+> 
+> > +}
+> > +
+> > +static void ts4800_write_reg16(const struct sja1000_priv *priv, int reg, u8 val)
+> > +{
+> > +	sp_write_reg16(priv, 0, reg);
+> > +	sp_write_reg16(priv, 2, val);
+> 
+> This is racy, too.
+> 
+> Have a look at https://marc.info/?l=linux-can&m=137149497403825&w=2
 
-Great, thanks!
+Thank you for the link. In my situation, I don't think there is a race
+issue at the bus level, so a per-device spinlock should be enough. Would
+that be an acceptable patch? It would look a lot like the patch you
+suggested in the thread you linked, just rebased on current version.
 
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---3snK74p7ddXn3Qrx--
+Thanks,
+Damien
