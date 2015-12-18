@@ -1,309 +1,178 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v11 0/19] Add Analogix Core Display Port Driver
-Date: Fri, 18 Dec 2015 00:51:36 +0100
-Message-ID: <1767456.MuDjE2lUmn@diego>
-References: <1450236018-1118-1-git-send-email-ykk@rock-chips.com>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3] extcon: add Maxim MAX3355 driver
+Date: Fri, 18 Dec 2015 09:19:49 +0900
+Message-ID: <56735125.1040304@samsung.com>
+References: <2473780.4IzuWX8hE2@wasted.cogentembedded.com>
+ <CAJKOXPfD8DnDow04_wyRyGk+8zBmT15giDS+WDcV+pFaWSypGw@mail.gmail.com>
+ <5672C884.3000603@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1450236018-1118-1-git-send-email-ykk@rock-chips.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: Inki Dae <inki.dae@samsung.com>, Mark Yao <mark.yao@rock-chips.com>, Jingoo Han <jingoohan1@gmail.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, emil.l.velikov@gmail.com, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Kishon Vijay Abraham I <kishon@ti.com>, javier@osg.samsung.com, Andy Yan <andy.yan@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <5672C884.3000603-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Yakir,
+On 17.12.2015 23:36, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 12/17/2015 3:53 AM, Krzysztof Kozlowski wrote:
+> 
+>>> Maxim Integrated MAX3355E chip integrates a charge pump and
+>>> comparators to
+>>> enable a system with an integrated USB OTG dual-role transceiver to
+>>> function as an USB OTG dual-role device. In addition to
+>>> sensing/controlling
+>>> Vbus, the chip also passes thru the ID signal from the USB OTG
+>>> connector.
+>>> On some Renesas boards, this signal is just fed into the SoC thru a GPIO
+>>> pin -- there's no real OTG controller, only host and gadget USB
+>>> controllers
+>>> sharing the same USB bus; however, we'd like to allow host or gadget
+>>> drivers to be loaded depending on the cable type, hence the need for the
+>>> MAX3355 extcon driver. The Vbus status signals are also wired to GPIOs
+>>> (however, we aren't currently interested in them), the OFFVBUS#
+>>> signal is
+>>> controlled by the host controllers, there's also the SHDN# signal
+>>> wired to
+>>> a GPIO, it should be driven high for the normal operation.
+>>>
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>>>
+>>> ---
+>>> Changes in version 3:
+>>> - reformatted the change log.
+>>>
+>>> Changes in version 2:
+>>> - added the USB gadget cable support;
+>>> - added the remove() driver method which drives SHDN# GPIO low to
+>>> save power;
+>>> - dropped vendor prefix from the ID GPIO property name;
+>>> - changed the GPIO property name suffix to "-gpios";
+>>> - switched to usign extcon_set_cable_state_() API;
+>>> - switched to using the gpiod/sleeping 'gpiolib' APIs;
+>>> - addded error messages to max3355_probe();
+>>> - added IRQF_NO_SUSPEND flasg to the devm_request_threaded_irq() call;
+>>> - renamed 'ret' variable to 'err' in max3355_probe();
+>>> - expanded the Kconfig entry help text;
+>>> - added vendor name to the patch summary, the bindings document, the
+>>> Kconfig
+>>>    entry, the driver heading comment, the module description, and the
+>>> change log;
+>>> - fixed up and reformatted the change log.
+>>>
+>>>   Documentation/devicetree/bindings/extcon/extcon-max3355.txt |   21 +
+>>>   drivers/extcon/Kconfig                                      |    8
+>>>   drivers/extcon/Makefile                                     |    1
+>>>   drivers/extcon/extcon-max3355.c                             |  153
+>>> ++++++++++++
+>>>   4 files changed, 183 insertions(+)
+>>>
+>>> Index:
+>>> renesas/Documentation/devicetree/bindings/extcon/extcon-max3355.txt
+>>> ===================================================================
+>>> --- /dev/null
+>>> +++ renesas/Documentation/devicetree/bindings/extcon/extcon-max3355.txt
+>>> @@ -0,0 +1,21 @@
+>>> +Maxim Integrated MAX3355 USB OTG chip
+>>> +-------------------------------------
+>>> +
+>>> +MAX3355 integrates a charge pump and comparators to enable a system
+>>> with an
+>>> +integrated USB OTG dual-role transceiver to function as a USB OTG
+>>> dual-role
+>>> +device.
+>>> +
+>>> +Required properties:
+>>> +- compatible: should be "maxim,max3355";
+>>> +- maxim,shdn-gpios: should contain a phandle and GPIO specifier for
+>>> the GPIO pin
+>>> +  connected to the MAX3355's SHDN# pin;
+>>
+>> Could you add some indentation to the wrapped line for this property?
+>> For readability.
+> 
+>    If it's not indented enough, I can add more spaces/tabs.
 
-Am Mittwoch, 16. Dezember 2015, 11:20:18 schrieb Yakir Yang:
->    The Samsung Exynos eDP controller and Rockchip RK3288 eDP controller
-> share the same IP, so a lot of parts can be re-used. I split the common
-> code into bridge directory, then rk3288 and exynos only need to keep
-> some platform code. Cause I can't find the exact IP name of exynos dp
-> controller, so I decide to name dp core driver with "analogix" which I
-> find in rk3288 eDP TRM
+Ahh, now I see it is sufficient. I need fix my email client.
 
-I'm really sorry for not thinking of this earlier, but I think we'll be doing 
-the atomic modesetting conversion of the drm/kms driver first - see v3 series 
-from Mark Yao.
-
-Could you handle necessary changes to make it apply and work _after_ the 
-atomic modesetting conversion please?
-
-
-Thanks
-Heiko
+> 
+>>> +- id-gpios: should contain a phandle and GPIO specifier for the GPIO
+>>> pin
+>>> +  connected to the MAX3355's ID_OUT pin.
+>>
+>> Ditto.
+>>
+>> Why this property lacks the vendor prefix i(n comparison to shdn-gpios
+>> which has the prefix)?
+> 
+>    Since the extcon-usb-gpio driver uses "id-gpio" prop already. I can
+> add back the vendor prefix if you insist.
 
 
-> But  there are still three light registers setting differents bewteen
-> exynos and rk3288.
-> 1. RK3288 have five special pll resigters which not indicata in exynos
->    dp controller.
-> 2. The address of DP_PHY_PD(dp phy power manager register) are different
->    between rk3288 and exynos.
-> 3. Rk3288 and exynos have different setting with AUX_HW_RETRY_CTL(dp debug
->    register).
+It is for USB ID and palmas has it already as well so I do not insist.
+Seems generic.
+
 > 
-> This series have been well tested on Rockchip platform with eDP panel on
-> Jerry Chromebook and Display Port Monitor on RK3288 board. Also I have
-> tested on Samsung Snow and Peach Pit Chromebooks, and thanks to
-> Javier@Samsung help to retest the whole series on Samsung Exynos5800 Peach
-> Pi Chromebook, glad to say that things works rightlly.
+> [...]
+>>> Index: renesas/drivers/extcon/extcon-max3355.c
+>>> ===================================================================
+>>> --- /dev/null
+>>> +++ renesas/drivers/extcon/extcon-max3355.c
+>>> @@ -0,0 +1,153 @@
+> [...]
+>>> +static int max3355_probe(struct platform_device *pdev)
+>>> +{
+>>> +       struct device_node *np = pdev->dev.of_node;
+>>> +       struct max3355_data *data;
+>>> +       struct gpio_desc *gpiod;
+>>> +       int irq, err;
+>>> +
+>>> +       data = devm_kzalloc(&pdev->dev, sizeof(struct max3355_data),
+>>> +                           GFP_KERNEL);
+>>> +       if (!data)
+>>> +               return -ENOMEM;
+>>> +
+>>> +       data->edev = devm_extcon_dev_allocate(&pdev->dev,
+>>> max3355_cable);
+>>> +       if (IS_ERR(data->edev)) {
+>>> +               dev_err(&pdev->dev, "failed to allocate extcon
+>>> device\n");
+>>> +               return PTR_ERR(data->edev);
+>>> +       }
+>>> +       data->edev->name = kstrdup(np->name, GFP_KERNEL);
+>>
+>> I think it is not needed any more (extcon_dev_register()) will set it.
+>> Anyway there is no checking for NULL return value and no freeing in
+>> error/exit paths.
 > 
-> Thanks,
-> - Yakir
+>    Oops, will fix.
 > 
+> [...]
+>>> +static struct platform_driver max3355_driver = {
+>>> +       .probe          = max3355_probe,
+>>> +       .remove         = max3355_remove,
+>>> +       .driver         = {
+>>> +               .name   = "extcon-max3355",
+>>> +               .of_match_table = max3355_match_table,
+>>> +               .owner  = THIS_MODULE,
+>>
+>> No need for owner.
+>> Please pass the source through recent coccicheck and fix the findings.
 > 
-> Changes in v11:
-> - Uses tabs to fix the indentation issues in analogix_dp_core.h (Heiko)
-> - Correct the title of this rockchip dp phy document(Rob)
-> - Add the ack from Rob Herring
-> - Rename the "analogix,need-force-hpd" to common 'force-hpd' (Rob)
-> - Add the ack from Rob Herring
-> - Revert parts of Gustavo Padovan's changes in commit:
-> 	drm/exynos: do not start enabling DP at bind() phase
->   Add dp phy poweron function in bind time.
-> - Move the panel prepare from get_modes time to bind time, and move
->   the panel unprepare from bridge->disable to unbind time. (Heiko)
-> 
-> Changes in v10:
-> - Add the ack from Rob Herring
-> - Correct the ROCKCHIP_ANALOGIX_DP indentation in Kconfig to tabs here
-> (Heiko) - Add the ack from Rob Herring
-> - Fix the wrong macro value of GRF_EDP_REF_CLK_SEL_INTER_HIWORD_MASK
->     BIT(4) -> BIT(20)
-> - Remove the surplus "plat_data" check. (Heiko)
-> -       switch (dp->plat_data && dp->plat_data->dev_type) {
-> +       switch (dp->plat_data->dev_type) {
-> 
-> Changes in v9:
-> - Document more details for 'ports' property.
-> - Removed the unused the variable "res" in probe function. (Heiko)
-> - Removed the unused head file.
-> 
-> Changes in v8:
-> - Correct the right document path of display-timing.txt (Heiko)
-> - Correct the misspell of 'from' to 'frm'. (Heiko)
-> - Modify the commit subject name. (Heiko)
-> - Fix the mixed spacers on macro definitions. (Heiko)
-> - Remove the unnecessary empty line after clk_prepare_enable. (Heiko)
-> - Remove the specific address in the example node name. (Heiko)
-> 
-> Changes in v7:
-> - Back to use the of_property_read_bool() interfacs to provoid backward
->   compatibility of "hsync-active-high" "vsync-active-high" "interlaced"
->   to avoid -EOVERFLOW error (Krzysztof)
-> - Simply the commit message. (Kishon)
-> - Symmetrical enable/disbale the phy clock and power. (Kishon)
-> - Simplify the commit message. (Kishon)
-> 
-> Changes in v6:
-> - Fix the Kconfig recursive dependency (Javier)
-> - Fix Peach Pit hpd property name error:
-> -       hpd-gpio = <&gpx2 6 0>;
-> +       hpd-gpios = <&gpx2 6 0>;
-> 
-> Changes in v5:
-> - Correct the check condition of gpio_is_valid when driver try to get
->   the "hpd-gpios" DT propery. (Heiko)
-> - Move the platform attach callback in the front of core driver bridge
->   attch function. Cause once platform failed at attach, core driver should
->   still failed, so no need to init connector before platform attached
-> (Krzysztof) - Keep code style no changes with the previous exynos_dp_code.c
-> in this patch, and update commit message about the new export symbol
-> (Krzysztof) - Gather the device type patch (v4 11/16) into this one.
-> (Krzysztof) - leave out the connector registration to analogix platform
-> driver. (Thierry) - Resequence this patch after analogix_dp driver have
-> been split
->   from exynos_dp code, and rephrase reasonable commit message, and
->   remove some controversial style (Krzysztof)
->     -		analogix_dp_write_byte_to_dpcd(
->     - 				dp, DP_TEST_RESPONSE,
->     +		analogix_dp_write_byte_to_dpcd(dp,
->     +				DP_TEST_RESPONSE,
-> 				DP_TEST_EDID_CHECKSUM_WRITE);
-> - Switch video timing type to "u32", so driver could use
-> "of_property_read_u32" to get the backword timing values. Krzysztof suggest
-> me that driver could use the "of_property_read_bool" to get backword timing
-> values, but that interfacs would modify the original drm_display_mode
-> timing directly (whether those properties exists or not).
-> - Correct the misspell in commit message. (Krzysztof)
-> - Remove the empty line at the end of document, and correct the endpoint
->   numbers in the example DT node, and remove the regulator iomux setting
->   in driver code while using the pinctl in devicetree instead. (Heiko)
-> - Add device type declared, cause the previous "platform device type
->   support (v4 11/16)" already merge into (v5 02/14).
-> - Implement connector registration code. (Thierry)
-> - Split binding doc's from driver changes. (Rob)
-> - Add eDP hotplug pinctrl property. (Heiko)
-> - Remove "reg" DT property, cause driver could poweron/poweroff phy via
->   the exist "grf" syscon already. And rename the example DT node from
->   "edp_phy: phy@ff770274" to "edp_phy: edp-phy" directly. (Heiko)
-> - Add deivce_node at the front of driver, update phy_ops type from "static
->   struct" to "static const struct". And correct the input paramters of
->   devm_phy_create() interfaces. (Heiko)
-> - Split binding doc's from driver changes. (Rob)
-> - Update the rockchip,grf explain in document, and correct the clock
-> required elemets in document. (Rob & Heiko)
-> - Fix compiled error (Heiko)
-> - Using the connector display info message to configure eDP driver input
->   video mode, but hard code CRTC video output mode to RGBaaa.
-> 
-> Changes in v4:
-> - Update "analogix,hpd-gpios" to "hpd-gpios" DT propery. (Rob)
-> - Rename "analogix_dp-exynos.c" file name to "exynos_dp.c" (Jingoo)
-> - Create a separate folder for analogix code in bridge/ (Archit)
-> - Update commit message more readable. (Jingoo)
-> - Adjust the order from 05 to 04
-> - Provide backword compatibility with samsung. (Krzysztof)
-> - Split all DTS changes, and provide backward compatibility. Mark old
->   properties as deprecated but still support them. (Krzysztof)
-> - Update "analogix,hpd-gpio" to "hpd-gpios" prop name. (Rob)
-> - Deprecated some properties which could parsed from Edid/Mode/DPCD.
-> (Thierry) "analogix,color-space" & "analogix,color-depth"   &
->     "analogix,link-rate"   & "analogix,lane-count"    &
->     "analogix,ycbcr-coeff" & "analogix,dynamic-range" &
->     "vsync-active-high"    & "hsync-active-high"      & "interlaces"
-> - Separate all DTS changes to a separate patch. (Krzysztof)
-> - Remove some deprecated DT properties in rockchip dp document.
-> - Add commit message, and remove the redundant rockchip_dp_phy_init()
->   function, move those code to probe() method. And remove driver .owner
->   number. (Kishon)
-> - Seprate the link-rate and lane-count limit out with the device_type
->   flag. (Thierry)
-> - Take Jingoo suggest, add commit messages.
-> - Call drm_panel_prepare() in .get_modes function, ensure panel should
->   power on before driver try to read edid message.
-> 
-> Changes in v3:
-> - Move exynos's video_timing code to analogix_dp-exynos platform driver,
->   add get_modes method to struct analogix_dp_plat_data. (Thierry)
-> - Rename some "samsung*" dts propery to "analogix*". (Heiko)
-> - The link_rate and lane_count shouldn't config to the DT property value
->   directly, but we can take those as hardware limite. For example, RK3288
->   only support 4 physical lanes of 2.7/1.62 Gbps/lane, so DT property would
->   like "link-rate = 0x0a" "lane-count = 4". (Thierry)
-> - Dynamic parse video timing info from struct drm_display_mode and
->   struct drm_display_info. (Thierry)
-> - Add devicetree binding documents. (Heiko)
-> - Remove sync pol & colorimetry properies from the new analogix dp driver
->   devicetree binding. (Thierry)
-> - Update the exist exynos dtsi file with the latest DP DT properies.
-> - Leave "sclk_edp_24m" to rockchip dp phy driver which name to "24m",
->   and leave "sclk_edp" to analogix dp core driver which name to "dp",
->   and leave "pclk_edp" to rockchip dp platform driver which name to
->   "pclk". (Thierry & Heiko)
-> - Add devicetree binding document. (Heiko)
-> - Remove "rockchip,panel" DT property, take use of remote point to get panel
-> node. (Heiko)
-> - Add the new function point dp_platdata->get_modes() init.
-> - Suggest, add rockchip dp phy driver, collect the phy clocks and
->   power control. (Heiko)
-> - Add "analogix,need-force-hpd" to indicate whether driver need foce
->   hpd when hpd detect failed.
-> - move dp hpd detect to connector detect function.
-> - Add edid modes parse support
-> 
-> Changes in v2:
-> - Remove new copyright (Jingoo)
-> - Fix compiled failed due to analogix_dp_device misspell
-> - Improved commit message more readable, and avoid using some
->   uncommon style like bellow: (Joe Preches)
->     -  retval = exynos_dp_read_bytes_from_i2c(...
->   				  ...);
->     +  retval =
->     +  exynos_dp_read_bytes_from_i2c(......);
-> - Get panel node with remote-endpoint method, and create devicetree binding
->   for driver. (Heiko)
-> - Remove the clock enable/disbale with "sclk_edp" & "sclk_edp_24m",
->   leave those clock to rockchip dp phy driver.
-> - Fix compile failed dut to phy_pd_addr variable misspell error
-> 
-> Mark Yao (1):
->   drm: rockchip: vop: add bpc and color mode setting
-> 
-> Yakir Yang (18):
->   drm: bridge: analogix/dp: split exynos dp driver to bridge directory
->   drm: bridge: analogix/dp: fix some obvious code style
->   drm: bridge: analogix/dp: remove duplicate configuration of link rate
->     and link count
->   drm: bridge: analogix/dp: dynamic parse sync_pol & interlace &
->     dynamic_range
->   dt-bindings: add document for analogix display port driver
->   ARM: dts: exynos/dp: remove some properties that deprecated by
->     analogix_dp driver
->   drm: rockchip: dp: add rockchip platform dp driver
->   dt-bindings: add document for rockchip variant of analogix_dp
->   phy: Add driver for rockchip Display Port PHY
->   dt-bindings: add document for rockchip dp phy
->   drm: bridge: analogix/dp: add some rk3288 special registers setting
->   drm: bridge: analogix/dp: add max link rate and lane count limit for
->     RK3288
->   drm: bridge: analogix/dp: try force hpd after plug in lookup failed
->   drm: bridge: analogix/dp: move hpd detect to connector detect function
->   drm: bridge: analogix/dp: add edid modes parse in get_modes method
->   drm: bridge: analogix/dp: expand the look time for waiting AUX CH
->     reply
->   drm: bridge: analogix/dp: add panel prepare/unprepare in
->     suspend/resume time
->   drm: bridge: analogix/dp: Fix the possible dead lock in bridge disable
->     time
-> 
->  .../bindings/display/bridge/analogix_dp.txt        |   52 +
->  .../bindings/display/exynos/exynos_dp.txt          |   66 +-
->  .../display/rockchip/analogix_dp-rockchip.txt      |   92 ++
->  .../devicetree/bindings/phy/rockchip-dp-phy.txt    |   22 +
->  arch/arm/boot/dts/exynos5250-arndale.dts           |    2 -
->  arch/arm/boot/dts/exynos5250-smdk5250.dts          |    2 -
->  arch/arm/boot/dts/exynos5250-snow-common.dtsi      |    4 +-
->  arch/arm/boot/dts/exynos5250-spring.dts            |    4 +-
->  arch/arm/boot/dts/exynos5420-peach-pit.dts         |    4 +-
->  arch/arm/boot/dts/exynos5420-smdk5420.dts          |    2 -
->  arch/arm/boot/dts/exynos5800-peach-pi.dts          |    4 +-
->  drivers/gpu/drm/bridge/Kconfig                     |    2 +
->  drivers/gpu/drm/bridge/Makefile                    |    1 +
->  drivers/gpu/drm/bridge/analogix/Kconfig            |    3 +
->  drivers/gpu/drm/bridge/analogix/Makefile           |    1 +
->  drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 1387
-> ++++++++++++++++++ drivers/gpu/drm/bridge/analogix/analogix_dp_core.h | 
-> 287 ++++
->  drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c  | 1320 +++++++++++++++++
-> .../analogix/analogix_dp_reg.h}                    |  270 ++--
->  drivers/gpu/drm/exynos/Kconfig                     |    3 +-
->  drivers/gpu/drm/exynos/Makefile                    |    2 +-
->  drivers/gpu/drm/exynos/exynos_dp.c                 |  384 +++++
->  drivers/gpu/drm/exynos/exynos_dp_core.c            | 1515
-> -------------------- drivers/gpu/drm/exynos/exynos_dp_core.h            | 
-> 282 ----
->  drivers/gpu/drm/exynos/exynos_dp_reg.c             | 1263 ----------------
->  drivers/gpu/drm/rockchip/Kconfig                   |    9 +
->  drivers/gpu/drm/rockchip/Makefile                  |    1 +
->  drivers/gpu/drm/rockchip/analogix_dp-rockchip.c    |  457 ++++++
->  drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        |    2 +-
->  drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |    2 +-
->  drivers/gpu/drm/rockchip/rockchip_drm_vop.c        |   32 +-
->  drivers/phy/Kconfig                                |    7 +
->  drivers/phy/Makefile                               |    1 +
->  drivers/phy/phy-rockchip-dp.c                      |  151 ++
->  include/drm/bridge/analogix_dp.h                   |   42 +
->  35 files changed, 4421 insertions(+), 3257 deletions(-)
->  create mode 100644
-> Documentation/devicetree/bindings/display/bridge/analogix_dp.txt create
-> mode 100644
-> Documentation/devicetree/bindings/display/rockchip/analogix_dp-rockchip.txt
-> create mode 100644
-> Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt create mode
-> 100644 drivers/gpu/drm/bridge/analogix/Kconfig
->  create mode 100644 drivers/gpu/drm/bridge/analogix/Makefile
->  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
->  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
->  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c
->  rename drivers/gpu/drm/{exynos/exynos_dp_reg.h =>
-> bridge/analogix/analogix_dp_reg.h} (62%) create mode 100644
-> drivers/gpu/drm/exynos/exynos_dp.c
->  delete mode 100644 drivers/gpu/drm/exynos/exynos_dp_core.c
->  delete mode 100644 drivers/gpu/drm/exynos/exynos_dp_core.h
->  delete mode 100644 drivers/gpu/drm/exynos/exynos_dp_reg.c
->  create mode 100644 drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
->  create mode 100644 drivers/phy/phy-rockchip-dp.c
->  create mode 100644 include/drm/bridge/analogix_dp.h
+>    Has it been included in the kernel source somewhere already?
+
+The rules detecting the unnecessary owner should be there for some time
+(sice 4.2 or 4.1?). The coccicheck is in kernel - scripts/coccicheck. It
+uses coccinelle/spatch. You can run it just like other code-checker
+tools - sparse and smatch.
+
+Best regards,
+Krzysztof
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
