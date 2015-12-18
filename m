@@ -1,91 +1,235 @@
 From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [RFC PATCH 5/5] ARM: dts: imx6qdl-udoo.dtsi: fix onboard USB HUB property
-Date: Fri, 18 Dec 2015 17:33:59 +0800
-Message-ID: <1450431239-16439-6-git-send-email-peter.chen@freescale.com>
+Subject: [RFC PATCH 3/5] usb: misc: generic_onboard_hub: add generic onboard USB device driver
+Date: Fri, 18 Dec 2015 17:33:57 +0800
+Message-ID: <1450431239-16439-4-git-send-email-peter.chen@freescale.com>
 References: <1450431239-16439-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1450431239-16439-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The current dts describes USB HUB's property at USB controller's
-entry, it is improper. The USB HUB should be the child node
-under USB controller.
+Current USB device driver lacks of platform interfaces to configure
+external signal on HUB chip, eg, the PHY input clock and gpio reset
+pin for HUB, these kinds of devices are usually soldered at the board,
+and they are not hot-plug USB devices.
+
+With this patch, the user can configure the device's pins at device tree,
+and these configuration will be effective before the USB bus can be used,
+it can avoid unexpected signals at USB bus during this USB device hardware
+reset process, so we use subsys_initcall for this driver.
 
 Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-udoo.dtsi | 35 ++++++++++++++---------------------
- 1 file changed, 14 insertions(+), 21 deletions(-)
+ MAINTAINERS                               |   7 ++
+ drivers/usb/misc/Kconfig                  |  10 +++
+ drivers/usb/misc/Makefile                 |   1 +
+ drivers/usb/misc/generic_onboard_device.c | 144 ++++++++++++++++++++++++++++++
+ 4 files changed, 162 insertions(+)
+ create mode 100644 drivers/usb/misc/generic_onboard_device.c
 
-diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-index 1211da8..7155afb 100644
---- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-@@ -9,6 +9,8 @@
-  *
-  */
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9bff63c..9ea0955 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11140,6 +11140,13 @@ S:	Maintained
+ F:	Documentation/usb/ohci.txt
+ F:	drivers/usb/host/ohci*
  
-+#include <dt-bindings/gpio/gpio.h>
++USB Generic Onboard Device Driver
++M:	Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/peter.chen/usb.git
++L:	linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
++S:	Maintained
++F:	drivers/usb/misc/generic_onboard_device.c
 +
- / {
- 	chosen {
- 		stdout-path = &uart2;
-@@ -17,23 +19,6 @@
- 	memory {
- 		reg = <0x10000000 0x40000000>;
- 	};
--
--	regulators {
--		compatible = "simple-bus";
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		reg_usb_h1_vbus: regulator@0 {
--			compatible = "regulator-fixed";
--			reg = <0>;
--			regulator-name = "usb_h1_vbus";
--			regulator-min-microvolt = <5000000>;
--			regulator-max-microvolt = <5000000>;
--			enable-active-high;
--			startup-delay-us = <2>; /* USB2415 requires a POR of 1 us minimum */
--			gpio = <&gpio7 12 0>;
--		};
--	};
- };
+ USB OTG FSM (Finite State Machine)
+ M:	Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/peter.chen/usb.git
+diff --git a/drivers/usb/misc/Kconfig b/drivers/usb/misc/Kconfig
+index f7a7fc2..089e2c4 100644
+--- a/drivers/usb/misc/Kconfig
++++ b/drivers/usb/misc/Kconfig
+@@ -268,3 +268,13 @@ config USB_CHAOSKEY
  
- &fec {
-@@ -119,11 +104,19 @@
- };
- 
- &usbh1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_usbh>;
--	vbus-supply = <&reg_usb_h1_vbus>;
--	clocks = <&clks 201>;
- 	status = "okay";
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called chaoskey.
 +
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	hub: usb2415@01 {
-+		compatible = "generic-onboard-device";
-+		reg = <0x01>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usbh>;
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+		reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
-+		reset-duration-us = <2>;
-+	};
- };
++config USB_ONBOARD_DEVICE
++	tristate "Generic USB Onboard Device"
++	help
++	  depends on OF
++	  Say Y here if your board has an onboard device, and this device
++	  needs to control its PHY clock and reset pin through external
++	  signals. If you are not sure, say N.
++
++	  To compile this driver as a module, choose M here.
+diff --git a/drivers/usb/misc/Makefile b/drivers/usb/misc/Makefile
+index 45fd4ac..60731bb 100644
+--- a/drivers/usb/misc/Makefile
++++ b/drivers/usb/misc/Makefile
+@@ -29,3 +29,4 @@ obj-$(CONFIG_USB_CHAOSKEY)		+= chaoskey.o
  
- &usdhc3 {
+ obj-$(CONFIG_USB_SISUSBVGA)		+= sisusbvga/
+ obj-$(CONFIG_USB_LINK_LAYER_TEST)	+= lvstest.o
++obj-$(CONFIG_USB_ONBOARD_DEVICE)	+= generic_onboard_device.o
+diff --git a/drivers/usb/misc/generic_onboard_device.c b/drivers/usb/misc/generic_onboard_device.c
+new file mode 100644
+index 0000000..0111bd9
+--- /dev/null
++++ b/drivers/usb/misc/generic_onboard_device.c
+@@ -0,0 +1,144 @@
++/*
++ * generic_onboard_device.c	The generic onboard USB device driver
++ *
++ * Copyright (C) 2015 Freescale Semiconductor, Inc.
++ * Author: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
++ *
++ * This program is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2  of
++ * the License as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++/*
++ * This driver is only for the USB HUB devices which need to control
++ * their external pins(clock, reset, etc), and these USB HUB devices
++ * are soldered at the board.
++ */
++
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/consumer.h>
++#include <linux/slab.h>
++
++struct usb_generic_onboard_data {
++	struct clk *clk;
++};
++
++static int usb_generic_onboard_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct usb_generic_onboard_data *hub_data;
++	int ret = -EINVAL;
++	struct gpio_desc *gpiod_reset = NULL;
++	struct device_node *node = dev->of_node;
++	u32 duration_us = 50, clk_rate = 0;
++
++	/* Only support device tree now */
++	if (!node)
++		return ret;
++
++	hub_data = devm_kzalloc(dev, sizeof(*hub_data), GFP_KERNEL);
++	if (!hub_data)
++		return -ENOMEM;
++
++	hub_data->clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(hub_data->clk)) {
++		dev_dbg(dev, "Can't get clock: %ld\n",
++			PTR_ERR(hub_data->clk));
++		hub_data->clk = NULL;
++	} else {
++		ret = clk_prepare_enable(hub_data->clk);
++		if (ret) {
++			dev_err(dev,
++				"Can't enable external clock: %d\n",
++				ret);
++			return ret;
++		}
++
++		of_property_read_u32(node, "clock-frequency", &clk_rate);
++		if (clk_rate) {
++			ret = clk_set_rate(hub_data->clk, clk_rate);
++			if (ret) {
++				dev_err(dev, "Error setting clock rate\n");
++				goto disable_clk;
++			}
++		}
++	}
++
++	gpiod_reset = devm_gpiod_get_optional(dev, "reset", GPIOD_ASIS);
++	ret = PTR_ERR_OR_ZERO(gpiod_reset);
++	if (ret) {
++		dev_err(dev, "Failed to get reset gpio, err = %d\n", ret);
++		goto disable_clk;
++	}
++
++	of_property_read_u32(node, "reset-duration-us", &duration_us);
++
++	if (gpiod_reset) {
++		gpiod_direction_output(gpiod_reset, 1);
++
++		gpiod_set_value(gpiod_reset, 1);
++		usleep_range(duration_us, duration_us + 10);
++		gpiod_set_value(gpiod_reset, 0);
++	}
++
++	dev_set_drvdata(dev, hub_data);
++	return ret;
++
++disable_clk:
++	clk_disable_unprepare(hub_data->clk);
++	return ret;
++}
++
++static int usb_generic_onboard_remove(struct platform_device *pdev)
++{
++	struct usb_generic_onboard_data *hub_data = platform_get_drvdata(pdev);
++
++	clk_disable_unprepare(hub_data->clk);
++	return 0;
++}
++
++static const struct of_device_id usb_generic_onboard_dt_ids[] = {
++	{.compatible = "generic-onboard-device"},
++	{ },
++};
++MODULE_DEVICE_TABLE(of, usb_generic_onboard_dt_ids);
++
++static struct platform_driver usb_generic_onboard_driver = {
++	.probe = usb_generic_onboard_probe,
++	.remove = usb_generic_onboard_remove,
++	.driver = {
++		.name = "usb_generic_onboard",
++		.of_match_table = usb_generic_onboard_dt_ids,
++	 },
++};
++
++static int __init usb_generic_onboard_init(void)
++{
++	return platform_driver_register(&usb_generic_onboard_driver);
++}
++subsys_initcall(usb_generic_onboard_init);
++
++static void __exit usb_generic_onboard_exit(void)
++{
++	platform_driver_unregister(&usb_generic_onboard_driver);
++}
++module_exit(usb_generic_onboard_exit);
++
++MODULE_AUTHOR("Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>");
++MODULE_DESCRIPTION("Generic Onboard USB HUB driver");
++MODULE_LICENSE("GPL v2");
 -- 
 1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
