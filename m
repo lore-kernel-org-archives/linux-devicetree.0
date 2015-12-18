@@ -1,51 +1,46 @@
 From: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/3] ARM: dts: bcm5301x: Add TWD WD Support to DT
-Date: Fri, 18 Dec 2015 16:37:54 -0500
-Message-ID: <1450474676-10210-1-git-send-email-jonmason@broadcom.com>
+Subject: [PATCH 2/3] ARM: dts: bcm5301x: Add I2C support to the DT
+Date: Fri, 18 Dec 2015 16:37:55 -0500
+Message-ID: <1450474676-10210-2-git-send-email-jonmason@broadcom.com>
+References: <1450474676-10210-1-git-send-email-jonmason@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1450474676-10210-1-git-send-email-jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for the ARM TWD Watchdog to the bcm5301x device tree.  The
-ARM TWD timer allocated the register space for the WDT, so this patch
-necessitated shrinking that.  Also, the GIC masks were added for these.
+Add I2C support to the bcm5301x Device Tree.  Since no driver changes
+are needed to enable this hardware, only the device tree changes are
+required to make this functional.
 
 Signed-off-by: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/boot/dts/bcm5301x.dtsi | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/bcm5301x.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
-index 65a1309..c31fafe 100644
+index c31fafe..553b2ec 100644
 --- a/arch/arm/boot/dts/bcm5301x.dtsi
 +++ b/arch/arm/boot/dts/bcm5301x.dtsi
-@@ -66,10 +66,19 @@
- 			clocks = <&periph_clk>;
+@@ -218,6 +218,15 @@
  		};
+ 	};
  
--		local-timer@20600 {
-+		twd-timer@20600 {
- 			compatible = "arm,cortex-a9-twd-timer";
--			reg = <0x20600 0x100>;
--			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
-+			reg = <0x20600 0x20>;
-+			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
-+						  IRQ_TYPE_LEVEL_HIGH)>;
-+			clocks = <&periph_clk>;
-+		};
++	i2c0: i2c@18009000 {
++		compatible = "brcm,iproc-i2c";
++		reg = <0x18009000 0x50>;
++		interrupts = <GIC_SPI 121 IRQ_TYPE_NONE>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clock-frequency = <100000>;
++	};
 +
-+		twd-watchdog@20620 {
-+			compatible = "arm,cortex-a9-twd-wdt";
-+			reg = <0x20620 0x20>;
-+			interrupts = <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
-+						  IRQ_TYPE_LEVEL_HIGH)>;
- 			clocks = <&periph_clk>;
- 		};
- 
+ 	lcpll0: lcpll0@1800c100 {
+ 		#clock-cells = <1>;
+ 		compatible = "brcm,nsp-lcpll0";
 -- 
 1.9.1
 
