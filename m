@@ -1,221 +1,98 @@
 From: Damien Riegel <damien.riegel@savoirfairelinux.com>
-Subject: [PATCH 2/2] irqchip: add TS-4800 interrupt controller
-Date: Fri, 18 Dec 2015 14:39:19 -0500
-Message-ID: <1450467559-21066-2-git-send-email-damien.riegel@savoirfairelinux.com>
-References: <1450467559-21066-1-git-send-email-damien.riegel@savoirfairelinux.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1450467559-21066-1-git-send-email-damien.riegel@savoirfairelinux.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, kernel@savoirfairelinux.com, Damien Riegel <damien.riegel@savoirfairelinux.com>
+Subject: [PATCH 2/2] can: sja1000: of: add compatibility with Technologic Systems version
+Date: Fri, 18 Dec 2015 15:17:25 -0500
+Message-ID: <1450469845-12900-2-git-send-email-damien.riegel@savoirfairelinux.com>
+References: <1450469845-12900-1-git-send-email-damien.riegel@savoirfairelinux.com>
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <1450469845-12900-1-git-send-email-damien.riegel@savoirfairelinux.com>
+Sender: linux-can-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, kernel@savoirfairelinux.com, Damien Riegel <damien.riegel@savoirfairelinux.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds support for the TS-4800 interrupt controller. This
-controller is instantiated in a companion FPGA, and multiplex interrupts
-for other FPGA IPs.
+Technologic Systems provides an IP compatible with the SJA1000,
+instantiated in an FPGA. Because of some bus widths issue, access to
+registers is made through a "window" that works like this:
 
-As this component is external to the SoC, the SoC might need to reserve
-pins, so this controller is implemented as a platform driver and doesn't
-use the IRQCHIP_DECLARE construct.
+    base + 0x0: address to read/write
+    base + 0x2: 8-bit register value
+
+This commit adds a new compatible device, "technologic,sja1000", with
+read and write functions using the window mechanism.
 
 Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
 ---
- drivers/irqchip/Kconfig      |   6 ++
- drivers/irqchip/Makefile     |   1 +
- drivers/irqchip/irq-ts4800.c | 156 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 163 insertions(+)
- create mode 100644 drivers/irqchip/irq-ts4800.c
+ drivers/net/can/sja1000/sja1000_platform.c | 30 ++++++++++++++++++++++++++++--
+ 1 file changed, 28 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 27b52c8..e734772 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -137,6 +137,12 @@ config TB10X_IRQC
- 	select IRQ_DOMAIN
- 	select GENERIC_IRQ_CHIP
+diff --git a/drivers/net/can/sja1000/sja1000_platform.c b/drivers/net/can/sja1000/sja1000_platform.c
+index 0552ed4..6cbf251 100644
+--- a/drivers/net/can/sja1000/sja1000_platform.c
++++ b/drivers/net/can/sja1000/sja1000_platform.c
+@@ -70,6 +70,18 @@ static void sp_write_reg32(const struct sja1000_priv *priv, int reg, u8 val)
+ 	iowrite8(val, priv->reg_base + reg * 4);
+ }
  
-+config TS4800_IRQ
-+	tristate "TS-4800 IRQ controller"
-+	select IRQ_DOMAIN
-+	help
-+	  Support for the TS-4800 FPGA IRQ controller
-+
- config VERSATILE_FPGA_IRQ
- 	bool
- 	select IRQ_DOMAIN
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index bb3048f..ca9de01 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -39,6 +39,7 @@ obj-$(CONFIG_ARCH_NSPIRE)		+= irq-zevio.o
- obj-$(CONFIG_ARCH_VT8500)		+= irq-vt8500.o
- obj-$(CONFIG_ST_IRQCHIP)		+= irq-st.o
- obj-$(CONFIG_TB10X_IRQC)		+= irq-tb10x.o
-+obj-$(CONFIG_TS4800_IRQ)		+= irq-ts4800.o
- obj-$(CONFIG_XTENSA)			+= irq-xtensa-pic.o
- obj-$(CONFIG_XTENSA_MX)			+= irq-xtensa-mx.o
- obj-$(CONFIG_IRQ_CROSSBAR)		+= irq-crossbar.o
-diff --git a/drivers/irqchip/irq-ts4800.c b/drivers/irqchip/irq-ts4800.c
-new file mode 100644
-index 0000000..f5a4d5b
---- /dev/null
-+++ b/drivers/irqchip/irq-ts4800.c
-@@ -0,0 +1,156 @@
-+/*
-+ * Multiplexed-IRQs driver for TS-4800's FPGA
-+ *
-+ * Copyright (c) 2015 - Savoir-faire Linux
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2. This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqdomain.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/platform_device.h>
-+
-+#define IRQ_MASK        0x4
-+#define IRQ_STATUS      0x8
-+
-+struct ts4800_irq_data {
-+	void __iomem            *base;
-+	struct irq_domain       *domain;
-+	struct irq_chip         irq_chip;
-+};
-+
-+static void ts4800_irq_mask(struct irq_data *d)
++static u8 ts4800_read_reg16(const struct sja1000_priv *priv, int reg)
 +{
-+	struct ts4800_irq_data *data = irq_data_get_irq_chip_data(d);
-+	u16 mask = 1 << d->hwirq;
-+	u16 reg = readw(data->base + IRQ_MASK);
-+
-+	writew(reg | mask, data->base + IRQ_MASK);
++	sp_write_reg16(priv, 0,  reg);
++	return sp_read_reg16(priv, 2);
 +}
 +
-+static void ts4800_irq_unmask(struct irq_data *d)
++static void ts4800_write_reg16(const struct sja1000_priv *priv, int reg, u8 val)
 +{
-+	struct ts4800_irq_data *data = irq_data_get_irq_chip_data(d);
-+	u16 mask = 1 << d->hwirq;
-+	u16 reg = readw(data->base + IRQ_MASK);
-+
-+	writew(reg & ~mask, data->base + IRQ_MASK);
++	sp_write_reg16(priv, 0, reg);
++	sp_write_reg16(priv, 2, val);
 +}
 +
-+static int ts4800_irqdomain_map(struct irq_domain *d, unsigned int irq,
-+				irq_hw_number_t hwirq)
-+{
-+	struct ts4800_irq_data *data = d->host_data;
+ static void sp_populate(struct sja1000_priv *priv,
+ 			struct sja1000_platform_data *pdata,
+ 			unsigned long resource_mem_flags)
+@@ -98,21 +110,34 @@ static void sp_populate(struct sja1000_priv *priv,
+ 
+ static void sp_populate_of(struct sja1000_priv *priv, struct device_node *of)
+ {
++	int is_technologic;
+ 	int err;
+ 	u32 prop;
+ 
++	is_technologic = of_device_is_compatible(of, "technologic,sja1000");
 +
-+	irq_set_chip_and_handler(irq, &data->irq_chip, handle_simple_irq);
-+	irq_set_chip_data(irq, data);
-+	irq_set_noprobe(irq);
-+
-+	return 0;
-+}
-+
-+struct irq_domain_ops ts4800_ic_ops = {
-+	.map = ts4800_irqdomain_map,
-+	.xlate = irq_domain_xlate_onecell,
-+};
-+
-+static void ts4800_ic_chained_handle_irq(struct irq_desc *desc)
-+{
-+	struct ts4800_irq_data *data = irq_desc_get_handler_data(desc);
-+	u16 status = readw(data->base + IRQ_STATUS);
-+
-+	if (unlikely(status == 0)) {
-+		handle_bad_irq(desc);
-+		return;
+ 	err = of_property_read_u32(of, "reg-io-width", &prop);
+ 	if (err)
+ 		prop = 1; /* 8 bit is default */
+ 
++	if (is_technologic && prop != 2) {
++		netdev_warn(priv->dev, "forcing reg-io-width to 2\n");
++		prop = 2;
 +	}
 +
-+	do {
-+		unsigned int bit = __ffs(status);
-+		int irq = irq_find_mapping(data->domain, bit);
-+
-+		status &= ~(1 << bit);
-+		generic_handle_irq(irq);
-+	} while (status);
-+}
-+
-+static int ts4800_ic_probe(struct platform_device *pdev)
-+{
-+	struct device_node *node = pdev->dev.of_node;
-+	struct ts4800_irq_data *data;
-+	struct irq_chip *irq_chip;
-+	struct resource *res;
-+	int parent_irq;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	data->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(data->base))
-+		return PTR_ERR(data->base);
-+
-+	writew(0xFFFF, data->base + IRQ_MASK);
-+
-+	parent_irq = irq_of_parse_and_map(node, 0);
-+	if (!parent_irq) {
-+		dev_err(&pdev->dev, "failed to get parent IRQ\n");
-+		return -EINVAL;
-+	}
-+
-+	irq_chip = &data->irq_chip;
-+	irq_chip->name = dev_name(&pdev->dev);
-+	irq_chip->irq_mask = ts4800_irq_mask;
-+	irq_chip->irq_unmask = ts4800_irq_unmask;
-+
-+	data->domain = irq_domain_add_linear(node, 8, &ts4800_ic_ops, data);
-+	if (!data->domain) {
-+		dev_err(&pdev->dev, "cannot add IRQ domain\n");
-+		return -ENOMEM;
-+	}
-+
-+	irq_set_chained_handler_and_data(parent_irq,
-+					 ts4800_ic_chained_handle_irq, data);
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	return 0;
-+}
-+
-+static int ts4800_ic_remove(struct platform_device *pdev)
-+{
-+	struct ts4800_irq_data *data = platform_get_drvdata(pdev);
-+
-+	irq_domain_remove(data->domain);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ts4800_ic_of_match[] = {
-+	{ .compatible = "technologic,ts4800-irqc", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, ts4800_ic_of_match);
-+
-+static struct platform_driver ts4800_ic_driver = {
-+	.probe  = ts4800_ic_probe,
-+	.remove = ts4800_ic_remove,
-+	.driver = {
-+		.name = "ts4800-irqc",
-+		.of_match_table = ts4800_ic_of_match,
-+	},
-+};
-+module_platform_driver(ts4800_ic_driver);
-+
-+MODULE_AUTHOR("Damien Riegel <damien.riegel@savoirfairelinux.com>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:ts4800_irqc");
+ 	switch (prop) {
+ 	case 4:
+ 		priv->read_reg = sp_read_reg32;
+ 		priv->write_reg = sp_write_reg32;
+ 		break;
+ 	case 2:
+-		priv->read_reg = sp_read_reg16;
+-		priv->write_reg = sp_write_reg16;
++		if (is_technologic) {
++			priv->read_reg = ts4800_read_reg16;
++			priv->write_reg = ts4800_write_reg16;
++		} else {
++			priv->read_reg = sp_read_reg16;
++			priv->write_reg = sp_write_reg16;
++		}
+ 		break;
+ 	case 1:	/* fallthrough */
+ 	default:
+@@ -244,6 +269,7 @@ static int sp_remove(struct platform_device *pdev)
+ 
+ static const struct of_device_id sp_of_table[] = {
+ 	{.compatible = "nxp,sja1000"},
++	{.compatible = "technologic,sja1000"},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, sp_of_table);
 -- 
 2.5.0
+
