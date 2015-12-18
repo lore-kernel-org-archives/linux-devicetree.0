@@ -1,50 +1,221 @@
-From: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH 1/2] irqchip: add documentation for TS-4800 interrupt controller
-Date: Fri, 18 Dec 2015 14:39:18 -0500
-Message-ID: <1450467559-21066-1-git-send-email-damien.riegel@savoirfairelinux.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+From: Damien Riegel <damien.riegel@savoirfairelinux.com>
+Subject: [PATCH 2/2] irqchip: add TS-4800 interrupt controller
+Date: Fri, 18 Dec 2015 14:39:19 -0500
+Message-ID: <1450467559-21066-2-git-send-email-damien.riegel@savoirfairelinux.com>
+References: <1450467559-21066-1-git-send-email-damien.riegel@savoirfairelinux.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1450467559-21066-1-git-send-email-damien.riegel@savoirfairelinux.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, kernel@savoirfairelinux.com, Damien Riegel <damien.riegel@savoirfairelinux.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an interrupt-controller implemented in an FPGA, to multiplex
-interrupts generated from other IPs. The FPGA usually uses a GPIO as a
-parent interrupt controller to notify that one of the multiplexed
-interrupts has triggered.
+This commit adds support for the TS-4800 interrupt controller. This
+controller is instantiated in a companion FPGA, and multiplex interrupts
+for other FPGA IPs.
 
-Signed-off-by: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+As this component is external to the SoC, the SoC might need to reserve
+pins, so this controller is implemented as a platform driver and doesn't
+use the IRQCHIP_DECLARE construct.
+
+Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
 ---
- .../bindings/interrupt-controller/technologic,ts4800.txt | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/technologic,ts4800.txt
+ drivers/irqchip/Kconfig      |   6 ++
+ drivers/irqchip/Makefile     |   1 +
+ drivers/irqchip/irq-ts4800.c | 156 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 163 insertions(+)
+ create mode 100644 drivers/irqchip/irq-ts4800.c
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/technologic,ts4800.txt b/Documentation/devicetree/bindings/interrupt-controller/technologic,ts4800.txt
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 27b52c8..e734772 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -137,6 +137,12 @@ config TB10X_IRQC
+ 	select IRQ_DOMAIN
+ 	select GENERIC_IRQ_CHIP
+ 
++config TS4800_IRQ
++	tristate "TS-4800 IRQ controller"
++	select IRQ_DOMAIN
++	help
++	  Support for the TS-4800 FPGA IRQ controller
++
+ config VERSATILE_FPGA_IRQ
+ 	bool
+ 	select IRQ_DOMAIN
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index bb3048f..ca9de01 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -39,6 +39,7 @@ obj-$(CONFIG_ARCH_NSPIRE)		+= irq-zevio.o
+ obj-$(CONFIG_ARCH_VT8500)		+= irq-vt8500.o
+ obj-$(CONFIG_ST_IRQCHIP)		+= irq-st.o
+ obj-$(CONFIG_TB10X_IRQC)		+= irq-tb10x.o
++obj-$(CONFIG_TS4800_IRQ)		+= irq-ts4800.o
+ obj-$(CONFIG_XTENSA)			+= irq-xtensa-pic.o
+ obj-$(CONFIG_XTENSA_MX)			+= irq-xtensa-mx.o
+ obj-$(CONFIG_IRQ_CROSSBAR)		+= irq-crossbar.o
+diff --git a/drivers/irqchip/irq-ts4800.c b/drivers/irqchip/irq-ts4800.c
 new file mode 100644
-index 0000000..7f15f1b
+index 0000000..f5a4d5b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/technologic,ts4800.txt
-@@ -0,0 +1,16 @@
-+TS-4800 FPGA interrupt controller
++++ b/drivers/irqchip/irq-ts4800.c
+@@ -0,0 +1,156 @@
++/*
++ * Multiplexed-IRQs driver for TS-4800's FPGA
++ *
++ * Copyright (c) 2015 - Savoir-faire Linux
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2. This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
 +
-+TS-4800 FPGA has an internal interrupt controller. When one of the
-+interrupts is triggered, the SoC is notified, usually using a GPIO as
-+parent interrupt source.
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/irq.h>
++#include <linux/irqchip.h>
++#include <linux/irqdomain.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/platform_device.h>
 +
-+Required properties:
-+- compatible: should be "technologic,ts4800-irqc"
-+- interrupt-controller: identifies the node as an interrupt controller
-+- reg: physical base address of the controller and length of memory mapped
-+  region
-+- #interrupt-cells: specifies the number of cells needed to encode an interrupt
-+  source, should be 1.
-+- interrupt-parent: phandle to the parent interrupt controller this one is
-+  cascaded from
-+- interrupts: specifies the interrupt line in the interrupt-parent controller
++#define IRQ_MASK        0x4
++#define IRQ_STATUS      0x8
++
++struct ts4800_irq_data {
++	void __iomem            *base;
++	struct irq_domain       *domain;
++	struct irq_chip         irq_chip;
++};
++
++static void ts4800_irq_mask(struct irq_data *d)
++{
++	struct ts4800_irq_data *data = irq_data_get_irq_chip_data(d);
++	u16 mask = 1 << d->hwirq;
++	u16 reg = readw(data->base + IRQ_MASK);
++
++	writew(reg | mask, data->base + IRQ_MASK);
++}
++
++static void ts4800_irq_unmask(struct irq_data *d)
++{
++	struct ts4800_irq_data *data = irq_data_get_irq_chip_data(d);
++	u16 mask = 1 << d->hwirq;
++	u16 reg = readw(data->base + IRQ_MASK);
++
++	writew(reg & ~mask, data->base + IRQ_MASK);
++}
++
++static int ts4800_irqdomain_map(struct irq_domain *d, unsigned int irq,
++				irq_hw_number_t hwirq)
++{
++	struct ts4800_irq_data *data = d->host_data;
++
++	irq_set_chip_and_handler(irq, &data->irq_chip, handle_simple_irq);
++	irq_set_chip_data(irq, data);
++	irq_set_noprobe(irq);
++
++	return 0;
++}
++
++struct irq_domain_ops ts4800_ic_ops = {
++	.map = ts4800_irqdomain_map,
++	.xlate = irq_domain_xlate_onecell,
++};
++
++static void ts4800_ic_chained_handle_irq(struct irq_desc *desc)
++{
++	struct ts4800_irq_data *data = irq_desc_get_handler_data(desc);
++	u16 status = readw(data->base + IRQ_STATUS);
++
++	if (unlikely(status == 0)) {
++		handle_bad_irq(desc);
++		return;
++	}
++
++	do {
++		unsigned int bit = __ffs(status);
++		int irq = irq_find_mapping(data->domain, bit);
++
++		status &= ~(1 << bit);
++		generic_handle_irq(irq);
++	} while (status);
++}
++
++static int ts4800_ic_probe(struct platform_device *pdev)
++{
++	struct device_node *node = pdev->dev.of_node;
++	struct ts4800_irq_data *data;
++	struct irq_chip *irq_chip;
++	struct resource *res;
++	int parent_irq;
++
++	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	data->base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(data->base))
++		return PTR_ERR(data->base);
++
++	writew(0xFFFF, data->base + IRQ_MASK);
++
++	parent_irq = irq_of_parse_and_map(node, 0);
++	if (!parent_irq) {
++		dev_err(&pdev->dev, "failed to get parent IRQ\n");
++		return -EINVAL;
++	}
++
++	irq_chip = &data->irq_chip;
++	irq_chip->name = dev_name(&pdev->dev);
++	irq_chip->irq_mask = ts4800_irq_mask;
++	irq_chip->irq_unmask = ts4800_irq_unmask;
++
++	data->domain = irq_domain_add_linear(node, 8, &ts4800_ic_ops, data);
++	if (!data->domain) {
++		dev_err(&pdev->dev, "cannot add IRQ domain\n");
++		return -ENOMEM;
++	}
++
++	irq_set_chained_handler_and_data(parent_irq,
++					 ts4800_ic_chained_handle_irq, data);
++
++	platform_set_drvdata(pdev, data);
++
++	return 0;
++}
++
++static int ts4800_ic_remove(struct platform_device *pdev)
++{
++	struct ts4800_irq_data *data = platform_get_drvdata(pdev);
++
++	irq_domain_remove(data->domain);
++
++	return 0;
++}
++
++static const struct of_device_id ts4800_ic_of_match[] = {
++	{ .compatible = "technologic,ts4800-irqc", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, ts4800_ic_of_match);
++
++static struct platform_driver ts4800_ic_driver = {
++	.probe  = ts4800_ic_probe,
++	.remove = ts4800_ic_remove,
++	.driver = {
++		.name = "ts4800-irqc",
++		.of_match_table = ts4800_ic_of_match,
++	},
++};
++module_platform_driver(ts4800_ic_driver);
++
++MODULE_AUTHOR("Damien Riegel <damien.riegel@savoirfairelinux.com>");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:ts4800_irqc");
 -- 
 2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
