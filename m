@@ -1,23 +1,89 @@
-From: Michael-FRN3bSZE4v/5NTPwaLTJmkNGhIIjRCmT@public.gmane.org,
-	"J.Tynan <f.digeronimo"@federconsumatori.abruzzo.it
-Subject: Review & Reply
-Date: Fri, 18 Dec 2015 17:10:16 +0700
-Message-ID: <20151218101111.1187B8E52A9B__11449.5034715675$1450446642$gmane$org@mail.microamerica.com.pe>
-Reply-To: michaeljtynan8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 00/13] ARM: shmobile: dts: Update console parameters
+Date: Fri, 18 Dec 2015 15:05:38 +0100
+Message-ID: <CAMuHMdVzEpcZ11EckVW+5eG55UbLoWzsuGaza-Mp+XKZtRmNDA@mail.gmail.com>
+References: <1449597258-32623-1-git-send-email-geert+renesas@glider.be>
+	<20151210070239.GA17682@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Description: Mail message body
+In-Reply-To: <20151210070239.GA17682-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Recipients <f.digeronimo-OEd0YSEqKZmNIHX6aw5/uifbKdxUEgilNRkNT7W+5VM@public.gmane.org>
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Greetings,
-My name is Mr.Michael J. Tynan, I am a banker with Bank Of America. It is true that we have not meet each other in person, but I strongly believe in trust and friendship in every business. I have a Lebanese deceased customer's abandoned fund, which I am his personal financial adviser before his accidental death, that being the main reason why I alone working in the bank here, know much about the existence of this fund and the secrets surrounding this money. But before I disclose the full details to you, I will like to know your interest and willingness to assist me. You can call me as soon you receive my message, so that i will send to you full details about the transaction.
-My best regards,
-Mr.Michael J. Tynan
-MOBILE: +1 347 269 3740
+Hi Simon,
+
+On Thu, Dec 10, 2015 at 8:02 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> On Tue, Dec 08, 2015 at 06:54:05PM +0100, Geert Uytterhoeven wrote:
+>> This patch series updates the console parameters in the DTSes for
+>> various Renesas ARM boards.
+>>
+>>   - For all of them, the serial port config is added to
+>>     chosen/stdout-path, as per current best practices,
+>>   - On some boards (armadillo, bockw, kzm9d, kzm9g), "console="
+>>     parameters are removed from the kernel command lines, as they're no
+>>     longer needed for DT-only platforms,
+>>   - On some boards (genmai, kzm9g), the console alias is changed to
+>>     "serial0", for consistency with other boards (the first serial port
+>>     is always called "serial0", unless labeled otherwise); this does
+>>     mean the device changes its name to /dev/ttySC0 in userspace, which
+>>     also happened on R-Car Gen2 before,
+>>   - On kzm9d, a console alias is added.
+>>
+>> Tested on r8a73a4/ape6evm, r8a7740/armadillo, r8a7778/bockw,
+>> r8a7779/marzen, r8a7791/koelsch, and sh73a0/kzm9g.
+>>
+>> Thanks for applying!
+>>
+>> Geert Uytterhoeven (13):
+>>   ARM: shmobile: alt dts: Add serial port config to chosen/stdout-path
+>>   ARM: shmobile: ape6evm dts: Add serial port config to
+>>     chosen/stdout-path
+>
+> alt and ape6evm tested ok.
+> I have queued up the changes for those boards.
+>
+>>   ARM: shmobile: armadillo800eva dts: Update console parameters
+>
+> I would prefer not to take the serial1 -> serial0 portion of this change at
+> this time as it causes a user-space visible change: the console moves from
+> ttySC1 to ttySC0. I noticed this because I no longer made it all the way
+> to user-space which was expecting a console on ttySC1.
+>
+> -- start before --
+> [    0.050000] e6c50000.serial: ttySC1 at MMIO 0xe6c50000 (irq = 25, base_baud = 0) is a scifa
+> [    0.780000] console [ttySC1] enabled
+> -- end before --
+>
+> -- start after --
+> [    0.050000] e6c50000.serial: ttySC0 at MMIO 0xe6c50000 (irq = 25, base_baud = 0) is a scifa
+> [    0.780000] console [ttySC0] enabled
+> -- end after --
+
+We made a similar change on koelsch, lager, and marzen (cfr. below) before,
+so I assumed this is OK?
+
+>>   ARM: shmobile: marzen dts: Add serial port config to
+>>     chosen/stdout-path
+>
+> Changing &scif2 to serial0 creates a user-space visible change:
+> the console moves from ttySC2 to ttySC0.
+
+Does it? Serial0 was already pointing to scif2 since Magnus' commit
+8025e3ff4ca972a0 ("ARM: shmobile: marzen: Board specific serial port order").
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
