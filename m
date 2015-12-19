@@ -1,173 +1,62 @@
-From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v2 5/5] ARM: dts: sun4i: Itead Iteaduino to use
- common code
-Date: Sat, 19 Dec 2015 16:05:21 +0100
-Message-ID: <1450537521-6476-6-git-send-email-codekipper@gmail.com>
-References: <1450537521-6476-1-git-send-email-codekipper@gmail.com>
-Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: "Gabriel L. Somlo" <somlo-D+Gtc/HYRWM@public.gmane.org>
+Subject: Re: [PATCH v6 0/4] SysFS driver for QEMU fw_cfg device
+Date: Sat, 19 Dec 2015 10:10:07 -0500
+Message-ID: <20151219151006.GA11545@GLSMBP.INI.CMU.EDU>
+References: <1449242946-12062-1-git-send-email-somlo@cmu.edu>
+ <20151217160923.GI19448@HEDWIG.INI.CMU.EDU>
+ <20151219091228.GA6024@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBPXE2WZQKGQE46IAIJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1450537521-6476-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151219091228.GA6024@amd>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, jordan.l.justen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hi Pavel,
 
-Convert the Itead Iteaduino A10 to use the new common itead core dtsi.
+On Sat, Dec 19, 2015 at 10:12:28AM +0100, Pavel Machek wrote:
+> On Thu 2015-12-17 11:09:23, Gabriel L. Somlo wrote:
+> > ping ?
+> > 
+> > Also, for the corresponding patch set on the QEMU end of things,
+> > ping on http://thread.gmane.org/gmane.comp.emulators.qemu/376321
+> 
+> I guess missing information is why such access is a good
+> idea. Debugging?
 
-Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../boot/dts/sun4i-a10-itead-iteaduino-plus.dts    | 102 +--------------------
- 1 file changed, 2 insertions(+), 100 deletions(-)
+Debugging did come up in earlier threads as well. However, personally,
+I am interested in a mechanism for the host to pass information to the
+guest in a way that's both
 
-diff --git a/arch/arm/boot/dts/sun4i-a10-itead-iteaduino-plus.dts b/arch/arm/boot/dts/sun4i-a10-itead-iteaduino-plus.dts
-index 985e155..86d7b7a 100644
---- a/arch/arm/boot/dts/sun4i-a10-itead-iteaduino-plus.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-itead-iteaduino-plus.dts
-@@ -1,5 +1,6 @@
- /*
-  * Copyright 2015 Josef Gajdusek <atx-MwjtXicnQwU@public.gmane.org>
-+ * Copyright 2015 - Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-  *
-  * This file is dual-licensed: you can use it either under the terms
-  * of the GPL or the X11 license, at your option. Note that this dual
-@@ -41,40 +42,11 @@
-  */
- 
- /dts-v1/;
--#include "sun4i-a10.dtsi"
--#include "sunxi-common-regulators.dtsi"
--
--#include <dt-bindings/gpio/gpio.h>
--#include <dt-bindings/pinctrl/sun4i-a10.h>
-+#include "sun4i-a10-itead-core.dtsi"
- 
- / {
- 	model = "Iteaduino Plus A10";
- 	compatible = "itead,iteaduino-plus-a10", "allwinner,sun4i-a10";
--
--	aliases {
--		serial0 = &uart0;
--	};
--
--	chosen {
--		stdout-path = "serial0:115200n8";
--	};
--};
--
--&ahci {
--	target-supply = <&reg_ahci_5v>;
--	status = "okay";
--};
--
--&cpu0 {
--	cpu-supply = <&reg_dcdc2>;
--};
--
--&ehci0 {
--	status = "okay";
--};
--
--&ehci1 {
--	status = "okay";
- };
- 
- &emac {
-@@ -88,17 +60,6 @@
- 	status = "okay";
- };
- 
--&i2c0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c0_pins_a>;
--	status = "okay";
--
--	axp209: pmic@34 {
--		reg = <0x34>;
--		interrupts = <0>;
--	};
--};
--
- &i2c1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c1_pins_a>;
-@@ -135,68 +96,9 @@
- 	status = "okay";
- };
- 
--&ohci0 {
--	status = "okay";
--};
--
--&ohci1 {
--	status = "okay";
--};
--
--&reg_ahci_5v {
--	status = "okay";
--};
--
--#include "axp209.dtsi"
--
--&reg_dcdc2 {
--	regulator-always-on;
--	regulator-min-microvolt = <1000000>;
--	regulator-max-microvolt = <1450000>;
--	regulator-name = "vdd-cpu";
--};
--
--&reg_dcdc3 {
--	regulator-always-on;
--	regulator-min-microvolt = <1000000>;
--	regulator-max-microvolt = <1400000>;
--	regulator-name = "vdd-int-dll";
--};
--
--&reg_ldo1 {
--	regulator-name = "vdd-rtc";
--};
--
--&reg_ldo2 {
--	regulator-always-on;
--	regulator-min-microvolt = <3000000>;
--	regulator-max-microvolt = <3000000>;
--	regulator-name = "avcc";
--};
--
--&reg_usb1_vbus {
--	status = "okay";
--};
--
--&reg_usb2_vbus {
--	status = "okay";
--};
--
- &spi0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&spi0_pins_a>,
- 		    <&spi0_cs0_pins_a>;
- 	status = "okay";
- };
--
--&uart0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&uart0_pins_a>;
--	status = "okay";
--};
--
--&usbphy {
--	usb1_vbus-supply = <&reg_usb1_vbus>;
--	usb2_vbus-supply = <&reg_usb2_vbus>;
--	status = "okay";
--};
--- 
-1.9.1
+	- asynchronous: i.e., host doesn't need to wait for guest to
+	  be ready to accept data (e.g. by first starting an agent)
+
+	- out-of-band: don't commandeer guest elements normally visible
+	  and available to guest *users* (e.g. kernel command line,
+	  mount a floppy/cdrom image, etc).
+
+QEMU now allows arbitrary fw_cfg blobs to be added via the command
+line, so it would be nice to make it easy to access them from the
+guest OS -- and what's nicer and easier than:
+
+	cat /sys/firmware/qemu-fw-cfg/.../some-blob-name/raw
+
+Thanks,
+--Gabriel
+
+> > On Fri, Dec 04, 2015 at 10:29:02AM -0500, Gabriel L. Somlo wrote:
+> > > Allow access to QEMU firmware blobs, passed into the guest VM via
+> > > the fw_cfg device, through SysFS entries. Blob meta-data (e.g. name,
+> > > size, and fw_cfg key), as well as the raw binary blob data may be
+> > > accessed.
+> > > 
+> > > The SysFS access location is /sys/firmware/qemu_fw_cfg/... and was
+> > > selected based on overall similarity to the type of information
+> > > exposed under /sys/firmware/dmi/entries/...
+> 
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
