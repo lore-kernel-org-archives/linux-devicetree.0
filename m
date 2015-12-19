@@ -1,28 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] gpio: sx150x: Add support for sx1502
-Date: Fri, 18 Dec 2015 22:19:38 -0600
-Message-ID: <20151219041938.GT14936@rob-hp-laptop>
-References: <1450216894-19390-1-git-send-email-peda@lysator.liu.se>
+Subject: Re: [PATCH v2 1/3] clk: bcm2835: Add bindings for the auxiliary
+ peripheral clock gates.
+Date: Fri, 18 Dec 2015 22:19:35 -0600
+Message-ID: <20151219041935.GS14936@rob-hp-laptop>
+References: <1450222559-22461-1-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1450216894-19390-1-git-send-email-peda@lysator.liu.se>
+In-Reply-To: <1450222559-22461-1-git-send-email-eric@anholt.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@lysator.liu.se>
-Cc: linux-gpio@vger.kernel.org, Peter Rosin <peda@axentia.se>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Wei Chen <Wei.Chen@csr.com>, Barry Song <Baohua.Song@csr.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>
+Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 15, 2015 at 11:01:34PM +0100, Peter Rosin wrote:
-> From: Peter Rosin <peda@axentia.se>
+On Tue, Dec 15, 2015 at 03:35:57PM -0800, Eric Anholt wrote:
+> These will be used for enabling UART1, SPI1, and SPI2.
 > 
-> Signed-off-by: Peter Rosin <peda@axentia.se>
+> Signed-off-by: Eric Anholt <eric@anholt.net>
 > ---
->  .../devicetree/bindings/gpio/gpio-sx150x.txt       |  3 +-
-
-For the binding:
+> 
+> v2: Make the binding cover both the IRQ and clock enable registers.
+> 
+>  .../bindings/clock/brcm,bcm2835-aux-clock.txt      | 31 ++++++++++++++++++++++
+>  include/dt-bindings/clock/bcm2835-aux.h            | 17 ++++++++++++
+>  2 files changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm2835-aux-clock.txt
+>  create mode 100644 include/dt-bindings/clock/bcm2835-aux.h
 
 Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/gpio/gpio-sx150x.c                         | 53 ++++++++++++++++++++--
->  2 files changed, 51 insertions(+), 5 deletions(-)
