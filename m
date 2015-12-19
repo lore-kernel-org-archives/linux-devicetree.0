@@ -1,11 +1,11 @@
 From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v2] ARM: sunxi: dt: enable audio codec on mk802
-Date: Sat, 19 Dec 2015 14:02:38 +0100
-Message-ID: <1450530158-7639-1-git-send-email-codekipper@gmail.com>
+Subject: [PATCH v2] ARM: dt: sun7i: Enable audio codec on MK808C
+Date: Sat, 19 Dec 2015 14:08:46 +0100
+Message-ID: <1450530526-28267-1-git-send-email-codekipper@gmail.com>
 Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBB4VK2WZQKGQEYUIR64Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBYNN2WZQKGQEG5UGVBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -19,19 +19,18 @@ List-Id: devicetree@vger.kernel.org
 
 From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-This commit enables the on-chip audio codec present on some variants
-of the MK802.
+This commit enables the on-chip audio codec present on the MK808C.
 
 Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/sun4i-a10-mk802.dts | 4 ++++
+ arch/arm/boot/dts/sun7i-a20-mk808c.dts | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun4i-a10-mk802.dts b/arch/arm/boot/dts/sun4i-a10-mk802.dts
-index 3c7eebe..ddf0683 100644
---- a/arch/arm/boot/dts/sun4i-a10-mk802.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-mk802.dts
-@@ -58,6 +58,10 @@
+diff --git a/arch/arm/boot/dts/sun7i-a20-mk808c.dts b/arch/arm/boot/dts/sun7i-a20-mk808c.dts
+index 4f432f8..c9e648d 100644
+--- a/arch/arm/boot/dts/sun7i-a20-mk808c.dts
++++ b/arch/arm/boot/dts/sun7i-a20-mk808c.dts
+@@ -68,6 +68,10 @@
  	};
  };
  
