@@ -1,35 +1,45 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 6/6] dt-bindings: add document for rk3036-vop
-Date: Fri, 18 Dec 2015 22:18:02 -0600
-Message-ID: <20151219041802.GH14936@rob-hp-laptop>
-References: <1450323426-32109-1-git-send-email-mark.yao@rock-chips.com>
- <1450323919-32228-1-git-send-email-mark.yao@rock-chips.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 12/12] ASoC: rsnd: add Multi channel support
+Date: Fri, 18 Dec 2015 22:18:10 -0600
+Message-ID: <20151219041810.GI14936@rob-hp-laptop>
+References: <87egeliyaz.wl%kuninori.morimoto.gx@renesas.com>
+ <87wpsdhje9.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1450323919-32228-1-git-send-email-mark.yao@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Yao <mark.yao@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <87wpsdhje9.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBEZWMgMTcsIDIwMTUgYXQgMTE6NDU6MTlBTSArMDgwMCwgTWFyayBZYW8gd3JvdGU6
-Cj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Cj4gQ2M6IFBhd2VsIE1vbGwg
-PHBhd2VsLm1vbGxAYXJtLmNvbT4KPiBDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJt
-LmNvbT4KPiBDYzogSWFuIENhbXBiZWxsIDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az4K
-PiBDYzogS3VtYXIgR2FsYSA8Z2FsYWtAY29kZWF1cm9yYS5vcmc+Cj4gQ2M6IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnCj4gCj4gU2lnbmVkLW9mZi1ieTogTWFyayBZYW8gPG1hcmsueWFvQHJv
-Y2stY2hpcHMuY29tPgoKQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Thu, Dec 17, 2015 at 03:00:10AM +0000, Kuninori Morimoto wrote:
+> 
+> From: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> 
+> This patch adds Multi channel support on Renesas R-Car sound.
+> This patch is tested on Salvator-X board, but it can't use
+> Multi channel, because supported format is different between
+> codec chip and R-Car.
+> Thus, it was tested on board which doesn't mount codec chip,
+> with oscilloscope.
+> 
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/sound/renesas,rsnd.txt     |  18 ++++
+
+For the binding:
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  sound/soc/sh/rcar/core.c                           |   6 +-
+>  sound/soc/sh/rcar/gen.c                            |   3 +
+>  sound/soc/sh/rcar/rsnd.h                           |  15 ++-
+>  sound/soc/sh/rcar/ssi.c                            | 114 ++++++++++++++++++++-
+>  sound/soc/sh/rcar/ssiu.c                           |  55 ++++++++--
+>  6 files changed, 194 insertions(+), 17 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
