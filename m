@@ -1,46 +1,46 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v5 2/2] arm: pxa27x: support for ICP DAS LP-8x4x w/ DT
-Date: Sat, 19 Dec 2015 13:27:07 +0100
-Message-ID: <87h9jehbdw.fsf@belgarion.home>
-References: <1449700088-28076-3-git-send-email-ynvich@gmail.com>
-	<7496839.vMjVcqPe8Q@wuerfel> <1450197727.21989.9.camel@gmail.com>
-	<1843454.zCnLJtF7B6@wuerfel>
+From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v2] ARM: sunxi: dt: enable audio codec on mk802
+Date: Sat, 19 Dec 2015 14:02:38 +0100
+Message-ID: <1450530158-7639-1-git-send-email-codekipper@gmail.com>
+Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1843454.zCnLJtF7B6@wuerfel> (Arnd Bergmann's message of "Tue, 15
-	Dec 2015 18:02:19 +0100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sergei Ianovich <ynvich@gmail.com>, linux-kernel@vger.kernel.org, Daniel Mack <zonque@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Arnaud Ebalard <arno@natisbad.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBB4VK2WZQKGQEYUIR64Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> writes:
+From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-> I would like those drivers to be enabled in some defconfig, so we get
-> compile-time coverage, but we generally stopped having one-config-per-board
-> files.
->
-> Maybe we can have a pxa_defconfig file that enables lots of boards
-> and then we remove the individual configs? We don't have to remove
-> them all at once, but it would make me very happy if we could at
-> least kill off some of the ones that are not used regularly.
+This commit enables the on-chip audio codec present on some variants
+of the MK802.
 
-I'll take that part, the pxa_defconfig which covers all pxa boards in
-arch/arm/mach-pxa. I have a prototype, which of course doesn't boot on any of my
-pxa platforms (breaks in the very early bootstrap code I think, DEBUG_LL is the
-next stage).
+Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/sun4i-a10-mk802.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Actually I've not even looked if a single kernel covering pxa2xx and pxa3xx is
-possible (since recently clock handling was a blocker).
-
-Once I have something that at least shows me a sign of life, I'll submit an RFC
-patch. This work will be orthogonal to Sergei's one, as it is aimed at having
-one defconfig compiling all mach-pxa/*.c files and the drivers referenced by
-them. This won't allow removing defconfig files until I have a good idea why my
-boards are not booting (lubbock, mainstone, mioa701, zylonite, cm-x300).
-
-Cheers.
-
+diff --git a/arch/arm/boot/dts/sun4i-a10-mk802.dts b/arch/arm/boot/dts/sun4i-a10-mk802.dts
+index 3c7eebe..ddf0683 100644
+--- a/arch/arm/boot/dts/sun4i-a10-mk802.dts
++++ b/arch/arm/boot/dts/sun4i-a10-mk802.dts
+@@ -58,6 +58,10 @@
+ 	};
+ };
+ 
++&codec {
++	status = "okay";
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
 -- 
-Robert
+2.6.4
