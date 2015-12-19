@@ -1,49 +1,275 @@
-From: 8001010@gmail.com
-Subject: Re: [PATCH 5/5] ARM: dts: sun5i: Add backlight node to
- sun5i-q8-common.dtsi
-Date: Sat, 19 Dec 2015 02:54:51 -0800 (PST)
-Message-ID: <5df61312-cf32-43d4-8aba-485acf66787d@googlegroups.com>
-References: <1442752251-20744-1-git-send-email-hdegoede@redhat.com>
- <1442752251-20744-6-git-send-email-hdegoede@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v3 2/3] ARM: dts: sun8i: Add Allwinner
+ A83T dtsi
+Date: Sat, 19 Dec 2015 11:57:03 +0100
+Message-ID: <567537FF.9010601@redhat.com>
+References: <1450445451-311-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1450445451-311-3-git-send-email-vishnupatekar0510@gmail.com>
+ <20151218214112.GU30359@lukather>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="----=_Part_26_471642778.1450522491222"
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1442752251-20744-6-git-send-email-hdegoede@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-sunxi <linux-sunxi@googlegroups.com>
-Cc: devicetree@vger.kernel.org, maxime.ripard@free-electrons.com, wens@csie.org, linux-arm-kernel@lists.infradead.org, hdegoede@redhat.com
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20151218214112.GU30359@lukather>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Vishnu Patekar <vishnupatekar0510@gmail.com>
+Cc: robh+dt@kernel.org, corbet@lwn.net, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, emilio@elopez.com.ar, linus.walleij@linaro.org, jenskuske@gmail.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-------=_Part_26_471642778.1450522491222
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Hi,
 
-> +		default-brightness-level = <8>;
+On 18-12-15 22:41, Maxime Ripard wrote:
+> Hi,
+>
+> On Fri, Dec 18, 2015 at 09:30:50PM +0800, Vishnu Patekar wrote:
+>> Allwinner A83T is new octa-core cortex-a7 SOC.
+>> This adds the basic dtsi, the clocks differs from
+>> earlier sun8i SOCs.
+>>
+>> Signed-off-by: Vishnu Patekar <vishnupatekar0510@gmail.com>
+>> ---
+>>   arch/arm/boot/dts/sun8i-a83t.dtsi | 206 ++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 206 insertions(+)
+>>   create mode 100644 arch/arm/boot/dts/sun8i-a83t.dtsi
+>>
+>> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+>> new file mode 100644
+>> index 0000000..e577c64
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+>> @@ -0,0 +1,206 @@
+>> +/*
+>> + * Copyright 2015 Vishnu Patekar
+>> + *
+>> + * Vishnu Patekar <vishnupatekar0510@gmail.com>
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> +
+>> + */
+>> +
+>> +#include "skeleton.dtsi"
+>> +
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +
+>> +#include <dt-bindings/pinctrl/sun4i-a10.h>
+>> +
+>> +/ {
+>> +	interrupt-parent = <&gic>;
+>> +
+>> +	chosen {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges;
+>> +	};
+>> +
+>> +	cpus {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		cpu@0 {
+>> +			compatible = "arm,cortex-a7";
+>> +			device_type = "cpu";
+>> +			reg = <0>;
+>> +		};
+>> +
+>> +		cpu@1 {
+>> +			compatible = "arm,cortex-a7";
+>> +			device_type = "cpu";
+>> +			reg = <1>;
+>> +		};
+>> +
+>> +		cpu@2 {
+>> +			compatible = "arm,cortex-a7";
+>> +			device_type = "cpu";
+>> +			reg = <2>;
+>> +		};
+>> +
+>> +		cpu@3 {
+>> +			compatible = "arm,cortex-a7";
+>> +			device_type = "cpu";
+>> +			reg = <3>;
+>> +		};
+>
+> A \n here please
+>
+>> +		cpu@100 {
+>> +			compatible = "arm,cortex-a7";
+>> +			device_type = "cpu";
+>> +			reg = <0x100>;
+>> +		};
+>> +
+>> +		cpu@101 {
+>> +			compatible = "arm,cortex-a7";
+>> +			device_type = "cpu";
+>> +			reg = <0x101>;
+>> +		};
+>
+> Ditto.
+>
+>> +		cpu@102 {
+>> +			compatible = "arm,cortex-a7";
+>> +			device_type = "cpu";
+>> +			reg = <0x102>;
+>> +		};
+>> +
+>> +		cpu@103 {
+>> +			compatible = "arm,cortex-a7";
+>> +			device_type = "cpu";
+>> +			reg = <0x103>;
+>> +		};
+>> +	};
+>> +
+>> +	memory {
+>> +		reg = <0x40000000 0x80000000>;
+>> +	};
+>
+> Is mainline u-boot usable ? If so, you can remove that node entirely.
+
+mainline u-boot works for me when cold-booting from a sdcard, so I consider
+it usable :)
+
+Regards,
+
+Hans
 
 
-Why?
-Is not better 100% ?
 
-Silviop
-
-------=_Part_26_471642778.1450522491222
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-------=_Part_26_471642778.1450522491222--
+>
+>> +
+>> +	timer {
+>> +		compatible = "arm,armv7-timer";
+>> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
+>> +	};
+>> +
+>> +	clocks {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges;
+>> +
+>> +		osc24M: osc24M_clk {
+>> +			#clock-cells = <0>;
+>> +			compatible = "fixed-clock";
+>> +			clock-frequency = <24000000>;
+>> +			clock-output-names = "osc24M";
+>> +		};
+>> +
+>> +		osc32k: osc32k_clk {
+>> +			#clock-cells = <0>;
+>> +			compatible = "fixed-clock";
+>> +			clock-frequency = <32768>;
+>> +			clock-output-names = "osc32k";
+>> +		};
+>
+> Do you need to modify the clocks driver in your first commit then?
+>
+>> +	};
+>> +
+>> +	soc {
+>> +		compatible = "simple-bus";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges;
+>> +
+>> +		gic: interrupt-controller@01c81000 {
+>> +			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
+>> +			reg = <0x01c81000 0x1000>,
+>> +			      <0x01c82000 0x1000>,
+>> +			      <0x01c84000 0x2000>,
+>> +			      <0x01c86000 0x2000>;
+>
+> Please order the nodes by ascending physical addresses.
+>
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <3>;
+>> +			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
+>> +		};
+>> +
+>> +		pio: pinctrl@01c20800 {
+>> +			compatible = "allwinner,sun8i-a83t-pinctrl";
+>> +			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
+>> +			reg = <0x01c20800 0x400>;
+>> +			clocks = <&osc24M>;
+>> +			gpio-controller;
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <3>;
+>> +			#gpio-cells = <3>;
+>> +
+>> +			mmc0_pins_a: mmc0@0 {
+>> +				allwinner,pins = "PF0", "PF1", "PF2",
+>> +						 "PF3", "PF4", "PF5";
+>> +				allwinner,function = "mmc0";
+>> +				allwinner,drive = <SUN4I_PINCTRL_30_MA>;
+>> +				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>> +			};
+>> +
+>> +			uart0_pins_a: uart0@0 {
+>> +				allwinner,pins = "PF2", "PF4";
+>> +				allwinner,function = "uart0";
+>> +				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> +				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>> +			};
+>> +
+>> +			uart0_pins_b: uart0@1 {
+>> +				allwinner,pins = "PB9", "PB10";
+>> +				allwinner,function = "uart0";
+>> +				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>> +				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>> +			};
+>> +		};
+>> +
+>> +		uart0: serial@01c28000 {
+>> +			compatible = "snps,dw-apb-uart";
+>> +			reg = <0x01c28000 0x400>;
+>> +			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+>> +			reg-shift = <2>;
+>> +			reg-io-width = <4>;
+>> +			clocks = <&osc24M>;
+>> +			status = "disabled";
+>> +		};
+>> +	};
+>> +};
+>
+> Thanks!
+> Maxime
+>
