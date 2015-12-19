@@ -1,149 +1,49 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH v2 1/3] reset: Add shared
- reset_control_[de]assert variants
-Date: Sat, 19 Dec 2015 11:55:11 +0100
-Message-ID: <5675378F.5010904@redhat.com>
-References: <1449848520-27379-1-git-send-email-hdegoede@redhat.com>
- <20151214093607.GF19456@lukather> <1450086655.3407.23.camel@pengutronix.de>
- <20151216102934.GR19456@lukather> <1450264908.3421.36.camel@pengutronix.de>
- <20151218110810.GK30359@lukather>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: 8001010@gmail.com
+Subject: Re: [PATCH 5/5] ARM: dts: sun5i: Add backlight node to
+ sun5i-q8-common.dtsi
+Date: Sat, 19 Dec 2015 02:54:51 -0800 (PST)
+Message-ID: <5df61312-cf32-43d4-8aba-485acf66787d@googlegroups.com>
+References: <1442752251-20744-1-git-send-email-hdegoede@redhat.com>
+ <1442752251-20744-6-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBHHP2SZQKGQEZ2MOO3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20151218110810.GK30359@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Josh Triplett <josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org>, Rashika Kheria <rashika.kheria-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Content-Type: multipart/mixed;
+ boundary="----=_Part_26_471642778.1450522491222"
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1442752251-20744-6-git-send-email-hdegoede@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-sunxi <linux-sunxi@googlegroups.com>
+Cc: devicetree@vger.kernel.org, maxime.ripard@free-electrons.com, wens@csie.org, linux-arm-kernel@lists.infradead.org, hdegoede@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+------=_Part_26_471642778.1450522491222
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 18-12-15 12:08, Maxime Ripard wrote:
-> On Wed, Dec 16, 2015 at 12:21:48PM +0100, Philipp Zabel wrote:
->> Hi Maxime,
->>
->> Am Mittwoch, den 16.12.2015, 11:29 +0100 schrieb Maxime Ripard:
->>> On Mon, Dec 14, 2015 at 10:50:55AM +0100, Philipp Zabel wrote:
->>>> Am Montag, den 14.12.2015, 10:36 +0100 schrieb Maxime Ripard:
->>>>> Hi,
->>>>>
->>>>> On Fri, Dec 11, 2015 at 04:41:58PM +0100, Hans de Goede wrote:
->>>>>> diff --git a/include/linux/reset.h b/include/linux/reset.h
->>>>>> index c4c097d..1cca8ce 100644
->>>>>> --- a/include/linux/reset.h
->>>>>> +++ b/include/linux/reset.h
->>>>>> @@ -11,6 +11,8 @@ int reset_control_reset(struct reset_control *rstc);
->>>>>>   int reset_control_assert(struct reset_control *rstc);
->>>>>>   int reset_control_deassert(struct reset_control *rstc);
->>>>>>   int reset_control_status(struct reset_control *rstc);
->>>>>> +int reset_control_assert_shared(struct reset_control *rstc);
->>>>>> +int reset_control_deassert_shared(struct reset_control *rstc);
->>>>>
->>>>> Shouldn't that be handled in reset_control_get directly?
->>
->> I think I see your point now. Maybe we should add a flags parameter to
->> reset_control_get and/or wrap it in two versions,
->> reset_control_get_exclusive and reset_control_get_shared (or just add
->> the _shared variant). Then reset_control_get(_exclusive) could return
->> -EBUSY if a reset line is already in use.
->
-> I guess the current assumption was that reset_control_get was
-> exclusive.
->
-> So we could have something like:
->
-> reset_control_get (..) {
->    return __reset_control_get(.., 0);
-> }
->
-> reset_control_get_shared (..) {
->    return __reset_control_get(.., RESET_SHARED);
-> }
->
-> And all the logic shared between the two, without exposing any flag
-> (that would change the prototype and require to fix every callers).
->
->>
->>>> This is about different expectations of the caller.
->>>> A driver calling reset_control_assert expects the reset line to be
->>>> asserted after the call.
->>>
->>> Is that behaviour documented explicitly somewhere?
->>
->> /**
->>   * reset_control_assert - asserts the reset line
->>   * @rstc: reset controller
->>   */
->
-> Yeah, but it's not said when it would happen, or if it happens
-> synchronously.
->
->> Also, that expected behavior matches the function name, which I like.
->> So I still welcome adding new API calls for the shared/refcounting
->> variant.
->>
->>>> A driver calling reset_control_assert_shared
->>>> just signals that it doesn't care about the state of the reset line
->>>> anymore.
->>>> We could just as well call the two new functions
->>>> reset_control_deassert_get and reset_control_deassert_put.
->>>
->>> What happens if you mix them? What happens if you have several drivers
->>> ignoring this API?
->>
->> The core should give useful error messages and disallow non-shared reset
->> calls on shared lines.
->
-> I guess we could also have something like this:
->
->    * The driver gets the reference to the reset line using
->      reset_control_get or its shared variant.
->
->      - If you call reset_control_get on a free line, it succeeds, and
->        marks the line in exclusive use.
->      - If you call reset_control_get on a busy line, it fails with
->        EBUSY
->
->      - If you call the shared variant on a free line, it succeeds
->      - If you call the shared variant on a busy exclusive line, it
->        fails with EBUSY
->      - If you call the shared variant on a busy !exclusive line, it
->        succeeds.
->
->    * The customer driver can then call reset_control_assert / deassert:
->
->      - If the reset line is in exclusive use, the assertion happens
->        right away, it succeeds and returns 0.
->
->      - If the reset line is in a !exclusive use, but with a single
->        user, the assertion happens right away, it succeeds and returns
->        0.
+> +		default-brightness-level = <8>;
 
-Ack for all of the above, this is what I had in mind at first, but I started
-with a more lightweight version as I'm lazy :)  If Philipp likes this
-suggestion I can rework my patch-set into this.
 
->      - If the reset line is in a !exclusive use with more than 1 user,
->        the refcount is modified and an error is returned to notify that
->        it didn't happen.
+Why?
+Is not better 100% ?
 
-Also ack, except for returning the error, if a driver has used
-reset_control_get_shared, it should simply be aware that doing an assert
-might not necessarily actually assert the line, just like doing a clk-disable
-does not really necessary disable the clock, etc. If a driver is not prepared
-to deal with this, it should simply not use reset_control_get_shared.
+Silviop
 
-I see returning an error if the assert did not happen due to other users /
-deassert_count != 0 as inconsistent compared to how clks, regulators and phys
-handle this, these all simply return success in this case.
+------=_Part_26_471642778.1450522491222
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Regards,
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Hans
+------=_Part_26_471642778.1450522491222--
