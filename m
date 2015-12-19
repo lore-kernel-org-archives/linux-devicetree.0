@@ -1,98 +1,79 @@
-Return-Path: <qsyousef@gmail.com>
+Return-Path: <devicetree-owner@kernel.org>
+Received: from mout.kundenserver.de ([212.227.126.133]:58434 "EHLO
+	mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754028AbbLSPuJ (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Sat, 19 Dec 2015 10:50:09 -0500
+Date: Sat, 19 Dec 2015 16:49:36 +0100
+From: Karsten Merker <merker@debian.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 1/4] ARM: dts: sun7i: Enable
+ touchscreen on Wexler TAB7200 tablet
+Message-ID: <20151219154936.GA1845@excalibur.cnev.de>
+References: <1450428591-5597-1-git-send-email-mamlinav@gmail.com>
+ <1450428710-5653-1-git-send-email-mamlinav@gmail.com>
+ <20151218212525.GR30359@lukather>
 MIME-Version: 1.0
-In-Reply-To: <20151214014057.GM22783@voom.fritz.box>
-References: <561E2BE6.2090807@imgtec.com>
-	<5628BE00.4020106@imgtec.com>
-	<20151022115551.GI3953@io.lakedaemon.net>
-	<56684877.3020708@imgtec.com>
-	<CAL_Jsq+yv1UnBhrR+x+DEA41yETVANY9_-5W0DSQJVEQ4+Mx_w@mail.gmail.com>
-	<56695201.2070807@imgtec.com>
-	<20151211003902.GE20139@voom.fritz.box>
-	<566AA9DD.6040404@imgtec.com>
-	<20151214014057.GM22783@voom.fritz.box>
-Date: Thu, 17 Dec 2015 11:31:14 +0000
-Message-ID: <CA+mqd+6Qbp9EsvT0-A7YUBLn7TeffzqWSbM9i+ZcKVWytt9rvA@mail.gmail.com>
-Subject: Re: Generic DT binding for IPIs
-From: Qais Yousef <qsyousef@gmail.com>
-Content-Type: multipart/alternative; boundary=089e0111c0b642f36f0527165c8d
-To: David Gibson <david@gibson.dropbear.id.au>
-Cc: Qais Yousef <qais.yousef@imgtec.com>, Rob Herring <robh+dt@kernel.org>, "devicetree-spec@vger.kernel.org" <devicetree-spec@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, Jiang Liu <jiang.liu@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lisa Parratt <Lisa.Parratt@imgtec.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20151218212525.GR30359@lukather>
+Sender: devicetree-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Aleksei Mamlin <mamlinav@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, dev@linux-sunxi.org
 List-ID: <devicetree@vger.kernel.org>
 
---089e0111c0b642f36f0527165c8d
-Content-Type: text/plain; charset=UTF-8
+On Fri, Dec 18, 2015 at 10:25:25PM +0100, Maxime Ripard wrote:
+> On Fri, Dec 18, 2015 at 11:51:50AM +0300, Aleksei Mamlin wrote:
+> > Add a node for the Goodix GT911 touchscreen found on the Wexler TAB7200 tablet
+> > 
+> > Signed-off-by: Aleksei Mamlin <mamlinav@gmail.com>
+> > ---
+> >  arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts | 19 +++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+> > index 239b5d2..ec3b837 100644
+> > --- a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+> > +++ b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+> > @@ -102,6 +102,18 @@
+> >  	pinctrl-names = "default";
+> >  	pinctrl-0 = <&i2c2_pins_a>;
+> >  	status = "okay";
+> > +
+> > +	gt911: touchscreen@5d {
+> > +		compatible = "goodix,gt911";
+> > +		reg = <0x5d>;
+> > +		interrupt-parent = <&pio>;
+> > +		interrupts = <7 21 IRQ_TYPE_EDGE_FALLING>; /* EINT21 (PH21) */
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&ts_reset_pin>;
+> > +		irq-gpios = <&pio 7 21 GPIO_ACTIVE_HIGH>; /* INT (PH21) */
+> 
+> It seems odd that you need both irq-gpios and interrupts. These two
+> are completely redundant, and you should even actually use only one in
+> your driver, since the second request_irq will fail.
 
-> > Maybe it would help to look at the new IPI reservation API?
-> >
-> >     https://lkml.org/lkml/2015/12/8/249
->
-> Hmm.. not as much as I might have hoped.
->
-> From the API, it looks like you're reserving IPIs to signal between
-> different CPUs all of which are in Linux.  From your description here
-> it sounds like the coproc is a separate specialized thing not running
-> Linux (or at least, not the same Linux instance as the host OS which
-> this device tree is for).
+Hello,
 
-No the CPUs aren't only Linux CPUs. It should be any CPU that the interrupt
-controller can talk to.
-That CPU can be one of Linux CPUs, or a coproc.
+there is a "specialty" on this type of touchscreen controller -
+the irq pin on the GT9xx series of chips has two distinct
+functions:
 
-> > I'm not sure I understood you completely but no, there's no translation
-> > happening. When the IPI is allocated it would be routed
-> > to the coproc. When the host wants to send a signal, it'll use the
-allocated
-> > hwirq value (indirectly via the virq) to write to a register, which will
-> > cause an interrupt to be generated at the coproc.
->
-> Where is this magic register located?  In the host cpu?  In the
-> coproc?  In some special IPI controller?
+The first is the regular function for signalling interrupts to
+the CPU, which is set up with the "interrupts" property.
 
-The IPI controller. In my use case, the IPI controller is the same as the
-interrupt controller used by Linux. Generally they don't have to be the
-same though.
+The second function comes into play when initializing the chip. 
+Without a special initialization procedure, the chip provides
+basic touchscreen functionality, but several advanced functions
+are unavailable.  To enable those advanced functions, the host
+needs to temporarily configure the irq pin as a (host-side)
+output and transmit a specific pattern on the reset and irq
+lines.  This method doesn't work on all systems, so the driver
+only attempts to reprogram the irq line on the host side as an
+output if it is explicitly declared with the irq-gpios property.
 
-> So as noted above, I'm now sure that 'interrupts' is not the right
-> thing.  I'm trying to understand the coprocs and the ipi mechanism a
-> bit better to work out if there is something existing which would make
-> sense, or if we do need something entirely new.
-
-Let me know if I can help.
-
-Thanks,
-Qais
-
---089e0111c0b642f36f0527165c8d
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div><div><div><div>&gt; &gt; Maybe it would help to look =
-at the new IPI reservation API?<br>&gt; &gt;<br>&gt; &gt; =C2=A0 =C2=A0 <a =
-href=3D"https://lkml.org/lkml/2015/12/8/249">https://lkml.org/lkml/2015/12/=
-8/249</a><br>&gt;<br>&gt; Hmm.. not as much as I might have hoped.<br>&gt;<=
-br>&gt; From the API, it looks like you&#39;re reserving IPIs to signal bet=
-ween<br>&gt; different CPUs all of which are in Linux.=C2=A0 From your desc=
-ription here<br>&gt; it sounds like the coproc is a separate specialized th=
-ing not running<br>&gt; Linux (or at least, not the same Linux instance as =
-the host OS which<br>&gt; this device tree is for).<br><br></div>No the CPU=
-s aren&#39;t only Linux CPUs. It should be any CPU that the interrupt contr=
-oller can talk to.<br></div>That CPU can be one of Linux CPUs, or a coproc.=
-<br></div></div><div><div><div><div><br>&gt; &gt; I&#39;m not sure I unders=
-tood you completely but no, there&#39;s no translation<br>&gt; &gt; happeni=
-ng. When the IPI is allocated it would be routed<br>&gt; &gt; to the coproc=
-. When the host wants to send a signal, it&#39;ll use the allocated<br>&gt;=
- &gt; hwirq value (indirectly via the virq) to write to a register, which w=
-ill<br>&gt; &gt; cause an interrupt to be generated at the coproc.<br>&gt;<=
-br>&gt; Where is this magic register located?=C2=A0 In the host cpu?=C2=A0 =
-In the<br>&gt; coproc?=C2=A0 In some special IPI controller?<br><br></div><=
-div>The IPI controller. In my use case, the IPI controller is the same as t=
-he interrupt controller used by Linux. Generally they don&#39;t have to be =
-the same though.<br></div><div><br>&gt; So as noted above, I&#39;m now sure=
- that &#39;interrupts&#39; is not the right<br>&gt; thing.=C2=A0 I&#39;m tr=
-ying to understand the coprocs and the ipi mechanism a<br>&gt; bit better t=
-o work out if there is something existing which would make<br>&gt; sense, o=
-r if we do need something entirely new.<br><br></div><div>Let me know if I =
-can help.<br><br></div><div>Thanks,<br></div><div>Qais<br></div></div></div=
-></div></div>
-
---089e0111c0b642f36f0527165c8d--
+Regards,
+Karsten
+-- 
+Gem. Par. 28 Abs. 4 Bundesdatenschutzgesetz widerspreche ich der Nutzung
+sowie der Weitergabe meiner personenbezogenen Daten für Zwecke der
+Werbung sowie der Markt- oder Meinungsforschung.
