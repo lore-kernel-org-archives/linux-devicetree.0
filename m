@@ -1,26 +1,34 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V10 2/7] dma: hidma: Add Device Tree support
-Date: Fri, 18 Dec 2015 22:17:21 -0600
-Message-ID: <20151219041721.GC14936@rob-hp-laptop>
-References: <1450371684-23415-1-git-send-email-okaya@codeaurora.org>
- <1450371684-23415-3-git-send-email-okaya@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 19/26] devicetree: bindings: Document qcom,msm-id and
+ qcom,board-id
+Date: Fri, 18 Dec 2015 22:17:28 -0600
+Message-ID: <20151219041728.GD14936@rob-hp-laptop>
+References: <20151216222941.GB3342@linaro.org>
+ <1450371534-10923-20-git-send-email-mtitinger+renesas@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1450371684-23415-3-git-send-email-okaya@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: dmaengine@vger.kernel.org, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1450371534-10923-20-git-send-email-mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Titinger <mtitinger-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 17, 2015 at 12:01:17PM -0500, Sinan Kaya wrote:
-> Add documentation for the Qualcomm Technologies HIDMA driver.
+On Thu, Dec 17, 2015 at 05:58:47PM +0100, Marc Titinger wrote:
+> From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 > 
-> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
-> ---
->  .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    | 79 ++++++++++++++++++++++
->  1 file changed, 79 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+> The top level qcom,msm-id and qcom,board-id are utilized by bootloaders
+> on Qualcomm MSM platforms to determine which device tree should be
+> utilized and passed to the kernel.
+> 
+> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> Signed-off-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Nak. Stephen Boyd has already done an alternative.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
