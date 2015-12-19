@@ -1,34 +1,30 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 19/26] devicetree: bindings: Document qcom,msm-id and
- qcom,board-id
-Date: Fri, 18 Dec 2015 22:17:28 -0600
-Message-ID: <20151219041728.GD14936@rob-hp-laptop>
-References: <20151216222941.GB3342@linaro.org>
- <1450371534-10923-20-git-send-email-mtitinger+renesas@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 4/6] ARM: dts: rockchip: add the kylin board for rk3036
+Date: Fri, 18 Dec 2015 22:17:41 -0600
+Message-ID: <20151219041741.GE14936@rob-hp-laptop>
+References: <1450362112-8075-1-git-send-email-wxt@rock-chips.com>
+ <1450362112-8075-5-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1450371534-10923-20-git-send-email-mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Titinger <mtitinger-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1450362112-8075-5-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: heiko@sntech.de, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, leozwang@google.com, keescook@google.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 17, 2015 at 05:58:47PM +0100, Marc Titinger wrote:
-> From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+On Thu, Dec 17, 2015 at 10:21:50PM +0800, Caesar Wang wrote:
+> This patchset is the initiation version to try work
+> for kylin board.
 > 
-> The top level qcom,msm-id and qcom,board-id are utilized by bootloaders
-> on Qualcomm MSM platforms to determine which device tree should be
-> utilized and passed to the kernel.
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+> ---
 > 
-> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-> Signed-off-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>  Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
+>  arch/arm/boot/dts/Makefile                         |   1 +
+>  arch/arm/boot/dts/rk3036-kylin.dts                 | 298 +++++++++++++++++++++
+>  3 files changed, 303 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/rk3036-kylin.dts
 
-Nak. Stephen Boyd has already done an alternative.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
