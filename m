@@ -1,7 +1,7 @@
 From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [linux-sunxi][PATCH v2 2/5] ARM: dts: sun7i: Add Itead A20 Core support
-Date: Sat, 19 Dec 2015 16:05:18 +0100
-Message-ID: <1450537521-6476-3-git-send-email-codekipper@gmail.com>
+Subject: [linux-sunxi][PATCH v2 4/5] ARM: dts: sun4i: Add Itead A10 Core support
+Date: Sat, 19 Dec 2015 16:05:20 +0100
+Message-ID: <1450537521-6476-5-git-send-email-codekipper@gmail.com>
 References: <1450537521-6476-1-git-send-email-codekipper@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1450537521-6476-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -12,21 +12,21 @@ List-Id: devicetree@vger.kernel.org
 
 From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-The A20 Itead Core module comes with 4GB NAND and 1GB DDR RAM. All of the
+The A10 Itead Core module comes with 4GB NAND and 1GB DDR RAM. All of the
 I/O interfaces are exposed via 4 groups of 2*30 1mm pitched female headers.
 
 Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/sun7i-a20-itead-core.dtsi | 87 +++++++++++++++++++++++++++++
- 1 file changed, 87 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun7i-a20-itead-core.dtsi
+ arch/arm/boot/dts/sun4i-a10-itead-core.dtsi | 86 +++++++++++++++++++++++++++++
+ 1 file changed, 86 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun4i-a10-itead-core.dtsi
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-itead-core.dtsi b/arch/arm/boot/dts/sun7i-a20-itead-core.dtsi
+diff --git a/arch/arm/boot/dts/sun4i-a10-itead-core.dtsi b/arch/arm/boot/dts/sun4i-a10-itead-core.dtsi
 new file mode 100644
-index 0000000..db8c0f9
+index 0000000..97f653a
 --- /dev/null
-+++ b/arch/arm/boot/dts/sun7i-a20-itead-core.dtsi
-@@ -0,0 +1,87 @@
++++ b/arch/arm/boot/dts/sun4i-a10-itead-core.dtsi
+@@ -0,0 +1,86 @@
 +/*
 + * Copyright 2015 - Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 + *
@@ -69,7 +69,7 @@ index 0000000..db8c0f9
 + *     OTHER DEALINGS IN THE SOFTWARE.
 + */
 +
-+#include "sun7i-a20.dtsi"
++#include "sun4i-a10.dtsi"
 +#include "sunxi-itead-core-common.dtsi"
 +
 +&cpu0 {
@@ -83,8 +83,7 @@ index 0000000..db8c0f9
 +
 +	axp209: pmic@34 {
 +		reg = <0x34>;
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++		interrupts = <0>;
 +	};
 +};
 +
