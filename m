@@ -1,42 +1,32 @@
 From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v2 1/5] ARM: dts: sunxi: Add sunxi-itead-core-common.dtsi
-Date: Sat, 19 Dec 2015 16:05:17 +0100
-Message-ID: <1450537521-6476-2-git-send-email-codekipper@gmail.com>
+Subject: [linux-sunxi][PATCH v2 2/5] ARM: dts: sun7i: Add Itead A20 Core support
+Date: Sat, 19 Dec 2015 16:05:18 +0100
+Message-ID: <1450537521-6476-3-git-send-email-codekipper@gmail.com>
 References: <1450537521-6476-1-git-send-email-codekipper@gmail.com>
-Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBN7E2WZQKGQEME6XFWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1450537521-6476-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Itead have a core module board that can be populated with either
-an Allwinner A10 or A20 SoC. This patch creates a common dtsi
-which these boards can use.
+The A20 Itead Core module comes with 4GB NAND and 1GB DDR RAM. All of the
+I/O interfaces are exposed via 4 groups of 2*30 1mm pitched female headers.
 
 Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/sunxi-itead-core-common.dtsi | 114 +++++++++++++++++++++++++
- 1 file changed, 114 insertions(+)
- create mode 100644 arch/arm/boot/dts/sunxi-itead-core-common.dtsi
+ arch/arm/boot/dts/sun7i-a20-itead-core.dtsi | 87 +++++++++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-itead-core.dtsi
 
-diff --git a/arch/arm/boot/dts/sunxi-itead-core-common.dtsi b/arch/arm/boot/dts/sunxi-itead-core-common.dtsi
+diff --git a/arch/arm/boot/dts/sun7i-a20-itead-core.dtsi b/arch/arm/boot/dts/sun7i-a20-itead-core.dtsi
 new file mode 100644
-index 0000000..41449fa
+index 0000000..db8c0f9
 --- /dev/null
-+++ b/arch/arm/boot/dts/sunxi-itead-core-common.dtsi
-@@ -0,0 +1,114 @@
++++ b/arch/arm/boot/dts/sun7i-a20-itead-core.dtsi
+@@ -0,0 +1,87 @@
 +/*
 + * Copyright 2015 - Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 + *
@@ -79,77 +69,55 @@ index 0000000..41449fa
 + *     OTHER DEALINGS IN THE SOFTWARE.
 + */
 +
-+#include "sunxi-common-regulators.dtsi"
++#include "sun7i-a20.dtsi"
++#include "sunxi-itead-core-common.dtsi"
 +
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
-+
-+/ {
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
++&cpu0 {
++	cpu-supply = <&reg_dcdc2>;
 +};
 +
-+&ahci {
-+	target-supply = <&reg_ahci_5v>;
-+	status = "okay";
-+};
-+
-+&codec {
-+	status = "okay";
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&i2c1 {
++&i2c0 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins_a>;
++	pinctrl-0 = <&i2c0_pins_a>;
 +	status = "okay";
++
++	axp209: pmic@34 {
++		reg = <0x34>;
++		interrupt-parent = <&nmi_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++	};
 +};
 +
-+&ohci0 {
-+	status = "okay";
++#include "axp209.dtsi"
++
++&reg_dcdc2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-cpu";
 +};
 +
-+&ohci1 {
-+	status = "okay";
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-int-dll";
 +};
 +
-+&reg_ahci_5v {
-+	pinctrl-0 = <&ahci_pwr_pin_a>;
-+	gpio = <&pio 1 8 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
++&reg_ldo1 {
++	regulator-name = "vdd-rtc";
 +};
 +
-+&reg_usb1_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb2_vbus {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb1_vbus-supply = <&reg_usb1_vbus>;
-+	usb2_vbus-supply = <&reg_usb2_vbus>;
-+	status = "okay";
++&reg_ldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "avcc";
 +};
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
