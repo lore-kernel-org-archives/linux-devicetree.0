@@ -1,32 +1,63 @@
 From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [linux-sunxi][PATCH v2 4/5] ARM: dts: sun4i: Add Itead A10 Core support
-Date: Sat, 19 Dec 2015 16:05:20 +0100
-Message-ID: <1450537521-6476-5-git-send-email-codekipper@gmail.com>
+Subject: [PATCH v2 3/5] ARM: dts: sun7i: Add Itead Ibox support
+Date: Sat, 19 Dec 2015 16:05:19 +0100
+Message-ID: <1450537521-6476-4-git-send-email-codekipper@gmail.com>
 References: <1450537521-6476-1-git-send-email-codekipper@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBO7E2WZQKGQEEDNFLNY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1450537521-6476-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
 To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-The A10 Itead Core module comes with 4GB NAND and 1GB DDR RAM. All of the
-I/O interfaces are exposed via 4 groups of 2*30 1mm pitched female headers.
+The Itead Ibox is a multi board device based on the Allwinner A20 SoC.
+It contains the A20 Itead Core module and a base board for the external
+interfaces.
+
+The core module comes with 4GB NAND and 1GB DDR RAM.
+
+The base board to which the core board is connected provides 3 USB 2.0 Host
+ports, 1 USB 2.0 OTG, 1 uSD slot, 10/100 Ethernet port, HDMI, IR receiver,
+SPDIF and a 32-pin GPIO header. This header expands the features of core
+board by exposing the VGA pins, audio In/Out pins, SATA, SPI, I2C, UARTS,
+USB-OTG and power.
 
 Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/sun4i-a10-itead-core.dtsi | 86 +++++++++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun4i-a10-itead-core.dtsi
+ arch/arm/boot/dts/Makefile                 |   1 +
+ arch/arm/boot/dts/sun7i-a20-itead-ibox.dts | 111 +++++++++++++++++++++++++++++
+ 2 files changed, 112 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
 
-diff --git a/arch/arm/boot/dts/sun4i-a10-itead-core.dtsi b/arch/arm/boot/dts/sun4i-a10-itead-core.dtsi
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index cc7309b..ee8a1dc 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -637,6 +637,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-cubieboard2.dtb \
+ 	sun7i-a20-cubietruck.dtb \
+ 	sun7i-a20-hummingbird.dtb \
++	sun7i-a20-itead-ibox.dtb \
+ 	sun7i-a20-i12-tvbox.dtb \
+ 	sun7i-a20-icnova-swac.dtb \
+ 	sun7i-a20-m3.dtb \
+diff --git a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
 new file mode 100644
-index 0000000..97f653a
+index 0000000..87125d9
 --- /dev/null
-+++ b/arch/arm/boot/dts/sun4i-a10-itead-core.dtsi
-@@ -0,0 +1,86 @@
++++ b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+@@ -0,0 +1,111 @@
 +/*
 + * Copyright 2015 - Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 + *
@@ -69,54 +100,74 @@ index 0000000..97f653a
 + *     OTHER DEALINGS IN THE SOFTWARE.
 + */
 +
-+#include "sun4i-a10.dtsi"
-+#include "sunxi-itead-core-common.dtsi"
++/dts-v1/;
++#include "sun7i-a20-itead-core.dtsi"
 +
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
++/ {
++	model = "Itead Ibox A20";
++	compatible = "itead,itead_ibox_a20", "allwinner,sun7i-a20";
 +
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
-+	status = "okay";
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&led_pins_itead_core>;
 +
-+	axp209: pmic@34 {
-+		reg = <0x34>;
-+		interrupts = <0>;
++		green {
++			label = "itead_core:green:usr";
++			gpios = <&pio 7 20 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++
++		blue {
++			label = "itead_core:blue:usr";
++			gpios = <&pio 7 21 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
 +	};
 +};
 +
-+#include "axp209.dtsi"
++&gmac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&gmac_pins_mii_a>;
++	phy = <&phy1>;
++	phy-mode = "mii";
++	status = "okay";
 +
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-cpu";
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++	};
 +};
 +
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-int-dll";
++&ir0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ir0_rx_pins_a>;
++	status = "okay";
 +};
 +
-+&reg_ldo1 {
-+	regulator-name = "vdd-rtc";
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
++	cd-inverted;
++	status = "okay";
 +};
 +
-+&reg_ldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "avcc";
++&pio {
++	led_pins_itead_core: led_pins@0 {
++		allwinner,pins = "PH20","PH21";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_20_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&spi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi0_pins_a>,
++		    <&spi0_cs0_pins_a>;
++	status = "okay";
 +};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
