@@ -1,95 +1,96 @@
-From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND PATCH v7 2/4] Documentation, dt, arm64/arm: dt bindings
- for numa.
-Date: Sat, 19 Dec 2015 08:19:29 +0530
-Message-ID: <CAFpQJXXcQ9TfWHv8vC9ZxcedPyb1xJwASz7Ox=vtrJU40=sO9A@mail.gmail.com>
-References: <1450413433-7467-1-git-send-email-gkulkarni@caviumnetworks.com>
-	<20151218141826.GB30229@leverpostej>
-	<CAFpQJXVmXkgD1FuMbU3rWg5MR3AEeneHAiG6XVfOs6m6e6=byQ@mail.gmail.com>
-	<20151218180346.GF30229@leverpostej>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] ARM: sunxi: Introduce Allwinner for
+ A83T support
+Date: Fri, 18 Dec 2015 22:05:10 -0600
+Message-ID: <20151219040252.GA4997@rob-hp-laptop>
+References: <1450445451-311-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1450445451-311-2-git-send-email-vishnupatekar0510@gmail.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151218180346.GF30229@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Robert Richter <rrichter@>
+Return-path: <linux-sunxi+bncBDJIP47K7MERB7FO2OZQKGQEXYR2OWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1450445451-311-2-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: corbet-T1hC0tSOHrs@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 18, 2015 at 11:33 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Fri, Dec 18, 2015 at 09:00:18PM +0530, Ganapatrao Kulkarni wrote:
->> Hi Mark,
->>
->> On Fri, Dec 18, 2015 at 7:48 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->> >> +- distance-matrix
->> >> +  This property defines a matrix to describe the relative distances
->> >> +  between all numa nodes.
->> >> +  It is represented as a list of node pairs and their relative distance.
->> >> +
->> >> +  Note:
->> >> +     1. Each entry represents distance from first node to second node.
->> >> +     The distance are equal in either direction.
->> >> +     2. The distance from a node to self(local distance) is represented
->> >> +     with value 10 and all inter node distance should be represented with
->> >> +     value greater than 10.
->> >> +     3. distance-matrix shold have entries in lexicographical ascending
->> >> +     order of nodes.
->> >> +     4. There must be only one Device node distance-map and must reside in the root node.
->> >
->> > I am still concerned that the local distance of 10 is completely
->> > arbitrary.
->> IMHO, i do not see any issue in having defined local distance to
->> arbitrary number(10).
->> inter node numa distance is relative number with respect to local distance
->> we have to fix local distance to some value, having it in dt to make
->> generic will not add
->> any additional value as compared to having the fixed local distance to 10.
->
-> That's not quite true. The figure chosen for the local distance affects
-> the granularity with which you can describe all distances.
->
-> By using a local distance of 10 we can only encode distances in 10%
-> chunks of that. Using a local distance of 100 we could encode in 1%
-> chunks of that.
->
-> I believe that for some systems we may need a granularity better than
-> 10%. Certainly for others we may not. Having an explicit property allows
-> for the description of either, and should be sufficient for a reasonable
-> period of time to come.
-can we keep support for 1% granularity to numa-distance-map-v2
-when * some system * which needs this becomes a reality.
->
->>  #define LOCAL_DISTANCE          10
->> this macro which is defined in common code and used in many places in
->> common code as well in other arch specific codes.
->> If we add property to define local distance and it imply that local
->> distance can be changed to any value other than 10.
->> having this change demands common code changes wherever LOCAL_DISTANCE is used!.
->
-> While certainly painful, occasionally such changes are necessary.
-i have no confidence that the maintainers of acpi, x86 and other common code
-will agree to modify LOCAL_DISTANCE unless there is platform exist
-which needs such granularity.
-AFAIK, i dont see any existing platforms needs this.
-IMO, Lets not deprive support for existing platforms for some not
-known/future systems.
-AFAIK, distance is just a relative number and in no way it is used to
-infer granularity.
+On Fri, Dec 18, 2015 at 09:30:49PM +0800, Vishnu Patekar wrote:
+> Allwinner A83T is octa-core cortex-a7 based SoC.
+> It's clock control unit and prcm, pinmux are different from previous sun8i
+> series.
+> Its processor cores are arragned in two clusters 4 cores each,
+> similar to A80.
+> 
+> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
->
-> Another option is to scale the input to the kernel's idea of a local
-> distance (at the possible loss of some granularity).
->
->> I am not finding any reasoning to make local distance generic.
->
-> I hope the above has answered some of that.
->
-> Thanks,
-> Mark.
-thanks
-Ganapat
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  Documentation/arm/sunxi/README                  | 1 -
+>  Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
+>  arch/arm/mach-sunxi/sunxi.c                     | 1 +
+>  drivers/clk/sunxi/clk-sunxi.c                   | 6 ++++++
+>  4 files changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/arm/sunxi/README b/Documentation/arm/sunxi/README
+> index 430d279..e5a115f 100644
+> --- a/Documentation/arm/sunxi/README
+> +++ b/Documentation/arm/sunxi/README
+> @@ -72,6 +72,5 @@ SunXi family
+>  
+>      * Octa ARM Cortex-A7 based SoCs
+>        - Allwinner A83T
+> -        + Not Supported
+>          + Datasheet
+>            http://dl.linux-sunxi.org/A83T/A83T_datasheet_Revision_1.1.pdf
+> diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
+> index bb9b0faa..7e79fcc 100644
+> --- a/Documentation/devicetree/bindings/arm/sunxi.txt
+> +++ b/Documentation/devicetree/bindings/arm/sunxi.txt
+> @@ -11,5 +11,6 @@ using one of the following compatible strings:
+>    allwinner,sun7i-a20
+>    allwinner,sun8i-a23
+>    allwinner,sun8i-a33
+> +  allwinner,sun8i-a83t
+>    allwinner,sun8i-h3
+>    allwinner,sun9i-a80
+> diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
+> index c2be98f..3c15619 100644
+> --- a/arch/arm/mach-sunxi/sunxi.c
+> +++ b/arch/arm/mach-sunxi/sunxi.c
+> @@ -69,6 +69,7 @@ MACHINE_END
+>  static const char * const sun8i_board_dt_compat[] = {
+>  	"allwinner,sun8i-a23",
+>  	"allwinner,sun8i-a33",
+> +	"allwinner,sun8i-a83t",
+>  	"allwinner,sun8i-h3",
+>  	NULL,
+>  };
+> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+> index 5ba2188..0d45253 100644
+> --- a/drivers/clk/sunxi/clk-sunxi.c
+> +++ b/drivers/clk/sunxi/clk-sunxi.c
+> @@ -1219,6 +1219,12 @@ CLK_OF_DECLARE(sun8i_a23_clk_init, "allwinner,sun8i-a23", sun6i_init_clocks);
+>  CLK_OF_DECLARE(sun8i_a33_clk_init, "allwinner,sun8i-a33", sun6i_init_clocks);
+>  CLK_OF_DECLARE(sun8i_h3_clk_init, "allwinner,sun8i-h3", sun6i_init_clocks);
+>  
+> +static void __init sun8i_a83t_init_clocks(struct device_node *node)
+> +{
+> +	sunxi_init_clocks(NULL, 0);
+> +}
+> +CLK_OF_DECLARE(sun8i_a83t_clk_init, "allwinner,sun8i-a83t", sun8i_a83t_init_clocks);
+> +
+>  static void __init sun9i_init_clocks(struct device_node *node)
+>  {
+>  	sunxi_init_clocks(NULL, 0);
+> -- 
+> 1.9.1
+> 
