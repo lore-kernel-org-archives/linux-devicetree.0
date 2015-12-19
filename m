@@ -1,67 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4] extcon: add Maxim MAX3355 driver
-Date: Fri, 18 Dec 2015 22:17:14 -0600
-Message-ID: <20151219041714.GB14936@rob-hp-laptop>
-References: <1767472.2Rx4LOCrWY@wasted.cogentembedded.com>
+Subject: Re: [PATCH V10 2/7] dma: hidma: Add Device Tree support
+Date: Fri, 18 Dec 2015 22:17:21 -0600
+Message-ID: <20151219041721.GC14936@rob-hp-laptop>
+References: <1450371684-23415-1-git-send-email-okaya@codeaurora.org>
+ <1450371684-23415-3-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1767472.2Rx4LOCrWY@wasted.cogentembedded.com>
+In-Reply-To: <1450371684-23415-3-git-send-email-okaya@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: dmaengine@vger.kernel.org, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 18, 2015 at 01:47:14AM +0300, Sergei Shtylyov wrote:
-> Maxim Integrated MAX3355E chip integrates a charge pump and comparators to
-> enable a system with an integrated USB OTG dual-role transceiver to
-> function as an USB OTG dual-role device. In addition to sensing/controlling
-> Vbus, the chip also passes thru the ID signal from the USB OTG connector.
-> On some Renesas boards, this signal is just fed into the SoC thru a GPIO
-> pin -- there's no real OTG controller, only host and gadget USB controllers
-> sharing the same USB bus; however, we'd like to allow host or gadget
-> drivers to be loaded depending on the cable type, hence the need for the
-> MAX3355 extcon driver. The Vbus status signals are also wired to GPIOs
-> (however, we aren't currently interested in them), the OFFVBUS# signal is
-> controlled by the host controllers, there's also the SHDN# signal wired to
-> a GPIO, it should be driven high for the normal operation.
+On Thu, Dec 17, 2015 at 12:01:17PM -0500, Sinan Kaya wrote:
+> Add documentation for the Qualcomm Technologies HIDMA driver.
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
+> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
 > ---
-> The patch is against the 'extcon-next' branch of the 'extcon.git' repo.
-> 
-> Changes in version 4:
-> - stopped calling kstrdup() for the device name;
-> - removed unneeded 'owner' field initializer;
-> - moved devm_extcon_allocate() call further down in the probe() method;
-> - extended the driver copyright;
-> - indented the continuation lines in the binding document.
-> 
-> Changes in version 3:
-> - reformatted the change log.
-> 
-> Changes in version 2:
-> - added the USB gadget cable support;
-> - added the remove() driver method which drives SHDN# GPIO low to save power;
-> - dropped vendor prefix from the ID GPIO property name;
-> - changed the GPIO property name suffix to "-gpios";
-> - switched to usign extcon_set_cable_state_() API;
-> - switched to using the gpiod/sleeping 'gpiolib' APIs;
-> - addded error messages to max3355_probe();
-> - added IRQF_NO_SUSPEND flasg to the devm_request_threaded_irq() call;
-> - renamed 'ret' variable to 'err' in max3355_probe();
-> - expanded the Kconfig entry help text;
-> - added vendor name to the patch summary, the bindings document, the Kconfig
->   entry, the driver heading comment, the module description, and the change log;
-> - fixed up and reformatted the change log.
-> 
->  Documentation/devicetree/bindings/extcon/extcon-max3355.txt |   21 +
+>  .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    | 79 ++++++++++++++++++++++
+>  1 file changed, 79 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
 
 Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/extcon/Kconfig                                      |    8 
->  drivers/extcon/Makefile                                     |    1 
->  drivers/extcon/extcon-max3355.c                             |  151 ++++++++++++
->  4 files changed, 181 insertions(+)
