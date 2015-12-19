@@ -1,54 +1,40 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/3] arm: dts: phy3250: add SD fixed regulator
-Date: Sun, 20 Dec 2015 01:32:11 +0200
-Message-ID: <1450567932-22994-3-git-send-email-vz@mleia.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] arm: dts: phy3250: add SD fixed regulator
+Date: Sat, 19 Dec 2015 23:48:48 +0000
+Message-ID: <20151219234848.GT8644@n2100.arm.linux.org.uk>
 References: <1450567932-22994-1-git-send-email-vz@mleia.com>
+ <1450567932-22994-3-git-send-email-vz@mleia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450567932-22994-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1450567932-22994-3-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The change adds fixed voltage regulator for SD controller, ARM MMCI
-controller driver uses it to control card power management.
+On Sun, Dec 20, 2015 at 01:32:11AM +0200, Vladimir Zapolskiy wrote:
+> @@ -162,6 +171,7 @@
+>  				cd-gpios = <&gpio 3 1 0>;
+>  				cd-inverted;
+>  				bus-width = <4>;
+> +				vqmmc-supply = <&sd_reg>;
 
-Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/phy3250.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+This looks wrong.  ios->power_mode controls the _card_ power (which is
+vmmc-supply), not the signalling power (which is vqmmc-supply):
 
-diff --git a/arch/arm/boot/dts/phy3250.dts b/arch/arm/boot/dts/phy3250.dts
-index 34e15fd..5465b9e 100644
---- a/arch/arm/boot/dts/phy3250.dts
-+++ b/arch/arm/boot/dts/phy3250.dts
-@@ -45,6 +45,15 @@
- 			enable-active-high;
- 			regulator-boot-on;
- 		};
-+
-+		sd_reg: fixed-regulator@2 {
-+			compatible = "regulator-fixed";
-+			regulator-name = "sd_reg";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			gpio = <&gpio 5 5 0>;
-+			enable-active-high;
-+		};
- 	};
- 
- 	ahb {
-@@ -162,6 +171,7 @@
- 				cd-gpios = <&gpio 3 1 0>;
- 				cd-inverted;
- 				bus-width = <4>;
-+				vqmmc-supply = <&sd_reg>;
- 				status = "okay";
- 			};
- 		};
+- vmmc-supply            : phandle to the regulator device tree node, mentioned
+                           as the VCC/VDD supply in the eMMC/SD specs.
+
+- vqmmc-supply           : phandle to the regulator device tree node, mentioned
+                           as the VCCQ/VDD_IO supply in the eMMC/SD specs.
+
+
 -- 
-2.1.4
-
+RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
