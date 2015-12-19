@@ -1,101 +1,24 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RESEND PATCH v2 2/2] ASoC: atmel-classd: DT binding for PDMIC
- driver
-Date: Fri, 18 Dec 2015 22:17:55 -0600
-Message-ID: <20151219041755.GG14936@rob-hp-laptop>
-References: <1450345800-21299-1-git-send-email-songjun.wu@atmel.com>
- <1450345800-21299-3-git-send-email-songjun.wu@atmel.com>
+Subject: Re: [PATCH v2 3/8] dt-bindings: Add root properties for Raspberry Pi
+ 2
+Date: Fri, 18 Dec 2015 22:18:33 -0600
+Message-ID: <20151219041833.GL14936@rob-hp-laptop>
+References: <1450310115-22163-1-git-send-email-eric@anholt.net>
+ <1450310115-22163-4-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1450345800-21299-3-git-send-email-songjun.wu@atmel.com>
+In-Reply-To: <1450310115-22163-4-git-send-email-eric@anholt.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Songjun Wu <songjun.wu@atmel.com>
-Cc: broonie@kernel.org, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>
+Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 17, 2015 at 05:50:00PM +0800, Songjun Wu wrote:
-> DT binding documentation for this new ASoC driver.
-> 
-> Signed-off-by: Songjun Wu <songjun.wu@atmel.com>
+On Wed, Dec 16, 2015 at 03:55:10PM -0800, Eric Anholt wrote:
+> Signed-off-by: Eric Anholt <eric@anholt.net>
 > ---
-> 
-> Changes in v2: None
-> 
->  .../devicetree/bindings/sound/atmel-pdmic.txt      |   55 ++++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/atmel-pdmic.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/atmel-pdmic.txt b/Documentation/devicetree/bindings/sound/atmel-pdmic.txt
-> new file mode 100644
-> index 0000000..e0875f1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/atmel-pdmic.txt
-> @@ -0,0 +1,55 @@
-> +* Atmel PDMIC driver under ALSA SoC architecture
-> +
-> +Required properties:
-> +- compatible
-> +	Should be "atmel,sama5d2-pdmic".
-> +- reg
-> +	Should contain PDMIC registers location and length.
-> +- interrupts
-> +	Should contain the IRQ line for the PDMIC.
-> +- dmas
-> +	One DMA specifiers as described in atmel-dma.txt and dma.txt files.
-> +- dma-names
-> +	Must be "rx".
-> +- clock-names
-> +	Required elements:
-> +	- "pclk"	peripheral clock
-> +	- "gclk"	generated clock
-> +- clocks
-> +	Must contain an entry for each required entry in clock-names.
-> +	Please refer to clock-bindings.txt.
-> +- atmel,mic-min-freq
-> +	The minimal frequency that the micphone supports.
-> +- atmel,mic-max-freq
-> +	The maximal frequency that the micphone supports.
+>  Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Please append units to these 2 (-hz).
-
- 
-> +Optional properties:
-> +- pinctrl-names, pinctrl-0
-> +	Please refer to pinctrl-bindings.txt.
-> +- atmel,model
-> +	The user-visible name of this sound card.
-> +	The default value is "PDMIC".
-
-When and why would this be different than the default?
-
-"label" can be used here if this is really needed.
-
-> +- atmel,mic-offset
-> +	The offset that should be added.
-> +	The range is from -32768 to 32767.
-> +	The default value is 0.
-> +
-> +Example:
-> +	pdmic@f8018000 {
-> +				compatible = "atmel,sama5d2-pdmic";
-> +				reg = <0xf8018000 0x124>;
-> +				interrupts = <48 IRQ_TYPE_LEVEL_HIGH 7>;
-> +				dmas = <&dma0
-> +					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1)
-> +					| AT91_XDMAC_DT_PERID(50))>;
-> +				dma-names = "rx";
-> +				clocks = <&pdmic_clk>, <&pdmic_gclk>;
-> +				clock-names = "pclk", "gclk";
-> +
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&pinctrl_pdmic_default>;
-> +				atmel,model = "PDMIC @ sama5d2_xplained";
-> +				atmel,mic-min-freq = <1000000>;
-> +				atmel,mic-max-freq = <3246000>;
-> +				atmel,mic-offset = <0x0>;
-> +	};
-> -- 
-> 1.7.9.5
-> 
+Acked-by: Rob Herring <robh@kernel.org>
