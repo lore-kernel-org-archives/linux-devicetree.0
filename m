@@ -1,56 +1,42 @@
-From: Sergei Ianovich <ynvich@gmail.com>
-Subject: Re: [PATCH v5] serial: support for 16550A serial ports on LP-8x4x
-Date: Sat, 19 Dec 2015 11:11:19 +0300
-Message-ID: <1450512679.8428.12.camel@gmail.com>
-References: <1397668667-27328-1-git-send-email-ynvich@gmail.com>
-	 <1970812.j9fZPC5F1b@wuerfel> <1450253097.21989.78.camel@gmail.com>
-	 <3230140.YE724HtqOd@wuerfel>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 0/4] SysFS driver for QEMU fw_cfg device
+Date: Sat, 19 Dec 2015 10:12:28 +0100
+Message-ID: <20151219091228.GA6024@amd>
+References: <1449242946-12062-1-git-send-email-somlo@cmu.edu>
+ <20151217160923.GI19448@HEDWIG.INI.CMU.EDU>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3230140.YE724HtqOd@wuerfel>
+Content-Disposition: inline
+In-Reply-To: <20151217160923.GI19448@HEDWIG.INI.CMU.EDU>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org, Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Scott Wood <scottwood@freescale.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Paul Burton <paul.burton@imgtec.com>, Joachim Eastwood <manabian@gmail.com>, Mans Rullgard <mans@mansr.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Peter Hurley <peter@hurleysoftware.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>open list:
+To: "Gabriel L. Somlo" <somlo@cmu.edu>
+Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, arnd@arndb.de, lersek@redhat.com, ralf@linux-mips.org, rmk+kernel@arm.linux.org.uk, eric@anholt.net, hanjun.guo@linaro.org, zajec5@gmail.com, sudeep.holla@arm.com, agross@codeaurora.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, qemu-devel@nongnu.org, jordan.l.justen@intel.com, mst@redhat.com, peter.maydell@linaro.org, leif.lindholm@linaro.org, ard.biesheuvel@linaro.org, pbonzini@redhat.com, kraxel@redhat.com, luto@amacapital.net, stefanha@gmail.com, revol@free.fr, matt@codeblueprint.co.uk
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-12-16 at 11:26 +0100, Arnd Bergmann wrote:
-> On Wednesday 16 December 2015 11:04:57 Sergei Ianovich wrote:
-> > On Tue, 2015-12-15 at 22:51 +0100, Arnd Bergmann wrote:
-> > > 'x' wildcards in the name of the board seem important. There are
-> > devices
-> > made by the same vendor without 8 or 4 in their name. Those devices
-> > either are not shipped with linux or are base on a x86 platform.
-> > 
-> > Does this justify the choice of the compatible string?
-> 
-> What I meant was that you should use the specific numbers of one
-> machine,
-> precisely for the reason you list above.
-> 
-> If there is e.g. a LP-8040 and a LP-8141 today, and you use lp8x4x in
-> the compatible string to cover both, this will no longer work when the
-> vendor comes out with a LP8047 that is completely different.
-> 
-> Instead, what you should do is to use the compatible string to
-> identify
-> one particular board (e.g. the first one that used this setup), and
-> then list the other ones as compatible with this. You can also add the
-> other board names in addition, e.g.
-> 
-> compatible = "icpdas,uart-lp8041", "icpdas,uart-lp8040";
-> 
-> for a lp8041 that is compatible with the lp8040. If it turns out later
-> that they are not entirely compatible, we can work around this in the
-> driver by checking for the lp8041 string that will be matched first,
-> while
-> the lp8040 can be used by the driver to match the entire family of
-> compatible machines (no need to list every one in the driver).
+Hi!
 
-I'll try to be more specific. This driver will support ports on LP-8081, 
-LP-8141, LP-8441, LP-8841. Last time I checked the vendor was announcing
-a series with 3 as the last digit. They use lp8x4x name, eg. in
-documentation like `LP-8x4x_ChangeLog.txt`. They ship their proprietary
-SDK in `lp8x4x_sdk_for_linux.tar`. All of this implies that it is a
-single board.
+On Thu 2015-12-17 11:09:23, Gabriel L. Somlo wrote:
+> ping ?
+> 
+> Also, for the corresponding patch set on the QEMU end of things,
+> ping on http://thread.gmane.org/gmane.comp.emulators.qemu/376321
+
+I guess missing information is why such access is a good
+idea. Debugging?
+
+								Pavel
+
+> On Fri, Dec 04, 2015 at 10:29:02AM -0500, Gabriel L. Somlo wrote:
+> > Allow access to QEMU firmware blobs, passed into the guest VM via
+> > the fw_cfg device, through SysFS entries. Blob meta-data (e.g. name,
+> > size, and fw_cfg key), as well as the raw binary blob data may be
+> > accessed.
+> > 
+> > The SysFS access location is /sys/firmware/qemu_fw_cfg/... and was
+> > selected based on overall similarity to the type of information
+> > exposed under /sys/firmware/dmi/entries/...
+
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
