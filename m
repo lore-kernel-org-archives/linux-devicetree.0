@@ -1,64 +1,443 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v5] extcon: add Maxim MAX3355 driver
-Date: Mon, 21 Dec 2015 14:01:53 +0300
-Message-ID: <5677DC21.3040509@cogentembedded.com>
-References: <5948633.my3nAG6hRz@wasted.cogentembedded.com>
- <CAGTfZH34rfMfjsAFgyPeNue74-5iCi6ZwrdN26_jwOXE6R=hwg@mail.gmail.com>
- <5676E214.2040009@cogentembedded.com> <5677662C.6060409@samsung.com>
+From: <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] powerpc/mpc85xx: Add pcsphy nodes to FManV3 device tree
+Date: Mon, 21 Dec 2015 01:57:31 +0200
+Message-ID: <1450655851-6556-1-git-send-email-igal.liberman@freescale.com>
+Reply-To: <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5677662C.6060409@samsung.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shaohui.xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+From: Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-On 12/21/2015 5:38 AM, Chanwoo Choi wrote:
+Signed-off-by: Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
->>> This patch depend on GPIOLIB configuration as following:
->>> I modified it with following diff and applied it.
->>>
->>> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
->>> index ba4db7d..3d89e60 100644
->>> --- a/drivers/extcon/Kconfig
->>> +++ b/drivers/extcon/Kconfig
->>> @@ -54,6 +54,7 @@ config EXTCON_MAX14577
->>>
->>>    config EXTCON_MAX3355
->>>           tristate "Maxim MAX3355 USB OTG EXTCON Support"
->>> +       depends on GPIOLIB || COMPILE_TEST
->>
->>     If it won't compile w/o gpiolib, what's the use of COMIPLE_TEST?
->>     And no, it shouldn't depend on gpiolib. It has empty stubs for the case of CONFIG_GPIOLIB=n. Obviously something is wrong with the GPIO headers, I'll look into it.
->
-> Yes. When GPIOLIB is disabled, the build issue don't happen.
+This patch adds pcsphy node to FManV3 device tree.
+Based on: https://patchwork.ozlabs.org/patch/503921/
+---
+ .../dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi   |    5 +++++
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi |    5 +++++
+ .../dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi   |    5 +++++
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi |    5 +++++
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi  |    5 +++++
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi  |    5 +++++
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi  |    5 +++++
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi  |    5 +++++
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi  |    5 +++++
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi  |    5 +++++
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi |    5 +++++
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi |    5 +++++
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi  |    5 +++++
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi  |    5 +++++
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi  |    5 +++++
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi  |    5 +++++
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi  |    5 +++++
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi  |    5 +++++
+ 18 files changed, 90 insertions(+)
 
-    What? It surely does happen!
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi
+index 2e441fa..e1a961f 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi
+@@ -55,6 +55,7 @@ fman@400000 {
+ 		reg = <0xe0000 0x1000>;
+ 		fsl,fman-ports = <&fman0_rx_0x08 &fman0_tx_0x28>;
+ 		ptp-timer = <&ptp_timer0>;
++		pcsphy-handle = <&pcsphy0>;
+ 	};
+ 
+ 	mdio@e1000 {
+@@ -62,5 +63,9 @@ fman@400000 {
+ 		#size-cells = <0>;
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xe1000 0x1000>;
++
++		pcsphy0: ethernet-phy@0 {
++			reg = <0x0>;
++		};
+ 	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi
+index 0b8f87f..c288f3c 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi
+@@ -52,6 +52,7 @@ fman@400000 {
+ 		compatible = "fsl,fman-memac";
+ 		reg = <0xf0000 0x1000>;
+ 		fsl,fman-ports = <&fman0_rx_0x10 &fman0_tx_0x30>;
++		pcsphy-handle = <&pcsphy6>;
+ 	};
+ 
+ 	mdio@f1000 {
+@@ -59,5 +60,9 @@ fman@400000 {
+ 		#size-cells = <0>;
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xf1000 0x1000>;
++
++		pcsphy6: ethernet-phy@0 {
++			reg = <0x0>;
++		};
+ 	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi
+index ba6f227..94f3e71 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi
+@@ -55,6 +55,7 @@ fman@400000 {
+ 		reg = <0xe2000 0x1000>;
+ 		fsl,fman-ports = <&fman0_rx_0x09 &fman0_tx_0x29>;
+ 		ptp-timer = <&ptp_timer0>;
++		pcsphy-handle = <&pcsphy1>;
+ 	};
+ 
+ 	mdio@e3000 {
+@@ -62,5 +63,9 @@ fman@400000 {
+ 		#size-cells = <0>;
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xe3000 0x1000>;
++
++		pcsphy1: ethernet-phy@0 {
++			reg = <0x0>;
++		};
+ 	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi
+index 8860038..94a7698 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi
+@@ -52,6 +52,7 @@ fman@400000 {
+ 		compatible = "fsl,fman-memac";
+ 		reg = <0xf2000 0x1000>;
+ 		fsl,fman-ports = <&fman0_rx_0x11 &fman0_tx_0x31>;
++		pcsphy-handle = <&pcsphy7>;
+ 	};
+ 
+ 	mdio@f3000 {
+@@ -59,5 +60,9 @@ fman@400000 {
+ 		#size-cells = <0>;
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xf3000 0x1000>;
++
++		pcsphy7: ethernet-phy@0 {
++			reg = <0x0>;
++		};
+ 	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi
+index ace9c13..09ffc2a 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi
+@@ -51,6 +51,7 @@ fman@400000 {
+ 		reg = <0xe0000 0x1000>;
+ 		fsl,fman-ports = <&fman0_rx_0x08 &fman0_tx_0x28>;
+ 		ptp-timer = <&ptp_timer0>;
++		pcsphy-handle = <&pcsphy0>;
+ 	};
+ 
+ 	mdio@e1000 {
+@@ -58,5 +59,9 @@ fman@400000 {
+ 		#size-cells = <0>;
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xe1000 0x1000>;
++
++		pcsphy0: pcs-phy@0 {
++			reg = <0x0>;
++		};
+ 	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi
+index a4fc286..60c3857 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi
+@@ -51,6 +51,7 @@ fman@400000 {
+ 		reg = <0xe2000 0x1000>;
+ 		fsl,fman-ports = <&fman0_rx_0x09 &fman0_tx_0x29>;
+ 		ptp-timer = <&ptp_timer0>;
++		pcsphy-handle = <&pcsphy1>;
+ 	};
+ 
+ 	mdio@e3000 {
+@@ -58,5 +59,9 @@ fman@400000 {
+ 		#size-cells = <0>;
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xe3000 0x1000>;
++
++		pcsphy1: pcs-phy@0 {
++			reg = <0x0>;
++		};
+ 	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi
+index 78596fa..f174fab 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi
+@@ -51,6 +51,7 @@ fman@400000 {
+ 		reg = <0xe4000 0x1000>;
+ 		fsl,fman-ports = <&fman0_rx_0x0a &fman0_tx_0x2a>;
+ 		ptp-timer = <&ptp_timer0>;
++		pcsphy-handle = <&pcsphy2>;
+ 	};
+ 
+ 	mdio@e5000 {
+@@ -58,5 +59,9 @@ fman@400000 {
+ 		#size-cells = <0>;
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xe5000 0x1000>;
++
++		pcsphy2: pcs-phy@0 {
++			reg = <0x0>;
++		};
+ 	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi
+index af93abd..eeea552 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi
+@@ -51,6 +51,7 @@ fman@400000 {
+ 		reg = <0xe6000 0x1000>;
+ 		fsl,fman-ports = <&fman0_rx_0x0b &fman0_tx_0x2b>;
+ 		ptp-timer = <&ptp_timer0>;
++		pcsphy-handle = <&pcsphy3>;
+ 	};
+ 
+ 	mdio@e7000 {
+@@ -58,5 +59,9 @@ fman@400000 {
+ 		#size-cells = <0>;
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xe7000 0x1000>;
++
++		pcsphy3: pcs-phy@0 {
++			reg = <0x0>;
++		};
+ 	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi
+index 97cffd7..0bf2d16 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi
+@@ -51,6 +51,7 @@ fman@400000 {
+ 		reg = <0xe8000 0x1000>;
+ 		fsl,fman-ports = <&fman0_rx_0x0c &fman0_tx_0x2c>;
+ 		ptp-timer = <&ptp_timer0>;
++		pcsphy-handle = <&pcsphy4>;
+ 	};
+ 
+ 	mdio@e9000 {
+@@ -58,5 +59,9 @@ fman@400000 {
+ 		#size-cells = <0>;
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xe9000 0x1000>;
++
++		pcsphy4: pcs-phy@0 {
++			reg = <0x0>;
++		};
+ 	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi
+index 232c5c2..fb0cb63 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi
+@@ -51,6 +51,7 @@ fman@400000 {
+ 		reg = <0xea000 0x1000>;
+ 		fsl,fman-ports = <&fman0_rx_0x0d &fman0_tx_0x2d>;
+ 		ptp-timer = <&ptp_timer0>;
++		pcsphy-handle = <&pcsphy5>;
+ 	};
+ 
+ 	mdio@eb000 {
+@@ -58,5 +59,9 @@ fman@400000 {
+ 		#size-cells = <0>;
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xeb000 0x1000>;
++
++		pcsphy5: pcs-phy@0 {
++			reg = <0x0>;
++		};
+ 	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi
+index 89d64ee..29304c9 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi
+@@ -52,6 +52,7 @@ fman@500000 {
+ 		compatible = "fsl,fman-memac";
+ 		reg = <0xf0000 0x1000>;
+ 		fsl,fman-ports = <&fman1_rx_0x10 &fman1_tx_0x30>;
++		pcsphy-handle = <&pcsphy14>;
+ 	};
+ 
+ 	mdio@f1000 {
+@@ -59,5 +60,9 @@ fman@500000 {
+ 		#size-cells = <0>;
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xf1000 0x1000>;
++
++		pcsphy14: pcs-phy@0 {
++			reg = <0x0>;
++		};
+ 	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi
+index 7fa9260..8222ff3 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi
+@@ -52,6 +52,7 @@ fman@500000 {
+ 		compatible = "fsl,fman-memac";
+ 		reg = <0xf2000 0x1000>;
+ 		fsl,fman-ports = <&fman1_rx_0x11 &fman1_tx_0x31>;
++		pcsphy-handle = <&pcsphy15>;
+ 	};
+ 
+ 	mdio@f3000 {
+@@ -59,5 +60,9 @@ fman@500000 {
+ 		#size-cells = <0>;
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xf3000 0x1000>;
++
++		pcsphy15: pcs-phy@0 {
++			reg = <0x0>;
++		};
+ 	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi
+index 3d23666..303b218 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi
+@@ -51,6 +51,7 @@ fman@500000 {
+ 		reg = <0xe0000 0x1000>;
+ 		fsl,fman-ports = <&fman1_rx_0x08 &fman1_tx_0x28>;
+ 		ptp-timer = <&ptp_timer1>;
++		pcsphy-handle = <&pcsphy8>;
+ 	};
+ 
+ 	mdio@e1000 {
+@@ -58,5 +59,9 @@ fman@500000 {
+ 		#size-cells = <0>;
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xe1000 0x1000>;
++
++		pcsphy8: pcs-phy@0 {
++			reg = <0x0>;
++		};
+ 	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi
+index 97dc2ee..efe4845 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi
+@@ -51,6 +51,7 @@ fman@500000 {
+ 		reg = <0xe2000 0x1000>;
+ 		fsl,fman-ports = <&fman1_rx_0x09 &fman1_tx_0x29>;
+ 		ptp-timer = <&ptp_timer1>;
++		pcsphy-handle = <&pcsphy9>;
+ 	};
+ 
+ 	mdio@e3000 {
+@@ -58,5 +59,9 @@ fman@500000 {
+ 		#size-cells = <0>;
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xe3000 0x1000>;
++
++		pcsphy9: pcs-phy@0 {
++			reg = <0x0>;
++		};
+ 	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi
+index f084dd2..0a2c337 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi
+@@ -51,6 +51,7 @@ fman@500000 {
+ 		reg = <0xe4000 0x1000>;
+ 		fsl,fman-ports = <&fman1_rx_0x0a &fman1_tx_0x2a>;
+ 		ptp-timer = <&ptp_timer1>;
++		pcsphy-handle = <&pcsphy10>;
+ 	};
+ 
+ 	mdio@e5000 {
+@@ -58,5 +59,9 @@ fman@500000 {
+ 		#size-cells = <0>;
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xe5000 0x1000>;
++
++		pcsphy10: pcs-phy@0 {
++			reg = <0x0>;
++		};
+ 	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi
+index bb627b3..c86c20b 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi
+@@ -51,6 +51,7 @@ fman@500000 {
+ 		reg = <0xe6000 0x1000>;
+ 		fsl,fman-ports = <&fman1_rx_0x0b &fman1_tx_0x2b>;
+ 		ptp-timer = <&ptp_timer1>;
++		pcsphy-handle = <&pcsphy11>;
+ 	};
+ 
+ 	mdio@e7000 {
+@@ -58,5 +59,9 @@ fman@500000 {
+ 		#size-cells = <0>;
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xe7000 0x1000>;
++
++		pcsphy11: pcs-phy@0 {
++			reg = <0x0>;
++		};
+ 	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi
+index 821ed12..7114471 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi
+@@ -51,6 +51,7 @@ fman@500000 {
+ 		reg = <0xe8000 0x1000>;
+ 		fsl,fman-ports = <&fman1_rx_0x0c &fman1_tx_0x2c>;
+ 		ptp-timer = <&ptp_timer1>;
++		pcsphy-handle = <&pcsphy12>;
+ 	};
+ 
+ 	mdio@e9000 {
+@@ -58,5 +59,9 @@ fman@500000 {
+ 		#size-cells = <0>;
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xe9000 0x1000>;
++
++		pcsphy12: pcs-phy@0 {
++			reg = <0x0>;
++		};
+ 	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi
+index e245f1a..d2dabee 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi
+@@ -51,6 +51,7 @@ fman@500000 {
+ 		reg = <0xea000 0x1000>;
+ 		fsl,fman-ports = <&fman1_rx_0x0d &fman1_tx_0x2d>;
+ 		ptp-timer = <&ptp_timer1>;
++		pcsphy-handle = <&pcsphy13>;
+ 	};
+ 
+ 	mdio@eb000 {
+@@ -58,5 +59,9 @@ fman@500000 {
+ 		#size-cells = <0>;
+ 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+ 		reg = <0xeb000 0x1000>;
++
++		pcsphy13: pcs-phy@0 {
++			reg = <0x0>;
++		};
+ 	};
+ };
+-- 
+1.7.9.5
 
-> because include/linux/gpio/consumer.h implement the dummy function
-> for all gpio functions if CONFIG_GPIOLIB is disabled.
-
-    Linus W. advised to #include this header explicitly -- I'll try and post.
-
-> For correct operation of max3355, you should add the dependency
-> to the extcon-max3355.c driver. This driver use the GPIO library
-> certainly.
-
-    I disagree. The driver will just cease to load in this case. I don't see 
-why we need such dependency. Only compilation time dependencies should be
-specified, I think.
-
-> COMPILE_TEST is used for just build test. You can see the detailed data[1].
-> [1] https://lkml.org/lkml/2013/5/22/155
-
-    I know. Re-read my question please.
-
-> Thanks,
-> Chanwoo Choi
-
-MBR, Sergei
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
