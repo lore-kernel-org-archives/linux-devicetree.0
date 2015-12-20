@@ -1,37 +1,50 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] arm: dts: am335x-pepper: fix typo in vmmc-supply property name
-Date: Sun, 20 Dec 2015 04:26:55 +0200
-Message-ID: <1450578415-29388-1-git-send-email-vz@mleia.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Ash Charles <ashcharles-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] can: sja1000: add documentation for Technologic
+ Systems version
+Date: Sat, 19 Dec 2015 21:37:42 -0600
+Message-ID: <20151220033742.GA9883@rob-hp-laptop>
+References: <1450469845-12900-1-git-send-email-damien.riegel@savoirfairelinux.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-can-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1450469845-12900-1-git-send-email-damien.riegel@savoirfairelinux.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Damien Riegel <damien.riegel@savoirfairelinux.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, kernel@savoirfairelinux.com
 List-Id: devicetree@vger.kernel.org
 
-Trivial fix of a typo, vmmc-supply should be the right property name.
+On Fri, Dec 18, 2015 at 03:17:24PM -0500, Damien Riegel wrote:
+> This commit adds documentation for the Technologic Systems version of
+> SJA1000. The difference with the NXP version is in the way the registers
+> are accessed.
+> 
+> Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
+> ---
+>  Documentation/devicetree/bindings/net/can/sja1000.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/can/sja1000.txt b/Documentation/devicetree/bindings/net/can/sja1000.txt
+> index b4a6d53..7a158d5 100644
+> --- a/Documentation/devicetree/bindings/net/can/sja1000.txt
+> +++ b/Documentation/devicetree/bindings/net/can/sja1000.txt
+> @@ -2,7 +2,7 @@ Memory mapped SJA1000 CAN controller from NXP (formerly Philips)
+>  
+>  Required properties:
+>  
+> -- compatible : should be "nxp,sja1000".
+> +- compatible : should be one of "nxp,sja1000", "technologic,sja1000".
+>  
+>  - reg : should specify the chip select, address offset and size required
+>  	to map the registers of the SJA1000. The size is usually 0x80.
+> @@ -14,6 +14,7 @@ Optional properties:
+>  
+>  - reg-io-width : Specify the size (in bytes) of the IO accesses that
+>  	should be performed on the device.  Valid value is 1, 2 or 4.
+> +	Must be set to 2 for technologic version.
+>  	Default to 1 (8 bits).
 
-Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/am335x-pepper.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Really, this should default to 2 for technologic version and not be 
+required.
 
-diff --git a/arch/arm/boot/dts/am335x-pepper.dts b/arch/arm/boot/dts/am335x-pepper.dts
-index 7106114..a137487 100644
---- a/arch/arm/boot/dts/am335x-pepper.dts
-+++ b/arch/arm/boot/dts/am335x-pepper.dts
-@@ -351,7 +351,7 @@
- 	status = "okay";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&wireless_pins>;
--	vmmmc-supply = <&v3v3c_reg>;
-+	vmmc-supply = <&v3v3c_reg>;
- 	bus-width = <4>;
- 	ti,non-removable;
- 	dmas = <&edma 12
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
