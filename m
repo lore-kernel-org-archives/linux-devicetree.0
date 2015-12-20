@@ -1,43 +1,43 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 9/9] phy: omap-usb2: use *syscon* framework API to
- power on/off the PHY
-Date: Sat, 19 Dec 2015 21:39:01 -0600
-Message-ID: <20151220033901.GI9883@rob-hp-laptop>
-References: <1450170968-11282-1-git-send-email-kishon@ti.com>
- <1450170968-11282-10-git-send-email-kishon@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm64: perf: Correct Cortex-A53/A57 compatible values
+Date: Sat, 19 Dec 2015 21:39:12 -0600
+Message-ID: <20151220033912.GJ9883@rob-hp-laptop>
+References: <1450168400-462-1-git-send-email-geert+renesas@glider.be>
+ <20151215103659.GB31299@leverpostej>
+ <20151215104242.GC9452@arm.com>
+ <20151217121955.GE11456@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1450170968-11282-10-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rogerq@ti.com, nsekhar@ti.com, linux-pci@vger.kernel.org, linux-usb@vger.kernel.org, tony@atomide.com, t-kristo@ti.com
+In-Reply-To: <20151217121955.GE11456-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 15, 2015 at 02:46:08PM +0530, Kishon Vijay Abraham I wrote:
-> Deprecate using phy-omap-control driver to power on/off the PHY,
-> and use *syscon* framework to do the same. This handles
-> powering on/off the PHY for the USB2 PHYs used in various TI SoCs.
+On Thu, Dec 17, 2015 at 12:19:56PM +0000, Will Deacon wrote:
+> On Tue, Dec 15, 2015 at 10:42:42AM +0000, Will Deacon wrote:
+> > On Tue, Dec 15, 2015 at 10:37:00AM +0000, Mark Rutland wrote:
+> > > On Tue, Dec 15, 2015 at 09:33:20AM +0100, Geert Uytterhoeven wrote:
+> > > > Use commas instead of periods.
+> > > > 
+> > > > Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> > > 
+> > > Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > 
+> > Cheers, Mark.
+> > 
+> > Rob -- do you want to pick this up, or shall I queue it on my perf
+> > branch?
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  Documentation/devicetree/bindings/phy/ti-phy.txt |    8 +-
->  drivers/phy/phy-omap-usb2.c                      |   94 ++++++++++++++++++----
->  include/linux/phy/omap_usb.h                     |   23 ++++++
->  3 files changed, 107 insertions(+), 18 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
-> index 49e5b0c..a3b3945 100644
-> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
-> @@ -31,6 +31,8 @@ OMAP USB2 PHY
->  
->  Required properties:
->   - compatible: Should be "ti,omap-usb2"
-> +	       Should be "ti,dra7x-usb2-phy2" for the 2nd instance of USB2 PHY
-> +	       in DRA7x
+> Since it's so trivial and also has Mark's ack, I've queued this in the
+> ARM perf tree.
 
-The 2nd instance is different somehow?
+Okay, no problem.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
