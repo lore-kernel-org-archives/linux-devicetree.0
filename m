@@ -1,65 +1,122 @@
-From: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] spi: sun4i: Add support for wait
- time between word transmissions
-Date: Sun, 20 Dec 2015 13:47:43 +0100
-Message-ID: <CAGNoLaOf6ZDxi+skRKc6gQKzAJot=fvvX91xx+H3c4ni9P-gdQ@mail.gmail.com>
-References: <1450352427-25350-1-git-send-email-mweseloh42@gmail.com>
-	<1450352427-25350-3-git-send-email-mweseloh42@gmail.com>
-	<20151218111627.GM30359@lukather>
-Reply-To: mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Caesar Wang <caesar.upstream@gmail.com>
+Subject: Re: [PATCH v1 0/6] Support the rk3036 Kylin board
+Date: Sun, 20 Dec 2015 20:49:14 +0800
+Message-ID: <5676A3CA.6090205@gmail.com>
+References: <1450362112-8075-1-git-send-email-wxt@rock-chips.com> <9746732.gszC1tXaj9@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDFO74UEV4IRB4GG3KZQKGQEW45ZSWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20151218111627.GM30359@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9746732.gszC1tXaj9@diego>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
+Cc: Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, keescook@google.com, leozwang@google.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Heiko,
 
-2015-12-18 12:16 GMT+01:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+=E5=9C=A8 2015=E5=B9=B412=E6=9C=8820=E6=97=A5 01:16, Heiko St=C3=BCbner=
+ =E5=86=99=E9=81=93:
+> Hi Caesar,
+>
+> Am Donnerstag, 17. Dezember 2015, 22:21:46 schrieb Caesar Wang:
+>> Kylin-board is based on RK3036 SOCs, add the initiation
+>> version for working.
+> I've applied:
+> - patch1 (please include the "rockchip:" part in dts subjects)
+> - patch3 (dito)
+> - patch4 (after merging in patch6 and dropping the hdmi+lcdc parts)
 
->>       sun4i_spi_write(sspi, SUN4I_CLK_CTL_REG, reg);
+Okay, thanks!
+
+Sync to the rockchip github=20
+<https://github.com/rockchip-linux/kernel/commits/develop4.4>.
+
+> Please resubmit the missing parts (audio + graphics) against my dts-b=
+ranch [0]
+> after the relevant maintainers have added the code-parts to their tre=
+es.
+
+=46or codec:
+RT5616 is existing  in
+https://git.kernel.org/cgit/linux/kernel/git/broonie/sound.git/log/?h=3D=
+for-next=20
+now.
+
+=46or 3036 vop:
+I would like wait a moment from Mark Yao updating the driver.
+
+
+>
+> Thanks
+> Heiko
+>
+> [0] https://git.kernel.org/cgit/linux/kernel/git/mmind/linux-rockchip=
+=2Egit/log/?h=3Dv4.5-armsoc/dts32
+>
+>> This series patches have the following decriptions:
 >>
->> +     /*
->> +      * Setup wait time between words.
->> +      *
->> +      * Wait time is set in SPI_CLK cycles. The SPI hardware needs 3
->> +      * additional cycles to setup the wait counter, so the minimum delay
->> +      * time is 4 cycles.
->> +      */
->> +     if (spi->word_wait_ns) {
->> +             clk_ns = DIV_ROUND_UP(1000000000, tfr->speed_hz);
+>> PATCH[1/6]:
+>> ARM: dts: fix the correct pinctrl control for rk3036
+>>
+>> The pinctrl gpio pull up/down is incorrect since the rk3036 SoCs
+>> can't set the status in the internal.
+>> ---
+>>
+>> PATCH[2/6]:
+>> ARM: dts: add the lcdc and hdmi node for rk3036
+>>
+>> Add the devices is related to display.
+>> Based on the series patches of Mark Yao's
+>> ---
+>>
+>> PATCH[3/6]:
+>> ARM: dts: add the sdio/sdmmc node for rk3036
+>>
+>> Add the wifi/sd card work for kylin board.
+>> ---
+>>
+>> PATCH[4/6]:
+>> ARM: dts: rockchip: add the kylin board for rk3036
+>>
+>> Add the dts for kylin board.
+>> ---
+>>
+>> PATCH[5/6]:
+>> ARM: dts: add the sound codec for kylin board
+>>
+>> Make the codec rt5616 working on kylin board.
+>> The realteak have been upstream for Mark Brown,
+>> I guess need some days to review.
+>>
+>> ---
+>>
+>> PATCH[6/6]:
+>> ARM: dts: add the sdio node for kylin board
+>>
+>> Enable the sdio for kylin board.
+>> ---
+>>
+>>
+>>
+>> Caesar Wang (6):
+>>    ARM: dts: fix the correct pinctrl control for rk3036
+>>    ARM: dts: add the lcdc and hdmi node for rk3036
+>>    ARM: dts: add the sdio/sdmmc node for rk3036
+>>    ARM: dts: rockchip: add the kylin board for rk3036
+>>    ARM: dts: add the sound codec for kylin board
+>>    ARM: dts: add the sdio node for kylin board
+>>
+>>   Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
+>>   arch/arm/boot/dts/Makefile                         |   1 +
+>>   arch/arm/boot/dts/rk3036-kylin.dts                 | 345
+>> +++++++++++++++++++++ arch/arm/boot/dts/rk3036.dtsi                 =
+     |
+>> 167 ++++++++-- 4 files changed, 498 insertions(+), 19 deletions(-)
+>>   create mode 100644 arch/arm/boot/dts/rk3036-kylin.dts
 >
-> You should use the actual rate of the clock returned by clk_get_rate
-> (or probably just use mclk_rate).
->
-> The clock driver might round the frequency to something else than what
-> was set in clk_set_rate, which would make your calculation here a bit
-> off.
-
-Yes, good point! And as the wait clock counter is based on the actual
-SPI_CLK and not the mod clock, I need to calculate the exact clock
-myself before handling the wait clock setting. Will amend the patch
-and send a new version.
-
-While looking into this, I also noticed a problem with a previous
-patch of mine, which changed the spi-sun[46]i to use
-transfer->speed_hz instead of the spi->max_speed_hz: I also changed
-the mclk_rate calculation to be based on tfr->speed_hz, which should
-have stayed with spi->max_speed_hz. In the current state, the clock
-calculations only ever increase mclk_rate, wich leads to very
-different clocks being set depending on which clock was used on the
-previous transfer. Will send a fix for that as well in a separate
-patch.
-
-Cheers,
-
-   Marcus
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
