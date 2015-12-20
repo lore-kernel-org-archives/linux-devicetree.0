@@ -1,310 +1,88 @@
-From: Chanwoo Choi <cwchoi00@gmail.com>
-Subject: Re: [PATCH v5] extcon: add Maxim MAX3355 driver
-Date: Sun, 20 Dec 2015 23:31:29 +0900
-Message-ID: <CAGTfZH34rfMfjsAFgyPeNue74-5iCi6ZwrdN26_jwOXE6R=hwg@mail.gmail.com>
-References: <5948633.my3nAG6hRz@wasted.cogentembedded.com>
-Reply-To: cw00.choi@samsung.com
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v1 0/6] Support the rk3036 Kylin board
+Date: Sun, 20 Dec 2015 15:44:17 +0100
+Message-ID: <2374106.I3IsqKzjVk@diego>
+References: <1450362112-8075-1-git-send-email-wxt@rock-chips.com>
+ <9746732.gszC1tXaj9@diego> <5676A3CA.6090205@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5948633.my3nAG6hRz@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <5676A3CA.6090205-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, leozwang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-This patch depend on GPIOLIB configuration as following:
-I modified it with following diff and applied it.
-
-diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
-index ba4db7d..3d89e60 100644
---- a/drivers/extcon/Kconfig
-+++ b/drivers/extcon/Kconfig
-@@ -54,6 +54,7 @@ config EXTCON_MAX14577
-
- config EXTCON_MAX3355
-        tristate "Maxim MAX3355 USB OTG EXTCON Support"
-+       depends on GPIOLIB || COMPILE_TEST
-        help
-          If you say yes here you get support for the USB OTG role detection by
-          MAX3355. The MAX3355 chip integrates a charge pump and comparators to
-
-Thanks,
-Chanwoo Choi
-
-
-On Sat, Dec 19, 2015 at 8:17 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Maxim Integrated MAX3355E chip integrates a charge pump and comparators to
-> enable a system with an integrated USB OTG dual-role transceiver to
-> function as an USB OTG dual-role device. In addition to sensing/controlling
-> Vbus, the chip also passes thru the ID signal from the USB OTG connector.
-> On some Renesas boards, this signal is just fed into the SoC thru a GPIO
-> pin -- there's no real OTG controller, only host and gadget USB controllers
-> sharing the same USB bus; however, we'd like to allow host or gadget
-> drivers to be loaded depending on the cable type, hence the need for the
-> MAX3355 extcon driver. The Vbus status signals are also wired to GPIOs
-> (however, we aren't currently interested in them), the OFFVBUS# signal is
-> controlled by the host controllers, there's also the SHDN# signal wired to
-> a GPIO, it should be driven high for the normal operation.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
->
-> ---
-> Changes in version 5:
-> - removed unused variable in the probe() method;
-> - removed reference to the Koelsch board from the binding document;
-> - added Chanwoo Choi's ACK.
->
-> Changes in version 4:
-> - stopped calling kstrdup() for the device name;
-> - removed unneeded 'owner' field initializer;
-> - moved devm_extcon_allocate() call further down in the probe() method;
-> - extended the driver copyright;
-> - indented the continuation lines in the binding document.
->
-> Changes in version 3:
-> - reformatted the change log.
->
-> Changes in version 2:
-> - added the USB gadget cable support;
-> - added the remove() driver method which drives SHDN# GPIO low to save power;
-> - dropped vendor prefix from the ID GPIO property name;
-> - changed the GPIO property name suffix to "-gpios";
-> - switched to usign extcon_set_cable_state_() API;
-> - switched to using the gpiod/sleeping 'gpiolib' APIs;
-> - addded error messages to max3355_probe();
-> - added IRQF_NO_SUSPEND flasg to the devm_request_threaded_irq() call;
-> - renamed 'ret' variable to 'err' in max3355_probe();
-> - expanded the Kconfig entry help text;
-> - added vendor name to the patch summary, the bindings document, the Kconfig
->   entry, the driver heading comment, the module description, and the change log;
-> - fixed up and reformatted the change log.
->
->  Documentation/devicetree/bindings/extcon/extcon-max3355.txt |   21 +
->  drivers/extcon/Kconfig                                      |    8
->  drivers/extcon/Makefile                                     |    1
->  drivers/extcon/extcon-max3355.c                             |  150 ++++++++++++
->  4 files changed, 180 insertions(+)
->
-> Index: extcon/Documentation/devicetree/bindings/extcon/extcon-max3355.txt
-> ===================================================================
-> --- /dev/null
-> +++ extcon/Documentation/devicetree/bindings/extcon/extcon-max3355.txt
-> @@ -0,0 +1,21 @@
-> +Maxim Integrated MAX3355 USB OTG chip
-> +-------------------------------------
-> +
-> +MAX3355 integrates a charge pump and comparators to enable a system with an
-> +integrated USB OTG dual-role transceiver to function as a USB OTG dual-role
-> +device.
-> +
-> +Required properties:
-> +- compatible: should be "maxim,max3355";
-> +- maxim,shdn-gpios: should contain a phandle and GPIO specifier for the GPIO pin
-> +                   connected to the MAX3355's SHDN# pin;
-> +- id-gpios: should contain a phandle and GPIO specifier for the GPIO pin
-> +           connected to the MAX3355's ID_OUT pin.
-> +
-> +Example:
-> +
-> +       usb-otg {
-> +               compatible = "maxim,max3355";
-> +               maxim,shdn-gpios = <&gpio2 4 GPIO_ACTIVE_LOW>;
-> +               id-gpios = <&gpio5 31 GPIO_ACTIVE_HIGH>;
-> +       };
-> Index: extcon/drivers/extcon/Kconfig
-> ===================================================================
-> --- extcon.orig/drivers/extcon/Kconfig
-> +++ extcon/drivers/extcon/Kconfig
-> @@ -52,6 +52,14 @@ config EXTCON_MAX14577
->           Maxim MAX14577/77836. The MAX14577/77836 MUIC is a USB port accessory
->           detector and switch.
->
-> +config EXTCON_MAX3355
-> +       tristate "Maxim MAX3355 USB OTG EXTCON Support"
-> +       help
-> +         If you say yes here you get support for the USB OTG role detection by
-> +         MAX3355. The MAX3355 chip integrates a charge pump and comparators to
-> +         enable a system with an integrated USB OTG dual-role transceiver to
-> +         function as an USB OTG dual-role device.
-> +
->  config EXTCON_MAX77693
->         tristate "Maxim MAX77693 EXTCON Support"
->         depends on MFD_MAX77693 && INPUT
-> Index: extcon/drivers/extcon/Makefile
-> ===================================================================
-> --- extcon.orig/drivers/extcon/Makefile
-> +++ extcon/drivers/extcon/Makefile
-> @@ -8,6 +8,7 @@ obj-$(CONFIG_EXTCON_ARIZONA)    += extcon-a
->  obj-$(CONFIG_EXTCON_AXP288)    += extcon-axp288.o
->  obj-$(CONFIG_EXTCON_GPIO)      += extcon-gpio.o
->  obj-$(CONFIG_EXTCON_MAX14577)  += extcon-max14577.o
-> +obj-$(CONFIG_EXTCON_MAX3355)   += extcon-max3355.o
->  obj-$(CONFIG_EXTCON_MAX77693)  += extcon-max77693.o
->  obj-$(CONFIG_EXTCON_MAX77843)  += extcon-max77843.o
->  obj-$(CONFIG_EXTCON_MAX8997)   += extcon-max8997.o
-> Index: extcon/drivers/extcon/extcon-max3355.c
-> ===================================================================
-> --- /dev/null
-> +++ extcon/drivers/extcon/extcon-max3355.c
-> @@ -0,0 +1,150 @@
-> +/*
-> + * Maxim Integrated MAX3355 USB OTG chip extcon driver
-> + *
-> + * Copyright (C)  2014-2015 Cogent Embedded, Inc.
-> + * Author: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + */
-> +
-> +#include <linux/extcon.h>
-> +#include <linux/gpio.h>
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/workqueue.h>
-> +
-> +struct max3355_data {
-> +       struct extcon_dev *edev;
-> +       struct gpio_desc *id_gpiod;
-> +       struct gpio_desc *shdn_gpiod;
-> +};
-> +
-> +static const unsigned int max3355_cable[] = {
-> +       EXTCON_USB,
-> +       EXTCON_USB_HOST,
-> +       EXTCON_NONE,
-> +};
-> +
-> +static irqreturn_t max3355_id_irq(int irq, void *dev_id)
-> +{
-> +       struct max3355_data *data = dev_id;
-> +       int id = gpiod_get_value_cansleep(data->id_gpiod);
-> +
-> +       if (id) {
-> +               /*
-> +                * ID = 1 means USB HOST cable detached.
-> +                * As we don't have event for USB peripheral cable attached,
-> +                * we simulate USB peripheral attach here.
-> +                */
-> +               extcon_set_cable_state_(data->edev, EXTCON_USB_HOST, false);
-> +               extcon_set_cable_state_(data->edev, EXTCON_USB, true);
-> +       } else {
-> +               /*
-> +                * ID = 0 means USB HOST cable attached.
-> +                * As we don't have event for USB peripheral cable detached,
-> +                * we simulate USB peripheral detach here.
-> +                */
-> +               extcon_set_cable_state_(data->edev, EXTCON_USB, false);
-> +               extcon_set_cable_state_(data->edev, EXTCON_USB_HOST, true);
-> +       }
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static int max3355_probe(struct platform_device *pdev)
-> +{
-> +       struct max3355_data *data;
-> +       struct gpio_desc *gpiod;
-> +       int irq, err;
-> +
-> +       data = devm_kzalloc(&pdev->dev, sizeof(struct max3355_data),
-> +                           GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       gpiod = devm_gpiod_get(&pdev->dev, "id", GPIOD_IN);
-> +       if (IS_ERR(gpiod)) {
-> +               dev_err(&pdev->dev, "failed to get ID_OUT GPIO\n");
-> +               return PTR_ERR(gpiod);
-> +       }
-> +       data->id_gpiod = gpiod;
-> +
-> +       gpiod = devm_gpiod_get(&pdev->dev, "maxim,shdn", GPIOD_OUT_HIGH);
-> +       if (IS_ERR(gpiod)) {
-> +               dev_err(&pdev->dev, "failed to get SHDN# GPIO\n");
-> +               return PTR_ERR(gpiod);
-> +       }
-> +       data->shdn_gpiod = gpiod;
-> +
-> +       data->edev = devm_extcon_dev_allocate(&pdev->dev, max3355_cable);
-> +       if (IS_ERR(data->edev)) {
-> +               dev_err(&pdev->dev, "failed to allocate extcon device\n");
-> +               return PTR_ERR(data->edev);
-> +       }
-> +
-> +       err = devm_extcon_dev_register(&pdev->dev, data->edev);
-> +       if (err < 0) {
-> +               dev_err(&pdev->dev, "failed to register extcon device\n");
-> +               return err;
-> +       }
-> +
-> +       irq = gpiod_to_irq(data->id_gpiod);
-> +       if (irq < 0) {
-> +               dev_err(&pdev->dev, "failed to translate ID_OUT GPIO to IRQ\n");
-> +               return irq;
-> +       }
-> +
-> +       err = devm_request_threaded_irq(&pdev->dev, irq, NULL, max3355_id_irq,
-> +                                       IRQF_ONESHOT | IRQF_NO_SUSPEND |
-> +                                       IRQF_TRIGGER_RISING |
-> +                                       IRQF_TRIGGER_FALLING,
-> +                                       pdev->name, data);
-> +       if (err < 0) {
-> +               dev_err(&pdev->dev, "failed to request ID_OUT IRQ\n");
-> +               return err;
-> +       }
-> +
-> +       platform_set_drvdata(pdev, data);
-> +
-> +       /* Perform initial detection */
-> +       max3355_id_irq(irq, data);
-> +
-> +       return 0;
-> +}
-> +
-> +static int max3355_remove(struct platform_device *pdev)
-> +{
-> +       struct max3355_data *data = platform_get_drvdata(pdev);
-> +
-> +       gpiod_set_value_cansleep(data->shdn_gpiod, 0);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id max3355_match_table[] = {
-> +       { .compatible = "maxim,max3355", },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(of, max3355_match_table);
-> +
-> +static struct platform_driver max3355_driver = {
-> +       .probe          = max3355_probe,
-> +       .remove         = max3355_remove,
-> +       .driver         = {
-> +               .name   = "extcon-max3355",
-> +               .of_match_table = max3355_match_table,
-> +       },
-> +};
-> +
-> +module_platform_driver(max3355_driver);
-> +
-> +MODULE_AUTHOR("Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>");
-> +MODULE_DESCRIPTION("Maxim MAX3355 extcon driver");
-> +MODULE_LICENSE("GPL v2");
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+SGkgQ2Flc2FyLAoKQW0gU29ubnRhZywgMjAuIERlemVtYmVyIDIwMTUsIDIwOjQ5OjE0IHNjaHJp
+ZWIgQ2Flc2FyIFdhbmc6Cj4gSGkgSGVpa28sCj4gCj4g5ZyoIDIwMTXlubQxMuaciDIw5pelIDAx
+OjE2LCBIZWlrbyBTdMO8Ym5lciDlhpnpgZM6Cj4gPiBIaSBDYWVzYXIsCj4gPiAKPiA+IEFtIERv
+bm5lcnN0YWcsIDE3LiBEZXplbWJlciAyMDE1LCAyMjoyMTo0NiBzY2hyaWViIENhZXNhciBXYW5n
+Ogo+ID4+IEt5bGluLWJvYXJkIGlzIGJhc2VkIG9uIFJLMzAzNiBTT0NzLCBhZGQgdGhlIGluaXRp
+YXRpb24KPiA+PiB2ZXJzaW9uIGZvciB3b3JraW5nLgo+ID4gCj4gPiBJJ3ZlIGFwcGxpZWQ6Cj4g
+PiAtIHBhdGNoMSAocGxlYXNlIGluY2x1ZGUgdGhlICJyb2NrY2hpcDoiIHBhcnQgaW4gZHRzIHN1
+YmplY3RzKQo+ID4gLSBwYXRjaDMgKGRpdG8pCj4gPiAtIHBhdGNoNCAoYWZ0ZXIgbWVyZ2luZyBp
+biBwYXRjaDYgYW5kIGRyb3BwaW5nIHRoZSBoZG1pK2xjZGMgcGFydHMpCj4gCj4gT2theSwgdGhh
+bmtzIQo+IAo+IFN5bmMgdG8gdGhlIHJvY2tjaGlwIGdpdGh1Ygo+IDxodHRwczovL2dpdGh1Yi5j
+b20vcm9ja2NoaXAtbGludXgva2VybmVsL2NvbW1pdHMvZGV2ZWxvcDQuND4uCj4gCj4gPiBQbGVh
+c2UgcmVzdWJtaXQgdGhlIG1pc3NpbmcgcGFydHMgKGF1ZGlvICsgZ3JhcGhpY3MpIGFnYWluc3Qg
+bXkgZHRzLWJyYW5jaAo+ID4gWzBdIGFmdGVyIHRoZSByZWxldmFudCBtYWludGFpbmVycyBoYXZl
+IGFkZGVkIHRoZSBjb2RlLXBhcnRzIHRvIHRoZWlyCj4gPiB0cmVlcy4KPiBGb3IgY29kZWM6Cj4g
+UlQ1NjE2IGlzIGV4aXN0aW5nICBpbgo+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvY2dpdC9saW51
+eC9rZXJuZWwvZ2l0L2Jyb29uaWUvc291bmQuZ2l0L2xvZy8/aD1mb3ItbmUKPiB4dCBub3cuCgp0
+aGF0IHNlZW1zIHRvIGJlIG1pc3NpbmcgdGhlIGRldmljZXRyZWUtcGFydHMuIEkgdGhpbmsgeW91
+IGNhbiBqdXN0IHNlbmQgYSAKcGF0Y2ggdG8gTWFyayBhZGRpbmcKLSBvZl9kZXZpY2VfaWQgbWF0
+Y2ggdGFibGUKLSBvZl9tYXRjaF90YWJsZSBhc3NpZ25tZW50Ci0gYmluZGluZy1kb2N1bWVudGF0
+aW9uIChpdCBzZWVtcyB0byBoYXZlIG9ubHkgY29tcGF0aWJsZSBhbmQgcmVnIHByb3BldGllcykK
+CgpIZWlrbwoKPiBGb3IgMzAzNiB2b3A6Cj4gSSB3b3VsZCBsaWtlIHdhaXQgYSBtb21lbnQgZnJv
+bSBNYXJrIFlhbyB1cGRhdGluZyB0aGUgZHJpdmVyLgo+IAo+ID4gVGhhbmtzCj4gPiBIZWlrbwo+
+ID4gCj4gPiBbMF0KPiA+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvY2dpdC9saW51eC9rZXJuZWwv
+Z2l0L21taW5kL2xpbnV4LXJvY2tjaGlwLmdpdC9sb2cKPiA+IC8/aD12NC41LWFybXNvYy9kdHMz
+Mj4gCj4gPj4gVGhpcyBzZXJpZXMgcGF0Y2hlcyBoYXZlIHRoZSBmb2xsb3dpbmcgZGVjcmlwdGlv
+bnM6Cj4gPj4gCj4gPj4gUEFUQ0hbMS82XToKPiA+PiBBUk06IGR0czogZml4IHRoZSBjb3JyZWN0
+IHBpbmN0cmwgY29udHJvbCBmb3IgcmszMDM2Cj4gPj4gCj4gPj4gVGhlIHBpbmN0cmwgZ3BpbyBw
+dWxsIHVwL2Rvd24gaXMgaW5jb3JyZWN0IHNpbmNlIHRoZSByazMwMzYgU29Dcwo+ID4+IGNhbid0
+IHNldCB0aGUgc3RhdHVzIGluIHRoZSBpbnRlcm5hbC4KPiA+PiAtLS0KPiA+PiAKPiA+PiBQQVRD
+SFsyLzZdOgo+ID4+IEFSTTogZHRzOiBhZGQgdGhlIGxjZGMgYW5kIGhkbWkgbm9kZSBmb3Igcmsz
+MDM2Cj4gPj4gCj4gPj4gQWRkIHRoZSBkZXZpY2VzIGlzIHJlbGF0ZWQgdG8gZGlzcGxheS4KPiA+
+PiBCYXNlZCBvbiB0aGUgc2VyaWVzIHBhdGNoZXMgb2YgTWFyayBZYW8ncwo+ID4+IC0tLQo+ID4+
+IAo+ID4+IFBBVENIWzMvNl06Cj4gPj4gQVJNOiBkdHM6IGFkZCB0aGUgc2Rpby9zZG1tYyBub2Rl
+IGZvciByazMwMzYKPiA+PiAKPiA+PiBBZGQgdGhlIHdpZmkvc2QgY2FyZCB3b3JrIGZvciBreWxp
+biBib2FyZC4KPiA+PiAtLS0KPiA+PiAKPiA+PiBQQVRDSFs0LzZdOgo+ID4+IEFSTTogZHRzOiBy
+b2NrY2hpcDogYWRkIHRoZSBreWxpbiBib2FyZCBmb3IgcmszMDM2Cj4gPj4gCj4gPj4gQWRkIHRo
+ZSBkdHMgZm9yIGt5bGluIGJvYXJkLgo+ID4+IC0tLQo+ID4+IAo+ID4+IFBBVENIWzUvNl06Cj4g
+Pj4gQVJNOiBkdHM6IGFkZCB0aGUgc291bmQgY29kZWMgZm9yIGt5bGluIGJvYXJkCj4gPj4gCj4g
+Pj4gTWFrZSB0aGUgY29kZWMgcnQ1NjE2IHdvcmtpbmcgb24ga3lsaW4gYm9hcmQuCj4gPj4gVGhl
+IHJlYWx0ZWFrIGhhdmUgYmVlbiB1cHN0cmVhbSBmb3IgTWFyayBCcm93biwKPiA+PiBJIGd1ZXNz
+IG5lZWQgc29tZSBkYXlzIHRvIHJldmlldy4KPiA+PiAKPiA+PiAtLS0KPiA+PiAKPiA+PiBQQVRD
+SFs2LzZdOgo+ID4+IEFSTTogZHRzOiBhZGQgdGhlIHNkaW8gbm9kZSBmb3Iga3lsaW4gYm9hcmQK
+PiA+PiAKPiA+PiBFbmFibGUgdGhlIHNkaW8gZm9yIGt5bGluIGJvYXJkLgo+ID4+IC0tLQo+ID4+
+IAo+ID4+IENhZXNhciBXYW5nICg2KToKPiA+PiAgICBBUk06IGR0czogZml4IHRoZSBjb3JyZWN0
+IHBpbmN0cmwgY29udHJvbCBmb3IgcmszMDM2Cj4gPj4gICAgQVJNOiBkdHM6IGFkZCB0aGUgbGNk
+YyBhbmQgaGRtaSBub2RlIGZvciByazMwMzYKPiA+PiAgICBBUk06IGR0czogYWRkIHRoZSBzZGlv
+L3NkbW1jIG5vZGUgZm9yIHJrMzAzNgo+ID4+ICAgIEFSTTogZHRzOiByb2NrY2hpcDogYWRkIHRo
+ZSBreWxpbiBib2FyZCBmb3IgcmszMDM2Cj4gPj4gICAgQVJNOiBkdHM6IGFkZCB0aGUgc291bmQg
+Y29kZWMgZm9yIGt5bGluIGJvYXJkCj4gPj4gICAgQVJNOiBkdHM6IGFkZCB0aGUgc2RpbyBub2Rl
+IGZvciBreWxpbiBib2FyZAo+ID4+ICAgCj4gPj4gICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvYXJtL3JvY2tjaGlwLnR4dCB8ICAgNCArCj4gPj4gICBhcmNoL2FybS9ib290L2R0
+cy9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCj4gPj4gICBhcmNoL2Fy
+bS9ib290L2R0cy9yazMwMzYta3lsaW4uZHRzICAgICAgICAgICAgICAgICB8IDM0NQo+ID4+IAo+
+ID4+ICsrKysrKysrKysrKysrKysrKysrKyBhcmNoL2FybS9ib290L2R0cy9yazMwMzYuZHRzaSAg
+ICAgICAgICAgICAgICAgICAgIAo+ID4+IHwKPiA+PiAxNjcgKysrKysrKystLSA0IGZpbGVzIGNo
+YW5nZWQsIDQ5OCBpbnNlcnRpb25zKCspLCAxOSBkZWxldGlvbnMoLSkKPiA+PiAKPiA+PiAgIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9ib290L2R0cy9yazMwMzYta3lsaW4uZHRzCj4gPiAK
+PiA+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gPiBM
+aW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKPiA+IExpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKPiA+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+bGludXgtcm9ja2NoaXAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKTGludXgtcm9ja2NoaXBAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2xpbnV4LXJvY2tjaGlwCg==
