@@ -1,75 +1,34 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2 v2] ARM: l2x0: make it possible to disable outer sync
- from DT
-Date: Sat, 19 Dec 2015 21:39:24 -0600
-Message-ID: <20151220033924.GK9883@rob-hp-laptop>
-References: <1450126385-14517-1-git-send-email-linus.walleij@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 04/27] serial: sh-sci: Update DT binding documentation
+ for BRG support
+Date: Sat, 19 Dec 2015 21:39:38 -0600
+Message-ID: <20151220033938.GN9883@rob-hp-laptop>
+References: <1450119456-964-1-git-send-email-geert+renesas@glider.be>
+ <1450119456-964-5-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1450126385-14517-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1450119456-964-5-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, linux-serial@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 14, 2015 at 09:53:05PM +0100, Linus Walleij wrote:
-> According to commit 2503a5ecd86c002506001eba432c524ea009fe7f
-> "ARM: 6201/1: RealView: Do not use outer_sync() on ARM11MPCore
-> boards with L220" Some PB11MPCore RealView core tiles have broken
-> outer_sync.
+On Mon, Dec 14, 2015 at 07:57:13PM +0100, Geert Uytterhoeven wrote:
+> Amend the DT bindings to include the optional clock sources for the Baud
+> Rate Generator for External Clock (BRG), as found on some SCIF variants
+> and on HSCIF.
 > 
-> We got rid of the custom barriers from the machine by disabling
-> outer sync, but that was just for the boardfile case. We have
-> to be able to do the same in the device tree case.
-> 
-> Since __l2c_init() is cloning and copying the L2C vtable,
-> we pass an argument to this function to optionally numb
-> the outer sync operation if desired, before initializing
-> the cache.
-> 
-> After this we can set up the cache correctly on the RealView
-> PB11MPCore. This was tested on a PB11MPCore known to have the
-> issue. Before this, spurious crashes would occur if we try to
-> set up the cache properly, after this it boots rock solid.
-> 
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: devicetree@vger.kernel.org
 > ---
-> ChangeLog v2->v3:
-> - Update description, reference Catalins initial commit in the
->   commit blurb.
+> v3:
+>   - Add Acked-by,
+>   - Rename "int_clk" to "brg_int".
 > ---
->  Documentation/devicetree/bindings/arm/l2cc.txt |  3 +++
->  arch/arm/mm/cache-l2x0.c                       | 13 ++++++++++---
->  2 files changed, 13 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-> index d181b7c4c522..416864e9dc92 100644
-> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
-> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-> @@ -75,6 +75,9 @@ Optional properties:
->    specified to indicate that such transforms are precluded.
->  - arm,parity-enable : enable parity checking on the L2 cache (L220 or PL310).
->  - arm,parity-disable : disable parity checking on the L2 cache (L220 or PL310).
-> +- arm,outer-sync-disable : disable the outer sync operation on the L2 cache.
-> +  Some core tiles, especially ARM PB11MPCore have a faulty L220 cache that
-> +  will randomly hang unless outer sync operations are disabled.
+>  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-This is also useful on Highbank as a feature where all DMA goes thru the 
-ACP port and there should not be a need to flush the L2 write buffer. 
-But I already optimized the performance critical register accesses with 
-_relaxed variants, so it doesn't really matter. I don't think any other 
-platform cares, therefore:
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-Rob
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
