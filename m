@@ -1,27 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] devicetree: mxsfb: add reset-active property
-Date: Sat, 19 Dec 2015 21:38:23 -0600
-Message-ID: <20151220033823.GE9883@rob-hp-laptop>
-References: <1450200297-19243-1-git-send-email-mans@mansr.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] Documentation: DT: Add entry for ARM SP805-WDT
+Date: Sat, 19 Dec 2015 21:38:29 -0600
+Message-ID: <20151220033829.GF9883@rob-hp-laptop>
+References: <1450189825-29065-1-git-send-email-bhupesh.sharma@freescale.com>
+ <1450189825-29065-2-git-send-email-bhupesh.sharma@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1450200297-19243-1-git-send-email-mans@mansr.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mans Rullgard <mans@mansr.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, marex@denx.de
+In-Reply-To: <1450189825-29065-2-git-send-email-bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Catalin.Marinas-5wv7dgnIgG8@public.gmane.org, LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 15, 2015 at 05:24:56PM +0000, Mans Rullgard wrote:
-> Some boards connect the LCD_RESET pin to a reset input on the
-> display panel.  On these boards, this pin must be set to the
-> proper level for the display to function.
+On Tue, Dec 15, 2015 at 08:00:24PM +0530, Bhupesh Sharma wrote:
+> This patch adds a devicetree binding documentation for ARM's
+> SP805 WatchDog Timer.
 > 
-> This adds an optional "reset-active" property to the "display"
-> subnode such that devicetrees can specify the desired polarity
-> of the LCD_RESET pin.
-> 
-> Signed-off-by: Mans Rullgard <mans@mansr.com>
+> Signed-off-by: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  .../devicetree/bindings/watchdog/sp805-wdt.txt     |   29 ++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
