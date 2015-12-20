@@ -1,122 +1,65 @@
-From: Sergei Ianovich <ynvich@gmail.com>
-Subject: Re: [PATCH v5] rtc: support DS1302 RTC on ICP DAS LP-8x4x
-Date: Sun, 20 Dec 2015 15:14:16 +0300
-Message-ID: <1450613656.15911.62.camel@gmail.com>
-References: <397668667-27328-3-git-send-email-ynvich@gmail.com>
-	 <1450201525-9137-1-git-send-email-ynvich@gmail.com>
-	 <20151220033815.GD9883@rob-hp-laptop>
+From: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] spi: sun4i: Add support for wait
+ time between word transmissions
+Date: Sun, 20 Dec 2015 13:47:43 +0100
+Message-ID: <CAGNoLaOf6ZDxi+skRKc6gQKzAJot=fvvX91xx+H3c4ni9P-gdQ@mail.gmail.com>
+References: <1450352427-25350-1-git-send-email-mweseloh42@gmail.com>
+	<1450352427-25350-3-git-send-email-mweseloh42@gmail.com>
+	<20151218111627.GM30359@lukather>
+Reply-To: mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151220033815.GD9883@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alessandro Zummo <a.zummo@towertech.it>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <rtc-linux@googlegroups.com>
+Return-path: <linux-sunxi+bncBDFO74UEV4IRB4GG3KZQKGQEW45ZSWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20151218111627.GM30359@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2015-12-19 at 21:38 -0600, Rob Herring wrote:
-> On Tue, Dec 15, 2015 at 08:45:23PM +0300, Sergei Ianovich wrote:
->=20
-> Nothing in this is specific to ICP, so the subject should be updated.
->=20
-> > Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
-> > CC: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> > ---
-> > =C2=A0=C2=A0=C2=A0v4..v5
-> > =C2=A0=C2=A0=C2=A0* drop THIS_MODULE from struct platform driver
-> > =C2=A0=C2=A0=C2=A0* use "dallas" for vendor name per vendor-prefixe=
-s.txt
-> >=20
-> > =C2=A0=C2=A0=C2=A0v3..v4
-> > =C2=A0=C2=A0=C2=A0* move DTS bindings to a different patch
-> >=20
-> > =C2=A0=C2=A0=C2=A0v2..v3
-> > =C2=A0=C2=A0=C2=A0* use usleep_range instead of custom nsleep
-> > =C2=A0=C2=A0=C2=A0* number change (07/16 -> 09/21)
-> >=20
-> > =C2=A0=C2=A0=C2=A0v0..v2
-> > =C2=A0=C2=A0=C2=A0* use device tree
-> > =C2=A0=C2=A0=C2=A0* use devm helpers where possible
-> >=20
-> > =C2=A0.../devicetree/bindings/rtc/rtc-ds1302.txt=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A014 +++
-> > =C2=A0drivers/rtc/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0|=C2=A0=C2=A0=C2=A02 +-
-> > =C2=A0drivers/rtc/rtc-ds1302.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 100
-> > ++++++++++++++++++++-
-> > =C2=A03 files changed, 113 insertions(+), 3 deletions(-)
-> > =C2=A0create mode 100644 Documentation/devicetree/bindings/rtc/rtc-
-> > ds1302.txt
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1302.txt
-> > b/Documentation/devicetree/bindings/rtc/rtc-ds1302.txt
-> > new file mode 100644
-> > index 0000000..810613b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/rtc/rtc-ds1302.txt
-> > @@ -0,0 +1,14 @@
-> > +* Dallas Semiconductor DS-1302 RTC
-> > +
-> > +Simple device which could be used to store date/time between
-> > reboots.
-> > +
-> > +Required properties:
-> > +- compatible : Should be "dallas,rtc-ds1302"
-> > +- reg : Should be address and size of IO memory region
->=20
-> This device is a SPI (or SPI like?) interface. So you have some sort
-> of=20
-> of FPGA logic in between the cpu and ds1302. The DT should have a nod=
-e
-> for the controller and then the ds1302 as a child of it. A full blown=
-=20
-> SPI driver may be overkill here, but that's a separate discussion fro=
-m
-> the DT binding.
+Hi,
 
-Below is the quote from the actual DT of LP-8x4x:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0fpga@5 {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0compatible =3D "simple-bus";
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0#address-cells =3D <1>;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0#size-cells =3D <1>;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0ranges =3D <0 5 0x3000000 0x10000>;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0interrupt-parent =3D <&fpgairq>;
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0rtc@901c {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0compatible =3D "dall=
-as,rtc-ds1302";
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0reg =3D <0x901c 0x1>=
-;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0status =3D "okay";
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0};
+2015-12-18 12:16 GMT+01:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
 
-You are right about the topology. ds1302 is a half-duplex SPI device.
-Does this mean I should rewrite the driver to handle the chip as a slav=
-e
-SPI device, and then provide a master SPI functionality at the FPGA?
+>>       sun4i_spi_write(sspi, SUN4I_CLK_CTL_REG, reg);
+>>
+>> +     /*
+>> +      * Setup wait time between words.
+>> +      *
+>> +      * Wait time is set in SPI_CLK cycles. The SPI hardware needs 3
+>> +      * additional cycles to setup the wait counter, so the minimum delay
+>> +      * time is 4 cycles.
+>> +      */
+>> +     if (spi->word_wait_ns) {
+>> +             clk_ns = DIV_ROUND_UP(1000000000, tfr->speed_hz);
+>
+> You should use the actual rate of the clock returned by clk_get_rate
+> (or probably just use mclk_rate).
+>
+> The clock driver might round the frequency to something else than what
+> was set in clk_set_rate, which would make your calculation here a bit
+> off.
+
+Yes, good point! And as the wait clock counter is based on the actual
+SPI_CLK and not the mod clock, I need to calculate the exact clock
+myself before handling the wait clock setting. Will amend the patch
+and send a new version.
+
+While looking into this, I also noticed a problem with a previous
+patch of mine, which changed the spi-sun[46]i to use
+transfer->speed_hz instead of the spi->max_speed_hz: I also changed
+the mclk_rate calculation to be based on tfr->speed_hz, which should
+have stayed with spi->max_speed_hz. In the current state, the clock
+calculations only ever increase mclk_rate, wich leads to very
+different clocks being set depending on which clock was used on the
+previous transfer. Will send a fix for that as well in a separate
+patch.
+
+Cheers,
+
+   Marcus
