@@ -1,96 +1,132 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 2/5] doc: dt-binding: generic onboard USB device
-Date: Mon, 21 Dec 2015 16:52:33 +0800
-Message-ID: <CAL411-ruqmx3qytz_Oxh6zQZZriy0Uw5+qpgpLvE4XAqwFc==Q@mail.gmail.com>
-References: <1450431239-16439-1-git-send-email-peter.chen@freescale.com>
- <1450431239-16439-3-git-send-email-peter.chen@freescale.com> <20151219041552.GA14247@rob-hp-laptop>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v4 3/9] phy: ti-pipe3: move sysctrl initialization to a separate function
+Date: Mon, 21 Dec 2015 14:24:07 +0530
+Message-ID: <1450688053-3429-4-git-send-email-kishon@ti.com>
+References: <1450688053-3429-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151219041552.GA14247@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1450688053-3429-1-git-send-email-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kishon@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rogerq@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 19, 2015 at 12:15 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Dec 18, 2015 at 05:33:56PM +0800, Peter Chen wrote:
->> Add dt-binding documentation for generic onboard USB device.
->
-> As has already been mentioned, please following the existing USB device
-> binding convention. We can debate whether the kernel driver is tied into
-> existing USB drivers or separate platform drivers, but the binding needs
-> to reflect the h/w.
->
-> Rob
->
+No functional change. Moved sysctrl initialization done in probe to a
+separate function as part of cleaning up ti_pipe3_probe.
 
-There is no USB device binding currently, would you mean this:
-http://playground.sun.com/1275/bindings/usb/usb-1_0.ps
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/phy/phy-ti-pipe3.c |   78 +++++++++++++++++++++++++-------------------
+ 1 file changed, 45 insertions(+), 33 deletions(-)
 
-In fact, we hardly describe USB device at dts. No matter device address,
-Device class, or compatible string, neither can work, since we know nothing
-before enumeration, and there are maybe two or more usb devices at the USB bus,
-only possible is {pid, vid}, but there are may be two same devices on the bus.
-
->>
->> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> ---
->>  .../bindings/usb/generic-onboard-device.txt        | 31 ++++++++++++++++++++++
->>  1 file changed, 31 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/usb/generic-onboard-device.txt
->>
->> diff --git a/Documentation/devicetree/bindings/usb/generic-onboard-device.txt b/Documentation/devicetree/bindings/usb/generic-onboard-device.txt
->> new file mode 100644
->> index 0000000..cdb3014
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/generic-onboard-device.txt
->> @@ -0,0 +1,31 @@
->> +Generic Onboard USB Device
->> +
->> +The node should be located at USB host controller's node or
->> +any USB HUB's node.
->> +
->> +Required properties:
->> +- compatible: should be "generic-onboard-device"
->> +
->> +Optional properties:
->> +- clocks: the input clock for USB device.
->> +- clock-frequency: the frequency for device's clock.
->> +- reset-gpios: Should specify the GPIO for reset.
->> +- reset-duration-us: the duration for assert reset signal, the time unit
->> +  is microsecond.
->> +
->> +Example:
->> +
->> +&usbh1 {
->> +     vbus-supply = <&reg_usb_h1_vbus>;
->> +        status = "okay";
->> +
->> +     #address-cells = <1>;
->> +     #size-cells = <0>;
->> +     hub: usb2415@01 {
->> +            compatible = "generic-onboard-device";
->> +            reg = <0x01>;
->> +            clocks = <&clks IMX6QDL_CLK_CKO>;
->> +            reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
->> +            reset-duration-us = <10>;
->> +     };
->> +};
->> --
->> 1.9.1
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
+diff --git a/drivers/phy/phy-ti-pipe3.c b/drivers/phy/phy-ti-pipe3.c
+index 3379a4d..3154da0 100644
+--- a/drivers/phy/phy-ti-pipe3.c
++++ b/drivers/phy/phy-ti-pipe3.c
+@@ -376,6 +376,48 @@ static int ti_pipe3_get_clk(struct ti_pipe3 *phy)
+ 	return 0;
+ }
+ 
++static int ti_pipe3_get_sysctrl(struct ti_pipe3 *phy)
++{
++	struct device *dev = phy->dev;
++	struct device_node *node = dev->of_node;
++	struct device_node *control_node;
++	struct platform_device *control_pdev;
++
++	control_node = of_parse_phandle(node, "ctrl-module", 0);
++	if (!control_node) {
++		dev_err(dev, "Failed to get control device phandle\n");
++		return -EINVAL;
++	}
++
++	control_pdev = of_find_device_by_node(control_node);
++	if (!control_pdev) {
++		dev_err(dev, "Failed to get control device\n");
++		return -EINVAL;
++	}
++
++	phy->control_dev = &control_pdev->dev;
++
++	if (of_device_is_compatible(node, "ti,phy-pipe3-sata")) {
++		phy->dpll_reset_syscon = syscon_regmap_lookup_by_phandle(node,
++							"syscon-pllreset");
++		if (IS_ERR(phy->dpll_reset_syscon)) {
++			dev_info(dev,
++				 "can't get syscon-pllreset, sata dpll won't idle\n");
++			phy->dpll_reset_syscon = NULL;
++		} else {
++			if (of_property_read_u32_index(node,
++						       "syscon-pllreset", 1,
++						       &phy->dpll_reset_reg)) {
++				dev_err(dev,
++					"couldn't get pllreset reg. offset\n");
++				return -EINVAL;
++			}
++		}
++	}
++
++	return 0;
++}
++
+ static int ti_pipe3_probe(struct platform_device *pdev)
+ {
+ 	struct ti_pipe3 *phy;
+@@ -383,8 +425,6 @@ static int ti_pipe3_probe(struct platform_device *pdev)
+ 	struct phy_provider *phy_provider;
+ 	struct resource *res;
+ 	struct device_node *node = pdev->dev.of_node;
+-	struct device_node *control_node;
+-	struct platform_device *control_pdev;
+ 	const struct of_device_id *match;
+ 	struct device *dev = &pdev->dev;
+ 	int ret;
+@@ -413,42 +453,14 @@ static int ti_pipe3_probe(struct platform_device *pdev)
+ 			return PTR_ERR(phy->pll_ctrl_base);
+ 	}
+ 
+-	if (of_device_is_compatible(node, "ti,phy-pipe3-sata")) {
+-		phy->dpll_reset_syscon = syscon_regmap_lookup_by_phandle(node,
+-							"syscon-pllreset");
+-		if (IS_ERR(phy->dpll_reset_syscon)) {
+-			dev_info(dev,
+-				 "can't get syscon-pllreset, sata dpll won't idle\n");
+-			phy->dpll_reset_syscon = NULL;
+-		} else {
+-			if (of_property_read_u32_index(node,
+-						       "syscon-pllreset", 1,
+-						       &phy->dpll_reset_reg)) {
+-				dev_err(dev,
+-					"couldn't get pllreset reg. offset\n");
+-				return -EINVAL;
+-			}
+-		}
+-	}
++	ret = ti_pipe3_get_sysctrl(phy);
++	if (ret)
++		return ret;
+ 
+ 	ret = ti_pipe3_get_clk(phy);
+ 	if (ret)
+ 		return ret;
+ 
+-	control_node = of_parse_phandle(node, "ctrl-module", 0);
+-	if (!control_node) {
+-		dev_err(dev, "Failed to get control device phandle\n");
+-		return -EINVAL;
+-	}
+-
+-	control_pdev = of_find_device_by_node(control_node);
+-	if (!control_pdev) {
+-		dev_err(dev, "Failed to get control device\n");
+-		return -EINVAL;
+-	}
+-
+-	phy->control_dev = &control_pdev->dev;
+-
+ 	omap_control_phy_power(phy->control_dev, 0);
+ 
+ 	platform_set_drvdata(pdev, phy);
 -- 
-BR,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
