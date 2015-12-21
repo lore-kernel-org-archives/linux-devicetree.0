@@ -1,79 +1,64 @@
-From: Silvio Pellicano <8001010-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/5] ARM: dts: sunxi: Add backlight node to
- q8 tablets
-Date: Mon, 21 Dec 2015 02:56:32 -0800 (PST)
-Message-ID: <fc4adcf5-4362-4d4c-b42e-729922c79f65@googlegroups.com>
-References: <1442752251-20744-1-git-send-email-hdegoede@redhat.com>
-Reply-To: 8001010-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v5] extcon: add Maxim MAX3355 driver
+Date: Mon, 21 Dec 2015 14:01:53 +0300
+Message-ID: <5677DC21.3040509@cogentembedded.com>
+References: <5948633.my3nAG6hRz@wasted.cogentembedded.com>
+ <CAGTfZH34rfMfjsAFgyPeNue74-5iCi6ZwrdN26_jwOXE6R=hwg@mail.gmail.com>
+ <5676E214.2040009@cogentembedded.com> <5677662C.6060409@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----=_Part_4626_1791416691.1450695392835"
-Return-path: <linux-sunxi+bncBDB4XENY4EMRBYNV36ZQKGQEWYFPFAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1442752251-20744-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <5677662C.6060409@samsung.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-------=_Part_4626_1791416691.1450695392835
-Content-Type: multipart/alternative;
-	boundary="----=_Part_4627_1477629616.1450695392835"
+Hello.
 
-------=_Part_4627_1477629616.1450695392835
-Content-Type: text/plain; charset=UTF-8
+On 12/21/2015 5:38 AM, Chanwoo Choi wrote:
 
-
-
-> Here is a slightly updated version of Chen-Yu's backlight 
-> patches, also adding support for the backlight found on A13 
-> based q8 tablets. 
+>>> This patch depend on GPIOLIB configuration as following:
+>>> I modified it with following diff and applied it.
+>>>
+>>> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
+>>> index ba4db7d..3d89e60 100644
+>>> --- a/drivers/extcon/Kconfig
+>>> +++ b/drivers/extcon/Kconfig
+>>> @@ -54,6 +54,7 @@ config EXTCON_MAX14577
+>>>
+>>>    config EXTCON_MAX3355
+>>>           tristate "Maxim MAX3355 USB OTG EXTCON Support"
+>>> +       depends on GPIOLIB || COMPILE_TEST
+>>
+>>     If it won't compile w/o gpiolib, what's the use of COMIPLE_TEST?
+>>     And no, it shouldn't depend on gpiolib. It has empty stubs for the case of CONFIG_GPIOLIB=n. Obviously something is wrong with the GPIO headers, I'll look into it.
 >
+> Yes. When GPIOLIB is disabled, the build issue don't happen.
 
-If i compile your dtsi with (obviously) pwm  support enable , backlight 
-switch off after kernel start, 
-if i disable pwm in menuconfig,it stay on, all seem correct (pwm on PB2 in 
-original script.bin),
-but there is somewhere a bug in pwm or dtsi description of backlight.
+    What? It surely does happen!
 
-Silviop
+> because include/linux/gpio/consumer.h implement the dummy function
+> for all gpio functions if CONFIG_GPIOLIB is disabled.
 
--- 
-You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+    Linus W. advised to #include this header explicitly -- I'll try and post.
 
-------=_Part_4627_1477629616.1450695392835
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+> For correct operation of max3355, you should add the dependency
+> to the extcon-max3355.c driver. This driver use the GPIO library
+> certainly.
 
-<div dir=3D"ltr"><br><blockquote class=3D"gmail_quote" style=3D"margin: 0;m=
-argin-left: 0.8ex;border-left: 1px #ccc solid;padding-left: 1ex;">Here is a=
- slightly updated version of Chen-Yu&#39;s backlight
-<br>patches, also adding support for the backlight found on A13=20
-<br>based q8 tablets.
-<br></blockquote><div><br>If i compile your dtsi with (obviously) pwm=C2=A0=
- support enable , backlight switch off after kernel start, <br>if i disable=
- pwm in menuconfig,it stay on, all seem correct (pwm on PB2 in original scr=
-ipt.bin),<br>but there is somewhere a bug in pwm or dtsi description of bac=
-klight.<br><br>Silviop<br></div></div>
+    I disagree. The driver will just cease to load in this case. I don't see 
+why we need such dependency. Only compilation time dependencies should be
+specified, I think.
 
-<p></p>
+> COMPILE_TEST is used for just build test. You can see the detailed data[1].
+> [1] https://lkml.org/lkml/2013/5/22/155
 
--- <br />
-You received this message because you are subscribed to the Google Groups &=
-quot;linux-sunxi&quot; group.<br />
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
-unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
-For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
-s://groups.google.com/d/optout</a>.<br />
+    I know. Re-read my question please.
 
-------=_Part_4627_1477629616.1450695392835--
+> Thanks,
+> Chanwoo Choi
 
-------=_Part_4626_1791416691.1450695392835--
+MBR, Sergei
+
