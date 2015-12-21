@@ -1,48 +1,45 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH 1/6] dt-bindings: misc: add document for reboot-mode driver
-Date: Mon, 21 Dec 2015 19:30:33 +0800
-Message-ID: <1450697433-30045-1-git-send-email-andy.yan@rock-chips.com>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 2/6] dt-bindings: soc: add document for rockchip reboot-mode driver
+Date: Mon, 21 Dec 2015 19:33:11 +0800
+Message-ID: <1450697591-30100-1-git-send-email-andy.yan@rock-chips.com>
 References: <1450697249-29994-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1450697249-29994-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, heiko@sntech.de, arnd@arndb.de, john.stultz@linaro.org
-Cc: sjg@chromium.org, alexandre.belloni@free-electrons.com, treding@nvidia.com, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, wxt@rock-chips.com, catalin.marinas@arm.com, olof@lixom.net, geert+renesas@glider.be, linux-rockchip@lists.infradead.org, dbaryshkov@gmail.com, sre@kernel.org, jun.nie@linaro.org, pawel.moll@arm.com, will.deacon@arm.com, akpm@linux-foundation.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, joel@jms.id.au, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, khilman@linaro.org, moritz.fischer@ettus.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, Andy Yan <andy.yan@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1450697249-29994-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-add device tree bindings document for reboot-mode driver
+Add device tree binding document for rockchip reboot-mode driver
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-
+Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
 
- .../devicetree/bindings/misc/reboot-mode.txt       | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/reboot-mode.txt
+ .../bindings/soc/rockchip/rockchip,reboot-mode.txt | 39 ++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/rockchip/rockchip,reboot-mode.txt
 
-diff --git a/Documentation/devicetree/bindings/misc/reboot-mode.txt b/Documentation/devicetree/bindings/misc/reboot-mode.txt
+diff --git a/Documentation/devicetree/bindings/soc/rockchip/rockchip,reboot-mode.txt b/Documentation/devicetree/bindings/soc/rockchip/rockchip,reboot-mode.txt
 new file mode 100644
-index 0000000..68346b3
+index 0000000..ede8509
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/reboot-mode.txt
-@@ -0,0 +1,41 @@
-+Generic reboot mode communication driver
++++ b/Documentation/devicetree/bindings/soc/rockchip/rockchip,reboot-mode.txt
+@@ -0,0 +1,39 @@
++Rockchip reboot mode driver
 +
 +This driver get reboot mode arguments from userspace
-+and stores it in special register or ram . Then the
-+bootloader will read it and take different action
-+according the argument stored.
++and stores it in special register. Then the bootloader
++will read it and take different action according the
++argument stored.
 +
 +Required properties:
-+        - compatible = "reboot-mode" or other vendor compatible string;
++- compatible: should be "rockchip,reboot-mode"
++- regmap: this is phandle to the register map node
++- offset: offset in the register map for the storage register (in bytes)
++The rest of the properties should follow the generic reboot-mode discription
++found in ../../misc/reboot-mode.txt
 +
-+Each mode is represented as a sub-node of reboot_mode:
-+
-+Subnode properties:
-+        - linux,mode: reboot mode command,such as "loader","recover", "fastboot".
-+        - linux,magic: magic number for the mode, this is vendor specific.
-+
-+example:
++Examples:
 +	reboot_mode {
 +		compatible = "rockchip,reboot-mode";
 +		rockchip,regmap = <&pmu>;
@@ -66,6 +63,12 @@ index 0000000..68346b3
 +			linux,mode = "fastboot";
 +			linux,magic = <0x5242C309>;
 +		};
-+        };
++	};
 -- 
 1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
