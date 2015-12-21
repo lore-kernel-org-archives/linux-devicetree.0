@@ -1,207 +1,120 @@
-From: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: ts-4800: Add LCD support
-Date: Mon, 21 Dec 2015 13:40:59 -0500
-Message-ID: <20151221184057.GE12696@localhost>
-References: <1450458033-30471-1-git-send-email-damien.riegel@savoirfairelinux.com>
- <20151221133519.GC18410@tiger>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [PATCH v2 0/5] clk: lpc32xx: add clock support for NXP LPC32xx
+Date: Mon, 21 Dec 2015 21:34:14 +0200
+Message-ID: <56785436.4000505@mleia.com>
+References: <1449398757-16834-1-git-send-email-vz@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151221133519.GC18410@tiger>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1449398757-16834-1-git-send-email-vz@mleia.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>
+Cc: Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Roland Stigge <stigge@antcom.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 21, 2015 at 09:35:19PM +0800, Shawn Guo wrote:
-> On Fri, Dec 18, 2015 at 12:00:32PM -0500, Damien Riegel wrote:
-> > This commit adds LCD support for the TS-4800. The panel is an Okaya
-> > RS800480T-7X0WQ and the timings have been extracted from Technologic
-> > Systems' tree.
-> > 
-> > Signed-off-by: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/imx51-ts4800.dts | 109 +++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 109 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx51-ts4800.dts b/arch/arm/boot/dts/imx51-ts4800.dts
-> > index 83352cb..4951ebd 100644
-> > --- a/arch/arm/boot/dts/imx51-ts4800.dts
-> > +++ b/arch/arm/boot/dts/imx51-ts4800.dts
-> > @@ -30,6 +30,60 @@
-> >  			clock-frequency = <24576000>;
-> >  		};
-> >  	};
-> > +
-> > +	regulators {
-> > +		compatible = "simple-bus";
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		backlight_reg: regulator@0 {
-> > +			compatible = "regulator-fixed";
-> > +			reg = <0>;
-> > +			pinctrl-names = "default";
-> > +			pinctrl-0 = <&pinctrl_enable_lcd>;
-> > +			regulator-name = "enable_lcd_reg";
-> > +			regulator-min-microvolt = <3300000>;
-> > +			regulator-max-microvolt = <3300000>;
-> > +			gpio = <&gpio4 9 GPIO_ACTIVE_HIGH>;
-> > +			enable-active-high;
-> > +		};
-> > +	};
-> 
-> DT maintainers dislike this fake simple-bus container.  Let's put the
-> regulator directly under root like below.
-> 
->         backlight_reg: regulator-backlight {
->                 compatible = "regulator-fixed";
->                 pinctrl-names = "default";
->                 pinctrl-0 = <&pinctrl_enable_lcd>;
->                 regulator-name = "enable_lcd_reg";
->                 regulator-min-microvolt = <3300000>;
->                 regulator-max-microvolt = <3300000>;
->                 gpio = <&gpio4 9 GPIO_ACTIVE_HIGH>;
->                 enable-active-high;
->         };
-> 
-> I fixed it up and applied both patches.
+Hi Stephen, Michael,
 
-Thank you. I am using the imx51-*.dts as examples, maybe they should be
-updated to be consistent with the newer device tree style? I'm willing
-to do that but I don't want to make changes on dts files that I can't
-test.
-
-Sidenote: your Signed-off-by is missing on these two patches.
-
-
-Thanks,
-Damien
-
+On 06.12.2015 12:45, Vladimir Zapolskiy wrote:
+> This changeset adds common clock framework driver for NXP LPC32xx
+> boards.
 > 
-> Shawn
+> The change can be applied without any dependencies, LPC32xx device tree
+> and mach changes will be done, when this changeset is accepted.
 > 
-> > +
-> > +	backlight: backlight {
-> > +		compatible = "pwm-backlight";
-> > +		pwms = <&pwm1 0 78770>;
-> > +		brightness-levels = <0 150 200 255>;
-> > +		default-brightness-level = <1>;
-> > +		power-supply = <&backlight_reg>;
-> > +	};
-> > +
-> > +	display0: display@di0 {
-> > +		compatible = "fsl,imx-parallel-display";
-> > +		interface-pix-fmt = "rgb24";
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&pinctrl_lcd>;
-> > +
-> > +		display-timings {
-> > +			800x480p60 {
-> > +				native-mode;
-> > +				clock-frequency = <30066000>;
-> > +				hactive = <800>;
-> > +				vactive = <480>;
-> > +				hfront-porch = <50>;
-> > +				hback-porch = <70>;
-> > +				hsync-len = <50>;
-> > +				vback-porch = <0>;
-> > +				vfront-porch = <0>;
-> > +				vsync-len = <50>;
-> > +			};
-> > +		};
-> > +
-> > +		port@0 {
-> > +			display0_in: endpoint {
-> > +				remote-endpoint = <&ipu_di0_disp0>;
-> > +			};
-> > +		};
-> > +	};
-> >  };
-> >  
-> >  &esdhc1 {
-> > @@ -60,6 +114,16 @@
-> >  	};
-> >  };
-> >  
-> > +&ipu_di0_disp0 {
-> > +	remote-endpoint = <&display0_in>;
-> > +};
-> > +
-> > +&pwm1 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_pwm_backlight>;
-> > +	status = "okay";
-> > +};
-> > +
-> >  &uart1 {
-> >  	pinctrl-names = "default";
-> >  	pinctrl-0 = <&pinctrl_uart1>;
-> > @@ -115,6 +179,12 @@
-> >  		>;
-> >  	};
-> >  
-> > +	pinctrl_enable_lcd: enablelcdgrp {
-> > +		fsl,pins = <
-> > +			MX51_PAD_CSI2_D12__GPIO4_9		0x1c5
-> > +		>;
-> > +	};
-> > +
-> >  	pinctrl_esdhc1: esdhc1grp {
-> >  		fsl,pins = <
-> >  			MX51_PAD_SD1_CMD__SD1_CMD		0x400020d5
-> > @@ -159,6 +229,45 @@
-> >  		>;
-> >  	};
-> >  
-> > +	pinctrl_lcd: lcdgrp {
-> > +		fsl,pins = <
-> > +			MX51_PAD_DISP1_DAT0__DISP1_DAT0		0x5
-> > +			MX51_PAD_DISP1_DAT1__DISP1_DAT1		0x5
-> > +			MX51_PAD_DISP1_DAT2__DISP1_DAT2		0x5
-> > +			MX51_PAD_DISP1_DAT3__DISP1_DAT3		0x5
-> > +			MX51_PAD_DISP1_DAT4__DISP1_DAT4		0x5
-> > +			MX51_PAD_DISP1_DAT5__DISP1_DAT5		0x5
-> > +			MX51_PAD_DISP1_DAT6__DISP1_DAT6		0x5
-> > +			MX51_PAD_DISP1_DAT7__DISP1_DAT7		0x5
-> > +			MX51_PAD_DISP1_DAT8__DISP1_DAT8		0x5
-> > +			MX51_PAD_DISP1_DAT9__DISP1_DAT9		0x5
-> > +			MX51_PAD_DISP1_DAT10__DISP1_DAT10	0x5
-> > +			MX51_PAD_DISP1_DAT11__DISP1_DAT11	0x5
-> > +			MX51_PAD_DISP1_DAT12__DISP1_DAT12	0x5
-> > +			MX51_PAD_DISP1_DAT13__DISP1_DAT13	0x5
-> > +			MX51_PAD_DISP1_DAT14__DISP1_DAT14	0x5
-> > +			MX51_PAD_DISP1_DAT15__DISP1_DAT15	0x5
-> > +			MX51_PAD_DISP1_DAT16__DISP1_DAT16	0x5
-> > +			MX51_PAD_DISP1_DAT17__DISP1_DAT17	0x5
-> > +			MX51_PAD_DISP1_DAT18__DISP1_DAT18	0x5
-> > +			MX51_PAD_DISP1_DAT19__DISP1_DAT19	0x5
-> > +			MX51_PAD_DISP1_DAT20__DISP1_DAT20	0x5
-> > +			MX51_PAD_DISP1_DAT21__DISP1_DAT21	0x5
-> > +			MX51_PAD_DISP1_DAT22__DISP1_DAT22	0x5
-> > +			MX51_PAD_DISP1_DAT23__DISP1_DAT23	0x5
-> > +			MX51_PAD_DI1_PIN2__DI1_PIN2		0x5
-> > +			MX51_PAD_DI1_PIN3__DI1_PIN3		0x5
-> > +			MX51_PAD_DI2_DISP_CLK__DI2_DISP_CLK	0x5
-> > +			MX51_PAD_DI_GP4__DI2_PIN15		0x5
-> > +		>;
-> > +	};
-> > +
-> > +	pinctrl_pwm_backlight: backlightgrp {
-> > +		fsl,pins = <
-> > +			MX51_PAD_GPIO1_2__PWM1_PWMO		0x80000000
-> > +		>;
-> > +	};
-> > +
-> >  	pinctrl_uart1: uart1grp {
-> >  		fsl,pins = <
-> >  			MX51_PAD_UART1_RXD__UART1_RXD		0x1c5
-> > -- 
-> > 2.5.0
-> > 
-> > 
+> The v1 version of CCF driver can be found here:
+>   http://www.spinics.net/lists/arm-kernel/msg461632.html
+> 
+> The RFC version of CCF driver 9/11 can be found here:
+>   http://www.spinics.net/lists/devicetree/msg100583.html
+> 
+> Changes from v1 to v2:
+> * removed dependency on the recent LPC32xx device tree changes,
+>   also removed LPC32xx device tree and mach changes, which depend
+>   on this series,
+> * use lowercase hex numbers in a DT binding example,
+> * incremented by 1 all clock values, possibly clock "0" may have a
+>   special meaning in future,
+> * removed explicit COMMON_CLK selection for NXP LPC18xx,
+> * LPC32XX_CLK_DEFINE() does not stringify clock names,
+> * fixed a minor bug in clk_pll_set_rate().
+> 
+> Changes from RFC to v1:
+> * added definitions of a missed IRDA clock,
+> * renamed compatible property from lpc32xx-scb to lpc32xx-clk
+> * switched to regmap interface instead of mmio, this is required to
+>   secure access to registers shared between pinmux, dma and clock
+>   driver, unfortunately this change has to pull some code snippets
+>   from common gate, divider and mux helpers rebased on regmap API,
+> * split clock definitions from the driver to be able to update
+>   dts files separately from CCF driver.
+> 
+> The driver is written from scratch, here are main functional
+> differences with the legacy driver arch/arm/mach-lpc32xx/clock.c:
+> * serialized access to SCB registers,
+> * reworked routines to select PLL parameters,
+> * now the clock driver has detailed description of all clocks,
+>   the original driver misses several clock entries and most of fine
+>   grained clock controls, here every mux and divider are accounted,
+> * now clocks and clock hierarchies can be described in board DT file,
+> * sophisticated management of USB clocks, for example now USB device
+>   controller needs only one clock instead of USB PLL, USB OTG and USB
+>   device clocks,
+> * other benefits from a driver powered by CCF.
+> 
+> Patch 5/5 may produce false positives from checkpatch.pl, the fix
+> to checkpatch is found in Andrew's tree
+> 
+> Vladimir Zapolskiy (5):
+>   dt-bindings: clock: add description of LPC32xx clock controller
+>   dt-bindings: clock: add description of LPC32xx USB clock controller
+>   dt-bindings: clock: add NXP LPC32xx clock list for consumers
+>   clk: lpc18xx: add NXP specific COMMON_CLK_NXP configuration symbol
+>   clk: lpc32xx: add common clock framework driver
+> 
+>  .../devicetree/bindings/clock/nxp,lpc3220-clk.txt  |   30 +
+>  .../bindings/clock/nxp,lpc3220-usb-clk.txt         |   22 +
+>  drivers/clk/Kconfig                                |    6 +
+>  drivers/clk/Makefile                               |    2 +-
+>  drivers/clk/nxp/Makefile                           |    1 +
+>  drivers/clk/nxp/clk-lpc32xx.c                      | 1569 ++++++++++++++++++++
+>  include/dt-bindings/clock/lpc32xx-clock.h          |   56 +
+>  7 files changed, 1685 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/nxp,lpc3220-usb-clk.txt
+>  create mode 100644 drivers/clk/nxp/clk-lpc32xx.c
+>  create mode 100644 include/dt-bindings/clock/lpc32xx-clock.h
+> 
+
+this is a gentle ping, the first version of the driver was published
+in October, the only functional change is switching from iomap to regmap
+API to access the registers.
+
+A couple of words about the change to mitigate your impression of
+apparently imperfect code.
+
+The NXP LPC32xx platform is unmaintained and broken for about one
+and a half years, so I presume you won't get an ack from Roland, who
+is an official maintainer. Adding a CCF driver will be a huge progress,
+since it allows in +1 kernel release to fix the platform -- there is
+a critical problem in legacy IRQ handling based on hardware IRQs,
+irqchip driver change is ready as well, but CCF should go first,
+because it allows to remove a legacy clocksource/clockevent driver
+arch/arm/mach-lpc32xx/timer.c. That driver depends on legacy broken
+irqchip (hardware IRQs are used, irqchip with virtual IRQs will break
+the driver), it has a proper replacement drivers/clocksource/time-lpc32xx.c,
+but to use the new driver common clock support is needed. The CCF
+driver will let me remove tons of other legacy stuff as well, and this
+should be a step towards inclusion of the platform to multiarch builds.
+
+If you find impossible to include this CCF driver to v4.5, please add
+the first 4 of 5 changes, dt bindings include file is needed to
+update DTS files independently on CCF driver inclusion status.
+
+Thank you in advance.
+
+Merry Christmas, Happy Holidays!
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With best wishes,
+Vladimir
