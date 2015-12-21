@@ -1,48 +1,57 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 8/9] ARM: shmobile: silk dts: Add compatible property to "partitions" node
-Date: Mon, 21 Dec 2015 11:33:52 +0100
-Message-ID: <1450694033-27717-9-git-send-email-geert+renesas@glider.be>
-References: <1450694033-27717-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1450694033-27717-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: arm@kernel.org, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Alex Smith <alex.smith@imgtec.com>
-Cc: Brian Norris <computersforpeace@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, linux-mips@linux-mips.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 1/5] ARM: dts: sun4i: Add touchscreen
+ node to inet9f-rev03 tablet dts file
+Date: Mon, 21 Dec 2015 11:40:05 +0100
+Message-ID: <5677D705.4070206@redhat.com>
+References: <1450611782-9494-1-git-send-email-hdegoede@redhat.com>
+ <CAGb2v67tBGSZTwVk4uQ97tqah3x83xFEPJn=rM-dBV9xgyFMAw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGb2v67tBGSZTwVk4uQ97tqah3x83xFEPJn=rM-dBV9xgyFMAw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-As of commit e488ca9f8d4f62c2 ("doc: dt: mtd: partitions: add compatible
-property to "partitions" node"), the "partitions" subnode of an SPI
-FLASH device node must have a compatible property. The partitions are no
-longer detected if it is not present.
+Hi,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Brian Norris <computersforpeace@gmail.com>
----
-v2:
-  - Add Acked-by.
----
- arch/arm/boot/dts/r8a7794-silk.dts | 1 +
- 1 file changed, 1 insertion(+)
+On 21-12-15 06:57, Chen-Yu Tsai wrote:
+> On Sun, Dec 20, 2015 at 7:42 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> Add a node describing the focaltech ft5406ee8 touchscreen found on
+>> inet-9f-rev03 / qware qw tb-g100 tablets.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts b/arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts
+>> index ca49b0d..d39067e 100644
+>> --- a/arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts
+>> +++ b/arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts
+>> @@ -253,6 +253,16 @@
+>>          pinctrl-names = "default";
+>>          pinctrl-0 = <&i2c2_pins_a>;
+>>          status = "okay";
+>> +
+>> +       ft5406ee8: touchscreen@38 {
+>> +               compatible = "edt,edt-ft5406";
+>> +               reg = <0x38>;
+>> +               interrupt-parent = <&pio>;
+>> +               interrupts = <7 21 IRQ_TYPE_EDGE_FALLING>;
+>> +               pinctrl-names = "default";
+>
+> Name only and no references?
 
-diff --git a/arch/arm/boot/dts/r8a7794-silk.dts b/arch/arm/boot/dts/r8a7794-silk.dts
-index eb608283a24c070c..c0ae94979a71b04c 100644
---- a/arch/arm/boot/dts/r8a7794-silk.dts
-+++ b/arch/arm/boot/dts/r8a7794-silk.dts
-@@ -217,6 +217,7 @@
- 		m25p,fast-read;
- 
- 		partitions {
-+			compatible = "fixed-partitions";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 
--- 
-1.9.1
+My bad (and even copy and pasted it to the 2 others), this line needs
+to be dropped. I'll send a v2.
+
+Regards,
+
+Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
