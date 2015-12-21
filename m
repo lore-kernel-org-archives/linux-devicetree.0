@@ -1,441 +1,67 @@
-From: <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH] powerpc/mpc85xx: Add pcsphy nodes to FManV3 device tree
-Date: Mon, 21 Dec 2015 01:57:31 +0200
-Message-ID: <1450655851-6556-1-git-send-email-igal.liberman@freescale.com>
-Reply-To: <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 0/6] misc: add reboot mode driver
+Date: Mon, 21 Dec 2015 19:27:29 +0800
+Message-ID: <1450697249-29994-1-git-send-email-andy.yan@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shaohui.xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Signed-off-by: Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+This driver parse the reboot commands like "reboot loader"
+and "reboot recovery" to get a boot mode described in the
+device tree , then call the vendor specific write interfae
+to store the boot mode in some place like special register
+or sram , which can be read by the bootloader after system
+reboot.
 
-This patch adds pcsphy node to FManV3 device tree.
-Based on: https://patchwork.ozlabs.org/patch/503921/
----
- .../dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi   |    5 +++++
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi |    5 +++++
- .../dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi   |    5 +++++
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi |    5 +++++
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi  |    5 +++++
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi  |    5 +++++
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi  |    5 +++++
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi  |    5 +++++
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi  |    5 +++++
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi  |    5 +++++
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi |    5 +++++
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi |    5 +++++
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi  |    5 +++++
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi  |    5 +++++
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi  |    5 +++++
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi  |    5 +++++
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi  |    5 +++++
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi  |    5 +++++
- 18 files changed, 90 insertions(+)
+This is commonly done on Android based devices, in order to
+reboot the device into fastboot or recovery mode.
 
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi
-index 2e441fa..e1a961f 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi
-@@ -55,6 +55,7 @@ fman@400000 {
- 		reg = <0xe0000 0x1000>;
- 		fsl,fman-ports = <&fman0_rx_0x08 &fman0_tx_0x28>;
- 		ptp-timer = <&ptp_timer0>;
-+		pcsphy-handle = <&pcsphy0>;
- 	};
- 
- 	mdio@e1000 {
-@@ -62,5 +63,9 @@ fman@400000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe1000 0x1000>;
-+
-+		pcsphy0: ethernet-phy@0 {
-+			reg = <0x0>;
-+		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi
-index 0b8f87f..c288f3c 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi
-@@ -52,6 +52,7 @@ fman@400000 {
- 		compatible = "fsl,fman-memac";
- 		reg = <0xf0000 0x1000>;
- 		fsl,fman-ports = <&fman0_rx_0x10 &fman0_tx_0x30>;
-+		pcsphy-handle = <&pcsphy6>;
- 	};
- 
- 	mdio@f1000 {
-@@ -59,5 +60,9 @@ fman@400000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xf1000 0x1000>;
-+
-+		pcsphy6: ethernet-phy@0 {
-+			reg = <0x0>;
-+		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi
-index ba6f227..94f3e71 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi
-@@ -55,6 +55,7 @@ fman@400000 {
- 		reg = <0xe2000 0x1000>;
- 		fsl,fman-ports = <&fman0_rx_0x09 &fman0_tx_0x29>;
- 		ptp-timer = <&ptp_timer0>;
-+		pcsphy-handle = <&pcsphy1>;
- 	};
- 
- 	mdio@e3000 {
-@@ -62,5 +63,9 @@ fman@400000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe3000 0x1000>;
-+
-+		pcsphy1: ethernet-phy@0 {
-+			reg = <0x0>;
-+		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi
-index 8860038..94a7698 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi
-@@ -52,6 +52,7 @@ fman@400000 {
- 		compatible = "fsl,fman-memac";
- 		reg = <0xf2000 0x1000>;
- 		fsl,fman-ports = <&fman0_rx_0x11 &fman0_tx_0x31>;
-+		pcsphy-handle = <&pcsphy7>;
- 	};
- 
- 	mdio@f3000 {
-@@ -59,5 +60,9 @@ fman@400000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xf3000 0x1000>;
-+
-+		pcsphy7: ethernet-phy@0 {
-+			reg = <0x0>;
-+		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi
-index ace9c13..09ffc2a 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi
-@@ -51,6 +51,7 @@ fman@400000 {
- 		reg = <0xe0000 0x1000>;
- 		fsl,fman-ports = <&fman0_rx_0x08 &fman0_tx_0x28>;
- 		ptp-timer = <&ptp_timer0>;
-+		pcsphy-handle = <&pcsphy0>;
- 	};
- 
- 	mdio@e1000 {
-@@ -58,5 +59,9 @@ fman@400000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe1000 0x1000>;
-+
-+		pcsphy0: pcs-phy@0 {
-+			reg = <0x0>;
-+		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi
-index a4fc286..60c3857 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi
-@@ -51,6 +51,7 @@ fman@400000 {
- 		reg = <0xe2000 0x1000>;
- 		fsl,fman-ports = <&fman0_rx_0x09 &fman0_tx_0x29>;
- 		ptp-timer = <&ptp_timer0>;
-+		pcsphy-handle = <&pcsphy1>;
- 	};
- 
- 	mdio@e3000 {
-@@ -58,5 +59,9 @@ fman@400000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe3000 0x1000>;
-+
-+		pcsphy1: pcs-phy@0 {
-+			reg = <0x0>;
-+		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi
-index 78596fa..f174fab 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi
-@@ -51,6 +51,7 @@ fman@400000 {
- 		reg = <0xe4000 0x1000>;
- 		fsl,fman-ports = <&fman0_rx_0x0a &fman0_tx_0x2a>;
- 		ptp-timer = <&ptp_timer0>;
-+		pcsphy-handle = <&pcsphy2>;
- 	};
- 
- 	mdio@e5000 {
-@@ -58,5 +59,9 @@ fman@400000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe5000 0x1000>;
-+
-+		pcsphy2: pcs-phy@0 {
-+			reg = <0x0>;
-+		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi
-index af93abd..eeea552 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi
-@@ -51,6 +51,7 @@ fman@400000 {
- 		reg = <0xe6000 0x1000>;
- 		fsl,fman-ports = <&fman0_rx_0x0b &fman0_tx_0x2b>;
- 		ptp-timer = <&ptp_timer0>;
-+		pcsphy-handle = <&pcsphy3>;
- 	};
- 
- 	mdio@e7000 {
-@@ -58,5 +59,9 @@ fman@400000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe7000 0x1000>;
-+
-+		pcsphy3: pcs-phy@0 {
-+			reg = <0x0>;
-+		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi
-index 97cffd7..0bf2d16 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi
-@@ -51,6 +51,7 @@ fman@400000 {
- 		reg = <0xe8000 0x1000>;
- 		fsl,fman-ports = <&fman0_rx_0x0c &fman0_tx_0x2c>;
- 		ptp-timer = <&ptp_timer0>;
-+		pcsphy-handle = <&pcsphy4>;
- 	};
- 
- 	mdio@e9000 {
-@@ -58,5 +59,9 @@ fman@400000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe9000 0x1000>;
-+
-+		pcsphy4: pcs-phy@0 {
-+			reg = <0x0>;
-+		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi
-index 232c5c2..fb0cb63 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi
-@@ -51,6 +51,7 @@ fman@400000 {
- 		reg = <0xea000 0x1000>;
- 		fsl,fman-ports = <&fman0_rx_0x0d &fman0_tx_0x2d>;
- 		ptp-timer = <&ptp_timer0>;
-+		pcsphy-handle = <&pcsphy5>;
- 	};
- 
- 	mdio@eb000 {
-@@ -58,5 +59,9 @@ fman@400000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xeb000 0x1000>;
-+
-+		pcsphy5: pcs-phy@0 {
-+			reg = <0x0>;
-+		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi
-index 89d64ee..29304c9 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi
-@@ -52,6 +52,7 @@ fman@500000 {
- 		compatible = "fsl,fman-memac";
- 		reg = <0xf0000 0x1000>;
- 		fsl,fman-ports = <&fman1_rx_0x10 &fman1_tx_0x30>;
-+		pcsphy-handle = <&pcsphy14>;
- 	};
- 
- 	mdio@f1000 {
-@@ -59,5 +60,9 @@ fman@500000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xf1000 0x1000>;
-+
-+		pcsphy14: pcs-phy@0 {
-+			reg = <0x0>;
-+		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi
-index 7fa9260..8222ff3 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi
-@@ -52,6 +52,7 @@ fman@500000 {
- 		compatible = "fsl,fman-memac";
- 		reg = <0xf2000 0x1000>;
- 		fsl,fman-ports = <&fman1_rx_0x11 &fman1_tx_0x31>;
-+		pcsphy-handle = <&pcsphy15>;
- 	};
- 
- 	mdio@f3000 {
-@@ -59,5 +60,9 @@ fman@500000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xf3000 0x1000>;
-+
-+		pcsphy15: pcs-phy@0 {
-+			reg = <0x0>;
-+		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi
-index 3d23666..303b218 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi
-@@ -51,6 +51,7 @@ fman@500000 {
- 		reg = <0xe0000 0x1000>;
- 		fsl,fman-ports = <&fman1_rx_0x08 &fman1_tx_0x28>;
- 		ptp-timer = <&ptp_timer1>;
-+		pcsphy-handle = <&pcsphy8>;
- 	};
- 
- 	mdio@e1000 {
-@@ -58,5 +59,9 @@ fman@500000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe1000 0x1000>;
-+
-+		pcsphy8: pcs-phy@0 {
-+			reg = <0x0>;
-+		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi
-index 97dc2ee..efe4845 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi
-@@ -51,6 +51,7 @@ fman@500000 {
- 		reg = <0xe2000 0x1000>;
- 		fsl,fman-ports = <&fman1_rx_0x09 &fman1_tx_0x29>;
- 		ptp-timer = <&ptp_timer1>;
-+		pcsphy-handle = <&pcsphy9>;
- 	};
- 
- 	mdio@e3000 {
-@@ -58,5 +59,9 @@ fman@500000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe3000 0x1000>;
-+
-+		pcsphy9: pcs-phy@0 {
-+			reg = <0x0>;
-+		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi
-index f084dd2..0a2c337 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi
-@@ -51,6 +51,7 @@ fman@500000 {
- 		reg = <0xe4000 0x1000>;
- 		fsl,fman-ports = <&fman1_rx_0x0a &fman1_tx_0x2a>;
- 		ptp-timer = <&ptp_timer1>;
-+		pcsphy-handle = <&pcsphy10>;
- 	};
- 
- 	mdio@e5000 {
-@@ -58,5 +59,9 @@ fman@500000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe5000 0x1000>;
-+
-+		pcsphy10: pcs-phy@0 {
-+			reg = <0x0>;
-+		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi
-index bb627b3..c86c20b 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi
-@@ -51,6 +51,7 @@ fman@500000 {
- 		reg = <0xe6000 0x1000>;
- 		fsl,fman-ports = <&fman1_rx_0x0b &fman1_tx_0x2b>;
- 		ptp-timer = <&ptp_timer1>;
-+		pcsphy-handle = <&pcsphy11>;
- 	};
- 
- 	mdio@e7000 {
-@@ -58,5 +59,9 @@ fman@500000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe7000 0x1000>;
-+
-+		pcsphy11: pcs-phy@0 {
-+			reg = <0x0>;
-+		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi
-index 821ed12..7114471 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi
-@@ -51,6 +51,7 @@ fman@500000 {
- 		reg = <0xe8000 0x1000>;
- 		fsl,fman-ports = <&fman1_rx_0x0c &fman1_tx_0x2c>;
- 		ptp-timer = <&ptp_timer1>;
-+		pcsphy-handle = <&pcsphy12>;
- 	};
- 
- 	mdio@e9000 {
-@@ -58,5 +59,9 @@ fman@500000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xe9000 0x1000>;
-+
-+		pcsphy12: pcs-phy@0 {
-+			reg = <0x0>;
-+		};
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi
-index e245f1a..d2dabee 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi
-@@ -51,6 +51,7 @@ fman@500000 {
- 		reg = <0xea000 0x1000>;
- 		fsl,fman-ports = <&fman1_rx_0x0d &fman1_tx_0x2d>;
- 		ptp-timer = <&ptp_timer1>;
-+		pcsphy-handle = <&pcsphy13>;
- 	};
- 
- 	mdio@eb000 {
-@@ -58,5 +59,9 @@ fman@500000 {
- 		#size-cells = <0>;
- 		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
- 		reg = <0xeb000 0x1000>;
-+
-+		pcsphy13: pcs-phy@0 {
-+			reg = <0x0>;
-+		};
- 	};
- };
+Before this patch , I have try some hack on[0], and then found
+John Stultz also doing the same work[1].
+
+As John is busy these days, I go on with this work.
+
+[0]https://patchwork.kernel.org/patch/7647751/
+[1]https://patchwork.kernel.org/patch/7802391/
+
+
+Andy Yan (6):
+  dt-bindings: misc: add document for reboot-mode driver
+  dt-bindings: soc: add document for rockchip reboot-mode driver
+  misc: add reboot mode driver
+  soc: rockchip: add reboot mode driver
+  ARM: dts: rockchip: add reboot mode node
+  ARM64: dts: rockchip: add reboot mode node
+
+ .../devicetree/bindings/misc/reboot-mode.txt       | 41 +++++++++
+ .../bindings/soc/rockchip/rockchip,reboot-mode.txt | 39 +++++++++
+ arch/arm/boot/dts/rk3288.dtsi                      | 25 ++++++
+ arch/arm/boot/dts/rk3xxx.dtsi                      | 26 ++++++
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi           | 26 ++++++
+ drivers/misc/Kconfig                               |  7 ++
+ drivers/misc/Makefile                              |  1 +
+ drivers/misc/reboot_mode.c                         | 96 ++++++++++++++++++++++
+ drivers/power/reset/Kconfig                        |  1 -
+ drivers/soc/rockchip/Kconfig                       |  8 ++
+ drivers/soc/rockchip/Makefile                      |  1 +
+ drivers/soc/rockchip/loader.h                      | 22 +++++
+ drivers/soc/rockchip/reboot.c                      | 66 +++++++++++++++
+ include/dt-bindings/soc/rockchip_boot-mode.h       | 30 +++++++
+ include/linux/reboot.h                             |  4 +-
+ 15 files changed, 391 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/misc/reboot-mode.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/rockchip/rockchip,reboot-mode.txt
+ create mode 100644 drivers/misc/reboot_mode.c
+ create mode 100644 drivers/soc/rockchip/loader.h
+ create mode 100644 drivers/soc/rockchip/reboot.c
+ create mode 100644 include/dt-bindings/soc/rockchip_boot-mode.h
+
 -- 
-1.7.9.5
+1.9.1
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
