@@ -1,74 +1,56 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v1 2/2] dt-bindings: sound: add devicetree document for rt5616
-Date: Mon, 21 Dec 2015 22:56:08 +0800
-Message-ID: <1450709768-14898-1-git-send-email-wxt@rock-chips.com>
-References: <1450703894-32623-2-git-send-email-wxt@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450703894-32623-2-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Damien Riegel <damien.riegel@savoirfairelinux.com>
+Subject: Re: [PATCH 1/2] can: sja1000: add documentation for Technologic
+ Systems version
+Date: Mon, 21 Dec 2015 10:09:54 -0500
+Message-ID: <20151221150953.GA6434@localhost>
+References: <1450469845-12900-1-git-send-email-damien.riegel@savoirfairelinux.com>
+ <20151220033742.GA9883@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-can-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151220033742.GA9883@rob-hp-laptop>
+Sender: linux-can-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, kernel@savoirfairelinux.com
 List-Id: devicetree@vger.kernel.org
 
-Add the description for rt5616 codec.
+On Sat, Dec 19, 2015 at 09:37:42PM -0600, Rob Herring wrote:
+> On Fri, Dec 18, 2015 at 03:17:24PM -0500, Damien Riegel wrote:
+> > This commit adds documentation for the Technologic Systems version of
+> > SJA1000. The difference with the NXP version is in the way the registers
+> > are accessed.
+> > 
+> > Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
+> > ---
+> >  Documentation/devicetree/bindings/net/can/sja1000.txt | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/can/sja1000.txt b/Documentation/devicetree/bindings/net/can/sja1000.txt
+> > index b4a6d53..7a158d5 100644
+> > --- a/Documentation/devicetree/bindings/net/can/sja1000.txt
+> > +++ b/Documentation/devicetree/bindings/net/can/sja1000.txt
+> > @@ -2,7 +2,7 @@ Memory mapped SJA1000 CAN controller from NXP (formerly Philips)
+> >  
+> >  Required properties:
+> >  
+> > -- compatible : should be "nxp,sja1000".
+> > +- compatible : should be one of "nxp,sja1000", "technologic,sja1000".
+> >  
+> >  - reg : should specify the chip select, address offset and size required
+> >  	to map the registers of the SJA1000. The size is usually 0x80.
+> > @@ -14,6 +14,7 @@ Optional properties:
+> >  
+> >  - reg-io-width : Specify the size (in bytes) of the IO accesses that
+> >  	should be performed on the device.  Valid value is 1, 2 or 4.
+> > +	Must be set to 2 for technologic version.
+> >  	Default to 1 (8 bits).
+> 
+> Really, this should default to 2 for technologic version and not be 
+> required.
 
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Would something along the line of "This property is <not used|ignored>
+for technologic version." be more appropriate?
 
----
-
-Changes in v1:
-- As Heiko comments, remove the not exist option properties.
-
- Documentation/devicetree/bindings/sound/rt5616.txt | 36 ++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/rt5616.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/rt5616.txt b/Documentation/devicetree/bindings/sound/rt5616.txt
-new file mode 100644
-index 0000000..2030a22
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/rt5616.txt
-@@ -0,0 +1,36 @@
-+RT5616 audio CODEC
-+
-+This device supports I2C only.
-+
-+Required properties:
-+
-+- compatible : "realtek,rt5616".
-+
-+- reg : The I2C address of the device.
-+
-+Pins on the device (for linking into audio routes) for RT5616:
-+
-+  * IN1P
-+  * IN2P
-+  * IN2N
-+  * LOUTL
-+  * LOUTR
-+  * CPN2
-+  * CPP2
-+  * CPN1
-+  * CPP1
-+  * HPO_R
-+  * HPO_L
-+  * ADCDAT1
-+  * DACDAT1
-+  * LRCK1
-+  * BCLK1
-+  * MCLK
-+  * GPIO1
-+
-+Example:
-+
-+rt5616 {
-+	compatible = "realtek,rt5616";
-+	reg = <0x1b>;
-+};
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Damien
