@@ -1,16 +1,15 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH 4/5] ARM: dts: sun5i: Add dts file for
- the Empire Electronix D709 tablet
-Date: Mon, 21 Dec 2015 11:46:18 +0100
-Message-ID: <5677D87A.90805@redhat.com>
-References: <1450611782-9494-1-git-send-email-hdegoede@redhat.com>
- <1450611782-9494-4-git-send-email-hdegoede@redhat.com>
- <CAGb2v65daCCOWf7EXDkNWnxv1idXHXesOp6Et_0h-o+9drdeMA@mail.gmail.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Silvio Pellicano <8001010-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/5] ARM: dts: sunxi: Add backlight node to
+ q8 tablets
+Date: Mon, 21 Dec 2015 02:56:32 -0800 (PST)
+Message-ID: <fc4adcf5-4362-4d4c-b42e-729922c79f65@googlegroups.com>
+References: <1442752251-20744-1-git-send-email-hdegoede@redhat.com>
+Reply-To: 8001010-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBAFR36ZQKGQECM7C75I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGb2v65daCCOWf7EXDkNWnxv1idXHXesOp6Et_0h-o+9drdeMA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Type: multipart/mixed;
+	boundary="----=_Part_4626_1791416691.1450695392835"
+Return-path: <linux-sunxi+bncBDB4XENY4EMRBYNV36ZQKGQEWYFPFAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1442752251-20744-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -18,65 +17,63 @@ Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+------=_Part_4626_1791416691.1450695392835
+Content-Type: multipart/alternative;
+	boundary="----=_Part_4627_1477629616.1450695392835"
 
-On 21-12-15 07:09, Chen-Yu Tsai wrote:
-> Hi,
+------=_Part_4627_1477629616.1450695392835
+Content-Type: text/plain; charset=UTF-8
+
+
+
+> Here is a slightly updated version of Chen-Yu's backlight 
+> patches, also adding support for the backlight found on A13 
+> based q8 tablets. 
 >
-> On Sun, Dec 20, 2015 at 7:43 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> The Empire Electronix D709 tablet is a fairly standard 7" A13 tablet,
->> featuring usb-wifi, a micro-sd slot, micro-usb otg and headphone jack.
->>
->> Empire Electronix is written on the back of the tablet, the D709 model
->> info can be found in the about tablet menu in android.
->>
->> The PCB has no markings to speak of.
->>
->> This dts file does not add support for the ft5x touchscreen found at
->> i2c bus 1, addr 0x38, irq PG11, because it does not work out of the box.
->> It seems it has been flashed with the wrong firmware and needs to have
->> alternative firmware uploaded at boot to make the touchscreen work
->> properly, when hot-booting from android into an upstream kernel the
->> touchscreen does work.
->>
->> The Memsic MXC622X accelerometer at i2c bus 1, addr 0x15 also is not
->> enabled as there is no driver for it.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/Makefile                         |   1 +
->>   .../boot/dts/sun5i-a13-empire-electronix-d709.dts  | 241 +++++++++++++++++++++
->
-> The contents seem the same as sun5i-q8-common.dtsi and sun5i-a13-q8-tablet.dts.
-> Any chance you could use those instead?
 
-Given the special needs of the touchscreen I do not think that that is a good idea.
+If i compile your dtsi with (obviously) pwm  support enable , backlight 
+switch off after kernel start, 
+if i disable pwm in menuconfig,it stay on, all seem correct (pwm on PB2 in 
+original script.bin),
+but there is somewhere a bug in pwm or dtsi description of backlight.
 
-> On the side, any thoughts on how to handle the differences between various "Q8"
-> tablets, like different I2C-based sensors and WiFi chips?
+Silviop
 
-For i2c based sensors the plan is to use devicetree overlays + an in kernel
-overlay manager which probes the i2c bus (checking known touchscreen / accelerometer
-addresses) and then picks the right touchscreen + accelerometer overlays.
+-- 
+You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
 
-Wifi is somewhat more tricky I must admit, esp. since there seem to be q8 a23 based
-tablet variants with usb wifi and others with sdio wifi. Since both busses are
-discoverable I'm tempted to just enable both in devicetree, and let the kernel probe
-and see what is actually there. This assume that the way the wifichip is powered
-is the same on all boards, or at least that it is safe to enable the necessary
-regulators on all boards ...
+------=_Part_4627_1477629616.1450695392835
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-> I'm asking because with Maxime's couple-regulator we should be able to get the
-> RTL8723BS on the Q8 A23/33 v1.5 working.
+<div dir=3D"ltr"><br><blockquote class=3D"gmail_quote" style=3D"margin: 0;m=
+argin-left: 0.8ex;border-left: 1px #ccc solid;padding-left: 1ex;">Here is a=
+ slightly updated version of Chen-Yu&#39;s backlight
+<br>patches, also adding support for the backlight found on A13=20
+<br>based q8 tablets.
+<br></blockquote><div><br>If i compile your dtsi with (obviously) pwm=C2=A0=
+ support enable , backlight switch off after kernel start, <br>if i disable=
+ pwm in menuconfig,it stay on, all seem correct (pwm on PB2 in original scr=
+ipt.bin),<br>but there is somewhere a bug in pwm or dtsi description of bac=
+klight.<br><br>Silviop<br></div></div>
 
-So this means enabled the sdio controller (should be safe on all boards?) and
-enabling 2 regulators to power the wifi-chip. I think it will be safe to do this
-even on boards where those regulators are not used, what do you think ?
+<p></p>
 
-Regards,
+-- <br />
+You received this message because you are subscribed to the Google Groups &=
+quot;linux-sunxi&quot; group.<br />
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
+unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
+For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
+s://groups.google.com/d/optout</a>.<br />
 
-Hans
+------=_Part_4627_1477629616.1450695392835--
+
+------=_Part_4626_1791416691.1450695392835--
