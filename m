@@ -1,76 +1,126 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: I2C eeprom compatibles? (was Re: [PATCH/RFC 03/19] ARM: shmobile:
- gose: add i2c2 bus to device tree)
-Date: Mon, 21 Dec 2015 09:02:56 +0100
-Message-ID: <CAMuHMdUCAs74E5cHH0_YgOm9LFbz2meT6Zo+cj_u4AwyCouHFQ@mail.gmail.com>
-References: <1449802376-11301-1-git-send-email-horms+renesas@verge.net.au>
-	<20151218030239.GB10973@verge.net.au>
-	<20151218073531.GA1517@katana>
-	<1839177.77Qt0RnI3v@wuerfel>
-	<20151218103214.GA1532@katana>
-	<20151221043346.GE14422@verge.net.au>
+From: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: imx7d: cl-som-imx7: add basic module support
+Date: Mon, 21 Dec 2015 10:07:29 +0200
+Message-ID: <5677B341.6040203@compulab.co.il>
+References: <20151208151401.GA20042@rob-hp-laptop>
+ <1449756097-2921-1-git-send-email-grinberg@compulab.co.il>
+ <20151214024315.GC25756@tiger> <56716EA4.2080107@compulab.co.il>
+ <20151221063608.GB4703@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20151221043346.GE14422@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa@sang-engineering.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151221063608.GB4703@tiger>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 21, 2015 at 5:33 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Fri, Dec 18, 2015 at 11:32:15AM +0100, Wolfram Sang wrote:
->> On Fri, Dec 18, 2015 at 10:06:48AM +0100, Arnd Bergmann wrote:
->> > On Friday 18 December 2015 08:35:32 Wolfram Sang wrote:
->> > > >
->> > > > It seems to me that we have some consensus around:
->> > > >
->> > > >       compatible = "renesas,r1ex24002", "24c02";
->> > >
->> > > Thinking again, "generic,24c02" or "generic-24c02" could also be an
->> > > option.
->> > >
->> > > > Should this be added to Documentation/devicetree/bindings/eeprom/eeprom.txt ?
->> > > > Or documented elsewhere?
->> > >
->> > > Probably we need a DT maintainers advice here? I don't mind vendor
->> > > specific compatibles being documented, but I'm reluctant to add all
->> > > these compatibles for the myriads of I2C eeproms to the at24 driver. 99%
->> > > are covered by the generic case.
->> > >
->> > > Adding DT to CC.
->> >
->> > I'd rather use some vendor string in addition to 24c02. Isn't this originally
->> > an Atmel part? In that case, using "atmel,24c02" as the most generic string
->> > would be appropriate,
+Hi Shawn,
+
+On 12/21/15 08:36, Shawn Guo wrote:
+> On Wed, Dec 16, 2015 at 04:01:08PM +0200, Igor Grinberg wrote:
+>> Hi Shawn,
 >>
->> Yeah, the at24 driver is named after Atmel chips AFAIR. Having "atmel,*"
->> as the generic fallback sounds like a good solution to me, too.
+>> On 12/14/15 04:43, Shawn Guo wrote:
+>>> On Thu, Dec 10, 2015 at 04:01:37PM +0200, Igor Grinberg wrote:
+>>>> From: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 >>
->> > and IIRC the i2c framework will just match that with
->> > the "24c02" entry in the i2c_device_id list.
+>> [...]
 >>
->> True, although this behaviour is often complained about. There have been
->> attempts to make i2c/spi behave like the rest of the DT world and to
->> deprecate the current way. It didn't happen because of lots gory details,
->> however :/
->
-> My reading of the above is that we are currently leaning towards:
->
->         compatible = "renesas,r1ex24002", "atmel,24c02";
->
-> And we are unsure what to do about the documentation.
+>>>> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+>>>> index 34c88b0..30b0ba1 100644
+>>>> --- a/Documentation/devicetree/bindings/arm/fsl.txt
+>>>> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
+>>>> @@ -53,6 +53,10 @@ i.MX6 Quad SABRE Automotive Board
+>>>>  Required root node properties:
+>>>>      - compatible = "fsl,imx6q-sabreauto", "fsl,imx6q";
+>>>>  
+>>>> +i.MX7D CL-SOM-iMX7 Board
+>>>> +Required root node properties:
+>>>> +    - compatible = "compulab,cl-som-imx7", "fsl,imx7d";
+>>>> +
+>>>
+>>> This is not a board produced by FSL, so it should be documented in
+>>> fsl.txt.
+>>
+>> You mean _should not_ be documented in fsl.txt, right?
+> 
+> Right.  Sorry.
+> 
+>> Ok, I have no problem with that, we've just used the same approach OMAP
+>> takes - all the OMAP based boards are documented in the same file:
+>> Documentation/devicetree/bindings/arm/omap/omap.txt
+> 
+> omap.txt is probably fine, as it's not ti.txt.
 
-To avoid checkpatch.pl complaining about our DTS patches, "renesas,r1ex24002"
-should be added to Documentation/devicetree/bindings/eeprom/eeprom.txt.
+Have you considered creating a kind of imx.txt?
 
-Gr{oetje,eeting}s,
+> 
+>>
+>> Do you think we should document it in:
+>> Documentation/devicetree/bindings/arm/compulab-boards.txt
+>> (this file should already exist in arm-soc/next/dt)?
+> 
+> Yeah, if the file already exist, it's the best option.  But, as it
+> doesn't exist on my tree, I can not apply this change.
 
-                        Geert
+It is already in linux-next.
+Who do you think should apply the v2 patch then?
+May be the arm-soc guys? (Cc'ed Olof and Arnd)
 
+> 
+>>
+>>>
+>>>>  Generic i.MX boards
+>>>>  -------------------
+>>>>  
+>>>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>>>> index 30bbc37..83ed521 100644
+>>>> --- a/arch/arm/boot/dts/Makefile
+>>>> +++ b/arch/arm/boot/dts/Makefile
+>>>> @@ -350,6 +350,7 @@ dtb-$(CONFIG_SOC_IMX6SX) += \
+>>>>  dtb-$(CONFIG_SOC_IMX6UL) += \
+>>>>  	imx6ul-14x14-evk.dtb
+>>>>  dtb-$(CONFIG_SOC_IMX7D) += \
+>>>> +	imx7d-cl-som-imx7.dtb \
+>>>>  	imx7d-sdb.dtb
+>>>>  dtb-$(CONFIG_SOC_LS1021A) += \
+>>>>  	ls1021a-qds.dtb \
+>>>> diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+>>>> new file mode 100644
+>>>> index 0000000..ba05198
+>>>> --- /dev/null
+>>>> +++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+>>>> @@ -0,0 +1,150 @@
+>>>> +/*
+>>>> + * Support for CompuLab CL-SOM-iMX7 System-on-Module
+>>>> + *
+>>>> + * Copyright (C) 2015 CompuLab Ltd. - http://www.compulab.co.il/
+>>>> + * Author: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+>>>> + *
+>>>> + * This program is free software; you can redistribute it and/or modify it
+>>>> + * under the terms of the GNU General Public License version 2 as published by
+>>>> + * the Free Software Foundation.
+>>>> + */
+>>>
+>>> GPL/X11 dual licence is generally suggested for newly added dts files,
+>>> as it will let non-Linux OS use them.
+>>
+>> I don't remember we've used this one before...
+>> Can you please point to an example?
+> 
+> The following command will give you a plenty of examples.
+> 
+> $ git grep X11 arch/arm/boot/dts
+
+10x!
+
+
+-- 
+Regards,
+Igor.
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
