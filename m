@@ -1,39 +1,51 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: imx7d: cl-som-imx7: add basic module support
-Date: Mon, 21 Dec 2015 21:59:59 +0800
-Message-ID: <20151221135959.GA18858@tiger>
-References: <20151208151401.GA20042@rob-hp-laptop>
- <1449756097-2921-1-git-send-email-grinberg@compulab.co.il>
- <20151214024315.GC25756@tiger>
- <56716EA4.2080107@compulab.co.il>
- <20151221063608.GB4703@tiger>
- <5677B341.6040203@compulab.co.il>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: sound: add devicetree document for rt5616
+Date: Mon, 21 Dec 2015 15:10:57 +0100
+Message-ID: <1511057.C46mHiuCd6@diego>
+References: <1450703894-32623-1-git-send-email-wxt@rock-chips.com> <1450703894-32623-2-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5677B341.6040203-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+In-Reply-To: <1450703894-32623-2-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 21, 2015 at 10:07:29AM +0200, Igor Grinberg wrote:
-> >> Do you think we should document it in:
-> >> Documentation/devicetree/bindings/arm/compulab-boards.txt
-> >> (this file should already exist in arm-soc/next/dt)?
-> > 
-> > Yeah, if the file already exist, it's the best option.  But, as it
-> > doesn't exist on my tree, I can not apply this change.
+Am Montag, 21. Dezember 2015, 21:18:14 schrieb Caesar Wang:
+> Add the description for rt5616 codec.
 > 
-> It is already in linux-next.
-> Who do you think should apply the v2 patch then?
-> May be the arm-soc guys? (Cc'ed Olof and Arnd)
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+> 
+>  Documentation/devicetree/bindings/sound/rt5616.txt | 38
+> ++++++++++++++++++++++ 1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/rt5616.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/rt5616.txt
+> b/Documentation/devicetree/bindings/sound/rt5616.txt new file mode 100644
+> index 0000000..af96207
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/rt5616.txt
+> @@ -0,0 +1,38 @@
+> +RT5616 audio CODEC
+> +
+> +This device supports I2C only.
+> +
+> +Required properties:
+> +
+> +- compatible : "realtek,rt5616".
+> +
+> +- reg : The I2C address of the device.
+> +
+> +Optional properties:
 
-I think you can leave out the change from the patch, so that I can
-apply.  And you send that change separately to arm-soc folks.
+you don't have optional properties, so that headline should probably also not 
+be here.
 
-Shawn
+
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
