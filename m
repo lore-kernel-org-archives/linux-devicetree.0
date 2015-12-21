@@ -1,84 +1,56 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 0/8] Raspberry Pi 2 support.
-Date: Tue, 22 Dec 2015 00:11:32 +0100
-Message-ID: <201512220011.32234.arnd@arndb.de>
-References: <1450310115-22163-1-git-send-email-eric@anholt.net> <20151218100826.GB1145@omega> <20151220221158.GA6416@omega>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH] clk: bcm2835: Add PWM clock support to the device tree
+Date: Mon, 21 Dec 2015 15:57:14 -0800
+Message-ID: <87twnbe4o5.fsf@eliezer.anholt.net>
+References: <1450728779-2599-1-git-send-email-repk@triplefau.lt>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151220221158.GA6416@omega>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Aring <alex.aring@gmail.com>
-Cc: Eric Anholt <eric@anholt.net>, linux-rpi-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Scott Branden <sbranden@broadcom.com>, Marc Zyngier <marc.zyngier@arm.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1450728779-2599-1-git-send-email-repk-lovNVp52yxIDGOk2Oe9MvA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Remi Pommarel <repk-lovNVp52yxIDGOk2Oe9MvA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 20 December 2015, Alexander Aring wrote:
-> On Fri, Dec 18, 2015 at 11:08:26AM +0100, Alexander Aring wrote:
-> > [    0.000000] Memory policy: Data cache writeback
-> > [    0.000000] BUG: mapping for 0x3f201000 at 0xf0201000 out of vmalloc space
+--=-=-=
+Content-Type: text/plain
 
-This is a separate bug, right?
+Remi Pommarel <repk-lovNVp52yxIDGOk2Oe9MvA@public.gmane.org> writes:
 
-> > [    0.000000] ------------[ cut here ]------------
-> > [    0.000000] WARNING: CPU: 0 PID: 0 at arch/arm/kernel/devtree.c:149 arm_dt_init_cpu_maps+0x100/0x1a4()
-> > [    0.000000] DT /cpu 2 nodes greater than max cores 1, capping them
-> > [    0.000000] Modules linked in:
-> > [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.4.0-rc5+ #989
-> > [    0.000000] Hardware name: BCM2835
-> > [    0.000000] [<c0016c4c>] (unwind_backtrace) from [<c0013e58>] (show_stack+0x20/0x24)
-> > [    0.000000] [<c0013e58>] (show_stack) from [<c0247620>] (dump_stack+0x20/0x28)
-> > [    0.000000] [<c0247620>] (dump_stack) from [<c0023a84>] (warn_slowpath_common+0x9c/0xc4)
-> > [    0.000000] [<c0023a84>] (warn_slowpath_common) from [<c0023aec>] (warn_slowpath_fmt+0x40/0x48)
-> > [    0.000000] [<c0023aec>] (warn_slowpath_fmt) from [<c074ef94>] (arm_dt_init_cpu_maps+0x100/0x1a4)
-> > [    0.000000] [<c074ef94>] (arm_dt_init_cpu_maps) from [<c074e60c>] (setup_arch+0x6f4/0x89c)
-> > [    0.000000] [<c074e60c>] (setup_arch) from [<c074b9cc>] (start_kernel+0x74/0x3a4)
-> > [    0.000000] [<c074b9cc>] (start_kernel) from [<00008078>] (0x8078)
-> > [    0.000000] ---[ end trace cb88537fdc8fa200 ]---
-> > [    0.000000] DT missing boot CPU MPIDR[23:0], fall back to default cpu_logical_map
-> > [    0.000000] CPU: All CPU(s) started in SVC mode.
-> 
-> I can remove this WARNING when I enable CONFIG_SMP.
+> Signed-off-by: Remi Pommarel <repk-lovNVp52yxIDGOk2Oe9MvA@public.gmane.org>
+> ---
+>
+> With the upcomming PWM clock patch (see https://lkml.org/lkml/2015/12/6/74)
+> PWM can now be used and can be added in the RPI devicetree.
 
-I think we should try to change this in the code.
+Looks good to me.  I'll try to keep a watch on the clock tree and
+include this (possibly moved to bcm283x.dtsi depending on if 2836 lands
+first) when I have something I can pull from for the BCM2835_CLOCK_PWM
+definition.
 
-> > [    0.000000] Virtual kernel memory layout:
-> > [    0.000000]     vector  : 0xffff0000 - 0xffff1000   (   4 kB)
-> > [    0.000000]     fixmap  : 0xffc00000 - 0xfff00000   (3072 kB)
-> > [    0.000000]     vmalloc : 0xf0800000 - 0xff800000   ( 240 MB)
-> > [    0.000000]     lowmem  : 0xc0000000 - 0xf0000000   ( 768 MB)
-> > [    0.000000]     modules : 0xbf000000 - 0xc0000000   (  16 MB)
-> > [    0.000000]       .text : 0xc0008000 - 0xc074a7cc   (7434 kB)
-> > [    0.000000]       .init : 0xc074b000 - 0xc07b4000   ( 420 kB)
-> > [    0.000000]       .data : 0xc07b4000 - 0xc081e910   ( 427 kB)
-> > [    0.000000]        .bss : 0xc081e910 - 0xc08ca80c   ( 688 kB)
-> > [    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
-> > [    0.000000] NR_IRQS:16 nr_irqs:16 16
-> > [    0.000000] Kernel panic - not syncing: /soc/local_intc: unable to map local interrupt registers
-> > [    0.000000] 
-> > [    0.000000] CPU: 0 PID: 0 Comm: swapper Tainted: G        W       4.4.0-rc5+ #989
-> > [    0.000000] Hardware name: BCM2835
-> > [    0.000000] [<c0016c4c>] (unwind_backtrace) from [<c0013e58>] (show_stack+0x20/0x24)
-> > [    0.000000] [<c0013e58>] (show_stack) from [<c0247620>] (dump_stack+0x20/0x28)
-> > [    0.000000] [<c0247620>] (dump_stack) from [<c00c17c0>] (panic+0x84/0x210)
-> > [    0.000000] [<c00c17c0>] (panic) from [<c0771d5c>] (bcm2836_arm_irqchip_l1_intc_of_init+0x94/0x110)
-> > [    0.000000] [<c0771d5c>] (bcm2836_arm_irqchip_l1_intc_of_init) from [<c0779f04>] (of_irq_init+0x1a0/0x2a8)
-> > [    0.000000] [<c0779f04>] (of_irq_init) from [<c0771af4>] (irqchip_init+0x14/0x1c)
-> > [    0.000000] [<c0771af4>] (irqchip_init) from [<c074d7a8>] (init_IRQ+0x28/0x88)
-> > [    0.000000] [<c074d7a8>] (init_IRQ) from [<c074bb64>] (start_kernel+0x20c/0x3a4)
-> > [    0.000000] [<c074bb64>] (start_kernel) from [<00008078>] (0x8078)
-> > [    0.000000] ---[ end Kernel panic - not syncing: /soc/local_intc: unable to map local interrupt registers
-> > 
-> 
-> But still getting this panic, your patches does not contain some
-> defconfig, so I still try to figure out what I need to enable to get it
-> working. Maybe it is some missing config entry which should be enabled.
-> 
-> But, for me it looks like some devicetree issue, because of_iomem returns
-> NULL, at [0]. Don't know what I am doing wrong.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-That is the most likely cause, yes. You can try replacing it with an ioremap with a
-hardcoded physical address to see if that works.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-	Arnd
+iQIcBAEBCgAGBQJWeJHbAAoJELXWKTbR/J7oB3QP/RBEMFp0SHbJS/1JJQYpTlMA
+w5zkQjuffFmmieNMhdZtmYbsTdXDo3TgtD06jR8wlvYtBrVh2x3AL6GWPn2wqJgG
+w7QqQbPlYnhwOTNap64yO/EOfkc4uvfB9DnyeQdIIxZZwfvM4BlFT4UjTNZH3jnp
+IkiovzSPC5qIbM8Q0v40+UaGo7sXCGaPUxgz1Mr7yy9PZtbnpXAzUW4dB+KOpzYY
+kgPoxFkCsNy6AK+jUTQJHdhHWz3OyF7NqQRvlvNSXpxXWGF9dkLebRCOer0tTH1H
+TFRZYFzVcj0W0YTy/pLYhLUzcZ+YB1pwEiMxjNXYIP+ey+wI4Md3Lnxu1wehVN9S
+InPnZeR0XJ8P742TuSYMeFDTBe764PU/8sIhXX8V/3FpJ6NSdA63imcikXLG82IV
+oLWxYsmTJ4ehk5YCkuL2WvS9r021VyUNUWnB9n0zl15ggDfop09dEkJYp2x55RxI
+k1dOC+GA4EYF3AiN4x2myPj0gi+CnrblmJq/5ZWJ19SvZoikOhQCW7qtv1e09TRM
+R8KcqJHiRXv8ip8CY+BN8yLqCoOXW41S6Pti5ORecmwiGFsmsXNHrpFBWkslEWqI
+078/IjAF4hmyD+qG0HciLDpWGnAkx+ZuiQF3+HywGgTaaZB9m1cBoW2B6uq7t31M
+XSIbrs3R1v5Zm/U+5drc
+=Y+B7
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
