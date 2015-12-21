@@ -1,67 +1,40 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: Fix suspend hang on Tegra124 Chromebooks
-Date: Mon, 21 Dec 2015 09:50:08 +0000
-Message-ID: <5677CB50.7030907@nvidia.com>
-References: <1449570409-30244-1-git-send-email-jonathanh@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449570409-30244-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 7/9] ARM: shmobile: gose dts: Add compatible property to "partitions" node
+Date: Mon, 21 Dec 2015 11:33:51 +0100
+Message-ID: <1450694033-27717-8-git-send-email-geert+renesas@glider.be>
+References: <1450694033-27717-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1450694033-27717-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-kernel-owner@vger.kernel.org
+To: arm@kernel.org, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Alex Smith <alex.smith@imgtec.com>
+Cc: Brian Norris <computersforpeace@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, linux-mips@linux-mips.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Ping?
+As of commit e488ca9f8d4f62c2 ("doc: dt: mtd: partitions: add compatible
+property to "partitions" node"), the "partitions" subnode of an SPI
+FLASH device node must have a compatible property. The partitions are no
+longer detected if it is not present.
 
-On 08/12/15 10:26, Jon Hunter wrote:
-> Enabling CPUFreq support for Tegra124 Chromebooks is causing the Tegra124
-> to hang when resuming from suspend.
-> 
-> When CPUFreq is enabled, the CPU clock is changed from the PLLX clock to
-> the DFLL clock during kernel boot. When resuming from suspend the CPU
-> clock is temporarily changed back to the PLLX clock before switching back
-> to the DFLL. If the DFLL is operating at a much lower frequency than the
-> PLLX when we enter suspend, and so the CPU voltage rail is at a voltage
-> too low for the CPUs to operate at the PLLX frequency, then the device
-> will hang.
-> 
-> Please note that the PLLX is used in the resume sequence to switch the CPU
-> clock from the very slow 32K clock to a faster clock during early resume
-> to speed up the resume sequence before the DFLL is resumed.
-> 
-> Ideally, we should fix this by setting the suspend frequency so that it
-> matches the PLLX frequency, however, that would be a bigger change. For
-> now simply disable CPUFreq support for Tegra124 Chromebooks to avoid the
-> hang when resuming from suspend.
-> 
-> Fixes: 9a0baee960a7 ("ARM: tegra: Enable CPUFreq support for Tegra124
-> 		      Chromebooks")
-> 
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> 
-> Please note that this fix is required for v4.4
-> 
->  arch/arm/boot/dts/tegra124-nyan.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/tegra124-nyan.dtsi b/arch/arm/boot/dts/tegra124-nyan.dtsi
-> index 40c23a0b7cfc..ec1aa64ded68 100644
-> --- a/arch/arm/boot/dts/tegra124-nyan.dtsi
-> +++ b/arch/arm/boot/dts/tegra124-nyan.dtsi
-> @@ -399,7 +399,7 @@
->  
->  	/* CPU DFLL clock */
->  	clock@0,70110000 {
-> -		status = "okay";
-> +		status = "disabled";
->  		vdd-cpu-supply = <&vdd_cpu>;
->  		nvidia,i2c-fs-rate = <400000>;
->  	};
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Brian Norris <computersforpeace@gmail.com>
+---
+v2:
+  - Add Acked-by.
+---
+ arch/arm/boot/dts/r8a7793-gose.dts | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
+index 077ab9423f5e17d6..3d4bd3c02c4fece0 100644
+--- a/arch/arm/boot/dts/r8a7793-gose.dts
++++ b/arch/arm/boot/dts/r8a7793-gose.dts
+@@ -128,6 +128,7 @@
+ 		m25p,fast-read;
+ 
+ 		partitions {
++			compatible = "fixed-partitions";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 
+-- 
+1.9.1
