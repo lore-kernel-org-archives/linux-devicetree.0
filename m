@@ -1,26 +1,33 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 1/1] platform: goldfish: pipe: add devicetree bindings
-Date: Mon, 21 Dec 2015 13:35:14 -0800
-Message-ID: <20151221213514.GA17128@kroah.com>
-References: <1448481582-16991-1-git-send-email-jinqian@android.com>
+From: Okaya@codeaurora.org
+Subject: Re: [PATCH V10 2/7] dma: hidma: Add Device Tree support
+Date: Mon, 21 Dec 2015 22:01:35 -0000
+Message-ID: <59ccbbe291408823915df4ba151b3bc8.squirrel@www.codeaurora.org>
+References: <1450371684-23415-1-git-send-email-okaya@codeaurora.org>
+    <1450371684-23415-3-git-send-email-okaya@codeaurora.org>
+    <20151219041721.GC14936@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1448481582-16991-1-git-send-email-jinqian@android.com>
+In-Reply-To: <20151219041721.GC14936@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jin Qian <jinqian@android.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Hackmann <ghackmann@google.com>, Christoffer Dall <christoffer.dall@linaro.org>, Joe Perches <joe@perches.com>, Dan Carpenter <dan.carpenter@oracle.com>, Peter Senna Tschudin <peter.senna@gmail.com>, Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Sinan Kaya <okaya@codeaurora.org>, dmaengine@vger.kernel.org, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 25, 2015 at 11:59:37AM -0800, Jin Qian wrote:
-> From: Greg Hackmann <ghackmann@google.com>
-> 
-> Signed-off-by: Greg Hackmann <ghackmann@google.com>
-> (cherry picked from commit 3c56d07eb796066530e93a40e74dea3bc59bf4cf)
+> On Thu, Dec 17, 2015 at 12:01:17PM -0500, Sinan Kaya wrote:
+>> Add documentation for the Qualcomm Technologies HIDMA driver.
+>>
+>> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    | 79
+>> ++++++++++++++++++++++
+>>  1 file changed, 79 insertions(+)
+>>  create mode 100644
+>> Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+>
+>
 
-What is this commit id here for?
-
-confused,
-
-greg k-h
+Ty.
