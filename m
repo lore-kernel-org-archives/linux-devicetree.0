@@ -1,7 +1,7 @@
 From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH v2] ARM: dts: imx7d: cl-som-imx7: add basic module support
-Date: Mon, 21 Dec 2015 21:54:13 +0800
-Message-ID: <20151221135413.GE18410@tiger>
+Date: Mon, 21 Dec 2015 21:59:59 +0800
+Message-ID: <20151221135959.GA18858@tiger>
 References: <20151208151401.GA20042@rob-hp-laptop>
  <1449756097-2921-1-git-send-email-grinberg@compulab.co.il>
  <20151214024315.GC25756@tiger>
@@ -30,8 +30,8 @@ On Mon, Dec 21, 2015 at 10:07:29AM +0200, Igor Grinberg wrote:
 > Who do you think should apply the v2 patch then?
 > May be the arm-soc guys? (Cc'ed Olof and Arnd)
 
-I think the best approach here is you leave the change out from the
-patch, and send that change to arm-soc folks.
+I think you can leave out the change from the patch, so that I can
+apply.  And you send that change separately to arm-soc folks.
 
 Shawn
 --
