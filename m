@@ -1,46 +1,48 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH 0/5] ARM: dts: sunxi: Add backlight node
- to q8 tablets
-Date: Mon, 21 Dec 2015 13:59:59 +0100
-Message-ID: <5677F7CF.3050308@redhat.com>
-References: <1442752251-20744-1-git-send-email-hdegoede@redhat.com>
- <fc4adcf5-4362-4d4c-b42e-729922c79f65@googlegroups.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBVXP36ZQKGQEMY6GWDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <fc4adcf5-4362-4d4c-b42e-729922c79f65-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Silvio Pellicano <8001010-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [PATCH 1/2] ASoC: rt5616: add an of_match table
+Date: Mon, 21 Dec 2015 21:18:13 +0800
+Message-ID: <1450703894-32623-1-git-send-email-wxt@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, broonie@kernel.org
+Cc: devicetree@vger.kernel.org, wxt@rock-chips.com, linux-kernel@vger.kernel.org, bardliao@realtek.com, alsa-devel@alsa-project.org, heiko@sntech.de
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add a device tree match table. This serves to make the driver's support
+of device tree more explicit.
 
-On 21-12-15 11:56, Silvio Pellicano wrote:
->
->
->> Here is a slightly updated version of Chen-Yu's backlight
->> patches, also adding support for the backlight found on A13
->> based q8 tablets.
->>
->
-> If i compile your dtsi with (obviously) pwm  support enable , backlight
-> switch off after kernel start,
-> if i disable pwm in menuconfig,it stay on, all seem correct (pwm on PB2 in
-> original script.bin),
-> but there is somewhere a bug in pwm or dtsi description of backlight.
+Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+---
 
-No there is not, if you enable the pwm driver you must also enable
-the backlight-pwm driver / add CONFIG_BACKLIGHT_PWM=y to your .config
-(and make sure it stays that way after a "make oldconfig").
+ sound/soc/codecs/rt5616.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Regards,
-
-Hans
+diff --git a/sound/soc/codecs/rt5616.c b/sound/soc/codecs/rt5616.c
+index f4005cb..e01a32d 100644
+--- a/sound/soc/codecs/rt5616.c
++++ b/sound/soc/codecs/rt5616.c
+@@ -1287,6 +1287,14 @@ static const struct i2c_device_id rt5616_i2c_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, rt5616_i2c_id);
+ 
++#if defined(CONFIG_OF)
++static const struct of_device_id rt5616_of_match[] = {
++	{ .compatible = "realtek,rt5616", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, rt5616_of_match);
++#endif
++
+ static int rt5616_i2c_probe(struct i2c_client *i2c,
+ 		    const struct i2c_device_id *id)
+ {
+@@ -1359,6 +1367,7 @@ static void rt5616_i2c_shutdown(struct i2c_client *client)
+ static struct i2c_driver rt5616_i2c_driver = {
+ 	.driver = {
+ 		.name = "rt5616",
++		.of_match_table = of_match_ptr(rt5616_of_match),
+ 	},
+ 	.probe = rt5616_i2c_probe,
+ 	.remove = rt5616_i2c_remove,
+-- 
+1.9.1
