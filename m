@@ -1,86 +1,52 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 0/9] ARM: dts: Add compatible property to "partitions" node
-Date: Mon, 21 Dec 2015 11:33:44 +0100
-Message-ID: <1450694033-27717-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-mips-bounce@linux-mips.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Subject: [PATCH v2 3/9] ARM: shmobile: bockw dts: Add compatible property to
+ "partitions" node
+Date: Mon, 21 Dec 2015 11:33:47 +0100
+Message-ID: <1450694033-27717-4-git-send-email-geert+renesas@glider.be>
+References: <1450694033-27717-1-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1450694033-27717-1-git-send-email-geert+renesas@glider.be>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: arm@kernel.org, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Alex Smith <alex.smith@imgtec.com>
-Cc: Brian Norris <computersforpeace@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, linux-mips@linux-mips.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-mips@linux-mips.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-	Hi,
-
 As of commit e488ca9f8d4f62c2 ("doc: dt: mtd: partitions: add compatible
-property to "partitions" node"), which is in v4.4-rc6, the "partitions"
-subnode of an SPI FLASH device node must have a compatible property. The
-partitions are no longer detected if it is not present.
+property to "partitions" node"), the "partitions" subnode of an SPI
+FLASH device node must have a compatible property. The partitions are no
+longer detected if it is not present.
 
-However, several DTSes in -next have already been converted to the
-"partitions" subnode without "compatible" property, introduced by
-commits 5cfdedb7b9a0fe38 ("mtd: ofpart: move ofpart partitions to a
-dedicated dt node") and fe2585e9c29a650a ("doc: dt: mtd: support
-partitions in a special 'partitions' subnode"). Hence all of these are
-now broken in -next, and will be broken in upstream during the merge
-window.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Brian Norris <computersforpeace@gmail.com>
+---
+v2:
+  - Add Acked-by.
+---
+ arch/arm/boot/dts/r8a7778-bockw.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-This series fixes all users in next-20151221.
-Tested on r8a7791/koelsch.
-
-Changes since v1:
-  - Add Acked-by,
-  - Fix new users in -next (kirkwood, ci20).
-
-Most of these are in arm-soc/for-next. Exceptions are kirkwood (in
-mvebu/for-next), and ci20 (in mips/mips-for-linux-next).
-
-Given we're late in the v4.4-rc cycle, perhaps it's easiest if the
-arm-soc maintainers take all applicable patches directly, bypassing the
-mvebu and shmobile maintainers?
-
-Thanks for queuing for v4.5!
-
-Geert Uytterhoeven (9):
-  ARM: mvebu: ix4-300d: Add compatible property to "partitions" node
-  ARM: mvebu: kirkwood: Add compatible property to "partitions" node
-  ARM: shmobile: bockw dts: Add compatible property to "partitions" node
-  ARM: shmobile: lager dts: Add compatible property to "partitions" node
-  ARM: shmobile: koelsch dts: Add compatible property to "partitions"
-    node
-  ARM: shmobile: porter dts: Add compatible property to "partitions"
-    node
-  ARM: shmobile: gose dts: Add compatible property to "partitions" node
-  ARM: shmobile: silk dts: Add compatible property to "partitions" node
-  MIPS: dts: jz4780/ci20: Add compatible property to "partitions" node
-
- arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts  | 1 +
- arch/arm/boot/dts/kirkwood-pogoplug-series-4.dts | 1 +
- arch/arm/boot/dts/r8a7778-bockw.dts              | 1 +
- arch/arm/boot/dts/r8a7790-lager.dts              | 1 +
- arch/arm/boot/dts/r8a7791-koelsch.dts            | 1 +
- arch/arm/boot/dts/r8a7791-porter.dts             | 1 +
- arch/arm/boot/dts/r8a7793-gose.dts               | 1 +
- arch/arm/boot/dts/r8a7794-silk.dts               | 1 +
- arch/mips/boot/dts/ingenic/ci20.dts              | 1 +
- 9 files changed, 9 insertions(+)
-
+diff --git a/arch/arm/boot/dts/r8a7778-bockw.dts b/arch/arm/boot/dts/r8a7778-bockw.dts
+index 482228b8a984656e..06ceefe3cb500dc7 100644
+--- a/arch/arm/boot/dts/r8a7778-bockw.dts
++++ b/arch/arm/boot/dts/r8a7778-bockw.dts
+@@ -212,6 +212,7 @@
+ 		m25p,fast-read;
+ 
+ 		partitions {
++			compatible = "fixed-partitions";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 
 -- 
 1.9.1
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
