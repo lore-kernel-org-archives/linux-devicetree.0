@@ -1,57 +1,58 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: imx: select HAVE_ARM_ARCH_TIMER if selected
- i.MX7D
-Date: Mon, 21 Dec 2015 14:48:38 +0800
-Message-ID: <20151221064614.GE4703@tiger>
-References: <1449789132-18976-1-git-send-email-Frank.Li@freescale.com>
- <1449789132-18976-2-git-send-email-Frank.Li@freescale.com>
+From: Mark yao <mark.yao@rock-chips.com>
+Subject: Re: [RFC PATCH v1 0/2] Introduce Innosilicon HDMI driver on Rockchip
+ platforms
+Date: Mon, 21 Dec 2015 15:25:58 +0800
+Message-ID: <5677A986.10103@rock-chips.com>
+References: <1447227952-4787-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1449789132-18976-2-git-send-email-Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1447227952-4787-1-git-send-email-ykk@rock-chips.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Yakir Yang <ykk@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ben Chan <benchan@google.com>, Ken Mixte <kmixter@google.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Zheng Yang <zhengyang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 11, 2015 at 07:12:11AM +0800, Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
-> From: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> i.MX7D Supported ARCH Timer.
-> 
-> Signed-off-by: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  arch/arm/mach-imx/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-> index 0ac180f..061dea4 100644
-> --- a/arch/arm/mach-imx/Kconfig
-> +++ b/arch/arm/mach-imx/Kconfig
-> @@ -563,6 +563,7 @@ config SOC_IMX7D
->  	select ARM_GIC
->  	select HAVE_IMX_ANATOP
->  	select HAVE_IMX_MMDC
-> +	select HAVE_ARM_ARCH_TIMER
-
-Please sort these selections alphabetically.
-
-Shawn
-
->  	help
->  		This enables support for Freescale i.MX7 Dual processor.
->  
-> -- 
-> 2.5.2
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgWWFraXIKICAgICBJIHdhbnQgdG8gY29udmVydCBkcm0vcm9ja2NoaXAgdG8gc3VwcG9ydCBh
+dG9taWMgYXBpLAogICAgIEknZCBsaWtlIHlvdSBjYW4gZG8gc29tZSBtb2RpZnkgdG8gYWRhcHQg
+aXQuCgotIE1hcmsKCk9uIDIwMTXlubQxMeaciDEx5pelIDE1OjQ1LCBZYWtpciBZYW5nIHdyb3Rl
+Ogo+IEhpIGd1eXM6Cj4KPiBIZXJlIGFyZSBhIGJyaWVmIGludHJvZHVjdGlvbiB0byBJbm5vc2ls
+aWNvbiBIRE1JIElQOgo+ICAgLSBTdXBwb3J0IEhETUkgMS40YSwgSERDUCAxLjIgYW5kIERWSSAx
+LjAgc3RhbmRhcmQgY29tcGxpYW50IHRyYW5zbWl0dGVyCj4gICAtIFN1cHBvcnQgSERNSTEuNCBh
+L2IgM0QgZnVuY3Rpb24gZGVmaW5lZCBpbiBIRE1JIDEuNCBhL2Igc3BlYwo+ICAgLSBEaWdpdGFs
+IHZpZGVvIGludGVyZmFjZSBzdXBwb3J0cyBhIHBpeGVsIHNpemUgb2YgMjQsIDMwLCAzNiwgNDhi
+aXRzIGNvbG9yCj4gICAgIGRlcHRoIGluIFJHQgo+ICAgLSBTL1BESUYgb3V0cHV0IHN1cHBvcnRz
+IFBDTSwgRG9sYnkgRGlnaXRhbCwgRFRTIGRpZ2l0YWwgYXVkaW8gdHJhbnNtaXNzaW9uCj4gICAg
+ICgzMi0xOTJrSHogRnMpIHVzaW5nIElFQzYwOTU4IGFuZCBJRUMgNjE5MzcKPiAgIC0gVGhlIEVE
+SUQgYW5kIENFQyBmdW5jdGlvbiBhcmUgYWxzbyBzdXBwb3J0ZWQgYnkgSW5ub3NpbGljb24gSERN
+SSBUcmFuc21pdHRlcgo+ICAgICBDb250cm9sbGUKPgo+IFRoaXMgSVAgaGF2ZSBiZWVuIGludGVn
+cmF0ZWQgb24gc29tZSBSb2NrY2hpcCBDUFVzIChsaWtlIFJLMzAzNi9SSzMxMngpLCBkdWUKPiB0
+byB0aG9zZSBDUFVzIGhhdmVuJ3QgYmVlbiBsYW5kZWQgb24gbWFubGluZSBrZXJuZWwsIHNvIEkg
+Y3JlYXQgYSBicmFuY2ggdG8KPiB2ZXJpZnkgdGhpcyBzZXJpZXMgW2h0dHBzOi8vZ2l0aHViLmNv
+bS9yb2NrY2hpcC1saW51eC9rZXJuZWxdLgo+Cj4gLSBZYWtpcgo+Cj4KPiBZYWtpciBZYW5nICgy
+KToKPiAgICBkcm06IHJvY2tjaGlwL2hkbWk6IGFkZCBJbm5vc2lsaWNvbiBIRE1JIHN1cHBvcnQK
+PiAgICBkdC1iaW5kaW5nczogYWRkIGRvY3VtZW50IGZvciBJbm5vc2lsaWNvbiBIRE1JIG9uIFJv
+Y2tjaGlwIHBsYXRmb3JtCj4KPiAgIC4uLi9kaXNwbGF5L3JvY2tjaGlwL2lubm9faGRtaS1yb2Nr
+Y2hpcC50eHQgICAgICAgIHwgICA1MCArCj4gICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvS2Nv
+bmZpZyAgICAgICAgICAgICAgICAgICB8ICAgIDggKwo+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tj
+aGlwL01ha2VmaWxlICAgICAgICAgICAgICAgICAgfCAgICAxICsKPiAgIGRyaXZlcnMvZ3B1L2Ry
+bS9yb2NrY2hpcC9pbm5vX2hkbWkuYyAgICAgICAgICAgICAgIHwgMTAwOCArKysrKysrKysrKysr
+KysrKysrKwo+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2lubm9faGRtaS5oICAgICAgICAg
+ICAgICAgfCAgMzY0ICsrKysrKysKPiAgIDUgZmlsZXMgY2hhbmdlZCwgMTQzMSBpbnNlcnRpb25z
+KCspCj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvcm9ja2NoaXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dAo+ICAgY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9pbm5vX2hkbWkuYwo+ICAgY3JlYXRl
+IG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9pbm5vX2hkbWkuaAo+CgoKLS0g
+Cu+8rWFyayBZYW8KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
