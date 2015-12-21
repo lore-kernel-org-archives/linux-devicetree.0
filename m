@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 7/9] ARM: shmobile: gose dts: Add compatible property to "partitions" node
-Date: Mon, 21 Dec 2015 11:33:51 +0100
-Message-ID: <1450694033-27717-8-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v2 5/9] ARM: shmobile: koelsch dts: Add compatible property to "partitions" node
+Date: Mon, 21 Dec 2015 11:33:49 +0100
+Message-ID: <1450694033-27717-6-git-send-email-geert+renesas@glider.be>
 References: <1450694033-27717-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1450694033-27717-1-git-send-email-geert+renesas@glider.be>
@@ -21,14 +21,14 @@ Acked-by: Brian Norris <computersforpeace@gmail.com>
 v2:
   - Add Acked-by.
 ---
- arch/arm/boot/dts/r8a7793-gose.dts | 1 +
+ arch/arm/boot/dts/r8a7791-koelsch.dts | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/r8a7793-gose.dts b/arch/arm/boot/dts/r8a7793-gose.dts
-index 077ab9423f5e17d6..3d4bd3c02c4fece0 100644
---- a/arch/arm/boot/dts/r8a7793-gose.dts
-+++ b/arch/arm/boot/dts/r8a7793-gose.dts
-@@ -128,6 +128,7 @@
+diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
+index d949853a48edc956..9ff5d2b29788dfc1 100644
+--- a/arch/arm/boot/dts/r8a7791-koelsch.dts
++++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
+@@ -500,6 +500,7 @@
  		m25p,fast-read;
  
  		partitions {
