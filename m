@@ -1,71 +1,54 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] arm: imx7d: correct chip version information
-Date: Mon, 21 Dec 2015 19:48:23 +0800
-Message-ID: <20151221114823.GH4703@tiger>
-References: <1450129582-4261-1-git-send-email-Frank.Li@freescale.com>
+From: Martin Sperl <kernel@martin.sperl.org>
+Subject: Re: [PATCH 4/4] ARM: bcm2835: Switch to using the new clock driver
+ support.
+Date: Mon, 21 Dec 2015 12:51:27 +0100
+Message-ID: <5677E7BF.3020404@martin.sperl.org>
+References: <1441562263-19888-1-git-send-email-eric@anholt.net>
+ <1441562263-19888-5-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1450129582-4261-1-git-send-email-Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1441562263-19888-5-git-send-email-eric@anholt.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>, linux-clk@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 14, 2015 at 03:46:22PM -0600, Frank Li wrote:
-> show correct soc version infomation.
+On 06.09.2015 19:57, Eric Anholt wrote:
+>   
+> +		clocks: cprman@7e101000 {
+> +			compatible = "brcm,bcm2835-cprman";
+> +			#clock-cells = <1>;
+> +			reg = <0x7e101000 0x2000>;
+> +
+> +			/* CPRMAN derives everything from the platform's
+> +			 * oscillator.
+> +			 */
+> +			clocks = <&clk_osc>;
+> +		};
+> +
+>
+This actually breaks i2s because of an overlap in registers:
+[   12.734352] bcm2835-i2s 20203000.i2s: can't request region for 
+resource [mem 0x20101098-0x2010109f]
+[   12.826571] bcm2835-i2s: probe of 20203000.i2s failed with error -16
 
-s/infomation/information
+here the corresponding section for i2s in /arch/arm/boot/dts/bcm2835.dtsi:
+                 i2s: i2s@7e203000 {
+                         compatible = "brcm,bcm2835-i2s";
+                         reg = <0x7e203000 0x20>,
+                               <0x7e101098 0x02>;
 
-I feel you should write your commit log and comments a bit more
-seriously.  The commit log above is not even a sentence.
+                         dmas = <&dma 2>,
+                                <&dma 3>;
+                         dma-names = "tx", "rx";
+                         status = "disabled";
+                 };
 
-For arch/arm/ patches sent to me, please use "ARM" rather than "arm" as
-subject prefix.
+Note that actually the PCM/I2S reg-range should be (off by 4):
+     reg = <0x7e203000 0x24>;
+(see also: https://github.com/raspberrypi/linux/pull/1079)
 
-> 
-> Signed-off-by: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  arch/arm/mach-imx/anatop.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/mach-imx/anatop.c b/arch/arm/mach-imx/anatop.c
-> index 231bb25..23a4fc1 100644
-> --- a/arch/arm/mach-imx/anatop.c
-> +++ b/arch/arm/mach-imx/anatop.c
-> @@ -151,7 +151,14 @@ void __init imx_init_revision_from_anatop(void)
->  		revision = IMX_CHIP_REVISION_1_5;
->  		break;
->  	default:
-> -		revision = IMX_CHIP_REVISION_UNKNOWN;
-> +		/*
-> +		 * Fail back to return raw register value instead of 0xff.
-> +		 * It will be easy know version information in SOC if it
-> +		 * can't recongized by known version. And some chip like
-> +		 * i.MX7D soc digprog value match linux version format,
-> +		 * needn't map again and direct use register value.
-> +		 */
-
-There are quite a few grammar issues in this piece of comment.  Please
-fix them.
-
-> +		revision = digprog & 0xff;
-
-I'm fine with it.  But we should be clear about that with this change,
-the "unknown revision" message in imx_print_silicon_rev() will never work
-then for digprog.
-
-Shawn
-
->  	}
->  
->  	mxc_set_cpu_type(digprog >> 16 & 0xff);
-> -- 
-> 2.5.2
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ciao,
+             Martin
