@@ -1,114 +1,90 @@
 From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] USB: add generic onboard USB HUB driver
-Date: Mon, 21 Dec 2015 16:44:10 +0800
-Message-ID: <CAL411-o5nEcjKA+AePX7ka+i5Mn62FeY3ZU9NLr4XdJpNTyQmg@mail.gmail.com>
-References: <1450077974-22762-1-git-send-email-peter.chen@freescale.com>
- <CAOMZO5CfBKuJ584jwbg98s9tn+0Z7W0nOaZnUkm4cJUSvNGTZw@mail.gmail.com>
- <20151215062821.GA11241@shlinux2> <CAOMZO5DiRzfy5dULh0C7qU2KUM-i8fBh6W5rS9zOTHJJK6fqwg@mail.gmail.com>
- <20151216041058.GC23482@shlinux2> <CAOMZO5An3CK-a3NQtOF3nnPc8vzu2+SKnfJ=iOuAhjCBvZwToQ@mail.gmail.com>
- <5671C40F.3000000@maciej.szmigiero.name> <20151217065756.GB3793@shlinux2> <56749B58.4040306@maciej.szmigiero.name>
+Subject: Re: [RFC PATCH 2/5] doc: dt-binding: generic onboard USB device
+Date: Mon, 21 Dec 2015 16:52:33 +0800
+Message-ID: <CAL411-ruqmx3qytz_Oxh6zQZZriy0Uw5+qpgpLvE4XAqwFc==Q@mail.gmail.com>
+References: <1450431239-16439-1-git-send-email-peter.chen@freescale.com>
+ <1450431239-16439-3-git-send-email-peter.chen@freescale.com> <20151219041552.GA14247@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56749B58.4040306-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
+In-Reply-To: <20151219041552.GA14247@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
-Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Patryk Kowalczyk <patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 19, 2015 at 7:48 AM, Maciej S. Szmigiero
-<mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org> wrote:
-> On 17.12.2015 07:57, Peter Chen wrote:
->> On Wed, Dec 16, 2015 at 09:05:35PM +0100, Maciej S. Szmigiero wrote:
->>> Hi Fabio,
->>> Hi Peter,
->>>
->>> On 16.12.2015 11:11, Fabio Estevam wrote:
->>>> Hi Peter,
->>>>
->>>> On Wed, Dec 16, 2015 at 2:11 AM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
->>>>
->>>>> Thanks, Fabio, but I am curious how things like that? The USBOH3 clock
->>>>> is not opened, the usb driver will hang when it tries to access
->>>>> registers. If this clock is always on, then, why the system will
->>>>> hang later?
->>>>
->>>> I found the issue with your patch. You missed to add the pinctrl node.
->>>>
->>>> With the change below USB is functional in Udoo:
->>>>
->>>> --- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
->>>> +++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
->>>> @@ -22,6 +22,8 @@
->>>>
->>>>         usb_hub1 {
->>>>                 compatible = "generic-onboard-hub";
->>>> +               pinctrl-names = "default";
->>>> +               pinctrl-0 = <&pinctrl_usbh>;
->>>>                 clocks = <&clks IMX6QDL_CLK_CKO>;
->>>>                 reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
->>>>                 reset-duration-us = <2>;
->>>>
->>>
->>> Thanks for your work, I didn't notice it previously (sorry).
->>>
->>> I can confirm, too that with Peter's patches and the above change
->>> the USB support works again on my UDOO DualLite board.
->>>
->>> However, I noticed that when you have host USB support configured to be
->>> build as modules then (due to its location under "if USB") it is only
->>> possible to compile generic onboard USB HUB as module, too.
->>>
->>> Then this module would need to be loaded before loading USB support
->>> (or quickly after it), otherwise USB enumeration would time out after
->>> few secs and loading it later wouldn't help.
->>
->> Thanks for testing it, it maybe this hardware limitation.
->> The USB device should be back to work whenever do hardware reset,
->> otherwise, this reset is not clean.
+On Sat, Dec 19, 2015 at 12:15 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Dec 18, 2015 at 05:33:56PM +0800, Peter Chen wrote:
+>> Add dt-binding documentation for generic onboard USB device.
 >
-> I looked deeper into it and looks like the reset GPIO have to be
-> explicitly configured as output and also the reset pulse duration
-> have to be longer in order for hub the successfully reset and reattach
-> to USB host (at least on the one UDOO board that I have).
+> As has already been mentioned, please following the existing USB device
+> binding convention. We can debate whether the kernel driver is tied into
+> existing USB drivers or separate platform drivers, but the binding needs
+> to reflect the h/w.
 >
-> The shortest working time seems to be 3000us - 2000us didn't work even
-> when I changed GPIO pin mode to fast and drive strength to maximum.
+> Rob
 >
-> Summing up, this change allows me to load generic_onboard_hub driver
-> in any order with respect to USB host modules:
-> --- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-> @@ -26,7 +26,7 @@
->                 pinctrl-0 = <&pinctrl_usbh>;
->                 clocks = <&clks IMX6QDL_CLK_CKO>;
->                 reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
-> -               reset-duration-us = <2>;
-> +               reset-duration-us = <3000>;
->         };
->  };
->
-> --- a/drivers/usb/misc/generic_onboard_hub.c
-> +++ b/drivers/usb/misc/generic_onboard_hub.c
-> @@ -89,7 +89,7 @@ static int usb_hub_generic_probe(struct platform_device *pdev)
->         of_property_read_u32(node, "reset-duration-us", &duration_us);
->
->         if (gpiod_reset) {
-> -               gpiod_set_value(gpiod_reset, 1);
-> +               gpiod_direction_output(gpiod_reset, 1);
->                 usleep_range(duration_us, duration_us + 10);
->                 gpiod_set_value(gpiod_reset, 0);
->         }
->
->
-> Best regards,
-> Maciej Szmigiero
->
-> --
 
-Thanks, I will change the duration next time, and at my RFC version
-(you are CCed), I have already
-fixed problem that without setting output.
+There is no USB device binding currently, would you mean this:
+http://playground.sun.com/1275/bindings/usb/usb-1_0.ps
+
+In fact, we hardly describe USB device at dts. No matter device address,
+Device class, or compatible string, neither can work, since we know nothing
+before enumeration, and there are maybe two or more usb devices at the USB bus,
+only possible is {pid, vid}, but there are may be two same devices on the bus.
+
+>>
+>> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>> ---
+>>  .../bindings/usb/generic-onboard-device.txt        | 31 ++++++++++++++++++++++
+>>  1 file changed, 31 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/usb/generic-onboard-device.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/generic-onboard-device.txt b/Documentation/devicetree/bindings/usb/generic-onboard-device.txt
+>> new file mode 100644
+>> index 0000000..cdb3014
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/generic-onboard-device.txt
+>> @@ -0,0 +1,31 @@
+>> +Generic Onboard USB Device
+>> +
+>> +The node should be located at USB host controller's node or
+>> +any USB HUB's node.
+>> +
+>> +Required properties:
+>> +- compatible: should be "generic-onboard-device"
+>> +
+>> +Optional properties:
+>> +- clocks: the input clock for USB device.
+>> +- clock-frequency: the frequency for device's clock.
+>> +- reset-gpios: Should specify the GPIO for reset.
+>> +- reset-duration-us: the duration for assert reset signal, the time unit
+>> +  is microsecond.
+>> +
+>> +Example:
+>> +
+>> +&usbh1 {
+>> +     vbus-supply = <&reg_usb_h1_vbus>;
+>> +        status = "okay";
+>> +
+>> +     #address-cells = <1>;
+>> +     #size-cells = <0>;
+>> +     hub: usb2415@01 {
+>> +            compatible = "generic-onboard-device";
+>> +            reg = <0x01>;
+>> +            clocks = <&clks IMX6QDL_CLK_CKO>;
+>> +            reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+>> +            reset-duration-us = <10>;
+>> +     };
+>> +};
+>> --
+>> 1.9.1
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
 
 
 -- 
