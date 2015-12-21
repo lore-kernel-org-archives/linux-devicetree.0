@@ -1,37 +1,207 @@
-From: Martin Sperl <kernel@martin.sperl.org>
-Subject: Re: [PATCH 4/4] ARM: bcm2835: Switch to using the new clock driver support.
-Date: Mon, 21 Dec 2015 19:32:40 +0100
-Message-ID: <1C11D489-8708-4937-A1CD-338DDEFF7AAD@martin.sperl.org>
-References: <1441562263-19888-1-git-send-email-eric@anholt.net> <1441562263-19888-5-git-send-email-eric@anholt.net> <5677E7BF.3020404@martin.sperl.org> <5677F3C8.5000600@lategoodbye.de> <03BE10FE-D743-4CD3-8825-112D0F6B2D43@martin.sperl.org> <56784038.402@lategoodbye.de>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <56784038.402@lategoodbye.de>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stefan Wahren <info@lategoodbye.de>
-Cc: Eric Anholt <eric@anholt.net>, linux-clk@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, Remi Pommarel <repk@triplefau.lt>
+From: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: ts-4800: Add LCD support
+Date: Mon, 21 Dec 2015 13:40:59 -0500
+Message-ID: <20151221184057.GE12696@localhost>
+References: <1450458033-30471-1-git-send-email-damien.riegel@savoirfairelinux.com>
+ <20151221133519.GC18410@tiger>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20151221133519.GC18410@tiger>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Dec 21, 2015 at 09:35:19PM +0800, Shawn Guo wrote:
+> On Fri, Dec 18, 2015 at 12:00:32PM -0500, Damien Riegel wrote:
+> > This commit adds LCD support for the TS-4800. The panel is an Okaya
+> > RS800480T-7X0WQ and the timings have been extracted from Technologic
+> > Systems' tree.
+> > 
+> > Signed-off-by: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/imx51-ts4800.dts | 109 +++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 109 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/imx51-ts4800.dts b/arch/arm/boot/dts/imx51-ts4800.dts
+> > index 83352cb..4951ebd 100644
+> > --- a/arch/arm/boot/dts/imx51-ts4800.dts
+> > +++ b/arch/arm/boot/dts/imx51-ts4800.dts
+> > @@ -30,6 +30,60 @@
+> >  			clock-frequency = <24576000>;
+> >  		};
+> >  	};
+> > +
+> > +	regulators {
+> > +		compatible = "simple-bus";
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +
+> > +		backlight_reg: regulator@0 {
+> > +			compatible = "regulator-fixed";
+> > +			reg = <0>;
+> > +			pinctrl-names = "default";
+> > +			pinctrl-0 = <&pinctrl_enable_lcd>;
+> > +			regulator-name = "enable_lcd_reg";
+> > +			regulator-min-microvolt = <3300000>;
+> > +			regulator-max-microvolt = <3300000>;
+> > +			gpio = <&gpio4 9 GPIO_ACTIVE_HIGH>;
+> > +			enable-active-high;
+> > +		};
+> > +	};
+> 
+> DT maintainers dislike this fake simple-bus container.  Let's put the
+> regulator directly under root like below.
+> 
+>         backlight_reg: regulator-backlight {
+>                 compatible = "regulator-fixed";
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&pinctrl_enable_lcd>;
+>                 regulator-name = "enable_lcd_reg";
+>                 regulator-min-microvolt = <3300000>;
+>                 regulator-max-microvolt = <3300000>;
+>                 gpio = <&gpio4 9 GPIO_ACTIVE_HIGH>;
+>                 enable-active-high;
+>         };
+> 
+> I fixed it up and applied both patches.
 
-> On 21.12.2015, at 19:08, Stefan Wahren <info@lategoodbye.de> wrote:
-> 
-> Hi,
-> 
-> [fix Michael's address and add Remi]
-> 
-> Am 21.12.2015 um 16:17 schrieb Martin Sperl:
->> 
->> I started looking and found that drivers/clk/bcm/clk-bcm2835.c
->> does not include the PWM clock either.
-> 
-> yes but please look at Remi's patch series first:
-> 
-> http://lists.infradead.org/pipermail/linux-rpi-kernel/2015-December/002672.html
+Thank you. I am using the imx51-*.dts as examples, maybe they should be
+updated to be consistent with the newer device tree style? I'm willing
+to do that but I don't want to make changes on dts files that I can't
+test.
 
-I guess I must have seen it, but have not realized that I could
-apply these. It still leaves the i2s driver itself to get modified -
-I got something working but there are still issues...
+Sidenote: your Signed-off-by is missing on these two patches.
+
 
 Thanks,
-	Martin
+Damien
+
+> 
+> Shawn
+> 
+> > +
+> > +	backlight: backlight {
+> > +		compatible = "pwm-backlight";
+> > +		pwms = <&pwm1 0 78770>;
+> > +		brightness-levels = <0 150 200 255>;
+> > +		default-brightness-level = <1>;
+> > +		power-supply = <&backlight_reg>;
+> > +	};
+> > +
+> > +	display0: display@di0 {
+> > +		compatible = "fsl,imx-parallel-display";
+> > +		interface-pix-fmt = "rgb24";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_lcd>;
+> > +
+> > +		display-timings {
+> > +			800x480p60 {
+> > +				native-mode;
+> > +				clock-frequency = <30066000>;
+> > +				hactive = <800>;
+> > +				vactive = <480>;
+> > +				hfront-porch = <50>;
+> > +				hback-porch = <70>;
+> > +				hsync-len = <50>;
+> > +				vback-porch = <0>;
+> > +				vfront-porch = <0>;
+> > +				vsync-len = <50>;
+> > +			};
+> > +		};
+> > +
+> > +		port@0 {
+> > +			display0_in: endpoint {
+> > +				remote-endpoint = <&ipu_di0_disp0>;
+> > +			};
+> > +		};
+> > +	};
+> >  };
+> >  
+> >  &esdhc1 {
+> > @@ -60,6 +114,16 @@
+> >  	};
+> >  };
+> >  
+> > +&ipu_di0_disp0 {
+> > +	remote-endpoint = <&display0_in>;
+> > +};
+> > +
+> > +&pwm1 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pinctrl_pwm_backlight>;
+> > +	status = "okay";
+> > +};
+> > +
+> >  &uart1 {
+> >  	pinctrl-names = "default";
+> >  	pinctrl-0 = <&pinctrl_uart1>;
+> > @@ -115,6 +179,12 @@
+> >  		>;
+> >  	};
+> >  
+> > +	pinctrl_enable_lcd: enablelcdgrp {
+> > +		fsl,pins = <
+> > +			MX51_PAD_CSI2_D12__GPIO4_9		0x1c5
+> > +		>;
+> > +	};
+> > +
+> >  	pinctrl_esdhc1: esdhc1grp {
+> >  		fsl,pins = <
+> >  			MX51_PAD_SD1_CMD__SD1_CMD		0x400020d5
+> > @@ -159,6 +229,45 @@
+> >  		>;
+> >  	};
+> >  
+> > +	pinctrl_lcd: lcdgrp {
+> > +		fsl,pins = <
+> > +			MX51_PAD_DISP1_DAT0__DISP1_DAT0		0x5
+> > +			MX51_PAD_DISP1_DAT1__DISP1_DAT1		0x5
+> > +			MX51_PAD_DISP1_DAT2__DISP1_DAT2		0x5
+> > +			MX51_PAD_DISP1_DAT3__DISP1_DAT3		0x5
+> > +			MX51_PAD_DISP1_DAT4__DISP1_DAT4		0x5
+> > +			MX51_PAD_DISP1_DAT5__DISP1_DAT5		0x5
+> > +			MX51_PAD_DISP1_DAT6__DISP1_DAT6		0x5
+> > +			MX51_PAD_DISP1_DAT7__DISP1_DAT7		0x5
+> > +			MX51_PAD_DISP1_DAT8__DISP1_DAT8		0x5
+> > +			MX51_PAD_DISP1_DAT9__DISP1_DAT9		0x5
+> > +			MX51_PAD_DISP1_DAT10__DISP1_DAT10	0x5
+> > +			MX51_PAD_DISP1_DAT11__DISP1_DAT11	0x5
+> > +			MX51_PAD_DISP1_DAT12__DISP1_DAT12	0x5
+> > +			MX51_PAD_DISP1_DAT13__DISP1_DAT13	0x5
+> > +			MX51_PAD_DISP1_DAT14__DISP1_DAT14	0x5
+> > +			MX51_PAD_DISP1_DAT15__DISP1_DAT15	0x5
+> > +			MX51_PAD_DISP1_DAT16__DISP1_DAT16	0x5
+> > +			MX51_PAD_DISP1_DAT17__DISP1_DAT17	0x5
+> > +			MX51_PAD_DISP1_DAT18__DISP1_DAT18	0x5
+> > +			MX51_PAD_DISP1_DAT19__DISP1_DAT19	0x5
+> > +			MX51_PAD_DISP1_DAT20__DISP1_DAT20	0x5
+> > +			MX51_PAD_DISP1_DAT21__DISP1_DAT21	0x5
+> > +			MX51_PAD_DISP1_DAT22__DISP1_DAT22	0x5
+> > +			MX51_PAD_DISP1_DAT23__DISP1_DAT23	0x5
+> > +			MX51_PAD_DI1_PIN2__DI1_PIN2		0x5
+> > +			MX51_PAD_DI1_PIN3__DI1_PIN3		0x5
+> > +			MX51_PAD_DI2_DISP_CLK__DI2_DISP_CLK	0x5
+> > +			MX51_PAD_DI_GP4__DI2_PIN15		0x5
+> > +		>;
+> > +	};
+> > +
+> > +	pinctrl_pwm_backlight: backlightgrp {
+> > +		fsl,pins = <
+> > +			MX51_PAD_GPIO1_2__PWM1_PWMO		0x80000000
+> > +		>;
+> > +	};
+> > +
+> >  	pinctrl_uart1: uart1grp {
+> >  		fsl,pins = <
+> >  			MX51_PAD_UART1_RXD__UART1_RXD		0x1c5
+> > -- 
+> > 2.5.0
+> > 
+> > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
