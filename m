@@ -1,54 +1,87 @@
-From: Martin Sperl <kernel@martin.sperl.org>
-Subject: Re: [PATCH 4/4] ARM: bcm2835: Switch to using the new clock driver
- support.
-Date: Mon, 21 Dec 2015 12:51:27 +0100
-Message-ID: <5677E7BF.3020404@martin.sperl.org>
-References: <1441562263-19888-1-git-send-email-eric@anholt.net>
- <1441562263-19888-5-git-send-email-eric@anholt.net>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v5 0/5] Add memory mapped read support for ti-qspi
+Date: Mon, 21 Dec 2015 17:33:02 +0530
+Message-ID: <5677EA76.6000108@ti.com>
+References: <1449807000-6457-1-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1441562263-19888-5-git-send-email-eric@anholt.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>, linux-clk@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1449807000-6457-1-git-send-email-vigneshr@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>, Brian Norris <computersforpeace@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, hramrach@gmail.com, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06.09.2015 19:57, Eric Anholt wrote:
->   
-> +		clocks: cprman@7e101000 {
-> +			compatible = "brcm,bcm2835-cprman";
-> +			#clock-cells = <1>;
-> +			reg = <0x7e101000 0x2000>;
-> +
-> +			/* CPRMAN derives everything from the platform's
-> +			 * oscillator.
-> +			 */
-> +			clocks = <&clk_osc>;
-> +		};
-> +
->
-This actually breaks i2s because of an overlap in registers:
-[   12.734352] bcm2835-i2s 20203000.i2s: can't request region for 
-resource [mem 0x20101098-0x2010109f]
-[   12.826571] bcm2835-i2s: probe of 20203000.i2s failed with error -16
 
-here the corresponding section for i2s in /arch/arm/boot/dts/bcm2835.dtsi:
-                 i2s: i2s@7e203000 {
-                         compatible = "brcm,bcm2835-i2s";
-                         reg = <0x7e203000 0x20>,
-                               <0x7e101098 0x02>;
 
-                         dmas = <&dma 2>,
-                                <&dma 3>;
-                         dma-names = "tx", "rx";
-                         status = "disabled";
-                 };
+On 12/11/2015 09:39 AM, Vignesh R wrote:
+> Changes since v4:
+> Use syscon to access system control module register in ti-qspi driver.
+> 
+> Changes since v3:
+> Rework to introduce spi_flash_read_message struct.
+> Support different opcode/addr/data formats as per Brian's suggestion
+> here: https://lkml.org/lkml/2015/11/11/454
+> 
 
-Note that actually the PCM/I2S reg-range should be (off by 4):
-     reg = <0x7e203000 0x24>;
-(see also: https://github.com/raspberrypi/linux/pull/1079)
+Gentle Ping on the series...
 
-Ciao,
-             Martin
+
+> Changes since v2:
+> Remove mmap_lock_mutex.
+> Optimize enable/disable of mmap mode.
+> 
+> Changes since v1:
+> Introduce API in SPI core that MTD flash driver can call for mmap read
+> instead of directly calling spi-master driver callback. This API makes
+> sure that SPI core msg queue is locked during mmap transfers.
+> v1: https://lkml.org/lkml/2015/9/4/103
+> 
+> 
+> Cover letter:
+> 
+> This patch series adds support for memory mapped read port of ti-qspi.
+> ti-qspi has a special memory mapped port through which SPI flash
+> memories can be accessed directly via SoC specific memory region.
+> 
+> First patch adds a method to pass flash specific information like read
+> opcode, dummy bytes etc and to request mmap read. Second patch
+> implements mmap read method in ti-qspi driver. Patch 3 adapts m25p80 to
+> use mmap read method before trying normal SPI transfer. Patch 4 and 5
+> add memory map region DT entries for DRA7xx and AM43xx SoCs.
+> 
+> This patch series is based on the discussions here:
+> http://www.spinics.net/lists/linux-spi/msg04796.html
+> 
+> Tested on DRA74 EVM and AM437x-SK.
+> Read performance increases from ~100kB/s to ~2.5MB/s.
+> 
+> Vignesh R (5):
+>   spi: introduce accelerated read support for spi flash devices
+>   spi: spi-ti-qspi: add mmap mode read support
+>   mtd: devices: m25p80: add support for mmap read request
+>   ARM: dts: DRA7: add entry for qspi mmap region
+>   ARM: dts: AM4372: add entry for qspi mmap region
+> 
+>  Documentation/devicetree/bindings/spi/ti_qspi.txt |  22 +++-
+>  arch/arm/boot/dts/am4372.dtsi                     |   4 +-
+>  arch/arm/boot/dts/dra7.dtsi                       |   6 +-
+>  drivers/mtd/devices/m25p80.c                      |  20 ++++
+>  drivers/spi/spi-ti-qspi.c                         | 139 +++++++++++++++++-----
+>  drivers/spi/spi.c                                 |  45 +++++++
+>  include/linux/spi/spi.h                           |  41 +++++++
+>  7 files changed, 243 insertions(+), 34 deletions(-)
+> 
+
+-- 
+Regards
+Vignesh
