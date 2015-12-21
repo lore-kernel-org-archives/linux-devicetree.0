@@ -1,87 +1,49 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v5 0/5] Add memory mapped read support for ti-qspi
-Date: Mon, 21 Dec 2015 17:33:02 +0530
-Message-ID: <5677EA76.6000108@ti.com>
-References: <1449807000-6457-1-git-send-email-vigneshr@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/3] arm: dts: phy3250: add SD fixed regulator
+Date: Mon, 21 Dec 2015 15:43:08 +0300
+Message-ID: <5677F3DC.6070402@cogentembedded.com>
+References: <1450567932-22994-1-git-send-email-vz@mleia.com>
+ <1450567932-22994-3-git-send-email-vz@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1449807000-6457-1-git-send-email-vigneshr@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>, Brian Norris <computersforpeace@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, hramrach@gmail.com, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1450567932-22994-3-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
+On 12/20/2015 2:32 AM, Vladimir Zapolskiy wrote:
 
-On 12/11/2015 09:39 AM, Vignesh R wrote:
-> Changes since v4:
-> Use syscon to access system control module register in ti-qspi driver.
-> 
-> Changes since v3:
-> Rework to introduce spi_flash_read_message struct.
-> Support different opcode/addr/data formats as per Brian's suggestion
-> here: https://lkml.org/lkml/2015/11/11/454
-> 
+> The change adds fixed voltage regulator for SD controller, ARM MMCI
+> controller driver uses it to control card power management.
+>
+> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+> ---
+>   arch/arm/boot/dts/phy3250.dts | 10 ++++++++++
+>   1 file changed, 10 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/phy3250.dts b/arch/arm/boot/dts/phy3250.dts
+> index 34e15fd..5465b9e 100644
+> --- a/arch/arm/boot/dts/phy3250.dts
+> +++ b/arch/arm/boot/dts/phy3250.dts
+> @@ -45,6 +45,15 @@
+>   			enable-active-high;
+>   			regulator-boot-on;
+>   		};
+> +
+> +		sd_reg: fixed-regulator@2 {
 
-Gentle Ping on the series...
+    Please just "regulator@2", to comply with the ePAPR standard.
 
+[...]
 
-> Changes since v2:
-> Remove mmap_lock_mutex.
-> Optimize enable/disable of mmap mode.
-> 
-> Changes since v1:
-> Introduce API in SPI core that MTD flash driver can call for mmap read
-> instead of directly calling spi-master driver callback. This API makes
-> sure that SPI core msg queue is locked during mmap transfers.
-> v1: https://lkml.org/lkml/2015/9/4/103
-> 
-> 
-> Cover letter:
-> 
-> This patch series adds support for memory mapped read port of ti-qspi.
-> ti-qspi has a special memory mapped port through which SPI flash
-> memories can be accessed directly via SoC specific memory region.
-> 
-> First patch adds a method to pass flash specific information like read
-> opcode, dummy bytes etc and to request mmap read. Second patch
-> implements mmap read method in ti-qspi driver. Patch 3 adapts m25p80 to
-> use mmap read method before trying normal SPI transfer. Patch 4 and 5
-> add memory map region DT entries for DRA7xx and AM43xx SoCs.
-> 
-> This patch series is based on the discussions here:
-> http://www.spinics.net/lists/linux-spi/msg04796.html
-> 
-> Tested on DRA74 EVM and AM437x-SK.
-> Read performance increases from ~100kB/s to ~2.5MB/s.
-> 
-> Vignesh R (5):
->   spi: introduce accelerated read support for spi flash devices
->   spi: spi-ti-qspi: add mmap mode read support
->   mtd: devices: m25p80: add support for mmap read request
->   ARM: dts: DRA7: add entry for qspi mmap region
->   ARM: dts: AM4372: add entry for qspi mmap region
-> 
->  Documentation/devicetree/bindings/spi/ti_qspi.txt |  22 +++-
->  arch/arm/boot/dts/am4372.dtsi                     |   4 +-
->  arch/arm/boot/dts/dra7.dtsi                       |   6 +-
->  drivers/mtd/devices/m25p80.c                      |  20 ++++
->  drivers/spi/spi-ti-qspi.c                         | 139 +++++++++++++++++-----
->  drivers/spi/spi.c                                 |  45 +++++++
->  include/linux/spi/spi.h                           |  41 +++++++
->  7 files changed, 243 insertions(+), 34 deletions(-)
-> 
+MBR, Sergei
 
--- 
-Regards
-Vignesh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
