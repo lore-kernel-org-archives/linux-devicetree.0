@@ -1,67 +1,42 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH 2/2] dt-bindings: sound: add devicetree document for rt5616
-Date: Mon, 21 Dec 2015 21:18:14 +0800
-Message-ID: <1450703894-32623-2-git-send-email-wxt@rock-chips.com>
-References: <1450703894-32623-1-git-send-email-wxt@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1450703894-32623-1-git-send-email-wxt@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, broonie@kernel.org
-Cc: devicetree@vger.kernel.org, wxt@rock-chips.com, linux-kernel@vger.kernel.org, bardliao@realtek.com, alsa-devel@alsa-project.org, heiko@sntech.de
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] ARM64: tegra: Add chosen node for tegra132 norrin
+Date: Mon, 21 Dec 2015 13:22:51 +0000
+Message-ID: <1450704171-8345-1-git-send-email-jonathanh@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the description for rt5616 codec.
+The NVIDIA bootloader, nvtboot, expects the "chosen" node to be present
+in the device-tree blob and it is not then it fails to boot the kernel.
+Add the chosen node so we can boot the kernel on tegra132 norrin with
+the nvtboot bootloader.
 
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
+ arch/arm64/boot/dts/nvidia/tegra132-norrin.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
- Documentation/devicetree/bindings/sound/rt5616.txt | 38 ++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/rt5616.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/rt5616.txt b/Documentation/devicetree/bindings/sound/rt5616.txt
-new file mode 100644
-index 0000000..af96207
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/rt5616.txt
-@@ -0,0 +1,38 @@
-+RT5616 audio CODEC
+diff --git a/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts b/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
+index 7dfe1c085966..62f33fc84e3e 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
++++ b/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
+@@ -12,6 +12,8 @@
+ 		rtc1 = "/rtc@0,7000e000";
+ 	};
+ 
++	chosen { };
 +
-+This device supports I2C only.
-+
-+Required properties:
-+
-+- compatible : "realtek,rt5616".
-+
-+- reg : The I2C address of the device.
-+
-+Optional properties:
-+
-+Pins on the device (for linking into audio routes) for RT5616:
-+
-+  * IN1P
-+  * IN2P
-+  * IN2N
-+  * LOUTL
-+  * LOUTR
-+  * CPN2
-+  * CPP2
-+  * CPN1
-+  * CPP1
-+  * HPO_R
-+  * HPO_L
-+  * ADCDAT1
-+  * DACDAT1
-+  * LRCK1
-+  * BCLK1
-+  * MCLK
-+  * GPIO1
-+
-+Example:
-+
-+rt5616 {
-+	compatible = "realtek,rt5616";
-+	reg = <0x1b>;
-+};
+ 	memory {
+ 		device_type = "memory";
+ 		reg = <0x0 0x80000000 0x0 0x80000000>;
 -- 
-1.9.1
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
