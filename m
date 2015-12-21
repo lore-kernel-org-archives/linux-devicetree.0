@@ -1,15 +1,15 @@
-From: Mark yao <mark.yao@rock-chips.com>
-Subject: Re: [RFC PATCH v1 1/2] drm: rockchip/hdmi: add Innosilicon HDMI
- support
-Date: Mon, 21 Dec 2015 15:31:16 +0800
-Message-ID: <5677AAC4.1010405@rock-chips.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [RFC PATCH v1 0/2] Introduce Innosilicon HDMI driver on Rockchip
+ platforms
+Date: Mon, 21 Dec 2015 15:44:25 +0800
+Message-ID: <5677ADD9.5000803@rock-chips.com>
 References: <1447227952-4787-1-git-send-email-ykk@rock-chips.com>
- <1447227999-4842-1-git-send-email-ykk@rock-chips.com>
+ <5677A986.10103@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1447227999-4842-1-git-send-email-ykk@rock-chips.com>
+In-Reply-To: <5677A986.10103@rock-chips.com>
 List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
@@ -19,22 +19,44 @@ List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Yakir Yang <ykk@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
+To: Mark yao <mark.yao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ben Chan <benchan@google.com>, Ken Mixte <kmixter@google.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Zheng Yang <zhengyang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxNeW5tDEx5pyIMTHml6UgMTU6NDYsIFlha2lyIFlhbmcgd3JvdGU6Cj4gKwloZG1pLT5j
-b25uZWN0b3IucG9sbGVkID0gRFJNX0NPTk5FQ1RPUl9QT0xMX0hQRDsKPiArCj4gKwlkcm1fY29u
-bmVjdG9yX2hlbHBlcl9hZGQoJmhkbWktPmNvbm5lY3RvciwKPiArCQkJCSAmaW5ub19oZG1pX2Nv
-bm5lY3Rvcl9oZWxwZXJfZnVuY3MpOwo+ICsJZHJtX2Nvbm5lY3Rvcl9pbml0KGRybSwgJmhkbWkt
-PmNvbm5lY3RvciwgJmlubm9faGRtaV9jb25uZWN0b3JfZnVuY3MsCj4gKwkJCSAgIERSTV9NT0RF
-X0NPTk5FQ1RPUl9IRE1JQSk7Cj4gKwo+ICsJaGRtaS0+Y29ubmVjdG9yLmVuY29kZXIgPSBlbmNv
-ZGVyOwoKUGxzIHJlbW92ZSAiaGRtaS0+Y29ubmVjdG9yLmVuY29kZXIgPSBlbmNvZGVyOyIKCkl0
-IHdvdWxkIGNhdXNlIGEgZXJyb3IgZHVtcCBvbiBhdG9taWMgZHJtIHJ1bnRpbWU6CgpXQVJOSU5H
-OiBDUFU6IDMgUElEOiA3NCBhdCBkcml2ZXJzL2dwdS9kcm0vZHJtX2F0b21pY19oZWxwZXIuYzo2
-ODIgCmRybV9hdG9taWNfaGVscGVyX3VwZGF0ZV9sZWdhY3lfbW9kZXNldF9zdGF0ZSsweDZjLzB4
-MjAwKCkKClRoaXMgaXNzdWUgY2FuIGJlIGV4cGxhaW5lZCBmcm9tIGZvbGxvd2luZyB0aHJlYWQ6
-Cmh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE1LzExLzE2LzQ5OAoKVGhhbmtzLgoKLS0gCu+8rWFy
-ayBZYW8KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+SGkgTWFyawoKT24gMTIvMjEvMjAxNSAwMzoyNSBQTSwgTWFyayB5YW8gd3JvdGU6Cj4gSGkgWWFr
+aXIKPiAgICAgSSB3YW50IHRvIGNvbnZlcnQgZHJtL3JvY2tjaGlwIHRvIHN1cHBvcnQgYXRvbWlj
+IGFwaSwKPiAgICAgSSdkIGxpa2UgeW91IGNhbiBkbyBzb21lIG1vZGlmeSB0byBhZGFwdCBpdC4K
+PgoKU3VyZSwgd291bGQgdXBkYXRlIGFzIHNvb24gYXMgcG9zc2libGUuCgpUaGFua3MsCi0gWWFr
+aXIKCj4gLSBNYXJrCj4KPiBPbiAyMDE15bm0MTHmnIgxMeaXpSAxNTo0NSwgWWFraXIgWWFuZyB3
+cm90ZToKPj4gSGkgZ3V5czoKPj4KPj4gSGVyZSBhcmUgYSBicmllZiBpbnRyb2R1Y3Rpb24gdG8g
+SW5ub3NpbGljb24gSERNSSBJUDoKPj4gICAtIFN1cHBvcnQgSERNSSAxLjRhLCBIRENQIDEuMiBh
+bmQgRFZJIDEuMCBzdGFuZGFyZCBjb21wbGlhbnQgCj4+IHRyYW5zbWl0dGVyCj4+ICAgLSBTdXBw
+b3J0IEhETUkxLjQgYS9iIDNEIGZ1bmN0aW9uIGRlZmluZWQgaW4gSERNSSAxLjQgYS9iIHNwZWMK
+Pj4gICAtIERpZ2l0YWwgdmlkZW8gaW50ZXJmYWNlIHN1cHBvcnRzIGEgcGl4ZWwgc2l6ZSBvZiAy
+NCwgMzAsIDM2LCAKPj4gNDhiaXRzIGNvbG9yCj4+ICAgICBkZXB0aCBpbiBSR0IKPj4gICAtIFMv
+UERJRiBvdXRwdXQgc3VwcG9ydHMgUENNLCBEb2xieSBEaWdpdGFsLCBEVFMgZGlnaXRhbCBhdWRp
+byAKPj4gdHJhbnNtaXNzaW9uCj4+ICAgICAoMzItMTkya0h6IEZzKSB1c2luZyBJRUM2MDk1OCBh
+bmQgSUVDIDYxOTM3Cj4+ICAgLSBUaGUgRURJRCBhbmQgQ0VDIGZ1bmN0aW9uIGFyZSBhbHNvIHN1
+cHBvcnRlZCBieSBJbm5vc2lsaWNvbiBIRE1JIAo+PiBUcmFuc21pdHRlcgo+PiAgICAgQ29udHJv
+bGxlCj4+Cj4+IFRoaXMgSVAgaGF2ZSBiZWVuIGludGVncmF0ZWQgb24gc29tZSBSb2NrY2hpcCBD
+UFVzIChsaWtlIAo+PiBSSzMwMzYvUkszMTJ4KSwgZHVlCj4+IHRvIHRob3NlIENQVXMgaGF2ZW4n
+dCBiZWVuIGxhbmRlZCBvbiBtYW5saW5lIGtlcm5lbCwgc28gSSBjcmVhdCBhIAo+PiBicmFuY2gg
+dG8KPj4gdmVyaWZ5IHRoaXMgc2VyaWVzIFtodHRwczovL2dpdGh1Yi5jb20vcm9ja2NoaXAtbGlu
+dXgva2VybmVsXS4KPj4KPj4gLSBZYWtpcgo+Pgo+Pgo+PiBZYWtpciBZYW5nICgyKToKPj4gICAg
+ZHJtOiByb2NrY2hpcC9oZG1pOiBhZGQgSW5ub3NpbGljb24gSERNSSBzdXBwb3J0Cj4+ICAgIGR0
+LWJpbmRpbmdzOiBhZGQgZG9jdW1lbnQgZm9yIElubm9zaWxpY29uIEhETUkgb24gUm9ja2NoaXAg
+cGxhdGZvcm0KPj4KPj4gICAuLi4vZGlzcGxheS9yb2NrY2hpcC9pbm5vX2hkbWktcm9ja2NoaXAu
+dHh0ICAgICAgICB8ICAgNTAgKwo+PiAgIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9LY29uZmln
+ICAgICAgICAgICAgICAgICAgIHwgICAgOCArCj4+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlw
+L01ha2VmaWxlICAgICAgICAgICAgICAgICAgfCAgICAxICsKPj4gICBkcml2ZXJzL2dwdS9kcm0v
+cm9ja2NoaXAvaW5ub19oZG1pLmMgICAgICAgICAgICAgICB8IDEwMDggCj4+ICsrKysrKysrKysr
+KysrKysrKysrCj4+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2lubm9faGRtaS5oICAgICAg
+ICAgICAgICAgfCAgMzY0ICsrKysrKysKPj4gICA1IGZpbGVzIGNoYW5nZWQsIDE0MzEgaW5zZXJ0
+aW9ucygrKQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCAKPj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dAo+PiAg
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvaW5ub19oZG1pLmMK
+Pj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2lubm9faGRt
+aS5oCj4+Cj4KPgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
