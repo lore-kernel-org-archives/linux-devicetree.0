@@ -1,59 +1,39 @@
 From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/8] Add support for CL-SOM-iMX7 and SBC-iMX7
-Date: Mon, 21 Dec 2015 14:41:15 +0800
-Message-ID: <20151221064115.GC4703@tiger>
-References: <1449472479-2521-1-git-send-email-ilya@compulab.co.il>
- <20151214024715.GD25756@tiger>
- <5671707E.5000908@compulab.co.il>
+Subject: Re: [PATCH 1/3] ARM: dts: imx7d: add arch timer
+Date: Mon, 21 Dec 2015 14:44:14 +0800
+Message-ID: <20151221064414.GD4703@tiger>
+References: <1449789132-18976-1-git-send-email-Frank.Li@freescale.com>
+ <024b6540b3ebd5f132d171ba40c6e727@agner.ch>
+ <CAHrpEqTQFkme-BmVOPHbFwguQkpbYboaXymrRMc-6TDjwO8dUg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5671707E.5000908-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+In-Reply-To: <CAHrpEqTQFkme-BmVOPHbFwguQkpbYboaXymrRMc-6TDjwO8dUg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Cc: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Zhi Li <lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, "Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 16, 2015 at 04:09:02PM +0200, Igor Grinberg wrote:
-> Hi Shawn,
+On Thu, Dec 17, 2015 at 03:23:59PM -0600, Zhi Li wrote:
+> On Thu, Dec 17, 2015 at 2:45 PM, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org> wrote:
+> > On 2015-12-10 15:12, Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
+> >> From: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> >>
+> >> add cortex a7 arch timer.
+> >> uboot v2016.01-rc2 supported psci basic support.
+> >> smp can be supported by psci
+> >
+> > This sounds a bit overly simplified log message. I am not very into this
+> > PSCI topic, is this a prerequisit for the ARM arch timers? Maybe you
+> > could elaborate that a bit more.
 > 
-> On 12/14/15 04:47, Shawn Guo wrote:
-> > On Mon, Dec 07, 2015 at 09:14:31AM +0200, Ilya Ledvich wrote:
-> >> Ilya Ledvich (8):
-> >>   ARM: dts: imx7d: cl-som-imx7: add basic module support
-> >>   ARM: dts: imx7d: cl-som-imx7: add usb otg support
-> >>   ARM: dts: imx7d: cl-som-imx7: add eMMC support
-> >>   ARM: dts: imx7d: cl-som-imx7: add fec1 support
-> >>   ARM: dts: imx7d: cl-som-imx7: add eeprom support
-> >>   ARM: dts: imx7d: cl-som-imx7: add gpio extender support
-> >>   ARM: dts: imx7d: cl-som-imx7: add fec2 support
-> > 
-> > For the initial board support submission, it doesn't really need such
-> > splitting.  Please merge above patches into one.
-> 
-> Yeah, I know there is no need for such splitting, yet I think
-> if the splitting is done right - it is much simpler to review,
+> No.
+> But according to previous discussion. Shawn want us to use psci to enable
+> second core.  We need enable arch timer if second core enabled.
 
-Not really for a initial board support.
-
-> it provides a better bisectability (in case it will be needed in
-> the future),
-
-This is an initial board support submission and all the devices added
-there should be functional.  The bisectability shouldn't needed in this
-case.
-
-> and also if for some reason one (or more) patches are
-> needing some time consuming rework, others (earlier ones in the series)
-> can be accepted meanwhile.
-
-It's not really the case for this series.
-
-> 
-> So, I really like to keep it this way, unless you insist.
-
-Please merge them.
+I guess you can make the commit log a bit better by commenting
+the relationship between the arch timer and secondary core.
 
 Shawn
 --
