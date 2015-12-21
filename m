@@ -1,56 +1,61 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v5] extcon: add Maxim MAX3355 driver
-Date: Mon, 21 Dec 2015 11:38:36 +0900
-Message-ID: <5677662C.6060409@samsung.com>
-References: <5948633.my3nAG6hRz@wasted.cogentembedded.com>
- <CAGTfZH34rfMfjsAFgyPeNue74-5iCi6ZwrdN26_jwOXE6R=hwg@mail.gmail.com>
- <5676E214.2040009@cogentembedded.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: I2C eeprom compatibles? (was Re: [PATCH/RFC 03/19] ARM:
+ shmobile: gose: add i2c2 bus to device tree)
+Date: Mon, 21 Dec 2015 15:33:48 +1100
+Message-ID: <20151221043346.GE14422@verge.net.au>
+References: <1449802376-11301-1-git-send-email-horms+renesas@verge.net.au>
+ <20151218030239.GB10973@verge.net.au>
+ <20151218073531.GA1517@katana>
+ <1839177.77Qt0RnI3v@wuerfel>
+ <20151218103214.GA1532@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-reply-to: <5676E214.2040009@cogentembedded.com>
+Content-Disposition: inline
+In-Reply-To: <20151218103214.GA1532@katana>
 Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Dec 18, 2015 at 11:32:15AM +0100, Wolfram Sang wrote:
+> On Fri, Dec 18, 2015 at 10:06:48AM +0100, Arnd Bergmann wrote:
+> > On Friday 18 December 2015 08:35:32 Wolfram Sang wrote:
+> > > > 
+> > > > It seems to me that we have some consensus around:
+> > > > 
+> > > >       compatible = "renesas,r1ex24002", "24c02";
+> > > 
+> > > Thinking again, "generic,24c02" or "generic-24c02" could also be an
+> > > option.
+> > > 
+> > > > Should this be added to Documentation/devicetree/bindings/eeprom/eeprom.txt ?
+> > > > Or documented elsewhere?
+> > > 
+> > > Probably we need a DT maintainers advice here? I don't mind vendor
+> > > specific compatibles being documented, but I'm reluctant to add all
+> > > these compatibles for the myriads of I2C eeproms to the at24 driver. 99%
+> > > are covered by the generic case.
+> > > 
+> > > Adding DT to CC.
+> > 
+> > I'd rather use some vendor string in addition to 24c02. Isn't this originally
+> > an Atmel part? In that case, using "atmel,24c02" as the most generic string
+> > would be appropriate,
+> 
+> Yeah, the at24 driver is named after Atmel chips AFAIR. Having "atmel,*"
+> as the generic fallback sounds like a good solution to me, too.
+> 
+> > and IIRC the i2c framework will just match that with
+> > the "24c02" entry in the i2c_device_id list.
+> 
+> True, although this behaviour is often complained about. There have been
+> attempts to make i2c/spi behave like the rest of the DT world and to
+> deprecate the current way. It didn't happen because of lots gory details,
+> however :/
 
-On 2015=EB=85=84 12=EC=9B=94 21=EC=9D=BC 02:15, Sergei Shtylyov wrote:
-> Hello.
->=20
-> On 12/20/2015 05:31 PM, Chanwoo Choi wrote:
->=20
->> This patch depend on GPIOLIB configuration as following:
->> I modified it with following diff and applied it.
->>
->> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
->> index ba4db7d..3d89e60 100644
->> --- a/drivers/extcon/Kconfig
->> +++ b/drivers/extcon/Kconfig
->> @@ -54,6 +54,7 @@ config EXTCON_MAX14577
->>
->>   config EXTCON_MAX3355
->>          tristate "Maxim MAX3355 USB OTG EXTCON Support"
->> +       depends on GPIOLIB || COMPILE_TEST
->=20
->    If it won't compile w/o gpiolib, what's the use of COMIPLE_TEST?
->    And no, it shouldn't depend on gpiolib. It has empty stubs for the=
- case of CONFIG_GPIOLIB=3Dn. Obviously something is wrong with the GPIO=
- headers, I'll look into it.
+My reading of the above is that we are currently leaning towards:
 
-Yes. When GPIOLIB is disabled, the build issue don't happen.
-because include/linux/gpio/consumer.h implement the dummy function
-for all gpio functions if CONFIG_GPIOLIB is disabled.
+	compatible = "renesas,r1ex24002", "atmel,24c02";
 
-=46or correct operation of max3355, you should add the dependency=20
-to the extcon-max3355.c driver. This driver use the GPIO library
-certainly.
-
-COMPILE_TEST is used for just build test. You can see the detailed data=
-[1].
-[1] https://lkml.org/lkml/2013/5/22/155
-
-Thanks,
-Chanwoo Choi
+And we are unsure what to do about the documentation.
