@@ -1,62 +1,57 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH 4/5] ARM: dts: sun5i: Add dts file for
- the Empire Electronix D709 tablet
-Date: Mon, 21 Dec 2015 20:36:53 +0100
-Message-ID: <567854D5.7030601@redhat.com>
-References: <1450611782-9494-1-git-send-email-hdegoede@redhat.com>
- <1450611782-9494-4-git-send-email-hdegoede@redhat.com>
- <CAGb2v65daCCOWf7EXDkNWnxv1idXHXesOp6Et_0h-o+9drdeMA@mail.gmail.com>
- <5677D87A.90805@redhat.com> <20151221161132.GA30359@lukather>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v5] extcon: add Maxim MAX3355 driver
+Date: Mon, 21 Dec 2015 22:38:22 +0300
+Message-ID: <5678552E.3010709@cogentembedded.com>
+References: <5948633.my3nAG6hRz@wasted.cogentembedded.com>
+ <CAGTfZH34rfMfjsAFgyPeNue74-5iCi6ZwrdN26_jwOXE6R=hwg@mail.gmail.com>
+ <5676E214.2040009@cogentembedded.com> <5677662C.6060409@samsung.com>
+ <5677DC21.3040509@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBXNJ4GZQKGQE7ICY63Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20151221161132.GA30359@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <5677DC21.3040509@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello.
 
-On 21-12-15 17:11, Maxime Ripard wrote:
-> Hi,x
+On 12/21/2015 02:01 PM, Sergei Shtylyov wrote:
+
+>>>> This patch depend on GPIOLIB configuration as following:
+>>>> I modified it with following diff and applied it.
+>>>>
+>>>> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
+>>>> index ba4db7d..3d89e60 100644
+>>>> --- a/drivers/extcon/Kconfig
+>>>> +++ b/drivers/extcon/Kconfig
+>>>> @@ -54,6 +54,7 @@ config EXTCON_MAX14577
+>>>>
+>>>>    config EXTCON_MAX3355
+>>>>           tristate "Maxim MAX3355 USB OTG EXTCON Support"
+>>>> +       depends on GPIOLIB || COMPILE_TEST
+>>>
+>>>     If it won't compile w/o gpiolib, what's the use of COMIPLE_TEST?
+>>>     And no, it shouldn't depend on gpiolib. It has empty stubs for the case
+>>> of CONFIG_GPIOLIB=n. Obviously something is wrong with the GPIO headers,
+>>> I'll look into it.
+>>
+>> Yes. When GPIOLIB is disabled, the build issue don't happen.
 >
-> On Mon, Dec 21, 2015 at 11:46:18AM +0100, Hans de Goede wrote:
->>> On the side, any thoughts on how to handle the differences between various "Q8"
->>> tablets, like different I2C-based sensors and WiFi chips?
->>
->> For i2c based sensors the plan is to use devicetree overlays + an in kernel
->> overlay manager which probes the i2c bus (checking known touchscreen / accelerometer
->> addresses) and then picks the right touchscreen + accelerometer overlays.
->>
->> Wifi is somewhat more tricky I must admit, esp. since there seem to be q8 a23 based
->> tablet variants with usb wifi and others with sdio wifi. Since both busses are
->> discoverable I'm tempted to just enable both in devicetree, and let the kernel probe
->> and see what is actually there. This assume that the way the wifichip is powered
->> is the same on all boards, or at least that it is safe to enable the necessary
->> regulators on all boards ...
->>
->>> I'm asking because with Maxime's couple-regulator we should be able to get the
->>> RTL8723BS on the Q8 A23/33 v1.5 working.
->>
->> So this means enabled the sdio controller (should be safe on all boards?) and
->> enabling 2 regulators to power the wifi-chip. I think it will be safe to do this
->> even on boards where those regulators are not used, what do you think ?
+>     What? It surely does happen!
 >
-> Wouldn't that introduce some useless power drain on those boards?
+>> because include/linux/gpio/consumer.h implement the dummy function
+>> for all gpio functions if CONFIG_GPIOLIB is disabled.
+>
+>     Linus W. advised to #include this header explicitly -- I'll try and post.
 
-If nothing is attached to those regulators (which I expect to be the case when
-they are not used to power wifi) then I would expect the drain to be minimal,
-my biggest worry is some board having tied these to ground, but I don't think
-that is very likely.
+    I see you already #include'd it, thanks. But in that case, <linux/gpio.h> 
+doesn't seem necessary.
 
-Regards,
+>> Thanks,
+>> Chanwoo Choi
 
-Hans
+MBR, Sergei
+
