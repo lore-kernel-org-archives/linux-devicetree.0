@@ -1,65 +1,68 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [PATCH 4/5] ARM: dts: sun5i: Add dts file for
- the Empire Electronix D709 tablet
-Date: Mon, 21 Dec 2015 17:11:32 +0100
-Message-ID: <20151221161132.GA30359@lukather>
-References: <1450611782-9494-1-git-send-email-hdegoede@redhat.com>
- <1450611782-9494-4-git-send-email-hdegoede@redhat.com>
- <CAGb2v65daCCOWf7EXDkNWnxv1idXHXesOp6Et_0h-o+9drdeMA@mail.gmail.com>
- <5677D87A.90805@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2 1/9] ARM: mvebu: ix4-300d: Add compatible property to "partitions" node
+Date: Mon, 21 Dec 2015 17:48:48 +0100
+Message-ID: <87zix3rbm7.fsf@free-electrons.com>
+References: <1450694033-27717-1-git-send-email-geert+renesas@glider.be>
+	<1450694033-27717-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="F4Dl6XKrV7PH8SJF"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBQGJ4CZQKGQEXXX3EKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5677D87A.90805-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1450694033-27717-2-git-send-email-geert+renesas@glider.be>
+	(Geert Uytterhoeven's message of "Mon, 21 Dec 2015 11:33:45 +0100")
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: arm@kernel.org, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Alex Smith <alex.smith@imgtec.com>, Brian Norris <computersforpeace@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, linux-mips@linux-mips.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---F4Dl6XKrV7PH8SJF
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hi Geert,
+=20
+ On lun., d=C3=A9c. 21 2015, Geert Uytterhoeven <geert+renesas@glider.b=
+e> wrote:
 
-Hi,x
+> As of commit e488ca9f8d4f62c2 ("doc: dt: mtd: partitions: add compati=
+ble
+> property to "partitions" node"), the "partitions" subnode of an SPI
+> FLASH device node must have a compatible property. The partitions are=
+ no
+> longer detected if it is not present.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Acked-by: Brian Norris <computersforpeace@gmail.com>
 
-On Mon, Dec 21, 2015 at 11:46:18AM +0100, Hans de Goede wrote:
-> >On the side, any thoughts on how to handle the differences between various "Q8"
-> >tablets, like different I2C-based sensors and WiFi chips?
-> 
-> For i2c based sensors the plan is to use devicetree overlays + an in kernel
-> overlay manager which probes the i2c bus (checking known touchscreen / accelerometer
-> addresses) and then picks the right touchscreen + accelerometer overlays.
-> 
-> Wifi is somewhat more tricky I must admit, esp. since there seem to be q8 a23 based
-> tablet variants with usb wifi and others with sdio wifi. Since both busses are
-> discoverable I'm tempted to just enable both in devicetree, and let the kernel probe
-> and see what is actually there. This assume that the way the wifichip is powered
-> is the same on all boards, or at least that it is safe to enable the necessary
-> regulators on all boards ...
-> 
-> >I'm asking because with Maxime's couple-regulator we should be able to get the
-> >RTL8723BS on the Q8 A23/33 v1.5 working.
-> 
-> So this means enabled the sdio controller (should be safe on all boards?) and
-> enabling 2 regulators to power the wifi-chip. I think it will be safe to do this
-> even on boards where those regulators are not used, what do you think ?
+Applied on mvebu/dt (with the hope that it is still time to push it to
+arm-soc)
 
-Wouldn't that introduce some useless power drain on those boards?
+Thanks,
 
-Thanks!
-Maxime
+Gregory
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
+> ---
+> v2:
+>   - Add Acked-by.
+> ---
+>  arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts b/arch/a=
+rm/boot/dts/armada-xp-lenovo-ix4-300d.dts
+> index 13cf69a8d0fb392b..fb9e1bbf23385b85 100644
+> --- a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
+> +++ b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
+> @@ -152,6 +152,7 @@
+>  				nand-on-flash-bbt;
+> =20
+>  				partitions {
+> +					compatible =3D "fixed-partitions";
+>  					#address-cells =3D <1>;
+>  					#size-cells =3D <1>;
+> =20
+> --=20
+> 1.9.1
+>
+
+--=20
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
 http://free-electrons.com
---F4Dl6XKrV7PH8SJF--
