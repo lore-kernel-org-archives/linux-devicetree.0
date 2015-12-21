@@ -1,144 +1,86 @@
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: bcm2835: Switch to using the new clock driver support.
-Date: Mon, 21 Dec 2015 16:17:02 +0100
-Message-ID: <03BE10FE-D743-4CD3-8825-112D0F6B2D43@martin.sperl.org>
-References: <1441562263-19888-1-git-send-email-eric@anholt.net> <1441562263-19888-5-git-send-email-eric@anholt.net> <5677E7BF.3020404@martin.sperl.org> <5677F3C8.5000600@lategoodbye.de>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5677F3C8.5000600-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: dts: sun7i: Enable touchscreen on
+ Wexler TAB7200 tablet
+Date: Mon, 21 Dec 2015 16:43:42 +0100
+Message-ID: <20151221154342.GV30359@lukather>
+References: <1450428591-5597-1-git-send-email-mamlinav@gmail.com>
+ <1450428710-5653-1-git-send-email-mamlinav@gmail.com>
+ <20151218212525.GR30359@lukather>
+ <CAF==cZWcY=FH9Sr8RY4j4Ob8iuiYrBGkajZDWpNQzS-t4d074Q@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="MUnXZt0Uv08c1hBe"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBMF44CZQKGQEZCPW6QI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAF==cZWcY=FH9Sr8RY4j4Ob8iuiYrBGkajZDWpNQzS-t4d074Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+--MUnXZt0Uv08c1hBe
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-> On 21.12.2015, at 13:42, Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org> wrote:
->=20
-> Hi Martin,
->=20
->> here the corresponding section for i2s in /arch/arm/boot/dts/bcm2835=
-=2Edtsi:
->>                 i2s: i2s@7e203000 {
->>                         compatible =3D "brcm,bcm2835-i2s";
->>                         reg =3D <0x7e203000 0x20>,
->>                               <0x7e101098 0x02>;
->>=20
->>                         dmas =3D <&dma 2>,
->>                                <&dma 3>;
->>                         dma-names =3D "tx", "rx";
->>                         status =3D "disabled";
->>                 };
->=20
-> unfortunately i don't have a i2s interface, but thanks for the remark=
-=2E
-I received one just today...
->=20
-> It looks like the i2s driver programm the clock by itself instead of =
-using the clock framework. So the second register entry should be remov=
-ed from the i2s node.
+On Sat, Dec 19, 2015 at 06:11:40PM +0300, Aleksei Mamlin wrote:
+> 2015-12-19 0:25 GMT+03:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> 
+> > Hi,
+> >
+> > On Fri, Dec 18, 2015 at 11:51:50AM +0300, Aleksei Mamlin wrote:
+> > > Add a node for the Goodix GT911 touchscreen found on the Wexler TAB7200
+> > tablet
+> > >
+> > > Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > ---
+> > >  arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts | 19 +++++++++++++++++++
+> > >  1 file changed, 19 insertions(+)
+> > >
+> > > diff --git a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+> > b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+> > > index 239b5d2..ec3b837 100644
+> > > --- a/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+> > > +++ b/arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+> > > @@ -102,6 +102,18 @@
+> > >       pinctrl-names = "default";
+> > >       pinctrl-0 = <&i2c2_pins_a>;
+> > >       status = "okay";
+> > > +
+> > > +     gt911: touchscreen@5d {
+> > > +             compatible = "goodix,gt911";
+> > > +             reg = <0x5d>;
+> > > +             interrupt-parent = <&pio>;
+> > > +             interrupts = <7 21 IRQ_TYPE_EDGE_FALLING>; /* EINT21
+> > (PH21) */
+> > > +             pinctrl-names = "default";
+> > > +             pinctrl-0 = <&ts_reset_pin>;
+> > > +             irq-gpios = <&pio 7 21 GPIO_ACTIVE_HIGH>; /* INT (PH21) */
+> >
+> > It seems odd that you need both irq-gpios and interrupts. These two
+> > are completely redundant, and you should even actually use only one in
+> > your driver, since the second request_irq will fail.
+> >
+> >
+> We need both interrupts and irq-gpios because the driver uses the interrupt
+> gpio pin as output to reset the device. See bindings documentation [1]
+> 
+> [1]
+> https://git.kernel.org/cgit/linux/kernel/git/dtor/input.git/tree/Documentation/devicetree/bindings/input/touchscreen/goodix.txt?h=goodix
 
-I started looking and found that drivers/clk/bcm/clk-bcm2835.c
-does not include the PWM clock either.
-
-Anyway - looking at: sound/soc/bcm/bcm2835-i2s.c
-it seems that right now this driver makes use of
-a different parent-clock depending of the requested clock
-
-I guess Eric needs to look into this portion to put it into the generic=
- clock_code=85
-It is way more complicated than just using a fixed clock...
-
->>=20
->> Note that actually the PCM/I2S reg-range should be (off by 4):
->>     reg =3D <0x7e203000 0x24>;
->> (see also: https://github.com/raspberrypi/linux/pull/1079)
->=20
-> Any chance that Robert (patch author) can send a proper patch to linu=
-x-rpi-kernel for the of by 4 issue?
-as we need to remove the second register-set anyway we need to make
-modifications in the same location anyway.
-
-Looks probably something like this for the device-tree:
-diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835=
-=2Edtsi
-index aef64de..288d678 100644
---- a/arch/arm/boot/dts/bcm2835.dtsi
-+++ b/arch/arm/boot/dts/bcm2835.dtsi
-@@ -120,8 +120,9 @@
-=20
- 		i2s: i2s@7e203000 {
- 			compatible =3D "brcm,bcm2835-i2s";
--			reg =3D <0x7e203000 0x20>,
--			      <0x7e101098 0x02>;
-+			reg =3D <0x7e203000 0x24>;
-+			clocks =3D <&clocks BCM2835_CLOCK_PWM>,
-+				 <&clocks BCM2835_CLOCK_VPU>;
-=20
- 			dmas =3D <&dma 2>,
- 			       <&dma 3>;
-diff --git a/include/dt-bindings/clock/bcm2835.h b/include/dt-bindings/=
-clock/bcm
-index d323efa..61f1d20 100644
---- a/include/dt-bindings/clock/bcm2835.h
-+++ b/include/dt-bindings/clock/bcm2835.h
-@@ -43,5 +43,6 @@
- #define BCM2835_CLOCK_TSENS		27
- #define BCM2835_CLOCK_EMMC		28
- #define BCM2835_CLOCK_PERI_IMAGE	29
-+#define BCM2835_CLOCK_PWM		30
-=20
--#define BCM2835_CLOCK_COUNT		30
-+#define BCM2835_CLOCK_COUNT		31
-
-And obviously more changes to the clock driver itself to support it:
---- a/drivers/clk/bcm/clk-bcm2835.c
-+++ b/drivers/clk/bcm/clk-bcm2835.c
-@@ -807,6 +807,17 @@ static const struct bcm2835_clock_data bcm2835_clo=
-ck_emmc_d
- 	.frac_bits =3D 8,
- };
-=20
-+/* PWM/I2S clock */
-+static const struct bcm2835_clock_data bcm2835_clock_pwm_data =3D {
-+	.name =3D "pwm",
-+	.num_mux_parents =3D ARRAY_SIZE(bcm2835_clock_per_parents),
-+	.parents =3D bcm2835_clock_per_parents,
-+	.ctl_reg =3D CM_PWMCTL,
-+	.div_reg =3D CM_PWMDIV,
-+	.int_bits =3D 4,
-+	.frac_bits =3D 8,
-+};
-+
- struct bcm2835_pll {
- 	struct clk_hw hw;
- 	struct bcm2835_cprman *cprman;
-@@ -1537,6 +1548,8 @@ static int bcm2835_clk_probe(struct platform_devi=
-ce *pdev)
- 		bcm2835_register_clock(cprman, &bcm2835_clock_hsm_data);
- 	clks[BCM2835_CLOCK_EMMC] =3D
- 		bcm2835_register_clock(cprman, &bcm2835_clock_emmc_data);
-+	clks[BCM2835_CLOCK_PWM] =3D
-+		bcm2835_register_clock(cprman, &bcm2835_clock_pwm_data);
-=20
- 	/*
- 	 * CM_PERIICTL (and CM_PERIACTL, CM_SYSCTL and CM_VPUCTL if
-=20
-=20
-
-And obviously many more changes to sound/soc/bcm/bcm2835-i2s.c
-to remove the clock code and use the clock framework instead.
-
-The biggest thing is the selection of the clock to use - the current co=
-de
-either uses the OSC or PLLD.
-
-@Eric: ist there some means to do that?
+Hmm, indeed, and even the documentation is confusing.
 
 Thanks,
-	Martin--
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--MUnXZt0Uv08c1hBe--
