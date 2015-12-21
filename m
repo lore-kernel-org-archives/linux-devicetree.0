@@ -1,49 +1,45 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v4 3/4] ARM: dts: dra7: Use "ti,
- dra7x-usb2-phy2" compatible string for USB2 PHY2
-Date: Mon, 21 Dec 2015 14:43:20 +0530
-Message-ID: <1450689201-16973-4-git-send-email-kishon@ti.com>
-References: <1450689201-16973-1-git-send-email-kishon@ti.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/5] Introduce at91_adc8xx driver
+Date: Mon, 21 Dec 2015 10:24:07 +0100
+Message-ID: <1450689852-22763-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1450689201-16973-1-git-send-email-kishon@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, tony@atomide.com, bcousson@baylibre.com
-Cc: mark.rutland@arm.com, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, kishon@ti.com, robh+dt@kernel.org, galak@codeaurora.org, rogerq@ti.com
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The USB2 PHY2 has a different register map compared to USB2 PHY1
-to power on/off the PHY. In order to handle it, use the new compatible
-string "ti,dra7x-usb2-phy2" for the second instance of USB2 PHY.
+Hi,
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- arch/arm/boot/dts/dra7.dtsi |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+This is the very basic support for the adc introduced with the SAMA5D2 SoC
+family.
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 41a3d35..7d35b94 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -1299,7 +1299,8 @@
- 			};
- 
- 			usb2_phy2: phy@4a085000 {
--				compatible = "ti,omap-usb2";
-+				compatible = "ti,dra7x-usb2-phy2",
-+					     "ti,omap-usb2";
- 				reg = <0x4a085000 0x400>;
- 				ctrl-module = <&omap_control_usb2phy2>;
- 				clocks = <&usb_phy2_always_on_clk32k>,
+The goal is to provide something to the user as soon as possible instead of
+waiting for a full featured driver.
+
+Only unsigned conversions on a software tigger are supported. Next steps are
+signed conversions, differential channels, hardware triggers, dma support,
+touchscreen support, and others.
+
+Ludovic Desroches (5):
+  iio:adc:at91_adc8xx: introduce new atmel adc driver
+  MAINTAINERS: add entry for Atmel ADC 8xx driver
+  ARM: at91/dt: sama5d2: add adc device
+  ARM: at91/dt: sama5d2 Xplained: enable the adc device
+  ARM: at91/defconfig: add sama5d2 adc support in sama5_defconfig
+
+ .../devicetree/bindings/iio/adc/at91_adc8xx.txt    |  27 ++
+ MAINTAINERS                                        |   6 +
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts        |  22 ++
+ arch/arm/boot/dts/sama5d2.dtsi                     |  11 +-
+ arch/arm/configs/sama5_defconfig                   |   1 +
+ drivers/iio/adc/Kconfig                            |  11 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/at91_adc8xx.c                      | 417 +++++++++++++++++++++
+ 8 files changed, 495 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/at91_adc8xx.txt
+ create mode 100644 drivers/iio/adc/at91_adc8xx.c
+
 -- 
-1.7.9.5
+2.5.0
