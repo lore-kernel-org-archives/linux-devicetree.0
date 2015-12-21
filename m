@@ -1,83 +1,26 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 2/2] dt-bindings: sound: add devicetree document for
- rt5616
-Date: Mon, 21 Dec 2015 13:15:35 -0800
-Message-ID: <56786BF7.7070608@gmail.com>
-References: <1450703894-32623-2-git-send-email-wxt@rock-chips.com> <1450709768-14898-1-git-send-email-wxt@rock-chips.com>
-Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 1/1] platform: goldfish: pipe: add devicetree bindings
+Date: Mon, 21 Dec 2015 13:35:14 -0800
+Message-ID: <20151221213514.GA17128@kroah.com>
+References: <1448481582-16991-1-git-send-email-jinqian@android.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450709768-14898-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1448481582-16991-1-git-send-email-jinqian@android.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jin Qian <jinqian@android.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Hackmann <ghackmann@google.com>, Christoffer Dall <christoffer.dall@linaro.org>, Joe Perches <joe@perches.com>, Dan Carpenter <dan.carpenter@oracle.com>, Peter Senna Tschudin <peter.senna@gmail.com>, Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/21/2015 6:56 AM, Caesar Wang wrote:
-> Add the description for rt5616 codec.
+On Wed, Nov 25, 2015 at 11:59:37AM -0800, Jin Qian wrote:
+> From: Greg Hackmann <ghackmann@google.com>
 > 
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> ---
-> 
-> Changes in v1:
-> - As Heiko comments, remove the not exist option properties.
-> 
->  Documentation/devicetree/bindings/sound/rt5616.txt | 36 ++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/rt5616.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/rt5616.txt b/Documentation/devicetree/bindings/sound/rt5616.txt
-> new file mode 100644
-> index 0000000..2030a22
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/rt5616.txt
-> @@ -0,0 +1,36 @@
-> +RT5616 audio CODEC
-> +
-> +This device supports I2C only.
-> +
-> +Required properties:
-> +
-> +- compatible : "realtek,rt5616".
-> +
-> +- reg : The I2C address of the device.
-> +
-> +Pins on the device (for linking into audio routes) for RT5616:
-> +
-> +  * IN1P
-> +  * IN2P
-> +  * IN2N
-> +  * LOUTL
-> +  * LOUTR
-> +  * CPN2
-> +  * CPP2
-> +  * CPN1
-> +  * CPP1
-> +  * HPO_R
-> +  * HPO_L
-> +  * ADCDAT1
-> +  * DACDAT1
-> +  * LRCK1
-> +  * BCLK1
-> +  * MCLK
-> +  * GPIO1
-> +
-> +Example:
-> +
-> +rt5616 {
+> Signed-off-by: Greg Hackmann <ghackmann@google.com>
+> (cherry picked from commit 3c56d07eb796066530e93a40e74dea3bc59bf4cf)
 
-The node name should be rt5616@1b (including the reg value
-from the node).
+What is this commit id here for?
 
-> +	compatible = "realtek,rt5616";
-> +	reg = <0x1b>;
-> +};
-> 
+confused,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+greg k-h
