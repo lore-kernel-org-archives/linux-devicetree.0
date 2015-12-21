@@ -1,61 +1,58 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 2/3] arm: dts: phy3250: add SD fixed regulator
-Date: Mon, 21 Dec 2015 21:54:26 +0200
-Message-ID: <1450727667-16175-3-git-send-email-vz@mleia.com>
-References: <1450727667-16175-1-git-send-email-vz@mleia.com>
+From: Remi Pommarel <repk-lovNVp52yxIDGOk2Oe9MvA@public.gmane.org>
+Subject: [PATCH] clk: bcm2835: Add PWM clock support to the device tree
+Date: Mon, 21 Dec 2015 21:12:59 +0100
+Message-ID: <1450728779-2599-1-git-send-email-repk@triplefau.lt>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450727667-16175-1-git-send-email-vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Remi Pommarel <repk-lovNVp52yxIDGOk2Oe9MvA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The change adds fixed voltage regulator for SD controller, ARM MMCI
-controller driver uses it to control card power management.
-
-Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Remi Pommarel <repk-lovNVp52yxIDGOk2Oe9MvA@public.gmane.org>
 ---
-Changes from v2 to v3:
-* use "regulator" as a generic device tree node name of fixed
-  regulators, thanks to Sergei Shtylyov
 
-Changes from v1 to v2:
-* specify SD card power supply instead of signal power supply,
-  thanks to Russell King
+With the upcomming PWM clock patch (see https://lkml.org/lkml/2015/12/6/74)
+PWM can now be used and can be added in the RPI devicetree.
 
- arch/arm/boot/dts/phy3250.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/bcm2835-rpi.dtsi |  4 ++++
+ arch/arm/boot/dts/bcm2835.dtsi     | 10 ++++++++++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/arch/arm/boot/dts/phy3250.dts b/arch/arm/boot/dts/phy3250.dts
-index 8ac368f..a00d7ce 100644
---- a/arch/arm/boot/dts/phy3250.dts
-+++ b/arch/arm/boot/dts/phy3250.dts
-@@ -45,6 +45,15 @@
- 			enable-active-high;
- 			regulator-boot-on;
- 		};
+diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+index 3572f03..55801e0 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
++++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+@@ -60,3 +60,7 @@
+ 	status = "okay";
+ 	bus-width = <4>;
+ };
 +
-+		sd_reg: regulator@2 {
-+			compatible = "regulator-fixed";
-+			regulator-name = "sd_reg";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			gpio = <&gpio 5 5 0>;
-+			enable-active-high;
-+		};
- 	};
- 
- 	ahb {
-@@ -162,6 +171,7 @@
- 				cd-gpios = <&gpio 3 1 0>;
- 				cd-inverted;
- 				bus-width = <4>;
-+				vmmc-supply = <&sd_reg>;
- 				status = "okay";
- 			};
++&pwm {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index aef64de..fe8d17c 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -149,6 +149,16 @@
+ 			status = "disabled";
  		};
+ 
++		pwm: pwm@7e20c000 {
++			compatible = "brcm,bcm2835-pwm";
++			reg = <0x7e20c000 0x28>;
++			clocks = <&clocks BCM2835_CLOCK_PWM>;
++			assigned-clocks = <&clocks BCM2835_CLOCK_PWM>;
++			assigned-clock-rates = <10000000>;
++			#pwm-cells = <2>;
++			status = "disabled";
++		};
++
+ 		sdhci: sdhci@7e300000 {
+ 			compatible = "brcm,bcm2835-sdhci";
+ 			reg = <0x7e300000 0x100>;
 -- 
-2.1.4
+2.0.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
