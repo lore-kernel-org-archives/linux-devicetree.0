@@ -1,81 +1,56 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] pinctrl: mediatek: Add Pinctrl/GPIO/EINT driver
- for mt2701
-Date: Mon, 21 Dec 2015 10:37:09 +0800
-Message-ID: <CAGS+omCTxV4jbW_AaAhDDf5OGBKeQT-XiCN=QNp8wKvs+Dd59w@mail.gmail.com>
-References: <1449824872-18314-1-git-send-email-biao.huang@mediatek.com>
- <1449824872-18314-5-git-send-email-biao.huang@mediatek.com> <1450451637.19539.11.camel@mtksdaap41>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v5] extcon: add Maxim MAX3355 driver
+Date: Mon, 21 Dec 2015 11:38:36 +0900
+Message-ID: <5677662C.6060409@samsung.com>
+References: <5948633.my3nAG6hRz@wasted.cogentembedded.com>
+ <CAGTfZH34rfMfjsAFgyPeNue74-5iCi6ZwrdN26_jwOXE6R=hwg@mail.gmail.com>
+ <5676E214.2040009@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450451637.19539.11.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Biao Huang <biao.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-reply-to: <5676E214.2040009@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Biao and Joe,
+Hi,
 
-On Fri, Dec 18, 2015 at 11:13 PM, Yingjoe Chen
-<yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> On Fri, 2015-12-11 at 17:07 +0800, Biao Huang wrote:
->> Add mt2701 support using mediatek common pinctrl driver.
->> MT2701 have some special pins need an extra setting register
->> than other ICs, so adding this support to common code.
+On 2015=EB=85=84 12=EC=9B=94 21=EC=9D=BC 02:15, Sergei Shtylyov wrote:
+> Hello.
+>=20
+> On 12/20/2015 05:31 PM, Chanwoo Choi wrote:
+>=20
+>> This patch depend on GPIOLIB configuration as following:
+>> I modified it with following diff and applied it.
 >>
->> Signed-off-by: Biao Huang <biao.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> ---
->>  drivers/pinctrl/mediatek/Kconfig              |    6 +
->>  drivers/pinctrl/mediatek/Makefile             |    1 +
->>  drivers/pinctrl/mediatek/pinctrl-mt2701.c     |  590 +++++++
->>  drivers/pinctrl/mediatek/pinctrl-mtk-common.c |   14 +
->>  drivers/pinctrl/mediatek/pinctrl-mtk-common.h |   12 +-
->>  drivers/pinctrl/mediatek/pinctrl-mtk-mt2701.h | 2323 +++++++++++++++++++++++++
->>  6 files changed, 2945 insertions(+), 1 deletion(-)
->>  create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt2701.c
->>  create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt2701.h
->
-> This patch looks good to me.
-> Thanks
->
-> Acked-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-
->
-> Joe.C
->
+>> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
+>> index ba4db7d..3d89e60 100644
+>> --- a/drivers/extcon/Kconfig
+>> +++ b/drivers/extcon/Kconfig
+>> @@ -54,6 +54,7 @@ config EXTCON_MAX14577
 >>
->> diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
->> index 02f6f92..13e9939 100644
->> --- a/drivers/pinctrl/mediatek/Kconfig
->> +++ b/drivers/pinctrl/mediatek/Kconfig
->> @@ -9,6 +9,12 @@ config PINCTRL_MTK_COMMON
->>       select OF_GPIO
->>
->>  # For ARMv7 SoCs
->> +config PINCTRL_MT2701
->> +     bool "Mediatek MT2701 pin control" if COMPILE_TEST && !MACH_MT2701
+>>   config EXTCON_MAX3355
+>>          tristate "Maxim MAX3355 USB OTG EXTCON Support"
+>> +       depends on GPIOLIB || COMPILE_TEST
+>=20
+>    If it won't compile w/o gpiolib, what's the use of COMIPLE_TEST?
+>    And no, it shouldn't depend on gpiolib. It has empty stubs for the=
+ case of CONFIG_GPIOLIB=3Dn. Obviously something is wrong with the GPIO=
+ headers, I'll look into it.
 
-This is 'bool', so can never be built as a module...
+Yes. When GPIOLIB is disabled, the build issue don't happen.
+because include/linux/gpio/consumer.h implement the dummy function
+for all gpio functions if CONFIG_GPIOLIB is disabled.
 
-[snip...]
+=46or correct operation of max3355, you should add the dependency=20
+to the extcon-max3355.c driver. This driver use the GPIO library
+certainly.
 
->> +module_init(mtk_pinctrl_init);
+COMPILE_TEST is used for just build test. You can see the detailed data=
+[1].
+[1] https://lkml.org/lkml/2013/5/22/155
 
-Yingjoe - you just ack'ed this change for the other MTK pinctrl.
-So, let's apply it here too:
-
--module_init(mtk_pinctrl_init);
-+arch_initcall(mtk_pinctrl_init);
-
->> +
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_DESCRIPTION("MediaTek MT2701 Pinctrl Driver");
->> +MODULE_AUTHOR("Biao Huang <biao.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>");
-
-And remove these lines since this isn't a module.
-
--Dan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Chanwoo Choi
