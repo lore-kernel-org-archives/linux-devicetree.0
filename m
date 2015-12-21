@@ -1,120 +1,62 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH v2 0/5] clk: lpc32xx: add clock support for NXP LPC32xx
-Date: Mon, 21 Dec 2015 21:34:14 +0200
-Message-ID: <56785436.4000505@mleia.com>
-References: <1449398757-16834-1-git-send-email-vz@mleia.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH 4/5] ARM: dts: sun5i: Add dts file for
+ the Empire Electronix D709 tablet
+Date: Mon, 21 Dec 2015 20:36:53 +0100
+Message-ID: <567854D5.7030601@redhat.com>
+References: <1450611782-9494-1-git-send-email-hdegoede@redhat.com>
+ <1450611782-9494-4-git-send-email-hdegoede@redhat.com>
+ <CAGb2v65daCCOWf7EXDkNWnxv1idXHXesOp6Et_0h-o+9drdeMA@mail.gmail.com>
+ <5677D87A.90805@redhat.com> <20151221161132.GA30359@lukather>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1449398757-16834-1-git-send-email-vz@mleia.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>
-Cc: Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Roland Stigge <stigge@antcom.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBXNJ4GZQKGQE7ICY63Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20151221161132.GA30359@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen, Michael,
+Hi,
 
-On 06.12.2015 12:45, Vladimir Zapolskiy wrote:
-> This changeset adds common clock framework driver for NXP LPC32xx
-> boards.
-> 
-> The change can be applied without any dependencies, LPC32xx device tree
-> and mach changes will be done, when this changeset is accepted.
-> 
-> The v1 version of CCF driver can be found here:
->   http://www.spinics.net/lists/arm-kernel/msg461632.html
-> 
-> The RFC version of CCF driver 9/11 can be found here:
->   http://www.spinics.net/lists/devicetree/msg100583.html
-> 
-> Changes from v1 to v2:
-> * removed dependency on the recent LPC32xx device tree changes,
->   also removed LPC32xx device tree and mach changes, which depend
->   on this series,
-> * use lowercase hex numbers in a DT binding example,
-> * incremented by 1 all clock values, possibly clock "0" may have a
->   special meaning in future,
-> * removed explicit COMMON_CLK selection for NXP LPC18xx,
-> * LPC32XX_CLK_DEFINE() does not stringify clock names,
-> * fixed a minor bug in clk_pll_set_rate().
-> 
-> Changes from RFC to v1:
-> * added definitions of a missed IRDA clock,
-> * renamed compatible property from lpc32xx-scb to lpc32xx-clk
-> * switched to regmap interface instead of mmio, this is required to
->   secure access to registers shared between pinmux, dma and clock
->   driver, unfortunately this change has to pull some code snippets
->   from common gate, divider and mux helpers rebased on regmap API,
-> * split clock definitions from the driver to be able to update
->   dts files separately from CCF driver.
-> 
-> The driver is written from scratch, here are main functional
-> differences with the legacy driver arch/arm/mach-lpc32xx/clock.c:
-> * serialized access to SCB registers,
-> * reworked routines to select PLL parameters,
-> * now the clock driver has detailed description of all clocks,
->   the original driver misses several clock entries and most of fine
->   grained clock controls, here every mux and divider are accounted,
-> * now clocks and clock hierarchies can be described in board DT file,
-> * sophisticated management of USB clocks, for example now USB device
->   controller needs only one clock instead of USB PLL, USB OTG and USB
->   device clocks,
-> * other benefits from a driver powered by CCF.
-> 
-> Patch 5/5 may produce false positives from checkpatch.pl, the fix
-> to checkpatch is found in Andrew's tree
-> 
-> Vladimir Zapolskiy (5):
->   dt-bindings: clock: add description of LPC32xx clock controller
->   dt-bindings: clock: add description of LPC32xx USB clock controller
->   dt-bindings: clock: add NXP LPC32xx clock list for consumers
->   clk: lpc18xx: add NXP specific COMMON_CLK_NXP configuration symbol
->   clk: lpc32xx: add common clock framework driver
-> 
->  .../devicetree/bindings/clock/nxp,lpc3220-clk.txt  |   30 +
->  .../bindings/clock/nxp,lpc3220-usb-clk.txt         |   22 +
->  drivers/clk/Kconfig                                |    6 +
->  drivers/clk/Makefile                               |    2 +-
->  drivers/clk/nxp/Makefile                           |    1 +
->  drivers/clk/nxp/clk-lpc32xx.c                      | 1569 ++++++++++++++++++++
->  include/dt-bindings/clock/lpc32xx-clock.h          |   56 +
->  7 files changed, 1685 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/nxp,lpc3220-usb-clk.txt
->  create mode 100644 drivers/clk/nxp/clk-lpc32xx.c
->  create mode 100644 include/dt-bindings/clock/lpc32xx-clock.h
-> 
+On 21-12-15 17:11, Maxime Ripard wrote:
+> Hi,x
+>
+> On Mon, Dec 21, 2015 at 11:46:18AM +0100, Hans de Goede wrote:
+>>> On the side, any thoughts on how to handle the differences between various "Q8"
+>>> tablets, like different I2C-based sensors and WiFi chips?
+>>
+>> For i2c based sensors the plan is to use devicetree overlays + an in kernel
+>> overlay manager which probes the i2c bus (checking known touchscreen / accelerometer
+>> addresses) and then picks the right touchscreen + accelerometer overlays.
+>>
+>> Wifi is somewhat more tricky I must admit, esp. since there seem to be q8 a23 based
+>> tablet variants with usb wifi and others with sdio wifi. Since both busses are
+>> discoverable I'm tempted to just enable both in devicetree, and let the kernel probe
+>> and see what is actually there. This assume that the way the wifichip is powered
+>> is the same on all boards, or at least that it is safe to enable the necessary
+>> regulators on all boards ...
+>>
+>>> I'm asking because with Maxime's couple-regulator we should be able to get the
+>>> RTL8723BS on the Q8 A23/33 v1.5 working.
+>>
+>> So this means enabled the sdio controller (should be safe on all boards?) and
+>> enabling 2 regulators to power the wifi-chip. I think it will be safe to do this
+>> even on boards where those regulators are not used, what do you think ?
+>
+> Wouldn't that introduce some useless power drain on those boards?
 
-this is a gentle ping, the first version of the driver was published
-in October, the only functional change is switching from iomap to regmap
-API to access the registers.
+If nothing is attached to those regulators (which I expect to be the case when
+they are not used to power wifi) then I would expect the drain to be minimal,
+my biggest worry is some board having tied these to ground, but I don't think
+that is very likely.
 
-A couple of words about the change to mitigate your impression of
-apparently imperfect code.
+Regards,
 
-The NXP LPC32xx platform is unmaintained and broken for about one
-and a half years, so I presume you won't get an ack from Roland, who
-is an official maintainer. Adding a CCF driver will be a huge progress,
-since it allows in +1 kernel release to fix the platform -- there is
-a critical problem in legacy IRQ handling based on hardware IRQs,
-irqchip driver change is ready as well, but CCF should go first,
-because it allows to remove a legacy clocksource/clockevent driver
-arch/arm/mach-lpc32xx/timer.c. That driver depends on legacy broken
-irqchip (hardware IRQs are used, irqchip with virtual IRQs will break
-the driver), it has a proper replacement drivers/clocksource/time-lpc32xx.c,
-but to use the new driver common clock support is needed. The CCF
-driver will let me remove tons of other legacy stuff as well, and this
-should be a step towards inclusion of the platform to multiarch builds.
-
-If you find impossible to include this CCF driver to v4.5, please add
-the first 4 of 5 changes, dt bindings include file is needed to
-update DTS files independently on CCF driver inclusion status.
-
-Thank you in advance.
-
-Merry Christmas, Happy Holidays!
-
---
-With best wishes,
-Vladimir
+Hans
