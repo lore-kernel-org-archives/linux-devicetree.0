@@ -1,48 +1,58 @@
-From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Subject: [PATCH 3/6] ASoC: da7219: Update REFERENCES reg
- default, in-line with HW
-Date: Tue, 22 Dec 2015 18:27:53 +0000
-Message-ID: <5233faeef4073f33e2826866eae35e8c9502c35f.1450807642.git.Adam.Thomson.Opensource@diasemi.com>
-References: <cover.1450807642.git.Adam.Thomson.Opensource@diasemi.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] can: sja1000: add documentation for Technologic
+ Systems version
+Date: Tue, 22 Dec 2015 12:28:52 -0600
+Message-ID: <CAL_JsqJ3MM7DLFndhKA3GVrb-OtYJJDcCck_i4RZh-+V_RGynQ@mail.gmail.com>
+References: <1450469845-12900-1-git-send-email-damien.riegel@savoirfairelinux.com>
+ <20151220033742.GA9883@rob-hp-laptop> <20151221150953.GA6434@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <cover.1450807642.git.Adam.Thomson.Opensource@diasemi.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151221150953.GA6434@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Damien Riegel <damien.riegel@savoirfairelinux.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>, linux-can@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, kernel@savoirfairelinux.com
 List-Id: devicetree@vger.kernel.org
 
-In current AB silicon, BIAS_EN field is enabled by default in the
-REFERENCES register, so the regmap default value should reflect
-this.
+On Mon, Dec 21, 2015 at 9:09 AM, Damien Riegel
+<damien.riegel@savoirfairelinux.com> wrote:
+> On Sat, Dec 19, 2015 at 09:37:42PM -0600, Rob Herring wrote:
+>> On Fri, Dec 18, 2015 at 03:17:24PM -0500, Damien Riegel wrote:
+>> > This commit adds documentation for the Technologic Systems version of
+>> > SJA1000. The difference with the NXP version is in the way the registers
+>> > are accessed.
+>> >
+>> > Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
+>> > ---
+>> >  Documentation/devicetree/bindings/net/can/sja1000.txt | 3 ++-
+>> >  1 file changed, 2 insertions(+), 1 deletion(-)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/net/can/sja1000.txt b/Documentation/devicetree/bindings/net/can/sja1000.txt
+>> > index b4a6d53..7a158d5 100644
+>> > --- a/Documentation/devicetree/bindings/net/can/sja1000.txt
+>> > +++ b/Documentation/devicetree/bindings/net/can/sja1000.txt
+>> > @@ -2,7 +2,7 @@ Memory mapped SJA1000 CAN controller from NXP (formerly Philips)
+>> >
+>> >  Required properties:
+>> >
+>> > -- compatible : should be "nxp,sja1000".
+>> > +- compatible : should be one of "nxp,sja1000", "technologic,sja1000".
+>> >
+>> >  - reg : should specify the chip select, address offset and size required
+>> >     to map the registers of the SJA1000. The size is usually 0x80.
+>> > @@ -14,6 +14,7 @@ Optional properties:
+>> >
+>> >  - reg-io-width : Specify the size (in bytes) of the IO accesses that
+>> >     should be performed on the device.  Valid value is 1, 2 or 4.
+>> > +   Must be set to 2 for technologic version.
+>> >     Default to 1 (8 bits).
+>>
+>> Really, this should default to 2 for technologic version and not be
+>> required.
+>
+> Would something along the line of "This property is <not used|ignored>
+> for technologic version." be more appropriate?
 
-Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
----
- sound/soc/codecs/da7219.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes, exactly.
 
-diff --git a/sound/soc/codecs/da7219.c b/sound/soc/codecs/da7219.c
-index 253d8e7..3502c13 100644
---- a/sound/soc/codecs/da7219.c
-+++ b/sound/soc/codecs/da7219.c
-@@ -1788,7 +1788,7 @@ static struct reg_default da7219_reg_defaults[] = {
- 	{ DA7219_DIG_ROUTING_DAC, 0x32 },
- 	{ DA7219_DAI_OFFSET_LOWER, 0x00 },
- 	{ DA7219_DAI_OFFSET_UPPER, 0x00 },
--	{ DA7219_REFERENCES, 0x00 },
-+	{ DA7219_REFERENCES, 0x08 },
- 	{ DA7219_MIXIN_L_SELECT, 0x00 },
- 	{ DA7219_MIXIN_L_GAIN, 0x03 },
- 	{ DA7219_ADC_L_GAIN, 0x6F },
--- 
-1.9.3
+Rob
