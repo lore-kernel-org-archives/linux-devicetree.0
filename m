@@ -1,66 +1,69 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v1 0/6] misc: add reboot mode driver
-Date: Tue, 22 Dec 2015 17:02:29 +0800
-Message-ID: <1450774949-23901-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, heiko@sntech.de, arnd@arndb.de, john.stultz@linaro.org
-Cc: sjg@chromium.org, alexandre.belloni@free-electrons.com, treding@nvidia.com, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, wxt@rock-chips.com, catalin.marinas@arm.com, olof@lixom.net, geert+renesas@glider.be, linux-rockchip@lists.infradead.org, dbaryshkov@gmail.com, sre@kernel.org, jun.nie@linaro.org, pawel.moll@arm.com, will.deacon@arm.com, akpm@linux-foundation.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, joel@jms.id.au, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, khilman@linaro.org, moritz.fischer@ettus.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, Andy Yan <andy.yan@rock-chips.com>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 5/6] ARM: dts: rockchip: add reboot mode node
+Date: Tue, 22 Dec 2015 17:04:42 +0800
+Message-ID: <5679122A.2070700@rock-chips.com>
+References: <1450697249-29994-1-git-send-email-andy.yan@rock-chips.com>
+ <1450698149-30260-1-git-send-email-andy.yan@rock-chips.com>
+ <CAFnsNoQbeAsuESSPeDDs_fQvPv96pBX=jNh=ahpWrTKLrpEExw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CAFnsNoQbeAsuESSPeDDs_fQvPv96pBX=jNh=ahpWrTKLrpEExw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Naoki FUKAUMI <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-This driver parse the reboot commands like "reboot loader"
-and "reboot recovery" to get a boot mode described in the
-device tree , then call the vendor specific write interfae
-to store the boot mode in some place like special register
-or sram , which can be read by the bootloader after system
-reboot.
-
-This is commonly done on Android based devices, in order to
-reboot the device into fastboot or recovery mode.
-
-Before this patch , I have try some hack on[0], and then found
-John Stultz also doing the same work[1].
-
-As John is busy these days, I go on with this work.
-
-[0]https://patchwork.kernel.org/patch/7647751/
-[1]https://patchwork.kernel.org/patch/7802391/
-
-Changes in v1:
-- fix the embarrassed compile warning
-- correct the maskrom magic number
-- check for the normal reboot
-- correct the maskrom magic number
-- use macro defined in rockchip_boot-mode.h for reboot-mode DT node
-
-Andy Yan (6):
-  dt-bindings: misc: add document for reboot-mode driver
-  dt-bindings: soc: add document for rockchip reboot-mode driver
-  misc: add reboot mode driver
-  soc: rockchip: add reboot mode driver
-  ARM: dts: rockchip: add reboot-mode node
-  ARM64: dts: rockchip: add reboot-mode node
-
- .../devicetree/bindings/misc/reboot-mode.txt       | 41 +++++++++
- .../bindings/soc/rockchip/rockchip,reboot-mode.txt | 39 +++++++++
- arch/arm/boot/dts/rk3288.dtsi                      | 26 ++++++
- arch/arm/boot/dts/rk3xxx.dtsi                      | 26 ++++++
- arch/arm64/boot/dts/rockchip/rk3368.dtsi           | 26 ++++++
- drivers/misc/Kconfig                               |  7 ++
- drivers/misc/Makefile                              |  1 +
- drivers/misc/reboot_mode.c                         | 96 ++++++++++++++++++++++
- drivers/soc/rockchip/Kconfig                       |  9 ++
- drivers/soc/rockchip/Makefile                      |  1 +
- drivers/soc/rockchip/reboot.c                      | 68 +++++++++++++++
- include/dt-bindings/soc/rockchip_boot-mode.h       | 30 +++++++
- include/linux/reboot.h                             |  4 +-
- 13 files changed, 373 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/misc/reboot-mode.txt
- create mode 100644 Documentation/devicetree/bindings/soc/rockchip/rockchip,reboot-mode.txt
- create mode 100644 drivers/misc/reboot_mode.c
- create mode 100644 drivers/soc/rockchip/reboot.c
- create mode 100644 include/dt-bindings/soc/rockchip_boot-mode.h
-
--- 
-1.9.1
+SGksCgpPbiAyMDE15bm0MTLmnIgyMuaXpSAxMTowNCwgTmFva2kgRlVLQVVNSSB3cm90ZToKPiBo
+aSwKPgo+IE9uIE1vbiwgRGVjIDIxLCAyMDE1IGF0IDg6NDIgUE0sIEFuZHkgWWFuPGFuZHkueWFu
+QHJvY2stY2hpcHMuY29tPiAgd3JvdGU6Cj4+IEFkZCByZWJvb3QgbW9kZSBkcml2ZXIgRFQgbm9k
+ZSBmb3IgcmszeHh4LHJrMzI4OCBwbGF0Zm9ybQo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBBbmR5IFlh
+bjxhbmR5LnlhbkByb2NrLWNoaXBzLmNvbT4KPj4gLS0tCj4+Cj4+ICAgYXJjaC9hcm0vYm9vdC9k
+dHMvcmszMjg4LmR0c2kgICAgICAgICAgICAgICAgfCAyNSArKysrKysrKysrKysrKysrKysrKysr
+Kwo+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL3JrM3h4eC5kdHNpICAgICAgICAgICAgICAgIHwgMjYg
+KysrKysrKysrKysrKysrKysrKysrKysrCj4+ICAgaW5jbHVkZS9kdC1iaW5kaW5ncy9zb2Mvcm9j
+a2NoaXBfYm9vdC1tb2RlLmggfCAzMCArKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+ICAg
+MyBmaWxlcyBjaGFuZ2VkLCA4MSBpbnNlcnRpb25zKCspCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0
+IGluY2x1ZGUvZHQtYmluZGluZ3Mvc29jL3JvY2tjaGlwX2Jvb3QtbW9kZS5oCj4+Cj4+IGRpZmYg
+LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9yazMyODguZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRz
+L3JrMzI4OC5kdHNpCj4+IGluZGV4IDA0ZWEyMDkuLjkzN2JhNGMgMTAwNjQ0Cj4+IC0tLSBhL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC5kdHNpCj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3Jr
+MzI4OC5kdHNpCj4+IEBAIC0xNzAsNiArMTcwLDMxIEBACj4+ICAgICAgICAgICAgICAgICAgfTsK
+Pj4gICAgICAgICAgfTsKPj4KPj4gKyAgICAgICByZWJvb3RfbW9kZSB7Cj4+ICsgICAgICAgICAg
+ICAgICBjb21wYXRpYmxlID0gInJvY2tjaGlwLHJlYm9vdC1tb2RlIjsKPj4gKyAgICAgICAgICAg
+ICAgIHJvY2tjaGlwLHJlZ21hcCA9IDwmcG11PjsKPj4gKyAgICAgICAgICAgICAgIG9mZnNldCA9
+IDwweDk0PjsKPj4gKyAgICAgICAgICAgICAgIGxvYWRlciB7Cj4+ICsgICAgICAgICAgICAgICAg
+ICAgICAgIGxpbnV4LG1vZGUgPSAibG9hZGVyIjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+bGludXgsbWFnaWMgPSA8MHg1MjQyQzMwMT47Cj4+ICsgICAgICAgICAgICAgICB9Owo+PiArCj4+
+ICsgICAgICAgICAgICAgICBtYXNrcm9tIHsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgbGlu
+dXgsbW9kZSA9ICJtYXNrcm9tIjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgbGludXgsbWFn
+aWMgPSA8MHg1MjQyQzMwMj47Cj4+ICsgICAgICAgICAgICAgICB9Owo+PiArCj4+ICsgICAgICAg
+ICAgICAgICByZWNvdmVyeSB7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGxpbnV4LG1vZGUg
+PSAicmVjb3ZlcnkiOwo+PiArICAgICAgICAgICAgICAgICAgICAgICBsaW51eCxtYWdpYyA9IDww
+eDUyNDJDMzAzPjsKPj4gKyAgICAgICAgICAgICAgIH07Cj4+ICsKPj4gKyAgICAgICAgICAgICAg
+IGZhc3Rib290IHsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgbGludXgsbW9kZSA9ICJmYXN0
+Ym9vdCI7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGxpbnV4LG1hZ2ljID0gPDB4NTI0MkMz
+MDk+Owo+PiArICAgICAgICAgICAgICAgfTsKPj4gKyAgICAgICB9Owo+PiArCj4gKHNuaXApCj4K
+PiBJIHNvbWV0aW1lcyB1c2UgMHhFRjA4QTUzQyB0byBsb2FkIGJvb3Rsb2FkZXIgZnJvbSBTRCBj
+YXJkIGluc3RlYWQgb2YKPiBvbi1ib2FyZCBmbGFzaCBtZW1vcnkgc3VjaCBhcyBlTU1DLgo+ICAg
+aHR0cHM6Ly9naXRodWIuY29tL2xpbnV4LXJvY2tjaGlwL3UtYm9vdC1yb2NrY2hpcC9ibG9iL3Ut
+Ym9vdC1yazMyODgvY29tbW9uL2NtZF9yb2NrdXNiLmMjTDg5Mwo+Cj4gSSBkb24ndCBrbm93IGFu
+eSBkZXRhaWwgYWJvdXQgdGhpcyBmdW5jdGlvbi4KPiAoYWJvdmUgY29kZSBzYXlzICJyZWJvb3Qg
+dG8gbWFza3JvbSIsIGJ1dCBpdCBzaG91bGQgYmUgd3JvbmcgZnJvbSBteSBleHBlcmllbmNlKQo+
+Cj4gZG8geW91IGtub3cgc29tZXRoaW5nIGFib3V0IHRoaXMgZnVuY3Rpb24/IGNhbiB5b3UgaGFu
+ZGxlIHRoaXMgdG9vPwo+Cj4gUmVnYXJkcywKPgo+Cj4KICBIYXZlIHNvbWUgZGlzY3Vzc2lvbiB3
+aXRoIHRoZSBib290bG9hZGVyIGVuZ2luZWVyLCB0aGUgY29ycmVjdCBtYWdpYyAgCm51bWJlciB0
+bwogIHJlYm9vdCB0aGUgc3lzdGVtIHRvIG1hc2tyb20gbW9kZSBpcyAweEVGMDhBNTNDLiBJIHdp
+bGwgIGZpeCBpdCBpbiAKbmV4dCB2ZXJzaW9uLgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCkxpbnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdApMaW51eC1y
+b2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
