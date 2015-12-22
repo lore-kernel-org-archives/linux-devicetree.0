@@ -1,76 +1,65 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: ts-4800: Add LCD support
-Date: Tue, 22 Dec 2015 20:24:35 +0800
-Message-ID: <20151222122435.GE26290@tiger>
-References: <1450458033-30471-1-git-send-email-damien.riegel@savoirfairelinux.com>
- <20151221133519.GC18410@tiger>
- <20151221184057.GE12696@localhost>
+From: "Jingoo Han" <jingoohan1@gmail.com>
+Subject: Re: [PATCH v11 17/19] drm: bridge: analogix/dp: expand the look time
+ for waiting AUX CH reply
+Date: Tue, 22 Dec 2015 21:26:52 +0900
+Message-ID: <000a01d13cb4$0f81f510$2e85df30$@com>
+References: <1450236018-1118-1-git-send-email-ykk@rock-chips.com>
+ <1450238257-3274-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151221184057.GE12696@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1450238257-3274-1-git-send-email-ykk@rock-chips.com>
+Content-Language: ko
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: 'Yakir Yang' <ykk@rock-chips.com>, 'Inki Dae' <inki.dae@samsung.com>, 'Mark Yao' <mark.yao@rock-chips.com>, 'Heiko Stuebner' <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, 'Russell King' <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, 'Jingoo Han' <jingoohan1@gmail.com>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 'Kishon Vijay Abraham I' <kishon@ti.com>, javier@osg.samsung.com, 'Rob Herring' <robh+dt@kernel.org>, 'Andy Yan' <andy.yan@rock-chips.com>, 'Thierry Reding' <treding@nvidia.com>, 'Gustavo Padovan' <gustavo.padovan@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 21, 2015 at 01:40:59PM -0500, Damien Riegel wrote:
-> > > @@ -30,6 +30,60 @@
-> > >  			clock-frequency = <24576000>;
-> > >  		};
-> > >  	};
-> > > +
-> > > +	regulators {
-> > > +		compatible = "simple-bus";
-> > > +		#address-cells = <1>;
-> > > +		#size-cells = <0>;
-> > > +
-> > > +		backlight_reg: regulator@0 {
-> > > +			compatible = "regulator-fixed";
-> > > +			reg = <0>;
-> > > +			pinctrl-names = "default";
-> > > +			pinctrl-0 = <&pinctrl_enable_lcd>;
-> > > +			regulator-name = "enable_lcd_reg";
-> > > +			regulator-min-microvolt = <3300000>;
-> > > +			regulator-max-microvolt = <3300000>;
-> > > +			gpio = <&gpio4 9 GPIO_ACTIVE_HIGH>;
-> > > +			enable-active-high;
-> > > +		};
-> > > +	};
-> > 
-> > DT maintainers dislike this fake simple-bus container.  Let's put the
-> > regulator directly under root like below.
-> > 
-> >         backlight_reg: regulator-backlight {
-> >                 compatible = "regulator-fixed";
-> >                 pinctrl-names = "default";
-> >                 pinctrl-0 = <&pinctrl_enable_lcd>;
-> >                 regulator-name = "enable_lcd_reg";
-> >                 regulator-min-microvolt = <3300000>;
-> >                 regulator-max-microvolt = <3300000>;
-> >                 gpio = <&gpio4 9 GPIO_ACTIVE_HIGH>;
-> >                 enable-active-high;
-> >         };
-> > 
-> > I fixed it up and applied both patches.
-> 
-> Thank you. I am using the imx51-*.dts as examples, maybe they should be
-> updated to be consistent with the newer device tree style? I'm willing
-> to do that but I don't want to make changes on dts files that I can't
-> test.
-
-Leave them there for now.
-
-> 
-> Sidenote: your Signed-off-by is missing on these two patches.
-
-Oops.  Thanks.  Fixed now.
-
-Shawn
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkbmVzZGF5LCBEZWNlbWJlciAxNiwgMjAxNSAxMjo1OCBQTSwgWWFraXIgWWFuZyB3cm90
+ZToKPiAKPiBBZnRlciB0ZXN0IG9uIHJvY2tjaGlvcCBwbGF0Zm9ybSwgaSBmb3VuZCBzb21ldGlt
+cyBkcml2ZXIgd291bGQgZmFpbGVkCj4gYXQgcmVhZGluZyBFRElEIG1lc3NhZ2UuIEFmdGVyIGRl
+YnVnZ2luZyBtb3JlLCBpIGZvdW5kIHRoYXQgaXQncyBva2F5Cj4gdG8gcmVhZF9hIGJ5dGUgZnJv
+bSBpMmMsIGJ1dCBpdCB3b3VsZCBmYWlsZWQgYXQgQVVYIHRyYW5zY2F0aW9uIGlmIHdlCj4gdHJ5
+IHRvIHJlYWR5IG11bHRpLWJ5dGVzIGZyb20gaTJjLgo+IAo+IERyaXZlciBqdXN0IGNhbid0IHJl
+Y2VpdmVkIHRoZSBBVVggQ0ggcmVwbHkgY29tbWFuZCwgZXZlbiBubyBBVVggZXJyb3IKPiBjb2Rl
+LiBJIG1heSBndWVzcyB0aGF0IHRoZSBBVVggd2FpdCB0aW1lIGlzIG5vdCBlbm91Z2gsIHNvIEkg
+dHJ5IHRvCj4gZXhwYW5kIHRoZSBBVVggd2FpdCB0aW1lLCBhbmQgaSBkbyBzZWUgdGhpcyBjb3Vs
+ZCBmaXggdGhlIEVESUQgcmVhZAo+IGZhaWxlZCBhdCByb2NrY2hpcCBwbGF0Zm9ybS4KPiAKPiBB
+bmQgSSB0aG91Z2h0IHRoYXQgZXhwYW5kIHRoZSB3YWl0IHRpbWUgd29uJ3QgaHVydCBFeHlub3Mg
+cGxhdGZvcm0gdG9vCj4gbXVjaCwgY2F1c2UgRXh5bm9zIGRpZG4ndCBoYXZlIHRoaXMgcHJvYmxl
+bSwgdGhlbiBkcml2ZXIgd291bGQgcmVjZWl2ZWQKPiB0aGUgcmVwbHkgY29tbWFuZCB2ZXJ5IHNv
+b24sIHNvIG5vIG1vcmUgYWRkaXRpb25hbCB3YWl0IHRpbWUgd291bGQgYnJpbmcKPiB0byBFeHlu
+b3MgcGxhdGZvcm0uCj4gCj4gU2lnbmVkLW9mZi1ieTogWWFraXIgWWFuZyA8eWtrQHJvY2stY2hp
+cHMuY29tPgo+IC0tLQo+IENoYW5nZXMgaW4gdjExOiBOb25lCj4gQ2hhbmdlcyBpbiB2MTA6IE5v
+bmUKPiBDaGFuZ2VzIGluIHY5OiBOb25lCj4gQ2hhbmdlcyBpbiB2ODogTm9uZQo+IENoYW5nZXMg
+aW4gdjc6IE5vbmUKPiBDaGFuZ2VzIGluIHY2OiBOb25lCj4gQ2hhbmdlcyBpbiB2NTogTm9uZQo+
+IENoYW5nZXMgaW4gdjQ6IE5vbmUKPiBDaGFuZ2VzIGluIHYzOiBOb25lCj4gQ2hhbmdlcyBpbiB2
+MjogTm9uZQo+IAo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FuYWxvZ2l4L2FuYWxvZ2l4X2Rw
+X3JlZy5jIHwgMiArLQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRp
+b24oLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbmFsb2dpeC9h
+bmFsb2dpeF9kcF9yZWcuYwo+IGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbmFsb2dpeC9hbmFs
+b2dpeF9kcF9yZWcuYwo+IGluZGV4IGM3ZTI5NTkuLmRjMzc2YmQgMTAwNjQ0Cj4gLS0tIGEvZHJp
+dmVycy9ncHUvZHJtL2JyaWRnZS9hbmFsb2dpeC9hbmFsb2dpeF9kcF9yZWcuYwo+ICsrKyBiL2Ry
+aXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhfZHBfcmVnLmMKPiBAQCAtNDgy
+LDcgKzQ4Miw3IEBAIGludCBhbmFsb2dpeF9kcF9zdGFydF9hdXhfdHJhbnNhY3Rpb24oc3RydWN0
+IGFuYWxvZ2l4X2RwX2RldmljZSAqZHApCj4gIAlyZWcgPSByZWFkbChkcC0+cmVnX2Jhc2UgKyBB
+TkFMT0dJWF9EUF9JTlRfU1RBKTsKPiAgCXdoaWxlICghKHJlZyAmIFJQTFlfUkVDRUlWKSkgewo+
+ICAJCXRpbWVvdXRfbG9vcCsrOwo+IC0JCWlmIChEUF9USU1FT1VUX0xPT1BfQ09VTlQgPCB0aW1l
+b3V0X2xvb3ApIHsKPiArCQlpZiAoRFBfVElNRU9VVF9MT09QX0NPVU5UICogMTAgPCB0aW1lb3V0
+X2xvb3ApIHsKCk5vLCBJIGhhdGUgdGhpcyBjb2RpbmcuCmFuYWxvZ2l4X2RwX3JlZy5jIGlzIHRo
+ZSBjb21tb24gY29kZSB0aGF0IGNhbiBiZSBzaGFyZWQgYnkgdmFyaW91cyBTb0NzLgpQbGVhc2Us
+IGZpbmQgYW5vdGhlciB3YXkuCgpCZXN0IHJlZ2FyZHMsCkppbmdvbyBIYW4KCgo+ICAJCQlkZXZf
+ZXJyKGRwLT5kZXYsICJBVVggQ0ggY29tbWFuZCByZXBseSBmYWlsZWQhXG4iKTsKPiAgCQkJcmV0
+dXJuIC1FVElNRURPVVQ7Cj4gIAkJfQo+IC0tCj4gMS45LjEKCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
