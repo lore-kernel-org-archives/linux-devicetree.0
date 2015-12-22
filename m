@@ -1,104 +1,95 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH 2/2] pci, pcie-thunder-pem: Add PCIe host driver for
- ThunderX processors.
-Date: Tue, 22 Dec 2015 10:03:52 +0000
-Message-ID: <20151222100352.GC32623@arm.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/2] PCI: generic: Refactor code to enable reuse by other
+ drivers.
+Date: Tue, 22 Dec 2015 10:07:33 +0000
+Message-ID: <20151222100732.GD32623@arm.com>
 References: <1450749222-15966-1-git-send-email-ddaney.cavm@gmail.com>
- <1450749222-15966-3-git-send-email-ddaney.cavm@gmail.com>
+ <1450749222-15966-2-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1450749222-15966-3-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, David Daney <david.daney@cavium.com>
+In-Reply-To: <1450749222-15966-2-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 21, 2015 at 05:53:42PM -0800, David Daney wrote:
-> From: David Daney <david.daney@cavium.com>
+On Mon, Dec 21, 2015 at 05:53:41PM -0800, David Daney wrote:
+> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 > 
-> Some Cavium ThunderX processors require quirky access methods for the
-> config space of the PCIe bridge.  Add a driver to provide these config
-> space accessor functions.  The pci-host-generic driver code is used to
-> configure the PCI machinery.
+> No change in functionality.
 > 
-> Signed-off-by: David Daney <david.daney@cavium.com>
+> Move structure definitions into a separate header file.  Split probe
+> function in to two parts:
+> 
+>    - a small driver specific probe function (gen_pci_probe)
+> 
+>    - a common probe that can be used by other drivers
+>      (gen_pci_common_probe)
+> 
+> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 > ---
->  .../devicetree/bindings/pci/pcie-thunder-pem.txt   |  43 ++++
->  drivers/pci/host/Kconfig                           |   6 +
->  drivers/pci/host/Makefile                          |   1 +
->  drivers/pci/host/pcie-thunder-pem.c                | 283 +++++++++++++++++++++
->  4 files changed, 333 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/pcie-thunder-pem.txt
->  create mode 100644 drivers/pci/host/pcie-thunder-pem.c
+>  drivers/pci/host/pci-host-generic.c | 53 ++++++++++++-----------------------
+>  drivers/pci/host/pci-host-generic.h | 56 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 74 insertions(+), 35 deletions(-)
+>  create mode 100644 drivers/pci/host/pci-host-generic.h
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/pcie-thunder-pem.txt b/Documentation/devicetree/bindings/pci/pcie-thunder-pem.txt
-> new file mode 100644
-> index 0000000..66824d5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/pcie-thunder-pem.txt
-> @@ -0,0 +1,43 @@
-> +* ThunderX PEM PCIe host controller
-> +
-> +Firmware-initialized PCIe host controller found on some Cavium
-> +ThunderX processors.
-> +
-> +The properties and their meanings are identical to those described in
-> +host-heneric-pci.txt except as listed below.
-> +
-> +Properties of the host controller node that differ from
-> +host-heneric-pci.txt:
-
-Consistently odd typo (s/heneric/generic/)!
-
-> +
-> +- compatible     : Must be "cavium,pci-host-thunder-pem"
-> +
-> +- reg            : Two entries: First the configuration space for down
-> +                   stream devices base address and size, as accessed
-> +                   from the parent bus. Second, the register bank of
-> +                   the PEM device PCIe bridge.
-> +
-> +Example:
-> +
-> +    pem2 {
-> +	compatible = "cavium,pci-host-thunder-pem";
-> +	device_type = "pci";
-> +	msi-parent = <&its>;
-> +	msi-map = <0 &its 0x10000 0x10000>;
-> +	bus-range = <0x8f 0xc7>;
-> +	#size-cells = <2>;
-> +	#address-cells = <3>;
-> +
-> +	reg = <0x8880 0x8f000000 0x0 0x39000000>,  /* Configuration space */
-> +	      <0x87e0 0xc2000000 0x0 0x00010000>; /* PEM space */
-> +	ranges = <0x01000000 0x00 0x00020000 0x88b0 0x00020000 0x00 0x00010000>, /* I/O */
-> +		 <0x03000000 0x00 0x10000000 0x8890 0x10000000 0x0f 0xf0000000>, /* mem64 */
-> +		 <0x43000000 0x10 0x00000000 0x88a0 0x00000000 0x10 0x00000000>, /* mem64-pref */
-> +		 <0x03000000 0x87e0 0xc2f00000 0x87e0 0xc2000000 0x00 0x00100000>; /* mem64 PEM BAR4 */
-> +
-> +	#interrupt-cells = <1>;
-> +	interrupt-map-mask = <0 0 0 7>;
-> +	interrupt-map = <0 0 0 1 &gic0 0 0 0 24 4>, /* INTA */
-> +			<0 0 0 2 &gic0 0 0 0 25 4>, /* INTB */
-> +			<0 0 0 3 &gic0 0 0 0 26 4>, /* INTC */
-> +			<0 0 0 4 &gic0 0 0 0 27 4>; /* INTD */
-> +    };
-> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-> index f131ba9..16ed9c3 100644
-> --- a/drivers/pci/host/Kconfig
-> +++ b/drivers/pci/host/Kconfig
-> @@ -172,4 +172,10 @@ config PCI_HISI
->  	help
->  	  Say Y here if you want PCIe controller support on HiSilicon HIP05 SoC
+> diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
+> index 5434c90..e83cec7 100644
+> --- a/drivers/pci/host/pci-host-generic.c
+> +++ b/drivers/pci/host/pci-host-generic.c
+> @@ -25,33 +25,7 @@
+>  #include <linux/of_pci.h>
+>  #include <linux/platform_device.h>
 >  
-> +config PCIE_HOST_THUNDER_PEM
-> +	bool "Cavium Thunder PCIe controller to off-chip devices"
-> +	depends on PCI_HOST_GENERIC && ARM64
+> -struct gen_pci_cfg_bus_ops {
+> -	u32 bus_shift;
+> -	struct pci_ops ops;
+> -};
+> -
+> -struct gen_pci_cfg_windows {
+> -	struct resource				res;
+> -	struct resource				*bus_range;
+> -	void __iomem				**win;
+> -
+> -	struct gen_pci_cfg_bus_ops		*ops;
+> -};
+> -
+> -/*
+> - * ARM pcibios functions expect the ARM struct pci_sys_data as the PCI
+> - * sysdata.  Add pci_sys_data as the first element in struct gen_pci so
+> - * that when we use a gen_pci pointer as sysdata, it is also a pointer to
+> - * a struct pci_sys_data.
+> - */
+> -struct gen_pci {
+> -#ifdef CONFIG_ARM
+> -	struct pci_sys_data			sys;
+> -#endif
+> -	struct pci_host_bridge			host;
+> -	struct gen_pci_cfg_windows		cfg;
+> -	struct list_head			resources;
+> -};
+> +#include "pci-host-generic.h"
+>  
+>  static void __iomem *gen_pci_map_cfg_bus_cam(struct pci_bus *bus,
+>  					     unsigned int devfn,
+> @@ -208,19 +182,15 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+>  	return 0;
+>  }
+>  
+> -static int gen_pci_probe(struct platform_device *pdev)
+> +int gen_pci_common_probe(struct platform_device *pdev,
+> +			 struct gen_pci *pci)
 
-|| COMPILE_TEST ?
-
-(or does the use of writeq get you? If so, maybe COMPILE_TEST && 64BIT)
+Whilst I'm fine with this patch, I don't know how Bjorn will feel about
+exposing this function outside of the generic host driver. We could avoid
+it by turning things upside-down and having the generic driver probe
+the other drivers by matching a compatible string with a probe function
+pointer, but I'd be interested to see what others think.
 
 Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
