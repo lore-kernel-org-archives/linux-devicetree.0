@@ -1,109 +1,37 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] powerpc/fsl: Update fman dt binding with pcs-phy and
- tbi-phy
-Date: Tue, 22 Dec 2015 15:42:58 -0600
-Message-ID: <1450820578.18314.94.camel@freescale.com>
-References: <1450757888-14216-1-git-send-email-igal.liberman@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] ASoC: sun4i-codec: Use proper output for external amp routes
+Date: Tue, 22 Dec 2015 23:00:17 +0100
+Message-ID: <1450821617-12906-1-git-send-email-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450757888-14216-1-git-send-email-igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shaohui.xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-12-22 at 06:18 +0200, igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
-> From: Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> Signed-off-by: Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  .../devicetree/bindings/powerpc/fsl/fman.txt       |   39
-> ++++++++++++++++++++
->  1 file changed, 39 insertions(+)
+An external amp (if any) is connected to the external outputs of the SoC
+of course, rather then directly to the internal amp.
 
-Some description in the log would be nice, especially why it can't use phy
--handle
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ sound/soc/sunxi/sun4i-codec.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> 
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> index 1fc5328..7a6d7c3 100644
-> --- a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> +++ b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> @@ -315,6 +315,16 @@ PROPERTIES
->  		Value type: <phandle>
->  		Definition: A phandle for 1EEE1588 timer.
->  
-> +- pcsphy-handle
-> +		Usage required for "fsl,fman-memac" MACs
-> +		Value type: <phandle>
-> +		Definition: A phandle for pcsphy.
-> +
-> +- tbi-handle
-> +		Usage required for "fsl,fman-dtsec" MACs
-> +		Value type: <phandle>
-> +		Definition: A phandle for tbiphy.
-> +
->  EXAMPLE
->  
->  fman1_tx28: port@a8000 {
-> @@ -340,6 +350,7 @@ ethernet@e0000 {
->  	reg = <0xe0000 0x1000>;
->  	fsl,fman-ports = <&fman1_rx8 &fman1_tx28>;
->  	ptp-timer = <&ptp-timer>;
-> +	tbi-handle = <&tbi0>;
->  };
->  
->  ===========================================================================
-> =
-> @@ -415,6 +426,13 @@ PROPERTIES
->  		The settings and programming routines for internal/external
->  		MDIO are different. Must be included for internal MDIO.
->  
-> +For internal PHY device on internal mdio bus, a PHY node should be created.
-> +See the definition of the PHY node in booting-without-of.txt for an
-> +example of how to define a PHY (Internal PHY has no interrupt line).
-> +- For "fsl,fman-mdio" compatible internal mdio bus, the PHY is TBI PHY.
-> +- For "fsl,fman-memac-mdio" compatible internal mdio bus, the PHY is PCS
-> PHY,
-> +  PCS PHY addr must be '0'.
-> +
->  EXAMPLE
->  
->  Example for FMan v2 external MDIO:
-> @@ -425,12 +443,28 @@ mdio@f1000 {
->  	interrupts = <101 2 0 0>;
->  };
->  
-> +Example for FMan v2 internal MDIO:
-> +
-> +mdio@e3120 {
-> +	compatible = "fsl,fman-mdio";
-> +	reg = <0xe3120 0xee0>;
-> +	fsl,fman-internal-mdio;
-> +
-> +	tbi1: tbi-phy@8 {
-> +		reg = <0x8>;
-> +		device_type = "tbi-phy";
-> +	};
-> +};
-> +
->  Example for FMan v3 internal MDIO:
->  
->  mdio@f1000 {
->  	compatible = "fsl,fman-memac-mdio";
->  	reg = <0xf1000 0x1000>;
->  	fsl,fman-internal-mdio;
-> +
-> +	pcsphy6: ethernet-phy@0 {
-> +		reg = <0x0>;
->  };
-
-missing }
-
--Scott
+diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-codec.c
+index e6cc6a1..44f170c 100644
+--- a/sound/soc/sunxi/sun4i-codec.c
++++ b/sound/soc/sunxi/sun4i-codec.c
+@@ -728,7 +728,8 @@ static const struct snd_soc_dapm_widget sun4i_codec_card_dapm_widgets[] = {
+ };
+ 
+ static const struct snd_soc_dapm_route sun4i_codec_card_dapm_routes[] = {
+-	{ "Speaker", NULL, "Power Amplifier" },
++	{ "Speaker", NULL, "HP Right" },
++	{ "Speaker", NULL, "HP Left" },
+ };
+ 
+ static struct snd_soc_card *sun4i_codec_create_card(struct device *dev)
+-- 
+2.5.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
