@@ -1,60 +1,47 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH v2 2/2] ASoC: atmel-classd: DT binding for PDMIC
- driver
-Date: Tue, 22 Dec 2015 23:49:25 +0000
-Message-ID: <20151222234925.GB16023@sirena.org.uk>
-References: <1450345800-21299-1-git-send-email-songjun.wu@atmel.com>
- <1450345800-21299-3-git-send-email-songjun.wu@atmel.com>
- <20151219040913.D0F442C02FD@rob-hp-laptop>
- <20151219113055.GF5727@sirena.org.uk>
- <CAL_JsqKTNJ6Y0OUydkef3aYUO2jzDb30myvGJau-RBoJ3qe8hQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: sound: add devicetree document for
+ rt5616
+Date: Tue, 22 Dec 2015 23:53:11 +0000
+Message-ID: <20151222235311.GC16023@sirena.org.uk>
+References: <1450763103-21073-1-git-send-email-wxt@rock-chips.com>
+ <1450763103-21073-2-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="z6Eq5LdranGa6ru8"
+	protocol="application/pgp-signature"; boundary="L6iaP+gRLNZHKoI4"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqKTNJ6Y0OUydkef3aYUO2jzDb30myvGJau-RBoJ3qe8hQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1450763103-21073-2-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Songjun Wu <songjun.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1UjKrWyv+zT/A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---z6Eq5LdranGa6ru8
+--L6iaP+gRLNZHKoI4
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Dec 22, 2015 at 12:37:24PM -0600, Rob Herring wrote:
-> On Sat, Dec 19, 2015 at 5:30 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+On Tue, Dec 22, 2015 at 01:45:03PM +0800, Caesar Wang wrote:
+> Add the description for rt5616 codec.
 
-> >> "label" can be used here if this is really needed.
+Please use subject lines matching the style for the subsystem.
 
-> > The plastics for the system are often very important for audio
-> > configuration - we need userspace to be able to distinguish between
-> > systems that are identical even on the electrical level.
-
-> Okay. That is exactly what label is for, so please use it.
-
-Can you send fixes for this please?  There's rather a lot of existing
-bindings using the current scheme, together with some subsystem code to
-help parse them.
-
---z6Eq5LdranGa6ru8
+--L6iaP+gRLNZHKoI4
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJWeeGEAAoJECTWi3JdVIfQlcIH/RdURUdVLQXGdf+1lhPgORHu
-tY8J7ptAFCYxUPEgUPLZZHytOn4hPWLS0G66Yg5I2gUh5ueQ/LmQMJS6OqBvzi06
-EQIZU9tLTKrWgN+ffKU+HlmqmNk56zuQs+hSW1Lp+GE29CDV4pyafAPEIo/ExJnb
-jFw6jnnw8BXIKOBMNI/I7CDr7H8X4vBB4zfMuisSb1LsUY7ht71wekWHBmbMy/za
-PCD2CoF+pLWamf4BW3Yhqg9CcSqK1NQICp1qQHvS8iIrvLyDyownTpQMBYfmF6DP
-M87wrqdvc2y2hr+tXSRhf2L+k+ifaCZz/oD/0wGbOizixJ4rlwn5yFLBxzymmaA=
-=myZJ
+iQEcBAEBCAAGBQJWeeJnAAoJECTWi3JdVIfQkt4H/RdpOunUbJEAkczVGJvo5e5u
+dsRCfI8lUUmQJEVW7nTaAmBz6wi74lftDkC2moVlWR4LtbrPCn80Nlcq83fcK46R
+JsSfVAaarOuNEzZxO556CpJ6GM0P0f/xFcj71oqEMNoq/nJ+dsrWYFmjqlbFdF7i
+IsA5DjYj6q0YUgu1i2uKmLxjUlmsA9ZeYvNg2sD7073CpiIMEgmKrHrEW63rrhpZ
+wM60P1v8Eb0KicU348frxQYiN93SmWFCAS6r3ab46dhSzFo8pAsFu92YyuCyXROT
+LNyo+FS0x/FsGab3AKcxhsrFzz08QnaZcRj+RNr0K86Yr2O+8/WM+QvQZaYLyYk=
+=2iir
 -----END PGP SIGNATURE-----
 
---z6Eq5LdranGa6ru8--
+--L6iaP+gRLNZHKoI4--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
