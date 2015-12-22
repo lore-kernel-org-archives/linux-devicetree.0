@@ -1,45 +1,29 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [GIT PULL 5/9] ARM: EXYNOS: Drivers for v4.5
-Date: Mon, 21 Dec 2015 20:50:42 -0800
-Message-ID: <20151222045042.GF30172@localhost>
-References: <1449020386-20250-1-git-send-email-k.kozlowski@samsung.com>
- <1449020386-20250-6-git-send-email-k.kozlowski@samsung.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 1/2] ARM: at91/dt: sama5d2: add pdmic node
+Date: Tue, 22 Dec 2015 20:07:40 +0100
+Message-ID: <20151222190740.GF8623@piout.net>
+References: <1450776365-6373-1-git-send-email-songjun.wu@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1449020386-20250-6-git-send-email-k.kozlowski@samsung.com>
+In-Reply-To: <1450776365-6373-1-git-send-email-songjun.wu@atmel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, arm@kernel.org, Kukjin Kim <kgene@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kevin Hilman <khilman@linaro.org>, linux.walleij@linaro.org
+To: Songjun Wu <songjun.wu@atmel.com>
+Cc: nicolas.ferre@atmel.com, Ludovic.Desroches@atmel.com, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
-
-On Wed, Dec 02, 2015 at 10:39:42AM +0900, Krzysztof Kozlowski wrote:
-> Hi Kukjin,
-> 
-> Pinctrl for v4.5.
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
-> The following changes since commit 8005c49d9aea74d382f474ce11afbbc7d7130bec:
-> 
->   Linux 4.4-rc1 (2015-11-15 17:00:27 -0800)
-> 
-> are available in the git repository at:
-> 
->   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-drivers-4.5
-> 
-> for you to fetch changes up to 023e06dfa6882f500b9c86fd61f0b1913aa07f36:
-> 
->   pinctrl: exynos: add exynos5410 SoC specific data (2015-11-16 10:54:43 +0900)
 
 Hi,
 
-This should either go in through the pinctrl tree, or have an acked/reviewed-by
-one of the pinctrl maintainers.
+On 22/12/2015 at 17:26:04 +0800, Songjun Wu wrote :
+> Add pdmic node.`
+> 
+> Signed-off-by: Songjun Wu <songjun.wu@atmel.com>
+> ---
 
+Both patches have been applied and pushed out, thanks.
 
-
--Olof
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
