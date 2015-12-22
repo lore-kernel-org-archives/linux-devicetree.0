@@ -1,68 +1,100 @@
-From: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Subject: Re: [PATCH v2 9/9] MIPS: dts: jz4780/ci20: Add compatible property
- to "partitions" node
-Date: Tue, 22 Dec 2015 02:16:09 +0100
-Message-ID: <20151222011609.GA15881@linux-mips.org>
-References: <1450694033-27717-1-git-send-email-geert+renesas@glider.be>
- <1450694033-27717-10-git-send-email-geert+renesas@glider.be>
+From: Bard Liao <bardliao@realtek.com>
+Subject: Re: [PATCH v1 2/2] dt-bindings: sound: add devicetree
+	document for rt5616
+Date: Tue, 22 Dec 2015 01:50:16 +0000
+Message-ID: <ABFD875FF5FB574BA706497D987D48D7010E22FC@RTITMBSV03.realtek.com.tw>
+References: <1450703894-32623-2-git-send-email-wxt@rock-chips.com>
+ <1450709768-14898-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1450694033-27717-10-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1450709768-14898-1-git-send-email-wxt@rock-chips.com>
+Content-Language: zh-TW
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Caesar Wang <wxt@rock-chips.com>, "broonie@kernel.org" <broonie@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "heiko@sntech.de" <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 21, 2015 at 11:33:53AM +0100, Geert Uytterhoeven wrote:
-> Date:   Mon, 21 Dec 2015 11:33:53 +0100
-> From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement
->  <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth
->  <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>,
->  Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>,
->  Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring
->  <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
->  linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
->  linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org,
->  linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> Subject: [PATCH v2 9/9] MIPS: dts: jz4780/ci20: Add compatible property to
->  "partitions" node
+
+> -----Original Message-----
+> From: Caesar Wang [mailto:wxt@rock-chips.com]
+> Sent: Monday, December 21, 2015 10:56 PM
+> To: broonie@kernel.org; robh+dt@kernel.org
+> Cc: linux-kernel@vger.kernel.org; devicetree@vger.kernel.org;
+> alsa-devel@alsa-project.org; Bard Liao; heiko@sntech.de; Caesar Wang
+> Subject: [PATCH v1 2/2] dt-bindings: sound: add devicetree document for
+> rt5616
 > 
-> As of commit e488ca9f8d4f62c2 ("doc: dt: mtd: partitions: add compatible
-> property to "partitions" node"), the "partitions" subnode of an SPI
-> FLASH device node must have a compatible property. The partitions are no
-> longer detected if it is not present.
+> Add the description for rt5616 codec.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+> 
 > ---
-> v2:
->   - New.
-> ---
->  arch/mips/boot/dts/ingenic/ci20.dts | 1 +
->  1 file changed, 1 insertion(+)
 > 
-> diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-> index 782258c0e4fbba8e..1652d8d60b1e4b86 100644
-> --- a/arch/mips/boot/dts/ingenic/ci20.dts
-> +++ b/arch/mips/boot/dts/ingenic/ci20.dts
-> @@ -70,6 +70,7 @@
->  			nand-on-flash-bbt;
->  
->  			partitions {
-> +				compatible = "fixed-partitions";
->  				#address-cells = <2>;
->  				#size-cells = <2>;
->  
-> -- 
+> Changes in v1:
+> - As Heiko comments, remove the not exist option properties.
+> 
+>  Documentation/devicetree/bindings/sound/rt5616.txt | 36
+> ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/sound/rt5616.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/rt5616.txt
+> b/Documentation/devicetree/bindings/sound/rt5616.txt
+> new file mode 100644
+> index 0000000..2030a22
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/rt5616.txt
+> @@ -0,0 +1,36 @@
+> +RT5616 audio CODEC
+> +
+> +This device supports I2C only.
+> +
+> +Required properties:
+> +
+> +- compatible : "realtek,rt5616".
+> +
+> +- reg : The I2C address of the device.
+> +
+> +Pins on the device (for linking into audio routes) for RT5616:
+> +
+> +  * IN1P
+> +  * IN2P
+> +  * IN2N
+> +  * LOUTL
+> +  * LOUTR
+
+These names below seems not defined in rt5616_dapm_widgets.
+Where are they from?
+
+> +  * CPN2
+> +  * CPP2
+> +  * CPN1
+> +  * CPP1
+> +  * HPO_R
+> +  * HPO_L
+> +  * ADCDAT1
+> +  * DACDAT1
+> +  * LRCK1
+> +  * BCLK1
+> +  * MCLK
+> +  * GPIO1
+> +
+> +Example:
+> +
+> +rt5616 {
+> +	compatible = "realtek,rt5616";
+> +	reg = <0x1b>;
+> +};
+> --
 > 1.9.1
-
-Acked-by: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-
-  Ralf
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
