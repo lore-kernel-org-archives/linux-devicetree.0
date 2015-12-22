@@ -1,36 +1,89 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH resend] pinctrl: sunxi: Add A80 special pin controller
-Date: Tue, 22 Dec 2015 10:29:13 +0100
-Message-ID: <CACRpkdYW3teBky_GvqLxUt7+Zr29k-CRKb7Lj=MKkcB-zSrC_A@mail.gmail.com>
-References: <1450283982-25295-1-git-send-email-wens@csie.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1450283982-25295-1-git-send-email-wens@csie.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Chen-Yu Tsai <wens@wens.tw>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [PATCH 0/5] Support the codec and wifi/bt for rk3036 Kylin board
+Date: Tue, 22 Dec 2015 17:33:48 +0800
+Message-ID: <1450776833-27639-1-git-send-email-wxt@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, keescook@google.com, leozwang@google.com, leecam@google.com, Caesar Wang <wxt@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 16, 2015 at 5:39 PM, Chen-Yu Tsai <wens@csie.org> wrote:
 
-> From: Maxime Ripard <maxime.ripard@free-electrons.com>
->
-> Like the previous designs, the A80 has a special pin controller for the
-> critical pins, like the PMIC bus.
->
-> Add a driver for this controller.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> [wens: Add A80 compatible strings to bindings doc; fix pin function
->        names based on v1.3 datasheet; constify of_device_id table]
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
->
-> Linus, can we have this one included for 4.5?
+Add the needed device for kylin board.
 
-Yep. Patch rebased and applied!
+--------------
+This series patches have the following decriptions:
 
-Yours,
-Linus Walleij
+PATCH[1/5]:
+ARM: dts: set the pinctrl default setting for i2s
+
+The kylin will hang in system when enable the i2s,
+we need set the pinctrl default setting for i2s firstly.
+--------------
+
+PATCH[2/5]:
+ARM: dts: add the sound codec for kylin board
+
+Let the codec works.
+
+RT5616 driver is landed in Mark branch.
+(https://git.kernel.org/cgit/linux/kernel/git/broonie/sound.git/commit/
+?h=for-next&id=b1d15059957d33d111e0ed38724a6b2c5caac790)
+
+Maybe need wait the below patch be merged firstly.
+(add an of_match table: https://patchwork.kernel.org/patch/7901951/
+rt5616 document: https://patchwork.kernel.org/patch/7901971/)
+---------------
+
+PATCH[3/5]:
+ARM: dts: rockchip: enable the high speed on sdio for kylin board
+
+This patch is solving the wifi work frequency.
+37.5MHz frequency for rk3036.
+
+The wifi throughput:
+
+iperf -s -i 1
+...
+[  4] 116.0-117.0 sec  2.88 MBytes  24.1 Mbits/sec
+[  4] 117.0-118.0 sec  2.99 MBytes  25.0 Mbits/sec
+[  4] 118.0-119.0 sec  3.01 MBytes  25.2 Mbits/sec
+[  4] 119.0-120.0 sec  2.89 MBytes  24.2 Mbits/sec
+[  4]  0.0-120.4 sec   332 MBytes  23.1 Mbits/sec
+----------------
+
+PATCH[4/5]:
+ARM: dts: add the wifi/bt regulator for kylin board
+
+Add the wifi/bt regulator for wifi module, let the module work on bootup.
+
+Yep, this patch is based on olof patch[0].
+patch[0]:
+https://patchwork.kernel.org/patch/3510571/
+----------------
+
+PATCH[5/5]:
+ARM: dts: enable the uart0 for bluetooth module
+
+Enable the uart0 for BT module working.
+----------------
+
+Note: that's seem the wifi driver has not landed in mainline.
+This driver has existed in rockchip github develop4.1.
+https://github.com/rockchip-linux/kernel/commit/a731ffcd0d6ee3b3e6f015d3e2f7b4bf698a3533
+
+
+
+Caesar Wang (5):
+  ARM: dts: set the pinctrl default setting for i2s
+  ARM: dts: add the sound codec for kylin board
+  ARM: dts: rockchip: enable the high speed on sdio for kylin board
+  ARM: dts: add the wifi/bt regulator for kylin board
+  ARM: dts: enable the uart0 for bluetooth module
+
+ arch/arm/boot/dts/rk3036-kylin.dts | 85 +++++++++++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/rk3036.dtsi      | 12 +++---
+ 2 files changed, 90 insertions(+), 7 deletions(-)
+
+-- 
+1.9.1
