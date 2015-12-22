@@ -1,119 +1,59 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 4/5] ARM: dts: add the wifi/bt regulator for kylin board
-Date: Tue, 22 Dec 2015 10:50:32 +0100
-Message-ID: <1796344.o2BSs8sx7m@diego>
-References: <1450776833-27639-1-git-send-email-wxt@rock-chips.com> <1450776833-27639-5-git-send-email-wxt@rock-chips.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: GPIO: Add generic serializer binding
+Date: Tue, 22 Dec 2015 10:51:50 +0100
+Message-ID: <CACRpkdYapF8br=c3utUmMbmPxyHwxZuT5pC8N-pySPY7dtEwng@mail.gmail.com>
+References: <1449863184-29668-1-git-send-email-afd@ti.com>
+	<1449863184-29668-2-git-send-email-afd@ti.com>
+	<CACRpkdaV_dxzWUQcJ8pwPUDQNJ8qLhCvLvE9tBYFcTTGMoumWQ@mail.gmail.com>
+	<566EF12C.4060509@ti.com>
+	<CAL_Jsq+kYSJQd003RhYTeVFv6xLaSCxzZK7wnF2LVs502sWu4g@mail.gmail.com>
+	<566F4E9B.8090202@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450776833-27639-5-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, leozwang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, leecam-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <566F4E9B.8090202-l0cyMroinI0@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Caesaer,
+On Tue, Dec 15, 2015 at 12:19 AM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
+> [Rob]
+>> I agree the generic version is fine (or find who made the first part
+>> ;)). What "pisosr" is is not very obvious though. Having 74165 in the
+>> compatible would make it somewhat more obvious it is a standard logic
+>> part.
+>>
+>
+> A quick search shows shift-registers being made from vacuum tubes for
+> the Colossus! Those might work with this driver if you could match the
+> voltage to an SPI bus... :)
+>
+> I agree about the name not being very good, but I'm not sure about
+> 74165 ether as it is also just a single part number.
 
-Am Dienstag, 22. Dezember 2015, 17:33:52 schrieb Caesar Wang:
-> Without this the wifi/bluetooth module doesn't work
-> properly at bootup.
-> 
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> Patchset: Rockchip kylin board Patch[6/6], bring up kylin board.
-> We need add the wifi regulator to control the power.
-> 
-> (am https://patchwork.kernel.org/patch/7873721/)
-> ---
-> 
->  arch/arm/boot/dts/rk3036-kylin.dts | 43
-> +++++++++++++++++++++++++++++++++++++- 1 file changed, 42 insertions(+), 1
-> deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/rk3036-kylin.dts
-> b/arch/arm/boot/dts/rk3036-kylin.dts index 2ef38be..ed0466f 100644
-> --- a/arch/arm/boot/dts/rk3036-kylin.dts
-> +++ b/arch/arm/boot/dts/rk3036-kylin.dts
-> @@ -76,6 +76,32 @@
->  		regulator-always-on;
->  		regulator-boot-on;
->  	};
-> +
-> +	bt_regulator: bt-regulator {
-> +		compatible = "regulator-fixed";
-> +		enable-active-high;
-> +		gpio = <&gpio2 9 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&bt_rst_l>;
-> +		regulator-name = "bt_regulator";
-> +	};
-> +
-> +	wifi_regulator: wifi-regulator {
-> +		/*
-> +		 * On the module itself this is one of these (depending
-> +		 * on the actual card populated):
-> +		 * - SDIO_RESET_L_WL_REG_ON
-> +		 * - PDN (power down when low)
-> +		 */
-> +
-> +		compatible = "regulator-fixed";
-> +		enable-active-high;
-> +		gpio = <&gpio0 26 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&wifi_enable_h>;
-> +		regulator-name = "wifi_regulator";
-> +		vin-supply = <&bt_regulator>;
-> +	};
->  };
-> 
->  &acodec {
-> @@ -303,12 +329,13 @@
->  	sd-uhs-sdr50;
->  	sd-uhs-sdr104;
->  	cap-sdio-irq;
-> +	card-external-vcc-supply = <&wifi_regulator>;
+We can add many compatible strings so it's not an issue.
+"ti,74165" works for me as TI invented the 74xx series.
 
-as I said in our chat, that concept didn't make it into the kernel. mmc-power-
-sequences are the new thing. Please look into the sdio-pwrseq node in rk3288-
-veyron.dtsi for examples.
+> The idea was to
+> have a non-part number compatible string for any shift-register you
+> can hook to the SPI line.
 
+Again, one does not exclude the other. I'm happy with a generic
+compatible *and* "ti,74165".
 
-Heiko
+> That way when we have boards with a sn65x882
+> or something we wont have to call it a 74165. But I guess that's why
+> it's a "compatible:" string, and not "is-a:" string.
 
->  	default-sample-phase = <90>;
->  	keep-power-in-suspend;
->  	non-removable;
->  	num-slots = <1>;
->  	pinctrl-names = "default";
-> -	pinctrl-0 = <&sdio_clk &sdio_cmd &sdio_bus4>;
-> +	pinctrl-0 = <&sdio_clk &sdio_cmd &sdio_bus4 &bt_wake_h>;
->  };
-> 
->  &uart2 {
-> @@ -330,6 +357,20 @@
->  		};
->  	};
-> 
-> +	sdio {
-> +		wifi_enable_h: wifienable-h {
-> +			rockchip,pins = <0 26 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +
-> +		bt_rst_l: bt-rst-l {
-> +			rockchip,pins = <2 9 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +
-> +		bt_wake_h: bt-wake-h {
-> +			rockchip,pins = <2 8 RK_FUNC_GPIO &pcfg_pull_default>;
-> +		};
-> +	};
-> +
->  	sleep {
->  		global_pwroff: global-pwroff {
->  			rockchip,pins = <2 7 RK_FUNC_1 &pcfg_pull_none>;
+Compatible ranges from the specific to the more generic
+so compatible = "ti,74165", "pisosr"; is just fine. Something
+will match if there is a suitable driver. The OS may choose to
+provide something part-specific or something more generic.
 
+Yours,
+Linus Walleij
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
