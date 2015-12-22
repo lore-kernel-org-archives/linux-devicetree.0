@@ -1,60 +1,86 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [RFC 1/1] powerpc: legacy serial port use device tree
- cell-index property
-Date: Mon, 21 Dec 2015 21:42:11 -0600
-Message-ID: <1450755731.18314.76.camel@freescale.com>
-References: <1448477209-22340-2-git-send-email-curt@cumulusnetworks.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH v4 2/4] ARM: bcm2835: add rpi power domain driver
+Date: Mon, 21 Dec 2015 20:02:21 -0800
+Message-ID: <877fk7167m.fsf@eliezer.anholt.net>
+References: <1450312009-1791-1-git-send-email-eric@anholt.net> <1450312009-1791-3-git-send-email-eric@anholt.net> <CAPDyKFp5JfHmNw+ryoAnu-0XANcxW_pyNL_GUFUw7sBQmU+WDA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1448477209-22340-2-git-send-email-curt@cumulusnetworks.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Curt Brune <curt@cumulusnetworks.com>, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFp5JfHmNw+ryoAnu-0XANcxW_pyNL_GUFUw7sBQmU+WDA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-rpi-kernel@lists.infradead.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexander Aring <alex.aring@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE1LTExLTI1IGF0IDEwOjQ2IC0wODAwLCBDdXJ0IEJydW5lIHdyb3RlOgo+IEN1
-cnJlbnRseSBmb3IgUG93ZXJQQyBzeXN0ZW1zIHVzaW5nIGRldmljZSB0cmVlLCB0aGUgbGVnYWN5
-IHNlcmlhbAo+IHBvcnRzIGFyZSBhbGxvY2F0ZWQgaW4gdGhlIG9yZGVyIGJ5IHdoaWNoIHRoZXkg
-YXJlIGZvdW5kIGluIHRoZSBkZXZpY2UKPiB0cmVlIHN0cnVjdHVyZS4KPiAKPiBUaGlzIGNhbiBj
-YXVzZSBwcm9ibGVtcyBpbiBjYXNlcyB3aGVyZSB0aGUgZGV2aWNlIHRyZWUgbm9kZXMgYXJlCj4g
-c3lzbnRoZXNpemVkIGJ5IGFuIGV4dGVybmFsIHByb2dyYW0gKGtleGVjIGZvciBleGFtcGxlKSwg
-d2hpY2ggbWF5IG5vdAo+IHByZXNlcnZlIHRoZSBvcmlnaW5hbCBvcmRlciBvZiB0aGUgZGV2aWNl
-IHRyZWUgbm9kZXMuICBUaGlzIGluIHR1cm4KPiBjYW4gcmVzdWx0IGluIHRoZSBzZXJpYWwgY29u
-c29sZSBjaGFuZ2luZyBmcm9tIHR0eVMwIHRvIHR0eVMxCj4gdW5leHBlY3RlZGx5Lgo+IAo+IFRo
-aXMgcGF0Y2ggdXNlcyB0aGUgJ2NlbGwtaW5kZXgnIHByb3BlcnR5IChpZiBwcmVzZW50KSB0byBt
-YXAgVUFSVAo+IGRldmljZSB0cmVlIG5vZGVzIHRvIGxlZ2FjeSBzZXJpYWwgcG9ydCBudW1iZXIu
-ICBUaGUgY2VsbC1pbmRleAo+IHByb3BlcnR5IGlzIHdpZGVseSB1c2VkIGluIGFsbCB0aGUgRnJl
-ZXNjYWxlIC5kdHMgZmlsZXMgZm9yIFBvd2VyUEMuCj4gCj4gU2lnbmVkLW9mZi1ieTogQ3VydCBC
-cnVuZSA8Y3VydEBjdW11bHVzbmV0d29ya3MuY29tPgo+IC0tLQo+ICBhcmNoL3Bvd2VycGMva2Vy
-bmVsL2xlZ2FjeV9zZXJpYWwuYyB8IDExICsrKysrKysrKy0tCj4gIDEgZmlsZSBjaGFuZ2VkLCA5
-IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvcG93
-ZXJwYy9rZXJuZWwvbGVnYWN5X3NlcmlhbC5jCj4gYi9hcmNoL3Bvd2VycGMva2VybmVsL2xlZ2Fj
-eV9zZXJpYWwuYwo+IGluZGV4IDdiNzUwYzQuLmI3MTcxMzMgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9w
-b3dlcnBjL2tlcm5lbC9sZWdhY3lfc2VyaWFsLmMKPiArKysgYi9hcmNoL3Bvd2VycGMva2VybmVs
-L2xlZ2FjeV9zZXJpYWwuYwo+IEBAIC0xNjQsNiArMTY0LDggQEAgc3RhdGljIGludCBfX2luaXQg
-YWRkX2xlZ2FjeV9zb2NfcG9ydChzdHJ1Y3QgZGV2aWNlX25vZGUKPiAqbnAsCj4gIAl1NjQgYWRk
-cjsKPiAgCWNvbnN0IF9fYmUzMiAqYWRkcnA7Cj4gIAlzdHJ1Y3QgZGV2aWNlX25vZGUgKnRzaSA9
-IG9mX2dldF9wYXJlbnQobnApOwo+ICsJaW50IGluZGV4ID0gLTEsIGxlbjsKPiArCXUzMiAqaW5k
-ZXhwOwo+ICAKPiAgCS8qIFdlIG9ubHkgc3VwcG9ydCBwb3J0cyB0aGF0IGhhdmUgYSBjbG9jayBm
-cmVxdWVuY3kgcHJvcGVybHkKPiAgCSAqIGVuY29kZWQgaW4gdGhlIGRldmljZS10cmVlLgo+IEBA
-IC0xODgsMTQgKzE5MCwxOSBAQCBzdGF0aWMgaW50IF9faW5pdCBhZGRfbGVnYWN5X3NvY19wb3J0
-KHN0cnVjdAo+IGRldmljZV9ub2RlICpucCwKPiAgCWlmIChhZGRyID09IE9GX0JBRF9BRERSKQo+
-ICAJCXJldHVybiAtMTsKPiAgCj4gKwkvKiBDaGVjayBpZiB0aGUgcG9ydHMgaGF2ZSBhbiBvcmRl
-cmluZywgZGVmaW5lZCBieSAnY2VsbC1pbmRleCcgKi8KPiArCWlmICgoKGluZGV4cCA9ICh1MzIq
-KW9mX2dldF9wcm9wZXJ0eShucCwgImNlbGwtaW5kZXgiLCAmbGVuKSkgIT0KPiBOVUxMKSAmJgo+
-ICsJICAgIChsZW4gPT0gc2l6ZW9mKHUzMikpKQo+ICsJCWluZGV4ID0gKmluZGV4cDsKCmNvbnN0
-IHUzMiAqCgpPciBiZXR0ZXIsIHVzZSBvZl9yZWFkX251bWJlcigpIG9yIHNpbWlsYXIuCgotU2Nv
-dHQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4
-cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6
-Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+--=-=-=
+Content-Type: text/plain
+
+Ulf Hansson <ulf.hansson@linaro.org> writes:
+
+> On 17 December 2015 at 01:26, Eric Anholt <eric@anholt.net> wrote:
+>> From: Alexander Aring <alex.aring@gmail.com>
+>>
+>> This patch adds support for several power domains on Raspberry Pi,
+>> including USB (so it can be enabled even if the bootloader didn't do
+>> it), and graphics.
+>>
+>> This patch is the combined work of Eric Anholt (who wrote USB support
+>> inside of the Raspberry Pi firmware driver, and wrote the non-USB
+>> domain support) and Alexander Aring (who separated the original USB
+>> work out from the firmware driver).
+>>
+>> Signed-off-by: Alexander Aring <alex.aring@gmail.com>
+>> Signed-off-by: Eric Anholt <eric@anholt.net>
+>> ---
+>>
+>> v2: Add support for power domains other than USB, using the new
+>>     firmware interface, reword commit message (changes by Eric)
+>>
+>> v3: Restructure as a builtin driver, and drop
+>>     of_genpd_add_provider_onecell error handling to avoid
+>>     pm_genpd_exit() dependency until that API can be settled.  Clean
+>>     up copyright header, add missing ISP initialization, and fix typo
+>>     in transposer's name.
+>>
+>> v4: Move to drivers/soc/bcm/, move include to dt-bindings/soc/, set up
+>>     Makefile for the drivers/soc/bcm following clk/'s model.
+>>
+>>  drivers/soc/Kconfig                         |   1 +
+>>  drivers/soc/Makefile                        |   1 +
+>>  drivers/soc/bcm/Kconfig                     |   9 +
+>>  drivers/soc/bcm/Makefile                    |   1 +
+>>  drivers/soc/bcm/raspberrypi-power.c         | 247 ++++++++++++++++++++++++++++
+>>  include/dt-bindings/soc/raspberrypi-power.h |  41 +++++
+>
+> There is currently a directory which I think may be better.
+> include/dt-bindings/power/*
+>
+> Besides this nitpick, I think this looks good. You may add my:
+>
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+Thanks!  I'll be sending my pull requests with the two r-bs added and
+these nitpicks fixed.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJWeMtNAAoJELXWKTbR/J7oV/MP/jY90i5XfExEzuffj9QFInLa
+T+oSu0R8epjxq00hUP92DPBFe6qPRDtWV0MjiV3Li2+OYxbsqEMJRdEEX+VS5Uw6
+jS712lNLQYx9seI4gvDzZzlz9Th8sWqflnXbb8TI232LzWSMu6PQJ7eLEcTaPgaX
+4osiAba2DIMY0DOJ5HIb2XbGhFibTu0z2Vkb1ByXhCjNY/aeqcGLTBSyXMBP/G3c
+RiOwrZ4ER3uhjMQFFRGjA7gmI/OM1GrGTepFz7Icja+ipO/URS7WPYNXLfM5HNCN
+EJV9ZA/WQJECW1I/BmPjMY4INxdd205Ap1aSGu7DxgH3UDHNTORNaY0C2jfKZNMw
+gktkxxVMuMQY1GSnV05xl0n9AC0XYgXHAhlfn/E2seOUKgTgTsglXMtezuoro9yY
+vrjRl+Xec7Bh8Kj06CzdvlwWWqJeceRXOMuL6cKZl/hRhiL6omBbe2fR7mAT2a0j
+x3aNeWunRsVi/V91FEHqfmRLej+f+efDh3xNVYmmavkg56HEZuVljrg9aSXmgwNj
+ljRv4/o8q9BOw54Yf2+PwXeJH3tN8zmomFyxkAyu3T+nN2EJLdKMxe08mJZIl2R5
+9X6WdVRyWlPweNlgNKNS1QxGdtblY0/C0LJLTZoAXDKiAZFyuBKrtV3VGR732f4M
+XlLgRgJ57WvTLmdgSWyO
+=k9S/
+-----END PGP SIGNATURE-----
+--=-=-=--
