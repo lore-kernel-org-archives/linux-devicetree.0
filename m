@@ -1,41 +1,124 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2 v2] ARM: l2x0: make it possible to disable outer sync
- from DT
-Date: Tue, 22 Dec 2015 11:20:58 +0100
-Message-ID: <CACRpkdZWq71qkGF09W3Bp6tD=OGd0vLxevVaCAyTroahqO4HXg@mail.gmail.com>
-References: <1450126385-14517-1-git-send-email-linus.walleij@linaro.org>
-	<20151220033924.GK9883@rob-hp-laptop>
-	<20151220161149.GU8644@n2100.arm.linux.org.uk>
+From: Zhiqiang Hou <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCH V4 2/2] powerpc/85xx: Add PCIe controller support for
+ bsc9132qds
+Date: Tue, 22 Dec 2015 09:21:44 +0000
+Message-ID: <HE1PR04MB09069B4DB385437FB661C62684E50@HE1PR04MB0906.eurprd04.prod.outlook.com>
+References: <1446693360-1578-1-git-send-email-Zhiqiang.Hou@freescale.com>
+ <1446693360-1578-2-git-send-email-Zhiqiang.Hou@freescale.com>
+ <CY1PR0301MB07806A3A31D76967125054C28B1D0@CY1PR0301MB0780.namprd03.prod.outlook.com>
+ <1447988543.27264.176.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151220161149.GU8644-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1447988543.27264.176.camel@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <scottwood@freescale.com>, Zhiqiang Hou <B48286@freescale.com>, Zhiqiang Hou <Zhiqiang.Hou@freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "paulus@samba.org" <paulus@samba.org>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Harninder Rai <harninder.rai@freescale.com>
+Cc: Minghuan Lian <Minghuan.Lian@freescale.com>, Mingkai Hu <Mingkai.Hu@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 20, 2015 at 5:11 PM, Russell King - ARM Linux
-<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-
-> It would be nice to have a faster response though, because Linus Walleij
-> put this in the patch system on the 15th December, and I could have
-> applied it without waiting for DT people to comment.  The good thing is
-> that I _have_ the patch system, which allows me to temporarily ignore
-> patches (provided I remember) while people chew the cud on stuff like
-> this.
->
-> However, I'd _much_ rather prefer the authors to hold back the patches
-> until they get "approved" *before* sending them there, so I don't have
-> to find and remember to track the status of each patch on the mailing
-> list.
-
-OK sorry, I guess I was a bit trigger happy as my RealView was booting
-so nicely and all.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgU2NvdHQsDQoNCkNvdWxkIHlvdSBwbGVhc2UgaGVscCB0byBhcHBseSB0aGlzIHBhdGNoPw0K
+DQpUaGFua3MsDQpaaGlxaWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZy
+b206IFNjb3R0IFdvb2QNCj4gU2VudDogMjAxNeW5tDEx5pyIMjDml6UgMTE6MDINCj4gVG86IFpo
+aXFpYW5nIEhvdTsgWmhpcWlhbmcgSG91OyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsN
+Cj4gZ2FsYWtAa2VybmVsLmNyYXNoaW5nLm9yZzsgYmVuaEBrZXJuZWwuY3Jhc2hpbmcub3JnOyBw
+YXVsdXNAc2FtYmEub3JnOw0KPiBtcGVAZWxsZXJtYW4uaWQuYXU7IGRldmljZXRyZWVAdmdlci5r
+ZXJuZWwub3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IHBhd2VsLm1vbGxAYXJtLmNvbTsgbWFy
+ay5ydXRsYW5kQGFybS5jb207IGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrOw0KPiBIYXJu
+aW5kZXIgUmFpDQo+IENjOiBNaW5naHVhbiBMaWFuOyBNaW5na2FpIEh1DQo+IFN1YmplY3Q6IFJl
+OiBbUEFUQ0ggVjQgMi8yXSBwb3dlcnBjLzg1eHg6IEFkZCBQQ0llIGNvbnRyb2xsZXIgc3VwcG9y
+dCBmb3INCj4gYnNjOTEzMnFkcw0KPiANCj4gT24gTW9uLCAyMDE1LTExLTE2IGF0IDIwOjMxIC0w
+NjAwLCBIb3UgWmhpcWlhbmctQjQ4Mjg2IHdyb3RlOg0KPiA+IEhpLA0KPiA+DQo+ID4gQW55IHJl
+c3BvbnNlLCBwbGVhc2UgY29tbWVudC4NCj4gDQo+IFRoZXkgbG9vayBPSy4NCj4gDQo+IC1TY290
+dA0KPiANCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206
+IFpoaXFpYW5nIEhvdSBbbWFpbHRvOlpoaXFpYW5nLkhvdUBmcmVlc2NhbGUuY29tXQ0KPiA+ID4g
+U2VudDogMjAxNeW5tDEx5pyINeaXpSAxMToxNg0KPiA+ID4gVG86IGxpbnV4cHBjLWRldkBsaXN0
+cy5vemxhYnMub3JnOyBXb29kIFNjb3R0LUIwNzQyMTsNCj4gPiA+IGdhbGFrQGtlcm5lbC5jcmFz
+aGluZy5vcmc7IGJlbmhAa2VybmVsLmNyYXNoaW5nLm9yZzsNCj4gPiA+IHBhdWx1c0BzYW1iYS5v
+cmc7IG1wZUBlbGxlcm1hbi5pZC5hdTsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4g
+PiByb2JoK2R0QGtlcm5lbC5vcmc7IHBhd2VsLm1vbGxAYXJtLmNvbTsgbWFyay5ydXRsYW5kQGFy
+bS5jb207DQo+ID4gPiBpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51azsgUmFpIEhhcm5pbmRl
+ci1CMDEwNDQNCj4gPiA+IENjOiBMaWFuIE1pbmdodWFuLUIzMTkzOTsgSHUgTWluZ2thaS1CMjEy
+ODQ7IEhvdSBaaGlxaWFuZy1CNDgyODYNCj4gPiA+IFN1YmplY3Q6IFtQQVRDSCBWNCAyLzJdIHBv
+d2VycGMvODV4eDogQWRkIFBDSWUgY29udHJvbGxlciBzdXBwb3J0DQo+ID4gPiBmb3IgYnNjOTEz
+MnFkcw0KPiA+ID4NCj4gPiA+IEZyb206IEhhcm5pbmRlciBSYWkgPGhhcm5pbmRlci5yYWlAZnJl
+ZXNjYWxlLmNvbT4NCj4gPiA+DQo+ID4gPiAxLiBVc2UgbWFjaGluZV9hcmNoX2luaXRjYWxsIHRv
+IGhvb2sgbXBjODV4eF9jb21tb25fcHVibGlzaF9kZXZpY2VzDQo+ID4gPiBUaGlzIGNhbiBlbnN1
+cmUgYmVmb3JlIHBjaWJpb3NfaW5pdCgpIGlzIGNhbGxlZCwgcGNpIGNvbnRyb2xsZXJzDQo+ID4g
+PiBoYXZlIGJlZW4gcHJvYmVkIGFuZCBhZGRlZCB0byB0aGUgaG9zZV9saXN0Lg0KPiA+ID4gMi4g
+QWRkIGEgd29ya2Fyb3VuZCBmb3IgZXJyYXRhIEEtMDA1NDM0IEZvciB0aGUgQlNDOTEzMiwNCj4g
+PiA+IFBFWF9QRVhJV0FSbltUUkdUXSBmb3IgYWxsIHdpbmRvd3MgZGVmYXVsdHMgdG8gMHhGLCB3
+aGljaCBpcyBtYXBwZWQNCj4gPiA+IHRvIENDU1JCQVIuIEhvd2V2ZXIsIGZvciBvdGhlciBwcm9k
+dWN0cywgMHhGIGlzIG1hcHBlZCB0byB0aGUgbG9jYWwNCj4gPiA+IG1lbW9yeS4gVGhlcmVmb3Jl
+LCBmb3IgdGhlIEJTQzkxMzIsIGFueSBkZWZhdWx0IFBDSSBFeHByZXNzIGFjY2Vzcw0KPiA+ID4g
+dG8gdGhlIGxvY2FsIG1lbW9yeSAoRERSKSB3aWxsIG5vdyBhY2Nlc3MgdGhlIENDU1JCQVIuIFRo
+aXMgcGF0Y2gNCj4gPiA+IGNoYW5nZXMgdGhlIG1hcHBpbmcgb2YgdGFyZ2V0cyBvZiBpbmJvdW5k
+IHdpbmRvd3MgUEVYX1BFWElXQVJuW1RSR1RdDQo+ID4gPiB0byB0aGUgTG9jYWwgYWRkcmVzcyBz
+cGFjZSDigJMgMHgwIChmcm9tIDB4RikuDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogSGFy
+bmluZGVyIFJhaSA8aGFybmluZGVyLnJhaUBmcmVlc2NhbGUuY29tPg0KPiA+ID4gU2lnbmVkLW9m
+Zi1ieTogTWluZ2h1YW4gTGlhbiA8TWluZ2h1YW4uTGlhbkBmcmVlc2NhbGUuY29tPg0KPiA+ID4g
+U2lnbmVkLW9mZi1ieTogSG91IFpoaXFpYW5nIDxCNDgyODZAZnJlZXNjYWxlLmNvbT4NCj4gPiA+
+IC0tLQ0KPiA+ID4gVjQ6IFYzOg0KPiA+ID4gIC0gUmVtb3ZlIGdlcnJpdCBzdHVmZi4NCj4gPiA+
+DQo+ID4gPiAgYXJjaC9wb3dlcnBjL3BsYXRmb3Jtcy84NXh4L2JzYzkxM3hfcWRzLmMgfCAgOCAr
+KysrKysrLQ0KPiA+ID4gIGFyY2gvcG93ZXJwYy9zeXNkZXYvZnNsX3BjaS5jICAgICAgICAgICAg
+IHwgMTMgKysrKysrKysrKysrKw0KPiA+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMjAgaW5zZXJ0aW9u
+cygrKSwgMSBkZWxldGlvbigtKQ0KPiA+ID4NCj4gPiA+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2Vy
+cGMvcGxhdGZvcm1zLzg1eHgvYnNjOTEzeF9xZHMuYw0KPiA+ID4gYi9hcmNoL3Bvd2VycGMvcGxh
+dGZvcm1zLzg1eHgvYnNjOTEzeF9xZHMuYw0KPiA+ID4gaW5kZXggZjA5MjdlNS4uZGNmYWZkNiAx
+MDA2NDQNCj4gPiA+IC0tLSBhL2FyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvODV4eC9ic2M5MTN4X3Fk
+cy5jDQo+ID4gPiArKysgYi9hcmNoL3Bvd2VycGMvcGxhdGZvcm1zLzg1eHgvYnNjOTEzeF9xZHMu
+Yw0KPiA+ID4gQEAgLTE3LDYgKzE3LDcgQEANCj4gPiA+ICAjaW5jbHVkZSA8bGludXgvcGNpLmg+
+DQo+ID4gPiAgI2luY2x1ZGUgPGFzbS9tcGljLmg+DQo+ID4gPiAgI2luY2x1ZGUgPHN5c2Rldi9m
+c2xfc29jLmg+DQo+ID4gPiArI2luY2x1ZGUgPHN5c2Rldi9mc2xfcGNpLmg+DQo+ID4gPiAgI2lu
+Y2x1ZGUgPGFzbS91ZGJnLmg+DQo+ID4gPg0KPiA+ID4gICNpbmNsdWRlICJtcGM4NXh4LmgiDQo+
+ID4gPiBAQCAtNDYsMTAgKzQ3LDEyIEBAIHN0YXRpYyB2b2lkIF9faW5pdCBic2M5MTN4X3Fkc19z
+ZXR1cF9hcmNoKHZvaWQpDQo+ID4gPiAgCW1wYzg1eHhfc21wX2luaXQoKTsNCj4gPiA+ICAjZW5k
+aWYNCj4gPiA+DQo+ID4gPiArCWZzbF9wY2lfYXNzaWduX3ByaW1hcnkoKTsNCj4gPiA+ICsNCj4g
+PiA+ICAJcHJfaW5mbygiYnNjOTEzeCBib2FyZCBmcm9tIEZyZWVzY2FsZSBTZW1pY29uZHVjdG9y
+XG4iKTsgIH0NCj4gPiA+DQo+ID4gPiAtbWFjaGluZV9kZXZpY2VfaW5pdGNhbGwoYnNjOTEzMl9x
+ZHMsDQo+ID4gPiBtcGM4NXh4X2NvbW1vbl9wdWJsaXNoX2RldmljZXMpOw0KPiA+ID4gK21hY2hp
+bmVfYXJjaF9pbml0Y2FsbChic2M5MTMyX3FkcywgbXBjODV4eF9jb21tb25fcHVibGlzaF9kZXZp
+Y2VzKTsNCj4gPiA+DQo+ID4gPiAgLyoNCj4gPiA+ICAgKiBDYWxsZWQgdmVyeSBlYXJseSwgZGV2
+aWNlLXRyZWUgaXNuJ3QgdW5mbGF0dGVuZWQgQEAgLTY3LDYgKzcwLDkNCj4gPiA+IEBADQo+ID4g
+PiBkZWZpbmVfbWFjaGluZShic2M5MTMyX3Fkcykgew0KPiA+ID4gIAkucHJvYmUJCQk9IGJzYzkx
+MzJfcWRzX3Byb2JlLA0KPiA+ID4gIAkuc2V0dXBfYXJjaAkJPSBic2M5MTN4X3Fkc19zZXR1cF9h
+cmNoLA0KPiA+ID4gIAkuaW5pdF9JUlEJCT0gYnNjOTEzeF9xZHNfcGljX2luaXQsDQo+ID4gPiAr
+I2lmZGVmIENPTkZJR19QQ0kNCj4gPiA+ICsJLnBjaWJpb3NfZml4dXBfYnVzCT0gZnNsX3BjaWJp
+b3NfZml4dXBfYnVzLA0KPiA+ID4gKyNlbmRpZg0KPiA+ID4gIAkuZ2V0X2lycQkJPSBtcGljX2dl
+dF9pcnEsDQo+ID4gPiAgCS5yZXN0YXJ0CQk9IGZzbF9yc3Rjcl9yZXN0YXJ0LA0KPiA+ID4gIAku
+Y2FsaWJyYXRlX2RlY3IJCT0gZ2VuZXJpY19jYWxpYnJhdGVfZGVjciwNCj4gPiA+IGRpZmYgLS1n
+aXQgYS9hcmNoL3Bvd2VycGMvc3lzZGV2L2ZzbF9wY2kuYw0KPiA+ID4gYi9hcmNoL3Bvd2VycGMv
+c3lzZGV2L2ZzbF9wY2kuYyBpbmRleCBlYmMxZjQxMi4uYjg2MDdmNiAxMDA2NDQNCj4gPiA+IC0t
+LSBhL2FyY2gvcG93ZXJwYy9zeXNkZXYvZnNsX3BjaS5jDQo+ID4gPiArKysgYi9hcmNoL3Bvd2Vy
+cGMvc3lzZGV2L2ZzbF9wY2kuYw0KPiA+ID4gQEAgLTE5Myw2ICsxOTMsMTkgQEAgc3RhdGljIHZv
+aWQgc2V0dXBfcGNpX2F0bXUoc3RydWN0DQo+ID4gPiBwY2lfY29udHJvbGxlcg0KPiA+ID4gKmhv
+c2UpDQo+ID4gPiAgCWNvbnN0IHU2NCAqcmVnOw0KPiA+ID4gIAlpbnQgbGVuOw0KPiA+ID4NCj4g
+PiA+ICsJaWYgKG9mX2RldmljZV9pc19jb21wYXRpYmxlKGhvc2UtPmRuLCAiZnNsLGJzYzkxMzIt
+cGNpZSIpKSB7DQo+ID4gPiArCQkvKg0KPiA+ID4gKwkJICogQlNDOTEzMiBSZXYxLjAgaGFzIGFu
+IGlzc3VlIHdoZXJlIGFsbCB0aGUgUEVYIGluYm91bmQNCj4gPiA+ICsJCSAqIHdpbmRvd3MgaGF2
+ZSBpbXBsZW1lbnRlZCB0aGUgZGVmYXVsdCB0YXJnZXQgdmFsdWUgYXMNCj4gPiA+IDB4Zg0KPiA+
+ID4gKwkJICogZm9yIENDU1Igc3BhY2UuSW4gYWxsIEZyZWVzY2FsZSBsZWdhY3kgZGV2aWNlcyB0
+aGUNCj4gPiA+IHRhcmdldA0KPiA+ID4gKwkJICogb2YgMHhmIGlzIHJlc2VydmVkIGZvciBsb2Nh
+bCBtZW1vcnkgc3BhY2UuIDkxMzIgUmV2MS4wDQo+ID4gPiArCQkgKiBub3cgaGFzIGxvY2FsIG1l
+bXByeSBzcGFjZSBtYXBwZWQgdG8gdGFyZ2V0IDB4MA0KPiA+ID4gaW5zdGVhZCBvZg0KPiA+ID4g
+KwkJICogMHhmLiBIZW5jZSBhZGRpbmcgYSB3b3JrYXJvdW5kIHRvIHJlbW92ZSB0aGUgdGFyZ2V0
+DQo+ID4gPiAweGYNCj4gPiA+ICsJCSAqIGRlZmluZWQgZm9yIG1lbW9yeSBzcGFjZSBmcm9tIElu
+Ym91bmQgd2luZG93DQo+ID4gPiBhdHRyaWJ1dGVzLg0KPiA+ID4gKwkJICovDQo+ID4gPiArCQlw
+aXdhciAmPSB+UElXQVJfVEdJX0xPQ0FMOw0KPiA+ID4gKwl9DQo+ID4gPiArDQo+ID4gPiAgCWlm
+IChlYXJseV9maW5kX2NhcGFiaWxpdHkoaG9zZSwgMCwgMCwgUENJX0NBUF9JRF9FWFApKSB7DQo+
+ID4gPiAgCQlpZiAoaW5fYmUzMigmcGNpLT5ibG9ja19yZXYxKSA+PSBQQ0lFX0lQX1JFVl8yXzIp
+IHsNCj4gPiA+ICAJCQl3aW5faWR4ID0gMjsNCj4gPiA+IC0tDQo+ID4gPiAyLjEuMC4yNy5nOTZk
+YjMyNA0KPiA+DQo+ID4gVGhhbmtzLA0KPiA+IFpoaXFpYW5nDQpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0Ckxp
+bnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0
+aW5mby9saW51eHBwYy1kZXY=
