@@ -1,59 +1,36 @@
-From: Songjun Wu <songjun.wu@atmel.com>
-Subject: [PATCH 2/2] ARM: at91/dt: sama5d2 Xplained: add pdmic node
-Date: Tue, 22 Dec 2015 17:26:05 +0800
-Message-ID: <1450776365-6373-2-git-send-email-songjun.wu@atmel.com>
-References: <1450776365-6373-1-git-send-email-songjun.wu@atmel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH resend] pinctrl: sunxi: Add A80 special pin controller
+Date: Tue, 22 Dec 2015 10:29:13 +0100
+Message-ID: <CACRpkdYW3teBky_GvqLxUt7+Zr29k-CRKb7Lj=MKkcB-zSrC_A@mail.gmail.com>
+References: <1450283982-25295-1-git-send-email-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1450776365-6373-1-git-send-email-songjun.wu@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@atmel.com
-Cc: Ludovic.Desroches@atmel.com, Songjun Wu <songjun.wu@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1450283982-25295-1-git-send-email-wens@csie.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Chen-Yu Tsai <wens@wens.tw>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add pdmic node on sama5d2-xplained board.The pdmic
-pins conflict with ISC_D0 & ISC_D1 data pins.
+On Wed, Dec 16, 2015 at 5:39 PM, Chen-Yu Tsai <wens@csie.org> wrote:
 
-Signed-off-by: Songjun Wu <songjun.wu@atmel.com>
----
+> From: Maxime Ripard <maxime.ripard@free-electrons.com>
+>
+> Like the previous designs, the A80 has a special pin controller for the
+> critical pins, like the PMIC bus.
+>
+> Add a driver for this controller.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> [wens: Add A80 compatible strings to bindings doc; fix pin function
+>        names based on v1.3 datasheet; constify of_device_id table]
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+>
+> Linus, can we have this one included for 4.5?
 
- arch/arm/boot/dts/at91-sama5d2_xplained.dts |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Yep. Patch rebased and applied!
 
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-index c2fcc29..77ddff0 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -119,6 +119,16 @@
- 				status = "okay";
- 			};
- 
-+			pdmic@f8018000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&pinctrl_pdmic_default>;
-+				atmel,model = "PDMIC @ sama5d2_xplained";
-+				atmel,mic-min-freq = <1000000>;
-+				atmel,mic-max-freq = <3246000>;
-+				atmel,mic-offset = <0x0>;
-+				status = "okay";
-+			};
-+
- 			uart1: serial@f8020000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_uart1_default>;
-@@ -290,6 +300,12 @@
- 					bias-disable;
- 				};
- 
-+				pinctrl_pdmic_default: pdmic_default {
-+					pinmux = <PIN_PB26__PDMIC_DAT>,
-+						<PIN_PB27__PDMIC_CLK>;
-+					bias-disable;
-+				};
-+
- 				pinctrl_sdmmc0_default: sdmmc0_default {
- 					cmd_data {
- 						pinmux = <PIN_PA1__SDMMC0_CMD>,
--- 
-1.7.9.5
+Yours,
+Linus Walleij
