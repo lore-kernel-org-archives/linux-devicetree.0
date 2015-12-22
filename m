@@ -1,88 +1,128 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH 4/5] ARM: dts: sun5i: Add dts file for
- the Empire Electronix D709 tablet
-Date: Tue, 22 Dec 2015 12:29:24 +0800
-Message-ID: <CAGb2v67+XpYwUFAVSGEGAfJ0bzubQ87Ebaf5W5Ze619mEE6uUA@mail.gmail.com>
-References: <1450611782-9494-1-git-send-email-hdegoede@redhat.com>
- <1450611782-9494-4-git-send-email-hdegoede@redhat.com> <CAGb2v65daCCOWf7EXDkNWnxv1idXHXesOp6Et_0h-o+9drdeMA@mail.gmail.com>
- <5677D87A.90805@redhat.com> <20151221161132.GA30359@lukather> <567854D5.7030601@redhat.com>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: Generic DT binding for IPIs
+Date: Tue, 22 Dec 2015 15:38:28 +1100
+Message-ID: <20151222043828.GU3011@voom.redhat.com>
+References: <561E2BE6.2090807@imgtec.com>
+ <5628BE00.4020106@imgtec.com>
+ <20151022115551.GI3953@io.lakedaemon.net>
+ <56684877.3020708@imgtec.com>
+ <CAL_Jsq+yv1UnBhrR+x+DEA41yETVANY9_-5W0DSQJVEQ4+Mx_w@mail.gmail.com>
+ <56695201.2070807@imgtec.com>
+ <20151211003902.GE20139@voom.fritz.box>
+ <566AA9DD.6040404@imgtec.com>
+ <20151214014057.GM22783@voom.fritz.box>
+ <CA+mqd+6Qbp9EsvT0-A7YUBLn7TeffzqWSbM9i+ZcKVWytt9rvA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <567854D5.7030601-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="z118w8IfbP8nVdqq"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CA+mqd+6Qbp9EsvT0-A7YUBLn7TeffzqWSbM9i+ZcKVWytt9rvA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Qais Yousef <qsyousef@gmail.com>
+Cc: Qais Yousef <qais.yousef@imgtec.com>, Rob Herring <robh+dt@kernel.org>, "devicetree-spec@vger.kernel.org" <devicetree-spec@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, Jiang Liu <jiang.liu@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lisa Parratt <Lisa.Parratt@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 22, 2015 at 3:36 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi,
->
-> On 21-12-15 17:11, Maxime Ripard wrote:
->>
->> Hi,x
->>
->> On Mon, Dec 21, 2015 at 11:46:18AM +0100, Hans de Goede wrote:
->>>>
->>>> On the side, any thoughts on how to handle the differences between
->>>> various "Q8"
->>>> tablets, like different I2C-based sensors and WiFi chips?
->>>
->>>
->>> For i2c based sensors the plan is to use devicetree overlays + an in
->>> kernel
->>> overlay manager which probes the i2c bus (checking known touchscreen /
->>> accelerometer
->>> addresses) and then picks the right touchscreen + accelerometer overlays.
->>>
->>> Wifi is somewhat more tricky I must admit, esp. since there seem to be q8
->>> a23 based
->>> tablet variants with usb wifi and others with sdio wifi. Since both
->>> busses are
->>> discoverable I'm tempted to just enable both in devicetree, and let the
->>> kernel probe
->>> and see what is actually there. This assume that the way the wifichip is
->>> powered
->>> is the same on all boards, or at least that it is safe to enable the
->>> necessary
->>> regulators on all boards ...
->>>
->>>> I'm asking because with Maxime's couple-regulator we should be able to
->>>> get the
->>>> RTL8723BS on the Q8 A23/33 v1.5 working.
->>>
->>>
->>> So this means enabled the sdio controller (should be safe on all boards?)
->>> and
->>> enabling 2 regulators to power the wifi-chip. I think it will be safe to
->>> do this
->>> even on boards where those regulators are not used, what do you think ?
->>
->>
->> Wouldn't that introduce some useless power drain on those boards?
->
->
-> If nothing is attached to those regulators (which I expect to be the case
-> when
-> they are not used to power wifi) then I would expect the drain to be
-> minimal,
-> my biggest worry is some board having tied these to ground, but I don't
-> think
-> that is very likely.
 
-AFAIK the AXP datasheets mention that unused DCDC outputs should be left
-floating. Not sure if this applies to LDO outputs as well. But any used
-outputs would have a bypass capacitor.
+--z118w8IfbP8nVdqq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->From the board designs I've seen, this seems to be the common case.
-I'm not an electrical engineer, but I think we're covered here.
+On Thu, Dec 17, 2015 at 11:31:14AM +0000, Qais Yousef wrote:
+> > > Maybe it would help to look at the new IPI reservation API?
+> > >
+> > >     https://lkml.org/lkml/2015/12/8/249
+> >
+> > Hmm.. not as much as I might have hoped.
+> >
+> > From the API, it looks like you're reserving IPIs to signal between
+> > different CPUs all of which are in Linux.  From your description here
+> > it sounds like the coproc is a separate specialized thing not running
+> > Linux (or at least, not the same Linux instance as the host OS which
+> > this device tree is for).
+>=20
+> No the CPUs aren't only Linux CPUs. It should be any CPU that the interru=
+pt
+> controller can talk to.
+> That CPU can be one of Linux CPUs, or a coproc.
 
-Another thing we need to deal with is the different power sequencing
-requirements for the different SDIO chips.
+Ok.. but it looks like anything you can reserve an IPI for must be
+cpu_possible_mask, so I'm guessing they're CPUs that could be CPUs,
+even if they're not at the present time.  Is that right?
 
-Regards
-ChenYu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I guess the point is that the targets of these IPIs are participating
+in the same coherency fabric as the host CPUs, yes?
+
+> > > I'm not sure I understood you completely but no, there's no translati=
+on
+> > > happening. When the IPI is allocated it would be routed
+> > > to the coproc. When the host wants to send a signal, it'll use the
+> allocated
+> > > hwirq value (indirectly via the virq) to write to a register, which w=
+ill
+> > > cause an interrupt to be generated at the coproc.
+> >
+> > Where is this magic register located?  In the host cpu?  In the
+> > coproc?  In some special IPI controller?
+>=20
+> The IPI controller. In my use case, the IPI controller is the same as the
+> interrupt controller used by Linux. Generally they don't have to be the
+> same though.
+
+Ok.  So, the one existing thing I can think of which might fit -
+although it seems a bit odd - is the gpio binding.  I'm not that
+familiar with the binding, so it's possible I've overlooked something
+that would make it unsuitable, still..
+
+I think you might be able to treat the IPIs bound for a coproc as
+gpios to that coproc device, with the IPI controller designated as the
+gpio controller.  The driver for this gpio controller would know that
+it uses the IPI reservation mechanism to trigger those "gpio" lines.
+
+This scheme would have the advatage that if you ever have a version of
+the coproc that exists as a separate piece of hardware *not* belonging
+to the same coherency fabric as the host cpu - and with it's inbound
+interrupts instead triggered by "real" gpios - then that should, at
+least in theory, be supported without host kernel changes.
+
+> > So as noted above, I'm now sure that 'interrupts' is not the right
+> > thing.  I'm trying to understand the coprocs and the ipi mechanism a
+> > bit better to work out if there is something existing which would make
+> > sense, or if we do need something entirely new.
+>=20
+> Let me know if I can help.
+
+I don't know what sort of software is running on the coproc.  If it
+also uses a device tree, then the device tree from the coproc point of
+view *would* represent these inbound IPIs as 'interrupts' properties -
+probably on some node representing the host cpu / system.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--z118w8IfbP8nVdqq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWeNPEAAoJEGw4ysog2bOSD/UP/0xbb2os9EdK7mJ4I1AzSgSE
+EkwewQ7mbR+Ou1EQ/huS2WZbmGjBQbWhJcush8FWgkm3iBp8GT/I0RJPmExW7lDO
+xbHwWlj3DJ+tWPIGk2T+GboyQjzSXCE3KtrUli4jGNFvoE7zD5YZUOaEQ6iLOjfr
+O5ZIcUFDX3tAYv/SdPGPsiRm20zX7yUyam7Iwc6d+ueYBgm7Qyqomi51pcdbrlYU
+t5eNRzkeLXW78y7B9yrvZxmfR9mQbcCXZZnWAAD+sr8zZNczc4sPlRx3Pc2APhRU
+sGo5CxQPu2G+dB2zlTvy5G2SzYjBOD1trDO8QW0/hSabKIkgWVE9zjj1jn3sAknN
+QOVhJvtiy/q0f6TLtAnczKQEES0/c+nMGb0Kkh7UqMvhfW5F8UPcwKgnGffj5oOV
+dtXbZagq6D/Ff6g0js3C0STH3bHwZqAxLEZTDYxK8/JoIhrXVIcH7HOgXvZnY6Ts
+AVJsJLNrUVq0RP5XbnHtY20CjYbN8BxcFsl7DrSCmmapvJFn8W5FCYPITjALoILW
+Ojfu9OQEWp4eVRoIRliO04TrIamaP9iCfbAKasXcjaAZyooUOQ3sfhHHCMEggMrk
+ObsUlDp7GmyxpDgndhyH+fl2CwBfaztIETetsOLRuSe5A+LXv6XEht81Z7PG+EG6
+Pol/3F22f9pJ5NFsK/8N
+=NjSs
+-----END PGP SIGNATURE-----
+
+--z118w8IfbP8nVdqq--
