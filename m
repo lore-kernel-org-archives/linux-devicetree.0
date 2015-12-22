@@ -1,35 +1,44 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] ASoC: sun4i-codec: Use proper output for external amp routes
-Date: Tue, 22 Dec 2015 23:00:17 +0100
-Message-ID: <1450821617-12906-1-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH v2 1/3] ARM: dts: sun4i: Add touchscreen node to inet9f-rev03 tablet dts file
+Date: Tue, 22 Dec 2015 23:35:00 +0100
+Message-ID: <1450823702-21565-1-git-send-email-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-An external amp (if any) is connected to the external outputs of the SoC
-of course, rather then directly to the internal amp.
+Add a node describing the focaltech ft5406ee8 touchscreen found on
+inet-9f-rev03 / qware qw tb-g100 tablets.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- sound/soc/sunxi/sun4i-codec.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Changes in v2:
+-Drop unused pinctrl-names = "default";
+---
+ arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-codec.c
-index e6cc6a1..44f170c 100644
---- a/sound/soc/sunxi/sun4i-codec.c
-+++ b/sound/soc/sunxi/sun4i-codec.c
-@@ -728,7 +728,8 @@ static const struct snd_soc_dapm_widget sun4i_codec_card_dapm_widgets[] = {
+diff --git a/arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts b/arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts
+index ca49b0d..bba4f9c 100644
+--- a/arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts
++++ b/arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts
+@@ -253,6 +253,15 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c2_pins_a>;
+ 	status = "okay";
++
++	ft5406ee8: touchscreen@38 {
++		compatible = "edt,edt-ft5406";
++		reg = <0x38>;
++		interrupt-parent = <&pio>;
++		interrupts = <7 21 IRQ_TYPE_EDGE_FALLING>;
++		touchscreen-size-x = <800>;
++		touchscreen-size-y = <480>;
++	};
  };
  
- static const struct snd_soc_dapm_route sun4i_codec_card_dapm_routes[] = {
--	{ "Speaker", NULL, "Power Amplifier" },
-+	{ "Speaker", NULL, "HP Right" },
-+	{ "Speaker", NULL, "HP Left" },
- };
- 
- static struct snd_soc_card *sun4i_codec_create_card(struct device *dev)
+ &lradc {
 -- 
 2.5.0
 
