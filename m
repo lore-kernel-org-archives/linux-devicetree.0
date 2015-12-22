@@ -1,68 +1,51 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v1 6/6] ARM64: dts: rockchip: add reboot-mode node
-Date: Tue, 22 Dec 2015 17:19:49 +0800
-Message-ID: <1450775989-24301-1-git-send-email-andy.yan@rock-chips.com>
-References: <1450774949-23901-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1450774949-23901-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, heiko@sntech.de, arnd@arndb.de, john.stultz@linaro.org
-Cc: sjg@chromium.org, alexandre.belloni@free-electrons.com, treding@nvidia.com, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, wxt@rock-chips.com, catalin.marinas@arm.com, olof@lixom.net, geert+renesas@glider.be, linux-rockchip@lists.infradead.org, dbaryshkov@gmail.com, sre@kernel.org, jun.nie@linaro.org, pawel.moll@arm.com, will.deacon@arm.com, akpm@linux-foundation.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, joel@jms.id.au, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, khilman@linaro.org, moritz.fischer@ettus.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, Andy Yan <andy.yan@rock-chips.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/3] Add support for monitoring gpio switches
+Date: Tue, 22 Dec 2015 10:25:06 +0100
+Message-ID: <CACRpkdZWXnR0tUbr9KeX3KPEe11pUYC5ZcBkX8jvUx3fREwHgQ@mail.gmail.com>
+References: <1449250275-23435-1-git-send-email-martyn.welch@collabora.co.uk>
+	<1449250275-23435-3-git-send-email-martyn.welch@collabora.co.uk>
+	<CACRpkdb=it+U+3-0mvZ9Pf1cnYT_r1KkFiS=C4YDkqrjoRm+kQ@mail.gmail.com>
+	<567138E2.80505@collabora.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <567138E2.80505@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Martyn Welch <martyn.welch@collabora.co.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add reboot mode driver DT node for rk3368 platform
+On Wed, Dec 16, 2015 at 11:11 AM, Martyn Welch
+<martyn.welch@collabora.co.uk> wrote:
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
----
+>> Patches like that has however already been suggested, and I have NACKed
+>> them because the GPIO sysfs ABI is insane, and that is why I am
+>> refactoring
+>> the world to create a proper chardev ABI for GPIO instead. See:
+>> http://marc.info/?l=linux-gpio&m=144550276512673&w=2
+>
+> I can certainly understand the rationale for the changes that you are
+> proposing, though do worry that it does make it a bit tougher to use from
+> scripting languages.
 
-Changes in v1: None
+The idea is to provide commandline tools in the kernel tools/gpio subdir
+to satisfy the needs of scripting. "lsgpio" today is just one example,
+nothing stops us from having a tool called just "gpio-sak"
+(GPIO swiss army knife) that will be tailored for scripting.
 
- arch/arm64/boot/dts/rockchip/rk3368.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+> I see that the question of how to provide functionality
+> equivalent to the above was raised and no answer was forthcoming. Is there a
+> plan for supporting the identification of a GPIO line serving a specific
+> purpose?
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-index cc093a4..776f1be 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-@@ -45,6 +45,7 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/pinctrl/rockchip.h>
-+#include <dt-bindings/soc/rockchip_boot-mode.h>
- 
- / {
- 	compatible = "rockchip,rk3368";
-@@ -202,6 +203,31 @@
- 		method = "smc";
- 	};
- 
-+	reboot_mode {
-+		compatible = "rockchip,reboot-mode";
-+		rockchip,regmap = <&pmugrf>;
-+		offset = <0x200>;
-+		loader {
-+			linux,mode = "loader";
-+			linux,magic = <BOOT_LOADER>;
-+		};
-+
-+		maskrom {
-+			linux,mode = "maskrom";
-+			linux,magic = <BOOT_MASKROM>;
-+		};
-+
-+		recovery {
-+			linux,mode = "recovery";
-+			linux,magic = <BOOT_RECOVERY>;
-+		};
-+
-+		fastboot {
-+			linux,mode = "fastboot";
-+			linux,magic = <BOOT_FASTBOOT>;
-+		};
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 13
--- 
-1.9.1
+Yes by name.
+
+> What is the status of the mentioned patch series?
+
+They stubled into a few dozen architecture issues in the GPIO
+subsystem so I am busy refactoring the whole know universe :D
+
+But I still intend to persue the series.
+
+Yours,
+Linus Walleij
