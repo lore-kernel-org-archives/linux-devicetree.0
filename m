@@ -1,63 +1,74 @@
-From: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: dts: imx7d: cl-som-imx7: add basic module
- support
-Date: Tue, 22 Dec 2015 16:07:51 +0200
-Message-ID: <56795937.6090903@compulab.co.il>
-References: <1449472479-2521-1-git-send-email-ilya@compulab.co.il>
- <1450772120-18131-1-git-send-email-ilya@compulab.co.il>
- <1450772120-18131-2-git-send-email-ilya@compulab.co.il>
- <20151222121718.GB26290@tiger>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] powerpc/mpc85xx: Add pcsphy nodes to FManV3 device tree
+Date: Tue, 22 Dec 2015 08:10:04 -0600
+Message-ID: <1450793404.18314.90.camel@freescale.com>
+References: <1450655851-6556-1-git-send-email-igal.liberman@freescale.com>
+	 <1450708833.18314.35.camel@freescale.com>
+	 <DM2PR03MB509CAE5558807F9E327DCBDE6E50@DM2PR03MB509.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151222121718.GB26290@tiger>
+In-Reply-To: <DM2PR03MB509CAE5558807F9E327DCBDE6E50-ufbTtyGzTTTFwE0YMf9HFeO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Liberman Igal-B31950 <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: Bucur Madalin-Cristian-B32716 <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xie Shaohui-B21989 <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
-
-On 12/22/15 14:17, Shawn Guo wrote:
-> On Tue, Dec 22, 2015 at 10:15:19AM +0200, Ilya Ledvich wrote:
-
-[...]
-
->> +/ {
->> +	model = "CompuLab CL-SOM-iMX7";
->> +	compatible = "compulab,cl-som-imx7", "fsl,imx7d";
->> +
->> +	memory {
->> +		reg = <0x80000000 0x10000000>; /* 256 MB - minimal configuration */
->> +	};
->> +
->> +	regulators {
->> +		compatible = "simple-bus";
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
+On Tue, 2015-12-22 at 02:51 -0600, Liberman Igal-B31950 wrote:
 > 
-> DT maintainers dislike this fake "simple-bus" container, and we were
-> asked to put fixed regulator directly under root.  I fixed it up like
-> below:
+> Regards,
+> Igal Liberman
 > 
-> 	reg_usb_otg1_vbus: regulator-vbus {
-> 		compatible = "regulator-fixed";
-> 		regulator-name = "usb_otg1_vbus";
-> 		regulator-min-microvolt = <5000000>;
-> 		regulator-max-microvolt = <5000000>;
-> 		gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
-> 		enable-active-high;
-> 	};
+> > -----Original Message-----
+> > From: Wood Scott-B07421
+> > Sent: Monday, December 21, 2015 4:41 PM
+> > To: Liberman Igal-B31950 <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>;
+> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> > Cc: Bucur Madalin-Cristian-B32716 <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>; Xie
+> > Shaohui-B21989 <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > Subject: Re: [PATCH] powerpc/mpc85xx: Add pcsphy nodes to FManV3
+> > device tree
+> > 
+> > On Mon, 2015-12-21 at 01:57 +0200, igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
+> > > From: Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > 
+> > > Signed-off-by: Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > 
+> > > This patch adds pcsphy node to FManV3 device tree.
+> > > Based on: https://patchwork.ozlabs.org/patch/503921/
+> > > ---
+> > >  .../dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi   |    5 +++++
+> > >  arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi |    5 +++++
+> > >  .../dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi   |    5 +++++
+> > >  arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi |    5 +++++
+> > >  arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi  |    5 +++++
+> > >  arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi  |    5 +++++
+> > >  arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi  |    5 +++++
+> > >  arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi  |    5 +++++
+> > >  arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi  |    5 +++++
+> > >  arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi  |    5 +++++
+> > >  arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi |    5 +++++
+> > >  arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi |    5 +++++
+> > >  arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi  |    5 +++++
+> > >  arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi  |    5 +++++
+> > >  arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi  |    5 +++++
+> > >  arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi  |    5 +++++
+> > >  arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi  |    5 +++++
+> > >  arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi  |    5 +++++
+> > >  18 files changed, 90 insertions(+)
+> > 
+> > Binding?
+> > 
 > 
+> Working on that, I'll submit ASAP. 
+> 
+> Igal
 
-Looks good! Thanks for adjusting this.
+Always submit the binding before the dts patch.
 
-[...]
+-Scott
 
--- 
-Regards,
-Igor.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
