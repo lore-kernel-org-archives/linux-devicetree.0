@@ -1,100 +1,45 @@
-From: Bard Liao <bardliao@realtek.com>
-Subject: Re: [PATCH v1 2/2] dt-bindings: sound: add devicetree
-	document for rt5616
-Date: Tue, 22 Dec 2015 01:50:16 +0000
-Message-ID: <ABFD875FF5FB574BA706497D987D48D7010E22FC@RTITMBSV03.realtek.com.tw>
-References: <1450703894-32623-2-git-send-email-wxt@rock-chips.com>
- <1450709768-14898-1-git-send-email-wxt@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1450709768-14898-1-git-send-email-wxt@rock-chips.com>
-Content-Language: zh-TW
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Caesar Wang <wxt@rock-chips.com>, "broonie@kernel.org" <broonie@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "heiko@sntech.de" <heiko@sntech.de>
+From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/2] pci: Add host controller driver for Cavium ThunderX PCIe
+Date: Mon, 21 Dec 2015 17:53:40 -0800
+Message-ID: <1450749222-15966-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
-> -----Original Message-----
-> From: Caesar Wang [mailto:wxt@rock-chips.com]
-> Sent: Monday, December 21, 2015 10:56 PM
-> To: broonie@kernel.org; robh+dt@kernel.org
-> Cc: linux-kernel@vger.kernel.org; devicetree@vger.kernel.org;
-> alsa-devel@alsa-project.org; Bard Liao; heiko@sntech.de; Caesar Wang
-> Subject: [PATCH v1 2/2] dt-bindings: sound: add devicetree document for
-> rt5616
-> 
-> Add the description for rt5616 codec.
-> 
-> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
-> 
-> ---
-> 
-> Changes in v1:
-> - As Heiko comments, remove the not exist option properties.
-> 
->  Documentation/devicetree/bindings/sound/rt5616.txt | 36
-> ++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/sound/rt5616.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/rt5616.txt
-> b/Documentation/devicetree/bindings/sound/rt5616.txt
-> new file mode 100644
-> index 0000000..2030a22
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/rt5616.txt
-> @@ -0,0 +1,36 @@
-> +RT5616 audio CODEC
-> +
-> +This device supports I2C only.
-> +
-> +Required properties:
-> +
-> +- compatible : "realtek,rt5616".
-> +
-> +- reg : The I2C address of the device.
-> +
-> +Pins on the device (for linking into audio routes) for RT5616:
-> +
-> +  * IN1P
-> +  * IN2P
-> +  * IN2N
-> +  * LOUTL
-> +  * LOUTR
+Some Cavium ThunderX processors require quirky access methods for the
+config space of the PCIe bridge.
 
-These names below seems not defined in rt5616_dapm_widgets.
-Where are they from?
+There are two patches:
 
-> +  * CPN2
-> +  * CPP2
-> +  * CPN1
-> +  * CPP1
-> +  * HPO_R
-> +  * HPO_L
-> +  * ADCDAT1
-> +  * DACDAT1
-> +  * LRCK1
-> +  * BCLK1
-> +  * MCLK
-> +  * GPIO1
-> +
-> +Example:
-> +
-> +rt5616 {
-> +	compatible = "realtek,rt5616";
-> +	reg = <0x1b>;
-> +};
-> --
-> 1.9.1
+1) Refactor code in pci-host-generic so that it can more easily be
+   used by other drivers.
+
+2) Add the ThunderX PCIe driver, which leverages the code in
+   pci-host-generic
+
+David Daney (2):
+  PCI: generic: Refactor code to enable reuse by other drivers.
+  pci, pcie-thunder-pem: Add PCIe host driver for ThunderX processors.
+
+ .../devicetree/bindings/pci/pcie-thunder-pem.txt   |  43 ++++
+ drivers/pci/host/Kconfig                           |   6 +
+ drivers/pci/host/Makefile                          |   1 +
+ drivers/pci/host/pci-host-generic.c                |  53 ++--
+ drivers/pci/host/pci-host-generic.h                |  56 ++++
+ drivers/pci/host/pcie-thunder-pem.c                | 283 +++++++++++++++++++++
+ 6 files changed, 407 insertions(+), 35 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/pcie-thunder-pem.txt
+ create mode 100644 drivers/pci/host/pci-host-generic.h
+ create mode 100644 drivers/pci/host/pcie-thunder-pem.c
+
+-- 
+1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
