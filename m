@@ -1,184 +1,385 @@
-From: "Jingoo Han" <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v11 06/19] ARM: dts: exynos/dp: remove some properties that deprecated by analogix_dp driver
-Date: Tue, 22 Dec 2015 21:13:59 +0900
-Message-ID: <000801d13cb2$43079270$c916b750$@com>
-References: <1450236018-1118-1-git-send-email-ykk@rock-chips.com> <1450236876-1951-1-git-send-email-ykk@rock-chips.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM: dts: imx7d: cl-som-imx7: add basic module
+ support
+Date: Tue, 22 Dec 2015 20:17:18 +0800
+Message-ID: <20151222121718.GB26290@tiger>
+References: <1449472479-2521-1-git-send-email-ilya@compulab.co.il>
+ <1450772120-18131-1-git-send-email-ilya@compulab.co.il>
+ <1450772120-18131-2-git-send-email-ilya@compulab.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450236876-1951-1-git-send-email-ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Content-Language: ko
+Content-Disposition: inline
+In-Reply-To: <1450772120-18131-2-git-send-email-ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Yakir Yang' <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, 'Inki Dae' <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Mark Yao' <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, 'Heiko Stuebner' <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: 'Thierry Reding' <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, 'Krzysztof Kozlowski' <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Rob Herring' <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, 'Russell King' <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, 'Gustavo Padovan' <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, 'Kishon Vijay Abraham I' <kishon-l0cyMroinI0@public.gmane.org>, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, 'Andy Yan' <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, 'Jingoo Han' <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, December 16, 2015 12:35 PM, Yakir Yang wrote:
+On Tue, Dec 22, 2015 at 10:15:19AM +0200, Ilya Ledvich wrote:
+> CL-SOM-iMX7 is a miniature System-on-Module (SoM) based on
+> Freescale i.MX7 System-on-Chip family.
 > 
-> After exynos_dp have been split the common IP code into analogix_dp driver,
-> the analogix_dp driver have deprecated some Samsung platform properties which
-> could be dynamically parsed from EDID/MODE/DPCD message, so this is an update
-> for Exynos DTS file for dp-controller.
+> http://www.compulab.co.il/products/computer-on-modules/cl-som-imx7-freescale-i-mx-7-system-on-module/
 > 
-> Beside the backward compatibility is fully preserved, so there are no
-> bisectability break that make this change in a separate patch.
+> Add basic DT support for standalone module (without a carrier board):
 > 
-> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Tested-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-
-Reviewed-by: Jingoo Han < jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org >
-
-Best regards,
-Jingoo Han
-
+> * Memory configuration
+> * eMMC
+> * 2x Gigabit Ethernet ports (FEC1 and FEC2)
+> * I2C2 bus
+>   * EEPROM
+>   * PCA9555 GPIO extender
+>   * PMIC
+> * UART1
+> * USB OTG port
+> 
+> Signed-off-by: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> Signed-off-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 > ---
-> Changes in v11: None
-> Changes in v10: None
-> Changes in v9: None
-> Changes in v8: None
-> Changes in v7: None
-> Changes in v6:
-> - Fix Peach Pit hpd property name error:
-> -       hpd-gpio = <&gpx2 6 0>;
-> +       hpd-gpios = <&gpx2 6 0>;
 > 
-> Changes in v5:
-> - Correct the misspell in commit message. (Krzysztof)
+> v2: use generic node name for pmic (Thanks Rob)
+>     move board description out of fsl.txt (Shawn)
+>     use GPL/X11 dual licence for newly added dts files (Shawn)
+>     discard one level of container node (Shawn)
+>     squash several patches into one patch (Shawn)
 > 
-> Changes in v4:
-> - Separate all DTS changes to a separate patch. (Krzysztof)
+>  arch/arm/boot/dts/Makefile              |   1 +
+>  arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 293 ++++++++++++++++++++++++++++++++
+>  2 files changed, 294 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx7d-cl-som-imx7.dts
 > 
-> Changes in v3: None
-> Changes in v2: None
-> 
->  arch/arm/boot/dts/exynos5250-arndale.dts      | 2 --
->  arch/arm/boot/dts/exynos5250-smdk5250.dts     | 2 --
->  arch/arm/boot/dts/exynos5250-snow-common.dtsi | 4 +---
->  arch/arm/boot/dts/exynos5250-spring.dts       | 4 +---
->  arch/arm/boot/dts/exynos5420-peach-pit.dts    | 4 +---
->  arch/arm/boot/dts/exynos5420-smdk5420.dts     | 2 --
->  arch/arm/boot/dts/exynos5800-peach-pi.dts     | 4 +---
->  7 files changed, 4 insertions(+), 18 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-> index c000532..b1790cf 100644
-> --- a/arch/arm/boot/dts/exynos5250-arndale.dts
-> +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-> @@ -124,8 +124,6 @@
->  &dp {
->  	status = "okay";
->  	samsung,color-space = <0>;
-> -	samsung,dynamic-range = <0>;
-> -	samsung,ycbcr-coeff = <0>;
->  	samsung,color-depth = <1>;
->  	samsung,link-rate = <0x0a>;
->  	samsung,lane-count = <4>;
-> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> index 0f5dcd4..f30c2db 100644
-> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> @@ -80,8 +80,6 @@
-> 
->  &dp {
->  	samsung,color-space = <0>;
-> -	samsung,dynamic-range = <0>;
-> -	samsung,ycbcr-coeff = <0>;
->  	samsung,color-depth = <1>;
->  	samsung,link-rate = <0x0a>;
->  	samsung,lane-count = <4>;
-> diff --git a/arch/arm/boot/dts/exynos5250-snow-common.dtsi b/arch/arm/boot/dts/exynos5250-snow-
-> common.dtsi
-> index 5cb33ba..b96624b 100644
-> --- a/arch/arm/boot/dts/exynos5250-snow-common.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250-snow-common.dtsi
-> @@ -236,12 +236,10 @@
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&dp_hpd>;
->  	samsung,color-space = <0>;
-> -	samsung,dynamic-range = <0>;
-> -	samsung,ycbcr-coeff = <0>;
->  	samsung,color-depth = <1>;
->  	samsung,link-rate = <0x0a>;
->  	samsung,lane-count = <2>;
-> -	samsung,hpd-gpio = <&gpx0 7 GPIO_ACTIVE_HIGH>;
-> +	hpd-gpios = <&gpx0 7 GPIO_ACTIVE_HIGH>;
-> 
->  	ports {
->  		port@0 {
-> diff --git a/arch/arm/boot/dts/exynos5250-spring.dts b/arch/arm/boot/dts/exynos5250-spring.dts
-> index c1edd6d..91881d7 100644
-> --- a/arch/arm/boot/dts/exynos5250-spring.dts
-> +++ b/arch/arm/boot/dts/exynos5250-spring.dts
-> @@ -74,12 +74,10 @@
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&dp_hpd_gpio>;
->  	samsung,color-space = <0>;
-> -	samsung,dynamic-range = <0>;
-> -	samsung,ycbcr-coeff = <0>;
->  	samsung,color-depth = <1>;
->  	samsung,link-rate = <0x0a>;
->  	samsung,lane-count = <1>;
-> -	samsung,hpd-gpio = <&gpc3 0 GPIO_ACTIVE_HIGH>;
-> +	hpd-gpios = <&gpc3 0 GPIO_ACTIVE_HIGH>;
->  };
-> 
->  &ehci {
-> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> index 35cfb07..2f37c87 100644
-> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> @@ -148,12 +148,10 @@
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&dp_hpd_gpio>;
->  	samsung,color-space = <0>;
-> -	samsung,dynamic-range = <0>;
-> -	samsung,ycbcr-coeff = <0>;
->  	samsung,color-depth = <1>;
->  	samsung,link-rate = <0x06>;
->  	samsung,lane-count = <2>;
-> -	samsung,hpd-gpio = <&gpx2 6 GPIO_ACTIVE_HIGH>;
-> +	hpd-gpios = <&gpx2 6 GPIO_ACTIVE_HIGH>;
-> 
->  	ports {
->  		port@0 {
-> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> index ac35aef..f67344f 100644
-> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> @@ -93,8 +93,6 @@
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&dp_hpd>;
->  	samsung,color-space = <0>;
-> -	samsung,dynamic-range = <0>;
-> -	samsung,ycbcr-coeff = <0>;
->  	samsung,color-depth = <1>;
->  	samsung,link-rate = <0x0a>;
->  	samsung,lane-count = <4>;
-> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> index 7b018e4..363c95f 100644
-> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> @@ -142,12 +142,10 @@
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&dp_hpd_gpio>;
->  	samsung,color-space = <0>;
-> -	samsung,dynamic-range = <0>;
-> -	samsung,ycbcr-coeff = <0>;
->  	samsung,color-depth = <1>;
->  	samsung,link-rate = <0x0a>;
->  	samsung,lane-count = <2>;
-> -	samsung,hpd-gpio = <&gpx2 6 GPIO_ACTIVE_HIGH>;
-> +	hpd-gpios = <&gpx2 6 GPIO_ACTIVE_HIGH>;
->  	panel = <&panel>;
->  };
-> 
-> --
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 30bbc37..83ed521 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -350,6 +350,7 @@ dtb-$(CONFIG_SOC_IMX6SX) += \
+>  dtb-$(CONFIG_SOC_IMX6UL) += \
+>  	imx6ul-14x14-evk.dtb
+>  dtb-$(CONFIG_SOC_IMX7D) += \
+> +	imx7d-cl-som-imx7.dtb \
+>  	imx7d-sdb.dtb
+>  dtb-$(CONFIG_SOC_LS1021A) += \
+>  	ls1021a-qds.dtb \
+> diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+> new file mode 100644
+> index 0000000..1ec4528
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+> @@ -0,0 +1,293 @@
+> +/*
+> + * Support for CompuLab CL-SOM-iMX7 System-on-Module
+> + *
+> + * Copyright (C) 2015 CompuLab Ltd. - http://www.compulab.co.il/
+> + * Author: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/input/input.h>
+> +#include "imx7d.dtsi"
+> +
+> +/ {
+> +	model = "CompuLab CL-SOM-iMX7";
+> +	compatible = "compulab,cl-som-imx7", "fsl,imx7d";
+> +
+> +	memory {
+> +		reg = <0x80000000 0x10000000>; /* 256 MB - minimal configuration */
+> +	};
+> +
+> +	regulators {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+
+DT maintainers dislike this fake "simple-bus" container, and we were
+asked to put fixed regulator directly under root.  I fixed it up like
+below:
+
+	reg_usb_otg1_vbus: regulator-vbus {
+		compatible = "regulator-fixed";
+		regulator-name = "usb_otg1_vbus";
+		regulator-min-microvolt = <5000000>;
+		regulator-max-microvolt = <5000000>;
+		gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+	};
+
+Shawn
+
+> +
+> +		reg_usb_otg1_vbus: regulator@0 {
+> +			compatible = "regulator-fixed";
+> +			reg = <0>;
+> +			regulator-name = "usb_otg1_vbus";
+> +			regulator-min-microvolt = <5000000>;
+> +			regulator-max-microvolt = <5000000>;
+> +			gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
+> +			enable-active-high;
+> +		};
+> +	};
+> +};
+> +
+> +&cpu0 {
+> +	arm-supply = <&sw1a_reg>;
+> +};
+> +
+> +&fec1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_enet1>;
+> +	assigned-clocks = <&clks IMX7D_ENET1_TIME_ROOT_SRC>,
+> +			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
+> +	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
+> +	assigned-clock-rates = <0>, <100000000>;
+> +	phy-mode = "rgmii";
+> +	phy-handle = <&ethphy0>;
+> +	fsl,magic-packet;
+> +	status = "okay";
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ethphy0: ethernet-phy@0 {
+> +			reg = <0>;
+> +		};
+> +
+> +		ethphy1: ethernet-phy@1 {
+> +			reg = <1>;
+> +		};
+> +	};
+> +};
+> +
+> +&fec2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_enet2>;
+> +	assigned-clocks = <&clks IMX7D_ENET2_TIME_ROOT_SRC>,
+> +			  <&clks IMX7D_ENET2_TIME_ROOT_CLK>;
+> +	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
+> +	assigned-clock-rates = <0>, <100000000>;
+> +	phy-mode = "rgmii";
+> +	phy-handle = <&ethphy1>;
+> +	fsl,magic-packet;
+> +	status = "okay";
+> +};
+> +
+> +&i2c2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c2>;
+> +	status = "okay";
+> +
+> +	pmic: pmic@8 {
+> +		compatible = "fsl,pfuze3000";
+> +		reg = <0x08>;
+> +
+> +		regulators {
+> +			sw1a_reg: sw1a {
+> +				regulator-min-microvolt = <700000>;
+> +				regulator-max-microvolt = <1475000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-ramp-delay = <6250>;
+> +			};
+> +
+> +			/* use sw1c_reg to align with pfuze100/pfuze200 */
+> +			sw1c_reg: sw1b {
+> +				regulator-min-microvolt = <700000>;
+> +				regulator-max-microvolt = <1475000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-ramp-delay = <6250>;
+> +			};
+> +
+> +			sw2_reg: sw2 {
+> +				regulator-min-microvolt = <1500000>;
+> +				regulator-max-microvolt = <1850000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			sw3a_reg: sw3 {
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <1650000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			swbst_reg: swbst {
+> +				regulator-min-microvolt = <5000000>;
+> +				regulator-max-microvolt = <5150000>;
+> +			};
+> +
+> +			snvs_reg: vsnvs {
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vref_reg: vrefddr {
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen1_reg: vldo1 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen2_reg: vldo2 {
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <1550000>;
+> +			};
+> +
+> +			vgen3_reg: vccsd {
+> +				regulator-min-microvolt = <2850000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen4_reg: v33 {
+> +				regulator-min-microvolt = <2850000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen5_reg: vldo3 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen6_reg: vldo4 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +		};
+> +	};
+> +
+> +	pca9555: pca9555@20 {
+> +		compatible = "nxp,pca9555";
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		reg = <0x20>;
+> +	};
+> +
+> +	eeprom@50 {
+> +		compatible = "atmel,24c08";
+> +		reg = <0x50>;
+> +		pagesize = <16>;
+> +	};
+> +};
+> +
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart1>;
+> +	assigned-clocks = <&clks IMX7D_UART1_ROOT_SRC>;
+> +	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
+> +	status = "okay";
+> +};
+> +
+> +&usbotg1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usbotg1>;
+> +	vbus-supply = <&reg_usb_otg1_vbus>;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc3>;
+> +	assigned-clocks = <&clks IMX7D_USDHC3_ROOT_CLK>;
+> +	assigned-clock-rates = <400000000>;
+> +	bus-width = <8>;
+> +	fsl,tuning-step = <2>;
+> +	non-removable;
+> +	status = "okay";
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl_enet1: enet1grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_SD2_CD_B__ENET1_MDIO			0x3
+> +			MX7D_PAD_SD2_WP__ENET1_MDC			0x3
+> +			MX7D_PAD_ENET1_RGMII_TXC__ENET1_RGMII_TXC	0x1
+> +			MX7D_PAD_ENET1_RGMII_TD0__ENET1_RGMII_TD0	0x1
+> +			MX7D_PAD_ENET1_RGMII_TD1__ENET1_RGMII_TD1	0x1
+> +			MX7D_PAD_ENET1_RGMII_TD2__ENET1_RGMII_TD2	0x1
+> +			MX7D_PAD_ENET1_RGMII_TD3__ENET1_RGMII_TD3	0x1
+> +			MX7D_PAD_ENET1_RGMII_TX_CTL__ENET1_RGMII_TX_CTL	0x1
+> +			MX7D_PAD_ENET1_RGMII_RXC__ENET1_RGMII_RXC	0x1
+> +			MX7D_PAD_ENET1_RGMII_RD0__ENET1_RGMII_RD0	0x1
+> +			MX7D_PAD_ENET1_RGMII_RD1__ENET1_RGMII_RD1	0x1
+> +			MX7D_PAD_ENET1_RGMII_RD2__ENET1_RGMII_RD2	0x1
+> +			MX7D_PAD_ENET1_RGMII_RD3__ENET1_RGMII_RD3	0x1
+> +			MX7D_PAD_ENET1_RGMII_RX_CTL__ENET1_RGMII_RX_CTL	0x1
+> +		>;
+> +	};
+> +
+> +	pinctrl_enet2: enet2grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_EPDC_GDSP__ENET2_RGMII_TXC		0x1
+> +			MX7D_PAD_EPDC_SDCE2__ENET2_RGMII_TD0		0x1
+> +			MX7D_PAD_EPDC_SDCE3__ENET2_RGMII_TD1		0x1
+> +			MX7D_PAD_EPDC_GDCLK__ENET2_RGMII_TD2		0x1
+> +			MX7D_PAD_EPDC_GDOE__ENET2_RGMII_TD3		0x1
+> +			MX7D_PAD_EPDC_GDRL__ENET2_RGMII_TX_CTL		0x1
+> +			MX7D_PAD_EPDC_SDCE1__ENET2_RGMII_RXC		0x1
+> +			MX7D_PAD_EPDC_SDCLK__ENET2_RGMII_RD0		0x1
+> +			MX7D_PAD_EPDC_SDLE__ENET2_RGMII_RD1		0x1
+> +			MX7D_PAD_EPDC_SDOE__ENET2_RGMII_RD2		0x1
+> +			MX7D_PAD_EPDC_SDSHR__ENET2_RGMII_RD3		0x1
+> +			MX7D_PAD_EPDC_SDCE0__ENET2_RGMII_RX_CTL		0x1
+> +		>;
+> +	};
+> +
+> +	pinctrl_i2c2: i2c2grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_I2C2_SDA__I2C2_SDA		0x4000007f
+> +			MX7D_PAD_I2C2_SCL__I2C2_SCL		0x4000007f
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart1: uart1grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_UART1_TX_DATA__UART1_DCE_TX	0x79
+> +			MX7D_PAD_UART1_RX_DATA__UART1_DCE_RX	0x79
+> +		>;
+> +	};
+> +
+> +	pinctrl_usbotg1: usbotg1grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_GPIO1_IO05__GPIO1_IO5		0x14 /* OTG PWREN */
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc3: usdhc3grp {
+> +		fsl,pins = <
+> +			MX7D_PAD_SD3_CMD__SD3_CMD		0x59
+> +			MX7D_PAD_SD3_CLK__SD3_CLK		0x19
+> +			MX7D_PAD_SD3_DATA0__SD3_DATA0		0x59
+> +			MX7D_PAD_SD3_DATA1__SD3_DATA1		0x59
+> +			MX7D_PAD_SD3_DATA2__SD3_DATA2		0x59
+> +			MX7D_PAD_SD3_DATA3__SD3_DATA3		0x59
+> +			MX7D_PAD_SD3_DATA4__SD3_DATA4		0x59
+> +			MX7D_PAD_SD3_DATA5__SD3_DATA5		0x59
+> +			MX7D_PAD_SD3_DATA6__SD3_DATA6		0x59
+> +			MX7D_PAD_SD3_DATA7__SD3_DATA7		0x59
+> +			MX7D_PAD_SD3_STROBE__SD3_STROBE		0x19
+> +		>;
+> +	};
+> +};
+> -- 
 > 1.9.1
-
-
+> 
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
