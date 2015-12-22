@@ -1,75 +1,86 @@
-From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Subject: [PATCH 5/6] ASoC: da7219: Add support for 1.6V micbias level
-Date: Tue, 22 Dec 2015 18:27:55 +0000
-Message-ID: <7413a3e6c9996d2ae4c17ea60b220ad1d4012a9f.1450807642.git.Adam.Thomson.Opensource@diasemi.com>
-References: <cover.1450807642.git.Adam.Thomson.Opensource@diasemi.com>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: Re: [PATCH 1/2] PCI: generic: Refactor code to enable reuse by other
+ drivers.
+Date: Tue, 22 Dec 2015 10:29:31 -0800
+Message-ID: <5679968B.4090908@caviumnetworks.com>
+References: <1450749222-15966-1-git-send-email-ddaney.cavm@gmail.com> <1450749222-15966-2-git-send-email-ddaney.cavm@gmail.com> <20151222100732.GD32623@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1450807642.git.Adam.Thomson.Opensource@diasemi.com>
+In-Reply-To: <20151222100732.GD32623@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
+To: Will Deacon <will.deacon@arm.com>
+Cc: David Daney <ddaney.cavm@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-HW can provide 1.6V micbias level as well the existing levels
-already provided in the driver. This patch adds support for 1.6V
-to the DT binding.
+On 12/22/2015 02:07 AM, Will Deacon wrote:
+> On Mon, Dec 21, 2015 at 05:53:41PM -0800, David Daney wrote:
+>> From: David Daney <david.daney@cavium.com>
+>>
+>> No change in functionality.
+>>
+>> Move structure definitions into a separate header file.  Split probe
+>> function in to two parts:
+>>
+>>     - a small driver specific probe function (gen_pci_probe)
+>>
+>>     - a common probe that can be used by other drivers
+>>       (gen_pci_common_probe)
+>>
+>> Signed-off-by: David Daney <david.daney@cavium.com>
+>> ---
+>>   drivers/pci/host/pci-host-generic.c | 53 ++++++++++++-----------------------
+>>   drivers/pci/host/pci-host-generic.h | 56 +++++++++++++++++++++++++++++++++++++
+>>   2 files changed, 74 insertions(+), 35 deletions(-)
+>>   create mode 100644 drivers/pci/host/pci-host-generic.h
+>>
+>> diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
+>> index 5434c90..e83cec7 100644
+>> --- a/drivers/pci/host/pci-host-generic.c
+>> +++ b/drivers/pci/host/pci-host-generic.c
+[...]
+>> -static int gen_pci_probe(struct platform_device *pdev)
+>> +int gen_pci_common_probe(struct platform_device *pdev,
+>> +			 struct gen_pci *pci)
+>
+> Whilst I'm fine with this patch, I don't know how Bjorn will feel about
+> exposing this function outside of the generic host driver. We could avoid
+> it by turning things upside-down and having the generic driver probe
+> the other drivers by matching a compatible string with a probe function
+> pointer, but I'd be interested to see what others think.
+>
 
-Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
----
- Documentation/devicetree/bindings/sound/da7219.txt | 2 +-
- include/sound/da7219.h                             | 3 ++-
- sound/soc/codecs/da7219.c                          | 3 +++
- 3 files changed, 6 insertions(+), 2 deletions(-)
+Note: I know that pci-host-generic is not built as a loadable module, but...
 
-diff --git a/Documentation/devicetree/bindings/sound/da7219.txt b/Documentation/devicetree/bindings/sound/da7219.txt
-index 062a2a0..cf61681 100644
---- a/Documentation/devicetree/bindings/sound/da7219.txt
-+++ b/Documentation/devicetree/bindings/sound/da7219.txt
-@@ -29,7 +29,7 @@ Optional properties:
- - clock-names : Clock name string for 'clocks' attribute, should be "mclk".
- 
- - dlg,micbias-lvl : Voltage (mV) for Mic Bias
--	[<1800>, <2000>, <2200>, <2400>, <2600>]
-+	[<1600>, <1800>, <2000>, <2200>, <2400>, <2600>]
- - dlg,mic-amp-in-sel : Mic input source type
- 	["diff", "se_p", "se_n"]
- 
-diff --git a/include/sound/da7219.h b/include/sound/da7219.h
-index 307198b..02876ac 100644
---- a/include/sound/da7219.h
-+++ b/include/sound/da7219.h
-@@ -16,7 +16,8 @@
- 
- /* Mic Bias */
- enum da7219_micbias_voltage {
--	DA7219_MICBIAS_1_8V = 1,
-+	DA7219_MICBIAS_1_6V = 0,
-+	DA7219_MICBIAS_1_8V,
- 	DA7219_MICBIAS_2_0V,
- 	DA7219_MICBIAS_2_2V,
- 	DA7219_MICBIAS_2_4V,
-diff --git a/sound/soc/codecs/da7219.c b/sound/soc/codecs/da7219.c
-index 5daeec8..c019fef 100644
---- a/sound/soc/codecs/da7219.c
-+++ b/sound/soc/codecs/da7219.c
-@@ -1410,6 +1410,8 @@ static enum da7219_micbias_voltage
- 	da7219_of_micbias_lvl(struct snd_soc_codec *codec, u32 val)
- {
- 	switch (val) {
-+	case 1600:
-+		return DA7219_MICBIAS_1_6V;
- 	case 1800:
- 		return DA7219_MICBIAS_1_8V;
- 	case 2000:
-@@ -1571,6 +1573,7 @@ static void da7219_handle_pdata(struct snd_soc_codec *codec)
- 
- 		/* Mic Bias voltages */
- 		switch (pdata->micbias_lvl) {
-+		case DA7219_MICBIAS_1_6V:
- 		case DA7219_MICBIAS_1_8V:
- 		case DA7219_MICBIAS_2_0V:
- 		case DA7219_MICBIAS_2_2V:
--- 
-1.9.3
+struct of_device_id, MODULE_DEVICE_TABLE, struct platform_driver and the 
+registering of platform drivers is fairly well standardized in the 
+kernel, and module loading userpace tools.
+
+The struct of_device_id, MODULE_DEVICE_TABLE must really reside in the 
+same module as the driver for the device.   We are creating a separate 
+driver precisely because we don't want to mix all this ThunderX specific 
+code into the pci-host-generic driver when it is used by arm-32bit and 
+others.  This means that, at a minimum, we would have to export the 
+pci-host-generic probe function so that it could be referenced by struct 
+platform_driver in other modules.
+
+This brings up the next problem.  How to attach driver specific data to 
+the generic driver structures?  At first I tried augmenting  struct 
+gen_pci_cfg_bus_ops with a callback .init() function to be called by the 
+generic driver, but this would also require adding an an element to 
+struct gen_pci to point to a driver specific data object.  It felt a 
+little convoluted and complex.
+
+This led me to the current design where struct gen_pci is embedded in 
+the driver specific structure, and the allocation of this is done in the 
+driver specific probe function.  No more callbacks, no additions to the 
+pci-host-generic structures.  I think it is a little cleaner this way.
+
+If there are suggestions as to how it can be made cleaner yet, I would 
+be happy to implement and test them.
+
+David Daney
+
+> Will
+>
