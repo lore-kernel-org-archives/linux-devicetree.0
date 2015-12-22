@@ -1,86 +1,88 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH v4 2/4] ARM: bcm2835: add rpi power domain driver
-Date: Mon, 21 Dec 2015 20:02:21 -0800
-Message-ID: <877fk7167m.fsf@eliezer.anholt.net>
-References: <1450312009-1791-1-git-send-email-eric@anholt.net> <1450312009-1791-3-git-send-email-eric@anholt.net> <CAPDyKFp5JfHmNw+ryoAnu-0XANcxW_pyNL_GUFUw7sBQmU+WDA@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 4/5] ARM: dts: sun5i: Add dts file for
+ the Empire Electronix D709 tablet
+Date: Tue, 22 Dec 2015 12:29:24 +0800
+Message-ID: <CAGb2v67+XpYwUFAVSGEGAfJ0bzubQ87Ebaf5W5Ze619mEE6uUA@mail.gmail.com>
+References: <1450611782-9494-1-git-send-email-hdegoede@redhat.com>
+ <1450611782-9494-4-git-send-email-hdegoede@redhat.com> <CAGb2v65daCCOWf7EXDkNWnxv1idXHXesOp6Et_0h-o+9drdeMA@mail.gmail.com>
+ <5677D87A.90805@redhat.com> <20151221161132.GA30359@lukather> <567854D5.7030601@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFp5JfHmNw+ryoAnu-0XANcxW_pyNL_GUFUw7sBQmU+WDA@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-rpi-kernel@lists.infradead.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Kevin Hilman <khilman@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexander Aring <alex.aring@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <567854D5.7030601-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-
-Ulf Hansson <ulf.hansson@linaro.org> writes:
-
-> On 17 December 2015 at 01:26, Eric Anholt <eric@anholt.net> wrote:
->> From: Alexander Aring <alex.aring@gmail.com>
->>
->> This patch adds support for several power domains on Raspberry Pi,
->> including USB (so it can be enabled even if the bootloader didn't do
->> it), and graphics.
->>
->> This patch is the combined work of Eric Anholt (who wrote USB support
->> inside of the Raspberry Pi firmware driver, and wrote the non-USB
->> domain support) and Alexander Aring (who separated the original USB
->> work out from the firmware driver).
->>
->> Signed-off-by: Alexander Aring <alex.aring@gmail.com>
->> Signed-off-by: Eric Anholt <eric@anholt.net>
->> ---
->>
->> v2: Add support for power domains other than USB, using the new
->>     firmware interface, reword commit message (changes by Eric)
->>
->> v3: Restructure as a builtin driver, and drop
->>     of_genpd_add_provider_onecell error handling to avoid
->>     pm_genpd_exit() dependency until that API can be settled.  Clean
->>     up copyright header, add missing ISP initialization, and fix typo
->>     in transposer's name.
->>
->> v4: Move to drivers/soc/bcm/, move include to dt-bindings/soc/, set up
->>     Makefile for the drivers/soc/bcm following clk/'s model.
->>
->>  drivers/soc/Kconfig                         |   1 +
->>  drivers/soc/Makefile                        |   1 +
->>  drivers/soc/bcm/Kconfig                     |   9 +
->>  drivers/soc/bcm/Makefile                    |   1 +
->>  drivers/soc/bcm/raspberrypi-power.c         | 247 ++++++++++++++++++++++++++++
->>  include/dt-bindings/soc/raspberrypi-power.h |  41 +++++
+On Tue, Dec 22, 2015 at 3:36 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi,
 >
-> There is currently a directory which I think may be better.
-> include/dt-bindings/power/*
+> On 21-12-15 17:11, Maxime Ripard wrote:
+>>
+>> Hi,x
+>>
+>> On Mon, Dec 21, 2015 at 11:46:18AM +0100, Hans de Goede wrote:
+>>>>
+>>>> On the side, any thoughts on how to handle the differences between
+>>>> various "Q8"
+>>>> tablets, like different I2C-based sensors and WiFi chips?
+>>>
+>>>
+>>> For i2c based sensors the plan is to use devicetree overlays + an in
+>>> kernel
+>>> overlay manager which probes the i2c bus (checking known touchscreen /
+>>> accelerometer
+>>> addresses) and then picks the right touchscreen + accelerometer overlays.
+>>>
+>>> Wifi is somewhat more tricky I must admit, esp. since there seem to be q8
+>>> a23 based
+>>> tablet variants with usb wifi and others with sdio wifi. Since both
+>>> busses are
+>>> discoverable I'm tempted to just enable both in devicetree, and let the
+>>> kernel probe
+>>> and see what is actually there. This assume that the way the wifichip is
+>>> powered
+>>> is the same on all boards, or at least that it is safe to enable the
+>>> necessary
+>>> regulators on all boards ...
+>>>
+>>>> I'm asking because with Maxime's couple-regulator we should be able to
+>>>> get the
+>>>> RTL8723BS on the Q8 A23/33 v1.5 working.
+>>>
+>>>
+>>> So this means enabled the sdio controller (should be safe on all boards?)
+>>> and
+>>> enabling 2 regulators to power the wifi-chip. I think it will be safe to
+>>> do this
+>>> even on boards where those regulators are not used, what do you think ?
+>>
+>>
+>> Wouldn't that introduce some useless power drain on those boards?
 >
-> Besides this nitpick, I think this looks good. You may add my:
 >
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> If nothing is attached to those regulators (which I expect to be the case
+> when
+> they are not used to power wifi) then I would expect the drain to be
+> minimal,
+> my biggest worry is some board having tied these to ground, but I don't
+> think
+> that is very likely.
 
-Thanks!  I'll be sending my pull requests with the two r-bs added and
-these nitpicks fixed.
+AFAIK the AXP datasheets mention that unused DCDC outputs should be left
+floating. Not sure if this applies to LDO outputs as well. But any used
+outputs would have a bypass capacitor.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+>From the board designs I've seen, this seems to be the common case.
+I'm not an electrical engineer, but I think we're covered here.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Another thing we need to deal with is the different power sequencing
+requirements for the different SDIO chips.
 
-iQIcBAEBCgAGBQJWeMtNAAoJELXWKTbR/J7oV/MP/jY90i5XfExEzuffj9QFInLa
-T+oSu0R8epjxq00hUP92DPBFe6qPRDtWV0MjiV3Li2+OYxbsqEMJRdEEX+VS5Uw6
-jS712lNLQYx9seI4gvDzZzlz9Th8sWqflnXbb8TI232LzWSMu6PQJ7eLEcTaPgaX
-4osiAba2DIMY0DOJ5HIb2XbGhFibTu0z2Vkb1ByXhCjNY/aeqcGLTBSyXMBP/G3c
-RiOwrZ4ER3uhjMQFFRGjA7gmI/OM1GrGTepFz7Icja+ipO/URS7WPYNXLfM5HNCN
-EJV9ZA/WQJECW1I/BmPjMY4INxdd205Ap1aSGu7DxgH3UDHNTORNaY0C2jfKZNMw
-gktkxxVMuMQY1GSnV05xl0n9AC0XYgXHAhlfn/E2seOUKgTgTsglXMtezuoro9yY
-vrjRl+Xec7Bh8Kj06CzdvlwWWqJeceRXOMuL6cKZl/hRhiL6omBbe2fR7mAT2a0j
-x3aNeWunRsVi/V91FEHqfmRLej+f+efDh3xNVYmmavkg56HEZuVljrg9aSXmgwNj
-ljRv4/o8q9BOw54Yf2+PwXeJH3tN8zmomFyxkAyu3T+nN2EJLdKMxe08mJZIl2R5
-9X6WdVRyWlPweNlgNKNS1QxGdtblY0/C0LJLTZoAXDKiAZFyuBKrtV3VGR732f4M
-XlLgRgJ57WvTLmdgSWyO
-=k9S/
------END PGP SIGNATURE-----
---=-=-=--
+Regards
+ChenYu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
