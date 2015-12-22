@@ -1,97 +1,41 @@
-From: Alexander Aring <alex.aring@gmail.com>
-Subject: Re: [PATCH v2 6/8] ARM: bcm2835: Add devicetree for bcm2836 and
- Raspberry Pi 2 B
-Date: Tue, 22 Dec 2015 11:11:33 +0100
-Message-ID: <20151222101131.GA566@omega>
-References: <1450310115-22163-1-git-send-email-eric@anholt.net>
- <1450310115-22163-7-git-send-email-eric@anholt.net>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2 v2] ARM: l2x0: make it possible to disable outer sync
+ from DT
+Date: Tue, 22 Dec 2015 11:20:58 +0100
+Message-ID: <CACRpkdZWq71qkGF09W3Bp6tD=OGd0vLxevVaCAyTroahqO4HXg@mail.gmail.com>
+References: <1450126385-14517-1-git-send-email-linus.walleij@linaro.org>
+	<20151220033924.GK9883@rob-hp-laptop>
+	<20151220161149.GU8644@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1450310115-22163-7-git-send-email-eric@anholt.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>
-Cc: linux-rpi-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Scott Branden <sbranden@broadcom.com>, Marc Zyngier <marc.zyngier@arm.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151220161149.GU8644-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 16, 2015 at 03:55:13PM -0800, Eric Anholt wrote:
-> The Pi 2 B ends up like a Pi 1 B+, with the same peripherals and
-> pinout, but the CPU and memory layout changed to use the 2836.
-> 
-> Signed-off-by: Eric Anholt <eric@anholt.net>
-> ---
->  arch/arm/boot/dts/bcm2836-rpi-2-b.dts | 35 ++++++++++++++++
->  arch/arm/boot/dts/bcm2836.dtsi        | 77 +++++++++++++++++++++++++++++++++++
->  2 files changed, 112 insertions(+)
->  create mode 100644 arch/arm/boot/dts/bcm2836-rpi-2-b.dts
->  create mode 100644 arch/arm/boot/dts/bcm2836.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-> new file mode 100644
-> index 0000000..ff94666
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-> @@ -0,0 +1,35 @@
-> +/dts-v1/;
-> +#include "bcm2836.dtsi"
-> +#include "bcm2835-rpi.dtsi"
-> +
-> +/ {
-> +	compatible = "raspberrypi,2-model-b", "brcm,bcm2836";
-> +	model = "Raspberry Pi 2 Model B";
-> +
-> +	memory {
-> +		reg = <0 0x40000000>;
-> +	};
-> +
-> +	leds {
-> +		act {
-> +			gpios = <&gpio 47 0>;
-> +		};
-> +
-> +		pwr {
-> +			label = "PWR";
-> +			gpios = <&gpio 35 0>;
-> +			default-state = "keep";
-> +			linux,default-trigger = "default-on";
-> +		};
-> +	};
-> +};
-> +
-> +&gpio {
-> +	pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
-> +
-> +	/* I2S interface */
-> +	i2s_alt0: i2s_alt0 {
-> +		brcm,pins = <18 19 20 21>;
-> +		brcm,function = <BCM2835_FSEL_ALT0>;
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/bcm2836.dtsi b/arch/arm/boot/dts/bcm2836.dtsi
-> new file mode 100644
-> index 0000000..6693118
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/bcm2836.dtsi
-> @@ -0,0 +1,77 @@
-> +#include "bcm283x.dtsi"
-> +
-> +/ {
-> +	compatible = "brcm,bcm2836";
-> +
-> +	soc {
-> +		ranges = <0x7e000000 0x3f000000 0x1000000>,
+On Sun, Dec 20, 2015 at 5:11 PM, Russell King - ARM Linux
+<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
 
-nitpik, I would change it here to 0x01000000 for the size parameter,
-like below: 8-byte filled with zeroes.
+> It would be nice to have a faster response though, because Linus Walleij
+> put this in the patch system on the 15th December, and I could have
+> applied it without waiting for DT people to comment.  The good thing is
+> that I _have_ the patch system, which allows me to temporarily ignore
+> patches (provided I remember) while people chew the cud on stuff like
+> this.
+>
+> However, I'd _much_ rather prefer the authors to hold back the patches
+> until they get "approved" *before* sending them there, so I don't have
+> to find and remember to track the status of each patch on the mailing
+> list.
 
-> +			 <0x40000000 0x40000000 0x00001000>;
+OK sorry, I guess I was a bit trigger happy as my RealView was booting
+so nicely and all.
 
-Is 0x00001000 correct here? I currently debug this part because the
-devicetree issues which I mentioned. I looked into some bcm2836
-datasheet. See [0], section "4 Registers", I assume this should be 0x00000100.
-Or are there more than these registers which need to be accessable?
-
-- Alex
-
-[0] https://github.com/raspberrypi/documentation/blob/master/hardware/raspberrypi/bcm2836/QA7_rev3.4.pdf
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
