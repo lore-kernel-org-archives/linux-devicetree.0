@@ -1,71 +1,95 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 4/5] Documentation: afe4403: Add DT bindings for the
- AFE4403 heart monitor
-Date: Tue, 22 Dec 2015 17:38:13 +0000
-Message-ID: <56798A85.30706@kernel.org>
-References: <1450132561-5245-1-git-send-email-afd@ti.com>
- <1450132561-5245-5-git-send-email-afd@ti.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: [PATCH v7 0/4] drm: Add support for the ARM HDLCD display controller
+Date: Tue, 22 Dec 2015 17:41:45 +0000
+Message-ID: <1450806109-470-1-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1450132561-5245-5-git-send-email-afd@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh@kernel.org>, Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: devicetree <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Punit Agrawal <punit.agrawal@arm.com>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>, Andrew Morton <akpm@linux-foundation.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14/12/15 22:36, Andrew F. Davis wrote:
-> Add the TI AFE4403 heart monitor DT bindings documentation.
-> 
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
-Nothing terribly controversial in here that I can spot
-so looks good to me.
-
-Jonathan
-> ---
->  .../devicetree/bindings/iio/health/afe4403.txt     | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/health/afe4403.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/health/afe4403.txt b/Documentation/devicetree/bindings/iio/health/afe4403.txt
-> new file mode 100644
-> index 0000000..2fffd70
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/health/afe4403.txt
-> @@ -0,0 +1,34 @@
-> +Texas Instruments AFE4403 Heart rate and Pulse Oximeter
-> +
-> +Required properties:
-> + - compatible		: Should be "ti,afe4403".
-> + - reg			: SPI chip select address of device.
-> + - tx-supply		: Regulator supply to transmitting LEDs.
-> + - interrupt-parent	: Phandle to he parent interrupt controller.
-> + - interrupts		: The interrupt line the device ADC_RDY pin is
-> +			  connected to. For details refer to,
-> +			  ../../interrupt-controller/interrupts.txt.
-> +
-> +Optional properties:
-> + - reset-gpios		: GPIO used to reset the device.
-> +			  For details refer to, ../../gpio/gpio.txt.
-> +
-> +For other required and optional properties of SPI slave nodes
-> +please refer to ../../spi/spi-bus.txt.
-> +
-> +Example:
-> +
-> +&spi0 {
-> +	heart_mon@0 {
-> +		compatible = "ti,afe4403";
-> +		reg = <0>;
-> +		spi-max-frequency = <10000000>;
-> +
-> +		tx-supply = <&vbat>;
-> +
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <28 IRQ_TYPE_EDGE_RISING>;
-> +
-> +		reset-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
-> +	};
-> +};
-> 
+VGhpcyBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciBBUk0ncyBIRExDRCBkaXNwbGF5IGNvbnRyb2xs
+ZXIgZm91bmQgaW4gSnVubwphbmQgQVJNIFRDMiBDb3JldGlsZS4gVGhlIEhETENEIG91dHB1dHMg
+YW4gUkdCIHN0cmVhbSB0aGF0IGZlZWRzIGludG8gYQpzaW5nbGUgZGlnaXRhbCBlbmNvZGVyIChE
+Vkkgb3IgSERNSSkuCgpBIGZldyBkYXlzIGFmdGVyIHNlbmRpbmcgdGhlIHY2IHNlcmllcyBhbmQg
+YSB0aW1pZCBwdWxsIHJlcXVlc3QgSSd2ZSBkaXNjb3ZlcmVkCnRoYXQgdGhlIGNoYW5nZXMgcGls
+ZWQgaW4gbGludXgtbmV4dCB3aWxsIGJyZWFrIG15IGRyaXZlciwgc28gdGhpcyBpcyBhIHJlZnJl
+c2gKdG8gbWFrZSBpdCBjb21waWxlIG9uIHRvcCBvZiBEYXZlIEFpcmxpZSdzIGRybS1uZXh0LgoK
+VGhlcmUgYXJlIHN0aWxsIGEgZmV3IGRlcGVuZGVuY2llcyB0aGF0IGhhdmVuJ3QgbWFkZSBpdCBp
+biBsaW51eC1uZXh0IHRoYXQgd2lsbApoYW1wZXIgdGVzdGluZyBvZiB0aGUgc2VyaWVzLCBzbyBJ
+J3ZlIHB1c2hlZCB0aGUgZnVsbCBzZXQgaW50byBbMV0uIFRob3NlIG9mCnlvdSBsdWNreSBlbm91
+Z2ggdG8gaGF2ZSBhIEp1bm8gYm9hcmQgY2FuIGdpdmUgaXQgYSBzcGluLgoKT25seSB0aGUgSnVu
+byBmdW5jdGlvbmFsaXR5IGhhcyBiZWVuIHRlc3RlZCBhcyB0aGUgVEMyIENvcmV0aWxlIHJlcXVp
+cmUKYSB3b3JraW5nIFNpSTkwMjIgZHJpdmVyIGZvciBWRXhwcmVzcyB0aGF0IGlzIG5vdCBzdWJq
+ZWN0IG9mIHRoaXMgcGF0Y2hzZXQuCgpJIGhhdmVuJ3QgZ290IGFueSBhbnN3ZXIgZnJvbSBEYXZl
+IG9uIG15IHB1bGwgcmVxdWVzdCwgc28gSSdtIGd1ZXNzaW5nIGhlIGlzIG5vdApyZWFkeSB0byB0
+YWtlIGl0LiBJIHdvdWxkIGFwcHJlY2lhdGUgc29tZSBmZWVkYmFjayBvbiB0aGlzIHZlcnNpb24g
+aWYgaGUgdGhpbmtzCnRoZXJlIGFyZSBzdGlsbCBpc3N1ZXMgdG8gYWRkcmVzcy4KCkNoYW5nZWxv
+ZzoKdjc6IFVwZGF0ZWQgdGhlIHVzZSBvZiBjb21wb25lbnQgQVBJIHRvIG1hdGNoIHRoZSB1cGRh
+dGVzIHF1ZXVlZCBieSBSdXNzZWxsIEtpbmcsCiAgICBhcyB3ZWxsIGFzIGFsbCB0aGUgRFJNIGNo
+YW5nZXMgdGhhdCBoYXBwZW5lZCBzaW5jZSA0LjMtcmMzIChyZW1vdmUKICAgIGRybV9kZXZfc2V0
+X3VuaXF1ZSgpIHRoYXQgaXMgbm93IGRvbmUgaW4gZHJtX2Rldl9hbGxvYygpLCBhZGQgdGhlIG1p
+c3NpbmcKICAgIHBhcmFtZXRlciBpbiBkcm1fdW5pdmVyc2FsX3BsYW5lX2luaXQoKSBhbmQgZHJt
+X2NydGNfaW5pdF93aXRoX3BsYW5lcygpKS4KICAgIFRoaXMgc2hvdWxkIGNvbXBpbGUgY2xlYW5s
+eSBvbiB0b3Agb2YgZHJtLW5leHQgYXMgb2YgMjJuZCBvZiBEZWNlbWJlci4KdjY6IEFkZHJlc3Nl
+ZCB0aGUgc3R5bGUgbml0cyBwb2ludGVkIGJ5IFJvYmluIE11cnBoeSBhbmQgZml4ZWQgdGhlIHVz
+ZSBvZgogICAgZGVmYXVsdCBjb2xvciB0byBoaWdobGlnaHQgdW5kZXJydW4gZXJyb3JzLiBBbHNv
+IG1vZGlmaWVkIE1BSU5UQUlORVJTIGZpbGUKICAgIHRvIGNoYW5nZSB0aGUgc3RhdHVzIHRvIFN1
+cHBvcnRlZCBmb3IgSERMQ0QuIFsyXQp2NTogUXVldWUgdGhlIHBlbmRpbmcgdmJsYW5rIGV2ZW50
+cyBzZW50IGJ5IHVzZXJzcGFjZSB1c2luZyBhIGxpc3QgaW5zdGVhZCBvZgogICAga2VlcGluZyB0
+aGUgbGFzdCBldmVudCBzZWVuLiBTdWdnZXN0ZWQgYnkgRGFuaWVsIFN0b25lIDxkYW5pZWxAZm9v
+aXNoYmFyLm9yZz4uIFszXQp2NDogUmVtb3ZlIHNvbWUgZGVidWdnaW5nIGNvZGUgdGhhdCBjb3Vs
+ZCByZXR1cm4gYW4gZXJyb3Igb24gYSBjcml0aWNhbCBwYXRoCiAgICBhbmQgdXBkYXRlZCB0aGUg
+Y2hlY2sgZm9yIHZhbGlkIGZvcm1hdCBpbiBoZGxjZF9zZXRfcHhsX2ZtdCgpIHRvIG9ubHkKICAg
+IFdBUk4oKSBpZiBhbiBpbnZhbGlkIGZvcm1hdCBmb3VuZCAodW5saWtlbHkgY2FzZSkuIEFkZGVk
+IHRoZSBBQ0tzIHJlY2VpdmVkLiBbNF0KdjM6IENoYW5nZWQgdGhlIGRyaXZlciB0byB1c2UgdGhl
+IG1lbW9yeS1yZWdpb24gcGhhbmRsZSBmb3IgYmVzcG9rZSBmcmFtZWJ1ZmZlcnMuIFs1XQp2Mjog
+QWRkZWQgc3VwcG9ydCBmb3IgYXRvbWljIG1vZGVzZXQgWzZdCnYxOiBPcmlnaW5hbCBEUk0gc3Vi
+bWlzc2lvbiBbN10KClsxXSBnaXQ6Ly9saW51eC1hcm0ub3JnL2xpbnV4LWxkIHRlc3RpbmcvaGRs
+Y2QKWzJdIGh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvYXJjaGl2ZXMvZHJpLWRldmVsLzIw
+MTUtRGVjZW1iZXIvMDk2ODcyLmh0bWwKWzNdIGh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+YXJjaGl2ZXMvZHJpLWRldmVsLzIwMTUtRGVjZW1iZXIvMDk2NDMyLmh0bWwKWzRdIGh0dHA6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvYXJjaGl2ZXMvZHJpLWRldmVsLzIwMTUtRGVjZW1iZXIvMDk1
+OTkwLmh0bWwKWzVdIGh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvYXJjaGl2ZXMvZHJpLWRl
+dmVsLzIwMTUtRGVjZW1iZXIvMDk1ODc3Lmh0bWwKWzZdIGh0dHA6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvYXJjaGl2ZXMvZHJpLWRldmVsLzIwMTUtTm92ZW1iZXIvMDk0MTc3Lmh0bWwKWzddIGh0
+dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvYXJjaGl2ZXMvZHJpLWRldmVsLzIwMTUtQXVndXN0
+LzA4NzY4NS5odG1sCgpCZXN0IHJlZ2FyZHMsCkxpdml1CgpMaXZpdSBEdWRhdSAoNCk6CiAgZHJt
+OiBhcm06IEFkZCBEVCBiaW5kaW5ncyBkb2N1bWVudGF0aW9uIGZvciBIRExDRCBkcml2ZXIuCiAg
+ZHJtOiBBZGQgc3VwcG9ydCBmb3IgQVJNJ3MgSERMQ0QgY29udHJvbGxlci4KICBhcm02NDogSnVu
+bzogQWRkIEhETENEIHN1cHBvcnQgdG8gdGhlIEp1bm8gYm9hcmRzLgogIE1BSU5UQUlORVJTOiBB
+ZGQgTGl2aXUgRHVkYXUgYXMgbWFpbnRhaW5lciBmb3IgQVJNIEhETENEIGRyaXZlci4KCiAuLi4v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybSxoZGxjZC50eHQgICAgICB8ICA3OSArKysK
+IE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA2
+ICsKIGFyY2gvYXJtNjQvYm9vdC9kdHMvYXJtL2p1bm8tYmFzZS5kdHNpICAgICAgICAgICAgIHwg
+IDQ2ICstCiBkcml2ZXJzL2dwdS9kcm0vS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB8ICAgMiArCiBkcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAg
+ICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vYXJtL0tjb25maWcgICAgICAgICAgICAgICAg
+ICAgICAgICB8ICAyOSArKwogZHJpdmVycy9ncHUvZHJtL2FybS9NYWtlZmlsZSAgICAgICAgICAg
+ICAgICAgICAgICAgfCAgIDIgKwogZHJpdmVycy9ncHUvZHJtL2FybS9oZGxjZF9jcnRjLmMgICAg
+ICAgICAgICAgICAgICAgfCAzMjcgKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vYXJtL2hk
+bGNkX2Rydi5jICAgICAgICAgICAgICAgICAgICB8IDU2NyArKysrKysrKysrKysrKysrKysrKysK
+IGRyaXZlcnMvZ3B1L2RybS9hcm0vaGRsY2RfZHJ2LmggICAgICAgICAgICAgICAgICAgIHwgIDQy
+ICsrCiBkcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNkX3JlZ3MuaCAgICAgICAgICAgICAgICAgICB8
+ICA4NyArKysrCiAxMSBmaWxlcyBjaGFuZ2VkLCAxMTg0IGluc2VydGlvbnMoKyksIDQgZGVsZXRp
+b25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvYXJtLGhkbGNkLnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1
+L2RybS9hcm0vS2NvbmZpZwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9hcm0v
+TWFrZWZpbGUKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNkX2Ny
+dGMuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9hcm0vaGRsY2RfZHJ2LmMK
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYXJtL2hkbGNkX2Rydi5oCiBjcmVh
+dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2FybS9oZGxjZF9yZWdzLmgKCi0tIAoyLjYu
+NAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
