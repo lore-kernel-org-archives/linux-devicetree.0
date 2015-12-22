@@ -1,106 +1,58 @@
-From: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Subject: [PATCH v2 2/2] ARM: dts: imx7d: sbc-imx7: add basic board support
-Date: Tue, 22 Dec 2015 10:15:20 +0200
-Message-ID: <1450772120-18131-3-git-send-email-ilya@compulab.co.il>
-References: <1449472479-2521-1-git-send-email-ilya@compulab.co.il>
- <1450772120-18131-1-git-send-email-ilya@compulab.co.il>
+From: Liberman Igal <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] powerpc/mpc85xx: Add pcsphy nodes to FManV3 device tree
+Date: Tue, 22 Dec 2015 08:51:55 +0000
+Message-ID: <DM2PR03MB509CAE5558807F9E327DCBDE6E50@DM2PR03MB509.namprd03.prod.outlook.com>
+References: <1450655851-6556-1-git-send-email-igal.liberman@freescale.com>
+ <1450708833.18314.35.camel@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450772120-18131-1-git-send-email-ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+In-Reply-To: <1450708833.18314.35.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: Madalin-Cristian Bucur <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SBC-iMX7 is a single board computer designed for industrial
-and embedded applications. It is based on the Freescale i.MX7
-system-on-chip. SBC-iMX7 is implemented with the CL-SOM-iMX7
-System-on-Module providing most of the functions, and SB-SOM-iMX7
-carrier board providing additional peripheral functions and
-connectors.
-
-http://www.compulab.co.il/products/sbcs/sbc-imx7-freescale-i-mx-7-single-board-computer/
-
-http://www.compulab.co.il/products/computer-on-modules/cl-som-imx7-freescale-i-mx-7-system-on-module/
-
-Add basic board support, including SD card as a secondary boot and storage device
-
-Signed-off-by: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Signed-off-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
----
-
-v2: move board description out of fsl.txt (Shawn)
-    use GPL/X11 dual licence for newly added dts files (Shawn)
-
- arch/arm/boot/dts/Makefile           |  1 +
- arch/arm/boot/dts/imx7d-sbc-imx7.dts | 44 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 45 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx7d-sbc-imx7.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 83ed521..72ef172 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -351,6 +351,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-14x14-evk.dtb
- dtb-$(CONFIG_SOC_IMX7D) += \
- 	imx7d-cl-som-imx7.dtb \
-+	imx7d-sbc-imx7.dtb \
- 	imx7d-sdb.dtb
- dtb-$(CONFIG_SOC_LS1021A) += \
- 	ls1021a-qds.dtb \
-diff --git a/arch/arm/boot/dts/imx7d-sbc-imx7.dts b/arch/arm/boot/dts/imx7d-sbc-imx7.dts
-new file mode 100644
-index 0000000..000f5b6
---- /dev/null
-+++ b/arch/arm/boot/dts/imx7d-sbc-imx7.dts
-@@ -0,0 +1,44 @@
-+/*
-+ * Support for CompuLab SBC-iMX7 Single Board Computer
-+ *
-+ * Copyright (C) 2015 CompuLab Ltd. - http://www.compulab.co.il/
-+ * Author: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ */
-+
-+#include "imx7d-cl-som-imx7.dts"
-+
-+/ {
-+	model = "CompuLab SBC-iMX7";
-+	compatible = "compulab,sbc-imx7", "compulab,cl-som-imx7", "fsl,imx7d";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	cd-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
-+	wp-gpios = <&gpio5 1 GPIO_ACTIVE_HIGH>;
-+	enable-sdio-wakeup;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	cl-som-imx7 {
-+		pinctrl_usdhc1: usdhc1grp {
-+			fsl,pins = <
-+				MX7D_PAD_SD1_CMD__SD1_CMD		0x59
-+				MX7D_PAD_SD1_CLK__SD1_CLK		0x19
-+				MX7D_PAD_SD1_DATA0__SD1_DATA0		0x59
-+				MX7D_PAD_SD1_DATA1__SD1_DATA1		0x59
-+				MX7D_PAD_SD1_DATA2__SD1_DATA2		0x59
-+				MX7D_PAD_SD1_DATA3__SD1_DATA3		0x59
-+				MX7D_PAD_SD1_CD_B__GPIO5_IO0		0x59 /* CD */
-+				MX7D_PAD_SD1_WP__GPIO5_IO1		0x59 /* WP */
-+			>;
-+		};
-+	};
-+};
--- 
-1.9.1
-
+DQoNClJlZ2FyZHMsDQpJZ2FsIExpYmVybWFuDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
+LS0NCj4gRnJvbTogV29vZCBTY290dC1CMDc0MjENCj4gU2VudDogTW9uZGF5LCBEZWNlbWJlciAy
+MSwgMjAxNSA0OjQxIFBNDQo+IFRvOiBMaWJlcm1hbiBJZ2FsLUIzMTk1MCA8SWdhbC5MaWJlcm1h
+bkBmcmVlc2NhbGUuY29tPjsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBj
+LWRldkBsaXN0cy5vemxhYnMub3JnDQo+IENjOiBCdWN1ciBNYWRhbGluLUNyaXN0aWFuLUIzMjcx
+NiA8bWFkYWxpbi5idWN1ckBmcmVlc2NhbGUuY29tPjsgWGllDQo+IFNoYW9odWktQjIxOTg5IDxT
+aGFvaHVpLlhpZUBmcmVlc2NhbGUuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBwb3dlcnBj
+L21wYzg1eHg6IEFkZCBwY3NwaHkgbm9kZXMgdG8gRk1hblYzDQo+IGRldmljZSB0cmVlDQo+IA0K
+PiBPbiBNb24sIDIwMTUtMTItMjEgYXQgMDE6NTcgKzAyMDAsIGlnYWwubGliZXJtYW5AZnJlZXNj
+YWxlLmNvbSB3cm90ZToNCj4gPiBGcm9tOiBJZ2FsIExpYmVybWFuIDxpZ2FsLmxpYmVybWFuQGZy
+ZWVzY2FsZS5jb20+DQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBJZ2FsIExpYmVybWFuIDxpZ2Fs
+LmxpYmVybWFuQGZyZWVzY2FsZS5jb20+DQo+ID4NCj4gPiBUaGlzIHBhdGNoIGFkZHMgcGNzcGh5
+IG5vZGUgdG8gRk1hblYzIGRldmljZSB0cmVlLg0KPiA+IEJhc2VkIG9uOiBodHRwczovL3BhdGNo
+d29yay5vemxhYnMub3JnL3BhdGNoLzUwMzkyMS8NCj4gPiAtLS0NCj4gPiAgLi4uL2R0cy9mc2wv
+cW9yaXEtZm1hbjMtMC0xMGctMC1iZXN0LWVmZm9ydC5kdHNpICAgfCAgICA1ICsrKysrDQo+ID4g
+IGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcW9yaXEtZm1hbjMtMC0xMGctMC5kdHNpIHwgICAg
+NSArKysrKw0KPiA+ICAuLi4vZHRzL2ZzbC9xb3JpcS1mbWFuMy0wLTEwZy0xLWJlc3QtZWZmb3J0
+LmR0c2kgICB8ICAgIDUgKysrKysNCj4gPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9xb3Jp
+cS1mbWFuMy0wLTEwZy0xLmR0c2kgfCAgICA1ICsrKysrDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290
+L2R0cy9mc2wvcW9yaXEtZm1hbjMtMC0xZy0wLmR0c2kgIHwgICAgNSArKysrKw0KPiA+ICBhcmNo
+L3Bvd2VycGMvYm9vdC9kdHMvZnNsL3FvcmlxLWZtYW4zLTAtMWctMS5kdHNpICB8ICAgIDUgKysr
+KysNCj4gPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9xb3JpcS1mbWFuMy0wLTFnLTIuZHRz
+aSAgfCAgICA1ICsrKysrDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcW9yaXEtZm1h
+bjMtMC0xZy0zLmR0c2kgIHwgICAgNSArKysrKw0KPiA+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMv
+ZnNsL3FvcmlxLWZtYW4zLTAtMWctNC5kdHNpICB8ICAgIDUgKysrKysNCj4gPiAgYXJjaC9wb3dl
+cnBjL2Jvb3QvZHRzL2ZzbC9xb3JpcS1mbWFuMy0wLTFnLTUuZHRzaSAgfCAgICA1ICsrKysrDQo+
+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcW9yaXEtZm1hbjMtMS0xMGctMC5kdHNpIHwg
+ICAgNSArKysrKw0KPiA+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3FvcmlxLWZtYW4zLTEt
+MTBnLTEuZHRzaSB8ICAgIDUgKysrKysNCj4gPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9x
+b3JpcS1mbWFuMy0xLTFnLTAuZHRzaSAgfCAgICA1ICsrKysrDQo+ID4gIGFyY2gvcG93ZXJwYy9i
+b290L2R0cy9mc2wvcW9yaXEtZm1hbjMtMS0xZy0xLmR0c2kgIHwgICAgNSArKysrKw0KPiA+ICBh
+cmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3FvcmlxLWZtYW4zLTEtMWctMi5kdHNpICB8ICAgIDUg
+KysrKysNCj4gPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9xb3JpcS1mbWFuMy0xLTFnLTMu
+ZHRzaSAgfCAgICA1ICsrKysrDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcW9yaXEt
+Zm1hbjMtMS0xZy00LmR0c2kgIHwgICAgNSArKysrKw0KPiA+ICBhcmNoL3Bvd2VycGMvYm9vdC9k
+dHMvZnNsL3FvcmlxLWZtYW4zLTEtMWctNS5kdHNpICB8ICAgIDUgKysrKysNCj4gPiAgMTggZmls
+ZXMgY2hhbmdlZCwgOTAgaW5zZXJ0aW9ucygrKQ0KPiANCj4gQmluZGluZz8NCj4gDQoNCldvcmtp
+bmcgb24gdGhhdCwgSSdsbCBzdWJtaXQgQVNBUC4gDQoNCklnYWwNCg0KPiAtU2NvdHQNCg==
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
