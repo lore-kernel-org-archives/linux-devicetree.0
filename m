@@ -1,48 +1,49 @@
 From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v5] bus: uniphier-system-bus: add UniPhier System Bus
- driver
-Date: Tue, 22 Dec 2015 11:22:52 -0800
-Message-ID: <20151222192252.GO30172@localhost>
-References: <1449643979-27329-1-git-send-email-yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 0/3] DT labels for connector device mapping
+Date: Tue, 22 Dec 2015 11:25:55 -0800
+Message-ID: <20151222192555.GR30172@localhost>
+References: <1449782473-20880-1-git-send-email-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1449643979-27329-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+In-Reply-To: <1449782473-20880-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 09, 2015 at 03:52:59PM +0900, Masahiro Yamada wrote:
-> The UniPhier System Bus is an external bus that connects on-board
-> devices to the UniPhier SoC.  Each bank (chip select) is dynamically
-> mapped to the CPU-viewed address base via the bus controller.  The
-> bus controller must be configured before any access to the bus.
+On Thu, Dec 10, 2015 at 03:21:10PM -0600, Rob Herring wrote:
+> Having a common connector interface across different platforms can be 
+> problematic for determining which SOC device is connected to which 
+> connector pins. The standard DT property "label" is intended to provide 
+> a human readable name for a device and can be used to provide this 
+> information. Then userspace can can read the label to determine the 
+> device mapping. For example:
 > 
-> This driver parses the "ranges" property of the System Bus node and
-> initialized the bus controller.  After the bus becomes ready, devices
-> below it are populated.
+> for f in $(ls -d /sys/class/tty/tty*); do
+>   label=$(cat $f/device/of_node/label)
+>   if [ "$label" = "LS-UART1" ]; then
+>     # you've found UART1, so do something with it.
+>     # $f/dev is the major:minor for the /dev node
+>   fi
+> done
 > 
-> Note:
-> Each bank can be mapped anywhere in the supported address space;
-> there is nothing preventing us from assigning bank 0 on 0x42000000,
-> 0x43000000, or anywhere as long as such region is not used by others.
-> So, the "ranges" is just one possible software configuration, which
-> does not seem to fit in device tree because device tree is a hardware
-> description language.  However, of_translate_address() requires
-> "ranges" in every bus node between CPUs and device mapped on the CPU
-> address space.  In other words, "ranges" properties must be statically
-> defined in device tree.  After some discussion, I decided the dynamic
-> address reassignment by the driver is too bothersome.  Instead, the
-> device tree should provide a reasonable translation setup that the OS
-> can rely on.
+> This series adds labels on hikey and dragonboard 410c devices for the 
+> low speed and high speed connectors. Not tested at all.
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> BTW, there are no platform maintainers listed for these files. Setting 
+> them should be enforced for the dts files as DT maintainers mainly 
+> review binding docs, not dts files.
+> 
+> Rob
+> 
+> Rob Herring (3):
+>   arm64: dts: apq8016-sbc: enable UART0 on LS connector
+>   arm64: dts: apq8016-sbc: add label properties for UART, I2C, and SPI
+>   arm64: dts: hikey: add label properties to UARTs
 
-Thanks, applied to next/drivers.
+Applied all 3 to next/dt64.
 
 
 -Olof
