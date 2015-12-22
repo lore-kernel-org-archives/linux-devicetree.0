@@ -1,99 +1,77 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH 4/5] ARM: dts: sun5i: Add dts file for
- the Empire Electronix D709 tablet
-Date: Tue, 22 Dec 2015 11:50:01 +0100
-Message-ID: <56792AD9.9040209@redhat.com>
-References: <1450611782-9494-1-git-send-email-hdegoede@redhat.com>
- <1450611782-9494-4-git-send-email-hdegoede@redhat.com>
- <CAGb2v65daCCOWf7EXDkNWnxv1idXHXesOp6Et_0h-o+9drdeMA@mail.gmail.com>
- <5677D87A.90805@redhat.com> <20151221161132.GA30359@lukather>
- <567854D5.7030601@redhat.com>
- <CAGb2v67+XpYwUFAVSGEGAfJ0bzubQ87Ebaf5W5Ze619mEE6uUA@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5] extcon: add Maxim MAX3355 driver
+Date: Tue, 22 Dec 2015 14:15:15 +0300
+Message-ID: <567930C3.3090600@cogentembedded.com>
+References: <5948633.my3nAG6hRz@wasted.cogentembedded.com>
+ <CAGTfZH34rfMfjsAFgyPeNue74-5iCi6ZwrdN26_jwOXE6R=hwg@mail.gmail.com>
+ <5676E214.2040009@cogentembedded.com> <5677662C.6060409@samsung.com>
+ <5677DC21.3040509@cogentembedded.com> <5678A3BE.3040701@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGb2v67+XpYwUFAVSGEGAfJ0bzubQ87Ebaf5W5Ze619mEE6uUA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <5678A3BE.3040701-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello.
 
-On 22-12-15 05:29, Chen-Yu Tsai wrote:
-> On Tue, Dec 22, 2015 at 3:36 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> Hi,
->>
->> On 21-12-15 17:11, Maxime Ripard wrote:
->>>
->>> Hi,x
->>>
->>> On Mon, Dec 21, 2015 at 11:46:18AM +0100, Hans de Goede wrote:
+On 12/22/2015 4:13 AM, Chanwoo Choi wrote:
+
+>>>>> This patch depend on GPIOLIB configuration as following:
+>>>>> I modified it with following diff and applied it.
 >>>>>
->>>>> On the side, any thoughts on how to handle the differences between
->>>>> various "Q8"
->>>>> tablets, like different I2C-based sensors and WiFi chips?
+>>>>> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
+>>>>> index ba4db7d..3d89e60 100644
+>>>>> --- a/drivers/extcon/Kconfig
+>>>>> +++ b/drivers/extcon/Kconfig
+>>>>> @@ -54,6 +54,7 @@ config EXTCON_MAX14577
+>>>>>
+>>>>>     config EXTCON_MAX3355
+>>>>>            tristate "Maxim MAX3355 USB OTG EXTCON Support"
+>>>>> +       depends on GPIOLIB || COMPILE_TEST
 >>>>
->>>>
->>>> For i2c based sensors the plan is to use devicetree overlays + an in
->>>> kernel
->>>> overlay manager which probes the i2c bus (checking known touchscreen /
->>>> accelerometer
->>>> addresses) and then picks the right touchscreen + accelerometer overlays.
->>>>
->>>> Wifi is somewhat more tricky I must admit, esp. since there seem to be q8
->>>> a23 based
->>>> tablet variants with usb wifi and others with sdio wifi. Since both
->>>> busses are
->>>> discoverable I'm tempted to just enable both in devicetree, and let the
->>>> kernel probe
->>>> and see what is actually there. This assume that the way the wifichip is
->>>> powered
->>>> is the same on all boards, or at least that it is safe to enable the
->>>> necessary
->>>> regulators on all boards ...
->>>>
->>>>> I'm asking because with Maxime's couple-regulator we should be able to
->>>>> get the
->>>>> RTL8723BS on the Q8 A23/33 v1.5 working.
->>>>
->>>>
->>>> So this means enabled the sdio controller (should be safe on all boards?)
->>>> and
->>>> enabling 2 regulators to power the wifi-chip. I think it will be safe to
->>>> do this
->>>> even on boards where those regulators are not used, what do you think ?
+>>>>      If it won't compile w/o gpiolib, what's the use of COMIPLE_TEST?
+>>>>      And no, it shouldn't depend on gpiolib. It has empty stubs for the case of CONFIG_GPIOLIB=n. Obviously something is wrong with the GPIO headers, I'll look into it.
 >>>
->>>
->>> Wouldn't that introduce some useless power drain on those boards?
+>>> Yes. When GPIOLIB is disabled, the build issue don't happen.
 >>
+>>     What? It surely does happen!
+>
+> hmm....
+> Sure. you need to check the include/linux/gpio/consumer.h.
+>
+> Because of build error happen, you miss to include the "linux/gpio/consumer.h"
+> header file in extcon-max3355.c. Please test it for enough time.
+
+    Yes, with this file #include'd, it build fine now.
+
+>>> because include/linux/gpio/consumer.h implement the dummy function
+>>> for all gpio functions if CONFIG_GPIOLIB is disabled.
 >>
->> If nothing is attached to those regulators (which I expect to be the case
->> when
->> they are not used to power wifi) then I would expect the drain to be
->> minimal,
->> my biggest worry is some board having tied these to ground, but I don't
->> think
->> that is very likely.
+>>     Linus W. advised to #include this header explicitly -- I'll try and post.
 >
-> AFAIK the AXP datasheets mention that unused DCDC outputs should be left
-> floating. Not sure if this applies to LDO outputs as well. But any used
-> outputs would have a bypass capacitor.
+> Don't necessary. I already updated it including the "include/linux/gpio/consumer.h".
+
+    I saw that, yes.
+
+>>> For correct operation of max3355, you should add the dependency
+>>> to the extcon-max3355.c driver. This driver use the GPIO library
+>>> certainly.
+>>
+>>     I disagree. The driver will just cease to load in this case. I don't see why we need such dependency. Only compilation time dependencies should be
+>> specified, I think.
 >
->  From the board designs I've seen, this seems to be the common case.
-> I'm not an electrical engineer, but I think we're covered here.
->
-> Another thing we need to deal with is the different power sequencing
-> requirements for the different SDIO chips.
+> This driver have to depend on GPIOLIB.
+> Why are you disagreeing the COMPILE_TEST dependency? It is just compile test
+> without anything.
 
-In my experience there are not that much sequences, as simply making sure
-all necessary resources are one before probing the sdio bus, I have yet to
-see a case where the order in which the resources are enabled matters.
+    I agree now. I still disagree about the gpiolib dependency though.
 
-Regards,
+MBR, Sergei
 
-Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
