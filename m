@@ -1,81 +1,85 @@
-From: Joakim Tjernlund <Joakim.Tjernlund-27rvihrghlNWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] powerpc/fsl: Update fman dt binding with pcs-phy and
- tbi-phy
-Date: Tue, 22 Dec 2015 15:56:57 +0000
-Message-ID: <1450799843.28718.56.camel@infinera.com>
-References: <1450757888-14216-1-git-send-email-igal.liberman@freescale.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v1 0/6] misc: add reboot mode driver
+Date: Tue, 22 Dec 2015 17:47:42 +0100
+Message-ID: <20151222164742.GA8623@piout.net>
+References: <1450774949-23901-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450757888-14216-1-git-send-email-igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Content-ID: <AD703585BA7F2142A8F78A1BAB54AFAE-27rvihrghlNWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1450774949-23901-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shaohui.xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <shaohui.xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-12-22 at 06:18 +0200, igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
-> From: Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->=20
-> Signed-off-by: Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
-> =A0.../devicetree/bindings/powerpc/fsl/fman.txt=A0=A0=A0=A0=A0=A0=A0|=
-=A0=A0=A039 ++++++++++++++++++++
-> =A01 file changed, 39 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> index 1fc5328..7a6d7c3 100644
-> --- a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> +++ b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> @@ -315,6 +315,16 @@ PROPERTIES
-> =A0		Value type: <phandle>
-> =A0		Definition: A phandle for 1EEE1588 timer.
-> =A0
-> +- pcsphy-handle
-> +		Usage required for "fsl,fman-memac" MACs
-> +		Value type: <phandle>
-> +		Definition: A phandle for pcsphy.
-> +
-> +- tbi-handle
-> +		Usage required for "fsl,fman-dtsec" MACs
-> +		Value type: <phandle>
-> +		Definition: A phandle for tbiphy.
-> +
-> =A0EXAMPLE
-> =A0
-> =A0fman1_tx28: port@a8000 {
-> @@ -340,6 +350,7 @@ ethernet@e0000 {
-> =A0	reg =3D <0xe0000 0x1000>;
-> =A0	fsl,fman-ports =3D <&fman1_rx8 &fman1_tx28>;
-> =A0	ptp-timer =3D <&ptp-timer>;
-> +	tbi-handle =3D <&tbi0>;
-> =A0};
-> =A0
-> =A0=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-> @@ -415,6 +426,13 @@ PROPERTIES
-> =A0		The settings and programming routines for internal/external
-> =A0		MDIO are different. Must be included for internal MDIO.
-> =A0
-> +For internal PHY device on internal mdio bus, a PHY node should be c=
-reated.
-> +See the definition of the PHY node in booting-without-of.txt for an
-> +example of how to define a PHY (Internal PHY has no interrupt line).
-> +- For "fsl,fman-mdio" compatible internal mdio bus, the PHY is TBI P=
-HY.
-> +- For "fsl,fman-memac-mdio" compatible internal mdio bus, the PHY is=
- PCS PHY,
-> +=A0=A0PCS PHY addr must be '0'.
+Hi,
 
-Will this replace the need for fixed PHYs ?
+On 22/12/2015 at 17:02:29 +0800, Andy Yan wrote :
+> 
+> This driver parse the reboot commands like "reboot loader"
+> and "reboot recovery" to get a boot mode described in the
+> device tree , then call the vendor specific write interfae
+> to store the boot mode in some place like special register
+> or sram , which can be read by the bootloader after system
+> reboot.
+> 
+> This is commonly done on Android based devices, in order to
+> reboot the device into fastboot or recovery mode.
+> 
+> Before this patch , I have try some hack on[0], and then found
+> John Stultz also doing the same work[1].
+> 
+> As John is busy these days, I go on with this work.
+> 
+> [0]https://patchwork.kernel.org/patch/7647751/
+> [1]https://patchwork.kernel.org/patch/7802391/
+> 
+> Changes in v1:
+> - fix the embarrassed compile warning
+> - correct the maskrom magic number
+> - check for the normal reboot
+> - correct the maskrom magic number
+> - use macro defined in rockchip_boot-mode.h for reboot-mode DT node
+> 
+> Andy Yan (6):
+>   dt-bindings: misc: add document for reboot-mode driver
+>   dt-bindings: soc: add document for rockchip reboot-mode driver
+>   misc: add reboot mode driver
+>   soc: rockchip: add reboot mode driver
+>   ARM: dts: rockchip: add reboot-mode node
+>   ARM64: dts: rockchip: add reboot-mode node
+> 
 
-=A0 =A0Jocke--
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+This seems nice and useful, some further ideas:
+
+>  .../devicetree/bindings/misc/reboot-mode.txt       | 41 +++++++++
+>  .../bindings/soc/rockchip/rockchip,reboot-mode.txt | 39 +++++++++
+>  arch/arm/boot/dts/rk3288.dtsi                      | 26 ++++++
+>  arch/arm/boot/dts/rk3xxx.dtsi                      | 26 ++++++
+>  arch/arm64/boot/dts/rockchip/rk3368.dtsi           | 26 ++++++
+>  drivers/misc/Kconfig                               |  7 ++
+>  drivers/misc/Makefile                              |  1 +
+>  drivers/misc/reboot_mode.c                         | 96 ++++++++++++++++++++++
+
+I think this actually belongs to drivers/power/reset/ instead of misc
+
+>  drivers/soc/rockchip/Kconfig                       |  9 ++
+>  drivers/soc/rockchip/Makefile                      |  1 +
+>  drivers/soc/rockchip/reboot.c                      | 68 +++++++++++++++
+
+And maybe that part could be made generic instead of rockchip specific.
+It simply uses a regmap to do the accesses, I guess a lot of other
+platforms will do that. We have syscon-reboot and syscon-poweroff for example.
+
+I think then we can extend the "framework" by having generic drivers to
+store the value in eeprom or nvram for example.
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
