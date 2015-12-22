@@ -1,136 +1,110 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 0/8] Raspberry Pi 2 support.
-Date: Tue, 22 Dec 2015 22:23:52 +0100
-Message-ID: <201512222223.52449.arnd@arndb.de>
-References: <1450310115-22163-1-git-send-email-eric@anholt.net> <201512220011.32234.arnd@arndb.de> <20151222142045.GA29335@omega>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] powerpc/fsl: Update fman dt binding with pcs-phy and
+ tbi-phy
+Date: Tue, 22 Dec 2015 15:42:58 -0600
+Message-ID: <1450820578.18314.94.camel@freescale.com>
+References: <1450757888-14216-1-git-send-email-igal.liberman@freescale.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151222142045.GA29335@omega>
+In-Reply-To: <1450757888-14216-1-git-send-email-igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shaohui.xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 22 December 2015, Alexander Aring wrote:
-> On Tue, Dec 22, 2015 at 12:11:32AM +0100, Arnd Bergmann wrote:
-> > On Sunday 20 December 2015, Alexander Aring wrote:
-> > > On Fri, Dec 18, 2015 at 11:08:26AM +0100, Alexander Aring wrote:
-> > > > [    0.000000] Memory policy: Data cache writeback
-> > > > [    0.000000] BUG: mapping for 0x3f201000 at 0xf0201000 out of vmalloc space
-> > 
-> > This is a separate bug, right?
-> > 
+On Tue, 2015-12-22 at 06:18 +0200, igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
+> From: Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > 
-> Yes, I can remove this BUG when setting:
-> 
-> VMSPLIT_2G
-> 
-> or some other option, was "VMSPLIT_3G" before and with this option I
-> will get the above message.
+> Signed-off-by: Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  .../devicetree/bindings/powerpc/fsl/fman.txt       |   39
+> ++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
 
-Please try to figure out why this happened, it should really work with any
-vmsplit, in particular the one that everyone uses.
+Some description in the log would be nice, especially why it can't use phy
+-handle
 
-> > > > [    0.000000] ------------[ cut here ]------------
-> > > > [    0.000000] WARNING: CPU: 0 PID: 0 at arch/arm/kernel/devtree.c:149 arm_dt_init_cpu_maps+0x100/0x1a4()
-> > > > [    0.000000] DT /cpu 2 nodes greater than max cores 1, capping them
-> > > > [    0.000000] Modules linked in:
-> > > > [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.4.0-rc5+ #989
-> > > > [    0.000000] Hardware name: BCM2835
-> > > > [    0.000000] [<c0016c4c>] (unwind_backtrace) from [<c0013e58>] (show_stack+0x20/0x24)
-> > > > [    0.000000] [<c0013e58>] (show_stack) from [<c0247620>] (dump_stack+0x20/0x28)
-> > > > [    0.000000] [<c0247620>] (dump_stack) from [<c0023a84>] (warn_slowpath_common+0x9c/0xc4)
-> > > > [    0.000000] [<c0023a84>] (warn_slowpath_common) from [<c0023aec>] (warn_slowpath_fmt+0x40/0x48)
-> > > > [    0.000000] [<c0023aec>] (warn_slowpath_fmt) from [<c074ef94>] (arm_dt_init_cpu_maps+0x100/0x1a4)
-> > > > [    0.000000] [<c074ef94>] (arm_dt_init_cpu_maps) from [<c074e60c>] (setup_arch+0x6f4/0x89c)
-> > > > [    0.000000] [<c074e60c>] (setup_arch) from [<c074b9cc>] (start_kernel+0x74/0x3a4)
-> > > > [    0.000000] [<c074b9cc>] (start_kernel) from [<00008078>] (0x8078)
-> > > > [    0.000000] ---[ end trace cb88537fdc8fa200 ]---
-> > > > [    0.000000] DT missing boot CPU MPIDR[23:0], fall back to default cpu_logical_map
-> > > > [    0.000000] CPU: All CPU(s) started in SVC mode.
-> > > 
-> > > I can remove this WARNING when I enable CONFIG_SMP.
-> > 
-> > I think we should try to change this in the code.
-> > 
 > 
-> mhhh, okay... I am not sure I think there is some missing
-> IS_ENABLED(CONFIG_SMP) check.
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> index 1fc5328..7a6d7c3 100644
+> --- a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> @@ -315,6 +315,16 @@ PROPERTIES
+>  		Value type: <phandle>
+>  		Definition: A phandle for 1EEE1588 timer.
+>  
+> +- pcsphy-handle
+> +		Usage required for "fsl,fman-memac" MACs
+> +		Value type: <phandle>
+> +		Definition: A phandle for pcsphy.
+> +
+> +- tbi-handle
+> +		Usage required for "fsl,fman-dtsec" MACs
+> +		Value type: <phandle>
+> +		Definition: A phandle for tbiphy.
+> +
+>  EXAMPLE
+>  
+>  fman1_tx28: port@a8000 {
+> @@ -340,6 +350,7 @@ ethernet@e0000 {
+>  	reg = <0xe0000 0x1000>;
+>  	fsl,fman-ports = <&fman1_rx8 &fman1_tx28>;
+>  	ptp-timer = <&ptp-timer>;
+> +	tbi-handle = <&tbi0>;
+>  };
+>  
+>  ===========================================================================
+> =
+> @@ -415,6 +426,13 @@ PROPERTIES
+>  		The settings and programming routines for internal/external
+>  		MDIO are different. Must be included for internal MDIO.
+>  
+> +For internal PHY device on internal mdio bus, a PHY node should be created.
+> +See the definition of the PHY node in booting-without-of.txt for an
+> +example of how to define a PHY (Internal PHY has no interrupt line).
+> +- For "fsl,fman-mdio" compatible internal mdio bus, the PHY is TBI PHY.
+> +- For "fsl,fman-memac-mdio" compatible internal mdio bus, the PHY is PCS
+> PHY,
+> +  PCS PHY addr must be '0'.
+> +
+>  EXAMPLE
+>  
+>  Example for FMan v2 external MDIO:
+> @@ -425,12 +443,28 @@ mdio@f1000 {
+>  	interrupts = <101 2 0 0>;
+>  };
+>  
+> +Example for FMan v2 internal MDIO:
+> +
+> +mdio@e3120 {
+> +	compatible = "fsl,fman-mdio";
+> +	reg = <0xe3120 0xee0>;
+> +	fsl,fman-internal-mdio;
+> +
+> +	tbi1: tbi-phy@8 {
+> +		reg = <0x8>;
+> +		device_type = "tbi-phy";
+> +	};
+> +};
+> +
+>  Example for FMan v3 internal MDIO:
+>  
+>  mdio@f1000 {
+>  	compatible = "fsl,fman-memac-mdio";
+>  	reg = <0xf1000 0x1000>;
+>  	fsl,fman-internal-mdio;
+> +
+> +	pcsphy6: ethernet-phy@0 {
+> +		reg = <0x0>;
+>  };
 
-Makes sense.
+missing }
 
-> > > > [    0.000000] Virtual kernel memory layout:
-> > > > [    0.000000]     vector  : 0xffff0000 - 0xffff1000   (   4 kB)
-> > > > [    0.000000]     fixmap  : 0xffc00000 - 0xfff00000   (3072 kB)
-> > > > [    0.000000]     vmalloc : 0xf0800000 - 0xff800000   ( 240 MB)
-> > > > [    0.000000]     lowmem  : 0xc0000000 - 0xf0000000   ( 768 MB)
-> > > > [    0.000000]     modules : 0xbf000000 - 0xc0000000   (  16 MB)
-> > > > [    0.000000]       .text : 0xc0008000 - 0xc074a7cc   (7434 kB)
-> > > > [    0.000000]       .init : 0xc074b000 - 0xc07b4000   ( 420 kB)
-> > > > [    0.000000]       .data : 0xc07b4000 - 0xc081e910   ( 427 kB)
-> > > > [    0.000000]        .bss : 0xc081e910 - 0xc08ca80c   ( 688 kB)
-> > > > [    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
-> > > > [    0.000000] NR_IRQS:16 nr_irqs:16 16
-> > > > [    0.000000] Kernel panic - not syncing: /soc/local_intc: unable to map local interrupt registers
-> > > > [    0.000000] 
-> > > > [    0.000000] CPU: 0 PID: 0 Comm: swapper Tainted: G        W       4.4.0-rc5+ #989
-> > > > [    0.000000] Hardware name: BCM2835
-> > > > [    0.000000] [<c0016c4c>] (unwind_backtrace) from [<c0013e58>] (show_stack+0x20/0x24)
-> > > > [    0.000000] [<c0013e58>] (show_stack) from [<c0247620>] (dump_stack+0x20/0x28)
-> > > > [    0.000000] [<c0247620>] (dump_stack) from [<c00c17c0>] (panic+0x84/0x210)
-> > > > [    0.000000] [<c00c17c0>] (panic) from [<c0771d5c>] (bcm2836_arm_irqchip_l1_intc_of_init+0x94/0x110)
-> > > > [    0.000000] [<c0771d5c>] (bcm2836_arm_irqchip_l1_intc_of_init) from [<c0779f04>] (of_irq_init+0x1a0/0x2a8)
-> > > > [    0.000000] [<c0779f04>] (of_irq_init) from [<c0771af4>] (irqchip_init+0x14/0x1c)
-> > > > [    0.000000] [<c0771af4>] (irqchip_init) from [<c074d7a8>] (init_IRQ+0x28/0x88)
-> > > > [    0.000000] [<c074d7a8>] (init_IRQ) from [<c074bb64>] (start_kernel+0x20c/0x3a4)
-> > > > [    0.000000] [<c074bb64>] (start_kernel) from [<00008078>] (0x8078)
-> > > > [    0.000000] ---[ end Kernel panic - not syncing: /soc/local_intc: unable to map local interrupt registers
-> > > > 
-> > > 
-> > > But still getting this panic, your patches does not contain some
-> > > defconfig, so I still try to figure out what I need to enable to get it
-> > > working. Maybe it is some missing config entry which should be enabled.
-> > > 
-> > > But, for me it looks like some devicetree issue, because of_iomem returns
-> > > NULL, at [0]. Don't know what I am doing wrong.
-> > 
-> > That is the most likely cause, yes. You can try replacing it with an ioremap with a
-> > hardcoded physical address to see if that works.
-> > 
-> 
-> When I changed to "VMSPLIT_2G" the above issue doesn't occur anymore.
+-Scott
 
-Someone recently had a similar bug on some freescale platform, but unfortunately I don't
-remember the details. As above, it should really not depend on that option.
-
-> Later while booting the kernel hangs forever, the solution on my side
-> was to enable:
-> 
-> CONFIG_HAVE_ARM_ARCH_TIMER
-> 
-> I think this doesn't use the BCM2835 timer anymore and some cortex-a7
-> related "generic timer", or?
-
-Right, but I don't see how that relates to the irqchip. Is the BCM2835 timer
-connected to a secondary irqchip, while the arch timer connects to the primary GIC?
-
-> btw:
-> 
-> After the RPi is booted succesful I get several:
-> 
-> [   35.048513] unexpected IRQ trap at vector 00
-> 
-> When I type something via uart (after each character).
-> 
-> 
-> Any ideas?
-
-That also indicates that there is something wrong with the irqchip.
-
-	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
