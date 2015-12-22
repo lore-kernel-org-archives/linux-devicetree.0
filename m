@@ -1,70 +1,66 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v1 2/6] dt-bindings: soc: add document for rockchip reboot-mode driver
-Date: Tue, 22 Dec 2015 17:08:14 +0800
-Message-ID: <1450775294-24028-1-git-send-email-andy.yan@rock-chips.com>
-References: <1450774949-23901-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1450774949-23901-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, heiko@sntech.de, arnd@arndb.de, john.stultz@linaro.org
-Cc: sjg@chromium.org, alexandre.belloni@free-electrons.com, treding@nvidia.com, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, wxt@rock-chips.com, catalin.marinas@arm.com, olof@lixom.net, geert+renesas@glider.be, linux-rockchip@lists.infradead.org, dbaryshkov@gmail.com, sre@kernel.org, jun.nie@linaro.org, pawel.moll@arm.com, will.deacon@arm.com, akpm@linux-foundation.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, joel@jms.id.au, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, khilman@linaro.org, moritz.fischer@ettus.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, Andy Yan <andy.yan@rock-chips.com>
+From: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: [PATCH] ARM: dts: compulab: add new board description
+Date: Tue, 22 Dec 2015 11:10:59 +0200
+Message-ID: <1450775459-18937-1-git-send-email-ilya@compulab.co.il>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding document for rockchip reboot-mode driver
+Add description for newly introduced Compulab devices:
+- CL-SOM-iMX7
+- SBC-iMX7
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+Signed-off-by: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 ---
 
-Changes in v1: None
+Arnd, Olof, this patch follows the discussion in [1].
+Can you please apply it on top of arm-soc next/dt branch?
 
- .../bindings/soc/rockchip/rockchip,reboot-mode.txt | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/rockchip/rockchip,reboot-mode.txt
+Thanks!
 
-diff --git a/Documentation/devicetree/bindings/soc/rockchip/rockchip,reboot-mode.txt b/Documentation/devicetree/bindings/soc/rockchip/rockchip,reboot-mode.txt
-new file mode 100644
-index 0000000..cdb5093
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/rockchip/rockchip,reboot-mode.txt
-@@ -0,0 +1,39 @@
-+Rockchip reboot mode driver
+[1] - http://www.spinics.net/lists/arm-kernel/msg470410.html
+
+ .../devicetree/bindings/arm/compulab-boards.txt    | 24 ++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/compulab-boards.txt b/Documentation/devicetree/bindings/arm/compulab-boards.txt
+index 71172d5..42a1028 100644
+--- a/Documentation/devicetree/bindings/arm/compulab-boards.txt
++++ b/Documentation/devicetree/bindings/arm/compulab-boards.txt
+@@ -1,5 +1,25 @@
+-CompuLab SB-SOM is a multi-module baseboard capable of carrying CM-T43, CM-T54,
+-and CM-QS600 modules with minor modifications to the SB-SOM assembly.
++CompuLab SB-SOM is a multi-module baseboard capable of carrying:
++ - CM-T43
++ - CM-T54
++ - CM-QS600
++ - CL-SOM-AM57x
++ - CL-SOM-iMX7
++modules with minor modifications to the SB-SOM assembly.
+ 
+ Required root node properties:
+     - compatible = should be "compulab,sb-som"
 +
-+This driver get reboot mode arguments from userspace
-+and stores it in special register. Then the bootloader
-+will read it and take different action according the
-+argument stored.
++Compulab CL-SOM-iMX7 is a miniature System-on-Module (SoM) based on
++Freescale i.MX7 ARM Cortex-A7 System-on-Chip.
 +
-+Required properties:
-+- compatible: should be "rockchip,reboot-mode"
-+- regmap: this is phandle to the register map node
-+- offset: offset in the register map for the storage register (in bytes)
-+The rest of the properties should follow the generic reboot-mode discription
-+found in ../../misc/reboot-mode.txt
++Required root node properties:
++    - compatible = "compulab,cl-som-imx7", "fsl,imx7d";
 +
-+Examples:
-+	reboot_mode {
-+		compatible = "rockchip,reboot-mode";
-+		rockchip,regmap = <&pmu>;
-+		offset = <0x40>;
-+		loader {
-+			linux,mode = "loader";
-+			linux,magic = <BOOT_LOADER>;
-+		};
++Compulab SBC-iMX7 is a single board computer based on the
++Freescale i.MX7 system-on-chip. SBC-iMX7 is implemented with
++the CL-SOM-iMX7 System-on-Module providing most of the functions,
++and SB-SOM-iMX7 carrier board providing additional peripheral
++functions and connectors.
 +
-+		maskrom {
-+			linux,mode = "maskrom";
-+			linux,magic = <BOOT_MASKROM>;
-+		};
-+
-+		recovery {
-+			linux,mode = "recovery";
-+			linux,magic = <BOOT_RECOVERY>;
-+		};
-+
-+		fastboot {
-+			linux,mode = "fastboot";
-+			linux,magic = <BOOT_FASTBOOT>;
-+		};
-+	};
++Required root node properties:
++    - compatible = "compulab,sbc-imx7", "compulab,cl-som-imx7", "fsl,imx7d";
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
