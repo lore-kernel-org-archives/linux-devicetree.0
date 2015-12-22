@@ -1,56 +1,101 @@
-From: Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 0/8] Raspberry Pi 2 support.
-Date: Tue, 22 Dec 2015 15:26:49 +0100
-Message-ID: <20151222142643.GB29335@omega>
-References: <1450310115-22163-1-git-send-email-eric@anholt.net>
- <20151218100826.GB1145@omega>
- <20151220221158.GA6416@omega>
- <874mfbflj3.fsf@eliezer.anholt.net>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] USB: add generic onboard USB HUB driver
+Date: Tue, 22 Dec 2015 10:48:52 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1512221039580.1539-100000@iolanthe.rowland.org>
+References: <CAL411-oVEbh1cDnUugs0Rxrt1opvH-NeffjcmeMy-OuZS38CbA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <874mfbflj3.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+In-Reply-To: <CAL411-oVEbh1cDnUugs0Rxrt1opvH-NeffjcmeMy-OuZS38CbA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 21, 2015 at 03:07:44PM -0800, Eric Anholt wrote:
-...
+On Tue, 22 Dec 2015, Peter Chen wrote:
+
+> > I don't really understand this.  However, you can always specify a USB
+> > device by giving its port number on the parent hub, and the hub's port
+> > number on _its_ parent hub, and so on back to the root hub and host
+> > controller.  That works even if you're not using DT or OF or ACPI.
 > >
-> > But still getting this panic, your patches does not contain some
-> > defconfig, so I still try to figure out what I need to enable to get it
-> > working. Maybe it is some missing config entry which should be enabled.
-> >
-> > But, for me it looks like some devicetree issue, because of_iomem returns
-> > NULL, at [0]. Don't know what I am doing wrong.
 > 
-> My best guess is that since you're not using U-Boot, the firmware's
-> mangling the DT in some way that breaks us.  Notably, in my current
-> firmware checkout, set /soc/ranges to just the first entry that we're
-> using, which would break the mapping.  However,
-> rpi/rpi-4.4.y:arch/arm/boot/dts/bcm2709.dtsi uses the same /soc/ranges
-> setup that we do, so I'm not sure what's going on.  Perhaps
-> bcm2709_io_desc[]'s initialization covers for it?
+> Thanks, so the HUB's physical port number is the same with its logical port
+> number which reported at its descriptor?
 
-I boot here with two different bootloaders, both ends in the same panic.
+There's no distinction between logical and physical port numbers in
+USB.  (However, there can be an issue with USB-3 root hubs, because
+they may assign two different port numbers to the same physical port:
+One is the port number on the LS/FS/HS bus and the other is the port
+number on the SS bus.  This shouldn't cause any problems.)
 
-Finally I figured out if I do a user/kernel split (2G/2G) then the
-issue is gone.
+>  If we assumed all HUBs follow it,
+> then we can use port number to align the devices which we described at
+> DT and detected by USB bus.
 
-Later I need to enable "CONFIG_HAVE_ARM_ARCH_TIMER" so the kernel
-doesn't hang forever.
+Yes.
 
-After finally booting the RPi2 I get several messages of:
+> If the host controller has DT supported, and there are two ports connects
+> two different onboard devices. When the device is found by the bus,
+> we will know its portnum and parent (see usb_alloc_dev), and we know parent's
+> device node, so we will know two children node by iterate its parent,
+> and match its port number
+> (property "reg" at below dts node) with udev->portnum we assigned at
+> usb_alloc_dev.
+> Then we can let the device know DT.
+> 
+> After USB device knows DT, it can handle DT properties at its driver.
+> 
+> --- a/drivers/usb/core/usb.c
+> +++ b/drivers/usb/core/usb.c
+> @@ -494,6 +494,8 @@ struct usb_device *usb_alloc_dev(struct usb_device *parent,
+>         dev->portnum = port1;
+>         dev->bus = bus;
+>         dev->parent = parent;
+> +       if (parent->of_node)
+> +               dev->dev->of_node = find_node_by_bus(parent->of_node,
+> dev->portnum);
 
-unexpected IRQ trap at vector 00
+That's right, except you should also handle the case where parent is 
+NULL (a root hub).
 
-while typing _one_ character over uart.
+>         INIT_LIST_HEAD(&dev->filelist);
+> 
+> 
+> &usbh1 {
+>         vbus-supply = <&reg_usb_h1_vbus>;
+>         status = "okay";
+> 
+>         devices-pre-operation = <&usbh1_pre_operation>
+> 
+>         #address-cells = <1>;
+>         #size-cells = <0>;
+>         usb: usb_mfd2415@01 {
+>                 compatible = "usb multi-device";
+>                 reg = <0x01>;
+>                 clocks = <&clks IMX6QDL_CLK_CKO>;
+>                 reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+>                 reset-duration-us = <3000>;
+>                 gpio-controller;
+>                 #gpio-cells = <2>;
+>         };
+> 
+>         usb: usb_mfd2415@02 {
+>                 compatible = "usb multi-device";
+>                 reg = <0x02>;
+>                 clocks = <&clks IMX6QDL_CLK_CKO2>;
+>                 reset-gpios = <&gpio7 13 GPIO_ACTIVE_LOW>;
+>                 reset-duration-us = <3000>;
+>                 gpio-controller;
+>                 #gpio-cells = <2>;
+>         };
+> };
 
-Can you provide somehow your RPi2 kernelconfig?
+I'll leave this for the DT experts to discuss.  However, it's worth 
+pointing out that a similar scheme should work for ACPI.
 
-- Alex
+Alan Stern
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
