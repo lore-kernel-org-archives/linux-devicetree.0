@@ -1,100 +1,137 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] USB: add generic onboard USB HUB driver
-Date: Tue, 22 Dec 2015 10:48:52 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1512221039580.1539-100000@iolanthe.rowland.org>
-References: <CAL411-oVEbh1cDnUugs0Rxrt1opvH-NeffjcmeMy-OuZS38CbA@mail.gmail.com>
+From: <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] powerpc/fsl: Update fman dt binding with pcs-phy and tbi-phy
+Date: Tue, 22 Dec 2015 06:18:08 +0200
+Message-ID: <1450757888-14216-1-git-send-email-igal.liberman@freescale.com>
+Reply-To: <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL411-oVEbh1cDnUugs0Rxrt1opvH-NeffjcmeMy-OuZS38CbA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shaohui.xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 Dec 2015, Peter Chen wrote:
+From: Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-> > I don't really understand this.  However, you can always specify a USB
-> > device by giving its port number on the parent hub, and the hub's port
-> > number on _its_ parent hub, and so on back to the root hub and host
-> > controller.  That works even if you're not using DT or OF or ACPI.
-> >
-> 
-> Thanks, so the HUB's physical port number is the same with its logical port
-> number which reported at its descriptor?
+Signed-off-by: Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ .../devicetree/bindings/powerpc/fsl/fman.txt       |   39 ++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-There's no distinction between logical and physical port numbers in
-USB.  (However, there can be an issue with USB-3 root hubs, because
-they may assign two different port numbers to the same physical port:
-One is the port number on the LS/FS/HS bus and the other is the port
-number on the SS bus.  This shouldn't cause any problems.)
-
->  If we assumed all HUBs follow it,
-> then we can use port number to align the devices which we described at
-> DT and detected by USB bus.
-
-Yes.
-
-> If the host controller has DT supported, and there are two ports connects
-> two different onboard devices. When the device is found by the bus,
-> we will know its portnum and parent (see usb_alloc_dev), and we know parent's
-> device node, so we will know two children node by iterate its parent,
-> and match its port number
-> (property "reg" at below dts node) with udev->portnum we assigned at
-> usb_alloc_dev.
-> Then we can let the device know DT.
-> 
-> After USB device knows DT, it can handle DT properties at its driver.
-> 
-> --- a/drivers/usb/core/usb.c
-> +++ b/drivers/usb/core/usb.c
-> @@ -494,6 +494,8 @@ struct usb_device *usb_alloc_dev(struct usb_device *parent,
->         dev->portnum = port1;
->         dev->bus = bus;
->         dev->parent = parent;
-> +       if (parent->of_node)
-> +               dev->dev->of_node = find_node_by_bus(parent->of_node,
-> dev->portnum);
-
-That's right, except you should also handle the case where parent is 
-NULL (a root hub).
-
->         INIT_LIST_HEAD(&dev->filelist);
-> 
-> 
-> &usbh1 {
->         vbus-supply = <&reg_usb_h1_vbus>;
->         status = "okay";
-> 
->         devices-pre-operation = <&usbh1_pre_operation>
-> 
->         #address-cells = <1>;
->         #size-cells = <0>;
->         usb: usb_mfd2415@01 {
->                 compatible = "usb multi-device";
->                 reg = <0x01>;
->                 clocks = <&clks IMX6QDL_CLK_CKO>;
->                 reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
->                 reset-duration-us = <3000>;
->                 gpio-controller;
->                 #gpio-cells = <2>;
->         };
-> 
->         usb: usb_mfd2415@02 {
->                 compatible = "usb multi-device";
->                 reg = <0x02>;
->                 clocks = <&clks IMX6QDL_CLK_CKO2>;
->                 reset-gpios = <&gpio7 13 GPIO_ACTIVE_LOW>;
->                 reset-duration-us = <3000>;
->                 gpio-controller;
->                 #gpio-cells = <2>;
->         };
-> };
-
-I'll leave this for the DT experts to discuss.  However, it's worth 
-pointing out that a similar scheme should work for ACPI.
-
-Alan Stern
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+index 1fc5328..7a6d7c3 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+@@ -315,6 +315,16 @@ PROPERTIES
+ 		Value type: <phandle>
+ 		Definition: A phandle for 1EEE1588 timer.
+ 
++- pcsphy-handle
++		Usage required for "fsl,fman-memac" MACs
++		Value type: <phandle>
++		Definition: A phandle for pcsphy.
++
++- tbi-handle
++		Usage required for "fsl,fman-dtsec" MACs
++		Value type: <phandle>
++		Definition: A phandle for tbiphy.
++
+ EXAMPLE
+ 
+ fman1_tx28: port@a8000 {
+@@ -340,6 +350,7 @@ ethernet@e0000 {
+ 	reg = <0xe0000 0x1000>;
+ 	fsl,fman-ports = <&fman1_rx8 &fman1_tx28>;
+ 	ptp-timer = <&ptp-timer>;
++	tbi-handle = <&tbi0>;
+ };
+ 
+ ============================================================================
+@@ -415,6 +426,13 @@ PROPERTIES
+ 		The settings and programming routines for internal/external
+ 		MDIO are different. Must be included for internal MDIO.
+ 
++For internal PHY device on internal mdio bus, a PHY node should be created.
++See the definition of the PHY node in booting-without-of.txt for an
++example of how to define a PHY (Internal PHY has no interrupt line).
++- For "fsl,fman-mdio" compatible internal mdio bus, the PHY is TBI PHY.
++- For "fsl,fman-memac-mdio" compatible internal mdio bus, the PHY is PCS PHY,
++  PCS PHY addr must be '0'.
++
+ EXAMPLE
+ 
+ Example for FMan v2 external MDIO:
+@@ -425,12 +443,28 @@ mdio@f1000 {
+ 	interrupts = <101 2 0 0>;
+ };
+ 
++Example for FMan v2 internal MDIO:
++
++mdio@e3120 {
++	compatible = "fsl,fman-mdio";
++	reg = <0xe3120 0xee0>;
++	fsl,fman-internal-mdio;
++
++	tbi1: tbi-phy@8 {
++		reg = <0x8>;
++		device_type = "tbi-phy";
++	};
++};
++
+ Example for FMan v3 internal MDIO:
+ 
+ mdio@f1000 {
+ 	compatible = "fsl,fman-memac-mdio";
+ 	reg = <0xf1000 0x1000>;
+ 	fsl,fman-internal-mdio;
++
++	pcsphy6: ethernet-phy@0 {
++		reg = <0x0>;
+ };
+ 
+ =============================================================================
+@@ -568,6 +602,7 @@ fman@400000 {
+ 		cell-index = <0>;
+ 		reg = <0xe0000 0x1000>;
+ 		fsl,fman-ports = <&fman1_rx_0x8 &fman1_tx_0x28>;
++		tbi-handle = <&tbi5>;
+ 	};
+ 
+ 	ethernet@e2000 {
+@@ -575,6 +610,7 @@ fman@400000 {
+ 		cell-index = <1>;
+ 		reg = <0xe2000 0x1000>;
+ 		fsl,fman-ports = <&fman1_rx_0x9 &fman1_tx_0x29>;
++		tbi-handle = <&tbi6>;
+ 	};
+ 
+ 	ethernet@e4000 {
+@@ -582,6 +618,7 @@ fman@400000 {
+ 		cell-index = <2>;
+ 		reg = <0xe4000 0x1000>;
+ 		fsl,fman-ports = <&fman1_rx_0xa &fman1_tx_0x2a>;
++		tbi-handle = <&tbi7>;
+ 	};
+ 
+ 	ethernet@e6000 {
+@@ -589,6 +626,7 @@ fman@400000 {
+ 		cell-index = <3>;
+ 		reg = <0xe6000 0x1000>;
+ 		fsl,fman-ports = <&fman1_rx_0xb &fman1_tx_0x2b>;
++		tbi-handle = <&tbi8>;
+ 	};
+ 
+ 	ethernet@e8000 {
+@@ -596,6 +634,7 @@ fman@400000 {
+ 		cell-index = <4>;
+ 		reg = <0xf0000 0x1000>;
+ 		fsl,fman-ports = <&fman1_rx_0xc &fman1_tx_0x2c>;
++		tbi-handle = <&tbi9>;
+ 
+ 	ethernet@f0000 {
+ 		cell-index = <8>;
+-- 
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
