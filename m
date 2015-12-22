@@ -1,279 +1,84 @@
-From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] ARM: dts: sun8i: Add Allwinner A83T dtsi
-Date: Tue, 22 Dec 2015 17:41:22 +0800
-Message-ID: <CAEzqOZuVdLS+b9KO9YPgAFiQhXg9KfkmA0i5AEPQPUaben0GCQ@mail.gmail.com>
-References: <1450445451-311-1-git-send-email-vishnupatekar0510@gmail.com>
- <1450445451-311-3-git-send-email-vishnupatekar0510@gmail.com> <20151218214112.GU30359@lukather>
-Reply-To: vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Zhiqiang Hou <zhiqiang.hou-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH V4 1/2] powerpc/fsl: Add PCI node in device tree of
+ bsc9132qds
+Date: Tue, 22 Dec 2015 09:28:28 +0000
+Message-ID: <HE1PR04MB0906A35F4F48C8DACF5CD16D84E50@HE1PR04MB0906.eurprd04.prod.outlook.com>
+References: <1446693360-1578-1-git-send-email-Zhiqiang.Hou@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD64TFVR3YIBBVVV4SZQKGQEV2UZHKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20151218214112.GU30359@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1446693360-1578-1-git-send-email-Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhiqiang Hou <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org" <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, "mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org" <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Harninder Rai <harninder.rai-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Minghuan Lian <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mingkai Hu <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Zhiqiang Hou <B48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Maxime,
-
-
-On Sat, Dec 19, 2015 at 5:41 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> On Fri, Dec 18, 2015 at 09:30:50PM +0800, Vishnu Patekar wrote:
->> Allwinner A83T is new octa-core cortex-a7 SOC.
->> This adds the basic dtsi, the clocks differs from
->> earlier sun8i SOCs.
->>
->> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/sun8i-a83t.dtsi | 206 ++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 206 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/sun8i-a83t.dtsi
->>
->> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
->> new file mode 100644
->> index 0000000..e577c64
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
->> @@ -0,0 +1,206 @@
->> +/*
->> + * Copyright 2015 Vishnu Patekar
->> + *
->> + * Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> + *
->> + * This file is dual-licensed: you can use it either under the terms
->> + * of the GPL or the X11 license, at your option. Note that this dual
->> + * licensing only applies to this file, and not this project as a
->> + * whole.
->> + *
->> + *  a) This file is free software; you can redistribute it and/or
->> + *     modify it under the terms of the GNU General Public License as
->> + *     published by the Free Software Foundation; either version 2 of the
->> + *     License, or (at your option) any later version.
->> + *
->> + *     This file is distributed in the hope that it will be useful,
->> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + *     GNU General Public License for more details.
->> + *
->> + * Or, alternatively,
->> + *
->> + *  b) Permission is hereby granted, free of charge, to any person
->> + *     obtaining a copy of this software and associated documentation
->> + *     files (the "Software"), to deal in the Software without
->> + *     restriction, including without limitation the rights to use,
->> + *     copy, modify, merge, publish, distribute, sublicense, and/or
->> + *     sell copies of the Software, and to permit persons to whom the
->> + *     Software is furnished to do so, subject to the following
->> + *     conditions:
->> + *
->> + *     The above copyright notice and this permission notice shall be
->> + *     included in all copies or substantial portions of the Software.
->> + *
->> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
->> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
->> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
->> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
->> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
->> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
->> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->> + *     OTHER DEALINGS IN THE SOFTWARE.
->> +
->> + */
->> +
->> +#include "skeleton.dtsi"
->> +
->> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->> +
->> +#include <dt-bindings/pinctrl/sun4i-a10.h>
->> +
->> +/ {
->> +     interrupt-parent = <&gic>;
->> +
->> +     chosen {
->> +             #address-cells = <1>;
->> +             #size-cells = <1>;
->> +             ranges;
->> +     };
->> +
->> +     cpus {
->> +             #address-cells = <1>;
->> +             #size-cells = <0>;
->> +
->> +             cpu@0 {
->> +                     compatible = "arm,cortex-a7";
->> +                     device_type = "cpu";
->> +                     reg = <0>;
->> +             };
->> +
->> +             cpu@1 {
->> +                     compatible = "arm,cortex-a7";
->> +                     device_type = "cpu";
->> +                     reg = <1>;
->> +             };
->> +
->> +             cpu@2 {
->> +                     compatible = "arm,cortex-a7";
->> +                     device_type = "cpu";
->> +                     reg = <2>;
->> +             };
->> +
->> +             cpu@3 {
->> +                     compatible = "arm,cortex-a7";
->> +                     device_type = "cpu";
->> +                     reg = <3>;
->> +             };
->
-> A \n here please
->
->> +             cpu@100 {
->> +                     compatible = "arm,cortex-a7";
->> +                     device_type = "cpu";
->> +                     reg = <0x100>;
->> +             };
->> +
->> +             cpu@101 {
->> +                     compatible = "arm,cortex-a7";
->> +                     device_type = "cpu";
->> +                     reg = <0x101>;
->> +             };
->
-> Ditto.
->
->> +             cpu@102 {
->> +                     compatible = "arm,cortex-a7";
->> +                     device_type = "cpu";
->> +                     reg = <0x102>;
->> +             };
->> +
->> +             cpu@103 {
->> +                     compatible = "arm,cortex-a7";
->> +                     device_type = "cpu";
->> +                     reg = <0x103>;
->> +             };
->> +     };
->> +
->> +     memory {
->> +             reg = <0x40000000 0x80000000>;
->> +     };
->
-> Is mainline u-boot usable ? If so, you can remove that node entirely.
-Yes, it is usable now. :)
->
->> +
->> +     timer {
->> +             compatible = "arm,armv7-timer";
->> +             interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
->> +                          <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
->> +                          <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
->> +                          <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
->> +     };
->> +
->> +     clocks {
->> +             #address-cells = <1>;
->> +             #size-cells = <1>;
->> +             ranges;
->> +
->> +             osc24M: osc24M_clk {
->> +                     #clock-cells = <0>;
->> +                     compatible = "fixed-clock";
->> +                     clock-frequency = <24000000>;
->> +                     clock-output-names = "osc24M";
->> +             };
->> +
->> +             osc32k: osc32k_clk {
->> +                     #clock-cells = <0>;
->> +                     compatible = "fixed-clock";
->> +                     clock-frequency = <32768>;
->> +                     clock-output-names = "osc32k";
->> +             };
->
-> Do you need to modify the clocks driver in your first commit then?
-I did not get what you are trying to say here, could you please elaborate?
-
-I'll correct mistakes, and re-send this patch, is it okie?
->
->> +     };
->> +
->> +     soc {
->> +             compatible = "simple-bus";
->> +             #address-cells = <1>;
->> +             #size-cells = <1>;
->> +             ranges;
->> +
->> +             gic: interrupt-controller@01c81000 {
->> +                     compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
->> +                     reg = <0x01c81000 0x1000>,
->> +                           <0x01c82000 0x1000>,
->> +                           <0x01c84000 0x2000>,
->> +                           <0x01c86000 0x2000>;
->
-> Please order the nodes by ascending physical addresses.
->
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <3>;
->> +                     interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
->> +             };
->> +
->> +             pio: pinctrl@01c20800 {
->> +                     compatible = "allwinner,sun8i-a83t-pinctrl";
->> +                     interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
->> +                                  <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
->> +                                  <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
->> +                     reg = <0x01c20800 0x400>;
->> +                     clocks = <&osc24M>;
->> +                     gpio-controller;
->> +                     interrupt-controller;
->> +                     #interrupt-cells = <3>;
->> +                     #gpio-cells = <3>;
->> +
->> +                     mmc0_pins_a: mmc0@0 {
->> +                             allwinner,pins = "PF0", "PF1", "PF2",
->> +                                              "PF3", "PF4", "PF5";
->> +                             allwinner,function = "mmc0";
->> +                             allwinner,drive = <SUN4I_PINCTRL_30_MA>;
->> +                             allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->> +                     };
->> +
->> +                     uart0_pins_a: uart0@0 {
->> +                             allwinner,pins = "PF2", "PF4";
->> +                             allwinner,function = "uart0";
->> +                             allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +                             allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->> +                     };
->> +
->> +                     uart0_pins_b: uart0@1 {
->> +                             allwinner,pins = "PB9", "PB10";
->> +                             allwinner,function = "uart0";
->> +                             allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> +                             allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->> +                     };
->> +             };
->> +
->> +             uart0: serial@01c28000 {
->> +                     compatible = "snps,dw-apb-uart";
->> +                     reg = <0x01c28000 0x400>;
->> +                     interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
->> +                     reg-shift = <2>;
->> +                     reg-io-width = <4>;
->> +                     clocks = <&osc24M>;
->> +                     status = "disabled";
->> +             };
->> +     };
->> +};
->
-> Thanks!
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+SGkgUm9iLA0KDQpDb3VsZCB5b3UgcGxlYXNlIHRha2UgdGhpcyBwYXRjaCBpbnRvIGFjY291bnQ/
+DQoNClRoYW5rcywNClpoaXFpYW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
+RnJvbTogWmhpcWlhbmcgSG91IFttYWlsdG86WmhpcWlhbmcuSG91QGZyZWVzY2FsZS5jb21dDQo+
+IFNlbnQ6IDIwMTXE6jEx1MI1yNUgMTE6MTYNCj4gVG86IGxpbnV4cHBjLWRldkBsaXN0cy5vemxh
+YnMub3JnOyBTY290dCBXb29kOyBnYWxha0BrZXJuZWwuY3Jhc2hpbmcub3JnOw0KPiBiZW5oQGtl
+cm5lbC5jcmFzaGluZy5vcmc7IHBhdWx1c0BzYW1iYS5vcmc7IG1wZUBlbGxlcm1hbi5pZC5hdTsN
+Cj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IHJvYmgrZHRAa2VybmVsLm9yZzsgcGF3ZWwu
+bW9sbEBhcm0uY29tOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgaWpjK2RldmljZXRyZWVAaGVs
+bGlvbi5vcmcudWs7IEhhcm5pbmRlciBSYWkNCj4gQ2M6IE1pbmdodWFuIExpYW47IE1pbmdrYWkg
+SHU7IFpoaXFpYW5nIEhvdQ0KPiBTdWJqZWN0OiBbUEFUQ0ggVjQgMS8yXSBwb3dlcnBjL2ZzbDog
+QWRkIFBDSSBub2RlIGluIGRldmljZSB0cmVlIG9mDQo+IGJzYzkxMzJxZHMNCj4gDQo+IEZyb206
+IEhhcm5pbmRlciBSYWkgPGhhcm5pbmRlci5yYWlAZnJlZXNjYWxlLmNvbT4NCj4gDQo+IFNpZ25l
+ZC1vZmYtYnk6IEhhcm5pbmRlciBSYWkgPGhhcm5pbmRlci5yYWlAZnJlZXNjYWxlLmNvbT4NCj4g
+U2lnbmVkLW9mZi1ieTogTWluZ2h1YW4gTGlhbiA8TWluZ2h1YW4uTGlhbkBmcmVlc2NhbGUuY29t
+Pg0KPiBTaWduZWQtb2ZmLWJ5OiBIb3UgWmhpcWlhbmcgPEI0ODI4NkBmcmVlc2NhbGUuY29tPg0K
+PiAtLS0NCj4gVjQ6IFYzOg0KPiAgLSBSZW1vdmUgZ2Vycml0IHN0dWZmLg0KPiBWMjoNCj4gIC0g
+UmVtb3ZlIHByb3BlcnR5IGNsb2NrLWZyZXF1ZW5jeS4NCj4gDQo+ICBhcmNoL3Bvd2VycGMvYm9v
+dC9kdHMvYnNjOTEzMnFkcy5kdHMgICAgICAgICAgfCAxNSArKysrKysrKysrKysrKw0KPiAgYXJj
+aC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9ic2M5MTMyc2ktcG9zdC5kdHNpIHwgMjgNCj4gKysrKysr
+KysrKysrKysrKysrKysrKysrKysrICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2JzYzkxMzJz
+aS1wcmUuZHRzaQ0KPiB8ICAxICsNCj4gIDMgZmlsZXMgY2hhbmdlZCwgNDQgaW5zZXJ0aW9ucygr
+KQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9ic2M5MTMycWRzLmR0
+cw0KPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9ic2M5MTMycWRzLmR0cw0KPiBpbmRleCA2Y2Fi
+MTA2Li45NDBkNzE5IDEwMDY0NA0KPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvYnNjOTEz
+MnFkcy5kdHMNCj4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2JzYzkxMzJxZHMuZHRzDQo+
+IEBAIC0yOSw2ICsyOSwyMSBAQA0KPiAgCXNvYzogc29jQGZmNzAwMDAwIHsNCj4gIAkJcmFuZ2Vz
+ID0gPDB4MCAweDAgMHhmZjcwMDAwMCAweDEwMDAwMD47DQo+ICAJfTsNCj4gKw0KPiArCXBjaTA6
+IHBjaWVAZmY3MGEwMDAgew0KPiArCQlyZWcgPSA8MCAweGZmNzBhMDAwIDAgMHgxMDAwPjsNCj4g
+KwkJcmFuZ2VzID0gPDB4MjAwMDAwMCAweDAgMHg5MDAwMDAwMCAwIDB4OTAwMDAwMDAgMHgwDQo+
+IDB4MjAwMDAwMDANCj4gKwkJCSAgMHgxMDAwMDAwIDB4MCAweDAwMDAwMDAwIDAgMHhjMDAxMDAw
+MCAweDAgMHgxMDAwMD47DQo+ICsJCXBjaWVAMCB7DQo+ICsJCQlyYW5nZXMgPSA8MHgyMDAwMDAw
+IDB4MCAweDkwMDAwMDAwDQo+ICsJCQkJICAweDIwMDAwMDAgMHgwIDB4OTAwMDAwMDANCj4gKwkJ
+CQkgIDB4MCAweDIwMDAwMDAwDQo+ICsNCj4gKwkJCQkgIDB4MTAwMDAwMCAweDAgMHgwDQo+ICsJ
+CQkJICAweDEwMDAwMDAgMHgwIDB4MA0KPiArCQkJCSAgMHgwIDB4MTAwMDAwPjsNCj4gKwkJfTsN
+Cj4gKwl9Ow0KPiAgfTsNCj4gDQo+ICAvaW5jbHVkZS8gImJzYzkxMzJxZHMuZHRzaSINCj4gZGlm
+ZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYnNjOTEzMnNpLXBvc3QuZHRzaQ0K
+PiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYnNjOTEzMnNpLXBvc3QuZHRzaQ0KPiBpbmRl
+eCBjNzIzMDcxLi5iNWYwNzE1IDEwMDY0NA0KPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMv
+ZnNsL2JzYzkxMzJzaS1wb3N0LmR0c2kNCj4gKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2Zz
+bC9ic2M5MTMyc2ktcG9zdC5kdHNpDQo+IEBAIC00MCw2ICs0MCwzNCBAQA0KPiAgCWludGVycnVw
+dHMgPSA8MTYgMiAwIDAgMjAgMiAwIDA+Ow0KPiAgfTsNCj4gDQo+ICsvKiBjb250cm9sbGVyIGF0
+IDB4YTAwMCAqLw0KPiArJnBjaTAgew0KPiArCWNvbXBhdGlibGUgPSAiZnNsLGJzYzkxMzItcGNp
+ZSIsICJmc2wscW9yaXEtcGNpZS12Mi4yIjsNCj4gKwlkZXZpY2VfdHlwZSA9ICJwY2kiOw0KPiAr
+CSNzaXplLWNlbGxzID0gPDI+Ow0KPiArCSNhZGRyZXNzLWNlbGxzID0gPDM+Ow0KPiArCWJ1cy1y
+YW5nZSA9IDwwIDI1NT47DQo+ICsJaW50ZXJydXB0cyA9IDwxNiAyIDAgMD47DQo+ICsNCj4gKwlw
+Y2llQDAgew0KPiArCQlyZWcgPSA8MCAwIDAgMCAwPjsNCj4gKwkJI2ludGVycnVwdC1jZWxscyA9
+IDwxPjsNCj4gKwkJI3NpemUtY2VsbHMgPSA8Mj47DQo+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDM+
+Ow0KPiArCQlkZXZpY2VfdHlwZSA9ICJwY2kiOw0KPiArCQlpbnRlcnJ1cHRzID0gPDE2IDIgMCAw
+PjsNCj4gKwkJaW50ZXJydXB0LW1hcC1tYXNrID0gPDB4ZjgwMCAwIDAgNz47DQo+ICsNCj4gKwkJ
+aW50ZXJydXB0LW1hcCA9IDwNCj4gKwkJCS8qIElEU0VMIDB4MCAqLw0KPiArCQkJMDAwMCAweDAg
+MHgwIDB4MSAmbXBpYyAweDAgMHgyIDB4MCAweDANCj4gKwkJCTAwMDAgMHgwIDB4MCAweDIgJm1w
+aWMgMHgxIDB4MiAweDAgMHgwDQo+ICsJCQkwMDAwIDB4MCAweDAgMHgzICZtcGljIDB4MiAweDIg
+MHgwIDB4MA0KPiArCQkJMDAwMCAweDAgMHgwIDB4NCAmbXBpYyAweDMgMHgyIDB4MCAweDANCj4g
+KwkJCT47DQo+ICsJfTsNCj4gK307DQo+ICsNCj4gICZzb2Mgew0KPiAgCSNhZGRyZXNzLWNlbGxz
+ID0gPDE+Ow0KPiAgCSNzaXplLWNlbGxzID0gPDE+Ow0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dl
+cnBjL2Jvb3QvZHRzL2ZzbC9ic2M5MTMyc2ktcHJlLmR0c2kNCj4gYi9hcmNoL3Bvd2VycGMvYm9v
+dC9kdHMvZnNsL2JzYzkxMzJzaS1wcmUuZHRzaQ0KPiBpbmRleCAzMDFhOWRiLi45MGY3OTQ5IDEw
+MDY0NA0KPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2JzYzkxMzJzaS1wcmUuZHRz
+aQ0KPiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2JzYzkxMzJzaS1wcmUuZHRzaQ0K
+PiBAQCAtNDUsNiArNDUsNyBAQA0KPiAgCQlzZXJpYWwwID0gJnNlcmlhbDA7DQo+ICAJCWV0aGVy
+bmV0MCA9ICZlbmV0MDsNCj4gIAkJZXRoZXJuZXQxID0gJmVuZXQxOw0KPiArCQlwY2kwID0gJnBj
+aTA7DQo+ICAJfTsNCj4gDQo+ICAJY3B1cyB7DQo+IC0tDQo+IDIuMS4wLjI3Lmc5NmRiMzI0DQoN
+Cg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
