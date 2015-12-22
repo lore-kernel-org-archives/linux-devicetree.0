@@ -1,35 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RESEND PATCH v2 2/2] ASoC: atmel-classd: DT binding for PDMIC driver
-Date: Tue, 22 Dec 2015 12:37:24 -0600
-Message-ID: <CAL_JsqKTNJ6Y0OUydkef3aYUO2jzDb30myvGJau-RBoJ3qe8hQ@mail.gmail.com>
-References: <1450345800-21299-1-git-send-email-songjun.wu@atmel.com>
- <1450345800-21299-3-git-send-email-songjun.wu@atmel.com> <20151219040913.D0F442C02FD@rob-hp-laptop>
- <20151219113055.GF5727@sirena.org.uk>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 12/12] ASoC: rsnd: add Multi channel support
+Date: Tue, 22 Dec 2015 12:47:55 -0600
+Message-ID: <CAL_JsqL0khcdBEvCbJtOZ6HU1488-ThwWdg3coa-u-OAETLP8A@mail.gmail.com>
+References: <87egeliyaz.wl%kuninori.morimoto.gx@renesas.com>
+ <87wpsdhje9.wl%kuninori.morimoto.gx@renesas.com> <20151218200448.GA1476@rob-hp-laptop>
+ <20151219113709.GG5727@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151219113055.GF5727@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Songjun Wu <songjun.wu@atmel.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151219113709.GG5727-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 19, 2015 at 5:30 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Fri, Dec 18, 2015 at 01:56:21PM -0600, Rob Herring wrote:
->> On Thu, Dec 17, 2015 at 05:50:00PM +0800, Songjun Wu wrote:
+On Sat, Dec 19, 2015 at 5:37 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Dec 18, 2015 at 02:04:51PM -0600, Rob Herring wrote:
+>> On Thu, Dec 17, 2015 at 03:00:10AM +0000, Kuninori Morimoto wrote:
 >
->> > +- atmel,model
->> > +   The user-visible name of this sound card.
->> > +   The default value is "PDMIC".
+>> > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+>> > ---
+>> >  .../devicetree/bindings/sound/renesas,rsnd.txt     |  18 ++++
 >
->> When and why would this be different than the default?
+>> For the binding:
 >
->> "label" can be used here if this is really needed.
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 >
-> The plastics for the system are often very important for audio
-> configuration - we need userspace to be able to distinguish between
-> systems that are identical even on the electrical level.
+> Rob, it looks like something's up with your mail system - I'm getting
+> two copies of all your mails.  It looks like I'm getting one copy sent
+> with TLS and one copy sent without TLS both from rob-hp-laptop with
+> different message IDs:
 
-Okay. That is exactly what label is for, so please use it.
+Yeah, I've been playing with my mail setup and messed up with this
+batch mail I had accumulated offline. Thanks for letting me know.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
