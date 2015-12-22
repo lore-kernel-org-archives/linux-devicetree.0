@@ -1,69 +1,73 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 5/6] ARM: dts: rockchip: add reboot mode node
-Date: Tue, 22 Dec 2015 17:04:42 +0800
-Message-ID: <5679122A.2070700@rock-chips.com>
-References: <1450697249-29994-1-git-send-email-andy.yan@rock-chips.com>
- <1450698149-30260-1-git-send-email-andy.yan@rock-chips.com>
- <CAFnsNoQbeAsuESSPeDDs_fQvPv96pBX=jNh=ahpWrTKLrpEExw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <CAFnsNoQbeAsuESSPeDDs_fQvPv96pBX=jNh=ahpWrTKLrpEExw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Naoki FUKAUMI <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH v1 1/6] dt-bindings: misc: add document for reboot-mode driver
+Date: Tue, 22 Dec 2015 17:05:24 +0800
+Message-ID: <1450775124-23966-1-git-send-email-andy.yan@rock-chips.com>
+References: <1450774949-23901-1-git-send-email-andy.yan@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1450774949-23901-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, heiko@sntech.de, arnd@arndb.de, john.stultz@linaro.org
+Cc: sjg@chromium.org, alexandre.belloni@free-electrons.com, treding@nvidia.com, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, wxt@rock-chips.com, catalin.marinas@arm.com, olof@lixom.net, geert+renesas@glider.be, linux-rockchip@lists.infradead.org, dbaryshkov@gmail.com, sre@kernel.org, jun.nie@linaro.org, pawel.moll@arm.com, will.deacon@arm.com, akpm@linux-foundation.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, joel@jms.id.au, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, khilman@linaro.org, moritz.fischer@ettus.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, Andy Yan <andy.yan@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAyMDE15bm0MTLmnIgyMuaXpSAxMTowNCwgTmFva2kgRlVLQVVNSSB3cm90ZToKPiBo
-aSwKPgo+IE9uIE1vbiwgRGVjIDIxLCAyMDE1IGF0IDg6NDIgUE0sIEFuZHkgWWFuPGFuZHkueWFu
-QHJvY2stY2hpcHMuY29tPiAgd3JvdGU6Cj4+IEFkZCByZWJvb3QgbW9kZSBkcml2ZXIgRFQgbm9k
-ZSBmb3IgcmszeHh4LHJrMzI4OCBwbGF0Zm9ybQo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBBbmR5IFlh
-bjxhbmR5LnlhbkByb2NrLWNoaXBzLmNvbT4KPj4gLS0tCj4+Cj4+ICAgYXJjaC9hcm0vYm9vdC9k
-dHMvcmszMjg4LmR0c2kgICAgICAgICAgICAgICAgfCAyNSArKysrKysrKysrKysrKysrKysrKysr
-Kwo+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL3JrM3h4eC5kdHNpICAgICAgICAgICAgICAgIHwgMjYg
-KysrKysrKysrKysrKysrKysrKysrKysrCj4+ICAgaW5jbHVkZS9kdC1iaW5kaW5ncy9zb2Mvcm9j
-a2NoaXBfYm9vdC1tb2RlLmggfCAzMCArKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+ICAg
-MyBmaWxlcyBjaGFuZ2VkLCA4MSBpbnNlcnRpb25zKCspCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IGluY2x1ZGUvZHQtYmluZGluZ3Mvc29jL3JvY2tjaGlwX2Jvb3QtbW9kZS5oCj4+Cj4+IGRpZmYg
-LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9yazMyODguZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L3JrMzI4OC5kdHNpCj4+IGluZGV4IDA0ZWEyMDkuLjkzN2JhNGMgMTAwNjQ0Cj4+IC0tLSBhL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC5kdHNpCj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3Jr
-MzI4OC5kdHNpCj4+IEBAIC0xNzAsNiArMTcwLDMxIEBACj4+ICAgICAgICAgICAgICAgICAgfTsK
-Pj4gICAgICAgICAgfTsKPj4KPj4gKyAgICAgICByZWJvb3RfbW9kZSB7Cj4+ICsgICAgICAgICAg
-ICAgICBjb21wYXRpYmxlID0gInJvY2tjaGlwLHJlYm9vdC1tb2RlIjsKPj4gKyAgICAgICAgICAg
-ICAgIHJvY2tjaGlwLHJlZ21hcCA9IDwmcG11PjsKPj4gKyAgICAgICAgICAgICAgIG9mZnNldCA9
-IDwweDk0PjsKPj4gKyAgICAgICAgICAgICAgIGxvYWRlciB7Cj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIGxpbnV4LG1vZGUgPSAibG9hZGVyIjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-bGludXgsbWFnaWMgPSA8MHg1MjQyQzMwMT47Cj4+ICsgICAgICAgICAgICAgICB9Owo+PiArCj4+
-ICsgICAgICAgICAgICAgICBtYXNrcm9tIHsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgbGlu
-dXgsbW9kZSA9ICJtYXNrcm9tIjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgbGludXgsbWFn
-aWMgPSA8MHg1MjQyQzMwMj47Cj4+ICsgICAgICAgICAgICAgICB9Owo+PiArCj4+ICsgICAgICAg
-ICAgICAgICByZWNvdmVyeSB7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGxpbnV4LG1vZGUg
-PSAicmVjb3ZlcnkiOwo+PiArICAgICAgICAgICAgICAgICAgICAgICBsaW51eCxtYWdpYyA9IDww
-eDUyNDJDMzAzPjsKPj4gKyAgICAgICAgICAgICAgIH07Cj4+ICsKPj4gKyAgICAgICAgICAgICAg
-IGZhc3Rib290IHsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgbGludXgsbW9kZSA9ICJmYXN0
-Ym9vdCI7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGxpbnV4LG1hZ2ljID0gPDB4NTI0MkMz
-MDk+Owo+PiArICAgICAgICAgICAgICAgfTsKPj4gKyAgICAgICB9Owo+PiArCj4gKHNuaXApCj4K
-PiBJIHNvbWV0aW1lcyB1c2UgMHhFRjA4QTUzQyB0byBsb2FkIGJvb3Rsb2FkZXIgZnJvbSBTRCBj
-YXJkIGluc3RlYWQgb2YKPiBvbi1ib2FyZCBmbGFzaCBtZW1vcnkgc3VjaCBhcyBlTU1DLgo+ICAg
-aHR0cHM6Ly9naXRodWIuY29tL2xpbnV4LXJvY2tjaGlwL3UtYm9vdC1yb2NrY2hpcC9ibG9iL3Ut
-Ym9vdC1yazMyODgvY29tbW9uL2NtZF9yb2NrdXNiLmMjTDg5Mwo+Cj4gSSBkb24ndCBrbm93IGFu
-eSBkZXRhaWwgYWJvdXQgdGhpcyBmdW5jdGlvbi4KPiAoYWJvdmUgY29kZSBzYXlzICJyZWJvb3Qg
-dG8gbWFza3JvbSIsIGJ1dCBpdCBzaG91bGQgYmUgd3JvbmcgZnJvbSBteSBleHBlcmllbmNlKQo+
-Cj4gZG8geW91IGtub3cgc29tZXRoaW5nIGFib3V0IHRoaXMgZnVuY3Rpb24/IGNhbiB5b3UgaGFu
-ZGxlIHRoaXMgdG9vPwo+Cj4gUmVnYXJkcywKPgo+Cj4KICBIYXZlIHNvbWUgZGlzY3Vzc2lvbiB3
-aXRoIHRoZSBib290bG9hZGVyIGVuZ2luZWVyLCB0aGUgY29ycmVjdCBtYWdpYyAgCm51bWJlciB0
-bwogIHJlYm9vdCB0aGUgc3lzdGVtIHRvIG1hc2tyb20gbW9kZSBpcyAweEVGMDhBNTNDLiBJIHdp
-bGwgIGZpeCBpdCBpbiAKbmV4dCB2ZXJzaW9uLgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCkxpbnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdApMaW51eC1y
-b2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
+add device tree bindings document for reboot-mode driver
+
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+
+---
+
+Changes in v1: None
+
+ .../devicetree/bindings/misc/reboot-mode.txt       | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/reboot-mode.txt
+
+diff --git a/Documentation/devicetree/bindings/misc/reboot-mode.txt b/Documentation/devicetree/bindings/misc/reboot-mode.txt
+new file mode 100644
+index 0000000..082bc0c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/reboot-mode.txt
+@@ -0,0 +1,41 @@
++Generic reboot mode communication driver
++
++This driver get reboot mode arguments from userspace
++and stores it in special register or ram . Then the
++bootloader will read it and take different action
++according the argument stored.
++
++Required properties:
++        - compatible = "reboot-mode" or other vendor compatible string;
++
++Each mode is represented as a sub-node of reboot_mode:
++
++Subnode required properties:
++        - linux,mode: reboot mode command,such as "loader","recovery", "fastboot".
++        - linux,magic: magic number for the mode, this is vendor specific.
++
++example:
++	reboot_mode {
++		compatible = "rockchip,reboot-mode";
++		rockchip,regmap = <&pmu>;
++		offset = <0x40>;
++		loader {
++			linux,mode = "loader";
++			linux,magic = <0x5242C301>;
++		};
++
++		maskrom {
++			linux,mode = "maskrom";
++			linux,magic = <0x5242C302>;
++		};
++
++		recovery {
++			linux,mode = "recovery";
++			linux,magic = <0x5242C303>;
++		};
++
++		fastboot {
++			linux,mode = "fastboot";
++			linux,magic = <0x5242C309>;
++		};
++        };
+-- 
+1.9.1
