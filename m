@@ -1,37 +1,48 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/irq: Export of_irq_count()
-Date: Wed, 23 Dec 2015 00:55:53 +0100
-Message-ID: <CACRpkdYUbKARq-8YBV7omWX7-7NC6S0e8LLiohTxgps1Hu625g@mail.gmail.com>
-References: <1450786942-13292-1-git-send-email-broonie@kernel.org>
-	<CAL_JsqJELQc316UkkpzLrbSsYMYh69uxX5Jw8p4TpWm6eqmfuA@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/6] ASoC: da7219: Update REFERENCES reg default, in-line
+ with HW
+Date: Wed, 23 Dec 2015 00:10:19 +0000
+Message-ID: <20151223001019.GG16023@sirena.org.uk>
+References: <cover.1450807642.git.Adam.Thomson.Opensource@diasemi.com>
+ <5233faeef4073f33e2826866eae35e8c9502c35f.1450807642.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJELQc316UkkpzLrbSsYMYh69uxX5Jw8p4TpWm6eqmfuA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="doKZ0ri6bHmN2Q5y"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5233faeef4073f33e2826866eae35e8c9502c35f.1450807642.git.Adam.Thomson.Opensource@diasemi.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 22, 2015 at 6:12 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Dec 22, 2015 at 6:22 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> Some of the Qualcomm pinctrl drivers have started trying to use
->> of_irq_count() in modular code but this fails to build as the symbol is
->> not exported.  Since there doesn't seem to be any reason not to export
->> the symbol make it available to modules.
->
-> The reason it has not been exported is because we want to stick with
-> the platform_* APIs for IRQs. There's not really an equivalent
-> function though. Perhaps we should make one? Usually it is just used
-> for allocating some driver data. If that is the case, is it really
-> enough data to not just allocate the max?
 
-Hm that seems like a bigger solution. Should we try to mitigate
-the issue by making the Qualcomm drivers builtin for the time being?
+--doKZ0ri6bHmN2Q5y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tue, Dec 22, 2015 at 06:27:53PM +0000, Adam Thomson wrote:
+> In current AB silicon, BIAS_EN field is enabled by default in the
+> REFERENCES register, so the regmap default value should reflect
+> this.
+
+This is the sort of thing where a register patch would normally be used
+- if you put in a register patch for the older silicon then the driver
+can correct for the register default automatically.
+
+--doKZ0ri6bHmN2Q5y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWeeZqAAoJECTWi3JdVIfQvXUH/0BCBYVlvn9/FvHt83e3hI+r
+15hGFZUcdjrDD7FFia5yDUDhE1YEQtlvOffrlPuOYH3WYwdVBbaG0uykvwPbifOb
+0gBz4M1snfO9S7ov+3c1bAWbMSn7v2rUcywgyG7/MpSgV0GIDeqImrMauQ8sJvHX
+XFIiP9MhMFIK1fnrgZwo11gWmQmuFjuUanXtnwv8g6AmkzVITFRATnuFHpG/oqji
+CIq3xKhnkbNp2JlD57HW7TK+j/wBdmpqDC+LUxeUa2wseEjj2EGh0fD2K94M+b4R
+ZyMHNmcf4mO4bg7nDBAAkFCQ739c7rWMfGIXAIKDAQy5WlW9K1DvMyvE/c2n9ZQ=
+=FpM+
+-----END PGP SIGNATURE-----
+
+--doKZ0ri6bHmN2Q5y--
