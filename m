@@ -1,73 +1,244 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 0/9] ARM: dts: Add compatible property to "partitions" node
-Date: Wed, 23 Dec 2015 15:21:29 +0100
-Message-ID: <CAMuHMdVJY6+vFvO44kQkzbPJGDkY8SfRz3Dwt4-_RVJL2o=pdw@mail.gmail.com>
-References: <1450694033-27717-1-git-send-email-geert+renesas@glider.be>
-	<20151222212350.GF30172@localhost>
-	<87egedfmsm.fsf@free-electrons.com>
+From: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: Re: [PATCH 2/3] wlcore/wl12xx: spi: add device tree support
+Date: Wed, 23 Dec 2015 16:38:03 +0200
+Message-ID: <567AB1CB.1050203@compulab.co.il>
+References: <1450859744-9948-1-git-send-email-uri.mashiach@compulab.co.il>
+ <1450859744-9948-3-git-send-email-uri.mashiach@compulab.co.il>
+ <567A76B5.70605@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87egedfmsm.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <567A76B5.70605-l0cyMroinI0@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof, Gregory,
+Hi Grygorii,
 
-On Wed, Dec 23, 2015 at 12:04 PM, Gregory CLEMENT
-<gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->  On mar., d=C3=A9c. 22 2015, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->> On Mon, Dec 21, 2015 at 11:33:44AM +0100, Geert Uytterhoeven wrote:
->>> As of commit e488ca9f8d4f62c2 ("doc: dt: mtd: partitions: add compa=
-tible
->>> property to "partitions" node"), which is in v4.4-rc6, the "partiti=
-ons"
->>> subnode of an SPI FLASH device node must have a compatible property=
-=2E The
->>> partitions are no longer detected if it is not present.
->>>
->>> However, several DTSes in -next have already been converted to the
->>> "partitions" subnode without "compatible" property, introduced by
->>> commits 5cfdedb7b9a0fe38 ("mtd: ofpart: move ofpart partitions to a
->>> dedicated dt node") and fe2585e9c29a650a ("doc: dt: mtd: support
->>> partitions in a special 'partitions' subnode"). Hence all of these =
-are
->>> now broken in -next, and will be broken in upstream during the merg=
-e
->>> window.
+On 12/23/2015 12:25 PM, Grygorii Strashko wrote:
+> On 12/23/2015 10:35 AM, Uri Mashiach wrote:
+>> Add DT support for the wl1271 SPI WiFi.
 >>
->> So, if I understand this correctly, the partitions format was added =
-for v4.4,
->> then this non-backwards compatible change was added in -rc6. But, th=
-ere were
->> also DT files that had the new-for-v4.4 partitions nodes in them tha=
-t then
->> stopped working in -rc6?
+>> Add documentation file for the wl1271 SPI WiFi.
+>>
+>> Signed-off-by: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+>> Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+>> ---
+>>    .../bindings/net/wireless/ti,wlcore,spi.txt        | 35 +++++++++++
+>>    drivers/net/wireless/ti/wlcore/spi.c               | 67 +++++++++++++++++++---
+>>    2 files changed, 95 insertions(+), 7 deletions(-)
+>>    create mode 100644 Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt b/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
+>> new file mode 100644
+>> index 0000000..a3e7eb7
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
+>> @@ -0,0 +1,35 @@
+>> +* Texas Instruments wl1271 wireless lan controller
+>> +
+>> +The wl1271 chip can be connected via SPI or via SDIO. This
+>> +document describes the binding for the SPI connected chip.
+>> +
+>> +Required properties:
+>> +- compatible :          Should be "ti,wl1271"
+>> +- reg :                 Chip select address of device
+>> +- spi-max-frequency :   Maximum SPI clocking speed of device in Hz
+>> +- ref-clock-frequency : Reference clock frequency
+>> +- interrupts :          Should contain interrupt line and trigger type
 >
-> At least for the mvebu dts, the change was added for v4.5 not
-> v4.4. Currently it is only in the next branches (and also in your
-> arm-soc tree in next/dt).
+> It's good to describe here number of IRQ lines your device have and IRQ types (edge/level)
+>
 
-The same is true for the shmobile changes: they are queued up for v4.5.
+Maybe IRQ type should be provided by dts file 
+(IRQ_TYPE_LEVEL_HIGH/IRQ_TYPE_EDGE_RISING...)
+to enable support for additional controllers?
 
-Gr{oetje,eeting}s,
+>> +- interrupt-parent :    Should be the phandle for the interrupt controller
+> interrupt-parent is not required (also interrupts-extended can be used)
+>
 
-                        Geert
+Will be done in v2.
 
+>> +                        that services interrupts for this device
+>> +- vwlan-supply :        Point the node of the regulator that controls the wl1271 chip WLAN_EN pin
+>
+> Pls, use gpio if this is required just to toggle WLAN_EN pin.
+>
+> [ti,] power-gpio or en-gpio
+>
+>
+
+The controller's power might need toggling in some board implementation.
+Maybe GPIO and regulator should be implemented?
+
+>> +
+>> +Optional properties:
+>> +- clock-xtal :          boolean, clock is generated from XTAL
+>> +
+>> +- Please consult Documentation/devicetree/bindings/spi/spi-bus.txt
+>> +  for optional SPI connection related properties,just
+>> +
+>> +Examples:
+>> +
+>> +&spi1 {
+>> +	wl1271@1 {
+>> +		compatible = "ti,wl1271";
+>> +
+>> +		reg = <1>;
+>> +		spi-max-frequency = <48000000>;
+>> +		clock-xtal;
+>> +		interrupt-parent = <&gpio3>;
+>> +		interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
+>> +		wifi-supply = <&wifi_fixed>;
+>> +	};
+>> +};
+>> diff --git a/drivers/net/wireless/ti/wlcore/spi.c b/drivers/net/wireless/ti/wlcore/spi.c
+>> index d3a4bcb..7281f5a 100644
+>> --- a/drivers/net/wireless/ti/wlcore/spi.c
+>> +++ b/drivers/net/wireless/ti/wlcore/spi.c
+>> @@ -30,6 +30,7 @@
+>>    #include <linux/spi/spi.h>
+>>    #include <linux/wl12xx.h>
+>>    #include <linux/platform_device.h>
+>> +#include <linux/of_irq.h>
+>>    #include <linux/regulator/consumer.h>
+>>
+>>    #include "wlcore.h"
+>> @@ -357,6 +358,54 @@ static struct wl1271_if_operations spi_ops = {
+>>    	.set_block_size = NULL,
+>>    };
+>>
+>> +#ifdef CONFIG_OF
+>> +static const struct of_device_id wlcore_spi_of_match_table[] = {
+>> +	{ .compatible = "ti,wl1271" },
+>> +	{ }
+>> +};
+>> +
+>> +/**
+>> + * wlcore_probe_of - DT node parsing.
+>> + * @spi: SPI slave device parameters.
+>> + * @res: resource parameters.
+>> + * @glue: wl12xx SPI bus to slave device glue parameters.
+>> + * @pdev_data: wlcore device parameters
+>> + */
+>> +static int wlcore_probe_of(struct spi_device *spi, struct resource *res,
+>> +			   struct wl12xx_spi_glue *glue,
+>> +			   struct wlcore_platdev_data *pdev_data)
+>> +{
+>> +	struct device_node *dt_node = spi->dev.of_node;
+>> +	int ret;
+>> +
+>> +	ret = of_irq_to_resource(dt_node, 0, &res[0]);
+>> +	if (spi->irq != ret) {
+>> +		dev_err(glue->dev, "can't get interrupt resource\n");
+>> +		return -EINVAL;
+>> +	}
+>
+> SPI core will parse IRQ for you (see below)
+>
+>> +
+>> +	if (of_find_property(dt_node, "clock-xtal", NULL))
+>> +		pdev_data->ref_clock_xtal = true;
+>> +
+>> +	ret = of_property_read_u32(dt_node, "ref-clock-frequency",
+>> +				   &pdev_data->ref_clock_freq);
+>> +	if (IS_ERR_VALUE(ret)) {
+>> +		dev_err(glue->dev,
+>> +			"can't get reference clock frequency (%d)\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +#else /* CONFIG_OF */
+>> +static int wlcore_probe_of(struct spi_device *spi, struct resource *res,
+>> +			   struct wl12xx_spi_glue *glue,
+>> +			   struct wlcore_platdev_data *pdev_data)
+>> +{
+>> +	return -ENODATA;
+>> +}
+>> +#endif /* CONFIG_OF */
+>> +
+>>    static int wl1271_probe(struct spi_device *spi)
+>>    {
+>>    	struct wl12xx_spi_glue *glue;
+>> @@ -365,8 +414,7 @@ static int wl1271_probe(struct spi_device *spi)
+>>    	int ret;
+>>
+>>    	memset(&pdev_data, 0x00, sizeof(pdev_data));
+>> -
+>> -	/* TODO: add DT parsing when needed */
+>> +	memset(res, 0x00, sizeof(res));
+>>
+>>    	pdev_data.if_ops = &spi_ops;
+>>
+>> @@ -390,6 +438,13 @@ static int wl1271_probe(struct spi_device *spi)
+>>    		return PTR_ERR(glue->reg);
+>>    	}
+>>
+>> +	ret = wlcore_probe_of(spi, &res[0], glue, &pdev_data);
+>> +	if (IS_ERR_VALUE(ret)) {
+>> +		dev_err(glue->dev,
+>> +			"can't get device tree parameters (%d)\n", ret);
+>> +		return ret;
+>
+> So, wl1271_probe will fail always if CONFIG_OF=n. Right?
+>
+>
+
+Is a support for CONFIG_OF=n needed?
+
+>> +	}
+>> +
+>>    	ret = spi_setup(spi);
+>>    	if (ret < 0) {
+>>    		dev_err(glue->dev, "spi_setup failed\n");
+>> @@ -404,10 +459,6 @@ static int wl1271_probe(struct spi_device *spi)
+>>
+>>    	glue->core->dev.parent = &spi->dev;
+>>
+>> -	memset(res, 0x00, sizeof(res));
+>> -
+>> -	res[0].start = spi->irq;
+>> -	res[0].flags = IORESOURCE_IRQ;
+>>    	res[0].name = "irq";
+>
+> Above code might be left unchaenged.
+>
+>
+
+Will be done in v2.
+
+>>
+>>    	ret = platform_device_add_resources(glue->core, res, ARRAY_SIZE(res));
+>> @@ -445,10 +496,12 @@ static int wl1271_remove(struct spi_device *spi)
+>>    	return 0;
+>>    }
+>>
+>> -
+>>    static struct spi_driver wl1271_spi_driver = {
+>>    	.driver = {
+>>    		.name		= "wl1271_spi",
+>> +#ifdef CONFIG_OF
+>> +		.of_match_table = of_match_ptr(wlcore_spi_of_match_table),
+>> +#endif /* CONFIG_OF */
+>
+> These ifdefs are not needed - see of_match_ptr() definition
+>
+>>    	},
+>>
+>>    	.probe		= wl1271_probe,
+>>
+>
+>
+
+-- 
+Regards,
+Uri
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
-m68k.org
-
-In personal conversations with technical people, I call myself a hacker=
-=2E But
-when I'm talking to journalists I just say "programmer" or something li=
-ke that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
