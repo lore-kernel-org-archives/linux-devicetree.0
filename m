@@ -1,33 +1,75 @@
-From: Andy Gross <andy.gross@linaro.org>
-Subject: Re: next-20151222 build: 3 failures 13 warnings (next-20151222)
-Date: Tue, 22 Dec 2015 21:46:36 -0600
-Message-ID: <20151223034636.GA4569@hector.tx.rr.com>
-References: <E1aBIky-0007nI-7t@optimist>
- <20151222122228.GL5727@sirena.org.uk>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v11 17/19] drm: bridge: analogix/dp: expand the look time
+ for waiting AUX CH reply
+Date: Wed, 23 Dec 2015 12:24:12 +0800
+Message-ID: <567A21EC.4010003@rock-chips.com>
+References: <1450236018-1118-1-git-send-email-ykk@rock-chips.com>
+ <1450238257-3274-1-git-send-email-ykk@rock-chips.com>
+ <000a01d13cb4$0f81f510$2e85df30$@com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-next-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151222122228.GL5727@sirena.org.uk>
-Sender: linux-next-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <agross@codeaurora.org>, =?iso-8859-1?Q?Bj=F6rn?= Andersson <bjorn.andersson@sonymobile.com>, Linus Walleij <linus.walleij@linaro.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, kernel-build-reports@lists.linaro.org, linaro-kernel@lists.linaro.org, linux-next@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <000a01d13cb4$0f81f510$2e85df30$@com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jingoo Han <jingoohan1@gmail.com>, 'Inki Dae' <inki.dae@samsung.com>, 'Mark Yao' <mark.yao@rock-chips.com>, 'Heiko Stuebner' <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, 'Russell King' <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 'Kishon Vijay Abraham I' <kishon@ti.com>, javier@osg.samsung.com, 'Rob Herring' <robh+dt@kernel.org>, 'Andy Yan' <andy.yan@rock-chips.com>, 'Thierry Reding' <treding@nvidia.com>, 'Gustavo Padovan' <gustavo.padovan@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 22, 2015 at 12:22:28PM +0000, Mark Brown wrote:
-> On Tue, Dec 22, 2015 at 08:57:20AM +0000, Build bot for Mark Brown wrote:
-> 
-> Today's linux-next fails to link an arm64 allmodconfig due to:
-> 
-> > ERROR: "of_irq_count" [drivers/pinctrl/qcom/pinctrl-ssbi-mpp.ko] undefined!
-> > ERROR: "of_irq_count" [drivers/pinctrl/qcom/pinctrl-ssbi-gpio.ko] undefined!
-> > ERROR: "of_irq_count" [drivers/pinctrl/qcom/pinctrl-spmi-mpp.ko] undefined!
-> > ERROR: "of_irq_count" [drivers/pinctrl/qcom/pinctrl-spmi-gpio.ko] undefined!
-> 
-> which are caused by ab4256cfeab91569 (pinctrl: qcom: pmic-gpio/mpp:
-> of_irq_count() == npins) which adds uses of irq_of_count() but that is
-> not exported so can't be used in modules.  I've just sent a patch adding
-> the export.
-
-Thanks for fixing that Mark.  I had seen it in the pinctrl builds but hadn't
-gotten the screen time to send in a fix.
+SGkgSmluZ29vLAoKT24gMTIvMjIvMjAxNSAwODoyNiBQTSwgSmluZ29vIEhhbiB3cm90ZToKPiBP
+biBXZWRuZXNkYXksIERlY2VtYmVyIDE2LCAyMDE1IDEyOjU4IFBNLCBZYWtpciBZYW5nIHdyb3Rl
+Ogo+PiBBZnRlciB0ZXN0IG9uIHJvY2tjaGlvcCBwbGF0Zm9ybSwgaSBmb3VuZCBzb21ldGltcyBk
+cml2ZXIgd291bGQgZmFpbGVkCj4+IGF0IHJlYWRpbmcgRURJRCBtZXNzYWdlLiBBZnRlciBkZWJ1
+Z2dpbmcgbW9yZSwgaSBmb3VuZCB0aGF0IGl0J3Mgb2theQo+PiB0byByZWFkX2EgYnl0ZSBmcm9t
+IGkyYywgYnV0IGl0IHdvdWxkIGZhaWxlZCBhdCBBVVggdHJhbnNjYXRpb24gaWYgd2UKPj4gdHJ5
+IHRvIHJlYWR5IG11bHRpLWJ5dGVzIGZyb20gaTJjLgo+Pgo+PiBEcml2ZXIganVzdCBjYW4ndCBy
+ZWNlaXZlZCB0aGUgQVVYIENIIHJlcGx5IGNvbW1hbmQsIGV2ZW4gbm8gQVVYIGVycm9yCj4+IGNv
+ZGUuIEkgbWF5IGd1ZXNzIHRoYXQgdGhlIEFVWCB3YWl0IHRpbWUgaXMgbm90IGVub3VnaCwgc28g
+SSB0cnkgdG8KPj4gZXhwYW5kIHRoZSBBVVggd2FpdCB0aW1lLCBhbmQgaSBkbyBzZWUgdGhpcyBj
+b3VsZCBmaXggdGhlIEVESUQgcmVhZAo+PiBmYWlsZWQgYXQgcm9ja2NoaXAgcGxhdGZvcm0uCj4+
+Cj4+IEFuZCBJIHRob3VnaHQgdGhhdCBleHBhbmQgdGhlIHdhaXQgdGltZSB3b24ndCBodXJ0IEV4
+eW5vcyBwbGF0Zm9ybSB0b28KPj4gbXVjaCwgY2F1c2UgRXh5bm9zIGRpZG4ndCBoYXZlIHRoaXMg
+cHJvYmxlbSwgdGhlbiBkcml2ZXIgd291bGQgcmVjZWl2ZWQKPj4gdGhlIHJlcGx5IGNvbW1hbmQg
+dmVyeSBzb29uLCBzbyBubyBtb3JlIGFkZGl0aW9uYWwgd2FpdCB0aW1lIHdvdWxkIGJyaW5nCj4+
+IHRvIEV4eW5vcyBwbGF0Zm9ybS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogWWFraXIgWWFuZyA8eWtr
+QHJvY2stY2hpcHMuY29tPgo+PiAtLS0KPj4gQ2hhbmdlcyBpbiB2MTE6IE5vbmUKPj4gQ2hhbmdl
+cyBpbiB2MTA6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2OTogTm9uZQo+PiBDaGFuZ2VzIGluIHY4OiBO
+b25lCj4+IENoYW5nZXMgaW4gdjc6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2NjogTm9uZQo+PiBDaGFu
+Z2VzIGluIHY1OiBOb25lCj4+IENoYW5nZXMgaW4gdjQ6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2Mzog
+Tm9uZQo+PiBDaGFuZ2VzIGluIHYyOiBOb25lCj4+Cj4+ICAgZHJpdmVycy9ncHUvZHJtL2JyaWRn
+ZS9hbmFsb2dpeC9hbmFsb2dpeF9kcF9yZWcuYyB8IDIgKy0KPj4gICAxIGZpbGUgY2hhbmdlZCwg
+MSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhfZHBfcmVnLmMKPj4gYi9kcml2ZXJzL2dw
+dS9kcm0vYnJpZGdlL2FuYWxvZ2l4L2FuYWxvZ2l4X2RwX3JlZy5jCj4+IGluZGV4IGM3ZTI5NTku
+LmRjMzc2YmQgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXgv
+YW5hbG9naXhfZHBfcmVnLmMKPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbmFsb2dp
+eC9hbmFsb2dpeF9kcF9yZWcuYwo+PiBAQCAtNDgyLDcgKzQ4Miw3IEBAIGludCBhbmFsb2dpeF9k
+cF9zdGFydF9hdXhfdHJhbnNhY3Rpb24oc3RydWN0IGFuYWxvZ2l4X2RwX2RldmljZSAqZHApCj4+
+ICAgCXJlZyA9IHJlYWRsKGRwLT5yZWdfYmFzZSArIEFOQUxPR0lYX0RQX0lOVF9TVEEpOwo+PiAg
+IAl3aGlsZSAoIShyZWcgJiBSUExZX1JFQ0VJVikpIHsKPj4gICAJCXRpbWVvdXRfbG9vcCsrOwo+
+PiAtCQlpZiAoRFBfVElNRU9VVF9MT09QX0NPVU5UIDwgdGltZW91dF9sb29wKSB7Cj4+ICsJCWlm
+IChEUF9USU1FT1VUX0xPT1BfQ09VTlQgKiAxMCA8IHRpbWVvdXRfbG9vcCkgewo+IE5vLCBJIGhh
+dGUgdGhpcyBjb2RpbmcuCj4gYW5hbG9naXhfZHBfcmVnLmMgaXMgdGhlIGNvbW1vbiBjb2RlIHRo
+YXQgY2FuIGJlIHNoYXJlZCBieSB2YXJpb3VzIFNvQ3MuCj4gUGxlYXNlLCBmaW5kIGFub3RoZXIg
+d2F5LgoKT2theSwgSSBoYXZlIGRvdWJsZSBjaGVja2VkIHRoYXQgaSBkbyBoYXZlIHRoaXMgcHJv
+YmxlbSBpbiBteSBzaWRlLiAKSG1tbS4uLi4uCkkgdGhvdWdodCBpdCdzIG9rYXkgZm9yIHlvdSBp
+ZiBJIGV4cGFuZCB0aGUgIkRQX1RJTUVPVVRfTE9PUF9DT1VOVCIgCmRpcmVjdGx5LAppdCB3b24n
+dCBodXJ0IEV4eW5vcyBwbGF0Zm9ybSB0b28gbXVjaCwgY2F1c2UgRXh5bm9zIGRpZG4ndCBoYXZl
+IHRoaXMgCnByb2JsZW0sCnRoZW4gZHJpdmVyIHdvdWxkIHJlY2VpdmVkLHRoZSByZXBseSBjb21t
+YW5kIHZlcnkgc29vbiwgc28gbm8gbW9yZSAKYWRkaXRpb25hbAp3YWl0IHRpbWUgd291bGQgYnJp
+bmcgdG8gRXh5bm9zIHBsYXRmb3JtLgoKQW5kIGFjdHVhbGx5IHRoZSBkYXRhc2hlZXQgaGF2ZW4n
+dCBkZXNjcmliZWQgdGhlIHNwZWMgb2YgYXV4IHJlcGx5IGRlbGF5IAp0aW1lLgoKVGhhbmtzLAot
+IFlha2lyCgo+IEJlc3QgcmVnYXJkcywKPiBKaW5nb28gSGFuCj4KPgo+PiAgIAkJCWRldl9lcnIo
+ZHAtPmRldiwgIkFVWCBDSCBjb21tYW5kIHJlcGx5IGZhaWxlZCFcbiIpOwo+PiAgIAkJCXJldHVy
+biAtRVRJTUVET1VUOwo+PiAgIAkJfQo+PiAtLQo+PiAxLjkuMQo+Cj4KPgo+CgoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
