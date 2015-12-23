@@ -1,24 +1,72 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 0/3] drivers: net: cpsw: phy-handle fixes
-Date: Wed, 23 Dec 2015 12:04:25 -0500 (EST)
-Message-ID: <20151223.120425.2005941258192616350.davem@davemloft.net>
-References: <1450830994-5450-1-git-send-email-drivshin.allworx@gmail.com>
+From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Subject: Re: [PATCH 1/5] iio:adc:at91_adc8xx: introduce new atmel adc driver
+Date: Wed, 23 Dec 2015 17:21:25 +0000
+Message-ID: <E2C27D1A-1035-4330-AEF3-C72B87C27FEF@jic23.retrosnub.co.uk>
+References: <1450689852-22763-1-git-send-email-ludovic.desroches@atmel.com> <1450689852-22763-2-git-send-email-ludovic.desroches@atmel.com> <56799798.203@kernel.org> <20151223102700.GC2789@odux.rfo.atmel.com> <20151223104833.GE2789@odux.rfo.atmel.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1450830994-5450-1-git-send-email-drivshin.allworx@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: drivshin.allworx@gmail.com
-Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, hs@denx.de, mugunthanvnm@ti.com, systemprogrammierung.brunner@gmail.com, kernel@iktek.de, dtrautmann@ibhsoftec-sps.de
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151223104833.GE2789-FuRPzXQv2LUWBfJKYY8PcdBPR1lH4CV8@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
-Date: Tue, 22 Dec 2015 19:36:31 -0500
 
-> Testing by anyone who has real hardware using phy-handle or dual_emac
-> with fixed-link would be appreciated.
 
-I'm going to wait for such testing before applying this series.
+On 23 December 2015 10:48:33 GMT+00:00, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+>On Wed, Dec 23, 2015 at 11:27:00AM +0100, Ludovic Desroches wrote:
+>> On Tue, Dec 22, 2015 at 06:34:00PM +0000, Jonathan Cameron wrote:
+>> > On 21/12/15 09:24, Ludovic Desroches wrote:
+>> > > This driver supports the new version of the Atmel ADC device
+>introduced
+>> > > with the SAMA5D2 SoC family.
+>> > > 
+>
+>[...]
+>
+>> > > +static irqreturn_t at91_adc_interrupt(int irq, void *private)
+>> > > +{
+>> > > +	struct iio_dev *indio = private;
+>> > > +	struct at91_adc_state *st = iio_priv(indio);
+>> > > +	u32 status = at91_adc_readl(st, ADC_ISR);
+>> > > +
+>> > > +	status &= at91_adc_readl(st, ADC_IMR);
+>> > > +	if (status & 0xFFF) {
+>> > > +		st->last_value = at91_adc_readl(st, st->chan->address);
+>> > If this is a polled read - is there any reason to read this value
+>here
+>> > rather than outside the interrupt?
+>> 
+>> No it can be done outside the interrupt. I have taken some parts from
+>the
+>> previous driver but it was reading a register used by all the
+>channels
+>> when it has been designed. So yes there is probably no more reason to
+>> read it into the interrupt.
+>> 
+>
+>Thinking about it. Is it really useful to move reading outside the
+>interrupt?
+It avoids needing to know the channel in here, hence simplifying the code a bit.
+>
+>By the way this is not a polled read.
+I meant that it is an individually requested conversion rather than a free running
+ sampling system where the value read might change before it is read out.
+>
+>> > > +		st->done = true;
+>> > > +		wake_up_interruptible(&st->wq_data_available);
+>> > > +	}
+>> > > +
+>> > > +	return IRQ_HANDLED;
+>> > > +}
+>
+>Ludovic
+>--
+>To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+>the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Thanks.
+-- 
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
