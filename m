@@ -1,65 +1,58 @@
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/5] iio:adc:at91_adc8xx: introduce new atmel adc driver
-Date: Wed, 23 Dec 2015 11:29:10 +0100
-Message-ID: <20151223102910.GD2789@odux.rfo.atmel.com>
-References: <1450689852-22763-1-git-send-email-ludovic.desroches@atmel.com>
- <1450689852-22763-2-git-send-email-ludovic.desroches@atmel.com>
- <20151223005118.GA29457@rob-hp-laptop>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [GIT PULL 3/9] ARM64: EXYNOS: clk: Clock dependency for ARM64 for
+ v4.5
+Date: Wed, 23 Dec 2015 19:44:32 +0900
+Message-ID: <567A7B10.3030501@samsung.com>
+References: <1449020386-20250-1-git-send-email-k.kozlowski@samsung.com>
+ <1449020386-20250-4-git-send-email-k.kozlowski@samsung.com>
+ <20151222044636.GD30172@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20151223005118.GA29457@rob-hp-laptop>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20151222044636.GD30172@localhost>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: k.kozlowski.k@gmail.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, arm@kernel.org, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 22, 2015 at 06:51:18PM -0600, Rob Herring wrote:
-> On Mon, Dec 21, 2015 at 10:24:08AM +0100, Ludovic Desroches wrote:
-> > This driver supports the new version of the Atmel ADC device introduced
-> > with the SAMA5D2 SoC family.
-> > 
-> > Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/iio/adc/at91_adc8xx.txt    |  27 ++
-> >  drivers/iio/adc/Kconfig                            |  11 +
-> >  drivers/iio/adc/Makefile                           |   1 +
-> >  drivers/iio/adc/at91_adc8xx.c                      | 417 +++++++++++++++++++++
-> >  4 files changed, 456 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/at91_adc8xx.txt
-> >  create mode 100644 drivers/iio/adc/at91_adc8xx.c
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/at91_adc8xx.txt b/Documentation/devicetree/bindings/iio/adc/at91_adc8xx.txt
-> > new file mode 100644
-> > index 0000000..64ad6a5
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/adc/at91_adc8xx.txt
-> > @@ -0,0 +1,27 @@
-> > +* AT91 SAMA5D2 Analog to Digital Converter (ADC)
-> > +
-> > +Required properties:
-> > +  - compatible: Should be "atmel,sama5d2-adc".
-> > +  - reg: Should contain ADC registers location and length.
-> > +  - interrupts: Should contain the IRQ line for the ADC.
-> > +  - clocks: phandles to clocks.
-> > +  - clock-names: tuple listing clock names.
-> > +      Required elements: "adc_clk", "adc_op_clk". "adc_clk" is the peripheral
-> > +      clock, "adc_clk" is the sampling clock.
-> > +  - vref-supply: Supply used as reference for conversions.
-> > +
-> > +Optional properties:
-> > +  - vddana-supply: Supply for the adc device.
+W dniu 22.12.2015 o 13:46, Olof Johansson pisze:
+> On Wed, Dec 02, 2015 at 10:39:40AM +0900, Krzysztof Kozlowski wrote:
+>> Hi Kukjin,
+>>
+>> Dependency for soc64 changes.
+>>
+>> Best regards,
+>> Krzysztof
+>>
+>>
+>> The following changes since commit 8005c49d9aea74d382f474ce11afbbc7d7130bec:
+>>
+>>   Linux 4.4-rc1 (2015-11-15 17:00:27 -0800)
+>>
+>> are available in the git repository at:
+>>
+>>   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-clk-arm64-symbols-4.5
+>>
+>> for you to fetch changes up to 8c2a90ed18a74e8b9cdbba679403faa44d6024fc:
+>>
+>>   clk: samsung: Don't build ARMv8 clock drivers on ARMv7 (2015-11-22 19:25:29 +0900)
 > 
-> What makes a supply optional? If chip dependent, then then you need a 
-> more specific compatible string.
+> Hi,
 > 
+> Looks like this lacks ack from any of the clock maintainers.
 
-I thought I had read that we can supply an external vddana or having a
-default one. Double checking the datasheet. I can't find it, I probably
-read it on a draft version. Will move the vddana supply to required
-properties.
+It got the ack from Sylwester and Tomasz - Samsung clock maintainers. If
+it is not sufficient... then let's wait with it for v4.6. I am on
+holidays now so I cannot really do anything meaningful with it.
 
-Thanks
 
-Ludovic
+> 
+> Given that EXYNOS_ARM64_COMMON_CLK is not yet introduced, this will cause
+> a breakage in bisectability on some of these platforms as well.
+
+The patch introduces EXYNOS_ARM64_COMMON_CLK which will be enabled by
+default on our platforms. What kind of breakage do you have in mind?
+
+Best regards,
+Krzysztof
