@@ -1,66 +1,94 @@
-From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Subject: Re: [PATCH 5/5] arm: boot: store ATAGs structure into DT
- "/chosen/linux,atags" entry
-Date: Wed, 23 Dec 2015 16:54:32 +0200
-Message-ID: <567AB5A8.4000505@gmail.com>
-References: <20150713131902.GH26485@atomide.com>
- <20151129180939.GE30871@n2100.arm.linux.org.uk>
- <alpine.LFD.2.20.1511291902100.22569@knanqh.ubzr> <201511300115.12478@pali>
- <20151130152352.GY2517@atomide.com> <20151130153933.GD29576@pali>
- <alpine.LFD.2.20.1511301041090.22569@knanqh.ubzr>
- <20151215093325.GK13531@pali> <20151215122038.GI30871@n2100.arm.linux.org.uk>
+From: "Jingoo Han" <jingoohan1@gmail.com>
+Subject: Re: [PATCH v12 16/18] drm: bridge: analogix/dp: expand the wait time
+ for looking AUX CH reply flag
+Date: Thu, 24 Dec 2015 00:10:22 +0900
+Message-ID: <000001d13d94$120e0d60$362a2820$@com>
+References: <1450873538-18304-1-git-send-email-ykk@rock-chips.com>
+ <1450875064-19627-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151215122038.GI30871@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Tony Lindgren <tony@atomide.com>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laura Abbott <lauraa@codeaurora.org>, Sebastian Reichel <sre@debian.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robherring2@gmail.com>, Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, linux-omap@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1450875064-19627-1-git-send-email-ykk@rock-chips.com>
+Content-Language: ko
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: 'Yakir Yang' <ykk@rock-chips.com>, 'Inki Dae' <inki.dae@samsung.com>, 'Mark Yao' <mark.yao@rock-chips.com>, 'Heiko Stuebner' <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, 'Russell King' <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, 'Jingoo Han' <jingoohan1@gmail.com>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 'Kishon Vijay Abraham I' <kishon@ti.com>, javier@osg.samsung.com, 'Rob Herring' <robh+dt@kernel.org>, 'Andy Yan' <andy.yan@rock-chips.com>, 'Thierry Reding' <treding@nvidia.com>, 'Gustavo Padovan' <gustavo.padovan@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 15.12.2015 14:20, Russell King - ARM Linux wrote:
->
-> You could also just save_atags() in there, with a comment saying that
-> this is a work-around for N900 which needs the ATAGs saved, and this
-> is allowed in ->reserve as a special exception.
->
-
-What about this (just to confirm I got the idea correctly, proper patch 
-will follow if that's the case):
-
-diff --git a/arch/arm/mach-omap2/board-generic.c 
-b/arch/arm/mach-omap2/board-generic.c
-index 34ff14b..8916856 100644
---- a/arch/arm/mach-omap2/board-generic.c
-+++ b/arch/arm/mach-omap2/board-generic.c
-@@ -83,8 +83,25 @@ static const char *const n900_boards_compat[] 
-__initconst = {
-         NULL,
-  };
-
-+#ifdef CONFIG_ATAGS_PROC
-+extern void save_atags(const struct tag *tags);
-+
-+/* Legacy userspace on Nokia N900 needs ATAGS exported in /proc/atags,
-+ * save them while the data is still not overwritten
-+ */
-+static void __init rx51_reserve(void)
-+{
-+       const phys_addr_t __atags_pointer = 0x100;
-+
-+       save_atags(phys_to_virt(__atags_pointer));
-+       omap_reserve();
-+}
-+#else
-+#define rx51_reserve omap_reserve
-+#endif
-+
-  DT_MACHINE_START(OMAP3_N900_DT, "Nokia RX-51 board")
--       .reserve        = omap_reserve,
-+       .reserve        = rx51_reserve,
-         .map_io         = omap3_map_io,
-         .init_early     = omap3430_init_early,
-         .init_machine   = omap_generic_init,
+T24gV2VkbmVzZGF5LCBEZWNlbWJlciAyMywgMjAxNSA5OjUxIFBNLCBZYWtpciBZYW5nIHdyb3Rl
+Ogo+IAo+IE9uIFJvY2tjaGlwIHBsYXRmb3JtLCBzb21ldGltZXMgZHJpdmVyIHdvdWxkIGZhaWxl
+ZCBhdCByZWFkaW5nIEVESUQKPiBtZXNzYWdlLCBhbmQgaXQncyBjYXVzZWQgYnkgdGhlIEFVWCBy
+ZXBseSBmbGFnIHdvdWxkbid0IHJlY2VpdmVkIHVuZGVyCj4gdGhlIDEwMCoxMHVzIHdhaXQgdGlt
+ZS4KClRoZSBwcm9ibGVtIGlzIHNwZWNpZmljIGZvciBSb2NrY2hpcCBwbGF0Zm9ybS4KQWxzbywg
+MSBtcyBpcyBsb25nIHRpbWUuClRoZSBiZXN0IHdheSBpcyB0aGF0IHlvdXIgaGFyZHdhcmUgZW5n
+aW5lZXJzIGZpbmQgdGhlIHJvb3QgY2F1c2UuCkkgY2Fubm90IHVuZGVyc3RhbmQgd2h5IHlvdXIg
+ZW5naW5lZXJzIGNhbm5vdCBmaW5kIHRoZSByb290IGNhdXNlLiA6LSgKCj4gCj4gQnV0IGFmdGVy
+IGV4cGFuZCB0aGUgd2FpdCB0aW1lIGEgbGl0dGxlLCB0aGUgQVVYIHJlcGx5IGZsYWcgd291bGQg
+YmUKPiBzZXQsIHNvIG1heWJlIHRoZSB3YWl0IHRpbWUgaXMgYSBsaXR0bGUgY3JpdGljYWwuIEJl
+c2lkZXMgdGhlIGFuYWxvZ2l4Cj4gZHAgYm9vayBoYXZlbid0IHJlbWluZGVkIHRoZSBzdGFuZGFy
+ZCB3YWl0IGZvciBsb29raW5nIEFVWCByZXBseSBmbGFnLAo+IHNvIEkgdGhvdWdodCBpdCdzIG9r
+YXkgdG8gZXhwYW5kIHRoZSB3YWl0IHRpbWUuCj4gCj4gQW5kIHRoZSBleHRlcm5hbCB3YWl0IHRp
+bWUgd29uJ3QgaHVydCBFeHlub3MgRFAgdG9vIG11Y2gsIGNhdXNlIHRoZXkKPiB3b3VsZG4ndCBt
+ZWV0IHRoaXMgcHJvYmxlbSwgdGhlbiBkcml2ZXIgd291bGQgcmVjZWl2ZWQgdGhlIHJlcGx5IGNv
+bW1hbmQKPiB2ZXJ5IHNvb24sIHNvIG5vIG1vcmUgYWRkaXRpb25hbCB3YWl0IHRpbWUgd291bGQg
+YnJpbmcgdG8gRXh5bm9zIHBsYXRmb3JtLgoKVGhlbiwgd2hlbiBsb29wIHRpbWUgaGFwcGVucyBv
+biBFeHlub3MgcGxhdGZvcm0sIGl0IHdpbGwgdGFrZSBsb25nIHRpbWUKdG8gcmV0dXJuIGVycm9y
+LgoKPiAKPiBTaWduZWQtb2ZmLWJ5OiBZYWtpciBZYW5nIDx5a2tAcm9jay1jaGlwcy5jb20+Cj4g
+LS0tCj4gQ2hhbmdlcyBpbiB2MTI6Cj4gLSBVc2luZyBhbm90aGVyIHdheSB0byBleHBhbmQgdGhl
+IEFVWCByZXBseSB3YWl0IHRpbWUgKEppbmdvbykKPiAKPiBDaGFuZ2VzIGluIHYxMTogTm9uZQo+
+IENoYW5nZXMgaW4gdjEwOiBOb25lCj4gQ2hhbmdlcyBpbiB2OTogTm9uZQo+IENoYW5nZXMgaW4g
+djg6IE5vbmUKPiBDaGFuZ2VzIGluIHY3OiBOb25lCj4gQ2hhbmdlcyBpbiB2NjogTm9uZQo+IENo
+YW5nZXMgaW4gdjU6IE5vbmUKPiBDaGFuZ2VzIGluIHY0OiBOb25lCj4gQ2hhbmdlcyBpbiB2Mzog
+Tm9uZQo+IENoYW5nZXMgaW4gdjI6IE5vbmUKPiAKPiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9h
+bmFsb2dpeC9hbmFsb2dpeF9kcF9yZWcuYyB8IDEwICsrKystLS0tLS0KPiAgMSBmaWxlIGNoYW5n
+ZWQsIDQgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9ncHUvZHJtL2JyaWRnZS9hbmFsb2dpeC9hbmFsb2dpeF9kcF9yZWcuYwo+IGIvZHJpdmVy
+cy9ncHUvZHJtL2JyaWRnZS9hbmFsb2dpeC9hbmFsb2dpeF9kcF9yZWcuYwo+IGluZGV4IGNiYTNm
+ZmQuLjg2ODdlZWEgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbmFsb2dp
+eC9hbmFsb2dpeF9kcF9yZWcuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9n
+aXgvYW5hbG9naXhfZHBfcmVnLmMKPiBAQCAtNDcxLDcgKzQ3MSw3IEBAIGludCBhbmFsb2dpeF9k
+cF9zdGFydF9hdXhfdHJhbnNhY3Rpb24oc3RydWN0IGFuYWxvZ2l4X2RwX2RldmljZSAqZHApCj4g
+IHsKPiAgCWludCByZWc7Cj4gIAlpbnQgcmV0dmFsID0gMDsKPiAtCWludCB0aW1lb3V0X2xvb3Ag
+PSAwOwo+ICsJdW5zaWduZWQgbG9uZyB0aW1lb3V0Owo+IAo+ICAJLyogRW5hYmxlIEFVWCBDSCBv
+cGVyYXRpb24gKi8KPiAgCXJlZyA9IHJlYWRsKGRwLT5yZWdfYmFzZSArIEFOQUxPR0lYX0RQX0FV
+WF9DSF9DVExfMik7Cj4gQEAgLTQ3OSwxNCArNDc5LDEyIEBAIGludCBhbmFsb2dpeF9kcF9zdGFy
+dF9hdXhfdHJhbnNhY3Rpb24oc3RydWN0IGFuYWxvZ2l4X2RwX2RldmljZSAqZHApCj4gIAl3cml0
+ZWwocmVnLCBkcC0+cmVnX2Jhc2UgKyBBTkFMT0dJWF9EUF9BVVhfQ0hfQ1RMXzIpOwo+IAo+ICAJ
+LyogSXMgQVVYIENIIGNvbW1hbmQgcmVwbHkgcmVjZWl2ZWQ/ICovCj4gLQlyZWcgPSByZWFkbChk
+cC0+cmVnX2Jhc2UgKyBBTkFMT0dJWF9EUF9JTlRfU1RBKTsKPiAtCXdoaWxlICghKHJlZyAmIFJQ
+TFlfUkVDRUlWKSkgewo+IC0JCXRpbWVvdXRfbG9vcCsrOwo+IC0JCWlmIChEUF9USU1FT1VUX0xP
+T1BfQ09VTlQgPCB0aW1lb3V0X2xvb3ApIHsKPiArCXRpbWVvdXQgPSBqaWZmaWVzICsgbXNlY3Nf
+dG9famlmZmllcyg1KTsKPiArCXdoaWxlICgocmVhZGwoZHAtPnJlZ19iYXNlICsgQU5BTE9HSVhf
+RFBfSU5UX1NUQSkgJiBSUExZX1JFQ0VJVikgPT0gMCkgewo+ICsJCWlmICh0aW1lX2FmdGVyKGpp
+ZmZpZXMsIHRpbWVvdXQpKSB7Cj4gIAkJCWRldl9lcnIoZHAtPmRldiwgIkFVWCBDSCBjb21tYW5k
+IHJlcGx5IGZhaWxlZCFcbiIpOwo+ICAJCQlyZXR1cm4gLUVUSU1FRE9VVDsKPiAgCQl9Cj4gLQkJ
+cmVnID0gcmVhZGwoZHAtPnJlZ19iYXNlICsgQU5BTE9HSVhfRFBfSU5UX1NUQSk7CgpTb3JyeSwg
+SSBkb24ndCBsaWtlIHlvdXIgcGF0Y2guCgpUaGUgcHJvYmxlbSBoYXBwZW5zIGJlY2F1c2Ugb2Yg
+Um9ja2NoaXAgcGxhdGZvcm0uClNvLCB5b3UgbmVlZCB0byBhZGQgd29ya2Fyb3VuZCBmb3Igb25s
+eSBSb2NrY2hpcCBwbGF0Zm9ybS4KCkp1c3QgYWRkIG5ldyBEVCBwcm9wZXJ0eSBhbmQgbmV3IHZh
+cmlhYmxlIGZvciB0aGUgdmFsdWUgZm9yIHdhaXQgdGltZS4KV2hlbiwgdGhlIHByb2JlIGlzIGNh
+bGxlZCwgbmV3IHdhaXQgdGltZSB2YWx1ZSBpcyByZWFkIGZyb20gUm9ja2NoaXAgRFQgZmlsZS4K
+VGhlbiwgdGhlIG5ldyB3YWl0IHRpbWUgdmFsdWUgY2FuIGJlIHdyaXR0ZW4gdG8gdGhlIG5ldyB2
+YXJpYWJsZS4KCiAgICBuZXcgRFQgcHJvcGVydHk6IHdhaXQtdGltZS1hdXgKICAgIG5ldyB2YXJp
+YWJsZTogd2FpdF90aW1lX2F1eAoKCklmICggKSAvLyBOZXcgRFQgCiAgICB3YWl0X3RpbWVfYXV4
+ID0gTmV3IERUOwplbHNlIAogICAgd2FpdF90aW1lX2F1eCA9IDEwOwoKCj4gIAkJdXNsZWVwX3Jh
+bmdlKDEwLCAxMSk7CgpJZiB0aGVyZSBpcyBOTyAgbmV3IHdhaXQgdGltZSB2YWx1ZSBmcm9tIERU
+IGZpbGUsIHRoZSBkZWZhdWx0IHZhbHVlICcxMCcgaXMKdXNlZCBmb3Igc2xlZXAuCgpCdXQsIGlm
+IHRoZXJlIGlzIG5ldyB3YWl0IHRpbWUgdmFsdWUgZnJvbSBEVCBmaWxlLCBuZXcgd2FpdCB0aW1l
+IHZhbHVlCmNhbiBiZSB1c2VkIGZvciBzbGVlcC4KCiAgICAgICAgICAgICAgICAgdXNsZWVwX3Jh
+bmdlKGRwLT53YWl0X3RpbWVfYXV4LCBkcC0+d2FpdF90aW1lX2F1eCArIDEpOwoKV2hhdCBJIHdh
+bnQgdG8gc2F5IGlzIHRoYXQgdGhlcmUgc2hvdWxkIGJlIE5PIGVmZmVjdCBvbiBFeHlub3MgcGxh
+dGZvcm0sCmJlY2F1c2Ugb2YgdGhlIGhhcmR3YXJlIGJ1ZyBvZiBSb2NrY2hpcCBwbGF0Zm9ybS4K
+CkJlc3QgcmVnYXJkcywKSmluZ29vIEhhbgoKPiAgCX0KPiAKPiAtLQo+IDEuOS4xCgoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
