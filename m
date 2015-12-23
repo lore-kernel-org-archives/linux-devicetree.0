@@ -1,94 +1,48 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5] extcon: add Maxim MAX3355 driver
-Date: Wed, 23 Dec 2015 22:56:06 +0300
-Message-ID: <567AFC56.8050806@cogentembedded.com>
-References: <5948633.my3nAG6hRz@wasted.cogentembedded.com>
- <CAGTfZH34rfMfjsAFgyPeNue74-5iCi6ZwrdN26_jwOXE6R=hwg@mail.gmail.com>
- <5676E214.2040009@cogentembedded.com> <5677662C.6060409@samsung.com>
- <5677DC21.3040509@cogentembedded.com> <5678A3BE.3040701@samsung.com>
- <567930C3.3090600@cogentembedded.com> <567A0456.7090400@samsung.com>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH v2 1/3] clk: bcm2835: Add bindings for the auxiliary
+ peripheral clock gates.
+Date: Wed, 23 Dec 2015 12:46:08 -0800
+Message-ID: <CAEG3pNCOO1F8+nwOQGSjUKxYCGbWW_Ripc6xUwDyg6ay66uL7w@mail.gmail.com>
+References: <1450222559-22461-1-git-send-email-eric@anholt.net> <20151219041935.GS14936@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <567A0456.7090400-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20151219041935.GS14936@rob-hp-laptop>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Eric Anholt <eric@anholt.net>, linux-clk <linux-clk@vger.kernel.org>, "Stephen Boyd <sboyd@codeaurora.org>, Emilio Lopez
+	<emilio@elopez.com.ar>, Hans de Goede <hdegoede@redhat.com>, linux-clk
+	<linux-clk@vger.kernel.org>, linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>, linux-rpi-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 12/23/2015 05:17 AM, Chanwoo Choi wrote:
-
->>>>>>> This patch depend on GPIOLIB configuration as following:
->>>>>>> I modified it with following diff and applied it.
->>>>>>>
->>>>>>> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
->>>>>>> index ba4db7d..3d89e60 100644
->>>>>>> --- a/drivers/extcon/Kconfig
->>>>>>> +++ b/drivers/extcon/Kconfig
->>>>>>> @@ -54,6 +54,7 @@ config EXTCON_MAX14577
->>>>>>>
->>>>>>>      config EXTCON_MAX3355
->>>>>>>             tristate "Maxim MAX3355 USB OTG EXTCON Support"
->>>>>>> +       depends on GPIOLIB || COMPILE_TEST
->>>>>>
->>>>>>       If it won't compile w/o gpiolib, what's the use of COMIPLE_TEST?
->>>>>>       And no, it shouldn't depend on gpiolib. It has empty stubs for the case of CONFIG_GPIOLIB=n. Obviously something is wrong with the GPIO headers, I'll look into it.
->>>>>
->>>>> Yes. When GPIOLIB is disabled, the build issue don't happen.
->>>>
->>>>      What? It surely does happen!
->>>
->>> hmm....
->>> Sure. you need to check the include/linux/gpio/consumer.h.
->>>
->>> Because of build error happen, you miss to include the "linux/gpio/consumer.h"
->>> header file in extcon-max3355.c. Please test it for enough time.
+On Fri, Dec 18, 2015 at 8:19 PM, Rob Herring <robh@kernel.org> wrote:
+> On Tue, Dec 15, 2015 at 03:35:57PM -0800, Eric Anholt wrote:
+>> These will be used for enabling UART1, SPI1, and SPI2.
 >>
->>     Yes, with this file #include'd, it build fine now.
+>> Signed-off-by: Eric Anholt <eric@anholt.net>
+>> ---
 >>
->>>>> because include/linux/gpio/consumer.h implement the dummy function
->>>>> for all gpio functions if CONFIG_GPIOLIB is disabled.
->>>>
->>>>      Linus W. advised to #include this header explicitly -- I'll try and post.
->>>
->>> Don't necessary. I already updated it including the "include/linux/gpio/consumer.h".
+>> v2: Make the binding cover both the IRQ and clock enable registers.
 >>
->>     I saw that, yes.
->>
->>>>> For correct operation of max3355, you should add the dependency
->>>>> to the extcon-max3355.c driver. This driver use the GPIO library
->>>>> certainly.
->>>>
->>>>      I disagree. The driver will just cease to load in this case. I don't see why we need such dependency. Only compilation time dependencies should be
->>>> specified, I think.
->>>
->>> This driver have to depend on GPIOLIB.
->>> Why are you disagreeing the COMPILE_TEST dependency? It is just compile test
->>> without anything.
->>
->>     I agree now. I still disagree about the gpiolib dependency though.
+>>  .../bindings/clock/brcm,bcm2835-aux-clock.txt      | 31 ++++++++++++++++++++++
+>>  include/dt-bindings/clock/bcm2835-aux.h            | 17 ++++++++++++
+>>  2 files changed, 48 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm2835-aux-clock.txt
+>>  create mode 100644 include/dt-bindings/clock/bcm2835-aux.h
 >
-> If gpiolib is disabled, extcon-max3355.c might not operate it correctly.
+> Acked-by: Rob Herring <robh@kernel.org>
 
-    It'll just fail the probe, that's all.
+Applied to clk-next.
 
-> Just this driver could be built without operation because gpiolib function
-> will not do the any behavior.
+Next time if you put the header into the clk driver patch then we can
+send the binding description through the DT tree and take the header
+and C file through the clk tree in one patch.
 
-    devm_gpiod_get() will just fail with -ENOSYS.
+Regards,
+Mike
 
-> I think that it is not too much problem. I should send the pull request within this week.
-> If you want to need more discussion of extcon-max3355.c,
-> I will not include it on pull request for v4.5 because there is issue.
-
-    No, please include it into the pull request.
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Michael Turquette
+CEO
+BayLibre - At the Heart of Embedded Linux
+http://baylibre.com/
