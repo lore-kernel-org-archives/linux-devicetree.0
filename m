@@ -1,48 +1,53 @@
-From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 1/6] dt-bindings: misc: add document for reboot-mode driver
-Date: Wed, 23 Dec 2015 00:37:22 -0800
-Message-ID: <CAAtXAHfkfqELHamMVK3-6UE+LtVwimA7oe=QEzfF2WyrHXxcaQ@mail.gmail.com>
-References: <1450774949-23901-1-git-send-email-andy.yan@rock-chips.com>
-	<1450775124-23966-1-git-send-email-andy.yan@rock-chips.com>
-	<20151223003217.GA18700@rob-hp-laptop>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: Fix suspend hang on Tegra124 Chromebooks
+Date: Wed, 23 Dec 2015 09:00:16 +0000
+Message-ID: <567A62A0.1000809@nvidia.com>
+References: <1449570409-30244-1-git-send-email-jonathanh@nvidia.com>
+ <20151222234203.GA28181@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151223003217.GA18700@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, khilm
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151222234203.GA28181@localhost>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rob,
 
-On Tue, Dec 22, 2015 at 4:32 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+On 22/12/15 23:42, Olof Johansson wrote:
+> On Tue, Dec 08, 2015 at 10:26:49AM +0000, Jon Hunter wrote:
+>> Enabling CPUFreq support for Tegra124 Chromebooks is causing the Tegra124
+>> to hang when resuming from suspend.
+>>
+>> When CPUFreq is enabled, the CPU clock is changed from the PLLX clock to
+>> the DFLL clock during kernel boot. When resuming from suspend the CPU
+>> clock is temporarily changed back to the PLLX clock before switching back
+>> to the DFLL. If the DFLL is operating at a much lower frequency than the
+>> PLLX when we enter suspend, and so the CPU voltage rail is at a voltage
+>> too low for the CPUs to operate at the PLLX frequency, then the device
+>> will hang.
+>>
+>> Please note that the PLLX is used in the resume sequence to switch the CPU
+>> clock from the very slow 32K clock to a faster clock during early resume
+>> to speed up the resume sequence before the DFLL is resumed.
+>>
+>> Ideally, we should fix this by setting the suspend frequency so that it
+>> matches the PLLX frequency, however, that would be a bigger change. For
+>> now simply disable CPUFreq support for Tegra124 Chromebooks to avoid the
+>> hang when resuming from suspend.
+>>
+>> Fixes: 9a0baee960a7 ("ARM: tegra: Enable CPUFreq support for Tegra124
+>> 		      Chromebooks")
+>>
+>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>
+>> Please note that this fix is required for v4.4
+> 
+> Since I saw this mentioned on IRC, I applied it directly to the arm-soc
+> fixes branch.
 
-> I would like to see the property names here standardized as much as
-> possible. I'm not sure if we can define the properties as a u32 or need
-> some flexibility here.
+Thanks!
 
-Quick question, semi on topic. I have a similar case (and a driver in
-the pipeline),
-however all I got is a (persistent over reboot) hardware register to
-which I can write whatever.
-On the other side I'd have u-boot pull out the value, but as it's up
-to u-boot to
-implement whatever it does with this info I'm kinda struggling with the idea
-of a standardized binding. In my case I'd like it to go into 'safe
-mode' or 'firmware update'.
-
-With loader = <0xace0ba5e>, <0xdeadbeef> ... and loader-names <> I
-could have u-boot read the values
-from fdt at boot. Then again I'm not describing hardware, but specific
-settings ...
-
-Would that be acceptable?
-
-Cheers,
-
-Moritz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers Jon
