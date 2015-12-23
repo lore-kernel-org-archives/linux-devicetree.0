@@ -1,61 +1,46 @@
-From: Rameshswar Prasad Sahu <rsahu@apm.com>
-Subject: [PATCH] dmaengine: xgene-dma: Fix double IRQ issue by setting IRQ_DISABLE_UNLAZY flag
-Date: Wed, 23 Dec 2015 18:28:15 +0530
-Message-ID: <1450875495-2229-1-git-send-email-rsahu@apm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, dan.j.williams@intel.com
-Cc: dmaengine@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, kgondkar@apm.com, Rameshwar Prasad Sahu <rsahu@apm.com>
+From: Rameshswar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH] mmc: host: arasan: sdhci-of-arasan: Remove no-hispd and no-cmd23 quirks for sdhci-arasan4.9a
+Date: Wed, 23 Dec 2015 18:59:51 +0530
+Message-ID: <1450877391-3029-1-git-send-email-rsahu@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, kgondkar-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rameshwar Prasad Sahu <rsahu@apm.com>
+From: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
 
-For interrupt controller that doesn't support irq_disable and hardware
-with level interrupt, an extra interrupt can be pending. This patch fixes
-the issue by setting IRQ_DISABLE_UNLAZY flag for the interrupt line.
+The Arason SD host controller supports set block count command (cmd23)
+and high speed mode. This patch re-enable both of these features that
+was disabled. For device that doesn't support high speed, it should
+configure its capability register accordingly instead disables it
+explicitly.
 
-Reference: http://git.kernel.org/tip/e9849777d0e27cdd2902805be51da73e7c79578c
-
-Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
 ---
- drivers/dma/xgene-dma.c |    4 ++++
- 1 files changed, 4 insertions(+), 0 deletions(-)
+ drivers/mmc/host/sdhci-of-arasan.c |    5 -----
+ 1 files changed, 0 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
-index 9dfa2b0..6363e84 100644
---- a/drivers/dma/xgene-dma.c
-+++ b/drivers/dma/xgene-dma.c
-@@ -29,6 +29,7 @@
- #include <linux/dmapool.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-+#include <linux/irq.h>
- #include <linux/module.h>
- #include <linux/of_device.h>
-
-@@ -1610,6 +1611,7 @@ static int xgene_dma_request_irqs(struct xgene_dma *pdma)
- 	/* Register DMA channel rx irq */
- 	for (i = 0; i < XGENE_DMA_MAX_CHANNEL; i++) {
- 		chan = &pdma->chan[i];
-+		irq_set_status_flags(chan->rx_irq, IRQ_DISABLE_UNLAZY);
- 		ret = devm_request_irq(chan->dev, chan->rx_irq,
- 				       xgene_dma_chan_ring_isr,
- 				       0, chan->name, chan);
-@@ -1620,6 +1622,7 @@ static int xgene_dma_request_irqs(struct xgene_dma *pdma)
-
- 			for (j = 0; j < i; j++) {
- 				chan = &pdma->chan[i];
-+				irq_clear_status_flags(chan->rx_irq, IRQ_DISABLE_UNLAZY);
- 				devm_free_irq(chan->dev, chan->rx_irq, chan);
- 			}
-
-@@ -1640,6 +1643,7 @@ static void xgene_dma_free_irqs(struct xgene_dma *pdma)
-
- 	for (i = 0; i < XGENE_DMA_MAX_CHANNEL; i++) {
- 		chan = &pdma->chan[i];
-+		irq_clear_status_flags(chan->rx_irq, IRQ_DISABLE_UNLAZY);
- 		devm_free_irq(chan->dev, chan->rx_irq, chan);
+diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+index 75379cb..5d9fdb3 100644
+--- a/drivers/mmc/host/sdhci-of-arasan.c
++++ b/drivers/mmc/host/sdhci-of-arasan.c
+@@ -172,11 +172,6 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+ 		goto clk_disable_all;
  	}
- }
+
+-	if (of_device_is_compatible(pdev->dev.of_node, "arasan,sdhci-4.9a")) {
+-		host->quirks |= SDHCI_QUIRK_NO_HISPD_BIT;
+-		host->quirks2 |= SDHCI_QUIRK2_HOST_NO_CMD23;
+-	}
+-
+ 	sdhci_get_of_property(pdev);
+ 	pltfm_host = sdhci_priv(host);
+ 	pltfm_host->priv = sdhci_arasan;
 --
 1.7.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
