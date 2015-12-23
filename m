@@ -1,88 +1,35 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [GIT PULL 5/9] ARM: EXYNOS: Drivers for v4.5
-Date: Wed, 23 Dec 2015 20:11:15 +0900
-Message-ID: <567A8153.7080009@samsung.com>
-References: <1449020386-20250-1-git-send-email-k.kozlowski@samsung.com>
- <1449020386-20250-6-git-send-email-k.kozlowski@samsung.com>
- <20151222045042.GF30172@localhost> <567A7C9F.3020907@samsung.com>
- <CA+Ln22Fk5UOgWzgOeEVb9sgPni028LMVDjgFhy3xQvnz4rwh_Q@mail.gmail.com>
- <567A7E68.2050504@samsung.com>
- <CA+Ln22HCvb1wt2o=2QcJ5FpLRBO1VB8EcRSxf4jE-19wWmp9MQ@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 13/19] ARM: dts: tegra: replace legacy *,wakeup property
+ with wakeup-source
+Date: Wed, 23 Dec 2015 11:24:38 +0000
+Message-ID: <CAPKp9uZ1hMegdL6wTUT0ROGd5CzyrnfKWsSRShXNdwRcyZ4Pnw@mail.gmail.com>
+References: <1445422216-29375-1-git-send-email-sudeep.holla@arm.com>
+	<1445422216-29375-14-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CA+Ln22HCvb1wt2o=2QcJ5FpLRBO1VB8EcRSxf4jE-19wWmp9MQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: k.kozlowski.k@gmail.com, Olof Johansson <olof@lixom.net>, devicetree <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1445422216-29375-14-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-W dniu 23.12.2015 o 20:06, Tomasz Figa pisze:
-> 2015-12-23 19:58 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.com>:
->> W dniu 23.12.2015 o 19:54, Tomasz Figa pisze:
->>> Hi,
->>>
->>> 2015-12-23 19:51 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.com>:
->>>> W dniu 22.12.2015 o 13:50, Olof Johansson pisze:
->>>>> On Wed, Dec 02, 2015 at 10:39:42AM +0900, Krzysztof Kozlowski wrote:
->>>>>> Hi Kukjin,
->>>>>>
->>>>>> Pinctrl for v4.5.
->>>>>>
->>>>>> Best regards,
->>>>>> Krzysztof
->>>>>>
->>>>>>
->>>>>> The following changes since commit 8005c49d9aea74d382f474ce11afbbc7d7130bec:
->>>>>>
->>>>>>   Linux 4.4-rc1 (2015-11-15 17:00:27 -0800)
->>>>>>
->>>>>> are available in the git repository at:
->>>>>>
->>>>>>   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-drivers-4.5
->>>>>>
->>>>>> for you to fetch changes up to 023e06dfa6882f500b9c86fd61f0b1913aa07f36:
->>>>>>
->>>>>>   pinctrl: exynos: add exynos5410 SoC specific data (2015-11-16 10:54:43 +0900)
->>>>>
->>>>> Hi,
->>>>>
->>>>> This should either go in through the pinctrl tree, or have an acked/reviewed-by
->>>>> one of the pinctrl maintainers.
->>>>
->>>> It was acked by Tomasz Figa - Samsung Pin Controller maintainer:
->>>> https://patchwork.ozlabs.org/patch/450340/
->>>
->>> Actually, is there any reason to send this through ARM SoC? Looks like
->>> this pull request contains only pinctrl changes which could normally
->>> go through pinctrl tree. Maybe Linus W. could simply pull it?
->>
->> Of course, I would be happy with it.
->>
->> But apparently I am the only one who continuously tracks all of these
->> patches for Exynos (also for subsystems different than arch/arm/mach*).
->> Yeah, I could ping everyone for every patch (not mine patch I mean)...
->> but it is easier just to grab it after acking and send it. I really
->> don't care about the method, just apply the damned patch ;)
-> 
-> My intention was by no means to belittle your effort, really thanks
-> for doing this. :)
-> 
-> I was just wondering if Linus couldn't pull this just as is, without
-> causing further commotion and unnecessarily introducing field for
-> potential conflicts between trees.
+On Wed, Oct 21, 2015 at 11:10 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+> Though the keyboard and other driver will continue to support the legacy
+> "gpio-key,wakeup", "nvidia,wakeup-source" boolean property to enable the
+> wakeup source, "wakeup-source" is the new standard binding.
+>
+> This patch replaces all the legacy wakeup properties with the unified
+> "wakeup-source" property in order to avoid any futher copy-paste
+> duplication.
+>
+> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-That makes sense. The pinctrl driver change is not a direct dependency
-for anything in this pull request so from my side:
+Ping, do you prefer taking via your tree or should I send to armsoc
+directly ?
 
-Acked-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-
-Linus,
-The patch can be cherry-picked from:
-https://git.kernel.org/cgit/linux/kernel/git/krzk/linux.git/log/?h=samsung-drivers-4.5
-
-(the only commit in tag: samsung-drivers-4.5)
-
-Best regards,
-Krzysztof
+--
+Regards,
+Sudeep
