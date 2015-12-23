@@ -1,72 +1,55 @@
-From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Subject: Re: [PATCH 1/5] iio:adc:at91_adc8xx: introduce new atmel adc driver
-Date: Wed, 23 Dec 2015 17:21:25 +0000
-Message-ID: <E2C27D1A-1035-4330-AEF3-C72B87C27FEF@jic23.retrosnub.co.uk>
-References: <1450689852-22763-1-git-send-email-ludovic.desroches@atmel.com> <1450689852-22763-2-git-send-email-ludovic.desroches@atmel.com> <56799798.203@kernel.org> <20151223102700.GC2789@odux.rfo.atmel.com> <20151223104833.GE2789@odux.rfo.atmel.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: am335x-evm: add shared transport device
+ tree bindings
+Date: Wed, 23 Dec 2015 10:19:46 -0800
+Message-ID: <20151223181945.GN2793@atomide.com>
+References: <1450870253-8694-1-git-send-email-eyalr@ti.com>
+ <1450870253-8694-2-git-send-email-eyalr@ti.com>
+ <8665E2433BC68541A24DFFCA87B70F5B23759A6B@DFRE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151223104833.GE2789-FuRPzXQv2LUWBfJKYY8PcdBPR1lH4CV8@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <8665E2433BC68541A24DFFCA87B70F5B23759A6B-1tpBd5JUCm6IQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+* Reizer, Eyal <eyalr-l0cyMroinI0@public.gmane.org> [151223 03:40]:
+> The shared Shared Transport (ST) software enables BT and GPS protocols
+> or software components to interact with their respective cores over
+> single physical port.
+> Add the uart and enable pin device tree bindings
+...
+> --- a/arch/arm/boot/dts/am335x-evm.dts
+> +++ b/arch/arm/boot/dts/am335x-evm.dts
+> @@ -160,6 +160,18 @@
+>  			system-clock-frequency = <12000000>;
+>  		};
+>  	};
+> +
+> +	kim {
+> +		compatible = "kim";
+> +		nshutdown-gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
+> +		serial-device = <&uart1>;
+> +		flow_cntrl = <1>;
+> +		baud_rate = <3000000>;
+> +	};
+> +
+> +	btwilink {
+> +		compatible = "btwilink";
+> +	};
+>  };
 
+I think this "kim" binding got dropped.. We need some sane binding and
+solution for it.
 
-On 23 December 2015 10:48:33 GMT+00:00, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
->On Wed, Dec 23, 2015 at 11:27:00AM +0100, Ludovic Desroches wrote:
->> On Tue, Dec 22, 2015 at 06:34:00PM +0000, Jonathan Cameron wrote:
->> > On 21/12/15 09:24, Ludovic Desroches wrote:
->> > > This driver supports the new version of the Atmel ADC device
->introduced
->> > > with the SAMA5D2 SoC family.
->> > > 
->
->[...]
->
->> > > +static irqreturn_t at91_adc_interrupt(int irq, void *private)
->> > > +{
->> > > +	struct iio_dev *indio = private;
->> > > +	struct at91_adc_state *st = iio_priv(indio);
->> > > +	u32 status = at91_adc_readl(st, ADC_ISR);
->> > > +
->> > > +	status &= at91_adc_readl(st, ADC_IMR);
->> > > +	if (status & 0xFFF) {
->> > > +		st->last_value = at91_adc_readl(st, st->chan->address);
->> > If this is a polled read - is there any reason to read this value
->here
->> > rather than outside the interrupt?
->> 
->> No it can be done outside the interrupt. I have taken some parts from
->the
->> previous driver but it was reading a register used by all the
->channels
->> when it has been designed. So yes there is probably no more reason to
->> read it into the interrupt.
->> 
->
->Thinking about it. Is it really useful to move reading outside the
->interrupt?
-It avoids needing to know the channel in here, hence simplifying the code a bit.
->
->By the way this is not a polled read.
-I meant that it is an individually requested conversion rather than a free running
- sampling system where the value read might change before it is read out.
->
->> > > +		st->done = true;
->> > > +		wake_up_interruptible(&st->wq_data_available);
->> > > +	}
->> > > +
->> > > +	return IRQ_HANDLED;
->> > > +}
->
->Ludovic
->--
->To unsubscribe from this list: send the line "unsubscribe linux-iio" in
->the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
 
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+Tony
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
