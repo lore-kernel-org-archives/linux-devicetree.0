@@ -1,68 +1,270 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/6] regulator: lp872x: Remove warning about invalid DVS
- GPIO
-Date: Wed, 23 Dec 2015 11:58:38 +0000
-Message-ID: <20151223115838.GT16023@sirena.org.uk>
-References: <1450868319-20513-1-git-send-email-contact@paulk.fr>
- <1450868319-20513-4-git-send-email-contact@paulk.fr>
- <20151223114126.GR16023@sirena.org.uk>
- <1450871420.2648.6.camel@collins>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="nDmTXYS4kVhtHHfR"
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH] arm64: Add DT support for Juno r2 board
+Date: Wed, 23 Dec 2015 12:10:11 +0000
+Message-ID: <1450872611-15326-1-git-send-email-sudeep.holla@arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1450871420.2648.6.camel@collins>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arm-hC8oa7XEHlfYtjvyW6yDsg@public.gmane.org
+Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Juno r2 is identical to Juno r1 with Cortex A57 cores replaced by
+Cortex A72 cores.
 
---nDmTXYS4kVhtHHfR
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/arm-boards |   1 +
+ Documentation/devicetree/bindings/arm/cpus.txt   |   1 +
+ arch/arm64/boot/dts/arm/Makefile                 |   2 +-
+ arch/arm64/boot/dts/arm/juno-r2.dts              | 200 +++++++++++++++++++++++
+ 4 files changed, 203 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/arm/juno-r2.dts
 
-On Wed, Dec 23, 2015 at 12:50:20PM +0100, Paul Kocialkowski wrote:
-> Le mercredi 23 d=E9cembre 2015 =E0 11:41 +0000, Mark Brown a =E9crit :
+diff --git a/Documentation/devicetree/bindings/arm/arm-boards b/Documentation/devicetree/bindings/arm/arm-boards
+index 1a709970e7f7..70601a58c433 100644
+--- a/Documentation/devicetree/bindings/arm/arm-boards
++++ b/Documentation/devicetree/bindings/arm/arm-boards
+@@ -180,6 +180,7 @@ described under the RS1 memory mapping.
+ Required properties (in root node):
+ 	compatible = "arm,juno";	/* For Juno r0 board */
+ 	compatible = "arm,juno-r1";	/* For Juno r1 board */
++	compatible = "arm,juno-r2";	/* For Juno r2 board */
+ 
+ Required nodes:
+ The description for the board must include:
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index 3a07a87fef20..58e240d75169 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -157,6 +157,7 @@ nodes to be present and contain the properties described below.
+ 			    "arm,cortex-a17"
+ 			    "arm,cortex-a53"
+ 			    "arm,cortex-a57"
++			    "arm,cortex-a72"
+ 			    "arm,cortex-m0"
+ 			    "arm,cortex-m0+"
+ 			    "arm,cortex-m1"
+diff --git a/arch/arm64/boot/dts/arm/Makefile b/arch/arm64/boot/dts/arm/Makefile
+index bb3c07209676..c0bf56b9ce3d 100644
+--- a/arch/arm64/boot/dts/arm/Makefile
++++ b/arch/arm64/boot/dts/arm/Makefile
+@@ -1,5 +1,5 @@
+ dtb-$(CONFIG_ARCH_VEXPRESS) += foundation-v8.dtb
+-dtb-$(CONFIG_ARCH_VEXPRESS) += juno.dtb juno-r1.dtb
++dtb-$(CONFIG_ARCH_VEXPRESS) += juno.dtb juno-r1.dtb juno-r2.dtb
+ dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb
+ dtb-$(CONFIG_ARCH_VEXPRESS) += vexpress-v2f-1xv7-ca53x2.dtb
+ 
+diff --git a/arch/arm64/boot/dts/arm/juno-r2.dts b/arch/arm64/boot/dts/arm/juno-r2.dts
+new file mode 100644
+index 000000000000..7ca939032373
+--- /dev/null
++++ b/arch/arm64/boot/dts/arm/juno-r2.dts
+@@ -0,0 +1,200 @@
++/*
++ * ARM Ltd. Juno Platform
++ *
++ * Copyright (c) 2015 ARM Ltd.
++ *
++ * This file is licensed under a dual GPLv2 or BSD license.
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	model = "ARM Juno development board (r2)";
++	compatible = "arm,juno-r2", "arm,juno", "arm,vexpress";
++	interrupt-parent = <&gic>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	aliases {
++		serial0 = &soc_uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		cpu-map {
++			cluster0 {
++				core0 {
++					cpu = <&A72_0>;
++				};
++				core1 {
++					cpu = <&A72_1>;
++				};
++			};
++
++			cluster1 {
++				core0 {
++					cpu = <&A53_0>;
++				};
++				core1 {
++					cpu = <&A53_1>;
++				};
++				core2 {
++					cpu = <&A53_2>;
++				};
++				core3 {
++					cpu = <&A53_3>;
++				};
++			};
++		};
++
++		idle-states {
++			entry-method = "arm,psci";
++
++			CPU_SLEEP_0: cpu-sleep-0 {
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x0010000>;
++				local-timer-stop;
++				entry-latency-us = <300>;
++				exit-latency-us = <1200>;
++				min-residency-us = <2000>;
++			};
++
++			CLUSTER_SLEEP_0: cluster-sleep-0 {
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x1010000>;
++				local-timer-stop;
++				entry-latency-us = <300>;
++				exit-latency-us = <1200>;
++				min-residency-us = <2500>;
++			};
++		};
++
++		A72_0: cpu@0 {
++			compatible = "arm,cortex-a72","arm,armv8";
++			reg = <0x0 0x0>;
++			device_type = "cpu";
++			enable-method = "psci";
++			next-level-cache = <&A72_L2>;
++			clocks = <&scpi_dvfs 0>;
++			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
++		};
++
++		A72_1: cpu@1 {
++			compatible = "arm,cortex-a72","arm,armv8";
++			reg = <0x0 0x1>;
++			device_type = "cpu";
++			enable-method = "psci";
++			next-level-cache = <&A72_L2>;
++			clocks = <&scpi_dvfs 0>;
++			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
++		};
++
++		A53_0: cpu@100 {
++			compatible = "arm,cortex-a53","arm,armv8";
++			reg = <0x0 0x100>;
++			device_type = "cpu";
++			enable-method = "psci";
++			next-level-cache = <&A53_L2>;
++			clocks = <&scpi_dvfs 1>;
++			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
++		};
++
++		A53_1: cpu@101 {
++			compatible = "arm,cortex-a53","arm,armv8";
++			reg = <0x0 0x101>;
++			device_type = "cpu";
++			enable-method = "psci";
++			next-level-cache = <&A53_L2>;
++			clocks = <&scpi_dvfs 1>;
++			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
++		};
++
++		A53_2: cpu@102 {
++			compatible = "arm,cortex-a53","arm,armv8";
++			reg = <0x0 0x102>;
++			device_type = "cpu";
++			enable-method = "psci";
++			next-level-cache = <&A53_L2>;
++			clocks = <&scpi_dvfs 1>;
++			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
++		};
++
++		A53_3: cpu@103 {
++			compatible = "arm,cortex-a53","arm,armv8";
++			reg = <0x0 0x103>;
++			device_type = "cpu";
++			enable-method = "psci";
++			next-level-cache = <&A53_L2>;
++			clocks = <&scpi_dvfs 1>;
++			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
++		};
++
++		A72_L2: l2-cache0 {
++			compatible = "cache";
++		};
++
++		A53_L2: l2-cache1 {
++			compatible = "cache";
++		};
++	};
++
++	pmu_a72 {
++		compatible = "arm,cortex-a72-pmu";
++		interrupts = <GIC_SPI 02 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 06 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&A72_0>,
++				     <&A72_1>;
++	};
++
++	pmu_a53 {
++		compatible = "arm,cortex-a53-pmu";
++		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&A53_0>,
++				     <&A53_1>,
++				     <&A53_2>,
++				     <&A53_3>;
++	};
++
++	#include "juno-base.dtsi"
++
++	pcie-controller@40000000 {
++		compatible = "arm,juno-r1-pcie", "plda,xpressrich3-axi", "pci-host-ecam-generic";
++		device_type = "pci";
++		reg = <0 0x40000000 0 0x10000000>;	/* ECAM config space */
++		bus-range = <0 255>;
++		linux,pci-domain = <0>;
++		#address-cells = <3>;
++		#size-cells = <2>;
++		dma-coherent;
++		ranges = <0x01000000 0x00 0x5f800000 0x00 0x5f800000 0x0 0x00800000>,
++			 <0x02000000 0x00 0x50000000 0x00 0x50000000 0x0 0x08000000>,
++			 <0x42000000 0x40 0x00000000 0x40 0x00000000 0x1 0x00000000>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0 0 7>;
++		interrupt-map = <0 0 0 1 &gic 0 0 0 136 4>,
++				<0 0 0 2 &gic 0 0 0 137 4>,
++				<0 0 0 3 &gic 0 0 0 138 4>,
++				<0 0 0 4 &gic 0 0 0 139 4>;
++		msi-parent = <&v2m_0>;
++	};
++};
++
++&memtimer {
++	status = "okay";
++};
+-- 
+1.9.1
 
-> > I would expect the driver at least needs to know how the pins or
-> > strapped, or otherwise have configuration for ignoring the input on the
-> > pins.  This just deletes the warnings, it doesn't have any handling for
-> > this case that I can see.
-
-> When the DVS GPIO is invalid, lp872x_init_dvs jumps to the
-> set_default_dvs_mode label, which instructs the chip not to use the DVS
-> pin at all and do it all in software instead (by clearing the
-> LP8720_EXT_DVS_M bit in the LP872X_GENERAL_CFG register).
-
-> That is reflected later in the code, when setting the bucks (the DVS pin
-> only applies to the bucks) by checking for the LP8720_EXT_DVS_M bit on
-> the LP872X_GENERAL_CFG register (in lp872x_select_buck_vout_addr) to
-> decide whether to use software or hardware DVS selection.
-
-> As far as I understood, everything goes well when the GPIO is invalid.
-
-So please put this analysis in the changelog so that the changelog
-accurately reflects what the change is doing.
-
---nDmTXYS4kVhtHHfR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWeoxuAAoJECTWi3JdVIfQi/YH/jcqPJlsU9m1FUCaGWFuowH9
-0nJMQ7roEWkDbOdDLmyWAsZWGZ5smERjZe5W+EPrL6uZFolnb1m/3JXnLrs7U1Fg
-NDJdRzXcsdtrNvbRcOftOnEU9Q1lepQrLsukEAd7tUQw0lvCIMHG1KVdxdZiKTUh
-2iM7sDymy0c4cG/z19fGV4f9iU/Zs2TO3G5Nx9owQVANw8j8/VLVoXd8r9o2Pj7M
-nm3tsRkbduD6yxCXtpqwjpwLjL0ImHGlJ5AUQMM5Fd8QJH7J29O71A0mNU0xqTGN
-RYEcqPIQatbYLl5svL4nVKjoDl3ntWycvQ1scOI/5TD7vjlmIPe2ya7yyd7JiQE=
-=kuyp
------END PGP SIGNATURE-----
-
---nDmTXYS4kVhtHHfR--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
