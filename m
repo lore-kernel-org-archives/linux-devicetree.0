@@ -1,69 +1,75 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [GIT PULL 7/9] ARM: EXYNOS: dts: DeviceTree for v4.5
-Date: Wed, 23 Dec 2015 20:04:43 +0900
-Message-ID: <567A7FCB.1040304@samsung.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [GIT PULL 5/9] ARM: EXYNOS: Drivers for v4.5
+Date: Wed, 23 Dec 2015 20:06:41 +0900
+Message-ID: <CA+Ln22HCvb1wt2o=2QcJ5FpLRBO1VB8EcRSxf4jE-19wWmp9MQ@mail.gmail.com>
 References: <1449020386-20250-1-git-send-email-k.kozlowski@samsung.com>
- <1449020386-20250-8-git-send-email-k.kozlowski@samsung.com>
- <20151222045221.GH30172@localhost>
+	<1449020386-20250-6-git-send-email-k.kozlowski@samsung.com>
+	<20151222045042.GF30172@localhost>
+	<567A7C9F.3020907@samsung.com>
+	<CA+Ln22Fk5UOgWzgOeEVb9sgPni028LMVDjgFhy3xQvnz4rwh_Q@mail.gmail.com>
+	<567A7E68.2050504@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20151222045221.GH30172@localhost>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: k.kozlowski.k@gmail.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, arm@kernel.org, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, Tomasz Figa <tomasz.figa@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <567A7E68.2050504@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski.k@gmail.com>, Olof Johansson <olof@lixom.net>, devicetree <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-W dniu 22.12.2015 o 13:52, Olof Johansson pisze:
-> On Wed, Dec 02, 2015 at 10:39:44AM +0900, Krzysztof Kozlowski wrote:
->> Hi Kukjin,
+2015-12-23 19:58 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.com>:
+> W dniu 23.12.2015 o 19:54, Tomasz Figa pisze:
+>> Hi,
 >>
->> A lot of stuff here, mostly cleanups. Description in tag.
+>> 2015-12-23 19:51 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.com>:
+>>> W dniu 22.12.2015 o 13:50, Olof Johansson pisze:
+>>>> On Wed, Dec 02, 2015 at 10:39:42AM +0900, Krzysztof Kozlowski wrote:
+>>>>> Hi Kukjin,
+>>>>>
+>>>>> Pinctrl for v4.5.
+>>>>>
+>>>>> Best regards,
+>>>>> Krzysztof
+>>>>>
+>>>>>
+>>>>> The following changes since commit 8005c49d9aea74d382f474ce11afbbc7d7130bec:
+>>>>>
+>>>>>   Linux 4.4-rc1 (2015-11-15 17:00:27 -0800)
+>>>>>
+>>>>> are available in the git repository at:
+>>>>>
+>>>>>   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-drivers-4.5
+>>>>>
+>>>>> for you to fetch changes up to 023e06dfa6882f500b9c86fd61f0b1913aa07f36:
+>>>>>
+>>>>>   pinctrl: exynos: add exynos5410 SoC specific data (2015-11-16 10:54:43 +0900)
+>>>>
+>>>> Hi,
+>>>>
+>>>> This should either go in through the pinctrl tree, or have an acked/reviewed-by
+>>>> one of the pinctrl maintainers.
+>>>
+>>> It was acked by Tomasz Figa - Samsung Pin Controller maintainer:
+>>> https://patchwork.ozlabs.org/patch/450340/
 >>
->> Best regards,
->> Krzysztof
->>
->>
->> The following changes since commit 8005c49d9aea74d382f474ce11afbbc7d7130bec:
->>
->>   Linux 4.4-rc1 (2015-11-15 17:00:27 -0800)
->>
->> are available in the git repository at:
->>
->>   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-dt-4.5
->>
->> for you to fetch changes up to 2cf107f1033e0343d45b59d06f16487c8362702f:
->>
->>   ARM: dts: Unify G2D device node with other devices on exynos4 (2015-11-30 17:00:43 +0900)
->>
->> ----------------------------------------------------------------
->> Samsung DeviceTree updates and improvements for 4.5:
->> 1. Pinctrl for Exynos5410.
->> 2. eMMC/SDIO minor fixes usage of bindings on Snow and Peach
->>    Chromebooks.
->> 3. Remove FIMD from Odroid XU3-family because on XU3 it cannot be used
->>    yet and on XU3-Lite and XU4 it is not supported.
->> 4. Remove deprecated since June 2013 samsung,exynos5-hdmi.
->> 5. Add support for Pseudo Random Generator on Exynos4 (Trats2 for now).
->>    This depends on new SSS clock.
->> 6. Add rotator nodes for Exynos4 and Exynos5.
->> 7. Switch DWC3_1 on Odroid XU3 and XU3-Lite to peripheral mode because
->>    now it cannot be used as OTG.
->> 8. Cleanup the G2D usage on Exynos4 and add it to a proper domain
->>    in case of Exynos4210.
->> 9. Put MDMA1 in proper domain on Exynos4210 as well.
->> 10. Minor cleanups.
-> 
-> Given the request to get acks for the pinctrl changes, can you respin this
-> branch without those pieces so we can merge in the rest of it?
-> 
-The pinctrl changes here are only DTS changes. I reviewed the pinctrl
-DTSI. Why do you want an additional ack for them?
+>> Actually, is there any reason to send this through ARM SoC? Looks like
+>> this pull request contains only pinctrl changes which could normally
+>> go through pinctrl tree. Maybe Linus W. could simply pull it?
+>
+> Of course, I would be happy with it.
+>
+> But apparently I am the only one who continuously tracks all of these
+> patches for Exynos (also for subsystems different than arch/arm/mach*).
+> Yeah, I could ping everyone for every patch (not mine patch I mean)...
+> but it is easier just to grab it after acking and send it. I really
+> don't care about the method, just apply the damned patch ;)
 
-However this contains the previous clock dependency (the SSS clock acked
-by Stephen Boyd). I responded about this already so let's don't
-duplicate the discussion.
+My intention was by no means to belittle your effort, really thanks
+for doing this. :)
+
+I was just wondering if Linus couldn't pull this just as is, without
+causing further commotion and unnecessarily introducing field for
+potential conflicts between trees.
 
 Best regards,
-Krzysztof
+Tomasz
