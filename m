@@ -1,55 +1,96 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/5] iio:adc:at91_adc8xx: introduce new atmel adc driver
-Date: Tue, 22 Dec 2015 18:51:18 -0600
-Message-ID: <20151223005118.GA29457@rob-hp-laptop>
-References: <1450689852-22763-1-git-send-email-ludovic.desroches@atmel.com>
- <1450689852-22763-2-git-send-email-ludovic.desroches@atmel.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v5] extcon: add Maxim MAX3355 driver
+Date: Wed, 23 Dec 2015 11:17:58 +0900
+Message-ID: <567A0456.7090400@samsung.com>
+References: <5948633.my3nAG6hRz@wasted.cogentembedded.com>
+ <CAGTfZH34rfMfjsAFgyPeNue74-5iCi6ZwrdN26_jwOXE6R=hwg@mail.gmail.com>
+ <5676E214.2040009@cogentembedded.com> <5677662C.6060409@samsung.com>
+ <5677DC21.3040509@cogentembedded.com> <5678A3BE.3040701@samsung.com>
+ <567930C3.3090600@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1450689852-22763-2-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-reply-to: <567930C3.3090600@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 21, 2015 at 10:24:08AM +0100, Ludovic Desroches wrote:
-> This driver supports the new version of the Atmel ADC device introduced
-> with the SAMA5D2 SoC family.
-> 
-> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/iio/adc/at91_adc8xx.txt    |  27 ++
->  drivers/iio/adc/Kconfig                            |  11 +
->  drivers/iio/adc/Makefile                           |   1 +
->  drivers/iio/adc/at91_adc8xx.c                      | 417 +++++++++++++++++++++
->  4 files changed, 456 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/at91_adc8xx.txt
->  create mode 100644 drivers/iio/adc/at91_adc8xx.c
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/at91_adc8xx.txt b/Documentation/devicetree/bindings/iio/adc/at91_adc8xx.txt
-> new file mode 100644
-> index 0000000..64ad6a5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/at91_adc8xx.txt
-> @@ -0,0 +1,27 @@
-> +* AT91 SAMA5D2 Analog to Digital Converter (ADC)
-> +
-> +Required properties:
-> +  - compatible: Should be "atmel,sama5d2-adc".
-> +  - reg: Should contain ADC registers location and length.
-> +  - interrupts: Should contain the IRQ line for the ADC.
-> +  - clocks: phandles to clocks.
-> +  - clock-names: tuple listing clock names.
-> +      Required elements: "adc_clk", "adc_op_clk". "adc_clk" is the peripheral
-> +      clock, "adc_clk" is the sampling clock.
-> +  - vref-supply: Supply used as reference for conversions.
-> +
-> +Optional properties:
-> +  - vddana-supply: Supply for the adc device.
+On 2015=EB=85=84 12=EC=9B=94 22=EC=9D=BC 20:15, Sergei Shtylyov wrote:
+> Hello.
+>=20
+> On 12/22/2015 4:13 AM, Chanwoo Choi wrote:
+>=20
+>>>>>> This patch depend on GPIOLIB configuration as following:
+>>>>>> I modified it with following diff and applied it.
+>>>>>>
+>>>>>> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
+>>>>>> index ba4db7d..3d89e60 100644
+>>>>>> --- a/drivers/extcon/Kconfig
+>>>>>> +++ b/drivers/extcon/Kconfig
+>>>>>> @@ -54,6 +54,7 @@ config EXTCON_MAX14577
+>>>>>>
+>>>>>>     config EXTCON_MAX3355
+>>>>>>            tristate "Maxim MAX3355 USB OTG EXTCON Support"
+>>>>>> +       depends on GPIOLIB || COMPILE_TEST
+>>>>>
+>>>>>      If it won't compile w/o gpiolib, what's the use of COMIPLE_T=
+EST?
+>>>>>      And no, it shouldn't depend on gpiolib. It has empty stubs f=
+or the case of CONFIG_GPIOLIB=3Dn. Obviously something is wrong with th=
+e GPIO headers, I'll look into it.
+>>>>
+>>>> Yes. When GPIOLIB is disabled, the build issue don't happen.
+>>>
+>>>     What? It surely does happen!
+>>
+>> hmm....
+>> Sure. you need to check the include/linux/gpio/consumer.h.
+>>
+>> Because of build error happen, you miss to include the "linux/gpio/c=
+onsumer.h"
+>> header file in extcon-max3355.c. Please test it for enough time.
+>=20
+>    Yes, with this file #include'd, it build fine now.
+>=20
+>>>> because include/linux/gpio/consumer.h implement the dummy function
+>>>> for all gpio functions if CONFIG_GPIOLIB is disabled.
+>>>
+>>>     Linus W. advised to #include this header explicitly -- I'll try=
+ and post.
+>>
+>> Don't necessary. I already updated it including the "include/linux/g=
+pio/consumer.h".
+>=20
+>    I saw that, yes.
+>=20
+>>>> For correct operation of max3355, you should add the dependency
+>>>> to the extcon-max3355.c driver. This driver use the GPIO library
+>>>> certainly.
+>>>
+>>>     I disagree. The driver will just cease to load in this case. I =
+don't see why we need such dependency. Only compilation time dependenci=
+es should be
+>>> specified, I think.
+>>
+>> This driver have to depend on GPIOLIB.
+>> Why are you disagreeing the COMPILE_TEST dependency? It is just comp=
+ile test
+>> without anything.
+>=20
+>    I agree now. I still disagree about the gpiolib dependency though.
 
-What makes a supply optional? If chip dependent, then then you need a 
-more specific compatible string.
+If gpiolib is disabled, extcon-max3355.c might not operate it correctly=
+=2E
+Just this driver could be built without operation because gpiolib funct=
+ion
+will not do the any behavior.
 
-Rob
+I think that it is not too much problem. I should send the pull request=
+ within this week.
+If you want to need more discussion of extcon-max3355.c,
+I will not include it on pull request for v4.5 because there is issue.
+
+
+
