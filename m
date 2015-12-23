@@ -1,43 +1,52 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v7 2/4] drm: Add support for ARM's HDLCD controller.
-Date: Wed, 23 Dec 2015 10:06:21 +0000
-Message-ID: <20151223100621.GX960@e106497-lin.cambridge.arm.com>
-References: <1450806109-470-1-git-send-email-Liviu.Dudau@arm.com>
- <1450806109-470-3-git-send-email-Liviu.Dudau@arm.com>
- <CAPj87rPK4gaFw79poT+Gwfg3R39svdvBTP=GD-E4Lvbm4ysSAg@mail.gmail.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/3] wlcore/wl12xx: spi: fix NULL pointer dereference
+ (Oops)
+Date: Wed, 23 Dec 2015 12:08:07 +0200
+Message-ID: <567A7287.3010205@ti.com>
+References: <1450859744-9948-1-git-send-email-uri.mashiach@compulab.co.il>
+ <1450859744-9948-2-git-send-email-uri.mashiach@compulab.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <CAPj87rPK4gaFw79poT+Gwfg3R39svdvBTP=GD-E4Lvbm4ysSAg@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Stone <daniel@fooishbar.org>
-Cc: Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Robin Murphy <robin.murphy@arm.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1450859744-9948-2-git-send-email-uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBEZWMgMjMsIDIwMTUgYXQgMTA6MDM6MDBBTSArMDAwMCwgRGFuaWVsIFN0b25lIHdy
-b3RlOgo+IEhpLAo+IAo+IE9uIDIyIERlY2VtYmVyIDIwMTUgYXQgMTc6NDEsIExpdml1IER1ZGF1
-IDxMaXZpdS5EdWRhdUBhcm0uY29tPiB3cm90ZToKPiA+IFRoZSBIRExDRCBjb250cm9sbGVyIGlz
-IGEgZGlzcGxheSBjb250cm9sbGVyIHRoYXQgc3VwcG9ydHMgcmVzb2x1dGlvbnMKPiA+IHVwIHRv
-IDQwOTZ4NDA5NiBwaXhlbHMuIEl0IGlzIHByZXNlbnQgb24gdmFyaW91cyBkZXZlbG9wbWVudCBi
-b2FyZHMKPiA+IHByb2R1Y2VkIGJ5IEFSTSBMdGQgYW5kIGVtdWxhdGVkIGJ5IHRoZSBsYXRlc3Qg
-RmFzdCBNb2RlbHMgZnJvbSB0aGUKPiA+IGNvbXBhbnkuCj4gCj4gSSBkaWRuJ3QgZ2V0IHRvIHRh
-a2UgYXMgY2xvc2UgYSBsb29rIGFzIGxhc3QgdGltZSwgYnV0IEkgb25seSBoYWQKPiBmYWlybHkg
-bWlub3IgcXVpYmJsZXMgdGhlbiwgYW5kIG5vdGhpbmcganVtcGVkIG91dCBhdCBtZSB0aGlzIHRp
-bWUKPiBlaXRoZXIuCj4gCj4gUmV2aWV3ZWQtYnk6IERhbmllbCBTdG9uZSA8ZGFuaWVsc0Bjb2xs
-YWJvcmEuY29tPgoKQ2hlZXJzIGFuZCBNZXJyeSBIb2xpZGF5cyEKTGl2aXUKCj4gCj4gQ2hlZXJz
-LAo+IERhbmllbAo+IAoKLS0gCj09PT09PT09PT09PT09PT09PT09CnwgSSB3b3VsZCBsaWtlIHRv
-IHwKfCBmaXggdGhlIHdvcmxkLCAgfAp8IGJ1dCB0aGV5J3JlIG5vdCB8CnwgZ2l2aW5nIG1lIHRo
-ZSAgIHwKIFwgc291cmNlIGNvZGUhICAvCiAgLS0tLS0tLS0tLS0tLS0tCiAgICDCr1xfKOODhClf
-L8KvCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 12/23/2015 10:35 AM, Uri Mashiach wrote:
+> The power function uses a consumer regulator access to update the WiFi
+> enable GPIO value.
+> 
+> Fix the below Oops when trying to modprobe wlcore_spi.
+> The oops occurs because the wl1271_power_{off,on}()
+> function doesn't check the power() function pointer.
+> 
+> [   23.401447] Unable to handle kernel NULL pointer dereference at
+> virtual address 00000000
+> [   23.409954] pgd = c0004000
+> [   23.412922] [00000000] *pgd=00000000
+> [   23.416693] Internal error: Oops: 80000007 [#1] SMP ARM
+> [   23.422168] Modules linked in: wl12xx wlcore mac80211 cfg80211
+> musb_dsps musb_hdrc usbcore usb_common snd_soc_simple_card evdev joydev
+> omap_rng wlcore_spi snd_soc_tlv320aic23_i2c rng_core snd_soc_tlv320aic23
+> c_can_platform c_can can_dev snd_soc_davinci_mcasp snd_soc_edma
+> snd_soc_omap omap_wdt musb_am335x cpufreq_dt thermal_sys hwmon
+> [   23.453253] CPU: 0 PID: 36 Comm: kworker/0:2 Not tainted
+> 4.2.0-00002-g951efee-dirty #233
+> [   23.461720] Hardware name: Generic AM33XX (Flattened Device Tree)
+> [   23.468123] Workqueue: events request_firmware_work_func
+> [   23.473690] task: de32efc0 ti: de4ee000 task.ti: de4ee000
+> [   23.479341] PC is at 0x0
+> [   23.482112] LR is at wl12xx_set_power_on+0x28/0x124 [wlcore]
+
+Why can't you just add proper check in wl1271_power_on/wl1271_power_off() instead?
+
+-- 
+regards,
+-grygorii
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
