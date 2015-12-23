@@ -1,66 +1,54 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [GIT PULL 5/9] ARM: EXYNOS: Drivers for v4.5
-Date: Wed, 23 Dec 2015 19:58:48 +0900
-Message-ID: <567A7E68.2050504@samsung.com>
-References: <1449020386-20250-1-git-send-email-k.kozlowski@samsung.com>
- <1449020386-20250-6-git-send-email-k.kozlowski@samsung.com>
- <20151222045042.GF30172@localhost> <567A7C9F.3020907@samsung.com>
- <CA+Ln22Fk5UOgWzgOeEVb9sgPni028LMVDjgFhy3xQvnz4rwh_Q@mail.gmail.com>
+From: Paul Kocialkowski <contact@paulk.fr>
+Subject: [PATCH 2/6] regulator: lp872x: Get rid of duplicate reference to DVS
+ GPIO
+Date: Wed, 23 Dec 2015 11:58:35 +0100
+Message-ID: <1450868319-20513-3-git-send-email-contact@paulk.fr>
+References: <1450868319-20513-1-git-send-email-contact@paulk.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+Ln22Fk5UOgWzgOeEVb9sgPni028LMVDjgFhy3xQvnz4rwh_Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: k.kozlowski.k@gmail.com, Olof Johansson <olof@lixom.net>, devicetree <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1450868319-20513-1-git-send-email-contact@paulk.fr>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Milo Kim <milo.kim@ti.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Paul Kocialkowski <contact@paulk.fr>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-W dniu 23.12.2015 o 19:54, Tomasz Figa pisze:
-> Hi,
-> 
-> 2015-12-23 19:51 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.com>:
->> W dniu 22.12.2015 o 13:50, Olof Johansson pisze:
->>> On Wed, Dec 02, 2015 at 10:39:42AM +0900, Krzysztof Kozlowski wrote:
->>>> Hi Kukjin,
->>>>
->>>> Pinctrl for v4.5.
->>>>
->>>> Best regards,
->>>> Krzysztof
->>>>
->>>>
->>>> The following changes since commit 8005c49d9aea74d382f474ce11afbbc7d7130bec:
->>>>
->>>>   Linux 4.4-rc1 (2015-11-15 17:00:27 -0800)
->>>>
->>>> are available in the git repository at:
->>>>
->>>>   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-drivers-4.5
->>>>
->>>> for you to fetch changes up to 023e06dfa6882f500b9c86fd61f0b1913aa07f36:
->>>>
->>>>   pinctrl: exynos: add exynos5410 SoC specific data (2015-11-16 10:54:43 +0900)
->>>
->>> Hi,
->>>
->>> This should either go in through the pinctrl tree, or have an acked/reviewed-by
->>> one of the pinctrl maintainers.
->>
->> It was acked by Tomasz Figa - Samsung Pin Controller maintainer:
->> https://patchwork.ozlabs.org/patch/450340/
-> 
-> Actually, is there any reason to send this through ARM SoC? Looks like
-> this pull request contains only pinctrl changes which could normally
-> go through pinctrl tree. Maybe Linus W. could simply pull it?
+The lp872x structure holds a reference to the DVS GPIO, but it is never actually
+used anywhere, since a first reference exists from the lp872x_dvs structure.
 
-Of course, I would be happy with it.
+Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
+---
+ drivers/regulator/lp872x.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-But apparently I am the only one who continuously tracks all of these
-patches for Exynos (also for subsystems different than arch/arm/mach*).
-Yeah, I could ping everyone for every patch (not mine patch I mean)...
-but it is easier just to grab it after acking and send it. I really
-don't care about the method, just apply the damned patch ;)
-
-Best regards,
-Krzysztof
+diff --git a/drivers/regulator/lp872x.c b/drivers/regulator/lp872x.c
+index 9412353..19d7584 100644
+--- a/drivers/regulator/lp872x.c
++++ b/drivers/regulator/lp872x.c
+@@ -108,7 +108,6 @@ struct lp872x {
+ 	struct lp872x_platform_data *pdata;
+ 	int num_regulators;
+ 	enum lp872x_dvs_state dvs_pin;
+-	int dvs_gpio;
+ };
+ 
+ /* LP8720/LP8725 shared voltage table for LDOs */
+@@ -752,7 +751,6 @@ static int lp872x_init_dvs(struct lp872x *lp)
+ 	}
+ 
+ 	lp->dvs_pin = pinstate;
+-	lp->dvs_gpio = gpio;
+ 
+ 	return 0;
+ 
+-- 
+1.9.1
