@@ -1,278 +1,69 @@
-From: Paul Kocialkowski <contact@paulk.fr>
-Subject: [PATCH 5/6] ARM: LG Optimus Black (P970) codename sniper support,
- with basic features
-Date: Wed, 23 Dec 2015 11:58:38 +0100
-Message-ID: <1450868319-20513-6-git-send-email-contact@paulk.fr>
-References: <1450868319-20513-1-git-send-email-contact@paulk.fr>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [GIT PULL 7/9] ARM: EXYNOS: dts: DeviceTree for v4.5
+Date: Wed, 23 Dec 2015 20:04:43 +0900
+Message-ID: <567A7FCB.1040304@samsung.com>
+References: <1449020386-20250-1-git-send-email-k.kozlowski@samsung.com>
+ <1449020386-20250-8-git-send-email-k.kozlowski@samsung.com>
+ <20151222045221.GH30172@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1450868319-20513-1-git-send-email-contact@paulk.fr>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Milo Kim <milo.kim@ti.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Paul Kocialkowski <contact@paulk.fr>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20151222045221.GH30172@localhost>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: k.kozlowski.k@gmail.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, arm@kernel.org, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The LG Optimus Black (P970) codename sniper is a smartphone that was designed
-and manufactured by LG Electronics (LGE) and released back in 2011.
-It is using an OMAP3630 SoC, GP version.
+W dniu 22.12.2015 o 13:52, Olof Johansson pisze:
+> On Wed, Dec 02, 2015 at 10:39:44AM +0900, Krzysztof Kozlowski wrote:
+>> Hi Kukjin,
+>>
+>> A lot of stuff here, mostly cleanups. Description in tag.
+>>
+>> Best regards,
+>> Krzysztof
+>>
+>>
+>> The following changes since commit 8005c49d9aea74d382f474ce11afbbc7d7130bec:
+>>
+>>   Linux 4.4-rc1 (2015-11-15 17:00:27 -0800)
+>>
+>> are available in the git repository at:
+>>
+>>   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-dt-4.5
+>>
+>> for you to fetch changes up to 2cf107f1033e0343d45b59d06f16487c8362702f:
+>>
+>>   ARM: dts: Unify G2D device node with other devices on exynos4 (2015-11-30 17:00:43 +0900)
+>>
+>> ----------------------------------------------------------------
+>> Samsung DeviceTree updates and improvements for 4.5:
+>> 1. Pinctrl for Exynos5410.
+>> 2. eMMC/SDIO minor fixes usage of bindings on Snow and Peach
+>>    Chromebooks.
+>> 3. Remove FIMD from Odroid XU3-family because on XU3 it cannot be used
+>>    yet and on XU3-Lite and XU4 it is not supported.
+>> 4. Remove deprecated since June 2013 samsung,exynos5-hdmi.
+>> 5. Add support for Pseudo Random Generator on Exynos4 (Trats2 for now).
+>>    This depends on new SSS clock.
+>> 6. Add rotator nodes for Exynos4 and Exynos5.
+>> 7. Switch DWC3_1 on Odroid XU3 and XU3-Lite to peripheral mode because
+>>    now it cannot be used as OTG.
+>> 8. Cleanup the G2D usage on Exynos4 and add it to a proper domain
+>>    in case of Exynos4210.
+>> 9. Put MDMA1 in proper domain on Exynos4210 as well.
+>> 10. Minor cleanups.
+> 
+> Given the request to get acks for the pinctrl changes, can you respin this
+> branch without those pieces so we can merge in the rest of it?
+> 
+The pinctrl changes here are only DTS changes. I reviewed the pinctrl
+DTSI. Why do you want an additional ack for them?
 
-This adds devicetree support for the device, with only a few basic features
-supported, such as debug uart, i2c, internal emmc and external mmc.
+However this contains the previous clock dependency (the SSS clock acked
+by Stephen Boyd). I responded about this already so let's don't
+duplicate the discussion.
 
-Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
----
- arch/arm/boot/dts/Makefile         |   1 +
- arch/arm/boot/dts/omap3-sniper.dts | 220 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 221 insertions(+)
- create mode 100644 arch/arm/boot/dts/omap3-sniper.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 30bbc37..2c71106 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -447,6 +447,7 @@ dtb-$(CONFIG_ARCH_OMAP3) += \
- 	omap3-sbc-t3517.dtb \
- 	omap3-sbc-t3530.dtb \
- 	omap3-sbc-t3730.dtb \
-+	omap3-sniper.dtb \
- 	omap3-thunder.dtb \
- 	omap3-zoom3.dtb
- dtb-$(CONFIG_SOC_TI81XX) += \
-diff --git a/arch/arm/boot/dts/omap3-sniper.dts b/arch/arm/boot/dts/omap3-sniper.dts
-new file mode 100644
-index 0000000..6c2d99a
---- /dev/null
-+++ b/arch/arm/boot/dts/omap3-sniper.dts
-@@ -0,0 +1,220 @@
-+/*
-+ * Copyright (C) 2015 Paul Kocialkowski <contact@paulk.fr>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+/dts-v1/;
-+
-+#include "omap36xx.dtsi"
-+
-+/ {
-+	model = "LG Optimus Black (P970)";
-+	compatible = "lge,omap3-sniper", "ti,omap36xx", "ti,omap3";
-+
-+	cpus {
-+		cpu@0 {
-+			cpu0-supply = <&vcc>;
-+		};
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>; /* 512 MB */
-+	};
-+};
-+
-+&omap3_pmx_core {
-+	pinctrl-names = "default";
-+
-+	uart3_pins: pinmux_uart3_pins {
-+		pinctrl-single,pins = <
-+			0x16e (PIN_INPUT | MUX_MODE0)		/* uart3_rx_irrx */
-+			0x170 (PIN_OUTPUT | MUX_MODE0)		/* uart3_tx_irtx */
-+		>;
-+	};
-+
-+	i2c1_pins: pinmux_i2c1_pins {
-+		pinctrl-single,pins = <
-+			0x18a (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c1_scl */
-+			0x18c (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c1_sda */
-+		>;
-+	};
-+
-+	i2c2_pins: pinmux_i2c2_pins {
-+		pinctrl-single,pins = <
-+			0x18e (PIN_INPUT | MUX_MODE0)		/* i2c2_scl */
-+			0x190 (PIN_INPUT | MUX_MODE0)		/* i2c2_sda */
-+		>;
-+	};
-+
-+	i2c3_pins: pinmux_i2c3_pins {
-+		pinctrl-single,pins = <
-+			0x192 (PIN_INPUT | MUX_MODE0)		/* i2c3_scl */
-+			0x194 (PIN_INPUT | MUX_MODE0)		/* i2c3_sda */
-+		>;
-+	};
-+
-+	lp8720_en_pin: pinmux_lp8720_en_pin {
-+		pinctrl-single,pins = <
-+			0x80 (PIN_OUTPUT | MUX_MODE4)		/* gpio_37 */
-+		>;
-+	};
-+
-+	mmc1_pins: pinmux_mmc1_pins {
-+		pinctrl-single,pins = <
-+			0x114 (PIN_INPUT | MUX_MODE0)		/* sdmmc1_clk */
-+			0x116 (PIN_INPUT | MUX_MODE0)		/* sdmmc1_cmd */
-+			0x118 (PIN_INPUT | MUX_MODE0)		/* sdmmc1_dat0 */
-+			0x11a (PIN_INPUT | MUX_MODE0)		/* sdmmc1_dat1 */
-+			0x11c (PIN_INPUT | MUX_MODE0)		/* sdmmc1_dat2 */
-+			0x11e (PIN_INPUT | MUX_MODE0)		/* sdmmc1_dat3 */
-+		>;
-+	};
-+
-+	mmc2_pins: pinmux_mmc2_pins {
-+		pinctrl-single,pins = <
-+			0x128 (PIN_INPUT | MUX_MODE0)		/* sdmmc2_clk */
-+			0x12a (PIN_INPUT | MUX_MODE0)		/* sdmmc2_cmd */
-+			0x12c (PIN_INPUT | MUX_MODE0)		/* sdmmc2_dat0 */
-+			0x12e (PIN_INPUT | MUX_MODE0)		/* sdmmc2_dat1 */
-+			0x130 (PIN_INPUT | MUX_MODE0)		/* sdmmc2_dat2 */
-+			0x132 (PIN_INPUT | MUX_MODE0)		/* sdmmc2_dat3 */
-+			0x134 (PIN_INPUT | MUX_MODE0)		/* sdmmc2_dat4 */
-+			0x136 (PIN_INPUT | MUX_MODE0)		/* sdmmc2_dat5 */
-+			0x138 (PIN_INPUT | MUX_MODE0)		/* sdmmc2_dat6 */
-+			0x13a (PIN_INPUT | MUX_MODE0)		/* sdmmc2_dat7 */
-+		>;
-+	};
-+};
-+
-+&omap3_pmx_wkup {
-+	pinctrl-names = "default";
-+
-+	mmc1_cd_pin: pinmux_mmc1_cd_pin {
-+		pinctrl-single,pins = <
-+			0x1a (PIN_INPUT | MUX_MODE4)		/* gpio_10 */
-+		>;
-+	};
-+};
-+
-+&gpio1 {
-+	ti,no-reset-on-init;
-+};
-+
-+&gpio2 {
-+	ti,no-reset-on-init;
-+};
-+
-+&gpio3 {
-+	ti,no-reset-on-init;
-+};
-+
-+&gpio4 {
-+	ti,no-reset-on-init;
-+};
-+
-+&gpio5 {
-+	ti,no-reset-on-init;
-+};
-+
-+&gpio6 {
-+	ti,no-reset-on-init;
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_pins>;
-+
-+	interrupts-extended = <&intc 74 &omap3_pmx_core OMAP3_UART3_RX>;
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+
-+	clock-frequency = <2600000>;
-+
-+	twl: twl@48 {
-+		reg = <0x48>;
-+		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-+		interrupt-parent = <&intc>;
-+
-+		twl_power: power {
-+			compatible = "ti,twl4030-power";
-+			ti,use_poweroff;
-+		};
-+	};
-+};
-+
-+#include "twl4030.dtsi"
-+#include "twl4030_omap3.dtsi"
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins>;
-+
-+	clock-frequency = <400000>;
-+};
-+
-+&i2c3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c3_pins>;
-+
-+	clock-frequency = <400000>;
-+
-+	lp8720@7d {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&lp8720_en_pin>;
-+
-+		compatible = "ti,lp8720";
-+		reg = <0x7d>;
-+
-+		ti,enable-gpio = <&gpio2 5 GPIO_ACTIVE_HIGH>;	/* gpio_37 */
-+
-+		lp8720_ldo1: ldo1 {
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3000000>;
-+		};
-+	};
-+};
-+
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins &mmc1_cd_pin>;
-+	vmmc-supply = <&lp8720_ldo1>;
-+	cd-gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;			/* gpio 10 */
-+	bus-width = <4>;
-+};
-+
-+&mmc2 {
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_pins>;
-+	vmmc-supply = <&vmmc2>;
-+	ti,non-removable;
-+	bus-width = <8>;
-+};
-+
-+&mmc3 {
-+	status = "disabled";
-+};
-+
-+/*
-+ * The TWL4030 VAUX2 and VDAC regulators power sensors that are slaves on I2C3.
-+ * When not powered, these sensors cause the I2C3 clock to stay low at all times,
-+ * making it impossible to reach other devices on I2C3.
-+ */
-+
-+&vaux2 {
-+	regulator-min-microvolt = <2800000>;
-+	regulator-max-microvolt = <2800000>;
-+	regulator-always-on;
-+};
-+
-+&vdac {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-always-on;
-+};
--- 
-1.9.1
+Best regards,
+Krzysztof
