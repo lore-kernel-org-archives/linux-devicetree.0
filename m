@@ -1,46 +1,58 @@
-From: Rameshswar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH] mmc: host: arasan: sdhci-of-arasan: Remove no-hispd and no-cmd23 quirks for sdhci-arasan4.9a
-Date: Wed, 23 Dec 2015 18:59:51 +0530
-Message-ID: <1450877391-3029-1-git-send-email-rsahu@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
-Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, kgondkar-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+From: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: Re: [PATCH 1/3] wlcore/wl12xx: spi: fix NULL pointer dereference
+ (Oops)
+Date: Wed, 23 Dec 2015 16:11:21 +0200
+Message-ID: <567AAB89.4010101@compulab.co.il>
+References: <1450859744-9948-1-git-send-email-uri.mashiach@compulab.co.il>
+ <1450859744-9948-2-git-send-email-uri.mashiach@compulab.co.il>
+ <567A7287.3010205@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <567A7287.3010205-l0cyMroinI0@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Hi Grygorii,
 
-The Arason SD host controller supports set block count command (cmd23)
-and high speed mode. This patch re-enable both of these features that
-was disabled. For device that doesn't support high speed, it should
-configure its capability register accordingly instead disables it
-explicitly.
+On 12/23/2015 12:08 PM, Grygorii Strashko wrote:
+> On 12/23/2015 10:35 AM, Uri Mashiach wrote:
+>> The power function uses a consumer regulator access to update the WiFi
+>> enable GPIO value.
+>>
+>> Fix the below Oops when trying to modprobe wlcore_spi.
+>> The oops occurs because the wl1271_power_{off,on}()
+>> function doesn't check the power() function pointer.
+>>
+>> [   23.401447] Unable to handle kernel NULL pointer dereference at
+>> virtual address 00000000
+>> [   23.409954] pgd = c0004000
+>> [   23.412922] [00000000] *pgd=00000000
+>> [   23.416693] Internal error: Oops: 80000007 [#1] SMP ARM
+>> [   23.422168] Modules linked in: wl12xx wlcore mac80211 cfg80211
+>> musb_dsps musb_hdrc usbcore usb_common snd_soc_simple_card evdev joydev
+>> omap_rng wlcore_spi snd_soc_tlv320aic23_i2c rng_core snd_soc_tlv320aic23
+>> c_can_platform c_can can_dev snd_soc_davinci_mcasp snd_soc_edma
+>> snd_soc_omap omap_wdt musb_am335x cpufreq_dt thermal_sys hwmon
+>> [   23.453253] CPU: 0 PID: 36 Comm: kworker/0:2 Not tainted
+>> 4.2.0-00002-g951efee-dirty #233
+>> [   23.461720] Hardware name: Generic AM33XX (Flattened Device Tree)
+>> [   23.468123] Workqueue: events request_firmware_work_func
+>> [   23.473690] task: de32efc0 ti: de4ee000 task.ti: de4ee000
+>> [   23.479341] PC is at 0x0
+>> [   23.482112] LR is at wl12xx_set_power_on+0x28/0x124 [wlcore]
+>
+> Why can't you just add proper check in wl1271_power_on/wl1271_power_off() instead?
+>
 
-Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
----
- drivers/mmc/host/sdhci-of-arasan.c |    5 -----
- 1 files changed, 0 insertions(+), 5 deletions(-)
+Will be done in v2.
 
-diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-index 75379cb..5d9fdb3 100644
---- a/drivers/mmc/host/sdhci-of-arasan.c
-+++ b/drivers/mmc/host/sdhci-of-arasan.c
-@@ -172,11 +172,6 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
- 		goto clk_disable_all;
- 	}
-
--	if (of_device_is_compatible(pdev->dev.of_node, "arasan,sdhci-4.9a")) {
--		host->quirks |= SDHCI_QUIRK_NO_HISPD_BIT;
--		host->quirks2 |= SDHCI_QUIRK2_HOST_NO_CMD23;
--	}
--
- 	sdhci_get_of_property(pdev);
- 	pltfm_host = sdhci_priv(host);
- 	pltfm_host->priv = sdhci_arasan;
+Thanks,
+Uri
 --
-1.7.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
