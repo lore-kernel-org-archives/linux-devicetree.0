@@ -1,34 +1,36 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 3/6] ASoC: da7219: Update REFERENCES reg default,
- in-line with HW
-Date: Wed, 23 Dec 2015 09:47:23 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337D4611EEA@SW-EX-MBX01.diasemi.com>
-References: <cover.1450807642.git.Adam.Thomson.Opensource@diasemi.com>
- <5233faeef4073f33e2826866eae35e8c9502c35f.1450807642.git.Adam.Thomson.Opensource@diasemi.com>
- <20151223001019.GG16023@sirena.org.uk>
+From: Daniel Stone <daniel@fooishbar.org>
+Subject: Re: [PATCH v7 2/4] drm: Add support for ARM's HDLCD controller.
+Date: Wed, 23 Dec 2015 10:03:00 +0000
+Message-ID: <CAPj87rPK4gaFw79poT+Gwfg3R39svdvBTP=GD-E4Lvbm4ysSAg@mail.gmail.com>
+References: <1450806109-470-1-git-send-email-Liviu.Dudau@arm.com>
+ <1450806109-470-3-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151223001019.GG16023-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1450806109-470-3-git-send-email-Liviu.Dudau@arm.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Jon Medhurst <tixy@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Punit Agrawal <punit.agrawal@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, DRI devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Robin Murphy <robin.murphy@arm.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRGVjZW1iZXIgMjMsIDIwMTUgMDA6MTAsIE1hcmsgQnJvd24gd3JvdGU6DQoNCj4gT24gVHVl
-LCBEZWMgMjIsIDIwMTUgYXQgMDY6Mjc6NTNQTSArMDAwMCwgQWRhbSBUaG9tc29uIHdyb3RlOg0K
-PiA+IEluIGN1cnJlbnQgQUIgc2lsaWNvbiwgQklBU19FTiBmaWVsZCBpcyBlbmFibGVkIGJ5IGRl
-ZmF1bHQgaW4gdGhlDQo+ID4gUkVGRVJFTkNFUyByZWdpc3Rlciwgc28gdGhlIHJlZ21hcCBkZWZh
-dWx0IHZhbHVlIHNob3VsZCByZWZsZWN0DQo+ID4gdGhpcy4NCj4gDQo+IFRoaXMgaXMgdGhlIHNv
-cnQgb2YgdGhpbmcgd2hlcmUgYSByZWdpc3RlciBwYXRjaCB3b3VsZCBub3JtYWxseSBiZSB1c2Vk
-DQo+IC0gaWYgeW91IHB1dCBpbiBhIHJlZ2lzdGVyIHBhdGNoIGZvciB0aGUgb2xkZXIgc2lsaWNv
-biB0aGVuIHRoZSBkcml2ZXINCj4gY2FuIGNvcnJlY3QgZm9yIHRoZSByZWdpc3RlciBkZWZhdWx0
-IGF1dG9tYXRpY2FsbHkuDQoNClRoYW5rcy4gWWVzLCBhbSBhd2FyZSBvZiB0aGF0LiBXZXJlIHRo
-ZSBvbGRlciBzaWxpY29uIHN0aWxsIGluIHVzZSB0aGVuIEknZCBoYXZlDQp0YWtlbiB0aGF0IHJv
-dXRlLCBidXQgZGlkbid0IHNlZW0gbmVjZXNzYXJ5IGluIHRoaXMgaW5zdGFuY2UuDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgpPbiAyMiBEZWNlbWJlciAyMDE1IGF0IDE3OjQxLCBMaXZpdSBEdWRhdSA8TGl2aXUuRHVk
+YXVAYXJtLmNvbT4gd3JvdGU6Cj4gVGhlIEhETENEIGNvbnRyb2xsZXIgaXMgYSBkaXNwbGF5IGNv
+bnRyb2xsZXIgdGhhdCBzdXBwb3J0cyByZXNvbHV0aW9ucwo+IHVwIHRvIDQwOTZ4NDA5NiBwaXhl
+bHMuIEl0IGlzIHByZXNlbnQgb24gdmFyaW91cyBkZXZlbG9wbWVudCBib2FyZHMKPiBwcm9kdWNl
+ZCBieSBBUk0gTHRkIGFuZCBlbXVsYXRlZCBieSB0aGUgbGF0ZXN0IEZhc3QgTW9kZWxzIGZyb20g
+dGhlCj4gY29tcGFueS4KCkkgZGlkbid0IGdldCB0byB0YWtlIGFzIGNsb3NlIGEgbG9vayBhcyBs
+YXN0IHRpbWUsIGJ1dCBJIG9ubHkgaGFkCmZhaXJseSBtaW5vciBxdWliYmxlcyB0aGVuLCBhbmQg
+bm90aGluZyBqdW1wZWQgb3V0IGF0IG1lIHRoaXMgdGltZQplaXRoZXIuCgpSZXZpZXdlZC1ieTog
+RGFuaWVsIFN0b25lIDxkYW5pZWxzQGNvbGxhYm9yYS5jb20+CgpDaGVlcnMsCkRhbmllbApfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
