@@ -1,48 +1,41 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/6] regulator: lp872x: Remove warning about invalid DVS
- GPIO
-Date: Wed, 23 Dec 2015 11:41:26 +0000
-Message-ID: <20151223114126.GR16023@sirena.org.uk>
-References: <1450868319-20513-1-git-send-email-contact@paulk.fr>
- <1450868319-20513-4-git-send-email-contact@paulk.fr>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [RFC LINUX PATCH] dt: xilinx: xadc: provision to control clock
+ frequency
+Date: Wed, 23 Dec 2015 03:49:08 -0800
+Message-ID: <20151223114908.GG6491@xsjsorenbubuntu>
+References: <1450866505-22069-1-git-send-email-ranjit.waghmode@xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Hw0FrjWlp+qkNlJP"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1450868319-20513-4-git-send-email-contact@paulk.fr>
+In-Reply-To: <1450866505-22069-1-git-send-email-ranjit.waghmode@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Kocialkowski <contact@paulk.fr>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Milo Kim <milo.kim@ti.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+To: Ranjit Waghmode <ranjit.waghmode@xilinx.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, corbet@lwn.net, lars@metafoo.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, punnaia@xilinx.com, anirudh@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 2015-12-23 at 03:58PM +0530, Ranjit Waghmode wrote:
+> This patch adds parameter to the xilinx-xadc node for controlling
+> clock frequency.
+>=20
+> Following are the possible options for user to control the frequency:
+> 	* 00 : 1/2 of clock frequency
+> 	* 01 : 1/4 of clock frequency
+> 	* 10 : 1/8 of clock frequency
+> 	* 11 : 1/16 of clock frequency
 
---Hw0FrjWlp+qkNlJP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+How is this chosen? Are these just arbitrary values that you need for
+some use-case? Or are these the options HW allows?
 
-On Wed, Dec 23, 2015 at 11:58:36AM +0100, Paul Kocialkowski wrote:
-> Some devices don't hook the DVS pin to a GPIO but to ground or VCC.
-> In those cases, it is not a problem to have no DVS GPIO.
+>=20
+> So this patch adds parameter tck-rate to set user defined values from
+> above pool to control the clock frequency.
 
-I would expect the driver at least needs to know how the pins or
-strapped, or otherwise have configuration for ignoring the input on the
-pins.  This just deletes the warnings, it doesn't have any handling for
-this case that I can see.
+This is no longer describing HW, but configuring driver/HW. Why does
+this have to be in DT? Why can't the driver request/set the frequency a=
+s
+operation requires it?
 
---Hw0FrjWlp+qkNlJP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWeohlAAoJECTWi3JdVIfQhxcH/16aoKYCBQFn6uJa44boXVg+
-QE2MUruEO+MIIvUVQDX3DmAbpyNUqpEMR2Ueg+rwQXs446eQy5SEh7OzLfcBTPS4
-eZ0kuOlGYqomwQKZNWjw9MQYap44r36sijJSIOUijgQoJD3C9gqHAwlZxli+hRlP
-EpvwWrqx0US1VJbcJCwr+eIeOyQd+LSORhQG0uYUuF38KH2zANyFoQmHSEGXi/SR
-9Y/qDdbMFJK1ppUuppsKz6B1uMSctz9HEKUKVzHHEc7LgBqS24e5gX4NpPgX/B5r
-UzM7Vznc6JR18MRbU9H1hqjpTGDs9a1lqohGCVHqOwa+Dm7ORZBtpxePrYtA67o=
-=nY0D
------END PGP SIGNATURE-----
-
---Hw0FrjWlp+qkNlJP--
+	Thanks,
+	S=C3=B6ren
