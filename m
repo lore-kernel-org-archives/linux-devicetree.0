@@ -1,221 +1,63 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/3] wlcore/wl12xx: spi: add device tree support
-Date: Wed, 23 Dec 2015 12:25:57 +0200
-Message-ID: <567A76B5.70605@ti.com>
-References: <1450859744-9948-1-git-send-email-uri.mashiach@compulab.co.il>
- <1450859744-9948-3-git-send-email-uri.mashiach@compulab.co.il>
+From: Ranjit Waghmode <ranjit.waghmode@xilinx.com>
+Subject: [RFC LINUX PATCH] dt: xilinx: xadc: provision to control clock frequency
+Date: Wed, 23 Dec 2015 15:58:25 +0530
+Message-ID: <1450866505-22069-1-git-send-email-ranjit.waghmode@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450859744-9948-3-git-send-email-uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, corbet@lwn.net, lars@metafoo.de
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, punnaia@xilinx.com, anirudh@xilinx.com, Ranjit Waghmode <ranjit.waghmode@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/23/2015 10:35 AM, Uri Mashiach wrote:
-> Add DT support for the wl1271 SPI WiFi.
-> 
-> Add documentation file for the wl1271 SPI WiFi.
-> 
-> Signed-off-by: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> ---
->   .../bindings/net/wireless/ti,wlcore,spi.txt        | 35 +++++++++++
->   drivers/net/wireless/ti/wlcore/spi.c               | 67 +++++++++++++++++++---
->   2 files changed, 95 insertions(+), 7 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt b/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
-> new file mode 100644
-> index 0000000..a3e7eb7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
-> @@ -0,0 +1,35 @@
-> +* Texas Instruments wl1271 wireless lan controller
-> +
-> +The wl1271 chip can be connected via SPI or via SDIO. This
-> +document describes the binding for the SPI connected chip.
-> +
-> +Required properties:
-> +- compatible :          Should be "ti,wl1271"
-> +- reg :                 Chip select address of device
-> +- spi-max-frequency :   Maximum SPI clocking speed of device in Hz
-> +- ref-clock-frequency : Reference clock frequency
-> +- interrupts :          Should contain interrupt line and trigger type
+This patch adds parameter to the xilinx-xadc node for controlling
+clock frequency.
 
-It's good to describe here number of IRQ lines your device have and IRQ types (edge/level) 
+Following are the possible options for user to control the frequency:
+	* 00 : 1/2 of clock frequency
+	* 01 : 1/4 of clock frequency
+	* 10 : 1/8 of clock frequency
+	* 11 : 1/16 of clock frequency
 
-> +- interrupt-parent :    Should be the phandle for the interrupt controller
-interrupt-parent is not required (also interrupts-extended can be used)
+So this patch adds parameter tck-rate to set user defined values from
+above pool to control the clock frequency.
 
-> +                        that services interrupts for this device
-> +- vwlan-supply :        Point the node of the regulator that controls the wl1271 chip WLAN_EN pin
+Signed-off-by: Ranjit Waghmode <ranjit.waghmode@xilinx.com>
+---
+ Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Pls, use gpio if this is required just to toggle WLAN_EN pin.
+diff --git a/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
+index d71258e..2cabb9b 100644
+--- a/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
+@@ -20,6 +20,11 @@ Required properties:
+ 	- clocks: When using the ZYNQ this must be the ZYNQ PCAP clock,
+ 	  when using the AXI-XADC pcore this must be the clock that provides the
+ 	  clock to the AXI bus interface of the core.
++	- tck-rate: clock frequency control
++		* 0x0: 1/2  of clock frequency
++		* 0x1: 1/4  of clock frequency
++		* 0x2: 1/8  of clock frequency
++		* 0x3: 1/16 of clock frequency
 
-[ti,] power-gpio or en-gpio
+ Optional properties:
+ 	- interrupt-parent: phandle to the parent interrupt controller
+@@ -79,6 +84,7 @@ Examples:
+ 		interrupts = <0 7 4>;
+ 		interrupt-parent = <&gic>;
+ 		clocks = <&pcap_clk>;
++		tck-rate = <0x3>;
 
+ 		xlnx,channels {
+ 			#address-cells = <1>;
+@@ -101,6 +107,7 @@ Examples:
+ 		interrupts = <0 53 4>;
+ 		interrupt-parent = <&gic>;
+ 		clocks = <&fpga1_clk>;
++		tck-rate = <0x3>;
 
-> +
-> +Optional properties:
-> +- clock-xtal :          boolean, clock is generated from XTAL
-> +
-> +- Please consult Documentation/devicetree/bindings/spi/spi-bus.txt
-> +  for optional SPI connection related properties,just
-> +
-> +Examples:
-> +
-> +&spi1 {
-> +	wl1271@1 {
-> +		compatible = "ti,wl1271";
-> +
-> +		reg = <1>;
-> +		spi-max-frequency = <48000000>;
-> +		clock-xtal;
-> +		interrupt-parent = <&gpio3>;
-> +		interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
-> +		wifi-supply = <&wifi_fixed>;
-> +	};
-> +};
-> diff --git a/drivers/net/wireless/ti/wlcore/spi.c b/drivers/net/wireless/ti/wlcore/spi.c
-> index d3a4bcb..7281f5a 100644
-> --- a/drivers/net/wireless/ti/wlcore/spi.c
-> +++ b/drivers/net/wireless/ti/wlcore/spi.c
-> @@ -30,6 +30,7 @@
->   #include <linux/spi/spi.h>
->   #include <linux/wl12xx.h>
->   #include <linux/platform_device.h>
-> +#include <linux/of_irq.h>
->   #include <linux/regulator/consumer.h>
->   
->   #include "wlcore.h"
-> @@ -357,6 +358,54 @@ static struct wl1271_if_operations spi_ops = {
->   	.set_block_size = NULL,
->   };
->   
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id wlcore_spi_of_match_table[] = {
-> +	{ .compatible = "ti,wl1271" },
-> +	{ }
-> +};
-> +
-> +/**
-> + * wlcore_probe_of - DT node parsing.
-> + * @spi: SPI slave device parameters.
-> + * @res: resource parameters.
-> + * @glue: wl12xx SPI bus to slave device glue parameters.
-> + * @pdev_data: wlcore device parameters
-> + */
-> +static int wlcore_probe_of(struct spi_device *spi, struct resource *res,
-> +			   struct wl12xx_spi_glue *glue,
-> +			   struct wlcore_platdev_data *pdev_data)
-> +{
-> +	struct device_node *dt_node = spi->dev.of_node;
-> +	int ret;
-> +
-> +	ret = of_irq_to_resource(dt_node, 0, &res[0]);
-> +	if (spi->irq != ret) {
-> +		dev_err(glue->dev, "can't get interrupt resource\n");
-> +		return -EINVAL;
-> +	}
-
-SPI core will parse IRQ for you (see below)
-
-> +
-> +	if (of_find_property(dt_node, "clock-xtal", NULL))
-> +		pdev_data->ref_clock_xtal = true;
-> +
-> +	ret = of_property_read_u32(dt_node, "ref-clock-frequency",
-> +				   &pdev_data->ref_clock_freq);
-> +	if (IS_ERR_VALUE(ret)) {
-> +		dev_err(glue->dev,
-> +			"can't get reference clock frequency (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +#else /* CONFIG_OF */
-> +static int wlcore_probe_of(struct spi_device *spi, struct resource *res,
-> +			   struct wl12xx_spi_glue *glue,
-> +			   struct wlcore_platdev_data *pdev_data)
-> +{
-> +	return -ENODATA;
-> +}
-> +#endif /* CONFIG_OF */
-> +
->   static int wl1271_probe(struct spi_device *spi)
->   {
->   	struct wl12xx_spi_glue *glue;
-> @@ -365,8 +414,7 @@ static int wl1271_probe(struct spi_device *spi)
->   	int ret;
->   
->   	memset(&pdev_data, 0x00, sizeof(pdev_data));
-> -
-> -	/* TODO: add DT parsing when needed */
-> +	memset(res, 0x00, sizeof(res));
->   
->   	pdev_data.if_ops = &spi_ops;
->   
-> @@ -390,6 +438,13 @@ static int wl1271_probe(struct spi_device *spi)
->   		return PTR_ERR(glue->reg);
->   	}
->   
-> +	ret = wlcore_probe_of(spi, &res[0], glue, &pdev_data);
-> +	if (IS_ERR_VALUE(ret)) {
-> +		dev_err(glue->dev,
-> +			"can't get device tree parameters (%d)\n", ret);
-> +		return ret;
-
-So, wl1271_probe will fail always if CONFIG_OF=n. Right?
-
-
-> +	}
-> +
->   	ret = spi_setup(spi);
->   	if (ret < 0) {
->   		dev_err(glue->dev, "spi_setup failed\n");
-> @@ -404,10 +459,6 @@ static int wl1271_probe(struct spi_device *spi)
->   
->   	glue->core->dev.parent = &spi->dev;
->   
-> -	memset(res, 0x00, sizeof(res));
-> -
-> -	res[0].start = spi->irq;
-> -	res[0].flags = IORESOURCE_IRQ;
->   	res[0].name = "irq";
-
-Above code might be left unchaenged.
-
-
->   
->   	ret = platform_device_add_resources(glue->core, res, ARRAY_SIZE(res));
-> @@ -445,10 +496,12 @@ static int wl1271_remove(struct spi_device *spi)
->   	return 0;
->   }
->   
-> -
->   static struct spi_driver wl1271_spi_driver = {
->   	.driver = {
->   		.name		= "wl1271_spi",
-> +#ifdef CONFIG_OF
-> +		.of_match_table = of_match_ptr(wlcore_spi_of_match_table),
-> +#endif /* CONFIG_OF */
-
-These ifdefs are not needed - see of_match_ptr() definition
-
->   	},
->   
->   	.probe		= wl1271_probe,
-> 
-
-
--- 
-regards,
--grygorii
+ 		xlnx,channels {
+ 			#address-cells = <1>;
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.2
