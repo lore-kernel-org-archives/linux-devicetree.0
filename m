@@ -1,70 +1,156 @@
 From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v6 0/7] ARM: dts: Add Advantech board support
-Date: Wed, 23 Dec 2015 17:00:09 -0500
-Message-ID: <1450908016-17384-1-git-send-email-akshay.bhat@timesys.com>
+Subject: [PATCH v6 6/7] ARM: dts: imx: Add support for Advantech/GE B650v3
+Date: Wed, 23 Dec 2015 17:00:15 -0500
+Message-ID: <1450908016-17384-7-git-send-email-akshay.bhat@timesys.com>
+References: <1450908016-17384-1-git-send-email-akshay.bhat@timesys.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1450908016-17384-1-git-send-email-akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series aims to add Advantech BA-16 module (iMX6 based) and GE board support.
+Add support for Advantech/GE B650v3 board.
 
-This series has been tested against linux-next tag next-20151223.
-
-Modifications:
-v5->v6:
-- BA16:
-Add missing dlg,da9063-onkey compatibility
-Revert partitions container for spi-nor flash
-Address below comments from Shawn:
-Update to GPL/X11 dual license
-Add new line between properties and sub-nodes; between nodes
-Consistently use lowercase for hex values
-Move iomux node to bottom of dts file for easier readability
-Get rid of imx6q-ba16 container to save on indentation
-Reduce the number of entries in hog group
-Sort pinctrl nodes alphabetically
-Explicitly call out pad configuration value instead of 0x80000000
-- Bx50v3: 
-Update to GPL/X11 dual license 
-Remove @unit-address for regulators as per Shawn's suggestion
-- B450v3, B650v3 and B850v3: 
-Update to GPL/X11 dual license
-
-History:
---------
-[v1]: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-October/381872.html
-[v2]: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-November/383276.html
-[v3]: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-November/384202.html
-[v4]: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/390373.html
-[v5]: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/390788.html
-
-Akshay Bhat (5):
-  of: Add vendor prefix for Advantech Corporation
-  of: Add vendor prefix for General Electric Company
-  ARM: dts: imx: Add support for Advantech/GE B450v3
-  ARM: dts: imx: Add support for Advantech/GE B650v3
-  ARM: dts: imx: Add support for Advantech/GE B850v3
-
-Justin Waters (2):
-  ARM: dts: imx: Add Advantech BA-16 Qseven module
-  ARM: dts: imx: Add support for Advantech/GE Bx50v3
-
- .../devicetree/bindings/vendor-prefixes.txt        |   2 +
- arch/arm/boot/dts/Makefile                         |   3 +
- arch/arm/boot/dts/imx6q-b450v3.dts                 | 114 ++++
- arch/arm/boot/dts/imx6q-b650v3.dts                 | 114 ++++
- arch/arm/boot/dts/imx6q-b850v3.dts                 | 157 +++++
- arch/arm/boot/dts/imx6q-ba16.dtsi                  | 641 +++++++++++++++++++++
- arch/arm/boot/dts/imx6q-bx50v3.dtsi                | 237 ++++++++
- 7 files changed, 1268 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-b450v3.dts
+Signed-off-by: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile         |   1 +
+ arch/arm/boot/dts/imx6q-b650v3.dts | 114 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 115 insertions(+)
  create mode 100644 arch/arm/boot/dts/imx6q-b650v3.dts
- create mode 100644 arch/arm/boot/dts/imx6q-b850v3.dts
- create mode 100644 arch/arm/boot/dts/imx6q-ba16.dtsi
- create mode 100644 arch/arm/boot/dts/imx6q-bx50v3.dtsi
 
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 0e029fc..684a504 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -318,6 +318,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-apf6dev.dtb \
+ 	imx6q-arm2.dtb \
+ 	imx6q-b450v3.dtb \
++	imx6q-b650v3.dtb \
+ 	imx6q-cm-fx6.dtb \
+ 	imx6q-cubox-i.dtb \
+ 	imx6q-dfi-fs700-m60.dtb \
+diff --git a/arch/arm/boot/dts/imx6q-b650v3.dts b/arch/arm/boot/dts/imx6q-b650v3.dts
+new file mode 100644
+index 0000000..0e6b775
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6q-b650v3.dts
+@@ -0,0 +1,114 @@
++/*
++ * Copyright 2015 Timesys Corporation.
++ * Copyright 2015 General Electric Company
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "imx6q-bx50v3.dtsi"
++
++/ {
++	model = "General Electric B650v3";
++	compatible = "ge,imx6q-b650v3", "advantech,imx6q-ba16", "fsl,imx6q";
++
++	chosen {
++		stdout-path = &uart3;
++	};
++
++	panel_lvds0 {
++		compatible = "innolux,g121x1-l03";
++		backlight = <&backlight_lvds>;
++		power-supply = <&reg_lvds>;
++
++		port {
++			panel_in_lvds0: endpoint {
++				remote-endpoint = <&lvds0_out>;
++			};
++		};
++	};
++
++	panel_lvds1 {
++		compatible = "innolux,g121x1-l03";
++		backlight = <&backlight_lvds>;
++		power-supply = <&reg_lvds>;
++
++		port {
++			panel_in_lvds1: endpoint {
++				remote-endpoint = <&lvds1_out>;
++			};
++		};
++	};
++};
++
++&ldb {
++	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
++			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
++	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
++				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
++	status = "okay";
++
++	lvds0: lvds-channel@0 {
++		fsl,data-mapping = "spwg";
++		fsl,data-width = <24>;
++		status = "okay";
++
++		port@4 {
++			reg = <4>;
++
++			lvds0_out: endpoint {
++				remote-endpoint = <&panel_in_lvds0>;
++			};
++		};
++	};
++
++	lvds1: lvds-channel@1 {
++		fsl,data-mapping = "spwg";
++		fsl,data-width = <24>;
++		status = "okay";
++
++		port@4 {
++			reg = <4>;
++
++			lvds1_out: endpoint {
++				remote-endpoint = <&panel_in_lvds1>;
++			};
++		};
++	};
++};
 -- 
 2.6.3
 
