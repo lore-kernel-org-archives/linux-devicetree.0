@@ -1,84 +1,134 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v11 17/19] drm: bridge: analogix/dp: expand the look time
- for waiting AUX CH reply
-Date: Wed, 23 Dec 2015 14:00:34 +0800
-Message-ID: <567A3882.3020808@rock-chips.com>
-References: <1450236018-1118-1-git-send-email-ykk@rock-chips.com>
- <1450238257-3274-1-git-send-email-ykk@rock-chips.com>
- <000a01d13cb4$0f81f510$2e85df30$@com> <567A21EC.4010003@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <567A21EC.4010003@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jingoo Han <jingoohan1@gmail.com>, 'Inki Dae' <inki.dae@samsung.com>, 'Mark Yao' <mark.yao@rock-chips.com>, 'Heiko Stuebner' <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, 'Russell King' <linux@arm.linux.org.uk>, javier@osg.samsung.com, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 'Kishon Vijay Abraham I' <kishon@ti.com>, linux-rockchip@lists.infradead.org, 'Rob Herring' <robh+dt@kernel.org>, 'Andy Yan' <andy.yan@rock-chips.com>, 'Thierry Reding' <treding@nvidia.com>, 'Gustavo Padovan' <gustavo.padovan@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
+From: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: [PATCH 3/3] wlcore/wl12xx: spi: add wifi support to cm-t335
+Date: Wed, 23 Dec 2015 10:35:44 +0200
+Message-ID: <1450859744-9948-4-git-send-email-uri.mashiach@compulab.co.il>
+References: <1450859744-9948-1-git-send-email-uri.mashiach@compulab.co.il>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1450859744-9948-1-git-send-email-uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmluZ29vLAoKT24gMTIvMjMvMjAxNSAxMjoyNCBQTSwgWWFraXIgWWFuZyB3cm90ZToKPiBI
-aSBKaW5nb28sCj4KPiBPbiAxMi8yMi8yMDE1IDA4OjI2IFBNLCBKaW5nb28gSGFuIHdyb3RlOgo+
-PiBPbiBXZWRuZXNkYXksIERlY2VtYmVyIDE2LCAyMDE1IDEyOjU4IFBNLCBZYWtpciBZYW5nIHdy
-b3RlOgo+Pj4gQWZ0ZXIgdGVzdCBvbiByb2NrY2hpb3AgcGxhdGZvcm0sIGkgZm91bmQgc29tZXRp
-bXMgZHJpdmVyIHdvdWxkIGZhaWxlZAo+Pj4gYXQgcmVhZGluZyBFRElEIG1lc3NhZ2UuIEFmdGVy
-IGRlYnVnZ2luZyBtb3JlLCBpIGZvdW5kIHRoYXQgaXQncyBva2F5Cj4+PiB0byByZWFkX2EgYnl0
-ZSBmcm9tIGkyYywgYnV0IGl0IHdvdWxkIGZhaWxlZCBhdCBBVVggdHJhbnNjYXRpb24gaWYgd2UK
-Pj4+IHRyeSB0byByZWFkeSBtdWx0aS1ieXRlcyBmcm9tIGkyYy4KPj4+Cj4+PiBEcml2ZXIganVz
-dCBjYW4ndCByZWNlaXZlZCB0aGUgQVVYIENIIHJlcGx5IGNvbW1hbmQsIGV2ZW4gbm8gQVVYIGVy
-cm9yCj4+PiBjb2RlLiBJIG1heSBndWVzcyB0aGF0IHRoZSBBVVggd2FpdCB0aW1lIGlzIG5vdCBl
-bm91Z2gsIHNvIEkgdHJ5IHRvCj4+PiBleHBhbmQgdGhlIEFVWCB3YWl0IHRpbWUsIGFuZCBpIGRv
-IHNlZSB0aGlzIGNvdWxkIGZpeCB0aGUgRURJRCByZWFkCj4+PiBmYWlsZWQgYXQgcm9ja2NoaXAg
-cGxhdGZvcm0uCj4+Pgo+Pj4gQW5kIEkgdGhvdWdodCB0aGF0IGV4cGFuZCB0aGUgd2FpdCB0aW1l
-IHdvbid0IGh1cnQgRXh5bm9zIHBsYXRmb3JtIHRvbwo+Pj4gbXVjaCwgY2F1c2UgRXh5bm9zIGRp
-ZG4ndCBoYXZlIHRoaXMgcHJvYmxlbSwgdGhlbiBkcml2ZXIgd291bGQgcmVjZWl2ZWQKPj4+IHRo
-ZSByZXBseSBjb21tYW5kIHZlcnkgc29vbiwgc28gbm8gbW9yZSBhZGRpdGlvbmFsIHdhaXQgdGlt
-ZSB3b3VsZCAKPj4+IGJyaW5nCj4+PiB0byBFeHlub3MgcGxhdGZvcm0uCj4+Pgo+Pj4gU2lnbmVk
-LW9mZi1ieTogWWFraXIgWWFuZyA8eWtrQHJvY2stY2hpcHMuY29tPgo+Pj4gLS0tCj4+PiBDaGFu
-Z2VzIGluIHYxMTogTm9uZQo+Pj4gQ2hhbmdlcyBpbiB2MTA6IE5vbmUKPj4+IENoYW5nZXMgaW4g
-djk6IE5vbmUKPj4+IENoYW5nZXMgaW4gdjg6IE5vbmUKPj4+IENoYW5nZXMgaW4gdjc6IE5vbmUK
-Pj4+IENoYW5nZXMgaW4gdjY6IE5vbmUKPj4+IENoYW5nZXMgaW4gdjU6IE5vbmUKPj4+IENoYW5n
-ZXMgaW4gdjQ6IE5vbmUKPj4+IENoYW5nZXMgaW4gdjM6IE5vbmUKPj4+IENoYW5nZXMgaW4gdjI6
-IE5vbmUKPj4+Cj4+PiAgIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhf
-ZHBfcmVnLmMgfCAyICstCj4+PiAgIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBk
-ZWxldGlvbigtKQo+Pj4KPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2Fu
-YWxvZ2l4L2FuYWxvZ2l4X2RwX3JlZy5jCj4+PiBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5h
-bG9naXgvYW5hbG9naXhfZHBfcmVnLmMKPj4+IGluZGV4IGM3ZTI5NTkuLmRjMzc2YmQgMTAwNjQ0
-Cj4+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FuYWxvZ2l4L2FuYWxvZ2l4X2RwX3Jl
-Zy5jCj4+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FuYWxvZ2l4L2FuYWxvZ2l4X2Rw
-X3JlZy5jCj4+PiBAQCAtNDgyLDcgKzQ4Miw3IEBAIGludCBhbmFsb2dpeF9kcF9zdGFydF9hdXhf
-dHJhbnNhY3Rpb24oc3RydWN0IAo+Pj4gYW5hbG9naXhfZHBfZGV2aWNlICpkcCkKPj4+ICAgICAg
-IHJlZyA9IHJlYWRsKGRwLT5yZWdfYmFzZSArIEFOQUxPR0lYX0RQX0lOVF9TVEEpOwo+Pj4gICAg
-ICAgd2hpbGUgKCEocmVnICYgUlBMWV9SRUNFSVYpKSB7Cj4+PiAgICAgICAgICAgdGltZW91dF9s
-b29wKys7Cj4+PiAtICAgICAgICBpZiAoRFBfVElNRU9VVF9MT09QX0NPVU5UIDwgdGltZW91dF9s
-b29wKSB7Cj4+PiArICAgICAgICBpZiAoRFBfVElNRU9VVF9MT09QX0NPVU5UICogMTAgPCB0aW1l
-b3V0X2xvb3ApIHsKPj4gTm8sIEkgaGF0ZSB0aGlzIGNvZGluZy4KPj4gYW5hbG9naXhfZHBfcmVn
-LmMgaXMgdGhlIGNvbW1vbiBjb2RlIHRoYXQgY2FuIGJlIHNoYXJlZCBieSB2YXJpb3VzIFNvQ3Mu
-Cj4+IFBsZWFzZSwgZmluZCBhbm90aGVyIHdheS4KPgo+IE9rYXksIEkgaGF2ZSBkb3VibGUgY2hl
-Y2tlZCB0aGF0IGkgZG8gaGF2ZSB0aGlzIHByb2JsZW0gaW4gbXkgc2lkZS4gCj4gSG1tbS4uLi4u
-Cj4gSSB0aG91Z2h0IGl0J3Mgb2theSBmb3IgeW91IGlmIEkgZXhwYW5kIHRoZSAiRFBfVElNRU9V
-VF9MT09QX0NPVU5UIiAKPiBkaXJlY3RseSwKPiBpdCB3b24ndCBodXJ0IEV4eW5vcyBwbGF0Zm9y
-bSB0b28gbXVjaCwgY2F1c2UgRXh5bm9zIGRpZG4ndCBoYXZlIHRoaXMgCj4gcHJvYmxlbSwKPiB0
-aGVuIGRyaXZlciB3b3VsZCByZWNlaXZlZCx0aGUgcmVwbHkgY29tbWFuZCB2ZXJ5IHNvb24sIHNv
-IG5vIG1vcmUgCj4gYWRkaXRpb25hbAo+IHdhaXQgdGltZSB3b3VsZCBicmluZyB0byBFeHlub3Mg
-cGxhdGZvcm0uCj4KCk9oLCBzb3JyeSwgbGl0dGxlIG1pc3Rha2VuLCBJIG1lYW4sIGlzIGl0IG9r
-YXkgZm9yIHlvdSB0byBleHBhbmQgdGhlIAoiRFBfVElNRU9VVF9MT09QX0NPVU5UIiBkaXJlY3Rs
-eSA/CgotIFlha2lyCgoKPiBBbmQgYWN0dWFsbHkgdGhlIGRhdGFzaGVldCBoYXZlbid0IGRlc2Ny
-aWJlZCB0aGUgc3BlYyBvZiBhdXggcmVwbHkgCj4gZGVsYXkgdGltZS4KPgo+IFRoYW5rcywKPiAt
-IFlha2lyCj4KPj4gQmVzdCByZWdhcmRzLAo+PiBKaW5nb28gSGFuCj4+Cj4+Cj4+PiAgICAgICAg
-ICAgICAgIGRldl9lcnIoZHAtPmRldiwgIkFVWCBDSCBjb21tYW5kIHJlcGx5IGZhaWxlZCFcbiIp
-Owo+Pj4gICAgICAgICAgICAgICByZXR1cm4gLUVUSU1FRE9VVDsKPj4+ICAgICAgICAgICB9Cj4+
-PiAtLSAKPj4+IDEuOS4xCj4+Cj4+Cj4+Cj4+Cj4KPgo+Cj4gX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KPiBMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QK
-PiBMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcAo+Cj4KPgoKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
-IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Device tree modifications:
+- Pinmux for SPI0 and WiFi GPIOs.
+- SPI0 node with wlcore as a child node.
+
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Acked-by: Igor Grinberg <grinberg-lB3UumIvzKrRNpEZXGUFxA@public.gmane.org>
+---
+Prerequisites:
+This patch applies on Tony's omap-for-v4.5/dt branch.
+
+ arch/arm/boot/dts/am335x-cm-t335.dts | 58 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 57 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/am335x-cm-t335.dts b/arch/arm/boot/dts/am335x-cm-t335.dts
+index 42e9b66..41242a5 100644
+--- a/arch/arm/boot/dts/am335x-cm-t335.dts
++++ b/arch/arm/boot/dts/am335x-cm-t335.dts
+@@ -11,6 +11,7 @@
+ /dts-v1/;
+ 
+ #include "am33xx.dtsi"
++#include <dt-bindings/interrupt-controller/irq.h>
+ 
+ / {
+ 	model = "CompuLab CM-T335";
+@@ -40,6 +41,15 @@
+ 		regulator-max-microvolt = <3300000>;
+ 	};
+ 
++	/* Regulator for WiFi */
++	vwlan_fixed: fixedregulator@2 {
++		compatible = "regulator-fixed";
++		regulator-name = "vwlan_fixed";
++		gpio = <&gpio0 20 GPIO_ACTIVE_HIGH>; /* gpio0_20 */
++		enable-active-high;
++		regulator-boot-off;
++	};
++
+ 	backlight {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&ecap0 0 50000 0>;
+@@ -50,7 +60,10 @@
+ 
+ &am33xx_pinmux {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&bluetooth_pins>;
++	pinctrl-0 = <
++		  &bluetooth_pins
++		  &wifi_pins
++	>;
+ 
+ 	i2c0_pins: pinmux_i2c0_pins {
+ 		pinctrl-single,pins = <
+@@ -223,6 +236,21 @@
+ 		>;
+ 	};
+ 
++	spi0_pins: pinmux_spi0_pins {
++		pinctrl-single,pins = <
++			/* spi0_sclk.spi0_sclk */
++			AM33XX_IOPAD(0x950, PIN_INPUT | MUX_MODE0)
++			/* spi0_d0.spi0_d0 */
++			AM33XX_IOPAD(0x954, PIN_OUTPUT_PULLUP | MUX_MODE0)
++			/* spi0_d1.spi0_d1 */
++			AM33XX_IOPAD(0x958, PIN_INPUT | MUX_MODE0)
++			/* spi0_cs0.spi0_cs0 */
++			AM33XX_IOPAD(0x95C, PIN_OUTPUT | MUX_MODE0)
++			/* spi0_cs1.spi0_cs1 */
++			AM33XX_IOPAD(0x960, PIN_OUTPUT | MUX_MODE0)
++		>;
++	};
++
+ 	/* wl1271 bluetooth */
+ 	bluetooth_pins: pinmux_bluetooth_pins {
+ 		pinctrl-single,pins = <
+@@ -230,6 +258,16 @@
+ 			AM33XX_IOPAD(0x9b0, PIN_OUTPUT_PULLUP | MUX_MODE7)
+ 		>;
+ 	};
++
++	/* wl1271 WiFi */
++	wifi_pins: pinmux_wifi_pins {
++		pinctrl-single,pins = <
++			/* EMU1.gpio3_8 - WiFi IRQ */
++			AM33XX_IOPAD(0x9e8, PIN_INPUT_PULLUP | MUX_MODE7)
++			/* XDMA_EVENT_INTR1.gpio0_20 - WiFi enable */
++			AM33XX_IOPAD(0x9b4, PIN_OUTPUT | MUX_MODE7)
++		>;
++	};
+ };
+ 
+ &uart0 {
+@@ -394,3 +432,21 @@ status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins>;
+ };
++
++&spi0 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi0_pins>;
++	ti,pindir-d0-out-d1-in = <1>;
++	/* WLS1271 WiFi */
++	wlcore: wlcore@1 {
++		compatible = "ti,wl1271";
++		reg = <1>;
++		spi-max-frequency = <48000000>;
++		clock-xtal;
++		ref-clock-frequency = <38400000>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
++		vwlan-supply = <&vwlan_fixed>;
++	};
++};
+-- 
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
