@@ -1,70 +1,57 @@
-From: Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2 3/4] dts/ls2080a: update the DTS for QSPI and DSPI support
-Date: Thu, 24 Dec 2015 19:01:02 +0800
-Message-ID: <1450954863-7540-3-git-send-email-yao.yuan@freescale.com>
-References: <1450954863-7540-1-git-send-email-yao.yuan@freescale.com>
+From: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v10 0/3] mtd: nand: jz4780: Add NAND and BCH drivers
+Date: Thu, 24 Dec 2015 12:20:12 +0000
+Message-ID: <1450959615-30246-1-git-send-email-harvey.hunt@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450954863-7540-1-git-send-email-yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yao.yuan-3arQi8VN3Tc@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: alex-oucj9GSTHrKwpo/f3jThPQ@public.gmane.org, Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>
----
-Changed in v2:
-Update my email to <yao.yuan-3arQi8VN3Tc@public.gmane.org>
----
- arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts | 9 ++++++++-
- arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi    | 4 ++--
- 2 files changed, 10 insertions(+), 3 deletions(-)
+Hi,
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-index 4cb996d..e8801fa 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-@@ -178,7 +178,14 @@
- 
- &qspi {
- 	status = "okay";
--	qflash0: s25fl008k {
-+	flash0: s25fl256s1@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "st,m25p80";
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+	};
-+	flash2: s25fl256s1@2 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		compatible = "st,m25p80";
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-index e81cd48..7a80666 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-@@ -250,7 +250,7 @@
- 
- 		dspi: dspi@2100000 {
- 			status = "disabled";
--			compatible = "fsl,vf610-dspi";
-+			compatible = "fsl,ls2085a-dspi", "fsl,ls2080a-dspi";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <0x0 0x2100000 0x0 0x10000>;
-@@ -371,7 +371,7 @@
- 
- 		qspi: quadspi@20c0000 {
- 			status = "disabled";
--			compatible = "fsl,vf610-qspi";
-+			compatible = "fsl,ls2080a-qspi", "fsl,ls1021a-qspi";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <0x0 0x20c0000 0x0 0x10000>,
+This series adds support for the BCH controller and NAND devices on
+the Ingenic JZ4780 SoC.
+
+Tested on the MIPS Creator Ci20 board. All dependencies are now in
+mainline.
+
+This version of the series is based on l2-mtd/master.
+
+As suggested by Boris [0], refactoring work has been done to treat NAND
+chips as children nodes of the NAND controller.
+
+Review and feedback welcome.
+
+Thanks,
+
+Harvey
+
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+
+Alex Smith (3):
+  dt-bindings: binding for jz4780-{nand,bch}
+  mtd: nand: jz4780: driver for NAND devices on JZ4780 SoCs
+  MIPS: dts: jz4780/ci20: Add NEMC, BCH and NAND device tree nodes
+
+ .../bindings/mtd/ingenic,jz4780-nand.txt           |  86 +++++
+ arch/mips/boot/dts/ingenic/ci20.dts                |  63 ++++
+ arch/mips/boot/dts/ingenic/jz4780.dtsi             |  26 ++
+ drivers/mtd/nand/Kconfig                           |   7 +
+ drivers/mtd/nand/Makefile                          |   1 +
+ drivers/mtd/nand/jz4780_bch.c                      | 381 +++++++++++++++++++
+ drivers/mtd/nand/jz4780_bch.h                      |  44 +++
+ drivers/mtd/nand/jz4780_nand.c                     | 417 +++++++++++++++++++++
+ 8 files changed, 1025 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+ create mode 100644 drivers/mtd/nand/jz4780_bch.c
+ create mode 100644 drivers/mtd/nand/jz4780_bch.h
+ create mode 100644 drivers/mtd/nand/jz4780_nand.c
+
 -- 
-2.1.0.27.g96db324
+2.6.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
