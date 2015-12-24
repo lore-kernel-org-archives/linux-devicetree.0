@@ -1,182 +1,99 @@
-From: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
-Subject: Re: [PATCH 0/3] drivers: net: cpsw: phy-handle fixes
-Date: Wed, 23 Dec 2015 20:18:16 -0500
-Message-ID: <20151223201816.1a4bd0f6.drivshin.allworx@gmail.com>
-References: <1450830994-5450-1-git-send-email-drivshin.allworx@gmail.com>
-	<CABr+WT=oDpp56jouAD57UM8_38geD1MMizZcDnx14maf2ohpCw@mail.gmail.com>
-	<20151223165454.6e4d5950.drivshin.allworx@gmail.com>
-	<CABr+WTm=Oo16=qB6dyO6ZhUUz0307ROi=o270Rac2R4W5-usjg@mail.gmail.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v12 16/18] drm: bridge: analogix/dp: expand the wait time
+ for looking AUX CH reply flag
+Date: Thu, 24 Dec 2015 09:23:05 +0800
+Message-ID: <567B48F9.6010902@rock-chips.com>
+References: <1450873538-18304-1-git-send-email-ykk@rock-chips.com>
+ <1450875064-19627-1-git-send-email-ykk@rock-chips.com>
+ <000001d13d94$120e0d60$362a2820$@com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CABr+WTm=Oo16=qB6dyO6ZhUUz0307ROi=o270Rac2R4W5-usjg@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Nicolas Chauvet <kwizart@gmail.com>
-Cc: netdev@vger.kernel.org, Markus Brunner <systemprogrammierung.brunner@gmail.com>, devicetree@vger.kernel.org, Daniel Trautmann <dtrautmann@ibhsoftec-sps.de>, linux-omap@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>, Pascal Speck <kernel@iktek.de>, Heiko Schocher <hs@denx.de>, David Miller <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <000001d13d94$120e0d60$362a2820$@com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jingoo Han <jingoohan1@gmail.com>, 'Inki Dae' <inki.dae@samsung.com>, 'Mark Yao' <mark.yao@rock-chips.com>, 'Heiko Stuebner' <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, 'Russell King' <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 'Kishon Vijay Abraham I' <kishon@ti.com>, javier@osg.samsung.com, 'Rob Herring' <robh+dt@kernel.org>, 'Andy Yan' <andy.yan@rock-chips.com>, 'Thierry Reding' <treding@nvidia.com>, 'Gustavo Padovan' <gustavo.padovan@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 24 Dec 2015 00:34:49 +0100
-Nicolas Chauvet <kwizart@gmail.com> wrote:
-
-> 2015-12-23 22:54 GMT+01:00 David Rivshin (Allworx) <
-> drivshin.allworx@gmail.com>:
-> 
-> > On Wed, 23 Dec 2015 22:20:58 +0100
-> > Nicolas Chauvet <kwizart@gmail.com> wrote:
-> >
-> > > 2015-12-23 1:36 GMT+01:00 David Rivshin (Allworx) <
-> > > drivshin.allworx@gmail.com>:
-> > >
-> > > > From: David Rivshin <drivshin@allworx.com>
-> > > >
-> > > > This series is based on the tip of the net tree.
-> > > >
-> > > > The first patch fixes a bug that makes dual_emac mode break if
-> > > > either slave uses the phy-handle property in the devicetree.
-> > > >
-> > > > The second patch fixes some cosmetic problems with error
-> > > > messages, and also makes the binding documentation more
-> > > > explicit.
-> > > >
-> > > > The third patch cleans up the fixed-link case to work like
-> > > > the now-fixed phy-handle case.
-> > > >
-> > > > I have tested on the following hardware configurations:
-> > > >  - (EVMSK) dual emac, phy_id property in both slaves
-> > > >  - (BeagleBoneBlack) single emac, phy_id property
-> > > >  - (custom) single emac, fixed-link subnode
-> > > > Note that I don't have a board which would uses a phy-handle
-> > > > property, though I have used hacked devicetrees to exercise the
-> > > > code paths. Testing by anyone who has real hardware using
-> > > > phy-handle or dual_emac with fixed-link would be appreciated.
-> > > >
-> > > > David Rivshin (3):
-> > > >   drivers: net: cpsw: fix parsing of phy-handle DT property in
-> > > > dual_emac config
-> > > >   drivers: net: cpsw: fix error messages when using phy-handle
-> > > > DT property
-> > > >   drivers: net: cpsw: use of_phy_connect() in fixed-link case
-> > > >
-> > > >  Documentation/devicetree/bindings/net/cpsw.txt |  4 +--
-> > > >  drivers/net/ethernet/ti/cpsw.c                 | 40
-> > > > +++++++++++++-------------
-> > > >  drivers/net/ethernet/ti/cpsw.h                 |  1 +
-> > > >  3 files changed, 23 insertions(+), 22 deletions(-)
-> > > >
-> > > >
-> > > This serie failed with me on dm8418 hp-t410 on top of linux-next
-> > > from today whereas the same patch level and same methods without
-> > > this serie is working fine.
-> > > I wasn't able to ping anything on a minimal rootfs with static ip
-> > > set from cmdline from kernel.
-> > >
-> > > Sorry for  the lack of details, feel free to add me to any other
-> > > revision of the patch if any.
-> > > I will be able to do more testing next month.
-> >
-> > (Sorry for the duplicate, doing a reply-all this time. Not sure why
-> > it looked like a non-list email the first time)
-> >
-> My bad, I've replied twice, but only last on-list.
-> 
-> 
-> > Thanks for testing. I found the dm8148-t410.dts devicetree in the
-> > kernel source, and it uses the phy_id for both slaves, just like the
-> > EVMSK board I tested. So I can't think of an obvious reason for the
-> > problem.
-> > Would you be able to send the 'dmesg' log from right after bootup?
-> > I'm hoping there is an error message in there with some clue.
-> >
-> here is the full dmesg output with this serie applied to linux-next:
-> http://ur1.ca/ocvs6
-> 
-> [    2.281524] davinci_mdio 4a100800.mdio: davinci mdio revision 1.6
-> [    2.287909] davinci_mdio 4a100800.mdio: detected phy mask fffffffe
-> [    2.302663] Atheros 8031 ethernet 4a100800.mdio:00: GPIO lookup for
-> consumer reset
-> [    2.302686] Atheros 8031 ethernet 4a100800.mdio:00: using lookup
-> tables for GPIO lookup
-> [    2.302732] Atheros 8031 ethernet 4a100800.mdio:00: lookup for GPIO
-> reset failed
-> [    2.302860] libphy: 4a100800.mdio: probed
-> [    2.307063] davinci_mdio 4a100800.mdio: phy[0]: device
-> 4a100800.mdio:00, driver Atheros 8031 ethernet
-> [    2.317945] cpsw 4a100000.ethernet: Detected MACID =
-> 00:18:32:60:8e:38
-> 
-> * 19:06 < nchauvet> btw with this dmesg, I've tried to apply this
-> serie: http://marc.info/?l=linux-omap&m=145032865615589&w=2, but it
-> doesn't seem to work for me (I cannot ping my gateway anymore)
-
-That particular email was about a v1 patch, which was then replaced
-by a 3-patch series for v2:
-http://marc.info/?l=linux-netdev&m=145032497014944&w=2
-That is already in linux-next, and below you show that you have it.
-
-> So I've remembered that I've double checked the Ethernet wire, but I
-> agree it can also be another random issue.
-
-If it works without this series, but fails with it, that is strong
-evidence that something in this series either is a bug or exposes
-one.
-
-> > Just to verify, is your linux-next tree up-to-date? This series
-> > needs to be applied is based on another recent series of 3 patches
-> > to cpsw.c. Although I doubt it would apply cleanly at all without
-> > those.
-> 
-> From my linux-next base, related to cpsw, I have:
-> git log --oneline cpsw*
-> a6b257c Merge remote-tracking branch 'net-next/master'
-> dfc0a6d drivers: net: cpsw: increment reference count on fixed-link
-> PHY node 
-> f1eea5c drivers: net: cpsw: fix RMII/RGMII mode when used
-> with fixed-link PHY
-> 1873c58 ethernet:ti:cpsw: fix phy identification with multiple slaves
-> on fixed-phy
-> f188b95 Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net
-> 0db19b8 net: cpsw: Fix ethernet regression for dm814
-> 
-> Theses patches don't lead to any issue on the t410 device.
-
-Thanks for verifying. 1873c58, f1eea5, and cdfc0a6d are the previous
-patches I referred to.
-
-> Comparing a dmesg output where the driver work: it doesn't show any
-> difference from the quoted lines:
-> http://paste.fedoraproject.org/304248/45086839/
-
-Thanks for the additional info. I also don't see any red flags in the 
-dmesg output. 
-
-When I looked closer at the dm8148-t410 devicetree, I see that it's 
-actually more like the BeagleBones than an EVMSK. It specifies two 
-slaves, but is not in dual_emac mode. Other than using RGMII mode 
-instead of MII, the emac configuration in the DT looks the same to
-me. Further, your dmesg shows there is only one actual PHY, same as
-a BeagleBone. I assume that's historical, as specifying slaves=<1> 
-used to crash (fixed by 1973db0df7c3b in v4.2).
-
-Despite the similarities, I have been unable to reproduce a failure 
-on a BeagleBone-Black running linux-next plus this series. Things
-that I've checked in dmesg output look similar to yours, so I'm 
-currently out of ideas I can check myself. If I could ask you for
-some more assistance in debugging:
-
-Are you using the devicetree from the linux-next source, or is it 
-modified? If it's modified, can you send it?
-
-Could you check the phy_interface mode used? I know that being wrong
-would generate such symptoms. Quickest way to check that (and related
-bits) is probably:
-   grep -H . /sys/bus/mdio_bus/devices/*/phy*
-Based on the devicetree in the kernel source and your dmesg output, 
-I expect there to be a single PHY with phy_interface=rgmii and
-phy_id=0x4dd074. If any of those aspects don't match what sysfs 
-reports, then that's likely to be the cause.
-
-Failing that, I would next try to apply the 3 patches in this series
-one at a time (or bisect them) to identify the specific culprit. 
-
-Thanks.
+SGkgSmluZ29vLAoKT2theSwgZmluZSwgSSB3b3VsZCBkcm9wIHRoaXMgcGF0Y2gsIHVudGlsIEkg
+Zm91bmQgdGhlIHRoZSByb290IGNhdXNlLgoKLSBZYWtpcgoKT24gMTIvMjMvMjAxNSAxMToxMCBQ
+TSwgSmluZ29vIEhhbiB3cm90ZToKPiBPbiBXZWRuZXNkYXksIERlY2VtYmVyIDIzLCAyMDE1IDk6
+NTEgUE0sIFlha2lyIFlhbmcgd3JvdGU6Cj4+IE9uIFJvY2tjaGlwIHBsYXRmb3JtLCBzb21ldGlt
+ZXMgZHJpdmVyIHdvdWxkIGZhaWxlZCBhdCByZWFkaW5nIEVESUQKPj4gbWVzc2FnZSwgYW5kIGl0
+J3MgY2F1c2VkIGJ5IHRoZSBBVVggcmVwbHkgZmxhZyB3b3VsZG4ndCByZWNlaXZlZCB1bmRlcgo+
+PiB0aGUgMTAwKjEwdXMgd2FpdCB0aW1lLgo+IFRoZSBwcm9ibGVtIGlzIHNwZWNpZmljIGZvciBS
+b2NrY2hpcCBwbGF0Zm9ybS4KPiBBbHNvLCAxIG1zIGlzIGxvbmcgdGltZS4KPiBUaGUgYmVzdCB3
+YXkgaXMgdGhhdCB5b3VyIGhhcmR3YXJlIGVuZ2luZWVycyBmaW5kIHRoZSByb290IGNhdXNlLgo+
+IEkgY2Fubm90IHVuZGVyc3RhbmQgd2h5IHlvdXIgZW5naW5lZXJzIGNhbm5vdCBmaW5kIHRoZSBy
+b290IGNhdXNlLiA6LSgKPgo+PiBCdXQgYWZ0ZXIgZXhwYW5kIHRoZSB3YWl0IHRpbWUgYSBsaXR0
+bGUsIHRoZSBBVVggcmVwbHkgZmxhZyB3b3VsZCBiZQo+PiBzZXQsIHNvIG1heWJlIHRoZSB3YWl0
+IHRpbWUgaXMgYSBsaXR0bGUgY3JpdGljYWwuIEJlc2lkZXMgdGhlIGFuYWxvZ2l4Cj4+IGRwIGJv
+b2sgaGF2ZW4ndCByZW1pbmRlZCB0aGUgc3RhbmRhcmQgd2FpdCBmb3IgbG9va2luZyBBVVggcmVw
+bHkgZmxhZywKPj4gc28gSSB0aG91Z2h0IGl0J3Mgb2theSB0byBleHBhbmQgdGhlIHdhaXQgdGlt
+ZS4KPj4KPj4gQW5kIHRoZSBleHRlcm5hbCB3YWl0IHRpbWUgd29uJ3QgaHVydCBFeHlub3MgRFAg
+dG9vIG11Y2gsIGNhdXNlIHRoZXkKPj4gd291bGRuJ3QgbWVldCB0aGlzIHByb2JsZW0sIHRoZW4g
+ZHJpdmVyIHdvdWxkIHJlY2VpdmVkIHRoZSByZXBseSBjb21tYW5kCj4+IHZlcnkgc29vbiwgc28g
+bm8gbW9yZSBhZGRpdGlvbmFsIHdhaXQgdGltZSB3b3VsZCBicmluZyB0byBFeHlub3MgcGxhdGZv
+cm0uCj4gVGhlbiwgd2hlbiBsb29wIHRpbWUgaGFwcGVucyBvbiBFeHlub3MgcGxhdGZvcm0sIGl0
+IHdpbGwgdGFrZSBsb25nIHRpbWUKPiB0byByZXR1cm4gZXJyb3IuCj4KPj4gU2lnbmVkLW9mZi1i
+eTogWWFraXIgWWFuZyA8eWtrQHJvY2stY2hpcHMuY29tPgo+PiAtLS0KPj4gQ2hhbmdlcyBpbiB2
+MTI6Cj4+IC0gVXNpbmcgYW5vdGhlciB3YXkgdG8gZXhwYW5kIHRoZSBBVVggcmVwbHkgd2FpdCB0
+aW1lIChKaW5nb28pCj4+Cj4+IENoYW5nZXMgaW4gdjExOiBOb25lCj4+IENoYW5nZXMgaW4gdjEw
+OiBOb25lCj4+IENoYW5nZXMgaW4gdjk6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2ODogTm9uZQo+PiBD
+aGFuZ2VzIGluIHY3OiBOb25lCj4+IENoYW5nZXMgaW4gdjY6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2
+NTogTm9uZQo+PiBDaGFuZ2VzIGluIHY0OiBOb25lCj4+IENoYW5nZXMgaW4gdjM6IE5vbmUKPj4g
+Q2hhbmdlcyBpbiB2MjogTm9uZQo+Pgo+PiAgIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9n
+aXgvYW5hbG9naXhfZHBfcmVnLmMgfCAxMCArKysrLS0tLS0tCj4+ICAgMSBmaWxlIGNoYW5nZWQs
+IDQgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhfZHBfcmVnLmMKPj4gYi9kcml2ZXJz
+L2dwdS9kcm0vYnJpZGdlL2FuYWxvZ2l4L2FuYWxvZ2l4X2RwX3JlZy5jCj4+IGluZGV4IGNiYTNm
+ZmQuLjg2ODdlZWEgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9n
+aXgvYW5hbG9naXhfZHBfcmVnLmMKPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbmFs
+b2dpeC9hbmFsb2dpeF9kcF9yZWcuYwo+PiBAQCAtNDcxLDcgKzQ3MSw3IEBAIGludCBhbmFsb2dp
+eF9kcF9zdGFydF9hdXhfdHJhbnNhY3Rpb24oc3RydWN0IGFuYWxvZ2l4X2RwX2RldmljZSAqZHAp
+Cj4+ICAgewo+PiAgIAlpbnQgcmVnOwo+PiAgIAlpbnQgcmV0dmFsID0gMDsKPj4gLQlpbnQgdGlt
+ZW91dF9sb29wID0gMDsKPj4gKwl1bnNpZ25lZCBsb25nIHRpbWVvdXQ7Cj4+Cj4+ICAgCS8qIEVu
+YWJsZSBBVVggQ0ggb3BlcmF0aW9uICovCj4+ICAgCXJlZyA9IHJlYWRsKGRwLT5yZWdfYmFzZSAr
+IEFOQUxPR0lYX0RQX0FVWF9DSF9DVExfMik7Cj4+IEBAIC00NzksMTQgKzQ3OSwxMiBAQCBpbnQg
+YW5hbG9naXhfZHBfc3RhcnRfYXV4X3RyYW5zYWN0aW9uKHN0cnVjdCBhbmFsb2dpeF9kcF9kZXZp
+Y2UgKmRwKQo+PiAgIAl3cml0ZWwocmVnLCBkcC0+cmVnX2Jhc2UgKyBBTkFMT0dJWF9EUF9BVVhf
+Q0hfQ1RMXzIpOwo+Pgo+PiAgIAkvKiBJcyBBVVggQ0ggY29tbWFuZCByZXBseSByZWNlaXZlZD8g
+Ki8KPj4gLQlyZWcgPSByZWFkbChkcC0+cmVnX2Jhc2UgKyBBTkFMT0dJWF9EUF9JTlRfU1RBKTsK
+Pj4gLQl3aGlsZSAoIShyZWcgJiBSUExZX1JFQ0VJVikpIHsKPj4gLQkJdGltZW91dF9sb29wKys7
+Cj4+IC0JCWlmIChEUF9USU1FT1VUX0xPT1BfQ09VTlQgPCB0aW1lb3V0X2xvb3ApIHsKPj4gKwl0
+aW1lb3V0ID0gamlmZmllcyArIG1zZWNzX3RvX2ppZmZpZXMoNSk7Cj4+ICsJd2hpbGUgKChyZWFk
+bChkcC0+cmVnX2Jhc2UgKyBBTkFMT0dJWF9EUF9JTlRfU1RBKSAmIFJQTFlfUkVDRUlWKSA9PSAw
+KSB7Cj4+ICsJCWlmICh0aW1lX2FmdGVyKGppZmZpZXMsIHRpbWVvdXQpKSB7Cj4+ICAgCQkJZGV2
+X2VycihkcC0+ZGV2LCAiQVVYIENIIGNvbW1hbmQgcmVwbHkgZmFpbGVkIVxuIik7Cj4+ICAgCQkJ
+cmV0dXJuIC1FVElNRURPVVQ7Cj4+ICAgCQl9Cj4+IC0JCXJlZyA9IHJlYWRsKGRwLT5yZWdfYmFz
+ZSArIEFOQUxPR0lYX0RQX0lOVF9TVEEpOwo+IFNvcnJ5LCBJIGRvbid0IGxpa2UgeW91ciBwYXRj
+aC4KPgo+IFRoZSBwcm9ibGVtIGhhcHBlbnMgYmVjYXVzZSBvZiBSb2NrY2hpcCBwbGF0Zm9ybS4K
+PiBTbywgeW91IG5lZWQgdG8gYWRkIHdvcmthcm91bmQgZm9yIG9ubHkgUm9ja2NoaXAgcGxhdGZv
+cm0uCj4KPiBKdXN0IGFkZCBuZXcgRFQgcHJvcGVydHkgYW5kIG5ldyB2YXJpYWJsZSBmb3IgdGhl
+IHZhbHVlIGZvciB3YWl0IHRpbWUuCj4gV2hlbiwgdGhlIHByb2JlIGlzIGNhbGxlZCwgbmV3IHdh
+aXQgdGltZSB2YWx1ZSBpcyByZWFkIGZyb20gUm9ja2NoaXAgRFQgZmlsZS4KPiBUaGVuLCB0aGUg
+bmV3IHdhaXQgdGltZSB2YWx1ZSBjYW4gYmUgd3JpdHRlbiB0byB0aGUgbmV3IHZhcmlhYmxlLgo+
+Cj4gICAgICBuZXcgRFQgcHJvcGVydHk6IHdhaXQtdGltZS1hdXgKPiAgICAgIG5ldyB2YXJpYWJs
+ZTogd2FpdF90aW1lX2F1eAo+Cj4KPiBJZiAoICkgLy8gTmV3IERUCj4gICAgICB3YWl0X3RpbWVf
+YXV4ID0gTmV3IERUOwo+IGVsc2UKPiAgICAgIHdhaXRfdGltZV9hdXggPSAxMDsKPgo+Cj4+ICAg
+CQl1c2xlZXBfcmFuZ2UoMTAsIDExKTsKPiBJZiB0aGVyZSBpcyBOTyAgbmV3IHdhaXQgdGltZSB2
+YWx1ZSBmcm9tIERUIGZpbGUsIHRoZSBkZWZhdWx0IHZhbHVlICcxMCcgaXMKPiB1c2VkIGZvciBz
+bGVlcC4KPgo+IEJ1dCwgaWYgdGhlcmUgaXMgbmV3IHdhaXQgdGltZSB2YWx1ZSBmcm9tIERUIGZp
+bGUsIG5ldyB3YWl0IHRpbWUgdmFsdWUKPiBjYW4gYmUgdXNlZCBmb3Igc2xlZXAuCj4KPiAgICAg
+ICAgICAgICAgICAgICB1c2xlZXBfcmFuZ2UoZHAtPndhaXRfdGltZV9hdXgsIGRwLT53YWl0X3Rp
+bWVfYXV4ICsgMSk7Cj4KPiBXaGF0IEkgd2FudCB0byBzYXkgaXMgdGhhdCB0aGVyZSBzaG91bGQg
+YmUgTk8gZWZmZWN0IG9uIEV4eW5vcyBwbGF0Zm9ybSwKPiBiZWNhdXNlIG9mIHRoZSBoYXJkd2Fy
+ZSBidWcgb2YgUm9ja2NoaXAgcGxhdGZvcm0uCj4KPiBCZXN0IHJlZ2FyZHMsCj4gSmluZ29vIEhh
+bgo+Cj4+ICAgCX0KPj4KPj4gLS0KPj4gMS45LjEKPgo+Cj4KPgoKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
