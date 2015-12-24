@@ -1,169 +1,156 @@
-From: Harvey Hunt <harvey.hunt@imgtec.com>
-Subject: [PATCH v10 3/3] MIPS: dts: jz4780/ci20: Add NEMC, BCH and NAND device tree nodes
-Date: Thu, 24 Dec 2015 12:20:15 +0000
-Message-ID: <1450959615-30246-4-git-send-email-harvey.hunt@imgtec.com>
-References: <1450959615-30246-1-git-send-email-harvey.hunt@imgtec.com>
+From: <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [v2] powerpc/fsl: Update fman dt binding with pcs-phy and tbi-phy
+Date: Thu, 24 Dec 2015 03:42:11 +0200
+Message-ID: <1450921331-25309-1-git-send-email-igal.liberman@freescale.com>
+Reply-To: <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1450959615-30246-1-git-send-email-harvey.hunt@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org, boris.brezillon@free-electrons.com, computersforpeace@gmail.com
-Cc: alex@alex-smith.me.uk, Alex Smith <alex.smith@imgtec.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, David Woodhouse <dwmw2@infradead.org>, Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, robh@kernel.org, Harvey Hunt <harvey.hunt@imgtec.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shaohui.xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Alex Smith <alex.smith@imgtec.com>
+From: Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Add device tree nodes for the NEMC and BCH to the JZ4780 device tree,
-and make use of them in the Ci20 device tree to add a node for the
-board's NAND.
+The FMan contains internal PHY devices used for SGMII connections
+to external PHYs. When these PHYs are in use a reference is needed
+for both the external PHY and the internal one. For the external
+PHY phy-handle provides the reference. For the internal PHY a new
+handle is required.
+In dTSEC, the internal PHY is a TBI (Ten Bit Interface) PHY,
+the handle used will be tbi-handle.
+In mEMAC, the internal PHY is a PCS (Physical Coding Sublayer) PHY,
+the handle used will be pcsphy-handle.
 
-Note that since the pinctrl driver is not yet upstream, this includes
-neither pin configuration nor busy/write-protect GPIO pins for the
-NAND. Use of the NAND relies on the boot loader to have left the pins
-configured in a usable state, which should be the case when booted
-from the NAND.
-
-Signed-off-by: Alex Smith <alex.smith@imgtec.com>
-Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Brian Norris <computersforpeace@gmail.com>
-Cc: Paul Burton <paul.burton@imgtec.com>
-Cc: linux-mtd@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mips@linux-mips.org
-Cc: robh@kernel.org
-Signed-off-by: Harvey Hunt <harvey.hunt@imgtec.com>
+Signed-off-by: Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
-v9 -> v10:
- - No change.
 
-v8 -> v9:
- - Represent the partition table as a subnode of a NAND chip. 
+v1 --> v2
+	Addressed feedback from Scott Wood:
+	- Improved commit description
+	- Added missing parentheses
 
-v7 -> v8:
- - Describe the NAND chips as children nodes of the NAND controller.
- - Remove ingenic, prefix from ECC settings.
- - Renamed some ECC settings.
+ .../devicetree/bindings/powerpc/fsl/fman.txt       |   40 ++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-v6 -> v7:
- - Add nand-ecc-mode to DT.
- - Add nand-on-flash-bbt to DT.
-
-v4 -> v5:
- - New patch adding DT nodes for the NAND so that the driver can be
-   tested.
-
- arch/mips/boot/dts/ingenic/ci20.dts    | 63 ++++++++++++++++++++++++++++++++++
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 26 ++++++++++++++
- 2 files changed, 89 insertions(+)
-
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index 9fcb9e7..782258c 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -42,3 +42,66 @@
- &uart4 {
- 	status = "okay";
- };
-+
-+&nemc {
-+	status = "okay";
-+
-+	nandc: nand-controller@1 {
-+		compatible = "ingenic,jz4780-nand";
-+		reg = <1 0 0x1000000>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ingenic,bch-controller = <&bch>;
-+
-+		ingenic,nemc-tAS = <10>;
-+		ingenic,nemc-tAH = <5>;
-+		ingenic,nemc-tBP = <10>;
-+		ingenic,nemc-tAW = <15>;
-+		ingenic,nemc-tSTRV = <100>;
-+
-+		nand@1 {
-+			reg = <1>;
-+
-+			nand-ecc-step-size = <1024>;
-+			nand-ecc-strength = <24>;
-+			nand-ecc-mode = "hw";
-+			nand-on-flash-bbt;
-+
-+			partitions {
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+
-+				partition@0 {
-+					label = "u-boot-spl";
-+					reg = <0x0 0x0 0x0 0x800000>;
-+				};
-+
-+				partition@0x800000 {
-+					label = "u-boot";
-+					reg = <0x0 0x800000 0x0 0x200000>;
-+				};
-+
-+				partition@0xa00000 {
-+					label = "u-boot-env";
-+					reg = <0x0 0xa00000 0x0 0x200000>;
-+				};
-+
-+				partition@0xc00000 {
-+					label = "boot";
-+					reg = <0x0 0xc00000 0x0 0x4000000>;
-+				};
-+
-+				partition@0x8c00000 {
-+					label = "system";
-+					reg = <0x0 0x4c00000 0x1 0xfb400000>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&bch {
-+	status = "okay";
-+};
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index 65389f6..b868b42 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -108,4 +108,30 @@
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+index 1fc5328..55c2c03 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+@@ -315,6 +315,16 @@ PROPERTIES
+ 		Value type: <phandle>
+ 		Definition: A phandle for 1EEE1588 timer.
  
- 		status = "disabled";
- 	};
++- pcsphy-handle
++		Usage required for "fsl,fman-memac" MACs
++		Value type: <phandle>
++		Definition: A phandle for pcsphy.
 +
-+	nemc: nemc@13410000 {
-+		compatible = "ingenic,jz4780-nemc";
-+		reg = <0x13410000 0x10000>;
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges = <1 0 0x1b000000 0x1000000
-+			  2 0 0x1a000000 0x1000000
-+			  3 0 0x19000000 0x1000000
-+			  4 0 0x18000000 0x1000000
-+			  5 0 0x17000000 0x1000000
-+			  6 0 0x16000000 0x1000000>;
++- tbi-handle
++		Usage required for "fsl,fman-dtsec" MACs
++		Value type: <phandle>
++		Definition: A phandle for tbiphy.
 +
-+		clocks = <&cgu JZ4780_CLK_NEMC>;
+ EXAMPLE
+ 
+ fman1_tx28: port@a8000 {
+@@ -340,6 +350,7 @@ ethernet@e0000 {
+ 	reg = <0xe0000 0x1000>;
+ 	fsl,fman-ports = <&fman1_rx8 &fman1_tx28>;
+ 	ptp-timer = <&ptp-timer>;
++	tbi-handle = <&tbi0>;
+ };
+ 
+ ============================================================================
+@@ -415,6 +426,13 @@ PROPERTIES
+ 		The settings and programming routines for internal/external
+ 		MDIO are different. Must be included for internal MDIO.
+ 
++For internal PHY device on internal mdio bus, a PHY node should be created.
++See the definition of the PHY node in booting-without-of.txt for an
++example of how to define a PHY (Internal PHY has no interrupt line).
++- For "fsl,fman-mdio" compatible internal mdio bus, the PHY is TBI PHY.
++- For "fsl,fman-memac-mdio" compatible internal mdio bus, the PHY is PCS PHY,
++  PCS PHY addr must be '0'.
 +
-+		status = "disabled";
+ EXAMPLE
+ 
+ Example for FMan v2 external MDIO:
+@@ -425,12 +443,29 @@ mdio@f1000 {
+ 	interrupts = <101 2 0 0>;
+ };
+ 
++Example for FMan v2 internal MDIO:
++
++mdio@e3120 {
++	compatible = "fsl,fman-mdio";
++	reg = <0xe3120 0xee0>;
++	fsl,fman-internal-mdio;
++
++	tbi1: tbi-phy@8 {
++		reg = <0x8>;
++		device_type = "tbi-phy";
 +	};
++};
 +
-+	bch: bch@134d0000 {
-+		compatible = "ingenic,jz4780-bch";
-+		reg = <0x134d0000 0x10000>;
+ Example for FMan v3 internal MDIO:
+ 
+ mdio@f1000 {
+ 	compatible = "fsl,fman-memac-mdio";
+ 	reg = <0xf1000 0x1000>;
+ 	fsl,fman-internal-mdio;
 +
-+		clocks = <&cgu JZ4780_CLK_BCH>;
-+
-+		status = "disabled";
++	pcsphy6: ethernet-phy@0 {
++		reg = <0x0>;
 +	};
  };
+ 
+ =============================================================================
+@@ -568,6 +603,7 @@ fman@400000 {
+ 		cell-index = <0>;
+ 		reg = <0xe0000 0x1000>;
+ 		fsl,fman-ports = <&fman1_rx_0x8 &fman1_tx_0x28>;
++		tbi-handle = <&tbi5>;
+ 	};
+ 
+ 	ethernet@e2000 {
+@@ -575,6 +611,7 @@ fman@400000 {
+ 		cell-index = <1>;
+ 		reg = <0xe2000 0x1000>;
+ 		fsl,fman-ports = <&fman1_rx_0x9 &fman1_tx_0x29>;
++		tbi-handle = <&tbi6>;
+ 	};
+ 
+ 	ethernet@e4000 {
+@@ -582,6 +619,7 @@ fman@400000 {
+ 		cell-index = <2>;
+ 		reg = <0xe4000 0x1000>;
+ 		fsl,fman-ports = <&fman1_rx_0xa &fman1_tx_0x2a>;
++		tbi-handle = <&tbi7>;
+ 	};
+ 
+ 	ethernet@e6000 {
+@@ -589,6 +627,7 @@ fman@400000 {
+ 		cell-index = <3>;
+ 		reg = <0xe6000 0x1000>;
+ 		fsl,fman-ports = <&fman1_rx_0xb &fman1_tx_0x2b>;
++		tbi-handle = <&tbi8>;
+ 	};
+ 
+ 	ethernet@e8000 {
+@@ -596,6 +635,7 @@ fman@400000 {
+ 		cell-index = <4>;
+ 		reg = <0xf0000 0x1000>;
+ 		fsl,fman-ports = <&fman1_rx_0xc &fman1_tx_0x2c>;
++		tbi-handle = <&tbi9>;
+ 
+ 	ethernet@f0000 {
+ 		cell-index = <8>;
 -- 
-2.6.4
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
