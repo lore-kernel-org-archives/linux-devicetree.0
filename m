@@ -1,58 +1,140 @@
-From: Sharma Bhupesh <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v3 2/2] dts/ls2080a: Update DTSI to add support of SP805
- WDT
-Date: Thu, 24 Dec 2015 20:41:54 +0000
-Message-ID: <BN3PR0301MB1298AF2C5A88FCA392D0E9DD82E70@BN3PR0301MB1298.namprd03.prod.outlook.com>
-References: <1450189825-29065-1-git-send-email-bhupesh.sharma@freescale.com>
- <1450189825-29065-3-git-send-email-bhupesh.sharma@freescale.com>
- <CAFTCetS7P6wF3MhgMSXSXP_jnLQvBc-NSY0TW3OOnCjtbL0N_w@mail.gmail.com>
- <201512241118.32946.arnd@arndb.de>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] ARM: shmobile: porter: add DU DT support
+Date: Fri, 25 Dec 2015 01:45:30 +0300
+Message-ID: <2158897.lfmL4b1c4V@wasted.cogentembedded.com>
+References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201512241118.32946.arnd-r2nGTMty4D4@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Bhupesh SHARMA <bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Li Leo <LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQXJuZCBCZXJnbWFubiBb
-bWFpbHRvOmFybmRAYXJuZGIuZGVdDQo+IFNlbnQ6IFRodXJzZGF5LCBEZWNlbWJlciAyNCwgMjAx
-NSAzOjQ5IFBNDQo+IFRvOiBCaHVwZXNoIFNIQVJNQQ0KPiBDYzogU2hhcm1hIEJodXBlc2gtQjQ1
-MzcwOyBNYXJrIFJ1dGxhbmQ7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmc7IE9sb2YgSm9oYW5zc29uOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gUm9iIEhl
-cnJpbmc7IFdpbGwgRGVhY29uOyBDYXRhbGluIE1hcmluYXM7IExpIFlhbmctTGVvLVI1ODQ3Mjsg
-V29vZA0KPiBTY290dC1CMDc0MjE7IFlvZGVyIFN0dWFydC1CMDgyNDg7IHNoYXduLmd1b0BsaW5h
-cm8ub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMi8yXSBkdHMvbHMyMDgwYTogVXBkYXRl
-IERUU0kgdG8gYWRkIHN1cHBvcnQgb2YNCj4gU1A4MDUgV0RUDQo+IA0KPiBPbiBXZWRuZXNkYXkg
-MjMgRGVjZW1iZXIgMjAxNSwgQmh1cGVzaCBTSEFSTUEgd3JvdGU6DQo+ID4NCj4gPiBIaSBBcm5k
-LCBPbG9mLCBLZXZpbg0KPiA+DQo+ID4gT24gVHVlLCBEZWMgMTUsIDIwMTUgYXQgODowMCBQTSwg
-Qmh1cGVzaCBTaGFybWENCj4gPiA8Ymh1cGVzaC5zaGFybWFAZnJlZXNjYWxlLmNvbT4gd3JvdGU6
-DQo+ID4gPiBUaGlzIHBhdGNoIHVwZGF0ZXMgdGhlIExTMjA4MGEgRFRTSSAoRFRTIEluY2x1ZGUp
-IGZpbGUgdG8gYWRkDQo+ID4gPiBzdXBwb3J0IGZvciBlaWdodCBTUDgwNSBXYXRjaGRvZyB1bml0
-cyB3aGljaCBjYW4gYmUgdXNlZCB0byByZXNldA0KPiA+ID4gdGhlIGVpZ2h0IENvcnRleC1BNTcg
-Y29yZXMgYXZhaWxhYmxlIG9uIExTMjA4MEEuDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTog
-Qmh1cGVzaCBTaGFybWEgPGJodXBlc2guc2hhcm1hQGZyZWVzY2FsZS5jb20+DQo+ID4gPiAtLS0N
-Cj4gPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMyMDgwYS5kdHNpIHwg
-ICA1Ng0KPiArKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwg
-NTYgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gU2luY2UgUm9iIGhhcyBhY2tlZCB0aGUgU1A4MDUg
-V0RUIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBwYXRjaCAocGF0Y2gNCj4gPiAxLzIgb2YgdGhpcyBz
-ZXJpZXMpLA0KPiA+IGNhbiB0aGlzIERUU0kgY2hhbmdlLCBwbGVhc2UgYmUgY29uc2lkZXJlZCBm
-b3IgYWJzb3JwdGlvbiBpbiB0aGUgYXJtLQ0KPiBzb2MgdHJlZS4NCj4gDQo+IFN1cmUsIHBsZWFz
-ZSBzdWJtaXQgaXQgZm9yIGluY2x1c2lvbi4gV2hvIGlzIHRoZSBtYWludGFpbmVyIGZvcg0KPiBh
-cmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS8gPyBDYW4gdGhleSBwaWNrIHVwIGFsbCB0aGUg
-ZnJlZXNjYWxlDQo+IHJlbGF0ZWQgZHRzIGNoYW5nZXMgYW5kIHN1Ym1pdCB0aGVtIGFzIGEgcHVs
-bCByZXF1ZXN0PyBTaG91bGQgdGhleSBnbw0KPiB0aHJvdWdoIFNoYXduJ3MgdHJlZSBtYXliZT8N
-Cg0KVGhhbmtzIEFybmQuIEZvciBub3csIG1heS1iZSBJIGNhbiBzZW5kIHRoaXMgcGF0Y2hzZXQg
-d2l0aCBSb2IncyBBY2tlZC1ieSBhZGRlZA0KZm9yIDEvMiB0byAnYXJtQGtlcm5lbC5vcmcnLiBT
-byB0aGF0IHRoaXMgY2FuIGJlIHBpY2tlZCBieSB2aWEgdGhlIGFybS1zb2MgdHJlZS4NClNoYXdu
-LCBJIGhvcGUgaXQncyBvayB3aXRoIHlvdS4NCg0KSW4gdGhlIG1lYW53aGlsZSwgSSB3aWxsIGRp
-c2N1c3MgaW50ZXJuYWxseSBhcyB0byBob3cgd2UgY2FuIGhhdmUgaW4gcGxhY2UgYSBmcmVlc2Nh
-bGUgbWFpbnRhaW5lciwNCndobyBjYW4gc3VibWl0IHRoZSBwdWxsIHJlcXVlc3RzIHRvIHRoZSAn
-YXJtLXNvYycgdHJlZS4NCg0KUmVnYXJkcywNCkJodXBlc2gNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Define  the Porter board dependent part of the DU device node.
+Add the device node  for Analog Devices ADV7511W  HDMI transmitter to I2C2
+bus and the HDMI connector. Add the necessary subnodes to interconnect  DU
+and HDMI devices.
+
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+---
+This patch is against 'renesas-devel-20151221-v4.4-rc6' tag of Simon Horman's
+'renesas.git' repo.
+
+ arch/arm/boot/dts/r8a7791-porter.dts |   81 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 81 insertions(+)
+
+Index: renesas/arch/arm/boot/dts/r8a7791-porter.dts
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7791-porter.dts
++++ renesas/arch/arm/boot/dts/r8a7791-porter.dts
+@@ -78,6 +78,29 @@
+ 		states = <3300000 1
+ 			  1800000 0>;
+ 	};
++
++	hdmi-out {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con: endpoint {
++				remote-endpoint = <&adv7511_out>;
++			};
++		};
++	};
++
++	x3_clk: x3-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <148500000>;
++	};
++
++	x16_clk: x16-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <74250000>;
++	};
+ };
+ 
+ &extal_clk {
+@@ -139,6 +162,11 @@
+ 		renesas,groups = "can0_data";
+ 		renesas,function = "can0";
+ 	};
++
++	du_pins: du {
++		renesas,groups = "du_rgb888", "du_sync", "du_disp", "du_clk_out_0";
++		renesas,function = "du";
++	};
+ };
+ 
+ &scif0 {
+@@ -240,6 +268,38 @@
+ 			};
+ 		};
+ 	};
++
++	hdmi@39 {
++		compatible = "adi,adv7511w";
++		reg = <0x39>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
++
++		adi,input-depth = <8>;
++		adi,input-colorspace = "rgb";
++		adi,input-clock = "1x";
++		adi,input-style = <1>;
++		adi,input-justification = "evenly";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				adv7511_in: endpoint {
++					remote-endpoint = <&du_out_rgb>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				adv7511_out: endpoint {
++					remote-endpoint = <&hdmi_con>;
++				};
++			};
++		};
++	};
+ };
+ 
+ &sata0 {
+@@ -303,3 +363,24 @@
+ 
+ 	status = "okay";
+ };
++
++&du {
++	pinctrl-0 = <&du_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++
++	clocks = <&mstp7_clks R8A7791_CLK_DU0>,
++		 <&mstp7_clks R8A7791_CLK_DU1>,
++		 <&mstp7_clks R8A7791_CLK_LVDS0>,
++		 <&x3_clk>, <&x16_clk>;
++	clock-names = "du.0", "du.1", "lvds.0",
++		      "dclkin.0", "dclkin.1";
++
++	ports {
++		port@1 {
++			endpoint {
++				remote-endpoint = <&adv7511_in>;
++			};
++		};
++	};
++};
+
