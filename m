@@ -1,209 +1,125 @@
-From: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] wlcore/wl12xx: spi: add device tree support
-Date: Thu, 24 Dec 2015 19:24:17 +0200
-Message-ID: <567C2A41.1030207@compulab.co.il>
-References: <1450971335-15961-1-git-send-email-uri.mashiach@compulab.co.il>
- <1450971335-15961-3-git-send-email-uri.mashiach@compulab.co.il>
- <567C1E19.1090500@ti.com>
+From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Subject: Re: [PATCH 4/6] regulator: lp872x: Add enable GPIO pin support
+Date: Thu, 24 Dec 2015 19:12:53 +0100
+Message-ID: <1450980773.11913.3.camel@collins>
+References: <1450868319-20513-1-git-send-email-contact@paulk.fr>
+	 <1450868319-20513-5-git-send-email-contact@paulk.fr>
+	 <20151223115632.GS16023@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <567C1E19.1090500-l0cyMroinI0@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-cOvcqAHKDsfGng59WIn/"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151223115632.GS16023-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grygorii,
 
-On 12/24/2015 06:32 PM, Grygorii Strashko wrote:
-> On 12/24/2015 05:35 PM, Uri Mashiach wrote:
->> Add DT support for the wl1271 SPI WiFi.
->>
->> Add documentation file for the wl1271 SPI WiFi.
->>
->> Signed-off-by: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
->> Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
->> ---
->> v1 -> v2: update interrupt documentation.
->>             replace interrupts and interrupt-parent with interrupts-extended.
->> 	  IRQ parameters retrieved from spi_device instead of DT.
->> 	  remove redundant #ifdef CONFIG_OF
->>
->>    .../bindings/net/wireless/ti,wlcore,spi.txt        | 34 +++++++++++++
->>    drivers/net/wireless/ti/wlcore/spi.c               | 55 ++++++++++++++++++++--
->>    2 files changed, 85 insertions(+), 4 deletions(-)
->>    create mode 100644 Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
->>
->> diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt b/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
->> new file mode 100644
->> index 0000000..502c27e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
->> @@ -0,0 +1,34 @@
->> +* Texas Instruments wl1271 wireless lan controller
->> +
->> +The wl1271 chip can be connected via SPI or via SDIO. This
->> +document describes the binding for the SPI connected chip.
->> +
->> +Required properties:
->> +- compatible :          Should be "ti,wl1271"
->> +- reg :                 Chip select address of device
->> +- spi-max-frequency :   Maximum SPI clocking speed of device in Hz
->> +- ref-clock-frequency : Reference clock frequency
->> +- interrupts-extended : Should contain parameters for 1 interrupt line.
->> +                        Interrupt parameters: parent, line number, type.
->> +- vwlan-supply :        Point the node of the regulator that powers/enable the wl1271 chip
->> +
->> +Optional properties:
->> +- clock-xtal :          boolean, clock is generated from XTAL
->> +
->> +- Please consult Documentation/devicetree/bindings/spi/spi-bus.txt
->> +  for optional SPI connection related properties,
->> +
->> +Examples:
->> +
->> +&spi1 {
->> +	wl1271@1 {
->> +		compatible = "ti,wl1271";
->> +
->> +		reg = <1>;
->> +		spi-max-frequency = <48000000>;
->> +		clock-xtal;
->> +		ref-clock-frequency = <38400000>;
->> +		interrupts-extended = <&gpio3 8 IRQ_TYPE_LEVEL_HIGH>;
->> +		vwlan-supply = <&vwlan_fixed>;
->> +	};
->> +};
->> diff --git a/drivers/net/wireless/ti/wlcore/spi.c b/drivers/net/wireless/ti/wlcore/spi.c
->> index d3a4bcb..e9e8d54 100644
->> --- a/drivers/net/wireless/ti/wlcore/spi.c
->> +++ b/drivers/net/wireless/ti/wlcore/spi.c
->> @@ -30,6 +30,7 @@
->>    #include <linux/spi/spi.h>
->>    #include <linux/wl12xx.h>
->>    #include <linux/platform_device.h>
->> +#include <linux/of_irq.h>
->>    #include <linux/regulator/consumer.h>
->>
->>    #include "wlcore.h"
->> @@ -357,6 +358,46 @@ static struct wl1271_if_operations spi_ops = {
->>    	.set_block_size = NULL,
->>    };
->>
->> +#ifdef CONFIG_OF
->> +static const struct of_device_id wlcore_spi_of_match_table[] = {
->> +	{ .compatible = "ti,wl1271" },
->> +	{ }
->> +};
->> +
->> +/**
->> + * wlcore_probe_of - DT node parsing.
->> + * @spi: SPI slave device parameters.
->> + * @res: resource parameters.
->> + * @glue: wl12xx SPI bus to slave device glue parameters.
->> + * @pdev_data: wlcore device parameters
->> + */
->> +static int wlcore_probe_of(struct spi_device *spi, struct wl12xx_spi_glue *glue,
->> +			   struct wlcore_platdev_data *pdev_data)
->> +{
->> +	struct device_node *dt_node = spi->dev.of_node;
->> +	int ret;
->> +
->> +	if (of_find_property(dt_node, "clock-xtal", NULL))
->> +		pdev_data->ref_clock_xtal = true;
->> +
->> +	ret = of_property_read_u32(dt_node, "ref-clock-frequency",
->> +				   &pdev_data->ref_clock_freq);
->> +	if (IS_ERR_VALUE(ret)) {
->> +		dev_err(glue->dev,
->> +			"can't get reference clock frequency (%d)\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	return 0;
->> +}
->> +#else /* CONFIG_OF */
->> +static int wlcore_probe_of(struct spi_device *spi, struct wl12xx_spi_glue *glue,
->> +			   struct wlcore_platdev_data *pdev_data)
->> +{
->> +	return -ENODATA;
->> +}
->> +#endif /* CONFIG_OF */
->
-> My question for your v1 was related to all above ifdefs.
-> If CONFIG_OF=n is not going to be supported then all this ifdefs
-> can be dropped and proper dependency can be added to Kconfig instead.
->
+--=-cOvcqAHKDsfGng59WIn/
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Will be done in v3.
+Le mercredi 23 d=C3=A9cembre 2015 =C3=A0 11:56 +0000, Mark Brown a =C3=A9cr=
+it :
+> On Wed, Dec 23, 2015 at 11:58:37AM +0100, Paul Kocialkowski wrote:
+>=20
+> > +	gpio =3D lp->pdata->enable_gpio;
+> > +	if (!gpio_is_valid(gpio))
+> > +		return 0;
+> > +
+> > +	/* Always set enable GPIO high. */
+> > +	ret =3D devm_gpio_request_one(lp->dev, gpio, GPIOF_OUT_INIT_HIGH, "LP=
+872X EN");
+> > +	if (ret) {
+> > +		dev_err(lp->dev, "gpio request err: %d\n", ret);
+> > +		return ret;
+> > +	}
+>=20
+> This isn't really adding support for the enable GPIO as the changelog
+> suggests, it's requesting but not managing the GPIO.  Since there is
+> core support for manging enable GPIOs this seems especially silly,
+> please tell the core about the GPIO and then it will work at runtime
+> too.
 
->> +
->>    static int wl1271_probe(struct spi_device *spi)
->>    {
->>    	struct wl12xx_spi_glue *glue;
->> @@ -366,8 +407,6 @@ static int wl1271_probe(struct spi_device *spi)
->>
->>    	memset(&pdev_data, 0x00, sizeof(pdev_data));
->>
->> -	/* TODO: add DT parsing when needed */
->> -
->>    	pdev_data.if_ops = &spi_ops;
->>
->>    	glue = devm_kzalloc(&spi->dev, sizeof(*glue), GFP_KERNEL);
->> @@ -390,6 +429,13 @@ static int wl1271_probe(struct spi_device *spi)
->>    		return PTR_ERR(glue->reg);
->>    	}
->>
->> +	ret = wlcore_probe_of(spi, glue, &pdev_data);
->> +	if (IS_ERR_VALUE(ret)) {
->> +		dev_err(glue->dev,
->> +			"can't get device tree parameters (%d)\n", ret);
->> +		return ret;
->> +	}
->> +
->>    	ret = spi_setup(spi);
->>    	if (ret < 0) {
->>    		dev_err(glue->dev, "spi_setup failed\n");
->> @@ -407,7 +453,8 @@ static int wl1271_probe(struct spi_device *spi)
->>    	memset(res, 0x00, sizeof(res));
->>
->>    	res[0].start = spi->irq;
->> -	res[0].flags = IORESOURCE_IRQ;
->> +	res[0].flags = IORESOURCE_IRQ |
->> +			irqd_get_trigger_type(irq_get_irq_data(spi->irq));
->
->
-> irq_get_trigger_type()?
->
+It looks like the core bindings for GPIO can only be used instead of the
+rdev->desc->ops->enable callback, not jointly, which doesn't fit my use
+case, where both the GPIO and register write have to be used to enable
+regulators.
 
-Will be replaced in v3.
+I think it would be worth making it possible to use both in core, since
+that situation is probably shared with other regulators. I suggest the
+following diff (that would be split into a separate patch in v2 of this
+series):
 
->>    	res[0].name = "irq";
->>
->>    	ret = platform_device_add_resources(glue->core, res, ARRAY_SIZE(res));
->> @@ -445,10 +492,10 @@ static int wl1271_remove(struct spi_device *spi)
->>    	return 0;
->>    }
->>
->> -
->>    static struct spi_driver wl1271_spi_driver = {
->>    	.driver = {
->>    		.name		= "wl1271_spi",
->> +		.of_match_table = of_match_ptr(wlcore_spi_of_match_table),
->>    	},
->>
->>    	.probe		= wl1271_probe,
->>
->
-> Sorry for delayed replay.
->
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index e92f344..dd0674f 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -1963,7 +1963,6 @@ static int regulator_ena_gpio_ctrl(struct
+regulator_dev *rdev, bool enable)
+ 		if (pin->enable_count =3D=3D 0)
+ 			gpiod_set_value_cansleep(pin->gpiod,
+ 						 !pin->ena_gpio_invert);
+-
+ 		pin->enable_count++;
+ 	} else {
+ 		if (pin->enable_count > 1) {
+@@ -2063,6 +2062,14 @@ static int _regulator_do_enable(struct
+regulator_dev *rdev)
+ 		}
+ 	}
+=20
++	if (rdev->desc->ops->enable) {
++		ret =3D rdev->desc->ops->enable(rdev);
++		if (ret < 0)
++			return ret;
++	} else if (!rdev->ena_pin) {
++		return -EINVAL;
++	}
++
+ 	if (rdev->ena_pin) {
+ 		if (!rdev->ena_gpio_state) {
+ 			ret =3D regulator_ena_gpio_ctrl(rdev, true);
+@@ -2070,10 +2077,6 @@ static int _regulator_do_enable(struct
+regulator_dev *rdev)
+ 				return ret;
+ 			rdev->ena_gpio_state =3D 1;
+ 		}
+-	} else if (rdev->desc->ops->enable) {
+-		ret =3D rdev->desc->ops->enable(rdev);
+-		if (ret < 0)
+-			return ret;
+ 	} else {
+ 		return -EINVAL;
+ 	}
 
--- 
-Thanks,
-Uri
+--=-cOvcqAHKDsfGng59WIn/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAABAgAGBQJWfDWlAAoJEIT9weqP7pUMUuQP/1nRU7sWhsY+cdtmhrLFaNol
+bbUc2AjUdyhU/2jVB6v5n0w22QjenIO4YtYeb2kpaA5jeX6P1NZVoKZ79rwKd4HV
+rYeemWOtsRAnaxOFMzD9oP/KOworouFkKaf77ewqMbL7TfFiJ09/SuB7+jLIB109
+JVHN0gdoIQxLSh/k/ZEZt9YBdu9UgWTGWU2TwUy1yNvjT/j4D3KjBJSa3JRwPqyq
+Z/e4qclhBSWZJYuv+6Vw09fBGR5f61q/Y9uhdE6VRKNhfSA7MCCr4niu+MJgY/Wt
+q/k77t1mHWqvqBMObwhtAyN15tgBYWWHjJU3KabHNjwBfnC9WaqbnnirUfxZ94o6
+l8BW9pyQZOBuU64sZjrvXjuaUN7v7O/MLo8BvwTM5wZsjNIousRwuanBe4yRyXhs
+iRdUGYo+ilmM2BumPzex+OmiozN7UbHYYnSnPRZkwXbzH60RMG+0X48FLXulRyfk
+BJkfeI3qz3TDdLxNAZz7qgE/6rCj3wYzB7fcckG82nH7e6hT2VULMzbdIp3PbvtZ
+lBxjLjZ01c7CV1X5Pi8CG7fSctTfANHpGrF5J7aO5MNojW0IilBGyouaXELk854B
+lcCGasTxbo8xvBm8ToFpPzd5EXj0uDoIiYbhIsTjYW5jVs8Jr+owbNDIqbgJpORU
+kfwYGfyQlq2htZqUBqkf
+=vheG
+-----END PGP SIGNATURE-----
+
+--=-cOvcqAHKDsfGng59WIn/--
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
