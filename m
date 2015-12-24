@@ -1,140 +1,70 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] ARM: shmobile: porter: add DU DT support
-Date: Fri, 25 Dec 2015 01:45:30 +0300
-Message-ID: <2158897.lfmL4b1c4V@wasted.cogentembedded.com>
-References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH v2 1/3] clk: bcm2835: Add bindings for the auxiliary peripheral clock gates.
+Date: Thu, 24 Dec 2015 15:45:15 -0800
+Message-ID: <87wps3qulw.fsf@eliezer.anholt.net>
+References: <1450222559-22461-1-git-send-email-eric@anholt.net> <20151219041935.GS14936@rob-hp-laptop> <CAEG3pNCOO1F8+nwOQGSjUKxYCGbWW_Ripc6xUwDyg6ay66uL7w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAEG3pNCOO1F8+nwOQGSjUKxYCGbWW_Ripc6xUwDyg6ay66uL7w@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>
+Cc: linux-clk <linux-clk@vger.kernel.org>, "Stephen Boyd <sboyd@codeaurora.org>, Emilio Lopez
+	<emilio@elopez.com.ar>, Hans de Goede <hdegoede@redhat.com>,
+	linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>, linux-rpi-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Define  the Porter board dependent part of the DU device node.
-Add the device node  for Analog Devices ADV7511W  HDMI transmitter to I2C2
-bus and the HDMI connector. Add the necessary subnodes to interconnect  DU
-and HDMI devices.
+--=-=-=
+Content-Type: text/plain
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Michael Turquette <mturquette@baylibre.com> writes:
 
----
-This patch is against 'renesas-devel-20151221-v4.4-rc6' tag of Simon Horman's
-'renesas.git' repo.
+> On Fri, Dec 18, 2015 at 8:19 PM, Rob Herring <robh@kernel.org> wrote:
+>> On Tue, Dec 15, 2015 at 03:35:57PM -0800, Eric Anholt wrote:
+>>> These will be used for enabling UART1, SPI1, and SPI2.
+>>>
+>>> Signed-off-by: Eric Anholt <eric@anholt.net>
+>>> ---
+>>>
+>>> v2: Make the binding cover both the IRQ and clock enable registers.
+>>>
+>>>  .../bindings/clock/brcm,bcm2835-aux-clock.txt      | 31 ++++++++++++++++++++++
+>>>  include/dt-bindings/clock/bcm2835-aux.h            | 17 ++++++++++++
+>>>  2 files changed, 48 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm2835-aux-clock.txt
+>>>  create mode 100644 include/dt-bindings/clock/bcm2835-aux.h
+>>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>
+> Applied to clk-next.
+>
+> Next time if you put the header into the clk driver patch then we can
+> send the binding description through the DT tree and take the header
+> and C file through the clk tree in one patch.
 
- arch/arm/boot/dts/r8a7791-porter.dts |   81 +++++++++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
+I would *love* to do that, but I've previously been told that having the
+bindings patch reference a header file not present as of the bindings
+patch is not acceptable and made to change it.
 
-Index: renesas/arch/arm/boot/dts/r8a7791-porter.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791-porter.dts
-+++ renesas/arch/arm/boot/dts/r8a7791-porter.dts
-@@ -78,6 +78,29 @@
- 		states = <3300000 1
- 			  1800000 0>;
- 	};
-+
-+	hdmi-out {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con: endpoint {
-+				remote-endpoint = <&adv7511_out>;
-+			};
-+		};
-+	};
-+
-+	x3_clk: x3-clock {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <148500000>;
-+	};
-+
-+	x16_clk: x16-clock {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <74250000>;
-+	};
- };
- 
- &extal_clk {
-@@ -139,6 +162,11 @@
- 		renesas,groups = "can0_data";
- 		renesas,function = "can0";
- 	};
-+
-+	du_pins: du {
-+		renesas,groups = "du_rgb888", "du_sync", "du_disp", "du_clk_out_0";
-+		renesas,function = "du";
-+	};
- };
- 
- &scif0 {
-@@ -240,6 +268,38 @@
- 			};
- 		};
- 	};
-+
-+	hdmi@39 {
-+		compatible = "adi,adv7511w";
-+		reg = <0x39>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
-+
-+		adi,input-depth = <8>;
-+		adi,input-colorspace = "rgb";
-+		adi,input-clock = "1x";
-+		adi,input-style = <1>;
-+		adi,input-justification = "evenly";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				adv7511_in: endpoint {
-+					remote-endpoint = <&du_out_rgb>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				adv7511_out: endpoint {
-+					remote-endpoint = <&hdmi_con>;
-+				};
-+			};
-+		};
-+	};
- };
- 
- &sata0 {
-@@ -303,3 +363,24 @@
- 
- 	status = "okay";
- };
-+
-+&du {
-+	pinctrl-0 = <&du_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+
-+	clocks = <&mstp7_clks R8A7791_CLK_DU0>,
-+		 <&mstp7_clks R8A7791_CLK_DU1>,
-+		 <&mstp7_clks R8A7791_CLK_LVDS0>,
-+		 <&x3_clk>, <&x16_clk>;
-+	clock-names = "du.0", "du.1", "lvds.0",
-+		      "dclkin.0", "dclkin.1";
-+
-+	ports {
-+		port@1 {
-+			endpoint {
-+				remote-endpoint = <&adv7511_in>;
-+			};
-+		};
-+	};
-+};
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJWfIOLAAoJELXWKTbR/J7o5u4QALF1EWBUM5xA8yxZT8/8VrDN
+sw6ErdSebzvjj4YTNYw89PSm2rnnZGiJL/g92AnrWbqAkRCguYUb5v9PNUvQyLyd
+GoeMyggfqMRuLMcmfXiP7yWgLxzn2JnwbqUBGf+kHUGcH35j1NMEdniicRznbBnM
+GQfdZJ+oQLv0DRfu2cdbwatjWFlC5ISDbgl3GM2GvdKArvOxzB6qqs0JjQViLxZ/
+vcDROwMa3Pw/4oymo8+b6G+MIPWHHQkCxEd10VZrTRL/TW9Beri+GVpAoHC+oaaA
+yZ/j+492R+Rpf9l/eLkF7tBlUhG8nbXyjtTAQf22087F6gkoynEjlosKGT8OFvDN
+utL79Zl0P58ZLCg7RctMWTmGRUju2Z812a91zhAKyVI0uj1zigrnvSkAAJjnvKXR
+V5F4aYlT+rKZcFrAHkaEx5L9SSz9wX/p45dqTJ5dgMZ/M+jd9e4eMMk1tnd9w3Qb
+qEuQn4xpeDYivqXOy2doWB0B+vXmUuHzkIUw40l90apYR4sAXDqhAYXbhzN7Mfo2
+Npa0V5fhWIu1F9YIrBhjNnrMbrALSEq1LxT2leR6pWMIQO7D3RQittxSR1kJTxRg
+GIzBF/qaKI66dPpCVWDeKlklidj/IvlcRxf3TxKeaD8oCfOcNh5sUUzkbcdJYk9p
+ALnErDrCJ4lsLmqElzYl
+=Gv3p
+-----END PGP SIGNATURE-----
+--=-=-=--
