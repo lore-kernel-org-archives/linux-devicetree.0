@@ -1,115 +1,230 @@
-From: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH 1/2] libahci: Implement the workaround to fix the missing of edge interrupt for HOST_IRQ_STAT
-Date: Thu, 24 Dec 2015 13:01:28 +0530
-Message-ID: <1450942289-12660-2-git-send-email-stripathi@apm.com>
-References: <1450942289-12660-1-git-send-email-stripathi@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450942289-12660-1-git-send-email-stripathi-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+From: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: Re: [PATCH 2/3] wlcore/wl12xx: spi: add device tree support
+Date: Thu, 24 Dec 2015 09:41:34 +0200
+Message-ID: <567BA1AE.4010606@compulab.co.il>
+References: <1450859744-9948-1-git-send-email-uri.mashiach@compulab.co.il>
+ <1450859744-9948-3-git-send-email-uri.mashiach@compulab.co.il>
+ <567A76B5.70605@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <567A76B5.70605-l0cyMroinI0@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Due to H/W errata, the HOST_IRQ_STAT register misses the edge interrupt
-when clearing the HOST_IRQ_STAT register and hardware reporting the
-PORT_IRQ_STAT register at the same clock cycle. As such, the
-algorithm below outlines the workaround.
+Hi Grygorii,
 
-1. Read HOST_IRQ_STAT register and save the state.
-2. Clear the HOST_IRQ_STAT register.
-3. Read back the HOST_IRQ_STAT register.
-4. If HOST_IRQ_STAT register equals to zero, then
-   traverse the rest of port's PORT_IRQ_STAT register
-   to check if an interrupt is triggered at that point else
-   go to step 6.
-5. If PORT_IRQ_STAT register of rest ports is not equal to zero
-   then update the state of HOST_IRQ_STAT saved in step 1.
-6. Handle port interrupts.
-7. Exit
+On 12/23/2015 12:25 PM, Grygorii Strashko wrote:
+> On 12/23/2015 10:35 AM, Uri Mashiach wrote:
+>> Add DT support for the wl1271 SPI WiFi.
+>>
+>> Add documentation file for the wl1271 SPI WiFi.
+>>
+>> Signed-off-by: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+>> Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+>> ---
+>>    .../bindings/net/wireless/ti,wlcore,spi.txt        | 35 +++++++++++
+>>    drivers/net/wireless/ti/wlcore/spi.c               | 67 +++++++++++++++++++---
+>>    2 files changed, 95 insertions(+), 7 deletions(-)
+>>    create mode 100644 Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt b/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
+>> new file mode 100644
+>> index 0000000..a3e7eb7
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
+>> @@ -0,0 +1,35 @@
+>> +* Texas Instruments wl1271 wireless lan controller
+>> +
+>> +The wl1271 chip can be connected via SPI or via SDIO. This
+>> +document describes the binding for the SPI connected chip.
+>> +
+>> +Required properties:
+>> +- compatible :          Should be "ti,wl1271"
+>> +- reg :                 Chip select address of device
+>> +- spi-max-frequency :   Maximum SPI clocking speed of device in Hz
+>> +- ref-clock-frequency : Reference clock frequency
+>> +- interrupts :          Should contain interrupt line and trigger type
+>
+> It's good to describe here number of IRQ lines your device have and IRQ types (edge/level)
+>
+>> +- interrupt-parent :    Should be the phandle for the interrupt controller
+> interrupt-parent is not required (also interrupts-extended can be used)
+>
+>> +                        that services interrupts for this device
+>> +- vwlan-supply :        Point the node of the regulator that controls the wl1271 chip WLAN_EN pin
+>
+> Pls, use gpio if this is required just to toggle WLAN_EN pin.
+>
+> [ti,] power-gpio or en-gpio
+>
+>
+>> +
+>> +Optional properties:
+>> +- clock-xtal :          boolean, clock is generated from XTAL
+>> +
+>> +- Please consult Documentation/devicetree/bindings/spi/spi-bus.txt
+>> +  for optional SPI connection related properties,just
+>> +
+>> +Examples:
+>> +
+>> +&spi1 {
+>> +	wl1271@1 {
+>> +		compatible = "ti,wl1271";
+>> +
+>> +		reg = <1>;
+>> +		spi-max-frequency = <48000000>;
+>> +		clock-xtal;
+>> +		interrupt-parent = <&gpio3>;
+>> +		interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
+>> +		wifi-supply = <&wifi_fixed>;
+>> +	};
+>> +};
+>> diff --git a/drivers/net/wireless/ti/wlcore/spi.c b/drivers/net/wireless/ti/wlcore/spi.c
+>> index d3a4bcb..7281f5a 100644
+>> --- a/drivers/net/wireless/ti/wlcore/spi.c
+>> +++ b/drivers/net/wireless/ti/wlcore/spi.c
+>> @@ -30,6 +30,7 @@
+>>    #include <linux/spi/spi.h>
+>>    #include <linux/wl12xx.h>
+>>    #include <linux/platform_device.h>
+>> +#include <linux/of_irq.h>
+>>    #include <linux/regulator/consumer.h>
+>>
+>>    #include "wlcore.h"
+>> @@ -357,6 +358,54 @@ static struct wl1271_if_operations spi_ops = {
+>>    	.set_block_size = NULL,
+>>    };
+>>
+>> +#ifdef CONFIG_OF
+>> +static const struct of_device_id wlcore_spi_of_match_table[] = {
+>> +	{ .compatible = "ti,wl1271" },
+>> +	{ }
+>> +};
+>> +
+>> +/**
+>> + * wlcore_probe_of - DT node parsing.
+>> + * @spi: SPI slave device parameters.
+>> + * @res: resource parameters.
+>> + * @glue: wl12xx SPI bus to slave device glue parameters.
+>> + * @pdev_data: wlcore device parameters
+>> + */
+>> +static int wlcore_probe_of(struct spi_device *spi, struct resource *res,
+>> +			   struct wl12xx_spi_glue *glue,
+>> +			   struct wlcore_platdev_data *pdev_data)
+>> +{
+>> +	struct device_node *dt_node = spi->dev.of_node;
+>> +	int ret;
+>> +
+>> +	ret = of_irq_to_resource(dt_node, 0, &res[0]);
+>> +	if (spi->irq != ret) {
+>> +		dev_err(glue->dev, "can't get interrupt resource\n");
+>> +		return -EINVAL;
+>> +	}
+>
+> SPI core will parse IRQ for you (see below)
+>
 
-Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
----
- drivers/ata/ahci.h    |    2 ++
- drivers/ata/libahci.c |   45 +++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 47 insertions(+), 0 deletions(-)
+The IRQ type should be stored in res[0].flags.
+Is there an alternative to of_irq_to_resource() for getting the IRQ type?
 
-diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-index 45586c1..736f4a5 100644
---- a/drivers/ata/ahci.h
-+++ b/drivers/ata/ahci.h
-@@ -242,6 +242,8 @@ enum {
- 	AHCI_HFLAG_NO_FBS		= (1 << 18), /* no FBS */
- 	AHCI_HFLAG_EDGE_IRQ		= (1 << 19), /* HOST_IRQ_STAT behaves as
- 							Edge Triggered */
-+	AHCI_HFLAG_EDGE_IRQ_BROKEN	= (1 << 20), /* HOST_IRQ_STAT miss edge
-+							from PORT_IRQ_STAT */
+>> +
+>> +	if (of_find_property(dt_node, "clock-xtal", NULL))
+>> +		pdev_data->ref_clock_xtal = true;
+>> +
+>> +	ret = of_property_read_u32(dt_node, "ref-clock-frequency",
+>> +				   &pdev_data->ref_clock_freq);
+>> +	if (IS_ERR_VALUE(ret)) {
+>> +		dev_err(glue->dev,
+>> +			"can't get reference clock frequency (%d)\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +#else /* CONFIG_OF */
+>> +static int wlcore_probe_of(struct spi_device *spi, struct resource *res,
+>> +			   struct wl12xx_spi_glue *glue,
+>> +			   struct wlcore_platdev_data *pdev_data)
+>> +{
+>> +	return -ENODATA;
+>> +}
+>> +#endif /* CONFIG_OF */
+>> +
+>>    static int wl1271_probe(struct spi_device *spi)
+>>    {
+>>    	struct wl12xx_spi_glue *glue;
+>> @@ -365,8 +414,7 @@ static int wl1271_probe(struct spi_device *spi)
+>>    	int ret;
+>>
+>>    	memset(&pdev_data, 0x00, sizeof(pdev_data));
+>> -
+>> -	/* TODO: add DT parsing when needed */
+>> +	memset(res, 0x00, sizeof(res));
+>>
+>>    	pdev_data.if_ops = &spi_ops;
+>>
+>> @@ -390,6 +438,13 @@ static int wl1271_probe(struct spi_device *spi)
+>>    		return PTR_ERR(glue->reg);
+>>    	}
+>>
+>> +	ret = wlcore_probe_of(spi, &res[0], glue, &pdev_data);
+>> +	if (IS_ERR_VALUE(ret)) {
+>> +		dev_err(glue->dev,
+>> +			"can't get device tree parameters (%d)\n", ret);
+>> +		return ret;
+>
+> So, wl1271_probe will fail always if CONFIG_OF=n. Right?
+>
+>
+>> +	}
+>> +
+>>    	ret = spi_setup(spi);
+>>    	if (ret < 0) {
+>>    		dev_err(glue->dev, "spi_setup failed\n");
+>> @@ -404,10 +459,6 @@ static int wl1271_probe(struct spi_device *spi)
+>>
+>>    	glue->core->dev.parent = &spi->dev;
+>>
+>> -	memset(res, 0x00, sizeof(res));
+>> -
+>> -	res[0].start = spi->irq;
+>> -	res[0].flags = IORESOURCE_IRQ;
+>>    	res[0].name = "irq";
+>
+> Above code might be left unchaenged.
+>
+>
+>>
+>>    	ret = platform_device_add_resources(glue->core, res, ARRAY_SIZE(res));
+>> @@ -445,10 +496,12 @@ static int wl1271_remove(struct spi_device *spi)
+>>    	return 0;
+>>    }
+>>
+>> -
+>>    static struct spi_driver wl1271_spi_driver = {
+>>    	.driver = {
+>>    		.name		= "wl1271_spi",
+>> +#ifdef CONFIG_OF
+>> +		.of_match_table = of_match_ptr(wlcore_spi_of_match_table),
+>> +#endif /* CONFIG_OF */
+>
+> These ifdefs are not needed - see of_match_ptr() definition
+>
+>>    	},
+>>
+>>    	.probe		= wl1271_probe,
+>>
+>
+>
 
- 	/* ap->flags bits */
-
-diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-index 096064c..02b85c2 100644
---- a/drivers/ata/libahci.c
-+++ b/drivers/ata/libahci.c
-@@ -1832,10 +1832,55 @@ static irqreturn_t ahci_multi_irqs_intr(int irq, void *dev_instance)
- 	return IRQ_WAKE_THREAD;
- }
-
-+static void ahci_handle_broken_edge_irq(struct ata_host *host,
-+					u32 *irq_masked)
-+{
-+	struct ahci_host_priv *hpriv = host->private_data;
-+	void __iomem *mmio = hpriv->mmio;
-+	unsigned int i, temp_irq_masked;
-+	struct ata_port *next_ap;
-+	void __iomem *port_mmio;
-+	int j;
-+
-+	if (!readl(mmio + HOST_IRQ_STAT)) {
-+		temp_irq_masked = *irq_masked;
-+
-+		for (i = 0; i < __sw_hweight32(hpriv->port_map);
-+		     i++) {
-+			if (*irq_masked & (1 << i)) {
-+				for (j = 0;
-+				     j < __sw_hweight32(hpriv->port_map);
-+				     j++) {
-+					if (i == j)
-+						continue;
-+
-+					next_ap = host->ports[j];
-+					port_mmio = ahci_port_base(next_ap);
-+					if (readl(port_mmio + PORT_IRQ_STAT))
-+						temp_irq_masked |= (1 << j);
-+				}
-+			}
-+		}
-+		*irq_masked = temp_irq_masked;
-+	}
-+
-+}
-+
- static u32 ahci_handle_port_intr(struct ata_host *host, u32 irq_masked)
- {
-+	struct ahci_host_priv *hpriv = host->private_data;
- 	unsigned int i, handled = 0;
-
-+	/*
-+	 * For hardware with broken edge trigger latch
-+	 * the HOST_IRQ_STAT register misses the edge interrupt
-+	 * when clearing of HOST_IRQ_STAT register and hardware
-+	 * reporting the PORT_IRQ_STAT register at the
-+	 * same clock cycle.
-+	 */
-+	if (hpriv->flags & AHCI_HFLAG_EDGE_IRQ_BROKEN)
-+		ahci_handle_broken_edge_irq(host, &irq_masked);
-+
- 	for (i = 0; i < host->n_ports; i++) {
- 		struct ata_port *ap;
-
+-- 
+Thanks,
+Uri
 --
-1.7.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
