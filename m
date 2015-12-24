@@ -1,130 +1,58 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH v2 0/5] clk: lpc32xx: add clock support for NXP LPC32xx
-Date: Thu, 24 Dec 2015 12:37:19 -0800
-Message-ID: <20151224203719.GA29521@quark.deferred.io>
-References: <1449398757-16834-1-git-send-email-vz@mleia.com>
- <56785436.4000505@mleia.com>
+From: Sharma Bhupesh <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH v3 2/2] dts/ls2080a: Update DTSI to add support of SP805
+ WDT
+Date: Thu, 24 Dec 2015 20:41:54 +0000
+Message-ID: <BN3PR0301MB1298AF2C5A88FCA392D0E9DD82E70@BN3PR0301MB1298.namprd03.prod.outlook.com>
+References: <1450189825-29065-1-git-send-email-bhupesh.sharma@freescale.com>
+ <1450189825-29065-3-git-send-email-bhupesh.sharma@freescale.com>
+ <CAFTCetS7P6wF3MhgMSXSXP_jnLQvBc-NSY0TW3OOnCjtbL0N_w@mail.gmail.com>
+ <201512241118.32946.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56785436.4000505@mleia.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Roland Stigge <stigge@antcom.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201512241118.32946.arnd-r2nGTMty4D4@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Bhupesh SHARMA <bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Li Leo <LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/21, Vladimir Zapolskiy wrote:
-> Hi Stephen, Michael,
-> 
-> On 06.12.2015 12:45, Vladimir Zapolskiy wrote:
-> > This changeset adds common clock framework driver for NXP LPC32xx
-> > boards.
-> > 
-> > The change can be applied without any dependencies, LPC32xx device tree
-> > and mach changes will be done, when this changeset is accepted.
-> > 
-> > The v1 version of CCF driver can be found here:
-> >   http://www.spinics.net/lists/arm-kernel/msg461632.html
-> > 
-> > The RFC version of CCF driver 9/11 can be found here:
-> >   http://www.spinics.net/lists/devicetree/msg100583.html
-> > 
-> > Changes from v1 to v2:
-> > * removed dependency on the recent LPC32xx device tree changes,
-> >   also removed LPC32xx device tree and mach changes, which depend
-> >   on this series,
-> > * use lowercase hex numbers in a DT binding example,
-> > * incremented by 1 all clock values, possibly clock "0" may have a
-> >   special meaning in future,
-> > * removed explicit COMMON_CLK selection for NXP LPC18xx,
-> > * LPC32XX_CLK_DEFINE() does not stringify clock names,
-> > * fixed a minor bug in clk_pll_set_rate().
-> > 
-> > Changes from RFC to v1:
-> > * added definitions of a missed IRDA clock,
-> > * renamed compatible property from lpc32xx-scb to lpc32xx-clk
-> > * switched to regmap interface instead of mmio, this is required to
-> >   secure access to registers shared between pinmux, dma and clock
-> >   driver, unfortunately this change has to pull some code snippets
-> >   from common gate, divider and mux helpers rebased on regmap API,
-> > * split clock definitions from the driver to be able to update
-> >   dts files separately from CCF driver.
-> > 
-> > The driver is written from scratch, here are main functional
-> > differences with the legacy driver arch/arm/mach-lpc32xx/clock.c:
-> > * serialized access to SCB registers,
-> > * reworked routines to select PLL parameters,
-> > * now the clock driver has detailed description of all clocks,
-> >   the original driver misses several clock entries and most of fine
-> >   grained clock controls, here every mux and divider are accounted,
-> > * now clocks and clock hierarchies can be described in board DT file,
-> > * sophisticated management of USB clocks, for example now USB device
-> >   controller needs only one clock instead of USB PLL, USB OTG and USB
-> >   device clocks,
-> > * other benefits from a driver powered by CCF.
-> > 
-> > Patch 5/5 may produce false positives from checkpatch.pl, the fix
-> > to checkpatch is found in Andrew's tree
-> > 
-> > Vladimir Zapolskiy (5):
-> >   dt-bindings: clock: add description of LPC32xx clock controller
-> >   dt-bindings: clock: add description of LPC32xx USB clock controller
-> >   dt-bindings: clock: add NXP LPC32xx clock list for consumers
-> >   clk: lpc18xx: add NXP specific COMMON_CLK_NXP configuration symbol
-> >   clk: lpc32xx: add common clock framework driver
-> > 
-> >  .../devicetree/bindings/clock/nxp,lpc3220-clk.txt  |   30 +
-> >  .../bindings/clock/nxp,lpc3220-usb-clk.txt         |   22 +
-> >  drivers/clk/Kconfig                                |    6 +
-> >  drivers/clk/Makefile                               |    2 +-
-> >  drivers/clk/nxp/Makefile                           |    1 +
-> >  drivers/clk/nxp/clk-lpc32xx.c                      | 1569 ++++++++++++++++++++
-> >  include/dt-bindings/clock/lpc32xx-clock.h          |   56 +
-> >  7 files changed, 1685 insertions(+), 1 deletion(-)
-> >  create mode 100644 Documentation/devicetree/bindings/clock/nxp,lpc3220-clk.txt
-> >  create mode 100644 Documentation/devicetree/bindings/clock/nxp,lpc3220-usb-clk.txt
-> >  create mode 100644 drivers/clk/nxp/clk-lpc32xx.c
-> >  create mode 100644 include/dt-bindings/clock/lpc32xx-clock.h
-> > 
-> 
-> this is a gentle ping, the first version of the driver was published
-> in October, the only functional change is switching from iomap to regmap
-> API to access the registers.
-> 
-> A couple of words about the change to mitigate your impression of
-> apparently imperfect code.
-> 
-> The NXP LPC32xx platform is unmaintained and broken for about one
-> and a half years, so I presume you won't get an ack from Roland, who
-> is an official maintainer. Adding a CCF driver will be a huge progress,
-> since it allows in +1 kernel release to fix the platform -- there is
-> a critical problem in legacy IRQ handling based on hardware IRQs,
-> irqchip driver change is ready as well, but CCF should go first,
-> because it allows to remove a legacy clocksource/clockevent driver
-> arch/arm/mach-lpc32xx/timer.c. That driver depends on legacy broken
-> irqchip (hardware IRQs are used, irqchip with virtual IRQs will break
-> the driver), it has a proper replacement drivers/clocksource/time-lpc32xx.c,
-> but to use the new driver common clock support is needed. The CCF
-> driver will let me remove tons of other legacy stuff as well, and this
-> should be a step towards inclusion of the platform to multiarch builds.
-> 
-> If you find impossible to include this CCF driver to v4.5, please add
-> the first 4 of 5 changes, dt bindings include file is needed to
-> update DTS files independently on CCF driver inclusion status.
-
-Thanks for the helpful background information.
-
-Applied to clk-next towards 4.5.
-
-Regards,
-Mike
-
-> 
-> Thank you in advance.
-> 
-> Merry Christmas, Happy Holidays!
-> 
-> --
-> With best wishes,
-> Vladimir
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQXJuZCBCZXJnbWFubiBb
+bWFpbHRvOmFybmRAYXJuZGIuZGVdDQo+IFNlbnQ6IFRodXJzZGF5LCBEZWNlbWJlciAyNCwgMjAx
+NSAzOjQ5IFBNDQo+IFRvOiBCaHVwZXNoIFNIQVJNQQ0KPiBDYzogU2hhcm1hIEJodXBlc2gtQjQ1
+MzcwOyBNYXJrIFJ1dGxhbmQ7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmc7IE9sb2YgSm9oYW5zc29uOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gUm9iIEhl
+cnJpbmc7IFdpbGwgRGVhY29uOyBDYXRhbGluIE1hcmluYXM7IExpIFlhbmctTGVvLVI1ODQ3Mjsg
+V29vZA0KPiBTY290dC1CMDc0MjE7IFlvZGVyIFN0dWFydC1CMDgyNDg7IHNoYXduLmd1b0BsaW5h
+cm8ub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMi8yXSBkdHMvbHMyMDgwYTogVXBkYXRl
+IERUU0kgdG8gYWRkIHN1cHBvcnQgb2YNCj4gU1A4MDUgV0RUDQo+IA0KPiBPbiBXZWRuZXNkYXkg
+MjMgRGVjZW1iZXIgMjAxNSwgQmh1cGVzaCBTSEFSTUEgd3JvdGU6DQo+ID4NCj4gPiBIaSBBcm5k
+LCBPbG9mLCBLZXZpbg0KPiA+DQo+ID4gT24gVHVlLCBEZWMgMTUsIDIwMTUgYXQgODowMCBQTSwg
+Qmh1cGVzaCBTaGFybWENCj4gPiA8Ymh1cGVzaC5zaGFybWFAZnJlZXNjYWxlLmNvbT4gd3JvdGU6
+DQo+ID4gPiBUaGlzIHBhdGNoIHVwZGF0ZXMgdGhlIExTMjA4MGEgRFRTSSAoRFRTIEluY2x1ZGUp
+IGZpbGUgdG8gYWRkDQo+ID4gPiBzdXBwb3J0IGZvciBlaWdodCBTUDgwNSBXYXRjaGRvZyB1bml0
+cyB3aGljaCBjYW4gYmUgdXNlZCB0byByZXNldA0KPiA+ID4gdGhlIGVpZ2h0IENvcnRleC1BNTcg
+Y29yZXMgYXZhaWxhYmxlIG9uIExTMjA4MEEuDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTog
+Qmh1cGVzaCBTaGFybWEgPGJodXBlc2guc2hhcm1hQGZyZWVzY2FsZS5jb20+DQo+ID4gPiAtLS0N
+Cj4gPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMyMDgwYS5kdHNpIHwg
+ICA1Ng0KPiArKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwg
+NTYgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gU2luY2UgUm9iIGhhcyBhY2tlZCB0aGUgU1A4MDUg
+V0RUIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBwYXRjaCAocGF0Y2gNCj4gPiAxLzIgb2YgdGhpcyBz
+ZXJpZXMpLA0KPiA+IGNhbiB0aGlzIERUU0kgY2hhbmdlLCBwbGVhc2UgYmUgY29uc2lkZXJlZCBm
+b3IgYWJzb3JwdGlvbiBpbiB0aGUgYXJtLQ0KPiBzb2MgdHJlZS4NCj4gDQo+IFN1cmUsIHBsZWFz
+ZSBzdWJtaXQgaXQgZm9yIGluY2x1c2lvbi4gV2hvIGlzIHRoZSBtYWludGFpbmVyIGZvcg0KPiBh
+cmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS8gPyBDYW4gdGhleSBwaWNrIHVwIGFsbCB0aGUg
+ZnJlZXNjYWxlDQo+IHJlbGF0ZWQgZHRzIGNoYW5nZXMgYW5kIHN1Ym1pdCB0aGVtIGFzIGEgcHVs
+bCByZXF1ZXN0PyBTaG91bGQgdGhleSBnbw0KPiB0aHJvdWdoIFNoYXduJ3MgdHJlZSBtYXliZT8N
+Cg0KVGhhbmtzIEFybmQuIEZvciBub3csIG1heS1iZSBJIGNhbiBzZW5kIHRoaXMgcGF0Y2hzZXQg
+d2l0aCBSb2IncyBBY2tlZC1ieSBhZGRlZA0KZm9yIDEvMiB0byAnYXJtQGtlcm5lbC5vcmcnLiBT
+byB0aGF0IHRoaXMgY2FuIGJlIHBpY2tlZCBieSB2aWEgdGhlIGFybS1zb2MgdHJlZS4NClNoYXdu
+LCBJIGhvcGUgaXQncyBvayB3aXRoIHlvdS4NCg0KSW4gdGhlIG1lYW53aGlsZSwgSSB3aWxsIGRp
+c2N1c3MgaW50ZXJuYWxseSBhcyB0byBob3cgd2UgY2FuIGhhdmUgaW4gcGxhY2UgYSBmcmVlc2Nh
+bGUgbWFpbnRhaW5lciwNCndobyBjYW4gc3VibWl0IHRoZSBwdWxsIHJlcXVlc3RzIHRvIHRoZSAn
+YXJtLXNvYycgdHJlZS4NCg0KUmVnYXJkcywNCkJodXBlc2gNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
