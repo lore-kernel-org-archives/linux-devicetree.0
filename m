@@ -1,99 +1,218 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v12 16/18] drm: bridge: analogix/dp: expand the wait time
- for looking AUX CH reply flag
-Date: Thu, 24 Dec 2015 09:23:05 +0800
-Message-ID: <567B48F9.6010902@rock-chips.com>
-References: <1450873538-18304-1-git-send-email-ykk@rock-chips.com>
- <1450875064-19627-1-git-send-email-ykk@rock-chips.com>
- <000001d13d94$120e0d60$362a2820$@com>
+From: Zhiqiang Hou <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] ARM64: dts: add LS1043a-QDS board support
+Date: Thu, 24 Dec 2015 13:30:37 +0800
+Message-ID: <1450935037-42930-1-git-send-email-Zhiqiang.Hou@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <000001d13d94$120e0d60$362a2820$@com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jingoo Han <jingoohan1@gmail.com>, 'Inki Dae' <inki.dae@samsung.com>, 'Mark Yao' <mark.yao@rock-chips.com>, 'Heiko Stuebner' <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, 'Russell King' <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 'Kishon Vijay Abraham I' <kishon@ti.com>, javier@osg.samsung.com, 'Rob Herring' <robh+dt@kernel.org>, 'Andy Yan' <andy.yan@rock-chips.com>, 'Thierry Reding' <treding@nvidia.com>, 'Gustavo Padovan' <gustavo.padovan@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Hou Zhiqiang <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmluZ29vLAoKT2theSwgZmluZSwgSSB3b3VsZCBkcm9wIHRoaXMgcGF0Y2gsIHVudGlsIEkg
-Zm91bmQgdGhlIHRoZSByb290IGNhdXNlLgoKLSBZYWtpcgoKT24gMTIvMjMvMjAxNSAxMToxMCBQ
-TSwgSmluZ29vIEhhbiB3cm90ZToKPiBPbiBXZWRuZXNkYXksIERlY2VtYmVyIDIzLCAyMDE1IDk6
-NTEgUE0sIFlha2lyIFlhbmcgd3JvdGU6Cj4+IE9uIFJvY2tjaGlwIHBsYXRmb3JtLCBzb21ldGlt
-ZXMgZHJpdmVyIHdvdWxkIGZhaWxlZCBhdCByZWFkaW5nIEVESUQKPj4gbWVzc2FnZSwgYW5kIGl0
-J3MgY2F1c2VkIGJ5IHRoZSBBVVggcmVwbHkgZmxhZyB3b3VsZG4ndCByZWNlaXZlZCB1bmRlcgo+
-PiB0aGUgMTAwKjEwdXMgd2FpdCB0aW1lLgo+IFRoZSBwcm9ibGVtIGlzIHNwZWNpZmljIGZvciBS
-b2NrY2hpcCBwbGF0Zm9ybS4KPiBBbHNvLCAxIG1zIGlzIGxvbmcgdGltZS4KPiBUaGUgYmVzdCB3
-YXkgaXMgdGhhdCB5b3VyIGhhcmR3YXJlIGVuZ2luZWVycyBmaW5kIHRoZSByb290IGNhdXNlLgo+
-IEkgY2Fubm90IHVuZGVyc3RhbmQgd2h5IHlvdXIgZW5naW5lZXJzIGNhbm5vdCBmaW5kIHRoZSBy
-b290IGNhdXNlLiA6LSgKPgo+PiBCdXQgYWZ0ZXIgZXhwYW5kIHRoZSB3YWl0IHRpbWUgYSBsaXR0
-bGUsIHRoZSBBVVggcmVwbHkgZmxhZyB3b3VsZCBiZQo+PiBzZXQsIHNvIG1heWJlIHRoZSB3YWl0
-IHRpbWUgaXMgYSBsaXR0bGUgY3JpdGljYWwuIEJlc2lkZXMgdGhlIGFuYWxvZ2l4Cj4+IGRwIGJv
-b2sgaGF2ZW4ndCByZW1pbmRlZCB0aGUgc3RhbmRhcmQgd2FpdCBmb3IgbG9va2luZyBBVVggcmVw
-bHkgZmxhZywKPj4gc28gSSB0aG91Z2h0IGl0J3Mgb2theSB0byBleHBhbmQgdGhlIHdhaXQgdGlt
-ZS4KPj4KPj4gQW5kIHRoZSBleHRlcm5hbCB3YWl0IHRpbWUgd29uJ3QgaHVydCBFeHlub3MgRFAg
-dG9vIG11Y2gsIGNhdXNlIHRoZXkKPj4gd291bGRuJ3QgbWVldCB0aGlzIHByb2JsZW0sIHRoZW4g
-ZHJpdmVyIHdvdWxkIHJlY2VpdmVkIHRoZSByZXBseSBjb21tYW5kCj4+IHZlcnkgc29vbiwgc28g
-bm8gbW9yZSBhZGRpdGlvbmFsIHdhaXQgdGltZSB3b3VsZCBicmluZyB0byBFeHlub3MgcGxhdGZv
-cm0uCj4gVGhlbiwgd2hlbiBsb29wIHRpbWUgaGFwcGVucyBvbiBFeHlub3MgcGxhdGZvcm0sIGl0
-IHdpbGwgdGFrZSBsb25nIHRpbWUKPiB0byByZXR1cm4gZXJyb3IuCj4KPj4gU2lnbmVkLW9mZi1i
-eTogWWFraXIgWWFuZyA8eWtrQHJvY2stY2hpcHMuY29tPgo+PiAtLS0KPj4gQ2hhbmdlcyBpbiB2
-MTI6Cj4+IC0gVXNpbmcgYW5vdGhlciB3YXkgdG8gZXhwYW5kIHRoZSBBVVggcmVwbHkgd2FpdCB0
-aW1lIChKaW5nb28pCj4+Cj4+IENoYW5nZXMgaW4gdjExOiBOb25lCj4+IENoYW5nZXMgaW4gdjEw
-OiBOb25lCj4+IENoYW5nZXMgaW4gdjk6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2ODogTm9uZQo+PiBD
-aGFuZ2VzIGluIHY3OiBOb25lCj4+IENoYW5nZXMgaW4gdjY6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2
-NTogTm9uZQo+PiBDaGFuZ2VzIGluIHY0OiBOb25lCj4+IENoYW5nZXMgaW4gdjM6IE5vbmUKPj4g
-Q2hhbmdlcyBpbiB2MjogTm9uZQo+Pgo+PiAgIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9n
-aXgvYW5hbG9naXhfZHBfcmVnLmMgfCAxMCArKysrLS0tLS0tCj4+ICAgMSBmaWxlIGNoYW5nZWQs
-IDQgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhfZHBfcmVnLmMKPj4gYi9kcml2ZXJz
-L2dwdS9kcm0vYnJpZGdlL2FuYWxvZ2l4L2FuYWxvZ2l4X2RwX3JlZy5jCj4+IGluZGV4IGNiYTNm
-ZmQuLjg2ODdlZWEgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9n
-aXgvYW5hbG9naXhfZHBfcmVnLmMKPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbmFs
-b2dpeC9hbmFsb2dpeF9kcF9yZWcuYwo+PiBAQCAtNDcxLDcgKzQ3MSw3IEBAIGludCBhbmFsb2dp
-eF9kcF9zdGFydF9hdXhfdHJhbnNhY3Rpb24oc3RydWN0IGFuYWxvZ2l4X2RwX2RldmljZSAqZHAp
-Cj4+ICAgewo+PiAgIAlpbnQgcmVnOwo+PiAgIAlpbnQgcmV0dmFsID0gMDsKPj4gLQlpbnQgdGlt
-ZW91dF9sb29wID0gMDsKPj4gKwl1bnNpZ25lZCBsb25nIHRpbWVvdXQ7Cj4+Cj4+ICAgCS8qIEVu
-YWJsZSBBVVggQ0ggb3BlcmF0aW9uICovCj4+ICAgCXJlZyA9IHJlYWRsKGRwLT5yZWdfYmFzZSAr
-IEFOQUxPR0lYX0RQX0FVWF9DSF9DVExfMik7Cj4+IEBAIC00NzksMTQgKzQ3OSwxMiBAQCBpbnQg
-YW5hbG9naXhfZHBfc3RhcnRfYXV4X3RyYW5zYWN0aW9uKHN0cnVjdCBhbmFsb2dpeF9kcF9kZXZp
-Y2UgKmRwKQo+PiAgIAl3cml0ZWwocmVnLCBkcC0+cmVnX2Jhc2UgKyBBTkFMT0dJWF9EUF9BVVhf
-Q0hfQ1RMXzIpOwo+Pgo+PiAgIAkvKiBJcyBBVVggQ0ggY29tbWFuZCByZXBseSByZWNlaXZlZD8g
-Ki8KPj4gLQlyZWcgPSByZWFkbChkcC0+cmVnX2Jhc2UgKyBBTkFMT0dJWF9EUF9JTlRfU1RBKTsK
-Pj4gLQl3aGlsZSAoIShyZWcgJiBSUExZX1JFQ0VJVikpIHsKPj4gLQkJdGltZW91dF9sb29wKys7
-Cj4+IC0JCWlmIChEUF9USU1FT1VUX0xPT1BfQ09VTlQgPCB0aW1lb3V0X2xvb3ApIHsKPj4gKwl0
-aW1lb3V0ID0gamlmZmllcyArIG1zZWNzX3RvX2ppZmZpZXMoNSk7Cj4+ICsJd2hpbGUgKChyZWFk
-bChkcC0+cmVnX2Jhc2UgKyBBTkFMT0dJWF9EUF9JTlRfU1RBKSAmIFJQTFlfUkVDRUlWKSA9PSAw
-KSB7Cj4+ICsJCWlmICh0aW1lX2FmdGVyKGppZmZpZXMsIHRpbWVvdXQpKSB7Cj4+ICAgCQkJZGV2
-X2VycihkcC0+ZGV2LCAiQVVYIENIIGNvbW1hbmQgcmVwbHkgZmFpbGVkIVxuIik7Cj4+ICAgCQkJ
-cmV0dXJuIC1FVElNRURPVVQ7Cj4+ICAgCQl9Cj4+IC0JCXJlZyA9IHJlYWRsKGRwLT5yZWdfYmFz
-ZSArIEFOQUxPR0lYX0RQX0lOVF9TVEEpOwo+IFNvcnJ5LCBJIGRvbid0IGxpa2UgeW91ciBwYXRj
-aC4KPgo+IFRoZSBwcm9ibGVtIGhhcHBlbnMgYmVjYXVzZSBvZiBSb2NrY2hpcCBwbGF0Zm9ybS4K
-PiBTbywgeW91IG5lZWQgdG8gYWRkIHdvcmthcm91bmQgZm9yIG9ubHkgUm9ja2NoaXAgcGxhdGZv
-cm0uCj4KPiBKdXN0IGFkZCBuZXcgRFQgcHJvcGVydHkgYW5kIG5ldyB2YXJpYWJsZSBmb3IgdGhl
-IHZhbHVlIGZvciB3YWl0IHRpbWUuCj4gV2hlbiwgdGhlIHByb2JlIGlzIGNhbGxlZCwgbmV3IHdh
-aXQgdGltZSB2YWx1ZSBpcyByZWFkIGZyb20gUm9ja2NoaXAgRFQgZmlsZS4KPiBUaGVuLCB0aGUg
-bmV3IHdhaXQgdGltZSB2YWx1ZSBjYW4gYmUgd3JpdHRlbiB0byB0aGUgbmV3IHZhcmlhYmxlLgo+
-Cj4gICAgICBuZXcgRFQgcHJvcGVydHk6IHdhaXQtdGltZS1hdXgKPiAgICAgIG5ldyB2YXJpYWJs
-ZTogd2FpdF90aW1lX2F1eAo+Cj4KPiBJZiAoICkgLy8gTmV3IERUCj4gICAgICB3YWl0X3RpbWVf
-YXV4ID0gTmV3IERUOwo+IGVsc2UKPiAgICAgIHdhaXRfdGltZV9hdXggPSAxMDsKPgo+Cj4+ICAg
-CQl1c2xlZXBfcmFuZ2UoMTAsIDExKTsKPiBJZiB0aGVyZSBpcyBOTyAgbmV3IHdhaXQgdGltZSB2
-YWx1ZSBmcm9tIERUIGZpbGUsIHRoZSBkZWZhdWx0IHZhbHVlICcxMCcgaXMKPiB1c2VkIGZvciBz
-bGVlcC4KPgo+IEJ1dCwgaWYgdGhlcmUgaXMgbmV3IHdhaXQgdGltZSB2YWx1ZSBmcm9tIERUIGZp
-bGUsIG5ldyB3YWl0IHRpbWUgdmFsdWUKPiBjYW4gYmUgdXNlZCBmb3Igc2xlZXAuCj4KPiAgICAg
-ICAgICAgICAgICAgICB1c2xlZXBfcmFuZ2UoZHAtPndhaXRfdGltZV9hdXgsIGRwLT53YWl0X3Rp
-bWVfYXV4ICsgMSk7Cj4KPiBXaGF0IEkgd2FudCB0byBzYXkgaXMgdGhhdCB0aGVyZSBzaG91bGQg
-YmUgTk8gZWZmZWN0IG9uIEV4eW5vcyBwbGF0Zm9ybSwKPiBiZWNhdXNlIG9mIHRoZSBoYXJkd2Fy
-ZSBidWcgb2YgUm9ja2NoaXAgcGxhdGZvcm0uCj4KPiBCZXN0IHJlZ2FyZHMsCj4gSmluZ29vIEhh
-bgo+Cj4+ICAgCX0KPj4KPj4gLS0KPj4gMS45LjEKPgo+Cj4KPgoKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+
+Signed-off-by: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Mingkai Hu <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+Dependence:
+ https://patchwork.kernel.org/patch/7635141/
+
+ arch/arm64/boot/dts/freescale/Makefile            |   1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts | 167 ++++++++++++++++++++++
+ 2 files changed, 168 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+
+diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+index f3c2516..1423fa4 100644
+--- a/arch/arm64/boot/dts/freescale/Makefile
++++ b/arch/arm64/boot/dts/freescale/Makefile
+@@ -2,6 +2,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-qds.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-rdb.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-simu.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-rdb.dtb
++dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-qds.dtb
+  
+ always		:= $(dtb-y)
+ subdir-y	:= $(dts-dirs)
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+new file mode 100644
+index 0000000..8c68620
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+@@ -0,0 +1,167 @@
++/*
++ * Device Tree Include file for Freescale Layerscape-1043A family SoC.
++ *
++ * Copyright 2014-2015, Freescale Semiconductor
++ *
++ * Mingkai Hu <Mingkai.hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPLv2 or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++/include/ "fsl-ls1043a.dtsi"
++
++/ {
++	model = "LS1043A QDS Board";
++
++	aliases {
++		serial0 = &lpuart0;
++		serial1 = &lpuart1;
++		serial2 = &lpuart2;
++		serial3 = &lpuart3;
++		serial4 = &lpuart4;
++		serial5 = &lpuart5;
++
++		gpio0 = &gpio1;
++		gpio1 = &gpio2;
++		gpio2 = &gpio3;
++		gpio3 = &gpio4;
++	};
++};
++
++&i2c0 {
++	status = "okay";
++	pca9547@77 {
++		compatible = "philips,pca9547";
++		reg = <0x77>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0>;
++
++			rtc@68 {
++				compatible = "dallas,ds3232";
++				reg = <0x68>;
++				/* IRQ10_B */
++				interrupts = <0 150 0x4>;
++			};
++		};
++
++		i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x2>;
++
++			ina220@40 {
++				compatible = "ti,ina220";
++				reg = <0x40>;
++				shunt-resistor = <1000>;
++			};
++
++			ina220@41 {
++				compatible = "ti,ina220";
++				reg = <0x41>;
++				shunt-resistor = <1000>;
++			};
++		};
++
++		i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x3>;
++
++			eeprom@56 {
++				compatible = "at24,24c512";
++				reg = <0x56>;
++			};
++
++			eeprom@57 {
++				compatible = "at24,24c512";
++				reg = <0x57>;
++			};
++
++			adt7461a@4c {
++				compatible = "adt7461a";
++				reg = <0x4c>;
++			};
++		};
++	};
++};
++
++&ifc {
++	status = "okay";
++	#address-cells = <2>;
++	#size-cells = <1>;
++	/* NOR, NAND Flashes and FPGA on board */
++	ranges = <0x0 0x0 0x0 0x60000000 0x08000000
++		  0x1 0x0 0x0 0x7e800000 0x00010000
++		  0x2 0x0 0x0 0x7fb00000 0x00000100>;
++
++	nor@0,0 {
++		compatible = "cfi-flash";
++		reg = <0x0 0x0 0x8000000>;
++		bank-width = <2>;
++		device-width = <1>;
++	};
++
++	nand@1,0 {
++		compatible = "fsl,ifc-nand";
++		reg = <0x1 0x0 0x10000>;
++	};
++
++	fpga: board-control@2,0 {
++		compatible = "fsl,ls1043aqds-fpga", "fsl,fpga-qixis";
++		reg = <0x2 0x0 0x0000100>;
++	};
++};
++
++&lpuart0 {
++	status = "okay";
++};
++
++&duart0 {
++	status = "okay";
++};
++
++&duart1 {
++	status = "okay";
++};
+-- 
+2.1.0.27.g96db324
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
