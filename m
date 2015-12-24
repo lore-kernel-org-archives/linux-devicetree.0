@@ -1,48 +1,89 @@
-From: Zhiqiang Hou <Zhiqiang.Hou@freescale.com>
-Subject: [PATCH v2 1/2] Documentation: DT: Add entry for Freescale LS1043a-QDS
- board
-Date: Thu, 24 Dec 2015 17:11:37 +0800
-Message-ID: <1450948298-33238-1-git-send-email-Zhiqiang.Hou@freescale.com>
+From: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/2] WM8505/WM8650 DT fixes for SD card controller
+Date: Thu, 24 Dec 2015 12:24:02 +0300
+Message-ID: <CABjd4YxLex0Or8PzJkNK_KWm2KhpGp7xqQL1on0hCbvi+ow5Fg@mail.gmail.com>
+References: <1423130878-3894-1-git-send-email-v1ron@v1ros.org>
+	<1425226007-2757-1-git-send-email-rvolkov@v1ros.org>
+	<2119510.55A8Br1LeL@wuerfel>
+	<20150301233911.2352ce48@v1ron-s7>
+	<20150404152720.1059e741@v1ron-s7>
+	<20151224004825.4350790e@anonymous>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: scottwood@freescale.com, Mingkai.Hu@freescale.com, Hou Zhiqiang <Zhiqiang.Hou@freescale.com>, Shaohui.Xie@freescale.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151224004825.4350790e@anonymous>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roman Volkov <v1ron-JGs/UdohzUI@public.gmane.org>
+Cc: Roman Volkov <v1ron-oLhuKTjYqW/YtjvyW6yDsg@public.gmane.org>, Roman Volkov <rvolkov-oLhuKTjYqW/YtjvyW6yDsg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou@freescale.com>
+2015-12-24 0:48 GMT+03:00 Roman Volkov <v1ron-JGs/UdohzUI@public.gmane.org>:
+> =D0=92 Sat, 4 Apr 2015 15:27:20 +0300
+> Roman Volkov <v1ron-oLhuKTjYqW/YtjvyW6yDsg@public.gmane.org> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>
+>> =D0=92 Sun, 1 Mar 2015 23:39:11 +0300
+>> Roman Volkov <rvolkov-oLhuKTjYqW/YtjvyW6yDsg@public.gmane.org> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>> > =D0=92 Sun, 01 Mar 2015 20:52:55 +0100
+>> > Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> >
+>> > > On Sunday 01 March 2015 19:06:45 Roman Volkov wrote:
+>> > > > This patch set enables SD controller support for WM8650 and
+>> > > > fixes minor errors in WM8505 Device Tree file.
+>> > > >
+>> > > > Changes in v3:
+>> > > > 1. Add minor fixes for WM8505 SDHC node
+>> > > >
+>> > > > Tested on both WM8505 and WM8650.
+>> > > >
+>> > > > Roman Volkov (2):
+>> > > >   dts: vt8500: Add SDHC node to DTS file for WM8650
+>> > > >   dts: vt8500: Fix errors in SDHC node for WM8505
+>> > > >
+>> > > >  arch/arm/boot/dts/wm8505.dtsi | 4 ++--
+>> > > >  arch/arm/boot/dts/wm8650.dtsi | 9 +++++++++
+>> > > >  2 files changed, 11 insertions(+), 2 deletions(-)
+>> > > >
+>> > > > --
+>> > > > Hi maintainers, I see my previous versions were not applied.
+>> > > > Could this little patch set be applied for the linux-next? I
+>> > > > don't think this is new functionality, this must be considered
+>> > > > as bugfix for existing Device Tree.
+>> > > >
+>> > > > Any other suggestions?
+>> > >
+>> > > According to the MAINTAINERS file, Tony Prisk should be the pers=
+on
+>> > > to pick them up, but he was not the recipient of the mail.
+>> > >
+>> > >   Arnd
+>> >
+>> > Thanks for the tip. Tony probably need to add these files to his
+>> > list of maintained files. get_maintainer.pl doesn't mention him.
+>> >
+>> > Roman
+>>
+>> Arnd,
+>>
+>> No response yet from Tony for over a month.
+>>
+>> Roman
+>
+> Ping. At least two patch sets for vt8500 are waiting to be picked up.
+> vt8500 maintainer is inactive for over a year.
 
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@freescale.com>
----
-new patch
+This series (as available at https://lkml.org/lkml/2015/3/1/172) looks
+good to me as far as VT8500 is concerned. Tony is unfortunately
+unresponsive lately, but I was the author of vt8500 code pre-DT, and
+these changes look all correct.
 
- Documentation/devicetree/bindings/arm/fsl.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+Rob/Grant, any chance you could push these via the OF tree?
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-index 752a685..dbbc095 100644
---- a/Documentation/devicetree/bindings/arm/fsl.txt
-+++ b/Documentation/devicetree/bindings/arm/fsl.txt
-@@ -135,6 +135,10 @@ LS1043A ARMv8 based RDB Board
- Required root node properties:
-     - compatible = "fsl,ls1043a-rdb", "fsl,ls1043a";
- 
-+LS1043A ARMv8 based QDS Board
-+Required root node properties:
-+    - compatible = "fsl,ls1043a-qds", "fsl,ls1043a";
-+
- LS2080A ARMv8 based Simulator model
- Required root node properties:
-     - compatible = "fsl,ls2080a-simu", "fsl,ls2080a";
--- 
-2.1.0.27.g96db324
+Best regards,
+Alexey
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
