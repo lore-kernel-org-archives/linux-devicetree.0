@@ -1,33 +1,66 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 0/6] arm64: renesas: add USB 2.0 device nodes for r8a7795
-Date: Fri, 25 Dec 2015 20:52:35 +0900
-Message-ID: <1451044361-5896-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2 1/6] arm64: renesas: r8a7795: add usb2_phy device nodes
+Date: Fri, 25 Dec 2015 20:52:36 +0900
+Message-ID: <1451044361-5896-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1451044361-5896-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1451044361-5896-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch set is based on the renesas.git / 20151221renesas-devel-20151221-v4.4-rc6 tag.
-(commit id = fe0e8e675dedf1877709a17258e88151c2614b77)
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 34 ++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-Changed from v1:
- - Fix register size from 0xff to 0x100 in patch 2
-
-Yoshihiro Shimoda (6):
-  arm64: renesas: r8a7795: add usb2_phy device nodes
-  arm64: renesas: r8a7795: add USB2.0 Host (EHCI/OHCI) device nodes
-  arm64: renesas: r8a7795: add HS-USB device node
-  arm64: renesas: salvator-x: enable usb2_phy
-  arm64: renesas: salvator-x: enable USB 2.0 Host channel 1 and 2
-  arm64: renesas: salvator-x: enable HS-USB
-
- arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts |  54 +++++++++-
- arch/arm64/boot/dts/renesas/r8a7795.dtsi           | 113 +++++++++++++++++++++
- 2 files changed, 166 insertions(+), 1 deletion(-)
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index bb353cd..89393ea 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -775,5 +775,39 @@
+ 			clocks = <&cpg CPG_MOD 815>;
+ 			status = "disabled";
+ 		};
++
++		usb2_phy0: usb-phy@ee080200 {
++			compatible = "renesas,usb2-phy-r8a7795";
++			reg = <0 0xee080200 0 0x700>, <0 0xe6590100 0 0x100>;
++			reg-names = "usb2_host", "hsusb";
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 703>, <&cpg CPG_MOD 704>;
++			clock-names = "usb2", "hsusb";
++			power-domains = <&cpg>;
++			#phy-cells = <0>;
++			status = "disabled";
++		};
++
++		usb2_phy1: usb-phy@ee0a0200 {
++			compatible = "renesas,usb2-phy-r8a7795";
++			reg = <0 0xee0a0200 0 0x700>;
++			reg-names = "usb2_host";
++			clocks = <&cpg CPG_MOD 702>;
++			clock-names = "usb2";
++			power-domains = <&cpg>;
++			#phy-cells = <0>;
++			status = "disabled";
++		};
++
++		usb2_phy2: usb-phy@ee0c0200 {
++			compatible = "renesas,usb2-phy-r8a7795";
++			reg = <0 0xee0c0200 0 0x700>;
++			reg-names = "usb2_host";
++			clocks = <&cpg CPG_MOD 701>;
++			clock-names = "usb2";
++			power-domains = <&cpg>;
++			#phy-cells = <0>;
++			status = "disabled";
++		};
+ 	};
+ };
 -- 
 1.9.1
 
