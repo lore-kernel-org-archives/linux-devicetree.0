@@ -1,51 +1,54 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH v2 1/3] clk: bcm2835: Add bindings for the auxiliary peripheral clock gates.
-Date: Thu, 24 Dec 2015 15:45:15 -0800
-Message-ID: <87wps3qulw.fsf@eliezer.anholt.net>
-References: <1450222559-22461-1-git-send-email-eric@anholt.net> <20151219041935.GS14936@rob-hp-laptop> <CAEG3pNCOO1F8+nwOQGSjUKxYCGbWW_Ripc6xUwDyg6ay66uL7w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/8] Raspberry Pi 2 support.
+Date: Thu, 24 Dec 2015 16:01:40 -0800
+Message-ID: <87lh8jqtuj.fsf@eliezer.anholt.net>
+References: <1450310115-22163-1-git-send-email-eric@anholt.net>
+ <201512220011.32234.arnd@arndb.de> <20151222142045.GA29335@omega>
+ <201512222223.52449.arnd@arndb.de>
 Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============8825556399905071606=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201512222223.52449.arnd@arndb.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, Alexander Aring <alex.aring@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Scott Branden <sbranden@broadcom.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
+List-Id: devicetree@vger.kernel.org
+
+--===============8825556399905071606==
 Content-Type: multipart/signed; boundary="=-=-=";
 	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAEG3pNCOO1F8+nwOQGSjUKxYCGbWW_Ripc6xUwDyg6ay66uL7w@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>
-Cc: linux-clk <linux-clk@vger.kernel.org>, "Stephen Boyd <sboyd@codeaurora.org>, Emilio Lopez
-	<emilio@elopez.com.ar>, Hans de Goede <hdegoede@redhat.com>,
-	linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>, linux-rpi-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org
-List-Id: devicetree@vger.kernel.org
 
 --=-=-=
 Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Michael Turquette <mturquette@baylibre.com> writes:
+Arnd Bergmann <arnd@arndb.de> writes:
 
-> On Fri, Dec 18, 2015 at 8:19 PM, Rob Herring <robh@kernel.org> wrote:
->> On Tue, Dec 15, 2015 at 03:35:57PM -0800, Eric Anholt wrote:
->>> These will be used for enabling UART1, SPI1, and SPI2.
->>>
->>> Signed-off-by: Eric Anholt <eric@anholt.net>
->>> ---
->>>
->>> v2: Make the binding cover both the IRQ and clock enable registers.
->>>
->>>  .../bindings/clock/brcm,bcm2835-aux-clock.txt      | 31 ++++++++++++++++++++++
->>>  include/dt-bindings/clock/bcm2835-aux.h            | 17 ++++++++++++
->>>  2 files changed, 48 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm2835-aux-clock.txt
->>>  create mode 100644 include/dt-bindings/clock/bcm2835-aux.h
->>
->> Acked-by: Rob Herring <robh@kernel.org>
+> On Tuesday 22 December 2015, Alexander Aring wrote:
+>> Later while booting the kernel hangs forever, the solution on my side
+>> was to enable:
+>>=20
+>> CONFIG_HAVE_ARM_ARCH_TIMER
+>>=20
+>> I think this doesn't use the BCM2835 timer anymore and some cortex-a7
+>> related "generic timer", or?
 >
-> Applied to clk-next.
->
-> Next time if you put the header into the clk driver patch then we can
-> send the binding description through the DT tree and take the header
-> and C file through the clk tree in one patch.
+> Right, but I don't see how that relates to the irqchip. Is the BCM2835 ti=
+mer
+> connected to a secondary irqchip, while the arch timer connects to the pr=
+imary GIC?
 
-I would *love* to do that, but I've previously been told that having the
-bindings patch reference a header file not present as of the bindings
-patch is not acceptable and made to change it.
+The 2835 timer is a "peripheral", and connects to the second level
+irqchip, while the arm arch timer can give us per-cpu interrupts in the
+first level controller.
 
 --=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
@@ -53,18 +56,32 @@ Content-Type: application/pgp-signature; name="signature.asc"
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBCgAGBQJWfIOLAAoJELXWKTbR/J7o5u4QALF1EWBUM5xA8yxZT8/8VrDN
-sw6ErdSebzvjj4YTNYw89PSm2rnnZGiJL/g92AnrWbqAkRCguYUb5v9PNUvQyLyd
-GoeMyggfqMRuLMcmfXiP7yWgLxzn2JnwbqUBGf+kHUGcH35j1NMEdniicRznbBnM
-GQfdZJ+oQLv0DRfu2cdbwatjWFlC5ISDbgl3GM2GvdKArvOxzB6qqs0JjQViLxZ/
-vcDROwMa3Pw/4oymo8+b6G+MIPWHHQkCxEd10VZrTRL/TW9Beri+GVpAoHC+oaaA
-yZ/j+492R+Rpf9l/eLkF7tBlUhG8nbXyjtTAQf22087F6gkoynEjlosKGT8OFvDN
-utL79Zl0P58ZLCg7RctMWTmGRUju2Z812a91zhAKyVI0uj1zigrnvSkAAJjnvKXR
-V5F4aYlT+rKZcFrAHkaEx5L9SSz9wX/p45dqTJ5dgMZ/M+jd9e4eMMk1tnd9w3Qb
-qEuQn4xpeDYivqXOy2doWB0B+vXmUuHzkIUw40l90apYR4sAXDqhAYXbhzN7Mfo2
-Npa0V5fhWIu1F9YIrBhjNnrMbrALSEq1LxT2leR6pWMIQO7D3RQittxSR1kJTxRg
-GIzBF/qaKI66dPpCVWDeKlklidj/IvlcRxf3TxKeaD8oCfOcNh5sUUzkbcdJYk9p
-ALnErDrCJ4lsLmqElzYl
-=Gv3p
+iQIcBAEBCgAGBQJWfIdkAAoJELXWKTbR/J7onFsP/22O7LiNE9td9J010tDu1dIO
+SekNqS75oYDFjYq0ZL2Rw0kGATqFCkr1OpnIyI7da8qdFn6Pa3eFngu4FCQFMvMC
+/KmrZwHY4lEvxND/jS/MdzzNWurjrmfOLR6kc/MM1lU3tnmiKxD3gR2e3ZzuWTVp
+hZgXmI3wPZQuY4S0vWgVWpd2KSBtJlA7BRc37N24gUvORiVaUDLsezlaD7RIv59+
+8V2i8DCcgG9tkP1FfTuz+a1GN4aobolAtmGY/kAd87b2p+ji5s+ryc3t6i8V9V2g
+KnY9NSv0zrpC/UK3FtvRBDc74nmGktszlWmCYDRho5pj/dWZEkXMGVmUNXGhcvSj
+kGc4F4LVRTGI603Zku5ECWWXa6HdrTugTjcWVgtk2ZHJ7DkdVcUup9O/sPWhPNvo
+/veJSg87YIm8/+meqrGpx6S3Gb2d7VfwzXyu4+LFd7r0vxLWB03sz8RAi0Zt0tWS
+3gip26HFohMvkftvyqjZYiIJ0TydaPSIOWmehXjuBTIQ3OAhgzPfNkt74oFbb5Px
+HfMmzrvRbE/pPp97kwM7PRa4Y0vurejOZ73BsYiC4ua+Z2ye17jwOd8BwgCkzWSx
+xlvmGhHEdXFvW5jGiCrA+oe5km72P3fi0KVezFVwg2NxSsIfhOZoKhIdtzchkSvu
+aEwsnioVzM/CFyzkBfin
+=LZ3M
 -----END PGP SIGNATURE-----
 --=-=-=--
+
+
+--===============8825556399905071606==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============8825556399905071606==--
