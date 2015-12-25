@@ -1,87 +1,74 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH v2 0/8] Raspberry Pi 2 support.
-Date: Thu, 24 Dec 2015 16:01:40 -0800
-Message-ID: <87lh8jqtuj.fsf@eliezer.anholt.net>
-References: <1450310115-22163-1-git-send-email-eric@anholt.net>
- <201512220011.32234.arnd@arndb.de> <20151222142045.GA29335@omega>
- <201512222223.52449.arnd@arndb.de>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] dts/ls2080a: Update DTSI to add support of SP805
+ WDT
+Date: Fri, 25 Dec 2015 09:56:17 +0800
+Message-ID: <20151225015616.GA27329@dragon>
+References: <1450189825-29065-1-git-send-email-bhupesh.sharma@freescale.com>
+ <1450189825-29065-3-git-send-email-bhupesh.sharma@freescale.com>
+ <CAFTCetS7P6wF3MhgMSXSXP_jnLQvBc-NSY0TW3OOnCjtbL0N_w@mail.gmail.com>
+ <201512241118.32946.arnd@arndb.de>
+ <BN3PR0301MB1298AF2C5A88FCA392D0E9DD82E70@BN3PR0301MB1298.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8825556399905071606=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201512222223.52449.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, Alexander Aring <alex.aring@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Scott Branden <sbranden@broadcom.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <BN3PR0301MB1298AF2C5A88FCA392D0E9DD82E70-CEkquS/Gb82NgPRq7B8Z6pwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sharma Bhupesh <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Bhupesh SHARMA <bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Li Leo <LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============8825556399905071606==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+On Thu, Dec 24, 2015 at 08:41:54PM +0000, Sharma Bhupesh wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
+> > Sent: Thursday, December 24, 2015 3:49 PM
+> > To: Bhupesh SHARMA
+> > Cc: Sharma Bhupesh-B45370; Mark Rutland; linux-arm-
+> > kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Olof Johansson; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > Rob Herring; Will Deacon; Catalin Marinas; Li Yang-Leo-R58472; Wood
+> > Scott-B07421; Yoder Stuart-B08248; shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+> > Subject: Re: [PATCH v3 2/2] dts/ls2080a: Update DTSI to add support of
+> > SP805 WDT
+> > 
+> > On Wednesday 23 December 2015, Bhupesh SHARMA wrote:
+> > >
+> > > Hi Arnd, Olof, Kevin
+> > >
+> > > On Tue, Dec 15, 2015 at 8:00 PM, Bhupesh Sharma
+> > > <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> > > > This patch updates the LS2080a DTSI (DTS Include) file to add
+> > > > support for eight SP805 Watchdog units which can be used to reset
+> > > > the eight Cortex-A57 cores available on LS2080A.
+> > > >
+> > > > Signed-off-by: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > > ---
+> > > >  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi |   56
+> > ++++++++++++++++++++++++
+> > > >  1 file changed, 56 insertions(+)
+> > >
+> > > Since Rob has acked the SP805 WDT binding documentation patch (patch
+> > > 1/2 of this series),
+> > > can this DTSI change, please be considered for absorption in the arm-
+> > soc tree.
+> > 
+> > Sure, please submit it for inclusion. Who is the maintainer for
+> > arch/arm64/boot/dts/freescale/ ? Can they pick up all the freescale
+> > related dts changes and submit them as a pull request? Should they go
+> > through Shawn's tree maybe?
+> 
+> Thanks Arnd. For now, may-be I can send this patchset with Rob's Acked-by added
+> for 1/2 to 'arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org'. So that this can be picked by via the arm-soc tree.
+> Shawn, I hope it's ok with you.
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Yeah.  I'm maintaining a git tree, collecting all Freescale arm32
+platform patches, and sending them to arm-soc for each merge window.
+If I can be copied on those arm64 patches, I do not mind handling them
+together with arm32 ones.
 
-Arnd Bergmann <arnd@arndb.de> writes:
-
-> On Tuesday 22 December 2015, Alexander Aring wrote:
->> Later while booting the kernel hangs forever, the solution on my side
->> was to enable:
->>=20
->> CONFIG_HAVE_ARM_ARCH_TIMER
->>=20
->> I think this doesn't use the BCM2835 timer anymore and some cortex-a7
->> related "generic timer", or?
->
-> Right, but I don't see how that relates to the irqchip. Is the BCM2835 ti=
-mer
-> connected to a secondary irqchip, while the arch timer connects to the pr=
-imary GIC?
-
-The 2835 timer is a "peripheral", and connects to the second level
-irqchip, while the arm arch timer can give us per-cpu interrupts in the
-first level controller.
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWfIdkAAoJELXWKTbR/J7onFsP/22O7LiNE9td9J010tDu1dIO
-SekNqS75oYDFjYq0ZL2Rw0kGATqFCkr1OpnIyI7da8qdFn6Pa3eFngu4FCQFMvMC
-/KmrZwHY4lEvxND/jS/MdzzNWurjrmfOLR6kc/MM1lU3tnmiKxD3gR2e3ZzuWTVp
-hZgXmI3wPZQuY4S0vWgVWpd2KSBtJlA7BRc37N24gUvORiVaUDLsezlaD7RIv59+
-8V2i8DCcgG9tkP1FfTuz+a1GN4aobolAtmGY/kAd87b2p+ji5s+ryc3t6i8V9V2g
-KnY9NSv0zrpC/UK3FtvRBDc74nmGktszlWmCYDRho5pj/dWZEkXMGVmUNXGhcvSj
-kGc4F4LVRTGI603Zku5ECWWXa6HdrTugTjcWVgtk2ZHJ7DkdVcUup9O/sPWhPNvo
-/veJSg87YIm8/+meqrGpx6S3Gb2d7VfwzXyu4+LFd7r0vxLWB03sz8RAi0Zt0tWS
-3gip26HFohMvkftvyqjZYiIJ0TydaPSIOWmehXjuBTIQ3OAhgzPfNkt74oFbb5Px
-HfMmzrvRbE/pPp97kwM7PRa4Y0vurejOZ73BsYiC4ua+Z2ye17jwOd8BwgCkzWSx
-xlvmGhHEdXFvW5jGiCrA+oe5km72P3fi0KVezFVwg2NxSsIfhOZoKhIdtzchkSvu
-aEwsnioVzM/CFyzkBfin
-=LZ3M
------END PGP SIGNATURE-----
---=-=-=--
-
-
---===============8825556399905071606==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8825556399905071606==--
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
