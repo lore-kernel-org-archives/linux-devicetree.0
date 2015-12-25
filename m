@@ -1,7 +1,7 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 5/6] arm64: renesas: salvator-x: enable USB 2.0 Host channel 1 and 2
-Date: Fri, 25 Dec 2015 20:52:40 +0900
-Message-ID: <1451044361-5896-6-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2 6/6] arm64: renesas: salvator-x: enable HS-USB
+Date: Fri, 25 Dec 2015 20:52:41 +0900
+Message-ID: <1451044361-5896-7-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1451044361-5896-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,36 +12,21 @@ To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@ar
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch doesn't enable USB2.0 Host channel 0 because it is connected
-to MAX3355 and cannot control the SHDN pin for now.
-
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-index 7353407..8e9cd31 100644
+index 8e9cd31..eb16403 100644
 --- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
 +++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-@@ -281,3 +281,19 @@
- 	pinctrl-0 = <&usb2_pins>;
- 	pinctrl-names = "default";
+@@ -297,3 +297,7 @@
+ &ohci2 {
+ 	status = "okay";
  };
 +
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&ehci2 {
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
-+&ohci2 {
++&hsusb {
 +	status = "okay";
 +};
 -- 
