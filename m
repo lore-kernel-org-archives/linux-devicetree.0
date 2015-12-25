@@ -1,7 +1,7 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 3/6] arm64: renesas: r8a7795: add HS-USB device node
-Date: Fri, 25 Dec 2015 19:03:56 +0900
-Message-ID: <1451037839-572-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 4/6] arm64: renesas: salvator-x: enable usb2_phy
+Date: Fri, 25 Dec 2015 19:03:57 +0900
+Message-ID: <1451037839-572-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1451037839-572-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,32 +14,59 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 34 +++++++++++++++++++++-
+ 1 file changed, 33 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index e26073c..4bccfb2b 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -875,5 +875,18 @@
- 			power-domains = <&cpg>;
- 			status = "disabled";
- 		};
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
+index 265d12f..7353407 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
++++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
+@@ -122,8 +122,22 @@
+ 				 "audio_clkout_a", "audio_clkout3_a";
+ 		renesas,function = "audio_clk";
+ 	};
+-};
+ 
++	usb0_pins: usb0 {
++		renesas,groups = "usb0";
++		renesas,function = "usb";
++	};
 +
-+		hsusb: usb@e6590000 {
-+			compatible = "renesas,usbhs-r8a7795",
-+				     "renesas,rcar-gen3-usbhs";
-+			reg = <0 0xe6590000 0 0x100>;
-+			interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 704>;
-+			renesas,buswait = <11>;
-+			phys = <&usb2_phy0>;
-+			phy-names = "usb";
-+			power-domains = <&cpg>;
-+			status = "disabled";
-+		};
++	usb1_pins: usb1 {
++		renesas,groups = "usb1";
++		renesas,function = "usb";
++	};
++
++	usb2_pins: usb2 {
++		renesas,groups = "usb2";
++		renesas,function = "usb";
++	};
++};
+ &scif1 {
+ 	pinctrl-0 = <&scif1_pins>;
+ 	pinctrl-names = "default";
+@@ -249,3 +263,21 @@
+ 		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
  	};
  };
++
++&usb2_phy0 {
++	status = "okay";
++	pinctrl-0 = <&usb0_pins>;
++	pinctrl-names = "default";
++};
++
++&usb2_phy1 {
++	status = "okay";
++	pinctrl-0 = <&usb1_pins>;
++	pinctrl-names = "default";
++};
++
++&usb2_phy2 {
++	status = "okay";
++	pinctrl-0 = <&usb2_pins>;
++	pinctrl-names = "default";
++};
 -- 
 1.9.1
 
