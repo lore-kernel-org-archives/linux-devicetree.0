@@ -1,34 +1,60 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 6/6] arm64: renesas: salvator-x: enable HS-USB
-Date: Fri, 25 Dec 2015 20:52:41 +0900
-Message-ID: <1451044361-5896-7-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1451044361-5896-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] mmc: omap_hsmmc: Add support for slot-name property in DT
+Date: Fri, 25 Dec 2015 13:53:11 +0100
+Message-ID: <201512251353.11491@pali>
+References: <1431724489-32359-1-git-send-email-pali.rohar@gmail.com> <20150518150607.GD10274@atomide.com> <2362824.FKNGrYsB7j@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1451044361-5896-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: multipart/signed;
+  boundary="nextPart8592971.2ZbaNmpTsc";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2362824.FKNGrYsB7j@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?utf-8?q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+--nextPart8592971.2ZbaNmpTsc
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-index 8e9cd31..eb16403 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-@@ -297,3 +297,7 @@
- &ohci2 {
- 	status = "okay";
- };
-+
-+&hsusb {
-+	status = "okay";
-+};
--- 
-1.9.1
+On Monday 18 May 2015 17:07:57 Arnd Bergmann wrote:
+> On Monday 18 May 2015 08:06:07 Tony Lindgren wrote:
+> > * Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> [150515 14:26]:
+> > > On Friday 15 May 2015 23:22:37 Pali Roh=C3=A1r wrote:
+> > If setting up the generic binding is expected to take a while,
+> > you can naturally pass it in pdata while waiting for the generic
+> > binding to get merged.
+>=20
+> Yes, good idea. So the n900 machine can use auxdata to pass this for
+> the time being, while the binding and generic implementation is
+> being worked out.
+>=20
+> 	Arnd
 
+Ok, so what is needed to finish this patch series?
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+
+--nextPart8592971.2ZbaNmpTsc
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlZ9PDcACgkQi/DJPQPkQ1JDLACfbI4geGNv33TQdImxefL5NyNt
+ek0An2LSIE8rkI10wbqDz7t5sbTgWIbW
+=BQDU
+-----END PGP SIGNATURE-----
+
+--nextPart8592971.2ZbaNmpTsc--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
