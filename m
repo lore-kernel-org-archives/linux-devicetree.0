@@ -1,74 +1,186 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] dts/ls2080a: Update DTSI to add support of SP805
- WDT
-Date: Fri, 25 Dec 2015 09:56:17 +0800
-Message-ID: <20151225015616.GA27329@dragon>
-References: <1450189825-29065-1-git-send-email-bhupesh.sharma@freescale.com>
- <1450189825-29065-3-git-send-email-bhupesh.sharma@freescale.com>
- <CAFTCetS7P6wF3MhgMSXSXP_jnLQvBc-NSY0TW3OOnCjtbL0N_w@mail.gmail.com>
- <201512241118.32946.arnd@arndb.de>
- <BN3PR0301MB1298AF2C5A88FCA392D0E9DD82E70@BN3PR0301MB1298.namprd03.prod.outlook.com>
+From: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: dts: rockchip: Add support emac for RK3036
+Date: Fri, 25 Dec 2015 10:36:04 +0800
+Message-ID: <567CAB94.7090701@gmail.com>
+References: <1450862390-407-1-git-send-email-zhengxing@rock-chips.com>
+ <1450862390-407-4-git-send-email-zhengxing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <BN3PR0301MB1298AF2C5A88FCA392D0E9DD82E70-CEkquS/Gb82NgPRq7B8Z6pwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <1450862390-407-4-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sharma Bhupesh <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Bhupesh SHARMA <bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Li Leo <LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, leozwang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 24, 2015 at 08:41:54PM +0000, Sharma Bhupesh wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
-> > Sent: Thursday, December 24, 2015 3:49 PM
-> > To: Bhupesh SHARMA
-> > Cc: Sharma Bhupesh-B45370; Mark Rutland; linux-arm-
-> > kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Olof Johansson; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> > Rob Herring; Will Deacon; Catalin Marinas; Li Yang-Leo-R58472; Wood
-> > Scott-B07421; Yoder Stuart-B08248; shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-> > Subject: Re: [PATCH v3 2/2] dts/ls2080a: Update DTSI to add support of
-> > SP805 WDT
-> > 
-> > On Wednesday 23 December 2015, Bhupesh SHARMA wrote:
-> > >
-> > > Hi Arnd, Olof, Kevin
-> > >
-> > > On Tue, Dec 15, 2015 at 8:00 PM, Bhupesh Sharma
-> > > <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > > > This patch updates the LS2080a DTSI (DTS Include) file to add
-> > > > support for eight SP805 Watchdog units which can be used to reset
-> > > > the eight Cortex-A57 cores available on LS2080A.
-> > > >
-> > > > Signed-off-by: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > > ---
-> > > >  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi |   56
-> > ++++++++++++++++++++++++
-> > > >  1 file changed, 56 insertions(+)
-> > >
-> > > Since Rob has acked the SP805 WDT binding documentation patch (patch
-> > > 1/2 of this series),
-> > > can this DTSI change, please be considered for absorption in the arm-
-> > soc tree.
-> > 
-> > Sure, please submit it for inclusion. Who is the maintainer for
-> > arch/arm64/boot/dts/freescale/ ? Can they pick up all the freescale
-> > related dts changes and submit them as a pull request? Should they go
-> > through Shawn's tree maybe?
-> 
-> Thanks Arnd. For now, may-be I can send this patchset with Rob's Acked-by added
-> for 1/2 to 'arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org'. So that this can be picked by via the arm-soc tree.
-> Shawn, I hope it's ok with you.
+Hi Xing,
 
-Yeah.  I'm maintaining a git tree, collecting all Freescale arm32
-platform patches, and sending them to arm-soc for each merge window.
-If I can be copied on those arm64 patches, I do not mind handling them
-together with arm32 ones.
+=E5=9C=A8 2015=E5=B9=B412=E6=9C=8823=E6=97=A5 17:19, Xing Zheng =E5=86=99=
+=E9=81=93:
+> This patch describe the emac, and we need to let mac clock under
+> the APLL which is able to provide the accurate 50MHz what mac_ref
+> need.
+>
+> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>
+>   arch/arm/boot/dts/rk3036-evb.dts   |   25 +++++++++++++++++++++++++
+>   arch/arm/boot/dts/rk3036-kylin.dts |   23 +++++++++++++++++++++++
+>   arch/arm/boot/dts/rk3036.dtsi      |   32 +++++++++++++++++++++++++=
++++++++
+>   3 files changed, 80 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/rk3036-evb.dts b/arch/arm/boot/dts/rk3=
+036-evb.dts
+> index 28a0336..69b96e6 100644
+> --- a/arch/arm/boot/dts/rk3036-evb.dts
+> +++ b/arch/arm/boot/dts/rk3036-evb.dts
+> @@ -62,3 +62,28 @@
+>   &uart2 {
+>   	status =3D "okay";
+>   };
+> +
+> +&emac {
+> +	assigned-clocks =3D <&cru SCLK_MACPLL>;
+> +	assigned-clock-parents =3D <&cru PLL_APLL>;
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
+> +	phy =3D <&phy0>;
+> +	status =3D "okay";
+> +
+> +	phy0: ethernet-phy@0 {
+> +		reg =3D <0>;
+> +	};
+> +};
+> +
+> +&pinctrl {
+> +	pcfg_output_high: pcfg-output-high {
+> +		output-high;
+> +	};
+> +
 
-Shawn
+That's seem a new preperty for pinctrl on rk3036, we should submit it i=
+n=20
+rk3036 dtsi.
+
+Do we are really need it?
+
+GPIO2_C6 is pulled up in internal chip.
+So, maybe you only do that:
+
+rockchip,pins =3D <2 22 RK_FUNC_GPIO &pcfg_pull_default>;
+
+
+> +	emac {
+> +		rmii_rst: rmii-rst {
+> +			rockchip,pins =3D <2 22 RK_FUNC_GPIO &pcfg_output_high>;
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/rk3036-kylin.dts b/arch/arm/boot/dts/r=
+k3036-kylin.dts
+> index 992f9ca..3fb1cfe 100644
+> --- a/arch/arm/boot/dts/rk3036-kylin.dts
+> +++ b/arch/arm/boot/dts/rk3036-kylin.dts
+> @@ -285,7 +285,24 @@
+>   	status =3D "okay";
+>   };
+>  =20
+> +&emac {
+> +	assigned-clocks =3D <&cru SCLK_MACPLL>;
+> +	assigned-clock-parents =3D <&cru PLL_APLL>;
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
+> +	phy =3D <&phy0>;
+> +	status =3D "okay";
+> +
+> +	phy0: ethernet-phy@0 {
+> +		reg =3D <0>;
+> +	};
+> +};
+> +
+>   &pinctrl {
+> +	pcfg_output_high: pcfg-output-high {
+> +		output-high;
+> +	};
+> +
+>   	pmic {
+>   		pmic_int: pmic-int {
+>   			rockchip,pins =3D <2 2 RK_FUNC_GPIO &pcfg_pull_default>;
+> @@ -297,4 +314,10 @@
+>   			rockchip,pins =3D <2 7 RK_FUNC_1 &pcfg_pull_none>;
+>   		};
+>   	};
+> +
+> +	emac {
+> +		rmii_rst: rmii-rst {
+> +			rockchip,pins =3D <2 22 RK_FUNC_GPIO &pcfg_output_high>;
+> +		};
+> +	};
+>   };
+> diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036=
+=2Edtsi
+> index b9567c1..0c09fb3 100644
+> --- a/arch/arm/boot/dts/rk3036.dtsi
+> +++ b/arch/arm/boot/dts/rk3036.dtsi
+> @@ -186,6 +186,20 @@
+>   		status =3D "disabled";
+>   	};
+>  =20
+> +	emac: ethernet@10200000 {
+> +		compatible =3D "rockchip,rk3036-emac", "snps,arc-emac";
+> +		reg =3D <0x10200000 0x4000>;
+> +		interrupts =3D <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +		rockchip,grf =3D <&grf>;
+> +		clocks =3D <&cru HCLK_MAC>, <&cru SCLK_MACREF>, <&cru SCLK_MAC>;
+> +		clock-names =3D "hclk", "macref", "macclk";
+> +		max-speed =3D <100>;
+> +		phy-mode =3D "rmii";
+> +		status =3D "disabled";
+> +	};
+> +
+>   	sdmmc: dwmmc@10214000 {
+>   		compatible =3D "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-msh=
+c";
+>   		reg =3D <0x10214000 0x4000>;
+> @@ -556,6 +570,24 @@
+>   			};
+>   		};
+>  =20
+> +		emac {
+> +			emac_xfer: emac-xfer {
+> +				rockchip,pins =3D <2 10 RK_FUNC_1 &pcfg_pull_none>, /* crs_dvali=
+d */
+> +						<2 13 RK_FUNC_1 &pcfg_pull_none>, /* tx_en */
+> +						<2 14 RK_FUNC_1 &pcfg_pull_none>, /* mac_clk */
+> +						<2 15 RK_FUNC_1 &pcfg_pull_none>, /* rx_err */
+> +						<2 16 RK_FUNC_1 &pcfg_pull_none>, /* rxd1 */
+> +						<2 17 RK_FUNC_1 &pcfg_pull_none>, /* rxd0 */
+> +						<2 18 RK_FUNC_1 &pcfg_pull_none>, /* txd1 */
+> +						<2 19 RK_FUNC_1 &pcfg_pull_none>; /* txd0 */
+> +			};
+> +
+> +			emac_mdio: emac-mdio {
+> +				rockchip,pins =3D <2 12 RK_FUNC_1 &pcfg_pull_none>, /* mac_md */
+> +						<2 25 RK_FUNC_1 &pcfg_pull_none>; /* mac_mdclk */
+> +			};
+> +		};
+> +
+>   		i2c0 {
+>   			i2c0_xfer: i2c0-xfer {
+>   				rockchip,pins =3D <0 0 RK_FUNC_1 &pcfg_pull_none>,
+
+
+--=20
+Thanks,
+Caesar
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
