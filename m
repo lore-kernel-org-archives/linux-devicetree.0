@@ -1,53 +1,33 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 2/6] arm64: renesas: r8a7795: add USB2.0 Host (EHCI/OHCI)
- device nodes
-Date: Fri, 25 Dec 2015 11:49:47 +0000
-Message-ID: <SG2PR06MB0919054A0FAA0F762DFEA781D8F80@SG2PR06MB0919.apcprd06.prod.outlook.com>
-References: <1451037839-572-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1451037839-572-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <567D2A2E.1080705@cogentembedded.com>
+Subject: [PATCH v2 0/6] arm64: renesas: add USB 2.0 device nodes for r8a7795
+Date: Fri, 25 Dec 2015 20:52:35 +0900
+Message-ID: <1451044361-5896-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <567D2A2E.1080705@cogentembedded.com>
-Content-Language: ja-JP
 Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "horms@verge.net.au" <horms@verge.net.au>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@vger.kernel.org" <linux-arm-kernel@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>
+To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+This patch set is based on the renesas.git / 20151221renesas-devel-20151221-v4.4-rc6 tag.
+(commit id = fe0e8e675dedf1877709a17258e88151c2614b77)
 
-> From: Sergei Shtylyov
-> Sent: Friday, December 25, 2015 8:36 PM
-> 
-> Hello.
-> 
-> On 12/25/2015 1:03 PM, Yoshihiro Shimoda wrote:
-> 
-> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > ---
-> >   arch/arm64/boot/dts/renesas/r8a7795.dtsi | 66 ++++++++++++++++++++++++++++++++
-> >   1 file changed, 66 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> > index 89393ea..e26073c 100644
-> > --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> > +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> > @@ -809,5 +809,71 @@
-> >   			#phy-cells = <0>;
-> >   			status = "disabled";
-> >   		};
-> > +
-> > +		ehci0: usb@ee080100 {
-> > +			compatible = "renesas,ehci-r8a7795", "generic-ehci";
-> > +			reg = <0 0xee080100 0 0xff>;
-> 
->     s/0xff/0x100? This is size, not limit.
+Changed from v1:
+ - Fix register size from 0xff to 0x100 in patch 2
 
-Thank you for the point! I will fix all nodes about this.
+Yoshihiro Shimoda (6):
+  arm64: renesas: r8a7795: add usb2_phy device nodes
+  arm64: renesas: r8a7795: add USB2.0 Host (EHCI/OHCI) device nodes
+  arm64: renesas: r8a7795: add HS-USB device node
+  arm64: renesas: salvator-x: enable usb2_phy
+  arm64: renesas: salvator-x: enable USB 2.0 Host channel 1 and 2
+  arm64: renesas: salvator-x: enable HS-USB
 
-Best regards,
-Yoshihiro Shimoda
+ arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts |  54 +++++++++-
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi           | 113 +++++++++++++++++++++
+ 2 files changed, 166 insertions(+), 1 deletion(-)
+
+-- 
+1.9.1
 
