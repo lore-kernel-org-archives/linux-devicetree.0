@@ -1,57 +1,61 @@
 From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: [PATCH] ARM: dts: omap3: Include missing bandgap data for ti-soc-thermal driver
-Date: Sat, 26 Dec 2015 00:32:25 +0100
-Message-ID: <1451086345-3340-1-git-send-email-pali.rohar@gmail.com>
+Subject: [PATCH] Fix documentation for adp1653 DT
+Date: Sat, 26 Dec 2015 00:37:16 +0100
+Message-ID: <1451086636-3621-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Pavel Machek <pavel@ucw.cz>, Eduardo Valentin <edubezval@gmail.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Pavel Machek <pavel@ucw.cz>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Driver for omap3 with documentation is there since v4.4-rc1.
+Property names do not match real names needed by driver itself.
+This patch fix this problem.
 
 Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
 ---
- arch/arm/boot/dts/omap34xx.dtsi |    5 +++++
- arch/arm/boot/dts/omap36xx.dtsi |    5 +++++
- 2 files changed, 10 insertions(+)
+ .../devicetree/bindings/media/i2c/adp1653.txt      |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap34=
-xx.dtsi
-index 4f6b2d5..c3f488f 100644
---- a/arch/arm/boot/dts/omap34xx.dtsi
-+++ b/arch/arm/boot/dts/omap34xx.dtsi
-@@ -54,6 +54,11 @@
- 				#size-cells =3D <0>;
- 			};
- 		};
-+
-+		bandgap {
-+			reg =3D <0x48002524 0x4>;
-+			compatible =3D "ti,omap34xx-bandgap";
-+		};
- 	};
- };
+diff --git a/Documentation/devicetree/bindings/media/i2c/adp1653.txt b/=
+Documentation/devicetree/bindings/media/i2c/adp1653.txt
+index 5ce66f2..4cce0de 100644
+--- a/Documentation/devicetree/bindings/media/i2c/adp1653.txt
++++ b/Documentation/devicetree/bindings/media/i2c/adp1653.txt
+@@ -12,12 +12,13 @@ There are two LED outputs available - flash and ind=
+icator. One LED is
+ represented by one child node, nodes need to be named "flash" and "ind=
+icator".
 =20
-diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36=
-xx.dtsi
-index 86253de..00f98c1 100644
---- a/arch/arm/boot/dts/omap36xx.dtsi
-+++ b/arch/arm/boot/dts/omap36xx.dtsi
-@@ -86,6 +86,11 @@
- 				#size-cells =3D <0>;
- 			};
- 		};
-+
-+		bandgap {
-+			reg =3D <0x48002524 0x4>;
-+			compatible =3D "ti,omap36xx-bandgap";
-+		};
- 	};
- };
+ Required properties of the LED child node:
+-- max-microamp : see Documentation/devicetree/bindings/leds/common.txt
++- led-max-microamp : see Documentation/devicetree/bindings/leds/common=
+=2Etxt
 =20
+ Required properties of the flash LED child node:
+=20
+ - flash-max-microamp : see Documentation/devicetree/bindings/leds/comm=
+on.txt
+ - flash-timeout-us : see Documentation/devicetree/bindings/leds/common=
+=2Etxt
++- led-max-microamp : see Documentation/devicetree/bindings/leds/common=
+=2Etxt
+=20
+ Example:
+=20
+@@ -29,9 +30,9 @@ Example:
+ 		flash {
+ 			flash-timeout-us =3D <500000>;
+ 			flash-max-microamp =3D <320000>;
+-			max-microamp =3D <50000>;
++			led-max-microamp =3D <50000>;
+ 		};
+ 		indicator {
+-			max-microamp =3D <17500>;
++			led-max-microamp =3D <17500>;
+ 		};
+ 	};
 --=20
 1.7.9.5
