@@ -1,186 +1,75 @@
-From: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dts: rockchip: Add support emac for RK3036
-Date: Fri, 25 Dec 2015 10:36:04 +0800
-Message-ID: <567CAB94.7090701@gmail.com>
-References: <1450862390-407-1-git-send-email-zhengxing@rock-chips.com>
- <1450862390-407-4-git-send-email-zhengxing@rock-chips.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH v2 0/2] Improve drm_of_component_probe() and move
+ rockchip to use it
+Date: Fri, 25 Dec 2015 10:38:17 +0100
+Message-ID: <20151225103817.3aa1d89433607ee7fbf5181f@free.fr>
+References: <1448029325-14602-1-git-send-email-Liviu.Dudau@arm.com>
+ <20151222173800.GU960@e106497-lin.cambridge.arm.com>
+ <20151223103906.2aae53595345240d57d57b41@free.fr>
+ <20151223100534.GW960@e106497-lin.cambridge.arm.com>
+ <20151223182033.a52356408b9a81e9497464e7@free.fr>
+ <20151223185948.GT8644@n2100.arm.linux.org.uk>
+ <20151224091528.4f68d0f5838735a1a38c02c6@free.fr>
+ <20151224105206.GB8644@n2100.arm.linux.org.uk>
+ <20151224132708.10a35feafb44a5bb8e65ba6d@free.fr>
+ <20151224123610.GE8644@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450862390-407-4-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, leozwang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20151224123610.GE8644@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: devicetree@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-rockchip <linux-rockchip@lists.infradead.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Xing,
-
-=E5=9C=A8 2015=E5=B9=B412=E6=9C=8823=E6=97=A5 17:19, Xing Zheng =E5=86=99=
-=E9=81=93:
-> This patch describe the emac, and we need to let mac clock under
-> the APLL which is able to provide the accurate 50MHz what mac_ref
-> need.
->
-> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->
->   arch/arm/boot/dts/rk3036-evb.dts   |   25 +++++++++++++++++++++++++
->   arch/arm/boot/dts/rk3036-kylin.dts |   23 +++++++++++++++++++++++
->   arch/arm/boot/dts/rk3036.dtsi      |   32 +++++++++++++++++++++++++=
-+++++++
->   3 files changed, 80 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/rk3036-evb.dts b/arch/arm/boot/dts/rk3=
-036-evb.dts
-> index 28a0336..69b96e6 100644
-> --- a/arch/arm/boot/dts/rk3036-evb.dts
-> +++ b/arch/arm/boot/dts/rk3036-evb.dts
-> @@ -62,3 +62,28 @@
->   &uart2 {
->   	status =3D "okay";
->   };
-> +
-> +&emac {
-> +	assigned-clocks =3D <&cru SCLK_MACPLL>;
-> +	assigned-clock-parents =3D <&cru PLL_APLL>;
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
-> +	phy =3D <&phy0>;
-> +	status =3D "okay";
-> +
-> +	phy0: ethernet-phy@0 {
-> +		reg =3D <0>;
-> +	};
-> +};
-> +
-> +&pinctrl {
-> +	pcfg_output_high: pcfg-output-high {
-> +		output-high;
-> +	};
-> +
-
-That's seem a new preperty for pinctrl on rk3036, we should submit it i=
-n=20
-rk3036 dtsi.
-
-Do we are really need it?
-
-GPIO2_C6 is pulled up in internal chip.
-So, maybe you only do that:
-
-rockchip,pins =3D <2 22 RK_FUNC_GPIO &pcfg_pull_default>;
-
-
-> +	emac {
-> +		rmii_rst: rmii-rst {
-> +			rockchip,pins =3D <2 22 RK_FUNC_GPIO &pcfg_output_high>;
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/rk3036-kylin.dts b/arch/arm/boot/dts/r=
-k3036-kylin.dts
-> index 992f9ca..3fb1cfe 100644
-> --- a/arch/arm/boot/dts/rk3036-kylin.dts
-> +++ b/arch/arm/boot/dts/rk3036-kylin.dts
-> @@ -285,7 +285,24 @@
->   	status =3D "okay";
->   };
->  =20
-> +&emac {
-> +	assigned-clocks =3D <&cru SCLK_MACPLL>;
-> +	assigned-clock-parents =3D <&cru PLL_APLL>;
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
-> +	phy =3D <&phy0>;
-> +	status =3D "okay";
-> +
-> +	phy0: ethernet-phy@0 {
-> +		reg =3D <0>;
-> +	};
-> +};
-> +
->   &pinctrl {
-> +	pcfg_output_high: pcfg-output-high {
-> +		output-high;
-> +	};
-> +
->   	pmic {
->   		pmic_int: pmic-int {
->   			rockchip,pins =3D <2 2 RK_FUNC_GPIO &pcfg_pull_default>;
-> @@ -297,4 +314,10 @@
->   			rockchip,pins =3D <2 7 RK_FUNC_1 &pcfg_pull_none>;
->   		};
->   	};
-> +
-> +	emac {
-> +		rmii_rst: rmii-rst {
-> +			rockchip,pins =3D <2 22 RK_FUNC_GPIO &pcfg_output_high>;
-> +		};
-> +	};
->   };
-> diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036=
-=2Edtsi
-> index b9567c1..0c09fb3 100644
-> --- a/arch/arm/boot/dts/rk3036.dtsi
-> +++ b/arch/arm/boot/dts/rk3036.dtsi
-> @@ -186,6 +186,20 @@
->   		status =3D "disabled";
->   	};
->  =20
-> +	emac: ethernet@10200000 {
-> +		compatible =3D "rockchip,rk3036-emac", "snps,arc-emac";
-> +		reg =3D <0x10200000 0x4000>;
-> +		interrupts =3D <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
-> +		rockchip,grf =3D <&grf>;
-> +		clocks =3D <&cru HCLK_MAC>, <&cru SCLK_MACREF>, <&cru SCLK_MAC>;
-> +		clock-names =3D "hclk", "macref", "macclk";
-> +		max-speed =3D <100>;
-> +		phy-mode =3D "rmii";
-> +		status =3D "disabled";
-> +	};
-> +
->   	sdmmc: dwmmc@10214000 {
->   		compatible =3D "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-msh=
-c";
->   		reg =3D <0x10214000 0x4000>;
-> @@ -556,6 +570,24 @@
->   			};
->   		};
->  =20
-> +		emac {
-> +			emac_xfer: emac-xfer {
-> +				rockchip,pins =3D <2 10 RK_FUNC_1 &pcfg_pull_none>, /* crs_dvali=
-d */
-> +						<2 13 RK_FUNC_1 &pcfg_pull_none>, /* tx_en */
-> +						<2 14 RK_FUNC_1 &pcfg_pull_none>, /* mac_clk */
-> +						<2 15 RK_FUNC_1 &pcfg_pull_none>, /* rx_err */
-> +						<2 16 RK_FUNC_1 &pcfg_pull_none>, /* rxd1 */
-> +						<2 17 RK_FUNC_1 &pcfg_pull_none>, /* rxd0 */
-> +						<2 18 RK_FUNC_1 &pcfg_pull_none>, /* txd1 */
-> +						<2 19 RK_FUNC_1 &pcfg_pull_none>; /* txd0 */
-> +			};
-> +
-> +			emac_mdio: emac-mdio {
-> +				rockchip,pins =3D <2 12 RK_FUNC_1 &pcfg_pull_none>, /* mac_md */
-> +						<2 25 RK_FUNC_1 &pcfg_pull_none>; /* mac_mdclk */
-> +			};
-> +		};
-> +
->   		i2c0 {
->   			i2c0_xfer: i2c0-xfer {
->   				rockchip,pins =3D <0 0 RK_FUNC_1 &pcfg_pull_none>,
-
-
---=20
-Thanks,
-Caesar
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCAyNCBEZWMgMjAxNSAxMjozNjoxMCArMDAwMApSdXNzZWxsIEtpbmcgLSBBUk0gTGlu
+dXggPGxpbnV4QGFybS5saW51eC5vcmcudWs+IHdyb3RlOgoKPiBJdCBzZWVtcyB0aGF0IHlvdSdy
+ZSB0cnlpbmcgdG8gd29yayBhcm91bmQgYSBsaW1pdGF0aW9uIGluIExpbnV4IGJ5Cj4gbW9kaWZ5
+aW5nIHRoZSBoYXJkd2FyZSByZXByZXNlbnRhdGlvbi4uLgoKU29ycnkgdG8gY29tZSBiYWNrIHRv
+IHRoaXMgdG9waWMsIGJ1dCBJIHRoaW5rIHlvdSBhcmUgd3JvbmcuCgpMb29raW5nIGF0IHRoZSBp
+bXg2IERUcywgdGhlIHByb2JsZW0gY29tZXMgZnJvbSB0aGUgZGlzcGxheS1zdWJzeXN0ZW0Kbm9k
+ZSB3aGljaCBpcyBhIHB1cmUgTGludXggc3BlY2lmaWMgc29mdHdhcmUgZW50aXR5LgoKSWYgeW91
+IHdhbnQgdG8gZGVzY3JpYmUgb25seSB0aGUgaGFyZHdhcmUgaW4gdGhlIERULCBldmVyeXRoaW5n
+IGlzCnNpbXBsZS4KCkEgSVBVIGlzIGEgaW1hZ2UgY29udHJvbGxlciB3aXRoIGl0cyBzdWItZGV2
+aWNlcy4gU2VlbiBmcm9tIHRoZSBzeXN0ZW0sIGl0CmlzIGxpa2UgYSAnYm9hcmQnIHdpdGggaXRz
+IGRldmljZXMgKExDRHMsIGNhbWVyYS4uLikuCgpXaGVuIDIgSVBVcywgdGhlcmUgYXJlIDIgaW5k
+ZXBlbmRhbnQgYm9hcmRzLgoKSGVyZSBpcyB3aGF0IGNvdWxkIGJlIGEgcHVyZSBoYXJkd2FyZSBE
+VDoKCi8qIG5vIGRpc3BsYXktc3Vic3lzdGVtICovCgoJaXB1MTogaXB1QDAyNDAwMDAwIHsJCS8q
+IGltYWdlIGNvbnRyb2xsZXIgLyBib2FyZCAxICovCgkJY29tcGF0aWJsZSA9ICJmc2wsaW14NnEt
+aXB1IjsKCQkuLi4KCQlwb3J0cyA9IDwmaXB1MV9kaTA+LCA8JmlwdTFfZGkxPjsKCX07CglpcHUx
+X2RpMDogZGlAMCB7CQkvKiBkaXNwbGF5IGludGVyZmFjZSAvIGNydGMgMSAqLwoJCWNvbXBhdGli
+bGUgPSAiZnNsLGlteDZxLWRpIjsKCQkuLi4KCQlpcHUxX2RpMF9oZG1pOiBlbmRwb2ludEAxIHsK
+CQkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pX211eF8wPjsKCQl9OwoJCWlwdTFfZGkwX21pcGk6
+IGVuZHBvaW50QDIgewoJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jm1pcGlfbXV4XzA+OwoJCX0KCQku
+Li4KCX07CglpcHUxX2RpMTogZGlAMSB7CQkvKiBkaXNwbGF5IGludGVyZmFjZSAvIGNydGMgMiAq
+LwoJCWNvbXBhdGlibGUgPSAiZnNsLGlteDZxLWRpIjsKCQkuLi4KCQlpcHUxX2RpMV9oZG1pOiBl
+bmRwb2ludEAxIHsKCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pX211eF8xPjsKCQl9OwoJCWlw
+dTFfZGkxX21pcGk6IGVuZHBvaW50QDIgewoJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jm1pcGlfbXV4
+XzE+OwoJCX0KCQkuLi4KCX07CgoJaXB1MjogaXB1QDAyODAwMDAwIHsJCS8qIGltYWdlIGNvbnRy
+b2xsZXIgLyBib2FyZCAyICovCgkJY29tcGF0aWJsZSA9ICJmc2wsaW14NnEtaXB1IjsKCQkuLi4K
+CQlwb3J0cyA9IDwmaXB1Ml9kaTA+LCA8JmlwdTJfZGkxPjsKCX07CglpcHUyX2RpMDogZGlAMCB7
+CQkvKiBkaXNwbGF5IGludGVyZmFjZSAvIGNydGMgMSAqLwoJCWNvbXBhdGlibGUgPSAiZnNsLGlt
+eDZxLWRpIjsKCQkuLi4KCQlpcHUyX2RpMF9oZG1pOiBlbmRwb2ludEAxIHsKCQkJcmVtb3RlLWVu
+ZHBvaW50ID0gPCZoZG1pX211eF8yPjsKCQl9OwoJCWlwdTJfZGkwX21pcGk6IGVuZHBvaW50QDIg
+ewoJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jm1pcGlfbXV4XzI+OwoJCX0KCQkuLi4KCX07CglpcHUy
+X2RpMTogZGlAMSB7CQkvKiBkaXNwbGF5IGludGVyZmFjZSAvIGNydGMgMiAqLwoJCWNvbXBhdGli
+bGUgPSAiZnNsLGlteDZxLWRpIjsKCQkuLi4KCQlpcHUyX2RpMV9oZG1pOiBlbmRwb2ludEAxIHsK
+CQkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pX211eF8zPjsKCQl9OwoJCWlwdTJfZGkxX21pcGk6
+IGVuZHBvaW50QDIgewoJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jm1pcGlfbXV4XzM+OwoJCX0KCQku
+Li4KCX07CgpUaGVuLCBhIHN0YW5kYXJkIGNvbXBvbmVudCBiaW5kaW5nIChwb3J0LT5wYXJlbnQp
+IHdvcmtzIGZpbmUuLi4KCih5b3UgbWF5IG5vdGUgdGhhdCB0aGUgc2FtZSBwcm9ibGVtIGV4aXN0
+cyB3aXRoIGF1ZGlvOiB0aGUKJ3NpbXBsZS1jYXJkJyBpcyBhbHNvIGEgcHVyZSBMaW51eCBzcGVj
+aWZpYyBzb2Z0d2FyZSBlbnRpdHkpCgotLSAKTWVycnkgQ2hyaXN0bWFzCXwJICAgICAgKiogQnJl
+aXpoIGhhIExpbnV4IGF0YXYhICoqCkplZgkJfAkJaHR0cDovL21vaW5lamYuZnJlZS5mci8KX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
