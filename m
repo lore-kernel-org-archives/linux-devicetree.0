@@ -1,75 +1,66 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH v2 0/2] Improve drm_of_component_probe() and move
- rockchip to use it
-Date: Fri, 25 Dec 2015 10:38:17 +0100
-Message-ID: <20151225103817.3aa1d89433607ee7fbf5181f@free.fr>
-References: <1448029325-14602-1-git-send-email-Liviu.Dudau@arm.com>
- <20151222173800.GU960@e106497-lin.cambridge.arm.com>
- <20151223103906.2aae53595345240d57d57b41@free.fr>
- <20151223100534.GW960@e106497-lin.cambridge.arm.com>
- <20151223182033.a52356408b9a81e9497464e7@free.fr>
- <20151223185948.GT8644@n2100.arm.linux.org.uk>
- <20151224091528.4f68d0f5838735a1a38c02c6@free.fr>
- <20151224105206.GB8644@n2100.arm.linux.org.uk>
- <20151224132708.10a35feafb44a5bb8e65ba6d@free.fr>
- <20151224123610.GE8644@n2100.arm.linux.org.uk>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 1/6] arm64: renesas: r8a7795: add usb2_phy device nodes
+Date: Fri, 25 Dec 2015 19:03:54 +0900
+Message-ID: <1451037839-572-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1451037839-572-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20151224123610.GE8644@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-rockchip <linux-rockchip@lists.infradead.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1451037839-572-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyNCBEZWMgMjAxNSAxMjozNjoxMCArMDAwMApSdXNzZWxsIEtpbmcgLSBBUk0gTGlu
-dXggPGxpbnV4QGFybS5saW51eC5vcmcudWs+IHdyb3RlOgoKPiBJdCBzZWVtcyB0aGF0IHlvdSdy
-ZSB0cnlpbmcgdG8gd29yayBhcm91bmQgYSBsaW1pdGF0aW9uIGluIExpbnV4IGJ5Cj4gbW9kaWZ5
-aW5nIHRoZSBoYXJkd2FyZSByZXByZXNlbnRhdGlvbi4uLgoKU29ycnkgdG8gY29tZSBiYWNrIHRv
-IHRoaXMgdG9waWMsIGJ1dCBJIHRoaW5rIHlvdSBhcmUgd3JvbmcuCgpMb29raW5nIGF0IHRoZSBp
-bXg2IERUcywgdGhlIHByb2JsZW0gY29tZXMgZnJvbSB0aGUgZGlzcGxheS1zdWJzeXN0ZW0Kbm9k
-ZSB3aGljaCBpcyBhIHB1cmUgTGludXggc3BlY2lmaWMgc29mdHdhcmUgZW50aXR5LgoKSWYgeW91
-IHdhbnQgdG8gZGVzY3JpYmUgb25seSB0aGUgaGFyZHdhcmUgaW4gdGhlIERULCBldmVyeXRoaW5n
-IGlzCnNpbXBsZS4KCkEgSVBVIGlzIGEgaW1hZ2UgY29udHJvbGxlciB3aXRoIGl0cyBzdWItZGV2
-aWNlcy4gU2VlbiBmcm9tIHRoZSBzeXN0ZW0sIGl0CmlzIGxpa2UgYSAnYm9hcmQnIHdpdGggaXRz
-IGRldmljZXMgKExDRHMsIGNhbWVyYS4uLikuCgpXaGVuIDIgSVBVcywgdGhlcmUgYXJlIDIgaW5k
-ZXBlbmRhbnQgYm9hcmRzLgoKSGVyZSBpcyB3aGF0IGNvdWxkIGJlIGEgcHVyZSBoYXJkd2FyZSBE
-VDoKCi8qIG5vIGRpc3BsYXktc3Vic3lzdGVtICovCgoJaXB1MTogaXB1QDAyNDAwMDAwIHsJCS8q
-IGltYWdlIGNvbnRyb2xsZXIgLyBib2FyZCAxICovCgkJY29tcGF0aWJsZSA9ICJmc2wsaW14NnEt
-aXB1IjsKCQkuLi4KCQlwb3J0cyA9IDwmaXB1MV9kaTA+LCA8JmlwdTFfZGkxPjsKCX07CglpcHUx
-X2RpMDogZGlAMCB7CQkvKiBkaXNwbGF5IGludGVyZmFjZSAvIGNydGMgMSAqLwoJCWNvbXBhdGli
-bGUgPSAiZnNsLGlteDZxLWRpIjsKCQkuLi4KCQlpcHUxX2RpMF9oZG1pOiBlbmRwb2ludEAxIHsK
-CQkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pX211eF8wPjsKCQl9OwoJCWlwdTFfZGkwX21pcGk6
-IGVuZHBvaW50QDIgewoJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jm1pcGlfbXV4XzA+OwoJCX0KCQku
-Li4KCX07CglpcHUxX2RpMTogZGlAMSB7CQkvKiBkaXNwbGF5IGludGVyZmFjZSAvIGNydGMgMiAq
-LwoJCWNvbXBhdGlibGUgPSAiZnNsLGlteDZxLWRpIjsKCQkuLi4KCQlpcHUxX2RpMV9oZG1pOiBl
-bmRwb2ludEAxIHsKCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pX211eF8xPjsKCQl9OwoJCWlw
-dTFfZGkxX21pcGk6IGVuZHBvaW50QDIgewoJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jm1pcGlfbXV4
-XzE+OwoJCX0KCQkuLi4KCX07CgoJaXB1MjogaXB1QDAyODAwMDAwIHsJCS8qIGltYWdlIGNvbnRy
-b2xsZXIgLyBib2FyZCAyICovCgkJY29tcGF0aWJsZSA9ICJmc2wsaW14NnEtaXB1IjsKCQkuLi4K
-CQlwb3J0cyA9IDwmaXB1Ml9kaTA+LCA8JmlwdTJfZGkxPjsKCX07CglpcHUyX2RpMDogZGlAMCB7
-CQkvKiBkaXNwbGF5IGludGVyZmFjZSAvIGNydGMgMSAqLwoJCWNvbXBhdGlibGUgPSAiZnNsLGlt
-eDZxLWRpIjsKCQkuLi4KCQlpcHUyX2RpMF9oZG1pOiBlbmRwb2ludEAxIHsKCQkJcmVtb3RlLWVu
-ZHBvaW50ID0gPCZoZG1pX211eF8yPjsKCQl9OwoJCWlwdTJfZGkwX21pcGk6IGVuZHBvaW50QDIg
-ewoJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jm1pcGlfbXV4XzI+OwoJCX0KCQkuLi4KCX07CglpcHUy
-X2RpMTogZGlAMSB7CQkvKiBkaXNwbGF5IGludGVyZmFjZSAvIGNydGMgMiAqLwoJCWNvbXBhdGli
-bGUgPSAiZnNsLGlteDZxLWRpIjsKCQkuLi4KCQlpcHUyX2RpMV9oZG1pOiBlbmRwb2ludEAxIHsK
-CQkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pX211eF8zPjsKCQl9OwoJCWlwdTJfZGkxX21pcGk6
-IGVuZHBvaW50QDIgewoJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jm1pcGlfbXV4XzM+OwoJCX0KCQku
-Li4KCX07CgpUaGVuLCBhIHN0YW5kYXJkIGNvbXBvbmVudCBiaW5kaW5nIChwb3J0LT5wYXJlbnQp
-IHdvcmtzIGZpbmUuLi4KCih5b3UgbWF5IG5vdGUgdGhhdCB0aGUgc2FtZSBwcm9ibGVtIGV4aXN0
-cyB3aXRoIGF1ZGlvOiB0aGUKJ3NpbXBsZS1jYXJkJyBpcyBhbHNvIGEgcHVyZSBMaW51eCBzcGVj
-aWZpYyBzb2Z0d2FyZSBlbnRpdHkpCgotLSAKTWVycnkgQ2hyaXN0bWFzCXwJICAgICAgKiogQnJl
-aXpoIGhhIExpbnV4IGF0YXYhICoqCkplZgkJfAkJaHR0cDovL21vaW5lamYuZnJlZS5mci8KX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 34 ++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index bb353cd..89393ea 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -775,5 +775,39 @@
+ 			clocks = <&cpg CPG_MOD 815>;
+ 			status = "disabled";
+ 		};
++
++		usb2_phy0: usb-phy@ee080200 {
++			compatible = "renesas,usb2-phy-r8a7795";
++			reg = <0 0xee080200 0 0x700>, <0 0xe6590100 0 0x100>;
++			reg-names = "usb2_host", "hsusb";
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 703>, <&cpg CPG_MOD 704>;
++			clock-names = "usb2", "hsusb";
++			power-domains = <&cpg>;
++			#phy-cells = <0>;
++			status = "disabled";
++		};
++
++		usb2_phy1: usb-phy@ee0a0200 {
++			compatible = "renesas,usb2-phy-r8a7795";
++			reg = <0 0xee0a0200 0 0x700>;
++			reg-names = "usb2_host";
++			clocks = <&cpg CPG_MOD 702>;
++			clock-names = "usb2";
++			power-domains = <&cpg>;
++			#phy-cells = <0>;
++			status = "disabled";
++		};
++
++		usb2_phy2: usb-phy@ee0c0200 {
++			compatible = "renesas,usb2-phy-r8a7795";
++			reg = <0 0xee0c0200 0 0x700>;
++			reg-names = "usb2_host";
++			clocks = <&cpg CPG_MOD 701>;
++			clock-names = "usb2";
++			power-domains = <&cpg>;
++			#phy-cells = <0>;
++			status = "disabled";
++		};
+ 	};
+ };
+-- 
+1.9.1
+
