@@ -1,37 +1,28 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH] Fix documentation for adp1653 DT
-Date: Sat, 26 Dec 2015 19:34:49 +0100
-Message-ID: <20151226183449.GA31847@amd>
-References: <1451086636-3621-1-git-send-email-pali.rohar@gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] ARM: dts: n900: Include adp1653 device
+Date: Sat, 26 Dec 2015 19:35:04 +0100
+Message-ID: <20151226183504.GB31847@amd>
+References: <1451086812-3729-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1451086636-3621-1-git-send-email-pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1451086812-3729-1-git-send-email-pali.rohar@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat 2015-12-26 00:37:16, Pali Roh=E1r wrote:
-> Property names do not match real names needed by driver itself.
-> This patch fix this problem.
+On Sat 2015-12-26 00:40:12, Pali Roh=E1r wrote:
+> This patch adds adp1653 device into n900 DT structure. DT support in
+> adp1653 driver is there since v4.2-rc1 version.
 >=20
-> Signed-off-by: Pali Roh=E1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
 
-Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
 
-Now... if someone could convert adp1653 to the LED subsystem so this
-is testable from the shell...
-								Pavel
-							=09
 --=20
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
 /blog.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
