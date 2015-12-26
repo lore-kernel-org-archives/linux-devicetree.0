@@ -1,83 +1,37 @@
-From: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v6 3/3] spi: sun4i: Add support for wait time
- between word transmissions
-Date: Sat, 26 Dec 2015 16:53:06 +0100
-Message-ID: <1451145186-14235-4-git-send-email-mweseloh42@gmail.com>
-References: <1451145186-14235-1-git-send-email-mweseloh42@gmail.com>
-Reply-To: mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH] Fix documentation for adp1653 DT
+Date: Sat, 26 Dec 2015 19:34:49 +0100
+Message-ID: <20151226183449.GA31847@amd>
+References: <1451086636-3621-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDFO74UEV4IRB57P7KZQKGQEFSUKX2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1451145186-14235-1-git-send-email-mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1451086636-3621-1-git-send-email-pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Modifies the sun4i SPI master driver to make use of the
-"spi-word-wait-ns" property. This specific SPI controller needs 3 clock
-cycles to set up the delay, which makes the minimum non-zero wait time
-on this hardware 4 clock cycles.
+On Sat 2015-12-26 00:37:16, Pali Roh=E1r wrote:
+> Property names do not match real names needed by driver itself.
+> This patch fix this problem.
+>=20
+> Signed-off-by: Pali Roh=E1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Signed-off-by: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/spi/spi-sun4i.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 
-diff --git a/drivers/spi/spi-sun4i.c b/drivers/spi/spi-sun4i.c
-index d67e142..4d6f77c 100644
---- a/drivers/spi/spi-sun4i.c
-+++ b/drivers/spi/spi-sun4i.c
-@@ -176,6 +176,9 @@ static int sun4i_spi_transfer_one(struct spi_master *master,
- 	unsigned int tx_len = 0;
- 	int ret = 0;
- 	u32 reg;
-+	int wait_clk = 0;
-+	int clk_ns = 0;
-+	unsigned int speed_hz;
- 
- 	/* We don't support transfer larger than the FIFO */
- 	if (tfr->len > SUN4I_FIFO_DEPTH)
-@@ -260,13 +263,34 @@ static int sun4i_spi_transfer_one(struct spi_master *master,
- 	div = DIV_ROUND_UP(mclk_rate, 2 * tfr->speed_hz) - 1;
- 	if (div <= SUN4I_CLK_CTL_CDR2_MASK) {
- 		reg = SUN4I_CLK_CTL_CDR2(div) | SUN4I_CLK_CTL_DRS;
-+		speed_hz = mclk_rate / (2 * (div + 1));
- 	} else {
- 		div = ilog2(roundup_pow_of_two(mclk_rate / tfr->speed_hz));
- 		reg = SUN4I_CLK_CTL_CDR1(div);
-+		speed_hz = mclk_rate / (1 << div);
- 	}
- 
- 	sun4i_spi_write(sspi, SUN4I_CLK_CTL_REG, reg);
- 
-+	/*
-+	 * Setup wait time between words.
-+	 *
-+	 * Wait time is set in SPI_CLK cycles. The SPI hardware needs 3
-+	 * additional cycles to setup the wait counter, so the minimum delay
-+	 * time is 4 cycles.
-+	 */
-+	if (spi->word_wait_ns) {
-+		clk_ns = DIV_ROUND_UP(1000000000, speed_hz);
-+		wait_clk = DIV_ROUND_UP(spi->word_wait_ns, clk_ns) - 3;
-+		if (wait_clk < 1) {
-+			wait_clk = 1;
-+			dev_dbg(&spi->dev,
-+				"using minimum of 4 word wait cycles (%uns)",
-+				4 * clk_ns);
-+		}
-+	}
-+	sun4i_spi_write(sspi, SUN4I_WAIT_REG, (u16)wait_clk);
-+
- 	/* Setup the transfer now... */
- 	if (sspi->tx_buf)
- 		tx_len = tfr->len;
--- 
-1.9.1
+Now... if someone could convert adp1653 to the LED subsystem so this
+is testable from the shell...
+								Pavel
+							=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
+/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
