@@ -1,187 +1,57 @@
-From: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-Subject: [PATCH v2 3/3] ARM64: dts: mt8173: Add CPU OPP, clock and regulator supply properties
-Date: Sun, 27 Dec 2015 14:21:58 +0800
-Message-ID: <1451197318-12418-4-git-send-email-pi-cheng.chen@linaro.org>
-References: <1451197318-12418-1-git-send-email-pi-cheng.chen@linaro.org>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1451197318-12418-1-git-send-email-pi-cheng.chen@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Daniel Kurtz <djkurtz@chromium.org>, linux-mediatek@lists.infradead.org, linaro-kernel@lists.linaro.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] DT: i2c: Update vendor prefix for 24c00
+Date: Sun, 27 Dec 2015 16:57:48 +0200
+Message-ID: <CAHp75VfvLJu+aL233izR3jh7UQg7ewEmS2Z3EhAg2WPZ9s1gyg@mail.gmail.com>
+References: <1450898335-22814-1-git-send-email-akshay.bhat@timesys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1450898335-22814-1-git-send-email-akshay.bhat@timesys.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Akshay Bhat <akshay.bhat@timesys.com>
+Cc: ktsai@capellamicro.com, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jiri Kosina <trivial@kernel.org>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, justin.waters@timesys.com
 List-Id: devicetree@vger.kernel.org
 
-Add operating-points-v2, clock, and regulator supply properties
-required by mt8173-cpufreq driver to enable it.
+On Wed, Dec 23, 2015 at 9:18 PM, Akshay Bhat <akshay.bhat@timesys.com> wrote:
+> "at" is not a valid vendor prefix, correcting the same to "atmel"
+>
 
-Signed-off-by: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
----
-This patch is based on the patch[1] that adds underlying clock MUX for
-MT8173 which is needed by mt8173-cpufreq driver but not yet picked.
+I'm afraid you can't just do this change alone as it's used in some
+DTS. Though you may deprecated it along with update of current users.
 
-[1] http://article.gmane.org/gmane.linux.kernel.clk/325
----
- arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 18 ++++++
- arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 90 +++++++++++++++++++++++++++++
- 2 files changed, 108 insertions(+)
+> Signed-off-by: Akshay Bhat <akshay.bhat@timesys.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/trivial-devices.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> index c50cf13..c4a01c0 100644
+> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> @@ -20,11 +20,11 @@ adi,adt7476         +/-1C TDM Extended Temp Range I.C
+>  adi,adt7490            +/-1C TDM Extended Temp Range I.C
+>  adi,adxl345            Three-Axis Digital Accelerometer
+>  adi,adxl346            Three-Axis Digital Accelerometer (backward-compatibility value "adi,adxl345" must be listed too)
+> -at,24c08               i2c serial eeprom  (24cxx)
+>  atmel,24c00            i2c serial eeprom  (24cxx)
+>  atmel,24c01            i2c serial eeprom  (24cxx)
+>  atmel,24c02            i2c serial eeprom  (24cxx)
+>  atmel,24c04            i2c serial eeprom  (24cxx)
+> +atmel,24c08            i2c serial eeprom  (24cxx)
+>  atmel,24c16            i2c serial eeprom  (24cxx)
+>  atmel,24c32            i2c serial eeprom  (24cxx)
+>  atmel,24c64            i2c serial eeprom  (24cxx)
+> --
+> 2.6.3
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-index 811cb76..5b6321b 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-@@ -405,6 +405,24 @@
- 	status = "okay";
- };
- 
-+&cpu0 {
-+	proc-supply = <&mt6397_vpca15_reg>;
-+};
-+
-+&cpu1 {
-+	proc-supply = <&mt6397_vpca15_reg>;
-+};
-+
-+&cpu2 {
-+	proc-supply = <&da9211_vcpu_reg>;
-+	sram-supply = <&mt6397_vsramca7_reg>;
-+};
-+
-+&cpu3 {
-+	proc-supply = <&da9211_vcpu_reg>;
-+	sram-supply = <&mt6397_vsramca7_reg>;
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 4dd5f93..ae28c12 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -24,6 +24,80 @@
- 	#address-cells = <2>;
- 	#size-cells = <2>;
- 
-+	cluster0_opp: opp_table0 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+		opp@507000000 {
-+			opp-hz = /bits/ 64 <507000000>;
-+			opp-microvolt = <859000>;
-+		};
-+		opp@702000000 {
-+			opp-hz = /bits/ 64 <702000000>;
-+			opp-microvolt = <908000>;
-+		};
-+		opp@1001000000 {
-+			opp-hz = /bits/ 64 <1001000000>;
-+			opp-microvolt = <983000>;
-+		};
-+		opp@1105000000 {
-+			opp-hz = /bits/ 64 <1105000000>;
-+			opp-microvolt = <1009000>;
-+		};
-+		opp@1183000000 {
-+			opp-hz = /bits/ 64 <1183000000>;
-+			opp-microvolt = <1028000>;
-+		};
-+		opp@1404000000 {
-+			opp-hz = /bits/ 64 <1404000000>;
-+			opp-microvolt = <1083000>;
-+		};
-+		opp@1508000000 {
-+			opp-hz = /bits/ 64 <1508000000>;
-+			opp-microvolt = <1109000>;
-+		};
-+		opp@1573000000 {
-+			opp-hz = /bits/ 64 <1573000000>;
-+			opp-microvolt = <1125000>;
-+		};
-+	};
-+
-+	cluster1_opp: opp_table1 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+		opp@507000000 {
-+			opp-hz = /bits/ 64 <507000000>;
-+			opp-microvolt = <828000>;
-+		};
-+		opp@702000000 {
-+			opp-hz = /bits/ 64 <702000000>;
-+			opp-microvolt = <867000>;
-+		};
-+		opp@1001000000 {
-+			opp-hz = /bits/ 64 <1001000000>;
-+			opp-microvolt = <927000>;
-+		};
-+		opp@1209000000 {
-+			opp-hz = /bits/ 64 <1209000000>;
-+			opp-microvolt = <968000>;
-+		};
-+		opp@1404000000 {
-+			opp-hz = /bits/ 64 <1404000000>;
-+			opp-microvolt = <1007000>;
-+		};
-+		opp@1612000000 {
-+			opp-hz = /bits/ 64 <1612000000>;
-+			opp-microvolt = <1049000>;
-+		};
-+		opp@1807000000 {
-+			opp-hz = /bits/ 64 <1807000000>;
-+			opp-microvolt = <1089000>;
-+		};
-+		opp@1989000000 {
-+			opp-hz = /bits/ 64 <1989000000>;
-+			opp-microvolt = <1125000>;
-+		};
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -54,6 +128,10 @@
- 			reg = <0x000>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&CPU_SLEEP_0>;
-+			clocks = <&infracfg CLK_INFRA_CA53SEL>,
-+				 <&apmixedsys CLK_APMIXED_MAINPLL>;
-+			clock-names = "cpu", "intermediate";
-+			operating-points-v2 = <&cluster0_opp>;
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -62,6 +140,10 @@
- 			reg = <0x001>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&CPU_SLEEP_0>;
-+			clocks = <&infracfg CLK_INFRA_CA53SEL>,
-+				 <&apmixedsys CLK_APMIXED_MAINPLL>;
-+			clock-names = "cpu", "intermediate";
-+			operating-points-v2 = <&cluster0_opp>;
- 		};
- 
- 		cpu2: cpu@100 {
-@@ -70,6 +152,10 @@
- 			reg = <0x100>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&CPU_SLEEP_0>;
-+			clocks = <&infracfg CLK_INFRA_CA57SEL>,
-+				 <&apmixedsys CLK_APMIXED_MAINPLL>;
-+			clock-names = "cpu", "intermediate";
-+			operating-points-v2 = <&cluster1_opp>;
- 		};
- 
- 		cpu3: cpu@101 {
-@@ -78,6 +164,10 @@
- 			reg = <0x101>;
- 			enable-method = "psci";
- 			cpu-idle-states = <&CPU_SLEEP_0>;
-+			clocks = <&infracfg CLK_INFRA_CA57SEL>,
-+				 <&apmixedsys CLK_APMIXED_MAINPLL>;
-+			clock-names = "cpu", "intermediate";
-+			operating-points-v2 = <&cluster1_opp>;
- 		};
- 
- 		idle-states {
+
+
 -- 
-1.9.1
-
+With Best Regards,
+Andy Shevchenko
