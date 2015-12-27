@@ -1,95 +1,31 @@
-From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] iio: health: max30100: add config for LED current
-Date: Sat, 26 Dec 2015 20:38:24 -0800
-Message-ID: <1451191104-1281-1-git-send-email-mranostay@gmail.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+Subject: [PATCH v2 0/3] ARM64: dts: cpufreq: mt8173: Migrate mt8173-cpufreq to use OPPv2 bindings
+Date: Sun, 27 Dec 2015 14:21:55 +0800
+Message-ID: <1451197318-12418-1-git-send-email-pi-cheng.chen@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Daniel Kurtz <djkurtz@chromium.org>, linux-mediatek@lists.infradead.org, linaro-kernel@lists.linaro.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Allow the current for both RED and IR LEDs to be set via an device tree
-property setting.
+This series tries to migrate mt8173-cpufreq driver to use
+operating-points-v2 bindings and add support for mt8173-cpufreq driver
 
-This is an optional setting that is useful for applications that have a
-known glass attenuation factor.
+v1->v2:
+- update dev_pm_opp_of_get_sharing_cpus() to setup bitfield of original CPU
+- rename OPP nodes in dts according to OPPv2 bindings in linux-next
 
-Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/iio/health/max30100.txt     |  7 +++++++
- drivers/iio/health/max30100.c                       | 21 +++++++++++++++------
- 2 files changed, 22 insertions(+), 6 deletions(-)
+Pi-Cheng Chen (3):
+  PM/OPP: Don't skip cpu_dev->id when setting up cpumask
+  cpufreq: mt8173: migrate to use operating-points-v2 bindings
+  ARM64: dts: mt8173: Add CPU OPP, clock and regulator supply properties
 
-diff --git a/Documentation/devicetree/bindings/iio/health/max30100.txt b/Documentation/devicetree/bindings/iio/health/max30100.txt
-index f6fbac6..009314c 100644
---- a/Documentation/devicetree/bindings/iio/health/max30100.txt
-+++ b/Documentation/devicetree/bindings/iio/health/max30100.txt
-@@ -11,11 +11,18 @@ Required properties:
-   Refer to interrupt-controller/interrupts.txt for generic
-   interrupt client node bindings.
- 
-+Optional properties:
-+  - max30100,led-current: configuration for LED current (in mA) while the engine
-+    is running. Upper nibble is for the RED LED, and lower nibble the IR LED.
-+
-+    Refer to the datasheet for the current mapping values.
-+
- Example:
- 
- max30100@057 {
- 	compatible = "maxim,max30100";
- 	reg = <57>;
-+	max30100,led-current = <0x7f>;
- 	interrupt-parent = <&gpio1>;
- 	interrupts = <16 2>;
- };
-diff --git a/drivers/iio/health/max30100.c b/drivers/iio/health/max30100.c
-index 9d1c81f..37e8d7e 100644
---- a/drivers/iio/health/max30100.c
-+++ b/drivers/iio/health/max30100.c
-@@ -13,7 +13,7 @@
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  * GNU General Public License for more details.
-  *
-- * TODO: allow LED current and pulse length controls via device tree properties
-+ * TODO: enable pulse length controls via device tree properties
-  */
- 
- #include <linux/module.h>
-@@ -24,6 +24,7 @@
- #include <linux/irq.h>
- #include <linux/i2c.h>
- #include <linux/mutex.h>
-+#include <linux/of.h>
- #include <linux/regmap.h>
- #include <linux/iio/iio.h>
- #include <linux/iio/buffer.h>
-@@ -245,13 +246,21 @@ static irqreturn_t max30100_interrupt_handler(int irq, void *private)
- 
- static int max30100_chip_init(struct max30100_data *data)
- {
-+	struct device *dev = &data->client->dev;
-+	struct device_node *np = dev->of_node;
- 	int ret;
-+	u32 val;
- 
--	/* RED IR LED = 24mA, IR LED = 50mA */
--	ret = regmap_write(data->regmap, MAX30100_REG_LED_CONFIG,
--				(MAX30100_REG_LED_CONFIG_24MA <<
--				 MAX30100_REG_LED_CONFIG_RED_LED_SHIFT) |
--				 MAX30100_REG_LED_CONFIG_50MA);
-+	ret = of_property_read_u32(np, "max30100,led-current", &val);
-+	if (ret) {
-+		/* Default to 24 mA RED LED, 50 mA IR LED */
-+		val = (MAX30100_REG_LED_CONFIG_24MA <<
-+			MAX30100_REG_LED_CONFIG_RED_LED_SHIFT) |
-+			MAX30100_REG_LED_CONFIG_50MA;
-+		dev_warn(dev, "no led-current set, defaulting to %d", val);
-+	}
-+
-+	ret = regmap_write(data->regmap, MAX30100_REG_LED_CONFIG, val & 0xFF);
- 	if (ret)
- 		return ret;
- 
+ arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 18 ++++++
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 90 +++++++++++++++++++++++++++++
+ drivers/base/power/opp/cpu.c                |  4 --
+ drivers/cpufreq/mt8173-cpufreq.c            | 17 ++++--
+ 4 files changed, 119 insertions(+), 10 deletions(-)
+
 -- 
-2.6.4
+1.9.1
+
