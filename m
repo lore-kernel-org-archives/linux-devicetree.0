@@ -1,80 +1,46 @@
-From: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] wlcore/wl12xx: spi: add power operation function
-Date: Sun, 27 Dec 2015 19:14:32 +0200
-Message-ID: <56801C78.9040102@compulab.co.il>
-References: <1450971335-15961-1-git-send-email-uri.mashiach@compulab.co.il>
- <1450971335-15961-2-git-send-email-uri.mashiach@compulab.co.il>
- <567C1E3B.3020404@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ASoC: sun4i-codec: Use proper output for
+ external amp routes
+Date: Sun, 27 Dec 2015 19:23:02 +0100
+Message-ID: <20151227182302.GJ30359@lukather>
+References: <1450821617-12906-1-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <567C1E3B.3020404-l0cyMroinI0@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HdZAANC5GEQnh8Bp"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBB6ZQC2AKGQERQMJWHA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1450821617-12906-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Grygorii,
+--HdZAANC5GEQnh8Bp
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On 12/24/2015 06:32 PM, Grygorii Strashko wrote:
-> On 12/24/2015 05:35 PM, Uri Mashiach wrote:
->> The power function uses a consumer regulator access to update the WiFi
->> enable GPIO value.
->>
->> Signed-off-by: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
->> ---
->> v1 -> v2: oops fix was removed to a separate fix.
->>
->>   drivers/net/wireless/ti/wlcore/spi.c | 37
->> ++++++++++++++++++++++++++++++++++++
->>   1 file changed, 37 insertions(+)
->>
->> diff --git a/drivers/net/wireless/ti/wlcore/spi.c
->> b/drivers/net/wireless/ti/wlcore/spi.c
->>
->
-> [...]
->
->> +
->>   static struct wl1271_if_operations spi_ops = {
->>       .read        = wl12xx_spi_raw_read,
->>       .write        = wl12xx_spi_raw_write,
->>       .reset        = wl12xx_spi_reset,
->>       .init        = wl12xx_spi_init,
->> +    .power        = wl12xx_spi_set_power,
->>       .set_block_size = NULL,
->>   };
->>
->> @@ -353,6 +384,12 @@ static int wl1271_probe(struct spi_device *spi)
->>        * comes from the board-peripherals file */
->>       spi->bits_per_word = 32;
->>
->> +    glue->reg = devm_regulator_get(&spi->dev, "vwlan");
->> +    if (IS_ERR(glue->reg)) {
->
-> It will be more correct to handle -EPROBE_DEFER here also. Like:
->           if (PTR_ERR(glue->reg) == -EPROBE_DEFER)
->              return PTR_ERR(glue->reg);
->
+Hi,
 
-It seems that the IS_ERR(glue->reg) condition covers the EPROBE_DEFER case.
+On Tue, Dec 22, 2015 at 11:00:17PM +0100, Hans de Goede wrote:
+> An external amp (if any) is connected to the external outputs of the SoC
+> of course, rather then directly to the internal amp.
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
->> +        dev_err(glue->dev, "can't get regulator\n");
->> +        return PTR_ERR(glue->reg);
->> +    }
->> +
->>       ret = spi_setup(spi);
->>       if (ret < 0) {
->>           dev_err(glue->dev, "spi_setup failed\n");
->>
->
->
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Thanks!
+Maxime
 
 -- 
-Thanks,
-Uri
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--HdZAANC5GEQnh8Bp--
