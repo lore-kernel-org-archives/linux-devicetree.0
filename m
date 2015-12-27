@@ -1,61 +1,95 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH v2 8/8] ARM: bcm2835: Add Kconfig support for bcm2836
-Date: Sat, 26 Dec 2015 14:38:05 -0800
-Message-ID: <87y4cg96pe.fsf@eliezer.anholt.net>
-References: <1450310115-22163-1-git-send-email-eric@anholt.net> <1450310115-22163-9-git-send-email-eric@anholt.net>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1450310115-22163-9-git-send-email-eric@anholt.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rpi-kernel@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
+From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] iio: health: max30100: add config for LED current
+Date: Sat, 26 Dec 2015 20:38:24 -0800
+Message-ID: <1451191104-1281-1-git-send-email-mranostay@gmail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+Allow the current for both RED and IR LEDs to be set via an device tree
+property setting.
 
-Eric Anholt <eric@anholt.net> writes:
+This is an optional setting that is useful for applications that have a
+known glass attenuation factor.
 
-> This should be a complete port of bcm2835 functionality to bcm2836
-> (Raspberry Pi 2).
->
-> Signed-off-by: Eric Anholt <eric@anholt.net>
-> ---
->
-> v2: Implement Arnd's feedback to not split to ARCH_BCM2836, and
->     instead use more conditionals in ARCH_BCM2835.  Also reduce diff
->     between 2835 and 2836.
->
->  arch/arm/Kconfig.debug     | 10 ++++++++--
->  arch/arm/boot/dts/Makefile |  3 ++-
->  arch/arm/mach-bcm/Kconfig  |  8 ++++----
->  3 files changed, 14 insertions(+), 7 deletions(-)
+Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ .../devicetree/bindings/iio/health/max30100.txt     |  7 +++++++
+ drivers/iio/health/max30100.c                       | 21 +++++++++++++++------
+ 2 files changed, 22 insertions(+), 6 deletions(-)
 
-I noticed a minor bug in this commit, that the dts/Makefile hunk should
-be in the Pi2 DT patch, instead.  Otherwise the -soc branch for
-submitting this doesn't build on its own before the merge of all the
-branches together.
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWfxbNAAoJELXWKTbR/J7o5YAP/jcJHwJX4D04/xD0CQRJ56M0
-pLVOgGKd3W9Kf3pidOWyjmWWDu84i2561iupVWvtVC0f4N7RavR642zQM7sd5F2r
-45ftKpiAkXIFL5BowHJlpKlcbCUp7X3KX+q2OchMAvazwZwct33FneJAD7IVMWUa
-qShcFCf7BdN4uf4A2U9+YgweJCrLIhNkMKJKBYZ1+DTJ1L3Z70QJUGN3i4anYWZ4
-ktRkTeyq7rSLOvKqL+a0TszPY1tEIzWuXfI1ah8Z/5h7Ck61vYbpiHGlhcHfqXP5
-2yE8630mbkIqAS9Sd9qbHscHLHyUK35MwxGU4e6xeARv5IMIotHU4S08IPxAbtSG
-NbbbJY6lMP0q6xhZQO5FqVAmQYThROZy1/iXwEiro4HAL1VpLzqP/NDXEJElFKPO
-7HWuJvcLs6ZWAwXX3dNj1NJZjUIxjsBD71Jj9hiMuipPuXWr8NLw0Vlb+AY96ETj
-tRsG5jYWHpFYZuLj/EcoZv6yIeUa3oeEpXROGLkb9O5+jixPHZkPgE1pUofN6bjd
-Umqe2GaBJ46A1iSIox+QdDM0dcNerP1+NCDncIjVF08l+mltWDJ9UsHB7ab5FosO
-/yunXRH1ot+P5GmmiBhbBOODXsqNR15nteG93EJoM8qbYBflQb9HbdG8E4lD01O4
-AnX0exb0QItu++S6N0kV
-=eiqj
------END PGP SIGNATURE-----
---=-=-=--
+diff --git a/Documentation/devicetree/bindings/iio/health/max30100.txt b/Documentation/devicetree/bindings/iio/health/max30100.txt
+index f6fbac6..009314c 100644
+--- a/Documentation/devicetree/bindings/iio/health/max30100.txt
++++ b/Documentation/devicetree/bindings/iio/health/max30100.txt
+@@ -11,11 +11,18 @@ Required properties:
+   Refer to interrupt-controller/interrupts.txt for generic
+   interrupt client node bindings.
+ 
++Optional properties:
++  - max30100,led-current: configuration for LED current (in mA) while the engine
++    is running. Upper nibble is for the RED LED, and lower nibble the IR LED.
++
++    Refer to the datasheet for the current mapping values.
++
+ Example:
+ 
+ max30100@057 {
+ 	compatible = "maxim,max30100";
+ 	reg = <57>;
++	max30100,led-current = <0x7f>;
+ 	interrupt-parent = <&gpio1>;
+ 	interrupts = <16 2>;
+ };
+diff --git a/drivers/iio/health/max30100.c b/drivers/iio/health/max30100.c
+index 9d1c81f..37e8d7e 100644
+--- a/drivers/iio/health/max30100.c
++++ b/drivers/iio/health/max30100.c
+@@ -13,7 +13,7 @@
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  * GNU General Public License for more details.
+  *
+- * TODO: allow LED current and pulse length controls via device tree properties
++ * TODO: enable pulse length controls via device tree properties
+  */
+ 
+ #include <linux/module.h>
+@@ -24,6 +24,7 @@
+ #include <linux/irq.h>
+ #include <linux/i2c.h>
+ #include <linux/mutex.h>
++#include <linux/of.h>
+ #include <linux/regmap.h>
+ #include <linux/iio/iio.h>
+ #include <linux/iio/buffer.h>
+@@ -245,13 +246,21 @@ static irqreturn_t max30100_interrupt_handler(int irq, void *private)
+ 
+ static int max30100_chip_init(struct max30100_data *data)
+ {
++	struct device *dev = &data->client->dev;
++	struct device_node *np = dev->of_node;
+ 	int ret;
++	u32 val;
+ 
+-	/* RED IR LED = 24mA, IR LED = 50mA */
+-	ret = regmap_write(data->regmap, MAX30100_REG_LED_CONFIG,
+-				(MAX30100_REG_LED_CONFIG_24MA <<
+-				 MAX30100_REG_LED_CONFIG_RED_LED_SHIFT) |
+-				 MAX30100_REG_LED_CONFIG_50MA);
++	ret = of_property_read_u32(np, "max30100,led-current", &val);
++	if (ret) {
++		/* Default to 24 mA RED LED, 50 mA IR LED */
++		val = (MAX30100_REG_LED_CONFIG_24MA <<
++			MAX30100_REG_LED_CONFIG_RED_LED_SHIFT) |
++			MAX30100_REG_LED_CONFIG_50MA;
++		dev_warn(dev, "no led-current set, defaulting to %d", val);
++	}
++
++	ret = regmap_write(data->regmap, MAX30100_REG_LED_CONFIG, val & 0xFF);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.6.4
