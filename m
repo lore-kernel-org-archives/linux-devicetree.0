@@ -1,123 +1,114 @@
-From: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Subject: [PATCH v3 3/3] wlcore/wl12xx: spi: add wifi support to cm-t335
-Date: Mon, 28 Dec 2015 14:02:19 +0200
-Message-ID: <1451304139-10899-4-git-send-email-uri.mashiach@compulab.co.il>
-References: <1451304139-10899-1-git-send-email-uri.mashiach@compulab.co.il>
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1451304139-10899-1-git-send-email-uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [RESEND PATCH v1 4/4] clk: rockchip: rk3036: fix and add node id for emac clock
+Date: Mon, 28 Dec 2015 13:41:14 +0100
+Message-ID: <11997168.T384RkEsFx@diego>
+References: <1451293433-32392-1-git-send-email-zhengxing@rock-chips.com> <1451293433-32392-5-git-send-email-zhengxing@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1451293433-32392-5-git-send-email-zhengxing@rock-chips.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Xing Zheng <zhengxing@rock-chips.com>
+Cc: keescook@google.com, leozwang@google.com, linux-rockchip@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Device tree modifications:
-- Pinmux for SPI0 and WiFi GPIOs.
-- SPI0 node with wlcore as a child node.
+Hi,
 
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Acked-by: Igor Grinberg <grinberg-lB3UumIvzKrRNpEZXGUFxA@public.gmane.org>
----
-v1 -> v2: Replace interrupts and interrupt-parent with interrupts-extended.
-v2 -> v3: Move the pinctrl-0 = <&wifi_pins> to the wlcore node.
+Am Montag, 28. Dezember 2015, 17:03:53 schrieb Xing Zheng:
+> Due to referred old version TRM, there is incorrect emac clock node,
+> we should fix it. The SEL_21_9 is the parent of SEL_21_4.
+> 
+> In the emac driver, we need to refer HCLK_MAC, and  because There are
+> only 3PLLs (APLL/GPLL/DPLL) on the rk3036, most clock are under the
+> GPLL, and it is unable to provide the accurate rate for mac_ref which
+> need to 50MHz probability, we should let it under the APLL and are
+> able to set the freq which integer multiples of 50MHz, so we add these
+> emac node for reference.
 
-arch/arm/boot/dts/am335x-cm-t335.dts | 54 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+I don't really follow here. While I do understand that the emac needs 50MHz, I 
+don't think using the APLL as source is helpful.
 
-diff --git a/arch/arm/boot/dts/am335x-cm-t335.dts b/arch/arm/boot/dts/am335x-cm-t335.dts
-index 42e9b66..b700940 100644
---- a/arch/arm/boot/dts/am335x-cm-t335.dts
-+++ b/arch/arm/boot/dts/am335x-cm-t335.dts
-@@ -11,6 +11,7 @@
- /dts-v1/;
- 
- #include "am33xx.dtsi"
-+#include <dt-bindings/interrupt-controller/irq.h>
- 
- / {
- 	model = "CompuLab CM-T335";
-@@ -40,6 +41,15 @@
- 		regulator-max-microvolt = <3300000>;
- 	};
- 
-+	/* Regulator for WiFi */
-+	vwlan_fixed: fixedregulator@2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vwlan_fixed";
-+		gpio = <&gpio0 20 GPIO_ACTIVE_HIGH>; /* gpio0_20 */
-+		enable-active-high;
-+		regulator-boot-off;
-+	};
-+
- 	backlight {
- 		compatible = "pwm-backlight";
- 		pwms = <&ecap0 0 50000 0>;
-@@ -223,6 +233,21 @@
- 		>;
- 	};
- 
-+	spi0_pins: pinmux_spi0_pins {
-+		pinctrl-single,pins = <
-+			/* spi0_sclk.spi0_sclk */
-+			AM33XX_IOPAD(0x950, PIN_INPUT | MUX_MODE0)
-+			/* spi0_d0.spi0_d0 */
-+			AM33XX_IOPAD(0x954, PIN_OUTPUT_PULLUP | MUX_MODE0)
-+			/* spi0_d1.spi0_d1 */
-+			AM33XX_IOPAD(0x958, PIN_INPUT | MUX_MODE0)
-+			/* spi0_cs0.spi0_cs0 */
-+			AM33XX_IOPAD(0x95C, PIN_OUTPUT | MUX_MODE0)
-+			/* spi0_cs1.spi0_cs1 */
-+			AM33XX_IOPAD(0x960, PIN_OUTPUT | MUX_MODE0)
-+		>;
-+	};
-+
- 	/* wl1271 bluetooth */
- 	bluetooth_pins: pinmux_bluetooth_pins {
- 		pinctrl-single,pins = <
-@@ -230,6 +255,16 @@
- 			AM33XX_IOPAD(0x9b0, PIN_OUTPUT_PULLUP | MUX_MODE7)
- 		>;
- 	};
-+
-+	/* wl1271 WiFi */
-+	wifi_pins: pinmux_wifi_pins {
-+		pinctrl-single,pins = <
-+			/* EMU1.gpio3_8 - WiFi IRQ */
-+			AM33XX_IOPAD(0x9e8, PIN_INPUT_PULLUP | MUX_MODE7)
-+			/* XDMA_EVENT_INTR1.gpio0_20 - WiFi enable */
-+			AM33XX_IOPAD(0x9b4, PIN_OUTPUT | MUX_MODE7)
-+		>;
-+	};
- };
- 
- &uart0 {
-@@ -394,3 +429,22 @@ status = "okay";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins>;
- };
-+
-+&spi0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi0_pins>;
-+	ti,pindir-d0-out-d1-in = <1>;
-+	/* WLS1271 WiFi */
-+	wlcore: wlcore@1 {
-+		compatible = "ti,wl1271";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wifi_pins>;
-+		reg = <1>;
-+		spi-max-frequency = <48000000>;
-+		clock-xtal;
-+		ref-clock-frequency = <38400000>;
-+		interrupts-extended = <&gpio3 8 IRQ_TYPE_LEVEL_HIGH>;
-+		vwlan-supply = <&vwlan_fixed>;
-+	};
-+};
--- 
-2.5.0
+The APLL is the main clocksource for the cpu-cores, including frequency 
+scaling, and while it currently only lists 816MHz as sole frequency, you're 
+pretty much guaranteed to not get your correct multiple of 50MHz from there 
+either. And limiting the cpu to just do 600MHz to get the mac working sounds 
+pretty bad ;-) .
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+In the rk3036 cru-node the gpll gets set to 594MHz. Is there a special reason 
+why it needs to be 594MHz and cannot be a round 600MHz? Because that would 
+also provide your 50MHz-multiple nicely.
+
+> Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
+> ---
+> 
+>  drivers/clk/rockchip/clk-rk3036.c      |   11 ++++++-----
+>  include/dt-bindings/clock/rk3036-cru.h |    2 ++
+>  2 files changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/clk/rockchip/clk-rk3036.c
+> b/drivers/clk/rockchip/clk-rk3036.c index 7420cbe..7863c4d 100644
+> --- a/drivers/clk/rockchip/clk-rk3036.c
+> +++ b/drivers/clk/rockchip/clk-rk3036.c
+> @@ -328,13 +328,14 @@ static struct rockchip_clk_branch
+> rk3036_clk_branches[] __initdata = { RK2928_CLKSEL_CON(16), 0, 2, MFLAGS,
+> 2, 5, DFLAGS,
+>  			RK2928_CLKGATE_CON(10), 5, GFLAGS),
+> 
+> -	COMPOSITE_NOGATE(0, "mac_pll_src", mux_pll_src_3plls_p, 0,
+> -			RK2928_CLKSEL_CON(21), 0, 2, MFLAGS, 4, 5, DFLAGS),
+> +	MUX(SCLK_MACPLL, "mac_pll_pre", mux_pll_src_3plls_p, 0,
+> +			RK2928_CLKSEL_CON(21), 0, 2, MFLAGS),
+> +	DIV(0, "mac_pll_src", "mac_pll_pre", 0,
+> +			RK2928_CLKSEL_CON(21), 9, 5, DFLAGS),
+>  	MUX(SCLK_MACREF, "mac_clk_ref", mux_mac_p, CLK_SET_RATE_PARENT,
+>  			RK2928_CLKSEL_CON(21), 3, 1, MFLAGS),
+> -
+>  	COMPOSITE_NOMUX(SCLK_MAC, "mac_clk", "mac_clk_ref", 0,
+> -			RK2928_CLKSEL_CON(21), 9, 5, DFLAGS,
+> +			RK2928_CLKSEL_CON(21), 4, 5, DFLAGS,
+>  			RK2928_CLKGATE_CON(2), 6, GFLAGS),
+> 
+>  	MUX(SCLK_HDMI, "dclk_hdmi", mux_dclk_p, 0,
+> @@ -389,7 +390,7 @@ static struct rockchip_clk_branch rk3036_clk_branches[]
+> __initdata = { GATE(HCLK_OTG1, "hclk_otg1", "hclk_peri", CLK_IGNORE_UNUSED,
+> RK2928_CLKGATE_CON(7), 3, GFLAGS), GATE(HCLK_I2S, "hclk_i2s", "hclk_peri",
+> 0, RK2928_CLKGATE_CON(7), 2, GFLAGS), GATE(0, "hclk_sfc", "hclk_peri",
+> CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(3), 14, GFLAGS), -	GATE(0,
+> "hclk_mac", "hclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(3), 15,
+> GFLAGS), +	GATE(HCLK_MAC, "hclk_mac", "hclk_peri", 0,
+> RK2928_CLKGATE_CON(3), 5, GFLAGS),
+> 
+>  	/* pclk_peri gates */
+>  	GATE(0, "pclk_peri_matrix", "pclk_peri", CLK_IGNORE_UNUSED,
+> RK2928_CLKGATE_CON(4), 1, GFLAGS), diff --git
+> a/include/dt-bindings/clock/rk3036-cru.h
+> b/include/dt-bindings/clock/rk3036-cru.h index ebc7a7b..de44109 100644
+> --- a/include/dt-bindings/clock/rk3036-cru.h
+> +++ b/include/dt-bindings/clock/rk3036-cru.h
+> @@ -54,6 +54,7 @@
+>  #define SCLK_PVTM_VIDEO		125
+>  #define SCLK_MAC		151
+>  #define SCLK_MACREF		152
+> +#define SCLK_MACPLL		153
+>  #define SCLK_SFC		160
+> 
+>  /* aclk gates */
+> @@ -92,6 +93,7 @@
+
+please separate the hclk addition into two separate patches:
+patch1: add the clock-id to the dt-binding header
+patch2: use the clock in the clock-driver
+
+>  #define HCLK_SDMMC		456
+>  #define HCLK_SDIO		457
+>  #define HCLK_EMMC		459
+> +#define HCLK_MAC		460
+>  #define HCLK_I2S		462
+>  #define HCLK_LCDC		465
+>  #define HCLK_ROM		467
+
+
+Thanks
+Heiko
