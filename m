@@ -1,62 +1,44 @@
-From: Biao Huang <biao.huang@mediatek.com>
-Subject: [PATCH v3 5/5] arm: dts: Add pinctrl/GPIO/EINT node for mt2701
-Date: Mon, 28 Dec 2015 15:09:06 +0800
-Message-ID: <1451286546-5920-6-git-send-email-biao.huang@mediatek.com>
-References: <1451286546-5920-1-git-send-email-biao.huang@mediatek.com>
+From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [RESEND PATCH v1 0/4] Add support emac for the RK3036 SoC platform
+Date: Mon, 28 Dec 2015 15:22:17 +0800
+Message-ID: <1451287341-16453-1-git-send-email-zhengxing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1451286546-5920-1-git-send-email-biao.huang@mediatek.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, srv_heupstream@mediatek.com, yingjoe.chen@mediatek.com, hongzhou.yang@mediatek.com, erin.lo@mediatek.com, Biao Huang <biao.huang@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, leozwang-hpIqsD4AKlcxg7vii5yOFA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add pinctrl and GPIO node to mt2701.dtsi
 
-Signed-off-by: Biao Huang <biao.huang@mediatek.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
----
- arch/arm/boot/dts/mt2701.dtsi |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Hi,
+  We have supported the emac for RK3066/RK3188, but the RK3036 have some
+configuration different with them. We should let the driver of emac_rockchip
+compatible with other Rockchip SoCs.
 
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index dc02f76..bd88ae9 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -17,6 +17,7 @@
- #include <dt-bindings/clock/mt2701-clk.h>
- #include <dt-bindings/reset-controller/mt2701-resets.h>
- #include "skeleton64.dtsi"
-+#include "mt2701-pinfunc.h"
- 
- / {
- 	compatible = "mediatek,mt2701";
-@@ -99,6 +100,24 @@
- 		#reset-cells = <1>;
- 	};
- 
-+	pio: pinctrl@10005000 {
-+		compatible = "mediatek,mt2701-pinctrl";
-+		reg = <0 0x1000b000 0 0x1000>;
-+		mediatek,pctl-regmap = <&syscfg_pctl_a>;
-+		pins-are-numbered;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	syscfg_pctl_a: syscfg@10005000 {
-+		compatible = "mediatek,mt2701-pctl-a-syscfg", "syscon";
-+		reg = <0 0x10005000 0 0x1000>;
-+	};
-+
- 	watchdog: watchdog@10007000 {
- 		compatible = "mediatek,mt2701-wdt",
- 			     "mediatek,mt6589-wdt";
+
+
+Xing Zheng (4):
+  net: ethernet: arc: Probe emac after set RMII clock
+  net: ethernet: arc: Keep emac compatibility for more Rockchip SoCs
+  net: ethernet: arc: Add support emac for RK3036
+  ARM: dts: rockchip: Add support emac for RK3036
+
+ arch/arm/boot/dts/rk3036-evb.dts         |   25 +++++++++
+ arch/arm/boot/dts/rk3036-kylin.dts       |   23 ++++++++
+ arch/arm/boot/dts/rk3036.dtsi            |   32 +++++++++++
+ drivers/net/ethernet/arc/Kconfig         |    4 +-
+ drivers/net/ethernet/arc/emac_rockchip.c |   86 ++++++++++++++++++++----------
+ 5 files changed, 140 insertions(+), 30 deletions(-)
+
 -- 
 1.7.9.5
-
