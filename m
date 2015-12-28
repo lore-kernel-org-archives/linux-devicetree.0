@@ -1,36 +1,58 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2 3/3] ARM64: dts: mt8173: Add CPU OPP, clock and
- regulator supply properties
-Date: Mon, 28 Dec 2015 08:43:40 +0530
-Message-ID: <20151228031340.GD3598@ubuntu>
-References: <1451197318-12418-1-git-send-email-pi-cheng.chen@linaro.org>
- <1451197318-12418-4-git-send-email-pi-cheng.chen@linaro.org>
+From: <shh.xie@gmail.com>
+Subject: [PATCH] powerpc: fsl: update fman dt binding for PCS PHY
+Date: Mon, 28 Dec 2015 11:47:34 +0800
+Message-ID: <1451274454-26091-1-git-send-email-shh.xie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1451197318-12418-4-git-send-email-pi-cheng.chen@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Daniel Kurtz <djkurtz@chromium.org>, linux-mediatek@lists.infradead.org, linaro-kernel@lists.linaro.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: scottwood@freescale.com, igal.liberman@freescale.com, Shaohui Xie <Shaohui.Xie@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On 27-12-15, 14:21, Pi-Cheng Chen wrote:
-> Add operating-points-v2, clock, and regulator supply properties
-> required by mt8173-cpufreq driver to enable it.
-> 
-> Signed-off-by: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-> ---
-> This patch is based on the patch[1] that adds underlying clock MUX for
-> MT8173 which is needed by mt8173-cpufreq driver but not yet picked.
-> 
-> [1] http://article.gmane.org/gmane.linux.kernel.clk/325
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 18 ++++++
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 90 +++++++++++++++++++++++++++++
->  2 files changed, 108 insertions(+)
-
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-
--- 
-viresh
+RnJvbTogU2hhb2h1aSBYaWUgPFNoYW9odWkuWGllQGZyZWVzY2FsZS5jb20+CgpQQ1MgUEhZIGNh
+biBzdXBwb3J0IGJhY2twbGFuZSAoMTAwMEJBU0UtS1ggYW5kIDEwR0JBU0UtS1IpLCB0aGlzIG5l
+ZWRzCnRvIGNoYW5nZSBjb3JyZXNwb25kaW5nIHNlcmRlcyBsYW5lIHNldHRpbmdzLCBzbyBhIHJl
+ZmVyZW5jZSBpcyBuZWVkZWQKZm9yIHNlcmRlcyBsYW5lLiBUaGlzIHBhdGNoIGRlc2NyaWJlcyBw
+cm9wZXJ0aWVzIG5lZWRlZCBmb3IgUENTIFBIWSB0bwpzdXBwb3J0IGJhY2twbGFuZS4KClNpZ25l
+ZC1vZmYtYnk6IFNoYW9odWkgWGllIDxTaGFvaHVpLlhpZUBmcmVlc2NhbGUuY29tPgotLS0KYmFz
+ZWQgb246IGh0dHA6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC81NjA5MzYvCgogRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0IHwgMTQgKysr
+KysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0
+CmluZGV4IDU1YzJjMDMuLmIzOGU3MjcgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZm1hbi50eHQKQEAgLTQzMiw2ICs0MzIsMTYg
+QEAgZXhhbXBsZSBvZiBob3cgdG8gZGVmaW5lIGEgUEhZIChJbnRlcm5hbCBQSFkgaGFzIG5vIGlu
+dGVycnVwdCBsaW5lKS4KIC0gRm9yICJmc2wsZm1hbi1tZGlvIiBjb21wYXRpYmxlIGludGVybmFs
+IG1kaW8gYnVzLCB0aGUgUEhZIGlzIFRCSSBQSFkuCiAtIEZvciAiZnNsLGZtYW4tbWVtYWMtbWRp
+byIgY29tcGF0aWJsZSBpbnRlcm5hbCBtZGlvIGJ1cywgdGhlIFBIWSBpcyBQQ1MgUEhZLAogICBQ
+Q1MgUEhZIGFkZHIgbXVzdCBiZSAnMCcuCisgIFBDUyBQSFkgY2FuIHN1cHBvcnQgYmFja3BsYW5l
+ICgxMDAwQkFTRS1LWCBhbmQgMTBHQkFTRS1LUiksIHRoaXMgbmVlZHMgdG8KKyAgY2hhbmdlIHRo
+ZSBjb3JyZXNwb25kaW5nIHNlcmRlcyBsYW5lIHNldHRpbmdzLgorCisgIFBDUyBQSFkgbm9kZSBw
+cm9wZXJ0aWVzIHJlcXVpcmVkIGZvciBiYWNrcGxhbmU6CisKKyAgLSBjb21wYXRpYmxlOiBtdXN0
+IGJlICJldGhlcm5ldC1waHktaWVlZTgwMi4zLWM0NSIuCisgIC0gcGh5LW1vZGU6IHN0cmluZywg
+b3BlcmF0aW9uIG1vZGUgb2YgdGhlIFBIWSBpbnRlcmZhY2U7IG11c3QgYmUgIjEwMDBiYXNlLWt4
+IgorICAgIGZvciAxMDAwQkFTRS1LWCwgb3IgIjEwZ2Jhc2Uta3IiIGZvciAxMEdCQVNFLUtSLgor
+ICAtIGxhbmUtaGFuZGxlOiBwaGFuZGxlLCBzcGVjaWZpZXMgYSByZWZlcmVuY2UgdG8gYSBub2Rl
+IHJlcHJlc2VudGluZyBhIFNlcmRlcy4KKyAgLSBsYW5lLXJhbmdlOiBvZmZzZXQgYW5kIGxlbmd0
+aCBvZiB0aGUgcmVnaXN0ZXIgc2V0IGZvciB0aGUgc2VyZGVzIGxhbmUuCiAKIEVYQU1QTEUKIApA
+QCAtNDY0LDcgKzQ3NCwxMSBAQCBtZGlvQGYxMDAwIHsKIAlmc2wsZm1hbi1pbnRlcm5hbC1tZGlv
+OwogCiAJcGNzcGh5NjogZXRoZXJuZXQtcGh5QDAgeworCQljb21wYXRpYmxlID0gImV0aGVybmV0
+LXBoeS1pZWVlODAyLjMtYzQ1IjsKKwkJcGh5LW1vZGUgPSAiMTBnYmFzZS1rciI7CiAJCXJlZyA9
+IDwweDA+OworCQlsYW5lLWhhbmRsZSA9IDwmc2VyZGVzPjsKKwkJbGFuZS1yYW5nZSA9IDwweDE4
+YzAgMHg0MD47CiAJfTsKIH07CiAKLS0gCjIuMS4wLjI3Lmc5NmRiMzI0CgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBs
+aXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9y
+Zy9saXN0aW5mby9saW51eHBwYy1kZXY=
