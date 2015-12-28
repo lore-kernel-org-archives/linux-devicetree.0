@@ -1,55 +1,72 @@
-From: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v4 0/2] ARM64: Enable SP805 WDT support for FSL LS2080A
-Date: Mon, 28 Dec 2015 15:31:22 +0530
-Message-ID: <1451296884-7932-1-git-send-email-bhupesh.sharma@freescale.com>
+From: Bhupesh Sharma <bhupesh.sharma@freescale.com>
+Subject: [PATCH v4 1/2] Documentation: DT: Add entry for ARM SP805-WDT
+Date: Mon, 28 Dec 2015 15:31:23 +0530
+Message-ID: <1451296884-7932-2-git-send-email-bhupesh.sharma@freescale.com>
+References: <1451296884-7932-1-git-send-email-bhupesh.sharma@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
-Cc: bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Catalin.Marinas-5wv7dgnIgG8@public.gmane.org, bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org, LeoLi-KZfg59tc24xl57MIdRCFDg@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1451296884-7932-1-git-send-email-bhupesh.sharma@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org, shawnguo@kernel.org, arnd@arndb.de, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, olof@lixom.net, devicetree@vger.kernel.org, robh@kernel.org, will.deacon@arm.com
+Cc: LeoLi@freescale.com, bhupesh.sharma@freescale.com, Catalin.Marinas@arm.com, stuart.yoder@freescale.com, scottwood@freescale.com, bhupesh.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd, Kevin, Olof
+This patch adds a devicetree binding documentation for ARM's
+SP805 WatchDog Timer.
 
-This is the v4 of patchset which adds the support for SP805 WDT on FSL LS2080A
-and also adds the missing documentation of SP805 WDT device-tree bindings.
-
-Rebased against arm-soc/next/dt
-
-Changes since v3:
-(v3 can be viewed here: https://www.mail-archive.com/devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg97249.html)
-- Added Rob's Acked-by for patch 1/2.
-- Sending to 'arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org' list and also cc'ed Shawn Guo
-
-Changes since v2:
-(v2 can be viewed here: http://permalink.gmane.org/gmane.linux.ports.arm.kernel/463141)
-- Addressed Rob's comments regarding the second mandatory CLK source's
-  (WDOGCLK) name in the bindings.
-
-Changes since v1:
-(v1 can be viewed here: http://www.spinics.net/lists/devicetree/msg102487.html)
-
-- Addressed Rob and Mark's comments regarding the mandatory CLK sources
-- Removed interrupt property from the bindings for now (as discussed
-  with Mark on IRC) till Will's patch proceeds further and enables
-  handling the WDOG interrupts for each core connected to the same PPI
-  line (http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/391616.html)
-
-Bhupesh Sharma (2):
-  Documentation: DT: Add entry for ARM SP805-WDT
-  dts/ls2080a: Update DTSI to add support of SP805 WDT
-
- .../devicetree/bindings/watchdog/sp805-wdt.txt     |   31 +++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi     |   56 ++++++++++++++++++++
- 2 files changed, 87 insertions(+)
+Signed-off-by: Bhupesh Sharma <bhupesh.sharma@freescale.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/watchdog/sp805-wdt.txt     |   31 ++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
 
+diff --git a/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+new file mode 100644
+index 0000000..edc4f0e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/sp805-wdt.txt
+@@ -0,0 +1,31 @@
++* ARM SP805 Watchdog Timer (WDT) Controller
++
++SP805 WDT is a ARM Primecell Peripheral and has a standard-id register that
++can be used to identify the peripheral type, vendor, and revision.
++This value can be used for driver matching.
++
++As SP805 WDT is a primecell IP, it follows the base bindings specified in
++'arm/primecell.txt'
++
++Required properties:
++- compatible : Should be "arm,sp805-wdt", "arm,primecell"
++- reg : Base address and size of the watchdog timer registers.
++- clocks : From common clock binding.
++           First clock is PCLK and the second is WDOGCLK.
++           WDOGCLK can be equal to or be a sub-multiple of the PCLK frequency.
++- clock-names : From common clock binding.
++                Shall be "apb_pclk" for first clock and "wdog_clk" for the
++                second one.
++
++Optional properties:
++- interrupts : Should specify WDT interrupt number.
++
++Examples:
++
++		cluster1_core0_watchdog: wdt@c000000 {
++			compatible = "arm,sp805-wdt", "arm,primecell";
++			reg = <0x0 0xc000000 0x0 0x1000>;
++			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
++			clock-names = "apb_pclk", "wdog_clk";
++		};
++
 -- 
 1.7.9.5
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
