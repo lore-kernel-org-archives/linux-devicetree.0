@@ -1,74 +1,158 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: [PATCH] ARM: dts: qcom: msm8974: Add additional reserved regions
-Date: Sun, 27 Dec 2015 17:17:40 -0800
-Message-ID: <1451265460-15106-1-git-send-email-bjorn.andersson@sonymobile.com>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v2 3/3] dt-bindings: regulator/mfd: Reorganize S2MPA01 bindings
+Date: Mon, 28 Dec 2015 10:15:14 +0900
+Message-ID: <1451265314-4232-4-git-send-email-k.kozlowski@samsung.com>
+References: <1451265314-4232-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1451265314-4232-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sangbeom Kim <sbkim73@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the additional reserved regions found on 8974 based devices.
+The mfd/s2mpa01.txt duplicates some of the information about bindings
+with old mfd/s2mps11.txt. Now common part exists entirely in
+mfd/samsung,sec-core.txt so:
+ - add company prefix to file name (regulator/samsung,s2mpa01.txt),
+ - remove duplicated information,
+ - reorganize the contents to match style of
+   regulator/samsung,s2mps11.txt.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Acked-by: Mark Brown <broonie@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
 ---
- arch/arm/boot/dts/qcom-msm8974.dtsi | 40 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index 578fa77ae331..3f6b8f2022c4 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -14,10 +14,50 @@
- 		#size-cells = <1>;
- 		ranges;
+Changes since v1:
+1. Added accumulated acks.
+2. Use -M20% so renames will be more visible (formatting is changed so
+   default -M50% does not consider it as renames).
+---
+ .../devicetree/bindings/mfd/samsung,sec-core.txt   |  4 +-
+ .../s2mpa01.txt => regulator/samsung,s2mpa01.txt}  | 69 +++++++++-------------
+ 2 files changed, 32 insertions(+), 41 deletions(-)
+ rename Documentation/devicetree/bindings/{mfd/s2mpa01.txt => regulator/samsung,s2mpa01.txt} (37%)
+
+diff --git a/Documentation/devicetree/bindings/mfd/samsung,sec-core.txt b/Documentation/devicetree/bindings/mfd/samsung,sec-core.txt
+index 4aeb95c82304..cdd079bfc287 100644
+--- a/Documentation/devicetree/bindings/mfd/samsung,sec-core.txt
++++ b/Documentation/devicetree/bindings/mfd/samsung,sec-core.txt
+@@ -4,7 +4,7 @@ Binding for Samsung S2M and S5M family multi-function device
+ This is a part of device tree bindings for S2M and S5M family multi-function
+ devices.
  
-+		mpss@08000000 {
-+			reg = <0x08000000 0x5100000>;
-+			no-map;
-+		};
-+
-+		mba@00d100000 {
-+			reg = <0x0d100000 0x100000>;
-+			no-map;
-+		};
-+
-+		reserved@0d200000 {
-+			reg = <0x0d200000 0xa00000>;
-+			no-map;
-+		};
-+
-+		adsp@0dc00000 {
-+			reg = <0x0dc00000 0x1900000>;
-+			no-map;
-+		};
-+
-+		venus@0f500000 {
-+			reg = <0x0f500000 0x500000>;
-+			no-map;
-+		};
-+
- 		smem_region: smem@fa00000 {
- 			reg = <0xfa00000 0x200000>;
- 			no-map;
- 		};
-+
-+		tz@0fc00000 {
-+			reg = <0x0fc00000 0x160000>;
-+			no-map;
-+		};
-+
-+		efs@0fd600000 {
-+			reg = <0x0fd60000 0x1a0000>;
-+			no-map;
-+		};
-+
-+		unused@0ff00000 {
-+			reg = <0x0ff00000 0x10100000>;
-+			no-map;
-+		};
- 	};
+-The Samsung S2MPS11/13/14/15, S2MPU02 and S5M8767 is a family
++The Samsung S2MPA01, S2MPS11/13/14/15, S2MPU02 and S5M8767 is a family
+ of multi-function devices which include voltage and current regulators, RTC,
+ charger controller, clock outputs and other sub-blocks. It is interfaced
+ to the host controller using an I2C interface. Each sub-block is usually
+@@ -13,6 +13,7 @@ addressed by the host system using different I2C slave addresses.
  
- 	firmware {
+ This document describes bindings for main device node. Optional sub-blocks
+ must be a sub-nodes to it. Bindings for them can be found in:
++ - bindings/regulator/samsung,s2mpa01.txt
+  - bindings/regulator/samsung,s2mps11.txt
+  - bindings/regulator/samsung,s5m8767.txt
+  - bindings/clock/samsung,s2mps11.txt
+@@ -20,6 +21,7 @@ must be a sub-nodes to it. Bindings for them can be found in:
+ 
+ Required properties:
+  - compatible: Should be one of the following
++	- "samsung,s2mpa01-pmic",
+ 	- "samsung,s2mps11-pmic",
+ 	- "samsung,s2mps13-pmic",
+ 	- "samsung,s2mps14-pmic",
+diff --git a/Documentation/devicetree/bindings/mfd/s2mpa01.txt b/Documentation/devicetree/bindings/regulator/samsung,s2mpa01.txt
+similarity index 37%
+rename from Documentation/devicetree/bindings/mfd/s2mpa01.txt
+rename to Documentation/devicetree/bindings/regulator/samsung,s2mpa01.txt
+index c13d3d8c3947..bae3c7f838cf 100644
+--- a/Documentation/devicetree/bindings/mfd/s2mpa01.txt
++++ b/Documentation/devicetree/bindings/regulator/samsung,s2mpa01.txt
+@@ -1,54 +1,43 @@
++Binding for Samsung S2MPA01 regulator block
++===========================================
+ 
+-* Samsung S2MPA01 Voltage and Current Regulator
++This is a part of device tree bindings for S2M family multi-function devices.
++More information can be found in bindings/mfd/sec-core.txt file.
+ 
+-The Samsung S2MPA01 is a multi-function device which includes high
+-efficiency buck converters including Dual-Phase buck converter, various LDOs,
+-and an RTC. It is interfaced to the host controller using an I2C interface.
+-Each sub-block is addressed by the host system using different I2C slave
+-addresses.
++The S2MPA01 device provide buck and LDO regulators.
+ 
+-Required properties:
+-- compatible: Should be "samsung,s2mpa01-pmic".
+-- reg: Specifies the I2C slave address of the PMIC block. It should be 0x66.
++To register these with regulator framework instantiate under main device node
++a sub-node named "regulators" with more sub-nodes for each regulator using the
++common regulator binding documented in:
++ - Documentation/devicetree/bindings/regulator/regulator.txt
+ 
+-Optional properties:
+-- interrupt-parent: Specifies the phandle of the interrupt controller to which
+-  the interrupts from s2mpa01 are delivered to.
+-- interrupts: An interrupt specifier for the sole interrupt generated by the
+-  device.
+-
+-Optional nodes:
+-- regulators: The regulators of s2mpa01 that have to be instantiated should be
+-  included in a sub-node named 'regulators'. Regulator nodes and constraints
+-  included in this sub-node use the standard regulator bindings which are
+-  documented elsewhere.
+-
+-Properties for BUCK regulator nodes:
+-- regulator-ramp-delay: ramp delay in uV/us. May be 6250, 12500
+-  (default), 25000, or 50000. May be 0 for disabling the ramp delay on
+-  BUCK{1,2,3,4}.
+-
+- In the absence of the regulator-ramp-delay property, the default ramp
+- delay will be used.
+-
+-  NOTE: Some BUCKs share the ramp rate setting i.e. same ramp value will be set
+-  for a particular group of BUCKs. So provide same regulator-ramp-delay=<value>.
+-
+-  The following BUCKs share ramp settings:
+-  * 1 and 6
+-  * 2 and 4
+-  * 8, 9, and 10
+-
+-The following are the names of the regulators that the s2mpa01 PMIC block
+-supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
+-as per the datasheet of s2mpa01.
+ 
++Names of regulators supported by S2MPA01 device:
+ 	- LDOn
+ 		  - valid values for n are 1 to 26
+ 		  - Example: LDO1, LD02, LDO26
+ 	- BUCKn
+ 		  - valid values for n are 1 to 10.
+ 		  - Example: BUCK1, BUCK2, BUCK9
++Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
++as per the datasheet of device.
++
++
++Optional properties of buck regulator nodes under "regulators" sub-node:
++ - regulator-ramp-delay: ramp delay in uV/us. May be 6250, 12500
++   (default), 25000, or 50000. May be 0 for disabling the ramp delay on
++   BUCK{1,2,3,4}.
++
++   In the absence of the regulator-ramp-delay property, the default ramp
++   delay will be used.
++
++   Note: Some bucks share the ramp rate setting i.e. same ramp value
++   will be set for a particular group of bucks so provide the same
++   regulator-ramp-delay value for them.
++   Groups sharing ramp rate:
++    - buck{1,6},
++    - buck{2,4},
++    - buck{8,9,10}.
+ 
+ Example:
+ 
 -- 
-2.5.0
+1.9.1
