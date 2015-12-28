@@ -1,58 +1,97 @@
-From: <shh.xie@gmail.com>
-Subject: [PATCH] powerpc: fsl: update fman dt binding for PCS PHY
-Date: Mon, 28 Dec 2015 11:47:34 +0800
-Message-ID: <1451274454-26091-1-git-send-email-shh.xie@gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 0/9] ARM: dts: Add compatible property to "partitions"
+ node
+Date: Mon, 28 Dec 2015 16:01:48 +1100
+Message-ID: <20151228050147.GE1066@verge.net.au>
+References: <1450694033-27717-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: scottwood@freescale.com, igal.liberman@freescale.com, Shaohui Xie <Shaohui.Xie@freescale.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mips-bounce@linux-mips.org>
+Content-Disposition: inline
+In-Reply-To: <1450694033-27717-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: arm@kernel.org, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Alex Smith <alex.smith@imgtec.com>, Brian Norris <computersforpeace@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, linux-mips@linux-mips.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogU2hhb2h1aSBYaWUgPFNoYW9odWkuWGllQGZyZWVzY2FsZS5jb20+CgpQQ1MgUEhZIGNh
-biBzdXBwb3J0IGJhY2twbGFuZSAoMTAwMEJBU0UtS1ggYW5kIDEwR0JBU0UtS1IpLCB0aGlzIG5l
-ZWRzCnRvIGNoYW5nZSBjb3JyZXNwb25kaW5nIHNlcmRlcyBsYW5lIHNldHRpbmdzLCBzbyBhIHJl
-ZmVyZW5jZSBpcyBuZWVkZWQKZm9yIHNlcmRlcyBsYW5lLiBUaGlzIHBhdGNoIGRlc2NyaWJlcyBw
-cm9wZXJ0aWVzIG5lZWRlZCBmb3IgUENTIFBIWSB0bwpzdXBwb3J0IGJhY2twbGFuZS4KClNpZ25l
-ZC1vZmYtYnk6IFNoYW9odWkgWGllIDxTaGFvaHVpLlhpZUBmcmVlc2NhbGUuY29tPgotLS0KYmFz
-ZWQgb246IGh0dHA6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC81NjA5MzYvCgogRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0IHwgMTQgKysr
-KysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0
-CmluZGV4IDU1YzJjMDMuLmIzOGU3MjcgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZm1hbi50eHQKQEAgLTQzMiw2ICs0MzIsMTYg
-QEAgZXhhbXBsZSBvZiBob3cgdG8gZGVmaW5lIGEgUEhZIChJbnRlcm5hbCBQSFkgaGFzIG5vIGlu
-dGVycnVwdCBsaW5lKS4KIC0gRm9yICJmc2wsZm1hbi1tZGlvIiBjb21wYXRpYmxlIGludGVybmFs
-IG1kaW8gYnVzLCB0aGUgUEhZIGlzIFRCSSBQSFkuCiAtIEZvciAiZnNsLGZtYW4tbWVtYWMtbWRp
-byIgY29tcGF0aWJsZSBpbnRlcm5hbCBtZGlvIGJ1cywgdGhlIFBIWSBpcyBQQ1MgUEhZLAogICBQ
-Q1MgUEhZIGFkZHIgbXVzdCBiZSAnMCcuCisgIFBDUyBQSFkgY2FuIHN1cHBvcnQgYmFja3BsYW5l
-ICgxMDAwQkFTRS1LWCBhbmQgMTBHQkFTRS1LUiksIHRoaXMgbmVlZHMgdG8KKyAgY2hhbmdlIHRo
-ZSBjb3JyZXNwb25kaW5nIHNlcmRlcyBsYW5lIHNldHRpbmdzLgorCisgIFBDUyBQSFkgbm9kZSBw
-cm9wZXJ0aWVzIHJlcXVpcmVkIGZvciBiYWNrcGxhbmU6CisKKyAgLSBjb21wYXRpYmxlOiBtdXN0
-IGJlICJldGhlcm5ldC1waHktaWVlZTgwMi4zLWM0NSIuCisgIC0gcGh5LW1vZGU6IHN0cmluZywg
-b3BlcmF0aW9uIG1vZGUgb2YgdGhlIFBIWSBpbnRlcmZhY2U7IG11c3QgYmUgIjEwMDBiYXNlLWt4
-IgorICAgIGZvciAxMDAwQkFTRS1LWCwgb3IgIjEwZ2Jhc2Uta3IiIGZvciAxMEdCQVNFLUtSLgor
-ICAtIGxhbmUtaGFuZGxlOiBwaGFuZGxlLCBzcGVjaWZpZXMgYSByZWZlcmVuY2UgdG8gYSBub2Rl
-IHJlcHJlc2VudGluZyBhIFNlcmRlcy4KKyAgLSBsYW5lLXJhbmdlOiBvZmZzZXQgYW5kIGxlbmd0
-aCBvZiB0aGUgcmVnaXN0ZXIgc2V0IGZvciB0aGUgc2VyZGVzIGxhbmUuCiAKIEVYQU1QTEUKIApA
-QCAtNDY0LDcgKzQ3NCwxMSBAQCBtZGlvQGYxMDAwIHsKIAlmc2wsZm1hbi1pbnRlcm5hbC1tZGlv
-OwogCiAJcGNzcGh5NjogZXRoZXJuZXQtcGh5QDAgeworCQljb21wYXRpYmxlID0gImV0aGVybmV0
-LXBoeS1pZWVlODAyLjMtYzQ1IjsKKwkJcGh5LW1vZGUgPSAiMTBnYmFzZS1rciI7CiAJCXJlZyA9
-IDwweDA+OworCQlsYW5lLWhhbmRsZSA9IDwmc2VyZGVzPjsKKwkJbGFuZS1yYW5nZSA9IDwweDE4
-YzAgMHg0MD47CiAJfTsKIH07CiAKLS0gCjIuMS4wLjI3Lmc5NmRiMzI0CgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBs
-aXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9y
-Zy9saXN0aW5mby9saW51eHBwYy1kZXY=
+On Mon, Dec 21, 2015 at 11:33:44AM +0100, Geert Uytterhoeven wrote:
+> 	Hi,
+> 
+> As of commit e488ca9f8d4f62c2 ("doc: dt: mtd: partitions: add compatible
+> property to "partitions" node"), which is in v4.4-rc6, the "partitions"
+> subnode of an SPI FLASH device node must have a compatible property. The
+> partitions are no longer detected if it is not present.
+> 
+> However, several DTSes in -next have already been converted to the
+> "partitions" subnode without "compatible" property, introduced by
+> commits 5cfdedb7b9a0fe38 ("mtd: ofpart: move ofpart partitions to a
+> dedicated dt node") and fe2585e9c29a650a ("doc: dt: mtd: support
+> partitions in a special 'partitions' subnode"). Hence all of these are
+> now broken in -next, and will be broken in upstream during the merge
+> window.
+> 
+> This series fixes all users in next-20151221.
+> Tested on r8a7791/koelsch.
+> 
+> Changes since v1:
+>   - Add Acked-by,
+>   - Fix new users in -next (kirkwood, ci20).
+> 
+> Most of these are in arm-soc/for-next. Exceptions are kirkwood (in
+> mvebu/for-next), and ci20 (in mips/mips-for-linux-next).
+> 
+> Given we're late in the v4.4-rc cycle, perhaps it's easiest if the
+> arm-soc maintainers take all applicable patches directly, bypassing the
+> mvebu and shmobile maintainers?
+> 
+> Thanks for queuing for v4.5!
+> 
+> Geert Uytterhoeven (9):
+>   ARM: mvebu: ix4-300d: Add compatible property to "partitions" node
+>   ARM: mvebu: kirkwood: Add compatible property to "partitions" node
+>   ARM: shmobile: bockw dts: Add compatible property to "partitions" node
+>   ARM: shmobile: lager dts: Add compatible property to "partitions" node
+>   ARM: shmobile: koelsch dts: Add compatible property to "partitions"
+>     node
+>   ARM: shmobile: porter dts: Add compatible property to "partitions"
+>     node
+>   ARM: shmobile: gose dts: Add compatible property to "partitions" node
+>   ARM: shmobile: silk dts: Add compatible property to "partitions" node
+
+Thanks, I have queued up the above "shmobile" patches for v4.6.
+
+>   MIPS: dts: jz4780/ci20: Add compatible property to "partitions" node
+> 
+>  arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts  | 1 +
+>  arch/arm/boot/dts/kirkwood-pogoplug-series-4.dts | 1 +
+>  arch/arm/boot/dts/r8a7778-bockw.dts              | 1 +
+>  arch/arm/boot/dts/r8a7790-lager.dts              | 1 +
+>  arch/arm/boot/dts/r8a7791-koelsch.dts            | 1 +
+>  arch/arm/boot/dts/r8a7791-porter.dts             | 1 +
+>  arch/arm/boot/dts/r8a7793-gose.dts               | 1 +
+>  arch/arm/boot/dts/r8a7794-silk.dts               | 1 +
+>  arch/mips/boot/dts/ingenic/ci20.dts              | 1 +
+>  9 files changed, 9 insertions(+)
+> 
+> -- 
+> 1.9.1
+> 
+> Gr{oetje,eeting}s,
+> 
+> 						Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+> 							    -- Linus Torvalds
+> 
