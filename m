@@ -1,92 +1,142 @@
-From: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 2/3] spi: sun4i: Fix clock calculations
- to be predictable and never exceed the requested rate
-Date: Mon, 28 Dec 2015 17:22:35 +0100
-Message-ID: <CAGNoLaMsdPe4BE7+skYR45doEcXkZGA7QdFOidUA_yPZmiE9eg@mail.gmail.com>
-References: <1451145186-14235-1-git-send-email-mweseloh42@gmail.com>
-	<1451145186-14235-3-git-send-email-mweseloh42@gmail.com>
-	<20151227210946.GL30359@lukather>
-	<CAGNoLaPcBAqDqFuff7sWWADjVH3Z-LWhZatSmzvEm4mLSrSNvw@mail.gmail.com>
-Reply-To: mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] watchdog: imx2_wdt: add external reset support via 'ext-reset-output' dt prop
+Date: Mon, 28 Dec 2015 17:29:23 +0100
+Message-ID: <20151228162923.GA31680@spo001.leaseweb.nl>
+References: <1446758362-11702-1-git-send-email-akshay.bhat@timesys.com> <1446758362-11702-2-git-send-email-akshay.bhat@timesys.com> <20151105222325.GA26159@roeck-us.net> <CAJ+vNU2fSxRJ7YvxOfNzoEoiKgzv-dHj=+eksKxH48ekHiUw2Q@mail.gmail.com> <20151106220249.GA19791@roeck-us.net> <565F4244.7090502@timesys.com> <CAJ+vNU00Bf97HUqkkW9KqOUzHXh482R9O1gasz6ju3Pn-_5chA@mail.gmail.com> <CAJ+vNU2qHQPSJ1KWp_3f3vAdeuOcF0ooZHmHsdafabZLXJv=Bw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDFO74UEV4IRBTGDQW2AKGQEU2H2XWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGNoLaPcBAqDqFuff7sWWADjVH3Z-LWhZatSmzvEm4mLSrSNvw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAJ+vNU2qHQPSJ1KWp_3f3vAdeuOcF0ooZHmHsdafabZLXJv=Bw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi again,
+Hi Tim,
 
-2015-12-28 0:29 GMT+01:00 Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> 2015-12-27 22:09 GMT+01:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-[...]
-> [...]
->>> -     /* Ensure that we have a parent clock fast enough */
->>> +     /*
->>> +      * Ensure that the parent clock is set to twice the max speed
->>> +      * of the spi device (possibly rounded up by the clk driver)
->>> +      */
->>>       mclk_rate = clk_get_rate(sspi->mclk);
->>> -     if (mclk_rate < (2 * tfr->speed_hz)) {
->>> -             clk_set_rate(sspi->mclk, 2 * tfr->speed_hz);
->>> +     if (spi->max_speed_hz != sspi->cur_max_speed ||
->>> +         mclk_rate != sspi->cur_mclk) {
->>
->> Do you need to cache the values? As far as I'm aware, you end up doing
->> the computation all the time anyway.
->
-> By caching the values we optimize the case when a single SPI slave
-> device (or even multiple slave devices with the same max_speed) are
-> used multiple times in a row. In that case, we're saving two calls:
-> clk_set_rate and clk_get_rate. I was unsure about how expensive the
-> clk_* calls were, so I thought it would be safer use caching. But
-> maybe it's not worth the extra code?
->
-> Oh, and I just noticed a mistake in the comment: the clock driver
-> rounds up _or_ down, so I should drop the "up".
+> On Wed, Dec 2, 2015 at 12:54 PM, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org> wrote:
+> >
+> > On Wed, Dec 2, 2015 at 11:11 AM, Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org> wrote:
+> > >
+> > >
+> > > On 11/06/2015 05:02 PM, Guenter Roeck wrote:
+> > >>
+> > >> On Fri, Nov 06, 2015 at 11:53:42AM -0800, Tim Harvey wrote:
+> > >>>
+> > >>> On Thu, Nov 5, 2015 at 2:23 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+> > >>>>
+> > >>>> On Thu, Nov 05, 2015 at 04:19:21PM -0500, Akshay Bhat wrote:
+> > >>>>>
+> > >>>>> From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+> > >>>>>
+> > >>>>> The IMX6 watchdog supports assertion of a signal (WDOG_B) which
+> > >>>>> can be pinmux'd to an external pin. This is typically used for boards
+> > >>>>> that
+> > >>>>> have PMIC's in control of the IMX6 power rails. In fact, failure to use
+> > >>>>> such an external reset on boards with external PMIC's can result in
+> > >>>>> various
+> > >>>>> hangs due to the IMX6 not being fully reset [1] as well as the board
+> > >>>>> failing
+> > >>>>> to reset because its PMIC has not been reset to provide adequate
+> > >>>>> voltage for
+> > >>>>> the CPU when coming out of reset at 800Mhz.
+> > >>>>>
+> > >>>>> This uses a new device-tree property 'ext-reset-output' to indicate the
+> > >>>>> board has such a reset and to cause the watchdog to be configured to
+> > >>>>> assert
+> > >>>>> WDOG_B instead of an internal reset both on a watchdog timeout and in
+> > >>>>> system_restart.
+> > >>>>>
+> > >>>>> [1]
+> > >>>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/333689.html
+> > >>>>>
+> > >>>>> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > >>>>> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+> > >>>>> ---
+> > >>>>>   .../devicetree/bindings/watchdog/fsl-imx-wdt.txt     |  2 ++
+> > >>>>>   drivers/watchdog/imx2_wdt.c                          | 20
+> > >>>>> ++++++++++++++++++--
+> > >>>>>   2 files changed, 20 insertions(+), 2 deletions(-)
+> > >>>>>
+> > >>>>> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+> > >>>>> b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+> > >>>>> index 8dab6fd..9b89b3a 100644
+> > >>>>> --- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+> > >>>>> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+> > >>>>> @@ -9,6 +9,8 @@ Optional property:
+> > >>>>
+> > >>>>
+> > >>>> properties ?
+> > >>>>
+> > >>>>>   - big-endian: If present the watchdog device's registers are
+> > >>>>> implemented
+> > >>>>>     in big endian mode, otherwise in native mode(same with CPU), for
+> > >>>>> more
+> > >>>>>     detail please see:
+> > >>>>> Documentation/devicetree/bindings/regmap/regmap.txt.
+> > >>>>> +- ext-reset-output: If present the watchdog device is configured to
+> > >>>>> assert its
+> > >>>>
+> > >>>>
+> > >>>> Should that have a vendor prefix ? Also, not sure if "-output"
+> > >>>> has any real value in the property name. "fsl,external-reset", maybe ?
+> > >>>
+> > >>>
+> > >>> Hi Guenter,
+> > >>>
+> > >>> I don't see why a vendor prefix is necessary - its a feature of the
+> > >>> IMX6 watchdog supported by this driver to be able to trigger an
+> > >>> internal chip-level reset and/or an external signal that can be hooked
+> > >>> to additional hardware.
+> > >>>
+> > >> Sounded like vendor specific to me, but then I am not a devicetree
+> > >> maintainer,
+> > >> so I am not an authority on the subject.
+> > >
+> > >
+> > > Devicetree maintainers,
+> > >
+> > > Any thoughts?
+> > >
+> > > Tim,
+> > >
+> > > After looking at all the other watchdog drivers, it does not appear that
+> > > there is any other processor which uses a similar feature. Since imx is the
+> > > only processor that appears to support this feature, it might make sense in
+> > > making this vendor specific. If in the future it is found more processors
+> > > support a similar functionality, it can be revisited and moved out from
+> > > being vendor specific?
+> > >
+> >
+> > I'm certainly no expert on device-tree policy. I understand your
+> > point, but realize that the driver in question is imx2_wdt.c
+> > (compatible = "fsl,imx21-wdt"). This is an IP block inside the silicon
+> > of only Freescale chips, so its not like a future omap chip would be
+> > using this driver - only fsl devices. So why would it need a 'vendor'
+> > property any more than its other properties?
+> >
+> > Regards,
+> >
+> > Tim
+> 
+> Wim,
+> 
+> Does the lack of response mean overwhelming approval?
+> 
+> I haven't heard any valid complaints - what does it take to get this approved?
+> 
+> Regards,
+> 
+> Tim
 
-As I'm looking further into this, I think the comment should read
-"possibly rounded down", as the clk framework is expected to set a
-frequency that is less or equal to the requested frequency. So the
-effect I was seeing (that I got a frequency higher than the requested
-one) is actually a bug!? Further details below.
+I have no objections against the idea and the code itself.
+But as Guenter pointed out: it would be handy to get feedback from the devicetree maintainers on the above discussion.
 
-> [...]
->>> -     div = mclk_rate / (2 * tfr->speed_hz);
->>> -     if (div <= (SUN4I_CLK_CTL_CDR2_MASK + 1)) {
->>> -             if (div > 0)
->>> -                     div--;
->>> -
->>> +     div = DIV_ROUND_UP(mclk_rate, 2 * tfr->speed_hz) - 1;
->>
->> Isn't it exactly the same thing as mclk_rate / (2 * tfr->speed_hz) ?
->
-> It is quite often, but not in all cases. The plain division rounds to
-> the nearest integer, so it rounds down sometimes. Consider the
-> following case: we have a slow SPI device with a spi-max-frequency of
-> 50kHz. Our clock driver can't find a clock as slow as 100kHz, so it
-> sets mclk to 214,285Hz.
+Kind regards,
+Wim.
 
-That clk_set_rate sets a higher frequency than requested seems to be a
-problem in itself. I had a look at clk/sunxi/clk-mod0.c and noticed a
-few small problems there. Will post an RFC patch in a couple of
-minutes.
-
-That doesn't invalidate any of the fixes proposed in this patch,
-though. They are still needed, as I see it. But after fixing
-clk-mod0.c, we need to make further changes to the spi-sun4i clock
-selection, as clk_set_rate could now return -EINVAL. Will amend this
-patch as well after receiving feedback on the (soon to come) mod0 clk
-patch.
-
-Cheers,
-
-  Marcus
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
