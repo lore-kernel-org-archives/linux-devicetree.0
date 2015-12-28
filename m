@@ -1,83 +1,182 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 4/5] pinctrl: mediatek: Add Pinctrl/GPIO/EINT driver
- for mt2701
-Date: Mon, 28 Dec 2015 16:07:46 +0800
-Message-ID: <1451290066.11129.4.camel@mtksdaap41>
-References: <1451286546-5920-1-git-send-email-biao.huang@mediatek.com>
- <1451286546-5920-5-git-send-email-biao.huang@mediatek.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v10 1/3] dt-bindings: binding for jz4780-{nand,bch}
+Date: Mon, 28 Dec 2015 09:27:18 +0100
+Message-ID: <20151228092718.3bb5ad24@bbrezillon>
+References: <1450959615-30246-1-git-send-email-harvey.hunt@imgtec.com>
+	<1450959615-30246-2-git-send-email-harvey.hunt@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1451286546-5920-5-git-send-email-biao.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Biao Huang <biao.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1450959615-30246-2-git-send-email-harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alex-oucj9GSTHrKwpo/f3jThPQ@public.gmane.org, Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-12-28 at 15:09 +0800, Biao Huang wrote:
-> Add mt2701 support using mediatek common pinctrl driver.
-> MT2701 have some special pins need an extra setting register
-> than other ICs, so adding this support to common code.
+On Thu, 24 Dec 2015 12:20:13 +0000
+Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+
+> From: Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 > 
-> Signed-off-by: Biao Huang <biao.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Acked-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-<...>
+> Add DT bindings for NAND devices connected to the NEMC on JZ4780 SoCs,
+> as well as the hardware BCH controller, used by the jz4780_{nand,bch}
+> drivers.
+> 
+> Signed-off-by: Alex Smith <alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+> Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+> Signed-off-by: Harvey Hunt <harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Already put my Reviewed-by on the previous version, but you seem to
+have forgotten it.
+
+Reviewed-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+> ---
+> v9 -> v10:
+>  - Added Rob Herring's Acked-by.
+> 
+> v8 -> v9:
+>  - Document that partitions are represented as a child node of a NAND chip.
+> 
+> v7 -> v8:
+>  - Describe how NAND chips are now child nodes of the NAND controller.
+> 
+> v6 -> v7:
+>  - Add nand-ecc-mode to DT bindings.
+>  - Add nand-on-flash-bbt to DT bindings.
+> 
+> v5 -> v6:
+>  - No change.
+> 
+> v4 -> v5:
+>  - Rename ingenic,bch-device to ingenic,bch-controller to fit with
+>    existing convention.
+> 
+> v3 -> v4:
+>  - No change
+> 
+> v2 -> v3:
+>  - Rebase to 4.0-rc6
+>  - Changed ingenic,ecc-size to common nand-ecc-step-size
+>  - Changed ingenic,ecc-strength to common nand-ecc-strength
+>  - Changed ingenic,busy-gpio to common rb-gpios
+>  - Changed ingenic,wp-gpio to common wp-gpios
+> 
+> v1 -> v2:
+>  - Rebase to 4.0-rc3
+> 
+>  .../bindings/mtd/ingenic,jz4780-nand.txt           | 86 ++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+> new file mode 100644
+> index 0000000..29ea585
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+> @@ -0,0 +1,86 @@
+> +* Ingenic JZ4780 NAND/BCH
 > +
-> +static struct platform_driver mtk_pinctrl_driver = {
-> +	.probe = mt2701_pinctrl_probe,
-> +	.driver = {
-> +		.name = "mediatek-mt2701-pinctrl",
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = mt2701_pctrl_match,
-> +	},
+> +This file documents the device tree bindings for NAND flash devices on the
+> +JZ4780. NAND devices are connected to the NEMC controller (described in
+> +memory-controllers/ingenic,jz4780-nemc.txt), and thus NAND device nodes must
+> +be children of the NEMC node.
+> +
+> +Required NAND controller device properties:
+> +- compatible: Should be set to "ingenic,jz4780-nand".
+> +- reg: For each bank with a NAND chip attached, should specify a bank number,
+> +  an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
+> +
+> +Optional NAND controller device properties:
+> +- ingenic,bch-controller: To make use of the hardware BCH controller, this
+> +  property must contain a phandle for the BCH controller node. The required
+> +  properties for this node are described below. If this is not specified,
+> +  software BCH will be used instead.
+> +
+> +Optional children nodes:
+> +- Individual NAND chips are children of the NAND controller node.
+> +
+> +Required children node properties:
+> +- reg: An integer ranging from 1 to 6 representing the CS line to use.
+> +
+> +Optional children node properties:
+> +- nand-ecc-step-size: ECC block size in bytes.
+> +- nand-ecc-strength: ECC strength (max number of correctable bits).
+> +- nand-ecc-mode: String, operation mode of the NAND ecc mode. "hw" by default
+> +- nand-on-flash-bbt: boolean to enable on flash bbt option, if not present false
+> +- rb-gpios: GPIO specifier for the busy pin.
+> +- wp-gpios: GPIO specifier for the write protect pin.
+> +
+> +Optional child node of NAND chip nodes:
+> +- partitions: see Documentation/devicetree/bindings/mtd/partition.txt
+> +
+> +Example:
+> +
+> +nemc: nemc@13410000 {
+> +	...
+> +
+> +	nandc: nand-controller@1 {
+> +		compatible = "ingenic,jz4780-nand";
+> +		reg = <1 0 0x1000000>;	/* Bank 1 */
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ingenic,bch-controller = <&bch>;
+> +
+> +		nand@1 {
+> +			reg = <1>;
+> +
+> +			nand-ecc-step-size = <1024>;
+> +			nand-ecc-strength = <24>;
+> +			nand-ecc-mode = "hw";
+> +			nand-on-flash-bbt;
+> +
+> +			rb-gpios = <&gpa 20 GPIO_ACTIVE_LOW>;
+> +			wp-gpios = <&gpf 22 GPIO_ACTIVE_LOW>;
+> +
+> +			partitions {
+> +				#address-cells = <2>;
+> +				#size-cells = <2>;
+> +				...
+> +			}
+> +		};
+> +	};
 > +};
 > +
-> +static int __init mtk_pinctrl_init(void)
-> +{
-> +	return platform_driver_register(&mtk_pinctrl_driver);
-> +}
+> +The BCH controller is a separate SoC component used for error correction on
+> +NAND devices. The following is a description of the device properties for a
+> +BCH controller.
 > +
-> +arch_initcall(mtk_pinctrl_init);
+> +Required BCH properties:
+> +- compatible: Should be set to "ingenic,jz4780-bch".
+> +- reg: Should specify the BCH controller registers location and length.
+> +- clocks: Clock for the BCH controller.
+> +
+> +Example:
+> +
+> +bch: bch@134d0000 {
+> +	compatible = "ingenic,jz4780-bch";
+> +	reg = <0x134d0000 0x10000>;
+> +
+> +	clocks = <&cgu JZ4780_CLK_BCH>;
+> +};
 
 
-As discussed in
-http://lists.infradead.org/pipermail/linux-mediatek/2015-December/003350.html
-we should use subsys_initcall() instead.
 
-
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> index f307f1d..76279f0 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-<...>
-> @@ -347,6 +352,7 @@ static int mtk_pconf_parse_conf(struct pinctrl_dev *pctldev,
->  		ret = mtk_pconf_set_pull_select(pctl, pin, true, false, arg);
->  		break;
->  	case PIN_CONFIG_INPUT_ENABLE:
-> +		mtk_pmx_gpio_set_direction(pctldev, NULL, pin, true);
->  		ret = mtk_pconf_set_ies_smt(pctl, pin, arg, param);
->  		break;
->  	case PIN_CONFIG_OUTPUT:
-> @@ -354,6 +360,7 @@ static int mtk_pconf_parse_conf(struct pinctrl_dev *pctldev,
->  		ret = mtk_pmx_gpio_set_direction(pctldev, NULL, pin, false);
->  		break;
->  	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
-> +		mtk_pmx_gpio_set_direction(pctldev, NULL, pin, true);
->  		ret = mtk_pconf_set_ies_smt(pctl, pin, arg, param);
->  		break;
->  	case PIN_CONFIG_DRIVE_STRENGTH:
-
-This change is not directly related to adding mt2710 support and change
-behavior for all MTK pinctrl drivers, please create a separate patch for
-this.
-
-Joe.C
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
