@@ -1,44 +1,82 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: [PATCH 0/4] WCN36xx convert to mainline SMD interface
-Date: Sun, 27 Dec 2015 17:34:23 -0800
-Message-ID: <1451266467-15377-1-git-send-email-bjorn.andersson@sonymobile.com>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Eugene Krasnikov <k.eugene.e@gmail.com>, Kalle Valo <kvalo@codeaurora.org>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, fengwei.yin@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, wcn36xx@lists.infradead.org
+From: bjorn@kryo.se
+Subject: [PATCH] ARM: dts: qcom: msm8974: Add smsm node
+Date: Sun, 27 Dec 2015 17:47:08 -0800
+Message-ID: <1451267228-15810-1-git-send-email-bjorn@kryo.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The mainline kernel now has the necessary implementations for SMD, SMSM and
-WCNSS_CTRL. This series provides the changes necessary for the wcn36xx driver
-to utilize this infrastructure and make this driver work in mainline.
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 
+Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+---
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 41 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-A driver for loading the WCNSS firmware, through remoteproc, has been posted
-here [1]. Upon starting this the necessary SMD channels will be registered,
-which triggers the probe of the wcn36xx driver.
-
-With this, the only missing piece for having fully working Qualcomm WiFi in
-mainline is the RPM clock-controller, needed by the remoteproc driver for doing
-XO calibration during boot of the WCNSS core. This is being worked on
-separately.
-
-[1] https://lkml.org/lkml/2015/12/27/185
-
-Bjorn Andersson (4):
-  wcn36xx: Fold indication payload into message header
-  wcn36xx: Change indication list lock to spinlock
-  wcn36xx: Transition driver to SMD client
-  dt: binding: Add Qualcomm wcn36xx WiFi binding
-
- .../bindings/net/wireless/qcom,wcn36xx-wifi.txt    |  76 ++++++++++++++
- drivers/net/wireless/ath/wcn36xx/Kconfig           |   2 +-
- drivers/net/wireless/ath/wcn36xx/dxe.c             |  16 +--
- drivers/net/wireless/ath/wcn36xx/main.c            | 111 ++++++++++++---------
- drivers/net/wireless/ath/wcn36xx/smd.c             |  51 +++++-----
- drivers/net/wireless/ath/wcn36xx/smd.h             |   6 +-
- drivers/net/wireless/ath/wcn36xx/wcn36xx.h         |  23 ++---
- 7 files changed, 188 insertions(+), 97 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/wireless/qcom,wcn36xx-wifi.txt
-
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index 3f6b8f2022c4..18c419ee9d48 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -160,6 +160,47 @@
+ 		hwlocks = <&tcsr_mutex 3>;
+ 	};
+ 
++	smsm {
++		compatible = "qcom,smsm";
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		qcom,ipc-1 = <&apcs 8 13>;
++		qcom,ipc-2 = <&apcs 8 9>;
++		qcom,ipc-3 = <&apcs 8 19>;
++
++		apps_smsm: apps@0 {
++			reg = <0>;
++
++			#qcom,state-cells = <1>;
++		};
++
++		modem_smsm: modem@1 {
++			reg = <1>;
++			interrupts = <0 26 IRQ_TYPE_EDGE_RISING>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
++		adsp_smsm: adsp@2 {
++			reg = <2>;
++			interrupts = <0 157 IRQ_TYPE_EDGE_RISING>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
++		wcnss_smsm: wcnss@7 {
++			reg = <7>;
++			interrupts = <0 144 IRQ_TYPE_EDGE_RISING>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++	};
++
+ 	soc: soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
 2.5.0
