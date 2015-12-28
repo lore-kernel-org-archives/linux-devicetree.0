@@ -1,56 +1,55 @@
-From: bjorn@kryo.se
-Subject: [PATCH] ARM: dts: qcom: msm8974: Add WCNSS SMP2P node
-Date: Sun, 27 Dec 2015 17:51:13 -0800
-Message-ID: <1451267473-15948-1-git-send-email-bjorn@kryo.se>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v2 1/3] PM/OPP: Don't skip cpu_dev->id when setting up
+ cpumask
+Date: Mon, 28 Dec 2015 08:41:23 +0530
+Message-ID: <20151228031123.GB3598@ubuntu>
+References: <1451197318-12418-1-git-send-email-pi-cheng.chen@linaro.org>
+ <1451197318-12418-2-git-send-email-pi-cheng.chen@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1451197318-12418-2-git-send-email-pi-cheng.chen@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Daniel Kurtz <djkurtz@chromium.org>, linux-mediatek@lists.infradead.org, linaro-kernel@lists.linaro.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+On 27-12-15, 14:21, Pi-Cheng Chen wrote:
+> Don't skip cpu_dev->id when setting up cpumask for CPUs that share the
+> same OPP table. This might be helpful when handling cpumask without the
+> original CPU bitfield set.
+> 
+> Signed-off-by: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+> ---
+>  drivers/base/power/opp/cpu.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/drivers/base/power/opp/cpu.c b/drivers/base/power/opp/cpu.c
+> index 7b445e8..4914a0d 100644
+> --- a/drivers/base/power/opp/cpu.c
+> +++ b/drivers/base/power/opp/cpu.c
+> @@ -214,7 +214,6 @@ EXPORT_SYMBOL_GPL(dev_pm_opp_of_cpumask_add_table);
+>  /*
+>   * Works only for OPP v2 bindings.
+>   *
+> - * cpumask should be already set to mask of cpu_dev->id.
+>   * Returns -ENOENT if operating-points-v2 bindings aren't supported.
+>   */
+>  int dev_pm_opp_of_get_sharing_cpus(struct device *cpu_dev, cpumask_var_t cpumask)
+> @@ -235,9 +234,6 @@ int dev_pm_opp_of_get_sharing_cpus(struct device *cpu_dev, cpumask_var_t cpumask
+>  		goto put_cpu_node;
+>  
+>  	for_each_possible_cpu(cpu) {
+> -		if (cpu == cpu_dev->id)
+> -			continue;
+> -
+>  		tcpu_dev = get_cpu_device(cpu);
+>  		if (!tcpu_dev) {
+>  			dev_err(cpu_dev, "%s: failed to get cpu%d device\n",
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
----
- arch/arm/boot/dts/qcom-msm8974.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+Not this way. You should just set 'cpumask' to cpumask of cpu_dev->id
+at the top of the function.
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index 18c419ee9d48..3a88228e4358 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -160,6 +160,32 @@
- 		hwlocks = <&tcsr_mutex 3>;
- 	};
- 
-+	smp2p-wcnss {
-+		compatible = "qcom,smp2p";
-+		qcom,smem = <451>, <431>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <0 143 IRQ_TYPE_EDGE_RISING>;
-+
-+		qcom,ipc = <&apcs 8 18>;
-+
-+		qcom,local-pid = <0>;
-+		qcom,remote-pid = <4>;
-+
-+		wcnss_smp2p_out: master-kernel {
-+			qcom,entry-name = "master-kernel";
-+
-+			#qcom,state-cells = <1>;
-+		};
-+
-+		wcnss_smp2p_in: slave-kernel {
-+			qcom,entry-name = "slave-kernel";
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+	};
-+
- 	smsm {
- 		compatible = "qcom,smsm";
- 
 -- 
-2.5.0
+viresh
