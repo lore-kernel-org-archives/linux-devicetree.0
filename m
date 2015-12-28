@@ -1,66 +1,69 @@
-From: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] add Alphascale asm9260-wdt driver
-Date: Mon, 28 Dec 2015 22:49:28 +0100
-Message-ID: <20151228214928.GA1395@spo001.leaseweb.nl>
-References: <5652BFA5.9010101@roeck-us.net> <1448480003-8029-1-git-send-email-linux@rempel-privat.de>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH v2 1/3] clk: bcm2835: Add bindings for the auxiliary peripheral
+ clock gates.
+Date: Mon, 28 Dec 2015 14:39:35 -0800
+Message-ID: <20151228223935.25842.28675@quark.deferred.io>
+References: <1450222559-22461-1-git-send-email-eric@anholt.net>
+ <20151219041935.GS14936@rob-hp-laptop>
+ <CAEG3pNCOO1F8+nwOQGSjUKxYCGbWW_Ripc6xUwDyg6ay66uL7w@mail.gmail.com>
+ <87wps3qulw.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1448480003-8029-1-git-send-email-linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87wps3qulw.fsf@eliezer.anholt.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>, Rob Herring <robh@kernel.org>
+Cc: linux-clk <linux-clk@vger.kernel.org>, "Stephen Boyd <sboyd@codeaurora.org>, Emilio Lopez
+	<emilio@elopez.com.ar>, Hans de Goede <hdegoede@redhat.com>, linux-clk
+	<linux-clk@vger.kernel.org>, linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>, linux-rpi-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Oleksij,
+Quoting Eric Anholt (2015-12-24 15:45:15)
+> Michael Turquette <mturquette@baylibre.com> writes:
+> 
+> > On Fri, Dec 18, 2015 at 8:19 PM, Rob Herring <robh@kernel.org> wrote:
+> >> On Tue, Dec 15, 2015 at 03:35:57PM -0800, Eric Anholt wrote:
+> >>> These will be used for enabling UART1, SPI1, and SPI2.
+> >>>
+> >>> Signed-off-by: Eric Anholt <eric@anholt.net>
+> >>> ---
+> >>>
+> >>> v2: Make the binding cover both the IRQ and clock enable registers.
+> >>>
+> >>>  .../bindings/clock/brcm,bcm2835-aux-clock.txt      | 31 ++++++++++++++++++++++
+> >>>  include/dt-bindings/clock/bcm2835-aux.h            | 17 ++++++++++++
+> >>>  2 files changed, 48 insertions(+)
+> >>>  create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm2835-aux-clock.txt
+> >>>  create mode 100644 include/dt-bindings/clock/bcm2835-aux.h
+> >>
+> >> Acked-by: Rob Herring <robh@kernel.org>
+> >
+> > Applied to clk-next.
+> >
+> > Next time if you put the header into the clk driver patch then we can
+> > send the binding description through the DT tree and take the header
+> > and C file through the clk tree in one patch.
+> 
+> I would *love* to do that, but I've previously been told that having the
+> bindings patch reference a header file not present as of the bindings
+> patch is not acceptable and made to change it.
 
-> v2:
-> - fix DT types
-> - remove obsolet comments
-> - add clk error handling
-> - reduce log noise
-> - allow to return an error in asm9260_wdt_get_dt_mode
-> 
-> v3:
-> - split patch to two parts, binding documentation and driver
-> - spelling fixes
-> - make reset a required property. It will make the code easier
-> - reduce timeout for asm9260_wdt_sys_reset
-> - rework error handling in asm9260_wdt_get_dt_clks
-> - asm9260_wdt_get_dt_mode - convert return type from int to void
-> - don't touch watchdog_set_nowayout
-> - don't do dev_err() if driver is still working, use dev_warn instead.
-> - asm9260_wdt_remove - use asm9260_wdt_disable() instead of asm9260_wdt_shutdown()
-> 
-> v4:
-> - update commit message
-> - remove IRQF_SHARED flag. This SOC don't need it.
-> - make "Watchdog enabled" more user freandly
-> - add watchdog_unregister_device to asm9260_wdt_remove
-> 
-> Oleksij Rempel (2):
->   watchdog: add Alphascale asm9260-wdt driver
->   DT: watchdog: add Alphascale asm9260 watchdog binding documentation.
-> 
->  .../bindings/watchdog/alphascale-asm9260.txt       |  35 ++
->  drivers/watchdog/Kconfig                           |  10 +
->  drivers/watchdog/Makefile                          |   1 +
->  drivers/watchdog/asm9260_wdt.c                     | 403 +++++++++++++++++++++
->  4 files changed, 449 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/alphascale-asm9260.txt
->  create mode 100644 drivers/watchdog/asm9260_wdt.c
-> 
-> -- 
-> 2.5.0
->
+Ugh, that is annoying. I would think that having code compile properly
+would trump the desire to have all of the documentation merged as one
+patch.
 
-This new driver has been added o linux-watchdog-next.
+On the other hand, I've been asked to not take binding descriptions
+through the clk tree. That is a policy that I'm happy to comply with,
+but it is at odds with the recommendation for the header and the binding
+description to be merged together.
 
-Kind regards,
-Wim.
+DT folks, what is the right way to do this? An immutable, shared branch
+just for a single header file solves the problem, but also feels very
+cumbersome for such a trivial issue.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+How about allowing binding descriptions to be merged without the header
+file, so long as it is merged through another tree?
+
+Regards,
+Mike
