@@ -1,58 +1,55 @@
-From: Milo Kim <milo.kim@ti.com>
-Subject: Re: [PATCH 2/6] regulator: lp872x: Get rid of duplicate reference to
- DVS GPIO
-Date: Mon, 28 Dec 2015 10:05:27 +0900
-Message-ID: <56808AD7.9080305@ti.com>
-References: <1450868319-20513-1-git-send-email-contact@paulk.fr>
- <1450868319-20513-3-git-send-email-contact@paulk.fr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1450868319-20513-3-git-send-email-contact@paulk.fr>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Paul Kocialkowski <contact@paulk.fr>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v2 0/3] dt-bindings: regulator/clock/mfd: Reorganize S2M/S5M
+ bindings
+Date: Mon, 28 Dec 2015 10:15:11 +0900
+Message-ID: <1451265314-4232-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sangbeom Kim <sbkim73@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/12/15 19:58, Paul Kocialkowski wrote:
-> The lp872x structure holds a reference to the DVS GPIO, but it is never actually
-> used anywhere, since a first reference exists from the lp872x_dvs structure.
->
-> Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
+Hi,
 
-Acked-by: Milo Kim <milo.kim@ti.com>
 
-> ---
->   drivers/regulator/lp872x.c | 2 --
->   1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/regulator/lp872x.c b/drivers/regulator/lp872x.c
-> index 9412353..19d7584 100644
-> --- a/drivers/regulator/lp872x.c
-> +++ b/drivers/regulator/lp872x.c
-> @@ -108,7 +108,6 @@ struct lp872x {
->   	struct lp872x_platform_data *pdata;
->   	int num_regulators;
->   	enum lp872x_dvs_state dvs_pin;
-> -	int dvs_gpio;
->   };
->
->   /* LP8720/LP8725 shared voltage table for LDOs */
-> @@ -752,7 +751,6 @@ static int lp872x_init_dvs(struct lp872x *lp)
->   	}
->
->   	lp->dvs_pin = pinstate;
-> -	lp->dvs_gpio = gpio;
->
->   	return 0;
->
->
+I got all acks for the patches. Please kindly pick up. Maybe Rob or Lee?
+
+
+The patchset tries to bring some order to the chaotic bindings for family
+of Samsung PMIC devices: S2MPS/S2MPA/S5M.
+
+Beside of renaming and removal of common parts I also tried to make
+a consistent style used in the files. The bindings itself were not
+modified.
+
+Rebased on next-20151223.
+
+
+Changes since v1:
+1. Added accumulated acks.
+2. Use -M20% so renames will be more visible (formatting is changed so
+   default -M50% does not consider it as renames).
+
+
+Best regards,
+Krzysztof
+
+Krzysztof Kozlowski (3):
+  dt-bindings: regulator/clock/mfd: Reorganize S2MPS-family bindings
+  dt-bindings: regulator/mfd: Reorganize S5M8767 bindings
+  dt-bindings: regulator/mfd: Reorganize S2MPA01 bindings
+
+ .../devicetree/bindings/clock/samsung,s2mps11.txt  |  49 +++++++
+ .../devicetree/bindings/mfd/samsung,sec-core.txt   |  88 ++++++++++++
+ .../s2mpa01.txt => regulator/samsung,s2mpa01.txt}  |  69 ++++------
+ .../s2mps11.txt => regulator/samsung,s2mps11.txt}  | 135 ++++++------------
+ .../{s5m8767-regulator.txt => samsung,s5m8767.txt} | 152 +++++++++------------
+ MAINTAINERS                                        |   6 +-
+ 6 files changed, 279 insertions(+), 220 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/samsung,s2mps11.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/samsung,sec-core.txt
+ rename Documentation/devicetree/bindings/{mfd/s2mpa01.txt => regulator/samsung,s2mpa01.txt} (37%)
+ rename Documentation/devicetree/bindings/{mfd/s2mps11.txt => regulator/samsung,s2mps11.txt} (25%)
+ rename Documentation/devicetree/bindings/regulator/{s5m8767-regulator.txt => samsung,s5m8767.txt} (34%)
+
+-- 
+1.9.1
