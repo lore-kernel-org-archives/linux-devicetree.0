@@ -1,74 +1,87 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 0/9] ARM: dts: Add compatible property to "partitions" node
-Date: Mon, 28 Dec 2015 11:15:30 +0100
-Message-ID: <CAMuHMdXt36GSDuoFVGBebJVN9OHPh=ze8u8KvQ0B+RcvT6xTYQ@mail.gmail.com>
-References: <1450694033-27717-1-git-send-email-geert+renesas@glider.be>
-	<20151228050147.GE1066@verge.net.au>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] wlcore/wl12xx: spi: add power operation function
+Date: Mon, 28 Dec 2015 13:59:27 +0200
+Message-ID: <5681241F.1060603@ti.com>
+References: <1450971335-15961-1-git-send-email-uri.mashiach@compulab.co.il>
+ <1450971335-15961-2-git-send-email-uri.mashiach@compulab.co.il>
+ <567C1E3B.3020404@ti.com> <56801C78.9040102@compulab.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151228050147.GE1066@verge.net.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, "arm@kernel.org" <arm@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Alex Smith <alex.smith@imgtec.com>, Brian Norris <computersforpeace@gmail.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-sh list <linux-sh@vger.kernel.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, MTD Maling List <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56801C78.9040102-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+On 12/27/2015 07:14 PM, Uri Mashiach wrote:
+> Hello Grygorii,
+> 
+> On 12/24/2015 06:32 PM, Grygorii Strashko wrote:
+>> On 12/24/2015 05:35 PM, Uri Mashiach wrote:
+>>> The power function uses a consumer regulator access to update the WiFi
+>>> enable GPIO value.
+>>>
+>>> Signed-off-by: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+>>> ---
+>>> v1 -> v2: oops fix was removed to a separate fix.
+>>>
+>>>   drivers/net/wireless/ti/wlcore/spi.c | 37
+>>> ++++++++++++++++++++++++++++++++++++
+>>>   1 file changed, 37 insertions(+)
+>>>
+>>> diff --git a/drivers/net/wireless/ti/wlcore/spi.c
+>>> b/drivers/net/wireless/ti/wlcore/spi.c
+>>>
+>>
+>> [...]
+>>
+>>> +
+>>>   static struct wl1271_if_operations spi_ops = {
+>>>       .read        = wl12xx_spi_raw_read,
+>>>       .write        = wl12xx_spi_raw_write,
+>>>       .reset        = wl12xx_spi_reset,
+>>>       .init        = wl12xx_spi_init,
+>>> +    .power        = wl12xx_spi_set_power,
+>>>       .set_block_size = NULL,
+>>>   };
+>>>
+>>> @@ -353,6 +384,12 @@ static int wl1271_probe(struct spi_device *spi)
+>>>        * comes from the board-peripherals file */
+>>>       spi->bits_per_word = 32;
+>>>
+>>> +    glue->reg = devm_regulator_get(&spi->dev, "vwlan");
+>>> +    if (IS_ERR(glue->reg)) {
+>>
+>> It will be more correct to handle -EPROBE_DEFER here also. Like:
+>>           if (PTR_ERR(glue->reg) == -EPROBE_DEFER)
+>>              return PTR_ERR(glue->reg);
+>>
+> 
+> It seems that the IS_ERR(glue->reg) condition covers the EPROBE_DEFER case.
 
-On Mon, Dec 28, 2015 at 6:01 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Mon, Dec 21, 2015 at 11:33:44AM +0100, Geert Uytterhoeven wrote:
->> As of commit e488ca9f8d4f62c2 ("doc: dt: mtd: partitions: add compatible
->> property to "partitions" node"), which is in v4.4-rc6, the "partitions"
->> subnode of an SPI FLASH device node must have a compatible property. The
->> partitions are no longer detected if it is not present.
->>
->> However, several DTSes in -next have already been converted to the
->> "partitions" subnode without "compatible" property, introduced by
->> commits 5cfdedb7b9a0fe38 ("mtd: ofpart: move ofpart partitions to a
->> dedicated dt node") and fe2585e9c29a650a ("doc: dt: mtd: support
->> partitions in a special 'partitions' subnode"). Hence all of these are
->> now broken in -next, and will be broken in upstream during the merge
->> window.
->>
->> This series fixes all users in next-20151221.
->> Tested on r8a7791/koelsch.
->>
->> Changes since v1:
->>   - Add Acked-by,
->>   - Fix new users in -next (kirkwood, ci20).
->>
->> Most of these are in arm-soc/for-next. Exceptions are kirkwood (in
->> mvebu/for-next), and ci20 (in mips/mips-for-linux-next).
->>
->> Given we're late in the v4.4-rc cycle, perhaps it's easiest if the
->> arm-soc maintainers take all applicable patches directly, bypassing the
->> mvebu and shmobile maintainers?
->>
->> Thanks for queuing for v4.5!
->>
->> Geert Uytterhoeven (9):
->>   ARM: mvebu: ix4-300d: Add compatible property to "partitions" node
->>   ARM: mvebu: kirkwood: Add compatible property to "partitions" node
->>   ARM: shmobile: bockw dts: Add compatible property to "partitions" node
->>   ARM: shmobile: lager dts: Add compatible property to "partitions" node
->>   ARM: shmobile: koelsch dts: Add compatible property to "partitions"
->>     node
->>   ARM: shmobile: porter dts: Add compatible property to "partitions"
->>     node
->>   ARM: shmobile: gose dts: Add compatible property to "partitions" node
->>   ARM: shmobile: silk dts: Add compatible property to "partitions" node
->
-> Thanks, I have queued up the above "shmobile" patches for v4.6.
+True. But this is not an error and it's common practice do not print
+any log messages in this case from driver :)
 
-I'm afraid v4.6 is too late, leaving all SPI FLASHes broken in v4.5.
+> 
+>>> +        dev_err(glue->dev, "can't get regulator\n");
+>>> +        return PTR_ERR(glue->reg);
+>>> +    }
+>>> +
+>>>       ret = spi_setup(spi);
+>>>       if (ret < 0) {
+>>>           dev_err(glue->dev, "spi_setup failed\n");
+>>>
+>>
+>>
+> 
 
-Gr{oetje,eeting}s,
 
-                        Geert
-
+-- 
+regards,
+-grygorii
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
