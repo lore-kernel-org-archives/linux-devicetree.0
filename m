@@ -1,79 +1,45 @@
-From: Bintian <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4] arm64: dts: add all hi6220 i2c nodes
-Date: Tue, 29 Dec 2015 21:15:02 +0800
-Message-ID: <56828756.2040500@huawei.com>
-References: <1449051201-7288-1-git-send-email-kong.kongxinwei@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1449051201-7288-1-git-send-email-kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: [PATCH 2/2] dt-bindings: ci-hdrc-usb2: add missing compatibles
+Date: Tue, 29 Dec 2015 16:41:09 +0000
+Message-ID: <1451407269-14905-2-git-send-email-stefan.wahren@i2se.com>
+References: <1451407269-14905-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1451407269-14905-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015/12/2 18:13, Xinwei Kong wrote:
-> This patch adds all I2C nodes for the Hi6220 SoC. This hi6220 Soc
-> use this I2C IP of Synopsys Designware for HiKey board.
->
-> Signed-off-by: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> ---
->   arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 34 +++++++++++++++++++++++++++++++
->   1 file changed, 34 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> index 82d2488..8cec56a 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> @@ -208,5 +208,39 @@
->   			clock-names = "uartclk", "apb_pclk";
->   			status = "disabled";
->   		};
-> +
-> +		i2c0: i2c@f7100000 {
-> +			compatible = "snps,designware-i2c";
-> +			reg = <0x0 0xf7100000 0x0 0x1000>;
-> +			interrupts = <0 44 4>;
-> +			clocks = <&sys_ctrl HI6220_I2C0_CLK>;
-> +			i2c-sda-hold-time-ns = <300>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&i2c0_pmx_func &i2c0_cfg_func>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c1: i2c@f7101000 {
-> +			compatible = "snps,designware-i2c";
-> +			reg = <0x0 0xf7101000 0x0 0x1000>;
-> +			clocks = <&sys_ctrl HI6220_I2C1_CLK>;
-> +			interrupts = <0 45 4>;
-> +			i2c-sda-hold-time-ns = <300>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&i2c1_pmx_func &i2c1_cfg_func>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c2: i2c@f7102000 {
-> +			compatible = "snps,designware-i2c";
-> +			reg = <0x0 0xf7102000 0x0 0x1000>;
-> +			clocks = <&sys_ctrl HI6220_I2C2_CLK>;
-> +			interrupts = <0 46 4>;
-> +			i2c-sda-hold-time-ns = <300>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&i2c2_pmx_func &i2c2_cfg_func>;
-> +			status = "disabled";
-> +		};
-> +
->   	};
->   };
+This patch adds the missing compatible strings from ci_hdrc_imx.
 
-Looks good to me!
+Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+---
+ .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Reviewed-by: Bintian Wang<bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-
+diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+index 781296b..1e83509 100644
+--- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
++++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+@@ -2,7 +2,14 @@
+ 
+ Required properties:
+ - compatible: should be one of:
++	"fsl,imx23-usb"
+ 	"fsl,imx27-usb"
++	"fsl,imx28-usb"
++	"fsl,imx6q-usb"
++	"fsl,imx6sl-usb"
++	"fsl,imx6sx-usb"
++	"fsl,imx6ul-usb"
++	"fsl,imx7d-usb"
+ 	"lsi,zevio-usb"
+ 	"qcom,ci-hdrc"
+ 	"chipidea,usb2"
+-- 
+1.7.9.5
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
