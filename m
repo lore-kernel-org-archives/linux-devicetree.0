@@ -1,40 +1,29 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/4] dt-binding: remoteproc: Introduce Qualcomm WCNSS
- loader binding
-Date: Tue, 29 Dec 2015 12:34:44 -0600
-Message-ID: <20151229183444.GD12450@rob-hp-laptop>
-References: <1451265346-14969-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1451265346-14969-4-git-send-email-bjorn.andersson@sonymobile.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: ci-hdrc-usb2: add missing compatibles
+Date: Tue, 29 Dec 2015 12:49:05 -0600
+Message-ID: <20151229184905.GA15469@rob-hp-laptop>
+References: <1451407269-14905-1-git-send-email-stefan.wahren@i2se.com>
+ <1451407269-14905-2-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1451265346-14969-4-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn@kryo.se>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, fengwei.yin@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org
+In-Reply-To: <1451407269-14905-2-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 27, 2015 at 05:15:45PM -0800, Bjorn Andersson wrote:
-> The document defines the binding for a component that loads firmware for
-> and boots the Qualcomm WCNSS core.
+On Tue, Dec 29, 2015 at 04:41:09PM +0000, Stefan Wahren wrote:
+> This patch adds the missing compatible strings from ci_hdrc_imx.
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 > ---
-> 
-> Changes since v1:
-> - Dropped custom properties for firmware-name and crash-reason
-> 
->  .../bindings/remoteproc/qcom,wcnss-pil.txt         | 92 ++++++++++++++++++++++
->  1 file changed, 92 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
+>  .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |    7 +++++++
+>  1 file changed, 7 insertions(+)
 
-Seems reasonable to me. I'd like to see some acks from QC folks.
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-
-> +- clock-names:
-> +	Usage: requireduired
-
-typo
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
