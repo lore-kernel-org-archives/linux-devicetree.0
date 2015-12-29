@@ -1,89 +1,63 @@
-From: zhongkaihua <zhongkaihua@huawei.com>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIIFYyIDEvMl0gZHQtYmluZGluZ3M6IHNwaTogRG9jdW1l?=
- =?gb2312?Q?ntation_for_Hi6220_spi_driver?=
-Date: Tue, 29 Dec 2015 08:29:33 +0000
-Message-ID: <191FB6491B9FFA40828A83010D6755E92998CF17@SZXEMI501-MBS.china.huawei.com>
-References: <1447922229-60552-1-git-send-email-zhongkaihua@huawei.com>
- <20151120153905.GA8476@rob-hp-laptop>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v7 06/14] drm/mediatek: Add HDMI support
+Date: Tue, 29 Dec 2015 16:49:33 +0800
+Message-ID: <1451378973.15546.3.camel@mtksdaap41>
+References: <1448917676-25584-1-git-send-email-p.zabel@pengutronix.de>
+	 <1448917676-25584-7-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20151120153905.GA8476@rob-hp-laptop>
-Content-Language: zh-CN
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Wangbintian <bintian.wang@huawei.com>, Xuyiping <xuyiping@hisilicon.com>, "arnd@arndb.de" <arnd@arndb.de>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, Dan zhao <dan.zhao@hisilicon.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "xuwei (O)" <xuwei5@hisilicon.com>, "kongxinwei (A)" <kong.kongxinwei@hisilicon.com>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "galak@codeaurora.org" <galak@codeaurora.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, "tyler.baker@linaro.org" <tyler.baker@linaro.org>, "Wangfei (William,
- Euler)" <w.f@huawei.com>, "kkojima@drone.co.jp" <kkojima>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1448917676-25584-7-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Cawa Cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Stone <daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This block is not modified and the document is removed.
+On Mon, 2015-11-30 at 22:07 +0100, Philipp Zabel wrote:
+> From: Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> This patch adds drivers for the HDMI bridge connected to the DPI0
+> display subsystem function block, for the HDMI DDC block, and for
+> the HDMI PHY to support HDMI output.
+> 
+> Signed-off-by: Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+<...>
+> +static int mtk_hdmi_setup_avi_infoframe(struct mtk_hdmi *hdmi,
+> +					struct drm_display_mode *mode)
+> +{
+> +	struct hdmi_avi_infoframe frame;
+> +	u8 buffer[17];
+> +	ssize_t err;
+> +
+> +	err = drm_hdmi_avi_infoframe_from_display_mode(&frame, mode);
+> +	if (err < 0) {
+> +		dev_err(hdmi->dev,
+> +			"Failed to get AVI infoframe from mode: %ld\n", err);
 
-I just send out V3 patch for SPI on hi6220. Are There any other problems? Thanks
+Please use %zd instead for ssize_t, otherwise you'll see warning message
+when compile this on 32bits platform.
 
-On 2015/11/20 23:39, Rob Herring wrote:> On Thu, Nov 19, 2015 at 04:37:08PM +0800, Zhong Kaihua wrote:
->> dt-bindings: spi: Documentation for Hi6220 spi driver
->>
->> Signed-off-by: Zhong Kaihua <zhongkaihua@huawei.com>
->> ---
->>  .../devicetree/bindings/spi/spi-hi6220.txt         | 45 ++++++++++++++++++++++
->>  1 file changed, 45 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/spi/spi-hi6220.txt
->>
->> diff --git a/Documentation/devicetree/bindings/spi/spi-hi6220.txt b/Documentation/devicetree/bindings/spi/spi-hi6220.txt
->> new file mode 100644
->> index 0000000..91aa169
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/spi/spi-hi6220.txt
->> @@ -0,0 +1,45 @@
->> +Hi6220 SPI controller
->> +
->> +Required properties:
->> +- compatible : "arm,pl022", "arm,primecell"
-> 
-> If this is just a pl022, then you don't need this document as 
-> spi_pl022.txt already exists. If HiSilicon has modified this block, then 
-> you need an additional HiSi specific compatible string and add it to 
-> spi_pl022.txt.
-> 
->> +- reg : Offset and length of the register set for the device
->> +- interrupts : Should contain SPI controller interrupt
->> +- num-cs : total number of chipselects
->> +
->> +Required Board Specific Properties:
->> +
->> +- #address-cells: should be 1.
->> +- #size-cells: should be 0.
->> +
->> +Optional properties:
->> +- cs-gpios : should specify GPIOs used for chipselects.
->> +  The gpios will be referred to as reg = <index> in the SPI child nodes.
->> +  If unspecified, a single SPI device without a chip select can be used.
->> +- dmas : Two or more DMA channel specifiers following the convention outlined
->> +         in bindings/dma/dma.txt
->> +- dma-names: Names for the dma channels, if present. There must be at
->> +	     least one channel named "tx" for transmit and named "rx" for
->> +             receive.
->> +
->> +Example:
->> +             spi_0: spi@f7106000 {
->> +			compatible = "arm,pl022", "arm,primecell";
->> +			reg = <0x0 0xf7106000 0x0 0x1000>;
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			interrupts = <0 50 4>;
->> +			bus-id = <0>;
-> 
-> This should be removed.
-> 
-> 
-> .
->
+Joe.C
+
+
+> +		return err;
+> +	}
+> +
+> +	err = hdmi_avi_infoframe_pack(&frame, buffer, sizeof(buffer));
+> +	if (err < 0) {
+> +		dev_err(hdmi->dev, "Failed to pack AVI infoframe: %ld\n", err);
+> +		return err;
+> +	}
+> +
+> +	mtk_hdmi_hw_send_info_frame(hdmi, buffer, sizeof(buffer));
+> +	return 0;
+> +}
+> +
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
