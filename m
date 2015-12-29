@@ -1,39 +1,58 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [RESEND PATCH v1 0/4] Add support emac for the RK3036 SoC
- platform
-Date: Tue, 29 Dec 2015 15:53:14 -0500 (EST)
-Message-ID: <20151229.155314.1522114236952280828.davem@davemloft.net>
-References: <1451287341-16453-1-git-send-email-zhengxing@rock-chips.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] devicetree/bindings: add reset-gpios and
+ vcc-supply for panel-dpi
+Date: Tue, 29 Dec 2015 14:54:58 -0600
+Message-ID: <20151229205458.GA31241@rob-hp-laptop>
+References: <1450610002-10531-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <1450610002-10531-2-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1451287341-16453-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1450610002-10531-2-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, leozwang-hpIqsD4AKlcxg7vii5yOFA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Dec 20, 2015 at 12:13:20PM +0100, Uwe Kleine-K=F6nig wrote:
+> Some displays have a reset input and/or need a regulator to function
+> properly. Allow to specify them for panel-dpi devices.
+>=20
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/display/panel/panel-dpi.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/display/panel/panel-dp=
+i.txt b/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
+> index 216c894d4f99..b52ac52757df 100644
+> --- a/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
+> +++ b/Documentation/devicetree/bindings/display/panel/panel-dpi.txt
+> @@ -7,6 +7,8 @@ Required properties:
+>  Optional properties:
+>  - label: a symbolic name for the panel
+>  - enable-gpios: panel enable gpio
+> +- reset-gpios: GPIO to control the RESET pin
 
-You have to submit this series properly, the same problem happend twice
-now.
+The problem with this in a generic binding is what if the panel has=20
+ordering requirements like enable gpio has to be inactive when reset=20
+is deasserted?
 
-When you submit a series you should:
+> +- vcc-supply: phandle of regulator that will be used to enable power=
+ to the display
 
-1) Make it clear which tree you expect these changes to be applied
-   to.  Here it is completely ambiguous, do you want it to go into
-   my networking tree or some other subsystem tree?
+What if there are 2 supplies?
 
-2) You MUST keep all parties informed about all patches for a series
-   like this.  That means you cannot drop netdev from patch #4 as
-   you did both times.  Doing this aggravates the situation for
-   #1 even more, because if a patch is not CC:'d to netdev it does
-   not enter patchwork.  And if it doesn't go into patchwork, I'm
-   not looking at it.
+While there are limits to what can be described here, I'm okay with=20
+allowing these, so:
 
-Thanks.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
