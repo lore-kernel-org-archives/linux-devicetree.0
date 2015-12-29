@@ -1,29 +1,46 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v9 1/3] Documentation: DT: Add entry for Freescale
- LS1043a-RDB board
-Date: Tue, 29 Dec 2015 12:35:12 -0600
-Message-ID: <20151229183512.GJ12450@rob-hp-laptop>
-References: <1450949873-34260-1-git-send-email-Zhiqiang.Hou@freescale.com>
+Subject: Re: [PATCH] DT: i2c: Add Freescale MPL3115 to trivial devices list
+Date: Tue, 29 Dec 2015 12:35:16 -0600
+Message-ID: <20151229183516.GK12450@rob-hp-laptop>
+References: <1450897147-22370-1-git-send-email-akshay.bhat@timesys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1450949873-34260-1-git-send-email-Zhiqiang.Hou@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Zhiqiang Hou <Zhiqiang.Hou@freescale.com>
-Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-doc@vger.kernel.org, corbet@lwn.net, scottwood@freescale.com, Mingkai.Hu@freescale.com, Shaohui.Xie@freescale.com, bhupesh.sharma@freescale.com, Hou Zhiqiang <B48286@freescale.com>
+In-Reply-To: <1450897147-22370-1-git-send-email-akshay.bhat@timesys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Akshay Bhat <akshay.bhat@timesys.com>
+Cc: ktsai@capellamicro.com, wsa@the-dreams.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, trivial@kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, justin.waters@timesys.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 24, 2015 at 05:37:51PM +0800, Zhiqiang Hou wrote:
-> From: Mingkai Hu <Mingkai.Hu@freescale.com>
+On Wed, Dec 23, 2015 at 01:59:07PM -0500, Akshay Bhat wrote:
+> This adds devicetree documentation for the bindings of mpl3115 driver.
 > 
-> Signed-off-by: Mingkai Hu <Mingkai.Hu@freescale.com>
-> Signed-off-by: Hou Zhiqiang <B48286@freescale.com>
+> Signed-off-by: Akshay Bhat <akshay.bhat@timesys.com>
 > ---
-> V9 - V2:
->  - No change.
->  Documentation/devicetree/bindings/arm/fsl.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+>  Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
 
+Who did you want to apply this? Send patches TO that person which I 
+would expect to be Wolfram or me.
+
+Rob
+
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> index c50cf13..f3f4bc2 100644
+> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> @@ -54,6 +54,7 @@ epson,rx8581		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
+>  fsl,mag3110		MAG3110: Xtrinsic High Accuracy, 3D Magnetometer
+>  fsl,mc13892		MC13892: Power Management Integrated Circuit (PMIC) for i.MX35/51
+>  fsl,mma8450		MMA8450Q: Xtrinsic Low-power, 3-axis Xtrinsic Accelerometer
+> +fsl,mpl3115		MPL3115: Absolute Digital Pressure Sensor
+>  fsl,mpr121		MPR121: Proximity Capacitive Touch Sensor Controller
+>  fsl,sgtl5000		SGTL5000: Ultra Low-Power Audio Codec
+>  gmt,g751		G751: Digital Temperature Sensor and Thermal Watchdog with Two-Wire Interface
+> -- 
+> 2.6.3
+> 
