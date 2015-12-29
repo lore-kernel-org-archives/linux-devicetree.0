@@ -1,26 +1,40 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/5] dt-bindings: mediatek: Modify pinctrl bindings
- for mt2701
-Date: Tue, 29 Dec 2015 12:34:22 -0600
-Message-ID: <20151229183422.GA12450@rob-hp-laptop>
-References: <1451286546-5920-1-git-send-email-biao.huang@mediatek.com>
- <1451286546-5920-3-git-send-email-biao.huang@mediatek.com>
+Subject: Re: [PATCH 4/4] dt: binding: Add Qualcomm wcn36xx WiFi binding
+Date: Tue, 29 Dec 2015 12:34:40 -0600
+Message-ID: <20151229183440.GC12450@rob-hp-laptop>
+References: <1451266467-15377-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1451266467-15377-5-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1451286546-5920-3-git-send-email-biao.huang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Biao Huang <biao.huang@mediatek.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, srv_heupstream@mediatek.com, yingjoe.chen@mediatek.com, hongzhou.yang@mediatek.com, erin.lo@mediatek.com
+In-Reply-To: <1451266467-15377-5-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn@kryo.se>
+Cc: Eugene Krasnikov <k.eugene.e@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kalle Valo <kvalo@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, fengwei.yin@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, wcn36xx@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 28, 2015 at 03:09:03PM +0800, Biao Huang wrote:
-> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+On Sun, Dec 27, 2015 at 05:34:27PM -0800, Bjorn Andersson wrote:
+> Add binding representing the Qualcomm wcn3620/60/80 WiFi block.
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 > ---
->  .../devicetree/bindings/pinctrl/pinctrl-mt65xx.txt |    9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+>  .../bindings/net/wireless/qcom,wcn36xx-wifi.txt    | 76 ++++++++++++++++++++++
+>  1 file changed, 76 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/qcom,wcn36xx-wifi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,wcn36xx-wifi.txt b/Documentation/devicetree/bindings/net/wireless/qcom,wcn36xx-wifi.txt
+> new file mode 100644
+> index 000000000000..7b314b9f30af
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,wcn36xx-wifi.txt
+> @@ -0,0 +1,76 @@
+> +Qualcomm WCN36xx WiFi Binding
+> +
+> +This binding describes the Qualcomm WCN36xx WiFi hardware. The hardware block
+> +is part of the Qualcomm WCNSS core, a WiFi/BT/FM combo chip, found in a variety
+> +of Qualcomm platforms.
 
-I acked v2 already. Please add acks when posting new versions.
+Are BT/FM functions completely separate? If so, separate bindings are 
+okay. If not, then we need to describe the full chip.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Rob
