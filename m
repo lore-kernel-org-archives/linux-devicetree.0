@@ -1,73 +1,155 @@
-From: Milo Kim <milo.kim@ti.com>
-Subject: Re: [PATCH 4/6] regulator: lp872x: Add enable GPIO pin support
-Date: Tue, 29 Dec 2015 09:45:28 +0900
-Message-ID: <5681D7A8.2030101@ti.com>
-References: <1450868319-20513-1-git-send-email-contact@paulk.fr>
- <1450868319-20513-5-git-send-email-contact@paulk.fr>
- <20151223115632.GS16023@sirena.org.uk> <568088B4.6090207@ti.com>
- <1451342963.14631.13.camel@collins>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [RESEND PATCH v1 4/4] clk: rockchip: rk3036: fix and add node id
+ for emac clock
+Date: Tue, 29 Dec 2015 09:59:00 +0800
+Message-ID: <5681E8E4.2010303@rock-chips.com>
+References: <1451293433-32392-1-git-send-email-zhengxing@rock-chips.com>
+ <1451293433-32392-5-git-send-email-zhengxing@rock-chips.com>
+ <11997168.T384RkEsFx@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1451342963.14631.13.camel@collins>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Paul Kocialkowski <contact@paulk.fr>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <11997168.T384RkEsFx@diego>
+Sender: linux-clk-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Xing Zheng <zhengxing@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Michael Turquette <mturquette@baylibre.com>, Kumar Gala <galak@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, keescook@google.com, linux-clk@vger.kernel.org, leozwang@google.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGF1bCwKCk9uIDI5LzEyLzE1IDA3OjQ5LCBQYXVsIEtvY2lhbGtvd3NraSB3cm90ZToKPiBI
-aSBNaWxvLCB0aGFua3MgZm9yIHRoZSByZXZpZXcsCj4KPiBMZSBsdW5kaSAyOCBkw6ljZW1icmUg
-MjAxNSDDoCAwOTo1NiArMDkwMCwgTWlsbyBLaW0gYSDDqWNyaXQgOgo+PiBIaSBQYXVsLAo+Pgo+
-PiBPbiAyMy8xMi8xNSAyMDo1NiwgTWFyayBCcm93biB3cm90ZToKPj4+IE9uIFdlZCwgRGVjIDIz
-LCAyMDE1IGF0IDExOjU4OjM3QU0gKzAxMDAsIFBhdWwgS29jaWFsa293c2tpIHdyb3RlOgo+Pj4K
-Pj4+PiArCWdwaW8gPSBscC0+cGRhdGEtPmVuYWJsZV9ncGlvOwo+Pj4+ICsJaWYgKCFncGlvX2lz
-X3ZhbGlkKGdwaW8pKQo+Pj4+ICsJCXJldHVybiAwOwo+Pj4+ICsKPj4+PiArCS8qIEFsd2F5cyBz
-ZXQgZW5hYmxlIEdQSU8gaGlnaC4gKi8KPj4+PiArCXJldCA9IGRldm1fZ3Bpb19yZXF1ZXN0X29u
-ZShscC0+ZGV2LCBncGlvLCBHUElPRl9PVVRfSU5JVF9ISUdILCAiTFA4NzJYIEVOIik7Cj4+Pj4g
-KwlpZiAocmV0KSB7Cj4+Pj4gKwkJZGV2X2VycihscC0+ZGV2LCAiZ3BpbyByZXF1ZXN0IGVycjog
-JWRcbiIsIHJldCk7Cj4+Pj4gKwkJcmV0dXJuIHJldDsKPj4+PiArCX0KPj4+Cj4+PiBUaGlzIGlz
-bid0IHJlYWxseSBhZGRpbmcgc3VwcG9ydCBmb3IgdGhlIGVuYWJsZSBHUElPIGFzIHRoZSBjaGFu
-Z2Vsb2cKPj4+IHN1Z2dlc3RzLCBpdCdzIHJlcXVlc3RpbmcgYnV0IG5vdCBtYW5hZ2luZyB0aGUg
-R1BJTy4gIFNpbmNlIHRoZXJlIGlzCj4+PiBjb3JlIHN1cHBvcnQgZm9yIG1hbmdpbmcgZW5hYmxl
-IEdQSU9zIHRoaXMgc2VlbXMgZXNwZWNpYWxseSBzaWxseSwKPj4+IHBsZWFzZSB0ZWxsIHRoZSBj
-b3JlIGFib3V0IHRoZSBHUElPIGFuZCB0aGVuIGl0IHdpbGwgd29yayBhdCBydW50aW1lCj4+PiB0
-b28uCj4+Pgo+Pgo+PiBXaXRoIHJlZmVyZW5jZSB0byBteSBwcmV2aW91cyBtYWlsLCBleHRlcm5h
-bCBHUElPcyBmb3IgTERPMyBhbmQgQlVDSzIgaW4KPj4gTFA4NzI1IGNhbiBiZSBzcGVjaWZpZWQg
-dGhyb3VnaCByZWd1bGF0b3JfY29uZmlnLmVuYV9ncGlvLiBCVUNLMiBvbmx5Cj4+IGNhbiBiZSBj
-b250cm9sbGVkIGJ5IGV4dGVybmFsIHBpbiB3aGVuIENPTkZJRyBwaW4gaXMgZ3JvdW5kZWQuCj4+
-Cj4+IFBsZWFzZSBzZWUgdGhlIGRlc2NyaXB0aW9uIGF0IHBhZ2UgNSBvZiB0aGUgZGF0YXNoZWV0
-Lgo+Pgo+PiAJaHR0cDovL3d3dy50aS5jb20vbGl0L2RzL3N5bWxpbmsvbHA4NzI1LnBkZgo+Cj4g
-QWZ0ZXIgcmVhZGluZyB0aGUgZGF0YXNoZWV0cyB0aG9yb3VnaGx5LCBpdCBzZWVtcyB0byBtZSB0
-aGF0IGZvciB0aGUKPiBscDg3MjAsIHRoZSBFTiBwaW4gaXMgdXNlZCB0byBlbmFibGUgdGhlIHJl
-Z3VsYXRvcnMgb3V0cHV0LCB3aGljaCBpcyBhCj4gZ29vZCBmaXQgZm9yIHRoZSBjb3JlIHJlZ3Vs
-YXRvciBHUElPIGZyYW1ld29yaywgYXMgdGhlcmUgaXMgbm8gcmVhc29uIHRvCj4ga2VlcCBpdCBv
-biB3aGVuIG5vIHJlZ3VsYXRvciBpcyBpbiB1c2UuIFRoZSBzZXJpYWwgaW50ZXJmYWNlIGlzIGFs
-cmVhZHkKPiBhdmFpbGFibGUgd2hlbiBFTj0wIGFuZCByZWd1bGF0b3JzIGNhbiBiZSBjb25maWd1
-cmVkIGluIHRoYXQgc3RhdGUuIFRoZQo+IGxwODcyNSBzZWVtcyBzZWVtcyB0byBiZWhhdmUgdGhl
-IHNhbWUgd2hlbiBDT05GSUc9MCAodGhlIGRhdGFzaGVldAo+IGNsZWFybHkgc3RhdGVzOiAiQ09O
-RklHPTA6IEVOPTEgdHVybnMgb24gb3V0cHV0cyBvciBzdGFuZGJ5IG1vZGUgaWYKPiBFTj0wIiku
-IE9uIHRoZSBvdGhlciBoYW5kLCBpdCBpcyBpbmRlZWQgdXNlZCBhcyBhIHBvd2VyLW9uIHBpbiB3
-aGVuCj4gQ09ORklHPTEuCgpJIHRoaW5rIGl0J3MgZGlmZmVyZW50IHVzZSBjYXNlLiBMUDg3MjAv
-NSBhcmUgZGVzaWduZWQgZm9yIHN5c3RlbSBQTVUsIApzbyBzb21lIHJlZ3VsYXRvcnMgYXJlIGVu
-YWJsZWQgYnkgZGVmYXVsdCBhZnRlciB0aGUgZGV2aWNlIGlzIG9uLiBFTiBwaW4gCmlzIHVzZWQg
-Zm9yIHR1cm5pbmcgb24vb2ZmIHRoZSBjaGlwLiBUaGlzIHBpbiBkb2VzIG5vdCBjb250cm9sIHJl
-Z3VsYXRvciAKb3V0cHV0cyBkaXJlY3RseS4gSXQncyBzZXBhcmF0ZSBmdW5jdGlvbmFsIGJsb2Nr
-IGluIHRoZSBzaWxpY29uLgoKT24gdGhlIG90aGVyIGhhbmQsICdlbmFfZ3BpbycgaXMgdXNlZCBm
-b3IgZWFjaCByZWd1bGF0b3IgY29udHJvbCBpdHNlbGYuCkZvciBleGFtcGxlLCBXTTg5OTQgaGFz
-IHR3byBMRE9zIHdoaWNoIGFyZSBjb250cm9sbGVkIGJ5IGV4dGVybmFsIHBpbnMuIApMRE9zIGFy
-ZSBlbmFibGVkL2Rpc2FibGVkIHRocm91Z2ggTERPMUVOQSBhbmQgTERPMkVOQSBwaW5zLiBJbiB0
-aGlzIApjYXNlLCAnZW5hX2dwaW8nIGlzIHVzZWQuCgoJaHR0cDovL3d3dy5jaXJydXMuY29tL2Vu
-L3B1YnMvcHJvRGF0YXNoZWV0L1dNODk5NF92NC40LnBkZgoJKHBsZWFzZSByZWZlciB0byBwYWdl
-IDIyNCBhbmQgMjI1KQoKQmVzdCByZWdhcmRzLApNaWxvCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Heiko,
+
+On 12/28/2015 08:41 PM, Heiko St=FCbner wrote:
+> Hi,
+>
+> Am Montag, 28. Dezember 2015, 17:03:53 schrieb Xing Zheng:
+>> Due to referred old version TRM, there is incorrect emac clock node,
+>> we should fix it. The SEL_21_9 is the parent of SEL_21_4.
+>>
+>> In the emac driver, we need to refer HCLK_MAC, and  because There ar=
+e
+>> only 3PLLs (APLL/GPLL/DPLL) on the rk3036, most clock are under the
+>> GPLL, and it is unable to provide the accurate rate for mac_ref whic=
+h
+>> need to 50MHz probability, we should let it under the APLL and are
+>> able to set the freq which integer multiples of 50MHz, so we add the=
+se
+>> emac node for reference.
+> I don't really follow here. While I do understand that the emac needs=
+ 50MHz, I
+> don't think using the APLL as source is helpful.
+>
+> The APLL is the main clocksource for the cpu-cores, including frequen=
+cy
+> scaling, and while it currently only lists 816MHz as sole frequency, =
+you're
+> pretty much guaranteed to not get your correct multiple of 50MHz from=
+ there
+> either. And limiting the cpu to just do 600MHz to get the mac working=
+ sounds
+> pretty bad ;-) .
+>
+>
+> In the rk3036 cru-node the gpll gets set to 594MHz. Is there a specia=
+l reason
+> why it needs to be 594MHz and cannot be a round 600MHz? Because that =
+would
+> also provide your 50MHz-multiple nicely.
+
+Yes, this magic 594MHz would help to support the standard HDMI=20
+resolutions, here are the math:
+
+1920x1080-60Hz DCLK =3D 148.5MHz =3D 594MHz / 4
+1280x720-60Hz DCLK =3D 74.25MHz =3D 594MHz / 8
+720x480-60Hz DCLK =3D 27MHz =3D 594MHz / 22
+
+Thanks,
+- Yakir
+
+>> Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
+>> ---
+>>
+>>   drivers/clk/rockchip/clk-rk3036.c      |   11 ++++++-----
+>>   include/dt-bindings/clock/rk3036-cru.h |    2 ++
+>>   2 files changed, 8 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/clk/rockchip/clk-rk3036.c
+>> b/drivers/clk/rockchip/clk-rk3036.c index 7420cbe..7863c4d 100644
+>> --- a/drivers/clk/rockchip/clk-rk3036.c
+>> +++ b/drivers/clk/rockchip/clk-rk3036.c
+>> @@ -328,13 +328,14 @@ static struct rockchip_clk_branch
+>> rk3036_clk_branches[] __initdata =3D { RK2928_CLKSEL_CON(16), 0, 2, =
+MFLAGS,
+>> 2, 5, DFLAGS,
+>>   			RK2928_CLKGATE_CON(10), 5, GFLAGS),
+>>
+>> -	COMPOSITE_NOGATE(0, "mac_pll_src", mux_pll_src_3plls_p, 0,
+>> -			RK2928_CLKSEL_CON(21), 0, 2, MFLAGS, 4, 5, DFLAGS),
+>> +	MUX(SCLK_MACPLL, "mac_pll_pre", mux_pll_src_3plls_p, 0,
+>> +			RK2928_CLKSEL_CON(21), 0, 2, MFLAGS),
+>> +	DIV(0, "mac_pll_src", "mac_pll_pre", 0,
+>> +			RK2928_CLKSEL_CON(21), 9, 5, DFLAGS),
+>>   	MUX(SCLK_MACREF, "mac_clk_ref", mux_mac_p, CLK_SET_RATE_PARENT,
+>>   			RK2928_CLKSEL_CON(21), 3, 1, MFLAGS),
+>> -
+>>   	COMPOSITE_NOMUX(SCLK_MAC, "mac_clk", "mac_clk_ref", 0,
+>> -			RK2928_CLKSEL_CON(21), 9, 5, DFLAGS,
+>> +			RK2928_CLKSEL_CON(21), 4, 5, DFLAGS,
+>>   			RK2928_CLKGATE_CON(2), 6, GFLAGS),
+>>
+>>   	MUX(SCLK_HDMI, "dclk_hdmi", mux_dclk_p, 0,
+>> @@ -389,7 +390,7 @@ static struct rockchip_clk_branch rk3036_clk_bra=
+nches[]
+>> __initdata =3D { GATE(HCLK_OTG1, "hclk_otg1", "hclk_peri", CLK_IGNOR=
+E_UNUSED,
+>> RK2928_CLKGATE_CON(7), 3, GFLAGS), GATE(HCLK_I2S, "hclk_i2s", "hclk_=
+peri",
+>> 0, RK2928_CLKGATE_CON(7), 2, GFLAGS), GATE(0, "hclk_sfc", "hclk_peri=
+",
+>> CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(3), 14, GFLAGS), -	GATE(0,
+>> "hclk_mac", "hclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(3), 1=
+5,
+>> GFLAGS), +	GATE(HCLK_MAC, "hclk_mac", "hclk_peri", 0,
+>> RK2928_CLKGATE_CON(3), 5, GFLAGS),
+>>
+>>   	/* pclk_peri gates */
+>>   	GATE(0, "pclk_peri_matrix", "pclk_peri", CLK_IGNORE_UNUSED,
+>> RK2928_CLKGATE_CON(4), 1, GFLAGS), diff --git
+>> a/include/dt-bindings/clock/rk3036-cru.h
+>> b/include/dt-bindings/clock/rk3036-cru.h index ebc7a7b..de44109 1006=
+44
+>> --- a/include/dt-bindings/clock/rk3036-cru.h
+>> +++ b/include/dt-bindings/clock/rk3036-cru.h
+>> @@ -54,6 +54,7 @@
+>>   #define SCLK_PVTM_VIDEO		125
+>>   #define SCLK_MAC		151
+>>   #define SCLK_MACREF		152
+>> +#define SCLK_MACPLL		153
+>>   #define SCLK_SFC		160
+>>
+>>   /* aclk gates */
+>> @@ -92,6 +93,7 @@
+> please separate the hclk addition into two separate patches:
+> patch1: add the clock-id to the dt-binding header
+> patch2: use the clock in the clock-driver
+>
+>>   #define HCLK_SDMMC		456
+>>   #define HCLK_SDIO		457
+>>   #define HCLK_EMMC		459
+>> +#define HCLK_MAC		460
+>>   #define HCLK_I2S		462
+>>   #define HCLK_LCDC		465
+>>   #define HCLK_ROM		467
+>
+> Thanks
+> Heiko
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>
+>
+>
+
+
