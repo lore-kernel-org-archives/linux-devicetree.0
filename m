@@ -1,26 +1,73 @@
-From: "Zahra Robert" <jakonyvtar-v1d7l9VOqKc@public.gmane.org>
-Subject: Cordial greeting
-Date: Tue, 29 Dec 2015 00:36:25 +0100
-Message-ID: <17aac186a43e8ddec2cf14406f8732ac.squirrel@oldwebmail.prtelecom.hu>
-Reply-To: zahrarobert-/E1597aS9LQAvxtiuMwx3w@public.gmane.org
+From: Milo Kim <milo.kim@ti.com>
+Subject: Re: [PATCH 4/6] regulator: lp872x: Add enable GPIO pin support
+Date: Tue, 29 Dec 2015 09:45:28 +0900
+Message-ID: <5681D7A8.2030101@ti.com>
+References: <1450868319-20513-1-git-send-email-contact@paulk.fr>
+ <1450868319-20513-5-git-send-email-contact@paulk.fr>
+ <20151223115632.GS16023@sirena.org.uk> <568088B4.6090207@ti.com>
+ <1451342963.14631.13.camel@collins>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balogh.bt-v1d7l9VOqKc@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1451342963.14631.13.camel@collins>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Paul Kocialkowski <contact@paulk.fr>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-
-Cordial greeting message from Eva Zahra, I am seeking for your help,I will
-be very glad if you do assist me to relocate a sum of (US$4 Million
-Dollars)into your Bank account in your country for the benefit of both of
-us i want to use this money for investment. I will give you more details
-as you reply Yours Eva Zahra Robert
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUGF1bCwKCk9uIDI5LzEyLzE1IDA3OjQ5LCBQYXVsIEtvY2lhbGtvd3NraSB3cm90ZToKPiBI
+aSBNaWxvLCB0aGFua3MgZm9yIHRoZSByZXZpZXcsCj4KPiBMZSBsdW5kaSAyOCBkw6ljZW1icmUg
+MjAxNSDDoCAwOTo1NiArMDkwMCwgTWlsbyBLaW0gYSDDqWNyaXQgOgo+PiBIaSBQYXVsLAo+Pgo+
+PiBPbiAyMy8xMi8xNSAyMDo1NiwgTWFyayBCcm93biB3cm90ZToKPj4+IE9uIFdlZCwgRGVjIDIz
+LCAyMDE1IGF0IDExOjU4OjM3QU0gKzAxMDAsIFBhdWwgS29jaWFsa293c2tpIHdyb3RlOgo+Pj4K
+Pj4+PiArCWdwaW8gPSBscC0+cGRhdGEtPmVuYWJsZV9ncGlvOwo+Pj4+ICsJaWYgKCFncGlvX2lz
+X3ZhbGlkKGdwaW8pKQo+Pj4+ICsJCXJldHVybiAwOwo+Pj4+ICsKPj4+PiArCS8qIEFsd2F5cyBz
+ZXQgZW5hYmxlIEdQSU8gaGlnaC4gKi8KPj4+PiArCXJldCA9IGRldm1fZ3Bpb19yZXF1ZXN0X29u
+ZShscC0+ZGV2LCBncGlvLCBHUElPRl9PVVRfSU5JVF9ISUdILCAiTFA4NzJYIEVOIik7Cj4+Pj4g
+KwlpZiAocmV0KSB7Cj4+Pj4gKwkJZGV2X2VycihscC0+ZGV2LCAiZ3BpbyByZXF1ZXN0IGVycjog
+JWRcbiIsIHJldCk7Cj4+Pj4gKwkJcmV0dXJuIHJldDsKPj4+PiArCX0KPj4+Cj4+PiBUaGlzIGlz
+bid0IHJlYWxseSBhZGRpbmcgc3VwcG9ydCBmb3IgdGhlIGVuYWJsZSBHUElPIGFzIHRoZSBjaGFu
+Z2Vsb2cKPj4+IHN1Z2dlc3RzLCBpdCdzIHJlcXVlc3RpbmcgYnV0IG5vdCBtYW5hZ2luZyB0aGUg
+R1BJTy4gIFNpbmNlIHRoZXJlIGlzCj4+PiBjb3JlIHN1cHBvcnQgZm9yIG1hbmdpbmcgZW5hYmxl
+IEdQSU9zIHRoaXMgc2VlbXMgZXNwZWNpYWxseSBzaWxseSwKPj4+IHBsZWFzZSB0ZWxsIHRoZSBj
+b3JlIGFib3V0IHRoZSBHUElPIGFuZCB0aGVuIGl0IHdpbGwgd29yayBhdCBydW50aW1lCj4+PiB0
+b28uCj4+Pgo+Pgo+PiBXaXRoIHJlZmVyZW5jZSB0byBteSBwcmV2aW91cyBtYWlsLCBleHRlcm5h
+bCBHUElPcyBmb3IgTERPMyBhbmQgQlVDSzIgaW4KPj4gTFA4NzI1IGNhbiBiZSBzcGVjaWZpZWQg
+dGhyb3VnaCByZWd1bGF0b3JfY29uZmlnLmVuYV9ncGlvLiBCVUNLMiBvbmx5Cj4+IGNhbiBiZSBj
+b250cm9sbGVkIGJ5IGV4dGVybmFsIHBpbiB3aGVuIENPTkZJRyBwaW4gaXMgZ3JvdW5kZWQuCj4+
+Cj4+IFBsZWFzZSBzZWUgdGhlIGRlc2NyaXB0aW9uIGF0IHBhZ2UgNSBvZiB0aGUgZGF0YXNoZWV0
+Lgo+Pgo+PiAJaHR0cDovL3d3dy50aS5jb20vbGl0L2RzL3N5bWxpbmsvbHA4NzI1LnBkZgo+Cj4g
+QWZ0ZXIgcmVhZGluZyB0aGUgZGF0YXNoZWV0cyB0aG9yb3VnaGx5LCBpdCBzZWVtcyB0byBtZSB0
+aGF0IGZvciB0aGUKPiBscDg3MjAsIHRoZSBFTiBwaW4gaXMgdXNlZCB0byBlbmFibGUgdGhlIHJl
+Z3VsYXRvcnMgb3V0cHV0LCB3aGljaCBpcyBhCj4gZ29vZCBmaXQgZm9yIHRoZSBjb3JlIHJlZ3Vs
+YXRvciBHUElPIGZyYW1ld29yaywgYXMgdGhlcmUgaXMgbm8gcmVhc29uIHRvCj4ga2VlcCBpdCBv
+biB3aGVuIG5vIHJlZ3VsYXRvciBpcyBpbiB1c2UuIFRoZSBzZXJpYWwgaW50ZXJmYWNlIGlzIGFs
+cmVhZHkKPiBhdmFpbGFibGUgd2hlbiBFTj0wIGFuZCByZWd1bGF0b3JzIGNhbiBiZSBjb25maWd1
+cmVkIGluIHRoYXQgc3RhdGUuIFRoZQo+IGxwODcyNSBzZWVtcyBzZWVtcyB0byBiZWhhdmUgdGhl
+IHNhbWUgd2hlbiBDT05GSUc9MCAodGhlIGRhdGFzaGVldAo+IGNsZWFybHkgc3RhdGVzOiAiQ09O
+RklHPTA6IEVOPTEgdHVybnMgb24gb3V0cHV0cyBvciBzdGFuZGJ5IG1vZGUgaWYKPiBFTj0wIiku
+IE9uIHRoZSBvdGhlciBoYW5kLCBpdCBpcyBpbmRlZWQgdXNlZCBhcyBhIHBvd2VyLW9uIHBpbiB3
+aGVuCj4gQ09ORklHPTEuCgpJIHRoaW5rIGl0J3MgZGlmZmVyZW50IHVzZSBjYXNlLiBMUDg3MjAv
+NSBhcmUgZGVzaWduZWQgZm9yIHN5c3RlbSBQTVUsIApzbyBzb21lIHJlZ3VsYXRvcnMgYXJlIGVu
+YWJsZWQgYnkgZGVmYXVsdCBhZnRlciB0aGUgZGV2aWNlIGlzIG9uLiBFTiBwaW4gCmlzIHVzZWQg
+Zm9yIHR1cm5pbmcgb24vb2ZmIHRoZSBjaGlwLiBUaGlzIHBpbiBkb2VzIG5vdCBjb250cm9sIHJl
+Z3VsYXRvciAKb3V0cHV0cyBkaXJlY3RseS4gSXQncyBzZXBhcmF0ZSBmdW5jdGlvbmFsIGJsb2Nr
+IGluIHRoZSBzaWxpY29uLgoKT24gdGhlIG90aGVyIGhhbmQsICdlbmFfZ3BpbycgaXMgdXNlZCBm
+b3IgZWFjaCByZWd1bGF0b3IgY29udHJvbCBpdHNlbGYuCkZvciBleGFtcGxlLCBXTTg5OTQgaGFz
+IHR3byBMRE9zIHdoaWNoIGFyZSBjb250cm9sbGVkIGJ5IGV4dGVybmFsIHBpbnMuIApMRE9zIGFy
+ZSBlbmFibGVkL2Rpc2FibGVkIHRocm91Z2ggTERPMUVOQSBhbmQgTERPMkVOQSBwaW5zLiBJbiB0
+aGlzIApjYXNlLCAnZW5hX2dwaW8nIGlzIHVzZWQuCgoJaHR0cDovL3d3dy5jaXJydXMuY29tL2Vu
+L3B1YnMvcHJvRGF0YXNoZWV0L1dNODk5NF92NC40LnBkZgoJKHBsZWFzZSByZWZlciB0byBwYWdl
+IDIyNCBhbmQgMjI1KQoKQmVzdCByZWdhcmRzLApNaWxvCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
