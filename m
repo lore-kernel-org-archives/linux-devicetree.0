@@ -1,67 +1,88 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/6] regulator: lp872x: Add enable GPIO pin support
-Date: Tue, 29 Dec 2015 15:55:45 -0600
-Message-ID: <CAL_JsqLiuNR_MQ+eX_TQVMDtn85hUTweNRL2Q+7Z8Tq-HJhx2g@mail.gmail.com>
-References: <1450868319-20513-1-git-send-email-contact@paulk.fr>
- <1450868319-20513-5-git-send-email-contact@paulk.fr> <20151229200244.GA27426@rob-hp-laptop>
- <1451424412.13576.1.camel@collins>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] clk: bcm2835: Add bindings for the auxiliary
+ peripheral clock gates.
+Date: Tue, 29 Dec 2015 16:15:09 -0600
+Message-ID: <CAL_JsqLu7=66jEuaezesEuoPsBBhRAT0UQcLVNOLVwkEvQacRA@mail.gmail.com>
+References: <1450222559-22461-1-git-send-email-eric@anholt.net>
+ <20151219041935.GS14936@rob-hp-laptop> <CAEG3pNCOO1F8+nwOQGSjUKxYCGbWW_Ripc6xUwDyg6ay66uL7w@mail.gmail.com>
+ <87wps3qulw.fsf@eliezer.anholt.net> <20151228223935.25842.28675@quark.deferred.io>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1451424412.13576.1.camel@collins>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151228223935.25842.28675@quark.deferred.io>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc: Eric Anholt <eric@anholt.net>, linux-clk <linux-clk@vger.kernel.org>, "Stephen Boyd <sboyd@codeaurora.org>, Emilio Lopez
+	<emilio@elopez.com.ar>, Hans de Goede <hdegoede@redhat.com>, linux-clk
+	<linux-clk@vger.kernel.org>, linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>, linux-rpi-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 29, 2015 at 3:26 PM, Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org> w=
-rote:
-> Le mardi 29 d=C3=A9cembre 2015 =C3=A0 14:02 -0600, Rob Herring a =C3=A9=
-crit :
->> On Wed, Dec 23, 2015 at 11:58:37AM +0100, Paul Kocialkowski wrote:
->> > LP872x regulators are made active via the EN pin, which might be h=
-ooked to a
->> > GPIO. This adds support for driving the GPIO high when the driver =
-is in use.
->> >
->> > Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
->> > ---
->> >  .../devicetree/bindings/regulator/lp872x.txt       |  1 +
->> >  drivers/regulator/lp872x.c                         | 33 +++++++++=
-+++++++++++--
->> >  include/linux/regulator/lp872x.h                   |  2 ++
->> >  3 files changed, 33 insertions(+), 3 deletions(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/regulator/lp872x.tx=
-t b/Documentation/devicetree/bindings/regulator/lp872x.txt
->> > index 7818318..0559c25 100644
->> > --- a/Documentation/devicetree/bindings/regulator/lp872x.txt
->> > +++ b/Documentation/devicetree/bindings/regulator/lp872x.txt
->> > @@ -28,6 +28,7 @@ Optional properties:
->> >    - ti,dvs-gpio: GPIO specifier for external DVS pin control of L=
-P872x devices.
->> >    - ti,dvs-vsel: DVS selector. 0 =3D SEL_V1, 1 =3D SEL_V2.
->> >    - ti,dvs-state: initial DVS pin state. 0 =3D DVS_LOW, 1 =3D DVS=
-_HIGH.
->> > +  - ti,enable-gpio: GPIO specifier for EN pin control of LP872x d=
-evices.
++Arnd and Olof
+
+On Mon, Dec 28, 2015 at 4:39 PM, Michael Turquette
+<mturquette@baylibre.com> wrote:
+> Quoting Eric Anholt (2015-12-24 15:45:15)
+>> Michael Turquette <mturquette@baylibre.com> writes:
 >>
->> Should be "-gpios" instead of "-gpio".
+>> > On Fri, Dec 18, 2015 at 8:19 PM, Rob Herring <robh@kernel.org> wrote:
+>> >> On Tue, Dec 15, 2015 at 03:35:57PM -0800, Eric Anholt wrote:
+>> >>> These will be used for enabling UART1, SPI1, and SPI2.
+>> >>>
+>> >>> Signed-off-by: Eric Anholt <eric@anholt.net>
+>> >>> ---
+>> >>>
+>> >>> v2: Make the binding cover both the IRQ and clock enable registers.
+>> >>>
+>> >>>  .../bindings/clock/brcm,bcm2835-aux-clock.txt      | 31 ++++++++++++++++++++++
+>> >>>  include/dt-bindings/clock/bcm2835-aux.h            | 17 ++++++++++++
+>> >>>  2 files changed, 48 insertions(+)
+>> >>>  create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm2835-aux-clock.txt
+>> >>>  create mode 100644 include/dt-bindings/clock/bcm2835-aux.h
+>> >>
+>> >> Acked-by: Rob Herring <robh@kernel.org>
+>> >
+>> > Applied to clk-next.
+>> >
+>> > Next time if you put the header into the clk driver patch then we can
+>> > send the binding description through the DT tree and take the header
+>> > and C file through the clk tree in one patch.
+>>
+>> I would *love* to do that, but I've previously been told that having the
+>> bindings patch reference a header file not present as of the bindings
+>> patch is not acceptable and made to change it.
 >
-> Care to comment why? There is only one GPIO that can be used here, si=
-nce
-> there is only one single EN pin. I thought this matched what is done
-> already with "ti,dvs-gpio".
+> Ugh, that is annoying. I would think that having code compile properly
+> would trump the desire to have all of the documentation merged as one
+> patch.
 
-To be consistent. We use "clocks" and "interrupts" always whether one
-or more for example.
+What about compiling the dts?
 
--gpio is documented as deprecated now.
+> On the other hand, I've been asked to not take binding descriptions
+> through the clk tree. That is a policy that I'm happy to comply with,
+> but it is at odds with the recommendation for the header and the binding
+> description to be merged together.
+
+By who? Any bindings in a series I always expect the subsystem
+maintainers to take the whole series. That doesn't solve the problem
+though as there is still a dependency between a subsystem tree and
+arm-soc typically.
+
+> DT folks, what is the right way to do this? An immutable, shared branch
+> just for a single header file solves the problem, but also feels very
+> cumbersome for such a trivial issue.
+
+Arnd and Olof have been complaining about this problem which is worse
+when it is a binding, driver and dts.
+
+I'm open to maintaining a branch for this purpose if that helps. That
+or staggering merging of bindings and drivers/dts are the only ideas
+I've come up with.
+
+> How about allowing binding descriptions to be merged without the header
+> file, so long as it is merged through another tree?
+
+I think that is wrong if we have the goal to separate bindings from
+the kernel and the bindings should stand on their own. However, if it
+greatly simplifies things, i'd be okay with that.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
