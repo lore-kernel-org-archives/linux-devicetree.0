@@ -1,42 +1,53 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/4] Documentation: fsl-quadspi: Add fsl, ls2080a-qspi
- compatible string
-Date: Tue, 29 Dec 2015 12:34:54 -0600
-Message-ID: <20151229183454.GF12450@rob-hp-laptop>
-References: <1450954863-7540-1-git-send-email-yao.yuan@freescale.com>
- <1450954863-7540-2-git-send-email-yao.yuan@freescale.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm64: Add DT support for Juno r2 board
+Date: Tue, 29 Dec 2015 12:35:21 -0600
+Message-ID: <20151229183521.GL12450@rob-hp-laptop>
+References: <1450872611-15326-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1450954863-7540-2-git-send-email-yao.yuan@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yuan Yao <yao.yuan@freescale.com>
-Cc: mark.rutland@arm.com, pawel.moll@arm.com, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yao.yuan@nxp.com
+In-Reply-To: <1450872611-15326-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arm-hC8oa7XEHlfYtjvyW6yDsg@public.gmane.org, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 24, 2015 at 07:01:01PM +0800, Yuan Yao wrote:
-> new compatible string: "fsl,ls2080a-qspi".
-> 
-> Signed-off-by: Yuan Yao <yao.yuan@nxp.com>
-> ---
-> Changed in v2:
-> Update my email to <yao.yuan@nxp.com>
-> ---
->  Documentation/devicetree/bindings/mtd/fsl-quadspi.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-> index 6585ac7..2bef0dc 100644
-> --- a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-> +++ b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-> @@ -3,7 +3,7 @@
->  Required properties:
->    - compatible : Should be "fsl,vf610-qspi", "fsl,imx6sx-qspi",
->  		 "fsl,imx7d-qspi", "fsl,imx6ul-qspi",
-> -		 "fsl,ls1021-qspi"
-> +		 "fsl,ls1021a-qspi", "fsl,ls2080a-qspi"
+On Wed, Dec 23, 2015 at 12:10:11PM +0000, Sudeep Holla wrote:
+> Juno r2 is identical to Juno r1 with Cortex A57 cores replaced by
+> Cortex A72 cores.
 
-You should explain what combinations of compatible strings are valid.
+That's a bigger change than I'd expect...
+
+> Acked-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/arm-boards |   1 +
+>  Documentation/devicetree/bindings/arm/cpus.txt   |   1 +
+
+This should probably be a separate patch, but I already have a patch in 
+my tree for 4.5 adding arm,cortex-a72. So just drop this hunk.
+
+>  arch/arm64/boot/dts/arm/Makefile                 |   2 +-
+>  arch/arm64/boot/dts/arm/juno-r2.dts              | 200 +++++++++++++++++++++++
+>  4 files changed, 203 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm64/boot/dts/arm/juno-r2.dts
+
+[...]
+
+> +	pmu_a72 {
+> +		compatible = "arm,cortex-a72-pmu";
+
+This needs to be documented.
+
+
+> +	pcie-controller@40000000 {
+> +		compatible = "arm,juno-r1-pcie", "plda,xpressrich3-axi", "pci-host-ecam-generic";
+
+Is this common with r1?
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
