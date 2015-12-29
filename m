@@ -1,101 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/2] pci, pcie-thunder-pem: Add PCIe host driver for
- ThunderX processors.
-Date: Tue, 29 Dec 2015 14:37:17 -0600
-Message-ID: <20151229203717.GA21072@rob-hp-laptop>
-References: <1450827832-3294-1-git-send-email-ddaney.cavm@gmail.com>
- <1450827832-3294-3-git-send-email-ddaney.cavm@gmail.com>
+Subject: Re: [PATCH v4 9/9] phy: omap-usb2: use *syscon* framework API to
+ power on/off the PHY
+Date: Tue, 29 Dec 2015 14:46:52 -0600
+Message-ID: <20151229204652.GA28118@rob-hp-laptop>
+References: <1450688053-3429-1-git-send-email-kishon@ti.com>
+ <1450688053-3429-10-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1450827832-3294-3-git-send-email-ddaney.cavm@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, David Daney <david.daney@cavium.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1450688053-3429-10-git-send-email-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rogerq@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 22, 2015 at 03:43:52PM -0800, David Daney wrote:
-> From: David Daney <david.daney@cavium.com>
+On Mon, Dec 21, 2015 at 02:24:13PM +0530, Kishon Vijay Abraham I wrote:
+> Deprecate using phy-omap-control driver to power on/off the PHY,
+> and use *syscon* framework to do the same. This handles
+> powering on/off the PHY for the USB2 PHYs used in various TI SoCs.
 > 
-> Some Cavium ThunderX processors require quirky access methods for the
-> config space of the PCIe bridge.  Add a driver to provide these config
-> space accessor functions.  The pci-host-common code is used to
-> configure the PCI machinery.
-
-Same comments again...
-
-> Signed-off-by: David Daney <david.daney@cavium.com>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  .../devicetree/bindings/pci/pcie-thunder-pem.txt   |  43 ++++
->  drivers/pci/host/Kconfig                           |   7 +
->  drivers/pci/host/Makefile                          |   1 +
->  drivers/pci/host/pcie-thunder-pem.c                | 283 +++++++++++++++++++++
->  4 files changed, 334 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/pcie-thunder-pem.txt
->  create mode 100644 drivers/pci/host/pcie-thunder-pem.c
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/pcie-thunder-pem.txt b/Documentation/devicetree/bindings/pci/pcie-thunder-pem.txt
-> new file mode 100644
-> index 0000000..52f56b3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/pcie-thunder-pem.txt
-> @@ -0,0 +1,43 @@
-> +* ThunderX PEM PCIe host controller
-> +
-> +Firmware-initialized PCIe host controller found on some Cavium
-> +ThunderX processors.
-> +
-> +The properties and their meanings are identical to those described in
-> +host-generic-pci.txt except as listed below.
-> +
-> +Properties of the host controller node that differ from
-> +host-generic-pci.txt:
-> +
-> +- compatible     : Must be "cavium,pci-host-thunder-pem"
+>  Documentation/devicetree/bindings/phy/ti-phy.txt |    8 +-
+>  drivers/phy/phy-omap-usb2.c                      |   92 ++++++++++++++++++----
+>  include/linux/phy/omap_usb.h                     |   23 ++++++
+>  3 files changed, 105 insertions(+), 18 deletions(-)
 
-pcie rather than pci?
-
-> +
-> +- reg            : Two entries: First the configuration space for down
-> +                   stream devices base address and size, as accessed
-> +                   from the parent bus. Second, the register bank of
-> +                   the PEM device PCIe bridge.
-> +
-> +Example:
-> +
-> +    pem2 {
-
-pcie-controller@... instead of pem2.
-
-> +	compatible = "cavium,pci-host-thunder-pem";
-> +	device_type = "pci";
-> +	msi-parent = <&its>;
-> +	msi-map = <0 &its 0x10000 0x10000>;
-> +	bus-range = <0x8f 0xc7>;
-> +	#size-cells = <2>;
-> +	#address-cells = <3>;
-> +
-> +	reg = <0x8880 0x8f000000 0x0 0x39000000>,  /* Configuration space */
-> +	      <0x87e0 0xc2000000 0x0 0x00010000>; /* PEM space */
-> +	ranges = <0x01000000 0x00 0x00020000 0x88b0 0x00020000 0x00 0x00010000>, /* I/O */
-> +		 <0x03000000 0x00 0x10000000 0x8890 0x10000000 0x0f 0xf0000000>, /* mem64 */
-> +		 <0x43000000 0x10 0x00000000 0x88a0 0x00000000 0x10 0x00000000>, /* mem64-pref */
-> +		 <0x03000000 0x87e0 0xc2f00000 0x87e0 0xc2000000 0x00 0x00100000>; /* mem64 PEM BAR4 */
-> +
-> +	#interrupt-cells = <1>;
-> +	interrupt-map-mask = <0 0 0 7>;
-> +	interrupt-map = <0 0 0 1 &gic0 0 0 0 24 4>, /* INTA */
-> +			<0 0 0 2 &gic0 0 0 0 25 4>, /* INTB */
-> +			<0 0 0 3 &gic0 0 0 0 26 4>, /* INTC */
-> +			<0 0 0 4 &gic0 0 0 0 27 4>; /* INTD */
-> +    };
+Acked-by: Rob Herring <robh@kernel.org>
