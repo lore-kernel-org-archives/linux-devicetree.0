@@ -1,63 +1,98 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v7 06/14] drm/mediatek: Add HDMI support
-Date: Tue, 29 Dec 2015 16:49:33 +0800
-Message-ID: <1451378973.15546.3.camel@mtksdaap41>
-References: <1448917676-25584-1-git-send-email-p.zabel@pengutronix.de>
-	 <1448917676-25584-7-git-send-email-p.zabel@pengutronix.de>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 3/3] [media] mt9v032: Add V4L2 controls for AEC and AGC
+Date: Tue, 29 Dec 2015 11:38:39 +0200
+Message-ID: <5194938.P3WvP9gjaZ@avalon>
+References: <1450104113-6392-1-git-send-email-mpa@pengutronix.de> <290053152.GcUooHzFZY@avalon> <2570493.HaAAxn7ErG@adelgunde>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1448917676-25584-7-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Cawa Cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Stone <daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <2570493.HaAAxn7ErG@adelgunde>
+Sender: linux-media-owner@vger.kernel.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-11-30 at 22:07 +0100, Philipp Zabel wrote:
-> From: Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Hi Markus,
+
+On Wednesday 16 December 2015 11:14:28 Markus Pargmann wrote:
+> On Wednesday 16 December 2015 09:47:58 Laurent Pinchart wrote:
+> > On Monday 14 December 2015 15:41:53 Markus Pargmann wrote:
+> >> This patch adds V4L2 controls for Auto Exposure Control and Auto Gain
+> >> Control settings. These settings include low pass filter, update
+> >> frequency of these settings and the update interval for those units.
+> >> 
+> >> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+> > 
+> > Please see below for a few comments. If you agree about them there's no
+> > need to resubmit, I'll fix the patch when applying.
 > 
-> This patch adds drivers for the HDMI bridge connected to the DPI0
-> display subsystem function block, for the HDMI DDC block, and for
-> the HDMI PHY to support HDMI output.
+> Most of them are fine, I commented on the open ones.
 > 
-> Signed-off-by: Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
-<...>
-> +static int mtk_hdmi_setup_avi_infoframe(struct mtk_hdmi *hdmi,
-> +					struct drm_display_mode *mode)
-> +{
-> +	struct hdmi_avi_infoframe frame;
-> +	u8 buffer[17];
-> +	ssize_t err;
-> +
-> +	err = drm_hdmi_avi_infoframe_from_display_mode(&frame, mode);
-> +	if (err < 0) {
-> +		dev_err(hdmi->dev,
-> +			"Failed to get AVI infoframe from mode: %ld\n", err);
+> >> ---
+> >> 
+> >>  drivers/media/i2c/mt9v032.c | 153 ++++++++++++++++++++++++++++++++++++-
+> >>  1 file changed, 152 insertions(+), 1 deletion(-)
+> >> 
+> >> diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9v032.c
+> >> index cc16acf001de..6cbc3b87eda9 100644
+> >> --- a/drivers/media/i2c/mt9v032.c
+> >> +++ b/drivers/media/i2c/mt9v032.c
 
-Please use %zd instead for ssize_t, otherwise you'll see warning message
-when compile this on 32bits platform.
+[snip]
 
-Joe.C
+> >> +static const struct v4l2_ctrl_config mt9v032_aec_max_shutter_width = {
+> >> +	.ops		= &mt9v032_ctrl_ops,
+> >> +	.id		= V4L2_CID_AEC_MAX_SHUTTER_WIDTH,
+> >> +	.type		= V4L2_CTRL_TYPE_INTEGER,
+> >> +	.name		= "aec_max_shutter_width",
+> >> +	.min		= 1,
+> >> +	.max		= MT9V032_TOTAL_SHUTTER_WIDTH_MAX,
+> > 
+> > According the the MT9V032 datasheet I have, the maximum value is 2047
+> > while MT9V032_TOTAL_SHUTTER_WIDTH_MAX is defined as 32767. Do you have any
+> > information that would hint for an error in the datasheet ?
+> 
+> The register is defined as having 15 bits. I simply assumed that the already
+> defined TOTAL_SHUTTER_WIDTH_MAX would apply for this register as well. At
+> least it should end up controlling the same property of the chip. I didn't
+> test this on mt9v032 but on mt9v024.
 
+According to the MT9V032 datasheet 
+(http://www.onsemi.com/pub/Collateral/MT9V032-D.PDF) the maximum shutter width 
+in AEC mode is limited to 2047. That is documented both in the Maximum Total 
+Shutter Width register legal values and in the "Automatic Gain Control and 
+Automatic Exposure Control" section:
 
-> +		return err;
-> +	}
-> +
-> +	err = hdmi_avi_infoframe_pack(&frame, buffer, sizeof(buffer));
-> +	if (err < 0) {
-> +		dev_err(hdmi->dev, "Failed to pack AVI infoframe: %ld\n", err);
-> +		return err;
-> +	}
-> +
-> +	mtk_hdmi_hw_send_info_frame(hdmi, buffer, sizeof(buffer));
-> +	return 0;
-> +}
-> +
+"The exposure is measured in row-time by reading R0xBB. The exposure range is
+1 to 2047."
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I assume that the the AEC unit limits the shutter width to 2047 lines and that 
+it's thus pointless to set the maximum total shutter width to a higher value. 
+Whether doing so could have any adverse effect I don't know, but better be 
+same than sorry. If you agree we should limit the value to 2047 I can fix 
+this.
+
+> >> +	.step		= 1,
+> >> +	.def		= MT9V032_TOTAL_SHUTTER_WIDTH_DEF,
+> >> +	.flags		= 0,
+> >> +};
+> >> +
+> >> +static const struct v4l2_ctrl_config mt9v034_aec_max_shutter_width = {
+> >> +	.ops		= &mt9v032_ctrl_ops,
+> >> +	.id		= V4L2_CID_AEC_MAX_SHUTTER_WIDTH,
+> >> +	.type		= V4L2_CTRL_TYPE_INTEGER,
+> >> +	.name		= "aec_max_shutter_width",
+> >> +	.min		= 1,
+> >> +	.max		= MT9V034_TOTAL_SHUTTER_WIDTH_MAX,
+> >> +	.step		= 1,
+> >> +	.def		= MT9V032_TOTAL_SHUTTER_WIDTH_DEF,
+> >> +	.flags		= 0,
+> >> +};
+> > 
+> > [snip]
+
+-- 
+Regards,
+
+Laurent Pinchart
