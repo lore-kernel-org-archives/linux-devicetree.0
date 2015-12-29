@@ -1,29 +1,55 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt-bindings: ci-hdrc-usb2: add missing compatibles
-Date: Tue, 29 Dec 2015 12:49:05 -0600
-Message-ID: <20151229184905.GA15469@rob-hp-laptop>
-References: <1451407269-14905-1-git-send-email-stefan.wahren@i2se.com>
- <1451407269-14905-2-git-send-email-stefan.wahren@i2se.com>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [PATCH 4/4] dt: binding: Add Qualcomm wcn36xx WiFi binding
+Date: Tue, 29 Dec 2015 11:03:57 -0800
+Message-ID: <20151229190357.GJ16437@tuxbot>
+References: <1451266467-15377-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1451266467-15377-5-git-send-email-bjorn.andersson@sonymobile.com>
+ <20151229183440.GC12450@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1451407269-14905-2-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20151229183440.GC12450@rob-hp-laptop>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Eugene Krasnikov <k.eugene.e@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kalle Valo <kvalo@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, fengwei.yin@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, wcn36xx@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 29, 2015 at 04:41:09PM +0000, Stefan Wahren wrote:
-> This patch adds the missing compatible strings from ci_hdrc_imx.
-> 
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> ---
->  .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |    7 +++++++
->  1 file changed, 7 insertions(+)
+On Tue 29 Dec 10:34 PST 2015, Rob Herring wrote:
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> On Sun, Dec 27, 2015 at 05:34:27PM -0800, Bjorn Andersson wrote:
+> > Add binding representing the Qualcomm wcn3620/60/80 WiFi block.
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> > ---
+> >  .../bindings/net/wireless/qcom,wcn36xx-wifi.txt    | 76 ++++++++++++++++++++++
+> >  1 file changed, 76 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/net/wireless/qcom,wcn36xx-wifi.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,wcn36xx-wifi.txt b/Documentation/devicetree/bindings/net/wireless/qcom,wcn36xx-wifi.txt
+> > new file mode 100644
+> > index 000000000000..7b314b9f30af
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/wireless/qcom,wcn36xx-wifi.txt
+> > @@ -0,0 +1,76 @@
+> > +Qualcomm WCN36xx WiFi Binding
+> > +
+> > +This binding describes the Qualcomm WCN36xx WiFi hardware. The hardware block
+> > +is part of the Qualcomm WCNSS core, a WiFi/BT/FM combo chip, found in a variety
+> > +of Qualcomm platforms.
+> 
+> Are BT/FM functions completely separate? If so, separate bindings are 
+> okay. If not, then we need to describe the full chip.
+> 
+
+It's three different hardware blocks (WiFi, BT and FM-radio) with shared
+RF-hardware and an ARM core for control logic.
+
+There seems to be some control commands going towards the BT part that
+controls coexistence properties of the RF-hardware, but other than that
+I see it as logically separate blocks.
+
+
+So I think it's fine to model this as separate pieces in DT.
+
+Regards,
+Bjorn
