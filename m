@@ -1,63 +1,73 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] Documentation: fsl-quadspi: Add fsl,ls2080a-dspi
- compatible string
-Date: Wed, 30 Dec 2015 09:19:30 -0600
-Message-ID: <CAL_Jsq+fsqJkN+5859rLm56Ch1k48LRDsRMP6KFHywnCNyf=kA@mail.gmail.com>
-References: <1450954863-7540-1-git-send-email-yao.yuan@freescale.com>
- <20151229183501.GH12450@rob-hp-laptop> <AM2PR04MB07228C97A751DA40EEDD231489FD0@AM2PR04MB0722.eurprd04.prod.outlook.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: rockchip: Adding LEDs handling via leds-gpio for the Radxa Rock2 Square
+Date: Wed, 30 Dec 2015 16:20:10 +0100
+Message-ID: <3613784.8JLtyMHEE9@diego>
+References: <1451474219-1313-1-git-send-email-romain.perier@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM2PR04MB07228C97A751DA40EEDD231489FD0@AM2PR04MB0722.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yao Yuan <yao.yuan@nxp.com>
-Cc: Yuan Yao <yao.yuan@freescale.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1451474219-1313-1-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 29, 2015 at 9:17 PM, Yao Yuan <yao.yuan@nxp.com> wrote:
-> Hi Rob,
->
-> Thanks for your review.
-> So you mean that I should add the commit message for why I add this new compatible?
+Hi Romain,
 
-Please don't top post on the lists.
+Am Mittwoch, 30. Dezember 2015, 12:16:59 schrieb Romain Perier:
 
-No, the binding doc should explain what are valid combinations of
-compatible strings and the order when the dts can have multiple
-strings. For example, is this valid:
+even a oneliner is generally preferred, compared to no commit message at all 
+;-)
 
-compatible = "fsl,vf610-dspi", "fsl,ls2080a-dspi";
+> Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/rk3288-rock2-square.dts | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts
+> b/arch/arm/boot/dts/rk3288-rock2-square.dts index c5453a0..a33020f 100644
+> --- a/arch/arm/boot/dts/rk3288-rock2-square.dts
+> +++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
+> @@ -56,6 +56,23 @@
+>  		pinctrl-0 = <&ir_int>;
+>  	};
+> 
+> +	gpio-leds {
+> +		compatible = "gpio-leds";
+> +
+> +		heartbeat {
+> +			gpios = <&gpio7 15 GPIO_ACTIVE_LOW>;
+> +			label = "rock2:green:heartbeat";
+> +			linux,default-trigger = "heartbeat";
+> +		};
+> +
+> +		mmc {
+> +			gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;
+> +			label = "rock2:blue:mmc";
+> +			linux,default-trigger = "mmc0";
+> +		};
 
-In other words, I should be able to check a dts file against what the
-binding doc says.
+the rock2 core schematics seem to not list these leds at all (especially when 
+looking at the gpio-side). But looking at the schematics my guess would be 
+led_state1 and led_state2, so the naming should reflect that 
+(rock2:green:state1 ...).
 
-Rob
+Also I'd like to refrain from encoding user-specific configurations in the 
+devicetree - aka please do a default trigger of "off" for those generic leds.
 
-> On Wed, Dec 30, 2015 at 02:35AM, Rob Herring wrote:
->> On Thu, Dec 24, 2015 at 07:01:00PM +0800, Yuan Yao wrote:
->> > new compatible string: "fsl,ls2080a-qspi".
->> >
->> > Signed-off-by: Yuan Yao <yao.yuan@nxp.com>
->> > ---
->> > Changed in v2:
->> > Update my email to <yao.yuan@nxp.com>
->> > ---
->> >  Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt | 3 ++-
->> >  1 file changed, 2 insertions(+), 1 deletion(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
->> b/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
->> > index fa77f87..2fe51d6 100644
->> > --- a/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
->> > +++ b/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
->> > @@ -1,7 +1,8 @@
->> >  ARM Freescale DSPI controller
->> >
->> >  Required properties:
->> > -- compatible : "fsl,vf610-dspi", "fsl,ls1021a-v1.0-dspi", "fsl,ls2085a-dspi"
->> > +- compatible : "fsl,vf610-dspi", "fsl,ls1021a-v1.0-dspi",
->> > +           "fsl,ls2085a-dspi", "fsl,ls2080a-dspi"
->>
->> You should explain what combinations of compatible strings are valid.
->>
->> Rob
+
+Thanks
+Heiko
+
+> +	};
+> +
+> +
+>  	sound {
+>  		compatible = "simple-audio-card";
+>  		simple-audio-card,name = "SPDIF";
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
