@@ -1,73 +1,234 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: Adding LEDs handling via leds-gpio for the Radxa Rock2 Square
-Date: Wed, 30 Dec 2015 16:20:10 +0100
-Message-ID: <3613784.8JLtyMHEE9@diego>
-References: <1451474219-1313-1-git-send-email-romain.perier@gmail.com>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V10 7/7] dma: qcom_hidma: add support for object hierarchy
+Date: Wed, 30 Dec 2015 10:28:30 -0500
+Message-ID: <5683F81E.5050406@codeaurora.org>
+References: <1450371684-23415-1-git-send-email-okaya@codeaurora.org>
+ <1450371684-23415-8-git-send-email-okaya@codeaurora.org>
+ <CAHp75Vd-ku1E4+BWGwtL06mO7EZHFmwCvwFiAhLUVwrJHNKD7w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1451474219-1313-1-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Vd-ku1E4+BWGwtL06mO7EZHFmwCvwFiAhLUVwrJHNKD7w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: dmaengine <dmaengine@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Timur Tabi <timur@codeaurora.org>, devicetree <devicetree@vger.kernel.org>, cov@codeaurora.org, Vinod Koul <vinod.koul@intel.com>, jcm@redhat.com, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Romain,
+On 12/19/2015 1:37 PM, Andy Shevchenko wrote:
+> On Thu, Dec 17, 2015 at 7:01 PM, Sinan Kaya <okaya@codeaurora.org> wr=
+ote:
+>> In order to create a relationship model between the channels and the
+>> management object, we are adding support for object hierarchy to the
+>> drivers. This patch simplifies the userspace application development=
+=2E
+>> We will not have to traverse different firmware paths based on devic=
+e
+>> tree or ACPI baed kernels.
+>>
+>> No matter what flavor of kernel is used, objects will be represented=
+ as
+>> platform devices.
+>>
+>> The new layout is as follows:
+>>
+>> hidmam_10: hidma-mgmt@0x5A000000 {
+>>         compatible =3D "qcom,hidma-mgmt-1.0";
+>>         ...
+>>
+>>         hidma_10: hidma@0x5a010000 {
+>>                         compatible =3D "qcom,hidma-1.0";
+>>                         ...
+>>         }
+>> }
+>>
+>> The hidma_mgmt_init detects each instance of the hidma-mgmt-1.0 obje=
+cts
+>> in device tree and calls into the channel driver to create platform =
+devices
+>> for each child of the management object.
+>>
+>> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+>=20
+>=20
+>> +What:          /sys/devices/platform/hidma-*/chid
+>> +               /sys/devices/platform/QCOM8061:*/chid
+>> +Date:          Dec 2015
+>> +KernelVersion: 4.4
+>> +Contact:       "Sinan Kaya <okaya@cudeaurora.org>"
+>> +Description:
+>> +               Contains the ID of the channel within the HIDMA inst=
+ance.
+>> +               It is used to associate a given HIDMA channel with t=
+he
+>> +               priority and weight calls in the management interfac=
+e.
+>=20
+>> -module_platform_driver(hidma_mgmt_driver);
+>> +#ifdef CONFIG_OF
+>> +static int object_counter;
+>> +
+>> +static int __init hidma_mgmt_of_populate_channels(struct device_nod=
+e *np)
+>> +{
+>> +       struct platform_device *pdev_parent =3D of_find_device_by_no=
+de(np);
+>> +       struct platform_device_info pdevinfo;
+>> +       struct of_phandle_args out_irq;
+>> +       struct device_node *child;
+>> +       struct resource *res;
+>> +       const __be32 *cell;
+>=20
+> Always BE ?
 
-Am Mittwoch, 30. Dezember 2015, 12:16:59 schrieb Romain Perier:
+Yes, as Timur indicated device tree is big endian all the time.
+>=20
+>> +       int ret =3D 0, size, i, num;
+>> +       u64 addr, addr_size;
+>=20
+> resource_size_t
 
-even a oneliner is generally preferred, compared to no commit message at all 
-;-)
+These values are read from the device tree blob using of_read_number fu=
+nction. of_read_number
+returns a u64.
+>=20
+>> +
+>> +       for_each_available_child_of_node(np, child) {
+>> +               int iter =3D 0;
+>> +
+>> +               cell =3D of_get_property(child, "reg", &size);
+>> +               if (!cell) {
+>> +                       ret =3D -EINVAL;
+>> +                       goto out;
+>> +               }
+>> +
+>> +               size /=3D (sizeof(*cell));
+>=20
+> Redundant parens. I think it might be good to use common sense for
+> operator precedence, here is a radical example of ignoring it. And
+> this is not the first case.
 
-> Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/rk3288-rock2-square.dts | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts
-> b/arch/arm/boot/dts/rk3288-rock2-square.dts index c5453a0..a33020f 100644
-> --- a/arch/arm/boot/dts/rk3288-rock2-square.dts
-> +++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
-> @@ -56,6 +56,23 @@
->  		pinctrl-0 = <&ir_int>;
->  	};
-> 
-> +	gpio-leds {
-> +		compatible = "gpio-leds";
-> +
-> +		heartbeat {
-> +			gpios = <&gpio7 15 GPIO_ACTIVE_LOW>;
-> +			label = "rock2:green:heartbeat";
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +
-> +		mmc {
-> +			gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;
-> +			label = "rock2:blue:mmc";
-> +			linux,default-trigger = "mmc0";
-> +		};
+Removed. Note that I copied most of this function from another driver.=20
 
-the rock2 core schematics seem to not list these leds at all (especially when 
-looking at the gpio-side). But looking at the schematics my guess would be 
-led_state1 and led_state2, so the naming should reflect that 
-(rock2:green:state1 ...).
+>=20
+>> +               num =3D size /
+>> +                       (of_n_addr_cells(child) + of_n_size_cells(ch=
+ild)) + 1;
+>> +
+>> +               /* allocate a resource array */
+>> +               res =3D kcalloc(num, sizeof(*res), GFP_KERNEL);
+>> +               if (!res) {
+>> +                       ret =3D -ENOMEM;
+>> +                       goto out;
+>> +               }
+>> +
+>> +               /* read each reg value */
+>> +               i =3D 0;
+>> +               while (i < size) {
+>> +                       addr =3D of_read_number(&cell[i],
+>> +                                             of_n_addr_cells(child)=
+);
+>> +                       i +=3D of_n_addr_cells(child);
+>> +
+>> +                       addr_size =3D of_read_number(&cell[i],
+>> +                                                  of_n_size_cells(c=
+hild));
+>> +                       i +=3D of_n_size_cells(child);
+>> +
+>> +                       res[iter].start =3D addr;
+>> +                       res[iter].end =3D res[iter].start + addr_siz=
+e - 1;
+>> +                       res[iter].flags =3D IORESOURCE_MEM;
+>=20
+> res->start =3D =E2=80=A6
+> =E2=80=A6
+> res++;
 
-Also I'd like to refrain from encoding user-specific configurations in the 
-devicetree - aka please do a default trigger of "off" for those generic leds.
+ok
+
+>=20
+>> +                       iter++;
+>> +               }
+>> +
+>> +               ret =3D of_irq_parse_one(child, 0, &out_irq);
+>> +               if (ret)
+>> +                       goto out;
+>> +
+>> +               res[iter].start =3D irq_create_of_mapping(&out_irq);
+>> +               res[iter].name =3D "hidma event irq";
+>> +               res[iter].flags =3D IORESOURCE_IRQ;
+>=20
+> Ditto.
+ok
+
+>=20
+>> +
+>> +               pdevinfo.fwnode =3D &child->fwnode;
+>> +               pdevinfo.parent =3D pdev_parent ? &pdev_parent->dev =
+: NULL;
+>> +               pdevinfo.name =3D child->name;
+>> +               pdevinfo.id =3D object_counter++;
+>> +               pdevinfo.res =3D res;
+>> +               pdevinfo.num_res =3D num;
+>> +               pdevinfo.data =3D NULL;
+>> +               pdevinfo.size_data =3D 0;
+>> +               pdevinfo.dma_mask =3D DMA_BIT_MASK(64);
+>> +               platform_device_register_full(&pdevinfo);
+>> +
+>> +               kfree(res);
+>> +               res =3D NULL;
+>> +       }
+>> +out:
+>=20
+>> +       kfree(res);
+>=20
+>=20
+>> +
+>> +       return ret;
+>> +}
+>> +#endif
+>> +
+>> +static int __init hidma_mgmt_init(void)
+>> +{
+>> +#ifdef CONFIG_OF
+>> +       struct device_node *child;
+>> +
+>> +       for (child =3D of_find_matching_node(NULL, hidma_mgmt_match)=
+; child;
+>> +            child =3D of_find_matching_node(child, hidma_mgmt_match=
+)) {
+>> +               /* device tree based firmware here */
+>> +               hidma_mgmt_of_populate_channels(child);
+>> +               of_node_put(child);
+>> +       }
+>=20
+> And why this is can't be done in probe of parent node driver?
+
+The populate function creates platform objects using platform_device_re=
+gister_full function above.=20
+The hidma device driver later probes the object during object enumerati=
+on phase.=20
+
+I tried moving platform_device_register_full into the probe context. Th=
+e objects got generated but hidma=20
+device driver didn't probe the object. I suppose we are required to cre=
+ate the objects before the probing starts.
+
+I copied this pattern from another driver.
+
+>=20
+>> +#endif
+>> +       platform_driver_register(&hidma_mgmt_driver);
+>> +
+>> +       return 0;
+>> +}
+>> +module_init(hidma_mgmt_init);
+>=20
 
 
-Thanks
-Heiko
-
-> +	};
-> +
-> +
->  	sound {
->  		compatible = "simple-audio-card";
->  		simple-audio-card,name = "SPDIF";
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, In=
+c.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Li=
+nux Foundation Collaborative Project
