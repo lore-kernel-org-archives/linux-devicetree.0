@@ -1,7 +1,7 @@
 From: Jiancheng Xue <xuejiancheng@huawei.com>
-Subject: [PATCH v4 2/6] ARM: hisi: add compatible string for Hi3519 soc
-Date: Wed, 30 Dec 2015 09:43:48 +0800
-Message-ID: <1451439832-13927-3-git-send-email-xuejiancheng@huawei.com>
+Subject: [PATCH v4 3/6] ARM: config: hisi: enable CONFIG_RESET_CONTROLLER
+Date: Wed, 30 Dec 2015 09:43:49 +0800
+Message-ID: <1451439832-13927-4-git-send-email-xuejiancheng@huawei.com>
 References: <1451439832-13927-1-git-send-email-xuejiancheng@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,51 +12,24 @@ To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, pawel.mol
 Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, Jiancheng Xue <xuejiancheng@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-add compatible string for Hi3519 soc.
+enable CONFIG_RESET_CONTROLLER in hisi_defconfig
 
 Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
 ---
- arch/arm/mach-hisi/hisilicon.c | 23 ++++-------------------
- 1 file changed, 4 insertions(+), 19 deletions(-)
+ arch/arm/configs/hisi_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/mach-hisi/hisilicon.c b/arch/arm/mach-hisi/hisilicon.c
-index 8cc6215..00dae89 100644
---- a/arch/arm/mach-hisi/hisilicon.c
-+++ b/arch/arm/mach-hisi/hisilicon.c
-@@ -54,30 +54,15 @@ DT_MACHINE_START(HI3620, "Hisilicon Hi3620 (Flattened Device Tree)")
- 	.dt_compat	= hi3xxx_compat,
- MACHINE_END
- 
--static const char *const hix5hd2_compat[] __initconst = {
-+static const char *const hisilicon_compat[] __initconst = {
- 	"hisilicon,hix5hd2",
--	NULL,
--};
--
--DT_MACHINE_START(HIX5HD2_DT, "Hisilicon HIX5HD2 (Flattened Device Tree)")
--	.dt_compat	= hix5hd2_compat,
--MACHINE_END
--
--static const char *const hip04_compat[] __initconst = {
- 	"hisilicon,hip04-d01",
--	NULL,
--};
--
--DT_MACHINE_START(HIP04, "Hisilicon HiP04 (Flattened Device Tree)")
--	.dt_compat	= hip04_compat,
--MACHINE_END
--
--static const char *const hip01_compat[] __initconst = {
- 	"hisilicon,hip01",
- 	"hisilicon,hip01-ca9x2",
-+	"hisilicon,hi3519",
- 	NULL,
- };
- 
--DT_MACHINE_START(HIP01, "Hisilicon HIP01 (Flattened Device Tree)")
--	.dt_compat      = hip01_compat,
-+DT_MACHINE_START(HISILICON_DT, "HiSilicon Soc")
-+	.dt_compat	= hisilicon_compat,
- MACHINE_END
+diff --git a/arch/arm/configs/hisi_defconfig b/arch/arm/configs/hisi_defconfig
+index b2e340b..ba62c07 100644
+--- a/arch/arm/configs/hisi_defconfig
++++ b/arch/arm/configs/hisi_defconfig
+@@ -75,6 +75,7 @@ CONFIG_DMADEVICES=y
+ CONFIG_DW_DMAC=y
+ CONFIG_PL330_DMA=y
+ CONFIG_PWM=y
++CONFIG_RESET_CONTROLLER=y
+ CONFIG_PHY_HIX5HD2_SATA=y
+ CONFIG_EXT4_FS=y
+ CONFIG_TMPFS=y
 -- 
 1.9.1
