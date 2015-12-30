@@ -1,83 +1,62 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/5] clk: mediatek: Refine the makefile to support multiple clock drivers
-Date: Wed, 30 Dec 2015 14:27:41 +0800
-Message-ID: <1451456865-44139-2-git-send-email-jamesjj.liao@mediatek.com>
-References: <1451456865-44139-1-git-send-email-jamesjj.liao@mediatek.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] DT: i2c: Add Freescale MPL3115 to trivial devices list
+Date: Wed, 30 Dec 2015 07:28:15 +0100
+Message-ID: <20151230062814.GA2295@tetsubishi>
+References: <1450897147-22370-1-git-send-email-akshay.bhat@timesys.com>
+ <20151229183516.GK12450@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1451456865-44139-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="huq684BweRXVnRxX"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20151229183516.GK12450@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Akshay Bhat <akshay.bhat@timesys.com>, ktsai@capellamicro.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, trivial@kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, justin.waters@timesys.com
 List-Id: devicetree@vger.kernel.org
 
-Add a Kconfig to define clock configuration for each SoC, and
-modify the Makefile to build drivers that only selected in config.
 
-Signed-off-by: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/clk/Kconfig           |  1 +
- drivers/clk/mediatek/Kconfig  | 23 +++++++++++++++++++++++
- drivers/clk/mediatek/Makefile |  6 +++---
- 3 files changed, 27 insertions(+), 3 deletions(-)
- create mode 100644 drivers/clk/mediatek/Kconfig
+--huq684BweRXVnRxX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index c3e3a02..b7a37dc 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -198,3 +198,4 @@ source "drivers/clk/mvebu/Kconfig"
- 
- source "drivers/clk/samsung/Kconfig"
- source "drivers/clk/tegra/Kconfig"
-+source "drivers/clk/mediatek/Kconfig"
-diff --git a/drivers/clk/mediatek/Kconfig b/drivers/clk/mediatek/Kconfig
-new file mode 100644
-index 0000000..dc224e6
---- /dev/null
-+++ b/drivers/clk/mediatek/Kconfig
-@@ -0,0 +1,23 @@
-+#
-+# MediaTek SoC drivers
-+#
-+config COMMON_CLK_MEDIATEK
-+	bool
-+	---help---
-+	  Mediatek SoCs' clock support.
-+
-+config COMMON_CLK_MT8135
-+	bool "Clock driver for Mediatek MT8135"
-+	depends on COMMON_CLK
-+	select COMMON_CLK_MEDIATEK
-+	default ARCH_MEDIATEK
-+	---help---
-+	  This driver supports Mediatek MT8135 clocks.
-+
-+config COMMON_CLK_MT8173
-+	bool "Clock driver for Mediatek MT8173"
-+	depends on COMMON_CLK
-+	select COMMON_CLK_MEDIATEK
-+	default ARCH_MEDIATEK
-+	---help---
-+	  This driver supports Mediatek MT8173 clocks.
-diff --git a/drivers/clk/mediatek/Makefile b/drivers/clk/mediatek/Makefile
-index 95fdfac..32e7222 100644
---- a/drivers/clk/mediatek/Makefile
-+++ b/drivers/clk/mediatek/Makefile
-@@ -1,4 +1,4 @@
--obj-y += clk-mtk.o clk-pll.o clk-gate.o clk-apmixed.o
-+obj-$(CONFIG_COMMON_CLK_MEDIATEK) += clk-mtk.o clk-pll.o clk-gate.o clk-apmixed.o
- obj-$(CONFIG_RESET_CONTROLLER) += reset.o
--obj-y += clk-mt8135.o
--obj-y += clk-mt8173.o
-+obj-$(CONFIG_COMMON_CLK_MT8135) += clk-mt8135.o
-+obj-$(CONFIG_COMMON_CLK_MT8173) += clk-mt8173.o
--- 
-1.9.1
+On Tue, Dec 29, 2015 at 12:35:16PM -0600, Rob Herring wrote:
+> On Wed, Dec 23, 2015 at 01:59:07PM -0500, Akshay Bhat wrote:
+> > This adds devicetree documentation for the bindings of mpl3115 driver.
+> >=20
+> > Signed-off-by: Akshay Bhat <akshay.bhat@timesys.com>
+> > ---
+> >  Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+>=20
+> Acked-by: Rob Herring <robh@kernel.org>
+>=20
+> Who did you want to apply this? Send patches TO that person which I=20
+> would expect to be Wolfram or me.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I usually take these. Will do again :)
+
+
+--huq684BweRXVnRxX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIbBAEBAgAGBQJWg3l+AAoJEBQN5MwUoCm2FYIP+Is7KOGsodIxTp4ZkPy+ztZK
+pI2kdpY6Bsz/mKxXbgdOf91RJqImvmuw2HvwpSlguflMGPit7R+ERTb45o7YtkKc
+QACimfRn+5VwcFoQxSgtEOo2JPL0j1bjoRnOydO1UwAes5hNBqJ8M5x/ft3Knir/
+GGTBaPeRNXyuIPQrLOTMAKcYjXp3hVnReHROE6TPUzWhbPVmcKqR3hsddEt4T/Mu
+3lq2kbcn/052l9P0ofu983QJuMV7m7qA0Wx0HglIurQQj2NXZU6Hbnf5+W0b+okB
+DPQONVB647d+zztt1KosZdci778/phtiXb6HJqGF0r3Ju5riNauPUvJNqxFrRHKL
+fTQKOo4tn6Nlg7Wz4nEscPN8qHPtRNSUGV5LQmVCSNtu7bdjeI1SNuKu1l0XxiTg
+L7Uk+AIomT1Ah/cj9hTU4i17HS4Ts6brVrrDG+pPT3COnuiQ/AnJtCWDi8fzsznB
+0FmTMoeUhd8Ld84XbRTeq+o7OT2PICFhmpkK7ovLa1XxWB9PJ6k9hMrBVU4ch/eP
+TNgt/YVJpSvNOs9c/PykHuTRe67L/6ahrcQq9GxOIxemZ7Vy5vcqI+AEK6H6tgyX
+nzaSjrymAqM9a8jW5c7Eec3rgBLsrastYv06XwZTSZIR5KJiX+xuL0YPOAQd7a/M
+NvQXXka2WwvbIt1e4Dg=
+=i7/Z
+-----END PGP SIGNATURE-----
+
+--huq684BweRXVnRxX--
