@@ -1,44 +1,31 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/4] soc: mediatek: Separate scpsys driver common code
-Date: Wed, 30 Dec 2015 09:52:19 +0100
-Message-ID: <2524123.scG8tD5NSM@wuerfel>
-References: <1451457706-14798-1-git-send-email-jamesjj.liao@mediatek.com> <1451457706-14798-2-git-send-email-jamesjj.liao@mediatek.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/4] soc: mediatek: Init MT8173 scpsys driver earlier
+Date: Wed, 30 Dec 2015 09:52:45 +0100
+Message-ID: <1670989.QknqqsXE3p@wuerfel>
+References: <1451457706-14798-1-git-send-email-jamesjj.liao@mediatek.com> <1451457706-14798-3-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1451457706-14798-2-git-send-email-jamesjj.liao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Liao <jamesjj.liao@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Kevin Hilman <khilman@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1451457706-14798-3-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 30 December 2015 14:41:43 James Liao wrote:
-> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> index 0a4ea80..eca6fb7 100644
-> --- a/drivers/soc/mediatek/Kconfig
-> +++ b/drivers/soc/mediatek/Kconfig
-> @@ -22,11 +22,20 @@ config MTK_PMIC_WRAP
->  
->  config MTK_SCPSYS
->         bool "MediaTek SCPSYS Support"
-> -       depends on ARCH_MEDIATEK || COMPILE_TEST
-> -       default ARM64 && ARCH_MEDIATEK
->         select REGMAP
->         select MTK_INFRACFG
->         select PM_GENERIC_DOMAINS if PM
->         help
->           Say yes here to add support for the MediaTek SCPSYS power domain
->           driver.
-> +
-> +config MTK_SCPSYS_MT8173
-> +       bool "MediaTek MT8173 SCPSYS Support"
-> +       depends on ARCH_MEDIATEK || COMPILE_TEST
-> +       select MTK_SCPSYS
-> +       default ARCH_MEDIATEK
+On Wednesday 30 December 2015 14:41:44 James Liao wrote:
+> Some power domain comsumers may init before module_init.
+> So the power domain provider (scpsys) need to be initialized
+> earlier too.
+> 
+> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
 > 
 
-Please don't "select" a user-visible Kconfig symbol. Either hide MTK_SCPSYS
-by removing the string behind 'bool', or make this "depends on MTK_SCPSYS".
+Why?
 
 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
