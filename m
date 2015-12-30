@@ -1,38 +1,50 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/4] soc: mediatek: Init MT8173 scpsys driver earlier
-Date: Wed, 30 Dec 2015 11:35:01 +0100
-Message-ID: <6145950.8rtkDup7QD@wuerfel>
-References: <1451457706-14798-1-git-send-email-jamesjj.liao@mediatek.com> <1670989.QknqqsXE3p@wuerfel> <1451470328.22426.5.camel@mtksdaap41>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1451470328.22426.5.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: James Liao <jamesjj.liao@mediatek.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, Daniel Kurtz <djkurtz@chromium.org>, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>
+From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: rockchip: Adding LEDs handling via leds-gpio for the Radxa Rock2 Square
+Date: Wed, 30 Dec 2015 12:16:59 +0100
+Message-ID: <1451474219-1313-1-git-send-email-romain.perier@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 30 December 2015 18:12:08 James Liao wrote:
-> On Wed, 2015-12-30 at 09:52 +0100, Arnd Bergmann wrote:
-> > On Wednesday 30 December 2015 14:41:44 James Liao wrote:
-> > > Some power domain comsumers may init before module_init.
-> > > So the power domain provider (scpsys) need to be initialized
-> > > earlier too.
-> > > 
-> > > Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
-> > > ---
-> > > 
-> > 
-> > Why?
-> 
-> Some drivers use different init level to ensure they can be initialized
-> before other drivers. To support these drivers, moving scpsys driver's
-> initial function to subsys_init is the most easy way.
+Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/rk3288-rock2-square.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-This is just the same generic explanation that you already have.
+diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts b/arch/arm/boot/dts/rk3288-rock2-square.dts
+index c5453a0..a33020f 100644
+--- a/arch/arm/boot/dts/rk3288-rock2-square.dts
++++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
+@@ -56,6 +56,23 @@
+ 		pinctrl-0 = <&ir_int>;
+ 	};
+ 
++	gpio-leds {
++		compatible = "gpio-leds";
++
++		heartbeat {
++			gpios = <&gpio7 15 GPIO_ACTIVE_LOW>;
++			label = "rock2:green:heartbeat";
++			linux,default-trigger = "heartbeat";
++		};
++
++		mmc {
++			gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;
++			label = "rock2:blue:mmc";
++			linux,default-trigger = "mmc0";
++		};
++	};
++
++
+ 	sound {
+ 		compatible = "simple-audio-card";
+ 		simple-audio-card,name = "SPDIF";
+-- 
+2.5.0
 
-Please be more specific what the dependency is and why we can't rely
-on deferred probing here.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
