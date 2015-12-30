@@ -1,89 +1,98 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: Add DT support for Juno r2 board
-Date: Wed, 30 Dec 2015 15:34:09 +0000
-Message-ID: <5683F971.9000300@arm.com>
-References: <1450872611-15326-1-git-send-email-sudeep.holla@arm.com>
- <20151229183521.GL12450@rob-hp-laptop> <5683BE7A.9020404@arm.com>
- <CAL_Jsq+RZk3LnOhGtiXRFmxmA6bTOEdymtF1yN=6q=iRmUr_9Q@mail.gmail.com>
+From: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: rockchip: Adding LEDs handling via leds-gpio
+ for the Radxa Rock2 Square
+Date: Wed, 30 Dec 2015 16:45:43 +0100
+Message-ID: <1451490343.11453.28.camel@collabora.co.uk>
+References: <1451474219-1313-1-git-send-email-romain.perier@gmail.com>
+	 <3613784.8JLtyMHEE9@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+RZk3LnOhGtiXRFmxmA6bTOEdymtF1yN=6q=iRmUr_9Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <3613784.8JLtyMHEE9@diego>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, arm-hC8oa7XEHlfYtjvyW6yDsg@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 2015-12-30 at 16:20 +0100, Heiko St=C3=BCbner wrote:
+> Hi Romain,
+>=20
+> Am Mittwoch, 30. Dezember 2015, 12:16:59 schrieb Romain Perier:
+>=20
+> even a oneliner is generally preferred, compared to no commit message
+> at all=C2=A0
+> ;-)
+>=20
+> > Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> > =C2=A0arch/arm/boot/dts/rk3288-rock2-square.dts | 17 ++++++++++++++=
++++
+> > =C2=A01 file changed, 17 insertions(+)
+> >=20
+> > diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts
+> > b/arch/arm/boot/dts/rk3288-rock2-square.dts index c5453a0..a33020f
+> > 100644
+> > --- a/arch/arm/boot/dts/rk3288-rock2-square.dts
+> > +++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
+> > @@ -56,6 +56,23 @@
+> > =C2=A0		pinctrl-0 =3D <&ir_int>;
+> > =C2=A0	};
+> >=20
+> > +	gpio-leds {
+> > +		compatible =3D "gpio-leds";
+> > +
+> > +		heartbeat {
+> > +			gpios =3D <&gpio7 15 GPIO_ACTIVE_LOW>;
+> > +			label =3D "rock2:green:heartbeat";
+> > +			linux,default-trigger =3D "heartbeat";
+> > +		};
+> > +
+> > +		mmc {
+> > +			gpios =3D <&gpio0 11 GPIO_ACTIVE_LOW>;
+> > +			label =3D "rock2:blue:mmc";
+> > +			linux,default-trigger =3D "mmc0";
+> > +		};
+>=20
+> the rock2 core schematics seem to not list these leds at all
+> (especially when=C2=A0
+> looking at the gpio-side). But looking at the schematics my guess
+> would be=C2=A0
+> led_state1 and led_state2, so the naming should reflect that=C2=A0
+> (rock2:green:state1 ...).
+>=20
+> Also I'd like to refrain from encoding user-specific configurations
+> in the=C2=A0
+> devicetree - aka please do a default trigger of "off" for those
+> generic leds.
+
+Seems a grey area. The vendor kernel configures these LEDs with the
+same default triggers as Romains patch does, so one could argue these
+are the intended usages for those LEDs (as such it's hardware
+description not use-specific configuration?).=C2=A0
+
+In any case having sensible default triggers (e.g. having the default
+mainline behaviour act the same as the vendor behaviour) seems quite a
+lot more useful then keeping these LEDs off and forcing usespace to set
+them up.
 
 
-On 30/12/15 15:09, Rob Herring wrote:
-> On Wed, Dec 30, 2015 at 5:22 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->> Hi Rob,
->>
->> Thanks for the review.
->>
->> On 29/12/15 18:35, Rob Herring wrote:
->>>
->>> On Wed, Dec 23, 2015 at 12:10:11PM +0000, Sudeep Holla wrote:
->>>>
->>>> Juno r2 is identical to Juno r1 with Cortex A57 cores replaced by
->>>> Cortex A72 cores.
->>>
->>>
->>> That's a bigger change than I'd expect...
->>>
->>
->> I am not sure if I understood what you meant by that. Do you want me to
->> elaborate with more details ?
->
-> No, just my commentary that I'd expect r1 -> r2 to be a board or Si
-> spin rather than a whole new core.
->
+> Thanks
+> Heiko
+>=20
+> > +	};
+> > +
+> > +
+> > =C2=A0	sound {
+> > =C2=A0		compatible =3D "simple-audio-card";
+> > =C2=A0		simple-audio-card,name =3D "SPDIF";
+>=20
 
-Ah OK, yes it's new Si and has other minor updates like latest revisions
-of Cortex-A53 and other IPs. I just mentioned only the DT visible
-changes in the commit log.
-
->>>> Acked-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
->>>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->>>> ---
->>>>    Documentation/devicetree/bindings/arm/arm-boards |   1 +
->>>>    Documentation/devicetree/bindings/arm/cpus.txt   |   1 +
->>>
->>>
->>> This should probably be a separate patch, but I already have a patch in
->>> my tree for 4.5 adding arm,cortex-a72. So just drop this hunk.
->>>
->>
->> OK, will post DT binding separately.
->
-> No need, it is already in my tree.
->
-
-Sorry for not being clear earlier. I was referring the "arm,juno-r2"
-compatible addition. I assume you have no objection if it's part of the
-same patch.
-
->>>> +       pcie-controller@40000000 {
->>>> +               compatible = "arm,juno-r1-pcie", "plda,xpressrich3-axi",
->>>> "pci-host-ecam-generic";
->>>
->>>
->>> Is this common with r1?
->>>
->>
->> AFAIK it is. Liviu can you confirm ?
->
-> Then perhaps you should move this to a common spot.
->
-
-True, will wait for Liviu's response.
-
--- 
-Regards,
-Sudeep
+--=20
+Sjoerd Simons
+Collabora Ltd.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
