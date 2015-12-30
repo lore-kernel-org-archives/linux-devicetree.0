@@ -1,58 +1,72 @@
-From: Jiancheng Xue <xuejiancheng@huawei.com>
-Subject: [PATCH v4 4/6] ARM: debug: add hi3519 debug uart
-Date: Wed, 30 Dec 2015 09:43:50 +0800
-Message-ID: <1451439832-13927-5-git-send-email-xuejiancheng@huawei.com>
-References: <1451439832-13927-1-git-send-email-xuejiancheng@huawei.com>
+From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] iio: health: max30100: add config for LED current
+Date: Tue, 29 Dec 2015 18:13:58 -0800
+Message-ID: <CAKzfze---+VUotfM91YC1TcEU-aK0UeNhBy8LL39772uvmVhDA@mail.gmail.com>
+References: <1451191104-1281-1-git-send-email-mranostay@gmail.com> <20151229183447.GE12450@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1451439832-13927-1-git-send-email-xuejiancheng@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, Jiancheng Xue <xuejiancheng@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151229183447.GE12450@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-add hi3519 debug uart.
+On Tue, Dec 29, 2015 at 10:34 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Sat, Dec 26, 2015 at 08:38:24PM -0800, Matt Ranostay wrote:
+>> Allow the current for both RED and IR LEDs to be set via an device tree
+>> property setting.
+>>
+>> This is an optional setting that is useful for applications that have a
+>> known glass attenuation factor.
+>>
+>> Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/iio/health/max30100.txt     |  7 +++++++
+>>  drivers/iio/health/max30100.c                       | 21 +++++++++++++++------
+>>  2 files changed, 22 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/health/max30100.txt b/Documentation/devicetree/bindings/iio/health/max30100.txt
+>> index f6fbac6..009314c 100644
+>> --- a/Documentation/devicetree/bindings/iio/health/max30100.txt
+>> +++ b/Documentation/devicetree/bindings/iio/health/max30100.txt
+>> @@ -11,11 +11,18 @@ Required properties:
+>>    Refer to interrupt-controller/interrupts.txt for generic
+>>    interrupt client node bindings.
+>>
+>> +Optional properties:
+>> +  - max30100,led-current: configuration for LED current (in mA) while the engine
+>> +    is running. Upper nibble is for the RED LED, and lower nibble the IR LED.
+>
+> Can you use the common LED binding and led-max-microamp instead?
+>
+> Otherwise, please add "-microamp" suffix and just split to 2 cells for
+> RED and IR LEDs. Also, "max30100" is not a vendor prefix. Use maxim.
 
-Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
----
- arch/arm/Kconfig.debug | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Ok.
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index 259c0ca..29af057 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -270,6 +270,14 @@ choice
- 		  Say Y here if you want the debug print routines to direct
- 		  their output to the 8250 at PCI COM1.
- 
-+	config DEBUG_HI3519_UART
-+		bool "Hisilicon Hi3519 Debug UART"
-+		depends on ARCH_HISI
-+		select DEBUG_UART_PL01X
-+		help
-+		  Say Y here if you want kernel low-level debugging support
-+		  on HI3519 UART.
-+
- 	config DEBUG_HI3620_UART
- 		bool "Hisilicon HI3620 Debug UART"
- 		depends on ARCH_HI3xxx
-@@ -1449,6 +1457,7 @@ config DEBUG_UART_PHYS
- 	default 0xf7fc9000 if DEBUG_BERLIN_UART
- 	default 0xf8b00000 if DEBUG_HIX5HD2_UART
- 	default 0xf991e000 if DEBUG_QCOM_UARTDM
-+	default 0x12100000 if DEBUG_HI3519_UART
- 	default 0xfcb00000 if DEBUG_HI3620_UART
- 	default 0xfd883000 if DEBUG_ALPINE_UART0
- 	default 0xfe800000 if ARCH_IOP32X
-@@ -1529,6 +1538,7 @@ config DEBUG_UART_VIRT
- 	default 0xfe230000 if DEBUG_PICOXCELL_UART
- 	default 0xfe300000 if DEBUG_BCM_KONA_UART
- 	default 0xfe800000 if ARCH_IOP32X
-+	default 0xfef00000 if DEBUG_HI3519_UART
- 	default 0xfeb00000 if DEBUG_HI3620_UART || DEBUG_HIX5HD2_UART
- 	default 0xfeb24000 if DEBUG_RK3X_UART0
- 	default 0xfeb26000 if DEBUG_RK3X_UART1
--- 
-1.9.1
+>
+>
+>> +     ret = of_property_read_u32(np, "max30100,led-current", &val);
+>> +     if (ret) {
+>> +             /* Default to 24 mA RED LED, 50 mA IR LED */
+>> +             val = (MAX30100_REG_LED_CONFIG_24MA <<
+>> +                     MAX30100_REG_LED_CONFIG_RED_LED_SHIFT) |
+>> +                     MAX30100_REG_LED_CONFIG_50MA;
+>> +             dev_warn(dev, "no led-current set, defaulting to %d", val);
+>> +     }
+>> +
+>> +     ret = regmap_write(data->regmap, MAX30100_REG_LED_CONFIG, val & 0xFF);
+>
+> Huh? You say the units are milliamps, but then you use the DT value
+> directly?
+
+Yeah they are direct index values in the register. Probably should
+make the documentation more clear.
+
+>
+> Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
