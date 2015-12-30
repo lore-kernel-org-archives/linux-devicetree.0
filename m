@@ -1,177 +1,45 @@
-From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2] iio: health: max30100: add config for LED current
-Date: Tue, 29 Dec 2015 21:44:48 -0800
-Message-ID: <1451454288-9945-1-git-send-email-mranostay@gmail.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: [PATCH 0/5] Add clock support for Mediatek MT2701
+Date: Wed, 30 Dec 2015 14:27:40 +0800
+Message-ID: <1451456865-44139-1-git-send-email-jamesjj.liao@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Allow the current for both RED and IR LEDs to be set via an device tree
-property setting.
+This patchset is based on 4.4-rc7, add clock and reset controller support
+for Mediatek MT2701.
 
-This is an optional setting that is useful for applications that have a
-known glass attenuation factor.
+This patchset also refined makefile and Kconfig to support configurable
+multiple SoC clock support.
 
-Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-Changes from v2:
-* change to use microamp property name from LED class
-* updated documentation for new format
-* added allowed current index map
+James Liao (1):
+  clk: mediatek: Refine the makefile to support multiple clock drivers
 
-.../devicetree/bindings/iio/health/max30100.txt    |  8 +++
- drivers/iio/health/max30100.c                      | 81 ++++++++++++++++++++--
- 2 files changed, 83 insertions(+), 6 deletions(-)
+Shunli Wang (4):
+  clk: mediatek: Add dt-bindings for MT2701 clocks
+  clk: mediatek: Add MT2701 clock support
+  reset: mediatek: mt2701 reset controller dt-binding file
+  reset: mediatek: mt2701 reset driver
 
-diff --git a/Documentation/devicetree/bindings/iio/health/max30100.txt b/Documentation/devicetree/bindings/iio/health/max30100.txt
-index f6fbac6..4eef96e 100644
---- a/Documentation/devicetree/bindings/iio/health/max30100.txt
-+++ b/Documentation/devicetree/bindings/iio/health/max30100.txt
-@@ -11,11 +11,19 @@ Required properties:
-   Refer to interrupt-controller/interrupts.txt for generic
-   interrupt client node bindings.
- 
-+Optional properties:
-+  - maxim,led-current-microamp: configuration for LED current in microamperes
-+    while the engine is running. First indexed value is the configuration for
-+    the RED LED, and second value is for the IR LED.
-+
-+    Refer to the datasheet for the allowed current values.
-+
- Example:
- 
- max30100@057 {
- 	compatible = "maxim,max30100";
- 	reg = <57>;
-+	maxim,led-current-microamp = <24000 50000>;
- 	interrupt-parent = <&gpio1>;
- 	interrupts = <16 2>;
- };
-diff --git a/drivers/iio/health/max30100.c b/drivers/iio/health/max30100.c
-index 9d1c81f..09db893 100644
---- a/drivers/iio/health/max30100.c
-+++ b/drivers/iio/health/max30100.c
-@@ -13,7 +13,7 @@
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  * GNU General Public License for more details.
-  *
-- * TODO: allow LED current and pulse length controls via device tree properties
-+ * TODO: enable pulse length controls via device tree properties
-  */
- 
- #include <linux/module.h>
-@@ -24,6 +24,7 @@
- #include <linux/irq.h>
- #include <linux/i2c.h>
- #include <linux/mutex.h>
-+#include <linux/of.h>
- #include <linux/regmap.h>
- #include <linux/iio/iio.h>
- #include <linux/iio/buffer.h>
-@@ -65,6 +66,7 @@
- #define MAX30100_REG_SPO2_CONFIG_1600US		0x3
- 
- #define MAX30100_REG_LED_CONFIG			0x09
-+#define MAX30100_REG_LED_CONFIG_LED_MASK	0x0f
- #define MAX30100_REG_LED_CONFIG_RED_LED_SHIFT	4
- 
- #define MAX30100_REG_LED_CONFIG_24MA		0x07
-@@ -111,6 +113,12 @@ static const struct regmap_config max30100_regmap_config = {
- 	.volatile_reg = max30100_is_volatile_reg,
- };
- 
-+static const unsigned int max30100_led_current_mapping[] = {
-+	4400, 7600, 11000, 14200, 17400,
-+	20800, 24000, 27100, 30600, 33800,
-+	37000, 40200, 43600, 46800, 50000
-+};
-+
- static const unsigned long max30100_scan_masks[] = {0x3, 0};
- 
- static const struct iio_chan_spec max30100_channels[] = {
-@@ -243,15 +251,76 @@ static irqreturn_t max30100_interrupt_handler(int irq, void *private)
- 	return IRQ_HANDLED;
- }
- 
-+static int max30100_get_current_idx(unsigned int val, int *reg)
-+{
-+	int idx;
-+
-+	/* LED turned off */
-+	if (val == 0) {
-+		*reg = 0;
-+		return 0;
-+	}
-+
-+	for (idx = 0; idx < ARRAY_SIZE(max30100_led_current_mapping); idx++) {
-+		if (max30100_led_current_mapping[idx] == val) {
-+			*reg = idx + 1;
-+			return 0;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int max30100_led_init(struct max30100_data *data)
-+{
-+	struct device *dev = &data->client->dev;
-+	struct device_node *np = dev->of_node;
-+	unsigned int val[2];
-+	int reg, ret;
-+
-+	ret = of_property_read_u32_array(np, "maxim,led-current-microamp",
-+					(unsigned int *) &val, 2);
-+	if (ret) {
-+		/* Default to 24 mA RED LED, 50 mA IR LED */
-+		reg = (MAX30100_REG_LED_CONFIG_24MA <<
-+			MAX30100_REG_LED_CONFIG_RED_LED_SHIFT) |
-+			MAX30100_REG_LED_CONFIG_50MA;
-+		dev_warn(dev, "no led-current-microamp set");
-+
-+		return regmap_write(data->regmap, MAX30100_REG_LED_CONFIG, reg);
-+	}
-+
-+	/* RED LED current */
-+	ret = max30100_get_current_idx(val[0], &reg);
-+	if (ret) {
-+		dev_err(dev, "invalid RED current setting %d", val[0]);
-+		return ret;
-+	}
-+
-+	ret = regmap_update_bits(data->regmap, MAX30100_REG_LED_CONFIG,
-+		MAX30100_REG_LED_CONFIG_LED_MASK <<
-+		MAX30100_REG_LED_CONFIG_RED_LED_SHIFT,
-+		reg << MAX30100_REG_LED_CONFIG_RED_LED_SHIFT);
-+	if (ret)
-+		return ret;
-+
-+	/* IR LED current */
-+	ret = max30100_get_current_idx(val[1], &reg);
-+	if (ret) {
-+		dev_err(dev, "invalid IR current setting %d", val[1]);
-+		return ret;
-+	}
-+
-+	return regmap_update_bits(data->regmap, MAX30100_REG_LED_CONFIG,
-+		MAX30100_REG_LED_CONFIG_LED_MASK, reg);
-+}
-+
- static int max30100_chip_init(struct max30100_data *data)
- {
- 	int ret;
- 
--	/* RED IR LED = 24mA, IR LED = 50mA */
--	ret = regmap_write(data->regmap, MAX30100_REG_LED_CONFIG,
--				(MAX30100_REG_LED_CONFIG_24MA <<
--				 MAX30100_REG_LED_CONFIG_RED_LED_SHIFT) |
--				 MAX30100_REG_LED_CONFIG_50MA);
-+	/* setup LED current settings */
-+	ret = max30100_led_init(data);
- 	if (ret)
- 		return ret;
- 
--- 
-2.6.4
+ drivers/clk/Kconfig                                |    1 +
+ drivers/clk/mediatek/Kconfig                       |   31 +
+ drivers/clk/mediatek/Makefile                      |    7 +-
+ drivers/clk/mediatek/clk-gate.c                    |   56 +
+ drivers/clk/mediatek/clk-gate.h                    |    2 +
+ drivers/clk/mediatek/clk-mt2701.c                  | 1215 ++++++++++++++++++++
+ drivers/clk/mediatek/clk-mtk.c                     |   25 +
+ drivers/clk/mediatek/clk-mtk.h                     |   35 +-
+ include/dt-bindings/clock/mt2701-clk.h             |  481 ++++++++
+ .../dt-bindings/reset-controller/mt2701-resets.h   |   74 ++
+ 10 files changed, 1921 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/clk/mediatek/Kconfig
+ create mode 100644 drivers/clk/mediatek/clk-mt2701.c
+ create mode 100644 include/dt-bindings/clock/mt2701-clk.h
+ create mode 100644 include/dt-bindings/reset-controller/mt2701-resets.h
+
+--
+1.9.1
