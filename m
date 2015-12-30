@@ -1,61 +1,27 @@
 From: "Andrew F. Davis" <afd@ti.com>
 Subject: Re: [PATCH 1/2] dt-bindings: GPIO: Add generic serializer binding
-Date: Wed, 30 Dec 2015 10:59:38 -0600
-Message-ID: <56840D7A.4060502@ti.com>
+Date: Wed, 30 Dec 2015 11:05:20 -0600
+Message-ID: <56840ED0.6070205@ti.com>
 References: <1449863184-29668-1-git-send-email-afd@ti.com>
  <1449863184-29668-2-git-send-email-afd@ti.com>
  <CACRpkdaV_dxzWUQcJ8pwPUDQNJ8qLhCvLvE9tBYFcTTGMoumWQ@mail.gmail.com>
  <566EF12C.4060509@ti.com>
  <CAL_Jsq+kYSJQd003RhYTeVFv6xLaSCxzZK7wnF2LVs502sWu4g@mail.gmail.com>
  <566F4E9B.8090202@ti.com>
- <CAL_JsqJbg-VsZjg6QuN5SUvDXGR1DnShmhLvp3b_bipVn1q74A@mail.gmail.com>
+ <CACRpkdYapF8br=c3utUmMbmPxyHwxZuT5pC8N-pySPY7dtEwng@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJbg-VsZjg6QuN5SUvDXGR1DnShmhLvp3b_bipVn1q74A@mail.gmail.com>
+In-Reply-To: <CACRpkdYapF8br=c3utUmMbmPxyHwxZuT5pC8N-pySPY7dtEwng@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/16/2015 10:29 AM, Rob Herring wrote:
-> On Mon, Dec 14, 2015 at 5:19 PM, Andrew F. Davis <afd@ti.com> wrote:
->> On 12/14/2015 04:36 PM, Rob Herring wrote:
->>>
->>> On Mon, Dec 14, 2015 at 10:41 AM, Andrew F. Davis <afd@ti.com> wrote:
->>>>
->>>> On 12/11/2015 03:48 PM, Linus Walleij wrote:
->>>>>
->>>>>
->>>>> On Fri, Dec 11, 2015 at 8:46 PM, Andrew F. Davis <afd@ti.com> wrote:
->
-> [...]
->
->>>>>> + - compatible          : Should be "pisosr-gpio".
->>>>>
->>>>>
->>>>>
->>>>> I think it should also define compatible strings on the "vendor,device"
->>>>> format apart from the generic compatible. Sooner or later we may need
->>>>> to differentiate them and then that comes in handy.
->>>>>
->>>>
->>>> Would it be better to wait until/if this issue arises? This driver
->>>> targets the generic features, as these parts are very generic and
->>>> have been produced by many companies since the 70s I'm not sure
->>>> if privileging any of them makes much sense.
->>>>
->>>> What I'm worried about looks to have happened with the gpio-74x164
->>>> driver, this is kind of the companion device to mine (74164 / 74165)
->>>> and should work with any 74164 compatible shift register (possibly 100s
->>>> of versions of them), but the compatible string that was added is
->>>> "fairchild,74hc595", a relatively new device by a single manufacturer.
->>>> The problem this has is then that boards will use this compatible string
->>>> even if the parts are not actually the Fairchild version, just to get
->>>> the match, when they should be using a generic string.
->>>
->>>
+On 12/22/2015 03:51 AM, Linus Walleij wrote:
+> On Tue, Dec 15, 2015 at 12:19 AM, Andrew F. Davis <afd@ti.com> wrote:
+>> [Rob]
 >>> I agree the generic version is fine (or find who made the first part
 >>> ;)). What "pisosr" is is not very obvious though. Having 74165 in the
 >>> compatible would make it somewhat more obvious it is a standard logic
@@ -67,57 +33,39 @@ On 12/16/2015 10:29 AM, Rob Herring wrote:
 >> voltage to an SPI bus... :)
 >>
 >> I agree about the name not being very good, but I'm not sure about
->> 74165 ether as it is also just a single part number. The idea was to
+>> 74165 ether as it is also just a single part number.
+>
+> We can add many compatible strings so it's not an issue.
+> "ti,74165" works for me as TI invented the 74xx series.
+>
+
+Free advertising for our parts :)
+
+>> The idea was to
 >> have a non-part number compatible string for any shift-register you
->> can hook to the SPI line. That way when we have boards with a sn65x882
+>> can hook to the SPI line.
+>
+> Again, one does not exclude the other. I'm happy with a generic
+> compatible *and* "ti,74165".
+>
+>> That way when we have boards with a sn65x882
 >> or something we wont have to call it a 74165. But I guess that's why
 >> it's a "compatible:" string, and not "is-a:" string.
 >
-> If there are a couple then I think it is okay. If there are 10s then
-> maybe not. Perhaps logic-pisosr or discrete-pisosr?
+> Compatible ranges from the specific to the more generic
+> so compatible = "ti,74165", "pisosr"; is just fine. Something
+> will match if there is a suitable driver. The OS may choose to
+> provide something part-specific or something more generic.
 >
 
-My concern as well, there are a lot of them, and every device doesn't
-need its own string, so why privilege the name of any that don't have
-anything different.
+And so we won't need to have "ti,74165" in the driver itself,
+if we just have "pisosr", then dts files can use what ever they
+like to correctly identify the part then fall back to pisosr.
 
-I'd like to leave the named ones for odd cases that needs special
-handling.
-
->>>>>> +Optional properties:
->>>>>> + - ngpios              : Number of GPIO lines, default is 8.
->>>>>
->>>>>
->>>>>
->>>>> If you didn't do "pisosr-gpio" but instead "foo,sn74165", maybe you
->>>>> don't need to have this in the device tree but instead it can be
->>>>> determined from the compatible string?
->>>>>
->>>>> In that case do that.
->>>>>
->>>>
->>>> These devices can be daisy-chained together, so three 8bit registers
->>>> look exactly like one 24bit register. The only way to know this is
->>>> from the physical wiring of the board, not from the part number.
->>>
->>>
->>> Then you should say it must be multiple of 8 (or are there other
->>> lengths?).
->>>
->>
->> Some are 4bit, you can even just hook a single flip-flop to the SPI bus for
->> a single bit (or multiples) of input.
->
-> One would hope you would just connect the CS signal directly to that
-> input for 1-bit... I guess you could be out of GPIOs and only have a
-> free output only CS signal.
->
-
-Interesting use-case idea :), I'm more worried about a device with any
-prime number of pins where multiples will fail, not that I have ever
-seen one.
+compatible = "company,random_numbers_of_exact_part_actually_on_board", "pisosr";
 
 Andrew
 
-> Rob
+> Yours,
+> Linus Walleij
 >
