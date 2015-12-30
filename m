@@ -1,49 +1,62 @@
-From: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 5/6] mfd: dt-bindings: add device tree bindings for Hi3519 sysctrl
-Date: Wed, 30 Dec 2015 09:43:51 +0800
-Message-ID: <1451439832-13927-6-git-send-email-xuejiancheng@huawei.com>
+From: Jiancheng Xue <xuejiancheng@huawei.com>
+Subject: [PATCH v4 2/6] ARM: hisi: add compatible string for Hi3519 soc
+Date: Wed, 30 Dec 2015 09:43:48 +0800
+Message-ID: <1451439832-13927-3-git-send-email-xuejiancheng@huawei.com>
 References: <1451439832-13927-1-git-send-email-xuejiancheng@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1451439832-13927-1-git-send-email-xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangzhenxing-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1451439832-13927-1-git-send-email-xuejiancheng@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com
+Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, Jiancheng Xue <xuejiancheng@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings for Hi3519 system controller.
+add compatible string for Hi3519 soc.
 
-Signed-off-by: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
 ---
- Documentation/devicetree/bindings/mfd/hi3519.txt | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/hi3519.txt
+ arch/arm/mach-hisi/hisilicon.c | 23 ++++-------------------
+ 1 file changed, 4 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/hi3519.txt b/Documentation/devicetree/bindings/mfd/hi3519.txt
-new file mode 100644
-index 0000000..2536edc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/hi3519.txt
-@@ -0,0 +1,14 @@
-+* Hisilicon Hi3519 System Controller Block
-+
-+This bindings use the following binding:
-+Dcumentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+- compatible: "hisilicon,hi3519-sysctrl".
-+- reg: the register region of this block
-+
-+Examples:
-+sysctrl: system-controller@12010000 {
-+	compatible = "hisilicon,hi3519-sysctrl", "syscon";
-+	reg = <0x12010000 0x1000>;
-+};
+diff --git a/arch/arm/mach-hisi/hisilicon.c b/arch/arm/mach-hisi/hisilicon.c
+index 8cc6215..00dae89 100644
+--- a/arch/arm/mach-hisi/hisilicon.c
++++ b/arch/arm/mach-hisi/hisilicon.c
+@@ -54,30 +54,15 @@ DT_MACHINE_START(HI3620, "Hisilicon Hi3620 (Flattened Device Tree)")
+ 	.dt_compat	= hi3xxx_compat,
+ MACHINE_END
+ 
+-static const char *const hix5hd2_compat[] __initconst = {
++static const char *const hisilicon_compat[] __initconst = {
+ 	"hisilicon,hix5hd2",
+-	NULL,
+-};
+-
+-DT_MACHINE_START(HIX5HD2_DT, "Hisilicon HIX5HD2 (Flattened Device Tree)")
+-	.dt_compat	= hix5hd2_compat,
+-MACHINE_END
+-
+-static const char *const hip04_compat[] __initconst = {
+ 	"hisilicon,hip04-d01",
+-	NULL,
+-};
+-
+-DT_MACHINE_START(HIP04, "Hisilicon HiP04 (Flattened Device Tree)")
+-	.dt_compat	= hip04_compat,
+-MACHINE_END
+-
+-static const char *const hip01_compat[] __initconst = {
+ 	"hisilicon,hip01",
+ 	"hisilicon,hip01-ca9x2",
++	"hisilicon,hi3519",
+ 	NULL,
+ };
+ 
+-DT_MACHINE_START(HIP01, "Hisilicon HIP01 (Flattened Device Tree)")
+-	.dt_compat      = hip01_compat,
++DT_MACHINE_START(HISILICON_DT, "HiSilicon Soc")
++	.dt_compat	= hisilicon_compat,
+ MACHINE_END
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
