@@ -1,99 +1,72 @@
-From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: Adding LEDs handling via leds-gpio
- for the Radxa Rock2 Square
-Date: Wed, 30 Dec 2015 17:07:54 +0100
-Message-ID: <CABgxDoLS+WKX+5YGGgHHzsnxHRF9iMqUDo7nmBm6YXD99J5GAA@mail.gmail.com>
-References: <1451474219-1313-1-git-send-email-romain.perier@gmail.com>
-	<3613784.8JLtyMHEE9@diego>
-	<1451490343.11453.28.camel@collabora.co.uk>
-	<3020768.zersTrE99c@diego>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [v2] powerpc/fsl: Update fman dt binding with pcs-phy and tbi-phy
+Date: Wed, 30 Dec 2015 10:27:33 -0600
+Message-ID: <20151230162733.GA2518@rob-hp-laptop>
+References: <1450921331-25309-1-git-send-email-igal.liberman@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3020768.zersTrE99c@diego>
+Content-Disposition: inline
+In-Reply-To: <1450921331-25309-1-git-send-email-igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org, shaohui.xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On Thu, Dec 24, 2015 at 03:42:11AM +0200, igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
+> From: Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> The FMan contains internal PHY devices used for SGMII connections
+> to external PHYs. When these PHYs are in use a reference is needed
+> for both the external PHY and the internal one. For the external
+> PHY phy-handle provides the reference. For the internal PHY a new
+> handle is required.
+> In dTSEC, the internal PHY is a TBI (Ten Bit Interface) PHY,
+> the handle used will be tbi-handle.
+> In mEMAC, the internal PHY is a PCS (Physical Coding Sublayer) PHY,
+> the handle used will be pcsphy-handle.
 
-I agree with Sjoerd, that's more useful to keep these LEDs in sync
-with the default vendor behaviour than put their default state to off
-and ask the user to manipulate them explicitly... in the worst case,
-he can still change the default state from sysfs...
+This is fairly commom for 10G eth I think. Can't you use the common PHY 
+binding here in the case without internal MDIO bus? Just because you use 
+it that doesn't mean you have to use the generic phy subsystem in the 
+kernel. 
 
+Perhaps phy-handle should be deprecated in favor of doing something like 
+this if you need a phandle to both:
 
+phys = <&internal-phy>, <&external-phy>;
 
-2015-12-30 16:53 GMT+01:00 Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>:
->> > even a oneliner is generally preferred, compared to no commit mess=
-age
->> > at all
->> > ;-)
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> index 1fc5328..55c2c03 100644
+> --- a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> @@ -315,6 +315,16 @@ PROPERTIES
+>  		Value type: <phandle>
+>  		Definition: A phandle for 1EEE1588 timer.
+>  
+> +- pcsphy-handle
+> +		Usage required for "fsl,fman-memac" MACs
+> +		Value type: <phandle>
+> +		Definition: A phandle for pcsphy.
+> +
+> +- tbi-handle
+> +		Usage required for "fsl,fman-dtsec" MACs
+> +		Value type: <phandle>
+> +		Definition: A phandle for tbiphy.
+> +
+>  EXAMPLE
+>  
+>  fman1_tx28: port@a8000 {
+> @@ -340,6 +350,7 @@ ethernet@e0000 {
+>  	reg = <0xe0000 0x1000>;
+>  	fsl,fman-ports = <&fman1_rx8 &fman1_tx28>;
+>  	ptp-timer = <&ptp-timer>;
+> +	tbi-handle = <&tbi0>;
 
-Well, lack of inspiration :P
-No, just kidding, I agree.
+What does the tbi0 node contain? It should be present in the example.
 
->> >
->> > > Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> > > ---
->> > >  arch/arm/boot/dts/rk3288-rock2-square.dts | 17 ++++++++++++++++=
-+
->> > >  1 file changed, 17 insertions(+)
->> > >
->> > > diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts
->> > > b/arch/arm/boot/dts/rk3288-rock2-square.dts index c5453a0..a3302=
-0f
->> > > 100644
->> > > --- a/arch/arm/boot/dts/rk3288-rock2-square.dts
->> > > +++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
->> > > @@ -56,6 +56,23 @@
->> > >           pinctrl-0 =3D <&ir_int>;
->> > >   };
->> > >
->> > > + gpio-leds {
->> > > +         compatible =3D "gpio-leds";
->> > > +
->> > > +         heartbeat {
->> > > +                 gpios =3D <&gpio7 15 GPIO_ACTIVE_LOW>;
->> > > +                 label =3D "rock2:green:heartbeat";
->> > > +                 linux,default-trigger =3D "heartbeat";
->> > > +         };
->> > > +
->> > > +         mmc {
->> > > +                 gpios =3D <&gpio0 11 GPIO_ACTIVE_LOW>;
->> > > +                 label =3D "rock2:blue:mmc";
->> > > +                 linux,default-trigger =3D "mmc0";
->> > > +         };
->> >
->> > the rock2 core schematics seem to not list these leds at all
->> > (especially when
->> > looking at the gpio-side). But looking at the schematics my guess
->> > would be
->> > led_state1 and led_state2, so the naming should reflect that
->> > (rock2:green:state1 ...).
-
-I used the schematic and the vendor devicetree to retrieve these inform=
-ations.
-
-
-> Anybody opposed to me adding the following commit message?
->
-> ----
-> Describe the two user-controllable LEDs on Rock2-square boards.
-> The default-triggers mimic the behaviour of the vendor-kernel to
-> keep functionalities in sync.
-> ----
-
-+1
-Please do.
-
-Do you want a v2 patch ? (the label of these leds is wrong)
-
-Romain
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
