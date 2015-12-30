@@ -1,58 +1,86 @@
-From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 4/4] soc: mediatek: Add MT2701/MT7623 scpsys driver
-Date: Wed, 30 Dec 2015 17:01:54 +0800
-Message-ID: <CAGS+omCwxB+4VFOA1hA9Rg-ekWCVM8Y_c7woTEXnvX6FG1y9mQ@mail.gmail.com>
-References: <1451457706-14798-1-git-send-email-jamesjj.liao@mediatek.com> <1451457706-14798-5-git-send-email-jamesjj.liao@mediatek.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 1/3] clk: bcm2835: Add bindings for the auxiliary peripheral clock gates.
+Date: Wed, 30 Dec 2015 10:29:02 +0100
+Message-ID: <1477432.fTm0GUZ57A@wuerfel>
+References: <1450222559-22461-1-git-send-email-eric@anholt.net> <20151228223935.25842.28675@quark.deferred.io> <CAL_JsqLu7=66jEuaezesEuoPsBBhRAT0UQcLVNOLVwkEvQacRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1451457706-14798-5-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLu7=66jEuaezesEuoPsBBhRAT0UQcLVNOLVwkEvQacRA@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Olof Johansson <olof@lixom.net>, Eric Anholt <eric@anholt.net>, linux-clk <linux-clk@vger.kernel.org>, "Stephen Boyd <sboyd@codeaurora.org>, Emilio Lopez
+	<emilio@elopez.com.ar>, Hans de Goede <hdegoede@redhat.com>, linux-clk
+	<linux-clk@vger.kernel.org>, linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>, linux-rpi-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 30, 2015 at 2:41 PM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->
-> From: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->
-> Add scpsys driver for MT2701 and MT7623.
->
-> Signed-off-by: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/soc/mediatek/Kconfig             |  11 +++
->  drivers/soc/mediatek/Makefile            |   1 +
->  drivers/soc/mediatek/mtk-scpsys-mt2701.c | 161 +++++++++++++++++++++++++++++++
->  3 files changed, 173 insertions(+)
->  create mode 100644 drivers/soc/mediatek/mtk-scpsys-mt2701.c
->
-> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> index eca6fb7..92cf838 100644
-> --- a/drivers/soc/mediatek/Kconfig
-> +++ b/drivers/soc/mediatek/Kconfig
-> @@ -39,3 +39,14 @@ config MTK_SCPSYS_MT8173
->           driver.
->           The System Control Processor System (SCPSYS) has several power
->           management related tasks in the system.
-> +
-> +config MTK_SCPSYS_MT2701
-> +       bool "SCPSYS Support MediaTek MT2701 and MT7623"
-> +       depends on ARCH_MEDIATEK || COMPILE_TEST
-> +       select MTK_SCPSYS
-> +       default ARCH_MEDIATEK
-> +       help
-> +         Say yes here to add support for the MT2701/MT7623 SCPSYS power
-> +         domain driver.
-> +         The System Control Processor System (SCPSYS) has several power
-> +         management related tasks in the system.
+On Tuesday 29 December 2015 16:15:09 Rob Herring wrote:
+> On Mon, Dec 28, 2015 at 4:39 PM, Michael Turquette
+> <mturquette@baylibre.com> wrote:
+> > Quoting Eric Anholt (2015-12-24 15:45:15)
+> >> Michael Turquette <mturquette@baylibre.com> writes:
+> >> I would *love* to do that, but I've previously been told that having the
+> >> bindings patch reference a header file not present as of the bindings
+> >> patch is not acceptable and made to change it.
+> >
+> > Ugh, that is annoying. I would think that having code compile properly
+> > would trump the desire to have all of the documentation merged as one
+> > patch.
+> 
+> What about compiling the dts?
+> 
+> > On the other hand, I've been asked to not take binding descriptions
+> > through the clk tree. That is a policy that I'm happy to comply with,
+> > but it is at odds with the recommendation for the header and the binding
+> > description to be merged together.
+> 
+> By who? Any bindings in a series I always expect the subsystem
+> maintainers to take the whole series. That doesn't solve the problem
+> though as there is still a dependency between a subsystem tree and
+> arm-soc typically.
 
-I don't think we really want different drivers and Kconfig options.
+I don't care too much which tree the binding description goes through either,
+as long as it is kept in sync.
 
-Can we just use different compatibles to select the appropriate scp_domain_data?
+> > DT folks, what is the right way to do this? An immutable, shared branch
+> > just for a single header file solves the problem, but also feels very
+> > cumbersome for such a trivial issue.
+> 
+> Arnd and Olof have been complaining about this problem which is worse
+> when it is a binding, driver and dts.
+> 
+> I'm open to maintaining a branch for this purpose if that helps. That
+> or staggering merging of bindings and drivers/dts are the only ideas
+> I've come up with.
 
--Dan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> > How about allowing binding descriptions to be merged without the header
+> > file, so long as it is merged through another tree?
+> 
+> I think that is wrong if we have the goal to separate bindings from
+> the kernel and the bindings should stand on their own. However, if it
+> greatly simplifies things, i'd be okay with that.
+
+The header file is really the main issue we need to worry about. My preferred
+way of doing this would be to give it an extra merge window: add the binding
+document and the header file in one merge window, and then add the dts files
+and the driver one release later. I've seen a lot of header files added for
+no good reason at all, and at least that way we can get people to think about
+the dependency more.
+
+It's also ok to merge the header file and binding with either the dts file
+changes or the driver and then do the other part the following release.
+
+In the past, we've worked around the issue by merging the driver through
+arm-soc, or by merging the dts changes through a driver tree, with the
+appropriate Acks in each case. Both of those approaches work of course,
+but the former always feels awkward to me as we are not using the right
+maintainer path, and the latter approach tends to cause merge conflicts,
+especially when multiple headers for different subsystems get added or
+the dts files are added at the same time.
+
+Having a shared branch for the header file is another way to do it, and
+we can do that in some cases, but I'd prefer not to make it the default.
+
+	Arnd
