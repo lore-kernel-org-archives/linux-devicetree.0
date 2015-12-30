@@ -1,47 +1,62 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH v2 3/3] arm: boot: beaglex15: pass correct interrupt
-Date: Wed, 30 Dec 2015 09:55:47 +0900
-Message-ID: <1451436947-22163-4-git-send-email-cw00.choi@samsung.com>
-References: <1451436947-22163-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1451436947-22163-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com, robh+dt@kernel.org, lee.jones@linaro.org, balbi@ti.com
-Cc: rogerq@ti.com, kishon@ti.com, george.cherian@ti.com, cw00.choi@samsung.com, myungjoo.ham@samsung.com, linux-kernel@vger.kernel.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: David Miller <davem@davemloft.net>
+Subject: Re: [RESEND PATCH v1 0/4] Add support emac for the RK3036 SoC
+ platform
+Date: Tue, 29 Dec 2015 20:48:47 -0500 (EST)
+Message-ID: <20151229.204847.578920480799799256.davem@davemloft.net>
+References: <1451287341-16453-1-git-send-email-zhengxing@rock-chips.com>
+	<20151229.155314.1522114236952280828.davem@davemloft.net>
+	<3925713.yDzK1dvrIv@diego>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <3925713.yDzK1dvrIv@diego>
+Sender: netdev-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: zhengxing@rock-chips.com, linux-rockchip@lists.infradead.org, keescook@google.com, leozwang@google.comi, linux@arm.linux.org.uk, devicetree@vger.kernel.org, netdev@vger.kernel.org, paul.gortmaker@windriver.com, galak@codeaurora.org, linux-kernel@vger.kernel.org, ijc+devicetree@hellion.org.uk, pawel.moll@arm.com, geert@linux-m68k.org, mark.rutland@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Felipe Balbi <balbi@ti.com>
+=46rom: Heiko St=FCbner <heiko@sntech.de>
+Date: Tue, 29 Dec 2015 23:27:55 +0100
 
-According to latest schematics [1], GPIO_1/VBUSDET
-on TPS659038 is tied to AM57x GPIO4_21. We can use
-that as a VBUS interrupt, instead of relying on
-PMIC's VBUS interrupts which don't seem to be firing
-on x15 at all.
+> Hi Dave,
+>=20
+> Am Dienstag, 29. Dezember 2015, 15:53:14 schrieb David Miller:
+>> You have to submit this series properly, the same problem happend tw=
+ice
+>> now.
+>>=20
+>> When you submit a series you should:
+>>=20
+>> 1) Make it clear which tree you expect these changes to be applied
+>>    to.  Here it is completely ambiguous, do you want it to go into
+>>    my networking tree or some other subsystem tree?
+>>=20
+>> 2) You MUST keep all parties informed about all patches for a series
+>>    like this.  That means you cannot drop netdev from patch #4 as
+>>    you did both times.  Doing this aggravates the situation for
+>>    #1 even more, because if a patch is not CC:'d to netdev it does
+>>    not enter patchwork.  And if it doesn't go into patchwork, I'm
+>>    not looking at it.
+>=20
+> I guess that is some unfortunate result of git send-email combined wi=
+th=20
+> get_maintainer.pl . In general I also prefer to see the whole series,=
+ but have=20
+> gotten such partial series from other maintainers as well in the past=
+, so it=20
+> seems to be depending on preferences somewhat.
+>=20
+> For the series at hand, the 4th patch is the devicetree addition, whi=
+ch the=20
+> expected way is me picking it up, after you are comfortable with the =
+code-
+> related changes.
 
-A follow up patch will add support for using this
-GPIO-based interrupt mechanism for notifying about
-VBUS.
+Why would it not be appropriate for a DT file change to go into my tree
+if it corresponds to functionality created by the rest of the patches
+in the series?
 
-[1] https://github.com/beagleboard/beagleboard-x15/blob/master/BeagleBoard-X15_RevA2.pdf
-
-Signed-off-by: Felipe Balbi <balbi@ti.com>
-[cw00.choi: Use the 'vbus-gpio' property instead of 'interrupts-extended']
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
----
- arch/arm/boot/dts/am57xx-beagle-x15.dts | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-index be4990608c77..3887ba89d2a5 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-@@ -560,6 +560,7 @@
- 		extcon_usb2: tps659038_usb {
- 			compatible = "ti,palmas-usb-vid";
- 			ti,enable-vbus-detection;
-+			vbus-gpio = <&gpio4 21 GPIO_ACTIVE_HIGH>;
- 		};
- 
- 	};
--- 
-1.9.1
+It looks better to put it all together as a unit, via one series, with
+a merge commit containing your "[PATCH 0/N]" description in the commit
+message.
