@@ -1,60 +1,40 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 3/7] of: reserved_mem: add support for named reserved
- mem nodes
-Date: Wed, 30 Dec 2015 17:25:04 -0600
-Message-ID: <CAL_JsqKmY3DOZ6xNcQ7mSrkuLzdxaGtAPRCjkanH-G58=iOtmw@mail.gmail.com>
-References: <1450280249-24681-1-git-send-email-m.szyprowski@samsung.com> <1450280249-24681-4-git-send-email-m.szyprowski@samsung.com>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH 3/5] clk: mediatek: Add MT2701 clock support
+Date: Wed, 30 Dec 2015 15:34:06 -0800
+Message-ID: <20151230233406.19557.35006@quark.deferred.io>
+References: <1451456865-44139-1-git-send-email-jamesjj.liao@mediatek.com>
+ <1451456865-44139-4-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1450280249-24681-4-git-send-email-m.szyprowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Andrzej Hajda <a.hajda@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1451456865-44139-4-git-send-email-jamesjj.liao@mediatek.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, Shunli Wang <shunli.wang@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 16, 2015 at 9:37 AM, Marek Szyprowski
-<m.szyprowski@samsung.com> wrote:
-> This patch allows device drivers to initialize more than one reserved
-> memory region assigned to given device. When driver needs to use more
-> than one reserved memory region, it should allocate child devices and
-> initialize regions by index or name for each of its child devices.
->
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->  .../bindings/reserved-memory/reserved-memory.txt   |   2 +
->  .../devicetree/bindings/resource-names.txt         |   1 +
->  drivers/of/of_reserved_mem.c                       | 104 +++++++++++++++++----
->  include/linux/of_reserved_mem.h                    |  31 +++++-
->  4 files changed, 115 insertions(+), 23 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> index 3da0ebdba8d9..43a14957fd64 100644
-> --- a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> +++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> @@ -74,6 +74,8 @@ Regions in the /reserved-memory node may be referenced by other device
->  nodes by adding a memory-region property to the device node.
->
->  memory-region (optional) - phandle, specifier pairs to children of /reserved-memory
-> +memory-region-names (optional) - supplemental names property, provide array of
-> +                                names to identify memory regions
->
->  Example
->  -------
-> diff --git a/Documentation/devicetree/bindings/resource-names.txt b/Documentation/devicetree/bindings/resource-names.txt
-> index e280fef6f265..51823e99b983 100644
-> --- a/Documentation/devicetree/bindings/resource-names.txt
-> +++ b/Documentation/devicetree/bindings/resource-names.txt
-> @@ -12,6 +12,7 @@ Resource Property     Supplemental Names Property
->  reg                    reg-names
->  clocks                 clock-names
->  interrupts             interrupt-names
-> +memory-region          memory-region-names
+Hi James,
 
-The other cases of *-names should correspond to actual h/w names for a
-h/w block. memory-regions are not really h/w. So I'd prefer to not add
-memory-region-names. If you want a name for the region, put it in the
-region node. The name for each client node is not going to be
-different.
+Quoting James Liao (2015-12-29 22:27:43)
+> +CLK_OF_DECLARE(mtk_topckgen, "mediatek,mt2701-topckgen", mtk_topckgen_init);
+> +CLK_OF_DECLARE(mtk_infrasys, "mediatek,mt2701-infracfg", mtk_infrasys_init);
+> +CLK_OF_DECLARE(mtk_pericfg, "mediatek,mt2701-pericfg", mtk_pericfg_init);
+> +CLK_OF_DECLARE(mtk_mmsys, "mediatek,mt2701-mmsys", mtk_mmsys_init);
+> +CLK_OF_DECLARE(mtk_imgsys, "mediatek,mt2701-imgsys", mtk_imgsys_init);
+> +CLK_OF_DECLARE(mtk_vdecsys, "mediatek,mt2701-vdecsys", mtk_vdecsys_init);
+> +CLK_OF_DECLARE(mtk_hifsys, "mediatek,mt2701-hifsys", mtk_hifsys_init);
+> +CLK_OF_DECLARE(mtk_ethsys, "mediatek,mt2701-ethsys", mtk_ethsys_init);
+> +CLK_OF_DECLARE(mtk_bdpsys, "mediatek,mt2701-bdpsys", mtk_bdpsys_init);
+> +CLK_OF_DECLARE(mtk_apmixedsys, "mediatek,mt2701-apmixedsys",
 
-Rob
+None of these compatible strings are documented with a binding
+description in this patch series. In fact looking through
+Documentation/devicetree/bindings/clock/ on the latest linux-next tag I
+see that the only existing binding is mt8173-cpu-dvfs.txt.
+
+Am I looking in the wrong place or do we have a case of missing binding
+descriptions?
+
+Thanks,
+Mike
