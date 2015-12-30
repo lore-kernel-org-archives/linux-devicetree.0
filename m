@@ -1,83 +1,87 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/4] soc: mediatek: Add MT2701/MT7623 scpsys driver
-Date: Wed, 30 Dec 2015 18:49:31 +0100
-Message-ID: <5684192B.4020806@gmail.com>
-References: <1451457706-14798-1-git-send-email-jamesjj.liao@mediatek.com>
- <1451457706-14798-5-git-send-email-jamesjj.liao@mediatek.com>
- <CAGS+omCwxB+4VFOA1hA9Rg-ekWCVM8Y_c7woTEXnvX6FG1y9mQ@mail.gmail.com>
- <1451470692.22426.11.camel@mtksdaap41>
+From: Paul Kocialkowski <contact@paulk.fr>
+Subject: Re: [PATCH 4/6] regulator: lp872x: Add enable GPIO pin support
+Date: Wed, 30 Dec 2015 19:37:19 +0100
+Message-ID: <1451500639.14341.6.camel@collins>
+References: <1450868319-20513-1-git-send-email-contact@paulk.fr>
+	 <1450868319-20513-5-git-send-email-contact@paulk.fr>
+	 <20151223115632.GS16023@sirena.org.uk> <568088B4.6090207@ti.com>
+	 <1451342963.14631.13.camel@collins> <5681D7A8.2030101@ti.com>
+	 <1451387613.18148.9.camel@collins> <568323B7.7080101@ti.com>
+	 <1451464521.2531.4.camel@collins> <20151230163307.GW16023@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1451470692.22426.11.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-LSx1ZIlV1MMhc/8HbKM5"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151230163307.GW16023@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Milo Kim <milo.kim@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--=-LSx1ZIlV1MMhc/8HbKM5
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 30/12/15 11:18, James Liao wrote:
-> Hi Daniel,
->
-> On Wed, 2015-12-30 at 17:01 +0800, Daniel Kurtz wrote:
->> On Wed, Dec 30, 2015 at 2:41 PM, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->>>
->>> From: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>>
->>> Add scpsys driver for MT2701 and MT7623.
->>>
->>> Signed-off-by: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>> ---
->>>   drivers/soc/mediatek/Kconfig             |  11 +++
->>>   drivers/soc/mediatek/Makefile            |   1 +
->>>   drivers/soc/mediatek/mtk-scpsys-mt2701.c | 161 +++++++++++++++++++++++++++++++
->>>   3 files changed, 173 insertions(+)
->>>   create mode 100644 drivers/soc/mediatek/mtk-scpsys-mt2701.c
->>>
->>> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
->>> index eca6fb7..92cf838 100644
->>> --- a/drivers/soc/mediatek/Kconfig
->>> +++ b/drivers/soc/mediatek/Kconfig
->>> @@ -39,3 +39,14 @@ config MTK_SCPSYS_MT8173
->>>            driver.
->>>            The System Control Processor System (SCPSYS) has several power
->>>            management related tasks in the system.
->>> +
->>> +config MTK_SCPSYS_MT2701
->>> +       bool "SCPSYS Support MediaTek MT2701 and MT7623"
->>> +       depends on ARCH_MEDIATEK || COMPILE_TEST
->>> +       select MTK_SCPSYS
->>> +       default ARCH_MEDIATEK
->>> +       help
->>> +         Say yes here to add support for the MT2701/MT7623 SCPSYS power
->>> +         domain driver.
->>> +         The System Control Processor System (SCPSYS) has several power
->>> +         management related tasks in the system.
->>
->> I don't think we really want different drivers and Kconfig options.
->>
->> Can we just use different compatibles to select the appropriate scp_domain_data?
->
-> Yes, we can. All scpsys drivers are built-in by default, and they will
-> be activate by specific compatible string.
->
-> But some projects don't want to build unused drivers into kernel to save
-> code size. Use different Kconfig options for each SoC so that these
-> projects can disable unused drivers.
->
+Le mercredi 30 d=C3=A9cembre 2015 =C3=A0 16:33 +0000, Mark Brown a =C3=A9cr=
+it :
+> On Wed, Dec 30, 2015 at 09:35:21AM +0100, Paul Kocialkowski wrote:
+>=20
+> > In my opinion, it would be more elegant to adapt the core regulator
+> > framework to first enable the GPIO and then call the regulator enable
+> > ops callback instead of handling the GPIO in the driver.
+>=20
+> Why would we want to actively manage both things at runtime?  It's more
+> work, what do we gain from it?
 
-Scpsys is a bool right now, you can disable it if you don't need it for 
-your project.
+Well, I figured that it would be best to disable the EN pin when we're
+not using any of the regulators, since that allows the chip to enter
+standby mode (and thus consume less power).
 
-I don't think the impact of adding scp_domain_data justifies adding SoC 
-specific scpsys drivers and bloat the drivers/soc/mediatek folder.
+Implementing that logic in the driver seems very redundant when we're
+one step away from doing it with the core regulator framework.
+It is also likely that in the future, other chips will use and need to
+handle a global enable pin for the same purpose, while allowing
+regulator configuration and enable via registers.
 
-Best regards,
-Matthias
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It also doesn't hurt regulators that only use a GPIO for enable.
+
+The diff to do this is very minimal, I already have a patch ready, that
+I could send if there is a chance for it to get through.
+
+--=20
+Paul Kocialkowski, Replicant developer
+
+Replicant is a fully free Android distribution running on several
+devices, a free software mobile operating system putting the emphasis on
+freedom and privacy/security.
+
+Website: https://www.replicant.us/
+Blog: https://blog.replicant.us/
+Wiki/tracker/forums: https://redmine.replicant.us/
+
+
+--=-LSx1ZIlV1MMhc/8HbKM5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAABAgAGBQJWhCRfAAoJEIT9weqP7pUM8DYQAJyNvHDw0gfikZ2+He8Q5cL9
+E4fDdmCAOKphHK9j/WAYwuIGticmCn7ea2DsNFQbdbY55T5irS+BSvh93+HRCSTs
+PrFD7Y3oZm7vsyXqmClSinMDqA3BZN1JMNmLxKK9L0/h9y6Ya+O5CfYx2YR+nqMN
+QITCfQAJjTkSvIVu7HhjmCDmxmLQu19CMq57vNOMj8/ClftvHKLeNjhyJdanu9gw
+aaneqz2qB81XQFESkCzdvfIujbt7xbYcGUMCB4oo4Et5fZ1Teb+4t8e4or05keO2
+iYG/pxny6kEcRW1RFpdr4SBr3MHrdT4ApfbcOA6JNBo9xkPeP8J1aQVj3Jr1fTDo
+8lN5a2c7Xi7dicgSA1tp9Y5GL9Sy32OIMwLmgakpQmk5+Z79EkCUpLZyy1kmGeGt
+V2qw+MTgNVMgGCMAVlT9YS/7nn+c4LLuHsxE/aaUpW3IGLE0s7qBG7zCP9i+2cT9
+P24qhJ73pk56wVze1EXKGfeCL/q4RFLNrowwF2Ur/RHXjhKXSM8pqpsbWWhRnLj5
+jWOgaAHyGtyfxLhpJfgXZsPhIALoqoiEB/O/t3pYIcCMExJwZP8hJvty7enevHFm
+5YTF1bB3e+VgptaZ/WkwUL7MF/QljghKGUvnB+hyxGToaJl4q3Hs6AZfsxyOFQBq
+nrxXznyXhsYFtdjDImiS
+=aKaA
+-----END PGP SIGNATURE-----
+
+--=-LSx1ZIlV1MMhc/8HbKM5--
