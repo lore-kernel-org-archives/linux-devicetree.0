@@ -1,86 +1,68 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt: bindings: add bindings for ipq4019 wifi block
-Date: Wed, 30 Dec 2015 10:35:24 -0600
-Message-ID: <20151230163524.GA26810@rob-hp-laptop>
-References: <1450848915-9772-1-git-send-email-rmani@qti.qualcomm.com>
+From: Curt Brune <curt-qUQiAmfTcIp+XZJcv9eMoEEOCMrvLtNR@public.gmane.org>
+Subject: Re: [RFC 1/1] powerpc: legacy serial port use device tree cell-index
+ property
+Date: Wed, 30 Dec 2015 08:36:01 -0800
+Message-ID: <20151230163601.GX14046@cumulusnetworks.com>
+References: <1448477209-22340-2-git-send-email-curt@cumulusnetworks.com>
+ <20151220150225.GA27380@gate.crashing.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1450848915-9772-1-git-send-email-rmani@qti.qualcomm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Raja Mani <rmani@qti.qualcomm.com>
-Cc: agross@codeaurora.org, devicetree@vger.kernel.org, ath10k@lists.infradead.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, mmcclint@qca.qualcomm.com
+In-Reply-To: <20151220150225.GA27380-JorI+TVEvZrY24RiXHRV3ti2O/JbrIOy@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 23, 2015 at 11:05:15AM +0530, Raja Mani wrote:
-> Add device tree binding documentation details for wifi block present
-> in Qualcomm IPQ4019 SoC into qcom,ath10k.txt.
+On Sun Dec 20 09:02, Segher Boessenkool wrote:
+> On Wed, Nov 25, 2015 at 10:46:49AM -0800, Curt Brune wrote:
+> > +	/* Check if the ports have an ordering, defined by 'cell-index' */
+> > +	if (((indexp = (u32*)of_get_property(np, "cell-index", &len)) != NULL) &&
+> > +	    (len == sizeof(u32)))
+> > +		index = *indexp;
+> > +
+> >  	/* Add port, irq will be dealt with later. We passed a translated
+> >  	 * IO port value. It will be fixed up later along with the irq
+> >  	 */
+> >  	if (tsi && !strcmp(tsi->type, "tsi-bridge"))
+> > -		return add_legacy_port(np, -1, UPIO_TSI, addr, addr,
+> > +		return add_legacy_port(np, index, UPIO_TSI, addr, addr,
+> >  				       NO_IRQ, legacy_port_flags, 0);
+> >  	else
+> > -		return add_legacy_port(np, -1, UPIO_MEM, addr, addr,
+> > +		return add_legacy_port(np, index, UPIO_MEM, addr, addr,
+> >  				       NO_IRQ, legacy_port_flags, 0);
 > 
-> Signed-off-by: Raja Mani <rmani@qti.qualcomm.com>
-> ---
->  .../bindings/net/wireless/qcom,ath10k.txt          | 87 ++++++++++++++++++++--
->  1 file changed, 82 insertions(+), 5 deletions(-)
+> What does this do if the value in cell-index is a duplicate. or the port
+> with that number is already created some other way?  Are the numbers in
+> cell-index global anyway, or relative to some parent device (I couldn't
+> find the documentation for this).
 > 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> index edefc26..ffd0742 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> @@ -1,17 +1,42 @@
->  * Qualcomm Atheros ath10k wireless devices
->  
-> -For ath10k devices the calibration data can be provided through Device
-> -Tree. The node is a child node of the PCI controller.
+> 
+> Segher
 
-So it is now not a PCI device?
+add_legacy_port() has support for handling duplicate index entries.
+Reading that code it looks like the recent entry wins and the older
+entry is moved to the next available index.
 
-> -
->  Required properties:
-> --compatible : Should be "qcom,ath10k"
-> +- compatible: Should be one of the following:
-> +	* "qcom,ath10k"
-> +	* "qcom,ipq4019-wifi"
+The numbers in cell-index are not global nor explicitly relative to a
+parent device.  I also could not find documentation on this.
 
-One is a standalone PCI device and one is embedded block in an SOC? 
-These should be more separated as all these new properties would only 
-apply in the latter case.
+In common usage, however, the cell-index property is used in two
+different ways:
 
->  
->  Optional properties:
-> +- reg: Address and length of the register set for the device.
-> +- core-id: Core number associated to the device.
+1.  For devices that have "channels" or "regions" (DMA for example),
+the parent device node has child nodes enumerated by cell-index.  For
+example see:  arch/powerpc/boot/dts/fsl/pq3-dma-0.dtsi
 
-This needs a better explanation.
+2.  For multiple instances of a device, for example UARTS,
+each device node is enumerated using cell-index.  See:
+arch/powerpc/boot/dts/fsl/qoriq-duart-0.dtsi
 
-> +- resets: Must contain an entry for each entry in reset-names.
-> +          See ../reset/reseti.txt for details.
-> +- reset-names: Must include the list of following reset names,
-> +	       "wifi_cpu_init"
-> +	       "wifi_radio_srif"
-> +	       "wifi_radio_warm"
-> +	       "wifi_radio_cold"
-> +	       "wifi_core_warm"
-> +	       "wifi_core_cold"
-> +- clocks: List of clock specifiers, must contain an entry for each required
-> +          entry in clock-names.
-> +- clock-names: Should contain the clock names "wifi_wcss_cmd", "wifi_wcss_ref",
-> +               "wifi_wcss_rtc".
-> +- interrupts: List of interrupt lines. Must contain an entry
-> +	      for each entry in the interrupt-names property.
-> +- interrupt-names: Must include the entries for MSI interrupt
-> +		   names ("msi0" to "msi15") and legacy interrupt
-> +		   name ("legacy"),
-> +- qca,msi_addr: MSI interrupt address.
-> +- qca,msi_base: Base value to add before writing MSI data into
-> +		MSI address register.
-
-Why don't the standard MSI properties work?
-
->  - qcom,ath10k-calibration-data : calibration data as an array, the
->  				 length can vary between hw versions
-> +- status: Either "disabled" or "ok".
-> +
-
-No need to document status here.
-
-Rob
+Cheers,
+Curt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
