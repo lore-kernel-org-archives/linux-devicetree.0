@@ -1,58 +1,86 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/6] regulator: lp872x: Add enable GPIO pin support
-Date: Wed, 30 Dec 2015 16:33:07 +0000
-Message-ID: <20151230163307.GW16023@sirena.org.uk>
-References: <1450868319-20513-1-git-send-email-contact@paulk.fr>
- <1450868319-20513-5-git-send-email-contact@paulk.fr>
- <20151223115632.GS16023@sirena.org.uk>
- <568088B4.6090207@ti.com>
- <1451342963.14631.13.camel@collins>
- <5681D7A8.2030101@ti.com>
- <1451387613.18148.9.camel@collins>
- <568323B7.7080101@ti.com>
- <1451464521.2531.4.camel@collins>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt: bindings: add bindings for ipq4019 wifi block
+Date: Wed, 30 Dec 2015 10:35:24 -0600
+Message-ID: <20151230163524.GA26810@rob-hp-laptop>
+References: <1450848915-9772-1-git-send-email-rmani@qti.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="UTjKcilERHWBCdCp"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1451464521.2531.4.camel@collins>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Cc: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1450848915-9772-1-git-send-email-rmani@qti.qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Raja Mani <rmani@qti.qualcomm.com>
+Cc: agross@codeaurora.org, devicetree@vger.kernel.org, ath10k@lists.infradead.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, mmcclint@qca.qualcomm.com
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Dec 23, 2015 at 11:05:15AM +0530, Raja Mani wrote:
+> Add device tree binding documentation details for wifi block present
+> in Qualcomm IPQ4019 SoC into qcom,ath10k.txt.
+> 
+> Signed-off-by: Raja Mani <rmani@qti.qualcomm.com>
+> ---
+>  .../bindings/net/wireless/qcom,ath10k.txt          | 87 ++++++++++++++++++++--
+>  1 file changed, 82 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> index edefc26..ffd0742 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> @@ -1,17 +1,42 @@
+>  * Qualcomm Atheros ath10k wireless devices
+>  
+> -For ath10k devices the calibration data can be provided through Device
+> -Tree. The node is a child node of the PCI controller.
 
---UTjKcilERHWBCdCp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+So it is now not a PCI device?
 
-On Wed, Dec 30, 2015 at 09:35:21AM +0100, Paul Kocialkowski wrote:
+> -
+>  Required properties:
+> --compatible : Should be "qcom,ath10k"
+> +- compatible: Should be one of the following:
+> +	* "qcom,ath10k"
+> +	* "qcom,ipq4019-wifi"
 
-> In my opinion, it would be more elegant to adapt the core regulator
-> framework to first enable the GPIO and then call the regulator enable
-> ops callback instead of handling the GPIO in the driver.
+One is a standalone PCI device and one is embedded block in an SOC? 
+These should be more separated as all these new properties would only 
+apply in the latter case.
 
-Why would we want to actively manage both things at runtime?  It's more
-work, what do we gain from it?
+>  
+>  Optional properties:
+> +- reg: Address and length of the register set for the device.
+> +- core-id: Core number associated to the device.
 
---UTjKcilERHWBCdCp
-Content-Type: application/pgp-signature; name="signature.asc"
+This needs a better explanation.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> +- resets: Must contain an entry for each entry in reset-names.
+> +          See ../reset/reseti.txt for details.
+> +- reset-names: Must include the list of following reset names,
+> +	       "wifi_cpu_init"
+> +	       "wifi_radio_srif"
+> +	       "wifi_radio_warm"
+> +	       "wifi_radio_cold"
+> +	       "wifi_core_warm"
+> +	       "wifi_core_cold"
+> +- clocks: List of clock specifiers, must contain an entry for each required
+> +          entry in clock-names.
+> +- clock-names: Should contain the clock names "wifi_wcss_cmd", "wifi_wcss_ref",
+> +               "wifi_wcss_rtc".
+> +- interrupts: List of interrupt lines. Must contain an entry
+> +	      for each entry in the interrupt-names property.
+> +- interrupt-names: Must include the entries for MSI interrupt
+> +		   names ("msi0" to "msi15") and legacy interrupt
+> +		   name ("legacy"),
+> +- qca,msi_addr: MSI interrupt address.
+> +- qca,msi_base: Base value to add before writing MSI data into
+> +		MSI address register.
 
-iQEcBAEBCAAGBQJWhAdCAAoJECTWi3JdVIfQQmYH/jsIV1f+vwmsJYUCVshMxwso
-+W4sZ+0R9otbA3HQMt1pvQyF8UUaQMk0WatGhbCF88EzOXgO2GCPIcBw1pi7q7mA
-oUmdbXeHyd4OrTfKi/OOGqlk6kIlrp8i2PHOF3ubOdXvLQHJ3r8JYWufDFpLDaT3
-c1FfGW+pC7whF+nixEeoPIJvqvBUCFNA9rTN0jqfS667IqVrztoXACrEkqsHrMtt
-zV09Cs80t4Ez6W16F2klnh41nntt+Wp9x0FrV2HzIIJzeHz6uwFwabkOi4D8kjhA
-abIIVVO4nmNiv8kanwP/CblT50iMKre3z366m3jZNxoZtBDQwG7+ZnGjNA8ZB4k=
-=eFvT
------END PGP SIGNATURE-----
+Why don't the standard MSI properties work?
 
---UTjKcilERHWBCdCp--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  - qcom,ath10k-calibration-data : calibration data as an array, the
+>  				 length can vary between hw versions
+> +- status: Either "disabled" or "ok".
+> +
+
+No need to document status here.
+
+Rob
