@@ -1,28 +1,34 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] Document: spi: Add bindings for mediatek MT2701 soc
- platform
-Date: Thu, 31 Dec 2015 16:15:15 -0600
-Message-ID: <20151231221515.GA17872@rob-hp-laptop>
-References: <1451530743-8995-1-git-send-email-leilk.liu@mediatek.com>
- <1451530743-8995-5-git-send-email-leilk.liu@mediatek.com>
+Subject: Re: [PATCH v2] iio: health: max30100: add config for LED current
+Date: Thu, 31 Dec 2015 16:17:31 -0600
+Message-ID: <20151231221731.GA4445@rob-hp-laptop>
+References: <1451454288-9945-1-git-send-email-mranostay@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1451530743-8995-5-git-send-email-leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1451454288-9945-1-git-send-email-mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 31, 2015 at 10:59:03AM +0800, Leilk Liu wrote:
-> This patch adds a DT binding documentation for the MT2701 soc.
+On Tue, Dec 29, 2015 at 09:44:48PM -0800, Matt Ranostay wrote:
+> Allow the current for both RED and IR LEDs to be set via an device tree
+> property setting.
 > 
-> Signed-off-by: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> This is an optional setting that is useful for applications that have a
+> known glass attenuation factor.
+> 
+> Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> Changes from v2:
+> * change to use microamp property name from LED class
+> * updated documentation for new format
+> * added allowed current index map
+> 
+> .../devicetree/bindings/iio/health/max30100.txt    |  8 +++
+>  drivers/iio/health/max30100.c                      | 81 ++++++++++++++++++++--
+>  2 files changed, 83 insertions(+), 6 deletions(-)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
