@@ -1,82 +1,47 @@
-From: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: omap3: Include missing bandgap data for
- ti-soc-thermal driver
-Date: Thu, 31 Dec 2015 09:38:45 -0800
-Message-ID: <20151231173844.GD11863@localhost.localdomain>
-References: <1451086345-3340-1-git-send-email-pali.rohar@gmail.com>
+From: Roman Volkov <v1ron@mail.ru>
+Subject: [PATCH v3 RESEND 0/2] WM8505/WM8650 DT fixes for SD card controller
+Date: Thu, 31 Dec 2015 20:41:16 +0300
+Message-ID: <1451583678-3692-1-git-send-email-v1ron@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1451086345-3340-1-git-send-email-pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Tony Prisk <linux@prisktech.co.nz>, Rob Herring <robh+dt@kernel.org>, Alexey Charkov <alchark@gmail.com>, Roman Volkov <rvolkov@v1ros.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+From: Roman Volkov <rvolkov@v1ros.org>
 
-On Sat, Dec 26, 2015 at 12:32:25AM +0100, Pali Roh=E1r wrote:
-> Driver for omap3 with documentation is there since v4.4-rc1.
->=20
-> Signed-off-by: Pali Roh=E1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+This patch set enables SD controller support for WM8650 and
+fixes minor errors in WM8505 Device Tree file.
 
+Changes in v3:
+1. Add minor fixes for WM8505 SDHC node
 
-> ---
->  arch/arm/boot/dts/omap34xx.dtsi |    5 +++++
->  arch/arm/boot/dts/omap36xx.dtsi |    5 +++++
->  2 files changed, 10 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap=
-34xx.dtsi
-> index 4f6b2d5..c3f488f 100644
-> --- a/arch/arm/boot/dts/omap34xx.dtsi
-> +++ b/arch/arm/boot/dts/omap34xx.dtsi
-> @@ -54,6 +54,11 @@
->  				#size-cells =3D <0>;
->  			};
->  		};
-> +
-> +		bandgap {
-> +			reg =3D <0x48002524 0x4>;
-> +			compatible =3D "ti,omap34xx-bandgap";
-> +		};
->  	};
->  };
-> =20
-> diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap=
-36xx.dtsi
-> index 86253de..00f98c1 100644
-> --- a/arch/arm/boot/dts/omap36xx.dtsi
-> +++ b/arch/arm/boot/dts/omap36xx.dtsi
-> @@ -86,6 +86,11 @@
->  				#size-cells =3D <0>;
->  			};
->  		};
-> +
-> +		bandgap {
-> +			reg =3D <0x48002524 0x4>;
-> +			compatible =3D "ti,omap36xx-bandgap";
+Tested on both WM8505 and WM8650.
 
-Can you please already add on both cases
+Roman Volkov (2):
+  dts: vt8500: Add SDHC node to DTS file for WM8650
+  dts: vt8500: Fix errors in SDHC node for WM8505
 
-#thermal-sensor-cells =3D <0>;
-?
+ arch/arm/boot/dts/wm8505.dtsi | 4 ++--
+ arch/arm/boot/dts/wm8650.dtsi | 9 +++++++++
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-This way we can already use them to define thermal zones. Of course,
-that alone won't add the thermal zones. A separated patch would be
-needed to add the thermal zone for OMAP3.
+-- 
+Hi maintainers, I see my previous versions were not applied. Could this
+little patch set be applied for the linux-next? I don't think this is new
+functionality, this must be considered as bugfix for existing Device Tree.
 
-> +		};
->  	};
->  };
-> =20
-> --=20
-> 1.7.9.5
->=20
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Any other suggestions?
+
+2.3.1
