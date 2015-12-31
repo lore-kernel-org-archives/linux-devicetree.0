@@ -1,59 +1,35 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 0/2] WM8505/WM8650 DT fixes for SD card controller
-Date: Thu, 31 Dec 2015 16:32:59 +0100
-Message-ID: <14890370.KqS7HiJXlh@wuerfel>
-References: <1423130878-3894-1-git-send-email-v1ron@v1ros.org> <20151224004825.4350790e@anonymous> <5659431.mYBM8uKUnZ@wuerfel>
+Subject: Re: [PATCH v4 0/2] ARM64: Enable SP805 WDT support for FSL LS2080A
+Date: Thu, 31 Dec 2015 16:41:24 +0100
+Message-ID: <9706173.374hkpUbfJ@wuerfel>
+References: <1451296884-7932-1-git-send-email-bhupesh.sharma@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5659431.mYBM8uKUnZ@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roman Volkov <v1ron@mail.ru>
-Cc: Roman Volkov <v1ron@v1ros.org>, Roman Volkov <rvolkov@v1ros.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Alexey Charkov <alchark@gmail.com>, linux-kernel@vger.kernel.org, Tony Prisk <linux@prisktech.co.nz>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1451296884-7932-1-git-send-email-bhupesh.sharma@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, bhupesh.linux@gmail.com, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Catalin.Marinas@arm.com, will.deacon@arm.com, stuart.yoder@freescale.com, scottwood@freescale.com, arm@kernel.org, olof@lixom.net, LeoLi@freescale.com, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 31 December 2015 16:31:02 Arnd Bergmann wrote:
-> On Thursday 24 December 2015 00:48:25 Roman Volkov wrote:
-> > =D0=92 Sat, 4 Apr 2015 15:27:20 +0300
-> > Roman Volkov <v1ron@v1ros.org> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >=20
-> > > =D0=92 Sun, 1 Mar 2015 23:39:11 +0300
-> > > Roman Volkov <rvolkov@v1ros.org> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > >=20
-> > > > =D0=92 Sun, 01 Mar 2015 20:52:55 +0100
-> > > > Arnd Bergmann <arnd@arndb.de> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > > > > > Any other suggestions? =20
-> > > > >=20
-> > > > > According to the MAINTAINERS file, Tony Prisk should be the p=
-erson
-> > > > > to pick them up, but he was not the recipient of the mail.
-> > > > >=20
-> > > > >   Arnd =20
-> > > >=20
-> > > > Thanks for the tip. Tony probably need to add these files to hi=
-s
-> > > > list of maintained files. get_maintainer.pl doesn't mention him=
-=2E
-> > > >=20
-> > > > Roman =20
-> > >=20
-> > > Arnd,
-> > >=20
-> > > No response yet from Tony for over a month.
-> > >=20
-> > > Roman
-> >=20
-> > Ping. At least two patch sets for vt8500 are waiting to be picked u=
-p.
-> > vt8500 maintainer is inactive for over a year.
->=20
-> I seem to have lost the original mails now, as it's been a while. Can=
- you
-> send the entire series of patches to arm@kernel.org please?
+On Monday 28 December 2015 15:31:22 Bhupesh Sharma wrote:
+> Hi Arnd, Kevin, Olof
+> 
+> This is the v4 of patchset which adds the support for SP805 WDT on FSL LS2080A
+> and also adds the missing documentation of SP805 WDT device-tree bindings.
+> 
+> Rebased against arm-soc/next/dt
+> 
 
-To clarify, please first make sure they still apply cleanly on a recent
-kernel, then send them to arm@kernel.org with all the involved parties
-and the mailing list(s) in Cc.
+Applied all on next/dt64, thanks!
 
 	Arnd
