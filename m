@@ -1,52 +1,56 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/4] soc: mediatek: Init MT8173 scpsys driver earlier
-Date: Thu, 31 Dec 2015 15:45:22 +0100
-Message-ID: <4141203.8f3N9nOLLy@wuerfel>
-References: <1451457706-14798-1-git-send-email-jamesjj.liao@mediatek.com> <1451541566.10610.10.camel@mtksdaap41> <1451553394.10610.14.camel@mtksdaap41>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 0/2] WM8505/WM8650 DT fixes for SD card controller
+Date: Thu, 31 Dec 2015 16:31:02 +0100
+Message-ID: <5659431.mYBM8uKUnZ@wuerfel>
+References: <1423130878-3894-1-git-send-email-v1ron@v1ros.org> <20150404152720.1059e741@v1ron-s7> <20151224004825.4350790e@anonymous>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1451553394.10610.14.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Liao <jamesjj.liao@mediatek.com>
-Cc: devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20151224004825.4350790e@anonymous>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roman Volkov <v1ron-JGs/UdohzUI@public.gmane.org>
+Cc: Roman Volkov <v1ron-oLhuKTjYqW/YtjvyW6yDsg@public.gmane.org>, Roman Volkov <rvolkov-oLhuKTjYqW/YtjvyW6yDsg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 31 December 2015 17:16:34 James Liao wrote:
-> 
-> """
-> Take a example for our IOMMU(M4U) and SMI.  The IOMMU which is
-> subsys_init defaultly will depend on SMI. 
-> The SMI is a bridge between m4u and the Multimedia HW.  About the HW
-> block diagram and more other information please help check  [1].
-> SMI is responsible to enable/disable iommu and help transfer data for
-> each Multimedia HW,  Both have to wait until the power and the clocks is
-> enabled.  
-> 
-> So our iommu should probe done after smi, smi should be after
-> power-domain, and all the iommu consumer(display/vdec/venc/camera etc.)
-> should be after the iommu.
-> Then all the multimedia module will be delayed by power-domain who is
-> module_init currently.
-> 
-> After grep, we get some example whose  pm is not module_init:
-> core_initcall(exynos4_pm_init_power_domain);
-> subsys_initcall(imx_pgc_init);
-> 
-> So we expect move the power-domain initial more earlier too.  The
-> power-domain seems to be a basic module like ccf.
-> Is there some special reason about we should use module_init,  or do you
-> have any concern if we change it?
-> Thanks.
+On Thursday 24 December 2015 00:48:25 Roman Volkov wrote:
+> =D0=92 Sat, 4 Apr 2015 15:27:20 +0300
+> Roman Volkov <v1ron-oLhuKTjYqW/YtjvyW6yDsg@public.gmane.org> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>=20
+> > =D0=92 Sun, 1 Mar 2015 23:39:11 +0300
+> > Roman Volkov <rvolkov-oLhuKTjYqW/YtjvyW6yDsg@public.gmane.org> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >=20
+> > > =D0=92 Sun, 01 Mar 2015 20:52:55 +0100
+> > > Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > > > > Any other suggestions? =20
+> > > >=20
+> > > > According to the MAINTAINERS file, Tony Prisk should be the per=
+son
+> > > > to pick them up, but he was not the recipient of the mail.
+> > > >=20
+> > > >   Arnd =20
+> > >=20
+> > > Thanks for the tip. Tony probably need to add these files to his
+> > > list of maintained files. get_maintainer.pl doesn't mention him.
+> > >=20
+> > > Roman =20
+> >=20
+> > Arnd,
+> >=20
+> > No response yet from Tony for over a month.
+> >=20
+> > Roman
+>=20
+> Ping. At least two patch sets for vt8500 are waiting to be picked up.
+> vt8500 maintainer is inactive for over a year.
 
-Ok, got it. Generally, we should try to avoid using the earlier initcall
-levels, but a few things like clock controllers, iommus etc are special
-enough that we need to make sure their dependencies are there by the
-time those are probed.
-
-Please put your explanation above into the patch changelog and add a code
-comment about the IOMMU next to the subsys_initcall() so it doesn't
-accidentally get changed when someone tries to do a code cleanup.
+I seem to have lost the original mails now, as it's been a while. Can y=
+ou
+send the entire series of patches to arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org please?
 
 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
