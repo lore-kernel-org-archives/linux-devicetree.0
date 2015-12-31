@@ -1,90 +1,55 @@
 From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/4] soc: mediatek: Init MT8173 scpsys driver earlier
-Date: Thu, 31 Dec 2015 17:16:34 +0800
-Message-ID: <1451553394.10610.14.camel@mtksdaap41>
-References: <1451457706-14798-1-git-send-email-jamesjj.liao@mediatek.com>
-	 <1670989.QknqqsXE3p@wuerfel> <1451470328.22426.5.camel@mtksdaap41>
-	 <6145950.8rtkDup7QD@wuerfel> <1451541566.10610.10.camel@mtksdaap41>
+Subject: Re: [PATCH 3/5] clk: mediatek: Add MT2701 clock support
+Date: Thu, 31 Dec 2015 17:59:02 +0800
+Message-ID: <1451555942.10610.18.camel@mtksdaap41>
+References: <1451456865-44139-1-git-send-email-jamesjj.liao@mediatek.com>
+ <1451456865-44139-4-git-send-email-jamesjj.liao@mediatek.com>
+ <20151230233406.19557.35006@quark.deferred.io>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1451541566.10610.10.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20151230233406.19557.35006-/Ffx6e7uQFNsG52AEeRyZ2GXanvQGlWp@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-> On Wed, 2015-12-30 at 11:35 +0100, Arnd Bergmann wrote:
-> > On Wednesday 30 December 2015 18:12:08 James Liao wrote:
-> > > On Wed, 2015-12-30 at 09:52 +0100, Arnd Bergmann wrote:
-> > > > On Wednesday 30 December 2015 14:41:44 James Liao wrote:
-> > > > > Some power domain comsumers may init before module_init.
-> > > > > So the power domain provider (scpsys) need to be initialized
-> > > > > earlier too.
-> > > > > 
-> > > > > Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > > > ---
-> > > > > 
-> > > > 
-> > > > Why?
-> > > 
-> > > Some drivers use different init level to ensure they can be initialized
-> > > before other drivers. To support these drivers, moving scpsys driver's
-> > > initial function to subsys_init is the most easy way.
-> > 
-> > This is just the same generic explanation that you already have.
-> > 
-> > Please be more specific what the dependency is and why we can't rely
-> > on deferred probing here.
+Hi Mike
+On Wed, 2015-12-30 at 15:34 -0800, Michael Turquette wrote:
+> Quoting James Liao (2015-12-29 22:27:43)
+> > +CLK_OF_DECLARE(mtk_topckgen, "mediatek,mt2701-topckgen", mtk_topckgen_init);
+> > +CLK_OF_DECLARE(mtk_infrasys, "mediatek,mt2701-infracfg", mtk_infrasys_init);
+> > +CLK_OF_DECLARE(mtk_pericfg, "mediatek,mt2701-pericfg", mtk_pericfg_init);
+> > +CLK_OF_DECLARE(mtk_mmsys, "mediatek,mt2701-mmsys", mtk_mmsys_init);
+> > +CLK_OF_DECLARE(mtk_imgsys, "mediatek,mt2701-imgsys", mtk_imgsys_init);
+> > +CLK_OF_DECLARE(mtk_vdecsys, "mediatek,mt2701-vdecsys", mtk_vdecsys_init);
+> > +CLK_OF_DECLARE(mtk_hifsys, "mediatek,mt2701-hifsys", mtk_hifsys_init);
+> > +CLK_OF_DECLARE(mtk_ethsys, "mediatek,mt2701-ethsys", mtk_ethsys_init);
+> > +CLK_OF_DECLARE(mtk_bdpsys, "mediatek,mt2701-bdpsys", mtk_bdpsys_init);
+> > +CLK_OF_DECLARE(mtk_apmixedsys, "mediatek,mt2701-apmixedsys",
 > 
-> In our case, there is a SMI driver provide APIs to control multiple
-> devices that attached to different power domains.Video encoder / decoder
-> and GPU drivers are SMI users. It's not easy for SMI users to detect SMI
-> and scpsys driver are initialized or not. A most easy way to resolve the
-> init sequence issue is moving SMI and scpsys driver in early init stage.
+> None of these compatible strings are documented with a binding
+> description in this patch series. In fact looking through
+> Documentation/devicetree/bindings/clock/ on the latest linux-next tag I
+> see that the only existing binding is mt8173-cpu-dvfs.txt.
 > 
-> Do you prefer to keep scpsys driver's init in module_init? If yes, I can
-> remove this patch in next version.
+> Am I looking in the wrong place or do we have a case of missing binding
+> descriptions?
 
-After discuss with our SMI / IOMMU driver owner, he still prefer to keep
-scpsys driver init in subsys_init. Here is his explanation:
-
-"""
-Take a example for our IOMMU(M4U) and SMI.  The IOMMU which is
-subsys_init defaultly will depend on SMI. 
-The SMI is a bridge between m4u and the Multimedia HW.  About the HW
-block diagram and more other information please help check  [1].
-SMI is responsible to enable/disable iommu and help transfer data for
-each Multimedia HW,  Both have to wait until the power and the clocks is
-enabled.  
-
-So our iommu should probe done after smi, smi should be after
-power-domain, and all the iommu consumer(display/vdec/venc/camera etc.)
-should be after the iommu.
-Then all the multimedia module will be delayed by power-domain who is
-module_init currently.
-
-After grep, we get some example whose  pm is not module_init:
-core_initcall(exynos4_pm_init_power_domain);
-subsys_initcall(imx_pgc_init);
-
-So we expect move the power-domain initial more earlier too.  The
-power-domain seems to be a basic module like ccf.
-Is there some special reason about we should use module_init,  or do you
-have any concern if we change it?
-Thanks.
-
-[1]:
-http://lists.linuxfoundation.org/pipermail/iommu/2015-December/015105.html
+The binding documents are located in
+Documentation/devicetree/bindings/arm/mediatek/ . And I missed to add
+mt2701 compatible strings into it. I'll add them in next patchset.
 
 
-Best Regards.
+Best regards,
 
 James
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
