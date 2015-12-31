@@ -1,88 +1,69 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 1/5] clk: mediatek: Refine the makefile to support
- multiple clock drivers
-Date: Thu, 31 Dec 2015 09:16:39 +0100
-Message-ID: <5684E467.8070203@gmail.com>
-References: <1451456865-44139-1-git-send-email-jamesjj.liao@mediatek.com>
- <1451456865-44139-2-git-send-email-jamesjj.liao@mediatek.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/4] spi: mediatek: merge all identical compat to
+ mtk_common_compat
+Date: Thu, 31 Dec 2015 09:32:07 +0100
+Message-ID: <5684E807.30300@gmail.com>
+References: <1451530743-8995-1-git-send-email-leilk.liu@mediatek.com>
+ <1451530743-8995-2-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1451456865-44139-2-git-send-email-jamesjj.liao@mediatek.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: James Liao <jamesjj.liao@mediatek.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, Shunli Wang <shunli.wang@mediatek.com>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1451530743-8995-2-git-send-email-leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 30/12/15 07:27, James Liao wrote:
-> Add a Kconfig to define clock configuration for each SoC, and
-> modify the Makefile to build drivers that only selected in config.
+On 31/12/15 03:59, Leilk Liu wrote:
+> This patch merge all identical compat into on mtk_common_compat
+> and used for all compatible soc.
 >
-> Signed-off-by: Shunli Wang <shunli.wang@mediatek.com>
-> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+> Signed-off-by: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
 
-Looks good to me.
+Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
->   drivers/clk/Kconfig           |  1 +
->   drivers/clk/mediatek/Kconfig  | 23 +++++++++++++++++++++++
->   drivers/clk/mediatek/Makefile |  6 +++---
->   3 files changed, 27 insertions(+), 3 deletions(-)
->   create mode 100644 drivers/clk/mediatek/Kconfig
+>   drivers/spi/spi-mt65xx.c |   15 ++++++++++-----
+>   1 file changed, 10 insertions(+), 5 deletions(-)
 >
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index c3e3a02..b7a37dc 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -198,3 +198,4 @@ source "drivers/clk/mvebu/Kconfig"
+> diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+> index 563954a..3573c09 100644
+> --- a/drivers/spi/spi-mt65xx.c
+> +++ b/drivers/spi/spi-mt65xx.c
+> @@ -95,8 +95,7 @@ struct mtk_spi {
+>   	const struct mtk_spi_compatible *dev_comp;
+>   };
 >
->   source "drivers/clk/samsung/Kconfig"
->   source "drivers/clk/tegra/Kconfig"
-> +source "drivers/clk/mediatek/Kconfig"
-> diff --git a/drivers/clk/mediatek/Kconfig b/drivers/clk/mediatek/Kconfig
-> new file mode 100644
-> index 0000000..dc224e6
-> --- /dev/null
-> +++ b/drivers/clk/mediatek/Kconfig
-> @@ -0,0 +1,23 @@
-> +#
-> +# MediaTek SoC drivers
-> +#
-> +config COMMON_CLK_MEDIATEK
-> +	bool
-> +	---help---
-> +	  Mediatek SoCs' clock support.
-> +
-> +config COMMON_CLK_MT8135
-> +	bool "Clock driver for Mediatek MT8135"
-> +	depends on COMMON_CLK
-> +	select COMMON_CLK_MEDIATEK
-> +	default ARCH_MEDIATEK
-> +	---help---
-> +	  This driver supports Mediatek MT8135 clocks.
-> +
-> +config COMMON_CLK_MT8173
-> +	bool "Clock driver for Mediatek MT8173"
-> +	depends on COMMON_CLK
-> +	select COMMON_CLK_MEDIATEK
-> +	default ARCH_MEDIATEK
-> +	---help---
-> +	  This driver supports Mediatek MT8173 clocks.
-> diff --git a/drivers/clk/mediatek/Makefile b/drivers/clk/mediatek/Makefile
-> index 95fdfac..32e7222 100644
-> --- a/drivers/clk/mediatek/Makefile
-> +++ b/drivers/clk/mediatek/Makefile
-> @@ -1,4 +1,4 @@
-> -obj-y += clk-mtk.o clk-pll.o clk-gate.o clk-apmixed.o
-> +obj-$(CONFIG_COMMON_CLK_MEDIATEK) += clk-mtk.o clk-pll.o clk-gate.o clk-apmixed.o
->   obj-$(CONFIG_RESET_CONTROLLER) += reset.o
-> -obj-y += clk-mt8135.o
-> -obj-y += clk-mt8173.o
-> +obj-$(CONFIG_COMMON_CLK_MT8135) += clk-mt8135.o
-> +obj-$(CONFIG_COMMON_CLK_MT8173) += clk-mt8173.o
+> -static const struct mtk_spi_compatible mt6589_compat;
+> -static const struct mtk_spi_compatible mt8135_compat;
+> +static const struct mtk_spi_compatible mtk_common_compat;
+>   static const struct mtk_spi_compatible mt8173_compat = {
+>   	.need_pad_sel = true,
+>   	.must_tx = true,
+> @@ -112,9 +111,15 @@ static const struct mtk_chip_config mtk_default_chip_info = {
+>   };
 >
+>   static const struct of_device_id mtk_spi_of_match[] = {
+> -	{ .compatible = "mediatek,mt6589-spi", .data = (void *)&mt6589_compat },
+> -	{ .compatible = "mediatek,mt8135-spi", .data = (void *)&mt8135_compat },
+> -	{ .compatible = "mediatek,mt8173-spi", .data = (void *)&mt8173_compat },
+> +	{ .compatible = "mediatek,mt6589-spi",
+> +		.data = (void *)&mtk_common_compat,
+> +	},
+> +	{ .compatible = "mediatek,mt8135-spi",
+> +		.data = (void *)&mtk_common_compat,
+> +	},
+> +	{ .compatible = "mediatek,mt8173-spi",
+> +		.data = (void *)&mt8173_compat,
+> +	},
+>   	{}
+>   };
+>   MODULE_DEVICE_TABLE(of, mtk_spi_of_match);
+>
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
