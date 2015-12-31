@@ -1,63 +1,88 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/4] soc: mediatek: Init MT8173 scpsys driver earlier
-Date: Thu, 31 Dec 2015 13:59:26 +0800
-Message-ID: <1451541566.10610.10.camel@mtksdaap41>
-References: <1451457706-14798-1-git-send-email-jamesjj.liao@mediatek.com>
- <1670989.QknqqsXE3p@wuerfel> <1451470328.22426.5.camel@mtksdaap41>
- <6145950.8rtkDup7QD@wuerfel>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 1/5] clk: mediatek: Refine the makefile to support
+ multiple clock drivers
+Date: Thu, 31 Dec 2015 09:16:39 +0100
+Message-ID: <5684E467.8070203@gmail.com>
+References: <1451456865-44139-1-git-send-email-jamesjj.liao@mediatek.com>
+ <1451456865-44139-2-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <6145950.8rtkDup7QD@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1451456865-44139-2-git-send-email-jamesjj.liao@mediatek.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: James Liao <jamesjj.liao@mediatek.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, Shunli Wang <shunli.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-
-On Wed, 2015-12-30 at 11:35 +0100, Arnd Bergmann wrote:
-> On Wednesday 30 December 2015 18:12:08 James Liao wrote:
-> > On Wed, 2015-12-30 at 09:52 +0100, Arnd Bergmann wrote:
-> > > On Wednesday 30 December 2015 14:41:44 James Liao wrote:
-> > > > Some power domain comsumers may init before module_init.
-> > > > So the power domain provider (scpsys) need to be initialized
-> > > > earlier too.
-> > > > 
-> > > > Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > > ---
-> > > > 
-> > > 
-> > > Why?
-> > 
-> > Some drivers use different init level to ensure they can be initialized
-> > before other drivers. To support these drivers, moving scpsys driver's
-> > initial function to subsys_init is the most easy way.
-> 
-> This is just the same generic explanation that you already have.
-> 
-> Please be more specific what the dependency is and why we can't rely
-> on deferred probing here.
-
-In our case, there is a SMI driver provide APIs to control multiple
-devices that attached to different power domains.Video encoder / decoder
-and GPU drivers are SMI users. It's not easy for SMI users to detect SMI
-and scpsys driver are initialized or not. A most easy way to resolve the
-init sequence issue is moving SMI and scpsys driver in early init stage.
-
-Do you prefer to keep scpsys driver's init in module_init? If yes, I can
-remove this patch in next version.
 
 
-Best regards,
+On 30/12/15 07:27, James Liao wrote:
+> Add a Kconfig to define clock configuration for each SoC, and
+> modify the Makefile to build drivers that only selected in config.
+>
+> Signed-off-by: Shunli Wang <shunli.wang@mediatek.com>
+> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+> ---
 
-James
+Looks good to me.
+
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+>   drivers/clk/Kconfig           |  1 +
+>   drivers/clk/mediatek/Kconfig  | 23 +++++++++++++++++++++++
+>   drivers/clk/mediatek/Makefile |  6 +++---
+>   3 files changed, 27 insertions(+), 3 deletions(-)
+>   create mode 100644 drivers/clk/mediatek/Kconfig
+>
+> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> index c3e3a02..b7a37dc 100644
+> --- a/drivers/clk/Kconfig
+> +++ b/drivers/clk/Kconfig
+> @@ -198,3 +198,4 @@ source "drivers/clk/mvebu/Kconfig"
+>
+>   source "drivers/clk/samsung/Kconfig"
+>   source "drivers/clk/tegra/Kconfig"
+> +source "drivers/clk/mediatek/Kconfig"
+> diff --git a/drivers/clk/mediatek/Kconfig b/drivers/clk/mediatek/Kconfig
+> new file mode 100644
+> index 0000000..dc224e6
+> --- /dev/null
+> +++ b/drivers/clk/mediatek/Kconfig
+> @@ -0,0 +1,23 @@
+> +#
+> +# MediaTek SoC drivers
+> +#
+> +config COMMON_CLK_MEDIATEK
+> +	bool
+> +	---help---
+> +	  Mediatek SoCs' clock support.
+> +
+> +config COMMON_CLK_MT8135
+> +	bool "Clock driver for Mediatek MT8135"
+> +	depends on COMMON_CLK
+> +	select COMMON_CLK_MEDIATEK
+> +	default ARCH_MEDIATEK
+> +	---help---
+> +	  This driver supports Mediatek MT8135 clocks.
+> +
+> +config COMMON_CLK_MT8173
+> +	bool "Clock driver for Mediatek MT8173"
+> +	depends on COMMON_CLK
+> +	select COMMON_CLK_MEDIATEK
+> +	default ARCH_MEDIATEK
+> +	---help---
+> +	  This driver supports Mediatek MT8173 clocks.
+> diff --git a/drivers/clk/mediatek/Makefile b/drivers/clk/mediatek/Makefile
+> index 95fdfac..32e7222 100644
+> --- a/drivers/clk/mediatek/Makefile
+> +++ b/drivers/clk/mediatek/Makefile
+> @@ -1,4 +1,4 @@
+> -obj-y += clk-mtk.o clk-pll.o clk-gate.o clk-apmixed.o
+> +obj-$(CONFIG_COMMON_CLK_MEDIATEK) += clk-mtk.o clk-pll.o clk-gate.o clk-apmixed.o
+>   obj-$(CONFIG_RESET_CONTROLLER) += reset.o
+> -obj-y += clk-mt8135.o
+> -obj-y += clk-mt8173.o
+> +obj-$(CONFIG_COMMON_CLK_MT8135) += clk-mt8135.o
+> +obj-$(CONFIG_COMMON_CLK_MT8173) += clk-mt8173.o
+>
