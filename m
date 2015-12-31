@@ -1,40 +1,31 @@
-From: Leilk Liu <leilk.liu@mediatek.com>
-Subject: [PATCH 4/4] Document: spi: Add bindings for mediatek MT2701 soc platform
-Date: Thu, 31 Dec 2015 10:59:03 +0800
-Message-ID: <1451530743-8995-5-git-send-email-leilk.liu@mediatek.com>
-References: <1451530743-8995-1-git-send-email-leilk.liu@mediatek.com>
+From: Shaohui Xie <shaohui.xie-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH] powerpc: fsl: update fman dt binding for PCS PHY
+Date: Thu, 31 Dec 2015 05:21:57 +0000
+Message-ID: <VI1PR04MB1664D662E6EB17B0572697D7E8FE0@VI1PR04MB1664.eurprd04.prod.outlook.com>
+References: <1451274454-26091-1-git-send-email-shh.xie@gmail.com>
+ <20151229183436.GB12450@rob-hp-laptop>
+ <VI1PR04MB1664E34FC9467506BEC5D815E8FD0@VI1PR04MB1664.eurprd04.prod.outlook.com>
+ <CAL_JsqLaFj2uC8dZRhvAi=fdr=JySd4+zp62z3FosePOp7Dqjw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1451530743-8995-1-git-send-email-leilk.liu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, Leilk Liu <leilk.liu@mediatek.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLaFj2uC8dZRhvAi=fdr=JySd4+zp62z3FosePOp7Dqjw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Igal Liberman <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a DT binding documentation for the MT2701 soc.
-
-Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
----
- .../devicetree/bindings/spi/spi-mt65xx.txt         |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
-index ce363c923f..bf489e0 100644
---- a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
-@@ -2,9 +2,10 @@ Binding for MTK SPI controller
- 
- Required properties:
- - compatible: should be one of the following.
--    - mediatek,mt8173-spi: for mt8173 platforms
--    - mediatek,mt8135-spi: for mt8135 platforms
-+    - mediatek,mt2701-spi: for mt2701 platforms
-     - mediatek,mt6589-spi: for mt6589 platforms
-+    - mediatek,mt8135-spi: for mt8135 platforms
-+    - mediatek,mt8173-spi: for mt8173 platforms
- 
- - #address-cells: should be 1.
- 
--- 
-1.7.9.5
+PiA+IFtTLkhdICdjb21wYXRpYmxlJyBhbmQgJ3BoeS1tb2RlJyBhcmUgc3RhbmRhcmQgcHJvcGVy
+dGllcyBhbHJlYWR5IGluDQo+ID4gY29tbW9uIEV0aGVybmV0IHBoeSBiaW5kaW5nLCBJIGNhbiB1
+cGRhdGUgJ3BoeS1tb2RlJyB3aXRoDQo+ID4gIjEwMDBiYXNlLWt4IiBhbmQgIjEwZ2Jhc2Uta3Ii
+LCBob3cgYWJvdXQgSSBzdGlsbCBsaXN0IHRoZSB0d28NCj4gPiBwcm9wZXJ0aWVzIGhlcmUgZm9y
+IHRoZSByZXF1aXJlbWVudCBvZiBQQ1MgUEhZIHRvIHN1cHBvcnQgYmFja3BsYW5lPw0KPiANCj4g
+WWVzLiBUaGUgY29tbW9uIGJpbmRpbmcgc2hvdWxkIGxpc3QgYWxsIHBvc3NpYmxlIHZhbHVlcyBh
+bmQgdGhpcyBiaW5kaW5nIHNob3VsZA0KPiBsaXN0IGFsbG93ZWQgdmFsdWVzLg0KR290IGl0Lg0K
+VGhhbmsgeW91IQ0KDQpTaGFvaHVpDQoNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
