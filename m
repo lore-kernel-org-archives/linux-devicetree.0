@@ -1,86 +1,64 @@
-From: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH v4] arm64: dts: add all hi6220 i2c nodes
-Date: Thu, 31 Dec 2015 09:27:06 +0800
-Message-ID: <5684846A.2050305@hisilicon.com>
-References: <1449051201-7288-1-git-send-email-kong.kongxinwei@hisilicon.com> <56828756.2040500@huawei.com>
+From: Yao Yuan <yao.yuan-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH v2 1/4] Documentation: fsl-quadspi: Add fsl,ls2080a-dspi
+ compatible string
+Date: Thu, 31 Dec 2015 02:35:07 +0000
+Message-ID: <AM2PR04MB07228D58C13AD5DFC256B32789FE0@AM2PR04MB0722.eurprd04.prod.outlook.com>
+References: <1450954863-7540-1-git-send-email-yao.yuan@freescale.com>
+ <20151229183501.GH12450@rob-hp-laptop>
+ <AM2PR04MB07228C97A751DA40EEDD231489FD0@AM2PR04MB0722.eurprd04.prod.outlook.com>
+ <CAL_Jsq+fsqJkN+5859rLm56Ch1k48LRDsRMP6KFHywnCNyf=kA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56828756.2040500-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+fsqJkN+5859rLm56Ch1k48LRDsRMP6KFHywnCNyf=kA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bintian <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+to xuwei
-
-On 2015/12/29 21:15, Bintian wrote:
-> On 2015/12/2 18:13, Xinwei Kong wrote:
->> This patch adds all I2C nodes for the Hi6220 SoC. This hi6220 Soc
->> use this I2C IP of Synopsys Designware for HiKey board.
->>
->> Signed-off-by: Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->> Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-   Reviewed-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> ---
->>   arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 34 +++++++++++++++++++++++++++++++
->>   1 file changed, 34 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
->> index 82d2488..8cec56a 100644
->> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
->> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
->> @@ -208,5 +208,39 @@
->>               clock-names = "uartclk", "apb_pclk";
->>               status = "disabled";
->>           };
->> +
->> +        i2c0: i2c@f7100000 {
->> +            compatible = "snps,designware-i2c";
->> +            reg = <0x0 0xf7100000 0x0 0x1000>;
->> +            interrupts = <0 44 4>;
->> +            clocks = <&sys_ctrl HI6220_I2C0_CLK>;
->> +            i2c-sda-hold-time-ns = <300>;
->> +            pinctrl-names = "default";
->> +            pinctrl-0 = <&i2c0_pmx_func &i2c0_cfg_func>;
->> +            status = "disabled";
->> +        };
->> +
->> +        i2c1: i2c@f7101000 {
->> +            compatible = "snps,designware-i2c";
->> +            reg = <0x0 0xf7101000 0x0 0x1000>;
->> +            clocks = <&sys_ctrl HI6220_I2C1_CLK>;
->> +            interrupts = <0 45 4>;
->> +            i2c-sda-hold-time-ns = <300>;
->> +            pinctrl-names = "default";
->> +            pinctrl-0 = <&i2c1_pmx_func &i2c1_cfg_func>;
->> +            status = "disabled";
->> +        };
->> +
->> +        i2c2: i2c@f7102000 {
->> +            compatible = "snps,designware-i2c";
->> +            reg = <0x0 0xf7102000 0x0 0x1000>;
->> +            clocks = <&sys_ctrl HI6220_I2C2_CLK>;
->> +            interrupts = <0 46 4>;
->> +            i2c-sda-hold-time-ns = <300>;
->> +            pinctrl-names = "default";
->> +            pinctrl-0 = <&i2c2_pmx_func &i2c2_cfg_func>;
->> +            status = "disabled";
->> +        };
->> +
->>       };
->>   };
-> 
-> Looks good to me!
-> 
-> Reviewed-by: Bintian Wang<bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> 
-> 
-> 
-> .
-> 
-
+T24gV2VkLCBEZWMgMzAsIDIwMTUgYXQgMTE6MjAgUE0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBP
+biBUdWUsIERlYyAyOSwgMjAxNSBhdCA5OjE3IFBNLCBZYW8gWXVhbiA8eWFvLnl1YW5AbnhwLmNv
+bT4gd3JvdGU6DQo+ID4gSGkgUm9iLA0KPiA+DQo+ID4gVGhhbmtzIGZvciB5b3VyIHJldmlldy4N
+Cj4gPiBTbyB5b3UgbWVhbiB0aGF0IEkgc2hvdWxkIGFkZCB0aGUgY29tbWl0IG1lc3NhZ2UgZm9y
+IHdoeSBJIGFkZCB0aGlzIG5ldw0KPiBjb21wYXRpYmxlPw0KPiANCj4gUGxlYXNlIGRvbid0IHRv
+cCBwb3N0IG9uIHRoZSBsaXN0cy4NCj4gDQo+IE5vLCB0aGUgYmluZGluZyBkb2Mgc2hvdWxkIGV4
+cGxhaW4gd2hhdCBhcmUgdmFsaWQgY29tYmluYXRpb25zIG9mIGNvbXBhdGlibGUNCj4gc3RyaW5n
+cyBhbmQgdGhlIG9yZGVyIHdoZW4gdGhlIGR0cyBjYW4gaGF2ZSBtdWx0aXBsZSBzdHJpbmdzLiBG
+b3IgZXhhbXBsZSwgaXMNCj4gdGhpcyB2YWxpZDoNCj4gDQo+IGNvbXBhdGlibGUgPSAiZnNsLHZm
+NjEwLWRzcGkiLCAiZnNsLGxzMjA4MGEtZHNwaSI7DQo+IA0KPiBJbiBvdGhlciB3b3JkcywgSSBz
+aG91bGQgYmUgYWJsZSB0byBjaGVjayBhIGR0cyBmaWxlIGFnYWluc3Qgd2hhdCB0aGUgYmluZGlu
+ZyBkb2MNCj4gc2F5cy4NCj4gDQo+IFJvYg0KDQpPSywgSSBnb3QgaXQuDQpUaGUgImZzbCx2ZjYx
+MC1kc3BpIiwgImZzbCxsczEwMjFhLXYxLjAtZHNwaSIsICJmc2wsbHMyMDg1YS1kc3BpIiBpcyB2
+YWxpZCBhbmQgdXNlZCBpbiBkcml2ZXIuDQpCdXQgImZzbCxsczIwODBhLWRzcGkiIGlzIGp1c3Qg
+dXNlZCBmb3IgcGxhdGZvcm0gZmxhZy4NCkNvdWxkIHlvdSBoZWxwIHRvIGdpdmUgYW4gZXhhbXBs
+ZSB0aGF0IGhvdyBjYW4gSSBleHBsYWluIGl0IGluIERvY3VtZW50cz8NCk9yIHNob3VsZCBJIG5v
+dCB3cml0ZSB0aGlzIGNvbXBhdGlibGUgaW4gRG9jdW1lbnQuDQoNCkkgZmluZCB0aGF0IG1hbnkg
+Y29tcGF0aWJsZSBzdHJpbmdzIGxpa2UgdGhpcyAobm90IHZhbGlkIGp1c3QgYSBwbGF0Zm9ybSBm
+bGFnKSBmb3Igb3RoZXIgZHJpdmVyIGFyZSBub3QgcmVjb3JkIGluIGRvY3VtZW50Lg0KDQpUaGFu
+a3MuDQoNCll1YW4gWWFvDQoNCj4gDQo+ID4gT24gV2VkLCBEZWMgMzAsIDIwMTUgYXQgMDI6MzVB
+TSwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+ID4+IE9uIFRodSwgRGVjIDI0LCAyMDE1IGF0IDA3OjAx
+OjAwUE0gKzA4MDAsIFl1YW4gWWFvIHdyb3RlOg0KPiA+PiA+IG5ldyBjb21wYXRpYmxlIHN0cmlu
+ZzogImZzbCxsczIwODBhLXFzcGkiLg0KPiA+PiA+DQo+ID4+ID4gU2lnbmVkLW9mZi1ieTogWXVh
+biBZYW8gPHlhby55dWFuQG54cC5jb20+DQo+ID4+ID4gLS0tDQo+ID4+ID4gQ2hhbmdlZCBpbiB2
+MjoNCj4gPj4gPiBVcGRhdGUgbXkgZW1haWwgdG8gPHlhby55dWFuQG54cC5jb20+DQo+ID4+ID4g
+LS0tDQo+ID4+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLWZz
+bC1kc3BpLnR4dCB8IDMgKystDQo+ID4+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMo
+KyksIDEgZGVsZXRpb24oLSkNCj4gPj4gPg0KPiA+PiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL3NwaS1mc2wtZHNwaS50eHQNCj4gPj4gYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL3NwaS1mc2wtZHNwaS50eHQNCj4gPj4g
+PiBpbmRleCBmYTc3Zjg3Li4yZmU1MWQ2IDEwMDY0NA0KPiA+PiA+IC0tLSBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLWZzbC1kc3BpLnR4dA0KPiA+PiA+ICsrKyBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLWZzbC1kc3BpLnR4dA0K
+PiA+PiA+IEBAIC0xLDcgKzEsOCBAQA0KPiA+PiA+ICBBUk0gRnJlZXNjYWxlIERTUEkgY29udHJv
+bGxlcg0KPiA+PiA+DQo+ID4+ID4gIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4+ID4gLS0gY29t
+cGF0aWJsZSA6ICJmc2wsdmY2MTAtZHNwaSIsICJmc2wsbHMxMDIxYS12MS4wLWRzcGkiLCAiZnNs
+LGxzMjA4NWEtZHNwaSINCj4gPj4gPiArLSBjb21wYXRpYmxlIDogImZzbCx2ZjYxMC1kc3BpIiwg
+ImZzbCxsczEwMjFhLXYxLjAtZHNwaSIsDQo+ID4+ID4gKyAgICAgICAgICAgImZzbCxsczIwODVh
+LWRzcGkiLCAiZnNsLGxzMjA4MGEtZHNwaSINCj4gPj4NCj4gPj4gWW91IHNob3VsZCBleHBsYWlu
+IHdoYXQgY29tYmluYXRpb25zIG9mIGNvbXBhdGlibGUgc3RyaW5ncyBhcmUgdmFsaWQuDQo+ID4+
+DQo+ID4+IFJvYg0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
