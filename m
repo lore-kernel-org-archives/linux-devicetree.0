@@ -1,64 +1,38 @@
-From: Yao Yuan <yao.yuan-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH v2 1/4] Documentation: fsl-quadspi: Add fsl,ls2080a-dspi
- compatible string
-Date: Thu, 31 Dec 2015 02:35:07 +0000
-Message-ID: <AM2PR04MB07228D58C13AD5DFC256B32789FE0@AM2PR04MB0722.eurprd04.prod.outlook.com>
-References: <1450954863-7540-1-git-send-email-yao.yuan@freescale.com>
- <20151229183501.GH12450@rob-hp-laptop>
- <AM2PR04MB07228C97A751DA40EEDD231489FD0@AM2PR04MB0722.eurprd04.prod.outlook.com>
- <CAL_Jsq+fsqJkN+5859rLm56Ch1k48LRDsRMP6KFHywnCNyf=kA@mail.gmail.com>
+From: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/4] SPI: support mt2701 IC
+Date: Thu, 31 Dec 2015 10:58:59 +0800
+Message-ID: <1451530743-8995-1-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+fsqJkN+5859rLm56Ch1k48LRDsRMP6KFHywnCNyf=kA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBEZWMgMzAsIDIwMTUgYXQgMTE6MjAgUE0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBP
-biBUdWUsIERlYyAyOSwgMjAxNSBhdCA5OjE3IFBNLCBZYW8gWXVhbiA8eWFvLnl1YW5AbnhwLmNv
-bT4gd3JvdGU6DQo+ID4gSGkgUm9iLA0KPiA+DQo+ID4gVGhhbmtzIGZvciB5b3VyIHJldmlldy4N
-Cj4gPiBTbyB5b3UgbWVhbiB0aGF0IEkgc2hvdWxkIGFkZCB0aGUgY29tbWl0IG1lc3NhZ2UgZm9y
-IHdoeSBJIGFkZCB0aGlzIG5ldw0KPiBjb21wYXRpYmxlPw0KPiANCj4gUGxlYXNlIGRvbid0IHRv
-cCBwb3N0IG9uIHRoZSBsaXN0cy4NCj4gDQo+IE5vLCB0aGUgYmluZGluZyBkb2Mgc2hvdWxkIGV4
-cGxhaW4gd2hhdCBhcmUgdmFsaWQgY29tYmluYXRpb25zIG9mIGNvbXBhdGlibGUNCj4gc3RyaW5n
-cyBhbmQgdGhlIG9yZGVyIHdoZW4gdGhlIGR0cyBjYW4gaGF2ZSBtdWx0aXBsZSBzdHJpbmdzLiBG
-b3IgZXhhbXBsZSwgaXMNCj4gdGhpcyB2YWxpZDoNCj4gDQo+IGNvbXBhdGlibGUgPSAiZnNsLHZm
-NjEwLWRzcGkiLCAiZnNsLGxzMjA4MGEtZHNwaSI7DQo+IA0KPiBJbiBvdGhlciB3b3JkcywgSSBz
-aG91bGQgYmUgYWJsZSB0byBjaGVjayBhIGR0cyBmaWxlIGFnYWluc3Qgd2hhdCB0aGUgYmluZGlu
-ZyBkb2MNCj4gc2F5cy4NCj4gDQo+IFJvYg0KDQpPSywgSSBnb3QgaXQuDQpUaGUgImZzbCx2ZjYx
-MC1kc3BpIiwgImZzbCxsczEwMjFhLXYxLjAtZHNwaSIsICJmc2wsbHMyMDg1YS1kc3BpIiBpcyB2
-YWxpZCBhbmQgdXNlZCBpbiBkcml2ZXIuDQpCdXQgImZzbCxsczIwODBhLWRzcGkiIGlzIGp1c3Qg
-dXNlZCBmb3IgcGxhdGZvcm0gZmxhZy4NCkNvdWxkIHlvdSBoZWxwIHRvIGdpdmUgYW4gZXhhbXBs
-ZSB0aGF0IGhvdyBjYW4gSSBleHBsYWluIGl0IGluIERvY3VtZW50cz8NCk9yIHNob3VsZCBJIG5v
-dCB3cml0ZSB0aGlzIGNvbXBhdGlibGUgaW4gRG9jdW1lbnQuDQoNCkkgZmluZCB0aGF0IG1hbnkg
-Y29tcGF0aWJsZSBzdHJpbmdzIGxpa2UgdGhpcyAobm90IHZhbGlkIGp1c3QgYSBwbGF0Zm9ybSBm
-bGFnKSBmb3Igb3RoZXIgZHJpdmVyIGFyZSBub3QgcmVjb3JkIGluIGRvY3VtZW50Lg0KDQpUaGFu
-a3MuDQoNCll1YW4gWWFvDQoNCj4gDQo+ID4gT24gV2VkLCBEZWMgMzAsIDIwMTUgYXQgMDI6MzVB
-TSwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+ID4+IE9uIFRodSwgRGVjIDI0LCAyMDE1IGF0IDA3OjAx
-OjAwUE0gKzA4MDAsIFl1YW4gWWFvIHdyb3RlOg0KPiA+PiA+IG5ldyBjb21wYXRpYmxlIHN0cmlu
-ZzogImZzbCxsczIwODBhLXFzcGkiLg0KPiA+PiA+DQo+ID4+ID4gU2lnbmVkLW9mZi1ieTogWXVh
-biBZYW8gPHlhby55dWFuQG54cC5jb20+DQo+ID4+ID4gLS0tDQo+ID4+ID4gQ2hhbmdlZCBpbiB2
-MjoNCj4gPj4gPiBVcGRhdGUgbXkgZW1haWwgdG8gPHlhby55dWFuQG54cC5jb20+DQo+ID4+ID4g
-LS0tDQo+ID4+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLWZz
-bC1kc3BpLnR4dCB8IDMgKystDQo+ID4+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMo
-KyksIDEgZGVsZXRpb24oLSkNCj4gPj4gPg0KPiA+PiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL3NwaS1mc2wtZHNwaS50eHQNCj4gPj4gYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL3NwaS1mc2wtZHNwaS50eHQNCj4gPj4g
-PiBpbmRleCBmYTc3Zjg3Li4yZmU1MWQ2IDEwMDY0NA0KPiA+PiA+IC0tLSBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLWZzbC1kc3BpLnR4dA0KPiA+PiA+ICsrKyBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLWZzbC1kc3BpLnR4dA0K
-PiA+PiA+IEBAIC0xLDcgKzEsOCBAQA0KPiA+PiA+ICBBUk0gRnJlZXNjYWxlIERTUEkgY29udHJv
-bGxlcg0KPiA+PiA+DQo+ID4+ID4gIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4+ID4gLS0gY29t
-cGF0aWJsZSA6ICJmc2wsdmY2MTAtZHNwaSIsICJmc2wsbHMxMDIxYS12MS4wLWRzcGkiLCAiZnNs
-LGxzMjA4NWEtZHNwaSINCj4gPj4gPiArLSBjb21wYXRpYmxlIDogImZzbCx2ZjYxMC1kc3BpIiwg
-ImZzbCxsczEwMjFhLXYxLjAtZHNwaSIsDQo+ID4+ID4gKyAgICAgICAgICAgImZzbCxsczIwODVh
-LWRzcGkiLCAiZnNsLGxzMjA4MGEtZHNwaSINCj4gPj4NCj4gPj4gWW91IHNob3VsZCBleHBsYWlu
-IHdoYXQgY29tYmluYXRpb25zIG9mIGNvbXBhdGlibGUgc3RyaW5ncyBhcmUgdmFsaWQuDQo+ID4+
-DQo+ID4+IFJvYg0K
+This series are based on 4.4-rc1 and provide 4 patches to support
+mt2701 spi HW.
+
+Change in this series:
+1. merge all identical compat to mtk_common_compat;
+2. Add spi support for mt2701 IC;
+3. add spi dts for mt2701;
+4. Add bindings for mediatek MT2701 soc platform.
+
+Leilk Liu (4):
+  spi: mediatek: merge all identical compat to mtk_common_compat
+  spi: mediatek: Add spi support for mt2701 IC
+  dts: mt2701: add spi dts for mt2701
+  Document: spi: Add bindings for mediatek MT2701 soc platform
+
+ .../devicetree/bindings/spi/spi-mt65xx.txt         |    5 ++-
+ arch/arm/boot/dts/mt2701.dtsi                      |   39 ++++++++++++++++++++
+ drivers/spi/spi-mt65xx.c                           |   18 ++++++---
+ 3 files changed, 55 insertions(+), 7 deletions(-)
+
+--
+1.7.9.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
