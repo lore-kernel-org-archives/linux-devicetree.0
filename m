@@ -1,48 +1,182 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] gpiolib: always initialize *flags from of_get_named_gpio_flags
-Date: Fri, 01 Jan 2016 23:40:46 +0100
-Message-ID: <6037371.CvRA1dDj1l@wuerfel>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH linux-next (v2) 2/2] clk: bcm6345: Add BCM6345 gated clock support
+Date: Fri, 01 Jan 2016 15:40:31 -0800
+Message-ID: <20160101234031.7140.66812@quark.deferred.io>
+References: <5669F361.60405@simon.arlott.org.uk> <5669F3C3.3090207@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linus.walleij@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <5669F3C3.3090207@simon.arlott.org.uk>
+Sender: linux-clk-owner@vger.kernel.org
+To: Simon Arlott <simon@fire.lp0.eu>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, linux-mips@linux-mips.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonas Gorski <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-The of_get_named_gpio_flags() function does nothing other than returning
-an error when CONFIG_OF_GPIO is disabled, but that causes spurious
-warnings about possible use of uninitialized variables in any code that
-does not check the of_get_named_gpio_flags() return value before trying
-to use the flags:
+Hi Simon,
 
-drivers/input/misc/rotary_encoder.c: In function 'rotary_encoder_probe':
-drivers/input/misc/rotary_encoder.c:223:28: warning: 'flags' may be used uninitialized in this function [-Wmaybe-uninitialized]
-drivers/power/bq24735-charger.c: In function 'bq24735_charger_probe':
-drivers/power/bq24735-charger.c:227:12: warning: 'flags' may be used uninitialized in this function [-Wmaybe-uninitialized]
-drivers/power/sbs-battery.c: In function 'sbs_probe':
-drivers/power/sbs-battery.c:782:17: warning: 'gpio_flags' may be used uninitialized in this function [-Wmaybe-uninitialized]
+Quoting Simon Arlott (2015-12-10 13:50:59)
+> +#define to_clk_bcm6345(_hw) container_of(_hw, struct clk_bcm6345, hw)
+> +
+> +static int clk_bcm6345_enable(struct clk_hw *hw)
+> +{
+> +       struct clk_bcm6345 *gate = to_clk_bcm6345(hw);
+> +
+> +       return regmap_write_bits(gate->map, gate->offset,
+> +                                       gate->mask, gate->mask);
 
-This changes the behavior of the inline helper to set the flags to zero
-when OF_GPIO is disabled, to avoid the warnings. In all cases I've
-encountered, we don't actually get to the place that uses the flags
-if CONFIG_OF is disabled because we won't enter the DT parser code.
+Does your regmap hold a spinlock or mutex? If a mutex then this should
+be a .prepare callback instead of .enable. If it's a spinlock then
+nothing to see here, move along.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> +}
+> +
+> +static void clk_bcm6345_disable(struct clk_hw *hw)
+> +{
+> +       struct clk_bcm6345 *gate = to_clk_bcm6345(hw);
+> +
+> +       regmap_write_bits(gate->map, gate->offset,
+> +                                       gate->mask, 0);
+> +}
+> +
+> +static int clk_bcm6345_is_enabled(struct clk_hw *hw)
+> +{
+> +       struct clk_bcm6345 *gate = to_clk_bcm6345(hw);
+> +       unsigned int val;
+> +       int ret;
+> +
+> +       ret = regmap_read(gate->map, gate->offset, &val);
+> +       if (ret)
+> +               return ret;
+> +
+> +       val &= gate->mask;
+> +
+> +       return val ? 1 : 0;
+> +}
+> +
+> +const struct clk_ops clk_bcm6345_ops = {
+> +       .enable = clk_bcm6345_enable,
+> +       .disable = clk_bcm6345_disable,
+> +       .is_enabled = clk_bcm6345_is_enabled,
+> +};
+> +
+> +static struct clk * __init of_bcm6345_clk_register(const char *parent_name,
+> +       const char *clk_name, struct regmap *map, u32 offset, u32 mask)
+> +{
+> +       struct clk_bcm6345 *gate;
+> +       struct clk_init_data init;
+> +       struct clk *ret;
+> +
+> +       gate = kzalloc(sizeof(*gate), GFP_KERNEL);
+> +       if (!gate)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       init.name = clk_name;
+> +       init.ops = &clk_bcm6345_ops;
+> +       init.flags = CLK_IS_BASIC;
 
-diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
-index 87d6d1632dd4..bb85a8eeba6a 100644
---- a/include/linux/of_gpio.h
-+++ b/include/linux/of_gpio.h
-@@ -67,6 +67,9 @@ extern int of_gpio_simple_xlate(struct gpio_chip *gc,
- static inline int of_get_named_gpio_flags(struct device_node *np,
- 		const char *list_name, int index, enum of_gpio_flags *flags)
- {
-+	if (flags)
-+		*flags = 0;
-+
- 	return -ENOSYS;
- }
- 
+Why is CLK_IS_BASIC set?
 
+> +       init.parent_names = (parent_name ? &parent_name : NULL);
+> +       init.num_parents = (parent_name ? 1 : 0);
+> +       gate->hw.init = &init;
+> +       gate->map = map;
+> +       gate->offset = offset;
+> +       gate->mask = mask;
+> +
+> +       ret = clk_register(NULL, &gate->hw);
+> +       if (IS_ERR(ret))
+> +               kfree(gate);
+> +
+> +       return ret;
+> +}
+> +
+> +static void __init of_bcm6345_clk_setup(struct device_node *node)
+> +{
+> +       struct clk_onecell_data *clk_data;
+> +       const char *parent_name = NULL;
+> +       struct regmap *map;
+> +       u32 offset;
+> +       unsigned int clocks = 0;
+> +       int i;
+> +
+> +       clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
+> +       if (!clk_data)
+> +               return;
+> +
+> +       clk_data->clk_num = 32;
+> +       clk_data->clks = kmalloc_array(clk_data->clk_num,
+> +               sizeof(*clk_data->clks), GFP_KERNEL);
+> +
+> +       for (i = 0; i < clk_data->clk_num; i++)
+> +               clk_data->clks[i] = ERR_PTR(-ENODEV);
+> +
+> +       if (of_clk_get_parent_count(node) > 0)
+> +               parent_name = of_clk_get_parent_name(node, 0);
+> +
+> +       map = syscon_regmap_lookup_by_phandle(node, "regmap");
+> +       if (IS_ERR(map)) {
+> +               pr_err("%s: regmap lookup error %ld\n",
+> +                       node->full_name, PTR_ERR(map));
+> +               goto out;
+> +       }
+> +
+> +       if (of_property_read_u32(node, "offset", &offset)) {
+> +               pr_err("%s: offset not specified\n", node->full_name);
+> +               goto out;
+> +       }
+> +
+> +       /* clks[] is sparse, indexed by bit, maximum clocks checked using i */
+> +       for (i = 0; i < clk_data->clk_num; i++) {
+> +               u32 bit;
+> +               const char *clk_name;
+> +
+> +               if (of_property_read_u32_index(node, "clock-indices",
+> +                               i, &bit))
+> +                       goto out;
+> +
+> +               if (of_property_read_string_index(node, "clock-output-names",
+> +                               i, &clk_name))
+> +                       goto out;
+> +
+> +               if (bit >= clk_data->clk_num) {
+> +                       pr_err("%s: clock bit %u out of range\n",
+> +                               node->full_name, bit);
+> +                       continue;
+> +               }
+> +
+> +               if (!IS_ERR(clk_data->clks[bit])) {
+> +                       pr_err("%s: clock bit %u already exists\n",
+> +                               node->full_name, bit);
+> +                       continue;
+> +               }
+> +
+> +               clk_data->clks[bit] = of_bcm6345_clk_register(parent_name,
+> +                                       clk_name, map, offset, BIT(bit));
+> +               if (!IS_ERR(clk_data->clks[bit]))
+> +                       clocks++;
+> +       }
+> +
+> +out:
+> +       if (clocks) {
+> +               of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+> +               pr_info("%s: registered %u clocks\n", node->name, clocks);
+> +       } else {
+> +               kfree(clk_data->clks);
+> +               kfree(clk_data);
+> +       }
+> +}
+> +
+> +CLK_OF_DECLARE(bcm6345_clk, "brcm,bcm6345-gate-clk", of_bcm6345_clk_setup);
+
+Please do not use CLK_OF_DECLARE unless there is a good reason. Ideally
+this should be a platform_driver.
+
+Regards,
+Mike
+
+> -- 
+> 2.1.4
+> 
+> -- 
+> Simon Arlott
