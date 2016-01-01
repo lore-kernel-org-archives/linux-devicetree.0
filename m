@@ -1,44 +1,86 @@
-From: Silvio Pellicano <8001010-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Re: [PATCH 0/5] ARM: dts: sunxi: Add backlight node
- to q8 tablets
-Date: Thu, 31 Dec 2015 16:17:21 -0800 (PST)
-Message-ID: <6cd9718a-3339-4779-8772-004923077fb0@googlegroups.com>
-References: <1442752251-20744-1-git-send-email-hdegoede@redhat.com>
- <fc4adcf5-4362-4d4c-b42e-729922c79f65@googlegroups.com>
- <5677F7CF.3050308@redhat.com>
-Reply-To: 8001010-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH linux-next (v2) 1/2] clk: Add brcm,
+ bcm6345-gate-clk device tree binding
+Date: Thu, 31 Dec 2015 23:16:19 -0800
+Message-ID: <20160101071619.7140.40854@quark.deferred.io>
+References: <5669F361.60405@simon.arlott.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----=_Part_697_785438814.1451607441727"
-Return-path: <linux-sunxi+bncBDB4XENY4EMRBEULS62AKGQEL72ANHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <5677F7CF.3050308-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: 8001010-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <5669F361.60405@simon.arlott.org.uk>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Simon Arlott <simon@fire.lp0.eu>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, linux-mips@linux-mips.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonas Gorski <jogo@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-------=_Part_697_785438814.1451607441727
-Content-Type: multipart/alternative;
-	boundary="----=_Part_698_467393797.1451607441727"
+Hi Simon,
 
-------=_Part_698_467393797.1451607441727
-Content-Type: text/plain; charset=UTF-8
+Quoting Simon Arlott (2015-12-10 13:49:21)
+> +periph_clk: periph_clk {
+> +       compatible = "brcm,bcm63168-gate-clk", "brcm,bcm6345-gate-clk";
+> +       regmap = <&periph_cntl>;
+> +       offset = <0x4>;
+> +
+> +       #clock-cells = <1>;
+> +       clock-indices =
+> +               <1>,          <2>,        <3>,       <4>,     <5>,
+> +               <6>,          <7>,        <8>,       <9>,     <10>,
+> +               <11>,         <12>,       <13>,      <14>,    <15>,
+> +               <16>,         <17>,       <18>,      <19>,    <20>,
+> +               <27>,         <31>;
+> +       clock-output-names =
+> +               "vdsl_qproc", "vdsl_afe", "vdsl",    "mips",  "wlan_ocp",
+> +               "dect",       "fap0",     "fap1",    "sar",   "robosw",
+> +               "pcm",        "usbd",     "usbh",    "ipsec", "spi",
+> +               "hsspi",      "pcie",     "phymips", "gmac",  "nand",
+> +               "tbus",       "robosw250";
 
+Why is clock-output-names required? Because you don't have any clock
+data in your driver? Or is there another reason?
 
->
-> the backlight-pwm driver / add CONFIG_BACKLIGHT_PWM=y to your .config 
-> (and make sure it stays that way after a "make oldconfig"). 
->
->
-> Ok kernel with pwm_backligth leave on backlight, now i must turn on VUSB 
-for OTG , uboot 
-turn otg vbus on kernel NOT(switch off).
-------=_Part_698_467393797.1451607441727--
+FYI, I'm not a fan of clock-output-names, and prefer for the clk
+consumer devices to specify the clock-names property.
 
-------=_Part_697_785438814.1451607441727--
+Another question, is it correct that this binding requires a DT node for
+every register that contains clock control bits? If so, I'm skeptical of
+that approach. What if you have a clock controller IP block on a future
+soc that has several registers worth of clock controls?
+
+Regards,
+Mike
+
+> +};
+> +
+> +timer_clk: timer_clk {
+> +       compatible = "brcm,bcm63168-gate-clk", "brcm,bcm6345-gate-clk";
+> +       regmap = <&timer_cntl>;
+> +       offset = <0x4>;
+> +
+> +       #clock-cells = <1>;
+> +       clock-indices = <17>, <18>;
+> +       clock-output-names = "uto_extin", "usb_ref";
+> +};
+> +
+> +ehci0: usb@10002500 {
+> +       compatible = "brcm,bcm63168-ehci", "brcm,bcm6345-ehci", "generic-ehci";
+> +       reg = <0x10002500 0x100>;
+> +       big-endian;
+> +       interrupt-parent = <&periph_intc>;
+> +       interrupts = <10>;
+> +       clocks = <&periph_clk 13>, <&timer_clk 18>;
+> +       phys = <&usbh>;
+> +};
+> -- 
+> 2.1.4
+> 
+> -- 
+> Simon Arlott
