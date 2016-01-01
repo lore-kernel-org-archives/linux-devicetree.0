@@ -1,116 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3] net: emac: emac gigabit ethernet controller driver
-Date: Thu, 31 Dec 2015 17:10:39 -0600
-Message-ID: <20151231231039.GA8886@rob-hp-laptop>
-References: <1451440135-25771-1-git-send-email-gavidov@codeaurora.org>
+From: Silvio Pellicano <8001010-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Re: [PATCH 0/5] ARM: dts: sunxi: Add backlight node
+ to q8 tablets
+Date: Thu, 31 Dec 2015 16:17:21 -0800 (PST)
+Message-ID: <6cd9718a-3339-4779-8772-004923077fb0@googlegroups.com>
+References: <1442752251-20744-1-git-send-email-hdegoede@redhat.com>
+ <fc4adcf5-4362-4d4c-b42e-729922c79f65@googlegroups.com>
+ <5677F7CF.3050308@redhat.com>
+Reply-To: 8001010-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1451440135-25771-1-git-send-email-gavidov@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gilad Avidov <gavidov@codeaurora.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, timur@codeaurora.org, gregkh@linuxfoundation.org, vikrams@codeaurora.org, cov@codeaurora.org
+Content-Type: multipart/mixed;
+	boundary="----=_Part_697_785438814.1451607441727"
+Return-path: <linux-sunxi+bncBDB4XENY4EMRBEULS62AKGQEL72ANHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <5677F7CF.3050308-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: 8001010-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 29, 2015 at 06:48:55PM -0700, Gilad Avidov wrote:
-> Add supports for ethernet controller HW on Qualcomm Technologies, Inc. SoC.
-> This driver supports the following features:
-> 1) Checksum offload.
-> 2) Runtime power management support.
-> 3) Interrupt coalescing support.
-> 4) SGMII phy.
-> 5) SGMII direct connection without external phy.
-> 
-> Based on a driver by Niranjana Vishwanathapura
-> <nvishwan@codeaurora.org>.
+------=_Part_697_785438814.1451607441727
+Content-Type: multipart/alternative;
+	boundary="----=_Part_698_467393797.1451607441727"
 
-[...]
+------=_Part_698_467393797.1451607441727
+Content-Type: text/plain; charset=UTF-8
 
-> diff --git a/Documentation/devicetree/bindings/net/qcom-emac.txt b/Documentation/devicetree/bindings/net/qcom-emac.txt
-> new file mode 100644
-> index 0000000..8d58a40
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/qcom-emac.txt
-> @@ -0,0 +1,68 @@
-> +Qualcomm EMAC Gigabit Ethernet Controller
-> +
-> +Required properties:
-> +- cell-index : EMAC controller instance number.
-> +- compatible : Should be "qcom,emac".
 
-This should be more specific with the SOC name.
+>
+> the backlight-pwm driver / add CONFIG_BACKLIGHT_PWM=y to your .config 
+> (and make sure it stays that way after a "make oldconfig"). 
+>
+>
+> Ok kernel with pwm_backligth leave on backlight, now i must turn on VUSB 
+for OTG , uboot 
+turn otg vbus on kernel NOT(switch off).
+------=_Part_698_467393797.1451607441727--
 
-> +- reg : Offset and length of the register regions for the device
-> +- reg-names : Register region names referenced in 'reg' above.
-> +	Required register resource entries are:
-> +	"base"   : EMAC controller base register block.
-> +	"csr"    : EMAC wrapper register block.
-> +	Optional register resource entries are:
-> +	"ptp"    : EMAC PTP (1588) register block.
-> +		   Required if 'qcom,emac-tstamp-en' is present.
-> +	"sgmii"  : EMAC SGMII PHY register block.
-> +- interrupts : Interrupt numbers used by this controller
-> +- interrupt-names : Interrupt resource names referenced in 'interrupts' above.
-> +	Required interrupt resource entries are:
-> +	"emac_core0"   : EMAC core0 interrupt.
-> +	"sgmii_irq"   : EMAC SGMII interrupt.
-> +- qcom,emac-gpio-mdc  : GPIO pin number of the MDC line of MDIO bus.
-> +- qcom,emac-gpio-mdio : GPIO pin number of the MDIO line of MDIO bus.
-
-Use the standard binding for GPIO controlled MDIO bus.
-
-> +- phy-addr            : Specifies phy address on MDIO bus.
-> +			Required if the optional property "qcom,no-external-phy"
-> +			is not specified.
-
-Don't you think you will need to know the specific phy device or other 
-properties of the phy?
-
-> +
-> +Optional properties:
-> +- qcom,emac-tstamp-en       : Enables the PTP (1588) timestamping feature.
-> +			      Include this only if PTP (1588) timestamping
-> +			      feature is needed. If included, "ptp" register
-> +			      base should be specified.
-
-Isn't this a user enabled feature if the h/w supports it?
-
-> +- mac-address               : The 6-byte MAC address. If present, it is the
-> +			      default MAC address.
-> +- qcom,no-external-phy      : Indicates there is no external PHY connected to
-> +			      EMAC. Include this only if the EMAC is directly
-> +			      connected to the peer end without EPHY.
-> +- qcom,emac-ptp-grandmaster : Enable the PTP (1588) grandmaster mode.
-> +			      Include this only if PTP (1588) is configured as
-> +			      grandmaster.
-> +- qcom,emac-ptp-frac-ns-adj : The vector table to adjust the fractional ns per
-> +			      RTC clock cycle.
-> +			      Include this only if there is accuracy loss of
-> +			      fractional ns per RTC clock cycle. For individual
-> +			      table entry, the first field indicates the RTC
-> +			      reference clock rate. The second field indicates
-> +			      the number of adjustment in 2 ^ -26 ns.
-> +Example:
-> +	emac0: qcom,emac@feb20000 {
-> +		cell-index = <0>;
-> +		compatible = "qcom,emac";
-> +		reg-names = "base", "csr", "ptp", "sgmii";
-> +		reg =   <0xfeb20000 0x10000>,
-> +			<0xfeb36000 0x1000>,
-> +			<0xfeb3c000 0x4000>,
-> +			<0xfeb38000 0x400>;
-> +		#address-cells = <0>;
-> +		interrupt-parent = <&emac0>;
-> +		#interrupt-cells = <1>;
-> +		interrupts = <0 1>;
-> +		interrupt-map-mask = <0xffffffff>;
-> +		interrupt-map = <0 &intc 0 76 0
-> +				 1 &intc 0 80 0>;
-> +		interrupt-names = "emac_core0", "sgmii_irq";
-> +		qcom,emac-gpio-mdc = <&qcomgpio 123 0>;
-> +		qcom,emac-gpio-mdio = <&qcomgpio 124 0>;
-> +		qcom,emac-tstamp-en;
-> +		qcom,emac-ptp-frac-ns-adj = <125000000 1>;
-> +		phy-addr = <0>;
-> +	};
+------=_Part_697_785438814.1451607441727--
