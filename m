@@ -1,102 +1,51 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH] DT: i2c: Update vendor prefix for 24c00
-Date: Sat, 2 Jan 2016 22:21:43 +0100
-Message-ID: <20160102212143.GG1589@katana>
-References: <1450898335-22814-1-git-send-email-akshay.bhat@timesys.com>
- <CAHp75VfvLJu+aL233izR3jh7UQg7ewEmS2Z3EhAg2WPZ9s1gyg@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/2] mmc: omap_hsmmc: Add support for slot-name property in DT
+Date: Sat, 02 Jan 2016 23:57:47 +0100
+Message-ID: <9361696.ohU1ACX8N1@wuerfel>
+References: <1431724489-32359-1-git-send-email-pali.rohar@gmail.com> <4500962.b9ypZOL9bV@wuerfel> <201601021622.03763@pali>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WkfBGePaEyrk4zXB"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfvLJu+aL233izR3jh7UQg7ewEmS2Z3EhAg2WPZ9s1gyg@mail.gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Akshay Bhat <akshay.bhat@timesys.com>, ktsai@capellamicro.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jiri Kosina <trivial@kernel.org>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, justin.waters@timesys.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201601021622.03763@pali>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Ulf Hansson <ulf.hansson@linaro.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Saturday 02 January 2016 16:22:03 Pali Roh=E1r wrote:
+> On Monday 28 December 2015 15:55:28 Arnd Bergmann wrote:
+> > On Monday 28 December 2015 15:54:35 Pali Roh=E1r wrote:
+> > > >=20
+> > > > I mean you can add the platform data to the omap_auxdata_lookup=
+[]
+> > > > table for this board.
+> > >=20
+> > > But can I mix data from omap3-n900.dts and omap_auxdata_lookup[]?
+> >=20
+> Hm... looks like it is not possible. omap_hsmmc driver ignores any=20
+> supplied platform data if there are device tree data. So array=20
+> omap_auxdata_lookup[] does not help.
 
---WkfBGePaEyrk4zXB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Obviously you need to the driver to work with that setting. Maybe
+something as simple as
 
-On Sun, Dec 27, 2015 at 04:57:48PM +0200, Andy Shevchenko wrote:
-> On Wed, Dec 23, 2015 at 9:18 PM, Akshay Bhat <akshay.bhat@timesys.com> wr=
-ote:
-> > "at" is not a valid vendor prefix, correcting the same to "atmel"
-> >
->=20
-> I'm afraid you can't just do this change alone as it's used in some
-> DTS. Though you may deprecated it along with update of current users.
+diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmm=
+c.c
+index e06b1881b6a1..4fa35fc84b8b 100644
+--- a/drivers/mmc/host/omap_hsmmc.c
++++ b/drivers/mmc/host/omap_hsmmc.c
+@@ -2006,7 +2006,7 @@ static int omap_hsmmc_probe(struct platform_devic=
+e *pdev)
+ 	void __iomem *base;
+=20
+ 	match =3D of_match_device(of_match_ptr(omap_mmc_of_match), &pdev->dev=
+);
+-	if (match) {
++	if (!pdata && match) {
+ 		pdata =3D of_get_hsmmc_pdata(&pdev->dev);
+=20
+ 		if (IS_ERR(pdata))
 
-Well, in Linux, I2C core currently strips the vendor anyhow. This will
-probably be changed somewhen (tm), but for now, the impact for Linux
-should be extremly close to 0.
 
-
->=20
-> > Signed-off-by: Akshay Bhat <akshay.bhat@timesys.com>
-> > ---
-> >  Documentation/devicetree/bindings/i2c/trivial-devices.txt | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt =
-b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> > index c50cf13..c4a01c0 100644
-> > --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> > +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> > @@ -20,11 +20,11 @@ adi,adt7476         +/-1C TDM Extended Temp Range I=
-=2EC
-> >  adi,adt7490            +/-1C TDM Extended Temp Range I.C
-> >  adi,adxl345            Three-Axis Digital Accelerometer
-> >  adi,adxl346            Three-Axis Digital Accelerometer (backward-comp=
-atibility value "adi,adxl345" must be listed too)
-> > -at,24c08               i2c serial eeprom  (24cxx)
-> >  atmel,24c00            i2c serial eeprom  (24cxx)
-> >  atmel,24c01            i2c serial eeprom  (24cxx)
-> >  atmel,24c02            i2c serial eeprom  (24cxx)
-> >  atmel,24c04            i2c serial eeprom  (24cxx)
-> > +atmel,24c08            i2c serial eeprom  (24cxx)
-> >  atmel,24c16            i2c serial eeprom  (24cxx)
-> >  atmel,24c32            i2c serial eeprom  (24cxx)
-> >  atmel,24c64            i2c serial eeprom  (24cxx)
-> > --
-> > 2.6.3
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-kernel"=
- in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> > Please read the FAQ at  http://www.tux.org/lkml/
->=20
->=20
->=20
-> --=20
-> With Best Regards,
-> Andy Shevchenko
-
---WkfBGePaEyrk4zXB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWiD9nAAoJEBQN5MwUoCm27aQQAKCecDnEUVnmYeJRhqRdW+mY
-xXvSwq9sf1qFXLKT6b2Ef7beXJbS1vJugqINWvnWISCrFmWS0iZPNS1/AkVDll7l
-cIDecBMgxu8LfBE6nZXu4q3w80vyq57M85f8qNsTR9Rr3Q7KmvNl2NLpG5koaWZE
-zyNfmzsqb3m3HKMGoozK4NTQVOdt/YOkCdCNOazfO6wzF7rqtCObB/uORAHYfEry
-eUgnBRfdqUXXqiWM7mTg0UuulzIx+TJLDclPUZiSzVrJVhhS7Vr0e/r6BpUHByD3
-BBHA/6DwSP1ge3Zy5gCdkPC24Cv+c0yBpYZUbNjQ+L0bfWOQ6GU9fzaqic50k8sf
-4h/FhFy5p0BbriXpulRbtemRRQ65Xhn8MsHafkpzYw/fEU8k2GUCzlS43vz9g2iO
-/pWf6dXT3u8w/8zWpsnraW7NqPqT91xfGpOPaRaEZlLrY9Jmh19Zr/XaOsUmeLH5
-1upTfrso+CrKD4zleU903WB6FauX27EWKIIMhqpgiAACKyPzmrhYmsJYs1jIh0sU
-OHqMwLR8q3VuZuW/MJxbxM+JkQuQ4requseDeLCi4/nIPFoVuRG+A/Un0Q4rI9vA
-EaEdxXGqxsTg9MHwwP+n63lDCXk9LrimDDO0bajb8ne7xaw2OBGLlnlWqXqmkIVv
-SDse2w302FHAEfji69nb
-=gtHk
------END PGP SIGNATURE-----
-
---WkfBGePaEyrk4zXB--
+	Arnd
