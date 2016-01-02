@@ -1,46 +1,79 @@
-From: Roman Volkov <v1ron@mail.ru>
-Subject: Re: [PATCH v3 RESEND 0/2] WM8505/WM8650 DT fixes for SD card
- controller
-Date: Sat, 2 Jan 2016 12:12:39 +0300
-Message-ID: <20160102121239.01b64a0c@v1ron-s7>
-References: <1451655492-2569-1-git-send-email-v1ron@mail.ru>
-	<7786478.TezhYjHkEF@wuerfel>
-	<20160101203230.1dc5e655@v1ron-s7>
-	<9863929.DgKyDlgJ1e@wuerfel>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 1/2] mmc: omap_hsmmc: Add support for slot-name property in DT
+Date: Sat, 2 Jan 2016 16:22:03 +0100
+Message-ID: <201601021622.03763@pali>
+References: <1431724489-32359-1-git-send-email-pali.rohar@gmail.com> <201512281554.35277@pali> <4500962.b9ypZOL9bV@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9863929.DgKyDlgJ1e@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: multipart/signed;
+  boundary="nextPart2951603.i4bZoqKfT1";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <4500962.b9ypZOL9bV@wuerfel>
+Sender: linux-mmc-owner@vger.kernel.org
 To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, linux+armsoc@arm.linux.org.uk, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Tony Prisk <linux@prisktech.co.nz>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Alexey Charkov <alchark@gmail.com>, Roman Volkov <rvolkov@v1ros.org>, Kumar Gala <galak@codeaurora.org>
+Cc: Tony Lindgren <tony@atomide.com>, =?utf-8?q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Ulf Hansson <ulf.hansson@linaro.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-=D0=92 Fri, 01 Jan 2016 22:53:33 +0100
-Arnd Bergmann <arnd@arndb.de> =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+--nextPart2951603.i4bZoqKfT1
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-> On Friday 01 January 2016 20:32:30 Roman Volkov wrote:
-> > > Applied both to next/dt, thanks a lot for following up!
+On Monday 28 December 2015 15:55:28 Arnd Bergmann wrote:
+> On Monday 28 December 2015 15:54:35 Pali Roh=C3=A1r wrote:
+> > On Monday 28 December 2015 15:41:01 Arnd Bergmann wrote:
+> > > On Monday 28 December 2015 15:28:48 Pali Roh=C3=A1r wrote:
+> > > > On Monday 28 December 2015 15:14:50 Arnd Bergmann wrote:
+> > > > > On Friday 25 December 2015 13:53:11 Pali Roh=C3=A1r wrote:
+> > > > > > On Monday 18 May 2015 17:07:57 Arnd Bergmann wrote:
+> > > > > > > On Monday 18 May 2015 08:06:07 Tony Lindgren wrote:
+> > > > > > > > * Arnd Bergmann <arnd@arndb.de> [150515 14:26]:
+> > > > > > > > > On Friday 15 May 2015 23:22:37 Pali Roh=C3=A1r wrote:
+> > > > > > > > If setting up the generic binding is expected to take a
+> > > > > > > > while, you can naturally pass it in pdata while waiting
+> > > > > > > > for the generic binding to get merged.
+> > > > > > >=20
+> > > > > > > Yes, good idea. So the n900 machine can use auxdata to
+> > > > > > > pass this for the time being, while the binding and
+> > > > > > > generic implementation is being worked out.
+> > > > > >=20
+> > > > > > Ok, so what is needed to finish this patch series?
+> > > > >=20
+> > > > > I don't know where we are at this point. Has either the
+> > > > > auxdata approach or the generic binding been worked on at
+> > > > > all?
+> > > >=20
+> > > > What are auxdata data?
 > > >=20
-> > > Let me know if you think this should go into stable backports as
-> > > well, I did not apply it to the fixes branch as you don't have a
-> > > 'Cc: stable@vger.kernel.org' tag and it has never worked so far. =
-=20
+> > > I mean you can add the platform data to the omap_auxdata_lookup[]
+> > > table for this board.
 > >=20
-> > Yes, this must go into the stable too. Let me know if I must change
-> > something or resend. =20
+> > But can I mix data from omap3-n900.dts and omap_auxdata_lookup[]?
 >=20
-> I can put them in the fixes branch with the appropriate stable
-> tag myself, but please clarify whether we need just the first or
-> both patches there. It looks to me that the second one while
-> correct only addresses a cosmetic problem and everything works
-> without it.
+> Yes.
+>=20
+> 	Arnd
 
-Correct, everything works without the second one. One of reviewers
-noticed that addresses are different between WM8505 and WM8650 where
-the hardware is the same. If such trivial changes are not accepted,
-please do not apply.
+Hm... looks like it is not possible. omap_hsmmc driver ignores any=20
+supplied platform data if there are device tree data. So array=20
+omap_auxdata_lookup[] does not help.
 
-Happy New Year,
-Roman
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart2951603.i4bZoqKfT1
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlaH6xsACgkQi/DJPQPkQ1LB9wCgjTVc5XphW0DxLCgEuG14Wkz2
+JxIAoKiN10sMo0tB8WwFntSqbnwxm/E8
+=Ev+j
+-----END PGP SIGNATURE-----
+
+--nextPart2951603.i4bZoqKfT1--
