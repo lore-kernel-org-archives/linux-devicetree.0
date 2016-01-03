@@ -1,100 +1,189 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: Re: [PATCH 4/6] regulator: lp872x: Add enable GPIO pin support
-Date: Sun, 03 Jan 2016 11:19:26 +0100
-Message-ID: <1451816366.3428.4.camel@collins>
-References: <568088B4.6090207@ti.com> <1451342963.14631.13.camel@collins>
-	 <5681D7A8.2030101@ti.com> <1451387613.18148.9.camel@collins>
-	 <568323B7.7080101@ti.com> <1451464521.2531.4.camel@collins>
-	 <20151230163307.GW16023@sirena.org.uk> <1451500639.14341.6.camel@collins>
-	 <20151231214007.GC16023@sirena.org.uk> <1451599146.9673.2.camel@collins>
-	 <20151231221407.GF16023@sirena.org.uk>
+From: Rongrong Zou <zourongrong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v1 3/3] ARM64 LPC: update binding doc
+Date: Sun, 3 Jan 2016 20:24:14 +0800
+Message-ID: <568912EE.9030009@huawei.com>
+References: <1451396032-23708-1-git-send-email-zourongrong@gmail.com>
+ <1899302.RWIn6Bg3Dr@wuerfel> <568537C3.3060902@huawei.com>
+ <17750582.ajK78gYOFz@wuerfel>
+ <CABTftiT1+AmrNjiAie-T6on-oWA4Zz73+Tj2pQrixMT3o475uw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-Ebdf2CMHbKlKpNAmectL"
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151231221407.GF16023-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <CABTftiT1+AmrNjiAie-T6on-oWA4Zz73+Tj2pQrixMT3o475uw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rongrong Zou <zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+=E5=9C=A8 2015/12/31 23:00, Rongrong Zou =E5=86=99=E9=81=93:
+>
+>
+> 2015-12-31 22:40 GMT+08:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org <mailto:arnd@=
+arndb.de>>:
+>  >
+>  > On Thursday 31 December 2015 22:12:19 Rongrong Zou wrote:
+>  > > =E5=9C=A8 2015/12/30 17:06, Arnd Bergmann =E5=86=99=E9=81=93:
+>  > > > On Tuesday 29 December 2015 21:33:52 Rongrong Zou wrote:
+>  > > >> +Example:
+>  > > >> +
+>  > > >> +        lpc_0: lpc@a01b0000 {
+>  > > >> +          #address-cells =3D <1>;
+>  > > >> +          #size-cells =3D <1>;
+>  > > >> +                compatible =3D "low-pin-count";
+>  > > >> +                reg =3D <0x0 0xa01b0000 0x0 0x10000>;
+>  > > >> +        };
+>  > > >
+>  > > > One more thought: please try to stick as closely as possible t=
+o the existing
+>  > > > ISA binding that is documented at
+>  > > >
+>  > > > http://www.firmware.org/1275/bindings/isa/isa0_4d.ps
+>  > >  From the specification, I think I should use 2 32bit integer to=
+ describe the isa addr in dts.
+>  > > >
+>  > > > In particular, this should cover the possibility of describing=
+ both memory
+>  > > > and I/O spaces in child devices.
+>  > > >
+>  > >
+>  > > I found below config in powerpc dts "arch/powerpc/boot/dts/mpc85=
+44ds.dts"
+>  > >
+>  > > isa@1e {
+>  > >                                  device_type =3D "isa";
+>  > >                                  #interrupt-cells =3D <2>;
+>  > >                                  #size-cells =3D <1>;
+>  > >                                  #address-cells =3D <2>;
+>  > >                                  reg =3D <0xf000 0x0 0x0 0x0 0x0=
+>;
+>  > >                                  ranges =3D <0x1 0x0 0x1000000 0=
+x0 0x0
+>  > >                                            0x1000>;
+>  > >                                  interrupt-parent =3D <&i8259>;
+>  > >
+>  > >
+>  > >
+>  > >                                  rtc@70 {
+>  > >                                          compatible =3D "pnpPNP,=
+b00";
+>  > >                                          reg =3D <0x1 0x70 0x2>;
+>  > >                                  };
+>  > >   the isa space in child-node: reg =3D <0x1 0x70 0x2>;
+>  > >   0x1 means IO space, 70 means addr, 0x2 is size.
+>  > >   but when i config the following in dts, the ipmi_0 node can't =
+be probed,
+>  > >   I think there may be some problems.
+>  > >
+>  > > lpc_0: lpc@a01b0000 {
+>  > >       compatible =3D "low-pin-count";
+>  > >       device_type =3D "isa";
+>  > >       #address-cells =3D <2>;
+>  > >       #size-cells =3D <1>;
+>  > >       reg =3D <0x0 0xa01b0000 0x0 0x10000>;
+>  > >
+>  > >       ipmi_0:ipmi@000000e4{
+>  > >               device_type =3D "ipmi";
+>  > >               compatible =3D "ipmi-bt";
+>  > >               reg =3D <0x1 0x000000e4 0x4>;
+>  > > };
+>  >
+>  > The DT sample above looks good in principle. I believe what you ar=
+e missing
+>  > here is code in your driver to scan the child nodes to create the =
+platform
+>  > devices. of_bus_isa_translate() should work with your definition h=
+ere
+>  > and create the correct IORESOURCE_IO resources. You don't have any=
+ MMIO
+>  > resources, so the absence of a ranges property is ok. Maybe all yo=
+u
+>  > are missing is a call to of_platform_populate() or of_platform_bus=
+_probe()?
+>  >
+>
+> You are right. thanks, i'll try on test board .  if i get the correct=
+ result , the new patch
+> will be sent later. By the way, it's my another email account use whe=
+n i at home.
 
---=-Ebdf2CMHbKlKpNAmectL
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I tried, and there need some additional changes.
 
-Le jeudi 31 d=C3=A9cembre 2015 =C3=A0 22:14 +0000, Mark Brown a =C3=A9crit =
-:
-> On Thu, Dec 31, 2015 at 10:59:06PM +0100, Paul Kocialkowski wrote:
->=20
-> > I understand, thanks for pointing this out. Well, for my use case, ther=
-e
-> > is no use in disabling the chip at any point as it powers the external
-> > mmc.
->=20
-> Presumably someone might decide not to use the MMC in some case (perhaps
-> only mounting it when explicitly needed in order to save power for
-> example, or the MMC subsystem might figure out a way to power down an
-> idle MMC block device).
+isa@a01b0000 {
 
-Makes sense, I'll keep that in mind.
+/*the node name should start with "isa", because of below definition
+* static int of_bus_isa_match(struct device_node *np)
+* {
+*	return !strcmp(np->name, "isa");
+* }
+*/
+	compatible =3D "low-pin-count";
+	device_type =3D "isa";
+	#address-cells =3D <2>;
+	#size-cells =3D <1>;
+	reg =3D <0x0 0xa01b0000 0x0 0x10000>;
+	ranges =3D <0x1 0x0 0x0 0x0 0x1000>;
+/*
+*  ranges is required, then i can get the IORESOURCE_IO <0xe4,4> from "=
+reg =3D <0x1, 0x000000e4, 4>".
+*
+*/
+	ipmi_0:ipmi@000000e4{
+		device_type =3D "ipmi";
+		compatible =3D "ipmi-bt";
+		reg =3D <0x1 0x000000e4 0x4>;
+};
 
-> > Would you agree to have the enable pin handled directly (and by that, I
-> > mean enabled once, when requested, as I first suggested in the patchset=
-)
-> > in the driver then?
->=20
-> That's probably fine, or do it via runtime PM (the framework is fairly
-> simple to use, I'll probably go add support in the core for it in the
-> next day or two as this seems like a sensible use case).  I can't
-> remember if this device is a MFD or not and I'm just on my way out the
-> door.
+drivers\of\address.c
+static int __of_address_to_resource(struct device_node *dev,
+                 const __be32 *addrp, u64 size, unsigned int flags,
+                 const char *name, struct resource *r)
+{
+         u64 taddr;
 
-Runtime PM seems like a good fit (though I hadn't heard about it before:
-you can guess I'm fairly new to kernel development), please let me know
-whether you end up implementing it so I can try to handle the GPIO this
-way.
+         if ((flags & (IORESOURCE_IO | IORESOURCE_MEM)) =3D=3D 0)
+                 return -EINVAL;
+         taddr =3D of_translate_address(dev, addrp);
+         if (taddr =3D=3D OF_BAD_ADDR)
+                 return -EINVAL;
+         memset(r, 0, sizeof(struct resource));
+         if (flags & IORESOURCE_IO) {
+                 unsigned long port;
 
-Thanks!
-
---=20
-Paul Kocialkowski, Replicant developer
-
-Replicant is a fully free Android distribution running on several
-devices, a free software mobile operating system putting the emphasis on
-freedom and privacy/security.
-
-Website: https://www.replicant.us/
-Blog: https://blog.replicant.us/
-Wiki/tracker/forums: https://redmine.replicant.us/
+/*****************************************************************/
+/*legacy port(< 0x1000) is reserved, and need no translation here*/
+/*****************************************************************/
+                 if(taddr + size < PCIBIOS_MIN_IO){
+                         r->start =3D taddr;
+                         r->end =3D taddr + size - 1;
+                 }
 
 
---=-Ebdf2CMHbKlKpNAmectL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+                 else{
+                         port =3D pci_address_to_pio(taddr);
+                         if (port =3D=3D (unsigned long)-1)
+                                 return -EINVAL;
+                         r->start =3D port;
+                         r->end =3D port + size - 1;
+                 }
+         } else {
+                 r->start =3D taddr;
+                 r->end =3D taddr + size - 1;
+         }
+         r->flags =3D flags;
+         r->name =3D name ? name : dev->full_name;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+         return 0;
+}
 
-iQIcBAABAgAGBQJWiPWuAAoJEIT9weqP7pUMRN8P/2d9llXdsSJWu5YyqNxMZj/k
-IPbrOWs34ZdMMAdmeRnqIDjuZxGL5j6KjpnjPnjAPLJjLxiBYEQgBbIOYp+rBERX
-mNDUED/nKafPL70X87nDFPBztImimC/QVHSoxc9uua5Ojl/RdcJd1vs/7/ofTA7m
-xxqNqTdXn38yKkJF0LBJIUesKikXf3d+fsHKHVAlxY/gAxsmoAcwEdXMGq2LB/Kz
-cWptA1lhGLe3I0uuPqC04DjVhu77lGMrkfNP0xHzf8cgbeWMDeBuZfxid2r260Y+
-gb5TlfsRodCDR9o9oD6ZokYC3B+j0ijBRVbD7x9Ck4L0xwkv7AanbMBm0G6+24iq
-cBHMDHfTy39TNiLt4JvaWgR251MBeNyMSwjk7pMdru/95KnnLMHS/bfTT4PWj3vQ
-XMAUoWX+6wbilQLsL76LqdEcsfL4hrCpJ7Ilar58JCU0nWgvKaaIjEo8WJOzw0XA
-0F6ffgBbJV7zob7wVB6FwfXGLq2VXSf9Xrzq5FZWhPzOYDRwN/BoUPAmdRjCJR20
-kLcTAtwrwoozm4iJ0B3BNbfzsgWJPtyyKTc/1NblJBuh+ffKT4GE9C7yMJ4fMh3c
-Vvb0ufij8o6m+350460fG54PAYvY8jdHrWKM3TSFd2BdkCotEWwhZmzKRoh2taAb
-b4XW9nHqogSNq8MnvvVf
-=jY/K
------END PGP SIGNATURE-----
 
---=-Ebdf2CMHbKlKpNAmectL--
+
+>
+>  >         Arnd
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
