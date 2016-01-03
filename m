@@ -1,63 +1,55 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/2] mmc: omap_hsmmc: Add support for slot-name property in DT
-Date: Sun, 03 Jan 2016 00:17:40 +0100
-Message-ID: <5286117.vKOl7qiBNG@wuerfel>
-References: <1431724489-32359-1-git-send-email-pali.rohar@gmail.com> <9361696.ohU1ACX8N1@wuerfel> <201601030003.54168@pali>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v2] PM/OPP: Set cpu_dev->id in cpumask first
+Date: Sun, 03 Jan 2016 02:01:16 +0100
+Message-ID: <725923899.qhRhv456J6@vostro.rjw.lan>
+References: <20151228031123.GB3598@ubuntu> <1451307977-7427-1-git-send-email-pi-cheng.chen@linaro.org> <20151229035054.GA6351@ubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201601030003.54168@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Ulf Hansson <ulf.hansson@linaro.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20151229035054.GA6351@ubuntu>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Pi-Cheng Chen <pi-cheng.chen@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Daniel Kurtz <djkurtz@chromium.org>, linux-mediatek@lists.infradead.org, linaro-kernel@lists.linaro.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 03 January 2016 00:03:54 Pali Roh=E1r wrote:
-> On Saturday 02 January 2016 23:57:47 Arnd Bergmann wrote:
-> > On Saturday 02 January 2016 16:22:03 Pali Roh=E1r wrote:
-> > > On Monday 28 December 2015 15:55:28 Arnd Bergmann wrote:
-> > > > On Monday 28 December 2015 15:54:35 Pali Roh=E1r wrote:
-> > > > > > I mean you can add the platform data to the
-> > > > > > omap_auxdata_lookup[] table for this board.
-> > > > >=20
-> > > > > But can I mix data from omap3-n900.dts and
-> > > > > omap_auxdata_lookup[]?
-> > >=20
-> > > Hm... looks like it is not possible. omap_hsmmc driver ignores an=
-y
-> > > supplied platform data if there are device tree data. So array
-> > > omap_auxdata_lookup[] does not help.
-> >=20
-> > Obviously you need to the driver to work with that setting. Maybe
-> > something as simple as
-> >=20
-> > diff --git a/drivers/mmc/host/omap_hsmmc.c
-> > b/drivers/mmc/host/omap_hsmmc.c index e06b1881b6a1..4fa35fc84b8b
-> > 100644
-> > --- a/drivers/mmc/host/omap_hsmmc.c
-> > +++ b/drivers/mmc/host/omap_hsmmc.c
-> > @@ -2006,7 +2006,7 @@ static int omap_hsmmc_probe(struct
-> > platform_device *pdev) void __iomem *base;
-> >=20
-> >       match =3D of_match_device(of_match_ptr(omap_mmc_of_match),
-> > &pdev->dev); -        if (match) {
-> > +     if (!pdata && match) {
-> >               pdata =3D of_get_hsmmc_pdata(&pdev->dev);
-> >=20
-> >               if (IS_ERR(pdata))
-> >=20
->=20
-> But in this case I must copy mmc definition from omap3-n900.dts file=20
-> back to board code to omap_auxdata_lookup[]. And mmc definitions in=20
-> omap3-n900.dts will be ignored. This is step back.
->=20
-> Mixing mmc definitions from DTS file together with omap_auxdata_looku=
-p[]=20
-> just will not work.
+On Tuesday, December 29, 2015 09:20:54 AM Viresh Kumar wrote:
+> On 28-12-15, 21:06, Pi-Cheng Chen wrote:
+> > Set cpu_dev->id in cpumask first when setting up cpumask for CPUs that
+> > share the same OPP table. This might be helpful when handling cpumask
+> > without the original CPU bitfield set.
+> > 
+> > Signed-off-by: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+> > ---
+> > v1->v2:
+> > - Set cpu_dev->id in cpumask at the top instead of skip it in the loop
+> > ---
+> >  drivers/base/power/opp/cpu.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/base/power/opp/cpu.c b/drivers/base/power/opp/cpu.c
+> > index 7b445e8..9f0c155 100644
+> > --- a/drivers/base/power/opp/cpu.c
+> > +++ b/drivers/base/power/opp/cpu.c
+> > @@ -214,7 +214,6 @@ EXPORT_SYMBOL_GPL(dev_pm_opp_of_cpumask_add_table);
+> >  /*
+> >   * Works only for OPP v2 bindings.
+> >   *
+> > - * cpumask should be already set to mask of cpu_dev->id.
+> >   * Returns -ENOENT if operating-points-v2 bindings aren't supported.
+> >   */
+> >  int dev_pm_opp_of_get_sharing_cpus(struct device *cpu_dev, cpumask_var_t cpumask)
+> > @@ -230,6 +229,8 @@ int dev_pm_opp_of_get_sharing_cpus(struct device *cpu_dev, cpumask_var_t cpumask
+> >  		return -ENOENT;
+> >  	}
+> >  
+> > +	cpumask_set_cpu(cpu_dev->id, cpumask);
+> > +
+> >  	/* OPPs are shared ? */
+> >  	if (!of_property_read_bool(np, "opp-shared"))
+> >  		goto put_cpu_node;
+> 
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-As I said earlier, if you prefer to avoid the auxdata hack, you are
-also welcome to work on support for named slots in the MMC core code,
-it will just be more work and will take time to get consensus on.
+Applied, along with the [2-3/3], thanks!
 
-	Arnd
