@@ -1,47 +1,72 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] iio: health: max30100: add config for LED current
-Date: Sun, 3 Jan 2016 18:00:39 +0000
-Message-ID: <568961C7.1060503@kernel.org>
-References: <1451454288-9945-1-git-send-email-mranostay@gmail.com>
- <20151231221731.GA4445@rob-hp-laptop>
+From: Enric Balletbo i Serra <eballetbo@gmail.com>
+Subject: [PATCHv7 0/5] Add initial support for slimport anx78xx
+Date: Sun,  3 Jan 2016 22:37:43 +0100
+Message-ID: <1451857068-23750-1-git-send-email-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151231221731.GA4445@rob-hp-laptop>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devel@driverdev.osuosl.org, treding@nvidia.com
+Cc: mark.rutland@arm.com, drinkcat@chromium.org, laurent.pinchart@ideasonboard.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, gregkh@linuxfoundation.org, emil.l.velikov@gmail.com, cawa.cheng@mediatek.com, jb.tsai@mediatek.com, sjoerd.simons@collabora.co.uk, robh+dt@kernel.org, span@analogixsemi.com, galak@codeaurora.org, javier@dowhile0.org, eddie.huang@mediatek.com, cjiao@analogixsemi.com, dan.carpenter@oracle.com, nathan.chung@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 31/12/15 22:17, Rob Herring wrote:
-> On Tue, Dec 29, 2015 at 09:44:48PM -0800, Matt Ranostay wrote:
->> Allow the current for both RED and IR LEDs to be set via an device tree
->> property setting.
->>
->> This is an optional setting that is useful for applications that have a
->> known glass attenuation factor.
->>
->> Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->> Changes from v2:
->> * change to use microamp property name from LED class
->> * updated documentation for new format
->> * added allowed current index map
->>
->> .../devicetree/bindings/iio/health/max30100.txt    |  8 +++
->>  drivers/iio/health/max30100.c                      | 81 ++++++++++++++++++++--
->>  2 files changed, 83 insertions(+), 6 deletions(-)
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Looks good to me as well. Applied to the togreg branch of iio.git - initially
-pushed out as testing for the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+SGkgYWxsLAoKVGhpcyBpcyBhbm90aGVyIHZlcnNpb24gb2YgdGhlIHBhdGNoIHNldCB0byBpbnRy
+b2R1Y2UgdGhlIGFueDc4MTQgdHJhbnNtaXR0ZXIuCkFueSBjb21tZW50cyBhcmUgd2VsY29tZS4K
+ClRoZSBmb2xsb3dpbmcgc2VyaWVzIGFkZCBpbml0aWFsIHN1cHBvcnQgZm9yIHRoZSBTbGltcG9y
+dCBBTlg3ODE0IHRyYW5zbWl0dGVyLCBhCnVsdHJhLWxvdyBwb3dlciBGdWxsLUhEICgxMDgwcDYw
+KSB0cmFuc21pdHRlciBkZXNpZ25lZCBmb3IgcG9ydGFibGUgZGV2aWNlLgoKVGhlIGRyaXZlciB3
+YXMgb3JpZ2luYWxseSBjcmVhdGVkIGFuZCBiYXNlZCBmcm9tIHRoZSB3b3JrIG9mIEp1bmh1YSBY
+aWEgZnJvbQpBbmFsb2dpeC4gVGhpcyBkcml2ZXIgaXMgYSByZWZhY3RvciBvZiB0aGUgb3JpZ2lu
+YWwgZHJpdmVyIGFuZCBmaXhlcyBkaWZmZXJlbnQKY29kaW5nIHN0eWxlIGxpbmVzLCBhbmQgZGlm
+ZmVyZW50IGVycm9ycy93YXJuaW5ncyByZXBvcnRlZCBieSBjaGVja3BhdGNoLiBBbHNvCnRoZXJl
+IHdlcmUgdGhpbmdzIHRoYXQgSSBub3RpY2VkIHRoYXQgd2UgbmVlZCB0byBjaGFuZ2UgbGlrZToK
+CiAtIENvbnZlcnQgdGhlIG51bWJlcmVkIEdQSU8gQVBJIHRvIHRoZSBuZXcgZGVzY3JpcHRvciBi
+YXNlZCBHUElPIEFQSS4KIC0gUmV2aWV3IHRoZSBEVCBiaW5kaW5nCiAtIEFkZCBtaXNzaW5nIE1P
+RFVMRV9ERVZJQ0VfVEFCTEUob2YsIC4uLik7CiAtIEZpeCBNYWtlZmlsZXMgYW5kIEtjb25maWcg
+dG8gYnVpbGQgY29uZGl0aW9uYWxseS4KIC0gVXNlIFNJTVBMRV9ERVZfUE1fT1BTKCkgaW5zdGVh
+ZCBvZiB0aGUgZGVwcmVjYXRlZCBpMmMgLnN1c3BlbmQgYW5kCiAgLnJlc3VtZSBjYWxsYmFja3Mu
+CiAtIE1vdmUgdG8gdXNlIG1hbmFnZWQgZGV2aWNlIHJlc291cmNlcy4KIC0gUmVtb3ZlIGRlYWQv
+dW51c2VkIGNvZGUuCiAtIEFuZCBvdGhlcnMgLi4uCgpFbnJpYyBCYWxsZXRibyBpIFNlcnJhICg1
+KToKICBkcm0vZHA6IGFkZCBEUENEIGRlZmluaXRpb25zIGZyb20gRFAgMS4xCiAgaGRtaTogYWRk
+ZWQgZnVuY3Rpb25zIGZvciBNUEVHIEluZm9GcmFtZXMKICBvZjogQWRkIHZlbmRvciBwcmVmaXgg
+Zm9yIEFuYWxvZ2l4IFNlbWljb25kdWN0b3IsIEluYy4KICBkZXZpY2V0cmVlOiBBZGQgbmV3IEFO
+WDc4MTQgU2xpbVBvcnQgdHJhbnNtaXR0ZXIgYmluZGluZy4KICBkcm06IGJyaWRnZTogYW54Nzh4
+eDogQWRkIGFueDc4eHggZHJpdmVyIHN1cHBvcnQgYnkgYW5hbG9naXguCgogLi4uL2RldmljZXRy
+ZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCAgICAgICAgfCAgICAxICsKIC4uLi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JyaWRnZS9hbng3ODE0LnR4dCAgIHwgICAzOSArCiBkcml2
+ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcgICAgICAgICAgICAgICAgICAgICB8ICAgIDIgKwog
+ZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgfCAgICAx
+ICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW54Nzh4eC9LY29uZmlnICAgICAgICAgICAgIHwg
+ICAgNSArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FueDc4eHgvTWFrZWZpbGUgICAgICAgICAg
+ICB8ICAgIDQgKwogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbng3OHh4L2FueDc4eHguaCAgICAg
+ICAgICAgfCAgIDQ0ICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW54Nzh4eC9hbng3OHh4X21h
+aW4uYyAgICAgIHwgIDMzNCArKwogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbng3OHh4L3NsaW1w
+b3J0X3R4X2Rydi5jICAgfCAzMTk0ICsrKysrKysrKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9k
+cm0vYnJpZGdlL2FueDc4eHgvc2xpbXBvcnRfdHhfZHJ2LmggICB8ICAxMTAgKwogZHJpdmVycy9n
+cHUvZHJtL2JyaWRnZS9hbng3OHh4L3NsaW1wb3J0X3R4X3JlZy5oICAgfCAgNzM3ICsrKysrCiBk
+cml2ZXJzL3ZpZGVvL2hkbWkuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxNTYg
+KwogaW5jbHVkZS9kcm0vZHJtX2RwX2hlbHBlci5oICAgICAgICAgICAgICAgICAgICAgICAgfCAg
+IDEwICsKIGluY2x1ZGUvbGludXgvaGRtaS5oICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHwgICAyNCArCiAxNCBmaWxlcyBjaGFuZ2VkLCA0NjYxIGluc2VydGlvbnMoKykKIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vYnJpZGdl
+L2FueDc4MTQudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9h
+bng3OHh4L0tjb25maWcKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdl
+L2FueDc4eHgvTWFrZWZpbGUKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJp
+ZGdlL2FueDc4eHgvYW54Nzh4eC5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJt
+L2JyaWRnZS9hbng3OHh4L2FueDc4eHhfbWFpbi5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
+cy9ncHUvZHJtL2JyaWRnZS9hbng3OHh4L3NsaW1wb3J0X3R4X2Rydi5jCiBjcmVhdGUgbW9kZSAx
+MDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbng3OHh4L3NsaW1wb3J0X3R4X2Rydi5oCiBj
+cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbng3OHh4L3NsaW1wb3J0
+X3R4X3JlZy5oCgotLSAKMi4xLjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVsCg==
