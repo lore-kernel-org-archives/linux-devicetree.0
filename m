@@ -1,7 +1,7 @@
 From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH 07/10] [media] tvp5150: Add device tree binding document
-Date: Mon,  4 Jan 2016 09:25:29 -0300
-Message-ID: <1451910332-23385-8-git-send-email-javier@osg.samsung.com>
+Subject: [PATCH 09/10] [media] tvp5150: Initialize the chip on probe
+Date: Mon,  4 Jan 2016 09:25:31 -0300
+Message-ID: <1451910332-23385-10-git-send-email-javier@osg.samsung.com>
 References: <1451910332-23385-1-git-send-email-javier@osg.samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1451910332-23385-1-git-send-email-javier@osg.samsung.com>
@@ -10,55 +10,88 @@ To: linux-kernel@vger.kernel.org
 Cc: devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Enrico Butera <ebutera@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Rob Herring <robh+dt@kernel.org>, Eduard Gavin <egavinc@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a Device Tree binding document for the TVP5150 video decoder.
+After power-up, the tvp5150 decoder is in a unknown state until the
+RESETB pin is driven LOW which reset all the registers and restarts
+the chip's internal state machine.
+
+The init sequence has some timing constraints and the RESETB signal
+can only be used if the PDN (Power-down) pin is first released.
+
+So, the initialization sequence is as follows:
+
+1- PDN (active-low) is driven HIGH so the chip is power-up
+2- A 20 ms delay is needed before sending a RESETB (active-low) signal.
+3- The RESETB pulse duration is 500 ns.
+4- A 200 us delay is needed for the I2C client to be active after reset.
+
+This patch used as a reference the logic in the IGEPv2 board file from
+the ISEE 2.6.37 vendor tree.
 
 Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
 ---
 
- .../devicetree/bindings/media/i2c/tvp5150.txt      | 35 ++++++++++++++++++++++
+ drivers/media/i2c/tvp5150.c | 35 +++++++++++++++++++++++++++++++++++
  1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp5150.txt
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-new file mode 100644
-index 000000000000..bf0b3f3128ce
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-@@ -0,0 +1,35 @@
-+* Texas Instruments TVP5150 and TVP5151 video decoders
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index caac96a577f8..fed89a811ab7 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -5,6 +5,7 @@
+  * This code is placed under the terms of the GNU General Public License v2
+  */
+ 
++#include <linux/of_gpio.h>
+ #include <linux/i2c.h>
+ #include <linux/slab.h>
+ #include <linux/videodev2.h>
+@@ -1197,6 +1198,36 @@ static int tvp5150_detect_version(struct tvp5150 *core)
+ 	return 0;
+ }
+ 
++static inline int tvp5150_init(struct i2c_client *c)
++{
++	struct gpio_desc *pdn_gpio;
++	struct gpio_desc *reset_gpio;
 +
-+The TVP5150 and TVP5151 are video decoders that convert baseband NTSC and PAL
-+(and also SECAM in the TVP5151 case) video signals to either 8-bit 4:2:2 YUV
-+with discrete syncs or 8-bit ITU-R BT.656 with embedded syncs output formats.
++	pdn_gpio = devm_gpiod_get_optional(&c->dev, "powerdown", GPIOD_OUT_HIGH);
++	if (IS_ERR(pdn_gpio))
++		return PTR_ERR(pdn_gpio);
 +
-+Required Properties:
-+- compatible: value must be "ti,tvp5150"
-+- reg: I2C slave address
++	if (pdn_gpio) {
++		gpiod_set_value_cansleep(pdn_gpio, 0);
++		/* Delay time between power supplies active and reset */
++		msleep(20);
++	}
 +
-+Optional Properties:
-+- powerdown-gpios: phandle for the GPIO connected to the PDN pin, if any.
-+- reset-gpios: phandle for the GPIO connected to the RESETB pin, if any.
++	reset_gpio = devm_gpiod_get_optional(&c->dev, "reset", GPIOD_OUT_HIGH);
++	if (IS_ERR(reset_gpio))
++		return PTR_ERR(reset_gpio);
 +
-+The device node must contain one 'port' child node for its digital output
-+video port, in accordance with the video interface bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
++	if (reset_gpio) {
++		/* RESETB pulse duration */
++		ndelay(500);
++		gpiod_set_value_cansleep(reset_gpio, 0);
++		/* Delay time between end of reset to I2C active */
++		usleep_range(200, 250);
++	}
 +
-+Example:
++	return 0;
++}
 +
-+&i2c2 {
-+	...
-+	tvp5150@5c {
-+			compatible = "ti,tvp5150";
-+			reg = <0x5c>;
-+			powerdown-gpios = <&gpio4 30 GPIO_ACTIVE_LOW>;
-+			reset-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
+ static int tvp5150_probe(struct i2c_client *c,
+ 			 const struct i2c_device_id *id)
+ {
+@@ -1209,6 +1240,10 @@ static int tvp5150_probe(struct i2c_client *c,
+ 	     I2C_FUNC_SMBUS_READ_BYTE | I2C_FUNC_SMBUS_WRITE_BYTE_DATA))
+ 		return -EIO;
+ 
++	res = tvp5150_init(c);
++	if (res)
++		return res;
 +
-+			port {
-+				tvp5150_1: endpoint {
-+					remote-endpoint = <&ccdc_ep>;
-+				};
-+			};
-+	};
-+};
+ 	core = devm_kzalloc(&c->dev, sizeof(*core), GFP_KERNEL);
+ 	if (!core)
+ 		return -ENOMEM;
 -- 
 2.4.3
