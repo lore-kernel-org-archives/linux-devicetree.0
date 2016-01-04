@@ -1,73 +1,128 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: [PATCH 00/10] [media] tvp5150: add MC and DT support
-Date: Mon,  4 Jan 2016 09:25:22 -0300
-Message-ID: <1451910332-23385-1-git-send-email-javier@osg.samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Enrico Butera <ebutera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eduard Gavin <egavinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH 01/10] [media] tvp5150: Restructure version detection
+Date: Mon,  4 Jan 2016 09:25:23 -0300
+Message-ID: <1451910332-23385-2-git-send-email-javier@osg.samsung.com>
+References: <1451910332-23385-1-git-send-email-javier@osg.samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1451910332-23385-1-git-send-email-javier@osg.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Enrico Butera <ebutera@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Rob Herring <robh+dt@kernel.org>, Eduard Gavin <egavinc@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-One of my testing platforms for the MC next gen [0] work has been an OMAP3
-board (IGEPv2) with a tvp5151 video decoder attached to the OMAP3ISP block.
+Move the version detection code to a separate function and restructure
+it to prepare for TVP5151 support.
 
-I've been using some patches from Laurent Pinchart that adds MC support to
-the tvp5150 driver. The patches were never posted to the list and it seems
-he doesn't have time to continue working on this so I have taken them from
-his personal tree [1] and submitting now for review.
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+---
 
-The series also contains patches that adds DT support to the driver so it
-can be used in DT based platforms.
+ drivers/media/i2c/tvp5150.c | 79 ++++++++++++++++++++++++++-------------------
+ 1 file changed, 45 insertions(+), 34 deletions(-)
 
-To test, the following media pipeline was used:
-
-$ media-ctl -r -l '"tvp5150 1-005c":0->"OMAP3 ISP CCDC":0[1], "OMAP3 ISP CCDC":1->"OMAP3 ISP CCDC output":0[1]'
-$ media-ctl -v --set-format '"OMAP3 ISP CCDC":0 [UYVY2X8 720x240 field:alternate]'
-$ media-ctl -v --set-format '"OMAP3 ISP CCDC":1 [UYVY2X8 720x240 field:interlaced-tb]'
-
-And frames captured with the yavta tool:
-
-$ yavta -f UYVY -s 720x480 -n 1 --field interlaced-tb --capture=1 -F /dev/video2
-$ raw2rgbpnm -f UYVY -s 720x480 frame-000000.bin frame-000000.pnm
-
-The patches are on top of [0] not because is a depedency but just to avoid
-merge conflicts and I don't expect them to be picked before that anyways.
-
-Best regards,
-Javier
-
-[0]: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-August/367109.html
-[1]: http://git.linuxtv.org/pinchartl/media.git/log/?h=omap3isp/tvp5151
-
-
-Eduard Gavin (1):
-  [media] tvp5150: Add OF match table
-
-Javier Martinez Canillas (3):
-  [media] tvp5150: Add device tree binding document
-  [media] tvp5150: Initialize the chip on probe
-  [media] tvp5150: Configure data interface via pdata or DT
-
-Laurent Pinchart (6):
-  [media] tvp5150: Restructure version detection
-  [media] tvp5150: Add tvp5151 support
-  [media] tvp5150: Add pad-level subdev operations
-  [media] tvp5150: Add pixel rate control support
-  [media] tvp5150: Add s_stream subdev operation support
-  [media] tvp5150: Add g_mbus_config subdev operation support
-
- .../devicetree/bindings/media/i2c/tvp5150.txt      |  35 +++
- drivers/media/i2c/tvp5150.c                        | 272 +++++++++++++++++----
- include/media/i2c/tvp5150.h                        |   5 +
- 3 files changed, 263 insertions(+), 49 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index dda8b3c000cc..9e953e5a7ec9 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -1105,13 +1105,53 @@ static const struct v4l2_subdev_ops tvp5150_ops = {
+ 			I2C Client & Driver
+  ****************************************************************************/
+ 
++static int tvp5150_detect_version(struct tvp5150 *core)
++{
++	struct v4l2_subdev *sd = &core->sd;
++	struct i2c_client *c = v4l2_get_subdevdata(sd);
++	unsigned int i;
++	u16 dev_id;
++	u16 rom_ver;
++	u8 regs[4];
++	int res;
++
++	/*
++	 * Read consequent registers - TVP5150_MSB_DEV_ID, TVP5150_LSB_DEV_ID,
++	 * TVP5150_ROM_MAJOR_VER, TVP5150_ROM_MINOR_VER
++	 */
++	for (i = 0; i < 4; i++) {
++		res = tvp5150_read(sd, TVP5150_MSB_DEV_ID + i);
++		if (res < 0)
++			return res;
++		regs[i] = res;
++	}
++
++	dev_id = (regs[0] << 8) | regs[1];
++	rom_ver = (regs[2] << 8) | regs[3];
++
++	v4l2_info(sd, "tvp%04x (%u.%u) chip found @ 0x%02x (%s)\n",
++		  dev_id, regs[2], regs[3], c->addr << 1, c->adapter->name);
++
++	if (dev_id == 0x5150 && rom_ver == 0x0321) { /* TVP51510A */
++		v4l2_info(sd, "tvp5150a detected.\n");
++	} else if (dev_id == 0x5150 && rom_ver == 0x0400) { /* TVP5150AM1 */
++		v4l2_info(sd, "tvp5150am1 detected.\n");
++
++		/* ITU-T BT.656.4 timing */
++		tvp5150_write(sd, TVP5150_REV_SELECT, 0);
++	} else {
++		v4l2_info(sd, "*** unknown tvp%04x chip detected.\n", dev_id);
++	}
++
++	return 0;
++}
++
+ static int tvp5150_probe(struct i2c_client *c,
+ 			 const struct i2c_device_id *id)
+ {
+ 	struct tvp5150 *core;
+ 	struct v4l2_subdev *sd;
+-	int tvp5150_id[4];
+-	int i, res;
++	int res;
+ 
+ 	/* Check if the adapter supports the needed features */
+ 	if (!i2c_check_functionality(c->adapter,
+@@ -1124,38 +1164,9 @@ static int tvp5150_probe(struct i2c_client *c,
+ 	sd = &core->sd;
+ 	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
+ 
+-	/* 
+-	 * Read consequent registers - TVP5150_MSB_DEV_ID, TVP5150_LSB_DEV_ID,
+-	 * TVP5150_ROM_MAJOR_VER, TVP5150_ROM_MINOR_VER 
+-	 */
+-	for (i = 0; i < 4; i++) {
+-		res = tvp5150_read(sd, TVP5150_MSB_DEV_ID + i);
+-		if (res < 0)
+-			return res;
+-		tvp5150_id[i] = res;
+-	}
+-
+-	v4l_info(c, "chip found @ 0x%02x (%s)\n",
+-		 c->addr << 1, c->adapter->name);
+-
+-	if (tvp5150_id[2] == 4 && tvp5150_id[3] == 0) { /* Is TVP5150AM1 */
+-		v4l2_info(sd, "tvp%02x%02xam1 detected.\n",
+-			  tvp5150_id[0], tvp5150_id[1]);
+-
+-		/* ITU-T BT.656.4 timing */
+-		tvp5150_write(sd, TVP5150_REV_SELECT, 0);
+-	} else {
+-		/* Is TVP5150A */
+-		if (tvp5150_id[2] == 3 || tvp5150_id[3] == 0x21) {
+-			v4l2_info(sd, "tvp%02x%02xa detected.\n",
+-				  tvp5150_id[0], tvp5150_id[1]);
+-		} else {
+-			v4l2_info(sd, "*** unknown tvp%02x%02x chip detected.\n",
+-				  tvp5150_id[0], tvp5150_id[1]);
+-			v4l2_info(sd, "*** Rom ver is %d.%d\n",
+-				  tvp5150_id[2], tvp5150_id[3]);
+-		}
+-	}
++	res = tvp5150_detect_version(core);
++	if (res < 0)
++		return res;
+ 
+ 	core->norm = V4L2_STD_ALL;	/* Default is autodetect */
+ 	core->input = TVP5150_COMPOSITE1;
 -- 
 2.4.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
