@@ -1,7 +1,7 @@
 From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH 09/10] [media] tvp5150: Initialize the chip on probe
-Date: Mon,  4 Jan 2016 09:25:31 -0300
-Message-ID: <1451910332-23385-10-git-send-email-javier@osg.samsung.com>
+Subject: [PATCH 10/10] [media] tvp5150: Configure data interface via pdata or DT
+Date: Mon,  4 Jan 2016 09:25:32 -0300
+Message-ID: <1451910332-23385-11-git-send-email-javier@osg.samsung.com>
 References: <1451910332-23385-1-git-send-email-javier@osg.samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1451910332-23385-1-git-send-email-javier@osg.samsung.com>
@@ -10,88 +10,170 @@ To: linux-kernel@vger.kernel.org
 Cc: devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Enrico Butera <ebutera@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Rob Herring <robh+dt@kernel.org>, Eduard Gavin <egavinc@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-After power-up, the tvp5150 decoder is in a unknown state until the
-RESETB pin is driven LOW which reset all the registers and restarts
-the chip's internal state machine.
-
-The init sequence has some timing constraints and the RESETB signal
-can only be used if the PDN (Power-down) pin is first released.
-
-So, the initialization sequence is as follows:
-
-1- PDN (active-low) is driven HIGH so the chip is power-up
-2- A 20 ms delay is needed before sending a RESETB (active-low) signal.
-3- The RESETB pulse duration is 500 ns.
-4- A 200 us delay is needed for the I2C client to be active after reset.
-
-This patch used as a reference the logic in the IGEPv2 board file from
-the ISEE 2.6.37 vendor tree.
+The video decoder supports either 8-bit 4:2:2 YUV with discrete syncs
+or 8-bit ITU-R BT.656 with embedded syncs output format but currently
+BT.656 it's always reported. Allow to configure the format to use via
+either platform data or a device tree definition.
 
 Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
 ---
 
- drivers/media/i2c/tvp5150.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ drivers/media/i2c/tvp5150.c | 61 +++++++++++++++++++++++++++++++++++++++++++--
+ include/media/i2c/tvp5150.h |  5 ++++
+ 2 files changed, 64 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index caac96a577f8..fed89a811ab7 100644
+index fed89a811ab7..8bce45a6e264 100644
 --- a/drivers/media/i2c/tvp5150.c
 +++ b/drivers/media/i2c/tvp5150.c
-@@ -5,6 +5,7 @@
-  * This code is placed under the terms of the GNU General Public License v2
+@@ -6,6 +6,7 @@
   */
  
-+#include <linux/of_gpio.h>
+ #include <linux/of_gpio.h>
++#include <linux/of_graph.h>
  #include <linux/i2c.h>
  #include <linux/slab.h>
  #include <linux/videodev2.h>
-@@ -1197,6 +1198,36 @@ static int tvp5150_detect_version(struct tvp5150 *core)
+@@ -15,6 +16,7 @@
+ #include <media/v4l2-device.h>
+ #include <media/i2c/tvp5150.h>
+ #include <media/v4l2-ctrls.h>
++#include <media/v4l2-of.h>
+ 
+ #include "tvp5150_reg.h"
+ 
+@@ -39,6 +41,7 @@ struct tvp5150 {
+ 	struct media_pad pad;
+ 	struct v4l2_ctrl_handler hdl;
+ 	struct v4l2_rect rect;
++	struct tvp5150_platform_data *pdata;
+ 
+ 	v4l2_std_id norm;	/* Current set standard */
+ 	u32 input;
+@@ -757,6 +760,7 @@ static int tvp5150_s_std(struct v4l2_subdev *sd, v4l2_std_id std)
+ static int tvp5150_reset(struct v4l2_subdev *sd, u32 val)
+ {
+ 	struct tvp5150 *decoder = to_tvp5150(sd);
++	struct tvp5150_platform_data *pdata = decoder->pdata;
+ 
+ 	/* Initializes TVP5150 to its default values */
+ 	tvp5150_write_inittab(sd, tvp5150_init_default);
+@@ -774,6 +778,10 @@ static int tvp5150_reset(struct v4l2_subdev *sd, u32 val)
+ 	v4l2_ctrl_handler_setup(&decoder->hdl);
+ 
+ 	tvp5150_set_std(sd, decoder->norm);
++
++	if (pdata && pdata->bus_type == V4L2_MBUS_PARALLEL)
++		tvp5150_write(sd, TVP5150_DATA_RATE_SEL, 0x40);
++
+ 	return 0;
+ };
+ 
+@@ -940,6 +948,16 @@ static int tvp5150_cropcap(struct v4l2_subdev *sd, struct v4l2_cropcap *a)
+ static int tvp5150_g_mbus_config(struct v4l2_subdev *sd,
+ 				 struct v4l2_mbus_config *cfg)
+ {
++	struct tvp5150_platform_data *pdata = to_tvp5150(sd)->pdata;
++
++	if (pdata) {
++		cfg->type = pdata->bus_type;
++		cfg->flags = pdata->parallel_flags;
++
++		return 0;
++	}
++
++	/* Default values if no platform data was provided */
+ 	cfg->type = V4L2_MBUS_BT656;
+ 	cfg->flags = V4L2_MBUS_MASTER | V4L2_MBUS_PCLK_SAMPLE_RISING
+ 		   | V4L2_MBUS_FIELD_EVEN_LOW | V4L2_MBUS_DATA_ACTIVE_HIGH;
+@@ -986,13 +1004,20 @@ static int tvp5150_enum_frame_size(struct v4l2_subdev *sd,
+ 
+ static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
+ {
++	struct tvp5150_platform_data *pdata = to_tvp5150(sd)->pdata;
++	/* Output format: 8-bit ITU-R BT.656 with embedded syncs */
++	int val = 0x09;
++
++	/* Output format: 8-bit 4:2:2 YUV with discrete sync */
++	if (pdata && pdata->bus_type == V4L2_MBUS_PARALLEL)
++		val = 0x0d;
++
+ 	/* Initializes TVP5150 to its default values */
+ 	/* # set PCLK (27MHz) */
+ 	tvp5150_write(sd, TVP5150_CONF_SHARED_PIN, 0x00);
+ 
+-	/* Output format: 8-bit ITU-R BT.656 with embedded syncs */
+ 	if (enable)
+-		tvp5150_write(sd, TVP5150_MISC_CTL, 0x09);
++		tvp5150_write(sd, TVP5150_MISC_CTL, val);
+ 	else
+ 		tvp5150_write(sd, TVP5150_MISC_CTL, 0x00);
+ 
+@@ -1228,11 +1253,42 @@ static inline int tvp5150_init(struct i2c_client *c)
  	return 0;
  }
  
-+static inline int tvp5150_init(struct i2c_client *c)
++static struct tvp5150_platform_data *tvp5150_get_pdata(struct device *dev)
 +{
-+	struct gpio_desc *pdn_gpio;
-+	struct gpio_desc *reset_gpio;
++	struct tvp5150_platform_data *pdata = dev_get_platdata(dev);
++	struct v4l2_of_endpoint bus_cfg;
++	struct device_node *ep;
 +
-+	pdn_gpio = devm_gpiod_get_optional(&c->dev, "powerdown", GPIOD_OUT_HIGH);
-+	if (IS_ERR(pdn_gpio))
-+		return PTR_ERR(pdn_gpio);
++	if (pdata)
++		return pdata;
 +
-+	if (pdn_gpio) {
-+		gpiod_set_value_cansleep(pdn_gpio, 0);
-+		/* Delay time between power supplies active and reset */
-+		msleep(20);
++	if (IS_ENABLED(CONFIG_OF) && dev->of_node) {
++		pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++		if (!pdata)
++			return NULL;
++
++		ep = of_graph_get_next_endpoint(dev->of_node, NULL);
++		if (!ep)
++			return NULL;
++
++		v4l2_of_parse_endpoint(ep, &bus_cfg);
++
++		pdata->bus_type = bus_cfg.bus_type;
++		pdata->parallel_flags = bus_cfg.bus.parallel.flags;
++
++		of_node_put(ep);
++		return pdata;
 +	}
 +
-+	reset_gpio = devm_gpiod_get_optional(&c->dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(reset_gpio))
-+		return PTR_ERR(reset_gpio);
-+
-+	if (reset_gpio) {
-+		/* RESETB pulse duration */
-+		ndelay(500);
-+		gpiod_set_value_cansleep(reset_gpio, 0);
-+		/* Delay time between end of reset to I2C active */
-+		usleep_range(200, 250);
-+	}
-+
-+	return 0;
++	return NULL;
 +}
 +
  static int tvp5150_probe(struct i2c_client *c,
  			 const struct i2c_device_id *id)
  {
-@@ -1209,6 +1240,10 @@ static int tvp5150_probe(struct i2c_client *c,
- 	     I2C_FUNC_SMBUS_READ_BYTE | I2C_FUNC_SMBUS_WRITE_BYTE_DATA))
- 		return -EIO;
+ 	struct tvp5150 *core;
+ 	struct v4l2_subdev *sd;
++	struct tvp5150_platform_data *pdata = tvp5150_get_pdata(&c->dev);
+ 	int res;
  
-+	res = tvp5150_init(c);
-+	if (res)
-+		return res;
+ 	/* Check if the adapter supports the needed features */
+@@ -1262,6 +1318,7 @@ static int tvp5150_probe(struct i2c_client *c,
+ 	if (res < 0)
+ 		return res;
+ 
++	core->pdata = pdata;
+ 	core->norm = V4L2_STD_ALL;	/* Default is autodetect */
+ 	core->input = TVP5150_COMPOSITE1;
+ 	core->enable = 1;
+diff --git a/include/media/i2c/tvp5150.h b/include/media/i2c/tvp5150.h
+index 649908a25605..e4cda0c843df 100644
+--- a/include/media/i2c/tvp5150.h
++++ b/include/media/i2c/tvp5150.h
+@@ -30,4 +30,9 @@
+ #define TVP5150_NORMAL       0
+ #define TVP5150_BLACK_SCREEN 1
+ 
++struct tvp5150_platform_data {
++	enum v4l2_mbus_type bus_type;
++	unsigned int parallel_flags;
++};
 +
- 	core = devm_kzalloc(&c->dev, sizeof(*core), GFP_KERNEL);
- 	if (!core)
- 		return -ENOMEM;
+ #endif
 -- 
 2.4.3
