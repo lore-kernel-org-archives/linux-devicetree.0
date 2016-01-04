@@ -1,80 +1,26 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 07/10] [media] tvp5150: Add device tree binding document
-Date: Mon, 4 Jan 2016 08:07:48 -0600
-Message-ID: <20160104140748.GA10797@rob-hp-laptop>
-References: <1451910332-23385-1-git-send-email-javier@osg.samsung.com>
- <1451910332-23385-8-git-send-email-javier@osg.samsung.com>
+Subject: Re: [RFC PATCH v1 2/2] dt-bindings: add document for rk3229-vop
+Date: Mon, 4 Jan 2016 08:11:21 -0600
+Message-ID: <20160104141121.GA22245@rob-hp-laptop>
+References: <1451908230-25329-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1451910332-23385-8-git-send-email-javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+In-Reply-To: <1451908230-25329-1-git-send-email-ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Enrico Butera <ebutera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eduard Gavin <egavinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 04, 2016 at 09:25:29AM -0300, Javier Martinez Canillas wrote:
-> Add a Device Tree binding document for the TVP5150 video decoder.
+On Mon, Jan 04, 2016 at 07:50:30PM +0800, Yakir Yang wrote:
 > 
-> Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
-> 
->  .../devicetree/bindings/media/i2c/tvp5150.txt      | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-> new file mode 100644
-> index 000000000000..bf0b3f3128ce
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-> @@ -0,0 +1,35 @@
-> +* Texas Instruments TVP5150 and TVP5151 video decoders
-> +
-> +The TVP5150 and TVP5151 are video decoders that convert baseband NTSC and PAL
-> +(and also SECAM in the TVP5151 case) video signals to either 8-bit 4:2:2 YUV
-> +with discrete syncs or 8-bit ITU-R BT.656 with embedded syncs output formats.
-> +
-> +Required Properties:
-> +- compatible: value must be "ti,tvp5150"
+>  Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-What about the 5151? The driver never needs to know if SECAM is 
-supported or not?
-
-> +- reg: I2C slave address
-> +
-> +Optional Properties:
-> +- powerdown-gpios: phandle for the GPIO connected to the PDN pin, if any.
-> +- reset-gpios: phandle for the GPIO connected to the RESETB pin, if any.
-> +
-> +The device node must contain one 'port' child node for its digital output
-> +video port, in accordance with the video interface bindings defined in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +Example:
-> +
-> +&i2c2 {
-> +	...
-> +	tvp5150@5c {
-> +			compatible = "ti,tvp5150";
-
-Too much indentation here.
-
-> +			reg = <0x5c>;
-> +			powerdown-gpios = <&gpio4 30 GPIO_ACTIVE_LOW>;
-> +			reset-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
-> +
-> +			port {
-> +				tvp5150_1: endpoint {
-> +					remote-endpoint = <&ccdc_ep>;
-> +				};
-> +			};
-> +	};
-> +};
-> -- 
-> 2.4.3
-> 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
