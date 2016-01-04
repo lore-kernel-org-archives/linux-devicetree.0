@@ -1,76 +1,39 @@
-From: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: rockchip: Adding LEDs handling via
- leds-gpio for the Radxa Rock2 Square
-Date: Mon, 04 Jan 2016 10:10:29 +0100
-Message-ID: <1451898629.3269.11.camel@collabora.co.uk>
-References: <1451553232-2533-1-git-send-email-romain.perier@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1451553232-2533-1-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v4 net-next 0/3] Add new capability and macb DT variant
+Date: Mon,  4 Jan 2016 10:42:50 +0100
+Message-ID: <1451900573-22657-1-git-send-email-narmstrong@baylibre.com>
+References: <1451898103-21868-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1451898103-21868-1-git-send-email-narmstrong@baylibre.com>
+Sender: netdev-owner@vger.kernel.org
+To: nicolas.ferre@atmel.com, davem@davemloft.net, harini.katakam@xilinx.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, joshc@ni.com, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2015-12-31 at 10:13 +0100, Romain Perier wrote:
-> Describe the two user-controllable LEDs on Rock2 Square boards.
-> All information have been retrieved from the schematics and the
-> vendor
-> devicetree. The default-triggers mimic the behaviour of the vendor-
-> kernel to
-> keep functionalities in sync.
->=20
-> Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+The first patch introduces a new capability bit to disable usage of the
+USRIO register on platform not implementing it thus avoiding some external
+imprecise aborts on ARM based platforms.
+The two last patchs adds a new macb variant compatible name using the
+capability, the NPx name is temporary and must be fixed when the first patch
+hits mainline.
 
-Reviewed-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Only the first patch should be merged right now until the compatible name
+is fixed.
 
-> ---
->=20
-> Changes in v2:
-> - Changed labels according to what is defined in the schematics
-> - Added a long commit message describing this patch in details
->=20
-> =C2=A0arch/arm/boot/dts/rk3288-rock2-square.dts | 17 ++++++++++++++++=
-+
-> =C2=A01 file changed, 17 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts
-> b/arch/arm/boot/dts/rk3288-rock2-square.dts
-> index c5453a0..0813428 100644
-> --- a/arch/arm/boot/dts/rk3288-rock2-square.dts
-> +++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
-> @@ -56,6 +56,23 @@
-> =C2=A0		pinctrl-0 =3D <&ir_int>;
-> =C2=A0	};
-> =C2=A0
-> +	gpio-leds {
-> +		compatible =3D "gpio-leds";
-> +
-> +		heartbeat {
-> +			gpios =3D <&gpio7 15 GPIO_ACTIVE_LOW>;
-> +			label =3D "rock2:green:state1";
-> +			linux,default-trigger =3D "heartbeat";
-> +		};
-> +
-> +		mmc {
-> +			gpios =3D <&gpio0 11 GPIO_ACTIVE_LOW>;
-> +			label =3D "rock2:blue:state2";
-> +			linux,default-trigger =3D "mmc0";
-> +		};
-> +	};
-> +
-> +
-> =C2=A0	sound {
-> =C2=A0		compatible =3D "simple-audio-card";
-> =C2=A0		simple-audio-card,name =3D "SPDIF";
+v1: http://lkml.kernel.org/r/1449485914-12883-1-git-send-email-narmstrong@baylibre.com
+v2: http://lkml.kernel.org/r/1449582726-6148-1-git-send-email-narmstrong@baylibre.com
+v3: http://lkml.kernel.org/r/1451898103-21868-1-git-send-email-narmstrong@baylibre.com
+v4: as nicolas suggested, use a new macb config and a new product/vendor prefix
 
---=20
-Sjoerd Simons
-Collabora Ltd.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Neil Armstrong (3):
+  net: ethernet: cadence-macb: Add disabled usrio caps
+  net: macb: Add NPx macb config using USRIO_DISABLED cap
+  dt-bindings: net: macb: Add NPx macb variant
+
+ Documentation/devicetree/bindings/net/macb.txt |  1 +
+ drivers/net/ethernet/cadence/macb.c            | 33 ++++++++++++++++----------
+ drivers/net/ethernet/cadence/macb.h            |  1 +
+ 3 files changed, 23 insertions(+), 12 deletions(-)
+
+-- 
+1.9.1
