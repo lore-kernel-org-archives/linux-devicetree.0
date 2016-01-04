@@ -1,170 +1,71 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] [media] mt9v032: Add V4L2 controls for AEC and AGC
-Date: Mon, 04 Jan 2016 10:56:44 +0100
-Message-ID: <1598879.76W0kKqfX7@adelgunde>
-References: <1450104113-6392-1-git-send-email-mpa@pengutronix.de> <2570493.HaAAxn7ErG@adelgunde> <5194938.P3WvP9gjaZ@avalon>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v3 2/3] ARM: dts: sun8i: Add Allwinner
+ A83T dtsi
+Date: Mon, 4 Jan 2016 11:04:08 +0100
+Message-ID: <20160104100408.GB11722@lukather>
+References: <1450445451-311-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1450445451-311-3-git-send-email-vishnupatekar0510@gmail.com>
+ <20151218214112.GU30359@lukather>
+ <567537FF.9010601@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3218746.xMjAhSZ7hY"; micalg="pgp-sha256"; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5194938.P3WvP9gjaZ@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="KFztAG8eRSV9hGtP"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <567537FF.9010601@redhat.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Vishnu Patekar <vishnupatekar0510@gmail.com>, robh+dt@kernel.org, corbet@lwn.net, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, emilio@elopez.com.ar, linus.walleij@linaro.org, jenskuske@gmail.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---nextPart3218746.xMjAhSZ7hY
+--KFztAG8eRSV9hGtP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="us-ascii"
 
-Hi Laurent,
+Hi,
 
-On Tuesday 29 December 2015 11:38:39 Laurent Pinchart wrote:
-> Hi Markus,
+On Sat, Dec 19, 2015 at 11:57:03AM +0100, Hans de Goede wrote:
+> >>+	memory {
+> >>+		reg =3D <0x40000000 0x80000000>;
+> >>+	};
+> >
+> >Is mainline u-boot usable ? If so, you can remove that node entirely.
 >=20
-> On Wednesday 16 December 2015 11:14:28 Markus Pargmann wrote:
-> > On Wednesday 16 December 2015 09:47:58 Laurent Pinchart wrote:
-> > > On Monday 14 December 2015 15:41:53 Markus Pargmann wrote:
-> > >> This patch adds V4L2 controls for Auto Exposure Control and Auto=
- Gain
-> > >> Control settings. These settings include low pass filter, update=
+> mainline u-boot works for me when cold-booting from a sdcard, so I consid=
+er
+> it usable :)
 
-> > >> frequency of these settings and the update interval for those un=
-its.
-> > >>=20
-> > >> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > >=20
-> > > Please see below for a few comments. If you agree about them ther=
-e's no
-> > > need to resubmit, I'll fix the patch when applying.
-> >=20
-> > Most of them are fine, I commented on the open ones.
-> >=20
-> > >> ---
-> > >>=20
-> > >>  drivers/media/i2c/mt9v032.c | 153 +++++++++++++++++++++++++++++=
-+++++++-
-> > >>  1 file changed, 152 insertions(+), 1 deletion(-)
-> > >>=20
-> > >> diff --git a/drivers/media/i2c/mt9v032.c b/drivers/media/i2c/mt9=
-v032.c
-> > >> index cc16acf001de..6cbc3b87eda9 100644
-> > >> --- a/drivers/media/i2c/mt9v032.c
-> > >> +++ b/drivers/media/i2c/mt9v032.c
->=20
-> [snip]
->=20
-> > >> +static const struct v4l2_ctrl_config mt9v032_aec_max_shutter_wi=
-dth =3D {
-> > >> +=09.ops=09=09=3D &mt9v032_ctrl_ops,
-> > >> +=09.id=09=09=3D V4L2_CID_AEC_MAX_SHUTTER_WIDTH,
-> > >> +=09.type=09=09=3D V4L2_CTRL_TYPE_INTEGER,
-> > >> +=09.name=09=09=3D "aec_max_shutter_width",
-> > >> +=09.min=09=09=3D 1,
-> > >> +=09.max=09=09=3D MT9V032_TOTAL_SHUTTER_WIDTH_MAX,
-> > >=20
-> > > According the the MT9V032 datasheet I have, the maximum value is =
-2047
-> > > while MT9V032_TOTAL_SHUTTER_WIDTH_MAX is defined as 32767. Do you=
- have any
-> > > information that would hint for an error in the datasheet ?
-> >=20
-> > The register is defined as having 15 bits. I simply assumed that th=
-e already
-> > defined TOTAL_SHUTTER_WIDTH_MAX would apply for this register as we=
-ll. At
-> > least it should end up controlling the same property of the chip. I=
- didn't
-> > test this on mt9v032 but on mt9v024.
->=20
-> According to the MT9V032 datasheet=20
-> (http://www.onsemi.com/pub/Collateral/MT9V032-D.PDF) the maximum shut=
-ter width=20
-> in AEC mode is limited to 2047. That is documented both in the Maximu=
-m Total=20
-> Shutter Width register legal values and in the "Automatic Gain Contro=
-l and=20
-> Automatic Exposure Control" section:
->=20
-> "The exposure is measured in row-time by reading R0xBB. The exposure =
-range is
-> 1 to 2047."
->=20
-> I assume that the the AEC unit limits the shutter width to 2047 lines=
- and that=20
-> it's thus pointless to set the maximum total shutter width to a highe=
-r value.=20
-> Whether doing so could have any adverse effect I don't know, but bett=
-er be=20
-> same than sorry. If you agree we should limit the value to 2047 I can=
- fix=20
-> this.
+I'm glad we have the same definition of usable ;)
 
-Yes, I agree. It would be great if you fix this.
+Maxime
 
-Thanks,
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-Markus
-
->=20
-> > >> +=09.step=09=09=3D 1,
-> > >> +=09.def=09=09=3D MT9V032_TOTAL_SHUTTER_WIDTH_DEF,
-> > >> +=09.flags=09=09=3D 0,
-> > >> +};
-> > >> +
-> > >> +static const struct v4l2_ctrl_config mt9v034_aec_max_shutter_wi=
-dth =3D {
-> > >> +=09.ops=09=09=3D &mt9v032_ctrl_ops,
-> > >> +=09.id=09=09=3D V4L2_CID_AEC_MAX_SHUTTER_WIDTH,
-> > >> +=09.type=09=09=3D V4L2_CTRL_TYPE_INTEGER,
-> > >> +=09.name=09=09=3D "aec_max_shutter_width",
-> > >> +=09.min=09=09=3D 1,
-> > >> +=09.max=09=09=3D MT9V034_TOTAL_SHUTTER_WIDTH_MAX,
-> > >> +=09.step=09=09=3D 1,
-> > >> +=09.def=09=09=3D MT9V032_TOTAL_SHUTTER_WIDTH_DEF,
-> > >> +=09.flags=09=09=3D 0,
-> > >> +};
-> > >=20
-> > > [snip]
->=20
->=20
-
-=2D-=20
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
-
---nextPart3218746.xMjAhSZ7hY
+--KFztAG8eRSV9hGtP
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Version: GnuPG v1
 
-iQIcBAABCAAGBQJWikHhAAoJEEpcgKtcEGQQ/pwQAKCdg5Phi7Dt564Dq0M7PvDT
-g9A0sdkH/uxaTwoHJAMPaDe5L3cmnoNCQFrPDMmSsMAnyc5AEKohrgeifcxcVrgc
-5gw2qRHIEz8KbqgjF8szeAC1ZFepMCu/kdH1aaZGvvN1AaqPOo4jPfrZpGrmOt7g
-v8BAcJ91LI9/1h5u5Szw4hhy2YpyP9Y12m2bDCLAFr26MYnK3dD11A1YftQJfszX
-WW6r6RWXtq3u48SxpJkXzMk0RKNFJSHW9jXjiS84GuIT+W8gfEVB7BSFPE6Wjy2G
-VyMvYgcrlz+p3X0IvpyRxivkq7XWeI/lqjtv3DBKh5pipDBPA8n/UFYvQnim32hC
-HmgqUnvG/2di7WpeefXmiDVH+3UAay9OTBX2gjj5OTMmwbwuKLmjClkjFsaI6WLC
-xvsIot5CxUjbdw2urCciO9PBny927b3g+A+nNP004CAcJ5tizKHRESqudfJnS/aa
-+l51G4LcHUiNHE8ven5qvG1IQbk1R0y3jQEFL6w26hnA+DacYgrelr7an8kJZXtq
-MADV/A9LkHZ5rObu3AbN068y8n8Q4InmIILwUBRXwMvr9gewkBAhbxnusf0KV93z
-i/BJExRiqBF8tDS25oRyom6CDioAGlXWnU5V8qbx7LvSox6kYVw1JP490fTpOIjF
-P1vZ2zZlmE791M/GvUBE
-=XjSD
+iQIcBAEBAgAGBQJWikOYAAoJEBx+YmzsjxAgM0sQAI37JwR9RFmpabddZuW9Sy1v
+8ULDzQD4cmZ/+4sPuwZgw6AsCqvvDIhXm7HZjkCDxgp/2Bl3EhkjAJ1WNH0zS9wN
+4rjisdEzByJvoCemIeRwcyjdtz443aC7qtjuPYnz8FSDMOemptsl5TlXwQhRudMP
+LaU6sNJNbXcUxtSx/KUf5xQ1LOJyCQ/2DnryH+W7jFFPJsaW4OnCifkC2ivYuDvD
+b0iMOFEhwliHvMnJUui7SyPFv8m5Bm0HvKHGhWU5qgL8ThjZlsY0d/3lWHoSwN9r
+/sfju4MNUUffaPbUTwZ1yUjtz6V06YyXNLHrSACDrIua0USrtYWx20lMIzHq+FcX
+NRgwDdn/+QgUp7EKmzB0StHyVpiOS4yn7uanBVmR3qZ6/bFFLE1ZgyDBm/xvT8rm
+EJ4ho5iZvE7uwO9WVge1WBtQqNPk2+u+arcJZ+L1BTltSOzTFqJRbKVwfXj9Lm9P
+gfK9N+B97WipsDX7yZfonVz5iXt80E5B6uzs6H+TPbIbqpnoUGjs7gvz+eCnAe61
+aCvoEUkITsCCqg7FOUAr89eEGf+eeO2AxI2my3jlUvs4dxE09uV/7GefgnqjGuto
+i63R+qCk103RYcNzoETTqbTYLQgfLHcTkWIQ79ooiDTWQlT+8CH2BZMCzrOVQIjn
+bvBKIrPwjP9otkS1/oXf
+=3m9s
 -----END PGP SIGNATURE-----
 
---nextPart3218746.xMjAhSZ7hY--
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--KFztAG8eRSV9hGtP--
