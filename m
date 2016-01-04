@@ -1,40 +1,45 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpiolib: always initialize *flags from of_get_named_gpio_flags
-Date: Mon, 4 Jan 2016 08:49:30 +0100
-Message-ID: <CACRpkdZpax1RKu44nR9qbDjDj32cJpSCvTcdjSknmWVbRSxN3g@mail.gmail.com>
-References: <6037371.CvRA1dDj1l@wuerfel>
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: [PATCH 2/2] bindings: i2c: Add clock entries for i2c-xiic
+Date: Mon, 4 Jan 2016 13:20:34 +0530
+Message-ID: <1451893834-1066-2-git-send-email-shubhraj@xilinx.com>
+References: <1451893834-1066-1-git-send-email-shubhraj@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <6037371.CvRA1dDj1l@wuerfel>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1451893834-1066-1-git-send-email-shubhraj@xilinx.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
+Cc: wsa@the-dreams.de, Shubhrajyoti Datta <shubhraj@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 1, 2016 at 11:40 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+Add clock description for i2c-xiic
 
-> The of_get_named_gpio_flags() function does nothing other than returning
-> an error when CONFIG_OF_GPIO is disabled, but that causes spurious
-> warnings about possible use of uninitialized variables in any code that
-> does not check the of_get_named_gpio_flags() return value before trying
-> to use the flags:
->
-> drivers/input/misc/rotary_encoder.c: In function 'rotary_encoder_probe':
-> drivers/input/misc/rotary_encoder.c:223:28: warning: 'flags' may be used uninitialized in this function [-Wmaybe-uninitialized]
-> drivers/power/bq24735-charger.c: In function 'bq24735_charger_probe':
-> drivers/power/bq24735-charger.c:227:12: warning: 'flags' may be used uninitialized in this function [-Wmaybe-uninitialized]
-> drivers/power/sbs-battery.c: In function 'sbs_probe':
-> drivers/power/sbs-battery.c:782:17: warning: 'gpio_flags' may be used uninitialized in this function [-Wmaybe-uninitialized]
->
-> This changes the behavior of the inline helper to set the flags to zero
-> when OF_GPIO is disabled, to avoid the warnings. In all cases I've
-> encountered, we don't actually get to the place that uses the flags
-> if CONFIG_OF is disabled because we won't enter the DT parser code.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Shubhrajyoti Datta <shubhraj@xilinx.com>
+---
+ Documentation/devicetree/bindings/i2c/i2c-xiic.txt |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
 
-Patch applied!
-
-Yours,
-Linus Walleij
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-xiic.txt b/Documentation/devicetree/bindings/i2c/i2c-xiic.txt
+index ceabbe9..caf42e9 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-xiic.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-xiic.txt
+@@ -6,14 +6,17 @@ Required properties:
+ - interrupts : IIC controller unterrupt
+ - #address-cells = <1>
+ - #size-cells = <0>
++- clocks: Input clock specifier. Refer to common clock bindings.
+ 
+ Optional properties:
+ - Child nodes conforming to i2c bus binding
++- clock-names: Input clock name, should be 'pclk'.
+ 
+ Example:
+ 
+ 	axi_iic_0: i2c@40800000 {
+ 		compatible = "xlnx,xps-iic-2.00.a";
++		clocks = <&clkc 15>;
+ 		interrupts = < 1 2 >;
+ 		reg = < 0x40800000 0x10000 >;
+ 
+-- 
+1.7.1
