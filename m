@@ -1,25 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] bindings: i2c: Add clock entries for i2c-xiic
-Date: Mon, 4 Jan 2016 08:18:43 -0600
-Message-ID: <20160104141843.GA26927@rob-hp-laptop>
-References: <1451893834-1066-1-git-send-email-shubhraj@xilinx.com>
- <1451893834-1066-2-git-send-email-shubhraj@xilinx.com>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH v5 1/5] PCI: designware: ensure ATU is enabled before
+ IO/conf space accesses
+Date: Mon, 4 Jan 2016 16:31:27 +0200
+Message-ID: <568A823F.5090209@mm-sol.com>
+References: <1450442339-18765-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1450442339-18765-2-git-send-email-stanimir.varbanov@linaro.org>
+ <CAHM4w1kzGKahVOTdTxMciZBs81U9EVoSYPgCw9=ph3R9vSwCwQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1451893834-1066-2-git-send-email-shubhraj@xilinx.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, wsa@the-dreams.de, Shubhrajyoti Datta <shubhraj@xilinx.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHM4w1kzGKahVOTdTxMciZBs81U9EVoSYPgCw9=ph3R9vSwCwQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Pratyush Anand <pratyush.anand@gmail.com>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jingoohan1@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 04, 2016 at 01:20:34PM +0530, Shubhrajyoti Datta wrote:
-> Add clock description for i2c-xiic
+On 12/18/2015 04:41 PM, Pratyush Anand wrote:
+> On Fri, Dec 18, 2015 at 6:08 PM, Stanimir Varbanov
+> <stanimir.varbanov@linaro.org> wrote:
+>> There is no guarantees that enabling ATU will hit the hardware
+>> immediately, and subsequent accesses to configuration / IO spaces
+>> are reliable. So fixing this by read back PCIE_ATU_CR2 register
+>> just after writing.
+>>
+>> Without such a fix the PCI device enumeration during kernel boot
+>> is not reliable, and reading configuration space for particular
+>> PCI device on the bus returns zero aka no device.
+>>
+>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 > 
-> Signed-off-by: Shubhrajyoti Datta <shubhraj@xilinx.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-xiic.txt |    3 +++
->  1 files changed, 3 insertions(+), 0 deletions(-)
+> Acked-by: Pratyush Anand <pratyush.anand@gmail.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Bjorn, Do you want to resend the whole patchset with collected acks and
+tested tags?
+
+
+-- 
+regards,
+Stan
