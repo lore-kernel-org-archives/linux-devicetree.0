@@ -1,59 +1,36 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: cs35l32: avoid uninitialized variable access
-Date: Mon, 4 Jan 2016 15:45:11 +0000
-Message-ID: <20160104154511.GL16023@sirena.org.uk>
-References: <2884997.s8B8BuE04L@wuerfel>
- <20160102141746.GH16023@sirena.org.uk>
- <9222694.IRNnfpj6Tn@wuerfel>
+From: Peter Rosin <peda@lysator.liu.se>
+Subject: Re: [PATCH 10/10] i2c: pca954x: get rid of the i2c deadlock workaround
+Date: Mon, 04 Jan 2016 16:45:36 +0100
+Message-ID: <568A93A0.5030109@lysator.liu.se>
+References: <1451920215-29167-1-git-send-email-peda@lysator.liu.se> <1451920215-29167-11-git-send-email-peda@lysator.liu.se> <568A8D87.8020201@metafoo.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Uus2/pBTyv0r7Av1"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9222694.IRNnfpj6Tn@wuerfel>
+In-Reply-To: <568A8D87.8020201@metafoo.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Brian Austin <brian.austin@cirrus.com>, Liam Girdwood <lgirdwood@gmail.com>, Paul Handrigan <Paul.Handrigan@cirrus.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>, Wolfram Sang <wsa@the-dreams.de>
+Cc: Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 2016-01-04 16:19, Lars-Peter Clausen wrote:
+> On 01/04/2016 04:10 PM, Peter Rosin wrote:
+>> From: Peter Rosin <peda@axentia.se>
+>>
+>> Signed-off-by: Peter Rosin <peda@axentia.se>
+> 
+> It would be quite good if the commit messaged said why it is now safe to
+> remove the workaround.
 
---Uus2/pBTyv0r7Av1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Right, hmm, the two last patches seemed obvious at the time I wrote them,
+but now I see a problem.
 
-On Mon, Jan 04, 2016 at 04:17:47PM +0100, Arnd Bergmann wrote:
-> On Saturday 02 January 2016 14:17:46 Mark Brown wrote:
+E.g. if two pca954x devices that depends on being idle when client devices
+are not accessed happen to sit on the same bus (perhaps because the muxes
+are used to hide a bunch of identical devices), it is indeed not safe to
+make this change.
 
-> > This would be a lot nicer if there was an __always_null annotation we
-> > could put on of_node for !OF configurations, that'd Just Work and this
-> > can't be the only case where we have this idiom.
+Thanks for making my think, and consider 9/10 and 10/10 dropped.
 
-> How about an inline helper like
-
-> static inline struct device_node *dev_of_node(struct device *dev)
-> {
-> 	if (IS_ENABLED(CONFIG_OF))
-> 		return dev->of_node;=09
-> }
-
-Yeah, that'd work as well (with the correction Russell mentioned) - it's
-a bit more typing but we already do similar things for the ID tables and
-it looks nicer than the IS_ENABLED() in code does.
-
---Uus2/pBTyv0r7Av1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWipOHAAoJECTWi3JdVIfQDscH/0/I17MLpIYja4Wqp5vyhO5d
-DGloM3wUstCkK0MI0gsZwa++ozFnyiv2Jqmz659SGLcv+vwZradQW+EA7ytjSYww
-QrMIq5oyepwsLyu5FFPDN8+Ofo4/PHpBMehPzskmuscSS/eNoIEQhcbuKoP6kPPk
-zs1au3Sxe1TOAPHVQkNhdo6ue4lJrcKNB7E6c8N+GVJ6mqyAVBK0lhC0ke0+1c9d
-Qya7K2l6uE+C3J8FKattEVCAq/ejU3RkwscL3Dx765kDKj+Su/40qdnaA60s7edI
-UI/pCrLWl7DNFNiipgnWcJS9tNLLo3Ak/4RFBL2f8+D0l7JVxEcouKW+f1RXHrI=
-=/fXq
------END PGP SIGNATURE-----
-
---Uus2/pBTyv0r7Av1--
+Cheers,
+Peter
