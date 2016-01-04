@@ -1,24 +1,94 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/6] arm64: renesas: add USB 2.0 device nodes for
- r8a7795
-Date: Mon, 4 Jan 2016 09:19:36 +1100
-Message-ID: <20160103221936.GF22806@verge.net.au>
-References: <1451044361-5896-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1451044361-5896-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@vger.kernel.org, linux-sh@vger.kernel.org
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: [PATCH V11 0/7] dma: add Qualcomm Technologies HIDMA driver
+Date: Sun,  3 Jan 2016 19:06:28 -0500
+Message-ID: <1451865996-12808-1-git-send-email-okaya@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: dmaengine@vger.kernel.org, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
+Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 25, 2015 at 08:52:35PM +0900, Yoshihiro Shimoda wrote:
-> This patch set is based on the renesas.git / 20151221renesas-devel-20151221-v4.4-rc6 tag.
-> (commit id = fe0e8e675dedf1877709a17258e88151c2614b77)
-> 
-> Changed from v1:
->  - Fix register size from 0xff to 0x100 in patch 2
+The Qualcomm Technologies HIDMA device has been designed
+to support virtualization technology. The driver has been
+divided into two to follow the hardware design.
 
-Thanks, I have queued these up for v4.6.
+1. HIDMA Management driver
+2. HIDMA Channel driver
+
+Each HIDMA HW consists of multiple channels. These channels
+share some set of common parameters. These parameters are
+initialized by the management driver during power up.
+Same management driver is used for monitoring the execution
+of the channels. Management driver can change the performance
+behavior dynamically such as bandwidth allocation and
+prioritization in the future.
+
+The management driver is executed in hypervisor context and
+is the main management entity for all channels provided by
+the device.
+
+Changes from V10: (https://lkml.org/lkml/2015/12/17/454)
+* none
+
+Changes from V10: (https://lkml.org/lkml/2015/12/17/448)
+* none
+
+Changes from V10: (https://lkml.org/lkml/2015/12/17/449)
+* none
+
+Changes from V10: (https://lkml.org/lkml/2015/12/17/451)
+* none
+
+Changes from V10: (https://lkml.org/lkml/2015/12/17/452)
+* none
+
+Changes from V10: (https://lkml.org/lkml/2015/12/17/453)
+* none
+
+Changes from V10: (https://lkml.org/lkml/2015/12/17/450)
+* Clean up style issues
+* make depend on CONFIG_OF_IRQ too as SPARC arch doesn't seem to define
+CONFIG_OF_IRQ but it defines CONFIG_OF.
+
+Sinan Kaya (7):
+  dma: qcom_bam_dma: move to qcom directory
+  dma: hidma: Add Device Tree support
+  dma: add Qualcomm Technologies HIDMA management driver
+  dma: add Qualcomm Technologies HIDMA channel driver
+  dma: qcom_hidma: implement lower level hardware interface
+  dma: qcom_hidma: add debugfs hooks
+  dma: qcom_hidma: add support for object hierarchy
+
+ Documentation/ABI/testing/sysfs-platform-hidma     |   9 +
+ .../ABI/testing/sysfs-platform-hidma-mgmt          |  97 +++
+ .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    |  79 ++
+ drivers/dma/Kconfig                                |  11 +-
+ drivers/dma/Makefile                               |   2 +-
+ drivers/dma/qcom/Kconfig                           |  29 +
+ drivers/dma/qcom/Makefile                          |   5 +
+ drivers/dma/{qcom_bam_dma.c => qcom/bam_dma.c}     |   4 +-
+ drivers/dma/qcom/hidma.c                           | 784 +++++++++++++++++
+ drivers/dma/qcom/hidma.h                           | 162 ++++
+ drivers/dma/qcom/hidma_dbg.c                       | 219 +++++
+ drivers/dma/qcom/hidma_ll.c                        | 927 +++++++++++++++++++++
+ drivers/dma/qcom/hidma_mgmt.c                      | 400 +++++++++
+ drivers/dma/qcom/hidma_mgmt.h                      |  39 +
+ drivers/dma/qcom/hidma_mgmt_sys.c                  | 295 +++++++
+ 15 files changed, 3050 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-hidma
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-hidma-mgmt
+ create mode 100644 Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+ create mode 100644 drivers/dma/qcom/Kconfig
+ create mode 100644 drivers/dma/qcom/Makefile
+ rename drivers/dma/{qcom_bam_dma.c => qcom/bam_dma.c} (99%)
+ create mode 100644 drivers/dma/qcom/hidma.c
+ create mode 100644 drivers/dma/qcom/hidma.h
+ create mode 100644 drivers/dma/qcom/hidma_dbg.c
+ create mode 100644 drivers/dma/qcom/hidma_ll.c
+ create mode 100644 drivers/dma/qcom/hidma_mgmt.c
+ create mode 100644 drivers/dma/qcom/hidma_mgmt.h
+ create mode 100644 drivers/dma/qcom/hidma_mgmt_sys.c
+
+-- 
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
