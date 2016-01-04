@@ -1,127 +1,252 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V11 1/7] dma: qcom_bam_dma: move to qcom directory
-Date: Sun,  3 Jan 2016 19:06:29 -0500
-Message-ID: <1451865996-12808-2-git-send-email-okaya@codeaurora.org>
+Subject: [PATCH V11 7/7] dma: qcom_hidma: add support for object hierarchy
+Date: Sun,  3 Jan 2016 19:06:35 -0500
+Message-ID: <1451865996-12808-8-git-send-email-okaya@codeaurora.org>
 References: <1451865996-12808-1-git-send-email-okaya@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1451865996-12808-1-git-send-email-okaya@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: dmaengine@vger.kernel.org, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Sinan Kaya <okaya@codeaurora.org>, agross@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Creating a QCOM directory for all QCOM DMA source files.
+In order to create a relationship model between the channels and the
+management object, we are adding support for object hierarchy to the
+drivers. This patch simplifies the userspace application development.
+We will not have to traverse different firmware paths based on device
+tree or ACPI baed kernels.
+
+No matter what flavor of kernel is used, objects will be represented as
+platform devices.
+
+The new layout is as follows:
+
+hidmam_10: hidma-mgmt@0x5A000000 {
+	compatible = "qcom,hidma-mgmt-1.0";
+	...
+
+	hidma_10: hidma@0x5a010000 {
+			compatible = "qcom,hidma-1.0";
+			...
+	}
+}
+
+The hidma_mgmt_init detects each instance of the hidma-mgmt-1.0 objects
+in device tree and calls into the channel driver to create platform devices
+for each child of the management object.
 
 Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
-Reviewed-by: Andy Gtoss <agross@codeaurora.org>
 ---
- drivers/dma/Kconfig                            | 11 ++---------
- drivers/dma/Makefile                           |  2 +-
- drivers/dma/qcom/Kconfig                       |  8 ++++++++
- drivers/dma/qcom/Makefile                      |  1 +
- drivers/dma/{qcom_bam_dma.c => qcom/bam_dma.c} |  4 ++--
- 5 files changed, 14 insertions(+), 12 deletions(-)
- create mode 100644 drivers/dma/qcom/Kconfig
- create mode 100644 drivers/dma/qcom/Makefile
- rename drivers/dma/{qcom_bam_dma.c => qcom/bam_dma.c} (99%)
+ Documentation/ABI/testing/sysfs-platform-hidma |   9 +++
+ drivers/dma/qcom/hidma.c                       |  39 +++++++++-
+ drivers/dma/qcom/hidma_mgmt.c                  | 104 ++++++++++++++++++++++++-
+ 3 files changed, 148 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-hidma
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index b458475..47b1b98 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -408,15 +408,6 @@ config PXA_DMA
- 	  16 to 32 channels for peripheral to memory or memory to memory
- 	  transfers.
+diff --git a/Documentation/ABI/testing/sysfs-platform-hidma b/Documentation/ABI/testing/sysfs-platform-hidma
+new file mode 100644
+index 0000000..d364415
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-platform-hidma
+@@ -0,0 +1,9 @@
++What:		/sys/devices/platform/hidma-*/chid
++		/sys/devices/platform/QCOM8061:*/chid
++Date:		Dec 2015
++KernelVersion:	4.4
++Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
++Description:
++		Contains the ID of the channel within the HIDMA instance.
++		It is used to associate a given HIDMA channel with the
++		priority and weight calls in the management interface.
+diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
+index 833db9e..ac20bdb 100644
+--- a/drivers/dma/qcom/hidma.c
++++ b/drivers/dma/qcom/hidma.c
+@@ -549,6 +549,43 @@ static irqreturn_t hidma_chirq_handler(int chirq, void *arg)
+ 	return hidma_ll_inthandler(chirq, lldev);
+ }
  
--config QCOM_BAM_DMA
--	tristate "QCOM BAM DMA support"
--	depends on ARCH_QCOM || (COMPILE_TEST && OF && ARM)
--	select DMA_ENGINE
--	select DMA_VIRTUAL_CHANNELS
--	---help---
--	  Enable support for the QCOM BAM DMA controller.  This controller
--	  provides DMA capabilities for a variety of on-chip devices.
--
- config SIRF_DMA
- 	tristate "CSR SiRFprimaII/SiRFmarco DMA support"
- 	depends on ARCH_SIRF
-@@ -527,6 +518,8 @@ config ZX_DMA
- # driver files
- source "drivers/dma/bestcomm/Kconfig"
- 
-+source "drivers/dma/qcom/Kconfig"
++static ssize_t hidma_show_values(struct device *dev,
++				 struct device_attribute *attr, char *buf)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct hidma_dev *mdev = platform_get_drvdata(pdev);
 +
- source "drivers/dma/dw/Kconfig"
++	buf[0] = 0;
++
++	if (strcmp(attr->attr.name, "chid") == 0)
++		sprintf(buf, "%d\n", mdev->chidx);
++
++	return strlen(buf);
++}
++
++static int hidma_create_sysfs_entry(struct hidma_dev *dev, char *name,
++				    int mode)
++{
++	struct device_attribute *attrs;
++	char *name_copy;
++
++	attrs = devm_kmalloc(dev->ddev.dev, sizeof(struct device_attribute),
++			     GFP_KERNEL);
++	if (!attrs)
++		return -ENOMEM;
++
++	name_copy = devm_kstrdup(dev->ddev.dev, name, GFP_KERNEL);
++	if (!name_copy)
++		return -ENOMEM;
++
++	attrs->attr.name = name_copy;
++	attrs->attr.mode = mode;
++	attrs->show = hidma_show_values;
++	sysfs_attr_init(&attrs->attr);
++
++	return device_create_file(dev->ddev.dev, attrs);
++}
++
+ static int hidma_probe(struct platform_device *pdev)
+ {
+ 	struct hidma_dev *dmadev;
+@@ -682,6 +719,7 @@ static int hidma_probe(struct platform_device *pdev)
+ 	dmadev->irq = chirq;
+ 	tasklet_init(&dmadev->task, hidma_issue_task, (unsigned long)dmadev);
+ 	hidma_debug_init(dmadev);
++	hidma_create_sysfs_entry(dmadev, "chid", S_IRUGO);
+ 	dev_info(&pdev->dev, "HI-DMA engine driver registration complete\n");
+ 	platform_set_drvdata(pdev, dmadev);
+ 	pm_runtime_mark_last_busy(dmadev->ddev.dev);
+@@ -730,7 +768,6 @@ static const struct of_device_id hidma_match[] = {
+ 	{.compatible = "qcom,hidma-1.0",},
+ 	{},
+ };
+-
+ MODULE_DEVICE_TABLE(of, hidma_match);
  
- source "drivers/dma/hsu/Kconfig"
-diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index 7711a71..8dba90d 100644
---- a/drivers/dma/Makefile
-+++ b/drivers/dma/Makefile
-@@ -52,7 +52,6 @@ obj-$(CONFIG_PCH_DMA) += pch_dma.o
- obj-$(CONFIG_PL330_DMA) += pl330.o
- obj-$(CONFIG_PPC_BESTCOMM) += bestcomm/
- obj-$(CONFIG_PXA_DMA) += pxa_dma.o
--obj-$(CONFIG_QCOM_BAM_DMA) += qcom_bam_dma.o
- obj-$(CONFIG_RENESAS_DMA) += sh/
- obj-$(CONFIG_SIRF_DMA) += sirf-dma.o
- obj-$(CONFIG_STE_DMA40) += ste_dma40.o ste_dma40_ll.o
-@@ -66,4 +65,5 @@ obj-$(CONFIG_TI_EDMA) += edma.o
- obj-$(CONFIG_XGENE_DMA) += xgene-dma.o
- obj-$(CONFIG_ZX_DMA) += zx296702_dma.o
+ static struct platform_driver hidma_driver = {
+diff --git a/drivers/dma/qcom/hidma_mgmt.c b/drivers/dma/qcom/hidma_mgmt.c
+index ef491b8..4443b47 100644
+--- a/drivers/dma/qcom/hidma_mgmt.c
++++ b/drivers/dma/qcom/hidma_mgmt.c
+@@ -17,13 +17,14 @@
+ #include <linux/acpi.h>
+ #include <linux/of.h>
+ #include <linux/property.h>
+-#include <linux/interrupt.h>
+-#include <linux/platform_device.h>
++#include <linux/of_irq.h>
++#include <linux/of_platform.h>
+ #include <linux/module.h>
+ #include <linux/uaccess.h>
+ #include <linux/slab.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/bitops.h>
++#include <linux/dma-mapping.h>
  
-+obj-y += qcom/
- obj-y += xilinx/
-diff --git a/drivers/dma/qcom/Kconfig b/drivers/dma/qcom/Kconfig
-new file mode 100644
-index 0000000..f17c272
---- /dev/null
-+++ b/drivers/dma/qcom/Kconfig
-@@ -0,0 +1,8 @@
-+config QCOM_BAM_DMA
-+	tristate "QCOM BAM DMA support"
-+	depends on ARCH_QCOM || (COMPILE_TEST && OF && ARM)
-+	select DMA_ENGINE
-+	select DMA_VIRTUAL_CHANNELS
-+	---help---
-+	  Enable support for the QCOM BAM DMA controller.  This controller
-+	  provides DMA capabilities for a variety of on-chip devices.
-diff --git a/drivers/dma/qcom/Makefile b/drivers/dma/qcom/Makefile
-new file mode 100644
-index 0000000..f612ae3
---- /dev/null
-+++ b/drivers/dma/qcom/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_QCOM_BAM_DMA) += bam_dma.o
-diff --git a/drivers/dma/qcom_bam_dma.c b/drivers/dma/qcom/bam_dma.c
-similarity index 99%
-rename from drivers/dma/qcom_bam_dma.c
-rename to drivers/dma/qcom/bam_dma.c
-index 5a250cd..b6f053d 100644
---- a/drivers/dma/qcom_bam_dma.c
-+++ b/drivers/dma/qcom/bam_dma.c
-@@ -49,8 +49,8 @@
- #include <linux/clk.h>
- #include <linux/dmaengine.h>
+ #include "hidma_mgmt.h"
  
--#include "dmaengine.h"
--#include "virt-dma.h"
-+#include "../dmaengine.h"
-+#include "../virt-dma.h"
+@@ -298,5 +299,102 @@ static struct platform_driver hidma_mgmt_driver = {
+ 	},
+ };
  
- struct bam_desc_hw {
- 	u32 addr;		/* Buffer physical address */
+-module_platform_driver(hidma_mgmt_driver);
++#if defined(CONFIG_OF)&&defined(CONFIG_OF_IRQ)
++static int object_counter;
++
++static int __init hidma_mgmt_of_populate_channels(struct device_node *np)
++{
++	struct platform_device *pdev_parent = of_find_device_by_node(np);
++	struct platform_device_info pdevinfo;
++	struct of_phandle_args out_irq;
++	struct device_node *child;
++	struct resource *res;
++	const __be32 *cell;
++	int ret = 0, size, i, num;
++	u64 addr, addr_size;
++
++	for_each_available_child_of_node(np, child) {
++		struct resource *res_iter;
++
++		cell = of_get_property(child, "reg", &size);
++		if (!cell) {
++			ret = -EINVAL;
++			goto out;
++		}
++
++		size /= sizeof(*cell);
++		num = size /
++			(of_n_addr_cells(child) + of_n_size_cells(child)) + 1;
++
++		/* allocate a resource array */
++		res = kcalloc(num, sizeof(*res), GFP_KERNEL);
++		if (!res) {
++			ret = -ENOMEM;
++			goto out;
++		}
++
++		/* read each reg value */
++		i = 0;
++		res_iter = res;
++		while (i < size) {
++			addr = of_read_number(&cell[i],
++					      of_n_addr_cells(child));
++			i += of_n_addr_cells(child);
++
++			addr_size = of_read_number(&cell[i],
++						   of_n_size_cells(child));
++			i += of_n_size_cells(child);
++
++			res_iter->start = addr;
++			res_iter->end = res_iter->start + addr_size - 1;
++			res_iter->flags = IORESOURCE_MEM;
++			res_iter++;
++		}
++
++		ret = of_irq_parse_one(child, 0, &out_irq);
++		if (ret)
++			goto out;
++
++		res_iter->start = irq_create_of_mapping(&out_irq);
++		res_iter->name = "hidma event irq";
++		res_iter->flags = IORESOURCE_IRQ;
++
++		pdevinfo.fwnode = &child->fwnode;
++		pdevinfo.parent = pdev_parent ? &pdev_parent->dev : NULL;
++		pdevinfo.name = child->name;
++		pdevinfo.id = object_counter++;
++		pdevinfo.res = res;
++		pdevinfo.num_res = num;
++		pdevinfo.data = NULL;
++		pdevinfo.size_data = 0;
++		pdevinfo.dma_mask = DMA_BIT_MASK(64);
++		platform_device_register_full(&pdevinfo);
++
++		kfree(res);
++		res = NULL;
++	}
++out:
++	kfree(res);
++
++	return ret;
++}
++#endif
++
++static int __init hidma_mgmt_init(void)
++{
++#if defined(CONFIG_OF)&&defined(CONFIG_OF_IRQ)
++	struct device_node *child;
++
++	for (child = of_find_matching_node(NULL, hidma_mgmt_match); child;
++	     child = of_find_matching_node(child, hidma_mgmt_match)) {
++		/* device tree based firmware here */
++		hidma_mgmt_of_populate_channels(child);
++		of_node_put(child);
++	}
++#endif
++	platform_driver_register(&hidma_mgmt_driver);
++
++	return 0;
++}
++module_init(hidma_mgmt_init);
+ MODULE_LICENSE("GPL v2");
 -- 
 Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
