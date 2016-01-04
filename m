@@ -1,71 +1,67 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [linux-sunxi] Re: [PATCH v3 2/3] ARM: dts: sun8i: Add Allwinner
- A83T dtsi
-Date: Mon, 4 Jan 2016 11:04:08 +0100
-Message-ID: <20160104100408.GB11722@lukather>
-References: <1450445451-311-1-git-send-email-vishnupatekar0510@gmail.com>
- <1450445451-311-3-git-send-email-vishnupatekar0510@gmail.com>
- <20151218214112.GU30359@lukather>
- <567537FF.9010601@redhat.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH 4/5] ARM: dts: sun5i: Add dts file for
+ the Empire Electronix D709 tablet
+Date: Mon, 4 Jan 2016 11:11:21 +0100
+Message-ID: <20160104101121.GC11722@lukather>
+References: <1450611782-9494-1-git-send-email-hdegoede@redhat.com>
+ <1450611782-9494-4-git-send-email-hdegoede@redhat.com>
+ <CAGb2v65daCCOWf7EXDkNWnxv1idXHXesOp6Et_0h-o+9drdeMA@mail.gmail.com>
+ <5677D87A.90805@redhat.com>
+ <20151221161132.GA30359@lukather>
+ <567854D5.7030601@redhat.com>
+ <CAGb2v67+XpYwUFAVSGEGAfJ0bzubQ87Ebaf5W5Ze619mEE6uUA@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="KFztAG8eRSV9hGtP"
-Return-path: <linux-gpio-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="iFRdW5/EC4oqxDHL"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBTMKVG2AKGQE6XXH4VI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <567537FF.9010601@redhat.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Vishnu Patekar <vishnupatekar0510@gmail.com>, robh+dt@kernel.org, corbet@lwn.net, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, emilio@elopez.com.ar, linus.walleij@linaro.org, jenskuske@gmail.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux-gpio@vger.kernel.org
+In-Reply-To: <CAGb2v67+XpYwUFAVSGEGAfJ0bzubQ87Ebaf5W5Ze619mEE6uUA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---KFztAG8eRSV9hGtP
-Content-Type: text/plain; charset=us-ascii
+--iFRdW5/EC4oqxDHL
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Sat, Dec 19, 2015 at 11:57:03AM +0100, Hans de Goede wrote:
-> >>+	memory {
-> >>+		reg =3D <0x40000000 0x80000000>;
-> >>+	};
+On Tue, Dec 22, 2015 at 12:29:24PM +0800, Chen-Yu Tsai wrote:
+> >>> So this means enabled the sdio controller (should be safe on all
+> >>> boards?)  and enabling 2 regulators to power the wifi-chip. I
+> >>> think it will be safe to do this even on boards where those
+> >>> regulators are not used, what do you think ?
+> >>
+> >> Wouldn't that introduce some useless power drain on those boards?
 > >
-> >Is mainline u-boot usable ? If so, you can remove that node entirely.
->=20
-> mainline u-boot works for me when cold-booting from a sdcard, so I consid=
-er
-> it usable :)
+> >
+> > If nothing is attached to those regulators (which I expect to be
+> > the case when they are not used to power wifi) then I would expect
+> > the drain to be minimal, my biggest worry is some board having
+> > tied these to ground, but I don't think that is very likely.
+> 
+> AFAIK the AXP datasheets mention that unused DCDC outputs should be left
+> floating. Not sure if this applies to LDO outputs as well. But any used
+> outputs would have a bypass capacitor.
+> 
+> From the board designs I've seen, this seems to be the common case.
+> I'm not an electrical engineer, but I think we're covered here.
 
-I'm glad we have the same definition of usable ;)
+Ok, I guess we're good then.
 
+Thanks!
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
-
---KFztAG8eRSV9hGtP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWikOYAAoJEBx+YmzsjxAgM0sQAI37JwR9RFmpabddZuW9Sy1v
-8ULDzQD4cmZ/+4sPuwZgw6AsCqvvDIhXm7HZjkCDxgp/2Bl3EhkjAJ1WNH0zS9wN
-4rjisdEzByJvoCemIeRwcyjdtz443aC7qtjuPYnz8FSDMOemptsl5TlXwQhRudMP
-LaU6sNJNbXcUxtSx/KUf5xQ1LOJyCQ/2DnryH+W7jFFPJsaW4OnCifkC2ivYuDvD
-b0iMOFEhwliHvMnJUui7SyPFv8m5Bm0HvKHGhWU5qgL8ThjZlsY0d/3lWHoSwN9r
-/sfju4MNUUffaPbUTwZ1yUjtz6V06YyXNLHrSACDrIua0USrtYWx20lMIzHq+FcX
-NRgwDdn/+QgUp7EKmzB0StHyVpiOS4yn7uanBVmR3qZ6/bFFLE1ZgyDBm/xvT8rm
-EJ4ho5iZvE7uwO9WVge1WBtQqNPk2+u+arcJZ+L1BTltSOzTFqJRbKVwfXj9Lm9P
-gfK9N+B97WipsDX7yZfonVz5iXt80E5B6uzs6H+TPbIbqpnoUGjs7gvz+eCnAe61
-aCvoEUkITsCCqg7FOUAr89eEGf+eeO2AxI2my3jlUvs4dxE09uV/7GefgnqjGuto
-i63R+qCk103RYcNzoETTqbTYLQgfLHcTkWIQ79ooiDTWQlT+8CH2BZMCzrOVQIjn
-bvBKIrPwjP9otkS1/oXf
-=3m9s
------END PGP SIGNATURE-----
-
---KFztAG8eRSV9hGtP--
+--iFRdW5/EC4oqxDHL--
