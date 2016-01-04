@@ -1,54 +1,39 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v7 06/14] drm/mediatek: Add HDMI support
-Date: Mon, 04 Jan 2016 20:23:28 +0100
-Message-ID: <1451935408.3884.48.camel@pengutronix.de>
-References: <1448917676-25584-1-git-send-email-p.zabel@pengutronix.de>
-	 <1448917676-25584-7-git-send-email-p.zabel@pengutronix.de>
-	 <1451378973.15546.3.camel@mtksdaap41>
+From: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: compulab: add new board description
+Date: Mon, 4 Jan 2016 22:27:28 +0200
+Message-ID: <568AD5B0.5050304@compulab.co.il>
+References: <1450775459-18937-1-git-send-email-ilya@compulab.co.il>
+ <20151222232126.GA15443@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1451378973.15546.3.camel@mtksdaap41>
+In-Reply-To: <20151222232126.GA15443@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Cawa Cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daniel Stone <daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nikita Kiryanov <nikita-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 29.12.2015, 16:49 +0800 schrieb Yingjoe Chen:
-> On Mon, 2015-11-30 at 22:07 +0100, Philipp Zabel wrote:
-> > From: Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> > This patch adds drivers for the HDMI bridge connected to the DPI0
-> > display subsystem function block, for the HDMI DDC block, and for
-> > the HDMI PHY to support HDMI output.
-> > 
-> > Signed-off-by: Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> <...>
-> > +static int mtk_hdmi_setup_avi_infoframe(struct mtk_hdmi *hdmi,
-> > +					struct drm_display_mode *mode)
-> > +{
-> > +	struct hdmi_avi_infoframe frame;
-> > +	u8 buffer[17];
-> > +	ssize_t err;
-> > +
-> > +	err = drm_hdmi_avi_infoframe_from_display_mode(&frame, mode);
-> > +	if (err < 0) {
-> > +		dev_err(hdmi->dev,
-> > +			"Failed to get AVI infoframe from mode: %ld\n", err);
+Arnd, Olof,
+
+Will we be able to get this in for 4.5 trough your tree?
+Or should we get it in some other way around?
+
+On 12/23/15 01:21, Rob Herring wrote:
+> On Tue, Dec 22, 2015 at 11:10:59AM +0200, Ilya Ledvich wrote:
+>> Add description for newly introduced Compulab devices:
+>> - CL-SOM-iMX7
+>> - SBC-iMX7
+>>
+>> Signed-off-by: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 > 
-> Please use %zd instead for ssize_t, otherwise you'll see warning message
-> when compile this on 32bits platform.
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > 
-> Joe.C
+> 
 
-Ok, thanks.
-
-regards
-Philipp
-
+-- 
+Regards,
+Igor.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
