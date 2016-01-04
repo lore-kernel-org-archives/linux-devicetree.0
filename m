@@ -1,156 +1,76 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v6 0/9] mfd: axp20x: Add support for RSB
- based AXP223
-Date: Mon, 4 Jan 2016 16:40:02 +0800
-Message-ID: <CAGb2v645fRATYK2x-Axcga2jEtcLJVa1iTTWFUC+vfRjXVD06A@mail.gmail.com>
-References: <1450283538-25067-1-git-send-email-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: rockchip: Adding LEDs handling via
+ leds-gpio for the Radxa Rock2 Square
+Date: Mon, 04 Jan 2016 10:10:29 +0100
+Message-ID: <1451898629.3269.11.camel@collabora.co.uk>
+References: <1451553232-2533-1-git-send-email-romain.perier@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB6O7VC2AKGQETYFLNLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1450283538-25067-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1451553232-2533-1-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+On Thu, 2015-12-31 at 10:13 +0100, Romain Perier wrote:
+> Describe the two user-controllable LEDs on Rock2 Square boards.
+> All information have been retrieved from the schematics and the
+> vendor
+> devicetree. The default-triggers mimic the behaviour of the vendor-
+> kernel to
+> keep functionalities in sync.
+>=20
+> Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-On Thu, Dec 17, 2015 at 12:32 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> Hi everyone,
->
-> This is v6 of the AXP223 PMIC series. v6 fixes the address of the AXP223
-> in the DT. Hope this series makes it into 4.5, and we can then support
-> even more AXP PMICs in 4.6+.
->
-> Lee, can you take the first 7 patches. Once they're in, Maxime can take
-> the DTS patches.
+Reviewed-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 
-We're at -rc8. Any chance the first 7 patches make the next release?
+> ---
+>=20
+> Changes in v2:
+> - Changed labels according to what is defined in the schematics
+> - Added a long commit message describing this patch in details
+>=20
+> =C2=A0arch/arm/boot/dts/rk3288-rock2-square.dts | 17 ++++++++++++++++=
++
+> =C2=A01 file changed, 17 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts
+> b/arch/arm/boot/dts/rk3288-rock2-square.dts
+> index c5453a0..0813428 100644
+> --- a/arch/arm/boot/dts/rk3288-rock2-square.dts
+> +++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
+> @@ -56,6 +56,23 @@
+> =C2=A0		pinctrl-0 =3D <&ir_int>;
+> =C2=A0	};
+> =C2=A0
+> +	gpio-leds {
+> +		compatible =3D "gpio-leds";
+> +
+> +		heartbeat {
+> +			gpios =3D <&gpio7 15 GPIO_ACTIVE_LOW>;
+> +			label =3D "rock2:green:state1";
+> +			linux,default-trigger =3D "heartbeat";
+> +		};
+> +
+> +		mmc {
+> +			gpios =3D <&gpio0 11 GPIO_ACTIVE_LOW>;
+> +			label =3D "rock2:blue:state2";
+> +			linux,default-trigger =3D "mmc0";
+> +		};
+> +	};
+> +
+> +
+> =C2=A0	sound {
+> =C2=A0		compatible =3D "simple-audio-card";
+> =C2=A0		simple-audio-card,name =3D "SPDIF";
 
-Thanks
-
-ChenYu
-
->
-> Changes since v5:
->
->   - Correct AXP223 address to 0x3a3.
->
-> Changes since v4:
->
->   - Get rid of second parameter of axp20x_match_device() (new patch 2)
->
->   - Match against dev->driver->of_match_table, so the entirety of
->     axp20x_match_device() can be kept in the core. (new patch 3)
->
->   - Move *_device_id tables to bottom of the driver, right above driver
->     declaration. (patch 4 & 6)
->
->   - Remove extra whitespaces while moving i2c specific code (patch 4)
->
->   - Remove leftover whitespace and code style issues in axp20x core
->     (new patch 5)
->
->   - Remove extra whitespaces in rsb specific code (patch 6)
->
-> Changes since v3:
->
->   - Removed settings for axp223 reg_rtc_ldo from board dts files that
->     are already in axp22x.dtsi. The name is kept.
->
->   - Dropped simplefb label and defconfig patches, as they are merged.
->
-> Changes since v2:
->
->   - s/It's/Its/ for the commit messages of patches 5 and 7
->
->   - Add Rob's Acked-by for patch 1
->
-> Changes since v1:
->
->   - Dropped NMI interrupt controller dts patch (Merged)
->
->   - Change MFD_AXP20X to represent the axp20x core, and drop MFD_AXP20X_CORE
->
->   - Keep the axp20x core bits named axp20x.c
->
->   - Add patch 7 to add AXP223 to sun8i-q8-common.dtsi
->
->   - Add patch 8 & 9 to update defconfigs
->
->   - Make axp20x drivers tristate and buildable as modules
->
->   - Drop "_sunxi" substring from identifiers in axp20x-rsb driver
->
->
-> This series adds support for the Reduced Serial Bus based AXP223 PMIC.
-> The AXP223 is functionally identical to the AXP221, which we already
-> support. Only some default values for the regulators are different.
-> The defaults fit their recommended application, paired with different
-> SoCs.
->
-> Patch 1 adds AXP223 to the list of supported chips in the DT binding.
->
-> Patch 2 gets rid of the extra "struct device *" parameter from
-> axp20x_match_device().
->
-> Patch 3 makes axp20x_match_device() use dev->driver->of_match_table,
-> so the function can be library-ized without modification.
->
-> Patch 4 splits the axp20x mfd driver into 2 parts, a core library, and
-> an I2C driver.
->
-> Patch 5 cleans up some leftover whitespace issues in axp20x core.
->
-> Patch 6 adds an RSB based driver for the AXP223.
->
-> Patch 7 adds support for the AXP223 regulators
->
-> Patch 8 enables the AXP223 PMIC and its regulators for the Sinlinx
-> SinA33.
->
-> Patch 9 enables the AXP223 PMIC and its regulators for A23/A33 based
-> Q8 tablet devices.
->
->
-> Regards
-> ChenYu
->
->
-> Chen-Yu Tsai (9):
->   mfd: axp20x: Add AXP223 to list of supported PMICs in DT bindings
->   mfd: axp20x: Remove second struct device * parameter for
->     axp20x_match_device()
->   mfd: axp20x: use dev->driver->of_match_table in axp20x_match_device()
->   mfd: axp20x: Split the driver into core and i2c bits
->   mfd: axp20x: Whitespace, open parenthesis alignment code style fixes
->   mfd: axp20x: Add support for RSB based AXP223 PMIC
->   regulator: axp20x: Support new AXP223 PMIC
->   ARM: dts: sun8i: sinlinx-sina33: Add AXP223 PMIC device and regulator
->     nodes
->   ARM: dts: sun8i: q8-common: Add AXP223 PMIC device and regulator nodes
->
->  Documentation/devicetree/bindings/mfd/axp20x.txt |   7 +-
->  arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts   |  76 ++++++++++++++++-
->  arch/arm/boot/dts/sun8i-q8-common.dtsi           |  83 +++++++++++++++++-
->  drivers/mfd/Kconfig                              |  25 ++++--
->  drivers/mfd/Makefile                             |   2 +
->  drivers/mfd/axp20x-i2c.c                         | 102 +++++++++++++++++++++++
->  drivers/mfd/axp20x-rsb.c                         |  78 +++++++++++++++++
->  drivers/mfd/axp20x.c                             | 101 +++++-----------------
->  drivers/regulator/axp20x-regulator.c             |   3 +
->  include/linux/mfd/axp20x.h                       |  34 +++++++-
->  10 files changed, 418 insertions(+), 93 deletions(-)
->  create mode 100644 drivers/mfd/axp20x-i2c.c
->  create mode 100644 drivers/mfd/axp20x-rsb.c
->
-> --
-> 2.6.4
->
+--=20
+Sjoerd Simons
+Collabora Ltd.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
