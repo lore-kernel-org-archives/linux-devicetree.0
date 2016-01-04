@@ -1,146 +1,82 @@
-From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH linux-next 1/5] mtd: spi-nor: properly detect the memory
- when it boots in Quad or Dual mode
-Date: Mon, 4 Jan 2016 17:50:29 +0100
-Message-ID: <568AA2D5.6080504@atmel.com>
-References: <cover.1449494420.git.cyrille.pitchen@atmel.com>
- <813edd1addf9a09b9f01031d3cb279c8cdfe97bb.1449494420.git.cyrille.pitchen@atmel.com>
- <20151218015544.GG10460@google.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH] ASoC: cs35l32: avoid uninitialized variable access
+Date: Mon, 4 Jan 2016 16:52:20 +0000
+Message-ID: <20160104165220.GL19062@n2100.arm.linux.org.uk>
+References: <2884997.s8B8BuE04L@wuerfel>
+ <9222694.IRNnfpj6Tn@wuerfel>
+ <20160104152058.GH19062@n2100.arm.linux.org.uk>
+ <3088017.xkc6Hgo0y2@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151218015544.GG10460-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <3088017.xkc6Hgo0y2@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
-
-Le 18/12/2015 02:55, Brian Norris a =E9crit :
-> Hi Cyrille,
->=20
-> On Mon, Dec 07, 2015 at 03:09:10PM +0100, Cyrille Pitchen wrote:
-[...]
->> +
->> +			/* Set this protocol for all commands. */
->> +			nor->reg_proto =3D configs[i].proto;
->> +			nor->read_proto =3D configs[i].proto;
->> +			nor->write_proto =3D configs[i].proto;
->> +			nor->erase_proto =3D configs[i].proto;
->=20
-> Are these all fully independent? Do we really need 4 fields for this?
->=20
-
-Currently, for sure reg_proto and read_proto are independent. Let's tak=
-e
-Spansion memories as an example:
-- Fast Read Quad Data 0x6B uses SPI 1-1-4
-- register accesses (read/write) use SPI 1-1-1
-
-AFAIK, Quad IO write commands are not used yet but if one day they are,=
- for
-instance with Macronix memories (QPI mode disabled):
-- 4x I/O Page Program 0x38 uses SPI 1-1-4
-- register accesses (read/write) uses SPI 1-1-1
-- Fast Read Quad I/O 0xEB uses SPI 1-4-4
-- Sector Erase 0x20 uses SPI 1-1-1
-
-=46or now, I don't have any example where erase_proto is different from
-reg_proto but for clarity reasons I'd rather keep erase_proto and reg_p=
-roto
-distinct. Otherwise both field should be renamed as it looks odd to use
-reg_proto when implementing the nor->erase() hook, doesn't it?
-
-The names were chosen according to both the *_opcode and hooks from the
-struct spi_nor:
-
-hook           op code          protocol
-read_reg()     N/A              reg_proto
-write_reg()    N/A              reg_proto
-read()         read_opcode      read_proto
-write()        program_opcode   write_proto
-erase()        erase_opcode     erase_proto
-
-I admit following this logic 'program_opcode' should be renamed
-'write_opcode'.
-
-
-
-[...]
->> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor=
-=2Eh
->> index fac3f6f53981..c91986a99caf 100644
->> --- a/include/linux/mtd/spi-nor.h
->> +++ b/include/linux/mtd/spi-nor.h
->> @@ -75,8 +75,9 @@
->>  #define SPINOR_OP_BRWR		0x17	/* Bank register write */
->> =20
->>  /* Used for Micron flashes only. */
->> -#define SPINOR_OP_RD_EVCR      0x65    /* Read EVCR register */
->> -#define SPINOR_OP_WD_EVCR      0x61    /* Write EVCR register */
->> +#define SPINOR_OP_MIO_RDID	0xaf	/* Multiple I/O Read JEDEC ID */
->> +#define SPINOR_OP_RD_EVCR	0x65    /* Read EVCR register */
->> +#define SPINOR_OP_WD_EVCR	0x61    /* Write EVCR register */
->> =20
->>  /* Status Register bits. */
->>  #define SR_WIP			BIT(0)	/* Write in progress */
->> @@ -105,6 +106,16 @@ enum read_mode {
->>  	SPI_NOR_QUAD,
->>  };
->> =20
->> +enum spi_protocol {
->> +	SPI_PROTO_1_1_1,	/* SPI */
->> +	SPI_PROTO_1_1_2,	/* Dual Output */
->> +	SPI_PROTO_1_1_4,	/* Quad Output */
->> +	SPI_PROTO_1_2_2,	/* Dual IO */
->> +	SPI_PROTO_1_4_4,	/* Quad IO */
->> +	SPI_PROTO_2_2_2,	/* Dual Command */
->> +	SPI_PROTO_4_4_4,	/* Quad Command */
->=20
-> Would it help at all to make this enum into something more like a
-> bitfield? So in some cases, rather than a bit switch block, we can ju=
-st
-> extract the "number of lines" from the integer value? e.g.:
->=20
-> #define SNOR_PROTO(command, addr, data) \
-> 	(((command) << 0) | \
-> 	 ((addr) << 4) | \
-> 	 ((data) << 8)) // or some other kind of macro magic
->=20
-> enum spi_nor_protocol {
-> 	SNOR_PROTO_1_1_1		=3D SNOR_PROTO(1, 1, 1),
-> 	SNOR_PROTO_1_1_2		=3D SNOR_PROTO(1, 1, 2),
+On Mon, Jan 04, 2016 at 05:41:05PM +0100, Arnd Bergmann wrote:
+> That reminds of a different problem that has been bugging me for a
+> while: We frequently have a pattern like
+> 
+> #ifdef CONFIG_FOO
+> static int function(void)
+> {
+> 	...
+> }
+> #endif
+> 
+> struct operations = {
+> 	...
+> #ifdef CONFIG_FOO
+> 	.function = function;
+> #endif
 > 	...
 > };
->=20
-> static inline int spi_nor_io_lines_command(enum spi_nor_protocol prot=
-o)
+> 
+> Except that people constantly get it wrong, e.g. by using the
+> wrong ifdef, forgetting one of the two ifdefs, or by leaving
+> unused static functions that only get called indirectly from the
+> other one that is built conditionally.
+
+We already have a solution to that.  __maybe_unused against the
+function, and use the correct #ifdef in the structure initialiser.
+We just need reviewers to be better at picking that up.
+
+> We could add a macro like
+> 
+> #define COND_PTR(config, ptr) (IS_ENABLED(config) ? (ptr) : NULL)
+> 
+> and then let the compiler figure out that "function" is unused even
+> without an explicit __maybe_unused annotation.  The function above
+> can be simplied to
+> 
+> static inline struct device_node *dev_of_node(struct device *dev)
 > {
-> 	return proto & 0xf;
+> 	return COND_PTR(CONFIG_OF, dev->of_node);
 > }
->=20
-> (Similar for addr and data phases. Also, my naming might suck. Feel f=
-ree
-> to improve!)
->=20
-> I don't think we should stomp on the SPI namespace with the
-> "SPI_PROTO_*" definitions. That's why I chose SNOR_PROTO_ and spi_nor=
-_
-> prefixes.
->=20
+> 
+> with that, which is another benefit.
 
-It looks good to me so I'll change for that :)
+You're just inventing another way for people to get it wrong though.
+Instead of having mismatched #ifdefs, we can now have a mismatched
+#ifdef around the function and the COND_PTR config - and people will
+add #ifdef's because they won't realise they don't need them.
 
-> Brian
+You're reliant on reviewers to spotting the pattern, and suggesting
+using COND_PTR() without #ifdefs around the function.  It's the same
+problem with spotting the existing pattern and suggesting dropping
+the #ifdef around the function and annotating the function with
+__maybe_unused.
 
+So, I don't see the benefit.
 
-Best regards,
-
-Cyrille
+-- 
+RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
