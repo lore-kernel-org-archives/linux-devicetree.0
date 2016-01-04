@@ -1,373 +1,486 @@
-From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH linux-next 2/5] mtd: spi-nor: fix Quad SPI mode support
- for Spansion, Micron and Macronix
-Date: Mon, 4 Jan 2016 17:12:14 +0100
-Message-ID: <568A99DE.5010502@atmel.com>
-References: <cover.1449494420.git.cyrille.pitchen@atmel.com>
- <7f2a084da433f1936a1305dfa30327bc5abc802c.1449494420.git.cyrille.pitchen@atmel.com>
- <20151218021857.GI10460@google.com>
+From: kbuild test robot <fengguang.wu@intel.com>
+Subject: [linux-review:Peter-Rosin/i2c-mux-cleanup-and-locking-update/20160104-231355] 8627e12bd6d3fc7506656f026a23afae52d12c73 BUILD DONE
+Date: Tue, 05 Jan 2016 00:13:32 +0800
+Message-ID: <568a9a2c./f52eMGHRPq5ELHe%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151218021857.GI10460-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Peter Rosin <peda@lysator.liu.se>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+https://github.com/0day-ci/linux  Peter-Rosin/i2c-mux-cleanup-and-locki=
+ng-update/20160104-231355
+8627e12bd6d3fc7506656f026a23afae52d12c73  i2c: pca954x: get rid of the =
+i2c deadlock workaround
 
-Le 18/12/2015 03:18, Brian Norris a =E9crit :
-> On Mon, Dec 07, 2015 at 03:09:11PM +0100, Cyrille Pitchen wrote:
->> This patch reworks the support of Quad and Dual SPI protocols for Mi=
-cron,
->> Spansion and Macronix Quad/Dual capable memories. Indeed, in the bes=
+drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:845:18: warning: assignment =
+makes pointer from integer without a cast [-Wint-conversion]
+drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:845:20: error: too many argu=
+ments to function 'i2c_add_mux_adapter'
+drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:845:40: warning: passing arg=
+ument 1 of 'i2c_add_mux_adapter' from incompatible pointer type [-Winco=
+mpatible-pointer-types]
+drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:845:46: sparse: too many arg=
+uments for function i2c_add_mux_adapter
+drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:846:12: warning: passing arg=
+ument 2 of 'i2c_add_mux_adapter' makes integer from pointer without a c=
+ast [-Wint-conversion]
+drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:847:12: warning: passing arg=
+ument 3 of 'i2c_add_mux_adapter' makes integer from pointer without a c=
+ast [-Wint-conversion]
+drivers/iio/imu/inv_mpu6050/inv_mpu_core.c:863:2: error: implicit decla=
+ration of function 'i2c_del_mux_adapter' [-Werror=3Dimplicit-function-d=
+eclaration]
+drivers/media/dvb-frontends/m88ds3103.c:1470:19: warning: assignment ma=
+kes pointer from integer without a cast [-Wint-conversion]
+drivers/media/dvb-frontends/m88ds3103.c:1470:21: error: too many argume=
+nts to function 'i2c_add_mux_adapter'
+drivers/media/dvb-frontends/m88ds3103.c:1470:41: warning: passing argum=
+ent 1 of 'i2c_add_mux_adapter' from incompatible pointer type
+drivers/media/dvb-frontends/m88ds3103.c:1470:41: warning: passing argum=
+ent 1 of 'i2c_add_mux_adapter' from incompatible pointer type [-Wincomp=
+atible-pointer-types]
+drivers/media/dvb-frontends/m88ds3103.c:1470:47: sparse: too many argum=
+ents for function i2c_add_mux_adapter
+drivers/media/dvb-frontends/m88ds3103.c:1470:58: warning: passing argum=
+ent 2 of 'i2c_add_mux_adapter' makes integer from pointer without a cas=
 t
->> case, only Spansion memories are correctly supported by the current
->> spi-nor framework.
->=20
-> ^^ Ah, so this is what I was struggling with at first. I agree that
-> Micron looks broken. Quite possibly Macronix too. Unfortunately, I
-> haven't had great test hardware for some of the quad modes. Especiall=
-y
-> not anything that supports generic SPI, and not completely on mainlin=
-e.
->=20
+drivers/media/dvb-frontends/m88ds3103.c:1470:58: warning: passing argum=
+ent 2 of 'i2c_add_mux_adapter' makes integer from pointer without a cas=
+t [-Wint-conversion]
+drivers/media/dvb-frontends/m88ds3103.c:1471:13: warning: passing argum=
+ent 3 of 'i2c_add_mux_adapter' makes integer from pointer without a cas=
+t [-Wint-conversion]
+drivers/media/dvb-frontends/m88ds3103.c:1505:2: error: implicit declara=
+tion of function 'i2c_del_mux_adapter' [-Werror=3Dimplicit-function-dec=
+laration]
+drivers/media/dvb-frontends/rtl2830.c:868:15: warning: assignment makes=
+ pointer from integer without a cast [-Wint-conversion]
+drivers/media/dvb-frontends/rtl2830.c:868:17: error: too many arguments=
+ to function 'i2c_add_mux_adapter'
+drivers/media/dvb-frontends/rtl2830.c:868:37: warning: passing argument=
+ 1 of 'i2c_add_mux_adapter' from incompatible pointer type
+drivers/media/dvb-frontends/rtl2830.c:868:37: warning: passing argument=
+ 1 of 'i2c_add_mux_adapter' from incompatible pointer type [-Wincompati=
+ble-pointer-types]
+drivers/media/dvb-frontends/rtl2830.c:868:43: sparse: too many argument=
+s for function i2c_add_mux_adapter
+drivers/media/dvb-frontends/rtl2830.c:868:54: warning: passing argument=
+ 2 of 'i2c_add_mux_adapter' makes integer from pointer without a cast
+drivers/media/dvb-frontends/rtl2830.c:868:54: warning: passing argument=
+ 2 of 'i2c_add_mux_adapter' makes integer from pointer without a cast [=
+-Wint-conversion]
+drivers/media/dvb-frontends/rtl2830.c:869:4: warning: passing argument =
+3 of 'i2c_add_mux_adapter' makes integer from pointer without a cast [-=
+Wint-conversion]
+drivers/media/dvb-frontends/rtl2830.c:903:2: error: implicit declaratio=
+n of function 'i2c_del_mux_adapter' [-Werror=3Dimplicit-function-declar=
+ation]
+drivers/media/dvb-frontends/rtl2832.c:1265:53: sparse: too many argumen=
+ts for function i2c_add_mux_adapter
+drivers/media/dvb-frontends/si2168.c:712:17: error: too many arguments =
+to function 'i2c_add_mux_adapter'
+drivers/media/dvb-frontends/si2168.c:712:37: warning: passing argument =
+1 of 'i2c_add_mux_adapter' from incompatible pointer type
+drivers/media/dvb-frontends/si2168.c:712:37: warning: passing argument =
+1 of 'i2c_add_mux_adapter' from incompatible pointer type [-Wincompatib=
+le-pointer-types]
+drivers/media/dvb-frontends/si2168.c:712:43: sparse: too many arguments=
+ for function i2c_add_mux_adapter
+drivers/media/dvb-frontends/si2168.c:712:54: warning: passing argument =
+2 of 'i2c_add_mux_adapter' makes integer from pointer without a cast
+drivers/media/dvb-frontends/si2168.c:712:54: warning: passing argument =
+2 of 'i2c_add_mux_adapter' makes integer from pointer without a cast [-=
+Wint-conversion]
+drivers/media/dvb-frontends/si2168.c:713:4: warning: passing argument 3=
+ of 'i2c_add_mux_adapter' makes integer from pointer without a cast [-W=
+int-conversion]
+drivers/media/usb/cx231xx/cx231xx-i2c.c:574:56: sparse: too many argume=
+nts for function i2c_add_mux_adapter
+drivers/of/unittest.c:1730:16: warning: assignment makes pointer from i=
+nteger without a cast [-Wint-conversion]
+drivers/of/unittest.c:1730:18: error: too many arguments to function 'i=
+2c_add_mux_adapter'
+drivers/of/unittest.c:1730:38: warning: passing argument 1 of 'i2c_add_=
+mux_adapter' from incompatible pointer type [-Wincompatible-pointer-typ=
+es]
+drivers/of/unittest.c:1730:49: warning: passing argument 3 of 'i2c_add_=
+mux_adapter' makes integer from pointer without a cast [-Wint-conversio=
+n]
+drivers/of/unittest.c:1735:5: error: implicit declaration of function '=
+i2c_del_mux_adapter' [-Werror=3Dimplicit-function-declaration]
 
-To explain the origin of this series of patches I would say that at fir=
-st
-I was only supposed to write a driver for the Atmel QSPI controller. I =
-was
-using (ans still use) a sama5d2 xplained board with a Micron n25q128a13
-memory. Hence, testing the driver, I found that the probe failed inside=
- the
-old micron_quad_enable() function.
-Indeed nor->write_reg() was successfully called to clear the Quad Enabl=
-e bit
-in the Enhanced Volatile Configuration Register but immediately after
-spi_nor_wait_till_ready() failed.
-The reason was that the Micron memory was switched to its Quad Mode and=
- then
-expected all the following commands to use the SPI 4-4-4 protocol. Howe=
-ver
-the Atmel QSPI controller driver was not aware of this protocol change =
-and
-kept on using the SPI 1-1-1 protocol.
+Error ids grouped by kconfigs:
 
-So in the very first version of this series of patches, I inserted a ca=
-ll of
-spi_nor_set_protocol(), a new function simply calling an optional hook,
-between the nor->write_reg() and spi_nor_wait_till_ready() calls. This =
-way
-the (Q)SPI controller driver was now notified about the protocol switch=
- and
-can eventually adapt to this change.
-
-After some discussions on the mailing list, it appeared that using such=
- a
-hook to handle protocol changes would required to insert calls of the n=
-ew
-spi_nor_set_protocol() function before all the calls of nor->read_reg()=
-,
-nor->write_reg(), nor->read(), nor->write() and nor->erase().
-Indeed some manufacturers like Spansion use different numbers of I/O li=
-nes
-depending on the type of operation:
-- Fast Read: 1-1-4
-- register read/write: 1-1-1
-
-So the addition inside struct spi_nor of the new reg_proto, read_proto,
-write_proto and erase_proto fields was prefered to the first
-spi_nor_set_protocol() proposal. This fields are set once for all by
-spi_nor_scan(). SPI controller drivers have to worry about their values=
- only
-if they claim to support Dual or Quad protocols through the 'mode' argu=
-ment
-of spi_nor_scan().
-
-Then about the Micron case, I did test it and it didn't work without pa=
-tching.
-To be cautious, I wondered whether it might have work with a
-different configuration/SPI controller because I don't want to break
-something working. I wondered about a mean for the SPI controller drive=
-r to
-detect the protocol change. Maybe parsing the SPI message and checking =
-the
-command op code. However it looked a highly inefficient method and also=
- it
-simply can not work since the very same op code, for instance 0x6B, is =
-used
-by both the 1-1-4 and 4-4-4 protocols.
-So my conclusion was it could not have worked before: I don't have to w=
-orry
-about breaking the support of Quad protocols for Micron memories.
-
-I don't think there is a real need to revert Bean's commit since this s=
-eries
-fixes the issue anyway. However if you feel it would be better to rever=
-t it to
-start from a cleaner base, I'm fine with it. Just let me know your choi=
-ce so
-I can adapt my series before sending the next version.
-
-
-About the Macronix case, I still don't have any memory sample to test.
-However, reading some memory datasheet (again and again), my understand=
-ing
-has changed a little bit: setting the Quad Enable (QE) non-volatile bit=
- in
-the Status Register doesn't mean enabling the Quad Peripheral Interface=
- (QPI)
-as I thought.
-Two dedicated op codes are used when sending the required commands to
-enable/disable the QPI. Once the QPI enabled, the memory expects ALL co=
-mmands
-to use the SPI 4-4-4 protocol. Enabling the QPI requires the QE bit to =
-bit set
-first in the Status Register.
-However the QE bit is also required to use the SPI 1-1-4 protocol: QPI =
-must be
-disabled in that case.
-Setting the QE bit only disables the Write Protect and Hold features: t=
-he two
-associated pins then become the IO2 and IO3 lines, needed by Quad SPI
-protocols.
-
-=46inally for the Winbond case, I don't have memory from this manufactu=
-rer
-yet so once again I refer only to some datasheets: it looks like Winbon=
-d
-memories use a pattern of behaviour very closed to Macronix' one.
-Indeed, some Quad Enable non volatile bit must be set inside the Status
-Register. Also two dedicated op codes are used to enable/disable the QP=
-I mode.
-The QPI mode requires the QE bit to be set and, once enabled, all comma=
-nds
-must use the SPI 4-4-4 protocol.
-However the two op codes to enter/leave the QPI mode are not the same a=
-s
-those of Macronix and both manufacturers use different offsets for thei=
+recent_errors
+=E2=94=9C=E2=94=80=E2=94=80 i386-allmodconfig
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:error:implicit-declaration-of-function-i2c_del_mu=
+x_adapter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:error:too-many-arguments-to-function-i2c_add_mux_=
+adapter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:warning:assignment-makes-pointer-from-integer-wit=
+hout-a-cast
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:warning:passing-argument-of-i2c_add_mux_adapter-f=
+rom-incompatible-pointer-type
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:warning:passing-argument-of-i2c_add_mux_adapter-m=
+akes-integer-from-pointer-without-a-cast
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-m88ds3103.c:error:implicit-declaration-of-function-i2c_del_mux_a=
+dapter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-m88ds3103.c:error:too-many-arguments-to-function-i2c_add_mux_ada=
+pter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-m88ds3103.c:warning:assignment-makes-pointer-from-integer-withou=
+t-a-cast
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-m88ds3103.c:warning:passing-argument-of-i2c_add_mux_adapter-from=
+-incompatible-pointer-type
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-m88ds3103.c:warning:passing-argument-of-i2c_add_mux_adapter-make=
+s-integer-from-pointer-without-a-cast
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-rtl2830.c:error:implicit-declaration-of-function-i2c_del_mux_ada=
+pter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-rtl2830.c:error:too-many-arguments-to-function-i2c_add_mux_adapt=
+er
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-rtl2830.c:warning:assignment-makes-pointer-from-integer-without-=
+a-cast
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-rtl2830.c:warning:passing-argument-of-i2c_add_mux_adapter-from-i=
+ncompatible-pointer-type
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-rtl2830.c:warning:passing-argument-of-i2c_add_mux_adapter-makes-=
+integer-from-pointer-without-a-cast
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-si2168.c:error:too-many-arguments-to-function-i2c_add_mux_adapte=
 r
-QE bits.
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-si2168.c:warning:passing-argument-of-i2c_add_mux_adapter-from-in=
+compatible-pointer-type
+=E2=94=82=C2=A0=C2=A0 =E2=94=94=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-si2168.c:warning:passing-argument-of-i2c_add_mux_adapter-makes-i=
+nteger-from-pointer-without-a-cast
+=E2=94=9C=E2=94=80=E2=94=80 i386-randconfig-i0-01042049
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:error:implicit-declaration-of-function-i2c_del_mu=
+x_adapter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:error:too-many-arguments-to-function-i2c_add_mux_=
+adapter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:warning:assignment-makes-pointer-from-integer-wit=
+hout-a-cast
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:warning:passing-argument-of-i2c_add_mux_adapter-f=
+rom-incompatible-pointer-type
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:warning:passing-argument-of-i2c_add_mux_adapter-m=
+akes-integer-from-pointer-without-a-cast
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-of-unittest.c=
+:error:implicit-declaration-of-function-i2c_del_mux_adapter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-of-unittest.c=
+:error:too-many-arguments-to-function-i2c_add_mux_adapter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-of-unittest.c=
+:warning:assignment-makes-pointer-from-integer-without-a-cast
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-of-unittest.c=
+:warning:passing-argument-of-i2c_add_mux_adapter-from-incompatible-poin=
+ter-type
+=E2=94=82=C2=A0=C2=A0 =E2=94=94=E2=94=80=E2=94=80 drivers-of-unittest.c=
+:warning:passing-argument-of-i2c_add_mux_adapter-makes-integer-from-poi=
+nter-without-a-cast
+=E2=94=9C=E2=94=80=E2=94=80 i386-randconfig-s1-201601
+=E2=94=82=C2=A0=C2=A0 =E2=94=94=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:warning:passing-argument-of-i2c_add_mux_adapter-f=
+rom-incompatible-pointer-type
+=E2=94=9C=E2=94=80=E2=94=80 x86_64-allmodconfig
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:sparse:too-many-arguments-for-function-i2c_add_mu=
+x_adapter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-m88ds3103.c:sparse:too-many-arguments-for-function-i2c_add_mux_a=
+dapter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-m88ds3103.c:warning:passing-argument-of-i2c_add_mux_adapter-from=
+-incompatible-pointer-type
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-rtl2830.c:sparse:too-many-arguments-for-function-i2c_add_mux_ada=
+pter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-rtl2830.c:warning:passing-argument-of-i2c_add_mux_adapter-from-i=
+ncompatible-pointer-type
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-rtl2832.c:sparse:too-many-arguments-for-function-i2c_add_mux_ada=
+pter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-si2168.c:sparse:too-many-arguments-for-function-i2c_add_mux_adap=
+ter
+=E2=94=82=C2=A0=C2=A0 =E2=94=94=E2=94=80=E2=94=80 drivers-media-usb-cx2=
+31xx-cx231xx-i2c.c:sparse:too-many-arguments-for-function-i2c_add_mux_a=
+dapter
+=E2=94=9C=E2=94=80=E2=94=80 x86_64-randconfig-i0-201601
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-m88ds3103.c:error:implicit-declaration-of-function-i2c_del_mux_a=
+dapter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-m88ds3103.c:error:too-many-arguments-to-function-i2c_add_mux_ada=
+pter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-m88ds3103.c:warning:assignment-makes-pointer-from-integer-withou=
+t-a-cast
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-m88ds3103.c:warning:passing-argument-of-i2c_add_mux_adapter-from=
+-incompatible-pointer-type
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-m88ds3103.c:warning:passing-argument-of-i2c_add_mux_adapter-make=
+s-integer-from-pointer-without-a-cast
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-rtl2830.c:error:implicit-declaration-of-function-i2c_del_mux_ada=
+pter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-rtl2830.c:error:too-many-arguments-to-function-i2c_add_mux_adapt=
+er
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-rtl2830.c:warning:assignment-makes-pointer-from-integer-without-=
+a-cast
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-rtl2830.c:warning:passing-argument-of-i2c_add_mux_adapter-from-i=
+ncompatible-pointer-type
+=E2=94=82=C2=A0=C2=A0 =E2=94=94=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-rtl2830.c:warning:passing-argument-of-i2c_add_mux_adapter-makes-=
+integer-from-pointer-without-a-cast
+=E2=94=9C=E2=94=80=E2=94=80 x86_64-randconfig-n0-01050002
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:error:implicit-declaration-of-function-i2c_del_mu=
+x_adapter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:error:too-many-arguments-to-function-i2c_add_mux_=
+adapter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:warning:assignment-makes-pointer-from-integer-wit=
+hout-a-cast
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:warning:passing-argument-of-i2c_add_mux_adapter-f=
+rom-incompatible-pointer-type
+=E2=94=82=C2=A0=C2=A0 =E2=94=94=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:warning:passing-argument-of-i2c_add_mux_adapter-m=
+akes-integer-from-pointer-without-a-cast
+=E2=94=9C=E2=94=80=E2=94=80 x86_64-randconfig-s3-01042359
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-m88ds3103.c:error:implicit-declaration-of-function-i2c_del_mux_a=
+dapter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-m88ds3103.c:error:too-many-arguments-to-function-i2c_add_mux_ada=
+pter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-m88ds3103.c:warning:assignment-makes-pointer-from-integer-withou=
+t-a-cast
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-m88ds3103.c:warning:passing-argument-of-i2c_add_mux_adapter-from=
+-incompatible-pointer-type
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-m88ds3103.c:warning:passing-argument-of-i2c_add_mux_adapter-make=
+s-integer-from-pointer-without-a-cast
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-rtl2830.c:error:implicit-declaration-of-function-i2c_del_mux_ada=
+pter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-rtl2830.c:error:too-many-arguments-to-function-i2c_add_mux_adapt=
+er
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-rtl2830.c:warning:assignment-makes-pointer-from-integer-without-=
+a-cast
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-rtl2830.c:warning:passing-argument-of-i2c_add_mux_adapter-from-i=
+ncompatible-pointer-type
+=E2=94=82=C2=A0=C2=A0 =E2=94=94=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-rtl2830.c:warning:passing-argument-of-i2c_add_mux_adapter-makes-=
+integer-from-pointer-without-a-cast
+=E2=94=9C=E2=94=80=E2=94=80 x86_64-randconfig-s4-01042328
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-si2168.c:error:too-many-arguments-to-function-i2c_add_mux_adapte=
+r
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-si2168.c:warning:passing-argument-of-i2c_add_mux_adapter-from-in=
+compatible-pointer-type
+=E2=94=82=C2=A0=C2=A0 =E2=94=94=E2=94=80=E2=94=80 drivers-media-dvb-fro=
+ntends-si2168.c:warning:passing-argument-of-i2c_add_mux_adapter-makes-i=
+nteger-from-pointer-without-a-cast
+=E2=94=9C=E2=94=80=E2=94=80 x86_64-randconfig-s4-01042359
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:error:implicit-declaration-of-function-i2c_del_mu=
+x_adapter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:error:too-many-arguments-to-function-i2c_add_mux_=
+adapter
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:warning:assignment-makes-pointer-from-integer-wit=
+hout-a-cast
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:warning:passing-argument-of-i2c_add_mux_adapter-f=
+rom-incompatible-pointer-type
+=E2=94=82=C2=A0=C2=A0 =E2=94=94=E2=94=80=E2=94=80 drivers-iio-imu-inv_m=
+pu6050-inv_mpu_core.c:warning:passing-argument-of-i2c_add_mux_adapter-m=
+akes-integer-from-pointer-without-a-cast
+=E2=94=94=E2=94=80=E2=94=80 x86_64-rhel
+    =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-frontends-m88ds3103.c=
+:error:too-many-arguments-to-function-i2c_add_mux_adapter
+    =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-frontends-m88ds3103.c=
+:warning:passing-argument-of-i2c_add_mux_adapter-from-incompatible-poin=
+ter-type
+    =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-frontends-m88ds3103.c=
+:warning:passing-argument-of-i2c_add_mux_adapter-makes-integer-from-poi=
+nter-without-a-cast
+    =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-frontends-rtl2830.c:e=
+rror:too-many-arguments-to-function-i2c_add_mux_adapter
+    =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-frontends-rtl2830.c:w=
+arning:passing-argument-of-i2c_add_mux_adapter-from-incompatible-pointe=
+r-type
+    =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-frontends-rtl2830.c:w=
+arning:passing-argument-of-i2c_add_mux_adapter-makes-integer-from-point=
+er-without-a-cast
+    =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-frontends-si2168.c:er=
+ror:too-many-arguments-to-function-i2c_add_mux_adapter
+    =E2=94=9C=E2=94=80=E2=94=80 drivers-media-dvb-frontends-si2168.c:wa=
+rning:passing-argument-of-i2c_add_mux_adapter-from-incompatible-pointer=
+-type
+    =E2=94=94=E2=94=80=E2=94=80 drivers-media-dvb-frontends-si2168.c:wa=
+rning:passing-argument-of-i2c_add_mux_adapter-makes-integer-from-pointe=
+r-without-a-cast
 
-What I've planned to do to support Macronix and Winbond memory is to si=
-ll
-use the spi_nor_read_id() function to guess the current protocol. If th=
-e
-caller of spi_nor_scan() asks for Quad SPI support through the 'mode'
-argument, I will use the SPI 4-4-4 protocol if the QPI mode is already
-enabled, the SPI 1-1-4 protocol otherwise: I won't change the state of =
-the
-QPI mode. Indeed, if spi_nor_read_id() has succeeded in reading the JED=
-EC
-ID, the current state of QPI mode is supported whatever it is.
+elapsed time: 57m
 
+configs tested: 120
 
->> 1 - Micron:
->> When their Quad SPI mode is enabled, Micron spi-nor memories expect =
-all
->> commands to use the SPI 4-4-4 protocol. Also when the Dual SPI mode =
-is
->> enabled, all commands must use the SPI 2-2-2 protocol.
->>
->> Before this patch, the spi-nor framework used to always enable the Q=
-uad
->> mode when the mode argument of spi_nor_scan() took the value SPI_NOR=
-_QUAD.
->> That was not suited with drivers only supporting SPI 1-x-4 protocols=
- but
->> not the 4-4-4 (e.g. the m25p80 driver). Also the SPI controller was =
-not
->> notified about which SPI protocol to use to transfert command. We ca=
-nnot
->> rely only on the op code: in Extended SPI mode the 0x6b command must=
- use
->> the SPI 1-1-4 protocol whereas in Quad SPi mode the SPI 4-4-4 protoc=
-ol
->> must be use instead.
->>
->> After this patch, the spi-nor framework uses the result of the
->> spi_nor_read_id() function to choose the right SPI protocol to be us=
-ed.
->> If the reg_proto was set to SPI_PROTO_4_4_4, we already know that th=
-e Quad
->> SPI mode is already enabled and that the SPI controller supports the=
- SPI
->> 4-4-4 protocol (otherwise it would have fail to read the JEDEC ID wi=
-th the
->> 0xaf op code). For the very same reason, if the reg_proto was set to
->> SPI_PROTO_2_2_2, we already know that the Dual mode is already enabl=
-ed and
->> that the SPI controller supports the SPI 2-2-2 protocol.
->> Otherwise we switch back to the Extended SPI protocol, which support=
-s at
->> least the Fast Read commands:
->> - 1-1-1 (0x0b)
->> - Dual Output 1-1-2 (0x3b)
->> - Quad Output 1-1-4 (0x6b)
->>
->> We also safely set the number of dummy cycles to 8 for Fast Read com=
-mands
->> through the Volatile Configuration Register (VCR): some drivers (m25=
-p80)
->> or SPI controllers only support a number of dummy cycles multiple of=
- 8.
->> This number may have previouly been set to an unsupported value by a=
-n
->> early bootloader or at reset thanks to the Non-Volatile Configuratio=
-n
->> Register.
->=20
-> It's not clear to me how you're being safe with the dummy cycles at a=
-ll.
-> It seems like you're introducing new values that may be incompatible
-> with drivers. That can be OK, but you have to give drivers a chance t=
-o
-> opt-out... Maybe some kind of "host capability" flags?
->=20
+x86_64                             acpi-redef
+x86_64                           allyesdebian
+x86_64                                nfsroot
+x86_64                           allmodconfig
+arm                               allnoconfig
+arm                         at91_dt_defconfig
+arm                                  at_hdmac
+arm                                    ep93xx
+arm                       imx_v6_v7_defconfig
+arm                                  iop-adma
+arm                          marzen_defconfig
+arm                          prima2_defconfig
+arm                                    sa1100
+arm                                   samsung
+arm                                        sh
+arm                       spear13xx_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+alpha                               defconfig
+parisc                            allnoconfig
+parisc                         b180_defconfig
+parisc                        c3000_defconfig
+parisc                              defconfig
+blackfin                BF526-EZBRD_defconfig
+blackfin                BF533-EZKIT_defconfig
+blackfin            BF561-EZKIT-SMP_defconfig
+blackfin                  TCM-BF537_defconfig
+cris                 etrax-100lx_v2_defconfig
+x86_64               randconfig-x017-01041832
+x86_64               randconfig-x011-01041832
+x86_64               randconfig-x015-01041832
+x86_64               randconfig-x010-01041832
+x86_64               randconfig-x016-01041832
+x86_64               randconfig-x013-01041832
+x86_64               randconfig-x018-01041832
+x86_64               randconfig-x019-01041832
+x86_64               randconfig-x012-01041832
+x86_64               randconfig-x014-01041832
+i386                             alldefconfig
+i386                              allnoconfig
+i386                                defconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+i386                     randconfig-s0-201601
+i386                     randconfig-s1-201601
+x86_64                 randconfig-s3-01042359
+x86_64                 randconfig-s4-01042359
+x86_64                 randconfig-s5-01042359
+avr32                      atngw100_defconfig
+avr32                     atstk1006_defconfig
+frv                                 defconfig
+mn10300                     asb2364_defconfig
+openrisc                    or1ksim_defconfig
+tile                         tilegx_defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+i386                             allmodconfig
+mips                              allnoconfig
+mips                      fuloong2e_defconfig
+mips                                   jz4740
+mips                                     txx9
+x86_64                   randconfig-i0-201601
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+i386                   randconfig-i0-01042049
+i386                   randconfig-i1-01042049
+sparc                               defconfig
+sparc64                           allnoconfig
+sparc64                             defconfig
+m32r                       m32104ut_defconfig
+m32r                     mappi3.smp_defconfig
+m32r                         opsput_defconfig
+m32r                           usrv_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+i386                               tinyconfig
+arm                             pxa_defconfig
+arm                          simpad_defconfig
+powerpc                          alldefconfig
+powerpc                     redwood_defconfig
+arm                                      arm5
+arm                                     arm67
+arm                                       mmp
+arm                       omap2plus_defconfig
+arm                         s3c2410_defconfig
+arm                           tegra_defconfig
+x86_64                                    lkp
+x86_64                                   rhel
+i386                     randconfig-n0-201601
+ia64                             alldefconfig
+ia64                              allnoconfig
+ia64                                defconfig
+x86_64                 randconfig-n0-01050002
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+x86_64               randconfig-x007-01040711
+x86_64               randconfig-x005-01040711
+x86_64               randconfig-x003-01040711
+x86_64               randconfig-x001-01040711
+x86_64               randconfig-x004-01040711
+x86_64               randconfig-x009-01040711
+x86_64               randconfig-x002-01040711
+x86_64               randconfig-x000-01040711
+x86_64               randconfig-x008-01040711
+x86_64               randconfig-x006-01040711
+i386                     randconfig-r0-201601
+i386                 randconfig-x005-01040616
+i386                 randconfig-x003-01040616
+i386                 randconfig-x002-01040616
+i386                 randconfig-x001-01040616
+i386                 randconfig-x008-01040616
+i386                 randconfig-x000-01040616
+i386                 randconfig-x009-01040616
+i386                 randconfig-x006-01040616
+i386                 randconfig-x004-01040616
+i386                 randconfig-x007-01040616
 
-Currently not all drivers support numbers of dummy cycles which are not
-multiple of 8 bits. Especially this is the case of the m25p80 driver.
-Other drivers, those supporting more numbers of dummy cycles still supp=
-ort
-multiple of 8 bits. So now the spi-nor framework always  sets to 8 the =
-number
-of dummy cycles to be used by updating some Micron *volatile* register.
-All drivers can deal with a value of 8. This value is almost always the
-value used before. It is large enough to fit the highest SPI bus clock
-frequencies but still provides good performances.
-Actually, I'm pretty sure it was the only used value before.
-And since the driver updates a volatile register, the configuration wil=
-l
-still be the same after reset for bootloaders.
-In fact it should not change what worked before, it only gives a chance=
- to
-recover from bootloaders which would have used "strange" values of dumm=
-y
-cycle number.
-=46or instance, the romcode of the sama5d2 sets this number of dummy cy=
-cles to
-10 for all Micron memories to limit the risk of incompatibility with me=
-mory
-timing requirements. This romcode cannot be updated and tries to
-support as many QSPI memories as possible within a limited code size: w=
-e
-cannot afford using tables indexed by JEDEC ID but only by manufacturer=
- ID.
-However a value of 10 is not such a kind of value as expected by Linux
-drivers. A value of 8 gives a chance to use the m25p80 driver to manufa=
-cturers
-who don't want/can't develop a driver dedicated to their QSPI controlle=
-r.
-
-As a second thought, another solution is to only read the current value=
- of dummy
-cycle number and simply set use this value to initialize nor->read_dumm=
-y.
-The assumption is now that is the value was fine for the QSPI controlle=
-r during
-the bootloader phase it's still fine under Linux as long as a driver ca=
-n handle
-this QSPI controller.
-
-Please let me know which strategy you prefer for my next series.
-
-
->> Finally the XIP bit is always set in the VCR to disable the Continuo=
-us
->> Read mode as we don't want to care about mode cycles.
->>
->> 2 - Macronix:
->> When the QPI mode is enabled, all commands must use the SPI 4-4-4 pr=
-otocol
->> and only the 0xeb op code is supported for Fast Read commands.
->> Before this patch, the spi-nor framework used to force the QPI mode =
-but
->> used the 0x6b op code for Fast Read commands when the SPI controller
->> claims to support Quad SPI mode.
->> This patch uses the result of spi_nor_read_id() to guess whether the=
- QPI
->> mode is both enable and supported by the SPI controller (otherwise i=
-t
->> would have failed to read the JEDEC ID with the 0xaf op code).
->> When the QPI mode is disabled, Macronix memories still support the
->> following Fast Read commands:
->> - 1-1-1 (0x0b)
->> - Dual Output 1-1-2 (0x3b)
->> - Quad Output 1-1-4 (0x6b)
->> So if the QPI mode has not already been enabled, there is not need t=
-o
->> enable it. We also avoid the 0xbb (Dual I/O 1-2-2) and 0xeb (Quad I/=
-O
->> 1-4-4) op codes on purpose as we don't want to care about the value =
-to set
->> in mode cycles not to enter the Continuous Read (Performance Enhance=
-)
->> mode.
->>
->> As for Micron memories, the spi-nor framework now safely sets the nu=
-mber
->> of dummy cycles to 8 thanks to 2 volatile bits inside the Configurat=
-ion
->> Register.
->>
->> 3 - Spansion:
->> As for Macronix, we avoid the 0xbb (Dual I/O 1-2-2) and 0xeb (Quad I=
-/O
->> 1-4-4) op codes on purpose as we don't want to care about the value =
-to set
->> in mode cycles not to enter in the Continuous Read mode.
->>
->> Besides, we only care about the Quad Enable bit inside the Configura=
-tion
->> Register (CR) when using Quad operations. In such a case, we first c=
-heck
->> its state before trying to set it. Now we also notify the user about=
- the
->> update of this non-volatile bit.
->>
->> We also check the Latency Code (LC) in CR to know the exact number o=
-f
->> dummy cycles to use when performing a Fast Read operation. Currently=
- only
->> the 0x0b, 0x3b and 0x6b op codes are used to perform Fast Read opera=
-tion
->> so the number of dummy cycles is always either 0 or 8. Hence no regr=
-ession
->> should be introduced.
->>
->> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->> ---
->>  drivers/mtd/spi-nor/spi-nor.c | 783 +++++++++++++++++++++++++++++++=
-++++++-----
->>  include/linux/mtd/spi-nor.h   |  15 +-
->>  2 files changed, 699 insertions(+), 99 deletions(-)
->=20
-> That's quite a lot to do in one patch, both in number of lines of cod=
-e,
-> and in number of tasks outlined in the commit description. Can this b=
-e
-> broken down at all to be more modular and incremental?
-
-I've already tried to split the series a bit more. I had troubles makin=
-g
-patches smaller without breaking functionnal dependencies but I'll try
-to split it again before sending the next series.
-
->=20
-> Snipped the rest of the patch for now.
->=20
-> Brian
->=20
-
-Happy new year, all! :)
-
-Best regards,
-
-Cyrille
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+=46engguang
