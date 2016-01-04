@@ -1,24 +1,60 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH 10/10] i2c: pca954x: get rid of the i2c deadlock
- workaround
-Date: Mon, 4 Jan 2016 16:19:35 +0100
-Message-ID: <568A8D87.8020201@metafoo.de>
-References: <1451920215-29167-1-git-send-email-peda@lysator.liu.se>
- <1451920215-29167-11-git-send-email-peda@lysator.liu.se>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH] ASoC: cs35l32: avoid uninitialized variable access
+Date: Mon, 4 Jan 2016 15:20:58 +0000
+Message-ID: <20160104152058.GH19062@n2100.arm.linux.org.uk>
+References: <2884997.s8B8BuE04L@wuerfel>
+ <20160102141746.GH16023@sirena.org.uk>
+ <9222694.IRNnfpj6Tn@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1451920215-29167-11-git-send-email-peda@lysator.liu.se>
+Content-Disposition: inline
+In-Reply-To: <9222694.IRNnfpj6Tn@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@lysator.liu.se>, Wolfram Sang <wsa@the-dreams.de>
-Cc: Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Brian Austin <brian.austin@cirrus.com>, Liam Girdwood <lgirdwood@gmail.com>, Paul Handrigan <Paul.Handrigan@cirrus.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/04/2016 04:10 PM, Peter Rosin wrote:
-> From: Peter Rosin <peda@axentia.se>
+On Mon, Jan 04, 2016 at 04:17:47PM +0100, Arnd Bergmann wrote:
+> On Saturday 02 January 2016 14:17:46 Mark Brown wrote:
+> > On Sat, Jan 02, 2016 at 12:19:52AM +0100, Arnd Bergmann wrote:
+> > 
+> > > -             if (i2c_client->dev.of_node) {
+> > > +             if (IS_ENABLED(CONFIG_OF) && i2c_client->dev.of_node) {
+> > 
+> > This would be a lot nicer if there was an __always_null annotation we
+> > could put on of_node for !OF configurations, that'd Just Work and this
+> > can't be the only case where we have this idiom.
+> > 
 > 
-> Signed-off-by: Peter Rosin <peda@axentia.se>
+> How about an inline helper like
+> 
+> static inline struct device_node *dev_of_node(struct device *dev)
+> {
+> 	if (IS_ENABLED(CONFIG_OF))
+> 		return dev->of_node;	
 
-It would be quite good if the commit messaged said why it is now safe to
-remove the workaround.
+ITYM:
+
+	return IS_ENABLED(CONFIG_OF) ? dev->of_node : NULL;
+
+or
+
+	if (IS_ENABLED(CONFIG_OF))
+		return dev->of_node;
+	else
+		return NULL;
+
+> }
+> 
+> 	Arnd
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
