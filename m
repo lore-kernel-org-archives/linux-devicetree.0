@@ -1,81 +1,81 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v3 3/7] of: reserved_mem: add support for named reserved
- mem nodes
-Date: Mon, 04 Jan 2016 14:57:30 +0100
-Message-ID: <568A7A4A.4000308@samsung.com>
-References: <1450280249-24681-1-git-send-email-m.szyprowski@samsung.com>
- <1450280249-24681-4-git-send-email-m.szyprowski@samsung.com>
- <CAL_JsqKmY3DOZ6xNcQ7mSrkuLzdxaGtAPRCjkanH-G58=iOtmw@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 07/10] [media] tvp5150: Add device tree binding document
+Date: Mon, 4 Jan 2016 08:07:48 -0600
+Message-ID: <20160104140748.GA10797@rob-hp-laptop>
+References: <1451910332-23385-1-git-send-email-javier@osg.samsung.com>
+ <1451910332-23385-8-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAL_JsqKmY3DOZ6xNcQ7mSrkuLzdxaGtAPRCjkanH-G58=iOtmw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kamil Debski <k.debski@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Andrzej Hajda <a.hajda@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1451910332-23385-8-git-send-email-javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Enrico Butera <ebutera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eduard Gavin <egavinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Mon, Jan 04, 2016 at 09:25:29AM -0300, Javier Martinez Canillas wrote:
+> Add a Device Tree binding document for the TVP5150 video decoder.
+> 
+> Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+> ---
+> 
+>  .../devicetree/bindings/media/i2c/tvp5150.txt      | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+> new file mode 100644
+> index 000000000000..bf0b3f3128ce
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+> @@ -0,0 +1,35 @@
+> +* Texas Instruments TVP5150 and TVP5151 video decoders
+> +
+> +The TVP5150 and TVP5151 are video decoders that convert baseband NTSC and PAL
+> +(and also SECAM in the TVP5151 case) video signals to either 8-bit 4:2:2 YUV
+> +with discrete syncs or 8-bit ITU-R BT.656 with embedded syncs output formats.
+> +
+> +Required Properties:
+> +- compatible: value must be "ti,tvp5150"
 
-On 2015-12-31 00:25, Rob Herring wrote:
-> On Wed, Dec 16, 2015 at 9:37 AM, Marek Szyprowski
-> <m.szyprowski@samsung.com> wrote:
->> This patch allows device drivers to initialize more than one reserved
->> memory region assigned to given device. When driver needs to use more
->> than one reserved memory region, it should allocate child devices and
->> initialize regions by index or name for each of its child devices.
->>
->> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> ---
->>   .../bindings/reserved-memory/reserved-memory.txt   |   2 +
->>   .../devicetree/bindings/resource-names.txt         |   1 +
->>   drivers/of/of_reserved_mem.c                       | 104 +++++++++++++++++----
->>   include/linux/of_reserved_mem.h                    |  31 +++++-
->>   4 files changed, 115 insertions(+), 23 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
->> index 3da0ebdba8d9..43a14957fd64 100644
->> --- a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
->> +++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
->> @@ -74,6 +74,8 @@ Regions in the /reserved-memory node may be referenced by other device
->>   nodes by adding a memory-region property to the device node.
->>
->>   memory-region (optional) - phandle, specifier pairs to children of /reserved-memory
->> +memory-region-names (optional) - supplemental names property, provide array of
->> +                                names to identify memory regions
->>
->>   Example
->>   -------
->> diff --git a/Documentation/devicetree/bindings/resource-names.txt b/Documentation/devicetree/bindings/resource-names.txt
->> index e280fef6f265..51823e99b983 100644
->> --- a/Documentation/devicetree/bindings/resource-names.txt
->> +++ b/Documentation/devicetree/bindings/resource-names.txt
->> @@ -12,6 +12,7 @@ Resource Property     Supplemental Names Property
->>   reg                    reg-names
->>   clocks                 clock-names
->>   interrupts             interrupt-names
->> +memory-region          memory-region-names
-> The other cases of *-names should correspond to actual h/w names for a
-> h/w block. memory-regions are not really h/w. So I'd prefer to not add
-> memory-region-names. If you want a name for the region, put it in the
-> region node. The name for each client node is not going to be
-> different.
+What about the 5151? The driver never needs to know if SECAM is 
+supported or not?
 
-There is a difference between a name in the region node and a name assigned
-in client node. Reserved memory region bindings already allows assigning
-given region to more than one device. In such case the name put in the
-region itself is not really useful.
+> +- reg: I2C slave address
+> +
+> +Optional Properties:
+> +- powerdown-gpios: phandle for the GPIO connected to the PDN pin, if any.
+> +- reset-gpios: phandle for the GPIO connected to the RESETB pin, if any.
+> +
+> +The device node must contain one 'port' child node for its digital output
+> +video port, in accordance with the video interface bindings defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Example:
+> +
+> +&i2c2 {
+> +	...
+> +	tvp5150@5c {
+> +			compatible = "ti,tvp5150";
 
-In my case (Exynos MFC device) the names are related to HW names. The memory
-regions are named in the hw documentation (referred as 'left memory bank'
-and 'right memory bank'). Using those names in the binding is also simply
-convenient (no need to remember which regions is at which index number).
+Too much indentation here.
 
-Those names might be also convenient for describing Android's ION related
-regions, although I didn't look deep into details of such use case.
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+> +			reg = <0x5c>;
+> +			powerdown-gpios = <&gpio4 30 GPIO_ACTIVE_LOW>;
+> +			reset-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
+> +
+> +			port {
+> +				tvp5150_1: endpoint {
+> +					remote-endpoint = <&ccdc_ep>;
+> +				};
+> +			};
+> +	};
+> +};
+> -- 
+> 2.4.3
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
