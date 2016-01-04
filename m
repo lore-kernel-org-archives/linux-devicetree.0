@@ -1,7 +1,7 @@
 From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH 05/10] [media] tvp5150: Add s_stream subdev operation support
-Date: Mon,  4 Jan 2016 09:25:27 -0300
-Message-ID: <1451910332-23385-6-git-send-email-javier@osg.samsung.com>
+Subject: [PATCH 02/10] [media] tvp5150: Add tvp5151 support
+Date: Mon,  4 Jan 2016 09:25:24 -0300
+Message-ID: <1451910332-23385-3-git-send-email-javier@osg.samsung.com>
 References: <1451910332-23385-1-git-send-email-javier@osg.samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1451910332-23385-1-git-send-email-javier@osg.samsung.com>
@@ -12,48 +12,27 @@ List-Id: devicetree@vger.kernel.org
 
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-This patch adds the .s_stream subdev operation to the driver.
+Expand the version detection code to identity the tvp5151.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
 ---
 
- drivers/media/i2c/tvp5150.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/media/i2c/tvp5150.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index 71473cec236a..fb7a4ddff1fe 100644
+index 9e953e5a7ec9..b3b34e24db13 100644
 --- a/drivers/media/i2c/tvp5150.c
 +++ b/drivers/media/i2c/tvp5150.c
-@@ -973,6 +973,21 @@ static int tvp5150_enum_frame_size(struct v4l2_subdev *sd,
- 			I2C Command
-  ****************************************************************************/
+@@ -1139,6 +1139,8 @@ static int tvp5150_detect_version(struct tvp5150 *core)
  
-+static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
-+{
-+	/* Initializes TVP5150 to its default values */
-+	/* # set PCLK (27MHz) */
-+	tvp5150_write(sd, TVP5150_CONF_SHARED_PIN, 0x00);
-+
-+	/* Output format: 8-bit ITU-R BT.656 with embedded syncs */
-+	if (enable)
-+		tvp5150_write(sd, TVP5150_MISC_CTL, 0x09);
-+	else
-+		tvp5150_write(sd, TVP5150_MISC_CTL, 0x00);
-+
-+	return 0;
-+}
-+
- static int tvp5150_s_routing(struct v4l2_subdev *sd,
- 			     u32 input, u32 output, u32 config)
- {
-@@ -1094,6 +1109,7 @@ static const struct v4l2_subdev_tuner_ops tvp5150_tuner_ops = {
- 
- static const struct v4l2_subdev_video_ops tvp5150_video_ops = {
- 	.s_std = tvp5150_s_std,
-+	.s_stream = tvp5150_s_stream,
- 	.s_routing = tvp5150_s_routing,
- 	.s_crop = tvp5150_s_crop,
- 	.g_crop = tvp5150_g_crop,
+ 		/* ITU-T BT.656.4 timing */
+ 		tvp5150_write(sd, TVP5150_REV_SELECT, 0);
++	} else if (dev_id == 0x5151 && rom_ver == 0x0100) { /* TVP5151 */
++		v4l2_info(sd, "tvp5151 detected.\n");
+ 	} else {
+ 		v4l2_info(sd, "*** unknown tvp%04x chip detected.\n", dev_id);
+ 	}
 -- 
 2.4.3
