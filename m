@@ -1,55 +1,70 @@
 From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/platform: export of_default_bus_match_table
-Date: Tue, 5 Jan 2016 08:21:33 -0600
-Message-ID: <CAL_JsqLrt5s1igeA3=9kWDy+BD1Dvd6DfmBgU0Nc6PxUwdRG4w@mail.gmail.com>
-References: <1451960273-19934-1-git-send-email-yamada.masahiro@socionext.com>
- <2748326.r4zEhnPneC@wuerfel> <CAK7LNAR3yxRoQ-qLCASAaCwzCZaSiXMbRjasfWf=X1O9P49fgw@mail.gmail.com>
- <4336094.nx25lSVlfU@wuerfel>
+Subject: Re: [PATCH] of/irq: Export of_irq_count()
+Date: Tue, 5 Jan 2016 08:26:52 -0600
+Message-ID: <CAL_Jsq+b1m0JM18LRdu41j88nv_ua7gayopqeUSsVhczc9PqpQ@mail.gmail.com>
+References: <1450786942-13292-1-git-send-email-broonie@kernel.org>
+ <CAL_JsqJELQc316UkkpzLrbSsYMYh69uxX5Jw8p4TpWm6eqmfuA@mail.gmail.com> <20160105000454.GB22188@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4336094.nx25lSVlfU@wuerfel>
+In-Reply-To: <20160105000454.GB22188-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 5, 2016 at 5:48 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Tuesday 05 January 2016 19:50:31 Masahiro Yamada wrote:
->> 2016-01-05 19:13 GMT+09:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
->> > On Tuesday 05 January 2016 11:17:53 Masahiro Yamada wrote:
+On Mon, Jan 4, 2016 at 6:04 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> On 12/22, Rob Herring wrote:
+>> On Tue, Dec 22, 2015 at 6:22 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> > Some of the Qualcomm pinctrl drivers have started trying to use
+>> > of_irq_count() in modular code but this fails to build as the symbol is
+>> > not exported.  Since there doesn't seem to be any reason not to export
+>> > the symbol make it available to modules.
 >>
->> This bus is used to connect external (on-board) devices with the SoC.
->>
->> So, no possibility for AMBA, but
->> I want "simple-bus" for grouping some device nodes.
->> Also, "simple-mfd" would be useful because an external device could be an MFD.
->>
->>
->> Please see arch/arm/boot/dts/uniphier-support-card.dtsi
->>
->> It describes an add-on card (expansion board)
->> which has ETHER, UART, etc. on it.
->>
->> I implemented it as "simple-bus".
->>
->> This card is connected to the chip select 1
->> of the UniPhier System Bus.
+>> The reason it has not been exported is because we want to stick with
+>> the platform_* APIs for IRQs. There's not really an equivalent
+>> function though. Perhaps we should make one? Usually it is just used
+>> for allocating some driver data. If that is the case, is it really
+>> enough data to not just allocate the max?
 >>
 >
-> Ok, got it. So you could alternatively define your own match table
-> in the driver with just "simple-bus" and  "simple-mfd". I think either
-> way is fine, let's see what the DT maintainers prefer.
+> It's mostly used for allocation but we also do some pin type
+> discovery by reading registers and that would fail if we went
+> past the actual number of pins there are.
+>
+> So how about implementing platform_irq_count()? I'd like to keep
+> these drivers as tristate if possible.
 
-I'd like a wrapper function here and try to eliminate non-default
-matches (as well as auxdata). All but a few callers pass either
-of_default_bus_match_table or NULL (populate only the immediate
-children). So no, I don't want to see more match tables. It shouldn't
-hurt to have extra entries in the match table (BTW, we should also
-kill off "amba-bus" which is an ambiguous term).
+Ack.
 
-If the wrapper was done as a static inline, we'd still need this
-export, so I'm fine with this change and will apply it.
+> ----8<----
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index d77ed0c946dd..421c67f8fdef 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -118,6 +118,25 @@ int platform_get_irq(struct platform_device *dev, unsigned int num)
+>  EXPORT_SYMBOL_GPL(platform_get_irq);
+>
+>  /**
+> + * platform_irq_count - Count the number of IRQs a platform device uses
+> + * @dev: platform device
+> + *
+> + * Return: Number of IRQs a platform device uses or EPROBE_DEFER
+> + */
+> +int platform_irq_count(struct platform_device *dev)
+> +{
+> +       int ret, nr = 0;
+> +
+> +       while ((ret = platform_get_irq(dev, nr)) == 0)
+> +               nr++;
+> +
+> +       if (ret == -EPROBE_DEFER)
+> +               return ret;
+> +
+> +       return nr;
+> +}
+
+Don't forget the export here. :)
 
 Rob
 --
