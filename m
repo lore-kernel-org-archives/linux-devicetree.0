@@ -1,57 +1,86 @@
-From: Oreste Salerno <oreste.salerno@tomtom.com>
-Subject: [PATCH v2 3/3] Input: cyttsp - add default init function
-Date: Tue, 5 Jan 2016 13:59:15 +0100
-Message-ID: <bfd64d1a8478adb89c84c9d718505e82ad6e7a1f.1451997697.git.oreste.salerno@tomtom.com>
-References: <cover.1451997697.git.oreste.salerno@tomtom.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/5] iio:adc:at91_adc8xx: introduce new atmel adc driver
+Date: Tue, 5 Jan 2016 14:18:05 +0100
+Message-ID: <20160105131805.GE2334@odux.rfo.atmel.com>
+References: <1450689852-22763-1-git-send-email-ludovic.desroches@atmel.com>
+ <1450689852-22763-2-git-send-email-ludovic.desroches@atmel.com>
+ <56799798.203@kernel.org>
+ <20151223102700.GC2789@odux.rfo.atmel.com>
+ <20151223104833.GE2789@odux.rfo.atmel.com>
+ <E2C27D1A-1035-4330-AEF3-C72B87C27FEF@jic23.retrosnub.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1451997697.git.oreste.salerno@tomtom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-input@vger.kernel.org, fery@cypress.com, dmitry.torokhov@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, oreste.salerno@tomtom.com
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <E2C27D1A-1035-4330-AEF3-C72B87C27FEF-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When using device trees, it's not possible to assign an init()
-function in the platform data.
-In case the init function has not been assigned, attempt to
-perform a hard reset of the chip, using reset gpio defined in the
-platform data / device tree.
+On Wed, Dec 23, 2015 at 05:21:25PM +0000, Jonathan Cameron wrote:
+> 
+> 
+> On 23 December 2015 10:48:33 GMT+00:00, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+> >On Wed, Dec 23, 2015 at 11:27:00AM +0100, Ludovic Desroches wrote:
+> >> On Tue, Dec 22, 2015 at 06:34:00PM +0000, Jonathan Cameron wrote:
+> >> > On 21/12/15 09:24, Ludovic Desroches wrote:
+> >> > > This driver supports the new version of the Atmel ADC device
+> >introduced
+> >> > > with the SAMA5D2 SoC family.
+> >> > > 
+> >
+> >[...]
+> >
+> >> > > +static irqreturn_t at91_adc_interrupt(int irq, void *private)
+> >> > > +{
+> >> > > +	struct iio_dev *indio = private;
+> >> > > +	struct at91_adc_state *st = iio_priv(indio);
+> >> > > +	u32 status = at91_adc_readl(st, ADC_ISR);
+> >> > > +
+> >> > > +	status &= at91_adc_readl(st, ADC_IMR);
+> >> > > +	if (status & 0xFFF) {
+> >> > > +		st->last_value = at91_adc_readl(st, st->chan->address);
+> >> > If this is a polled read - is there any reason to read this value
+> >here
+> >> > rather than outside the interrupt?
+> >> 
+> >> No it can be done outside the interrupt. I have taken some parts from
+> >the
+> >> previous driver but it was reading a register used by all the
+> >channels
+> >> when it has been designed. So yes there is probably no more reason to
+> >> read it into the interrupt.
+> >> 
+> >
+> >Thinking about it. Is it really useful to move reading outside the
+> >interrupt?
+> It avoids needing to know the channel in here, hence simplifying the code a bit.
 
-Signed-off-by: Oreste Salerno <oreste.salerno@tomtom.com>
----
- drivers/input/touchscreen/cyttsp_core.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+I am not sure it will simplify the code since the interrupt is cleared
+when reading the conversion not the interrupt status register.
 
-diff --git a/drivers/input/touchscreen/cyttsp_core.c b/drivers/input/touchscreen/cyttsp_core.c
-index 8390236..9872333 100644
---- a/drivers/input/touchscreen/cyttsp_core.c
-+++ b/drivers/input/touchscreen/cyttsp_core.c
-@@ -238,6 +238,16 @@ static int cyttsp_set_sysinfo_regs(struct cyttsp *ts)
- 	return retval;
- }
- 
-+static void cyttsp_hard_reset(struct cyttsp *ts)
-+{
-+	if (ts->pdata->reset_gpio) {
-+		gpiod_set_value_cansleep(ts->pdata->reset_gpio, 1);
-+		msleep(CY_DELAY_DFLT);
-+		gpiod_set_value_cansleep(ts->pdata->reset_gpio, 0);
-+		msleep(CY_DELAY_DFLT);
-+	}
-+}
-+
- static int cyttsp_soft_reset(struct cyttsp *ts)
- {
- 	unsigned long timeout;
-@@ -659,6 +669,8 @@ struct cyttsp *cyttsp_probe(const struct cyttsp_bus_ops *bus_ops,
- 				error);
- 			goto err_free_mem;
- 		}
-+	} else {
-+		cyttsp_hard_reset(ts);
- 	}
- 
- 	input_dev->name = pdata->name;
--- 
-1.9.1
+> >
+> >By the way this is not a polled read.
+> I meant that it is an individually requested conversion rather than a free running
+>  sampling system where the value read might change before it is read out.
+> >
+> >> > > +		st->done = true;
+> >> > > +		wake_up_interruptible(&st->wq_data_available);
+> >> > > +	}
+> >> > > +
+> >> > > +	return IRQ_HANDLED;
+> >> > > +}
+> >
+> >Ludovic
+> >--
+> >To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> >the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> -- 
+> Sent from my Android device with K-9 Mail. Please excuse my brevity.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
