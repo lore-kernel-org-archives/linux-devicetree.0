@@ -1,452 +1,75 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dtc: create tool to diff device trees
-Date: Mon, 4 Jan 2016 15:29:48 -0600
-Message-ID: <CAL_JsqKWUGZp24-GMO=f1zOYvAntVtr0cKBUKz_7XK5F_epWOg@mail.gmail.com>
-References: <5684F17E.6060209@gmail.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] of/irq: Export of_irq_count()
+Date: Mon, 4 Jan 2016 16:04:54 -0800
+Message-ID: <20160105000454.GB22188@codeaurora.org>
+References: <1450786942-13292-1-git-send-email-broonie@kernel.org>
+ <CAL_JsqJELQc316UkkpzLrbSsYMYh69uxX5Jw8p4TpWm6eqmfuA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5684F17E.6060209-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJELQc316UkkpzLrbSsYMYh69uxX5Jw8p4TpWm6eqmfuA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 31, 2015 at 3:12 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
->
-> Create script to diff device trees.
->
-> The device tree can be in any of the forms recognized by the dtc compiler:
->   - source
->   - binary blob
->   - file system tree (from /proc/devicetree)
->
-> If the device tree is a source file, then it is pre-processed in the
-> same way as it would be when built in the linux kernel source tree
-> before diffing.
+On 12/22, Rob Herring wrote:
+> On Tue, Dec 22, 2015 at 6:22 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > Some of the Qualcomm pinctrl drivers have started trying to use
+> > of_irq_count() in modular code but this fails to build as the symbol is
+> > not exported.  Since there doesn't seem to be any reason not to export
+> > the symbol make it available to modules.
+> 
+> The reason it has not been exported is because we want to stick with
+> the platform_* APIs for IRQs. There's not really an equivalent
+> function though. Perhaps we should make one? Usually it is just used
+> for allocating some driver data. If that is the case, is it really
+> enough data to not just allocate the max?
+> 
 
-In general, I'd like to see some of this move to dtc and the kernel
-dependencies minimized.
+It's mostly used for allocation but we also do some pin type
+discovery by reading registers and that would fail if we went
+past the actual number of pins there are.
 
->
-> Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> ---
->
-> Tools to develop and debug device tree are somewhat inadequate.  This is a
-> small step in improving the situation.
->
-> Rationale for and examples of using the script are provided in slides
-> 1 - 78 of the elce 2015 presentation "Solving Device Tree Issues",
-> which can be found at:
->
->    http://elinux.org/images/0/04/Dt_debugging_elce_2015_151006_0421.pdf
->
-> (The script was named dtdiff instead of dtx_diff in the presentation.)
->
->
->  scripts/dtc/dtx_diff |  368 +++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 368 insertions(+)
->
-> Index: b/scripts/dtc/dtx_diff
-> ===================================================================
-> --- /dev/null
-> +++ b/scripts/dtc/dtx_diff
-> @@ -0,0 +1,368 @@
-> +#! /bin/bash
+So how about implementing platform_irq_count()? I'd like to keep
+these drivers as tristate if possible.
 
-Add "-e" by default?
+----8<----
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index d77ed0c946dd..421c67f8fdef 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -118,6 +118,25 @@ int platform_get_irq(struct platform_device *dev, unsigned int num)
+ EXPORT_SYMBOL_GPL(platform_get_irq);
+ 
+ /**
++ * platform_irq_count - Count the number of IRQs a platform device uses
++ * @dev: platform device
++ *
++ * Return: Number of IRQs a platform device uses or EPROBE_DEFER
++ */
++int platform_irq_count(struct platform_device *dev)
++{
++	int ret, nr = 0;
++
++	while ((ret = platform_get_irq(dev, nr)) == 0)
++		nr++;
++
++	if (ret == -EPROBE_DEFER)
++		return ret;
++
++	return nr;
++}
++
++/**
+  * platform_get_resource_byname - get a resource for a device by name
+  * @dev: platform device
+  * @type: resource type
 
-> +
-> +# Copyright (C) 2015 Frank Rowand
-> +#
-> +# This program is free software; you can redistribute it and/or modify
-> +# it under the terms of the GNU General Public License as published by
-> +# the Free Software Foundation; version 2 of the License.
-> +
-> +
-> +usage() {
-> +
-> +       # use spaces instead of tabs in the usage message
-> +       cat >&2 <<eod
-> +
-> +Usage:
-> +
-> +   `basename $0` DTx
-> +        decompile DTx
-> +
-> +   `basename $0` DTx_1 DTx_2
-> +        diff DTx_1 and DTx_2
-> +
-> +
-> +       -f           print full dts in diff (--unified=99999)
-> +       -h           synonym for --help
-> +       -help        synonym for --help
-> +      --help        print this message and exit
-> +       -s SRCTREE   linux kernel source tree is at path SRCTREE
-> +                        (default is current directory)
-> +       -S           linux kernel source tree is at root of current git repo
-
-Can't this be detected? There are some cases of kernel trees which are
-not in git.
-
-> +       -u           unsorted, do not sort DTx
-> +
-> +
-> +Each DTx is processed by the dtc compiler to produce a sorted dts source
-> +file.  If DTx is a dts source file then it is pre-processed in the same
-> +manner as done for the compile of the dts source file in the Linux kernel
-> +build system ('#include' and '/include/' directives are processed).
-> +
-> +If two DTx are provided, the resulting dts source files are diffed.
-> +
-> +If DTx is a directory, it is treated as a DT subtree, such as
-> +  /proc/device-tree.
-> +
-> +If DTx contains the binary blob magic value in the first four bytes,
-> +  it is treated as a binary blob (aka .dtb or FDT).
-> +
-> +Otherwise DTx is treated as a dts source file (aka .dts).
-> +
-> +   If this script is not run from the root of the linux source tree,
-> +   and DTx utilizes '#include' or '/include/' then the path of the
-> +   linux source tree can be provided by '-s SRCTREE' or '-S' so that
-> +   include paths will be set properly.
-> +
-> +   The shell variable \${ARCH} must provide the architecture containing
-> +   the dts source file for include paths to be set properly for '#include'
-> +   or '/include/' to be processed.
-> +
-> +   If DTx_1 and DTx_2 are in different architectures, then this script
-> +   may not work since \${ARCH} is part of the include path.  Two possible
-> +   workarounds:
-> +
-> +      `basename $0` \\
-> +          <(ARCH=arch_of_dtx_1 `basename $0` DTx_1) \\
-> +          <(ARCH=arch_of_dtx_2 `basename $0` DTx_2)
-> +
-> +      `basename $0` ARCH=arch_of_dtx_1 DTx_1 >tmp_dtx_1.dts
-> +      `basename $0` ARCH=arch_of_dtx_2 DTx_2 >tmp_dtx_2.dts
-> +      `basename $0` tmp_dtx_1.dts tmp_dtx_2.dts
-> +      rm tmp_dtx_1.dts tmp_dtx_2.dts
-> +
-> +   If DTx_1 and DTx_2 are in different directories, then this script will
-> +   add the path of DTx_1 and DTx_2 to the include paths.  If DTx_2 includes
-> +   a local file that exists in both the path of DTx_1 and DTx_2 then the
-> +   file in the path of DTx_1 will incorrectly be included.  Possible
-> +   workaround:
-> +
-> +      `basename $0` DTx_1 >tmp_dtx_1.dts
-> +      `basename $0` DTx_2 >tmp_dtx_2.dts
-> +      `basename $0` tmp_dtx_1.dts tmp_dtx_2.dts
-> +      rm tmp_dtx_1.dts tmp_dtx_2.dts
-> +
-> +eod
-> +}
-> +
-> +
-> +compile_to_dts() {
-> +
-> +       dtx="$1"
-> +
-> +       if [ -d "${dtx}" ] ; then
-> +
-> +               # -----  input is file tree
-> +
-> +               if ( ! ${DTC} -I fs ${dtx} ) ; then
-> +                       exit 3
-> +               fi
-> +
-> +       elif [ -f "${dtx}" ] && [ -r "${dtx}" ] ; then
-> +
-> +               magic=`hexdump -n 4 -e '/1 "%02x"' ${dtx}`
-> +               if [ "${magic}" = "d00dfeed" ] ; then
-
-Perhaps this auto-detection should be part of dtc?
-
-> +
-> +                       # -----  input is FDT (binary blob)
-> +
-> +                       if ( ! ${DTC} -I dtb ${dtx} ) ; then
-> +                               exit 3
-> +                       fi
-> +
-> +               else
-> +
-> +                       # -----  input is DTS (source)
-> +
-> +                       if ( cpp ${cpp_flags} -x assembler-with-cpp ${dtx} | ${DTC} -I dts ) ; then
-> +                               return
-> +                       fi
-> +
-> +                       echo ""                                                          >&2
-> +                       echo "Possible hints to resolve the above error:"                >&2
-> +                       echo "  (hints might not fix the problem)"                       >&2
-> +
-> +                       hint_given=0
-> +
-> +                       if [ "${ARCH}" = "" ] ; then
-> +                               hint_given=1
-> +                               echo ""                                                      >&2
-> +                               echo "  shell variable \$ARCH not set"                       >&2
-> +                       fi
-> +
-> +                       dtx_arch=`echo "/${dtx}" | sed -e 's|.*/arch/||' -e 's|/.*||'`
-> +
-> +                       if [ "${dtx_arch}" != ""  -a "${dtx_arch}" != "${ARCH}" ] ; then
-> +                               hint_given=1
-> +                               echo ""                                                      >&2
-> +                               echo "  architecture ${dtx_arch} is in file path, but"       >&2
-> +                               echo "  does not match shell variable \$ARCH (${ARCH})"      >&2
-> +                       fi
-> +
-> +                       if [ ! -d ${srctree}/arch/${ARCH} ] ; then
-> +                               hint_given=1
-> +                               echo ""                                                      >&2
-> +                               echo "  ${srctree}/arch/${ARCH}/ does not exist"             >&2
-> +                               echo "  Is \$ARCH='${ARCH}' correct?"                        >&2
-> +                               echo "  Possible fix: use '-s' option"                       >&2
-> +
-> +                               git_root=`git rev-parse --show-toplevel 2>/dev/null`
-> +                               if [ -d ${git_root}/arch/ ] ; then
-> +                                       echo "  Possible fix: use '-S' option"                   >&2
-> +                               fi
-> +                       fi
-> +
-> +                       if [ $hint_given = 0 ] ; then
-> +                               echo ""                                                      >&2
-> +                               echo "  No hints available."                                 >&2
-> +                       fi
-> +
-> +                       echo ""                                                          >&2
-> +
-> +                       exit 3
-> +
-> +               fi
-> +       else
-> +               echo ""                                                              >&2
-> +               echo "ERROR: ${dtx} does not exist or is not readable"               >&2
-> +               echo ""                                                              >&2
-> +               exit 2
-> +       fi
-> +
-> +}
-> +
-> +
-> +# -----  start of script
-> +
-> +cmd_diff=0
-> +diff_flags="-u"
-> +dtx_file_1=""
-> +dtx_file_2=""
-> +dtc_sort="-s"
-> +help=0
-> +srctree=""
-> +
-> +
-> +while [ $# -gt 0 ] ; do
-> +
-> +       case $1 in
-> +
-> +       -f )
-> +               diff_flags="--unified=999999"
-> +               shift
-> +               ;;
-> +
-> +       -h | -help | --help )
-> +               help=1
-> +               shift
-> +               ;;
-> +
-> +       -s )
-> +               srctree="$2"
-> +               shift 2
-> +               ;;
-> +
-> +       -S )
-> +               git_root=`git rev-parse --show-toplevel 2>/dev/null`
-> +               srctree="${git_root}"
-> +               shift
-> +               ;;
-> +
-> +       -u )
-> +               dtc_sort=""
-> +               shift
-> +               ;;
-> +
-> +       *)
-> +               if [ "${dtx_file_1}"  = "" ] ; then
-> +                       dtx_file_1="$1"
-> +               elif [ "${dtx_file_2}" = "" ] ; then
-> +                       dtx_file_2="$1"
-> +               else
-> +                       echo ""                                                          >&2
-> +                       echo "ERROR: Unexpected parameter: $1"                           >&2
-> +                       echo ""                                                          >&2
-> +                       exit 2
-> +               fi
-> +               shift
-> +               ;;
-> +
-> +       esac
-> +
-> +done
-> +
-> +if [ "${srctree}" = "" ] ; then
-> +       srctree="."
-> +fi
-> +
-> +if [ "${dtx_file_2}" != "" ]; then
-> +       cmd_diff=1
-> +fi
-> +
-> +if (( ${help} )) ; then
-> +       usage
-> +       exit 1
-> +fi
-> +
-> +# this must follow check for ${help}
-> +if [ "${dtx_file_1}" = "" ]; then
-> +       echo ""                                                                  >&2
-> +       echo "ERROR: parameter DTx required"                                     >&2
-> +       echo ""                                                                  >&2
-> +       exit 2
-> +fi
-> +
-> +
-> +# -----  prefer dtc from linux kernel, allow fallback to dtc in $PATH
-> +
-> +if [ "${KBUILD_OUTPUT:0:2}" = ".." ] ; then
-> +       __KBUILD_OUTPUT="${srctree}/${KBUILD_OUTPUT}"
-> +elif [ "${KBUILD_OUTPUT}" = "" ] ; then
-> +       __KBUILD_OUTPUT="."
-> +else
-> +       __KBUILD_OUTPUT="${KBUILD_OUTPUT}"
-> +fi
-> +
-> +DTC="${__KBUILD_OUTPUT}/scripts/dtc/dtc"
-> +
-> +if [ ! -x ${DTC} ] ; then
-> +       __DTC="dtc"
-> +       if ( ! which ${__DTC} >/dev/null ) ; then
-> +
-> +               # use spaces instead of tabs in the error message
-> +               cat >&2 <<eod
-> +
-> +ERROR: unable to find a 'dtc' program
-> +
-> +   Preferred 'dtc' (built from Linux kernel source tree) was not found or
-> +   is not executable.
-> +
-> +      'dtc' is: ${DTC}
-> +
-> +      If it does not exist, create it from the root of the Linux source tree:
-> +
-> +         'make scripts'.
-> +
-> +      If not at the root of the Linux kernel source tree -s SRCTREE or -S
-> +      may need to be specified to find 'dtc'.
-> +
-> +      If 'O=\${dir}' is specified in your Linux builds, this script requires
-> +      'export KBUILD_OUTPUT=\${dir}' or add \${dir}/scripts/dtc to \$PATH
-> +      before running.
-> +
-> +      If \${KBUILD_OUTPUT} is a relative path, then '-s SRCDIR', -S, or run
-> +      this script from the root of the Linux kernel source tree is required.
-> +
-> +   Fallback '${__DTC}' was also not in \${PATH} or is not executable.
-> +
-> +eod
-> +               exit 2
-> +       fi
-> +       DTC=${__DTC}
-> +fi
-> +
-> +
-> +# -----  cpp and dtc flags same as for linux source tree build of .dtb files,
-> +#        plus directories of the dtx file(s)
-> +
-> +dtx_path_1_dtc_include="-i `dirname ${dtx_file_1}`"
-> +
-> +dtx_path_2_dtc_include=""
-> +if (( ${cmd_diff} )) ; then
-> +       dtx_path_2_dtc_include="-i `dirname ${dtx_file_2}`"
-> +fi
-> +
-> +cpp_flags="\
-> +       -nostdinc                                              \
-> +       -I${srctree}/arch/${ARCH}/boot/dts                     \
-> +       -I${srctree}/arch/${ARCH}/boot/dts/include             \
-> +       -I${srctree}/arch/${ARCH}/boot/dts/include/dt-bindings \
-
-kernel doesn't use this path. The less dependency on ARCH, the better.
-The dependency in the kernel is artificial.
-
-> +       -I${srctree}/drivers/of/testcase-data                  \
-> +       -undef -D__DTS__"
-> +
-> +_dts_makefile=""
-> +
-> +if [ -f ${srctree}/arch/${ARCH}/boot/dts/Makefile ] ; then
-> +       _dts_makefile="${srctree}/arch/${ARCH}/boot/dts/Makefile"
-> +elif [ -f ${srctree}/arch/${ARCH}/boot/Makefile ] ; then
-> +       # arch/powerpc
-> +       _dts_makefile="${srctree}/arch/${ARCH}/boot/Makefile"
-
-We need to move PPC to be in line with other arches rather than
-working around it.
-
-> +fi
-> +
-> +if [ "${_dts_makefile}" != "" ] ; then
-> +       arch_dtc_flags=`grep DTC_FLAGS ${_dts_makefile} \
-
-We should just kill DTC_FLAGS being per arch. Plus it is only used for
-padding, so it is irrelevant to this tool.
-
-> +               | grep -v "^#"                              \
-> +               | sed -e 's|.*=||' `
-> +else
-> +       arch_dtc_flags=""
-> +fi
-> +
-> +dtc_flags="\
-> +       -i ${srctree}/arch/${ARCH}/boot/dts/ \
-> +       -i ${srctree}/kernel/dts             \
-> +       ${dtx_path_1_dtc_include}            \
-> +       ${dtx_path_2_dtc_include}            \
-> +       ${arch_dtc_flags}"
-> +
-> +DTC="${DTC} ${dtc_flags} -O dts -qq -f ${dtc_sort} -o -"
-> +
-> +
-> +# -----  do the diff or decompile
-> +
-> +if (( ${cmd_diff} )) ; then
-> +
-> +       diff ${diff_flags} \
-> +               <(compile_to_dts "${dtx_file_1}") \
-> +               <(compile_to_dts "${dtx_file_2}")
-> +
-> +else
-> +
-> +       compile_to_dts "${dtx_file_1}"
-> +
-> +fi
-> +
-> +
-> +# ==============================================================================
-> +# ______________________________________________________________________________
-> +# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-> +# ______________________________________________________________________________
-> +#  vi config follows:
-> +#
-> +#  add "set modelines" to ~/.exrc or ~/.vimrc to set tabs automatically
-> +#  ex:set tabstop=4 shiftwidth=4 sts=4:
-
-Kernel standard is 8 characters. I assume that applies to bash files too.
-
-Rob
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
