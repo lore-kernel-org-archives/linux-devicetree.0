@@ -1,124 +1,88 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH v5 3/3] dt/bindings: qcom_nandc: Add DT bindings
-Date: Tue,  5 Jan 2016 10:55:01 +0530
-Message-ID: <1451971501-18160-4-git-send-email-architt@codeaurora.org>
-References: <1439959746-25498-1-git-send-email-architt@codeaurora.org>
- <1451971501-18160-1-git-send-email-architt@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1451971501-18160-1-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: computersforpeace@gmail.com, boris.brezillon@free-electrons.com
-Cc: linux-mtd@lists.infradead.org, cernekee@gmail.com, sboyd@codeaurora.org, andy.gross@linaro.org, dehrenberg@google.com, linux-arm-msm@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 1/6] clk: mediatek: Refine the makefile to support multiple
+ clock drivers
+Date: Tue, 5 Jan 2016 14:30:17 +0800
+Message-ID: <1451975422-31174-2-git-send-email-jamesjj.liao@mediatek.com>
+References: <1451975422-31174-1-git-send-email-jamesjj.liao@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1451975422-31174-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings document for the Qualcomm NAND controller driver.
+Add a Kconfig to define clock configuration for each SoC, and
+modify the Makefile to build drivers that only selected in config.
 
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>
-Signed-off-by: Archit Taneja <architt@codeaurora.org>
+Signed-off-by: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
-v5:
-- Make changes to incorporate chip select sub nodes (brcmnand taken as
-  reference)
+ drivers/clk/Kconfig           |  1 +
+ drivers/clk/mediatek/Kconfig  | 23 +++++++++++++++++++++++
+ drivers/clk/mediatek/Makefile |  6 +++---
+ 3 files changed, 27 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/clk/mediatek/Kconfig
 
-v3:
-- Don't use '0x' when specifying nand controller address space
-- Add optional property for on-flash bbt usage
-
- .../devicetree/bindings/mtd/qcom_nandc.txt         | 84 ++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-
-diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index c3e3a02..b7a37dc 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -198,3 +198,4 @@ source "drivers/clk/mvebu/Kconfig"
+ 
+ source "drivers/clk/samsung/Kconfig"
+ source "drivers/clk/tegra/Kconfig"
++source "drivers/clk/mediatek/Kconfig"
+diff --git a/drivers/clk/mediatek/Kconfig b/drivers/clk/mediatek/Kconfig
 new file mode 100644
-index 0000000..b2cf2d9
+index 0000000..dc224e6
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-@@ -0,0 +1,84 @@
-+* Qualcomm NAND controller
++++ b/drivers/clk/mediatek/Kconfig
+@@ -0,0 +1,23 @@
++#
++# MediaTek SoC drivers
++#
++config COMMON_CLK_MEDIATEK
++	bool
++	---help---
++	  Mediatek SoCs' clock support.
 +
-+Required properties:
-+- compatible:		should be "qcom,ebi2-nand" for IPQ806x
-+- reg:			MMIO address range
-+- clocks:		must contain core clock and always on clock
-+- clock-names:		must contain "core" for the core clock and "aon" for the
-+			always on clock
-+- dmas:			DMA specifier, consisting of a phandle to the ADM DMA
-+			controller node and the channel number to be used for
-+			NAND. Refer to dma.txt and qcom_adm.txt for more details
-+- dma-names:		must be "rxtx"
-+- qcom,cmd-crci:	must contain the ADM command type CRCI block instance
-+			number specified for the NAND controller on the given
-+			platform
-+- qcom,data-crci:	must contain the ADM data type CRCI block instance
-+			number specified for the NAND controller on the given
-+			platform
-+- #address-cells:	<1> - subnodes give the chip-select number
-+- #size-cells:		<0>
++config COMMON_CLK_MT8135
++	bool "Clock driver for Mediatek MT8135"
++	depends on COMMON_CLK
++	select COMMON_CLK_MEDIATEK
++	default ARCH_MEDIATEK
++	---help---
++	  This driver supports Mediatek MT8135 clocks.
 +
-+* NAND chip-select
-+
-+Each controller may contain one or more subnodes to represent enabled
-+chip-selects which (may) contain NAND flash chips. Their properties are as
-+follows.
-+
-+Required properties:
-+- compatible:		should contain "qcom,nandcs"
-+- reg:			a single integer representing the chip-select
-+			number (e.g., 0, 1, 2, etc.)
-+- #address-cells:	see partition.txt
-+- #size-cells:		see partition.txt
-+- nand-ecc-strength:	number of bits to correct per ECC step. Must be 4 or 8
-+			bits.
-+- nand-ecc-step-size:	bytes of data per ECC step. Must be 512.
-+
-+Optional properties:
-+- nand-bus-width:	bus width. Must be 8 or 16. If not present, 8 is chosen
-+			as default
-+
-+Each nandcs device node may optionally contain sub-nodes describing the flash
-+partition mapping. See partition.txt for more detail.
-+
-+Example:
-+
-+nand@1ac00000 {
-+	compatible = "qcom,ebi2-nandc";
-+	reg = <0x1ac00000 0x800>;
-+
-+	clocks = <&gcc EBI2_CLK>,
-+		 <&gcc EBI2_AON_CLK>;
-+	clock-names = "core", "aon";
-+
-+	dmas = <&adm_dma 3>;
-+	dma-names = "rxtx";
-+	qcom,cmd-crci = <15>;
-+	qcom,data-crci = <3>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	nandcs@0 {
-+		compatible = "qcom,nandcs";
-+		reg = <0>;
-+
-+		nand-ecc-strength = <4>;
-+		nand-ecc-step-size = <512>;
-+		nand-bus-width = <8>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		partition@0 {
-+			label = "boot-nand";
-+			reg = <0 0x58a0000>;
-+		};
-+
-+		partition@58a0000 {
-+			label = "fs-nand";
-+			reg = <0x58a0000 0x4000000>;
-+		};
-+	};
-+};
++config COMMON_CLK_MT8173
++	bool "Clock driver for Mediatek MT8173"
++	depends on COMMON_CLK
++	select COMMON_CLK_MEDIATEK
++	default ARCH_MEDIATEK
++	---help---
++	  This driver supports Mediatek MT8173 clocks.
+diff --git a/drivers/clk/mediatek/Makefile b/drivers/clk/mediatek/Makefile
+index 95fdfac..32e7222 100644
+--- a/drivers/clk/mediatek/Makefile
++++ b/drivers/clk/mediatek/Makefile
+@@ -1,4 +1,4 @@
+-obj-y += clk-mtk.o clk-pll.o clk-gate.o clk-apmixed.o
++obj-$(CONFIG_COMMON_CLK_MEDIATEK) += clk-mtk.o clk-pll.o clk-gate.o clk-apmixed.o
+ obj-$(CONFIG_RESET_CONTROLLER) += reset.o
+-obj-y += clk-mt8135.o
+-obj-y += clk-mt8173.o
++obj-$(CONFIG_COMMON_CLK_MT8135) += clk-mt8135.o
++obj-$(CONFIG_COMMON_CLK_MT8173) += clk-mt8173.o
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+1.9.1
