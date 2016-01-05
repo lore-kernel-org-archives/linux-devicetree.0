@@ -1,50 +1,56 @@
-From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCH] ARM: dts: socfpga: add the clk-phase property for sd/mmc clock
-Date: Tue, 5 Jan 2016 15:22:05 -0600
-Message-ID: <1452028925-8947-1-git-send-email-dinguyen@opensource.altera.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v5 0/5] Qualcomm PCIe driver and designware fixes
+Date: Tue, 5 Jan 2016 15:42:06 -0600
+Message-ID: <20160105214206.GA23814@localhost>
+References: <1450442339-18765-1-git-send-email-stanimir.varbanov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
-Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1450442339-18765-1-git-send-email-stanimir.varbanov@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+On Fri, Dec 18, 2015 at 02:38:54PM +0200, Stanimir Varbanov wrote:
+> Hi,
+> 
+> I'm sending v5 with following changes:
+> - in 1/5 - replace wmb() call with PCIE_ATU_CR2 register read.
+> - in 3/5 - addressed comments from Born Helgaas about usage of a
+> standard PCI capabilities register names and rename link training
+> function to the way that other Designware based drivers use.
+> - in 5/5 - addressed a comment from Bjorn Andersson about regulator
+> label duplication.
+> 
+> Comments are welcome!
+> 
+> The previous v4 of the patch set can be found at [1].
+> 
+> regards,
+> Stan
+> 
+> [1] https://lkml.org/lkml/2015/12/3/370
+> 
+> Stanimir Varbanov (5):
+>   PCI: designware: ensure ATU is enabled before IO/conf space accesses
+>   DT: PCI: qcom: Document PCIe devicetree bindings
+>   PCI: qcom: Add Qualcomm PCIe controller driver
+>   ARM: dts: apq8064: add pcie devicetree node
+>   ARM: dts: ifc6410: enable pcie dt node for this board
+> 
+>  .../devicetree/bindings/pci/qcom,pcie.txt          |  233 ++++++++
+>  MAINTAINERS                                        |    7 +
+>  arch/arm/boot/dts/qcom-apq8064-ifc6410.dts         |   26 +
+>  arch/arm/boot/dts/qcom-apq8064.dtsi                |   36 ++
+>  drivers/pci/host/Kconfig                           |   10 +
+>  drivers/pci/host/Makefile                          |    1 +
+>  drivers/pci/host/pcie-designware.c                 |    7 +
+>  drivers/pci/host/pcie-qcom.c                       |  617 ++++++++++++++++++++
+>  8 files changed, 937 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>  create mode 100644 drivers/pci/host/pcie-qcom.c
 
-The CIU clock for the SD/MMC should be the sdmmc_clk and not the
-sdmmc_free_clk. Also, add the correct phase shift the sdmmc_clk.
-
-Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
----
- arch/arm/boot/dts/socfpga_arria10.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-index cce9e50..89a3558 100644
---- a/arch/arm/boot/dts/socfpga_arria10.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-@@ -362,6 +362,7 @@
- 						compatible = "altr,socfpga-a10-gate-clk";
- 						clocks = <&sdmmc_free_clk>;
- 						clk-gate = <0xC8 5>;
-+						clk-phase = <0 135>;
- 					};
- 
- 					qspi_clk: qspi_clk {
-@@ -589,7 +590,7 @@
- 			reg = <0xff808000 0x1000>;
- 			interrupts = <0 98 IRQ_TYPE_LEVEL_HIGH>;
- 			fifo-depth = <0x400>;
--			clocks = <&l4_mp_clk>, <&sdmmc_free_clk>;
-+			clocks = <&l4_mp_clk>, <&sdmmc_clk>;
- 			clock-names = "biu", "ciu";
- 			status = "disabled";
- 		};
--- 
-2.6.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied to pci/host-qcom for v4.5, with Pratyush's ack on the first patch.
+Thanks!
