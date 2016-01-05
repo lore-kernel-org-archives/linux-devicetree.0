@@ -1,76 +1,35 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 4/6] arm64: renesas: salvator-x: enable usb2_phy
-Date: Tue, 5 Jan 2016 13:55:44 +0100
-Message-ID: <CAMuHMdW7odgpbiPTjd27JMA2axvqXjHHsEGCdPxcy6K4QueqiA@mail.gmail.com>
-References: <1451037839-572-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-	<1451037839-572-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Oreste Salerno <oreste.salerno@tomtom.com>
+Subject: [PATCH v2 0/3] Add device tree support to the cyttsp driver
+Date: Tue, 5 Jan 2016 13:59:12 +0100
+Message-ID: <cover.1451997697.git.oreste.salerno@tomtom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1451037839-572-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@vger.kernel.org, Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-input@vger.kernel.org, fery@cypress.com, dmitry.torokhov@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, oreste.salerno@tomtom.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
+This set of patches adds support to the cyttsp touchscreen driver
+to retrieve platform data details from the device tree.
+Additionally, they define a default init function that performs a hard
+reset of the chip on boot.
 
-On Fri, Dec 25, 2015 at 11:03 AM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 34 +++++++++++++++++++++-
->  1 file changed, 33 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-> index 265d12f..7353407 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-> +++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts
-> @@ -122,8 +122,22 @@
->                                  "audio_clkout_a", "audio_clkout3_a";
->                 renesas,function = "audio_clk";
->         };
-> -};
->
-> +       usb0_pins: usb0 {
-> +               renesas,groups = "usb0";
-> +               renesas,function = "usb";
-> +       };
-> +
-> +       usb1_pins: usb1 {
-> +               renesas,groups = "usb1";
-> +               renesas,function = "usb";
-> +       };
-> +
-> +       usb2_pins: usb2 {
-> +               renesas,groups = "usb2";
-> +               renesas,function = "usb";
-> +       };
+---
+Changes in v2:
+  - Fix err_cast.cocci warning in patch 2/3
 
-sh-pfc e6060000.pfc: function 'usb' not supported
-sh-pfc e6060000.pfc: invalid function usb in map table
-sh-pfc e6060000.pfc: function 'usb' not supported
-sh-pfc e6060000.pfc: invalid function usb in map table
-sh-pfc e6060000.pfc: function 'usb' not supported
-sh-pfc e6060000.pfc: invalid function usb in map table
+Oreste Salerno (3):
+  Input: cyttsp - remove unused irq_gpio from platform_data
+  Input: cyttsp - add device tree support
+  Input: cyttsp - add default init function
 
-As the usb patches for pfc-r8a7795 haven't been posted yet, it's difficult
-to test/comment.
+ .../bindings/input/touchscreen/cyttsp.txt          |  73 +++++++++++++
+ drivers/input/touchscreen/cyttsp_core.c            | 120 +++++++++++++++++++--
+ include/linux/input/cyttsp.h                       |   4 +-
+ 3 files changed, 189 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
 
-Note that the functions were called "usb%u" in a previous version, and in the
-pfc-r8a7795 code in the BSP.
+-- 
+1.9.1
 
-Can you please post the pfc-r8a7795 patches, too?
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
