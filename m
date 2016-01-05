@@ -1,56 +1,52 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2 3/3] ARM64: dts: mt8173: Add CPU OPP, clock and
- regulator supply properties
-Date: Tue, 5 Jan 2016 15:54:55 +0530
-Message-ID: <20160105102455.GA30120@ubuntu>
-References: <1451197318-12418-1-git-send-email-pi-cheng.chen@linaro.org>
- <1451197318-12418-4-git-send-email-pi-cheng.chen@linaro.org>
- <20151228031340.GD3598@ubuntu>
- <3310024.mO5K6yH9vU@wuerfel>
+From: Rameshwar Sahu <rsahu@apm.com>
+Subject: Re: [PATCH] mmc: host: arasan: sdhci-of-arasan: Remove no-hispd and
+ no-cmd23 quirks for sdhci-arasan4.9a
+Date: Tue, 5 Jan 2016 15:55:52 +0530
+Message-ID: <CAFd313ziJ_zgxQ11J6e=ueRLFKXFOsDPg_evRDK2FGQC5rOmfA@mail.gmail.com>
+References: <1450877391-3029-1-git-send-email-rsahu@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3310024.mO5K6yH9vU@wuerfel>
-Sender: linux-pm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Pi-Cheng Chen <pi-cheng.chen@linaro.org>, devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Daniel Kurtz <djkurtz@chromium.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1450877391-3029-1-git-send-email-rsahu@apm.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com
+Cc: linux-mmc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Kaustubh Gondkar <kgondkar@apm.com>, Rameshwar Prasad Sahu <rsahu@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05-01-16, 11:21, Arnd Bergmann wrote:
-> On Monday 28 December 2015 08:43:40 Viresh Kumar wrote:
-> > On 27-12-15, 14:21, Pi-Cheng Chen wrote:
-> > > Add operating-points-v2, clock, and regulator supply properties
-> > > required by mt8173-cpufreq driver to enable it.
-> > > 
-> > > Signed-off-by: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-> > > ---
-> > > This patch is based on the patch[1] that adds underlying clock MUX for
-> > > MT8173 which is needed by mt8173-cpufreq driver but not yet picked.
-> > > 
-> > > [1] http://article.gmane.org/gmane.linux.kernel.clk/325
-> > > ---
-> > >  arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 18 ++++++
-> > >  arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 90 +++++++++++++++++++++++++++++
-> > >  2 files changed, 108 insertions(+)
-> > 
-> > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > 
-> 
-> This patch is now in linux-next through Rafael's pm tree, and it breaks the
-> arm64 build:
-> 
->         arm64-defconfig
-> Error: ../arch/arm64/boot/dts/mediatek/mt8173.dtsi:132.24-25 syntax error
-> 
-> 
-> Please revert.
-> 
-> In the future, please send all dts changes through the proper maintainer
-> channels (-> Mattias -> arm-soc), and make sure they actually build.
+Hi Ulf,
 
-Rafael has already reverted that, AFAIK, after Mark Brown reported the
-build issue.
+On Wed, Dec 23, 2015 at 6:59 PM, Rameshswar Prasad Sahu <rsahu@apm.com> wrote:
+> From: Rameshwar Prasad Sahu <rsahu@apm.com>
+>
+> The Arason SD host controller supports set block count command (cmd23)
+> and high speed mode. This patch re-enable both of these features that
+> was disabled. For device that doesn't support high speed, it should
+> configure its capability register accordingly instead disables it
+> explicitly.
+>
+> Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+> ---
+>  drivers/mmc/host/sdhci-of-arasan.c |    5 -----
+>  1 files changed, 0 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+> index 75379cb..5d9fdb3 100644
+> --- a/drivers/mmc/host/sdhci-of-arasan.c
+> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+> @@ -172,11 +172,6 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+>                 goto clk_disable_all;
+>         }
+>
+> -       if (of_device_is_compatible(pdev->dev.of_node, "arasan,sdhci-4.9a")) {
+> -               host->quirks |= SDHCI_QUIRK_NO_HISPD_BIT;
+> -               host->quirks2 |= SDHCI_QUIRK2_HOST_NO_CMD23;
+> -       }
+> -
+>         sdhci_get_of_property(pdev);
+>         pltfm_host = sdhci_priv(host);
+>         pltfm_host->priv = sdhci_arasan;
+> --
+> 1.7.1
+>
 
--- 
-viresh
+Any comment on this patch ??
