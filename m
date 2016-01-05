@@ -1,1464 +1,515 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 4/6] clk: mediatek: Add MT2701 clock support
-Date: Tue, 5 Jan 2016 14:30:20 +0800
-Message-ID: <1451975422-31174-5-git-send-email-jamesjj.liao@mediatek.com>
-References: <1451975422-31174-1-git-send-email-jamesjj.liao@mediatek.com>
+From: xuejiancheng <xuejiancheng@huawei.com>
+Subject: Re: [PATCH v4 1/6] clk: hisilicon: add CRG driver for hi3519 soc
+Date: Tue, 5 Jan 2016 15:21:15 +0800
+Message-ID: <568B6EEB.8030602@huawei.com>
+References: <1451439832-13927-1-git-send-email-xuejiancheng@huawei.com>
+ <1451439832-13927-2-git-send-email-xuejiancheng@huawei.com>
+ <20151231002323.19557.50218@quark.deferred.io>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1451975422-31174-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20151231002323.19557.50218@quark.deferred.io>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: sboyd@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, p.zabel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-From: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Hi Mike,
+   Happy new year to you!
+   Thank you for taking time to reply.
 
-Add MT2701 clock support, include topckgen, apmixedsys,
-infracfg, pericfg and subsystem clocks.
+On 2015/12/31 8:23, Michael Turquette wrote:
+> Hello Jiancheng Xue,
+> 
+> Quoting Jiancheng Xue (2015-12-29 17:43:47)
+>> The CRG(Clock and Reset Generator) block provides clock
+>> and reset signals for other modules in hi3519 soc.
+>>
+>> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
+>> ---
+>>  .../devicetree/bindings/clock/hi3519-crg.txt       |  46 +++++++
+>>  drivers/clk/hisilicon/Kconfig                      |   7 +
+>>  drivers/clk/hisilicon/Makefile                     |   2 +
+>>  drivers/clk/hisilicon/clk-hi3519.c                 | 103 ++++++++++++++
+>>  drivers/clk/hisilicon/reset.c                      | 149 +++++++++++++++++++++
+>>  drivers/clk/hisilicon/reset.h                      |  32 +++++
+>>  include/dt-bindings/clock/hi3519-clock.h           |  43 ++++++
+>>  7 files changed, 382 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/hi3519-crg.txt
+>>  create mode 100644 drivers/clk/hisilicon/clk-hi3519.c
+>>  create mode 100644 drivers/clk/hisilicon/reset.c
+>>  create mode 100644 drivers/clk/hisilicon/reset.h
+>>  create mode 100644 include/dt-bindings/clock/hi3519-clock.h
+> 
+> Please keep Philipp Zabel Cc'd for reset-related patches. I've added
+> him to Cc.
+> 
+OK.
 
-Signed-off-by: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/clk/mediatek/Kconfig      |    8 +
- drivers/clk/mediatek/Makefile     |    1 +
- drivers/clk/mediatek/clk-gate.c   |   56 ++
- drivers/clk/mediatek/clk-gate.h   |    2 +
- drivers/clk/mediatek/clk-mt2701.c | 1210 +++++++++++++++++++++++++++++++++++++
- drivers/clk/mediatek/clk-mtk.c    |   25 +
- drivers/clk/mediatek/clk-mtk.h    |   35 +-
- 7 files changed, 1334 insertions(+), 3 deletions(-)
- create mode 100644 drivers/clk/mediatek/clk-mt2701.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/hi3519-crg.txt b/Documentation/devicetree/bindings/clock/hi3519-crg.txt
+>> new file mode 100644
+>> index 0000000..2d23950
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/hi3519-crg.txt
+>> @@ -0,0 +1,46 @@
+>> +* Hisilicon Hi3519 Clock and Reset Generator(CRG)
+>> +
+>> +The Hi3519 CRG module provides clock and reset signals to various
+>> +controllers within the SoC.
+>> +
+>> +This binding uses the following bindings:
+>> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> +    Documentation/devicetree/bindings/reset/reset.txt
+>> +
+>> +Required Properties:
+>> +
+>> +- compatible: should be one of the following.
+>> +  - "hisilicon,hi3519-crg" - controller compatible with Hi3519 SoC.
+>> +
+>> +- reg: physical base address of the controller and length of memory mapped
+>> +  region.
+>> +
+>> +- #clock-cells: should be 1.
+>> +
+>> +Each clock is assigned an identifier and client nodes use this identifier
+>> +to specify the clock which they consume.
+>> +
+>> +All these identifier could be found in <dt-bindings/clock/hi3519-clock.h>.
+>> +
+>> +- #reset-cells: should be 2.
+>> +
+>> +A reset signal can be controlled by writing a bit register in the CRG module.
+>> +The reset specifier consists of two cells. The first cell represents the
+>> +register offset relative to the base address. The second cell represents the
+>> +bit index in the register.
+>> +
+>> +Example: CRG nodes
+>> +CRG: clock-reset-controller@12010000 {
+>> +       compatible = "hisilicon,hi3519-crg";
+>> +        reg = <0x12010000 0x10000>;
+>> +        #clock-cells = <1>;
+>> +        #reset-cells = <2>;
+>> +};
+>> +
+>> +Example: consumer nodes
+>> +i2c0: i2c@12110000 {
+>> +       compatible = "hisilicon,hi3519-i2c";
+>> +        reg = <0x12110000 0x1000>;
+>> +        clocks = <&CRG HI3519_I2C0_RST>;*/
+>> +        resets = <&CRG 0xe4 0>;
+>> +};
+>> diff --git a/drivers/clk/hisilicon/Kconfig b/drivers/clk/hisilicon/Kconfig
+>> index e434854..b6baebf 100644
+>> --- a/drivers/clk/hisilicon/Kconfig
+>> +++ b/drivers/clk/hisilicon/Kconfig
+>> @@ -1,3 +1,10 @@
+>> +config COMMON_CLK_HI3519
+>> +       tristate "Clock Driver for Hi3519"
+>> +       depends on ARCH_HISI
+>> +       default y
+>> +       help
+>> +         Build the clock driver for hi3519.
+>> +
+>>  config COMMON_CLK_HI6220
+>>         bool "Hi6220 Clock Driver"
+>>         depends on ARCH_HISI || COMPILE_TEST
+>> diff --git a/drivers/clk/hisilicon/Makefile b/drivers/clk/hisilicon/Makefile
+>> index 74dba31..3f57b09 100644
+>> --- a/drivers/clk/hisilicon/Makefile
+>> +++ b/drivers/clk/hisilicon/Makefile
+>> @@ -4,8 +4,10 @@
+>>  
+>>  obj-y  += clk.o clkgate-separated.o clkdivider-hi6220.o
+>>  
+>> +obj-$(CONFIG_RESET_CONTROLLER) += reset.o
+>>  obj-$(CONFIG_ARCH_HI3xxx)      += clk-hi3620.o
+>>  obj-$(CONFIG_ARCH_HIP04)       += clk-hip04.o
+>>  obj-$(CONFIG_ARCH_HIX5HD2)     += clk-hix5hd2.o
+>>  obj-$(CONFIG_COMMON_CLK_HI6220)        += clk-hi6220.o
+>>  obj-$(CONFIG_STUB_CLK_HI6220)  += clk-hi6220-stub.o
+>> +obj-$(CONFIG_COMMON_CLK_HI3519)        += clk-hi3519.o
+>> diff --git a/drivers/clk/hisilicon/clk-hi3519.c b/drivers/clk/hisilicon/clk-hi3519.c
+>> new file mode 100644
+>> index 0000000..e220234
+>> --- /dev/null
+>> +++ b/drivers/clk/hisilicon/clk-hi3519.c
+>> @@ -0,0 +1,103 @@
+>> +/*
+>> + * Copyright (c) 2015 HiSilicon Technologies Co., Ltd.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License
+>> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +
+>> +#include <linux/of_address.h>
+>> +#include <dt-bindings/clock/hi3519-clock.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/delay.h>
+>> +#include "clk.h"
+>> +#include "reset.h"
+>> +
+>> +#define HI3519_FIXED_24M       (HI3519_EXT_CLKS + 1)
+>> +#define HI3519_FIXED_50M       (HI3519_EXT_CLKS + 2)
+>> +#define HI3519_FIXED_75M       (HI3519_EXT_CLKS + 3)
+>> +#define HI3519_FIXED_125M      (HI3519_EXT_CLKS + 4)
+>> +#define HI3519_FIXED_150M      (HI3519_EXT_CLKS + 5)
+>> +#define HI3519_FIXED_200M      (HI3519_EXT_CLKS + 6)
+>> +#define HI3519_FIXED_250M      (HI3519_EXT_CLKS + 7)
+>> +#define HI3519_FIXED_300M      (HI3519_EXT_CLKS + 8)
+>> +#define HI3519_FIXED_400M      (HI3519_EXT_CLKS + 9)
+>> +#define HI3519_FMC_MUX         (HI3519_EXT_CLKS + 10)
+>> +
+>> +#define HI3519_NR_CLKS 128
+>> +#define HI3519_NR_RSTS 128
+>> +
+>> +static struct hisi_fixed_rate_clock hi3519_fixed_rate_clks[] __initdata = {
+>> +       { HI3519_FIXED_3M, "3m", NULL, CLK_IS_ROOT, 3000000, },
+>> +       { HI3519_FIXED_24M, "24m", NULL, CLK_IS_ROOT, 24000000, },
+>> +       { HI3519_FIXED_50M, "50m", NULL, CLK_IS_ROOT, 50000000, },
+>> +       { HI3519_FIXED_75M, "75m", NULL, CLK_IS_ROOT, 75000000, },
+>> +       { HI3519_FIXED_125M, "125m", NULL, CLK_IS_ROOT, 125000000, },
+>> +       { HI3519_FIXED_150M, "150m", NULL, CLK_IS_ROOT, 150000000, },
+>> +       { HI3519_FIXED_200M, "200m", NULL, CLK_IS_ROOT, 200000000, },
+>> +       { HI3519_FIXED_250M, "250m", NULL, CLK_IS_ROOT, 250000000, },
+>> +       { HI3519_FIXED_300M, "300m", NULL, CLK_IS_ROOT, 300000000, },
+>> +       { HI3519_FIXED_400M, "400m", NULL, CLK_IS_ROOT, 400000000, },
+>> +};
+>> +
+>> +static const char *fmc_mux_p[] __initconst = {
+>> +               "24m", "75m", "125m", "150m", "200m", "250m", "300m", "400m", };
+>> +static u32 fmc_mux_table[] = {0, 1, 2, 3, 4, 5, 6, 7};
+>> +
+>> +static struct hisi_mux_clock hi3519_mux_clks[] __initdata = {
+>> +       { HI3519_FMC_MUX, "fmc_mux", fmc_mux_p, ARRAY_SIZE(fmc_mux_p),
+>> +               CLK_SET_RATE_PARENT, 0xc0, 2, 3, 0, fmc_mux_table, },
+>> +};
+>> +
+>> +static struct hisi_gate_clock hi3519_gate_clks[] __initdata = {
+>> +       /* fmc */
+>> +       { HI3519_FMC_CLK, "clk_fmc", "fmc_mux",
+>> +               CLK_SET_RATE_PARENT, 0xc0, 1, 0, },
+>> +       /* uart */
+>> +       { HI3519_UART0_CLK, "clk_uart0", "24m",
+>> +               CLK_SET_RATE_PARENT, 0xe4, 20, 0, },
+>> +       { HI3519_UART1_CLK, "clk_uart1", "24m",
+>> +               CLK_SET_RATE_PARENT, 0xe4, 21, 0, },
+>> +       { HI3519_UART2_CLK, "clk_uart2", "24m",
+>> +               CLK_SET_RATE_PARENT, 0xe4, 22, 0, },
+>> +       { HI3519_UART3_CLK, "clk_uart3", "24m",
+>> +               CLK_SET_RATE_PARENT, 0xe4, 23, 0, },
+>> +       { HI3519_UART4_CLK, "clk_uart4", "24m",
+>> +               CLK_SET_RATE_PARENT, 0xe4, 24, 0, },
+>> +       { HI3519_SPI0_CLK, "clk_spi0", "50m",
+>> +               CLK_SET_RATE_PARENT, 0xe4, 16, 0, },
+>> +       { HI3519_SPI1_CLK, "clk_spi1", "50m",
+>> +               CLK_SET_RATE_PARENT, 0xe4, 17, 0, },
+>> +       { HI3519_SPI2_CLK, "clk_spi2", "50m",
+>> +               CLK_SET_RATE_PARENT, 0xe4, 18, 0, },
+>> +};
+>> +
+>> +static void __init hi3519_clk_init(struct device_node *np)
+>> +{
+>> +       struct hisi_clock_data *clk_data;
+>> +
+>> +       clk_data = hisi_clk_init(np, HI3519_NR_CLKS);
+>> +       if (!clk_data)
+>> +               return;
+>> +
+>> +       hisi_reset_init(np, HI3519_NR_RSTS);
+>> +
+>> +       hisi_clk_register_fixed_rate(hi3519_fixed_rate_clks,
+>> +                                    ARRAY_SIZE(hi3519_fixed_rate_clks),
+>> +                                    clk_data);
+>> +       hisi_clk_register_mux(hi3519_mux_clks, ARRAY_SIZE(hi3519_mux_clks),
+>> +                                       clk_data);
+>> +       hisi_clk_register_gate(hi3519_gate_clks,
+>> +                       ARRAY_SIZE(hi3519_gate_clks), clk_data);
+>> +}
+>> +
+>> +CLK_OF_DECLARE(hi3519_clk, "hisilicon,hi3519-crg", hi3519_clk_init);
+> 
+> Is CLK_OF_DECLARE required here? Why do you need to register these
+> clocks so early?
+> 
+> Can this be a real platform driver instead? See,
+> 
+> grep platform_driver drivers/clk/qcom/*.c
+> 
+> Regards,
+> Mike
+> 
 
-diff --git a/drivers/clk/mediatek/Kconfig b/drivers/clk/mediatek/Kconfig
-index dc224e6..6c7cdc0 100644
---- a/drivers/clk/mediatek/Kconfig
-+++ b/drivers/clk/mediatek/Kconfig
-@@ -6,6 +6,14 @@ config COMMON_CLK_MEDIATEK
- 	---help---
- 	  Mediatek SoCs' clock support.
- 
-+config COMMON_CLK_MT2701
-+	bool "Clock driver for Mediatek MT2701 and MT7623"
-+	depends on COMMON_CLK
-+	select COMMON_CLK_MEDIATEK
-+	default ARCH_MEDIATEK
-+	---help---
-+	  This driver supports Mediatek MT2701 and MT7623 clocks.
-+
- config COMMON_CLK_MT8135
- 	bool "Clock driver for Mediatek MT8135"
- 	depends on COMMON_CLK
-diff --git a/drivers/clk/mediatek/Makefile b/drivers/clk/mediatek/Makefile
-index 32e7222..5b2b91b 100644
---- a/drivers/clk/mediatek/Makefile
-+++ b/drivers/clk/mediatek/Makefile
-@@ -1,4 +1,5 @@
- obj-$(CONFIG_COMMON_CLK_MEDIATEK) += clk-mtk.o clk-pll.o clk-gate.o clk-apmixed.o
- obj-$(CONFIG_RESET_CONTROLLER) += reset.o
-+obj-$(CONFIG_COMMON_CLK_MT2701) += clk-mt2701.o
- obj-$(CONFIG_COMMON_CLK_MT8135) += clk-mt8135.o
- obj-$(CONFIG_COMMON_CLK_MT8173) += clk-mt8173.o
-diff --git a/drivers/clk/mediatek/clk-gate.c b/drivers/clk/mediatek/clk-gate.c
-index 576bdb7..38badb4 100644
---- a/drivers/clk/mediatek/clk-gate.c
-+++ b/drivers/clk/mediatek/clk-gate.c
-@@ -61,6 +61,26 @@ static void mtk_cg_clr_bit(struct clk_hw *hw)
- 	regmap_write(cg->regmap, cg->clr_ofs, BIT(cg->bit));
- }
- 
-+static void mtk_cg_set_bit_no_setclr(struct clk_hw *hw)
-+{
-+	struct mtk_clk_gate *cg = to_clk_gate(hw);
-+	u32 val;
-+
-+	regmap_read(cg->regmap, cg->sta_ofs, &val);
-+	val |= BIT(cg->bit);
-+	regmap_write(cg->regmap, cg->sta_ofs, val);
-+}
-+
-+static void mtk_cg_clr_bit_no_setclr(struct clk_hw *hw)
-+{
-+	struct mtk_clk_gate *cg = to_clk_gate(hw);
-+	u32 val;
-+
-+	regmap_read(cg->regmap, cg->sta_ofs, &val);
-+	val &= ~(BIT(cg->bit));
-+	regmap_write(cg->regmap, cg->sta_ofs, val);
-+}
-+
- static int mtk_cg_enable(struct clk_hw *hw)
- {
- 	mtk_cg_clr_bit(hw);
-@@ -85,6 +105,30 @@ static void mtk_cg_disable_inv(struct clk_hw *hw)
- 	mtk_cg_clr_bit(hw);
- }
- 
-+static int mtk_cg_enable_no_setclr(struct clk_hw *hw)
-+{
-+	mtk_cg_clr_bit_no_setclr(hw);
-+
-+	return 0;
-+}
-+
-+static void mtk_cg_disable_no_setclr(struct clk_hw *hw)
-+{
-+	mtk_cg_set_bit_no_setclr(hw);
-+}
-+
-+static int mtk_cg_enable_inv_no_setclr(struct clk_hw *hw)
-+{
-+	mtk_cg_set_bit_no_setclr(hw);
-+
-+	return 0;
-+}
-+
-+static void mtk_cg_disable_inv_no_setclr(struct clk_hw *hw)
-+{
-+	mtk_cg_clr_bit_no_setclr(hw);
-+}
-+
- const struct clk_ops mtk_clk_gate_ops_setclr = {
- 	.is_enabled	= mtk_cg_bit_is_cleared,
- 	.enable		= mtk_cg_enable,
-@@ -97,6 +141,18 @@ const struct clk_ops mtk_clk_gate_ops_setclr_inv = {
- 	.disable	= mtk_cg_disable_inv,
- };
- 
-+const struct clk_ops mtk_clk_gate_ops_no_setclr = {
-+	.is_enabled	= mtk_cg_bit_is_cleared,
-+	.enable		= mtk_cg_enable_no_setclr,
-+	.disable	= mtk_cg_disable_no_setclr,
-+};
-+
-+const struct clk_ops mtk_clk_gate_ops_no_setclr_inv = {
-+	.is_enabled	= mtk_cg_bit_is_set,
-+	.enable		= mtk_cg_enable_inv_no_setclr,
-+	.disable	= mtk_cg_disable_inv_no_setclr,
-+};
-+
- struct clk * __init mtk_clk_register_gate(
- 		const char *name,
- 		const char *parent_name,
-diff --git a/drivers/clk/mediatek/clk-gate.h b/drivers/clk/mediatek/clk-gate.h
-index 11e25c9..7f7ef34 100644
---- a/drivers/clk/mediatek/clk-gate.h
-+++ b/drivers/clk/mediatek/clk-gate.h
-@@ -36,6 +36,8 @@ static inline struct mtk_clk_gate *to_clk_gate(struct clk_hw *hw)
- 
- extern const struct clk_ops mtk_clk_gate_ops_setclr;
- extern const struct clk_ops mtk_clk_gate_ops_setclr_inv;
-+extern const struct clk_ops mtk_clk_gate_ops_no_setclr;
-+extern const struct clk_ops mtk_clk_gate_ops_no_setclr_inv;
- 
- struct clk *mtk_clk_register_gate(
- 		const char *name,
-diff --git a/drivers/clk/mediatek/clk-mt2701.c b/drivers/clk/mediatek/clk-mt2701.c
-new file mode 100644
-index 0000000..2f521f4
---- /dev/null
-+++ b/drivers/clk/mediatek/clk-mt2701.c
-@@ -0,0 +1,1210 @@
-+/*
-+ * Copyright (c) 2014 MediaTek Inc.
-+ * Author: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+
-+#include "clk-mtk.h"
-+#include "clk-gate.h"
-+
-+#include <dt-bindings/clock/mt2701-clk.h>
-+
-+static DEFINE_SPINLOCK(lock);
-+
-+static const struct mtk_fixed_clk top_fixed_clks[] __initconst = {
-+	FIXED_CLK(CLK_TOP_DPI, "dpi_ck", "clk26m", 108 * MHZ),
-+	FIXED_CLK(CLK_TOP_DMPLL, "dmpll_ck", "clk26m", 400 * MHZ),
-+	FIXED_CLK(CLK_TOP_VENCPLL, "vencpll_ck", "clk26m", 295750000),
-+	FIXED_CLK(CLK_TOP_HDMI_0_PIX340M, "hdmi_0_pix340m", "clk26m", 340 * MHZ),
-+	FIXED_CLK(CLK_TOP_HDMI_0_DEEP340M, "hdmi_0_deep340m", "clk26m", 340 * MHZ),
-+	FIXED_CLK(CLK_TOP_HDMI_0_PLL340M, "hdmi_0_pll340m", "clk26m", 340 * MHZ),
-+	FIXED_CLK(CLK_TOP_HDMITX_CLKDIG_CTS, "hdmitx_dig_cts", "clk26m", 300 * MHZ),
-+	FIXED_CLK(CLK_TOP_HADDS2_FB, "hadds2_fbclk", "clk26m", 27 * MHZ),
-+	FIXED_CLK(CLK_TOP_WBG_DIG_416M, "wbg_dig_ck_416m", "clk26m", 416 * MHZ),
-+};
-+
-+static const struct mtk_fixed_factor top_fixed_divs[] __initconst = {
-+	FACTOR(CLK_TOP_SYSPLL, "syspll_ck", "mainpll", 1, 1),
-+	FACTOR(CLK_TOP_SYSPLL_D2, "syspll_d2", "mainpll", 1, 2),
-+	FACTOR(CLK_TOP_SYSPLL_D3, "syspll_d3", "mainpll", 1, 3),
-+	FACTOR(CLK_TOP_SYSPLL_D5, "syspll_d5", "mainpll", 1, 5),
-+	FACTOR(CLK_TOP_SYSPLL_D7, "syspll_d7", "mainpll", 1, 7),
-+	FACTOR(CLK_TOP_SYSPLL1_D2, "syspll1_d2", "syspll_d2", 1, 2),
-+	FACTOR(CLK_TOP_SYSPLL1_D4, "syspll1_d4", "syspll_d2", 1, 4),
-+	FACTOR(CLK_TOP_SYSPLL1_D8, "syspll1_d8", "syspll_d2", 1, 8),
-+	FACTOR(CLK_TOP_SYSPLL1_D16, "syspll1_d16", "syspll_d2", 1, 16),
-+	FACTOR(CLK_TOP_SYSPLL2_D2, "syspll2_d2", "syspll_d3", 1, 2),
-+	FACTOR(CLK_TOP_SYSPLL2_D4, "syspll2_d4", "syspll_d3", 1, 4),
-+	FACTOR(CLK_TOP_SYSPLL2_D8, "syspll2_d8", "syspll_d3", 1, 8),
-+	FACTOR(CLK_TOP_SYSPLL3_D2, "syspll3_d2", "syspll_d5", 1, 2),
-+	FACTOR(CLK_TOP_SYSPLL3_D4, "syspll3_d4", "syspll_d5", 1, 4),
-+	FACTOR(CLK_TOP_SYSPLL4_D2, "syspll4_d2", "syspll_d7", 1, 2),
-+	FACTOR(CLK_TOP_SYSPLL4_D4, "syspll4_d4", "syspll_d7", 1, 4),
-+
-+	FACTOR(CLK_TOP_UNIVPLL, "univpll_ck", "univpll", 1, 1),
-+	FACTOR(CLK_TOP_UNIVPLL_D2, "univpll_d2", "univpll", 1, 2),
-+	FACTOR(CLK_TOP_UNIVPLL_D3, "univpll_d3", "univpll", 1, 3),
-+	FACTOR(CLK_TOP_UNIVPLL_D5, "univpll_d5", "univpll", 1, 5),
-+	FACTOR(CLK_TOP_UNIVPLL_D7, "univpll_d7", "univpll", 1, 7),
-+	FACTOR(CLK_TOP_UNIVPLL_D26, "univpll_d26", "univpll", 1, 26),
-+	FACTOR(CLK_TOP_UNIVPLL_D52, "univpll_d52", "univpll", 1, 52),
-+	FACTOR(CLK_TOP_UNIVPLL_D108, "univpll_d108", "univpll", 1, 108),
-+	FACTOR(CLK_TOP_USB_PHY48M, "USB_PHY48M_CK", "univpll", 1, 26),
-+	FACTOR(CLK_TOP_UNIVPLL1_D2, "univpll1_d2", "univpll_d2", 1, 2),
-+	FACTOR(CLK_TOP_UNIVPLL1_D4, "univpll1_d4", "univpll_d2", 1, 4),
-+	FACTOR(CLK_TOP_UNIVPLL1_D8, "univpll1_d8", "univpll_d2", 1, 8),
-+	FACTOR(CLK_TOP_8BDAC, "8bdac_ck", "univpll_d2", 1, 1),
-+	FACTOR(CLK_TOP_UNIVPLL2_D2, "univpll2_d2", "univpll_d3", 1, 2),
-+	FACTOR(CLK_TOP_UNIVPLL2_D4, "univpll2_d4", "univpll_d3", 1, 4),
-+	FACTOR(CLK_TOP_UNIVPLL2_D8, "univpll2_d8", "univpll_d3", 1, 8),
-+	FACTOR(CLK_TOP_UNIVPLL2_D16, "univpll2_d16", "univpll_d3", 1, 16),
-+	FACTOR(CLK_TOP_UNIVPLL2_D32, "univpll2_d32", "univpll_d3", 1, 32),
-+	FACTOR(CLK_TOP_UNIVPLL3_D2, "univpll3_d2", "univpll_d5", 1, 2),
-+	FACTOR(CLK_TOP_UNIVPLL3_D4, "univpll3_d4", "univpll_d5", 1, 4),
-+	FACTOR(CLK_TOP_UNIVPLL3_D8, "univpll3_d8", "univpll_d5", 1, 8),
-+
-+	FACTOR(CLK_TOP_MSDCPLL, "msdcpll_ck", "msdcpll", 1, 1),
-+	FACTOR(CLK_TOP_MSDCPLL_D2, "msdcpll_d2", "msdcpll", 1, 2),
-+	FACTOR(CLK_TOP_MSDCPLL_D4, "msdcpll_d4", "msdcpll", 1, 4),
-+	FACTOR(CLK_TOP_MSDCPLL_D8, "msdcpll_d8", "msdcpll", 1, 8),
-+
-+	FACTOR(CLK_TOP_MMPLL, "mmpll_ck", "mmpll", 1, 1),
-+	FACTOR(CLK_TOP_MMPLL_D2, "mmpll_d2", "mmpll", 1, 2),
-+
-+	FACTOR(CLK_TOP_DMPLL_D2, "dmpll_d2", "dmpll_ck", 1, 2),
-+	FACTOR(CLK_TOP_DMPLL_D4, "dmpll_d4", "dmpll_ck", 1, 4),
-+	FACTOR(CLK_TOP_DMPLL_X2, "dmpll_x2", "dmpll_ck", 1, 1),
-+
-+	FACTOR(CLK_TOP_TVDPLL, "tvdpll_ck", "tvdpll", 1, 1),
-+	FACTOR(CLK_TOP_TVDPLL_D2, "tvdpll_d2", "tvdpll", 1, 2),
-+	FACTOR(CLK_TOP_TVDPLL_D4, "tvdpll_d4", "tvdpll", 1, 4),
-+
-+	FACTOR(CLK_TOP_VDECPLL, "vdecpll_ck", "vdecpll", 1, 1),
-+	FACTOR(CLK_TOP_TVD2PLL, "tvd2pll_ck", "tvd2pll", 1, 1),
-+	FACTOR(CLK_TOP_TVD2PLL_D2, "tvd2pll_d2", "tvd2pll", 1, 2),
-+
-+	FACTOR(CLK_TOP_MIPIPLL, "mipipll", "dpi_ck", 1, 1),
-+	FACTOR(CLK_TOP_MIPIPLL_D2, "mipipll_d2", "dpi_ck", 1, 2),
-+	FACTOR(CLK_TOP_MIPIPLL_D4, "mipipll_d4", "dpi_ck", 1, 4),
-+
-+	FACTOR(CLK_TOP_HDMIPLL, "hdmipll_ck", "hdmitx_dig_cts", 1, 1),
-+	FACTOR(CLK_TOP_HDMIPLL_D2, "hdmipll_d2", "hdmitx_dig_cts", 1, 2),
-+	FACTOR(CLK_TOP_HDMIPLL_D3, "hdmipll_d3", "hdmitx_dig_cts", 1, 3),
-+
-+	FACTOR(CLK_TOP_ARMPLL_1P3G, "armpll_1p3g_ck", "armpll", 1, 1),
-+
-+	FACTOR(CLK_TOP_AUDPLL, "audpll", "audpll_sel", 1, 1),
-+	FACTOR(CLK_TOP_AUDPLL_D4, "audpll_d4", "audpll_sel", 1, 4),
-+	FACTOR(CLK_TOP_AUDPLL_D8, "audpll_d8", "audpll_sel", 1, 8),
-+	FACTOR(CLK_TOP_AUDPLL_D16, "audpll_d16", "audpll_sel", 1, 16),
-+	FACTOR(CLK_TOP_AUDPLL_D24, "audpll_d24", "audpll_sel", 1, 24),
-+
-+	FACTOR(CLK_TOP_AUD1PLL_98M, "aud1pll_98m_ck", "aud1pll", 1, 3),
-+	FACTOR(CLK_TOP_AUD2PLL_90M, "aud2pll_90m_ck", "aud2pll", 1, 3),
-+	FACTOR(CLK_TOP_HADDS2PLL_98M, "hadds2pll_98m", "hadds2pll", 1, 3),
-+	FACTOR(CLK_TOP_HADDS2PLL_294M, "hadds2pll_294m", "hadds2pll", 1, 1),
-+	FACTOR(CLK_TOP_ETHPLL_500M, "ethpll_500m_ck", "ethpll", 1, 1),
-+	FACTOR(CLK_TOP_CLK26M_D8, "clk26m_d8", "clk26m", 1, 8),
-+	FACTOR(CLK_TOP_32K_INTERNAL, "32k_internal", "clk26m", 1, 793),
-+	FACTOR(CLK_TOP_32K_EXTERNAL, "32k_external", "rtc32k", 1, 1),
-+};
-+
-+static const char * const axi_parents[] __initconst = {
-+	"clk26m",
-+	"syspll1_d2",
-+	"syspll_d5",
-+	"syspll1_d4",
-+	"univpll_d5",
-+	"univpll2_d2",
-+	"mmpll_d2",
-+	"dmpll_d2"
-+};
-+
-+static const char * const mem_parents[] __initconst = {
-+	"clk26m",
-+	"dmpll_ck"
-+};
-+
-+static const char * const ddrphycfg_parents[] __initconst = {
-+	"clk26m",
-+	"syspll1_d8"
-+};
-+
-+static const char * const mm_parents[] __initconst = {
-+	"clk26m",
-+	"vencpll_ck",
-+	"syspll1_d2",
-+	"syspll1_d4",
-+	"univpll_d5",
-+	"univpll1_d2",
-+	"univpll2_d2",
-+	"dmpll_ck"
-+};
-+
-+static const char * const pwm_parents[] __initconst = {
-+	"clk26m",
-+	"univpll2_d4",
-+	"univpll3_d2",
-+	"univpll1_d4",
-+};
-+
-+static const char * const vdec_parents[] __initconst = {
-+	"clk26m",
-+	"vdecpll_ck",
-+	"syspll_d5",
-+	"syspll1_d4",
-+	"univpll_d5",
-+	"univpll2_d2",
-+	"vencpll_ck",
-+	"msdcpll_d2",
-+	"mmpll_d2"
-+};
-+
-+static const char * const mfg_parents[] __initconst = {
-+	"clk26m",
-+	"mmpll_ck",
-+	"dmpll_x2_ck",
-+	"msdcpll_ck",
-+	"clk26m",
-+	"syspll_d3",
-+	"univpll_d3",
-+	"univpll1_d2"
-+};
-+
-+static const char * const camtg_parents[] __initconst = {
-+	"clk26m",
-+	"univpll_d26",
-+	"univpll2_d2",
-+	"syspll3_d2",
-+	"syspll3_d4",
-+	"msdcpll_d2",
-+	"mmpll_d2"
-+};
-+
-+static const char * const uart_parents[] __initconst = {
-+	"clk26m",
-+	"univpll2_d8"
-+};
-+
-+static const char * const spi_parents[] __initconst = {
-+	"clk26m",
-+	"syspll3_d2",
-+	"syspll4_d2",
-+	"univpll2_d4",
-+	"univpll1_d8"
-+};
-+
-+static const char * const usb20_parents[] __initconst = {
-+	"clk26m",
-+	"univpll1_d8",
-+	"univpll3_d4"
-+};
-+
-+static const char * const msdc30_parents[] __initconst = {
-+	"clk26m",
-+	"msdcpll_d2",
-+	"syspll2_d2",
-+	"syspll1_d4",
-+	"univpll1_d4",
-+	"univpll2_d4"
-+};
-+
-+static const char * const audio_parents[] __initconst = {
-+	"clk26m",
-+	"syspll1_d16"
-+};
-+
-+static const char * const aud_intbus_parents[] __initconst = {
-+	"clk26m",
-+	"syspll1_d4",
-+	"syspll3_d2",
-+	"syspll4_d2",
-+	"univpll3_d2",
-+	"univpll2_d4"
-+};
-+
-+static const char * const pmicspi_parents[] __initconst = {
-+	"clk26m",
-+	"syspll1_d8",
-+	"syspll2_d4",
-+	"syspll4_d2",
-+	"syspll3_d4",
-+	"syspll2_d8",
-+	"syspll1_d16",
-+	"univpll3_d4",
-+	"univpll_d26",
-+	"dmpll_d2",
-+	"dmpll_d4"
-+};
-+
-+static const char * const scp_parents[] __initconst = {
-+	"clk26m",
-+	"syspll1_d8",
-+	"dmpll_d2",
-+	"dmpll_d4"
-+};
-+
-+static const char * const dpi0_parents[] __initconst = {
-+	"clk26m",
-+	"mipipll",
-+	"mipipll_d2",
-+	"mipipll_d4",
-+	"clk26m",
-+	"tvdpll_ck",
-+	"tvdpll_d2",
-+	"tvdpll_d4"
-+};
-+
-+static const char * const dpi1_parents[] __initconst = {
-+	"clk26m",
-+	"tvdpll_ck",
-+	"tvdpll_d2",
-+	"tvdpll_d4"
-+};
-+
-+static const char * const tve_parents[] __initconst = {
-+	"clk26m",
-+	"mipipll",
-+	"mipipll_d2",
-+	"mipipll_d4",
-+	"clk26m",
-+	"tvdpll_ck",
-+	"tvdpll_d2",
-+	"tvdpll_d4"
-+};
-+
-+static const char * const hdmi_parents[] __initconst = {
-+	"clk26m",
-+	"hdmipll_ck",
-+	"hdmipll_d2",
-+	"hdmipll_d3"
-+};
-+
-+static const char * const apll_parents[] __initconst = {
-+	"clk26m",
-+	"audpll",
-+	"audpll_d4",
-+	"audpll_d8",
-+	"audpll_d16",
-+	"audpll_d24",
-+	"clk26m",
-+	"clk26m"
-+};
-+
-+static const char * const rtc_parents[] __initconst = {
-+	"32k_internal",
-+	"32k_external",
-+	"clk26m",
-+	"univpll3_d8"
-+};
-+
-+static const char * const nfi2x_parents[] __initconst = {
-+	"clk26m",
-+	"syspll2_d2",
-+	"syspll_d7",
-+	"univpll3_d2",
-+	"syspll2_d4",
-+	"univpll3_d4",
-+	"syspll4_d4",
-+	"clk26m"
-+};
-+
-+static const char * const emmc_hclk_parents[] __initconst = {
-+	"clk26m",
-+	"syspll1_d2",
-+	"syspll1_d4",
-+	"syspll2_d2"
-+};
-+
-+static const char * const flash_parents[] __initconst = {
-+	"clk26m_d8",
-+	"clk26m",
-+	"syspll2_d8",
-+	"syspll3_d4",
-+	"univpll3_d4",
-+	"syspll4_d2",
-+	"syspll2_d4",
-+	"univpll2_d4"
-+};
-+
-+static const char * const di_parents[] __initconst = {
-+	"clk26m",
-+	"tvd2pll_ck",
-+	"tvd2pll_d2",
-+	"clk26m"
-+};
-+
-+static const char * const nr_osd_parents[] __initconst = {
-+	"clk26m",
-+	"vencpll_ck",
-+	"syspll1_d2",
-+	"syspll1_d4",
-+	"univpll_d5",
-+	"univpll1_d2",
-+	"univpll2_d2",
-+	"dmpll_ck"
-+};
-+
-+static const char * const hdmirx_bist_parents[] __initconst = {
-+	"clk26m",
-+	"syspll_d3",
-+	"clk26m",
-+	"syspll1_d16",
-+	"syspll4_d2",
-+	"syspll1_d4",
-+	"vencpll_ck",
-+	"clk26m"
-+};
-+
-+static const char * const intdir_parents[] __initconst = {
-+	"clk26m",
-+	"mmpll_ck",
-+	"syspll_d2",
-+	"univpll_d2"
-+};
-+
-+static const char * const asm_parents[] __initconst = {
-+	"clk26m",
-+	"univpll2_d4",
-+	"univpll2_d2",
-+	"syspll_d5"
-+};
-+
-+static const char * const ms_card_parents[] __initconst = {
-+	"clk26m",
-+	"univpll3_d8",
-+	"syspll4_d4"
-+};
-+
-+static const char * const ethif_parents[] __initconst = {
-+	"clk26m",
-+	"syspll1_d2",
-+	"syspll_d5",
-+	"syspll1_d4",
-+	"univpll_d5",
-+	"univpll1_d2",
-+	"dmpll_ck",
-+	"dmpll_d2"
-+};
-+
-+static const char * const hdmirx_parents[] __initconst = {
-+	"clk26m",
-+	"univpll_d52"
-+};
-+
-+static const char * const cmsys_parents[] __initconst = {
-+	"clk26m",
-+	"syspll1_d2",
-+	"univpll1_d2",
-+	"univpll_d5",
-+	"syspll_d5",
-+	"syspll2_d2",
-+	"syspll1_d4",
-+	"syspll3_d2",
-+	"syspll2_d4",
-+	"syspll1_d8",
-+	"clk26m",
-+	"clk26m",
-+	"clk26m",
-+	"clk26m",
-+	"clk26m"
-+};
-+
-+static const char * const clk_8bdac_parents[] __initconst = {
-+	"clkrtc_int",
-+	"8bdac_ck_pre",
-+	"clk26m",
-+	"clk26m"
-+};
-+
-+static const char * const aud2dvd_parents[] __initconst = {
-+	"a1sys_hp_ck",
-+	"a2sys_hp_ck"
-+};
-+
-+static const char * const padmclk_parents[] __initconst = {
-+	"clk26m",
-+	"univpll_d26",
-+	"univpll_d52",
-+	"univpll_d108",
-+	"univpll2_d8",
-+	"univpll2_d16",
-+	"univpll2_d32"
-+};
-+
-+static const char * const aud_mux_parents[] __initconst = {
-+	"clk26m",
-+	"aud1pll_98m_ck",
-+	"aud2pll_90m_ck",
-+	"hadds2pll_98m",
-+	"audio_ext1_ck",
-+	"audio_ext2_ck"
-+};
-+
-+static const char * const aud_src_parents[] __initconst = {
-+	"aud_mux1_sel",
-+	"aud_mux2_sel"
-+};
-+
-+static const char * const cpu_parents[] __initconst = {
-+	"clk26m",
-+	"armpll",
-+	"mainpll",
-+	"mmpll"
-+};
-+
-+static const struct mtk_composite top_muxes[] __initconst = {
-+	MUX_GATE(CLK_TOP_AXI_SEL, "axi_sel", axi_parents,
-+		0x0040, 0, 3, INVALID_MUX_GATE_BIT),
-+	MUX_GATE(CLK_TOP_MEM_SEL, "mem_sel", mem_parents, 0x0040, 8, 1, 15),
-+	MUX_GATE(CLK_TOP_DDRPHYCFG_SEL, "ddrphycfg_sel", ddrphycfg_parents, 0x0040, 16, 1, 23),
-+	MUX_GATE(CLK_TOP_MM_SEL, "mm_sel", mm_parents, 0x0040, 24, 3, 31),
-+
-+	MUX_GATE(CLK_TOP_PWM_SEL, "pwm_sel", pwm_parents, 0x0050, 0, 2, 7),
-+	MUX_GATE(CLK_TOP_VDEC_SEL, "vdec_sel", vdec_parents, 0x0050, 8, 4, 15),
-+	MUX_GATE(CLK_TOP_MFG_SEL, "mfg_sel", mfg_parents, 0x0050, 16, 3, 23),
-+	MUX_GATE(CLK_TOP_CAMTG_SEL, "camtg_sel", camtg_parents, 0x0050, 24, 3, 31),
-+	MUX_GATE(CLK_TOP_UART_SEL, "uart_sel", uart_parents, 0x0060, 0, 1, 7),
-+
-+	MUX_GATE(CLK_TOP_SPI0_SEL, "spi0_sel", spi_parents, 0x0060, 8, 3, 15),
-+	MUX_GATE(CLK_TOP_USB20_SEL, "usb20_sel", usb20_parents, 0x0060, 16, 2, 23),
-+	MUX_GATE(CLK_TOP_MSDC30_0_SEL, "msdc30_0_sel", msdc30_parents, 0x0060, 24, 3, 31),
-+
-+	MUX_GATE(CLK_TOP_MSDC30_1_SEL, "msdc30_1_sel", msdc30_parents, 0x0070, 0, 3, 7),
-+	MUX_GATE(CLK_TOP_MSDC30_2_SEL, "msdc30_2_sel", msdc30_parents, 0x0070, 8, 3, 15),
-+	MUX_GATE(CLK_TOP_AUDIO_SEL, "audio_sel", msdc30_parents, 0x0070, 16, 1, 23),
-+	MUX_GATE(CLK_TOP_AUDINTBUS_SEL, "aud_intbus_sel", aud_intbus_parents, 0x0070, 24, 3, 31),
-+
-+	MUX_GATE(CLK_TOP_PMICSPI_SEL, "pmicspi_sel", pmicspi_parents, 0x0080, 0, 4, 7),
-+	MUX_GATE(CLK_TOP_SCP_SEL, "scp_sel", scp_parents, 0x0080, 8, 2, 15),
-+	MUX_GATE(CLK_TOP_DPI0_SEL, "dpi0_sel", dpi0_parents, 0x0080, 16, 3, 23),
-+	MUX_GATE(CLK_TOP_DPI1_SEL, "dpi1_sel", dpi1_parents, 0x0080, 24, 2, 31),
-+
-+	MUX_GATE(CLK_TOP_TVE_SEL, "tve_sel", tve_parents, 0x0090, 0, 3, 7),
-+	MUX_GATE(CLK_TOP_HDMI_SEL, "hdmi_sel", hdmi_parents, 0x0090, 8, 2, 15),
-+	MUX_GATE(CLK_TOP_APLL_SEL, "apll_sel", apll_parents, 0x0090, 16, 3, 23),
-+
-+	MUX_GATE(CLK_TOP_RTC_SEL, "rtc_sel", rtc_parents, 0x00A0, 0, 2, 7),
-+	MUX_GATE(CLK_TOP_NFI2X_SEL, "nfi2x_sel", nfi2x_parents, 0x00A0, 8, 3, 15),
-+	MUX_GATE(CLK_TOP_EMMC_HCLK_SEL, "emmc_hclk_sel", emmc_hclk_parents, 0x00A0, 24, 2, 31),
-+
-+	MUX_GATE(CLK_TOP_FLASH_SEL, "flash_sel", flash_parents, 0x00B0, 0, 3, 7),
-+	MUX_GATE(CLK_TOP_DI_SEL, "di_sel", di_parents, 0x00B0, 8, 2, 15),
-+	MUX_GATE(CLK_TOP_NR_SEL, "nr_sel", nr_osd_parents, 0x00B0, 16, 3, 23),
-+	MUX_GATE(CLK_TOP_OSD_SEL, "osd_sel", nr_osd_parents, 0x00B0, 24, 3, 31),
-+
-+	MUX_GATE(CLK_TOP_HDMIRX_BIST_SEL, "hdmirx_bist_sel", hdmirx_bist_parents, 0x00C0, 0, 3, 7),
-+	MUX_GATE(CLK_TOP_INTDIR_SEL, "intdir_sel", intdir_parents, 0x00C0, 8, 2, 15),
-+	MUX_GATE(CLK_TOP_ASM_I_SEL, "asm_i_sel", asm_parents, 0x00C0, 16, 2, 23),
-+	MUX_GATE(CLK_TOP_ASM_M_SEL, "asm_m_sel", asm_parents, 0x00C0, 24, 3, 31),
-+
-+	MUX_GATE(CLK_TOP_ASM_H_SEL, "asm_h_sel", asm_parents, 0x00D0, 0, 2, 7),
-+	MUX_GATE(CLK_TOP_MS_CARD_SEL, "ms_card_sel", ms_card_parents, 0x00D0, 16, 2, 23),
-+	MUX_GATE(CLK_TOP_ETHIF_SEL, "ethif_sel", ethif_parents, 0x00D0, 24, 3, 31),
-+
-+	MUX_GATE(CLK_TOP_HDMIRX26_24_SEL, "hdmirx26_24_sel", hdmirx_parents, 0x00E0, 0, 1, 7),
-+	MUX_GATE(CLK_TOP_MSDC30_3_SEL, "msdc30_3_sel", msdc30_parents, 0x00E0, 8, 3, 15),
-+	MUX_GATE(CLK_TOP_CMSYS_SEL, "cmsys_sel", cmsys_parents, 0x00E0, 16, 4, 23),
-+
-+	MUX_GATE(CLK_TOP_SPI1_SEL, "spi2_sel", spi_parents, 0x00E0, 24, 3, 31),
-+	MUX_GATE(CLK_TOP_SPI2_SEL, "spi1_sel", spi_parents, 0x00F0, 0, 3, 7),
-+	MUX_GATE(CLK_TOP_8BDAC_SEL, "8bdac_sel", clk_8bdac_parents, 0x00F0, 8, 2, 15),
-+	MUX_GATE(CLK_TOP_AUD2DVD_SEL, "aud2dvd_sel", aud2dvd_parents, 0x00F0, 16, 1, 23),
-+
-+	MUX(CLK_TOP_PADMCLK_SEL, "padmclk_sel", padmclk_parents, 0x0100, 0, 3),
-+
-+	MUX(CLK_TOP_AUD_MUX1_SEL, "aud_mux1_sel", aud_mux_parents, 0x012c, 0, 3),
-+	MUX(CLK_TOP_AUD_MUX2_SEL, "aud_mux2_sel", aud_mux_parents, 0x012c, 3, 3),
-+	MUX(CLK_TOP_AUDPLL_MUX_SEL, "audpll_sel", aud_mux_parents, 0x012c, 6, 3),
-+	MUX_GATE(CLK_TOP_AUD_K1_SRC_SEL, "aud_k1_src_sel", aud_src_parents, 0x012c, 15, 1, 23),
-+	MUX_GATE(CLK_TOP_AUD_K2_SRC_SEL, "aud_k2_src_sel", aud_src_parents, 0x012c, 16, 1, 24),
-+	MUX_GATE(CLK_TOP_AUD_K3_SRC_SEL, "aud_k3_src_sel", aud_src_parents, 0x012c, 17, 1, 25),
-+	MUX_GATE(CLK_TOP_AUD_K4_SRC_SEL, "aud_k4_src_sel", aud_src_parents, 0x012c, 18, 1, 26),
-+	MUX_GATE(CLK_TOP_AUD_K5_SRC_SEL, "aud_k5_src_sel", aud_src_parents, 0x012c, 19, 1, 27),
-+	MUX_GATE(CLK_TOP_AUD_K6_SRC_SEL, "aud_k6_src_sel", aud_src_parents, 0x012c, 20, 1, 28),
-+};
-+
-+static const struct mtk_clk_divider top_adj_divs[] __initconst = {
-+	DIV_ADJ(CLK_TOP_AUD_EXTCK1_DIV, "audio_ext1_ck", "aud_ext_ck1", 0x0120, 0, 8),
-+	DIV_ADJ(CLK_TOP_AUD_EXTCK2_DIV, "audio_ext2_ck", "aud_ext_ck2", 0x0120, 8, 8),
-+	DIV_ADJ(CLK_TOP_AUD_MUX1_DIV, "aud_mux1_div", "aud_mux1_sel", 0x0120, 16, 8),
-+	DIV_ADJ(CLK_TOP_AUD_MUX2_DIV, "aud_mux2_div", "aud_mux2_sel", 0x0120, 24, 8),
-+	DIV_ADJ(CLK_TOP_AUD_K1_SRC_DIV, "aud_k1_src_div", "aud_k1_src_sel", 0x0124, 0, 8),
-+	DIV_ADJ(CLK_TOP_AUD_K2_SRC_DIV, "aud_k2_src_div", "aud_k2_src_sel", 0x0124, 8, 8),
-+	DIV_ADJ(CLK_TOP_AUD_K3_SRC_DIV, "aud_k3_src_div", "aud_k3_src_sel", 0x0124, 16, 8),
-+	DIV_ADJ(CLK_TOP_AUD_K4_SRC_DIV, "aud_k4_src_div", "aud_k4_src_sel", 0x0124, 24, 8),
-+	DIV_ADJ(CLK_TOP_AUD_K5_SRC_DIV, "aud_k5_src_div", "aud_k5_src_sel", 0x0128, 0, 8),
-+	DIV_ADJ(CLK_TOP_AUD_K6_SRC_DIV, "aud_k6_src_div", "aud_k6_src_sel", 0x0128, 8, 8),
-+};
-+
-+static const struct mtk_gate_regs top_aud_cg_regs __initconst = {
-+	.sta_ofs = 0x012C,
-+};
-+
-+#define GATE_TOP_AUD(_id, _name, _parent, _shift) {	\
-+		.id = _id,				\
-+		.name = _name,				\
-+		.parent_name = _parent,			\
-+		.regs = &top_aud_cg_regs,		\
-+		.shift = _shift,			\
-+		.ops = &mtk_clk_gate_ops_no_setclr,	\
-+	}
-+
-+static const struct mtk_gate top_clks[] __initconst = {
-+	GATE_TOP_AUD(CLK_TOP_AUD_48K_TIMING, "a1sys_hp_ck", "aud_mux1_div", 21),
-+	GATE_TOP_AUD(CLK_TOP_AUD_44K_TIMING, "a2sys_hp_ck", "aud_mux2_div", 22),
-+	GATE_TOP_AUD(CLK_TOP_AUD_I2S1_MCLK, "aud_i2s1_mclk", "aud_k1_src_div", 23),
-+	GATE_TOP_AUD(CLK_TOP_AUD_I2S2_MCLK, "aud_i2s2_mclk", "aud_k2_src_div", 24),
-+	GATE_TOP_AUD(CLK_TOP_AUD_I2S3_MCLK, "aud_i2s3_mclk", "aud_k3_src_div", 25),
-+	GATE_TOP_AUD(CLK_TOP_AUD_I2S4_MCLK, "aud_i2s4_mclk", "aud_k4_src_div", 26),
-+	GATE_TOP_AUD(CLK_TOP_AUD_I2S5_MCLK, "aud_i2s5_mclk", "aud_k5_src_div", 27),
-+	GATE_TOP_AUD(CLK_TOP_AUD_I2S6_MCLK, "aud_i2s6_mclk", "aud_k6_src_div", 28),
-+};
-+
-+static void __init mtk_topckgen_init(struct device_node *node)
-+{
-+	struct clk_onecell_data *clk_data;
-+	void __iomem *base;
-+	int r;
-+
-+	base = of_iomap(node, 0);
-+	if (!base) {
-+		pr_err("%s(): ioremap failed\n", __func__);
-+		return;
-+	}
-+
-+	clk_data = mtk_alloc_clk_data(CLK_TOP_NR);
-+
-+	mtk_clk_register_fixed_clks(top_fixed_clks, ARRAY_SIZE(top_fixed_clks),
-+								clk_data);
-+
-+	mtk_clk_register_factors(top_fixed_divs, ARRAY_SIZE(top_fixed_divs),
-+								clk_data);
-+
-+	mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes),
-+				base, &lock, clk_data);
-+
-+	mtk_clk_register_dividers(top_adj_divs, ARRAY_SIZE(top_adj_divs),
-+				base, &lock, clk_data);
-+
-+	mtk_clk_register_gates(node, top_clks, ARRAY_SIZE(top_clks),
-+						clk_data);
-+
-+	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+	if (r)
-+		pr_err("%s(): could not register clock provider: %d\n",
-+			__func__, r);
-+}
-+CLK_OF_DECLARE(mtk_topckgen, "mediatek,mt2701-topckgen", mtk_topckgen_init);
-+
-+static const struct mtk_gate_regs infra_cg_regs __initconst = {
-+	.set_ofs = 0x0040,
-+	.clr_ofs = 0x0044,
-+	.sta_ofs = 0x0048,
-+};
-+
-+#define GATE_ICG(_id, _name, _parent, _shift) {		\
-+		.id = _id,				\
-+		.name = _name,				\
-+		.parent_name = _parent,			\
-+		.regs = &infra_cg_regs,			\
-+		.shift = _shift,			\
-+		.ops = &mtk_clk_gate_ops_setclr,	\
-+	}
-+
-+static const struct mtk_gate infra_clks[] __initconst = {
-+	GATE_ICG(CLK_INFRA_DBG, "dbgclk", "axi_sel", 0),
-+	GATE_ICG(CLK_INFRA_SMI, "smi_ck", "mm_sel", 1),
-+	GATE_ICG(CLK_INFRA_QAXI_CM4, "cm4_ck", "axi_sel", 2),
-+	GATE_ICG(CLK_INFRA_AUD_SPLIN_B, "audio_splin_bck", "hadds2_294m_ck", 4),
-+	GATE_ICG(CLK_INFRA_AUDIO, "audio_ck", "clk_null", 5),
-+	GATE_ICG(CLK_INFRA_EFUSE, "efuse_ck", "clk26m", 6),
-+	GATE_ICG(CLK_INFRA_L2C_SRAM, "l2c_sram_ck", "mm_sel", 7),
-+	GATE_ICG(CLK_INFRA_M4U, "m4u_ck", "mem_sel", 8),
-+	GATE_ICG(CLK_INFRA_CONNMCU, "connsys_bus", "wbg_dig_ck_416m", 12),
-+	GATE_ICG(CLK_INFRA_TRNG, "trng_ck", "axi_sel", 13),
-+	GATE_ICG(CLK_INFRA_RAMBUFIF, "rambufif_ck", "mem_sel", 14),
-+	GATE_ICG(CLK_INFRA_CPUM, "cpum_ck", "mem_sel", 15),
-+	GATE_ICG(CLK_INFRA_KP, "kp_ck", "axi_sel", 16),
-+	GATE_ICG(CLK_INFRA_CEC, "cec_ck", "rtc_sel", 18),
-+	GATE_ICG(CLK_INFRA_IRRX, "irrx_ck", "axi_sel", 19),
-+	GATE_ICG(CLK_INFRA_PMICSPI, "pmicspi_ck", "pmicspi_sel", 22),
-+	GATE_ICG(CLK_INFRA_PMICWRAP, "pmicwrap_ck", "axi_sel", 23),
-+	GATE_ICG(CLK_INFRA_DDCCI, "ddcci_ck", "axi_sel", 24),
-+};
-+
-+static const struct mtk_fixed_factor infra_fixed_divs[] __initconst = {
-+	FACTOR(CLK_INFRA_CLK_13M, "clk13m", "clk26m", 1, 2),
-+};
-+
-+static void __init mtk_infrasys_init(struct device_node *node)
-+{
-+	struct clk_onecell_data *clk_data;
-+	int r;
-+
-+	clk_data = mtk_alloc_clk_data(CLK_INFRA_NR);
-+
-+	mtk_clk_register_gates(node, infra_clks, ARRAY_SIZE(infra_clks),
-+						clk_data);
-+	mtk_clk_register_factors(infra_fixed_divs, ARRAY_SIZE(infra_fixed_divs),
-+						clk_data);
-+
-+	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+	if (r)
-+		pr_err("%s(): could not register clock provider: %d\n",
-+			__func__, r);
-+}
-+CLK_OF_DECLARE(mtk_infrasys, "mediatek,mt2701-infracfg", mtk_infrasys_init);
-+
-+static const struct mtk_gate_regs peri0_cg_regs __initconst = {
-+	.set_ofs = 0x0008,
-+	.clr_ofs = 0x0010,
-+	.sta_ofs = 0x0018,
-+};
-+
-+static const struct mtk_gate_regs peri1_cg_regs __initconst = {
-+	.set_ofs = 0x000c,
-+	.clr_ofs = 0x0014,
-+	.sta_ofs = 0x001c,
-+};
-+
-+#define GATE_PERI0(_id, _name, _parent, _shift) {	\
-+		.id = _id,				\
-+		.name = _name,				\
-+		.parent_name = _parent,			\
-+		.regs = &peri0_cg_regs,			\
-+		.shift = _shift,			\
-+		.ops = &mtk_clk_gate_ops_setclr,	\
-+	}
-+
-+#define GATE_PERI1(_id, _name, _parent, _shift) {	\
-+		.id = _id,				\
-+		.name = _name,				\
-+		.parent_name = _parent,			\
-+		.regs = &peri1_cg_regs,			\
-+		.shift = _shift,			\
-+		.ops = &mtk_clk_gate_ops_setclr,	\
-+	}
-+
-+static const struct mtk_gate peri_clks[] __initconst = {
-+	GATE_PERI1(CLK_PERI_USB0_MCU, "usb0_mcu_ck", "axi_sel", 31),
-+	GATE_PERI1(CLK_PERI_ETH, "eth_ck", "clk26m", 30),
-+	GATE_PERI1(CLK_PERI_SPI0, "spi0_ck", "spi0_sel", 29),
-+	GATE_PERI1(CLK_PERI_AUXADC, "auxadc_ck", "clk26m", 28),
-+	GATE_PERI0(CLK_PERI_I2C3, "i2c3_ck", "clk26m", 27),
-+	GATE_PERI0(CLK_PERI_I2C2, "i2c2_ck", "axi_sel", 26),
-+	GATE_PERI0(CLK_PERI_I2C1, "i2c1_ck", "axi_sel", 25),
-+	GATE_PERI0(CLK_PERI_I2C0, "i2c0_ck", "axi_sel", 24),
-+	GATE_PERI0(CLK_PERI_BTIF, "bitif_ck", "axi_sel", 23),
-+	GATE_PERI0(CLK_PERI_UART3, "uart3_ck", "axi_sel", 22),
-+	GATE_PERI0(CLK_PERI_UART2, "uart2_ck", "axi_sel", 21),
-+	GATE_PERI0(CLK_PERI_UART1, "uart1_ck", "axi_sel", 20),
-+	GATE_PERI0(CLK_PERI_UART0, "uart0_ck", "axi_sel", 19),
-+	GATE_PERI0(CLK_PERI_NLI, "nli_ck", "axi_sel", 18),
-+	GATE_PERI0(CLK_PERI_MSDC50_3, "msdc50_3_ck", "emmc_hclk_sel", 17),
-+	GATE_PERI0(CLK_PERI_MSDC30_3, "msdc30_3_ck", "msdc30_3_sel", 16),
-+	GATE_PERI0(CLK_PERI_MSDC30_2, "msdc30_2_ck", "msdc30_2_sel", 15),
-+	GATE_PERI0(CLK_PERI_MSDC30_1, "msdc30_1_ck", "msdc30_1_sel", 14),
-+	GATE_PERI0(CLK_PERI_MSDC30_0, "msdc30_0_ck", "msdc30_0_sel", 13),
-+	GATE_PERI0(CLK_PERI_AP_DMA, "ap_dma_ck", "axi_sel", 12),
-+	GATE_PERI0(CLK_PERI_USB1, "usb1_ck", "usb20_sel", 11),
-+	GATE_PERI0(CLK_PERI_USB0, "usb0_ck", "usb20_sel", 10),
-+	GATE_PERI0(CLK_PERI_PWM, "pwm_ck", "axi_sel", 9),
-+	GATE_PERI0(CLK_PERI_PWM7, "pwm7_ck", "axi_sel", 8),
-+	GATE_PERI0(CLK_PERI_PWM6, "pwm6_ck", "axi_sel", 7),
-+	GATE_PERI0(CLK_PERI_PWM5, "pwm5_ck", "axi_sel", 6),
-+	GATE_PERI0(CLK_PERI_PWM4, "pwm4_ck", "axi_sel", 5),
-+	GATE_PERI0(CLK_PERI_PWM3, "pwm3_ck", "axi_sel", 4),
-+	GATE_PERI0(CLK_PERI_PWM2, "pwm2_ck", "axi_sel", 3),
-+	GATE_PERI0(CLK_PERI_PWM1, "pwm1_ck", "axi_sel", 2),
-+	GATE_PERI0(CLK_PERI_THERM, "therm_ck", "axi_sel", 1),
-+	GATE_PERI0(CLK_PERI_NFI, "nfi_ck", "nfi2x_sel", 0),
-+
-+	GATE_PERI1(CLK_PERI_FCI, "fci_ck", "ms_card", 11),
-+	GATE_PERI1(CLK_PERI_SPI2, "spi2_ck", "spi2_sel", 10),
-+	GATE_PERI1(CLK_PERI_SPI1, "spi1_ck", "spi1_sel", 9),
-+	GATE_PERI1(CLK_PERI_HOST89_DVD, "host89_dvd_ck", "aud2dvd_sel", 8),
-+	GATE_PERI1(CLK_PERI_HOST89_SPI, "host89_spi_ck", "spi0_sel", 7),
-+	GATE_PERI1(CLK_PERI_HOST89_INT, "host89_int_ck", "axi_sel", 6),
-+	GATE_PERI1(CLK_PERI_FLASH, "flash_ck", "nfi2x_sel", 5),
-+	GATE_PERI1(CLK_PERI_NFI_PAD, "nfi_pad_ck", "nfi_sel", 4),
-+	GATE_PERI1(CLK_PERI_NFI_ECC, "nfi_ecc_ck", "nfi_sel", 3),
-+	GATE_PERI1(CLK_PERI_GCPU, "gcpu_ck", "axi_sel", 2),
-+	GATE_PERI1(CLK_PERI_USB_SLV, "usbslv_ck", "axi_sel", 1),
-+	GATE_PERI1(CLK_PERI_USB1_MCU, "usb1_mcu_ck", "axi_sel", 0),
-+};
-+
-+static const char * const uart_ck_sel_parents[] __initconst = {
-+	"clk26m",
-+	"uart_sel",
-+};
-+
-+static const struct mtk_composite peri_muxs[] __initconst = {
-+	MUX(CLK_PERI_UART0_SEL, "uart0_ck_sel", uart_ck_sel_parents, 0x40c, 0, 1),
-+	MUX(CLK_PERI_UART1_SEL, "uart1_ck_sel", uart_ck_sel_parents, 0x40c, 1, 1),
-+	MUX(CLK_PERI_UART2_SEL, "uart2_ck_sel", uart_ck_sel_parents, 0x40c, 2, 1),
-+	MUX(CLK_PERI_UART3_SEL, "uart3_ck_sel", uart_ck_sel_parents, 0x40c, 3, 1),
-+};
-+
-+static void __init mtk_pericfg_init(struct device_node *node)
-+{
-+	struct clk_onecell_data *clk_data;
-+	void __iomem *base;
-+	int r;
-+
-+	base = of_iomap(node, 0);
-+	if (!base) {
-+		pr_err("%s(): ioremap failed\n", __func__);
-+		return;
-+	}
-+
-+	clk_data = mtk_alloc_clk_data(CLK_PERI_NR);
-+
-+	mtk_clk_register_gates(node, peri_clks, ARRAY_SIZE(peri_clks),
-+						clk_data);
-+
-+	mtk_clk_register_composites(peri_muxs, ARRAY_SIZE(peri_muxs), base,
-+			&lock, clk_data);
-+
-+	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+	if (r)
-+		pr_err("%s(): could not register clock provider: %d\n",
-+			__func__, r);
-+}
-+CLK_OF_DECLARE(mtk_pericfg, "mediatek,mt2701-pericfg", mtk_pericfg_init);
-+
-+static const struct mtk_gate_regs disp0_cg_regs __initconst = {
-+	.set_ofs = 0x0104,
-+	.clr_ofs = 0x0108,
-+	.sta_ofs = 0x0100,
-+};
-+
-+static const struct mtk_gate_regs disp1_cg_regs __initconst = {
-+	.set_ofs = 0x0114,
-+	.clr_ofs = 0x0118,
-+	.sta_ofs = 0x0110,
-+};
-+
-+#define GATE_DISP0(_id, _name, _parent, _shift) {	\
-+		.id = _id,				\
-+		.name = _name,				\
-+		.parent_name = _parent,			\
-+		.regs = &disp0_cg_regs,			\
-+		.shift = _shift,			\
-+		.ops = &mtk_clk_gate_ops_setclr,	\
-+	}
-+
-+#define GATE_DISP1(_id, _name, _parent, _shift) {	\
-+		.id = _id,				\
-+		.name = _name,				\
-+		.parent_name = _parent,			\
-+		.regs = &disp1_cg_regs,			\
-+		.shift = _shift,			\
-+		.ops = &mtk_clk_gate_ops_setclr,	\
-+	}
-+
-+static const struct mtk_gate mm_clks[] __initconst = {
-+	GATE_DISP0(CLK_MM_SMI_COMMON, "mm_smi_comm", "mm_sel", 0),
-+	GATE_DISP0(CLK_MM_SMI_LARB0, "mm_smi_larb0", "mm_sel", 1),
-+	GATE_DISP0(CLK_MM_CMDQ, "mm_cmdq", "mm_sel", 2),
-+	GATE_DISP0(CLK_MM_MUTEX, "mm_mutex", "mm_sel", 3),
-+	GATE_DISP0(CLK_MM_DISP_COLOR, "mm_disp_color", "mm_sel", 4),
-+	GATE_DISP0(CLK_MM_DISP_BLS, "mm_disp_bls", "mm_sel", 5),
-+	GATE_DISP0(CLK_MM_DISP_WDMA, "mm_disp_wdma", "mm_sel", 6),
-+	GATE_DISP0(CLK_MM_DISP_RDMA, "mm_disp_rdma", "mm_sel", 7),
-+	GATE_DISP0(CLK_MM_DISP_OVL, "mm_disp_ovl", "mm_sel", 8),
-+	GATE_DISP0(CLK_MM_MDP_TDSHP, "mm_mdp_tdshp", "mm_sel", 9),
-+	GATE_DISP0(CLK_MM_MDP_WROT, "mm_mdp_wrot", "mm_sel", 10),
-+	GATE_DISP0(CLK_MM_MDP_WDMA, "mm_mdp_wdma", "mm_sel", 11),
-+	GATE_DISP0(CLK_MM_MDP_RSZ1, "mm_mdp_rsz1", "mm_sel", 12),
-+	GATE_DISP0(CLK_MM_MDP_RSZ0, "mm_mdp_rsz0", "mm_sel", 13),
-+	GATE_DISP0(CLK_MM_MDP_RDMA, "mm_mdp_rdma", "mm_sel", 14),
-+	GATE_DISP0(CLK_MM_MDP_BLS_26M, "mm_mdp_bls_26m", "clk26m", 15),
-+	GATE_DISP0(CLK_MM_CAM_MDP, "mm_cam_mdp", "mm_sel", 16),
-+	GATE_DISP0(CLK_MM_FAKE_ENG, "mm_fake_eng", "mm_sel", 17),
-+	GATE_DISP0(CLK_MM_MUTEX_32K, "mm_mutex_32k", "rtc_sel", 18),
-+	GATE_DISP0(CLK_MM_DISP_RDMA1, "mm_disp_rdma1", "mm_sel", 19),
-+	GATE_DISP0(CLK_MM_DISP_UFOE, "mm_disp_ufoe", "mm_sel", 20),
-+	GATE_DISP1(CLK_MM_DSI_ENGINE, "mm_dsi_eng", "mm_sel", 0),
-+	GATE_DISP1(CLK_MM_DSI_DIG, "mm_dsi_dig", "dsio_lntc_dsiclk", 1),
-+	GATE_DISP1(CLK_MM_DPI_DIGL, "mm_dpi_digl", "dpi0_sel", 2),
-+	GATE_DISP1(CLK_MM_DPI_ENGINE, "mm_dpi_eng", "mm_sel", 3),
-+	GATE_DISP1(CLK_MM_DPI1_DIGL, "mm_dpi1_digl", "dpi1_sel", 4),
-+	GATE_DISP1(CLK_MM_DPI1_ENGINE, "mm_dpi1_eng", "mm_sel", 5),
-+	GATE_DISP1(CLK_MM_TVE_OUTPUT, "mm_tve_output", "tve_sel", 6),
-+	GATE_DISP1(CLK_MM_TVE_INPUT, "mm_tve_input", "dpi0_sel", 7),
-+	GATE_DISP1(CLK_MM_HDMI_PIXEL, "mm_hdmi_pixel", "dpi1_sel", 8),
-+	GATE_DISP1(CLK_MM_HDMI_PLL, "mm_hdmi_pll", "hdmi_sel", 9),
-+	GATE_DISP1(CLK_MM_HDMI_AUDIO, "mm_hdmi_audio", "apll_sel", 10),
-+	GATE_DISP1(CLK_MM_HDMI_SPDIF, "mm_hdmi_spdif", "apll_sel", 11),
-+	GATE_DISP1(CLK_MM_TVE_FMM, "mm_tve_fmm", "mm_sel", 14),
-+};
-+
-+static void __init mtk_mmsys_init(struct device_node *node)
-+{
-+	struct clk_onecell_data *clk_data;
-+	int r;
-+
-+	clk_data = mtk_alloc_clk_data(CLK_MM_NR);
-+
-+	mtk_clk_register_gates(node, mm_clks, ARRAY_SIZE(mm_clks),
-+						clk_data);
-+
-+	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+	if (r)
-+		pr_err("%s(): could not register clock provider: %d\n",
-+			__func__, r);
-+}
-+CLK_OF_DECLARE(mtk_mmsys, "mediatek,mt2701-mmsys", mtk_mmsys_init);
-+
-+static const struct mtk_gate_regs img_cg_regs __initconst = {
-+	.set_ofs = 0x0004,
-+	.clr_ofs = 0x0008,
-+	.sta_ofs = 0x0000,
-+};
-+
-+#define GATE_IMG(_id, _name, _parent, _shift) {		\
-+		.id = _id,				\
-+		.name = _name,				\
-+		.parent_name = _parent,			\
-+		.regs = &img_cg_regs,			\
-+		.shift = _shift,			\
-+		.ops = &mtk_clk_gate_ops_setclr,	\
-+	}
-+
-+static const struct mtk_gate img_clks[] __initconst = {
-+	GATE_IMG(CLK_IMG_SMI_COMM, "img_smi_comm", "mm_sel", 0),
-+	GATE_IMG(CLK_IMG_RESZ, "img_resz", "mm_sel", 1),
-+	GATE_IMG(CLK_IMG_JPGDEC, "img_jpgdec", "mm_sel", 5),
-+	GATE_IMG(CLK_IMG_VENC_LT, "img_venc_lt", "mm_sel", 8),
-+	GATE_IMG(CLK_IMG_VENC, "img_venc", "mm_sel", 9),
-+};
-+
-+static void __init mtk_imgsys_init(struct device_node *node)
-+{
-+	struct clk_onecell_data *clk_data;
-+	int r;
-+
-+	clk_data = mtk_alloc_clk_data(CLK_IMG_NR);
-+
-+	mtk_clk_register_gates(node, img_clks, ARRAY_SIZE(img_clks),
-+						clk_data);
-+
-+	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+	if (r)
-+		pr_err("%s(): could not register clock provider: %d\n",
-+			__func__, r);
-+}
-+CLK_OF_DECLARE(mtk_imgsys, "mediatek,mt2701-imgsys", mtk_imgsys_init);
-+
-+static const struct mtk_gate_regs vdec0_cg_regs __initconst = {
-+	.set_ofs = 0x0000,
-+	.clr_ofs = 0x0004,
-+	.sta_ofs = 0x0000,
-+};
-+
-+static const struct mtk_gate_regs vdec1_cg_regs __initconst = {
-+	.set_ofs = 0x0008,
-+	.clr_ofs = 0x000c,
-+	.sta_ofs = 0x0008,
-+};
-+
-+#define GATE_VDEC0(_id, _name, _parent, _shift) {	\
-+		.id = _id,				\
-+		.name = _name,				\
-+		.parent_name = _parent,			\
-+		.regs = &vdec0_cg_regs,			\
-+		.shift = _shift,			\
-+		.ops = &mtk_clk_gate_ops_setclr_inv,	\
-+	}
-+
-+#define GATE_VDEC1(_id, _name, _parent, _shift) {	\
-+		.id = _id,				\
-+		.name = _name,				\
-+		.parent_name = _parent,			\
-+		.regs = &vdec1_cg_regs,			\
-+		.shift = _shift,			\
-+		.ops = &mtk_clk_gate_ops_setclr_inv,	\
-+	}
-+
-+static const struct mtk_gate vdec_clks[] __initconst = {
-+	GATE_VDEC0(CLK_VDEC_CKGEN, "vdec_cken", "vdec_sel", 0),
-+	GATE_VDEC1(CLK_VDEC_LARB, "vdec_larb_cken", "mm_sel", 0),
-+};
-+
-+static void __init mtk_vdecsys_init(struct device_node *node)
-+{
-+	struct clk_onecell_data *clk_data;
-+	int r;
-+
-+	clk_data = mtk_alloc_clk_data(CLK_VDEC_NR);
-+
-+	mtk_clk_register_gates(node, vdec_clks, ARRAY_SIZE(vdec_clks),
-+						clk_data);
-+
-+	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+	if (r)
-+		pr_err("%s(): could not register clock provider: %d\n",
-+			__func__, r);
-+}
-+CLK_OF_DECLARE(mtk_vdecsys, "mediatek,mt2701-vdecsys", mtk_vdecsys_init);
-+
-+static const struct mtk_gate_regs hif_cg_regs __initconst = {
-+	.sta_ofs = 0x0008,
-+};
-+
-+#define GATE_HIF(_id, _name, _parent, _shift) {		\
-+		.id = _id,				\
-+		.name = _name,				\
-+		.parent_name = _parent,			\
-+		.regs = &hif_cg_regs,			\
-+		.shift = _shift,			\
-+		.ops = &mtk_clk_gate_ops_no_setclr_inv,	\
-+	}
-+
-+static const struct mtk_gate hif_clks[] __initconst = {
-+	GATE_HIF(CLK_HIFSYS_USB0PHY, "usb0_phy_clk", "ethpll_500m_ck", 21),
-+	GATE_HIF(CLK_HIFSYS_USB1PHY, "usb1_phy_clk", "ethpll_500m_ck", 22),
-+	GATE_HIF(CLK_HIFSYS_PCIE0, "pcie0_clk", "ethpll_500m_ck", 24),
-+	GATE_HIF(CLK_HIFSYS_PCIE1, "pcie1_clk", "ethpll_500m_ck", 25),
-+	GATE_HIF(CLK_HIFSYS_PCIE2, "pcie2_clk", "ethpll_500m_ck", 26),
-+};
-+
-+static void __init mtk_hifsys_init(struct device_node *node)
-+{
-+	struct clk_onecell_data *clk_data;
-+	int r;
-+
-+	clk_data = mtk_alloc_clk_data(CLK_HIFSYS_NR);
-+
-+	mtk_clk_register_gates(node, hif_clks, ARRAY_SIZE(hif_clks),
-+						clk_data);
-+
-+	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+	if (r)
-+		pr_err("%s(): could not register clock provider: %d\n",
-+			__func__, r);
-+}
-+CLK_OF_DECLARE(mtk_hifsys, "mediatek,mt2701-hifsys", mtk_hifsys_init);
-+
-+static const struct mtk_gate_regs eth_cg_regs __initconst = {
-+	.sta_ofs = 0x0030,
-+};
-+
-+#define GATE_eth(_id, _name, _parent, _shift) {		\
-+		.id = _id,				\
-+		.name = _name,				\
-+		.parent_name = _parent,			\
-+		.regs = &eth_cg_regs,			\
-+		.shift = _shift,			\
-+		.ops = &mtk_clk_gate_ops_no_setclr_inv,	\
-+	}
-+
-+static const struct mtk_gate eth_clks[] __initconst = {
-+	GATE_HIF(CLK_ETHSYS_HSDMA, "hsdma_clk", "ethif_sel", 5),
-+	GATE_HIF(CLK_ETHSYS_ESW, "esw_clk", "ethpll_500m_ck", 6),
-+	GATE_HIF(CLK_ETHSYS_GP2, "gp2_clk", "trgpll", 7),
-+	GATE_HIF(CLK_ETHSYS_GP1, "gp1_clk", "ethpll_500m_ck", 8),
-+	GATE_HIF(CLK_ETHSYS_PCM, "pcm_clk", "ethif_sel", 11),
-+	GATE_HIF(CLK_ETHSYS_GDMA, "gdma_clk", "ethif_sel", 14),
-+	GATE_HIF(CLK_ETHSYS_I2S, "i2s_clk", "ethif_sel", 17),
-+	GATE_HIF(CLK_ETHSYS_CRYPTO, "crypto_clk", "ethif_sel", 29),
-+};
-+
-+static void __init mtk_ethsys_init(struct device_node *node)
-+{
-+	struct clk_onecell_data *clk_data;
-+	int r;
-+
-+	clk_data = mtk_alloc_clk_data(CLK_ETHSYS_NR);
-+
-+	mtk_clk_register_gates(node, eth_clks, ARRAY_SIZE(eth_clks),
-+						clk_data);
-+
-+	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+	if (r)
-+		pr_err("%s(): could not register clock provider: %d\n",
-+			__func__, r);
-+}
-+CLK_OF_DECLARE(mtk_ethsys, "mediatek,mt2701-ethsys", mtk_ethsys_init);
-+
-+static const struct mtk_gate_regs bdp0_cg_regs __initconst = {
-+	.set_ofs = 0x0104,
-+	.clr_ofs = 0x0108,
-+	.sta_ofs = 0x0100,
-+};
-+
-+static const struct mtk_gate_regs bdp1_cg_regs __initconst = {
-+	.set_ofs = 0x0114,
-+	.clr_ofs = 0x0118,
-+	.sta_ofs = 0x0110,
-+};
-+
-+#define GATE_BDP0(_id, _name, _parent, _shift) {	\
-+		.id = _id,				\
-+		.name = _name,				\
-+		.parent_name = _parent,			\
-+		.regs = &bdp0_cg_regs,			\
-+		.shift = _shift,			\
-+		.ops = &mtk_clk_gate_ops_setclr_inv,	\
-+	}
-+
-+#define GATE_BDP1(_id, _name, _parent, _shift) {	\
-+		.id = _id,				\
-+		.name = _name,				\
-+		.parent_name = _parent,			\
-+		.regs = &bdp1_cg_regs,			\
-+		.shift = _shift,			\
-+		.ops = &mtk_clk_gate_ops_setclr_inv,	\
-+	}
-+
-+static const struct mtk_gate bdp_clks[] __initconst = {
-+	GATE_BDP0(CLK_BDP_BRG_BA, "brg_baclk", "mm_sel", 0),
-+	GATE_BDP0(CLK_BDP_BRG_DRAM, "brg_dram", "mm_sel", 1),
-+	GATE_BDP0(CLK_BDP_LARB_DRAM, "larb_dram", "mm_sel", 2),
-+	GATE_BDP0(CLK_BDP_WR_VDI_PXL, "wr_vdi_pxl", "hdmi_0_deep340m", 3),
-+	GATE_BDP0(CLK_BDP_WR_VDI_DRAM, "wr_vdi_dram", "mm_sel", 4),
-+	GATE_BDP0(CLK_BDP_WR_B, "wr_bclk", "mm_sel", 5),
-+	GATE_BDP0(CLK_BDP_DGI_IN, "dgi_in", "dpi1_sel", 6),
-+	GATE_BDP0(CLK_BDP_DGI_OUT, "dgi_out", "dpi_sel", 7),
-+	GATE_BDP0(CLK_BDP_FMT_MAST_27, "fmt_mast_27", "dpi1_sel", 8),
-+	GATE_BDP0(CLK_BDP_FMT_B, "fmt_bclk", "mm_sel", 9),
-+	GATE_BDP0(CLK_BDP_OSD_B, "osd_bclk", "mm_sel", 10),
-+	GATE_BDP0(CLK_BDP_OSD_DRAM, "osd_dram", "mm_sel", 11),
-+	GATE_BDP0(CLK_BDP_OSD_AGENT, "osd_agent", "osd_sel", 12),
-+	GATE_BDP0(CLK_BDP_OSD_PXL, "osd_pxl", "dpi1_sel", 13),
-+	GATE_BDP0(CLK_BDP_RLE_B, "rle_bclk", "mm_sel", 14),
-+	GATE_BDP0(CLK_BDP_RLE_AGENT, "rle_agent", "mm_sel", 15),
-+	GATE_BDP0(CLK_BDP_RLE_DRAM, "rle_dram", "mm_sel", 16),
-+	GATE_BDP0(CLK_BDP_F27M, "f27m", "di_sel", 17),
-+	GATE_BDP0(CLK_BDP_F27M_VDOUT, "f27m_vdout", "di_sel", 18),
-+	GATE_BDP0(CLK_BDP_F27_74_74, "f27_74_74", "di_sel", 19),
-+	GATE_BDP0(CLK_BDP_F2FS, "f2fs", "di_sel", 20),
-+	GATE_BDP0(CLK_BDP_F2FS74_148, "f2fs74_148", "di_sel", 21),
-+	GATE_BDP0(CLK_BDP_FB, "fbclk", "mm_sel", 22),
-+	GATE_BDP0(CLK_BDP_VDO_DRAM, "vdo_dram", "mm_sel", 23),
-+	GATE_BDP0(CLK_BDP_VDO_2FS, "vdo_2fs", "di_sel", 24),
-+	GATE_BDP0(CLK_BDP_VDO_B, "vdo_bclk", "mm_sel", 25),
-+	GATE_BDP0(CLK_BDP_WR_DI_PXL, "wr_di_pxl", "di_sel", 26),
-+	GATE_BDP0(CLK_BDP_WR_DI_DRAM, "wr_di_dram", "mm_sel", 27),
-+	GATE_BDP0(CLK_BDP_WR_DI_B, "wr_di_bclk", "mm_sel", 28),
-+	GATE_BDP0(CLK_BDP_NR_PXL, "nr_pxl", "nr_sel", 29),
-+	GATE_BDP0(CLK_BDP_NR_DRAM, "nr_dram", "mm_sel", 30),
-+	GATE_BDP0(CLK_BDP_NR_B, "nr_bclk", "mm_sel", 31),
-+	GATE_BDP1(CLK_BDP_RX_F, "rx_fclk", "hadds2_fbclk", 0),
-+	GATE_BDP1(CLK_BDP_RX_X, "rx_xclk", "clk26m", 1),
-+	GATE_BDP1(CLK_BDP_RXPDT, "rxpdtclk", "hdmi_0_pix340m", 2),
-+	GATE_BDP1(CLK_BDP_RX_CSCL_N, "rx_cscl_n", "clk26m", 3),
-+	GATE_BDP1(CLK_BDP_RX_CSCL, "rx_cscl", "clk26m", 4),
-+	GATE_BDP1(CLK_BDP_RX_DDCSCL_N, "rx_ddcscl_n", "hdmi_scl_rx", 5),
-+	GATE_BDP1(CLK_BDP_RX_DDCSCL, "rx_ddcscl", "hdmi_scl_rx", 6),
-+	GATE_BDP1(CLK_BDP_RX_VCO, "rx_vcoclk", "hadds2pll_294m", 7),
-+	GATE_BDP1(CLK_BDP_RX_DP, "rx_dpclk", "hdmi_0_pll340m", 8),
-+	GATE_BDP1(CLK_BDP_RX_P, "rx_pclk", "hdmi_0_pll340m", 9),
-+	GATE_BDP1(CLK_BDP_RX_M, "rx_mclk", "hadds2pll_294m", 10),
-+	GATE_BDP1(CLK_BDP_RX_PLL, "rx_pllclk", "hdmi_0_pix340m", 11),
-+	GATE_BDP1(CLK_BDP_BRG_RT_B, "brg_rt_bclk", "mm_sel", 12),
-+	GATE_BDP1(CLK_BDP_BRG_RT_DRAM, "brg_rt_dram", "mm_sel", 13),
-+	GATE_BDP1(CLK_BDP_LARBRT_DRAM, "larbrt_dram", "mm_sel", 14),
-+	GATE_BDP1(CLK_BDP_TMDS_SYN, "tmds_syn", "hdmi_0_pll340m", 15),
-+	GATE_BDP1(CLK_BDP_HDMI_MON, "hdmi_mon", "hdmi_0_mon", 16),
-+};
-+
-+static void __init mtk_bdpsys_init(struct device_node *node)
-+{
-+	struct clk_onecell_data *clk_data;
-+	int r;
-+
-+	clk_data = mtk_alloc_clk_data(CLK_BDP_NR);
-+
-+	mtk_clk_register_gates(node, bdp_clks, ARRAY_SIZE(bdp_clks),
-+						clk_data);
-+
-+	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+	if (r)
-+		pr_err("%s(): could not register clock provider: %d\n",
-+			__func__, r);
-+}
-+CLK_OF_DECLARE(mtk_bdpsys, "mediatek,mt2701-bdpsys", mtk_bdpsys_init);
-+
-+#define MT8590_PLL_FMAX		(2000 * MHZ)
-+#define CON0_MT8590_RST_BAR	BIT(27)
-+
-+#define PLL(_id, _name, _reg, _pwr_reg, _en_mask, _flags, _pcwbits, _pd_reg, \
-+			_pd_shift, _tuner_reg, _pcw_reg, _pcw_shift) {	\
-+		.id = _id,						\
-+		.name = _name,						\
-+		.reg = _reg,						\
-+		.pwr_reg = _pwr_reg,					\
-+		.en_mask = _en_mask,					\
-+		.flags = _flags,					\
-+		.rst_bar_mask = CON0_MT8590_RST_BAR,			\
-+		.fmax = MT8590_PLL_FMAX,				\
-+		.pcwbits = _pcwbits,					\
-+		.pd_reg = _pd_reg,					\
-+		.pd_shift = _pd_shift,					\
-+		.tuner_reg = _tuner_reg,				\
-+		.pcw_reg = _pcw_reg,					\
-+		.pcw_shift = _pcw_shift,				\
-+	}
-+
-+static const struct mtk_pll_data apmixed_plls[] = {
-+	PLL(CLK_APMIXED_ARMPLL, "armpll", 0x200, 0x20c, 0x80000001, 0,
-+				21, 0x204, 24, 0x0, 0x204, 0),
-+	PLL(CLK_APMIXED_MAINPLL, "mainpll", 0x210, 0x21c, 0xf0000001,
-+		  HAVE_RST_BAR, 21, 0x210, 4, 0x0, 0x214, 0),
-+	PLL(CLK_APMIXED_UNIVPLL, "univpll", 0x220, 0x22c, 0xf3000001,
-+		  HAVE_RST_BAR, 7, 0x220, 4, 0x0, 0x224, 14),
-+	PLL(CLK_APMIXED_MMPLL, "mmpll", 0x230, 0x23c, 0x00000001, 0,
-+				21, 0x230, 4, 0x0, 0x234, 0),
-+	PLL(CLK_APMIXED_MSDCPLL, "msdcpll", 0x240, 0x24c, 0x00000001, 0,
-+				21, 0x240, 4, 0x0, 0x244, 0),
-+	PLL(CLK_APMIXED_TVDPLL, "tvdpll", 0x250, 0x25c, 0x00000001, 0,
-+				21, 0x250, 4, 0x0, 0x254, 0),
-+	PLL(CLK_APMIXED_AUD1PLL, "aud1pll", 0x270, 0x27c, 0x00000001, 0,
-+				31, 0x270, 4, 0x0, 0x274, 0),
-+	PLL(CLK_APMIXED_TRGPLL, "trgpll", 0x280, 0x28c, 0x00000001, 0,
-+				31, 0x280, 4, 0x0, 0x284, 0),
-+	PLL(CLK_APMIXED_ETHPLL, "ethpll", 0x290, 0x29c, 0x00000001, 0,
-+				31, 0x290, 4, 0x0, 0x294, 0),
-+	PLL(CLK_APMIXED_VDECPLL, "vdecpll", 0x2a0, 0x2ac, 0x00000001, 0,
-+				31, 0x2a0, 4, 0x0, 0x2a4, 0),
-+	PLL(CLK_APMIXED_HADDS2PLL, "hadds2pll", 0x2b0, 0x2bc, 0x00000001, 0,
-+				31, 0x2b0, 4, 0x0, 0x2b4, 0),
-+	PLL(CLK_APMIXED_AUD2PLL, "aud2pll", 0x2c0, 0x2cc, 0x00000001, 0,
-+				31, 0x2c0, 4, 0x0, 0x2c4, 0),
-+	PLL(CLK_APMIXED_TVD2PLL, "tvd2pll", 0x2d0, 0x2dc, 0x00000001, 0,
-+				21, 0x2d0, 4, 0x0, 0x2d4, 0),
-+};
-+
-+static void __init mtk_apmixedsys_init(struct device_node *node)
-+{
-+	struct clk_onecell_data *clk_data;
-+	int r;
-+
-+	clk_data = mtk_alloc_clk_data(ARRAY_SIZE(apmixed_plls));
-+	if (!clk_data)
-+		return;
-+
-+	mtk_clk_register_plls(node, apmixed_plls, ARRAY_SIZE(apmixed_plls),
-+								clk_data);
-+
-+	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+	if (r)
-+		pr_err("%s(): could not register clock provider: %d\n",
-+			__func__, r);
-+}
-+CLK_OF_DECLARE(mtk_apmixedsys, "mediatek,mt2701-apmixedsys",
-+							mtk_apmixedsys_init);
-diff --git a/drivers/clk/mediatek/clk-mtk.c b/drivers/clk/mediatek/clk-mtk.c
-index cf08db6..be19a41 100644
---- a/drivers/clk/mediatek/clk-mtk.c
-+++ b/drivers/clk/mediatek/clk-mtk.c
-@@ -242,3 +242,28 @@ void __init mtk_clk_register_composites(const struct mtk_composite *mcs,
- 			clk_data->clks[mc->id] = clk;
- 	}
- }
-+
-+void __init mtk_clk_register_dividers(const struct mtk_clk_divider *mcds,
-+			int num, void __iomem *base, spinlock_t *lock,
-+				struct clk_onecell_data *clk_data)
-+{
-+	struct clk *clk;
-+	int i;
-+
-+	for (i = 0; i <  num; i++) {
-+		const struct mtk_clk_divider *mcd = &mcds[i];
-+
-+		clk = clk_register_divider(NULL, mcd->name, mcd->parent_name,
-+			mcd->flags, base +  mcd->div_reg, mcd->div_shift,
-+			mcd->div_width, mcd->clk_divider_flags, lock);
-+
-+		if (IS_ERR(clk)) {
-+			pr_err("Failed to register clk %s: %ld\n",
-+				mcd->name, PTR_ERR(clk));
-+			continue;
-+		}
-+
-+		if (clk_data)
-+			clk_data->clks[mcd->id] = clk;
-+	}
-+}
-diff --git a/drivers/clk/mediatek/clk-mtk.h b/drivers/clk/mediatek/clk-mtk.h
-index 32d2e45..60701e8 100644
---- a/drivers/clk/mediatek/clk-mtk.h
-+++ b/drivers/clk/mediatek/clk-mtk.h
-@@ -110,7 +110,8 @@ struct mtk_composite {
- 		.flags = CLK_SET_RATE_PARENT,				\
- 	}
- 
--#define DIV_GATE(_id, _name, _parent, _gate_reg, _gate_shift, _div_reg, _div_width, _div_shift) {	\
-+#define DIV_GATE(_id, _name, _parent, _gate_reg, _gate_shift, _div_reg,	\
-+					_div_width, _div_shift) {	\
- 		.id = _id,						\
- 		.parent = _parent,					\
- 		.name = _name,						\
-@@ -145,8 +146,36 @@ struct mtk_gate {
- 	const struct clk_ops *ops;
- };
- 
--int mtk_clk_register_gates(struct device_node *node, const struct mtk_gate *clks,
--		int num, struct clk_onecell_data *clk_data);
-+int mtk_clk_register_gates(struct device_node *node,
-+			const struct mtk_gate *clks, int num,
-+			struct clk_onecell_data *clk_data);
-+
-+struct mtk_clk_divider {
-+	int id;
-+	const char *name;
-+	const char *parent_name;
-+	unsigned long flags;
-+
-+	uint32_t div_reg;
-+	unsigned char div_shift;
-+	unsigned char div_width;
-+	unsigned char clk_divider_flags;
-+	const struct clk_div_table *clk_div_table;
-+};
-+
-+#define DIV_ADJ(_id, _name, _parent, _reg, _shift, _width) {	\
-+		.id = _id,					\
-+		.name = _name,					\
-+		.parent_name = _parent,				\
-+		.flags = CLK_SET_RATE_PARENT,			\
-+		.div_reg = _reg,				\
-+		.div_shift = _shift,				\
-+		.div_width = _width,				\
-+}
-+
-+void mtk_clk_register_dividers(const struct mtk_clk_divider *mcds,
-+			int num, void __iomem *base, spinlock_t *lock,
-+				struct clk_onecell_data *clk_data);
- 
- struct clk_onecell_data *mtk_alloc_clk_data(unsigned int clk_num);
- 
--- 
-1.9.1
+It's OK to realize this as a real platform driver. I'll modify it in next version.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+More comments will be appreciated.
+
+Thank you.
+
+Jiancheng
+
+>> diff --git a/drivers/clk/hisilicon/reset.c b/drivers/clk/hisilicon/reset.c
+>> new file mode 100644
+>> index 0000000..cf5c32a
+>> --- /dev/null
+>> +++ b/drivers/clk/hisilicon/reset.c
+>> @@ -0,0 +1,149 @@
+>> +/*
+>> + * Hisilicon Reset Controller driver
+>> + *
+>> + * Copyright (c) 2015 HiSilicon Technologies Co., Ltd.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License
+>> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +
+>> +#include <linux/err.h>
+>> +#include <linux/io.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/reset-controller.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/spinlock.h>
+>> +#include <linux/types.h>
+>> +
+>> +#define        HISI_RESET_BIT_SHIFT    0
+>> +#define        HISI_RESET_BIT_WIDTH    16
+>> +#define        HISI_RESET_OFFSET_SHIFT 16
+>> +#define        HISI_RESET_OFFSET_WIDTH 16
+>> +
+>> +struct hisi_reset_controller {
+>> +       spinlock_t      lock;
+>> +       void __iomem    *membase;
+>> +       struct reset_controller_dev     rcdev;
+>> +};
+>> +
+>> +
+>> +#define to_hisi_reset_controller(rcdev)  \
+>> +       container_of(rcdev, struct hisi_reset_controller, rcdev)
+>> +
+>> +/*31                        16                         0
+>> + * |---reset_spec->args[0]---|---reset_spec->args[1]---|
+>> + * |-------reg_offset--------|--------reg_bit----------|
+>> + */
+>> +static int hisi_reset_of_xlate(struct reset_controller_dev *rcdev,
+>> +                       const struct of_phandle_args *reset_spec)
+>> +{
+>> +       unsigned int offset, bit, id;
+>> +       const __be32 *addr;
+>> +       u64 size;
+>> +
+>> +       if (WARN_ON(reset_spec->args_count != rcdev->of_reset_n_cells))
+>> +               return -EINVAL;
+>> +
+>> +       addr = of_get_address(rcdev->of_node, 0, &size, NULL);
+>> +       if (!addr)
+>> +               return -EINVAL;
+>> +
+>> +       if (reset_spec->args[1] >= 32
+>> +               || reset_spec->args[0] + reset_spec->args[1] / 8 > size)
+>> +               return -EINVAL;
+>> +
+>> +       offset = reset_spec->args[0] & (BIT(HISI_RESET_OFFSET_WIDTH) - 1);
+>> +       bit = (reset_spec->args[1] & (BIT(HISI_RESET_BIT_WIDTH) - 1));
+>> +       id = offset << HISI_RESET_OFFSET_SHIFT | bit;
+>> +
+>> +       return id;
+>> +}
+>> +
+>> +static int hisi_reset_assert(struct reset_controller_dev *rcdev,
+>> +                             unsigned long id)
+>> +{
+>> +       struct hisi_reset_controller *rstc = to_hisi_reset_controller(rcdev);
+>> +       unsigned int offset, bit;
+>> +       unsigned long flags;
+>> +       u32 reg;
+>> +
+>> +       offset = id >> HISI_RESET_OFFSET_SHIFT;
+>> +       offset &= (BIT(HISI_RESET_OFFSET_WIDTH) - 1);
+>> +       bit = id & (BIT(HISI_RESET_BIT_WIDTH) - 1);
+>> +
+>> +       spin_lock_irqsave(&rstc->lock, flags);
+>> +
+>> +       reg = readl(rstc->membase + offset);
+>> +       writel(reg | BIT(bit), rstc->membase + offset);
+>> +
+>> +       spin_unlock_irqrestore(&rstc->lock, flags);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int hisi_reset_deassert(struct reset_controller_dev *rcdev,
+>> +                               unsigned long id)
+>> +{
+>> +       struct hisi_reset_controller *rstc = to_hisi_reset_controller(rcdev);
+>> +       unsigned int offset, bit;
+>> +       unsigned long flags;
+>> +       u32 reg;
+>> +
+>> +       offset = id >> HISI_RESET_OFFSET_SHIFT;
+>> +       offset &= (BIT(HISI_RESET_OFFSET_WIDTH) - 1);
+>> +       bit = id & (BIT(HISI_RESET_BIT_WIDTH) - 1);
+>> +
+>> +       spin_lock_irqsave(&rstc->lock, flags);
+>> +
+>> +       reg = readl(rstc->membase + offset);
+>> +       writel(reg & ~BIT(bit), rstc->membase + offset);
+>> +
+>> +       spin_unlock_irqrestore(&rstc->lock, flags);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static struct reset_control_ops hisi_reset_ops = {
+>> +       .assert         = hisi_reset_assert,
+>> +       .deassert       = hisi_reset_deassert,
+>> +};
+>> +
+>> +int __init hisi_reset_init(struct device_node *np,
+>> +                                            int nr_rsts)
+>> +{
+>> +       struct hisi_reset_controller *rstc;
+>> +
+>> +       rstc = kzalloc(sizeof(*rstc), GFP_KERNEL);
+>> +       if (!rstc)
+>> +               return -ENOMEM;
+>> +
+>> +       rstc->membase = of_iomap(np, 0);
+>> +       if (!rstc->membase)
+>> +               return -EINVAL;
+>> +
+>> +       spin_lock_init(&rstc->lock);
+>> +
+>> +       rstc->rcdev.owner = THIS_MODULE;
+>> +       rstc->rcdev.nr_resets = nr_rsts;
+>> +       rstc->rcdev.ops = &hisi_reset_ops;
+>> +       rstc->rcdev.of_node = np;
+>> +       rstc->rcdev.of_reset_n_cells = 2;
+>> +       rstc->rcdev.of_xlate = hisi_reset_of_xlate;
+>> +
+>> +       return reset_controller_register(&rstc->rcdev);
+>> +}
+>> +
+>> diff --git a/drivers/clk/hisilicon/reset.h b/drivers/clk/hisilicon/reset.h
+>> new file mode 100644
+>> index 0000000..b04796f
+>> --- /dev/null
+>> +++ b/drivers/clk/hisilicon/reset.h
+>> @@ -0,0 +1,32 @@
+>> +/*
+>> + * Copyright (c) 2015 HiSilicon Technologies Co., Ltd.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License
+>> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +
+>> +#ifndef        __HISI_RESET_H
+>> +#define        __HISI_RESET_H
+>> +
+>> +#include <linux/of.h>
+>> +
+>> +#ifdef CONFIG_RESET_CONTROLLER
+>> +int __init hisi_reset_init(struct device_node *np, int nr_rsts);
+>> +#else
+>> +static inline int __init hisi_reset_init(struct device_node *np, int nr_rsts)
+>> +{
+>> +       return 0;
+>> +}
+>> +#endif
+>> +
+>> +#endif /* __HISI_RESET_H */
+>> diff --git a/include/dt-bindings/clock/hi3519-clock.h b/include/dt-bindings/clock/hi3519-clock.h
+>> new file mode 100644
+>> index 0000000..1e4a3c1
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/hi3519-clock.h
+>> @@ -0,0 +1,43 @@
+>> +/*
+>> + * Copyright (c) 2015 HiSilicon Technologies Co., Ltd.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License
+>> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +
+>> +#ifndef __DTS_HI3519_CLOCK_H
+>> +#define __DTS_HI3519_CLOCK_H
+>> +
+>> +#define HI3519_FIXED_3M                        1
+>> +#define HI3519_FMC_CLK                 2
+>> +#define HI3519_USB2_BUS_CLK            3
+>> +#define HI3519_USB2_PORT_CLK           4
+>> +#define HI3519_USB3_CLK                        5
+>> +#define HI3519_ETH_PHY_CLK             6
+>> +#define HI3519_ETH_MAC_CLK             7
+>> +#define HI3519_ETH_MACIF_CLK           8
+>> +#define HI3519_PWM_CLK                 9
+>> +#define HI3519_DMA_CLK                 10
+>> +#define HI3519_SPI0_CLK                        11
+>> +#define HI3519_SPI1_CLK                        12
+>> +#define HI3519_SPI2_CLK                        13
+>> +#define HI3519_IR_CLK                  14
+>> +#define HI3519_UART0_CLK               15
+>> +#define HI3519_UART1_CLK               16
+>> +#define HI3519_UART2_CLK               17
+>> +#define HI3519_UART3_CLK               18
+>> +#define HI3519_UART4_CLK               19
+>> +
+>> +#define HI3519_EXT_CLKS                        19
+>> +
+>> +#endif /* __DTS_HI3519_CLOCK_H */
+>> -- 
+>> 1.9.1
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Please read the FAQ at  http://www.tux.org/lkml/
+> 
+> .
+> 
+
