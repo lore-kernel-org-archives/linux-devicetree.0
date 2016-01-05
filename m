@@ -1,93 +1,111 @@
-From: Chengxiang Jiao <CJiao@ANALOGIXSEMI.COM>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIdjcgMC81XSBBZGQgaW5pdGlhbCBzdXBwb3J0IGZvciBz?=
- =?gb2312?Q?limport_anx78xx?=
-Date: Tue, 5 Jan 2016 08:54:18 +0000
-Message-ID: <CY1PR04MB17999901095C939C7F2E28F4D2F30@CY1PR04MB1799.namprd04.prod.outlook.com>
-References: <1451857068-23750-1-git-send-email-enric.balletbo@collabora.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] clk: mediatek: Add MT2701 clock support
+Date: Tue, 05 Jan 2016 10:30:01 +0100
+Message-ID: <1451986201.3391.3.camel@pengutronix.de>
+References: <1451975422-31174-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <1451975422-31174-5-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1451857068-23750-1-git-send-email-enric.balletbo@collabora.com>
-Content-Language: zh-CN
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Enric Balletbo i Serra <eballetbo@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "treding@nvidia.com" <treding@nvidia.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "drinkcat@chromium.org" <drinkcat@chromium.org>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "airlied@linux.ie" <airlied@linux.ie>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "emil.l.velikov@gmail.com" <emil.l.velikov@gmail.com>, "cawa.cheng@mediatek.com" <cawa.cheng@mediatek.com>, "djkurtz@chromium.org" <djkurtz@chromium.org>, "jb.tsai@mediatek.com" <jb.tsai@mediatek.com>, "sjoerd.simons@collabora.co.uk" <sjoerd.simons@collabora.co.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Sheng Pan <SPan@ANALOGIXSEMI.COM>, "galak@codeaurora.org" <galak@codeaurora.org>, "javier@dowhile0.org" <javier@dowhile0.org>, "eddie.huang@mediatek.com" <eddie.huang@mediatek.com>, dan.carpente
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1451975422-31174-5-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRW5yaWMsDQoNCkp1c3QgdG8gY29uZmlybSB3aXRoIHlvdS4NClRoaXMgdmVyc2lvbiBpcyBm
-cm9tIGh0dHBzOi8vY2hyb21pdW0tcmV2aWV3Lmdvb2dsZXNvdXJjZS5jb20vIy9jLzMwODQ0Mi8x
-MSwgcmlnaHQ/DQoNCkNoZW5neGlhbmcNCjIwMTYvMS81DQoNCg0KLS0tLS3Tyrz+1K28/i0tLS0t
-DQq3orz+yMs6IEVucmljIEJhbGxldGJvIGkgU2VycmEgW21haWx0bzplYmFsbGV0Ym9AZ21haWwu
-Y29tXSANCreiy83KsbzkOiAyMDE2xOox1MI0yNUgNTozOA0KytW8/sjLOiBkZXZpY2V0cmVlQHZn
-ZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZzsgZGV2ZWxAZHJpdmVyZGV2Lm9zdW9zbC5vcmc7IHRyZWRpbmdA
-bnZpZGlhLmNvbQ0Ks63LzTogcm9iaCtkdEBrZXJuZWwub3JnOyBwYXdlbC5tb2xsQGFybS5jb207
-IG1hcmsucnV0bGFuZEBhcm0uY29tOyBpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51azsgZ2Fs
-YWtAY29kZWF1cm9yYS5vcmc7IGFpcmxpZWRAbGludXguaWU7IGdyZWdraEBsaW51eGZvdW5kYXRp
-b24ub3JnOyBzam9lcmQuc2ltb25zQGNvbGxhYm9yYS5jby51azsgamF2aWVyQGRvd2hpbGUwLm9y
-ZzsgU2hlbmcgUGFuOyBuYXRoYW4uY2h1bmdAbWVkaWF0ZWsuY29tOyBkamt1cnR6QGNocm9taXVt
-Lm9yZzsgZHJpbmtjYXRAY2hyb21pdW0ub3JnOyBsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2Fy
-ZC5jb207IGRhbi5jYXJwZW50ZXJAb3JhY2xlLmNvbTsgamIudHNhaUBtZWRpYXRlay5jb207IGNh
-d2EuY2hlbmdAbWVkaWF0ZWsuY29tOyBlZGRpZS5odWFuZ0BtZWRpYXRlay5jb207IENoZW5neGlh
-bmcgSmlhbzsgZW1pbC5sLnZlbGlrb3ZAZ21haWwuY29tDQrW98ziOiBbUEFUQ0h2NyAwLzVdIEFk
-ZCBpbml0aWFsIHN1cHBvcnQgZm9yIHNsaW1wb3J0IGFueDc4eHgNCg0KSGkgYWxsLA0KDQpUaGlz
-IGlzIGFub3RoZXIgdmVyc2lvbiBvZiB0aGUgcGF0Y2ggc2V0IHRvIGludHJvZHVjZSB0aGUgYW54
-NzgxNCB0cmFuc21pdHRlci4NCkFueSBjb21tZW50cyBhcmUgd2VsY29tZS4NCg0KVGhlIGZvbGxv
-d2luZyBzZXJpZXMgYWRkIGluaXRpYWwgc3VwcG9ydCBmb3IgdGhlIFNsaW1wb3J0IEFOWDc4MTQg
-dHJhbnNtaXR0ZXIsIGEgdWx0cmEtbG93IHBvd2VyIEZ1bGwtSEQgKDEwODBwNjApIHRyYW5zbWl0
-dGVyIGRlc2lnbmVkIGZvciBwb3J0YWJsZSBkZXZpY2UuDQoNClRoZSBkcml2ZXIgd2FzIG9yaWdp
-bmFsbHkgY3JlYXRlZCBhbmQgYmFzZWQgZnJvbSB0aGUgd29yayBvZiBKdW5odWEgWGlhIGZyb20g
-QW5hbG9naXguIFRoaXMgZHJpdmVyIGlzIGEgcmVmYWN0b3Igb2YgdGhlIG9yaWdpbmFsIGRyaXZl
-ciBhbmQgZml4ZXMgZGlmZmVyZW50IGNvZGluZyBzdHlsZSBsaW5lcywgYW5kIGRpZmZlcmVudCBl
-cnJvcnMvd2FybmluZ3MgcmVwb3J0ZWQgYnkgY2hlY2twYXRjaC4gQWxzbyB0aGVyZSB3ZXJlIHRo
-aW5ncyB0aGF0IEkgbm90aWNlZCB0aGF0IHdlIG5lZWQgdG8gY2hhbmdlIGxpa2U6DQoNCiAtIENv
-bnZlcnQgdGhlIG51bWJlcmVkIEdQSU8gQVBJIHRvIHRoZSBuZXcgZGVzY3JpcHRvciBiYXNlZCBH
-UElPIEFQSS4NCiAtIFJldmlldyB0aGUgRFQgYmluZGluZw0KIC0gQWRkIG1pc3NpbmcgTU9EVUxF
-X0RFVklDRV9UQUJMRShvZiwgLi4uKTsNCiAtIEZpeCBNYWtlZmlsZXMgYW5kIEtjb25maWcgdG8g
-YnVpbGQgY29uZGl0aW9uYWxseS4NCiAtIFVzZSBTSU1QTEVfREVWX1BNX09QUygpIGluc3RlYWQg
-b2YgdGhlIGRlcHJlY2F0ZWQgaTJjIC5zdXNwZW5kIGFuZA0KICAucmVzdW1lIGNhbGxiYWNrcy4N
-CiAtIE1vdmUgdG8gdXNlIG1hbmFnZWQgZGV2aWNlIHJlc291cmNlcy4NCiAtIFJlbW92ZSBkZWFk
-L3VudXNlZCBjb2RlLg0KIC0gQW5kIG90aGVycyAuLi4NCg0KRW5yaWMgQmFsbGV0Ym8gaSBTZXJy
-YSAoNSk6DQogIGRybS9kcDogYWRkIERQQ0QgZGVmaW5pdGlvbnMgZnJvbSBEUCAxLjENCiAgaGRt
-aTogYWRkZWQgZnVuY3Rpb25zIGZvciBNUEVHIEluZm9GcmFtZXMNCiAgb2Y6IEFkZCB2ZW5kb3Ig
-cHJlZml4IGZvciBBbmFsb2dpeCBTZW1pY29uZHVjdG9yLCBJbmMuDQogIGRldmljZXRyZWU6IEFk
-ZCBuZXcgQU5YNzgxNCBTbGltUG9ydCB0cmFuc21pdHRlciBiaW5kaW5nLg0KICBkcm06IGJyaWRn
-ZTogYW54Nzh4eDogQWRkIGFueDc4eHggZHJpdmVyIHN1cHBvcnQgYnkgYW5hbG9naXguDQoNCiAu
-Li4vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0ICAgICAgICB8ICAgIDEg
-Kw0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JyaWRnZS9hbng3ODE0LnR4dCAgIHwg
-ICAzOSArDQogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmlnICAgICAgICAgICAgICAgICAg
-ICAgfCAgICAyICsNCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlICAgICAgICAgICAg
-ICAgICAgICB8ICAgIDEgKw0KIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW54Nzh4eC9LY29uZmln
-ICAgICAgICAgICAgIHwgICAgNSArDQogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbng3OHh4L01h
-a2VmaWxlICAgICAgICAgICAgfCAgICA0ICsNCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FueDc4
-eHgvYW54Nzh4eC5oICAgICAgICAgICB8ICAgNDQgKw0KIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
-YW54Nzh4eC9hbng3OHh4X21haW4uYyAgICAgIHwgIDMzNCArKw0KIGRyaXZlcnMvZ3B1L2RybS9i
-cmlkZ2UvYW54Nzh4eC9zbGltcG9ydF90eF9kcnYuYyAgIHwgMzE5NCArKysrKysrKysrKysrKysr
-KysrKw0KIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW54Nzh4eC9zbGltcG9ydF90eF9kcnYuaCAg
-IHwgIDExMCArDQogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbng3OHh4L3NsaW1wb3J0X3R4X3Jl
-Zy5oICAgfCAgNzM3ICsrKysrDQogZHJpdmVycy92aWRlby9oZG1pLmMgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgfCAgMTU2ICsNCiBpbmNsdWRlL2RybS9kcm1fZHBfaGVscGVyLmggICAg
-ICAgICAgICAgICAgICAgICAgICB8ICAgMTAgKw0KIGluY2x1ZGUvbGludXgvaGRtaS5oICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyNCArDQogMTQgZmlsZXMgY2hhbmdlZCwgNDY2
-MSBpbnNlcnRpb25zKCspDQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy92aWRlby9icmlkZ2UvYW54NzgxNC50eHQNCiBjcmVhdGUgbW9kZSAxMDA2
-NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbng3OHh4L0tjb25maWcNCiBjcmVhdGUgbW9kZSAx
-MDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbng3OHh4L01ha2VmaWxlDQogY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW54Nzh4eC9hbng3OHh4LmgNCiBjcmVh
-dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbng3OHh4L2FueDc4eHhfbWFp
-bi5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW54Nzh4eC9z
-bGltcG9ydF90eF9kcnYuYw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJp
-ZGdlL2FueDc4eHgvc2xpbXBvcnRfdHhfZHJ2LmgNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9ncHUvZHJtL2JyaWRnZS9hbng3OHh4L3NsaW1wb3J0X3R4X3JlZy5oDQoNCi0tDQoyLjEuMA0K
-DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZlbCBt
-YWlsaW5nIGxpc3QKZGV2ZWxAbGludXhkcml2ZXJwcm9qZWN0Lm9yZwpodHRwOi8vZHJpdmVyZGV2
-LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcml2ZXJkZXYtZGV2ZWwK
+Hi James,
+
+Am Dienstag, den 05.01.2016, 14:30 +0800 schrieb James Liao:
+> From: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> Add MT2701 clock support, include topckgen, apmixedsys,
+> infracfg, pericfg and subsystem clocks.
+> 
+> Signed-off-by: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/clk/mediatek/Kconfig      |    8 +
+>  drivers/clk/mediatek/Makefile     |    1 +
+>  drivers/clk/mediatek/clk-gate.c   |   56 ++
+>  drivers/clk/mediatek/clk-gate.h   |    2 +
+>  drivers/clk/mediatek/clk-mt2701.c | 1210 +++++++++++++++++++++++++++++++++++++
+>  drivers/clk/mediatek/clk-mtk.c    |   25 +
+>  drivers/clk/mediatek/clk-mtk.h    |   35 +-
+>  7 files changed, 1334 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/clk/mediatek/clk-mt2701.c
+> 
+> diff --git a/drivers/clk/mediatek/Kconfig b/drivers/clk/mediatek/Kconfig
+> index dc224e6..6c7cdc0 100644
+> --- a/drivers/clk/mediatek/Kconfig
+> +++ b/drivers/clk/mediatek/Kconfig
+> @@ -6,6 +6,14 @@ config COMMON_CLK_MEDIATEK
+>  	---help---
+>  	  Mediatek SoCs' clock support.
+>  
+> +config COMMON_CLK_MT2701
+> +	bool "Clock driver for Mediatek MT2701 and MT7623"
+> +	depends on COMMON_CLK
+> +	select COMMON_CLK_MEDIATEK
+> +	default ARCH_MEDIATEK
+> +	---help---
+> +	  This driver supports Mediatek MT2701 and MT7623 clocks.
+> +
+>  config COMMON_CLK_MT8135
+>  	bool "Clock driver for Mediatek MT8135"
+>  	depends on COMMON_CLK
+> diff --git a/drivers/clk/mediatek/Makefile b/drivers/clk/mediatek/Makefile
+> index 32e7222..5b2b91b 100644
+> --- a/drivers/clk/mediatek/Makefile
+> +++ b/drivers/clk/mediatek/Makefile
+> @@ -1,4 +1,5 @@
+>  obj-$(CONFIG_COMMON_CLK_MEDIATEK) += clk-mtk.o clk-pll.o clk-gate.o clk-apmixed.o
+>  obj-$(CONFIG_RESET_CONTROLLER) += reset.o
+> +obj-$(CONFIG_COMMON_CLK_MT2701) += clk-mt2701.o
+>  obj-$(CONFIG_COMMON_CLK_MT8135) += clk-mt8135.o
+>  obj-$(CONFIG_COMMON_CLK_MT8173) += clk-mt8173.o
+> diff --git a/drivers/clk/mediatek/clk-gate.c b/drivers/clk/mediatek/clk-gate.c
+> index 576bdb7..38badb4 100644
+> --- a/drivers/clk/mediatek/clk-gate.c
+> +++ b/drivers/clk/mediatek/clk-gate.c
+> @@ -61,6 +61,26 @@ static void mtk_cg_clr_bit(struct clk_hw *hw)
+>  	regmap_write(cg->regmap, cg->clr_ofs, BIT(cg->bit));
+>  }
+>  
+> +static void mtk_cg_set_bit_no_setclr(struct clk_hw *hw)
+> +{
+> +	struct mtk_clk_gate *cg = to_clk_gate(hw);
+> +	u32 val;
+> +
+> +	regmap_read(cg->regmap, cg->sta_ofs, &val);
+> +	val |= BIT(cg->bit);
+> +	regmap_write(cg->regmap, cg->sta_ofs, val);
+
+You can use regmap_update_bits here:
+
+	u32 bit = BIT(cg->bit);
+	regmap_update_bits(cg->regmap, cg->sta_ofs, bit, bit);
+
+> +}
+> +
+> +static void mtk_cg_clr_bit_no_setclr(struct clk_hw *hw)
+> +{
+> +	struct mtk_clk_gate *cg = to_clk_gate(hw);
+> +	u32 val;
+> +
+> +	regmap_read(cg->regmap, cg->sta_ofs, &val);
+> +	val &= ~(BIT(cg->bit));
+> +	regmap_write(cg->regmap, cg->sta_ofs, val);
+
+and here:
+
+	u32 bit = BIT(cg->bit);
+	regmap_update_bits(cg->regmap, cg->sta_ofs, bit, 0);
+
+best regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
