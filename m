@@ -1,85 +1,124 @@
-From: James Liao <jamesjj.liao@mediatek.com>
-Subject: Re: [PATCH 4/4] soc: mediatek: Add MT2701/MT7623 scpsys driver
-Date: Tue, 5 Jan 2016 13:23:59 +0800
-Message-ID: <1451971439.19026.3.camel@mtksdaap41>
-References: <1451457706-14798-1-git-send-email-jamesjj.liao@mediatek.com>
-	 <1451457706-14798-5-git-send-email-jamesjj.liao@mediatek.com>
-	 <CAGS+omCwxB+4VFOA1hA9Rg-ekWCVM8Y_c7woTEXnvX6FG1y9mQ@mail.gmail.com>
-	 <1451470692.22426.11.camel@mtksdaap41> <5684192B.4020806@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5684192B.4020806@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, Kevin Hilman <khilman@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Shunli Wang <shunli.wang@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: [PATCH v5 3/3] dt/bindings: qcom_nandc: Add DT bindings
+Date: Tue,  5 Jan 2016 10:55:01 +0530
+Message-ID: <1451971501-18160-4-git-send-email-architt@codeaurora.org>
+References: <1439959746-25498-1-git-send-email-architt@codeaurora.org>
+ <1451971501-18160-1-git-send-email-architt@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1451971501-18160-1-git-send-email-architt@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: computersforpeace@gmail.com, boris.brezillon@free-electrons.com
+Cc: linux-mtd@lists.infradead.org, cernekee@gmail.com, sboyd@codeaurora.org, andy.gross@linaro.org, dehrenberg@google.com, linux-arm-msm@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
-On Wed, 2015-12-30 at 18:49 +0100, Matthias Brugger wrote:
-> > On Wed, 2015-12-30 at 17:01 +0800, Daniel Kurtz wrote:
-> >> On Wed, Dec 30, 2015 at 2:41 PM, James Liao <jamesjj.liao@mediatek.com> wrote:
-> >>>
-> >>> From: Shunli Wang <shunli.wang@mediatek.com>
-> >>>
-> >>> Add scpsys driver for MT2701 and MT7623.
-> >>>
-> >>> Signed-off-by: Shunli Wang <shunli.wang@mediatek.com>
-> >>> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
-> >>> ---
-> >>>   drivers/soc/mediatek/Kconfig             |  11 +++
-> >>>   drivers/soc/mediatek/Makefile            |   1 +
-> >>>   drivers/soc/mediatek/mtk-scpsys-mt2701.c | 161 +++++++++++++++++++++++++++++++
-> >>>   3 files changed, 173 insertions(+)
-> >>>   create mode 100644 drivers/soc/mediatek/mtk-scpsys-mt2701.c
-> >>>
-> >>> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> >>> index eca6fb7..92cf838 100644
-> >>> --- a/drivers/soc/mediatek/Kconfig
-> >>> +++ b/drivers/soc/mediatek/Kconfig
-> >>> @@ -39,3 +39,14 @@ config MTK_SCPSYS_MT8173
-> >>>            driver.
-> >>>            The System Control Processor System (SCPSYS) has several power
-> >>>            management related tasks in the system.
-> >>> +
-> >>> +config MTK_SCPSYS_MT2701
-> >>> +       bool "SCPSYS Support MediaTek MT2701 and MT7623"
-> >>> +       depends on ARCH_MEDIATEK || COMPILE_TEST
-> >>> +       select MTK_SCPSYS
-> >>> +       default ARCH_MEDIATEK
-> >>> +       help
-> >>> +         Say yes here to add support for the MT2701/MT7623 SCPSYS power
-> >>> +         domain driver.
-> >>> +         The System Control Processor System (SCPSYS) has several power
-> >>> +         management related tasks in the system.
-> >>
-> >> I don't think we really want different drivers and Kconfig options.
-> >>
-> >> Can we just use different compatibles to select the appropriate scp_domain_data?
-> >
-> > Yes, we can. All scpsys drivers are built-in by default, and they will
-> > be activate by specific compatible string.
-> >
-> > But some projects don't want to build unused drivers into kernel to save
-> > code size. Use different Kconfig options for each SoC so that these
-> > projects can disable unused drivers.
-> >
-> 
-> Scpsys is a bool right now, you can disable it if you don't need it for 
-> your project.
-> 
-> I don't think the impact of adding scp_domain_data justifies adding SoC 
-> specific scpsys drivers and bloat the drivers/soc/mediatek folder.
+Add DT bindings document for the Qualcomm NAND controller driver.
 
-So you prefer to enable MT8173 and MT2701 scpsys drivers at the same
-time if MTK_SCPSYS is true?
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>
+Signed-off-by: Archit Taneja <architt@codeaurora.org>
+---
+v5:
+- Make changes to incorporate chip select sub nodes (brcmnand taken as
+  reference)
 
-BTW, this patchset is based on 4.4-rc7, which lacks two patches from
-your v4.4-next/soc. Should I rebase to v4.4-next/soc when I send v2
-patch?
+v3:
+- Don't use '0x' when specifying nand controller address space
+- Add optional property for on-flash bbt usage
 
+ .../devicetree/bindings/mtd/qcom_nandc.txt         | 84 ++++++++++++++++++++++
+ 1 file changed, 84 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/qcom_nandc.txt
 
-Best regards,
-
-James
+diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+new file mode 100644
+index 0000000..b2cf2d9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+@@ -0,0 +1,84 @@
++* Qualcomm NAND controller
++
++Required properties:
++- compatible:		should be "qcom,ebi2-nand" for IPQ806x
++- reg:			MMIO address range
++- clocks:		must contain core clock and always on clock
++- clock-names:		must contain "core" for the core clock and "aon" for the
++			always on clock
++- dmas:			DMA specifier, consisting of a phandle to the ADM DMA
++			controller node and the channel number to be used for
++			NAND. Refer to dma.txt and qcom_adm.txt for more details
++- dma-names:		must be "rxtx"
++- qcom,cmd-crci:	must contain the ADM command type CRCI block instance
++			number specified for the NAND controller on the given
++			platform
++- qcom,data-crci:	must contain the ADM data type CRCI block instance
++			number specified for the NAND controller on the given
++			platform
++- #address-cells:	<1> - subnodes give the chip-select number
++- #size-cells:		<0>
++
++* NAND chip-select
++
++Each controller may contain one or more subnodes to represent enabled
++chip-selects which (may) contain NAND flash chips. Their properties are as
++follows.
++
++Required properties:
++- compatible:		should contain "qcom,nandcs"
++- reg:			a single integer representing the chip-select
++			number (e.g., 0, 1, 2, etc.)
++- #address-cells:	see partition.txt
++- #size-cells:		see partition.txt
++- nand-ecc-strength:	number of bits to correct per ECC step. Must be 4 or 8
++			bits.
++- nand-ecc-step-size:	bytes of data per ECC step. Must be 512.
++
++Optional properties:
++- nand-bus-width:	bus width. Must be 8 or 16. If not present, 8 is chosen
++			as default
++
++Each nandcs device node may optionally contain sub-nodes describing the flash
++partition mapping. See partition.txt for more detail.
++
++Example:
++
++nand@1ac00000 {
++	compatible = "qcom,ebi2-nandc";
++	reg = <0x1ac00000 0x800>;
++
++	clocks = <&gcc EBI2_CLK>,
++		 <&gcc EBI2_AON_CLK>;
++	clock-names = "core", "aon";
++
++	dmas = <&adm_dma 3>;
++	dma-names = "rxtx";
++	qcom,cmd-crci = <15>;
++	qcom,data-crci = <3>;
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	nandcs@0 {
++		compatible = "qcom,nandcs";
++		reg = <0>;
++
++		nand-ecc-strength = <4>;
++		nand-ecc-step-size = <512>;
++		nand-bus-width = <8>;
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		partition@0 {
++			label = "boot-nand";
++			reg = <0 0x58a0000>;
++		};
++
++		partition@58a0000 {
++			label = "fs-nand";
++			reg = <0x58a0000 0x4000000>;
++		};
++	};
++};
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
