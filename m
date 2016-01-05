@@ -1,48 +1,41 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH 1/4] extcon: arizona: Remove enable/disable of 32k clock
-Date: Tue, 5 Jan 2016 15:41:39 +0000
-Message-ID: <1452008502-3749-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH 4/4] mfd: arizona: Add device tree binding documentation for new clock driver
+Date: Tue, 5 Jan 2016 15:41:42 +0000
+Message-ID: <1452008502-3749-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+References: <1452008502-3749-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1452008502-3749-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@baylibre.com, cw00.choi@samsung.com, lee.jones@linaro.org
+Cc: sboyd@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-The 32k clock is unconditionally enabled by the MFD core so there is no
-need to control it from the extcon device, so this patch removes the
-control of the 32k clock.
+Specify the device tree binding for the input clocks to Arizona devices.
 
-Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 ---
- drivers/extcon/extcon-arizona.c | 2 --
- 1 file changed, 2 deletions(-)
+ Documentation/devicetree/bindings/mfd/arizona.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index e4890dd..52d041f 100644
---- a/drivers/extcon/extcon-arizona.c
-+++ b/drivers/extcon/extcon-arizona.c
-@@ -1571,7 +1571,6 @@ static int arizona_extcon_probe(struct platform_device *pdev)
- 		goto err_micdet;
- 	}
+diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+index 18be0cb..39f76f8 100644
+--- a/Documentation/devicetree/bindings/mfd/arizona.txt
++++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+@@ -45,6 +45,13 @@ Optional properties:
  
--	arizona_clk32k_enable(arizona);
- 	regmap_update_bits(arizona->regmap, ARIZONA_JACK_DETECT_DEBOUNCE,
- 			   ARIZONA_JD1_DB, ARIZONA_JD1_DB);
- 	regmap_update_bits(arizona->regmap, ARIZONA_JACK_DETECT_ANALOGUE,
-@@ -1642,7 +1641,6 @@ static int arizona_extcon_remove(struct platform_device *pdev)
- 	cancel_delayed_work_sync(&info->hpdet_work);
- 	regmap_update_bits(arizona->regmap, ARIZONA_JACK_DETECT_ANALOGUE,
- 			   ARIZONA_JD1_ENA, 0);
--	arizona_clk32k_disable(arizona);
+   - wlf,reset : GPIO specifier for the GPIO controlling /RESET
  
- 	return 0;
- }
++  - clocks: Should reference the clocks supplied on MCLK1 and MCLK2
++  - clock-names: Should contains two strings:
++      "mclk1" for the clock supplied on MCLK1, recommended to be a high
++      quality audio reference clock
++      "mclk2" for the clock supplied on MCLK2, recommended to be an always on
++      32k clock
++
+   - wlf,gpio-defaults : A list of GPIO configuration register values. Defines
+     for the appropriate values can found in <dt-bindings/mfd/arizona.txt>. If
+     absent, no configuration of these registers is performed. If any entry has
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
