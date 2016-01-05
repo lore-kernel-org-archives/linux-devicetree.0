@@ -1,39 +1,103 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 net-next 3/3] dt-bindings: net: macb: Add NP4 macb variant
-Date: Tue,  5 Jan 2016 14:39:18 +0100
-Message-ID: <1452001158-20585-4-git-send-email-narmstrong@baylibre.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v5 net-next 1/3] net: ethernet: cadence-macb: Add disabled
+ usrio caps
+Date: Tue, 5 Jan 2016 14:45:15 +0100
+Message-ID: <568BC8EB.1040102@atmel.com>
 References: <1451900573-22657-1-git-send-email-narmstrong@baylibre.com>
  <1452001158-20585-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452001158-20585-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joshc-acOepvfBmUk@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+ <1452001158-20585-2-git-send-email-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1452001158-20585-2-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>, davem@davemloft.net, harini.katakam@xilinx.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, joshc@ni.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add NP4 macb SoC variant.
+Le 05/01/2016 14:39, Neil Armstrong a =E9crit :
+> On some platforms, the macb integration does not use the USRIO
+> register to configure the (R)MII port and clocks.
+> When the register is not implemented and the MACB error signal
+> is connected to the bus error, reading or writing to the USRIO
+> register can trigger some Imprecise External Aborts on ARM platforms.
+>=20
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/net/macb.txt | 1 +
- 1 file changed, 1 insertion(+)
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 
-diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-index 38c8e84..5c397ca 100644
---- a/Documentation/devicetree/bindings/net/macb.txt
-+++ b/Documentation/devicetree/bindings/net/macb.txt
-@@ -4,6 +4,7 @@ Required properties:
- - compatible: Should be "cdns,[<chip>-]{macb|gem}"
-   Use "cdns,at91sam9260-macb" for Atmel at91sam9 SoCs or the 10/100Mbit IP
-   available on sama5d3 SoCs.
-+  Use "cdns,np4-macb" for NP4 SoC devices.
-   Use "cdns,at32ap7000-macb" for other 10/100 usage or use the generic form: "cdns,macb".
-   Use "cdns,pc302-gem" for Picochip picoXcell pc302 and later devices based on
-   the Cadence GEM, or the generic form: "cdns,gem".
--- 
-1.9.1
+Thanks!
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  drivers/net/ethernet/cadence/macb.c | 27 +++++++++++++++------------
+>  drivers/net/ethernet/cadence/macb.h |  1 +
+>  2 files changed, 16 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethern=
+et/cadence/macb.c
+> index 8b45bc9..fa53bc3 100644
+> --- a/drivers/net/ethernet/cadence/macb.c
+> +++ b/drivers/net/ethernet/cadence/macb.c
+> @@ -2124,7 +2124,8 @@ static void macb_get_regs(struct net_device *de=
+v, struct ethtool_regs *regs,
+>  	regs_buff[10] =3D macb_tx_dma(&bp->queues[0], tail);
+>  	regs_buff[11] =3D macb_tx_dma(&bp->queues[0], head);
+> =20
+> -	regs_buff[12] =3D macb_or_gem_readl(bp, USRIO);
+> +	if (!(bp->caps & MACB_CAPS_USRIO_DISABLED))
+> +		regs_buff[12] =3D macb_or_gem_readl(bp, USRIO);
+>  	if (macb_is_gem(bp)) {
+>  		regs_buff[13] =3D gem_readl(bp, DMACFG);
+>  	}
+> @@ -2403,19 +2404,21 @@ static int macb_init(struct platform_device *=
+pdev)
+>  		dev->hw_features &=3D ~NETIF_F_SG;
+>  	dev->features =3D dev->hw_features;
+> =20
+> -	val =3D 0;
+> -	if (bp->phy_interface =3D=3D PHY_INTERFACE_MODE_RGMII)
+> -		val =3D GEM_BIT(RGMII);
+> -	else if (bp->phy_interface =3D=3D PHY_INTERFACE_MODE_RMII &&
+> -		 (bp->caps & MACB_CAPS_USRIO_DEFAULT_IS_MII))
+> -		val =3D MACB_BIT(RMII);
+> -	else if (!(bp->caps & MACB_CAPS_USRIO_DEFAULT_IS_MII))
+> -		val =3D MACB_BIT(MII);
+> +	if (!(bp->caps & MACB_CAPS_USRIO_DISABLED)) {
+> +		val =3D 0;
+> +		if (bp->phy_interface =3D=3D PHY_INTERFACE_MODE_RGMII)
+> +			val =3D GEM_BIT(RGMII);
+> +		else if (bp->phy_interface =3D=3D PHY_INTERFACE_MODE_RMII &&
+> +			 (bp->caps & MACB_CAPS_USRIO_DEFAULT_IS_MII))
+> +			val =3D MACB_BIT(RMII);
+> +		else if (!(bp->caps & MACB_CAPS_USRIO_DEFAULT_IS_MII))
+> +			val =3D MACB_BIT(MII);
+> =20
+> -	if (bp->caps & MACB_CAPS_USRIO_HAS_CLKEN)
+> -		val |=3D MACB_BIT(CLKEN);
+> +		if (bp->caps & MACB_CAPS_USRIO_HAS_CLKEN)
+> +			val |=3D MACB_BIT(CLKEN);
+> =20
+> -	macb_or_gem_writel(bp, USRIO, val);
+> +		macb_or_gem_writel(bp, USRIO, val);
+> +	}
+> =20
+>  	/* Set MII management clock divider */
+>  	val =3D macb_mdc_clk_div(bp);
+> diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethern=
+et/cadence/macb.h
+> index 5c03e81..0d4ecfc 100644
+> --- a/drivers/net/ethernet/cadence/macb.h
+> +++ b/drivers/net/ethernet/cadence/macb.h
+> @@ -400,6 +400,7 @@
+>  #define MACB_CAPS_USRIO_HAS_CLKEN		0x00000002
+>  #define MACB_CAPS_USRIO_DEFAULT_IS_MII		0x00000004
+>  #define MACB_CAPS_NO_GIGABIT_HALF		0x00000008
+> +#define MACB_CAPS_USRIO_DISABLED		0x00000010
+>  #define MACB_CAPS_FIFO_MODE			0x10000000
+>  #define MACB_CAPS_GIGABIT_MODE_AVAILABLE	0x20000000
+>  #define MACB_CAPS_SG_DISABLED			0x40000000
+>=20
+
+
+--=20
+Nicolas Ferre
