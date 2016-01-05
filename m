@@ -1,83 +1,46 @@
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] spi: atmel: add support for the internal chip-select of the spi controller
-Date: Tue, 05 Jan 2016 21:50:54 +0000
-Message-ID: <yw1xvb771yrl.fsf@unicorn.mansr.com>
-References: <cover.1433850255.git.cyrille.pitchen@atmel.com>
-	<c05f4d9abfdabb62b3b3cfeb57a3f9c138b4e45d.1433850255.git.cyrille.pitchen@atmel.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v11 0/8] Goodix touchscreen enhancements
+Date: Tue, 5 Jan 2016 14:07:47 -0800
+Message-ID: <CAKdAkRQRJTONwakthxKDyG-=2CeaBjANiew6jpGc_1+ustSmGQ@mail.gmail.com>
+References: <1447936001-21420-1-git-send-email-irina.tirdea@intel.com>
+	<20151218011318.GB16016@dtor-ws>
+	<20160105200343.GA3425@excalibur.cnev.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c05f4d9abfdabb62b3b3cfeb57a3f9c138b4e45d.1433850255.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-	(Cyrille Pitchen's message of "Tue, 9 Jun 2015 13:53:52 +0200")
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mark Browk <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20160105200343.GA3425@excalibur.cnev.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Karsten Merker <merker@debian.org>
+Cc: Irina Tirdea <irina.tirdea@intel.com>, Bastien Nocera <hadess@hadess.net>, Aleksei Mamlin <mamlinav@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Octavian Purdila <octavian.purdila@intel.com>, lkml <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> writes:
+Hi Karsten,
 
-> This patch relies on the CSAAT (Chip Select Active After Transfer) fe=
-ature
-> introduced by the version 2 of the spi controller. This new mode allo=
-ws to
-> use properly the internal chip-select output pin of the spi controlle=
-r
-> instead of using external gpios. Consequently, the "cs-gpios" device-=
-tree
-> property becomes optional.
+On Tue, Jan 5, 2016 at 12:03 PM, Karsten Merker <merker@debian.org> wrote:
+> On Thu, Dec 17, 2015 at 05:13:18PM -0800, Dmitry Torokhov wrote:
+>> On Thu, Nov 19, 2015 at 02:26:33PM +0200, Irina Tirdea wrote:
+>> > This patchset depends on Dmitry's patch that fixes the
+>> > GPIO ACPI API[1], so devm_gpiod_get_optional can be properly
+>> > used in the code.
+>> >
+>> > [1] https://lkml.org/lkml/2015/11/11/465
+>>
+>> Applied 1 through 5 (see my goodix branch), looking at the rest.
 >
-> When the new CSAAT bit is set into the Chip Select Register, the inte=
-rnal
-> chip-select output pin remains asserted till both the following condi=
-tions
-> become true:
-> - the LASTXFER bit is set into the Control Register (or the Transmit =
-Data
->   Register)
-> - the Transmit Data Register and its shift register are empty.
+> Hello,
 >
-> WARNING: if the LASTXFER bit is set into the Control Register then ne=
-w
-> data are written into the Transmit Data Register fast enough to keep =
-its
-> shifter not empty, the chip-select output pin remains asserted. Only =
-when
-> the shifter becomes empty, the chip-select output pin is unasserted.
->
-> When the CSAAT bit is clear in the Chip Select Register, the LASTXFER=
- bit
-> is ignored in both the Control Register and the Transmit Data Registe=
-r.
-> The internal chip-select output pin remains active as long as the Tra=
-nsmit
-> Data Register or its shift register are not empty.
->
-> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/spi/spi-atmel.c | 37 ++++++++++++++++++++++++++++---------
->  1 file changed, 28 insertions(+), 9 deletions(-)
+> as we are getting near to the next merge window, I wanted to
+> kindly ask whether there is any news on this.  It would be really
+> nice if the complete stack of goodix patches could go into kernel
+> 4.5.
 
-[...]
+There is goodix branch at
+git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git that we
+should be able to merge in 4.5. It has your patches and half of
+Irina's (with config dump and ESD support missing at the moment). If
+you could give ti a quick spin I'd appreciate it.
 
-> @@ -1338,6 +1350,13 @@ static int atmel_spi_probe(struct platform_dev=
-ice *pdev)
->
->  	atmel_get_caps(as);
->
-> +	as->use_cs_gpios =3D true;
-> +	if (atmel_spi_is_v2(as) &&
-> +	    !of_get_property(pdev->dev.of_node, "cs-gpios", NULL)) {
-> +		as->use_cs_gpios =3D false;
-> +		master->num_chipselect =3D 4;
-> +	}
+Thanks.
 
-This part breaks the AVR32 boards and probably anything else that
-doesn't use devicetree but does use GPIOs for chip select.
-
---=20
-M=E5ns Rullg=E5rd
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Dmitry
