@@ -1,47 +1,47 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] of/platform: export of_default_bus_match_table
-Date: Tue, 05 Jan 2016 11:13:28 +0100
-Message-ID: <2748326.r4zEhnPneC@wuerfel>
-References: <1451960273-19934-1-git-send-email-yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v2 3/3] ARM64: dts: mt8173: Add CPU OPP, clock and regulator supply properties
+Date: Tue, 05 Jan 2016 11:21:44 +0100
+Message-ID: <3310024.mO5K6yH9vU@wuerfel>
+References: <1451197318-12418-1-git-send-email-pi-cheng.chen@linaro.org> <1451197318-12418-4-git-send-email-pi-cheng.chen@linaro.org> <20151228031340.GD3598@ubuntu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1451960273-19934-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: devicetree@vger.kernel.org, Paul Gortmaker <paul.gortmaker@windriver.com>, Olof Johansson <olof@lixom.net>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20151228031340.GD3598@ubuntu>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Pi-Cheng Chen <pi-cheng.chen@linaro.org>, devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Daniel Kurtz <djkurtz@chromium.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 05 January 2016 11:17:53 Masahiro Yamada wrote:
-> Currently, drivers/bus/uniphier-system-bus.c is kept from being a
-> module due to the unresolved reference to of_default_bus_match_table.
+On Monday 28 December 2015 08:43:40 Viresh Kumar wrote:
+> On 27-12-15, 14:21, Pi-Cheng Chen wrote:
+> > Add operating-points-v2, clock, and regulator supply properties
+> > required by mt8173-cpufreq driver to enable it.
+> > 
+> > Signed-off-by: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+> > ---
+> > This patch is based on the patch[1] that adds underlying clock MUX for
+> > MT8173 which is needed by mt8173-cpufreq driver but not yet picked.
+> > 
+> > [1] http://article.gmane.org/gmane.linux.kernel.clk/325
+> > ---
+> >  arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 18 ++++++
+> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 90 +++++++++++++++++++++++++++++
+> >  2 files changed, 108 insertions(+)
 > 
-> Refer to commit 326ea45aa827 ("bus: uniphier: allow only built-in
-> driver").
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
->  drivers/of/platform.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index af98343..8d103e4 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -31,6 +31,7 @@ const struct of_device_id of_default_bus_match_table[] = {
->  #endif /* CONFIG_ARM_AMBA */
->         {} /* Empty terminated list */
->  };
-> +EXPORT_SYMBOL(of_default_bus_match_table);
 
-I wonder if the uniphier bus should actually use the default
-match table at all. Sorry for not having thought of that when
-I did my patch.
+This patch is now in linux-next through Rafael's pm tree, and it breaks the
+arm64 build:
 
-What kinds of devices do you see below this bus? Do you have multiple
-levels of devices? Are they all platform devices or could they
-be AMBA?
+        arm64-defconfig
+Error: ../arch/arm64/boot/dts/mediatek/mt8173.dtsi:132.24-25 syntax error
+
+
+Please revert.
+
+In the future, please send all dts changes through the proper maintainer
+channels (-> Mattias -> arm-soc), and make sure they actually build.
 
 	Arnd
