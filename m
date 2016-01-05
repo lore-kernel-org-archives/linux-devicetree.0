@@ -1,56 +1,83 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v5 0/5] Qualcomm PCIe driver and designware fixes
-Date: Tue, 5 Jan 2016 15:42:06 -0600
-Message-ID: <20160105214206.GA23814@localhost>
-References: <1450442339-18765-1-git-send-email-stanimir.varbanov@linaro.org>
+From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] spi: atmel: add support for the internal chip-select of the spi controller
+Date: Tue, 05 Jan 2016 21:50:54 +0000
+Message-ID: <yw1xvb771yrl.fsf@unicorn.mansr.com>
+References: <cover.1433850255.git.cyrille.pitchen@atmel.com>
+	<c05f4d9abfdabb62b3b3cfeb57a3f9c138b4e45d.1433850255.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1450442339-18765-1-git-send-email-stanimir.varbanov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <c05f4d9abfdabb62b3b3cfeb57a3f9c138b4e45d.1433850255.git.cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+	(Cyrille Pitchen's message of "Tue, 9 Jun 2015 13:53:52 +0200")
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mark Browk <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 18, 2015 at 02:38:54PM +0200, Stanimir Varbanov wrote:
-> Hi,
-> 
-> I'm sending v5 with following changes:
-> - in 1/5 - replace wmb() call with PCIE_ATU_CR2 register read.
-> - in 3/5 - addressed comments from Born Helgaas about usage of a
-> standard PCI capabilities register names and rename link training
-> function to the way that other Designware based drivers use.
-> - in 5/5 - addressed a comment from Bjorn Andersson about regulator
-> label duplication.
-> 
-> Comments are welcome!
-> 
-> The previous v4 of the patch set can be found at [1].
-> 
-> regards,
-> Stan
-> 
-> [1] https://lkml.org/lkml/2015/12/3/370
-> 
-> Stanimir Varbanov (5):
->   PCI: designware: ensure ATU is enabled before IO/conf space accesses
->   DT: PCI: qcom: Document PCIe devicetree bindings
->   PCI: qcom: Add Qualcomm PCIe controller driver
->   ARM: dts: apq8064: add pcie devicetree node
->   ARM: dts: ifc6410: enable pcie dt node for this board
-> 
->  .../devicetree/bindings/pci/qcom,pcie.txt          |  233 ++++++++
->  MAINTAINERS                                        |    7 +
->  arch/arm/boot/dts/qcom-apq8064-ifc6410.dts         |   26 +
->  arch/arm/boot/dts/qcom-apq8064.dtsi                |   36 ++
->  drivers/pci/host/Kconfig                           |   10 +
->  drivers/pci/host/Makefile                          |    1 +
->  drivers/pci/host/pcie-designware.c                 |    7 +
->  drivers/pci/host/pcie-qcom.c                       |  617 ++++++++++++++++++++
->  8 files changed, 937 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/qcom,pcie.txt
->  create mode 100644 drivers/pci/host/pcie-qcom.c
+Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> writes:
 
-Applied to pci/host-qcom for v4.5, with Pratyush's ack on the first patch.
-Thanks!
+> This patch relies on the CSAAT (Chip Select Active After Transfer) fe=
+ature
+> introduced by the version 2 of the spi controller. This new mode allo=
+ws to
+> use properly the internal chip-select output pin of the spi controlle=
+r
+> instead of using external gpios. Consequently, the "cs-gpios" device-=
+tree
+> property becomes optional.
+>
+> When the new CSAAT bit is set into the Chip Select Register, the inte=
+rnal
+> chip-select output pin remains asserted till both the following condi=
+tions
+> become true:
+> - the LASTXFER bit is set into the Control Register (or the Transmit =
+Data
+>   Register)
+> - the Transmit Data Register and its shift register are empty.
+>
+> WARNING: if the LASTXFER bit is set into the Control Register then ne=
+w
+> data are written into the Transmit Data Register fast enough to keep =
+its
+> shifter not empty, the chip-select output pin remains asserted. Only =
+when
+> the shifter becomes empty, the chip-select output pin is unasserted.
+>
+> When the CSAAT bit is clear in the Chip Select Register, the LASTXFER=
+ bit
+> is ignored in both the Control Register and the Transmit Data Registe=
+r.
+> The internal chip-select output pin remains active as long as the Tra=
+nsmit
+> Data Register or its shift register are not empty.
+>
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/spi/spi-atmel.c | 37 ++++++++++++++++++++++++++++---------
+>  1 file changed, 28 insertions(+), 9 deletions(-)
+
+[...]
+
+> @@ -1338,6 +1350,13 @@ static int atmel_spi_probe(struct platform_dev=
+ice *pdev)
+>
+>  	atmel_get_caps(as);
+>
+> +	as->use_cs_gpios =3D true;
+> +	if (atmel_spi_is_v2(as) &&
+> +	    !of_get_property(pdev->dev.of_node, "cs-gpios", NULL)) {
+> +		as->use_cs_gpios =3D false;
+> +		master->num_chipselect =3D 4;
+> +	}
+
+This part breaks the AVR32 boards and probably anything else that
+doesn't use devicetree but does use GPIOs for chip select.
+
+--=20
+M=E5ns Rullg=E5rd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
