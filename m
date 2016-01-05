@@ -1,308 +1,409 @@
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Subject: [PATCH v2 2/2] ARM: dts: imx6: Add support for Toradex Ixora carrier board
-Date: Tue,  5 Jan 2016 17:39:02 +0100
-Message-ID: <1452011942-11940-3-git-send-email-marcel.ziswiler@toradex.com>
-References: <1452011942-11940-1-git-send-email-marcel.ziswiler@toradex.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/8] i2c-mux: add common core data for every mux
+ instance
+Date: Tue, 5 Jan 2016 08:42:03 -0800
+Message-ID: <568BF25B.5030905@roeck-us.net>
+References: <1452009438-27347-1-git-send-email-peda@lysator.liu.se>
+ <1452009438-27347-2-git-send-email-peda@lysator.liu.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452011942-11940-1-git-send-email-marcel.ziswiler@toradex.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Lucas Stach <l.stach@pengutronix.de>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>, Shawn Guo <shawn.guo@linaro.org>, Fabio Estevam <festevam@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stefan Agner <stefan@agner.ch>, Joshua Clayton <stillcompiling@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452009438-27347-2-git-send-email-peda-SamgB31n2u5IcsJQ0EH25Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-SamgB31n2u5IcsJQ0EH25Q@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Nicholas Mc Guire <hofrat-Q945KHDl0DbYtjvyW6yDsg@public.gmane.org>, Olli Salonen <olli.salonen-X3B1VOXEql0@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TaqPxH82wqD4g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-=46rom: Petr =C5=A0tetiar <ynezz@true.cz>
+On 01/05/2016 07:57 AM, Peter Rosin wrote:
+> From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+>
+> The initial core mux structure starts off small with only the parent
+> adapter pointer, which all muxes have, and a priv pointer for mux
+> driver private data.
+>
+> Add i2c_mux_alloc function to unify the creation of a mux.
+>
+> Where appropriate, pass around the mux core structure instead of the
+> parent adapter or the driver private data.
+>
+> Remove the parent adapter pointer from the driver private data for all
+> mux drivers.
+>
+> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> ---
+>   drivers/i2c/i2c-mux.c                        | 28 +++++++++++++++++-----
+>   drivers/i2c/muxes/i2c-arb-gpio-challenge.c   | 24 +++++++++----------
+>   drivers/i2c/muxes/i2c-mux-gpio.c             | 20 ++++++++--------
+>   drivers/i2c/muxes/i2c-mux-pca9541.c          | 35 ++++++++++++++--------------
+>   drivers/i2c/muxes/i2c-mux-pca954x.c          | 19 ++++++++++-----
+>   drivers/i2c/muxes/i2c-mux-pinctrl.c          | 23 +++++++++---------
+>   drivers/i2c/muxes/i2c-mux-reg.c              | 23 ++++++++++--------
+>   drivers/iio/imu/inv_mpu6050/inv_mpu_core.c   | 10 +++++++-
+>   drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h    |  1 +
+>   drivers/media/dvb-frontends/m88ds3103.c      | 10 +++++++-
+>   drivers/media/dvb-frontends/m88ds3103_priv.h |  1 +
+>   drivers/media/dvb-frontends/rtl2830.c        | 10 +++++++-
+>   drivers/media/dvb-frontends/rtl2830_priv.h   |  1 +
+>   drivers/media/dvb-frontends/rtl2832.c        | 10 +++++++-
+>   drivers/media/dvb-frontends/rtl2832_priv.h   |  1 +
+>   drivers/media/dvb-frontends/si2168.c         | 10 +++++++-
+>   drivers/media/dvb-frontends/si2168_priv.h    |  1 +
+>   drivers/media/usb/cx231xx/cx231xx-core.c     |  3 +++
+>   drivers/media/usb/cx231xx/cx231xx-i2c.c      | 13 +++++++++--
+>   drivers/media/usb/cx231xx/cx231xx.h          |  2 ++
+>   drivers/of/unittest.c                        | 16 +++++++------
+>   include/linux/i2c-mux.h                      | 14 ++++++++++-
+>   22 files changed, 187 insertions(+), 88 deletions(-)
+>
+> diff --git a/drivers/i2c/i2c-mux.c b/drivers/i2c/i2c-mux.c
+> index 00fc5b1c7b66..c2163f6b51d5 100644
+> --- a/drivers/i2c/i2c-mux.c
+> +++ b/drivers/i2c/i2c-mux.c
+> @@ -31,8 +31,8 @@
+>   struct i2c_mux_priv {
+>   	struct i2c_adapter adap;
+>   	struct i2c_algorithm algo;
+> +	struct i2c_mux_core *muxc;
+>
+> -	struct i2c_adapter *parent;
+>   	struct device *mux_dev;
+>   	void *mux_priv;
+>   	u32 chan_id;
+> @@ -45,7 +45,8 @@ static int i2c_mux_master_xfer(struct i2c_adapter *adap,
+>   			       struct i2c_msg msgs[], int num)
+>   {
+>   	struct i2c_mux_priv *priv = adap->algo_data;
+> -	struct i2c_adapter *parent = priv->parent;
+> +	struct i2c_mux_core *muxc = priv->muxc;
+> +	struct i2c_adapter *parent = muxc->parent;
+>   	int ret;
+>
+>   	/* Switch to the right mux port and perform the transfer. */
+> @@ -65,7 +66,8 @@ static int i2c_mux_smbus_xfer(struct i2c_adapter *adap,
+>   			      int size, union i2c_smbus_data *data)
+>   {
+>   	struct i2c_mux_priv *priv = adap->algo_data;
+> -	struct i2c_adapter *parent = priv->parent;
+> +	struct i2c_mux_core *muxc = priv->muxc;
+> +	struct i2c_adapter *parent = muxc->parent;
+>   	int ret;
+>
+>   	/* Select the right mux port and perform the transfer. */
+> @@ -84,7 +86,7 @@ static int i2c_mux_smbus_xfer(struct i2c_adapter *adap,
+>   static u32 i2c_mux_functionality(struct i2c_adapter *adap)
+>   {
+>   	struct i2c_mux_priv *priv = adap->algo_data;
+> -	struct i2c_adapter *parent = priv->parent;
+> +	struct i2c_adapter *parent = priv->muxc->parent;
+>
+>   	return parent->algo->functionality(parent);
+>   }
+> @@ -102,7 +104,20 @@ static unsigned int i2c_mux_parent_classes(struct i2c_adapter *parent)
+>   	return class;
+>   }
+>
+> -struct i2c_adapter *i2c_add_mux_adapter(struct i2c_adapter *parent,
+> +struct i2c_mux_core *i2c_mux_alloc(struct device *dev, int sizeof_priv)
+> +{
+> +	struct i2c_mux_core *muxc;
+> +
+> +	muxc = devm_kzalloc(dev, sizeof(*muxc) + sizeof_priv, GFP_KERNEL);
+> +	if (!muxc)
+> +		return NULL;
+> +	if (sizeof_priv)
+> +		muxc->priv = muxc + 1;
+> +	return muxc;
+> +}
+> +EXPORT_SYMBOL_GPL(i2c_mux_alloc);
+> +
+> +struct i2c_adapter *i2c_add_mux_adapter(struct i2c_mux_core *muxc,
+>   				struct device *mux_dev,
+>   				void *mux_priv, u32 force_nr, u32 chan_id,
+>   				unsigned int class,
+> @@ -111,6 +126,7 @@ struct i2c_adapter *i2c_add_mux_adapter(struct i2c_adapter *parent,
+>   				int (*deselect) (struct i2c_adapter *,
+>   						 void *, u32))
+>   {
+> +	struct i2c_adapter *parent = muxc->parent;
+>   	struct i2c_mux_priv *priv;
+>   	char symlink_name[20];
+>   	int ret;
+> @@ -120,7 +136,7 @@ struct i2c_adapter *i2c_add_mux_adapter(struct i2c_adapter *parent,
+>   		return NULL;
+>
+>   	/* Set up private adapter data */
+> -	priv->parent = parent;
+> +	priv->muxc = muxc;
+>   	priv->mux_dev = mux_dev;
+>   	priv->mux_priv = mux_priv;
+>   	priv->chan_id = chan_id;
+> diff --git a/drivers/i2c/muxes/i2c-arb-gpio-challenge.c b/drivers/i2c/muxes/i2c-arb-gpio-challenge.c
+> index 402e3a6c671a..6e27ea4fb25a 100644
+> --- a/drivers/i2c/muxes/i2c-arb-gpio-challenge.c
+> +++ b/drivers/i2c/muxes/i2c-arb-gpio-challenge.c
+> @@ -42,7 +42,6 @@
+>    */
+>
+>   struct i2c_arbitrator_data {
+> -	struct i2c_adapter *parent;
+>   	struct i2c_adapter *child;
+>   	int our_gpio;
+>   	int our_gpio_release;
+> @@ -119,6 +118,7 @@ static int i2c_arbitrator_probe(struct platform_device *pdev)
+>   	struct device *dev = &pdev->dev;
+>   	struct device_node *np = dev->of_node;
+>   	struct device_node *parent_np;
+> +	struct i2c_mux_core *muxc;
+>   	struct i2c_arbitrator_data *arb;
+>   	enum of_gpio_flags gpio_flags;
+>   	unsigned long out_init;
+> @@ -134,13 +134,12 @@ static int i2c_arbitrator_probe(struct platform_device *pdev)
+>   		return -EINVAL;
+>   	}
+>
+> -	arb = devm_kzalloc(dev, sizeof(*arb), GFP_KERNEL);
+> -	if (!arb) {
+> -		dev_err(dev, "Cannot allocate i2c_arbitrator_data\n");
+> +	muxc = i2c_mux_alloc(dev, sizeof(*arb));
+> +	if (!muxc)
+>   		return -ENOMEM;
+> -	}
+> -	platform_set_drvdata(pdev, arb);
+> +	arb = i2c_mux_priv(muxc);
+>
+> +	platform_set_drvdata(pdev, muxc);
+>   	/* Request GPIOs */
+>   	ret = of_get_named_gpio_flags(np, "our-claim-gpio", 0, &gpio_flags);
+>   	if (!gpio_is_valid(ret)) {
+> @@ -196,21 +195,21 @@ static int i2c_arbitrator_probe(struct platform_device *pdev)
+>   		dev_err(dev, "Cannot parse i2c-parent\n");
+>   		return -EINVAL;
+>   	}
+> -	arb->parent = of_get_i2c_adapter_by_node(parent_np);
+> +	muxc->parent = of_find_i2c_adapter_by_node(parent_np);
+>   	of_node_put(parent_np);
+> -	if (!arb->parent) {
+> +	if (!muxc->parent) {
+>   		dev_err(dev, "Cannot find parent bus\n");
+>   		return -EPROBE_DEFER;
+>   	}
+>
+>   	/* Actually add the mux adapter */
+> -	arb->child = i2c_add_mux_adapter(arb->parent, dev, arb, 0, 0, 0,
+> +	arb->child = i2c_add_mux_adapter(muxc, dev, arb, 0, 0, 0,
+>   					 i2c_arbitrator_select,
+>   					 i2c_arbitrator_deselect);
+>   	if (!arb->child) {
+>   		dev_err(dev, "Failed to add adapter\n");
+>   		ret = -ENODEV;
+> -		i2c_put_adapter(arb->parent);
+> +		i2c_put_adapter(muxc->parent);
+>   	}
+>
+>   	return ret;
+> @@ -218,10 +217,11 @@ static int i2c_arbitrator_probe(struct platform_device *pdev)
+>
+>   static int i2c_arbitrator_remove(struct platform_device *pdev)
+>   {
+> -	struct i2c_arbitrator_data *arb = platform_get_drvdata(pdev);
+> +	struct i2c_mux_core *muxc = platform_get_drvdata(pdev);
+> +	struct i2c_arbitrator_data *arb = i2c_mux_priv(muxc);
+>
+>   	i2c_del_mux_adapter(arb->child);
+> -	i2c_put_adapter(arb->parent);
+> +	i2c_put_adapter(muxc->parent);
+>
+>   	return 0;
+>   }
+> diff --git a/drivers/i2c/muxes/i2c-mux-gpio.c b/drivers/i2c/muxes/i2c-mux-gpio.c
+> index b8e11c16d98c..ee43dd76a4d7 100644
+> --- a/drivers/i2c/muxes/i2c-mux-gpio.c
+> +++ b/drivers/i2c/muxes/i2c-mux-gpio.c
+> @@ -18,7 +18,6 @@
+>   #include <linux/of_gpio.h>
+>
+>   struct gpiomux {
+> -	struct i2c_adapter *parent;
+>   	struct i2c_adapter **adap; /* child busses */
+>   	struct i2c_mux_gpio_platform_data data;
+>   	unsigned gpio_base;
+> @@ -136,19 +135,19 @@ static int i2c_mux_gpio_probe_dt(struct gpiomux *mux,
+>
+>   static int i2c_mux_gpio_probe(struct platform_device *pdev)
+>   {
+> +	struct i2c_mux_core *muxc;
+>   	struct gpiomux *mux;
+>   	struct i2c_adapter *parent;
+>   	int (*deselect) (struct i2c_adapter *, void *, u32);
+>   	unsigned initial_state, gpio_base;
+>   	int i, ret;
+>
+> -	mux = devm_kzalloc(&pdev->dev, sizeof(*mux), GFP_KERNEL);
+> -	if (!mux) {
+> -		dev_err(&pdev->dev, "Cannot allocate gpiomux structure");
+> +	muxc = i2c_mux_alloc(&pdev->dev, sizeof(*mux));
+> +	if (!muxc)
+>   		return -ENOMEM;
+> -	}
+> +	mux = i2c_mux_priv(muxc);
+>
+> -	platform_set_drvdata(pdev, mux);
+> +	platform_set_drvdata(pdev, muxc);
+>
+>   	if (!dev_get_platdata(&pdev->dev)) {
+>   		ret = i2c_mux_gpio_probe_dt(mux, pdev);
+> @@ -180,7 +179,7 @@ static int i2c_mux_gpio_probe(struct platform_device *pdev)
+>   	if (!parent)
+>   		return -EPROBE_DEFER;
+>
+> -	mux->parent = parent;
+> +	muxc->parent = parent;
+>   	mux->gpio_base = gpio_base;
+>
+>   	mux->adap = devm_kzalloc(&pdev->dev,
+> @@ -223,7 +222,7 @@ static int i2c_mux_gpio_probe(struct platform_device *pdev)
+>   		u32 nr = mux->data.base_nr ? (mux->data.base_nr + i) : 0;
+>   		unsigned int class = mux->data.classes ? mux->data.classes[i] : 0;
+>
+> -		mux->adap[i] = i2c_add_mux_adapter(parent, &pdev->dev, mux, nr,
+> +		mux->adap[i] = i2c_add_mux_adapter(muxc, &pdev->dev, mux, nr,
+>   						   mux->data.values[i], class,
+>   						   i2c_mux_gpio_select, deselect);
+>   		if (!mux->adap[i]) {
+> @@ -253,7 +252,8 @@ alloc_failed:
+>
+>   static int i2c_mux_gpio_remove(struct platform_device *pdev)
+>   {
+> -	struct gpiomux *mux = platform_get_drvdata(pdev);
+> +	struct i2c_mux_core *muxc = platform_get_drvdata(pdev);
+> +	struct gpiomux *mux = i2c_mux_priv(muxc);
+>   	int i;
+>
+>   	for (i = 0; i < mux->data.n_values; i++)
+> @@ -262,7 +262,7 @@ static int i2c_mux_gpio_remove(struct platform_device *pdev)
+>   	for (i = 0; i < mux->data.n_gpios; i++)
+>   		gpio_free(mux->gpio_base + mux->data.gpios[i]);
+>
+> -	i2c_put_adapter(mux->parent);
+> +	i2c_put_adapter(muxc->parent);
+>
+>   	return 0;
+>   }
+> diff --git a/drivers/i2c/muxes/i2c-mux-pca9541.c b/drivers/i2c/muxes/i2c-mux-pca9541.c
+> index d0ba424adebc..47ae2259d1ca 100644
+> --- a/drivers/i2c/muxes/i2c-mux-pca9541.c
+> +++ b/drivers/i2c/muxes/i2c-mux-pca9541.c
+> @@ -73,6 +73,7 @@
+>   #define SELECT_DELAY_LONG	1000
+>
+>   struct pca9541 {
+> +	struct i2c_client *client;
 
-Signed-off-by: Petr =C5=A0tetiar <ynezz@true.cz>
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
----
+I fail to see where this is being used.
 
-Changes in v2: None
+>   	struct i2c_adapter *mux_adap;
+>   	unsigned long select_timeout;
+>   	unsigned long arb_timeout;
+> @@ -217,7 +218,8 @@ static const u8 pca9541_control[16] = {
+>    */
+>   static int pca9541_arbitrate(struct i2c_client *client)
+>   {
+> -	struct pca9541 *data = i2c_get_clientdata(client);
+> +	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
+> +	struct pca9541 *data = i2c_mux_priv(muxc);
+>   	int reg;
+>
+>   	reg = pca9541_reg_read(client, PCA9541_CONTROL);
+> @@ -324,20 +326,22 @@ static int pca9541_probe(struct i2c_client *client,
+>   {
+>   	struct i2c_adapter *adap = client->adapter;
+>   	struct pca954x_platform_data *pdata = dev_get_platdata(&client->dev);
+> +	struct i2c_mux_core *muxc;
+>   	struct pca9541 *data;
+>   	int force;
+> -	int ret = -ENODEV;
+>
+>   	if (!i2c_check_functionality(adap, I2C_FUNC_SMBUS_BYTE_DATA))
+> -		goto err;
+> +		return -ENODEV;
+>
+> -	data = kzalloc(sizeof(struct pca9541), GFP_KERNEL);
+> -	if (!data) {
+> -		ret = -ENOMEM;
+> -		goto err;
+> -	}
+> +	muxc = i2c_mux_alloc(&client->dev, sizeof(*data));
+> +	if (!muxc)
+> +		return -ENOMEM;
+> +	data = i2c_mux_priv(muxc);
+> +
+> +	i2c_set_clientdata(client, muxc);
+>
+> -	i2c_set_clientdata(client, data);
+> +	data->client = client;
+> +	muxc->parent = adap;
+>
+>   	/*
+>   	 * I2C accesses are unprotected here.
+> @@ -352,34 +356,29 @@ static int pca9541_probe(struct i2c_client *client,
+>   	force = 0;
+>   	if (pdata)
+>   		force = pdata->modes[0].adap_id;
+> -	data->mux_adap = i2c_add_mux_adapter(adap, &client->dev, client,
+> +	data->mux_adap = i2c_add_mux_adapter(muxc, &client->dev, client,
+>   					     force, 0, 0,
+>   					     pca9541_select_chan,
+>   					     pca9541_release_chan);
+>
+>   	if (data->mux_adap == NULL) {
+>   		dev_err(&client->dev, "failed to register master selector\n");
+> -		goto exit_free;
+> +		return -ENODEV;
+>   	}
+>
+>   	dev_info(&client->dev, "registered master selector for I2C %s\n",
+>   		 client->name);
+>
+>   	return 0;
+> -
+> -exit_free:
+> -	kfree(data);
+> -err:
+> -	return ret;
+>   }
+>
+>   static int pca9541_remove(struct i2c_client *client)
+>   {
+> -	struct pca9541 *data = i2c_get_clientdata(client);
+> +	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
+> +	struct pca9541 *data = i2c_mux_priv(muxc);
+>
+>   	i2c_del_mux_adapter(data->mux_adap);
+>
+> -	kfree(data);
+>   	return 0;
+>   }
+>
+> diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
+> index acfcef3d4068..a4df831fae9d 100644
+> --- a/drivers/i2c/muxes/i2c-mux-pca954x.c
+> +++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
+> @@ -63,6 +63,7 @@ struct pca954x {
+>   	struct i2c_adapter *virt_adaps[PCA954X_MAX_NCHANS];
+>
+>   	u8 last_chan;		/* last register value */
+> +	struct i2c_client *client;
 
- arch/arm/boot/dts/Makefile               |   1 +
- arch/arm/boot/dts/imx6q-apalis-ixora.dts | 256 +++++++++++++++++++++++=
-++++++++
- 2 files changed, 257 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-apalis-ixora.dts
+Same here.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 44508dc..29b1aae 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -315,6 +315,7 @@ dtb-$(CONFIG_SOC_IMX6Q) +=3D \
- 	imx6dl-udoo.dtb \
- 	imx6dl-wandboard.dtb \
- 	imx6dl-wandboard-revb1.dtb \
-+	imx6q-apalis-ixora.dtb \
- 	imx6q-apf6dev.dtb \
- 	imx6q-arm2.dtb \
- 	imx6q-cm-fx6.dtb \
-diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora.dts b/arch/arm/boot/d=
-ts/imx6q-apalis-ixora.dts
-new file mode 100644
-index 0000000..5494a13
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
-@@ -0,0 +1,256 @@
-+/*
-+ * Copyright 2014-2016 Toradex AG
-+ * Copyright 2012 Freescale Semiconductor, Inc.
-+ * Copyright 2011 Linaro Ltd.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include "imx6q.dtsi"
-+#include "imx6qdl-apalis.dtsi"
-+
-+/ {
-+	model =3D "Toradex Apalis iMX6Q/D Module on Ixora Carrier Board";
-+	compatible =3D "toradex,apalis_imx6q-ixora", "toradex,apalis_imx6q",
-+		     "fsl,imx6q";
-+
-+	aliases {
-+		i2c0 =3D &i2cddc;
-+		i2c1 =3D &i2c1;
-+		i2c2 =3D &i2c2;
-+		i2c3 =3D &i2c3;
-+	};
-+
-+	aliases {
-+		rtc0 =3D &rtc_i2c;
-+		rtc1 =3D "/soc/aips-bus@02000000/snvs@020cc000/snvs-rtc-lp@34";
-+	};
-+
-+	gpio-keys {
-+		compatible =3D "gpio-keys";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_gpio_keys>;
-+
-+		wakeup {
-+			label =3D "Wake-Up";
-+			gpios =3D <&gpio1 4 GPIO_ACTIVE_LOW>;
-+			linux,code =3D <KEY_WAKEUP>;
-+			debounce-interval =3D <10>;
-+			gpio-key,wakeup;
-+		};
-+	};
-+
-+	leds {
-+		compatible =3D "gpio-leds";
-+
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_leds_ixora>;
-+
-+		led4-green {
-+			label =3D "LED_4_GREEN";
-+			gpios =3D <&gpio1 17 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led4-red {
-+			label =3D "LED_4_RED";
-+			gpios =3D <&gpio1 21 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led5-green {
-+			label =3D "LED_5_GREEN";
-+			gpios =3D <&gpio2 1 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led5-red {
-+			label =3D "LED_5_RED";
-+			gpios =3D <&gpio2 2 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	pwmleds {
-+		compatible =3D "pwm-leds";
-+		ledpwm1 {
-+			label =3D "PWM1";
-+			pwms =3D <&pwm1 0 50000>;
-+			max-brightness =3D <255>;
-+		};
-+
-+		ledpwm2 {
-+			label =3D "PWM2";
-+			pwms =3D <&pwm2 0 50000>;
-+			max-brightness =3D <255>;
-+		};
-+
-+		ledpwm3 {
-+			label =3D "PWM3";
-+			pwms =3D <&pwm3 0 50000>;
-+			max-brightness =3D <255>;
-+		};
-+	};
-+
-+	regulators {
-+		reg_usb_otg_vbus: usb_otg_vbus {
-+			status =3D "okay";
-+		};
-+
-+		reg_usb_host_vbus: usb_host_vbus {
-+			status =3D "okay";
-+		};
-+	};
-+};
-+
-+&backlight {
-+	brightness-levels =3D <0 127 191 223 239 247 251 255>;
-+	default-brightness-level =3D <1>;
-+	status =3D "okay";
-+};
-+
-+&can1 {
-+	status =3D "okay";
-+};
-+
-+&can2 {
-+	status =3D "okay";
-+};
-+
-+/* GEN1_I2C: I2C1_SDA/SCL on MXM3 209/211 (e.g. RTC on carrier board) =
-*/
-+&i2c1 {
-+	status =3D "okay";
-+
-+	cat24c02@50 {
-+		compatible =3D "atmel,24c02";
-+		reg =3D <0x50>;
-+	};
-+
-+	/* M41T0M6 real time clock on carrier board */
-+	rtc_i2c: rtc@68 {
-+		compatible =3D "st,m41t00";
-+		reg =3D <0x68>;
-+	};
-+};
-+
-+&iomuxc {
-+	/*
-+	 * Mux the Apalis GPIOs, GPIO7 used for PCIe reset,
-+	 * GPIO5, 6 used by optional fusion_F0710A kernel module
-+	 */
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_apalis_gpio1 &pinctrl_apalis_gpio2
-+		     &pinctrl_apalis_gpio3 &pinctrl_apalis_gpio4
-+		     &pinctrl_apalis_gpio5 &pinctrl_apalis_gpio6
-+		     &pinctrl_apalis_gpio7 &pinctrl_apalis_gpio8>;
-+
-+	leds_ixora {
-+		pinctrl_leds_ixora: leds-ixora {
-+			fsl,pins =3D <
-+				MX6QDL_PAD_SD1_DAT1__GPIO1_IO17 PAD_CTRL_HYS_PU
-+				MX6QDL_PAD_SD1_DAT3__GPIO1_IO21 PAD_CTRL_HYS_PU
-+				MX6QDL_PAD_NANDF_D1__GPIO2_IO01 PAD_CTRL_HYS_PU
-+				MX6QDL_PAD_NANDF_D2__GPIO2_IO02 PAD_CTRL_HYS_PU
-+			>;
-+		};
-+	};
-+};
-+
-+&pcie {
-+	/* active-low meaning opposite of regular PERST# active-low polarity =
-*/
-+	reset-gpio =3D <&gpio1 28 GPIO_ACTIVE_LOW>;
-+	status =3D "okay";
-+};
-+
-+&pwm1 {
-+	status =3D "okay";
-+};
-+
-+&pwm2 {
-+	status =3D "okay";
-+};
-+
-+&pwm3 {
-+	status =3D "okay";
-+};
-+
-+&pwm4 {
-+	status =3D "okay";
-+};
-+
-+&sata {
-+	status =3D "okay";
-+};
-+
-+&sound_spdif {
-+	status =3D "okay";
-+};
-+
-+&spdif {
-+	status =3D "okay";
-+};
-+
-+&uart1 {
-+	status =3D "okay";
-+};
-+
-+&uart2 {
-+	status =3D "okay";
-+};
-+
-+&uart4 {
-+	status =3D "okay";
-+};
-+
-+&uart5 {
-+	status =3D "okay";
-+};
-+
-+&usbh1 {
-+	status =3D "okay";
-+};
-+
-+&usbotg {
-+	status =3D "okay";
-+};
-+
-+/* SD1 */
-+&usdhc2 {
-+	status =3D "okay";
-+};
---=20
-2.5.0
+Maybe it starts to be used in a later patch (I did not check), but then it should be defined
+where it is used.
+
+Thanks,
+Guenter
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
