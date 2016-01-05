@@ -1,53 +1,69 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v4 net-next 2/3] net: macb: Add NPx macb config using
- USRIO_DISABLED cap
-Date: Tue, 5 Jan 2016 13:20:50 +0100
-Message-ID: <568BB522.4060905@baylibre.com>
-References: <1451898103-21868-1-git-send-email-narmstrong@baylibre.com>
- <1451900573-22657-1-git-send-email-narmstrong@baylibre.com>
- <1451900573-22657-3-git-send-email-narmstrong@baylibre.com>
- <568A4BC0.2090005@atmel.com>
+From: xuejiancheng <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 5/6] mfd: dt-bindings: add device tree bindings for
+ Hi3519 sysctrl
+Date: Tue, 5 Jan 2016 20:19:02 +0800
+Message-ID: <568BB4B6.20507@huawei.com>
+References: <1451439832-13927-1-git-send-email-xuejiancheng@huawei.com>
+ <1451439832-13927-6-git-send-email-xuejiancheng@huawei.com>
+ <1451988742.3391.22.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <568A4BC0.2090005@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, davem@davemloft.net, harini.katakam@xilinx.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, joshc@ni.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1451988742.3391.22.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangzhenxing-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/04/2016 11:38 AM, Nicolas Ferre wrote:
-> Le 04/01/2016 10:42, Neil Armstrong a =E9crit :
->>  static const struct macb_config zynqmp_config =3D {
->>  	.caps =3D MACB_CAPS_GIGABIT_MODE_AVAILABLE | MACB_CAPS_JUMBO,
->> @@ -2801,6 +2806,7 @@ static const struct of_device_id macb_dt_ids[]=
- =3D {
->>  	{ .compatible =3D "cdns,at32ap7000-macb" },
->>  	{ .compatible =3D "cdns,at91sam9260-macb", .data =3D &at91sam9260_=
-config },
->>  	{ .compatible =3D "cdns,macb" },
->> +	{ .compatible =3D "cdns,npx-macb", .data =3D &npx_config },
->=20
-> I can accept that, but I think that you'd better make your device tre=
-e
-> compatibility string *not* generic. Name it by the first NPx SoC or
-> perfectly compatible SoC family that has this configuration and you'l=
-l
-> be able to make the NP(x+1) compatible with it.
-Well, the first Soc having this configuration is Np4, would cdns,np4-ma=
-cb be ok ?
->=20
-> It has proven to be much more future proof and even if in the early d=
-ays
-> of DT on ARM we accepted some binding with generic strings like this =
-one
-> below, It has proven to be a mistake.
->=20
->>  	{ .compatible =3D "cdns,gem", .data =3D &pc302gem_config },
->>  	{ .compatible =3D "atmel,sama5d2-gem", .data =3D &sama5d2_config }=
-,
->>
->=20
->=20
 
-Neil
+On 2016/1/5 18:12, Philipp Zabel wrote:
+> Am Mittwoch, den 30.12.2015, 09:43 +0800 schrieb Jiancheng Xue:
+>> Add device tree bindings for Hi3519 system controller.
+>>
+>> Signed-off-by: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/mfd/hi3519.txt | 14 ++++++++++++++
+>>  1 file changed, 14 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mfd/hi3519.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/hi3519.txt b/Documentation/devicetree/bindings/mfd/hi3519.txt
+>> new file mode 100644
+>> index 0000000..2536edc
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/hi3519.txt
+>> @@ -0,0 +1,14 @@
+>> +* Hisilicon Hi3519 System Controller Block
+>> +
+>> +This bindings use the following binding:
+>> +Dcumentation/devicetree/bindings/clock/clock-bindings.txt
+> 
+> Typo: "Documentation"
+> - but I don't see the clock bindings being used here at all.
+> Maybe just drop this sentence?
+> 
+
+Sorry about this mistake. Thank you very much.
+
+>> +
+>> +Required properties:
+>> +- compatible: "hisilicon,hi3519-sysctrl".
+>> +- reg: the register region of this block
+>> +
+>> +Examples:
+>> +sysctrl: system-controller@12010000 {
+>> +	compatible = "hisilicon,hi3519-sysctrl", "syscon";
+>> +	reg = <0x12010000 0x1000>;
+>> +};
+> 
+> regards
+> Philipp
+> 
+> 
+> .
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
