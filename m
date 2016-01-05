@@ -1,56 +1,79 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH V11 3/7] dma: add Qualcomm Technologies HIDMA management
- driver
-Date: Tue, 5 Jan 2016 10:16:19 +0530
-Message-ID: <20160105044619.GJ2940@localhost>
-References: <1451865996-12808-1-git-send-email-okaya@codeaurora.org>
- <1451865996-12808-4-git-send-email-okaya@codeaurora.org>
- <CAHp75Vd49-1H+1dkDmJzLpVhov1g+uJV+YiTBC9Xd3hVTmwRVg@mail.gmail.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v5 0/5] Add memory mapped read support for ti-qspi
+Date: Tue, 5 Jan 2016 10:50:42 +0530
+Message-ID: <568B52AA.4070900@ti.com>
+References: <1449807000-6457-1-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vd49-1H+1dkDmJzLpVhov1g+uJV+YiTBC9Xd3hVTmwRVg@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Sinan Kaya <okaya@codeaurora.org>, dmaengine <dmaengine@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Timur Tabi <timur@codeaurora.org>, devicetree <devicetree@vger.kernel.org>, Christopher Covington <cov@codeaurora.org>, jcm@redhat.com, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1449807000-6457-1-git-send-email-vigneshr@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Brian Norris <computersforpeace@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, hramrach@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 04, 2016 at 08:37:30PM +0200, Andy Shevchenko wrote:
+Hi Brian,
 
-> > +static int set_priority(struct hidma_mgmt_dev *mdev, unsigned int i, u64 val)
-> > +{
-> > +       u64 tmp;
-> > +       int rc;
-> > +
-> > +       if (i > mdev->dma_channels)
+On 12/11/2015 09:39 AM, Vignesh R wrote:
+> Changes since v4:
+> Use syscon to access system control module register in ti-qspi driver.
 > 
-> Shouldn't be >= ? I somehow missed that.
 
-There is no merit is posting not related context while replying, makes your
-emails harder to read, please fix that
+Gentle ping...
+Are you ok with MTD side changes of this patch series?
 
-> > +               return -EINVAL;
-> > +
-> > +       tmp = mdev->priority[i];
-> > +       mdev->priority[i] = val;
-> > +       rc = hidma_mgmt_setup(mdev);
-> > +       if (rc)
-> > +               mdev->priority[i] = tmp;
-> > +       return rc;
-> > +}
-> > +
-> > +static int set_weight(struct hidma_mgmt_dev *mdev, unsigned int i, u64 val)
-> > +{
-> > +       u64 tmp;
-> > +       int rc;
-> > +
-> > +       if (i > mdev->dma_channels)
+> Changes since v3:
+> Rework to introduce spi_flash_read_message struct.
+> Support different opcode/addr/data formats as per Brian's suggestion
+> here: https://lkml.org/lkml/2015/11/11/454
 > 
-> Ditto.
-
-Exactly, ditto...
-
+> Changes since v2:
+> Remove mmap_lock_mutex.
+> Optimize enable/disable of mmap mode.
+> 
+> Changes since v1:
+> Introduce API in SPI core that MTD flash driver can call for mmap read
+> instead of directly calling spi-master driver callback. This API makes
+> sure that SPI core msg queue is locked during mmap transfers.
+> v1: https://lkml.org/lkml/2015/9/4/103
+> 
+> 
+> Cover letter:
+> 
+> This patch series adds support for memory mapped read port of ti-qspi.
+> ti-qspi has a special memory mapped port through which SPI flash
+> memories can be accessed directly via SoC specific memory region.
+> 
+> First patch adds a method to pass flash specific information like read
+> opcode, dummy bytes etc and to request mmap read. Second patch
+> implements mmap read method in ti-qspi driver. Patch 3 adapts m25p80 to
+> use mmap read method before trying normal SPI transfer. Patch 4 and 5
+> add memory map region DT entries for DRA7xx and AM43xx SoCs.
+> 
+> This patch series is based on the discussions here:
+> http://www.spinics.net/lists/linux-spi/msg04796.html
+> 
+> Tested on DRA74 EVM and AM437x-SK.
+> Read performance increases from ~100kB/s to ~2.5MB/s.
+> 
+> Vignesh R (5):
+>   spi: introduce accelerated read support for spi flash devices
+>   spi: spi-ti-qspi: add mmap mode read support
+>   mtd: devices: m25p80: add support for mmap read request
+>   ARM: dts: DRA7: add entry for qspi mmap region
+>   ARM: dts: AM4372: add entry for qspi mmap region
+> 
+>  Documentation/devicetree/bindings/spi/ti_qspi.txt |  22 +++-
+>  arch/arm/boot/dts/am4372.dtsi                     |   4 +-
+>  arch/arm/boot/dts/dra7.dtsi                       |   6 +-
+>  drivers/mtd/devices/m25p80.c                      |  20 ++++
+>  drivers/spi/spi-ti-qspi.c                         | 139 +++++++++++++++++-----
+>  drivers/spi/spi.c                                 |  45 +++++++
+>  include/linux/spi/spi.h                           |  41 +++++++
+>  7 files changed, 243 insertions(+), 34 deletions(-)
+> 
 
 -- 
-~Vinod
+Regards
+Vignesh
