@@ -1,89 +1,93 @@
-From: Peter Rosin <peda@lysator.liu.se>
-Subject: Re: [PATCH 01/10] i2c-mux: add common core data for every mux instance
-Date: Tue, 05 Jan 2016 10:05:17 +0100
-Message-ID: <568B874D.8020205@lysator.liu.se>
-References: <1451920215-29167-1-git-send-email-peda@lysator.liu.se> <1451920215-29167-2-git-send-email-peda@lysator.liu.se> <568A919E.8040006@roeck-us.net>
+From: Chengxiang Jiao <CJiao@ANALOGIXSEMI.COM>
+Subject: =?gb2312?B?tPC4tDogW1BBVENIdjcgMC81XSBBZGQgaW5pdGlhbCBzdXBwb3J0IGZvciBz?=
+ =?gb2312?Q?limport_anx78xx?=
+Date: Tue, 5 Jan 2016 08:54:18 +0000
+Message-ID: <CY1PR04MB17999901095C939C7F2E28F4D2F30@CY1PR04MB1799.namprd04.prod.outlook.com>
+References: <1451857068-23750-1-git-send-email-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <568A919E.8040006@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Wolfram Sang <wsa@the-dreams.de>
-Cc: Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Peter Korsgaard <peter.korsgaard@barco.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1451857068-23750-1-git-send-email-enric.balletbo@collabora.com>
+Content-Language: zh-CN
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Enric Balletbo i Serra <eballetbo@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "treding@nvidia.com" <treding@nvidia.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "drinkcat@chromium.org" <drinkcat@chromium.org>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "airlied@linux.ie" <airlied@linux.ie>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "emil.l.velikov@gmail.com" <emil.l.velikov@gmail.com>, "cawa.cheng@mediatek.com" <cawa.cheng@mediatek.com>, "djkurtz@chromium.org" <djkurtz@chromium.org>, "jb.tsai@mediatek.com" <jb.tsai@mediatek.com>, "sjoerd.simons@collabora.co.uk" <sjoerd.simons@collabora.co.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Sheng Pan <SPan@ANALOGIXSEMI.COM>, "galak@codeaurora.org" <galak@codeaurora.org>, "javier@dowhile0.org" <javier@dowhile0.org>, "eddie.huang@mediatek.com" <eddie.huang@mediatek.com>, dan.carpente
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
-
-On 2016-01-04 16:37, Guenter Roeck wrote:
-> On 01/04/2016 07:10 AM, Peter Rosin wrote:
->> From: Peter Rosin <peda@axentia.se>
->>
->> The initial core mux structure starts off small with only the parent
->> adapter pointer, which all muxes have, and a priv pointer for mux
->> driver private data.
->>
->> Add i2c_mux_alloc function to unify the creation of a mux.
->>
->> Where appropriate, pass around the mux core structure instead of the
->> parent adapter or the driver private data.
->>
->> Remove the parent adapter pointer from the driver private data for all
->> mux drivers.
->>
->> Signed-off-by: Peter Rosin <peda@axentia.se>
->> ---
->>   drivers/i2c/i2c-mux.c                      | 35 ++++++++++++++++++++++++-----
->>   drivers/i2c/muxes/i2c-arb-gpio-challenge.c | 24 +++++++++++---------
->>   drivers/i2c/muxes/i2c-mux-gpio.c           | 20 +++++++++--------
->>   drivers/i2c/muxes/i2c-mux-pca9541.c        | 36 ++++++++++++++++--------------
->>   drivers/i2c/muxes/i2c-mux-pca954x.c        | 22 +++++++++++++-----
->>   drivers/i2c/muxes/i2c-mux-pinctrl.c        | 24 +++++++++++---------
->>   drivers/i2c/muxes/i2c-mux-reg.c            | 25 ++++++++++++---------
->>   include/linux/i2c-mux.h                    | 14 +++++++++++-
->>   8 files changed, 129 insertions(+), 71 deletions(-)
->>
-
-*snip*
-
->> +struct i2c_mux_core *i2c_mux_alloc(struct device *dev, int sizeof_priv)
->> +{
->> +    struct i2c_mux_core *muxc;
->> +
->> +    muxc = devm_kzalloc(dev, sizeof(*muxc), GFP_KERNEL);
->> +    if (!muxc)
->> +        return NULL;
->> +    if (sizeof_priv) {
->> +        muxc->priv = devm_kzalloc(dev, sizeof_priv, GFP_KERNEL);
->> +        if (!muxc->priv)
->> +            goto fail;
->> +    }
-> 
-> Why not just allocate sizeof(*muxc) + sizeof_priv in a single operation
-> and then assign muxc->priv to muxc + 1 if sizeof_priv > 0 ?
-
-Why indeed, good suggestion.
-
-*snip*
-
->> @@ -134,13 +134,14 @@ static int i2c_arbitrator_probe(struct platform_device *pdev)
->>           return -EINVAL;
->>       }
->>
->> -    arb = devm_kzalloc(dev, sizeof(*arb), GFP_KERNEL);
->> -    if (!arb) {
->> -        dev_err(dev, "Cannot allocate i2c_arbitrator_data\n");
->> +    muxc = i2c_mux_alloc(dev, sizeof(*arb));
->> +    if (!muxc) {
->> +        dev_err(dev, "Cannot allocate i2c_mux_core structure\n");
-> 
-> Unnecessary error message.
-> 
-
-Right, I'll remove that (and the others just like it).
-
-I'll see if I can cook up a v2 that also converts the i2c muxes elsewhere in
-drivers/ that I wasn't aware of.
-
-Cheers,
-Peter
+SGkgRW5yaWMsDQoNCkp1c3QgdG8gY29uZmlybSB3aXRoIHlvdS4NClRoaXMgdmVyc2lvbiBpcyBm
+cm9tIGh0dHBzOi8vY2hyb21pdW0tcmV2aWV3Lmdvb2dsZXNvdXJjZS5jb20vIy9jLzMwODQ0Mi8x
+MSwgcmlnaHQ/DQoNCkNoZW5neGlhbmcNCjIwMTYvMS81DQoNCg0KLS0tLS3Tyrz+1K28/i0tLS0t
+DQq3orz+yMs6IEVucmljIEJhbGxldGJvIGkgU2VycmEgW21haWx0bzplYmFsbGV0Ym9AZ21haWwu
+Y29tXSANCreiy83KsbzkOiAyMDE2xOox1MI0yNUgNTozOA0KytW8/sjLOiBkZXZpY2V0cmVlQHZn
+ZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgZHJpLWRldmVsQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZzsgZGV2ZWxAZHJpdmVyZGV2Lm9zdW9zbC5vcmc7IHRyZWRpbmdA
+bnZpZGlhLmNvbQ0Ks63LzTogcm9iaCtkdEBrZXJuZWwub3JnOyBwYXdlbC5tb2xsQGFybS5jb207
+IG1hcmsucnV0bGFuZEBhcm0uY29tOyBpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51azsgZ2Fs
+YWtAY29kZWF1cm9yYS5vcmc7IGFpcmxpZWRAbGludXguaWU7IGdyZWdraEBsaW51eGZvdW5kYXRp
+b24ub3JnOyBzam9lcmQuc2ltb25zQGNvbGxhYm9yYS5jby51azsgamF2aWVyQGRvd2hpbGUwLm9y
+ZzsgU2hlbmcgUGFuOyBuYXRoYW4uY2h1bmdAbWVkaWF0ZWsuY29tOyBkamt1cnR6QGNocm9taXVt
+Lm9yZzsgZHJpbmtjYXRAY2hyb21pdW0ub3JnOyBsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2Fy
+ZC5jb207IGRhbi5jYXJwZW50ZXJAb3JhY2xlLmNvbTsgamIudHNhaUBtZWRpYXRlay5jb207IGNh
+d2EuY2hlbmdAbWVkaWF0ZWsuY29tOyBlZGRpZS5odWFuZ0BtZWRpYXRlay5jb207IENoZW5neGlh
+bmcgSmlhbzsgZW1pbC5sLnZlbGlrb3ZAZ21haWwuY29tDQrW98ziOiBbUEFUQ0h2NyAwLzVdIEFk
+ZCBpbml0aWFsIHN1cHBvcnQgZm9yIHNsaW1wb3J0IGFueDc4eHgNCg0KSGkgYWxsLA0KDQpUaGlz
+IGlzIGFub3RoZXIgdmVyc2lvbiBvZiB0aGUgcGF0Y2ggc2V0IHRvIGludHJvZHVjZSB0aGUgYW54
+NzgxNCB0cmFuc21pdHRlci4NCkFueSBjb21tZW50cyBhcmUgd2VsY29tZS4NCg0KVGhlIGZvbGxv
+d2luZyBzZXJpZXMgYWRkIGluaXRpYWwgc3VwcG9ydCBmb3IgdGhlIFNsaW1wb3J0IEFOWDc4MTQg
+dHJhbnNtaXR0ZXIsIGEgdWx0cmEtbG93IHBvd2VyIEZ1bGwtSEQgKDEwODBwNjApIHRyYW5zbWl0
+dGVyIGRlc2lnbmVkIGZvciBwb3J0YWJsZSBkZXZpY2UuDQoNClRoZSBkcml2ZXIgd2FzIG9yaWdp
+bmFsbHkgY3JlYXRlZCBhbmQgYmFzZWQgZnJvbSB0aGUgd29yayBvZiBKdW5odWEgWGlhIGZyb20g
+QW5hbG9naXguIFRoaXMgZHJpdmVyIGlzIGEgcmVmYWN0b3Igb2YgdGhlIG9yaWdpbmFsIGRyaXZl
+ciBhbmQgZml4ZXMgZGlmZmVyZW50IGNvZGluZyBzdHlsZSBsaW5lcywgYW5kIGRpZmZlcmVudCBl
+cnJvcnMvd2FybmluZ3MgcmVwb3J0ZWQgYnkgY2hlY2twYXRjaC4gQWxzbyB0aGVyZSB3ZXJlIHRo
+aW5ncyB0aGF0IEkgbm90aWNlZCB0aGF0IHdlIG5lZWQgdG8gY2hhbmdlIGxpa2U6DQoNCiAtIENv
+bnZlcnQgdGhlIG51bWJlcmVkIEdQSU8gQVBJIHRvIHRoZSBuZXcgZGVzY3JpcHRvciBiYXNlZCBH
+UElPIEFQSS4NCiAtIFJldmlldyB0aGUgRFQgYmluZGluZw0KIC0gQWRkIG1pc3NpbmcgTU9EVUxF
+X0RFVklDRV9UQUJMRShvZiwgLi4uKTsNCiAtIEZpeCBNYWtlZmlsZXMgYW5kIEtjb25maWcgdG8g
+YnVpbGQgY29uZGl0aW9uYWxseS4NCiAtIFVzZSBTSU1QTEVfREVWX1BNX09QUygpIGluc3RlYWQg
+b2YgdGhlIGRlcHJlY2F0ZWQgaTJjIC5zdXNwZW5kIGFuZA0KICAucmVzdW1lIGNhbGxiYWNrcy4N
+CiAtIE1vdmUgdG8gdXNlIG1hbmFnZWQgZGV2aWNlIHJlc291cmNlcy4NCiAtIFJlbW92ZSBkZWFk
+L3VudXNlZCBjb2RlLg0KIC0gQW5kIG90aGVycyAuLi4NCg0KRW5yaWMgQmFsbGV0Ym8gaSBTZXJy
+YSAoNSk6DQogIGRybS9kcDogYWRkIERQQ0QgZGVmaW5pdGlvbnMgZnJvbSBEUCAxLjENCiAgaGRt
+aTogYWRkZWQgZnVuY3Rpb25zIGZvciBNUEVHIEluZm9GcmFtZXMNCiAgb2Y6IEFkZCB2ZW5kb3Ig
+cHJlZml4IGZvciBBbmFsb2dpeCBTZW1pY29uZHVjdG9yLCBJbmMuDQogIGRldmljZXRyZWU6IEFk
+ZCBuZXcgQU5YNzgxNCBTbGltUG9ydCB0cmFuc21pdHRlciBiaW5kaW5nLg0KICBkcm06IGJyaWRn
+ZTogYW54Nzh4eDogQWRkIGFueDc4eHggZHJpdmVyIHN1cHBvcnQgYnkgYW5hbG9naXguDQoNCiAu
+Li4vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0ICAgICAgICB8ICAgIDEg
+Kw0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JyaWRnZS9hbng3ODE0LnR4dCAgIHwg
+ICAzOSArDQogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmlnICAgICAgICAgICAgICAgICAg
+ICAgfCAgICAyICsNCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlICAgICAgICAgICAg
+ICAgICAgICB8ICAgIDEgKw0KIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW54Nzh4eC9LY29uZmln
+ICAgICAgICAgICAgIHwgICAgNSArDQogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbng3OHh4L01h
+a2VmaWxlICAgICAgICAgICAgfCAgICA0ICsNCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2FueDc4
+eHgvYW54Nzh4eC5oICAgICAgICAgICB8ICAgNDQgKw0KIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
+YW54Nzh4eC9hbng3OHh4X21haW4uYyAgICAgIHwgIDMzNCArKw0KIGRyaXZlcnMvZ3B1L2RybS9i
+cmlkZ2UvYW54Nzh4eC9zbGltcG9ydF90eF9kcnYuYyAgIHwgMzE5NCArKysrKysrKysrKysrKysr
+KysrKw0KIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW54Nzh4eC9zbGltcG9ydF90eF9kcnYuaCAg
+IHwgIDExMCArDQogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbng3OHh4L3NsaW1wb3J0X3R4X3Jl
+Zy5oICAgfCAgNzM3ICsrKysrDQogZHJpdmVycy92aWRlby9oZG1pLmMgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgfCAgMTU2ICsNCiBpbmNsdWRlL2RybS9kcm1fZHBfaGVscGVyLmggICAg
+ICAgICAgICAgICAgICAgICAgICB8ICAgMTAgKw0KIGluY2x1ZGUvbGludXgvaGRtaS5oICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyNCArDQogMTQgZmlsZXMgY2hhbmdlZCwgNDY2
+MSBpbnNlcnRpb25zKCspDQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy92aWRlby9icmlkZ2UvYW54NzgxNC50eHQNCiBjcmVhdGUgbW9kZSAxMDA2
+NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbng3OHh4L0tjb25maWcNCiBjcmVhdGUgbW9kZSAx
+MDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbng3OHh4L01ha2VmaWxlDQogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW54Nzh4eC9hbng3OHh4LmgNCiBjcmVh
+dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hbng3OHh4L2FueDc4eHhfbWFp
+bi5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW54Nzh4eC9z
+bGltcG9ydF90eF9kcnYuYw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJp
+ZGdlL2FueDc4eHgvc2xpbXBvcnRfdHhfZHJ2LmgNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
+cy9ncHUvZHJtL2JyaWRnZS9hbng3OHh4L3NsaW1wb3J0X3R4X3JlZy5oDQoNCi0tDQoyLjEuMA0K
+DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZlbCBt
+YWlsaW5nIGxpc3QKZGV2ZWxAbGludXhkcml2ZXJwcm9qZWN0Lm9yZwpodHRwOi8vZHJpdmVyZGV2
+LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcml2ZXJkZXYtZGV2ZWwK
