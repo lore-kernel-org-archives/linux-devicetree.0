@@ -1,86 +1,68 @@
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/5] iio:adc:at91_adc8xx: introduce new atmel adc driver
-Date: Tue, 5 Jan 2016 14:18:05 +0100
-Message-ID: <20160105131805.GE2334@odux.rfo.atmel.com>
-References: <1450689852-22763-1-git-send-email-ludovic.desroches@atmel.com>
- <1450689852-22763-2-git-send-email-ludovic.desroches@atmel.com>
- <56799798.203@kernel.org>
- <20151223102700.GC2789@odux.rfo.atmel.com>
- <20151223104833.GE2789@odux.rfo.atmel.com>
- <E2C27D1A-1035-4330-AEF3-C72B87C27FEF@jic23.retrosnub.co.uk>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 net-next 2/3] net: macb: Add NPx macb config using
+ USRIO_DISABLED cap
+Date: Tue, 5 Jan 2016 14:27:23 +0100
+Message-ID: <568BC4BB.1030202@atmel.com>
+References: <1451898103-21868-1-git-send-email-narmstrong@baylibre.com>
+ <1451900573-22657-1-git-send-email-narmstrong@baylibre.com>
+ <1451900573-22657-3-git-send-email-narmstrong@baylibre.com>
+ <568A4BC0.2090005@atmel.com> <568BB522.4060905@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <E2C27D1A-1035-4330-AEF3-C72B87C27FEF-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+In-Reply-To: <568BB522.4060905-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joshc-acOepvfBmUk@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 23, 2015 at 05:21:25PM +0000, Jonathan Cameron wrote:
-> 
-> 
-> On 23 December 2015 10:48:33 GMT+00:00, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
-> >On Wed, Dec 23, 2015 at 11:27:00AM +0100, Ludovic Desroches wrote:
-> >> On Tue, Dec 22, 2015 at 06:34:00PM +0000, Jonathan Cameron wrote:
-> >> > On 21/12/15 09:24, Ludovic Desroches wrote:
-> >> > > This driver supports the new version of the Atmel ADC device
-> >introduced
-> >> > > with the SAMA5D2 SoC family.
-> >> > > 
-> >
-> >[...]
-> >
-> >> > > +static irqreturn_t at91_adc_interrupt(int irq, void *private)
-> >> > > +{
-> >> > > +	struct iio_dev *indio = private;
-> >> > > +	struct at91_adc_state *st = iio_priv(indio);
-> >> > > +	u32 status = at91_adc_readl(st, ADC_ISR);
-> >> > > +
-> >> > > +	status &= at91_adc_readl(st, ADC_IMR);
-> >> > > +	if (status & 0xFFF) {
-> >> > > +		st->last_value = at91_adc_readl(st, st->chan->address);
-> >> > If this is a polled read - is there any reason to read this value
-> >here
-> >> > rather than outside the interrupt?
-> >> 
-> >> No it can be done outside the interrupt. I have taken some parts from
-> >the
-> >> previous driver but it was reading a register used by all the
-> >channels
-> >> when it has been designed. So yes there is probably no more reason to
-> >> read it into the interrupt.
-> >> 
-> >
-> >Thinking about it. Is it really useful to move reading outside the
-> >interrupt?
-> It avoids needing to know the channel in here, hence simplifying the code a bit.
+Le 05/01/2016 13:20, Neil Armstrong a =E9crit :
+> On 01/04/2016 11:38 AM, Nicolas Ferre wrote:
+>> Le 04/01/2016 10:42, Neil Armstrong a =E9crit :
+>>>  static const struct macb_config zynqmp_config =3D {
+>>>  	.caps =3D MACB_CAPS_GIGABIT_MODE_AVAILABLE | MACB_CAPS_JUMBO,
+>>> @@ -2801,6 +2806,7 @@ static const struct of_device_id macb_dt_ids[=
+] =3D {
+>>>  	{ .compatible =3D "cdns,at32ap7000-macb" },
+>>>  	{ .compatible =3D "cdns,at91sam9260-macb", .data =3D &at91sam9260=
+_config },
+>>>  	{ .compatible =3D "cdns,macb" },
+>>> +	{ .compatible =3D "cdns,npx-macb", .data =3D &npx_config },
+>>
+>> I can accept that, but I think that you'd better make your device tr=
+ee
+>> compatibility string *not* generic. Name it by the first NPx SoC or
+>> perfectly compatible SoC family that has this configuration and you'=
+ll
+>> be able to make the NP(x+1) compatible with it.
+> Well, the first Soc having this configuration is Np4, would cdns,np4-=
+macb be ok ?
 
-I am not sure it will simplify the code since the interrupt is cleared
-when reading the conversion not the interrupt status register.
+Yes, absolutely.
 
-> >
-> >By the way this is not a polled read.
-> I meant that it is an individually requested conversion rather than a free running
->  sampling system where the value read might change before it is read out.
-> >
-> >> > > +		st->done = true;
-> >> > > +		wake_up_interruptible(&st->wq_data_available);
-> >> > > +	}
-> >> > > +
-> >> > > +	return IRQ_HANDLED;
-> >> > > +}
-> >
-> >Ludovic
-> >--
-> >To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> >the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> -- 
-> Sent from my Android device with K-9 Mail. Please excuse my brevity.
+Thanks
+
+>> It has proven to be much more future proof and even if in the early =
+days
+>> of DT on ARM we accepted some binding with generic strings like this=
+ one
+>> below, It has proven to be a mistake.
+>>
+>>>  	{ .compatible =3D "cdns,gem", .data =3D &pc302gem_config },
+>>>  	{ .compatible =3D "atmel,sama5d2-gem", .data =3D &sama5d2_config =
+},
+>>>
+>>
+>>
+>=20
+> Neil
+>=20
+
+
+--=20
+Nicolas Ferre
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
