@@ -1,50 +1,65 @@
-From: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH 0/2] ata: Introduce the AHCI_HFLAG_EDGE_IRQ_BROKEN in
- libahci and enabling it for ahci_xgene driver.
-Date: Wed, 6 Jan 2016 19:20:26 +0530
-Message-ID: <CAOHikRAMhdGuqYsajJPD0e+iSVtYn4Ymxc7sR7WdN_1mo_x_bQ@mail.gmail.com>
-References: <1450942289-12660-1-git-send-email-stripathi@apm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450942289-12660-1-git-send-email-stripathi-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Langsdorf <mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: [RFC v2 0/4] i2c/of: switch I2C IP cores at runtime via OF_DYNAMIC
+Date: Wed,  6 Jan 2016 14:51:21 +0100
+Message-ID: <1452088285-6427-1-git-send-email-wsa@the-dreams.de>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: linux-i2c@vger.kernel.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Jan Luebbe <jlu@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Happy new  year !!
+I know this is gonna be a controversial series, but we have a usecase for this :)
 
-Any comments on this patchset ?
+This series allows an I2C bus to switch between multiple masters, i.e. a
+n-to-1-demuxer. This is not hot-switching because connected I2C slaves will be
+re-instantiated. It is meant to select the best I2C core at runtime once the
+task is known. Example: Prefer i2c-gpio over another I2C core because of HW
+errata affecting your current runtime configuration.
 
-On Thu, Dec 24, 2015 at 1:01 PM, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org> wrote:
-> This patch set implements a workaround for an errate in the APM
-> X-Gene SATA host controller with edge interrupt. The HOST_IRQ_STAT
-> misses the edge interrupt from the PORT_IRQ_STAT when clearing the
-> HOST_IRQ_STAT and reporting the PORT_IRQ_STAT happens in same clock
-> cycle.
->
-> Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
->
-> Suman Tripathi (2):
->   libahci: Implement the workaround to fix the missing of edge
->     interrupt for HOST_IRQ_STAT
->   ahci_xgene: Enable AHCI_HFLAG_EDGE_IRQ_BROKEN for APM X-Gen2 SATA
->     host controller
->
->  drivers/ata/ahci.h       |    2 ++
->  drivers/ata/ahci_xgene.c |    3 ++-
->  drivers/ata/libahci.c    |   45 +++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 49 insertions(+), 1 deletions(-)
->
+It works by using OF_DYNAMIC and en-/disabling the i2c parent as needed. See
+the binding docs for more details. Because this is largely using OF_DYNAMIC, I
+decided to post the whole series to the dt list.
+
+Changes since RFC v1:
+
+* gracefully handle if i2c adapters are not present at runtime
+  (driver not loaded yet)
+* added more documentation and examples
+* properly put the i2c adapters after use
+* respect PAGE_SIZE in sysfs_show
+
+This has been tested on a Renesas Lager board switching between i2c-gpio and
+two different IP cores (i2c-rcar and i2c-sh_mobile). The rebinding seems to be
+working as expected. However, in practice, I couldn't use the HDMI i2c slaves
+with another controller yet, because the rcar-du driver OOPSes when unbinding.
+This seems unrelated to this series because it can also be triggered via
+sysfs-unbind. soc-camera also had problems properly cleaning up on unbind, a
+patch for this already has been sent. So, this series is for sure a good test
+for the unbind path of drivers.
+
+Let me know what you think.
+
+Thanks,
+
+   Wolfram
 
 
+Wolfram Sang (4):
+  of: make of_mutex public
+  dt-bindings: i2c: mux: demux-pinctrl: add bindings
+  i2c: mux: demux-pinctrl: add driver
+  ARM: shmobile: r8a7790: rework dts to use i2c demuxer
+
+ .../devicetree/bindings/i2c/i2c-demux-pinctrl.txt  | 155 ++++++++++++
+ arch/arm/boot/dts/r8a7790-lager.dts                | 141 +++++++----
+ drivers/i2c/muxes/Kconfig                          |   9 +
+ drivers/i2c/muxes/Makefile                         |   2 +
+ drivers/i2c/muxes/i2c-demux-pinctrl.c              | 276 +++++++++++++++++++++
+ drivers/of/of_private.h                            |   1 -
+ include/linux/of.h                                 |   2 +
+ 7 files changed, 532 insertions(+), 54 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.txt
+ create mode 100644 drivers/i2c/muxes/i2c-demux-pinctrl.c
 
 -- 
-Thanks,
-with regards,
-Suman Tripathi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
