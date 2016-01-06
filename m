@@ -1,183 +1,209 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 2/2] pci: host: pci-dra7xx: Enable x2 mode support
-Date: Wed, 6 Jan 2016 16:19:53 +0530
-Message-ID: <1452077393-25880-3-git-send-email-kishon@ti.com>
-References: <1452077393-25880-1-git-send-email-kishon@ti.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 10/10] [media] tvp5150: Configure data interface via pdata or DT
+Date: Wed, 06 Jan 2016 12:56 +0200
+Message-ID: <1743151.ozK6T8LOF3@avalon>
+References: <1451910332-23385-1-git-send-email-javier@osg.samsung.com> <1451910332-23385-11-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452077393-25880-1-git-send-email-kishon@ti.com>
+In-Reply-To: <1451910332-23385-11-git-send-email-javier@osg.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, nsekhar@ti.com
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Enrico Butera <ebutera@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Rob Herring <robh+dt@kernel.org>, Eduard Gavin <egavinc@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Perform syscon configurations to get x2 mode to working in DRA74x and
-DRA72x. Also add a new compatible string to dfferentiate
-DRA72x and DRA74x, since b1c0 mask is different for both these platforms.
+Hi Javier,
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- Documentation/devicetree/bindings/pci/ti-pci.txt |    8 ++-
- drivers/pci/host/pci-dra7xx.c                    |   81 +++++++++++++++++++++-
- 2 files changed, 86 insertions(+), 3 deletions(-)
+Thank you for the patch.
 
-diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
-index 60e2516..0b10e84 100644
---- a/Documentation/devicetree/bindings/pci/ti-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
-@@ -1,7 +1,9 @@
- TI PCI Controllers
- 
- PCIe Designware Controller
-- - compatible: Should be "ti,dra7-pcie""
-+ - compatible: "ti,dra7-pcie" is deprecated
-+	       Should be "ti,dra746-pcie" for DRA74x
-+	       Should be "ti,dra726-pcie" for DRA72x
-  - reg : Two register ranges as listed in the reg-names property
-  - reg-names : The first entry must be "ti-conf" for the TI specific registers
- 	       The second entry must be "rc-dbics" for the designware pcie
-@@ -14,6 +16,10 @@ PCIe Designware Controller
- 	       where <X> is the instance number of the pcie from the HW spec.
-  - interrupts : Two interrupt entries must be specified. The first one is for
- 		main interrupt line and the second for MSI interrupt line.
-+ - syscon-lane-conf : phandle/offset pair. Phandle to the system control module and the
-+   register offset to specify 1 lane or 2 lane.
-+ - syscon-lane-sel : phandle/offset pair. Phandle to the system control module and the
-+   register offset to specify lane selection.
-  - #address-cells,
-    #size-cells,
-    #interrupt-cells,
-diff --git a/drivers/pci/host/pci-dra7xx.c b/drivers/pci/host/pci-dra7xx.c
-index 05bbeee..dac216f 100644
---- a/drivers/pci/host/pci-dra7xx.c
-+++ b/drivers/pci/host/pci-dra7xx.c
-@@ -22,9 +22,11 @@
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
-+#include <linux/of_platform.h>
- #include <linux/resource.h>
- #include <linux/types.h>
--#include <linux/platform_data/pci-dra7xx.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
- 
- #include <linux/platform_data/pci-dra7xx.h>
- 
-@@ -67,14 +69,22 @@
- #define	LINK_UP						BIT(16)
- #define	DRA7XX_CPU_TO_BUS_ADDR				0x0FFFFFFF
- 
-+#define PCIE_1LANE_2LANE_SELECTION			BIT(13)
-+#define PCIE_B1C0_MODE_SEL				BIT(2)
-+
- struct dra7xx_pcie {
- 	void __iomem		*base;
-+	u32			*b1c0_mask;
- 	struct phy		**phy;
- 	int			lanes;
- 	struct device		*dev;
- 	struct pcie_port	pp;
- };
- 
-+struct dra7xx_pcie_data {
-+	u32	b1co_mode_sel_mask;
-+};
-+
- #define to_dra7xx_pcie(x)	container_of((x), struct dra7xx_pcie, pp)
- 
- static inline u32 dra7xx_pcie_readl(struct dra7xx_pcie *pcie, u32 offset)
-@@ -358,6 +368,57 @@ static int dra7xx_pcie_reset(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id of_dra7xx_pcie_match[];
-+
-+static int dra7xx_pcie_configure_two_lane(struct device *dev)
-+{
-+	struct device_node *np = dev->of_node;
-+	struct regmap *pcie_syscon;
-+	unsigned int pcie_reg;
-+	struct dra7xx_pcie_data *data;
-+	const struct of_device_id *match;
-+
-+	match = of_match_device(of_dra7xx_pcie_match, dev);
-+	if (!match)
-+		return -EINVAL;
-+
-+	data = (struct dra7xx_pcie_data *)match->data;
-+	if (!data) {
-+		dev_err(dev, "no b1c0 mask data\n");
-+		return -EINVAL;
-+	}
-+
-+	pcie_syscon = syscon_regmap_lookup_by_phandle(np, "syscon-lane-conf");
-+	if (IS_ERR(pcie_syscon)) {
-+		dev_err(dev, "unable to get syscon-lane-conf\n");
-+		return -EINVAL;
-+	}
-+
-+	if (of_property_read_u32_index(np, "syscon-lane-conf", 1, &pcie_reg)) {
-+		dev_err(dev, "couldn't get lane configuration reg offset\n");
-+		return -EINVAL;
-+	}
-+
-+	regmap_update_bits(pcie_syscon, pcie_reg, PCIE_1LANE_2LANE_SELECTION,
-+			   PCIE_1LANE_2LANE_SELECTION);
-+
-+	pcie_syscon = syscon_regmap_lookup_by_phandle(np, "syscon-lane-sel");
-+	if (IS_ERR(pcie_syscon)) {
-+		dev_err(dev, "unable to get syscon-lane-sel\n");
-+		return -EINVAL;
-+	}
-+
-+	if (of_property_read_u32_index(np, "syscon-lane-sel", 1, &pcie_reg)) {
-+		dev_err(dev, "couldn't get lane selection reg offset\n");
-+		return -EINVAL;
-+	}
-+
-+	regmap_update_bits(pcie_syscon, pcie_reg, data->b1co_mode_sel_mask,
-+			   PCIE_B1C0_MODE_SEL);
-+
-+	return 0;
-+}
-+
- static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- {
- 	u32 reg;
-@@ -428,6 +489,12 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	if (lanes == 2) {
-+		ret = dra7xx_pcie_configure_two_lane(dev);
-+		if (ret < 0)
-+			goto err_phy;
-+	}
-+
- 	dra7xx->base = base;
- 	dra7xx->phy = phy;
- 	dra7xx->dev = dev;
-@@ -581,8 +648,18 @@ static const struct dev_pm_ops dra7xx_pcie_pm_ops = {
- 				      dra7xx_pcie_resume_noirq)
- };
- 
-+static const struct dra7xx_pcie_data dra746_pcie_data = {
-+	.b1co_mode_sel_mask = BIT(2),
-+};
-+
-+static const struct dra7xx_pcie_data dra726_pcie_data = {
-+	.b1co_mode_sel_mask = GENMASK(3, 2),
-+};
-+
- static const struct of_device_id of_dra7xx_pcie_match[] = {
--	{ .compatible = "ti,dra7-pcie", },
-+	{ .compatible = "ti,dra7-pcie", .data = &dra746_pcie_data },
-+	{ .compatible = "ti,dra746-pcie", .data = &dra746_pcie_data },
-+	{ .compatible = "ti,dra726-pcie", .data = &dra726_pcie_data },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, of_dra7xx_pcie_match);
+On Monday 04 January 2016 09:25:32 Javier Martinez Canillas wrote:
+> The video decoder supports either 8-bit 4:2:2 YUV with discrete syncs
+> or 8-bit ITU-R BT.656 with embedded syncs output format but currently
+> BT.656 it's always reported. Allow to configure the format to use via
+> either platform data or a device tree definition.
+> 
+> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> ---
+>  drivers/media/i2c/tvp5150.c | 61 ++++++++++++++++++++++++++++++++++++++++--
+>  include/media/i2c/tvp5150.h |  5 ++++
+>  2 files changed, 64 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+> index fed89a811ab7..8bce45a6e264 100644
+> --- a/drivers/media/i2c/tvp5150.c
+> +++ b/drivers/media/i2c/tvp5150.c
+> @@ -6,6 +6,7 @@
+>   */
+> 
+>  #include <linux/of_gpio.h>
+> +#include <linux/of_graph.h>
+>  #include <linux/i2c.h>
+>  #include <linux/slab.h>
+>  #include <linux/videodev2.h>
+> @@ -15,6 +16,7 @@
+>  #include <media/v4l2-device.h>
+>  #include <media/i2c/tvp5150.h>
+>  #include <media/v4l2-ctrls.h>
+> +#include <media/v4l2-of.h>
+> 
+>  #include "tvp5150_reg.h"
+> 
+> @@ -39,6 +41,7 @@ struct tvp5150 {
+>  	struct media_pad pad;
+>  	struct v4l2_ctrl_handler hdl;
+>  	struct v4l2_rect rect;
+> +	struct tvp5150_platform_data *pdata;
+
+How about embedding tvp5150_platform_data instead of pointing to it ? It would 
+save an allocation and you could get rid of the pdata != NULL checks.
+
+>  	v4l2_std_id norm;	/* Current set standard */
+>  	u32 input;
+> @@ -757,6 +760,7 @@ static int tvp5150_s_std(struct v4l2_subdev *sd,
+> v4l2_std_id std) static int tvp5150_reset(struct v4l2_subdev *sd, u32 val)
+>  {
+>  	struct tvp5150 *decoder = to_tvp5150(sd);
+> +	struct tvp5150_platform_data *pdata = decoder->pdata;
+> 
+>  	/* Initializes TVP5150 to its default values */
+>  	tvp5150_write_inittab(sd, tvp5150_init_default);
+> @@ -774,6 +778,10 @@ static int tvp5150_reset(struct v4l2_subdev *sd, u32
+> val) v4l2_ctrl_handler_setup(&decoder->hdl);
+> 
+>  	tvp5150_set_std(sd, decoder->norm);
+> +
+> +	if (pdata && pdata->bus_type == V4L2_MBUS_PARALLEL)
+> +		tvp5150_write(sd, TVP5150_DATA_RATE_SEL, 0x40);
+> +
+>  	return 0;
+>  };
+> 
+> @@ -940,6 +948,16 @@ static int tvp5150_cropcap(struct v4l2_subdev *sd,
+> struct v4l2_cropcap *a) static int tvp5150_g_mbus_config(struct v4l2_subdev
+> *sd,
+>  				 struct v4l2_mbus_config *cfg)
+>  {
+> +	struct tvp5150_platform_data *pdata = to_tvp5150(sd)->pdata;
+> +
+> +	if (pdata) {
+> +		cfg->type = pdata->bus_type;
+> +		cfg->flags = pdata->parallel_flags;
+
+The clock and sync signals polarity don't seem configurable, shouldn't they 
+just be hardcoded as currently done ?
+
+> +		return 0;
+> +	}
+> +
+> +	/* Default values if no platform data was provided */
+>  	cfg->type = V4L2_MBUS_BT656;
+>  	cfg->flags = V4L2_MBUS_MASTER | V4L2_MBUS_PCLK_SAMPLE_RISING
+> 
+>  		   | V4L2_MBUS_FIELD_EVEN_LOW | V4L2_MBUS_DATA_ACTIVE_HIGH;
+> 
+> @@ -986,13 +1004,20 @@ static int tvp5150_enum_frame_size(struct v4l2_subdev
+> *sd,
+> 
+>  static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
+>  {
+> +	struct tvp5150_platform_data *pdata = to_tvp5150(sd)->pdata;
+> +	/* Output format: 8-bit ITU-R BT.656 with embedded syncs */
+> +	int val = 0x09;
+> +
+> +	/* Output format: 8-bit 4:2:2 YUV with discrete sync */
+> +	if (pdata && pdata->bus_type == V4L2_MBUS_PARALLEL)
+> +		val = 0x0d;
+> +
+>  	/* Initializes TVP5150 to its default values */
+>  	/* # set PCLK (27MHz) */
+>  	tvp5150_write(sd, TVP5150_CONF_SHARED_PIN, 0x00);
+> 
+> -	/* Output format: 8-bit ITU-R BT.656 with embedded syncs */
+>  	if (enable)
+> -		tvp5150_write(sd, TVP5150_MISC_CTL, 0x09);
+> +		tvp5150_write(sd, TVP5150_MISC_CTL, val);
+>  	else
+>  		tvp5150_write(sd, TVP5150_MISC_CTL, 0x00);
+> 
+> @@ -1228,11 +1253,42 @@ static inline int tvp5150_init(struct i2c_client *c)
+> return 0;
+>  }
+> 
+> +static struct tvp5150_platform_data *tvp5150_get_pdata(struct device *dev)
+> +{
+> +	struct tvp5150_platform_data *pdata = dev_get_platdata(dev);
+> +	struct v4l2_of_endpoint bus_cfg;
+> +	struct device_node *ep;
+> +
+> +	if (pdata)
+> +		return pdata;
+
+Nobody uses platform data today, I wonder whether we shouldn't postpone adding 
+support for it until we have a use case. Embedded systems (at least the ARM-
+based ones) should use DT.
+
+> +	if (IS_ENABLED(CONFIG_OF) && dev->of_node) {
+> +		pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +		if (!pdata)
+> +			return NULL;
+> +
+> +		ep = of_graph_get_next_endpoint(dev->of_node, NULL);
+> +		if (!ep)
+> +			return NULL;
+> +
+> +		v4l2_of_parse_endpoint(ep, &bus_cfg);
+
+Shouldn't you check the return value of the function ?
+
+> +
+> +		pdata->bus_type = bus_cfg.bus_type;
+> +		pdata->parallel_flags = bus_cfg.bus.parallel.flags;
+
+The V4L2_MBUS_DATA_ACTIVE_HIGH flags set returned by tvp5150_g_mbus_config() 
+when pdata is NULL is never set by v4l2_of_parse_endpoint(), should you add it 
+unconditionally ?
+
+> +		of_node_put(ep);
+> +		return pdata;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+>  static int tvp5150_probe(struct i2c_client *c,
+>  			 const struct i2c_device_id *id)
+>  {
+>  	struct tvp5150 *core;
+>  	struct v4l2_subdev *sd;
+> +	struct tvp5150_platform_data *pdata = tvp5150_get_pdata(&c->dev);
+>  	int res;
+> 
+>  	/* Check if the adapter supports the needed features */
+> @@ -1262,6 +1318,7 @@ static int tvp5150_probe(struct i2c_client *c,
+>  	if (res < 0)
+>  		return res;
+> 
+> +	core->pdata = pdata;
+>  	core->norm = V4L2_STD_ALL;	/* Default is autodetect */
+>  	core->input = TVP5150_COMPOSITE1;
+>  	core->enable = 1;
+> diff --git a/include/media/i2c/tvp5150.h b/include/media/i2c/tvp5150.h
+> index 649908a25605..e4cda0c843df 100644
+> --- a/include/media/i2c/tvp5150.h
+> +++ b/include/media/i2c/tvp5150.h
+> @@ -30,4 +30,9 @@
+>  #define TVP5150_NORMAL       0
+>  #define TVP5150_BLACK_SCREEN 1
+> 
+> +struct tvp5150_platform_data {
+> +	enum v4l2_mbus_type bus_type;
+> +	unsigned int parallel_flags;
+> +};
+> +
+>  #endif
+
 -- 
-1.7.9.5
+Regards,
+
+Laurent Pinchart
