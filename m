@@ -1,60 +1,42 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and charging of backup battery
-Date: Wed, 6 Jan 2016 17:47:33 +0100
-Message-ID: <2AC46952-3758-458A-B0A5-1794C207BD4C@goldelico.com>
-References: <cover.1451995297.git.hns@goldelico.com> <b4a6fe205cbb1a9eddc4e5f63fa05d299641313d.1451995297.git.hns@goldelico.com> <568C5451.8070709@ti.com> <20160106010011.GG12777@atomide.com> <8FE6954B-6411-4593-9CE5-717A469A6AA8@goldelico.com> <20160106164136.GI12777@atomide.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160106164136.GI12777@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, Nishanth Menon <nm@ti.com>, =?iso-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek@goldelico.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC v2 3/4] i2c: mux: demux-pinctrl: add driver
+Date: Wed, 6 Jan 2016 11:08:44 -0600
+Message-ID: <CAL_JsqK8bekw0_FhzMmrZftWpFLv=NnJ7J7767KNwESROPgzPA@mail.gmail.com>
+References: <1452088285-6427-1-git-send-email-wsa@the-dreams.de> <1452088285-6427-4-git-send-email-wsa@the-dreams.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1452088285-6427-4-git-send-email-wsa@the-dreams.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Jan Luebbe <jlu@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+On Wed, Jan 6, 2016 at 7:51 AM, Wolfram Sang <wsa@the-dreams.de> wrote:
+> From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>
+> This driver allows an I2C bus to switch between multiple masters. This
+> is not hot-swichting because connected I2C slaves will be
+> re-instantiated. It is meant to select the best I2C core at runtime once
+> the task is known. Example: Prefer i2c-gpio over another I2C core
+> because of HW errata affetcing your use case.
+>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Am 06.01.2016 um 17:41 schrieb Tony Lindgren <tony@atomide.com>:
+[...]
 
-> Hi,
-> 
-> * H. Nikolaus Schaller <hns@goldelico.com> [160106 00:12]:
->> Am 06.01.2016 um 02:00 schrieb Tony Lindgren <tony@atomide.com>:
->>> 
->>> Also I'm not seeing just zeroes coming from RTC after typing hwclock
->>> on omap5-uevm. It's working on x15 though.
->>> 
->>> Nikolaus, is hwclock command working for you on omap5-uevm?
->> 
->> Well, yes and no. It appears it *was* working when tested last time
->> (we sometimes have months of delay for submitting patches upstream).
->> 
->> I have found an SD image with 4.3-rc6 with this patch in the dtb and
->> there it works. With 4.4-rc8 it does not work. hwclock command hangs for
->> 10 seconds (I guess some timeout).
->> 
->> I have checked the dtb and in both cases it is interrupts = <8 0>;
->> 
->> xxd /sys/firmware/devicetree/base/ocp/i2c@48070000/palmas@48/rtc/interrupts
->> 0000000: 0000 0008 0000 0000
->> 
->> So I think something has changed in the rtc driver or somewhere else.
-> 
-> I just gave it a try on v4.3-rc6 with omap5-uevm.dts patched for
-> RTC, and I still don't have hwclock working with RTC.
-> 
-> It seems you have some additional patches there that make it work?
+> +static int i2c_demux_activate_master(struct i2c_demux_pinctrl_priv *priv, u32 new_chan)
+> +{
+> +       struct i2c_adapter *adap;
+> +       struct pinctrl *p;
+> +       int ret;
+> +
+> +       mutex_lock(&of_mutex);
+> +       ret = of_changeset_apply(&priv->chan[new_chan].chgset);
+> +       mutex_unlock(&of_mutex);
 
-Hm. Not that I am aware of. We just did add the rtc nodes but did not
-touch palmas drivers (except adding the gpadc of this patch series).
+Looks like you need this patch[1] rather than exposing of_mutex.
 
-> 
-> I guess it could also be a bootloader change if it's a different
-> SD image that works for you.
+Rob
 
-Yes, it is using a 2 years old U-Boot instead 2015.10 compiled from
-source. I will try to find out if it makes a difference.
-
-BR,
-Nikolaus
+[1] https://patchwork.ozlabs.org/patch/539938/
