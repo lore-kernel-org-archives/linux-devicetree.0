@@ -1,69 +1,63 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and charging
- of backup battery
-Date: Wed, 6 Jan 2016 08:36:07 -0600
-Message-ID: <568D2657.6050400@ti.com>
-References: <cover.1451995297.git.hns@goldelico.com>
- <b4a6fe205cbb1a9eddc4e5f63fa05d299641313d.1451995297.git.hns@goldelico.com>
- <568C5451.8070709@ti.com>
- <B2CEA92E-5F60-43C1-8265-F7C66FBD90D6@goldelico.com>
- <568CCCA2.4040004@nvidia.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 8/8] i2c-mux: relax locking of the top i2c adapter
+ during i2c controlled muxing
+Date: Wed, 6 Jan 2016 08:49:47 -0600
+Message-ID: <20160106144947.GA13257@rob-hp-laptop>
+References: <1452009438-27347-1-git-send-email-peda@lysator.liu.se>
+ <1452009438-27347-9-git-send-email-peda@lysator.liu.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <568CCCA2.4040004@nvidia.com>
+Content-Disposition: inline
+In-Reply-To: <1452009438-27347-9-git-send-email-peda@lysator.liu.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>, "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek@goldelico.com>
+To: Peter Rosin <peda@lysator.liu.se>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Peter Rosin <peda@axentia.se>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Adriana Reus <adriana.reus@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>, Nicholas Mc Guire <hofrat@osadl.org>, Olli Salonen <olli.salonen@iki.fi>, linux-i2c@vger.k
 List-Id: devicetree@vger.kernel.org
 
-On 01/06/2016 02:13 AM, Laxman Dewangan wrote:
+On Tue, Jan 05, 2016 at 04:57:18PM +0100, Peter Rosin wrote:
+> From: Peter Rosin <peda@axentia.se>
 > 
-> On Wednesday 06 January 2016 01:12 PM, H. Nikolaus Schaller wrote:
->> Hi,
->>
->> Am 06.01.2016 um 00:40 schrieb Nishanth Menon <nm@ti.com>:
->>
->>> On 01/05/2016 06:01 AM, H. Nikolaus Schaller wrote:
->>>> +        rtc {
->>>> +            compatible = "ti,palmas-rtc";
->>>> +            interrupt-parent = <&palmas>;
->>>> +            interrupts = <8 IRQ_TYPE_NONE>;
->>> IRQ_TYPE_NONE is not correct here -> it should have some polarity - if
->>> it had none, there'd be no interrupt, right?
->> Well, it just translates IRQ_TYPE_NONE through
->>
->> Linux/include/dt-bindings/interrupt-controller/irq.h
->>
->> to
->>
->> interrupts = <8 0>;
->>
->> which is given as an example in
->>
->> Documentation//devicetree/bindings/rtc/rtc-palmas.txt
->>
->> Since I don't know anything about the rtc driver beyond the bindings
->> documentation I assume it is correct...
->> I have added Laxman Dewangan because he introduced this interrupts =
->> <8 0>;
->>
+> With a i2c topology like the following
 > 
-> As this is for palmas interrupt controller, it does not use the second
-> field for interrupt from RTC.
-> So there is no really any polarity. It can be set to 0.
+>                        GPIO ---|  ------ BAT1
+>                         |      v /
+>    I2C  -----+----------+---- MUX
+>              |                   \
+>            EEPROM                 ------ BAT2
+
+Yuck. One would think you would just use an I2C controlled mux in this 
+case...
+ 
+> there is a locking problem with the GPIO controller since it is a client
+> on the same i2c bus that it muxes. Transfers to the mux clients (e.g. BAT1)
+> will lock the whole i2c bus prior to attempting to switch the mux to the
+> correct i2c segment. In the above case, the GPIO device is an I/O expander
+> with an i2c interface, and since the GPIO subsystem knows nothing (and
+> rightfully so) about the lockless needs of the i2c mux code, this results
+> in a deadlock when the GPIO driver issues i2c transfers to modify the
+> mux.
 > 
-> The second argument will be used for GPIOs mainly. However, support need
-> to be added on GPIO driver for rising/falling configuration.
+> So, observing that while it is needed to have the i2c bus locked during the
+> actual MUX update in order to avoid random garbage on the slave side, it
+> is not strictly a must to have it locked over the whole sequence of a full
+> select-transfer-deselect mux client operation. The mux itself needs to be
+> locked, so transfers to clients behind the mux are serialized, and the mux
+> needs to be stable during all i2c traffic (otherwise individual mux slave
+> segments might see garbage, or worse).
+> 
+> Add devive tree properties (bool named i2c-controlled) to i2c-mux-gpio and
+> i2c-mux-pinctrl that asserts that the the gpio/pinctrl is controlled via
+> the same i2c bus that it muxes.
 
+Can't you determine this condition by checking the mux parent and gpio 
+parent are the same i2c controller?
 
-Device tree represents the hardware - not to reflect how the driver
-works. if the driver is wrong, fix it. the interrupt polarity needs to
-be described in DT. based on palmas like designs, you should probably
-use IRQ_TYPE_EDGE_FALLING because that is the default signaling inside
-the SoC as it reaches Secondary interrupt handlers(SIH) registers.
+Alternatively, can't you just always do the locking like i2c-controlled 
+is set when a mux is involved? What is the harm in doing that if the 
+GPIO is controlled somewhere else?
 
--- 
-Regards,
-Nishanth Menon
+I would prefer to see a solution not requiring DT updates to fix and 
+this change seems like it is working around kernel issues.
+
+Rob
