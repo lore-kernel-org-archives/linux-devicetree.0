@@ -1,66 +1,52 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 2/2] drm: bridge: add sil902x DT bindings doc
-Date: Wed, 6 Jan 2016 14:24:57 +0100
-Message-ID: <20160106142457.28c8af15@bbrezillon>
-References: <1452079551-30914-1-git-send-email-boris.brezillon@free-electrons.com>
- <1452079551-30914-2-git-send-email-boris.brezillon@free-electrons.com>
- <20160106131959.GA18121@rob-hp-laptop>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 2/3] ARM: dts: sun8i: Add Allwinner A83T dtsi
+Date: Wed, 6 Jan 2016 13:25:05 +0000
+Message-ID: <20160106132505.GJ563@leverpostej>
+References: <1452085914-29340-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1452085914-29340-3-git-send-email-vishnupatekar0510@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160106131959.GA18121@rob-hp-laptop>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1452085914-29340-3-git-send-email-vishnupatekar0510@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Vishnu Patekar <vishnupatekar0510@gmail.com>
+Cc: robh+dt@kernel.org, corbet@lwn.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, emilio@elopez.com.ar, linus.walleij@linaro.org, jenskuske@gmail.com, hdegoede@redhat.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gV2VkLCA2IEphbiAyMDE2IDA3OjE5OjU5IC0wNjAwClJvYiBIZXJyaW5nIDxy
-b2JoQGtlcm5lbC5vcmc+IHdyb3RlOgoKPiBPbiBXZWQsIEphbiAwNiwgMjAxNiBhdCAxMjoyNTo1
-MVBNICswMTAwLCBCb3JpcyBCcmV6aWxsb24gd3JvdGU6Cj4gPiBBZGQgU2lsOTAyMiBEVCBiaW5k
-aW5ncyBkZXNjcmlwdGlvbi4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogQm9yaXMgQnJlemlsbG9u
-IDxib3Jpcy5icmV6aWxsb25AZnJlZS1lbGVjdHJvbnMuY29tPgo+ID4gLS0tCj4gPiAgLi4uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lsOTAyeC50eHQgfCAzMSArKysrKysr
-KysrKysrKysrKysrKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDMxIGluc2VydGlvbnMoKykKPiA+
-ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvYnJpZGdlL3NpbDkwMngudHh0Cj4gPiAKPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lsOTAyeC50eHQgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lsOTAyeC50eHQK
-PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiBpbmRleCAwMDAwMDAwLi43ZjEzMzlmCj4gPiAt
-LS0gL2Rldi9udWxsCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9icmlkZ2Uvc2lsOTAyeC50eHQKPiA+IEBAIC0wLDAgKzEsMzEgQEAKPiA+ICtzaWw5
-MDJ4IEhETUkgYnJpZGdlIGJpbmRpbmdzCj4gPiArCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoK
-PiA+ICsJLSBjb21wYXRpYmxlOiAic2lsLHNpbDkwMjIiCj4gPiArCS0gcmVnOiBpMmMgYWRkcmVz
-cyBvZiB0aGUgYnJpZGdlCj4gPiArCS0gcmVzZXQtZ3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8g
-c3BlY2lmaWNhdGlvbiBmb3IgUlNUX04gcGluLgo+ID4gKwo+ID4gK09wdGlvbmFsIHByb3BlcnRp
-ZXM6Cj4gPiArCS0gaW50ZXJydXB0cy1leHRlbmRlZCBvciBpbnRlcnJ1cHQtcGFyZW50ICsgaW50
-ZXJydXB0czogZGVzY3JpYmUKPiA+ICsJICB0aGUgaW50ZXJydXB0IGxpbmUgdXNlZCB0byBpbmZv
-cm0gdGhlIGhvc3QgYWJvdXQgaG90cGx1ZyBldmVudHMuCj4gPiArCj4gPiArT3B0aW9uYWwgc3Vi
-bm9kZXM6Cj4gPiArCS0gdmlkZW8gaW5wdXQ6IERldmljZSBub2RlIGNhbiBjb250YWluIHZpZGVv
-IGlucHV0IHBvcnQgbm9kZSB0bwo+ID4gKwkgIGNvbm5lY3QgdGhlIGJyaWRnZSB0byBhIGRpc3Bs
-YXkgY29udHJvbGxlciBvdXRwdXQgKFNlZSB0aGlzCj4gPiArCSAgZG9jdW1lbnRhdGlvbiBbMV0p
-Lgo+ID4gKwo+ID4gK1sxXTogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlh
-L3ZpZGVvLWludGVyZmFjZXMudHh0Cj4gPiArCj4gPiArRXhhbXBsZToKPiA+ICsJaGRtaS1icmlk
-Z2VAMzkgewo+ID4gKwkJY29tcGF0aWJsZSA9ICJzaWwsc2lsOTAyMiI7Cj4gPiArCQlyZWcgPSA8
-MHgzOT47Cj4gPiArCQlyZXNldC1ncGlvcyA9IDwmZ3B4MSA1IDEgMCAwPjsKPiAKPiA0IEdQSU8g
-Y2VsbHM/IFZhbGlkLCBidXQgdW51c3VhbC4KCkhlaGUsIEkgYmxpbmRseSBjb3BpZWQgbnhwLHB0
-bjM0NjAgZG9jLCB3aGljaCBpcyBkZWZpbmluZyBzdWNoIEdQSU8KZGVzY3JpcHRvcnMgOi0pLiBJ
-IGNhbiBjaGFuZ2UgdGhhdCBpZiB5b3Ugd2FudC4KCj4gCj4gPiArCQlwb3J0cyB7Cj4gPiArCQkJ
-cG9ydEAwIHsKPiAKPiBFaXRoZXIgbmVlZCBhIHJlZyBwcm9wZXJ0eSBoZXJlIG9yIGRyb3AgdGhl
-IHVuaXQgYWRkcmVzcy4gWW91IGNvdWxkIAo+IHJlbW92ZSBwb3J0cyBhcyB3ZWxsLgoKQWN0dWFs
-bHkgd2UnbGwgbGlrZWx5IGRlZmluZSBhIDJuZCBwb3J0IGZvciB0aGUgYXVkaW8gaW5wdXQsIHNv
-IEknZApwcmVmZXIga2VlcGluZyB0aGUgcG9ydHMgYW5kIEAwIHN1ZmZpeCBhbmQgYWRkaW5nIGEg
-cmVnIHByb3BlcnR5IHJhdGhlcgp0aGFuIGp1c3QgZGVmaW5pbmcgcG9ydCB7IC4uLiB9OwoKQmVz
-dCBSZWdhcmRzLAoKQm9yaXMKCi0tIApCb3JpcyBCcmV6aWxsb24sIEZyZWUgRWxlY3Ryb25zCkVt
-YmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKaHR0cDovL2ZyZWUtZWxlY3Ryb25z
-LmNvbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi,
+
+> +	chosen {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +	};
+
+What is the ranges property doing here?
+
+[...]
+
+> +	clocks {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		osc24M: osc24M_clk {
+> +			#clock-cells = <0>;
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <24000000>;
+> +			clock-output-names = "osc24M";
+> +		};
+> +
+> +		osc32k: osc32k_clk {
+> +			#clock-cells = <0>;
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <32768>;
+> +			clock-output-names = "osc32k";
+> +		};
+> +	};
+
+Just put the clocks under the root node. 'clocks' is not a special node.
+
+Thanks,
+Mark.
