@@ -1,83 +1,126 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v7 5/5] ARM: dts: rockchip: add support mipi panel tv080wum-nl0
-Date: Wed,  6 Jan 2016 12:03:57 +0800
-Message-ID: <1452053038-32098-6-git-send-email-zyw@rock-chips.com>
-References: <1452053038-32098-1-git-send-email-zyw@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452053038-32098-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
-Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v2 2/3] drm/rockchip: vop: add rk3229 vop support
+Date: Wed, 6 Jan 2016 14:13:26 +0800
+Message-ID: <568CB086.3000609@rock-chips.com>
+References: <1451965688-12286-1-git-send-email-ykk@rock-chips.com>
+ <1451966307-12642-1-git-send-email-ykk@rock-chips.com>
+ <568C6650.5040708@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <568C6650.5040708@rock-chips.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark yao <mark.yao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, David Airlie <airlied@linux.ie>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This tv080wum-nl0 panel is a mipi panel, it can use in MIPI_TX socket
-of rk3288 evb board.
-
-Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
----
-
-Changes in v7:
-- Move the lcd_en control to act8846 dts
-
-Changes in v6: None
-Changes in v5:
-- add a blank line befor lcd_en
-
-Changes in v4: None
-Changes in v3: None
-
- arch/arm/boot/dts/rk3288-evb-act8846.dts |  2 ++
- arch/arm/boot/dts/rk3288-evb.dtsi        | 12 +++++++++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/rk3288-evb-act8846.dts b/arch/arm/boot/dts/rk3288-evb-act8846.dts
-index e662147..7d5475b 100644
---- a/arch/arm/boot/dts/rk3288-evb-act8846.dts
-+++ b/arch/arm/boot/dts/rk3288-evb-act8846.dts
-@@ -50,6 +50,8 @@
- 		gpio = <&gpio7 3 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&lcd_en>;
-+		regulator-always-on;
-+		regulator-boot-on;
- 		regulator-name = "vcc_lcd";
- 		vin-supply = <&vcc_io>;
- 	};
-diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
-index 4faabdb..0c91858 100644
---- a/arch/arm/boot/dts/rk3288-evb.dtsi
-+++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-@@ -47,7 +47,7 @@
- 		reg = <0x0 0x80000000>;
- 	};
- 
--	backlight {
-+	backlight: backlight {
- 		compatible = "pwm-backlight";
- 		brightness-levels = <
- 			  0   1   2   3   4   5   6   7
-@@ -183,6 +183,16 @@
- 	status = "okay";
- };
- 
-+&mipi_dsi {
-+	status = "okay";
-+	panel {
-+		compatible ="boe,tv080wum-nl0";
-+		reg = <0>;
-+		backlight = <&backlight>;
-+		status = "okay";
-+	};
-+};
-+
- &sdmmc {
- 	bus-width = <4>;
- 	cap-mmc-highspeed;
--- 
-2.6.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgTWFyaywKCk9uIDAxLzA2LzIwMTYgMDg6NTYgQU0sIE1hcmsgeWFvIHdyb3RlOgo+IE9uIDIw
+MTblubQwMeaciDA15pelIDExOjU4LCBZYWtpciBZYW5nIHdyb3RlOgo+PiBSSzMyMjkgcmVnaXN0
+ZXJzIGxheW91dCBpcyBzaW1hbGFyIHRvIFJLMzI4OCBsYXlvdXQsIG9ubHkgdGhlCj4+IGludGVy
+cnVwdXQgcmVnaXN0ZXJzIGlzIGRpZmZlcmVudCB0byBSSzMyODguCj4+Cj4+IFJLMzIyOSBzdXBw
+b3J0IHR3byBvdmVybGF5IHBsYW5lIGFuZCBvbmUgaHdjIHBsYW5lLCBtYXggb3V0cHV0Cj4+IHJl
+c29sdXRpb24gaXMgNEsuIGl0IHN1cHBvcnQgSU9NTVUsIGFuZCBpdHMgSU9NTVUgc2FtZSBhcyBy
+azMyODgncy4KPj4KPj4gU2lnbmVkLW9mZi1ieTogWWFraXIgWWFuZyA8eWtrQHJvY2stY2hpcHMu
+Y29tPgo+PiAtLS0KPj4gQ2hhbmdlcyBpbiB2MjoKPj4gLSBTZXBhcmF0ZSB0aGUgd3JpdGUtbWFz
+ayBjaGFuZ2VzIG91dCwgYW5kIHJlbW92ZSB0aGUgRFVNTVlfSU5UUiAKPj4gbWFyY29zIChIZWlr
+bykKPj4KPj4gICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfdm9wX3JlZy5jIHwg
+MTEwIAo+PiArKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+ICAgZHJpdmVycy9ncHUvZHJt
+L3JvY2tjaGlwL3JvY2tjaGlwX3ZvcF9yZWcuaCB8ICA5MCAKPj4gKysrKysrKysrKysrKysrKysr
+KysrKysKPj4gICAyIGZpbGVzIGNoYW5nZWQsIDIwMCBpbnNlcnRpb25zKCspCj4+Cj4+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfdm9wX3JlZy5jIAo+PiBi
+L2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF92b3BfcmVnLmMKPj4gaW5kZXggN2Zi
+YWY3Ni4uZjEzNThmOSAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3Jv
+Y2tjaGlwX3ZvcF9yZWcuYwo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2No
+aXBfdm9wX3JlZy5jCj4+IEBAIC0xOTEsNiArMTkxLDExNCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0
+IHZvcF9kYXRhIHJrMzI4OF92b3AgPSB7Cj4+ICAgICAgIC53aW5fc2l6ZSA9IEFSUkFZX1NJWkUo
+cmszMjg4X3ZvcF93aW5fZGF0YSksCj4+ICAgfTsKPj4gICArc3RhdGljIGNvbnN0IHN0cnVjdCB2
+b3Bfc2NsX2V4dGVuc2lvbiByazMyMjlfd2luX2Z1bGxfc2NsX2V4dCA9IHsKPj4gKyAgICAuY2Jj
+cl92c2RfbW9kZSA9IFZPUF9SRUcoUkszMjI5X1dJTjBfQ1RSTDEsIDB4MSwgMzEpLAo+PiArICAg
+IC5jYmNyX3ZzdV9tb2RlID0gVk9QX1JFRyhSSzMyMjlfV0lOMF9DVFJMMSwgMHgxLCAzMCksCj4+
+ICsgICAgLmNiY3JfaHNkX21vZGUgPSBWT1BfUkVHKFJLMzIyOV9XSU4wX0NUUkwxLCAweDMsIDI4
+KSwKPj4gKyAgICAuY2Jjcl92ZXJfc2NsX21vZGUgPSBWT1BfUkVHKFJLMzIyOV9XSU4wX0NUUkwx
+LCAweDMsIDI2KSwKPj4gKyAgICAuY2Jjcl9ob3Jfc2NsX21vZGUgPSBWT1BfUkVHKFJLMzIyOV9X
+SU4wX0NUUkwxLCAweDMsIDI0KSwKPj4gKyAgICAueXJnYl92c2RfbW9kZSA9IFZPUF9SRUcoUksz
+MjI5X1dJTjBfQ1RSTDEsIDB4MSwgMjMpLAo+PiArICAgIC55cmdiX3ZzdV9tb2RlID0gVk9QX1JF
+RyhSSzMyMjlfV0lOMF9DVFJMMSwgMHgxLCAyMiksCj4+ICsgICAgLnlyZ2JfaHNkX21vZGUgPSBW
+T1BfUkVHKFJLMzIyOV9XSU4wX0NUUkwxLCAweDMsIDIwKSwKPj4gKyAgICAueXJnYl92ZXJfc2Ns
+X21vZGUgPSBWT1BfUkVHKFJLMzIyOV9XSU4wX0NUUkwxLCAweDMsIDE4KSwKPj4gKyAgICAueXJn
+Yl9ob3Jfc2NsX21vZGUgPSBWT1BfUkVHKFJLMzIyOV9XSU4wX0NUUkwxLCAweDMsIDE2KSwKPj4g
+KyAgICAubGluZV9sb2FkX21vZGUgPSBWT1BfUkVHKFJLMzIyOV9XSU4wX0NUUkwxLCAweDEsIDE1
+KSwKPj4gKyAgICAuY2Jjcl9heGlfZ2F0aGVyX251bSA9IFZPUF9SRUcoUkszMjI5X1dJTjBfQ1RS
+TDEsIDB4NywgMTIpLAo+PiArICAgIC55cmdiX2F4aV9nYXRoZXJfbnVtID0gVk9QX1JFRyhSSzMy
+MjlfV0lOMF9DVFJMMSwgMHhmLCA4KSwKPj4gKyAgICAudnNkX2NiY3JfZ3QyID0gVk9QX1JFRyhS
+SzMyMjlfV0lOMF9DVFJMMSwgMHgxLCA3KSwKPj4gKyAgICAudnNkX2NiY3JfZ3Q0ID0gVk9QX1JF
+RyhSSzMyMjlfV0lOMF9DVFJMMSwgMHgxLCA2KSwKPj4gKyAgICAudnNkX3lyZ2JfZ3QyID0gVk9Q
+X1JFRyhSSzMyMjlfV0lOMF9DVFJMMSwgMHgxLCA1KSwKPj4gKyAgICAudnNkX3lyZ2JfZ3Q0ID0g
+Vk9QX1JFRyhSSzMyMjlfV0lOMF9DVFJMMSwgMHgxLCA0KSwKPj4gKyAgICAuYmljX2NvZV9zZWwg
+PSBWT1BfUkVHKFJLMzIyOV9XSU4wX0NUUkwxLCAweDMsIDIpLAo+PiArICAgIC5jYmNyX2F4aV9n
+YXRoZXJfZW4gPSBWT1BfUkVHKFJLMzIyOV9XSU4wX0NUUkwxLCAweDEsIDEpLAo+PiArICAgIC55
+cmdiX2F4aV9nYXRoZXJfZW4gPSBWT1BfUkVHKFJLMzIyOV9XSU4wX0NUUkwxLCAweDEsIDApLAo+
+PiArICAgIC5sYl9tb2RlID0gVk9QX1JFRyhSSzMyMjlfV0lOMF9DVFJMMCwgMHg3LCA1KSwKPj4g
+K307Cj4+ICsKPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgdm9wX3NjbF9yZWdzIHJrMzIyOV93aW5f
+ZnVsbF9zY2wgPSB7Cj4+ICsgICAgLmV4dCA9ICZyazMyMjlfd2luX2Z1bGxfc2NsX2V4dCwKPj4g
+KyAgICAuc2NhbGVfeXJnYl94ID0gVk9QX1JFRyhSSzMyMjlfV0lOMF9TQ0xfRkFDVE9SX1lSR0Is
+IDB4ZmZmZiwgMHgwKSwKPj4gKyAgICAuc2NhbGVfeXJnYl95ID0gVk9QX1JFRyhSSzMyMjlfV0lO
+MF9TQ0xfRkFDVE9SX1lSR0IsIDB4ZmZmZiwgMTYpLAo+PiArICAgIC5zY2FsZV9jYmNyX3ggPSBW
+T1BfUkVHKFJLMzIyOV9XSU4wX1NDTF9GQUNUT1JfQ0JSLCAweGZmZmYsIDB4MCksCj4+ICsgICAg
+LnNjYWxlX2NiY3JfeSA9IFZPUF9SRUcoUkszMjI5X1dJTjBfU0NMX0ZBQ1RPUl9DQlIsIDB4ZmZm
+ZiwgMTYpLAo+PiArfTsKPj4gKwo+PiArc3RhdGljIGNvbnN0IHN0cnVjdCB2b3Bfd2luX3BoeSBy
+azMyMjlfd2luMDFfZGF0YSA9IHsKPj4gKyAgICAuc2NsID0gJnJrMzIyOV93aW5fZnVsbF9zY2ws
+Cj4+ICsgICAgLmRhdGFfZm9ybWF0cyA9IGZvcm1hdHNfd2luX2Z1bGwsCj4+ICsgICAgLm5mb3Jt
+YXRzID0gQVJSQVlfU0laRShmb3JtYXRzX3dpbl9mdWxsKSwKPj4gKyAgICAuZW5hYmxlID0gVk9Q
+X1JFRyhSSzMyMjlfV0lOMF9DVFJMMCwgMHgxLCAwKSwKPj4gKyAgICAuZm9ybWF0ID0gVk9QX1JF
+RyhSSzMyMjlfV0lOMF9DVFJMMCwgMHg3LCAxKSwKPj4gKyAgICAucmJfc3dhcCA9IFZPUF9SRUco
+UkszMjI5X1dJTjBfQ1RSTDAsIDB4MSwgMTIpLAo+PiArICAgIC5hY3RfaW5mbyA9IFZPUF9SRUco
+UkszMjI5X1dJTjBfQUNUX0lORk8sIDB4MWZmZjFmZmYsIDApLAo+PiArICAgIC5kc3BfaW5mbyA9
+IFZPUF9SRUcoUkszMjI5X1dJTjBfRFNQX0lORk8sIDB4MGZmZjBmZmYsIDApLAo+PiArICAgIC5k
+c3Bfc3QgPSBWT1BfUkVHKFJLMzIyOV9XSU4wX0RTUF9TVCwgMHgxZmZmMWZmZiwgMCksCj4+ICsg
+ICAgLnlyZ2JfbXN0ID0gVk9QX1JFRyhSSzMyMjlfV0lOMF9ZUkdCX01TVCwgMHhmZmZmZmZmZiwg
+MCksCj4+ICsgICAgLnV2X21zdCA9IFZPUF9SRUcoUkszMjI5X1dJTjBfQ0JSX01TVCwgMHhmZmZm
+ZmZmZiwgMCksCj4+ICsgICAgLnlyZ2JfdmlyID0gVk9QX1JFRyhSSzMyMjlfV0lOMF9WSVIsIDB4
+M2ZmZiwgMCksCj4+ICsgICAgLnV2X3ZpciA9IFZPUF9SRUcoUkszMjI5X1dJTjBfVklSLCAweDNm
+ZmYsIDE2KSwKPj4gKyAgICAuc3JjX2FscGhhX2N0bCA9IFZPUF9SRUcoUkszMjI5X1dJTjBfU1JD
+X0FMUEhBX0NUUkwsIDB4ZmYsIDApLAo+PiArICAgIC5kc3RfYWxwaGFfY3RsID0gVk9QX1JFRyhS
+SzMyMjlfV0lOMF9EU1RfQUxQSEFfQ1RSTCwgMHhmZiwgMCksCj4+ICt9Owo+PiArCj4+ICtzdGF0
+aWMgY29uc3Qgc3RydWN0IHZvcF93aW5fZGF0YSByazMyMjlfdm9wX3dpbl9kYXRhW10gPSB7Cj4+
+ICsgICAgeyAuYmFzZSA9IDB4MDAsIC5waHkgPSAmcmszMjI5X3dpbjAxX2RhdGEsCj4+ICsgICAg
+ICAudHlwZSA9IERSTV9QTEFORV9UWVBFX1BSSU1BUlkgfSwKPj4gKyAgICB7IC5iYXNlID0gMHg0
+MCwgLnBoeSA9ICZyazMyMjlfd2luMDFfZGF0YSwKPj4gKyAgICAgIC50eXBlID0gRFJNX1BMQU5F
+X1RZUEVfQ1VSU09SIH0sCj4+ICt9Owo+PiArCj4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHZvcF9j
+dHJsIHJrMzIyOV9jdHJsX2RhdGEgPSB7Cj4+ICsgICAgLmNmZ19kb25lID0gVk9QX1JFRyhSSzMy
+MjlfUkVHX0NGR19ET05FLCAweDEsIDApLAo+PiArICAgIC5zdGFuZGJ5ID0gVk9QX1JFRyhSSzMy
+MjlfU1lTX0NUUkwsIDB4MSwgMjIpLAo+PiArICAgIC5nYXRlX2VuID0gVk9QX1JFRyhSSzMyMjlf
+U1lTX0NUUkwsIDB4MSwgMjMpLAo+PiArICAgIC5tbXVfZW4gPSBWT1BfUkVHKFJLMzIyOV9TWVNf
+Q1RSTCwgMHgxLCAyMCksCj4+ICsgICAgLnJnYl9lbiA9IFZPUF9SRUcoUkszMjI5X1NZU19DVFJM
+LCAweDEsIDEyKSwKPj4gKyAgICAuaGRtaV9lbiA9IFZPUF9SRUcoUkszMjI5X1NZU19DVFJMLCAw
+eDEsIDEzKSwKPj4gKyAgICAuZWRwX2VuID0gVk9QX1JFRyhSSzMyMjlfU1lTX0NUUkwsIDB4MSwg
+MTQpLAo+PiArICAgIC5taXBpX2VuID0gVk9QX1JFRyhSSzMyMjlfU1lTX0NUUkwsIDB4MSwgMTUp
+LAo+PiArICAgIC5kYXRhX2JsYW5rID0gVk9QX1JFRyhSSzMyMjlfRFNQX0NUUkwwLCAweDEsIDE5
+KSwKPj4gKyAgICAub3V0X21vZGUgPSBWT1BfUkVHKFJLMzIyOV9EU1BfQ1RSTDAsIDB4ZiwgMCks
+Cj4+ICsgICAgLnBpbl9wb2wgPSBWT1BfUkVHKFJLMzIyOV9EU1BfQ1RSTDEsIDB4ZiwgMjApLAo+
+PiArICAgIC5kaXRoZXJfdXAgPSBWT1BfUkVHKFJLMzIyOV9EU1BfQ1RSTDEsIDB4MSwgNiksCj4+
+ICsgICAgLmh0b3RhbF9wdyA9IFZPUF9SRUcoUkszMjI5X0RTUF9IVE9UQUxfSFNfRU5ELCAweDFm
+ZmYxZmZmLCAwKSwKPj4gKyAgICAuaGFjdF9zdF9lbmQgPSBWT1BfUkVHKFJLMzIyOV9EU1BfSEFD
+VF9TVF9FTkQsIDB4MWZmZjFmZmYsIDApLAo+PiArICAgIC52dG90YWxfcHcgPSBWT1BfUkVHKFJL
+MzIyOV9EU1BfVlRPVEFMX1ZTX0VORCwgMHgxZmZmMWZmZiwgMCksCj4+ICsgICAgLnZhY3Rfc3Rf
+ZW5kID0gVk9QX1JFRyhSSzMyMjlfRFNQX1ZBQ1RfU1RfRU5ELCAweDFmZmYxZmZmLCAwKSwKPj4g
+KyAgICAuaHBvc3Rfc3RfZW5kID0gVk9QX1JFRyhSSzMyMjlfUE9TVF9EU1BfSEFDVF9JTkZPLCAw
+eDFmZmYxZmZmLCAwKSwKPj4gKyAgICAudnBvc3Rfc3RfZW5kID0gVk9QX1JFRyhSSzMyMjlfUE9T
+VF9EU1BfVkFDVF9JTkZPLCAweDFmZmYxZmZmLCAwKSwKPj4gK307Cj4KPiBIaSBZYWtpcgo+Cj4g
+UkszMjI5IHJlZ2lzdGVycyBsYXlvdXQgaXMgc2ltYWxhciB0byBSSzMyODggbGF5b3V0LCBpcyBw
+b3NzaWJsZSB0byAKPiByZXVzZSByazMyODggcmVnaXN0ZXIgdGFibGU/Cj4KPiByazMyMjlfY3Ry
+bF9kYXRhICYgcmszMjI5X3dpbjAxX2RhdGEgc2VlbXMgc2FtZSBhcyByazMyODhfY3RybF9kYXRh
+ICYgCj4gcmszMjg4X3dpbjAxX2RhdGEuCj4KCkdyZWF0LCBnbGFkIHRvIGRvIHRoYXQgOikKCi0g
+WWFraXIKCj4gVGhhbmtzLgo+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
