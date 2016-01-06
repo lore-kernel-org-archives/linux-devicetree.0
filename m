@@ -1,62 +1,114 @@
-From: Ilia Mirkin <imirkin-FrUbXkNCsVf2fBVCVOL8/A@public.gmane.org>
-Subject: Re: [PATCH 1/2] drm: bridge: sil902x
-Date: Wed, 6 Jan 2016 10:35:37 -0500
-Message-ID: <CAKb7UvghNhGZLUX_3LchZoiYAtywN99tEpDy+k8ApPnPF-ce+Q@mail.gmail.com>
-References: <1452079551-30914-1-git-send-email-boris.brezillon@free-electrons.com>
-	<20160106134736.GR13058@pengutronix.de>
-	<20160106145330.03479703@bbrezillon>
-	<20160106152638.GS13058@pengutronix.de>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v5 3/3] dt/bindings: qcom_nandc: Add DT bindings
+Date: Wed, 6 Jan 2016 16:37:53 +0100
+Message-ID: <20160106163753.68f93f67@bbrezillon>
+References: <1439959746-25498-1-git-send-email-architt@codeaurora.org>
+	<1451971501-18160-1-git-send-email-architt@codeaurora.org>
+	<1451971501-18160-4-git-send-email-architt@codeaurora.org>
+	<20160106151444.GA4131@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160106152638.GS13058-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160106151444.GA4131@rob-hp-laptop>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Archit Taneja <architt@codeaurora.org>, computersforpeace@gmail.com, linux-mtd@lists.infradead.org, cernekee@gmail.com, sboyd@codeaurora.org, andy.gross@linaro.org, dehrenberg@google.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 6, 2016 at 10:26 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> On Wed, Jan 06, 2016 at 02:53:30PM +0100, Boris Brezillon wrote:
->> Hi Sascha,
->>
->> On Wed, 6 Jan 2016 14:47:36 +0100
->> Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
->>
->> > Hi Boris,
->> >
->> > On Wed, Jan 06, 2016 at 12:25:50PM +0100, Boris Brezillon wrote:
->> > > Add basic support for the sil902x RGB -> HDMI bridge.
->> > > This driver does not support audio output yet.
->> > >
->> > > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> > > ---
->> > > Hello,
->> > >
->> > > This patch is only adding basic support for the sil9022 chip.
->> >
->> > This thing is a SiI9022 for camel case "Silicon Image" with a capital 'I',
->> > not a small 'l'.
->>
->> Oh, my bad, I'll fix that, but the vendor prefix defined in
->> Documentation/devicetree/bindings/vendor-prefixes.txt is not helping in
->> getting this right.
->
-> No, indeed not. Unfortunately sii is already taken by Seiko.
->
->>
->> Should I also change the driver name?
->
-> I would suggest so, yes.
+On Wed, 6 Jan 2016 09:14:44 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-For opposing opinions:
+> On Tue, Jan 05, 2016 at 10:55:01AM +0530, Archit Taneja wrote:
+> > Add DT bindings document for the Qualcomm NAND controller driver.
+> > 
+> > Cc: devicetree@vger.kernel.org
+> > Cc: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Archit Taneja <architt@codeaurora.org>
+> > ---
+> > v5:
+> > - Make changes to incorporate chip select sub nodes (brcmnand taken as
+> >   reference)
+> > 
+> > v3:
+> > - Don't use '0x' when specifying nand controller address space
+> > - Add optional property for on-flash bbt usage
+> > 
+> >  .../devicetree/bindings/mtd/qcom_nandc.txt         | 84 ++++++++++++++++++++++
+> >  1 file changed, 84 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> > new file mode 100644
+> > index 0000000..b2cf2d9
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> > @@ -0,0 +1,84 @@
+> > +* Qualcomm NAND controller
+> > +
+> > +Required properties:
+> > +- compatible:		should be "qcom,ebi2-nand" for IPQ806x
+> 
+> More specific name please.
+> 
+> > +- reg:			MMIO address range
+> > +- clocks:		must contain core clock and always on clock
+> > +- clock-names:		must contain "core" for the core clock and "aon" for the
+> > +			always on clock
+> > +- dmas:			DMA specifier, consisting of a phandle to the ADM DMA
+> > +			controller node and the channel number to be used for
+> > +			NAND. Refer to dma.txt and qcom_adm.txt for more details
+> > +- dma-names:		must be "rxtx"
+> > +- qcom,cmd-crci:	must contain the ADM command type CRCI block instance
+> > +			number specified for the NAND controller on the given
+> > +			platform
+> > +- qcom,data-crci:	must contain the ADM data type CRCI block instance
+> > +			number specified for the NAND controller on the given
+> > +			platform
+> > +- #address-cells:	<1> - subnodes give the chip-select number
+> > +- #size-cells:		<0>
+> > +
+> > +* NAND chip-select
+> > +
+> > +Each controller may contain one or more subnodes to represent enabled
+> > +chip-selects which (may) contain NAND flash chips. Their properties are as
+> > +follows.
+> > +
+> > +Required properties:
+> > +- compatible:		should contain "qcom,nandcs"
+> > +- reg:			a single integer representing the chip-select
+> > +			number (e.g., 0, 1, 2, etc.)
+> > +- #address-cells:	see partition.txt
+> > +- #size-cells:		see partition.txt
+> > +- nand-ecc-strength:	number of bits to correct per ECC step. Must be 4 or 8
+> > +			bits.
+> > +- nand-ecc-step-size:	bytes of data per ECC step. Must be 512.
+> > +
+> > +Optional properties:
+> > +- nand-bus-width:	bus width. Must be 8 or 16. If not present, 8 is chosen
+> > +			as default
+> > +
+> > +Each nandcs device node may optionally contain sub-nodes describing the flash
+> > +partition mapping. See partition.txt for more detail.
+> 
+> Can't the partitioning span across chip selects? After all, interleaving 
+> is how you get high performance.
 
-drivers/gpu/drm/i2c/sil164_drv.c
-drivers/media/platform/s5p-tv/sii9234_drv.c
+Hm, defining aggregated mtd devices in the DT is not supported, and
+since, as I've been told many times ;), DT is supposed to represent the
+HW not what we want to do with it, I'm not sure that's such a good idea.
 
-One of each :)
+Note that the infrastructure to concatenate several MTD devices
+already exists, but it's not used by the NAND layer.
 
-  -ilia
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Also note that some NAND chips embed several dies and expose multiple
+CS lines. The NAND framework already supports assigning different CS
+lines to a single NAND device, so you could abuse this feature and
+expose your different NAND devices as a single one (that will only work
+for a cluster of identical chips connected to the same controller), but
+I'd really like to avoid this kind of things.
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
