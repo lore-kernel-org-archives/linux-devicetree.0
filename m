@@ -1,49 +1,106 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH 07/10] [media] tvp5150: Add device tree binding document
-Date: Wed, 6 Jan 2016 07:46:35 -0300
-Message-ID: <568CF08B.6080107@osg.samsung.com>
-References: <1451910332-23385-1-git-send-email-javier@osg.samsung.com>
- <1451910332-23385-8-git-send-email-javier@osg.samsung.com>
- <2787681.imkQ5NT8Qm@avalon>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 1/2] pci: host: pci-dra7xx: use "num-lanes" property to find phy count
+Date: Wed, 6 Jan 2016 16:19:52 +0530
+Message-ID: <1452077393-25880-2-git-send-email-kishon@ti.com>
+References: <1452077393-25880-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2787681.imkQ5NT8Qm@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Enrico Butera <ebutera@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Rob Herring <robh+dt@kernel.org>, Eduard Gavin <egavinc@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1452077393-25880-1-git-send-email-kishon@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Laurent,
+use "num-lanes" property to find phy count instead of the number
+phy-names property.
 
-On 01/06/2016 07:39 AM, Laurent Pinchart wrote:
-> Hi Javier,
-> 
-> Thank you for the patch.
->
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+---
+ drivers/pci/host/pci-dra7xx.c |   23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
-Thanks a lot for your feedback.
-
-[snip]
-
->> +
->> +Optional Properties:
->> +- powerdown-gpios: phandle for the GPIO connected to the PDN pin, if any.
-> 
-> The signal is called PDN in the datasheet, so it might make sense to call this 
-> pdn-gpios. I have no strong opinion on this, I'll let you decide what you 
-> think is best.
->
-
-Yes, I wondered if the convention was to use a descriptive name or the one
-used in the datasheet but Documentation/devicetree/bindings/gpio/gpio.txt
-says nothing about it.
-
-I'll change it to pdn-gpios since it could be easier to match with the doc.
-
-Best regards,
+diff --git a/drivers/pci/host/pci-dra7xx.c b/drivers/pci/host/pci-dra7xx.c
+index 5963adc..05bbeee 100644
+--- a/drivers/pci/host/pci-dra7xx.c
++++ b/drivers/pci/host/pci-dra7xx.c
+@@ -70,7 +70,7 @@
+ struct dra7xx_pcie {
+ 	void __iomem		*base;
+ 	struct phy		**phy;
+-	int			phy_count;
++	int			lanes;
+ 	struct device		*dev;
+ 	struct pcie_port	pp;
+ };
+@@ -364,7 +364,7 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+ 	int ret;
+ 	int irq;
+ 	int i;
+-	int phy_count;
++	u32 lanes;
+ 	struct phy **phy;
+ 	void __iomem *base;
+ 	struct resource *res;
+@@ -402,17 +402,16 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+ 	if (!base)
+ 		return -ENOMEM;
+ 
+-	phy_count = of_property_count_strings(np, "phy-names");
+-	if (phy_count < 0) {
+-		dev_err(dev, "unable to find the strings\n");
+-		return phy_count;
++	if (of_property_read_u32(np, "num-lanes", &lanes)) {
++		dev_err(dev, "Failed to parse the number of lanes\n");
++		return -EINVAL;
+ 	}
+ 
+-	phy = devm_kzalloc(dev, sizeof(*phy) * phy_count, GFP_KERNEL);
++	phy = devm_kzalloc(dev, sizeof(*phy) * lanes, GFP_KERNEL);
+ 	if (!phy)
+ 		return -ENOMEM;
+ 
+-	for (i = 0; i < phy_count; i++) {
++	for (i = 0; i < lanes; i++) {
+ 		snprintf(name, sizeof(name), "pcie-phy%d", i);
+ 		phy[i] = devm_phy_get(dev, name);
+ 		if (IS_ERR(phy[i]))
+@@ -432,7 +431,7 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+ 	dra7xx->base = base;
+ 	dra7xx->phy = phy;
+ 	dra7xx->dev = dev;
+-	dra7xx->phy_count = phy_count;
++	dra7xx->lanes = lanes;
+ 
+ 	pm_runtime_enable(dev);
+ 	ret = pm_runtime_get_sync(dev);
+@@ -489,7 +488,7 @@ static int __exit dra7xx_pcie_remove(struct platform_device *pdev)
+ 	struct dra7xx_pcie *dra7xx = platform_get_drvdata(pdev);
+ 	struct pcie_port *pp = &dra7xx->pp;
+ 	struct device *dev = &pdev->dev;
+-	int count = dra7xx->phy_count;
++	int count = dra7xx->lanes;
+ 
+ 	if (pp->irq_domain)
+ 		irq_domain_remove(pp->irq_domain);
+@@ -535,7 +534,7 @@ static int dra7xx_pcie_resume(struct device *dev)
+ static int dra7xx_pcie_suspend_noirq(struct device *dev)
+ {
+ 	struct dra7xx_pcie *dra7xx = dev_get_drvdata(dev);
+-	int count = dra7xx->phy_count;
++	int count = dra7xx->lanes;
+ 
+ 	while (count--) {
+ 		phy_power_off(dra7xx->phy[count]);
+@@ -548,7 +547,7 @@ static int dra7xx_pcie_suspend_noirq(struct device *dev)
+ static int dra7xx_pcie_resume_noirq(struct device *dev)
+ {
+ 	struct dra7xx_pcie *dra7xx = dev_get_drvdata(dev);
+-	int phy_count = dra7xx->phy_count;
++	int phy_count = dra7xx->lanes;
+ 	int ret;
+ 	int i;
+ 
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+1.7.9.5
