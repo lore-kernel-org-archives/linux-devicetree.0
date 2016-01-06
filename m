@@ -1,115 +1,123 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 2/2] phy: ti-pipe3: configure usb3 phy to be used as pcie phy
-Date: Wed, 6 Jan 2016 16:29:08 +0530
-Message-ID: <1452077948-26232-3-git-send-email-kishon@ti.com>
-References: <1452077948-26232-1-git-send-email-kishon@ti.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 09/10] [media] tvp5150: Initialize the chip on probe
+Date: Wed, 06 Jan 2016 12:59:50 +0200
+Message-ID: <1730920.ntKvfybiDd@avalon>
+References: <1451910332-23385-1-git-send-email-javier@osg.samsung.com> <1451910332-23385-10-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452077948-26232-1-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rogerq@ti.com, nsekhar@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1451910332-23385-10-git-send-email-javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Enrico Butera <ebutera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eduard Gavin <egavinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DRA72 uses USB3 PHY for the 2nd lane of PCIE. The configuration
-required to make USB3 PHY used for the 2nd lane of PCIe is done
-here.
+Hi Javier,
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- Documentation/devicetree/bindings/phy/ti-phy.txt |    2 ++
- drivers/phy/phy-ti-pipe3.c                       |   30 +++++++++++++++++++++-
- 2 files changed, 31 insertions(+), 1 deletion(-)
+Thankk you for the patch.
 
-diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
-index a3b3945..6a7de94 100644
---- a/Documentation/devicetree/bindings/phy/ti-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
-@@ -91,6 +91,8 @@ Optional properties:
-    register that contains the SATA_PLL_SOFT_RESET bit. Only valid for sata_phy.
-  - syscon-pcs : phandle/offset pair. Phandle to the system control module and the
-    register offset to write the PCS delay value.
-+ - "ti,configure-as-pcie" : property to indicate if the PHY should be
-+   configured as PCIE PHY.
- 
- Deprecated properties:
-  - ctrl-module : phandle of the control module used by PHY driver to power on
-diff --git a/drivers/phy/phy-ti-pipe3.c b/drivers/phy/phy-ti-pipe3.c
-index 7d83d2b..793185e 100644
---- a/drivers/phy/phy-ti-pipe3.c
-+++ b/drivers/phy/phy-ti-pipe3.c
-@@ -56,6 +56,12 @@
- 
- #define SATA_PLL_SOFT_RESET	BIT(18)
- 
-+#define PHY_RX_ANA_PRGRAMMABILITY_REG	0xC
-+#define MEM_EN_PLLBYP			BIT(7)
-+
-+#define PHY_TX_TEST_CONFIG	0x2C
-+#define MEM_ENTESTCLK		BIT(31)
-+
- #define PIPE3_PHY_PWRCTL_CLK_CMD_MASK	0x003FC000
- #define PIPE3_PHY_PWRCTL_CLK_CMD_SHIFT	14
- 
-@@ -68,6 +74,10 @@
- #define PCIE_PCS_MASK			0xFF0000
- #define PCIE_PCS_DELAY_COUNT_SHIFT	0x10
- 
-+#define PIPE3_PHY_DISABLE_SYNC_POWER	BIT(4)
-+
-+#define CONFIGURE_AS_PCIE		BIT(0)
-+
- /*
-  * This is an Empirical value that works, need to confirm the actual
-  * value required for the PIPE3PHY_PLL_CONFIGURATION2.PLL_IDLE status
-@@ -90,6 +100,7 @@ struct pipe3_dpll_map {
- };
- 
- struct ti_pipe3 {
-+	u32			flags;
- 	void __iomem		*pll_ctrl_base;
- 	void __iomem		*phy_rx;
- 	void __iomem		*phy_tx;
-@@ -270,6 +281,19 @@ static int ti_pipe3_init(struct phy *x)
- 	int ret = 0;
- 
- 	ti_pipe3_enable_clocks(phy);
-+
-+	if (phy->flags & CONFIGURE_AS_PCIE) {
-+		val = ti_pipe3_readl(phy->phy_rx,
-+				     PHY_RX_ANA_PRGRAMMABILITY_REG);
-+		val |= MEM_EN_PLLBYP;
-+		ti_pipe3_writel(phy->phy_rx, PHY_RX_ANA_PRGRAMMABILITY_REG,
-+				val);
-+		val = ti_pipe3_readl(phy->phy_tx, PHY_TX_TEST_CONFIG);
-+		val |= MEM_ENTESTCLK;
-+		ti_pipe3_writel(phy->phy_tx, PHY_TX_TEST_CONFIG, val);
-+		return 0;
-+	}
-+
- 	/*
- 	 * Set pcie_pcs register to 0x96 for proper functioning of phy
- 	 * as recommended in AM572x TRM SPRUHZ6, section 18.5.2.2, table
-@@ -318,7 +342,8 @@ static int ti_pipe3_exit(struct phy *x)
- 		return 0;
- 
- 	/* PCIe doesn't have internal DPLL */
--	if (!of_device_is_compatible(phy->dev->of_node, "ti,phy-pipe3-pcie")) {
-+	if (!of_device_is_compatible(phy->dev->of_node, "ti,phy-pipe3-pcie") &&
-+			!(phy->flags & CONFIGURE_AS_PCIE)) {
- 		/* Put DPLL in IDLE mode */
- 		val = ti_pipe3_readl(phy->pll_ctrl_base, PLL_CONFIGURATION2);
- 		val |= PLL_IDLE;
-@@ -590,6 +615,9 @@ static int ti_pipe3_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	if (of_property_read_bool(node, "ti,configure-as-pcie"))
-+		phy->flags |= CONFIGURE_AS_PCIE;
-+
- 	platform_set_drvdata(pdev, phy);
- 	pm_runtime_enable(dev);
- 
+On Monday 04 January 2016 09:25:31 Javier Martinez Canillas wrote:
+> After power-up, the tvp5150 decoder is in a unknown state until the
+> RESETB pin is driven LOW which reset all the registers and restarts
+> the chip's internal state machine.
+> 
+> The init sequence has some timing constraints and the RESETB signal
+> can only be used if the PDN (Power-down) pin is first released.
+> 
+> So, the initialization sequence is as follows:
+> 
+> 1- PDN (active-low) is driven HIGH so the chip is power-up
+> 2- A 20 ms delay is needed before sending a RESETB (active-low) signal.
+> 3- The RESETB pulse duration is 500 ns.
+> 4- A 200 us delay is needed for the I2C client to be active after reset.
+> 
+> This patch used as a reference the logic in the IGEPv2 board file from
+> the ISEE 2.6.37 vendor tree.
+> 
+> Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+> ---
+> 
+>  drivers/media/i2c/tvp5150.c | 35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+> 
+> diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+> index caac96a577f8..fed89a811ab7 100644
+> --- a/drivers/media/i2c/tvp5150.c
+> +++ b/drivers/media/i2c/tvp5150.c
+> @@ -5,6 +5,7 @@
+>   * This code is placed under the terms of the GNU General Public License v2
+> */
+> 
+> +#include <linux/of_gpio.h>
+
+Let's keep the headers sorted alphabetically if you don't mind :-)
+
+>  #include <linux/i2c.h>
+>  #include <linux/slab.h>
+>  #include <linux/videodev2.h>
+> @@ -1197,6 +1198,36 @@ static int tvp5150_detect_version(struct tvp5150
+> *core) return 0;
+>  }
+> 
+> +static inline int tvp5150_init(struct i2c_client *c)
+> +{
+> +	struct gpio_desc *pdn_gpio;
+> +	struct gpio_desc *reset_gpio;
+> +
+> +	pdn_gpio = devm_gpiod_get_optional(&c->dev, "powerdown", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(pdn_gpio))
+> +		return PTR_ERR(pdn_gpio);
+> +
+> +	if (pdn_gpio) {
+> +		gpiod_set_value_cansleep(pdn_gpio, 0);
+> +		/* Delay time between power supplies active and reset */
+> +		msleep(20);
+
+How about usleep_range() instead ?
+
+> +	}
+> +
+> +	reset_gpio = devm_gpiod_get_optional(&c->dev, "reset", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(reset_gpio))
+> +		return PTR_ERR(reset_gpio);
+> +
+> +	if (reset_gpio) {
+> +		/* RESETB pulse duration */
+> +		ndelay(500);
+
+Is the timing so sensitive that we need a delay, or could we use 
+usleep_range() ?
+
+> +		gpiod_set_value_cansleep(reset_gpio, 0);
+> +		/* Delay time between end of reset to I2C active */
+> +		usleep_range(200, 250);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int tvp5150_probe(struct i2c_client *c,
+>  			 const struct i2c_device_id *id)
+>  {
+> @@ -1209,6 +1240,10 @@ static int tvp5150_probe(struct i2c_client *c,
+>  	     I2C_FUNC_SMBUS_READ_BYTE | I2C_FUNC_SMBUS_WRITE_BYTE_DATA))
+>  		return -EIO;
+> 
+> +	res = tvp5150_init(c);
+> +	if (res)
+> +		return res;
+> +
+>  	core = devm_kzalloc(&c->dev, sizeof(*core), GFP_KERNEL);
+>  	if (!core)
+>  		return -ENOMEM;
+
 -- 
-1.7.9.5
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
