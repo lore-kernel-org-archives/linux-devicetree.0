@@ -1,114 +1,58 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v5 3/3] dt/bindings: qcom_nandc: Add DT bindings
-Date: Wed, 6 Jan 2016 16:37:53 +0100
-Message-ID: <20160106163753.68f93f67@bbrezillon>
-References: <1439959746-25498-1-git-send-email-architt@codeaurora.org>
-	<1451971501-18160-1-git-send-email-architt@codeaurora.org>
-	<1451971501-18160-4-git-send-email-architt@codeaurora.org>
-	<20160106151444.GA4131@rob-hp-laptop>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/5] Introduce at91_adc8xx driver
+Date: Wed, 6 Jan 2016 17:12:34 +0100
+Message-ID: <1452096759-19438-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160106151444.GA4131@rob-hp-laptop>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Archit Taneja <architt@codeaurora.org>, computersforpeace@gmail.com, linux-mtd@lists.infradead.org, cernekee@gmail.com, sboyd@codeaurora.org, andy.gross@linaro.org, dehrenberg@google.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 6 Jan 2016 09:14:44 -0600
-Rob Herring <robh@kernel.org> wrote:
 
-> On Tue, Jan 05, 2016 at 10:55:01AM +0530, Archit Taneja wrote:
-> > Add DT bindings document for the Qualcomm NAND controller driver.
-> > 
-> > Cc: devicetree@vger.kernel.org
-> > Cc: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Archit Taneja <architt@codeaurora.org>
-> > ---
-> > v5:
-> > - Make changes to incorporate chip select sub nodes (brcmnand taken as
-> >   reference)
-> > 
-> > v3:
-> > - Don't use '0x' when specifying nand controller address space
-> > - Add optional property for on-flash bbt usage
-> > 
-> >  .../devicetree/bindings/mtd/qcom_nandc.txt         | 84 ++++++++++++++++++++++
-> >  1 file changed, 84 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-> > new file mode 100644
-> > index 0000000..b2cf2d9
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-> > @@ -0,0 +1,84 @@
-> > +* Qualcomm NAND controller
-> > +
-> > +Required properties:
-> > +- compatible:		should be "qcom,ebi2-nand" for IPQ806x
-> 
-> More specific name please.
-> 
-> > +- reg:			MMIO address range
-> > +- clocks:		must contain core clock and always on clock
-> > +- clock-names:		must contain "core" for the core clock and "aon" for the
-> > +			always on clock
-> > +- dmas:			DMA specifier, consisting of a phandle to the ADM DMA
-> > +			controller node and the channel number to be used for
-> > +			NAND. Refer to dma.txt and qcom_adm.txt for more details
-> > +- dma-names:		must be "rxtx"
-> > +- qcom,cmd-crci:	must contain the ADM command type CRCI block instance
-> > +			number specified for the NAND controller on the given
-> > +			platform
-> > +- qcom,data-crci:	must contain the ADM data type CRCI block instance
-> > +			number specified for the NAND controller on the given
-> > +			platform
-> > +- #address-cells:	<1> - subnodes give the chip-select number
-> > +- #size-cells:		<0>
-> > +
-> > +* NAND chip-select
-> > +
-> > +Each controller may contain one or more subnodes to represent enabled
-> > +chip-selects which (may) contain NAND flash chips. Their properties are as
-> > +follows.
-> > +
-> > +Required properties:
-> > +- compatible:		should contain "qcom,nandcs"
-> > +- reg:			a single integer representing the chip-select
-> > +			number (e.g., 0, 1, 2, etc.)
-> > +- #address-cells:	see partition.txt
-> > +- #size-cells:		see partition.txt
-> > +- nand-ecc-strength:	number of bits to correct per ECC step. Must be 4 or 8
-> > +			bits.
-> > +- nand-ecc-step-size:	bytes of data per ECC step. Must be 512.
-> > +
-> > +Optional properties:
-> > +- nand-bus-width:	bus width. Must be 8 or 16. If not present, 8 is chosen
-> > +			as default
-> > +
-> > +Each nandcs device node may optionally contain sub-nodes describing the flash
-> > +partition mapping. See partition.txt for more detail.
-> 
-> Can't the partitioning span across chip selects? After all, interleaving 
-> is how you get high performance.
+Hi,
 
-Hm, defining aggregated mtd devices in the DT is not supported, and
-since, as I've been told many times ;), DT is supposed to represent the
-HW not what we want to do with it, I'm not sure that's such a good idea.
+This is the very basic support for the adc introduced with the SAMA5D2 SoC
+family.
 
-Note that the infrastructure to concatenate several MTD devices
-already exists, but it's not used by the NAND layer.
+The goal is to provide something to the user as soon as possible instead of
+waiting for a full featured driver.
 
-Also note that some NAND chips embed several dies and expose multiple
-CS lines. The NAND framework already supports assigning different CS
-lines to a single NAND device, so you could abuse this feature and
-expose your different NAND devices as a single one (that will only work
-for a cluster of identical chips connected to the same controller), but
-I'd really like to avoid this kind of things.
+Only unsigned conversions on a software tigger are supported. Next steps are
+signed conversions, differential channels, hardware triggers, dma support,
+touchscreen support, and others.
+
+Changes:
+- v2:
+  - Cleanup thanks to Peter Meerwald-Stadler comments (add prefix for macros,
+    remove useless stuff, etc).
+  - Move parameters relative to the SoC to the device tree (min/max sampling
+    rate and startup time).
+  - Use sysfs to configure the sampling frequency.
+  - vddana supply is no more optionnal.
+  - No change for irq since I am not sure it will simplify the code (interrupt
+    is cleared when reading channel conversion result). Jonathan, tell me if
+    I need to rework this part.
+
+Ludovic Desroches (5):
+  iio:adc:at91_adc8xx: introduce new atmel adc driver
+  MAINTAINERS: add entry for Atmel ADC 8xx driver
+  ARM: at91/dt: sama5d2: add adc device
+  ARM: at91/dt: sama5d2 Xplained: enable the adc device
+  ARM: at91/defconfig: add sama5d2 adc support in sama5_defconfig
+
+ .../devicetree/bindings/iio/adc/at91_adc8xx.txt    |  28 ++
+ MAINTAINERS                                        |   6 +
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts        |  22 +
+ arch/arm/boot/dts/sama5d2.dtsi                     |  18 +-
+ arch/arm/configs/sama5_defconfig                   |   1 +
+ drivers/iio/adc/Kconfig                            |  11 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/at91_adc8xx.c                      | 461 +++++++++++++++++++++
+ 8 files changed, 542 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/at91_adc8xx.txt
+ create mode 100644 drivers/iio/adc/at91_adc8xx.c
 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+2.5.0
