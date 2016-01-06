@@ -1,42 +1,70 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 1/2] drm: bridge: sil902x
-Date: Wed, 6 Jan 2016 14:53:30 +0100
-Message-ID: <20160106145330.03479703@bbrezillon>
-References: <1452079551-30914-1-git-send-email-boris.brezillon@free-electrons.com>
- <20160106134736.GR13058@pengutronix.de>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] ARM: dts: sun8i: Add Allwinner A83T dtsi
+Date: Wed, 6 Jan 2016 15:05:31 +0100
+Message-ID: <20160106140531.GK11722@lukather>
+References: <1452085914-29340-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1452085914-29340-3-git-send-email-vishnupatekar0510@gmail.com>
+ <20160106132505.GJ563@leverpostej>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160106134736.GR13058@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Xb8pJpF45Qg/t7GZ"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBLF6WS2AKGQETWYQ76Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160106132505.GJ563@leverpostej>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2FzY2hhLAoKT24gV2VkLCA2IEphbiAyMDE2IDE0OjQ3OjM2ICswMTAwClNhc2NoYSBIYXVl
-ciA8cy5oYXVlckBwZW5ndXRyb25peC5kZT4gd3JvdGU6Cgo+IEhpIEJvcmlzLAo+IAo+IE9uIFdl
-ZCwgSmFuIDA2LCAyMDE2IGF0IDEyOjI1OjUwUE0gKzAxMDAsIEJvcmlzIEJyZXppbGxvbiB3cm90
-ZToKPiA+IEFkZCBiYXNpYyBzdXBwb3J0IGZvciB0aGUgc2lsOTAyeCBSR0IgLT4gSERNSSBicmlk
-Z2UuCj4gPiBUaGlzIGRyaXZlciBkb2VzIG5vdCBzdXBwb3J0IGF1ZGlvIG91dHB1dCB5ZXQuCj4g
-PiAKPiA+IFNpZ25lZC1vZmYtYnk6IEJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemlsbG9uQGZy
-ZWUtZWxlY3Ryb25zLmNvbT4KPiA+IC0tLQo+ID4gSGVsbG8sCj4gPiAKPiA+IFRoaXMgcGF0Y2gg
-aXMgb25seSBhZGRpbmcgYmFzaWMgc3VwcG9ydCBmb3IgdGhlIHNpbDkwMjIgY2hpcC4KPiAKPiBU
-aGlzIHRoaW5nIGlzIGEgU2lJOTAyMiBmb3IgY2FtZWwgY2FzZSAiU2lsaWNvbiBJbWFnZSIgd2l0
-aCBhIGNhcGl0YWwgJ0knLAo+IG5vdCBhIHNtYWxsICdsJy4KCk9oLCBteSBiYWQsIEknbGwgZml4
-IHRoYXQsIGJ1dCB0aGUgdmVuZG9yIHByZWZpeCBkZWZpbmVkIGluCkRvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0IGlzIG5vdCBoZWxwaW5nIGluCmdl
-dHRpbmcgdGhpcyByaWdodC4KClNob3VsZCBJIGFsc28gY2hhbmdlIHRoZSBkcml2ZXIgbmFtZT8K
-CkJlc3QgUmVnYXJkcywKCkJvcmlzCgotLSAKQm9yaXMgQnJlemlsbG9uLCBGcmVlIEVsZWN0cm9u
-cwpFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVuZ2luZWVyaW5nCmh0dHA6Ly9mcmVlLWVsZWN0
-cm9ucy5jb20KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+--Xb8pJpF45Qg/t7GZ
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+Hi Mark,
+
+On Wed, Jan 06, 2016 at 01:25:05PM +0000, Mark Rutland wrote:
+> > +	clocks {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		ranges;
+> > +
+> > +		osc24M: osc24M_clk {
+> > +			#clock-cells = <0>;
+> > +			compatible = "fixed-clock";
+> > +			clock-frequency = <24000000>;
+> > +			clock-output-names = "osc24M";
+> > +		};
+> > +
+> > +		osc32k: osc32k_clk {
+> > +			#clock-cells = <0>;
+> > +			compatible = "fixed-clock";
+> > +			clock-frequency = <32768>;
+> > +			clock-output-names = "osc32k";
+> > +		};
+> > +	};
+> 
+> Just put the clocks under the root node. 'clocks' is not a special
+> node.
+
+No, it's not a special node, but it's a very convenient one. It avoids
+"crippling" the main SoC definition with all the clocks definition,
+and keep the noise relatively low.
+
+And a bunch of other maintainers seem to agree:
+$ git grep "clocks {"  -- arch/arm/boot/dts/ arch/arm64/boot/dts/ | wc -l
+271
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--Xb8pJpF45Qg/t7GZ--
