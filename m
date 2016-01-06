@@ -1,70 +1,73 @@
 From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v7 2/5] Documentation: dt-bindings: Add bindings for rk3288 DW MIPI DSI driver
-Date: Wed,  6 Jan 2016 12:03:54 +0800
-Message-ID: <1452053038-32098-3-git-send-email-zyw@rock-chips.com>
+Subject: [PATCH v7 4/5] ARM: dts: rockchip: add rk3288 mipi_dsi nodes
+Date: Wed,  6 Jan 2016 12:03:56 +0800
+Message-ID: <1452053038-32098-5-git-send-email-zyw@rock-chips.com>
 References: <1452053038-32098-1-git-send-email-zyw@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1452053038-32098-1-git-send-email-zyw@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: heiko@sntech.de, linux-rockchip@lists.infradead.org, mark.yao@rock-chips.com, treding@nvidia.com
-Cc: Chris Zhong <zyw@rock-chips.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: Chris Zhong <zyw@rock-chips.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-add device tree bindings for rk3288 specific Synopsys DW MIPI DSI driver
+Add a mipi_dsi node, and also add mipi_dsi endpoints to vopb and vopl
+output port nodes.
 
 Signed-off-by: Chris Zhong <zyw@rock-chips.com>
-Acked-by: Rob Herring <robh@kernel.org>
 
 ---
 
 Changes in v7: None
-Changes in v6:
-- update the document, since the bridge device has been deleted.
+Changes in v6: None
+Changes in v5:
+- modify the clk name to SCLK_MIPIDSI_24M
 
-Changes in v5: None
 Changes in v4: None
-Changes in v3:
-- move dw_mipi_dsi_rockchip.txt to bindings/display/rockchip/
+Changes in v3: None
 
- .../display/rockchip/dw_mipi_dsi_rockchip.txt      | 60 ++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt
+ arch/arm/boot/dts/rk3288.dtsi | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt
-new file mode 100644
-index 0000000..1753f0c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt
-@@ -0,0 +1,60 @@
-+Rockchip specific extensions to the Synopsys Designware MIPI DSI
-+================================
-+
-+Required properties:
-+- #address-cells: Should be <1>.
-+- #size-cells: Should be <0>.
-+- compatible: "rockchip,rk3288-mipi-dsi", "snps,dw-mipi-dsi".
-+- reg: Represent the physical address range of the controller.
-+- interrupts: Represent the controller's interrupt to the CPU(s).
-+- clocks, clock-names: Phandles to the controller's pll reference
-+  clock(ref) and APB clock(pclk), as described in [1].
-+- rockchip,grf: this soc should set GRF regs to mux vopl/vopb.
-+- ports: contain a port node with endpoint definitions as defined in [2].
-+  For vopb,set the reg = <0> and set the reg = <1> for vopl.
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+[2] Documentation/devicetree/bindings/media/video-interfaces.txt
-+
-+Example:
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 04ea209..6b21a87 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -800,6 +800,10 @@
+ 				reg = <0>;
+ 				remote-endpoint = <&hdmi_in_vopb>;
+ 			};
++			vopb_out_mipi: endpoint@2 {
++				reg = <2>;
++				remote-endpoint = <&mipi_in_vopb>;
++			};
+ 		};
+ 	};
+ 
+@@ -833,6 +837,10 @@
+ 				reg = <0>;
+ 				remote-endpoint = <&hdmi_in_vopl>;
+ 			};
++			vopl_out_mipi: endpoint@2 {
++				reg = <2>;
++				remote-endpoint = <&mipi_in_vopl>;
++			};
+ 		};
+ 	};
+ 
+@@ -873,6 +881,37 @@
+ 		};
+ 	};
+ 
 +	mipi_dsi: mipi@ff960000 {
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +		compatible = "rockchip,rk3288-mipi-dsi", "snps,dw-mipi-dsi";
 +		reg = <0xff960000 0x4000>;
 +		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_MIPI_24M>, <&cru PCLK_MIPI_DSI0>;
++		clocks = <&cru SCLK_MIPIDSI_24M>, <&cru PCLK_MIPI_DSI0>;
 +		clock-names = "ref", "pclk";
 +		rockchip,grf = <&grf>;
-+		status = "okay";
++		status = "disabled";
 +
 +		ports {
 +			#address-cells = <1>;
@@ -84,17 +87,10 @@ index 0000000..1753f0c
 +				};
 +			};
 +		};
-+
-+		panel {
-+			compatible ="boe,tv080wum-nl0";
-+			reg = <0>;
-+
-+			enable-gpios = <&gpio7 3 GPIO_ACTIVE_HIGH>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&lcd_en>;
-+			backlight = <&backlight>;
-+			status = "okay";
-+		};
 +	};
++
+ 	gic: interrupt-controller@ffc01000 {
+ 		compatible = "arm,gic-400";
+ 		interrupt-controller;
 -- 
 2.6.3
