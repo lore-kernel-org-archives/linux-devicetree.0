@@ -1,93 +1,51 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 3/3] dt/bindings: qcom_nandc: Add DT bindings
-Date: Wed, 6 Jan 2016 09:14:44 -0600
-Message-ID: <20160106151444.GA4131@rob-hp-laptop>
-References: <1439959746-25498-1-git-send-email-architt@codeaurora.org>
- <1451971501-18160-1-git-send-email-architt@codeaurora.org>
- <1451971501-18160-4-git-send-email-architt@codeaurora.org>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 1/2] drm: bridge: sil902x
+Date: Wed, 6 Jan 2016 16:26:38 +0100
+Message-ID: <20160106152638.GS13058@pengutronix.de>
+References: <1452079551-30914-1-git-send-email-boris.brezillon@free-electrons.com>
+ <20160106134736.GR13058@pengutronix.de>
+ <20160106145330.03479703@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1451971501-18160-4-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: computersforpeace@gmail.com, boris.brezillon@free-electrons.com, linux-mtd@lists.infradead.org, cernekee@gmail.com, sboyd@codeaurora.org, andy.gross@linaro.org, dehrenberg@google.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20160106145330.03479703@bbrezillon>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 05, 2016 at 10:55:01AM +0530, Archit Taneja wrote:
-> Add DT bindings document for the Qualcomm NAND controller driver.
-> 
-> Cc: devicetree@vger.kernel.org
-> Cc: Rob Herring <robh@kernel.org>
-> Signed-off-by: Archit Taneja <architt@codeaurora.org>
-> ---
-> v5:
-> - Make changes to incorporate chip select sub nodes (brcmnand taken as
->   reference)
-> 
-> v3:
-> - Don't use '0x' when specifying nand controller address space
-> - Add optional property for on-flash bbt usage
-> 
->  .../devicetree/bindings/mtd/qcom_nandc.txt         | 84 ++++++++++++++++++++++
->  1 file changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-> new file mode 100644
-> index 0000000..b2cf2d9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-> @@ -0,0 +1,84 @@
-> +* Qualcomm NAND controller
-> +
-> +Required properties:
-> +- compatible:		should be "qcom,ebi2-nand" for IPQ806x
-
-More specific name please.
-
-> +- reg:			MMIO address range
-> +- clocks:		must contain core clock and always on clock
-> +- clock-names:		must contain "core" for the core clock and "aon" for the
-> +			always on clock
-> +- dmas:			DMA specifier, consisting of a phandle to the ADM DMA
-> +			controller node and the channel number to be used for
-> +			NAND. Refer to dma.txt and qcom_adm.txt for more details
-> +- dma-names:		must be "rxtx"
-> +- qcom,cmd-crci:	must contain the ADM command type CRCI block instance
-> +			number specified for the NAND controller on the given
-> +			platform
-> +- qcom,data-crci:	must contain the ADM data type CRCI block instance
-> +			number specified for the NAND controller on the given
-> +			platform
-> +- #address-cells:	<1> - subnodes give the chip-select number
-> +- #size-cells:		<0>
-> +
-> +* NAND chip-select
-> +
-> +Each controller may contain one or more subnodes to represent enabled
-> +chip-selects which (may) contain NAND flash chips. Their properties are as
-> +follows.
-> +
-> +Required properties:
-> +- compatible:		should contain "qcom,nandcs"
-> +- reg:			a single integer representing the chip-select
-> +			number (e.g., 0, 1, 2, etc.)
-> +- #address-cells:	see partition.txt
-> +- #size-cells:		see partition.txt
-> +- nand-ecc-strength:	number of bits to correct per ECC step. Must be 4 or 8
-> +			bits.
-> +- nand-ecc-step-size:	bytes of data per ECC step. Must be 512.
-> +
-> +Optional properties:
-> +- nand-bus-width:	bus width. Must be 8 or 16. If not present, 8 is chosen
-> +			as default
-> +
-> +Each nandcs device node may optionally contain sub-nodes describing the flash
-> +partition mapping. See partition.txt for more detail.
-
-Can't the partitioning span across chip selects? After all, interleaving 
-is how you get high performance.
-
-Rob
+T24gV2VkLCBKYW4gMDYsIDIwMTYgYXQgMDI6NTM6MzBQTSArMDEwMCwgQm9yaXMgQnJlemlsbG9u
+IHdyb3RlOgo+IEhpIFNhc2NoYSwKPiAKPiBPbiBXZWQsIDYgSmFuIDIwMTYgMTQ6NDc6MzYgKzAx
+MDAKPiBTYXNjaGEgSGF1ZXIgPHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOgo+IAo+ID4g
+SGkgQm9yaXMsCj4gPiAKPiA+IE9uIFdlZCwgSmFuIDA2LCAyMDE2IGF0IDEyOjI1OjUwUE0gKzAx
+MDAsIEJvcmlzIEJyZXppbGxvbiB3cm90ZToKPiA+ID4gQWRkIGJhc2ljIHN1cHBvcnQgZm9yIHRo
+ZSBzaWw5MDJ4IFJHQiAtPiBIRE1JIGJyaWRnZS4KPiA+ID4gVGhpcyBkcml2ZXIgZG9lcyBub3Qg
+c3VwcG9ydCBhdWRpbyBvdXRwdXQgeWV0Lgo+ID4gPiAKPiA+ID4gU2lnbmVkLW9mZi1ieTogQm9y
+aXMgQnJlemlsbG9uIDxib3Jpcy5icmV6aWxsb25AZnJlZS1lbGVjdHJvbnMuY29tPgo+ID4gPiAt
+LS0KPiA+ID4gSGVsbG8sCj4gPiA+IAo+ID4gPiBUaGlzIHBhdGNoIGlzIG9ubHkgYWRkaW5nIGJh
+c2ljIHN1cHBvcnQgZm9yIHRoZSBzaWw5MDIyIGNoaXAuCj4gPiAKPiA+IFRoaXMgdGhpbmcgaXMg
+YSBTaUk5MDIyIGZvciBjYW1lbCBjYXNlICJTaWxpY29uIEltYWdlIiB3aXRoIGEgY2FwaXRhbCAn
+SScsCj4gPiBub3QgYSBzbWFsbCAnbCcuCj4gCj4gT2gsIG15IGJhZCwgSSdsbCBmaXggdGhhdCwg
+YnV0IHRoZSB2ZW5kb3IgcHJlZml4IGRlZmluZWQgaW4KPiBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCBpcyBub3QgaGVscGluZyBpbgo+IGdldHRp
+bmcgdGhpcyByaWdodC4KCk5vLCBpbmRlZWQgbm90LiBVbmZvcnR1bmF0ZWx5IHNpaSBpcyBhbHJl
+YWR5IHRha2VuIGJ5IFNlaWtvLgoKPiAKPiBTaG91bGQgSSBhbHNvIGNoYW5nZSB0aGUgZHJpdmVy
+IG5hbWU/CgpJIHdvdWxkIHN1Z2dlc3Qgc28sIHllcy4KClNhc2NoYQoKLS0gClBlbmd1dHJvbml4
+IGUuSy4gICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICB8CkluZHVzdHJpYWwgTGludXggU29sdXRpb25zICAgICAgICAgICAgICAgICB8IGh0dHA6
+Ly93d3cucGVuZ3V0cm9uaXguZGUvICB8ClBlaW5lciBTdHIuIDYtOCwgMzExMzcgSGlsZGVzaGVp
+bSwgR2VybWFueSB8IFBob25lOiArNDktNTEyMS0yMDY5MTctMCAgICB8CkFtdHNnZXJpY2h0IEhp
+bGRlc2hlaW0sIEhSQSAyNjg2ICAgICAgICAgICB8IEZheDogICArNDktNTEyMS0yMDY5MTctNTU1
+NSB8Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
