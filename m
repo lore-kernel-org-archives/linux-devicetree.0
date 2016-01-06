@@ -1,149 +1,49 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH 10/10] [media] tvp5150: Configure data interface via pdata or DT
-Date: Wed, 06 Jan 2016 15:48 +0200
-Message-ID: <1895052.dqIgFQaCHk@avalon>
-References: <1451910332-23385-1-git-send-email-javier@osg.samsung.com> <1743151.ozK6T8LOF3@avalon> <568CFA1E.6060309@osg.samsung.com>
+From: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH 0/2] ata: Introduce the AHCI_HFLAG_EDGE_IRQ_BROKEN in
+ libahci and enabling it for ahci_xgene driver.
+Date: Wed, 6 Jan 2016 19:20:26 +0530
+Message-ID: <CAOHikRAMhdGuqYsajJPD0e+iSVtYn4Ymxc7sR7WdN_1mo_x_bQ@mail.gmail.com>
+References: <1450942289-12660-1-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <568CFA1E.6060309-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+In-Reply-To: <1450942289-12660-1-git-send-email-stripathi-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Enrico Butera <ebutera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eduard Gavin <egavinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Langsdorf <mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier,
+Happy new  year !!
 
-On Wednesday 06 January 2016 08:27:26 Javier Martinez Canillas wrote:
-> On 01/06/2016 07:56 AM, Laurent Pinchart wrote:
-> > On Monday 04 January 2016 09:25:32 Javier Martinez Canillas wrote:
-> >> The video decoder supports either 8-bit 4:2:2 YUV with discrete syncs
-> >> or 8-bit ITU-R BT.656 with embedded syncs output format but currently
-> >> BT.656 it's always reported. Allow to configure the format to use via
-> >> either platform data or a device tree definition.
-> >> 
-> >> Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-> >> ---
-> >> 
-> >>  drivers/media/i2c/tvp5150.c | 61 +++++++++++++++++++++++++++++++++++++--
-> >>  include/media/i2c/tvp5150.h |  5 ++++
-> >>  2 files changed, 64 insertions(+), 2 deletions(-)
-> >> 
-> >> diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-> >> index fed89a811ab7..8bce45a6e264 100644
-> >> --- a/drivers/media/i2c/tvp5150.c
-> >> +++ b/drivers/media/i2c/tvp5150.c
+Any comments on this patchset ?
 
-[snip]
+On Thu, Dec 24, 2015 at 1:01 PM, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org> wrote:
+> This patch set implements a workaround for an errate in the APM
+> X-Gene SATA host controller with edge interrupt. The HOST_IRQ_STAT
+> misses the edge interrupt from the PORT_IRQ_STAT when clearing the
+> HOST_IRQ_STAT and reporting the PORT_IRQ_STAT happens in same clock
+> cycle.
+>
+> Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+>
+> Suman Tripathi (2):
+>   libahci: Implement the workaround to fix the missing of edge
+>     interrupt for HOST_IRQ_STAT
+>   ahci_xgene: Enable AHCI_HFLAG_EDGE_IRQ_BROKEN for APM X-Gen2 SATA
+>     host controller
+>
+>  drivers/ata/ahci.h       |    2 ++
+>  drivers/ata/ahci_xgene.c |    3 ++-
+>  drivers/ata/libahci.c    |   45 +++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 49 insertions(+), 1 deletions(-)
+>
 
-> >> @@ -940,6 +948,16 @@ static int tvp5150_cropcap(struct v4l2_subdev *sd,
-> >> struct v4l2_cropcap *a)
-> >>  static int tvp5150_g_mbus_config(struct v4l2_subdev *sd,
-> >>  				 struct v4l2_mbus_config *cfg)
-> >>  {
-> >> +	struct tvp5150_platform_data *pdata = to_tvp5150(sd)->pdata;
-> >> +
-> >> +	if (pdata) {
-> >> +		cfg->type = pdata->bus_type;
-> >> +		cfg->flags = pdata->parallel_flags;
-> > 
-> > The clock and sync signals polarity don't seem configurable, shouldn't
-> > they just be hardcoded as currently done ?
-> 
-> That's a very good question, I added the flags because according to
-> Documentation/devicetree/bindings/media/video-interfaces.txt, the way
-> to define that the output format will be BT.656 is to avoid defining
-> {hsync,vsync,field-even}-active properties.
-> 
-> IOW, if parallel sync is used, then these properties have to be defined
-> and it felt strange to not use in the driver what is defined in the DT.
 
-In that case we should restrict the values of the properties to what the 
-hardware actually supports. I would hardcode the flags here, and check them 
-when parsing the endpoint to make sure they're valid.
-
-If you find a register I have missed in the documentation with which 
-polarities could be configured then please also feel free to prove me wrong 
-:-)
-
-> >> +		return 0;
-> >> +	}
-> >> +
-> >> +	/* Default values if no platform data was provided */
-> >>  	cfg->type = V4L2_MBUS_BT656;
-> >>  	cfg->flags = V4L2_MBUS_MASTER | V4L2_MBUS_PCLK_SAMPLE_RISING
-> >>  		   | V4L2_MBUS_FIELD_EVEN_LOW | V4L2_MBUS_DATA_ACTIVE_HIGH;
-
-[snip]
-
-> >> @@ -1228,11 +1253,42 @@ static inline int tvp5150_init(struct i2c_client
-> >> *c) return 0;
-> >> 
-> >>  }
-> >> 
-> >> +static struct tvp5150_platform_data *tvp5150_get_pdata(struct device
-> >> *dev)
-> >> +{
-> >> +	struct tvp5150_platform_data *pdata = dev_get_platdata(dev);
-> >> +	struct v4l2_of_endpoint bus_cfg;
-> >> +	struct device_node *ep;
-> >> +
-> >> +	if (pdata)
-> >> +		return pdata;
-> > 
-> > Nobody uses platform data today, I wonder whether we shouldn't postpone
-> > adding support for it until we have a use case. Embedded systems (at
-> > least the ARM- based ones) should use DT.
-> 
-> Yes, I just added it for completeness since in other subsystems I've been
-> yelled in the past that not all the world is DT and that I needed a pdata :)
-> 
-> But I'll gladly remove it since it means less code which is always good.
-> 
-> >> +	if (IS_ENABLED(CONFIG_OF) && dev->of_node) {
-> >> +		pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-> >> +		if (!pdata)
-> >> +			return NULL;
-> >> +
-> >> +		ep = of_graph_get_next_endpoint(dev->of_node, NULL);
-> >> +		if (!ep)
-> >> +			return NULL;
-> >> +
-> >> +		v4l2_of_parse_endpoint(ep, &bus_cfg);
-> > 
-> > Shouldn't you check the return value of the function ?
-> 
-> Right, the v4l2_of_parse_endpoint() kernel doc says "Return: 0." and most
-> drivers are not checking the return value so I thought that it couldn't
-> fail. But now looking at the implementation I see that's not true so I'll
-> add a check in v2.
-> 
-> I'll also post patches to update v4l2_of_parse_endpoint() kernel-doc and
-> the drivers that are not currently checking for this return value.
-
-Thank you for that.
-
-> >> +
-> >> +		pdata->bus_type = bus_cfg.bus_type;
-> >> +		pdata->parallel_flags = bus_cfg.bus.parallel.flags;
-> > 
-> > The V4L2_MBUS_DATA_ACTIVE_HIGH flags set returned by
-> > tvp5150_g_mbus_config() when pdata is NULL is never set by
-> > v4l2_of_parse_endpoint(), should you add it unconditionally ?
-> 
-> But v4l2_of_parse_endpoint() calls v4l2_of_parse_parallel_bus() which does
-> it or did I read the code incorrectly?
-
-No, you're right, I had overlooked the V4L2_MBUS_DATA_ACTIVE_HIGH flag when 
-reading v4l2_of_parse_parallel_bus(), probably a typo when searching. Please 
-ignore that comment.
 
 -- 
-Regards,
-
-Laurent Pinchart
-
+Thanks,
+with regards,
+Suman Tripathi
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
