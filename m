@@ -1,64 +1,33 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 08/10] [media] tvp5150: Add OF match table
-Date: Wed, 06 Jan 2016 12:40:23 +0200
-Message-ID: <2299682.QCkEGMGsiZ@avalon>
-References: <1451910332-23385-1-git-send-email-javier@osg.samsung.com> <1451910332-23385-9-git-send-email-javier@osg.samsung.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 0/2] dra72: add support for PCIE 2 lane mode
+Date: Wed, 6 Jan 2016 16:29:06 +0530
+Message-ID: <1452077948-26232-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1451910332-23385-9-git-send-email-javier@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Enrico Butera <ebutera@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Rob Herring <robh+dt@kernel.org>, Eduard Gavin <egavinc@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: kishon@ti.com
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rogerq@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier,
+dra72 reuse the USB PHY for the PCIe 2n lane. So in order for PCIe x2 mode
+to work in dra72, certain special configuration has to be made in
+USB PHY. This patch series adds those configurations.
 
-Thank you for the patch.
+In order to enable PCIe x2 mode in DRA72, USB should be disabled.
 
-On Monday 04 January 2016 09:25:30 Javier Martinez Canillas wrote:
-> From: Eduard Gavin <egavinc@gmail.com>
-> 
-> The Documentation/devicetree/bindings/media/i2c/tvp5150.txt DT binding doc
-> lists "ti,tvp5150" as the device compatible string but the driver does not
-> have an OF match table. Add the table to the driver so the I2C core can do
-> an OF style match.
-> 
-> Signed-off-by: Eduard Gavin <egavinc@gmail.com>
-> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+Certain board modifications has to be done in order to test
+x2 mode in dra72-evm.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Patch series is rebased on top of linux-phy next
 
-> ---
-> 
->  drivers/media/i2c/tvp5150.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-> index 105bd1c6b17f..caac96a577f8 100644
-> --- a/drivers/media/i2c/tvp5150.c
-> +++ b/drivers/media/i2c/tvp5150.c
-> @@ -1295,8 +1295,17 @@ static const struct i2c_device_id tvp5150_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, tvp5150_id);
-> 
-> +#if IS_ENABLED(CONFIG_OF)
-> +static const struct of_device_id tvp5150_of_match[] = {
-> +	{ .compatible = "ti,tvp5150", },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, tvp5150_of_match);
-> +#endif
-> +
->  static struct i2c_driver tvp5150_driver = {
->  	.driver = {
-> +		.of_match_table = of_match_ptr(tvp5150_of_match),
->  		.name	= "tvp5150",
->  	},
->  	.probe		= tvp5150_probe,
+Kishon Vijay Abraham I (2):
+  phy: ti-pipe3: get tx and rx MEM resource
+  phy: ti-pipe3: configure usb3 phy to be used as pcie phy
+
+ Documentation/devicetree/bindings/phy/ti-phy.txt |    2 +
+ drivers/phy/phy-ti-pipe3.c                       |   57 +++++++++++++++++++++-
+ 2 files changed, 58 insertions(+), 1 deletion(-)
 
 -- 
-Regards,
-
-Laurent Pinchart
+1.7.9.5
