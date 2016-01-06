@@ -1,58 +1,38 @@
 From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 0/5] Introduce at91_adc8xx driver
-Date: Wed, 6 Jan 2016 17:12:34 +0100
-Message-ID: <1452096759-19438-1-git-send-email-ludovic.desroches@atmel.com>
+Subject: [PATCH v2 2/5] MAINTAINERS: add entry for Atmel ADC 8xx driver
+Date: Wed, 6 Jan 2016 17:12:36 +0100
+Message-ID: <1452096759-19438-3-git-send-email-ludovic.desroches@atmel.com>
+References: <1452096759-19438-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452096759-19438-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+---
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Hi,
-
-This is the very basic support for the adc introduced with the SAMA5D2 SoC
-family.
-
-The goal is to provide something to the user as soon as possible instead of
-waiting for a full featured driver.
-
-Only unsigned conversions on a software tigger are supported. Next steps are
-signed conversions, differential channels, hardware triggers, dma support,
-touchscreen support, and others.
-
-Changes:
-- v2:
-  - Cleanup thanks to Peter Meerwald-Stadler comments (add prefix for macros,
-    remove useless stuff, etc).
-  - Move parameters relative to the SoC to the device tree (min/max sampling
-    rate and startup time).
-  - Use sysfs to configure the sampling frequency.
-  - vddana supply is no more optionnal.
-  - No change for irq since I am not sure it will simplify the code (interrupt
-    is cleared when reading channel conversion result). Jonathan, tell me if
-    I need to rework this part.
-
-Ludovic Desroches (5):
-  iio:adc:at91_adc8xx: introduce new atmel adc driver
-  MAINTAINERS: add entry for Atmel ADC 8xx driver
-  ARM: at91/dt: sama5d2: add adc device
-  ARM: at91/dt: sama5d2 Xplained: enable the adc device
-  ARM: at91/defconfig: add sama5d2 adc support in sama5_defconfig
-
- .../devicetree/bindings/iio/adc/at91_adc8xx.txt    |  28 ++
- MAINTAINERS                                        |   6 +
- arch/arm/boot/dts/at91-sama5d2_xplained.dts        |  22 +
- arch/arm/boot/dts/sama5d2.dtsi                     |  18 +-
- arch/arm/configs/sama5_defconfig                   |   1 +
- drivers/iio/adc/Kconfig                            |  11 +
- drivers/iio/adc/Makefile                           |   1 +
- drivers/iio/adc/at91_adc8xx.c                      | 461 +++++++++++++++++++++
- 8 files changed, 542 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/at91_adc8xx.txt
- create mode 100644 drivers/iio/adc/at91_adc8xx.c
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 248828d..827bc83 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1945,6 +1945,12 @@ M:	Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+ S:	Supported
+ F:	drivers/tty/serial/atmel_serial.c
+ 
++ATMEL ADC 8xx DRIVER
++M:	Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
++L:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
++S:	Supported
++F:	drivers/iio/adc/at91_adc8xx.c
++
+ ATMEL Audio ALSA driver
+ M:	Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+ L:	alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org (moderated for non-subscribers)
 -- 
 2.5.0
