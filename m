@@ -1,103 +1,90 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] Input: cyttsp - add device tree support
-Date: Wed, 6 Jan 2016 09:02:56 -0600
-Message-ID: <20160106150256.GA27683@rob-hp-laptop>
-References: <cover.1451997697.git.oreste.salerno@tomtom.com>
- <97cd8c1d98d7406347e4e48f4c7383a394a2ae93.1451997697.git.oreste.salerno@tomtom.com>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH 10/10] [media] tvp5150: Configure data interface via pdata
+ or DT
+Date: Wed, 6 Jan 2016 12:04:24 -0300
+Message-ID: <568D2CF8.9090802@osg.samsung.com>
+References: <1451910332-23385-1-git-send-email-javier@osg.samsung.com>
+ <1743151.ozK6T8LOF3@avalon> <568CFA1E.6060309@osg.samsung.com>
+ <1895052.dqIgFQaCHk@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <97cd8c1d98d7406347e4e48f4c7383a394a2ae93.1451997697.git.oreste.salerno@tomtom.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Oreste Salerno <oreste.salerno@tomtom.com>
-Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, fery@cypress.com, dmitry.torokhov@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1895052.dqIgFQaCHk@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Enrico Butera <ebutera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eduard Gavin <egavinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 05, 2016 at 01:59:14PM +0100, Oreste Salerno wrote:
-> Add support for retrieving the platform data from the device
-> tree.
+Hello Laurent,
 
-Converting platform data to DT as is is typically not the right thing to 
-do. There's some overlap, but it is not typically 1-1.
+On 01/06/2016 10:48 AM, Laurent Pinchart wrote:
 
-> Signed-off-by: Oreste Salerno <oreste.salerno@tomtom.com>
-> ---
->  .../bindings/input/touchscreen/cyttsp.txt          |  73 ++++++++++++++
->  drivers/input/touchscreen/cyttsp_core.c            | 108 +++++++++++++++++++--
->  include/linux/input/cyttsp.h                       |   3 +
->  3 files changed, 177 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
+[snip]
+
+>>>> @@ -940,6 +948,16 @@ static int tvp5150_cropcap(struct v4l2_subdev *sd,
+>>>> struct v4l2_cropcap *a)
+>>>>  static int tvp5150_g_mbus_config(struct v4l2_subdev *sd,
+>>>>  				 struct v4l2_mbus_config *cfg)
+>>>>  {
+>>>> +	struct tvp5150_platform_data *pdata = to_tvp5150(sd)->pdata;
+>>>> +
+>>>> +	if (pdata) {
+>>>> +		cfg->type = pdata->bus_type;
+>>>> +		cfg->flags = pdata->parallel_flags;
+>>>
+>>> The clock and sync signals polarity don't seem configurable, shouldn't
+>>> they just be hardcoded as currently done ?
+>>
+>> That's a very good question, I added the flags because according to
+>> Documentation/devicetree/bindings/media/video-interfaces.txt, the way
+>> to define that the output format will be BT.656 is to avoid defining
+>> {hsync,vsync,field-even}-active properties.
+>>
+>> IOW, if parallel sync is used, then these properties have to be defined
+>> and it felt strange to not use in the driver what is defined in the DT.
 > 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt b/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
-> new file mode 100644
-> index 0000000..8e0bcc73
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
-> @@ -0,0 +1,73 @@
-> +* Cypress cyttsp touchscreen controller
-> +
-> +Required properties:
-> +- compatible		: must be "cypress,cyttsp-i2c" or "cypress,cyttsp-spi"
-> +- reg			: Device address
+> In that case we should restrict the values of the properties to what the 
+> hardware actually supports. I would hardcode the flags here, and check them 
+> when parsing the endpoint to make sure they're valid.
+>
 
-...or SPI chip select number
+That's a good idea, I'll also mention the supported values in the binding doc.
+ 
+> If you find a register I have missed in the documentation with which 
+> polarities could be configured then please also feel free to prove me wrong 
+> :-)
+>
 
-> +- spi-max-frequency 	: Maximum SPI clocking speed of the device (for cyttsp-spi)
-> +- interrupt-parent	: the phandle for the gpio controller
-> +			  (see interrupt binding[0]).
-> +- interrupts		: (gpio) interrupt to which the chip is connected
-> +			  (see interrupt binding[0]).
-> +- reset-gpios		: the reset gpio the chip is connected to
-> +			  (see GPIO binding[1] for more details).
-> +- maxx			: horizontal resolution of touchscreen (in pixels)
-> +- maxy			: vertical resolution of touchscreen (in pixels)
+I didn't find either when reading the datasheet to prepare this patch-set
+so I think you are correct on that.
 
-IIRC, we have standard properties for these. Touchscreens don't really 
-have pixels...
+[snip]
 
-> +- bootloader-key	: the bootloader key used to exit bootloader mode
+>>>> +
+>>>> +		pdata->bus_type = bus_cfg.bus_type;
+>>>> +		pdata->parallel_flags = bus_cfg.bus.parallel.flags;
+>>>
+>>> The V4L2_MBUS_DATA_ACTIVE_HIGH flags set returned by
+>>> tvp5150_g_mbus_config() when pdata is NULL is never set by
+>>> v4l2_of_parse_endpoint(), should you add it unconditionally ?
+>>
+>> But v4l2_of_parse_endpoint() calls v4l2_of_parse_parallel_bus() which does
+>> it or did I read the code incorrectly?
+> 
+> No, you're right, I had overlooked the V4L2_MBUS_DATA_ACTIVE_HIGH flag when 
+> reading v4l2_of_parse_parallel_bus(), probably a typo when searching. Please 
+> ignore that comment.
+> 
 
-I don't understand what this is.
+Ok, thanks for the clarification.
 
-> +
-> +Optional properties:
-> +- use_hndshk		: enable handshake bit
-> +- act_dist		: active distance
-> +- act_intrvl		: active refresh interval in ms
-
-Is this sampling frequency?
-
-> +- tch_tmout		: active touch timeout in ms
-> +- lp_intrvl		: low power refresh interval in ms
-
-Look whether other touchscreens bindings have similar properties already 
-and copy those. These need better definitions in general.
-
-Don't use '_' in property names and append units to the name of 
-properties that have units (e.g. ms).
-
-> +Example:
-> +	&i2c1 {
-> +		/* ... */
-> +		cyttsp@a {
-> +			compatible = "cypress,cyttsp-i2c";
-> +			reg = <0xa>;
-> +			interrupt-parent = <&msm_gpio>;
-> +			interrupts = <13 0x2008>;
-> +			reset-gpios = <&msm_gpio 12 0x00>;
-> +
-> +			maxx = <800>;
-> +			maxy = <480>;
-> +			bootloader-key = /bits/ 8 <0x01 0x02 0x03 0x04 0x05 0x06 0x07 0x08>;
-> +
-> +			use_hndshk;
-> +			act_dist = /bits/ 8 <0xF8>;
-> +			act_intrvl = /bits/ 8 <0x00>;
-> +			tch_tmout = /bits/ 8 <0xFF>;
-> +			lp_intrvl = /bits/ 8 <0x0A>;
-
-If the size is not 32-bits, you need to state that in the description. 
-There is not really much point in making these 8-bit though.
-
-Rob
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
