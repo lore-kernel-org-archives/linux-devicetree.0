@@ -1,152 +1,46 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v5 3/3] dt/bindings: qcom_nandc: Add DT bindings
-Date: Wed, 6 Jan 2016 16:05:09 +0100
-Message-ID: <20160106160509.1fdc53bf@bbrezillon>
-References: <1439959746-25498-1-git-send-email-architt@codeaurora.org>
-	<1451971501-18160-1-git-send-email-architt@codeaurora.org>
-	<1451971501-18160-4-git-send-email-architt@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/6] dt-bindings: ARM: Mediatek: Document bindings for
+ MT2701
+Date: Wed, 6 Jan 2016 09:08:00 -0600
+Message-ID: <20160106150800.GA941@rob-hp-laptop>
+References: <1451975422-31174-1-git-send-email-jamesjj.liao@mediatek.com>
+ <1451975422-31174-3-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1451971501-18160-4-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: computersforpeace@gmail.com, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, linux-arm-msm@vger.kernel.org, cernekee@gmail.com, sboyd@codeaurora.org, linux-mtd@lists.infradead.org, dehrenberg@google.com, andy.gross@linaro.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1451975422-31174-3-git-send-email-jamesjj.liao@mediatek.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: James Liao <jamesjj.liao@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Archit,
+On Tue, Jan 05, 2016 at 02:30:18PM +0800, James Liao wrote:
+> This patch adds the binding documentation for apmixedsys, bdpsys,
+> ethsys, hifsys, imgsys, infracfg, mmsys, pericfg, topckgen and
+> vdecsys for Mediatek MT2701.
+> 
+> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
 
-On Tue,  5 Jan 2016 10:55:01 +0530
-Archit Taneja <architt@codeaurora.org> wrote:
+[...]
 
-> Add DT bindings document for the Qualcomm NAND controller driver.
-> 
-> Cc: devicetree@vger.kernel.org
-> Cc: Rob Herring <robh@kernel.org>
-> Signed-off-by: Archit Taneja <architt@codeaurora.org>
-> ---
-> v5:
-> - Make changes to incorporate chip select sub nodes (brcmnand taken as
->   reference)
-> 
-> v3:
-> - Don't use '0x' when specifying nand controller address space
-> - Add optional property for on-flash bbt usage
-> 
->  .../devicetree/bindings/mtd/qcom_nandc.txt         | 84 ++++++++++++++++++++++
->  1 file changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
 > new file mode 100644
-> index 0000000..b2cf2d9
+> index 0000000..4137196
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-> @@ -0,0 +1,84 @@
-> +* Qualcomm NAND controller
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
+> @@ -0,0 +1,22 @@
+> +Mediatek bdpsys controller
+> +============================
 > +
-> +Required properties:
-> +- compatible:		should be "qcom,ebi2-nand" for IPQ806x
-> +- reg:			MMIO address range
-> +- clocks:		must contain core clock and always on clock
-> +- clock-names:		must contain "core" for the core clock and "aon" for the
-> +			always on clock
-> +- dmas:			DMA specifier, consisting of a phandle to the ADM DMA
-> +			controller node and the channel number to be used for
-> +			NAND. Refer to dma.txt and qcom_adm.txt for more details
-> +- dma-names:		must be "rxtx"
-> +- qcom,cmd-crci:	must contain the ADM command type CRCI block instance
-> +			number specified for the NAND controller on the given
-> +			platform
-> +- qcom,data-crci:	must contain the ADM data type CRCI block instance
-> +			number specified for the NAND controller on the given
-> +			platform
-> +- #address-cells:	<1> - subnodes give the chip-select number
-> +- #size-cells:		<0>
+> +The Mediatek bdpsys controller provides various clocks to the system.
 > +
-> +* NAND chip-select
+> +Required Properties:
 > +
-> +Each controller may contain one or more subnodes to represent enabled
-> +chip-selects which (may) contain NAND flash chips. Their properties are as
-> +follows.
-> +
-> +Required properties:
-> +- compatible:		should contain "qcom,nandcs"
-> +- reg:			a single integer representing the chip-select
-> +			number (e.g., 0, 1, 2, etc.)
-> +- #address-cells:	see partition.txt
-> +- #size-cells:		see partition.txt
-> +- nand-ecc-strength:	number of bits to correct per ECC step. Must be 4 or 8
-> +			bits.
-> +- nand-ecc-step-size:	bytes of data per ECC step. Must be 512.
-> +
-> +Optional properties:
-> +- nand-bus-width:	bus width. Must be 8 or 16. If not present, 8 is chosen
-> +			as default
+> +- compatible: Should be:
+> +	- "mediatek,mt2701-bdpsys", "syscon"
 
-You should probably reference
-Documentation/devicetree/bindings/mtd/nand.txt which is documenting
-generic nand-xxx properties.
+If this block and others only provide clocks, then why do you need 
+syscon here? If it is more that clocks, then the description is wrong.
 
-> +
-> +Each nandcs device node may optionally contain sub-nodes describing the flash
-> +partition mapping. See partition.txt for more detail.
-> +
-> +Example:
-> +
-> +nand@1ac00000 {
-> +	compatible = "qcom,ebi2-nandc";
-> +	reg = <0x1ac00000 0x800>;
-> +
-> +	clocks = <&gcc EBI2_CLK>,
-> +		 <&gcc EBI2_AON_CLK>;
-> +	clock-names = "core", "aon";
-> +
-> +	dmas = <&adm_dma 3>;
-> +	dma-names = "rxtx";
-> +	qcom,cmd-crci = <15>;
-> +	qcom,data-crci = <3>;
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	nandcs@0 {
-> +		compatible = "qcom,nandcs";
-> +		reg = <0>;
-> +
-> +		nand-ecc-strength = <4>;
-> +		nand-ecc-step-size = <512>;
-> +		nand-bus-width = <8>;
-> +
-
-It's now recommended to define a 'partitions' subnode to store those
-partition nodes.
-
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		partition@0 {
-> +			label = "boot-nand";
-> +			reg = <0 0x58a0000>;
-> +		};
-> +
-> +		partition@58a0000 {
-> +			label = "fs-nand";
-> +			reg = <0x58a0000 0x4000000>;
-> +		};
-> +	};
-> +};
-
-The rest looks good to me.
-
-Reviewed-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-
-Best Regards,
-
-Boris
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Rob
