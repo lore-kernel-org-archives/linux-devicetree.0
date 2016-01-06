@@ -1,165 +1,56 @@
-From: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Subject: Re: [PATCH v4 5/5] misc: eeprom_93xx46: Add support for a GPIO
- 'select' line.
-Date: Tue, 5 Jan 2016 22:21:57 -0500
-Message-ID: <568C8855.1070106@pid1solutions.com>
-References: <1449720055-25965-1-git-send-email-cory.tusar@pid1solutions.com>
- <1449720055-25965-6-git-send-email-cory.tusar@pid1solutions.com>
- <5678999C.7040808@mleia.com>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] USB: add generic onboard USB HUB driver
+Date: Wed, 6 Jan 2016 11:20:27 +0800
+Message-ID: <20160106032027.GA23726@shlinux2>
+References: <CAL411-rK6qfkbQsSjvXH5VPAQAm4tMyD6fVTEgFQrpLHNGMXeA@mail.gmail.com>
+ <Pine.LNX.4.44L0.1512181030590.1682-100000@iolanthe.rowland.org>
+ <CAL411-qKE=12VZAN9=tUWPqkC5BfSgpQb9aNgCU6rmPLasXNHQ@mail.gmail.com>
+ <CAL_Jsq+P8SBmWzNURrmNgz8soCn4QPOPid4SXF0a3TYL_SH27A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5678999C.7040808-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, afd-l0cyMroinI0@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Chris.Healy-c8ZVq/bFV1I@public.gmane.org, Keith.Vennel-c8ZVq/bFV1I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+P8SBmWzNURrmNgz8soCn4QPOPid4SXF0a3TYL_SH27A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
-
-On 12/21/2015 07:30 PM, Vladimir Zapolskiy wrote:
-> Hi Cory,
+On Tue, Jan 05, 2016 at 08:36:31AM -0600, Rob Herring wrote:
+> > 2. There are MFD USB devices, which includes several interfaces under
+> > USB device,
+> > like i2c, gpios, etc. Due to lack of device tree support, USB
+> > class/device driver doesn't know
+> > which kinds of interfaces are needed for this board.
 > 
-> On 10.12.2015 06:00, Cory Tusar wrote:
->> This commit adds support to the eeprom_93x46 driver allowing a GPIO line
->> to function as a 'select' or 'enable' signal prior to accessing the
->> EEPROM.
->>
->> Signed-off-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
->> Tested-by: Chris Healy <chris.healy-c8ZVq/bFV1I@public.gmane.org>
->> ---
->>  drivers/misc/eeprom/eeprom_93xx46.c | 35 +++++++++++++++++++++++++++++++++++
->>  include/linux/eeprom_93xx46.h       |  3 +++
->>  2 files changed, 38 insertions(+)
->>
->> diff --git a/drivers/misc/eeprom/eeprom_93xx46.c b/drivers/misc/eeprom/eeprom_93xx46.c
->> index d50bc17..d28fac2 100644
->> --- a/drivers/misc/eeprom/eeprom_93xx46.c
->> +++ b/drivers/misc/eeprom/eeprom_93xx46.c
->> @@ -10,11 +10,13 @@
->>  
->>  #include <linux/delay.h>
->>  #include <linux/device.h>
->> +#include <linux/gpio/consumer.h>
->>  #include <linux/kernel.h>
->>  #include <linux/module.h>
->>  #include <linux/mutex.h>
->>  #include <linux/of.h>
->>  #include <linux/of_device.h>
->> +#include <linux/of_gpio.h>
->>  #include <linux/slab.h>
->>  #include <linux/spi/spi.h>
->>  #include <linux/sysfs.h>
->> @@ -343,6 +345,20 @@ static ssize_t eeprom_93xx46_store_erase(struct device *dev,
->>  }
->>  static DEVICE_ATTR(erase, S_IWUSR, NULL, eeprom_93xx46_store_erase);
->>  
->> +static void select_assert(void *context)
->> +{
->> +	struct eeprom_93xx46_dev *edev = context;
->> +
->> +	gpiod_set_value_cansleep(edev->pdata->select, 1);
->> +}
->> +
->> +static void select_deassert(void *context)
->> +{
->> +	struct eeprom_93xx46_dev *edev = context;
->> +
->> +	gpiod_set_value_cansleep(edev->pdata->select, 0);
->> +}
->> +
->>  static const struct of_device_id eeprom_93xx46_of_table[] = {
->>  	{ .compatible = "eeprom-93xx46", },
->>  	{ .compatible = "atmel,at93c46d", .data = &atmel_at93c46d_data, },
->> @@ -357,6 +373,8 @@ static int eeprom_93xx46_probe_dt(struct spi_device *spi)
->>  	struct device_node *np = spi->dev.of_node;
->>  	struct eeprom_93xx46_platform_data *pd;
->>  	u32 tmp;
->> +	int gpio;
->> +	enum of_gpio_flags of_flags;
->>  	int ret;
->>  
->>  	pd = devm_kzalloc(&spi->dev, sizeof(*pd), GFP_KERNEL);
->> @@ -381,6 +399,23 @@ static int eeprom_93xx46_probe_dt(struct spi_device *spi)
->>  	if (of_property_read_bool(np, "read-only"))
->>  		pd->flags |= EE_READONLY;
->>  
->> +	gpio = of_get_named_gpio_flags(np, "select-gpios", 0, &of_flags);
->> +	if (gpio_is_valid(gpio)) {
->> +		unsigned long flags =
->> +			of_flags == OF_GPIO_ACTIVE_LOW ? GPIOF_ACTIVE_LOW : 0;
->> +
->> +		ret = devm_gpio_request_one(&spi->dev, gpio, flags,
->> +					    "eeprom_93xx46_select");
->> +		if (ret)
->> +			return ret;
->> +
->> +		pd->select = gpio_to_desc(gpio);
->> +		pd->prepare = select_assert;
->> +		pd->finish = select_deassert;
->> +
->> +		gpiod_direction_output(pd->select, 0);
->> +	}
->> +
->>  	if (of_id->data) {
->>  		const struct eeprom_93xx46_devtype_data *data = of_id->data;
->>  
->> diff --git a/include/linux/eeprom_93xx46.h b/include/linux/eeprom_93xx46.h
->> index 92fa4c3..03f3435 100644
->> --- a/include/linux/eeprom_93xx46.h
->> +++ b/include/linux/eeprom_93xx46.h
->> @@ -3,6 +3,8 @@
->>   * platform description for 93xx46 EEPROMs.
->>   */
->>  
->> +#include <linux/of_gpio.h>
->> +
-> 
-> You need just "struct gpio_desc;" instead of the include here, please fix.
+> Are you talking about a device hard wired on the same board or
+> something like GPIOs on FTDI chip which could be hot-plugged in any
+> host (including non-DT based)?
 
-Hi Vladimir,
-
-I'll fix for v5.
+I talked about the case that the device hard wired on the board.
+Hot-plug device's bus topology is unknown, we can't describe it
+statically at dts.
 
 > 
->>  struct eeprom_93xx46_platform_data {
->>  	unsigned char	flags;
->>  #define EE_ADDR8	0x01		/*  8 bit addr. cfg */
->> @@ -21,4 +23,5 @@ struct eeprom_93xx46_platform_data {
->>  	 */
->>  	void (*prepare)(void *);
->>  	void (*finish)(void *);
->> +	struct gpio_desc *select;
->>  };
->>
+> For the hotplug case, we will need a way to associate a DT overlay
+> with the USB device and there may not even be a base DT to map the
+> overlay into. In this case, the USB device's driver will need to load
+> the overlay and trigger enumerating the child devices. Anyway, this is
+> a separate issue from your problem.
 > 
-> Reviewed-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
 
-Thanks and best regards,
-- -Cory
+Since both you and Alan agree with my problem should be fixed at
+bootloader, I give the kernel solution up. 
 
+The another thing I open to discuss is how to let USB devices know its
+device node, the user reported issue that they can't handle interfaces
+below in USB device since that.
 
-- -- 
-Cory Tusar
-Principal
-PID 1 Solutions, Inc.
+-- 
 
-
-"There are two ways of constructing a software design.  One way is to
- make it so simple that there are obviously no deficiencies, and the
- other way is to make it so complicated that there are no obvious
- deficiencies."  --Sir Charles Anthony Richard Hoare
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iEYEARECAAYFAlaMiFUACgkQHT1tsfGwHJ8PvwCgmCxWi9TiL+ZXCI6IYZgaGZbT
-vHsAn3FOyuJ5tAqb6JywtDY6piiQGywv
-=2mcd
------END PGP SIGNATURE-----
+Best Regards,
+Peter Chen
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
