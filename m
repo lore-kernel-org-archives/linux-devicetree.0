@@ -1,46 +1,77 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 07/10] [media] tvp5150: Add device tree binding document
-Date: Wed, 06 Jan 2016 13:00:31 +0200
-Message-ID: <3433197.yOemOv0bmo@avalon>
-References: <1451910332-23385-1-git-send-email-javier@osg.samsung.com> <2787681.imkQ5NT8Qm@avalon> <568CF08B.6080107@osg.samsung.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 1/2] phy: ti-pipe3: get tx and rx MEM resource
+Date: Wed, 6 Jan 2016 16:29:07 +0530
+Message-ID: <1452077948-26232-2-git-send-email-kishon@ti.com>
+References: <1452077948-26232-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <568CF08B.6080107@osg.samsung.com>
+In-Reply-To: <1452077948-26232-1-git-send-email-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Enrico Butera <ebutera@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Rob Herring <robh+dt@kernel.org>, Eduard Gavin <egavinc@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org
+To: kishon@ti.com
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rogerq@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 06 January 2016 07:46:35 Javier Martinez Canillas wrote:
-> On 01/06/2016 07:39 AM, Laurent Pinchart wrote:
-> > Hi Javier,
-> > 
-> > Thank you for the patch.
-> 
-> Thanks a lot for your feedback.
-> 
-> [snip]
-> 
-> >> +
-> >> +Optional Properties:
-> >> +- powerdown-gpios: phandle for the GPIO connected to the PDN pin, if
-> >> any.
-> > 
-> > The signal is called PDN in the datasheet, so it might make sense to call
-> > this pdn-gpios. I have no strong opinion on this, I'll let you decide
-> > what you think is best.
-> 
-> Yes, I wondered if the convention was to use a descriptive name or the one
-> used in the datasheet but Documentation/devicetree/bindings/gpio/gpio.txt
-> says nothing about it.
+get tx and rx MEM resource since this has to be used to configure
+for DRA72x to work in X2 mode.
 
-The device tree maintainers might want to comment on that :-)
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+---
+ drivers/phy/phy-ti-pipe3.c |   27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-> I'll change it to pdn-gpios since it could be easier to match with the doc.
-
+diff --git a/drivers/phy/phy-ti-pipe3.c b/drivers/phy/phy-ti-pipe3.c
+index 0a477d2..7d83d2b 100644
+--- a/drivers/phy/phy-ti-pipe3.c
++++ b/drivers/phy/phy-ti-pipe3.c
+@@ -91,6 +91,8 @@ struct pipe3_dpll_map {
+ 
+ struct ti_pipe3 {
+ 	void __iomem		*pll_ctrl_base;
++	void __iomem		*phy_rx;
++	void __iomem		*phy_tx;
+ 	struct device		*dev;
+ 	struct device		*control_dev;
+ 	struct clk		*wkupclk;
+@@ -536,6 +538,27 @@ static int ti_pipe3_get_pll_base(struct ti_pipe3 *phy)
+ 	return 0;
+ }
+ 
++static int ti_pipe3_get_rx_tx_base(struct ti_pipe3 *phy)
++{
++	struct resource *res;
++	struct device *dev = phy->dev;
++	struct platform_device *pdev = to_platform_device(dev);
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
++					   "phy_rx");
++	phy->phy_rx = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(phy->phy_rx))
++		return PTR_ERR(phy->phy_rx);
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
++					   "phy_tx");
++	phy->phy_tx = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(phy->phy_tx))
++		return PTR_ERR(phy->phy_tx);
++
++	return 0;
++}
++
+ static int ti_pipe3_probe(struct platform_device *pdev)
+ {
+ 	struct ti_pipe3 *phy;
+@@ -555,6 +578,10 @@ static int ti_pipe3_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
++	ret = ti_pipe3_get_rx_tx_base(phy);
++	if (ret)
++		return ret;
++
+ 	ret = ti_pipe3_get_sysctrl(phy);
+ 	if (ret)
+ 		return ret;
 -- 
-Regards,
-
-Laurent Pinchart
+1.7.9.5
