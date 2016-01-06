@@ -1,72 +1,78 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH] DT: i2c: Update vendor prefix for 24c00
-Date: Wed, 6 Jan 2016 09:55:54 +0100
-Message-ID: <20160106085554.GG1525@katana>
-References: <1450898335-22814-1-git-send-email-akshay.bhat@timesys.com>
- <CAHp75VfvLJu+aL233izR3jh7UQg7ewEmS2Z3EhAg2WPZ9s1gyg@mail.gmail.com>
- <20160102212143.GG1589@katana>
- <CAHp75VcCEpf1XJgRXym4T78VGa=PS3GuzLAfyDbRWd8CvN=jQg@mail.gmail.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH] dmaengine: xgene-dma: Fix double IRQ issue by setting
+ IRQ_DISABLE_UNLAZY flag
+Date: Wed, 6 Jan 2016 14:43:23 +0530
+Message-ID: <20160106091323.GP2940@localhost>
+References: <1450875495-2229-1-git-send-email-rsahu@apm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="yQbNiKLmgenwUfTN"
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHp75VcCEpf1XJgRXym4T78VGa=PS3GuzLAfyDbRWd8CvN=jQg@mail.gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Akshay Bhat <akshay.bhat@timesys.com>, ktsai@capellamicro.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jiri Kosina <trivial@kernel.org>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, justin.waters@timesys.com
+In-Reply-To: <1450875495-2229-1-git-send-email-rsahu@apm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rameshswar Prasad Sahu <rsahu@apm.com>
+Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, kgondkar@apm.com
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Dec 23, 2015 at 06:28:15PM +0530, Rameshswar Prasad Sahu wrote:
+> From: Rameshwar Prasad Sahu <rsahu@apm.com>
+> 
+> For interrupt controller that doesn't support irq_disable and hardware
+> with level interrupt, an extra interrupt can be pending. This patch fixes
+> the issue by setting IRQ_DISABLE_UNLAZY flag for the interrupt line.
+> 
+> Reference: http://git.kernel.org/tip/e9849777d0e27cdd2902805be51da73e7c79578c
 
---yQbNiKLmgenwUfTN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I seem to have got this patch thrice :(
 
-On Mon, Jan 04, 2016 at 08:22:33PM +0200, Andy Shevchenko wrote:
-> On Sat, Jan 2, 2016 at 11:21 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
-> > On Sun, Dec 27, 2015 at 04:57:48PM +0200, Andy Shevchenko wrote:
-> >> On Wed, Dec 23, 2015 at 9:18 PM, Akshay Bhat <akshay.bhat@timesys.com>=
- wrote:
-> >> > "at" is not a valid vendor prefix, correcting the same to "atmel"
-> >> >
-> >>
-> >> I'm afraid you can't just do this change alone as it's used in some
-> >> DTS. Though you may deprecated it along with update of current users.
-> >
-> > Well, in Linux, I2C core currently strips the vendor anyhow. This will
-> > probably be changed somewhen (tm), but for now, the impact for Linux
-> > should be extremly close to 0.
->=20
-> Okay, no objections to the original patch then.
+> 
+> Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+> ---
+>  drivers/dma/xgene-dma.c |    4 ++++
+>  1 files changed, 4 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
+> index 9dfa2b0..6363e84 100644
+> --- a/drivers/dma/xgene-dma.c
+> +++ b/drivers/dma/xgene-dma.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/dmapool.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+> +#include <linux/irq.h>
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+> 
+> @@ -1610,6 +1611,7 @@ static int xgene_dma_request_irqs(struct xgene_dma *pdma)
+>  	/* Register DMA channel rx irq */
+>  	for (i = 0; i < XGENE_DMA_MAX_CHANNEL; i++) {
+>  		chan = &pdma->chan[i];
+> +		irq_set_status_flags(chan->rx_irq, IRQ_DISABLE_UNLAZY);
 
-Heh, I just go reminded that eeproms already have a seperate binding
-description (Documentation/devicetree/bindings/eeprom/eeprom.txt).
+Why not use irq_settings_disable_unlazy(), at least read the reference you
+pointed out!
 
-I will update the eeprom bindings and remove the entries from trivial
-devices.
+>  		ret = devm_request_irq(chan->dev, chan->rx_irq,
+>  				       xgene_dma_chan_ring_isr,
+>  				       0, chan->name, chan);
+> @@ -1620,6 +1622,7 @@ static int xgene_dma_request_irqs(struct xgene_dma *pdma)
+> 
+>  			for (j = 0; j < i; j++) {
+>  				chan = &pdma->chan[i];
+> +				irq_clear_status_flags(chan->rx_irq, IRQ_DISABLE_UNLAZY);
+>  				devm_free_irq(chan->dev, chan->rx_irq, chan);
+>  			}
+> 
+> @@ -1640,6 +1643,7 @@ static void xgene_dma_free_irqs(struct xgene_dma *pdma)
+> 
+>  	for (i = 0; i < XGENE_DMA_MAX_CHANNEL; i++) {
+>  		chan = &pdma->chan[i];
+> +		irq_clear_status_flags(chan->rx_irq, IRQ_DISABLE_UNLAZY);
+>  		devm_free_irq(chan->dev, chan->rx_irq, chan);
+>  	}
+>  }
+> --
+> 1.7.1
 
-
---yQbNiKLmgenwUfTN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWjNaaAAoJEBQN5MwUoCm2v0wQAKlNl/j4j1pRVDh4IeNYQyBN
-m62n7axcUiq4zEos+EJtOarN8I7K/X8NP3CPOK592ID+qOXVzOeR9HDfYX91KyIQ
-G/zh7aEjKukszAURVO8zazTVPKiU7C8JSR+YHhEuQ+ThFO5JsfYJ4j7Xen+Mz9Ej
-Zj3lDnBb+56Q5q5OvPs+bF29H+BiSSHNGb46gL1pHNL3wdpkSduq2IhZMOR66O+H
-3XeEEnoi1rJP3XXBEpgBzGG4UujyhpwBjyKalAHMsU36J+qS3oyBuFB1Tu/ew/iW
-9cV38LY6h1iN2++dvrxvCMmnAyYM1jJ+gg+KQUX36jWula7QNeohB7J3B27rLyJV
-Uh1/8deM9KnxPAeu3S7HXp9YWrmvG6R7zCEU7lXx9EUWVY/ER/pLS++6bOr5/bFt
-VPvho3/2AmOwFj8hnz7X9LrMRHCuxmTwsmxsACXuJcW6i+gauqAvwwqwde+0a/0Z
-TcjaD+hNnKkIqn/IhkWP8J2+AWT4cdFEOyuekvGPCRC+kQnNFIlwPqpaG4Y598eT
-GQX8doTo5m1O0y+UFkedvX61T3up1/Fq9XR+ydM6SiXRs+CSXis0SU/qWxcPFG3e
-Vks867LBwxOwevl0Xw0PEpfO/ueb6zB6GYkUSPPtTM47OJkV3+zaR0LQ7Fo9PTuk
-hwX/eCYi5upph4zjCes9
-=OmAA
------END PGP SIGNATURE-----
-
---yQbNiKLmgenwUfTN--
+-- 
+~Vinod
