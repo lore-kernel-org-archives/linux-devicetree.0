@@ -1,74 +1,52 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] ARM64: tegra: Add support for Google Pixel C
-Date: Wed, 6 Jan 2016 09:46:16 +0000
-Message-ID: <20160106094616.GA563@leverpostej>
-References: <1452073222-2956-1-git-send-email-jonathanh@nvidia.com>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH] dmaengine: xgene-dma: Fix double IRQ issue by setting
+ IRQ_DISABLE_UNLAZY flag
+Date: Wed, 6 Jan 2016 11:05:02 +0100 (CET)
+Message-ID: <alpine.DEB.2.11.1601061103000.3689@nanos>
+References: <1450875495-2229-1-git-send-email-rsahu@apm.com> <20160106091323.GP2940@localhost> <CAFd313xhh_4OFP6W2yuApM8ppYMX20DUCCQHJ9YEtCMbzr6Hgg@mail.gmail.com> <20160106093121.GB11778@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1452073222-2956-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20160106093121.GB11778@localhost>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Rameshwar Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Kaustubh Gondkar <kgondkar-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, Jan 06, 2016 at 09:40:22AM +0000, Jon Hunter wrote:
-> Add initial device-tree support for Google Pixel C (a.k.a. Smaug) based
-> upon Tegra210 SoC with 3 GiB of LPDDR4 RAM.
+On Wed, 6 Jan 2016, Vinod Koul wrote:
+> On Wed, Jan 06, 2016 at 02:51:07PM +0530, Rameshwar Sahu wrote:
+> > >> @@ -1610,6 +1611,7 @@ static int xgene_dma_request_irqs(struct xgene_dma *pdma)
+> > >>       /* Register DMA channel rx irq */
+> > >>       for (i = 0; i < XGENE_DMA_MAX_CHANNEL; i++) {
+> > >>               chan = &pdma->chan[i];
+> > >> +             irq_set_status_flags(chan->rx_irq, IRQ_DISABLE_UNLAZY);
+> > >
+> > > Why not use irq_settings_disable_unlazy(), at least read the reference you
+> > > pointed out!
+> > 
+> > irq_settings_disable_unlazy() is helper function to test
+> > IRQ_DISABLE_UNLAZY flag is set or not, it's not for setting this flag.
+> > FYI...
+> > +static inline bool irq_settings_disable_unlazy(struct irq_desc *desc)
+> > +{
+> > + return desc->status_use_accessors & _IRQ_DISABLE_UNLAZY;
+> > +}
 > 
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/nvidia/Makefile           |  1 +
->  arch/arm64/boot/dts/nvidia/tegra210-smaug.dts | 42 +++++++++++++++++++++++++++
->  2 files changed, 43 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
+> Ah yes, I saw clear API and assumed there would be set. Then I think we
+> should add a set helper as well as the usage is intended for drivers to
+> set this flag
 > 
-> diff --git a/arch/arm64/boot/dts/nvidia/Makefile b/arch/arm64/boot/dts/nvidia/Makefile
-> index a7e865da1005..0f7cdf3e05c1 100644
-> --- a/arch/arm64/boot/dts/nvidia/Makefile
-> +++ b/arch/arm64/boot/dts/nvidia/Makefile
-> @@ -2,6 +2,7 @@ dtb-$(CONFIG_ARCH_TEGRA_132_SOC) += tegra132-norrin.dtb
->  dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2371-0000.dtb
->  dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2371-2180.dtb
->  dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2571.dtb
-> +dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-smaug.dtb
->  
->  always		:= $(dtb-y)
->  clean-files	:= *.dtb
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
-> new file mode 100644
-> index 000000000000..a7474f5fcbcc
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
-> @@ -0,0 +1,42 @@
-> +/dts-v1/;
-> +
-> +#include "tegra210.dtsi"
-> +
-> +/ {
-> +	model = "Google Pixel C";
-> +	compatible = "google,smaug-rev8", "google,smaug-rev7",
-> +		     "google,smaug-rev6", "google,smaug-rev5",
-> +		     "google,smaug-rev4", "google,smaug-rev3",
-> +		     "google,smaug-rev1", "google,smaug", "nvidia,tegra210";
+> Thomas,
+> 
+> Any reason why you didn't add a set helper, only test and clear?
 
-This looks a little funky. Is each revision a strict superset of the
-previous version?
+Why would I? Those helpers are core internal and not usable in random drivers.
 
-> +
-> +	chosen {
-> +		bootargs = "console=ttyS0,115200n8 earlycon=uart8250,mmio32,0x70006000";
-> +	};
-
-Use stdout-path.
-
-Otherwise this looks ok.
+Drivers have irq_set_status_flags()/irq_clear_status_flags() ...
 
 Thanks,
-Mark.
+
+	tglx
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
