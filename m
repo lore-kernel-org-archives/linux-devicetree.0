@@ -1,125 +1,65 @@
-From: Petr =?iso-8859-2?Q?=A9tetiar?= <ynezz@true.cz>
-Subject: Re: [PATCH v2 1/2] ARM: dts: imx6: Add support for Toradex Apalis
- iMX6Q/D SoM
-Date: Wed, 6 Jan 2016 09:03:58 +0100
-Message-ID: <20160106080358.GD9030@ibawizard.net>
-References: <1452011942-11940-1-git-send-email-marcel.ziswiler@toradex.com>
- <1452011942-11940-2-git-send-email-marcel.ziswiler@toradex.com>
-Reply-To: Petr =?iso-8859-2?Q?=A9tetiar?= <ynezz@true.cz>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1452011942-11940-2-git-send-email-marcel.ziswiler@toradex.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Joshua Clayton <stillcompiling@gmail.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Petr =?iso-8859-2?Q?=A9tetiar?= <ynezz@true.cz>, Shawn Guo <shawn.guo@linaro.org>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and charging of backup battery
+Date: Wed, 6 Jan 2016 09:11:21 +0100
+Message-ID: <8FE6954B-6411-4593-9CE5-717A469A6AA8@goldelico.com>
+References: <cover.1451995297.git.hns@goldelico.com> <b4a6fe205cbb1a9eddc4e5f63fa05d299641313d.1451995297.git.hns@goldelico.com> <568C5451.8070709@ti.com> <20160106010011.GG12777@atomide.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160106010011.GG12777@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Nishanth Menon <nm@ti.com>, =?iso-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-Marcel Ziswiler <marcel.ziswiler@toradex.com> [2016-01-05 17:39:01]:
+Hi Tony,
 
-Hi Marcel,
+Am 06.01.2016 um 02:00 schrieb Tony Lindgren <tony@atomide.com>:
 
-thanks for taking care of this, I'm quite busy with other tasks :(
+> * Nishanth Menon <nm@ti.com> [160105 15:40]:
+>> On 01/05/2016 06:01 AM, H. Nikolaus Schaller wrote:
+>>> tested on OMP5432 EVM
+>>> 
+>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>>> ---
+>>> arch/arm/boot/dts/omap5-board-common.dtsi | 8 ++++++++
+>>> 1 file changed, 8 insertions(+)
+>>> 
+>>> diff --git a/arch/arm/boot/dts/omap5-board-common.dtsi b/arch/arm/boot/dts/omap5-board-common.dtsi
+>>> index 5cf76a1..30c0d3b 100644
+>>> --- a/arch/arm/boot/dts/omap5-board-common.dtsi
+>>> +++ b/arch/arm/boot/dts/omap5-board-common.dtsi
+>>> @@ -358,6 +358,14 @@
+>>> 			#clock-cells = <0>;
+>>> 		};
+>>> 
+>>> +		rtc {
+>>> +			compatible = "ti,palmas-rtc";
+>>> +			interrupt-parent = <&palmas>;
+>>> +			interrupts = <8 IRQ_TYPE_NONE>;
+>> 
+>> IRQ_TYPE_NONE is not correct here -> it should have some polarity - if
+>> it had none, there'd be no interrupt, right?
+> 
+> Also I'm not seeing just zeroes coming from RTC after typing hwclock
+> on omap5-uevm. It's working on x15 though.
+> 
+> Nikolaus, is hwclock command working for you on omap5-uevm?
 
-> - integrated review feedback from Lucas
+Well, yes and no. It appears it *was* working when tested last time
+(we sometimes have months of delay for submitting patches upstream).
 
-You've probably missed few of them :) See my nitpicks bellow.
+I have found an SD image with 4.3-rc6 with this patch in the dtb and
+there it works. With 4.4-rc8 it does not work. hwclock command hangs for
+10 seconds (I guess some timeout).
 
-> - left and even added some more comments as I don't see why putting any
->   explanatory comments in dts' should be such a bad thing to do
+I have checked the dtb and in both cases it is interrupts = <8 0>;
 
-You've marked this as v2 so I think, that you should only work on the
-feedback. Ideally you shouldn't add any new stuff if it wasn't requested
-otherwise you're wasting reviewer time.
+xxd /sys/firmware/devicetree/base/ocp/i2c@48070000/palmas@48/rtc/interrupts
+0000000: 0000 0008 0000 0000
 
-> - completely got rid of the memory node as that is something typically filled
->   in by the boot loader e.g. U-Boot
+So I think something has changed in the rtc driver or somewhere else.
 
-If I'm not mistaken, it wasn't requested by the reviewer.
-
-> - without the regulators simple-bus it no longer boots
-
-It works for me on 4.4.0-rc3 with following DTS[1]. BTW, this DTS is my
-preparation for v2 patch series.
-
-> - fixed Ethernet PHY reset & interrupt (requires Micrel PHY driver to be
->   enabled)
-
-Great!
-
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-
-Hope you've some kind of ACK from FSL and Linaro :)
-
-> +		reg_usb_otg_vbus: usb_otg_vbus {
-> +			compatible = "regulator-fixed";
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&pinctrl_regulator_usbotg_pwr>;
-> +			regulator-name = "usb_otg_vbus";
-> +			regulator-min-microvolt = <5000000>;
-> +			regulator-max-microvolt = <5000000>;
-> +			gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
-> +			enable-active-high;
-> +			status = "disabled";
-> +		};
-
-I'm not sure, but it seems to me, that we should move this regulator into the
-carrier board DTS. On our custom carrier board we've this regulator always on
-and we use this GPIO for heartbeat LED, so I've this in our carrier board
-DTS[2]:
-
-	reg_usb_otg_vbus: usb_otg_vbus {
-		/* Regulator is always on, and we use GPIO for heartbeat LED */
-		pinctrl-0 = <>;
-		gpio = <>;
-
-		compatible = "regulator-fixed";
-		regulator-name = "usb_otg_vbus";
-		regulator-min-microvolt = <5000000>;
-		regulator-max-microvolt = <5000000>;
-		regulator-always-on;
-	};
-
-	...
-
-	usbotg {
-		/* GPIO3_IO22 is Heartbeat LED */
-		pinctrl_regulator_usbotg_pwr: gpio_regulator_usbotg_pwr {
-		};
-	};
-
-> +/* PAD Ctrl values for common settings */
-> +/*
-> + * (PAD_CTL_HYS | PAD_CTL_PUS_100K_UP | PAD_CTL_PUE | PAD_CTL_PKE |
-> + *  PAD_CTL_SPEED_MED | PAD_CTL_DSE_40ohm)
-> + */
-> +#define PAD_CTRL_HYS_PU 0x1b0b0
-
-This was requested to be reworked. I've simply replaced all the macros with
-hex values.
-
-> +		pinctrl_usdhc3_100mhz: usdhc3grp-100mhz { /* 100Mhz */
-> +			fsl,pins = <
-> +				MX6QDL_PAD_SD3_CMD__SD3_CMD 0x170B9
-
-As per review comments, all hex values should be lowercase.
-
-1. https://github.com/ynezz/linux-2.6/blob/b27de46e67605fe1a8e386b065845a9708e8e792/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-2. https://github.com/ynezz/linux-2.6/blob/ec678e3734d9fff35f7ba9605469a68a3e424020/arch/arm/boot/dts/imx6qdl-apalis-gaben-flexisbc.dtsi#L143
-
-Thanks!
-
--- ynezz
+BR,
+Nikolaus
