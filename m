@@ -1,33 +1,171 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] phy: ti-pipe3: configure usb3 phy to be used as pcie
- phy
-Date: Wed, 6 Jan 2016 07:28:35 -0600
-Message-ID: <20160106132835.GA20318@rob-hp-laptop>
-References: <1452077948-26232-1-git-send-email-kishon@ti.com>
- <1452077948-26232-3-git-send-email-kishon@ti.com>
+From: Rongrong Zou <zourongrong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v1 3/3] ARM64 LPC: update binding doc
+Date: Wed, 6 Jan 2016 21:36:33 +0800
+Message-ID: <568D1861.1070201@huawei.com>
+References: <1451396032-23708-1-git-send-email-zourongrong@gmail.com>
+ <6384244.Uhpjfgly6O@wuerfel> <568BB035.1050801@huawei.com>
+ <2550495.K9prJVsVEi@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1452077948-26232-3-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <2550495.K9prJVsVEi@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rongrong Zou <zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 06, 2016 at 04:29:08PM +0530, Kishon Vijay Abraham I wrote:
-> DRA72 uses USB3 PHY for the 2nd lane of PCIE. The configuration
-> required to make USB3 PHY used for the 2nd lane of PCIe is done
-> here.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/phy/ti-phy.txt |    2 ++
->  drivers/phy/phy-ti-pipe3.c                       |   30 +++++++++++++++++++++-
->  2 files changed, 31 insertions(+), 1 deletion(-)
+=E5=9C=A8 2016/1/5 20:19, Arnd Bergmann =E5=86=99=E9=81=93:
+> On Tuesday 05 January 2016 19:59:49 Rongrong Zou wrote:
+>> =E5=9C=A8 2016/1/5 0:34, Arnd Bergmann =E5=86=99=E9=81=93:
+>>> On Tuesday 05 January 2016 00:04:19 Rongrong Zou wrote:
+>>>> =E5=9C=A8 2016/1/4 19:13, Arnd Bergmann =E5=86=99=E9=81=93:
+>>>>> On Sunday 03 January 2016 20:24:14 Rongrong Zou wrote:
+>>>>>> =E5=9C=A8 2015/12/31 23:00, Rongrong Zou =E5=86=99=E9=81=93:
+>>>> Ranges property can set empty, but this means 1:1 translation. the=
+ I/O
+>>>> port range is translated to MMIO address 0x00000001 00000000 to
+>>>> 0x00000001 00000004, it looks wrong else. I wonder if anyone get l=
+egacy
+>>>> I/O port resource from dts.
+>>>
+>>> As I said, nothing should really require the ranges property here, =
+unless
+>>> you have a valid IORESOURCE_MEM translation. The code that requires
+>>> the ranges to be present is wrong.
+>>>
+>>
+>> I think the openfirmware(DT) do not support for those unmapped I/O p=
+orts, because I
+>> must get resource by calling of_address_to_resource(), which have to=
+ call
+>> pci_address_to_pio() when resource type is IORESOURCE_IO. I'm sorry =
+I have no
+>> better idea for this now. Maybe liviu can give me some opinions.
+>
+> I think on x86 it works (or used to work, few people use open firmwar=
+e on
+> x86 these days, and it may be broken), and the pci_address_to_pio() c=
+all
+> behaves differently when PCI_IOBASE is set. x86 never maps I/O ports =
+into
+> memory mapped I/O addresses, they have their own way of accessing the=
+m
+> just like your platform.
+>
+>> /**
+>>    * of_address_to_resource - Translate device tree address and retu=
+rn as resource
+>>    *
+>>    * Note that if your address is a PIO address, the conversion will=
+ fail if
+>>    * the physical address can't be internally converted to an IO tok=
+en with
+>>    * pci_address_to_pio(), that is because it's either called to ear=
+ly or it
+>>    * can't be matched to any host bridge IO space
+>>    */
+>> int of_address_to_resource(struct device_node *dev, int index,
+>> 			   struct resource *r)
+>
+> The problem here seems to be that the code assumes that either the I/=
+O ports
+> are always mapped or they are never mapped (no PCI_IOBASE). We need t=
+o extend
+> it because now we can have the combination of the two.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+I am considering the following solution:
+
+Adding unmapped isa io functions in
+
+drivers/of/address.c,
+
+static LIST_HEAD(legacy_io_range_list);
+int isa_register_io_range(phys_addr_t addr, resource_size_t size);
+
+/* before I call isa(LPC) bus driver, the input I/O port must be transl=
+ated to phys_addr_t
+(the least 16bit means port addr on bus, the second 16bit means bus id)=
+*/
+
+phys_addr_t isa_pio_to_bus_addr(unsigned long pio);
+
+/* the returned PIO do not conflict with PIO get from pci_address_to_pi=
+o*/
+unsigned long isa_bus_addr_to_pio(phys_addr_t address);
+
+drivers/bus/lpc.c
+
+lpc_bus_probe()
+{
+	isa_register_io_range(phys_addr_t addr, resource_size_t size);
+}
+
+inb(unsigned long port)
+{
+	unsigned short bus;
+	phys_addr_t addr;
+	/*hit isa port range*/
+	if(addr =3D isa_pio_to_bus_addr(port))
+	{
+		bus =3D (addr >> 16) & 0xffff;
+
+		call lpc driver with addr;
+		return lpc_read_byte(bus, addr);
+	}
+	else /*not hit*/
+	{
+		return readb(PCI_IOBASE + port);
+	}
+}
+
+
+
+>
+>>>> For ipmi driver, I can get I/O port resource by DMI rather than dt=
+s.
+>>>
+>>> No, the ipmi driver uses the resource that belongs to the platform
+>>> device already, you can't rely on DMI data to be present there.
+>>
+>> Ipmi has a lot of way to be discovered(ACPI, DMI, hardcoded, hot-add=
+,
+>> openfirmware and a few other), I think we just use one of them, not =
+all of them.
+>> It depend on vendor's hardware solution actually.
+>
+> I don't think we should mix multiple methods here: if the bus is desc=
+ribed
+> in DT, all its children should be there as well. Otherwise you get in=
+to problems
+> e.g. if you have multiple instances of the LPC bus and the Linux I/O =
+addresses
+> for one or more of them have an offset to the bus specific addresses.
+>
+> The bus probe code decides what the Linux I/O port numbers are, but D=
+MI
+> and other methods have no idea of the mapping. As long as there is on=
+ly
+> one instance, using the first 0x1000 addresses with a 1:1 mapping sav=
+es
+> us a bit of trouble, but I'd be worried about relying on that assumpt=
+ion
+> too much.
+>
+> 	Arnd
+>
+>
+> .
+>
+
+Thanks,
+
+Rongrong
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
