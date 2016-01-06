@@ -1,56 +1,74 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] USB: add generic onboard USB HUB driver
-Date: Wed, 6 Jan 2016 11:20:27 +0800
-Message-ID: <20160106032027.GA23726@shlinux2>
-References: <CAL411-rK6qfkbQsSjvXH5VPAQAm4tMyD6fVTEgFQrpLHNGMXeA@mail.gmail.com>
- <Pine.LNX.4.44L0.1512181030590.1682-100000@iolanthe.rowland.org>
- <CAL411-qKE=12VZAN9=tUWPqkC5BfSgpQb9aNgCU6rmPLasXNHQ@mail.gmail.com>
- <CAL_Jsq+P8SBmWzNURrmNgz8soCn4QPOPid4SXF0a3TYL_SH27A@mail.gmail.com>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH v7 0/5] Add mipi dsi support for rk3288
+Date: Wed,  6 Jan 2016 12:03:52 +0800
+Message-ID: <1452053038-32098-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+P8SBmWzNURrmNgz8soCn4QPOPid4SXF0a3TYL_SH27A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: heiko@sntech.de, linux-rockchip@lists.infradead.org, mark.yao@rock-chips.com, treding@nvidia.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 05, 2016 at 08:36:31AM -0600, Rob Herring wrote:
-> > 2. There are MFD USB devices, which includes several interfaces under
-> > USB device,
-> > like i2c, gpios, etc. Due to lack of device tree support, USB
-> > class/device driver doesn't know
-> > which kinds of interfaces are needed for this board.
-> 
-> Are you talking about a device hard wired on the same board or
-> something like GPIOs on FTDI chip which could be hot-plugged in any
-> host (including non-DT based)?
-
-I talked about the case that the device hard wired on the board.
-Hot-plug device's bus topology is unknown, we can't describe it
-statically at dts.
-
-> 
-> For the hotplug case, we will need a way to associate a DT overlay
-> with the USB device and there may not even be a base DT to map the
-> overlay into. In this case, the USB device's driver will need to load
-> the overlay and trigger enumerating the child devices. Anyway, this is
-> a separate issue from your problem.
-> 
-
-Since both you and Alan agree with my problem should be fixed at
-bootloader, I give the kernel solution up. 
-
-The another thing I open to discuss is how to let USB devices know its
-device node, the user reported issue that they can't handle interfaces
-below in USB device since that.
-
--- 
-
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ClRoZSByazMyODggTUlQSSBEU0kgaXMgYSBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgRFNJIGhv
+c3QgY29udHJvbGxlcgpJUC4gVGhpcyBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciBhIFN5bm9wc3lz
+IERlc2lnbldhcmUgTUlQSSBEU0kgaG9zdApjb250cm9sbGVyIERSTSBkcml2ZXIuCgpUaGUgTUlQ
+SSBEU0kgZmVhdHVyZSBpcyB0ZXN0ZWQgb24gcmszMjg4IGV2YiBib2FyZCwgYmFja3BvcnQgdGhl
+bSB0bwpjaHJvbWUgb3Mga2VybmVsIGNocm9tZV92My4xNCwgYW5kIGl0IGNhbiBkaXNwbGF5IG5v
+cm1hbGx5LgoKVGhpcyBwYXRjaHNldCBpcyBiYXNlIG9uIHRoZSBwYXRjaHNldCBmcm9tIFlpbmcu
+bGl1QGZyZWVzY2FsZS5jb20uCjxodHRwOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2RyaS1kZXZl
+bC9tc2c3NzE4MS5odG1sPgoKQWNjb3JkaW5nIHRvIHRoZSBzdWdnZXN0aW9uIGZyb20gVGhpZXJy
+eSwgSSBoYXZlIGdldCByaWQgb2YgdGhlIGJyaWRnZSwKYW5kIHJlZ2lzdGVyIHRoZSBlbmNvZGVy
+ICYgY29ubmVjdGVyIGluIGRybS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jLgoKQWZ0ZXIgYmFja3Bv
+cnQgYmVsb3cgcGF0Y2hlcyBmcm9tIGxpbnV4LW5leHQsIEkgY2FuIG1lcmdlIHRoaXMgc2VyaWFs
+IGludG8KRGF2ZSdzIGRybS1uZXh0IGJyYW5jaC4KCjk0ZDVkNmEwZmJmMyBjbGs6IHJvY2tjaGlw
+OiBhZGQgYW4gaWQgZm9yIHJrMzI4OCBjcnlwdG8gY2xrCmM2ZDQ5ZmJjZmNjNCBjbGs6IHJvY2tj
+aGlwOiBhZGQgaWQgZm9yIG1pcGlkc2kgc2NsayBvbiByazMyODgKYTJmNGM1NjBmMThlIGNsazog
+cm9ja2NoaXA6IGFkZCBtaXBpZHNpIGNsb2NrIG9uIHJrMzI4OAo2OWM5MjM3NDM2NDAgQVJNOiBk
+dHM6IHJvY2tjaGlwOiBjb3JyZWN0IHRoZSBuYW1lIG9mIFJFRzggZm9yIHJrMzI4OC1ldmItYWN0
+ODg0Ngo2NjI1MTNhMTRjOWQgQVJNOiBkdHM6IHJvY2tjaGlwOiBhZGQgMiByZWd1bGF0b3JzIGZv
+ciByazMyODgtZXZiLWFjdDg4NDYKYjA0MDYxZTY1OTliIEFSTTogZHRzOiByb2NrY2hpcDogbW92
+ZSB0aGUgcHVibGljIHBhcnQgdG8gcmszMjg4LWV2YiBjb21tb24KCgpDaGFuZ2VzIGluIHY3Ogot
+IG1vZGlmeSB0aGUgY29uZmlnIHRvIHRyaXN0YXRlIGZvciBtb2R1bGVzIGJ1aWxkIChNYXJrIFlh
+bykKLSBQYXNzIE5VTEwgJ25hbWUnIHRvIGRybV9lbmNvZGVyX2luaXQoKSB0byBmaXggY29tcGls
+ZSBlcnIgKE1hcmsgWWFvKQotIE1vdmUgdGhlIGxjZF9lbiBjb250cm9sIHRvIGFjdDg4NDYgZHRz
+CgpDaGFuZ2VzIGluIHY2OgotIHVwZGF0ZSB0aGUgZG9jdW1lbnQsIHNpbmNlIHRoZSBicmlkZ2Ug
+ZGV2aWNlIGhhcyBiZWVuIGRlbGV0ZWQuCi0gbW92ZSB0aGUgbWlwaV9lbiBnYXRlIHRvIG9ja2No
+aXBfZHJtX2NydGNfbW9kZV9jb25maWcKLSBSZW1vdmUgdGhlIGF0b21pYyBmZWF0dXJlIGNoZWNr
+IChNYXJrIFlhbykKLSBBZGQgYXRvbWljIEFQSSBzdXBwb3J0IChIZWlrbyBTdMO8Ym5lKQotIERv
+IG5vdCB1c2UgYnJpZGdlIGRyaXZlciAoVGhpZXJyeSBSZWRpbmcpCi0gT3B0aW1pemF0aW9uIHRo
+ZSBwaHkgaW5pdCBzZXF1ZW5jZQoKQ2hhbmdlcyBpbiB2NToKLSBtb2RpZnkgdGhlIGNsayBuYW1l
+IHRvIFNDTEtfTUlQSURTSV8yNE0KLSBhZGQgYSBibGFuayBsaW5lIGJlZm9yIGxjZF9lbgoKQ2hh
+bmdlcyBpbiB2NDoKLSB1c2UgY2xrX3JvdW5kX3JhdGUgdG8gY2hlY2sgdGhlIGNsb2NrIHJhdGUg
+aW4gdm9wX2NydGNfbW9kZV9maXh1cAoKQ2hhbmdlcyBpbiB2MzoKLSBtb3ZlIGR3X21pcGlfZHNp
+X3JvY2tjaGlwLnR4dCB0byBiaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwLwoKQ2hyaXMgWmhvbmcg
+KDUpOgogIGRybS9yb2NrY2hpcDogcmV0dXJuIGEgdHJ1ZSBjbG9jayByYXRlIHRvIGFkanVzdGVk
+X21vZGUKICBEb2N1bWVudGF0aW9uOiBkdC1iaW5kaW5nczogQWRkIGJpbmRpbmdzIGZvciByazMy
+ODggRFcgTUlQSSBEU0kgZHJpdmVyCiAgZHJtOiByb2NrY2hpcDogU3VwcG9ydCBTeW5vcHN5cyBE
+VyBNSVBJIERTSQogIEFSTTogZHRzOiByb2NrY2hpcDogYWRkIHJrMzI4OCBtaXBpX2RzaSBub2Rl
+cwogIEFSTTogZHRzOiByb2NrY2hpcDogYWRkIHN1cHBvcnQgbWlwaSBwYW5lbCB0djA4MHd1bS1u
+bDAKCiAuLi4vZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50eHQgICAgICB8
+ICAgNjAgKwogYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LWV2Yi1hY3Q4ODQ2LmR0cyAgICAgICAg
+ICAgfCAgICAyICsKIGFyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC1ldmIuZHRzaSAgICAgICAgICAg
+ICAgICAgIHwgICAxMiArLQogYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LmR0c2kgICAgICAgICAg
+ICAgICAgICAgICAgfCAgIDM5ICsKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9LY29uZmlnICAg
+ICAgICAgICAgICAgICAgIHwgICAxMCArCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvTWFrZWZp
+bGUgICAgICAgICAgICAgICAgICB8ICAgIDEgKwogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3
+LW1pcGktZHNpLmMgICAgICAgICAgICAgfCAxMTk2ICsrKysrKysrKysrKysrKysrKysrCiBkcml2
+ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX3ZvcC5jICAgICAgICB8ICAgIDggKwog
+OCBmaWxlcyBjaGFuZ2VkLCAxMzI3IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9y
+b2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
+ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYwoKLS0gCjIuNi4zCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
