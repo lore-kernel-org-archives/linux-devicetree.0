@@ -1,284 +1,143 @@
-From: Cory Tusar <cory.tusar@pid1solutions.com>
-Subject: Re: [PATCH v4 4/5] misc: eeprom_93xx46: Add quirks to support Atmel
- AT93C46D device.
-Date: Tue, 5 Jan 2016 22:20:48 -0500
-Message-ID: <568C8810.8070706@pid1solutions.com>
+From: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+Subject: Re: [PATCH v4 5/5] misc: eeprom_93xx46: Add support for a GPIO
+ 'select' line.
+Date: Tue, 5 Jan 2016 22:21:57 -0500
+Message-ID: <568C8855.1070106@pid1solutions.com>
 References: <1449720055-25965-1-git-send-email-cory.tusar@pid1solutions.com>
- <1449720055-25965-5-git-send-email-cory.tusar@pid1solutions.com>
- <56789700.7090308@mleia.com>
+ <1449720055-25965-6-git-send-email-cory.tusar@pid1solutions.com>
+ <5678999C.7040808@mleia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56789700.7090308@mleia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, gregkh@linuxfoundation.org
-Cc: jic23@kernel.org, broonie@kernel.org, afd@ti.com, andrew@lunn.ch, Chris.Healy@zii.aero, Keith.Vennel@zii.aero, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5678999C.7040808-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, afd-l0cyMroinI0@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Chris.Healy-c8ZVq/bFV1I@public.gmane.org, Keith.Vennel-c8ZVq/bFV1I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-On 12/21/2015 07:19 PM, Vladimir Zapolskiy wrote:
-> 
-> 
-> With best wishes,
-> Vladimir
+On 12/21/2015 07:30 PM, Vladimir Zapolskiy wrote:
+> Hi Cory,
 > 
 > On 10.12.2015 06:00, Cory Tusar wrote:
->> Atmel devices in this family have some quirks not found in other similar
->> chips - they do not support a sequential read of the entire EEPROM
->> contents, and the control word sent at the start of each operation
->> varies in bit length.
+>> This commit adds support to the eeprom_93x46 driver allowing a GPIO line
+>> to function as a 'select' or 'enable' signal prior to accessing the
+>> EEPROM.
 >>
->> This commit adds quirk support to the driver and modifies the read
->> implementation to support non-sequential reads for consistency with
->> other misc/eeprom drivers.
->>
->> Tested on a custom Freescale VF610-based platform, with an AT93C46D
->> device attached via dspi2.  The spi-gpio driver was used to allow the
->> necessary non-byte-sized transfers.
->>
->> Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
->> Tested-by: Chris Healy <chris.healy@zii.aero>
+>> Signed-off-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+>> Tested-by: Chris Healy <chris.healy-c8ZVq/bFV1I@public.gmane.org>
 >> ---
->>  drivers/misc/eeprom/eeprom_93xx46.c | 126 ++++++++++++++++++++++++++----------
->>  include/linux/eeprom_93xx46.h       |   6 ++
->>  2 files changed, 97 insertions(+), 35 deletions(-)
+>>  drivers/misc/eeprom/eeprom_93xx46.c | 35 +++++++++++++++++++++++++++++++++++
+>>  include/linux/eeprom_93xx46.h       |  3 +++
+>>  2 files changed, 38 insertions(+)
 >>
 >> diff --git a/drivers/misc/eeprom/eeprom_93xx46.c b/drivers/misc/eeprom/eeprom_93xx46.c
->> index cc27e11..d50bc17 100644
+>> index d50bc17..d28fac2 100644
 >> --- a/drivers/misc/eeprom/eeprom_93xx46.c
 >> +++ b/drivers/misc/eeprom/eeprom_93xx46.c
->> @@ -27,6 +27,15 @@
->>  #define ADDR_ERAL	0x20
->>  #define ADDR_EWEN	0x30
+>> @@ -10,11 +10,13 @@
 >>  
->> +struct eeprom_93xx46_devtype_data {
->> +	unsigned int quirks;
->> +};
->> +
->> +static const struct eeprom_93xx46_devtype_data atmel_at93c46d_data = {
->> +	.quirks = EEPROM_93XX46_QUIRK_SINGLE_WORD_READ |
->> +		  EEPROM_93XX46_QUIRK_INSTRUCTION_LENGTH,
->> +};
->> +
->>  struct eeprom_93xx46_dev {
->>  	struct spi_device *spi;
->>  	struct eeprom_93xx46_platform_data *pdata;
->> @@ -35,6 +44,16 @@ struct eeprom_93xx46_dev {
->>  	int addrlen;
->>  };
->>  
->> +static inline bool has_quirk_single_word_read(struct eeprom_93xx46_dev *edev)
->> +{
->> +	return edev->pdata->quirks & EEPROM_93XX46_QUIRK_SINGLE_WORD_READ;
->> +}
->> +
->> +static inline bool has_quirk_instruction_length(struct eeprom_93xx46_dev *edev)
->> +{
->> +	return edev->pdata->quirks & EEPROM_93XX46_QUIRK_INSTRUCTION_LENGTH;
->> +}
->> +
->>  static ssize_t
->>  eeprom_93xx46_bin_read(struct file *filp, struct kobject *kobj,
->>  		       struct bin_attribute *bin_attr,
->> @@ -42,58 +61,73 @@ eeprom_93xx46_bin_read(struct file *filp, struct kobject *kobj,
->>  {
->>  	struct eeprom_93xx46_dev *edev;
->>  	struct device *dev;
->> -	struct spi_message m;
->> -	struct spi_transfer t[2];
->> -	int bits, ret;
->> -	u16 cmd_addr;
->> +	ssize_t ret = 0;
->>  
->>  	dev = container_of(kobj, struct device, kobj);
->>  	edev = dev_get_drvdata(dev);
->>  
->> -	cmd_addr = OP_READ << edev->addrlen;
->> +	mutex_lock(&edev->lock);
->>  
->> -	if (edev->addrlen == 7) {
->> -		cmd_addr |= off & 0x7f;
->> -		bits = 10;
->> -	} else {
->> -		cmd_addr |= (off >> 1) & 0x3f;
->> -		bits = 9;
->> -	}
->> +	if (edev->pdata->prepare)
->> +		edev->pdata->prepare(edev);
->>  
->> -	dev_dbg(&edev->spi->dev, "read cmd 0x%x, %d Hz\n",
->> -		cmd_addr, edev->spi->max_speed_hz);
->> +	while (count) {
->> +		struct spi_message m;
->> +		struct spi_transfer t[2] = { { 0 } };
->> +		u16 cmd_addr = OP_READ << edev->addrlen;
->> +		size_t nbytes = count;
->> +		int bits;
->> +		int err;
->> +
->> +		if (edev->addrlen == 7) {
->> +			cmd_addr |= off & 0x7f;
->> +			bits = 10;
->> +			if (has_quirk_single_word_read(edev))
->> +				nbytes = 1;
->> +		} else {
->> +			cmd_addr |= (off >> 1) & 0x3f;
->> +			bits = 9;
->> +			if (has_quirk_single_word_read(edev))
->> +				nbytes = 2;
->> +		}
->>  
->> -	spi_message_init(&m);
->> -	memset(t, 0, sizeof(t));
->> +		dev_dbg(&edev->spi->dev, "read cmd 0x%x, %d Hz\n",
->> +			cmd_addr, edev->spi->max_speed_hz);
->>  
->> -	t[0].tx_buf = (char *)&cmd_addr;
->> -	t[0].len = 2;
->> -	t[0].bits_per_word = bits;
->> -	spi_message_add_tail(&t[0], &m);
->> +		spi_message_init(&m);
->>  
->> -	t[1].rx_buf = buf;
->> -	t[1].len = count;
->> -	t[1].bits_per_word = 8;
->> -	spi_message_add_tail(&t[1], &m);
->> +		t[0].tx_buf = (char *)&cmd_addr;
->> +		t[0].len = 2;
->> +		t[0].bits_per_word = bits;
->> +		spi_message_add_tail(&t[0], &m);
->>  
->> -	mutex_lock(&edev->lock);
->> +		t[1].rx_buf = buf;
->> +		t[1].len = count;
->> +		t[1].bits_per_word = 8;
->> +		spi_message_add_tail(&t[1], &m);
->>  
->> -	if (edev->pdata->prepare)
->> -		edev->pdata->prepare(edev);
->> +		err = spi_sync(edev->spi, &m);
->> +		/* have to wait at least Tcsl ns */
->> +		ndelay(250);
->>  
->> -	ret = spi_sync(edev->spi, &m);
->> -	/* have to wait at least Tcsl ns */
->> -	ndelay(250);
->> -	if (ret) {
->> -		dev_err(&edev->spi->dev, "read %zu bytes at %d: err. %d\n",
->> -			count, (int)off, ret);
->> +		if (err) {
->> +			dev_err(&edev->spi->dev, "read %zu bytes at %d: err. %d\n",
->> +				nbytes, (int)off, err);
->> +			ret = err;
->> +			break;
->> +		}
->> +
->> +		buf += nbytes;
->> +		off += nbytes;
->> +		count -= nbytes;
->> +		ret += nbytes;
->>  	}
->>  
->>  	if (edev->pdata->finish)
->>  		edev->pdata->finish(edev);
->>  
->>  	mutex_unlock(&edev->lock);
->> -	return ret ? : count;
->> +	return ret;
+>>  #include <linux/delay.h>
+>>  #include <linux/device.h>
+>> +#include <linux/gpio/consumer.h>
+>>  #include <linux/kernel.h>
+>>  #include <linux/module.h>
+>>  #include <linux/mutex.h>
+>>  #include <linux/of.h>
+>>  #include <linux/of_device.h>
+>> +#include <linux/of_gpio.h>
+>>  #include <linux/slab.h>
+>>  #include <linux/spi/spi.h>
+>>  #include <linux/sysfs.h>
+>> @@ -343,6 +345,20 @@ static ssize_t eeprom_93xx46_store_erase(struct device *dev,
 >>  }
+>>  static DEVICE_ATTR(erase, S_IWUSR, NULL, eeprom_93xx46_store_erase);
 >>  
->>  static int eeprom_93xx46_ew(struct eeprom_93xx46_dev *edev, int is_on)
->> @@ -112,7 +146,13 @@ static int eeprom_93xx46_ew(struct eeprom_93xx46_dev *edev, int is_on)
->>  		bits = 9;
->>  	}
->>  
->> -	dev_dbg(&edev->spi->dev, "ew cmd 0x%04x\n", cmd_addr);
->> +	if (has_quirk_instruction_length(edev)) {
->> +		cmd_addr <<= 2;
->> +		bits += 2;
->> +	}
+>> +static void select_assert(void *context)
+>> +{
+>> +	struct eeprom_93xx46_dev *edev = context;
 >> +
->> +	dev_dbg(&edev->spi->dev, "ew%s cmd 0x%04x, %d bits\n",
->> +			is_on ? "en" : "ds", cmd_addr, bits);
->>  
->>  	spi_message_init(&m);
->>  	memset(&t, 0, sizeof(t));
->> @@ -247,6 +287,13 @@ static int eeprom_93xx46_eral(struct eeprom_93xx46_dev *edev)
->>  		bits = 9;
->>  	}
->>  
->> +	if (has_quirk_instruction_length(edev)) {
->> +		cmd_addr <<= 2;
->> +		bits += 2;
->> +	}
+>> +	gpiod_set_value_cansleep(edev->pdata->select, 1);
+>> +}
 >> +
->> +	dev_dbg(&edev->spi->dev, "eral cmd 0x%04x, %d bits\n", cmd_addr, bits);
+>> +static void select_deassert(void *context)
+>> +{
+>> +	struct eeprom_93xx46_dev *edev = context;
 >> +
->>  	spi_message_init(&m);
->>  	memset(&t, 0, sizeof(t));
->>  
->> @@ -298,12 +345,15 @@ static DEVICE_ATTR(erase, S_IWUSR, NULL, eeprom_93xx46_store_erase);
->>  
+>> +	gpiod_set_value_cansleep(edev->pdata->select, 0);
+>> +}
+>> +
 >>  static const struct of_device_id eeprom_93xx46_of_table[] = {
 >>  	{ .compatible = "eeprom-93xx46", },
->> +	{ .compatible = "atmel,at93c46d", .data = &atmel_at93c46d_data, },
-> 
-> Ok, got the second "atmel,at93c46d" here.
-
-Yeah.
-
-> 
->>  	{}
->>  };
->>  MODULE_DEVICE_TABLE(of, eeprom_93xx46_of_table);
->>  
->>  static int eeprom_93xx46_probe_dt(struct spi_device *spi)
->>  {
->> +	const struct of_device_id *of_id =
->> +		of_match_device(eeprom_93xx46_of_table, &spi->dev);
+>>  	{ .compatible = "atmel,at93c46d", .data = &atmel_at93c46d_data, },
+>> @@ -357,6 +373,8 @@ static int eeprom_93xx46_probe_dt(struct spi_device *spi)
 >>  	struct device_node *np = spi->dev.of_node;
 >>  	struct eeprom_93xx46_platform_data *pd;
 >>  	u32 tmp;
->> @@ -331,6 +381,12 @@ static int eeprom_93xx46_probe_dt(struct spi_device *spi)
+>> +	int gpio;
+>> +	enum of_gpio_flags of_flags;
+>>  	int ret;
+>>  
+>>  	pd = devm_kzalloc(&spi->dev, sizeof(*pd), GFP_KERNEL);
+>> @@ -381,6 +399,23 @@ static int eeprom_93xx46_probe_dt(struct spi_device *spi)
 >>  	if (of_property_read_bool(np, "read-only"))
 >>  		pd->flags |= EE_READONLY;
 >>  
->> +	if (of_id->data) {
->> +		const struct eeprom_93xx46_devtype_data *data = of_id->data;
+>> +	gpio = of_get_named_gpio_flags(np, "select-gpios", 0, &of_flags);
+>> +	if (gpio_is_valid(gpio)) {
+>> +		unsigned long flags =
+>> +			of_flags == OF_GPIO_ACTIVE_LOW ? GPIOF_ACTIVE_LOW : 0;
 >> +
->> +		pd->quirks = data->quirks;
+>> +		ret = devm_gpio_request_one(&spi->dev, gpio, flags,
+>> +					    "eeprom_93xx46_select");
+>> +		if (ret)
+>> +			return ret;
+>> +
+>> +		pd->select = gpio_to_desc(gpio);
+>> +		pd->prepare = select_assert;
+>> +		pd->finish = select_deassert;
+>> +
+>> +		gpiod_direction_output(pd->select, 0);
 >> +	}
 >> +
->>  	spi->dev.platform_data = pd;
+>>  	if (of_id->data) {
+>>  		const struct eeprom_93xx46_devtype_data *data = of_id->data;
 >>  
->>  	return 0;
 >> diff --git a/include/linux/eeprom_93xx46.h b/include/linux/eeprom_93xx46.h
->> index 0679181..92fa4c3 100644
+>> index 92fa4c3..03f3435 100644
 >> --- a/include/linux/eeprom_93xx46.h
 >> +++ b/include/linux/eeprom_93xx46.h
->> @@ -9,6 +9,12 @@ struct eeprom_93xx46_platform_data {
->>  #define EE_ADDR16	0x02		/* 16 bit addr. cfg */
->>  #define EE_READONLY	0x08		/* forbid writing */
+>> @@ -3,6 +3,8 @@
+>>   * platform description for 93xx46 EEPROMs.
+>>   */
 >>  
->> +	unsigned int	quirks;
->> +/* Single word read transfers only; no sequential read. */
->> +#define EEPROM_93XX46_QUIRK_SINGLE_WORD_READ		(1 << 0)
->> +/* Instructions such as EWEN are (addrlen + 2) in length. */
->> +#define EEPROM_93XX46_QUIRK_INSTRUCTION_LENGTH		(1 << 1)
+>> +#include <linux/of_gpio.h>
 >> +
->>  	/*
->>  	 * optional hooks to control additional logic
->>  	 * before and after spi transfer.
+> 
+> You need just "struct gpio_desc;" instead of the include here, please fix.
+
+Hi Vladimir,
+
+I'll fix for v5.
+
+> 
+>>  struct eeprom_93xx46_platform_data {
+>>  	unsigned char	flags;
+>>  #define EE_ADDR8	0x01		/*  8 bit addr. cfg */
+>> @@ -21,4 +23,5 @@ struct eeprom_93xx46_platform_data {
+>>  	 */
+>>  	void (*prepare)(void *);
+>>  	void (*finish)(void *);
+>> +	struct gpio_desc *select;
+>>  };
 >>
 > 
-> Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
+> Reviewed-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
 
-Thanks again for all the reviews.
-
-Best regards,
+Thanks and best regards,
 - -Cory
 
 
@@ -296,7 +155,11 @@ PID 1 Solutions, Inc.
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iEYEARECAAYFAlaMiBAACgkQHT1tsfGwHJ/MLQCgju12m/YJl2wOEz/g9WqqMF0J
-22gAn37PF8DaSfoUmCF0toTjPdVhk5Ks
-=/kv3
+iEYEARECAAYFAlaMiFUACgkQHT1tsfGwHJ8PvwCgmCxWi9TiL+ZXCI6IYZgaGZbT
+vHsAn3FOyuJ5tAqb6JywtDY6piiQGywv
+=2mcd
 -----END PGP SIGNATURE-----
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
