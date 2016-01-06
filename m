@@ -1,56 +1,84 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] pci: host: pci-dra7xx: Enable x2 mode support
-Date: Wed, 6 Jan 2016 08:13:24 -0600
-Message-ID: <20160106141324.GA24713@rob-hp-laptop>
-References: <1452077393-25880-1-git-send-email-kishon@ti.com>
- <1452077393-25880-3-git-send-email-kishon@ti.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [RFC v2 3/4] i2c: mux: demux-pinctrl: add driver
+Date: Wed, 6 Jan 2016 15:20:46 +0100
+Message-ID: <CAMuHMdUuiuXPFJQpUB+Y3xF34KnqhzdZ+x-E7zL1ywp=sAQWXg@mail.gmail.com>
+References: <1452088285-6427-1-git-send-email-wsa@the-dreams.de>
+	<1452088285-6427-4-git-send-email-wsa@the-dreams.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1452077393-25880-3-git-send-email-kishon@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452088285-6427-4-git-send-email-wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 06, 2016 at 04:19:53PM +0530, Kishon Vijay Abraham I wrote:
-> Perform syscon configurations to get x2 mode to working in DRA74x and
-> DRA72x. Also add a new compatible string to dfferentiate
-> DRA72x and DRA74x, since b1c0 mask is different for both these platforms.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  Documentation/devicetree/bindings/pci/ti-pci.txt |    8 ++-
->  drivers/pci/host/pci-dra7xx.c                    |   81 +++++++++++++++++++++-
->  2 files changed, 86 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
-> index 60e2516..0b10e84 100644
-> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
-> @@ -1,7 +1,9 @@
->  TI PCI Controllers
->  
->  PCIe Designware Controller
-> - - compatible: Should be "ti,dra7-pcie""
-> + - compatible: "ti,dra7-pcie" is deprecated
-> +	       Should be "ti,dra746-pcie" for DRA74x
-> +	       Should be "ti,dra726-pcie" for DRA72x
->   - reg : Two register ranges as listed in the reg-names property
->   - reg-names : The first entry must be "ti-conf" for the TI specific registers
->  	       The second entry must be "rc-dbics" for the designware pcie
-> @@ -14,6 +16,10 @@ PCIe Designware Controller
->  	       where <X> is the instance number of the pcie from the HW spec.
->   - interrupts : Two interrupt entries must be specified. The first one is for
->  		main interrupt line and the second for MSI interrupt line.
-> + - syscon-lane-conf : phandle/offset pair. Phandle to the system control module and the
-> +   register offset to specify 1 lane or 2 lane.
-> + - syscon-lane-sel : phandle/offset pair. Phandle to the system control module and the
-> +   register offset to specify lane selection.
+Hi Wolfram,
 
-These should have a ti prefix.
+On Wed, Jan 6, 2016 at 2:51 PM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
+> From: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+>
+> This driver allows an I2C bus to switch between multiple masters. This
+> is not hot-swichting because connected I2C slaves will be
 
->   - #address-cells,
->     #size-cells,
->     #interrupt-cells,
+switching
+
+> re-instantiated. It is meant to select the best I2C core at runtime once
+> the task is known. Example: Prefer i2c-gpio over another I2C core
+> because of HW errata affetcing your use case.
+
+affecting
+
+> --- /dev/null
+> +++ b/drivers/i2c/muxes/i2c-demux-pinctrl.c
+> @@ -0,0 +1,276 @@
+> +/*
+> + * Pinctrl based I2C DeMultiplexer
+> + *
+> + * Copyright (C) 2015-16 by Wolfram Sang, Sang Engineering <wsa-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+> + * Copyright (C) 2015-16 by Renesas Electronics Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation; version 2 of the License.
+> + *
+> + * See the bindings doc for DTS setup.
+> + */
+> +
+> +#include <linux/i2c.h>
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/pinctrl/consumer.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/sysfs.h>
+> +
+> +struct i2c_demux_pinctrl_chan {
+> +       struct device_node *parent_np;
+> +       struct i2c_adapter *parent_adap;
+> +       struct of_changeset chgset;
+> +};
+> +
+> +struct i2c_demux_pinctrl_priv {
+> +       int cur_chan;
+> +       int num_chan;
+
+This is always positive, so you can make num_chan and a few loop counters
+unsigned.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
