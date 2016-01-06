@@ -1,50 +1,66 @@
-From: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/8] i2c mux cleanup and locking update
-Date: Wed, 6 Jan 2016 14:23:02 +0100
-Message-ID: <CAKv63uvvdjmQj3J73UJZFLJ=U0c+Z=dmknm3UH=3MvYU0oqNNg@mail.gmail.com>
-References: <1452009438-27347-1-git-send-email-peda@lysator.liu.se> <20160105184819.GA1743@katana>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH 2/2] drm: bridge: add sil902x DT bindings doc
+Date: Wed, 6 Jan 2016 14:24:57 +0100
+Message-ID: <20160106142457.28c8af15@bbrezillon>
+References: <1452079551-30914-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1452079551-30914-2-git-send-email-boris.brezillon@free-electrons.com>
+ <20160106131959.GA18121@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160105184819.GA1743@katana>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Peter Rosin <peda-SamgB31n2u5IcsJQ0EH25Q@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Nicholas Mc Guire <hofrat-Q945KHDl0DbYtjvyW6yDsg@public.gmane.org>Olli Salonen <ol>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160106131959.GA18121@rob-hp-laptop>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram and Peter,
-I will give my opinion about the path chosen although it should be
-taken lightly.
-
-I can see that hardware guys missed the software guys again on the
-development path, but since this happens more often than not, I would
-say it seems OK to have support for this as long as it does not make
-more complex (longer) standard i2c transfers. I would support to have
-additional mutex before mux as that will make less chance that someone
-forgets to lock mutex before mux and proposed solution seems valid.
-
-Regards,
-Crt
-
-On 5 January 2016 at 19:48, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
-> Peter,
->
->> PS. needs a bunch of testing, I do not have access to all the involved hw
->
-> First of all, thanks for diving into this topic and the huge effort you
-> apparently have put into it.
->
-> It is obviously a quite intrusive series, so it needs careful review.
-> TBH, I can't really tell when I have the bandwidth to do that, so I hope
-> other people will step up. And yes, it needs serious testing.
->
-> To all: Although I appreciate any review support, I'd think the first
-> thing to be done should be a very high level review - is this series
-> worth the huge update? Is the path chosen proper? Stuff like this. I'd
-> appreciate Acks or Revs for that. Stuff like fixing checkpatch warnings
-> and other minor stuff should come later.
->
-> Thanks,
->
->    Wolfram
->
+SGkgUm9iLAoKT24gV2VkLCA2IEphbiAyMDE2IDA3OjE5OjU5IC0wNjAwClJvYiBIZXJyaW5nIDxy
+b2JoQGtlcm5lbC5vcmc+IHdyb3RlOgoKPiBPbiBXZWQsIEphbiAwNiwgMjAxNiBhdCAxMjoyNTo1
+MVBNICswMTAwLCBCb3JpcyBCcmV6aWxsb24gd3JvdGU6Cj4gPiBBZGQgU2lsOTAyMiBEVCBiaW5k
+aW5ncyBkZXNjcmlwdGlvbi4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogQm9yaXMgQnJlemlsbG9u
+IDxib3Jpcy5icmV6aWxsb25AZnJlZS1lbGVjdHJvbnMuY29tPgo+ID4gLS0tCj4gPiAgLi4uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lsOTAyeC50eHQgfCAzMSArKysrKysr
+KysrKysrKysrKysrKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDMxIGluc2VydGlvbnMoKykKPiA+
+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvYnJpZGdlL3NpbDkwMngudHh0Cj4gPiAKPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lsOTAyeC50eHQgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lsOTAyeC50eHQK
+PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiBpbmRleCAwMDAwMDAwLi43ZjEzMzlmCj4gPiAt
+LS0gL2Rldi9udWxsCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9icmlkZ2Uvc2lsOTAyeC50eHQKPiA+IEBAIC0wLDAgKzEsMzEgQEAKPiA+ICtzaWw5
+MDJ4IEhETUkgYnJpZGdlIGJpbmRpbmdzCj4gPiArCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoK
+PiA+ICsJLSBjb21wYXRpYmxlOiAic2lsLHNpbDkwMjIiCj4gPiArCS0gcmVnOiBpMmMgYWRkcmVz
+cyBvZiB0aGUgYnJpZGdlCj4gPiArCS0gcmVzZXQtZ3Bpb3M6IE9GIGRldmljZS10cmVlIGdwaW8g
+c3BlY2lmaWNhdGlvbiBmb3IgUlNUX04gcGluLgo+ID4gKwo+ID4gK09wdGlvbmFsIHByb3BlcnRp
+ZXM6Cj4gPiArCS0gaW50ZXJydXB0cy1leHRlbmRlZCBvciBpbnRlcnJ1cHQtcGFyZW50ICsgaW50
+ZXJydXB0czogZGVzY3JpYmUKPiA+ICsJICB0aGUgaW50ZXJydXB0IGxpbmUgdXNlZCB0byBpbmZv
+cm0gdGhlIGhvc3QgYWJvdXQgaG90cGx1ZyBldmVudHMuCj4gPiArCj4gPiArT3B0aW9uYWwgc3Vi
+bm9kZXM6Cj4gPiArCS0gdmlkZW8gaW5wdXQ6IERldmljZSBub2RlIGNhbiBjb250YWluIHZpZGVv
+IGlucHV0IHBvcnQgbm9kZSB0bwo+ID4gKwkgIGNvbm5lY3QgdGhlIGJyaWRnZSB0byBhIGRpc3Bs
+YXkgY29udHJvbGxlciBvdXRwdXQgKFNlZSB0aGlzCj4gPiArCSAgZG9jdW1lbnRhdGlvbiBbMV0p
+Lgo+ID4gKwo+ID4gK1sxXTogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlh
+L3ZpZGVvLWludGVyZmFjZXMudHh0Cj4gPiArCj4gPiArRXhhbXBsZToKPiA+ICsJaGRtaS1icmlk
+Z2VAMzkgewo+ID4gKwkJY29tcGF0aWJsZSA9ICJzaWwsc2lsOTAyMiI7Cj4gPiArCQlyZWcgPSA8
+MHgzOT47Cj4gPiArCQlyZXNldC1ncGlvcyA9IDwmZ3B4MSA1IDEgMCAwPjsKPiAKPiA0IEdQSU8g
+Y2VsbHM/IFZhbGlkLCBidXQgdW51c3VhbC4KCkhlaGUsIEkgYmxpbmRseSBjb3BpZWQgbnhwLHB0
+bjM0NjAgZG9jLCB3aGljaCBpcyBkZWZpbmluZyBzdWNoIEdQSU8KZGVzY3JpcHRvcnMgOi0pLiBJ
+IGNhbiBjaGFuZ2UgdGhhdCBpZiB5b3Ugd2FudC4KCj4gCj4gPiArCQlwb3J0cyB7Cj4gPiArCQkJ
+cG9ydEAwIHsKPiAKPiBFaXRoZXIgbmVlZCBhIHJlZyBwcm9wZXJ0eSBoZXJlIG9yIGRyb3AgdGhl
+IHVuaXQgYWRkcmVzcy4gWW91IGNvdWxkIAo+IHJlbW92ZSBwb3J0cyBhcyB3ZWxsLgoKQWN0dWFs
+bHkgd2UnbGwgbGlrZWx5IGRlZmluZSBhIDJuZCBwb3J0IGZvciB0aGUgYXVkaW8gaW5wdXQsIHNv
+IEknZApwcmVmZXIga2VlcGluZyB0aGUgcG9ydHMgYW5kIEAwIHN1ZmZpeCBhbmQgYWRkaW5nIGEg
+cmVnIHByb3BlcnR5IHJhdGhlcgp0aGFuIGp1c3QgZGVmaW5pbmcgcG9ydCB7IC4uLiB9OwoKQmVz
+dCBSZWdhcmRzLAoKQm9yaXMKCi0tIApCb3JpcyBCcmV6aWxsb24sIEZyZWUgRWxlY3Ryb25zCkVt
+YmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKaHR0cDovL2ZyZWUtZWxlY3Ryb25z
+LmNvbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
