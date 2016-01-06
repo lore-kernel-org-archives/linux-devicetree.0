@@ -1,64 +1,38 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH V3] net: emac: emac gigabit ethernet controller driver
-Date: Tue, 5 Jan 2016 18:21:38 -0600
-Message-ID: <568C5E12.8050100@codeaurora.org>
-References: <1451440135-25771-1-git-send-email-gavidov@codeaurora.org>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [PATCH v2 3/3] dt-bindings: add document for rk3229-vop
+Date: Wed, 6 Jan 2016 08:46:27 +0800
+Message-ID: <568C63E3.1010908@rock-chips.com>
+References: <1451965688-12286-1-git-send-email-ykk@rock-chips.com>
+ <1451966436-12733-1-git-send-email-ykk@rock-chips.com>
+ <CAL_JsqKnyYJvgh05OTr6S2pG5+OqFHg-SZtSvpahb0pg64tmkQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1451440135-25771-1-git-send-email-gavidov@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gilad Avidov <gavidov@codeaurora.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc: sdharia@codeaurora.org, shankerd@codeaurora.org, gregkh@linuxfoundation.org, vikrams@codeaurora.org, cov@codeaurora.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_JsqKnyYJvgh05OTr6S2pG5+OqFHg-SZtSvpahb0pg64tmkQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Gilad Avidov wrote:
-
-> diff --git a/drivers/net/ethernet/qualcomm/emac/emac-mac.c b/drivers/net/ethernet/qualcomm/emac/emac-mac.c
-> new file mode 100644
-> index 0000000..36a7746
-> --- /dev/null
-> +++ b/drivers/net/ethernet/qualcomm/emac/emac-mac.c
-> @@ -0,0 +1,1808 @@
-> +/* Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +/* Qualcomm Technologies, Inc. EMAC Ethernet Controller MAC layer support
-> + */
-> +
-> +#include <linux/tcp.h>
-> +#include <linux/ip.h>
-> +#include <linux/ipv6.h>
-> +#include <linux/crc32.h>
-> +#include <linux/if_vlan.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/phy.h>
-> +#include <linux/of.h>
-> +#include <linux/gpio.h>
-> +#include <linux/pm_runtime.h>
-> +#include "emac.h"
-> +#include "emac-sgmii.h"
-
-You also need
-
-	#include <net/ip6_checksum.h>
-
-otherwise you get this:
-
-   CC      drivers/net/ethernet/qualcomm/emac/emac-mac.o
-drivers/net/ethernet/qualcomm/emac/emac-mac.c: In function 'emac_tso_csum':
-drivers/net/ethernet/qualcomm/emac/emac-mac.c:2045:4: error: implicit 
-declaration of function 'csum_ipv6_magic' 
-[-Werror=implicit-function-declaration]
-     tcp_hdr(skb)->check = ~csum_ipv6_magic(
-     ^
+CgpPbiAwMS8wNi8yMDE2IDEyOjA2IEFNLCBSb2IgSGVycmluZyB3cm90ZToKPiBPbiBNb24sIEph
+biA0LCAyMDE2IGF0IDEwOjAwIFBNLCBZYWtpciBZYW5nIDx5a2tAcm9jay1jaGlwcy5jb20+IHdy
+b3RlOgo+PiBTaWduZWQtb2ZmLWJ5OiBZYWtpciBZYW5nIDx5a2tAcm9jay1jaGlwcy5jb20+Cj4+
+IEFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+PiAtLS0KPj4gQ2hhbmdl
+cyBpbiB2MjoKPj4gLSBhY2tlZCBieSBSb2IKPiBJdCBkb2Vzbid0IGh1cnQsIGJ1dCB0aGVyZSBp
+cyBubyBwb2ludCB0byBzZW5kIGEgbmV3IHZlcnNpb24ganVzdCB0bwo+IGFkZCBhY2tzLiBUaGUg
+bWFpbnRhaW5lciBzaG91bGQgYWRkIGFueSBmb3IgdGhlIGN1cnJlbnQgdmVyc2lvbi4gSWYKPiB5
+b3UgZG8gc2VuZCBhIG5ldyB2ZXJzaW9uIHdpdGggY2hhbmdlcywgdGhlbiBpdCBpcyB5b3VyIHJl
+c3BvbnNpYmlsaXR5Cj4gdG8gYWRkIGFja3MuIE1haW50YWluZXJzIGFyZSBub3QgZ29pbmcgdG8g
+bG9vayBhdCBvbGRlciB2ZXJzaW9ucy4KCkdvdCBpdCAgOikKCi0gWWFraXIKCj4gUm9iCj4KPgo+
+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
