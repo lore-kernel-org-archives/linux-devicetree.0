@@ -1,229 +1,84 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH v2 3/4] mfd: arizona: Switch to using clock driver for 32k clock
-Date: Wed, 6 Jan 2016 12:34:31 +0000
-Message-ID: <1452083672-3994-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1452083672-3994-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/1] regulator: max8973: add support for junction thermal
+ warning
+Date: Wed, 6 Jan 2016 12:37:35 +0000
+Message-ID: <20160106123735.GX6588@sirena.org.uk>
+References: <1452060922-24426-1-git-send-email-ldewangan@nvidia.com>
+ <20160106121857.GW6588@sirena.org.uk>
+ <568D064A.8080609@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1452083672-3994-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: mturquette@baylibre.com, cw00.choi@samsung.com, lee.jones@linaro.org
-Cc: sboyd@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="QHp3Wr1K3N9pKO2V"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <568D064A.8080609@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Now we have a clock driver that can control the 32k clock use this
-rather than directly controlling the 32k clock from the MFD device.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
----
+--QHp3Wr1K3N9pKO2V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Changes since v1:
- - No long select COMMON_CLK_ARIZONA from the MFD, this can lead
-   to a situation where we are building COMMON_CLK_ARIZONA but
-   not COMMON_CLK which leads to many build errors. Furthermore
-   most other routes to resolve the issue result in a circular
-   dependency. Simplest solution is just to not do the select.
+On Wed, Jan 06, 2016 at 05:49:22PM +0530, Laxman Dewangan wrote:
+> On Wednesday 06 January 2016 05:48 PM, Mark Brown wrote:
+> >* PGP Signed by an unknown key
 
-Thanks,
-Charles
+> >On Wed, Jan 06, 2016 at 11:45:22AM +0530, Laxman Dewangan wrote:
 
- drivers/mfd/arizona-core.c       | 104 +++++++++------------------------------
- include/linux/mfd/arizona/core.h |   7 +--
- 2 files changed, 25 insertions(+), 86 deletions(-)
+> >>  Enhanced transient response (ETR) will affect the configuration of CKADV.
+> >>+-maxim,junction-temp-warning: Junction temp warning on which device generates
+> >>+		warning interrupts.
+> >This needs to specify what the values are - it looks like it's raw
+> >register values but I'd have expected from this that it'd be an actual
+> >temperature.
 
-diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-index d474732..5a55dd6 100644
---- a/drivers/mfd/arizona-core.c
-+++ b/drivers/mfd/arizona-core.c
-@@ -36,63 +36,6 @@ static const char * const wm5102_core_supplies[] = {
- 	"DBVDD1",
- };
- 
--int arizona_clk32k_enable(struct arizona *arizona)
--{
--	int ret = 0;
--
--	mutex_lock(&arizona->clk_lock);
--
--	arizona->clk32k_ref++;
--
--	if (arizona->clk32k_ref == 1) {
--		switch (arizona->pdata.clk32k_src) {
--		case ARIZONA_32KZ_MCLK1:
--			ret = pm_runtime_get_sync(arizona->dev);
--			if (ret != 0)
--				goto out;
--			break;
--		}
--
--		ret = regmap_update_bits(arizona->regmap, ARIZONA_CLOCK_32K_1,
--					 ARIZONA_CLK_32K_ENA,
--					 ARIZONA_CLK_32K_ENA);
--	}
--
--out:
--	if (ret != 0)
--		arizona->clk32k_ref--;
--
--	mutex_unlock(&arizona->clk_lock);
--
--	return ret;
--}
--EXPORT_SYMBOL_GPL(arizona_clk32k_enable);
--
--int arizona_clk32k_disable(struct arizona *arizona)
--{
--	mutex_lock(&arizona->clk_lock);
--
--	BUG_ON(arizona->clk32k_ref <= 0);
--
--	arizona->clk32k_ref--;
--
--	if (arizona->clk32k_ref == 0) {
--		regmap_update_bits(arizona->regmap, ARIZONA_CLOCK_32K_1,
--				   ARIZONA_CLK_32K_ENA, 0);
--
--		switch (arizona->pdata.clk32k_src) {
--		case ARIZONA_32KZ_MCLK1:
--			pm_runtime_put_sync(arizona->dev);
--			break;
--		}
--	}
--
--	mutex_unlock(&arizona->clk_lock);
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(arizona_clk32k_disable);
--
- static irqreturn_t arizona_clkgen_err(int irq, void *data)
- {
- 	struct arizona *arizona = data;
-@@ -874,6 +817,7 @@ static inline int arizona_of_get_core_pdata(struct arizona *arizona)
- 
- static const struct mfd_cell early_devs[] = {
- 	{ .name = "arizona-ldo1" },
-+	{ .name = "arizona-clk" },
- };
- 
- static const char * const wm5102_supplies[] = {
-@@ -970,7 +914,6 @@ int arizona_dev_init(struct arizona *arizona)
- 	int n_subdevs, ret, i;
- 
- 	dev_set_drvdata(arizona->dev, arizona);
--	mutex_init(&arizona->clk_lock);
- 
- 	if (dev_get_platdata(arizona->dev))
- 		memcpy(&arizona->pdata, dev_get_platdata(arizona->dev),
-@@ -1261,28 +1204,6 @@ int arizona_dev_init(struct arizona *arizona)
- 	}
- 
- 	/* Chip default */
--	if (!arizona->pdata.clk32k_src)
--		arizona->pdata.clk32k_src = ARIZONA_32KZ_MCLK2;
--
--	switch (arizona->pdata.clk32k_src) {
--	case ARIZONA_32KZ_MCLK1:
--	case ARIZONA_32KZ_MCLK2:
--		regmap_update_bits(arizona->regmap, ARIZONA_CLOCK_32K_1,
--				   ARIZONA_CLK_32K_SRC_MASK,
--				   arizona->pdata.clk32k_src - 1);
--		arizona_clk32k_enable(arizona);
--		break;
--	case ARIZONA_32KZ_NONE:
--		regmap_update_bits(arizona->regmap, ARIZONA_CLOCK_32K_1,
--				   ARIZONA_CLK_32K_SRC_MASK, 2);
--		break;
--	default:
--		dev_err(arizona->dev, "Invalid 32kHz clock source: %d\n",
--			arizona->pdata.clk32k_src);
--		ret = -EINVAL;
--		goto err_reset;
--	}
--
- 	for (i = 0; i < ARIZONA_MAX_MICBIAS; i++) {
- 		if (!arizona->pdata.micbias[i].mV &&
- 		    !arizona->pdata.micbias[i].bypass)
-@@ -1387,10 +1308,25 @@ int arizona_dev_init(struct arizona *arizona)
- 	pm_runtime_set_active(arizona->dev);
- 	pm_runtime_enable(arizona->dev);
- 
-+	arizona->clk32k = devm_clk_get(arizona->dev, "arizona-32k");
-+	if (IS_ERR(arizona->clk32k)) {
-+		ret = PTR_ERR(arizona->clk32k);
-+		if (ret == -ENOENT)
-+			ret = -EPROBE_DEFER;
-+		dev_err(arizona->dev, "Failed to get 32k clock: %d\n", ret);
-+		goto err_pm;
-+	}
-+
-+	ret = clk_prepare_enable(arizona->clk32k);
-+	if (ret < 0) {
-+		dev_err(arizona->dev, "Failed to enable 32k clock: %d\n", ret);
-+		goto err_pm;
-+	}
-+
- 	/* Set up for interrupts */
- 	ret = arizona_irq_init(arizona);
- 	if (ret != 0)
--		goto err_reset;
-+		goto err_clock;
- 
- 	pm_runtime_set_autosuspend_delay(arizona->dev, 100);
- 	pm_runtime_use_autosuspend(arizona->dev);
-@@ -1414,6 +1350,10 @@ int arizona_dev_init(struct arizona *arizona)
- 
- err_irq:
- 	arizona_irq_exit(arizona);
-+err_clock:
-+	clk_disable_unprepare(arizona->clk32k);
-+err_pm:
-+	pm_runtime_disable(arizona->dev);
- err_reset:
- 	arizona_enable_reset(arizona);
- 	regulator_disable(arizona->dcvdd);
-@@ -1430,6 +1370,8 @@ EXPORT_SYMBOL_GPL(arizona_dev_init);
- 
- int arizona_dev_exit(struct arizona *arizona)
- {
-+	clk_disable_unprepare(arizona->clk32k);
-+
- 	pm_runtime_disable(arizona->dev);
- 
- 	regulator_disable(arizona->dcvdd);
-diff --git a/include/linux/mfd/arizona/core.h b/include/linux/mfd/arizona/core.h
-index 79e607e..b9a1da4 100644
---- a/include/linux/mfd/arizona/core.h
-+++ b/include/linux/mfd/arizona/core.h
-@@ -13,6 +13,7 @@
- #ifndef _WM_ARIZONA_CORE_H
- #define _WM_ARIZONA_CORE_H
- 
-+#include <linux/clk.h>
- #include <linux/interrupt.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
-@@ -133,8 +134,7 @@ struct arizona {
- 	bool hpdet_clamp;
- 	unsigned int hp_ena;
- 
--	struct mutex clk_lock;
--	int clk32k_ref;
-+	struct clk *clk32k;
- 
- 	bool ctrlif_error;
- 
-@@ -148,9 +148,6 @@ struct arizona {
- 	struct mutex dac_comp_lock;
- };
- 
--int arizona_clk32k_enable(struct arizona *arizona);
--int arizona_clk32k_disable(struct arizona *arizona);
--
- int arizona_request_irq(struct arizona *arizona, int irq, char *name,
- 			irq_handler_t handler, void *data);
- void arizona_free_irq(struct arizona *arizona, int irq, void *data);
--- 
-2.1.4
+> I tried to roundoff to the next higher threshold when supported value (120
+> or 140 degC) is not provided in driver. But it is fine to me to specify the
+> possible value setting here and DT binding doc. Will do on next patch.
 
+I don't really mind which you use so long as the documentation is clear.
+
+> >>+-interrupt-flags: Interrupt flags for registering interrupt which can not be
+> >>+		passed via interrupt properties.
+
+> >Why is this being specified and what are the values?  Most devices don't
+> >have this...
+
+> I have two different design with this device:
+> In both design, I have main PMIC like MAX77620 and two MAX77621.
+
+> In one of design, interrupt from MAX77620, and alert from both MAX77621
+> shorted and going to Arm GIC controller. On this case, I need to register
+> the interrupt as SHARED interrupt. This property can not be passed via
+> "interrupt" properties from DT.
+> That's why this flag is added to support this.
+
+If the driver supports shared interrupts it should just register as a
+shared interrupt all the time, there is nothing about shared interrupts
+which requires that the pin actually be shared.
+
+> Now, by default, if I register the interrupt as SHARED in driver then it
+> failed on second design as GPIO does not offer to register as SHARED
+> interrupt.
+
+What makes you say that this would fail?
+
+--QHp3Wr1K3N9pKO2V
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWjQqPAAoJECTWi3JdVIfQMGcH/2vo/GLOKWqOwfZejECnEvbY
+UCc9V/0XXfqHvJwIC1TjsIs4YAWN+jTI+I39bSdb+tR6BhsB+xYdUu3QDTyUrr4I
+TLyCQ1840Fj9c03G0+wTrOcU7oAOX8dTSJGNo7X/9+2qd2yy7ilxDEh2fSLhPLYn
+okL+itQ3kUkCfLSk9EwVeMvdRb2pjosG9UoV4GURepulKxGSOLVP7AEyBNCQKX28
+bZ64rosBjE9uOXGCpj2KGQA+Ru7DYDuCmO6KjQ9BXw0R7xkUspAa/9JE0sxApv+h
+qBel6lGiNgrr7JwqV6V5tWZ5X8HXlDHE17FTHUrOQ/lmK53dZpY06m/+jQUUXbA=
+=9ewV
+-----END PGP SIGNATURE-----
+
+--QHp3Wr1K3N9pKO2V--
