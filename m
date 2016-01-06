@@ -1,77 +1,93 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 1/2] phy: ti-pipe3: get tx and rx MEM resource
-Date: Wed, 6 Jan 2016 16:29:07 +0530
-Message-ID: <1452077948-26232-2-git-send-email-kishon@ti.com>
-References: <1452077948-26232-1-git-send-email-kishon@ti.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 07/10] [media] tvp5150: Add device tree binding document
+Date: Wed, 06 Jan 2016 12:39:25 +0200
+Message-ID: <2787681.imkQ5NT8Qm@avalon>
+References: <1451910332-23385-1-git-send-email-javier@osg.samsung.com> <1451910332-23385-8-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452077948-26232-1-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rogerq@ti.com, nsekhar@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1451910332-23385-8-git-send-email-javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Enrico Butera <ebutera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eduard Gavin <egavinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-get tx and rx MEM resource since this has to be used to configure
-for DRA72x to work in X2 mode.
+Hi Javier,
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
----
- drivers/phy/phy-ti-pipe3.c |   27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Thank you for the patch.
 
-diff --git a/drivers/phy/phy-ti-pipe3.c b/drivers/phy/phy-ti-pipe3.c
-index 0a477d2..7d83d2b 100644
---- a/drivers/phy/phy-ti-pipe3.c
-+++ b/drivers/phy/phy-ti-pipe3.c
-@@ -91,6 +91,8 @@ struct pipe3_dpll_map {
- 
- struct ti_pipe3 {
- 	void __iomem		*pll_ctrl_base;
-+	void __iomem		*phy_rx;
-+	void __iomem		*phy_tx;
- 	struct device		*dev;
- 	struct device		*control_dev;
- 	struct clk		*wkupclk;
-@@ -536,6 +538,27 @@ static int ti_pipe3_get_pll_base(struct ti_pipe3 *phy)
- 	return 0;
- }
- 
-+static int ti_pipe3_get_rx_tx_base(struct ti_pipe3 *phy)
-+{
-+	struct resource *res;
-+	struct device *dev = phy->dev;
-+	struct platform_device *pdev = to_platform_device(dev);
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+					   "phy_rx");
-+	phy->phy_rx = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(phy->phy_rx))
-+		return PTR_ERR(phy->phy_rx);
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+					   "phy_tx");
-+	phy->phy_tx = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(phy->phy_tx))
-+		return PTR_ERR(phy->phy_tx);
-+
-+	return 0;
-+}
-+
- static int ti_pipe3_probe(struct platform_device *pdev)
- {
- 	struct ti_pipe3 *phy;
-@@ -555,6 +578,10 @@ static int ti_pipe3_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	ret = ti_pipe3_get_rx_tx_base(phy);
-+	if (ret)
-+		return ret;
-+
- 	ret = ti_pipe3_get_sysctrl(phy);
- 	if (ret)
- 		return ret;
+On Monday 04 January 2016 09:25:29 Javier Martinez Canillas wrote:
+> Add a Device Tree binding document for the TVP5150 video decoder.
+> 
+> Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+> ---
+> 
+>  .../devicetree/bindings/media/i2c/tvp5150.txt      | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+> b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt new file mode
+> 100644
+> index 000000000000..bf0b3f3128ce
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+> @@ -0,0 +1,35 @@
+> +* Texas Instruments TVP5150 and TVP5151 video decoders
+> +
+> +The TVP5150 and TVP5151 are video decoders that convert baseband NTSC and
+> PAL
+> +(and also SECAM in the TVP5151 case) video signals to either 8-bit 4:2:2
+> YUV
+> +with discrete syncs or 8-bit ITU-R BT.656 with embedded syncs output
+> formats.
+> +
+> +Required Properties:
+> +- compatible: value must be "ti,tvp5150"
+> +- reg: I2C slave address
+> +
+> +Optional Properties:
+> +- powerdown-gpios: phandle for the GPIO connected to the PDN pin, if any.
+
+The signal is called PDN in the datasheet, so it might make sense to call this 
+pdn-gpios. I have no strong opinion on this, I'll let you decide what you 
+think is best.
+
+Apart from that (and the indentation issue pointed out by Rob),
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+
+> +- reset-gpios: phandle for the GPIO connected to the RESETB pin, if any.
+> +
+> +The device node must contain one 'port' child node for its digital output
+> +video port, in accordance with the video interface bindings defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Example:
+> +
+> +&i2c2 {
+> +	...
+> +	tvp5150@5c {
+> +			compatible = "ti,tvp5150";
+> +			reg = <0x5c>;
+> +			powerdown-gpios = <&gpio4 30 GPIO_ACTIVE_LOW>;
+> +			reset-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
+> +
+> +			port {
+> +				tvp5150_1: endpoint {
+> +					remote-endpoint = <&ccdc_ep>;
+> +				};
+> +			};
+> +	};
+> +};
+
 -- 
-1.7.9.5
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
