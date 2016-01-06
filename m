@@ -1,122 +1,95 @@
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Subject: Re: [PATCH v2 1/2] ARM: dts: imx6: Add support for Toradex Apalis
- iMX6Q/D SoM
-Date: Wed, 6 Jan 2016 09:15:18 +0000
-Message-ID: <1452071716.30372.61.camel@toradex.com>
-References: <1452011942-11940-1-git-send-email-marcel.ziswiler@toradex.com>
- <1452011942-11940-2-git-send-email-marcel.ziswiler@toradex.com>
- <20160106080358.GD9030@ibawizard.net>
+From: Rameshwar Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH] dmaengine: xgene-dma: Fix double IRQ issue by setting
+ IRQ_DISABLE_UNLAZY flag
+Date: Wed, 6 Jan 2016 14:51:07 +0530
+Message-ID: <CAFd313xhh_4OFP6W2yuApM8ppYMX20DUCCQHJ9YEtCMbzr6Hgg@mail.gmail.com>
+References: <1450875495-2229-1-git-send-email-rsahu@apm.com>
+	<20160106091323.GP2940@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160106080358.GD9030@ibawizard.net>
-Content-Language: en-US
-Content-ID: <879E344D5F3ED74282E933D6CCD4D359@eurprd05.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "ynezz@true.cz" <ynezz@true.cz>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "stillcompiling@gmail.com" <stillcompiling@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "galak@codeaurora.org" <galak@codeaurora.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160106091323.GP2940@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Kaustubh Gondkar <kgondkar-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGV0cg0KDQpPbiBXZWQsIDIwMTYtMDEtMDYgYXQgMDk6MDMgKzAxMDAsIFBldHIgxaB0ZXRp
-YXIgd3JvdGU6DQo+IE1hcmNlbCBaaXN3aWxlciA8bWFyY2VsLnppc3dpbGVyQHRvcmFkZXguY29t
-PiBbMjAxNi0wMS0wNSAxNzozOTowMV06DQo+IA0KPiBIaSBNYXJjZWwsDQo+IA0KPiB0aGFua3Mg
-Zm9yIHRha2luZyBjYXJlIG9mIHRoaXMsIEknbSBxdWl0ZSBidXN5IHdpdGggb3RoZXIgdGFza3Mg
-OigNCg0KWW91J3JlIHdlbGNvbWUuIEkga25vdyB0aGF0IGZlZWxpbmcuDQoNCj4gPiAtIGludGVn
-cmF0ZWQgcmV2aWV3IGZlZWRiYWNrIGZyb20gTHVjYXMNCj4gDQo+IFlvdSd2ZSBwcm9iYWJseSBt
-aXNzZWQgZmV3IG9mIHRoZW0gOikgU2VlIG15IG5pdHBpY2tzIGJlbGxvdy4NCg0KSSBkb24ndCB0
-aGluayBzbyBidXQgd2UgZG9uJ3QgbmVjZXNzYXJpbHkgYWdyZWUgd2l0aCBhbGwgb2YgTHVjYXMn
-DQpmaW5kaW5ncyBwbHVzIHRoZSBkaXNjdXNzaW9uIGFib3V0IHNvbWUgb2YgdGhlIHN0dWZmIGhh
-c24ndCByZWFsbHkNCmNvbmNsdWRlZC4NCg0KPiA+IC0gbGVmdCBhbmQgZXZlbiBhZGRlZCBzb21l
-IG1vcmUgY29tbWVudHMgYXMgSSBkb24ndCBzZWUgd2h5IHB1dHRpbmcNCj4gPiBhbnkNCj4gPiDC
-oCBleHBsYW5hdG9yeSBjb21tZW50cyBpbiBkdHMnIHNob3VsZCBiZSBzdWNoIGEgYmFkIHRoaW5n
-IHRvIGRvDQoNCj4gWW91J3ZlIG1hcmtlZCB0aGlzIGFzIHYyDQoNCldlbGwsIGFzIFN0ZWZhbiBw
-b2ludGVkIG91dCB3ZSBhdCBUb3JhZGV4IGFyZS93ZXJlIHdvcmtpbmcgb24gdGhpcyBhcw0Kd2Vs
-bCBhbmQgd2UgZGlzY3Vzc2VkIHdoZXRoZXIgd2Ugc2hvdWxkIGp1c3QgaWdub3JlIHdoYXRldmVy
-IHlvdSBoYXZlDQpkb25lIG9yIG5vdCBkb25lIGFuZCBwb3N0IG91ciBvd24gc3R1ZmYgYnV0IGRl
-Y2lkZWQgdG8gcmF0aGVyIGpvaW4NCmVmZm9ydHMgbm93IGFzIHlvdSBhbHJlYWR5IGp1bXBlZCBh
-aGVhZC4NCg0KPiAgc28gSSB0aGluaywgdGhhdCB5b3Ugc2hvdWxkIG9ubHkgd29yayBvbiB0aGUN
-Cj4gZmVlZGJhY2suIElkZWFsbHkgeW91IHNob3VsZG4ndCBhZGQgYW55IG5ldyBzdHVmZiBpZiBp
-dCB3YXNuJ3QNCj4gcmVxdWVzdGVkDQo+IG90aGVyd2lzZSB5b3UncmUgd2FzdGluZyByZXZpZXdl
-ciB0aW1lLg0KDQpJIGRvbid0IHRoaW5rIHNvLiBXaGF0IGlzIGltcG9ydGFudCBpcyB0aGF0IGFu
-eSBjaGFuZ2VzIGFyZSBjbGVhcmx5DQpkZWNsYXJlZCB3aGljaCB3ZSBkaWQuDQoNCj4gPiAtIGNv
-bXBsZXRlbHkgZ290IHJpZCBvZiB0aGUgbWVtb3J5IG5vZGUgYXMgdGhhdCBpcyBzb21ldGhpbmcN
-Cj4gPiB0eXBpY2FsbHkgZmlsbGVkDQo+ID4gwqAgaW4gYnkgdGhlIGJvb3QgbG9hZGVyIGUuZy4g
-VS1Cb290DQo+IA0KPiBJZiBJJ20gbm90IG1pc3Rha2VuLCBpdCB3YXNuJ3QgcmVxdWVzdGVkIGJ5
-IHRoZSByZXZpZXdlci4NCg0KTHVjYXMgd2FzIGFjdHVhbGx5IG5pdHBpY2tpbmcgYWJvdXQgdGhl
-IGxvY2F0aW9uIHRoZXJlb2YgYW5kIHJhdGhlcg0KdGhhbiBtb3ZpbmcgaXQgd2UgZGVjaWRlZCB0
-byBqdXN0IGdldCByaWQgb2YgaXQgYXMgaXQgZG9lcyBub3Qgb25seSBub3QNCmFkZCBhbnkgdmFs
-dWUgYnV0IGlzIHNpbXBseSB3cm9uZyBvbiBtb3N0IG9mIHRoZSBtb2R1bGVzIGZlYXR1cmluZw0K
-ZGlmZmVyZW50IGFtb3VudCBvZiBtZW1vcnkuDQoNCj4gPiAtIHdpdGhvdXQgdGhlIHJlZ3VsYXRv
-cnMgc2ltcGxlLWJ1cyBpdCBubyBsb25nZXIgYm9vdHMNCj4gDQo+IEl0IHdvcmtzIGZvciBtZSBv
-biA0LjQuMC1yYzMgd2l0aCBmb2xsb3dpbmcgRFRTWzFdLiBCVFcsIHRoaXMgRFRTIGlzDQo+IG15
-DQo+IHByZXBhcmF0aW9uIGZvciB2MiBwYXRjaCBzZXJpZXMuDQoNCkkgb25seSB0cmllZCB3aXRo
-IC1uZXh0IHN0dWZmIHNvIGl0IG1pZ2h0IGJlIHNvbWV0aGluZyBpcyBqdXN0IGJyb2tlbg0KdGhl
-cmUgSSBndWVzcy4NCg0KPiA+IC0gZml4ZWQgRXRoZXJuZXQgUEhZIHJlc2V0ICYgaW50ZXJydXB0
-IChyZXF1aXJlcyBNaWNyZWwgUEhZIGRyaXZlcg0KPiA+IHRvIGJlDQo+ID4gwqAgZW5hYmxlZCkN
-Cj4gDQo+IEdyZWF0IQ0KDQpZZWFoLCB0aGF0IG9uZSB0b29rIHVzIGEgZGF5IHRvIGZpZ3VyZSBp
-dCBhbGwgb3V0LiBBdCB0aGUgZW5kIHdlDQphY3R1YWxseSBzdHVtYmxlZCBvdmVyIHlvdXIgUENJ
-ZSByZXNldCBwYXRjaCBpbnZlcnRpbmcgdGhlIG1lYW5pbmcgb2YNCmFjdGl2ZS1sb3cgdnMuIGFj
-dGl2ZS1oaWdoICg7LXApLg0KDQo+ID4gKyAqIFRoaXMgZmlsZSBpcyBkdWFsLWxpY2Vuc2VkOiB5
-b3UgY2FuIHVzZSBpdCBlaXRoZXIgdW5kZXIgdGhlDQo+ID4gdGVybXMNCj4gPiArICogb2YgdGhl
-IEdQTCBvciB0aGUgWDExIGxpY2Vuc2UsIGF0IHlvdXIgb3B0aW9uLiBOb3RlIHRoYXQgdGhpcw0K
-PiA+IGR1YWwNCj4gPiArICogbGljZW5zaW5nIG9ubHkgYXBwbGllcyB0byB0aGlzIGZpbGUsIGFu
-ZCBub3QgdGhpcyBwcm9qZWN0IGFzIGENCj4gPiArICogd2hvbGUuDQo+IA0KPiBIb3BlIHlvdSd2
-ZSBzb21lIGtpbmQgb2YgQUNLIGZyb20gRlNMIGFuZCBMaW5hcm8gOikNCg0KV2VsbCwgYWxsIG5l
-dyBEVFMnIGFyZSBub3cgZHVhbC1saWNlbnNlZCBpbmNsdWRpbmcgc2V2ZXJhbCBpLk1YIDYNCnJl
-bGF0ZWQgb25lcyBzbyB3ZSBhcmUgbm90IGRvaW5nIGFueXRoaW5nIHNwZWNpYWwgdGhlcmUgcmVh
-bGx5Lg0KDQo+ID4gKwkJcmVnX3VzYl9vdGdfdmJ1czogdXNiX290Z192YnVzIHsNCj4gPiArCQkJ
-Y29tcGF0aWJsZSA9ICJyZWd1bGF0b3ItZml4ZWQiOw0KPiA+ICsJCQlwaW5jdHJsLW5hbWVzID0g
-ImRlZmF1bHQiOw0KPiA+ICsJCQlwaW5jdHJsLTAgPQ0KPiA+IDwmcGluY3RybF9yZWd1bGF0b3Jf
-dXNib3RnX3B3cj47DQo+ID4gKwkJCXJlZ3VsYXRvci1uYW1lID0gInVzYl9vdGdfdmJ1cyI7DQo+
-ID4gKwkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDUwMDAwMDA+Ow0KPiA+ICsJCQlyZWd1
-bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDw1MDAwMDAwPjsNCj4gPiArCQkJZ3BpbyA9IDwmZ3BpbzMg
-MjIgR1BJT19BQ1RJVkVfSElHSD47DQo+ID4gKwkJCWVuYWJsZS1hY3RpdmUtaGlnaDsNCj4gPiAr
-CQkJc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPiArCQl9Ow0KPiANCj4gSSdtIG5vdCBzdXJlLCBi
-dXQgaXQgc2VlbXMgdG8gbWUsIHRoYXQgd2Ugc2hvdWxkIG1vdmUgdGhpcyByZWd1bGF0b3INCj4g
-aW50byB0aGUNCj4gY2FycmllciBib2FyZCBEVFMuIE9uIG91ciBjdXN0b20gY2FycmllciBib2Fy
-ZCB3ZSd2ZSB0aGlzIHJlZ3VsYXRvcg0KPiBhbHdheXMgb24NCj4gYW5kIHdlIHVzZSB0aGlzIEdQ
-SU8gZm9yIGhlYXJ0YmVhdCBMRUQsIHNvIEkndmUgdGhpcyBpbiBvdXIgY2Fycmllcg0KPiBib2Fy
-ZA0KPiBEVFNbMl06DQoNClllcywgeW91IGFyZSBhYnNvbHV0ZWx5IHJpZ2h0IGFuZCBlLmcuIG9u
-IEFwYWxpcyBUMzAgWzFdIHRoYXQgaXMNCmV4YWN0bHkgaG93IHdlIGRpZCBpdC4NCg0KPiAJcmVn
-X3VzYl9vdGdfdmJ1czogdXNiX290Z192YnVzIHsNCj4gCQkvKiBSZWd1bGF0b3IgaXMgYWx3YXlz
-IG9uLCBhbmQgd2UgdXNlIEdQSU8gZm9yDQo+IGhlYXJ0YmVhdCBMRUQgKi8NCj4gCQlwaW5jdHJs
-LTAgPSA8PjsNCj4gCQlncGlvID0gPD47DQo+IA0KPiAJCWNvbXBhdGlibGUgPSAicmVndWxhdG9y
-LWZpeGVkIjsNCj4gCQlyZWd1bGF0b3ItbmFtZSA9ICJ1c2Jfb3RnX3ZidXMiOw0KPiAJCXJlZ3Vs
-YXRvci1taW4tbWljcm92b2x0ID0gPDUwMDAwMDA+Ow0KPiAJCXJlZ3VsYXRvci1tYXgtbWljcm92
-b2x0ID0gPDUwMDAwMDA+Ow0KPiAJCXJlZ3VsYXRvci1hbHdheXMtb247DQo+IAl9Ow0KPiANCj4g
-CS4uLg0KPiANCj4gCXVzYm90ZyB7DQo+IAkJLyogR1BJTzNfSU8yMiBpcyBIZWFydGJlYXQgTEVE
-ICovDQo+IAkJcGluY3RybF9yZWd1bGF0b3JfdXNib3RnX3B3cjogZ3Bpb19yZWd1bGF0b3JfdXNi
-b3RnX3B3cg0KPiB7DQo+IAkJfTsNCj4gCX07DQo+IA0KPiA+ICsvKiBQQUQgQ3RybCB2YWx1ZXMg
-Zm9yIGNvbW1vbiBzZXR0aW5ncyAqLw0KPiA+ICsvKg0KPiA+ICsgKiAoUEFEX0NUTF9IWVMgfCBQ
-QURfQ1RMX1BVU18xMDBLX1VQIHwgUEFEX0NUTF9QVUUgfCBQQURfQ1RMX1BLRQ0KPiA+IHwNCj4g
-PiArICrCoMKgUEFEX0NUTF9TUEVFRF9NRUQgfCBQQURfQ1RMX0RTRV80MG9obSkNCj4gPiArICov
-DQo+ID4gKyNkZWZpbmUgUEFEX0NUUkxfSFlTX1BVIDB4MWIwYjANCj4gDQo+IFRoaXMgd2FzIHJl
-cXVlc3RlZCB0byBiZSByZXdvcmtlZC4gSSd2ZSBzaW1wbHkgcmVwbGFjZWQgYWxsIHRoZQ0KPiBt
-YWNyb3Mgd2l0aA0KPiBoZXggdmFsdWVzLg0KDQpJIGRvbid0IHRoaW5rIHRoZSByZXZpZXdlcnMg
-cmVhbGx5IGNvbmNsdWRlZCBvbiB0aGUgYWN0aW9uIHRvIGJlIHRha2VuDQpvbiBoZXJlIGFuZCBq
-dXN0IHVzaW5nIGhleCB2YWx1ZXMgaXMgcHJvYmFibHkgdGhlIG1vc3Qgc3R1cGlkIHNvbHV0aW9u
-Lg0KDQo+ID4gKwkJcGluY3RybF91c2RoYzNfMTAwbWh6OiB1c2RoYzNncnAtMTAwbWh6IHsgLyoN
-Cj4gPiAxMDBNaHogKi8NCj4gPiArCQkJZnNsLHBpbnMgPSA8DQo+ID4gKwkJCQlNWDZRRExfUEFE
-X1NEM19DTURfX1NEM19DTUQNCj4gPiAweDE3MEI5DQo+IA0KPiBBcyBwZXIgcmV2aWV3IGNvbW1l
-bnRzLCBhbGwgaGV4IHZhbHVlcyBzaG91bGQgYmUgbG93ZXJjYXNlLg0KDQpZZXMsIHdlIHByb2Jh
-Ymx5IG1pc3NlZCB0aGF0IG9uZS4NCg0KPiAxLiBodHRwczovL2dpdGh1Yi5jb20veW5lenovbGlu
-dXgtMi42L2Jsb2IvYjI3ZGU0NmU2NzYwNWZlMWE4ZTM4NmIwNjUNCj4gODQ1YTk3MDhlOGU3OTIv
-YXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC1hcGFsaXMuZHRzaQ0KPiAyLiBodHRwczovL2dpdGh1
-Yi5jb20veW5lenovbGludXgtMi42L2Jsb2IvZWM2NzhlMzczNGQ5ZmZmMzVmN2JhOTYwNTQNCj4g
-NjlhNjhhM2U0MjQwMjAvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC1hcGFsaXMtZ2FiZW4tDQo+
-IGZsZXhpc2JjLmR0c2kjTDE0Mw0KPiANCj4gVGhhbmtzIQ0KDQpUaGFuayB5b3UuDQoNCj4gLS0g
-eW5lenoNCg0KDQpbMV0gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9jZ2l0L2xpbnV4L2tlcm5lbC9n
-aXQvdG9ydmFsZHMvbGludXguZ2l0L3RyZWUvYXJjaC9hcm0vYm9vdC9kdHMvdGVncmEzMC1hcGFs
-aXMtZXZhbC5kdHMjbjIzNQ0KDQpDaGVlcnMNCg0KTWFyY2VsDQpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
-dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Vinod,
+
+On Wed, Jan 6, 2016 at 2:43 PM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Dec 23, 2015 at 06:28:15PM +0530, Rameshswar Prasad Sahu wrote:
+>> From: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+>>
+>> For interrupt controller that doesn't support irq_disable and hardware
+>> with level interrupt, an extra interrupt can be pending. This patch fixes
+>> the issue by setting IRQ_DISABLE_UNLAZY flag for the interrupt line.
+>>
+>> Reference: http://git.kernel.org/tip/e9849777d0e27cdd2902805be51da73e7c79578c
+>
+> I seem to have got this patch thrice :(
+Due to mail failure (some issue was in my email client) to some
+email-id it was multiple times,
+>
+>>
+>> Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+>> ---
+>>  drivers/dma/xgene-dma.c |    4 ++++
+>>  1 files changed, 4 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
+>> index 9dfa2b0..6363e84 100644
+>> --- a/drivers/dma/xgene-dma.c
+>> +++ b/drivers/dma/xgene-dma.c
+>> @@ -29,6 +29,7 @@
+>>  #include <linux/dmapool.h>
+>>  #include <linux/interrupt.h>
+>>  #include <linux/io.h>
+>> +#include <linux/irq.h>
+>>  #include <linux/module.h>
+>>  #include <linux/of_device.h>
+>>
+>> @@ -1610,6 +1611,7 @@ static int xgene_dma_request_irqs(struct xgene_dma *pdma)
+>>       /* Register DMA channel rx irq */
+>>       for (i = 0; i < XGENE_DMA_MAX_CHANNEL; i++) {
+>>               chan = &pdma->chan[i];
+>> +             irq_set_status_flags(chan->rx_irq, IRQ_DISABLE_UNLAZY);
+>
+> Why not use irq_settings_disable_unlazy(), at least read the reference you
+> pointed out!
+
+irq_settings_disable_unlazy() is helper function to test
+IRQ_DISABLE_UNLAZY flag is set or not, it's not for setting this flag.
+FYI...
++static inline bool irq_settings_disable_unlazy(struct irq_desc *desc)
++{
++ return desc->status_use_accessors & _IRQ_DISABLE_UNLAZY;
++}
+>
+>>               ret = devm_request_irq(chan->dev, chan->rx_irq,
+>>                                      xgene_dma_chan_ring_isr,
+>>                                      0, chan->name, chan);
+>> @@ -1620,6 +1622,7 @@ static int xgene_dma_request_irqs(struct xgene_dma *pdma)
+>>
+>>                       for (j = 0; j < i; j++) {
+>>                               chan = &pdma->chan[i];
+>> +                             irq_clear_status_flags(chan->rx_irq, IRQ_DISABLE_UNLAZY);
+>>                               devm_free_irq(chan->dev, chan->rx_irq, chan);
+>>                       }
+>>
+>> @@ -1640,6 +1643,7 @@ static void xgene_dma_free_irqs(struct xgene_dma *pdma)
+>>
+>>       for (i = 0; i < XGENE_DMA_MAX_CHANNEL; i++) {
+>>               chan = &pdma->chan[i];
+>> +             irq_clear_status_flags(chan->rx_irq, IRQ_DISABLE_UNLAZY);
+>>               devm_free_irq(chan->dev, chan->rx_irq, chan);
+>>       }
+>>  }
+>> --
+>> 1.7.1
+>
+> --
+> ~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
