@@ -1,42 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/1] regulator: max8973: add support for junction thermal
- warning
-Date: Wed, 6 Jan 2016 08:25:21 -0600
-Message-ID: <20160106142521.GA11188@rob-hp-laptop>
-References: <1452060922-24426-1-git-send-email-ldewangan@nvidia.com>
- <20160106121857.GW6588@sirena.org.uk>
- <568D064A.8080609@nvidia.com>
- <20160106123735.GX6588@sirena.org.uk>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [RFC v2 1/4] of: make of_mutex public
+Date: Wed, 6 Jan 2016 15:26:28 +0100
+Message-ID: <CAMuHMdXBPV09UMRLWuFWA0x7OxPT=DCAH8VsCGoa1+bgvoNK_g@mail.gmail.com>
+References: <1452088285-6427-1-git-send-email-wsa@the-dreams.de>
+	<1452088285-6427-2-git-send-email-wsa@the-dreams.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160106123735.GX6588@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1452088285-6427-2-git-send-email-wsa@the-dreams.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Linux I2C <linux-i2c@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Jan Luebbe <jlu@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 06, 2016 at 12:37:35PM +0000, Mark Brown wrote:
-> On Wed, Jan 06, 2016 at 05:49:22PM +0530, Laxman Dewangan wrote:
-> > On Wednesday 06 January 2016 05:48 PM, Mark Brown wrote:
-> > >* PGP Signed by an unknown key
-> 
-> > >On Wed, Jan 06, 2016 at 11:45:22AM +0530, Laxman Dewangan wrote:
-> 
-> > >>  Enhanced transient response (ETR) will affect the configuration of CKADV.
-> > >>+-maxim,junction-temp-warning: Junction temp warning on which device generates
-> > >>+		warning interrupts.
-> > >This needs to specify what the values are - it looks like it's raw
-> > >register values but I'd have expected from this that it'd be an actual
-> > >temperature.
-> 
-> > I tried to roundoff to the next higher threshold when supported value (120
-> > or 140 degC) is not provided in driver. But it is fine to me to specify the
-> > possible value setting here and DT binding doc. Will do on next patch.
-> 
-> I don't really mind which you use so long as the documentation is clear.
+Hi Wolfram,
 
-I prefer that degrees are used rather than register values.
+On Wed, Jan 6, 2016 at 2:51 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
+> From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>
+> If we want to use OF_DYNAMIC features outside the of framework, we need
+> to access this lock.
 
-Rob
+As I2C_DEMUX_PINCTRL is tristate, you want to add an EXPORT_SYMBOL_GPL(), too.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
