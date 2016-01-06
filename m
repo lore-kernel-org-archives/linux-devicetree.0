@@ -1,42 +1,133 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6] pstore/ram: Add ramoops support for the Flattened
- Device Tree.
-Date: Tue, 5 Jan 2016 19:42:23 -0600
-Message-ID: <CAL_JsqJN0hxR2_KX4WjV7tEkHtChp+06mN3h63QnGiG0mOxpLA@mail.gmail.com>
-References: <1347042576-17675-1-git-send-email-bfreed@chromium.org>
- <20120908052907.GA4724@lizard> <20120917062302.GA768@lizard>
- <CAL_JsqK_L9nN6+oxUQzNwFjbFf3+3NroeEwzbMdPS4T6=Mnemg@mail.gmail.com>
- <20130407174313.GA7168@lizard> <CAEYUcX0rQKDGD3_pbc7JnDO6WJ_QMd8AWW+X1giNVL313wODyA@mail.gmail.com>
- <20130414142441.GA3619@teo> <CAGXu5jJVmz+tZWEAqEezPDEA7i4Tcp7OfZtux9rs0bpQCCxDfw@mail.gmail.com>
- <CAGXu5jKpfN5VycKgGJhxC1DuRkC8D1D2putTGz4MaB9MLpaiNg@mail.gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 2/4] clk: arizona: Add clock driver for the Arizona
+ devices
+Date: Tue, 5 Jan 2016 17:45:04 -0800
+Message-ID: <20160106014504.GE22188@codeaurora.org>
+References: <1452008502-3749-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1452008502-3749-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGXu5jKpfN5VycKgGJhxC1DuRkC8D1D2putTGz4MaB9MLpaiNg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Bryan Freed <bfreed-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Tony Luck <tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Marco Stornelli <marco.stornelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1452008502-3749-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: mturquette@baylibre.com, cw00.choi@samsung.com, lee.jones@linaro.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-+Greg H
+On 01/05, Charles Keepax wrote:
+> Add an initial clock driver for the Arizona series audio CODECs.
+> Currently this driver only provides support for parsing the two input
+> clocks (mclk1, mclk2) and providing the internally consumed 32k clock.
+> 
+> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 
-On Tue, Jan 5, 2016 at 7:06 PM, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> [fixing devicetree mailing list]
->
-> On Tue, Jan 5, 2016 at 5:04 PM, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->> [thread necromancy, if you don't have the thread locally, it's here:
->> https://patchwork.kernel.org/patch/1426261/]
->>
->> We still need to solve this, and John pinged me about it today. Where
->> does this stand?
+Can this go through clk-tree without the other three patches and
+nothing breaks?
 
-Wrong thread here as the latest version is "[PATCH v2] pstore-ram: add
-Device Tree bindings" recently posted by Greg H (and reviewed by you).
-I am mostly happy with it and only had a minor comment remaining. I
-was expecting to see a v3.
+> diff --git a/drivers/clk/clk-arizona.c b/drivers/clk/clk-arizona.c
+> new file mode 100644
+> index 0000000..1ab69ee
+> --- /dev/null
+> +++ b/drivers/clk/clk-arizona.c
+> @@ -0,0 +1,192 @@
+> +
+> +static int arizona_32k_enable(struct clk_hw *hw)
+> +{
+> +	struct arizona_clk *clkdata = clk32k_to_arizona_clk(hw);
+> +	struct arizona *arizona = clkdata->arizona;
+> +	int ret;
+> +
+> +	switch (arizona->pdata.clk32k_src) {
+> +	case ARIZONA_32KZ_MCLK1:
+> +		ret = pm_runtime_get_sync(arizona->dev);
+> +		if (ret != 0)
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+typically we write this as
+
+	if (ret)
+
+
+> +			goto out;
+> +		break;
+> +	}
+> +
+> +	ret = regmap_update_bits_async(arizona->regmap, ARIZONA_CLOCK_32K_1,
+> +				       ARIZONA_CLK_32K_ENA,
+> +				       ARIZONA_CLK_32K_ENA);
+> +
+> +out:
+> +	return ret;
+> +}
+> +
+> +static int arizona_clk_of_get_pdata(struct arizona *arizona)
+> +{
+> +	const char * const pins[] = { "mclk1", "mclk2" };
+> +	struct clk *mclk;
+> +	int i;
+> +
+> +	if (!of_property_read_bool(arizona->dev->of_node, "clocks"))
+> +		return 0;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(pins); ++i) {
+> +		mclk = of_clk_get_by_name(arizona->dev->of_node, pins[i]);
+> +		if (IS_ERR(mclk))
+> +			return PTR_ERR(mclk);
+> +
+> +		if (clk_get_rate(mclk) == CLK32K_RATE) {
+> +			arizona->pdata.clk32k_src = ARIZONA_32KZ_MCLK1 + i;
+> +			arizona->pdata.clk32k_parent = __clk_get_name(mclk);
+> +		}
+> +
+> +		clk_put(mclk);
+
+Is this configuring some mux for the 32kHz source? Perhaps this
+can be done with assigned clock parents and a set_parent clk_op
+instead of with of_clk_get_by_name() in a loop over the possible
+parents?
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int arizona_clk_probe(struct platform_device *pdev)
+> +{
+[..]
+> +
+> +	if (arizona->pdata.clk32k_parent) {
+> +		clk32k_init.num_parents = 1;
+> +		clk32k_init.parent_names = &arizona->pdata.clk32k_parent;
+> +	} else {
+> +		clk32k_init.flags |= CLK_IS_ROOT;
+> +	}
+> +
+> +	clkdata->clk32k_hw.init = &clk32k_init;
+> +	clkdata->clk32k = devm_clk_register(&pdev->dev, &clkdata->clk32k_hw);
+> +	if (IS_ERR(clkdata->clk32k)) {
+> +		ret = PTR_ERR(clkdata->clk32k);
+> +		dev_err(arizona->dev, "Failed to register 32k clock: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_register_clkdev(clkdata->clk32k, "arizona-32k",
+> +				  dev_name(arizona->dev));
+
+Any reason we register with clkdev but don't register an of clk
+provider?
+
+> +	if (ret) {
+> +		dev_err(arizona->dev, "Failed to register 32k clock dev: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, clkdata);
+> +
+> +	return 0;
+> +}
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
