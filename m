@@ -1,53 +1,72 @@
-From: Mark yao <mark.yao@rock-chips.com>
-Subject: Re: [PATCH v7 0/5] Add mipi dsi support for rk3288
-Date: Wed, 06 Jan 2016 16:39:24 +0800
-Message-ID: <568CD2BC.7080800@rock-chips.com>
-References: <1452053038-32098-1-git-send-email-zyw@rock-chips.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] DT: i2c: Update vendor prefix for 24c00
+Date: Wed, 6 Jan 2016 09:55:54 +0100
+Message-ID: <20160106085554.GG1525@katana>
+References: <1450898335-22814-1-git-send-email-akshay.bhat@timesys.com>
+ <CAHp75VfvLJu+aL233izR3jh7UQg7ewEmS2Z3EhAg2WPZ9s1gyg@mail.gmail.com>
+ <20160102212143.GG1589@katana>
+ <CAHp75VcCEpf1XJgRXym4T78VGa=PS3GuzLAfyDbRWd8CvN=jQg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1452053038-32098-1-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chris Zhong <zyw@rock-chips.com>, heiko@sntech.de, linux-rockchip@lists.infradead.org, treding@nvidia.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="yQbNiKLmgenwUfTN"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcCEpf1XJgRXym4T78VGa=PS3GuzLAfyDbRWd8CvN=jQg@mail.gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Akshay Bhat <akshay.bhat@timesys.com>, ktsai@capellamicro.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jiri Kosina <trivial@kernel.org>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, justin.waters@timesys.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxNuW5tDAx5pyIMDbml6UgMTI6MDMsIENocmlzIFpob25nIHdyb3RlOgo+IFRoZSByazMy
-ODggTUlQSSBEU0kgaXMgYSBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgRFNJIGhvc3QgY29udHJv
-bGxlcgo+IElQLiBUaGlzIHNlcmllcyBhZGRzIHN1cHBvcnQgZm9yIGEgU3lub3BzeXMgRGVzaWdu
-V2FyZSBNSVBJIERTSSBob3N0Cj4gY29udHJvbGxlciBEUk0gZHJpdmVyLgo+Cj4gVGhlIE1JUEkg
-RFNJIGZlYXR1cmUgaXMgdGVzdGVkIG9uIHJrMzI4OCBldmIgYm9hcmQsIGJhY2twb3J0IHRoZW0g
-dG8KPiBjaHJvbWUgb3Mga2VybmVsIGNocm9tZV92My4xNCwgYW5kIGl0IGNhbiBkaXNwbGF5IG5v
-cm1hbGx5Lgo+Cj4gVGhpcyBwYXRjaHNldCBpcyBiYXNlIG9uIHRoZSBwYXRjaHNldCBmcm9tIFlp
-bmcubGl1QGZyZWVzY2FsZS5jb20uCj4gPGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvZHJp
-LWRldmVsL21zZzc3MTgxLmh0bWw+Cj4KPiBBY2NvcmRpbmcgdG8gdGhlIHN1Z2dlc3Rpb24gZnJv
-bSBUaGllcnJ5LCBJIGhhdmUgZ2V0IHJpZCBvZiB0aGUgYnJpZGdlLAo+IGFuZCByZWdpc3RlciB0
-aGUgZW5jb2RlciAmIGNvbm5lY3RlciBpbiBkcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYy4KPgo+
-IEFmdGVyIGJhY2twb3J0IGJlbG93IHBhdGNoZXMgZnJvbSBsaW51eC1uZXh0LCBJIGNhbiBtZXJn
-ZSB0aGlzIHNlcmlhbCBpbnRvCj4gRGF2ZSdzIGRybS1uZXh0IGJyYW5jaC4KPgo+IDk0ZDVkNmEw
-ZmJmMyBjbGs6IHJvY2tjaGlwOiBhZGQgYW4gaWQgZm9yIHJrMzI4OCBjcnlwdG8gY2xrCj4gYzZk
-NDlmYmNmY2M0IGNsazogcm9ja2NoaXA6IGFkZCBpZCBmb3IgbWlwaWRzaSBzY2xrIG9uIHJrMzI4
-OAo+IGEyZjRjNTYwZjE4ZSBjbGs6IHJvY2tjaGlwOiBhZGQgbWlwaWRzaSBjbG9jayBvbiByazMy
-ODgKPiA2OWM5MjM3NDM2NDAgQVJNOiBkdHM6IHJvY2tjaGlwOiBjb3JyZWN0IHRoZSBuYW1lIG9m
-IFJFRzggZm9yIHJrMzI4OC1ldmItYWN0ODg0Ngo+IDY2MjUxM2ExNGM5ZCBBUk06IGR0czogcm9j
-a2NoaXA6IGFkZCAyIHJlZ3VsYXRvcnMgZm9yIHJrMzI4OC1ldmItYWN0ODg0Ngo+IGIwNDA2MWU2
-NTk5YiBBUk06IGR0czogcm9ja2NoaXA6IG1vdmUgdGhlIHB1YmxpYyBwYXJ0IHRvIHJrMzI4OC1l
-dmIgY29tbW9uCj4KPgo+CkhpIENocmlzCgpJIGhhZCBwaWNrZWQgZm9sbG93aW5nIHRocmVlIHBh
-dGNoZXMgYW5kIHNlbmQgYSBwdWxsLXJlcXVlc3QgdG8gRGF2ZQogICAgICAgW1BBVENIIHY3IDEv
-NV0gZHJtL3JvY2tjaGlwOiByZXR1cm4gYSB0cnVlIGNsb2NrIHJhdGUgdG8gCmFkanVzdGVkX21v
-ZGUKICAgICAgIFtQQVRDSCB2NyAyLzVdIERvY3VtZW50YXRpb246IGR0LWJpbmRpbmdzOiBBZGQg
-YmluZGluZ3MgZm9yIApyazMyODggRFcgTUlQSSBEU0kgZHJpdmVyCiAgICAgICBbUEFUQ0ggdjcu
-MiAzLzVdIGRybTogcm9ja2NoaXA6IFN1cHBvcnQgU3lub3BzeXMgRFcgTUlQSSBEU0kKClRoYW5r
-cy4KCi0tIArvvK1hcmsgWWFvCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+
+--yQbNiKLmgenwUfTN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jan 04, 2016 at 08:22:33PM +0200, Andy Shevchenko wrote:
+> On Sat, Jan 2, 2016 at 11:21 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
+> > On Sun, Dec 27, 2015 at 04:57:48PM +0200, Andy Shevchenko wrote:
+> >> On Wed, Dec 23, 2015 at 9:18 PM, Akshay Bhat <akshay.bhat@timesys.com>=
+ wrote:
+> >> > "at" is not a valid vendor prefix, correcting the same to "atmel"
+> >> >
+> >>
+> >> I'm afraid you can't just do this change alone as it's used in some
+> >> DTS. Though you may deprecated it along with update of current users.
+> >
+> > Well, in Linux, I2C core currently strips the vendor anyhow. This will
+> > probably be changed somewhen (tm), but for now, the impact for Linux
+> > should be extremly close to 0.
+>=20
+> Okay, no objections to the original patch then.
+
+Heh, I just go reminded that eeproms already have a seperate binding
+description (Documentation/devicetree/bindings/eeprom/eeprom.txt).
+
+I will update the eeprom bindings and remove the entries from trivial
+devices.
+
+
+--yQbNiKLmgenwUfTN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWjNaaAAoJEBQN5MwUoCm2v0wQAKlNl/j4j1pRVDh4IeNYQyBN
+m62n7axcUiq4zEos+EJtOarN8I7K/X8NP3CPOK592ID+qOXVzOeR9HDfYX91KyIQ
+G/zh7aEjKukszAURVO8zazTVPKiU7C8JSR+YHhEuQ+ThFO5JsfYJ4j7Xen+Mz9Ej
+Zj3lDnBb+56Q5q5OvPs+bF29H+BiSSHNGb46gL1pHNL3wdpkSduq2IhZMOR66O+H
+3XeEEnoi1rJP3XXBEpgBzGG4UujyhpwBjyKalAHMsU36J+qS3oyBuFB1Tu/ew/iW
+9cV38LY6h1iN2++dvrxvCMmnAyYM1jJ+gg+KQUX36jWula7QNeohB7J3B27rLyJV
+Uh1/8deM9KnxPAeu3S7HXp9YWrmvG6R7zCEU7lXx9EUWVY/ER/pLS++6bOr5/bFt
+VPvho3/2AmOwFj8hnz7X9LrMRHCuxmTwsmxsACXuJcW6i+gauqAvwwqwde+0a/0Z
+TcjaD+hNnKkIqn/IhkWP8J2+AWT4cdFEOyuekvGPCRC+kQnNFIlwPqpaG4Y598eT
+GQX8doTo5m1O0y+UFkedvX61T3up1/Fq9XR+ydM6SiXRs+CSXis0SU/qWxcPFG3e
+Vks867LBwxOwevl0Xw0PEpfO/ueb6zB6GYkUSPPtTM47OJkV3+zaR0LQ7Fo9PTuk
+hwX/eCYi5upph4zjCes9
+=OmAA
+-----END PGP SIGNATURE-----
+
+--yQbNiKLmgenwUfTN--
