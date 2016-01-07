@@ -1,74 +1,59 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM64: tegra: Add support for Google Pixel C
-Date: Thu, 7 Jan 2016 18:00:56 +0000
-Message-ID: <568EA7D8.1060305@nvidia.com>
-References: <1452073222-2956-1-git-send-email-jonathanh@nvidia.com>
- <568D0D70.4020309@nvidia.com> <568E65F0.2070201@nvidia.com>
- <4442990.rM1mk43t6M@wuerfel> <568E9804.5020503@nvidia.com>
- <CAL_Jsq++DkgJA--40YBqGZd5BJFkzXfKt_st1kN+ZiVY7yb8OA@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/2] DRA72/DRA74: Add 2 lane support
+Date: Thu, 7 Jan 2016 10:13:20 -0800
+Message-ID: <20160107181320.GO12777@atomide.com>
+References: <1452077393-25880-1-git-send-email-kishon@ti.com>
+ <20160107174126.GB14105@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq++DkgJA--40YBqGZd5BJFkzXfKt_st1kN+ZiVY7yb8OA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160107174126.GB14105@localhost>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, Richard Cochran <richardcochran@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On 07/01/16 17:20, Rob Herring wrote:
-> On Thu, Jan 7, 2016 at 10:53 AM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->>
->> On 07/01/16 14:11, Arnd Bergmann wrote:
->>> On Thursday 07 January 2016 13:19:44 Jon Hunter wrote:
+* Bjorn Helgaas <helgaas@kernel.org> [160107 09:42]:
+> [+cc Richard]
 > 
-> [...]
+> Hi Kishon,
 > 
->> Ok so something like this ...
->>
->> diff --git a/drivers/tty/serial/8250/8250_early.c
->> b/drivers/tty/serial/8250/8250_early.c
->> index af62131af21e..4ce6e2b57534 100644
->> --- a/drivers/tty/serial/8250/8250_early.c
->> +++ b/drivers/tty/serial/8250/8250_early.c
->> @@ -141,7 +141,18 @@ int __init early_serial8250_setup(struct
->> earlycon_device *device,
->>         device->con->write = early_serial8250_write;
->>         return 0;
->>  }
->> +
->> +int __init early_serial8250_mem32_setup(struct earlycon_device *device,
->> +                                       const char *options)
->> +{
->> +       device->port.iotype = UPIO_MEM32;
->> +       device->port.regshift = 2;
->> +
->> +       return early_serial8250_setup(device, options);
->> +}
->>  EARLYCON_DECLARE(uart8250, early_serial8250_setup);
->>  EARLYCON_DECLARE(uart, early_serial8250_setup);
->>  OF_EARLYCON_DECLARE(ns16550, "ns16550", early_serial8250_setup);
->>  OF_EARLYCON_DECLARE(ns16550a, "ns16550a", early_serial8250_setup);
->> +OF_EARLYCON_DECLARE(tegra20_uart, "nvidia,tegra20-uart",
->> +                   early_serial8250_mem32_setup);
->>
->>> Would it be possible to handle the "reg-io-width" parsing in
->>> early_serial8250_setup instead of keying it off the string?
->>
->> Good point. I spent a bit of time looking at this, but I cannot see an
->> easy way to do this unless we check for "reg-io-width" and "reg-shift"
->> in early_init_dt_scan_chosen_serial() and pass to of_setup_earlycon(),
->> however, I am guessing that this would not be ideal as this would happen
->> for non-8250 devices. May be that would be ok, but I am not sure.
+> On Wed, Jan 06, 2016 at 04:19:51PM +0530, Kishon Vijay Abraham I wrote:
+> > Add driver modifications in pci-dra7xx to get x2 mode working in
+> > DRA72 and DRA74. Certain modifications is needed in PHY driver also
+> > which will be sent as a separate series.
+> > 
+> > Certain board modifications has to be done in order to test
+> > x2 mode in dra72-evm.
+> > 
+> > These patches were created on pci next.
+> > 
+> > Changes from RFC:
+> > *) .b1co_mode_sel_mask is now set with the correct value.
+> > *) cleanup the patch
+> > 
+> > Kishon Vijay Abraham I (2):
+> >   pci: host: pci-dra7xx: use "num-lanes" property to find phy count
+> >   pci: host: pci-dra7xx: Enable x2 mode support
+> > 
+> >  Documentation/devicetree/bindings/pci/ti-pci.txt |    8 +-
+> >  drivers/pci/host/pci-dra7xx.c                    |  104 +++++++++++++++++++---
+> >  2 files changed, 97 insertions(+), 15 deletions(-)
 > 
-> There's been one attempt[1] already. It had a few issues easily
-> solved, but I haven't seen a follow-up.
+> Apparently dra7xx in mainline doesn't work [1].  Until that's
+> resolved, I'm going to ignore dra7xx patches.
 
-Thanks. Adding Paul.
+Agreed. Guys, please do the development _and_ testing on the mainline
+kernel. We do have the mainline kernel usable for probably a few
+tens of omap SoC variants. If you have issues using dra7 with mainline,
+please fix those issues ASAP.
 
-Paul, are you planning a follow-up to your patch? Otherwise, I am happy
-to have crack at it. Don't we also need to read the "reg-shift"?
+Ideally of course please also use the device you're working on to
+send out the patches :)
 
-Cheers
-Jon
+Regards,
+
+Tony
+
+> [1] http://lkml.kernel.org/r/20160106214518.GA6106@localhost.localdomain
