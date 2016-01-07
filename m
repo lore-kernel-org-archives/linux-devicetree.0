@@ -1,108 +1,55 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: [PATCH v2 09/10] [media] tvp5150: Initialize the chip on probe
-Date: Thu,  7 Jan 2016 09:46:49 -0300
-Message-ID: <1452170810-32346-10-git-send-email-javier@osg.samsung.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH v2 08/10] [media] tvp5150: Add OF match table
+Date: Thu,  7 Jan 2016 09:46:48 -0300
+Message-ID: <1452170810-32346-9-git-send-email-javier@osg.samsung.com>
 References: <1452170810-32346-1-git-send-email-javier@osg.samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452170810-32346-1-git-send-email-javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Enrico Butera <ebutera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eduard Gavin <egavinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1452170810-32346-1-git-send-email-javier@osg.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Enrico Butera <ebutera@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Rob Herring <robh+dt@kernel.org>, Eduard Gavin <egavinc@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-After power-up, the tvp5150 decoder is in a unknown state until the
-RESETB pin is driven LOW which reset all the registers and restarts
-the chip's internal state machine.
+From: Eduard Gavin <egavinc@gmail.com>
 
-The init sequence has some timing constraints and the RESETB signal
-can only be used if the PDN (Power-down) pin is first released.
+The Documentation/devicetree/bindings/media/i2c/tvp5150.txt DT binding doc
+lists "ti,tvp5150" as the device compatible string but the driver does not
+have an OF match table. Add the table to the driver so the I2C core can do
+an OF style match.
 
-So, the initialization sequence is as follows:
-
-1- PDN (active-low) is driven HIGH so the chip is power-up
-2- A 20 ms delay is needed before sending a RESETB (active-low) signal.
-3- The RESETB pulse duration is 500 ns.
-4- A 200 us delay is needed for the I2C client to be active after reset.
-
-This patch used as a reference the logic in the IGEPv2 board file from
-the ISEE 2.6.37 vendor tree.
-
-Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Signed-off-by: Eduard Gavin <egavinc@gmail.com>
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
 ---
 
 Changes in v2:
-- Include missing linux/gpio/consumer.h header. Reported by kbuild test robot.
-- Keep the headers sorted alphabetically. Suggested by Laurent Pinchart.
-- Rename powerdown to pdn to match datasheet pin. Suggested by Laurent Pinchart.
+- Add Reviewed-by tag from Laurent Pinchart to patch 8/10.
 
- drivers/media/i2c/tvp5150.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ drivers/media/i2c/tvp5150.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index caac96a577f8..48df7615eb64 100644
+index 105bd1c6b17f..caac96a577f8 100644
 --- a/drivers/media/i2c/tvp5150.c
 +++ b/drivers/media/i2c/tvp5150.c
-@@ -9,6 +9,7 @@
- #include <linux/slab.h>
- #include <linux/videodev2.h>
- #include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/module.h>
- #include <media/v4l2-async.h>
- #include <media/v4l2-device.h>
-@@ -1197,6 +1198,36 @@ static int tvp5150_detect_version(struct tvp5150 *core)
- 	return 0;
- }
+@@ -1295,8 +1295,17 @@ static const struct i2c_device_id tvp5150_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, tvp5150_id);
  
-+static int tvp5150_init(struct i2c_client *c)
-+{
-+	struct gpio_desc *pdn_gpio;
-+	struct gpio_desc *reset_gpio;
++#if IS_ENABLED(CONFIG_OF)
++static const struct of_device_id tvp5150_of_match[] = {
++	{ .compatible = "ti,tvp5150", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, tvp5150_of_match);
++#endif
 +
-+	pdn_gpio = devm_gpiod_get_optional(&c->dev, "pdn", GPIOD_OUT_HIGH);
-+	if (IS_ERR(pdn_gpio))
-+		return PTR_ERR(pdn_gpio);
-+
-+	if (pdn_gpio) {
-+		gpiod_set_value_cansleep(pdn_gpio, 0);
-+		/* Delay time between power supplies active and reset */
-+		msleep(20);
-+	}
-+
-+	reset_gpio = devm_gpiod_get_optional(&c->dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(reset_gpio))
-+		return PTR_ERR(reset_gpio);
-+
-+	if (reset_gpio) {
-+		/* RESETB pulse duration */
-+		ndelay(500);
-+		gpiod_set_value_cansleep(reset_gpio, 0);
-+		/* Delay time between end of reset to I2C active */
-+		usleep_range(200, 250);
-+	}
-+
-+	return 0;
-+}
-+
- static int tvp5150_probe(struct i2c_client *c,
- 			 const struct i2c_device_id *id)
- {
-@@ -1209,6 +1240,10 @@ static int tvp5150_probe(struct i2c_client *c,
- 	     I2C_FUNC_SMBUS_READ_BYTE | I2C_FUNC_SMBUS_WRITE_BYTE_DATA))
- 		return -EIO;
- 
-+	res = tvp5150_init(c);
-+	if (res)
-+		return res;
-+
- 	core = devm_kzalloc(&c->dev, sizeof(*core), GFP_KERNEL);
- 	if (!core)
- 		return -ENOMEM;
+ static struct i2c_driver tvp5150_driver = {
+ 	.driver = {
++		.of_match_table = of_match_ptr(tvp5150_of_match),
+ 		.name	= "tvp5150",
+ 	},
+ 	.probe		= tvp5150_probe,
 -- 
 2.4.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
