@@ -1,138 +1,97 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH v2 03/10] [media] tvp5150: Add pad-level subdev operations
-Date: Thu,  7 Jan 2016 09:46:43 -0300
-Message-ID: <1452170810-32346-4-git-send-email-javier@osg.samsung.com>
-References: <1452170810-32346-1-git-send-email-javier@osg.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452170810-32346-1-git-send-email-javier@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Enrico Butera <ebutera@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Rob Herring <robh+dt@kernel.org>, Eduard Gavin <egavinc@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM64: tegra: Add support for Google Pixel C
+Date: Thu, 7 Jan 2016 13:19:44 +0000
+Message-ID: <568E65F0.2070201@nvidia.com>
+References: <1452073222-2956-1-git-send-email-jonathanh@nvidia.com>
+ <20160106094616.GA563@leverpostej> <568D0D70.4020309@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <568D0D70.4020309-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-This patch enables the tvp5150 decoder driver to be used with the media
-controller framework by adding pad-level subdev operations and init the
-media entity pad.
+On 06/01/16 12:49, Jon Hunter wrote: 
+> On 06/01/16 09:46, Mark Rutland wrote:
+>> Hi,
+>>
+>> On Wed, Jan 06, 2016 at 09:40:22AM +0000, Jon Hunter wrote:
+>>> Add initial device-tree support for Google Pixel C (a.k.a. Smaug) based
+>>> upon Tegra210 SoC with 3 GiB of LPDDR4 RAM.
+>>>
+>>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>  arch/arm64/boot/dts/nvidia/Makefile           |  1 +
+>>>  arch/arm64/boot/dts/nvidia/tegra210-smaug.dts | 42 +++++++++++++++++++++++++++
+>>>  2 files changed, 43 insertions(+)
+>>>  create mode 100644 arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+[snip]
+
+>>> +
+>>> +	chosen {
+>>> +		bootargs = "console=ttyS0,115200n8 earlycon=uart8250,mmio32,0x70006000";
+>>> +	};
+>>
+>> Use stdout-path.
+> 
+> Ok.
+
+Adding Arnd.
+
+Hmmm ... well apparently stdout-path does not work for tegra and in
+order to make this work I had to do the following ...
+
+
+[PATCH] serial: 8250: of: Add earlycon support for Tegra
+
+Currently, early console support only works for Tegra when the serial
+port information is passed via the earlycon boot parameter. If the
+serial port information is specified via device-tree using the
+"stdout-path" then the early console does not work because:
+
+1. The tegra serial ports compatibility parameter does not match any
+   of the supported serial drivers for early console.
+2. The of_setup_earlycon() function assumes that serial port registers
+   are byte aligned and for tegra they are 32-bit aligned.
+
+Add an early console setup function for tegra so that the early console
+can be specified via the device-tree "stdout-path" variable.
+
+Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
+ drivers/tty/serial/8250/8250_of.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Changes in v2: None
-
- drivers/media/i2c/tvp5150.c | 60 +++++++++++++++++++++++++++++++++------------
- 1 file changed, 45 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index b3b34e24db13..82fba9d46f30 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -35,6 +35,7 @@ MODULE_PARM_DESC(debug, "Debug level (0-2)");
- 
- struct tvp5150 {
- 	struct v4l2_subdev sd;
-+	struct media_pad pad;
- 	struct v4l2_ctrl_handler hdl;
- 	struct v4l2_rect rect;
- 
-@@ -818,17 +819,6 @@ static v4l2_std_id tvp5150_read_std(struct v4l2_subdev *sd)
- 	}
+diff --git a/drivers/tty/serial/8250/8250_of.c b/drivers/tty/serial/8250/8250_of.c
+index 33021c1f7d55..98adf83e83c2 100644
+--- a/drivers/tty/serial/8250/8250_of.c
++++ b/drivers/tty/serial/8250/8250_of.c
+@@ -44,6 +44,16 @@ void tegra_serial_handle_break(struct uart_port *p)
+ 		udelay(1);
+ 	} while (1);
  }
- 
--static int tvp5150_enum_mbus_code(struct v4l2_subdev *sd,
--		struct v4l2_subdev_pad_config *cfg,
--		struct v4l2_subdev_mbus_code_enum *code)
--{
--	if (code->pad || code->index)
--		return -EINVAL;
--
--	code->code = MEDIA_BUS_FMT_UYVY8_2X8;
--	return 0;
--}
--
- static int tvp5150_fill_fmt(struct v4l2_subdev *sd,
- 		struct v4l2_subdev_pad_config *cfg,
- 		struct v4l2_subdev_format *format)
-@@ -841,13 +831,11 @@ static int tvp5150_fill_fmt(struct v4l2_subdev *sd,
- 
- 	f = &format->format;
- 
--	tvp5150_reset(sd, 0);
--
- 	f->width = decoder->rect.width;
--	f->height = decoder->rect.height;
-+	f->height = decoder->rect.height / 2;
- 
- 	f->code = MEDIA_BUS_FMT_UYVY8_2X8;
--	f->field = V4L2_FIELD_SEQ_TB;
-+	f->field = V4L2_FIELD_ALTERNATE;
- 	f->colorspace = V4L2_COLORSPACE_SMPTE170M;
- 
- 	v4l2_dbg(1, debug, sd, "width = %d, height = %d\n", f->width,
-@@ -948,6 +936,39 @@ static int tvp5150_cropcap(struct v4l2_subdev *sd, struct v4l2_cropcap *a)
- 	return 0;
- }
- 
-+ /****************************************************************************
-+			V4L2 subdev pad ops
-+ ****************************************************************************/
 +
-+static int tvp5150_enum_mbus_code(struct v4l2_subdev *sd,
-+				  struct v4l2_subdev_pad_config *cfg,
-+				  struct v4l2_subdev_mbus_code_enum *code)
++int __init tegra_earlycon_setup(struct earlycon_device *device,
++				const char *options)
 +{
-+	if (code->index)
-+		return -EINVAL;
++	device->port.iotype = UPIO_MEM32;
++	device->port.regshift = 2;
 +
-+	code->code = MEDIA_BUS_FMT_UYVY8_2X8;
-+	return 0;
++	return early_serial8250_setup(device, options);
 +}
-+
-+static int tvp5150_enum_frame_size(struct v4l2_subdev *sd,
-+				   struct v4l2_subdev_pad_config *cfg,
-+				   struct v4l2_subdev_frame_size_enum *fse)
-+{
-+	struct tvp5150 *decoder = to_tvp5150(sd);
-+
-+	if (fse->index >= 8 || fse->code != MEDIA_BUS_FMT_UYVY8_2X8)
-+		return -EINVAL;
-+
-+	fse->code = MEDIA_BUS_FMT_UYVY8_2X8;
-+	fse->min_width = decoder->rect.width;
-+	fse->max_width = decoder->rect.width;
-+	fse->min_height = decoder->rect.height / 2;
-+	fse->max_height = decoder->rect.height / 2;
-+
-+	return 0;
-+}
-+
- /****************************************************************************
- 			I2C Command
-  ****************************************************************************/
-@@ -1088,6 +1109,7 @@ static const struct v4l2_subdev_vbi_ops tvp5150_vbi_ops = {
- 
- static const struct v4l2_subdev_pad_ops tvp5150_pad_ops = {
- 	.enum_mbus_code = tvp5150_enum_mbus_code,
-+	.enum_frame_size = tvp5150_enum_frame_size,
- 	.set_fmt = tvp5150_fill_fmt,
- 	.get_fmt = tvp5150_fill_fmt,
- };
-@@ -1165,6 +1187,14 @@ static int tvp5150_probe(struct i2c_client *c,
- 		return -ENOMEM;
- 	sd = &core->sd;
- 	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
-+	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-+
-+#if defined(CONFIG_MEDIA_CONTROLLER)
-+	core->pad.flags = MEDIA_PAD_FL_SOURCE;
-+	res = media_entity_pads_init(&sd->entity, 1, &core->pad);
-+	if (res < 0)
-+		return res;
-+#endif
- 
- 	res = tvp5150_detect_version(core);
- 	if (res < 0)
--- 
-2.4.3
++OF_EARLYCON_DECLARE(tegra20_uart, "nvidia,tegra20-uart", tegra_earlycon_setup);
+ #else
+ static inline void tegra_serial_handle_break(struct uart_port *port)
+ {
+
+
+Arnd, does the above look ok, or should there be a generic
+early_serial8250x32_setup() somewhere?
+
+Cheers
+Jon
