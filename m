@@ -1,89 +1,57 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm: dts: bcm5301x: Add syscon based reboot in DT
-Date: Thu, 07 Jan 2016 15:45:32 +0100
-Message-ID: <2695666.f4UPYAJLqz@wuerfel>
-References: <1450474676-10210-1-git-send-email-jonmason@broadcom.com> <2180042.V6T2Tnxp6B@wuerfel> <20160105222605.GL31867@broadcom.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH 0/6] Add support for MAXIM MAX77620/MAX20024 PMIC
+Date: Thu, 7 Jan 2016 20:08:38 +0530
+Message-ID: <1452177524-23192-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160105222605.GL31867-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com
+Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 05 January 2016 17:26:06 Jon Mason wrote:
-> On Fri, Dec 18, 2015 at 10:44:28PM +0100, Arnd Bergmann wrote:
-> > On Friday 18 December 2015 16:37:56 Jon Mason wrote:
-> > > +       cru: cru@1800c184 {
-> > > +               compatible = "syscon";
-> > > +               reg = <0x1800c184 0xc>;
-> > > +       };
-> > 
-> > It's unusual for a device to start at such an odd address. Are you sure
-> > it's not a larger device starting at 0x1800c000 or 0x18000000?
-> 
-> The CRU (Clock and Reset Unit) starts at 0x1800c100, with the
-> following layout:
-> 
-> CRU Clock Management at 0x1800c100-0x1800c180
-> CRU Reset at 0x1800c184
-> CRU Period Sample Clock at 0x1800c188
-> CRU Interrupt register at 0x1800c18c
-> CRU MDIO Control at 0x1800c190
-> CRU GPIO at 0x1800c1c0-0x1800c1e0
-> CRU SDIO 0x1800c200-0x1800c214
-> CRU RoboSW Interrupt at 0x1800c280
-> CRU Straps Control at 0x1800c2a0
-> 
-> The clock driver is already referencing the registers between
-> 0x1800c100-0x1800c180, and the GPIO driver is referencing registers
-> between 0x1800c1c0-0x1800c1e0.
-> 
-> The reset part of the syscon seems to be the only useful thing in this
-> block.  Am I approaching this incorrectly?
+Add SW support for MAXIM Semiconductor's Power Management
+IC (PMIC) MAX77620/MAX20024. This PMIC supports DC-DC/LDOS, GPIOs,
+RTC, watchdog, clocks etc.
 
-I think the problem is how the gpio controller has a device node
-that overlaps with one of the devices of the chip.
+This series add respective driver for each of sub-modules.
 
-If the data sheet lists a "Clock and Reset Unit" at those addresses,
-that is a strong indication that this is actually a specific
-piece of hardware, and it should be represented as one device node
-in DT, with the sub-registers being exposed by that driver in
-some way. A typical way would be to have a syscon node like
+Laxman Dewangan (6):
+  DT: mfd: add device-tree binding doc fro PMIC max77620/max20024
+  mfd: max77620: add core driver for MAX77620/MAX20024
+  pinctrl: max77620: add pincontrol driver for MAX77620/MAX20024
+  gpio: max77620: add gpio driver for MAX77620/MAX20024
+  rtc: max77620: add support for max77620/max20024 RTC driver
+  regulator: max77620: add regulator driver for max77620/max20024
 
-	cru: syscon@1800c100 {
-		compatible = "brcm,bcm53010-clock-reset-unit", "syscon";
-		reg = <0x1800c100 100>;
-	};
+ Documentation/devicetree/bindings/mfd/max77620.txt |  383 +++++++
+ drivers/gpio/Kconfig                               |    9 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-max77620.c                       |  330 ++++++
+ drivers/mfd/Kconfig                                |   15 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/max77620.c                             |  926 +++++++++++++++++
+ drivers/pinctrl/Kconfig                            |   10 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/pinctrl-max77620.c                 |  700 +++++++++++++
+ drivers/regulator/Kconfig                          |    9 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/max77620-regulator.c             | 1062 ++++++++++++++++++++
+ drivers/rtc/Kconfig                                |    9 +
+ drivers/rtc/Makefile                               |    1 +
+ drivers/rtc/rtc-max77620.c                         |  574 +++++++++++
+ include/dt-bindings/mfd/max77620.h                 |   38 +
+ include/linux/mfd/max77620.h                       |  503 +++++++++
+ 18 files changed, 4573 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77620.txt
+ create mode 100644 drivers/gpio/gpio-max77620.c
+ create mode 100644 drivers/mfd/max77620.c
+ create mode 100644 drivers/pinctrl/pinctrl-max77620.c
+ create mode 100644 drivers/regulator/max77620-regulator.c
+ create mode 100644 drivers/rtc/rtc-max77620.c
+ create mode 100644 include/dt-bindings/mfd/max77620.h
+ create mode 100644 include/linux/mfd/max77620.h
 
-that represents the entire unit. You can then have syscon references
-in each driver that uses it, and/or create a high-level driver that
-binds to the "brcm,bcm53010-clock-reset-unit" compatible string and that
-exports a set of functions for other drivers to be used if you prefer
-to do this as functional abstraction rather than register based.
+-- 
+2.1.4
 
-> > Also, please provide a more specific compatible string based on the
-> > name of the device in the data sheet. The node name in contrast should
-> > be more generic, e.g.
-> > 
-> > 	cru: system-controller@1800c000 {
-> > 		compatible = "brcm,bcm53010-cru", "syscon";
-> 
-> This is very similar between the NS and NSP (and NS2) platforms.  I'll
-> verify the layout and see if this can't be "brcm,iproc-cru" or
-> something similar.
-
-If it's only "very similar" but not identical, don't use the same compatible
-string, at least not as the only one. You should be able to identify the
-specific device by looking at its compatible string in case you want to
-write a high-level driver that knows about the differences later (the driver
-should not need to inquire the chip name, it should only look at one device
-node).
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
