@@ -1,78 +1,130 @@
-From: Rameshwar Sahu <rsahu@apm.com>
-Subject: Re: [PATCH] mmc: host: arasan: sdhci-of-arasan: Remove no-hispd and
- no-cmd23 quirks for sdhci-arasan4.9a
-Date: Thu, 7 Jan 2016 18:02:09 +0530
-Message-ID: <CAFd313y53tpopYFmzrnfhxQEV6GMLzXqPy2sCy+Qbk-pPaHf8Q@mail.gmail.com>
-References: <1450877391-3029-1-git-send-email-rsahu@apm.com>
-	<CAFd313ziJ_zgxQ11J6e=ueRLFKXFOsDPg_evRDK2FGQC5rOmfA@mail.gmail.com>
-	<568DC068.6020602@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <568DC068.6020602@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, linux-mmc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Kaustubh Gondkar <kgondkar@apm.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH v2 01/10] [media] tvp5150: Restructure version detection
+Date: Thu,  7 Jan 2016 09:46:41 -0300
+Message-ID: <1452170810-32346-2-git-send-email-javier@osg.samsung.com>
+References: <1452170810-32346-1-git-send-email-javier@osg.samsung.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1452170810-32346-1-git-send-email-javier@osg.samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Enrico Butera <ebutera@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Rob Herring <robh+dt@kernel.org>, Eduard Gavin <egavinc@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jaehoon,
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-On Thu, Jan 7, 2016 at 7:03 AM, Jaehoon Chung <jh80.chung@samsung.com> wrote:
-> Hi,
->
-> On 01/05/2016 07:25 PM, Rameshwar Sahu wrote:
->> Hi Ulf,
->>
->> On Wed, Dec 23, 2015 at 6:59 PM, Rameshswar Prasad Sahu <rsahu@apm.com> wrote:
->>> From: Rameshwar Prasad Sahu <rsahu@apm.com>
->>>
->>> The Arason SD host controller supports set block count command (cmd23)
->>> and high speed mode. This patch re-enable both of these features that
->>> was disabled. For device that doesn't support high speed, it should
->>> configure its capability register accordingly instead disables it
->>> explicitly.
->>>
->>> Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
->>> ---
->>>  drivers/mmc/host/sdhci-of-arasan.c |    5 -----
->>>  1 files changed, 0 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
->>> index 75379cb..5d9fdb3 100644
->>> --- a/drivers/mmc/host/sdhci-of-arasan.c
->>> +++ b/drivers/mmc/host/sdhci-of-arasan.c
->>> @@ -172,11 +172,6 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
->>>                 goto clk_disable_all;
->>>         }
->>>
->>> -       if (of_device_is_compatible(pdev->dev.of_node, "arasan,sdhci-4.9a")) {
->>> -               host->quirks |= SDHCI_QUIRK_NO_HISPD_BIT;
->>> -               host->quirks2 |= SDHCI_QUIRK2_HOST_NO_CMD23;
->
-> I'm not sure what's correct since i didn't have any information for arasan.
-> But in case of exynos, SDHCI_QUIRK_NO_HISPD_BIT is used because that bit is used as other purpose.
-> If your SoC is not used anymore, i think this patch looks good.
+Move the version detection code to a separate function and restructure
+it to prepare for TVP5151 support.
 
-Our SoC doesn't need that bit, that's why we are going to remove it.
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+---
 
->
-> Best Regards,
-> Jaehoon Chung
->
->>> -       }
->>> -
->>>         sdhci_get_of_property(pdev);
->>>         pltfm_host = sdhci_priv(host);
->>>         pltfm_host->priv = sdhci_arasan;
->>> --
->>> 1.7.1
->>>
->>
->> Any comment on this patch ??
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->>
->
+Changes in v2: None
+
+ drivers/media/i2c/tvp5150.c | 79 ++++++++++++++++++++++++++-------------------
+ 1 file changed, 45 insertions(+), 34 deletions(-)
+
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index dda8b3c000cc..9e953e5a7ec9 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -1105,13 +1105,53 @@ static const struct v4l2_subdev_ops tvp5150_ops = {
+ 			I2C Client & Driver
+  ****************************************************************************/
+ 
++static int tvp5150_detect_version(struct tvp5150 *core)
++{
++	struct v4l2_subdev *sd = &core->sd;
++	struct i2c_client *c = v4l2_get_subdevdata(sd);
++	unsigned int i;
++	u16 dev_id;
++	u16 rom_ver;
++	u8 regs[4];
++	int res;
++
++	/*
++	 * Read consequent registers - TVP5150_MSB_DEV_ID, TVP5150_LSB_DEV_ID,
++	 * TVP5150_ROM_MAJOR_VER, TVP5150_ROM_MINOR_VER
++	 */
++	for (i = 0; i < 4; i++) {
++		res = tvp5150_read(sd, TVP5150_MSB_DEV_ID + i);
++		if (res < 0)
++			return res;
++		regs[i] = res;
++	}
++
++	dev_id = (regs[0] << 8) | regs[1];
++	rom_ver = (regs[2] << 8) | regs[3];
++
++	v4l2_info(sd, "tvp%04x (%u.%u) chip found @ 0x%02x (%s)\n",
++		  dev_id, regs[2], regs[3], c->addr << 1, c->adapter->name);
++
++	if (dev_id == 0x5150 && rom_ver == 0x0321) { /* TVP51510A */
++		v4l2_info(sd, "tvp5150a detected.\n");
++	} else if (dev_id == 0x5150 && rom_ver == 0x0400) { /* TVP5150AM1 */
++		v4l2_info(sd, "tvp5150am1 detected.\n");
++
++		/* ITU-T BT.656.4 timing */
++		tvp5150_write(sd, TVP5150_REV_SELECT, 0);
++	} else {
++		v4l2_info(sd, "*** unknown tvp%04x chip detected.\n", dev_id);
++	}
++
++	return 0;
++}
++
+ static int tvp5150_probe(struct i2c_client *c,
+ 			 const struct i2c_device_id *id)
+ {
+ 	struct tvp5150 *core;
+ 	struct v4l2_subdev *sd;
+-	int tvp5150_id[4];
+-	int i, res;
++	int res;
+ 
+ 	/* Check if the adapter supports the needed features */
+ 	if (!i2c_check_functionality(c->adapter,
+@@ -1124,38 +1164,9 @@ static int tvp5150_probe(struct i2c_client *c,
+ 	sd = &core->sd;
+ 	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
+ 
+-	/* 
+-	 * Read consequent registers - TVP5150_MSB_DEV_ID, TVP5150_LSB_DEV_ID,
+-	 * TVP5150_ROM_MAJOR_VER, TVP5150_ROM_MINOR_VER 
+-	 */
+-	for (i = 0; i < 4; i++) {
+-		res = tvp5150_read(sd, TVP5150_MSB_DEV_ID + i);
+-		if (res < 0)
+-			return res;
+-		tvp5150_id[i] = res;
+-	}
+-
+-	v4l_info(c, "chip found @ 0x%02x (%s)\n",
+-		 c->addr << 1, c->adapter->name);
+-
+-	if (tvp5150_id[2] == 4 && tvp5150_id[3] == 0) { /* Is TVP5150AM1 */
+-		v4l2_info(sd, "tvp%02x%02xam1 detected.\n",
+-			  tvp5150_id[0], tvp5150_id[1]);
+-
+-		/* ITU-T BT.656.4 timing */
+-		tvp5150_write(sd, TVP5150_REV_SELECT, 0);
+-	} else {
+-		/* Is TVP5150A */
+-		if (tvp5150_id[2] == 3 || tvp5150_id[3] == 0x21) {
+-			v4l2_info(sd, "tvp%02x%02xa detected.\n",
+-				  tvp5150_id[0], tvp5150_id[1]);
+-		} else {
+-			v4l2_info(sd, "*** unknown tvp%02x%02x chip detected.\n",
+-				  tvp5150_id[0], tvp5150_id[1]);
+-			v4l2_info(sd, "*** Rom ver is %d.%d\n",
+-				  tvp5150_id[2], tvp5150_id[3]);
+-		}
+-	}
++	res = tvp5150_detect_version(core);
++	if (res < 0)
++		return res;
+ 
+ 	core->norm = V4L2_STD_ALL;	/* Default is autodetect */
+ 	core->input = TVP5150_COMPOSITE1;
+-- 
+2.4.3
