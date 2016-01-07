@@ -1,31 +1,99 @@
-From: Quan Nguyen <qnguyen@apm.com>
-Subject: [PATCH v3 0/3] Enable X-Gene standby GPIO as interrupt controller
-Date: Thu,  7 Jan 2016 17:27:05 +0700
-Message-ID: <1452162428-26839-1-git-send-email-qnguyen@apm.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Duc Dang <dhdang@apm.com>, patches@apm.com, Quan Nguyen <qnguyen@apm.com>
+From: Quan Nguyen <qnguyen-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH v3 2/3] Documentation: gpio: Update description for X-Gene standby GPIO controller DTS binding
+Date: Thu,  7 Jan 2016 17:27:07 +0700
+Message-ID: <1452162428-26839-3-git-send-email-qnguyen@apm.com>
+References: <1452162428-26839-1-git-send-email-qnguyen@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452162428-26839-1-git-send-email-qnguyen-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Y Vo <yvo-qTEPVZfXA3Y@public.gmane.org>, Phong Vo <pvo-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org, Quan Nguyen <qnguyen-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-V3 Changes:
-        - Picking up from version 2 of "Y Vo <yvo@apm.com>"
-        - Get HW resource information from DT
-        - Avoid keeping parent IRQ controller
-V2 Changes:
-        - Support X-Gene standby GPIO as an interrupt controller.
+Update description for X-Gene standby GPIO controller DTS binding to
+support GPIO line configuration as input, output or external IRQ pin.
 
-Quan Nguyen (3):
-  gpio: xgene: Enable X-Gene standby GPIO as interrupt controller
-  Documentation: gpio: Update description for X-Gene standby GPIO
-    controller DTS binding
-  arm64: dts: Update X-Gene standby GPIO controller DTS entries
+Signed-off-by: Y Vo <yvo-qTEPVZfXA3Y@public.gmane.org>
+Signed-off-by: Quan Nguyen <qnguyen-qTEPVZfXA3Y@public.gmane.org>
+---
+ .../devicetree/bindings/gpio/gpio-xgene-sb.txt     | 49 +++++++++++++++++-----
+ 1 file changed, 38 insertions(+), 11 deletions(-)
 
- .../devicetree/bindings/gpio/gpio-xgene-sb.txt     |  49 +++-
- arch/arm64/boot/dts/apm/apm-storm.dtsi             |   5 +-
- drivers/gpio/gpio-xgene-sb.c                       | 289 ++++++++++++++++++---
- 3 files changed, 289 insertions(+), 54 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt b/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
+index dae1300..a960d1b 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
+@@ -1,10 +1,20 @@
+ APM X-Gene Standby GPIO controller bindings
+ 
+-This is a gpio controller in the standby domain.
+-
+-There are 20 GPIO pins from 0..21. There is no GPIO_DS14 or GPIO_DS15,
+-only GPIO_DS8..GPIO_DS13 support interrupts. The IRQ mapping
+-is currently 1-to-1 on interrupts 0x28 thru 0x2d.
++This is a gpio controller in the standby domain. It also supports interrupt in
++some particular pins which are sourced to its parent interrupt controller
++as diagram below:
++                           +-----------------+
++                           | X-Gene standby  |
++                           | GPIO controller +--------- GPIO_0
+++------------+             |                 | ...
++| Parent IRQ |             |                 +--------- GPIO_8/EXT_INT_0
++| controller |  EXT_INT_0  |                 | ...
++| (GICv2)    +-------------+                 +--------- GPIO_[N+8]/EXT_INT_N
++|            |  ...        |                 |
++|            |  EXT_INT_N  |                 +--------- GPIO_[N+9]
++|            +-------------+                 | ...
++|            |             |                 +--------- GPIO_MAX
+++------------+             +-----------------+
+ 
+ Required properties:
+ - compatible: "apm,xgene-gpio-sb" for the X-Gene Standby GPIO controller
+@@ -16,6 +26,11 @@ Required properties:
+ 		1 = active low
+ - gpio-controller: Marks the device node as a GPIO controller.
+ - interrupts: Shall contain exactly 6 interrupts.
++- interrupt-parent: Phandle of the parent interrupt controller.
++- interrupt-cells: Shoule be two.
++       - first cell is 0-N coresponding for EXT_INT_0 to EXT_INT_N.
++       - second cell is used to specify flags.
++- interrupt-controller: Marks the device node as an interrupt controller.
+ 
+ Example:
+ 	sbgpio: sbgpio@17001000 {
+@@ -23,10 +38,22 @@ Example:
+ 		reg = <0x0 0x17001000 0x0 0x400>;
+ 		#gpio-cells = <2>;
+ 		gpio-controller;
+-		interrupts = 	<0x0 0x28 0x1>,
+-				<0x0 0x29 0x1>,
+-				<0x0 0x2a 0x1>,
+-				<0x0 0x2b 0x1>,
+-				<0x0 0x2c 0x1>,
+-				<0x0 0x2d 0x1>;
++		interrupt-parent = <&gic>;
++		interrupts =    <0x0 0x28 0x4>,
++				<0x0 0x29 0x4>,
++				<0x0 0x2a 0x4>,
++				<0x0 0x2b 0x4>,
++				<0x0 0x2c 0x4>,
++				<0x0 0x2d 0x4>;
++		#interrupt-cells = <2>;
++		interrupt-controller;
++	};
++
++	testuser {
++		compatible = "example,testuser";
++		/* Use the GPIO_13/EXT_INT_5 line as an active high triggered
++		 * level interrupt
++		 */
++		interrupts = <5 4>;
++		interrupt-parent = <&sbgpio>;
+ 	};
 -- 
 2.2.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
