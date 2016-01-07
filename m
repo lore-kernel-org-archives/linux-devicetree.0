@@ -1,59 +1,54 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 0/2] DRA72/DRA74: Add 2 lane support
-Date: Thu, 7 Jan 2016 10:13:20 -0800
-Message-ID: <20160107181320.GO12777@atomide.com>
-References: <1452077393-25880-1-git-send-email-kishon@ti.com>
- <20160107174126.GB14105@localhost>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dtc: create tool to diff device trees
+Date: Thu, 07 Jan 2016 10:40:29 -0800
+Message-ID: <568EB11D.2060604@gmail.com>
+References: <5684F17E.6060209@gmail.com> <CAL_JsqKWUGZp24-GMO=f1zOYvAntVtr0cKBUKz_7XK5F_epWOg@mail.gmail.com>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160107174126.GB14105@localhost>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, Richard Cochran <richardcochran@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKWUGZp24-GMO=f1zOYvAntVtr0cKBUKz_7XK5F_epWOg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Bjorn Helgaas <helgaas@kernel.org> [160107 09:42]:
-> [+cc Richard]
+On 1/4/2016 1:29 PM, Rob Herring wrote:
+> On Thu, Dec 31, 2015 at 3:12 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+>>
+>> Create script to diff device trees.
+>>
+>> The device tree can be in any of the forms recognized by the dtc compiler:
+>>   - source
+>>   - binary blob
+>>   - file system tree (from /proc/devicetree)
+>>
+>> If the device tree is a source file, then it is pre-processed in the
+>> same way as it would be when built in the linux kernel source tree
+>> before diffing.
 > 
-> Hi Kishon,
+> In general, I'd like to see some of this move to dtc and the kernel
+> dependencies minimized.
 > 
-> On Wed, Jan 06, 2016 at 04:19:51PM +0530, Kishon Vijay Abraham I wrote:
-> > Add driver modifications in pci-dra7xx to get x2 mode working in
-> > DRA72 and DRA74. Certain modifications is needed in PHY driver also
-> > which will be sent as a separate series.
-> > 
-> > Certain board modifications has to be done in order to test
-> > x2 mode in dra72-evm.
-> > 
-> > These patches were created on pci next.
-> > 
-> > Changes from RFC:
-> > *) .b1co_mode_sel_mask is now set with the correct value.
-> > *) cleanup the patch
-> > 
-> > Kishon Vijay Abraham I (2):
-> >   pci: host: pci-dra7xx: use "num-lanes" property to find phy count
-> >   pci: host: pci-dra7xx: Enable x2 mode support
-> > 
-> >  Documentation/devicetree/bindings/pci/ti-pci.txt |    8 +-
-> >  drivers/pci/host/pci-dra7xx.c                    |  104 +++++++++++++++++++---
-> >  2 files changed, 97 insertions(+), 15 deletions(-)
-> 
-> Apparently dra7xx in mainline doesn't work [1].  Until that's
-> resolved, I'm going to ignore dra7xx patches.
 
-Agreed. Guys, please do the development _and_ testing on the mainline
-kernel. We do have the mainline kernel usable for probably a few
-tens of omap SoC variants. If you have issues using dra7 with mainline,
-please fix those issues ASAP.
+I didn't address this comment in my first reply.  Didn't mean to gloss
+over it.
 
-Ideally of course please also use the device you're working on to
-send out the patches :)
+I agree with the sentiment, but I'm not sure how to act on it.  I don't
+think that dtc should be changed to be Linux specific (but if the dtc
+maintainers think differently I would follow their lead).  You did
+provide at least one example of minimizing kernel dependencies
+(removing the arch specific Makefile dtc flags), but beyond that
+I'm not sure what can be done.
 
-Regards,
+On the positive side, we can avoid adding more kernel dependencies.
 
-Tony
+< snip >
 
-> [1] http://lkml.kernel.org/r/20160106214518.GA6106@localhost.localdomain
+-Frank
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
