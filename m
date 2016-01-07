@@ -1,226 +1,143 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH] phy: rcar-gen3-usb2: remove HSUSB registers handling
-Date: Thu, 7 Jan 2016 18:16:44 +0900
-Message-ID: <1452158204-5236-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2 1/2] drm: bridge: sil902x
+Date: Thu, 7 Jan 2016 10:35:34 +0100
+Message-ID: <20160107103534.56844a20@bbrezillon>
+References: <1452079551-30914-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1452083126-18211-1-git-send-email-boris.brezillon@free-electrons.com>
+	<568DFAD7.6030003@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <568DFAD7.6030003@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-kernel@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Clark <robdclark@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Since the related driver (CPG/MSSR driver) only manages the first module
-clock, this driver should not handle the HSUSB registers. So, this patch
-removes the HSUSB registers handling.
+Hi Archit,
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- This patch is based on the linux-phy / next branch.
- (commit id = 9955a7835bf376e12482583958b2661f501b868b)
+On Thu, 7 Jan 2016 11:12:47 +0530
+Archit Taneja <architt@codeaurora.org> wrote:
 
- .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 15 ++--
- drivers/phy/phy-rcar-gen3-usb2.c                   | 83 +++-------------------
- 2 files changed, 15 insertions(+), 83 deletions(-)
+> 
+> 
+> On 01/06/2016 05:55 PM, Boris Brezillon wrote:
+> > Add basic support for the sil902x RGB -> HDMI bridge.
+> > This driver does not support audio output yet.
+> >
+> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> > ---
+> > Hello,
+> >
+> > This patch is only adding basic support for the sil9022 chip.
+> > As stated in the commit log, there's no audio support, but the
+> > driver also hardcodes a lot of things (like the RGB input format to
+> > use).
+> > There are two reasons for this:
+> > 1/ the DRM framework does not allow for advanced link description
+> >     between an encoder and a bridge (that's for the RGB format
+> >     limitation). Any idea how this should be described?
+> 
+> The adv7511 driver uses a DT param "input_colorspace" to chose between
+> RGB or YUV. I don't think DT is the best idea, but I don't know of a
+> better way either.
 
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-index 2390e4e..eaf7e9b 100644
---- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-+++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-@@ -7,33 +7,26 @@ Required properties:
- - compatible: "renesas,usb2-phy-r8a7795" if the device is a part of an R8A7795
- 	      SoC.
- - reg: offset and length of the partial USB 2.0 Host register block.
--- reg-names: must be "usb2_host".
- - clocks: clock phandle and specifier pair(s).
- - #phy-cells: see phy-bindings.txt in the same directory, must be <0>.
- 
- Optional properties:
- To use a USB channel where USB 2.0 Host and HSUSB (USB 2.0 Peripheral) are
--combined, the device tree node should set HSUSB properties to reg and reg-names
--properties. This is because HSUSB has registers to select USB 2.0 host or
--peripheral at that channel:
--- reg: offset and length of the partial HSUSB register block.
--- reg-names: must be "hsusb".
-+combined, the device tree node should set interrupt properties to use the
-+channel as USB OTG:
- - interrupts: interrupt specifier for the PHY.
- 
- Example (R-Car H3):
- 
- 	usb-phy@ee080200 {
- 		compatible = "renesas,usb2-phy-r8a7795";
--		reg = <0 0xee080200 0 0x700>, <0 0xe6590100 0 0x100>;
--		reg-names = "usb2_host", "hsusb";
-+		reg = <0 0xee080200 0 0x700>;
- 		interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&mstp7_clks R8A7795_CLK_EHCI0>,
--			 <&mstp7_clks R8A7795_CLK_HSUSB>;
-+		clocks = <&mstp7_clks R8A7795_CLK_EHCI0>;
- 	};
- 
- 	usb-phy@ee0a0200 {
- 		compatible = "renesas,usb2-phy-r8a7795";
- 		reg = <0 0xee0a0200 0 0x700>;
--		reg-names = "usb2_host";
- 		clocks = <&mstp7_clks R8A7795_CLK_EHCI0>;
- 	};
-diff --git a/drivers/phy/phy-rcar-gen3-usb2.c b/drivers/phy/phy-rcar-gen3-usb2.c
-index ef332ef..bc4f7dd 100644
---- a/drivers/phy/phy-rcar-gen3-usb2.c
-+++ b/drivers/phy/phy-rcar-gen3-usb2.c
-@@ -74,20 +74,6 @@
- #define USB2_ADPCTRL_IDPULLUP		BIT(5)	/* 1 = ID sampling is enabled */
- #define USB2_ADPCTRL_DRVVBUS		BIT(4)
- 
--/******* HSUSB registers (original offset is +0x100) *******/
--#define HSUSB_LPSTS			0x02
--#define HSUSB_UGCTRL2			0x84
--
--/* Low Power Status register (LPSTS) */
--#define HSUSB_LPSTS_SUSPM		0x4000
--
--/* USB General control register 2 (UGCTRL2) */
--#define HSUSB_UGCTRL2_MASK		0x00000031 /* bit[31:6] should be 0 */
--#define HSUSB_UGCTRL2_USB0SEL		0x00000030
--#define HSUSB_UGCTRL2_USB0SEL_HOST	0x00000010
--#define HSUSB_UGCTRL2_USB0SEL_HS_USB	0x00000020
--#define HSUSB_UGCTRL2_USB0SEL_OTG	0x00000030
--
- struct rcar_gen3_data {
- 	void __iomem *base;
- 	struct clk *clk;
-@@ -95,8 +81,8 @@ struct rcar_gen3_data {
- 
- struct rcar_gen3_chan {
- 	struct rcar_gen3_data usb2;
--	struct rcar_gen3_data hsusb;
- 	struct phy *phy;
-+	bool has_otg;
- };
- 
- static void rcar_gen3_set_host_mode(struct rcar_gen3_chan *ch, int host)
-@@ -202,24 +188,15 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
- {
- 	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
- 	void __iomem *usb2_base = channel->usb2.base;
--	void __iomem *hsusb_base = channel->hsusb.base;
--	u32 val;
- 
- 	/* Initialize USB2 part */
- 	writel(USB2_INT_ENABLE_INIT, usb2_base + USB2_INT_ENABLE);
- 	writel(USB2_SPD_RSM_TIMSET_INIT, usb2_base + USB2_SPD_RSM_TIMSET);
- 	writel(USB2_OC_TIMSET_INIT, usb2_base + USB2_OC_TIMSET);
- 
--	/* Initialize HSUSB part */
--	if (hsusb_base) {
--		val = readl(hsusb_base + HSUSB_UGCTRL2);
--		val = (val & ~HSUSB_UGCTRL2_USB0SEL) |
--		      HSUSB_UGCTRL2_USB0SEL_OTG;
--		writel(val & HSUSB_UGCTRL2_MASK, hsusb_base + HSUSB_UGCTRL2);
--
--		/* Initialize otg part */
-+	/* Initialize otg part */
-+	if (channel->has_otg)
- 		rcar_gen3_init_otg(channel);
--	}
- 
- 	return 0;
- }
-@@ -237,7 +214,6 @@ static int rcar_gen3_phy_usb2_power_on(struct phy *p)
- {
- 	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
- 	void __iomem *usb2_base = channel->usb2.base;
--	void __iomem *hsusb_base = channel->hsusb.base;
- 	u32 val;
- 
- 	val = readl(usb2_base + USB2_USBCTR);
-@@ -246,33 +222,6 @@ static int rcar_gen3_phy_usb2_power_on(struct phy *p)
- 	val &= ~USB2_USBCTR_PLL_RST;
- 	writel(val, usb2_base + USB2_USBCTR);
- 
--	/*
--	 * TODO: To reduce power consuming, this driver should set the SUSPM
--	 *	after the PHY detects ID pin as peripheral.
--	 */
--	if (hsusb_base) {
--		/* Power on HSUSB PHY */
--		val = readw(hsusb_base + HSUSB_LPSTS);
--		val |= HSUSB_LPSTS_SUSPM;
--		writew(val, hsusb_base + HSUSB_LPSTS);
--	}
--
--	return 0;
--}
--
--static int rcar_gen3_phy_usb2_power_off(struct phy *p)
--{
--	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
--	void __iomem *hsusb_base = channel->hsusb.base;
--	u32 val;
--
--	if (hsusb_base) {
--		/* Power off HSUSB PHY */
--		val = readw(hsusb_base + HSUSB_LPSTS);
--		val &= ~HSUSB_LPSTS_SUSPM;
--		writew(val, hsusb_base + HSUSB_LPSTS);
--	}
--
- 	return 0;
- }
- 
-@@ -280,7 +229,6 @@ static struct phy_ops rcar_gen3_phy_usb2_ops = {
- 	.init		= rcar_gen3_phy_usb2_init,
- 	.exit		= rcar_gen3_phy_usb2_exit,
- 	.power_on	= rcar_gen3_phy_usb2_power_on,
--	.power_off	= rcar_gen3_phy_usb2_power_off,
- 	.owner		= THIS_MODULE,
- };
- 
-@@ -313,6 +261,7 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
- 	struct rcar_gen3_chan *channel;
- 	struct phy_provider *provider;
- 	struct resource *res;
-+	int irq;
- 
- 	if (!dev->of_node) {
- 		dev_err(dev, "This driver needs device tree\n");
-@@ -323,29 +272,19 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
- 	if (!channel)
- 		return -ENOMEM;
- 
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "usb2_host");
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	channel->usb2.base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(channel->usb2.base))
- 		return PTR_ERR(channel->usb2.base);
- 
--	/* "hsusb" memory resource is optional */
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsusb");
--
--	/* To avoid error message by devm_ioremap_resource() */
--	if (res) {
--		int irq;
--
--		channel->hsusb.base = devm_ioremap_resource(dev, res);
--		if (IS_ERR(channel->hsusb.base))
--			channel->hsusb.base = NULL;
--		/* call request_irq for OTG */
--		irq = platform_get_irq(pdev, 0);
--		if (irq >= 0)
--			irq = devm_request_irq(dev, irq, rcar_gen3_phy_usb2_irq,
--					       IRQF_SHARED, dev_name(dev),
--					       channel);
-+	/* call request_irq for OTG */
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq >= 0) {
-+		irq = devm_request_irq(dev, irq, rcar_gen3_phy_usb2_irq,
-+				       IRQF_SHARED, dev_name(dev), channel);
- 		if (irq < 0)
- 			dev_err(dev, "No irq handler (%d)\n", irq);
-+		channel->has_otg = true;
- 	}
- 
- 	/* devm_phy_create() will call pm_runtime_enable(dev); */
+Yes, maybe not the best place, but I must admit that's a convenient way
+to set the link format.
+
+> 
+> The connector's display_info.color_formats field gives us some info
+> about the color formats supported by the monitor, but I guess that
+> isn't sufficient data to know what format the encoder is pushing out.
+
+I created the ->bus_formats field in drm_display_info exactly for this
+purpose (it's used to detect the appropriate output format when
+connecting panels), but as you said, this is only describing the link
+between the connector and the display, not the link between the encoder
+and the bridge.
+I'm currently abusing this field (setting bus_formats to RGB888 in the
+sii902x driver), but that would be better to have this description at
+the encoder/bridge level.
+
+> 
+> We get around this problem in case the case of DSI encoders by using
+> the mipi_dsi_device api, where a DSI based bridge or panel can pass
+> color format/lane info to the DSI host (i.e, encoder) by using
+> mipi_dsi_attach().
+
+Yep, that's also an approach I considered a while ago: creating a DPI
+bus layer (not sure DPI is the correct name here), and implementing a
+DPI driver in atmel_hlcdc drivers and using DPI APIs on the slave side
+(panels and bridges/encoders). But I never had any feedback.
+
+> 
+> 
+> >
+> > 2/ I don't have the datasheet of this HDMI encoder, and all logic
+> >     has been extracted from those two drivers [1][2], which means
+> >     I may miss some important things in my encoder setup.
+> >
+> > Another thing I find weird in the drm_bridge interface is the fact
+> > that we have a ->attach() method, but no ->detach(), which can be
+> > a problem if we allow drm bridges and KMS drivers to be compiled as
+> > modules. Any reason for that?
+> 
+> I guess the drm_bridge_add/remove ops make can ensure that the bridge
+> driver itself can be compiled as a module. However, you're right that
+> we would need a bridge detach op that the kms driver should call
+> before it is removed (to unregister the connector we created).
+> 
+> Someone would still need to make sure about the order in which the
+> modules are removed. If the bridge driver is removed first, then
+> it would really mess up the kms driver using the bridge.
+
+Yes, the remove order is another problem we have to deal with
+
+> 
+> 
+> Would the kms driver using this chip really have an encoder?
+
+No, I have to create an encoder of type NONE to make everybody happy
+(we need an encoder + a connector to attach to a panel), but as I
+understand, when the KMS device outputs the pixel stream in raw RGB it's
+not considered as an encoder (which IMO is not such a good idea,
+because I have no way to represent my raw RGB connector :-/).
+
+> Since the chip takes in RGB input, I'm assuming that the encoder in
+> the kms driver would more or less be nop funcs, giving their way to
+> bridge ops.
+
+Exactly, that's a nop unless you have a panel connected to it. In the
+case it calls the drm_panel_xxx() functions.
+
+> 
+> In such cases, I think the bridge still doesn't fit in so well. The
+> best fit here is how the current tda998x driver is modeled. It adds
+> itself as a component that creates both an encoder and connector,
+> which the kms driver can use directly. This approach, of course,
+> prevents us using tda998x in kms drivers that don't accept any
+> encoders that it didn't create itself.
+
+Actually that's what I did first [1], but I asked for some advice to
+other DRM developers, and they suggested to expose it as a drm_bridge.
+
+Now, I don't know what's the best option: I heard that some work was
+being done to merge the encoder slave and bridge concepts. I just
+thought external encoders were falling in that case too.
+And BTW, the different between all those components is still obscure to
+me.
+
+Thanks for the suggestions.
+
+Best Regards,
+
+Boris
+
+[1]https://github.com/linux4sam/linux-at91/blob/linux-3.18-at91/drivers/gpu/drm/i2c/sil902x.c
+
+
 -- 
-1.9.1
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
