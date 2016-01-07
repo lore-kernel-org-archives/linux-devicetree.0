@@ -1,60 +1,31 @@
 From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH] dmaengine: xgene-dma: Fix double IRQ issue by setting
  IRQ_DISABLE_UNLAZY flag
-Date: Thu, 7 Jan 2016 10:19:09 +0530
-Message-ID: <20160107044909.GF11778@localhost>
+Date: Thu, 7 Jan 2016 11:10:05 +0530
+Message-ID: <20160107054005.GI11778@localhost>
 References: <1450875495-2229-1-git-send-email-rsahu@apm.com>
- <20160106091323.GP2940@localhost>
- <CAFd313xhh_4OFP6W2yuApM8ppYMX20DUCCQHJ9YEtCMbzr6Hgg@mail.gmail.com>
- <20160106093121.GB11778@localhost>
- <alpine.DEB.2.11.1601061103000.3689@nanos>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.11.1601061103000.3689@nanos>
+In-Reply-To: <1450875495-2229-1-git-send-email-rsahu-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Rameshwar Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Kaustubh Gondkar <kgondkar-qTEPVZfXA3Y@public.gmane.org>
+To: Rameshswar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, kgondkar-qTEPVZfXA3Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 06, 2016 at 11:05:02AM +0100, Thomas Gleixner wrote:
-> On Wed, 6 Jan 2016, Vinod Koul wrote:
-> > On Wed, Jan 06, 2016 at 02:51:07PM +0530, Rameshwar Sahu wrote:
-> > > >> @@ -1610,6 +1611,7 @@ static int xgene_dma_request_irqs(struct xgene_dma *pdma)
-> > > >>       /* Register DMA channel rx irq */
-> > > >>       for (i = 0; i < XGENE_DMA_MAX_CHANNEL; i++) {
-> > > >>               chan = &pdma->chan[i];
-> > > >> +             irq_set_status_flags(chan->rx_irq, IRQ_DISABLE_UNLAZY);
-> > > >
-> > > > Why not use irq_settings_disable_unlazy(), at least read the reference you
-> > > > pointed out!
-> > > 
-> > > irq_settings_disable_unlazy() is helper function to test
-> > > IRQ_DISABLE_UNLAZY flag is set or not, it's not for setting this flag.
-> > > FYI...
-> > > +static inline bool irq_settings_disable_unlazy(struct irq_desc *desc)
-> > > +{
-> > > + return desc->status_use_accessors & _IRQ_DISABLE_UNLAZY;
-> > > +}
-> > 
-> > Ah yes, I saw clear API and assumed there would be set. Then I think we
-> > should add a set helper as well as the usage is intended for drivers to
-> > set this flag
-> > 
-> > Thomas,
-> > 
-> > Any reason why you didn't add a set helper, only test and clear?
+On Wed, Dec 23, 2015 at 06:28:15PM +0530, Rameshswar Prasad Sahu wrote:
+> From: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
 > 
-> Why would I? Those helpers are core internal and not usable in random drivers.
+> For interrupt controller that doesn't support irq_disable and hardware
+> with level interrupt, an extra interrupt can be pending. This patch fixes
+> the issue by setting IRQ_DISABLE_UNLAZY flag for the interrupt line.
 > 
-> Drivers have irq_set_status_flags()/irq_clear_status_flags() ...
+> Reference: http://git.kernel.org/tip/e9849777d0e27cdd2902805be51da73e7c79578c
+> 
 
-The effect of irq_set_status_flags(irq, IRQ_DISABLE_UNLAZY) is same as
-providing a helper. If your recommendation is to use this by driver then I
-am find with the approach too
+Applied now
 
-Thanks
 -- 
 ~Vinod
 --
