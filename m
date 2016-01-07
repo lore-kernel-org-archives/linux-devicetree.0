@@ -1,63 +1,64 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [GIT PULL 6/9] ARM: EXYNOS: clk: Another clock dependency,
- ARMv7, for v4.5
-Date: Thu, 7 Jan 2016 06:06:49 +0100
-Message-ID: <20160107050649.GB26875@localhost>
-References: <1449020386-20250-1-git-send-email-k.kozlowski@samsung.com>
- <1449020386-20250-7-git-send-email-k.kozlowski@samsung.com>
- <20151222045135.GG30172@localhost>
- <567A7D8F.3010209@samsung.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] arm64/dts: Add missing DMA Abort interrupt to Juno
+Date: Thu, 7 Jan 2016 15:06:28 +0000
+Message-ID: <568E7EF4.1020403@arm.com>
+References: <6a66d2ac442925e066fe9b67ee2883de5894b0d3.1452168063.git.robin.murphy@arm.com>
+ <2736927.0LiVxGZzgm@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <567A7D8F.3010209@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: k.kozlowski.k@gmail.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, arm@kernel.org, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, Stephen Boyd <sboyd@codeaurora.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2736927.0LiVxGZzgm@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 23, 2015 at 07:55:11PM +0900, Krzysztof Kozlowski wrote:
-> W dniu 22.12.2015 o 13:51, Olof Johansson pisze:
-> > On Wed, Dec 02, 2015 at 10:39:43AM +0900, Krzysztof Kozlowski wrote:
-> >> Hi Kukjin,
-> >>
-> >> This is also clock dependency. I put it in separate tag in case clock
-> >> folks want to pull it also.
-> >>
-> >> Best regards,
-> >> Krzysztof
-> >>
-> >>
-> >> The following changes since commit 8005c49d9aea74d382f474ce11afbbc7d7130bec:
-> >>
-> >>   Linux 4.4-rc1 (2015-11-15 17:00:27 -0800)
-> >>
-> >> are available in the git repository at:
-> >>
-> >>   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-clk-exynos4-4.5
-> >>
-> >> for you to fetch changes up to 94af7a3c310f5877dc6f756179b92f24f89a9b08:
-> >>
-> >>   clk: samsung: exynos4: Add SSS gate clock (2015-11-18 22:02:02 +0900)
-> > 
-> > Again, this should probably go through the clk maintainer (or have an ack).
-> > It's just two one-line changes though, so if they're slow to respond we can
-> > take it as a fallback. Resend if that's the case.
-> > 
-> 
-> Wait, I am missing something. This contains only one patch which has the
-> Stephen's Boyd ack:
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-October/379230.html
-> (this is in commit message already)
-> 
-> What kind of ack do you expect here? Ack for pull-request?
-
-Yeah, looks good. I likely mixed up branch contents when I replied to this one.
-
-I'll merge it into drivers. Still, for patches that only touches clock
-subsystem, the default of merging through those subsystem maintainers is
-preferred. Complications, of course, are when there's dependencies.
 
 
--Olof
+On 07/01/16 14:36, Arnd Bergmann wrote:
+> On Thursday 07 January 2016 12:01:59 Robin Murphy wrote:
+>> The DMA-330 has an "irq_abort" interrupt line on which it signals faults
+>> separately from the "irq[n:0]" channel interrupts. On Juno, this is
+>> wired up to SPI 92; add it to the DT so that DMAC faults are correctly
+>> reported for the driver to reset the thing, rather than leaving it
+>> locked up and waiting to time out.
+>>
+>> CC: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+>> CC: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> CC: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+>> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+>>
+>
+> Nothing wrong with the patch, but could you please come up with
+> a more structured way to get patches for Juno into the kernel?
+>
+
+Sorry for that. Liviu is on holidays, he usually reviews Juno DTS change
+and provides ack. But missed to check with him before he disappeared.
+
+> You have addressed the patch "to:" the arm-soc maintainers, but
+> you are not listed in the maintainers file for the directory, so
+> it's not clear what you expect to happen here.
+>
+> Ideally, we'd get patches from just one of the people listed
+> in the MAINTAINERS file normally, and let us know if the
+> primary maintainer changes, or if one of the others sends a
+> patch because that person is unavailable.
+>
+
+We(me along with Liviu and Lorenzo) will try to group them together and
+one of us can send you pull request.
+
+I don't think there's any other fixes on the list though there are few
+feature additions which I assume is too late for v4.5 now. But still I
+prefer to wait till next week so that I can check with Liviu to see if
+there are any other Juno fixes that can be grouped.
+
+-- 
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
