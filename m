@@ -1,110 +1,117 @@
-From: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Subject: [PATCH v5 3/5] misc: eeprom_93xx46: Implement eeprom_93xx46 DT bindings.
-Date: Wed,  6 Jan 2016 22:55:02 -0500
-Message-ID: <1452138904-24820-4-git-send-email-cory.tusar@pid1solutions.com>
+From: Cory Tusar <cory.tusar@pid1solutions.com>
+Subject: [PATCH v5 5/5] misc: eeprom_93xx46: Add support for a GPIO 'select' line.
+Date: Wed,  6 Jan 2016 22:55:04 -0500
+Message-ID: <1452138904-24820-6-git-send-email-cory.tusar@pid1solutions.com>
 References: <1452138904-24820-1-git-send-email-cory.tusar@pid1solutions.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452138904-24820-1-git-send-email-cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, afd-l0cyMroinI0@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Chris.Healy-c8ZVq/bFV1I@public.gmane.org, Keith.Vennel-c8ZVq/bFV1I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1452138904-24820-1-git-send-email-cory.tusar@pid1solutions.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, gregkh@linuxfoundation.org
+Cc: jic23@kernel.org, vz@mleia.com, broonie@kernel.org, afd@ti.com, andrew@lunn.ch, Chris.Healy@zii.aero, Keith.Vennel@zii.aero, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Cory Tusar <cory.tusar@pid1solutions.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit implements bindings in the eeprom_93xx46 driver allowing
-device word size and read-only attributes to be specified via
-devicetree.
+This commit adds support to the eeprom_93x46 driver allowing a GPIO line
+to function as a 'select' or 'enable' signal prior to accessing the
+EEPROM.
 
-Signed-off-by: Cory Tusar <cory.tusar-J6Z/VSE8EyIAspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Tested-by: Chris Healy <chris.healy-c8ZVq/bFV1I@public.gmane.org>
-Reviewed-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
+Tested-by: Chris Healy <chris.healy@zii.aero>
+Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
 ---
- drivers/misc/eeprom/eeprom_93xx46.c | 49 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+ drivers/misc/eeprom/eeprom_93xx46.c | 35 +++++++++++++++++++++++++++++++++++
+ include/linux/eeprom_93xx46.h       |  3 +++
+ 2 files changed, 38 insertions(+)
 
 diff --git a/drivers/misc/eeprom/eeprom_93xx46.c b/drivers/misc/eeprom/eeprom_93xx46.c
-index e1bf0a5..cc27e11 100644
+index d50bc17..d28fac2 100644
 --- a/drivers/misc/eeprom/eeprom_93xx46.c
 +++ b/drivers/misc/eeprom/eeprom_93xx46.c
-@@ -13,6 +13,8 @@
+@@ -10,11 +10,13 @@
+ 
+ #include <linux/delay.h>
+ #include <linux/device.h>
++#include <linux/gpio/consumer.h>
  #include <linux/kernel.h>
  #include <linux/module.h>
  #include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/of_gpio.h>
  #include <linux/slab.h>
  #include <linux/spi/spi.h>
  #include <linux/sysfs.h>
-@@ -294,12 +296,58 @@ static ssize_t eeprom_93xx46_store_erase(struct device *dev,
+@@ -343,6 +345,20 @@ static ssize_t eeprom_93xx46_store_erase(struct device *dev,
  }
  static DEVICE_ATTR(erase, S_IWUSR, NULL, eeprom_93xx46_store_erase);
  
-+static const struct of_device_id eeprom_93xx46_of_table[] = {
-+	{ .compatible = "eeprom-93xx46", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, eeprom_93xx46_of_table);
-+
-+static int eeprom_93xx46_probe_dt(struct spi_device *spi)
++static void select_assert(void *context)
 +{
-+	struct device_node *np = spi->dev.of_node;
-+	struct eeprom_93xx46_platform_data *pd;
-+	u32 tmp;
-+	int ret;
++	struct eeprom_93xx46_dev *edev = context;
 +
-+	pd = devm_kzalloc(&spi->dev, sizeof(*pd), GFP_KERNEL);
-+	if (!pd)
-+		return -ENOMEM;
-+
-+	ret = of_property_read_u32(np, "data-size", &tmp);
-+	if (ret < 0) {
-+		dev_err(&spi->dev, "data-size property not found\n");
-+		return ret;
-+	}
-+
-+	if (tmp == 8) {
-+		pd->flags |= EE_ADDR8;
-+	} else if (tmp == 16) {
-+		pd->flags |= EE_ADDR16;
-+	} else {
-+		dev_err(&spi->dev, "invalid data-size (%d)\n", tmp);
-+		return -EINVAL;
-+	}
-+
-+	if (of_property_read_bool(np, "read-only"))
-+		pd->flags |= EE_READONLY;
-+
-+	spi->dev.platform_data = pd;
-+
-+	return 0;
++	gpiod_set_value_cansleep(edev->pdata->select, 1);
 +}
 +
- static int eeprom_93xx46_probe(struct spi_device *spi)
- {
++static void select_deassert(void *context)
++{
++	struct eeprom_93xx46_dev *edev = context;
++
++	gpiod_set_value_cansleep(edev->pdata->select, 0);
++}
++
+ static const struct of_device_id eeprom_93xx46_of_table[] = {
+ 	{ .compatible = "eeprom-93xx46", },
+ 	{ .compatible = "atmel,at93c46d", .data = &atmel_at93c46d_data, },
+@@ -357,6 +373,8 @@ static int eeprom_93xx46_probe_dt(struct spi_device *spi)
+ 	struct device_node *np = spi->dev.of_node;
  	struct eeprom_93xx46_platform_data *pd;
- 	struct eeprom_93xx46_dev *edev;
- 	int err;
+ 	u32 tmp;
++	int gpio;
++	enum of_gpio_flags of_flags;
+ 	int ret;
  
-+	if (spi->dev.of_node) {
-+		err = eeprom_93xx46_probe_dt(spi);
-+		if (err < 0)
-+			return err;
+ 	pd = devm_kzalloc(&spi->dev, sizeof(*pd), GFP_KERNEL);
+@@ -381,6 +399,23 @@ static int eeprom_93xx46_probe_dt(struct spi_device *spi)
+ 	if (of_property_read_bool(np, "read-only"))
+ 		pd->flags |= EE_READONLY;
+ 
++	gpio = of_get_named_gpio_flags(np, "select-gpios", 0, &of_flags);
++	if (gpio_is_valid(gpio)) {
++		unsigned long flags =
++			of_flags == OF_GPIO_ACTIVE_LOW ? GPIOF_ACTIVE_LOW : 0;
++
++		ret = devm_gpio_request_one(&spi->dev, gpio, flags,
++					    "eeprom_93xx46_select");
++		if (ret)
++			return ret;
++
++		pd->select = gpio_to_desc(gpio);
++		pd->prepare = select_assert;
++		pd->finish = select_deassert;
++
++		gpiod_direction_output(pd->select, 0);
 +	}
 +
- 	pd = spi->dev.platform_data;
- 	if (!pd) {
- 		dev_err(&spi->dev, "missing platform data\n");
-@@ -370,6 +418,7 @@ static int eeprom_93xx46_remove(struct spi_device *spi)
- static struct spi_driver eeprom_93xx46_driver = {
- 	.driver = {
- 		.name	= "93xx46",
-+		.of_match_table = of_match_ptr(eeprom_93xx46_of_table),
- 	},
- 	.probe		= eeprom_93xx46_probe,
- 	.remove		= eeprom_93xx46_remove,
+ 	if (of_id->data) {
+ 		const struct eeprom_93xx46_devtype_data *data = of_id->data;
+ 
+diff --git a/include/linux/eeprom_93xx46.h b/include/linux/eeprom_93xx46.h
+index 92fa4c3..885f587 100644
+--- a/include/linux/eeprom_93xx46.h
++++ b/include/linux/eeprom_93xx46.h
+@@ -3,6 +3,8 @@
+  * platform description for 93xx46 EEPROMs.
+  */
+ 
++struct gpio_desc;
++
+ struct eeprom_93xx46_platform_data {
+ 	unsigned char	flags;
+ #define EE_ADDR8	0x01		/*  8 bit addr. cfg */
+@@ -21,4 +23,5 @@ struct eeprom_93xx46_platform_data {
+ 	 */
+ 	void (*prepare)(void *);
+ 	void (*finish)(void *);
++	struct gpio_desc *select;
+ };
 -- 
 2.4.10
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
