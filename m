@@ -1,266 +1,61 @@
-From: Greg Hackmann <ghackmann@google.com>
-Subject: [PATCH v3] pstore-ram: add Device Tree bindings
-Date: Thu,  7 Jan 2016 15:40:56 -0800
-Message-ID: <1452210056-14436-1-git-send-email-ghackmann@google.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, John Stultz <john.stultz@linaro.org>, linux-doc@vger.kernel.org, Greg Hackmann <ghackmann@google.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] ata: add AMD Seattle platform driver
+Date: Fri, 08 Jan 2016 00:42:54 +0100
+Message-ID: <4983521.tEaWggKCCv@wuerfel>
+References: <1452200002-31590-1-git-send-email-brijesh.singh@amd.com> <4652600.rUhSEOUPkl@wuerfel> <568EE596.3060005@amd.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <568EE596.3060005@amd.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Brijesh Singh <brijesh.singh@amd.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-ide@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, tj@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-ramoops is one of the remaining places where ARM vendors still rely on
-board-specific shims.  Device Tree lets us replace those shims with
-generic code.
+On Thursday 07 January 2016 16:24:22 Brijesh Singh wrote:
+> >> +
+> >> +Examples:
+> >> +        sata0@e0300000 {
+> >> +            compatible = "amd,seattle-ahci";
+> >> +            reg = <0x0 0xe0300000 0x0 0xf0000>, <0x0 0xe0000078 0x0 0x1>;
+> > 
+> > Looking at the register values, I doubt that the SGPIO is actually part of the
+> > sata device. More likely, you are pointing in the middle of an actual
+> > GPIO controller.
+> > 
+> 
+> That address is SGPIO control register for SATA. The current hardware implementation to control activity LED is not ideal.
 
-These bindings mirror the ramoops module parameters, with two small
-differences:
+Of course its a control register "for" SATA, what I meant is that it's
+not part "of" the SATA IP block, which is hopefully a standard AHCI
+compliant part as required by SBSA.
 
-(1) dump_oops becomes an optional "no-dump-oops" property, since ramoops
-    sets dump_oops=1 by default.
+> A57 does not have access to GPIO's connected to backplane controller
+> instead SoC has exposed two SGPIO control registers (LSIOC_SGPIO_CONTROL0:
+> 0xE000_0078 and LSIOC_SGPIO_CONTROL1: 0xE000_007C) to A57. All we 
+> need to do is to program these registers based on the disk activity.
+> The firmware running on A5 reads the values and generate proper SGPIO
+> timing and toggles the LEDs etc.
 
-(2) mem_type=1 becomes the more self-explanatory "unbuffered" property.
+It still sounds like SGPIO is not part of the AHCI standard spec, but
+rather a subset of a device called LSIOC.
 
-Signed-off-by: Greg Hackmann <ghackmann@google.com>
----
-Changes in V3:
-- documentation fixes
-- look for "no-ram-oops" property as documented
+> These registers are defined in SATA0/1 DSDT resource template and also
+> documented in SoC BKDG. I just noticed that BKDG has wrong register
+> definition so will ask documentation folks to fix that.
+> 
+> This driver is using SGPIO LED control similar to sata_highbank [1]
+> except bit bang GPIO (which is done by firmware).
+> 
+> [1] http://lxr.free-electrons.com/source/drivers/ata/sata_highbank.c#L140
 
-Changes in V2:
-- make DT binding documentation more generic
+This one is rather different: there is a single device that combines
+registers for AHCI, the PHY attached to it and the LED. This is not
+SBSA compliant of course, and it requires having a special driver.
 
- Documentation/devicetree/bindings/misc/ramoops.txt |  43 ++++++++
- Documentation/ramoops.txt                          |   6 +-
- fs/pstore/ram.c                                    | 110 ++++++++++++++++++++-
- 3 files changed, 155 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/misc/ramoops.txt
+What you have instead looks like a regular AHCI implementation that
+should just work with the standard driver as long as you describe how
+it gets its LEDs.
 
-diff --git a/Documentation/devicetree/bindings/misc/ramoops.txt b/Documentation/devicetree/bindings/misc/ramoops.txt
-new file mode 100644
-index 0000000..5a475fa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/ramoops.txt
-@@ -0,0 +1,43 @@
-+Ramoops oops/panic logger
-+=========================
-+
-+ramoops provides persistent RAM storage for oops and panics, so they can be
-+recovered after a reboot.
-+
-+Parts of this storage may be set aside for other persistent log buffers, such
-+as kernel log messages, or for optional ECC error-correction data.  The total
-+size of these optional buffers must fit in the reserved region.
-+
-+Any remaining space will be used for a circular buffer of oops and panic
-+records.  These records have a configurable size, with a size of 0 indicating
-+that they should be disabled.
-+
-+
-+Required properties:
-+
-+- compatible: must be "ramoops"
-+
-+- memory-region: phandle to a region of memory that is preserved between reboots
-+
-+
-+Optional properties:
-+
-+- ecc-size: enables ECC support and specifies ECC buffer size in bytes
-+  (defaults to no ECC)
-+
-+- record-size: maximum size in bytes of each dump done on oops/panic
-+  (defaults to 0)
-+
-+- console-size: size in bytes of log buffer reserved for kernel messages
-+  (defaults to 0)
-+
-+- ftrace-size: size in bytes of log buffer reserved for function tracing and
-+  profiling (defaults to 0)
-+
-+- pmsg-size: size in bytes of log buffer reserved for userspace messages
-+  (defaults to 0)
-+
-+- unbuffered: if present, use unbuffered mappings to map the reserved region
-+  (defaults to buffered mappings)
-+
-+- no-dump-oops: if present, only dump panics (defaults to panics and oops)
-diff --git a/Documentation/ramoops.txt b/Documentation/ramoops.txt
-index 5d86756..9264bca 100644
---- a/Documentation/ramoops.txt
-+++ b/Documentation/ramoops.txt
-@@ -45,7 +45,7 @@ corrupt, but usually it is restorable.
- 
- 2. Setting the parameters
- 
--Setting the ramoops parameters can be done in 2 different manners:
-+Setting the ramoops parameters can be done in 3 different manners:
-  1. Use the module parameters (which have the names of the variables described
-  as before).
-  For quick debugging, you can also reserve parts of memory during boot
-@@ -54,7 +54,9 @@ Setting the ramoops parameters can be done in 2 different manners:
-  kernel to use only the first 128 MB of memory, and place ECC-protected ramoops
-  region at 128 MB boundary:
-  "mem=128M ramoops.mem_address=0x8000000 ramoops.ecc=1"
-- 2. Use a platform device and set the platform data. The parameters can then
-+ 2. Use Device Tree bindings, as described in
-+ Documentation/device-tree/bindings/misc/ramoops.txt.
-+ 3. Use a platform device and set the platform data. The parameters can then
-  be set through that platform data. An example of doing that is:
- 
- #include <linux/pstore_ram.h>
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index 319c3a6..0f2912c 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -34,6 +34,8 @@
- #include <linux/slab.h>
- #include <linux/compiler.h>
- #include <linux/pstore_ram.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
- 
- #define RAMOOPS_KERNMSG_HDR "===="
- #define MIN_MEM_SIZE 4096UL
-@@ -458,15 +460,112 @@ static int ramoops_init_prz(struct device *dev, struct ramoops_context *cxt,
- 	return 0;
- }
- 
-+static int ramoops_parse_dt_size(struct platform_device *pdev,
-+		const char *propname, unsigned long *val)
-+{
-+	u64 val64;
-+	int ret;
-+
-+	ret = of_property_read_u64(pdev->dev.of_node, propname, &val64);
-+	if (ret == -EINVAL) {
-+		*val = 0;
-+		return 0;
-+	} else if (ret != 0) {
-+		dev_err(&pdev->dev, "failed to parse property %s: %d\n",
-+				propname, ret);
-+		return ret;
-+	}
-+
-+	if (val64 > ULONG_MAX) {
-+		dev_err(&pdev->dev, "invalid %s %llu\n", propname, val64);
-+		return -EOVERFLOW;
-+	}
-+
-+	*val = val64;
-+	return 0;
-+}
-+
-+static int ramoops_parse_dt(struct platform_device *pdev,
-+		struct ramoops_platform_data *pdata)
-+{
-+	struct device_node *of_node = pdev->dev.of_node;
-+	struct device_node *mem_region;
-+	struct resource res;
-+	u32 ecc_size;
-+	int ret;
-+
-+	dev_dbg(&pdev->dev, "using Device Tree\n");
-+
-+	mem_region = of_parse_phandle(of_node, "memory-region", 0);
-+	if (!mem_region) {
-+		dev_err(&pdev->dev, "no memory-region phandle\n");
-+		return -ENODEV;
-+	}
-+
-+	ret = of_address_to_resource(mem_region, 0, &res);
-+	of_node_put(mem_region);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to translate memory-region to resource: %d\n",
-+				ret);
-+		return ret;
-+	}
-+
-+	pdata->mem_size = resource_size(&res);
-+	pdata->mem_address = res.start;
-+	pdata->mem_type = of_property_read_bool(of_node, "unbuffered");
-+	pdata->dump_oops = !of_property_read_bool(of_node, "no-dump-oops");
-+
-+	ret = ramoops_parse_dt_size(pdev, "record-size", &pdata->record_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ramoops_parse_dt_size(pdev, "console-size", &pdata->console_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ramoops_parse_dt_size(pdev, "ftrace-size", &pdata->ftrace_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ramoops_parse_dt_size(pdev, "pmsg-size", &pdata->pmsg_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = of_property_read_u32(of_node, "ecc-size", &ecc_size);
-+	if (ret == 0) {
-+		if (ecc_size > INT_MAX) {
-+			dev_err(&pdev->dev, "invalid ecc-size %u\n", ecc_size);
-+			return -EOVERFLOW;
-+		}
-+		pdata->ecc_info.ecc_size = ecc_size;
-+	} else if (ret != -EINVAL) {
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int ramoops_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct ramoops_platform_data *pdata = pdev->dev.platform_data;
-+	struct ramoops_platform_data *pdata = platform_get_drvdata(pdev);
- 	struct ramoops_context *cxt = &oops_cxt;
- 	size_t dump_mem_sz;
- 	phys_addr_t paddr;
- 	int err = -EINVAL;
- 
-+	if (dev->of_node && !pdata) {
-+		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+		if (!pdata) {
-+			err = -ENOMEM;
-+			goto fail_out;
-+		}
-+
-+		err = ramoops_parse_dt(pdev, pdata);
-+		if (err < 0)
-+			goto fail_out;
-+	}
-+
- 	/* Only a single ramoops area allowed at a time, so fail extra
- 	 * probes.
- 	 */
-@@ -561,6 +660,7 @@ static int ramoops_probe(struct platform_device *pdev)
- 		cxt->size, (unsigned long long)cxt->phys_addr,
- 		cxt->ecc_info.ecc_size, cxt->ecc_info.block_size);
- 
-+	platform_set_drvdata(pdev, pdata);
- 	return 0;
- 
- fail_buf:
-@@ -596,11 +696,17 @@ static int ramoops_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id dt_match[] = {
-+	{ .compatible = "ramoops" },
-+	{}
-+};
-+
- static struct platform_driver ramoops_driver = {
- 	.probe		= ramoops_probe,
- 	.remove		= ramoops_remove,
- 	.driver		= {
--		.name	= "ramoops",
-+		.name		= "ramoops",
-+		.of_match_table	= dt_match,
- 	},
- };
- 
--- 
-2.6.0.rc2.230.g3dd15c0
+	Arnd
