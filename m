@@ -1,119 +1,49 @@
-From: Harvey Hunt <harvey.hunt@imgtec.com>
-Subject: Re: [PATCH v11 3/3] MIPS: dts: jz4780/ci20: Add NEMC, BCH and NAND
- device tree nodes
-Date: Thu, 7 Jan 2016 09:40:13 +0000
-Message-ID: <568E327D.8040905@imgtec.com>
-References: <1451910884-18710-1-git-send-email-harvey.hunt@imgtec.com>
- <1451910884-18710-4-git-send-email-harvey.hunt@imgtec.com>
- <20160107012903.GX109450@google.com>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: [PATCH v2 0/2] Introduce Innosilicon HDMI driver on Rockchip platforms
+Date: Thu,  7 Jan 2016 18:01:36 +0800
+Message-ID: <1452160896-27096-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160107012903.GX109450@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: linux-mtd@lists.infradead.org, boris.brezillon@free-electrons.com, alex@alex-smith.me.uk, Alex Smith <alex.smith@imgtec.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, David Woodhouse <dwmw2@infradead.org>, Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, robh@kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Yao <mark.yao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ben Chan <benchan@google.com>, Ken Mixte <kmixter@google.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Zheng Yang <zhengyang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
-
-On 07/01/16 01:29, Brian Norris wrote:
-> On Mon, Jan 04, 2016 at 12:34:44PM +0000, Harvey Hunt wrote:
->> diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
->> index 9fcb9e7..782258c 100644
->> --- a/arch/mips/boot/dts/ingenic/ci20.dts
->> +++ b/arch/mips/boot/dts/ingenic/ci20.dts
->
-> As I noted on patch 1, you need to send this to linux-mips + Ralf.
-
-I forgot to CC Ralf on this version, but he took v9 (no change between 
-v9 and v11) through linux-mips as can be seen here: 
-http://patchwork.linux-mips.org/patch/11695/
-
->
->> @@ -42,3 +42,66 @@
->>   &uart4 {
->>   	status = "okay";
->>   };
->> +
->> +&nemc {
->> +	status = "okay";
->> +
->> +	nandc: nand-controller@1 {
->> +		compatible = "ingenic,jz4780-nand";
->> +		reg = <1 0 0x1000000>;
->> +
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		ingenic,bch-controller = <&bch>;
->> +
->> +		ingenic,nemc-tAS = <10>;
->> +		ingenic,nemc-tAH = <5>;
->> +		ingenic,nemc-tBP = <10>;
->> +		ingenic,nemc-tAW = <15>;
->> +		ingenic,nemc-tSTRV = <100>;
->> +
->> +		nand@1 {
->> +			reg = <1>;
->> +
->> +			nand-ecc-step-size = <1024>;
->> +			nand-ecc-strength = <24>;
->> +			nand-ecc-mode = "hw";
->> +			nand-on-flash-bbt;
->> +
->> +			partitions {
->> +				#address-cells = <2>;
->> +				#size-cells = <2>;
->
-> This binding was updated, so you need:
->
-> 				compatible = "fixed-partitions";
-
-This has been fixed in mips-linux here: 
-http://patchwork.linux-mips.org/patch/11914/
-
-Thanks,
-
-Harvey
-
->
-> Brian
->
->> +
->> +				partition@0 {
->> +					label = "u-boot-spl";
->> +					reg = <0x0 0x0 0x0 0x800000>;
->> +				};
->> +
->> +				partition@0x800000 {
->> +					label = "u-boot";
->> +					reg = <0x0 0x800000 0x0 0x200000>;
->> +				};
->> +
->> +				partition@0xa00000 {
->> +					label = "u-boot-env";
->> +					reg = <0x0 0xa00000 0x0 0x200000>;
->> +				};
->> +
->> +				partition@0xc00000 {
->> +					label = "boot";
->> +					reg = <0x0 0xc00000 0x0 0x4000000>;
->> +				};
->> +
->> +				partition@0x8c00000 {
->> +					label = "system";
->> +					reg = <0x0 0x4c00000 0x1 0xfb400000>;
->> +				};
->> +			};
->> +		};
->> +	};
->> +};
->> +
->> +&bch {
->> +	status = "okay";
->> +};
->
-> Brian
->
+CkhlcmUgYXJlIGEgYnJpZWYgaW50cm9kdWN0aW9uIHRvIElubm9zaWxpY29uIEhETUkgSVA6CiAt
+IFN1cHBvcnQgSERNSSAxLjRhLCBIRENQIDEuMiBhbmQgRFZJIDEuMCBzdGFuZGFyZCBjb21wbGlh
+bnQgdHJhbnNtaXR0ZXIKIC0gU3VwcG9ydCBIRE1JMS40IGEvYiAzRCBmdW5jdGlvbiBkZWZpbmVk
+IGluIEhETUkgMS40IGEvYiBzcGVjCiAtIERpZ2l0YWwgdmlkZW8gaW50ZXJmYWNlIHN1cHBvcnRz
+IGEgcGl4ZWwgc2l6ZSBvZiAyNCwgMzAsIDM2LCA0OGJpdHMgY29sb3IKICAgZGVwdGggaW4gUkdC
+CiAtIFMvUERJRiBvdXRwdXQgc3VwcG9ydHMgUENNLCBEb2xieSBEaWdpdGFsLCBEVFMgZGlnaXRh
+bCBhdWRpbyB0cmFuc21pc3Npb24KICAgKDMyLTE5MmtIeiBGcykgdXNpbmcgSUVDNjA5NTggYW5k
+IElFQyA2MTkzNwogLSBUaGUgRURJRCBhbmQgQ0VDIGZ1bmN0aW9uIGFyZSBhbHNvIHN1cHBvcnRl
+ZCBieSBJbm5vc2lsaWNvbiBIRE1JIFRyYW5zbWl0dGVyCiAgIENvbnRyb2xsZQoKCkNoYW5nZXMg
+aW4gdjI6Ci0gVXNpbmcgRFJNIGF0b21pYyBoZWxwZXIgZnVuY3Rpb25zIGZvciBjb25uZWN0b3Ig
+aW5pdCAoTWFyaykKLSBSZW1vdmUgImhkbWktPmNvbm5lY3Rvci5lbmNvZGVyID0gZW5jb2Rlcjsi
+IChNYXJrKQotIENvcnJlY3QgdGhlIG1pc3NwZWxsICJyazMwMzYtZHctaGRtaSIgKEhlaWtvKQoK
+WWFraXIgWWFuZyAoMik6CiAgZHJtOiByb2NrY2hpcC9oZG1pOiBhZGQgSW5ub3NpbGljb24gSERN
+SSBzdXBwb3J0CiAgZHQtYmluZGluZ3M6IGFkZCBkb2N1bWVudCBmb3IgSW5ub3NpbGljb24gSERN
+SSBvbiBSb2NrY2hpcCBwbGF0Zm9ybQoKIC4uLi9kaXNwbGF5L3JvY2tjaGlwL2lubm9faGRtaS1y
+b2NrY2hpcC50eHQgICAgICAgIHwgICA1MCArCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvS2Nv
+bmZpZyAgICAgICAgICAgICAgICAgICB8ICAgIDggKwogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlw
+L01ha2VmaWxlICAgICAgICAgICAgICAgICAgfCAgICAxICsKIGRyaXZlcnMvZ3B1L2RybS9yb2Nr
+Y2hpcC9pbm5vX2hkbWkuYyAgICAgICAgICAgICAgIHwgMTAxMCArKysrKysrKysrKysrKysrKysr
+KwogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2lubm9faGRtaS5oICAgICAgICAgICAgICAgfCAg
+MzY0ICsrKysrKysKIDUgZmlsZXMgY2hhbmdlZCwgMTQzMyBpbnNlcnRpb25zKCspCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9j
+a2NoaXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+Z3B1L2RybS9yb2NrY2hpcC9pbm5vX2hkbWkuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+Z3B1L2RybS9yb2NrY2hpcC9pbm5vX2hkbWkuaAoKLS0gCjIuMS4yCgoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
