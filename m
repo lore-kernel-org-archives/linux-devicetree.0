@@ -1,57 +1,61 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 1/3] spi: atmel: add support for the internal
- chip-select of the spi controller
-Date: Thu, 7 Jan 2016 15:40:24 +0000
-Message-ID: <20160107154024.GF6588@sirena.org.uk>
-References: <cover.1433850255.git.cyrille.pitchen@atmel.com>
- <c05f4d9abfdabb62b3b3cfeb57a3f9c138b4e45d.1433850255.git.cyrille.pitchen@atmel.com>
- <yw1xvb771yrl.fsf@unicorn.mansr.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] arm64/dts: Add missing DMA Abort interrupt to Juno
+Date: Thu, 7 Jan 2016 15:45:15 +0000
+Message-ID: <568E880B.2090602@arm.com>
+References: <6a66d2ac442925e066fe9b67ee2883de5894b0d3.1452168063.git.robin.murphy@arm.com>
+ <2736927.0LiVxGZzgm@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kb0TSCuX821Ar6UT"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <yw1xvb771yrl.fsf@unicorn.mansr.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Cc: Cyrille Pitchen <cyrille.pitchen@atmel.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2736927.0LiVxGZzgm@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 07/01/16 14:36, Arnd Bergmann wrote:
+> On Thursday 07 January 2016 12:01:59 Robin Murphy wrote:
+>> The DMA-330 has an "irq_abort" interrupt line on which it signals faults
+>> separately from the "irq[n:0]" channel interrupts. On Juno, this is
+>> wired up to SPI 92; add it to the DT so that DMAC faults are correctly
+>> reported for the driver to reset the thing, rather than leaving it
+>> locked up and waiting to time out.
+>>
+>> CC: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+>> CC: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> CC: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+>> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+>>
+>
+> Nothing wrong with the patch, but could you please come up with
+> a more structured way to get patches for Juno into the kernel?
+>
+> You have addressed the patch "to:" the arm-soc maintainers, but
+> you are not listed in the maintainers file for the directory, so
+> it's not clear what you expect to happen here.
 
---kb0TSCuX821Ar6UT
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'll admit I got to the addressing point and wasn't entirely sure either 
+- there still seemed to be a precedent of patches going to arm-soc 
+picking up acks along the way, rather than via a sub-maintainer pull, 
+hence what I ended up with.
 
-On Tue, Jan 05, 2016 at 09:50:54PM +0000, M=E5ns Rullg=E5rd wrote:
-> Cyrille Pitchen <cyrille.pitchen@atmel.com> writes:
+> Ideally, we'd get patches from just one of the people listed
+> in the MAINTAINERS file normally, and let us know if the
+> primary maintainer changes, or if one of the others sends a
+> patch because that person is unavailable.
 
-> > +	as->use_cs_gpios =3D true;
-> > +	if (atmel_spi_is_v2(as) &&
-> > +	    !of_get_property(pdev->dev.of_node, "cs-gpios", NULL)) {
-> > +		as->use_cs_gpios =3D false;
-> > +		master->num_chipselect =3D 4;
-> > +	}
+Sure, I'll bear that in mind in future, especially when sending from an 
+email domain which doesn't really make clear the context that I'm just 
+another end-user posting a fix for something I found, rather than trying 
+to assume any "official" capacity ;)
 
-> This part breaks the AVR32 boards and probably anything else that
-> doesn't use devicetree but does use GPIOs for chip select.
+As a side note, the Juno dts* files don't actually seem to be covered by 
+MAINTAINERS at all, which can't help the situation.
 
-Shouldn't this just be setting defaults for the case where nothing is
-provided?
-
---kb0TSCuX821Ar6UT
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWjobnAAoJECTWi3JdVIfQcOIH/0IRDnR/cOnV4JzxMw20Yvll
-YSsZtp3wzhw4N2iP8QBqXmh2v1nPCEOt86G209PUhHd0o0akfLC1Rd/FoO7YL2oj
-gQg5nATqrbrW1yx2TQBkMD+FrYr8cGA7Pf402fPK1uSwEmhmnEqoUdx0mbq8a2Go
-htOtk/npZ/rPGxoeiIpSsg47hipzC4Ny2BkoEYScIjeKGnTPWY1LYGD8E07/+M+Z
-SNKUv7n50cAZ8qIo5+tDamT8yycfHTRdwdjDDDB24uagx0j7VtQxOsqoUDqsGPGZ
-9+/2S1TFvEVR13qHo0UUL6mtiiGQbcI2eFsHoxAKp3JmdQxPwqWjbRCc8Ludma4=
-=caE8
------END PGP SIGNATURE-----
-
---kb0TSCuX821Ar6UT--
+Sorry for the confusion,
+Robin.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
