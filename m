@@ -1,63 +1,36 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 4/6] arm64: renesas: salvator-x: enable usb2_phy
-Date: Thu, 7 Jan 2016 01:56:24 +0000
-Message-ID: <SG2PR06MB091909E565E1108B317B086DD8F50@SG2PR06MB0919.apcprd06.prod.outlook.com>
-References: <1451037839-572-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-	<1451037839-572-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdW7odgpbiPTjd27JMA2axvqXjHHsEGCdPxcy6K4QueqiA@mail.gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 1/5] devicetree: bindings: Document qcom board
+ compatible format
+Date: Wed, 6 Jan 2016 17:58:52 -0800
+Message-ID: <568DC65C.7050301@codeaurora.org>
+References: <1448062280-15406-1-git-send-email-sboyd@codeaurora.org>
+ <1448062280-15406-2-git-send-email-sboyd@codeaurora.org>
+ <20151122204935.GA465@rob-hp-laptop> <20151124004722.GL19156@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdW7odgpbiPTjd27JMA2axvqXjHHsEGCdPxcy6K4QueqiA@mail.gmail.com>
-Content-Language: ja-JP
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@vger.kernel.org" <linux-arm-kernel@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20151124004722.GL19156@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andy Gross <agross@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbg0KPiBTZW50OiBUdWVz
-ZGF5LCBKYW51YXJ5IDA1LCAyMDE2IDk6NTYgUE0NCj4gDQo+IEhpIFNoaW1vZGEtc2FuLA0KPiAN
-Cj4gT24gRnJpLCBEZWMgMjUsIDIwMTUgYXQgMTE6MDMgQU0sIFlvc2hpaGlybyBTaGltb2RhDQo+
-IDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gU2lnbmVkLW9m
-Zi1ieTogWW9zaGloaXJvIFNoaW1vZGEgPHlvc2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29t
-Pg0KPiA+IC0tLQ0KPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5NS1zYWx2
-YXRvci14LmR0cyB8IDM0ICsrKysrKysrKysrKysrKysrKysrKy0NCj4gPiAgMSBmaWxlIGNoYW5n
-ZWQsIDMzIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQg
-YS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5NS1zYWx2YXRvci14LmR0cyBiL2Fy
-Y2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk1LXNhbHZhdG9yLXguZHRzDQo+ID4gaW5k
-ZXggMjY1ZDEyZi4uNzM1MzQwNyAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRz
-L3JlbmVzYXMvcjhhNzc5NS1zYWx2YXRvci14LmR0cw0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9v
-dC9kdHMvcmVuZXNhcy9yOGE3Nzk1LXNhbHZhdG9yLXguZHRzDQo+ID4gQEAgLTEyMiw4ICsxMjIs
-MjIgQEANCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiYXVkaW9fY2xrb3V0
-X2EiLCAiYXVkaW9fY2xrb3V0M19hIjsNCj4gPiAgICAgICAgICAgICAgICAgcmVuZXNhcyxmdW5j
-dGlvbiA9ICJhdWRpb19jbGsiOw0KPiA+ICAgICAgICAgfTsNCj4gPiAtfTsNCj4gPg0KPiA+ICsg
-ICAgICAgdXNiMF9waW5zOiB1c2IwIHsNCj4gPiArICAgICAgICAgICAgICAgcmVuZXNhcyxncm91
-cHMgPSAidXNiMCI7DQo+ID4gKyAgICAgICAgICAgICAgIHJlbmVzYXMsZnVuY3Rpb24gPSAidXNi
-IjsNCj4gPiArICAgICAgIH07DQo+ID4gKw0KPiA+ICsgICAgICAgdXNiMV9waW5zOiB1c2IxIHsN
-Cj4gPiArICAgICAgICAgICAgICAgcmVuZXNhcyxncm91cHMgPSAidXNiMSI7DQo+ID4gKyAgICAg
-ICAgICAgICAgIHJlbmVzYXMsZnVuY3Rpb24gPSAidXNiIjsNCj4gPiArICAgICAgIH07DQo+ID4g
-Kw0KPiA+ICsgICAgICAgdXNiMl9waW5zOiB1c2IyIHsNCj4gPiArICAgICAgICAgICAgICAgcmVu
-ZXNhcyxncm91cHMgPSAidXNiMiI7DQo+ID4gKyAgICAgICAgICAgICAgIHJlbmVzYXMsZnVuY3Rp
-b24gPSAidXNiIjsNCj4gPiArICAgICAgIH07DQo+IA0KPiBzaC1wZmMgZTYwNjAwMDAucGZjOiBm
-dW5jdGlvbiAndXNiJyBub3Qgc3VwcG9ydGVkDQo+IHNoLXBmYyBlNjA2MDAwMC5wZmM6IGludmFs
-aWQgZnVuY3Rpb24gdXNiIGluIG1hcCB0YWJsZQ0KPiBzaC1wZmMgZTYwNjAwMDAucGZjOiBmdW5j
-dGlvbiAndXNiJyBub3Qgc3VwcG9ydGVkDQo+IHNoLXBmYyBlNjA2MDAwMC5wZmM6IGludmFsaWQg
-ZnVuY3Rpb24gdXNiIGluIG1hcCB0YWJsZQ0KPiBzaC1wZmMgZTYwNjAwMDAucGZjOiBmdW5jdGlv
-biAndXNiJyBub3Qgc3VwcG9ydGVkDQo+IHNoLXBmYyBlNjA2MDAwMC5wZmM6IGludmFsaWQgZnVu
-Y3Rpb24gdXNiIGluIG1hcCB0YWJsZQ0KPiANCj4gQXMgdGhlIHVzYiBwYXRjaGVzIGZvciBwZmMt
-cjhhNzc5NSBoYXZlbid0IGJlZW4gcG9zdGVkIHlldCwgaXQncyBkaWZmaWN1bHQNCj4gdG8gdGVz
-dC9jb21tZW50Lg0KPiANCj4gTm90ZSB0aGF0IHRoZSBmdW5jdGlvbnMgd2VyZSBjYWxsZWQgInVz
-YiV1IiBpbiBhIHByZXZpb3VzIHZlcnNpb24sIGFuZCBpbiB0aGUNCj4gcGZjLXI4YTc3OTUgY29k
-ZSBpbiB0aGUgQlNQLg0KPiANCj4gQ2FuIHlvdSBwbGVhc2UgcG9zdCB0aGUgcGZjLXI4YTc3OTUg
-cGF0Y2hlcywgdG9vPw0KDQpUaGFuayB5b3UgZm9yIHRoZSBwb2ludC4gSSBvdmVybG9va2VkIHRo
-ZXNlIGVycm9yIG1lc3NhZ2VzIGJlY2F1c2UNCnVzYiBob3N0IGZ1bmN0aW9ucyB3b3JrZWQgY29y
-cmVjdGx5Li4uDQoNCkFueXdheSwgSSB3aWxsIG1ha2UgdGhlIHBmYy1yOGE3Nzk1IHBhdGNoZXMg
-Zm9yIGl0IGxhdGVyLg0KDQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0KDQo+IFRo
-YW5rcyENCj4gDQo+IEdye29ldGplLGVldGluZ31zLA0KPiANCj4gICAgICAgICAgICAgICAgICAg
-ICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxv
-dHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgtbTY4ay5vcmcNCj4gDQo+IElu
-IHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlz
-ZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2luZyB0byBqb3VybmFsaXN0cyBJIGp1
-c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0aGF0Lg0KPiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRzDQo=
+On 11/23/15 16:47, Stephen Boyd wrote:
+> On 11/22, Rob Herring wrote:
+>>
+>> Much more reasonable now. I do find the '/' in it a bit strange though.
+> I can remove the backslash if you like. Is a dash more preferred?
+>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>>
+> and if so can I keep the ack? I'll resend with that change and
+> add the ack.
+>
+
+I'll take no answer as "let's not change anything", so can someone
+pickup this patch as is? Perhaps Andy can do that?
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
