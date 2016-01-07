@@ -1,49 +1,21 @@
 From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH v2 00/10] [media] tvp5150: add MC and DT support
-Date: Thu,  7 Jan 2016 09:46:40 -0300
-Message-ID: <1452170810-32346-1-git-send-email-javier@osg.samsung.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
+Subject: [PATCH v2 07/10] [media] tvp5150: Add device tree binding document
+Date: Thu,  7 Jan 2016 09:46:47 -0300
+Message-ID: <1452170810-32346-8-git-send-email-javier@osg.samsung.com>
+References: <1452170810-32346-1-git-send-email-javier@osg.samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1452170810-32346-1-git-send-email-javier@osg.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Enrico Butera <ebutera@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Rob Herring <robh+dt@kernel.org>, Eduard Gavin <egavinc@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Add a Device Tree binding document for the TVP5150 video decoder.
 
-One of my testing platforms for the MC next gen [0] work has been an OMAP3
-board (IGEPv2) with a tvp5151 video decoder attached to the OMAP3ISP block.
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-I've been using some patches from Laurent Pinchart that adds MC support to
-the tvp5150 driver. The patches were never posted to the list and it seems
-he doesn't have time to continue working on this so I have taken them from
-his personal tree [1] and submitting now for review.
-
-The series also contains patches that adds DT support to the driver so it
-can be used in DT based platforms.
-
-This is the second version of the series that fixes issues addressed by
-Rob Herring and Laurent Pinchart. The first patch-set version was [2].
-
-To test, the following media pipeline was used:
-
-$ media-ctl -r -l '"tvp5150 1-005c":0->"OMAP3 ISP CCDC":0[1], "OMAP3 ISP CCDC":1->"OMAP3 ISP CCDC output":0[1]'
-$ media-ctl -v --set-format '"OMAP3 ISP CCDC":0 [UYVY2X8 720x240 field:alternate]'
-$ media-ctl -v --set-format '"OMAP3 ISP CCDC":1 [UYVY2X8 720x240 field:interlaced-tb]'
-
-And frames captured with the yavta tool:
-
-$ yavta -f UYVY -s 720x480 -n 1 --field interlaced-tb --capture=1 -F /dev/video2
-$ raw2rgbpnm -f UYVY -s 720x480 frame-000000.bin frame-000000.pnm
-
-The patches are on top of [0] not because is a depedency but just to avoid
-merge conflicts and I don't expect them to be picked before that anyways.
-
-Best regards,
-Javier
-
-[0]: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-August/367109.html
-[1]: http://git.linuxtv.org/pinchartl/media.git/log/?h=omap3isp/tvp5151
-[2]: https://lkml.org/lkml/2016/1/4/216
+---
 
 Changes in v2:
 - Fix indentation of the DTS example. Suggested by Rob Herring.
@@ -51,35 +23,61 @@ Changes in v2:
   the datasheet. Suggested by Laurent Pinchart.
 - Add optional properties for the video endpoint and list the supported
   values. Suggested by Laurent Pinchart.
-- Add Reviewed-by tag from Laurent Pinchart to patch 8/10.
-- Include missing linux/gpio/consumer.h header. Reported by kbuild test robot.
-- Keep the headers sorted alphabetically. Suggested by Laurent Pinchart.
-- Rename powerdown to pdn to match datasheet pin. Suggested by Laurent Pinchart.
-- Embed mbus_type into struct tvp5150. Suggested by Laurent Pinchart.
-- Remove platform data support. Suggested by Laurent Pinchart.
-- Check if the hsync, vsync and field even active properties are correct.
-  Suggested by Laurent Pinchart.
 
-Eduard Gavin (1):
-  [media] tvp5150: Add OF match table
-
-Javier Martinez Canillas (3):
-  [media] tvp5150: Add device tree binding document
-  [media] tvp5150: Initialize the chip on probe
-  [media] tvp5150: Configure data interface via DT
-
-Laurent Pinchart (6):
-  [media] tvp5150: Restructure version detection
-  [media] tvp5150: Add tvp5151 support
-  [media] tvp5150: Add pad-level subdev operations
-  [media] tvp5150: Add pixel rate control support
-  [media] tvp5150: Add s_stream subdev operation support
-  [media] tvp5150: Add g_mbus_config subdev operation support
-
- .../devicetree/bindings/media/i2c/tvp5150.txt      |  45 ++++
- drivers/media/i2c/tvp5150.c                        | 269 +++++++++++++++++----
- 2 files changed, 268 insertions(+), 46 deletions(-)
+ .../devicetree/bindings/media/i2c/tvp5150.txt      | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp5150.txt
 
+diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+new file mode 100644
+index 000000000000..8c0fc1a26bf0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+@@ -0,0 +1,45 @@
++* Texas Instruments TVP5150 and TVP5151 video decoders
++
++The TVP5150 and TVP5151 are video decoders that convert baseband NTSC and PAL
++(and also SECAM in the TVP5151 case) video signals to either 8-bit 4:2:2 YUV
++with discrete syncs or 8-bit ITU-R BT.656 with embedded syncs output formats.
++
++Required Properties:
++- compatible: value must be "ti,tvp5150"
++- reg: I2C slave address
++
++Optional Properties:
++- pdn-gpios: phandle for the GPIO connected to the PDN pin, if any.
++- reset-gpios: phandle for the GPIO connected to the RESETB pin, if any.
++
++The device node must contain one 'port' child node for its digital output
++video port, in accordance with the video interface bindings defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Required Endpoint Properties for parallel synchronization:
++
++- hsync-active: active state of the HSYNC signal. Must be <1> (HIGH).
++- vsync-active: active state of the VSYNC signal. Must be <1> (HIGH).
++- field-even-active: field signal level during the even field data
++  transmission. Must be <0>.
++
++If none of hsync-active, vsync-active and field-even-active is specified,
++the endpoint is assumed to use embedded BT.656 synchronization.
++
++Example:
++
++&i2c2 {
++	...
++	tvp5150@5c {
++		compatible = "ti,tvp5150";
++		reg = <0x5c>;
++		pdn-gpios = <&gpio4 30 GPIO_ACTIVE_LOW>;
++		reset-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
++
++		port {
++			tvp5150_1: endpoint {
++				remote-endpoint = <&ccdc_ep>;
++			};
++		};
++	};
++};
 -- 
 2.4.3
