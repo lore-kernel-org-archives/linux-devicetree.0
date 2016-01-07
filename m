@@ -1,275 +1,266 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/6] DT: mfd: add device-tree binding doc fro PMIC
- max77620/max20024
-Date: Thu, 7 Jan 2016 17:12:49 -0600
-Message-ID: <20160107231249.GA17514@rob-hp-laptop>
-References: <1452177524-23192-1-git-send-email-ldewangan@nvidia.com>
- <1452177524-23192-2-git-send-email-ldewangan@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1452177524-23192-2-git-send-email-ldewangan@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com
+From: Greg Hackmann <ghackmann@google.com>
+Subject: [PATCH v3] pstore-ram: add Device Tree bindings
+Date: Thu,  7 Jan 2016 15:40:56 -0800
+Message-ID: <1452210056-14436-1-git-send-email-ghackmann@google.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, John Stultz <john.stultz@linaro.org>, linux-doc@vger.kernel.org, Greg Hackmann <ghackmann@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 07, 2016 at 08:08:39PM +0530, Laxman Dewangan wrote:
-> The MAXIM PMIC MAX77620 and MAX20024 are power management IC
-> which supports RTC, GPIO, DCDC/LDO regulators, interrupt,
-> watchdog etc.
-> 
-> Add DT binding document for the different functionality of
-> this device.
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> ---
->  Documentation/devicetree/bindings/mfd/max77620.txt | 383 +++++++++++++++++++++
->  include/dt-bindings/mfd/max77620.h                 |  38 ++
->  2 files changed, 421 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/max77620.txt
->  create mode 100644 include/dt-bindings/mfd/max77620.h
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
-> new file mode 100644
-> index 0000000..09cff4a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/max77620.txt
-> @@ -0,0 +1,383 @@
-> +* MAX77620 Power management IC from Maxim Semiconductor.
-> +
-> +Required properties:
-> +-------------------
-> +- compatible: Must be one of
-> +		"maxim,max77620" or
-> +		"maxim,max20024".
-> +- reg: I2C device address.
-> +- interrupt-controller: MAX77620 has internal interrupt controller which
-> +  takes the interrupt request from internal sub-blocks like RTC,
-> +  regulators, GPIOs as well as external input.
-> +- #interrupt-cells: Should be set to 2 for IRQ number and flags.
-> +  The first cell is the IRQ number. IRQ numbers for different interrupt
-> +  source of MAX77620 are defined at dt-bindings/mfd/max77620.h
-> +  The second cell is the flags, encoded as the trigger masks from binding
-> +  document interrupts.txt, using dt-bindings/irq.
-> +
-> +Optional properties:
-> +-------------------
-> +This device also supports the power OFF of system.
-> +Following properties are used for this purpose:
-> +- system-power-controller: Boolean, This device will be use as
-> +	system power controller and used for power OFF of system.
-> +	Host issue necessary command to PMIC.
-> +
-> +
-> +Optional submodule and their properties:
-> +=======================================
-> +
-> +Flexible power sequence configuration
-> +====================================
-> +This sub-node configures the Flexible Power Sequnece(FPS) for power ON slot,
-> +power OFF slot and slot period of the device. Device has 3 FPS as FPS0,
-> +FPS1 and FPS2. The details of FPS configuration is provided through
-> +subnode "fps". The details of FPS0, FPS1, FPS2 are provided through the
-> +child node under this subnodes. The FPS number is provided via reg property.
-> +
-> +The property for fps child nodes as:
-> +Required properties:
-> +	-reg: FPS number like 0, 1, 2 for FPS0, FPS1 and FPS2 respectively.
-> +Optinal properties:
-> +	-maxim,active-fps-time-period: Active state FPS time period.
-> +	-maxim,suspend-fps-time-period: Suspend state FPS time period.
+ramoops is one of the remaining places where ARM vendors still rely on
+board-specific shims.  Device Tree lets us replace those shims with
+generic code.
 
-What are the units?
+These bindings mirror the ramoops module parameters, with two small
+differences:
 
-> +	-maxim,fps-enable-input: FPS enable source like EN0, EN1 or SW. The
-> +			macros are defined on dt-bindings/mfd/max77620.h for
-> +			different enable source.
-> +				FPS_EN_SRC_EN0 for EN0 enable source.
-> +				FPS_EN_SRC_EN1 for En1 enable source.
-> +				FPS_EN_SRC_SW for SW based control.
-> +	-maxim,fps-sw-enable: Boolean, applicable if enable input is SW.
-> +			If this property present then enable the FPS else
-> +			disable FPS.
-> +	-maxim,enable-sleep: Enable sleep when the external control goes from
-> +			HIGH to LOW.
+(1) dump_oops becomes an optional "no-dump-oops" property, since ramoops
+    sets dump_oops=1 by default.
 
-Boolean?
+(2) mem_type=1 becomes the more self-explanatory "unbuffered" property.
 
-> +	-maxim,enable-global-lpm: Enable global LPM when the external control
-> +			goes from HIGH to LOW.
+Signed-off-by: Greg Hackmann <ghackmann@google.com>
+---
+Changes in V3:
+- documentation fixes
+- look for "no-ram-oops" property as documented
 
-Boolean?
+Changes in V2:
+- make DT binding documentation more generic
 
-> +
-> +Pinmux and GPIO:
-> +===============
-> +Device has 8 GPIO pins which can be configured as GPIO as well as the
-> +special IO functions.
-> +
-> +Please refer to pinctrl-bindings.txt for details of the common pinctrl
-> +bindings used by client devices, including the meaning of the phrase
-> +"pin configuration node".
-> +
-> +Following are properties which is needed if GPIO and pinmux functionality
-> +is required:
-> +    Required properties:
-> +    -------------------
-> +	- gpio-controller: Marks the device node as a GPIO controller.
-> +	- #gpio-cells: Number of GPIO cells. Refer to binding document
-> +			gpio/gpio.txt
-> +
-> +    Optional properties:
-> +    --------------------
-> +	Following properties are require if pin control setting is required
-> +	at boot.
-> +	- pinctrl-names: A pinctrl state named "default" be defined, using
-> +		the bindings in pinctrl/pinctrl-binding.txt.
-> +	- pinctrl[0...n]: Properties to contain the phandle that refer to
-> +		different nodes of pin control settings. These nodes
-> +		represents the pin control setting of state 0 to state n.
-> +		Each of these nodes contains different subnodes to
-> +		represents some desired configuration for a list of pins.
-> +		This configuration can include the mux function to select
-> +		on those pin(s), and various pin configuration parameters,
-> +		such as pull-up, open drain.
-> +
-> +		Each subnode have following properties:
-> +		Required properties:
-> +		    - pins: List of pins. Valid values of pins properties
-> +				are: gpio0, gpio1, gpio2, gpio3, gpio4,
-> +				gpio5, gpio6, gpio7
-> +
-> +		Optional properties:
-> +			function, drive-push-pull, drive-open-drain,
-> +			bias-pull-up, bias-pull-down.
-> +				Definitions are in the pinmux dt binding
-> +			devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> +			Absence of properties will leave the configuration
-> +			on default.
-> +
-> +			Valid values for function properties are:
-> +				gpio, lpm-control-in, fps-out, 32k-out,
-> +				sd0-dvs-in, sd1-dvs-in, reference-out
-> +			Theres is also customised property for the GPIO1,
-> +				GPIO2 and GPIO3.
-> +			- maxim,active-fps-source: FPS source for the gpios in
-> +				active state of the GPIO. Valid values are
-> +				FPS_SRC_0, FPS_SRC_1, FPS_SRC_2 and
-> +				FPS_SRC_NONE. Absence of this property will
-> +				leave the pin on default.
-> +			- maxim,active-fps-power-up-slot: Power up slot on
-> +				given FPS for acive state.Valid values are 0
-> +				to 7.
-> +			- maxim,active-fps-power-down-slot: Power down slot
-> +				on given FPS for active state. Valid values
-> +				are 0 t  7.
-> +			- maxim,suspend-fps-source: Suspend state FPS source.
-> +			- maxim,suspend-fps-power-down-slot: Suspend state
-> +				power down slot.
-> +			- maxim,suspend-fps-power-up-slot: Suspend state power
-> +				up slot.
-> +
-> +Regulators:
-> +===========
-> +Device has multiple DCDC(sd[0-3] and LDOs(ldo[0-8]). The node "regulators"
-> +is require if regulator functionality is needed.
-> +
-> +Following are properties of regulator subnode.
-> +
-> +    Optional properties:
-> +    -------------------
-> +	The input supply of regulators are the optional properties on the
-> +	regulator node. The input supply of these regulators are provided
-> +	through following properties:
-> +		in-sd0-supply: Input supply for SD0, INA-SD0 or INB-SD0 pins.
-> +		in-sd1-supply: Input supply for SD1.
-> +		in-sd2-supply: Input supply for SD2.
-> +		in-sd3-supply: Input supply for SD3.
-> +		in-ldo0-1-supply: Input supply for LDO0 and LDO1.
-> +		in-ldo2-supply: Input supply for LDO2.
-> +		in-ldo3-5-supply: Input supply for LDO3 and LDO5
-> +		in-ldo4-6-supply: Input supply for LDO4 and LDO6.
-> +		in-ldo7-8-supply: Input supply for LDO7 and LDO8.
-> +
-> +
-> +    Optional sub nodes for regulators:
-> +    ---------------------------------
-> +	The subnodes name is the name of regulator and it must be one of:
-> +	sd[0-3], ldo[0-8]
-> +
-> +	Each sub-node should contain the constraints and initialization
-> +	information for that regulator. See regulator.txt for a description
-> +	of standard properties for these sub-nodes.
-> +	Additional optional custom properties  are listed below.
-> +		maxim,active-fps-source: FPS source. The macros are defined at
-> +			dt-bindings/mfd/max77620.h
-> +		maxim,shutdown-fps-source: Same as maxim,fps-source, but it
-> +			will apply during shutdown of system.
-> +		maxim,active-fps-power-up-slot: Active state Power up slot for
-> +			rail on given FPS.
-> +		maxim,active-fps-power-down-slot: Active state Power down slot
-> +			for rail on given FPS.
-> +		maxim,suspend-fps-source: Suspend state FPS source of rail.
-> +		maxim,suspend-fps-power-up-slot: Suspend state FPS power
-> +			up slot.
-> +		maxim,suspend-fps-power-down-slot: Suspend state FPS power
-> +			down slot.
-> +		maxim,enable-group-low-power: Enable Group low power mode.
-> +		maxim,enable-sd0-en2-control: Enable EN2 pincontrol for SD0.
-> +			This property is only applicable for SD0.
-> +		maxim,disable-remote-sense-on-suspend: Boolean, disable
-> +			remote sense on suspend and re-enable on resume.
-> +			If this property is not there then no change on
-> +			configuration.
-> +
-> +Backup Battery:
-> +==============
-> +This sub-node configure charging backup battery of the device. Device
-> +has support of charging the backup battery. The subnode name is
-> +"backup-battery".
-> +
-> +The property for backup-battery child nodes as:
-> +Presense of this child node will enable the backup battery charging.
-> +
-> +Optinal properties:
-> +	-maxim,backup-battery-charging-current: Charging current setting.
-> +			The device supports 50/100/200/400/600/800uA.
-> +			If this property is unavailable then it will
-> +			charge with 50uA.
+ Documentation/devicetree/bindings/misc/ramoops.txt |  43 ++++++++
+ Documentation/ramoops.txt                          |   6 +-
+ fs/pstore/ram.c                                    | 110 ++++++++++++++++++++-
+ 3 files changed, 155 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/misc/ramoops.txt
 
-Add units suffix (-microamp).
-
-> +	-maxim,backup-battery-charging-voltage: Charging Voltage Limit Setting.
-> +			Device supports 2500000/3000000/3300000/350000uV.
-> +			Default will be set to 2500mV. The voltage will be roundoff
-> +			to nearest lower side if other than above is configured.
-
-Add units suffix (-microvolt).
-
-> +	-maxim,backup-battery-output-resister: Output resistor on Ohm.
-> +			Device supports 100/1000/3000/6000 Ohms.
-
-Add units suffix.
-
-> +
-> +Low-Battery Monitor:
-> +==================
-> +This sub-node configure low battery monitor configuration registers.
-> +Device has support for low-battery monitor configuration through
-> +child DT node "low-battery-monitor".
-> +
-> +Optinal properties:
-> +	- maxim,low-battery-dac-enable: Enable low battery DAC.
-> +	- maxim,low-battery-dac-disable: Disable low battery DAC.
-> +	- maxim,low-battery-shutdown-enable: Enable low battery shutdown.
-> +	- maxim,low-battery-shutdown-disable: Disable low battery shutdown.
-> +	- maxim,low-battery-reset-enable: Enable low battery reset.
-> +	- maxim,low-battery-reset-disable: Disable low battery reset.
-
-Why not boolean? Not present means keep default value? I'd prefer 
-boolean or tristate of not present, 0 to disable, or 1 to enable.
-
-Rob
-
+diff --git a/Documentation/devicetree/bindings/misc/ramoops.txt b/Documentation/devicetree/bindings/misc/ramoops.txt
+new file mode 100644
+index 0000000..5a475fa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/ramoops.txt
+@@ -0,0 +1,43 @@
++Ramoops oops/panic logger
++=========================
++
++ramoops provides persistent RAM storage for oops and panics, so they can be
++recovered after a reboot.
++
++Parts of this storage may be set aside for other persistent log buffers, such
++as kernel log messages, or for optional ECC error-correction data.  The total
++size of these optional buffers must fit in the reserved region.
++
++Any remaining space will be used for a circular buffer of oops and panic
++records.  These records have a configurable size, with a size of 0 indicating
++that they should be disabled.
++
++
++Required properties:
++
++- compatible: must be "ramoops"
++
++- memory-region: phandle to a region of memory that is preserved between reboots
++
++
++Optional properties:
++
++- ecc-size: enables ECC support and specifies ECC buffer size in bytes
++  (defaults to no ECC)
++
++- record-size: maximum size in bytes of each dump done on oops/panic
++  (defaults to 0)
++
++- console-size: size in bytes of log buffer reserved for kernel messages
++  (defaults to 0)
++
++- ftrace-size: size in bytes of log buffer reserved for function tracing and
++  profiling (defaults to 0)
++
++- pmsg-size: size in bytes of log buffer reserved for userspace messages
++  (defaults to 0)
++
++- unbuffered: if present, use unbuffered mappings to map the reserved region
++  (defaults to buffered mappings)
++
++- no-dump-oops: if present, only dump panics (defaults to panics and oops)
+diff --git a/Documentation/ramoops.txt b/Documentation/ramoops.txt
+index 5d86756..9264bca 100644
+--- a/Documentation/ramoops.txt
++++ b/Documentation/ramoops.txt
+@@ -45,7 +45,7 @@ corrupt, but usually it is restorable.
+ 
+ 2. Setting the parameters
+ 
+-Setting the ramoops parameters can be done in 2 different manners:
++Setting the ramoops parameters can be done in 3 different manners:
+  1. Use the module parameters (which have the names of the variables described
+  as before).
+  For quick debugging, you can also reserve parts of memory during boot
+@@ -54,7 +54,9 @@ Setting the ramoops parameters can be done in 2 different manners:
+  kernel to use only the first 128 MB of memory, and place ECC-protected ramoops
+  region at 128 MB boundary:
+  "mem=128M ramoops.mem_address=0x8000000 ramoops.ecc=1"
+- 2. Use a platform device and set the platform data. The parameters can then
++ 2. Use Device Tree bindings, as described in
++ Documentation/device-tree/bindings/misc/ramoops.txt.
++ 3. Use a platform device and set the platform data. The parameters can then
+  be set through that platform data. An example of doing that is:
+ 
+ #include <linux/pstore_ram.h>
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index 319c3a6..0f2912c 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -34,6 +34,8 @@
+ #include <linux/slab.h>
+ #include <linux/compiler.h>
+ #include <linux/pstore_ram.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
+ 
+ #define RAMOOPS_KERNMSG_HDR "===="
+ #define MIN_MEM_SIZE 4096UL
+@@ -458,15 +460,112 @@ static int ramoops_init_prz(struct device *dev, struct ramoops_context *cxt,
+ 	return 0;
+ }
+ 
++static int ramoops_parse_dt_size(struct platform_device *pdev,
++		const char *propname, unsigned long *val)
++{
++	u64 val64;
++	int ret;
++
++	ret = of_property_read_u64(pdev->dev.of_node, propname, &val64);
++	if (ret == -EINVAL) {
++		*val = 0;
++		return 0;
++	} else if (ret != 0) {
++		dev_err(&pdev->dev, "failed to parse property %s: %d\n",
++				propname, ret);
++		return ret;
++	}
++
++	if (val64 > ULONG_MAX) {
++		dev_err(&pdev->dev, "invalid %s %llu\n", propname, val64);
++		return -EOVERFLOW;
++	}
++
++	*val = val64;
++	return 0;
++}
++
++static int ramoops_parse_dt(struct platform_device *pdev,
++		struct ramoops_platform_data *pdata)
++{
++	struct device_node *of_node = pdev->dev.of_node;
++	struct device_node *mem_region;
++	struct resource res;
++	u32 ecc_size;
++	int ret;
++
++	dev_dbg(&pdev->dev, "using Device Tree\n");
++
++	mem_region = of_parse_phandle(of_node, "memory-region", 0);
++	if (!mem_region) {
++		dev_err(&pdev->dev, "no memory-region phandle\n");
++		return -ENODEV;
++	}
++
++	ret = of_address_to_resource(mem_region, 0, &res);
++	of_node_put(mem_region);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to translate memory-region to resource: %d\n",
++				ret);
++		return ret;
++	}
++
++	pdata->mem_size = resource_size(&res);
++	pdata->mem_address = res.start;
++	pdata->mem_type = of_property_read_bool(of_node, "unbuffered");
++	pdata->dump_oops = !of_property_read_bool(of_node, "no-dump-oops");
++
++	ret = ramoops_parse_dt_size(pdev, "record-size", &pdata->record_size);
++	if (ret < 0)
++		return ret;
++
++	ret = ramoops_parse_dt_size(pdev, "console-size", &pdata->console_size);
++	if (ret < 0)
++		return ret;
++
++	ret = ramoops_parse_dt_size(pdev, "ftrace-size", &pdata->ftrace_size);
++	if (ret < 0)
++		return ret;
++
++	ret = ramoops_parse_dt_size(pdev, "pmsg-size", &pdata->pmsg_size);
++	if (ret < 0)
++		return ret;
++
++	ret = of_property_read_u32(of_node, "ecc-size", &ecc_size);
++	if (ret == 0) {
++		if (ecc_size > INT_MAX) {
++			dev_err(&pdev->dev, "invalid ecc-size %u\n", ecc_size);
++			return -EOVERFLOW;
++		}
++		pdata->ecc_info.ecc_size = ecc_size;
++	} else if (ret != -EINVAL) {
++		return ret;
++	}
++
++	return 0;
++}
++
+ static int ramoops_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+-	struct ramoops_platform_data *pdata = pdev->dev.platform_data;
++	struct ramoops_platform_data *pdata = platform_get_drvdata(pdev);
+ 	struct ramoops_context *cxt = &oops_cxt;
+ 	size_t dump_mem_sz;
+ 	phys_addr_t paddr;
+ 	int err = -EINVAL;
+ 
++	if (dev->of_node && !pdata) {
++		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++		if (!pdata) {
++			err = -ENOMEM;
++			goto fail_out;
++		}
++
++		err = ramoops_parse_dt(pdev, pdata);
++		if (err < 0)
++			goto fail_out;
++	}
++
+ 	/* Only a single ramoops area allowed at a time, so fail extra
+ 	 * probes.
+ 	 */
+@@ -561,6 +660,7 @@ static int ramoops_probe(struct platform_device *pdev)
+ 		cxt->size, (unsigned long long)cxt->phys_addr,
+ 		cxt->ecc_info.ecc_size, cxt->ecc_info.block_size);
+ 
++	platform_set_drvdata(pdev, pdata);
+ 	return 0;
+ 
+ fail_buf:
+@@ -596,11 +696,17 @@ static int ramoops_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id dt_match[] = {
++	{ .compatible = "ramoops" },
++	{}
++};
++
+ static struct platform_driver ramoops_driver = {
+ 	.probe		= ramoops_probe,
+ 	.remove		= ramoops_remove,
+ 	.driver		= {
+-		.name	= "ramoops",
++		.name		= "ramoops",
++		.of_match_table	= dt_match,
+ 	},
+ };
+ 
+-- 
+2.6.0.rc2.230.g3dd15c0
