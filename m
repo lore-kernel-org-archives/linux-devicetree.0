@@ -1,7 +1,7 @@
 From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH v2 06/10] [media] tvp5150: Add g_mbus_config subdev operation support
-Date: Thu,  7 Jan 2016 09:46:46 -0300
-Message-ID: <1452170810-32346-7-git-send-email-javier@osg.samsung.com>
+Subject: [PATCH v2 04/10] [media] tvp5150: Add pixel rate control support
+Date: Thu,  7 Jan 2016 09:46:44 -0300
+Message-ID: <1452170810-32346-5-git-send-email-javier@osg.samsung.com>
 References: <1452170810-32346-1-git-send-email-javier@osg.samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1452170810-32346-1-git-send-email-javier@osg.samsung.com>
@@ -12,7 +12,7 @@ List-Id: devicetree@vger.kernel.org
 
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-This patch adds the .g_mbus_config subdev operation to the driver.
+This patch adds support for the V4L2_CID_PIXEL_RATE control.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
@@ -20,37 +20,31 @@ Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
 Changes in v2: None
 
- drivers/media/i2c/tvp5150.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/media/i2c/tvp5150.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index fb7a4ddff1fe..105bd1c6b17f 100644
+index 82fba9d46f30..71473cec236a 100644
 --- a/drivers/media/i2c/tvp5150.c
 +++ b/drivers/media/i2c/tvp5150.c
-@@ -936,6 +936,16 @@ static int tvp5150_cropcap(struct v4l2_subdev *sd, struct v4l2_cropcap *a)
- 	return 0;
- }
+@@ -1204,7 +1204,7 @@ static int tvp5150_probe(struct i2c_client *c,
+ 	core->input = TVP5150_COMPOSITE1;
+ 	core->enable = 1;
  
-+static int tvp5150_g_mbus_config(struct v4l2_subdev *sd,
-+				 struct v4l2_mbus_config *cfg)
-+{
-+	cfg->type = V4L2_MBUS_BT656;
-+	cfg->flags = V4L2_MBUS_MASTER | V4L2_MBUS_PCLK_SAMPLE_RISING
-+		   | V4L2_MBUS_FIELD_EVEN_LOW | V4L2_MBUS_DATA_ACTIVE_HIGH;
-+
-+	return 0;
-+}
-+
-  /****************************************************************************
- 			V4L2 subdev pad ops
-  ****************************************************************************/
-@@ -1114,6 +1124,7 @@ static const struct v4l2_subdev_video_ops tvp5150_video_ops = {
- 	.s_crop = tvp5150_s_crop,
- 	.g_crop = tvp5150_g_crop,
- 	.cropcap = tvp5150_cropcap,
-+	.g_mbus_config = tvp5150_g_mbus_config,
- };
- 
- static const struct v4l2_subdev_vbi_ops tvp5150_vbi_ops = {
+-	v4l2_ctrl_handler_init(&core->hdl, 4);
++	v4l2_ctrl_handler_init(&core->hdl, 5);
+ 	v4l2_ctrl_new_std(&core->hdl, &tvp5150_ctrl_ops,
+ 			V4L2_CID_BRIGHTNESS, 0, 255, 1, 128);
+ 	v4l2_ctrl_new_std(&core->hdl, &tvp5150_ctrl_ops,
+@@ -1213,6 +1213,9 @@ static int tvp5150_probe(struct i2c_client *c,
+ 			V4L2_CID_SATURATION, 0, 255, 1, 128);
+ 	v4l2_ctrl_new_std(&core->hdl, &tvp5150_ctrl_ops,
+ 			V4L2_CID_HUE, -128, 127, 1, 0);
++	v4l2_ctrl_new_std(&core->hdl, &tvp5150_ctrl_ops,
++			V4L2_CID_PIXEL_RATE, 27000000,
++			27000000, 1, 27000000);
+ 	sd->ctrl_handler = &core->hdl;
+ 	if (core->hdl.error) {
+ 		res = core->hdl.error;
 -- 
 2.4.3
