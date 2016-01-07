@@ -1,55 +1,61 @@
 From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH v2 08/10] [media] tvp5150: Add OF match table
-Date: Thu,  7 Jan 2016 09:46:48 -0300
-Message-ID: <1452170810-32346-9-git-send-email-javier@osg.samsung.com>
+Subject: [PATCH v2 05/10] [media] tvp5150: Add s_stream subdev operation support
+Date: Thu,  7 Jan 2016 09:46:45 -0300
+Message-ID: <1452170810-32346-6-git-send-email-javier@osg.samsung.com>
 References: <1452170810-32346-1-git-send-email-javier@osg.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <1452170810-32346-1-git-send-email-javier@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-media-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Enrico Butera <ebutera@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Rob Herring <robh+dt@kernel.org>, Eduard Gavin <egavinc@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Eduard Gavin <egavinc@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-The Documentation/devicetree/bindings/media/i2c/tvp5150.txt DT binding doc
-lists "ti,tvp5150" as the device compatible string but the driver does not
-have an OF match table. Add the table to the driver so the I2C core can do
-an OF style match.
+This patch adds the .s_stream subdev operation to the driver.
 
-Signed-off-by: Eduard Gavin <egavinc@gmail.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
 ---
 
-Changes in v2:
-- Add Reviewed-by tag from Laurent Pinchart to patch 8/10.
+Changes in v2: None
 
- drivers/media/i2c/tvp5150.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/media/i2c/tvp5150.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index 105bd1c6b17f..caac96a577f8 100644
+index 71473cec236a..fb7a4ddff1fe 100644
 --- a/drivers/media/i2c/tvp5150.c
 +++ b/drivers/media/i2c/tvp5150.c
-@@ -1295,8 +1295,17 @@ static const struct i2c_device_id tvp5150_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, tvp5150_id);
+@@ -973,6 +973,21 @@ static int tvp5150_enum_frame_size(struct v4l2_subdev *sd,
+ 			I2C Command
+  ****************************************************************************/
  
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id tvp5150_of_match[] = {
-+	{ .compatible = "ti,tvp5150", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, tvp5150_of_match);
-+#endif
++static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
++{
++	/* Initializes TVP5150 to its default values */
++	/* # set PCLK (27MHz) */
++	tvp5150_write(sd, TVP5150_CONF_SHARED_PIN, 0x00);
 +
- static struct i2c_driver tvp5150_driver = {
- 	.driver = {
-+		.of_match_table = of_match_ptr(tvp5150_of_match),
- 		.name	= "tvp5150",
- 	},
- 	.probe		= tvp5150_probe,
++	/* Output format: 8-bit ITU-R BT.656 with embedded syncs */
++	if (enable)
++		tvp5150_write(sd, TVP5150_MISC_CTL, 0x09);
++	else
++		tvp5150_write(sd, TVP5150_MISC_CTL, 0x00);
++
++	return 0;
++}
++
+ static int tvp5150_s_routing(struct v4l2_subdev *sd,
+ 			     u32 input, u32 output, u32 config)
+ {
+@@ -1094,6 +1109,7 @@ static const struct v4l2_subdev_tuner_ops tvp5150_tuner_ops = {
+ 
+ static const struct v4l2_subdev_video_ops tvp5150_video_ops = {
+ 	.s_std = tvp5150_s_std,
++	.s_stream = tvp5150_s_stream,
+ 	.s_routing = tvp5150_s_routing,
+ 	.s_crop = tvp5150_s_crop,
+ 	.g_crop = tvp5150_g_crop,
 -- 
 2.4.3
