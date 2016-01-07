@@ -1,85 +1,103 @@
 From: Yakir Yang <ykk@rock-chips.com>
-Subject: [RFC PATCH v2 1/4] drm: dw-hdmi: make it easy to recovery the
- platform data for platform driver
-Date: Thu,  7 Jan 2016 16:57:53 +0800
-Message-ID: <1452157073-18576-1-git-send-email-ykk@rock-chips.com>
+Subject: [RFC PATCH v2 2/4] drm: dw-hdmi: passing the "plat_data" when calling platform mode_valid
+Date: Thu,  7 Jan 2016 17:00:19 +0800
+Message-ID: <1452157219-18635-1-git-send-email-ykk@rock-chips.com>
 References: <1452156811-18150-1-git-send-email-ykk@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1452156811-18150-1-git-send-email-ykk@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Russell King <rmk+kernel@arm.linux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>, Andy Yan <andy.yan@rock-chips.com>, Mark Yao <mark.yao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Zheng Yang <zhengyang@rock-chips.com>
+Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Zheng Yang <zhengyang@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Yakir Yang <ykk@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogWWFraXIgWWFuZyA8eWtrQHJvY2stY2hpcHMuY29tPgotLS0KQ2hhbmdl
-cyBpbiB2MjogTm9uZQoKIGRyaXZlcnMvZ3B1L2RybS9pbXgvZHdfaGRtaS1pbXguYyAgICAgICAg
-ICAgfCA3ICsrKystLS0KIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlw
-LmMgfCA3ICsrKystLS0KIDIgZmlsZXMgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCA2IGRlbGV0
-aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9pbXgvZHdfaGRtaS1pbXguYyBi
-L2RyaXZlcnMvZ3B1L2RybS9pbXgvZHdfaGRtaS1pbXguYwppbmRleCAwNjM4MjVmLi4wOTY4NjEw
-IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vaW14L2R3X2hkbWktaW14LmMKKysrIGIvZHJp
-dmVycy9ncHUvZHJtL2lteC9kd19oZG1pLWlteC5jCkBAIC0yNiw2ICsyNiw3IEBAIHN0cnVjdCBp
-bXhfaGRtaSB7CiAJc3RydWN0IGRldmljZSAqZGV2OwogCXN0cnVjdCBkcm1fZW5jb2RlciBlbmNv
-ZGVyOwogCXN0cnVjdCByZWdtYXAgKnJlZ21hcDsKKwlzdHJ1Y3QgZHdfaGRtaV9wbGF0X2RhdGEg
-cGxhdF9kYXRhOwogfTsKIAogc3RhdGljIGNvbnN0IHN0cnVjdCBkd19oZG1pX21wbGxfY29uZmln
-IGlteF9tcGxsX2NmZ1tdID0gewpAQCAtMjA0LDcgKzIwNSw2IEBAIHN0YXRpYyBpbnQgZHdfaGRt
-aV9pbXhfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKIAkJ
-CSAgICB2b2lkICpkYXRhKQogewogCXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYgPSB0b19w
-bGF0Zm9ybV9kZXZpY2UoZGV2KTsKLQljb25zdCBzdHJ1Y3QgZHdfaGRtaV9wbGF0X2RhdGEgKnBs
-YXRfZGF0YTsKIAljb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkICptYXRjaDsKIAlzdHJ1Y3QgZHJt
-X2RldmljZSAqZHJtID0gZGF0YTsKIAlzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXI7CkBAIC0y
-MjEsNyArMjIxLDcgQEAgc3RhdGljIGludCBkd19oZG1pX2lteF9iaW5kKHN0cnVjdCBkZXZpY2Ug
-KmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAogCQlyZXR1cm4gLUVOT01FTTsKIAogCW1hdGNo
-ID0gb2ZfbWF0Y2hfbm9kZShkd19oZG1pX2lteF9kdF9pZHMsIHBkZXYtPmRldi5vZl9ub2RlKTsK
-LQlwbGF0X2RhdGEgPSBtYXRjaC0+ZGF0YTsKKwloZG1pLT5wbGF0X2RhdGEgPSAqKGNvbnN0IHN0
-cnVjdCBkd19oZG1pX3BsYXRfZGF0YSAqKW1hdGNoLT5kYXRhOwogCWhkbWktPmRldiA9ICZwZGV2
-LT5kZXY7CiAJZW5jb2RlciA9ICZoZG1pLT5lbmNvZGVyOwogCkBAIC0yNTMsNyArMjUzLDggQEAg
-c3RhdGljIGludCBkd19oZG1pX2lteF9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRl
-dmljZSAqbWFzdGVyLAogCWRybV9lbmNvZGVyX2luaXQoZHJtLCBlbmNvZGVyLCAmZHdfaGRtaV9p
-bXhfZW5jb2Rlcl9mdW5jcywKIAkJCSBEUk1fTU9ERV9FTkNPREVSX1RNRFMsIE5VTEwpOwogCi0J
-cmV0dXJuIGR3X2hkbWlfYmluZChkZXYsIG1hc3RlciwgZGF0YSwgZW5jb2RlciwgaW9yZXMsIGly
-cSwgcGxhdF9kYXRhKTsKKwlyZXR1cm4gZHdfaGRtaV9iaW5kKGRldiwgbWFzdGVyLCBkYXRhLCBl
-bmNvZGVyLCBpb3JlcywgaXJxLAorCQkJICAgICZoZG1pLT5wbGF0X2RhdGEpOwogfQogCiBzdGF0
-aWMgdm9pZCBkd19oZG1pX2lteF91bmJpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2
-aWNlICptYXN0ZXIsCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHdfaGRt
-aS1yb2NrY2hpcC5jIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAu
-YwppbmRleCBjNjVjZThjLi5kNTgxNmIzIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcm9j
-a2NoaXAvZHdfaGRtaS1yb2NrY2hpcC5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9k
-d19oZG1pLXJvY2tjaGlwLmMKQEAgLTI4LDYgKzI4LDcgQEAgc3RydWN0IHJvY2tjaGlwX2hkbWkg
-ewogCXN0cnVjdCBkZXZpY2UgKmRldjsKIAlzdHJ1Y3QgcmVnbWFwICpyZWdtYXA7CiAJc3RydWN0
-IGRybV9lbmNvZGVyIGVuY29kZXI7CisJc3RydWN0IGR3X2hkbWlfcGxhdF9kYXRhIHBsYXRfZGF0
-YTsKIH07CiAKICNkZWZpbmUgdG9fcm9ja2NoaXBfaGRtaSh4KQljb250YWluZXJfb2YoeCwgc3Ry
-dWN0IHJvY2tjaGlwX2hkbWksIHgpCkBAIC0yNDIsNyArMjQzLDYgQEAgc3RhdGljIGludCBkd19o
-ZG1pX3JvY2tjaGlwX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0
-ZXIsCiAJCQkJIHZvaWQgKmRhdGEpCiB7CiAJc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiA9
-IHRvX3BsYXRmb3JtX2RldmljZShkZXYpOwotCWNvbnN0IHN0cnVjdCBkd19oZG1pX3BsYXRfZGF0
-YSAqcGxhdF9kYXRhOwogCWNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgKm1hdGNoOwogCXN0cnVj
-dCBkcm1fZGV2aWNlICpkcm0gPSBkYXRhOwogCXN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcjsK
-QEAgLTI1OSw3ICsyNTksNyBAQCBzdGF0aWMgaW50IGR3X2hkbWlfcm9ja2NoaXBfYmluZChzdHJ1
-Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKIAkJcmV0dXJuIC1FTk9NRU07
-CiAKIAltYXRjaCA9IG9mX21hdGNoX25vZGUoZHdfaGRtaV9yb2NrY2hpcF9kdF9pZHMsIHBkZXYt
-PmRldi5vZl9ub2RlKTsKLQlwbGF0X2RhdGEgPSBtYXRjaC0+ZGF0YTsKKwloZG1pLT5wbGF0X2Rh
-dGEgPSAqKGNvbnN0IHN0cnVjdCBkd19oZG1pX3BsYXRfZGF0YSAqKW1hdGNoLT5kYXRhOwogCWhk
-bWktPmRldiA9ICZwZGV2LT5kZXY7CiAJZW5jb2RlciA9ICZoZG1pLT5lbmNvZGVyOwogCkBAIC0y
-OTMsNyArMjkzLDggQEAgc3RhdGljIGludCBkd19oZG1pX3JvY2tjaGlwX2JpbmQoc3RydWN0IGRl
-dmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsCiAJZHJtX2VuY29kZXJfaW5pdChkcm0s
-IGVuY29kZXIsICZkd19oZG1pX3JvY2tjaGlwX2VuY29kZXJfZnVuY3MsCiAJCQkgRFJNX01PREVf
-RU5DT0RFUl9UTURTLCBOVUxMKTsKIAotCXJldHVybiBkd19oZG1pX2JpbmQoZGV2LCBtYXN0ZXIs
-IGRhdGEsIGVuY29kZXIsIGlvcmVzLCBpcnEsIHBsYXRfZGF0YSk7CisJcmV0dXJuIGR3X2hkbWlf
-YmluZChkZXYsIG1hc3RlciwgZGF0YSwgZW5jb2RlciwgaW9yZXMsIGlycSwKKwkJCSAgICAmaGRt
-aS0+cGxhdF9kYXRhKTsKIH0KIAogc3RhdGljIHZvaWQgZHdfaGRtaV9yb2NrY2hpcF91bmJpbmQo
-c3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsCi0tIAoyLjEuMgoKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Make it easy for platform driver could recovery the private data that
+would help to valid the display mode.
+
+Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+---
+Changes in v2: None
+
+ drivers/gpu/drm/bridge/dw-hdmi.c            |  5 +++--
+ drivers/gpu/drm/imx/dw_hdmi-imx.c           | 10 ++++++----
+ drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c |  2 +-
+ include/drm/bridge/dw_hdmi.h                |  2 +-
+ 4 files changed, 11 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/dw-hdmi.c b/drivers/gpu/drm/bridge/dw-hdmi.c
+index 6fbec99..5ad72ec 100644
+--- a/drivers/gpu/drm/bridge/dw-hdmi.c
++++ b/drivers/gpu/drm/bridge/dw-hdmi.c
+@@ -1476,14 +1476,15 @@ dw_hdmi_connector_mode_valid(struct drm_connector *connector,
+ {
+ 	struct dw_hdmi *hdmi = container_of(connector,
+ 					   struct dw_hdmi, connector);
++	const struct dw_hdmi_plat_data *plat_data = hdmi->plat_data;
+ 	enum drm_mode_status mode_status = MODE_OK;
+ 
+ 	/* We don't support double-clocked modes */
+ 	if (mode->flags & DRM_MODE_FLAG_DBLCLK)
+ 		return MODE_BAD;
+ 
+-	if (hdmi->plat_data->mode_valid)
+-		mode_status = hdmi->plat_data->mode_valid(connector, mode);
++	if (plat_data->mode_valid)
++		mode_status = plat_data->mode_valid(plat_data, mode);
+ 
+ 	return mode_status;
+ }
+diff --git a/drivers/gpu/drm/imx/dw_hdmi-imx.c b/drivers/gpu/drm/imx/dw_hdmi-imx.c
+index 0968610..8b0a7da 100644
+--- a/drivers/gpu/drm/imx/dw_hdmi-imx.c
++++ b/drivers/gpu/drm/imx/dw_hdmi-imx.c
+@@ -150,8 +150,9 @@ static const struct drm_encoder_funcs dw_hdmi_imx_encoder_funcs = {
+ 	.destroy = drm_encoder_cleanup,
+ };
+ 
+-static enum drm_mode_status imx6q_hdmi_mode_valid(struct drm_connector *con,
+-						  struct drm_display_mode *mode)
++static enum drm_mode_status
++imx6q_hdmi_mode_valid(const struct dw_hdmi_plat_data *plat_data,
++		      struct drm_display_mode *mode)
+ {
+ 	if (mode->clock < 13500)
+ 		return MODE_CLOCK_LOW;
+@@ -162,8 +163,9 @@ static enum drm_mode_status imx6q_hdmi_mode_valid(struct drm_connector *con,
+ 	return MODE_OK;
+ }
+ 
+-static enum drm_mode_status imx6dl_hdmi_mode_valid(struct drm_connector *con,
+-						   struct drm_display_mode *mode)
++static enum drm_mode_status
++imx6dl_hdmi_mode_valid(const struct dw_hdmi_plat_data *plat_data,
++		       struct drm_display_mode *mode)
+ {
+ 	if (mode->clock < 13500)
+ 		return MODE_CLOCK_LOW;
+diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+index d5816b3..8164823 100644
+--- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
++++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+@@ -156,7 +156,7 @@ static int rockchip_hdmi_parse_dt(struct rockchip_hdmi *hdmi)
+ }
+ 
+ static enum drm_mode_status
+-dw_hdmi_rockchip_mode_valid(struct drm_connector *connector,
++dw_hdmi_rockchip_mode_valid(const struct dw_hdmi_plat_data *plat_data,
+ 			    struct drm_display_mode *mode)
+ {
+ 	const struct dw_hdmi_mpll_config *mpll_cfg = rockchip_mpll_cfg;
+diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
+index bae79f3..f8dec64 100644
+--- a/include/drm/bridge/dw_hdmi.h
++++ b/include/drm/bridge/dw_hdmi.h
+@@ -52,7 +52,7 @@ struct dw_hdmi_plat_data {
+ 	const struct dw_hdmi_mpll_config *mpll_cfg;
+ 	const struct dw_hdmi_curr_ctrl *cur_ctr;
+ 	const struct dw_hdmi_phy_config *phy_config;
+-	enum drm_mode_status (*mode_valid)(struct drm_connector *connector,
++	enum drm_mode_status (*mode_valid)(const struct dw_hdmi_plat_data *pd,
+ 					   struct drm_display_mode *mode);
+ };
+ 
+-- 
+2.1.2
