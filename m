@@ -1,7 +1,7 @@
 From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH v2 07/10] [media] tvp5150: Add device tree binding document
-Date: Thu,  7 Jan 2016 09:46:47 -0300
-Message-ID: <1452170810-32346-8-git-send-email-javier@osg.samsung.com>
+Subject: [PATCH v2 02/10] [media] tvp5150: Add tvp5151 support
+Date: Thu,  7 Jan 2016 09:46:42 -0300
+Message-ID: <1452170810-32346-3-git-send-email-javier@osg.samsung.com>
 References: <1452170810-32346-1-git-send-email-javier@osg.samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1452170810-32346-1-git-send-email-javier@osg.samsung.com>
@@ -10,74 +10,31 @@ To: linux-kernel@vger.kernel.org
 Cc: devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Enrico Butera <ebutera@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Rob Herring <robh+dt@kernel.org>, Eduard Gavin <egavinc@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a Device Tree binding document for the TVP5150 video decoder.
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
+Expand the version detection code to identity the tvp5151.
+
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
 ---
 
-Changes in v2:
-- Fix indentation of the DTS example. Suggested by Rob Herring.
-- Rename powerdown-gpios to pdn-gpios to match the pin name in
-  the datasheet. Suggested by Laurent Pinchart.
-- Add optional properties for the video endpoint and list the supported
-  values. Suggested by Laurent Pinchart.
+Changes in v2: None
 
- .../devicetree/bindings/media/i2c/tvp5150.txt      | 45 ++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+ drivers/media/i2c/tvp5150.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-new file mode 100644
-index 000000000000..8c0fc1a26bf0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-@@ -0,0 +1,45 @@
-+* Texas Instruments TVP5150 and TVP5151 video decoders
-+
-+The TVP5150 and TVP5151 are video decoders that convert baseband NTSC and PAL
-+(and also SECAM in the TVP5151 case) video signals to either 8-bit 4:2:2 YUV
-+with discrete syncs or 8-bit ITU-R BT.656 with embedded syncs output formats.
-+
-+Required Properties:
-+- compatible: value must be "ti,tvp5150"
-+- reg: I2C slave address
-+
-+Optional Properties:
-+- pdn-gpios: phandle for the GPIO connected to the PDN pin, if any.
-+- reset-gpios: phandle for the GPIO connected to the RESETB pin, if any.
-+
-+The device node must contain one 'port' child node for its digital output
-+video port, in accordance with the video interface bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Required Endpoint Properties for parallel synchronization:
-+
-+- hsync-active: active state of the HSYNC signal. Must be <1> (HIGH).
-+- vsync-active: active state of the VSYNC signal. Must be <1> (HIGH).
-+- field-even-active: field signal level during the even field data
-+  transmission. Must be <0>.
-+
-+If none of hsync-active, vsync-active and field-even-active is specified,
-+the endpoint is assumed to use embedded BT.656 synchronization.
-+
-+Example:
-+
-+&i2c2 {
-+	...
-+	tvp5150@5c {
-+		compatible = "ti,tvp5150";
-+		reg = <0x5c>;
-+		pdn-gpios = <&gpio4 30 GPIO_ACTIVE_LOW>;
-+		reset-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
-+
-+		port {
-+			tvp5150_1: endpoint {
-+				remote-endpoint = <&ccdc_ep>;
-+			};
-+		};
-+	};
-+};
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index 9e953e5a7ec9..b3b34e24db13 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -1139,6 +1139,8 @@ static int tvp5150_detect_version(struct tvp5150 *core)
+ 
+ 		/* ITU-T BT.656.4 timing */
+ 		tvp5150_write(sd, TVP5150_REV_SELECT, 0);
++	} else if (dev_id == 0x5151 && rom_ver == 0x0100) { /* TVP5151 */
++		v4l2_info(sd, "tvp5151 detected.\n");
+ 	} else {
+ 		v4l2_info(sd, "*** unknown tvp%04x chip detected.\n", dev_id);
+ 	}
 -- 
 2.4.3
