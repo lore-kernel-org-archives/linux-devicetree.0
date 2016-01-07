@@ -1,61 +1,23 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH v2 2/2] dt-bindings: add document for Innosilicon HDMI on
- Rockchip platform
-Date: Thu,  7 Jan 2016 18:07:10 +0800
-Message-ID: <1452161230-27315-1-git-send-email-ykk@rock-chips.com>
-References: <1452160896-27096-1-git-send-email-ykk@rock-chips.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 2/5] dt-bindings: mediatek: Modify pinctrl bindings for mt2701
+Date: Thu, 7 Jan 2016 11:11:42 +0100
+Message-ID: <CACRpkdbwQgP-4dOuRcaabkdyozEwJPeS7YG9F8cg8M4mgDZwNQ@mail.gmail.com>
+References: <1451286546-5920-1-git-send-email-biao.huang@mediatek.com>
+	<1451286546-5920-3-git-send-email-biao.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1452160896-27096-1-git-send-email-ykk@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Yao <mark.yao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ben Chan <benchan@google.com>, Ken Mixte <kmixter@google.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, linux-arm-kernel@lists.infradead.org, Zheng Yang <zhengyang@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1451286546-5920-3-git-send-email-biao.huang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Biao Huang <biao.huang@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Erin Lo <erin.lo@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogWWFraXIgWWFuZyA8eWtrQHJvY2stY2hpcHMuY29tPgpBY2tlZC1ieTog
-Um9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KLS0tCkNoYW5nZXMgaW4gdjI6Ci0gQ29ycmVj
-dCB0aGUgbWlzc3BlbGwgInJrMzAzNi1kdy1oZG1pIiAoSGVpa28pCgogLi4uL2Rpc3BsYXkvcm9j
-a2NoaXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dCAgICAgICAgfCA1MCArKysrKysrKysrKysrKysr
-KysrKysrCiAxIGZpbGUgY2hhbmdlZCwgNTAgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAw
-NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2lu
-bm9faGRtaS1yb2NrY2hpcC50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9pbm5vX2hkbWktcm9ja2NoaXAudHh0IGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvaW5ub19oZG1p
-LXJvY2tjaGlwLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi44MDk2YTI5
-Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvcm9ja2NoaXAvaW5ub19oZG1pLXJvY2tjaGlwLnR4dApAQCAtMCwwICsxLDUwIEBACitS
-b2NrY2hpcCBzcGVjaWZpYyBleHRlbnNpb25zIHRvIHRoZSBJbm5vc2lsaWNvbiBIRE1JCis9PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PQorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBj
-b21wYXRpYmxlOgorCSJyb2NrY2hpcCxyazMwMzYtaW5uby1oZG1pIjsKKy0gcmVnOgorCVBoeXNp
-Y2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBjb250cm9sbGVyJ3MgcmVnaXN0ZXJz
-LgorLSBjbG9ja3MsIGNsb2NrLW5hbWVzOgorCVBoYW5kbGUgdG8gaGRtaSBjb250cm9sbGVyIGNs
-b2NrLCBuYW1lIHNob3VsZCBiZSAicGNsayIKKy0gaW50ZXJydXB0czoKKwlIRE1JIGludGVycnVw
-dCBudW1iZXIKKy0gcG9ydHM6CisJQ29udGFpbiBvbmUgcG9ydCBub2RlIHdpdGggZW5kcG9pbnQg
-ZGVmaW5pdGlvbnMgYXMgZGVmaW5lZCBpbgorCURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9ncmFwaC50eHQuCistIHBpbmN0cmwtMCwgcGluY3RybC1uYW1lOgorCVN3aXRjaCB0aGUg
-aW9tdXggb2YgSFBEL0NFQyBwaW5zIHRvIEhETUkgZnVuY3Rpb24uCisKK0V4YW1wbGU6CitoZG1p
-OiBoZG1pQDIwMDM0MDAwIHsKKwljb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzAzNi1pbm5vLWhk
-bWkiOworCXJlZyA9IDwweDIwMDM0MDAwIDB4NDAwMD47CisJaW50ZXJydXB0cyA9IDxHSUNfU1BJ
-IDQ1IElSUV9UWVBFX0xFVkVMX0hJR0g+OworCWNsb2NrcyA9IDwmY3J1ICBQQ0xLX0hETUk+Owor
-CWNsb2NrLW5hbWVzID0gInBjbGsiOworCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJcGlu
-Y3RybC0wID0gPCZoZG1pX2N0bD47CisJc3RhdHVzID0gImRpc2FibGVkIjsKKworCWhkbWlfaW46
-IHBvcnQgeworCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJI3NpemUtY2VsbHMgPSA8MD47CisJ
-CWhkbWlfaW5fbGNkYzogZW5kcG9pbnRAMCB7CisJCQlyZWcgPSA8MD47CisJCQlyZW1vdGUtZW5k
-cG9pbnQgPSA8JmxjZGNfb3V0X2hkbWk+OworCQl9OworCX07Cit9OworCismcGluY3RybCB7CisJ
-aGRtaSB7CisJCWhkbWlfY3RsOiBoZG1pLWN0bCB7CisJCQlyb2NrY2hpcCxwaW5zID0gPDEgOCAg
-UktfRlVOQ18xICZwY2ZnX3B1bGxfbm9uZT4sCisJCQkJCTwxIDkgIFJLX0ZVTkNfMSAmcGNmZ19w
-dWxsX25vbmU+LAorCQkJCQk8MSAxMCBSS19GVU5DXzEgJnBjZmdfcHVsbF9ub25lPiwKKwkJCQkJ
-PDEgMTEgUktfRlVOQ18xICZwY2ZnX3B1bGxfbm9uZT47CisJCX07CisJfTsKKworfTsKLS0gCjIu
-MS4yCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Mon, Dec 28, 2015 at 8:09 AM, Biao Huang <biao.huang@mediatek.com> wrote:
+
+> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+
+Patch applied with the ACKs.
+
+Yours,
+Linus Walleij
