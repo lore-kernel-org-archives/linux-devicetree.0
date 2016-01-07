@@ -1,85 +1,58 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 02/12] ARM: dts: rockchip: add the sound codec for kylin board
-Date: Thu,  7 Jan 2016 16:25:45 +0800
-Message-ID: <1452155155-16232-3-git-send-email-wxt@rock-chips.com>
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [PATCH v2 05/12] mmc: pwrseq: Document optional exteral vcc for the simple power sequence
+Date: Thu,  7 Jan 2016 16:25:48 +0800
+Message-ID: <1452155155-16232-6-git-send-email-wxt@rock-chips.com>
 References: <1452155155-16232-1-git-send-email-wxt@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452155155-16232-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, leecam-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, leozwang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1452155155-16232-1-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-rockchip@lists.infradead.org, leecam@google.com, leozwang@google.com, keescook@google.com, Caesar Wang <wxt@rock-chips.com>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, Andreas Fenkart <afenkart@gmail.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Support the rt5616 codec for kylin board, but we need
-enable the i2s firstly.
-Also, this patch adds the CPU/CODEC information for simple card
-to make the happy work.
+This patch adds the exteral vcc optional for the simple power sequence.
 
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Some WLAN chips attached to a SDIO interface, need an external vcc
+to be operational. Since this is very common, extend the simple MMC
+power sequence DT binding to support an optional exteral vcc.
 
+Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 ---
 
-Changes in v2:
-- fix the mclk-fs as the 256.
+Changes in v2: None
 
- arch/arm/boot/dts/rk3036-kylin.dts | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3036-kylin.dts b/arch/arm/boot/dts/rk3036-kylin.dts
-index 992f9ca..27b6326 100644
---- a/arch/arm/boot/dts/rk3036-kylin.dts
-+++ b/arch/arm/boot/dts/rk3036-kylin.dts
-@@ -46,6 +46,28 @@
- 	model = "Rockchip RK3036 KylinBoard";
- 	compatible = "rockchip,rk3036-kylin", "rockchip,rk3036";
+diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+index ce0e767..fdcc6a1 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
++++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+@@ -12,6 +12,7 @@ Optional properties:
+ 	at initialization and prior we start the power up procedure of the card.
+ 	They will be de-asserted right after the power has been provided to the
+ 	card.
++- ext-vcc-supply : Regulator to drive (independent) card VCC.
+ - clocks : Must contain an entry for the entry in clock-names.
+   See ../clocks/clock-bindings.txt for details.
+ - clock-names : Must include the following entry:
+@@ -19,9 +20,17 @@ Optional properties:
  
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,name = "rockchip,rt5616-codec";
-+		simple-audio-card,mclk-fs = <256>;
-+		simple-audio-card,widgets =
-+			"Microphone", "Microphone Jack",
-+			"Headphone", "Headphone Jack";
-+		simple-audio-card,routing =
-+			"MIC1", "Microphone Jack",
-+			"MIC2", "Microphone Jack",
-+			"Microphone Jack", "micbias1",
-+			"Headphone Jack", "HPOL",
-+			"Headphone Jack", "HPOR";
-+		simple-audio-card,cpu {
-+			sound-dai = <&i2s>;
-+		};
-+		simple-audio-card,codec {
-+			sound-dai = <&rt5616>;
-+		};
+ Example:
+ 
++	wifi_regulator: wifi-regulator {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio0 26 GPIO_ACTIVE_HIGH>;
++		regulator-name = "wifi_regulator";
 +	};
 +
- 	vcc_sys: vsys-regulator {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc_sys";
-@@ -257,6 +279,17 @@
- 
- &i2c2 {
- 	status = "okay";
-+
-+	rt5616: rt5616@1b {
-+		#sound-dai-cells = <0>;
-+		compatible = "rt5616";
-+		reg = <0x1b>;
-+	};
-+};
-+
-+&i2s {
-+	#sound-dai-cells = <0>;
-+	status = "okay";
- };
- 
- &sdio {
+ 	sdhci0_pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
+ 		reset-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
++		ext-vcc-supply = <&wifi_regulator>;
+ 		clocks = <&clk_32768_ck>;
+ 		clock-names = "ext_clock";
+ 	}
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
