@@ -1,43 +1,48 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 12/12] ARM: dts: Add pl330-broken-no-flushp quirk for rk3036 SoCs
-Date: Thu,  7 Jan 2016 16:25:55 +0800
-Message-ID: <1452155155-16232-13-git-send-email-wxt@rock-chips.com>
-References: <1452155155-16232-1-git-send-email-wxt@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452155155-16232-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, leecam-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, leozwang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: [RFC PATCH v2 0/4] Add RK3229 HDMI support
+Date: Thu,  7 Jan 2016 16:53:31 +0800
+Message-ID: <1452156811-18150-1-git-send-email-ykk@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Yao <mark.yao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Russell King <rmk+kernel@arm.linux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>, Andy Yan <andy.yan@rock-chips.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Zheng Yang <zhengyang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Pl330 integrated in rk3036platform doesn't support
-DMAFLUSHP function. So we add arm,pl330-broken-no-flushp quirk
-for it.
-
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
-
-Changes in v2: None
-
- arch/arm/boot/dts/rk3036.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index 6ff03e3..0168817 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -102,6 +102,7 @@
- 		pdma: pdma@20078000 {
- 			compatible = "arm,pl330", "arm,primecell";
- 			reg = <0x20078000 0x4000>;
-+			arm,pl330-broken-no-flushp;
- 			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
- 			#dma-cells = <1>;
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ClJLMzIyOSBoYXZlIGludGVncmF0ZWQgYW4gRGVzaWduZWRXYXJlIEhETUkgY29udHJvbGxlciBh
+bmQgYW4gSU5OTyBIRE1JIHBoeSwKc28gd2UgY2FuIHN0aWxsIHJldXNlIHRoZSBkdy1oZG1pIGRy
+aXZlciBmb3IgUkszMjI5IEhETUkgY29udHJvbGxlciwgYnV0CndlIG5lZWQgdG8gY3JlYXRlIGFu
+IHNlcGFyYXRlIGRyaXZlciBmb3IgUkszMjI5IEhETUkgUEhZLgoKVGhpcyBzZXJpZXMgaXMgYmFz
+ZWQgb24gTWFyayBZYW8ncyBkcm0tbmV4dCBicmFuY2gKW2h0dHBzOi8vZ2l0aHViLmNvbS9tYXJr
+eXpxL2tlcm5lbC1kcm0tcm9ja2NoaXAvdHJlZS9kcm0tcm9ja2NoaXAtbmV4dC0yMDE1LTEyLTI4
+XQoKQWZ0ZXIgcGlja2luZyBteSAiQWRkIFJLMzIyOSB2b3Agc3VwcG9ydCIgc2VyaWVzLCBIRE1J
+IG1vbml0b3IgY291bGQgbGlnaHQgdXAKbm9ybWFsbHkgb24gUkszMjI5IFNESyBib2FyZC4KCgpD
+aGFuZ2VzIGluIHYyOgotIFNwbGl0IHNvbWUgZHctaGRtaSBkcml2ZXIgY2hhbmdlcyBpbnRvIHNl
+cGFyYXRlIHBhdGNoZXMgWzAxLzA0XSAmIFswMi8wNF0KCllha2lyIFlhbmcgKDQpOgogIGRybTog
+ZHctaGRtaTogbWFrZSBpdCBlYXN5IHRvIHJlY292ZXJ5IHRoZSBwbGF0Zm9ybSBkYXRhIGZvciBw
+bGF0Zm9ybQogICAgZHJpdmVyCiAgZHJtOiBkdy1oZG1pOiBwYXNzaW5nIHRoZSAicGxhdF9kYXRh
+IiB3aGVuIGNhbGxpbmcgcGxhdGZvcm0gbW9kZV92YWxpZAogIGRybTogcm9ja2NoaXA6IGhkbWk6
+IGFkZCBSSzMyMjkgSERNSSBzdXBwb3J0CiAgZHQtYmluZGluZ3M6IGFkZCBkb2N1bWVudCBmb3Ig
+cmszMjI5LWhkbWkKCiAuLi4vYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19oZG1pLXJvY2tj
+aGlwLnR4dCB8ICAgNCArLQogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kdy1oZG1pLmMgICAgICAg
+ICAgICAgICAgICAgfCAgMzIgKy0KIGRyaXZlcnMvZ3B1L2RybS9pbXgvZHdfaGRtaS1pbXguYyAg
+ICAgICAgICAgICAgICAgIHwgIDE3ICstCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHdfaGRt
+aS1yb2NrY2hpcC5jICAgICAgICB8IDM3NiArKysrKysrKysrKysrKysrKysrLS0KIGRyaXZlcnMv
+Z3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmggICAgICAgIHwgMTM3ICsrKysrKysr
+CiBpbmNsdWRlL2RybS9icmlkZ2UvZHdfaGRtaS5oICAgICAgICAgICAgICAgICAgICAgICB8ICAg
+NSArLQogNiBmaWxlcyBjaGFuZ2VkLCA1MjkgaW5zZXJ0aW9ucygrKSwgNDIgZGVsZXRpb25zKC0p
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9j
+a2NoaXAuaAoKLS0gCjIuMS4yCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
