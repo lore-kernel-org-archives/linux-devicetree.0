@@ -1,369 +1,493 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v2 1/2] drm: bridge: sil902x
-Date: Thu, 7 Jan 2016 11:12:47 +0530
-Message-ID: <568DFAD7.6030003@codeaurora.org>
-References: <1452079551-30914-1-git-send-email-boris.brezillon@free-electrons.com>
- <1452083126-18211-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dtc: create tool to diff device trees
+Date: Wed, 06 Jan 2016 22:15:09 -0800
+Message-ID: <568E026D.4030105@gmail.com>
+References: <5684F17E.6060209@gmail.com> <CAL_JsqKWUGZp24-GMO=f1zOYvAntVtr0cKBUKz_7XK5F_epWOg@mail.gmail.com>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1452083126-18211-1-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Boris Brezillon <boris.brezillon@free-electrons.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKWUGZp24-GMO=f1zOYvAntVtr0cKBUKz_7XK5F_epWOg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwMS8wNi8yMDE2IDA1OjU1IFBNLCBCb3JpcyBCcmV6aWxsb24gd3JvdGU6Cj4gQWRkIGJh
-c2ljIHN1cHBvcnQgZm9yIHRoZSBzaWw5MDJ4IFJHQiAtPiBIRE1JIGJyaWRnZS4KPiBUaGlzIGRy
-aXZlciBkb2VzIG5vdCBzdXBwb3J0IGF1ZGlvIG91dHB1dCB5ZXQuCj4KPiBTaWduZWQtb2ZmLWJ5
-OiBCb3JpcyBCcmV6aWxsb24gPGJvcmlzLmJyZXppbGxvbkBmcmVlLWVsZWN0cm9ucy5jb20+Cj4g
-LS0tCj4gSGVsbG8sCj4KPiBUaGlzIHBhdGNoIGlzIG9ubHkgYWRkaW5nIGJhc2ljIHN1cHBvcnQg
-Zm9yIHRoZSBzaWw5MDIyIGNoaXAuCj4gQXMgc3RhdGVkIGluIHRoZSBjb21taXQgbG9nLCB0aGVy
-ZSdzIG5vIGF1ZGlvIHN1cHBvcnQsIGJ1dCB0aGUKPiBkcml2ZXIgYWxzbyBoYXJkY29kZXMgYSBs
-b3Qgb2YgdGhpbmdzIChsaWtlIHRoZSBSR0IgaW5wdXQgZm9ybWF0IHRvCj4gdXNlKS4KPiBUaGVy
-ZSBhcmUgdHdvIHJlYXNvbnMgZm9yIHRoaXM6Cj4gMS8gdGhlIERSTSBmcmFtZXdvcmsgZG9lcyBu
-b3QgYWxsb3cgZm9yIGFkdmFuY2VkIGxpbmsgZGVzY3JpcHRpb24KPiAgICAgYmV0d2VlbiBhbiBl
-bmNvZGVyIGFuZCBhIGJyaWRnZSAodGhhdCdzIGZvciB0aGUgUkdCIGZvcm1hdAo+ICAgICBsaW1p
-dGF0aW9uKS4gQW55IGlkZWEgaG93IHRoaXMgc2hvdWxkIGJlIGRlc2NyaWJlZD8KClRoZSBhZHY3
-NTExIGRyaXZlciB1c2VzIGEgRFQgcGFyYW0gImlucHV0X2NvbG9yc3BhY2UiIHRvIGNob3NlIGJl
-dHdlZW4KUkdCIG9yIFlVVi4gSSBkb24ndCB0aGluayBEVCBpcyB0aGUgYmVzdCBpZGVhLCBidXQg
-SSBkb24ndCBrbm93IG9mIGEKYmV0dGVyIHdheSBlaXRoZXIuCgpUaGUgY29ubmVjdG9yJ3MgZGlz
-cGxheV9pbmZvLmNvbG9yX2Zvcm1hdHMgZmllbGQgZ2l2ZXMgdXMgc29tZSBpbmZvCmFib3V0IHRo
-ZSBjb2xvciBmb3JtYXRzIHN1cHBvcnRlZCBieSB0aGUgbW9uaXRvciwgYnV0IEkgZ3Vlc3MgdGhh
-dAppc24ndCBzdWZmaWNpZW50IGRhdGEgdG8ga25vdyB3aGF0IGZvcm1hdCB0aGUgZW5jb2RlciBp
-cyBwdXNoaW5nIG91dC4KCldlIGdldCBhcm91bmQgdGhpcyBwcm9ibGVtIGluIGNhc2UgdGhlIGNh
-c2Ugb2YgRFNJIGVuY29kZXJzIGJ5IHVzaW5nCnRoZSBtaXBpX2RzaV9kZXZpY2UgYXBpLCB3aGVy
-ZSBhIERTSSBiYXNlZCBicmlkZ2Ugb3IgcGFuZWwgY2FuIHBhc3MKY29sb3IgZm9ybWF0L2xhbmUg
-aW5mbyB0byB0aGUgRFNJIGhvc3QgKGkuZSwgZW5jb2RlcikgYnkgdXNpbmcKbWlwaV9kc2lfYXR0
-YWNoKCkuCgoKPgo+IDIvIEkgZG9uJ3QgaGF2ZSB0aGUgZGF0YXNoZWV0IG9mIHRoaXMgSERNSSBl
-bmNvZGVyLCBhbmQgYWxsIGxvZ2ljCj4gICAgIGhhcyBiZWVuIGV4dHJhY3RlZCBmcm9tIHRob3Nl
-IHR3byBkcml2ZXJzIFsxXVsyXSwgd2hpY2ggbWVhbnMKPiAgICAgSSBtYXkgbWlzcyBzb21lIGlt
-cG9ydGFudCB0aGluZ3MgaW4gbXkgZW5jb2RlciBzZXR1cC4KPgo+IEFub3RoZXIgdGhpbmcgSSBm
-aW5kIHdlaXJkIGluIHRoZSBkcm1fYnJpZGdlIGludGVyZmFjZSBpcyB0aGUgZmFjdAo+IHRoYXQg
-d2UgaGF2ZSBhIC0+YXR0YWNoKCkgbWV0aG9kLCBidXQgbm8gLT5kZXRhY2goKSwgd2hpY2ggY2Fu
-IGJlCj4gYSBwcm9ibGVtIGlmIHdlIGFsbG93IGRybSBicmlkZ2VzIGFuZCBLTVMgZHJpdmVycyB0
-byBiZSBjb21waWxlZCBhcwo+IG1vZHVsZXMuIEFueSByZWFzb24gZm9yIHRoYXQ/CgpJIGd1ZXNz
-IHRoZSBkcm1fYnJpZGdlX2FkZC9yZW1vdmUgb3BzIG1ha2UgY2FuIGVuc3VyZSB0aGF0IHRoZSBi
-cmlkZ2UKZHJpdmVyIGl0c2VsZiBjYW4gYmUgY29tcGlsZWQgYXMgYSBtb2R1bGUuIEhvd2V2ZXIs
-IHlvdSdyZSByaWdodCB0aGF0CndlIHdvdWxkIG5lZWQgYSBicmlkZ2UgZGV0YWNoIG9wIHRoYXQg
-dGhlIGttcyBkcml2ZXIgc2hvdWxkIGNhbGwKYmVmb3JlIGl0IGlzIHJlbW92ZWQgKHRvIHVucmVn
-aXN0ZXIgdGhlIGNvbm5lY3RvciB3ZSBjcmVhdGVkKS4KClNvbWVvbmUgd291bGQgc3RpbGwgbmVl
-ZCB0byBtYWtlIHN1cmUgYWJvdXQgdGhlIG9yZGVyIGluIHdoaWNoIHRoZQptb2R1bGVzIGFyZSBy
-ZW1vdmVkLiBJZiB0aGUgYnJpZGdlIGRyaXZlciBpcyByZW1vdmVkIGZpcnN0LCB0aGVuCml0IHdv
-dWxkIHJlYWxseSBtZXNzIHVwIHRoZSBrbXMgZHJpdmVyIHVzaW5nIHRoZSBicmlkZ2UuCgoKV291
-bGQgdGhlIGttcyBkcml2ZXIgdXNpbmcgdGhpcyBjaGlwIHJlYWxseSBoYXZlIGFuIGVuY29kZXI/
-ClNpbmNlIHRoZSBjaGlwIHRha2VzIGluIFJHQiBpbnB1dCwgSSdtIGFzc3VtaW5nIHRoYXQgdGhl
-IGVuY29kZXIgaW4KdGhlIGttcyBkcml2ZXIgd291bGQgbW9yZSBvciBsZXNzIGJlIG5vcCBmdW5j
-cywgZ2l2aW5nIHRoZWlyIHdheSB0bwpicmlkZ2Ugb3BzLgoKSW4gc3VjaCBjYXNlcywgSSB0aGlu
-ayB0aGUgYnJpZGdlIHN0aWxsIGRvZXNuJ3QgZml0IGluIHNvIHdlbGwuIFRoZQpiZXN0IGZpdCBo
-ZXJlIGlzIGhvdyB0aGUgY3VycmVudCB0ZGE5OTh4IGRyaXZlciBpcyBtb2RlbGVkLiBJdCBhZGRz
-Cml0c2VsZiBhcyBhIGNvbXBvbmVudCB0aGF0IGNyZWF0ZXMgYm90aCBhbiBlbmNvZGVyIGFuZCBj
-b25uZWN0b3IsCndoaWNoIHRoZSBrbXMgZHJpdmVyIGNhbiB1c2UgZGlyZWN0bHkuIFRoaXMgYXBw
-cm9hY2gsIG9mIGNvdXJzZSwKcHJldmVudHMgdXMgdXNpbmcgdGRhOTk4eCBpbiBrbXMgZHJpdmVy
-cyB0aGF0IGRvbid0IGFjY2VwdCBhbnkKZW5jb2RlcnMgdGhhdCBpdCBkaWRuJ3QgY3JlYXRlIGl0
-c2VsZi4KClRoYW5rcywKQXJjaGl0Cgo+Cj4gVGhhdCdzIGFsbCBmb3IgdGhlIHF1ZXN0aW9ucyBw
-YXJ0IDotKS4KPgo+IEJlc3QgUmVnYXJkcywKPgo+IEJvcmlzCj4KPiBDaGFuZ2VzIGluIHYyOgo+
-IC0gZml4IGVycm9ycyByZXBvcnRlZCBieSBrYnVpbGQgdGVzdCByb2JvdAo+Cj4gLS0tCj4gICBk
-cml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcgICB8ICAgOCArCj4gICBkcml2ZXJzL2dwdS9k
-cm0vYnJpZGdlL01ha2VmaWxlICB8ICAgMSArCj4gICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3Np
-bDkwMnguYyB8IDQ5MSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAg
-IDMgZmlsZXMgY2hhbmdlZCwgNTAwIGluc2VydGlvbnMoKykKPiAgIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpbDkwMnguYwo+Cj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZp
-Zwo+IGluZGV4IDI3ZTIwMjIuLjk3MDFmZDIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJt
-L2JyaWRnZS9LY29uZmlnCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmlnCj4g
-QEAgLTQwLDQgKzQwLDEyIEBAIGNvbmZpZyBEUk1fUEFSQURFX1BTODYyMgo+ICAgCS0tLWhlbHAt
-LS0KPiAgIAkgIFBhcmFkZSBlRFAtTFZEUyBicmlkZ2UgY2hpcCBkcml2ZXIuCj4KPiArY29uZmln
-IERSTV9TSUw5MDJYCj4gKwl0cmlzdGF0ZSAiU2lsaWNvbiBJbWFnZSBzaWw5MDJ4IFJHQi9IRE1J
-IGJyaWRnZSIKPiArCWRlcGVuZHMgb24gT0YKPiArCXNlbGVjdCBEUk1fS01TX0hFTFBFUgo+ICsJ
-c2VsZWN0IFJFR01BUF9JMkMKPiArCS0tLWhlbHAtLS0KPiArCSAgU2lsaWNvbiBJbWFnZSBzaWw5
-MDJ4IGJyaWRnZSBjaGlwIGRyaXZlci4KPiArCj4gICBlbmRtZW51Cj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZpbGUgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01h
-a2VmaWxlCj4gaW5kZXggZjEzYzMzZC4uYTY4OWFhZCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vYnJpZGdlL01ha2VmaWxlCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtl
-ZmlsZQo+IEBAIC00LDMgKzQsNCBAQCBvYmotJChDT05GSUdfRFJNX0RXX0hETUkpICs9IGR3LWhk
-bWkubwo+ICAgb2JqLSQoQ09ORklHX0RSTV9EV19IRE1JX0FIQl9BVURJTykgKz0gZHctaGRtaS1h
-aGItYXVkaW8ubwo+ICAgb2JqLSQoQ09ORklHX0RSTV9OWFBfUFROMzQ2MCkgKz0gbnhwLXB0bjM0
-NjAubwo+ICAgb2JqLSQoQ09ORklHX0RSTV9QQVJBREVfUFM4NjIyKSArPSBwYXJhZGUtcHM4NjIy
-Lm8KPiArb2JqLSQoQ09ORklHX0RSTV9TSUw5MDJYKSArPSBzaWw5MDJ4Lm8KPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWw5MDJ4LmMgYi9kcml2ZXJzL2dwdS9kcm0vYnJp
-ZGdlL3NpbDkwMnguYwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uMjY1
-NzAzMQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpbDkw
-MnguYwo+IEBAIC0wLDAgKzEsNDkxIEBACj4gKy8qCj4gKyAqIENvcHlyaWdodCAoQykgMjAxNCBB
-dG1lbAo+ICsgKgkJICAgICAgQm8gU2hlbiA8dm9pY2Uuc2hlbkBhdG1lbC5jb20+Cj4gKyAqCj4g
-KyAqIEF1dGhvcnM6CSAgICAgIEJvIFNoZW4gPHZvaWNlLnNoZW5AYXRtZWwuY29tPgo+ICsgKgkJ
-ICAgICAgQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5icmV6aWxsb25AZnJlZS1lbGVjdHJvbnMuY29t
-Pgo+ICsgKgkJICAgICAgV3UsIFNvbmdqdW4gPFNvbmdqdW4uV3VAYXRtZWwuY29tPgo+ICsgKgo+
-ICsgKgo+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTAtMjAxMSBGcmVlc2NhbGUgU2VtaWNvbmR1Y3Rv
-ciwgSW5jLiBBbGwgUmlnaHRzIFJlc2VydmVkLgo+ICsgKgo+ICsgKiBUaGlzIHByb2dyYW0gaXMg
-ZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yIG1vZGlmeQo+ICsg
-KiBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGFz
-IHB1Ymxpc2hlZCBieQo+ICsgKiB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uOyBlaXRoZXIg
-dmVyc2lvbiAyIG9mIHRoZSBMaWNlbnNlLCBvcgo+ICsgKiAoYXQgeW91ciBvcHRpb24pIGFueSBs
-YXRlciB2ZXJzaW9uLgo+ICsgKgo+ICsgKiBUaGlzIHByb2dyYW0gaXMgZGlzdHJpYnV0ZWQgaW4g
-dGhlIGhvcGUgdGhhdCBpdCB3aWxsIGJlIHVzZWZ1bCwKPiArICogYnV0IFdJVEhPVVQgQU5ZIFdB
-UlJBTlRZOyB3aXRob3V0IGV2ZW4gdGhlIGltcGxpZWQgd2FycmFudHkgb2YKPiArICogTUVSQ0hB
-TlRBQklMSVRZIG9yIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZQo+
-ICsgKiBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBmb3IgbW9yZSBkZXRhaWxzLgo+ICsgKi8K
-PiArCj4gKyNpbmNsdWRlIDxsaW51eC9jb21wb25lbnQuaD4KPiArI2luY2x1ZGUgPGxpbnV4L2dw
-aW8vY29uc3VtZXIuaD4KPiArI2luY2x1ZGUgPGxpbnV4L2kyYy5oPgo+ICsjaW5jbHVkZSA8bGlu
-dXgvbW9kdWxlLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPgo+ICsjaW5jbHVkZSA8bGludXgv
-b2ZfZ3Bpby5oPgo+ICsjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+Cj4gKwo+ICsjaW5jbHVkZSA8
-ZHJtL2RybVAuaD4KPiArI2luY2x1ZGUgPGRybS9kcm1fYXRvbWljLmg+Cj4gKyNpbmNsdWRlIDxk
-cm0vZHJtX2F0b21pY19oZWxwZXIuaD4KPiArI2luY2x1ZGUgPGRybS9kcm1fY3J0Y19oZWxwZXIu
-aD4KPiArI2luY2x1ZGUgPGRybS9kcm1fZWRpZC5oPgo+ICsjaW5jbHVkZSA8ZHJtL2RybV9lbmNv
-ZGVyX3NsYXZlLmg+Cj4gKwo+ICsjZGVmaW5lIFNJTDkwMlhfVFBJX1ZJREVPX0RBVEEJCQkweDAK
-PiArCj4gKyNkZWZpbmUgU0lMOTAyWF9UUElfUElYRUxfUkVQRVRJVElPTgkJMHg4Cj4gKyNkZWZp
-bmUgU0lMOTAyWF9UUElfQVZJX1BJWEVMX1JFUF9CVVNfMjRCSVQgICAgIEJJVCg1KQo+ICsjZGVm
-aW5lIFNJTDkwMlhfVFBJX0FWSV9QSVhFTF9SRVBfUklTSU5HX0VER0UgICBCSVQoNCkKPiArI2Rl
-ZmluZSBTSUw5MDJYX1RQSV9BVklfUElYRUxfUkVQXzRYCQkzCj4gKyNkZWZpbmUgU0lMOTAyWF9U
-UElfQVZJX1BJWEVMX1JFUF8yWAkJMQo+ICsjZGVmaW5lIFNJTDkwMlhfVFBJX0FWSV9QSVhFTF9S
-RVBfTk9ORQkJMAo+ICsjZGVmaW5lIFNJTDkwMlhfVFBJX0NMS19SQVRJT19IQUxGCQkoMCA8PCA2
-KQo+ICsjZGVmaW5lIFNJTDkwMlhfVFBJX0NMS19SQVRJT18xWAkJKDEgPDwgNikKPiArI2RlZmlu
-ZSBTSUw5MDJYX1RQSV9DTEtfUkFUSU9fMlgJCSgyIDw8IDYpCj4gKyNkZWZpbmUgU0lMOTAyWF9U
-UElfQ0xLX1JBVElPXzRYCQkoMyA8PCA2KQo+ICsKPiArI2RlZmluZSBTSUw5MDJYX1RQSV9BVklf
-SU5fRk9STUFUCQkweDkKPiArI2RlZmluZSBTSUw5MDJYX1RQSV9BVklfSU5QVVRfQklUTU9ERV8x
-MkJJVAlCSVQoNykKPiArI2RlZmluZSBTSUw5MDJYX1RQSV9BVklfSU5QVVRfRElUSEVSCQlCSVQo
-NikKPiArI2RlZmluZSBTSUw5MDJYX1RQSV9BVklfSU5QVVRfUkFOR0VfTElNSVRFRAkoMiA8PCAy
-KQo+ICsjZGVmaW5lIFNJTDkwMlhfVFBJX0FWSV9JTlBVVF9SQU5HRV9GVUxMCSgxIDw8IDIpCj4g
-KyNkZWZpbmUgU0lMOTAyWF9UUElfQVZJX0lOUFVUX1JBTkdFX0FVVE8JKDAgPDwgMikKPiArI2Rl
-ZmluZSBTSUw5MDJYX1RQSV9BVklfSU5QVVRfQ09MT1JTUEFDRV9CTEFDSwkoMyA8PCAwKQo+ICsj
-ZGVmaW5lIFNJTDkwMlhfVFBJX0FWSV9JTlBVVF9DT0xPUlNQQUNFX1lVVjQyMgkoMiA8PCAwKQo+
-ICsjZGVmaW5lIFNJTDkwMlhfVFBJX0FWSV9JTlBVVF9DT0xPUlNQQUNFX1lVVjQ0NAkoMSA8PCAw
-KQo+ICsjZGVmaW5lIFNJTDkwMlhfVFBJX0FWSV9JTlBVVF9DT0xPUlNQQUNFX1JHQgkoMCA8PCAw
-KQo+ICsKPiArI2RlZmluZSBTSUw5MDJYX1RQSV9BVklfSU5GT0ZSQU1FCQkweDBjCj4gKwo+ICsj
-ZGVmaW5lIFNJTDkwMlhfU1lTX0NUUkxfREFUQQkJCTB4MWEKPiArI2RlZmluZSBTSUw5MDJYX1NZ
-U19DVFJMX1BXUl9EV04JCUJJVCg0KQo+ICsjZGVmaW5lIFNJTDkwMlhfU1lTX0NUUkxfQVZfTVVU
-RQkJQklUKDMpCj4gKyNkZWZpbmUgU0lMOTAyWF9TWVNfQ1RSTF9ERENfQlVTX1JFUQkJQklUKDIp
-Cj4gKyNkZWZpbmUgU0lMOTAyWF9TWVNfQ1RSTF9ERENfQlVTX0dSVEQJCUJJVCgxKQo+ICsjZGVm
-aW5lIFNJTDkwMlhfU1lTX0NUUkxfT1VUUFVUX01PREUJCUJJVCgwKQo+ICsjZGVmaW5lIFNJTDkw
-MlhfU1lTX0NUUkxfT1VUUFVUX0hETUkJCTEKPiArI2RlZmluZSBTSUw5MDJYX1NZU19DVFJMX09V
-VFBVVF9EVkkJCTAKPiArCj4gKyNkZWZpbmUgU0lMOTAyWF9SRUdfQ0hJUElEKG4pCQkJKDB4MWIg
-KyAobikpCj4gKwo+ICsjZGVmaW5lIFNJTDkwMlhfUFdSX1NUQVRFX0NUUkwJCQkweDFlCj4gKyNk
-ZWZpbmUgU0lMOTAyWF9BVklfUE9XRVJfU1RBVEVfTVNLCQlHRU5NQVNLKDEsIDApCj4gKyNkZWZp
-bmUgU0lMOTAyWF9BVklfUE9XRVJfU1RBVEVfRChsKQkJKChsKSAmIFNJTDkwMlhfQVZJX1BPV0VS
-X1NUQVRFX01TSykKPiArCj4gKyNkZWZpbmUgU0k5MDJYX0lOVF9FTkFCTEUJCQkweDNjCj4gKyNk
-ZWZpbmUgU0k5MDJYX0lOVF9TVEFUVVMJCQkweDNkCj4gKyNkZWZpbmUgU0k5MDJYX0hPVFBMVUdf
-RVZFTlQJCQlCSVQoMCkKPiArI2RlZmluZSBTSTkwMlhfUExVR0dFRF9TVEFUVVMJCQlCSVQoMikK
-PiArCj4gKyNkZWZpbmUgU0lMOTAyWF9SRUdfVFBJX1JRQgkJCTB4YzcKPiArCj4gK3N0cnVjdCBz
-aWw5MDJ4IHsKPiArCXN0cnVjdCBpMmNfY2xpZW50ICppMmM7Cj4gKwlzdHJ1Y3QgcmVnbWFwICpy
-ZWdtYXA7Cj4gKwlzdHJ1Y3QgZHJtX2JyaWRnZSBicmlkZ2U7Cj4gKwlzdHJ1Y3QgZHJtX2Nvbm5l
-Y3RvciBjb25uZWN0b3I7Cj4gKwlzdHJ1Y3QgZ3Bpb19kZXNjICpyZXNldF9ncGlvOwo+ICsJc3Ry
-dWN0IHdvcmtfc3RydWN0IGhvdHBsdWdfd29yazsKPiArfTsKPiArCj4gK3N0YXRpYyBpbmxpbmUg
-c3RydWN0IHNpbDkwMnggKmJyaWRnZV90b19zaWw5MDJ4KHN0cnVjdCBkcm1fYnJpZGdlICpicmlk
-Z2UpCj4gK3sKPiArCXJldHVybiBjb250YWluZXJfb2YoYnJpZGdlLCBzdHJ1Y3Qgc2lsOTAyeCwg
-YnJpZGdlKTsKPiArfQo+ICsKPiArc3RhdGljIGlubGluZSBzdHJ1Y3Qgc2lsOTAyeCAqY29ubmVj
-dG9yX3RvX3NpbDkwMngoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbikKPiArewo+ICsJcmV0dXJu
-IGNvbnRhaW5lcl9vZihjb24sIHN0cnVjdCBzaWw5MDJ4LCBjb25uZWN0b3IpOwo+ICt9Cj4gKwo+
-ICtzdGF0aWMgdm9pZCBzaWw5MDJ4X3Jlc2V0KHN0cnVjdCBzaWw5MDJ4ICpzaWw5MDJ4KQo+ICt7
-Cj4gKwlncGlvZF9zZXRfdmFsdWUoc2lsOTAyeC0+cmVzZXRfZ3BpbywgMSk7Cj4gKwo+ICsJbXNs
-ZWVwKDEwMCk7Cj4gKwo+ICsJZ3Bpb2Rfc2V0X3ZhbHVlKHNpbDkwMngtPnJlc2V0X2dwaW8sIDAp
-Owo+ICt9Cj4gKwo+ICtzdGF0aWMgdm9pZCBzaWw5MDJ4X2Nvbm5lY3Rvcl9kZXN0cm95KHN0cnVj
-dCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IpCj4gK3sKPiArCWRybV9jb25uZWN0b3JfdW5yZWdp
-c3Rlcihjb25uZWN0b3IpOwo+ICsJZHJtX2Nvbm5lY3Rvcl9jbGVhbnVwKGNvbm5lY3Rvcik7Cj4g
-K30KPiArCj4gK3N0YXRpYyBlbnVtIGRybV9jb25uZWN0b3Jfc3RhdHVzCj4gK3NpbDkwMnhfY29u
-bmVjdG9yX2RldGVjdChzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yLCBib29sIGZvcmNl
-KQo+ICt7Cj4gKwlzdHJ1Y3Qgc2lsOTAyeCAqc2lsOTAyeCA9IGNvbm5lY3Rvcl90b19zaWw5MDJ4
-KGNvbm5lY3Rvcik7Cj4gKwl1bnNpZ25lZCBpbnQgc3RhdHVzOwo+ICsKPiArCXJlZ21hcF9yZWFk
-KHNpbDkwMngtPnJlZ21hcCwgU0k5MDJYX0lOVF9TVEFUVVMsICZzdGF0dXMpOwo+ICsKPiArCXJl
-dHVybiAoc3RhdHVzICYgU0k5MDJYX1BMVUdHRURfU1RBVFVTKSA/Cj4gKwkgICAgICAgY29ubmVj
-dG9yX3N0YXR1c19jb25uZWN0ZWQgOiBjb25uZWN0b3Jfc3RhdHVzX2Rpc2Nvbm5lY3RlZDsKPiAr
-fQo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fY29ubmVjdG9yX2Z1bmNzIHNpbDkwMnhf
-YXRvbWljX2Nvbm5lY3Rvcl9mdW5jcyA9IHsKPiArCS5kcG1zID0gZHJtX2F0b21pY19oZWxwZXJf
-Y29ubmVjdG9yX2RwbXMsCj4gKwkuZGV0ZWN0ID0gc2lsOTAyeF9jb25uZWN0b3JfZGV0ZWN0LAo+
-ICsJLmZpbGxfbW9kZXMgPSBkcm1faGVscGVyX3Byb2JlX3NpbmdsZV9jb25uZWN0b3JfbW9kZXMs
-Cj4gKwkuZGVzdHJveSA9IHNpbDkwMnhfY29ubmVjdG9yX2Rlc3Ryb3ksCj4gKwkucmVzZXQgPSBk
-cm1fYXRvbWljX2hlbHBlcl9jb25uZWN0b3JfcmVzZXQsCj4gKwkuYXRvbWljX2R1cGxpY2F0ZV9z
-dGF0ZSA9IGRybV9hdG9taWNfaGVscGVyX2Nvbm5lY3Rvcl9kdXBsaWNhdGVfc3RhdGUsCj4gKwku
-YXRvbWljX2Rlc3Ryb3lfc3RhdGUgPSBkcm1fYXRvbWljX2hlbHBlcl9jb25uZWN0b3JfZGVzdHJv
-eV9zdGF0ZSwKPiArfTsKPiArCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Nvbm5lY3Rvcl9m
-dW5jcyBzaWw5MDJ4X2Nvbm5lY3Rvcl9mdW5jcyA9IHsKPiArCS5kcG1zID0gZHJtX2F0b21pY19o
-ZWxwZXJfY29ubmVjdG9yX2RwbXMsCj4gKwkuZGV0ZWN0ID0gc2lsOTAyeF9jb25uZWN0b3JfZGV0
-ZWN0LAo+ICsJLmZpbGxfbW9kZXMgPSBkcm1faGVscGVyX3Byb2JlX3NpbmdsZV9jb25uZWN0b3Jf
-bW9kZXMsCj4gKwkuZGVzdHJveSA9IHNpbDkwMnhfY29ubmVjdG9yX2Rlc3Ryb3ksCj4gK307Cj4g
-Kwo+ICtzdGF0aWMgaW50IHNpbDkwMnhfZ2V0X21vZGVzKHN0cnVjdCBkcm1fY29ubmVjdG9yICpj
-b25uZWN0b3IpCj4gK3sKPiArCXN0cnVjdCBzaWw5MDJ4ICpzaWw5MDJ4ID0gY29ubmVjdG9yX3Rv
-X3NpbDkwMngoY29ubmVjdG9yKTsKPiArCXN0cnVjdCByZWdtYXAgKnJlZ21hcCA9IHNpbDkwMngt
-PnJlZ21hcDsKPiArCXUzMiBidXNfZm9ybWF0ID0gTUVESUFfQlVTX0ZNVF9SR0I4ODhfMVgyNDsK
-PiArCXVuc2lnbmVkIGludCBzdGF0dXM7Cj4gKwlzdHJ1Y3QgZWRpZCAqZWRpZDsKPiArCWludCBu
-dW0gPSAwOwo+ICsJaW50IHJldDsKPiArCWludCBpOwo+ICsKPiArCXJldCA9IHJlZ21hcF91cGRh
-dGVfYml0cyhyZWdtYXAsIFNJTDkwMlhfUFdSX1NUQVRFX0NUUkwsCj4gKwkJCQkgU0lMOTAyWF9B
-VklfUE9XRVJfU1RBVEVfTVNLLAo+ICsJCQkJIFNJTDkwMlhfQVZJX1BPV0VSX1NUQVRFX0QoMikp
-Owo+ICsJaWYgKHJldCkKPiArCQlyZXR1cm4gcmV0Owo+ICsKPiArCXJldCA9IHJlZ21hcF93cml0
-ZShyZWdtYXAsIFNJTDkwMlhfU1lTX0NUUkxfREFUQSwKPiArCQkJICAgU0lMOTAyWF9TWVNfQ1RS
-TF9PVVRQVVRfSERNSSB8Cj4gKwkJCSAgIFNJTDkwMlhfU1lTX0NUUkxfUFdSX0RXTik7Cj4gKwlp
-ZiAocmV0KQo+ICsJCXJldHVybiByZXQ7Cj4gKwo+ICsJcmV0ID0gcmVnbWFwX3VwZGF0ZV9iaXRz
-KHJlZ21hcCwgU0lMOTAyWF9TWVNfQ1RSTF9EQVRBLAo+ICsJCQkJIFNJTDkwMlhfU1lTX0NUUkxf
-RERDX0JVU19SRVEsCj4gKwkJCQkgU0lMOTAyWF9TWVNfQ1RSTF9ERENfQlVTX1JFUSk7Cj4gKwlp
-ZiAocmV0KQo+ICsJCXJldHVybiByZXQ7Cj4gKwo+ICsJaSA9IDA7Cj4gKwlkbyB7Cj4gKwkJcmV0
-ID0gcmVnbWFwX3JlYWQocmVnbWFwLCBTSUw5MDJYX1NZU19DVFJMX0RBVEEsICZzdGF0dXMpOwo+
-ICsJCWlmIChyZXQpCj4gKwkJCXJldHVybiByZXQ7Cj4gKwkJaSsrOwo+ICsJfSB3aGlsZSAoIShz
-dGF0dXMgJiBTSUw5MDJYX1NZU19DVFJMX0REQ19CVVNfR1JURCkpOwo+ICsKPiArCXJldCA9IHJl
-Z21hcF93cml0ZShyZWdtYXAsIFNJTDkwMlhfU1lTX0NUUkxfREFUQSwgc3RhdHVzKTsKPiArCWlm
-IChyZXQpCj4gKwkJcmV0dXJuIHJldDsKPiArCj4gKwllZGlkID0gZHJtX2dldF9lZGlkKGNvbm5l
-Y3Rvciwgc2lsOTAyeC0+aTJjLT5hZGFwdGVyKTsKPiArCWRybV9tb2RlX2Nvbm5lY3Rvcl91cGRh
-dGVfZWRpZF9wcm9wZXJ0eShjb25uZWN0b3IsIGVkaWQpOwo+ICsJaWYgKGVkaWQpIHsKPiArCQlu
-dW0gKz0gZHJtX2FkZF9lZGlkX21vZGVzKGNvbm5lY3RvciwgZWRpZCk7Cj4gKwkJa2ZyZWUoZWRp
-ZCk7Cj4gKwl9Cj4gKwo+ICsJcmV0ID0gZHJtX2Rpc3BsYXlfaW5mb19zZXRfYnVzX2Zvcm1hdHMo
-JmNvbm5lY3Rvci0+ZGlzcGxheV9pbmZvLAo+ICsJCQkJCSAgICAgICAmYnVzX2Zvcm1hdCwgMSk7
-Cj4gKwlpZiAocmV0KQo+ICsJCXJldHVybiByZXQ7Cj4gKwo+ICsJcmVnbWFwX3JlYWQocmVnbWFw
-LCBTSUw5MDJYX1NZU19DVFJMX0RBVEEsICZzdGF0dXMpOwo+ICsJaWYgKHJldCkKPiArCQlyZXR1
-cm4gcmV0Owo+ICsKPiArCXJldCA9IHJlZ21hcF91cGRhdGVfYml0cyhyZWdtYXAsIFNJTDkwMlhf
-U1lTX0NUUkxfREFUQSwKPiArCQkJCSBTSUw5MDJYX1NZU19DVFJMX0REQ19CVVNfUkVRIHwKPiAr
-CQkJCSBTSUw5MDJYX1NZU19DVFJMX0REQ19CVVNfR1JURCwgMCk7Cj4gKwlpZiAocmV0KQo+ICsJ
-CXJldHVybiByZXQ7Cj4gKwo+ICsJaSA9IDA7Cj4gKwlkbyB7Cj4gKwkJcmV0ID0gcmVnbWFwX3Jl
-YWQocmVnbWFwLCBTSUw5MDJYX1NZU19DVFJMX0RBVEEsICZzdGF0dXMpOwo+ICsJCWlmIChyZXQp
-Cj4gKwkJCXJldHVybiByZXQ7Cj4gKwkJaSsrOwo+ICsJfSB3aGlsZSAoc3RhdHVzICYgKFNJTDkw
-MlhfU1lTX0NUUkxfRERDX0JVU19SRVEgfAo+ICsJCQkgICBTSUw5MDJYX1NZU19DVFJMX0REQ19C
-VVNfR1JURCkpOwo+ICsKPiArCXJldHVybiBudW07Cj4gK30KPiArCj4gK3N0YXRpYyBlbnVtIGRy
-bV9tb2RlX3N0YXR1cyBzaWw5MDJ4X21vZGVfdmFsaWQoc3RydWN0IGRybV9jb25uZWN0b3IgKmNv
-bm5lY3RvciwKPiArCQkJCQkgICAgICAgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUpCj4g
-K3sKPiArCS8qIFRPRE86IGNoZWNrIG1vZGUgKi8KPiArCj4gKwlyZXR1cm4gTU9ERV9PSzsKPiAr
-fQo+ICsKPiArc3RhdGljIHN0cnVjdCBkcm1fZW5jb2RlciAqc2lsOTAyeF9iZXN0X2VuY29kZXIo
-c3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcikKPiArewo+ICsJc3RydWN0IHNpbDkwMngg
-KnNpbDkwMnggPSBjb25uZWN0b3JfdG9fc2lsOTAyeChjb25uZWN0b3IpOwo+ICsKPiArCXJldHVy
-biBzaWw5MDJ4LT5icmlkZ2UuZW5jb2RlcjsKPiArfQo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVj
-dCBkcm1fY29ubmVjdG9yX2hlbHBlcl9mdW5jcyBzaWw5MDJ4X2Nvbm5lY3Rvcl9oZWxwZXJfZnVu
-Y3MgPSB7Cj4gKwkuZ2V0X21vZGVzID0gc2lsOTAyeF9nZXRfbW9kZXMsCj4gKwkubW9kZV92YWxp
-ZCA9IHNpbDkwMnhfbW9kZV92YWxpZCwKPiArCS5iZXN0X2VuY29kZXIgPSBzaWw5MDJ4X2Jlc3Rf
-ZW5jb2RlciwKPiArfTsKPiArCj4gK3N0YXRpYyB2b2lkIHNpbDkwMnhfYnJpZGdlX2Rpc2FibGUo
-c3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSkKPiArewo+ICsJc3RydWN0IHNpbDkwMnggKnNpbDkw
-MnggPSBicmlkZ2VfdG9fc2lsOTAyeChicmlkZ2UpOwo+ICsKPiArCXJlZ21hcF91cGRhdGVfYml0
-cyhzaWw5MDJ4LT5yZWdtYXAsIFNJTDkwMlhfU1lTX0NUUkxfREFUQSwKPiArCQkJICAgU0lMOTAy
-WF9TWVNfQ1RSTF9QV1JfRFdOLAo+ICsJCQkgICBTSUw5MDJYX1NZU19DVFJMX1BXUl9EV04pOwo+
-ICt9Cj4gKwo+ICtzdGF0aWMgdm9pZCBzaWw5MDJ4X2JyaWRnZV9lbmFibGUoc3RydWN0IGRybV9i
-cmlkZ2UgKmJyaWRnZSkKPiArewo+ICsJc3RydWN0IHNpbDkwMnggKnNpbDkwMnggPSBicmlkZ2Vf
-dG9fc2lsOTAyeChicmlkZ2UpOwo+ICsKPiArCXJlZ21hcF91cGRhdGVfYml0cyhzaWw5MDJ4LT5y
-ZWdtYXAsIFNJTDkwMlhfUFdSX1NUQVRFX0NUUkwsCj4gKwkJCSAgIFNJTDkwMlhfQVZJX1BPV0VS
-X1NUQVRFX01TSywKPiArCQkJICAgU0lMOTAyWF9BVklfUE9XRVJfU1RBVEVfRCgwKSk7Cj4gKwly
-ZWdtYXBfdXBkYXRlX2JpdHMoc2lsOTAyeC0+cmVnbWFwLCBTSUw5MDJYX1NZU19DVFJMX0RBVEEs
-Cj4gKwkJCSAgIFNJTDkwMlhfU1lTX0NUUkxfUFdSX0RXTiwgMCk7Cj4gK30KPiArCj4gK3N0YXRp
-YyB2b2lkIHNpbDkwMnhfYnJpZGdlX21vZGVfc2V0KHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2Us
-Cj4gKwkJCQkgICAgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUsCj4gKwkJCQkgICAgc3Ry
-dWN0IGRybV9kaXNwbGF5X21vZGUgKmFkaikKPiArewo+ICsJdTggYnVmW0hETUlfSU5GT0ZSQU1F
-X0hFQURFUl9TSVpFICsgSERNSV9BVklfSU5GT0ZSQU1FX1NJWkVdOwo+ICsJc3RydWN0IHNpbDkw
-MnggKnNpbDkwMnggPSBicmlkZ2VfdG9fc2lsOTAyeChicmlkZ2UpOwo+ICsJc3RydWN0IHJlZ21h
-cCAqcmVnbWFwID0gc2lsOTAyeC0+cmVnbWFwOwo+ICsJc3RydWN0IGhkbWlfYXZpX2luZm9mcmFt
-ZSBmcmFtZTsKPiArCWludCByZXQ7Cj4gKwo+ICsJYnVmWzBdID0gYWRqLT5jbG9jazsKPiArCWJ1
-ZlsxXSA9IGFkai0+Y2xvY2sgPj4gODsKPiArCWJ1ZlsyXSA9IGFkai0+dnJlZnJlc2g7Cj4gKwli
-dWZbM10gPSAweDAwOwo+ICsJYnVmWzRdID0gYWRqLT5oZGlzcGxheTsKPiArCWJ1Zls1XSA9IGFk
-ai0+aGRpc3BsYXkgPj4gODsKPiArCWJ1Zls2XSA9IGFkai0+dmRpc3BsYXk7Cj4gKwlidWZbN10g
-PSBhZGotPnZkaXNwbGF5ID4+IDg7Cj4gKwlidWZbOF0gPSBTSUw5MDJYX1RQSV9DTEtfUkFUSU9f
-MVggfCBTSUw5MDJYX1RQSV9BVklfUElYRUxfUkVQX05PTkUgfAo+ICsJCSBTSUw5MDJYX1RQSV9B
-VklfUElYRUxfUkVQX0JVU18yNEJJVDsKPiArCWJ1Zls5XSA9IFNJTDkwMlhfVFBJX0FWSV9JTlBV
-VF9SQU5HRV9BVVRPIHwKPiArCQkgU0lMOTAyWF9UUElfQVZJX0lOUFVUX0NPTE9SU1BBQ0VfUkdC
-Owo+ICsKPiArCXJldCA9IHJlZ21hcF9idWxrX3dyaXRlKHJlZ21hcCwgU0lMOTAyWF9UUElfVklE
-RU9fREFUQSwgYnVmLCAxMCk7Cj4gKwlpZiAocmV0KQo+ICsJCXJldHVybjsKPiArCj4gKwlyZXQg
-PSBkcm1faGRtaV9hdmlfaW5mb2ZyYW1lX2Zyb21fZGlzcGxheV9tb2RlKCZmcmFtZSwgYWRqKTsK
-PiArCWlmIChyZXQgPCAwKSB7Cj4gKwkJRFJNX0VSUk9SKCJjb3VsZG4ndCBmaWxsIEFWSSBpbmZv
-ZnJhbWVcbiIpOwo+ICsJCXJldHVybjsKPiArCX0KPiArCj4gKwlyZXQgPSBoZG1pX2F2aV9pbmZv
-ZnJhbWVfcGFjaygmZnJhbWUsIGJ1Ziwgc2l6ZW9mKGJ1ZikpOwo+ICsJaWYgKHJldCA8IDApIHsK
-PiArCQlEUk1fRVJST1IoImZhaWxlZCB0byBwYWNrIEFWSSBpbmZvZnJhbWU6ICV6ZFxuIiwgcmV0
-KTsKPiArCQlyZXR1cm47Cj4gKwl9Cj4gKwo+ICsJLyogRG8gbm90IHNlbmQgdGhlIGluZm9mcmFt
-ZSBoZWFkZXIsIGJ1dCBrZWVwIHRoZSBDUkMgZmllbGQuICovCj4gKwlyZWdtYXBfYnVsa193cml0
-ZShyZWdtYXAsIFNJTDkwMlhfVFBJX0FWSV9JTkZPRlJBTUUsCj4gKwkJCSAgYnVmICsgSERNSV9J
-TkZPRlJBTUVfSEVBREVSX1NJWkUgLSAxLAo+ICsJCQkgIEhETUlfQVZJX0lORk9GUkFNRV9TSVpF
-ICsgMSk7Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQgc2lsOTAyeF9icmlkZ2VfYXR0YWNoKHN0cnVj
-dCBkcm1fYnJpZGdlICpicmlkZ2UpCj4gK3sKPiArCWNvbnN0IHN0cnVjdCBkcm1fY29ubmVjdG9y
-X2Z1bmNzICpmdW5jcyA9ICZzaWw5MDJ4X2Nvbm5lY3Rvcl9mdW5jczsKPiArCXN0cnVjdCBzaWw5
-MDJ4ICpzaWw5MDJ4ID0gYnJpZGdlX3RvX3NpbDkwMngoYnJpZGdlKTsKPiArCXN0cnVjdCBkcm1f
-ZGV2aWNlICpkcm0gPSBicmlkZ2UtPmRldjsKPiArCWludCByZXQ7Cj4gKwo+ICsJZHJtX2Nvbm5l
-Y3Rvcl9oZWxwZXJfYWRkKCZzaWw5MDJ4LT5jb25uZWN0b3IsCj4gKwkJCQkgJnNpbDkwMnhfY29u
-bmVjdG9yX2hlbHBlcl9mdW5jcyk7Cj4gKwo+ICsJaWYgKGRybV9jb3JlX2NoZWNrX2ZlYXR1cmUo
-ZHJtLCBEUklWRVJfQVRPTUlDKSkKPiArCQlmdW5jcyA9ICZzaWw5MDJ4X2F0b21pY19jb25uZWN0
-b3JfZnVuY3M7Cj4gKwo+ICsJcmV0ID0gZHJtX2Nvbm5lY3Rvcl9pbml0KGRybSwgJnNpbDkwMngt
-PmNvbm5lY3RvciwgZnVuY3MsCj4gKwkJCQkgRFJNX01PREVfQ09OTkVDVE9SX0hETUlBKTsKPiAr
-CWlmIChyZXQpCj4gKwkJcmV0dXJuIHJldDsKPiArCj4gKwlpZiAoc2lsOTAyeC0+aTJjLT5pcnEg
-PiAwKQo+ICsJCXNpbDkwMngtPmNvbm5lY3Rvci5wb2xsZWQgPSBEUk1fQ09OTkVDVE9SX1BPTExf
-SFBEOwo+ICsJZWxzZQo+ICsJCXNpbDkwMngtPmNvbm5lY3Rvci5wb2xsZWQgPSBEUk1fQ09OTkVD
-VE9SX1BPTExfQ09OTkVDVDsKPiArCj4gKwlkcm1fbW9kZV9jb25uZWN0b3JfYXR0YWNoX2VuY29k
-ZXIoJnNpbDkwMngtPmNvbm5lY3RvciwgYnJpZGdlLT5lbmNvZGVyKTsKPiArCj4gKwlyZXR1cm4g
-MDsKPiArfQo+ICsKPiArc3RhdGljIHZvaWQgc2lsOTAyeF9icmlkZ2Vfbm9wKHN0cnVjdCBkcm1f
-YnJpZGdlICpicmlkZ2UpCj4gK3sKPiArfQo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1f
-YnJpZGdlX2Z1bmNzIHNpbDkwMnhfYnJpZGdlX2Z1bmNzID0gewo+ICsJLmF0dGFjaCA9IHNpbDkw
-MnhfYnJpZGdlX2F0dGFjaCwKPiArCS5tb2RlX3NldCA9IHNpbDkwMnhfYnJpZGdlX21vZGVfc2V0
-LAo+ICsJLmRpc2FibGUgPSBzaWw5MDJ4X2JyaWRnZV9kaXNhYmxlLAo+ICsJLnBvc3RfZGlzYWJs
-ZSA9IHNpbDkwMnhfYnJpZGdlX25vcCwKPiArCS5wcmVfZW5hYmxlID0gc2lsOTAyeF9icmlkZ2Vf
-bm9wLAo+ICsJLmVuYWJsZSA9IHNpbDkwMnhfYnJpZGdlX2VuYWJsZSwKPiArfTsKPiArCj4gK3N0
-YXRpYyBjb25zdCBzdHJ1Y3QgcmVnbWFwX3JhbmdlIHNpbDkwMnhfdm9sYXRpbGVfcmFuZ2VzW10g
-PSB7Cj4gKwl7IC5yYW5nZV9taW4gPSAwLCAucmFuZ2VfbWF4ID0gMHhmZiB9LAo+ICt9Owo+ICsK
-PiArc3RhdGljIGNvbnN0IHN0cnVjdCByZWdtYXBfYWNjZXNzX3RhYmxlIHNpbDkwMnhfdm9sYXRp
-bGVfdGFibGUgPSB7Cj4gKwkueWVzX3JhbmdlcyA9IHNpbDkwMnhfdm9sYXRpbGVfcmFuZ2VzLAo+
-ICsJLm5feWVzX3JhbmdlcyA9IEFSUkFZX1NJWkUoc2lsOTAyeF92b2xhdGlsZV9yYW5nZXMpLAo+
-ICt9Owo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCByZWdtYXBfY29uZmlnIHNpbDkwMnhfcmVn
-bWFwX2NvbmZpZyA9IHsKPiArCS5yZWdfYml0cyA9IDgsCj4gKwkudmFsX2JpdHMgPSA4LAo+ICsJ
-LnZvbGF0aWxlX3RhYmxlID0gJnNpbDkwMnhfdm9sYXRpbGVfdGFibGUsCj4gKwkuY2FjaGVfdHlw
-ZSA9IFJFR0NBQ0hFX05PTkUsCj4gK307Cj4gKwo+ICtzdGF0aWMgaXJxcmV0dXJuX3Qgc2lsOTAy
-eF9pbnRlcnJ1cHQoaW50IGlycSwgdm9pZCAqZGF0YSkKPiArewo+ICsJc3RydWN0IHNpbDkwMngg
-KnNpbDkwMnggPSBkYXRhOwo+ICsJdW5zaWduZWQgaW50IHN0YXR1cyA9IDA7Cj4gKwo+ICsJcmVn
-bWFwX3JlYWQoc2lsOTAyeC0+cmVnbWFwLCBTSTkwMlhfSU5UX1NUQVRVUywgJnN0YXR1cyk7Cj4g
-KwlyZWdtYXBfd3JpdGUoc2lsOTAyeC0+cmVnbWFwLCBTSTkwMlhfSU5UX1NUQVRVUywgc3RhdHVz
-KTsKPiArCj4gKwlpZiAoKHN0YXR1cyAmIFNJOTAyWF9IT1RQTFVHX0VWRU5UKSAmJiBzaWw5MDJ4
-LT5icmlkZ2UuZGV2KQo+ICsJCWRybV9oZWxwZXJfaHBkX2lycV9ldmVudChzaWw5MDJ4LT5icmlk
-Z2UuZGV2KTsKPiArCj4gKwlyZXR1cm4gSVJRX0hBTkRMRUQ7Cj4gK30KPiArCj4gK3N0YXRpYyBp
-bnQgc2lsOTAyeF9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LAo+ICsJCQkgY29uc3Qg
-c3RydWN0IGkyY19kZXZpY2VfaWQgKmlkKQo+ICt7Cj4gKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAm
-Y2xpZW50LT5kZXY7Cj4gKwl1bnNpZ25lZCBpbnQgc3RhdHVzID0gMDsKPiArCXN0cnVjdCBzaWw5
-MDJ4ICpzaWw5MDJ4Owo+ICsJdTggY2hpcGlkWzRdOwo+ICsJaW50IHJldDsKPiArCj4gKwlzaWw5
-MDJ4ID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCpzaWw5MDJ4KSwgR0ZQX0tFUk5FTCk7Cj4g
-KwlpZiAoIXNpbDkwMngpCj4gKwkJcmV0dXJuIC1FTk9NRU07Cj4gKwo+ICsJc2lsOTAyeC0+aTJj
-ID0gY2xpZW50Owo+ICsJc2lsOTAyeC0+cmVnbWFwID0gZGV2bV9yZWdtYXBfaW5pdF9pMmMoY2xp
-ZW50LCAmc2lsOTAyeF9yZWdtYXBfY29uZmlnKTsKPiArCWlmIChJU19FUlIoc2lsOTAyeC0+cmVn
-bWFwKSkKPiArCQlyZXR1cm4gUFRSX0VSUihzaWw5MDJ4LT5yZWdtYXApOwo+ICsKPiArCXNpbDkw
-MngtPnJlc2V0X2dwaW8gPSBkZXZtX2dwaW9kX2dldChkZXYsICJyZXNldCIsIEdQSU9EX09VVF9M
-T1cpOwo+ICsJaWYgKElTX0VSUihzaWw5MDJ4LT5yZXNldF9ncGlvKSkgewo+ICsJCWRldl9lcnIo
-ZGV2LCAiRmFpbGVkIHRvIHJldHJpZXZlL3JlcXVlc3QgcmVzZXQgZ3BpbzogJWxkXG4iLAo+ICsJ
-CQlQVFJfRVJSKHNpbDkwMngtPnJlc2V0X2dwaW8pKTsKPiArCQlyZXR1cm4gUFRSX0VSUihzaWw5
-MDJ4LT5yZXNldF9ncGlvKTsKPiArCX0KPiArCj4gKwlzaWw5MDJ4X3Jlc2V0KHNpbDkwMngpOwo+
-ICsKPiArCXJldCA9IHJlZ21hcF93cml0ZShzaWw5MDJ4LT5yZWdtYXAsIFNJTDkwMlhfUkVHX1RQ
-SV9SUUIsIDB4MCk7Cj4gKwlpZiAocmV0KQo+ICsJCXJldHVybiByZXQ7Cj4gKwo+ICsJcmV0ID0g
-cmVnbWFwX2J1bGtfcmVhZChzaWw5MDJ4LT5yZWdtYXAsIFNJTDkwMlhfUkVHX0NISVBJRCgwKSwK
-PiArCQkJICAgICAgICZjaGlwaWQsIDQpOwo+ICsJaWYgKHJldCkgewo+ICsJCWRldl9lcnIoZGV2
-LCAicmVnbWFwX3JlYWQgZmFpbGVkICVkXG4iLCByZXQpOwo+ICsJCXJldHVybiByZXQ7Cj4gKwl9
-Cj4gKwo+ICsJaWYgKGNoaXBpZFswXSAhPSAweGIwKSB7Cj4gKwkJZGV2X2VycihkZXYsICJJbnZh
-bGlkIGNoaXBpZDogJTAyeCAoZXhwZWN0aW5nIDB4YjApXG4iLAo+ICsJCQljaGlwaWRbMF0pOwo+
-ICsJCXJldHVybiAtRUlOVkFMOwo+ICsJfQo+ICsKPiArCS8qIENsZWFyIGFsbCBwZW5kaW5nIGlu
-dGVycnVwdHMgKi8KPiArCXJlZ21hcF9yZWFkKHNpbDkwMngtPnJlZ21hcCwgU0k5MDJYX0lOVF9T
-VEFUVVMsICZzdGF0dXMpOwo+ICsJcmVnbWFwX3dyaXRlKHNpbDkwMngtPnJlZ21hcCwgU0k5MDJY
-X0lOVF9TVEFUVVMsIHN0YXR1cyk7Cj4gKwo+ICsJaWYgKGNsaWVudC0+aXJxID4gMCkgewo+ICsJ
-CXJlZ21hcF93cml0ZShzaWw5MDJ4LT5yZWdtYXAsIFNJOTAyWF9JTlRfRU5BQkxFLAo+ICsJCQkg
-ICAgIFNJOTAyWF9IT1RQTFVHX0VWRU5UKTsKPiArCj4gKwkJcmV0ID0gZGV2bV9yZXF1ZXN0X3Ro
-cmVhZGVkX2lycShkZXYsIGNsaWVudC0+aXJxLCBOVUxMLAo+ICsJCQkJCQlzaWw5MDJ4X2ludGVy
-cnVwdCwKPiArCQkJCQkJSVJRRl9PTkVTSE9ULCBkZXZfbmFtZShkZXYpLAo+ICsJCQkJCQlzaWw5
-MDJ4KTsKPiArCQlpZiAocmV0KQo+ICsJCQlyZXR1cm4gcmV0Owo+ICsJfQo+ICsKPiArCXNpbDkw
-MngtPmJyaWRnZS5mdW5jcyA9ICZzaWw5MDJ4X2JyaWRnZV9mdW5jczsKPiArCXNpbDkwMngtPmJy
-aWRnZS5vZl9ub2RlID0gZGV2LT5vZl9ub2RlOwo+ICsJcmV0ID0gZHJtX2JyaWRnZV9hZGQoJnNp
-bDkwMngtPmJyaWRnZSk7Cj4gKwlpZiAocmV0KSB7Cj4gKwkJZGV2X2VycihkZXYsICJGYWlsZWQg
-dG8gYWRkIGRybV9icmlkZ2VcbiIpOwo+ICsJCXJldHVybiByZXQ7Cj4gKwl9Cj4gKwo+ICsJaTJj
-X3NldF9jbGllbnRkYXRhKGNsaWVudCwgc2lsOTAyeCk7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30K
-PiArCj4gK3N0YXRpYyBpbnQgc2lsOTAyeF9yZW1vdmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVu
-dCkKPiArCj4gK3sKPiArCXN0cnVjdCBzaWw5MDJ4ICpzaWw5MDJ4ID0gaTJjX2dldF9jbGllbnRk
-YXRhKGNsaWVudCk7Cj4gKwo+ICsJZHJtX2JyaWRnZV9yZW1vdmUoJnNpbDkwMngtPmJyaWRnZSk7
-Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4gKyNpZmRlZiBDT05GSUdfT0YKPiArc3RhdGlj
-IGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgc2lsOTAyeF9kdF9pZHNbXSA9IHsKPiArCXsgLmNv
-bXBhdGlibGUgPSAic2lsLHNpbDkwMjIiLCB9LAo+ICsJeyB9Cj4gK307Cj4gK01PRFVMRV9ERVZJ
-Q0VfVEFCTEUob2YsIHNpbDkwMnhfZHRfaWRzKTsKPiArI2VuZGlmCj4gKwo+ICtzdGF0aWMgY29u
-c3Qgc3RydWN0IGkyY19kZXZpY2VfaWQgc2lsOTAyeF9pMmNfaWRzW10gPSB7Cj4gKwl7ICJzaWw5
-MDIyIiwgMCB9LAo+ICsJeyB9LAo+ICt9Owo+ICtNT0RVTEVfREVWSUNFX1RBQkxFKGkyYywgc2ls
-OTAyeF9pMmNfaWRzKTsKPiArCj4gK3N0YXRpYyBzdHJ1Y3QgaTJjX2RyaXZlciBzaWw5MDJ4X2Ry
-aXZlciA9IHsKPiArCS5wcm9iZSA9IHNpbDkwMnhfcHJvYmUsCj4gKwkucmVtb3ZlID0gc2lsOTAy
-eF9yZW1vdmUsCj4gKwkuZHJpdmVyID0gewo+ICsJCS5uYW1lID0gInNpbDkwMngiLAo+ICsJCS5v
-Zl9tYXRjaF90YWJsZSA9IG9mX21hdGNoX3B0cihzaWw5MDJ4X2R0X2lkcyksCj4gKwl9LAo+ICsJ
-LmlkX3RhYmxlID0gc2lsOTAyeF9pMmNfaWRzLAo+ICt9Owo+ICttb2R1bGVfaTJjX2RyaXZlcihz
-aWw5MDJ4X2RyaXZlcik7Cj4gKwo+ICtNT0RVTEVfQVVUSE9SKCJCb3JpcyBCcmV6aWxsb24gPGJv
-cmlzLmJyZXppbGxvbkBmcmVlLWVsZWN0cm9ucy5jb20+Iik7Cj4gK01PRFVMRV9ERVNDUklQVElP
-TigiU0lMOTAyeCBSR0IgLT4gSERNSSBicmlkZ2VzIik7Cj4gK01PRFVMRV9MSUNFTlNFKCJHUEwi
-KTsKPgoKLS0gClRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJl
-ciBvZiB0aGUgQ29kZSBBdXJvcmEgCkZvcnVtLCBob3N0ZWQgYnkgVGhlIExpbnV4IEZvdW5kYXRp
-b24KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Rob,
+
+Thanks for the comments.
+
+On 1/4/2016 1:29 PM, Rob Herring wrote:
+> On Thu, Dec 31, 2015 at 3:12 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+>>
+>> Create script to diff device trees.
+>>
+>> The device tree can be in any of the forms recognized by the dtc compiler:
+>>   - source
+>>   - binary blob
+>>   - file system tree (from /proc/devicetree)
+>>
+>> If the device tree is a source file, then it is pre-processed in the
+>> same way as it would be when built in the linux kernel source tree
+>> before diffing.
+> 
+> In general, I'd like to see some of this move to dtc and the kernel
+> dependencies minimized.
+> 
+>>
+>> Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+>> ---
+>>
+>> Tools to develop and debug device tree are somewhat inadequate.  This is a
+>> small step in improving the situation.
+>>
+>> Rationale for and examples of using the script are provided in slides
+>> 1 - 78 of the elce 2015 presentation "Solving Device Tree Issues",
+>> which can be found at:
+>>
+>>    http://elinux.org/images/0/04/Dt_debugging_elce_2015_151006_0421.pdf
+>>
+>> (The script was named dtdiff instead of dtx_diff in the presentation.)
+>>
+>>
+>>  scripts/dtc/dtx_diff |  368 +++++++++++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 368 insertions(+)
+>>
+>> Index: b/scripts/dtc/dtx_diff
+>> ===================================================================
+>> --- /dev/null
+>> +++ b/scripts/dtc/dtx_diff
+>> @@ -0,0 +1,368 @@
+>> +#! /bin/bash
+> 
+> Add "-e" by default?
+
+Nope.  There are several commands in the script that can fail in
+normal operation, but the script needs to continue.
+
+> 
+>> +
+>> +# Copyright (C) 2015 Frank Rowand
+>> +#
+>> +# This program is free software; you can redistribute it and/or modify
+>> +# it under the terms of the GNU General Public License as published by
+>> +# the Free Software Foundation; version 2 of the License.
+>> +
+>> +
+>> +usage() {
+>> +
+>> +       # use spaces instead of tabs in the usage message
+>> +       cat >&2 <<eod
+>> +
+>> +Usage:
+>> +
+>> +   `basename $0` DTx
+>> +        decompile DTx
+>> +
+>> +   `basename $0` DTx_1 DTx_2
+>> +        diff DTx_1 and DTx_2
+>> +
+>> +
+>> +       -f           print full dts in diff (--unified=99999)
+>> +       -h           synonym for --help
+>> +       -help        synonym for --help
+>> +      --help        print this message and exit
+>> +       -s SRCTREE   linux kernel source tree is at path SRCTREE
+>> +                        (default is current directory)
+>> +       -S           linux kernel source tree is at root of current git repo
+> 
+> Can't this be detected? There are some cases of kernel trees which are
+> not in git.
+
+-S is just an easier option to use than -s if the script is run from within
+the linux kernel source tree if it is a git repo.  If the script is run
+from the root of the tree then there is no need to specify -s or -S -- it
+just works.
+
+> 
+>> +       -u           unsorted, do not sort DTx
+>> +
+>> +
+>> +Each DTx is processed by the dtc compiler to produce a sorted dts source
+>> +file.  If DTx is a dts source file then it is pre-processed in the same
+>> +manner as done for the compile of the dts source file in the Linux kernel
+>> +build system ('#include' and '/include/' directives are processed).
+>> +
+>> +If two DTx are provided, the resulting dts source files are diffed.
+>> +
+>> +If DTx is a directory, it is treated as a DT subtree, such as
+>> +  /proc/device-tree.
+>> +
+>> +If DTx contains the binary blob magic value in the first four bytes,
+>> +  it is treated as a binary blob (aka .dtb or FDT).
+>> +
+>> +Otherwise DTx is treated as a dts source file (aka .dts).
+>> +
+>> +   If this script is not run from the root of the linux source tree,
+>> +   and DTx utilizes '#include' or '/include/' then the path of the
+>> +   linux source tree can be provided by '-s SRCTREE' or '-S' so that
+>> +   include paths will be set properly.
+>> +
+>> +   The shell variable \${ARCH} must provide the architecture containing
+>> +   the dts source file for include paths to be set properly for '#include'
+>> +   or '/include/' to be processed.
+>> +
+>> +   If DTx_1 and DTx_2 are in different architectures, then this script
+>> +   may not work since \${ARCH} is part of the include path.  Two possible
+>> +   workarounds:
+>> +
+>> +      `basename $0` \\
+>> +          <(ARCH=arch_of_dtx_1 `basename $0` DTx_1) \\
+>> +          <(ARCH=arch_of_dtx_2 `basename $0` DTx_2)
+>> +
+>> +      `basename $0` ARCH=arch_of_dtx_1 DTx_1 >tmp_dtx_1.dts
+>> +      `basename $0` ARCH=arch_of_dtx_2 DTx_2 >tmp_dtx_2.dts
+>> +      `basename $0` tmp_dtx_1.dts tmp_dtx_2.dts
+>> +      rm tmp_dtx_1.dts tmp_dtx_2.dts
+>> +
+>> +   If DTx_1 and DTx_2 are in different directories, then this script will
+>> +   add the path of DTx_1 and DTx_2 to the include paths.  If DTx_2 includes
+>> +   a local file that exists in both the path of DTx_1 and DTx_2 then the
+>> +   file in the path of DTx_1 will incorrectly be included.  Possible
+>> +   workaround:
+>> +
+>> +      `basename $0` DTx_1 >tmp_dtx_1.dts
+>> +      `basename $0` DTx_2 >tmp_dtx_2.dts
+>> +      `basename $0` tmp_dtx_1.dts tmp_dtx_2.dts
+>> +      rm tmp_dtx_1.dts tmp_dtx_2.dts
+>> +
+>> +eod
+>> +}
+>> +
+>> +
+>> +compile_to_dts() {
+>> +
+>> +       dtx="$1"
+>> +
+>> +       if [ -d "${dtx}" ] ; then
+>> +
+>> +               # -----  input is file tree
+>> +
+>> +               if ( ! ${DTC} -I fs ${dtx} ) ; then
+>> +                       exit 3
+>> +               fi
+>> +
+>> +       elif [ -f "${dtx}" ] && [ -r "${dtx}" ] ; then
+>> +
+>> +               magic=`hexdump -n 4 -e '/1 "%02x"' ${dtx}`
+>> +               if [ "${magic}" = "d00dfeed" ] ; then
+> 
+> Perhaps this auto-detection should be part of dtc?
+
+The script needs to invoke dtc differently for a source dts (it
+needs to preprocess with cpp) so we need this check here
+anyway.
+
+> 
+>> +
+>> +                       # -----  input is FDT (binary blob)
+>> +
+>> +                       if ( ! ${DTC} -I dtb ${dtx} ) ; then
+>> +                               exit 3
+>> +                       fi
+>> +
+>> +               else
+>> +
+>> +                       # -----  input is DTS (source)
+>> +
+>> +                       if ( cpp ${cpp_flags} -x assembler-with-cpp ${dtx} | ${DTC} -I dts ) ; then
+>> +                               return
+>> +                       fi
+>> +
+>> +                       echo ""                                                          >&2
+>> +                       echo "Possible hints to resolve the above error:"                >&2
+>> +                       echo "  (hints might not fix the problem)"                       >&2
+>> +
+>> +                       hint_given=0
+>> +
+>> +                       if [ "${ARCH}" = "" ] ; then
+>> +                               hint_given=1
+>> +                               echo ""                                                      >&2
+>> +                               echo "  shell variable \$ARCH not set"                       >&2
+>> +                       fi
+>> +
+>> +                       dtx_arch=`echo "/${dtx}" | sed -e 's|.*/arch/||' -e 's|/.*||'`
+>> +
+>> +                       if [ "${dtx_arch}" != ""  -a "${dtx_arch}" != "${ARCH}" ] ; then
+>> +                               hint_given=1
+>> +                               echo ""                                                      >&2
+>> +                               echo "  architecture ${dtx_arch} is in file path, but"       >&2
+>> +                               echo "  does not match shell variable \$ARCH (${ARCH})"      >&2
+>> +                       fi
+>> +
+>> +                       if [ ! -d ${srctree}/arch/${ARCH} ] ; then
+>> +                               hint_given=1
+>> +                               echo ""                                                      >&2
+>> +                               echo "  ${srctree}/arch/${ARCH}/ does not exist"             >&2
+>> +                               echo "  Is \$ARCH='${ARCH}' correct?"                        >&2
+>> +                               echo "  Possible fix: use '-s' option"                       >&2
+>> +
+>> +                               git_root=`git rev-parse --show-toplevel 2>/dev/null`
+>> +                               if [ -d ${git_root}/arch/ ] ; then
+>> +                                       echo "  Possible fix: use '-S' option"                   >&2
+>> +                               fi
+>> +                       fi
+>> +
+>> +                       if [ $hint_given = 0 ] ; then
+>> +                               echo ""                                                      >&2
+>> +                               echo "  No hints available."                                 >&2
+>> +                       fi
+>> +
+>> +                       echo ""                                                          >&2
+>> +
+>> +                       exit 3
+>> +
+>> +               fi
+>> +       else
+>> +               echo ""                                                              >&2
+>> +               echo "ERROR: ${dtx} does not exist or is not readable"               >&2
+>> +               echo ""                                                              >&2
+>> +               exit 2
+>> +       fi
+>> +
+>> +}
+>> +
+>> +
+>> +# -----  start of script
+>> +
+>> +cmd_diff=0
+>> +diff_flags="-u"
+>> +dtx_file_1=""
+>> +dtx_file_2=""
+>> +dtc_sort="-s"
+>> +help=0
+>> +srctree=""
+>> +
+>> +
+>> +while [ $# -gt 0 ] ; do
+>> +
+>> +       case $1 in
+>> +
+>> +       -f )
+>> +               diff_flags="--unified=999999"
+>> +               shift
+>> +               ;;
+>> +
+>> +       -h | -help | --help )
+>> +               help=1
+>> +               shift
+>> +               ;;
+>> +
+>> +       -s )
+>> +               srctree="$2"
+>> +               shift 2
+>> +               ;;
+>> +
+>> +       -S )
+>> +               git_root=`git rev-parse --show-toplevel 2>/dev/null`
+>> +               srctree="${git_root}"
+>> +               shift
+>> +               ;;
+>> +
+>> +       -u )
+>> +               dtc_sort=""
+>> +               shift
+>> +               ;;
+>> +
+>> +       *)
+>> +               if [ "${dtx_file_1}"  = "" ] ; then
+>> +                       dtx_file_1="$1"
+>> +               elif [ "${dtx_file_2}" = "" ] ; then
+>> +                       dtx_file_2="$1"
+>> +               else
+>> +                       echo ""                                                          >&2
+>> +                       echo "ERROR: Unexpected parameter: $1"                           >&2
+>> +                       echo ""                                                          >&2
+>> +                       exit 2
+>> +               fi
+>> +               shift
+>> +               ;;
+>> +
+>> +       esac
+>> +
+>> +done
+>> +
+>> +if [ "${srctree}" = "" ] ; then
+>> +       srctree="."
+>> +fi
+>> +
+>> +if [ "${dtx_file_2}" != "" ]; then
+>> +       cmd_diff=1
+>> +fi
+>> +
+>> +if (( ${help} )) ; then
+>> +       usage
+>> +       exit 1
+>> +fi
+>> +
+>> +# this must follow check for ${help}
+>> +if [ "${dtx_file_1}" = "" ]; then
+>> +       echo ""                                                                  >&2
+>> +       echo "ERROR: parameter DTx required"                                     >&2
+>> +       echo ""                                                                  >&2
+>> +       exit 2
+>> +fi
+>> +
+>> +
+>> +# -----  prefer dtc from linux kernel, allow fallback to dtc in $PATH
+>> +
+>> +if [ "${KBUILD_OUTPUT:0:2}" = ".." ] ; then
+>> +       __KBUILD_OUTPUT="${srctree}/${KBUILD_OUTPUT}"
+>> +elif [ "${KBUILD_OUTPUT}" = "" ] ; then
+>> +       __KBUILD_OUTPUT="."
+>> +else
+>> +       __KBUILD_OUTPUT="${KBUILD_OUTPUT}"
+>> +fi
+>> +
+>> +DTC="${__KBUILD_OUTPUT}/scripts/dtc/dtc"
+>> +
+>> +if [ ! -x ${DTC} ] ; then
+>> +       __DTC="dtc"
+>> +       if ( ! which ${__DTC} >/dev/null ) ; then
+>> +
+>> +               # use spaces instead of tabs in the error message
+>> +               cat >&2 <<eod
+>> +
+>> +ERROR: unable to find a 'dtc' program
+>> +
+>> +   Preferred 'dtc' (built from Linux kernel source tree) was not found or
+>> +   is not executable.
+>> +
+>> +      'dtc' is: ${DTC}
+>> +
+>> +      If it does not exist, create it from the root of the Linux source tree:
+>> +
+>> +         'make scripts'.
+>> +
+>> +      If not at the root of the Linux kernel source tree -s SRCTREE or -S
+>> +      may need to be specified to find 'dtc'.
+>> +
+>> +      If 'O=\${dir}' is specified in your Linux builds, this script requires
+>> +      'export KBUILD_OUTPUT=\${dir}' or add \${dir}/scripts/dtc to \$PATH
+>> +      before running.
+>> +
+>> +      If \${KBUILD_OUTPUT} is a relative path, then '-s SRCDIR', -S, or run
+>> +      this script from the root of the Linux kernel source tree is required.
+>> +
+>> +   Fallback '${__DTC}' was also not in \${PATH} or is not executable.
+>> +
+>> +eod
+>> +               exit 2
+>> +       fi
+>> +       DTC=${__DTC}
+>> +fi
+>> +
+>> +
+>> +# -----  cpp and dtc flags same as for linux source tree build of .dtb files,
+>> +#        plus directories of the dtx file(s)
+>> +
+>> +dtx_path_1_dtc_include="-i `dirname ${dtx_file_1}`"
+>> +
+>> +dtx_path_2_dtc_include=""
+>> +if (( ${cmd_diff} )) ; then
+>> +       dtx_path_2_dtc_include="-i `dirname ${dtx_file_2}`"
+>> +fi
+>> +
+>> +cpp_flags="\
+>> +       -nostdinc                                              \
+>> +       -I${srctree}/arch/${ARCH}/boot/dts                     \
+>> +       -I${srctree}/arch/${ARCH}/boot/dts/include             \
+>> +       -I${srctree}/arch/${ARCH}/boot/dts/include/dt-bindings \
+> 
+> kernel doesn't use this path. The less dependency on ARCH, the better.
+> The dependency in the kernel is artificial.
+
+Yep, ARCH is a pain.  But it is used in the kernel build of dt files.
+See "dtc_cpp_flags" in scripts/Makefile.lib.  I'm not sure why I
+have dt-bindings in there though.  I'll have to check that.
+
+
+> 
+>> +       -I${srctree}/drivers/of/testcase-data                  \
+>> +       -undef -D__DTS__"
+>> +
+>> +_dts_makefile=""
+>> +
+>> +if [ -f ${srctree}/arch/${ARCH}/boot/dts/Makefile ] ; then
+>> +       _dts_makefile="${srctree}/arch/${ARCH}/boot/dts/Makefile"
+>> +elif [ -f ${srctree}/arch/${ARCH}/boot/Makefile ] ; then
+>> +       # arch/powerpc
+>> +       _dts_makefile="${srctree}/arch/${ARCH}/boot/Makefile"
+> 
+> We need to move PPC to be in line with other arches rather than
+> working around it.
+> 
+>> +fi
+>> +
+>> +if [ "${_dts_makefile}" != "" ] ; then
+>> +       arch_dtc_flags=`grep DTC_FLAGS ${_dts_makefile} \
+> 
+> We should just kill DTC_FLAGS being per arch. Plus it is only used for
+> padding, so it is irrelevant to this tool.
+
+Yes it is irrelevant.  The only reason I included it was just to future
+proof for if anyone snuck anything else into the DTC_FLAGS in the future.
+I'll just remove this section (resolving the issue with working around
+the location of the PPC makefile too).
+
+> 
+>> +               | grep -v "^#"                              \
+>> +               | sed -e 's|.*=||' `
+>> +else
+>> +       arch_dtc_flags=""
+>> +fi
+>> +
+>> +dtc_flags="\
+>> +       -i ${srctree}/arch/${ARCH}/boot/dts/ \
+>> +       -i ${srctree}/kernel/dts             \
+>> +       ${dtx_path_1_dtc_include}            \
+>> +       ${dtx_path_2_dtc_include}            \
+>> +       ${arch_dtc_flags}"
+>> +
+>> +DTC="${DTC} ${dtc_flags} -O dts -qq -f ${dtc_sort} -o -"
+>> +
+>> +
+>> +# -----  do the diff or decompile
+>> +
+>> +if (( ${cmd_diff} )) ; then
+>> +
+>> +       diff ${diff_flags} \
+>> +               <(compile_to_dts "${dtx_file_1}") \
+>> +               <(compile_to_dts "${dtx_file_2}")
+>> +
+>> +else
+>> +
+>> +       compile_to_dts "${dtx_file_1}"
+>> +
+>> +fi
+>> +
+>> +
+>> +# ==============================================================================
+>> +# ______________________________________________________________________________
+>> +# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+>> +# ______________________________________________________________________________
+>> +#  vi config follows:
+>> +#
+>> +#  add "set modelines" to ~/.exrc or ~/.vimrc to set tabs automatically
+>> +#  ex:set tabstop=4 shiftwidth=4 sts=4:
+> 
+> Kernel standard is 8 characters. I assume that applies to bash files too.
+
+I'll reformat to 8 characters.
+
+> 
+> Rob
+
+-Frank
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
