@@ -1,58 +1,62 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v2 05/12] mmc: pwrseq: Document optional exteral vcc for the simple power sequence
-Date: Thu,  7 Jan 2016 16:25:48 +0800
-Message-ID: <1452155155-16232-6-git-send-email-wxt@rock-chips.com>
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 03/12] ARM: dts: rockchip: override the clocks in i2s for kylin board
+Date: Thu,  7 Jan 2016 16:25:46 +0800
+Message-ID: <1452155155-16232-4-git-send-email-wxt@rock-chips.com>
 References: <1452155155-16232-1-git-send-email-wxt@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452155155-16232-1-git-send-email-wxt@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-rockchip@lists.infradead.org, leecam@google.com, leozwang@google.com, keescook@google.com, Caesar Wang <wxt@rock-chips.com>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, Andreas Fenkart <afenkart@gmail.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452155155-16232-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, leecam-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, leozwang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the exteral vcc optional for the simple power sequence.
+The sysclk seems be incorrect since we use the simple card for kylin
+board.
 
-Some WLAN chips attached to a SDIO interface, need an external vcc
-to be operational. Since this is very common, extend the simple MMC
-power sequence DT binding to support an optional exteral vcc.
+The simple card call:
 
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+asoc_simple_card_probe ->
+ asoc_simple_card_dai_link_of ->
+  asoc_simple_card_sub_parse_of ->
+...
+clk = of_clk_get(args.np, 0);
+if (!IS_ERR(clk))
+dai->sysclk = clk_get_rate(clk);
+
+The sysclk come from the first clock, then first clock is hclk_i2s
+in i2s for rk3036 dtsi.
+So, we can override the clocks to fit the simple card in here.
+
+Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
 
 Changes in v2: None
 
- Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/rk3036-kylin.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-index ce0e767..fdcc6a1 100644
---- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-@@ -12,6 +12,7 @@ Optional properties:
- 	at initialization and prior we start the power up procedure of the card.
- 	They will be de-asserted right after the power has been provided to the
- 	card.
-+- ext-vcc-supply : Regulator to drive (independent) card VCC.
- - clocks : Must contain an entry for the entry in clock-names.
-   See ../clocks/clock-bindings.txt for details.
- - clock-names : Must include the following entry:
-@@ -19,9 +20,17 @@ Optional properties:
+diff --git a/arch/arm/boot/dts/rk3036-kylin.dts b/arch/arm/boot/dts/rk3036-kylin.dts
+index 27b6326..b642369 100644
+--- a/arch/arm/boot/dts/rk3036-kylin.dts
++++ b/arch/arm/boot/dts/rk3036-kylin.dts
+@@ -288,6 +288,13 @@
+ };
  
- Example:
- 
-+	wifi_regulator: wifi-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio0 26 GPIO_ACTIVE_HIGH>;
-+		regulator-name = "wifi_regulator";
-+	};
+ &i2s {
++	/**
++	 * We should override the clocks since sysclk from the first clock
++	 * in simple card.
++	 */
++	clock-names = "i2s_clk", "i2s_hclk";
++	clocks = <&cru SCLK_I2S>, <&cru HCLK_I2S>;
 +
- 	sdhci0_pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		reset-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
-+		ext-vcc-supply = <&wifi_regulator>;
- 		clocks = <&clk_32768_ck>;
- 		clock-names = "ext_clock";
- 	}
+ 	#sound-dai-cells = <0>;
+ 	status = "okay";
+ };
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
