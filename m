@@ -1,51 +1,40 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] ata: add AMD Seattle platform driver
-Date: Thu, 7 Jan 2016 16:56:28 -0600
-Message-ID: <20160107225628.GA4213@rob-hp-laptop>
-References: <1452200002-31590-1-git-send-email-brijesh.singh@amd.com>
- <4652600.rUhSEOUPkl@wuerfel>
+Subject: Re: [PATCH 1/2] dt-bindings: move I2C eeprom descriptions to the
+ proper file
+Date: Thu, 7 Jan 2016 17:00:12 -0600
+Message-ID: <20160107230012.GA15023@rob-hp-laptop>
+References: <1452199860-3601-1-git-send-email-wsa@the-dreams.de>
+ <1452199860-3601-2-git-send-email-wsa@the-dreams.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4652600.rUhSEOUPkl@wuerfel>
-Sender: linux-ide-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Brijesh Singh <brijesh.singh@amd.com>, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-ide@vger.kernel.org, galak@codeaurora.org, tj@kernel.org
+In-Reply-To: <1452199860-3601-2-git-send-email-wsa@the-dreams.de>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-sh@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 07, 2016 at 10:25:38PM +0100, Arnd Bergmann wrote:
-> On Thursday 07 January 2016 14:53:22 Brijesh Singh wrote:
-> > AMD Seattle SATA controller mostly conforms to AHCI interface with some
-> > special register to control SGPIO interface. In the case of an AHCI
-> > controller, the SGPIO feature is ideally implemented using the
-> > "Enclosure Management" register of the AHCI controller, but those
-> > registeres are not implemented in the Seattle SoC. Instead SoC
-> > (Rev B0 onwards) provides a 32-bit SGPIO control register which should
-> > be programmed to control the activity, locate and fault LEDs.
-
-> > +Examples:
-> > +        sata0@e0300000 {
-> > +		compatible = "amd,seattle-ahci";
-> > +		reg = <0x0 0xe0300000 0x0 0xf0000>, <0x0 0xe0000078 0x0 0x1>;
+On Thu, Jan 07, 2016 at 09:50:59PM +0100, Wolfram Sang wrote:
+> From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 > 
-> Looking at the register values, I doubt that the SGPIO is actually part of the
-> sata device. More likely, you are pointing in the middle of an actual
-> GPIO controller.
+> EEPROMs can have additional properties, so they are not suitable for
+> trivial-devices.txt. Move most bindings to the designated eeprom.txt.
+> Add the missing "atmel,24c08" while doing that. Note that the remaining
+> ones in trivial-devices need to be dealt with seperately because of
 
-SGPIO is really a poor name as it has little to do with GPIO. It's a 
-serial protocol to set LED states. Still, I agree this should probably 
-be a separate node with perhaps a phandle to syscon.
- 
-> If so, please implement a GPIO driver for that device, and use the gpio-leds
-> driver to drive the LEDs. IIRC there is already a generic way to communicate
-> with the LEDs interface from libata, if not you can implement that in order
-> to keep the special case out of the platform driver.
+s/seperately/separately/
 
-There is kernel support for activity LEDs, but the others you want to 
-control with ledmon/ledctl utilities rather than LED subsystem. Those 
-utilities use an enclosure management sysfs file IIRC. There's no 
-kernel support for SGPIO outside of the AHCI enclosure management 
-register (at least there wasn't 2 years ago when I last looked). 
+> improper manufacturer names.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>  Documentation/devicetree/bindings/eeprom/eeprom.txt   | 19 ++++++++++++++-----
+>  .../devicetree/bindings/i2c/trivial-devices.txt       | 13 -------------
+>  2 files changed, 14 insertions(+), 18 deletions(-)
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+Fine to take these thru your tree.
 
 Rob
