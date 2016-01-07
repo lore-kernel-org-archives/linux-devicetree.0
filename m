@@ -1,146 +1,341 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: Re: [PATCH v5 1/5] PCI: designware: ensure ATU is enabled before
- IO/conf space accesses
-Date: Thu, 7 Jan 2016 14:33:23 +0800
-Message-ID: <20160107143323.396797bb@xhacker>
-References: <1450442339-18765-1-git-send-email-stanimir.varbanov@linaro.org>
-	<1450442339-18765-2-git-send-email-stanimir.varbanov@linaro.org>
-	<20160106182003.GA16231@localhost>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: dts: imx6: Add support for Toradex Ixora
+ carrier board
+Date: Wed, 06 Jan 2016 22:38:24 -0800
+Message-ID: <f2639aa8a966b4d0a36d0a5c4e27863f@agner.ch>
+References: <1452011942-11940-1-git-send-email-marcel.ziswiler@toradex.com>
+ <1452011942-11940-3-git-send-email-marcel.ziswiler@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20160106182003.GA16231@localhost>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452011942-11940-3-git-send-email-marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Bjorn,
+Hi Marcel,
 
-On Wed, 6 Jan 2016 12:20:03 -0600 Bjorn Helgaas wrote:
+On 2016-01-05 08:39, Marcel Ziswiler wrote:
+> From: Petr =C5=A0tetiar <ynezz-knWk7/PSn+s@public.gmane.org>
+>=20
+> Signed-off-by: Petr =C5=A0tetiar <ynezz-knWk7/PSn+s@public.gmane.org>
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+> ---
+>=20
+> Changes in v2: None
+>=20
+>  arch/arm/boot/dts/Makefile               |   1 +
+>  arch/arm/boot/dts/imx6q-apalis-ixora.dts | 256 +++++++++++++++++++++=
+++++++++++
+>  2 files changed, 257 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6q-apalis-ixora.dts
+>=20
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 44508dc..29b1aae 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -315,6 +315,7 @@ dtb-$(CONFIG_SOC_IMX6Q) +=3D \
+>  	imx6dl-udoo.dtb \
+>  	imx6dl-wandboard.dtb \
+>  	imx6dl-wandboard-revb1.dtb \
+> +	imx6q-apalis-ixora.dtb \
+>  	imx6q-apf6dev.dtb \
+>  	imx6q-arm2.dtb \
+>  	imx6q-cm-fx6.dtb \
+> diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora.dts
+> b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
+> new file mode 100644
+> index 0000000..5494a13
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
+> @@ -0,0 +1,256 @@
+> +/*
+> + * Copyright 2014-2016 Toradex AG
+> + * Copyright 2012 Freescale Semiconductor, Inc.
+> + * Copyright 2011 Linaro Ltd.
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dua=
+l
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License
+> + *     version 2 as published by the Free Software Foundation.
+> + *
+> + *     This file is distributed in the hope that it will be useful
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty o=
+f
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentatio=
+n
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom th=
+e
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall b=
+e
+> + *     included in all copies or substantial portions of the Softwar=
+e.
+> + *
+> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTI=
+ES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include "imx6q.dtsi"
+> +#include "imx6qdl-apalis.dtsi"
+> +
+> +/ {
+> +	model =3D "Toradex Apalis iMX6Q/D Module on Ixora Carrier Board";
+> +	compatible =3D "toradex,apalis_imx6q-ixora", "toradex,apalis_imx6q"=
+,
+> +		     "fsl,imx6q";
+> +
+> +	aliases {
+> +		i2c0 =3D &i2cddc;
+> +		i2c1 =3D &i2c1;
+> +		i2c2 =3D &i2c2;
+> +		i2c3 =3D &i2c3;
+> +	};
+> +
+> +	aliases {
+> +		rtc0 =3D &rtc_i2c;
+> +		rtc1 =3D "/soc/aips-bus@02000000/snvs@020cc000/snvs-rtc-lp@34";
 
-> [+cc Jisheng]
-> 
-> On Fri, Dec 18, 2015 at 02:38:55PM +0200, Stanimir Varbanov wrote:
-> > There is no guarantees that enabling ATU will hit the hardware
-> > immediately, and subsequent accesses to configuration / IO spaces
-> > are reliable. So fixing this by read back PCIE_ATU_CR2 register
-> > just after writing.
-> > 
-> > Without such a fix the PCI device enumeration during kernel boot
-> > is not reliable, and reading configuration space for particular
-> > PCI device on the bus returns zero aka no device.
-> > 
-> > Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> > ---
-> >  drivers/pci/host/pcie-designware.c |    7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
-> > index 02a7452bdf23..7880de63895d 100644
-> > --- a/drivers/pci/host/pcie-designware.c
-> > +++ b/drivers/pci/host/pcie-designware.c
-> > @@ -154,6 +154,8 @@ static int dw_pcie_wr_own_conf(struct pcie_port *pp, int where, int size,
-> >  static void dw_pcie_prog_outbound_atu(struct pcie_port *pp, int index,
-> >  		int type, u64 cpu_addr, u64 pci_addr, u32 size)
-> >  {
-> > +	u32 val;
-> > +
-> >  	dw_pcie_writel_rc(pp, PCIE_ATU_REGION_OUTBOUND | index,
-> >  			  PCIE_ATU_VIEWPORT);
-> >  	dw_pcie_writel_rc(pp, lower_32_bits(cpu_addr), PCIE_ATU_LOWER_BASE);
-> > @@ -164,6 +166,11 @@ static void dw_pcie_prog_outbound_atu(struct pcie_port *pp, int index,
-> >  	dw_pcie_writel_rc(pp, upper_32_bits(pci_addr), PCIE_ATU_UPPER_TARGET);
-> >  	dw_pcie_writel_rc(pp, type, PCIE_ATU_CR1);
-> >  	dw_pcie_writel_rc(pp, PCIE_ATU_ENABLE, PCIE_ATU_CR2);
-> > +	/*
-> > +	 * ensure that the ATU enable has been happaned before accessing
-> > +	 * pci configuration/io spaces through dw_pcie_cfg_[read|write].
-> > +	 */
-> > +	dw_pcie_readl_rc(pp, PCIE_ATU_CR2, &val);  
-> 
-> This particular fix makes sense to me.
-> 
-> But I have a larger question about how the ATU works.  I see these
-> definitions:
-> 
->   #define PCIE_ATU_TYPE_MEM
->   #define PCIE_ATU_TYPE_IO
->   #define PCIE_ATU_TYPE_CFG0
->   #define PCIE_ATU_TYPE_CFG1
-> 
-> and these uses:
-> 
->   - In dw_pcie_host_init(), set PCIE_ATU_TYPE_MEM for unit 1
->     (but only if rd_other_conf is not overridden)
-> 
->   - In dw_pcie_rd_other_conf() and dw_pcie_wr_other_conf(),
->     set PCIE_ATU_TYPE_CFG0 before config access to own bus;
->     set PCIE_ATU_TYPE_CFG1 before config access to other bus;
->     set PCIE_ATU_TYPE_IO after completion
-> 
-> I'm confused:
-> 
-> 1) I assume PCIE_ATU_TYPE_MEM is for access to PCI memory space.  Why
-> is that initialization related to rd_other_conf?  Shouldn't that be
-> set up always?  A comment here would be nice, to clarify that this is
-> not related to the subsequent dw_pcie_wr_own_conf() calls.
+Probably easier and better readable when using the label here
+("&snvs_rtc").
 
-Indeed, the comment is necessary. I forget the reason until read the code
-carefully again. The reason here is
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible =3D "gpio-keys";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pinctrl_gpio_keys>;
+> +
+> +		wakeup {
+> +			label =3D "Wake-Up";
+> +			gpios =3D <&gpio1 4 GPIO_ACTIVE_LOW>;
+> +			linux,code =3D <KEY_WAKEUP>;
+> +			debounce-interval =3D <10>;
+> +			gpio-key,wakeup;
+> +		};
+> +	};
+> +
+> +	leds {
+> +		compatible =3D "gpio-leds";
+> +
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pinctrl_leds_ixora>;
+> +
+> +		led4-green {
+> +			label =3D "LED_4_GREEN";
+> +			gpios =3D <&gpio1 17 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		led4-red {
+> +			label =3D "LED_4_RED";
+> +			gpios =3D <&gpio1 21 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		led5-green {
+> +			label =3D "LED_5_GREEN";
+> +			gpios =3D <&gpio2 1 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		led5-red {
+> +			label =3D "LED_5_RED";
+> +			gpios =3D <&gpio2 2 GPIO_ACTIVE_HIGH>;
+> +		};
+> +	};
+> +
+> +	pwmleds {
+> +		compatible =3D "pwm-leds";
+> +		ledpwm1 {
+> +			label =3D "PWM1";
+> +			pwms =3D <&pwm1 0 50000>;
+> +			max-brightness =3D <255>;
+> +		};
+> +
+> +		ledpwm2 {
+> +			label =3D "PWM2";
+> +			pwms =3D <&pwm2 0 50000>;
+> +			max-brightness =3D <255>;
+> +		};
+> +
+> +		ledpwm3 {
+> +			label =3D "PWM3";
+> +			pwms =3D <&pwm3 0 50000>;
+> +			max-brightness =3D <255>;
+> +		};
+> +	};
+> +
+> +	regulators {
+> +		reg_usb_otg_vbus: usb_otg_vbus {
+> +			status =3D "okay";
+> +		};
+> +
+> +		reg_usb_host_vbus: usb_host_vbus {
+> +			status =3D "okay";
+> +		};
+> +	};
+> +};
+> +
+> +&backlight {
+> +	brightness-levels =3D <0 127 191 223 239 247 251 255>;
+> +	default-brightness-level =3D <1>;
+> +	status =3D "okay";
+> +};
+> +
+> +&can1 {
+> +	status =3D "okay";
+> +};
+> +
+> +&can2 {
+> +	status =3D "okay";
+> +};
+> +
+> +/* GEN1_I2C: I2C1_SDA/SCL on MXM3 209/211 (e.g. RTC on carrier board=
+) */
+> +&i2c1 {
+> +	status =3D "okay";
+> +
+> +	cat24c02@50 {
 
-If the platform provides ->rd_other_conf, it means the platform
-doesn't support ATU, it uses its own address translation component
-rather than ATU, so we should ignore ATU programming for this
-kind of platform.
+According to devicetree.org, nodes are named according to what kind of
+device it represents. Hence this should be eeprom@50.
 
-I have sent out one patch to add this comment.
+> +		compatible =3D "atmel,24c02";
+> +		reg =3D <0x50>;
+> +	};
+> +
+> +	/* M41T0M6 real time clock on carrier board */
+> +	rtc_i2c: rtc@68 {
+> +		compatible =3D "st,m41t00";
+> +		reg =3D <0x68>;
+> +	};
+> +};
+> +
+> +&iomuxc {
 
-> 
-> 2) Why doesn't dw_pcie_host_init() use dw_pcie_rd_conf() instead of
-> dw_pcie_rd_own_conf()?  Using pci_read_config_dword() might be even
-> better.  Using the internal interfaces piecemeal like we do today is
-> just an opportunity for doing it wrong.
+This should go to the end of the device tree.
 
-IMHO, the reason is during host_init, the pci bus etc. are not initialized,
-from another side, the code is really accessing its own conf registers.
+Otherwise looks good to me:
+Reviewed-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 
-> 
-> 3) The definitions and your comment about "accessing PCI
-> configuration/io spaces" suggest that the ATU must be programmed
-> differently for accesses to PCI config space vs. I/O space.  If that's
+--
+Stefan
 
-Yes.
-
-> the case, we'd need some kind of mutex to protect inl(), etc., during
-> config accesses.  For example, in this scenario:
-> 
->   thread A                                         thread B
->   ---------------------------------------------    ----------
->   pci_read_config_dword()
->   dw_pcie_prog_outbound_atu(PCIE_ATU_TYPE_CFG0)
->                                                    inl()
->   dw_pcie_cfg_read()
->   readl()
->   dw_pcie_prog_outbound_atu(PCIE_ATU_TYPE_IO)
->                                                    inl()
-> 
-> Do both inl() calls by thread B work correctly, even though the ATU
-> seems to be programmed for CFG0 for the first but IO for the second?
-> 
-
-Indeed, there's such race issue as you and RMK pointed out.
-
-IMHO, we need support:
-
-1. platforms which contain three or more iATUs, there's no need to mux
-iATU usage: one ATU for IO, one for cfg and another for MEM. But how to
-get the number of iATUs, DT? eg. "snps,atu_num = 3"
-
-2. platforms which contain only two iATUs, add mechanism to protect
-the cfg vs IO race. Could you please give suggestions to how to achieve
-this goal?
-
-Thanks,
-Jisheng
+> +	/*
+> +	 * Mux the Apalis GPIOs, GPIO7 used for PCIe reset,
+> +	 * GPIO5, 6 used by optional fusion_F0710A kernel module
+> +	 */
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_apalis_gpio1 &pinctrl_apalis_gpio2
+> +		     &pinctrl_apalis_gpio3 &pinctrl_apalis_gpio4
+> +		     &pinctrl_apalis_gpio5 &pinctrl_apalis_gpio6
+> +		     &pinctrl_apalis_gpio7 &pinctrl_apalis_gpio8>;
+> +
+> +	leds_ixora {
+> +		pinctrl_leds_ixora: leds-ixora {
+> +			fsl,pins =3D <
+> +				MX6QDL_PAD_SD1_DAT1__GPIO1_IO17 PAD_CTRL_HYS_PU
+> +				MX6QDL_PAD_SD1_DAT3__GPIO1_IO21 PAD_CTRL_HYS_PU
+> +				MX6QDL_PAD_NANDF_D1__GPIO2_IO01 PAD_CTRL_HYS_PU
+> +				MX6QDL_PAD_NANDF_D2__GPIO2_IO02 PAD_CTRL_HYS_PU
+> +			>;
+> +		};
+> +	};
+> +};
+> +
+> +&pcie {
+> +	/* active-low meaning opposite of regular PERST# active-low polarit=
+y */
+> +	reset-gpio =3D <&gpio1 28 GPIO_ACTIVE_LOW>;
+> +	status =3D "okay";
+> +};
+> +
+> +&pwm1 {
+> +	status =3D "okay";
+> +};
+> +
+> +&pwm2 {
+> +	status =3D "okay";
+> +};
+> +
+> +&pwm3 {
+> +	status =3D "okay";
+> +};
+> +
+> +&pwm4 {
+> +	status =3D "okay";
+> +};
+> +
+> +&sata {
+> +	status =3D "okay";
+> +};
+> +
+> +&sound_spdif {
+> +	status =3D "okay";
+> +};
+> +
+> +&spdif {
+> +	status =3D "okay";
+> +};
+> +
+> +&uart1 {
+> +	status =3D "okay";
+> +};
+> +
+> +&uart2 {
+> +	status =3D "okay";
+> +};
+> +
+> +&uart4 {
+> +	status =3D "okay";
+> +};
+> +
+> +&uart5 {
+> +	status =3D "okay";
+> +};
+> +
+> +&usbh1 {
+> +	status =3D "okay";
+> +};
+> +
+> +&usbotg {
+> +	status =3D "okay";
+> +};
+> +
+> +/* SD1 */
+> +&usdhc2 {
+> +	status =3D "okay";
+> +};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
