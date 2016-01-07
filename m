@@ -1,50 +1,63 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: [RFC PATCH v1 2/2] dt-bindings: add document for rk3229-hdmi
-Date: Thu,  7 Jan 2016 12:39:33 +0800
-Message-ID: <1452141573-9490-1-git-send-email-ykk@rock-chips.com>
-References: <1452141288-9292-1-git-send-email-ykk@rock-chips.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dmaengine: xgene-dma: Fix double IRQ issue by setting
+ IRQ_DISABLE_UNLAZY flag
+Date: Thu, 7 Jan 2016 10:19:09 +0530
+Message-ID: <20160107044909.GF11778@localhost>
+References: <1450875495-2229-1-git-send-email-rsahu@apm.com>
+ <20160106091323.GP2940@localhost>
+ <CAFd313xhh_4OFP6W2yuApM8ppYMX20DUCCQHJ9YEtCMbzr6Hgg@mail.gmail.com>
+ <20160106093121.GB11778@localhost>
+ <alpine.DEB.2.11.1601061103000.3689@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1452141288-9292-1-git-send-email-ykk@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Yao <mark.yao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Russell King <rmk+kernel@arm.linux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>, Andy Yan <andy.yan@rock-chips.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Zheng Yang <zhengyang@rock-chips.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.11.1601061103000.3689@nanos>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Rameshwar Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Kaustubh Gondkar <kgondkar-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogWWFraXIgWWFuZyA8eWtrQHJvY2stY2hpcHMuY29tPgotLS0KIC4uLi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC50eHQg
-ICAgICAgICB8IDQgKysrLQogMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxl
-dGlvbigtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC50eHQKaW5k
-ZXggNjY4MDkxZi4uMWNkYzYyNyAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC50eHQKKysrIGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfaGRtaS1y
-b2NrY2hpcC50eHQKQEAgLTIsNyArMiw3IEBAIFJvY2tjaGlwIHNwZWNpZmljIGV4dGVuc2lvbnMg
-dG8gdGhlIFN5bm9wc3lzIERlc2lnbndhcmUgSERNSQogPT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT0KIAogUmVxdWlyZWQgcHJvcGVydGllczoKLS0gY29tcGF0aWJsZTogInJvY2tjaGlw
-LHJrMzI4OC1kdy1oZG1pIjsKKy0gY29tcGF0aWJsZTogInJvY2tjaGlwLHJrMzI4OC1kdy1oZG1p
-IiwgInJvY2tjaGlwLHJrMzIyOS1kdy1oZG1pIjsKIC0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJl
-c3MgYW5kIGxlbmd0aCBvZiB0aGUgY29udHJvbGxlcidzIHJlZ2lzdGVycy4KIC0gY2xvY2tzOiBw
-aGFuZGxlIHRvIGhkbWkgaWFoYiBhbmQgaXNmciBjbG9ja3MuCiAtIGNsb2NrLW5hbWVzOiBzaG91
-bGQgYmUgImlhaGIiICJpc2ZyIgpAQCAtMTUsOCArMTUsMTAgQEAgUmVxdWlyZWQgcHJvcGVydGll
-czoKICAgcmszMjg4IHBsYXRmb3JtCiAKIE9wdGlvbmFsIHByb3BlcnRpZXMKKy0gcmVnOiBQaHlz
-aWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgZXh0ZXJuYWwgSERNSSBQSFkncyBy
-ZWdpc3RlcnMuCiAtIGRkYy1pMmMtYnVzOiBwaGFuZGxlIG9mIGFuIEkyQyBjb250cm9sbGVyIHVz
-ZWQgZm9yIEREQyBFRElEIHByb2JpbmcKIC0gY2xvY2tzLCBjbG9jay1uYW1lczogcGhhbmRsZSB0
-byB0aGUgSERNSSBDRUMgY2xvY2ssIG5hbWUgc2hvdWxkIGJlICJjZWMiCisJCSAgICAgICBwaGFu
-ZGxlIHRvIHRoZSBleHRlcm5hbCBIRE1JIFBIWSBjbG9jaywgbmFtZSBzaG91bGQgYmUgImV4dHBo
-eSIKIAogRXhhbXBsZToKIGhkbWk6IGhkbWlAZmY5ODAwMDAgewotLSAKMi4xLjIKCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Wed, Jan 06, 2016 at 11:05:02AM +0100, Thomas Gleixner wrote:
+> On Wed, 6 Jan 2016, Vinod Koul wrote:
+> > On Wed, Jan 06, 2016 at 02:51:07PM +0530, Rameshwar Sahu wrote:
+> > > >> @@ -1610,6 +1611,7 @@ static int xgene_dma_request_irqs(struct xgene_dma *pdma)
+> > > >>       /* Register DMA channel rx irq */
+> > > >>       for (i = 0; i < XGENE_DMA_MAX_CHANNEL; i++) {
+> > > >>               chan = &pdma->chan[i];
+> > > >> +             irq_set_status_flags(chan->rx_irq, IRQ_DISABLE_UNLAZY);
+> > > >
+> > > > Why not use irq_settings_disable_unlazy(), at least read the reference you
+> > > > pointed out!
+> > > 
+> > > irq_settings_disable_unlazy() is helper function to test
+> > > IRQ_DISABLE_UNLAZY flag is set or not, it's not for setting this flag.
+> > > FYI...
+> > > +static inline bool irq_settings_disable_unlazy(struct irq_desc *desc)
+> > > +{
+> > > + return desc->status_use_accessors & _IRQ_DISABLE_UNLAZY;
+> > > +}
+> > 
+> > Ah yes, I saw clear API and assumed there would be set. Then I think we
+> > should add a set helper as well as the usage is intended for drivers to
+> > set this flag
+> > 
+> > Thomas,
+> > 
+> > Any reason why you didn't add a set helper, only test and clear?
+> 
+> Why would I? Those helpers are core internal and not usable in random drivers.
+> 
+> Drivers have irq_set_status_flags()/irq_clear_status_flags() ...
+
+The effect of irq_set_status_flags(irq, IRQ_DISABLE_UNLAZY) is same as
+providing a helper. If your recommendation is to use this by driver then I
+am find with the approach too
+
+Thanks
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
