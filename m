@@ -1,70 +1,69 @@
-From: James Liao <jamesjj.liao@mediatek.com>
-Subject: [PATCH v2 2/4] soc: mediatek: Init MT8173 scpsys driver earlier
-Date: Fri, 8 Jan 2016 11:32:46 +0800
-Message-ID: <1452223968-6566-3-git-send-email-jamesjj.liao@mediatek.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 3/4] soc: mediatek: Add MT2701 power dt-bindings
+Date: Fri, 8 Jan 2016 11:32:47 +0800
+Message-ID: <1452223968-6566-4-git-send-email-jamesjj.liao@mediatek.com>
 References: <1452223968-6566-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452223968-6566-1-git-send-email-jamesjj.liao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <kernel@pengutronix.de>
-Cc: Kevin Hilman <khilman@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, James Liao <jamesjj.liao@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1452223968-6566-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some power domain comsumers may init before module_init.
-So the power domain provider (scpsys) need to be initialized
-earlier too.
+From: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Take an example for our IOMMU (M4U) and SMI. SMI is a bridge
-between IOMMU and multimedia HW. SMI is responsible to
-enable/disable iommu and help transfer data for each multimedia
-HW. Both of them have to wait until the power and clocks are
-enabled.
+Add power dt-bindings for MT2701.
 
-So scpsys driver should be initialized before SMI, and SMI should
-be initialized before IOMMU, and then init IOMMU consumers
-(display/vdec/venc/camera etc.).
-
-IOMMU is subsys_init by default. So we need to init scpsys driver
-before subsys_init.
-
-Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+Signed-off-by: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/soc/mediatek/mtk-scpsys-mt8173.c | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+ include/dt-bindings/power/mt2701-power.h | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 include/dt-bindings/power/mt2701-power.h
 
-diff --git a/drivers/soc/mediatek/mtk-scpsys-mt8173.c b/drivers/soc/mediatek/mtk-scpsys-mt8173.c
-index 3c7b569..4d7b341 100644
---- a/drivers/soc/mediatek/mtk-scpsys-mt8173.c
-+++ b/drivers/soc/mediatek/mtk-scpsys-mt8173.c
-@@ -176,4 +176,26 @@ static struct platform_driver scpsys_drv = {
- 	},
- };
- 
--module_platform_driver_probe(scpsys_drv, scpsys_probe);
-+static int __init scpsys_drv_init(void)
-+{
-+	return platform_driver_probe(&scpsys_drv, scpsys_probe);
-+}
-+
-+static void __exit scpsys_drv_exit(void)
-+{
-+	platform_driver_unregister(&scpsys_drv);
-+}
-+
+diff --git a/include/dt-bindings/power/mt2701-power.h b/include/dt-bindings/power/mt2701-power.h
+new file mode 100644
+index 0000000..64cc826
+--- /dev/null
++++ b/include/dt-bindings/power/mt2701-power.h
+@@ -0,0 +1,27 @@
 +/*
-+ * There are some Mediatek drivers which depend on the power domain driver need
-+ * to probe in earlier initcall levels. So scpsys driver also need to probe
-+ * earlier.
++ * Copyright (C) 2015 MediaTek Inc.
 + *
-+ * IOMMU(M4U) and SMI drivers for example. SMI is a bridge between IOMMU and
-+ * multimedia HW. IOMMU depends on SMI, and SMI is a power domain consumer,
-+ * so the proper probe sequence should be scpsys -> SMI -> IOMMU driver.
-+ * IOMMU drivers are initialized during subsys_init by default, so we need to
-+ * move SMI and scpsys drivers to subsys_init or earlier init levels.
++ * This program is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
 + */
-+subsys_initcall(scpsys_drv_init);
-+module_exit(scpsys_drv_exit);
++
++#ifndef _DT_BINDINGS_POWER_MT2701_POWER_H
++#define _DT_BINDINGS_POWER_MT2701_POWER_H
++
++#define MT2701_POWER_DOMAIN_CONN	0
++#define MT2701_POWER_DOMAIN_DISP	1
++#define MT2701_POWER_DOMAIN_MFG		2
++#define MT2701_POWER_DOMAIN_VDEC	3
++#define MT2701_POWER_DOMAIN_ISP		4
++#define MT2701_POWER_DOMAIN_BDP		5
++#define MT2701_POWER_DOMAIN_ETH		6
++#define MT2701_POWER_DOMAIN_HIF		7
++#define MT2701_POWER_DOMAIN_IFR_MSC	8
++
++#endif /* _DT_BINDINGS_POWER_MT2701_POWER_H */
 -- 
 1.9.1
