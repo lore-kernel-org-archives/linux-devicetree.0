@@ -1,55 +1,98 @@
-From: Mark Brown <broonie@kernel.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 Subject: Re: [rtc-linux] [PATCH 5/6] rtc: max77620: add support for
  max77620/max20024 RTC driver
-Date: Fri, 8 Jan 2016 12:51:17 +0000
-Message-ID: <20160108125117.GM6588@sirena.org.uk>
+Date: Fri, 8 Jan 2016 22:05:39 +0900
+Message-ID: <568FB423.7030108@samsung.com>
 References: <1452177524-23192-1-git-send-email-ldewangan@nvidia.com>
  <1452177524-23192-6-git-send-email-ldewangan@nvidia.com>
  <CAJKOXPd938soaa5M0GFo5HpVCYzAS1w8j8Hko3Ja9mx47NYkEQ@mail.gmail.com>
  <568F8D7E.10500@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="XZn3P0VKTizxZG2b"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
 In-Reply-To: <568F8D7E.10500@nvidia.com>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, rtc-linux@googlegroups.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, swarren@nvidia.com, treding@nvidia.com, Chaitanya Bandi <bandik@nvidia.com>
+To: rtc-linux@googlegroups.com, ldewangan@nvidia.com
+Cc: k.kozlowski.k@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, swarren@nvidia.com, treding@nvidia.com, Chaitanya Bandi <bandik@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+W dniu 08.01.2016 o 19:20, Laxman Dewangan pisze:
+> Hi Krzysztof,
+> Thanks for review.
+> 
+> Accepted most of review comment and will update in next patch.
+> 
+> Answer to query:
+> 
+> 
+> On Friday 08 January 2016 07:33 AM, Krzysztof Kozlowski wrote:
+>> 2016-01-07 23:38 GMT+09:00 Laxman Dewangan <ldewangan@nvidia.com>:
+>> ---
+>>   drivers/rtc/Kconfig        |   9 +
+>>   drivers/rtc/Makefile       |   1 +
+>>   drivers/rtc/rtc-max77620.c | 574
+>> +++++++++++++++++++++++++++++++++++++++++++++
+>> The driver (as most of Maxim's) looks quite similar to existing RTC
+>> driver, like max77802. It is difficult to spot the exact differences
+>> (I don't have 77620's datasheet) but I would suggest not duplicating
+>> the work. Maybe the biggest difference is the way you configure the
+>> regmap... but still sometimes the regmap config can be shared.
+> Yaah, that is the issue on IP based PMIC system and it happen with the
+> Maxim and TI.
+> The MFD and its sub module drivers are too much couped  and hence
+> dificult to use the IP driver across PMIC. For almost all Maxim PMIC, we
+> end up of same type of RTC driver.
+> 
+> Probably, we need to enhance the mfd sub system to allow sub module
+> driver to decoupe from its APIs.
 
---XZn3P0VKTizxZG2b
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Actually the MFD and other subsystems are quite decoupled already and
+support sharing drivers for common IP block. The problem is that we
+develop drivers in a coupled way. This is not only issue of this
+particular set of drivers. Others were developed in a same way.
 
-On Fri, Jan 08, 2016 at 03:50:46PM +0530, Laxman Dewangan wrote:
+So instead I would be happy to see this driver developed in the
+decoupled way so existing RTC driver could be reused. If this requires
+changing existing MFD driver like max77686 then please go ahead. I may
+provide testing for that purpose. Something similar I made recently to
+the max77693 and max77843. Both devices have different parent MFD
+drivers but share some of the specific subsystem drivers: regulator and
+input/haptic.
 
-> Yaah, that is the issue on IP based PMIC system and it happen with the Maxim
-> and TI.
-> The MFD and its sub module drivers are too much couped  and hence dificult
-> to use the IP driver across PMIC. For almost all Maxim PMIC, we end up of
-> same type of RTC driver.
+> 
+> 
+> +
+> +       rtc->irq = platform_get_irq(pdev, 0);
+> +       ret = devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
+> +                       max77620_rtc_irq, IRQF_ONESHOT | IRQF_EARLY_RESUME,
+> 
+>> Why early resume?
+> 
+> When we go on suspend, the interrupts are masked by framework. For
+> regmap-irq, it is stored on local reg value but not written into the
+> PMIC register.
+> In Nvidia Tegra system, ARM GIC controller registered before the other
+> interrupt controller like GPIO, PMIC etc.
+> When wakeup happened through RTC alarm, we get the interrupt from PMIC
+> and on resume path, the PMIC isr handler get called after PMIC interrupt
+> to the GIC is unmasked. But at this time, PMIC RTC alarm is still in
+> masked state by regmap-irq which causes the interrupt to RTC ignore in
+> the PMIC ISR handler and so RTC Isr did not get called and not cleared
+> interrupt. This causes PMIC ISr handler to stuck on loop.
+> 
+> The need is to unmask the RTC alarm interrupt on PMIC interrupt driver
+> before PMIC interrupt served so that we can have proper interrupt status
+> in handler and rtc isr can get called.
+> 
+> For this, RTC alarm interrupt need to be EARLY_RESUME.
 
-> Probably, we need to enhance the mfd sub system to allow sub module driver
-> to decoupe from its APIs.
+Okay, this is quite common issue and I think this can be solved by
+disabling the IRQ in suspend:
+http://lxr.free-electrons.com/source/drivers/mfd/max77843.c#L205
 
-Could you be more specific about the issues here please?  I can't think
-of any barriers and you've not mentioned any barriers...
+IMHO this would be preferred way because you won't be moving device
+suspend/resume callbacks to a syscore level.
 
---XZn3P0VKTizxZG2b
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWj7DEAAoJECTWi3JdVIfQgFIH/26MBEPgSRynUZFlJHbdiig5
-2NisJbsGLrhNLUG7PcVoNt8dIjsHlt8f6JsZqhoxm+kwd/fwc02lAceRtXlrcluW
-BWw0xQkHLi8haOnZQmECd/J7vLyyWIAWhtuqY/pWOMi1IsChAG5kIhpDurWu9nos
-DGWqXBuTQ23qQyisC+FlgViaEiwwl6Db27BAHHMkTQ51bxXVmuzHZmY5PkIvMkR8
-r2WuaXJQSmjMR+srmTwMjApQs0c/HYVYIiIaQn7Tihl3+AGbkk6JgR7JgMhBeSjw
-+IWkMZ57Q17/7zBfpVIJFcbTaFnWSaQsk5t9KB7h8QscuRLSgwfWf3ctUmZG36c=
-=QLbi
------END PGP SIGNATURE-----
-
---XZn3P0VKTizxZG2b--
+Best regards,
+Krzysztof
