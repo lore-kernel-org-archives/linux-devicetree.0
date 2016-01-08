@@ -1,56 +1,56 @@
-From: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH 3/6] QE: Add uqe_serial document to bindings
-Date: Fri, 8 Jan 2016 10:18:11 +0800
-Message-ID: <1452219494-31947-3-git-send-email-qiang.zhao@nxp.com>
+From: Zhao Qiang <qiang.zhao@nxp.com>
+Subject: [PATCH 2/6] QE: Add ucc hdlc document to bindings
+Date: Fri, 8 Jan 2016 10:18:10 +0800
+Message-ID: <1452219494-31947-2-git-send-email-qiang.zhao@nxp.com>
 References: <1452219494-31947-1-git-send-email-qiang.zhao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452219494-31947-1-git-send-email-qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1452219494-31947-1-git-send-email-qiang.zhao@nxp.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: oss@buserror.net, Priyanka.Jain@freescale.com, Zhao Qiang <qiang.zhao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add uqe_serial document to
-Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
-
-Signed-off-by: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
----
- .../bindings/powerpc/fsl/cpm_qe/uqe_serial.txt       | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
-
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
-new file mode 100644
-index 0000000..e677599
---- /dev/null
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
-@@ -0,0 +1,20 @@
-+* Serial
-+
-+Currently defined compatibles:
-+- ucc_uart
-+
-+Properties for ucc_uart:
-+device_type : which type the device is
-+port-number : port number of UCC-UART
-+rx-clock-name : which clock QE use for RX
-+tx-clock-name : which clock QE use for TX
-+
-+Example:
-+
-+	serial: ucc@2200 {
-+		device_type = "serial";
-+		compatible = "ucc_uart";
-+		port-number = <1>;
-+		rx-clock-name = "brg2";
-+		tx-clock-name = "brg2";
-+	};
--- 
-2.1.0.27.g96db324
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QWRkIHVjYyBoZGxjIGRvY3VtZW50IHRvCkRvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9wb3dlcnBjL2ZzbC9jcG1fcWUvbmV0d29yay50eHQKClNpZ25lZC1vZmYtYnk6IFpoYW8gUWlh
+bmcgPHFpYW5nLnpoYW9AbnhwLmNvbT4KLS0tCiAuLi4vYmluZGluZ3MvcG93ZXJwYy9mc2wvY3Bt
+X3FlL25ldHdvcmsudHh0ICAgICAgICB8IDM1ICsrKysrKysrKysrKysrKysrKysrKysKIDEgZmls
+ZSBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2NwbV9xZS9uZXR3b3JrLnR4dCBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jcG1fcWUvbmV0d29yay50
+eHQKaW5kZXggMjliMjhiOC4uMDE3Y2JmNyAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2NwbV9xZS9uZXR3b3JrLnR4dAorKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvY3BtX3FlL25ldHdvcmsu
+dHh0CkBAIC00MSwzICs0MSwzOCBAQCBFeGFtcGxlOgogCQlmc2wsbWRpby1waW4gPSA8MTI+Owog
+CQlmc2wsbWRjLXBpbiA9IDwxMz47CiAJfTsKKworKiBIRExDCisKK0N1cnJlbnRseSBkZWZpbmVk
+IGNvbXBhdGlibGVzOgorLSBmc2wsdWNjX2hkbGMKKworUHJvcGVydGllcyBmb3IgZnNsLHVjY19o
+ZGxjOgorcngtY2xvY2stbmFtZSA6IHdoaWNoIGNsb2NrIFFFIHVzZSBmb3IgUlgKK3R4LWNsb2Nr
+LW5hbWUgOiB3aGljaCBjbG9jayBRRSB1c2UgZm9yIFRYCitmc2wscngtc3luYy1jbG9jayA6IHdo
+aWNoIHBpbiBRRSB1c2UgZm9yIFJYIHN5bmMKK2ZzbCx0eC1zeW5jLWNsb2NrIDogd2hpY2ggcGlu
+IFFFIHVzZSBmb3IgVFggc3luYworZnNsLHR4LXRpbWVzbG90IDogdHggdGltZXNsb3QKK2ZzbCxy
+eC10aW1lc2xvdCA6IHJ4IHRpbWVzbG90Citmc2wsdGRtLWZyYW1lci10eXBlIDogdGRtIGZyYW1l
+ciB0eXBlCitmc2wsdGRtLW1vZGUgOiB0ZG0gbW9kZSwgbm9ybWFsIG9yIGludGVybmFsLWxvb3Bi
+YWNrCitmc2wsdGRtLWlkIDogdGRtIElECitmc2wsc2lyYW0tZW50cnktaWQgOiBTSSBSQU0gZW50
+cnkgSUQgZm9yIHRoZSBURE0KK2ZzbCx0ZG0taW50ZXJmYWNlIDogaGRsYyBiYXNlZCBvbiB0ZG0t
+aW50ZXJmYWNlCisKK0V4YW1wbGU6CisKKwl1Y2NAMjAwMCB7CisJCWNvbXBhdGlibGUgPSAiZnNs
+LHVjY19oZGxjIjsKKwkJcngtY2xvY2stbmFtZSA9ICJjbGs4IjsKKwkJdHgtY2xvY2stbmFtZSA9
+ICJjbGs5IjsKKwkJZnNsLHJ4LXN5bmMtY2xvY2sgPSAicnN5bmNfcGluIjsKKwkJZnNsLHR4LXN5
+bmMtY2xvY2sgPSAidHN5bmNfcGluIjsKKwkJZnNsLHR4LXRpbWVzbG90ID0gPDB4ZmZmZmZmZmU+
+OworCQlmc2wscngtdGltZXNsb3QgPSA8MHhmZmZmZmZmZT47CisJCWZzbCx0ZG0tZnJhbWVyLXR5
+cGUgPSAiZTEiOworCQlmc2wsdGRtLW1vZGUgPSAibm9ybWFsIjsKKwkJZnNsLHRkbS1pZCA9IDww
+PjsKKwkJZnNsLHNpcmFtLWVudHJ5LWlkID0gPDA+OworCQlmc2wsdGRtLWludGVyZmFjZTsKKwl9
+OwotLSAKMi4xLjAuMjcuZzk2ZGIzMjQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxp
+c3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBj
+LWRldg==
