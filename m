@@ -1,26 +1,133 @@
-From: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 00/23] HiSilicon SAS v2 hw support
-Date: Fri, 8 Jan 2016 14:31:14 +0000
-Message-ID: <568FC832.60108@huawei.com>
-References: <1452262542-64589-1-git-send-email-john.garry@huawei.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 1/2] USB: core: let USB device know device node
+Date: Fri, 8 Jan 2016 08:32:45 -0600
+Message-ID: <CAL_JsqKwATxGiqJ_MNV6_pur1dUEVOzH+iB8yY+kWA0y2gWbNg@mail.gmail.com>
+References: <1452231864-11171-1-git-send-email-peter.chen@freescale.com> <1452231864-11171-2-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452262542-64589-1-git-send-email-john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James.Bottomley-JuX6DAaQMKPCXq6kfMZ53/egYHeGw8Jk@public.gmane.org
-Cc: martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, JBottomley-wo1vFcy6AUs@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452231864-11171-2-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-My patchset was bounced by JBottomley-wo1vFcy6AUs@public.gmane.org
+On Thu, Jan 7, 2016 at 11:44 PM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> Although most of USB devices are hot-plug's, there are still some devices
+> are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
+> If these kinds of USB devices are multiple functions, and they can supply
+> other interfaces like i2c, gpios for other devices, we may need to
+> descirbe these at device tree.
+>
+> In this commit, it uses "reg" in dts as port number to match the port
+> number decided by USB core, if they are the same, then the device node
+> is for the device we are creating for USB core.
+>
+> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  .../devicetree/bindings/usb/usb-device.txt         |  8 ++++
+>  drivers/usb/core/Makefile                          |  2 +-
+>  drivers/usb/core/of.c                              | 48 ++++++++++++++++++++++
+>  drivers/usb/core/usb.c                             |  8 +++-
+>  include/linux/usb.h                                |  2 +
+>  include/linux/usb/of.h                             |  6 +++
+>  6 files changed, 71 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/usb-device.txt
+>  create mode 100644 drivers/usb/core/of.c
+>
+> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+> new file mode 100644
+> index 0000000..d35facd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+> @@ -0,0 +1,8 @@
+> +Generic USB Device Properties
+> +
+> +Usually, we only use device tree for hard wired USB device.
+> +The reference binding doc is from:
+> +http://playground.sun.com/1275/bindings/usb/usb-1_0.ps.
 
-It seems sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org had the same issue earlier this 
-week, but other contributors seem to continue using the same address - 
-shall I resend with alternate address?
+This path doesn't exist anymore. Use
+http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
 
+> +
+> +Required properties:
+> +- reg: the port number which this device is connecting to.
 
+At least compatible should also be here.
+
+> diff --git a/drivers/usb/core/Makefile b/drivers/usb/core/Makefile
+> index 2f6f932..9780877 100644
+> --- a/drivers/usb/core/Makefile
+> +++ b/drivers/usb/core/Makefile
+> @@ -5,7 +5,7 @@
+>  usbcore-y := usb.o hub.o hcd.o urb.o message.o driver.o
+>  usbcore-y += config.o file.o buffer.o sysfs.o endpoint.o
+>  usbcore-y += devio.o notify.o generic.o quirks.o devices.o
+> -usbcore-y += port.o
+> +usbcore-y += port.o of.o
+>
+>  usbcore-$(CONFIG_PCI)          += hcd-pci.o
+>  usbcore-$(CONFIG_ACPI)         += usb-acpi.o
+> diff --git a/drivers/usb/core/of.c b/drivers/usb/core/of.c
+> new file mode 100644
+> index 0000000..008ae6a
+> --- /dev/null
+> +++ b/drivers/usb/core/of.c
+> @@ -0,0 +1,48 @@
+> +/*
+> + * of.c                The helpers for hcd device tree support
+> + *
+> + * Copyright (C) 2016 Freescale Semiconductor, Inc.
+> + * Author: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> + *
+> + * This program is free software: you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2  of
+> + * the License as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/moduleparam.h>
+> +#include <linux/of.h>
+> +
+> +/**
+> + * usb_of_find_node - Find the device node match port number
+> + * @dev: the parent device node
+> + * @portnum: the port number which device is connecting
+> + *
+> + * Find the node from device tree according to its port number.
+> + *
+> + * Return: On success, a pointer to the device node, %NULL on failure.
+> + */
+> +struct device_node *usb_of_find_node(struct device_node *parent, int portnum)
+> +{
+> +       struct device_node *node;
+> +       u32 port;
+> +
+> +       for_each_child_of_node(parent, node) {
+> +               if (!of_property_read_u32(node, "reg", &port)) {
+> +                       if (port == portnum)
+> +                               return node;
+
+This needs to match on the compatible string too. Otherwise, this
+could match in lots of cases.
+
+> +               }
+> +       }
+> +
+> +       return NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(usb_of_find_node);
+> +
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
