@@ -1,43 +1,44 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/6] DT: mfd: add device-tree binding doc fro PMIC max77620/max20024
-Date: Fri, 8 Jan 2016 11:36:55 +0530
-Message-ID: <568F51FF.7000102@nvidia.com>
-References: <1452177524-23192-1-git-send-email-ldewangan@nvidia.com> <1452177524-23192-2-git-send-email-ldewangan@nvidia.com> <20160107231249.GA17514@rob-hp-laptop>
+From: "Pallala, Ramakrishna" <ramakrishna.pallala@intel.com>
+Subject: RE: [PATCH 0/2] power: Add support for TI BQ24261 charger
+Date: Fri, 8 Jan 2016 07:17:58 +0000
+Message-ID: <D854C92F57B1B347B57E531E78D05EAD57A0CA5F@BGSMSX104.gar.corp.intel.com>
+References: <1446136625-20845-1-git-send-email-ramakrishna.pallala@intel.com>
+ <20151205164022.GC30410@earth>
+ <D854C92F57B1B347B57E531E78D05EAD5797AD32@BGSMSX104.gar.corp.intel.com>
+ <20160105152002.GA9696@LTA0797059A>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160107231249.GA17514@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160105152002.GA9696@LTA0797059A>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Dannenberg <dannenberg@ti.com>
+Cc: Sebastian Reichel <sre@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Tc, Jenny" <jenny.tc@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Rob for review.
-I have taken care of all comment except following which I have query.
 
-On Friday 08 January 2016 04:42 AM, Rob Herring wrote:
-> +	- maxim,low-battery-reset-enable: Enable low battery reset.
-> +	- maxim,low-battery-reset-disable: Disable low battery reset.
-> Why not boolean? Not present means keep default value? I'd prefer
-> boolean or tristate of not present, 0 to disable, or 1 to enable.
->
->
-Here, the properties are boolean. I will add this on the description.
+> On Mon, Dec 07, 2015 at 07:03:41AM +0000, Pallala, Ramakrishna wrote:
+> > Hi Sebastian,
+> >
+> > > On Thu, Oct 29, 2015 at 10:07:03PM +0530, Ramakrishna Pallala wrote:
+> > > > This patch series adds the support for TI BQ24261 charger driver.
+> > > >
+> > > > TI BQ24261 charger driver relies on extcon notifications to get
+> > > > the charger cable type and based on that it will set the charging
+> parameters.
+> > >
+> > > I wonder if there is any new version of this patchset, that I missed
+> > > with the comments from Krzysztof and Andreas being taken care of?
+> >
+> > I was bit busy lately. I will address both Krzysztof and Andreas comments and
+> submit the new patchset in the coming few days.
+> 
+> Hi Ram,
+> hope all is well. I was just wondering regarding the status of this...
+> Are you still planning on updating your driver with the feedback?
 
-I like to enable or disable with the DT and properties are not there 
-then left to default.
-So added two properties for enable and disable. If properties are there, 
-do the activity.
+I was on vacation until this week. I will update patch very soon.
 
-Here tristate is also possible:
-maxim,low-battery-reset: tristate, low battery reset control. 0 for 
-disable, 1 for enable and
-                                  absence of this will leave 
-configuration on default.
-
-Does it look fine?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Ram
