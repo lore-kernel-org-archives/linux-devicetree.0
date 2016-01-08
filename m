@@ -1,56 +1,33 @@
-From: zhangqing <zhangqing@rock-chips.com>
-Subject: [PATCH v2 1/2] dt-bindings: add power-domain header for RK3368 SoCs
-Date: Fri,  8 Jan 2016 10:37:40 -0800
-Message-ID: <1452278261-16864-2-git-send-email-zhangqing@rock-chips.com>
-References: <1452278261-16864-1-git-send-email-zhangqing@rock-chips.com>
+From: Matthias Brugger <mbrugger@suse.com>
+Subject: [PATCH] documentation/dt: Fix stdout-path property
+Date: Fri,  8 Jan 2016 11:41:16 +0100
+Message-ID: <1452249676-25803-1-git-send-email-mbrugger@suse.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452278261-16864-1-git-send-email-zhangqing@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, wxt@rock-chips.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, khilman@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, huangtao@rock-chips.com, zyw@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, zhangqing <zhangqing@rock-chips.com>
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>
 List-Id: devicetree@vger.kernel.org
 
-According to a description from TRM, add all the power domains.
+Property linux,stdout-path is deprecated. Fix the documentation
+to reflect the up-to-date property.
 
-Signed-off-by: zhangqing <zhangqing@rock-chips.com>
+Signed-off-by: Matthias Brugger <mbrugger@suse.com>
 ---
- include/dt-bindings/power/rk3368-power.h | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 include/dt-bindings/power/rk3368-power.h
+ Documentation/devicetree/booting-without-of.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/dt-bindings/power/rk3368-power.h b/include/dt-bindings/power/rk3368-power.h
-new file mode 100644
-index 0000000..93633d5
---- /dev/null
-+++ b/include/dt-bindings/power/rk3368-power.h
-@@ -0,0 +1,28 @@
-+#ifndef __DT_BINDINGS_POWER_RK3368_POWER_H__
-+#define __DT_BINDINGS_POWER_RK3368_POWER_H__
-+
-+/* VD_CORE */
-+#define RK3368_PD_A53_L0	0
-+#define RK3368_PD_A53_L1	1
-+#define RK3368_PD_A53_L2	2
-+#define RK3368_PD_A53_L3	3
-+#define RK3368_PD_SCU_L		4
-+#define RK3368_PD_A53_B0	5
-+#define RK3368_PD_A53_B1	6
-+#define RK3368_PD_A53_B2	7
-+#define RK3368_PD_A53_B3	8
-+#define RK3368_PD_SCU_B		9
-+
-+/* VD_LOGIC */
-+#define RK3368_PD_BUS		10
-+#define RK3368_PD_PERI		11
-+#define RK3368_PD_VIO		12
-+#define RK3368_PD_ALIVE		13
-+#define RK3368_PD_VIDEO		14
-+#define RK3368_PD_GPU_0		15
-+#define RK3368_PD_GPU_1		16
-+
-+/* VD_PMU */
-+#define RK3368_PD_PMU		17
-+
-+#endif
+diff --git a/Documentation/devicetree/booting-without-of.txt b/Documentation/devicetree/booting-without-of.txt
+index 04d34f6..f7b4092 100644
+--- a/Documentation/devicetree/booting-without-of.txt
++++ b/Documentation/devicetree/booting-without-of.txt
+@@ -976,7 +976,7 @@ compatibility.
+ 
+     - bootargs : This zero-terminated string is passed as the kernel
+       command line
+-    - linux,stdout-path : This is the full path to your standard
++    - stdout-path : This is the full path to your standard
+       console device if any. Typically, if you have serial devices on
+       your board, you may want to put the full path to the one set as
+       the default console in the firmware here, for the kernel to pick
 -- 
-1.9.1
+2.6.2
