@@ -1,198 +1,67 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] soc: rockchip: power-domain: Modify power domain driver for rk3368
-Date: Fri, 08 Jan 2016 10:18:55 +0100
-Message-ID: <4607132.KdVH8UGEg4@phil>
-References: <1452269144-15389-1-git-send-email-zhangqing@rock-chips.com> <3979294.oVXyhiFhfI@phil> <568FECFE.8060107@rock-chips.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [rtc-linux] [PATCH 2/6] mfd: max77620: add core driver for MAX77620/MAX20024
+Date: Fri, 8 Jan 2016 14:46:43 +0530
+Message-ID: <568F7E7B.1010501@nvidia.com>
+References: <1452177524-23192-1-git-send-email-ldewangan@nvidia.com>	<1452177524-23192-3-git-send-email-ldewangan@nvidia.com> <CAJKOXPfa0jjRWE6LKvNmwCRcG9Es7=36_03kTqCx-aB1wENx0g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <568FECFE.8060107-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <CAJKOXPfa0jjRWE6LKvNmwCRcG9Es7=36_03kTqCx-aB1wENx0g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Chaitanya Bandi <bandik-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mallikarjun Kasoju <mkasoju-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 8. Januar 2016, 09:08:14 schrieb zhangqing:
-> On 01/08/2016 12:25 AM, Heiko Stuebner wrote:
-> > Hi Elaine,
-> > 
-> > Am Freitag, 8. Januar 2016, 08:05:44 schrieb zhangqing:
-> >> This driver is modified to support RK3368 SoC.
-> >> 
-> >> Signed-off-by: zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> >> ---
-> >> 
-> >>   drivers/soc/rockchip/pm_domains.c        | 33
-> >> 
-> >> ++++++++++++++++++++++++++++++++
-> >> include/dt-bindings/power/rk3368-power.h
-> >> 
-> >> | 28 +++++++++++++++++++++++++++ 2 files changed, 61 insertions(+)
-> >> | 
-> >>   create mode 100644 include/dt-bindings/power/rk3368-power.h
-> >> 
-> >> diff --git a/drivers/soc/rockchip/pm_domains.c
-> >> b/drivers/soc/rockchip/pm_domains.c index 534c589..6cdffb1 100644
-> >> --- a/drivers/soc/rockchip/pm_domains.c
-> >> +++ b/drivers/soc/rockchip/pm_domains.c
-> >> @@ -18,6 +18,7 @@
-> >> 
-> >>   #include <linux/regmap.h>
-> >>   #include <linux/mfd/syscon.h>
-> >>   #include <dt-bindings/power/rk3288-power.h>
-> >> 
-> >> +#include <dt-bindings/power/rk3368-power.h>
-> >> 
-> >>   struct rockchip_domain_info {
-> >>   
-> >>   	int pwr_mask;
-> >> 
-> >> @@ -75,6 +76,9 @@ struct rockchip_pmu {
-> >> 
-> >>   #define DOMAIN_RK3288(pwr, status, req)		\
-> >>   
-> >>   	DOMAIN(pwr, status, req, req, (req) + 16)
-> >> 
-> >> +#define DOMAIN_RK3368(pwr, status, req)		\
-> >> +	DOMAIN(pwr, status, req, (req) + 16, req)
-> >> +
-> >> 
-> >>   static bool rockchip_pmu_domain_is_idle(struct rockchip_pm_domain
-> >>   *pd)
-> >>   {
-> >>   
-> >>   	struct rockchip_pmu *pmu = pd->pmu;
-> >> 
-> >> @@ -444,6 +448,14 @@ static const struct rockchip_domain_info
-> >> rk3288_pm_domains[] = { [RK3288_PD_GPU]		= DOMAIN_RK3288(9, 9, 2),
-> >> 
-> >>   };
-> >> 
-> >> +static const struct rockchip_domain_info rk3368_pm_domains[] = {
-> >> +	[RK3368_PD_PERI]	= DOMAIN_RK3368(13, 12, 6),
-> >> +	[RK3368_PD_VIO]		= DOMAIN_RK3368(15, 14, 8),
-> >> +	[RK3368_PD_VIDEO]	= DOMAIN_RK3368(14, 13, 7),
-> >> +	[RK3368_PD_GPU_0]	= DOMAIN_RK3368(16, 15, 2),
-> >> +	[RK3368_PD_GPU_1]	= DOMAIN_RK3368(17, 16, 2),
-> >> +};
-> > 
-> > The structure in the registers (and thus the macros you define above) is
-> > the same between rk3288 and rk3368, so there is no need to define that
-> > a second time. It is perfectly fine to re-use the DOMAIN_RK3288 macro
-> > here and saves double-definitions. [see our clock-drivers which already
-> > do this for the common parts].
-> 
-> The ack_mask bit and idle_mask bit is different in rk3368.
-> you can check the :
-> 
-> +#define DOMAIN_RK3368(pwr, status, req)		\
-> +	DOMAIN(pwr, status, req,(req) + 16, req)
-> +
-> But the rk3288 is :
-> #define DOMAIN_RK3288(pwr, status, req)		\
->   	DOMAIN(pwr, status, req, req, (req) + 16)
+Hi Krzysztof,
+Thanks for review.
+I will fix most of your comment on my next patch.
 
-ah sorry, misread that then ... so please forget I said anything ;-)
+Answering to some of comment/query.
 
+On Friday 08 January 2016 07:05 AM, Krzysztof Kozlowski wrote:
+> ()2016-01-07 23:38 GMT+09:00 Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>:
+> +                               dev_err(dev,
+> +                                   "FPS enable-input %u is not supported\n",
+> +                                       pval);
+> Indentation of arguments does not seem equal here or maybe this is
+> just my email client. Have you run this through checkpatch? And
+> sparse? And coccicheck (that one definitely not because kbuild is
+> complaining)?
+I ran checkpatch before I sent.
 
-Heiko
+> +               chip->rmap[i] = devm_regmap_init_i2c(chip->clients[i],
+> +               (const struct regmap_config *)&max77620_regmap_config[i]);
+> Indentation looks weird here (or again this is my email client...).
+> The cast is even weirder?!? Why casting?
+There is some parameter difference for MAX77620 and MAX20024. I have 
+only one structure for it and changing tun time so I have not define 
+this structure as constant.
+Now API needs const type structure and hence casting it.
 
-> 
-> >> +
-> >> 
-> >>   static const struct rockchip_pmu_info rk3288_pmu = {
-> >>   
-> >>   	.pwr_offset = 0x08,
-> >>   	.status_offset = 0x0c,
-> >> 
-> >> @@ -461,11 +473,32 @@ static const struct rockchip_pmu_info rk3288_pmu
-> >> = { .domain_info = rk3288_pm_domains,
-> >> 
-> >>   };
-> >> 
-> >> +static const struct rockchip_pmu_info rk3368_pmu = {
-> >> +	.pwr_offset = 0x0c,
-> >> +	.status_offset = 0x10,
-> >> +	.req_offset = 0x3c,
-> >> +	.idle_offset = 0x40,
-> >> +	.ack_offset = 0x40,
-> >> +
-> >> +	.core_pwrcnt_offset = 0x48,
-> >> +	.gpu_pwrcnt_offset = 0x50,
-> >> +
-> >> +	.core_power_transition_time = 24,
-> >> +	.gpu_power_transition_time = 24,
-> >> +
-> >> +	.num_domains = ARRAY_SIZE(rk3368_pm_domains),
-> >> +	.domain_info = rk3368_pm_domains,
-> >> +};
-> >> +
-> >> 
-> >>   static const struct of_device_id rockchip_pm_domain_dt_match[] = {
-> >>   
-> >>   	{
-> >>   	
-> >>   		.compatible = "rockchip,rk3288-power-controller",
-> >>   		.data = (void *)&rk3288_pmu,
-> >>   	
-> >>   	},
-> >> 
-> >> +	{
-> >> +		.compatible = "rockchip,rk3368-power-controller",
-> >> +		.data = (void *)&rk3368_pmu,
-> >> +	},
-> >> 
-> >>   	{ /* sentinel */ },
-> >>   
-> >>   };
-> >> 
-> >> diff --git a/include/dt-bindings/power/rk3368-power.h
-> >> b/include/dt-bindings/power/rk3368-power.h new file mode 100644
-> >> index 0000000..93633d5
-> >> --- /dev/null
-> >> +++ b/include/dt-bindings/power/rk3368-power.h
-> > 
-> > Please split the addition of the binding-header into a separate patch.
-> > We
-> > will need the header in both the soc-specific code as well as the
-> > devicetree side, which requires the header being in a shared branch.
-> > 
-> > Otherwise patch looks great.
-> > 
-> > 
-> > Thanks
-> > Heiko
-> > 
-> >> @@ -0,0 +1,28 @@
-> >> +#ifndef __DT_BINDINGS_POWER_RK3368_POWER_H__
-> >> +#define __DT_BINDINGS_POWER_RK3368_POWER_H__
-> >> +
-> >> +/* VD_CORE */
-> >> +#define RK3368_PD_A53_L0	0
-> >> +#define RK3368_PD_A53_L1	1
-> >> +#define RK3368_PD_A53_L2	2
-> >> +#define RK3368_PD_A53_L3	3
-> >> +#define RK3368_PD_SCU_L		4
-> >> +#define RK3368_PD_A53_B0	5
-> >> +#define RK3368_PD_A53_B1	6
-> >> +#define RK3368_PD_A53_B2	7
-> >> +#define RK3368_PD_A53_B3	8
-> >> +#define RK3368_PD_SCU_B		9
-> >> +
-> >> +/* VD_LOGIC */
-> >> +#define RK3368_PD_BUS		10
-> >> +#define RK3368_PD_PERI		11
-> >> +#define RK3368_PD_VIO		12
-> >> +#define RK3368_PD_ALIVE		13
-> >> +#define RK3368_PD_VIDEO		14
-> >> +#define RK3368_PD_GPU_0		15
-> >> +#define RK3368_PD_GPU_1		16
-> >> +
-> >> +/* VD_PMU */
-> >> +#define RK3368_PD_PMU		17
-> >> +
-> >> +#endif
+However, I have  define different structure for MAX77620 and MAX20024 
+which are const type and hence no need to explicitly casting here. This 
+will be in my next patch.
+
++static inline int max77620_reg_update(struct device *dev, int sid,
++               unsigned int reg, unsigned int mask, unsigned int val)
++{
++       struct max77620_chip *chip = dev_get_drvdata(dev);
++
++       return regmap_update_bits(chip->rmap[sid], reg, mask, val);
++}
+
+> I think all these shouldn't be static inlines in header. Although some
+> of them are one-liners but rest are not. Let the compiler decide what
+> to do with these wrappers.
+
+If I dont make inline from header then this will complain as unused 
+static function on related C compilation if it is not used on C. This 
+header included from all sub module driver and they are not using all 
+these APIs.
+
+To avoid compilation warning,  I need to use inline here.
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
