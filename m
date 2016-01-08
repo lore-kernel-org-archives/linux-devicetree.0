@@ -1,133 +1,26 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 1/2] USB: core: let USB device know device node
-Date: Fri, 8 Jan 2016 08:32:45 -0600
-Message-ID: <CAL_JsqKwATxGiqJ_MNV6_pur1dUEVOzH+iB8yY+kWA0y2gWbNg@mail.gmail.com>
-References: <1452231864-11171-1-git-send-email-peter.chen@freescale.com> <1452231864-11171-2-git-send-email-peter.chen@freescale.com>
+From: Finance Department <tk_danang-iBkIZk4oxds5riKZytjAwg@public.gmane.org>
+Subject: Payment
+Date: Fri, 8 Jan 2016 16:52:22 +0700 (ICT)
+Message-ID: <2035633041.863418.1452246742744.JavaMail.zimbra@vksndtc.gov.vn>
+Reply-To: Finance Department <un44401-9uewiaClKEY@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452231864-11171-2-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 7, 2016 at 11:44 PM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> Although most of USB devices are hot-plug's, there are still some devices
-> are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
-> If these kinds of USB devices are multiple functions, and they can supply
-> other interfaces like i2c, gpios for other devices, we may need to
-> descirbe these at device tree.
->
-> In this commit, it uses "reg" in dts as port number to match the port
-> number decided by USB core, if they are the same, then the device node
-> is for the device we are creating for USB core.
->
-> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  .../devicetree/bindings/usb/usb-device.txt         |  8 ++++
->  drivers/usb/core/Makefile                          |  2 +-
->  drivers/usb/core/of.c                              | 48 ++++++++++++++++++++++
->  drivers/usb/core/usb.c                             |  8 +++-
->  include/linux/usb.h                                |  2 +
->  include/linux/usb/of.h                             |  6 +++
->  6 files changed, 71 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/usb/usb-device.txt
->  create mode 100644 drivers/usb/core/of.c
->
-> diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
-> new file mode 100644
-> index 0000000..d35facd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
-> @@ -0,0 +1,8 @@
-> +Generic USB Device Properties
-> +
-> +Usually, we only use device tree for hard wired USB device.
-> +The reference binding doc is from:
-> +http://playground.sun.com/1275/bindings/usb/usb-1_0.ps.
+Hello,
 
-This path doesn't exist anymore. Use
-http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
+We wish to inform you that your email as been selected and awarded the =
+sum of Eight Million Pounds sterling (=C2=A38,000,000.00) with referenc=
+e number 77100146. This compensation funds is from the United Nations. =
+To receive payment Send us your full personal details to deliver your f=
+unds as soon as possible.
 
-> +
-> +Required properties:
-> +- reg: the port number which this device is connecting to.
-
-At least compatible should also be here.
-
-> diff --git a/drivers/usb/core/Makefile b/drivers/usb/core/Makefile
-> index 2f6f932..9780877 100644
-> --- a/drivers/usb/core/Makefile
-> +++ b/drivers/usb/core/Makefile
-> @@ -5,7 +5,7 @@
->  usbcore-y := usb.o hub.o hcd.o urb.o message.o driver.o
->  usbcore-y += config.o file.o buffer.o sysfs.o endpoint.o
->  usbcore-y += devio.o notify.o generic.o quirks.o devices.o
-> -usbcore-y += port.o
-> +usbcore-y += port.o of.o
->
->  usbcore-$(CONFIG_PCI)          += hcd-pci.o
->  usbcore-$(CONFIG_ACPI)         += usb-acpi.o
-> diff --git a/drivers/usb/core/of.c b/drivers/usb/core/of.c
-> new file mode 100644
-> index 0000000..008ae6a
-> --- /dev/null
-> +++ b/drivers/usb/core/of.c
-> @@ -0,0 +1,48 @@
-> +/*
-> + * of.c                The helpers for hcd device tree support
-> + *
-> + * Copyright (C) 2016 Freescale Semiconductor, Inc.
-> + * Author: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> + *
-> + * This program is free software: you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2  of
-> + * the License as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/moduleparam.h>
-> +#include <linux/of.h>
-> +
-> +/**
-> + * usb_of_find_node - Find the device node match port number
-> + * @dev: the parent device node
-> + * @portnum: the port number which device is connecting
-> + *
-> + * Find the node from device tree according to its port number.
-> + *
-> + * Return: On success, a pointer to the device node, %NULL on failure.
-> + */
-> +struct device_node *usb_of_find_node(struct device_node *parent, int portnum)
-> +{
-> +       struct device_node *node;
-> +       u32 port;
-> +
-> +       for_each_child_of_node(parent, node) {
-> +               if (!of_property_read_u32(node, "reg", &port)) {
-> +                       if (port == portnum)
-> +                               return node;
-
-This needs to match on the compatible string too. Otherwise, this
-could match in lots of cases.
-
-> +               }
-> +       }
-> +
-> +       return NULL;
-> +}
-> +EXPORT_SYMBOL_GPL(usb_of_find_node);
-> +
+Gloria Peter
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
