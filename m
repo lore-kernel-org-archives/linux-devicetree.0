@@ -1,69 +1,99 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [rtc-linux] [PATCH 2/6] mfd: max77620: add core driver for MAX77620/MAX20024
-Date: Fri, 8 Jan 2016 14:46:43 +0530
-Message-ID: <568F7E7B.1010501@nvidia.com>
-References: <1452177524-23192-1-git-send-email-ldewangan@nvidia.com>	<1452177524-23192-3-git-send-email-ldewangan@nvidia.com> <CAJKOXPfa0jjRWE6LKvNmwCRcG9Es7=36_03kTqCx-aB1wENx0g@mail.gmail.com>
+From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 05/14] dt/bindings: Add bindings for PIC32/MZDA
+ platforms
+Date: Fri, 8 Jan 2016 13:37:39 +0300
+Message-ID: <20160108133739.9a9c63c18fee346098354b21@gmail.com>
+References: <1452211389-31025-1-git-send-email-joshua.henderson@microchip.com>
+	<1452211389-31025-6-git-send-email-joshua.henderson@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJKOXPfa0jjRWE6LKvNmwCRcG9Es7=36_03kTqCx-aB1wENx0g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1452211389-31025-6-git-send-email-joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Chaitanya Bandi <bandik-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mallikarjun Kasoju <mkasoju-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
-Thanks for review.
-I will fix most of your comment on my next patch.
+On Thu, 7 Jan 2016 17:00:20 -0700
+Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org> wrote:
 
-Answering to some of comment/query.
+> This adds support for the Microchip PIC32 platform along with the
+> specific variant PIC32MZDA on a PIC32MZDA Starter Kit.
+>=20
+> Signed-off-by: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  .../bindings/mips/pic32/microchip,pic32mzda.txt    |   33 ++++++++++=
+++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mips/pic32/micr=
+ochip,pic32mzda.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/mips/pic32/microchip,p=
+ic32mzda.txt b/Documentation/devicetree/bindings/mips/pic32/microchip,p=
+ic32mzda.txt
+> new file mode 100644
+> index 0000000..bcf3e04
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mips/pic32/microchip,pic32mzd=
+a.txt
+> @@ -0,0 +1,33 @@
+> +* Microchip PIC32MZDA Platforms
+> +
+> +PIC32MZDA Starter Kit
+> +Required root node properties:
+> +    - compatible =3D "microchip,pic32mzda-sk", "microchip,pic32mzda"
+> +
+> +CPU nodes:
+> +----------
+> +A "cpus" node is required.  Required properties:
+> + - #address-cells: Must be 1.
+> + - #size-cells: Must be 0.
+> +A CPU sub-node is also required.  Required properties:
+> + - device_type: Must be "cpu".
+> + - compatible: Must be "mti,mips14KEc".
+> +Example:
+> +	cpus {
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			device_type =3D "cpu";
+> +			compatible =3D "mti,mips14KEc";
+> +		};
+> +	};
+> +
+> +Boot protocol
+> +--------------
+> +In accordance with the MIPS UHI specification[1], the bootloader mus=
+t pass the
+> +following arguments to the kernel:
+> + - $a0: -2.
+> + - $a1: KSEG0 address of the flattened device-tree blob.
+> +
+> +[1] http://prplfoundation.org/wiki/MIPS_documentation
 
-On Friday 08 January 2016 07:05 AM, Krzysztof Kozlowski wrote:
-> ()2016-01-07 23:38 GMT+09:00 Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>:
-> +                               dev_err(dev,
-> +                                   "FPS enable-input %u is not supported\n",
-> +                                       pval);
-> Indentation of arguments does not seem equal here or maybe this is
-> just my email client. Have you run this through checkpatch? And
-> sparse? And coccicheck (that one definitely not because kbuild is
-> complaining)?
-I ran checkpatch before I sent.
+At the moment the link [1] does not work. It is redirected to nonexisti=
+ng "http://wiki.prplfoundation.org//MIPS_documentation" (prplfoundation=
+=2Eorg site problem?).
 
-> +               chip->rmap[i] = devm_regmap_init_i2c(chip->clients[i],
-> +               (const struct regmap_config *)&max77620_regmap_config[i]);
-> Indentation looks weird here (or again this is my email client...).
-> The cast is even weirder?!? Why casting?
-There is some parameter difference for MAX77620 and MAX20024. I have 
-only one structure for it and changing tun time so I have not define 
-this structure as constant.
-Now API needs const type structure and hence casting it.
+The http://wiki.prplfoundation.org/wiki/MIPS_documentation URL works.
 
-However, I have  define different structure for MAX77620 and MAX20024 
-which are const type and hence no need to explicitly casting here. This 
-will be in my next patch.
+The "MIPS documentation" wiki page contains many documents so can we us=
+e=20
+more accurate URL, e.g. http://wiki.prplfoundation.org/wiki/MIPS_docume=
+ntation#Unified_Hosting_Interface ?
 
-+static inline int max77620_reg_update(struct device *dev, int sid,
-+               unsigned int reg, unsigned int mask, unsigned int val)
-+{
-+       struct max77620_chip *chip = dev_get_drvdata(dev);
-+
-+       return regmap_update_bits(chip->rmap[sid], reg, mask, val);
-+}
+Can we use more strict name for "MIPS UHI specification", e.g. "Unified=
+ Hosting Interface Reference Manual (MD01069)"?
 
-> I think all these shouldn't be static inlines in header. Although some
-> of them are one-liners but rest are not. Let the compiler decide what
-> to do with these wrappers.
-
-If I dont make inline from header then this will complain as unused 
-static function on related C compilation if it is not used on C. This 
-header included from all sub module driver and they are not using all 
-these APIs.
-
-To avoid compilation warning,  I need to use inline here.
-
-
+--=A0
+Best regards,
+=A0 Antony Pavlov
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
