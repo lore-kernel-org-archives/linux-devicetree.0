@@ -1,58 +1,85 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] ata: add AMD Seattle platform driver
-Date: Fri, 08 Jan 2016 11:59:53 -0800
-Message-ID: <1452283193.4028.84.camel@perches.com>
-References: <1452200002-31590-1-git-send-email-brijesh.singh@amd.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/6] QE: Add ucc hdlc document to bindings
+Date: Fri, 8 Jan 2016 14:10:17 -0600
+Message-ID: <20160108201017.GA26581@rob-hp-laptop>
+References: <1452219494-31947-1-git-send-email-qiang.zhao@nxp.com>
+ <1452219494-31947-2-git-send-email-qiang.zhao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1452200002-31590-1-git-send-email-brijesh.singh@amd.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Brijesh Singh <brijesh.singh@amd.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, tj@kernel.org, devicetree@vger.kernel.org, linux-ide@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1452219494-31947-2-git-send-email-qiang.zhao@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Zhao Qiang <qiang.zhao@nxp.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Priyanka.Jain@freescale.com, oss@buserror.net
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-01-07 at 14:53 -0600, Brijesh Singh wrote:
-> AMD Seattle SATA controller mostly conforms to AHCI interface with so=
-me
-> special register to control SGPIO interface. In the case of an AHCI
-> controller, the SGPIO feature is ideally implemented using the
-> "Enclosure Management" register of the AHCI controller, but those
-> registeres are not implemented in the Seattle SoC. Instead SoC
-> (Rev B0 onwards) provides a 32-bit SGPIO control register which shoul=
-d
-> be programmed to control the activity, locate and fault LEDs.
-
-trivia:
-
-> diff --git a/drivers/ata/ahci_seattle.c b/drivers/ata/ahci_seattle.c
-[]
-> +static ssize_t seattle_transmit_led_message(struct ata_port *ap, u32=
- state,
-> +					=A0=A0=A0=A0ssize_t size)
-> +{
-> +	struct ahci_host_priv *hpriv =3D ap->host->private_data;
-> +	struct ahci_port_priv *pp =3D ap->private_data;
-> +	struct seattle_plat_data *plat_data =3D hpriv->plat_data;
-> +	unsigned long flags;
-> +	int pmp;
-> +	struct ahci_em_priv *emp;
-> +	u32 val;
+On Fri, Jan 08, 2016 at 10:18:10AM +0800, Zhao Qiang wrote:
+> Add ucc hdlc document to
+> Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt
+> 
+> Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
+> ---
+>  .../bindings/powerpc/fsl/cpm_qe/network.txt        | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt
+> index 29b28b8..017cbf7 100644
+> --- a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt
+> @@ -41,3 +41,38 @@ Example:
+>  		fsl,mdio-pin = <12>;
+>  		fsl,mdc-pin = <13>;
+>  	};
 > +
-> +	/* get the slot number from the message */
-> +	pmp =3D (state & EM_MSG_LED_PMP_SLOT) >> 8;
-> +	if (pmp < EM_MAX_SLOTS)
-> +		emp =3D &pp->em_priv[pmp];
-> +	else
-> +		return -EINVAL;
+> +* HDLC
+> +
+> +Currently defined compatibles:
+> +- fsl,ucc_hdlc
 
-This is generally done using a inverted test that
-returns immediately
+Don't use _.
 
-	if (pmp >=3D EMP_MAX_SLOTS)
-		return -EINVAL;
+> +
+> +Properties for fsl,ucc_hdlc:
+> +rx-clock-name : which clock QE use for RX
+> +tx-clock-name : which clock QE use for TX
+> +fsl,rx-sync-clock : which pin QE use for RX sync
+> +fsl,tx-sync-clock : which pin QE use for TX sync
+> +fsl,tx-timeslot : tx timeslot
+> +fsl,rx-timeslot : rx timeslot
+> +fsl,tdm-framer-type : tdm framer type
+> +fsl,tdm-mode : tdm mode, normal or internal-loopback
+> +fsl,tdm-id : tdm ID
+> +fsl,siram-entry-id : SI RAM entry ID for the TDM
+> +fsl,tdm-interface : hdlc based on tdm-interface
 
-	emp =3D &pp->em_priv[pmp];
+It is not clear what any of these properties do. For example, what are 
+allowed/valid values. Provide enough information to validate the 
+example.
 
+Rob
 
+> +
+> +Example:
+> +
+> +	ucc@2000 {
+> +		compatible = "fsl,ucc_hdlc";
+> +		rx-clock-name = "clk8";
+> +		tx-clock-name = "clk9";
+> +		fsl,rx-sync-clock = "rsync_pin";
+> +		fsl,tx-sync-clock = "tsync_pin";
+> +		fsl,tx-timeslot = <0xfffffffe>;
+> +		fsl,rx-timeslot = <0xfffffffe>;
+> +		fsl,tdm-framer-type = "e1";
+> +		fsl,tdm-mode = "normal";
+> +		fsl,tdm-id = <0>;
+> +		fsl,siram-entry-id = <0>;
+> +		fsl,tdm-interface;
+> +	};
+> -- 
+> 2.1.0.27.g96db324
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
