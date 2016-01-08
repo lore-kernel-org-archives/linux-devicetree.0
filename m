@@ -1,769 +1,285 @@
-From: Joshua Henderson <joshua.henderson@microchip.com>
-Subject: [PATCH v3 13/14] MIPS: dts: Add initial DTS for the PIC32MZDA Starter Kit
-Date: Thu, 7 Jan 2016 17:00:28 -0700
-Message-ID: <1452211389-31025-14-git-send-email-joshua.henderson@microchip.com>
-References: <1452211389-31025-1-git-send-email-joshua.henderson@microchip.com>
+From: Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH v3] pstore-ram: add Device Tree bindings
+Date: Thu, 7 Jan 2016 16:23:10 -0800
+Message-ID: <CAGXu5j+DGf8_C+=bP1mJ69+XCnLaAjZJrSneOAkFjyMnWHJ-zQ@mail.gmail.com>
+References: <1452210056-14436-1-git-send-email-ghackmann@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452211389-31025-1-git-send-email-joshua.henderson@microchip.com>
+In-Reply-To: <1452210056-14436-1-git-send-email-ghackmann@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, Joshua Henderson <joshua.henderson@microchip.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Bresticker <abrestic@chromium.org>, Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org
+To: Greg Hackmann <ghackmann@google.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, John Stultz <john.stultz@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds basic DTS configuration for the PIC32MZDA chip and in turn the
-PIC32MZDA Starter Kit.
+On Thu, Jan 7, 2016 at 3:40 PM, Greg Hackmann <ghackmann@google.com> wrote:
+> ramoops is one of the remaining places where ARM vendors still rely on
+> board-specific shims.  Device Tree lets us replace those shims with
+> generic code.
+>
+> These bindings mirror the ramoops module parameters, with two small
+> differences:
+>
+> (1) dump_oops becomes an optional "no-dump-oops" property, since ramoops
+>     sets dump_oops=1 by default.
+>
+> (2) mem_type=1 becomes the more self-explanatory "unbuffered" property.
+>
+> Signed-off-by: Greg Hackmann <ghackmann@google.com>
 
-Signed-off-by: Joshua Henderson <joshua.henderson@microchip.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
----
- arch/mips/boot/dts/Makefile                 |    1 +
- arch/mips/boot/dts/pic32/Makefile           |   12 ++
- arch/mips/boot/dts/pic32/pic32mzda-clk.dtsi |  236 +++++++++++++++++++++++
- arch/mips/boot/dts/pic32/pic32mzda.dtsi     |  275 +++++++++++++++++++++++++++
- arch/mips/boot/dts/pic32/pic32mzda_sk.dts   |  151 +++++++++++++++
- arch/mips/pic32/Kconfig                     |   16 ++
- 6 files changed, 691 insertions(+)
- create mode 100644 arch/mips/boot/dts/pic32/Makefile
- create mode 100644 arch/mips/boot/dts/pic32/pic32mzda-clk.dtsi
- create mode 100644 arch/mips/boot/dts/pic32/pic32mzda.dtsi
- create mode 100644 arch/mips/boot/dts/pic32/pic32mzda_sk.dts
+Acked-by: Kees Cook <keescook@chromium.org>
 
-diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
-index a0bf516..fc7a0a9 100644
---- a/arch/mips/boot/dts/Makefile
-+++ b/arch/mips/boot/dts/Makefile
-@@ -4,6 +4,7 @@ dts-dirs	+= ingenic
- dts-dirs	+= lantiq
- dts-dirs	+= mti
- dts-dirs	+= netlogic
-+dts-dirs	+= pic32
- dts-dirs	+= qca
- dts-dirs	+= ralink
- dts-dirs	+= xilfpga
-diff --git a/arch/mips/boot/dts/pic32/Makefile b/arch/mips/boot/dts/pic32/Makefile
-new file mode 100644
-index 0000000..7ac7905
---- /dev/null
-+++ b/arch/mips/boot/dts/pic32/Makefile
-@@ -0,0 +1,12 @@
-+dtb-$(CONFIG_DTB_PIC32_MZDA_SK)		+= pic32mzda_sk.dtb
-+
-+dtb-$(CONFIG_DTB_PIC32_NONE)		+= \
-+					pic32mzda_sk.dtb
-+
-+obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
-+
-+# Force kbuild to make empty built-in.o if necessary
-+obj-				+= dummy.o
-+
-+always				:= $(dtb-y)
-+clean-files			:= *.dtb *.dtb.S
-diff --git a/arch/mips/boot/dts/pic32/pic32mzda-clk.dtsi b/arch/mips/boot/dts/pic32/pic32mzda-clk.dtsi
-new file mode 100644
-index 0000000..ef13350
---- /dev/null
-+++ b/arch/mips/boot/dts/pic32/pic32mzda-clk.dtsi
-@@ -0,0 +1,236 @@
-+/*
-+ * Device Tree Source for PIC32MZDA clock data
-+ *
-+ * Purna Chandra Mandal <purna.mandal@microchip.com>
-+ * Copyright (C) 2015 Microchip Technology Inc.  All rights reserved.
-+ *
-+ * Licensed under GPLv2 or later.
-+ */
-+
-+/* all fixed rate clocks */
-+
-+/ {
-+	POSC:posc_clk { /* On-chip primary oscillator */
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>;
-+	};
-+
-+	FRC:frc_clk { /* internal FRC oscillator */
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <8000000>;
-+	};
-+
-+	BFRC:bfrc_clk { /* internal backup FRC oscillator */
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <8000000>;
-+	};
-+
-+	LPRC:lprc_clk { /* internal low-power FRC oscillator */
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <32000>;
-+	};
-+
-+	/* UPLL provides clock to USBCORE */
-+	UPLL:usb_phy_clk {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>;
-+		clock-output-names = "usbphy_clk";
-+	};
-+
-+	TxCKI:txcki_clk { /* external clock input on TxCLKI pin */
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <4000000>;
-+		status = "disabled";
-+	};
-+
-+	/* external clock input on REFCLKIx pin */
-+	REFIx:refix_clk {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>;
-+		status = "disabled";
-+	};
-+
-+	/* PIC32 specific clks */
-+	pic32_clktree {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x1f801200 0x200>;
-+		compatible = "microchip,pic32mzda-clk";
-+		ranges = <0 0x1f801200 0x200>;
-+
-+		/* secondary oscillator; external input on SOSCI pin */
-+		SOSC:sosc_clk@0 {
-+			#clock-cells = <0>;
-+			compatible = "microchip,pic32mzda-sosc";
-+			clock-frequency = <32768>;
-+			reg = <0x000 0x10>,   /* enable reg */
-+			      <0x1d0 0x10>; /* status reg */
-+			microchip,bit-mask = <0x02>; /* enable mask */
-+			microchip,status-bit-mask = <0x10>; /* status-mask*/
-+		};
-+
-+		FRCDIV:frcdiv_clk {
-+			#clock-cells = <0>;
-+			compatible = "microchip,pic32mzda-frcdivclk";
-+			clocks = <&FRC>;
-+			clock-output-names = "frcdiv_clk";
-+		};
-+
-+		/* System PLL clock */
-+		SYSPLL:spll_clk@020 {
-+			#clock-cells = <0>;
-+			compatible = "microchip,pic32mzda-syspll";
-+			reg = <0x020 0x10>, /* SPLL register */
-+			      <0x1d0 0x10>; /* CLKSTAT register */
-+			clocks = <&POSC>, <&FRC>;
-+			clock-output-names = "sys_pll";
-+			microchip,status-bit-mask = <0x80>; /* SPLLRDY */
-+		};
-+
-+		/* system clock; mux with postdiv & slew */
-+		SYSCLK:sys_clk@1c0 {
-+			#clock-cells = <0>;
-+			compatible = "microchip,pic32mzda-sysclk-v2";
-+			reg = <0x1c0 0x04>; /* SLEWCON */
-+			clocks = <&FRCDIV>, <&SYSPLL>, <&POSC>, <&SOSC>,
-+				 <&LPRC>, <&FRCDIV>;
-+			microchip,clock-indices = <0>, <1>, <2>, <4>,
-+						  <5>, <7>;
-+			clock-output-names = "sys_clk";
-+		};
-+
-+		/* Peripheral bus1 clock */
-+		PBCLK1:pb1_clk@140 {
-+			reg = <0x140 0x10>;
-+			#clock-cells = <0>;
-+			compatible = "microchip,pic32mzda-pbclk";
-+			clocks = <&SYSCLK>;
-+			clock-output-names = "pb1_clk";
-+			/* used by system modules, not gateable */
-+			microchip,ignore-unused;
-+		};
-+
-+		/* Peripheral bus2 clock */
-+		PBCLK2:pb2_clk@150 {
-+			reg = <0x150 0x10>;
-+			#clock-cells = <0>;
-+			compatible = "microchip,pic32mzda-pbclk";
-+			clocks = <&SYSCLK>;
-+			clock-output-names = "pb2_clk";
-+			/* avoid gating even if unused */
-+			microchip,ignore-unused;
-+		};
-+
-+		/* Peripheral bus3 clock */
-+		PBCLK3:pb3_clk@160 {
-+			reg = <0x160 0x10>;
-+			#clock-cells = <0>;
-+			compatible = "microchip,pic32mzda-pbclk";
-+			clocks = <&SYSCLK>;
-+			clock-output-names = "pb3_clk";
-+		};
-+
-+		/* Peripheral bus4 clock(I/O ports, GPIO) */
-+		PBCLK4:pb4_clk@170 {
-+			reg = <0x170 0x10>;
-+			#clock-cells = <0>;
-+			compatible = "microchip,pic32mzda-pbclk";
-+			clocks = <&SYSCLK>;
-+			clock-output-names = "pb4_clk";
-+		};
-+
-+		/* Peripheral bus clock */
-+		PBCLK5:pb5_clk@180 {
-+			reg = <0x180 0x10>;
-+			#clock-cells = <0>;
-+			compatible = "microchip,pic32mzda-pbclk";
-+			clocks = <&SYSCLK>;
-+			clock-output-names = "pb5_clk";
-+		};
-+
-+		/* Peripheral Bus6 clock; */
-+		PBCLK6:pb6_clk@190 {
-+			reg = <0x190 0x10>;
-+			compatible = "microchip,pic32mzda-pbclk";
-+			clocks = <&SYSCLK>;
-+			#clock-cells = <0>;
-+		};
-+
-+		/* Peripheral bus7 clock */
-+		PBCLK7:pb7_clk@1a0 {
-+			reg = <0x1a0 0x10>;
-+			#clock-cells = <0>;
-+			compatible = "microchip,pic32mzda-pbclk";
-+			/* CPU is driven by this clock; so named */
-+			clock-output-names = "cpu_clk";
-+			clocks = <&SYSCLK>;
-+		};
-+
-+		/* Reference Oscillator clock for SPI/I2S */
-+		REFCLKO1:refo1_clk@80 {
-+			reg = <0x080 0x20>;
-+			#clock-cells = <0>;
-+			compatible = "microchip,pic32mzda-refoclk";
-+			clocks = <&SYSCLK>, <&PBCLK1>, <&POSC>, <&FRC>, <&LPRC>,
-+				 <&SOSC>, <&SYSPLL>, <&REFIx>, <&BFRC>;
-+			microchip,clock-indices = <0>, <1>, <2>, <3>, <4>,
-+						  <5>, <7>, <8>, <9>;
-+			clock-output-names = "refo1_clk";
-+		};
-+
-+		/* Reference Oscillator clock for SQI */
-+		REFCLKO2:refo2_clk@a0 {
-+			reg = <0x0a0 0x20>;
-+			#clock-cells = <0>;
-+			compatible = "microchip,pic32mzda-refoclk";
-+			clocks = <&SYSCLK>, <&PBCLK1>, <&POSC>, <&FRC>, <&LPRC>,
-+				 <&SOSC>, <&SYSPLL>, <&REFIx>, <&BFRC>;
-+			microchip,clock-indices = <0>, <1>, <2>, <3>, <4>,
-+						  <5>, <7>, <8>, <9>;
-+			clock-output-names = "refo2_clk";
-+		};
-+
-+		/* Reference Oscillator clock, ADC */
-+		REFCLKO3:refo3_clk@c0 {
-+			reg = <0x0c0 0x20>;
-+			compatible = "microchip,pic32mzda-refoclk";
-+			clocks = <&SYSCLK>, <&PBCLK1>, <&POSC>, <&FRC>, <&LPRC>,
-+				 <&SOSC>, <&SYSPLL>, <&REFIx>, <&BFRC>;
-+			microchip,clock-indices = <0>, <1>, <2>, <3>, <4>,
-+						  <5>, <7>, <8>, <9>;
-+			#clock-cells = <0>;
-+			clock-output-names = "refo3_clk";
-+		};
-+
-+		/* Reference Oscillator clock */
-+		REFCLKO4:refo4_clk@e0 {
-+			reg = <0x0e0 0x20>;
-+			compatible = "microchip,pic32mzda-refoclk";
-+			clocks = <&SYSCLK>, <&PBCLK1>, <&POSC>, <&FRC>, <&LPRC>,
-+				 <&SOSC>, <&SYSPLL>, <&REFIx>, <&BFRC>;
-+			microchip,clock-indices = <0>, <1>, <2>, <3>, <4>,
-+						  <5>, <7>, <8>, <9>;
-+			#clock-cells = <0>;
-+			clock-output-names = "refo4_clk";
-+		};
-+
-+		/* Reference Oscillator clock, LCD */
-+		REFCLKO5:refo5_clk@100 {
-+			reg = <0x100 0x20>;
-+			compatible = "microchip,pic32mzda-refoclk";
-+			clocks = <&SYSCLK>,<&PBCLK1>,<&POSC>,<&FRC>,<&LPRC>,
-+				 <&SOSC>,<&SYSPLL>,<&REFIx>,<&BFRC>;
-+			microchip,clock-indices = <0>, <1>, <2>, <3>, <4>,
-+						  <5>, <7>, <8>, <9>;
-+			#clock-cells = <0>;
-+			clock-output-names = "refo5_clk";
-+		};
-+	};
-+};
-diff --git a/arch/mips/boot/dts/pic32/pic32mzda.dtsi b/arch/mips/boot/dts/pic32/pic32mzda.dtsi
-new file mode 100644
-index 0000000..3eee106
---- /dev/null
-+++ b/arch/mips/boot/dts/pic32/pic32mzda.dtsi
-@@ -0,0 +1,275 @@
-+/*
-+ * Copyright (C) 2015 Microchip Technology Inc.  All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+#include "pic32mzda-clk.dtsi"
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	interrupt-parent = <&evic>;
-+
-+	aliases {
-+		gpio0 = &gpio0;
-+		gpio1 = &gpio1;
-+		gpio2 = &gpio2;
-+		gpio3 = &gpio3;
-+		gpio4 = &gpio4;
-+		gpio5 = &gpio5;
-+		gpio6 = &gpio6;
-+		gpio7 = &gpio7;
-+		gpio8 = &gpio8;
-+		gpio9 = &gpio9;
-+		serial0 = &uart1;
-+		serial1 = &uart2;
-+		serial2 = &uart3;
-+		serial3 = &uart4;
-+		serial4 = &uart5;
-+		serial5 = &uart6;
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			compatible = "mti,mips14KEc";
-+			device_type = "cpu";
-+		};
-+	};
-+
-+	evic: interrupt-controller@1f810000 {
-+		compatible = "microchip,pic32mzda-evic";
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		reg = <0x1f810000 0x1000>;
-+	};
-+
-+	pic32_pinctrl: pinctrl@1f801400{
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "microchip,pic32mzda-pinctrl";
-+		reg = <0x1f801400 0x400>;
-+		clocks = <&PBCLK1>;
-+	};
-+
-+	/* PORTA */
-+	gpio0: gpio0@1f860000 {
-+		compatible = "microchip,pic32mzda-gpio";
-+		reg = <0x1f860000 0x100>;
-+		interrupts = <118 IRQ_TYPE_LEVEL_HIGH>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		clocks = <&PBCLK4>;
-+		microchip,gpio-bank = <0>;
-+		gpio-ranges = <&pic32_pinctrl 0 0 16>;
-+	};
-+
-+	/* PORTB */
-+	gpio1: gpio1@1f860100 {
-+		compatible = "microchip,pic32mzda-gpio";
-+		reg = <0x1f860100 0x100>;
-+		interrupts = <119 IRQ_TYPE_LEVEL_HIGH>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		clocks = <&PBCLK4>;
-+		microchip,gpio-bank = <1>;
-+		gpio-ranges = <&pic32_pinctrl 0 16 16>;
-+	};
-+
-+	/* PORTC */
-+	gpio2: gpio2@1f860200 {
-+		compatible = "microchip,pic32mzda-gpio";
-+		reg = <0x1f860200 0x100>;
-+		interrupts = <120 IRQ_TYPE_LEVEL_HIGH>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		clocks = <&PBCLK4>;
-+		microchip,gpio-bank = <2>;
-+		gpio-ranges = <&pic32_pinctrl 0 32 16>;
-+	};
-+
-+	/* PORTD */
-+	gpio3: gpio3@1f860300 {
-+		compatible = "microchip,pic32mzda-gpio";
-+		reg = <0x1f860300 0x100>;
-+		interrupts = <121 IRQ_TYPE_LEVEL_HIGH>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		clocks = <&PBCLK4>;
-+		microchip,gpio-bank = <3>;
-+		gpio-ranges = <&pic32_pinctrl 0 48 16>;
-+	};
-+
-+	/* PORTE */
-+	gpio4: gpio4@1f860400 {
-+		compatible = "microchip,pic32mzda-gpio";
-+		reg = <0x1f860400 0x100>;
-+		interrupts = <122 IRQ_TYPE_LEVEL_HIGH>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		clocks = <&PBCLK4>;
-+		microchip,gpio-bank = <4>;
-+		gpio-ranges = <&pic32_pinctrl 0 64 16>;
-+	};
-+
-+	/* PORTF */
-+	gpio5: gpio5@1f860500 {
-+		compatible = "microchip,pic32mzda-gpio";
-+		reg = <0x1f860500 0x100>;
-+		interrupts = <123 IRQ_TYPE_LEVEL_HIGH>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		clocks = <&PBCLK4>;
-+		microchip,gpio-bank = <5>;
-+		gpio-ranges = <&pic32_pinctrl 0 80 16>;
-+	};
-+
-+	/* PORTG */
-+	gpio6: gpio6@1f860600 {
-+		compatible = "microchip,pic32mzda-gpio";
-+		reg = <0x1f860600 0x100>;
-+		interrupts = <124 IRQ_TYPE_LEVEL_HIGH>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		clocks = <&PBCLK4>;
-+		microchip,gpio-bank = <6>;
-+		gpio-ranges = <&pic32_pinctrl 0 96 16>;
-+	};
-+
-+	/* PORTH */
-+	gpio7: gpio7@1f860700 {
-+		compatible = "microchip,pic32mzda-gpio";
-+		reg = <0x1f860700 0x100>;
-+		interrupts = <125 IRQ_TYPE_LEVEL_HIGH>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		clocks = <&PBCLK4>;
-+		microchip,gpio-bank = <7>;
-+		gpio-ranges = <&pic32_pinctrl 0 112 16>;
-+	};
-+
-+	/* PORTI does not exist */
-+
-+	/* PORTJ */
-+	gpio8: gpio8@1f860800 {
-+		compatible = "microchip,pic32mzda-gpio";
-+		reg = <0x1f860800 0x100>;
-+		interrupts = <126 IRQ_TYPE_LEVEL_HIGH>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		clocks = <&PBCLK4>;
-+		microchip,gpio-bank = <8>;
-+		gpio-ranges = <&pic32_pinctrl 0 128 16>;
-+	};
-+
-+	/* PORTK */
-+	gpio9: gpio9@1f860900 {
-+		compatible = "microchip,pic32mzda-gpio";
-+		reg = <0x1f860900 0x100>;
-+		interrupts = <127 IRQ_TYPE_LEVEL_HIGH>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		clocks = <&PBCLK4>;
-+		microchip,gpio-bank = <9>;
-+		gpio-ranges = <&pic32_pinctrl 0 144 16>;
-+	};
-+
-+	sdhci: sdhci@1f8ec000 {
-+		compatible = "microchip,pic32mzda-sdhci";
-+		reg = <0x1f8ec000 0x100>;
-+		interrupts = <191 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&REFCLKO4>, <&PBCLK5>;
-+		clock-names = "base_clk", "sys_clk";
-+		bus-width = <4>;
-+		cap-sd-highspeed;
-+		status = "disabled";
-+	};
-+
-+	uart1: serial@1f822000 {
-+		compatible = "microchip,pic32mzda-uart";
-+		reg = <0x1f822000 0x50>;
-+		interrupts = <112 IRQ_TYPE_LEVEL_HIGH>,
-+			<113 IRQ_TYPE_LEVEL_HIGH>,
-+			<114 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&PBCLK2>;
-+		status = "disabled";
-+	};
-+
-+	uart2: serial@1f822200 {
-+		compatible = "microchip,pic32mzda-uart";
-+		reg = <0x1f822200 0x50>;
-+		interrupts = <145 IRQ_TYPE_LEVEL_HIGH>,
-+			<146 IRQ_TYPE_LEVEL_HIGH>,
-+			<147 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&PBCLK2>;
-+		status = "disabled";
-+	};
-+
-+	uart3: serial@1f822400 {
-+		compatible = "microchip,pic32mzda-uart";
-+		reg = <0x1f822400 0x50>;
-+		interrupts = <157 IRQ_TYPE_LEVEL_HIGH>,
-+			<158 IRQ_TYPE_LEVEL_HIGH>,
-+			<159 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&PBCLK2>;
-+		status = "disabled";
-+	};
-+
-+	uart4: serial@1f822600 {
-+		compatible = "microchip,pic32mzda-uart";
-+		reg = <0x1f822600 0x50>;
-+		interrupts = <170 IRQ_TYPE_LEVEL_HIGH>,
-+			<171 IRQ_TYPE_LEVEL_HIGH>,
-+			<172 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&PBCLK2>;
-+		status = "disabled";
-+	};
-+
-+	uart5: serial@1f822800 {
-+		compatible = "microchip,pic32mzda-uart";
-+		reg = <0x1f822800 0x50>;
-+		interrupts = <179 IRQ_TYPE_LEVEL_HIGH>,
-+			<180 IRQ_TYPE_LEVEL_HIGH>,
-+			<181 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&PBCLK2>;
-+		status = "disabled";
-+	};
-+
-+	uart6: serial@1f822A00 {
-+		compatible = "microchip,pic32mzda-uart";
-+		reg = <0x1f822A00 0x50>;
-+		interrupts = <188 IRQ_TYPE_LEVEL_HIGH>,
-+			<189 IRQ_TYPE_LEVEL_HIGH>,
-+			<190 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&PBCLK2>;
-+		status = "disabled";
-+	};
-+};
-diff --git a/arch/mips/boot/dts/pic32/pic32mzda_sk.dts b/arch/mips/boot/dts/pic32/pic32mzda_sk.dts
-new file mode 100644
-index 0000000..5d434a5
---- /dev/null
-+++ b/arch/mips/boot/dts/pic32/pic32mzda_sk.dts
-@@ -0,0 +1,151 @@
-+/*
-+ * Copyright (C) 2015 Microchip Technology Inc.  All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+#include "pic32mzda.dtsi"
-+
-+/ {
-+	compatible = "microchip,pic32mzda-sk", "microchip,pic32mzda";
-+	model = "Microchip PIC32MZDA Starter Kit";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x08000000 0x08000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "earlyprintk=ttyPIC1,115200n8r console=ttyPIC1,115200n8";
-+	};
-+
-+	leds0 {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&user_leds_s0>;
-+
-+		led@1 {
-+			label = "pic32mzda_sk:red:led1";
-+			gpios = <&gpio7 0 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		led@2 {
-+			label = "pic32mzda_sk:yellow:led2";
-+			gpios = <&gpio7 1 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "mmc0";
-+		};
-+
-+		led@3 {
-+			label = "pic32mzda_sk:green:led3";
-+			gpios = <&gpio7 2 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+	};
-+
-+	keys0 {
-+		compatible = "gpio-keys";
-+		pinctrl-0 = <&user_buttons_s0>;
-+		pinctrl-names = "default";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		button@sw1 {
-+			label = "ESC";
-+			linux,code = <1>;
-+			gpios = <&gpio1 12 0>;
-+		};
-+
-+		button@sw2 {
-+			label = "Home";
-+			linux,code = <102>;
-+			gpios = <&gpio1 13 0>;
-+		};
-+
-+		button@sw3 {
-+			label = "Menu";
-+			linux,code = <139>;
-+			gpios = <&gpio1 14 0>;
-+		};
-+	};
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4>;
-+	status = "okay";
-+};
-+
-+&sdhci {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_sdhc1>;
-+	status = "okay";
-+	assigned-clocks = <&REFCLKO2>,<&REFCLKO4>,<&REFCLKO5>;
-+	assigned-clock-rates = <50000000>,<25000000>,<40000000>;
-+};
-+
-+&pic32_pinctrl {
-+
-+	pinctrl_sdhc1: sdhc1_pins0 {
-+		pins = "A6", "D4", "G13", "G12", "G14", "A7", "A0";
-+		microchip,digital;
-+	};
-+
-+	user_leds_s0: user_leds_s0 {
-+		pins = "H0", "H1", "H2";
-+		output-low;
-+		microchip,digital;
-+	};
-+
-+	user_buttons_s0: user_buttons_s0 {
-+		pins = "B12", "B13", "B14";
-+		microchip,digital;
-+		input-enable;
-+		bias-pull-up;
-+	};
-+
-+	pinctrl_uart2: pinctrl_uart2 {
-+		uart2-tx {
-+			pins = "G9";
-+			function = "U2TX";
-+			microchip,digital;
-+			output-high;
-+		};
-+		uart2-rx {
-+			pins = "B0";
-+			function = "U2RX";
-+			microchip,digital;
-+			input-enable;
-+		};
-+	};
-+
-+	pinctrl_uart4: uart4-0 {
-+		uart4-tx {
-+			pins = "C3";
-+			function = "U4TX";
-+			microchip,digital;
-+			output-high;
-+		};
-+		uart4-rx {
-+			pins = "E8";
-+			function = "U4RX";
-+			microchip,digital;
-+			input-enable;
-+		};
-+	};
-+};
-diff --git a/arch/mips/pic32/Kconfig b/arch/mips/pic32/Kconfig
-index 0161f09..b1bd7ba 100644
---- a/arch/mips/pic32/Kconfig
-+++ b/arch/mips/pic32/Kconfig
-@@ -31,4 +31,20 @@ config PIC32MZDA
- 
- endchoice
- 
-+choice
-+	prompt "Devicetree selection"
-+	default DTB_PIC32_NONE
-+	help
-+	  Select the devicetree.
-+
-+config DTB_PIC32_NONE
-+       bool "None"
-+
-+config DTB_PIC32_MZDA_SK
-+       bool "PIC32MZDA Starter Kit"
-+       depends on PIC32MZDA
-+       select BUILTIN_DTB
-+
-+endchoice
-+
- endif # MACH_PIC32
+Thanks!
+
+-Kees
+
+> ---
+> Changes in V3:
+> - documentation fixes
+> - look for "no-ram-oops" property as documented
+>
+> Changes in V2:
+> - make DT binding documentation more generic
+>
+>  Documentation/devicetree/bindings/misc/ramoops.txt |  43 ++++++++
+>  Documentation/ramoops.txt                          |   6 +-
+>  fs/pstore/ram.c                                    | 110 ++++++++++++++++++++-
+>  3 files changed, 155 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/misc/ramoops.txt
+>
+> diff --git a/Documentation/devicetree/bindings/misc/ramoops.txt b/Documentation/devicetree/bindings/misc/ramoops.txt
+> new file mode 100644
+> index 0000000..5a475fa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/ramoops.txt
+> @@ -0,0 +1,43 @@
+> +Ramoops oops/panic logger
+> +=========================
+> +
+> +ramoops provides persistent RAM storage for oops and panics, so they can be
+> +recovered after a reboot.
+> +
+> +Parts of this storage may be set aside for other persistent log buffers, such
+> +as kernel log messages, or for optional ECC error-correction data.  The total
+> +size of these optional buffers must fit in the reserved region.
+> +
+> +Any remaining space will be used for a circular buffer of oops and panic
+> +records.  These records have a configurable size, with a size of 0 indicating
+> +that they should be disabled.
+> +
+> +
+> +Required properties:
+> +
+> +- compatible: must be "ramoops"
+> +
+> +- memory-region: phandle to a region of memory that is preserved between reboots
+> +
+> +
+> +Optional properties:
+> +
+> +- ecc-size: enables ECC support and specifies ECC buffer size in bytes
+> +  (defaults to no ECC)
+> +
+> +- record-size: maximum size in bytes of each dump done on oops/panic
+> +  (defaults to 0)
+> +
+> +- console-size: size in bytes of log buffer reserved for kernel messages
+> +  (defaults to 0)
+> +
+> +- ftrace-size: size in bytes of log buffer reserved for function tracing and
+> +  profiling (defaults to 0)
+> +
+> +- pmsg-size: size in bytes of log buffer reserved for userspace messages
+> +  (defaults to 0)
+> +
+> +- unbuffered: if present, use unbuffered mappings to map the reserved region
+> +  (defaults to buffered mappings)
+> +
+> +- no-dump-oops: if present, only dump panics (defaults to panics and oops)
+> diff --git a/Documentation/ramoops.txt b/Documentation/ramoops.txt
+> index 5d86756..9264bca 100644
+> --- a/Documentation/ramoops.txt
+> +++ b/Documentation/ramoops.txt
+> @@ -45,7 +45,7 @@ corrupt, but usually it is restorable.
+>
+>  2. Setting the parameters
+>
+> -Setting the ramoops parameters can be done in 2 different manners:
+> +Setting the ramoops parameters can be done in 3 different manners:
+>   1. Use the module parameters (which have the names of the variables described
+>   as before).
+>   For quick debugging, you can also reserve parts of memory during boot
+> @@ -54,7 +54,9 @@ Setting the ramoops parameters can be done in 2 different manners:
+>   kernel to use only the first 128 MB of memory, and place ECC-protected ramoops
+>   region at 128 MB boundary:
+>   "mem=128M ramoops.mem_address=0x8000000 ramoops.ecc=1"
+> - 2. Use a platform device and set the platform data. The parameters can then
+> + 2. Use Device Tree bindings, as described in
+> + Documentation/device-tree/bindings/misc/ramoops.txt.
+> + 3. Use a platform device and set the platform data. The parameters can then
+>   be set through that platform data. An example of doing that is:
+>
+>  #include <linux/pstore_ram.h>
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index 319c3a6..0f2912c 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -34,6 +34,8 @@
+>  #include <linux/slab.h>
+>  #include <linux/compiler.h>
+>  #include <linux/pstore_ram.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+>
+>  #define RAMOOPS_KERNMSG_HDR "===="
+>  #define MIN_MEM_SIZE 4096UL
+> @@ -458,15 +460,112 @@ static int ramoops_init_prz(struct device *dev, struct ramoops_context *cxt,
+>         return 0;
+>  }
+>
+> +static int ramoops_parse_dt_size(struct platform_device *pdev,
+> +               const char *propname, unsigned long *val)
+> +{
+> +       u64 val64;
+> +       int ret;
+> +
+> +       ret = of_property_read_u64(pdev->dev.of_node, propname, &val64);
+> +       if (ret == -EINVAL) {
+> +               *val = 0;
+> +               return 0;
+> +       } else if (ret != 0) {
+> +               dev_err(&pdev->dev, "failed to parse property %s: %d\n",
+> +                               propname, ret);
+> +               return ret;
+> +       }
+> +
+> +       if (val64 > ULONG_MAX) {
+> +               dev_err(&pdev->dev, "invalid %s %llu\n", propname, val64);
+> +               return -EOVERFLOW;
+> +       }
+> +
+> +       *val = val64;
+> +       return 0;
+> +}
+> +
+> +static int ramoops_parse_dt(struct platform_device *pdev,
+> +               struct ramoops_platform_data *pdata)
+> +{
+> +       struct device_node *of_node = pdev->dev.of_node;
+> +       struct device_node *mem_region;
+> +       struct resource res;
+> +       u32 ecc_size;
+> +       int ret;
+> +
+> +       dev_dbg(&pdev->dev, "using Device Tree\n");
+> +
+> +       mem_region = of_parse_phandle(of_node, "memory-region", 0);
+> +       if (!mem_region) {
+> +               dev_err(&pdev->dev, "no memory-region phandle\n");
+> +               return -ENODEV;
+> +       }
+> +
+> +       ret = of_address_to_resource(mem_region, 0, &res);
+> +       of_node_put(mem_region);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "failed to translate memory-region to resource: %d\n",
+> +                               ret);
+> +               return ret;
+> +       }
+> +
+> +       pdata->mem_size = resource_size(&res);
+> +       pdata->mem_address = res.start;
+> +       pdata->mem_type = of_property_read_bool(of_node, "unbuffered");
+> +       pdata->dump_oops = !of_property_read_bool(of_node, "no-dump-oops");
+> +
+> +       ret = ramoops_parse_dt_size(pdev, "record-size", &pdata->record_size);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       ret = ramoops_parse_dt_size(pdev, "console-size", &pdata->console_size);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       ret = ramoops_parse_dt_size(pdev, "ftrace-size", &pdata->ftrace_size);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       ret = ramoops_parse_dt_size(pdev, "pmsg-size", &pdata->pmsg_size);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       ret = of_property_read_u32(of_node, "ecc-size", &ecc_size);
+> +       if (ret == 0) {
+> +               if (ecc_size > INT_MAX) {
+> +                       dev_err(&pdev->dev, "invalid ecc-size %u\n", ecc_size);
+> +                       return -EOVERFLOW;
+> +               }
+> +               pdata->ecc_info.ecc_size = ecc_size;
+> +       } else if (ret != -EINVAL) {
+> +               return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  static int ramoops_probe(struct platform_device *pdev)
+>  {
+>         struct device *dev = &pdev->dev;
+> -       struct ramoops_platform_data *pdata = pdev->dev.platform_data;
+> +       struct ramoops_platform_data *pdata = platform_get_drvdata(pdev);
+>         struct ramoops_context *cxt = &oops_cxt;
+>         size_t dump_mem_sz;
+>         phys_addr_t paddr;
+>         int err = -EINVAL;
+>
+> +       if (dev->of_node && !pdata) {
+> +               pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> +               if (!pdata) {
+> +                       err = -ENOMEM;
+> +                       goto fail_out;
+> +               }
+> +
+> +               err = ramoops_parse_dt(pdev, pdata);
+> +               if (err < 0)
+> +                       goto fail_out;
+> +       }
+> +
+>         /* Only a single ramoops area allowed at a time, so fail extra
+>          * probes.
+>          */
+> @@ -561,6 +660,7 @@ static int ramoops_probe(struct platform_device *pdev)
+>                 cxt->size, (unsigned long long)cxt->phys_addr,
+>                 cxt->ecc_info.ecc_size, cxt->ecc_info.block_size);
+>
+> +       platform_set_drvdata(pdev, pdata);
+>         return 0;
+>
+>  fail_buf:
+> @@ -596,11 +696,17 @@ static int ramoops_remove(struct platform_device *pdev)
+>         return 0;
+>  }
+>
+> +static const struct of_device_id dt_match[] = {
+> +       { .compatible = "ramoops" },
+> +       {}
+> +};
+> +
+>  static struct platform_driver ramoops_driver = {
+>         .probe          = ramoops_probe,
+>         .remove         = ramoops_remove,
+>         .driver         = {
+> -               .name   = "ramoops",
+> +               .name           = "ramoops",
+> +               .of_match_table = dt_match,
+>         },
+>  };
+>
+> --
+> 2.6.0.rc2.230.g3dd15c0
+>
+
+
+
 -- 
-1.7.9.5
+Kees Cook
+Chrome OS & Brillo Security
