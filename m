@@ -1,56 +1,55 @@
-From: Zhao Qiang <qiang.zhao@nxp.com>
-Subject: [PATCH 2/6] QE: Add ucc hdlc document to bindings
-Date: Fri, 8 Jan 2016 10:18:10 +0800
-Message-ID: <1452219494-31947-2-git-send-email-qiang.zhao@nxp.com>
-References: <1452219494-31947-1-git-send-email-qiang.zhao@nxp.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/4] Mediatek MT2701 SCPSYS power domain support
+Date: Fri, 8 Jan 2016 11:32:44 +0800
+Message-ID: <1452223968-6566-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1452219494-31947-1-git-send-email-qiang.zhao@nxp.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: oss@buserror.net, Priyanka.Jain@freescale.com, Zhao Qiang <qiang.zhao@nxp.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHVjYyBoZGxjIGRvY3VtZW50IHRvCkRvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9wb3dlcnBjL2ZzbC9jcG1fcWUvbmV0d29yay50eHQKClNpZ25lZC1vZmYtYnk6IFpoYW8gUWlh
-bmcgPHFpYW5nLnpoYW9AbnhwLmNvbT4KLS0tCiAuLi4vYmluZGluZ3MvcG93ZXJwYy9mc2wvY3Bt
-X3FlL25ldHdvcmsudHh0ICAgICAgICB8IDM1ICsrKysrKysrKysrKysrKysrKysrKysKIDEgZmls
-ZSBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2NwbV9xZS9uZXR3b3JrLnR4dCBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jcG1fcWUvbmV0d29yay50
-eHQKaW5kZXggMjliMjhiOC4uMDE3Y2JmNyAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2NwbV9xZS9uZXR3b3JrLnR4dAorKysgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvY3BtX3FlL25ldHdvcmsu
-dHh0CkBAIC00MSwzICs0MSwzOCBAQCBFeGFtcGxlOgogCQlmc2wsbWRpby1waW4gPSA8MTI+Owog
-CQlmc2wsbWRjLXBpbiA9IDwxMz47CiAJfTsKKworKiBIRExDCisKK0N1cnJlbnRseSBkZWZpbmVk
-IGNvbXBhdGlibGVzOgorLSBmc2wsdWNjX2hkbGMKKworUHJvcGVydGllcyBmb3IgZnNsLHVjY19o
-ZGxjOgorcngtY2xvY2stbmFtZSA6IHdoaWNoIGNsb2NrIFFFIHVzZSBmb3IgUlgKK3R4LWNsb2Nr
-LW5hbWUgOiB3aGljaCBjbG9jayBRRSB1c2UgZm9yIFRYCitmc2wscngtc3luYy1jbG9jayA6IHdo
-aWNoIHBpbiBRRSB1c2UgZm9yIFJYIHN5bmMKK2ZzbCx0eC1zeW5jLWNsb2NrIDogd2hpY2ggcGlu
-IFFFIHVzZSBmb3IgVFggc3luYworZnNsLHR4LXRpbWVzbG90IDogdHggdGltZXNsb3QKK2ZzbCxy
-eC10aW1lc2xvdCA6IHJ4IHRpbWVzbG90Citmc2wsdGRtLWZyYW1lci10eXBlIDogdGRtIGZyYW1l
-ciB0eXBlCitmc2wsdGRtLW1vZGUgOiB0ZG0gbW9kZSwgbm9ybWFsIG9yIGludGVybmFsLWxvb3Bi
-YWNrCitmc2wsdGRtLWlkIDogdGRtIElECitmc2wsc2lyYW0tZW50cnktaWQgOiBTSSBSQU0gZW50
-cnkgSUQgZm9yIHRoZSBURE0KK2ZzbCx0ZG0taW50ZXJmYWNlIDogaGRsYyBiYXNlZCBvbiB0ZG0t
-aW50ZXJmYWNlCisKK0V4YW1wbGU6CisKKwl1Y2NAMjAwMCB7CisJCWNvbXBhdGlibGUgPSAiZnNs
-LHVjY19oZGxjIjsKKwkJcngtY2xvY2stbmFtZSA9ICJjbGs4IjsKKwkJdHgtY2xvY2stbmFtZSA9
-ICJjbGs5IjsKKwkJZnNsLHJ4LXN5bmMtY2xvY2sgPSAicnN5bmNfcGluIjsKKwkJZnNsLHR4LXN5
-bmMtY2xvY2sgPSAidHN5bmNfcGluIjsKKwkJZnNsLHR4LXRpbWVzbG90ID0gPDB4ZmZmZmZmZmU+
-OworCQlmc2wscngtdGltZXNsb3QgPSA8MHhmZmZmZmZmZT47CisJCWZzbCx0ZG0tZnJhbWVyLXR5
-cGUgPSAiZTEiOworCQlmc2wsdGRtLW1vZGUgPSAibm9ybWFsIjsKKwkJZnNsLHRkbS1pZCA9IDww
-PjsKKwkJZnNsLHNpcmFtLWVudHJ5LWlkID0gPDA+OworCQlmc2wsdGRtLWludGVyZmFjZTsKKwl9
-OwotLSAKMi4xLjAuMjcuZzk2ZGIzMjQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxp
-c3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBj
-LWRldg==
+This patchset is based on 4.4-rc7, add scpsys power domain support for
+Mediatek MT2701.
+
+This patchset also separate MT8173 scpsys driver into common part
+(mtk-scpsys.c) and platform part (mtk-scpsys-mt8173.c), so that MT2701
+scpsys driver can share most implementation with MT8173.
+
+MT8173 and MT2701 scpsys init level are now subsys_init. Please refer to [1]
+to see discussion details.
+
+changes since v1:
+- Make MTK_SCPSYS in Kconfig invisible from users.
+- Add comments for changing scpsys init level to subsys_init.
+
+[1] http://lists.infradead.org/pipermail/linux-mediatek/2015-December/003416.html
+
+James Liao (2):
+  soc: mediatek: Separate scpsys driver common code
+  soc: mediatek: Init MT8173 scpsys driver earlier
+
+Shunli Wang (2):
+  soc: mediatek: Add MT2701 power dt-bindings
+  soc: mediatek: Add MT2701 scpsys driver
+
+ drivers/soc/mediatek/Kconfig             |  27 ++-
+ drivers/soc/mediatek/Makefile            |   2 +
+ drivers/soc/mediatek/mtk-scpsys-mt2701.c | 172 ++++++++++++++++++
+ drivers/soc/mediatek/mtk-scpsys-mt8173.c | 201 +++++++++++++++++++++
+ drivers/soc/mediatek/mtk-scpsys.c        | 301 ++++++++-----------------------
+ drivers/soc/mediatek/mtk-scpsys.h        |  54 ++++++
+ include/dt-bindings/power/mt2701-power.h |  27 +++
+ 7 files changed, 554 insertions(+), 230 deletions(-)
+ create mode 100644 drivers/soc/mediatek/mtk-scpsys-mt2701.c
+ create mode 100644 drivers/soc/mediatek/mtk-scpsys-mt8173.c
+ create mode 100644 drivers/soc/mediatek/mtk-scpsys.h
+ create mode 100644 include/dt-bindings/power/mt2701-power.h
+
+--
+1.9.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
