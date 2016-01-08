@@ -1,39 +1,45 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: add Silicon Image SiI8620 bridge
- bindings
-Date: Fri, 8 Jan 2016 13:20:34 -0600
-Message-ID: <20160108192034.GA24235@rob-hp-laptop>
-References: <1452257337-12334-1-git-send-email-a.hajda@samsung.com>
- <1452257337-12334-3-git-send-email-a.hajda@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1452257337-12334-3-git-send-email-a.hajda@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, Kyungmin Park <kyungmin.park@samsung.com>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and charging of backup battery
+Date: Fri, 8 Jan 2016 20:31:40 +0100
+Message-ID: <CCB763BE-5D1F-4A53-BF9A-C12C08A6EFC4@goldelico.com>
+References: <b4a6fe205cbb1a9eddc4e5f63fa05d299641313d.1451995297.git.hns@goldelico.com> <568C5451.8070709@ti.com> <20160106010011.GG12777@atomide.com> <8FE6954B-6411-4593-9CE5-717A469A6AA8@goldelico.com> <20160106164136.GI12777@atomide.com> <2AC46952-3758-458A-B0A5-1794C207BD4C@goldelico.com> <20160106170925.GK12777@atomide.com> <66F37918-EA7F-4D83-8B5F-A6B5C0CD7623@goldelico.com> <20160108181551.GX12777@atomide.com> <832803EE-E4CB-46B1-BF39-2DC0BB695A5D@goldelico.com> <20160108190457.GY12777@atomide.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160108190457.GY12777@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, Nishanth Menon <nm@ti.com>, =?iso-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek@goldelico.com>, =?windows-1252?Q?Gra=9Evydas_Ignotas?= <notasas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKYW4gMDgsIDIwMTYgYXQgMDE6NDg6NTZQTSArMDEwMCwgQW5kcnplaiBIYWpkYSB3
-cm90ZToKPiBTaUk4NjIwIHRyYW5zbWl0dGVyIGNvbnZlcnRzIGVUTURTL0hETUkgc2lnbmFsIHRv
-IE1ITCAzLjAuIEl0IGlzIGNvbnRyb2xsZWQKPiB2aWEgSTJDIGJ1cy4KPiAKPiBTaWduZWQtb2Zm
-LWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgo+IC0tLQo+IHYyOgo+IC0g
-Y2hhbmdlZCBzcGVjaWZpZXIgb2YgSU5UIHBpbiBmcm9tIGdwaW8gdG8gaW50ZXJydXB0IHByb3Bl
-cnR5LAo+IC0gaW1wcm92ZWQgZGVzY3JpcHRpb24uCj4gLS0tCj4gIC4uLi9iaW5kaW5ncy92aWRl
-by9icmlkZ2Uvc2lsLXNpaTg2MjAudHh0ICAgICAgICAgIHwgMzMgKysrKysrKysrKysrKysrKysr
-KysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMzMgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JyaWRnZS9zaWwt
-c2lpODYyMC50eHQKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+Am 08.01.2016 um 20:04 schrieb Tony Lindgren <tony@atomide.com>:
+
+> * H. Nikolaus Schaller <hns@goldelico.com> [160108 10:33]:
+>> Am 08.01.2016 um 19:15 schrieb Tony Lindgren <tony@atomide.com>:
+>>> * H. Nikolaus Schaller <hns@goldelico.com> [160108 09:50]:
+>>> 
+>>>> So I think it is something which is unstable in 4.4-rc8 that is (probably) fixed in
+>>>> linux-next and unrelated to this DT patch.
+>>>> 
+>>>> But I have no hint or idea what it is.
+>>> 
+>>> Or something hangs the RTC? And the back-up battery has to drain to
+>>> reset the RTC somehow?
+>> 
+>> Indeed it could be something like this. I already suspected that it depends
+>> on boot order of some components.
+>> 
+>> But you get the /dev/rtc and /sys/class/rtc nodes? This is what this patch
+>> should enable (and not fix potential driver issues).
+> 
+> Yes no problems with $subject patch. It's just the we also need
+> to figure out why RTC does not work :)
+
+Yes indeed. I can not focus on that at the moment but as soon as we have
+the new Pyra handheld devices (with OMAP5+Palmas) running, there will
+be more developers to look at it.
+
+BR,
+Nikolaus
