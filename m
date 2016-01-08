@@ -1,7 +1,7 @@
 From: Joshua Henderson <joshua.henderson@microchip.com>
-Subject: [PATCH v3 05/14] dt/bindings: Add bindings for PIC32/MZDA platforms
-Date: Thu, 7 Jan 2016 17:00:20 -0700
-Message-ID: <1452211389-31025-6-git-send-email-joshua.henderson@microchip.com>
+Subject: [PATCH v3 07/14] dt/bindings: Add bindings for PIC32 pin control and GPIO
+Date: Thu, 7 Jan 2016 17:00:22 -0700
+Message-ID: <1452211389-31025-8-git-send-email-joshua.henderson@microchip.com>
 References: <1452211389-31025-1-git-send-email-joshua.henderson@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,55 +12,139 @@ To: linux-kernel@vger.kernel.org
 Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, Joshua Henderson <joshua.henderson@microchip.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the Microchip PIC32 platform along with the
-specific variant PIC32MZDA on a PIC32MZDA Starter Kit.
+Document the devicetree bindings for PINCTRL and GPIO found on Microchip
+PIC32 class devices.
 
 Signed-off-by: Joshua Henderson <joshua.henderson@microchip.com>
 Cc: Ralf Baechle <ralf@linux-mips.org>
 Acked-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/mips/pic32/microchip,pic32mzda.txt    |   33 ++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/pic32/microchip,pic32mzda.txt
+ .../bindings/gpio/microchip,pic32-gpio.txt         |   49 ++++++++++++++++
+ .../bindings/pinctrl/microchip,pic32-pinctrl.txt   |   60 ++++++++++++++++++++
+ 2 files changed, 109 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt
 
-diff --git a/Documentation/devicetree/bindings/mips/pic32/microchip,pic32mzda.txt b/Documentation/devicetree/bindings/mips/pic32/microchip,pic32mzda.txt
+diff --git a/Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt b/Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt
 new file mode 100644
-index 0000000..bcf3e04
+index 0000000..ef37528
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/pic32/microchip,pic32mzda.txt
-@@ -0,0 +1,33 @@
-+* Microchip PIC32MZDA Platforms
++++ b/Documentation/devicetree/bindings/gpio/microchip,pic32-gpio.txt
+@@ -0,0 +1,49 @@
++* Microchip PIC32 GPIO devices (PIO).
 +
-+PIC32MZDA Starter Kit
-+Required root node properties:
-+    - compatible = "microchip,pic32mzda-sk", "microchip,pic32mzda"
++Required properties:
++ - compatible: "microchip,pic32mzda-gpio"
++ - reg: Base address and length for the device.
++ - interrupts: The port interrupt shared by all pins.
++ - gpio-controller: Marks the port as GPIO controller.
++ - #gpio-cells: Two. The first cell is the pin number and
++   the second cell is used to specify the gpio polarity as defined in
++   defined in <dt-bindings/gpio/gpio.h>:
++      0 = GPIO_ACTIVE_HIGH
++      1 = GPIO_ACTIVE_LOW
++      2 = GPIO_OPEN_DRAIN
++ - interrupt-controller: Marks the device node as an interrupt controller.
++ - #interrupt-cells: Two. The first cell is the GPIO number and second cell
++   is used to specify the trigger type as defined in
++   <dt-bindings/interrupt-controller/irq.h>:
++      IRQ_TYPE_EDGE_RISING
++      IRQ_TYPE_EDGE_FALLING
++      IRQ_TYPE_EDGE_BOTH
++ - clocks: Clock specifier (see clock bindings for details).
++ - microchip,gpio-bank: Specifies which bank a controller owns.
++ - gpio-ranges: Interaction with the PINCTRL subsystem.
 +
-+CPU nodes:
-+----------
-+A "cpus" node is required.  Required properties:
-+ - #address-cells: Must be 1.
-+ - #size-cells: Must be 0.
-+A CPU sub-node is also required.  Required properties:
-+ - device_type: Must be "cpu".
-+ - compatible: Must be "mti,mips14KEc".
 +Example:
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
 +
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "mti,mips14KEc";
++/* PORTA */
++gpio0: gpio0@1f860000 {
++	compatible = "microchip,pic32mzda-gpio";
++	reg = <0x1f860000 0x100>;
++	interrupts = <118 IRQ_TYPE_LEVEL_HIGH>;
++	#gpio-cells = <2>;
++	gpio-controller;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++	clocks = <&PBCLK4>;
++	microchip,gpio-bank = <0>;
++	gpio-ranges = <&pic32_pinctrl 0 0 16>;
++};
++
++keys {
++	...
++
++	button@sw1 {
++		label = "ESC";
++		linux,code = <1>;
++		gpios = <&gpio0 12 0>;
++	};
++};
+diff --git a/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt
+new file mode 100644
+index 0000000..4b5efa5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/microchip,pic32-pinctrl.txt
+@@ -0,0 +1,60 @@
++* Microchip PIC32 Pin Controller
++
++Please refer to pinctrl-bindings.txt, ../gpio/gpio.txt, and
++../interrupt-controller/interrupts.txt for generic information regarding
++pin controller, GPIO, and interrupt bindings.
++
++PIC32 'pin configuration node' is a node of a group of pins which can be
++used for a specific device or function. This node represents configuraions of
++pins, optional function, and optional mux related configuration.
++
++Required properties for pin controller node:
++ - compatible: "microchip,pic32mada-pinctrl"
++ - reg: Address range of the pinctrl registers.
++ - clocks: Clock specifier (see clock bindings for details)
++
++Required properties for pin configuration sub-nodes:
++ - pins: List of pins to which the configuration applies.
++
++Optional properties for pin configuration sub-nodes:
++----------------------------------------------------
++ - function: Mux function for the specified pins.
++ - bias-pull-up: Enable weak pull-up.
++ - bias-pull-down: Enable weak pull-down.
++ - input-enable: Set the pin as an input.
++ - output-low: Set the pin as an output level low.
++ - output-high: Set the pin as an output level high.
++ - microchip,digital: Enable digital I/O.
++ - microchip,analog: Enable analog I/O.
++
++Example:
++
++pic32_pinctrl: pinctrl@1f801400{
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "microchip,pic32mzda-pinctrl";
++	reg = <0x1f801400 0x400>;
++	clocks = <&PBCLK1>;
++
++	pinctrl_uart2: pinctrl_uart2 {
++		uart2-tx {
++			pins = "G9";
++			function = "U2TX";
++			microchip,digital;
++			output-low;
++		};
++		uart2-rx {
++			pins = "B0";
++			function = "U2RX";
++			microchip,digital;
++			input-enable;
 +		};
 +	};
++};
 +
-+Boot protocol
-+--------------
-+In accordance with the MIPS UHI specification[1], the bootloader must pass the
-+following arguments to the kernel:
-+ - $a0: -2.
-+ - $a1: KSEG0 address of the flattened device-tree blob.
-+
-+[1] http://prplfoundation.org/wiki/MIPS_documentation
++uart2: serial@1f822200 {
++	compatible = "microchip,pic32mzda-uart";
++	reg = <0x1f822200 0x50>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++};
 -- 
 1.7.9.5
