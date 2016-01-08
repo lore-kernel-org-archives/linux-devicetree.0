@@ -1,94 +1,131 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 01/23] devicetree: bindings: hisi_sas: add v2 HW bindings
-Date: Fri, 8 Jan 2016 14:52:56 +0000
-Message-ID: <20160108145256.GG3097@leverpostej>
-References: <1452262542-64589-1-git-send-email-john.garry@huawei.com>
- <1452262542-64589-2-git-send-email-john.garry@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1452262542-64589-2-git-send-email-john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: JBottomley-wo1vFcy6AUs@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Peter Rosin <peda@lysator.liu.se>
+Subject: [PATCH v3 0/8] i2c mux cleanup and locking update
+Date: Fri,  8 Jan 2016 16:04:48 +0100
+Message-ID: <1452265496-22475-1-git-send-email-peda@lysator.liu.se>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Peter Rosin <peda@axentia.se>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Adriana Reus <adriana.reus@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>, Nicholas Mc Guire <hofrat@osadl.org>, Olli Salonen <olli.salonen@iki.fi>, Peter Rosin <peda@lysator.liu.se>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.ker
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 08, 2016 at 10:15:20PM +0800, John Garry wrote:
-> Add the dt bindings for HiSi SAS controller v2 HW.
-> 
-> The main difference in the controllers from dt perspective
-> is interrupts.
-> 
-> Signed-off-by: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/scsi/hisilicon-sas.txt       | 20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
-> index 0a7a325..2695023 100644
-> --- a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
-> +++ b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
-> @@ -5,6 +5,7 @@ The HiSilicon SAS controller supports SAS/SATA.
->  Main node required properties:
->    - compatible : value should be as follows:
->  	(a) "hisilicon,hip05-sas-v1" for v1 hw in hip05 chipset
-> +	(b) "hisilicon,hip06-sas-v2" for v2 hw in hip06 chipset
->    - sas-addr : array of 8 bytes for host SAS address
->    - reg : Address and length of the SAS register
->    - hisilicon,sas-syscon: phandle of syscon used for sas control
-> @@ -13,11 +14,11 @@ Main node required properties:
->    - ctrl-clock-ena-reg : offset to controller clock enable register in ctrl reg
->    - queue-count : number of delivery and completion queues in the controller
->    - phy-count : number of phys accessible by the controller
-> -  - interrupts : Interrupts for phys, completion queues, and fatal
-> +  - interrupts : For v1 hw: Interrupts for phys, completion queues, and fatal
->  		sources; the interrupts are ordered in 3 groups, as follows:
-> -			- Phy interrupts
-> -			- Completion queue interrupts
-> -			- Fatal interrupts
-> +		  - Phy interrupts
-> +		  - Completion queue interrupts
-> +		  - Fatal interrupts
->  		Phy interrupts : Each phy has 3 interrupt sources:
->  			- broadcast
->  			- phyup
-> @@ -25,11 +26,28 @@ Main node required properties:
->  		The phy interrupts are ordered into groups of 3 per phy
->  		(broadcast, phyup, and abnormal) in increasing order.
->  		Completion queue interrupts : each completion queue has 1
-> -			interrupt source.
-> -			The interrupts are ordered in increasing order.
-> +			interrupt source. The interrupts are ordered in
-> +			increasing order.
->  		Fatal interrupts : the fatal interrupts are ordered as follows:
->  			- ECC
->  			- AXI bus
-> +		For v2 hw: Interrupts for phys, Sata, and completion queues;
-> +		the interrupts are ordered in 3 groups, as follows:
-> +		  - Phy interrupts
-> +		  - Sata interrupts
-> +		  - Completion queue interrupts
-> +		Phy interrupts : Each controller has 2 phy interrupts:
-> +			- phy up/down
-> +			- channel interrupt
-> +		Sata interrupts : Each phy on the controller has 1 Sata
-> +			interrupt. The interrupts are ordered in increasing
-> +			order.
-> +		Completion queue interrupts : each completion queue has 1
-> +			interrupt source. The interrupts are ordered in
-> +			increasing order.
+From: Peter Rosin <peda@axentia.se>
 
-There are no fatal interrupts in V2?
+Hi!
 
-> +Optional main node properties:
-> + - am-max-trans : limit controller for am max transmissions
+[doing a v3 even if there is no "big picture" feedback yet, but
+ previous versions has bugs that make them harder to test than
+ needed, and testing is very much desired]
 
-Is this a boolean? Number?
+I have a pair of boards with this i2c topology:
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+                       GPIO ---|  ------ BAT1
+                        |      v /
+   I2C  -----+------B---+---- MUX
+             |                   \
+           EEPROM                 ------ BAT2
+
+	(B denotes the boundary between the boards)
+
+The problem with this is that the GPIO controller sits on the same i2c bus
+that it MUXes. For pca954x devices this is worked around by using unlocked
+transfers when updating the MUX. I have no such luck as the GPIO is a general
+purpose IO expander and the MUX is just a random bidirectional MUX, unaware
+of the fact that it is muxing an i2c bus, and extending unlocked transfers
+into the GPIO subsystem is too ugly to even think about. But the general hw
+approach is sane in my opinion, with the number of connections between the
+two boards minimized. To put is plainly, I need support for it.
+
+So, I observe that while it is needed to have the i2c bus locked during the
+actual MUX update in order to avoid random garbage on the slave side, it
+is not strictly a must to have it locked over the whole sequence of a full
+select-transfer-deselect operation. The MUX itself needs to be locked, so
+transfers to clients behind the mux are serialized, and the MUX needs to be
+stable during all i2c traffic (otherwise individual mux slave segments
+might see garbage).
+
+This series accomplishes this by adding code to i2c-mux-gpio and
+i2c-mux-pinctrl that determines if all involved devices used to update the
+mux are controlled by the same root i2c adapter that is muxed. When this
+is the case, the select-transfer-deselect operations should be locked
+individually to avoid the deadlock. The i2c bus *is* still locked
+during muxing, since the muxing happens as part of i2c transfers. This
+is true even if the MUX is updated with several transfers to the GPIO (at
+least as long as *all* MUX changes are using the i2s master bus). A lock
+is added to the mux so that transfers through the mux are serialized.
+
+Concerns:
+- The locking is perhaps too complex?
+- I worry about the priority inheritance aspect of the adapter lock. When
+  the transfers behind the mux are divided into select-transfer-deselect all
+  locked individually, low priority transfers get more chances to interfere
+  with high priority transfers.
+- When doing an i2c_transfer() in_atomic() context or with irqs_disabled(),
+  there is a higher possibility that the mux is not returned to its idle
+  state after a failed (-EAGAIN) transfer due to trylock.
+- Is the detection of i2c-controlled gpios and pinctrls sane (i.e. the
+  usage of the new i2c_root_adapter() function in 8/8)?
+
+To summarize the series, there's some i2c-mux infrastructure cleanup work
+first (I think that part stands by itself as desireable regardless), the
+locking changes are in the last three patches of the series, with the real
+meat in 8/8.
+
+PS. needs a bunch of testing, I do not have access to all the involved hw
+
+Changes since v2:
+- Fix devm_kfree of a NULL pointer in i2c_mux_reserve_adapters().
+- Remove device tree "i2c-controlled" property and determine this by walking
+  the dev tree instead.
+- Fix compile problems with inv_mpu_acpi.c
+- Wait with adding the client pointer to patch 2/8 for pca9541 and pca954x.
+
+Changes since v1:
+- Allocate mux core and (optional) priv in a combined allocation.
+- Kill dev_err messages triggered by memory allocation failure.
+- Fix the device specific i2c muxes that I had overlooked.
+- Rebase on top of v4.4-rc8 (was based on v4.4-rc6 previously).
+- Drop the last two patches in the series.
+
+Cheers,
+Peter
+
+Peter Rosin (8):
+  i2c-mux: add common core data for every mux instance
+  i2c-mux: move select and deselect ops to i2c_mux_core
+  i2c-mux: move the slave side adapter management to i2c_mux_core
+  i2c-mux: remove the mux dev pointer from the mux per channel data
+  i2c-mux: pinctrl: get rid of the driver private struct device pointer
+  i2c: allow adapter drivers to override the adapter locking
+  i2c: muxes always lock the parent adapter
+  i2c-mux: relax locking of the top i2c adapter during i2c controlled
+    muxing
+
+ drivers/i2c/i2c-core.c                       |  59 +++---
+ drivers/i2c/i2c-mux.c                        | 299 ++++++++++++++++++++++-----
+ drivers/i2c/muxes/i2c-arb-gpio-challenge.c   |  46 ++---
+ drivers/i2c/muxes/i2c-mux-gpio.c             |  74 ++++---
+ drivers/i2c/muxes/i2c-mux-pca9541.c          |  58 +++---
+ drivers/i2c/muxes/i2c-mux-pca954x.c          |  66 +++---
+ drivers/i2c/muxes/i2c-mux-pinctrl.c          | 125 ++++++-----
+ drivers/i2c/muxes/i2c-mux-reg.c              |  63 +++---
+ drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c   |   2 +-
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c   |  34 +--
+ drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h    |   3 +-
+ drivers/media/dvb-frontends/m88ds3103.c      |  23 ++-
+ drivers/media/dvb-frontends/m88ds3103_priv.h |   2 +-
+ drivers/media/dvb-frontends/rtl2830.c        |  24 ++-
+ drivers/media/dvb-frontends/rtl2830_priv.h   |   2 +-
+ drivers/media/dvb-frontends/rtl2832.c        |  30 +--
+ drivers/media/dvb-frontends/rtl2832_priv.h   |   2 +-
+ drivers/media/dvb-frontends/si2168.c         |  29 ++-
+ drivers/media/dvb-frontends/si2168_priv.h    |   2 +-
+ drivers/media/usb/cx231xx/cx231xx-core.c     |   6 +-
+ drivers/media/usb/cx231xx/cx231xx-i2c.c      |  48 ++---
+ drivers/media/usb/cx231xx/cx231xx.h          |   4 +-
+ drivers/of/unittest.c                        |  41 ++--
+ include/linux/i2c-mux.h                      |  41 +++-
+ include/linux/i2c.h                          |  28 ++-
+ 25 files changed, 685 insertions(+), 426 deletions(-)
+
+-- 
+2.1.4
