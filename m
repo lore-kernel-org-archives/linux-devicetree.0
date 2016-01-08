@@ -1,60 +1,54 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH] arm64: dts: Add L2 cache node to msm8916
-Date: Fri,  8 Jan 2016 15:57:09 -0800
-Message-ID: <1452297429-6382-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: [PATCH v3 0/2] pci: Add host controller driver for Cavium ThunderX PCIe
+Date: Fri,  8 Jan 2016 15:59:11 -0800
+Message-ID: <1452297553-19911-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-The msm8916 SoC has an L2 cache for all 4 CPUs. Add it to the
-dtsi file so that the cache hierarchy can be probed.
+From: David Daney <david.daney@cavium.com>
 
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Some Cavium ThunderX processors require quirky access methods for the
+config space of the PCIe bridge.
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index ba8184d0f948..42573a7d4a94 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -61,24 +61,33 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a53", "arm,armv8";
- 			reg = <0x0>;
-+			next-level-cache = <&L2_0>;
- 		};
- 
- 		CPU1: cpu@1 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a53", "arm,armv8";
- 			reg = <0x1>;
-+			next-level-cache = <&L2_0>;
- 		};
- 
- 		CPU2: cpu@2 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a53", "arm,armv8";
- 			reg = <0x2>;
-+			next-level-cache = <&L2_0>;
- 		};
- 
- 		CPU3: cpu@3 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a53", "arm,armv8";
- 			reg = <0x3>;
-+			next-level-cache = <&L2_0>;
-+		};
-+
-+		L2_0: l2-cache {
-+		      compatible = "cache";
-+		      cache-level = <2>;
- 		};
- 	};
- 
+There are two patches:
+
+1) Refactor code in pci-host-generic so that it can more easily be
+   used by other drivers.  This splits the driver for CAM and ECAM
+   access methods to a separate file from the common host driver code.
+
+2) Add the ThunderX PCIe driver, which leverages the code in
+   pci-host-generic
+
+Changes from v2: Improve device tree binding example as noted by Rob
+Herring.  Rename pcie-thunder-pem.* to pci-thunder-pem.* for better
+consistency.  Update MAINTAINERS to reflect the changes.
+
+Changes from v1: Split CAM and ECAM code from common driver code as
+suggested by Arnd Bergmann.  Fix spelling errors in
+pcie-thunder-pem.txt
+
+
+
+David Daney (2):
+  PCI: generic: Refactor code to enable reuse by other drivers.
+  pci, pci-thunder-pem: Add PCIe host driver for ThunderX processors.
+
+ .../devicetree/bindings/pci/pci-thunder-pem.txt    |  43 ++++
+ MAINTAINERS                                        |   9 +
+ drivers/pci/host/Kconfig                           |  11 +
+ drivers/pci/host/Makefile                          |   2 +
+ drivers/pci/host/pci-host-common.c                 | 194 ++++++++++++++
+ drivers/pci/host/pci-host-common.h                 |  56 ++++
+ drivers/pci/host/pci-host-generic.c                | 190 +-------------
+ drivers/pci/host/pci-thunder-pem.c                 | 283 +++++++++++++++++++++
+ 8 files changed, 602 insertions(+), 186 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/pci-thunder-pem.txt
+ create mode 100644 drivers/pci/host/pci-host-common.c
+ create mode 100644 drivers/pci/host/pci-host-common.h
+ create mode 100644 drivers/pci/host/pci-thunder-pem.c
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.8.3.1
