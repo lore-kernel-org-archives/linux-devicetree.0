@@ -1,59 +1,39 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [RESEND RFC PATCH 2/2] ARM: dts: rockchip: Update the cpu freqs table
-Date: Fri, 08 Jan 2016 20:16:19 +0100
-Message-ID: <4951150.PYM4FhWu6V@phil>
-References: <1452252698-16765-1-git-send-email-zhengxing@rock-chips.com> <1452252698-16765-3-git-send-email-zhengxing@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: add Silicon Image SiI8620 bridge
+ bindings
+Date: Fri, 8 Jan 2016 13:20:34 -0600
+Message-ID: <20160108192034.GA24235@rob-hp-laptop>
+References: <1452257337-12334-1-git-send-email-a.hajda@samsung.com>
+ <1452257337-12334-3-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452252698-16765-3-git-send-email-zhengxing@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Xing Zheng <zhengxing@rock-chips.com>
-Cc: linux-rockchip@lists.infradead.org, keescook@google.com, leozwang@google.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1452257337-12334-3-git-send-email-a.hajda@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, Kyungmin Park <kyungmin.park@samsung.com>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Xing,
-
-Am Freitag, 8. Januar 2016, 19:31:38 schrieb Xing Zheng:
-> Actually, we need more cpu freqs which are 50MHz integer multiples.
-> 
-> Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
-> ---
-> 
->  arch/arm/boot/dts/rk3036.dtsi |   13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-> index 1cb5877..1a773eb 100644
-> --- a/arch/arm/boot/dts/rk3036.dtsi
-> +++ b/arch/arm/boot/dts/rk3036.dtsi
-> @@ -79,7 +79,18 @@
->  			resets = <&cru SRST_CORE0>;
->  			operating-points = <
->  				/* KHz    uV */
-> -				 816000 1000000
-> +				1200000 1200000
-> +				1100000 1200000
-> +				1000000 1200000
-> +				 900000 1200000
-> +				 800000 1200000
-> +				 700000 1200000
-> +				 600000 1200000
-> +				 500000 1200000
-> +				 400000 1200000
-> +				 300000 1200000
-> +				 200000 1200000
-> +				 100000 1200000
-
-what about reducing the voltage as well?
-
->From rk3288-specific discussions I remember that reducing the frequency 
-without touching the voltage, didn't really save so much energy.
-And it looks like it was running 816MHz@1.0V just fine as well.
-
-I guess you should find out which voltages are really necessary for each 
-step.
-
-
-Heiko
+T24gRnJpLCBKYW4gMDgsIDIwMTYgYXQgMDE6NDg6NTZQTSArMDEwMCwgQW5kcnplaiBIYWpkYSB3
+cm90ZToKPiBTaUk4NjIwIHRyYW5zbWl0dGVyIGNvbnZlcnRzIGVUTURTL0hETUkgc2lnbmFsIHRv
+IE1ITCAzLjAuIEl0IGlzIGNvbnRyb2xsZWQKPiB2aWEgSTJDIGJ1cy4KPiAKPiBTaWduZWQtb2Zm
+LWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgo+IC0tLQo+IHYyOgo+IC0g
+Y2hhbmdlZCBzcGVjaWZpZXIgb2YgSU5UIHBpbiBmcm9tIGdwaW8gdG8gaW50ZXJydXB0IHByb3Bl
+cnR5LAo+IC0gaW1wcm92ZWQgZGVzY3JpcHRpb24uCj4gLS0tCj4gIC4uLi9iaW5kaW5ncy92aWRl
+by9icmlkZ2Uvc2lsLXNpaTg2MjAudHh0ICAgICAgICAgIHwgMzMgKysrKysrKysrKysrKysrKysr
+KysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMzMgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2JyaWRnZS9zaWwt
+c2lpODYyMC50eHQKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
