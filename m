@@ -1,95 +1,224 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 4/4] soc: mediatek: Add MT2701/MT7623 scpsys driver
-Date: Fri, 8 Jan 2016 12:26:29 +0100
-Message-ID: <568F9CE5.7040601@gmail.com>
-References: <1451457706-14798-1-git-send-email-jamesjj.liao@mediatek.com>
- <1451457706-14798-5-git-send-email-jamesjj.liao@mediatek.com>
- <CAGS+omCwxB+4VFOA1hA9Rg-ekWCVM8Y_c7woTEXnvX6FG1y9mQ@mail.gmail.com>
- <1451470692.22426.11.camel@mtksdaap41> <5684192B.4020806@gmail.com>
- <1451971439.19026.3.camel@mtksdaap41>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH v3 3/4] mfd: arizona: Switch to using clock driver for 32k clock
+Date: Fri, 8 Jan 2016 11:29:41 +0000
+Message-ID: <1452252582-20834-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+References: <1452252582-20834-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1451971439.19026.3.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Liao <jamesjj.liao@mediatek.com>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, Kevin Hilman <khilman@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Shunli Wang <shunli.wang@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1452252582-20834-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: mturquette@baylibre.com, cw00.choi@samsung.com, lee.jones@linaro.org
+Cc: sboyd@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
+Now we have a clock driver that can control the 32k clock use this
+rather than directly controlling the 32k clock from the MFD device.
 
+Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+---
 
-On 05/01/16 06:23, James Liao wrote:
-> Hi Matthias,
-> On Wed, 2015-12-30 at 18:49 +0100, Matthias Brugger wrote:
->>> On Wed, 2015-12-30 at 17:01 +0800, Daniel Kurtz wrote:
->>>> On Wed, Dec 30, 2015 at 2:41 PM, James Liao <jamesjj.liao@mediatek.com> wrote:
->>>>>
->>>>> From: Shunli Wang <shunli.wang@mediatek.com>
->>>>>
->>>>> Add scpsys driver for MT2701 and MT7623.
->>>>>
->>>>> Signed-off-by: Shunli Wang <shunli.wang@mediatek.com>
->>>>> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
->>>>> ---
->>>>>    drivers/soc/mediatek/Kconfig             |  11 +++
->>>>>    drivers/soc/mediatek/Makefile            |   1 +
->>>>>    drivers/soc/mediatek/mtk-scpsys-mt2701.c | 161 +++++++++++++++++++++++++++++++
->>>>>    3 files changed, 173 insertions(+)
->>>>>    create mode 100644 drivers/soc/mediatek/mtk-scpsys-mt2701.c
->>>>>
->>>>> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
->>>>> index eca6fb7..92cf838 100644
->>>>> --- a/drivers/soc/mediatek/Kconfig
->>>>> +++ b/drivers/soc/mediatek/Kconfig
->>>>> @@ -39,3 +39,14 @@ config MTK_SCPSYS_MT8173
->>>>>             driver.
->>>>>             The System Control Processor System (SCPSYS) has several power
->>>>>             management related tasks in the system.
->>>>> +
->>>>> +config MTK_SCPSYS_MT2701
->>>>> +       bool "SCPSYS Support MediaTek MT2701 and MT7623"
->>>>> +       depends on ARCH_MEDIATEK || COMPILE_TEST
->>>>> +       select MTK_SCPSYS
->>>>> +       default ARCH_MEDIATEK
->>>>> +       help
->>>>> +         Say yes here to add support for the MT2701/MT7623 SCPSYS power
->>>>> +         domain driver.
->>>>> +         The System Control Processor System (SCPSYS) has several power
->>>>> +         management related tasks in the system.
->>>>
->>>> I don't think we really want different drivers and Kconfig options.
->>>>
->>>> Can we just use different compatibles to select the appropriate scp_domain_data?
->>>
->>> Yes, we can. All scpsys drivers are built-in by default, and they will
->>> be activate by specific compatible string.
->>>
->>> But some projects don't want to build unused drivers into kernel to save
->>> code size. Use different Kconfig options for each SoC so that these
->>> projects can disable unused drivers.
->>>
->>
->> Scpsys is a bool right now, you can disable it if you don't need it for
->> your project.
->>
->> I don't think the impact of adding scp_domain_data justifies adding SoC
->> specific scpsys drivers and bloat the drivers/soc/mediatek folder.
->
-> So you prefer to enable MT8173 and MT2701 scpsys drivers at the same
-> time if MTK_SCPSYS is true?
-
-Well the driver gets enabled by the compatible string from the DT 
-binding passed to the system. But yes, I prefer to have the code shared 
-and just add the necessary data structures.
-
->
-> BTW, this patchset is based on 4.4-rc7, which lacks two patches from
-> your v4.4-next/soc. Should I rebase to v4.4-next/soc when I send v2
-> patch?
->
-
-That would be a nice to have.
+No changes since v2.
 
 Thanks,
-Matthias
+Charles
+
+ drivers/mfd/arizona-core.c       | 104 +++++++++------------------------------
+ include/linux/mfd/arizona/core.h |   7 +--
+ 2 files changed, 25 insertions(+), 86 deletions(-)
+
+diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+index d474732..5a55dd6 100644
+--- a/drivers/mfd/arizona-core.c
++++ b/drivers/mfd/arizona-core.c
+@@ -36,63 +36,6 @@ static const char * const wm5102_core_supplies[] = {
+ 	"DBVDD1",
+ };
+ 
+-int arizona_clk32k_enable(struct arizona *arizona)
+-{
+-	int ret = 0;
+-
+-	mutex_lock(&arizona->clk_lock);
+-
+-	arizona->clk32k_ref++;
+-
+-	if (arizona->clk32k_ref == 1) {
+-		switch (arizona->pdata.clk32k_src) {
+-		case ARIZONA_32KZ_MCLK1:
+-			ret = pm_runtime_get_sync(arizona->dev);
+-			if (ret != 0)
+-				goto out;
+-			break;
+-		}
+-
+-		ret = regmap_update_bits(arizona->regmap, ARIZONA_CLOCK_32K_1,
+-					 ARIZONA_CLK_32K_ENA,
+-					 ARIZONA_CLK_32K_ENA);
+-	}
+-
+-out:
+-	if (ret != 0)
+-		arizona->clk32k_ref--;
+-
+-	mutex_unlock(&arizona->clk_lock);
+-
+-	return ret;
+-}
+-EXPORT_SYMBOL_GPL(arizona_clk32k_enable);
+-
+-int arizona_clk32k_disable(struct arizona *arizona)
+-{
+-	mutex_lock(&arizona->clk_lock);
+-
+-	BUG_ON(arizona->clk32k_ref <= 0);
+-
+-	arizona->clk32k_ref--;
+-
+-	if (arizona->clk32k_ref == 0) {
+-		regmap_update_bits(arizona->regmap, ARIZONA_CLOCK_32K_1,
+-				   ARIZONA_CLK_32K_ENA, 0);
+-
+-		switch (arizona->pdata.clk32k_src) {
+-		case ARIZONA_32KZ_MCLK1:
+-			pm_runtime_put_sync(arizona->dev);
+-			break;
+-		}
+-	}
+-
+-	mutex_unlock(&arizona->clk_lock);
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL_GPL(arizona_clk32k_disable);
+-
+ static irqreturn_t arizona_clkgen_err(int irq, void *data)
+ {
+ 	struct arizona *arizona = data;
+@@ -874,6 +817,7 @@ static inline int arizona_of_get_core_pdata(struct arizona *arizona)
+ 
+ static const struct mfd_cell early_devs[] = {
+ 	{ .name = "arizona-ldo1" },
++	{ .name = "arizona-clk" },
+ };
+ 
+ static const char * const wm5102_supplies[] = {
+@@ -970,7 +914,6 @@ int arizona_dev_init(struct arizona *arizona)
+ 	int n_subdevs, ret, i;
+ 
+ 	dev_set_drvdata(arizona->dev, arizona);
+-	mutex_init(&arizona->clk_lock);
+ 
+ 	if (dev_get_platdata(arizona->dev))
+ 		memcpy(&arizona->pdata, dev_get_platdata(arizona->dev),
+@@ -1261,28 +1204,6 @@ int arizona_dev_init(struct arizona *arizona)
+ 	}
+ 
+ 	/* Chip default */
+-	if (!arizona->pdata.clk32k_src)
+-		arizona->pdata.clk32k_src = ARIZONA_32KZ_MCLK2;
+-
+-	switch (arizona->pdata.clk32k_src) {
+-	case ARIZONA_32KZ_MCLK1:
+-	case ARIZONA_32KZ_MCLK2:
+-		regmap_update_bits(arizona->regmap, ARIZONA_CLOCK_32K_1,
+-				   ARIZONA_CLK_32K_SRC_MASK,
+-				   arizona->pdata.clk32k_src - 1);
+-		arizona_clk32k_enable(arizona);
+-		break;
+-	case ARIZONA_32KZ_NONE:
+-		regmap_update_bits(arizona->regmap, ARIZONA_CLOCK_32K_1,
+-				   ARIZONA_CLK_32K_SRC_MASK, 2);
+-		break;
+-	default:
+-		dev_err(arizona->dev, "Invalid 32kHz clock source: %d\n",
+-			arizona->pdata.clk32k_src);
+-		ret = -EINVAL;
+-		goto err_reset;
+-	}
+-
+ 	for (i = 0; i < ARIZONA_MAX_MICBIAS; i++) {
+ 		if (!arizona->pdata.micbias[i].mV &&
+ 		    !arizona->pdata.micbias[i].bypass)
+@@ -1387,10 +1308,25 @@ int arizona_dev_init(struct arizona *arizona)
+ 	pm_runtime_set_active(arizona->dev);
+ 	pm_runtime_enable(arizona->dev);
+ 
++	arizona->clk32k = devm_clk_get(arizona->dev, "arizona-32k");
++	if (IS_ERR(arizona->clk32k)) {
++		ret = PTR_ERR(arizona->clk32k);
++		if (ret == -ENOENT)
++			ret = -EPROBE_DEFER;
++		dev_err(arizona->dev, "Failed to get 32k clock: %d\n", ret);
++		goto err_pm;
++	}
++
++	ret = clk_prepare_enable(arizona->clk32k);
++	if (ret < 0) {
++		dev_err(arizona->dev, "Failed to enable 32k clock: %d\n", ret);
++		goto err_pm;
++	}
++
+ 	/* Set up for interrupts */
+ 	ret = arizona_irq_init(arizona);
+ 	if (ret != 0)
+-		goto err_reset;
++		goto err_clock;
+ 
+ 	pm_runtime_set_autosuspend_delay(arizona->dev, 100);
+ 	pm_runtime_use_autosuspend(arizona->dev);
+@@ -1414,6 +1350,10 @@ int arizona_dev_init(struct arizona *arizona)
+ 
+ err_irq:
+ 	arizona_irq_exit(arizona);
++err_clock:
++	clk_disable_unprepare(arizona->clk32k);
++err_pm:
++	pm_runtime_disable(arizona->dev);
+ err_reset:
+ 	arizona_enable_reset(arizona);
+ 	regulator_disable(arizona->dcvdd);
+@@ -1430,6 +1370,8 @@ EXPORT_SYMBOL_GPL(arizona_dev_init);
+ 
+ int arizona_dev_exit(struct arizona *arizona)
+ {
++	clk_disable_unprepare(arizona->clk32k);
++
+ 	pm_runtime_disable(arizona->dev);
+ 
+ 	regulator_disable(arizona->dcvdd);
+diff --git a/include/linux/mfd/arizona/core.h b/include/linux/mfd/arizona/core.h
+index 79e607e..b9a1da4 100644
+--- a/include/linux/mfd/arizona/core.h
++++ b/include/linux/mfd/arizona/core.h
+@@ -13,6 +13,7 @@
+ #ifndef _WM_ARIZONA_CORE_H
+ #define _WM_ARIZONA_CORE_H
+ 
++#include <linux/clk.h>
+ #include <linux/interrupt.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+@@ -133,8 +134,7 @@ struct arizona {
+ 	bool hpdet_clamp;
+ 	unsigned int hp_ena;
+ 
+-	struct mutex clk_lock;
+-	int clk32k_ref;
++	struct clk *clk32k;
+ 
+ 	bool ctrlif_error;
+ 
+@@ -148,9 +148,6 @@ struct arizona {
+ 	struct mutex dac_comp_lock;
+ };
+ 
+-int arizona_clk32k_enable(struct arizona *arizona);
+-int arizona_clk32k_disable(struct arizona *arizona);
+-
+ int arizona_request_irq(struct arizona *arizona, int irq, char *name,
+ 			irq_handler_t handler, void *data);
+ void arizona_free_irq(struct arizona *arizona, int irq, void *data);
+-- 
+2.1.4
+
