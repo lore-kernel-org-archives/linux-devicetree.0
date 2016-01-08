@@ -1,40 +1,83 @@
-Return-Path: <linux-arm-kernel-bounces+robh=kernel.org@lists.infradead.org>
-From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCHv2 0/2] net: fec: Reset ethernet PHY whenever the enet_out
- clock is being enabled
-Date: Tue, 12 Jan 2016 16:17:54 +0100
-Message-Id: <1452611876-451-1-git-send-email-LW@KARO-electronics.de>
 MIME-Version: 1.0
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+robh=kernel.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Fabio Estevam <fabio.estevam@freescale.com>, Greg Ungerer <gerg@uclinux.org>, Kevin Hao <haokexin@gmail.com>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>, Lucas Stach <l.stach@pengutronix.de>, Nimrod Andy <B38611@freescale.com>, Philippe Reynes <tremyfr@gmail.com>, Richard Cochran <richardcochran@gmail.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Stefan Agner <stefan@agner.ch>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Jeff Kirsher <jeffrey.t.kirsher@intel.com>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <568D70A3.2070007@ti.com>
+References: <cover.1451995297.git.hns@goldelico.com>
+	<b4a6fe205cbb1a9eddc4e5f63fa05d299641313d.1451995297.git.hns@goldelico.com>
+	<568C5451.8070709@ti.com>
+	<B2CEA92E-5F60-43C1-8265-F7C66FBD90D6@goldelico.com>
+	<568CCCA2.4040004@nvidia.com>
+	<568D2657.6050400@ti.com>
+	<CAL_Jsq+rfU0EuoRi1Jkq2QYQjK0_LOW8PALatYccpbJiPPZh-g@mail.gmail.com>
+	<568D70A3.2070007@ti.com>
+Date: Fri, 8 Jan 2016 13:33:59 -0600
+Message-ID: <CAL_JsqKpEcQTrwDdY2JquzNs_yFu_1OgNmU=-vGwEmSLEtrqgA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and charging
+ of backup battery
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+To: Nishanth Menon <nm@ti.com>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek@goldelico.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patchset fixes a regression introduced by
-commit e8fcfcd5684a ("net: fec: optimize the clock management to save power")
-for ethernet PHYs that are using ENET_OUT as reference clock (on i.MX6 or i.MX28)
+On Wed, Jan 6, 2016 at 1:53 PM, Nishanth Menon <nm@ti.com> wrote:
+> On 01/06/2016 01:34 PM, Rob Herring wrote:
+>> On Wed, Jan 6, 2016 at 8:36 AM, Nishanth Menon <nm@ti.com> wrote:
+>>> On 01/06/2016 02:13 AM, Laxman Dewangan wrote:
+>>>>
+>>>> On Wednesday 06 January 2016 01:12 PM, H. Nikolaus Schaller wrote:
+>>>>> Hi,
+>>>>>
+>>>>> Am 06.01.2016 um 00:40 schrieb Nishanth Menon <nm@ti.com>:
+>>>>>
+>>>>>> On 01/05/2016 06:01 AM, H. Nikolaus Schaller wrote:
+>>>>>>> +        rtc {
+>>>>>>> +            compatible = "ti,palmas-rtc";
+>>>>>>> +            interrupt-parent = <&palmas>;
+>>>>>>> +            interrupts = <8 IRQ_TYPE_NONE>;
+>>>>>> IRQ_TYPE_NONE is not correct here -> it should have some polarity - if
+>>>>>> it had none, there'd be no interrupt, right?
+>>>>> Well, it just translates IRQ_TYPE_NONE through
+>>>>>
+>>>>> Linux/include/dt-bindings/interrupt-controller/irq.h
+>>>>>
+>>>>> to
+>>>>>
+>>>>> interrupts = <8 0>;
+>>>>>
+>>>>> which is given as an example in
+>>>>>
+>>>>> Documentation//devicetree/bindings/rtc/rtc-palmas.txt
+>>>>>
+>>>>> Since I don't know anything about the rtc driver beyond the bindings
+>>>>> documentation I assume it is correct...
+>>>>> I have added Laxman Dewangan because he introduced this interrupts =
+>>>>> <8 0>;
+>>>>>
+>>>>
+>>>> As this is for palmas interrupt controller, it does not use the second
+>>>> field for interrupt from RTC.
+>>>> So there is no really any polarity. It can be set to 0.
+>>>>
+>>>> The second argument will be used for GPIOs mainly. However, support need
+>>>> to be added on GPIO driver for rising/falling configuration.
+>>>
+>>>
+>>> Device tree represents the hardware - not to reflect how the driver
+>>> works. if the driver is wrong, fix it. the interrupt polarity needs to
+>>> be described in DT. based on palmas like designs, you should probably
+>>> use IRQ_TYPE_EDGE_FALLING because that is the default signaling inside
+>>> the SoC as it reaches Secondary interrupt handlers(SIH) registers.
+>>
+>> If the trigger type is not programmable, then not setting the trigger
+>> type in the DT is fine. Internal connections are often not documented.
+>>
+>
+> Weird, that is not what I got feedback when I send
+> https://patchwork.ozlabs.org/patch/381125/
+>
+> If this is the new norm, I retract my objection.
 
-Changes vs. v1:
-- fixed reference to the commit that introduced the regression.
-- dropped patch to use gpiod framework. This should be added later,
-  after the affected DTBs have been updated to specify the correct
-  gpio_flags.
+I'm not saying that necessarily makes sense here. Given the above, you do know the polarity.
 
-Patch overview:
-1. cleanup patch to remove redundant NULL checks
-2. call fec_reset_phy() after the ENET_OUT clock has been enabled
+To put it another way, if the trigger type doesn't matter, why do you have a second cell?
 
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Rob
