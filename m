@@ -1,34 +1,46 @@
-From: John Garry <john.garry@huawei.com>
-Subject: [PATCH 23/23] hisi_sas: update driver version to 1.1
-Date: Fri, 8 Jan 2016 22:15:42 +0800
-Message-ID: <1452262542-64589-24-git-send-email-john.garry@huawei.com>
-References: <1452262542-64589-1-git-send-email-john.garry@huawei.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/6] DT: mfd: add device-tree binding doc fro PMIC max77620/max20024
+Date: Fri, 8 Jan 2016 08:19:37 -0600
+Message-ID: <CAL_JsqJ=bhFF2X-LHFtboWFP3Ch=W8VBr2gv1EFRTb4EgtM=2w@mail.gmail.com>
+References: <1452177524-23192-1-git-send-email-ldewangan@nvidia.com>
+ <1452177524-23192-2-git-send-email-ldewangan@nvidia.com> <20160107231249.GA17514@rob-hp-laptop>
+ <568F51FF.7000102@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452262542-64589-1-git-send-email-john.garry@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: JBottomley@odin.com, martin.petersen@oracle.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: linuxarm@huawei.com, zhangfei.gao@linaro.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, arnd@arndb.de, devicetree@vger.kernel.org, John Garry <john.garry@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <568F51FF.7000102@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <rtc-linux@googlegroups.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- drivers/scsi/hisi_sas/hisi_sas.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, Jan 8, 2016 at 12:06 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+> Thanks Rob for review.
+> I have taken care of all comment except following which I have query.
+>
+> On Friday 08 January 2016 04:42 AM, Rob Herring wrote:
+>>
+>> +       - maxim,low-battery-reset-enable: Enable low battery reset.
+>> +       - maxim,low-battery-reset-disable: Disable low battery reset.
+>> Why not boolean? Not present means keep default value? I'd prefer
+>> boolean or tristate of not present, 0 to disable, or 1 to enable.
+>>
+>>
+> Here, the properties are boolean. I will add this on the description.
+>
+> I like to enable or disable with the DT and properties are not there then
+> left to default.
+> So added two properties for enable and disable. If properties are there, do
+> the activity.
+>
+> Here tristate is also possible:
+> maxim,low-battery-reset: tristate, low battery reset control. 0 for disable,
+> 1 for enable and
+>                                  absence of this will leave configuration on
+> default.
+>
+> Does it look fine?
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas.h b/drivers/scsi/hisi_sas/hisi_sas.h
-index f00b55b..9f08c0c 100644
---- a/drivers/scsi/hisi_sas/hisi_sas.h
-+++ b/drivers/scsi/hisi_sas/hisi_sas.h
-@@ -21,7 +21,7 @@
- #include <scsi/sas_ata.h>
- #include <scsi/libsas.h>
- 
--#define DRV_VERSION "v1.0"
-+#define DRV_VERSION "v1.1"
- 
- #define HISI_SAS_MAX_PHYS	9
- #define HISI_SAS_MAX_QUEUES	32
--- 
-1.9.1
+Yes.
+
+Rob
