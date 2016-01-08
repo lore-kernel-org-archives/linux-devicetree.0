@@ -1,75 +1,143 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 1/6] arm64: renesas: r8a7795: add usb2_phy device nodes
-Date: Fri, 8 Jan 2016 10:37:13 +0900
-Message-ID: <20160108013713.GA9600@verge.net.au>
-References: <1451044361-5896-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1451044361-5896-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdWXFVRgMAg90Xxa2N_81ckPdyzJtge8SPUghaSK0EcGOw@mail.gmail.com>
- <SG2PR06MB09198CEABDD4B74DD95B5250D8F50@SG2PR06MB0919.apcprd06.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <SG2PR06MB09198CEABDD4B74DD95B5250D8F50@SG2PR06MB0919.apcprd06.prod.outlook.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@vger.kernel.org" <linux-arm-kernel@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+From: Xing Zheng <zhengxing@rock-chips.com>
+Subject: [PATCH] ARM: dts: rockchip: Add support emac for RK3036
+Date: Fri,  8 Jan 2016 09:37:06 +0800
+Message-ID: <1452217026-21155-1-git-send-email-zhengxing@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-rockchip@lists.infradead.org
+Cc: keescook@google.com, leozwang@google.com, heiko@sntech.de, davem@davemloft.net, netdev@vger.kernel.org, Xing Zheng <zhengxing@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 07, 2016 at 01:47:47AM +0000, Yoshihiro Shimoda wrote:
-> Hi Geert-san,
-> 
-> Thank you for your comment and sorry for the delayed response.
-> 
-> > From: Geert Uytterhoeven
-> > Sent: Monday, January 04, 2016 9:42 PM
-> > 
-> > On Fri, Dec 25, 2015 at 12:52 PM, Yoshihiro Shimoda
-> > <yoshihiro.shimoda.uh@renesas.com> wrote:
-> > > --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> > > +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> > > @@ -775,5 +775,39 @@
-> > >                         clocks = <&cpg CPG_MOD 815>;
-> > >                         status = "disabled";
-> > >                 };
-> > > +
-> > > +               usb2_phy0: usb-phy@ee080200 {
-> > > +                       compatible = "renesas,usb2-phy-r8a7795";
-> > > +                       reg = <0 0xee080200 0 0x700>, <0 0xe6590100 0 0x100>;
-> > > +                       reg-names = "usb2_host", "hsusb";
-> > > +                       interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-> > 
-> > Isn't 108 the EHCI0 interrupt?
-> > Cfr. the other usb-phy nodes that don't have interrupts.
-> 
-> Yes, 108 is the EHCI0 interrupt.
-> However, as the 73.5.1 Interrupt Signal List in the datasheet is described,
-> this EHCI0 has also phy interrupt (the datasheet names "UCON").
-> 
-> > > +                       clocks = <&cpg CPG_MOD 703>, <&cpg CPG_MOD 704>;
-> > > +                       clock-names = "usb2", "hsusb";
-> > > +                       power-domains = <&cpg>;
-> > 
-> > This device has two modules clocks, but the CPG/MSSR driver only manages
-> > the first modulo clock.
-> > Who enables the second clock (HS-USB-IF)?
-> 
-> Oops! Thank you for the point.
-> The second clock was enabled by a boot loader.
-> If a boot loader doesn't enable this clock,
-> a panic happens as the followings in probing timing of the renesas-hsusb driver:
-> 
-> renesas_usbhs e6590000.usb: transceiver found
-> renesas_usbhs e6590000.usb: gadget probed
-> Bad mode in Error handler detected, code 0xbf000002 -- SError
-> CPU: 3 PID: 1 Comm: swapper/0 Not tainted 4.4.0-rc6+ #42
-> Hardware name: Renesas Salvator-X board based on r8a7795 (DT)
-> task: ffffffc031868000 ti: ffffffc031870000 task.ti: ffffffc031870000
-> PC is at rcar_gen3_phy_usb2_init+0x38/0x114
-> LR is at phy_init+0x60/0xcc
-> 
-> So, I will fix this issue somehow.
-> Also, I would like to revert this patch set to avoid any troubles.
-> Simon-san, would you revert this patch set?
+This patch describe the emac, and we need to let mac clock under
+the APLL which is able to provide the accurate 50MHz what mac_ref
+need.
 
-Sure, I will drop the entire patchset.
+Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
+---
+
+ arch/arm/boot/dts/rk3036-evb.dts   |   23 +++++++++++++++++++++++
+ arch/arm/boot/dts/rk3036-kylin.dts |   21 +++++++++++++++++++++
+ arch/arm/boot/dts/rk3036.dtsi      |   32 ++++++++++++++++++++++++++++++++
+ 3 files changed, 76 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3036-evb.dts b/arch/arm/boot/dts/rk3036-evb.dts
+index 0a2367e..2505b9a 100644
+--- a/arch/arm/boot/dts/rk3036-evb.dts
++++ b/arch/arm/boot/dts/rk3036-evb.dts
+@@ -74,3 +74,26 @@
+ &uart2 {
+ 	status = "okay";
+ };
++
++&emac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
++	phy = <&phy0>;
++	status = "okay";
++
++	phy0: ethernet-phy@0 {
++		reg = <0>;
++	};
++};
++
++&pinctrl {
++	pcfg_output_high: pcfg-output-high {
++		output-high;
++	};
++
++	emac {
++		rmii_rst: rmii-rst {
++			rockchip,pins = <2 22 RK_FUNC_GPIO &pcfg_output_high>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/rk3036-kylin.dts b/arch/arm/boot/dts/rk3036-kylin.dts
+index 992f9ca..b6ba852 100644
+--- a/arch/arm/boot/dts/rk3036-kylin.dts
++++ b/arch/arm/boot/dts/rk3036-kylin.dts
+@@ -285,7 +285,22 @@
+ 	status = "okay";
+ };
+ 
++&emac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
++	phy = <&phy0>;
++	status = "okay";
++
++	phy0: ethernet-phy@0 {
++		reg = <0>;
++	};
++};
++
+ &pinctrl {
++	pcfg_output_high: pcfg-output-high {
++		output-high;
++	};
++
+ 	pmic {
+ 		pmic_int: pmic-int {
+ 			rockchip,pins = <2 2 RK_FUNC_GPIO &pcfg_pull_default>;
+@@ -297,4 +312,10 @@
+ 			rockchip,pins = <2 7 RK_FUNC_1 &pcfg_pull_none>;
+ 		};
+ 	};
++
++	emac {
++		rmii_rst: rmii-rst {
++			rockchip,pins = <2 22 RK_FUNC_GPIO &pcfg_output_high>;
++		};
++	};
+ };
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index b9567c1..1cb5877 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -186,6 +186,20 @@
+ 		status = "disabled";
+ 	};
+ 
++	emac: ethernet@10200000 {
++		compatible = "rockchip,rk3036-emac", "snps,arc-emac";
++		reg = <0x10200000 0x4000>;
++		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		rockchip,grf = <&grf>;
++		clocks = <&cru HCLK_MAC>, <&cru SCLK_MACREF>, <&cru SCLK_MAC>;
++		clock-names = "hclk", "macref", "macclk";
++		max-speed = <100>;
++		phy-mode = "rmii";
++		status = "disabled";
++	};
++
+ 	sdmmc: dwmmc@10214000 {
+ 		compatible = "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-mshc";
+ 		reg = <0x10214000 0x4000>;
+@@ -556,6 +570,24 @@
+ 			};
+ 		};
+ 
++		emac {
++			emac_xfer: emac-xfer {
++				rockchip,pins = <2 10 RK_FUNC_1 &pcfg_pull_default>, /* crs_dvalid */
++						<2 13 RK_FUNC_1 &pcfg_pull_default>, /* tx_en */
++						<2 14 RK_FUNC_1 &pcfg_pull_default>, /* mac_clk */
++						<2 15 RK_FUNC_1 &pcfg_pull_default>, /* rx_err */
++						<2 16 RK_FUNC_1 &pcfg_pull_default>, /* rxd1 */
++						<2 17 RK_FUNC_1 &pcfg_pull_default>, /* rxd0 */
++						<2 18 RK_FUNC_1 &pcfg_pull_default>, /* txd1 */
++						<2 19 RK_FUNC_1 &pcfg_pull_default>; /* txd0 */
++			};
++
++			emac_mdio: emac-mdio {
++				rockchip,pins = <2 12 RK_FUNC_1 &pcfg_pull_default>, /* mac_md */
++						<2 25 RK_FUNC_1 &pcfg_pull_default>; /* mac_mdclk */
++			};
++		};
++
+ 		i2c0 {
+ 			i2c0_xfer: i2c0-xfer {
+ 				rockchip,pins = <0 0 RK_FUNC_1 &pcfg_pull_none>,
+-- 
+1.7.9.5
