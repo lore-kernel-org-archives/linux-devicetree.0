@@ -1,48 +1,46 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH v3 4/4] mfd: arizona: Add device tree binding documentation for new clock driver
-Date: Fri, 8 Jan 2016 11:29:42 +0000
-Message-ID: <1452252582-20834-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1452252582-20834-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Xing Zheng <zhengxing@rock-chips.com>
+Subject: [RESEND RFC PATCH 2/2] ARM: dts: rockchip: Update the cpu freqs table
+Date: Fri,  8 Jan 2016 19:31:38 +0800
+Message-ID: <1452252698-16765-3-git-send-email-zhengxing@rock-chips.com>
+References: <1452252698-16765-1-git-send-email-zhengxing@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452252582-20834-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+In-Reply-To: <1452252698-16765-1-git-send-email-zhengxing@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com, cw00.choi@samsung.com, lee.jones@linaro.org
-Cc: sboyd@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+To: linux-rockchip@lists.infradead.org
+Cc: keescook@google.com, leozwang@google.com, heiko@sntech.de, Xing Zheng <zhengxing@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Specify the device tree binding for the input clocks to Arizona devices.
+Actually, we need more cpu freqs which are 50MHz integer multiples.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
 ---
 
-No changes since v2.
+ arch/arm/boot/dts/rk3036.dtsi |   13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-Thanks,
-Charles
-
- Documentation/devicetree/bindings/mfd/arizona.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-index 18be0cb..39f76f8 100644
---- a/Documentation/devicetree/bindings/mfd/arizona.txt
-+++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-@@ -45,6 +45,13 @@ Optional properties:
- 
-   - wlf,reset : GPIO specifier for the GPIO controlling /RESET
- 
-+  - clocks: Should reference the clocks supplied on MCLK1 and MCLK2
-+  - clock-names: Should contains two strings:
-+      "mclk1" for the clock supplied on MCLK1, recommended to be a high
-+      quality audio reference clock
-+      "mclk2" for the clock supplied on MCLK2, recommended to be an always on
-+      32k clock
-+
-   - wlf,gpio-defaults : A list of GPIO configuration register values. Defines
-     for the appropriate values can found in <dt-bindings/mfd/arizona.txt>. If
-     absent, no configuration of these registers is performed. If any entry has
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index 1cb5877..1a773eb 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -79,7 +79,18 @@
+ 			resets = <&cru SRST_CORE0>;
+ 			operating-points = <
+ 				/* KHz    uV */
+-				 816000 1000000
++				1200000 1200000
++				1100000 1200000
++				1000000 1200000
++				 900000 1200000
++				 800000 1200000
++				 700000 1200000
++				 600000 1200000
++				 500000 1200000
++				 400000 1200000
++				 300000 1200000
++				 200000 1200000
++				 100000 1200000
+ 			>;
+ 			clock-latency = <40000>;
+ 			clocks = <&cru ARMCLK>;
 -- 
-2.1.4
+1.7.9.5
