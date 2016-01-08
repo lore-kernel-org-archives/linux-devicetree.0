@@ -1,7 +1,7 @@
 From: Joshua Henderson <joshua.henderson@microchip.com>
-Subject: [PATCH v3 09/14] dt/bindings: Add bindings for PIC32 UART driver
-Date: Thu, 7 Jan 2016 17:00:24 -0700
-Message-ID: <1452211389-31025-10-git-send-email-joshua.henderson@microchip.com>
+Subject: [PATCH v3 11/14] dt/bindings: Add bindings for PIC32 SDHCI host controller
+Date: Thu, 7 Jan 2016 17:00:26 -0700
+Message-ID: <1452211389-31025-12-git-send-email-joshua.henderson@microchip.com>
 References: <1452211389-31025-1-git-send-email-joshua.henderson@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,7 +14,7 @@ List-Id: devicetree@vger.kernel.org
 
 From: Andrei Pistirica <andrei.pistirica@microchip.com>
 
-Document the devicetree bindings for the UART peripheral found on
+Document the devicetree bindings for the SDHCI peripheral found on
 Microchip PIC32 class devices.
 
 Signed-off-by: Andrei Pistirica <andrei.pistirica@microchip.com>
@@ -22,44 +22,44 @@ Signed-off-by: Joshua Henderson <joshua.henderson@microchip.com>
 Cc: Ralf Baechle <ralf@linux-mips.org>
 Acked-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/serial/microchip,pic32-uart.txt       |   29 ++++++++++++++++++++
+ .../bindings/mmc/microchip,sdhci-pic32.txt         |   29 ++++++++++++++++++++
  1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/microchip,pic32-uart.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt
 
-diff --git a/Documentation/devicetree/bindings/serial/microchip,pic32-uart.txt b/Documentation/devicetree/bindings/serial/microchip,pic32-uart.txt
+diff --git a/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt b/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt
 new file mode 100644
-index 0000000..65b38bf6
+index 0000000..71ad57e
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/microchip,pic32-uart.txt
++++ b/Documentation/devicetree/bindings/mmc/microchip,sdhci-pic32.txt
 @@ -0,0 +1,29 @@
-+* Microchip Universal Asynchronous Receiver Transmitter (UART)
++* Microchip PIC32 SDHCI Controller
++
++This file documents differences between the core properties in mmc.txt
++and the properties used by the sdhci-pic32 driver.
 +
 +Required properties:
-+- compatible: Should be "microchip,pic32mzda-uart"
-+- reg: Should contain registers location and length
++- compatible: Should be "microchip,pic32mzda-sdhci"
 +- interrupts: Should contain interrupt
++- clock-names: Should be "base_clk", "sys_clk".
++               See: Documentation/devicetree/bindings/resource-names.txt
 +- clocks: Phandle to the clock.
 +          See: Documentation/devicetree/bindings/clock/clock-bindings.txt
 +- pinctrl-names: A pinctrl state names "default" must be defined.
-+- pinctrl-0: Phandle referencing pin configuration of the UART peripheral.
++- pinctrl-0: Phandle referencing pin configuration of the SDHCI controller.
 +             See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
 +
-+Optional properties:
-+- cts-gpios: CTS pin for UART
-+
 +Example:
-+	uart1: serial@1f822000 {
-+		compatible = "microchip,pic32mzda-uart";
-+		reg = <0x1f822000 0x50>;
-+		interrupts = <112 IRQ_TYPE_LEVEL_HIGH>,
-+			<113 IRQ_TYPE_LEVEL_HIGH>,
-+			<114 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&PBCLK2>;
++
++	sdhci@1f8ec000 {
++		compatible = "microchip,pic32mzda-sdhci";
++		reg = <0x1f8ec000 0x100>;
++		interrupts = <191 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&REFCLKO4>, <&PBCLK5>;
++		clock-names = "base_clk", "sys_clk";
++		bus-width = <4>;
++		cap-sd-highspeed;
 +		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_uart1
-+				&pinctrl_uart1_cts
-+				&pinctrl_uart1_rts>;
-+		cts-gpios = <&gpio1 15 0>;
++		pinctrl-0 = <&pinctrl_sdhc1>;
 +	};
 -- 
 1.7.9.5
