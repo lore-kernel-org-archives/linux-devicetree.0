@@ -1,354 +1,468 @@
-Return-Path: <zhangqing@rock-chips.com>
-Message-ID: <568FECFE.8060107@rock-chips.com>
-Date: Fri, 08 Jan 2016 09:08:14 -0800
-From: zhangqing <zhangqing@rock-chips.com>
+Return-Path: <wxt@rock-chips.com>
+Subject: Re: [PATCH v2 00/12] Add the family patches to support for kylin
+ board
+References: <1452155155-16232-1-git-send-email-wxt@rock-chips.com>
+ <1759945.VO3mCQb2oc@phil>
+From: Caesar Wang <wxt@rock-chips.com>
+Message-ID: <568F7B0F.8030009@rock-chips.com>
+Date: Fri, 8 Jan 2016 17:02:07 +0800
 MIME-Version: 1.0
-Subject: Re: [PATCH] soc: rockchip: power-domain: Modify power domain driver
- for rk3368
-References: <1452269144-15389-1-git-send-email-zhangqing@rock-chips.com> <3979294.oVXyhiFhfI@phil>
-In-Reply-To: <3979294.oVXyhiFhfI@phil>
+In-Reply-To: <1759945.VO3mCQb2oc@phil>
 Content-Type: multipart/alternative;
- boundary="------------010402020300040702000204"
+ boundary="------------010808020105050202000804"
 To: Heiko Stuebner <heiko@sntech.de>
-Cc: wxt@rock-chips.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, khilman@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, huangtao@rock-chips.com, zyw@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Caesar Wang <wxt@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-clk@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Javier Martinez Canillas <javier@osg.samsung.com>, NeilBrown <neil@brown.name>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, keescook@google.com, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, linux-arm-kernel@lists.infradead.org, Andreas Fenkart <afenkart@gmail.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, leecam@google.com, Kumar Gala <galak@codeaurora.org>, leozwang@google.com
 List-ID: <devicetree@vger.kernel.org>
 
 This is a multi-part message in MIME format.
---------------010402020300040702000204
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+--------------010808020105050202000804
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+Hi Heiko,
 
-On 01/08/2016 12:25 AM, Heiko Stuebner wrote:
-> Hi Elaine,
+Thanks for pointing out.
+
+在 2016年01月07日 18:44, Heiko Stuebner 写道:
+> Hi Caesar,
 >
-> Am Freitag, 8. Januar 2016, 08:05:44 schrieb zhangqing:
->> This driver is modified to support RK3368 SoC.
+> Am Donnerstag, 7. Januar 2016, 16:25:43 schrieb Caesar Wang:
+>> Hi all,
 >>
->> Signed-off-by: zhangqing <zhangqing@rock-chips.com>
->> ---
->>   drivers/soc/rockchip/pm_domains.c        | 33
->> ++++++++++++++++++++++++++++++++ include/dt-bindings/power/rk3368-power.h
->> | 28 +++++++++++++++++++++++++++ 2 files changed, 61 insertions(+)
->>   create mode 100644 include/dt-bindings/power/rk3368-power.h
->>
->> diff --git a/drivers/soc/rockchip/pm_domains.c
->> b/drivers/soc/rockchip/pm_domains.c index 534c589..6cdffb1 100644
->> --- a/drivers/soc/rockchip/pm_domains.c
->> +++ b/drivers/soc/rockchip/pm_domains.c
->> @@ -18,6 +18,7 @@
->>   #include <linux/regmap.h>
->>   #include <linux/mfd/syscon.h>
->>   #include <dt-bindings/power/rk3288-power.h>
->> +#include <dt-bindings/power/rk3368-power.h>
->>
->>   struct rockchip_domain_info {
->>   	int pwr_mask;
->> @@ -75,6 +76,9 @@ struct rockchip_pmu {
->>   #define DOMAIN_RK3288(pwr, status, req)		\
->>   	DOMAIN(pwr, status, req, req, (req) + 16)
->>
->> +#define DOMAIN_RK3368(pwr, status, req)		\
->> +	DOMAIN(pwr, status, req, (req) + 16, req)
->> +
->>   static bool rockchip_pmu_domain_is_idle(struct rockchip_pm_domain *pd)
->>   {
->>   	struct rockchip_pmu *pmu = pd->pmu;
->> @@ -444,6 +448,14 @@ static const struct rockchip_domain_info
->> rk3288_pm_domains[] = { [RK3288_PD_GPU]		= DOMAIN_RK3288(9, 9, 2),
->>   };
->>
->> +static const struct rockchip_domain_info rk3368_pm_domains[] = {
->> +	[RK3368_PD_PERI]	= DOMAIN_RK3368(13, 12, 6),
->> +	[RK3368_PD_VIO]		= DOMAIN_RK3368(15, 14, 8),
->> +	[RK3368_PD_VIDEO]	= DOMAIN_RK3368(14, 13, 7),
->> +	[RK3368_PD_GPU_0]	= DOMAIN_RK3368(16, 15, 2),
->> +	[RK3368_PD_GPU_1]	= DOMAIN_RK3368(17, 16, 2),
->> +};
-> The structure in the registers (and thus the macros you define above) is the
-> same between rk3288 and rk3368, so there is no need to define that a second
-> time. It is perfectly fine to re-use the DOMAIN_RK3288 macro here and saves
-> double-definitions. [see our clock-drivers which already do this for the
-> common parts].
-The ack_mask bit and idle_mask bit is different in rk3368.
-you can check the :
+>> Happy new year! :)
+>> Let's go on working for happy.
+> please make sure to split your patch-series at appropriate points for future
+> versions to only address relevant people. For example I don't think Ulf
+> really cares about getting the audio-related or general devicetree patches.
 
-+#define DOMAIN_RK3368(pwr, status, req)		\
-+	DOMAIN(pwr, status, req,(req) + 16, req)
-+
-But the rk3288 is :
-#define DOMAIN_RK3288(pwr, status, req)		\
-  	DOMAIN(pwr, status, req, req, (req) + 16)
+Okay.
+That's seem the patman tool to send patches automatically.
+
+Ahem!
+Series-to: email / alias to ulf for emmc patches that will send all 
+patches for him.
 
 >
->> +
->>   static const struct rockchip_pmu_info rk3288_pmu = {
->>   	.pwr_offset = 0x08,
->>   	.status_offset = 0x0c,
->> @@ -461,11 +473,32 @@ static const struct rockchip_pmu_info rk3288_pmu = {
->> .domain_info = rk3288_pm_domains,
->>   };
->>
->> +static const struct rockchip_pmu_info rk3368_pmu = {
->> +	.pwr_offset = 0x0c,
->> +	.status_offset = 0x10,
->> +	.req_offset = 0x3c,
->> +	.idle_offset = 0x40,
->> +	.ack_offset = 0x40,
->> +
->> +	.core_pwrcnt_offset = 0x48,
->> +	.gpu_pwrcnt_offset = 0x50,
->> +
->> +	.core_power_transition_time = 24,
->> +	.gpu_power_transition_time = 24,
->> +
->> +	.num_domains = ARRAY_SIZE(rk3368_pm_domains),
->> +	.domain_info = rk3368_pm_domains,
->> +};
->> +
->>   static const struct of_device_id rockchip_pm_domain_dt_match[] = {
->>   	{
->>   		.compatible = "rockchip,rk3288-power-controller",
->>   		.data = (void *)&rk3288_pmu,
->>   	},
->> +	{
->> +		.compatible = "rockchip,rk3368-power-controller",
->> +		.data = (void *)&rk3368_pmu,
->> +	},
->>   	{ /* sentinel */ },
->>   };
->>
->> diff --git a/include/dt-bindings/power/rk3368-power.h
->> b/include/dt-bindings/power/rk3368-power.h new file mode 100644
->> index 0000000..93633d5
->> --- /dev/null
->> +++ b/include/dt-bindings/power/rk3368-power.h
-> Please split the addition of the binding-header into a separate patch. We
-> will need the header in both the soc-specific code as well as the devicetree
-> side, which requires the header being in a shared branch.
->
-> Otherwise patch looks great.
->
->
-> Thanks
 > Heiko
 >
->> @@ -0,0 +1,28 @@
->> +#ifndef __DT_BINDINGS_POWER_RK3368_POWER_H__
->> +#define __DT_BINDINGS_POWER_RK3368_POWER_H__
->> +
->> +/* VD_CORE */
->> +#define RK3368_PD_A53_L0	0
->> +#define RK3368_PD_A53_L1	1
->> +#define RK3368_PD_A53_L2	2
->> +#define RK3368_PD_A53_L3	3
->> +#define RK3368_PD_SCU_L		4
->> +#define RK3368_PD_A53_B0	5
->> +#define RK3368_PD_A53_B1	6
->> +#define RK3368_PD_A53_B2	7
->> +#define RK3368_PD_A53_B3	8
->> +#define RK3368_PD_SCU_B		9
->> +
->> +/* VD_LOGIC */
->> +#define RK3368_PD_BUS		10
->> +#define RK3368_PD_PERI		11
->> +#define RK3368_PD_VIO		12
->> +#define RK3368_PD_ALIVE		13
->> +#define RK3368_PD_VIDEO		14
->> +#define RK3368_PD_GPU_0		15
->> +#define RK3368_PD_GPU_1		16
->> +
->> +/* VD_PMU */
->> +#define RK3368_PD_PMU		17
->> +
->> +#endif
+>> This series patches are based on kernel version 4.4.0-rc8+
+>> (Linux version 4.4.0-rc8+ (wxt@ubuntu)...#142 SMP Thu Jan 7 12:38:40 CST
+>> 2016)
+>>
+>> This series pacthes are verified on the following github:
+>> https://github.com/Caesar-github/rockchip/commits/kylin-develop4.4
+>>
+>> This series has 12 patches: (12--->1)
+>> bbd1a01 ARM: dts: Add pl330-broken-no-flushp quirk for rk3036 SoCs
+>> fb8c1fd ARM: dts: rockchip: add the lcdc and hdmi node for rk3036
+>> 1aeb49d ARM: dts: rockchip: add the sdmmc for kylin board
+>> 3e19128 ARM: dts: rockchip: enable the uart0 for kylin board
+>> e7de154 ARM: dts: rockchip: add the wifi/bt regulator for kylin board
+>> 8699698 ARM: dts: rockchip: enable the high speed on sdio for kylin board
+>> 21eded4 mmc: pwrseq: add support for power-on sequencing through DT
+>> cdf3a7e mmc: pwrseq: Document optional exteral vcc for the simple power
+>> sequence 131c249 clk: rockchip: rk3036: enable the CLK_IGNORE_UNUSED flag
+>> for sclk_i2s_out b7ff8e1 ARM: dts: rockchip: override the clocks in i2s
+>> for kylin board 5f56af4 ARM: dts: rockchip: add the sound codec for kylin
+>> board
+>> 914d9c0 ARM: dts: rockchip: set the pinctrl default setting for rk3036 i2s
+>> ..
+>>
+>> This series patches have the following decriptions:
+>>
+>> PATCH[1/12-4/12]:====> Support rt5616 codec for kylin board
+>> 914d9c0 ARM: dts: rockchip: set the pinctrl default setting for rk3036 i2s
+>> 5f56af4 ARM: dts: rockchip: add the sound codec for kylin board
+>> b7ff8e1 ARM: dts: rockchip: override the clocks in i2s for kylin board
+>> 131c249 clk: rockchip: rk3036: enable the CLK_IGNORE_UNUSED flag for
+>> sclk_i2s_out
+>>
+>> This patches is working for codec rt5616 on kylin board. (RK3036 SoCs)
+>>
+>> That's needed the following rt5616 driver from Mark Brown Branch.
+>> (cherry picked from git.kernel.org broonie/sound.git for-next)
+>>
+>> cf94b7a UPSTREAM: ASoC: rt5616: rename some alsa control names
+>> 86f561d UPSTREAM: ASoC: rt5616: add devicetree document for rt5616
+>> 0e0f5f8 UPSTREAM: ASoC: rt5616: add an of_match table
+>> 263a330 UPSTREAM: ASoC: rt5616: Return error if device ID mismatch
+>> 0094139 UPSTREAM: ASoC: rt5616: add rt5616 codec driver
+>>
+>> Notes:
+>> I'm run it with the ubuntu 15.04 to set the configure.
+>> ./amixer "HP Playback Switch" 1
+>> ./amixer "HP Playback Volume" 20
+>> ./amixer "HPO MIX DAC1 Switch" 1
+>> ./amixer "OUT MIXR DAC R1 Switch" 1
+>> ./amixer "OUT MIXL DAC L1 Switch" 1
+>> ./amixer "Stereo DAC MIXR DAC R1 Switch" 1
+>> ./amixer "Stereo DAC MIXL DAC L1 Switch" 1
+>>
+>> root@linaro-alip:/media/aplay# ./aplay pcm.wav
+>> Playing sample: 2 ch, 48000 hz, 16 bit
+>> ..
+>> That can be normal playing the music.
+>> ----
+>>
+>> PATCH[5/12-9/12]: ====> Support wifi/bt module for kylin board
+>> cdf3a7e mmc: pwrseq: Document optional exteral vcc for the simple power
+>> sequence 21eded4 mmc: pwrseq: add support for power-on sequencing through
+>> DT 8699698 ARM: dts: rockchip: enable the high speed on sdio for kylin
+>> board e7de154 ARM: dts: rockchip: add the wifi/bt regulator for kylin
+>> board 3e19128 ARM: dts: rockchip: enable the uart0 for kylin board
+>>
+>> The wifi/bt driver hasn't land in mainline, the driver is in here:
+>> https://github.com/Caesar-github/rockchip/commit/1912ef4c0e358677904b0a0bb
+>> b83f9745066f0ec
+>>
+>> wpa_supplicant -Dnl80211 -c /etc/wifi/wpa_supplicant.conf -i wlan0 -B
+>> wpa_cli add_network
+>> wpa_cli set_network 1 ssid \"wxt\"
+>> wpa_cli set_network 1 psk \"123456789\"
+>> wpa_cli select_network 1
+>> wpa_cli save_config
+>>
+>> ifconfig wlan0 192.168.1.105
+>> route add default gw 192.168.1.1
+>>
+>> root@linaro-alip:/# ping 192.168.1.1
+>> PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.
+>> 64 bytes from 192.168.1.1: icmp_seq=1 ttl=64 time=6.83 ms
+>> 64 bytes from 192.168.1.1: icmp_seq=2 ttl=64 time=184 ms
+>> 64 bytes from 192.168.1.1: icmp_seq=3 ttl=64 time=9.21 ms
+>> 64 bytes from 192.168.1.1: icmp_seq=4 ttl=64 time=6.84 ms
+>> 64 bytes from 192.168.1.1: icmp_seq=5 ttl=64 time=11.2 ms
+>> 64 bytes from 192.168.1.1: icmp_seq=6 ttl=64 time=9.24 ms
+>> 64 bytes from 192.168.1.1: icmp_seq=7 ttl=64 time=12.9 ms
+>> 64 bytes from 192.168.1.1: icmp_seq=8 ttl=64 time=7.02 ms
+>> 64 bytes from 192.168.1.1: icmp_seq=9 ttl=64 time=24.3 ms
+>> 64 bytes from 192.168.1.1: icmp_seq=10 ttl=64 time=13.6 ms
+>> 64 bytes from 192.168.1.1: icmp_seq=11 ttl=64 time=3.87 m
+>> ...
+>>
+>> The wifi throughput:
+>>
+>> iperf -s -i 1
+>> ...
+>> [  4] 116.0-117.0 sec  2.88 MBytes  24.1 Mbits/sec
+>> [  4] 117.0-118.0 sec  2.99 MBytes  25.0 Mbits/sec
+>> [  4] 118.0-119.0 sec  3.01 MBytes  25.2 Mbits/sec
+>> [  4] 119.0-120.0 sec  2.89 MBytes  24.2 Mbits/sec
+>> [  4]  0.0-120.4 sec   332 MBytes  23.1 Mbits/sec
+>> ----
+>>
+>> PATCH[10/12]: ====> sdmmc patch for kylin board
+>> ARM: dts: rockchip: add the sdmmc for kylin board
+>>
+>> You should mark it "oaky" if you want to use the sdmmc.
+>> This patch default is disabing the sdmmc since the sdmmc and
+>> uart2(debug port) is reusing pin.
+>> ----
+>>
+>> PATCH[11/12]: ====> hdmi/lcdc diaply patch for rk3036 dts
+>> ARM: dts: rockchip: add the lcdc and hdmi node for rk3036
+>>
+>> We can add this patch to support it since the Mark Yao has land
+>> your vop support.
+>> https://github.com/markyzq/kernel-drm-rockchip/commits/drm-rockchip-next-2
+>> 015-12-28 ----
+>>
+>> PATCH[12/12]:====> DMA Patchs
+>> ARM: dts: Add pl330-broken-no-flushp quirk for rk3036 SoCs
+>>
+>> In order to be better read/write for emmc.
+>> This patch is based on the following:(Fix broken DMAFLUSHP on Rockchips
+>> platform)
+>>
+>> 3055695 FROMLIST: DMA: dmaengine: expose max burst capability to clientmZ
+>> (am from https://patchwork.kernel.org/patch/7399361/)
+>> ed56bee FROMLIST: DMA: pl330: add quirk for broken no flushp
+>> (am from https://patchwork.kernel.org/patch/7399371/)
+>> 0c43bc3 FROMLIST: Documentation: arm-pl330: add description of arm,
+>> pl330-broken-no-flushp (am from
+>> https://patchwork.kernel.org/patch/7399371/)
+>> 623a699 FROMLIST: DMA: pl330: support burst mode for dev-to-mem and
+>> mem-to-dev transmit (am from https://patchwork.kernel.org/patch/7399381/)
+>> ----
+>>
+>>
+>> Changes in v2:
+>> - modify the commit.
+>> - fix the mclk-fs as the 256.
+>> - This fix inmmc-power-sequences, as Heiko comment on
+>>    https://patchwork.kernel.org/patch/7903161/
+>> - As Heiko comment, modify it to fit the simple-mmc-sequence.
+>> - Add the uart0 commit content.
+>>
+>> Caesar Wang (12):
+>>    ARM: dts: rockchip: set the pinctrl default setting for rk3036 i2s
+>>    ARM: dts: rockchip: add the sound codec for kylin board
+>>    ARM: dts: rockchip: override the clocks in i2s for kylin board
+>>    clk: rockchip: rk3036: enable the CLK_IGNORE_UNUSED flag for
+>>      sclk_i2s_out
+>>    mmc: pwrseq: Document optional exteral vcc for the simple power
+>>      sequence
+>>    mmc: pwrseq: add support for power-on sequencing through DT
+>>    ARM: dts: rockchip: enable the high speed on sdio for kylin board
+>>    ARM: dts: rockchip: add the wifi/bt regulator for kylin board
+>>    ARM: dts: rockchip: enable the uart0 for kylin board
+>>    ARM: dts: rockchip: add the sdmmc for kylin board
+>>    ARM: dts: rockchip: add the lcdc and hdmi node for rk3036
+>>    ARM: dts: Add pl330-broken-no-flushp quirk for rk3036 SoCs
+>>
+>>   .../devicetree/bindings/mmc/mmc-pwrseq-simple.txt  |   9 ++
+>>   arch/arm/boot/dts/rk3036-kylin.dts                 | 119
+>> +++++++++++++++++++++ arch/arm/boot/dts/rk3036.dtsi
+>> |  74 +++++++++++-- drivers/clk/rockchip/clk-rk3036.c                  |
+>>   2 +-
+>>   drivers/mmc/core/pwrseq_simple.c                   |  16 +++
+>>   5 files changed, 213 insertions(+), 7 deletions(-)
 >
->
->
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 
 
---------------010402020300040702000204
-Content-Type: text/html; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+-- 
+caesar wang | software engineer | wxt@rock-chip.com
+
+
+--------------010808020105050202000804
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 <html>
   <head>
-    <meta content="text/html; charset=windows-1252"
-      http-equiv="Content-Type">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   </head>
-  <body alink="#EE0000" bgcolor="#ffffff" link="#0B6CDA" text="#000000"
-    vlink="#551A8B">
-    <br>
-    <div class="moz-cite-prefix">On 01/08/2016 12:25 AM, Heiko Stuebner
-      wrote:<br>
+  <body text="#000000" bgcolor="#FFFFFF">
+    <small><big>Hi Heiko,</big><br>
+      <br>
+      Thanks for pointing out.<br>
+    </small><br>
+    <div class="moz-cite-prefix">在 2016年01月07日 18:44, Heiko Stuebner 写道:<br>
     </div>
-    <blockquote cite="mid:3979294.oVXyhiFhfI@phil" type="cite">
-      <pre wrap="">Hi Elaine,
+    <blockquote cite="mid:1759945.VO3mCQb2oc@phil" type="cite">
+      <pre wrap="">Hi Caesar,
 
-Am Freitag, 8. Januar 2016, 08:05:44 schrieb zhangqing:
+Am Donnerstag, 7. Januar 2016, 16:25:43 schrieb Caesar Wang:
 </pre>
       <blockquote type="cite">
-        <pre wrap="">This driver is modified to support RK3368 SoC.
+        <pre wrap="">Hi all,
 
-Signed-off-by: zhangqing <a class="moz-txt-link-rfc2396E" href="mailto:zhangqing@rock-chips.com">&lt;zhangqing@rock-chips.com&gt;</a>
----
- drivers/soc/rockchip/pm_domains.c        | 33
-++++++++++++++++++++++++++++++++ include/dt-bindings/power/rk3368-power.h
-| 28 +++++++++++++++++++++++++++ 2 files changed, 61 insertions(+)
- create mode 100644 include/dt-bindings/power/rk3368-power.h
-
-diff --git a/drivers/soc/rockchip/pm_domains.c
-b/drivers/soc/rockchip/pm_domains.c index 534c589..6cdffb1 100644
---- a/drivers/soc/rockchip/pm_domains.c
-+++ b/drivers/soc/rockchip/pm_domains.c
-@@ -18,6 +18,7 @@
- #include &lt;linux/regmap.h&gt;
- #include &lt;linux/mfd/syscon.h&gt;
- #include &lt;dt-bindings/power/rk3288-power.h&gt;
-+#include &lt;dt-bindings/power/rk3368-power.h&gt;
-
- struct rockchip_domain_info {
- 	int pwr_mask;
-@@ -75,6 +76,9 @@ struct rockchip_pmu {
- #define DOMAIN_RK3288(pwr, status, req)		\
- 	DOMAIN(pwr, status, req, req, (req) + 16)
-
-+#define DOMAIN_RK3368(pwr, status, req)		\
-+	DOMAIN(pwr, status, req, (req) + 16, req)
-+
- static bool rockchip_pmu_domain_is_idle(struct rockchip_pm_domain *pd)
- {
- 	struct rockchip_pmu *pmu = pd-&gt;pmu;
-@@ -444,6 +448,14 @@ static const struct rockchip_domain_info
-rk3288_pm_domains[] = { [RK3288_PD_GPU]		= DOMAIN_RK3288(9, 9, 2),
- };
-
-+static const struct rockchip_domain_info rk3368_pm_domains[] = {
-+	[RK3368_PD_PERI]	= DOMAIN_RK3368(13, 12, 6),
-+	[RK3368_PD_VIO]		= DOMAIN_RK3368(15, 14, 8),
-+	[RK3368_PD_VIDEO]	= DOMAIN_RK3368(14, 13, 7),
-+	[RK3368_PD_GPU_0]	= DOMAIN_RK3368(16, 15, 2),
-+	[RK3368_PD_GPU_1]	= DOMAIN_RK3368(17, 16, 2),
-+};
+Happy new year! :)
+Let's go on working for happy.
 </pre>
       </blockquote>
       <pre wrap="">
-The structure in the registers (and thus the macros you define above) is the 
-same between rk3288 and rk3368, so there is no need to define that a second 
-time. It is perfectly fine to re-use the DOMAIN_RK3288 macro here and saves 
-double-definitions. [see our clock-drivers which already do this for the 
-common parts].</pre>
+please make sure to split your patch-series at appropriate points for future 
+versions to only address relevant people. For example I don't think Ulf 
+really cares about getting the audio-related or general devicetree patches.
+</pre>
     </blockquote>
-    The ack_mask bit and idle_mask bit is different in rk3368.<br>
-    you can check the :<br>
-    <pre wrap="">+#define DOMAIN_RK3368(pwr, status, req)		\
-+	DOMAIN(pwr, status, req, <font color="#ff0000">(req) + 16, req</font>)
-+
-But the rk3288 is :
-#define DOMAIN_RK3288(pwr, status, req)		\
- 	DOMAIN(pwr, status, req, req, (req) + 16)
-</pre>
-    <blockquote cite="mid:3979294.oVXyhiFhfI@phil" type="cite">
+    <br>
+    Okay.  <br>
+    That's seem the patman tool to send patches automatically.<br>
+    <br>
+    Ahem!<br>
+    Series-to: email / alias to ulf for emmc patches that will send all
+    patches for him.<br>
+    <br>
+    <blockquote cite="mid:1759945.VO3mCQb2oc@phil" type="cite">
       <pre wrap="">
 
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+
- static const struct rockchip_pmu_info rk3288_pmu = {
- 	.pwr_offset = 0x08,
- 	.status_offset = 0x0c,
-@@ -461,11 +473,32 @@ static const struct rockchip_pmu_info rk3288_pmu = {
-.domain_info = rk3288_pm_domains,
- };
-
-+static const struct rockchip_pmu_info rk3368_pmu = {
-+	.pwr_offset = 0x0c,
-+	.status_offset = 0x10,
-+	.req_offset = 0x3c,
-+	.idle_offset = 0x40,
-+	.ack_offset = 0x40,
-+
-+	.core_pwrcnt_offset = 0x48,
-+	.gpu_pwrcnt_offset = 0x50,
-+
-+	.core_power_transition_time = 24,
-+	.gpu_power_transition_time = 24,
-+
-+	.num_domains = ARRAY_SIZE(rk3368_pm_domains),
-+	.domain_info = rk3368_pm_domains,
-+};
-+
- static const struct of_device_id rockchip_pm_domain_dt_match[] = {
- 	{
- 		.compatible = "rockchip,rk3288-power-controller",
- 		.data = (void *)&amp;rk3288_pmu,
- 	},
-+	{
-+		.compatible = "rockchip,rk3368-power-controller",
-+		.data = (void *)&amp;rk3368_pmu,
-+	},
- 	{ /* sentinel */ },
- };
-
-diff --git a/include/dt-bindings/power/rk3368-power.h
-b/include/dt-bindings/power/rk3368-power.h new file mode 100644
-index 0000000..93633d5
---- /dev/null
-+++ b/include/dt-bindings/power/rk3368-power.h
-</pre>
-      </blockquote>
-      <pre wrap="">
-Please split the addition of the binding-header into a separate patch. We 
-will need the header in both the soc-specific code as well as the devicetree 
-side, which requires the header being in a shared branch.
-
-Otherwise patch looks great.
-
-
-Thanks
 Heiko
 
 </pre>
       <blockquote type="cite">
-        <pre wrap="">@@ -0,0 +1,28 @@
-+#ifndef __DT_BINDINGS_POWER_RK3368_POWER_H__
-+#define __DT_BINDINGS_POWER_RK3368_POWER_H__
-+
-+/* VD_CORE */
-+#define RK3368_PD_A53_L0	0
-+#define RK3368_PD_A53_L1	1
-+#define RK3368_PD_A53_L2	2
-+#define RK3368_PD_A53_L3	3
-+#define RK3368_PD_SCU_L		4
-+#define RK3368_PD_A53_B0	5
-+#define RK3368_PD_A53_B1	6
-+#define RK3368_PD_A53_B2	7
-+#define RK3368_PD_A53_B3	8
-+#define RK3368_PD_SCU_B		9
-+
-+/* VD_LOGIC */
-+#define RK3368_PD_BUS		10
-+#define RK3368_PD_PERI		11
-+#define RK3368_PD_VIO		12
-+#define RK3368_PD_ALIVE		13
-+#define RK3368_PD_VIDEO		14
-+#define RK3368_PD_GPU_0		15
-+#define RK3368_PD_GPU_1		16
-+
-+/* VD_PMU */
-+#define RK3368_PD_PMU		17
-+
-+#endif
+        <pre wrap="">This series patches are based on kernel version 4.4.0-rc8+
+(Linux version 4.4.0-rc8+ (wxt@ubuntu)...#142 SMP Thu Jan 7 12:38:40 CST
+2016)
+
+This series pacthes are verified on the following github:
+<a class="moz-txt-link-freetext" href="https://github.com/Caesar-github/rockchip/commits/kylin-develop4.4">https://github.com/Caesar-github/rockchip/commits/kylin-develop4.4</a>
+
+This series has 12 patches: (12---&gt;1)
+bbd1a01 ARM: dts: Add pl330-broken-no-flushp quirk for rk3036 SoCs
+fb8c1fd ARM: dts: rockchip: add the lcdc and hdmi node for rk3036
+1aeb49d ARM: dts: rockchip: add the sdmmc for kylin board
+3e19128 ARM: dts: rockchip: enable the uart0 for kylin board
+e7de154 ARM: dts: rockchip: add the wifi/bt regulator for kylin board
+8699698 ARM: dts: rockchip: enable the high speed on sdio for kylin board
+21eded4 mmc: pwrseq: add support for power-on sequencing through DT
+cdf3a7e mmc: pwrseq: Document optional exteral vcc for the simple power
+sequence 131c249 clk: rockchip: rk3036: enable the CLK_IGNORE_UNUSED flag
+for sclk_i2s_out b7ff8e1 ARM: dts: rockchip: override the clocks in i2s
+for kylin board 5f56af4 ARM: dts: rockchip: add the sound codec for kylin
+board
+914d9c0 ARM: dts: rockchip: set the pinctrl default setting for rk3036 i2s
+..
+
+This series patches have the following decriptions:
+
+PATCH[1/12-4/12]:====&gt; Support rt5616 codec for kylin board
+914d9c0 ARM: dts: rockchip: set the pinctrl default setting for rk3036 i2s
+5f56af4 ARM: dts: rockchip: add the sound codec for kylin board
+b7ff8e1 ARM: dts: rockchip: override the clocks in i2s for kylin board
+131c249 clk: rockchip: rk3036: enable the CLK_IGNORE_UNUSED flag for
+sclk_i2s_out
+
+This patches is working for codec rt5616 on kylin board. (RK3036 SoCs)
+
+That's needed the following rt5616 driver from Mark Brown Branch.
+(cherry picked from git.kernel.org broonie/sound.git for-next)
+
+cf94b7a UPSTREAM: ASoC: rt5616: rename some alsa control names
+86f561d UPSTREAM: ASoC: rt5616: add devicetree document for rt5616
+0e0f5f8 UPSTREAM: ASoC: rt5616: add an of_match table
+263a330 UPSTREAM: ASoC: rt5616: Return error if device ID mismatch
+0094139 UPSTREAM: ASoC: rt5616: add rt5616 codec driver
+
+Notes:
+I'm run it with the ubuntu 15.04 to set the configure.
+./amixer "HP Playback Switch" 1
+./amixer "HP Playback Volume" 20
+./amixer "HPO MIX DAC1 Switch" 1
+./amixer "OUT MIXR DAC R1 Switch" 1
+./amixer "OUT MIXL DAC L1 Switch" 1
+./amixer "Stereo DAC MIXR DAC R1 Switch" 1
+./amixer "Stereo DAC MIXL DAC L1 Switch" 1
+
+root@linaro-alip:/media/aplay# ./aplay pcm.wav
+Playing sample: 2 ch, 48000 hz, 16 bit
+..
+That can be normal playing the music.
+----
+
+PATCH[5/12-9/12]: ====&gt; Support wifi/bt module for kylin board
+cdf3a7e mmc: pwrseq: Document optional exteral vcc for the simple power
+sequence 21eded4 mmc: pwrseq: add support for power-on sequencing through
+DT 8699698 ARM: dts: rockchip: enable the high speed on sdio for kylin
+board e7de154 ARM: dts: rockchip: add the wifi/bt regulator for kylin
+board 3e19128 ARM: dts: rockchip: enable the uart0 for kylin board
+
+The wifi/bt driver hasn't land in mainline, the driver is in here:
+<a class="moz-txt-link-freetext" href="https://github.com/Caesar-github/rockchip/commit/1912ef4c0e358677904b0a0bb">https://github.com/Caesar-github/rockchip/commit/1912ef4c0e358677904b0a0bb</a>
+b83f9745066f0ec
+
+wpa_supplicant -Dnl80211 -c /etc/wifi/wpa_supplicant.conf -i wlan0 -B
+wpa_cli add_network
+wpa_cli set_network 1 ssid \"wxt\"
+wpa_cli set_network 1 psk \"123456789\"
+wpa_cli select_network 1
+wpa_cli save_config
+
+ifconfig wlan0 192.168.1.105
+route add default gw 192.168.1.1
+
+root@linaro-alip:/# ping 192.168.1.1
+PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.
+64 bytes from 192.168.1.1: icmp_seq=1 ttl=64 time=6.83 ms
+64 bytes from 192.168.1.1: icmp_seq=2 ttl=64 time=184 ms
+64 bytes from 192.168.1.1: icmp_seq=3 ttl=64 time=9.21 ms
+64 bytes from 192.168.1.1: icmp_seq=4 ttl=64 time=6.84 ms
+64 bytes from 192.168.1.1: icmp_seq=5 ttl=64 time=11.2 ms
+64 bytes from 192.168.1.1: icmp_seq=6 ttl=64 time=9.24 ms
+64 bytes from 192.168.1.1: icmp_seq=7 ttl=64 time=12.9 ms
+64 bytes from 192.168.1.1: icmp_seq=8 ttl=64 time=7.02 ms
+64 bytes from 192.168.1.1: icmp_seq=9 ttl=64 time=24.3 ms
+64 bytes from 192.168.1.1: icmp_seq=10 ttl=64 time=13.6 ms
+64 bytes from 192.168.1.1: icmp_seq=11 ttl=64 time=3.87 m
+...
+
+The wifi throughput:
+
+iperf -s -i 1
+...
+[  4] 116.0-117.0 sec  2.88 MBytes  24.1 Mbits/sec
+[  4] 117.0-118.0 sec  2.99 MBytes  25.0 Mbits/sec
+[  4] 118.0-119.0 sec  3.01 MBytes  25.2 Mbits/sec
+[  4] 119.0-120.0 sec  2.89 MBytes  24.2 Mbits/sec
+[  4]  0.0-120.4 sec   332 MBytes  23.1 Mbits/sec
+----
+
+PATCH[10/12]: ====&gt; sdmmc patch for kylin board
+ARM: dts: rockchip: add the sdmmc for kylin board
+
+You should mark it "oaky" if you want to use the sdmmc.
+This patch default is disabing the sdmmc since the sdmmc and
+uart2(debug port) is reusing pin.
+----
+
+PATCH[11/12]: ====&gt; hdmi/lcdc diaply patch for rk3036 dts
+ARM: dts: rockchip: add the lcdc and hdmi node for rk3036
+
+We can add this patch to support it since the Mark Yao has land
+your vop support.
+<a class="moz-txt-link-freetext" href="https://github.com/markyzq/kernel-drm-rockchip/commits/drm-rockchip-next-2">https://github.com/markyzq/kernel-drm-rockchip/commits/drm-rockchip-next-2</a>
+015-12-28 ----
+
+PATCH[12/12]:====&gt; DMA Patchs
+ARM: dts: Add pl330-broken-no-flushp quirk for rk3036 SoCs
+
+In order to be better read/write for emmc.
+This patch is based on the following:(Fix broken DMAFLUSHP on Rockchips
+platform)
+
+3055695 FROMLIST: DMA: dmaengine: expose max burst capability to clientmZ
+(am from <a class="moz-txt-link-freetext" href="https://patchwork.kernel.org/patch/7399361/">https://patchwork.kernel.org/patch/7399361/</a>)
+ed56bee FROMLIST: DMA: pl330: add quirk for broken no flushp
+(am from <a class="moz-txt-link-freetext" href="https://patchwork.kernel.org/patch/7399371/">https://patchwork.kernel.org/patch/7399371/</a>)
+0c43bc3 FROMLIST: Documentation: arm-pl330: add description of arm,
+pl330-broken-no-flushp (am from
+<a class="moz-txt-link-freetext" href="https://patchwork.kernel.org/patch/7399371/">https://patchwork.kernel.org/patch/7399371/</a>)
+623a699 FROMLIST: DMA: pl330: support burst mode for dev-to-mem and
+mem-to-dev transmit (am from <a class="moz-txt-link-freetext" href="https://patchwork.kernel.org/patch/7399381/">https://patchwork.kernel.org/patch/7399381/</a>)
+----
+
+
+Changes in v2:
+- modify the commit.
+- fix the mclk-fs as the 256.
+- This fix inmmc-power-sequences, as Heiko comment on
+  <a class="moz-txt-link-freetext" href="https://patchwork.kernel.org/patch/7903161/">https://patchwork.kernel.org/patch/7903161/</a>
+- As Heiko comment, modify it to fit the simple-mmc-sequence.
+- Add the uart0 commit content.
+
+Caesar Wang (12):
+  ARM: dts: rockchip: set the pinctrl default setting for rk3036 i2s
+  ARM: dts: rockchip: add the sound codec for kylin board
+  ARM: dts: rockchip: override the clocks in i2s for kylin board
+  clk: rockchip: rk3036: enable the CLK_IGNORE_UNUSED flag for
+    sclk_i2s_out
+  mmc: pwrseq: Document optional exteral vcc for the simple power
+    sequence
+  mmc: pwrseq: add support for power-on sequencing through DT
+  ARM: dts: rockchip: enable the high speed on sdio for kylin board
+  ARM: dts: rockchip: add the wifi/bt regulator for kylin board
+  ARM: dts: rockchip: enable the uart0 for kylin board
+  ARM: dts: rockchip: add the sdmmc for kylin board
+  ARM: dts: rockchip: add the lcdc and hdmi node for rk3036
+  ARM: dts: Add pl330-broken-no-flushp quirk for rk3036 SoCs
+
+ .../devicetree/bindings/mmc/mmc-pwrseq-simple.txt  |   9 ++
+ arch/arm/boot/dts/rk3036-kylin.dts                 | 119
++++++++++++++++++++++ arch/arm/boot/dts/rk3036.dtsi                     
+|  74 +++++++++++-- drivers/clk/rockchip/clk-rk3036.c                  | 
+ 2 +-
+ drivers/mmc/core/pwrseq_simple.c                   |  16 +++
+ 5 files changed, 213 insertions(+), 7 deletions(-)
 </pre>
       </blockquote>
       <pre wrap="">
 
-
-
+_______________________________________________
+Linux-rockchip mailing list
+<a class="moz-txt-link-abbreviated" href="mailto:Linux-rockchip@lists.infradead.org">Linux-rockchip@lists.infradead.org</a>
+<a class="moz-txt-link-freetext" href="http://lists.infradead.org/mailman/listinfo/linux-rockchip">http://lists.infradead.org/mailman/listinfo/linux-rockchip</a>
 </pre>
     </blockquote>
     <br>
+    <br>
+    <pre class="moz-signature" cols="72">-- 
+caesar wang | software engineer | <a class="moz-txt-link-abbreviated" href="mailto:wxt@rock-chip.com">wxt@rock-chip.com</a></pre>
   </body>
 </html>
 
---------------010402020300040702000204--
+--------------010808020105050202000804--
