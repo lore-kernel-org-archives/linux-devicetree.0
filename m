@@ -1,143 +1,592 @@
-From: Xing Zheng <zhengxing@rock-chips.com>
-Subject: [PATCH] ARM: dts: rockchip: Add support emac for RK3036
-Date: Fri,  8 Jan 2016 09:37:06 +0800
-Message-ID: <1452217026-21155-1-git-send-email-zhengxing@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: keescook@google.com, leozwang@google.com, heiko@sntech.de, davem@davemloft.net, netdev@vger.kernel.org, Xing Zheng <zhengxing@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2] mtd: spi-nor: add hisilicon spi-nor flash controller driver
+Date: Fri, 8 Jan 2016 09:26:45 +0800
+Message-ID: <1452216405-10826-1-git-send-email-xuejiancheng@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, pengbinquan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, han.xu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangzhenxing-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch describe the emac, and we need to let mac clock under
-the APLL which is able to provide the accurate 50MHz what mac_ref
-need.
+add hisilicon spi-nor flash controller driver
 
-Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
+Signed-off-by: Binquan Peng <pengbinquan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 ---
+ .../devicetree/bindings/spi/spi-hisi-sfc.txt       |  24 +
+ drivers/mtd/spi-nor/Kconfig                        |   6 +
+ drivers/mtd/spi-nor/Makefile                       |   1 +
+ drivers/mtd/spi-nor/hisi-sfc.c                     | 498 +++++++++++++++++++++
+ 4 files changed, 529 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
+ create mode 100644 drivers/mtd/spi-nor/hisi-sfc.c
 
- arch/arm/boot/dts/rk3036-evb.dts   |   23 +++++++++++++++++++++++
- arch/arm/boot/dts/rk3036-kylin.dts |   21 +++++++++++++++++++++
- arch/arm/boot/dts/rk3036.dtsi      |   32 ++++++++++++++++++++++++++++++++
- 3 files changed, 76 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3036-evb.dts b/arch/arm/boot/dts/rk3036-evb.dts
-index 0a2367e..2505b9a 100644
---- a/arch/arm/boot/dts/rk3036-evb.dts
-+++ b/arch/arm/boot/dts/rk3036-evb.dts
-@@ -74,3 +74,26 @@
- &uart2 {
- 	status = "okay";
- };
+diff --git a/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt b/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
+new file mode 100644
+index 0000000..a0d1e04
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
+@@ -0,0 +1,24 @@
++HiSilicon SPI-NOR Flash Controller
 +
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
-+	phy = <&phy0>;
-+	status = "okay";
++Required properties:
++- compatible : Should be "hisilicon,hisi-sfc".
++- address-cells : number of cells required to define a chip select
++        address on the SPI bus. Should be set to 1. See spi-bus.txt.
++- size-cells : Should be 0.
++- reg : Offset and length of the register set for the controller device.
++- reg-names : Must include the following two entries: "control", "memory".
++- clocks : handle to spi-nor flash controller clock.
 +
-+	phy0: ethernet-phy@0 {
++Example:
++spi-nor-controller@10000000 {
++	compatible = "hisilicon,hisi-sfc";
++	#address-cells = <1>;
++	#size-cells = <0>;
++	reg = <0x10000000 0x1000>, <0x14000000 0x1000000>;
++	reg-names = "control", "memory";
++	clocks = <&clock HI3519_FMC_CLK>;
++	spi-nor@0 {
++		compatible = "jedec,spi-nor";
 +		reg = <0>;
 +	};
 +};
+diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
+index 2fe2a7e..ffedf2b 100644
+--- a/drivers/mtd/spi-nor/Kconfig
++++ b/drivers/mtd/spi-nor/Kconfig
+@@ -30,6 +30,12 @@ config SPI_FSL_QUADSPI
+ 	  This controller does not support generic SPI. It only supports
+ 	  SPI NOR.
+ 
++config SPI_HISI_SFC
++	tristate "Hisilicon SPI-NOR Flash Controller(SFC)"
++	depends on ARCH_HISI
++	help
++	  This enables support for hisilicon SPI-NOR flash controller.
 +
-+&pinctrl {
-+	pcfg_output_high: pcfg-output-high {
-+		output-high;
-+	};
+ config SPI_NXP_SPIFI
+ 	tristate "NXP SPI Flash Interface (SPIFI)"
+ 	depends on OF && (ARCH_LPC18XX || COMPILE_TEST)
+diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
+index e53333e..8cea3c5 100644
+--- a/drivers/mtd/spi-nor/Makefile
++++ b/drivers/mtd/spi-nor/Makefile
+@@ -1,3 +1,4 @@
+ obj-$(CONFIG_MTD_SPI_NOR)	+= spi-nor.o
+ obj-$(CONFIG_SPI_FSL_QUADSPI)	+= fsl-quadspi.o
++obj-$(CONFIG_SPI_HISI_SFC)	+= hisi-sfc.o
+ obj-$(CONFIG_SPI_NXP_SPIFI)	+= nxp-spifi.o
+diff --git a/drivers/mtd/spi-nor/hisi-sfc.c b/drivers/mtd/spi-nor/hisi-sfc.c
+new file mode 100644
+index 0000000..56701ab
+--- /dev/null
++++ b/drivers/mtd/spi-nor/hisi-sfc.c
+@@ -0,0 +1,498 @@
++/* HiSilicon SPI Nor Flash Controller Driver
++ *
++ * Copyright (c) 2015-2016 HiSilicon Technologies Co., Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program. If not, see <http://www.gnu.org/licenses/>.
++ */
++#include <linux/clk.h>
++#include <linux/dma-mapping.h>
++#include <linux/module.h>
++#include <linux/mtd/mtd.h>
++#include <linux/mtd/spi-nor.h>
++#include <linux/of_platform.h>
++#include <linux/slab.h>
 +
-+	emac {
-+		rmii_rst: rmii-rst {
-+			rockchip,pins = <2 22 RK_FUNC_GPIO &pcfg_output_high>;
-+		};
-+	};
++/* Hardware register offsets and field definitions */
++#define FMC_CFG				0x00
++#define SPI_NOR_ADDR_MODE		BIT(10)
++#define FMC_GLOBAL_CFG			0x04
++#define FMC_GLOBAL_CFG_WP_ENABLE	BIT(6)
++#define FMC_SPI_TIMING_CFG		0x08
++#define TIMING_CFG_TCSH(nr)		(((nr) & 0xf) << 8)
++#define TIMING_CFG_TCSS(nr)		(((nr) & 0xf) << 4)
++#define TIMING_CFG_TSHSL(nr)		((nr) & 0xf)
++#define CS_HOLD_TIME			0x6
++#define CS_SETUP_TIME			0x6
++#define CS_DESELECT_TIME		0xf
++#define FMC_INT				0x18
++#define FMC_INT_OP_DONE			BIT(0)
++#define FMC_INT_CLR			0x20
++#define FMC_CMD				0x24
++#define FMC_CMD_CMD1(_cmd)		((_cmd) & 0xff)
++#define FMC_ADDRL			0x2c
++#define FMC_OP_CFG			0x30
++#define OP_CFG_FM_CS(_cs)		((_cs) << 11)
++#define OP_CFG_MEM_IF_TYPE(_type)	(((_type) & 0x7) << 7)
++#define OP_CFG_ADDR_NUM(_addr)		(((_addr) & 0x7) << 4)
++#define OP_CFG_DUMMY_NUM(_dummy)	((_dummy) & 0xf)
++#define FMC_DATA_NUM			0x38
++#define FMC_DATA_NUM_CNT(_n)		((_n) & 0x3fff)
++#define FMC_OP				0x3c
++#define FMC_OP_DUMMY_EN			BIT(8)
++#define FMC_OP_CMD1_EN			BIT(7)
++#define FMC_OP_ADDR_EN			BIT(6)
++#define FMC_OP_WRITE_DATA_EN		BIT(5)
++#define FMC_OP_READ_DATA_EN		BIT(2)
++#define FMC_OP_READ_STATUS_EN		BIT(1)
++#define FMC_OP_REG_OP_START		BIT(0)
++#define FMC_DMA_LEN			0x40
++#define FMC_DMA_LEN_SET(_len)		((_len) & 0x0fffffff)
++#define FMC_DMA_SADDR_D0		0x4c
++#define HIFMC_DMA_MAX_LEN		(4096)
++#define HIFMC_DMA_MASK			(HIFMC_DMA_MAX_LEN - 1)
++#define FMC_OP_DMA			0x68
++#define OP_CTRL_RD_OPCODE(_code)	(((_code) & 0xff) << 16)
++#define OP_CTRL_WR_OPCODE(_code)	(((_code) & 0xff) << 8)
++#define OP_CTRL_RW_OP(_op)		((_op) << 1)
++#define OP_CTRL_DMA_OP_READY		BIT(0)
++#define FMC_OP_READ			0x0
++#define FMC_OP_WRITE			0x1
++#define FMC_WAIT_TIMEOUT		10000000
++
++enum hifmc_iftype {
++	IF_TYPE_STD,
++	IF_TYPE_DUAL,
++	IF_TYPE_DIO,
++	IF_TYPE_QUAD,
++	IF_TYPE_QIO,
 +};
-diff --git a/arch/arm/boot/dts/rk3036-kylin.dts b/arch/arm/boot/dts/rk3036-kylin.dts
-index 992f9ca..b6ba852 100644
---- a/arch/arm/boot/dts/rk3036-kylin.dts
-+++ b/arch/arm/boot/dts/rk3036-kylin.dts
-@@ -285,7 +285,22 @@
- 	status = "okay";
- };
- 
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
-+	phy = <&phy0>;
-+	status = "okay";
 +
-+	phy0: ethernet-phy@0 {
-+		reg = <0>;
-+	};
++struct hifmc_priv {
++	int chipselect;
++	u32 clkrate;
++	struct hifmc_host *host;
 +};
 +
- &pinctrl {
-+	pcfg_output_high: pcfg-output-high {
-+		output-high;
-+	};
++#define HIFMC_MAX_CHIP_NUM		2
++struct hifmc_host {
++	struct device *dev;
++	struct mutex lock;
 +
- 	pmic {
- 		pmic_int: pmic-int {
- 			rockchip,pins = <2 2 RK_FUNC_GPIO &pcfg_pull_default>;
-@@ -297,4 +312,10 @@
- 			rockchip,pins = <2 7 RK_FUNC_1 &pcfg_pull_none>;
- 		};
- 	};
++	void __iomem *regbase;
++	void __iomem *iobase;
++	struct clk *clk;
++	void *buffer;
++	dma_addr_t dma_buffer;
 +
-+	emac {
-+		rmii_rst: rmii-rst {
-+			rockchip,pins = <2 22 RK_FUNC_GPIO &pcfg_output_high>;
-+		};
-+	};
- };
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index b9567c1..1cb5877 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -186,6 +186,20 @@
- 		status = "disabled";
- 	};
- 
-+	emac: ethernet@10200000 {
-+		compatible = "rockchip,rk3036-emac", "snps,arc-emac";
-+		reg = <0x10200000 0x4000>;
-+		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		rockchip,grf = <&grf>;
-+		clocks = <&cru HCLK_MAC>, <&cru SCLK_MACREF>, <&cru SCLK_MAC>;
-+		clock-names = "hclk", "macref", "macclk";
-+		max-speed = <100>;
-+		phy-mode = "rmii";
-+		status = "disabled";
-+	};
++	struct spi_nor	nor[HIFMC_MAX_CHIP_NUM];
++	struct hifmc_priv priv[HIFMC_MAX_CHIP_NUM];
++	int num_chip;
++};
 +
- 	sdmmc: dwmmc@10214000 {
- 		compatible = "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x10214000 0x4000>;
-@@ -556,6 +570,24 @@
- 			};
- 		};
- 
-+		emac {
-+			emac_xfer: emac-xfer {
-+				rockchip,pins = <2 10 RK_FUNC_1 &pcfg_pull_default>, /* crs_dvalid */
-+						<2 13 RK_FUNC_1 &pcfg_pull_default>, /* tx_en */
-+						<2 14 RK_FUNC_1 &pcfg_pull_default>, /* mac_clk */
-+						<2 15 RK_FUNC_1 &pcfg_pull_default>, /* rx_err */
-+						<2 16 RK_FUNC_1 &pcfg_pull_default>, /* rxd1 */
-+						<2 17 RK_FUNC_1 &pcfg_pull_default>, /* rxd0 */
-+						<2 18 RK_FUNC_1 &pcfg_pull_default>, /* txd1 */
-+						<2 19 RK_FUNC_1 &pcfg_pull_default>; /* txd0 */
-+			};
++static inline int wait_op_finish(struct hifmc_host *host)
++{
++	unsigned int reg, timeout = FMC_WAIT_TIMEOUT;
 +
-+			emac_mdio: emac-mdio {
-+				rockchip,pins = <2 12 RK_FUNC_1 &pcfg_pull_default>, /* mac_md */
-+						<2 25 RK_FUNC_1 &pcfg_pull_default>; /* mac_mdclk */
-+			};
-+		};
++	do {
++		reg = readl(host->regbase + FMC_INT);
++	} while (!(reg & FMC_INT_OP_DONE) && --timeout);
 +
- 		i2c0 {
- 			i2c0_xfer: i2c0-xfer {
- 				rockchip,pins = <0 0 RK_FUNC_1 &pcfg_pull_none>,
++	if (!timeout) {
++		dev_dbg(host->dev, "wait for operation finish timeout\n");
++		return -EAGAIN;
++	}
++
++	return 0;
++}
++
++static int get_if_type(enum read_mode flash_read)
++{
++	enum hifmc_iftype if_type;
++
++	switch (flash_read) {
++	case SPI_NOR_DUAL:
++		if_type = IF_TYPE_DUAL;
++		break;
++	case SPI_NOR_QUAD:
++		if_type = IF_TYPE_QUAD;
++		break;
++	case SPI_NOR_NORMAL:
++	case SPI_NOR_FAST:
++	default:
++		if_type = IF_TYPE_STD;
++		break;
++	}
++
++	return if_type;
++}
++
++void hisi_spi_nor_init(struct hifmc_host *host)
++{
++	unsigned int reg;
++
++	reg = TIMING_CFG_TCSH(CS_HOLD_TIME)
++		| TIMING_CFG_TCSS(CS_SETUP_TIME)
++		| TIMING_CFG_TSHSL(CS_DESELECT_TIME);
++	writel(reg, host->regbase + FMC_SPI_TIMING_CFG);
++}
++
++static int hisi_spi_nor_prep(struct spi_nor *nor, enum spi_nor_ops ops)
++{
++	struct hifmc_priv *priv = nor->priv;
++	struct hifmc_host *host = priv->host;
++	int ret;
++
++	mutex_lock(&host->lock);
++
++	ret = clk_set_rate(host->clk, priv->clkrate);
++	if (ret)
++		goto out;
++
++	ret = clk_prepare_enable(host->clk);
++	if (ret)
++		goto out;
++
++	return 0;
++
++out:
++	mutex_unlock(&host->lock);
++	return ret;
++}
++
++static void hisi_spi_nor_unprep(struct spi_nor *nor, enum spi_nor_ops ops)
++{
++	struct hifmc_priv *priv = nor->priv;
++	struct hifmc_host *host = priv->host;
++
++	clk_disable_unprepare(host->clk);
++	mutex_unlock(&host->lock);
++}
++
++static void hisi_spi_nor_cmd_prepare(struct hifmc_host *host, u8 cmd,
++		u32 *opcfg)
++{
++	u32 reg;
++
++	*opcfg |= FMC_OP_CMD1_EN;
++	switch (cmd) {
++	case SPINOR_OP_RDID:
++	case SPINOR_OP_RDSR:
++	case SPINOR_OP_RDCR:
++		*opcfg |= FMC_OP_READ_DATA_EN;
++		break;
++	case SPINOR_OP_WREN:
++		reg = readl(host->regbase + FMC_GLOBAL_CFG);
++		if (reg & FMC_GLOBAL_CFG_WP_ENABLE) {
++			reg &= ~FMC_GLOBAL_CFG_WP_ENABLE;
++			writel(reg, host->regbase + FMC_GLOBAL_CFG);
++		}
++		break;
++	case SPINOR_OP_WRSR:
++		*opcfg |= FMC_OP_WRITE_DATA_EN;
++		break;
++	case SPINOR_OP_BE_4K:
++	case SPINOR_OP_BE_4K_PMC:
++	case SPINOR_OP_SE_4B:
++	case SPINOR_OP_SE:
++		*opcfg |= FMC_OP_ADDR_EN;
++		break;
++	case SPINOR_OP_EN4B:
++		reg = readl(host->regbase + FMC_CFG);
++		reg |= SPI_NOR_ADDR_MODE;
++		writel(reg, host->regbase + FMC_CFG);
++		break;
++	case SPINOR_OP_EX4B:
++		reg = readl(host->regbase + FMC_CFG);
++		reg &= ~SPI_NOR_ADDR_MODE;
++		writel(reg, host->regbase + FMC_CFG);
++		break;
++	case SPINOR_OP_CHIP_ERASE:
++	default:
++		break;
++	}
++}
++
++static int hisi_spi_nor_send_cmd(struct spi_nor *nor, u8 cmd, int len)
++{
++	struct hifmc_priv *priv = nor->priv;
++	struct hifmc_host *host = priv->host;
++	u32 reg, op_cfg = 0;
++
++	hisi_spi_nor_cmd_prepare(host, cmd, &op_cfg);
++
++	reg = FMC_CMD_CMD1(cmd);
++	writel(reg, host->regbase + FMC_CMD);
++
++	reg = OP_CFG_FM_CS(priv->chipselect);
++	if (op_cfg & FMC_OP_ADDR_EN)
++		reg |= OP_CFG_ADDR_NUM(nor->addr_width);
++	writel(reg, host->regbase + FMC_OP_CFG);
++
++	reg = FMC_DATA_NUM_CNT(len);
++	writel(reg, host->regbase + FMC_DATA_NUM);
++
++	writel(0xff, host->regbase + FMC_INT_CLR);
++	reg = op_cfg | FMC_OP_REG_OP_START;
++	writel(reg, host->regbase + FMC_OP);
++
++	return wait_op_finish(host);
++}
++
++static int hisi_spi_nor_read_reg(struct spi_nor *nor, u8 opcode, u8 *buf,
++		int len)
++{
++	struct hifmc_priv *priv = nor->priv;
++	struct hifmc_host *host = priv->host;
++	int ret;
++
++	ret = hisi_spi_nor_send_cmd(nor, opcode, len);
++	if (ret)
++		return ret;
++
++	memcpy(buf, host->iobase, len);
++
++	return ret;
++}
++
++static int hisi_spi_nor_write_reg(struct spi_nor *nor, u8 opcode,
++				u8 *buf, int len)
++{
++	struct hifmc_priv *priv = nor->priv;
++	struct hifmc_host *host = priv->host;
++
++	if (len)
++		memcpy(host->iobase, buf, len);
++
++	return hisi_spi_nor_send_cmd(nor, opcode, len);
++}
++
++static void hisi_spi_nor_dma_transfer(struct spi_nor *nor, u32 start_off,
++		u32 dma_buf, u32 len, u8 op_type)
++{
++	struct hifmc_priv *priv = nor->priv;
++	struct hifmc_host *host = priv->host;
++	u8 if_type = 0, dummy = 0;
++	u8 w_cmd = 0, r_cmd = 0;
++	u32 reg;
++
++	writel(start_off, host->regbase + FMC_ADDRL);
++
++	if (op_type == FMC_OP_READ) {
++		if_type = get_if_type(nor->flash_read);
++		dummy = nor->read_dummy >> 3;
++		r_cmd = nor->read_opcode;
++	} else
++		w_cmd = nor->program_opcode;
++
++	reg = OP_CFG_FM_CS(priv->chipselect)
++		| OP_CFG_MEM_IF_TYPE(if_type)
++		| OP_CFG_ADDR_NUM(nor->addr_width)
++		| OP_CFG_DUMMY_NUM(dummy);
++	writel(reg, host->regbase + FMC_OP_CFG);
++
++	reg = FMC_DMA_LEN_SET(len);
++	writel(reg, host->regbase + FMC_DMA_LEN);
++	writel(dma_buf, host->regbase + FMC_DMA_SADDR_D0);
++
++	reg = OP_CTRL_RD_OPCODE(r_cmd)
++		| OP_CTRL_WR_OPCODE(w_cmd)
++		| OP_CTRL_RW_OP(op_type)
++		| OP_CTRL_DMA_OP_READY;
++	writel(0xff, host->regbase + FMC_INT_CLR);
++	writel(reg, host->regbase + FMC_OP_DMA);
++	wait_op_finish(host);
++}
++
++static int hisi_spi_nor_read(struct spi_nor *nor, loff_t from, size_t len,
++		size_t *retlen, u_char *read_buf)
++{
++	struct hifmc_priv *priv = nor->priv;
++	struct hifmc_host *host = priv->host;
++	unsigned char *ptr = read_buf;
++	int num;
++
++	while (len > 0) {
++		num = (len >= HIFMC_DMA_MAX_LEN)
++			? HIFMC_DMA_MAX_LEN : len;
++		hisi_spi_nor_dma_transfer(nor, from, host->dma_buffer,
++				num, FMC_OP_READ);
++		memcpy(ptr, host->buffer, num);
++		ptr += num;
++		from += num;
++		len -= num;
++	}
++	*retlen += (size_t)(ptr - read_buf);
++
++	return 0;
++}
++
++static void hisi_spi_nor_write(struct spi_nor *nor, loff_t to,
++			size_t len, size_t *retlen, const u_char *write_buf)
++{
++	struct hifmc_priv *priv = nor->priv;
++	struct hifmc_host *host = priv->host;
++	const unsigned char *ptr = write_buf;
++	int num;
++
++	while (len > 0) {
++		if (to & HIFMC_DMA_MASK)
++			num = (HIFMC_DMA_MAX_LEN - (to & HIFMC_DMA_MASK))
++				>= len	? len
++				: (HIFMC_DMA_MAX_LEN - (to & HIFMC_DMA_MASK));
++		else
++			num = (len >= HIFMC_DMA_MAX_LEN)
++				? HIFMC_DMA_MAX_LEN : len;
++		memcpy(host->buffer, ptr, num);
++		hisi_spi_nor_dma_transfer(nor, to, host->dma_buffer, num,
++				FMC_OP_WRITE);
++		to += num;
++		ptr += num;
++		len -= num;
++	}
++	*retlen += (size_t)(ptr - write_buf);
++}
++
++static int hisi_spi_nor_erase(struct spi_nor *nor, loff_t offs)
++{
++	struct hifmc_priv *priv = nor->priv;
++	struct hifmc_host *host = priv->host;
++
++	writel(offs, host->regbase + FMC_ADDRL);
++
++	return hisi_spi_nor_send_cmd(nor, nor->erase_opcode, 0);
++}
++
++static int hisi_spi_nor_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct resource *res;
++	struct hifmc_host *host;
++	struct device_node *np;
++	int ret, i = 0;
++
++	host = devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
++	if (!host)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, host);
++	host->dev = dev;
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "control");
++	host->regbase = devm_ioremap_resource(dev, res);
++	if (IS_ERR(host->regbase))
++		return PTR_ERR(host->regbase);
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "memory");
++	host->iobase = devm_ioremap_resource(dev, res);
++	if (IS_ERR(host->iobase))
++		return PTR_ERR(host->iobase);
++
++	host->clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(host->clk))
++		return PTR_ERR(host->clk);
++
++	host->buffer = dmam_alloc_coherent(dev, HIFMC_DMA_MAX_LEN,
++			&host->dma_buffer, GFP_KERNEL);
++	if (!host->buffer)
++		return -ENOMEM;
++
++	mutex_init(&host->lock);
++	clk_prepare_enable(host->clk);
++	hisi_spi_nor_init(host);
++
++	for_each_available_child_of_node(dev->of_node, np) {
++		struct spi_nor *nor = &host->nor[i];
++		struct hifmc_priv *priv = &host->priv[i];
++		struct mtd_info *mtd = &nor->mtd;
++		struct mtd_partition *parts = NULL;
++		int nr_parts = 0;
++
++		mtd->name = np->name;
++		nor->dev = dev;
++		nor->flash_node = np;
++		ret = of_property_read_u32(np, "reg", &priv->chipselect);
++		if (ret)
++			goto fail;
++		ret = of_property_read_u32(np, "spi-max-frequency",
++				&priv->clkrate);
++		if (ret)
++			goto fail;
++		priv->host = host;
++		nor->priv = priv;
++
++		nor->prepare = hisi_spi_nor_prep;
++		nor->unprepare = hisi_spi_nor_unprep;
++		nor->read_reg = hisi_spi_nor_read_reg;
++		nor->write_reg = hisi_spi_nor_write_reg;
++		nor->read = hisi_spi_nor_read;
++		nor->write = hisi_spi_nor_write;
++		nor->erase = hisi_spi_nor_erase;
++		ret = spi_nor_scan(nor, NULL, SPI_NOR_QUAD);
++		if (ret)
++			goto fail;
++
++		ret = mtd_device_register(mtd, parts, nr_parts);
++		if (ret)
++			goto fail;
++
++		i++;
++		host->num_chip++;
++		if (i == HIFMC_MAX_CHIP_NUM)
++			break;
++	}
++
++	return 0;
++
++fail:
++	for (i = 0; i < host->num_chip; i++)
++		mtd_device_unregister(&host->nor[i].mtd);
++
++	clk_disable_unprepare(host->clk);
++	mutex_destroy(&host->lock);
++
++	return ret;
++}
++
++static int hisi_spi_nor_remove(struct platform_device *pdev)
++{
++	struct hifmc_host *host = platform_get_drvdata(pdev);
++	int i;
++
++	for (i = 0; i < host->num_chip; i++)
++		mtd_device_unregister(&host->nor[i].mtd);
++
++	clk_disable_unprepare(host->clk);
++	mutex_destroy(&host->lock);
++
++	return 0;
++}
++
++static const struct of_device_id hisi_spi_nor_dt_ids[] = {
++	{ .compatible = "hisilicon,hisi-sfc"},
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, hisi_spi_nor_dt_ids);
++
++static struct platform_driver hisi_spi_nor_driver = {
++	.driver = {
++		.name	= "hisi-sfc",
++		.of_match_table = hisi_spi_nor_dt_ids,
++	},
++	.probe	= hisi_spi_nor_probe,
++	.remove	= hisi_spi_nor_remove,
++};
++module_platform_driver(hisi_spi_nor_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("HiSilicon SPI Nor Flash Controller Driver");
 -- 
-1.7.9.5
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
