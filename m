@@ -1,44 +1,95 @@
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Subject: Re: [PATCH v2 1/2] ARM: dts: imx6: Add support for Toradex Apalis
- iMX6Q/D SoM
-Date: Fri, 8 Jan 2016 10:59:32 +0000
-Message-ID: <1452250771.3357.26.camel@toradex.com>
-References: <1452011942-11940-1-git-send-email-marcel.ziswiler@toradex.com>
- <1452011942-11940-2-git-send-email-marcel.ziswiler@toradex.com>
- <20160108085734.GC27359@ibawizard.net>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 4/4] soc: mediatek: Add MT2701/MT7623 scpsys driver
+Date: Fri, 8 Jan 2016 12:26:29 +0100
+Message-ID: <568F9CE5.7040601@gmail.com>
+References: <1451457706-14798-1-git-send-email-jamesjj.liao@mediatek.com>
+ <1451457706-14798-5-git-send-email-jamesjj.liao@mediatek.com>
+ <CAGS+omCwxB+4VFOA1hA9Rg-ekWCVM8Y_c7woTEXnvX6FG1y9mQ@mail.gmail.com>
+ <1451470692.22426.11.camel@mtksdaap41> <5684192B.4020806@gmail.com>
+ <1451971439.19026.3.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160108085734.GC27359@ibawizard.net>
-Content-Language: en-US
-Content-ID: <938F68AE1B49B344BA28793368A843DA@eurprd05.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "ynezz@true.cz" <ynezz@true.cz>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "stillcompiling@gmail.com" <stillcompiling@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "galak@codeaurora.org" <galak@codeaurora.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1451971439.19026.3.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: James Liao <jamesjj.liao@mediatek.com>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, Kevin Hilman <khilman@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Shunli Wang <shunli.wang@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE2LTAxLTA4IGF0IDA5OjU3ICswMTAwLCBQZXRyIMWgdGV0aWFyIHdyb3RlOg0K
-PiA+ICsJaTJjZGRjOiBpMmNAMCB7DQo+ID4gKwkJZ3Bpb3MgPSA8JmdwaW8zIDE2IEdQSU9fQUNU
-SVZFX0hJR0ggLyogc2RhICovDQo+ID4gKwkJCcKgJmdwaW8yIDMwIEdQSU9fQUNUSVZFX0hJR0gg
-Lyogc2NsICovDQo+ID4gKwkJCT47DQo+IA0KPiBBY2NvcmRpbmcgdG8gb25lIG9mIHRoZSBjb21t
-ZW50cywgaXQgc2hvdWxkIGJlIGNoYW5nZWQgdG8gdGhlDQo+IGZvbGxvd2luZzoNCj4gDQo+IAkJ
-c2RhLWdwaW9zID0gPCZncGlvMyAxNiBHUElPX0FDVElWRV9ISUdIPjsNCj4gCQlzY2wtZ3Bpb3Mg
-PSA8JmdwaW8yIDMwIEdQSU9fQUNUSVZFX0hJR0g+Ow0KDQpObywgSSBiZWxpZXZlIHlvdSBtaXhl
-ZCB0aGUgaTJjLWlteCBiaW5kaW5nIHdpdGggdGhlIGkyYy1ncGlvIG9uZSBbMl0uDQoNCj4gLS0g
-eW5lenoNCg0KDQpbMV0gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9jZ2l0L2xpbnV4L2tlcm5lbC9n
-aXQvdG9ydmFsZHMvbGludXguZ2l0L3RyZWUvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2kyYy9pMmMtaW14LnR4dA0KWzJdIGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvY2dpdC9saW51
-eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC90cmVlL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9pMmMvaTJjLWdwaW8udHh0DQoNCkNoZWVycw0KDQpNYXJjZWwNCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
-ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+
+
+On 05/01/16 06:23, James Liao wrote:
+> Hi Matthias,
+> On Wed, 2015-12-30 at 18:49 +0100, Matthias Brugger wrote:
+>>> On Wed, 2015-12-30 at 17:01 +0800, Daniel Kurtz wrote:
+>>>> On Wed, Dec 30, 2015 at 2:41 PM, James Liao <jamesjj.liao@mediatek.com> wrote:
+>>>>>
+>>>>> From: Shunli Wang <shunli.wang@mediatek.com>
+>>>>>
+>>>>> Add scpsys driver for MT2701 and MT7623.
+>>>>>
+>>>>> Signed-off-by: Shunli Wang <shunli.wang@mediatek.com>
+>>>>> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+>>>>> ---
+>>>>>    drivers/soc/mediatek/Kconfig             |  11 +++
+>>>>>    drivers/soc/mediatek/Makefile            |   1 +
+>>>>>    drivers/soc/mediatek/mtk-scpsys-mt2701.c | 161 +++++++++++++++++++++++++++++++
+>>>>>    3 files changed, 173 insertions(+)
+>>>>>    create mode 100644 drivers/soc/mediatek/mtk-scpsys-mt2701.c
+>>>>>
+>>>>> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
+>>>>> index eca6fb7..92cf838 100644
+>>>>> --- a/drivers/soc/mediatek/Kconfig
+>>>>> +++ b/drivers/soc/mediatek/Kconfig
+>>>>> @@ -39,3 +39,14 @@ config MTK_SCPSYS_MT8173
+>>>>>             driver.
+>>>>>             The System Control Processor System (SCPSYS) has several power
+>>>>>             management related tasks in the system.
+>>>>> +
+>>>>> +config MTK_SCPSYS_MT2701
+>>>>> +       bool "SCPSYS Support MediaTek MT2701 and MT7623"
+>>>>> +       depends on ARCH_MEDIATEK || COMPILE_TEST
+>>>>> +       select MTK_SCPSYS
+>>>>> +       default ARCH_MEDIATEK
+>>>>> +       help
+>>>>> +         Say yes here to add support for the MT2701/MT7623 SCPSYS power
+>>>>> +         domain driver.
+>>>>> +         The System Control Processor System (SCPSYS) has several power
+>>>>> +         management related tasks in the system.
+>>>>
+>>>> I don't think we really want different drivers and Kconfig options.
+>>>>
+>>>> Can we just use different compatibles to select the appropriate scp_domain_data?
+>>>
+>>> Yes, we can. All scpsys drivers are built-in by default, and they will
+>>> be activate by specific compatible string.
+>>>
+>>> But some projects don't want to build unused drivers into kernel to save
+>>> code size. Use different Kconfig options for each SoC so that these
+>>> projects can disable unused drivers.
+>>>
+>>
+>> Scpsys is a bool right now, you can disable it if you don't need it for
+>> your project.
+>>
+>> I don't think the impact of adding scp_domain_data justifies adding SoC
+>> specific scpsys drivers and bloat the drivers/soc/mediatek folder.
+>
+> So you prefer to enable MT8173 and MT2701 scpsys drivers at the same
+> time if MTK_SCPSYS is true?
+
+Well the driver gets enabled by the compatible string from the DT 
+binding passed to the system. But yes, I prefer to have the code shared 
+and just add the necessary data structures.
+
+>
+> BTW, this patchset is based on 4.4-rc7, which lacks two patches from
+> your v4.4-next/soc. Should I rebase to v4.4-next/soc when I send v2
+> patch?
+>
+
+That would be a nice to have.
+
+Thanks,
+Matthias
