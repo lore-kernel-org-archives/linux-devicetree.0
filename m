@@ -1,87 +1,61 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and charging of backup battery
-Date: Fri, 8 Jan 2016 18:49:31 +0100
-Message-ID: <66F37918-EA7F-4D83-8B5F-A6B5C0CD7623@goldelico.com>
-References: <cover.1451995297.git.hns@goldelico.com> <b4a6fe205cbb1a9eddc4e5f63fa05d299641313d.1451995297.git.hns@goldelico.com> <568C5451.8070709@ti.com> <20160106010011.GG12777@atomide.com> <8FE6954B-6411-4593-9CE5-717A469A6AA8@goldelico.com> <20160106164136.GI12777@atomide.com> <2AC46952-3758-458A-B0A5-1794C207BD4C@goldelico.com> <20160106170925.GK12777@atomide.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160106170925.GK12777@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, Nishanth Menon <nm@ti.com>, =?iso-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek@goldelico.com>
+From: Laura Abbott <laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>
+Subject: Re: ION DTS changes for HiKey in -next
+Date: Fri, 8 Jan 2016 10:14:35 -0800
+Message-ID: <568FFC8B.3090101@labbott.name>
+References: <20160107173744.GJ6588@sirena.org.uk>
+ <20160108050214.GD30293@kroah.com> <20160108124439.GL6588@sirena.org.uk>
+ <20160108135552.GE3097@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160108135552.GE3097@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Yu Dongbin <yudongbin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Tony,
-it is strange. It now works under unknown conditions - without any obvoius change.
+On 1/8/16 5:55 AM, Mark Rutland wrote:
+> On Fri, Jan 08, 2016 at 12:44:39PM +0000, Mark Brown wrote:
+>> On Thu, Jan 07, 2016 at 09:02:14PM -0800, Greg Kroah-Hartman wrote:
+>>> On Thu, Jan 07, 2016 at 05:37:44PM +0000, Mark Brown wrote:
+>>
+>>>> I was just looking at DTs in -next and noticed that there is a patch
+>>>> 59dfafd03fc (arm64: dts: Add dts files to enable ION on Hi6220 SoC)
+>>>> which adds at DT doing something for ION.  Are we sure this should be
+>>>> going into the main production DT?  The bindings haven't been reviewed
+>>>> as far as I can tell, the matching driver is only in staging and hasn't
+>>>> been posted upstream.
+>>
+>>> Isn't "staging" upstream enough for this?  :)
+>>
+>> I wouldn't have thought so, DTs are supposed to be an ABI so we want
+>> proper review and having had a quick glance this doesn't look like it's
+>> a hardware description so it's not clear to me it should be in DT at all.
+>
+> Indeed.
+>
+> The driver and the binding before that don't really belong either,
+> I would have NAK'd those on devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, though it
+> appears I either missed them or they never made it to that list.
+>
+>  From my PoV there should not be a platform-specific ION binding. If we
+> need one at all, people should work on the proposed generic binding [1]
+> or figure out how to do this with the existing reserved-memory bindings.
+>
+> Thanks,
+> Mark.
+>
+> [1] https://lkml.org/lkml/2015/10/6/854
 
-Am 06.01.2016 um 18:09 schrieb Tony Lindgren <tony@atomide.com>:
+I posted v2 back in November
+(http://article.gmane.org/gmane.linux.drivers.driver-project.devel/80475)
+but there wasn't much in the way of review comments. More feedback there
+would be appreciated or I can resend.
 
-> * H. Nikolaus Schaller <hns@goldelico.com> [160106 08:48]:
->> Hi Tony,
->> 
->> Am 06.01.2016 um 17:41 schrieb Tony Lindgren <tony@atomide.com>:
->> 
->>> Hi,
->>> 
->>> * H. Nikolaus Schaller <hns@goldelico.com> [160106 00:12]:
->>>> Am 06.01.2016 um 02:00 schrieb Tony Lindgren <tony@atomide.com>:
->>>>> 
->>>>> Also I'm not seeing just zeroes coming from RTC after typing hwclock
->>>>> on omap5-uevm. It's working on x15 though.
->>>>> 
->>>>> Nikolaus, is hwclock command working for you on omap5-uevm?
->>>> 
->>>> Well, yes and no. It appears it *was* working when tested last time
->>>> (we sometimes have months of delay for submitting patches upstream).
->>>> 
->>>> I have found an SD image with 4.3-rc6 with this patch in the dtb and
->>>> there it works. With 4.4-rc8 it does not work. hwclock command hangs for
->>>> 10 seconds (I guess some timeout).
->>>> 
->>>> I have checked the dtb and in both cases it is interrupts = <8 0>;
->>>> 
->>>> xxd /sys/firmware/devicetree/base/ocp/i2c@48070000/palmas@48/rtc/interrupts
->>>> 0000000: 0000 0008 0000 0000
->>>> 
->>>> So I think something has changed in the rtc driver or somewhere else.
->>> 
->>> I just gave it a try on v4.3-rc6 with omap5-uevm.dts patched for
->>> RTC, and I still don't have hwclock working with RTC.
->>> 
->>> It seems you have some additional patches there that make it work?
->> 
->> Hm. Not that I am aware of. We just did add the rtc nodes but did not
->> touch palmas drivers (except adding the gpadc of this patch series).
-> 
-> OK
-> 
->>> I guess it could also be a bootloader change if it's a different
->>> SD image that works for you.
->> 
->> Yes, it is using a 2 years old U-Boot instead 2015.10 compiled from
->> source. I will try to find out if it makes a difference.
-> 
-> OK. It could be also some .config change with something built-in?
-
-I have compared /proc/config.gz from both systems and /sys/firmware/fdt
-with no significant and obvious change.
-
-Then I booted the 4.4-rc8 again and this time it worked.
-
-To verify, I have checked out linux-next this morning, cherry-picked this palmas
-rtc patch, compiled with omap2plus defconfig, and used the omap5-uevm.dtb. And
-hwclock works after doing a modprobe rtc_palmas.
-
-Then I did the same with official v4.4-rc8 and hwclock hangs. And now our
-4.4-rc8 production kernel hangs again as well. Even if I use the
-DTB from the 4.3 kernel.
-
-So I think it is something which is unstable in 4.4-rc8 that is (probably) fixed in
-linux-next and unrelated to this DT patch.
-
-But I have no hint or idea what it is.
-
-BR,
-Nikolaus
+Thanks,
+Laura
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
