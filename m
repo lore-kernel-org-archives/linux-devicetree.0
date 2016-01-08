@@ -1,32 +1,43 @@
-From: Petr =?iso-8859-2?Q?=A9tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: dts: imx6: Add support for Toradex Apalis
-	iMX6Q/D SoM
-Date: Fri, 8 Jan 2016 09:57:34 +0100
-Message-ID: <20160108085734.GC27359@ibawizard.net>
-References: <1452011942-11940-1-git-send-email-marcel.ziswiler@toradex.com> <1452011942-11940-2-git-send-email-marcel.ziswiler@toradex.com>
-Reply-To: Petr =?iso-8859-2?Q?=A9tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v3 1/3] gpio: xgene: Enable X-Gene standby GPIO as interrupt
+ controller
+Date: Fri, 08 Jan 2016 09:07:50 +0000
+Message-ID: <568F7C66.2050000@arm.com>
+References: <1452162428-26839-1-git-send-email-qnguyen@apm.com> <1452162428-26839-2-git-send-email-qnguyen@apm.com> <alpine.DEB.2.11.1601080942270.3575@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1452011942-11940-2-git-send-email-marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Petr =?iso-8859-2?Q?=A9tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.11.1601080942270.3575@nanos>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Quan Nguyen <qnguyen@apm.com>
+Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Duc Dang <dhdang@apm.com>, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-> +	i2cddc: i2c@0 {
-> +		gpios = <&gpio3 16 GPIO_ACTIVE_HIGH /* sda */
-> +			 &gpio2 30 GPIO_ACTIVE_HIGH /* scl */
-> +			>;
+On 08/01/16 08:45, Thomas Gleixner wrote:
+> On Thu, 7 Jan 2016, Quan Nguyen wrote:
+>> -static int apm_gpio_sb_to_irq(struct gpio_chip *gc, u32 gpio)
+>> +static void xgene_gpio_sb_irq_ack(struct irq_data *d)
+>> +{
+>> +	struct irq_data *irqdata;
+>> +	struct xgene_gpio_sb *priv = irq_data_get_irq_chip_data(d);
+>> +
+>> +	irqdata = irq_get_irq_data(priv->gic_virq[d->hwirq]);
+>> +	if (!irqdata || !irqdata->chip)
+>> +		return;
+> 
+> What the heck is this? Why are you looking up some random other irq and fiddle
+> with its irq chip?
+> 
+> This is a 1:1 mapping from your gpio irq to a gic irq. We have hierarchical
+> interrupt domains for this.
 
-According to one of the comments, it should be changed to the following:
+I've said the exact same thing back in October:
 
-		sda-gpios = <&gpio3 16 GPIO_ACTIVE_HIGH>;
-		scl-gpios = <&gpio2 30 GPIO_ACTIVE_HIGH>;
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-October/381996.html
 
--- ynezz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+but obviously I wasn't clear enough...
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
