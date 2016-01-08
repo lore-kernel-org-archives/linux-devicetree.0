@@ -1,86 +1,43 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] USB: add generic onboard USB HUB driver
-Date: Fri, 8 Jan 2016 11:33:14 +0800
-Message-ID: <20160108033314.GA26697@shlinux2>
-References: <CAL411-rK6qfkbQsSjvXH5VPAQAm4tMyD6fVTEgFQrpLHNGMXeA@mail.gmail.com>
- <Pine.LNX.4.44L0.1512181030590.1682-100000@iolanthe.rowland.org>
- <CAL411-qKE=12VZAN9=tUWPqkC5BfSgpQb9aNgCU6rmPLasXNHQ@mail.gmail.com>
- <CAL_Jsq+P8SBmWzNURrmNgz8soCn4QPOPid4SXF0a3TYL_SH27A@mail.gmail.com>
- <20160106032027.GA23726@shlinux2>
- <CAL_Jsq+rqv1NBSUToX5BsbnBp_goUWhdczU7ETSxOrJ5D4D1rw@mail.gmail.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [RFC PATCH 0/2] USB: let the USB device know device node
+Date: Fri, 8 Jan 2016 13:44:22 +0800
+Message-ID: <1452231864-11171-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+rqv1NBSUToX5BsbnBp_goUWhdczU7ETSxOrJ5D4D1rw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patryk-6+2coLtxvIyvnle+31E0rA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 07, 2016 at 08:18:02AM -0600, Rob Herring wrote:
-> On Tue, Jan 5, 2016 at 9:20 PM, Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Tue, Jan 05, 2016 at 08:36:31AM -0600, Rob Herring wrote:
-> >> > 2. There are MFD USB devices, which includes several interfaces under
-> >> > USB device,
-> >> > like i2c, gpios, etc. Due to lack of device tree support, USB
-> >> > class/device driver doesn't know
-> >> > which kinds of interfaces are needed for this board.
-> >>
-> >> Are you talking about a device hard wired on the same board or
-> >> something like GPIOs on FTDI chip which could be hot-plugged in any
-> >> host (including non-DT based)?
-> >
-> > I talked about the case that the device hard wired on the board.
-> > Hot-plug device's bus topology is unknown, we can't describe it
-> > statically at dts.
-> 
-> Correct, upstream (the USB side) can't be described, but it is the
-> downstream side we care about describing.
+Hi all,
 
-If it is hot-plug, there will be any USB devices at port, and it even
-has a USB HUB between controller and the device we want to describe.
+For some hard wired USB devices[1], we may need to use device tree to
+describe them, the first patch is teach USB device to know device
+node, the second patch is an example to show how to get properties
+through device node at USB device (class) driver.
 
-> 
-> >> For the hotplug case, we will need a way to associate a DT overlay
-> >> with the USB device and there may not even be a base DT to map the
-> >> overlay into. In this case, the USB device's driver will need to load
-> >> the overlay and trigger enumerating the child devices. Anyway, this is
-> >> a separate issue from your problem.
-> >>
-> >
-> > Since both you and Alan agree with my problem should be fixed at
-> > bootloader, I give the kernel solution up.
-> 
-> Surprising, no one ever seems to agree with that solution... There
-> will be people with this problem and unable to update their
-> bootloader.
-> 
+[1] http://marc.info/?l=linux-usb&m=142772952730243&w=2
 
-See: http://www.spinics.net/lists/linux-usb/msg134788.html
+Peter Chen (2):
+  USB: core: let USB device know device node
+  usb: Example for how to use device node at usb device driver
 
-I am a little puzzled what's your opinion for this problem.
-
-> > The another thing I open to discuss is how to let USB devices know its
-> > device node, the user reported issue that they can't handle interfaces
-> > below in USB device since that.
-> 
-> The driver for the USB device would need to load a DT overlay and from
-> that it should be able to get its node and child nodes. The hard part
-> is figuring out where to put the sub tree defined in the overlay as
-> either there is no base DT (think x86) or there is but we don't want
-> to describe the whole USB bus topology in DT (in theory we could
-> populate USB nodes dynamically as USB devices are discovered).
-> 
-> Rob
-
-I will send RFC patch for let the USB device know device node, but it is
-not for my issue.
+ .../devicetree/bindings/usb/usb-device.txt         |  8 ++++
+ arch/arm/boot/dts/imx6sx-sdb.dtsi                  |  9 ++++
+ drivers/usb/core/Makefile                          |  2 +-
+ drivers/usb/core/hub.c                             |  8 ++++
+ drivers/usb/core/of.c                              | 48 ++++++++++++++++++++++
+ drivers/usb/core/usb.c                             |  8 +++-
+ include/linux/usb.h                                |  2 +
+ include/linux/usb/of.h                             |  6 +++
+ 8 files changed, 88 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/usb-device.txt
+ create mode 100644 drivers/usb/core/of.c
 
 -- 
+1.9.1
 
-Best Regards,
-Peter Chen
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
