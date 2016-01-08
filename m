@@ -1,63 +1,173 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [RFC PATCH v2 3/4] drm: rockchip: hdmi: add RK3229 HDMI support
-Date: Fri, 8 Jan 2016 17:13:52 +0800
-Message-ID: <568F7DD0.7090707@rock-chips.com>
-References: <1452156811-18150-1-git-send-email-ykk@rock-chips.com>
- <1452157373-18783-1-git-send-email-ykk@rock-chips.com>
- <1452161052.4776.7.camel@pengutronix.de> <568E3AD0.1020904@rock-chips.com>
- <1452185424.4776.36.camel@pengutronix.de>
+From: zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH] soc: rockchip: power-domain: Modify power domain driver
+ for rk3368
+Date: Fri, 08 Jan 2016 09:15:07 -0800
+Message-ID: <568FEE9B.3000909@rock-chips.com>
+References: <1452269144-15389-1-git-send-email-zhangqing@rock-chips.com> <3979294.oVXyhiFhfI@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1452185424.4776.36.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Andy Yan <andy.yan@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Zheng Yang <zhengyang@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3979294.oVXyhiFhfI@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcCwKCk9uIDAxLzA4LzIwMTYgMTI6NTAgQU0sIFBoaWxpcHAgWmFiZWwgd3JvdGU6
-Cj4gSGkgWWFraXIsCj4KPiBBbSBEb25uZXJzdGFnLCBkZW4gMDcuMDEuMjAxNiwgMTg6MTUgKzA4
-MDAgc2NocmllYiBZYWtpciBZYW5nOgo+PiBIaSBQaGlsaXBwLAo+Pgo+PiBUaGFua3MgZm9yIHlv
-dXIgZmFzdCByZXNwb25kIDopCj4+Cj4+IE9uIDAxLzA3LzIwMTYgMDY6MDQgUE0sIFBoaWxpcHAg
-WmFiZWwgd3JvdGU6Cj4+PiBBbSBEb25uZXJzdGFnLCBkZW4gMDcuMDEuMjAxNiwgMTc6MDIgKzA4
-MDAgc2NocmllYiBZYWtpciBZYW5nOgo+Pj4+IFJLMzIyOSBpbnRlZ3JhdGUgYW4gRGVzaWduZWRX
-YXJlIEhETUkyLjAgY29udHJvbGxlciBhbmQgYW4gSU5OTyBIRE1JMi4wIHBoeSwKPj4+PiB0aGUg
-bWF4IG91dHB1dCByZXNvbHV0aW9uIGlzIDRLLgo+Pj4+Cj4+Pj4gU2lnbmVkLW9mZi1ieTogWWFr
-aXIgWWFuZyA8eWtrQHJvY2stY2hpcHMuY29tPgo+Pj4gSXQgc291bmRzIGxpa2UgdGhlIElOTk8g
-SERNSTIuMCBwaHkgaXMgbm90IG5lY2Vzc2FyaWx5IHNwZWNpZmljIHRvCj4+PiBSSzMyMjkgYnV0
-IG1pZ2h0IGFsc28gYXBwZWFyIGluIG90aGVyIFNvQ3M/IElmIHNvLCBJIHRoaW5rIHRoaXMgc2hv
-dWxkCj4+PiBiZSBpbXBsZW1lbnRlZCBpbiBhIHNlcGFyYXRlIHBoeSBkcml2ZXIgYW5kIGJlIHVz
-ZWQgYnkgZHdfaGRtaS1yb2NrY2hpcC4KPj4gRG8geW91IG1lYW4gSSBzaG91bGQgY3JlYXRlIGEg
-bmV3IHBoeSBkcml2ZXIgdGhhdCBwbGFjZSBpbiAiZHJpdmVyL3BoeSIKPj4gZGlyZWN0bHkgPwo+
-IFBvc3NpYmx5LCB5ZXMuIFRoZSBleHlub3MgdmlkZW8gcGh5cyBhcmUgYWxyZWFkeSB0aGVyZS4g
-SSBoYXZlIGtlcHQgdGhlCj4gbWVkaWF0ZWsgZHNpL2hkbWkgcGh5cyB0b2dldGhlciB3aXRoIHRo
-ZSBEUk0gZHJpdmVyLCBidXQgSSBzdXBwb3NlIEkKPiBjb3VsZCBtb3ZlIHRoZW0gdGhlcmUsIHRv
-by4KPgo+PiBJIGhhdmUgdGhpbmsgYWJvdXQgdGhpcyBpZGVhLCBhbmQgaXQgd291bGQgbWFrZSB0
-aGluZ3MgbXVjaCBjbGVhbi4gQnV0Cj4+IElOTk8gUEhZCj4+IGRyaXZlciBuZWVkIHRoZSB0YXJn
-ZXQgcGl4ZWwgY2xvY2sgaW4gZHJtX2Rpc3BsYXlfbW9kZSwgSSBkaWRuJ3QgZmluZCBhCj4+IGdv
-b2Qgd2F5Cj4+IHRvIHBhc3MgdGhpcyB2YXJpYWJsZSB0byBzZXBhcmF0ZSBwaHkgZHJpdmVyLiBE
-byB5b3UgaGF2ZSBzb21lIGlkZWEgPwo+IFdlJ2QgbmVlZCB0byBleHRlbmQgdGhlIFBIWSBBUEkg
-Zm9yIHRoaXMuIEZvciB0aGUgbWVkaWF0ZWsgcGh5cyB3ZSBoYXZlCj4gc2lkZS1zdGVwcGVkIHRo
-ZSBpc3N1ZSBieSB3aXJpbmcgdXAgdGhlIFBMTCBvdXRwdXQgdG8gdGhlIGNvbW1vbiBjbG9jawo+
-IGZyYW1ld29yay4KCldvdywgSSBoYXZlIGxvb2sgYXQgeW91ciAiZHJtL21lZGlhdGVrOiBBZGQg
-SERNSSBzdXBwb3J0IiBwYXRjaCwgaXQncyAKZ3JlYXQgdG8KcmVnaXN0ZXJzIGEgY29tbW9uIGNs
-b2NrIGZyYW1ld29yay4KCj4gSSBleHBlY3QgYmVzaWRlcyB0aGUgcGl4ZWwgY2xvY2sgZnJlcXVl
-bmN5LCBpdCBtaWdodCBhbHNvIGJlIG5lY2Vzc2FyeQo+IHRvIGluZm9ybSB0aGUgUEhZIGFib3V0
-IGN5Y2xlcyBwZXIgcGl4ZWwgZm9yIGRlZXAgY29sb3IgbW9kZXMuCgpJTk5PIFBIWSBkaWRuJ3Qg
-bmVlZCB0aGUgY29sb3IgZGVwdGggZGlyZWN0bHksIGRyaXZlciBjb3VsZCBnZXQgdGhlIAppbnB1
-dCBwaXhlbApjbG9jayByYXRlLCBhbmQgdGhlbiBoZG1pIGNvcmUgZHJpdmVyIGNvdWxkIHNldCBU
-TURTIHJhdGUgdGhvdWdoIGNvbW1vbgpjbG9jayBmcmFtZXdvcmsuCgpBbnl3YXkgaXQncyBncmVh
-dCBtYXRlcmlhbCwgSSB3b3VsZCB1cGRhdGUgdGhlIG5ldyB2ZXJzaW9uIG91dC4KClRoYW5rcyBh
-IGxvdAotIFlha2lyCgo+IHJlZ2FyZHMKPiBQaGlsaXBwCj4KPgo+Cj4KCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+
+On 01/08/2016 12:25 AM, Heiko Stuebner wrote:
+> Hi Elaine,
+>
+> Am Freitag, 8. Januar 2016, 08:05:44 schrieb zhangqing:
+>> This driver is modified to support RK3368 SoC.
+>>
+>> Signed-off-by: zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> ---
+>>   drivers/soc/rockchip/pm_domains.c        | 33
+>> ++++++++++++++++++++++++++++++++ include/dt-bindings/power/rk3368-power.h
+>> | 28 +++++++++++++++++++++++++++ 2 files changed, 61 insertions(+)
+>>   create mode 100644 include/dt-bindings/power/rk3368-power.h
+>>
+>> diff --git a/drivers/soc/rockchip/pm_domains.c
+>> b/drivers/soc/rockchip/pm_domains.c index 534c589..6cdffb1 100644
+>> --- a/drivers/soc/rockchip/pm_domains.c
+>> +++ b/drivers/soc/rockchip/pm_domains.c
+>> @@ -18,6 +18,7 @@
+>>   #include <linux/regmap.h>
+>>   #include <linux/mfd/syscon.h>
+>>   #include <dt-bindings/power/rk3288-power.h>
+>> +#include <dt-bindings/power/rk3368-power.h>
+>>
+>>   struct rockchip_domain_info {
+>>   	int pwr_mask;
+>> @@ -75,6 +76,9 @@ struct rockchip_pmu {
+>>   #define DOMAIN_RK3288(pwr, status, req)		\
+>>   	DOMAIN(pwr, status, req, req, (req) + 16)
+>>
+>> +#define DOMAIN_RK3368(pwr, status, req)		\
+>> +	DOMAIN(pwr, status, req, (req) + 16, req)
+>> +
+>>   static bool rockchip_pmu_domain_is_idle(struct rockchip_pm_domain *pd)
+>>   {
+>>   	struct rockchip_pmu *pmu = pd->pmu;
+>> @@ -444,6 +448,14 @@ static const struct rockchip_domain_info
+>> rk3288_pm_domains[] = { [RK3288_PD_GPU]		= DOMAIN_RK3288(9, 9, 2),
+>>   };
+>>
+>> +static const struct rockchip_domain_info rk3368_pm_domains[] = {
+>> +	[RK3368_PD_PERI]	= DOMAIN_RK3368(13, 12, 6),
+>> +	[RK3368_PD_VIO]		= DOMAIN_RK3368(15, 14, 8),
+>> +	[RK3368_PD_VIDEO]	= DOMAIN_RK3368(14, 13, 7),
+>> +	[RK3368_PD_GPU_0]	= DOMAIN_RK3368(16, 15, 2),
+>> +	[RK3368_PD_GPU_1]	= DOMAIN_RK3368(17, 16, 2),
+>> +};
+>
+> The structure in the registers (and thus the macros you define above) is the
+> same between rk3288 and rk3368, so there is no need to define that a second
+> time. It is perfectly fine to re-use the DOMAIN_RK3288 macro here and saves
+> double-definitions. [see our clock-drivers which already do this for the
+> common parts].
+
+The ack_mask bit and idle_mask bit is different in rk3368.
+you can check:
++#define DOMAIN_RK3368(pwr, status, req)		\
++	DOMAIN(pwr, status, req, (req) + 16, req)
++
+
+But the rk3288 is :
+#define DOMAIN_RK3288(pwr, status, req)		\
+  	DOMAIN(pwr, status, req, req, (req) + 16)
+
+>
+>> +
+>>   static const struct rockchip_pmu_info rk3288_pmu = {
+>>   	.pwr_offset = 0x08,
+>>   	.status_offset = 0x0c,
+>> @@ -461,11 +473,32 @@ static const struct rockchip_pmu_info rk3288_pmu = {
+>> .domain_info = rk3288_pm_domains,
+>>   };
+>>
+>> +static const struct rockchip_pmu_info rk3368_pmu = {
+>> +	.pwr_offset = 0x0c,
+>> +	.status_offset = 0x10,
+>> +	.req_offset = 0x3c,
+>> +	.idle_offset = 0x40,
+>> +	.ack_offset = 0x40,
+>> +
+>> +	.core_pwrcnt_offset = 0x48,
+>> +	.gpu_pwrcnt_offset = 0x50,
+>> +
+>> +	.core_power_transition_time = 24,
+>> +	.gpu_power_transition_time = 24,
+>> +
+>> +	.num_domains = ARRAY_SIZE(rk3368_pm_domains),
+>> +	.domain_info = rk3368_pm_domains,
+>> +};
+>> +
+>>   static const struct of_device_id rockchip_pm_domain_dt_match[] = {
+>>   	{
+>>   		.compatible = "rockchip,rk3288-power-controller",
+>>   		.data = (void *)&rk3288_pmu,
+>>   	},
+>> +	{
+>> +		.compatible = "rockchip,rk3368-power-controller",
+>> +		.data = (void *)&rk3368_pmu,
+>> +	},
+>>   	{ /* sentinel */ },
+>>   };
+>>
+>> diff --git a/include/dt-bindings/power/rk3368-power.h
+>> b/include/dt-bindings/power/rk3368-power.h new file mode 100644
+>> index 0000000..93633d5
+>> --- /dev/null
+>> +++ b/include/dt-bindings/power/rk3368-power.h
+>
+> Please split the addition of the binding-header into a separate patch. We
+> will need the header in both the soc-specific code as well as the devicetree
+> side, which requires the header being in a shared branch.
+>
+> Otherwise patch looks great.
+>
+>
+> Thanks
+> Heiko
+>
+>> @@ -0,0 +1,28 @@
+>> +#ifndef __DT_BINDINGS_POWER_RK3368_POWER_H__
+>> +#define __DT_BINDINGS_POWER_RK3368_POWER_H__
+>> +
+>> +/* VD_CORE */
+>> +#define RK3368_PD_A53_L0	0
+>> +#define RK3368_PD_A53_L1	1
+>> +#define RK3368_PD_A53_L2	2
+>> +#define RK3368_PD_A53_L3	3
+>> +#define RK3368_PD_SCU_L		4
+>> +#define RK3368_PD_A53_B0	5
+>> +#define RK3368_PD_A53_B1	6
+>> +#define RK3368_PD_A53_B2	7
+>> +#define RK3368_PD_A53_B3	8
+>> +#define RK3368_PD_SCU_B		9
+>> +
+>> +/* VD_LOGIC */
+>> +#define RK3368_PD_BUS		10
+>> +#define RK3368_PD_PERI		11
+>> +#define RK3368_PD_VIO		12
+>> +#define RK3368_PD_ALIVE		13
+>> +#define RK3368_PD_VIDEO		14
+>> +#define RK3368_PD_GPU_0		15
+>> +#define RK3368_PD_GPU_1		16
+>> +
+>> +/* VD_PMU */
+>> +#define RK3368_PD_PMU		17
+>> +
+>> +#endif
+>
+>
+>
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
