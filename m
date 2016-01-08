@@ -1,43 +1,63 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v3 1/3] gpio: xgene: Enable X-Gene standby GPIO as interrupt
- controller
-Date: Fri, 08 Jan 2016 09:07:50 +0000
-Message-ID: <568F7C66.2050000@arm.com>
-References: <1452162428-26839-1-git-send-email-qnguyen@apm.com> <1452162428-26839-2-git-send-email-qnguyen@apm.com> <alpine.DEB.2.11.1601080942270.3575@nanos>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: Re: [RFC PATCH v2 3/4] drm: rockchip: hdmi: add RK3229 HDMI support
+Date: Fri, 8 Jan 2016 17:13:52 +0800
+Message-ID: <568F7DD0.7090707@rock-chips.com>
+References: <1452156811-18150-1-git-send-email-ykk@rock-chips.com>
+ <1452157373-18783-1-git-send-email-ykk@rock-chips.com>
+ <1452161052.4776.7.camel@pengutronix.de> <568E3AD0.1020904@rock-chips.com>
+ <1452185424.4776.36.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.11.1601080942270.3575@nanos>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Quan Nguyen <qnguyen@apm.com>
-Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Duc Dang <dhdang@apm.com>, patches@apm.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1452185424.4776.36.camel@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Andy Yan <andy.yan@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Zheng Yang <zhengyang@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/01/16 08:45, Thomas Gleixner wrote:
-> On Thu, 7 Jan 2016, Quan Nguyen wrote:
->> -static int apm_gpio_sb_to_irq(struct gpio_chip *gc, u32 gpio)
->> +static void xgene_gpio_sb_irq_ack(struct irq_data *d)
->> +{
->> +	struct irq_data *irqdata;
->> +	struct xgene_gpio_sb *priv = irq_data_get_irq_chip_data(d);
->> +
->> +	irqdata = irq_get_irq_data(priv->gic_virq[d->hwirq]);
->> +	if (!irqdata || !irqdata->chip)
->> +		return;
-> 
-> What the heck is this? Why are you looking up some random other irq and fiddle
-> with its irq chip?
-> 
-> This is a 1:1 mapping from your gpio irq to a gic irq. We have hierarchical
-> interrupt domains for this.
-
-I've said the exact same thing back in October:
-
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-October/381996.html
-
-but obviously I wasn't clear enough...
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+SGkgUGhpbGlwcCwKCk9uIDAxLzA4LzIwMTYgMTI6NTAgQU0sIFBoaWxpcHAgWmFiZWwgd3JvdGU6
+Cj4gSGkgWWFraXIsCj4KPiBBbSBEb25uZXJzdGFnLCBkZW4gMDcuMDEuMjAxNiwgMTg6MTUgKzA4
+MDAgc2NocmllYiBZYWtpciBZYW5nOgo+PiBIaSBQaGlsaXBwLAo+Pgo+PiBUaGFua3MgZm9yIHlv
+dXIgZmFzdCByZXNwb25kIDopCj4+Cj4+IE9uIDAxLzA3LzIwMTYgMDY6MDQgUE0sIFBoaWxpcHAg
+WmFiZWwgd3JvdGU6Cj4+PiBBbSBEb25uZXJzdGFnLCBkZW4gMDcuMDEuMjAxNiwgMTc6MDIgKzA4
+MDAgc2NocmllYiBZYWtpciBZYW5nOgo+Pj4+IFJLMzIyOSBpbnRlZ3JhdGUgYW4gRGVzaWduZWRX
+YXJlIEhETUkyLjAgY29udHJvbGxlciBhbmQgYW4gSU5OTyBIRE1JMi4wIHBoeSwKPj4+PiB0aGUg
+bWF4IG91dHB1dCByZXNvbHV0aW9uIGlzIDRLLgo+Pj4+Cj4+Pj4gU2lnbmVkLW9mZi1ieTogWWFr
+aXIgWWFuZyA8eWtrQHJvY2stY2hpcHMuY29tPgo+Pj4gSXQgc291bmRzIGxpa2UgdGhlIElOTk8g
+SERNSTIuMCBwaHkgaXMgbm90IG5lY2Vzc2FyaWx5IHNwZWNpZmljIHRvCj4+PiBSSzMyMjkgYnV0
+IG1pZ2h0IGFsc28gYXBwZWFyIGluIG90aGVyIFNvQ3M/IElmIHNvLCBJIHRoaW5rIHRoaXMgc2hv
+dWxkCj4+PiBiZSBpbXBsZW1lbnRlZCBpbiBhIHNlcGFyYXRlIHBoeSBkcml2ZXIgYW5kIGJlIHVz
+ZWQgYnkgZHdfaGRtaS1yb2NrY2hpcC4KPj4gRG8geW91IG1lYW4gSSBzaG91bGQgY3JlYXRlIGEg
+bmV3IHBoeSBkcml2ZXIgdGhhdCBwbGFjZSBpbiAiZHJpdmVyL3BoeSIKPj4gZGlyZWN0bHkgPwo+
+IFBvc3NpYmx5LCB5ZXMuIFRoZSBleHlub3MgdmlkZW8gcGh5cyBhcmUgYWxyZWFkeSB0aGVyZS4g
+SSBoYXZlIGtlcHQgdGhlCj4gbWVkaWF0ZWsgZHNpL2hkbWkgcGh5cyB0b2dldGhlciB3aXRoIHRo
+ZSBEUk0gZHJpdmVyLCBidXQgSSBzdXBwb3NlIEkKPiBjb3VsZCBtb3ZlIHRoZW0gdGhlcmUsIHRv
+by4KPgo+PiBJIGhhdmUgdGhpbmsgYWJvdXQgdGhpcyBpZGVhLCBhbmQgaXQgd291bGQgbWFrZSB0
+aGluZ3MgbXVjaCBjbGVhbi4gQnV0Cj4+IElOTk8gUEhZCj4+IGRyaXZlciBuZWVkIHRoZSB0YXJn
+ZXQgcGl4ZWwgY2xvY2sgaW4gZHJtX2Rpc3BsYXlfbW9kZSwgSSBkaWRuJ3QgZmluZCBhCj4+IGdv
+b2Qgd2F5Cj4+IHRvIHBhc3MgdGhpcyB2YXJpYWJsZSB0byBzZXBhcmF0ZSBwaHkgZHJpdmVyLiBE
+byB5b3UgaGF2ZSBzb21lIGlkZWEgPwo+IFdlJ2QgbmVlZCB0byBleHRlbmQgdGhlIFBIWSBBUEkg
+Zm9yIHRoaXMuIEZvciB0aGUgbWVkaWF0ZWsgcGh5cyB3ZSBoYXZlCj4gc2lkZS1zdGVwcGVkIHRo
+ZSBpc3N1ZSBieSB3aXJpbmcgdXAgdGhlIFBMTCBvdXRwdXQgdG8gdGhlIGNvbW1vbiBjbG9jawo+
+IGZyYW1ld29yay4KCldvdywgSSBoYXZlIGxvb2sgYXQgeW91ciAiZHJtL21lZGlhdGVrOiBBZGQg
+SERNSSBzdXBwb3J0IiBwYXRjaCwgaXQncyAKZ3JlYXQgdG8KcmVnaXN0ZXJzIGEgY29tbW9uIGNs
+b2NrIGZyYW1ld29yay4KCj4gSSBleHBlY3QgYmVzaWRlcyB0aGUgcGl4ZWwgY2xvY2sgZnJlcXVl
+bmN5LCBpdCBtaWdodCBhbHNvIGJlIG5lY2Vzc2FyeQo+IHRvIGluZm9ybSB0aGUgUEhZIGFib3V0
+IGN5Y2xlcyBwZXIgcGl4ZWwgZm9yIGRlZXAgY29sb3IgbW9kZXMuCgpJTk5PIFBIWSBkaWRuJ3Qg
+bmVlZCB0aGUgY29sb3IgZGVwdGggZGlyZWN0bHksIGRyaXZlciBjb3VsZCBnZXQgdGhlIAppbnB1
+dCBwaXhlbApjbG9jayByYXRlLCBhbmQgdGhlbiBoZG1pIGNvcmUgZHJpdmVyIGNvdWxkIHNldCBU
+TURTIHJhdGUgdGhvdWdoIGNvbW1vbgpjbG9jayBmcmFtZXdvcmsuCgpBbnl3YXkgaXQncyBncmVh
+dCBtYXRlcmlhbCwgSSB3b3VsZCB1cGRhdGUgdGhlIG5ldyB2ZXJzaW9uIG91dC4KClRoYW5rcyBh
+IGxvdAotIFlha2lyCgo+IHJlZ2FyZHMKPiBQaGlsaXBwCj4KPgo+Cj4KCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
