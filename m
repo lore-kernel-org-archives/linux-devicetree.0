@@ -1,45 +1,58 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and charging of backup battery
-Date: Fri, 8 Jan 2016 20:31:40 +0100
-Message-ID: <CCB763BE-5D1F-4A53-BF9A-C12C08A6EFC4@goldelico.com>
-References: <b4a6fe205cbb1a9eddc4e5f63fa05d299641313d.1451995297.git.hns@goldelico.com> <568C5451.8070709@ti.com> <20160106010011.GG12777@atomide.com> <8FE6954B-6411-4593-9CE5-717A469A6AA8@goldelico.com> <20160106164136.GI12777@atomide.com> <2AC46952-3758-458A-B0A5-1794C207BD4C@goldelico.com> <20160106170925.GK12777@atomide.com> <66F37918-EA7F-4D83-8B5F-A6B5C0CD7623@goldelico.com> <20160108181551.GX12777@atomide.com> <832803EE-E4CB-46B1-BF39-2DC0BB695A5D@goldelico.com> <20160108190457.GY12777@atomide.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160108190457.GY12777@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, Nishanth Menon <nm@ti.com>, =?iso-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek@goldelico.com>, =?windows-1252?Q?Gra=9Evydas_Ignotas?= <notasas@gmail.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH] ata: add AMD Seattle platform driver
+Date: Fri, 08 Jan 2016 11:59:53 -0800
+Message-ID: <1452283193.4028.84.camel@perches.com>
+References: <1452200002-31590-1-git-send-email-brijesh.singh@amd.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1452200002-31590-1-git-send-email-brijesh.singh@amd.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Brijesh Singh <brijesh.singh@amd.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, tj@kernel.org, devicetree@vger.kernel.org, linux-ide@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 2016-01-07 at 14:53 -0600, Brijesh Singh wrote:
+> AMD Seattle SATA controller mostly conforms to AHCI interface with so=
+me
+> special register to control SGPIO interface. In the case of an AHCI
+> controller, the SGPIO feature is ideally implemented using the
+> "Enclosure Management" register of the AHCI controller, but those
+> registeres are not implemented in the Seattle SoC. Instead SoC
+> (Rev B0 onwards) provides a 32-bit SGPIO control register which shoul=
+d
+> be programmed to control the activity, locate and fault LEDs.
 
-Am 08.01.2016 um 20:04 schrieb Tony Lindgren <tony@atomide.com>:
+trivia:
 
-> * H. Nikolaus Schaller <hns@goldelico.com> [160108 10:33]:
->> Am 08.01.2016 um 19:15 schrieb Tony Lindgren <tony@atomide.com>:
->>> * H. Nikolaus Schaller <hns@goldelico.com> [160108 09:50]:
->>> 
->>>> So I think it is something which is unstable in 4.4-rc8 that is (probably) fixed in
->>>> linux-next and unrelated to this DT patch.
->>>> 
->>>> But I have no hint or idea what it is.
->>> 
->>> Or something hangs the RTC? And the back-up battery has to drain to
->>> reset the RTC somehow?
->> 
->> Indeed it could be something like this. I already suspected that it depends
->> on boot order of some components.
->> 
->> But you get the /dev/rtc and /sys/class/rtc nodes? This is what this patch
->> should enable (and not fix potential driver issues).
-> 
-> Yes no problems with $subject patch. It's just the we also need
-> to figure out why RTC does not work :)
+> diff --git a/drivers/ata/ahci_seattle.c b/drivers/ata/ahci_seattle.c
+[]
+> +static ssize_t seattle_transmit_led_message(struct ata_port *ap, u32=
+ state,
+> +					=A0=A0=A0=A0ssize_t size)
+> +{
+> +	struct ahci_host_priv *hpriv =3D ap->host->private_data;
+> +	struct ahci_port_priv *pp =3D ap->private_data;
+> +	struct seattle_plat_data *plat_data =3D hpriv->plat_data;
+> +	unsigned long flags;
+> +	int pmp;
+> +	struct ahci_em_priv *emp;
+> +	u32 val;
+> +
+> +	/* get the slot number from the message */
+> +	pmp =3D (state & EM_MSG_LED_PMP_SLOT) >> 8;
+> +	if (pmp < EM_MAX_SLOTS)
+> +		emp =3D &pp->em_priv[pmp];
+> +	else
+> +		return -EINVAL;
 
-Yes indeed. I can not focus on that at the moment but as soon as we have
-the new Pyra handheld devices (with OMAP5+Palmas) running, there will
-be more developers to look at it.
+This is generally done using a inverted test that
+returns immediately
 
-BR,
-Nikolaus
+	if (pmp >=3D EMP_MAX_SLOTS)
+		return -EINVAL;
+
+	emp =3D &pp->em_priv[pmp];
+
+
