@@ -1,71 +1,52 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] mtd: spi-nor: add hisilicon spi-nor flash controller
- driver
-Date: Sat, 9 Jan 2016 09:42:49 -0600
-Message-ID: <20160109154249.GA28102@rob-hp-laptop>
-References: <1452216405-10826-1-git-send-email-xuejiancheng@huawei.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 0/5] fix some clock configuration for the RK3036
+ platform
+Date: Sat, 09 Jan 2016 21:10:21 +0100
+Message-ID: <2423996.DXmZSXDRX7@phil>
+References: <1452169057-24467-1-git-send-email-zhengxing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1452216405-10826-1-git-send-email-xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, pengbinquan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, han.xu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangzhenxing-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1452169057-24467-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leozwang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 08, 2016 at 09:26:45AM +0800, Jiancheng Xue wrote:
-> add hisilicon spi-nor flash controller driver
-> 
-> Signed-off-by: Binquan Peng <pengbinquan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> ---
+Hi Xing
 
-Next time, please include changes in v2 here.
+Am Donnerstag, 7. Januar 2016, 20:17:32 schrieb Xing Zheng:
+>   In the development work, we found that some of the previous
+> incorrect clock configuration on the RK3036 platform, we should
+> fix them.
 
->  .../devicetree/bindings/spi/spi-hisi-sfc.txt       |  24 +
->  drivers/mtd/spi-nor/Kconfig                        |   6 +
->  drivers/mtd/spi-nor/Makefile                       |   1 +
->  drivers/mtd/spi-nor/hisi-sfc.c                     | 498 +++++++++++++++++++++
->  4 files changed, 529 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
->  create mode 100644 drivers/mtd/spi-nor/hisi-sfc.c
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt b/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
-> new file mode 100644
-> index 0000000..a0d1e04
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
-> @@ -0,0 +1,24 @@
-> +HiSilicon SPI-NOR Flash Controller
-> +
-> +Required properties:
-> +- compatible : Should be "hisilicon,hisi-sfc".
+I've applied patches 1-4 as fixes for 4.5 [0] and will apply patch 5
+regularly once 4.5-rc1 is released and I have stable base again.
 
-I missed this last time, but you also need a more specific compatible 
-string with the SOC name in it.
 
-> +- address-cells : number of cells required to define a chip select
-> +        address on the SPI bus. Should be set to 1. See spi-bus.txt.
-> +- size-cells : Should be 0.
-> +- reg : Offset and length of the register set for the controller device.
-> +- reg-names : Must include the following two entries: "control", "memory".
-> +- clocks : handle to spi-nor flash controller clock.
-> +
-> +Example:
-> +spi-nor-controller@10000000 {
-> +	compatible = "hisilicon,hisi-sfc";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	reg = <0x10000000 0x1000>, <0x14000000 0x1000000>;
-> +	reg-names = "control", "memory";
-> +	clocks = <&clock HI3519_FMC_CLK>;
-> +	spi-nor@0 {
-> +		compatible = "jedec,spi-nor";
-> +		reg = <0>;
-> +	};
-> +};
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Xing Zheng (5):
+>   clk: rockchip: rk3036: fix the FLAGs for clock mux
+>   clk: rockchip: rk3036: fix uarts clock error
+>   clk: rockchip: rk3036: fix the div offset for emac clock
+>   clk: rockchip: rk3036: rename emac ext source clock
+
+please make sure to also update the binding document in such cases.
+I've done it myself for this one.
+
+[for people reading along: the rk3036 clock-driver + binding is new in
+4.5 so we should be ok to fix the naming before it is actually released]
+
+
+Heiko
+
+
+[0] https://git.kernel.org/cgit/linux/kernel/git/mmind/linux-rockchip.git/log/?h=v4.5-clk/fixes
