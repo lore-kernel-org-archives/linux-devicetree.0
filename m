@@ -1,64 +1,92 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] wlcore/wl12xx: spi: add device tree support
-Date: Sat, 9 Jan 2016 03:56:46 +0100
-Message-ID: <20160109025645.GB3644@earth>
-References: <1451482533-8624-1-git-send-email-uri.mashiach@compulab.co.il>
- <1451482533-8624-3-git-send-email-uri.mashiach@compulab.co.il>
+From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [RESEND RFC PATCH 2/2] ARM: dts: rockchip: Update the cpu freqs
+ table
+Date: Sat, 9 Jan 2016 11:04:36 +0800
+Message-ID: <569078C4.8080000@rock-chips.com>
+References: <1452252698-16765-1-git-send-email-zhengxing@rock-chips.com>
+ <1452252698-16765-3-git-send-email-zhengxing@rock-chips.com>
+ <4951150.PYM4FhWu6V@phil>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="JYK4vJDZwFMowpUq"
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1451482533-8624-3-git-send-email-uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4951150.PYM4FhWu6V@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, leozwang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Heiko,
 
---JYK4vJDZwFMowpUq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2016=E5=B9=B401=E6=9C=8809=E6=97=A5 03:16, Heiko Stuebner wrote:
+> Hi Xing,
+>
+> Am Freitag, 8. Januar 2016, 19:31:38 schrieb Xing Zheng:
+>> Actually, we need more cpu freqs which are 50MHz integer multiples.
+>>
+>> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> ---
+>>
+>>   arch/arm/boot/dts/rk3036.dtsi |   13 ++++++++++++-
+>>   1 file changed, 12 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk303=
+6.dtsi
+>> index 1cb5877..1a773eb 100644
+>> --- a/arch/arm/boot/dts/rk3036.dtsi
+>> +++ b/arch/arm/boot/dts/rk3036.dtsi
+>> @@ -79,7 +79,18 @@
+>>   			resets =3D <&cru SRST_CORE0>;
+>>   			operating-points =3D <
+>>   				/* KHz    uV */
+>> -				 816000 1000000
+>> +				1200000 1200000
+>> +				1100000 1200000
+>> +				1000000 1200000
+>> +				 900000 1200000
+>> +				 800000 1200000
+>> +				 700000 1200000
+>> +				 600000 1200000
+>> +				 500000 1200000
+>> +				 400000 1200000
+>> +				 300000 1200000
+>> +				 200000 1200000
+>> +				 100000 1200000
+> what about reducing the voltage as well?
+>
+> >From rk3288-specific discussions I remember that reducing the freque=
+ncy
+> without touching the voltage, didn't really save so much energy.
+> And it looks like it was running 816MHz@1.0V just fine as well.
+>
+> I guess you should find out which voltages are really necessary for e=
+ach
+> step.
+>
+>
+> Heiko
+>
+Thank you for your comments. :-)
 
-Hi,
+Yes, these patches currently still in draft stage. Modify the frequency=
+=20
+of 816MHz is for mac apll patch can be FROMLIST for Kylin Board,
+and will work cpu frequency table as a start.
 
-On Wed, Dec 30, 2015 at 03:35:32PM +0200, Uri Mashiach wrote:
-> Add DT support for the wl1271 SPI WiFi.
->=20
-> Add documentation file for the wl1271 SPI WiFi.
->=20
-> Signed-off-by: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+We know you want to set the appropriate frequency of different batches=20
+of The RK3036 SoCs take some time,so I just tested a fixed
+high voltage 1.2v on my evb board, the frequency of the voltage to=20
+ensure that we can work needed.
+We'll start work dynamically adjust the voltage.
 
-[On Nokia N950]
-Tested-By: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Thanks.
 
--- Sebastian
+- Xing Zheng
 
---JYK4vJDZwFMowpUq
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJWkHbtAAoJENju1/PIO/qaOVUP/22LRoow0CfyHeClLu0gKtJN
-DnLO8VuTl9D0AAhPaIuySD4omhMEd6zp9BrStjgmgXI7fBHiwQ1w/x7PMm8e8SlF
-QrIIfTlrRubXkDVJ8K2gk7xAyW19npWlK8LMxpMxUVvbtfqXeoalPAiTgXkiCJyB
-V9l94z8B+R6CBdYI3+z0yaqUopFDPJDbBhA++vbWgLNTm82OWZzousKdN5dlRR/p
-d+666/+e+wKGgl+oRR2XfSCymEG6N8pmV5l6U7aHIKoUdOF8BXTH1Bsmlc+abnhR
-iTA9cuj1S62t0kTNDEPzDcgnlNK1pVoVIYNpWf+m2BJwO+1GP3xQ7tADD0myHW68
-ZaYpxaNhNmBFeUbfwgoXx8vsBhQGbL6bepvdUV2B0IFioB9rhRBhmDUTqkjutKXT
-g58sd5L5pXewK4wR2UV8O2TUAKgQS2sCR6Sj088fYyKqIuA98aEktzCGv04AFbyn
-roft+rUjeuvo9xvS1pWmfwqKTsid5mACTCF1PZyK8zQgXYeY560wMam42cUUYG+b
-oRpXOs2Y/39fxCo1iV90gqLX+9nsUj8GdzOJ1rh02fUAo9+fG6CXgwJvoRqyGjhh
-0YxY1vMnjmlJCfIBoSbPNOicEoMFwcuTF0umCEibA5g4f9wQz8d1VNHlIa/YVCQC
-Elq6n+QE/oAW7qljkpe8
-=pLCw
------END PGP SIGNATURE-----
-
---JYK4vJDZwFMowpUq--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
