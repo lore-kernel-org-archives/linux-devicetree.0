@@ -1,49 +1,103 @@
-From: kernel@martin.sperl.org
-Subject: [PATCH 4/5] ARM: bcm2835: I2S: use new register-range and clock framework
-Date: Sat,  9 Jan 2016 09:25:56 +0000
-Message-ID: <1452331558-2520-5-git-send-email-kernel@martin.sperl.org>
-References: <1452331558-2520-1-git-send-email-kernel@martin.sperl.org>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1452331558-2520-1-git-send-email-kernel@martin.sperl.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Remi Pommarel <repk@triplefau.lt>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Matthias Reichl <hias@horus.com>, lFlorian Meier <florian.meier@koalo.de>
-Cc: Martin Sperl <kernel@martin.sperl.org>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 1/2] USB: core: let USB device know device node
+Date: Sat, 9 Jan 2016 17:32:39 +0800
+Message-ID: <20160109093239.GE27759@shlinux2>
+References: <1452231864-11171-2-git-send-email-peter.chen@freescale.com>
+ <Pine.LNX.4.44L0.1601081746080.21467-100000@netrider.rowland.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.1601081746080.21467-100000-pYrvlCTfrz9XsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Sperl <kernel@martin.sperl.org>
+On Fri, Jan 08, 2016 at 05:50:13PM -0500, Alan Stern wrote:
+> On Fri, 8 Jan 2016, Peter Chen wrote:
+> 
+> > Although most of USB devices are hot-plug's, there are still some devices
+> > are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
+> > If these kinds of USB devices are multiple functions, and they can supply
+> > other interfaces like i2c, gpios for other devices, we may need to
+> > descirbe these at device tree.
+> > 
+> > In this commit, it uses "reg" in dts as port number to match the port
+> > number decided by USB core, if they are the same, then the device node
+> > is for the device we are creating for USB core.
+> > 
+> > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> 
+> > +#include <linux/module.h>
+> > +#include <linux/moduleparam.h>
+> 
+> Do you need those two #include's?
 
-Since the move to the new clock framework with
-commit 94cb7f76caa0b337 ("Switch to using the new clock driver support")
-the bcm2835-i2s driver was no longer working.
+Will remove
 
-This patch fixes the address ranges:
-* remove the PCM clock register range that is owned by the clockmanager
-* fix the length, which did not include the last register of this device
+> 
+> > +#include <linux/of.h>
+> > +
+> > +/**
+> > + * usb_of_find_node - Find the device node match port number
+> > + * @dev: the parent device node
+> 
+> The parameter is actually named "parent".
+> 
 
-It also adds the required pcm-clock with the corresponding default
-clock and rate.
+Sorry, I copied some code, will change.
 
-Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
----
- arch/arm/boot/dts/bcm2835.dtsi |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+> > + * @portnum: the port number which device is connecting 
+> > + *
+> > + * Find the node from device tree according to its port number.
+> > + *
+> > + * Return: On success, a pointer to the device node, %NULL on failure.
+> > + */
+> > +struct device_node *usb_of_find_node(struct device_node *parent, int portnum)
+> > +{
+> > +	struct device_node *node;
+> > +	u32 port;
+> > +
+> > +	for_each_child_of_node(parent, node) {
+> > +		if (!of_property_read_u32(node, "reg", &port)) {
+> > +			if (port == portnum)
+> > +				return node;
+> > +		}
+> > +	}
+> > +
+> > +	return NULL;
+> > +}
+> > +EXPORT_SYMBOL_GPL(usb_of_find_node);
+> > +
+> 
+> > diff --git a/include/linux/usb.h b/include/linux/usb.h
+> > index 89533ba..a3a0b07 100644
+> > --- a/include/linux/usb.h
+> > +++ b/include/linux/usb.h
+> > @@ -21,6 +21,7 @@
+> >  #include <linux/sched.h>	/* for current && schedule_timeout */
+> >  #include <linux/mutex.h>	/* for struct mutex */
+> >  #include <linux/pm_runtime.h>	/* for runtime PM */
+> > +#include <linux/of.h>		/* for device tree */
+> 
+> I think you don't need this line.  You can simply write:
+> 
+> 	struct device_node;
+> 
+> just like the two lines below.
+> 
+> >  struct usb_device;
+> >  struct usb_driver;
 
-diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
-index aef64de..83d9787 100644
---- a/arch/arm/boot/dts/bcm2835.dtsi
-+++ b/arch/arm/boot/dts/bcm2835.dtsi
-@@ -120,9 +120,8 @@
- 
- 		i2s: i2s@7e203000 {
- 			compatible = "brcm,bcm2835-i2s";
--			reg = <0x7e203000 0x20>,
--			      <0x7e101098 0x02>;
--
-+			reg = <0x7e203000 0x24>;
-+			clocks = <&clocks BCM2835_CLOCK_PCM>;
- 			dmas = <&dma 2>,
- 			       <&dma 3>;
- 			dma-names = "tx", "rx";
+Yes, you are right.
+
 -- 
-1.7.10.4
 
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
