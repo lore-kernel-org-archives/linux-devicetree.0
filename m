@@ -1,40 +1,107 @@
-From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Subject: [PATCH V2 0/2] serial: bcm2835: add bcm2835 auxiliar uart driver
-Date: Sat,  9 Jan 2016 13:07:31 +0000
-Message-ID: <1452344854-2576-1-git-send-email-kernel@martin.sperl.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 1/2] USB: core: let USB device know device node
+Date: Sat, 9 Jan 2016 09:20:21 -0600
+Message-ID: <CAL_Jsq+nc40EFwHH2aNAA9O4i5mS4aXiF65ZbU559wF1nqyrwg@mail.gmail.com>
+References: <1452231864-11171-1-git-send-email-peter.chen@freescale.com>
+ <1452231864-11171-2-git-send-email-peter.chen@freescale.com>
+ <CAL_JsqKwATxGiqJ_MNV6_pur1dUEVOzH+iB8yY+kWA0y2gWbNg@mail.gmail.com> <20160109090512.GD27759@shlinux2>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160109090512.GD27759@shlinux2>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+On Sat, Jan 9, 2016 at 3:05 AM, Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, Jan 08, 2016 at 08:32:45AM -0600, Rob Herring wrote:
+>> On Thu, Jan 7, 2016 at 11:44 PM, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+>> > Although most of USB devices are hot-plug's, there are still some devices
+>> > are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
+>> > If these kinds of USB devices are multiple functions, and they can supply
+>> > other interfaces like i2c, gpios for other devices, we may need to
+>> > descirbe these at device tree.
+>> >
+>> > In this commit, it uses "reg" in dts as port number to match the port
+>> > number decided by USB core, if they are the same, then the device node
+>> > is for the device we are creating for USB core.
+>> >
+>> > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>> > ---
+>> >  .../devicetree/bindings/usb/usb-device.txt         |  8 ++++
+>> >  drivers/usb/core/Makefile                          |  2 +-
+>> >  drivers/usb/core/of.c                              | 48 ++++++++++++++++++++++
+>> >  drivers/usb/core/usb.c                             |  8 +++-
+>> >  include/linux/usb.h                                |  2 +
+>> >  include/linux/usb/of.h                             |  6 +++
+>> >  6 files changed, 71 insertions(+), 3 deletions(-)
+>> >  create mode 100644 Documentation/devicetree/bindings/usb/usb-device.txt
+>> >  create mode 100644 drivers/usb/core/of.c
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+>> > new file mode 100644
+>> > index 0000000..d35facd
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+>> > @@ -0,0 +1,8 @@
+>> > +Generic USB Device Properties
+>> > +
+>> > +Usually, we only use device tree for hard wired USB device.
+>> > +The reference binding doc is from:
+>> > +http://playground.sun.com/1275/bindings/usb/usb-1_0.ps.
+>>
+>> This path doesn't exist anymore. Use
+>> http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
+>>
+>
+> Ok.
+>
+>> > +
+>> > +Required properties:
+>> > +- reg: the port number which this device is connecting to.
+>>
+>> At least compatible should also be here.
+>>
+>
+> What format for USB device compatible string has still not been decided.
+> Would you suggest something? At my example, I use "vid,pid".
 
-This patch series adds the bcm2835aux uart driver, which is created
-as a wrapper arround the 8250 driver (based on recommendations by
-Stephen Warren)
+Yes, it is. They are defined in OpenFirmware USB binding doc above.
+However, the compatible strings and nodes are supposed to reflect the
+USB descriptors and interfaces. I don't think we need that much detail
+here, so I'd suggest we limit it to a subset such as:
 
-The device tree patch itself is not included yet because this
-patch requires the clk-bcm2835aux driver, which is right now only
-in clk-next, but should become available with 4.5.
+usbVID.PID.REV
+usbVID.PID
+usbVID.classDC
+usb.classDC
+usbifVID.classIC
+usbif.classIC
 
-Martin Sperl (2):
-  dt/bindings: serial: bcm2835: add binding documentation for
-    bcm2835-aux-uart
-  serial: bcm2835: add driver for bcm2835-aux-uart
+>> > +struct device_node *usb_of_find_node(struct device_node *parent, int portnum)
+>> > +{
+>> > +       struct device_node *node;
+>> > +       u32 port;
+>> > +
+>> > +       for_each_child_of_node(parent, node) {
+>> > +               if (!of_property_read_u32(node, "reg", &port)) {
+>> > +                       if (port == portnum)
+>> > +                               return node;
+>>
+>> This needs to match on the compatible string too. Otherwise, this
+>> could match in lots of cases.
+>>
+>
+> No, the port number is unique under the USB HUB (including host
+> controller, which is roothub), and there are some many compatible
+> string for USB devices.
 
- .../bindings/serial/brcm,bcm2835-aux-uart.txt      |   18 +++
- drivers/tty/serial/8250/8250_bcm2835aux.c          |  143 ++++++++++++++++++++
- drivers/tty/serial/8250/Kconfig                    |    8 ++
- drivers/tty/serial/8250/Makefile                   |    1 +
- 4 files changed, 170 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/brcm,bcm2835-aux-uart.txt
- create mode 100644 drivers/tty/serial/8250/8250_bcm2835aux.c
+Assuming the parent node pointer is correct. You could pass a SPI host
+node to this function and it will return a valid device node pointer.
 
--- 
-1.7.10.4
-
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
