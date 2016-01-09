@@ -1,38 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5/5] dt-bindings: bsm2835: fix bindings documentation to
- use new clock framework
-Date: Sat, 9 Jan 2016 16:45:23 -0600
-Message-ID: <20160109224523.GA17329@rob-hp-laptop>
-References: <1452331558-2520-1-git-send-email-kernel@martin.sperl.org>
- <1452331558-2520-6-git-send-email-kernel@martin.sperl.org>
+Subject: Re: [PATCH v3 2/2] pci, pci-thunder-pem: Add PCIe host driver for
+ ThunderX processors.
+Date: Sat, 9 Jan 2016 16:53:21 -0600
+Message-ID: <20160109225321.GA22053@rob-hp-laptop>
+References: <1452297553-19911-1-git-send-email-ddaney.cavm@gmail.com>
+ <1452297553-19911-3-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1452331558-2520-6-git-send-email-kernel@martin.sperl.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: kernel@martin.sperl.org
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Remi Pommarel <repk@triplefau.lt>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Matthias Reichl <hias@horus.com>, lFlorian Meier <florian.meier@koalo.de>
+In-Reply-To: <1452297553-19911-3-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 09, 2016 at 09:25:57AM +0000, kernel@martin.sperl.org wrote:
-> From: Martin Sperl <kernel@martin.sperl.org>
+On Fri, Jan 08, 2016 at 03:59:13PM -0800, David Daney wrote:
+> From: David Daney <david.daney@cavium.com>
 > 
-> The bcm2835-i2s driver has been updated to use the new clock framework
-> for the bcm2835 SOC.
-
-You are breaking compatibility with the driver change. New kernels will 
-not work with old dtbs as you have found. What should be done is fix the 
-driver to work with the old and new dtb.
- 
-> This patch documents the required changes to the bindings.
+> Some Cavium ThunderX processors require quirky access methods for the
+> config space of the PCIe bridge.  Add a driver to provide these config
+> space accessor functions.  The pci-host-common code is used to
+> configure the PCI machinery.
 > 
-> Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+> Signed-off-by: David Daney <david.daney@cavium.com>
 > ---
->  Documentation/devicetree/bindings/sound/brcm,bcm2835-i2s.txt |    7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-
-But I leave it to platform maintainers to decide if breaking 
-compatibility is okay, so:
+>  .../devicetree/bindings/pci/pci-thunder-pem.txt    |  43 ++++
 
 Acked-by: Rob Herring <robh@kernel.org>
+
+>  MAINTAINERS                                        |   8 +
+>  drivers/pci/host/Kconfig                           |   7 +
+>  drivers/pci/host/Makefile                          |   1 +
+>  drivers/pci/host/pci-thunder-pem.c                 | 283 +++++++++++++++++++++
+>  5 files changed, 342 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/pci-thunder-pem.txt
+>  create mode 100644 drivers/pci/host/pci-thunder-pem.c
