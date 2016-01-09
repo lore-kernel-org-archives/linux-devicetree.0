@@ -1,28 +1,33 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/3] Documentation: gpio: Update description for
- X-Gene standby GPIO controller DTS binding
-Date: Sat, 9 Jan 2016 16:28:10 -0600
-Message-ID: <20160109222810.GA11205@rob-hp-laptop>
-References: <1452162428-26839-1-git-send-email-qnguyen@apm.com>
- <1452162428-26839-3-git-send-email-qnguyen@apm.com>
+Subject: Re: [PATCH] phy: rcar-gen3-usb2: remove HSUSB registers handling
+Date: Sat, 9 Jan 2016 16:33:07 -0600
+Message-ID: <20160109223307.GA14530@rob-hp-laptop>
+References: <1452158204-5236-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1452162428-26839-3-git-send-email-qnguyen@apm.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Quan Nguyen <qnguyen@apm.com>
-Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Duc Dang <dhdang@apm.com>, patches@apm.com
+In-Reply-To: <1452158204-5236-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: kishon@ti.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 07, 2016 at 05:27:07PM +0700, Quan Nguyen wrote:
-> Update description for X-Gene standby GPIO controller DTS binding to
-> support GPIO line configuration as input, output or external IRQ pin.
+On Thu, Jan 07, 2016 at 06:16:44PM +0900, Yoshihiro Shimoda wrote:
+> Since the related driver (CPG/MSSR driver) only manages the first module
+> clock, this driver should not handle the HSUSB registers. So, this patch
+> removes the HSUSB registers handling.
 > 
-> Signed-off-by: Y Vo <yvo@apm.com>
-> Signed-off-by: Quan Nguyen <qnguyen@apm.com>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 > ---
->  .../devicetree/bindings/gpio/gpio-xgene-sb.txt     | 49 +++++++++++++++++-----
->  1 file changed, 38 insertions(+), 11 deletions(-)
+>  This patch is based on the linux-phy / next branch.
+>  (commit id = 9955a7835bf376e12482583958b2661f501b868b)
+> 
+>  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 15 ++--
 
 Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/phy/phy-rcar-gen3-usb2.c                   | 83 +++-------------------
+>  2 files changed, 15 insertions(+), 83 deletions(-)
+
+
