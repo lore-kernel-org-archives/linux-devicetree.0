@@ -1,32 +1,38 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: rockchip: Adding LEDs handling via leds-gpio for the Radxa Rock2 Square
-Date: Sat, 09 Jan 2016 23:38:58 +0100
-Message-ID: <3350223.M0j5cTJeGc@phil>
-References: <1451553232-2533-1-git-send-email-romain.perier@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 5/5] dt-bindings: bsm2835: fix bindings documentation to
+ use new clock framework
+Date: Sat, 9 Jan 2016 16:45:23 -0600
+Message-ID: <20160109224523.GA17329@rob-hp-laptop>
+References: <1452331558-2520-1-git-send-email-kernel@martin.sperl.org>
+ <1452331558-2520-6-git-send-email-kernel@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1451553232-2533-1-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1452331558-2520-6-git-send-email-kernel@martin.sperl.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: kernel@martin.sperl.org
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Remi Pommarel <repk@triplefau.lt>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Matthias Reichl <hias@horus.com>, lFlorian Meier <florian.meier@koalo.de>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 31. Dezember 2015, 10:13:52 schrieb Romain Perier:
-> Describe the two user-controllable LEDs on Rock2 Square boards.
-> All information have been retrieved from the schematics and the vendor
-> devicetree. The default-triggers mimic the behaviour of the vendor-kernel
-> to keep functionalities in sync.
+On Sat, Jan 09, 2016 at 09:25:57AM +0000, kernel@martin.sperl.org wrote:
+> From: Martin Sperl <kernel@martin.sperl.org>
 > 
-> Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> The bcm2835-i2s driver has been updated to use the new clock framework
+> for the bcm2835 SOC.
 
-applied to my dts32-branch for 4.6 with Sjoerd's Review
+You are breaking compatibility with the driver change. New kernels will 
+not work with old dtbs as you have found. What should be done is fix the 
+driver to work with the old and new dtb.
+ 
+> This patch documents the required changes to the bindings.
+> 
+> Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+> ---
+>  Documentation/devicetree/bindings/sound/brcm,bcm2835-i2s.txt |    7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
 
+But I leave it to platform maintainers to decide if breaking 
+compatibility is okay, so:
 
-Thanks
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
