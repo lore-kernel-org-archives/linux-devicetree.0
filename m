@@ -1,106 +1,33 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/6] clk: hisilicon: add CRG driver for hi3519 soc
-Date: Sat, 9 Jan 2016 09:33:22 -0600
-Message-ID: <20160109153322.GA19311@rob-hp-laptop>
-References: <1452219400-32478-1-git-send-email-xuejiancheng@huawei.com>
- <1452219400-32478-2-git-send-email-xuejiancheng@huawei.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] regulator: add documentation for ACT8945A's
+ regulator DT bindings
+Date: Sat, 9 Jan 2016 09:35:54 -0600
+Message-ID: <20160109153554.GA25800@rob-hp-laptop>
+References: <1452218938-10621-1-git-send-email-wenyou.yang@atmel.com>
+ <1452218938-10621-3-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1452219400-32478-2-git-send-email-xuejiancheng@huawei.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jiancheng Xue <xuejiancheng@huawei.com>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, p.zabel@pengutronix.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
+In-Reply-To: <1452218938-10621-3-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 08, 2016 at 10:16:35AM +0800, Jiancheng Xue wrote:
-> The CRG(Clock and Reset Generator) block provides clock
-> and reset signals for other modules in hi3519 soc.
+On Fri, Jan 08, 2016 at 10:08:58AM +0800, Wenyou Yang wrote:
+> This patch adds documentation for the DT bindings of the regulator
+> subdevice of ACT8945A MFD.
 > 
-> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
+> Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> ---
+> 
+>  .../bindings/regulator/act8945a-regulator.txt      |   78 ++++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
 
-[...]
-
-> diff --git a/drivers/clk/hisilicon/clk-hi3519.c b/drivers/clk/hisilicon/clk-hi3519.c
-> new file mode 100644
-> index 0000000..72d3a7b0
-> --- /dev/null
-> +++ b/drivers/clk/hisilicon/clk-hi3519.c
-> @@ -0,0 +1,105 @@
-> +/*
-> + * Hi3519 Clock Driver
-> + *
-> + * Copyright (c) 2015-2016 HiSilicon Technologies Co., Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <dt-bindings/clock/hi3519-clock.h>
-> +#include <linux/delay.h>
-> +#include <linux/of_address.h>
-> +#include <linux/slab.h>
-> +#include "clk.h"
-> +#include "reset.h"
-> +
-> +#define HI3519_FIXED_24M	(HI3519_EXT_CLKS + 1)
-
-This is fragile because HI3519_EXT_CLKS will change every time you 
-add a clock to DT and means you have to keep the kernel and DT in sync. 
-
-I'd be less worried if your clock definitions were more complete, but 
-I'm guess the SOC has more than 19 clocks coming out of the clock 
-controller.
-
-> +#define HI3519_FIXED_50M	(HI3519_EXT_CLKS + 2)
-> +#define HI3519_FIXED_75M	(HI3519_EXT_CLKS + 3)
-> +#define HI3519_FIXED_125M	(HI3519_EXT_CLKS + 4)
-> +#define HI3519_FIXED_150M	(HI3519_EXT_CLKS + 5)
-> +#define HI3519_FIXED_200M	(HI3519_EXT_CLKS + 6)
-> +#define HI3519_FIXED_250M	(HI3519_EXT_CLKS + 7)
-> +#define HI3519_FIXED_300M	(HI3519_EXT_CLKS + 8)
-> +#define HI3519_FIXED_400M	(HI3519_EXT_CLKS + 9)
-> +#define HI3519_FMC_MUX		(HI3519_EXT_CLKS + 10)
-> +
-> +#define HI3519_NR_CLKS	128
-
-You only have 29 clocks defined.
-
-
-> +#ifndef __DTS_HI3519_CLOCK_H
-> +#define __DTS_HI3519_CLOCK_H
-> +
-> +#define HI3519_FIXED_3M			1
-> +#define HI3519_FMC_CLK			2
-> +#define HI3519_USB2_BUS_CLK		3
-> +#define HI3519_USB2_PORT_CLK		4
-> +#define HI3519_USB3_CLK			5
-> +#define HI3519_ETH_PHY_CLK		6
-> +#define HI3519_ETH_MAC_CLK		7
-> +#define HI3519_ETH_MACIF_CLK		8
-> +#define HI3519_PWM_CLK			9
-> +#define HI3519_DMA_CLK			10
-> +#define HI3519_SPI0_CLK			11
-> +#define HI3519_SPI1_CLK			12
-> +#define HI3519_SPI2_CLK			13
-> +#define HI3519_IR_CLK			14
-> +#define HI3519_UART0_CLK		15
-> +#define HI3519_UART1_CLK		16
-> +#define HI3519_UART2_CLK		17
-> +#define HI3519_UART3_CLK		18
-> +#define HI3519_UART4_CLK		19
-> +
-> +#define HI3519_EXT_CLKS			19
-> +
-> +#endif	/* __DTS_HI3519_CLOCK_H */
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
