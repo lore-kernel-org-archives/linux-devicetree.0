@@ -1,92 +1,112 @@
-From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [RESEND RFC PATCH 2/2] ARM: dts: rockchip: Update the cpu freqs
- table
-Date: Sat, 9 Jan 2016 11:04:36 +0800
-Message-ID: <569078C4.8080000@rock-chips.com>
-References: <1452252698-16765-1-git-send-email-zhengxing@rock-chips.com>
- <1452252698-16765-3-git-send-email-zhengxing@rock-chips.com>
- <4951150.PYM4FhWu6V@phil>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4951150.PYM4FhWu6V@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, leozwang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sebastian Reichel <sre@kernel.org>
+Subject: [PATCH] ARM: dts: N950: Add wlan support
+Date: Sat,  9 Jan 2016 04:19:34 +0100
+Message-ID: <1452309574-12921-1-git-send-email-sre@kernel.org>
+References: <1451482533-8624-4-git-send-email-uri.mashiach@compulab.co.il>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1451482533-8624-4-git-send-email-uri.mashiach@compulab.co.il>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+Add support for the wl1271 wlan chip. As far as I can see N9 uses the
+same chip with the same enable and irq gpio, but they use the mmc
+interface instead of the spi interface.
 
-On 2016=E5=B9=B401=E6=9C=8809=E6=97=A5 03:16, Heiko Stuebner wrote:
-> Hi Xing,
->
-> Am Freitag, 8. Januar 2016, 19:31:38 schrieb Xing Zheng:
->> Actually, we need more cpu freqs which are 50MHz integer multiples.
->>
->> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->>
->>   arch/arm/boot/dts/rk3036.dtsi |   13 ++++++++++++-
->>   1 file changed, 12 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk303=
-6.dtsi
->> index 1cb5877..1a773eb 100644
->> --- a/arch/arm/boot/dts/rk3036.dtsi
->> +++ b/arch/arm/boot/dts/rk3036.dtsi
->> @@ -79,7 +79,18 @@
->>   			resets =3D <&cru SRST_CORE0>;
->>   			operating-points =3D <
->>   				/* KHz    uV */
->> -				 816000 1000000
->> +				1200000 1200000
->> +				1100000 1200000
->> +				1000000 1200000
->> +				 900000 1200000
->> +				 800000 1200000
->> +				 700000 1200000
->> +				 600000 1200000
->> +				 500000 1200000
->> +				 400000 1200000
->> +				 300000 1200000
->> +				 200000 1200000
->> +				 100000 1200000
-> what about reducing the voltage as well?
->
-> >From rk3288-specific discussions I remember that reducing the freque=
-ncy
-> without touching the voltage, didn't really save so much energy.
-> And it looks like it was running 816MHz@1.0V just fine as well.
->
-> I guess you should find out which voltages are really necessary for e=
-ach
-> step.
->
->
-> Heiko
->
-Thank you for your comments. :-)
+Signed-off-by: Sebastian Reichel <sre@kernel.org>
+---
+Hi,
 
-Yes, these patches currently still in draft stage. Modify the frequency=
-=20
-of 816MHz is for mac apll patch can be FROMLIST for Kylin Board,
-and will work cpu frequency table as a start.
+I got working Wifi on Nokia N950 with this patch and the following
+patches from Uri Mashiach (using 4.4-rc8 as base):
 
-We know you want to set the appropriate frequency of different batches=20
-of The RK3036 SoCs take some time,so I just tested a fixed
-high voltage 1.2v on my evb board, the frequency of the voltage to=20
-ensure that we can work needed.
-We'll start work dynamically adjust the voltage.
+ * wlcore/wl12xx: spi: add power operation function
+ * wlcore/wl12xx: spi: add device tree support
+ * wlcore/wl12xx: spi: fix oops on firmware load
 
-Thanks.
+-- Sebastian
+---
+ arch/arm/boot/dts/omap3-n950-n9.dtsi | 15 +++++++++++++++
+ arch/arm/boot/dts/omap3-n950.dts     | 29 +++++++++++++++++++++++++++++
+ 2 files changed, 44 insertions(+)
 
-- Xing Zheng
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+index e9ee1df0e467..655deb99010a 100644
+--- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
++++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+@@ -31,6 +31,14 @@
+ 		startup-delay-us = <150>;
+ 		enable-active-high;
+ 	};
++
++	vwlan_fixed: fixedregulator@2 {
++		compatible = "regulator-fixed";
++		regulator-name = "VWLAN";
++		gpio = <&gpio2 3 GPIO_ACTIVE_HIGH>; /* gpio 35 */
++		enable-active-high;
++		regulator-boot-off;
++	};
+ };
+ 
+ &omap3_pmx_core {
+@@ -44,6 +52,13 @@
+ 			0x132 (PIN_INPUT_PULLUP | MUX_MODE0) /* sdmmc2_dat3 */
+ 		>;
+ 	};
++
++	wlan_pins: pinmux_wlan_pins {
++		pinctrl-single,pins = <
++			OMAP3_CORE1_IOPAD(0x207c, PIN_OUTPUT | MUX_MODE4) /* gpio 35 - wlan enable */
++			OMAP3_CORE1_IOPAD(0x208a, PIN_INPUT | MUX_MODE4) /* gpio 42 - wlan irq */
++		>;
++	};
+ };
+ 
+ &i2c1 {
+diff --git a/arch/arm/boot/dts/omap3-n950.dts b/arch/arm/boot/dts/omap3-n950.dts
+index 0885b34d5d7d..e5967262f28b 100644
+--- a/arch/arm/boot/dts/omap3-n950.dts
++++ b/arch/arm/boot/dts/omap3-n950.dts
+@@ -17,6 +17,17 @@
+ 	compatible = "nokia,omap3-n950", "ti,omap36xx", "ti,omap3";
+ };
+ 
++&omap3_pmx_core {
++	spi4_pins: pinmux_spi4_pins {
++		pinctrl-single,pins = <
++			OMAP3_CORE1_IOPAD(0x218c, PIN_INPUT_PULLDOWN | MUX_MODE1) /* mcspi4_clk */
++			OMAP3_CORE1_IOPAD(0x2190, PIN_OUTPUT | MUX_MODE1) /* mcspi4_simo */
++			OMAP3_CORE1_IOPAD(0x2192, PIN_INPUT_PULLDOWN | MUX_MODE1) /* mcspi4_somi */
++			OMAP3_CORE1_IOPAD(0x2196, PIN_OUTPUT | MUX_MODE1) /* mcspi4_cs0 */
++		>;
++	};
++};
++
+ &i2c2 {
+ 	smia_1: camera@10 {
+ 		compatible = "nokia,smia";
+@@ -53,3 +64,21 @@
+ 		};
+ 	};
+ };
++
++&mcspi4 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi4_pins>;
++
++	wlcore: wlcore@0 {
++		compatible = "ti,wl1271";
++		pinctrl-names = "default";
++		pinctrl-0 = <&wlan_pins>;
++		reg = <0>;
++		spi-max-frequency = <48000000>;
++		clock-xtal;
++		ref-clock-frequency = <38400000>;
++		interrupts-extended = <&gpio2 10 IRQ_TYPE_LEVEL_HIGH>; /* gpio 42 */
++		vwlan-supply = <&vwlan_fixed>;
++	};
++};
+-- 
+2.6.4
