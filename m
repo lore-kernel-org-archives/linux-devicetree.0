@@ -1,102 +1,85 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 1/2] USB: core: let USB device know device node
-Date: Sat, 9 Jan 2016 17:32:39 +0800
-Message-ID: <20160109093239.GE27759@shlinux2>
-References: <1452231864-11171-2-git-send-email-peter.chen@freescale.com>
- <Pine.LNX.4.44L0.1601081746080.21467-100000@netrider.rowland.org>
+From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v6 0/7] ARM: dts: Add Advantech board support
+Date: Sat, 9 Jan 2016 16:02:17 +0530
+Message-ID: <CACrMeVC+-D3a4pUccQMb0BXwcTts9EAagC4EDcvb=HYMhuD03w@mail.gmail.com>
+References: <1450908016-17384-1-git-send-email-akshay.bhat@timesys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1601081746080.21467-100000-pYrvlCTfrz9XsRXLowluHWD2FQJk+8+b@public.gmane.org>
+In-Reply-To: <1450908016-17384-1-git-send-email-akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Justin Waters <justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 08, 2016 at 05:50:13PM -0500, Alan Stern wrote:
-> On Fri, 8 Jan 2016, Peter Chen wrote:
-> 
-> > Although most of USB devices are hot-plug's, there are still some devices
-> > are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
-> > If these kinds of USB devices are multiple functions, and they can supply
-> > other interfaces like i2c, gpios for other devices, we may need to
-> > descirbe these at device tree.
-> > 
-> > In this commit, it uses "reg" in dts as port number to match the port
-> > number decided by USB core, if they are the same, then the device node
-> > is for the device we are creating for USB core.
-> > 
-> > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> 
-> > +#include <linux/module.h>
-> > +#include <linux/moduleparam.h>
-> 
-> Do you need those two #include's?
+Shawn,
 
-Will remove
+Did you have any further feedback on this patch set? If not can it be applied?
 
-> 
-> > +#include <linux/of.h>
-> > +
-> > +/**
-> > + * usb_of_find_node - Find the device node match port number
-> > + * @dev: the parent device node
-> 
-> The parameter is actually named "parent".
-> 
+Thanks,
+Akshay
 
-Sorry, I copied some code, will change.
-
-> > + * @portnum: the port number which device is connecting 
-> > + *
-> > + * Find the node from device tree according to its port number.
-> > + *
-> > + * Return: On success, a pointer to the device node, %NULL on failure.
-> > + */
-> > +struct device_node *usb_of_find_node(struct device_node *parent, int portnum)
-> > +{
-> > +	struct device_node *node;
-> > +	u32 port;
-> > +
-> > +	for_each_child_of_node(parent, node) {
-> > +		if (!of_property_read_u32(node, "reg", &port)) {
-> > +			if (port == portnum)
-> > +				return node;
-> > +		}
-> > +	}
-> > +
-> > +	return NULL;
-> > +}
-> > +EXPORT_SYMBOL_GPL(usb_of_find_node);
-> > +
-> 
-> > diff --git a/include/linux/usb.h b/include/linux/usb.h
-> > index 89533ba..a3a0b07 100644
-> > --- a/include/linux/usb.h
-> > +++ b/include/linux/usb.h
-> > @@ -21,6 +21,7 @@
-> >  #include <linux/sched.h>	/* for current && schedule_timeout */
-> >  #include <linux/mutex.h>	/* for struct mutex */
-> >  #include <linux/pm_runtime.h>	/* for runtime PM */
-> > +#include <linux/of.h>		/* for device tree */
-> 
-> I think you don't need this line.  You can simply write:
-> 
-> 	struct device_node;
-> 
-> just like the two lines below.
-> 
-> >  struct usb_device;
-> >  struct usb_driver;
-
-Yes, you are right.
-
--- 
-
-Best Regards,
-Peter Chen
+On Thu, Dec 24, 2015 at 3:30 AM, Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org> wrote:
+> This series aims to add Advantech BA-16 module (iMX6 based) and GE board support.
+>
+> This series has been tested against linux-next tag next-20151223.
+>
+> Modifications:
+> v5->v6:
+> - BA16:
+> Add missing dlg,da9063-onkey compatibility
+> Revert partitions container for spi-nor flash
+> Address below comments from Shawn:
+> Update to GPL/X11 dual license
+> Add new line between properties and sub-nodes; between nodes
+> Consistently use lowercase for hex values
+> Move iomux node to bottom of dts file for easier readability
+> Get rid of imx6q-ba16 container to save on indentation
+> Reduce the number of entries in hog group
+> Sort pinctrl nodes alphabetically
+> Explicitly call out pad configuration value instead of 0x80000000
+> - Bx50v3:
+> Update to GPL/X11 dual license
+> Remove @unit-address for regulators as per Shawn's suggestion
+> - B450v3, B650v3 and B850v3:
+> Update to GPL/X11 dual license
+>
+> History:
+> --------
+> [v1]: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-October/381872.html
+> [v2]: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-November/383276.html
+> [v3]: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-November/384202.html
+> [v4]: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/390373.html
+> [v5]: http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/390788.html
+>
+> Akshay Bhat (5):
+>   of: Add vendor prefix for Advantech Corporation
+>   of: Add vendor prefix for General Electric Company
+>   ARM: dts: imx: Add support for Advantech/GE B450v3
+>   ARM: dts: imx: Add support for Advantech/GE B650v3
+>   ARM: dts: imx: Add support for Advantech/GE B850v3
+>
+> Justin Waters (2):
+>   ARM: dts: imx: Add Advantech BA-16 Qseven module
+>   ARM: dts: imx: Add support for Advantech/GE Bx50v3
+>
+>  .../devicetree/bindings/vendor-prefixes.txt        |   2 +
+>  arch/arm/boot/dts/Makefile                         |   3 +
+>  arch/arm/boot/dts/imx6q-b450v3.dts                 | 114 ++++
+>  arch/arm/boot/dts/imx6q-b650v3.dts                 | 114 ++++
+>  arch/arm/boot/dts/imx6q-b850v3.dts                 | 157 +++++
+>  arch/arm/boot/dts/imx6q-ba16.dtsi                  | 641 +++++++++++++++++++++
+>  arch/arm/boot/dts/imx6q-bx50v3.dtsi                | 237 ++++++++
+>  7 files changed, 1268 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6q-b450v3.dts
+>  create mode 100644 arch/arm/boot/dts/imx6q-b650v3.dts
+>  create mode 100644 arch/arm/boot/dts/imx6q-b850v3.dts
+>  create mode 100644 arch/arm/boot/dts/imx6q-ba16.dtsi
+>  create mode 100644 arch/arm/boot/dts/imx6q-bx50v3.dtsi
+>
+> --
+> 2.6.3
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
