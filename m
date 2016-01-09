@@ -1,33 +1,68 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] regulator: add documentation for ACT8945A's
- regulator DT bindings
-Date: Sat, 9 Jan 2016 09:35:54 -0600
-Message-ID: <20160109153554.GA25800@rob-hp-laptop>
-References: <1452218938-10621-1-git-send-email-wenyou.yang@atmel.com>
- <1452218938-10621-3-git-send-email-wenyou.yang@atmel.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] mfd: add documentation for ACT8945A DT bindings
+Date: Sat, 9 Jan 2016 09:38:05 -0600
+Message-ID: <20160109153805.GA27000@rob-hp-laptop>
+References: <1452218729-11357-1-git-send-email-wenyou.yang@atmel.com>
+ <1452218729-11357-3-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1452218938-10621-3-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1452218729-11357-3-git-send-email-wenyou.yang@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wenyou Yang <wenyou.yang@atmel.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 08, 2016 at 10:08:58AM +0800, Wenyou Yang wrote:
-> This patch adds documentation for the DT bindings of the regulator
-> subdevice of ACT8945A MFD.
+On Fri, Jan 08, 2016 at 10:05:28AM +0800, Wenyou Yang wrote:
+> The Active-semi ACT8945A PMIC is a Multi-Function Device, it has
+> two subdevices:
+>  - Regulator
+>  - Charger
 > 
-> Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> This patch adds documentation for ACT8945A DT bindings.
+> 
+> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+
+One nit, otherwise:
+
+Acked-by: Rob Herring <robh@kernel.org>
+
 > ---
 > 
->  .../bindings/regulator/act8945a-regulator.txt      |   78 ++++++++++++++++++++
->  1 file changed, 78 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
+>  Documentation/devicetree/bindings/mfd/act8945a.txt |   16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/act8945a.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/act8945a.txt b/Documentation/devicetree/bindings/mfd/act8945a.txt
+> new file mode 100644
+> index 0000000..406db16
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/act8945a.txt
+> @@ -0,0 +1,16 @@
+> +Device-Tree bindings for Active-semi ACT8945A MFD driver
+> +
+> +Required properties:
+> + - compatible: "active-semi,act8945a".
+> + - reg: the I2C slave address for the ACT8945A chip
+> +
+> +The chip exposes two subdevices:
+> + - a regulators: see ../regulator/act8945a-regulator.txt
+> + - a charger: see ../power/act8945a-charger.txt
+> +
+> +Example:
+> +	mfd: act8945a@5b {
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+s/act8945a/pmic/
+
+> +		compatible = "active-semi,act8945a";
+> +		reg = <0x5b>;
+> +		status = "okay";
+> +	};
+> -- 
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
