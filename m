@@ -1,37 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 07/10] [media] tvp5150: Add device tree binding
- document
-Date: Sat, 9 Jan 2016 16:24:53 -0600
-Message-ID: <20160109222453.GA9848@rob-hp-laptop>
-References: <1452170810-32346-1-git-send-email-javier@osg.samsung.com>
- <1452170810-32346-8-git-send-email-javier@osg.samsung.com>
+Subject: Re: [PATCH v3 2/3] Documentation: gpio: Update description for
+ X-Gene standby GPIO controller DTS binding
+Date: Sat, 9 Jan 2016 16:28:10 -0600
+Message-ID: <20160109222810.GA11205@rob-hp-laptop>
+References: <1452162428-26839-1-git-send-email-qnguyen@apm.com>
+ <1452162428-26839-3-git-send-email-qnguyen@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1452170810-32346-8-git-send-email-javier@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Enrico Butera <ebutera@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Eduard Gavin <egavinc@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org
+In-Reply-To: <1452162428-26839-3-git-send-email-qnguyen@apm.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Quan Nguyen <qnguyen@apm.com>
+Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Y Vo <yvo@apm.com>, Phong Vo <pvo@apm.com>, Loc Ho <lho@apm.com>, Feng Kan <fkan@apm.com>, Duc Dang <dhdang@apm.com>, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 07, 2016 at 09:46:47AM -0300, Javier Martinez Canillas wrote:
-> Add a Device Tree binding document for the TVP5150 video decoder.
+On Thu, Jan 07, 2016 at 05:27:07PM +0700, Quan Nguyen wrote:
+> Update description for X-Gene standby GPIO controller DTS binding to
+> support GPIO line configuration as input, output or external IRQ pin.
 > 
-> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
+> Signed-off-by: Y Vo <yvo@apm.com>
+> Signed-off-by: Quan Nguyen <qnguyen@apm.com>
 > ---
-> 
-> Changes in v2:
-> - Fix indentation of the DTS example. Suggested by Rob Herring.
-> - Rename powerdown-gpios to pdn-gpios to match the pin name in
->   the datasheet. Suggested by Laurent Pinchart.
-> - Add optional properties for the video endpoint and list the supported
->   values. Suggested by Laurent Pinchart.
-> 
->  .../devicetree/bindings/media/i2c/tvp5150.txt      | 45 ++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+>  .../devicetree/bindings/gpio/gpio-xgene-sb.txt     | 49 +++++++++++++++++-----
+>  1 file changed, 38 insertions(+), 11 deletions(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
