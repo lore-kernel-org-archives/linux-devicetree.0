@@ -1,42 +1,37 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/5] clk: bcm2835: enable management of PCM
-	clock
-Date: Sat, 09 Jan 2016 21:56:39 +0100
-Message-ID: <4332640.jBKM55TPAo@wuerfel>
-References: <1452331558-2520-1-git-send-email-kernel@martin.sperl.org>
- <1452331558-2520-3-git-send-email-kernel@martin.sperl.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 07/10] [media] tvp5150: Add device tree binding
+ document
+Date: Sat, 9 Jan 2016 16:24:53 -0600
+Message-ID: <20160109222453.GA9848@rob-hp-laptop>
+References: <1452170810-32346-1-git-send-email-javier@osg.samsung.com>
+ <1452170810-32346-8-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1452331558-2520-3-git-send-email-kernel@martin.sperl.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: kernel@martin.sperl.org
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Michael Turquette <mturquette@baylibre.com>, Lee Jones <lee@kernel.org>, Takashi Iwai <tiwai@suse.com>, Eric Anholt <eric@anholt.net>, Remi Pommarel <repk@triplefau.lt>, Mark Brown <broonie@kernel.org>, linux-rpi-kernel@lists.infradead.org, lFlorian Meier <florian.meier@koalo.de>, Matthias Reichl <hias@horus.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1452170810-32346-8-git-send-email-javier@osg.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Enrico Butera <ebutera@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Eduard Gavin <egavinc@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 09 January 2016 09:25:54 kernel@martin.sperl.org wrote:
-> --- a/include/dt-bindings/clock/bcm2835.h
-> +++ b/include/dt-bindings/clock/bcm2835.h
-> @@ -44,5 +44,6 @@
->  #define BCM2835_CLOCK_EMMC             28
->  #define BCM2835_CLOCK_PERI_IMAGE       29
->  #define BCM2835_CLOCK_PWM              30
-> +#define BCM2835_CLOCK_PCM              31
->  
-> -#define BCM2835_CLOCK_COUNT            31
-> +#define BCM2835_CLOCK_COUNT            32
+On Thu, Jan 07, 2016 at 09:46:47AM -0300, Javier Martinez Canillas wrote:
+> Add a Device Tree binding document for the TVP5150 video decoder.
+> 
+> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> ---
+> 
+> Changes in v2:
+> - Fix indentation of the DTS example. Suggested by Rob Herring.
+> - Rename powerdown-gpios to pdn-gpios to match the pin name in
+>   the datasheet. Suggested by Laurent Pinchart.
+> - Add optional properties for the video endpoint and list the supported
+>   values. Suggested by Laurent Pinchart.
+> 
+>  .../devicetree/bindings/media/i2c/tvp5150.txt      | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp5150.txt
 
-The last line contains an incompatible change, please don't do that.
-If you have to add another clock, do that after the BCM2835_CLOCK_COUNT
-definition to avoid changing dts files that use that number.
-
-	Arnd
+Acked-by: Rob Herring <robh@kernel.org>
