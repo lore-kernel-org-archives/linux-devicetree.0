@@ -1,41 +1,96 @@
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx28: add pinmux for USB1 overcurrent on pwm2
-Date: Sun, 10 Jan 2016 13:13:24 +0000
-Message-ID: <yw1xoacty3uz.fsf@unicorn.mansr.com>
-References: <1452429613-28783-1-git-send-email-mans@mansr.com>
-	<1473600647.505612.cb24b396-67be-4b7b-9938-7cb30ef4fe05.open-xchange@email.1und1.de>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V11 3/7] dma: add Qualcomm Technologies HIDMA management
+ driver
+Date: Sun, 10 Jan 2016 08:14:11 -0500
+Message-ID: <56925923.6080007@codeaurora.org>
+References: <1451865996-12808-1-git-send-email-okaya@codeaurora.org>
+ <1451865996-12808-4-git-send-email-okaya@codeaurora.org>
+ <CAHp75Vd49-1H+1dkDmJzLpVhov1g+uJV+YiTBC9Xd3hVTmwRVg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473600647.505612.cb24b396-67be-4b7b-9938-7cb30ef4fe05.open-xchange-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
-	(Stefan Wahren's message of "Sun, 10 Jan 2016 14:08:40 +0100 (CET)")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Vd49-1H+1dkDmJzLpVhov1g+uJV+YiTBC9Xd3hVTmwRVg@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: dmaengine <dmaengine@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Timur Tabi <timur@codeaurora.org>, devicetree <devicetree@vger.kernel.org>, Christopher Covington <cov@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, jcm@redhat.com, Andy Gross <agross@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
 
-> Hi Mans,
+>> +
+>> +static int set_priority(struct hidma_mgmt_dev *mdev, unsigned int i, u64 val)
+>> +{
+>> +       u64 tmp;
+>> +       int rc;
+>> +
+>> +       if (i > mdev->dma_channels)
+> 
+> Shouldn't be >= ? I somehow missed that.
 >
->> Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org> hat am 10. Januar 2016 um 13:40 gesch=
-rieben:
->>
->>
->> Add pinmux setting for USB1 overcurrent on pwm2 pad.
->
-> could you please change your patch to describe why you need to add
-> this pinmux?
+Corrected.
 
-I'm working on a board that is wired that way.  I can of course put thi=
-s
-in the board-specific dts if that's preferable.
+ 
+>> +               return -EINVAL;
+>> +
+>> +       tmp = mdev->priority[i];
+>> +       mdev->priority[i] = val;
+>> +       rc = hidma_mgmt_setup(mdev);
+>> +       if (rc)
+>> +               mdev->priority[i] = tmp;
+>> +       return rc;
+>> +}
+>> +
+>> +static int set_weight(struct hidma_mgmt_dev *mdev, unsigned int i, u64 val)
+>> +{
+>> +       u64 tmp;
+>> +       int rc;
+>> +
+>> +       if (i > mdev->dma_channels)
+> 
+> Ditto.
+OK
 
---=20
-M=E5ns Rullg=E5rd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>> +               return -EINVAL;
+>> +
+>> +       tmp = mdev->weight[i];
+>> +       mdev->weight[i] = val;
+>> +       rc = hidma_mgmt_setup(mdev);
+>> +       if (rc)
+>> +               mdev->weight[i] = tmp;
+>> +       return rc;
+>> +}
+>> +
+
+>> +
+>> +int hidma_mgmt_init_sys(struct hidma_mgmt_dev *mdev)
+>> +{
+>> +       unsigned int i;
+>> +       int rc;
+>> +       int required;
+>> +       struct kobject *chanops;
+>> +
+>> +       required = sizeof(*mdev->chroots) * mdev->dma_channels;
+>> +       mdev->chroots = devm_kmalloc(&mdev->pdev->dev, required, GFP_KERNEL);
+>> +       if (!mdev->chroots)
+>> +               return -ENOMEM;
+>> +
+>> +       chanops = kobject_create_and_add("chanops", &mdev->pdev->dev.kobj);
+>> +       if (!chanops)
+>> +               return -ENOMEM;
+>> +
+>> +       /* create each channel directory here */
+>> +       for (i = 0; i < mdev->dma_channels; i++) {
+>> +               char name[10];
+> 
+> I would make this bigger just in case i comes bigger by some reason.
+> 16 or 20 looks reasonable.
+> 
+made 20
+
+
+
+-- 
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
