@@ -1,99 +1,78 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH V2 0/2] serial: bcm2835: add bcm2835 auxiliar uart
- driver
-Date: Sun, 10 Jan 2016 22:17:25 +0100 (CET)
-Message-ID: <1993851391.472790.ea76ff5f-f5e1-40e8-bbff-544f1cd5a3c3.open-xchange@email.1und1.de>
-References: <1452344854-2576-1-git-send-email-kernel@martin.sperl.org>
- <1057226922.507844.cb24b396-67be-4b7b-9938-7cb30ef4fe05.open-xchange@email.1und1.de>
- <46FD7886-510C-4F0F-A039-500D5438207B@martin.sperl.org>
+From: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 2/3] spi: sun4i: Fix clock calculations
+ to be predictable and never exceed the requested rate
+Date: Sun, 10 Jan 2016 22:37:21 +0100
+Message-ID: <CAGNoLaOnpCLALNMscQC1XsnPjf55rXMomYdJPJFdpk=FuFgK4g@mail.gmail.com>
+References: <1451145186-14235-1-git-send-email-mweseloh42@gmail.com>
+	<1451145186-14235-3-git-send-email-mweseloh42@gmail.com>
+	<20151227210946.GL30359@lukather>
+	<CAGNoLaPcBAqDqFuff7sWWADjVH3Z-LWhZatSmzvEm4mLSrSNvw@mail.gmail.com>
+	<CAGNoLaMsdPe4BE7+skYR45doEcXkZGA7QdFOidUA_yPZmiE9eg@mail.gmail.com>
+	<20160110194450.GI9631@lukather>
+Reply-To: mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <46FD7886-510C-4F0F-A039-500D5438207B-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-sunxi+bncBDFO74UEV4IRBEM6ZO2AKGQEZM2VVFQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20160110194450.GI9631@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-> Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org> hat am 10. Januar 2016 um 16:4=
-5
-> geschrieben:
+2016-01-10 20:44 GMT+01:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> On Mon, Dec 28, 2015 at 05:22:35PM +0100, Marcus Weseloh wrote:
+>> 2015-12-28 0:29 GMT+01:00 Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+>> > 2015-12-27 22:09 GMT+01:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+[...]
+>> > Oh, and I just noticed a mistake in the comment: the clock driver
+>> > rounds up _or_ down, so I should drop the "up".
+>>
+>> As I'm looking further into this, I think the comment should read
+>> "possibly rounded down", as the clk framework is expected to set a
+>> frequency that is less or equal to the requested frequency.
 >
->
->
-> > On 10.01.2016, at 16:05, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wro=
-te:
-> >
-> > Hi Martin,
-> >
-> >> kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org hat am 9. Januar 2016 um 14:07 geschrieben=
-:
-> >>
-> >>
-> >> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-> >>
-> >> This patch series adds the bcm2835aux uart driver, which is create=
-d
-> >> as a wrapper arround the 8250 driver (based on recommendations by
-> >> Stephen Warren)
-> >>
-> >> The device tree patch itself is not included yet because this
-> >> patch requires the clk-bcm2835aux driver, which is right now only
-> >> in clk-next, but should become available with 4.5.
-> >
-> > it doesn't make sense without the device tree patch. IMHO it's okay=
- as long
-> > as
-> > you point out the dependency and set the node status to disable.
->
-> I agree in principle, but it is the same as with the spi-bcm2835aux d=
-river,
-> where I had provided a patch to the dt, that still has not been appli=
-ed
-> yet, but with the driver itself already in the kernel.
+> AFAIK, there's no such expectation in the clock framework. You
+> treating this from a maximum frequency perspective, but it would be
+> the exact opposite if you were talking about a minimum frequency, as
+> might be the case for other consumers.
 
-Please provide a new version, because it won't apply anymore. It increa=
-se the
-chance of more testing.
+I was looking though the clk driver source and found this comment in
+drivers/clk/sunxi/clk-factors.c (Line 89):
 
->
-> Also the reorganisation of the dt to support the bcm2836 makes this
-> another moving target.
->
-> The other concern is that we would need to use defines included
-> from "dt-bindings/clock/bcm2835aux.h=E2=80=9D and without those the d=
-t will not
-> work.
+/* find the parent that can help provide the fastest rate <= rate */
 
-AFAIK there has been a discussion about such a problem.
+And that comments seems to be correct, because that is what the code
+is doing (and the comment is copied from the core clk framework). So
+it checks every parent to see if that parent could be used to get a
+clock rate that is less or equal to the requested clock. If it can't
+find one, i.e. all parents can only supply a larger clock, then
+-EINVAL is returned. Or am I missing something here?
 
->
-> For the record: this is what would be required:
-> uart1: uart@7e215040 {
-> compatible =3D "brcm,bcm2835-aux-uart";
-> reg =3D <0x7e215040 0x40>;
-> interrupts =3D <1 29>;
-> clocks =3D <&aux BCM2835_AUX_CLOCK_UART>;
-> status =3D "disabled";
-> };
->
-> I can respin the whole patchset to include this as well if you tell m=
-e to.
+Up to now this driver would never return -EINVAL, because of the
+problems in the mod0 clock driver I mentioned. But the intended effect
+seems to be actual rate <= requested rate. And it seems like clk
+drivers on other platforms do this as well.
 
-I think we should wait for a rpi maintainer's response about that. No n=
-eed to
-hurry.
+[...]
+>> That clk_set_rate sets a higher frequency than requested seems to be a
+>> problem in itself. I had a look at clk/sunxi/clk-mod0.c and noticed a
+>> few small problems there. Will post an RFC patch in a couple of
+>> minutes.
+>
+> Did you post these patches already? I think I missed them if that's
+> the case.
 
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, I've posted the patch to the clk-mod0.c here:
+https://groups.google.com/d/msg/linux-sunxi/BQWhOHGqliI/fMtirUFsBgAJ
+
+Cheers,
+
+  Marcus
