@@ -1,81 +1,81 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH] DT: i2c: Add Epson RX8010 to list of trivial devices
-Date: Sun, 10 Jan 2016 09:32:58 +0100
-Message-ID: <20160110083258.GD1526@katana>
-References: <1450895938-21631-1-git-send-email-akshay.bhat@timesys.com>
- <CAHp75VfakA8SykeMSxAKJiDpge9xtMLk=dcemuw=9uU81pk2Lw@mail.gmail.com>
- <20160102211758.GF1589@katana>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: move I2C eeprom descriptions to the
+ proper file
+Date: Sun, 10 Jan 2016 09:40:48 +0100
+Message-ID: <20160110084048.GF1526@katana>
+References: <1452199860-3601-1-git-send-email-wsa@the-dreams.de>
+ <1452199860-3601-2-git-send-email-wsa@the-dreams.de>
+ <20160107230012.GA15023@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="g7w8+K/95kPelPD2"
-Return-path: <linux-i2c-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="TeJTyD9hb8KJN2Jy"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160102211758.GF1589@katana>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Akshay Bhat <akshay.bhat@timesys.com>, ktsai@capellamicro.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jiri Kosina <trivial@kernel.org>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, justin.waters@timesys.com
+In-Reply-To: <20160107230012.GA15023@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---g7w8+K/95kPelPD2
+--TeJTyD9hb8KJN2Jy
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jan 02, 2016 at 10:17:58PM +0100, Wolfram Sang wrote:
-> On Sun, Dec 27, 2015 at 05:02:48PM +0200, Andy Shevchenko wrote:
-> > On Wed, Dec 23, 2015 at 8:38 PM, Akshay Bhat <akshay.bhat@timesys.com> =
-wrote:
-> > > This adds devicetree documentation for the bindings of rtc-rx8010
-> > > driver.
-> > >
-> > > Signed-off-by: Akshay Bhat <akshay.bhat@timesys.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.tx=
-t b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> > > index c50cf13..0f9c1de 100644
-> > > --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> > > +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> > > @@ -49,6 +49,7 @@ dallas,ds4510         CPU Supervisor with Nonvolati=
-le Memory and Programmable I/O
-> > >  dallas,ds75            Digital Thermometer and Thermostat
-> > >  dlg,da9053             DA9053: flexible system level PMIC with multi=
-core support
-> > >  dlg,da9063             DA9063: system PMIC for quad-core application=
- processors
-> > > +epson,rx8010           I2C-BUS INTERFACE REAL TIME CLOCK MODULE
+On Thu, Jan 07, 2016 at 05:00:12PM -0600, Rob Herring wrote:
+> On Thu, Jan 07, 2016 at 09:50:59PM +0100, Wolfram Sang wrote:
+> > From: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
 > >=20
-> > Is it indeed required to have all those capital letters together?
+> > EEPROMs can have additional properties, so they are not suitable for
+> > trivial-devices.txt. Move most bindings to the designated eeprom.txt.
+> > Add the missing "atmel,24c08" while doing that. Note that the remaining
+> > ones in trivial-devices need to be dealt with seperately because of
 >=20
-> I agree. Fixing that in all Epson RTC entries would be nice.
+> s/seperately/separately/
+>=20
+> > improper manufacturer names.
+> >=20
+> > Signed-off-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/eeprom/eeprom.txt   | 19 +++++++++++=
++++-----
+> >  .../devicetree/bindings/i2c/trivial-devices.txt       | 13 -----------=
+--
+> >  2 files changed, 14 insertions(+), 18 deletions(-)
+>=20
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>=20
+> Fine to take these thru your tree.
 
-Applied to for-next nonetheless, thanks! Squashed it with patch 2. Patch
-3 got superseded by a cleanup series I posted recently.
+Fixed the typo and applied both to for-next, thanks for the acks, Rob!
 
 
---g7w8+K/95kPelPD2
+
+--TeJTyD9hb8KJN2Jy
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJWkhc6AAoJEBQN5MwUoCm2sL0P/RqLkjPEChDDKojdrpXUPulR
-GtwTSpSF4ikDVoIlt8bOwa5nnpfnLT9LfIh/yi+PO/ZGTouGpmANxxuc8eRpc1dr
-jFe1FvSIEPkBH28snKLz/ouaJtSFkzaeFb0MsazgFtBPglbygi/HYfdyvAGBLcIG
-6BcfEcPdNaSUbK6KqWPnKLdceqfjhKvxRthaQKYHrCbiGIgkjQWVbLTQF9UJAkBi
-z1fbW2iSiJ/3L8VPJbfwzOKQXkWCNye/1oLZif5VYIMHVZMl8+SGoQAV3WokMeTP
-krzm5CapdV0wHA9TW0AKKOKf7t8rMZhlmGXiIfotiZpLYKnsBTizF9H3SmqGzjmi
-zgDwfc0LNA7/SfqWl61lhkGDyPNPlCFALWUc62Se6P3fdZ2BaBjR6K5nufloy0bM
-4AjJpbYXURKR8HQJHMZ8FnG4xffBo69t3xekSjmvcC6oujXf5bKRhohkOiTFfkvp
-jRgatv2KRjdJRVxdfEijbbDijnO7HTqBebs9hFCtqF1DpuIpUMEGZBU+JxMFcx4y
-FyaNdyPza+hIbaD+0sd4JnZgHS+IyYVhumYcCOhf9u8IXPfgFJq1vQyHwUivE2uy
-FjL5Zh4h1we+54xsgO3Sf9vKNOAB4xW10FwEUYC477oA0WRZz2ePnOXkdNrwWyu6
-AUORwvgC+IbszPYAzyoI
-=r3dx
+iQIcBAEBAgAGBQJWkhkQAAoJEBQN5MwUoCm26QkP/AmgYxmdorHzH0jKJiBg81Rr
+Fq8k/lu+YvNywMIH/59+8dkQ6WyE+5Zp6SlaH5/89EQM9Ty7TtU2JNXoCmNO8+fq
+3Hqlidi1fom+iisOSwOZHblEH0wNnj9WZMLZAWhrJdvNHr0U9javbkUiS5u/m8pK
++qmJKvTIrnUGqlBGnHn8CLQ8LB/SSdVUNL3jBaLIwS41V8PLMD2G8XoCl1GHtRY5
+gi5T+OTtqC1F1qhnODMtnvSatWhMSVa+2vBIYdb7B5r693rJmpMVfpEG02iOUd4p
+9Kramo48EJ+x6w6wENn1F/6xIjyDtyYkS4tTv28C2wsOqEBir6gjRfqUCtNhmKYQ
+s5LLw2NguWz16Ld9xhsf8QN4mykdj8ntvrNVznWJm0kyEVh+ajfUBPrSXDnQxx0I
+l+ar0M9s09DB66N45FGwP8/rGY/dFxbJ1R8AQcgZKcM40R2aLsAL6d6g7HrwT5YY
++SiwCVCUt+RtLBfJPoqobKf8r73xpK2iozokbMHL/s0GtiHJue95Vhm3rQmLgzwc
+OaopQ8rjkuyCiliuXoxEMKEHYoaqVFZz5uSuociMAUxRj1zZVNjK6k4xPk+P3zx9
+qWQgKfc0lU5vxas6/L1idknn9N6/zZ8nbUTSDhasfFG8FQyE2FJURZNVESKYFzNW
+RomPI6Q0S50ZdXZKQxy5
+=4RbI
 -----END PGP SIGNATURE-----
 
---g7w8+K/95kPelPD2--
+--TeJTyD9hb8KJN2Jy--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
