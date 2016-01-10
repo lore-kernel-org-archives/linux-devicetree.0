@@ -1,102 +1,106 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 2/5] clk: bcm2835: enable management of PCM clock
-Date: Sun, 10 Jan 2016 20:13:54 +0100
-Message-ID: <CAMuHMdXwwPMskWtgMr8rnA4h9ZLYU9OYFcM5sxdgOavqbkpbrw@mail.gmail.com>
-References: <1452331558-2520-1-git-send-email-kernel@martin.sperl.org>
-	<1452331558-2520-3-git-send-email-kernel@martin.sperl.org>
-	<4332640.jBKM55TPAo@wuerfel>
-	<CAMuHMdWOt4aCzu8Ode0ZrQ-c80nqAhwD5dd17nhgVbLrRYT5og@mail.gmail.com>
-	<4B891DE1-6340-4D3D-BEE3-F61D9A5D289B@martin.sperl.org>
-	<20160110115858.GV6588@sirena.org.uk>
-	<39E8C95F-C7DC-46C3-B29A-93A865485942@martin.sperl.org>
-	<CAMuHMdXan4aM76aAx_wbnrib7wH5W7tkg60jgRkyQjGFmUEo=A@mail.gmail.com>
-	<D415BD6A-6BE1-4B87-B0D4-D0AC6D39785A@martin.sperl.org>
-	<CAMuHMdVG+ox4JJWAiNRVgTtV_Lz4Njhekp0=dOyY-G+=mxby3Q@mail.gmail.com>
-	<93C244A0-20B7-4E21-A183-E09F83CFE035@martin.sperl.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 2/3] spi: sun4i: Fix clock calculations
+ to be predictable and never exceed the requested rate
+Date: Sun, 10 Jan 2016 20:44:50 +0100
+Message-ID: <20160110194450.GI9631@lukather>
+References: <1451145186-14235-1-git-send-email-mweseloh42@gmail.com>
+ <1451145186-14235-3-git-send-email-mweseloh42@gmail.com>
+ <20151227210946.GL30359@lukather>
+ <CAGNoLaPcBAqDqFuff7sWWADjVH3Z-LWhZatSmzvEm4mLSrSNvw@mail.gmail.com>
+ <CAGNoLaMsdPe4BE7+skYR45doEcXkZGA7QdFOidUA_yPZmiE9eg@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <93C244A0-20B7-4E21-A183-E09F83CFE035-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Remi Pommarel <repk-lovNVp52yxIDGOk2Oe9MvA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ALSA Development Mailing List <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Matthias Reichl <hias-vtPv7MOkFPkAvxtiuMwx3w@public.gmane.org>, lFlorian Meier <florian.meier-oZ8rN/sblLk@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fmvA4kSBHQVZhkR6"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBM7JZK2AKGQETNOUXJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGNoLaMsdPe4BE7+skYR45doEcXkZGA7QdFOidUA_yPZmiE9eg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+--fmvA4kSBHQVZhkR6
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On Sun, Jan 10, 2016 at 8:07 PM, Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org> wrote:
->> On 10.01.2016, at 19:56, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->> On Sun, Jan 10, 2016 at 7:01 PM, Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org> wrote:
->>>> On 10.01.2016, at 14:02, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->>>> I wrote:
->>>> | Hence it can better be replaced (it seems to be unused in dts files, but you
->>>> | can keep the definition to be 100% sure) by an ARRAY_SIZE() in the C driver.
->>>> | This requires changing the driver to e.g. initialize clks[] in
->>>> |bcm2835_clk_probe() based on a table instead of explicit code.
->>>>
->>>> If you fill in clks[] from a static table, you can take ARRAY_SIZE of
->>>> the static table.
->>>
->>> You mean something like the below?
->>> (note: copy/paste from console issues - spaces instead of tabs)
->>
->> More or less.
->>
->>> };
->>>
->>> static inline void cprman_write(struct bcm2835_cprman *cprman, u32 reg, u32 val
->>> @@ -496,6 +496,14 @@ static const struct bcm2835_pll_data bcm2835_pllh_data = {
->>>        .max_fb_rate = BCM2835_MAX_FB_RATE,
->>> };
->>>
->>> +static const struct bcm2835_pll_data *bcm2835_plls[] = {
->>> +       [BCM2835_PLLA] = &bcm2835_plla_data,
->>> +       [BCM2835_PLLB] = &bcm2835_pllb_data,
->>> +       [BCM2835_PLLC] = &bcm2835_pllc_data,
->>> +       [BCM2835_PLLD] = &bcm2835_plld_data,
->>> +       [BCM2835_PLLH] = &bcm2835_pllh_data,
->>> +};
->>
->> This is a sparse array?
-> Yes - for all.
->
->>> struct bcm2835_pll {
->>>        struct clk_hw hw;
->>>        struct bcm2835_cprman *cprman;
->>> @@ -1560,8 +1600,13 @@ static int bcm2835_clk_probe(struct platform_device *pdev)
->>>        struct clk **clks;
->>>        struct bcm2835_cprman *cprman;
->>>        struct resource *res;
->>> +       const int clks_cnt = max(ARRAY_SIZE(bcm2835_plls),
->>> +                                max(ARRAY_SIZE(bcm2835_pll_divs),
->>> +                                    ARRAY_SIZE(bcm2835_clks))) + 1;
->>> +       size_t alloc = sizeof(*cprman) + clks_cnt * sizeof(*clks);
->>> +       size_t i;
->>
->> If you combine all 3 arrays in a single non-sparse array, you could get rid
->> of the dynamic allocation using the maximum of the 3 sizes, and can just
->> use a single ARRAY_SIZE().
->
-> The problem is that we need different initialization methods for pll, pll-dividers
-> and derived clocks, so we can not easily make them a common setting unless we
-> would use function and void pointers to work arround this, which would make it
-> less readable (and more code again just for the - repeated - assignment).
+On Mon, Dec 28, 2015 at 05:22:35PM +0100, Marcus Weseloh wrote:
+> Hi again,
+> 
+> 2015-12-28 0:29 GMT+01:00 Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> > 2015-12-27 22:09 GMT+01:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> [...]
+> > [...]
+> >>> -     /* Ensure that we have a parent clock fast enough */
+> >>> +     /*
+> >>> +      * Ensure that the parent clock is set to twice the max speed
+> >>> +      * of the spi device (possibly rounded up by the clk driver)
+> >>> +      */
+> >>>       mclk_rate = clk_get_rate(sspi->mclk);
+> >>> -     if (mclk_rate < (2 * tfr->speed_hz)) {
+> >>> -             clk_set_rate(sspi->mclk, 2 * tfr->speed_hz);
+> >>> +     if (spi->max_speed_hz != sspi->cur_max_speed ||
+> >>> +         mclk_rate != sspi->cur_mclk) {
+> >>
+> >> Do you need to cache the values? As far as I'm aware, you end up doing
+> >> the computation all the time anyway.
+> >
+> > By caching the values we optimize the case when a single SPI slave
+> > device (or even multiple slave devices with the same max_speed) are
+> > used multiple times in a row. In that case, we're saving two calls:
+> > clk_set_rate and clk_get_rate. I was unsure about how expensive the
+> > clk_* calls were, so I thought it would be safer use caching. But
+> > maybe it's not worth the extra code?
+> >
+> > Oh, and I just noticed a mistake in the comment: the clock driver
+> > rounds up _or_ down, so I should drop the "up".
+> 
+> As I'm looking further into this, I think the comment should read
+> "possibly rounded down", as the clk framework is expected to set a
+> frequency that is less or equal to the requested frequency.
 
-You can store the clock type in the array elements, too?
+AFAIK, there's no such expectation in the clock framework. You
+treating this from a maximum frequency perspective, but it would be
+the exact opposite if you were talking about a minimum frequency, as
+might be the case for other consumers.
 
-I'm doing something similar, cfr. drivers/clk/shmobile/*-cpg-mssr.* in next.
+> So the effect I was seeing (that I got a frequency higher than the
+> requested one) is actually a bug!? Further details below.
+> 
+> > [...]
+> >>> -     div = mclk_rate / (2 * tfr->speed_hz);
+> >>> -     if (div <= (SUN4I_CLK_CTL_CDR2_MASK + 1)) {
+> >>> -             if (div > 0)
+> >>> -                     div--;
+> >>> -
+> >>> +     div = DIV_ROUND_UP(mclk_rate, 2 * tfr->speed_hz) - 1;
+> >>
+> >> Isn't it exactly the same thing as mclk_rate / (2 * tfr->speed_hz) ?
+> >
+> > It is quite often, but not in all cases. The plain division rounds to
+> > the nearest integer, so it rounds down sometimes. Consider the
+> > following case: we have a slow SPI device with a spi-max-frequency of
+> > 50kHz. Our clock driver can't find a clock as slow as 100kHz, so it
+> > sets mclk to 214,285Hz.
+> 
+> That clk_set_rate sets a higher frequency than requested seems to be a
+> problem in itself. I had a look at clk/sunxi/clk-mod0.c and noticed a
+> few small problems there. Will post an RFC patch in a couple of
+> minutes.
 
-Gr{oetje,eeting}s,
+Did you post these patches already? I think I missed them if that's
+the case.
 
-                        Geert
+Maxime
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--fmvA4kSBHQVZhkR6--
