@@ -1,59 +1,61 @@
-From: Xing Zheng <zhengxing@rock-chips.com>
-Subject: Re: [PATCH] dt-bindings: Fix the external clock name for the RK3036 EMAC
-Date: Sun, 10 Jan 2016 18:36:12 +0800
-Message-ID: <B588B7A8-EC8A-44A5-AEDF-F75AB5361F01@rock-chips.com>
-References: <1452410557-29208-1-git-send-email-zhengxing@rock-chips.com> <4001585.V8iyL2PDAE@phil> <E6BB80D3-5A62-4BE1-BFC2-74DAC9213C95@rock-chips.com>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain; charset=gb2312
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <E6BB80D3-5A62-4BE1-BFC2-74DAC9213C95@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org, keescook@google.com, leozwang@google.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, xing.zheng@rock-chips.com
+From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Subject: Re: [PATCH V2 1/2] dt/bindings: serial: bcm2835: add binding documentation for bcm2835-aux-uart
+Date: Sun, 10 Jan 2016 11:49:19 +0100
+Message-ID: <175E89CE-581C-48AB-B7FF-6E9A41B033D5@martin.sperl.org>
+References: <1452344854-2576-1-git-send-email-kernel@martin.sperl.org> <1452344854-2576-2-git-send-email-kernel@martin.sperl.org> <10159898.8xe3rmYdEi@wuerfel>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <10159898.8xe3rmYdEi@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
 
-> =D4=DA 2016=C4=EA1=D4=C210=C8=D5=A3=AC18:29=A3=ACXing Zheng <zhengxin=
-g@rock-chips.com> =D0=B4=B5=C0=A3=BA
->=20
->=20
-> Hi Heiko,
->=20
->> =D4=DA 2016=C4=EA1=D4=C210=C8=D5=A3=AC17:59=A3=ACHeiko Stuebner <hei=
-ko@sntech.de> =D0=B4=B5=C0=A3=BA
->>=20
->> Hi Xing,
->>=20
->> Am Sonntag, 10. Januar 2016, 15:22:37 schrieb Xing Zheng:
->>> Because the RK3036 doesn't support EMAC, and only support the RMII =
-mode
->>> in the EMAC IP, we refer to the TRM CRU and update the new external
->>> clock name for EMAC.
->>>=20
->>> Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
->>=20
->> as I said in the other mail, I already fixed the original patch myse=
-lf :-)
->> So I'm just going to drop this one.
->>=20
->>=20
->> Heiko
->>=20
->> https://git.kernel.org/cgit/linux/kernel/git/mmind/linux-rockchip.gi=
-t/commit/?h=3Dv4.5-clk/fixes&id=3D88807906af108a8384d77ad9cfb9421f164ea=
-931
-> I am sorry to misunderstand.
->=20
-> OK, thank you for your help.  :)
+> On 09.01.2016, at 21:53, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> 
+> On Saturday 09 January 2016 13:07:32 kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
+>> +
+>> +       uart1: uart@7e215040 {
+>> +               compatible = "brcm,bcm2835-aux-uart";
+>> +               reg = <0x7e215040 0x40>;
+>> +               interrupts = <1 29>;
+>> +               clocks = <&aux BCM2835_AUX_CLOCK_UART>;
+>> +       };
+>> 
+> 
+> The node name should always be "serial@...", not "uart@..."
+> 
+> 	Arnd
 
-Your patch is:
-- - "ext_gmac" - external GMAC clock - optional
-+ - "rmii_clkin" - external GMAC clock - optional
+The existing dts arch/arm/boot/dts/bcm2835.dtsi already contains:
+                uart0: uart@7e201000 {
+                        compatible = "brcm,bcm2835-pl011", "arm,pl011", "arm,primecell";
+                        reg = <0x7e201000 0x1000>;
+                        interrupts = <2 25>;
+                        clocks = <&clocks BCM2835_CLOCK_UART>,
+                                 <&clocks BCM2835_CLOCK_VPU>;
+                        clock-names = "uartclk", "apb_pclk";
+                        arm,primecell-periphid = <0x00241011>;
+                };
+for the primary uart.
 
-I think that these should be like this:
-- - "ext_gmac" - external GMAC clock - optional
-+ - "rmii_clkin" - external EMAC clock - optional
+So I was just following that example and would hesitate to
+use a different nomenclature in the same file (even though I
+saw serial examples elsewhere).
 
-Thanks. :)
+I guess this is a more general thing that needs to get resolved.
+
+If you tell me to re-spin the patch because of this then I can do that,
+but that would not solve the issue with uart0.
+
+Thanks,
+	Martin
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
