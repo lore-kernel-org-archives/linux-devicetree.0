@@ -1,238 +1,132 @@
-From: Martin Sperl <kernel@martin.sperl.org>
-Subject: Re: [PATCH 2/5] clk: bcm2835: enable management of PCM clock
-Date: Sun, 10 Jan 2016 19:01:30 +0100
-Message-ID: <D415BD6A-6BE1-4B87-B0D4-D0AC6D39785A@martin.sperl.org>
-References: <1452331558-2520-1-git-send-email-kernel@martin.sperl.org> <1452331558-2520-3-git-send-email-kernel@martin.sperl.org> <4332640.jBKM55TPAo@wuerfel> <CAMuHMdWOt4aCzu8Ode0ZrQ-c80nqAhwD5dd17nhgVbLrRYT5og@mail.gmail.com> <4B891DE1-6340-4D3D-BEE3-F61D9A5D289B@martin.sperl.org> <20160110115858.GV6588@sirena.org.uk> <39E8C95F-C7DC-46C3-B29A-93A865485942@martin.sperl.org> <CAMuHMdXan4aM76aAx_wbnrib7wH5W7tkg60jgRkyQjGFmUEo=A@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXan4aM76aAx_wbnrib7wH5W7tkg60jgRkyQjGFmUEo=A@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Remi Pommarel <repk@triplefau.lt>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-rpi-kernel@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Matthias Reichl <hias@horus.com>, lFlorian Meier <florian.meier@koalo.de>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 2/3] spi: sun4i: Fix clock calculations
+ to be predictable and never exceed the requested rate
+Date: Sun, 10 Jan 2016 19:14:28 +0100
+Message-ID: <20160110181428.GH9631@lukather>
+References: <1451145186-14235-1-git-send-email-mweseloh42@gmail.com>
+ <1451145186-14235-3-git-send-email-mweseloh42@gmail.com>
+ <20151227210946.GL30359@lukather>
+ <CAGNoLaPcBAqDqFuff7sWWADjVH3Z-LWhZatSmzvEm4mLSrSNvw@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0OWHXb1mYLuhj1Ox"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBBN7ZK2AKGQEFG2HBCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGNoLaPcBAqDqFuff7sWWADjVH3Z-LWhZatSmzvEm4mLSrSNvw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Marcus Weseloh <mweseloh42-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+--0OWHXb1mYLuhj1Ox
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-> On 10.01.2016, at 14:02, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+Hi,
+
+On Mon, Dec 28, 2015 at 12:29:16AM +0100, Marcus Weseloh wrote:
+> Hi,
 > 
-> I wrote:
-> | Hence it can better be replaced (it seems to be unused in dts files, but you
-> | can keep the definition to be 100% sure) by an ARRAY_SIZE() in the C driver.
-> | This requires changing the driver to e.g. initialize clks[] in
-> |bcm2835_clk_probe() based on a table instead of explicit code.
+> 2015-12-27 22:09 GMT+01:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> > On Sat, Dec 26, 2015 at 04:53:05PM +0100, Marcus Weseloh wrote:
+> >> This patch fixes multiple problems with the current clock calculations:
+> >>
+> >> 1. The A10/A20 datasheet contains the formula AHB_CLK / (2^(n+1)) to
+> >> calculate SPI_CLK from CDR1, but this formula is wrong. The actual
+> >> formula - determined by analyzing the actual waveforms - is
+> >> AHB_CLK / (2^n).
+> >>
+> >> 2. The divisor calculations for CDR1 and CDR2 both rounded to the
+> >> nearest integer. This could lead to a transfer speed that is higher than
+> >> the requested speed. This patch changes both calculations to always
+> >> round down.
+> >>
+> >> 3. The mclk frequency was only ever increased, never decreased. This could
+> >> lead to unpredictable transfer speeds, depending on the order in which
+> >> transfers with different speeds where serviced by the SPI driver.
+> >
+> > These 3 should probably be separate patches (and be Cc'd to stable
 > 
-> If you fill in clks[] from a static table, you can take ARRAY_SIZE of
-> the static table.
+> Will do. But I have the feeling that at least 1. and 2. should be in
+> the same patch as they touch the same lines of code. Do you think that
+> would be ok?
 
-You mean something like the below?
-(note: copy/paste from console issues - spaces instead of tabs)
+It can also be two subsequent patches that are part of the same serie.
 
-diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-index dee67b3..5ce5e7f 100644
---- a/drivers/clk/bcm/clk-bcm2835.c
-+++ b/drivers/clk/bcm/clk-bcm2835.c
-@@ -294,7 +294,7 @@ struct bcm2835_cprman {
-        const char *osc_name;
+> And before CC'ing stable, I would love to have someone with access to
+> A10 hardware and a scope (or even a bus pirate) check that the A10 SPI
+> controller does indeed have the same "bug". I strongly think so, but
+> would sleep better if it could be confirmed.
 
-        struct clk_onecell_data onecell;
--       struct clk *clks[BCM2835_CLOCK_COUNT];
-+       struct clk *clks[];
- };
+We never noticed any significant difference between the two. By now,
+if there was any, we probably would be aware of it. And if there's
+any, we can always send a subsequent patch.
 
- static inline void cprman_write(struct bcm2835_cprman *cprman, u32 reg, u32 val
-@@ -496,6 +496,14 @@ static const struct bcm2835_pll_data bcm2835_pllh_data = {
-        .max_fb_rate = BCM2835_MAX_FB_RATE,
- };
+> >> -     /* Ensure that we have a parent clock fast enough */
+> >> +     /*
+> >> +      * Ensure that the parent clock is set to twice the max speed
+> >> +      * of the spi device (possibly rounded up by the clk driver)
+> >> +      */
+> >>       mclk_rate = clk_get_rate(sspi->mclk);
+> >> -     if (mclk_rate < (2 * tfr->speed_hz)) {
+> >> -             clk_set_rate(sspi->mclk, 2 * tfr->speed_hz);
+> >> +     if (spi->max_speed_hz != sspi->cur_max_speed ||
+> >> +         mclk_rate != sspi->cur_mclk) {
+> >
+> > Do you need to cache the values? As far as I'm aware, you end up doing
+> > the computation all the time anyway.
+> 
+> By caching the values we optimize the case when a single SPI slave
+> device (or even multiple slave devices with the same max_speed) are
+> used multiple times in a row. In that case, we're saving two calls:
+> clk_set_rate and clk_get_rate. I was unsure about how expensive the
+> clk_* calls were, so I thought it would be safer use caching. But
+> maybe it's not worth the extra code?
 
-+static const struct bcm2835_pll_data *bcm2835_plls[] = {
-+       [BCM2835_PLLA] = &bcm2835_plla_data,
-+       [BCM2835_PLLB] = &bcm2835_pllb_data,
-+       [BCM2835_PLLC] = &bcm2835_pllc_data,
-+       [BCM2835_PLLD] = &bcm2835_plld_data,
-+       [BCM2835_PLLH] = &bcm2835_pllh_data,
-+};
-+
- struct bcm2835_pll_divider_data {
-        const char *name;
-        const struct bcm2835_pll_data *source_pll;
-@@ -625,6 +633,20 @@ static const struct bcm2835_pll_divider_data bcm2835_pllh_p
-        .fixed_divider = 10,
- };
+Unless you can point that there's a significant performance
+difference, I'm not sure it's worth it.
 
-+static const struct bcm2835_pll_divider_data *bcm2835_pll_divs[] = {
-+       [BCM2835_PLLA_CORE]     = &bcm2835_plla_core_data,
-+       [BCM2835_PLLA_PER]      = &bcm2835_plla_per_data,
-+       [BCM2835_PLLC_CORE0]    = &bcm2835_pllc_core0_data,
-+       [BCM2835_PLLC_CORE1]    = &bcm2835_pllc_core1_data,
-+       [BCM2835_PLLC_CORE2]    = &bcm2835_pllc_core2_data,
-+       [BCM2835_PLLC_PER]      = &bcm2835_pllc_per_data,
-+       [BCM2835_PLLD_CORE]     = &bcm2835_plld_core_data,
-+       [BCM2835_PLLD_PER]      = &bcm2835_plld_per_data,
-+       [BCM2835_PLLH_RCAL]     = &bcm2835_pllh_rcal_data,
-+       [BCM2835_PLLH_AUX]      = &bcm2835_pllh_aux_data,
-+       [BCM2835_PLLH_PIX]      = &bcm2835_pllh_pix_data,
-+};
-+
- struct bcm2835_clock_data {
-        const char *name;
+> Oh, and I just noticed a mistake in the comment: the clock driver
+> rounds up _or_ down, so I should drop the "up".
+> 
+> [...]
+> >> -     div = mclk_rate / (2 * tfr->speed_hz);
+> >> -     if (div <= (SUN4I_CLK_CTL_CDR2_MASK + 1)) {
+> >> -             if (div > 0)
+> >> -                     div--;
+> >> -
+> >> +     div = DIV_ROUND_UP(mclk_rate, 2 * tfr->speed_hz) - 1;
+> >
+> > Isn't it exactly the same thing as mclk_rate / (2 * tfr->speed_hz) ?
+> 
+> It is quite often, but not in all cases. The plain division rounds to
+> the nearest integer, so it rounds down sometimes. Consider the
+> following case: we have a slow SPI device with a spi-max-frequency of
+> 50kHz. Our clock driver can't find a clock as slow as 100kHz, so it
+> sets mclk to 214,285Hz.
+> 
+> Using the old calculation we get: 214,285 / (2 * 50,000) = 2, so div =
+> 1 as the old code subtracts 1 two lines further down
+> The new calculation results in: DIV_ROUND_UP(214,285, 2 * 50,000)  =
+> 3, so div = 2 if we add the -1
 
-@@ -837,6 +859,24 @@ static const struct bcm2835_clock_data bcm2835_clock_pcm_da
-        .mash = 1,
- };
+Except that you have that extra - 1 after your DIV_ROUND_UP
+calculation in the line you add.  so you have to remove 1 from that
+line above, and then 1 again when we set the register, which ends up
+being the exact same thing, or am I missing something?
 
-+static const struct bcm2835_clock_data *bcm2835_clks[] = {
-+       [BCM2835_CLOCK_TIMER]   = &bcm2835_clock_timer_data,
-+       [BCM2835_CLOCK_OTP]     = &bcm2835_clock_otp_data,
-+       [BCM2835_CLOCK_TSENS]   = &bcm2835_clock_tsens_data,
-+       [BCM2835_CLOCK_VPU]     = &bcm2835_clock_vpu_data,
-+       [BCM2835_CLOCK_V3D]     = &bcm2835_clock_v3d_data,
-+       [BCM2835_CLOCK_ISP]     = &bcm2835_clock_isp_data,
-+       [BCM2835_CLOCK_H264]    = &bcm2835_clock_h264_data,
-+       [BCM2835_CLOCK_V3D]     = &bcm2835_clock_v3d_data,
-+       [BCM2835_CLOCK_SDRAM]   = &bcm2835_clock_sdram_data,
-+       [BCM2835_CLOCK_UART]    = &bcm2835_clock_uart_data,
-+       [BCM2835_CLOCK_VEC]     = &bcm2835_clock_vec_data,
-+       [BCM2835_CLOCK_HSM]     = &bcm2835_clock_hsm_data,
-+       [BCM2835_CLOCK_EMMC]    = &bcm2835_clock_emmc_data,
-+       [BCM2835_CLOCK_PWM]     = &bcm2835_clock_pwm_data,
-+       [BCM2835_CLOCK_PCM]     = &bcm2835_clock_pcm_data,
-+};
-+
- struct bcm2835_pll {
-        struct clk_hw hw;
-        struct bcm2835_cprman *cprman;
-@@ -1560,8 +1600,13 @@ static int bcm2835_clk_probe(struct platform_device *pdev)
-        struct clk **clks;
-        struct bcm2835_cprman *cprman;
-        struct resource *res;
-+       const int clks_cnt = max(ARRAY_SIZE(bcm2835_plls),
-+                                max(ARRAY_SIZE(bcm2835_pll_divs),
-+                                    ARRAY_SIZE(bcm2835_clks))) + 1;
-+       size_t alloc = sizeof(*cprman) + clks_cnt * sizeof(*clks);
-+       size_t i;
+Thanks!
+Maxime
 
--       cprman = devm_kzalloc(dev, sizeof(*cprman), GFP_KERNEL);
-+       cprman = devm_kzalloc(dev, alloc , GFP_KERNEL);
-        if (!cprman)
-                return -ENOMEM;
-
-@@ -1578,67 +1623,43 @@ static int bcm2835_clk_probe(struct platform_device *pdev)
-
-        platform_set_drvdata(pdev, cprman);
-
--       cprman->onecell.clk_num = BCM2835_CLOCK_COUNT;
-+       cprman->onecell.clk_num = clks_cnt;
-        cprman->onecell.clks = cprman->clks;
-        clks = cprman->clks;
-
--       clks[BCM2835_PLLA] = bcm2835_register_pll(cprman, &bcm2835_plla_data);
--       clks[BCM2835_PLLB] = bcm2835_register_pll(cprman, &bcm2835_pllb_data);
--       clks[BCM2835_PLLC] = bcm2835_register_pll(cprman, &bcm2835_pllc_data);
--       clks[BCM2835_PLLD] = bcm2835_register_pll(cprman, &bcm2835_plld_data);
--       clks[BCM2835_PLLH] = bcm2835_register_pll(cprman, &bcm2835_pllh_data);
--
--       clks[BCM2835_PLLA_CORE] =
--               bcm2835_register_pll_divider(cprman, &bcm2835_plla_core_data);
--       clks[BCM2835_PLLA_PER] =
--               bcm2835_register_pll_divider(cprman, &bcm2835_plla_per_data);
--       clks[BCM2835_PLLC_CORE0] =
--               bcm2835_register_pll_divider(cprman, &bcm2835_pllc_core0_data);
--       clks[BCM2835_PLLC_CORE1] =
--               bcm2835_register_pll_divider(cprman, &bcm2835_pllc_core1_data);
--       clks[BCM2835_PLLC_CORE2] =
--               bcm2835_register_pll_divider(cprman, &bcm2835_pllc_core2_data);
--       clks[BCM2835_PLLC_PER] =
--               bcm2835_register_pll_divider(cprman, &bcm2835_pllc_per_data);
--       clks[BCM2835_PLLD_CORE] =
--               bcm2835_register_pll_divider(cprman, &bcm2835_plld_core_data);
--       clks[BCM2835_PLLD_PER] =
--               bcm2835_register_pll_divider(cprman, &bcm2835_plld_per_data);
--       clks[BCM2835_PLLH_RCAL] =
--               bcm2835_register_pll_divider(cprman, &bcm2835_pllh_rcal_data);
--       clks[BCM2835_PLLH_AUX] =
--               bcm2835_register_pll_divider(cprman, &bcm2835_pllh_aux_data);
--       clks[BCM2835_PLLH_PIX] =
--               bcm2835_register_pll_divider(cprman, &bcm2835_pllh_pix_data);
--
--       clks[BCM2835_CLOCK_TIMER] =
--               bcm2835_register_clock(cprman, &bcm2835_clock_timer_data);
--       clks[BCM2835_CLOCK_OTP] =
--               bcm2835_register_clock(cprman, &bcm2835_clock_otp_data);
--       clks[BCM2835_CLOCK_TSENS] =
--               bcm2835_register_clock(cprman, &bcm2835_clock_tsens_data);
--       clks[BCM2835_CLOCK_VPU] =
--               bcm2835_register_clock(cprman, &bcm2835_clock_vpu_data);
--       clks[BCM2835_CLOCK_V3D] =
--               bcm2835_register_clock(cprman, &bcm2835_clock_v3d_data);
--       clks[BCM2835_CLOCK_ISP] =
--               bcm2835_register_clock(cprman, &bcm2835_clock_isp_data);
--       clks[BCM2835_CLOCK_H264] =
--               bcm2835_register_clock(cprman, &bcm2835_clock_h264_data);
--       clks[BCM2835_CLOCK_V3D] =
--               bcm2835_register_clock(cprman, &bcm2835_clock_v3d_data);
--       clks[BCM2835_CLOCK_SDRAM] =
--               bcm2835_register_clock(cprman, &bcm2835_clock_sdram_data);
--       clks[BCM2835_CLOCK_UART] =
--               bcm2835_register_clock(cprman, &bcm2835_clock_uart_data);
--       clks[BCM2835_CLOCK_VEC] =
--               bcm2835_register_clock(cprman, &bcm2835_clock_vec_data);
--       clks[BCM2835_CLOCK_HSM] =
--               bcm2835_register_clock(cprman, &bcm2835_clock_hsm_data);
--       clks[BCM2835_CLOCK_EMMC] =
--               bcm2835_register_clock(cprman, &bcm2835_clock_emmc_data);
--       clks[BCM2835_CLOCK_PCM] =
--               bcm2835_register_clock(cprman, &bcm2835_clock_pcm_data);
-+       /*  register pll */
-+       for(i = 0; i< ARRAY_SIZE(bcm2835_plls); i++) {
-+               if (!bcm2835_plls[i])
-+                       continue;
-+               clks[i] = bcm2835_register_pll( cprman, bcm2835_plls[i]);
-+       }
-+
-+       /* register pll divider */
-+       for(i = 0; i< ARRAY_SIZE(bcm2835_pll_divs); i++) {
-+               if (!bcm2835_pll_divs[i])
-+                       continue;
-+               if (clks[i]) {
-+                       dev_err(dev,
-+                               "Could not register pll_div_id %i - is already defined as: %pC\n",
-+                               i, clks[i]);
-+                       continue;
-+               }
-+               clks[i] = bcm2835_register_pll_divider(cprman,
-+                                                      bcm2835_pll_divs[i]);
-+       }
-+
-+       /* register clocks */
-+       for(i = 0; i< ARRAY_SIZE(bcm2835_clks); i++) {
-+               if (!bcm2835_clks[i])
-+                       continue;
-+               if (clks[i]) {
-+                       dev_err(dev,
-+                               "Could not register clock_id %i - is already defined as: %pC\n",
-+                               i, clks[i]);
-+                       continue;
-+               }
-+               clks[i] = bcm2835_register_clock(cprman, bcm2835_clks[i]);
-+       }
-
-        /*
-         * CM_PERIICTL (and CM_PERIACTL, CM_SYSCTL and CM_VPUCTL if
-@@ -1652,8 +1673,6 @@ static int bcm2835_clk_probe(struct platform_device *pdev)
-                                  cprman->regs + CM_PERIICTL, CM_GATE_BIT,
-                                  0, &cprman->regs_lock);
-
--       clks[BCM2835_CLOCK_PWM] =
--               bcm2835_register_clock(cprman, &bcm2835_clock_pwm_data);
-
-        return of_clk_add_provider(dev->of_node, of_clk_src_onecell_get,
-                                   &cprman->onecell);
-
-
-If so, then I will send it as a patch plus the PCM patch after I have
-finished testing the patch.
-
-This patch-set would also include the complete list of clocks still 
-missing from dt-bindings.h as well as the patch that adds all the
-clock registers, which I had sent earlier.
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--0OWHXb1mYLuhj1Ox--
