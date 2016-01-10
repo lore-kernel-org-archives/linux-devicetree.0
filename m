@@ -1,60 +1,70 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 3/3] ASoC: pcm179x: Add support for pcm1795 and
- pcm1796
-Date: Sun, 10 Jan 2016 12:00:45 +0000
-Message-ID: <20160110120045.GW6588@sirena.org.uk>
-References: <1452382685-18009-1-git-send-email-michael@amarulasolutions.com>
- <1452382685-18009-4-git-send-email-michael@amarulasolutions.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="f3bMXCeKxSopGW1v"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1452382685-18009-4-git-send-email-michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+From: Martin Sperl <kernel@martin.sperl.org>
+Subject: Re: [PATCH 2/5] clk: bcm2835: enable management of PCM clock
+Date: Sun, 10 Jan 2016 13:17:17 +0100
+Message-ID: <39E8C95F-C7DC-46C3-B29A-93A865485942@martin.sperl.org>
+References: <1452331558-2520-1-git-send-email-kernel@martin.sperl.org> <1452331558-2520-3-git-send-email-kernel@martin.sperl.org> <4332640.jBKM55TPAo@wuerfel> <CAMuHMdWOt4aCzu8Ode0ZrQ-c80nqAhwD5dd17nhgVbLrRYT5og@mail.gmail.com> <4B891DE1-6340-4D3D-BEE3-F61D9A5D289B@martin.sperl.org> <20160110115858.GV6588@sirena.org.uk>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160110115858.GV6588@sirena.org.uk>
+Sender: linux-clk-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Remi Pommarel <repk@triplefau.lt>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-rpi-kernel@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Matthias Reichl <hias@horus.com>, lFlorian Meier <florian.meier@koalo.de>
 List-Id: devicetree@vger.kernel.org
 
 
---f3bMXCeKxSopGW1v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On 10.01.2016, at 12:58, Mark Brown <broonie@kernel.org> wrote:
+>=20
+> On Sun, Jan 10, 2016 at 11:55:48AM +0100, Martin Sperl wrote:
+>=20
+>> So if someone with a better idea how to keep those dt-binding includ=
+es
+>> synchronized with the definitions used by the code step forward and
+>> propose a better solution how to get that implemented?
+>=20
+>> I guess there will be a few more occurrences of clocks that are
+>> currently not defined, which will need to get introduced in the futu=
+re
+>> PWM and PCM were just the last in this series.
+>=20
+> Presumably just making the code not rely on having a define for the
+> number of clocks would deal with the problem (eg, using ARRAY_SIZE
+> internally).
+ARRAY_SIZE would work fine, but the code is:=20
 
-On Sun, Jan 10, 2016 at 12:38:05AM +0100, Michael Trimarchi wrote:
+#include <dt-bindings/clock/bcm2835.h>
+=2E..
+struct bcm2835_cprman {
+	struct device *dev;
+	void __iomem *regs;
+	spinlock_t regs_lock;
+	const char *osc_name;
 
-> +	if (priv->codec_model == PCM1795)
-> +		formats = PCM1795_FORMATS;
+	struct clk_onecell_data onecell;
+	struct clk *clks[BCM2835_CLOCK_COUNT];
+};
+=2E..
+static int bcm2835_clk_probe(struct platform_device *pdev)
+{
+=2E..
+	clks[BCM2835_PLLA_CORE] =3D
+		bcm2835_register_pll_divider(cprman, &bcm2835_plla_core_data);
+=2E..
+        clks[BCM2835_CLOCK_PCM] =3D
+                bcm2835_register_clock(cprman, &bcm2835_clock_pcm_data)=
+;
+=2E..
+}
 
-This should be a switch statement to handle any future variations.
+So the Array size is defined by the dt-bindings.
 
->  static const struct of_device_id pcm179x_of_match[] = {
->  	{ .compatible = "ti,pcm1792a", },
-> +	{ .compatible = "ti,pcm1796", },
-> +	{ .compatible = "ti,pcm1795",
-> +	  .data = &codec_model,
-> +	},
+What you propose is a major change to the clock framework, so I would
+hope that Eric (the original author of this clock-driver) would address
+it.
 
-Please keep tables sorted, it avoid conflicts and merge issues when
-adding new entries.
+Maybe someone has a better idea for a pattern to use to achieve=20
+the required while maintaining =E2=80=9Csynchronization=E2=80=9D betwee=
+n defines
+inside the dt-binding and the driver.
 
---f3bMXCeKxSopGW1v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWkkfsAAoJECTWi3JdVIfQp7oH/1TnOIht9/d4Uv+FJrz2zAsc
-ZuY4YyT6Xu9DCxKsOkNLufQIMcfFqRtyISrSjGk0tcKhqGoRiV+lDSpwyh7bJYJ5
-iUrF38U7b9FQItVvUeIExqyLEOTrXsHhMbZjjjdBfhtIi5STfXmYhS2huiEEu5Y6
-xT7tKzMYiI4Ab5IXxDqiBFYWYdAnzQLDAaZkomh3sbm+1phmyCj2lCqvaF61BCoM
-x6CBxXuLFC2cks2rsNPcIaNZWVICy29oMJCiGR3+NI9wDf1E3Jz+3wb5JoHUEGow
-G9YFhkwmJJoec5RX4zKnAszehNXk3ICqZ/tCx8Zfn/63VntzCfTACsSx68H+DoA=
-=j0V3
------END PGP SIGNATURE-----
-
---f3bMXCeKxSopGW1v--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
