@@ -1,105 +1,92 @@
-From: Remi Pommarel <repk@triplefau.lt>
-Subject: Re: [PATCH 2/5] clk: bcm2835: enable management of PCM clock
-Date: Sun, 10 Jan 2016 13:30:14 +0100
-Message-ID: <20160110123014.GA1764@cruxbox>
-References: <1452331558-2520-1-git-send-email-kernel@martin.sperl.org>
- <1452331558-2520-3-git-send-email-kernel@martin.sperl.org>
- <4332640.jBKM55TPAo@wuerfel>
- <CAMuHMdWOt4aCzu8Ode0ZrQ-c80nqAhwD5dd17nhgVbLrRYT5og@mail.gmail.com>
- <4B891DE1-6340-4D3D-BEE3-F61D9A5D289B@martin.sperl.org>
- <20160110115858.GV6588@sirena.org.uk>
- <39E8C95F-C7DC-46C3-B29A-93A865485942@martin.sperl.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 6/6] regulator: max77620: add regulator driver for
+ max77620/max20024
+Date: Sun, 10 Jan 2016 12:40:14 +0000
+Message-ID: <20160110124014.GZ6588@sirena.org.uk>
+References: <1452177524-23192-1-git-send-email-ldewangan@nvidia.com>
+ <1452177524-23192-7-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Cv++WRjpEUwHXUCE"
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <39E8C95F-C7DC-46C3-B29A-93A865485942@martin.sperl.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Martin Sperl <kernel@martin.sperl.org>
-Cc: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Russell King <linux@arm.linux.org.uk>, Michael Turquette <mturquette@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-rpi-kernel@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Matthias Reichl <hias@horus.com>, lFlorian Meier <florian.meier@koalo.de>
+In-Reply-To: <1452177524-23192-7-git-send-email-ldewangan@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, Mallikarjun Kasoju <mkasoju@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 10, 2016 at 01:17:17PM +0100, Martin Sperl wrote:
-> >=20
-> > Presumably just making the code not rely on having a define for the
-> > number of clocks would deal with the problem (eg, using ARRAY_SIZE
-> > internally).
-> ARRAY_SIZE would work fine, but the code is:=20
->=20
-> #include <dt-bindings/clock/bcm2835.h>
-> ...
-> struct bcm2835_cprman {
-> 	struct device *dev;
-> 	void __iomem *regs;
-> 	spinlock_t regs_lock;
-> 	const char *osc_name;
->=20
-> 	struct clk_onecell_data onecell;
-> 	struct clk *clks[BCM2835_CLOCK_COUNT];
-> };
-> ...
-> static int bcm2835_clk_probe(struct platform_device *pdev)
-> {
-> ...
-> 	clks[BCM2835_PLLA_CORE] =3D
-> 		bcm2835_register_pll_divider(cprman, &bcm2835_plla_core_data);
-> ...
->         clks[BCM2835_CLOCK_PCM] =3D
->                 bcm2835_register_clock(cprman, &bcm2835_clock_pcm_dat=
-a);
-> ...
-> }
->=20
-> So the Array size is defined by the dt-bindings.
->=20
-> What you propose is a major change to the clock framework, so I would
-> hope that Eric (the original author of this clock-driver) would addre=
-ss
-> it.
->=20
-> Maybe someone has a better idea for a pattern to use to achieve=20
-> the required while maintaining =E2=80=9Csynchronization=E2=80=9D betw=
-een defines
-> inside the dt-binding and the driver.
->=20
 
-Why not just get rid of BCM2835_CLOCK_COUNT and use an internal clock
-count ? Something like the patch attached at the end of the mail. This
-has the downside to be more careful when adding a new clock.
+--Cv++WRjpEUwHXUCE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-If it is not ok, I could try to modify the clk driver to use Mark's
-solution if you want.
+On Thu, Jan 07, 2016 at 08:08:44PM +0530, Laxman Dewangan wrote:
 
-Regards,
+This looks mostly good, a few fairly small things:
 
---=20
-Remi
+> +	if (rinfo->type == MAX77620_REGULATOR_TYPE_SD)
+> +		addr = rinfo->cfg_addr;
 
---------------------------------->8------------------------------------=
----
-diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm283=
-5.c
-index 015e687..f558c5b 100644
---- a/drivers/clk/bcm/clk-bcm2835.c
-+++ b/drivers/clk/bcm/clk-bcm2835.c
-@@ -281,6 +281,8 @@
- #define LOCK_TIMEOUT_NS                100000000
- #define BCM2835_MAX_FB_RATE    1750000000u
-=20
-+#define BCM2835_CLOCK_MAX BCM2835_CLOCK_PCM
-+
- struct bcm2835_cprman {
-        struct device *dev;
-        void __iomem *regs;
-@@ -288,7 +290,7 @@ struct bcm2835_cprman {
-        const char *osc_name;
-=20
-        struct clk_onecell_data onecell;
--       struct clk *clks[BCM2835_CLOCK_COUNT];
-+       struct clk *clks[BCM2835_CLOCK_MAX + 1];
- };
-=20
- static inline void cprman_write(struct bcm2835_cprman *cprman, u32 reg=
-, u32 val)
+Please write things like this as switch statement so if we end up adding
+more variants the code looks more natural.
 
+> +	case REGULATOR_MODE_IDLE:
+> +	case REGULATOR_MODE_STANDBY:
+> +		if (rpdata->glpm_enable)
+> +			power_mode = MAX77620_POWER_MODE_GLPM;
+> +		else
+> +			power_mode = MAX77620_POWER_MODE_LPM;
+> +		break;
+
+If there's no difference between two modes just don't implement one of
+the modes and let the framework worry about what to do for the other
+one.
+
+> +static int max77620_get_regulator_dt_data(struct platform_device *pdev,
+> +		struct max77620_regulator *max77620_regs)
+> +{
+> +	struct device_node *np;
+> +	u32 prop;
+> +	int id;
+> +	int ret;
+> +
+> +	np = of_get_child_by_name(pdev->dev.parent->of_node, "regulators");
+> +	if (!np) {
+> +		dev_err(&pdev->dev, "Device is not having regulators node\n");
+> +		return -ENODEV;
+> +	}
+> +	pdev->dev.of_node = np;
+> +
+> +	ret = of_regulator_match(&pdev->dev, np, max77620_regulator_matches,
+> +			ARRAY_SIZE(max77620_regulator_matches));
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Parsing of regulator node failed: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+
+Don't open code this, use the core support via regulators and of_match.
+
+> +		if (reg_pdata->disable_remote_sense_on_suspend &&
+> +				(rinfo->remote_sense_addr != 0xFF)) {
+
+Weird indentation here, the second line doesn't seem to be aligned with
+anything.
+
+--Cv++WRjpEUwHXUCE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWklEtAAoJECTWi3JdVIfQ+1oH/3eSQoArzQBo7MC8zeoazryT
+u8lvmt1K2pm7XDgla6UIbg5e5h6BQXONam1Dx6kf1faRqe37xFGYCuH+gyDgqJyZ
+SldfbFegoXhDK8t8EC4cl6cSAEVHCj1VBedTdPm29B8ZiliuTKlr4GFXTY8vcivV
+u77tctfgMFHcc9mFmlPH5itpfFaM5+XfFkbhANNL7E+VOqvIy3ElbG9llIALXAMY
+HnSvhEK4vkASeHAGSYtuPSAgoOEJKY/+Rl2rF18yzbRNZNIV3pFQlVNty+U/ubgp
+l348I2VJew/OG0j7QpmdZLEV2WqDnQWnLAkW6/DVB4cUjRYSuJlvkv92fZPC3pk=
+=xgMx
+-----END PGP SIGNATURE-----
+
+--Cv++WRjpEUwHXUCE--
