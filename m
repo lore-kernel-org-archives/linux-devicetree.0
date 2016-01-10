@@ -1,59 +1,49 @@
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx28: add pinmux for USB1 overcurrent on pwm2
-Date: Sun, 10 Jan 2016 13:42:03 +0000
-Message-ID: <yw1xk2nhy2j8.fsf@unicorn.mansr.com>
-References: <1452429613-28783-1-git-send-email-mans@mansr.com>
-	<1473600647.505612.cb24b396-67be-4b7b-9938-7cb30ef4fe05.open-xchange@email.1und1.de>
-	<yw1xoacty3uz.fsf@unicorn.mansr.com>
-	<89586980.506110.cb24b396-67be-4b7b-9938-7cb30ef4fe05.open-xchange@email.1und1.de>
+From: "Urmas Leirost" <urmaz-E01nCVcF24I@public.gmane.org>
+Subject: Your secret pin code is ML0757985
+Date: Sun, 10 Jan 2016 15:50:52 +0200 (EET)
+Message-ID: <24996.41.66.235.105.1452433852.squirrel@webmail.mbnet.fi>
+Reply-To: jamesbarryagent-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <89586980.506110.cb24b396-67be-4b7b-9938-7cb30ef4fe05.open-xchange-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
-	(Stefan Wahren's message of "Sun, 10 Jan 2016 14:38:00 +0100 (CET)")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
 
->> M=E5ns Rullg=E5rd <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org> hat am 10. Januar 2016 um 14:13 g=
-eschrieben:
->>
->>
->> Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
->>
->> > Hi Mans,
->> >
->> >> Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org> hat am 10. Januar 2016 um 13:40 ge=
-schrieben:
->> >>
->> >>
->> >> Add pinmux setting for USB1 overcurrent on pwm2 pad.
->> >
->> > could you please change your patch to describe why you need to add
->> > this pinmux?
->>
->> I'm working on a board that is wired that way. I can of course put t=
-his
->> in the board-specific dts if that's preferable.
->
-> So the board isn't submitted to mainline?
 
-Not yet anyway.
 
-> IMHO the change is okay, but the description doesn't explain why is i=
-t needed.
->
-> So a suitable description would be that it's needed for board xy.
+Attention Lucky Winner
 
-Would it be better to send this patch in a series along with the full
-board support?
+  We are happy to notify you that your e-mail address has been awarded
+=A3750.000 GBP in
+our MICROSOFT E-MAIL PROMO AWARD 2016 in cash credited to file: REF NO:
+MSW-L/2016-
+28793,BATCH NO.4365. Your secret pin code is ML0757985.
 
---=20
-M=E5ns Rullg=E5rd
+=46or claims please contact: Mr James Barry
+Email: jamesbarryagent-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Tel Phone: Tel.+447087626324
+
+
+YOU ARE TO INDICATE  THE OPTION SUITABLE FOR YOU IN RELEASING YOUR FUND=
+S.
+
+1. BANK TO BANK TRANSFER.
+2. DELIVERY BY CERTIFIED CHEQUE
+
+Provide the below details:
+1.Full Name:..
+2.Address:...
+3.Phone:...
+4.Country:...
+5.Sex:...
+6.Occupation:...
+7.Age:
+
+Regards:
+Mr James Barry.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
