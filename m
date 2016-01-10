@@ -1,92 +1,44 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 6/6] regulator: max77620: add regulator driver for
- max77620/max20024
-Date: Sun, 10 Jan 2016 12:40:14 +0000
-Message-ID: <20160110124014.GZ6588@sirena.org.uk>
-References: <1452177524-23192-1-git-send-email-ldewangan@nvidia.com>
- <1452177524-23192-7-git-send-email-ldewangan@nvidia.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Cv++WRjpEUwHXUCE"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1452177524-23192-7-git-send-email-ldewangan@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, Mallikarjun Kasoju <mkasoju@nvidia.com>
+From: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx28: add pinmux for USB1 overcurrent on pwm2
+Date: Sun, 10 Jan 2016 12:40:12 +0000
+Message-ID: <1452429613-28783-1-git-send-email-mans@mansr.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Add pinmux setting for USB1 overcurrent on pwm2 pad.
 
---Cv++WRjpEUwHXUCE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/imx28.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-On Thu, Jan 07, 2016 at 08:08:44PM +0530, Laxman Dewangan wrote:
+diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+index fae7b9069fc4..2f5cbf7d09f2 100644
+--- a/arch/arm/boot/dts/imx28.dtsi
++++ b/arch/arm/boot/dts/imx28.dtsi
+@@ -883,6 +883,16 @@
+ 					fsl,pull-up = <MXS_PULL_DISABLE>;
+ 				};
+ 
++				usb1_pins_b: usb1@1 {
++					reg = <1>;
++					fsl,pinmux-ids = <
++						MX28_PAD_PWM2__USB1_OVERCURRENT
++					>;
++					fsl,drive-strength = <MXS_DRIVE_12mA>;
++					fsl,voltage = <MXS_VOLTAGE_HIGH>;
++					fsl,pull-up = <MXS_PULL_DISABLE>;
++				};
++
+ 				usb0_id_pins_a: usb0id@0 {
+ 					reg = <0>;
+ 					fsl,pinmux-ids = <
+-- 
+2.7.0
 
-This looks mostly good, a few fairly small things:
-
-> +	if (rinfo->type == MAX77620_REGULATOR_TYPE_SD)
-> +		addr = rinfo->cfg_addr;
-
-Please write things like this as switch statement so if we end up adding
-more variants the code looks more natural.
-
-> +	case REGULATOR_MODE_IDLE:
-> +	case REGULATOR_MODE_STANDBY:
-> +		if (rpdata->glpm_enable)
-> +			power_mode = MAX77620_POWER_MODE_GLPM;
-> +		else
-> +			power_mode = MAX77620_POWER_MODE_LPM;
-> +		break;
-
-If there's no difference between two modes just don't implement one of
-the modes and let the framework worry about what to do for the other
-one.
-
-> +static int max77620_get_regulator_dt_data(struct platform_device *pdev,
-> +		struct max77620_regulator *max77620_regs)
-> +{
-> +	struct device_node *np;
-> +	u32 prop;
-> +	int id;
-> +	int ret;
-> +
-> +	np = of_get_child_by_name(pdev->dev.parent->of_node, "regulators");
-> +	if (!np) {
-> +		dev_err(&pdev->dev, "Device is not having regulators node\n");
-> +		return -ENODEV;
-> +	}
-> +	pdev->dev.of_node = np;
-> +
-> +	ret = of_regulator_match(&pdev->dev, np, max77620_regulator_matches,
-> +			ARRAY_SIZE(max77620_regulator_matches));
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "Parsing of regulator node failed: %d\n",
-> +			ret);
-> +		return ret;
-> +	}
-
-Don't open code this, use the core support via regulators and of_match.
-
-> +		if (reg_pdata->disable_remote_sense_on_suspend &&
-> +				(rinfo->remote_sense_addr != 0xFF)) {
-
-Weird indentation here, the second line doesn't seem to be aligned with
-anything.
-
---Cv++WRjpEUwHXUCE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWklEtAAoJECTWi3JdVIfQ+1oH/3eSQoArzQBo7MC8zeoazryT
-u8lvmt1K2pm7XDgla6UIbg5e5h6BQXONam1Dx6kf1faRqe37xFGYCuH+gyDgqJyZ
-SldfbFegoXhDK8t8EC4cl6cSAEVHCj1VBedTdPm29B8ZiliuTKlr4GFXTY8vcivV
-u77tctfgMFHcc9mFmlPH5itpfFaM5+XfFkbhANNL7E+VOqvIy3ElbG9llIALXAMY
-HnSvhEK4vkASeHAGSYtuPSAgoOEJKY/+Rl2rF18yzbRNZNIV3pFQlVNty+U/ubgp
-l348I2VJew/OG0j7QpmdZLEV2WqDnQWnLAkW6/DVB4cUjRYSuJlvkv92fZPC3pk=
-=xgMx
------END PGP SIGNATURE-----
-
---Cv++WRjpEUwHXUCE--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
