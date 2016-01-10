@@ -1,81 +1,64 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: move I2C eeprom descriptions to the
- proper file
-Date: Sun, 10 Jan 2016 09:40:48 +0100
-Message-ID: <20160110084048.GF1526@katana>
-References: <1452199860-3601-1-git-send-email-wsa@the-dreams.de>
- <1452199860-3601-2-git-send-email-wsa@the-dreams.de>
- <20160107230012.GA15023@rob-hp-laptop>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/5] clk: bcm2835: enable management of PCM
+	clock
+Date: Sun, 10 Jan 2016 10:30:33 +0100
+Message-ID: <CAMuHMdWOt4aCzu8Ode0ZrQ-c80nqAhwD5dd17nhgVbLrRYT5og@mail.gmail.com>
+References: <1452331558-2520-1-git-send-email-kernel@martin.sperl.org>
+ <1452331558-2520-3-git-send-email-kernel@martin.sperl.org>
+ <4332640.jBKM55TPAo@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="TeJTyD9hb8KJN2Jy"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160107230012.GA15023@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <4332640.jBKM55TPAo@wuerfel>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, lFlorian Meier <florian.meier@koalo.de>, Michael Turquette <mturquette@baylibre.com>, Lee Jones <lee@kernel.org>, Takashi Iwai <tiwai@suse.com>, Eric Anholt <eric@anholt.net>, Remi Pommarel <repk@triplefau.lt>, Mark Brown <broonie@kernel.org>, linux-rpi-kernel@lists.infradead.org, Martin Sperl <kernel@martin.sperl.org>, Matthias Reichl <hias@horus.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Arnd,
 
---TeJTyD9hb8KJN2Jy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sat, Jan 9, 2016 at 9:56 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Saturday 09 January 2016 09:25:54 kernel@martin.sperl.org wrote:
+>> --- a/include/dt-bindings/clock/bcm2835.h
+>> +++ b/include/dt-bindings/clock/bcm2835.h
+>> @@ -44,5 +44,6 @@
+>>  #define BCM2835_CLOCK_EMMC             28
+>>  #define BCM2835_CLOCK_PERI_IMAGE       29
+>>  #define BCM2835_CLOCK_PWM              30
+>> +#define BCM2835_CLOCK_PCM              31
+>>
+>> -#define BCM2835_CLOCK_COUNT            31
+>> +#define BCM2835_CLOCK_COUNT            32
+>
+> The last line contains an incompatible change, please don't do that.
+> If you have to add another clock, do that after the BCM2835_CLOCK_COUNT
+> definition to avoid changing dts files that use that number.
 
-On Thu, Jan 07, 2016 at 05:00:12PM -0600, Rob Herring wrote:
-> On Thu, Jan 07, 2016 at 09:50:59PM +0100, Wolfram Sang wrote:
-> > From: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
-> >=20
-> > EEPROMs can have additional properties, so they are not suitable for
-> > trivial-devices.txt. Move most bindings to the designated eeprom.txt.
-> > Add the missing "atmel,24c08" while doing that. Note that the remaining
-> > ones in trivial-devices need to be dealt with seperately because of
->=20
-> s/seperately/separately/
->=20
-> > improper manufacturer names.
-> >=20
-> > Signed-off-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/eeprom/eeprom.txt   | 19 +++++++++++=
-+++-----
-> >  .../devicetree/bindings/i2c/trivial-devices.txt       | 13 -----------=
+While I agree this changes dts files (in an unexpected way?), not updating
+BCM2835_CLOCK_COUNT makes it definition useless. Which teaches that
+having such definitions in DT headers is not a good idea in the first place...
+
+Hence it can better be replaced (it seems to be unused in dts files, but you
+can keep the definition to be 100% sure) by an ARRAY_SIZE() in the C driver.
+This requires changing the driver to e.g. initialize clks[] in
+bcm2835_clk_probe() based on a table instead of explicit code.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-> >  2 files changed, 14 insertions(+), 18 deletions(-)
->=20
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->=20
-> Fine to take these thru your tree.
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Fixed the typo and applied both to for-next, thanks for the acks, Rob!
-
-
-
---TeJTyD9hb8KJN2Jy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWkhkQAAoJEBQN5MwUoCm26QkP/AmgYxmdorHzH0jKJiBg81Rr
-Fq8k/lu+YvNywMIH/59+8dkQ6WyE+5Zp6SlaH5/89EQM9Ty7TtU2JNXoCmNO8+fq
-3Hqlidi1fom+iisOSwOZHblEH0wNnj9WZMLZAWhrJdvNHr0U9javbkUiS5u/m8pK
-+qmJKvTIrnUGqlBGnHn8CLQ8LB/SSdVUNL3jBaLIwS41V8PLMD2G8XoCl1GHtRY5
-gi5T+OTtqC1F1qhnODMtnvSatWhMSVa+2vBIYdb7B5r693rJmpMVfpEG02iOUd4p
-9Kramo48EJ+x6w6wENn1F/6xIjyDtyYkS4tTv28C2wsOqEBir6gjRfqUCtNhmKYQ
-s5LLw2NguWz16Ld9xhsf8QN4mykdj8ntvrNVznWJm0kyEVh+ajfUBPrSXDnQxx0I
-l+ar0M9s09DB66N45FGwP8/rGY/dFxbJ1R8AQcgZKcM40R2aLsAL6d6g7HrwT5YY
-+SiwCVCUt+RtLBfJPoqobKf8r73xpK2iozokbMHL/s0GtiHJue95Vhm3rQmLgzwc
-OaopQ8rjkuyCiliuXoxEMKEHYoaqVFZz5uSuociMAUxRj1zZVNjK6k4xPk+P3zx9
-qWQgKfc0lU5vxas6/L1idknn9N6/zZ8nbUTSDhasfFG8FQyE2FJURZNVESKYFzNW
-RomPI6Q0S50ZdXZKQxy5
-=4RbI
------END PGP SIGNATURE-----
-
---TeJTyD9hb8KJN2Jy--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
