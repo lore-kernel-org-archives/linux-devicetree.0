@@ -1,65 +1,87 @@
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
- Controller driver.
-Date: Mon, 11 Jan 2016 11:03:53 -0600
-Message-ID: <5693E079.3050301@opensource.altera.com>
-References: <1452486886-8049-1-git-send-email-marex@denx.de> <5693D306.9070001@opensource.altera.com> <201601111732.23954.marex@denx.de>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [rtc-linux] [PATCH 5/6] rtc: max77620: add support for max77620/max20024
+ RTC driver
+Date: Mon, 11 Jan 2016 22:37:23 +0530
+Message-ID: <5693E14B.4050306@nvidia.com>
+References: <1452177524-23192-1-git-send-email-ldewangan@nvidia.com> <1452177524-23192-6-git-send-email-ldewangan@nvidia.com> <CAJKOXPd938soaa5M0GFo5HpVCYzAS1w8j8Hko3Ja9mx47NYkEQ@mail.gmail.com> <568F8D7E.10500@nvidia.com> <20160108125117.GM6588@sirena.org.uk> <568FB3DD.4090503@nvidia.com> <20160108133648.GQ6588@sirena.org.uk> <568FBB6D.2020904@nvidia.com> <5693AB6E.4090700@nvidia.com> <20160111160419.GA3367@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201601111732.23954.marex-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "R, Vignesh" <vigneshr-l0cyMroinI0@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160111160419.GA3367@piout.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Mark Brown <broonie@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, rtc-linux@googlegroups.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, a.zummo@towertech.it, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, swarren@nvidia.com, treding@nvidia.com, Chaitanya Bandi <bandik@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/11/2016 10:32 AM, Marek Vasut wrote:
-> On Monday, January 11, 2016 at 05:06:30 PM, Dinh Nguyen wrote:
->> Hi Marek,
-> 
-> Hi!
-> 
->> On 01/10/2016 10:34 PM, Marek Vasut wrote:
->>> From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+
+On Monday 11 January 2016 09:34 PM, Alexandre Belloni wrote:
+> On 11/01/2016 at 18:47:34 +0530, Laxman Dewangan wrote :
+>> On Friday 08 January 2016 07:06 PM, Laxman Dewangan wrote:
+>>> On Friday 08 January 2016 07:06 PM, Mark Brown wrote:
+>>>> * PGP Signed by an unknown key
+>>>>
+>>>> On Fri, Jan 08, 2016 at 06:34:29PM +0530, Laxman Dewangan wrote:
+>>>>
+>>>>> If we get the parent device, regmap handle and interrupt number from
+>>>>> mfd
+>>>>> core independent of the PMIC (MAX77620 or MAX77686), then same driver
+>>>>> can be
+>>>>> used here.
+>>>>> Two way which I can think of here:
+>>>> Parent device is just dev->parent, you can use dev_get_regmap() to get a
+>>>> regmap given a struct device and you can use platform resources to pass
+>>>> the interrupts to the children from the MFD (there's some examples,
+>>>> wm831x is one).
+>>>>
+>>>>
+>>> I think it should work with named regmap. mfd whould init regmap with name
+>>> and rtc driver should ask with same name.
 >>>
->>> Add binding document for the Cadence QSPI controller.
+>>> I saw three drivers which looks same:
+>>> rtc-max77620.c (new from me) and already available rtc-max77686.c,
+>>> rtc-max77802.c
 >>>
->>> Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
->>> Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
->>> Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Cc: "R, Vignesh" <vigneshr-l0cyMroinI0@public.gmane.org>
->>> Cc: Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> ---
+>>> Seems I can develop IP based rtc driver as rtc-max77xxx.c
+>> I came with one of issue when doing this.
 >>
->> I think you also need to CC the following people for proper review of
->> these bindings:
+>> The RTC driver parent is not the same parent for which i2c slave address get
+>> registered.
+>> There is two slave address from max77620, 0x3C (for general) and 0x68 for
+>> RTC.
 >>
->> Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED
->> DEVICE TREE BINDINGS)
->> Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED
->> DEVICE TREE BINDINGS)
->> Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> (maintainer:OPEN FIRMWARE AND
->> FLATTENED DEVICE TREE BINDINGS)
->> Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org> (maintainer:OPEN FIRMWARE
->> AND FLATTENED DEVICE TREE BINDINGS)
->> Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> (maintainer:OPEN FIRMWARE AND
->> FLATTENED DEVICE TREE BINDINGS)
-> 
-> Isn't it enough to submit them to devicetree@vger ?
-> 
+>> In max77620 mfd driver, we make dummy i2c client for 0x68 and initialize
+>> regmap with this address.
+>>
+>> Now on mfd_add_devices, we pass the device for 0x3c and hence the RTC driver
+>> treat the parent as the 0x3c device but actually it should be 0x68 to get
+>> the proper regmap.
+>>
+>>
+>> Two approach:
+>> 1. If we add the option to pass parent_dev when adding cells form
+>> mfd_add_devices and select the parent device based on this option then it
+>> can be easily handle.
+>>      Add parent_dev structure in struct mfd_cell and then change the parent
+>> in mfd_add_device() if cells has parent device.
+>>
+>> 2. Register the RTC driver with different mfd_add_devices with dummy i2c
+>> client device.
+>> So two times mfd_add_devices.
+>>
+>>
+>> IMO, approach 1 looks good to me.
+>>
+>> Any opinion?
+>>
+> If the RTC is not at the same address, I'd say this is not an mfd
+> anymore, can't you probe it directly from DT?
+>
+>
+This approach is also possible but,
 
-Not sure, but I always CC those names explicitly for DTS bindings since
-they are listed in the MAINTAINERS file.
-
-Dinh
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+although this is independent IP with separate i2c address but became it 
+is inside the PMIC and its interrupt depends on PMIC internals, I like 
+to register this rtc device from the mfd core.
+So that when mfd core is ready with their interrupts and initial 
+setting, it can register rtc device.
