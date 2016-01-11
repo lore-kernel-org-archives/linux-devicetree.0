@@ -1,76 +1,15 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 5/6] mfd: dt-bindings: add device tree bindings for
- Hi3519 sysctrl
-Date: Mon, 11 Jan 2016 08:55:55 +0000
-Message-ID: <20160111085555.GE14104@x1>
-References: <1452219400-32478-1-git-send-email-xuejiancheng@huawei.com>
- <1452219400-32478-6-git-send-email-xuejiancheng@huawei.com>
- <20160111054846.GD3331@x1>
- <56935EA8.4060801@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56935EA8.4060801@huawei.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: xuejiancheng <xuejiancheng@huawei.com>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, p.zabel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
+From: wangwyy-hl91/bYNON7k1uMJSBkQmQ@public.gmane.org
+Subject: (unknown)
+Date: Mon, 11 Jan 2016 14:54:50 +0800 (CST)
+Message-ID: <201601111454.u0BEsoql094885@chinatex.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dfengsteel-Mj/0Miq2reM@public.gmane.org, dfdqyb-/E1597aS9LRv1O+Z8WTAqQ@public.gmane.org, dfdhcjs-/E1597aS9LRv1O+Z8WTAqQ@public.gmane.org, devilliang2003-/E1597aS9LRv1O+Z8WTAqQ@public.gmane.org, dfcmwhb-/E1597aS9LRv1O+Z8WTAqQ@public.gmane.org, dfcb203719-/E1597aS9LRv1O+Z8WTAqQ@public.gmane.org, dfertl-/E1597aS9LT0CCvOHzKKcA@public.gmane.org, dengjw2006-/E1597aS9LQAvxtiuMwx3w@public.gmane.org, devpandey007-/E1597aS9LQAvxtiuMwx3w@public.gmane.org, dfdpep-/E1597aS9LQAvxtiuMwx3w@public.gmane.org, dfdok-/E1597aS9LQAvxtiuMwx3w@public.gmane.org, devananthangovindasamy-/E1597aS9LQAvxtiuMwx3w@public.gmane.org, dezhimu-/E1597aS9LQAvxtiuMwx3w@public.gmane.org, dfevdong-dbdLmdGazhY@public.gmane.org, dfdichi-dbdLmdGazhY@public.gmane.org, dfd3fdf31-dbdLmdGazhY@public.gmane.org, dezheng5918-dbdLmdGazhY@public.gmane.org, deyeni-dbdLmdGazhY@public.gmane.org, devon199-icHrzHC44DVdHVCsmzoppAC/G2K4zDHf@public.gmane.org, dfdai-yKZSRQ1cFl8nDS1+zs4M5A@public.gmane.org, dfd.com.yahoomail.com.com.com.qmail-3K/ljU4b5cRWj0EZb7rXcA@public.gmane.org, dfermine-39ZsbGIQGT5GWvitb5QawA@public.gmane.org, deyuelou-uB8bxKUEBrdWk0Htik3J/w@public.gmane.org, devil2012-OlFFNeSka43QT0dZR+AlfA@public.gmane.org, dfcnyh-Q4arlSNMIUZBDgjK7y7TUQ@public.gmane.org, dfcgx-Q4arlSNMIUYnDS1+zs4M5A@public.gmane.org, den-GveOkT2v/s5BDgjK7y7TUQ@public.gmane.org, dfczyj-GveOkT2v/s5BDgjK7y7TUQ@public.gmane.org, dfcar-GveOkT2v/s5BDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devin_kao-53PKxisUrC1Wk0Htik3J/w@public.gmane.org, dfcm-N6yXg7DiKdn/Op/ZHr5HmtBPR1lH4CV8@public.gmane.org, dennisqiu-WVlzvzqoTvw@public.gmane.org, dfe2221a-WVlzvzqoTvw@public.gmane.org, devil.lucifer-WVlzvzqoTvw@public.gmane.org, dfdfd-WVlzvzqoTvw@public.gmane.orgdfd-WVlzvzqoTvw@public.gmane.org, dfcyr-WVlzvzqoTvw@public.gmane.org, df-chem08-BRl5FGHXDxgybS5Ee8rs3A@public.gmane.org, dfdq6699-ZySGJgZx7nw@public.gmane.org, dfdfdfdsa-Xb2Y1Dfb9CI@public.gmane.org, deyima123-Xb2Y1Dfb9CI@public.gmane.org, dfcd_0404-Xb2Y1Dfb9CI@public.gmane.org, dfdyzyxh-k+cT0dCbe1g@public.gmane.org, dfds34c-k+cT0dCbe1g@public.gmane.org, devilzhao2007-k+cT0dCbe1g@public.gmane.org, dfd123123-k+cT0dCbe1g@public.gmane.org, dfcy276-k+cT0dCbe1g@public.gmane.org, deyu_meng-k+cT0dCbe1g@public.gmane.org, devc-OgF88AMIrPI@public.gmane.org, deyun2010-OgF88AMIrPI@public.gmane.org, destiny-HNTOnvGQ4zJT5gTzvV8LJA@public.gmane.org, devinkoohenn-9uewiaClKEY@public.gmane.org, dfdf-9uewiaClKEY@public.gmane.org, dfclqc-9uewiaClKEY@public.gmane.org, dfcart-9uewiaClKEY@public.gmane.org, deviser-Rb0Jf8poU2zRZrzGfRn23g@public.gmane.org, devesh_nayel-qwtfpoLcW/NBDgjK7y7TUQ@public.gmane.org, development-D5Z//B4AU/Za40gUV4nqFg@public.gmane.org, devensharma-clv0Yerdm5P7AN6f9cml4A@public.gmane.org, dfcfed-tYpcc4DpfzHOh/anMiwajw@public.gmane.org, dfediter-MfTzJQwG5AH/PtFMR13I2A@public.gmane.org, desmond-4OXvjShbUAjGrLcYskJ8U1I55lpkh7Mf@public.gmane.org, dfd-fbLonNdNlJfM1kAEIRd3EQ@public.gmane.org, dfdsdbytjhg-O5WfVfzUwx8@public.gmane.org, dfdllaos-W45X8A759TzNvy9tFN6x7g@public.gmane.org, deskofchen-EMRzualFZlQ@public.gmane.org, devianaong-7vGswn/WW/5bV+YoFDeq9JqQE7yCjDx5@public.gmane.org, dfda1702-SFzwQBv0QYePt1CcHtbs0g@public.gmane.org, dfda1702-SFzwQBv0QYfQT0dZR+AlfA@public.gmane.org, desmond.lim-Gkt9oc4eHPuZox4op4iWzw@public.gmane.org, dfernandez-qazKcTl6WRFauNry4B2YBdBPR1lH4CV8@public.gmane.org, dfd43gg-aPYA7nAdAYY@public.gmane.org, devilsreject-1srLxb0qcfWsTnJN9+BGXg@public.gmane.org, dfcmf-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org, dfch2010-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org, dezhan_wang-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org, dfcbzp-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org, developer-calendar-hpIqsD4AKlcudzVYOr8gPA@public.gmane.org, devrel-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dferguson952-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devganaviral06-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dfdafdafdaf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dfcxscom-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dfcart.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dfdx-ILJx0z8OPX5BDgjK7y7TUQ@public.gmane.org, dfd44-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, development-yTDDCCtyreI@public.gmane.org, dfdad-XE7vAGxuVJY@public.gmane.org, dfds-uFX1IlsvibM@public.gmane.org, dfdlkj-Oc6UvEW/TdnQT0dZR+AlfA@public.gmane.org, dfd-Oc6UvEW/TdnQT0dZR+AlfA@public.gmane.org, developments-2Ab2zmU7B83FwwS5prck25owlv4uC7bZ@public.gmane.org, devin-r43S2WYX+QUAvxtiuMwx3w@public.gmane.org, dfdaxzc-ZUv9YkbHe8XM1kAEIRd3EQ@public.gmane.org, dfev-97KpSmJVGhY@public.gmane.org, dfcrane-FNuYk27Sz4YphpqALD0G3g@public.gmane.org, dfdfd-8bLLHpYfZlI@public.gmane.org, deyi-PgPGCxpc1Cfs8pBkeCBiNg@public.gmane.org, dfd-ABPYzLvwp+9ovHwfuhv8iQ@public.gmane.org, dfernandez-VV6DNBXUiqUVFWzw4pbozQC/G2K4zDHf@public.gmane.org, dfergi74-Wuw85uim5zDR7s880joybQ@public.gmane.org, dfcheng-cLwte9OEcXV6yEfUCMuykMzWQAQhF3cR@public.gmane.org, dengqing-7AspajivLnZv1O+Z8WTAqQ@public.gmane.org, developer-2qXIZsP/sU7k1uMJSBkQmQ@public.gmane.org, dferre-8X8WwZPxsWMiHY/eCyModw@public.gmane.org, devendrakhairnar-Twf0cfAbmqUAvxtiuMwx3w@public.gmane.org, devi-sKq451J3kyj7AN6f9cml4A@public.gmane.org, develop-1nPNsdV/eP8@public.gmane.org, development-/2dji457ehQ09Axj44yJ5l6hYfS7NtTn@public.gmane.org, deyuwpj-Y9sIeH5OGRo@public.gmane.org, deyi928-fY5oDydHwCQ@public.gmane.org, denguang1024-0GSiYjBpcig@public.gmane.org, dfdas-0GSiYjBpcig@public.gmane.org, dfdragon-+I6WMpcfFcY@public.gmane.org, dfdlgl-wAFV33soP7Q@public.gmane.org, devout88-9Onoh4P/yGk@public.gmane.org, devotion666-9Onoh4P/yGk@public.gmane.org, devoshoe-9Onoh4P/yGk@public.gmane.org, dfetdj2008-9Onoh4P/yGk@public.gmane.org, dfessb-9Onoh4P/yGk@public.gmane.org, dferic-9Onoh4P/yGk@public.gmane.org, dfeng123-9Onoh4P/yGk@public.gmane.org, dfe-9Onoh4P/yGk@public.gmane.org, dfdzcl-9Onoh4P/yGk@public.gmane.org, dfdy0688-9Onoh4P/yGk@public.gmane.org, dfdtxian-9Onoh4P/yGk@public.gmane.org, dfdss-9Onoh4P/yGk@public.gmane.org, dfdryl-9Onoh4P/yGk@public.gmane.org, df-dongguang-9Onoh4P/yGk@public.gmane.org, dfdn2003-9Onoh4P/yGk@public.gmane.org, dfdianqi_zp-9Onoh4P/yGk@public.gmane.org, dfdggg1234-9Onoh4P/yGk@public.gmane.org, dfdffz1-9Onoh4P/yGk@public.gmane.org, devilyan000-9Onoh4P/yGk@public.gmane.org, devenkal-9Onoh4P/yGk@public.gmane.org, deven06-9Onoh4P/yGk@public.gmane.org, develop_myself-9Onoh4P/yGk@public.gmane.org, deveice-9Onoh4P/yGk@public.gmane.org, dfdf3968-9Onoh4P/yGk@public.gmane.org, dfddhg-9Onoh4P/yGk@public.gmane.org, dfdczp-9Onoh4P/yGk@public.gmane.org, dfdc_hr-9Onoh4P/yGk@public.gmane.org, dfdaj618-9Onoh4P/yGk@public.gmane.org, dfd1996-9Onoh4P/yGk@public.gmane.org, dfd-9Onoh4P/yGk@public.gmane.org, dfczcl-9Onoh4P/yGk@public.gmane.org, dfcy-9Onoh4P/yGk@public.gmane.org, dfcwjjgs-9Onoh4P/yGk@public.gmane.org, dfcszq-9Onoh4P/yGk@public.gmane.org, dfcs_zkp-9Onoh4P/yGk@public.gmane.org, dfclwzq-9Onoh4P/yGk@public.gmane.org, dfclhw-9Onoh4P/yGk@public.gmane.org, dfclcl-9Onoh4P/yGk@public.gmane.org, dfcjry-9Onoh4P/yGk@public.gmane.org, dfchled-9Onoh4P/yGk@public.gmane.org, deyoulin-9Onoh4P/yGk@public.gmane.org, deyinghangcpa-9Onoh4P/yGk@public.gmane.org, deskzhuo-9Onoh4P/yGk@public.gmane.org, deyond_dzh-7R9yAhoRP9E@public.gmane.org, dfdasrfasd-f4zm8IJZe34@public.gmane.org, deyitongda-PuUFZLmaIHI@public.gmane.org, dengdengming-KN7UnAbNpbg@public.gmane.org, dfepec-KN7UnAbNpbg@public.gmane.org, dfeng_gx-KN7UnAbNpbg@public.gmane.org, dfdsfs-KN7UnAbNpbg@public.gmane.org, dfdsfd33i3-KN7UnAbNpbg@public.gmane.org, dfdrg8-KN7UnAbNpbg@public.gmane.org, dfdqwh_sb-KN7UnAbNpbg@public.gmane.org, dfdl2014_hr-KN7UnAbNpbg@public.gmane.org, dfdkyz-KN7UnAbNpbg@public.gmane.org, dfdjd2008-KN7UnAbNpbg@public.gmane.org, dfdj888-KN7UnAbNpbg@public.gmane.org, dfdgdhdjj-KN7UnAbNpbg@public.gmane.org, dfdfee-KN7UnAbNpbg@public.gmane.org, devilcry1986-KN7UnAbNpbg@public.gmane.org, dfdf1010-KN7UnAbNpbg@public.gmane.org, dfdf-KN7UnAbNpbg@public.gmane.org, dfdd1998-KN7UnAbNpbg@public.gmane.org, dfdchem-KN7UnAbNpbg@public.gmane.org, dfdcchb-KN7UnAbNpbg@public.gmane.org, dfdbtxx-KN7UnAbNpbg@public.gmane.org, dfdaozhuang-KN7UnAbNpbg@public.gmane.org, dfdahua3-KN7UnAbNpbg@public.gmane.org, dfd1-KN7UnAbNpbg@public.gmane.org, dfcx002-KN7UnAbNpbg@public.gmane.org, dfcvip-KN7UnAbNpbg@public.gmane.org, dfctdq-KN7UnAbNpbg@public.gmane.org, dfcsjx-KN7UnAbNpbg@public.gmane.org, dfcpwxs-KN7UnAbNpbg@public.gmane.org, dfcool201-KN7UnAbNpbg@public.gmane.org, dfcoaster-KN7UnAbNpbg@public.gmane.org, dfcnjr-KN7UnAbNpbg@public.gmane.org, dezekemao202-KN7UnAbNpbg@public.gmane.org, deyuanshicai-KN7UnAbNpbg@public.gmane.org, deyuan_jixie-KN7UnAbNpbg@public.gmane.org, deyixuanguanggao-KN7UnAbNpbg@public.gmane.org, deyigroup-KN7UnAbNpbg@public.gmane.org, dfcgjy-KN7UnAbNpbg@public.gmane.org, dfcg_hj-KN7UnAbNpbg@public.gmane.org, dentist_yxg-KN7UnAbNpbg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 11 Jan 2016, xuejiancheng wrote:
-> On 2016/1/11 13:48, Lee Jones wrote:
-> > On Fri, 08 Jan 2016, Jiancheng Xue wrote:
-> >=20
-> >> Add device tree bindings for Hi3519 system controller.
-> >>
-> >> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
-> >> ---
-> >>  Documentation/devicetree/bindings/mfd/hi3519.txt | 14 +++++++++++=
-+++
-> >>  1 file changed, 14 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/mfd/hi3519.t=
-xt
-> >=20
-> > I have this patch, but none of the others in the set, thus I am
-> > lacking context.
-> >=20
-> I can forward other patches in the set to you. Thank you.
->=20
-> >> diff --git a/Documentation/devicetree/bindings/mfd/hi3519.txt b/Do=
-cumentation/devicetree/bindings/mfd/hi3519.txt
-> >> new file mode 100644
-> >> index 0000000..115c5be
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/mfd/hi3519.txt
-> >> @@ -0,0 +1,14 @@
-> >> +* Hisilicon Hi3519 System Controller Block
-> >> +
-> >> +This bindings use the following binding:
-> >> +Documentation/devicetree/bindings/mfd/syscon.txt
-> >> +
-> >> +Required properties:
-> >> +- compatible: "hisilicon,hi3519-sysctrl".
-> >> +- reg: the register region of this block
-> >> +
-> >> +Examples:
-> >> +sysctrl: system-controller@12010000 {
-> >> +	compatible =3D "hisilicon,hi3519-sysctrl", "syscon";
-> >> +	reg =3D <0x12010000 0x1000>;
-> >> +};
-> >=20
-> > There is no requirement (nor want) for binding documents where the
-> > given device is simply using highly generic bindings.  This just
-> > amounts to churn.
-> >=20
-> This block is specific for Hi3519 SOC, and may has its own driver.
 
-Does it have its own driver currently?
-
-> So I think it's better to keep this binding.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+nd of smlast
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
