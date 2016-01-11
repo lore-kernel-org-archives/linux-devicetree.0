@@ -1,58 +1,40 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH v2 4/4] dt-bindings: add document for rk3229-hdmi
-Date: Sun, 10 Jan 2016 20:06:18 -0600
-Message-ID: <20160111020618.GA20680@rob-hp-laptop>
-References: <1452156811-18150-1-git-send-email-ykk@rock-chips.com>
- <1452157511-18891-1-git-send-email-ykk@rock-chips.com>
+From: xuejiancheng <xuejiancheng@huawei.com>
+Subject: Re: [PATCH v5 6/6] ARM: dts: add dts files for Hi3519
+Date: Mon, 11 Jan 2016 10:05:57 +0800
+Message-ID: <56930E05.1050009@huawei.com>
+References: <1452219400-32478-1-git-send-email-xuejiancheng@huawei.com>
+ <1452219400-32478-7-git-send-email-xuejiancheng@huawei.com>
+ <20160108151058.GN19062@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1452157511-18891-1-git-send-email-ykk@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Zheng Yang <zhengyang@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160108151058.GN19062@n2100.arm.linux.org.uk>
+Sender: linux-clk-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, p.zabel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBKYW4gMDcsIDIwMTYgYXQgMDU6MDU6MTFQTSArMDgwMCwgWWFraXIgWWFuZyB3cm90
-ZToKPiBTaWduZWQtb2ZmLWJ5OiBZYWtpciBZYW5nIDx5a2tAcm9jay1jaGlwcy5jb20+Cj4gLS0t
-Cj4gQ2hhbmdlcyBpbiB2MjogTm9uZQo+IAo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAudHh0ICAgICAgICAgfCA0ICsrKy0KPiAgMSBm
-aWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9k
-d19oZG1pLXJvY2tjaGlwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAudHh0Cj4gaW5kZXggNjY4MDkxZi4uMWNk
-YzYyNyAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAudHh0
-Cj4gQEAgLTIsNyArMiw3IEBAIFJvY2tjaGlwIHNwZWNpZmljIGV4dGVuc2lvbnMgdG8gdGhlIFN5
-bm9wc3lzIERlc2lnbndhcmUgSERNSQo+ICA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PQo+ICAKPiAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAtLSBjb21wYXRpYmxlOiAicm9ja2NoaXAs
-cmszMjg4LWR3LWhkbWkiOwo+ICstIGNvbXBhdGlibGU6ICJyb2NrY2hpcCxyazMyODgtZHctaGRt
-aSIsICJyb2NrY2hpcCxyazMyMjktZHctaGRtaSI7Cj4gIC0gcmVnOiBQaHlzaWNhbCBiYXNlIGFk
-ZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgY29udHJvbGxlcidzIHJlZ2lzdGVycy4KPiAgLSBjbG9j
-a3M6IHBoYW5kbGUgdG8gaGRtaSBpYWhiIGFuZCBpc2ZyIGNsb2Nrcy4KPiAgLSBjbG9jay1uYW1l
-czogc2hvdWxkIGJlICJpYWhiIiAiaXNmciIKPiBAQCAtMTUsOCArMTUsMTAgQEAgUmVxdWlyZWQg
-cHJvcGVydGllczoKPiAgICByazMyODggcGxhdGZvcm0KPiAgCj4gIE9wdGlvbmFsIHByb3BlcnRp
-ZXMKPiArLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBleHRl
-cm5hbCBIRE1JIFBIWSdzIHJlZ2lzdGVycy4KClRoaXMgaXMgYWxyZWFkeSByZXF1aXJlZC4uLgoK
-PiAgLSBkZGMtaTJjLWJ1czogcGhhbmRsZSBvZiBhbiBJMkMgY29udHJvbGxlciB1c2VkIGZvciBE
-REMgRURJRCBwcm9iaW5nCj4gIC0gY2xvY2tzLCBjbG9jay1uYW1lczogcGhhbmRsZSB0byB0aGUg
-SERNSSBDRUMgY2xvY2ssIG5hbWUgc2hvdWxkIGJlICJjZWMiCj4gKwkJICAgICAgIHBoYW5kbGUg
-dG8gdGhlIGV4dGVybmFsIEhETUkgUEhZIGNsb2NrLCBuYW1lIHNob3VsZCBiZSAiZXh0cGh5IgoK
-RG9lcyB0aGlzIGNoYW5nZSBhcHBseSB0byByazMyODggb3IganVzdCByazMyMjk/IElmIHRoZSBs
-YXR0ZXIsIHlvdSAKc2hvdWxkIG1ha2UgdGhhdCBjbGVhci4gVGhlIGRyaXZlciBuZWVkcyB0byBh
-bGxvdyBmb3Igb2xkIGR0YidzIHRoYXQgCm9ubHkgaGF2ZSAxIGNsb2NrLgoKQmFzZWQgb24gUGhp
-bGlwcCdzIGZlZWRiYWNrLCB5b3UgYWxzbyBuZWVkIHRvIGFkZCBhIHBoeXMgcHJvcGVydHkuCgpS
-b2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hello Russell,
+
+On 2016/1/8 23:10, Russell King - ARM Linux wrote:
+> On Fri, Jan 08, 2016 at 10:16:40AM +0800, Jiancheng Xue wrote:
+>> +		uart0: serial@12100000 {
+>> +			compatible = "arm,pl011", "arm,primecell";
+>> +			reg = <0x12100000 0x1000>;
+>> +			interrupts = <0 4 4>;
+> 
+> Should the last digit there be IRQ_TYPE_LEVEL_HIGH (and same for the
+> other interrupts= after this?)
+> 
+> Thanks.
+> 
+
+I'll include <dt-bindings/interrupt-controller/arm-gic.h> and use
+IRQ_TYPE_LEVEL_HIGH instead. The interrupts specifier will be wrote
+like this "interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;".
+
+Thank you.
+
+Jiancheng
+
