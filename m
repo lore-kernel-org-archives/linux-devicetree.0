@@ -1,42 +1,154 @@
 From: Laura Abbott <laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>
-Subject: [RESEND][PATCHv2 0/3] Devicetree bindings for Ion
-Date: Mon, 11 Jan 2016 13:39:21 -0800
-Message-ID: <1452548364-9522-1-git-send-email-laura@labbott.name>
+Subject: [RESEND][PATCHv2 3/3] NOMERGE: Sample driver
+Date: Mon, 11 Jan 2016 13:39:24 -0800
+Message-ID: <1452548364-9522-4-git-send-email-laura@labbott.name>
+References: <1452548364-9522-1-git-send-email-laura@labbott.name>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452548364-9522-1-git-send-email-laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Andrianov <andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org>, arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, Riley Andrews <riandrews-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
 Cc: Laura Abbott <laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tom Gall <tom.gall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Colin Cross <ccross-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Feng Tang <feng.tang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-There was some recent discussion
-(http://thread.gmane.org/gmane.linux.ports.arm.kernel/468051/)
-about Ion DT bindings and a request that I resend my proposal for common DT
-bindings. This is a straight resend, no bux fixed that were pointed out.
-Previous thread: http://article.gmane.org/gmane.linux.drivers.driver-project.devel/80475
-
->From before:
-
-This is another attempt at devicetree bindings for Ion. The big complaint from
-v1 was that too much unnecessary data was being pushed into devicetree.
-v2 takes a different approach of using just compatbile strings for the heaps.
-This gets closer to the devicetree philosophy of describing just the hardware.
-Each heap ultimately represents some kind of memory that exists in the system.
-The compatible string indicates the match for how to handle the type of memory
-on this system. The details like heap-id, name etc. are now pushed out to C
-files. This makes Ion heaps look closer to something like a quirks framework.
-(I'd argue this isn't a complete mischaracterization given the type of setup
-Ion gets used for...) The one downside here is that this leads to more new
-bindings for each board that gets added.
-
-This version also includes a sample C file which shows what the structure
-might look like. As always, your comments and reviews are appreciated.
 
 
-Thanks,
-Laura
+Small sample driver to show what setup would look like with the dt
+bindings
 
+Signed-off-by: Laura Abbott <laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>
+---
+ drivers/staging/android/ion/Kconfig         |  6 ++
+ drivers/staging/android/ion/Makefile        |  1 +
+ drivers/staging/android/ion/ion_of_sample.c | 96 +++++++++++++++++++++++++++++
+ 3 files changed, 103 insertions(+)
+ create mode 100644 drivers/staging/android/ion/ion_of_sample.c
+
+diff --git a/drivers/staging/android/ion/Kconfig b/drivers/staging/android/ion/Kconfig
+index 9b6d65d..c2afb35 100644
+--- a/drivers/staging/android/ion/Kconfig
++++ b/drivers/staging/android/ion/Kconfig
+@@ -43,3 +43,9 @@ config ION_OF
+ 	  extensions
+ 
+ 	  If using Ion and devicetree, you should say Y here
++
++config ION_OF_SAMPLE
++	bool "Sample driver"
++	depends on ION_OF
++	help
++	  Small sample driver showing the Ion OF interface
+diff --git a/drivers/staging/android/ion/Makefile b/drivers/staging/android/ion/Makefile
+index a77417b..1309b91 100644
+--- a/drivers/staging/android/ion/Makefile
++++ b/drivers/staging/android/ion/Makefile
+@@ -8,4 +8,5 @@ endif
+ obj-$(CONFIG_ION_DUMMY) += ion_dummy_driver.o
+ obj-$(CONFIG_ION_TEGRA) += tegra/
+ obj-$(CONFIG_ION_OF) += ion_of.o ion_physmem.o
++obj-$(CONFIG_ION_OF_SAMPLE) += ion_of_sample.o
+ 
+diff --git a/drivers/staging/android/ion/ion_of_sample.c b/drivers/staging/android/ion/ion_of_sample.c
+new file mode 100644
+index 0000000..bbcdf4d
+--- /dev/null
++++ b/drivers/staging/android/ion/ion_of_sample.c
+@@ -0,0 +1,96 @@
++/*
++ * Copyright (C) 2015 RC Module
++ * Andrew Andrianov <andrew-g16cbSVCqPUdnm+yROfE0A@public.gmane.org>
++ * Also based on work from Google, The Linux Foundation
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
++
++#include <linux/init.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/of_address.h>
++#include <linux/clk.h>
++#include <linux/dma-mapping.h>
++#include <linux/io.h>
++#include "ion.h"
++#include "ion_priv.h"
++#include "ion_of.h"
++
++struct sample_ion_dev {
++        struct ion_heap         **heaps;
++        struct ion_device       *idev;
++};
++
++static struct ion_of_heap heaps[] = {
++	PLATFORM_HEAP("sample-system", 0, ION_HEAP_TYPE_SYSTEM, "system"),
++	PLATFORM_HEAP("sample-camera", 1, ION_HEAP_TYPE_DMA, "camera"),
++	PLATFORM_HEAP("sample-fb", 2, ION_HEAP_TYPE_DMA, "fb"),
++	{}
++};
++
++static int ion_sample_probe(struct platform_device *pdev)
++{
++	struct ion_platform_data *data;
++	struct sample_ion_dev *ipdev;
++	int i;
++
++	ipdev = devm_kzalloc(&pdev->dev, sizeof(*ipdev), GFP_KERNEL);
++	if (!ipdev)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, ipdev);
++
++	ipdev->idev = ion_device_create(NULL);
++	if (!ipdev->idev)
++		return -ENOMEM;
++
++	data = ion_parse_dt(pdev, heaps);
++	if (IS_ERR(data))
++		return PTR_ERR(data);
++
++	ipdev->heaps = devm_kzalloc(&pdev->dev,
++				sizeof(struct ion_heap)*data->nr, GFP_KERNEL);
++
++	if (!ipdev->heaps)
++		return -ENOMEM;
++
++	for (i = 0; i < data->nr; i++) {
++		ipdev->heaps[i] = ion_heap_create(&data->heaps[i]);
++		if (!ipdev->heaps[i])
++			return -ENOMEM;
++		ion_device_add_heap(ipdev->idev, ipdev->heaps[i]);
++	}
++	return 0;
++}
++
++static int ion_sample_remove(struct platform_device *pdev)
++{
++	/* Everything should be devm */
++	return 0;
++}
++
++static const struct of_device_id of_match_table[] = {
++	{ .compatible = "sample-ion", },
++	{ /* end of list */ }
++};
++
++static struct platform_driver ion_sample_driver = {
++	.probe		= ion_sample_probe,
++	.remove		= ion_sample_remove,
++	.driver		= {
++		.name	= "ion-of",
++		.of_match_table = of_match_ptr(of_match_table),
++	},
++};
++
++static int __init ion_sample_init(void)
++{
++	return platform_driver_register(&ion_sample_driver);
++}
++device_initcall(ion_sample_init);
 -- 
 2.5.0
 
