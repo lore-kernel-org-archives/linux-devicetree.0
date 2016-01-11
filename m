@@ -1,146 +1,156 @@
-From: Raja Mani <rmani@qti.qualcomm.com>
-Subject: [PATCH v2] dt: bindings: add bindings for ipq4019 wifi block
-Date: Mon, 11 Jan 2016 11:19:03 +0530
-Message-ID: <1452491343-8803-1-git-send-email-rmani@qti.qualcomm.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 1/3] extcon: palmas: Add the support for VBUS
+ detection by using GPIO
+Date: Mon, 11 Jan 2016 05:49:25 +0000
+Message-ID: <20160111054925.GG3331@x1>
+References: <1451436947-22163-1-git-send-email-cw00.choi@samsung.com>
+ <1451436947-22163-2-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1451436947-22163-2-git-send-email-cw00.choi@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: agross@codeaurora.org, devicetree@vger.kernel.org
-Cc: ath10k@lists.infradead.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Raja Mani <rmani@qti.qualcomm.com>
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: tony@atomide.com, robh+dt@kernel.org, balbi@ti.com, rogerq@ti.com, kishon@ti.com, george.cherian@ti.com, myungjoo.ham@samsung.com, linux-kernel@vger.kernel.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation details for wifi block present
-in Qualcomm IPQ4019 SoC into "qcom,ath10k.txt".
+On Wed, 30 Dec 2015, Chanwoo Choi wrote:
 
-Right now, ath10k wireless driver has support for PCI based wlan devices.
-There is a plan to extend ath10k driver to support wifi devices which are
-connected over AHB as well (enumeration will happen via device tree node).
-For AHB based devices (ie, ipq4019), all wifi properties are supplied via
-device tree (including irq, reg addr, cal data,etc).
+> From: Felipe Balbi <balbi@ti.com>
+>=20
+> This patch support for VBUS detection by using GPIO pin.
+>=20
+> Signed-off-by: Felipe Balbi <balbi@ti.com>
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  drivers/extcon/extcon-palmas.c | 50 ++++++++++++++++++++++++++++++++=
+++++++++++
+>  include/linux/mfd/palmas.h     |  3 +++
 
-Signed-off-by: Raja Mani <rmani@qti.qualcomm.com>
----
-v2 changes:
- - Improved "core-id" description - [Rob]
- - Removed "status" documentation - [Rob]
- - Added description which properties are applicable
-   for ahb and which are applicable for pci devices - [Rob]
- - Improved commit msg to explain the context.
- - Renamed "qca,msi_addr" to "qcom,msi_addr" and
-   "qca,msi_base" to "qcom,msi_base" to follow uniformity.
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
- .../bindings/net/wireless/qcom,ath10k.txt          | 88 ++++++++++++++++++++--
- 1 file changed, 83 insertions(+), 5 deletions(-)
+>  2 files changed, 53 insertions(+)
+>=20
+> diff --git a/drivers/extcon/extcon-palmas.c b/drivers/extcon/extcon-p=
+almas.c
+> index 93c30a885740..885ee95a6a7b 100644
+> --- a/drivers/extcon/extcon-palmas.c
+> +++ b/drivers/extcon/extcon-palmas.c
+> @@ -216,11 +216,23 @@ static int palmas_usb_probe(struct platform_dev=
+ice *pdev)
+>  		return PTR_ERR(palmas_usb->id_gpiod);
+>  	}
+> =20
+> +	palmas_usb->vbus_gpiod =3D devm_gpiod_get_optional(&pdev->dev, "vbu=
+s",
+> +							GPIOD_IN);
+> +	if (IS_ERR(palmas_usb->vbus_gpiod)) {
+> +		dev_err(&pdev->dev, "failed to get vbus gpio\n");
+> +		return PTR_ERR(palmas_usb->vbus_gpiod);
+> +	}
+> +
+>  	if (palmas_usb->enable_id_detection && palmas_usb->id_gpiod) {
+>  		palmas_usb->enable_id_detection =3D false;
+>  		palmas_usb->enable_gpio_id_detection =3D true;
+>  	}
+> =20
+> +	if (palmas_usb->enable_vbus_detection && palmas_usb->vbus_gpiod) {
+> +		palmas_usb->enable_vbus_detection =3D false;
+> +		palmas_usb->enable_gpio_vbus_detection =3D true;
+> +	}
+> +
+>  	if (palmas_usb->enable_gpio_id_detection) {
+>  		u32 debounce;
+> =20
+> @@ -311,6 +323,40 @@ static int palmas_usb_probe(struct platform_devi=
+ce *pdev)
+>  					palmas_usb->vbus_irq, status);
+>  			return status;
+>  		}
+> +	} else if (palmas_usb->enable_gpio_vbus_detection) {
+> +		/* remux GPIO_1 as VBUSDET */
+> +		status =3D palmas_update_bits(palmas,
+> +			PALMAS_PU_PD_OD_BASE,
+> +			PALMAS_PRIMARY_SECONDARY_PAD1,
+> +			PALMAS_PRIMARY_SECONDARY_PAD1_GPIO_1_MASK,
+> +			(1 << PALMAS_PRIMARY_SECONDARY_PAD1_GPIO_1_SHIFT));
+> +		if (status < 0) {
+> +			dev_err(&pdev->dev, "can't remux GPIO1\n");
+> +			return status;
+> +		}
+> +
+> +		palmas_usb->vbus_otg_irq =3D regmap_irq_get_virq(palmas->irq_data,
+> +						       PALMAS_VBUS_OTG_IRQ);
+> +		palmas_usb->gpio_vbus_irq =3D gpiod_to_irq(palmas_usb->vbus_gpiod)=
+;
+> +		if (palmas_usb->gpio_vbus_irq < 0) {
+> +			dev_err(&pdev->dev, "failed to get vbus irq\n");
+> +			return palmas_usb->gpio_vbus_irq;
+> +		}
+> +		status =3D devm_request_threaded_irq(&pdev->dev,
+> +						palmas_usb->gpio_vbus_irq,
+> +						NULL,
+> +						palmas_vbus_irq_handler,
+> +						IRQF_TRIGGER_FALLING |
+> +						IRQF_TRIGGER_RISING |
+> +						IRQF_ONESHOT |
+> +						IRQF_EARLY_RESUME,
+> +						"palmas_usb_vbus",
+> +						palmas_usb);
+> +		if (status < 0) {
+> +			dev_err(&pdev->dev,
+> +				"failed to request handler for vbus irq\n");
+> +			return status;
+> +		}
+>  	}
+> =20
+>  	palmas_enable_irq(palmas_usb);
+> @@ -337,6 +383,8 @@ static int palmas_usb_suspend(struct device *dev)
+>  	if (device_may_wakeup(dev)) {
+>  		if (palmas_usb->enable_vbus_detection)
+>  			enable_irq_wake(palmas_usb->vbus_irq);
+> +		if (palmas_usb->enable_gpio_vbus_detection)
+> +			enable_irq_wake(palmas_usb->gpio_vbus_irq);
+>  		if (palmas_usb->enable_id_detection)
+>  			enable_irq_wake(palmas_usb->id_irq);
+>  		if (palmas_usb->enable_gpio_id_detection)
+> @@ -352,6 +400,8 @@ static int palmas_usb_resume(struct device *dev)
+>  	if (device_may_wakeup(dev)) {
+>  		if (palmas_usb->enable_vbus_detection)
+>  			disable_irq_wake(palmas_usb->vbus_irq);
+> +		if (palmas_usb->enable_gpio_vbus_detection)
+> +			disable_irq_wake(palmas_usb->gpio_vbus_irq);
+>  		if (palmas_usb->enable_id_detection)
+>  			disable_irq_wake(palmas_usb->id_irq);
+>  		if (palmas_usb->enable_gpio_id_detection)
+> diff --git a/include/linux/mfd/palmas.h b/include/linux/mfd/palmas.h
+> index 13e1d96935ed..7b2526f7bc9b 100644
+> --- a/include/linux/mfd/palmas.h
+> +++ b/include/linux/mfd/palmas.h
+> @@ -553,7 +553,9 @@ struct palmas_usb {
+>  	int vbus_irq;
+> =20
+>  	int gpio_id_irq;
+> +	int gpio_vbus_irq;
+>  	struct gpio_desc *id_gpiod;
+> +	struct gpio_desc *vbus_gpiod;
+>  	unsigned long sw_debounce_jiffies;
+>  	struct delayed_work wq_detectid;
+> =20
+> @@ -562,6 +564,7 @@ struct palmas_usb {
+>  	bool enable_vbus_detection;
+>  	bool enable_id_detection;
+>  	bool enable_gpio_id_detection;
+> +	bool enable_gpio_vbus_detection;
+>  };
+> =20
+>  #define comparator_to_palmas(x) container_of((x), struct palmas_usb,=
+ comparator)
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-index edefc26..d1595d2 100644
---- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-@@ -1,17 +1,44 @@
- * Qualcomm Atheros ath10k wireless devices
- 
--For ath10k devices the calibration data can be provided through Device
--Tree. The node is a child node of the PCI controller.
--
- Required properties:
---compatible : Should be "qcom,ath10k"
-+- compatible: Should be one of the following:
-+	* "qcom,ath10k"
-+	* "qcom,ipq4019-wifi"
- 
- Optional properties:
-+- reg: Address and length of the register set for the device.
-+- core-id: Numeric number associated to the wifi block.
-+           (0 means first wifi block, 1 means second wifi block, etc).
-+- resets: Must contain an entry for each entry in reset-names.
-+          See ../reset/reseti.txt for details.
-+- reset-names: Must include the list of following reset names,
-+	       "wifi_cpu_init"
-+	       "wifi_radio_srif"
-+	       "wifi_radio_warm"
-+	       "wifi_radio_cold"
-+	       "wifi_core_warm"
-+	       "wifi_core_cold"
-+- clocks: List of clock specifiers, must contain an entry for each required
-+          entry in clock-names.
-+- clock-names: Should contain the clock names "wifi_wcss_cmd", "wifi_wcss_ref",
-+               "wifi_wcss_rtc".
-+- interrupts: List of interrupt lines. Must contain an entry
-+	      for each entry in the interrupt-names property.
-+- interrupt-names: Must include the entries for MSI interrupt
-+		   names ("msi0" to "msi15") and legacy interrupt
-+		   name ("legacy"),
-+- qcom,msi_addr: MSI interrupt address.
-+- qcom,msi_base: Base value to add before writing MSI data into
-+		MSI address register.
- - qcom,ath10k-calibration-data : calibration data as an array, the
- 				 length can vary between hw versions
- 
-+Most of above properties are applicable to ahb based wlan device.
-+Whereas, pci based wlan device needs only "qcom,ath10k-calibration-data".
-+
-+Example (to supply the calibration data alone):
- 
--Example:
-+In this example, the node is defined as child node of the PCI controller.
- 
- pci {
- 	pcie@0 {
-@@ -28,3 +55,54 @@ pci {
- 		};
- 	};
- };
-+
-+Example (to supply ipq4019 SoC wifi block details):
-+
-+wifi0: wifi@a000000 {
-+	compatible = "qcom,ipq4019-wifi";
-+	reg = <0xa000000 0x200000>;
-+	core-id = <0x0>;
-+	resets = <&gcc WIFI0_CPU_INIT_RESET>,
-+		 <&gcc WIFI0_RADIO_SRIF_RESET>,
-+		 <&gcc WIFI0_RADIO_WARM_RESET>,
-+		 <&gcc WIFI0_RADIO_COLD_RESET>,
-+		 <&gcc WIFI0_CORE_WARM_RESET>,
-+		 <&gcc WIFI0_CORE_COLD_RESET>;
-+	reset-names = "wifi_cpu_init",
-+		      "wifi_radio_srif",
-+		      "wifi_radio_warm",
-+		      "wifi_radio_cold",
-+		      "wifi_core_warm",
-+		      "wifi_core_cold";
-+	clocks = <&gcc GCC_WCSS2G_CLK>,
-+		 <&gcc GCC_WCSS2G_REF_CLK>,
-+		 <&gcc GCC_WCSS2G_RTC_CLK>;
-+	clock-names = "wifi_wcss_cmd",
-+		      "wifi_wcss_ref",
-+		      "wifi_wcss_rtc";
-+	interrupts = <0 0x20 0x1>,
-+		     <0 0x21 0x1>,
-+		     <0 0x22 0x1>,
-+		     <0 0x23 0x1>,
-+		     <0 0x24 0x1>,
-+		     <0 0x25 0x1>,
-+		     <0 0x26 0x1>,
-+		     <0 0x27 0x1>,
-+		     <0 0x28 0x1>,
-+		     <0 0x29 0x1>,
-+		     <0 0x2a 0x1>,
-+		     <0 0x2b 0x1>,
-+		     <0 0x2c 0x1>,
-+		     <0 0x2d 0x1>,
-+		     <0 0x2e 0x1>,
-+		     <0 0x2f 0x1>,
-+		     <0 0xa8 0x0>;
-+	interrupt-names = "msi0",  "msi1",  "msi2",  "msi3",
-+			  "msi4",  "msi5",  "msi6",  "msi7",
-+			  "msi8",  "msi9",  "msi10", "msi11",
-+			  "msi12", "msi13", "msi14", "msi15",
-+			  "legacy";
-+	qcom,msi_addr = <0x0b006040>;
-+	qcom,msi_base = <0x40>;
-+	qcom,ath10k-calibration-data = [ 01 02 03 ... ];
-+};
--- 
-1.8.1.2
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
