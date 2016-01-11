@@ -1,61 +1,67 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [RFC v2 2/4] dt-bindings: i2c: mux: demux-pinctrl: add bindings
-Date: Mon, 11 Jan 2016 09:01:15 +0100
-Message-ID: <CAMuHMdUFdXxGv9wa66WQsX97EVgQYwhhhz+iduZdKSny_ZQT6g@mail.gmail.com>
-References: <1452088285-6427-1-git-send-email-wsa@the-dreams.de>
-	<1452088285-6427-3-git-send-email-wsa@the-dreams.de>
-	<20160111025200.GA5993@rob-hp-laptop>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 0/2] DRA72/DRA74: Add 2 lane support
+Date: Mon, 11 Jan 2016 13:39:02 +0530
+Message-ID: <5693631E.2050807@ti.com>
+References: <1452077393-25880-1-git-send-email-kishon@ti.com>
+ <20160107174126.GB14105@localhost> <20160107181320.GO12777@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20160111025200.GA5993@rob-hp-laptop>
-Sender: linux-sh-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Jan Luebbe <jlu@pengutronix.de>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160107181320.GO12777@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, Richard Cochran <richardcochran@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Tony,
 
-On Mon, Jan 11, 2016 at 3:52 AM, Rob Herring <robh@kernel.org> wrote:
-> On Wed, Jan 06, 2016 at 02:51:23PM +0100, Wolfram Sang wrote:
->> From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+On Thursday 07 January 2016 11:43 PM, Tony Lindgren wrote:
+> * Bjorn Helgaas <helgaas@kernel.org> [160107 09:42]:
+>> [+cc Richard]
 >>
->> These bindings allow an I2C bus to switch between multiple masters. This
->> is not hot-swichting because connected I2C slaves will be
->
-> s/swichting/switching/
->
->> re-instantiated. It is meant to select the best I2C core at runtime once
->> the task is known. Example: Prefer i2c-gpio over another I2C core
->> because of HW errata affetcing your use case.
->
-> This seems okay to me. I don't like not having the i2c devices under the
-> i2c controller, but not really much we can do about that.
->
-> I have another usecase which might end up needing a similar structure
-> as this. That is the whole question of how to deal with capes, hats,
-> shields and various daughterboards. For I2C devices on a daughterboard,
-> we need to be able to have a DT overlay for the daughterboard described
-> in terms of the connector(s) and independent of the host. Then the
-> base DT needs to define the mapping from the connector to the host
+>> Hi Kishon,
+>>
+>> On Wed, Jan 06, 2016 at 04:19:51PM +0530, Kishon Vijay Abraham I wrote:
+>>> Add driver modifications in pci-dra7xx to get x2 mode working in
+>>> DRA72 and DRA74. Certain modifications is needed in PHY driver also
+>>> which will be sent as a separate series.
+>>>
+>>> Certain board modifications has to be done in order to test
+>>> x2 mode in dra72-evm.
+>>>
+>>> These patches were created on pci next.
+>>>
+>>> Changes from RFC:
+>>> *) .b1co_mode_sel_mask is now set with the correct value.
+>>> *) cleanup the patch
+>>>
+>>> Kishon Vijay Abraham I (2):
+>>>   pci: host: pci-dra7xx: use "num-lanes" property to find phy count
+>>>   pci: host: pci-dra7xx: Enable x2 mode support
+>>>
+>>>  Documentation/devicetree/bindings/pci/ti-pci.txt |    8 +-
+>>>  drivers/pci/host/pci-dra7xx.c                    |  104 +++++++++++++++++++---
+>>>  2 files changed, 97 insertions(+), 15 deletions(-)
+>>
+>> Apparently dra7xx in mainline doesn't work [1].  Until that's
+>> resolved, I'm going to ignore dra7xx patches.
+> 
+> Agreed. Guys, please do the development _and_ testing on the mainline
+> kernel. We do have the mainline kernel usable for probably a few
+> tens of omap SoC variants. If you have issues using dra7 with mainline,
+> please fix those issues ASAP.
 
-Indeed. Currently an i2c bus is described in DT as tied to an i2c controller,
-while physically it's tied to a bunch of pins. Tying the bus to a controller
-is done through pinctrl.
+Here Bjorn meant pci-dra7xx is broken in mainline and not the dra7xx boot
+as such. (which is due to the absence of reset controller driver).
+All the patches to pci-dra7xx were tested on mainline kernel (having
+out-of-tree reset patches since the reset controller driver is not merged).
+> 
+> Ideally of course please also use the device you're working on to
+> send out the patches :)
 
-> controller. A complicating factor would be having devices on the same
-> bus but split across the main and daughter boards. I don't see anything
-> specific to change here, but just want to throw that out.
+dra7x is the only device that use this pci driver and all the patches to
+pci-dra7xx have been tested on both dra7 and dra72 boards.
 
-Can't the daughter board DTS just add more child devices to the mainboard bus?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks
+Kishon
