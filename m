@@ -1,295 +1,237 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/9] Documentation: dt-bindings: mfd: add TI LMU
- device binding information
-Date: Mon, 11 Jan 2016 09:46:07 +0000
-Message-ID: <20160111094607.GQ14104@x1>
-References: <1448521025-2796-1-git-send-email-milo.kim@ti.com>
- <1448521025-2796-2-git-send-email-milo.kim@ti.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH V2 2/2] serial: bcm2835: add driver for bcm2835-aux-uart
+Date: Mon, 11 Jan 2016 10:52:32 +0100
+Message-ID: <56937B60.5020200@i2se.com>
+References: <1452344854-2576-1-git-send-email-kernel@martin.sperl.org>
+ <1452344854-2576-3-git-send-email-kernel@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1448521025-2796-2-git-send-email-milo.kim@ti.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Milo Kim <milo.kim@ti.com>
-Cc: robh+dt@kernel.org, j.anaszewski@samsung.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452344854-2576-3-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 26 Nov 2015, Milo Kim wrote:
+Hi Martin,
 
-> This patch describes overall binding for TI LMU MFD devices.
->=20
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: Lee Jones <lee.jones@linaro.org>=20
-> Cc: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: linux-leds@vger.kernel.org=20
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Milo Kim <milo.kim@ti.com>
+Am 09.01.2016 um 14:07 schrieb kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org:
+> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+>
+> The bcm2835 SOC contains an auxiliary uart, which is very close
+> to the ns16550 with some differences.
+>
+> The big difference is that the uart HW is not using an internal divider
+> of 16 but 8, which results in an effictive baud-rate being twice
+> the requested baud-rate.
+>
+> This driver handles this device correctly and handles the difference in
+> the HW divider by scaling up the clock ba a factor of 2.
+>
+> The approach to write a separate (wrapper) driver instead of using a
+> multiplying clock and "ns16550" as compatibility in the device-tree
+> has been recommended by Stephen Warren.
+>
+> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/mfd/ti-lmu.txt | 243 +++++++++++++=
-++++++++++
->  1 file changed, 243 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/ti-lmu.txt
-
-Acked-by: Lee Jones <lee.jones@linaro.org>
-
-> diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Docum=
-entation/devicetree/bindings/mfd/ti-lmu.txt
+>  drivers/tty/serial/8250/8250_bcm2835aux.c |  143 +++++++++++++++++++++++++++++
+>  drivers/tty/serial/8250/Kconfig           |    8 ++
+>  drivers/tty/serial/8250/Makefile          |    1 +
+>  3 files changed, 152 insertions(+)
+>  create mode 100644 drivers/tty/serial/8250/8250_bcm2835aux.c
+>
+> diff --git a/drivers/tty/serial/8250/8250_bcm2835aux.c b/drivers/tty/serial/8250/8250_bcm2835aux.c
 > new file mode 100644
-> index 0000000..c885cf8
+> index 0000000..718c357
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-> @@ -0,0 +1,243 @@
-> +TI LMU (Lighting Management Unit) device tree bindings
+> +++ b/drivers/tty/serial/8250/8250_bcm2835aux.c
+> @@ -0,0 +1,143 @@
+> +/*
+> + * Serial port driver for BCM2835AUX UART
+> + *
+> + * Copyright (C) 2016 Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+> + *
+> + * Based on 8250_lpc18xx.c:
+> + * Copyright (C) 2015 Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + */
 > +
-> +TI LMU driver supports lighting devices below.
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
 > +
-> +   Name                  Child nodes
-> +  ------      ---------------------------------
-> +  LM3532       Backlight
-> +  LM3631       Backlight and regulator
-> +  LM3632       Backlight and regulator
-> +  LM3633       Backlight, LED and fault monitor
-> +  LM3695       Backlight
-> +  LM3697       Backlight and fault monitor
+> +#include "8250.h"
 > +
-> +Required properties:
-> +  - compatible: Should be one of:
-> +                "ti,lm3532"
-> +                "ti,lm3631"
-> +                "ti,lm3632"
-> +                "ti,lm3633"
-> +                "ti,lm3695"
-> +                "ti,lm3697"
-> +  - reg: I2C slave address.
-> +         0x11 for LM3632
-> +         0x29 for LM3631
-> +         0x36 for LM3633, LM3697
-> +         0x38 for LM3532
-> +         0x63 for LM3695
-> +
-> +Optional property:
-> +  - enable-gpios: A GPIO specifier for hardware enable pin.
-> +
-> +Required node:
-> +  - backlight: All LMU devices have backlight child nodes.
-> +               For the properties, please refer to [1].
-> +
-> +Optional nodes:
-> +  - fault-monitor: Hardware fault monitoring driver for LM3633 and L=
-M3697.
-> +    Required properties:
-> +      - compatible: Should be one of:
-> +                    "ti,lm3633-fault-monitor"
-> +                    "ti,lm3697-fault-monitor"
-> +  - leds: LED properties for LM3633. Please refer to [2].
-> +  - regulators: Regulator properties for LM3631 and LM3632.
-> +                Please refer to [3].
-> +
-> +[1] ../leds/backlight/ti-lmu-backlight.txt
-> +[2] ../leds/leds-lm3633.txt
-> +[3] ../regulator/lm363x-regulator.txt
-> +
-> +lm3532@38 {
-> +	compatible =3D "ti,lm3532";
-> +	reg =3D <0x38>;
-> +
-> +	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
-> +
-> +	backlight {
-> +		compatible =3D "ti,lm3532-backlight";
-> +
-> +		lcd {
-> +			led-sources =3D <0 1 2>;
-> +			ramp-up-msec =3D <30>;
-> +			ramp-down-msec =3D <0>;
-> +		};
-> +	};
+> +struct bcm2835aux_data {
+> +	struct uart_8250_port uart;
+> +	struct clk *clk;
 > +};
 > +
-> +lm3631@29 {
-> +	compatible =3D "ti,lm3631";
-> +	reg =3D <0x29>;
+> +static int bcm2835aux_serial_probe(struct platform_device *pdev)
+> +{
+> +	struct bcm2835aux_data *data;
+> +	struct resource *res;
+> +	int ret;
 > +
-> +	regulators {
-> +		compatible =3D "ti,lm363x-regulator";
+> +	/* allocate the custom structure */
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
 > +
-> +		vboost {
-> +			regulator-name =3D "lcd_boost";
-> +			regulator-min-microvolt =3D <4500000>;
-> +			regulator-max-microvolt =3D <6350000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		vcont {
-> +			regulator-name =3D "lcd_vcont";
-> +			regulator-min-microvolt =3D <1800000>;
-> +			regulator-max-microvolt =3D <3300000>;
-> +		};
-> +
-> +		voref {
-> +			regulator-name =3D "lcd_voref";
-> +			regulator-min-microvolt =3D <4000000>;
-> +			regulator-max-microvolt =3D <6000000>;
-> +		};
-> +
-> +		vpos {
-> +			regulator-name =3D "lcd_vpos";
-> +			regulator-min-microvolt =3D <4000000>;
-> +			regulator-max-microvolt =3D <6000000>;
-> +			regulator-boot-on;
-> +		};
-> +
-> +		vneg {
-> +			regulator-name =3D "lcd_vneg";
-> +			regulator-min-microvolt =3D <4000000>;
-> +			regulator-max-microvolt =3D <6000000>;
-> +			regulator-boot-on;
-> +		};
-> +	};
-> +
-> +	backlight {
-> +		compatible =3D "ti,lm3631-backlight";
-> +
-> +		lcd_bl {
-> +			led-sources =3D <0 1>;
-> +			ramp-up-msec =3D <300>;
-> +		};
-> +	};
-> +};
-> +
-> +lm3632@11 {
-> +	compatible =3D "ti,lm3632";
-> +	reg =3D <0x11>;
-> +
-> +	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>; /* PC2 */
-> +
-> +	regulators {
-> +		compatible =3D "ti,lm363x-regulator";
-> +
-> +		ti,lcm-en1-gpio =3D <&pioC 0 GPIO_ACTIVE_HIGH>; /* PC0 */
-> +		ti,lcm-en2-gpio =3D <&pioC 1 GPIO_ACTIVE_HIGH>; /* PC1 */
-> +
-> +		vboost {
-> +			regulator-name =3D "lcd_boost";
-> +			regulator-min-microvolt =3D <4500000>;
-> +			regulator-max-microvolt =3D <6400000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		vpos {
-> +			regulator-name =3D "lcd_vpos";
-> +			regulator-min-microvolt =3D <4000000>;
-> +			regulator-max-microvolt =3D <6000000>;
-> +		};
-> +
-> +		vneg {
-> +			regulator-name =3D "lcd_vneg";
-> +			regulator-min-microvolt =3D <4000000>;
-> +			regulator-max-microvolt =3D <6000000>;
-> +		};
-> +	};
-> +
-> +	backlight {
-> +		compatible =3D "ti,lm3632-backlight";
-> +
-> +		pwms =3D <&pwm0 0 10000 0>; /* pwm number, period, polarity */
-> +		pwm-names =3D "lmu-backlight";
-> +
-> +		lcd {
-> +			led-sources =3D <0 1>;
-> +			pwm-period =3D <10000>;
-> +		};
-> +	};
-> +};
-> +
-> +lm3633@36 {
-> +	compatible =3D "ti,lm3633";
-> +	reg =3D <0x36>;
-> +
-> +	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
-> +
-> +	backlight {
-> +		compatible =3D "ti,lm3633-backlight";
-> +
-> +		main {
-> +			label =3D "main_lcd";
-> +			led-sources =3D <1 2>;
-> +			ramp-up-msec =3D <500>;
-> +			ramp-down-msec =3D <500>;
-> +		};
-> +
-> +		front {
-> +			label =3D "front_lcd";
-> +			led-sources =3D <0>;
-> +			ramp-up-msec =3D <1000>;
-> +			ramp-down-msec =3D <0>;
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible =3D "ti,lm3633-leds";
-> +
-> +		chan1 {
-> +			label =3D "status";
-> +			led-sources =3D <1>;
-> +			led-max-microamp =3D <6000>;
-> +		};
-> +
-> +		chan345 {
-> +			label =3D "rgb";
-> +			led-sources =3D <3 4 5>;
-> +			led-max-microamp =3D <10000>;
-> +		};
-> +	};
-> +
-> +	fault-monitor {
-> +		compatible =3D "ti,lm3633-fault-monitor";
-> +	};
-> +};
-> +
-> +lm3695@63 {
-> +	compatible =3D "ti,lm3695";
-> +	reg =3D <0x63>;
-> +
-> +	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
-> +
-> +	backlight {
-> +		compatible =3D "ti,lm3695-backlight";
-> +
-> +		lcd {
-> +			label =3D "bl";
-> +			led-sources =3D <0 1>;
-> +		};
-> +	};
-> +};
-> +
-> +lm3697@36 {
-> +	compatible =3D "ti,lm3697";
-> +	reg =3D <0x36>;
-> +
-> +	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
-> +
-> +	backlight {
-> +		compatible =3D "ti,lm3697-backlight";
-> +
-> +		lcd {
-> +			led-sources =3D <0 1 2>;
-> +			ramp-up-msec =3D <200>;
-> +			ramp-down-msec =3D <200>;
-> +		};
-> +	};
-> +
-> +	fault-monitor {
-> +		compatible =3D "ti,lm3697-fault-monitor";
-> +	};
-> +};
+> +	/* initialize data */
+> +	spin_lock_init(&data->uart.port.lock);
+> +	data->uart.port.dev = &pdev->dev;
+> +	data->uart.port.regshift = 2;
+> +	data->uart.port.type = PORT_16550;
+> +	data->uart.port.iotype = UPIO_MEM;
+> +	data->uart.port.fifosize = 8;
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+data->uart.capabilities = UART_CAP_FIFO; ?
+
+> +	data->uart.port.flags = UPF_SHARE_IRQ |
+> +				UPF_FIXED_PORT |
+> +				UPF_FIXED_TYPE |
+> +				UPF_SKIP_TEST;
+> +
+> +	/* get the clock - this also enables the HW */
+> +	data->clk = devm_clk_get(&pdev->dev, NULL);
+> +	ret = PTR_ERR_OR_ZERO(data->clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "could not get clk: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* get the interrupt */
+> +	data->uart.port.irq = platform_get_irq(pdev, 0);
+> +	if (data->uart.port.irq < 0) {
+> +		dev_err(&pdev->dev, "irq not found - %i",
+> +			data->uart.port.irq);
+> +		return data->uart.port.irq;
+> +	}
+> +
+> +	/* map the main registers */
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "memory resource not found");
+> +		return -EINVAL;
+> +	}
+> +	data->uart.port.membase = devm_ioremap_resource(&pdev->dev, res);
+> +	ret = PTR_ERR_OR_ZERO(data->uart.port.membase);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Check for a fixed line number */
+> +	ret = of_alias_get_id(pdev->dev.of_node, "serial");
+> +	if (ret >= 0)
+> +		data->uart.port.line = ret;
+> +
+> +	/* enable the clock as a last step */
+> +	ret = clk_prepare_enable(data->clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "unable to enable uart clock\n");
+> +		return ret;
+> +	}
+> +
+> +	/* the HW-clock divider for bcm2835aux is 8,
+> +	 * but 8250 expects a divider of 16,
+> +	 * so we have to multiply the actual clock by 2
+> +	 * to get identical baudrates.
+> +	 */
+> +	data->uart.port.uartclk = clk_get_rate(data->clk) * 2;
+> +
+> +	/* register the port */
+> +	ret = serial8250_register_8250_port(&data->uart);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev,
+> +			"unable to register 8250 port - %d\n", ret);
+
+This should fit in one line.
+
+> +		goto dis_clk;
+> +	}
+> +	data->uart.port.line = ret;
+
+This looks wrong because it overwrites the result of of_alias_get_id.
+Either
+you store it in a new member of bcm2835aux_data or drop the assignment.
+
+> +
+> +	platform_set_drvdata(pdev, data);
+> +
+> +	return 0;
+> +
+> +dis_clk:
+> +	clk_disable_unprepare(data->clk);
+> +	return ret;
+> +}
+> +
+> +static int bcm2835aux_serial_remove(struct platform_device *pdev)
+> +{
+> +	struct bcm2835aux_data *data = platform_get_drvdata(pdev);
+> +
+> +	serial8250_unregister_port(data->uart.port.line);
+> +	clk_disable_unprepare(data->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id bcm2835aux_serial_match[] = {
+> +	{ .compatible = "brcm,bcm2835-aux-uart" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, bcm2835aux_serial_match);
+> +
+> +static struct platform_driver bcm2835aux_serial_driver = {
+> +	.driver = {
+> +		.name = "bcm2835-aux-uart",
+> +		.of_match_table = bcm2835aux_serial_match,
+> +	},
+> +	.probe  = bcm2835aux_serial_probe,
+> +	.remove = bcm2835aux_serial_remove,
+> +};
+> +module_platform_driver(bcm2835aux_serial_driver);
+> +
+> +MODULE_DESCRIPTION("BCM2835 auxiliar UART driver");
+> +MODULE_AUTHOR("Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
+> index 6412f14..105aa19 100644
+> --- a/drivers/tty/serial/8250/Kconfig
+> +++ b/drivers/tty/serial/8250/Kconfig
+> @@ -272,6 +272,14 @@ config SERIAL_8250_ACORN
+>  	  system, say Y to this option.  The driver can handle 1, 2, or 3 port
+>  	  cards.  If unsure, say N.
+>  
+> +config SERIAL_8250_BCM2835AUX
+> +	tristate "BCM2835 auxiliar uart support"
+
+BCM2835 auxiliary mini UART support
+
+> +	depends on ARCH_BCM2835 || COMPILE_TEST
+> +	depends on SERIAL_8250 && SERIAL_8250_SHARE_IRQ
+> +	help
+> +	  support for the BCM2835 auxiliar uart.
+
+auxiliary UART
+
+Since it's a mini UART it would be helpful to write down the
+limitiations here.
+
+> +	  If unsure, say N.
+> +
+>  config SERIAL_8250_FSL
+>  	bool
+>  	depends on SERIAL_8250_CONSOLE
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
