@@ -1,63 +1,28 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v2 0/9] ARM: dts: Add compatible property to "partitions" node
-Date: Mon, 11 Jan 2016 17:07:58 +0100
-Message-ID: <87lh7wyu8x.fsf@free-electrons.com>
-References: <1450694033-27717-1-git-send-email-geert+renesas@glider.be>
-	<20151228050147.GE1066@verge.net.au>
-	<CAMuHMdXt36GSDuoFVGBebJVN9OHPh=ze8u8KvQ0B+RcvT6xTYQ@mail.gmail.com>
-	<20160103213938.GD22806@verge.net.au>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 0/2] ata: Introduce the AHCI_HFLAG_EDGE_IRQ_BROKEN in
+ libahci and enabling it for ahci_xgene driver.
+Date: Mon, 11 Jan 2016 11:10:11 -0500
+Message-ID: <20160111161011.GD1898@mtj.duckdns.org>
+References: <1452506763-18649-1-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20160103213938.GD22806@verge.net.au> (Simon Horman's message of
-	"Mon, 4 Jan 2016 08:39:38 +1100")
-Sender: linux-sh-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "arm@kernel.org" <arm@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Alex Smith <alex.smith@imgtec.com>, Brian Norris <computersforpeace@gmail.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-sh list <linux-sh@vger.kernel.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, MTD Maling List <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1452506763-18649-1-git-send-email-stripathi@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>
+Cc: olof@lixom.net, arnd@arndb.de, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mlangsdo@redhat.com, jcm@redhat.com, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
- 
- On dim., janv. 03 2016, Simon Horman <horms@verge.net.au> wrote:
+On Mon, Jan 11, 2016 at 03:36:01PM +0530, Suman Tripathi wrote:
+> This patch set implements a workaround for an errate in the APM
+> X-Gene SATA host controller with edge interrupt. The HOST_IRQ_STAT
+> misses the edge interrupt from the PORT_IRQ_STAT when clearing the
+> HOST_IRQ_STAT and reporting the PORT_IRQ_STAT happens in same clock
+> cycle.
 
-> On Mon, Dec 28, 2015 at 11:15:30AM +0100, Geert Uytterhoeven wrote:
-
->> >> Most of these are in arm-soc/for-next. Exceptions are kirkwood (in
->> >> mvebu/for-next), and ci20 (in mips/mips-for-linux-next).
->> >>
->> >> Given we're late in the v4.4-rc cycle, perhaps it's easiest if the
->> >> arm-soc maintainers take all applicable patches directly, bypassing the
->> >> mvebu and shmobile maintainers?
->> >>
->> >> Thanks for queuing for v4.5!
->> >>
->> >> Geert Uytterhoeven (9):
->> >>   ARM: mvebu: ix4-300d: Add compatible property to "partitions" node
->> >>   ARM: mvebu: kirkwood: Add compatible property to "partitions" node
->> >>   ARM: shmobile: bockw dts: Add compatible property to "partitions" node
->> >>   ARM: shmobile: lager dts: Add compatible property to "partitions" node
->> >>   ARM: shmobile: koelsch dts: Add compatible property to "partitions"
->> >>     node
->> >>   ARM: shmobile: porter dts: Add compatible property to "partitions"
->> >>     node
->> >>   ARM: shmobile: gose dts: Add compatible property to "partitions" node
->> >>   ARM: shmobile: silk dts: Add compatible property to "partitions" node
->> >
->> > Thanks, I have queued up the above "shmobile" patches for v4.6.
->> 
->> I'm afraid v4.6 is too late, leaving all SPI FLASHes broken in v4.5.
->
-> Thanks. I'll re-queue them up as fixes for v4.5.
-
-I thought you planned to directly apply them for v4.5 but I did not see
-them in the for-next branch of arm-soc. So as Simon I will submit them
-as fix for 4.5.
-
-Gregory
-
+Heh, I don't know why but I had to pull this posting out of spam too.
+For some reason, gmail thought these are spams.
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+tejun
