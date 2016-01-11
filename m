@@ -1,64 +1,104 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
- Controller driver.
-Date: Mon, 11 Jan 2016 10:06:30 -0600
-Message-ID: <5693D306.9070001@opensource.altera.com>
-References: <1452486886-8049-1-git-send-email-marex@denx.de>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 1/2] libahci: Implement the workaround to fix the missing
+ of edge interrupt for HOST_IRQ_STAT
+Date: Mon, 11 Jan 2016 11:16:48 -0500
+Message-ID: <20160111161648.GE1898@mtj.duckdns.org>
+References: <1452506763-18649-1-git-send-email-stripathi@apm.com>
+ <1452506763-18649-2-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1452486886-8049-1-git-send-email-marex@denx.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Marek Vasut <marex@denx.de>, linux-mtd@lists.infradead.org
-Cc: devicetree@vger.kernel.org, "R, Vignesh" <vigneshr@ti.com>, Alan Tull <atull@opensource.altera.com>, Yves Vandervennet <yvanderv@opensource.altera.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Graham Moore <grmoore@opensource.altera.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1452506763-18649-2-git-send-email-stripathi@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>
+Cc: olof@lixom.net, arnd@arndb.de, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mlangsdo@redhat.com, jcm@redhat.com, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
+Hello,
 
-On 01/10/2016 10:34 PM, Marek Vasut wrote:
-> From: Graham Moore <grmoore@opensource.altera.com>
+On Mon, Jan 11, 2016 at 03:36:02PM +0530, Suman Tripathi wrote:
+> Due to H/W errata, the HOST_IRQ_STAT register misses the edge interrupt
+> when clearing the HOST_IRQ_STAT register and hardware reporting the
+> PORT_IRQ_STAT register at the same clock cycle. As such, the
+> algorithm below outlines the workaround.
 > 
-> Add binding document for the Cadence QSPI controller.
+> 1. Read HOST_IRQ_STAT register and save the state.
+> 2. Clear the HOST_IRQ_STAT register.
+> 3. Read back the HOST_IRQ_STAT register.
+> 4. If HOST_IRQ_STAT register equals to zero, then
+>    traverse the rest of port's PORT_IRQ_STAT register
+>    to check if an interrupt is triggered at that point else
+>    go to step 6.
+> 5. If PORT_IRQ_STAT register of rest ports is not equal to zero
+>    then update the state of HOST_IRQ_STAT saved in step 1.
+> 6. Handle port interrupts.
+> 7. Exit
+...
+> +static void ahci_handle_broken_edge_irq(struct ata_host *host,
+> +					u32 *irq_masked)
+> +{
+> +	struct ahci_host_priv *hpriv = host->private_data;
+> +	void __iomem *mmio = hpriv->mmio;
+> +	unsigned int i, temp_irq_masked;
+> +	struct ata_port *next_ap;
+> +	void __iomem *port_mmio;
+> +	int j;
+> +
+> +	if (!readl(mmio + HOST_IRQ_STAT)) {
+> +		temp_irq_masked = *irq_masked;
+> +
+> +		for (i = 0; i < __sw_hweight32(hpriv->port_map);
+> +		     i++) {
+                     ^^^^^^
+		     Doesn't this fit on the same line?
+
+> +			if (*irq_masked & (1 << i)) {
+> +				for (j = 0;
+> +				     j < __sw_hweight32(hpriv->port_map);
+> +				     j++) {
+
+Heh, if (!COND) continue; can be your friend.
+
+> +					if (i == j)
+> +						continue;
+> +
+> +					next_ap = host->ports[j];
+> +					port_mmio = ahci_port_base(next_ap);
+> +					if (readl(port_mmio + PORT_IRQ_STAT))
+> +						temp_irq_masked |= (1 << j);
+> +				}
+> +			}
+> +		}
+> +		*irq_masked = temp_irq_masked;
+> +	}
+> +
+> +}
+
+So, this is really specific to the controller.
+
+>  static u32 ahci_handle_port_intr(struct ata_host *host, u32 irq_masked)
+>  {
+> +	struct ahci_host_priv *hpriv = host->private_data;
+>  	unsigned int i, handled = 0;
 > 
-> Signed-off-by: Graham Moore <grmoore@opensource.altera.com>
-> Signed-off-by: Marek Vasut <marex@denx.de>
-> Cc: Alan Tull <atull@opensource.altera.com>
-> Cc: Brian Norris <computersforpeace@gmail.com>
-> Cc: David Woodhouse <dwmw2@infradead.org>
-> Cc: Dinh Nguyen <dinguyen@opensource.altera.com>
-> Cc: Graham Moore <grmoore@opensource.altera.com>
-> Cc: "R, Vignesh" <vigneshr@ti.com>
-> Cc: Yves Vandervennet <yvanderv@opensource.altera.com>
-> Cc: devicetree@vger.kernel.org
-> ---
+> +	/*
+> +	 * For hardware with broken edge trigger latch
+> +	 * the HOST_IRQ_STAT register misses the edge interrupt
+> +	 * when clearing of HOST_IRQ_STAT register and hardware
+> +	 * reporting the PORT_IRQ_STAT register at the
+> +	 * same clock cycle.
+> +	 */
+> +	if (hpriv->flags & AHCI_HFLAG_EDGE_IRQ_BROKEN)
+> +		ahci_handle_broken_edge_irq(host, &irq_masked);
+> +
 
-I think you also need to CC the following people for proper review of
-these bindings:
+And all it needs is doing some extra processing at the beginning of
+port interrupt handling.  I think it'd be better to implement
+ahci_xgene specific IRQ handler which does the special processing and
+call the generic ahci_handle_port_intr().
 
-Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED
-DEVICE TREE BINDINGS)
-Pawel Moll <pawel.moll@arm.com> (maintainer:OPEN FIRMWARE AND FLATTENED
-DEVICE TREE BINDINGS)
-Mark Rutland <mark.rutland@arm.com> (maintainer:OPEN FIRMWARE AND
-FLATTENED DEVICE TREE BINDINGS)
-Ian Campbell <ijc+devicetree@hellion.org.uk> (maintainer:OPEN FIRMWARE
-AND FLATTENED DEVICE TREE BINDINGS)
-Kumar Gala <galak@codeaurora.org> (maintainer:OPEN FIRMWARE AND
-FLATTENED DEVICE TREE BINDINGS)
+Thanks.
 
-Dinh
-
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+-- 
+tejun
