@@ -1,120 +1,191 @@
-From: Caesar Wang <caesar.upstream@gmail.com>
-Subject: Re: [PATCH v3 2/3] soc: rockchip: power-domain: Modify power domain
- driver for rk3368
-Date: Mon, 11 Jan 2016 21:27:45 +0800
-Message-ID: <5693ADD1.4000207@gmail.com>
-References: <1452508600-3512-1-git-send-email-zhangqing@rock-chips.com>
- <1452508600-3512-3-git-send-email-zhangqing@rock-chips.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 6/9] mfd: axp20x: Add support for RSB
+ based AXP223 PMIC
+Date: Mon, 11 Jan 2016 13:35:17 +0000
+Message-ID: <20160111133517.GH19803@x1>
+References: <1450283538-25067-1-git-send-email-wens@csie.org>
+ <1450283538-25067-7-git-send-email-wens@csie.org>
+ <20160111092427.GI14104@x1>
+ <CAGb2v67N_C5bLTPmQs2gcTkpYt=2=Dk8LjWLEzHqGU--qhu+9g@mail.gmail.com>
+ <20160111120902.GE19803@x1>
+ <CAGb2v64iF2DhFPb+bn1obDW2BywByqyV5rB0Nz_oEUfeb2y7nQ@mail.gmail.com>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452508600-3512-3-git-send-email-zhangqing@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: zhangqing <zhangqing@rock-chips.com>
-Cc: heiko@sntech.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, khilman@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, huangtao@rock-chips.com, zyw@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBGW7Z22AKGQEMFKMJLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64iF2DhFPb+bn1obDW2BywByqyV5rB0Nz_oEUfeb2y7nQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi zhangqin,
+On Mon, 11 Jan 2016, Chen-Yu Tsai wrote:
 
- From my datasheet "Rockchip RK3368 TRM V2.0.pdf"
-Maybe i'm missing something.
+> On Mon, Jan 11, 2016 at 8:09 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On Mon, 11 Jan 2016, Chen-Yu Tsai wrote:
+> >> On Mon, Jan 11, 2016 at 5:24 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrot=
+e:
+> >> > On Thu, 17 Dec 2015, Chen-Yu Tsai wrote:
+> >> >
+> >> >> The AXP223 is a new PMIC commonly paired with Allwinner A23/A33 SoC=
+s.
+> >> >> It is functionally identical to AXP221; only the regulator default
+> >> >> voltage/status and the external host interface are different.
+> >> >>
+> >> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> >> >> ---
+> >> >>  drivers/mfd/Kconfig        | 11 +++++++
+> >> >>  drivers/mfd/Makefile       |  1 +
+> >> >>  drivers/mfd/axp20x-rsb.c   | 78 ++++++++++++++++++++++++++++++++++=
+++++++++++++
+> >> >>  drivers/mfd/axp20x.c       |  2 ++
+> >> >>  include/linux/mfd/axp20x.h |  1 +
+> >> >>  5 files changed, 93 insertions(+)
+> >> >>  create mode 100644 drivers/mfd/axp20x-rsb.c
+> >
+> > [...]
+> >
+> >> >> +static int axp20x_rsb_probe(struct sunxi_rsb_device *rdev)
+> >> >> +{
+> >> >> +     struct axp20x_dev *axp20x;
+> >> >> +     int ret;
+> >> >> +
+> >> >> +     axp20x =3D devm_kzalloc(&rdev->dev, sizeof(*axp20x), GFP_KERN=
+EL);
+> >> >> +     if (!axp20x)
+> >> >> +             return -ENOMEM;
+> >> >> +
+> >> >> +     axp20x->dev =3D &rdev->dev;
+> >> >> +     axp20x->irq =3D rdev->irq;
+> >> >> +     sunxi_rsb_device_set_drvdata(rdev, axp20x);
+> >> >
+> >> > What's the point of this call?  Why do you need a sunxi_ variant?
+> >>
+> >> This is an inline call defined in include/linux/sunxi-rsb.h,
+> >> which is equivalent to dev_set_drvdata(&rdev->dev, data).
+> >>
+> >> It seems many subsystems or bus drivers have this pattern.
+> >>
+> >>     git grep void.*_set_drvdata include/linux/ | wc -l
+> >>
+> >> yields 34, not including dev_set_drvdata itself and this sunxi_rsb
+> >> variant.
+> >
+> > That doesn't answer my question.  Why is it required?
+> >
+> > Looks like superfluous churn to me.  Aggregation for the sake of it.
+>=20
+> I assumed it better to use functions matching the specific bus, and also
+> matching sunxi_rsb_device_get_drvdata() in the remove function.
 
+There are seldom good reasons to do that, since the generic calls do an
+outstanding job already.
 
-=E5=9C=A8 2016=E5=B9=B401=E6=9C=8811=E6=97=A5 18:36, zhangqing =E5=86=99=
-=E9=81=93:
-> This driver is modified to support RK3368 SoC.
->
-> Signed-off-by: zhangqing <zhangqing@rock-chips.com>
-> ---
->   drivers/soc/rockchip/pm_domains.c | 33 ++++++++++++++++++++++++++++=
-+++++
->   1 file changed, 33 insertions(+)
->
-> diff --git a/drivers/soc/rockchip/pm_domains.c b/drivers/soc/rockchip=
-/pm_domains.c
-> index 534c589..6cdffb1 100644
-> --- a/drivers/soc/rockchip/pm_domains.c
-> +++ b/drivers/soc/rockchip/pm_domains.c
-> @@ -18,6 +18,7 @@
->   #include <linux/regmap.h>
->   #include <linux/mfd/syscon.h>
->   #include <dt-bindings/power/rk3288-power.h>
-> +#include <dt-bindings/power/rk3368-power.h>
->  =20
->   struct rockchip_domain_info {
->   	int pwr_mask;
-> @@ -75,6 +76,9 @@ struct rockchip_pmu {
->   #define DOMAIN_RK3288(pwr, status, req)		\
->   	DOMAIN(pwr, status, req, req, (req) + 16)
->  =20
-> +#define DOMAIN_RK3368(pwr, status, req)		\
-> +	DOMAIN(pwr, status, req, (req) + 16, req)
-> +
+> But since we already get "struct device" two lines above, it's already
+> leaking the implementation, which beats the purpose of the wrapper. I'll
+> replace it with dev_set_drvdata() in the next version.
 
-You should  remove it, that's seem same with the rk3288.
+Much better, thank you.
 
-The rk3368 datasheet:
-PMU_PMU_BUS_IDLE_ST  ----->idle_vio[24]----->ack
-PMU_PMU_BUS_IDLE_REQ ---->idle_req_vio[8]----->idle
+> >> >> +     ret =3D axp20x_match_device(axp20x);
+> >> >> +     if (ret)
+> >> >> +             return ret;
+> >> >> +
+> >> >> +     axp20x->regmap =3D devm_regmap_init_sunxi_rsb(rdev, axp20x->r=
+egmap_cfg);
+> >> >> +     if (IS_ERR(axp20x->regmap)) {
+> >> >> +             ret =3D PTR_ERR(axp20x->regmap);
+> >> >> +             dev_err(&rdev->dev, "regmap init failed: %d\n", ret);
+> >> >> +             return ret;
+> >> >> +     }
+> >> >> +
+> >> >> +     return axp20x_device_probe(axp20x);
+> >> >> +}
+> >> >> +
+> >> >> +static int axp20x_rsb_remove(struct sunxi_rsb_device *rdev)
+> >> >> +{
+> >> >> +     struct axp20x_dev *axp20x =3D sunxi_rsb_device_get_drvdata(rd=
+ev);
+> >> >> +
+> >> >> +     return axp20x_device_remove(axp20x);
+> >> >> +}
+> >> >> +
+> >> >> +static const struct of_device_id axp20x_rsb_of_match[] =3D {
+> >> >> +     { .compatible =3D "x-powers,axp223", .data =3D (void *)AXP223=
+_ID },
+> >> >> +     { },
+> >> >> +};
+> >> >> +MODULE_DEVICE_TABLE(of, axp20x_rsb_of_match);
+> >> >> +
+> >> >> +static struct sunxi_rsb_driver axp20x_rsb_driver =3D {
+> >> >> +     .driver =3D {
+> >> >> +             .name   =3D "axp20x-rsb",
+> >> >> +             .of_match_table =3D of_match_ptr(axp20x_rsb_of_match)=
+,
+> >> >> +     },
+> >> >> +     .probe  =3D axp20x_rsb_probe,
+> >> >> +     .remove =3D axp20x_rsb_remove,
+> >> >> +};
+> >> >> +module_sunxi_rsb_driver(axp20x_rsb_driver);
+> >> >> +
+> >> >> +MODULE_DESCRIPTION("PMIC MFD sunXi RSB driver for AXP20X");
+> >> >> +MODULE_AUTHOR("Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>");
+> >> >> +MODULE_LICENSE("GPL v2");
+> >> >> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> >> >> index 54a00168da26..968d77fb95d8 100644
+> >> >> --- a/drivers/mfd/axp20x.c
+> >> >> +++ b/drivers/mfd/axp20x.c
+> >> >> @@ -33,6 +33,7 @@ static const char * const axp20x_model_names[] =
+=3D {
+> >> >>       "AXP202",
+> >> >>       "AXP209",
+> >> >>       "AXP221",
+> >> >> +     "AXP223",
+> >> >>       "AXP288",
+> >> >>  };
+> >> >>
+> >> >> @@ -616,6 +617,7 @@ int axp20x_match_device(struct axp20x_dev *axp2=
+0x)
+> >> >>               axp20x->regmap_irq_chip =3D &axp20x_regmap_irq_chip;
+> >> >>               break;
+> >> >>       case AXP221_ID:
+> >> >> +     case AXP223_ID:
+> >> >>               axp20x->nr_cells =3D ARRAY_SIZE(axp22x_cells);
+> >> >>               axp20x->cells =3D axp22x_cells;
+> >> >>               axp20x->regmap_cfg =3D &axp22x_regmap_config;
+> >> >> diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.=
+h
+> >> >> index 00697c6ad8b0..d82e7d51372b 100644
+> >> >> --- a/include/linux/mfd/axp20x.h
+> >> >> +++ b/include/linux/mfd/axp20x.h
+> >> >> @@ -18,6 +18,7 @@ enum {
+> >> >>       AXP202_ID,
+> >> >>       AXP209_ID,
+> >> >>       AXP221_ID,
+> >> >> +     AXP223_ID,
+> >> >>       AXP288_ID,
+> >> >>       NR_AXP20X_VARIANTS,
+> >> >>  };
+> >> >
+> >
 
->   static bool rockchip_pmu_domain_is_idle(struct rockchip_pm_domain *=
-pd)
->   {
->   	struct rockchip_pmu *pmu =3D pd->pmu;
-> @@ -444,6 +448,14 @@ static const struct rockchip_domain_info rk3288_=
-pm_domains[] =3D {
->   	[RK3288_PD_GPU]		=3D DOMAIN_RK3288(9, 9, 2),
->   };
->  =20
-> +static const struct rockchip_domain_info rk3368_pm_domains[] =3D {
-> +	[RK3368_PD_PERI]	=3D DOMAIN_RK3368(13, 12, 6),
-> +	[RK3368_PD_VIO]		=3D DOMAIN_RK3368(15, 14, 8),
-> +	[RK3368_PD_VIDEO]	=3D DOMAIN_RK3368(14, 13, 7),
-> +	[RK3368_PD_GPU_0]	=3D DOMAIN_RK3368(16, 15, 2),
-> +	[RK3368_PD_GPU_1]	=3D DOMAIN_RK3368(17, 16, 2),
-> +};
-> +
->   static const struct rockchip_pmu_info rk3288_pmu =3D {
->   	.pwr_offset =3D 0x08,
->   	.status_offset =3D 0x0c,
-> @@ -461,11 +473,32 @@ static const struct rockchip_pmu_info rk3288_pm=
-u =3D {
->   	.domain_info =3D rk3288_pm_domains,
->   };
->  =20
-> +static const struct rockchip_pmu_info rk3368_pmu =3D {
-> +	.pwr_offset =3D 0x0c,
-> +	.status_offset =3D 0x10,
-> +	.req_offset =3D 0x3c,
-> +	.idle_offset =3D 0x40,
-> +	.ack_offset =3D 0x40,
-> +
-> +	.core_pwrcnt_offset =3D 0x48,
-> +	.gpu_pwrcnt_offset =3D 0x50,
-> +
-> +	.core_power_transition_time =3D 24,
-> +	.gpu_power_transition_time =3D 24,
-> +
-> +	.num_domains =3D ARRAY_SIZE(rk3368_pm_domains),
-> +	.domain_info =3D rk3368_pm_domains,
-> +};
-> +
->   static const struct of_device_id rockchip_pm_domain_dt_match[] =3D =
-{
->   	{
->   		.compatible =3D "rockchip,rk3288-power-controller",
->   		.data =3D (void *)&rk3288_pmu,
->   	},
-> +	{
-> +		.compatible =3D "rockchip,rk3368-power-controller",
-> +		.data =3D (void *)&rk3368_pmu,
-> +	},
->   	{ /* sentinel */ },
->   };
->  =20
->
-> --=20
-> Thanks,
-> Caesar
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
