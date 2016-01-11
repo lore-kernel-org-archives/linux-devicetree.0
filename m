@@ -1,71 +1,37 @@
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH v2] rcar_jpu: Add R-Car Gen2 Fallback Compatibility String
-Date: Mon, 11 Jan 2016 11:13:20 +0900
-Message-ID: <1452478400-4267-1-git-send-email-horms+renesas@verge.net.au>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms+renesas@verge.net.au>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] iio:adc:at91_adc8xx: introduce new atmel adc
+ driver
+Date: Sun, 10 Jan 2016 20:32:39 -0600
+Message-ID: <20160111023239.GA27025@rob-hp-laptop>
+References: <1452096759-19438-1-git-send-email-ludovic.desroches@atmel.com>
+ <1452096759-19438-2-git-send-email-ludovic.desroches@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1452096759-19438-2-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add fallback compatibility string.
-This is in keeping with the fallback scheme being adopted wherever
-appropriate for drivers for Renesas SoCs.
+On Wed, Jan 06, 2016 at 05:12:35PM +0100, Ludovic Desroches wrote:
+> This driver supports the new version of the Atmel ADC device introduced
+> with the SAMA5D2 SoC family.
+> 
+> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iio/adc/at91_adc8xx.txt    |  28 ++
 
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+For the binding:
 
----
-v2
-* Make fallback compat string for R-Car Gen2 rather than all renesas
-  hardware: that seems too generic
----
- Documentation/devicetree/bindings/media/renesas,jpu.txt | 13 +++++++------
- drivers/media/platform/rcar_jpu.c                       |  1 +
- 2 files changed, 8 insertions(+), 6 deletions(-)
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/media/renesas,jpu.txt b/Documentation/devicetree/bindings/media/renesas,jpu.txt
-index 0cb94201bf92..d3436e5190f9 100644
---- a/Documentation/devicetree/bindings/media/renesas,jpu.txt
-+++ b/Documentation/devicetree/bindings/media/renesas,jpu.txt
-@@ -5,11 +5,12 @@ and decoding function conforming to the JPEG baseline process, so that the JPU
- can encode image data and decode JPEG data quickly.
- 
- Required properties:
--  - compatible: should containg one of the following:
--			- "renesas,jpu-r8a7790" for R-Car H2
--			- "renesas,jpu-r8a7791" for R-Car M2-W
--			- "renesas,jpu-r8a7792" for R-Car V2H
--			- "renesas,jpu-r8a7793" for R-Car M2-N
-+- compatible: "renesas,jpu-<soctype>", "renesas,rcar-gen2-jpu" as fallback.
-+	Examples with soctypes are:
-+	  - "renesas,jpu-r8a7790" for R-Car H2
-+	  - "renesas,jpu-r8a7791" for R-Car M2-W
-+	  - "renesas,jpu-r8a7792" for R-Car V2H
-+	  - "renesas,jpu-r8a7793" for R-Car M2-N
- 
-   - reg: Base address and length of the registers block for the JPU.
-   - interrupts: JPU interrupt specifier.
-@@ -17,7 +18,7 @@ Required properties:
- 
- Example: R8A7790 (R-Car H2) JPU node
- 	jpeg-codec@fe980000 {
--		compatible = "renesas,jpu-r8a7790";
-+		compatible = "renesas,jpu-r8a7790", "renesas,rcar-gen2-jpu";
- 		reg = <0 0xfe980000 0 0x10300>;
- 		interrupts = <0 272 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp1_clks R8A7790_CLK_JPU>;
-diff --git a/drivers/media/platform/rcar_jpu.c b/drivers/media/platform/rcar_jpu.c
-index f8e3e83c52a2..4caae52d9864 100644
---- a/drivers/media/platform/rcar_jpu.c
-+++ b/drivers/media/platform/rcar_jpu.c
-@@ -1611,6 +1611,7 @@ static const struct of_device_id jpu_dt_ids[] = {
- 	{ .compatible = "renesas,jpu-r8a7791" }, /* M2-W */
- 	{ .compatible = "renesas,jpu-r8a7792" }, /* V2H */
- 	{ .compatible = "renesas,jpu-r8a7793" }, /* M2-N */
-+	{ .compatible = "renesas,rcar-gen2-jpu" },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, jpu_dt_ids);
--- 
-2.7.0.rc3.207.g0ac5344
-
+>  drivers/iio/adc/Kconfig                            |  11 +
+>  drivers/iio/adc/Makefile                           |   1 +
+>  drivers/iio/adc/at91_adc8xx.c                      | 461 +++++++++++++++++++++
+>  4 files changed, 501 insertions(+)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
