@@ -1,58 +1,62 @@
-From: xuejiancheng <xuejiancheng@huawei.com>
-Subject: Re: [PATCH v5 4/6] ARM: debug: add hi3519 debug uart
-Date: Mon, 11 Jan 2016 10:32:52 +0800
-Message-ID: <56931454.6090300@huawei.com>
-References: <1452219400-32478-1-git-send-email-xuejiancheng@huawei.com>
- <1452219400-32478-5-git-send-email-xuejiancheng@huawei.com>
- <20160108150828.GM19062@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160108150828.GM19062@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: mark.rutland@arm.com, suwenping@hisilicon.com, mturquette@baylibre.com, bintian.wang@huawei.com, haojian.zhuang@linaro.org, linux-clk@vger.kernel.org, pawel.moll@arm.com, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, zhangzhenxing@hisilicon.com, devicetree@vger.kernel.org, khilman@linaro.org, arnd@arndb.de, ijc+devicetree@hellion.org.uk, yanhaifeng@hisilicon.com, ml.yang@hisilicon.com, robh+dt@kernel.org, xuejiancheng@hisilicon.com, linux-arm-kernel@lists.infradead.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, gaofei@hisilicon.com, p.zabel@pengutronix.de, galak@codeaurora.org, olof@lixom.net, yanghongwei@hisilicon.com
+From: zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3 1/3] dt-bindings: add power-domain header for RK3368 SoCs
+Date: Mon, 11 Jan 2016 02:36:38 -0800
+Message-ID: <1452508600-3512-2-git-send-email-zhangqing@rock-chips.com>
+References: <1452508600-3512-1-git-send-email-zhangqing@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452508600-3512-1-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Russell,
+According to a description from TRM, add all the power domains.
 
-On 2016/1/8 23:08, Russell King - ARM Linux wrote:
-> On Fri, Jan 08, 2016 at 10:16:38AM +0800, Jiancheng Xue wrote:
->> @@ -1449,6 +1457,7 @@ config DEBUG_UART_PHYS
->>  	default 0xf7fc9000 if DEBUG_BERLIN_UART
->>  	default 0xf8b00000 if DEBUG_HIX5HD2_UART
->>  	default 0xf991e000 if DEBUG_QCOM_UARTDM
->> +	default 0x12100000 if DEBUG_HI3519_UART
->>  	default 0xfcb00000 if DEBUG_HI3620_UART
->>  	default 0xfd883000 if DEBUG_ALPINE_UART0
->>  	default 0xfe800000 if ARCH_IOP32X
-> 
-> Please insert at the appropriate location - examination of the list
-> of defaults will show that it's sorted numerically, please keep this
-> sorted numerically.
-> 
+Signed-off-by: zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+ include/dt-bindings/power/rk3368-power.h | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 include/dt-bindings/power/rk3368-power.h
 
-OK. Thank you!
+diff --git a/include/dt-bindings/power/rk3368-power.h b/include/dt-bindings/power/rk3368-power.h
+new file mode 100644
+index 0000000..93633d5
+--- /dev/null
++++ b/include/dt-bindings/power/rk3368-power.h
+@@ -0,0 +1,28 @@
++#ifndef __DT_BINDINGS_POWER_RK3368_POWER_H__
++#define __DT_BINDINGS_POWER_RK3368_POWER_H__
++
++/* VD_CORE */
++#define RK3368_PD_A53_L0	0
++#define RK3368_PD_A53_L1	1
++#define RK3368_PD_A53_L2	2
++#define RK3368_PD_A53_L3	3
++#define RK3368_PD_SCU_L		4
++#define RK3368_PD_A53_B0	5
++#define RK3368_PD_A53_B1	6
++#define RK3368_PD_A53_B2	7
++#define RK3368_PD_A53_B3	8
++#define RK3368_PD_SCU_B		9
++
++/* VD_LOGIC */
++#define RK3368_PD_BUS		10
++#define RK3368_PD_PERI		11
++#define RK3368_PD_VIO		12
++#define RK3368_PD_ALIVE		13
++#define RK3368_PD_VIDEO		14
++#define RK3368_PD_GPU_0		15
++#define RK3368_PD_GPU_1		16
++
++/* VD_PMU */
++#define RK3368_PD_PMU		17
++
++#endif
+-- 
+1.9.1
 
->> @@ -1529,6 +1538,7 @@ config DEBUG_UART_VIRT
->>  	default 0xfe230000 if DEBUG_PICOXCELL_UART
->>  	default 0xfe300000 if DEBUG_BCM_KONA_UART
->>  	default 0xfe800000 if ARCH_IOP32X
->> +	default 0xfef00000 if DEBUG_HI3519_UART
->>  	default 0xfeb00000 if DEBUG_HI3620_UART || DEBUG_HIX5HD2_UART
->>  	default 0xfeb24000 if DEBUG_RK3X_UART0
->>  	default 0xfeb26000 if DEBUG_RK3X_UART1
-> 
-> Same for here.
-> 
-> Thanks.
-> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
