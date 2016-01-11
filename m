@@ -1,40 +1,71 @@
-From: xuejiancheng <xuejiancheng@huawei.com>
-Subject: Re: [PATCH v5 6/6] ARM: dts: add dts files for Hi3519
-Date: Mon, 11 Jan 2016 10:05:57 +0800
-Message-ID: <56930E05.1050009@huawei.com>
-References: <1452219400-32478-1-git-send-email-xuejiancheng@huawei.com>
- <1452219400-32478-7-git-send-email-xuejiancheng@huawei.com>
- <20160108151058.GN19062@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160108151058.GN19062@n2100.arm.linux.org.uk>
-Sender: linux-clk-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, p.zabel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH v2] rcar_jpu: Add R-Car Gen2 Fallback Compatibility String
+Date: Mon, 11 Jan 2016 11:13:20 +0900
+Message-ID: <1452478400-4267-1-git-send-email-horms+renesas@verge.net.au>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Hello Russell,
+Add fallback compatibility string.
+This is in keeping with the fallback scheme being adopted wherever
+appropriate for drivers for Renesas SoCs.
 
-On 2016/1/8 23:10, Russell King - ARM Linux wrote:
-> On Fri, Jan 08, 2016 at 10:16:40AM +0800, Jiancheng Xue wrote:
->> +		uart0: serial@12100000 {
->> +			compatible = "arm,pl011", "arm,primecell";
->> +			reg = <0x12100000 0x1000>;
->> +			interrupts = <0 4 4>;
-> 
-> Should the last digit there be IRQ_TYPE_LEVEL_HIGH (and same for the
-> other interrupts= after this?)
-> 
-> Thanks.
-> 
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 
-I'll include <dt-bindings/interrupt-controller/arm-gic.h> and use
-IRQ_TYPE_LEVEL_HIGH instead. The interrupts specifier will be wrote
-like this "interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;".
+---
+v2
+* Make fallback compat string for R-Car Gen2 rather than all renesas
+  hardware: that seems too generic
+---
+ Documentation/devicetree/bindings/media/renesas,jpu.txt | 13 +++++++------
+ drivers/media/platform/rcar_jpu.c                       |  1 +
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-Thank you.
-
-Jiancheng
+diff --git a/Documentation/devicetree/bindings/media/renesas,jpu.txt b/Documentation/devicetree/bindings/media/renesas,jpu.txt
+index 0cb94201bf92..d3436e5190f9 100644
+--- a/Documentation/devicetree/bindings/media/renesas,jpu.txt
++++ b/Documentation/devicetree/bindings/media/renesas,jpu.txt
+@@ -5,11 +5,12 @@ and decoding function conforming to the JPEG baseline process, so that the JPU
+ can encode image data and decode JPEG data quickly.
+ 
+ Required properties:
+-  - compatible: should containg one of the following:
+-			- "renesas,jpu-r8a7790" for R-Car H2
+-			- "renesas,jpu-r8a7791" for R-Car M2-W
+-			- "renesas,jpu-r8a7792" for R-Car V2H
+-			- "renesas,jpu-r8a7793" for R-Car M2-N
++- compatible: "renesas,jpu-<soctype>", "renesas,rcar-gen2-jpu" as fallback.
++	Examples with soctypes are:
++	  - "renesas,jpu-r8a7790" for R-Car H2
++	  - "renesas,jpu-r8a7791" for R-Car M2-W
++	  - "renesas,jpu-r8a7792" for R-Car V2H
++	  - "renesas,jpu-r8a7793" for R-Car M2-N
+ 
+   - reg: Base address and length of the registers block for the JPU.
+   - interrupts: JPU interrupt specifier.
+@@ -17,7 +18,7 @@ Required properties:
+ 
+ Example: R8A7790 (R-Car H2) JPU node
+ 	jpeg-codec@fe980000 {
+-		compatible = "renesas,jpu-r8a7790";
++		compatible = "renesas,jpu-r8a7790", "renesas,rcar-gen2-jpu";
+ 		reg = <0 0xfe980000 0 0x10300>;
+ 		interrupts = <0 272 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp1_clks R8A7790_CLK_JPU>;
+diff --git a/drivers/media/platform/rcar_jpu.c b/drivers/media/platform/rcar_jpu.c
+index f8e3e83c52a2..4caae52d9864 100644
+--- a/drivers/media/platform/rcar_jpu.c
++++ b/drivers/media/platform/rcar_jpu.c
+@@ -1611,6 +1611,7 @@ static const struct of_device_id jpu_dt_ids[] = {
+ 	{ .compatible = "renesas,jpu-r8a7791" }, /* M2-W */
+ 	{ .compatible = "renesas,jpu-r8a7792" }, /* V2H */
+ 	{ .compatible = "renesas,jpu-r8a7793" }, /* M2-N */
++	{ .compatible = "renesas,rcar-gen2-jpu" },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, jpu_dt_ids);
+-- 
+2.7.0.rc3.207.g0ac5344
 
