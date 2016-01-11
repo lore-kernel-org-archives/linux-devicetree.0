@@ -1,109 +1,83 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/4] PCI: rcar-gen2: Add device tree support for r8a7793
-Date: Mon, 11 Jan 2016 10:06:24 +0900
-Message-ID: <20160111010624.GA11387@verge.net.au>
-References: <1448954672-27236-1-git-send-email-horms+renesas@verge.net.au>
- <1448954672-27236-3-git-send-email-horms+renesas@verge.net.au>
- <20151204212649.GJ20125@localhost>
- <CAMuHMdWEXA-KTkqJsofXuBTQKBrtGW7x+2r+V42CuWwbjkqmvQ@mail.gmail.com>
- <20151207153833.GB7994@localhost>
- <20151208004519.GK10799@verge.net.au>
+From: xuejiancheng <xuejiancheng@huawei.com>
+Subject: Re: [PATCH v2] mtd: spi-nor: add hisilicon spi-nor flash controller
+ driver
+Date: Mon, 11 Jan 2016 09:20:41 +0800
+Message-ID: <56930369.1050000@huawei.com>
+References: <1452216405-10826-1-git-send-email-xuejiancheng@huawei.com>
+ <20160109154249.GA28102@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151208004519.GK10799@verge.net.au>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160109154249.GA28102@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dwmw2@infradead.org, computersforpeace@gmail.com, shijie.huang@intel.com, pengbinquan@huawei.com, han.xu@freescale.com, ezequiel@vanguardiasur.com.ar, fabio.estevam@freescale.com, manabian@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 08, 2015 at 09:45:19AM +0900, Simon Horman wrote:
-> On Mon, Dec 07, 2015 at 09:38:33AM -0600, Bjorn Helgaas wrote:
-> > On Sat, Dec 05, 2015 at 11:38:37AM +0100, Geert Uytterhoeven wrote:
-> > > Hi Bjorn,
-> > > 
-> > > On Fri, Dec 4, 2015 at 10:26 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Tue, Dec 01, 2015 at 04:24:30PM +0900, Simon Horman wrote:
-> > > >> Simply document new compat strings.
-> > > >> There appears to be no need for a driver updates.
-> > > >>
-> > > >> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> > > >> ---
-> > > >>  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 1 +
-> > > >>  1 file changed, 1 insertion(+)
-> > > >>
-> > > >> diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> > > >> index b19be08a8113..7c231b3e5872 100644
-> > > >> --- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> > > >> +++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> > > >> @@ -8,6 +8,7 @@ OHCI and EHCI controllers.
-> > > >>  Required properties:
-> > > >>  - compatible: "renesas,pci-r8a7790" for the R8A7790 SoC;
-> > > >>             "renesas,pci-r8a7791" for the R8A7791 SoC;
-> > > >> +           "renesas,pci-r8a7793" for the R8A7793 SoC;
-> > > >
-> > > > What's the benefit of adding a string here if the driver doesn't check
-> > > > for it?  Since the driver doesn't look for it, there's no way to test
-> > > > anything.
-> > > 
-> > > If we ever discover a difference between PCI on r8a7793 compared to PCI on
-> > > other SoCs of the R-Car Gen2 family, we can handle that difference in the
-> > > driver.
-> > > 
-> > > > It doesn't seem like this file is an authoritative source of names, so
-> > > 
-> > > Yes it is. When adding compatible values to a DTS, checkpatch.pl will check
-> > > for their existence in the binding documentation. Hence we always add the
-> > > compatible values to the DT binding docs, before we start using them.
-> > > 
-> > > > if we add it here, there's the possibility the r8a7793 will be
-> > > > canceled or renamed, and then we'd have to update this if the driver
-> > > > ever did need an r8a7793-specific quirk.  If we waited until the
-> > > 
-> > > I don't understand what you mean here.
-> > > 
-> > > > driver actually needs a quirk, then we'd know exactly what name to
-> > > > look for and we could update the driver, DT, and doc all together.
-> > > 
-> > > If we update driver, DT, and doc only after we discover the need for a quirk,
-> > > it's already too late, due to stable DT rules. Hence we always document and
-> > > use SoC-specific compatible values, sometimes combined with family-specific
-> > > compatible values. The driver only matches to the as least specific value as
-> > > possible.
-> > 
-> > The stable DT rules seem to be the key here, but I don't know what
-> > they are.  I found Documentation/devicetree/bindings/ABI.txt, but it
-> > doesn't clear it up for me.
-> > 
-> > I was assuming vendors could ship a DT in a platform ROM, in the same
-> > way platforms ship with an ACPI system description.  For ACPI, the
-> > _HID/_CID in the ROM in the field is authoritative in the sense that
-> > we have to regard it as a fixed, unchangeable feature of the platform.
-> > If we want a driver to recognize that device, we have to build the ID
-> > from the ROM into the driver, and it doesn't matter what is documented
-> > in the spec or in the kernel source.
-> > 
-> > If we had a one-sentence description of why adding the doc update when
-> > we actually need it is too late, that would probably be enough.
+Hi Rob,
+
+On 2016/1/9 23:42, Rob Herring wrote:
+> On Fri, Jan 08, 2016 at 09:26:45AM +0800, Jiancheng Xue wrote:
+>> add hisilicon spi-nor flash controller driver
+>>
+>> Signed-off-by: Binquan Peng <pengbinquan@huawei.com>
+>> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
+>> ---
 > 
-> I agree that would be useful.
-
-Sorry for letting this slip. How about the following in the relevant changelogs:
-
-	By documenting this compat sting it may be used in DTSs shipped,
-	for example as part of ROMs. It must be used in conjunction with
-	the Gen2 fallback compat string. At this time there are no known
-	differences between the r8a7793 IP block and that implemented by
-	the driver for the Gen2 fallback compat string. Thus there is no
-	need to update the driver as the use of the Gen2 fallback compat
-	string will activate the correct code in the current driver while
-	leaving the option for r8a7793-specific driver code to be activated
-	in an updated driver should the need arise.
-
-> > I'm perfectly happy with the PCI changes, so if somebody else wants to
-> > just merge all these via a DT tree, I'm happy to ack the PCI ones.
+> Next time, please include changes in v2 here.
 > 
-> I have no fixed ideas about who should take these changes
-> but I think you could take them through the PCI tree if you
-> are so inclined.
+
+OK. I will remember it. Thank you.
+
+In v2, I mainly fixed some compile warnings.
+
+>>  .../devicetree/bindings/spi/spi-hisi-sfc.txt       |  24 +
+>>  drivers/mtd/spi-nor/Kconfig                        |   6 +
+>>  drivers/mtd/spi-nor/Makefile                       |   1 +
+>>  drivers/mtd/spi-nor/hisi-sfc.c                     | 498 +++++++++++++++++++++
+>>  4 files changed, 529 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
+>>  create mode 100644 drivers/mtd/spi-nor/hisi-sfc.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt b/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
+>> new file mode 100644
+>> index 0000000..a0d1e04
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
+>> @@ -0,0 +1,24 @@
+>> +HiSilicon SPI-NOR Flash Controller
+>> +
+>> +Required properties:
+>> +- compatible : Should be "hisilicon,hisi-sfc".
+> 
+> I missed this last time, but you also need a more specific compatible 
+> string with the SOC name in it.
+> 
+
+This IP block is used in many SOCs. Do I need to add a specific compatible
+string for every SOC? Thank you.
+
+>> +- address-cells : number of cells required to define a chip select
+>> +        address on the SPI bus. Should be set to 1. See spi-bus.txt.
+>> +- size-cells : Should be 0.
+>> +- reg : Offset and length of the register set for the controller device.
+>> +- reg-names : Must include the following two entries: "control", "memory".
+>> +- clocks : handle to spi-nor flash controller clock.
+>> +
+>> +Example:
+>> +spi-nor-controller@10000000 {
+>> +	compatible = "hisilicon,hisi-sfc";
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	reg = <0x10000000 0x1000>, <0x14000000 0x1000000>;
+>> +	reg-names = "control", "memory";
+>> +	clocks = <&clock HI3519_FMC_CLK>;
+>> +	spi-nor@0 {
+>> +		compatible = "jedec,spi-nor";
+>> +		reg = <0>;
+>> +	};
+>> +};
+> 
+> .
+> 
