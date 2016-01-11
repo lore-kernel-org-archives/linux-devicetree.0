@@ -1,45 +1,61 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 3/3] dt-bindings: regulator/mfd: Reorganize S2MPA01
- bindings
-Date: Mon, 11 Jan 2016 07:56:49 +0000
-Message-ID: <20160111075649.GO3331@x1>
-References: <1449191405-3344-1-git-send-email-k.kozlowski@samsung.com>
- <1449191405-3344-4-git-send-email-k.kozlowski@samsung.com>
- <20151204121153.GZ26072@sirena.org.uk>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [RFC v2 2/4] dt-bindings: i2c: mux: demux-pinctrl: add bindings
+Date: Mon, 11 Jan 2016 09:01:15 +0100
+Message-ID: <CAMuHMdUFdXxGv9wa66WQsX97EVgQYwhhhz+iduZdKSny_ZQT6g@mail.gmail.com>
+References: <1452088285-6427-1-git-send-email-wsa@the-dreams.de>
+	<1452088285-6427-3-git-send-email-wsa@the-dreams.de>
+	<20160111025200.GA5993@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20151204121153.GZ26072@sirena.org.uk>
-Sender: linux-clk-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sangbeom Kim <sbkim73@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20160111025200.GA5993@rob-hp-laptop>
+Sender: linux-sh-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Jan Luebbe <jlu@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 04 Dec 2015, Mark Brown wrote:
+Hi Rob,
 
-> On Fri, Dec 04, 2015 at 10:10:05AM +0900, Krzysztof Kozlowski wrote:
-> > The mfd/s2mpa01.txt duplicates some of the information about bindin=
-gs
-> > with old mfd/s2mps11.txt. Now common part exists entirely in
-> > mfd/samsung,sec-core.txt so:
->=20
-> Acked-by: Mark Brown <broonie@kernel.org>
->=20
-> >  - add company prefix to file name (regulator/samsung,s2mpa01.txt),
->=20
-> I'm not 100% convinced about these prefixes BTW, the duplication isn'=
-t
-> usually an issue within a subsystem.  They don't do any harm either
-> though.
+On Mon, Jan 11, 2016 at 3:52 AM, Rob Herring <robh@kernel.org> wrote:
+> On Wed, Jan 06, 2016 at 02:51:23PM +0100, Wolfram Sang wrote:
+>> From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>>
+>> These bindings allow an I2C bus to switch between multiple masters. This
+>> is not hot-swichting because connected I2C slaves will be
+>
+> s/swichting/switching/
+>
+>> re-instantiated. It is meant to select the best I2C core at runtime once
+>> the task is known. Example: Prefer i2c-gpio over another I2C core
+>> because of HW errata affetcing your use case.
+>
+> This seems okay to me. I don't like not having the i2c devices under the
+> i2c controller, but not really much we can do about that.
+>
+> I have another usecase which might end up needing a similar structure
+> as this. That is the whole question of how to deal with capes, hats,
+> shields and various daughterboards. For I2C devices on a daughterboard,
+> we need to be able to have a DT overlay for the daughterboard described
+> in terms of the connector(s) and independent of the host. Then the
+> base DT needs to define the mapping from the connector to the host
 
-I think they're ugly and would prefer not to accept them, but lots of
-people are submitting them now and I can't be bothered to fight it, so
-meh!
+Indeed. Currently an i2c bus is described in DT as tied to an i2c controller,
+while physically it's tied to a bunch of pins. Tying the bus to a controller
+is done through pinctrl.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> controller. A complicating factor would be having devices on the same
+> bus but split across the main and daughter boards. I don't see anything
+> specific to change here, but just want to throw that out.
+
+Can't the daughter board DTS just add more child devices to the mainboard bus?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
