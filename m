@@ -1,68 +1,52 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [rtc-linux] [PATCH 2/6] mfd: max77620: add core driver for
- MAX77620/MAX20024
-Date: Mon, 11 Jan 2016 05:46:27 +0000
-Message-ID: <20160111054627.GB3331@x1>
-References: <1452177524-23192-1-git-send-email-ldewangan@nvidia.com>
- <1452177524-23192-3-git-send-email-ldewangan@nvidia.com>
- <CAJKOXPfa0jjRWE6LKvNmwCRcG9Es7=36_03kTqCx-aB1wENx0g@mail.gmail.com>
+Subject: Re: [PATCH 2/6] mfd: max77620: add core driver for MAX77620/MAX20024
+Date: Mon, 11 Jan 2016 05:48:35 +0000
+Message-ID: <20160111054835.GC3331@x1>
+References: <1452177524-23192-3-git-send-email-ldewangan@nvidia.com>
+ <201601072308.7XP0yi7D%fengguang.wu@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAJKOXPfa0jjRWE6LKvNmwCRcG9Es7=36_03kTqCx-aB1wENx0g@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: rtc-linux@googlegroups.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, swarren@nvidia.com, treding@nvidia.com, Laxman Dewangan <ldewangan@nvidia.com>, Chaitanya Bandi <bandik@nvidia.com>, Mallikarjun Kasoju <mkasoju@nvidia.com>
+In-Reply-To: <201601072308.7XP0yi7D%fengguang.wu@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kbuild test robot <lkp@intel.com>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, kbuild-all@01.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, Chaitanya Bandi <bandik@nvidia.com>, Mallikarjun Kasoju <mkasoju@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 08 Jan 2016, Krzysztof Kozlowski wrote:
+On Thu, 07 Jan 2016, kbuild test robot wrote:
 
-Thanks for taking the time to review.
-
-> ()2016-01-07 23:38 GMT+09:00 Laxman Dewangan <ldewangan@nvidia.com>:
-> > MAX77620/MAX20024 are Power Management IC from the MAXIM.
-> > It supports RTC, multiple GPIOs, multiple DCDC and LDOs,
-> > watchdog, clock etc.
-> >
-> > Add MFD drier to provides common support for accessing the
-> > device; additional drivers is developed on respected subsystem
-> > in order to use the functionality of the device.
-> >
-> > Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> > Signed-off-by: Chaitanya Bandi <bandik@nvidia.com>
-> > Signed-off-by: Mallikarjun Kasoju <mkasoju@nvidia.com>
-> > Tested-by: Venkat Reddy Talla <vreddytalla@nvidia.com>
+> Hi Laxman,
 >=20
-> The Testing and Reviewed are statements (see SubmittingPatches) so
-> they should be made explicitly by people. As this is v1 how they coul=
-d
-> make a public statement so far?
+> [auto build test WARNING on pinctrl/for-next]
+> [also build test WARNING on v4.4-rc8 next-20160107]
+> [if your patch is applied to the wrong git tree, please drop us a not=
+e to help improving the system]
+>=20
+> url:    https://github.com/0day-ci/linux/commits/Laxman-Dewangan/Add-=
+support-for-MAXIM-MAX77620-MAX20024-PMIC/20160107-225450
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-=
+pinctrl.git for-next
+>=20
+>=20
+> coccinelle warnings: (new ones prefixed by >>)
+>=20
+> >> drivers/mfd/max77620.c:900:3-8: No need to set .owner here. The co=
+re will do it.
 
-SubmittingPatches bears no mention that Reviewed-by/Tested-by
-statements have to be provided on one of the public mailing lists.
-These can be provided privately prior to upstream submission v1.
+I can't accept this patch until this has been taken care of.
 
-> > ---
-> >  drivers/mfd/Kconfig          |  15 +
-> >  drivers/mfd/Makefile         |   1 +
-> >  drivers/mfd/max77620.c       | 926 +++++++++++++++++++++++++++++++=
-++++++++++++
-> >  include/linux/mfd/max77620.h | 503 +++++++++++++++++++++++
-> >  4 files changed, 1445 insertions(+)
-> >  create mode 100644 drivers/mfd/max77620.c
-> >  create mode 100644 include/linux/mfd/max77620.h
+> Please review and possibly fold the followup patch.
+>=20
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technolog=
+y Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Cor=
+poration
 
-[...]
-=20
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
