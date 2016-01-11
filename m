@@ -1,7 +1,7 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V12 3/7] dma: add Qualcomm Technologies HIDMA management driver
-Date: Mon, 11 Jan 2016 09:45:43 -0500
-Message-ID: <1452523550-8920-4-git-send-email-okaya@codeaurora.org>
+Subject: [PATCH V12 5/7] dma: qcom_hidma: implement lower level hardware interface
+Date: Mon, 11 Jan 2016 09:45:45 -0500
+Message-ID: <1452523550-8920-6-git-send-email-okaya@codeaurora.org>
 References: <1452523550-8920-1-git-send-email-okaya@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1452523550-8920-1-git-send-email-okaya@codeaurora.org>
@@ -10,175 +10,62 @@ To: dmaengine@vger.kernel.org, mark.rutland@arm.com, timur@codeaurora.org, devic
 Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Qualcomm Technologies HIDMA device has been designed to support
-virtualization technology. The driver has been divided into two to follow
-the hardware design.
+This patch implements the hardware hooks for the HIDMA channel driver.
 
-1. HIDMA Management driver
-2. HIDMA Channel driver
+The main functions of interest are:
+- hidma_ll_init
+- hidma_ll_request
+- hidma_ll_queue_request
+- hidma_ll_hw_start
 
-Each HIDMA HW consists of multiple channels. These channels share some set
-of common parameters. These parameters are initialized by the management
-driver during power up. Same management driver is used for monitoring the
-execution of the channels. Management driver can change the performance
-behavior dynamically such as bandwidth allocation and prioritization.
+OS layer calls the hidma_ll_init function during probe to set up the
+hardware. At this moment, the number of supported descriptors are also
+given. On each request, a descriptor is allocated from the free pool and
+filled in with the transfer parameters. Multiple requests can be queued
+into the hardware via the OS interface. When client is ready for requests
+to be executed, start method is called.
 
-The management driver is executed in hypervisor context and is the main
-management entity for all channels provided by the device.
+Completions are delivered via callbacks via tasklet.
 
 Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- .../ABI/testing/sysfs-platform-hidma-mgmt          |  97 +++++++
- drivers/dma/qcom/Kconfig                           |  11 +
- drivers/dma/qcom/Makefile                          |   2 +
- drivers/dma/qcom/hidma_mgmt.c                      | 302 +++++++++++++++++++++
- drivers/dma/qcom/hidma_mgmt.h                      |  39 +++
- drivers/dma/qcom/hidma_mgmt_sys.c                  | 295 ++++++++++++++++++++
- 6 files changed, 746 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-platform-hidma-mgmt
- create mode 100644 drivers/dma/qcom/hidma_mgmt.c
- create mode 100644 drivers/dma/qcom/hidma_mgmt.h
- create mode 100644 drivers/dma/qcom/hidma_mgmt_sys.c
+ drivers/dma/qcom/Makefile   |   2 +
+ drivers/dma/qcom/hidma.h    |   2 +-
+ drivers/dma/qcom/hidma_ll.c | 927 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 930 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/dma/qcom/hidma_ll.c
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-hidma-mgmt b/Documentation/ABI/testing/sysfs-platform-hidma-mgmt
-new file mode 100644
-index 0000000..c2fb5d0
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-platform-hidma-mgmt
-@@ -0,0 +1,97 @@
-+What:		/sys/devices/platform/hidma-mgmt*/chanops/chan*/priority
-+		/sys/devices/platform/QCOM8060:*/chanops/chan*/priority
-+Date:		Nov 2015
-+KernelVersion:	4.4
-+Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-+Description:
-+		Contains either 0 or 1 and indicates if the DMA channel is a
-+		low priority (0) or high priority (1) channel.
-+
-+What:		/sys/devices/platform/hidma-mgmt*/chanops/chan*/weight
-+		/sys/devices/platform/QCOM8060:*/chanops/chan*/weight
-+Date:		Nov 2015
-+KernelVersion:	4.4
-+Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-+Description:
-+		Contains 0..15 and indicates the weight of the channel among
-+		equal priority channels during round robin scheduling.
-+
-+What:		/sys/devices/platform/hidma-mgmt*/chreset_timeout_cycles
-+		/sys/devices/platform/QCOM8060:*/chreset_timeout_cycles
-+Date:		Nov 2015
-+KernelVersion:	4.4
-+Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-+Description:
-+		Contains the platform specific cycle value to wait after a
-+		reset command is issued. If the value is chosen too short,
-+		then the HW will issue a reset failure interrupt. The value
-+		is platform specific and should not be changed without
-+		consultance.
-+
-+What:		/sys/devices/platform/hidma-mgmt*/dma_channels
-+		/sys/devices/platform/QCOM8060:*/dma_channels
-+Date:		Nov 2015
-+KernelVersion:	4.4
-+Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-+Description:
-+		Contains the number of dma channels supported by one instance
-+		of HIDMA hardware. The value may change from chip to chip.
-+
-+What:		/sys/devices/platform/hidma-mgmt*/hw_version_major
-+		/sys/devices/platform/QCOM8060:*/hw_version_major
-+Date:		Nov 2015
-+KernelVersion:	4.4
-+Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-+Description:
-+		Version number major for the hardware.
-+
-+What:		/sys/devices/platform/hidma-mgmt*/hw_version_minor
-+		/sys/devices/platform/QCOM8060:*/hw_version_minor
-+Date:		Nov 2015
-+KernelVersion:	4.4
-+Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-+Description:
-+		Version number minor for the hardware.
-+
-+What:		/sys/devices/platform/hidma-mgmt*/max_rd_xactions
-+		/sys/devices/platform/QCOM8060:*/max_rd_xactions
-+Date:		Nov 2015
-+KernelVersion:	4.4
-+Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-+Description:
-+		Contains a value between 0 and 31. Maximum number of
-+		read transactions that can be issued back to back.
-+		Choosing a higher number gives better performance but
-+		can also cause performance reduction to other peripherals
-+		sharing the same bus.
-+
-+What:		/sys/devices/platform/hidma-mgmt*/max_read_request
-+		/sys/devices/platform/QCOM8060:*/max_read_request
-+Date:		Nov 2015
-+KernelVersion:	4.4
-+Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-+Description:
-+		Size of each read request. The value needs to be a power
-+		of two and can be between 128 and 1024.
-+
-+What:		/sys/devices/platform/hidma-mgmt*/max_wr_xactions
-+		/sys/devices/platform/QCOM8060:*/max_wr_xactions
-+Date:		Nov 2015
-+KernelVersion:	4.4
-+Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-+Description:
-+		Contains a value between 0 and 31. Maximum number of
-+		write transactions that can be issued back to back.
-+		Choosing a higher number gives better performance but
-+		can also cause performance reduction to other peripherals
-+		sharing the same bus.
-+
-+
-+What:		/sys/devices/platform/hidma-mgmt*/max_write_request
-+		/sys/devices/platform/QCOM8060:*/max_write_request
-+Date:		Nov 2015
-+KernelVersion:	4.4
-+Contact:	"Sinan Kaya <okaya@cudeaurora.org>"
-+Description:
-+		Size of each write request. The value needs to be a power
-+		of two and can be between 128 and 1024.
-diff --git a/drivers/dma/qcom/Kconfig b/drivers/dma/qcom/Kconfig
-index f17c272..ebe5b8c 100644
---- a/drivers/dma/qcom/Kconfig
-+++ b/drivers/dma/qcom/Kconfig
-@@ -6,3 +6,14 @@ config QCOM_BAM_DMA
- 	---help---
- 	  Enable support for the QCOM BAM DMA controller.  This controller
- 	  provides DMA capabilities for a variety of on-chip devices.
-+
-+config QCOM_HIDMA_MGMT
-+	tristate "Qualcomm Technologies HIDMA Management support"
-+	select DMA_ENGINE
-+	help
-+	  Enable support for the Qualcomm Technologies HIDMA Management.
-+	  Each DMA device requires one management interface driver
-+	  for basic initialization before QCOM_HIDMA channel driver can
-+	  start managing the channels. In a virtualized environment,
-+	  the guest OS would run QCOM_HIDMA channel driver and the
-+	  hypervisor would run the QCOM_HIDMA_MGMT management driver.
 diff --git a/drivers/dma/qcom/Makefile b/drivers/dma/qcom/Makefile
-index f612ae3..bfea699 100644
+index bfea699..6bf9267 100644
 --- a/drivers/dma/qcom/Makefile
 +++ b/drivers/dma/qcom/Makefile
-@@ -1 +1,3 @@
+@@ -1,3 +1,5 @@
  obj-$(CONFIG_QCOM_BAM_DMA) += bam_dma.o
-+obj-$(CONFIG_QCOM_HIDMA_MGMT) += hdma_mgmt.o
-+hdma_mgmt-objs	 := hidma_mgmt.o hidma_mgmt_sys.o
-diff --git a/drivers/dma/qcom/hidma_mgmt.c b/drivers/dma/qcom/hidma_mgmt.c
+ obj-$(CONFIG_QCOM_HIDMA_MGMT) += hdma_mgmt.o
+ hdma_mgmt-objs	 := hidma_mgmt.o hidma_mgmt_sys.o
++obj-$(CONFIG_QCOM_HIDMA) +=  hdma.o
++hdma-objs        := hidma_ll.o hidma.o
+diff --git a/drivers/dma/qcom/hidma.h b/drivers/dma/qcom/hidma.h
+index 231e306..1e09d7c 100644
+--- a/drivers/dma/qcom/hidma.h
++++ b/drivers/dma/qcom/hidma.h
+@@ -37,7 +37,7 @@ struct hidma_tre {
+ 	atomic_t allocated;		/* if this channel is allocated	    */
+ 	bool queued;			/* flag whether this is pending     */
+ 	u16 status;			/* status			    */
+-	u32 chidx;			/* index of the tre		    */
++	u32 idx;			/* index of the tre		    */
+ 	u32 dma_sig;			/* signature of the tre		    */
+ 	const char *dev_name;		/* name of the device		    */
+ 	void (*callback)(void *data);	/* requester callback		    */
+diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
 new file mode 100644
-index 0000000..ef491b8
+index 0000000..c343bf7
 --- /dev/null
-+++ b/drivers/dma/qcom/hidma_mgmt.c
-@@ -0,0 +1,302 @@
++++ b/drivers/dma/qcom/hidma_ll.c
+@@ -0,0 +1,927 @@
 +/*
-+ * Qualcomm Technologies HIDMA DMA engine Management interface
++ * Qualcomm Technologies HIDMA DMA engine low level code
 + *
 + * Copyright (c) 2015, The Linux Foundation. All rights reserved.
 + *
@@ -193,638 +80,917 @@ index 0000000..ef491b8
 + */
 +
 +#include <linux/dmaengine.h>
-+#include <linux/acpi.h>
-+#include <linux/of.h>
-+#include <linux/property.h>
-+#include <linux/interrupt.h>
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
-+#include <linux/uaccess.h>
 +#include <linux/slab.h>
-+#include <linux/pm_runtime.h>
++#include <linux/interrupt.h>
++#include <linux/mm.h>
++#include <linux/highmem.h>
++#include <linux/dma-mapping.h>
++#include <linux/delay.h>
++#include <linux/atomic.h>
++#include <linux/iopoll.h>
++#include <linux/kfifo.h>
 +#include <linux/bitops.h>
 +
-+#include "hidma_mgmt.h"
++#include "hidma.h"
 +
-+#define HIDMA_QOS_N_OFFSET		0x300
-+#define HIDMA_CFG_OFFSET		0x400
-+#define HIDMA_MAX_BUS_REQ_LEN_OFFSET	0x41C
-+#define HIDMA_MAX_XACTIONS_OFFSET	0x420
-+#define HIDMA_HW_VERSION_OFFSET	0x424
-+#define HIDMA_CHRESET_TIMEOUT_OFFSET	0x418
++#define EVRE_SIZE			16	/* each EVRE is 16 bytes */
 +
-+#define HIDMA_MAX_WR_XACTIONS_MASK	GENMASK(4, 0)
-+#define HIDMA_MAX_RD_XACTIONS_MASK	GENMASK(4, 0)
-+#define HIDMA_WEIGHT_MASK		GENMASK(6, 0)
-+#define HIDMA_MAX_BUS_REQ_LEN_MASK	GENMASK(15, 0)
-+#define HIDMA_CHRESET_TIMEOUT_MASK	GENMASK(19, 0)
++#define TRCA_CTRLSTS_OFFSET		0x000
++#define TRCA_RING_LOW_OFFSET		0x008
++#define TRCA_RING_HIGH_OFFSET		0x00C
++#define TRCA_RING_LEN_OFFSET		0x010
++#define TRCA_READ_PTR_OFFSET		0x018
++#define TRCA_WRITE_PTR_OFFSET		0x020
++#define TRCA_DOORBELL_OFFSET		0x400
 +
-+#define HIDMA_MAX_WR_XACTIONS_BIT_POS	16
-+#define HIDMA_MAX_BUS_WR_REQ_BIT_POS	16
-+#define HIDMA_WRR_BIT_POS		8
-+#define HIDMA_PRIORITY_BIT_POS		15
++#define EVCA_CTRLSTS_OFFSET		0x000
++#define EVCA_INTCTRL_OFFSET		0x004
++#define EVCA_RING_LOW_OFFSET		0x008
++#define EVCA_RING_HIGH_OFFSET		0x00C
++#define EVCA_RING_LEN_OFFSET		0x010
++#define EVCA_READ_PTR_OFFSET		0x018
++#define EVCA_WRITE_PTR_OFFSET		0x020
++#define EVCA_DOORBELL_OFFSET		0x400
 +
-+#define HIDMA_AUTOSUSPEND_TIMEOUT	2000
-+#define HIDMA_MAX_CHANNEL_WEIGHT	15
++#define EVCA_IRQ_STAT_OFFSET		0x100
++#define EVCA_IRQ_CLR_OFFSET		0x108
++#define EVCA_IRQ_EN_OFFSET		0x110
 +
-+int hidma_mgmt_setup(struct hidma_mgmt_dev *mgmtdev)
++#define EVRE_CFG_IDX			0
++#define EVRE_LEN_IDX			1
++#define EVRE_DEST_LOW_IDX		2
++#define EVRE_DEST_HI_IDX		3
++
++#define EVRE_ERRINFO_BIT_POS		24
++#define EVRE_CODE_BIT_POS		28
++
++#define EVRE_ERRINFO_MASK		GENMASK(3, 0)
++#define EVRE_CODE_MASK			GENMASK(3, 0)
++
++#define CH_CONTROL_MASK		GENMASK(7, 0)
++#define CH_STATE_MASK			GENMASK(7, 0)
++#define CH_STATE_BIT_POS		0x8
++
++#define IRQ_EV_CH_EOB_IRQ_BIT_POS	0
++#define IRQ_EV_CH_WR_RESP_BIT_POS	1
++#define IRQ_TR_CH_TRE_RD_RSP_ER_BIT_POS 9
++#define IRQ_TR_CH_DATA_RD_ER_BIT_POS	10
++#define IRQ_TR_CH_DATA_WR_ER_BIT_POS	11
++#define IRQ_TR_CH_INVALID_TRE_BIT_POS	14
++
++#define	ENABLE_IRQS (BIT(IRQ_EV_CH_EOB_IRQ_BIT_POS)	| \
++		BIT(IRQ_EV_CH_WR_RESP_BIT_POS)		| \
++		BIT(IRQ_TR_CH_TRE_RD_RSP_ER_BIT_POS)	| \
++		BIT(IRQ_TR_CH_DATA_RD_ER_BIT_POS)	| \
++		BIT(IRQ_TR_CH_DATA_WR_ER_BIT_POS)	| \
++		BIT(IRQ_TR_CH_INVALID_TRE_BIT_POS))
++
++#define HIDMA_INCREMENT_ITERATOR(iter, size, ring_size)	\
++do {								\
++	iter += size;						\
++	if (iter >= ring_size)					\
++		iter -= ring_size;				\
++} while (0)
++
++#define HIDMA_CH_STATE(val)	\
++	((val >> CH_STATE_BIT_POS) & CH_STATE_MASK)
++
++enum ch_command {
++	CH_DISABLE = 0,
++	CH_ENABLE = 1,
++	CH_SUSPEND = 2,
++	CH_RESET = 9,
++};
++
++enum ch_state {
++	CH_DISABLED = 0,
++	CH_ENABLED = 1,
++	CH_RUNNING = 2,
++	CH_SUSPENDED = 3,
++	CH_STOPPED = 4,
++	CH_ERROR = 5,
++	CH_IN_RESET = 9,
++};
++
++enum tre_type {
++	TRE_MEMCPY = 3,
++	TRE_MEMSET = 4,
++};
++
++enum evre_type {
++	EVRE_DMA_COMPLETE = 0x23,
++	EVRE_IMM_DATA = 0x24,
++};
++
++enum err_code {
++	EVRE_STATUS_COMPLETE = 1,
++	EVRE_STATUS_ERROR = 4,
++};
++
++void hidma_ll_free(struct hidma_lldev *lldev, u32 tre_ch)
++{
++	struct hidma_tre *tre;
++
++	if (tre_ch >= lldev->nr_tres) {
++		dev_err(lldev->dev, "invalid TRE number in free:%d", tre_ch);
++		return;
++	}
++
++	tre = &lldev->trepool[tre_ch];
++	if (atomic_read(&tre->allocated) != true) {
++		dev_err(lldev->dev, "trying to free an unused TRE:%d", tre_ch);
++		return;
++	}
++
++	atomic_set(&tre->allocated, 0);
++}
++
++int hidma_ll_request(struct hidma_lldev *lldev, u32 dma_sig,
++		     const char *dev_name,
++		     void (*callback)(void *data), void *data, u32 *tre_ch)
 +{
 +	unsigned int i;
-+	u32 val;
++	struct hidma_tre *tre;
++	u32 *tre_local;
 +
-+	if (!is_power_of_2(mgmtdev->max_write_request) ||
-+	    (mgmtdev->max_write_request < 128) ||
-+	    (mgmtdev->max_write_request > 1024)) {
-+		dev_err(&mgmtdev->pdev->dev, "invalid write request %d\n",
-+			mgmtdev->max_write_request);
-+		return -EINVAL;
-+	}
-+
-+	if (!is_power_of_2(mgmtdev->max_read_request) ||
-+	    (mgmtdev->max_read_request < 128) ||
-+	    (mgmtdev->max_read_request > 1024)) {
-+		dev_err(&mgmtdev->pdev->dev, "invalid read request %d\n",
-+			mgmtdev->max_read_request);
-+		return -EINVAL;
-+	}
-+
-+	if (mgmtdev->max_wr_xactions > HIDMA_MAX_WR_XACTIONS_MASK) {
-+		dev_err(&mgmtdev->pdev->dev,
-+			"max_wr_xactions cannot be bigger than %ld\n",
-+			HIDMA_MAX_WR_XACTIONS_MASK);
-+		return -EINVAL;
-+	}
-+
-+	if (mgmtdev->max_rd_xactions > HIDMA_MAX_RD_XACTIONS_MASK) {
-+		dev_err(&mgmtdev->pdev->dev,
-+			"max_rd_xactions cannot be bigger than %ld\n",
-+			HIDMA_MAX_RD_XACTIONS_MASK);
-+		return -EINVAL;
-+	}
-+
-+	for (i = 0; i < mgmtdev->dma_channels; i++) {
-+		if (mgmtdev->priority[i] > 1) {
-+			dev_err(&mgmtdev->pdev->dev,
-+				"priority can be 0 or 1\n");
-+			return -EINVAL;
-+		}
-+
-+		if (mgmtdev->weight[i] > HIDMA_MAX_CHANNEL_WEIGHT) {
-+			dev_err(&mgmtdev->pdev->dev,
-+				"max value of weight can be %d.\n",
-+				HIDMA_MAX_CHANNEL_WEIGHT);
-+			return -EINVAL;
-+		}
-+
-+		/* weight needs to be at least one */
-+		if (mgmtdev->weight[i] == 0)
-+			mgmtdev->weight[i] = 1;
-+	}
-+
-+	pm_runtime_get_sync(&mgmtdev->pdev->dev);
-+	val = readl(mgmtdev->virtaddr + HIDMA_MAX_BUS_REQ_LEN_OFFSET);
-+	val &= ~(HIDMA_MAX_BUS_REQ_LEN_MASK << HIDMA_MAX_BUS_WR_REQ_BIT_POS);
-+	val |= mgmtdev->max_write_request << HIDMA_MAX_BUS_WR_REQ_BIT_POS;
-+	val &= ~HIDMA_MAX_BUS_REQ_LEN_MASK;
-+	val |= mgmtdev->max_read_request;
-+	writel(val, mgmtdev->virtaddr + HIDMA_MAX_BUS_REQ_LEN_OFFSET);
-+
-+	val = readl(mgmtdev->virtaddr + HIDMA_MAX_XACTIONS_OFFSET);
-+	val &= ~(HIDMA_MAX_WR_XACTIONS_MASK << HIDMA_MAX_WR_XACTIONS_BIT_POS);
-+	val |= mgmtdev->max_wr_xactions << HIDMA_MAX_WR_XACTIONS_BIT_POS;
-+	val &= ~HIDMA_MAX_RD_XACTIONS_MASK;
-+	val |= mgmtdev->max_rd_xactions;
-+	writel(val, mgmtdev->virtaddr + HIDMA_MAX_XACTIONS_OFFSET);
-+
-+	mgmtdev->hw_version =
-+	    readl(mgmtdev->virtaddr + HIDMA_HW_VERSION_OFFSET);
-+	mgmtdev->hw_version_major = (mgmtdev->hw_version >> 28) & 0xF;
-+	mgmtdev->hw_version_minor = (mgmtdev->hw_version >> 16) & 0xF;
-+
-+	for (i = 0; i < mgmtdev->dma_channels; i++) {
-+		u32 weight = mgmtdev->weight[i];
-+		u32 priority = mgmtdev->priority[i];
-+
-+		val = readl(mgmtdev->virtaddr + HIDMA_QOS_N_OFFSET + (4 * i));
-+		val &= ~(1 << HIDMA_PRIORITY_BIT_POS);
-+		val |= (priority & 0x1) << HIDMA_PRIORITY_BIT_POS;
-+		val &= ~(HIDMA_WEIGHT_MASK << HIDMA_WRR_BIT_POS);
-+		val |= (weight & HIDMA_WEIGHT_MASK) << HIDMA_WRR_BIT_POS;
-+		writel(val, mgmtdev->virtaddr + HIDMA_QOS_N_OFFSET + (4 * i));
-+	}
-+
-+	val = readl(mgmtdev->virtaddr + HIDMA_CHRESET_TIMEOUT_OFFSET);
-+	val &= ~HIDMA_CHRESET_TIMEOUT_MASK;
-+	val |= mgmtdev->chreset_timeout_cycles & HIDMA_CHRESET_TIMEOUT_MASK;
-+	writel(val, mgmtdev->virtaddr + HIDMA_CHRESET_TIMEOUT_OFFSET);
-+
-+	pm_runtime_mark_last_busy(&mgmtdev->pdev->dev);
-+	pm_runtime_put_autosuspend(&mgmtdev->pdev->dev);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(hidma_mgmt_setup);
-+
-+static int hidma_mgmt_probe(struct platform_device *pdev)
-+{
-+	struct hidma_mgmt_dev *mgmtdev;
-+	struct resource *res;
-+	void __iomem *virtaddr;
-+	int irq;
-+	int rc;
-+	u32 val;
-+
-+	pm_runtime_set_autosuspend_delay(&pdev->dev, HIDMA_AUTOSUSPEND_TIMEOUT);
-+	pm_runtime_use_autosuspend(&pdev->dev);
-+	pm_runtime_set_active(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+	pm_runtime_get_sync(&pdev->dev);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	virtaddr = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(virtaddr)) {
-+		rc = -ENOMEM;
-+		goto out;
-+	}
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		dev_err(&pdev->dev, "irq resources not found\n");
-+		rc = irq;
-+		goto out;
-+	}
-+
-+	mgmtdev = devm_kzalloc(&pdev->dev, sizeof(*mgmtdev), GFP_KERNEL);
-+	if (!mgmtdev) {
-+		rc = -ENOMEM;
-+		goto out;
-+	}
-+
-+	mgmtdev->pdev = pdev;
-+	mgmtdev->addrsize = resource_size(res);
-+	mgmtdev->virtaddr = virtaddr;
-+
-+	rc = device_property_read_u32(&pdev->dev, "dma-channels",
-+				      &mgmtdev->dma_channels);
-+	if (rc) {
-+		dev_err(&pdev->dev, "number of channels missing\n");
-+		goto out;
-+	}
-+
-+	rc = device_property_read_u32(&pdev->dev,
-+				      "channel-reset-timeout-cycles",
-+				      &mgmtdev->chreset_timeout_cycles);
-+	if (rc) {
-+		dev_err(&pdev->dev, "channel reset timeout missing\n");
-+		goto out;
-+	}
-+
-+	rc = device_property_read_u32(&pdev->dev, "max-write-burst-bytes",
-+				      &mgmtdev->max_write_request);
-+	if (rc) {
-+		dev_err(&pdev->dev, "max-write-burst-bytes missing\n");
-+		goto out;
-+	}
-+
-+	rc = device_property_read_u32(&pdev->dev, "max-read-burst-bytes",
-+				      &mgmtdev->max_read_request);
-+	if (rc) {
-+		dev_err(&pdev->dev, "max-read-burst-bytes missing\n");
-+		goto out;
-+	}
-+
-+	rc = device_property_read_u32(&pdev->dev, "max-write-transactions",
-+				      &mgmtdev->max_wr_xactions);
-+	if (rc) {
-+		dev_err(&pdev->dev, "max-write-transactions missing\n");
-+		goto out;
-+	}
-+
-+	rc = device_property_read_u32(&pdev->dev, "max-read-transactions",
-+				      &mgmtdev->max_rd_xactions);
-+	if (rc) {
-+		dev_err(&pdev->dev, "max-read-transactions missing\n");
-+		goto out;
-+	}
-+
-+	mgmtdev->priority = devm_kcalloc(&pdev->dev,
-+					 mgmtdev->dma_channels,
-+					 sizeof(*mgmtdev->priority),
-+					 GFP_KERNEL);
-+	if (!mgmtdev->priority) {
-+		rc = -ENOMEM;
-+		goto out;
-+	}
-+
-+	mgmtdev->weight = devm_kcalloc(&pdev->dev,
-+				       mgmtdev->dma_channels,
-+				       sizeof(*mgmtdev->weight), GFP_KERNEL);
-+	if (!mgmtdev->weight) {
-+		rc = -ENOMEM;
-+		goto out;
-+	}
-+
-+	rc = hidma_mgmt_setup(mgmtdev);
-+	if (rc) {
-+		dev_err(&pdev->dev, "setup failed\n");
-+		goto out;
-+	}
-+
-+	/* start the HW */
-+	val = readl(mgmtdev->virtaddr + HIDMA_CFG_OFFSET);
-+	val |= 1;
-+	writel(val, mgmtdev->virtaddr + HIDMA_CFG_OFFSET);
-+
-+	rc = hidma_mgmt_init_sys(mgmtdev);
-+	if (rc) {
-+		dev_err(&pdev->dev, "sysfs setup failed\n");
-+		goto out;
-+	}
-+
-+	dev_info(&pdev->dev,
-+		 "HW rev: %d.%d @ %pa with %d physical channels\n",
-+		 mgmtdev->hw_version_major, mgmtdev->hw_version_minor,
-+		 &res->start, mgmtdev->dma_channels);
-+
-+	platform_set_drvdata(pdev, mgmtdev);
-+	pm_runtime_mark_last_busy(&pdev->dev);
-+	pm_runtime_put_autosuspend(&pdev->dev);
-+	return 0;
-+out:
-+	pm_runtime_put_sync_suspend(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+	return rc;
-+}
-+
-+#if IS_ENABLED(CONFIG_ACPI)
-+static const struct acpi_device_id hidma_mgmt_acpi_ids[] = {
-+	{"QCOM8060"},
-+	{},
-+};
-+#endif
-+
-+static const struct of_device_id hidma_mgmt_match[] = {
-+	{.compatible = "qcom,hidma-mgmt-1.0",},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, hidma_mgmt_match);
-+
-+static struct platform_driver hidma_mgmt_driver = {
-+	.probe = hidma_mgmt_probe,
-+	.driver = {
-+		   .name = "hidma-mgmt",
-+		   .of_match_table = hidma_mgmt_match,
-+		   .acpi_match_table = ACPI_PTR(hidma_mgmt_acpi_ids),
-+	},
-+};
-+
-+module_platform_driver(hidma_mgmt_driver);
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/dma/qcom/hidma_mgmt.h b/drivers/dma/qcom/hidma_mgmt.h
-new file mode 100644
-index 0000000..f7daf33
---- /dev/null
-+++ b/drivers/dma/qcom/hidma_mgmt.h
-@@ -0,0 +1,39 @@
-+/*
-+ * Qualcomm Technologies HIDMA Management common header
-+ *
-+ * Copyright (c) 2015, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+struct hidma_mgmt_dev {
-+	u8 hw_version_major;
-+	u8 hw_version_minor;
-+
-+	u32 max_wr_xactions;
-+	u32 max_rd_xactions;
-+	u32 max_write_request;
-+	u32 max_read_request;
-+	u32 dma_channels;
-+	u32 chreset_timeout_cycles;
-+	u32 hw_version;
-+	u32 *priority;
-+	u32 *weight;
-+
-+	/* Hardware device constants */
-+	void __iomem *virtaddr;
-+	resource_size_t addrsize;
-+
-+	struct kobject **chroots;
-+	struct platform_device *pdev;
-+};
-+
-+int hidma_mgmt_init_sys(struct hidma_mgmt_dev *dev);
-+int hidma_mgmt_setup(struct hidma_mgmt_dev *mgmtdev);
-diff --git a/drivers/dma/qcom/hidma_mgmt_sys.c b/drivers/dma/qcom/hidma_mgmt_sys.c
-new file mode 100644
-index 0000000..7f252fb
---- /dev/null
-+++ b/drivers/dma/qcom/hidma_mgmt_sys.c
-@@ -0,0 +1,295 @@
-+/*
-+ * Qualcomm Technologies HIDMA Management SYS interface
-+ *
-+ * Copyright (c) 2015, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/sysfs.h>
-+#include <linux/platform_device.h>
-+
-+#include "hidma_mgmt.h"
-+
-+struct hidma_chan_attr {
-+	struct hidma_mgmt_dev *mdev;
-+	int index;
-+	struct kobj_attribute attr;
-+};
-+
-+struct hidma_mgmt_fileinfo {
-+	char *name;
-+	int mode;
-+	int (*get)(struct hidma_mgmt_dev *mdev);
-+	int (*set)(struct hidma_mgmt_dev *mdev, u64 val);
-+};
-+
-+#define IMPLEMENT_GETSET(name)					\
-+static int get_##name(struct hidma_mgmt_dev *mdev)		\
-+{								\
-+	return mdev->name;					\
-+}								\
-+static int set_##name(struct hidma_mgmt_dev *mdev, u64 val)	\
-+{								\
-+	u64 tmp;						\
-+	int rc;							\
-+								\
-+	tmp = mdev->name;					\
-+	mdev->name = val;					\
-+	rc = hidma_mgmt_setup(mdev);				\
-+	if (rc)							\
-+		mdev->name = tmp;				\
-+	return rc;						\
-+}
-+
-+#define DECLARE_ATTRIBUTE(name, mode)				\
-+	{#name, mode, get_##name, set_##name}
-+
-+IMPLEMENT_GETSET(hw_version_major)
-+IMPLEMENT_GETSET(hw_version_minor)
-+IMPLEMENT_GETSET(max_wr_xactions)
-+IMPLEMENT_GETSET(max_rd_xactions)
-+IMPLEMENT_GETSET(max_write_request)
-+IMPLEMENT_GETSET(max_read_request)
-+IMPLEMENT_GETSET(dma_channels)
-+IMPLEMENT_GETSET(chreset_timeout_cycles)
-+
-+static int set_priority(struct hidma_mgmt_dev *mdev, unsigned int i, u64 val)
-+{
-+	u64 tmp;
-+	int rc;
-+
-+	if (i >= mdev->dma_channels)
++	if (!tre_ch || !lldev)
 +		return -EINVAL;
 +
-+	tmp = mdev->priority[i];
-+	mdev->priority[i] = val;
-+	rc = hidma_mgmt_setup(mdev);
-+	if (rc)
-+		mdev->priority[i] = tmp;
-+	return rc;
-+}
-+
-+static int set_weight(struct hidma_mgmt_dev *mdev, unsigned int i, u64 val)
-+{
-+	u64 tmp;
-+	int rc;
-+
-+	if (i >= mdev->dma_channels)
-+		return -EINVAL;
-+
-+	tmp = mdev->weight[i];
-+	mdev->weight[i] = val;
-+	rc = hidma_mgmt_setup(mdev);
-+	if (rc)
-+		mdev->weight[i] = tmp;
-+	return rc;
-+}
-+
-+static struct hidma_mgmt_fileinfo hidma_mgmt_files[] = {
-+	DECLARE_ATTRIBUTE(hw_version_major, S_IRUGO),
-+	DECLARE_ATTRIBUTE(hw_version_minor, S_IRUGO),
-+	DECLARE_ATTRIBUTE(dma_channels, S_IRUGO),
-+	DECLARE_ATTRIBUTE(chreset_timeout_cycles, S_IRUGO),
-+	DECLARE_ATTRIBUTE(max_wr_xactions, (S_IRUGO | S_IWUGO)),
-+	DECLARE_ATTRIBUTE(max_rd_xactions, (S_IRUGO | S_IWUGO)),
-+	DECLARE_ATTRIBUTE(max_write_request, (S_IRUGO | S_IWUGO)),
-+	DECLARE_ATTRIBUTE(max_read_request, (S_IRUGO | S_IWUGO)),
-+};
-+
-+static ssize_t show_values(struct device *dev, struct device_attribute *attr,
-+			   char *buf)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct hidma_mgmt_dev *mdev = platform_get_drvdata(pdev);
-+	unsigned int i;
-+
-+	buf[0] = 0;
-+
-+	for (i = 0; i < ARRAY_SIZE(hidma_mgmt_files); i++) {
-+		if (strcmp(attr->attr.name, hidma_mgmt_files[i].name) == 0) {
-+			sprintf(buf, "%d\n", hidma_mgmt_files[i].get(mdev));
++	/* need to have at least one empty spot in the queue */
++	for (i = 0; i < lldev->nr_tres - 1; i++) {
++		if (atomic_add_unless(&lldev->trepool[i].allocated, 1, 1))
 +			break;
-+		}
 +	}
-+	return strlen(buf);
++
++	if (i == (lldev->nr_tres - 1))
++		return -ENOMEM;
++
++	tre = &lldev->trepool[i];
++	tre->dma_sig = dma_sig;
++	tre->dev_name = dev_name;
++	tre->callback = callback;
++	tre->data = data;
++	tre->idx = i;
++	tre->status = 0;
++	tre->queued = 0;
++	lldev->tx_status_list[i].err_code = 0;
++	tre->lldev = lldev;
++	tre_local = &tre->tre_local[0];
++	tre_local[TRE_CFG_IDX] = TRE_MEMCPY;
++	tre_local[TRE_CFG_IDX] |= (lldev->chidx & 0xFF) << 8;
++	tre_local[TRE_CFG_IDX] |= BIT(16);	/* set IEOB */
++	*tre_ch = i;
++	if (callback)
++		callback(data);
++	return 0;
 +}
 +
-+static ssize_t set_values(struct device *dev, struct device_attribute *attr,
-+			  const char *buf, size_t count)
++/*
++ * Multiple TREs may be queued and waiting in the
++ * pending queue.
++ */
++static void hidma_ll_tre_complete(unsigned long arg)
 +{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct hidma_mgmt_dev *mdev = platform_get_drvdata(pdev);
-+	unsigned long tmp;
-+	unsigned int i;
-+	int rc;
++	struct hidma_lldev *lldev = (struct hidma_lldev *)arg;
++	struct hidma_tre *tre;
 +
-+	rc = kstrtoul(buf, 0, &tmp);
++	while (kfifo_out(&lldev->handoff_fifo, &tre, 1)) {
++		/* call the user if it has been read by the hardware */
++		if (tre->callback)
++			tre->callback(tre->data);
++	}
++}
++
++/*
++ * Called to handle the interrupt for the channel.
++ * Return a positive number if TRE or EVRE were consumed on this run.
++ * Return a positive number if there are pending TREs or EVREs.
++ * Return 0 if there is nothing to consume or no pending TREs/EVREs found.
++ */
++static int hidma_handle_tre_completion(struct hidma_lldev *lldev)
++{
++	struct hidma_tre *tre;
++	u32 evre_write_off;
++	u32 evre_ring_size = lldev->evre_ring_size;
++	u32 tre_ring_size = lldev->tre_ring_size;
++	u32 num_completed = 0, tre_iterator, evre_iterator;
++	unsigned long flags;
++
++	evre_write_off = readl_relaxed(lldev->evca + EVCA_WRITE_PTR_OFFSET);
++	tre_iterator = lldev->tre_processed_off;
++	evre_iterator = lldev->evre_processed_off;
++
++	if ((evre_write_off > evre_ring_size) ||
++	    ((evre_write_off % EVRE_SIZE) != 0)) {
++		dev_err(lldev->dev, "HW reports invalid EVRE write offset\n");
++		return 0;
++	}
++
++	/*
++	 * By the time control reaches here the number of EVREs and TREs
++	 * may not match. Only consume the ones that hardware told us.
++	 */
++	while ((evre_iterator != evre_write_off)) {
++		u32 *current_evre = lldev->evre_ring + evre_iterator;
++		u32 cfg;
++		u8 err_info;
++
++		spin_lock_irqsave(&lldev->lock, flags);
++		tre = lldev->pending_tre_list[tre_iterator / TRE_SIZE];
++		if (!tre) {
++			spin_unlock_irqrestore(&lldev->lock, flags);
++			dev_warn(lldev->dev,
++				 "tre_index [%d] and tre out of sync\n",
++				 tre_iterator / TRE_SIZE);
++			HIDMA_INCREMENT_ITERATOR(tre_iterator, TRE_SIZE,
++						 tre_ring_size);
++			HIDMA_INCREMENT_ITERATOR(evre_iterator, EVRE_SIZE,
++						 evre_ring_size);
++			continue;
++		}
++		lldev->pending_tre_list[tre->tre_index] = NULL;
++
++		/*
++		 * Keep track of pending TREs that SW is expecting to receive
++		 * from HW. We got one now. Decrement our counter.
++		 */
++		lldev->pending_tre_count--;
++		if (lldev->pending_tre_count < 0) {
++			dev_warn(lldev->dev,
++				 "tre count mismatch on completion");
++			lldev->pending_tre_count = 0;
++		}
++
++		spin_unlock_irqrestore(&lldev->lock, flags);
++
++		cfg = current_evre[EVRE_CFG_IDX];
++		err_info = cfg >> EVRE_ERRINFO_BIT_POS;
++		err_info &= EVRE_ERRINFO_MASK;
++		lldev->tx_status_list[tre->idx].err_info = err_info;
++		lldev->tx_status_list[tre->idx].err_code =
++		    (cfg >> EVRE_CODE_BIT_POS) & EVRE_CODE_MASK;
++		tre->queued = 0;
++
++		kfifo_put(&lldev->handoff_fifo, tre);
++		tasklet_schedule(&lldev->task);
++
++		HIDMA_INCREMENT_ITERATOR(tre_iterator, TRE_SIZE,
++					 tre_ring_size);
++		HIDMA_INCREMENT_ITERATOR(evre_iterator, EVRE_SIZE,
++					 evre_ring_size);
++
++		/*
++		 * Read the new event descriptor written by the HW.
++		 * As we are processing the delivered events, other events
++		 * get queued to the SW for processing.
++		 */
++		evre_write_off =
++		    readl_relaxed(lldev->evca + EVCA_WRITE_PTR_OFFSET);
++		num_completed++;
++	}
++
++	if (num_completed) {
++		u32 evre_read_off = (lldev->evre_processed_off +
++				     EVRE_SIZE * num_completed);
++		u32 tre_read_off = (lldev->tre_processed_off +
++				    TRE_SIZE * num_completed);
++
++		evre_read_off = evre_read_off % evre_ring_size;
++		tre_read_off = tre_read_off % tre_ring_size;
++
++		writel(evre_read_off, lldev->evca + EVCA_DOORBELL_OFFSET);
++
++		/* record the last processed tre offset */
++		lldev->tre_processed_off = tre_read_off;
++		lldev->evre_processed_off = evre_read_off;
++	}
++
++	return num_completed;
++}
++
++void hidma_cleanup_pending_tre(struct hidma_lldev *lldev, u8 err_info,
++			       u8 err_code)
++{
++	u32 tre_iterator;
++	struct hidma_tre *tre;
++	u32 tre_ring_size = lldev->tre_ring_size;
++	int num_completed = 0;
++	u32 tre_read_off;
++	unsigned long flags;
++
++	tre_iterator = lldev->tre_processed_off;
++	while (lldev->pending_tre_count) {
++		int tre_index = tre_iterator / TRE_SIZE;
++
++		spin_lock_irqsave(&lldev->lock, flags);
++		tre = lldev->pending_tre_list[tre_index];
++		if (!tre) {
++			spin_unlock_irqrestore(&lldev->lock, flags);
++			HIDMA_INCREMENT_ITERATOR(tre_iterator, TRE_SIZE,
++						 tre_ring_size);
++			continue;
++		}
++		lldev->pending_tre_list[tre_index] = NULL;
++		lldev->pending_tre_count--;
++		if (lldev->pending_tre_count < 0) {
++			dev_warn(lldev->dev,
++				 "tre count mismatch on completion");
++			lldev->pending_tre_count = 0;
++		}
++		spin_unlock_irqrestore(&lldev->lock, flags);
++
++		lldev->tx_status_list[tre->idx].err_info = err_info;
++		lldev->tx_status_list[tre->idx].err_code = err_code;
++		tre->queued = 0;
++
++		kfifo_put(&lldev->handoff_fifo, tre);
++		tasklet_schedule(&lldev->task);
++
++		HIDMA_INCREMENT_ITERATOR(tre_iterator, TRE_SIZE,
++					 tre_ring_size);
++		num_completed++;
++	}
++	tre_read_off = (lldev->tre_processed_off + TRE_SIZE * num_completed);
++
++	tre_read_off = tre_read_off % tre_ring_size;
++
++	/* record the last processed tre offset */
++	lldev->tre_processed_off = tre_read_off;
++}
++
++static int hidma_ll_reset(struct hidma_lldev *lldev)
++{
++	u32 val;
++	int ret;
++
++	val = readl(lldev->trca + TRCA_CTRLSTS_OFFSET);
++	val &= ~(CH_CONTROL_MASK << 16);
++	val |= CH_RESET << 16;
++	writel(val, lldev->trca + TRCA_CTRLSTS_OFFSET);
++
++	/*
++	 * Delay 10ms after reset to allow DMA logic to quiesce.
++	 * Do a polled read up to 1ms and 10ms maximum.
++	 */
++	ret = readl_poll_timeout(lldev->trca + TRCA_CTRLSTS_OFFSET, val,
++				 HIDMA_CH_STATE(val) == CH_DISABLED, 1000,
++				 10000);
++	if (ret) {
++		dev_err(lldev->dev, "transfer channel did not reset\n");
++		return ret;
++	}
++
++	val = readl(lldev->evca + EVCA_CTRLSTS_OFFSET);
++	val &= ~(CH_CONTROL_MASK << 16);
++	val |= CH_RESET << 16;
++	writel(val, lldev->evca + EVCA_CTRLSTS_OFFSET);
++
++	/*
++	 * Delay 10ms after reset to allow DMA logic to quiesce.
++	 * Do a polled read up to 1ms and 10ms maximum.
++	 */
++	ret = readl_poll_timeout(lldev->evca + EVCA_CTRLSTS_OFFSET, val,
++				 HIDMA_CH_STATE(val) == CH_DISABLED, 1000,
++				 10000);
++	if (ret)
++		return ret;
++
++	lldev->trch_state = CH_DISABLED;
++	lldev->evch_state = CH_DISABLED;
++	return 0;
++}
++
++static void hidma_ll_enable_irq(struct hidma_lldev *lldev, u32 irq_bits)
++{
++	writel(irq_bits, lldev->evca + EVCA_IRQ_EN_OFFSET);
++}
++
++/*
++ * The interrupt handler for HIDMA will try to consume as many pending
++ * EVRE from the event queue as possible. Each EVRE has an associated
++ * TRE that holds the user interface parameters. EVRE reports the
++ * result of the transaction. Hardware guarantees ordering between EVREs
++ * and TREs. We use last processed offset to figure out which TRE is
++ * associated with which EVRE. If two TREs are consumed by HW, the EVREs
++ * are in order in the event ring.
++ *
++ * This handler will do a one pass for consuming EVREs. Other EVREs may
++ * be delivered while we are working. It will try to consume incoming
++ * EVREs one more time and return.
++ *
++ * For unprocessed EVREs, hardware will trigger another interrupt until
++ * all the interrupt bits are cleared.
++ *
++ * Hardware guarantees that by the time interrupt is observed, all data
++ * transactions in flight are delivered to their respective places and
++ * are visible to the CPU.
++ *
++ * On demand paging for IOMMU is only supported for PCIe via PRI
++ * (Page Request Interface) not for HIDMA. All other hardware instances
++ * including HIDMA work on pinned DMA addresses.
++ *
++ * HIDMA is not aware of IOMMU presence since it follows the DMA API. All
++ * IOMMU latency will be built into the data movement time. By the time
++ * interrupt happens, IOMMU lookups + data movement has already taken place.
++ *
++ * While the first read in a typical PCI endpoint ISR flushes all outstanding
++ * requests traditionally to the destination, this concept does not apply
++ * here for this HW.
++ */
++static void hidma_ll_int_handler_internal(struct hidma_lldev *lldev)
++{
++	u32 status;
++	u32 enable;
++	u32 cause;
++	int repeat = 2;
++	unsigned long timeout;
++
++	/*
++	 * Fine tuned for this HW...
++	 *
++	 * This ISR has been designed for this particular hardware. Relaxed
++	 * read and write accessors are used for performance reasons due to
++	 * interrupt delivery guarantees. Do not copy this code blindly and
++	 * expect that to work.
++	 */
++	status = readl_relaxed(lldev->evca + EVCA_IRQ_STAT_OFFSET);
++	enable = readl_relaxed(lldev->evca + EVCA_IRQ_EN_OFFSET);
++	cause = status & enable;
++
++	if ((cause & (BIT(IRQ_TR_CH_INVALID_TRE_BIT_POS))) ||
++	    (cause & BIT(IRQ_TR_CH_TRE_RD_RSP_ER_BIT_POS)) ||
++	    (cause & BIT(IRQ_EV_CH_WR_RESP_BIT_POS)) ||
++	    (cause & BIT(IRQ_TR_CH_DATA_RD_ER_BIT_POS)) ||
++	    (cause & BIT(IRQ_TR_CH_DATA_WR_ER_BIT_POS))) {
++		u8 err_code = EVRE_STATUS_ERROR;
++		u8 err_info = 0xFF;
++
++		/* Clear out pending interrupts */
++		writel(cause, lldev->evca + EVCA_IRQ_CLR_OFFSET);
++
++		dev_err(lldev->dev, "error 0x%x, resetting...\n", cause);
++
++		hidma_cleanup_pending_tre(lldev, err_info, err_code);
++
++		/* reset the channel for recovery */
++		if (hidma_ll_setup(lldev)) {
++			dev_err(lldev->dev,
++				"channel reinitialize failed after error\n");
++			return;
++		}
++		hidma_ll_enable_irq(lldev, ENABLE_IRQS);
++		return;
++	}
++
++	/*
++	 * Try to consume as many EVREs as possible.
++	 * skip this loop if the interrupt is spurious.
++	 */
++	while (cause && repeat) {
++		unsigned long start = jiffies;
++
++		/* This timeout should be sufficent for core to finish */
++		timeout = start + msecs_to_jiffies(500);
++
++		while (lldev->pending_tre_count) {
++			hidma_handle_tre_completion(lldev);
++			if (time_is_before_jiffies(timeout)) {
++				dev_warn(lldev->dev,
++					 "ISR timeout %lx-%lx from %lx [%d]\n",
++					 jiffies, timeout, start,
++					 lldev->pending_tre_count);
++				break;
++			}
++		}
++
++		/* We consumed TREs or there are pending TREs or EVREs. */
++		writel_relaxed(cause, lldev->evca + EVCA_IRQ_CLR_OFFSET);
++
++		/*
++		 * Another interrupt might have arrived while we are
++		 * processing this one. Read the new cause.
++		 */
++		status = readl_relaxed(lldev->evca + EVCA_IRQ_STAT_OFFSET);
++		enable = readl_relaxed(lldev->evca + EVCA_IRQ_EN_OFFSET);
++		cause = status & enable;
++
++		repeat--;
++	}
++}
++
++static int hidma_ll_enable(struct hidma_lldev *lldev)
++{
++	u32 val;
++	int ret;
++
++	val = readl(lldev->evca + EVCA_CTRLSTS_OFFSET);
++	val &= ~(CH_CONTROL_MASK << 16);
++	val |= CH_ENABLE << 16;
++	writel(val, lldev->evca + EVCA_CTRLSTS_OFFSET);
++
++	ret = readl_poll_timeout(lldev->evca + EVCA_CTRLSTS_OFFSET, val,
++				 (HIDMA_CH_STATE(val) == CH_ENABLED) ||
++				 (HIDMA_CH_STATE(val) == CH_RUNNING), 1000,
++				 10000);
++	if (ret) {
++		dev_err(lldev->dev, "event channel did not get enabled\n");
++		return ret;
++	}
++
++	val = readl(lldev->trca + TRCA_CTRLSTS_OFFSET);
++	val &= ~(CH_CONTROL_MASK << 16);
++	val |= CH_ENABLE << 16;
++	writel(val, lldev->trca + TRCA_CTRLSTS_OFFSET);
++
++	ret = readl_poll_timeout(lldev->trca + TRCA_CTRLSTS_OFFSET, val,
++				 (HIDMA_CH_STATE(val) == CH_ENABLED) ||
++				 (HIDMA_CH_STATE(val) == CH_RUNNING), 1000,
++				 10000);
++	if (ret) {
++		dev_err(lldev->dev, "transfer channel did not get enabled\n");
++		return ret;
++	}
++
++	lldev->trch_state = CH_ENABLED;
++	lldev->evch_state = CH_ENABLED;
++
++	return 0;
++}
++
++int hidma_ll_resume(struct hidma_lldev *lldev)
++{
++	return hidma_ll_enable(lldev);
++}
++
++static void hidma_ll_hw_start(struct hidma_lldev *lldev)
++{
++	unsigned long irqflags;
++
++	spin_lock_irqsave(&lldev->lock, irqflags);
++	writel(lldev->tre_write_offset, lldev->trca + TRCA_DOORBELL_OFFSET);
++	spin_unlock_irqrestore(&lldev->lock, irqflags);
++}
++
++bool hidma_ll_isenabled(struct hidma_lldev *lldev)
++{
++	u32 val;
++
++	val = readl(lldev->trca + TRCA_CTRLSTS_OFFSET);
++	lldev->trch_state = HIDMA_CH_STATE(val);
++	val = readl(lldev->evca + EVCA_CTRLSTS_OFFSET);
++	lldev->evch_state = HIDMA_CH_STATE(val);
++
++	/* both channels have to be enabled before calling this function */
++	if (((lldev->trch_state == CH_ENABLED) ||
++	     (lldev->trch_state == CH_RUNNING)) &&
++	    ((lldev->evch_state == CH_ENABLED) ||
++	     (lldev->evch_state == CH_RUNNING)))
++		return true;
++
++	return false;
++}
++
++void hidma_ll_queue_request(struct hidma_lldev *lldev, u32 tre_ch)
++{
++	struct hidma_tre *tre;
++	unsigned long flags;
++
++	tre = &lldev->trepool[tre_ch];
++
++	/* copy the TRE into its location in the TRE ring */
++	spin_lock_irqsave(&lldev->lock, flags);
++	tre->tre_index = lldev->tre_write_offset / TRE_SIZE;
++	lldev->pending_tre_list[tre->tre_index] = tre;
++	memcpy(lldev->tre_ring + lldev->tre_write_offset, &tre->tre_local[0],
++	       TRE_SIZE);
++	lldev->tx_status_list[tre->idx].err_code = 0;
++	lldev->tx_status_list[tre->idx].err_info = 0;
++	tre->queued = 1;
++	lldev->pending_tre_count++;
++	lldev->tre_write_offset = (lldev->tre_write_offset + TRE_SIZE)
++	    % lldev->tre_ring_size;
++	spin_unlock_irqrestore(&lldev->lock, flags);
++}
++
++void hidma_ll_start(struct hidma_lldev *lldev)
++{
++	hidma_ll_hw_start(lldev);
++}
++
++/*
++ * Note that even though we stop this channel
++ * if there is a pending transaction in flight
++ * it will complete and follow the callback.
++ * This request will prevent further requests
++ * to be made.
++ */
++int hidma_ll_pause(struct hidma_lldev *lldev)
++{
++	u32 val;
++	int ret;
++
++	val = readl(lldev->evca + EVCA_CTRLSTS_OFFSET);
++	lldev->evch_state = HIDMA_CH_STATE(val);
++	val = readl(lldev->trca + TRCA_CTRLSTS_OFFSET);
++	lldev->trch_state = HIDMA_CH_STATE(val);
++
++	/* already suspended by this OS */
++	if ((lldev->trch_state == CH_SUSPENDED) ||
++	    (lldev->evch_state == CH_SUSPENDED))
++		return 0;
++
++	/* already stopped by the manager */
++	if ((lldev->trch_state == CH_STOPPED) ||
++	    (lldev->evch_state == CH_STOPPED))
++		return 0;
++
++	val = readl(lldev->trca + TRCA_CTRLSTS_OFFSET);
++	val &= ~(CH_CONTROL_MASK << 16);
++	val |= CH_SUSPEND << 16;
++	writel(val, lldev->trca + TRCA_CTRLSTS_OFFSET);
++
++	/*
++	 * Start the wait right after the suspend is confirmed.
++	 * Do a polled read up to 1ms and 10ms maximum.
++	 */
++	ret = readl_poll_timeout(lldev->trca + TRCA_CTRLSTS_OFFSET, val,
++				 HIDMA_CH_STATE(val) == CH_SUSPENDED, 1000,
++				 10000);
++	if (ret)
++		return ret;
++
++	val = readl(lldev->evca + EVCA_CTRLSTS_OFFSET);
++	val &= ~(CH_CONTROL_MASK << 16);
++	val |= CH_SUSPEND << 16;
++	writel(val, lldev->evca + EVCA_CTRLSTS_OFFSET);
++
++	/*
++	 * Start the wait right after the suspend is confirmed
++	 * Delay up to 10ms after reset to allow DMA logic to quiesce.
++	 */
++	ret = readl_poll_timeout(lldev->evca + EVCA_CTRLSTS_OFFSET, val,
++				 HIDMA_CH_STATE(val) == CH_SUSPENDED, 1000,
++				 10000);
++	if (ret)
++		return ret;
++
++	lldev->trch_state = CH_SUSPENDED;
++	lldev->evch_state = CH_SUSPENDED;
++	return 0;
++}
++
++void hidma_ll_set_transfer_params(struct hidma_lldev *lldev, u32 tre_ch,
++				  dma_addr_t src, dma_addr_t dest, u32 len,
++				  u32 flags)
++{
++	struct hidma_tre *tre;
++	u32 *tre_local;
++
++	if (tre_ch >= lldev->nr_tres) {
++		dev_err(lldev->dev,
++			"invalid TRE number in transfer params:%d", tre_ch);
++		return;
++	}
++
++	tre = &lldev->trepool[tre_ch];
++	if (atomic_read(&tre->allocated) != true) {
++		dev_err(lldev->dev,
++			"trying to set params on an unused TRE:%d", tre_ch);
++		return;
++	}
++
++	tre_local = &tre->tre_local[0];
++	tre_local[TRE_LEN_IDX] = len;
++	tre_local[TRE_SRC_LOW_IDX] = lower_32_bits(src);
++	tre_local[TRE_SRC_HI_IDX] = upper_32_bits(src);
++	tre_local[TRE_DEST_LOW_IDX] = lower_32_bits(dest);
++	tre_local[TRE_DEST_HI_IDX] = upper_32_bits(dest);
++	tre->int_flags = flags;
++}
++
++/*
++ * Called during initialization and after an error condition
++ * to restore hardware state.
++ */
++int hidma_ll_setup(struct hidma_lldev *lldev)
++{
++	int rc;
++	u64 addr;
++	u32 val;
++	u32 nr_tres = lldev->nr_tres;
++
++	lldev->pending_tre_count = 0;
++	lldev->tre_processed_off = 0;
++	lldev->evre_processed_off = 0;
++	lldev->tre_write_offset = 0;
++
++	/* disable interrupts */
++	hidma_ll_enable_irq(lldev, 0);
++
++	/* clear all pending interrupts */
++	val = readl(lldev->evca + EVCA_IRQ_STAT_OFFSET);
++	writel(val, lldev->evca + EVCA_IRQ_CLR_OFFSET);
++
++	rc = hidma_ll_reset(lldev);
 +	if (rc)
 +		return rc;
 +
-+	for (i = 0; i < ARRAY_SIZE(hidma_mgmt_files); i++) {
-+		if (strcmp(attr->attr.name, hidma_mgmt_files[i].name) == 0) {
-+			rc = hidma_mgmt_files[i].set(mdev, tmp);
-+			if (rc)
-+				return rc;
++	/*
++	 * Clear all pending interrupts again.
++	 * Otherwise, we observe reset complete interrupts.
++	 */
++	val = readl(lldev->evca + EVCA_IRQ_STAT_OFFSET);
++	writel(val, lldev->evca + EVCA_IRQ_CLR_OFFSET);
 +
-+			break;
-+		}
-+	}
-+	return count;
-+}
++	/* disable interrupts again after reset */
++	hidma_ll_enable_irq(lldev, 0);
 +
-+static ssize_t show_values_channel(struct kobject *kobj,
-+				   struct kobj_attribute *attr, char *buf)
-+{
-+	struct hidma_chan_attr *chattr;
-+	struct hidma_mgmt_dev *mdev;
++	addr = lldev->tre_ring_handle;
++	writel(lower_32_bits(addr), lldev->trca + TRCA_RING_LOW_OFFSET);
++	writel(upper_32_bits(addr), lldev->trca + TRCA_RING_HIGH_OFFSET);
++	writel(lldev->tre_ring_size, lldev->trca + TRCA_RING_LEN_OFFSET);
 +
-+	buf[0] = 0;
-+	chattr = container_of(attr, struct hidma_chan_attr, attr);
-+	mdev = chattr->mdev;
-+	if (strcmp(attr->attr.name, "priority") == 0)
-+		sprintf(buf, "%d\n", mdev->priority[chattr->index]);
-+	else if (strcmp(attr->attr.name, "weight") == 0)
-+		sprintf(buf, "%d\n", mdev->weight[chattr->index]);
++	addr = lldev->evre_ring_handle;
++	writel(lower_32_bits(addr), lldev->evca + EVCA_RING_LOW_OFFSET);
++	writel(upper_32_bits(addr), lldev->evca + EVCA_RING_HIGH_OFFSET);
++	writel(EVRE_SIZE * nr_tres, lldev->evca + EVCA_RING_LEN_OFFSET);
 +
-+	return strlen(buf);
-+}
++	/* support IRQ only for now */
++	val = readl(lldev->evca + EVCA_INTCTRL_OFFSET);
++	val &= ~0xF;
++	val |= 0x1;
++	writel(val, lldev->evca + EVCA_INTCTRL_OFFSET);
 +
-+static ssize_t set_values_channel(struct kobject *kobj,
-+				  struct kobj_attribute *attr, const char *buf,
-+				  size_t count)
-+{
-+	struct hidma_chan_attr *chattr;
-+	struct hidma_mgmt_dev *mdev;
-+	unsigned long tmp;
-+	int rc;
++	/* clear all pending interrupts and enable them */
++	writel(ENABLE_IRQS, lldev->evca + EVCA_IRQ_CLR_OFFSET);
++	hidma_ll_enable_irq(lldev, ENABLE_IRQS);
 +
-+	chattr = container_of(attr, struct hidma_chan_attr, attr);
-+	mdev = chattr->mdev;
-+
-+	rc = kstrtoul(buf, 0, &tmp);
++	rc = hidma_ll_enable(lldev);
 +	if (rc)
 +		return rc;
 +
-+	if (strcmp(attr->attr.name, "priority") == 0) {
-+		rc = set_priority(mdev, chattr->index, tmp);
-+		if (rc)
-+			return rc;
-+	} else if (strcmp(attr->attr.name, "weight") == 0) {
-+		rc = set_weight(mdev, chattr->index, tmp);
-+		if (rc)
-+			return rc;
-+	}
-+	return count;
++	return rc;
 +}
 +
-+static int create_sysfs_entry(struct hidma_mgmt_dev *dev, char *name, int mode)
++struct hidma_lldev *hidma_ll_init(struct device *dev, u32 nr_tres,
++				  void __iomem *trca, void __iomem *evca,
++				  u8 chidx)
 +{
-+	struct device_attribute *attrs;
-+	char *name_copy;
-+
-+	attrs = devm_kmalloc(&dev->pdev->dev,
-+			     sizeof(struct device_attribute), GFP_KERNEL);
-+	if (!attrs)
-+		return -ENOMEM;
-+
-+	name_copy = devm_kstrdup(&dev->pdev->dev, name, GFP_KERNEL);
-+	if (!name_copy)
-+		return -ENOMEM;
-+
-+	attrs->attr.name = name_copy;
-+	attrs->attr.mode = mode;
-+	attrs->show = show_values;
-+	attrs->store = set_values;
-+	sysfs_attr_init(&attrs->attr);
-+
-+	return device_create_file(&dev->pdev->dev, attrs);
-+}
-+
-+static int create_sysfs_entry_channel(struct hidma_mgmt_dev *mdev, char *name,
-+				      int mode, int index,
-+				      struct kobject *parent)
-+{
-+	struct hidma_chan_attr *chattr;
-+	char *name_copy;
-+
-+	chattr = devm_kmalloc(&mdev->pdev->dev, sizeof(*chattr), GFP_KERNEL);
-+	if (!chattr)
-+		return -ENOMEM;
-+
-+	name_copy = devm_kstrdup(&mdev->pdev->dev, name, GFP_KERNEL);
-+	if (!name_copy)
-+		return -ENOMEM;
-+
-+	chattr->mdev = mdev;
-+	chattr->index = index;
-+	chattr->attr.attr.name = name_copy;
-+	chattr->attr.attr.mode = mode;
-+	chattr->attr.show = show_values_channel;
-+	chattr->attr.store = set_values_channel;
-+	sysfs_attr_init(&chattr->attr.attr);
-+
-+	return sysfs_create_file(parent, &chattr->attr.attr);
-+}
-+
-+int hidma_mgmt_init_sys(struct hidma_mgmt_dev *mdev)
-+{
-+	unsigned int i;
++	u32 required_bytes;
++	struct hidma_lldev *lldev;
 +	int rc;
-+	int required;
-+	struct kobject *chanops;
 +
-+	required = sizeof(*mdev->chroots) * mdev->dma_channels;
-+	mdev->chroots = devm_kmalloc(&mdev->pdev->dev, required, GFP_KERNEL);
-+	if (!mdev->chroots)
-+		return -ENOMEM;
++	if (!trca || !evca || !dev || !nr_tres)
++		return NULL;
 +
-+	chanops = kobject_create_and_add("chanops", &mdev->pdev->dev.kobj);
-+	if (!chanops)
-+		return -ENOMEM;
++	/* need at least four TREs */
++	if (nr_tres < 4)
++		return NULL;
 +
-+	/* create each channel directory here */
-+	for (i = 0; i < mdev->dma_channels; i++) {
-+		char name[20];
++	/* need an extra space */
++	nr_tres += 1;
 +
-+		snprintf(name, sizeof(name), "chan%d", i);
-+		mdev->chroots[i] = kobject_create_and_add(name, chanops);
-+		if (!mdev->chroots[i])
-+			return -ENOMEM;
++	lldev = devm_kzalloc(dev, sizeof(struct hidma_lldev), GFP_KERNEL);
++	if (!lldev)
++		return NULL;
++
++	lldev->evca = evca;
++	lldev->trca = trca;
++	lldev->dev = dev;
++	lldev->trepool = devm_kcalloc(lldev->dev, nr_tres,
++				      sizeof(struct hidma_tre), GFP_KERNEL);
++	if (!lldev->trepool)
++		return NULL;
++
++	required_bytes = sizeof(lldev->pending_tre_list[0]);
++	lldev->pending_tre_list = devm_kcalloc(dev, nr_tres, required_bytes,
++					       GFP_KERNEL);
++	if (!lldev->pending_tre_list)
++		return NULL;
++
++	lldev->tx_status_list = devm_kcalloc(dev, nr_tres,
++					     sizeof(lldev->tx_status_list[0]),
++					     GFP_KERNEL);
++	if (!lldev->tx_status_list)
++		return NULL;
++
++	lldev->tre_ring = dmam_alloc_coherent(dev, (TRE_SIZE + 1) * nr_tres,
++					      &lldev->tre_ring_handle,
++					      GFP_KERNEL);
++	if (!lldev->tre_ring)
++		return NULL;
++
++	memset(lldev->tre_ring, 0, (TRE_SIZE + 1) * nr_tres);
++	lldev->tre_ring_size = TRE_SIZE * nr_tres;
++	lldev->nr_tres = nr_tres;
++
++	/* the TRE ring has to be TRE_SIZE aligned */
++	if (!IS_ALIGNED(lldev->tre_ring_handle, TRE_SIZE)) {
++		u8 tre_ring_shift;
++
++		tre_ring_shift = lldev->tre_ring_handle % TRE_SIZE;
++		tre_ring_shift = TRE_SIZE - tre_ring_shift;
++		lldev->tre_ring_handle += tre_ring_shift;
++		lldev->tre_ring += tre_ring_shift;
 +	}
 +
-+	/* populate common parameters */
-+	for (i = 0; i < ARRAY_SIZE(hidma_mgmt_files); i++) {
-+		rc = create_sysfs_entry(mdev, hidma_mgmt_files[i].name,
-+					hidma_mgmt_files[i].mode);
-+		if (rc)
-+			return rc;
++	lldev->evre_ring = dmam_alloc_coherent(dev, (EVRE_SIZE + 1) * nr_tres,
++					       &lldev->evre_ring_handle,
++					       GFP_KERNEL);
++	if (!lldev->evre_ring)
++		return NULL;
++
++	memset(lldev->evre_ring, 0, (EVRE_SIZE + 1) * nr_tres);
++	lldev->evre_ring_size = EVRE_SIZE * nr_tres;
++
++	/* the EVRE ring has to be EVRE_SIZE aligned */
++	if (!IS_ALIGNED(lldev->evre_ring_handle, EVRE_SIZE)) {
++		u8 evre_ring_shift;
++
++		evre_ring_shift = lldev->evre_ring_handle % EVRE_SIZE;
++		evre_ring_shift = EVRE_SIZE - evre_ring_shift;
++		lldev->evre_ring_handle += evre_ring_shift;
++		lldev->evre_ring += evre_ring_shift;
 +	}
++	lldev->nr_tres = nr_tres;
++	lldev->chidx = chidx;
 +
-+	/* populate parameters that are per channel */
-+	for (i = 0; i < mdev->dma_channels; i++) {
-+		rc = create_sysfs_entry_channel(mdev, "priority",
-+						(S_IRUGO | S_IWUGO), i,
-+						mdev->chroots[i]);
-+		if (rc)
-+			return rc;
++	rc = kfifo_alloc(&lldev->handoff_fifo,
++			 nr_tres * sizeof(struct hidma_tre *), GFP_KERNEL);
++	if (rc)
++		return NULL;
 +
-+		rc = create_sysfs_entry_channel(mdev, "weight",
-+						(S_IRUGO | S_IWUGO), i,
-+						mdev->chroots[i]);
-+		if (rc)
-+			return rc;
-+	}
++	rc = hidma_ll_setup(lldev);
++	if (rc)
++		return NULL;
 +
-+	return 0;
++	spin_lock_init(&lldev->lock);
++	tasklet_init(&lldev->task, hidma_ll_tre_complete, (unsigned long)lldev);
++	lldev->initialized = 1;
++	hidma_ll_enable_irq(lldev, ENABLE_IRQS);
++	return lldev;
 +}
-+EXPORT_SYMBOL_GPL(hidma_mgmt_init_sys);
++
++int hidma_ll_uninit(struct hidma_lldev *lldev)
++{
++	int rc = 0;
++	u32 val;
++
++	if (!lldev)
++		return -ENODEV;
++
++	if (lldev->initialized) {
++		u32 required_bytes;
++
++		lldev->initialized = 0;
++
++		required_bytes = sizeof(struct hidma_tre) * lldev->nr_tres;
++		tasklet_kill(&lldev->task);
++		memset(lldev->trepool, 0, required_bytes);
++		lldev->trepool = NULL;
++		lldev->pending_tre_count = 0;
++		lldev->tre_write_offset = 0;
++
++		rc = hidma_ll_reset(lldev);
++
++		/*
++		 * Clear all pending interrupts again.
++		 * Otherwise, we observe reset complete interrupts.
++		 */
++		val = readl(lldev->evca + EVCA_IRQ_STAT_OFFSET);
++		writel(val, lldev->evca + EVCA_IRQ_CLR_OFFSET);
++		hidma_ll_enable_irq(lldev, 0);
++	}
++	return rc;
++}
++
++irqreturn_t hidma_ll_inthandler(int chirq, void *arg)
++{
++	struct hidma_lldev *lldev = arg;
++
++	hidma_ll_int_handler_internal(lldev);
++	return IRQ_HANDLED;
++}
++
++enum dma_status hidma_ll_status(struct hidma_lldev *lldev, u32 tre_ch)
++{
++	enum dma_status ret = DMA_ERROR;
++	unsigned long flags;
++	u8 err_code;
++
++	spin_lock_irqsave(&lldev->lock, flags);
++	err_code = lldev->tx_status_list[tre_ch].err_code;
++
++	if (err_code & EVRE_STATUS_COMPLETE)
++		ret = DMA_COMPLETE;
++	else if (err_code & EVRE_STATUS_ERROR)
++		ret = DMA_ERROR;
++	else
++		ret = DMA_IN_PROGRESS;
++	spin_unlock_irqrestore(&lldev->lock, flags);
++
++	return ret;
++}
 -- 
 Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
