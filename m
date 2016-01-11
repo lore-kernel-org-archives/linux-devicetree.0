@@ -1,48 +1,95 @@
-From: Mark Langsdorf <mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ata: add AMD Seattle platform driver
-Date: Mon, 11 Jan 2016 09:33:21 -0600
-Message-ID: <5693CB41.70408@redhat.com>
-References: <1452200002-31590-1-git-send-email-brijesh.singh@amd.com>
- <4983521.tEaWggKCCv@wuerfel> <568F14E0.4060107@amd.com>
- <10869853.plxna0HzWE@wuerfel> <5690367E.8060609@amd.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [rtc-linux] [PATCH 5/6] rtc: max77620: add support for
+ max77620/max20024 RTC driver
+Date: Mon, 11 Jan 2016 17:04:19 +0100
+Message-ID: <20160111160419.GA3367@piout.net>
+References: <1452177524-23192-1-git-send-email-ldewangan@nvidia.com>
+ <1452177524-23192-6-git-send-email-ldewangan@nvidia.com>
+ <CAJKOXPd938soaa5M0GFo5HpVCYzAS1w8j8Hko3Ja9mx47NYkEQ@mail.gmail.com>
+ <568F8D7E.10500@nvidia.com>
+ <20160108125117.GM6588@sirena.org.uk>
+ <568FB3DD.4090503@nvidia.com>
+ <20160108133648.GQ6588@sirena.org.uk>
+ <568FBB6D.2020904@nvidia.com>
+ <5693AB6E.4090700@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5690367E.8060609-5C7GfCeVMHo@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brijesh Singh <brijesh.singh-5C7GfCeVMHo@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5693AB6E.4090700@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Mark Brown <broonie@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, rtc-linux@googlegroups.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, a.zummo@towertech.it, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, swarren@nvidia.com, treding@nvidia.com, Chaitanya Bandi <bandik@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/08/2016 04:21 PM, Brijesh Singh wrote:
-> Hi,
+On 11/01/2016 at 18:47:34 +0530, Laxman Dewangan wrote :
+> 
+> On Friday 08 January 2016 07:06 PM, Laxman Dewangan wrote:
+> >
+> >On Friday 08 January 2016 07:06 PM, Mark Brown wrote:
+> >>* PGP Signed by an unknown key
+> >>
+> >>On Fri, Jan 08, 2016 at 06:34:29PM +0530, Laxman Dewangan wrote:
+> >>
+> >>>If we get the parent device, regmap handle and interrupt number from
+> >>>mfd
+> >>>core independent of the PMIC (MAX77620 or MAX77686), then same driver
+> >>>can be
+> >>>used here.
+> >>>Two way which I can think of here:
+> >>Parent device is just dev->parent, you can use dev_get_regmap() to get a
+> >>regmap given a struct device and you can use platform resources to pass
+> >>the interrupts to the children from the MFD (there's some examples,
+> >>wm831x is one).
+> >>
+> >>
+> >
+> >I think it should work with named regmap. mfd whould init regmap with name
+> >and rtc driver should ask with same name.
+> >
+> >I saw three drivers which looks same:
+> >rtc-max77620.c (new from me) and already available rtc-max77686.c,
+> >rtc-max77802.c
+> >
+> >Seems I can develop IP based rtc driver as rtc-max77xxx.c
+> 
+> I came with one of issue when doing this.
+> 
+> The RTC driver parent is not the same parent for which i2c slave address get
+> registered.
+> There is two slave address from max77620, 0x3C (for general) and 0x68 for
+> RTC.
+> 
+> In max77620 mfd driver, we make dummy i2c client for 0x68 and initialize
+> regmap with this address.
+> 
+> Now on mfd_add_devices, we pass the device for 0x3c and hence the RTC driver
+> treat the parent as the 0x3c device but actually it should be 0x68 to get
+> the proper regmap.
+> 
+> 
+> Two approach:
+> 1. If we add the option to pass parent_dev when adding cells form
+> mfd_add_devices and select the parent device based on this option then it
+> can be easily handle.
+>     Add parent_dev structure in struct mfd_cell and then change the parent
+> in mfd_add_device() if cells has parent device.
+> 
+> 2. Register the RTC driver with different mfd_add_devices with dummy i2c
+> client device.
+> So two times mfd_add_devices.
+> 
+> 
+> IMO, approach 1 looks good to me.
+> 
+> Any opinion?
+> 
 
->> We generally don't refer to register locations with properties other than
->> 'reg', so that approach would be worse. What I'd suggest you do is to
->> have the sgpio registers in a separate device node, and use the LED
->> binding to access it, see
->>
->> Documentation/devicetree/bindings/leds/common.txt
->>
->> It seems that none of the drivers/ata/ drivers use the leds interface
->> today, but that can be added to libata-*.c whenever the appropriate
->> properties are there.
->>
->
-> libata-*.c implements the "Enclosure management" style led messages but also has hooks
-> to register a custom led control callback. Since Seattle platform does not support
-> the "Enclosure management" registers hence ata_port_info we are setting a ATA_FLAG_EM | ATA_FLAG_SW_ACIVITY
-> to indicate that we can still handle the led messages by our registered callback. I see
-> that sata_highbank driver is doing something similar.
+If the RTC is not at the same address, I'd say this is not an mfd
+anymore, can't you probe it directly from DT?
 
-The sata_highbank driver is doing it wrong and shouldn't have been
-accepted in its current condition. Enclosure management really should
-be a separate device. Please don't use it as an example.
 
---Mark Langsdorf
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
