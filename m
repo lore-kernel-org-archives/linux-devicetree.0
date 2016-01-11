@@ -1,83 +1,58 @@
-From: xuejiancheng <xuejiancheng@huawei.com>
-Subject: Re: [PATCH v2] mtd: spi-nor: add hisilicon spi-nor flash controller
- driver
-Date: Mon, 11 Jan 2016 09:20:41 +0800
-Message-ID: <56930369.1050000@huawei.com>
-References: <1452216405-10826-1-git-send-email-xuejiancheng@huawei.com>
- <20160109154249.GA28102@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH v2 4/4] dt-bindings: add document for rk3229-hdmi
+Date: Sun, 10 Jan 2016 20:06:18 -0600
+Message-ID: <20160111020618.GA20680@rob-hp-laptop>
+References: <1452156811-18150-1-git-send-email-ykk@rock-chips.com>
+ <1452157511-18891-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160109154249.GA28102@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dwmw2@infradead.org, computersforpeace@gmail.com, shijie.huang@intel.com, pengbinquan@huawei.com, han.xu@freescale.com, ezequiel@vanguardiasur.com.ar, fabio.estevam@freescale.com, manabian@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1452157511-18891-1-git-send-email-ykk@rock-chips.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Zheng Yang <zhengyang@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 2016/1/9 23:42, Rob Herring wrote:
-> On Fri, Jan 08, 2016 at 09:26:45AM +0800, Jiancheng Xue wrote:
->> add hisilicon spi-nor flash controller driver
->>
->> Signed-off-by: Binquan Peng <pengbinquan@huawei.com>
->> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
->> ---
-> 
-> Next time, please include changes in v2 here.
-> 
-
-OK. I will remember it. Thank you.
-
-In v2, I mainly fixed some compile warnings.
-
->>  .../devicetree/bindings/spi/spi-hisi-sfc.txt       |  24 +
->>  drivers/mtd/spi-nor/Kconfig                        |   6 +
->>  drivers/mtd/spi-nor/Makefile                       |   1 +
->>  drivers/mtd/spi-nor/hisi-sfc.c                     | 498 +++++++++++++++++++++
->>  4 files changed, 529 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
->>  create mode 100644 drivers/mtd/spi-nor/hisi-sfc.c
->>
->> diff --git a/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt b/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
->> new file mode 100644
->> index 0000000..a0d1e04
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
->> @@ -0,0 +1,24 @@
->> +HiSilicon SPI-NOR Flash Controller
->> +
->> +Required properties:
->> +- compatible : Should be "hisilicon,hisi-sfc".
-> 
-> I missed this last time, but you also need a more specific compatible 
-> string with the SOC name in it.
-> 
-
-This IP block is used in many SOCs. Do I need to add a specific compatible
-string for every SOC? Thank you.
-
->> +- address-cells : number of cells required to define a chip select
->> +        address on the SPI bus. Should be set to 1. See spi-bus.txt.
->> +- size-cells : Should be 0.
->> +- reg : Offset and length of the register set for the controller device.
->> +- reg-names : Must include the following two entries: "control", "memory".
->> +- clocks : handle to spi-nor flash controller clock.
->> +
->> +Example:
->> +spi-nor-controller@10000000 {
->> +	compatible = "hisilicon,hisi-sfc";
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->> +	reg = <0x10000000 0x1000>, <0x14000000 0x1000000>;
->> +	reg-names = "control", "memory";
->> +	clocks = <&clock HI3519_FMC_CLK>;
->> +	spi-nor@0 {
->> +		compatible = "jedec,spi-nor";
->> +		reg = <0>;
->> +	};
->> +};
-> 
-> .
-> 
+T24gVGh1LCBKYW4gMDcsIDIwMTYgYXQgMDU6MDU6MTFQTSArMDgwMCwgWWFraXIgWWFuZyB3cm90
+ZToKPiBTaWduZWQtb2ZmLWJ5OiBZYWtpciBZYW5nIDx5a2tAcm9jay1jaGlwcy5jb20+Cj4gLS0t
+Cj4gQ2hhbmdlcyBpbiB2MjogTm9uZQo+IAo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAudHh0ICAgICAgICAgfCA0ICsrKy0KPiAgMSBm
+aWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9k
+d19oZG1pLXJvY2tjaGlwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAudHh0Cj4gaW5kZXggNjY4MDkxZi4uMWNk
+YzYyNyAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAudHh0
+Cj4gQEAgLTIsNyArMiw3IEBAIFJvY2tjaGlwIHNwZWNpZmljIGV4dGVuc2lvbnMgdG8gdGhlIFN5
+bm9wc3lzIERlc2lnbndhcmUgSERNSQo+ICA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PQo+ICAKPiAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAtLSBjb21wYXRpYmxlOiAicm9ja2NoaXAs
+cmszMjg4LWR3LWhkbWkiOwo+ICstIGNvbXBhdGlibGU6ICJyb2NrY2hpcCxyazMyODgtZHctaGRt
+aSIsICJyb2NrY2hpcCxyazMyMjktZHctaGRtaSI7Cj4gIC0gcmVnOiBQaHlzaWNhbCBiYXNlIGFk
+ZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgY29udHJvbGxlcidzIHJlZ2lzdGVycy4KPiAgLSBjbG9j
+a3M6IHBoYW5kbGUgdG8gaGRtaSBpYWhiIGFuZCBpc2ZyIGNsb2Nrcy4KPiAgLSBjbG9jay1uYW1l
+czogc2hvdWxkIGJlICJpYWhiIiAiaXNmciIKPiBAQCAtMTUsOCArMTUsMTAgQEAgUmVxdWlyZWQg
+cHJvcGVydGllczoKPiAgICByazMyODggcGxhdGZvcm0KPiAgCj4gIE9wdGlvbmFsIHByb3BlcnRp
+ZXMKPiArLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBleHRl
+cm5hbCBIRE1JIFBIWSdzIHJlZ2lzdGVycy4KClRoaXMgaXMgYWxyZWFkeSByZXF1aXJlZC4uLgoK
+PiAgLSBkZGMtaTJjLWJ1czogcGhhbmRsZSBvZiBhbiBJMkMgY29udHJvbGxlciB1c2VkIGZvciBE
+REMgRURJRCBwcm9iaW5nCj4gIC0gY2xvY2tzLCBjbG9jay1uYW1lczogcGhhbmRsZSB0byB0aGUg
+SERNSSBDRUMgY2xvY2ssIG5hbWUgc2hvdWxkIGJlICJjZWMiCj4gKwkJICAgICAgIHBoYW5kbGUg
+dG8gdGhlIGV4dGVybmFsIEhETUkgUEhZIGNsb2NrLCBuYW1lIHNob3VsZCBiZSAiZXh0cGh5IgoK
+RG9lcyB0aGlzIGNoYW5nZSBhcHBseSB0byByazMyODggb3IganVzdCByazMyMjk/IElmIHRoZSBs
+YXR0ZXIsIHlvdSAKc2hvdWxkIG1ha2UgdGhhdCBjbGVhci4gVGhlIGRyaXZlciBuZWVkcyB0byBh
+bGxvdyBmb3Igb2xkIGR0YidzIHRoYXQgCm9ubHkgaGF2ZSAxIGNsb2NrLgoKQmFzZWQgb24gUGhp
+bGlwcCdzIGZlZWRiYWNrLCB5b3UgYWxzbyBuZWVkIHRvIGFkZCBhIHBoeXMgcHJvcGVydHkuCgpS
+b2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
