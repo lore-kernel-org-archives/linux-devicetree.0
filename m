@@ -1,292 +1,146 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD
- driver
-Date: Mon, 11 Jan 2016 05:49:17 +0000
-Message-ID: <20160111054917.GF3331@x1>
-References: <1452218729-11357-1-git-send-email-wenyou.yang@atmel.com>
- <1452218729-11357-2-git-send-email-wenyou.yang@atmel.com>
+From: Raja Mani <rmani@qti.qualcomm.com>
+Subject: [PATCH v2] dt: bindings: add bindings for ipq4019 wifi block
+Date: Mon, 11 Jan 2016 11:19:03 +0530
+Message-ID: <1452491343-8803-1-git-send-email-rmani@qti.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1452218729-11357-2-git-send-email-wenyou.yang@atmel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wenyou Yang <wenyou.yang@atmel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: agross@codeaurora.org, devicetree@vger.kernel.org
+Cc: ath10k@lists.infradead.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Raja Mani <rmani@qti.qualcomm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 08 Jan 2016, Wenyou Yang wrote:
+Add device tree binding documentation details for wifi block present
+in Qualcomm IPQ4019 SoC into "qcom,ath10k.txt".
 
-> This patch adds support for the Active-semi ACT8945A PMIC.
-> It is a Multi Function Device with the following subdevices:
->  - Regulator
->  - Charger
->=20
-> It is interfaced to the host controller using I2C interface,
-> ACT8945A is a child device of the I2C.
->=20
-> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
-> ---
->=20
->  drivers/mfd/Kconfig          |    8 +++
->  drivers/mfd/Makefile         |    1 +
->  drivers/mfd/act8945a.c       |  122 ++++++++++++++++++++++++++++++++=
-++++++++++
->  include/linux/mfd/act8945a.h |   25 +++++++++
->  4 files changed, 156 insertions(+)
->  create mode 100644 drivers/mfd/act8945a.c
->  create mode 100644 include/linux/mfd/act8945a.h
->=20
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 9581ebb..018c72d 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -18,6 +18,14 @@ config MFD_CS5535
->  	  This is the core driver for CS5535/CS5536 MFD functions.  This is
->            necessary for using the board's GPIO and MFGPT functionali=
-ty.
-> =20
-> +config MFD_ACT8945A
-> +	bool "Active-semi ACT8945A"
-> +	select MFD_CORE
-> +	select REGMAP_I2C
-> +	depends on I2C && OF
-> +	help
-> +	  Support for the ACT8945A PMIC from Active-Semi
+Right now, ath10k wireless driver has support for PCI based wlan devices.
+There is a plan to extend ath10k driver to support wifi devices which are
+connected over AHB as well (enumeration will happen via device tree node).
+For AHB based devices (ie, ipq4019), all wifi properties are supplied via
+device tree (including irq, reg addr, cal data,etc).
 
-Checkpatch usually complains about single line helps.
+Signed-off-by: Raja Mani <rmani@qti.qualcomm.com>
+---
+v2 changes:
+ - Improved "core-id" description - [Rob]
+ - Removed "status" documentation - [Rob]
+ - Added description which properties are applicable
+   for ahb and which are applicable for pci devices - [Rob]
+ - Improved commit msg to explain the context.
+ - Renamed "qca,msi_addr" to "qcom,msi_addr" and
+   "qca,msi_base" to "qcom,msi_base" to follow uniformity.
 
->  config MFD_AS3711
->  	bool "AMS AS3711"
->  	select MFD_CORE
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 0f230a6..2f1ca82 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -6,6 +6,7 @@
->  obj-$(CONFIG_MFD_88PM860X)	+=3D 88pm860x.o
->  obj-$(CONFIG_MFD_88PM800)	+=3D 88pm800.o 88pm80x.o
->  obj-$(CONFIG_MFD_88PM805)	+=3D 88pm805.o 88pm80x.o
-> +obj-$(CONFIG_MFD_ACT8945A)	+=3D act8945a.o
->  obj-$(CONFIG_MFD_SM501)		+=3D sm501.o
->  obj-$(CONFIG_MFD_ASIC3)		+=3D asic3.o tmio_core.o
->  obj-$(CONFIG_MFD_BCM590XX)	+=3D bcm590xx.o
-> diff --git a/drivers/mfd/act8945a.c b/drivers/mfd/act8945a.c
-> new file mode 100644
-> index 0000000..b9b8685
-> --- /dev/null
-> +++ b/drivers/mfd/act8945a.c
-> @@ -0,0 +1,122 @@
-> +/*
-> + * MFD driver for Active-semi ACT8945a PMIC
-> + *
-> + * Copyright (C) 2015 Atmel Corporation.
+ .../bindings/net/wireless/qcom,ath10k.txt          | 88 ++++++++++++++++++++--
+ 1 file changed, 83 insertions(+), 5 deletions(-)
 
-Please update this.
-
-> + *                    Wenyou Yang <wenyou.yang@atmel.com>
-
-* Author: Wenyou Yang <wenyou.yang@atmel.com>
-
-> + * This software is licensed under the terms of the GNU General Publ=
-ic
-> + * License version 2, as published by the Free Software Foundation, =
-and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-
-This is the long version.  Any chance it can be shortened?
-
-> + */
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/mfd/act8945a.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/regmap.h>
-> +
-> +static const struct mfd_cell act8945a_devs[] =3D {
-> +	{
-> +		.name =3D "act8945a-pmic",
-> +		.of_compatible =3D "active-semi,act8945a-regulator",
-> +	},
-> +	{
-> +		.name =3D "act8945a-charger",
-> +		.of_compatible =3D "active-semi,act8945a-charger",
-> +	},
-> +};
-> +
-> +static const struct regmap_config act8945a_regmap_config =3D {
-> +	.reg_bits =3D 8,
-> +	.val_bits =3D 8,
-> +};
-> +
-> +static int act8945a_i2c_probe(struct i2c_client *client,
-> +			     const struct i2c_device_id *id)
-> +{
-> +	struct act8945a_dev *act8945a;
-> +	int ret;
-> +
-> +	act8945a =3D devm_kzalloc(&client->dev, sizeof(*act8945a), GFP_KERN=
-EL);
-> +	if (act8945a =3D=3D NULL)
-
-if (!act8945a)
-
-> +		return -ENOMEM;
-> +
-> +	i2c_set_clientdata(client, act8945a);
-> +
-> +	act8945a->dev =3D &client->dev;
-> +	act8945a->i2c_client =3D client;
-
-If you're saving 'client' already, you don't need to save 'dev' too,
-as one can be retrieved from the other.
-
-> +	act8945a->regmap =3D devm_regmap_init_i2c(client,
-> +						&act8945a_regmap_config);
-
-Don't we have a generic call to obtain a single 8bit register yet?
-
-> +	if (IS_ERR(act8945a->regmap)) {
-> +		ret =3D PTR_ERR(act8945a->regmap);
-> +		dev_err(&client->dev, "regmap init failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret =3D mfd_add_devices(act8945a->dev, -1, act8945a_devs,
-
-Please use the correct defines, instead of '-1'.
-
-> +			      ARRAY_SIZE(act8945a_devs), NULL, 0, NULL);
-> +	if (ret < 0) {
-
-if (ret)
-
-> +		dev_err(&client->dev, "mfd_add_devices failed: %d\n", ret);
-
-Be more explicit.
-
-"Failed to add sub devices".
-
-> +		return ret;
-> +	}
-> +
-> +	dev_info(&client->dev, "added %zu mfd sub-devices\n",
-> +		 ARRAY_SIZE(act8945a_devs));
-
-This serves no one, please remove.
-
-> +	return 0;
-> +
-> +}
-> +
-> +static int act8945a_i2c_remove(struct i2c_client *i2c)
-> +{
-> +	struct act8945a_dev *act8945a =3D i2c_get_clientdata(i2c);
-> +
-> +	mfd_remove_devices(act8945a->dev);
-
-mfd_remove_devices(i2c->dev);
-
-> +	return 0;
-> +}
-> +
-> +static const struct i2c_device_id act8945a_i2c_id[] =3D {
-> +	{ "act8945a", 0 },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, act8945a_i2c_id);
-> +
-> +static const struct of_device_id act8945a_of_match[] =3D {
-> +	{.compatible =3D "active-semi,act8945a", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, act8945a_of_match);
-> +
-> +static struct i2c_driver act8945a_i2c_driver =3D {
-> +	.driver =3D {
-> +		   .name =3D "act8945a",
-> +		   .owner =3D THIS_MODULE,
-
-Remove this line, it's taken care of elsewhere.
-
-> +		   .of_match_table =3D of_match_ptr(act8945a_of_match),
-> +	},
-> +	.probe =3D act8945a_i2c_probe,
-> +	.remove =3D act8945a_i2c_remove,
-> +	.id_table =3D act8945a_i2c_id,
-> +};
-> +
-> +static int __init act8945a_i2c_init(void)
-> +{
-> +	return i2c_add_driver(&act8945a_i2c_driver);
-> +}
-> +subsys_initcall(act8945a_i2c_init);
-> +
-> +static void __exit act8945a_i2c_exit(void)
-> +{
-> +	i2c_del_driver(&act8945a_i2c_driver);
-> +}
-> +module_exit(act8945a_i2c_exit);
-> +
-> +MODULE_DESCRIPTION("ACT8945A PMIC multi-function driver");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Wenyou Yang <wenyou.yang@atmel.com>");
-> diff --git a/include/linux/mfd/act8945a.h b/include/linux/mfd/act8945=
-a.h
-> new file mode 100644
-> index 0000000..5b18d16
-> --- /dev/null
-> +++ b/include/linux/mfd/act8945a.h
-> @@ -0,0 +1,25 @@
-> +/*
-> + * MFD for Active-semi ACT8945A PMIC
-> + *
-> + * Copyright (C) 2015 Atmel Corporation.
-
-Please update this.
-
-> + * This software is licensed under the terms of the GNU General Publ=
-ic
-> + * License version 2, as published by the Free Software Foundation, =
-and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#ifndef _LINUX_MFD_ACT8945A_H
-> +#define _LINUX_MFD_ACT8945A_H
-> +
-> +struct act8945a_dev {
-> +	struct device *dev;
-
-I don't think you need this.
-
-> +	struct i2c_client *i2c_client;
-
-Where is this used?
-
-> +	struct regmap *regmap;
-
-Where is this used?
-
-> +};
-> +
-> +#endif
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+index edefc26..d1595d2 100644
+--- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
++++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+@@ -1,17 +1,44 @@
+ * Qualcomm Atheros ath10k wireless devices
+ 
+-For ath10k devices the calibration data can be provided through Device
+-Tree. The node is a child node of the PCI controller.
+-
+ Required properties:
+--compatible : Should be "qcom,ath10k"
++- compatible: Should be one of the following:
++	* "qcom,ath10k"
++	* "qcom,ipq4019-wifi"
+ 
+ Optional properties:
++- reg: Address and length of the register set for the device.
++- core-id: Numeric number associated to the wifi block.
++           (0 means first wifi block, 1 means second wifi block, etc).
++- resets: Must contain an entry for each entry in reset-names.
++          See ../reset/reseti.txt for details.
++- reset-names: Must include the list of following reset names,
++	       "wifi_cpu_init"
++	       "wifi_radio_srif"
++	       "wifi_radio_warm"
++	       "wifi_radio_cold"
++	       "wifi_core_warm"
++	       "wifi_core_cold"
++- clocks: List of clock specifiers, must contain an entry for each required
++          entry in clock-names.
++- clock-names: Should contain the clock names "wifi_wcss_cmd", "wifi_wcss_ref",
++               "wifi_wcss_rtc".
++- interrupts: List of interrupt lines. Must contain an entry
++	      for each entry in the interrupt-names property.
++- interrupt-names: Must include the entries for MSI interrupt
++		   names ("msi0" to "msi15") and legacy interrupt
++		   name ("legacy"),
++- qcom,msi_addr: MSI interrupt address.
++- qcom,msi_base: Base value to add before writing MSI data into
++		MSI address register.
+ - qcom,ath10k-calibration-data : calibration data as an array, the
+ 				 length can vary between hw versions
+ 
++Most of above properties are applicable to ahb based wlan device.
++Whereas, pci based wlan device needs only "qcom,ath10k-calibration-data".
++
++Example (to supply the calibration data alone):
+ 
+-Example:
++In this example, the node is defined as child node of the PCI controller.
+ 
+ pci {
+ 	pcie@0 {
+@@ -28,3 +55,54 @@ pci {
+ 		};
+ 	};
+ };
++
++Example (to supply ipq4019 SoC wifi block details):
++
++wifi0: wifi@a000000 {
++	compatible = "qcom,ipq4019-wifi";
++	reg = <0xa000000 0x200000>;
++	core-id = <0x0>;
++	resets = <&gcc WIFI0_CPU_INIT_RESET>,
++		 <&gcc WIFI0_RADIO_SRIF_RESET>,
++		 <&gcc WIFI0_RADIO_WARM_RESET>,
++		 <&gcc WIFI0_RADIO_COLD_RESET>,
++		 <&gcc WIFI0_CORE_WARM_RESET>,
++		 <&gcc WIFI0_CORE_COLD_RESET>;
++	reset-names = "wifi_cpu_init",
++		      "wifi_radio_srif",
++		      "wifi_radio_warm",
++		      "wifi_radio_cold",
++		      "wifi_core_warm",
++		      "wifi_core_cold";
++	clocks = <&gcc GCC_WCSS2G_CLK>,
++		 <&gcc GCC_WCSS2G_REF_CLK>,
++		 <&gcc GCC_WCSS2G_RTC_CLK>;
++	clock-names = "wifi_wcss_cmd",
++		      "wifi_wcss_ref",
++		      "wifi_wcss_rtc";
++	interrupts = <0 0x20 0x1>,
++		     <0 0x21 0x1>,
++		     <0 0x22 0x1>,
++		     <0 0x23 0x1>,
++		     <0 0x24 0x1>,
++		     <0 0x25 0x1>,
++		     <0 0x26 0x1>,
++		     <0 0x27 0x1>,
++		     <0 0x28 0x1>,
++		     <0 0x29 0x1>,
++		     <0 0x2a 0x1>,
++		     <0 0x2b 0x1>,
++		     <0 0x2c 0x1>,
++		     <0 0x2d 0x1>,
++		     <0 0x2e 0x1>,
++		     <0 0x2f 0x1>,
++		     <0 0xa8 0x0>;
++	interrupt-names = "msi0",  "msi1",  "msi2",  "msi3",
++			  "msi4",  "msi5",  "msi6",  "msi7",
++			  "msi8",  "msi9",  "msi10", "msi11",
++			  "msi12", "msi13", "msi14", "msi15",
++			  "legacy";
++	qcom,msi_addr = <0x0b006040>;
++	qcom,msi_base = <0x40>;
++	qcom,ath10k-calibration-data = [ 01 02 03 ... ];
++};
+-- 
+1.8.1.2
