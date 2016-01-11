@@ -1,51 +1,68 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 3/5] gpio: arizona: Support Cirrus Logic CS47L24 and
- WM1831
-Date: Mon, 11 Jan 2016 06:26:19 +0000
-Message-ID: <20160111062619.GP3331@x1>
-References: <1446563316-28878-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1446563316-28878-4-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v10 4/8] mfd: fsl imx25 Touchscreen ADC driver
+Date: Mon, 11 Jan 2016 06:54:41 +0000
+Message-ID: <20160111065441.GW3331@x1>
+References: <1450101234-2191-1-git-send-email-mpa@pengutronix.de>
+ <1450101234-2191-5-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1446563316-28878-4-git-send-email-rf@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: linus.walleij@linaro.org, broonie@kernel.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, alsa-devel@alsa-project.org
+In-Reply-To: <1450101234-2191-5-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Eric =?iso-8859-1?Q?B=E9nard?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Juergen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 03 Nov 2015, Richard Fitzgerald wrote:
+On Mon, 14 Dec 2015, Markus Pargmann wrote:
 
-> The CS47L24 and WM1831 codecs only have two GPIO lines, but are
-> otherwise similar to the WM8280.
+> This is the core driver for imx25 touchscreen/adc driver. The module
+> has one shared ADC and two different conversion queues which use the
+> ADC. The two queues are identical. Both can be used for general purpo=
+se
+> ADC but one is meant to be used for touchscreens.
 >=20
-> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> This driver is the core which manages the central components and
+> registers of the TSC/ADC unit. It manages the IRQs and forwards them =
+to
+> the correct components.
+>=20
+> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+>=20
+> [ensure correct ADC clock depending on the IPG clock]
+> Signed-off-by: Juergen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
->  drivers/gpio/gpio-arizona.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>=20
+> Notes:
+>     Changes in v7:
+>      - Cleanup bit defines in header files to be more readable
+>      - Fix irq check to return with an error for irq <=3D 0
+>      - Add COMPILE_TEST in Kconfig file
+>    =20
+>     Changes in v5:
+>      - Remove ifdef CONFIG_OF as this driver is only for DT usage
+>      - Remove module owner
+>      - Add Kconfig dependencies ARCH_MX25 and OF
+>=20
+>  drivers/mfd/Kconfig             |   9 ++
+>  drivers/mfd/Makefile            |   2 +
+>  drivers/mfd/fsl-imx25-tsadc.c   | 203 ++++++++++++++++++++++++++++++=
+++++++++++
+>  include/linux/mfd/imx25-tsadc.h | 140 +++++++++++++++++++++++++++
+>  4 files changed, 354 insertions(+)
+>  create mode 100644 drivers/mfd/fsl-imx25-tsadc.c
+>  create mode 100644 include/linux/mfd/imx25-tsadc.h
 
-Applied, thanks.
+=46or my own reference:
+  Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-> diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.=
-c
-> index ca00273..624ea54 100644
-> --- a/drivers/gpio/gpio-arizona.c
-> +++ b/drivers/gpio/gpio-arizona.c
-> @@ -122,6 +122,10 @@ static int arizona_gpio_probe(struct platform_de=
-vice *pdev)
->  	case WM1814:
->  		arizona_gpio->gpio_chip.ngpio =3D 5;
->  		break;
-> +	case WM1831:
-> +	case CS47L24:
-> +		arizona_gpio->gpio_chip.ngpio =3D 2;
-> +		break;
->  	default:
->  		dev_err(&pdev->dev, "Unknown chip variant %d\n",
->  			arizona->type);
+I will apply this and sent out pull-requests to the relevant
+maintainers once -rc1 is out.
+
+[...]
 
 --=20
 Lee Jones
