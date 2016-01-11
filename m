@@ -1,36 +1,45 @@
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Subject: Re: [PATCH 1/2] devicetree: mxsfb: add reset-active property
-Date: Mon, 11 Jan 2016 14:38:27 +0000
-Message-ID: <yw1xy4bww598.fsf@unicorn.mansr.com>
-References: <1450200297-19243-1-git-send-email-mans@mansr.com>
-	<20151220033823.GE9883@rob-hp-laptop>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V2 1/2] dt/bindings: serial: bcm2835: add binding documentation for bcm2835-aux-uart
+Date: Mon, 11 Jan 2016 15:40:20 +0100
+Message-ID: <4799423.86Gz9JKjiK@wuerfel>
+References: <1452344854-2576-1-git-send-email-kernel@martin.sperl.org> <4288762.bCLxQBDvy4@wuerfel> <6035A0DD-AD61-48F7-B641-272BB23F3CD8@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151220033823.GE9883@rob-hp-laptop> (Rob Herring's message of
-	"Sat, 19 Dec 2015 21:38:23 -0600")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, marex@denx.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6035A0DD-AD61-48F7-B641-272BB23F3CD8-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh@kernel.org> writes:
+On Monday 11 January 2016 14:57:46 Martin Sperl wrote:
+> > On 11.01.2016, at 13:21, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > 
+> > Please just add another patch to rename the existing uarts appropriately
+> > first, then add this one on top with the correct name.
+> 
+> I can do that with the next incarnation of the patch.
+> 
+> But would that not break dt-source files, that refer to uart0?
+> Is this not considered an API change as well or does this only apply
+> to the binary files?
 
-> On Tue, Dec 15, 2015 at 05:24:56PM +0000, Mans Rullgard wrote:
->> Some boards connect the LCD_RESET pin to a reset input on the
->> display panel.  On these boards, this pin must be set to the
->> proper level for the display to function.
->>=20
->> This adds an optional "reset-active" property to the "display"
->> subnode such that devicetrees can specify the desired polarity
->> of the LCD_RESET pin.
->>=20
->> Signed-off-by: Mans Rullgard <mans@mansr.com>
->
-> Acked-by: Rob Herring <robh@kernel.org>
+To clarify: I meant you should change the node name, not the label.
 
-What happened to this patch?
+The label is not part of the dtb data that gets passed to the kernel
+and can have any value, including "uart0".
 
---=20
-M=E5ns Rullg=E5rd
+The node name is part of the dtb and should follow common naming
+conventions (per ePAPR), but the kernel doesn't actually care, so
+it won't break anything.
+
+There are cases where a bootloader relies on a particular node name
+in order to find a device node and patch its properties, but I don't
+think this is the case here.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
