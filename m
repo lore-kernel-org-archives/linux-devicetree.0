@@ -1,31 +1,54 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: Add support emac for RK3036
-Date: Mon, 11 Jan 2016 12:36:51 +0100
-Message-ID: <2062991.rcWfmTiAzP@phil>
-References: <1452217026-21155-1-git-send-email-zhengxing@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452217026-21155-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, leozwang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+Subject: [PATCH] ARM: dts: Allow simultaneous usage exynos-rng and s5p-sss drivers on exynos5
+Date: Mon, 11 Jan 2016 20:40:28 +0900
+Message-ID: <1452512428-3916-1-git-send-email-k.kozlowski.k@gmail.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 8. Januar 2016, 09:37:06 schrieb Xing Zheng:
-> This patch describe the emac, and we need to let mac clock under
-> the APLL which is able to provide the accurate 50MHz what mac_ref
-> need.
-> 
-> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+The s5p-sss crypto HW acceleration driver supports only AES algorithms
+thus it accesses only registers from feeder (offset 0x0, length 0x100)
+and AES (offset 0x200, length 0x100) blocks Security SubSystem (SSS).
 
-I've queued this to get applied after 4.5-rc1 is out and I have a clean base 
-again to add the needed shared clock-branch.
+The exynos-rng Pseudo Random Number Generator driver accesses only PRNG
+block at offset 0x400 (length 0x100).
 
+Narrow the size of memory mapped by s5p-sss driver so both drivers can
+be loaded at the same time.
 
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski.k@gmail.com>
+---
+ arch/arm/boot/dts/exynos5250.dtsi | 2 +-
+ arch/arm/boot/dts/exynos5420.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 33e2d5f7315b..234403422c6f 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -807,7 +807,7 @@
+ 
+ 	sss@10830000 {
+ 		compatible = "samsung,exynos4210-secss";
+-		reg = <0x10830000 0x10000>;
++		reg = <0x10830000 0x300>;
+ 		interrupts = <0 112 0>;
+ 		clocks = <&clock CLK_SSS>;
+ 		clock-names = "secss";
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index 48a0a55314f5..7c8a606d65aa 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -859,7 +859,7 @@
+ 
+ 	sss: sss@10830000 {
+ 		compatible = "samsung,exynos4210-secss";
+-		reg = <0x10830000 0x10000>;
++		reg = <0x10830000 0x300>;
+ 		interrupts = <0 112 0>;
+ 		clocks = <&clock CLK_SSS>;
+ 		clock-names = "secss";
+-- 
+2.1.4
