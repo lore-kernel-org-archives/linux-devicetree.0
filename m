@@ -1,71 +1,47 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/3] Input: cyttsp - add device tree bindings
-Date: Sun, 10 Jan 2016 21:01:56 -0600
-Message-ID: <20160111030156.GA18656@rob-hp-laptop>
-References: <cover.1452447124.git.oreste.salerno@tomtom.com>
- <dd329fe3420fba4049c353a9a092ff9c45c5a252.1452447124.git.oreste.salerno@tomtom.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 2/3] ASoC: pcm1792a: Rename pcm1792a to pcm179x
+Date: Sun, 10 Jan 2016 21:06:17 -0600
+Message-ID: <20160111030617.GA21801@rob-hp-laptop>
+References: <1452382685-18009-1-git-send-email-michael@amarulasolutions.com>
+ <1452382685-18009-3-git-send-email-michael@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <dd329fe3420fba4049c353a9a092ff9c45c5a252.1452447124.git.oreste.salerno@tomtom.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Oreste Salerno <oreste.salerno@tomtom.com>
-Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, fery@cypress.com, dmitry.torokhov@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+In-Reply-To: <1452382685-18009-3-git-send-email-michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 10, 2016 at 06:36:08PM +0100, Oreste Salerno wrote:
-> Signed-off-by: Oreste Salerno <oreste.salerno@tomtom.com>
-> ---
->  .../bindings/input/touchscreen/cyttsp.txt          |  82 +++++++++++++
->  drivers/input/touchscreen/cyttsp_core.c            | 134 +++++++++++++++++++--
->  include/linux/input/cyttsp.h                       |   3 +
->  3 files changed, 212 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
+On Sun, Jan 10, 2016 at 12:38:04AM +0100, Michael Trimarchi wrote:
+> pcm1792a is compatible with pcm1795 and pcm1796 so it's
+> better to have them under the common name pcm179x
 > 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt b/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
-> new file mode 100644
-> index 0000000..2dc5c65
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
-> @@ -0,0 +1,82 @@
-> +* Cypress cyttsp touchscreen controller
-> +
-> +Required properties:
-> +- compatible		: must be "cypress,cyttsp-i2c" or "cypress,cyttsp-spi"
-> +- reg			: Device I2C address or SPI chip select number
-> +- spi-max-frequency 	: Maximum SPI clocking speed of the device (for cyttsp-spi)
-> +- interrupt-parent	: the phandle for the gpio controller
-> +			  (see interrupt binding[0]).
-> +- interrupts		: (gpio) interrupt to which the chip is connected
-> +			  (see interrupt binding[0]).
-> +- reset-gpios		: the reset gpio the chip is connected to
-> +			  (see GPIO binding[1] for more details).
-> +- touchscreen-size-x	: horizontal resolution of touchscreen (in pixels)
-> +- touchscreen-size-y	: vertical resolution of touchscreen (in pixels)
-> +- bootloader-key	: the 8-byte bootloader key that is required to switch
-> +			  the chip from bootloader mode (default mode) to
-> +			  application mode.
-> +			  This property has to be specified as an array of 8
-> +			  '/bits/ 8' values.
-> +
-> +Optional properties:
-> +- active-distance	: the distance in pixels beyond which a touch must move
-> +			  before movement is detected and reported by the device.
-> +			  Valid values: 0-15.
+> Signed-off-by: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> ---
+>  .../devicetree/bindings/sound/pcm1792a.txt         |  18 --
+>  .../devicetree/bindings/sound/pcm179x.txt          |  18 ++
 
-Wouldn't this be the same as touchscreen-fuzz-(x|y) which is the 
-replacement for the deprecated moving-threshold? 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> +- active-interval-ms	: the minimum period in ms between consecutive
-> +			  scanning/processing cycles when the chip is in active mode.
-> +			  Valid values: 0-255.
-> +- lowpower-interval-ms	: the minimum period in ms between consecutive
-> +			  scanning/processing cycles when the chip is in low-power mode.
-> +			  Valid values: 0-2550
-> +- touch-timeout-ms	: minimum time in ms spent in the active power state while no
-> +			  touches are detected before entering low-power mode.
-> +			  Valid values: 0-2550
-> +
+Please use -M option for git-format-patch for renames/moves. The binding 
+is short enough, but the driver isn't really. 
 
-Otherwise, looks fine.
+>  sound/soc/codecs/Kconfig                           |   6 +-
+>  sound/soc/codecs/Makefile                          |   4 +-
+>  sound/soc/codecs/pcm1792a.c                        | 271 ---------------------
+>  sound/soc/codecs/pcm1792a.h                        |  27 --
+>  sound/soc/codecs/pcm179x.c                         | 271 +++++++++++++++++++++
+>  sound/soc/codecs/pcm179x.h                         |  27 ++
+>  8 files changed, 321 insertions(+), 321 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/pcm1792a.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/pcm179x.txt
+>  delete mode 100644 sound/soc/codecs/pcm1792a.c
+>  delete mode 100644 sound/soc/codecs/pcm1792a.h
+>  create mode 100644 sound/soc/codecs/pcm179x.c
+>  create mode 100644 sound/soc/codecs/pcm179x.h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
