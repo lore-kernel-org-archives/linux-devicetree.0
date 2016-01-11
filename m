@@ -1,66 +1,60 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and
- charging of backup battery
-Date: Mon, 11 Jan 2016 12:24:22 -0800
-Message-ID: <20160111202421.GA12777@atomide.com>
-References: <20160106010011.GG12777@atomide.com>
- <8FE6954B-6411-4593-9CE5-717A469A6AA8@goldelico.com>
- <20160106164136.GI12777@atomide.com>
- <2AC46952-3758-458A-B0A5-1794C207BD4C@goldelico.com>
- <20160106170925.GK12777@atomide.com>
- <66F37918-EA7F-4D83-8B5F-A6B5C0CD7623@goldelico.com>
- <20160108181551.GX12777@atomide.com>
- <832803EE-E4CB-46B1-BF39-2DC0BB695A5D@goldelico.com>
- <20160108190457.GY12777@atomide.com>
- <CCB763BE-5D1F-4A53-BF9A-C12C08A6EFC4@goldelico.com>
+From: Hongtao Jia <hongtao.jia@nxp.com>
+Subject: =?gb2312?B?tPC4tDogW1BBVENIIFYzXSBjcHVmcmVxOiBxb3JpcTogUmVnaXN0ZXIgY29v?=
+ =?gb2312?Q?ling_device_based_on_device_tree?=
+Date: Mon, 11 Jan 2016 14:54:14 +0000
+Message-ID: <AM3PR04MB3376CC754973BD535CF3F99EBC90@AM3PR04MB337.eurprd04.prod.outlook.com>
+References: <1448529671-48216-1-git-send-email-hongtao.jia@freescale.com>
+ <1697588.dLcbZBRWO4@vostro.rjw.lan> <3550740.QzZi28fbXg@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CCB763BE-5D1F-4A53-BF9A-C12C08A6EFC4@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, Nishanth Menon <nm@ti.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek@goldelico.com>, =?utf-8?Q?Gra=C5=BEvydas?= Ignotas <notasas@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <3550740.QzZi28fbXg@wuerfel>
+Content-Language: zh-CN
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Arnd Bergmann <arnd@arndb.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, Jia Hongtao <hongtao.jia@freescale.com>, "edubezval@gmail.com" <edubezval@gmail.com>, Scott Wood <scottwood@freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [160108 11:32]:
-> 
-> Am 08.01.2016 um 20:04 schrieb Tony Lindgren <tony@atomide.com>:
-> 
-> > * H. Nikolaus Schaller <hns@goldelico.com> [160108 10:33]:
-> >> Am 08.01.2016 um 19:15 schrieb Tony Lindgren <tony@atomide.com>:
-> >>> * H. Nikolaus Schaller <hns@goldelico.com> [160108 09:50]:
-> >>> 
-> >>>> So I think it is something which is unstable in 4.4-rc8 that is (probably) fixed in
-> >>>> linux-next and unrelated to this DT patch.
-> >>>> 
-> >>>> But I have no hint or idea what it is.
-> >>> 
-> >>> Or something hangs the RTC? And the back-up battery has to drain to
-> >>> reset the RTC somehow?
-> >> 
-> >> Indeed it could be something like this. I already suspected that it depends
-> >> on boot order of some components.
-> >> 
-> >> But you get the /dev/rtc and /sys/class/rtc nodes? This is what this patch
-> >> should enable (and not fix potential driver issues).
-> > 
-> > Yes no problems with $subject patch. It's just the we also need
-> > to figure out why RTC does not work :)
-> 
-> Yes indeed. I can not focus on that at the moment but as soon as we have
-> the new Pyra handheld devices (with OMAP5+Palmas) running, there will
-> be more developers to look at it.
-
-OK so the issue is that the twl msecure pin should be high to enable
-the RTC registers. We used to have that code with platform_data, but
-no longer have it with device tree based booting. I'll send a patch
-for that.
-
-Curiously setting jumper j5 on beagle-x15 that controls what used to
-be the msecure and now is powerhold, does the opposite.. The
-device boots automatically but RTC is stopped?
-
-Regards,
-
-Tony
+U29ycnkgZm9yIHRoZSBsYXRlIHJlc3BvbnNlLiBJIGdvdCBhIGtuZWUgc3VyZ2VyeSB0byBkby4N
+ClNlZSBjb21tZW50cyBhdCB0aGUgZW5kLg0KDQo+IC0tLS0t6YKu5Lu25Y6f5Lu2LS0tLS0NCj4g
+5Y+R5Lu25Lq6OiBBcm5kIEJlcmdtYW5uIFttYWlsdG86YXJuZEBhcm5kYi5kZV0NCj4g5Y+R6YCB
+5pe26Ze0OiBTYXR1cmRheSwgRGVjZW1iZXIgMTksIDIwMTUgNjozMyBBTQ0KPiDmlLbku7bkuro6
+IFJhZmFlbCBKLiBXeXNvY2tpIDxyandAcmp3eXNvY2tpLm5ldD4NCj4g5oqE6YCBOiBKaWEgSG9u
+Z3RhbyA8aG9uZ3Rhby5qaWFAZnJlZXNjYWxlLmNvbT47IGVkdWJlenZhbEBnbWFpbC5jb207DQo+
+IHZpcmVzaC5rdW1hckBsaW5hcm8ub3JnOyBsaW51eC1wbUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
+cHBjLQ0KPiBkZXZAbGlzdHMub3psYWJzLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
+IFNjb3R0IFdvb2QNCj4gPHNjb3R0d29vZEBmcmVlc2NhbGUuY29tPg0KPiDkuLvpopg6IFJlOiBb
+UEFUQ0ggVjNdIGNwdWZyZXE6IHFvcmlxOiBSZWdpc3RlciBjb29saW5nIGRldmljZSBiYXNlZCBv
+biBkZXZpY2UNCj4gdHJlZQ0KPiANCj4gT24gVHVlc2RheSAxNSBEZWNlbWJlciAyMDE1IDAwOjU4
+OjI2IFJhZmFlbCBKLiBXeXNvY2tpIHdyb3RlOg0KPiA+IE9uIFRodXJzZGF5LCBOb3ZlbWJlciAy
+NiwgMjAxNSAwNToyMToxMSBQTSBKaWEgSG9uZ3RhbyB3cm90ZToNCj4gPiA+IFJlZ2lzdGVyIHRo
+ZSBxb3JpcSBjcHVmcmVxIGRyaXZlciBhcyBhIGNvb2xpbmcgZGV2aWNlLCBiYXNlZCBvbiB0aGUN
+Cj4gPiA+IHRoZXJtYWwgZGV2aWNlIHRyZWUgZnJhbWV3b3JrLiBXaGVuIHRlbXBlcmF0dXJlIGNy
+b3NzZXMgdGhlIHBhc3NpdmUNCj4gPiA+IHRyaXAgcG9pbnQgY3B1ZnJlcSBpcyB1c2VkIHRvIHRo
+cm90dGxlIENQVXMuDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogSmlhIEhvbmd0YW8gPGhv
+bmd0YW8uamlhQGZyZWVzY2FsZS5jb20+DQo+ID4gPiBSZXZpZXdlZC1ieTogVmlyZXNoIEt1bWFy
+IDx2aXJlc2gua3VtYXJAbGluYXJvLm9yZz4NCj4gPg0KPiA+IEFwcGxpZWQsIHRoYW5rcyENCj4g
+Pg0KPiANCj4gSSBnb3QgYSByYW5kY29uZmlnIGJ1aWxkIGVycm9yIHRvZGF5Og0KPiANCj4gZHJp
+dmVycy9idWlsdC1pbi5vOiBJbiBmdW5jdGlvbiBgcW9yaXFfY3B1ZnJlcV9yZWFkeSc6DQo+IGRl
+YnVnZnMuYzooLnRleHQrMHgxZjQ2ODgpOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvDQo+IGBvZl9j
+cHVmcmVxX2Nvb2xpbmdfcmVnaXN0ZXInDQo+IA0KPiBDT05GSUdfT0Y9eQ0KPiBDT05GSUdfUU9S
+SVFfQ1BVRlJFUT15DQo+IENPTkZJR19USEVSTUFMPW0NCj4gQ09ORklHX1RIRVJNQUxfT0Y9eQ0K
+PiANCj4gSSB0aGluayB5b3UgbmVlZCBhICdkZXBlbmRzIG9uIFRIRVJNQUwnIHRvIHByZXZlbnQg
+dGhlIGRyaXZlciBmcm9tIGJlaW5nDQo+IGJ1aWx0LWluIHdoZW4gVEhFUk1BTD1tLg0KPiANCj4g
+CUFybmQNCg0KQ29ycmVjdC4gSSBuZWVkIHRvIGFkZCBmb2xsb3dpbmcgbGluZXMgdG8gdGhlIEtj
+b25maWcgZmlsZToNCmRlcGVuZHMgb24gIUNQVV9USEVSTUFMIHx8IFRIRVJNQUw9eQ0KDQpIaSBS
+YWZhZWwsDQpTaG91bGQgSSBzZW5kIGEgbmV3IHBhdGNoIGluY2x1ZGUgdGhpcyBmaXggb3Igc2Vu
+ZCBhIGZpeCBwYXRjaD8NCg0KVGhhbmtzLg0KLUhvbmd0YW8uDQpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0Ckxp
+bnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0
+aW5mby9saW51eHBwYy1kZXY=
