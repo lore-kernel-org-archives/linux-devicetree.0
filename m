@@ -1,57 +1,54 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [rtc-linux] [PATCH 2/6] mfd: max77620: add core driver for
- MAX77620/MAX20024
-Date: Mon, 11 Jan 2016 15:26:05 +0900
-Message-ID: <56934AFD.5060008@samsung.com>
-References: <1452177524-23192-1-git-send-email-ldewangan@nvidia.com>
- <1452177524-23192-3-git-send-email-ldewangan@nvidia.com>
- <CAJKOXPfa0jjRWE6LKvNmwCRcG9Es7=36_03kTqCx-aB1wENx0g@mail.gmail.com>
- <20160111054627.GB3331@x1>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 3/5] gpio: arizona: Support Cirrus Logic CS47L24 and
+ WM1831
+Date: Mon, 11 Jan 2016 06:26:19 +0000
+Message-ID: <20160111062619.GP3331@x1>
+References: <1446563316-28878-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1446563316-28878-4-git-send-email-rf@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-reply-to: <20160111054627.GB3331@x1>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: rtc-linux@googlegroups.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, swarren@nvidia.com, treding@nvidia.com, Laxman Dewangan <ldewangan@nvidia.com>, Chaitanya Bandi <bandik@nvidia.com>, Mallikarjun Kasoju <mkasoju@nvidia.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1446563316-28878-4-git-send-email-rf@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Cc: linus.walleij@linaro.org, broonie@kernel.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On 11.01.2016 14:46, Lee Jones wrote:
-> On Fri, 08 Jan 2016, Krzysztof Kozlowski wrote:
-> 
-> Thanks for taking the time to review.
-> 
->> ()2016-01-07 23:38 GMT+09:00 Laxman Dewangan <ldewangan@nvidia.com>:
->>> MAX77620/MAX20024 are Power Management IC from the MAXIM.
->>> It supports RTC, multiple GPIOs, multiple DCDC and LDOs,
->>> watchdog, clock etc.
->>>
->>> Add MFD drier to provides common support for accessing the
->>> device; additional drivers is developed on respected subsystem
->>> in order to use the functionality of the device.
->>>
->>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
->>> Signed-off-by: Chaitanya Bandi <bandik@nvidia.com>
->>> Signed-off-by: Mallikarjun Kasoju <mkasoju@nvidia.com>
->>> Tested-by: Venkat Reddy Talla <vreddytalla@nvidia.com>
->>
->> The Testing and Reviewed are statements (see SubmittingPatches) so
->> they should be made explicitly by people. As this is v1 how they could
->> make a public statement so far?
-> 
-> SubmittingPatches bears no mention that Reviewed-by/Tested-by
-> statements have to be provided on one of the public mailing lists.
-> These can be provided privately prior to upstream submission v1.
+On Tue, 03 Nov 2015, Richard Fitzgerald wrote:
 
-Indeed the document does not mention that they have to be provided by
-public.
+> The CS47L24 and WM1831 codecs only have two GPIO lines, but are
+> otherwise similar to the WM8280.
+>=20
+> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  drivers/gpio/gpio-arizona.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-In the same time these are statements given by a reviewer ("By offering
-my Reviewed-by: tag, I state that:")... and how can you validate a
-statement given through a private channel? Is it true? Is it a thorough
-testing or just copy-paste from Gerrit (or other automated system)?
+Applied, thanks.
 
-Best regards,
-Krzysztof
+> diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.=
+c
+> index ca00273..624ea54 100644
+> --- a/drivers/gpio/gpio-arizona.c
+> +++ b/drivers/gpio/gpio-arizona.c
+> @@ -122,6 +122,10 @@ static int arizona_gpio_probe(struct platform_de=
+vice *pdev)
+>  	case WM1814:
+>  		arizona_gpio->gpio_chip.ngpio =3D 5;
+>  		break;
+> +	case WM1831:
+> +	case CS47L24:
+> +		arizona_gpio->gpio_chip.ngpio =3D 2;
+> +		break;
+>  	default:
+>  		dev_err(&pdev->dev, "Unknown chip variant %d\n",
+>  			arizona->type);
 
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
