@@ -1,55 +1,99 @@
-From: 8001010 <8001010@gmail.com>
-Subject: Re: [linux-sunxi] Re: [PATCH 0/5] ARM: dts: sunxi: Add backlight node
- to q8 tablets
-Date: Mon, 11 Jan 2016 11:34:18 +0100
-Message-ID: <5693852A.1060604@gmail.com>
-References: <1442752251-20744-1-git-send-email-hdegoede@redhat.com>
- <fc4adcf5-4362-4d4c-b42e-729922c79f65@googlegroups.com>
- <5677F7CF.3050308@redhat.com>
+From: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] arm64/dts: Add missing DMA Abort interrupt to Juno
+Date: Mon, 11 Jan 2016 10:47:07 +0000
+Message-ID: <20160111104707.GB13633@e106497-lin.cambridge.arm.com>
+References: <6a66d2ac442925e066fe9b67ee2883de5894b0d3.1452168063.git.robin.murphy@arm.com>
+ <2736927.0LiVxGZzgm@wuerfel>
+ <568E7EF4.1020403@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5677F7CF.3050308@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>, linux-sunxi <linux-sunxi@googlegroups.com>
-Cc: devicetree@vger.kernel.org, maxime.ripard@free-electrons.com, wens@csie.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <568E7EF4.1020403-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hans de Goede wrote:
-> Hi,
->
-> On 21-12-15 11:56, Silvio Pellicano wrote:
->>
->>
->>> Here is a slightly updated version of Chen-Yu's backlight
->>> patches, also adding support for the backlight found on A13
->>> based q8 tablets.
->>>
->>
->> If i compile your dtsi with (obviously) pwm  support enable , backlight
->> switch off after kernel start,
->> if i disable pwm in menuconfig,it stay on, all seem correct (pwm on PB2 in
->> original script.bin),
->> but there is somewhere a bug in pwm or dtsi description of backlight.
->
-> No there is not, if you enable the pwm driver you must also enable
-> the backlight-pwm driver / add CONFIG_BACKLIGHT_PWM=y to your .config
-> (and make sure it stays that way after a "make oldconfig").
->
-> Regards,
->
-> Hans
->
-Now work, but what flag  i have to enable to leave 5v usb otg ON?
-uboot switch ON Usb Otg voltage but kernel switch off during boot (no usb devices work).
+On Thu, Jan 07, 2016 at 03:06:28PM +0000, Sudeep Holla wrote:
+>=20
+>=20
+> On 07/01/16 14:36, Arnd Bergmann wrote:
+> >On Thursday 07 January 2016 12:01:59 Robin Murphy wrote:
+> >>The DMA-330 has an "irq_abort" interrupt line on which it signals f=
+aults
+> >>separately from the "irq[n:0]" channel interrupts. On Juno, this is
+> >>wired up to SPI 92; add it to the DT so that DMAC faults are correc=
+tly
+> >>reported for the driver to reset the thing, rather than leaving it
+> >>locked up and waiting to time out.
+> >>
+> >>CC: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+> >>CC: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> >>CC: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> >>Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> >>
+> >
+> >Nothing wrong with the patch, but could you please come up with
+> >a more structured way to get patches for Juno into the kernel?
+> >
+>=20
+> Sorry for that. Liviu is on holidays, he usually reviews Juno DTS cha=
+nge
+> and provides ack. But missed to check with him before he disappeared.
+>=20
+> >You have addressed the patch "to:" the arm-soc maintainers, but
+> >you are not listed in the maintainers file for the directory, so
+> >it's not clear what you expect to happen here.
+> >
+> >Ideally, we'd get patches from just one of the people listed
+> >in the MAINTAINERS file normally, and let us know if the
+> >primary maintainer changes, or if one of the others sends a
+> >patch because that person is unavailable.
+> >
+>=20
+> We(me along with Liviu and Lorenzo) will try to group them together a=
+nd
+> one of us can send you pull request.
+>=20
+> I don't think there's any other fixes on the list though there are fe=
+w
+> feature additions which I assume is too late for v4.5 now. But still =
+I
+> prefer to wait till next week so that I can check with Liviu to see i=
+f
+> there are any other Juno fixes that can be grouped.
 
-Thanks
+Hi all,
+
+The only other changes queued for v4.5 are the HDLCD patches which touc=
+h
+on the .dts. Arnd, Olof: how do you prefer to handle this? Can you take
+Robin's patch in arm-soc and I'll queue the rest of the changes via Dav=
+id
+Airlie?
+
+Best regards,
+Liviu
+
+>=20
+> --=20
+> Regards,
+> Sudeep
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
