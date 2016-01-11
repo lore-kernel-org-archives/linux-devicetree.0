@@ -1,109 +1,79 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v10 1/8] ARM: dt: Binding documentation for imx25 ADC/TSC
-Date: Mon, 11 Jan 2016 07:29:21 +0000
-Message-ID: <20160111072921.GX3331@x1>
-References: <1450101234-2191-1-git-send-email-mpa@pengutronix.de>
- <1450101234-2191-2-git-send-email-mpa@pengutronix.de>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] mfd: arizona: Add device tree binding to specify
+ mono outputs
+Date: Mon, 11 Jan 2016 07:31:52 +0000
+Message-ID: <20160111073152.GY3331@x1>
+References: <1450088352-10470-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1450101234-2191-2-git-send-email-mpa@pengutronix.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: Shawn Guo <shawnguo@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Denis Carikli <denis@eukrea.com>, Eric =?iso-8859-1?Q?B=E9nard?= <eric@eukrea.com>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hartmut Knaack <knaack.h@gmx.de>, Fabio Estevam <festevam@gmail.com>
+In-Reply-To: <1450088352-10470-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 14 Dec 2015, Markus Pargmann wrote:
+On Mon, 14 Dec 2015, Charles Keepax wrote:
 
-> This documentation describes the devicetree bindings for the
-> ADC/Touchscreen unit of the i.MX25 SoC.
+> Add device tree bindings to support specifying outputs from the chip =
+as
+> mono outputs. Whilst we are doing it change the out_mono pdata from a
+> bool to an int, because Sparse gets upset about using ARRAY_SIZE on
+> bools.
 >=20
-> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> Acked-by: Jonathan Cameron <jic23@kernel.org>
-> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 > ---
 >=20
-> Notes:
->     Changes in v9:
->      - Fixed some style things.
->    =20
->     Changes in v6:
->      - Removed adc-ref property and replaced it with refp and refn fo=
-r positive and
->        negative references. The properties are optional now as the de=
-fault
->        behaviour is a positive internal reference voltage and ADC GND=
- as negative
->        reference.
+> No changes since v1.
 >=20
->  .../devicetree/bindings/mfd/fsl-imx25-tsadc.txt    | 47 ++++++++++++=
-++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/fsl-imx25-t=
-sadc.txt
+> Thanks,
+> Charles
+>=20
+>  drivers/mfd/arizona-core.c        | 10 ++++++++++
+>  include/linux/mfd/arizona/pdata.h |  2 +-
+>  2 files changed, 11 insertions(+), 1 deletion(-)
 
-Binding looks fine, but you need to change the subject line of the
-patch, for is it not an ARM, but MFD patch.
+Applied, thanks.
 
-> diff --git a/Documentation/devicetree/bindings/mfd/fsl-imx25-tsadc.tx=
-t b/Documentation/devicetree/bindings/mfd/fsl-imx25-tsadc.txt
-> new file mode 100644
-> index 000000000000..b03505286997
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/fsl-imx25-tsadc.txt
-> @@ -0,0 +1,47 @@
-> +Freescale MX25 ADC/TSC MultiFunction Device (MFD)
+> diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+> index b9489a0..4bb4866 100644
+> --- a/drivers/mfd/arizona-core.c
+> +++ b/drivers/mfd/arizona-core.c
+> @@ -861,6 +861,16 @@ static int arizona_of_get_core_pdata(struct ariz=
+ona *arizona)
+>  		count++;
+>  	}
+> =20
+> +	count =3D 0;
+> +	of_property_for_each_u32(arizona->dev->of_node, "wlf,out-mono", pro=
+p,
+> +				 cur, val) {
+> +		if (count =3D=3D ARRAY_SIZE(pdata->out_mono))
+> +			break;
 > +
-> +This device combines two general purpose conversion queues one used =
-for general
-> +ADC and the other used for touchscreens.
+> +		pdata->out_mono[count] =3D !!val;
+> +		count++;
+> +	}
 > +
-> +Required properties:
-> + - compatible:			Should be "fsl,imx25-tsadc".
-> + - reg:				Start address and size of the memory area of
-> + 					the device
-> + - interrupts:			Interrupt for this device
-> +					(See: ../interrupt-controller/interrupts.txt)
-> + - clocks:			An 'ipg' clock (See: ../clock/clock-bindings.txt)
-> + - interrupt-controller:	This device is an interrupt controller. It
-> +   					controls the interrupts of both
-> +					conversion queues.
-> + - #interrupt-cells:		Should be '<1>'.
-> + - #address-cells:		Should be '<1>'.
-> + - #size-cells:			Should be '<1>'.
-> +
-> +This device includes two conversion queues which can be added as sub=
-nodes.
-> +The first queue is for the touchscreen, the second for general purpo=
-se ADC.
-> +
-> +Example:
-> +	tscadc: tscadc@50030000 {
-> +		compatible =3D "fsl,imx25-tsadc";
-> +		reg =3D <0x50030000 0xc>;
-> +		interrupts =3D <46>;
-> +		clocks =3D <&clks 119>;
-> +		clock-names =3D "ipg";
-> +		interrupt-controller;
-> +		#interrupt-cells =3D <1>;
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
-> +		ranges;
-> +
-> +		tsc: tcq@50030400 {
-> +			compatible =3D "fsl,imx25-tcq";
-> +			reg =3D <0x50030400 0x60>;
-> +			...
-> +		};
-> +
-> +		adc: gcq@50030800 {
-> +			compatible =3D "fsl,imx25-gcq";
-> +			reg =3D <0x50030800 0x60>;
-> +			...
-> +		};
-> +	};
+>  	return 0;
+>  }
+> =20
+> diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/ar=
+izona/pdata.h
+> index 57b45ca..64faeef 100644
+> --- a/include/linux/mfd/arizona/pdata.h
+> +++ b/include/linux/mfd/arizona/pdata.h
+> @@ -171,7 +171,7 @@ struct arizona_pdata {
+>  	int inmode[ARIZONA_MAX_INPUT];
+> =20
+>  	/** Mode for outputs */
+> -	bool out_mono[ARIZONA_MAX_OUTPUT];
+> +	int out_mono[ARIZONA_MAX_OUTPUT];
+> =20
+>  	/** PDM speaker mute setting */
+>  	unsigned int spk_mute[ARIZONA_MAX_PDM_SPK];
 
 --=20
 Lee Jones
@@ -111,7 +81,7 @@ Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
