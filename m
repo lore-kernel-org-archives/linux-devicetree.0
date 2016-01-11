@@ -1,76 +1,64 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 6/9] mfd: add TI LMU hardware fault monitoring driver
-Date: Mon, 11 Jan 2016 10:21:17 +0000
-Message-ID: <20160111102117.GU14104@x1>
-References: <1448521025-2796-1-git-send-email-milo.kim@ti.com>
- <1448521025-2796-7-git-send-email-milo.kim@ti.com>
+Subject: Re: [PATCH v3 4/4] mfd: arizona: Add device tree binding
+ documentation for new clock driver
+Date: Mon, 11 Jan 2016 10:23:53 +0000
+Message-ID: <20160111102353.GW14104@x1>
+References: <1452252582-20834-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1452252582-20834-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1448521025-2796-7-git-send-email-milo.kim@ti.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Milo Kim <milo.kim@ti.com>
-Cc: robh+dt@kernel.org, j.anaszewski@samsung.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1452252582-20834-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: mturquette@baylibre.com, cw00.choi@samsung.com, sboyd@codeaurora.org, myungjoo.ham@samsung.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 26 Nov 2015, Milo Kim wrote:
+On Fri, 08 Jan 2016, Charles Keepax wrote:
 
-> LM3633 and LM3697 are TI LMU MFD device.
-> Those devices have hardware monitoring feature which detects open or
-> short circuit case.
+> Specify the device tree binding for the input clocks to Arizona devic=
+es.
 >=20
-> Debugfs
-> -------
->   Two files are created.
->     open_fault:  check light output channel is open or not.
->     short_fault: check light output channel is shorted or not.
->=20
->   The driver checks the status of backlight output channels.
->   LM3633 and LM3697 have same sequence to check channels, so common
->   functions are used.
->   ABI/testing document is also included.
->=20
-> Operations
-> ----------
->   Two devices have common control flow but register addresses are dif=
-ferent.
->   The structure, 'ti_lmu_reg' is used for register configuration.
->=20
-> Event notifier
-> --------------
->   After fault monitoring is done, LMU device is reset. So backlight a=
-nd
->   LED device should be reinitialized. It notifies an event as soon as
->   the monitoring is done. Then, LM3633 and LM3697 backlight and LED d=
-rivers
->   handle this event.
->=20
-> Cc: Lee Jones <lee.jones@linaro.org>=20
-> Cc: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-leds@vger.kernel.org=20
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Milo Kim <milo.kim@ti.com>
+> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 > ---
->  .../ABI/testing/debugfs-ti-lmu-fault-monitor       |  32 ++
->  drivers/mfd/Kconfig                                |  10 +
->  drivers/mfd/Makefile                               |   1 +
->  drivers/mfd/ti-lmu-fault-monitor.c                 | 405 +++++++++++=
-++++++++++
+>=20
+> No changes since v2.
+>=20
+> Thanks,
+> Charles
+>=20
+>  Documentation/devicetree/bindings/mfd/arizona.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
 
-I think this device is part of the MFD, rather than an MFD itself.
-Please relocate it to somewhere more appropriate.
+Applied, thanks.
 
->  4 files changed, 448 insertions(+)
->  create mode 100644 Documentation/ABI/testing/debugfs-ti-lmu-fault-mo=
-nitor
->  create mode 100644 drivers/mfd/ti-lmu-fault-monitor.c
-
-[...]
+> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Docu=
+mentation/devicetree/bindings/mfd/arizona.txt
+> index 18be0cb..39f76f8 100644
+> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> @@ -45,6 +45,13 @@ Optional properties:
+> =20
+>    - wlf,reset : GPIO specifier for the GPIO controlling /RESET
+> =20
+> +  - clocks: Should reference the clocks supplied on MCLK1 and MCLK2
+> +  - clock-names: Should contains two strings:
+> +      "mclk1" for the clock supplied on MCLK1, recommended to be a h=
+igh
+> +      quality audio reference clock
+> +      "mclk2" for the clock supplied on MCLK2, recommended to be an =
+always on
+> +      32k clock
+> +
+>    - wlf,gpio-defaults : A list of GPIO configuration register values=
+=2E Defines
+>      for the appropriate values can found in <dt-bindings/mfd/arizona=
+=2Etxt>. If
+>      absent, no configuration of these registers is performed. If any=
+ entry has
 
 --=20
 Lee Jones
