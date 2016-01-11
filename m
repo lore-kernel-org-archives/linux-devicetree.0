@@ -1,38 +1,77 @@
-From: zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3 0/3] SoC: rockchip: support power domain for RK3368
-Date: Mon, 11 Jan 2016 02:36:37 -0800
-Message-ID: <1452508600-3512-1-git-send-email-zhangqing@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: zhangqing <zhangqing@rock-chips.com>
+Subject: [PATCH v3 3/3] dt-bindings: modify document of Rockchip power domains
+Date: Mon, 11 Jan 2016 02:36:40 -0800
+Message-ID: <1452508600-3512-4-git-send-email-zhangqing@rock-chips.com>
+References: <1452508600-3512-1-git-send-email-zhangqing@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1452508600-3512-1-git-send-email-zhangqing@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, wxt@rock-chips.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, khilman@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, huangtao@rock-chips.com, zyw@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, zhangqing <zhangqing@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-add pd id in rk3368-power.h
-modify pm_domains.c to support RK3368 SoC
-add RK3368 document for Rockchip power domains
+Modify binding documentation for the power domains
+found on Rockchip RK3368 SoCs.
 
-zhangqing (3):
-  dt-bindings: add power-domain header for RK3368 SoCs
-  soc: rockchip: power-domain: Modify power domain driver for rk3368
-  dt-bindings: modify document of Rockchip power domains
+Signed-off-by: zhangqing <zhangqing@rock-chips.com>
+---
+ .../bindings/soc/rockchip/power_domain.txt          | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
- .../bindings/soc/rockchip/power_domain.txt         | 21 ++++++++++++++
- drivers/soc/rockchip/pm_domains.c                  | 33 ++++++++++++++++++++++
- include/dt-bindings/power/rk3368-power.h           | 28 ++++++++++++++++++
- 3 files changed, 82 insertions(+)
- create mode 100644 include/dt-bindings/power/rk3368-power.h
-
+diff --git a/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
+index 112756e..13dc6a3 100644
+--- a/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
++++ b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
+@@ -6,6 +6,7 @@ powered up/down by software based on different application scenes to save power.
+ Required properties for power domain controller:
+ - compatible: Should be one of the following.
+ 	"rockchip,rk3288-power-controller" - for RK3288 SoCs.
++	"rockchip,rk3368-power-controller" - for RK3368 SoCs.
+ - #power-domain-cells: Number of cells in a power-domain specifier.
+ 	Should be 1 for multiple PM domains.
+ - #address-cells: Should be 1.
+@@ -14,6 +15,7 @@ Required properties for power domain controller:
+ Required properties for power domain sub nodes:
+ - reg: index of the power domain, should use macros in:
+ 	"include/dt-bindings/power/rk3288-power.h" - for RK3288 type power domain.
++	"include/dt-bindings/power/rk3368-power.h" - for RK3368 type power domain.
+ - clocks (optional): phandles to clocks which need to be enabled while power domain
+ 	switches state.
+ 
+@@ -31,11 +33,24 @@ Example:
+ 		};
+ 	};
+ 
++	 power: power-controller {
++                compatible = "rockchip,rk3368-power-controller";
++                #power-domain-cells = <1>;
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                pd_gpu_1 {
++                        reg = <RK3368_PD_GPU_1>;
++                        clocks = <&cru ACLK_GPU_CFG>;
++                };
++        };
++
+ Node of a device using power domains must have a power-domains property,
+ containing a phandle to the power device node and an index specifying which
+ power domain to use.
+ The index should use macros in:
+ 	"include/dt-bindings/power/rk3288-power.h" - for rk3288 type power domain.
++	"include/dt-bindings/power/rk3368-power.h" - for rk3368 type power domain.
+ 
+ Example of the node using power domain:
+ 
+@@ -44,3 +59,9 @@ Example of the node using power domain:
+ 		power-domains = <&power RK3288_PD_GPU>;
+ 		/* ... */
+ 	};
++
++	node {
++                /* ... */
++                power-domains = <&power RK3368_PD_GPU_1>;
++                /* ... */
++        };
 -- 
 1.9.1
