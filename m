@@ -1,78 +1,120 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [rtc-linux] [PATCH 5/6] rtc: max77620: add support for max77620/max20024
- RTC driver
-Date: Mon, 11 Jan 2016 18:47:34 +0530
-Message-ID: <5693AB6E.4090700@nvidia.com>
-References: <1452177524-23192-1-git-send-email-ldewangan@nvidia.com> <1452177524-23192-6-git-send-email-ldewangan@nvidia.com> <CAJKOXPd938soaa5M0GFo5HpVCYzAS1w8j8Hko3Ja9mx47NYkEQ@mail.gmail.com> <568F8D7E.10500@nvidia.com> <20160108125117.GM6588@sirena.org.uk> <568FB3DD.4090503@nvidia.com> <20160108133648.GQ6588@sirena.org.uk> <568FBB6D.2020904@nvidia.com>
+From: Caesar Wang <caesar.upstream@gmail.com>
+Subject: Re: [PATCH v3 2/3] soc: rockchip: power-domain: Modify power domain
+ driver for rk3368
+Date: Mon, 11 Jan 2016 21:27:45 +0800
+Message-ID: <5693ADD1.4000207@gmail.com>
+References: <1452508600-3512-1-git-send-email-zhangqing@rock-chips.com>
+ <1452508600-3512-3-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <568FBB6D.2020904@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, rtc-linux@googlegroups.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, swarren@nvidia.com, treding@nvidia.com, Chaitanya Bandi <bandik@nvidia.com>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1452508600-3512-3-git-send-email-zhangqing@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: zhangqing <zhangqing@rock-chips.com>
+Cc: heiko@sntech.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, khilman@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, huangtao@rock-chips.com, zyw@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi zhangqin,
 
-On Friday 08 January 2016 07:06 PM, Laxman Dewangan wrote:
+ From my datasheet "Rockchip RK3368 TRM V2.0.pdf"
+Maybe i'm missing something.
+
+
+=E5=9C=A8 2016=E5=B9=B401=E6=9C=8811=E6=97=A5 18:36, zhangqing =E5=86=99=
+=E9=81=93:
+> This driver is modified to support RK3368 SoC.
 >
-> On Friday 08 January 2016 07:06 PM, Mark Brown wrote:
->> * PGP Signed by an unknown key
->>
->> On Fri, Jan 08, 2016 at 06:34:29PM +0530, Laxman Dewangan wrote:
->>
->>> If we get the parent device, regmap handle and interrupt number from 
->>> mfd
->>> core independent of the PMIC (MAX77620 or MAX77686), then same 
->>> driver can be
->>> used here.
->>> Two way which I can think of here:
->> Parent device is just dev->parent, you can use dev_get_regmap() to get a
->> regmap given a struct device and you can use platform resources to pass
->> the interrupts to the children from the MFD (there's some examples,
->> wm831x is one).
->>
->>
+> Signed-off-by: zhangqing <zhangqing@rock-chips.com>
+> ---
+>   drivers/soc/rockchip/pm_domains.c | 33 ++++++++++++++++++++++++++++=
++++++
+>   1 file changed, 33 insertions(+)
 >
-> I think it should work with named regmap. mfd whould init regmap with 
-> name and rtc driver should ask with same name.
+> diff --git a/drivers/soc/rockchip/pm_domains.c b/drivers/soc/rockchip=
+/pm_domains.c
+> index 534c589..6cdffb1 100644
+> --- a/drivers/soc/rockchip/pm_domains.c
+> +++ b/drivers/soc/rockchip/pm_domains.c
+> @@ -18,6 +18,7 @@
+>   #include <linux/regmap.h>
+>   #include <linux/mfd/syscon.h>
+>   #include <dt-bindings/power/rk3288-power.h>
+> +#include <dt-bindings/power/rk3368-power.h>
+>  =20
+>   struct rockchip_domain_info {
+>   	int pwr_mask;
+> @@ -75,6 +76,9 @@ struct rockchip_pmu {
+>   #define DOMAIN_RK3288(pwr, status, req)		\
+>   	DOMAIN(pwr, status, req, req, (req) + 16)
+>  =20
+> +#define DOMAIN_RK3368(pwr, status, req)		\
+> +	DOMAIN(pwr, status, req, (req) + 16, req)
+> +
+
+You should  remove it, that's seem same with the rk3288.
+
+The rk3368 datasheet:
+PMU_PMU_BUS_IDLE_ST  ----->idle_vio[24]----->ack
+PMU_PMU_BUS_IDLE_REQ ---->idle_req_vio[8]----->idle
+
+>   static bool rockchip_pmu_domain_is_idle(struct rockchip_pm_domain *=
+pd)
+>   {
+>   	struct rockchip_pmu *pmu =3D pd->pmu;
+> @@ -444,6 +448,14 @@ static const struct rockchip_domain_info rk3288_=
+pm_domains[] =3D {
+>   	[RK3288_PD_GPU]		=3D DOMAIN_RK3288(9, 9, 2),
+>   };
+>  =20
+> +static const struct rockchip_domain_info rk3368_pm_domains[] =3D {
+> +	[RK3368_PD_PERI]	=3D DOMAIN_RK3368(13, 12, 6),
+> +	[RK3368_PD_VIO]		=3D DOMAIN_RK3368(15, 14, 8),
+> +	[RK3368_PD_VIDEO]	=3D DOMAIN_RK3368(14, 13, 7),
+> +	[RK3368_PD_GPU_0]	=3D DOMAIN_RK3368(16, 15, 2),
+> +	[RK3368_PD_GPU_1]	=3D DOMAIN_RK3368(17, 16, 2),
+> +};
+> +
+>   static const struct rockchip_pmu_info rk3288_pmu =3D {
+>   	.pwr_offset =3D 0x08,
+>   	.status_offset =3D 0x0c,
+> @@ -461,11 +473,32 @@ static const struct rockchip_pmu_info rk3288_pm=
+u =3D {
+>   	.domain_info =3D rk3288_pm_domains,
+>   };
+>  =20
+> +static const struct rockchip_pmu_info rk3368_pmu =3D {
+> +	.pwr_offset =3D 0x0c,
+> +	.status_offset =3D 0x10,
+> +	.req_offset =3D 0x3c,
+> +	.idle_offset =3D 0x40,
+> +	.ack_offset =3D 0x40,
+> +
+> +	.core_pwrcnt_offset =3D 0x48,
+> +	.gpu_pwrcnt_offset =3D 0x50,
+> +
+> +	.core_power_transition_time =3D 24,
+> +	.gpu_power_transition_time =3D 24,
+> +
+> +	.num_domains =3D ARRAY_SIZE(rk3368_pm_domains),
+> +	.domain_info =3D rk3368_pm_domains,
+> +};
+> +
+>   static const struct of_device_id rockchip_pm_domain_dt_match[] =3D =
+{
+>   	{
+>   		.compatible =3D "rockchip,rk3288-power-controller",
+>   		.data =3D (void *)&rk3288_pmu,
+>   	},
+> +	{
+> +		.compatible =3D "rockchip,rk3368-power-controller",
+> +		.data =3D (void *)&rk3368_pmu,
+> +	},
+>   	{ /* sentinel */ },
+>   };
+>  =20
 >
-> I saw three drivers which looks same:
-> rtc-max77620.c (new from me) and already available rtc-max77686.c, 
-> rtc-max77802.c
->
-> Seems I can develop IP based rtc driver as rtc-max77xxx.c
-
-I came with one of issue when doing this.
-
-The RTC driver parent is not the same parent for which i2c slave address 
-get registered.
-There is two slave address from max77620, 0x3C (for general) and 0x68 
-for RTC.
-
-In max77620 mfd driver, we make dummy i2c client for 0x68 and initialize 
-regmap with this address.
-
-Now on mfd_add_devices, we pass the device for 0x3c and hence the RTC 
-driver treat the parent as the 0x3c device but actually it should be 
-0x68 to get the proper regmap.
-
-
-Two approach:
-1. If we add the option to pass parent_dev when adding cells form 
-mfd_add_devices and select the parent device based on this option then 
-it can be easily handle.
-     Add parent_dev structure in struct mfd_cell and then change the 
-parent in mfd_add_device() if cells has parent device.
-
-2. Register the RTC driver with different mfd_add_devices with dummy i2c 
-client device.
-So two times mfd_add_devices.
-
-
-IMO, approach 1 looks good to me.
-
-Any opinion?
-
-
+> --=20
+> Thanks,
+> Caesar
