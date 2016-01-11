@@ -1,37 +1,58 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] iio:adc:at91_adc8xx: introduce new atmel adc
- driver
-Date: Sun, 10 Jan 2016 20:32:39 -0600
-Message-ID: <20160111023239.GA27025@rob-hp-laptop>
-References: <1452096759-19438-1-git-send-email-ludovic.desroches@atmel.com>
- <1452096759-19438-2-git-send-email-ludovic.desroches@atmel.com>
+From: xuejiancheng <xuejiancheng@huawei.com>
+Subject: Re: [PATCH v5 4/6] ARM: debug: add hi3519 debug uart
+Date: Mon, 11 Jan 2016 10:32:52 +0800
+Message-ID: <56931454.6090300@huawei.com>
+References: <1452219400-32478-1-git-send-email-xuejiancheng@huawei.com>
+ <1452219400-32478-5-git-send-email-xuejiancheng@huawei.com>
+ <20160108150828.GM19062@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1452096759-19438-2-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160108150828.GM19062@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: mark.rutland@arm.com, suwenping@hisilicon.com, mturquette@baylibre.com, bintian.wang@huawei.com, haojian.zhuang@linaro.org, linux-clk@vger.kernel.org, pawel.moll@arm.com, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, zhangzhenxing@hisilicon.com, devicetree@vger.kernel.org, khilman@linaro.org, arnd@arndb.de, ijc+devicetree@hellion.org.uk, yanhaifeng@hisilicon.com, ml.yang@hisilicon.com, robh+dt@kernel.org, xuejiancheng@hisilicon.com, linux-arm-kernel@lists.infradead.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, gaofei@hisilicon.com, p.zabel@pengutronix.de, galak@codeaurora.org, olof@lixom.net, yanghongwei@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 06, 2016 at 05:12:35PM +0100, Ludovic Desroches wrote:
-> This driver supports the new version of the Atmel ADC device introduced
-> with the SAMA5D2 SoC family.
+Hello Russell,
+
+On 2016/1/8 23:08, Russell King - ARM Linux wrote:
+> On Fri, Jan 08, 2016 at 10:16:38AM +0800, Jiancheng Xue wrote:
+>> @@ -1449,6 +1457,7 @@ config DEBUG_UART_PHYS
+>>  	default 0xf7fc9000 if DEBUG_BERLIN_UART
+>>  	default 0xf8b00000 if DEBUG_HIX5HD2_UART
+>>  	default 0xf991e000 if DEBUG_QCOM_UARTDM
+>> +	default 0x12100000 if DEBUG_HI3519_UART
+>>  	default 0xfcb00000 if DEBUG_HI3620_UART
+>>  	default 0xfd883000 if DEBUG_ALPINE_UART0
+>>  	default 0xfe800000 if ARCH_IOP32X
 > 
-> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/iio/adc/at91_adc8xx.txt    |  28 ++
+> Please insert at the appropriate location - examination of the list
+> of defaults will show that it's sorted numerically, please keep this
+> sorted numerically.
+> 
 
-For the binding:
+OK. Thank you!
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
->  drivers/iio/adc/Kconfig                            |  11 +
->  drivers/iio/adc/Makefile                           |   1 +
->  drivers/iio/adc/at91_adc8xx.c                      | 461 +++++++++++++++++++++
->  4 files changed, 501 insertions(+)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> @@ -1529,6 +1538,7 @@ config DEBUG_UART_VIRT
+>>  	default 0xfe230000 if DEBUG_PICOXCELL_UART
+>>  	default 0xfe300000 if DEBUG_BCM_KONA_UART
+>>  	default 0xfe800000 if ARCH_IOP32X
+>> +	default 0xfef00000 if DEBUG_HI3519_UART
+>>  	default 0xfeb00000 if DEBUG_HI3620_UART || DEBUG_HIX5HD2_UART
+>>  	default 0xfeb24000 if DEBUG_RK3X_UART0
+>>  	default 0xfeb26000 if DEBUG_RK3X_UART1
+> 
+> Same for here.
+> 
+> Thanks.
+> 
