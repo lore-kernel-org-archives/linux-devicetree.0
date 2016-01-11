@@ -1,142 +1,114 @@
-From: Brijesh Singh <brijesh.singh@amd.com>
-Subject: Re: [PATCH] ata: add AMD Seattle platform driver
-Date: Mon, 11 Jan 2016 12:56:02 -0600
-Message-ID: <5693FAC2.4070003@amd.com>
-References: <1452200002-31590-1-git-send-email-brijesh.singh@amd.com>
- <10869853.plxna0HzWE@wuerfel> <5690367E.8060609@amd.com>
- <9923043.nz8DJ6lRiJ@wuerfel>
+From: Oreste Salerno <oreste.salerno@tomtom.com>
+Subject: Re: [PATCH v3 2/3] Input: cyttsp - add device tree bindings
+Date: Mon, 11 Jan 2016 20:01:33 +0100
+Message-ID: <20160111190133.GA19532@nl1lxl-107192.ttg.global>
+References: <cover.1452447124.git.oreste.salerno@tomtom.com>
+ <dd329fe3420fba4049c353a9a092ff9c45c5a252.1452447124.git.oreste.salerno@tomtom.com>
+ <20160111030156.GA18656@rob-hp-laptop>
+ <20160111175422.GA17070@nl1lxl-107192.ttg.global>
+ <20160111184550.GB22646@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <9923043.nz8DJ6lRiJ@wuerfel>
-Sender: linux-ide-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: brijesh.singh@amd.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-ide@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, tj@kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160111184550.GB22646@dtor-ws>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, fery@cypress.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-
-Thanks for all your valuable feedbacks.
-
-On 01/08/2016 04:47 PM, Arnd Bergmann wrote:
->>
->> libata-*.c implements the "Enclosure management" style led messages but also has hooks
->> to register a custom led control callback. Since Seattle platform does not support
->> the "Enclosure management" registers hence ata_port_info we are setting a ATA_FLAG_EM | ATA_FLAG_SW_ACIVITY 
->> to indicate that we can still handle the led messages by our registered callback. I see
->> that sata_highbank driver is doing something similar.
+On Mon, Jan 11, 2016 at 10:45:50AM -0800, Dmitry Torokhov wrote:
+> On Mon, Jan 11, 2016 at 06:54:23PM +0100, Oreste Salerno wrote:
+> > On Sun, Jan 10, 2016 at 09:01:56PM -0600, Rob Herring wrote:
+> > > On Sun, Jan 10, 2016 at 06:36:08PM +0100, Oreste Salerno wrote:
+> > > > Signed-off-by: Oreste Salerno <oreste.salerno@tomtom.com>
+> > > > ---
+> > > >  .../bindings/input/touchscreen/cyttsp.txt          |  82 +++++++++++++
+> > > >  drivers/input/touchscreen/cyttsp_core.c            | 134 +++++++++++++++++++--
+> > > >  include/linux/input/cyttsp.h                       |   3 +
+> > > >  3 files changed, 212 insertions(+), 7 deletions(-)
+> > > >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt b/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
+> > > > new file mode 100644
+> > > > index 0000000..2dc5c65
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
+> > > > @@ -0,0 +1,82 @@
+> > > > +* Cypress cyttsp touchscreen controller
+> > > > +
+> > > > +Required properties:
+> > > > +- compatible		: must be "cypress,cyttsp-i2c" or "cypress,cyttsp-spi"
+> > > > +- reg			: Device I2C address or SPI chip select number
+> > > > +- spi-max-frequency 	: Maximum SPI clocking speed of the device (for cyttsp-spi)
+> > > > +- interrupt-parent	: the phandle for the gpio controller
+> > > > +			  (see interrupt binding[0]).
+> > > > +- interrupts		: (gpio) interrupt to which the chip is connected
+> > > > +			  (see interrupt binding[0]).
+> > > > +- reset-gpios		: the reset gpio the chip is connected to
+> > > > +			  (see GPIO binding[1] for more details).
+> > > > +- touchscreen-size-x	: horizontal resolution of touchscreen (in pixels)
+> > > > +- touchscreen-size-y	: vertical resolution of touchscreen (in pixels)
+> > > > +- bootloader-key	: the 8-byte bootloader key that is required to switch
+> > > > +			  the chip from bootloader mode (default mode) to
+> > > > +			  application mode.
+> > > > +			  This property has to be specified as an array of 8
+> > > > +			  '/bits/ 8' values.
+> > > > +
+> > > > +Optional properties:
+> > > > +- active-distance	: the distance in pixels beyond which a touch must move
+> > > > +			  before movement is detected and reported by the device.
+> > > > +			  Valid values: 0-15.
+> > > 
+> > > Wouldn't this be the same as touchscreen-fuzz-(x|y) which is the 
+> > > replacement for the deprecated moving-threshold? 
+> > >
+> > 
+> > It is somewhat related. But I understand that the touchscreen-fuzz-(x|y) properties
+> > are meant to be used as parameters passed to input_set_abs_params(), which are used
+> > for a SW-based jitter filtering.
+> > The active-distance value instead is used to set a HW register in the chip which
+> > effectively performs the filtering in the HW.
+> > The driver is currently passing 0 as fuzz parameter to input_set_abs_params().
 > 
-> But if the LEDs are the only thing that is special, I think it makes
-> more sense to extend the generic driver. This is similar to how the
-> ahci driver knows how to deal with external PHY, clk, regulator etc
-> resources. All of those are not part of the AHCI spec, but are common
-> enough that we want to have them done in a single driver.
-> 
-> We really should not need a special driver just for handling LEDs
-> when we already deal with more complex stuff, and we have a proper
-> abstraction for LEDs in the kernel.
-> 
+> It doe snot have to and it will not if you use
+> touchscreen_parse_properties(). But you are right, fuzz is reserved for
+> software de-jittering, and it can be changed at any time from userspace
+> at input device level, but will not be communicated to the hardware. I
+> think hardware-based filtering is hardware-specific and I think
+> having a separate property is fine for it. We can still standardize on
+> name, units, etc though.
+>
 
-I took a quick look at LED class and saw ledtrig-ide-disk.c (ledtrig_ide_activity). It seems this approach was used
-in deprecate ide-disk driver for blinking the activity led. Are you thinking that we implement something similar
-in libahci to control the LED blinking? Looking at current libahci gives me feeling that LED's are considered as
- part of AHCI enclosure management implementation and hence LED triggers are not exposed outside the library. 
-If I am missing something then please correct me.
+Yes, I looked at touchscreen_parse_properties and I was planning to use it as part
+of a future improvement patch. But it makes sense to introduce it in this patch already.
  
+> >  
+> > > > +- active-interval-ms	: the minimum period in ms between consecutive
+> > > > +			  scanning/processing cycles when the chip is in active mode.
+> > > > +			  Valid values: 0-255.
+> > > > +- lowpower-interval-ms	: the minimum period in ms between consecutive
+> > > > +			  scanning/processing cycles when the chip is in low-power mode.
+> > > > +			  Valid values: 0-2550
+> > > > +- touch-timeout-ms	: minimum time in ms spent in the active power state while no
+> > > > +			  touches are detected before entering low-power mode.
+> > > > +			  Valid values: 0-2550
+> > > > +
+> > > 
+> > > Otherwise, looks fine.
+> > 
+> > I am still waiting for a review from the driver maintainer (Ferruh Yigit), but I see
+> > that he hasn't been actively reviewing patches for the cyttsp* drivers for a while.
+> > I wonder what would be the process in this case?  
 > 
-> A syscon is defined as (roughly) a group of otherwise unrelated registers
-> that happen to be part of the same physical register area because the SoC
-> designer couldn't find a proper abstraction for them. When you define
-> a register area with a single byte in it, that is not a syscon.
-> 
->>
->>                 sata@e0300000 {
->>                         compatible = "amd,seattle-ahci";
->>                         reg = <0x0 0xe0300000 0x0 0xf0000>;
->>                         interrupts = <0x0 0x163 0x4>;
->>                         amd,sgpio-ctrl = <&sgpio0>;
->>                         dma-coherent;
->>                 };
->>
-> 
-> 
-> The sata node should list "generic-ahci" so we can bind the normal
-> driver. You can leave the "amd,seattle-ahci" in addition in case we
-> ever need to know the difference to work around a bug, but it's really
-> not needed for the LED.
-> 
->> SGPIO0 (0xe0000078) and SGPIO1 (0xe000007C) does not belong to any system control register set.
->> They are meant to be used by SATA driver only and no other driver should every touch it. It almost feels
->> its just extension of the IP block but it just happened to be way out of the IP block range.
->> Other register near to 0xe000_0078 and 0xe000_007C should not be mapped by OS.
-> 
-> That is quite normal, a lot of chips have register blocks where one
-> register is meant for one device only. E.g. the clock controller may have
-> one register for controlling the clocks of the AHCI device. In the old
-> days, we would have hacks like what you did to turn on the clocks by poking
-> the register from the SATA driver, but now we abstract those things using
-> generic subsystems.
-> 
-> I think you either want a special led controller device node that
-> refers to the syscon device and exports the LEDs so they can be
-> accessed by the AHCI device, or do it in the device that contains
-> the registers.
-> 
->> But this syscon approach also brings another problem. Currently my code is pretty simple for mapping this regs
->>
->> +       plat_data->sgpio_ctrl = devm_ioremap_resource(dev,
->> +                             platform_get_resource(pdev, IORESOURCE_MEM, 1));
->> +       if (IS_ERR(plat_data->sgpio_ctrl))
->> +               return &ahci_port_info;
->> +
->>
->> The above code works on ACPI and DT cases. But if we go with syncon approach
->> then we need to handle DT and ACPI differently. Because sycon will provide
->> struct regmap instead of struct resources and also make reading/writing a 
->> bit different. I was trying to minimize the DT vs ACPI changes in the driver
->> (other than binding) hence I think defining two ranges in sata controller
->> reg property was much cleaner and it aligns with DSDT.
-> 
-> Isn't this the thing that ACPI based firmware would handle using AML anyway?
-> I don't think the server people would be too happy to add a new driver
-> each time a SATA controller does the LEDs slightly differently, and this
-> is really the kind of platform specific hack that AML is meant for.
-> 
-Sorry I am not able understand your comment, Could you please explain me what you mean by AML is meant for this kind of platform specific hack ?
+> Please address the items from my other email and I should be able to
+> pick it up.
+>
 
-"SATA0" and "SATA1" DSDT Resource template contains two resources (#0 SATA block register and #1 SGPIO control register).
+OK, I'll try to rework the patch soon and post a new version.
+Thanks a lot for your review!
 
-Device (SATA0)
-{
-	Name(_CRS, ResourceTemplate()
-	{
-		Memory32Fixed(ReadWrite, 0xE03000000, 0x000010000)
-		Interrupt(ResourceConsumer, Level, ActiveHigh Exclusive,,,) { 387}
-		Memory32Fixed(ReadWrite, 0xE00000078, 1)
-	}
-}
-
-Device (SATA1)
-{
-	Name(_CRS, ResourceTemplate()
-	{
-		Memory32Fixed(ReadWrite, 0xE0D100000, 0x000010000)
-		Interrupt(ResourceConsumer, Level, ActiveHigh Exclusive,,,) { 393}
-		Memory32Fixed(ReadWrite, 0xE0000007C, 1)
-	}
-}
-
-The generic ahci platform driver calls ahci_platform_get_resources() to get the resources.
-ahci_platform_get_resources() maps the resource #0. Since the SGPIO control resource is part of SATA device
-resource hence I could simply ioremap resource #1 for both DT and ACPI cases.  Since windows driver is making
-use of same DSDT hence its going to be tricky to modify the DSDT to create a new device entry for SATA LED.
-
-Before creating a new driver, I did attempt to extend the existing ahci_platform driver and was able to get it working but it was not looking good hence created a new driver. One of the issue was knowing when to map
-the SGPIO control register in ACPI case. ahci_platform driver does binding based on _CLS mask so I was not sure
-whether doing ioremap of resource#1 is safe and would not cause problem on non Seattle platform. If you want then
-i can send you patch for quick comment and see if that make sense instead of adding a new driver.
-
- 
-> 	Arnd
+> Thanks.
 > 
+> -- 
+> Dmitry
