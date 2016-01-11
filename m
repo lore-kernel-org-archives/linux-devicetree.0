@@ -1,32 +1,71 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] rcar_jpu: Add R-Car Gen2 Fallback Compatibility String
-Date: Sun, 10 Jan 2016 20:56:37 -0600
-Message-ID: <20160111025637.GA17825@rob-hp-laptop>
-References: <1452478400-4267-1-git-send-email-horms+renesas@verge.net.au>
+Subject: Re: [PATCH v3 2/3] Input: cyttsp - add device tree bindings
+Date: Sun, 10 Jan 2016 21:01:56 -0600
+Message-ID: <20160111030156.GA18656@rob-hp-laptop>
+References: <cover.1452447124.git.oreste.salerno@tomtom.com>
+ <dd329fe3420fba4049c353a9a092ff9c45c5a252.1452447124.git.oreste.salerno@tomtom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1452478400-4267-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-media-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>
+In-Reply-To: <dd329fe3420fba4049c353a9a092ff9c45c5a252.1452447124.git.oreste.salerno@tomtom.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Oreste Salerno <oreste.salerno@tomtom.com>
+Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, fery@cypress.com, dmitry.torokhov@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 11, 2016 at 11:13:20AM +0900, Simon Horman wrote:
-> Add fallback compatibility string.
-> This is in keeping with the fallback scheme being adopted wherever
-> appropriate for drivers for Renesas SoCs.
-> 
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> 
+On Sun, Jan 10, 2016 at 06:36:08PM +0100, Oreste Salerno wrote:
+> Signed-off-by: Oreste Salerno <oreste.salerno@tomtom.com>
 > ---
-> v2
-> * Make fallback compat string for R-Car Gen2 rather than all renesas
->   hardware: that seems too generic
-> ---
->  Documentation/devicetree/bindings/media/renesas,jpu.txt | 13 +++++++------
->  drivers/media/platform/rcar_jpu.c                       |  1 +
->  2 files changed, 8 insertions(+), 6 deletions(-)
+>  .../bindings/input/touchscreen/cyttsp.txt          |  82 +++++++++++++
+>  drivers/input/touchscreen/cyttsp_core.c            | 134 +++++++++++++++++++--
+>  include/linux/input/cyttsp.h                       |   3 +
+>  3 files changed, 212 insertions(+), 7 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt b/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
+> new file mode 100644
+> index 0000000..2dc5c65
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
+> @@ -0,0 +1,82 @@
+> +* Cypress cyttsp touchscreen controller
+> +
+> +Required properties:
+> +- compatible		: must be "cypress,cyttsp-i2c" or "cypress,cyttsp-spi"
+> +- reg			: Device I2C address or SPI chip select number
+> +- spi-max-frequency 	: Maximum SPI clocking speed of the device (for cyttsp-spi)
+> +- interrupt-parent	: the phandle for the gpio controller
+> +			  (see interrupt binding[0]).
+> +- interrupts		: (gpio) interrupt to which the chip is connected
+> +			  (see interrupt binding[0]).
+> +- reset-gpios		: the reset gpio the chip is connected to
+> +			  (see GPIO binding[1] for more details).
+> +- touchscreen-size-x	: horizontal resolution of touchscreen (in pixels)
+> +- touchscreen-size-y	: vertical resolution of touchscreen (in pixels)
+> +- bootloader-key	: the 8-byte bootloader key that is required to switch
+> +			  the chip from bootloader mode (default mode) to
+> +			  application mode.
+> +			  This property has to be specified as an array of 8
+> +			  '/bits/ 8' values.
+> +
+> +Optional properties:
+> +- active-distance	: the distance in pixels beyond which a touch must move
+> +			  before movement is detected and reported by the device.
+> +			  Valid values: 0-15.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Wouldn't this be the same as touchscreen-fuzz-(x|y) which is the 
+replacement for the deprecated moving-threshold? 
+
+> +- active-interval-ms	: the minimum period in ms between consecutive
+> +			  scanning/processing cycles when the chip is in active mode.
+> +			  Valid values: 0-255.
+> +- lowpower-interval-ms	: the minimum period in ms between consecutive
+> +			  scanning/processing cycles when the chip is in low-power mode.
+> +			  Valid values: 0-2550
+> +- touch-timeout-ms	: minimum time in ms spent in the active power state while no
+> +			  touches are detected before entering low-power mode.
+> +			  Valid values: 0-2550
+> +
+
+Otherwise, looks fine.
