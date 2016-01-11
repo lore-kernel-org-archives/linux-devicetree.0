@@ -1,124 +1,179 @@
-From: John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH 01/23] devicetree: bindings: hisi_sas: add v2 HW bindings
-Date: Mon, 11 Jan 2016 14:00:58 +0000
-Message-ID: <5693B59A.6000705@huawei.com>
-References: <1452262542-64589-1-git-send-email-john.garry@huawei.com>
- <1452262542-64589-2-git-send-email-john.garry@huawei.com>
- <20160108145256.GG3097@leverpostej> <568FD281.4050207@huawei.com>
- <20160108151934.GA32692@leverpostej> <568FD70D.1090303@huawei.com>
- <20160108164910.GD32692@leverpostej>
+From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Subject: Re: [PATCH linux-next v2 03/14] mtd: spi-nor: select op codes and SPI
+ NOR protocols by manufacturer
+Date: Mon, 11 Jan 2016 15:30:32 +0100
+Message-ID: <5693BC88.6070907@atmel.com>
+References: <cover.1452268345.git.cyrille.pitchen@atmel.com>
+ <fd5ca97795c35b3df5ffee95075e2e03a70c7e48.1452268345.git.cyrille.pitchen@atmel.com>
+ <20160111112421.5919b531@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <20160108164910.GD32692@leverpostej>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: JBottomley@odin.com, martin.petersen@oracle.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linuxarm@huawei.com, zhangfei.gao@linaro.org, xuwei5@hisilicon.com, john.garry2@mail.dcu.ie, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, arnd@arndb.de, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160111112421.5919b531@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: computersforpeace@gmail.com, linux-mtd@lists.infradead.org, nicolas.ferre@atmel.com, marex@denx.de, vigneshr@ti.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
->> This is a specific issue for hip06 chipset.
->
-> Ok. So is this:
->
-> * a bug within the SAS controller in hip06, or:
->
-> * a requirement/bug of an endpoint attached to the controller, or:
->
-> * a requirement/bug of some interconnect between the controller and
->    endpoint, or:
->
-> * some other integration bug?
+Hi Boris,
+
+Le 11/01/2016 11:24, Boris Brezillon a =E9crit :
+> Hi,
+>=20
+> On Fri, 8 Jan 2016 17:02:15 +0100
+> Cyrille Pitchen <cyrille.pitchen@atmel.com> wrote:
+>=20
+>> This is a transitional patch to prepare the split by Manufacturer of=
+ the
+>> support of Single/Dual/Quad SPI modes.
+>>
+>> Indeed every QSPI NOR manufacturer (Spansion, Micron, Macronix, Winb=
+ond)
+>> supports Dual or Quad SPI modes on its way. Especially the Fast Read=
+ op
+>> code and the SPI NOR protocols to use are not quite the same dependi=
+ng on
+>> the manufacturer.
+>>
+>> For instance Quad commands can use either the SPI 1-1-4, 1-4-4 or 4-=
+4-4
+>> protocol.
+>>
+>> This is why this patch will be completed by fixes for each manufactu=
+rer.
+>>
+>> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+>> ---
+>>  drivers/mtd/spi-nor/spi-nor.c | 110 +++++++++++++++++++++++++++++++=
++----------
+>>  include/linux/mtd/spi-nor.h   |  12 +++--
+>>  2 files changed, 92 insertions(+), 30 deletions(-)
+>>
+>> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi=
+-nor.c
+>> index 8967319ea7da..8793cebbe5a9 100644
+>> --- a/drivers/mtd/spi-nor/spi-nor.c
+>> +++ b/drivers/mtd/spi-nor/spi-nor.c
+>> @@ -1180,17 +1180,61 @@ static int set_quad_mode(struct spi_nor *nor=
+, const struct flash_info *info)
+>>  			dev_err(nor->dev, "Macronix quad-read not enabled\n");
+>>  			return -EINVAL;
+>>  		}
+>> -		return status;
+>> +		/* Check whether Macronix QPI mode is enabled. */
+>> +		if (nor->read_proto !=3D SNOR_PROTO_4_4_4)
+>> +			nor->read_proto =3D SNOR_PROTO_1_1_4;
+>> +		break;
+>> +
+>>  	case SNOR_MFR_MICRON:
+>> -		return 0;
+>> -	default:
+>> +		/* Check whether Micron Quad mode is enabled. */
+>> +		if (nor->read_proto !=3D SNOR_PROTO_4_4_4)
+>> +			nor->read_proto =3D SNOR_PROTO_1_1_4;
+>> +		break;
+>> +
+>> +	case SNOR_MFR_SPANSION:
+>=20
+> The following comment is not only related to your changes, but after
+> looking at the spi_nor_scan() function and a few other functions in t=
+he
+> core, I see a lot of vendor specific initialization.
+>=20
+> Would it make sense to somehow set a default configuration in
+> spi_nor_scan() and then overload this default config using a
+> per-manufacturer ->init() method. Something like that.
+>=20
+> struct spi_nor_manufacturer {
+> 	int (*init)(struct spi_nor *nor, const struct flash_info *fi);
+> }
+>=20
+> static const struct spi_nor_manufacturer manufacturers[] =3D {
+> 	[<manuf-id>] =3D {
+> 		.init =3D <manuf-init-callback>
+> 	},
+> };
+>=20
+> Of course you could add other methods if you think this differentiati=
+on
+> is needed after the initialization step.
+>=20
+
+It might be a good idea. I don't mind changing if needed. Brian, could =
+you
+please comment on this point?
+
+>>  		status =3D spansion_quad_enable(nor);
+>>  		if (status) {
+>>  			dev_err(nor->dev, "Spansion quad-read not enabled\n");
+>>  			return -EINVAL;
+>>  		}
+>> -		return status;
+>> +		nor->read_proto =3D SNOR_PROTO_1_1_4;
+>> +		break;
+>> +
+>> +	default:
+>> +		return -EINVAL;
+>>  	}
+>> +
+>> +	nor->read_opcode =3D SPINOR_OP_READ_1_1_4;
+>> +	return 0;
+>> +}
+>> +
+>> +static int set_dual_mode(struct spi_nor *nor, const struct flash_in=
+fo *info)
+>> +{
+>> +	switch (JEDEC_MFR(info)) {
+>> +	case SNOR_MFR_MICRON:
+>> +		/* Check whether Micron Dual mode is enabled. */
+>> +		if (nor->read_proto !=3D SNOR_PROTO_2_2_2)
+>> +			nor->read_proto =3D SNOR_PROTO_1_1_2;
+>> +		break;
+>> +
+>> +	default:
+>> +		nor->read_proto =3D SNOR_PROTO_1_1_2;
+>> +		break;
+>> +	}
+>> +
+>> +	nor->read_opcode =3D SPINOR_OP_READ_1_1_2;
+>> +	return 0;
+>> +}
+>> +
+>> +static int set_single_mode(struct spi_nor *nor, const struct flash_=
+info *info)
+>> +{
+>> +	switch (JEDEC_MFR(info)) {
+>> +	default:
+>> +		nor->read_proto =3D SNOR_PROTO_1_1_1;
+>> +		break;
+>> +	}
+>=20
+> You can just put
+>=20
+> 	nor->read_proto =3D SNOR_PROTO_1_1_1;
+>=20
+> until you have a manufacturer specific case.
 >
 
-This is related to how the SAS controller IP was integrated into the 
-chip. It is related to how many bursts are permitted for this controller 
-on the AXI bus.
+I did it on purpose: it is a transitional patch which was written only =
+to ease
+the split of the QSPI support by manufacturer. So the diff producing th=
+e next
+patch of this series is a little bit more easy to review: it is just a =
+new
+case in a switch statement instead of replacing a 'if' statement by a '=
+switch'
+one.
+Also it removes some (not all) constraints on the order the manufacture=
+r
+specific patches should be applied, which makes it easier to remove som=
+e of
+them from the series if needed: the rebase job will be simplified.
+Ideally, all manufacturer patches should be totally independent.
 
-> Please describe what the issue is that you're trying to work around, not
-> only your solution to it.
->
->> There is a bug in the HW on hip06 where controller #1 has to set to 2
->> registers to non-default values to limit "am-max-transmissions".
->
-> I got that. However, I have no idea what "am-max-transmissions" is, no
-> idea why you need to limit it (hopefully you can describe that a little
-> better above), nor what the semantics are for "limit".
->
+[...]
 
-So am-max-transmissions is a SW configurable feature of the controller. 
- From a high-level, it means how many commands we can send in parallel 
-to the end device(s) without waiting for a response. It is dependent on 
-the chip bus design.
+Best regards,
 
-> The description of the property is an imperative, which reads like a
-> description of a specific driver behaviour rather than a property of the
-> hardware that leads to that behaviour being necessary. That's a warning
-> sign that the property is ill-defined, and we may encounter problems in
-> future due to changes in Linux.
->
-
-Agreed.
-
-> Without knowing _why_ it's necessary to limit this, it's not possible to
-> know if the property is both necessary and sufficient to solve the
-> problem such that it doesn't rear its ugly head in future.
->
-> For example, if this is simply one way to work around a hip06-specific
-> integration bug that we cannot imagine occurring elsewhere, it may be
-> better to instead key off of a platform-specific compatible string for
-> the v2 SAS controller in hip06. That gives us more freedom to apply
-> different workarounds if we have to.
->
-> I see that the presence of this property will cause the driver to writes
-> hard-coded values two two registers. Not knowing the format of those
-> registers, their default values, nor how they respond to writes, I can't
-> tell:
->
-
-As for writing hardcoded values, by default the related registers will 
-hold 0x40, which means we can have upto 64 outstanding requests on this 
-controller. Due to controller #1 integration restrictions, we can only 
-issue 32 requests.
-
-> * If the writes have other effects.
->
-> * If the limit is a single bit being flipped (i.e. this is a boolean in
->    hardware too).
->
-> * If the limit is some arbitrary chosen value which is not described in
->    the property or the binding, nor what that value is. If we encounter a
->    similar bug requiring a different bound in future, it may be
->    problematic to have chosen an arbitrary fixed value, and it may make
->    more sense to describe the value in the DT.
->
-> So, please:
->
-> * Update the DT property description to describe the specific HW issue
->    that needs to be worked around, with a full description in the commit
->    message.
->
-> * Add a comment to the driver to explain what the effect of the register
->    writes is intended to be, i.e. what value am max transmissions is
->    being set to, and why that value isn't arbitrary.
->
-
-As I understand, there are no more restictions/special requirements for 
-controller #1. This v2 controller IP will be used in other chips, so we 
-may have this issue again - I am seeking information from HW people. As 
-such, it may be useful to know this info before decided on how this is 
-decribed in the DT.
-
->> This would not be a common SAS/SCSI controller property and is
->> specific to our HW.
->
-> Ok.
->
-> Thanks,
-> Mark.
->
-
-Cheers,
-John
-
-
+Cyrille
