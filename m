@@ -1,72 +1,51 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 2/2] mfd: arizona: Update binding docs for selecting
- mono/stereo outputs
-Date: Mon, 11 Jan 2016 07:32:10 +0000
-Message-ID: <20160111073210.GZ3331@x1>
-References: <1450088352-10470-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1450088352-10470-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 0/5] mfd: tps65912: Driver rewrite with DT support
+Date: Mon, 11 Jan 2016 07:38:11 +0000
+Message-ID: <20160111073811.GA3331@x1>
+References: <1447869580-10416-1-git-send-email-afd@ti.com>
+ <20151124162624.GI807@x1>
+ <20151204120240.GW26072@sirena.org.uk>
+ <5665E4F7.1070707@ti.com>
+ <20151208191657.GA5727@sirena.org.uk>
+ <CACRpkdZU3RrXmPr1fDzCMumhQ8nWEf126iC1rDu=xiLFj7DU+A@mail.gmail.com>
+ <56703CCC.5060608@ti.com>
+ <CACRpkdYxBkuRcE6_VvChO=kKHTd0TS1kKAutL=8hFA4-15h3nA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1450088352-10470-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, robh@kernel.org
+In-Reply-To: <CACRpkdYxBkuRcE6_VvChO=kKHTd0TS1kKAutL=8hFA4-15h3nA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 14 Dec 2015, Charles Keepax wrote:
+On Tue, 22 Dec 2015, Linus Walleij wrote:
 
-> Update the device tree binding documentation to include the wlf,out-m=
-ono
-> property that is used to specify whether each output is a mono or ste=
-reo
-> output.
+> On Tue, Dec 15, 2015 at 5:16 PM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
 >=20
-> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> ---
+> > Is there anything I can do to help this along? This series
+> > and the tps65086 series have been blocked for months on
+> > trivial issues. (Not sure why the tps65086 hasn't been taken,
+> > it doesn't have this problem, I'd be OK with this getting
+> > stalled for a bit longer if someone could look at the other
+> > one)
 >=20
-> Changes since v1:
->  - Clarify which outputs correspond to which entry in the out-mono li=
-st.
->=20
-> Thanks,
-> Charles
->=20
->  Documentation/devicetree/bindings/mfd/arizona.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
+> Lee can you merge the core driver if it's OK? Then we have
+> includes etc in place to merge subdrivers for the next merge
+> window.
 
-Applied, thanks.
-
-> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Docu=
-mentation/devicetree/bindings/mfd/arizona.txt
-> index 2b6ccdb..069e31d 100644
-> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
-> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-> @@ -65,6 +65,12 @@ Optional properties:
->      that have not been specified are set to 0 by default. Entries ar=
-e:
->      <IN1, IN2, IN3, IN4> (wm5102, wm5110, wm8280, wm8997)
->      <IN1A, IN2A, IN1B, IN2B> (wm8998, wm1814)
-> +  - wlf,out-mono : A list of boolean values indicating whether each =
-output is
-> +    mono or stereo. Position within the list indicates the output af=
-fected
-> +    (eg. First entry in the list corresponds to output 1). A non-zer=
-o value
-> +    indicates a mono output. If present, the number of values should=
- be less
-> +    than or equal to the number of outputs, if less values are suppl=
-ied the
-> +    additional outputs will be treated as stereo.
-> =20
->    - wlf,dmic-ref : DMIC reference voltage source for each input, can=
- be
->      selected from either MICVDD or one of the MICBIAS's, defines
+It's made more complex than that, due to patch 2 removing code from
+all subsystems.  We probably need to take this in in its entirety, no?
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
