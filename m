@@ -1,102 +1,211 @@
-From: Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 3/6] QE: Add uqe_serial document to bindings
-Date: Mon, 11 Jan 2016 08:19:10 +0000
-Message-ID: <AM3PR04MB11854D17FFE6F43B19B4EDCE91C90@AM3PR04MB1185.eurprd04.prod.outlook.com>
-References: <1452219494-31947-1-git-send-email-qiang.zhao@nxp.com>
- <1452219494-31947-3-git-send-email-qiang.zhao@nxp.com>
- <20160108201225.GA9813@rob-hp-laptop>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 1/1] USB: core: let USB device know device node
+Date: Mon, 11 Jan 2016 16:38:55 +0800
+Message-ID: <1452501535-8580-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160108201225.GA9813@rob-hp-laptop>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org" <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 09, 2016 at 04:12AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> -----Original Message-----
-> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Saturday, January 09, 2016 4:12 AM
-> To: Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-
-> dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org; oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org
-> Subject: Re: [PATCH 3/6] QE: Add uqe_serial document to bindings
-> 
-> On Fri, Jan 08, 2016 at 10:18:11AM +0800, Zhao Qiang wrote:
-> > Add uqe_serial document to
-> > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
-> >
-> > Signed-off-by: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-> > ---
-> >  .../bindings/powerpc/fsl/cpm_qe/uqe_serial.txt       | 20
-> ++++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
-> > b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
-> > new file mode 100644
-> > index 0000000..e677599
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.
-> > +++ txt
-> > @@ -0,0 +1,20 @@
-> > +* Serial
-> > +
-> > +Currently defined compatibles:
-> > +- ucc_uart
-> > +
-> > +Properties for ucc_uart:
-> > +device_type : which type the device is
-> 
-> Drop this please.
+Although most of USB devices are hot-plug's, there are still some devices
+are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
+If these kinds of USB devices are multiple functions, and they can supply
+other interfaces like i2c, gpios for other devices, we may need to
+descirbe these at device tree.
 
-Yes, I will drop it in next version.
+In this commit, it uses "reg" in dts as port number to match the port
+number decided by USB core, if they are the same, then the device node
+is for the device we are creating for USB core.
 
-> 
-> > +port-number : port number of UCC-UART
-> 
-> Use aliases instead.
+Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+Changes from RFC:
+- Fix the error address for binding doc, and add compatible for binding doc
+- Change get child node API from "usb_of_find_node" to
+  "usb_of_get_child_node"
+- Delete unecessary header files
+- One typo
 
-I don't understand, can you explain more?
+ .../devicetree/bindings/usb/usb-device.txt         | 17 ++++++++
+ drivers/usb/core/Makefile                          |  2 +-
+ drivers/usb/core/of.c                              | 47 ++++++++++++++++++++++
+ drivers/usb/core/usb.c                             |  8 +++-
+ include/linux/usb.h                                |  2 +
+ include/linux/usb/of.h                             |  7 ++++
+ 6 files changed, 80 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/usb-device.txt
+ create mode 100644 drivers/usb/core/of.c
 
-> 
-> > +rx-clock-name : which clock QE use for RX tx-clock-name : which clock
-> > +QE use for TX
-> 
-> These should use the clock binding.
+diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+new file mode 100644
+index 0000000..0468834
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+@@ -0,0 +1,17 @@
++Generic USB Device Properties
++
++Usually, we only use device tree for hard wired USB device.
++The reference binding doc is from:
++http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
++
++Required properties:
++- compatible: usbVID,PID
++- reg: the port number which this device is connecting to.
++
++
++Example:
++
++hub: genesys@01 {
++	compatible = "usb05e3,0608";
++	reg = <0x01>;
++};
+diff --git a/drivers/usb/core/Makefile b/drivers/usb/core/Makefile
+index 2f6f932..9780877 100644
+--- a/drivers/usb/core/Makefile
++++ b/drivers/usb/core/Makefile
+@@ -5,7 +5,7 @@
+ usbcore-y := usb.o hub.o hcd.o urb.o message.o driver.o
+ usbcore-y += config.o file.o buffer.o sysfs.o endpoint.o
+ usbcore-y += devio.o notify.o generic.o quirks.o devices.o
+-usbcore-y += port.o
++usbcore-y += port.o of.o
+ 
+ usbcore-$(CONFIG_PCI)		+= hcd-pci.o
+ usbcore-$(CONFIG_ACPI)		+= usb-acpi.o
+diff --git a/drivers/usb/core/of.c b/drivers/usb/core/of.c
+new file mode 100644
+index 0000000..2289700
+--- /dev/null
++++ b/drivers/usb/core/of.c
+@@ -0,0 +1,47 @@
++/*
++ * of.c		The helpers for hcd device tree support
++ *
++ * Copyright (C) 2016 Freescale Semiconductor, Inc.
++ * Author: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
++ *
++ * This program is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2  of
++ * the License as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <linux/of.h>
++
++/**
++ * usb_of_get_child_node - Find the device node match port number
++ * @parent: the parent device node
++ * @portnum: the port number which device is connecting
++ *
++ * Find the node from device tree according to its port number.
++ *
++ * Return: On success, a pointer to the device node, %NULL on failure.
++ */
++struct device_node *usb_of_get_child_node(struct device_node *parent,
++					int portnum)
++{
++	struct device_node *node;
++	u32 port;
++
++	for_each_child_of_node(parent, node) {
++		if (!of_property_read_u32(node, "reg", &port)) {
++			if (port == portnum)
++				return node;
++		}
++	}
++
++	return NULL;
++}
++EXPORT_SYMBOL_GPL(usb_of_get_child_node);
++
+diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
+index 77e4c9b..64c094e 100644
+--- a/drivers/usb/core/usb.c
++++ b/drivers/usb/core/usb.c
+@@ -36,6 +36,7 @@
+ #include <linux/mutex.h>
+ #include <linux/workqueue.h>
+ #include <linux/debugfs.h>
++#include <linux/usb/of.h>
+ 
+ #include <asm/io.h>
+ #include <linux/scatterlist.h>
+@@ -502,11 +503,14 @@ struct usb_device *usb_alloc_dev(struct usb_device *parent,
+ 	dev->connect_time = jiffies;
+ 	dev->active_duration = -jiffies;
+ #endif
+-	if (root_hub)	/* Root hub always ok [and always wired] */
++	if (root_hub) {	/* Root hub always ok [and always wired] */
+ 		dev->authorized = 1;
+-	else {
++		dev->of_node = bus->controller->of_node;
++	} else {
+ 		dev->authorized = !!HCD_DEV_AUTHORIZED(usb_hcd);
+ 		dev->wusb = usb_bus_is_wusb(bus) ? 1 : 0;
++		dev->dev.of_node = usb_of_get_child_node
++			(parent->of_node, dev->portnum);
+ 	}
+ 	return dev;
+ }
+diff --git a/include/linux/usb.h b/include/linux/usb.h
+index 89533ba..101b943 100644
+--- a/include/linux/usb.h
++++ b/include/linux/usb.h
+@@ -25,6 +25,7 @@
+ struct usb_device;
+ struct usb_driver;
+ struct wusb_dev;
++struct devcie_node;
+ 
+ /*-------------------------------------------------------------------------*/
+ 
+@@ -616,6 +617,7 @@ struct usb_device {
+ 	struct usb3_lpm_parameters u1_params;
+ 	struct usb3_lpm_parameters u2_params;
+ 	unsigned lpm_disable_count;
++	struct device_node	*of_node; /* associated device tree node */
+ };
+ #define	to_usb_device(d) container_of(d, struct usb_device, dev)
+ 
+diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
+index 974bce9..99d0377 100644
+--- a/include/linux/usb/of.h
++++ b/include/linux/usb/of.h
+@@ -16,6 +16,8 @@ enum usb_dr_mode of_usb_get_dr_mode_by_phy(struct device_node *phy_np);
+ bool of_usb_host_tpl_support(struct device_node *np);
+ int of_usb_update_otg_caps(struct device_node *np,
+ 			struct usb_otg_caps *otg_caps);
++struct device_node *usb_of_get_child_node(struct device_node *parent,
++			int portnum);
+ #else
+ static inline enum usb_dr_mode
+ of_usb_get_dr_mode_by_phy(struct device_node *phy_np)
+@@ -31,6 +33,11 @@ static inline int of_usb_update_otg_caps(struct device_node *np,
+ {
+ 	return 0;
+ }
++struct inline device_node * usb_of_get_child_node(struct device_node *parent,
++				int portnum)
++{
++	return NULL;
++}
+ #endif
+ 
+ #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_USB_SUPPORT)
+-- 
+1.9.1
 
-This property means which clock source the UCC use, 
-the QE just use this property to route UCC clock to clock source.
-The clock source maybe either internal or outside(from clock input pin).
-So clock binding is not apply in this case.
-
-> 
-> > +
-> > +Example:
-> > +
-> > +	serial: ucc@2200 {
-> > +		device_type = "serial";
-> > +		compatible = "ucc_uart";
-> > +		port-number = <1>;
-> > +		rx-clock-name = "brg2";
-> > +		tx-clock-name = "brg2";
-> > +	};
-> > --
-> > 2.1.0.27.g96db324
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree"
-> > in the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org More majordomo
-> > info at  http://vger.kernel.org/majordomo-info.html
-Best Regards
-Zhao Qiang
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
