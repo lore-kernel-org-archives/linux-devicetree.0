@@ -1,306 +1,120 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V12 6/7] dma: qcom_hidma: add debugfs hooks
-Date: Mon, 11 Jan 2016 09:45:46 -0500
-Message-ID: <1452523550-8920-7-git-send-email-okaya@codeaurora.org>
+Subject: [PATCH V12 2/7] dma: hidma: Add Device Tree support
+Date: Mon, 11 Jan 2016 09:45:42 -0500
+Message-ID: <1452523550-8920-3-git-send-email-okaya@codeaurora.org>
 References: <1452523550-8920-1-git-send-email-okaya@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1452523550-8920-1-git-send-email-okaya@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: dmaengine@vger.kernel.org, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, linux-kernel@vger.kernel.org
+Cc: arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Sinan Kaya <okaya@codeaurora.org>, agross@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add debugfs hooks for debugging the execution behavior of the DMA
-channel. The debugfs hooks get initialized by the probe function and
-uninitialized by the remove function.
-
-A stats file is created in debugfs. The stats file will show the
-information about each HIDMA channel as well as each asynchronous job
-queued and completed at a given time.
+Add documentation for the Qualcomm Technologies HIDMA driver.
 
 Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/dma/qcom/Makefile    |   2 +-
- drivers/dma/qcom/hidma.c     |   3 +
- drivers/dma/qcom/hidma.h     |   2 +
- drivers/dma/qcom/hidma_dbg.c | 219 +++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 225 insertions(+), 1 deletion(-)
- create mode 100644 drivers/dma/qcom/hidma_dbg.c
+ .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    | 79 ++++++++++++++++++++++
+ 1 file changed, 79 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
 
-diff --git a/drivers/dma/qcom/Makefile b/drivers/dma/qcom/Makefile
-index 6bf9267..4bfc38b 100644
---- a/drivers/dma/qcom/Makefile
-+++ b/drivers/dma/qcom/Makefile
-@@ -2,4 +2,4 @@ obj-$(CONFIG_QCOM_BAM_DMA) += bam_dma.o
- obj-$(CONFIG_QCOM_HIDMA_MGMT) += hdma_mgmt.o
- hdma_mgmt-objs	 := hidma_mgmt.o hidma_mgmt_sys.o
- obj-$(CONFIG_QCOM_HIDMA) +=  hdma.o
--hdma-objs        := hidma_ll.o hidma.o
-+hdma-objs        := hidma_ll.o hidma.o hidma_dbg.o
-diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
-index f8960f1..833db9e 100644
---- a/drivers/dma/qcom/hidma.c
-+++ b/drivers/dma/qcom/hidma.c
-@@ -681,6 +681,7 @@ static int hidma_probe(struct platform_device *pdev)
- 
- 	dmadev->irq = chirq;
- 	tasklet_init(&dmadev->task, hidma_issue_task, (unsigned long)dmadev);
-+	hidma_debug_init(dmadev);
- 	dev_info(&pdev->dev, "HI-DMA engine driver registration complete\n");
- 	platform_set_drvdata(pdev, dmadev);
- 	pm_runtime_mark_last_busy(dmadev->ddev.dev);
-@@ -689,6 +690,7 @@ static int hidma_probe(struct platform_device *pdev)
- 	return 0;
- 
- uninit:
-+	hidma_debug_uninit(dmadev);
- 	hidma_ll_uninit(dmadev->lldev);
- dmafree:
- 	if (dmadev)
-@@ -706,6 +708,7 @@ static int hidma_remove(struct platform_device *pdev)
- 	pm_runtime_get_sync(dmadev->ddev.dev);
- 	dma_async_device_unregister(&dmadev->ddev);
- 	devm_free_irq(dmadev->ddev.dev, dmadev->irq, dmadev->lldev);
-+	hidma_debug_uninit(dmadev);
- 	hidma_ll_uninit(dmadev->lldev);
- 	hidma_free(dmadev);
- 
-diff --git a/drivers/dma/qcom/hidma.h b/drivers/dma/qcom/hidma.h
-index 1e09d7c..c6b3ae0 100644
---- a/drivers/dma/qcom/hidma.h
-+++ b/drivers/dma/qcom/hidma.h
-@@ -157,4 +157,6 @@ int hidma_ll_uninit(struct hidma_lldev *llhndl);
- irqreturn_t hidma_ll_inthandler(int irq, void *arg);
- void hidma_cleanup_pending_tre(struct hidma_lldev *llhndl, u8 err_info,
- 				u8 err_code);
-+int hidma_debug_init(struct hidma_dev *dmadev);
-+void hidma_debug_uninit(struct hidma_dev *dmadev);
- #endif
-diff --git a/drivers/dma/qcom/hidma_dbg.c b/drivers/dma/qcom/hidma_dbg.c
+diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
 new file mode 100644
-index 0000000..fe35002
+index 0000000..0e6ed1f
 --- /dev/null
-+++ b/drivers/dma/qcom/hidma_dbg.c
-@@ -0,0 +1,219 @@
-+/*
-+ * Qualcomm Technologies HIDMA debug file
-+ *
-+ * Copyright (c) 2015, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
++++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+@@ -0,0 +1,79 @@
++Qualcomm Technologies HIDMA Management interface
 +
-+#include <linux/debugfs.h>
-+#include <linux/device.h>
-+#include <linux/list.h>
-+#include <linux/pm_runtime.h>
++Qualcomm Technologies HIDMA is a high speed DMA device. It only supports
++memcpy and memset capabilities. It has been designed for virtualized
++environments.
 +
-+#include "hidma.h"
++Each HIDMA HW instance consists of multiple DMA channels. These channels
++share the same bandwidth. The bandwidth utilization can be parititioned
++among channels based on the priority and weight assignments.
 +
-+static void hidma_ll_chstats(struct seq_file *s, void *llhndl, u32 tre_ch)
-+{
-+	struct hidma_lldev *lldev = llhndl;
-+	struct hidma_tre *tre;
-+	u32 length;
-+	dma_addr_t src_start;
-+	dma_addr_t dest_start;
-+	u32 *tre_local;
++There are only two priority levels and 15 weigh assignments possible.
 +
-+	if (tre_ch >= lldev->nr_tres) {
-+		dev_err(lldev->dev, "invalid TRE number in chstats:%d", tre_ch);
-+		return;
-+	}
-+	tre = &lldev->trepool[tre_ch];
-+	seq_printf(s, "------Channel %d -----\n", tre_ch);
-+	seq_printf(s, "allocated=%d\n", atomic_read(&tre->allocated));
-+	seq_printf(s, "queued = 0x%x\n", tre->queued);
-+	seq_printf(s, "err_info = 0x%x\n",
-+		   lldev->tx_status_list[tre->idx].err_info);
-+	seq_printf(s, "err_code = 0x%x\n",
-+		   lldev->tx_status_list[tre->idx].err_code);
-+	seq_printf(s, "status = 0x%x\n", tre->status);
-+	seq_printf(s, "idx = 0x%x\n", tre->idx);
-+	seq_printf(s, "dma_sig = 0x%x\n", tre->dma_sig);
-+	seq_printf(s, "dev_name=%s\n", tre->dev_name);
-+	seq_printf(s, "callback=%p\n", tre->callback);
-+	seq_printf(s, "data=%p\n", tre->data);
-+	seq_printf(s, "tre_index = 0x%x\n", tre->tre_index);
++Other parameters here determine how much of the system bus this HIDMA
++instance can use like maximum read/write request and and number of bytes to
++read/write in a single burst.
 +
-+	tre_local = &tre->tre_local[0];
-+	src_start = tre_local[TRE_SRC_LOW_IDX];
-+	src_start = ((u64) (tre_local[TRE_SRC_HI_IDX]) << 32) + src_start;
-+	dest_start = tre_local[TRE_DEST_LOW_IDX];
-+	dest_start += ((u64) (tre_local[TRE_DEST_HI_IDX]) << 32);
-+	length = tre_local[TRE_LEN_IDX];
++Main node required properties:
++- compatible: "qcom,hidma-mgmt-1.0";
++- reg: Address range for DMA device
++- dma-channels: Number of channels supported by this DMA controller.
++- max-write-burst-bytes: Maximum write burst in bytes. A memcpy requested is
++  fragmented to multiples of this amount.
++- max-read-burst-bytes: Maximum read burst in bytes. A memcpy request is
++  fragmented to multiples of this amount.
++- max-write-transactions: Maximum write transactions to perform in a burst
++- max-read-transactions: Maximum read transactions to perform in a burst
++- channel-reset-timeout-cycles: Channel reset timeout in cycles for this SOC.
 +
-+	seq_printf(s, "src=%pap\n", &src_start);
-+	seq_printf(s, "dest=%pap\n", &dest_start);
-+	seq_printf(s, "length = 0x%x\n", length);
-+}
++Sub-nodes:
 +
-+static void hidma_ll_devstats(struct seq_file *s, void *llhndl)
-+{
-+	struct hidma_lldev *lldev = llhndl;
++HIDMA has one or more DMA channels that are used to move data from one
++memory location to another.
 +
-+	seq_puts(s, "------Device -----\n");
-+	seq_printf(s, "lldev init = 0x%x\n", lldev->initialized);
-+	seq_printf(s, "trch_state = 0x%x\n", lldev->trch_state);
-+	seq_printf(s, "evch_state = 0x%x\n", lldev->evch_state);
-+	seq_printf(s, "chidx = 0x%x\n", lldev->chidx);
-+	seq_printf(s, "nr_tres = 0x%x\n", lldev->nr_tres);
-+	seq_printf(s, "trca=%p\n", lldev->trca);
-+	seq_printf(s, "tre_ring=%p\n", lldev->tre_ring);
-+	seq_printf(s, "tre_ring_handle=%pap\n", &lldev->tre_ring_handle);
-+	seq_printf(s, "tre_ring_size = 0x%x\n", lldev->tre_ring_size);
-+	seq_printf(s, "tre_processed_off = 0x%x\n", lldev->tre_processed_off);
-+	seq_printf(s, "pending_tre_count=%d\n", lldev->pending_tre_count);
-+	seq_printf(s, "evca=%p\n", lldev->evca);
-+	seq_printf(s, "evre_ring=%p\n", lldev->evre_ring);
-+	seq_printf(s, "evre_ring_handle=%pap\n", &lldev->evre_ring_handle);
-+	seq_printf(s, "evre_ring_size = 0x%x\n", lldev->evre_ring_size);
-+	seq_printf(s, "evre_processed_off = 0x%x\n", lldev->evre_processed_off);
-+	seq_printf(s, "tre_write_offset = 0x%x\n", lldev->tre_write_offset);
-+}
++Each DMA channel is described as a sub-node under the management object.
++When a transfer channel is given to the guest operating system, only the channel
++object is created. The drivers have support for both flat and hierarchical
++configuration.
 +
-+/*
-+ * hidma_chan_stats: display HIDMA channel statistics
-+ *
-+ * Display the statistics for the current HIDMA virtual channel device.
-+ */
-+static int hidma_chan_stats(struct seq_file *s, void *unused)
-+{
-+	struct hidma_chan *mchan = s->private;
-+	struct hidma_desc *mdesc;
-+	struct hidma_dev *dmadev = mchan->dmadev;
++Required properties:
++- compatible: must contain "qcom,hidma-1.0"
++- reg: Addresses for the transfer and event channel
++- interrupts: Should contain the event interrupt
++- desc-count: Number of asynchronous requests this channel can handle
++- channel-index: The HW event channel completions will be delivered.
 +
-+	pm_runtime_get_sync(dmadev->ddev.dev);
-+	seq_printf(s, "paused=%u\n", mchan->paused);
-+	seq_printf(s, "dma_sig=%u\n", mchan->dma_sig);
-+	seq_puts(s, "prepared\n");
-+	list_for_each_entry(mdesc, &mchan->prepared, node)
-+		hidma_ll_chstats(s, mchan->dmadev->lldev, mdesc->tre_ch);
++Example:
 +
-+	seq_puts(s, "active\n");
-+	list_for_each_entry(mdesc, &mchan->active, node)
-+		hidma_ll_chstats(s, mchan->dmadev->lldev, mdesc->tre_ch);
++Hypervisor OS configuration:
 +
-+	seq_puts(s, "completed\n");
-+	list_for_each_entry(mdesc, &mchan->completed, node)
-+		hidma_ll_chstats(s, mchan->dmadev->lldev, mdesc->tre_ch);
++	hidma-mgmt@f9984000 = {
++		compatible = "qcom,hidma-mgmt-1.0";
++		reg = <0xf9984000 0x15000>;
++		dma-channels = <6>;
++		max-write-burst-bytes = <1024>;
++		max-read-burst-bytes = <1024>;
++		max-write-transactions = <31>;
++		max-read-transactions = <31>;
++		channel-reset-timeout-cycles = <0x500>;
 +
-+	hidma_ll_devstats(s, mchan->dmadev->lldev);
-+	pm_runtime_mark_last_busy(dmadev->ddev.dev);
-+	pm_runtime_put_autosuspend(dmadev->ddev.dev);
-+	return 0;
-+}
++		hidma_24: dma-controller@0x5c050000 {
++			compatible = "qcom,hidma-1.0";
++			reg = <0 0x5c050000 0x0 0x1000>,
++			      <0 0x5c0b0000 0x0 0x1000>;
++			interrupts = <0 389 0>;
++			desc-count = <10>;
++			channel-index = <4>;
++		};
++	};
 +
-+/*
-+ * hidma_dma_info: display HIDMA device info
-+ *
-+ * Display the info for the current HIDMA device.
-+ */
-+static int hidma_dma_info(struct seq_file *s, void *unused)
-+{
-+	struct hidma_dev *dmadev = s->private;
-+	resource_size_t sz;
++Guest OS configuration:
 +
-+	seq_printf(s, "nr_descriptors=%d\n", dmadev->nr_descriptors);
-+	seq_printf(s, "dev_trca=%p\n", &dmadev->dev_trca);
-+	seq_printf(s, "dev_trca_phys=%pa\n", &dmadev->trca_resource->start);
-+	sz = resource_size(dmadev->trca_resource);
-+	seq_printf(s, "dev_trca_size=%pa\n", &sz);
-+	seq_printf(s, "dev_evca=%p\n", &dmadev->dev_evca);
-+	seq_printf(s, "dev_evca_phys=%pa\n", &dmadev->evca_resource->start);
-+	sz = resource_size(dmadev->evca_resource);
-+	seq_printf(s, "dev_evca_size=%pa\n", &sz);
-+	return 0;
-+}
-+
-+static int hidma_chan_stats_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, hidma_chan_stats, inode->i_private);
-+}
-+
-+static int hidma_dma_info_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, hidma_dma_info, inode->i_private);
-+}
-+
-+static const struct file_operations hidma_chan_fops = {
-+	.open = hidma_chan_stats_open,
-+	.read = seq_read,
-+	.llseek = seq_lseek,
-+	.release = single_release,
-+};
-+
-+static const struct file_operations hidma_dma_fops = {
-+	.open = hidma_dma_info_open,
-+	.read = seq_read,
-+	.llseek = seq_lseek,
-+	.release = single_release,
-+};
-+
-+void hidma_debug_uninit(struct hidma_dev *dmadev)
-+{
-+	debugfs_remove_recursive(dmadev->debugfs);
-+	debugfs_remove_recursive(dmadev->stats);
-+}
-+
-+int hidma_debug_init(struct hidma_dev *dmadev)
-+{
-+	int rc = 0;
-+	int chidx = 0;
-+	struct list_head *position = NULL;
-+
-+	dmadev->debugfs = debugfs_create_dir(dev_name(dmadev->ddev.dev), NULL);
-+	if (!dmadev->debugfs) {
-+		rc = -ENODEV;
-+		return rc;
-+	}
-+
-+	/* walk through the virtual channel list */
-+	list_for_each(position, &dmadev->ddev.channels) {
-+		struct hidma_chan *chan;
-+
-+		chan = list_entry(position, struct hidma_chan,
-+				  chan.device_node);
-+		sprintf(chan->dbg_name, "chan%d", chidx);
-+		chan->debugfs = debugfs_create_dir(chan->dbg_name,
-+						   dmadev->debugfs);
-+		if (!chan->debugfs) {
-+			rc = -ENOMEM;
-+			goto cleanup;
-+		}
-+		chan->stats = debugfs_create_file("stats", S_IRUGO,
-+						  chan->debugfs, chan,
-+						  &hidma_chan_fops);
-+		if (!chan->stats) {
-+			rc = -ENOMEM;
-+			goto cleanup;
-+		}
-+		chidx++;
-+	}
-+
-+	dmadev->stats = debugfs_create_file("stats", S_IRUGO,
-+					    dmadev->debugfs, dmadev,
-+					    &hidma_dma_fops);
-+	if (!dmadev->stats) {
-+		rc = -ENOMEM;
-+		goto cleanup;
-+	}
-+
-+	return 0;
-+cleanup:
-+	hidma_debug_uninit(dmadev);
-+	return rc;
-+}
++	hidma_24: dma-controller@0x5c050000 {
++		compatible = "qcom,hidma-1.0";
++		reg = <0 0x5c050000 0x0 0x1000>,
++		      <0 0x5c0b0000 0x0 0x1000>;
++		interrupts = <0 389 0>;
++		desc-count = <10>;
++		channel-index = <4>;
++	};
 -- 
 Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
