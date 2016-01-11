@@ -1,45 +1,102 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V2 1/2] dt/bindings: serial: bcm2835: add binding documentation for bcm2835-aux-uart
-Date: Mon, 11 Jan 2016 15:40:20 +0100
-Message-ID: <4799423.86Gz9JKjiK@wuerfel>
-References: <1452344854-2576-1-git-send-email-kernel@martin.sperl.org> <4288762.bCLxQBDvy4@wuerfel> <6035A0DD-AD61-48F7-B641-272BB23F3CD8@martin.sperl.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6035A0DD-AD61-48F7-B641-272BB23F3CD8-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: [PATCH v12 0/7] dma: add Qualcomm Technologies HIDMA driver
+Date: Mon, 11 Jan 2016 09:45:40 -0500
+Message-ID: <1452523550-8920-1-git-send-email-okaya@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dmaengine@vger.kernel.org, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
+Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 11 January 2016 14:57:46 Martin Sperl wrote:
-> > On 11.01.2016, at 13:21, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > 
-> > Please just add another patch to rename the existing uarts appropriately
-> > first, then add this one on top with the correct name.
-> 
-> I can do that with the next incarnation of the patch.
-> 
-> But would that not break dt-source files, that refer to uart0?
-> Is this not considered an API change as well or does this only apply
-> to the binary files?
+The Qualcomm Technologies HIDMA device has been designed
+to support virtualization technology. The driver has been
+divided into two to follow the hardware design.
 
-To clarify: I meant you should change the node name, not the label.
+1. HIDMA Management driver
+2. HIDMA Channel driver
 
-The label is not part of the dtb data that gets passed to the kernel
-and can have any value, including "uart0".
+Each HIDMA HW consists of multiple channels. These channels
+share some set of common parameters. These parameters are
+initialized by the management driver during power up.
+Same management driver is used for monitoring the execution
+of the channels. Management driver can change the performance
+behavior dynamically such as bandwidth allocation and
+prioritization in the future.
 
-The node name is part of the dtb and should follow common naming
-conventions (per ePAPR), but the kernel doesn't actually care, so
-it won't break anything.
+The management driver is executed in hypervisor context and
+is the main management entity for all channels provided by
+the device.
 
-There are cases where a bootloader relies on a particular node name
-in order to find a device node and patch its properties, but I don't
-think this is the case here.
+Creating a QCOM directory for all QCOM DMA source files.
+Changes from V11: (https://lkml.org/lkml/2016/1/3/249)
+* none
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+dma: hidma: Add Device Tree support
+Changes from V11: (https://lkml.org/lkml/2016/1/3/243)
+* none
+
+dma: add Qualcomm Technologies HIDMA management driver
+Changes from V11: (https://lkml.org/lkml/2016/1/3/248)
+* Correct range check in the sysfs.
+* increase the print array in sysfs.
+
+dma: add Qualcomm Technologies HIDMA channel driver
+Changes from V11: (https://lkml.org/lkml/2016/1/3/244)
+* none
+
+dma: qcom_hidma: implement lower level hardware interface
+Changes from V11: (https://lkml.org/lkml/2016/1/3/247)
+* introduce HIDMA_CH_STATE macro to simplify testing conditions.
+* introduce HIDMA_INCREMENT_ITERATOR macro to simplify code
+* replace devm_kzalloc with devm_kcalloc in certain places.
+
+dma: qcom_hidma: add debugfs hooks
+Changes from V11: (https://lkml.org/lkml/2016/1/3/245)
+* none
+
+dma: qcom_hidma: add support for object hierarchy
+Changes from V11: (https://lkml.org/lkml/2016/1/3/246)
+* none
+
+Sinan Kaya (7):
+  dma: qcom_bam_dma: move to qcom directory
+  dma: hidma: Add Device Tree support
+  dma: add Qualcomm Technologies HIDMA management driver
+  dma: add Qualcomm Technologies HIDMA channel driver
+  dma: qcom_hidma: implement lower level hardware interface
+  dma: qcom_hidma: add debugfs hooks
+  dma: qcom_hidma: add support for object hierarchy
+
+ Documentation/ABI/testing/sysfs-platform-hidma     |   9 +
+ .../ABI/testing/sysfs-platform-hidma-mgmt          |  97 +++
+ .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    |  79 ++
+ drivers/dma/Kconfig                                |  11 +-
+ drivers/dma/Makefile                               |   2 +-
+ drivers/dma/qcom/Kconfig                           |  29 +
+ drivers/dma/qcom/Makefile                          |   5 +
+ drivers/dma/{qcom_bam_dma.c => qcom/bam_dma.c}     |   4 +-
+ drivers/dma/qcom/hidma.c                           | 784 +++++++++++++++++
+ drivers/dma/qcom/hidma.h                           | 162 ++++
+ drivers/dma/qcom/hidma_dbg.c                       | 219 +++++
+ drivers/dma/qcom/hidma_ll.c                        | 927 +++++++++++++++++++++
+ drivers/dma/qcom/hidma_mgmt.c                      | 400 +++++++++
+ drivers/dma/qcom/hidma_mgmt.h                      |  39 +
+ drivers/dma/qcom/hidma_mgmt_sys.c                  | 295 +++++++
+ 15 files changed, 3050 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-hidma
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-hidma-mgmt
+ create mode 100644 Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+ create mode 100644 drivers/dma/qcom/Kconfig
+ create mode 100644 drivers/dma/qcom/Makefile
+ rename drivers/dma/{qcom_bam_dma.c => qcom/bam_dma.c} (99%)
+ create mode 100644 drivers/dma/qcom/hidma.c
+ create mode 100644 drivers/dma/qcom/hidma.h
+ create mode 100644 drivers/dma/qcom/hidma_dbg.c
+ create mode 100644 drivers/dma/qcom/hidma_ll.c
+ create mode 100644 drivers/dma/qcom/hidma_mgmt.c
+ create mode 100644 drivers/dma/qcom/hidma_mgmt.h
+ create mode 100644 drivers/dma/qcom/hidma_mgmt_sys.c
+
+-- 
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
