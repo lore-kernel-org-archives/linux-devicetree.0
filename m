@@ -1,69 +1,86 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: ION DTS changes for HiKey in -next
-Date: Mon, 11 Jan 2016 10:09:02 +0000
-Message-ID: <20160111100902.GA6499@leverpostej>
-References: <20160107173744.GJ6588@sirena.org.uk>
- <20160108050214.GD30293@kroah.com>
- <20160108124439.GL6588@sirena.org.uk>
- <20160108135552.GE3097@leverpostej>
- <568FFC8B.3090101@labbott.name>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 5/9] mfd: add TI LMU driver
+Date: Mon, 11 Jan 2016 10:17:29 +0000
+Message-ID: <20160111101729.GT14104@x1>
+References: <1448521025-2796-1-git-send-email-milo.kim@ti.com>
+ <1448521025-2796-6-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <568FFC8B.3090101-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laura Abbott <laura-0PSzFVTn/CLa5EbDDlwbIw@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Yu Dongbin <yudongbin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1448521025-2796-6-git-send-email-milo.kim@ti.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Milo Kim <milo.kim@ti.com>
+Cc: robh+dt@kernel.org, j.anaszewski@samsung.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 08, 2016 at 10:14:35AM -0800, Laura Abbott wrote:
-> On 1/8/16 5:55 AM, Mark Rutland wrote:
-> >On Fri, Jan 08, 2016 at 12:44:39PM +0000, Mark Brown wrote:
-> >>On Thu, Jan 07, 2016 at 09:02:14PM -0800, Greg Kroah-Hartman wrote:
-> >>>On Thu, Jan 07, 2016 at 05:37:44PM +0000, Mark Brown wrote:
-> >>
-> >>>>I was just looking at DTs in -next and noticed that there is a patch
-> >>>>59dfafd03fc (arm64: dts: Add dts files to enable ION on Hi6220 SoC)
-> >>>>which adds at DT doing something for ION.  Are we sure this should be
-> >>>>going into the main production DT?  The bindings haven't been reviewed
-> >>>>as far as I can tell, the matching driver is only in staging and hasn't
-> >>>>been posted upstream.
-> >>
-> >>>Isn't "staging" upstream enough for this?  :)
-> >>
-> >>I wouldn't have thought so, DTs are supposed to be an ABI so we want
-> >>proper review and having had a quick glance this doesn't look like it's
-> >>a hardware description so it's not clear to me it should be in DT at all.
-> >
-> >Indeed.
-> >
-> >The driver and the binding before that don't really belong either,
-> >I would have NAK'd those on devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, though it
-> >appears I either missed them or they never made it to that list.
-> >
-> > From my PoV there should not be a platform-specific ION binding. If we
-> >need one at all, people should work on the proposed generic binding [1]
-> >or figure out how to do this with the existing reserved-memory bindings.
-> >
-> >Thanks,
-> >Mark.
-> >
-> >[1] https://lkml.org/lkml/2015/10/6/854
-> 
-> I posted v2 back in November
-> (http://article.gmane.org/gmane.linux.drivers.driver-project.devel/80475)
-> but there wasn't much in the way of review comments. More feedback there
-> would be appreciated or I can resend.
+On Thu, 26 Nov 2015, Milo Kim wrote:
 
-A resend would be appeciated, as that's easier to reply to.
+> TI LMU (Lighting Management Unit) driver supports lighting devices be=
+low.
+>=20
+>   LM3532, LM3631, LM3632, LM3633, LM3695 and LM3697.
+>=20
+> LMU devices have common features.
+>   - I2C interface for accessing device registers
+>   - Hardware enable pin control
+>   - Backlight brightness control
+>   - Notifier for hardware fault monitoring
+>   - Regulators for LCD display bias
+>=20
+> It contains fault monitor, backlight, LED and regulator driver.
+>=20
+> LMU fault monitor
+> -----------------
+>   LM3633 and LM3697 provide hardware monitoring feature.
+>   It enables open or short circuit detection.
+>   After monitoring is done, each device should be re-initialized.
+>   Notifier is used for this case.
+>   Please refer to separate patch for 'ti-lmu-fault-monitor'.
+>=20
+> Backlight
+> ---------
+>   It's handled by TI LMU backlight consolidated driver and
+>   chip dependent data. Please refer to separate patches for
+>   'ti-lmu-backlight'.
+>=20
+> LED indicator
+> -------------
+>   LM3633 has 6 indicator LEDs. Programmable dimming pattern is also
+>   supported. Please refer to separate patch for 'leds-lm3633'.
+>=20
+> Regulator
+> ---------
+>   LM3631 has 5 regulators for the display bias.
+>   LM3632 supports 3 regulators. One consolidated driver enables it.
+>   Please refer to separate patch for 'lm363x-regulator'.
+>=20
+> Cc: Lee Jones <lee.jones@linaro.org>=20
+> Cc: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-leds@vger.kernel.org=20
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Milo Kim <milo.kim@ti.com>
+> ---
+>  drivers/mfd/Kconfig                 |  12 ++
+>  drivers/mfd/Makefile                |   2 +
+>  drivers/mfd/ti-lmu.c                | 259 ++++++++++++++++++++++++++=
++++++++
+>  include/linux/mfd/ti-lmu-register.h | 280 ++++++++++++++++++++++++++=
+++++++++++
+>  include/linux/mfd/ti-lmu.h          |  87 +++++++++++
+>  5 files changed, 640 insertions(+)
+>  create mode 100644 drivers/mfd/ti-lmu.c
+>  create mode 100644 include/linux/mfd/ti-lmu-register.h
+>  create mode 100644 include/linux/mfd/ti-lmu.h
 
-I'm still a little fuzzy on why this can't be done with reserved-memory,
-but that's a discussion better left for the thread with the patches.
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
