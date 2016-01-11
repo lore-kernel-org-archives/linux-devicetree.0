@@ -1,67 +1,46 @@
-From: xuejiancheng <xuejiancheng@huawei.com>
-Subject: Re: [PATCH v5 5/6] mfd: dt-bindings: add device tree bindings for
- Hi3519 sysctrl
-Date: Mon, 11 Jan 2016 15:50:00 +0800
-Message-ID: <56935EA8.4060801@huawei.com>
-References: <1452219400-32478-1-git-send-email-xuejiancheng@huawei.com>
- <1452219400-32478-6-git-send-email-xuejiancheng@huawei.com>
- <20160111054846.GD3331@x1>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] ARM: dts: sun8i: Add Allwinner A83T dtsi
+Date: Mon, 11 Jan 2016 08:53:20 +0100
+Message-ID: <20160111075320.GK9631@lukather>
+References: <1452085914-29340-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1452085914-29340-3-git-send-email-vishnupatekar0510@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160111054846.GD3331@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, p.zabel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="pWJxWxNlJUNgDlXi"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB4N6ZW2AKGQEQFVVX2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1452085914-29340-3-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee Jones,
+--pWJxWxNlJUNgDlXi
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-    Thanks for your comments.
+Hi,
 
-On 2016/1/11 13:48, Lee Jones wrote:
-> On Fri, 08 Jan 2016, Jiancheng Xue wrote:
+On Wed, Jan 06, 2016 at 09:11:53PM +0800, Vishnu Patekar wrote:
+> Allwinner A83T is new octa-core cortex-a7 SOC.
+> This adds the basic dtsi, the clocks differs from
+> earlier sun8i SOCs.
 > 
->> Add device tree bindings for Hi3519 system controller.
->>
->> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
->> ---
->>  Documentation/devicetree/bindings/mfd/hi3519.txt | 14 ++++++++++++++
->>  1 file changed, 14 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/hi3519.txt
-> 
-> I have this patch, but none of the others in the set, thus I am
-> lacking context.
-> 
-I can forward other patches in the set to you. Thank you.
+> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
->> diff --git a/Documentation/devicetree/bindings/mfd/hi3519.txt b/Documentation/devicetree/bindings/mfd/hi3519.txt
->> new file mode 100644
->> index 0000000..115c5be
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/hi3519.txt
->> @@ -0,0 +1,14 @@
->> +* Hisilicon Hi3519 System Controller Block
->> +
->> +This bindings use the following binding:
->> +Documentation/devicetree/bindings/mfd/syscon.txt
->> +
->> +Required properties:
->> +- compatible: "hisilicon,hi3519-sysctrl".
->> +- reg: the register region of this block
->> +
->> +Examples:
->> +sysctrl: system-controller@12010000 {
->> +	compatible = "hisilicon,hi3519-sysctrl", "syscon";
->> +	reg = <0x12010000 0x1000>;
->> +};
-> 
-> There is no requirement (nor want) for binding documents where the
-> given device is simply using highly generic bindings.  This just
-> amounts to churn.
-> 
-This block is specific for Hi3519 SOC, and may has its own driver.
-So I think it's better to keep this binding.
+I removed the empty chosen node, and applied, thanks!
 
-Jiancheng
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--pWJxWxNlJUNgDlXi--
