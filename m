@@ -1,49 +1,55 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 6/6] regulator: max77620: add regulator driver for max77620/max20024
-Date: Mon, 11 Jan 2016 15:46:30 +0530
-Message-ID: <569380FE.6020609@nvidia.com>
-References: <1452177524-23192-1-git-send-email-ldewangan@nvidia.com> <1452177524-23192-7-git-send-email-ldewangan@nvidia.com> <20160110124014.GZ6588@sirena.org.uk>
+From: 8001010 <8001010@gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH 0/5] ARM: dts: sunxi: Add backlight node
+ to q8 tablets
+Date: Mon, 11 Jan 2016 11:34:18 +0100
+Message-ID: <5693852A.1060604@gmail.com>
+References: <1442752251-20744-1-git-send-email-hdegoede@redhat.com>
+ <fc4adcf5-4362-4d4c-b42e-729922c79f65@googlegroups.com>
+ <5677F7CF.3050308@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160110124014.GZ6588-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Mallikarjun Kasoju <mkasoju-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5677F7CF.3050308@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans de Goede <hdegoede@redhat.com>, linux-sunxi <linux-sunxi@googlegroups.com>
+Cc: devicetree@vger.kernel.org, maxime.ripard@free-electrons.com, wens@csie.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks Mark for review.
-
-I have query in one of comment.
-
-On Sunday 10 January 2016 06:10 PM, Mark Brown wrote:
-> * PGP Signed by an unknown key
+Hans de Goede wrote:
+> Hi,
 >
-> On Thu, Jan 07, 2016 at 08:08:44PM +0530, Laxman Dewangan wrote:
+> On 21-12-15 11:56, Silvio Pellicano wrote:
+>>
+>>
+>>> Here is a slightly updated version of Chen-Yu's backlight
+>>> patches, also adding support for the backlight found on A13
+>>> based q8 tablets.
+>>>
+>>
+>> If i compile your dtsi with (obviously) pwm  support enable , backlight
+>> switch off after kernel start,
+>> if i disable pwm in menuconfig,it stay on, all seem correct (pwm on PB2 in
+>> original script.bin),
+>> but there is somewhere a bug in pwm or dtsi description of backlight.
 >
+> No there is not, if you enable the pwm driver you must also enable
+> the backlight-pwm driver / add CONFIG_BACKLIGHT_PWM=y to your .config
+> (and make sure it stays that way after a "make oldconfig").
 >
-> +	np = of_get_child_by_name(pdev->dev.parent->of_node, "regulators");
-> +	if (!np) {
-> +		dev_err(&pdev->dev, "Device is not having regulators node\n");
-> +		return -ENODEV;
-> +	}
-> +	pdev->dev.of_node = np;
-> +
-> +	ret = of_regulator_match(&pdev->dev, np, max77620_regulator_matches,
-> +			ARRAY_SIZE(max77620_regulator_matches));
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "Parsing of regulator node failed: %d\n",
-> +			ret);
-> +		return ret;
-> +	}
-> Don't open code this, use the core support via regulators and of_match.
+> Regards,
 >
+> Hans
+>
+Now work, but what flag  i have to enable to leave 5v usb otg ON?
+uboot switch ON Usb Otg voltage but kernel switch off during boot (no usb devices work).
 
-I did not get this point? Here I am using the of_regulator_match from 
-core? Can you please help to explain this?
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
