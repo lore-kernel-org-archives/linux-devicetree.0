@@ -1,49 +1,59 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 2/6] mfd: max77620: add core driver for MAX77620/MAX20024
-Date: Mon, 11 Jan 2016 05:48:35 +0000
-Message-ID: <20160111054835.GC3331@x1>
-References: <1452177524-23192-3-git-send-email-ldewangan@nvidia.com>
- <201601072308.7XP0yi7D%fengguang.wu@intel.com>
+Subject: Re: [PATCH v5 5/6] mfd: dt-bindings: add device tree bindings for
+ Hi3519 sysctrl
+Date: Mon, 11 Jan 2016 05:48:46 +0000
+Message-ID: <20160111054846.GD3331@x1>
+References: <1452219400-32478-1-git-send-email-xuejiancheng@huawei.com>
+ <1452219400-32478-6-git-send-email-xuejiancheng@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201601072308.7XP0yi7D%fengguang.wu@intel.com>
+In-Reply-To: <1452219400-32478-6-git-send-email-xuejiancheng@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, kbuild-all@01.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, Chaitanya Bandi <bandik@nvidia.com>, Mallikarjun Kasoju <mkasoju@nvidia.com>
+To: Jiancheng Xue <xuejiancheng@huawei.com>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, p.zabel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 07 Jan 2016, kbuild test robot wrote:
+On Fri, 08 Jan 2016, Jiancheng Xue wrote:
 
-> Hi Laxman,
+> Add device tree bindings for Hi3519 system controller.
 >=20
-> [auto build test WARNING on pinctrl/for-next]
-> [also build test WARNING on v4.4-rc8 next-20160107]
-> [if your patch is applied to the wrong git tree, please drop us a not=
-e to help improving the system]
->=20
-> url:    https://github.com/0day-ci/linux/commits/Laxman-Dewangan/Add-=
-support-for-MAXIM-MAX77620-MAX20024-PMIC/20160107-225450
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-=
-pinctrl.git for-next
->=20
->=20
-> coccinelle warnings: (new ones prefixed by >>)
->=20
-> >> drivers/mfd/max77620.c:900:3-8: No need to set .owner here. The co=
-re will do it.
-
-I can't accept this patch until this has been taken care of.
-
-> Please review and possibly fold the followup patch.
->=20
+> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
 > ---
-> 0-DAY kernel test infrastructure                Open Source Technolog=
-y Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Cor=
-poration
+>  Documentation/devicetree/bindings/mfd/hi3519.txt | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/hi3519.txt
+
+I have this patch, but none of the others in the set, thus I am
+lacking context.
+
+> diff --git a/Documentation/devicetree/bindings/mfd/hi3519.txt b/Docum=
+entation/devicetree/bindings/mfd/hi3519.txt
+> new file mode 100644
+> index 0000000..115c5be
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/hi3519.txt
+> @@ -0,0 +1,14 @@
+> +* Hisilicon Hi3519 System Controller Block
+> +
+> +This bindings use the following binding:
+> +Documentation/devicetree/bindings/mfd/syscon.txt
+> +
+> +Required properties:
+> +- compatible: "hisilicon,hi3519-sysctrl".
+> +- reg: the register region of this block
+> +
+> +Examples:
+> +sysctrl: system-controller@12010000 {
+> +	compatible =3D "hisilicon,hi3519-sysctrl", "syscon";
+> +	reg =3D <0x12010000 0x1000>;
+> +};
+
+There is no requirement (nor want) for binding documents where the
+given device is simply using highly generic bindings.  This just
+amounts to churn.
 
 --=20
 Lee Jones
