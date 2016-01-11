@@ -1,37 +1,47 @@
-From: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] serial: bcm2835: add driver for bcm2835-aux-uart
-Date: Mon, 11 Jan 2016 16:25:35 +0100
-Message-ID: <87y4bw9lzk.fsf@dell.be.48ers.dk>
-References: <1452344854-2576-1-git-send-email-kernel@martin.sperl.org>
-	<1452344854-2576-3-git-send-email-kernel@martin.sperl.org>
+From: Mark Langsdorf <mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ata: add AMD Seattle platform driver
+Date: Mon, 11 Jan 2016 09:33:21 -0600
+Message-ID: <5693CB41.70408@redhat.com>
+References: <1452200002-31590-1-git-send-email-brijesh.singh@amd.com>
+ <4983521.tEaWggKCCv@wuerfel> <568F14E0.4060107@amd.com>
+ <10869853.plxna0HzWE@wuerfel> <5690367E.8060609@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452344854-2576-3-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-	(kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org's message of "Sat, 9 Jan 2016 13:07:33
-	+0000")
+In-Reply-To: <5690367E.8060609-5C7GfCeVMHo@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brijesh Singh <brijesh.singh-5C7GfCeVMHo@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
->>>>> "kernel" == kernel  <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org> writes:
+On 01/08/2016 04:21 PM, Brijesh Singh wrote:
+> Hi,
 
- > From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
- > The bcm2835 SOC contains an auxiliary uart, which is very close
- > to the ns16550 with some differences.
+>> We generally don't refer to register locations with properties other than
+>> 'reg', so that approach would be worse. What I'd suggest you do is to
+>> have the sgpio registers in a separate device node, and use the LED
+>> binding to access it, see
+>>
+>> Documentation/devicetree/bindings/leds/common.txt
+>>
+>> It seems that none of the drivers/ata/ drivers use the leds interface
+>> today, but that can be added to libata-*.c whenever the appropriate
+>> properties are there.
+>>
+>
+> libata-*.c implements the "Enclosure management" style led messages but also has hooks
+> to register a custom led control callback. Since Seattle platform does not support
+> the "Enclosure management" registers hence ata_port_info we are setting a ATA_FLAG_EM | ATA_FLAG_SW_ACIVITY
+> to indicate that we can still handle the led messages by our registered callback. I see
+> that sata_highbank driver is doing something similar.
 
- > The big difference is that the uart HW is not using an internal divider
- > of 16 but 8, which results in an effictive baud-rate being twice
- > the requested baud-rate.
+The sata_highbank driver is doing it wrong and shouldn't have been
+accepted in its current condition. Enclosure management really should
+be a separate device. Please don't use it as an example.
 
- > This driver handles this device correctly and handles the difference in
- > the HW divider by scaling up the clock ba a factor of 2.
+--Mark Langsdorf
 
-s/ba/by/
-
--- 
-Bye, Peter Korsgaard
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
