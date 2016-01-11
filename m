@@ -1,135 +1,58 @@
-From: xuejiancheng <xuejiancheng@huawei.com>
-Subject: Re: [PATCH v5 1/6] clk: hisilicon: add CRG driver for hi3519 soc
-Date: Mon, 11 Jan 2016 11:47:14 +0800
-Message-ID: <569325C2.2090101@huawei.com>
-References: <1452219400-32478-1-git-send-email-xuejiancheng@huawei.com>
- <1452219400-32478-2-git-send-email-xuejiancheng@huawei.com>
- <20160109153322.GA19311@rob-hp-laptop>
+From: xuejiancheng <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2] mtd: spi-nor: add hisilicon spi-nor flash controller
+ driver
+Date: Mon, 11 Jan 2016 11:53:38 +0800
+Message-ID: <56932742.5070105@huawei.com>
+References: <1452216405-10826-1-git-send-email-xuejiancheng@huawei.com>
+ <20160109154249.GA28102@rob-hp-laptop> <56930369.1050000@huawei.com>
+ <CAL_Jsq+K-tF=snhq+w9yYQKmAxbxDSLq6cv5fLfWjHTgdJxQWQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160109153322.GA19311@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, suwenping@hisilicon.com, mturquette@baylibre.com, bintian.wang@huawei.com, haojian.zhuang@linaro.org, linux-clk@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, zhangzhenxing@hisilicon.com, devicetree@vger.kernel.org, khilman@linaro.org, arnd@arndb.de, ijc+devicetree@hellion.org.uk, yanhaifeng@hisilicon.com, ml.yang@hisilicon.com, xuejiancheng@hisilicon.com, linux-arm-kernel@lists.infradead.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, gaofei@hisilicon.com, p.zabel@pengutronix.de, galak@codeaurora.org, olof@lixom.net, yanghongwei@hisilicon.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+K-tF=snhq+w9yYQKmAxbxDSLq6cv5fLfWjHTgdJxQWQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, pengbinquan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, han.xu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangzhenxing-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On 2016/1/9 23:33, Rob Herring wrote:
-> On Fri, Jan 08, 2016 at 10:16:35AM +0800, Jiancheng Xue wrote:
->> The CRG(Clock and Reset Generator) block provides clock
->> and reset signals for other modules in hi3519 soc.
+
+On 2016/1/11 11:09, Rob Herring wrote:
+> On Sun, Jan 10, 2016 at 7:20 PM, xuejiancheng <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+>> Hi Rob,
 >>
->> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
+>> On 2016/1/9 23:42, Rob Herring wrote:
+>>> On Fri, Jan 08, 2016 at 09:26:45AM +0800, Jiancheng Xue wrote:
+>>>> add hisilicon spi-nor flash controller driver
+>>>>
+>>>> Signed-off-by: Binquan Peng <pengbinquan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>>>> Signed-off-by: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>>>> ---
 > 
-> [...]
+>>>> +Required properties:
+>>>> +- compatible : Should be "hisilicon,hisi-sfc".
+>>>
+>>> I missed this last time, but you also need a more specific compatible
+>>> string with the SOC name in it.
+>>>
+>>
+>> This IP block is used in many SOCs. Do I need to add a specific compatible
+>> string for every SOC? Thank you.
 > 
->> diff --git a/drivers/clk/hisilicon/clk-hi3519.c b/drivers/clk/hisilicon/clk-hi3519.c
->> new file mode 100644
->> index 0000000..72d3a7b0
->> --- /dev/null
->> +++ b/drivers/clk/hisilicon/clk-hi3519.c
->> @@ -0,0 +1,105 @@
->> +/*
->> + * Hi3519 Clock Driver
->> + *
->> + * Copyright (c) 2015-2016 HiSilicon Technologies Co., Ltd.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + *
->> + * You should have received a copy of the GNU General Public License
->> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
->> + */
->> +
->> +#include <dt-bindings/clock/hi3519-clock.h>
->> +#include <linux/delay.h>
->> +#include <linux/of_address.h>
->> +#include <linux/slab.h>
->> +#include "clk.h"
->> +#include "reset.h"
->> +
->> +#define HI3519_FIXED_24M	(HI3519_EXT_CLKS + 1)
-> 
-> This is fragile because HI3519_EXT_CLKS will change every time you 
-> add a clock to DT and means you have to keep the kernel and DT in sync. 
+> Yes. You can keep the generic one for driver matching, but you want to
+> have the specific one in case there ever is a quirk/errata in a
+> specific SOC.
 > 
 
-The dependence is indeed unneeded. Thank you.
+I see. Thank you.
 
-> I'd be less worried if your clock definitions were more complete, but 
-> I'm guess the SOC has more than 19 clocks coming out of the clock 
-> controller.
-> 
-
-You are right. Some clocks in the SOC are not defined in this patch. Because
-there is no plan to upstream those blocks drivers using these clocks. The clocks
-defined in this file will not referred by the DT. So it's also not proper to
-put these definitions into the dt-bingdings header file.
-
-I will change HI3519_EXT_CLKS to a large number to make sure that enough space
-is reserved for external clocks?  Is it OK?
-
-Your advise will be appreciated. Thank you.
-
->> +#define HI3519_FIXED_50M	(HI3519_EXT_CLKS + 2)
->> +#define HI3519_FIXED_75M	(HI3519_EXT_CLKS + 3)
->> +#define HI3519_FIXED_125M	(HI3519_EXT_CLKS + 4)
->> +#define HI3519_FIXED_150M	(HI3519_EXT_CLKS + 5)
->> +#define HI3519_FIXED_200M	(HI3519_EXT_CLKS + 6)
->> +#define HI3519_FIXED_250M	(HI3519_EXT_CLKS + 7)
->> +#define HI3519_FIXED_300M	(HI3519_EXT_CLKS + 8)
->> +#define HI3519_FIXED_400M	(HI3519_EXT_CLKS + 9)
->> +#define HI3519_FMC_MUX		(HI3519_EXT_CLKS + 10)
->> +
->> +#define HI3519_NR_CLKS	128
-> 
-> You only have 29 clocks defined.
-> 
-> 
->> +#ifndef __DTS_HI3519_CLOCK_H
->> +#define __DTS_HI3519_CLOCK_H
->> +
->> +#define HI3519_FIXED_3M			1
->> +#define HI3519_FMC_CLK			2
->> +#define HI3519_USB2_BUS_CLK		3
->> +#define HI3519_USB2_PORT_CLK		4
->> +#define HI3519_USB3_CLK			5
->> +#define HI3519_ETH_PHY_CLK		6
->> +#define HI3519_ETH_MAC_CLK		7
->> +#define HI3519_ETH_MACIF_CLK		8
->> +#define HI3519_PWM_CLK			9
->> +#define HI3519_DMA_CLK			10
->> +#define HI3519_SPI0_CLK			11
->> +#define HI3519_SPI1_CLK			12
->> +#define HI3519_SPI2_CLK			13
->> +#define HI3519_IR_CLK			14
->> +#define HI3519_UART0_CLK		15
->> +#define HI3519_UART1_CLK		16
->> +#define HI3519_UART2_CLK		17
->> +#define HI3519_UART3_CLK		18
->> +#define HI3519_UART4_CLK		19
->> +
->> +#define HI3519_EXT_CLKS			19
->> +
->> +#endif	/* __DTS_HI3519_CLOCK_H */
+> Rob
 > 
 > .
 > 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
