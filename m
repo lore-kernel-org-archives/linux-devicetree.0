@@ -1,114 +1,295 @@
-From: Igal Liberman <igal.liberman-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [v2] powerpc/fsl: Update fman dt binding with pcs-phy and tbi-phy
-Date: Mon, 11 Jan 2016 09:23:59 +0000
-Message-ID: <AMXPR04MB248CB84E0F389149CA964BBECC90@AMXPR04MB248.eurprd04.prod.outlook.com>
-References: <1450921331-25309-1-git-send-email-igal.liberman@freescale.com>
- <20151230162733.GA2518@rob-hp-laptop>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 1/9] Documentation: dt-bindings: mfd: add TI LMU
+ device binding information
+Date: Mon, 11 Jan 2016 09:46:07 +0000
+Message-ID: <20160111094607.GQ14104@x1>
+References: <1448521025-2796-1-git-send-email-milo.kim@ti.com>
+ <1448521025-2796-2-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151230162733.GA2518@rob-hp-laptop>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Igal Liberman <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Madalin-Cristian Bucur <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shaohui.xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <shaohui.xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1448521025-2796-2-git-send-email-milo.kim@ti.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Milo Kim <milo.kim@ti.com>
+Cc: robh+dt@kernel.org, j.anaszewski@samsung.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, 26 Nov 2015, Milo Kim wrote:
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Wednesday, December 30, 2015 6:28 PM
-> To: Igal Liberman <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Scott Wood
-> <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>; Madalin-Cristian Bucur
-> <madalin.bucur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>; shaohui.xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-> Subject: Re: [v2] powerpc/fsl: Update fman dt binding with pcs-phy and tbi-
-> phy
-> 
-> On Thu, Dec 24, 2015 at 03:42:11AM +0200, igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-> wrote:
-> > From: Igal Liberman <igal.liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> >
-> > The FMan contains internal PHY devices used for SGMII connections to
-> > external PHYs. When these PHYs are in use a reference is needed for
-> > both the external PHY and the internal one. For the external PHY
-> > phy-handle provides the reference. For the internal PHY a new handle
-> > is required.
-> > In dTSEC, the internal PHY is a TBI (Ten Bit Interface) PHY, the
-> > handle used will be tbi-handle.
-> > In mEMAC, the internal PHY is a PCS (Physical Coding Sublayer) PHY,
-> > the handle used will be pcsphy-handle.
-> 
-> This is fairly commom for 10G eth I think. Can't you use the common PHY
-> binding here in the case without internal MDIO bus? Just because you use it
-> that doesn't mean you have to use the generic phy subsystem in the kernel.
-> 
+> This patch describes overall binding for TI LMU MFD devices.
+>=20
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: Lee Jones <lee.jones@linaro.org>=20
+> Cc: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: linux-leds@vger.kernel.org=20
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Milo Kim <milo.kim@ti.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/ti-lmu.txt | 243 +++++++++++++=
+++++++++++
+>  1 file changed, 243 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/ti-lmu.txt
 
-mEMAC and dTSEC always have internal MDIO bus.
-I was requested to use generic PHY API for internal PHY configuration by netdev, this part was accepted. 
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-> Perhaps phy-handle should be deprecated in favor of doing something like
-> this if you need a phandle to both:
-> 
-> phys = <&internal-phy>, <&external-phy>;
-> 
+> diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Docum=
+entation/devicetree/bindings/mfd/ti-lmu.txt
+> new file mode 100644
+> index 0000000..c885cf8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+> @@ -0,0 +1,243 @@
+> +TI LMU (Lighting Management Unit) device tree bindings
+> +
+> +TI LMU driver supports lighting devices below.
+> +
+> +   Name                  Child nodes
+> +  ------      ---------------------------------
+> +  LM3532       Backlight
+> +  LM3631       Backlight and regulator
+> +  LM3632       Backlight and regulator
+> +  LM3633       Backlight, LED and fault monitor
+> +  LM3695       Backlight
+> +  LM3697       Backlight and fault monitor
+> +
+> +Required properties:
+> +  - compatible: Should be one of:
+> +                "ti,lm3532"
+> +                "ti,lm3631"
+> +                "ti,lm3632"
+> +                "ti,lm3633"
+> +                "ti,lm3695"
+> +                "ti,lm3697"
+> +  - reg: I2C slave address.
+> +         0x11 for LM3632
+> +         0x29 for LM3631
+> +         0x36 for LM3633, LM3697
+> +         0x38 for LM3532
+> +         0x63 for LM3695
+> +
+> +Optional property:
+> +  - enable-gpios: A GPIO specifier for hardware enable pin.
+> +
+> +Required node:
+> +  - backlight: All LMU devices have backlight child nodes.
+> +               For the properties, please refer to [1].
+> +
+> +Optional nodes:
+> +  - fault-monitor: Hardware fault monitoring driver for LM3633 and L=
+M3697.
+> +    Required properties:
+> +      - compatible: Should be one of:
+> +                    "ti,lm3633-fault-monitor"
+> +                    "ti,lm3697-fault-monitor"
+> +  - leds: LED properties for LM3633. Please refer to [2].
+> +  - regulators: Regulator properties for LM3631 and LM3632.
+> +                Please refer to [3].
+> +
+> +[1] ../leds/backlight/ti-lmu-backlight.txt
+> +[2] ../leds/leds-lm3633.txt
+> +[3] ../regulator/lm363x-regulator.txt
+> +
+> +lm3532@38 {
+> +	compatible =3D "ti,lm3532";
+> +	reg =3D <0x38>;
+> +
+> +	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
+> +
+> +	backlight {
+> +		compatible =3D "ti,lm3532-backlight";
+> +
+> +		lcd {
+> +			led-sources =3D <0 1 2>;
+> +			ramp-up-msec =3D <30>;
+> +			ramp-down-msec =3D <0>;
+> +		};
+> +	};
+> +};
+> +
+> +lm3631@29 {
+> +	compatible =3D "ti,lm3631";
+> +	reg =3D <0x29>;
+> +
+> +	regulators {
+> +		compatible =3D "ti,lm363x-regulator";
+> +
+> +		vboost {
+> +			regulator-name =3D "lcd_boost";
+> +			regulator-min-microvolt =3D <4500000>;
+> +			regulator-max-microvolt =3D <6350000>;
+> +			regulator-always-on;
+> +		};
+> +
+> +		vcont {
+> +			regulator-name =3D "lcd_vcont";
+> +			regulator-min-microvolt =3D <1800000>;
+> +			regulator-max-microvolt =3D <3300000>;
+> +		};
+> +
+> +		voref {
+> +			regulator-name =3D "lcd_voref";
+> +			regulator-min-microvolt =3D <4000000>;
+> +			regulator-max-microvolt =3D <6000000>;
+> +		};
+> +
+> +		vpos {
+> +			regulator-name =3D "lcd_vpos";
+> +			regulator-min-microvolt =3D <4000000>;
+> +			regulator-max-microvolt =3D <6000000>;
+> +			regulator-boot-on;
+> +		};
+> +
+> +		vneg {
+> +			regulator-name =3D "lcd_vneg";
+> +			regulator-min-microvolt =3D <4000000>;
+> +			regulator-max-microvolt =3D <6000000>;
+> +			regulator-boot-on;
+> +		};
+> +	};
+> +
+> +	backlight {
+> +		compatible =3D "ti,lm3631-backlight";
+> +
+> +		lcd_bl {
+> +			led-sources =3D <0 1>;
+> +			ramp-up-msec =3D <300>;
+> +		};
+> +	};
+> +};
+> +
+> +lm3632@11 {
+> +	compatible =3D "ti,lm3632";
+> +	reg =3D <0x11>;
+> +
+> +	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>; /* PC2 */
+> +
+> +	regulators {
+> +		compatible =3D "ti,lm363x-regulator";
+> +
+> +		ti,lcm-en1-gpio =3D <&pioC 0 GPIO_ACTIVE_HIGH>; /* PC0 */
+> +		ti,lcm-en2-gpio =3D <&pioC 1 GPIO_ACTIVE_HIGH>; /* PC1 */
+> +
+> +		vboost {
+> +			regulator-name =3D "lcd_boost";
+> +			regulator-min-microvolt =3D <4500000>;
+> +			regulator-max-microvolt =3D <6400000>;
+> +			regulator-always-on;
+> +		};
+> +
+> +		vpos {
+> +			regulator-name =3D "lcd_vpos";
+> +			regulator-min-microvolt =3D <4000000>;
+> +			regulator-max-microvolt =3D <6000000>;
+> +		};
+> +
+> +		vneg {
+> +			regulator-name =3D "lcd_vneg";
+> +			regulator-min-microvolt =3D <4000000>;
+> +			regulator-max-microvolt =3D <6000000>;
+> +		};
+> +	};
+> +
+> +	backlight {
+> +		compatible =3D "ti,lm3632-backlight";
+> +
+> +		pwms =3D <&pwm0 0 10000 0>; /* pwm number, period, polarity */
+> +		pwm-names =3D "lmu-backlight";
+> +
+> +		lcd {
+> +			led-sources =3D <0 1>;
+> +			pwm-period =3D <10000>;
+> +		};
+> +	};
+> +};
+> +
+> +lm3633@36 {
+> +	compatible =3D "ti,lm3633";
+> +	reg =3D <0x36>;
+> +
+> +	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
+> +
+> +	backlight {
+> +		compatible =3D "ti,lm3633-backlight";
+> +
+> +		main {
+> +			label =3D "main_lcd";
+> +			led-sources =3D <1 2>;
+> +			ramp-up-msec =3D <500>;
+> +			ramp-down-msec =3D <500>;
+> +		};
+> +
+> +		front {
+> +			label =3D "front_lcd";
+> +			led-sources =3D <0>;
+> +			ramp-up-msec =3D <1000>;
+> +			ramp-down-msec =3D <0>;
+> +		};
+> +	};
+> +
+> +	leds {
+> +		compatible =3D "ti,lm3633-leds";
+> +
+> +		chan1 {
+> +			label =3D "status";
+> +			led-sources =3D <1>;
+> +			led-max-microamp =3D <6000>;
+> +		};
+> +
+> +		chan345 {
+> +			label =3D "rgb";
+> +			led-sources =3D <3 4 5>;
+> +			led-max-microamp =3D <10000>;
+> +		};
+> +	};
+> +
+> +	fault-monitor {
+> +		compatible =3D "ti,lm3633-fault-monitor";
+> +	};
+> +};
+> +
+> +lm3695@63 {
+> +	compatible =3D "ti,lm3695";
+> +	reg =3D <0x63>;
+> +
+> +	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
+> +
+> +	backlight {
+> +		compatible =3D "ti,lm3695-backlight";
+> +
+> +		lcd {
+> +			label =3D "bl";
+> +			led-sources =3D <0 1>;
+> +		};
+> +	};
+> +};
+> +
+> +lm3697@36 {
+> +	compatible =3D "ti,lm3697";
+> +	reg =3D <0x36>;
+> +
+> +	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
+> +
+> +	backlight {
+> +		compatible =3D "ti,lm3697-backlight";
+> +
+> +		lcd {
+> +			led-sources =3D <0 1 2>;
+> +			ramp-up-msec =3D <200>;
+> +			ramp-down-msec =3D <200>;
+> +		};
+> +	};
+> +
+> +	fault-monitor {
+> +		compatible =3D "ti,lm3697-fault-monitor";
+> +	};
+> +};
 
-I think that pcsphy-handle and tbi-handle represent the hardware in a good way.
-This is the actual name of the hardware.
-
-> > diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> > b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> > index 1fc5328..55c2c03 100644
-> > --- a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> > +++ b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-> > @@ -315,6 +315,16 @@ PROPERTIES
-> >  		Value type: <phandle>
-> >  		Definition: A phandle for 1EEE1588 timer.
-> >
-> > +- pcsphy-handle
-> > +		Usage required for "fsl,fman-memac" MACs
-> > +		Value type: <phandle>
-> > +		Definition: A phandle for pcsphy.
-> > +
-> > +- tbi-handle
-> > +		Usage required for "fsl,fman-dtsec" MACs
-> > +		Value type: <phandle>
-> > +		Definition: A phandle for tbiphy.
-> > +
-> >  EXAMPLE
-> >
-> >  fman1_tx28: port@a8000 {
-> > @@ -340,6 +350,7 @@ ethernet@e0000 {
-> >  	reg = <0xe0000 0x1000>;
-> >  	fsl,fman-ports = <&fman1_rx8 &fman1_tx28>;
-> >  	ptp-timer = <&ptp-timer>;
-> > +	tbi-handle = <&tbi0>;
-> 
-> What does the tbi0 node contain? It should be present in the example.
-> 
-
-There is an example in under MDIO section:
-
-mdio@e3120 {
-	compatible = "fsl,fman-mdio";
-	reg = <0xe3120 0xee0>;
-	fsl,fman-internal-mdio;
-
-	tbi1: tbi-phy@8 {
-		reg = <0x8>;
-		device_type = "tbi-phy";
-	};
-};
-
-I used different indexes to make sure that it's aligned to the other examples in the binding document.
-
-> Rob
-
-Thank you for your feedback, 
-Igal
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
