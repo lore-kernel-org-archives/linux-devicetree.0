@@ -1,172 +1,109 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v11] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
- PCIe Host Controller
-Date: Sun, 10 Jan 2016 16:08:19 -0600
-Message-ID: <20160110220819.GA25883@localhost>
-References: <1448798633-12697-1-git-send-email-bharatku@xilinx.com>
- <20151209231921.GI31930@localhost>
- <8520D5D51A55D047800579B09414719825869A85@XAP-PVEXMBX01.xlnx.xilinx.com>
- <20151210201817.GB367@localhost>
- <8520D5D51A55D047800579B09414719825869EDC@XAP-PVEXMBX01.xlnx.xilinx.com>
- <8520D5D51A55D047800579B0941471982586BC8D@XAP-PVEXMBX01.xlnx.xilinx.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/4] PCI: rcar-gen2: Add device tree support for r8a7793
+Date: Mon, 11 Jan 2016 10:06:24 +0900
+Message-ID: <20160111010624.GA11387@verge.net.au>
+References: <1448954672-27236-1-git-send-email-horms+renesas@verge.net.au>
+ <1448954672-27236-3-git-send-email-horms+renesas@verge.net.au>
+ <20151204212649.GJ20125@localhost>
+ <CAMuHMdWEXA-KTkqJsofXuBTQKBrtGW7x+2r+V42CuWwbjkqmvQ@mail.gmail.com>
+ <20151207153833.GB7994@localhost>
+ <20151208004519.GK10799@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8520D5D51A55D047800579B0941471982586BC8D@XAP-PVEXMBX01.xlnx.xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc: Bharat Kumar Gogada <bharatku@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "dhdang@apm.com" <dhdang@apm.com>, "sbranden@broadcom.com" <sbranden@broadcom.com>"devicetree@vger.kernel.org" <devicetree>
+In-Reply-To: <20151208004519.GK10799@verge.net.au>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 21, 2015 at 05:23:47AM +0000, Bharat Kumar Gogada wrote:
-> Hi Bjorn, can you comment on this. Marc has also replied for query on irq_dispose_mapping().
-
-I'm not sure exactly what you want me to comment on.
-
-> > Subject: RE: [PATCH v11] PCI: Xilinx-NWL-PCIe: Added support for Xilinx NWL
-> > PCIe Host Controller
-> > 
-> > > Subject: Re: [PATCH v11] PCI: Xilinx-NWL-PCIe: Added support for
-> > > Xilinx NWL PCIe Host Controller
-> > >
-> > > [+cc Marc for irq_dispose_mapping() question]
-> > >
-> > > On Thu, Dec 10, 2015 at 02:10:34PM +0000, Bharat Kumar Gogada wrote:
-> > > I'm trying to figure out what the difference is between these two
-> > > checks and why you have both of them:
-> > >
-> > > > +	if (bus->number == pcie->root_busno && devfn > 0)
-> > > > +	if (bus->primary == pcie->root_busno && devfn > 0)
-> > >
-> > > If I understand correctly, pcie->root_busno is the bus number of the
-> > > Root Port device (likely 00).  I think the "bus->number ==
-> > > pcie->root_busno && devfn > 0" check means that the Root Port, e.g.,
-> > > 00:00.0, is the only device allowed on bus 00.  Often a Root Complex
-> > > contains several Root Ports and other integrated devices that typically are
-> > on bus 00.
-> > > But in your case, I think you're saying there is only the single Root
-> > > Port and no other devices.
-> > >
-> > > I think that first check takes care of everything on bus 00, so I'm
-> > > trying to figure out what the second check is for.  Assume your Root
-> > > Port is device
-> > > 00:00.0 and it is a bridge to [bus 01-ff].  Then we have two pci_bus
-> > > structs with these values:
-> > >
-> > >   bus->number = 00
-> > >   bus->primary = 00
-> > >   bus->busn_res = [bus 00-ff]
-> > >
-> > >   bus->number = 01
-> > >   bus->primary = 00
-> > >   bus->busn_res = [bus 01-ff]
-> > >
-> > > Because of the first check, 00:00.0 is the only possible device on bus
-> > > 00, and because of the second check, 01:00.0 is the only possible device on
-> > bus 01.
-> > > Therefore, you don't support a multifunction device connected to the
-> > > Root Port.  Right?
-> > >
-> > We support multifunction devices also, so this check should not be there, will
-> > remove this check in next patch.
-
-It looks like you're planning to change this.
-
-> > > > > > +		return false;
-> > > > > > +
-> > > > > > +	return true;
-> > > > > > +}
-> > > > > > + * nwl_setup_sspl - Set Slot Power limit
-> > > > > > + *
-> > > > > > + * @pcie: PCIe port information  */ static int
-> > > > > > +nwl_setup_sspl(struct nwl_pcie *pcie)
-> > > > >
-> > > > The Set_Slot_Power_Limit Message includes a one DW data payload. The
-> > > > data payload is copied from the Slot Capabilities register of the
-> > > > Downstream Port and is written into the Device Capabilities register
-> > > > of the Upstream Port on the other side of the Link. Bits 9:8 of the
-> > > > data payload map to the Slot Power Limit Scale field and bits 7:0
-> > > > map to the Slot Power Limit Value field. Bits 31:10 of the data
-> > > > payload must be set to all 0's by the Transmitter and ignored by the
-> > Receiver.
-> > >
-> > > > This Message is sent automatically by the Downstream Port (of a Root
-> > > > Complex or a Switch) when one of the following events occurs:
-> > > > -> On a Configuration Write to the Slot Capabilities register (see
-> > > > Section 7.8.9) when the Data Link Layer reports DL_Up status.
-> > >
-> > > I interpret this as meaning "the *hardware* automatically sends a
-> > > Set_Slot_Power_Limit Message."  There's no mention of software doing
-> > > anything other than the configuration write.
-> > >
-> > > If your hardware doesn't do that, I think it's a defect.  It's fine to
-> > > work around it, but we should have a comment to that effect so people
-> > > don't copy the code to new drivers that don't need it.
-> > 
-> > Our hardware is not capable of doing it, so we are doing it software. Yes I will
-> > add some comments.
-
-And add a comment here.
-
-> > > It's a little strange that 7.8.9 talks about writing to this register
-> > > when all of its fields are HwInit and supposedly read-only.  I had
-> > > assumed devices would use strapping or implementation-specific
-> > > registers to set the Slot Power values, but maybe some devices use direct
-> > writes to Slot Capabilities instead.
-> > >
-> > > BTW, I noticed a related lspci bug: it didn't decode the Capture Slot
-> > > Power Limit in Device Capabilities of Endpoints.  I posted a fix for that
-> > separately.
-> > >
-> > > The Slot Power Limit (in Slot Capabilities) indicates how much power
-> > > the slot can supply to a downstream device.  That's a function of the
-> > > platform design, so it seems like this is something you want to set
-> > > via DT or some other mechanism that knows about the platform.
-> > > Intercepting all config writes and updating it with whatever the
-> > > caller supplies doesn't sound wise.  The value might be coming from
-> > > setpci or some other source with no knowledge of the platform.
-> > 
-> > Agreed, but this is what can be done, it is difficult to determine who does
-> > what.
-
-Your driver is based on DT.  What prevents you from adding a DT property
-that shows the slot power capability?
-
-> > > > > > +			status = nwl_bridge_readl(pcie,
-> > TX_PCIE_MSG)
-> > > > > > +						  & MSG_DONE_BIT;
-> > > > > > +			if (status) {
-> > > > > > +				status = nwl_bridge_readl(pcie,
-> > > > > TX_PCIE_MSG)
-> > > > > > +						  &
-> > MSG_DONE_STATUS_BIT;
-> > >
-> > > > > It's not clear to me whether you need to re-read TX_PCIE_MSG here.
+On Tue, Dec 08, 2015 at 09:45:19AM +0900, Simon Horman wrote:
+> On Mon, Dec 07, 2015 at 09:38:33AM -0600, Bjorn Helgaas wrote:
+> > On Sat, Dec 05, 2015 at 11:38:37AM +0100, Geert Uytterhoeven wrote:
+> > > Hi Bjorn,
+> > > 
+> > > On Fri, Dec 4, 2015 at 10:26 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > On Tue, Dec 01, 2015 at 04:24:30PM +0900, Simon Horman wrote:
+> > > >> Simply document new compat strings.
+> > > >> There appears to be no need for a driver updates.
+> > > >>
+> > > >> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> > > >> ---
+> > > >>  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 1 +
+> > > >>  1 file changed, 1 insertion(+)
+> > > >>
+> > > >> diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> > > >> index b19be08a8113..7c231b3e5872 100644
+> > > >> --- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> > > >> +++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> > > >> @@ -8,6 +8,7 @@ OHCI and EHCI controllers.
+> > > >>  Required properties:
+> > > >>  - compatible: "renesas,pci-r8a7790" for the R8A7790 SoC;
+> > > >>             "renesas,pci-r8a7791" for the R8A7791 SoC;
+> > > >> +           "renesas,pci-r8a7793" for the R8A7793 SoC;
 > > > >
-> > > > MSG_DONE_BIT qualifies MSG_DONE_STATUS_BIT; so value of
-> > > > MSG_DONE_STATUS_BIT is valid only when MSG_DONE_BIT = 1
-> > >
-> > > That doesn't answer the question of whether another read is required.
-> > > In fact, I would argue that if MSG_DONE_STATUS_BIT is only valid when
-> > > MSG_DONE_BIT = 1, you *should* only do one read, because you want to
-> > > capture both bits simultaneously so you know they're consistent, e.g.,
-> > >
-> > >   status = nwl_bridge_readl(pcie, TX_PCIE_MSG);
-> > >   if (status & MSG_DONE_BIT) {
-> > >     if (status & MSG_DONE_STATUS_BIT)
-> > >       ...
-> > >   }
-> > >
-> > > If you read the register twice, you always have to worry about what
-> > > changes MSG_DONE_BIT, and how you guarantee that the second read
-> > > happens before MSG_DONE_BIT changes.
-> > >
-> > Agreed, will do it in this way, once will also confirm with IP owner regarding
-> > both bits being updated parallel.
+> > > > What's the benefit of adding a string here if the driver doesn't check
+> > > > for it?  Since the driver doesn't look for it, there's no way to test
+> > > > anything.
+> > > 
+> > > If we ever discover a difference between PCI on r8a7793 compared to PCI on
+> > > other SoCs of the R-Car Gen2 family, we can handle that difference in the
+> > > driver.
+> > > 
+> > > > It doesn't seem like this file is an authoritative source of names, so
+> > > 
+> > > Yes it is. When adding compatible values to a DTS, checkpatch.pl will check
+> > > for their existence in the binding documentation. Hence we always add the
+> > > compatible values to the DT binding docs, before we start using them.
+> > > 
+> > > > if we add it here, there's the possibility the r8a7793 will be
+> > > > canceled or renamed, and then we'd have to update this if the driver
+> > > > ever did need an r8a7793-specific quirk.  If we waited until the
+> > > 
+> > > I don't understand what you mean here.
+> > > 
+> > > > driver actually needs a quirk, then we'd know exactly what name to
+> > > > look for and we could update the driver, DT, and doc all together.
+> > > 
+> > > If we update driver, DT, and doc only after we discover the need for a quirk,
+> > > it's already too late, due to stable DT rules. Hence we always document and
+> > > use SoC-specific compatible values, sometimes combined with family-specific
+> > > compatible values. The driver only matches to the as least specific value as
+> > > possible.
+> > 
+> > The stable DT rules seem to be the key here, but I don't know what
+> > they are.  I found Documentation/devicetree/bindings/ABI.txt, but it
+> > doesn't clear it up for me.
+> > 
+> > I was assuming vendors could ship a DT in a platform ROM, in the same
+> > way platforms ship with an ACPI system description.  For ACPI, the
+> > _HID/_CID in the ROM in the field is authoritative in the sense that
+> > we have to regard it as a fixed, unchangeable feature of the platform.
+> > If we want a driver to recognize that device, we have to build the ID
+> > from the ROM into the driver, and it doesn't matter what is documented
+> > in the spec or in the kernel source.
+> > 
+> > If we had a one-sentence description of why adding the doc update when
+> > we actually need it is too late, that would probably be enough.
+> 
+> I agree that would be useful.
 
-It sounds like you're working on resolving this.
+Sorry for letting this slip. How about the following in the relevant changelogs:
 
-Did I miss a question for me?
+	By documenting this compat sting it may be used in DTSs shipped,
+	for example as part of ROMs. It must be used in conjunction with
+	the Gen2 fallback compat string. At this time there are no known
+	differences between the r8a7793 IP block and that implemented by
+	the driver for the Gen2 fallback compat string. Thus there is no
+	need to update the driver as the use of the Gen2 fallback compat
+	string will activate the correct code in the current driver while
+	leaving the option for r8a7793-specific driver code to be activated
+	in an updated driver should the need arise.
 
-Bjorn
+> > I'm perfectly happy with the PCI changes, so if somebody else wants to
+> > just merge all these via a DT tree, I'm happy to ack the PCI ones.
+> 
+> I have no fixed ideas about who should take these changes
+> but I think you could take them through the PCI tree if you
+> are so inclined.
