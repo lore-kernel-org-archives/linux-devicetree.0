@@ -1,126 +1,65 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: Add DT support for Juno r2 board
-Date: Mon, 11 Jan 2016 11:09:09 +0000
-Message-ID: <20160111110909.GD13633@e106497-lin.cambridge.arm.com>
-References: <1450872611-15326-1-git-send-email-sudeep.holla@arm.com>
- <20151229183521.GL12450@rob-hp-laptop>
- <5683BE7A.9020404@arm.com>
- <CAL_Jsq+RZk3LnOhGtiXRFmxmA6bTOEdymtF1yN=6q=iRmUr_9Q@mail.gmail.com>
- <5683F971.9000300@arm.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH 0/5] ARM: dts: sunxi: Add backlight node
+ to q8 tablets
+Date: Mon, 11 Jan 2016 12:09:12 +0100
+Message-ID: <56938D58.9020204@redhat.com>
+References: <1442752251-20744-1-git-send-email-hdegoede@redhat.com>
+ <fc4adcf5-4362-4d4c-b42e-729922c79f65@googlegroups.com>
+ <5677F7CF.3050308@redhat.com> <5693852A.1060604@gmail.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5683F971.9000300-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, arm-hC8oa7XEHlfYtjvyW6yDsg@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBX42Z22AKGQEYQIT4GY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <5693852A.1060604-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: 8001010 <8001010-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 30, 2015 at 03:34:09PM +0000, Sudeep Holla wrote:
->=20
->=20
-> On 30/12/15 15:09, Rob Herring wrote:
-> >On Wed, Dec 30, 2015 at 5:22 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>=
- wrote:
-> >>Hi Rob,
-> >>
-> >>Thanks for the review.
-> >>
-> >>On 29/12/15 18:35, Rob Herring wrote:
-> >>>
-> >>>On Wed, Dec 23, 2015 at 12:10:11PM +0000, Sudeep Holla wrote:
-> >>>>
-> >>>>Juno r2 is identical to Juno r1 with Cortex A57 cores replaced by
-> >>>>Cortex A72 cores.
-> >>>
-> >>>
-> >>>That's a bigger change than I'd expect...
-> >>>
-> >>
-> >>I am not sure if I understood what you meant by that. Do you want m=
-e to
-> >>elaborate with more details ?
-> >
-> >No, just my commentary that I'd expect r1 -> r2 to be a board or Si
-> >spin rather than a whole new core.
-> >
->=20
-> Ah OK, yes it's new Si and has other minor updates like latest revisi=
-ons
-> of Cortex-A53 and other IPs. I just mentioned only the DT visible
-> changes in the commit log.
->=20
-> >>>>Acked-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-> >>>>Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> >>>>---
-> >>>>   Documentation/devicetree/bindings/arm/arm-boards |   1 +
-> >>>>   Documentation/devicetree/bindings/arm/cpus.txt   |   1 +
-> >>>
-> >>>
-> >>>This should probably be a separate patch, but I already have a pat=
-ch in
-> >>>my tree for 4.5 adding arm,cortex-a72. So just drop this hunk.
-> >>>
-> >>
-> >>OK, will post DT binding separately.
-> >
-> >No need, it is already in my tree.
-> >
->=20
-> Sorry for not being clear earlier. I was referring the "arm,juno-r2"
-> compatible addition. I assume you have no objection if it's part of t=
-he
-> same patch.
->=20
-> >>>>+       pcie-controller@40000000 {
-> >>>>+               compatible =3D "arm,juno-r1-pcie", "plda,xpressri=
-ch3-axi",
-> >>>>"pci-host-ecam-generic";
-> >>>
-> >>>
-> >>>Is this common with r1?
-> >>>
-> >>
-> >>AFAIK it is. Liviu can you confirm ?
-> >
-> >Then perhaps you should move this to a common spot.
-> >
->=20
-> True, will wait for Liviu's response.
+Hi,
 
-AFAIK Juno r2 should have identical PCIe controller to r1. I have not b=
-een able to
-test it myself but at the same time I have no information on any change=
-s applied to
-the IP.
+On 11-01-16 11:34, 8001010 wrote:
+> Hans de Goede wrote:
+>> Hi,
+>>
+>> On 21-12-15 11:56, Silvio Pellicano wrote:
+>>>
+>>>
+>>>> Here is a slightly updated version of Chen-Yu's backlight
+>>>> patches, also adding support for the backlight found on A13
+>>>> based q8 tablets.
+>>>>
+>>>
+>>> If i compile your dtsi with (obviously) pwm  support enable , backlight
+>>> switch off after kernel start,
+>>> if i disable pwm in menuconfig,it stay on, all seem correct (pwm on PB2 in
+>>> original script.bin),
+>>> but there is somewhere a bug in pwm or dtsi description of backlight.
+>>
+>> No there is not, if you enable the pwm driver you must also enable
+>> the backlight-pwm driver / add CONFIG_BACKLIGHT_PWM=y to your .config
+>> (and make sure it stays that way after a "make oldconfig").
+>>
+>> Regards,
+>>
+>> Hans
+>>
+> Now work, but what flag  i have to enable to leave 5v usb otg ON?
+> uboot switch ON Usb Otg voltage but kernel switch off during boot (no usb devices work).
 
-Sudeep, probably worth moving the pcie-controller@40000000 node in juno=
--base.dtsi
-and disable it by default, then re-enable in juno-r1.dts and juno-r2.dt=
-s.
+In order for otg to work you must load a gadget driver, e.g. do:
 
-Best regards,
-Liviu
+insmod libcomposite.ko
+insmod u_serial.ko
+insmod usb_f_acm.ko
+insmod g_serial.ko
 
->=20
-> --=20
-> Regards,
-> Sudeep
->=20
+Regards,
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hans
