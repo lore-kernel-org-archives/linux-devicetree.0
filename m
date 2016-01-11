@@ -1,27 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 3/3] dt-bindings: modify document of Rockchip power
- domains
-Date: Sun, 10 Jan 2016 20:55:10 -0600
-Message-ID: <20160111025510.GA17050@rob-hp-laptop>
-References: <1452508600-3512-1-git-send-email-zhangqing@rock-chips.com>
- <1452508600-3512-4-git-send-email-zhangqing@rock-chips.com>
+Subject: Re: [PATCH v2] rcar_jpu: Add R-Car Gen2 Fallback Compatibility String
+Date: Sun, 10 Jan 2016 20:56:37 -0600
+Message-ID: <20160111025637.GA17825@rob-hp-laptop>
+References: <1452478400-4267-1-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1452508600-3512-4-git-send-email-zhangqing@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: zhangqing <zhangqing@rock-chips.com>
-Cc: heiko@sntech.de, wxt@rock-chips.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, khilman@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, huangtao@rock-chips.com, zyw@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1452478400-4267-1-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-media-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 11, 2016 at 02:36:40AM -0800, zhangqing wrote:
-> Modify binding documentation for the power domains
-> found on Rockchip RK3368 SoCs.
+On Mon, Jan 11, 2016 at 11:13:20AM +0900, Simon Horman wrote:
+> Add fallback compatibility string.
+> This is in keeping with the fallback scheme being adopted wherever
+> appropriate for drivers for Renesas SoCs.
 > 
-> Signed-off-by: zhangqing <zhangqing@rock-chips.com>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> 
 > ---
->  .../bindings/soc/rockchip/power_domain.txt          | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
+> v2
+> * Make fallback compat string for R-Car Gen2 rather than all renesas
+>   hardware: that seems too generic
+> ---
+>  Documentation/devicetree/bindings/media/renesas,jpu.txt | 13 +++++++------
+>  drivers/media/platform/rcar_jpu.c                       |  1 +
+>  2 files changed, 8 insertions(+), 6 deletions(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
