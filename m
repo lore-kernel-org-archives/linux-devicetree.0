@@ -1,54 +1,85 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and
- charging of backup battery
-Date: Tue, 12 Jan 2016 14:13:19 -0800
-Message-ID: <20160112221319.GE12777@atomide.com>
-References: <66F37918-EA7F-4D83-8B5F-A6B5C0CD7623@goldelico.com>
- <20160108181551.GX12777@atomide.com>
- <832803EE-E4CB-46B1-BF39-2DC0BB695A5D@goldelico.com>
- <20160108190457.GY12777@atomide.com>
- <CCB763BE-5D1F-4A53-BF9A-C12C08A6EFC4@goldelico.com>
- <20160111202421.GA12777@atomide.com>
- <20160112000917.GC12777@atomide.com>
- <417BBA32-A7DC-40CD-8A6B-EA910B1C9C13@goldelico.com>
- <E4C8F6CA-37C1-406F-9804-46055253BED9@goldelico.com>
- <5695722B.90202@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/4] Documentation: fsl-quadspi: Add fsl,ls2080a-dspi
+ compatible string
+Date: Tue, 12 Jan 2016 16:13:29 -0600
+Message-ID: <CAL_Jsq+FVonqh8EbY4FFqHzxGZ_kDWGoC2jKNiGioEV96FXD+w@mail.gmail.com>
+References: <1450954863-7540-1-git-send-email-yao.yuan@freescale.com>
+ <20151229183501.GH12450@rob-hp-laptop> <AM2PR04MB07228C97A751DA40EEDD231489FD0@AM2PR04MB0722.eurprd04.prod.outlook.com>
+ <CAL_Jsq+fsqJkN+5859rLm56Ch1k48LRDsRMP6KFHywnCNyf=kA@mail.gmail.com> <AM2PR04MB07220B81AE758762CB6B13D489CA0@AM2PR04MB0722.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5695722B.90202-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, =?utf-8?Q?Gra=C5=BEvydas?= Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AM2PR04MB07220B81AE758762CB6B13D489CA0@AM2PR04MB0722.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yao Yuan <yao.yuan@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [160112 13:38]:
-> On 01/12/2016 03:27 PM, H. Nikolaus Schaller wrote:
-> >> Am 12.01.2016 um 01:09 schrieb Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>:
-> >>> Care to test it with your RTC enabling patch?
-> >>
-> >> yes, I will test asap.
-> >>
-> >> Reminds me on some issues we did have with msecure and twl4030 rtc some years ago.
-> > 
-> > Ok, works for me on OMAP5432EVM.
-> > 
-> > Thanks for spotting the issue.
+On Mon, Jan 11, 2016 at 10:36 PM, Yao Yuan <yao.yuan@nxp.com> wrote:
+> On Thu, Dec 31, 2015 at 10:35PM, Yao Yuan <yao.yuan@nxp.com> wrote:
+>> On Wed, Dec 30, 2015 at 11:20 PM, Rob Herring wrote:
+>> > On Tue, Dec 29, 2015 at 9:17 PM, Yao Yuan <yao.yuan@nxp.com> wrote:
+>> > > Hi Rob,
+>> > >
+>> > > Thanks for your review.
+>> > > So you mean that I should add the commit message for why I add this
+>> > > new
+>> > compatible?
+>> >
+>> > Please don't top post on the lists.
+>> >
+>> > No, the binding doc should explain what are valid combinations of
+>> > compatible strings and the order when the dts can have multiple
+>> > strings. For example, is this valid:
+>> >
+>> > compatible = "fsl,vf610-dspi", "fsl,ls2080a-dspi";
+>> >
+>> > In other words, I should be able to check a dts file against what the
+>> > binding doc says.
+>> >
+>> > Rob
+>>
+>> OK, I got it.
+>> The "fsl,vf610-dspi", "fsl,ls1021a-v1.0-dspi", "fsl,ls2085a-dspi" is valid and used
+>> in driver.
+>> But "fsl,ls2080a-dspi" is just used for platform flag.
+>> Could you help to give an example that how can I explain it in Documents?
+>> Or should I not write this compatible in Document.
+>>
+>> I find that many compatible strings like this (not valid just a platform flag) for
+>> other driver are not record in document.
 
-OK thanks.
+Well, things sneak in without getting documented. Also, lots of PPC
+bindings predate our documentation requirement.
 
-> http://pastebin.ubuntu.com/14480852/
-> Works for me as well ( https://patchwork.kernel.org/patch/7954341/ +
-> http://pastebin.ubuntu.com/14480852/)
+>>
+>> Thanks.
+>>
+>> Yuan Yao
+>
+> Hi Rob,
+> How about like this:
+> diff --git a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
+> index 00c587b..7a9a523 100644
+> --- a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
+> +++ b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
+> @@ -4,6 +4,8 @@ Required properties:
+>    - compatible : Should be "fsl,vf610-qspi", "fsl,imx6sx-qspi",
+>                  "fsl,imx7d-qspi", "fsl,imx6ul-qspi",
+>                  "fsl,ls1021-qspi"
+> +       Invalid compatible just for SOC flag:
+> +               "fsl,ls2080a-qspi"
 
-OK thanks for testing, will apply both to omap-for-v4.5/fixes to get RTC
-working on omap5.
+This doesn't make sense to me. Typically, we see something like:
 
-Regards,
+Should be one of:
+  "vendor,soc1-device"
+  "vendor,soc2-device"
+Followed by "vendor,soc0-device"
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sometime the last entry is a generic string. Here soc0 is the first
+SOC with the block. Later SOCs have "the same" block, but new
+compatible strings in addition in case any changes or errata are found
+that the driver needs to deal with.
+
+Rob
