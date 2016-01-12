@@ -1,397 +1,81 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v2 1/2] regulator: Add coupled regulator
-Date: Tue, 12 Jan 2016 14:37:21 +0100
-Message-ID: <1452605842-9317-2-git-send-email-maxime.ripard@free-electrons.com>
-References: <1452605842-9317-1-git-send-email-maxime.ripard@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452605842-9317-1-git-send-email-maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Liam Girdwood <lgirdwood@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RESEND PATCH 1/2] devicetree: mxsfb: add reset-active property
+Date: Tue, 12 Jan 2016 15:39:06 +0200
+Message-ID: <569501FA.2060304@ti.com>
+References: <1452594141-26073-1-git-send-email-mans@mansr.com>
+ <5694F51C.7040107@ti.com> <yw1x7fjfuenu.fsf@unicorn.mansr.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="Xef7RdBgTfRQcRS1LiGXW07UaemInVVR6"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <yw1x7fjfuenu.fsf-OEaqT8BN2ezZK2NkWkPsZwC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some boards, in order to power devices that have a quite high power
-consumption, wire multiple regulators in parallel.
+--Xef7RdBgTfRQcRS1LiGXW07UaemInVVR6
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-In such a case, the regulators need to be kept in sync, all of them being
-enabled or disabled in parallel.
 
-This also requires to expose only the voltages that are common to all the
-regulators.
 
-Eventually support for changing the voltage in parallel should be added
-too, possibly with delays between each other to avoid having a too brutal
-peak consumption.
+On 12/01/16 15:10, M=C3=A5ns Rullg=C3=A5rd wrote:
 
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- .../bindings/regulator/coupled-voltage.txt         |  18 ++
- drivers/regulator/Kconfig                          |   8 +
- drivers/regulator/Makefile                         |   1 +
- drivers/regulator/coupled-voltage-regulator.c      | 299 +++++++++++++++++++++
- 4 files changed, 326 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/coupled-voltage.txt
- create mode 100644 drivers/regulator/coupled-voltage-regulator.c
+>> I don't see any sleeps related to reset in the code. If reset is
+>> asserted when the display is blanked, is it guaranteed that the reset
+>> stays asserted long enough until the display is enabled again?
+>=20
+> In the datasheet for the panel I'm dealing with, there's some vague
+> mention of 10 us (I missed it last time I looked), and my patch indeed
+> fails to ensure this is met.  Other panels will obviously have differen=
+t
+> requirements.  To handle all cases properly, I suppose a configurable
+> delay after changing the reset pin should be added.
 
-diff --git a/Documentation/devicetree/bindings/regulator/coupled-voltage.txt b/Documentation/devicetree/bindings/regulator/coupled-voltage.txt
-new file mode 100644
-index 000000000000..f5401aab52f2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/coupled-voltage.txt
-@@ -0,0 +1,18 @@
-+Coupled voltage regulators
-+
-+Required properties:
-+- compatible		: Must be "coupled-voltage-regulator".
-+
-+Optional properties:
-+- vinX-supply		: Phandle to the regulators it aggregates
-+
-+Any property defined as part of the core regulator binding defined in
-+regulator.txt can also be used.
-+
-+Example:
-+	vcc_wifi: wifi_reg {
-+		compatible = "coupled-voltage-regulator";
-+		regulator-name = "vcc-wifi";
-+		vin0-supply = <&reg_ldo3>;
-+		vin1-supply = <&reg_ldo4>;
-+	};
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 7df9da82f592..5d18c9a6169f 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -35,6 +35,14 @@ config REGULATOR_FIXED_VOLTAGE
- 	  useful for systems which use a combination of software
- 	  managed regulators and simple non-configurable regulators.
- 
-+config REGULATOR_COUPLED_VOLTAGE
-+	tristate "Coupled voltage regulator support"
-+	depends on OF
-+	help
-+	  This driver provides support for regulators that are an
-+	  aggregate of other regulators in the system, and need to
-+	  keep them all in sync.
-+
- config REGULATOR_VIRTUAL_CONSUMER
- 	tristate "Virtual regulator consumer support"
- 	help
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 980b1943fa81..76c9728113f7 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_REGULATOR_AS3711) += as3711-regulator.o
- obj-$(CONFIG_REGULATOR_AS3722) += as3722-regulator.o
- obj-$(CONFIG_REGULATOR_AXP20X) += axp20x-regulator.o
- obj-$(CONFIG_REGULATOR_BCM590XX) += bcm590xx-regulator.o
-+obj-$(CONFIG_REGULATOR_COUPLED_VOLTAGE) += coupled-voltage-regulator.o
- obj-$(CONFIG_REGULATOR_DA903X)	+= da903x.o
- obj-$(CONFIG_REGULATOR_DA9052)	+= da9052-regulator.o
- obj-$(CONFIG_REGULATOR_DA9055)	+= da9055-regulator.o
-diff --git a/drivers/regulator/coupled-voltage-regulator.c b/drivers/regulator/coupled-voltage-regulator.c
-new file mode 100644
-index 000000000000..c1bf798abfef
---- /dev/null
-+++ b/drivers/regulator/coupled-voltage-regulator.c
-@@ -0,0 +1,299 @@
-+/*
-+ * Copyright 2015 Free Electrons
-+ * Copyright 2015 NextThing Co.
-+ *
-+ * Author: Maxime Ripard <maxime.ripard@free-electrons.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of the
-+ * License, or (at your option) any later version.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+#include <linux/regulator/consumer.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/of_regulator.h>
-+
-+#define COUPLED_REGULATOR_MAX_SUPPLIES	16
-+
-+/**
-+ * struct coupled_regulator - Private data for the driver
-+ * @regulators: array of struct regulator aggregated
-+ * @n_regulators: number of regulators aggregated
-+ * @voltages: array of voltages common to all the regulators
-+ * @n_voltages: number of common voltages
-+ */
-+struct coupled_regulator {
-+	struct regulator	**regulators;
-+	int			n_regulators;
-+	int			*voltages;
-+	int			n_voltages;
-+};
-+
-+static int coupled_regulator_disable(struct regulator_dev *rdev)
-+{
-+	struct coupled_regulator *creg = rdev_get_drvdata(rdev);
-+	int ret, i;
-+
-+	for (i = 0; i < creg->n_regulators; i++) {
-+		ret = regulator_disable(creg->regulators[i]);
-+		if (ret) {
-+			dev_warn(&rdev->dev, "Couldn't disable our regulator\n");
-+			goto err_unwind;
-+		}
-+	}
-+
-+	return 0;
-+
-+err_unwind:
-+	/*
-+	 * In case a regulator cannot disable, unwind everything to
-+	 * make sure we're in a consistent (and probably safe) state
-+	 */
-+	for (; i >= 0; i--) {
-+		int en_ret = regulator_enable(creg->regulators[i]);
-+		if (en_ret)
-+			dev_warn(&rdev->dev,
-+				 "Couldn't unwind disable operation for our regulator\n");
-+	}
-+
-+	return ret;
-+}
-+
-+static int coupled_regulator_enable(struct regulator_dev *rdev)
-+{
-+	struct coupled_regulator *creg = rdev_get_drvdata(rdev);
-+	int ret, i;
-+
-+	for (i = 0; i < creg->n_regulators; i++) {
-+		ret = regulator_enable(creg->regulators[i]);
-+		if (ret) {
-+			dev_warn(&rdev->dev, "Couldn't enable our regulator\n");
-+			goto err_unwind;
-+		}
-+	}
-+
-+	return 0;
-+
-+err_unwind:
-+	/*
-+	 * In case a regulator cannot enable, unwind everything to
-+	 * make sure we're in a consistent (and probably safe) state
-+	 */
-+	for (; i >= 0; i--) {
-+		int en_ret = regulator_disable(creg->regulators[i]);
-+		if (en_ret)
-+			dev_warn(&rdev->dev,
-+				 "Couldn't unwind enable operation for our regulator\n");
-+	}
-+
-+	return ret;
-+}
-+
-+static int coupled_regulator_is_enabled(struct regulator_dev *rdev)
-+{
-+	struct coupled_regulator *creg = rdev_get_drvdata(rdev);
-+	int i;
-+
-+	for (i = 0; i < creg->n_regulators; i++) {
-+		int ret = regulator_is_enabled(creg->regulators[i]);
-+
-+		/*
-+		 * If there's at least one regulator that isn't
-+		 * enabled or returns an error, return that,
-+		 * otherwise, just go on.
-+		 */
-+		if (ret <= 0)
-+			return ret;
-+	}
-+
-+	return 1;
-+}
-+
-+static int coupled_regulator_list_voltage(struct regulator_dev *rdev,
-+					  unsigned int selector)
-+{
-+	struct coupled_regulator *creg = rdev_get_drvdata(rdev);
-+
-+	if (selector >= creg->n_voltages)
-+		return -EINVAL;
-+
-+	return creg->voltages[selector];
-+}
-+
-+static struct regulator_ops coupled_regulator_ops = {
-+	.enable			= coupled_regulator_enable,
-+	.disable		= coupled_regulator_disable,
-+	.is_enabled		= coupled_regulator_is_enabled,
-+	.list_voltage		= coupled_regulator_list_voltage,
-+};
-+
-+static struct regulator_desc coupled_regulator_desc = {
-+	.name		= "coupled-voltage-regulator",
-+	.type		= REGULATOR_VOLTAGE,
-+	.ops		= &coupled_regulator_ops,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int coupled_regulator_probe(struct platform_device *pdev)
-+{
-+	const struct regulator_init_data *init_data;
-+	struct coupled_regulator *creg;
-+	struct regulator_config config = { };
-+	struct regulator_dev *regulator;
-+	struct regulator_desc *desc;
-+	struct device_node *np = pdev->dev.of_node;
-+	int max_voltages, i;
-+
-+	if (!np) {
-+		dev_err(&pdev->dev, "Device Tree node missing\n");
-+		return -EINVAL;
-+	}
-+
-+	creg = devm_kzalloc(&pdev->dev, sizeof(*creg), GFP_KERNEL);
-+	if (!creg)
-+		return -ENOMEM;
-+
-+	init_data = of_get_regulator_init_data(&pdev->dev, np,
-+					       &coupled_regulator_desc);
-+	if (!init_data)
-+		return -ENOMEM;
-+
-+	config.of_node = np;
-+	config.dev = &pdev->dev;
-+	config.driver_data = creg;
-+	config.init_data = init_data;
-+
-+	for (i = 0; i < COUPLED_REGULATOR_MAX_SUPPLIES; i++) {
-+		char *propname = kasprintf(GFP_KERNEL, "vin%d-supply", i);
-+		const void *prop = of_get_property(np, propname, NULL);
-+		kfree(propname);
-+
-+		if (!prop) {
-+			creg->n_regulators = i;
-+			break;
-+		}
-+	}
-+
-+	dev_dbg(&pdev->dev, "Found %d parent regulators\n",
-+		creg->n_regulators);
-+
-+	if (!creg->n_regulators) {
-+		dev_err(&pdev->dev, "No parent regulators listed\n");
-+		return -EINVAL;
-+	}
-+
-+	creg->regulators = devm_kcalloc(&pdev->dev, creg->n_regulators,
-+					sizeof(*creg->regulators), GFP_KERNEL);
-+	if (!creg->regulators)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < creg->n_regulators; i++) {
-+		char *propname = kasprintf(GFP_KERNEL, "vin%d", i);
-+
-+		dev_dbg(&pdev->dev, "Trying to get supply %s\n", propname);
-+
-+		creg->regulators[i] = devm_regulator_get(&pdev->dev, propname);
-+		kfree(propname);
-+
-+		if (IS_ERR(creg->regulators[i])) {
-+			dev_err(&pdev->dev, "Couldn't get regulator vin%d\n",
-+				i);
-+			return PTR_ERR(creg->regulators[i]);
-+		}
-+
-+		/*
-+		 * FIXME: We should probably be doing something
-+		 * smarter here to avoid having a bunch of regulators
-+		 * disabled and a bunch enabled.
-+		 */
-+		if (regulator_is_enabled(creg->regulators[i])) {
-+			int ret = regulator_enable(creg->regulators[i]);
-+			if (ret) {
-+				regulator_put(creg->regulators[i]);
-+				return ret;
-+			}
-+		}
-+	}
-+
-+	/*
-+	 * Since we want only to expose voltages that can be set on
-+	 * all the regulators, we won't have more voltages supported
-+	 * than the number of voltages supported by the first
-+	 * regulator in our list
-+	 */
-+	max_voltages = regulator_count_voltages(creg->regulators[0]);
-+
-+	creg->voltages = devm_kcalloc(&pdev->dev, max_voltages, sizeof(int),
-+				      GFP_KERNEL);
-+
-+	/* Build up list of supported voltages */
-+	for (i = 0; i < max_voltages; i++) {
-+		int voltage = regulator_list_voltage(creg->regulators[0], i);
-+		bool usable = true;
-+		int j;
-+
-+		if (voltage <= 0)
-+			continue;
-+
-+		dev_dbg(&pdev->dev, "Checking voltage %d...\n", voltage);
-+
-+		for (j = 1; j < creg->n_regulators; j++) {
-+			if (!regulator_is_supported_voltage(creg->regulators[j],
-+							    voltage, voltage)) {
-+				usable = false;
-+				break;
-+			}
-+		}
-+
-+		if (usable) {
-+			creg->voltages[creg->n_voltages++] = voltage;
-+			dev_dbg(&pdev->dev,
-+				 "Adding voltage %d to the list of supported voltages\n",
-+				 voltage);
-+		}
-+	}
-+
-+	dev_dbg(&pdev->dev, "Supporting %d voltages\n", creg->n_voltages);
-+
-+	desc = devm_kmemdup(&pdev->dev, &coupled_regulator_desc,
-+			    sizeof(coupled_regulator_desc), GFP_KERNEL);
-+	if (!desc)
-+		return -ENOMEM;
-+	desc->n_voltages = creg->n_voltages;
-+
-+	regulator = devm_regulator_register(&pdev->dev, desc, &config);
-+	if (IS_ERR(regulator)) {
-+		dev_err(&pdev->dev, "Failed to register regulator %s\n",
-+			coupled_regulator_desc.name);
-+		return PTR_ERR(regulator);
-+	}
-+
-+	return 0;
-+}
-+
-+static struct of_device_id coupled_regulator_of_match[] = {
-+	{ .compatible = "coupled-voltage-regulator" },
-+	{ /* Sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, coupled_regulator_of_match);
-+
-+static struct platform_driver coupled_regulator_driver = {
-+	.probe	= coupled_regulator_probe,
-+
-+	.driver = {
-+		.name		= "coupled-voltage-regulator",
-+		.of_match_table	= coupled_regulator_of_match,
-+	},
-+};
-+module_platform_driver(coupled_regulator_driver);
-+
-+MODULE_AUTHOR("Maxime Ripard <maxime.ripard@free-electrons.com>");
-+MODULE_DESCRIPTION("Coupled Regulator Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.6.4
+Right. And then you need to ensure the powers are enabled in the right
+order, the pixel clock is started at the right time (some need pix clock
+before reset), and so on and so on =3D).
+
+> I could also take the lazy way out, pinmux this signal high and leave i=
+t
+> at that.
+
+I've seen panels that require a reset after powers have been off, or
+similar, but I hope those are minority.
+
+So yes, probably just making sure the reset is not asserted is the most
+generic and easy way forward.
+
+ Tomi
+
+
+--Xef7RdBgTfRQcRS1LiGXW07UaemInVVR6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJWlQH6AAoJEPo9qoy8lh71sogP/3frrmFZkgzKymU1ki3l0KM4
+fG7NlbfLUz+2666JEEyJUb9AEyg4UMqWfVF5O09A1UkKx50lKrNBmee1YpA40SpB
+uQ+O080o4OpafZ34sOej/eaG00+wwCDh8U8mDMtu5h+ckiEaHD4eZNih5mgaxBA9
+ScsQRB7QBSBopePnNv15sB+AjheEeGF9dT9YCy7WrjwQleMnZAEXxRBaeBhXAaHZ
+WXiK7a5xOZ1nUQCiBMJP9fN+fHIpvCPdPgfZweBc2xyC5RGBKCCL0972Ddhoz3VB
+ODZEN+TRckBTIJW2RTeYbkwy5LYbcqlxjkqU69XIbpnTWD+iSTGuF1hHiolPR7LX
+urN2F5Cj4TqOcN9nb6611XzWOaOb6aimU7Wvh84dfqaHRQLsrboB+T2b4KN157t6
+319MbXvx/vwRHmNPUx/3Ubk7wosVA5W+WGp+OeClSyP7N+LPHRwRy8mxKBryCIV/
+fNk77ny4UFxYfauUFAUcDll8h0QFhbzZ9I6LTtJlC8ad0b/i5Hm5gMdZ04MA9AjH
+Pgk0VkxvwifNgp7KHpXB+ehqzxo3o897Z0usZJQA+92GGPuE5hTKbOFWjmUfLoK/
+kwL5Wf5WSM52i3EUlmfxwZtBg46MDQRBt2Q7XUv7fZdcDrkH+qYEibyDN0Wqevb+
+0jkMi7TvX/ZRD3FXNbZV
+=vxC0
+-----END PGP SIGNATURE-----
+
+--Xef7RdBgTfRQcRS1LiGXW07UaemInVVR6--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
