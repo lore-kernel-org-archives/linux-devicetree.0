@@ -1,7 +1,7 @@
 From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V2 4/6] gpio: max77620: add gpio driver for MAX77620/MAX20024
-Date: Tue, 12 Jan 2016 14:47:51 +0530
-Message-ID: <1452590273-16421-5-git-send-email-ldewangan@nvidia.com>
+Subject: [PATCH V2 5/6] rtc: max77xxx: add RTC driver for Maxim MAX77xxx series RTC IP
+Date: Tue, 12 Jan 2016 14:47:52 +0530
+Message-ID: <1452590273-16421-6-git-send-email-ldewangan@nvidia.com>
 References: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,67 +9,71 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com
-Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, Laxman Dewangan <ldewangan@nvidia.com>, Chaitanya Bandi <bandik@nvidia.com>
+Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-MAXIM Semiconductor's PMIC, MAX77620/MAX20024 has 8 GPIO
-pins. It also supports interrupts from these pins.
+Maxim Semiconductor's PMIC MAX77620, MAX77686, MAX20024 have
+same RTC IP on these PMICs.
 
-Add GPIO driver for these pins to control via GPIO APIs.
+Add generic MAX77xxxx series RTC driver which can be used as
+RTC driver for these PMIC and avoids duplication of RTC driver
+for each PMICs. Their MFD driver can be different here.
 
 Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-Signed-off-by: Chaitanya Bandi <bandik@nvidia.com>
 ---
-- Use the gpiochip_add_data and get the chip data from core APIs.
-- Cleanups based on comment received on mfd/rtc.
-- Avoid duplication on error message.
+Changes from V1: 
+- Rename the file to rtc-max77xxx.c and make the generic implementation.
+- Direct regmap apis are used for the register access.
+- Decouped from max77620 driver.
+- Taken care of cleanup comments form V1 version.
 
- drivers/gpio/Kconfig         |   9 ++
- drivers/gpio/Makefile        |   1 +
- drivers/gpio/gpio-max77620.c | 306 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 316 insertions(+)
- create mode 100644 drivers/gpio/gpio-max77620.c
+ drivers/rtc/Kconfig        |  10 +
+ drivers/rtc/Makefile       |   1 +
+ drivers/rtc/rtc-max77xxx.c | 500 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 511 insertions(+)
+ create mode 100644 drivers/rtc/rtc-max77xxx.c
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index f2b7160..b96a80c 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -797,6 +797,15 @@ config GPIO_LP3943
- 	  LP3943 can be used as a GPIO expander which provides up to 16 GPIOs.
- 	  Open drain outputs are required for this usage.
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 376322f..4972dd5 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -315,6 +315,16 @@ config RTC_DRV_MAX8997
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called rtc-max8997.
  
-+config GPIO_MAX77620
-+	bool "GPIO support for PMIC MAX77620 and MAX20024"
-+	depends on MFD_MAX77620
++config RTC_DRV_MAX77XXX
++	tristate "Maxim MAX77XXX series generic RTC driver"
 +	help
-+	  GPIO driver for MAX77620 and MAX20024 PMIC from Maxim Semiconductor.
-+	  MAX77620 PMIC has 8 pins that can be configured as GPIOs. The
-+	  driver also provides interrupt support for each of the gpios.
-+	  Say yes here to enable the max77620 to be used as gpio controller.
++	  If you say yes here you will get support for the generic RTC driver
++	  for Maxim Semiconductor MAX77XXX series of PMIC like MAX77620.
++	  This also supports the RTC driver for Maxim PMIC MaX20024 which
++	  is almost same as MAX77620.
++	  This driver can also be built as a module. If so, the module
++	  will be called rtc-max77xxx.
 +
- config GPIO_MSIC
- 	bool "Intel MSIC mixed signal gpio support"
- 	depends on MFD_INTEL_MSIC
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index ece7d7c..f676a2d 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -57,6 +57,7 @@ obj-$(CONFIG_GPIO_MAX730X)	+= gpio-max730x.o
- obj-$(CONFIG_GPIO_MAX7300)	+= gpio-max7300.o
- obj-$(CONFIG_GPIO_MAX7301)	+= gpio-max7301.o
- obj-$(CONFIG_GPIO_MAX732X)	+= gpio-max732x.o
-+obj-$(CONFIG_GPIO_MAX77620)	+= gpio-max77620.o
- obj-$(CONFIG_GPIO_MB86S7X)	+= gpio-mb86s7x.o
- obj-$(CONFIG_GPIO_MC33880)	+= gpio-mc33880.o
- obj-$(CONFIG_GPIO_MC9S08DZ60)	+= gpio-mc9s08dz60.o
-diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
+ config RTC_DRV_MAX77686
+ 	tristate "Maxim MAX77686"
+ 	depends on MFD_MAX77686
+diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+index 62d61b2..e5aba30 100644
+--- a/drivers/rtc/Makefile
++++ b/drivers/rtc/Makefile
+@@ -85,6 +85,7 @@ obj-$(CONFIG_RTC_DRV_M48T59)	+= rtc-m48t59.o
+ obj-$(CONFIG_RTC_DRV_M48T86)	+= rtc-m48t86.o
+ obj-$(CONFIG_RTC_DRV_MAX6900)	+= rtc-max6900.o
+ obj-$(CONFIG_RTC_DRV_MAX6902)	+= rtc-max6902.o
++obj-$(CONFIG_RTC_DRV_MAX77XXX)	+= rtc-max77xxx.o
+ obj-$(CONFIG_RTC_DRV_MAX77686)	+= rtc-max77686.o
+ obj-$(CONFIG_RTC_DRV_MAX77802)	+= rtc-max77802.o
+ obj-$(CONFIG_RTC_DRV_MAX8907)	+= rtc-max8907.o
+diff --git a/drivers/rtc/rtc-max77xxx.c b/drivers/rtc/rtc-max77xxx.c
 new file mode 100644
-index 0000000..3185e6a
+index 0000000..c5ada63
 --- /dev/null
-+++ b/drivers/gpio/gpio-max77620.c
-@@ -0,0 +1,306 @@
++++ b/drivers/rtc/rtc-max77xxx.c
+@@ -0,0 +1,500 @@
 +/*
-+ * MAXIM MAX77620 GPIO driver
++ * Max77xxx(MAX77620, MAX77686 etc) RTC driver
 + *
 + * Copyright (c) 2016, NVIDIA CORPORATION.  All rights reserved.
 + *
@@ -84,295 +88,489 @@ index 0000000..3185e6a
 + */
 +
 +#include <linux/module.h>
-+#include <linux/interrupt.h>
-+#include <linux/gpio.h>
 +#include <linux/platform_device.h>
-+#include <linux/mfd/max77620.h>
++#include <linux/slab.h>
++#include <linux/delay.h>
++#include <linux/regmap.h>
++#include <linux/rtc.h>
 +
-+#define GPIO_REG_ADDR(offset) (MAX77620_REG_GPIO0 + offset)
++/* RTC Registers */
++#define MAX77XXX_REG_RTCINT			0x00
++#define MAX77XXX_REG_RTCINTM			0x01
++#define MAX77XXX_REG_RTCCNTLM			0x02
++#define MAX77XXX_REG_RTCCNTL			0x03
++#define MAX77XXX_REG_RTCUPDATE0			0x04
++#define MAX77XXX_REG_RTCUPDATE1			0x05
++#define MAX77XXX_REG_RTCSMPL			0x06
++#define MAX77XXX_REG_RTCSEC			0x07
++#define MAX77XXX_REG_RTCMIN			0x08
++#define MAX77XXX_REG_RTCHOUR			0x09
++#define MAX77XXX_REG_RTCDOW			0x0A
++#define MAX77XXX_REG_RTCMONTH			0x0B
++#define MAX77XXX_REG_RTCYEAR			0x0C
++#define MAX77XXX_REG_RTCDOM			0x0D
++#define MAX77XXX_REG_RTCSECA1			0x0E
++#define MAX77XXX_REG_RTCMINA1			0x0F
++#define MAX77XXX_REG_RTCHOURA1			0x10
++#define MAX77XXX_REG_RTCDOWA1			0x11
++#define MAX77XXX_REG_RTCMONTHA1			0x12
++#define MAX77XXX_REG_RTCYEARA1			0x13
++#define MAX77XXX_REG_RTCDOMA1			0x14
++#define MAX77XXX_REG_RTCSECA2			0x15
++#define MAX77XXX_REG_RTCMINA2			0x16
++#define MAX77XXX_REG_RTCHOURA2			0x17
++#define MAX77XXX_REG_RTCDOWA2			0x18
++#define MAX77XXX_REG_RTCMONTHA2			0x19
++#define MAX77XXX_REG_RTCYEARA2			0x1A
++#define MAX77XXX_REG_RTCDOMA2			0x1B
 +
-+struct max77620_gpio {
-+	struct gpio_chip	gpio_chip;
-+	struct device		*parent;
-+	struct device		*dev;
-+	int			gpio_irq;
-+	int			irq_base;
-+	int			gpio_base;
++#define MAX77XXX_RTC60S_MASK			BIT(0)
++#define MAX77XXX_RTCA1_MASK			BIT(1)
++#define MAX77XXX_RTCA2_MASK			BIT(2)
++#define MAX77XXX_RTC_SMPL_MASK			BIT(3)
++#define MAX77XXX_RTC_RTC1S_MASK			BIT(4)
++#define MAX77XXX_RTC_ALL_IRQ_MASK		0x1F
++
++#define MAX77XXX_BCDM_MASK			BIT(0)
++#define MAX77XXX_HRMODEM_MASK			BIT(1)
++
++#define WB_UPDATE_MASK				BIT(0)
++#define FLAG_AUTO_CLEAR_MASK			BIT(1)
++#define FREEZE_SEC_MASK				BIT(2)
++#define RTC_WAKE_MASK				BIT(3)
++#define RB_UPDATE_MASK				BIT(4)
++
++#define MAX77XXX_UDF_MASK			BIT(0)
++#define MAX77XXX_RBUDF_MASK			BIT(1)
++
++#define SEC_MASK				0x7F
++#define MIN_MASK				0x7F
++#define HOUR_MASK				0x3F
++#define WEEKDAY_MASK				0x7F
++#define MONTH_MASK				0x1F
++#define YEAR_MASK				0xFF
++#define MONTHDAY_MASK				0x3F
++
++#define ALARM_EN_MASK				0x80
++#define ALARM_EN_SHIFT				7
++
++#define RTC_YEAR_BASE				100
++#define RTC_YEAR_MAX				99
++
++#define ONOFF_WK_ALARM1_MASK			BIT(2)
++
++enum {
++	RTC_SEC,
++	RTC_MIN,
++	RTC_HOUR,
++	RTC_WEEKDAY,
++	RTC_MONTH,
++	RTC_YEAR,
++	RTC_MONTHDAY,
++	RTC_NR
 +};
 +
-+static const struct regmap_irq max77620_gpio_irqs[] = {
-+	[MAX77620_IRQ_GPIO0 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE0,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO1 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE1,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO2 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE2,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO3 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE3,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO4 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE4,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO5 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE5,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO6 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE6,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_GPIO7 - MAX77620_IRQ_GPIO0] = {
-+		.mask = MAX77620_IRQ_LVL2_GPIO_EDGE7,
-+		.reg_offset = 0,
-+	},
++struct max77xxx_rtc_info {
++	struct rtc_device *rtc;
++	struct device *dev;
++	struct regmap *rmap;
++	struct mutex io_lock;
++	int irq;
++	u8 irq_mask;
 +};
 +
-+static struct regmap_irq_chip max77620_gpio_irq_chip = {
-+	.name = "max77620-gpio",
-+	.irqs = max77620_gpio_irqs,
-+	.num_irqs = ARRAY_SIZE(max77620_gpio_irqs),
-+	.num_regs = 1,
-+	.irq_reg_stride = 1,
-+	.status_base = MAX77620_REG_IRQ_LVL2_GPIO,
-+};
-+
-+static int max77620_gpio_dir_input(struct gpio_chip *gc, unsigned offset)
++static int max77xxx_rtc_update_buffer(struct max77xxx_rtc_info *rinfo,
++		bool write)
 +{
-+	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
++	u8 val = FLAG_AUTO_CLEAR_MASK | RTC_WAKE_MASK;
 +	int ret;
 +
-+	ret = max77620_reg_update(mgpio->parent, MAX77620_PWR_SLAVE,
-+		GPIO_REG_ADDR(offset), MAX77620_CNFG_GPIO_DIR_MASK,
-+				MAX77620_CNFG_GPIO_DIR_INPUT);
-+	if (ret < 0)
-+		dev_err(mgpio->dev, "CNFG_GPIOx dir update failed: %d\n", ret);
++	if (write)
++		val |= WB_UPDATE_MASK;
++	else
++		val |= RB_UPDATE_MASK;
++
++	ret = regmap_write(rinfo->rmap, MAX77XXX_REG_RTCUPDATE0, val);
++	if (ret < 0) {
++		dev_err(rinfo->dev, "Reg RTCUPDATE0 write failed: %d\n", ret);
++		return ret;
++	}
++
++	/* Must wait 16ms for buffer update */
++	usleep_range(16000, 17000);
++
++	return 0;
++}
++
++static int max77xxx_rtc_write(struct max77xxx_rtc_info *rinfo, u8 addr,
++			void *vals, u32 len)
++{
++	int ret;
++	int i;
++	u8 *src = vals;
++
++	mutex_lock(&rinfo->io_lock);
++	for (i = 0; i < len; ++i) {
++		ret = regmap_write(rinfo->rmap, addr + i, *src++);
++		if (ret < 0) {
++			dev_err(rinfo->dev, "Reg 0x%02x write failed: %d\n",
++				addr + i, ret);
++			goto out;
++		}
++	}
++	ret = max77xxx_rtc_update_buffer(rinfo, true);
++out:
++	mutex_unlock(&rinfo->io_lock);
 +
 +	return ret;
 +}
 +
-+static int max77620_gpio_get(struct gpio_chip *gc, unsigned offset)
++static int max77xxx_rtc_read(struct max77xxx_rtc_info *rinfo, u8 addr,
++			void *vals, u32 len, bool update_buffer)
 +{
-+	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
-+	u8 val;
 +	int ret;
 +
-+	ret = max77620_reg_read(mgpio->parent, MAX77620_PWR_SLAVE,
-+				GPIO_REG_ADDR(offset), &val);
-+	if (ret < 0) {
-+		dev_err(mgpio->dev, "CNFG_GPIOx read failed: %d\n", ret);
-+		return ret;
++	mutex_lock(&rinfo->io_lock);
++	if (update_buffer) {
++		ret = max77xxx_rtc_update_buffer(rinfo, false);
++		if (ret < 0)
++			goto out;
 +	}
 +
-+	return !!(val & MAX77620_CNFG_GPIO_INPUT_VAL_MASK);
-+}
-+
-+static int max77620_gpio_dir_output(struct gpio_chip *gc, unsigned offset,
-+				int value)
-+{
-+	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
-+	u8 val;
-+	int ret;
-+
-+	val = (value) ? MAX77620_CNFG_GPIO_OUTPUT_VAL_HIGH :
-+				MAX77620_CNFG_GPIO_OUTPUT_VAL_LOW;
-+
-+	ret = max77620_reg_update(mgpio->parent, MAX77620_PWR_SLAVE,
-+			GPIO_REG_ADDR(offset),
-+			MAX77620_CNFG_GPIO_OUTPUT_VAL_MASK, val);
-+	if (ret < 0) {
-+		dev_err(mgpio->dev, "CNFG_GPIOx val update failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = max77620_reg_update(mgpio->parent, MAX77620_PWR_SLAVE,
-+		GPIO_REG_ADDR(offset), MAX77620_CNFG_GPIO_DIR_MASK,
-+				MAX77620_CNFG_GPIO_DIR_OUTPUT);
++	ret = regmap_bulk_read(rinfo->rmap, addr, vals, len);
 +	if (ret < 0)
-+		dev_err(mgpio->dev, "CNFG_GPIOx dir update failed: %d\n", ret);
++		dev_err(rinfo->dev, "Reg 0x%02x read failed: %d\n", addr, ret);
++out:
++	mutex_unlock(&rinfo->io_lock);
 +
 +	return ret;
 +}
 +
-+static int max77620_gpio_set_debounce(struct gpio_chip *gc,
-+		unsigned offset, unsigned debounce)
++static int max77xxx_rtc_reg_to_tm(struct max77xxx_rtc_info *rinfo, u8 *buf,
++			 struct rtc_time *tm)
 +{
-+	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
-+	u8 val;
-+	int ret;
++	int wday = buf[RTC_WEEKDAY] & WEEKDAY_MASK;
 +
-+	switch (debounce) {
-+	case 0:
-+		val = MAX77620_CNFG_GPIO_DBNC_None;
-+		break;
-+	case 1 ... 8:
-+		val = MAX77620_CNFG_GPIO_DBNC_8ms;
-+		break;
-+	case 9 ... 16:
-+		val = MAX77620_CNFG_GPIO_DBNC_16ms;
-+		break;
-+	case 17 ... 32:
-+		val = MAX77620_CNFG_GPIO_DBNC_32ms;
-+		break;
-+	default:
-+		dev_err(mgpio->dev, "Illegal value %u\n", debounce);
++	if (!wday) {
++		dev_err(rinfo->dev, "Invalid day of week, %d\n", wday);
 +		return -EINVAL;
 +	}
 +
-+	ret = max77620_reg_update(mgpio->parent, MAX77620_PWR_SLAVE,
-+		GPIO_REG_ADDR(offset), MAX77620_CNFG_GPIO_DBNC_MASK, val);
++	tm->tm_sec = (int)(buf[RTC_SEC] & SEC_MASK);
++	tm->tm_min = (int)(buf[RTC_MIN] & MIN_MASK);
++	tm->tm_hour = (int)(buf[RTC_HOUR] & HOUR_MASK);
++	tm->tm_mday = (int)(buf[RTC_MONTHDAY] & MONTHDAY_MASK);
++	tm->tm_mon = (int)(buf[RTC_MONTH] & MONTH_MASK) - 1;
++	tm->tm_year = (int)(buf[RTC_YEAR] & YEAR_MASK) + RTC_YEAR_BASE;
++	tm->tm_wday = ffs(wday) - 1;
++
++	return 0;
++}
++
++static int max77xxx_rtc_tm_to_reg(struct max77xxx_rtc_info *rinfo, u8 *buf,
++			 struct rtc_time *tm, int alarm)
++{
++	u8 alarm_mask = alarm ? ALARM_EN_MASK : 0;
++
++	if ((tm->tm_year < RTC_YEAR_BASE) ||
++			(tm->tm_year > (RTC_YEAR_BASE + RTC_YEAR_MAX))) {
++		dev_err(rinfo->dev, "Invalid year, %d\n", tm->tm_year);
++		return -EINVAL;
++	}
++
++	buf[RTC_SEC] = tm->tm_sec | alarm_mask;
++	buf[RTC_MIN] = tm->tm_min | alarm_mask;
++	buf[RTC_HOUR] = tm->tm_hour | alarm_mask;
++	buf[RTC_MONTHDAY] = tm->tm_mday | alarm_mask;
++	buf[RTC_MONTH] = (tm->tm_mon + 1) | alarm_mask;
++	buf[RTC_YEAR] = (tm->tm_year - RTC_YEAR_BASE) | alarm_mask;
++
++	/* The wday is configured only when disabled alarm. */
++	buf[RTC_WEEKDAY] = (alarm) ? 0x01 : (1 << tm->tm_wday);
++
++	return 0;
++}
++
++static int max77xxx_rtc_irq_mask(struct max77xxx_rtc_info *rinfo, u8 irq)
++{
++	u8 irq_mask = rinfo->irq_mask | irq;
++	int ret;
++
++	ret = max77xxx_rtc_write(rinfo, MAX77XXX_REG_RTCINTM, &irq_mask, 1);
 +	if (ret < 0)
-+		dev_err(mgpio->dev, "CNFG_GPIOx_DBNC update failed: %d\n", ret);
++		return ret;
++	rinfo->irq_mask = irq_mask;
 +
 +	return ret;
 +}
 +
-+static void max77620_gpio_set(struct gpio_chip *gc, unsigned offset,
-+			int value)
++static int max77xxx_rtc_irq_unmask(struct max77xxx_rtc_info *rinfo, u8 irq)
 +{
-+	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
++	u8 irq_mask = rinfo->irq_mask & ~irq;
++	int ret;
++
++	ret = max77xxx_rtc_write(rinfo, MAX77XXX_REG_RTCINTM, &irq_mask, 1);
++	if (ret < 0)
++		return ret;
++	rinfo->irq_mask = irq_mask;
++
++	return ret;
++}
++
++static int max77xxx_rtc_do_irq(struct max77xxx_rtc_info *rinfo)
++{
++	unsigned int irq_status;
++	int ret;
++
++	ret = regmap_read(rinfo->rmap, MAX77XXX_REG_RTCINT, &irq_status);
++	if (ret < 0) {
++		dev_err(rinfo->dev, "RTCINT read failed: %d\n", ret);
++		return ret;
++	}
++
++	if (!(rinfo->irq_mask & MAX77XXX_RTCA1_MASK) &&
++			(irq_status & MAX77XXX_RTCA1_MASK))
++		rtc_update_irq(rinfo->rtc, 1, RTC_IRQF | RTC_AF);
++
++	if (!(rinfo->irq_mask & MAX77XXX_RTC_RTC1S_MASK) &&
++			(irq_status & MAX77XXX_RTC_RTC1S_MASK))
++		rtc_update_irq(rinfo->rtc, 1, RTC_IRQF | RTC_UF);
++
++	return ret;
++}
++
++static irqreturn_t max77xxx_rtc_irq(int irq, void *data)
++{
++	struct max77xxx_rtc_info *rinfo = (struct max77xxx_rtc_info *)data;
++
++	max77xxx_rtc_do_irq(rinfo);
++
++	return IRQ_HANDLED;
++}
++
++static int max77xxx_rtc_alarm_irq_enable(struct device *dev,
++					 unsigned int enabled)
++{
++	struct max77xxx_rtc_info *rinfo = dev_get_drvdata(dev);
++	int ret;
++
++	if (rinfo->irq < 0)
++		return -ENXIO;
++
++	/* Handle pending interrupt */
++	ret = max77xxx_rtc_do_irq(rinfo);
++	if (ret < 0)
++		return ret;
++
++	/* Configure alarm interrupt */
++	if (enabled)
++		ret = max77xxx_rtc_irq_unmask(rinfo, MAX77XXX_RTCA1_MASK);
++	else
++		ret = max77xxx_rtc_irq_mask(rinfo, MAX77XXX_RTCA1_MASK);
++
++	return ret;
++}
++
++static int max77xxx_rtc_read_time(struct device *dev, struct rtc_time *tm)
++{
++	struct max77xxx_rtc_info *rinfo = dev_get_drvdata(dev);
++	u8 buf[RTC_NR];
++	int ret;
++
++	ret = max77xxx_rtc_read(rinfo, MAX77XXX_REG_RTCSEC, buf, RTC_NR, true);
++	if (ret < 0)
++		return ret;
++
++	return max77xxx_rtc_reg_to_tm(rinfo, buf, tm);
++}
++
++static int max77xxx_rtc_set_time(struct device *dev, struct rtc_time *tm)
++{
++	struct max77xxx_rtc_info *rinfo = dev_get_drvdata(dev);
++	u8 buf[RTC_NR];
++	int ret;
++
++	ret = max77xxx_rtc_tm_to_reg(rinfo, buf, tm, 0);
++	if (ret < 0)
++		return ret;
++
++	return max77xxx_rtc_write(rinfo, MAX77XXX_REG_RTCSEC, buf, RTC_NR);
++}
++
++static int max77xxx_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
++{
++	struct max77xxx_rtc_info *rinfo = dev_get_drvdata(dev);
++	u8 buf[RTC_NR];
++	int ret;
++
++	ret = max77xxx_rtc_read(rinfo, MAX77XXX_REG_RTCSECA1, buf, RTC_NR, 1);
++	if (ret < 0)
++		return ret;
++
++	buf[RTC_YEAR] &= ~ALARM_EN_MASK;
++	ret = max77xxx_rtc_reg_to_tm(rinfo, buf, &alrm->time);
++	if (ret < 0)
++		return ret;
++
++	alrm->enabled = (rinfo->irq_mask & MAX77XXX_RTCA1_MASK) ? 0 : 1;
++
++	return 0;
++}
++
++static int max77xxx_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
++{
++	struct max77xxx_rtc_info *rinfo = dev_get_drvdata(dev);
++	u8 buf[RTC_NR];
++	int ret;
++
++	ret = max77xxx_rtc_tm_to_reg(rinfo, buf, &alrm->time, 1);
++	if (ret < 0)
++		return ret;
++
++	ret = max77xxx_rtc_write(rinfo, MAX77XXX_REG_RTCSECA1, buf, RTC_NR);
++	if (ret < 0)
++		return ret;
++
++	ret = max77xxx_rtc_alarm_irq_enable(dev, alrm->enabled);
++	if (ret < 0)
++		return ret;
++
++	return ret;
++}
++
++static const struct rtc_class_ops max77xxx_rtc_ops = {
++	.read_time = max77xxx_rtc_read_time,
++	.set_time = max77xxx_rtc_set_time,
++	.read_alarm = max77xxx_rtc_read_alarm,
++	.set_alarm = max77xxx_rtc_set_alarm,
++	.alarm_irq_enable = max77xxx_rtc_alarm_irq_enable,
++};
++
++static int max77xxx_rtc_preinit(struct max77xxx_rtc_info *rinfo)
++{
 +	u8 val;
 +	int ret;
 +
-+	val = (value) ? MAX77620_CNFG_GPIO_OUTPUT_VAL_HIGH :
-+				MAX77620_CNFG_GPIO_OUTPUT_VAL_LOW;
-+
-+	ret = max77620_reg_update(mgpio->parent, MAX77620_PWR_SLAVE,
-+			GPIO_REG_ADDR(offset),
-+			MAX77620_CNFG_GPIO_OUTPUT_VAL_MASK, val);
++	/* Mask all interrupts */
++	rinfo->irq_mask = 0xFF;
++	ret = max77xxx_rtc_write(rinfo, MAX77XXX_REG_RTCINTM,
++			&rinfo->irq_mask, 1);
 +	if (ret < 0)
-+		dev_err(mgpio->dev, "CNFG_GPIO_OUT update failed: %d\n", ret);
++		return ret;
++
++	max77xxx_rtc_read(rinfo, MAX77XXX_REG_RTCINT, &val, 1, false);
++
++	/* Configure Binary mode and 24hour mode */
++	val = MAX77XXX_HRMODEM_MASK;
++	return max77xxx_rtc_write(rinfo, MAX77XXX_REG_RTCCNTL, &val, 1);
 +}
 +
-+static int max77620_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
++static int max77xxx_rtc_probe(struct platform_device *pdev)
 +{
-+	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
-+	struct max77620_chip *chip = dev_get_drvdata(mgpio->dev->parent);
-+
-+	return regmap_irq_get_virq(chip->gpio_irq_data, offset);
-+}
-+
-+static void max77620_gpio_irq_remove(struct max77620_gpio *mgpio)
-+{
-+	struct max77620_chip *chip = dev_get_drvdata(mgpio->dev->parent);
-+
-+	regmap_del_irq_chip(mgpio->gpio_irq, chip->gpio_irq_data);
-+	chip->gpio_irq_data = NULL;
-+}
-+
-+static int max77620_gpio_probe(struct platform_device *pdev)
-+{
-+	struct max77620_gpio *mgpio;
-+	struct max77620_chip *chip =  dev_get_drvdata(pdev->dev.parent);
++	static struct max77xxx_rtc_info *rinfo;
 +	int ret;
-+	int gpio_irq;
 +
-+	gpio_irq = platform_get_irq(pdev, 0);
-+	if (gpio_irq <= 0) {
-+		dev_err(&pdev->dev, "Gpio irq not available %d\n", gpio_irq);
++	rinfo = devm_kzalloc(&pdev->dev, sizeof(*rinfo), GFP_KERNEL);
++	if (!rinfo)
++		return -ENOMEM;
++
++	dev_set_drvdata(&pdev->dev, rinfo);
++	rinfo->dev = &pdev->dev;
++	mutex_init(&rinfo->io_lock);
++	rinfo->rmap = dev_get_regmap(pdev->dev.parent, "rtc-slave");
++	if (!rinfo->rmap) {
++		dev_err(&pdev->dev, "Regmap for RTC device not found\n");
 +		return -ENODEV;
 +	}
 +
-+	mgpio = devm_kzalloc(&pdev->dev, sizeof(*mgpio), GFP_KERNEL);
-+	if (!mgpio)
-+		return -ENOMEM;
++	ret = max77xxx_rtc_preinit(rinfo);
++	if (ret < 0)
++		goto fail_preinit;
 +
-+	mgpio->parent = pdev->dev.parent;
-+	mgpio->dev = &pdev->dev;
-+	mgpio->gpio_irq = gpio_irq;
++	device_init_wakeup(&pdev->dev, 1);
 +
-+	mgpio->gpio_chip.label = pdev->name;
-+	mgpio->gpio_chip.parent = &pdev->dev;
-+	mgpio->gpio_chip.direction_input = max77620_gpio_dir_input;
-+	mgpio->gpio_chip.get = max77620_gpio_get;
-+	mgpio->gpio_chip.direction_output = max77620_gpio_dir_output;
-+	mgpio->gpio_chip.set_debounce = max77620_gpio_set_debounce;
-+	mgpio->gpio_chip.set = max77620_gpio_set;
-+	mgpio->gpio_chip.to_irq = max77620_gpio_to_irq;
-+	mgpio->gpio_chip.ngpio = MAX77620_GPIO_NR;
-+	mgpio->gpio_chip.can_sleep = 1;
-+	mgpio->gpio_chip.base = -1;
-+	mgpio->irq_base = -1;
-+#ifdef CONFIG_OF_GPIO
-+	mgpio->gpio_chip.of_node = pdev->dev.parent->of_node;
-+#endif
-+
-+	platform_set_drvdata(pdev, mgpio);
-+
-+	ret = gpiochip_add_data(&mgpio->gpio_chip, mgpio);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "gpio_init: Failed to add max77620_gpio\n");
-+		return ret;
++	rinfo->rtc = devm_rtc_device_register(&pdev->dev, "max77xxx-rtc",
++				&max77xxx_rtc_ops, THIS_MODULE);
++	if (IS_ERR(rinfo->rtc)) {
++		ret = PTR_ERR(rinfo->rtc);
++		dev_err(&pdev->dev, "RTC registration failed: %d\n", ret);
++		goto fail_preinit;
 +	}
-+	mgpio->gpio_base = mgpio->gpio_chip.base;
 +
-+	ret = regmap_add_irq_chip(chip->rmap[MAX77620_PWR_SLAVE],
-+		mgpio->gpio_irq, IRQF_ONESHOT | IRQF_EARLY_RESUME,
-+		mgpio->irq_base,
-+		&max77620_gpio_irq_chip, &chip->gpio_irq_data);
++	rinfo->irq = platform_get_irq(pdev, 0);
++	ret = devm_request_threaded_irq(&pdev->dev, rinfo->irq, NULL,
++			max77xxx_rtc_irq, IRQF_ONESHOT, "max77xxx-rtc", rinfo);
 +	if (ret < 0) {
-+		dev_err(&pdev->dev, "Failed to add gpio irq_chip %d\n", ret);
-+		goto fail;
++		dev_err(rinfo->dev, "Failed to request irq %d\n", rinfo->irq);
++		goto fail_preinit;
 +	}
++
++	enable_irq_wake(rinfo->irq);
 +
 +	return 0;
 +
-+fail:
-+	gpiochip_remove(&mgpio->gpio_chip);
++fail_preinit:
++	mutex_destroy(&rinfo->io_lock);
 +
 +	return ret;
 +}
 +
-+static int max77620_gpio_remove(struct platform_device *pdev)
++static int max77xxx_rtc_remove(struct platform_device *pdev)
 +{
-+	struct max77620_gpio *mgpio = platform_get_drvdata(pdev);
++	struct max77xxx_rtc_info *rinfo = dev_get_drvdata(&pdev->dev);
 +
-+	max77620_gpio_irq_remove(mgpio);
-+	gpiochip_remove(&mgpio->gpio_chip);
++	mutex_destroy(&rinfo->io_lock);
 +
 +	return 0;
 +}
 +
-+static const struct platform_device_id max77620_gpio_devtype[] = {
-+	{
-+		.name = "max77620-gpio",
-+	},
-+	{
-+		.name = "max20024-gpio",
++#ifdef CONFIG_PM_SLEEP
++static int max77xxx_rtc_suspend(struct device *dev)
++{
++	struct max77xxx_rtc_info *rinfo = dev_get_drvdata(dev);
++
++	if (device_may_wakeup(dev))
++		enable_irq_wake(rinfo->irq);
++
++	return 0;
++}
++
++static int max77xxx_rtc_resume(struct device *dev)
++{
++	struct max77xxx_rtc_info *rinfo = dev_get_drvdata(dev);
++
++	if (device_may_wakeup(dev))
++		disable_irq_wake(rinfo->irq);
++
++	return 0;
++}
++#endif
++
++static const struct dev_pm_ops max77xxx_rtc_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(max77xxx_rtc_suspend, max77xxx_rtc_resume)
++};
++
++static const struct platform_device_id max77xxx_rtc_devtype[] = {
++	{ .name = "max77xxx-rtc", },
++	{ .name = "max77620-rtc", },
++	{ .name = "max20024-rtc", },
++};
++
++static struct platform_driver max77xxx_rtc_driver = {
++	.probe = max77xxx_rtc_probe,
++	.remove = max77xxx_rtc_remove,
++	.id_table = max77xxx_rtc_devtype,
++	.driver = {
++			.name = "max77xxx-rtc",
++			.pm = &max77xxx_rtc_pm_ops,
 +	},
 +};
 +
-+static struct platform_driver max77620_gpio_driver = {
-+	.driver.name	= "max77620-gpio",
-+	.driver.owner	= THIS_MODULE,
-+	.probe		= max77620_gpio_probe,
-+	.remove		= max77620_gpio_remove,
-+	.id_table	= max77620_gpio_devtype,
-+};
++module_platform_driver(max77xxx_rtc_driver);
 +
-+static int __init max77620_gpio_init(void)
-+{
-+	return platform_driver_register(&max77620_gpio_driver);
-+}
-+subsys_initcall(max77620_gpio_init);
-+
-+static void __exit max77620_gpio_exit(void)
-+{
-+	platform_driver_unregister(&max77620_gpio_driver);
-+}
-+module_exit(max77620_gpio_exit);
-+
-+MODULE_DESCRIPTION("GPIO interface for MAX77620 and MAX20024 PMIC");
++MODULE_DESCRIPTION("max77xxx RTC driver");
 +MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
-+MODULE_AUTHOR("Chaitanya Bandi <bandik@nvidia.com>");
-+MODULE_ALIAS("platform:max77620-gpio");
++MODULE_ALIAS("platform:max77xxx-rtc");
 +MODULE_LICENSE("GPL v2");
 -- 
 2.1.4
