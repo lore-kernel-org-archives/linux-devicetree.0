@@ -1,68 +1,84 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v5 2/7] remoteproc: dt: Provide bindings for ST's Remote Processor Controller driver
-Date: Tue, 12 Jan 2016 12:46:16 +0000
-Message-ID: <1452602781-22424-3-git-send-email-lee.jones@linaro.org>
+Subject: [PATCH v5 3/7] remoteproc: debugfs: Add ability to boot remote
+ processor using debugfs
+Date: Tue, 12 Jan 2016 12:46:17 +0000
+Message-ID: <1452602781-22424-4-git-send-email-lee.jones@linaro.org>
 References: <1452602781-22424-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1452602781-22424-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: kernel@stlinux.com, maxime.coquelin@st.com, ohad@wizery.com, devicetree@vger.kernel.org, Nathan_Lynch@mentor.com, f.fainelli@gmail.com, ludovic.barre@st.com, s-anna@ti.com, Lee Jones <lee.jones@linaro.org>
+Cc: ohad@wizery.com, devicetree@vger.kernel.org, f.fainelli@gmail.com, kernel@stlinux.com, Nathan_Lynch@mentor.com, Lee Jones <lee.jones@linaro.org>, ludovic.barre@st.com, maxime.coquelin@st.com
 List-Id: devicetree@vger.kernel.org
+
+This functionality is especially useful during the testing phase.  When
+used in conjunction with Mailbox's Test Framework we can trivially conduct
+end-to-end testing i.e. boot co-processor, send and receive messages to
+the co-processor, then shut it down again (repeat as required).
 
 Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- .../devicetree/bindings/remoteproc/st-rproc.txt    | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/st-rproc.txt
+ drivers/remoteproc/remoteproc_debugfs.c | 34 +++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/st-rproc.txt b/Documentation/devicetree/bindings/remoteproc/st-rproc.txt
-new file mode 100644
-index 0000000..1031bcd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/st-rproc.txt
-@@ -0,0 +1,41 @@
-+STMicroelectronics Co-Processor Bindings
-+----------------------------------------
+diff --git a/drivers/remoteproc/remoteproc_debugfs.c b/drivers/remoteproc/remoteproc_debugfs.c
+index f63464c..2f2ac33 100644
+--- a/drivers/remoteproc/remoteproc_debugfs.c
++++ b/drivers/remoteproc/remoteproc_debugfs.c
+@@ -88,8 +88,42 @@ static ssize_t rproc_state_read(struct file *filp, char __user *userbuf,
+ 	return simple_read_from_buffer(userbuf, count, ppos, buf, i);
+ }
+ 
++static ssize_t rproc_state_write(struct file *filp, const char __user *userbuf,
++				 size_t count, loff_t *ppos)
++{
++	struct rproc *rproc = filp->private_data;
++	char buf[10];
++	int ret;
 +
-+This binding provides support for adjunct processors found on ST SoCs.
++	if (count > sizeof(buf) || count <= 0)
++		return -EINVAL;
 +
-+Co-processors can be controlled from the bootloader or the primary OS. If
-+the bootloader starts a co-processor, the primary OS must detect its state
-+and act accordingly.
++	ret = copy_from_user(buf, userbuf, count);
++	if (ret)
++		return -EFAULT;
 +
-+Required properties:
-+- compatible		Should be one of:
-+				"st,st231-rproc"
-+				"st,st40-rproc"
-+- memory-region		Reserved memory (See: ../reserved-memory/reserved-memory.txt)
-+- resets		Reset lines (See: ../reset/reset.txt)
-+- reset-names		Must be "sw_reset" and "pwr_reset"
-+- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
-+- clock-frequency	Clock frequency to set co-processor at if the bootloader
-+			hasn't already done so
-+- st,syscfg		System configuration register which holds the boot vector
-+			for the co-processor
-+				1st cell: Phandle to syscon block
-+				2nd cell: Boot vector register offset
++	if (buf[count - 1] == '\n')
++		buf[count - 1] = '\0';
 +
-+Example:
++	if (!strncmp(buf, "start", count)) {
++		ret = rproc_boot(rproc);
++		if (ret) {
++			dev_err(&rproc->dev, "Boot failed: %d\n", ret);
++			return ret;
++		}
++	} else if (!strncmp(buf, "stop", count)) {
++		rproc_shutdown(rproc);
++	} else {
++		dev_err(&rproc->dev, "Unrecognised option: %s\n", buf);
++		return -EINVAL;
++	}
 +
-+	audio_reserved: rproc@42000000 {
-+		compatible = "shared-dma-pool";
-+		reg = <0x42000000 0x01000000>;
-+		no-map;
-+	};
++	return count;
++}
 +
-+	st231-audio {
-+		compatible	= "st,st231-rproc";
-+		memory-region	= <&audio_reserved>;
-+		resets		= <&softreset STIH407_ST231_AUD_SOFTRESET>;
-+		reset-names	= "sw_reset";
-+		clocks		= <&clk_s_c0_flexgen CLK_ST231_AUD_0>;
-+		clock-frequency	= <600000000>;
-+		st,syscfg	= <&syscfg_core 0x228>;
-+	};
+ static const struct file_operations rproc_state_ops = {
+ 	.read = rproc_state_read,
++	.write = rproc_state_write,
+ 	.open = simple_open,
+ 	.llseek	= generic_file_llseek,
+ };
 -- 
 1.9.1
