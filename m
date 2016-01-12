@@ -1,70 +1,47 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v5 6/7] ARM: STiH407: Add nodes for RemoteProc
-Date: Tue, 12 Jan 2016 12:46:20 +0000
-Message-ID: <1452602781-22424-7-git-send-email-lee.jones@linaro.org>
+Subject: [PATCH v5 1/7] remoteproc: debugfs: Check of invalid 'count' value
+Date: Tue, 12 Jan 2016 12:46:15 +0000
+Message-ID: <1452602781-22424-2-git-send-email-lee.jones@linaro.org>
 References: <1452602781-22424-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1452602781-22424-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: kernel@stlinux.com, maxime.coquelin@st.com, ohad@wizery.com, devicetree@vger.kernel.org, Nathan_Lynch@mentor.com, f.fainelli@gmail.com, ludovic.barre@st.com, s-anna@ti.com, Lee Jones <lee.jones@linaro.org>
+Cc: ohad@wizery.com, devicetree@vger.kernel.org, f.fainelli@gmail.com, kernel@stlinux.com, Nathan_Lynch@mentor.com, Lee Jones <lee.jones@linaro.org>, ludovic.barre@st.com, maxime.coquelin@st.com
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+If 'count' value is invalid, return early with an error.
+
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- arch/arm/boot/dts/stih407-family.dtsi | 40 +++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ drivers/remoteproc/remoteproc_debugfs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index 1e4e01925..15c20b6 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -650,5 +650,45 @@
- 			mbox-name	= "st231_audio_video";
- 			status		= "okay";
- 		};
-+
-+		st231_gp0: st231-gp0@40000000 {
-+			compatible	= "st,st231-rproc";
-+			reg		= <0x40000000 0x01000000>;
-+			resets		= <&softreset STIH407_ST231_GP0_SOFTRESET>;
-+			reset-names	= "sw_reset";
-+			clocks		= <&clk_s_c0_flexgen CLK_ST231_GP_0>;
-+			clock-frequency	= <600000000>;
-+			st,syscfg	= <&syscfg_core 0x22c>;
-+		};
-+
-+		st231_gp1: st231-gp1@41000000 {
-+			compatible	= "st,st231-rproc";
-+			reg		= <0x41000000 0x01000000>;
-+			resets		= <&softreset STIH407_ST231_GP1_SOFTRESET>;
-+			reset-names	= "sw_reset";
-+			clocks		= <&clk_s_c0_flexgen CLK_ST231_GP_1>;
-+			clock-frequency = <600000000>;
-+			st,syscfg	= <&syscfg_core 0x220>;
-+		};
-+
-+		st231_audio: st231-audio@42000000 {
-+			compatible	= "st,st231-rproc";
-+			reg		= <0x42000000 0x01000000>;
-+			resets		= <&softreset STIH407_ST231_AUD_SOFTRESET>;
-+			reset-names	= "sw_reset";
-+			clocks		= <&clk_s_c0_flexgen CLK_ST231_AUD_0>;
-+			clock-frequency	= <600000000>;
-+			st,syscfg	= <&syscfg_core 0x228>;
-+		};
-+
-+		st231_dmu: st231-dmu@43000000 {
-+			compatible	= "st,st231-rproc";
-+			reg		= <0x43000000 0x01000000>;
-+			resets		= <&softreset STIH407_ST231_DMU_SOFTRESET>;
-+			reset-names	= "sw_reset";
-+			clocks		= <&clk_s_c0_flexgen CLK_ST231_DMU>;
-+			clock-frequency	= <600000000>;
-+			st,syscfg	= <&syscfg_core 0x224>;
-+		};
- 	};
- };
+diff --git a/drivers/remoteproc/remoteproc_debugfs.c b/drivers/remoteproc/remoteproc_debugfs.c
+index 9d30809..f63464c 100644
+--- a/drivers/remoteproc/remoteproc_debugfs.c
++++ b/drivers/remoteproc/remoteproc_debugfs.c
+@@ -156,8 +156,8 @@ rproc_recovery_write(struct file *filp, const char __user *user_buf,
+ 	char buf[10];
+ 	int ret;
+ 
+-	if (count > sizeof(buf))
+-		return count;
++	if (count > sizeof(buf) || count <= 0)
++		return -EINVAL;
+ 
+ 	ret = copy_from_user(buf, user_buf, count);
+ 	if (ret)
 -- 
 1.9.1
