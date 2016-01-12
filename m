@@ -1,39 +1,58 @@
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Subject: Re: [PATCH V2 3/3] dt-bindings: bsm2835: fix bindings documentation to use new clock framework
-Date: Tue, 12 Jan 2016 16:52:12 +0100
-Message-ID: <2EC555E0-91B9-45AA-8804-848C445E052E@martin.sperl.org>
-References: <1452602149-5875-1-git-send-email-kernel@martin.sperl.org> <1452602149-5875-4-git-send-email-kernel@martin.sperl.org> <20160112143601.GA29373@rob-hp-laptop>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset=us-ascii
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 1/3] ARM: STi: Add DT defines for co-processor reset
+ lines
+Date: Tue, 12 Jan 2016 16:56:54 +0100
+Message-ID: <1452614214.4292.24.camel@pengutronix.de>
+References: <1445856969-19424-1-git-send-email-lee.jones@linaro.org>
+	 <20160112133437.GH27358@x1> <1452606099.4292.20.camel@pengutronix.de>
+	 <20160112142658.GI27358@x1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160112143601.GA29373@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160112142658.GI27358@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Am Dienstag, den 12.01.2016, 14:26 +0000 schrieb Lee Jones:
+> On Tue, 12 Jan 2016, Philipp Zabel wrote:
+> 
+> > Hi Lee,
+> > 
+> > Am Dienstag, den 12.01.2016, 13:34 +0000 schrieb Lee Jones:
+> > > On Mon, 26 Oct 2015, Lee Jones wrote:
+> > > 
+> > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > > ---
+> > > >  include/dt-bindings/reset-controller/stih407-resets.h | 4 ++++
+> > > >  1 file changed, 4 insertions(+)
+> > > > 
+> > > > diff --git a/include/dt-bindings/reset-controller/stih407-resets.h b/include/dt-bindings/reset-controller/stih407-resets.h
+> > > > index 02d4328..4ab3a1c 100644
+> > > > --- a/include/dt-bindings/reset-controller/stih407-resets.h
+> > > > +++ b/include/dt-bindings/reset-controller/stih407-resets.h
+> > > > @@ -52,6 +52,10 @@
+> > > >  #define STIH407_KEYSCAN_SOFTRESET	26
+> > > >  #define STIH407_USB2_PORT0_SOFTRESET	27
+> > > >  #define STIH407_USB2_PORT1_SOFTRESET	28
+> > > > +#define STIH407_ST231_AUD_SOFTRESET	29
+> > > > +#define STIH407_ST231_DMU_SOFTRESET	30
+> > > > +#define STIH407_ST231_GP0_SOFTRESET	31
+> > > > +#define STIH407_ST231_GP1_SOFTRESET	32
+> > > >  
+> > > >  /* Picophy reset defines */
+> > > >  #define STIH407_PICOPHY0_RESET		0
+> > > 
+> > > Has anyone seen this patch?
+> > 
+> > c9bfec0032fb, sorry I missed 4.4.
+> 
+> What about v4.5?  The merge window has only just opened.
 
-> On 12.01.2016, at 15:36, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> 
-> On Tue, Jan 12, 2016 at 12:35:48PM +0000, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
->> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-> 
-> Typo in the subject (bsm).
-> 
->> 
->> The bcm2835-i2s driver has been updated to use the new clock framework
->> for the bcm2835 SOC.
->> 
->> This patch documents the required changes to the bindings.
->> 
->> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-> 
-> Please add acks when you post new versions.
-> 
+It's sitting in arm-soc/for-next, so it should hit mainline during this
+merge window.
 
-You want it resent with the typo fixed and signed-off?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards
+Philipp
