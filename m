@@ -1,15 +1,15 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 0/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD
- driver
-Date: Tue, 12 Jan 2016 08:45:43 +0000
-Message-ID: <20160112084543.GP19803@x1>
+Subject: Re: [PATCH v2 2/2] mfd: add documentation for ACT8945A DT bindings
+Date: Tue, 12 Jan 2016 08:52:07 +0000
+Message-ID: <20160112085207.GQ19803@x1>
 References: <1452585915-551-1-git-send-email-wenyou.yang@atmel.com>
+ <1452585915-551-3-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1452585915-551-1-git-send-email-wenyou.yang@atmel.com>
+In-Reply-To: <1452585915-551-3-git-send-email-wenyou.yang@atmel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Wenyou Yang <wenyou.yang@atmel.com>
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Javier Martinez Canillas <javier@dowhile0.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
@@ -17,50 +17,118 @@ List-Id: devicetree@vger.kernel.org
 
 On Tue, 12 Jan 2016, Wenyou Yang wrote:
 
-> This patch set adds support for the Active-semi ACT8945A PMIC
-> MFD driver. It is a Multi Function Device with the following
-> subdevices:
+> The Active-semi ACT8945A PMIC is a Multi-Function Device, it has
+> two subdevices:
 >  - Regulator
 >  - Charger
 >=20
-> It is interfaced to the host controller using I2C interface,
-> ACT8945A is a child device of the I2C.
+> This patch adds documentation for ACT8945A DT bindings.
+>=20
+> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+> ---
 >=20
 > Changes in v2:
->  - add more help information in Kconfig.
->  - update the file header with short version license and author line.
->  - remove unused structure members (dev, i2c_client) of stuct act8945=
-a_dev.
->  - use define "PLATFORM_DEVID_NONE" for mfd_add_devices(), instead of=
- '-1'.
->  - use more explicit info to indicate the failure to add sub devices.
->  - remove the unnecessary print out.
->  - substitute MODULE_LICENSE("GPL") for MODULE_LICENSE("GPL v2").
 >  - use more specific label in Example.
 >  - add pmic and charger nodes in Example.
 >=20
-> Wenyou Yang (2):
->   mfd: act8945a: add Active-semi ACT8945A PMIC MFD driver
->   mfd: add documentation for ACT8945A DT bindings
-
-Sending out 3 patch-sets for related changes is a pretty
-unconventional way of doing things.  In future could you place them
-all in the same place, that way all of the patches stay together whist
-hopping around our inboxes.
-
 >  Documentation/devicetree/bindings/mfd/act8945a.txt |   82 ++++++++++=
-+++++
->  drivers/mfd/Kconfig                                |   11 ++
->  drivers/mfd/Makefile                               |    1 +
->  drivers/mfd/act8945a.c                             |  109 ++++++++++=
 ++++++++++
->  include/linux/mfd/act8945a.h                       |   21 ++++
->  5 files changed, 224 insertions(+)
+>  1 file changed, 82 insertions(+)
 >  create mode 100644 Documentation/devicetree/bindings/mfd/act8945a.tx=
 t
->  create mode 100644 drivers/mfd/act8945a.c
->  create mode 100644 include/linux/mfd/act8945a.h
 >=20
+> diff --git a/Documentation/devicetree/bindings/mfd/act8945a.txt b/Doc=
+umentation/devicetree/bindings/mfd/act8945a.txt
+> new file mode 100644
+> index 0000000..e4a8aaf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/act8945a.txt
+> @@ -0,0 +1,82 @@
+> +Device-Tree bindings for Active-semi ACT8945A MFD driver
+> +
+> +Required properties:
+> + - compatible: "active-semi,act8945a".
+> + - reg: the I2C slave address for the ACT8945A chip
+> +
+> +The chip exposes two subdevices:
+> + - a regulators: see ../regulator/act8945a-regulator.txt
+> + - a charger: see ../power/act8945a-charger.txt
+> +
+> +Example:
+> +	act8945a@5b {
+> +		compatible =3D "active-semi,act8945a";
+> +		reg =3D <0x5b>;
+> +		status =3D "okay";
+> +
+> +		pmic {
+> +			compatible =3D "active-semi,act8945a-regulator";
+> +			active-semi,vsel-high;
+> +
+> +				regulators {
+
+Your tabbing here is not correct.
+
+> +					vdd_1v35_reg: DCDC_REG1 {
+> +						regulator-name =3D "VDD_1V35";
+> +						regulator-min-microvolt =3D <1350000>;
+> +						regulator-max-microvolt =3D <1350000>;
+> +						regulator-always-on;
+> +					};
+> +
+> +					vdd_1v2_reg: DCDC_REG2 {
+> +						regulator-name =3D "VDD_1V2";
+> +						regulator-min-microvolt =3D <1100000>;
+> +						regulator-max-microvolt =3D <1300000>;
+> +						regulator-always-on;
+> +					};
+> +
+> +					vdd_3v3_reg: DCDC_REG3 {
+> +						regulator-name =3D "VDD_3V3";
+> +						regulator-min-microvolt =3D <3300000>;
+> +						regulator-max-microvolt =3D <3300000>;
+> +						regulator-always-on;
+> +					};
+> +
+> +					vdd_fuse_reg: LDO_REG1 {
+> +						regulator-name =3D "VDD_FUSE";
+> +						regulator-min-microvolt =3D <2500000>;
+> +						regulator-max-microvolt =3D <2500000>;
+> +						regulator-always-on;
+> +					};
+> +
+> +					vdd_3v3_lp_reg: LDO_REG2 {
+> +						regulator-name =3D "VDD_3V3_LP";
+> +						regulator-min-microvolt =3D <3300000>;
+> +						regulator-max-microvolt =3D <3300000>;
+> +						regulator-always-on;
+> +					};
+> +
+> +					vdd_led_reg: LDO_REG3 {
+> +						regulator-name =3D "VDD_LED";
+> +						regulator-min-microvolt =3D <3300000>;
+> +						regulator-max-microvolt =3D <3300000>;
+> +						regulator-always-on;
+> +					};
+> +
+> +					vdd_sdhc_1v8_reg: LDO_REG4 {
+> +						regulator-name =3D "VDD_SDHC_1V8";
+> +						regulator-min-microvolt =3D <1800000>;
+> +						regulator-max-microvolt =3D <1800000>;
+> +						regulator-always-on;
+> +					};
+> +				};
+> +			};
+> +
+> +		charger {
+> +			compatible =3D "active-semi,act8945a-charger";
+> +			pinctrl-names =3D "default";
+> +			pinctrl-0 =3D <&pinctrl_charger_chglev>;
+> +			active-semi,chglev-gpio =3D <&pioA 12 GPIO_ACTIVE_HIGH>;
+> +			active-semi,input_voltage_threshold =3D <6600>;
+> +			active-semi,precondition_timeout =3D <40>;
+> +			active-semi,total_timeout =3D <3>;
+> +		};
+> +	};
 
 --=20
 Lee Jones
