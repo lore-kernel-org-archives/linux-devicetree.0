@@ -1,128 +1,162 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH 2/3] edac: xgene: Add missing SoC register bus error handling and fix CE promotes to UE
-Date: Tue, 12 Jan 2016 16:04:59 -0700
-Message-ID: <1452639900-30919-3-git-send-email-lho@apm.com>
-References: <1452639900-30919-1-git-send-email-lho@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452639900-30919-1-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org
-Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] ARM: shmobile: silk: add DU DT support
+Date: Wed, 13 Jan 2016 02:06:08 +0300
+Message-ID: <20467499.tt8XqkxVqn@wasted.cogentembedded.com>
+References: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1674850.BZpGW9kEud@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add missing register bus error handling for APM X-Gene EDAC SoC and 
-fix an checking condition for CE error promotes to UE.
+Define  the SILK board dependent part of the DU device node.
+Add the device nodes for the Analog Devices ADV7511W HDMI transmitter
+(connected to DU0) and ADV7123  video DAC (connected to DU1). Add the
+necessary subnodes to interconnect DU, HDMI/VDAC devices, and HDMI/VGA
+connectors.
 
-Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
 ---
- drivers/edac/xgene_edac.c |   62 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 files changed, 61 insertions(+), 1 deletions(-)
+This patch is against the 'renesas-devel-20160111-v4.4' tag of Simon Horman's
+'renesas.git' repo.
 
-diff --git a/drivers/edac/xgene_edac.c b/drivers/edac/xgene_edac.c
-index 41f8764..417b749 100644
---- a/drivers/edac/xgene_edac.c
-+++ b/drivers/edac/xgene_edac.c
-@@ -61,6 +61,7 @@ struct xgene_edac {
- 	struct regmap		*mcba_map;
- 	struct regmap		*mcbb_map;
- 	struct regmap		*efuse_map;
-+	struct regmap		*rb_map;
- 	void __iomem		*pcp_csr;
- 	spinlock_t		lock;
- 	struct dentry           *dfs;
-@@ -1057,7 +1058,7 @@ static bool xgene_edac_l3_promote_to_uc_err(u32 l3cesr, u32 l3celr)
- 		case 0x041:
- 			return true;
- 		}
--	} else if (L3C_ELR_ERRSYN(l3celr) == 9)
-+	} else if (L3C_ELR_ERRWAY(l3celr) == 9)
- 		return true;
- 
- 	return false;
-@@ -1353,6 +1354,17 @@ static int xgene_edac_l3_remove(struct xgene_edac_dev_ctx *l3)
- #define GLBL_MDED_ERRH			0x0848
- #define GLBL_MDED_ERRHMASK		0x084c
- 
-+/* IO Bus Registers */
-+#define RBCSR				0x0000
-+#define STICKYERR_MASK			BIT(0)
-+#define RBEIR				0x0008
-+#define AGENT_OFFLINE_ERR_MASK		BIT(30)
-+#define UNIMPL_RBPAGE_ERR_MASK		BIT(29)
-+#define WORD_ALIGNED_ERR_MASK		BIT(28)
-+#define PAGE_ACCESS_ERR_MASK		BIT(27)
-+#define WRITE_ACCESS_MASK		BIT(26)
-+#define RBERRADDR_RD(src)		((src) & 0x03FFFFFF)
-+
- static const char * const soc_mem_err_v1[] = {
- 	"10GbE0",
- 	"10GbE1",
-@@ -1470,6 +1482,46 @@ static void xgene_edac_rb_report(struct edac_device_ctl_info *edac_dev)
- 	u32 err_addr_hi;
- 	u32 reg;
- 
-+	/*
-+	 * Check RB acess errors
-+	 * 1. Out of range
-+	 * 2. Un-implemented page
-+	 * 3. Un-aligned access
-+	 * 4. Offline slave IP
-+	 */
-+	if (regmap_read(ctx->edac->rb_map, RBCSR, &reg))
-+		return;
-+	if (reg & STICKYERR_MASK) {
-+		bool write;
-+		u32 address;
-+
-+		dev_err(edac_dev->dev, "IOB bus access error(s)\n");
-+		if (regmap_read(ctx->edac->rb_map, RBEIR, &reg))
-+			return;
-+		write = reg & WRITE_ACCESS_MASK ? 1 : 0;
-+		address = RBERRADDR_RD(reg);
-+		if (reg & AGENT_OFFLINE_ERR_MASK)
-+			dev_err(edac_dev->dev,
-+				"IOB bus %s access to offline agent error\n",
-+				write ? "write" : "read");
-+		if (reg & UNIMPL_RBPAGE_ERR_MASK)
-+			dev_err(edac_dev->dev,
-+				"IOB bus %s access to unimplemented page error\n",
-+				write ? "write" : "read");
-+		if (reg & WORD_ALIGNED_ERR_MASK)
-+			dev_err(edac_dev->dev,
-+				"IOB bus %s word aligned access error\n",
-+				write ? "write" : "read");
-+		if (reg & PAGE_ACCESS_ERR_MASK)
-+			dev_err(edac_dev->dev,
-+				"IOB bus %s to page out of range access error\n",
-+				write ? "write" : "read");
-+		if (regmap_write(ctx->edac->rb_map, RBEIR, 0))
-+			return;
-+		if (regmap_write(ctx->edac->rb_map, RBCSR, 0))
-+			return;
-+	}
-+
- 	/* IOB Bridge agent transaction error interrupt */
- 	reg = readl(ctx->dev_csr + IOBBATRANSERRINTSTS);
- 	if (!reg)
-@@ -1852,6 +1904,14 @@ static int xgene_edac_probe(struct platform_device *pdev)
- 		goto out_err;
- 	}
- 
-+	edac->rb_map = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
-+						       "regmap-rb");
-+	if (IS_ERR(edac->rb_map)) {
-+		dev_err(edac->dev, "unable to get syscon regmap rb\n");
-+		rc = PTR_ERR(edac->rb_map);
-+		goto out_err;
-+	}
-+
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	edac->pcp_csr = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(edac->pcp_csr)) {
--- 
-1.7.1
+ arch/arm/boot/dts/r8a7794-silk.dts |  109 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 109 insertions(+)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Index: renesas/arch/arm/boot/dts/r8a7794-silk.dts
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7794-silk.dts
++++ renesas/arch/arm/boot/dts/r8a7794-silk.dts
+@@ -64,6 +64,61 @@
+ 		states = <3300000 1
+ 			  1800000 0>;
+ 	};
++
++	vga-encoder {
++		compatible = "adi,adv7123";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				adv7123_in: endpoint {
++					remote-endpoint = <&du_out_rgb1>;
++				};
++			};
++			port@1 {
++				reg = <1>;
++				adv7123_out: endpoint {
++					remote-endpoint = <&vga_in>;
++				};
++			};
++		};
++	};
++
++	hdmi-out {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con: endpoint {
++				remote-endpoint = <&adv7511_out>;
++			};
++		};
++	};
++
++	vga {
++		compatible = "vga-connector";
++
++		port {
++			vga_in: endpoint {
++				remote-endpoint = <&adv7123_out>;
++			};
++		};
++	};
++
++	x2_clk: x2-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <148500000>;
++	};
++
++	x3_clk: x3-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <74250000>;
++	};
+ };
+ 
+ &extal_clk {
+@@ -164,6 +219,38 @@
+ 			};
+ 		};
+ 	};
++
++	hdmi@39 {
++		compatible = "adi,adv7511w";
++		reg = <0x39>;
++		interrupt-parent = <&gpio5>;
++		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
++
++		adi,input-depth = <8>;
++		adi,input-colorspace = "rgb";
++		adi,input-clock = "1x";
++		adi,input-style = <1>;
++		adi,input-justification = "evenly";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				adv7511_in: endpoint {
++					remote-endpoint = <&du_out_rgb0>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				adv7511_out: endpoint {
++					remote-endpoint = <&hdmi_con>;
++				};
++			};
++		};
++	};
+ };
+ 
+ &mmcif0 {
+@@ -258,3 +345,25 @@
+ &usbphy {
+ 	status = "okay";
+ };
++
++&du {
++	status = "okay";
++
++	clocks = <&mstp7_clks R8A7794_CLK_DU0>,
++		 <&mstp7_clks R8A7794_CLK_DU0>,
++		 <&x2_clk>, <&x3_clk>;
++	clock-names = "du.0", "du.1", "dclkin.0", "dclkin.1";
++
++	ports {
++		port@0 {
++			endpoint {
++				remote-endpoint = <&adv7511_in>;
++			};
++		};
++		port@1 {
++			endpoint {
++				remote-endpoint = <&adv7123_in>;
++			};
++		};
++	};
++};
+
