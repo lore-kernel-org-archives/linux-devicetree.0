@@ -1,172 +1,69 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH V6 3/6] i2c: qup: Transfer each i2c_msg in i2c_msgs without a
- stop bit
-Date: Tue, 12 Jan 2016 14:13:50 +0530
-Message-ID: <1452588233-1803-4-git-send-email-sricharan@codeaurora.org>
-References: <1452588233-1803-1-git-send-email-sricharan@codeaurora.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 0/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD
+ driver
+Date: Tue, 12 Jan 2016 08:45:43 +0000
+Message-ID: <20160112084543.GP19803@x1>
+References: <1452585915-551-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1452588233-1803-1-git-send-email-sricharan@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, agross@codeaurora.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, galak@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andy.gross@linaro.org, ntelkar@codeaurora.org, wsa@the-dreams.de
-Cc: srichara@codeaurora.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1452585915-551-1-git-send-email-wenyou.yang@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wenyou Yang <wenyou.yang@atmel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Javier Martinez Canillas <javier@dowhile0.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The definition of i2c_msg says that
+On Tue, 12 Jan 2016, Wenyou Yang wrote:
 
-"If this is the last message in a group, it is followed by a STOP.
-Otherwise it is followed by the next @i2c_msg transaction segment,
-beginning with a (repeated) START"
+> This patch set adds support for the Active-semi ACT8945A PMIC
+> MFD driver. It is a Multi Function Device with the following
+> subdevices:
+>  - Regulator
+>  - Charger
+>=20
+> It is interfaced to the host controller using I2C interface,
+> ACT8945A is a child device of the I2C.
+>=20
+> Changes in v2:
+>  - add more help information in Kconfig.
+>  - update the file header with short version license and author line.
+>  - remove unused structure members (dev, i2c_client) of stuct act8945=
+a_dev.
+>  - use define "PLATFORM_DEVID_NONE" for mfd_add_devices(), instead of=
+ '-1'.
+>  - use more explicit info to indicate the failure to add sub devices.
+>  - remove the unnecessary print out.
+>  - substitute MODULE_LICENSE("GPL") for MODULE_LICENSE("GPL v2").
+>  - use more specific label in Example.
+>  - add pmic and charger nodes in Example.
+>=20
+> Wenyou Yang (2):
+>   mfd: act8945a: add Active-semi ACT8945A PMIC MFD driver
+>   mfd: add documentation for ACT8945A DT bindings
 
-So the expectation is that there is no 'STOP' bit inbetween individual
-i2c_msg segments with repeated 'START'. The QUP i2c hardware has no way
-to inform that there should not be a 'STOP' at the end of transaction.
-The only way to implement this is to coalesce all the i2c_msg in i2c_msgs
-in to one transaction and transfer them. Adding the support for the same.
+Sending out 3 patch-sets for related changes is a pretty
+unconventional way of doing things.  In future could you place them
+all in the same place, that way all of the patches stay together whist
+hopping around our inboxes.
 
-This is required for some clients like touchscreen which keeps
-incrementing counts across individual transfers and 'STOP' bit inbetween
-resets the counter, which is not required.
+>  Documentation/devicetree/bindings/mfd/act8945a.txt |   82 ++++++++++=
++++++
+>  drivers/mfd/Kconfig                                |   11 ++
+>  drivers/mfd/Makefile                               |    1 +
+>  drivers/mfd/act8945a.c                             |  109 ++++++++++=
+++++++++++
+>  include/linux/mfd/act8945a.h                       |   21 ++++
+>  5 files changed, 224 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/act8945a.tx=
+t
+>  create mode 100644 drivers/mfd/act8945a.c
+>  create mode 100644 include/linux/mfd/act8945a.h
+>=20
 
-This patch adds the support in non-dma mode.
-
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-Reviewed-by: Andy Gross <andy.gross@linaro.org>
----
- drivers/i2c/busses/i2c-qup.c | 34 ++++++++++++++++++++++++++--------
- 1 file changed, 26 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
-index 715d4d7..f9009d6 100644
---- a/drivers/i2c/busses/i2c-qup.c
-+++ b/drivers/i2c/busses/i2c-qup.c
-@@ -112,6 +112,7 @@
- #define SET_BIT				0x1
- #define RESET_BIT			0x0
- #define ONE_BYTE			0x1
-+#define QUP_I2C_MX_CONFIG_DURING_RUN   BIT(31)
- 
- struct qup_i2c_block {
- 	int	count;
-@@ -147,6 +148,12 @@ struct qup_i2c_dev {
- 	/* QUP core errors */
- 	u32			qup_err;
- 
-+	/* To check if this is the last msg */
-+	bool			is_last;
-+
-+	/* To configure when bus is in run state */
-+	int			config_run;
-+
- 	struct completion	xfer;
- };
- 
-@@ -269,7 +276,7 @@ static int qup_i2c_wait_ready(struct qup_i2c_dev *qup, int op, bool val,
- 		status = readl(qup->base + QUP_I2C_STATUS);
- 
- 		if (((opflags & op) >> shift) == val) {
--			if (op == QUP_OUT_NOT_EMPTY) {
-+			if ((op == QUP_OUT_NOT_EMPTY) && qup->is_last) {
- 				if (!(status & I2C_STATUS_BUS_ACTIVE))
- 					return 0;
- 			} else {
-@@ -290,6 +297,8 @@ static void qup_i2c_set_write_mode_v2(struct qup_i2c_dev *qup,
- 	/* Number of entries to shift out, including the tags */
- 	int total = msg->len + qup->blk.tx_tag_len;
- 
-+	total |= qup->config_run;
-+
- 	if (total < qup->out_fifo_sz) {
- 		/* FIFO mode */
- 		writel(QUP_REPACK_EN, qup->base + QUP_IO_MODE);
-@@ -443,7 +452,7 @@ static int qup_i2c_set_tags(u8 *tags, struct qup_i2c_dev *qup,
- 	}
- 
- 	/* Send _STOP commands for the last block */
--	if (qup->blk.pos == (qup->blk.count - 1)) {
-+	if ((qup->blk.pos == (qup->blk.count - 1)) && qup->is_last) {
- 		if (msg->flags & I2C_M_RD)
- 			tags[len++] = QUP_TAG_V2_DATARD_STOP;
- 		else
-@@ -581,7 +590,6 @@ static int qup_i2c_write_one(struct qup_i2c_dev *qup, struct i2c_msg *msg)
- 
- 	/* Wait for the outstanding data in the fifo to drain */
- 	ret = qup_i2c_wait_ready(qup, QUP_OUT_NOT_EMPTY, RESET_BIT, ONE_BYTE);
--
- err:
- 	disable_irq(qup->irq);
- 	qup->msg = NULL;
-@@ -608,18 +616,20 @@ static void qup_i2c_set_read_mode_v2(struct qup_i2c_dev *qup, int len)
- 	int tx_len = qup->blk.tx_tag_len;
- 
- 	len += qup->blk.rx_tag_len;
-+	len |= qup->config_run;
-+	tx_len |= qup->config_run;
- 
- 	if (len < qup->in_fifo_sz) {
- 		/* FIFO mode */
- 		writel(QUP_REPACK_EN, qup->base + QUP_IO_MODE);
--		writel(len, qup->base + QUP_MX_READ_CNT);
- 		writel(tx_len, qup->base + QUP_MX_WRITE_CNT);
-+		writel(len, qup->base + QUP_MX_READ_CNT);
- 	} else {
- 		/* BLOCK mode (transfer data on chunks) */
- 		writel(QUP_INPUT_BLK_MODE | QUP_REPACK_EN,
- 		       qup->base + QUP_IO_MODE);
--		writel(len, qup->base + QUP_MX_INPUT_CNT);
- 		writel(tx_len, qup->base + QUP_MX_OUTPUT_CNT);
-+		writel(len, qup->base + QUP_MX_INPUT_CNT);
- 	}
- }
- 
-@@ -866,6 +876,12 @@ static int qup_i2c_xfer_v2(struct i2c_adapter *adap,
- 			goto out;
- 		}
- 
-+		qup->is_last = (idx == (num - 1));
-+		if (idx)
-+			qup->config_run = QUP_I2C_MX_CONFIG_DURING_RUN;
-+		else
-+			qup->config_run = 0;
-+
- 		reinit_completion(&qup->xfer);
- 
- 		if (msgs[idx].flags & I2C_M_RD)
-@@ -873,13 +889,13 @@ static int qup_i2c_xfer_v2(struct i2c_adapter *adap,
- 		else
- 			ret = qup_i2c_write_one_v2(qup, &msgs[idx]);
- 
--		if (!ret)
--			ret = qup_i2c_change_state(qup, QUP_RESET_STATE);
--
- 		if (ret)
- 			break;
- 	}
- 
-+	if (!ret)
-+		ret = qup_i2c_change_state(qup, QUP_RESET_STATE);
-+
- 	if (ret == 0)
- 		ret = num;
- out:
-@@ -1057,6 +1073,8 @@ static int qup_i2c_probe(struct platform_device *pdev)
- 	i2c_set_adapdata(&qup->adap, qup);
- 	qup->adap.dev.parent = qup->dev;
- 	qup->adap.dev.of_node = pdev->dev.of_node;
-+	qup->is_last = 1;
-+
- 	strlcpy(qup->adap.name, "QUP I2C adapter", sizeof(qup->adap.name));
- 
- 	pm_runtime_set_autosuspend_delay(qup->dev, MSEC_PER_SEC);
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
