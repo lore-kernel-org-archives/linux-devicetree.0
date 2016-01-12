@@ -1,68 +1,31 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RESEND v4 2/6] remoteproc: debugfs: Add ability to boot remote
- processor using debugfs
-Date: Tue, 12 Jan 2016 10:53:19 +0000
-Message-ID: <20160112105319.GB27358@x1>
-References: <1448370862-19120-1-git-send-email-lee.jones@linaro.org>
- <2600153.9u9Z7N2IT1@wuerfel>
- <20151203172830.GB26902@x1>
- <2473673.tSymyNlg3h@wuerfel>
- <20151204082427.GC26902@x1>
- <CAJAp7OhvwxkS5WkvBgd0ncBRMRCijnU2LggY8oyJ5sHg+5aohQ@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 0/3] serial: earlycon: Add device-tree support for earlycon on Tegra
+Date: Tue, 12 Jan 2016 11:56:10 +0100
+Message-ID: <11225965.Lke8Kt8TOj@wuerfel>
+References: <1452594809-17972-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJAp7OhvwxkS5WkvBgd0ncBRMRCijnU2LggY8oyJ5sHg+5aohQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn@kryo.se>
-Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ohad Ben-Cohen <ohad@wizery.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, kernel@stlinux.com, Nathan Lynch <Nathan_Lynch@mentor.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, ludovic.barre@st.com, Maxime Coquelin <maxime.coquelin@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452594809-17972-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 28 Dec 2015, Bjorn Andersson wrote:
+On Tuesday 12 January 2016 10:33:26 Jon Hunter wrote:
+> For Tegra the early console is support by passing the console information
+> via the boot parameter earlycon. This series allows us to use the
+> device-tree "stdout-path" property for early console (as well as the
+> console) on Tegra.
+> 
 
-> On Fri, Dec 4, 2015 at 12:24 AM, Lee Jones <lee.jones@linaro.org> wro=
-te:
-> > On Thu, 03 Dec 2015, Arnd Bergmann wrote:
-> >
-> >> On Thursday 03 December 2015 17:28:30 Lee Jones wrote:
-> >> > >
-> >> > > Ah, interesting. I haven't tried myself, and just tried to rea=
-d the
-> >> > > code. Maybe glibc already catches zero-length writes before it=
- gets
-> >> > > into the kernel, or I just missed the part of the syscall that=
- checks
-> >> > > for this.
-> >> >
-> >> > Glibc is responsible indeed:
-> >> >
-> >> >   http://osxr.org/glibc/source/io/write.c
-> >>
-> >> Ok, so an attacker can force the stack overflow by calling
-> >> syscall(__NR_write, fd, p, 0) if that has any potential value,
-> >> but normal users won't hit this case.
-> >
-> > Right.  I have fixed the issue (and another one I found) anyway, if
-> > only to rid the GCC warning.
-> >
->=20
-> Sorry, but I'm unable to find a new version of this patch, did I miss
-> it or could you resend it?
+Hi Jon,
 
-I didn't send it out.  Just looking at this again, post-vacation.
+I like this version, nice work!
 
-> Also, as I looked at this again, we should probably return an error i=
-f
-> count >=3D sizeof(buf) rather than just acknowledging the input (same=
- in
-> the other debugfs write function in this file).
-
-Sure.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
