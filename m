@@ -1,61 +1,106 @@
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] devicetree: mxsfb: add reset-active property
-Date: Tue, 12 Jan 2016 00:05:33 +0000
-Message-ID: <yw1xvb6zvf02.fsf@unicorn.mansr.com>
-References: <1450200297-19243-1-git-send-email-mans@mansr.com>
-	<20151220033823.GE9883@rob-hp-laptop>
-	<yw1xy4bww598.fsf@unicorn.mansr.com>
-	<CAL_Jsq++UkEVJDcWVrDZ9pdkz++uU8uD_skYCAmGWv412RbnVA@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and
+ charging of backup battery
+Date: Mon, 11 Jan 2016 16:09:17 -0800
+Message-ID: <20160112000917.GC12777@atomide.com>
+References: <8FE6954B-6411-4593-9CE5-717A469A6AA8@goldelico.com>
+ <20160106164136.GI12777@atomide.com>
+ <2AC46952-3758-458A-B0A5-1794C207BD4C@goldelico.com>
+ <20160106170925.GK12777@atomide.com>
+ <66F37918-EA7F-4D83-8B5F-A6B5C0CD7623@goldelico.com>
+ <20160108181551.GX12777@atomide.com>
+ <832803EE-E4CB-46B1-BF39-2DC0BB695A5D@goldelico.com>
+ <20160108190457.GY12777@atomide.com>
+ <CCB763BE-5D1F-4A53-BF9A-C12C08A6EFC4@goldelico.com>
+ <20160111202421.GA12777@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq++UkEVJDcWVrDZ9pdkz++uU8uD_skYCAmGWv412RbnVA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-	(Rob Herring's message of "Mon, 11 Jan 2016 18:01:01 -0600")
+Content-Disposition: inline
+In-Reply-To: <20160111202421.GA12777-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek =?utf-8?Q?Va=C5=A1ut?= <marex-ynQEQJNshbs@public.gmane.org>
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, =?utf-8?Q?Gra=C5=BEvydas?= Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [160111 12:27]:
+> 
+> OK so the issue is that the twl msecure pin should be high to enable
+> the RTC registers. We used to have that code with platform_data, but
+> no longer have it with device tree based booting. I'll send a patch
+> for that.
+> 
+> Curiously setting jumper j5 on beagle-x15 that controls what used to
+> be the msecure and now is powerhold, does the opposite.. The
+> device boots automatically but RTC is stopped?
 
-> On Mon, Jan 11, 2016 at 8:38 AM, M=E5ns Rullg=E5rd <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org> w=
-rote:
->> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
->>
->>> On Tue, Dec 15, 2015 at 05:24:56PM +0000, Mans Rullgard wrote:
->>>> Some boards connect the LCD_RESET pin to a reset input on the
->>>> display panel.  On these boards, this pin must be set to the
->>>> proper level for the display to function.
->>>>
->>>> This adds an optional "reset-active" property to the "display"
->>>> subnode such that devicetrees can specify the desired polarity
->>>> of the LCD_RESET pin.
->>>>
->>>> Signed-off-by: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
->>>
->>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>
->> What happened to this patch?
->
-> If I acked it, then I'm expecting the platform or subsystem maintaine=
-r
-> to pick up the series. I don't have patch #2 either, so I'm definitel=
-y
-> not picking up the series.
+And here's a fix the issue for omap5. Beagle-x15 needs to be
+investigated more.
 
-Argh, get_maintainer.pl picking different people for different patches
-again.  I really wish it would/could send all patches in a series to th=
-e
-same recipients in cases like this.
+Care to test it with your RTC enabling patch?
 
-Should I resend both to the combined set of people so everybody gets to
-see everything?
+Regards,
 
---=20
-M=E5ns Rullg=E5rd
+Tony
+
+8< ---------------
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Date: Mon, 11 Jan 2016 14:35:24 -0800
+Subject: [PATCH] ARM: dts: Fix omap5 PMIC control lines for RTC writes
+
+The palmas PMIC has some control lines that need to be muxed properly
+for things to work. The sys_nirq pin is used for interrupts, and msecure
+pin is used for enabling writes to some PMIC registers.
+
+Without these pins configured properly things can fail in mysterious
+ways. For example, we can't update the RTC registers on palmas PMIC
+unless the msecure pin is configured. And this is probably the reason
+why we had RTC missing from the omap5 dts file.
+
+According to "OMAP5430 ES2.0 Data Manual [Public] VErsion A (Rev. F)"
+swps052f.pdf, mux mode 1 is for sys_drm_msecure so there's no need to
+configure it as a GPIO pin.
+
+Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+
+--- a/arch/arm/boot/dts/omap5-board-common.dtsi
++++ b/arch/arm/boot/dts/omap5-board-common.dtsi
+@@ -213,6 +213,12 @@
+ 		>;
+ 	};
+ 
++	palmas_msecure_pins: palmas_msecure_pins {
++		pinctrl-single,pins = <
++			OMAP5_IOPAD(0x180, PIN_OUTPUT | MUX_MODE1) /* gpio8_234.sys_drm_msecure */
++		>;
++	};
++
+ 	usbhost_pins: pinmux_usbhost_pins {
+ 		pinctrl-single,pins = <
+ 			0x84 (PIN_INPUT | MUX_MODE0) /* usbb2_hsic_strobe */
+@@ -278,6 +284,12 @@
+ 			&usbhost_wkup_pins
+ 	>;
+ 
++	palmas_sys_nirq_pins: pinmux_palmas_sys_nirq_pins {
++		pinctrl-single,pins = <
++			OMAP5_IOPAD(0x068, PIN_INPUT_PULLUP | MUX_MODE0) /* sys_nirq1 */
++		>;
++	};
++
+ 	usbhost_wkup_pins: pinmux_usbhost_wkup_pins {
+ 		pinctrl-single,pins = <
+ 			0x1A (PIN_OUTPUT | MUX_MODE0) /* fref_clk1_out, USB hub clk */
+@@ -345,6 +357,8 @@
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
+ 		ti,system-power-controller;
++		pinctrl-names = "default";
++		pinctrl-0 = <&palmas_sys_nirq_pins &palmas_msecure_pins>;
+ 
+ 		extcon_usb3: palmas_usb {
+ 			compatible = "ti,palmas-usb-vid";
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
