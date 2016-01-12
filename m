@@ -1,123 +1,46 @@
 From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 2/2] mfd: add documentation for ACT8945A DT bindings
-Date: Tue, 12 Jan 2016 16:05:15 +0800
-Message-ID: <1452585915-551-3-git-send-email-wenyou.yang@atmel.com>
-References: <1452585915-551-1-git-send-email-wenyou.yang@atmel.com>
+Subject: [PATCH v2 0/2] regulator: act8945a: add regulator driver for the sub-device of ACT8945A MFD
+Date: Tue, 12 Jan 2016 16:17:07 +0800
+Message-ID: <1452586629-1117-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452585915-551-1-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Active-semi ACT8945A PMIC is a Multi-Function Device, it has
-two subdevices:
+The ACT8945A is a Multi Function Device with the following subdevices:
  - Regulator
  - Charger
 
-This patch adds documentation for ACT8945A DT bindings.
-
-Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
+This patch set is to add regulator driver for ACT8945A.
+It is based on the patch set:
+	[PATCH v2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD driver
 
 Changes in v2:
- - use more specific label in Example.
- - add pmic and charger nodes in Example.
+ - add more help information in Kconfig.
+ - update the file header with short version license and author line.
+ - remove unused structure, struct act8945a_pmic.
+ - substitute of_property_read_bool() for of_get_property().
+ - due to removing the member of stuct act8945a_dev, dev.
+ - remove the unnecessary print out.
+ - use module_platform_driver(), instead of subsys_initcall().
+ - substitute MODULE_LICENSE("GPL") for MODULE_LICENSE("GPL v2").
+ - add Acked-by Rob Herring.
 
- Documentation/devicetree/bindings/mfd/act8945a.txt |   82 ++++++++++++++++++++
- 1 file changed, 82 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/act8945a.txt
+Wenyou Yang (2):
+  regulator: act8945a: add regulator driver for ACT8945A
+  regulator: add documentation for ACT8945A's regulator DT bindings
 
-diff --git a/Documentation/devicetree/bindings/mfd/act8945a.txt b/Documentation/devicetree/bindings/mfd/act8945a.txt
-new file mode 100644
-index 0000000..e4a8aaf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/act8945a.txt
-@@ -0,0 +1,82 @@
-+Device-Tree bindings for Active-semi ACT8945A MFD driver
-+
-+Required properties:
-+ - compatible: "active-semi,act8945a".
-+ - reg: the I2C slave address for the ACT8945A chip
-+
-+The chip exposes two subdevices:
-+ - a regulators: see ../regulator/act8945a-regulator.txt
-+ - a charger: see ../power/act8945a-charger.txt
-+
-+Example:
-+	act8945a@5b {
-+		compatible = "active-semi,act8945a";
-+		reg = <0x5b>;
-+		status = "okay";
-+
-+		pmic {
-+			compatible = "active-semi,act8945a-regulator";
-+			active-semi,vsel-high;
-+
-+				regulators {
-+					vdd_1v35_reg: DCDC_REG1 {
-+						regulator-name = "VDD_1V35";
-+						regulator-min-microvolt = <1350000>;
-+						regulator-max-microvolt = <1350000>;
-+						regulator-always-on;
-+					};
-+
-+					vdd_1v2_reg: DCDC_REG2 {
-+						regulator-name = "VDD_1V2";
-+						regulator-min-microvolt = <1100000>;
-+						regulator-max-microvolt = <1300000>;
-+						regulator-always-on;
-+					};
-+
-+					vdd_3v3_reg: DCDC_REG3 {
-+						regulator-name = "VDD_3V3";
-+						regulator-min-microvolt = <3300000>;
-+						regulator-max-microvolt = <3300000>;
-+						regulator-always-on;
-+					};
-+
-+					vdd_fuse_reg: LDO_REG1 {
-+						regulator-name = "VDD_FUSE";
-+						regulator-min-microvolt = <2500000>;
-+						regulator-max-microvolt = <2500000>;
-+						regulator-always-on;
-+					};
-+
-+					vdd_3v3_lp_reg: LDO_REG2 {
-+						regulator-name = "VDD_3V3_LP";
-+						regulator-min-microvolt = <3300000>;
-+						regulator-max-microvolt = <3300000>;
-+						regulator-always-on;
-+					};
-+
-+					vdd_led_reg: LDO_REG3 {
-+						regulator-name = "VDD_LED";
-+						regulator-min-microvolt = <3300000>;
-+						regulator-max-microvolt = <3300000>;
-+						regulator-always-on;
-+					};
-+
-+					vdd_sdhc_1v8_reg: LDO_REG4 {
-+						regulator-name = "VDD_SDHC_1V8";
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+						regulator-always-on;
-+					};
-+				};
-+			};
-+
-+		charger {
-+			compatible = "active-semi,act8945a-charger";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_charger_chglev>;
-+			active-semi,chglev-gpio = <&pioA 12 GPIO_ACTIVE_HIGH>;
-+			active-semi,input_voltage_threshold = <6600>;
-+			active-semi,precondition_timeout = <40>;
-+			active-semi,total_timeout = <3>;
-+		};
-+	};
+ .../bindings/regulator/act8945a-regulator.txt      |   78 ++++++
+ drivers/regulator/Kconfig                          |    9 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/act8945a-regulator.c             |  267 ++++++++++++++++++++
+ 4 files changed, 355 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/act8945a-regulator.txt
+ create mode 100644 drivers/regulator/act8945a-regulator.c
+
 -- 
 1.7.9.5
 
