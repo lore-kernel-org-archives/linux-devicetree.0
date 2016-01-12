@@ -1,186 +1,175 @@
-From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: Re: [2/2] mtd: spi-nor: Add driver for Cadence Quad SPI Flash
- Controller.
-Date: Tue, 12 Jan 2016 10:29:11 +0530
-Message-ID: <5694881F.10707@ti.com>
-References: <1440148851-14621-2-git-send-email-marex@denx.de>
- <56932C19.6000509@ti.com> <201601110550.25422.marex@denx.de>
+From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: [PATCH 2/5] PCI: xilinx: Removing struct hw_irq structure.
+Date: Tue, 12 Jan 2016 10:56:36 +0530
+Message-ID: <1452576399-1513-3-git-send-email-bharatku@xilinx.com>
+References: <1452576399-1513-1-git-send-email-bharatku@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201601110550.25422.marex-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1452576399-1513-1-git-send-email-bharatku@xilinx.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: bhelgaas@google.com, michals@xilinx.com, lorenzo.pieralisi@arm.com, yinghai@kernel.org, wangyijing@huawei.com, robh@kernel.org, russell.joyce@york.ac.uk, sorenb@xilinx.com, jiang.liu@linux.intel.com, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, Ravi Kiran Gummaluri <rgummal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Removing struct hw_irq and adding generic PCI core API's.
 
-On 01/11/2016 10:20 AM, Marek Vasut wrote:
-> On Monday, January 11, 2016 at 05:14:17 AM, R, Vignesh wrote:
->> Hi Marek,
-> 
-> Hi!
-> 
->> On 08/21/2015 02:50 PM, Marek Vasut wrote:
->>> From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>>
->>> Add support for the Cadence QSPI controller. This controller is
->>> present in the Altera SoCFPGA SoCs and this driver has been tested
->>> on the Cyclone V SoC.
->>
->> Thanks for the patch.
->> I have a TI EVM with Cadence QSPI controller connected to Spansion
->> flash(s25fl512s), and I gave this series a try. It worked with couple of
->> changes, please see comments inline.
-> 
-> I just posted the latest greatest version I have in tree, could you give it
-> a spin please ?
-> 
+Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
+---
+Changes:
+Removing architecure dependecy structure struct hw_irq which is ARM 32-bit
+specific structure, and adding generic PCI core API's to register to
+PCI subsytem.
+Removing funtions which are not being used with generic API's.
+---
+ drivers/pci/host/pcie-xilinx.c | 80 +++++++++---------------------------------
+ 1 file changed, 16 insertions(+), 64 deletions(-)
 
-Thanks, I will test it soon.
-
->>> Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
->>> Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
->>> Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Cc: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
->>> Cc: Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> 
-> [...]
-> 
->>> +static irqreturn_t cqspi_irq_handler(int this_irq, void *dev)
->>> +{
->>> +	struct cqspi_st *cqspi = dev;
->>> +	unsigned int irq_status;
->>> +
->>> +	/* Read interrupt status */
->>> +	irq_status = readl(cqspi->iobase + CQSPI_REG_IRQSTATUS);
->>> +
->>> +	/* Clear interrupt */
->>> +	writel(irq_status, cqspi->iobase + CQSPI_REG_IRQSTATUS);
->>> +
->>> +	irq_status &= CQSPI_IRQ_MASK_RD | CQSPI_IRQ_MASK_WR;
->>> +
->>> +	if (irq_status)
->>> +		complete(&cqspi->transfer_complete);
->>> +
->>
->> You seem to signal completion even if the interrupt is
->> CQSPI_REG_IRQ_IND_(WR|RD)_OVERFLOW. Doesn't this lead to data loss on
->> overflow?
-> 
-> That's a good question. The write routine, cqspi_indirect_write_execute(),
-> always writes a page and then waits for completion, so the overflow should
-> never happen.
-> 
-> What would you suggest to do about write overflow interrupt anyway ? :(
-> 
-
-My concern was signalling completion on CQSPI_REG_IRQ_IND_WR_OVERFLOW
-interrupt which meant data loss.
-But, I see you have disabled CQSPI_REG_IRQ_IND_WR_OVERFLOW in v10. This
-addresses my concern.
-
-
->>> +	return IRQ_HANDLED;
->>> +}
-> 
-> [...]
-> 
->>> +static int cqspi_prep(struct spi_nor *nor, enum spi_nor_ops ops)
->>> +{
->>> +	struct cqspi_flash_pdata *f_pdata = nor->priv;
->>> +	struct cqspi_st *cqspi = f_pdata->cqspi;
->>> +	const unsigned int sclk = f_pdata->clk_rate;
->>> +
->>> +	/* Switch chip select. */
->>> +	if (cqspi->current_cs != f_pdata->cs) {
->>> +		cqspi->current_cs = f_pdata->cs;
->>> +		cqspi_switch_cs(nor);
->>> +	}
->>> +
->>> +	/* Setup baudrate divisor and delays */
->>> +	if (cqspi->sclk != sclk) {
->>> +		cqspi->sclk = sclk;
->>> +		cqspi_controller_disable(cqspi);
->>> +		cqspi_config_baudrate_div(cqspi, sclk);
->>> +		cqspi_delay(nor, sclk);
->>> +		cqspi_readdata_capture(cqspi, 1, f_pdata->read_delay);
->>
->> I see bypass field value is being hard coded to 1. Atleast on TI SoC,
->> bypass=0 when SPI bus frequency is  >= 50MHz. Therefore, is it possible
->> to provide a way to configure bypass bit from DT?
->> Or if bypass=0 for >=50MHz on your SoC too then, its better to configure
->> bypass bit based on SPI bus frequency.
-> 
-> You can have multiple SPI peripherals attached to the QSPI block, each running 
-> at different bus speed, so I think the bypass should be configured based on the 
-> frequency of the active peripheral, not from OF.
-
-I agree, if the dependency is uniform across SoCs, then bypass should be
-configured based on the frequency of the active peripheral.
-
-> 
-> I don't know exactly what impact configuring this bit has, the socfpga datasheet 
-> is not very clear about the meaning of this bit, so it'd be better if someone 
-> from Altera answered this question.
-> 
-
-Have you tested the driver at SPI bus frequency >50MHz?
-
->>> +		cqspi_controller_enable(cqspi);
->>> +	}
->>> +	return 0;
->>> +}
-> 
-> [...]
-> 
-[...]
->>> +	ret = devm_request_irq(dev, irq, cqspi_irq_handler, 0,
->>> +			       pdev->name, cqspi);
->>> +	if (ret) {
->>> +		dev_err(dev, "Cannot request IRQ.\n");
->>> +		return ret;
->>> +	}
->>> +
->>
->> pm_runtime_enable(), pm_runtime_get_sync() might be needed here as QSPI
->> clocks may not be enabled by default on all platforms.
-> 
-> Can you whip up a bit of code and test it on your platform ? I dont think
-> socfpga has runtime PM yet. I'd like to add it into the driver or you can
-> send a small patch later, whichever way you prefer.
-> 
-
-Ok, I can send a patch once the driver is accepted.
-
->>> +	cqspi_wait_idle(cqspi);
->>> +	cqspi_controller_init(cqspi);
->>> +	cqspi->current_cs = -1;
->>> +	cqspi->sclk = 0;
->>> +
->>> +	ret = cqspi_setup_flash(cqspi, np);
->>> +	if (ret) {
->>> +		dev_err(dev, "Cadence QSPI NOR probe failed %d\n", ret);
->>> +		cqspi_controller_disable(cqspi);
->>> +	}
->>> +
->>> +	return ret;
->>> +}
-> 
-> Thanks!
-> 
-
+diff --git a/drivers/pci/host/pcie-xilinx.c b/drivers/pci/host/pcie-xilinx.c
+index 588e568..3e3757f 100644
+--- a/drivers/pci/host/pcie-xilinx.c
++++ b/drivers/pci/host/pcie-xilinx.c
+@@ -117,11 +117,6 @@ struct xilinx_pcie_port {
+ 
+ static DECLARE_BITMAP(msi_irq_in_use, XILINX_NUM_MSI_IRQS);
+ 
+-static inline struct xilinx_pcie_port *sys_to_pcie(struct pci_sys_data *sys)
+-{
+-	return sys->private_data;
+-}
+-
+ static inline u32 pcie_read(struct xilinx_pcie_port *port, u32 reg)
+ {
+ 	return readl(port->reg_base + reg);
+@@ -163,7 +158,7 @@ static void xilinx_pcie_clear_err_interrupts(struct xilinx_pcie_port *port)
+  */
+ static bool xilinx_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
+ {
+-	struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
++	struct xilinx_pcie_port *port = bus->sysdata;
+ 
+ 	/* Check if link is up when trying to access downstream ports */
+ 	if (bus->number != port->root_busno)
+@@ -196,7 +191,7 @@ static bool xilinx_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
+ static void __iomem *xilinx_pcie_map_bus(struct pci_bus *bus,
+ 					 unsigned int devfn, int where)
+ {
+-	struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
++	struct xilinx_pcie_port *port = bus->sysdata;
+ 	int relbus;
+ 
+ 	if (!xilinx_pcie_valid_device(bus, devfn))
+@@ -228,7 +223,7 @@ static void xilinx_pcie_destroy_msi(unsigned int irq)
+ 
+ 	if (!test_bit(irq, msi_irq_in_use)) {
+ 		msi = irq_get_msi_desc(irq);
+-		port = sys_to_pcie(msi_desc_to_pci_sysdata(msi));
++		port = msi_desc_to_pci_sysdata(msi);
+ 		dev_err(port->dev, "Trying to free unused MSI#%d\n", irq);
+ 	} else {
+ 		clear_bit(irq, msi_irq_in_use);
+@@ -277,7 +272,7 @@ static int xilinx_pcie_msi_setup_irq(struct msi_controller *chip,
+ 				     struct pci_dev *pdev,
+ 				     struct msi_desc *desc)
+ {
+-	struct xilinx_pcie_port *port = sys_to_pcie(pdev->bus->sysdata);
++	struct xilinx_pcie_port *port = pdev->bus->sysdata;
+ 	unsigned int irq;
+ 	int hwirq;
+ 	struct msi_msg msg;
+@@ -614,46 +609,6 @@ static void xilinx_pcie_init_port(struct xilinx_pcie_port *port)
+ }
+ 
+ /**
+- * xilinx_pcie_setup - Setup memory resources
+- * @nr: Bus number
+- * @sys: Per controller structure
+- *
+- * Return: '1' on success and error value on failure
+- */
+-static int xilinx_pcie_setup(int nr, struct pci_sys_data *sys)
+-{
+-	struct xilinx_pcie_port *port = sys_to_pcie(sys);
+-
+-	list_splice_init(&port->resources, &sys->resources);
+-
+-	return 1;
+-}
+-
+-/**
+- * xilinx_pcie_scan_bus - Scan PCIe bus for devices
+- * @nr: Bus number
+- * @sys: Per controller structure
+- *
+- * Return: Valid Bus pointer on success and NULL on failure
+- */
+-static struct pci_bus *xilinx_pcie_scan_bus(int nr, struct pci_sys_data *sys)
+-{
+-	struct xilinx_pcie_port *port = sys_to_pcie(sys);
+-	struct pci_bus *bus;
+-
+-	port->root_busno = sys->busnr;
+-
+-	if (IS_ENABLED(CONFIG_PCI_MSI))
+-		bus = pci_scan_root_bus_msi(port->dev, sys->busnr,
+-					    &xilinx_pcie_ops, sys,
+-					    &sys->resources,
+-					    &xilinx_pcie_msi_chip);
+-	else
+-		bus = pci_scan_root_bus(port->dev, sys->busnr,
+-					&xilinx_pcie_ops, sys, &sys->resources);
+-	return bus;
+-}
+-
+  * xilinx_pcie_parse_dt - Parse Device tree
+  * @port: PCIe port information
+  *
+@@ -703,8 +658,9 @@ static int xilinx_pcie_parse_dt(struct xilinx_pcie_port *port)
+ static int xilinx_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct xilinx_pcie_port *port;
+-	struct hw_pci hw;
+ 	struct device *dev = &pdev->dev;
++	struct pci_bus *bus;
++
+ 	int err;
+ 	resource_size_t iobase = 0;
+ 	LIST_HEAD(res);
+@@ -738,24 +694,20 @@ static int xilinx_pcie_probe(struct platform_device *pdev)
+ 		dev_err(dev, "Getting bridge resources failed\n");
+ 		return err;
+ 	}
+-
+-	platform_set_drvdata(pdev, port);
+-
+-	/* Register the device */
+-	memset(&hw, 0, sizeof(hw));
+-	hw = (struct hw_pci) {
+-		.nr_controllers	= 1,
+-		.private_data	= (void **)&port,
+-		.setup		= xilinx_pcie_setup,
+-		.map_irq	= of_irq_parse_and_map_pci,
+-		.scan		= xilinx_pcie_scan_bus,
+-		.ops		= &xilinx_pcie_ops,
+-	};
++	bus = pci_create_root_bus(&pdev->dev, 0,
++				  &xilinx_pcie_ops, port, &res);
++	if (!bus)
++		return -ENOMEM;
+ 
+ #ifdef CONFIG_PCI_MSI
+ 	xilinx_pcie_msi_chip.dev = port->dev;
++	bus->msi = &xilinx_pcie_msi_chip;
+ #endif
+-	pci_common_init_dev(dev, &hw);
++	pci_scan_child_bus(bus);
++	pci_assign_unassigned_bus_resources(bus);
++	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
++	pci_bus_add_devices(bus);
++	platform_set_drvdata(pdev, port);
+ 
+ 	return 0;
+ }
 -- 
-Regards
-Vignesh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.1
