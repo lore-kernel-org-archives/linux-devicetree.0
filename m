@@ -1,7 +1,7 @@
 From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V2 2/6] mfd: max77620: add core driver for MAX77620/MAX20024
-Date: Tue, 12 Jan 2016 14:47:49 +0530
-Message-ID: <1452590273-16421-3-git-send-email-ldewangan@nvidia.com>
+Subject: [PATCH V2 3/6] pinctrl: max77620: add pincontrol driver for MAX77620/MAX20024
+Date: Tue, 12 Jan 2016 14:47:50 +0530
+Message-ID: <1452590273-16421-4-git-send-email-ldewangan@nvidia.com>
 References: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,88 +9,77 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com
-Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, Laxman Dewangan <ldewangan@nvidia.com>, Chaitanya Bandi <bandik@nvidia.com>, Mallikarjun Kasoju <mkasoju@nvidia.com>
+Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, Laxman Dewangan <ldewangan@nvidia.com>, Chaitanya Bandi <bandik@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-MAX77620/MAX20024 are Power Management IC from the MAXIM.
-It supports RTC, multiple GPIOs, multiple DCDC and LDOs,
-watchdog, clock etc.
+MAXIM Semiconductor's PMIC, MAX77620/MAX20024 has 8 GPIO pins
+which also act as the special function in alternate mode. Also
+there is configuration like push-pull, open drain, FPS timing
+etc for these pins.
 
-Add MFD drier to provides common support for accessing the
-device; additional drivers is developed on respected subsystem
-in order to use the functionality of the device.
+Add pincontrol driver to configure these parameters through
+pincontrol APIs.
 
 Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 Signed-off-by: Chaitanya Bandi <bandik@nvidia.com>
-Signed-off-by: Mallikarjun Kasoju <mkasoju@nvidia.com>
 ---
-- Code cleanups per review from V1. 
-- Move register acccess APIs from header to c file.
-- Remove some of non required variable, remove duplication in error message
- and simplify some of function implementation.
-- Register RTC driver such that it can get the regmap handle form parent device
+Changes from V1:
+- Cleanup code based on comment received on mfd/rtc.
+- Avoid duplication on error message.
 
- drivers/mfd/Kconfig          |  15 +
- drivers/mfd/Makefile         |   1 +
- drivers/mfd/max77620.c       | 997 +++++++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/max77620.h | 407 ++++++++++++++++++
- 4 files changed, 1420 insertions(+)
- create mode 100644 drivers/mfd/max77620.c
- create mode 100644 include/linux/mfd/max77620.h
+ drivers/pinctrl/Kconfig            |  10 +
+ drivers/pinctrl/Makefile           |   1 +
+ drivers/pinctrl/pinctrl-max77620.c | 705 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 716 insertions(+)
+ create mode 100644 drivers/pinctrl/pinctrl-max77620.c
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 9581ebb..edeb85c 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -492,6 +492,21 @@ config MFD_MAX14577
- 	  additional drivers must be enabled in order to use the functionality
- 	  of the device.
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 99a4c10..b6d2d23 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -227,6 +227,16 @@ config PINCTRL_COH901
+ 	  COH 901 335 and COH 901 571/3. They contain 3, 5 or 7
+ 	  ports of 8 GPIO pins each.
  
-+config MFD_MAX77620
-+	bool "Maxim Semiconductor MAX77620 and MAX20024 PMIC Support"
-+	depends on I2C=y
-+	depends on OF
-+	select MFD_CORE
-+	select REGMAP_I2C
-+	select REGMAP_IRQ
-+	select IRQ_DOMAIN
++config PINCTRL_MAX77620
++	bool "MAX77620/MAX20024 Pincontrol support"
++	depends on MFD_MAX77620
++	select GENERIC_PINCONF
 +	help
-+	  Say yes here to add support for Maxim Semiconductor MAX77620 and
-+	  MAX20024 which are Power Management IC with General purpose pins,
-+	  RTC, regulators, clock generator, watchdog etc. This driver
-+	  provides common support for accessing the device; additional drivers
-+	  must be enabled in order to use the functionality of the device.
++	  Say Yes here to enable Pin control support for Maxim PMIC MAX77620.
++	  This PMIC has 8 GPIO pins that work as GPIO as well as special
++	  function in alternate mode. This driver also configure push-pull,
++	  open drain, FPS slots etc.
 +
- config MFD_MAX77686
- 	bool "Maxim Semiconductor MAX77686/802 PMIC Support"
- 	depends on I2C=y
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 0f230a6..97910ed 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -123,6 +123,7 @@ obj-$(CONFIG_MFD_DA9063)	+= da9063.o
- obj-$(CONFIG_MFD_DA9150)	+= da9150-core.o
- 
- obj-$(CONFIG_MFD_MAX14577)	+= max14577.o
-+obj-$(CONFIG_MFD_MAX77620)	+= max77620.o
- obj-$(CONFIG_MFD_MAX77686)	+= max77686.o
- obj-$(CONFIG_MFD_MAX77693)	+= max77693.o
- obj-$(CONFIG_MFD_MAX77843)	+= max77843.o
-diff --git a/drivers/mfd/max77620.c b/drivers/mfd/max77620.c
+ config PINCTRL_PALMAS
+ 	bool "Pinctrl driver for the PALMAS Series MFD devices"
+ 	depends on OF && MFD_PALMAS
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index bf1b5ca..72833e3 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -17,6 +17,7 @@ obj-$(CONFIG_PINCTRL_AMD)	+= pinctrl-amd.o
+ obj-$(CONFIG_PINCTRL_DIGICOLOR)	+= pinctrl-digicolor.o
+ obj-$(CONFIG_PINCTRL_FALCON)	+= pinctrl-falcon.o
+ obj-$(CONFIG_PINCTRL_MESON)	+= meson/
++obj-$(CONFIG_PINCTRL_MAX77620)	+= pinctrl-max77620.o
+ obj-$(CONFIG_PINCTRL_PALMAS)	+= pinctrl-palmas.o
+ obj-$(CONFIG_PINCTRL_PISTACHIO)	+= pinctrl-pistachio.o
+ obj-$(CONFIG_PINCTRL_ROCKCHIP)	+= pinctrl-rockchip.o
+diff --git a/drivers/pinctrl/pinctrl-max77620.c b/drivers/pinctrl/pinctrl-max77620.c
 new file mode 100644
-index 0000000..c0cd400
+index 0000000..7c84aba
 --- /dev/null
-+++ b/drivers/mfd/max77620.c
-@@ -0,0 +1,997 @@
++++ b/drivers/pinctrl/pinctrl-max77620.c
+@@ -0,0 +1,705 @@
 +/*
-+ * Maxim MAX77620 MFD Driver
++ * MAX77620 pin control driver.
 + *
-+ * Copyright (C) 2016 NVIDIA CORPORATION. All rights reserved.
++ * Copyright (c) 2016, NVIDIA CORPORATION.  All rights reserved.
 + *
 + * Author:
-+ *		Laxman Dewangan <ldewangan@nvidia.com>
-+ *		Chaitanya Bandi <bandik@nvidia.com>
-+ *		Mallikarjun Kasoju <mkasoju@nvidia.com>
++ *	Chaitanya Bandi <bandik@nvidia.com>
++ *	Laxman Dewangan <ldewangan@nvidia.com>
 + *
 + * This program is free software; you can redistribute it and/or modify it
 + * under the terms and conditions of the GNU General Public License,
@@ -103,1394 +92,690 @@ index 0000000..c0cd400
 + */
 +
 +#include <linux/module.h>
-+#include <linux/i2c.h>
-+#include <linux/slab.h>
-+#include <linux/mfd/core.h>
-+#include <linux/interrupt.h>
-+#include <linux/regmap.h>
++#include <linux/platform_device.h>
 +#include <linux/of.h>
 +#include <linux/of_device.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinconf-generic.h>
++#include <linux/pinctrl/pinconf.h>
++#include <linux/pinctrl/pinmux.h>
 +#include <linux/mfd/max77620.h>
 +
-+static struct resource gpio_resources[] = {
++#include "core.h"
++#include "pinconf.h"
++#include "pinctrl-utils.h"
++
++#define MAX77620_PIN_NUM 8
++
++enum max77620_pin_ppdrv {
++	MAX77620_PIN_UNCONFIG_DRV,
++	MAX77620_PIN_OD_DRV,
++	MAX77620_PIN_PP_DRV,
++};
++
++enum max77620_pinconf_param {
++	MAX77620_ACTIVE_FPS_SOURCE = PIN_CONFIG_END + 1,
++	MAX77620_ACTIVE_FPS_POWER_ON_SLOTS,
++	MAX77620_ACTIVE_FPS_POWER_DOWN_SLOTS,
++	MAX77620_SUSPEND_FPS_SOURCE,
++	MAX77620_SUSPEND_FPS_POWER_ON_SLOTS,
++	MAX77620_SUSPEND_FPS_POWER_DOWN_SLOTS,
++};
++
++struct max77620_pin_function {
++	const char *name;
++	const char * const *groups;
++	unsigned ngroups;
++	int mux_option;
++};
++
++struct max77620_cfg_param {
++	const char *property;
++	enum max77620_pinconf_param param;
++};
++
++static const struct pinconf_generic_params max77620_cfg_params[] = {
 +	{
-+		.start	= MAX77620_IRQ_TOP_GPIO,
-+		.end	= MAX77620_IRQ_TOP_GPIO,
-+		.flags  = IORESOURCE_IRQ,
-+	}
-+};
-+
-+static struct resource rtc_resources[] = {
-+	{
-+		.start	= MAX77620_IRQ_TOP_RTC,
-+		.end	= MAX77620_IRQ_TOP_RTC,
-+		.flags  = IORESOURCE_IRQ,
-+	}
-+};
-+
-+static struct resource thermal_resources[] = {
-+	{
-+		.start	= MAX77620_IRQ_LBT_TJALRM1,
-+		.end	= MAX77620_IRQ_LBT_TJALRM1,
-+		.flags  = IORESOURCE_IRQ,
-+	},
-+	{
-+		.start	= MAX77620_IRQ_LBT_TJALRM2,
-+		.end	= MAX77620_IRQ_LBT_TJALRM2,
-+		.flags  = IORESOURCE_IRQ,
-+	}
-+};
-+
-+static const struct regmap_irq max77620_top_irqs[] = {
-+	[MAX77620_IRQ_TOP_GLBL] = {
-+		.mask = MAX77620_IRQ_TOP_GLBL_MASK,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_TOP_SD] = {
-+		.mask = MAX77620_IRQ_TOP_SD_MASK,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_TOP_LDO] = {
-+		.mask = MAX77620_IRQ_TOP_LDO_MASK,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_TOP_GPIO] = {
-+		.mask = MAX77620_IRQ_TOP_GPIO_MASK,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_TOP_RTC] = {
-+		.mask = MAX77620_IRQ_TOP_RTC_MASK,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_TOP_32K] = {
-+		.mask = MAX77620_IRQ_TOP_32K_MASK,
-+		.reg_offset = 0,
-+	},
-+	[MAX77620_IRQ_TOP_ONOFF] = {
-+		.mask = MAX77620_IRQ_TOP_ONOFF_MASK,
-+		.reg_offset = 0,
-+	},
-+
-+	[MAX77620_IRQ_LBT_MBATLOW] = {
-+		.mask = MAX77620_IRQ_LBM_MASK,
-+		.reg_offset = 1,
-+	},
-+	[MAX77620_IRQ_LBT_TJALRM1] = {
-+		.mask = MAX77620_IRQ_TJALRM1_MASK,
-+		.reg_offset = 1,
-+	},
-+	[MAX77620_IRQ_LBT_TJALRM2] = {
-+		.mask = MAX77620_IRQ_TJALRM2_MASK,
-+		.reg_offset = 1,
-+	},
-+
-+};
-+
-+static const char * const max77620_nverc[] = {
-+	"Shutdown-pin",
-+	"System WatchDog Timer",
-+	"Hard Reset",
-+	"Junction Temp Overload",
-+	"Main-Battery Low",
-+	"Main-Battery overvoltage Lockout",
-+	"Main-Battery undervoltage Lockout",
-+	"Reset input",
-+};
-+
-+enum max77660_ids {
-+	MAX77620_PMIC_ID,
-+	MAX77620_GPIO_ID,
-+	MAX77620_PINCTRL_ID,
-+	MAX77620_CLK_ID,
-+	MAX77620_POWER_OFF_ID,
-+	MAX77620_WDT_ID,
-+	MAX77620_THERMAL_ID,
-+	MAX77620_RTC_ID,
-+};
-+
-+#define MAX77620_SUB_MODULE_RES(_name, _id)			\
-+	[MAX77620_##_id##_ID] = {				\
-+		.name = "max77620-"#_name,			\
-+		.num_resources	= ARRAY_SIZE(_name##_resources), \
-+		.resources	= &_name##_resources[0],	\
-+		.id = MAX77620_##_id##_ID,			\
-+	}
-+
-+#define MAX20024_SUB_MODULE_RES(_name, _id)			\
-+	[MAX77620_##_id##_ID] = {				\
-+		.name = "max20024-"#_name,			\
-+		.num_resources	= ARRAY_SIZE(_name##_resources), \
-+		.resources	= &_name##_resources[0],	\
-+		.id = MAX77620_##_id##_ID,			\
-+	}
-+
-+#define MAX77620_SUB_MODULE_NO_RES(_name, _id)			\
-+	[MAX77620_##_id##_ID] = {				\
-+		.name = "max77620-"#_name,			\
-+		.id = MAX77620_##_id##_ID,			\
-+	}
-+
-+#define MAX20024_SUB_MODULE_NO_RES(_name, _id)			\
-+	[MAX77620_##_id##_ID] = {				\
-+		.name = "max20024-"#_name,			\
-+		.id = MAX77620_##_id##_ID,			\
-+	}
-+
-+static struct mfd_cell max77620_children[] = {
-+	MAX77620_SUB_MODULE_RES(gpio, GPIO),
-+	MAX77620_SUB_MODULE_NO_RES(pmic, PMIC),
-+	MAX77620_SUB_MODULE_NO_RES(pinctrl, PINCTRL),
-+	MAX77620_SUB_MODULE_NO_RES(clk, CLK),
-+	MAX77620_SUB_MODULE_NO_RES(power-off, POWER_OFF),
-+	MAX77620_SUB_MODULE_NO_RES(wdt, WDT),
-+	MAX77620_SUB_MODULE_RES(thermal, THERMAL),
-+};
-+
-+static struct mfd_cell max20024_children[] = {
-+	MAX20024_SUB_MODULE_RES(gpio, GPIO),
-+	MAX20024_SUB_MODULE_NO_RES(pmic, PMIC),
-+	MAX20024_SUB_MODULE_NO_RES(pinctrl, PINCTRL),
-+	MAX20024_SUB_MODULE_NO_RES(clk, CLK),
-+	MAX20024_SUB_MODULE_NO_RES(power-off, POWER_OFF),
-+	MAX20024_SUB_MODULE_NO_RES(wdt, WDT),
-+	MAX20024_SUB_MODULE_RES(thermal, THERMAL),
-+};
-+
-+static struct mfd_cell max77620_20024_rtc = {
-+	.name		= "max77620-rtc",
-+	.num_resources	= ARRAY_SIZE(rtc_resources),
-+	.resources	= rtc_resources,
-+	.id = MAX77620_RTC_ID,
-+};
-+
-+struct max77620_sub_modules {
-+	struct mfd_cell *cells;
-+	int ncells;
-+	u32 id;
-+};
-+
-+static const struct max77620_sub_modules max77620_cells = {
-+	.cells = max77620_children,
-+	.ncells = ARRAY_SIZE(max77620_children),
-+	.id = MAX77620,
-+};
-+
-+static const struct max77620_sub_modules  max20024_cells = {
-+	.cells = max20024_children,
-+	.ncells = ARRAY_SIZE(max20024_children),
-+	.id = MAX20024,
-+};
-+
-+
-+static const struct of_device_id max77620_of_match[] = {
-+	{
-+		.compatible = "maxim,max77620",
-+		.data = &max77620_cells,
++		.property = "maxim,active-fps-source",
++		.param = MAX77620_ACTIVE_FPS_SOURCE,
 +	}, {
-+		.compatible = "maxim,max20024",
-+		.data = &max20024_cells,
++		.property = "maxim,active-fps-power-up-slot",
++		.param = MAX77620_ACTIVE_FPS_POWER_ON_SLOTS,
 +	}, {
-+	},
-+};
-+MODULE_DEVICE_TABLE(of, max77620_of_match);
-+
-+static struct regmap_irq_chip max77620_top_irq_chip = {
-+	.name = "max77620-top",
-+	.irqs = max77620_top_irqs,
-+	.num_irqs = ARRAY_SIZE(max77620_top_irqs),
-+	.num_regs = 2,
-+	.status_base = MAX77620_REG_IRQTOP,
-+	.mask_base = MAX77620_REG_IRQTOPM,
-+};
-+
-+static const struct regmap_range max77620_readable_ranges[] = {
-+	regmap_reg_range(MAX77620_REG_CNFGGLBL1, MAX77620_REG_DVSSD4),
-+};
-+
-+static const struct regmap_access_table max77620_readable_table = {
-+	.yes_ranges = max77620_readable_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(max77620_readable_ranges),
-+};
-+
-+static const struct regmap_range max20024_readable_ranges[] = {
-+	regmap_reg_range(MAX77620_REG_CNFGGLBL1, MAX77620_REG_DVSSD4),
-+	regmap_reg_range(MAX20024_REG_MAX_ADD, MAX20024_REG_MAX_ADD),
-+};
-+
-+static const struct regmap_access_table max20024_readable_table = {
-+	.yes_ranges = max20024_readable_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(max20024_readable_ranges),
-+};
-+
-+static const struct regmap_range max77620_writable_ranges[] = {
-+	regmap_reg_range(MAX77620_REG_CNFGGLBL1, MAX77620_REG_DVSSD4),
-+};
-+
-+static const struct regmap_access_table max77620_writable_table = {
-+	.yes_ranges = max77620_writable_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(max77620_writable_ranges),
-+};
-+
-+static const struct regmap_range max77620_cacheable_ranges[] = {
-+	regmap_reg_range(MAX77620_REG_SD0_CFG, MAX77620_REG_LDO_CFG3),
-+	regmap_reg_range(MAX77620_REG_FPS_CFG0, MAX77620_REG_FPS_SD3),
-+};
-+
-+static const struct regmap_access_table max77620_volatile_table = {
-+	.no_ranges = max77620_cacheable_ranges,
-+	.n_no_ranges = ARRAY_SIZE(max77620_cacheable_ranges),
-+};
-+
-+static const struct regmap_config max77620_regmap_config[] = {
-+	[MAX77620_PWR_SLAVE] = {
-+		.name = "power-slave",
-+		.reg_bits = 8,
-+		.val_bits = 8,
-+		.max_register = MAX77620_REG_DVSSD4 + 1,
-+		.cache_type = REGCACHE_RBTREE,
-+		.rd_table = &max77620_readable_table,
-+		.wr_table = &max77620_writable_table,
-+		.volatile_table = &max77620_volatile_table,
-+	},
-+	[MAX77620_RTC_SLAVE] = {
-+		.name = "rtc-slave",
-+		.reg_bits = 8,
-+		.val_bits = 8,
-+		.max_register = 0x1b,
++		.property = "maxim,active-fps-power-down-slot",
++		.param = MAX77620_ACTIVE_FPS_POWER_DOWN_SLOTS,
++	}, {
++		.property = "maxim,suspend-fps-source",
++		.param = MAX77620_SUSPEND_FPS_SOURCE,
++	}, {
++		.property = "maxim,suspend-fps-power-up-slot",
++		.param = MAX77620_SUSPEND_FPS_POWER_ON_SLOTS,
++	}, {
++		.property = "maxim,suspend-fps-power-down-slot",
++		.param = MAX77620_SUSPEND_FPS_POWER_DOWN_SLOTS,
 +	},
 +};
 +
-+static const struct regmap_config max20024_regmap_config[] = {
-+	[MAX77620_PWR_SLAVE] = {
-+		.name = "power-slave",
-+		.reg_bits = 8,
-+		.val_bits = 8,
-+		.max_register = MAX20024_REG_MAX_ADD + 1,
-+		.cache_type = REGCACHE_RBTREE,
-+		.rd_table = &max20024_readable_table,
-+		.wr_table = &max77620_writable_table,
-+		.volatile_table = &max77620_volatile_table,
-+	},
-+	[MAX77620_RTC_SLAVE] = {
-+		.name = "rtc-slave",
-+		.reg_bits = 8,
-+		.val_bits = 8,
-+		.max_register = 0x1b,
-+	},
++enum max77620_alternate_pinmux_option {
++	MAX77620_PINMUX_GPIO				= 0,
++	MAX77620_PINMUX_LOW_POWER_MODE_CONTROL_IN	= 1,
++	MAX77620_PINMUX_FLEXIBLE_POWER_SEQUENCER_OUT	= 2,
++	MAX77620_PINMUX_32K_OUT1			= 3,
++	MAX77620_PINMUX_SD0_DYNAMIC_VOLTAGE_SCALING_IN	= 4,
++	MAX77620_PINMUX_SD1_DYNAMIC_VOLTAGE_SCALING_IN	= 5,
++	MAX77620_PINMUX_REFERENCE_OUT			= 6,
 +};
 +
-+static int max77620_slave_address[MAX77620_NUM_SLAVES] = {
-+	MAX77620_PWR_I2C_ADDR,
-+	MAX77620_RTC_I2C_ADDR,
++struct max77620_pingroup {
++	const char *name;
++	const unsigned pins[1];
++	unsigned npins;
++	enum max77620_alternate_pinmux_option alt_option;
 +};
 +
-+int max77620_irq_get_virq(struct device *dev, int irq)
-+{
-+	struct max77620_chip *chip = dev_get_drvdata(dev);
++struct max77620_pin_info {
++	enum max77620_pin_ppdrv drv_type;
++	int pull_config;
++};
 +
-+	return regmap_irq_get_virq(chip->top_irq_data, irq);
++struct max77620_fps_config {
++	int active_fps_src;
++	int active_power_up_slots;
++	int active_power_down_slots;
++	int suspend_fps_src;
++	int suspend_power_up_slots;
++	int suspend_power_down_slots;
++};
++
++struct max77620_pctrl_info {
++	struct device *dev;
++	struct pinctrl_dev *pctl;
++	struct max77620_chip *max77620;
++	int pins_current_opt[MAX77620_GPIO_NR];
++	const struct max77620_pin_function *functions;
++	unsigned num_functions;
++	const struct max77620_pingroup *pin_groups;
++	int num_pin_groups;
++	const struct pinctrl_pin_desc *pins;
++	unsigned num_pins;
++	struct max77620_pin_info pin_info[MAX77620_PIN_NUM];
++	struct max77620_fps_config fps_config[MAX77620_PIN_NUM];
++};
++
++static const struct pinctrl_pin_desc max77620_pins_desc[] = {
++	PINCTRL_PIN(MAX77620_GPIO0, "gpio0"),
++	PINCTRL_PIN(MAX77620_GPIO1, "gpio1"),
++	PINCTRL_PIN(MAX77620_GPIO2, "gpio2"),
++	PINCTRL_PIN(MAX77620_GPIO3, "gpio3"),
++	PINCTRL_PIN(MAX77620_GPIO4, "gpio4"),
++	PINCTRL_PIN(MAX77620_GPIO5, "gpio5"),
++	PINCTRL_PIN(MAX77620_GPIO6, "gpio6"),
++	PINCTRL_PIN(MAX77620_GPIO7, "gpio7"),
++};
++
++static const char * const gpio_groups[] = {
++	"gpio0",
++	"gpio1",
++	"gpio2",
++	"gpio3",
++	"gpio4",
++	"gpio5",
++	"gpio6",
++	"gpio7",
++};
++
++#define FUNCTION_GROUP(fname, mux)			\
++	{						\
++		.name = #fname,				\
++		.groups = gpio_groups,			\
++		.ngroups = ARRAY_SIZE(gpio_groups),	\
++		.mux_option = MAX77620_PINMUX_##mux,	\
++	}
++
++static const struct max77620_pin_function max77620_pin_function[] = {
++	FUNCTION_GROUP(gpio, GPIO),
++	FUNCTION_GROUP(lpm-control-in, LOW_POWER_MODE_CONTROL_IN),
++	FUNCTION_GROUP(fps-out, FLEXIBLE_POWER_SEQUENCER_OUT),
++	FUNCTION_GROUP(32k-out1, 32K_OUT1),
++	FUNCTION_GROUP(sd0-dvs-in, SD0_DYNAMIC_VOLTAGE_SCALING_IN),
++	FUNCTION_GROUP(sd1-dvs-in, SD1_DYNAMIC_VOLTAGE_SCALING_IN),
++	FUNCTION_GROUP(reference-out, REFERENCE_OUT),
++};
++
++#define MAX77620_PINGROUP(pg_name, pin_id, option) \
++	{								\
++		.name = #pg_name,					\
++		.pins = {MAX77620_##pin_id},				\
++		.npins = 1,						\
++		.alt_option = MAX77620_PINMUX_##option,			\
++	}
++
++static const struct max77620_pingroup max77620_pingroups[] = {
++	MAX77620_PINGROUP(gpio0, GPIO0, LOW_POWER_MODE_CONTROL_IN),
++	MAX77620_PINGROUP(gpio1, GPIO1, FLEXIBLE_POWER_SEQUENCER_OUT),
++	MAX77620_PINGROUP(gpio2, GPIO2, FLEXIBLE_POWER_SEQUENCER_OUT),
++	MAX77620_PINGROUP(gpio3, GPIO3, FLEXIBLE_POWER_SEQUENCER_OUT),
++	MAX77620_PINGROUP(gpio4, GPIO4, 32K_OUT1),
++	MAX77620_PINGROUP(gpio5, GPIO5, SD0_DYNAMIC_VOLTAGE_SCALING_IN),
++	MAX77620_PINGROUP(gpio6, GPIO6, SD1_DYNAMIC_VOLTAGE_SCALING_IN),
++	MAX77620_PINGROUP(gpio7, GPIO7, REFERENCE_OUT),
++};
++
++static int max77620_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
++{
++	struct max77620_pctrl_info *mpci = pinctrl_dev_get_drvdata(pctldev);
++
++	return mpci->num_pin_groups;
 +}
-+EXPORT_SYMBOL_GPL(max77620_irq_get_virq);
 +
-+int max77620_reg_write(struct device *dev, int sid,
-+		unsigned int reg, u8 val)
++static const char *max77620_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
++		unsigned group)
 +{
-+	struct max77620_chip *chip = dev_get_drvdata(dev);
++	struct max77620_pctrl_info *mpci = pinctrl_dev_get_drvdata(pctldev);
 +
-+	return regmap_write(chip->rmap[sid], reg, val);
-+}
-+EXPORT_SYMBOL_GPL(max77620_reg_write);
-+
-+int max77620_reg_read(struct device *dev, int sid,
-+		unsigned int reg, u8 *val)
-+{
-+	struct max77620_chip *chip = dev_get_drvdata(dev);
-+	unsigned int ival;
-+	int ret;
-+
-+	ret = regmap_read(chip->rmap[sid], reg, &ival);
-+	if (ret < 0)
-+		return ret;
-+	*val = ival;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(max77620_reg_read);
-+
-+int max77620_reg_update(struct device *dev, int sid,
-+		unsigned int reg, unsigned int mask, unsigned int val)
-+{
-+	struct max77620_chip *chip = dev_get_drvdata(dev);
-+
-+	return regmap_update_bits(chip->rmap[sid], reg, mask, val);
-+}
-+EXPORT_SYMBOL_GPL(max77620_reg_update);
-+
-+static int max77620_get_fps_period_reg_value(struct max77620_chip *chip,
-+		int tperiod)
-+{
-+	int base_fps_time = (chip->id == MAX20024) ? 20 : 40;
-+	int x, i;
-+
-+	for (i = 0; i < 0x7; ++i) {
-+		x = base_fps_time * BIT(i);
-+		if (x >= tperiod)
-+			return i;
-+	}
-+
-+	return i;
++	return mpci->pin_groups[group].name;
 +}
 +
-+static int max77620_config_fps(struct max77620_chip *chip,
-+		struct device_node *fps_np)
++static int max77620_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
++		unsigned group, const unsigned **pins, unsigned *num_pins)
 +{
-+	struct device *dev = chip->dev;
-+	unsigned int mask = 0, config = 0;
-+	int input_enable = 2;
-+	u32 pval;
-+	int tperiod, fps_id;
-+	int ret;
++	struct max77620_pctrl_info *mpci = pinctrl_dev_get_drvdata(pctldev);
 +
-+	ret = of_property_read_u32(fps_np, "reg", &pval);
-+	if (ret < 0) {
-+		dev_err(dev, "reg prop missing from node %s\n", fps_np->name);
-+		return 0;
-+	}
-+	if (pval > 2) {
-+		dev_err(dev, "FPS%u is not supported\n", pval);
-+		return 0;
-+	}
-+	fps_id = pval;
-+
-+	ret = of_property_read_u32(fps_np,
-+			"maxim,active-fps-time-period", &pval);
-+	if (!ret) {
-+		mask |= MAX77620_FPS_TIME_PERIOD_MASK;
-+		chip->active_fps_period[fps_id] = min(pval, 5120U);
-+		tperiod = max77620_get_fps_period_reg_value(chip,
-+					chip->active_fps_period[fps_id]);
-+		config |= tperiod << MAX77620_FPS_TIME_PERIOD_SHIFT;
-+	}
-+
-+	ret = of_property_read_u32(fps_np,
-+			"maxim,suspend-fps-time-period", &pval);
-+	if (!ret)
-+		chip->suspend_fps_period[fps_id] = min(pval, 5120U);
-+
-+	ret = of_property_read_u32(fps_np, "maxim,fps-enable-input", &pval);
-+	if (!ret) {
-+		if (pval > 2) {
-+			dev_err(dev, "FPS %d enable-input invalid\n", fps_id);
-+		} else {
-+			input_enable = pval;
-+			mask |= MAX77620_FPS_EN_SRC_MASK;
-+		}
-+	}
-+	config |= (input_enable & 0x3) << MAX77620_FPS_EN_SRC_SHIFT;
-+
-+	if (input_enable == 2) {
-+		bool enable_fps = of_property_read_bool(fps_np,
-+					"maxim,fps-sw-enable");
-+		mask |= MAX77620_FPS_ENFPS_MASK;
-+		if (enable_fps)
-+			config |= 1;
-+	}
-+
-+	if (!chip->sleep_enable)
-+		chip->sleep_enable = of_property_read_bool(fps_np,
-+					"maxim,enable-sleep");
-+	if (!chip->enable_global_lpm)
-+		chip->enable_global_lpm = of_property_read_bool(fps_np,
-+					"maxim,enable-global-lpm");
-+
-+	ret = max77620_reg_update(dev, MAX77620_PWR_SLAVE,
-+			MAX77620_REG_FPS_CFG0 + fps_id, mask, config);
-+	if (ret < 0) {
-+		dev_err(dev, "Reg 0x%02x write failed: %d\n",
-+			MAX77620_REG_FPS_CFG0 + fps_id, ret);
-+		return ret;
-+	}
++	*pins = mpci->pin_groups[group].pins;
++	*num_pins = mpci->pin_groups[group].npins;
 +
 +	return 0;
 +}
 +
-+static int max77620_initialise_fps(struct max77620_chip *chip,
-+			struct device *dev)
++static const struct pinctrl_ops max77620_pinctrl_ops = {
++	.get_groups_count = max77620_pinctrl_get_groups_count,
++	.get_group_name = max77620_pinctrl_get_group_name,
++	.get_group_pins = max77620_pinctrl_get_group_pins,
++	.dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
++	.dt_free_map = pinctrl_utils_dt_free_map,
++};
++
++static int max77620_pinctrl_get_funcs_count(struct pinctrl_dev *pctldev)
 +{
-+	struct device_node *fps_np, *fps_child;
-+	u8 config;
-+	int fps_id;
-+	int ret;
++	struct max77620_pctrl_info *mpci = pinctrl_dev_get_drvdata(pctldev);
 +
-+	for (fps_id = 0; fps_id < 3; ++fps_id) {
-+		chip->active_fps_period[fps_id] = -1;
-+		chip->suspend_fps_period[fps_id] = -1;
-+	}
++	return mpci->num_functions;
++}
 +
-+	fps_np = of_get_child_by_name(dev->of_node, "fps");
-+	if (!fps_np)
-+		goto skip_fps;
++static const char *max77620_pinctrl_get_func_name(struct pinctrl_dev *pctldev,
++			unsigned function)
++{
++	struct max77620_pctrl_info *mpci = pinctrl_dev_get_drvdata(pctldev);
 +
-+	for_each_child_of_node(fps_np, fps_child) {
-+		ret = max77620_config_fps(chip, fps_child);
-+		if (ret < 0)
-+			return ret;
-+	}
++	return mpci->functions[function].name;
++}
 +
-+	config = chip->enable_global_lpm ? MAX77620_ONOFFCNFG2_SLP_LPM_MSK : 0;
-+	ret = max77620_reg_update(chip->dev, MAX77620_PWR_SLAVE,
-+			MAX77620_REG_ONOFFCNFG2,
-+			MAX77620_ONOFFCNFG2_SLP_LPM_MSK, config);
-+	if (ret < 0) {
-+		dev_err(dev, "Reg ONOFFCNFG2 update failed: %d\n", ret);
-+		return ret;
-+	}
++static int max77620_pinctrl_get_func_groups(struct pinctrl_dev *pctldev,
++			unsigned function, const char * const **groups,
++			unsigned * const num_groups)
++{
++	struct max77620_pctrl_info *mpci = pinctrl_dev_get_drvdata(pctldev);
 +
-+skip_fps:
-+	/* Enable wake on EN0 pin */
-+	ret = max77620_reg_update(chip->dev, MAX77620_PWR_SLAVE,
-+			MAX77620_REG_ONOFFCNFG2, MAX77620_ONOFFCNFG2_WK_EN0,
-+			MAX77620_ONOFFCNFG2_WK_EN0);
-+	if (ret < 0) {
-+		dev_err(dev, "Reg ONOFFCNFG2 WK_EN0 update failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	if (!chip->sleep_enable)
-+		chip->sleep_enable = of_property_read_bool(dev->of_node,
-+						"maxim,enable-sleep");
-+
-+	/* For MAX20024, SLPEN will be POR reset if CLRSE is b11 */
-+	if ((chip->id == MAX20024) && chip->sleep_enable) {
-+		config = MAX77620_ONOFFCNFG1_SLPEN | MAX20024_ONOFFCNFG1_CLRSE;
-+		ret = max77620_reg_update(chip->dev, MAX77620_PWR_SLAVE,
-+			MAX77620_REG_ONOFFCNFG1, config, config);
-+		if (ret < 0) {
-+			dev_err(dev, "Reg ONOFFCNFG1 update failed: %d\n", ret);
-+			return ret;
-+		}
-+	}
++	*groups = mpci->functions[function].groups;
++	*num_groups = mpci->functions[function].ngroups;
 +
 +	return 0;
 +}
 +
-+static int max77620_init_backup_battery_charging(struct max77620_chip *chip,
-+		struct device *dev)
++static int max77620_pinctrl_enable(struct pinctrl_dev *pctldev,
++			unsigned function, unsigned group)
 +{
-+	struct device_node *bb_node;
-+	u32 pval;
-+	u8 config;
++	struct max77620_pctrl_info *mpci = pinctrl_dev_get_drvdata(pctldev);
++	u8 val;
 +	int ret;
 +
-+	bb_node = of_get_child_by_name(dev->of_node, "backup-battery");
-+	if (!bb_node) {
-+		dev_info(dev, "Backup battery charging support disabled\n");
-+		max77620_reg_update(chip->dev, MAX77620_PWR_SLAVE,
-+			MAX77620_REG_CNFGBBC, MAX77620_CNFGBBC_ENABLE, 0);
-+		return 0;
++	if (function == MAX77620_PINMUX_GPIO) {
++		val = 0;
++	} else if (function == mpci->pin_groups[group].alt_option) {
++		val = 1 << group;
++	} else {
++		dev_err(mpci->dev, "GPIO %u doesn't have function %u\n",
++				group, function);
++		return -EINVAL;
 +	}
-+
-+	config = MAX77620_CNFGBBC_ENABLE;
-+	ret = of_property_read_u32(bb_node,
-+			"maxim,bb-charging-current-microamp", &pval);
++	ret = max77620_reg_update(mpci->max77620->dev,
++			MAX77620_PWR_SLAVE, MAX77620_REG_AME_GPIO,
++			1 << group, val);
 +	if (ret < 0)
-+		pval = 50;
-+	if (pval <= 50)
-+		config |= 0 << MAX77620_CNFGBBC_CURRENT_SHIFT;
-+	else if (pval <= 100)
-+		config |= 3 << MAX77620_CNFGBBC_CURRENT_SHIFT;
-+	else if (pval <= 200)
-+		config |= 0 << MAX77620_CNFGBBC_CURRENT_SHIFT;
-+	else if (pval <= 400)
-+		config |= 3 << MAX77620_CNFGBBC_CURRENT_SHIFT;
-+	else if (pval <= 600)
-+		config |= 1 << MAX77620_CNFGBBC_CURRENT_SHIFT;
-+	else
-+		config |= 2 << MAX77620_CNFGBBC_CURRENT_SHIFT;
-+
-+	if (pval > 100)
-+		config |= MAX77620_CNFGBBC_LOW_CURRENT_DISABLE;
-+
-+	ret = of_property_read_u32(bb_node,
-+			"maxim,bb-charging-voltage-microvolt", &pval);
-+	if (ret < 0)
-+		pval = 2500000;
-+	pval /= 1000;
-+	if (pval <= 2500)
-+		config |= 0 << MAX77620_CNFGBBC_VOLTAGE_SHIFT;
-+	else if (pval <= 3000)
-+		config |= 1 << MAX77620_CNFGBBC_VOLTAGE_SHIFT;
-+	else if (pval <= 3300)
-+		config |= 2 << MAX77620_CNFGBBC_VOLTAGE_SHIFT;
-+	else
-+		config |= 3 << MAX77620_CNFGBBC_VOLTAGE_SHIFT;
-+
-+	ret = of_property_read_u32(bb_node,
-+			"maxim,bb-output-resister-ohm", &pval);
-+	if (ret < 0)
-+		pval = 1000;
-+
-+	if (pval <= 100)
-+		config |= 0 << MAX77620_CNFGBBC_RESISTOR_SHIFT;
-+	else if (pval <= 1000)
-+		config |= 1 << MAX77620_CNFGBBC_RESISTOR_SHIFT;
-+	else if (pval <= 3000)
-+		config |= 2 << MAX77620_CNFGBBC_RESISTOR_SHIFT;
-+	else if (pval <= 6000)
-+		config |= 3 << MAX77620_CNFGBBC_RESISTOR_SHIFT;
-+
-+	ret = max77620_reg_write(dev, MAX77620_PWR_SLAVE,
-+			MAX77620_REG_CNFGBBC, config);
-+	if (ret < 0) {
-+		dev_err(dev, "Reg 0x%02x write failed: %d\n",
-+			MAX77620_REG_CNFGBBC, ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int max77620_init_low_battery_monitor(struct max77620_chip *chip,
-+		struct device *dev)
-+{
-+	struct device_node *np;
-+	u8 mask = 0, val = 0;
-+	u32 pval;
-+	int ret;
-+
-+	np = of_get_child_by_name(dev->of_node, "low-battery-monitor");
-+	if (!np)
-+		return 0;
-+
-+	ret = of_property_read_u32(np, "maxim,low-battery-dac", &pval);
-+	if (!ret) {
-+		mask |= MAX77620_CNFGGLBL1_LBDAC_EN;
-+		if (pval)
-+			val |= MAX77620_CNFGGLBL1_LBDAC_EN;
-+	}
-+
-+	ret = of_property_read_u32(np, "maxim,low-battery-shutdown", &pval);
-+	if (!ret) {
-+		mask |= MAX77620_CNFGGLBL1_MPPLD;
-+		if (pval)
-+			val |= MAX77620_CNFGGLBL1_MPPLD;
-+	}
-+
-+	ret = of_property_read_u32(np, "maxim,low-battery-reset", &pval);
-+	if (!ret) {
-+		mask |= MAX77620_CNFGGLBL1_LBRSTEN;
-+		if (pval)
-+			val |= MAX77620_CNFGGLBL1_LBRSTEN;
-+	}
-+
-+	if (mask) {
-+		ret = max77620_reg_update(dev, MAX77620_PWR_SLAVE,
-+			MAX77620_REG_CNFGGLBL1, mask, val);
-+		if (ret < 0)
-+			dev_err(dev, "Reg CNFGGLBL1 update failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int max77620_initialise_chip(struct max77620_chip *chip,
-+			struct device *dev)
-+{
-+	struct device_node *np = dev->of_node;
-+	u32 mrt_time = 0;
-+	u8 reg_val;
-+	int ret;
-+
-+	ret = of_property_read_u32(np, "maxim,hard-power-off-time", &mrt_time);
-+	if (ret < 0)
-+		return 0;
-+
-+	mrt_time = (mrt_time > 12) ? 12 : mrt_time;
-+	if (mrt_time <= 6)
-+		reg_val = mrt_time - 2;
-+	else
-+		reg_val = (mrt_time - 6) / 2 + 4;
-+
-+	reg_val <<= MAX77620_ONOFFCNFG1_MRT_SHIFT;
-+
-+	ret = max77620_reg_update(dev, MAX77620_PWR_SLAVE,
-+			MAX77620_REG_ONOFFCNFG1, MAX77620_ONOFFCNFG1_MRT_MASK,
-+			reg_val);
-+	if (ret < 0) {
-+		dev_err(dev, "REG ONOFFCNFG1 update failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Disable alarm wake to enable sleep from EN input signal */
-+	ret = max77620_reg_update(dev, MAX77620_PWR_SLAVE,
-+		MAX77620_REG_ONOFFCNFG2, MAX77620_ONOFFCNFG2_WK_ALARM1, 0);
-+	if (ret < 0) {
-+		dev_err(dev, "REG ONOFFCNFG2 update failed: %d\n", ret);
-+		return ret;
-+	}
++		dev_err(mpci->dev, "REG AME GPIO update failed: %d\n", ret);
 +
 +	return ret;
 +}
 +
-+static int max77620_read_es_version(struct max77620_chip *chip)
++static const struct pinmux_ops max77620_pinmux_ops = {
++	.get_functions_count	= max77620_pinctrl_get_funcs_count,
++	.get_function_name	= max77620_pinctrl_get_func_name,
++	.get_function_groups	= max77620_pinctrl_get_func_groups,
++	.set_mux		= max77620_pinctrl_enable,
++};
++
++static int max77620_pinconf_get(struct pinctrl_dev *pctldev,
++			unsigned pin, unsigned long *config)
 +{
-+	u8 val, cid_val[6];
++	struct max77620_pctrl_info *mpci = pinctrl_dev_get_drvdata(pctldev);
++	struct device *dev = mpci->dev;
++	enum pin_config_param param = pinconf_to_config_param(*config);
++	u8 val;
++	int arg = 0;
++	int ret;
++
++	switch (param) {
++	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
++		if (mpci->pin_info[pin].drv_type == MAX77620_PIN_OD_DRV)
++			arg = 1;
++		break;
++
++	case PIN_CONFIG_DRIVE_PUSH_PULL:
++		if (mpci->pin_info[pin].drv_type == MAX77620_PIN_PP_DRV)
++			arg = 1;
++		break;
++
++	case PIN_CONFIG_BIAS_PULL_UP:
++		ret = max77620_reg_read(mpci->max77620->dev,
++			MAX77620_PWR_SLAVE, MAX77620_REG_PUE_GPIO, &val);
++		if (ret < 0) {
++			dev_err(dev, "Reg PUE_GPIO read failed: %d\n", ret);
++			return ret;
++		}
++		if (val & BIT(pin))
++			arg = 1;
++		break;
++
++	case PIN_CONFIG_BIAS_PULL_DOWN:
++		ret = max77620_reg_read(mpci->max77620->dev,
++			MAX77620_PWR_SLAVE, MAX77620_REG_PDE_GPIO, &val);
++		if (ret < 0) {
++			dev_err(dev, "Reg PDE_GPIO read failed: %d\n", ret);
++			return ret;
++		}
++		if (val & BIT(pin))
++			arg = 1;
++		break;
++
++	default:
++		dev_err(dev, "Properties not supported\n");
++		return -ENOTSUPP;
++	}
++
++	*config = pinconf_to_config_packed(param, (u16)arg);
++
++	return 0;
++}
++
++static int max77620_get_default_fps(struct max77620_pctrl_info *mpci,
++			int addr, int *fps)
++{
++	u8 val;
++	int ret;
++
++	ret = max77620_reg_read(mpci->max77620->dev,
++			MAX77620_PWR_SLAVE, addr, &val);
++	if (ret < 0) {
++		dev_err(mpci->dev, "Reg PUE_GPIO read failed: %d\n", ret);
++		return ret;
++	}
++	*fps = (val & MAX77620_FPS_SRC_MASK) >> MAX77620_FPS_SRC_SHIFT;
++
++	return 0;
++}
++
++static int max77620_set_fps_param(struct max77620_pctrl_info *mpci,
++			int pin, int param)
++{
++	struct max77620_fps_config *fps_config = &mpci->fps_config[pin];
++	int addr, ret;
++	int param_val;
++	int mask, shift;
++
++	if ((pin < MAX77620_GPIO1) || (pin > MAX77620_GPIO3))
++		return 0;
++
++	addr = MAX77620_REG_FPS_GPIO1 + pin - 1;
++	switch (param) {
++	case MAX77620_ACTIVE_FPS_SOURCE:
++	case MAX77620_SUSPEND_FPS_SOURCE:
++		mask = MAX77620_FPS_SRC_MASK;
++		shift = MAX77620_FPS_SRC_SHIFT;
++		param_val = fps_config->active_fps_src;
++		if (param == MAX77620_SUSPEND_FPS_SOURCE)
++			param_val = fps_config->suspend_fps_src;
++		break;
++
++	case MAX77620_ACTIVE_FPS_POWER_ON_SLOTS:
++	case MAX77620_SUSPEND_FPS_POWER_ON_SLOTS:
++		mask = MAX77620_FPS_PU_PERIOD_MASK;
++		shift = MAX77620_FPS_PU_PERIOD_SHIFT;
++		param_val = fps_config->active_power_up_slots;
++		if (param == MAX77620_SUSPEND_FPS_POWER_ON_SLOTS)
++			param_val = fps_config->suspend_power_up_slots;
++		break;
++
++	case MAX77620_ACTIVE_FPS_POWER_DOWN_SLOTS:
++	case MAX77620_SUSPEND_FPS_POWER_DOWN_SLOTS:
++		mask = MAX77620_FPS_PD_PERIOD_MASK;
++		shift = MAX77620_FPS_PD_PERIOD_SHIFT;
++		param_val = fps_config->active_power_down_slots;
++		if (param == MAX77620_SUSPEND_FPS_POWER_DOWN_SLOTS)
++			param_val = fps_config->suspend_power_down_slots;
++		break;
++
++	default:
++		dev_err(mpci->dev, "Invalid parameter %d for pin %d\n",
++			param, pin);
++		return -EINVAL;
++	};
++
++	if (param_val < 0)
++		return 0;
++
++	ret = max77620_reg_update(mpci->max77620->dev,
++		MAX77620_PWR_SLAVE, addr, mask, param_val << shift);
++	if (ret < 0)
++		dev_err(mpci->dev, "Reg 0x%02x update failed %d\n", addr, ret);
++
++	return ret;
++}
++
++static int max77620_pinconf_set(struct pinctrl_dev *pctldev,
++			unsigned pin, unsigned long *configs,
++			unsigned num_configs)
++{
++	struct max77620_pctrl_info *mpci = pinctrl_dev_get_drvdata(pctldev);
++	struct device *dev = mpci->dev;
++	struct device *parent  = mpci->max77620->dev;
++	struct max77620_fps_config *fps_config;
++	int param;
++	u16 param_val;
++	unsigned int val;
++	unsigned int pu_val;
++	unsigned int pd_val;
++	int addr, ret;
 +	int i;
-+	int ret;
 +
-+	for (i = MAX77620_REG_CID0; i <= MAX77620_REG_CID5; ++i) {
-+		ret = max77620_reg_read(chip->dev, MAX77620_PWR_SLAVE, i, &val);
-+		if (ret < 0) {
-+			dev_err(chip->dev, "CID%d register read failed: %d\n",
-+					i - MAX77620_REG_CID0, ret);
-+			return ret;
++	for (i = 0; i < num_configs; i++) {
++		param = pinconf_to_config_param(configs[i]);
++		param_val = pinconf_to_config_argument(configs[i]);
++
++		switch (param) {
++		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
++			val = param_val ? 0 : 1;
++			ret = max77620_reg_update(parent, MAX77620_PWR_SLAVE,
++					MAX77620_REG_GPIO0 + pin,
++					MAX77620_CNFG_GPIO_DRV_MASK, val);
++			if (ret < 0) {
++				dev_err(dev, "Reg 0x%02x update failed %d\n",
++					MAX77620_REG_GPIO0 + pin, ret);
++				return ret;
++			}
++			mpci->pin_info[pin].drv_type = val ?
++				MAX77620_PIN_PP_DRV : MAX77620_PIN_OD_DRV;
++			break;
++
++		case PIN_CONFIG_DRIVE_PUSH_PULL:
++			val = param_val ? 1 : 0;
++			ret = max77620_reg_update(parent, MAX77620_PWR_SLAVE,
++					MAX77620_REG_GPIO0 + pin,
++					MAX77620_CNFG_GPIO_DRV_MASK, val);
++			if (ret < 0) {
++				dev_err(dev, "Reg 0x%02x update failed %d\n",
++					MAX77620_REG_GPIO0 + pin, ret);
++				return ret;
++			}
++			mpci->pin_info[pin].drv_type = val ?
++				MAX77620_PIN_PP_DRV : MAX77620_PIN_OD_DRV;
++			break;
++
++		case MAX77620_ACTIVE_FPS_SOURCE:
++		case MAX77620_ACTIVE_FPS_POWER_ON_SLOTS:
++		case MAX77620_ACTIVE_FPS_POWER_DOWN_SLOTS:
++			if ((pin < MAX77620_GPIO1) || (pin > MAX77620_GPIO3))
++				return -EINVAL;
++
++			fps_config = &mpci->fps_config[pin];
++
++			if ((param == MAX77620_ACTIVE_FPS_SOURCE) &&
++				(param_val == FPS_SRC_DEF)) {
++				addr = MAX77620_REG_FPS_GPIO1 + pin - 1;
++				ret = max77620_get_default_fps(mpci,
++					addr, &fps_config->active_fps_src);
++				if (ret < 0)
++					return ret;
++				break;
++			}
++
++			if (param == MAX77620_ACTIVE_FPS_SOURCE)
++				fps_config->active_fps_src = param_val;
++			else if (param == MAX77620_ACTIVE_FPS_POWER_ON_SLOTS)
++				fps_config->active_power_up_slots = param_val;
++			else
++				fps_config->active_power_down_slots = param_val;
++
++			ret = max77620_set_fps_param(mpci, pin, param);
++			if (ret < 0)
++				return ret;
++			break;
++
++		case MAX77620_SUSPEND_FPS_SOURCE:
++		case MAX77620_SUSPEND_FPS_POWER_ON_SLOTS:
++		case MAX77620_SUSPEND_FPS_POWER_DOWN_SLOTS:
++			if ((pin < MAX77620_GPIO1) || (pin > MAX77620_GPIO3))
++				return -EINVAL;
++
++			fps_config = &mpci->fps_config[pin];
++
++			if ((param == MAX77620_SUSPEND_FPS_SOURCE) &&
++				(param_val == FPS_SRC_DEF)) {
++				addr = MAX77620_REG_FPS_GPIO1 + pin - 1;
++				ret = max77620_get_default_fps(mpci,
++					addr, &fps_config->suspend_fps_src);
++				if (ret < 0)
++					return ret;
++				break;
++			}
++
++			if (param == MAX77620_SUSPEND_FPS_SOURCE)
++				fps_config->suspend_fps_src = param_val;
++			else if (param == MAX77620_SUSPEND_FPS_POWER_ON_SLOTS)
++				fps_config->suspend_power_up_slots = param_val;
++			else
++				fps_config->suspend_power_down_slots =
++								param_val;
++			break;
++
++		case PIN_CONFIG_BIAS_PULL_UP:
++		case PIN_CONFIG_BIAS_PULL_DOWN:
++			pu_val = (param == PIN_CONFIG_BIAS_PULL_UP) ?
++							BIT(pin) : 0;
++			pd_val = (param == PIN_CONFIG_BIAS_PULL_DOWN) ?
++							BIT(pin) : 0;
++
++			ret = max77620_reg_update(mpci->max77620->dev,
++				MAX77620_PWR_SLAVE, MAX77620_REG_PUE_GPIO,
++				BIT(pin), pu_val);
++			if (ret < 0) {
++				dev_err(dev, "PUE_GPIO update failed: %d\n",
++					ret);
++				return ret;
++			}
++
++			ret = max77620_reg_update(mpci->max77620->dev,
++				MAX77620_PWR_SLAVE, MAX77620_REG_PDE_GPIO,
++				BIT(pin), pd_val);
++			if (ret < 0) {
++				dev_err(dev, "PDE_GPIO update failed: %d\n",
++					ret);
++				return ret;
++			}
++			break;
++
++		default:
++			dev_err(dev, "Properties not supported\n");
++			return -ENOTSUPP;
 +		}
-+		dev_dbg(chip->dev, "CID%d: 0x%02x\n",
-+			i - MAX77620_REG_CID0, val);
-+		cid_val[i - MAX77620_REG_CID0] = val;
 +	}
 +
-+	/* CID4 is OTP Version */
-+	dev_info(chip->dev, "MAX77620 PMIC OTP Version: 0x%02X\n", cid_val[4]);
-+
-+	/* CID5 is ES version */
-+	dev_info(chip->dev, "MAX77620 PMIC ES version: 1.%d\n",
-+				MAX77620_CID5_DIDM(cid_val[5]));
-+
-+	/* Read NVERC register */
-+	ret = max77620_reg_read(chip->dev, MAX77620_PWR_SLAVE,
-+			MAX77620_REG_NVERC, &val);
-+	if (ret < 0) {
-+		dev_err(chip->dev, "NVERC read failed: %d\n", ret);
-+		return ret;
-+	}
-+	dev_dbg(chip->dev, "NVERC = 0x%02x\n", val);
-+	for (i = 0; i < 8; ++i) {
-+		if (val & BIT(i))
-+			dev_info(chip->dev, "NVERC: %s\n", max77620_nverc[i]);
-+	}
-+
-+	return ret;
++	return 0;
 +}
 +
-+static irqreturn_t max77620_mbattlow_irq(int irq, void *data)
++static const struct pinconf_ops max77620_pinconf_ops = {
++	.pin_config_get = max77620_pinconf_get,
++	.pin_config_set = max77620_pinconf_set,
++};
++
++static struct pinctrl_desc max77620_pinctrl_desc = {
++	.pctlops = &max77620_pinctrl_ops,
++	.pmxops = &max77620_pinmux_ops,
++	.confops = &max77620_pinconf_ops,
++};
++
++static int max77620_pinctrl_probe(struct platform_device *pdev)
 +{
-+	struct max77620_chip *max77620 = data;
++	struct max77620_pctrl_info *mpci;
++	struct max77620_chip *max77620 = dev_get_drvdata(pdev->dev.parent);
++	int i;
 +
-+	dev_dbg(max77620->dev, "MBATTLOW interrupt occurred\n");
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int max77620_probe(struct i2c_client *client,
-+			  const struct i2c_device_id *id)
-+{
-+	struct device_node *node = client->dev.of_node;
-+	const struct max77620_sub_modules *children;
-+	const struct of_device_id *match;
-+	const struct regmap_config *rmap_config = max77620_regmap_config;
-+	struct max77620_chip *chip;
-+	int i = 0;
-+	int ret = 0;
-+
-+	if (!node) {
-+		dev_err(&client->dev, "Device is not from DT\n");
-+		return -ENODEV;
-+	}
-+
-+	match = of_match_device(max77620_of_match, &client->dev);
-+	children = match->data;
-+	if (!children)
-+		return -ENODEV;
-+
-+	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
++	mpci = devm_kzalloc(&pdev->dev, sizeof(*mpci), GFP_KERNEL);
++	if (!mpci)
 +		return -ENOMEM;
 +
-+	i2c_set_clientdata(client, chip);
-+	chip->dev = &client->dev;
-+	chip->irq_base = -1;
-+	chip->chip_irq = client->irq;
-+	chip->id = children->id;
++	mpci->dev = &pdev->dev;
++	mpci->dev->of_node = pdev->dev.parent->of_node;
++	mpci->max77620 = max77620;
 +
-+	if (chip->id == MAX20024)
-+		rmap_config = max20024_regmap_config;
++	mpci->pins = max77620_pins_desc;
++	mpci->num_pins = ARRAY_SIZE(max77620_pins_desc);
++	mpci->functions = max77620_pin_function;
++	mpci->num_functions = ARRAY_SIZE(max77620_pin_function);
++	mpci->pin_groups = max77620_pingroups;
++	mpci->num_pin_groups = ARRAY_SIZE(max77620_pingroups);
++	platform_set_drvdata(pdev, mpci);
 +
-+	mutex_init(&chip->mutex_config);
++	max77620_pinctrl_desc.name = dev_name(&pdev->dev);
++	max77620_pinctrl_desc.pins = max77620_pins_desc;
++	max77620_pinctrl_desc.npins = ARRAY_SIZE(max77620_pins_desc);
++	max77620_pinctrl_desc.num_custom_params =
++				ARRAY_SIZE(max77620_cfg_params);
++	max77620_pinctrl_desc.custom_params = max77620_cfg_params;
 +
-+	for (i = 0; i < MAX77620_NUM_SLAVES; i++) {
-+		if (max77620_slave_address[i] == client->addr)
-+			chip->clients[i] = client;
-+		else
-+			chip->clients[i] = i2c_new_dummy(client->adapter,
-+						max77620_slave_address[i]);
-+		if (!chip->clients[i]) {
-+			dev_err(&client->dev, "can't attach client %d\n", i);
-+			ret = -ENOMEM;
-+			goto fail_client_reg;
-+		}
-+
-+		chip->clients[i]->dev.of_node = node;
-+		i2c_set_clientdata(chip->clients[i], chip);
-+		chip->rmap[i] = devm_regmap_init_i2c(chip->clients[i],
-+					&rmap_config[i]);
-+		if (IS_ERR(chip->rmap[i])) {
-+			ret = PTR_ERR(chip->rmap[i]);
-+			dev_err(&client->dev,
-+				"regmap %d init failed, err %d\n", i, ret);
-+			goto fail_client_reg;
-+		}
++	for (i = 0; i < MAX77620_PIN_NUM; ++i) {
++		mpci->fps_config[i].active_fps_src = -1;
++		mpci->fps_config[i].active_power_up_slots = -1;
++		mpci->fps_config[i].active_power_down_slots = -1;
++		mpci->fps_config[i].suspend_fps_src = -1;
++		mpci->fps_config[i].suspend_power_up_slots = -1;
++		mpci->fps_config[i].suspend_power_down_slots = -1;
 +	}
 +
-+	ret = max77620_read_es_version(chip);
-+	if (ret < 0)
-+		goto fail_client_reg;
-+
-+	ret = max77620_initialise_chip(chip, &client->dev);
-+	if (ret < 0)
-+		goto fail_client_reg;
-+
-+	ret = regmap_add_irq_chip(chip->rmap[MAX77620_PWR_SLAVE],
-+		chip->chip_irq, IRQF_ONESHOT | IRQF_SHARED, chip->irq_base,
-+		&max77620_top_irq_chip, &chip->top_irq_data);
-+	if (ret < 0) {
-+		dev_err(chip->dev, "Failed to add top irq_chip %d\n", ret);
-+		goto fail_client_reg;
-+	}
-+
-+	ret = max77620_initialise_fps(chip, &client->dev);
-+	if (ret < 0)
-+		goto fail_free_irq;
-+
-+	ret = max77620_init_backup_battery_charging(chip, &client->dev);
-+	if (ret < 0)
-+		goto fail_free_irq;
-+
-+	ret = max77620_init_low_battery_monitor(chip, &client->dev);
-+	if (ret < 0)
-+		goto fail_free_irq;
-+
-+	ret =  mfd_add_devices(&client->dev, -1, children->cells,
-+			children->ncells, NULL, 0,
-+			regmap_irq_get_domain(chip->top_irq_data));
-+	if (ret < 0) {
-+		dev_err(&client->dev, "mfd add dev fail %d\n", ret);
-+		goto fail_free_irq;
-+	}
-+
-+	/* Register RTC with I2c dummy client */
-+	ret =  mfd_add_devices(&chip->clients[MAX77620_RTC_SLAVE]->dev, -1,
-+			&max77620_20024_rtc, 1, NULL, 0,
-+			regmap_irq_get_domain(chip->top_irq_data));
-+	if (ret < 0) {
-+		dev_err(&client->dev, "RTC mfd add dev failed: %d\n", ret);
-+		goto fail_free_irq;
-+	}
-+
-+	chip->irq_mbattlow = max77620_irq_get_virq(chip->dev,
-+					MAX77620_IRQ_LBT_MBATLOW);
-+	if (chip->irq_mbattlow) {
-+		ret = devm_request_threaded_irq(chip->dev, chip->irq_mbattlow,
-+			NULL, max77620_mbattlow_irq,
-+			IRQF_ONESHOT, dev_name(chip->dev),
-+			chip);
-+		if (ret < 0)
-+			dev_err(&client->dev, "request irq %d failed: %d\n",
-+			chip->irq_mbattlow, ret);
++	mpci->pctl = pinctrl_register(&max77620_pinctrl_desc,
++					&pdev->dev, mpci);
++	if (IS_ERR(mpci->pctl)) {
++		dev_err(&pdev->dev, "Couldn't register pinctrl driver\n");
++		return PTR_ERR(mpci->pctl);
 +	}
 +
 +	return 0;
-+
-+fail_free_irq:
-+	regmap_del_irq_chip(chip->chip_irq, chip->top_irq_data);
-+
-+fail_client_reg:
-+	for (i = 0; i < MAX77620_NUM_SLAVES; i++) {
-+		if (!chip->clients[i] || chip->clients[i] == client)
-+			continue;
-+		i2c_unregister_device(chip->clients[i]);
-+	}
-+
-+	return ret;
 +}
 +
-+static int max77620_remove(struct i2c_client *client)
++static int max77620_pinctrl_remove(struct platform_device *pdev)
 +{
++	struct max77620_pctrl_info *mpci = platform_get_drvdata(pdev);
 +
-+	struct max77620_chip *chip = i2c_get_clientdata(client);
-+	int i;
-+
-+	mfd_remove_devices(chip->dev);
-+	regmap_del_irq_chip(chip->chip_irq, chip->top_irq_data);
-+
-+	for (i = 0; i < MAX77620_NUM_SLAVES; i++) {
-+		if (chip->clients[i] != client)
-+			i2c_unregister_device(chip->clients[i]);
-+	}
++	pinctrl_unregister(mpci->pctl);
 +
 +	return 0;
 +}
 +
 +#ifdef CONFIG_PM_SLEEP
-+static int max77620_set_fps_period(struct max77620_chip *chip,
-+				int fps_id, int time_period)
-+{
-+	struct device *dev = chip->dev;
-+	int period = max77620_get_fps_period_reg_value(chip, time_period);
-+	int ret;
++static int max77620_suspend_fps_param[] = {
++	MAX77620_SUSPEND_FPS_SOURCE,
++	MAX77620_SUSPEND_FPS_POWER_ON_SLOTS,
++	MAX77620_SUSPEND_FPS_POWER_DOWN_SLOTS,
++};
 +
-+	ret = max77620_reg_update(dev, MAX77620_PWR_SLAVE,
-+			MAX77620_REG_FPS_CFG0 + fps_id,
-+			MAX77620_FPS_TIME_PERIOD_MASK,
-+			period << MAX77620_FPS_TIME_PERIOD_SHIFT);
-+	if (ret < 0) {
-+		dev_err(dev, "Reg 0x%02x write failed: %d\n",
-+			MAX77620_REG_FPS_CFG0 + fps_id, ret);
-+		return ret;
++static int max77620_active_fps_param[] = {
++	MAX77620_ACTIVE_FPS_SOURCE,
++	MAX77620_ACTIVE_FPS_POWER_ON_SLOTS,
++	MAX77620_ACTIVE_FPS_POWER_DOWN_SLOTS,
++};
++
++static int max77620_pinctrl_suspend(struct device *dev)
++{
++	struct max77620_pctrl_info *mpci = dev_get_drvdata(dev);
++	int pin, p;
++
++	for (pin = 0; pin < MAX77620_PIN_NUM; ++pin) {
++		if ((pin < MAX77620_GPIO1) || (pin > MAX77620_GPIO3))
++			continue;
++		for (p = 0; p < 3; ++p)
++			max77620_set_fps_param(mpci, pin,
++					max77620_suspend_fps_param[p]);
 +	}
 +
 +	return 0;
-+}
++};
 +
-+static int max77620_i2c_suspend(struct device *dev)
++static int max77620_pinctrl_resume(struct device *dev)
 +{
-+	struct max77620_chip *chip = dev_get_drvdata(dev);
-+	unsigned int config;
-+	int fps;
-+	int ret;
++	struct max77620_pctrl_info *mpci = dev_get_drvdata(dev);
++	int pin, p;
 +
-+	for (fps = 0; fps < 2; ++fps) {
-+		if (chip->suspend_fps_period[fps] < 0)
++	for (pin = 0; pin < MAX77620_PIN_NUM; ++pin) {
++		if ((pin < MAX77620_GPIO1) || (pin > MAX77620_GPIO3))
 +			continue;
-+
-+		ret = max77620_set_fps_period(chip, fps,
-+				chip->suspend_fps_period[fps]);
-+		if (ret < 0)
-+			dev_err(dev, "FPS%d config failed: %d\n", fps, ret);
++		for (p = 0; p < 3; ++p)
++			max77620_set_fps_param(mpci, pin,
++				max77620_active_fps_param[p]);
 +	}
-+
-+	/*
-+	 * For MAX20024: No need to configure SLPEN on suspend as
-+	 * it will be configured on Init.
-+	 */
-+	if (chip->id == MAX20024)
-+		goto out;
-+
-+	config = (chip->sleep_enable) ? MAX77620_ONOFFCNFG1_SLPEN : 0;
-+	ret = max77620_reg_update(chip->dev, MAX77620_PWR_SLAVE,
-+			MAX77620_REG_ONOFFCNFG1, MAX77620_ONOFFCNFG1_SLPEN,
-+			config);
-+	if (ret < 0) {
-+		dev_err(dev, "Reg ONOFFCNFG1 update failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Disable WK_EN0 */
-+	ret = max77620_reg_update(chip->dev, MAX77620_PWR_SLAVE,
-+			MAX77620_REG_ONOFFCNFG2, MAX77620_ONOFFCNFG2_WK_EN0, 0);
-+	if (ret < 0) {
-+		dev_err(dev, "Reg ONOFFCNFG2 WK_EN0 update failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+out:
-+	disable_irq(chip->chip_irq);
-+
-+	return 0;
-+}
-+
-+static int max77620_i2c_resume(struct device *dev)
-+{
-+	struct max77620_chip *chip = dev_get_drvdata(dev);
-+	int ret;
-+	int fps;
-+
-+	for (fps = 0; fps < 2; ++fps) {
-+		if (chip->active_fps_period[fps] < 0)
-+			continue;
-+
-+		ret = max77620_set_fps_period(chip, fps,
-+				chip->active_fps_period[fps]);
-+		if (ret < 0)
-+			dev_err(dev, "FPS%d config failed: %d\n", fps, ret);
-+	}
-+
-+	/*
-+	 * For MAX20024: No need to configure WKEN0 on resume as
-+	 * it is configured on Init.
-+	 */
-+	if (chip->id == MAX20024)
-+		goto out;
-+
-+	/* Enable WK_EN0 */
-+	ret = max77620_reg_update(chip->dev, MAX77620_PWR_SLAVE,
-+		MAX77620_REG_ONOFFCNFG2, MAX77620_ONOFFCNFG2_WK_EN0,
-+		MAX77620_ONOFFCNFG2_WK_EN0);
-+	if (ret < 0) {
-+		dev_err(dev, "Reg ONOFFCNFG2 WK_EN0 update failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+out:
-+	enable_irq(chip->chip_irq);
 +
 +	return 0;
 +}
 +#endif
 +
-+static const struct i2c_device_id max77620_id[] = {
-+	{"max77620", MAX77620},
-+	{"max20024", MAX20024},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(i2c, max77620_id);
-+
-+static const struct dev_pm_ops max77620_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(max77620_i2c_suspend, max77620_i2c_resume)
++static const struct dev_pm_ops max77620_pinctrl_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(max77620_pinctrl_suspend,
++			max77620_pinctrl_resume)
 +};
 +
-+static struct i2c_driver max77620_driver = {
-+	.driver = {
-+		.name = "max77620",
-+		.pm = &max77620_pm_ops,
-+		.of_match_table = max77620_of_match,
++static const struct platform_device_id max77620_pinctrl_devtype[] = {
++	{
++		.name = "max77620-pinctrl",
++	}, {
++		.name = "max20024-pinctrl",
 +	},
-+	.probe = max77620_probe,
-+	.remove = max77620_remove,
-+	.id_table = max77620_id,
 +};
 +
-+static int __init max77620_init(void)
-+{
-+	return i2c_add_driver(&max77620_driver);
-+}
-+subsys_initcall(max77620_init);
++static struct platform_driver max77620_pinctrl_driver = {
++	.driver = {
++		.name = "max77620-pinctrl",
++		.owner = THIS_MODULE,
++		.pm = &max77620_pinctrl_pm_ops,
++	},
++	.probe = max77620_pinctrl_probe,
++	.remove = max77620_pinctrl_remove,
++	.id_table = max77620_pinctrl_devtype,
++};
 +
-+static void __exit max77620_exit(void)
++static int __init max77620_pinctrl_init(void)
 +{
-+	i2c_del_driver(&max77620_driver);
++	return platform_driver_register(&max77620_pinctrl_driver);
 +}
-+module_exit(max77620_exit);
++subsys_initcall(max77620_pinctrl_init);
 +
-+MODULE_DESCRIPTION("MAX77620/MAX20024 Multi Function Device Core Driver");
-+MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
-+MODULE_AUTHOR("Chaitanya Bandi <bandik@nvidia.com>");
-+MODULE_AUTHOR("Mallikarjun Kasoju <mkasoju@nvidia.com>");
-+MODULE_ALIAS("i2c:max77620");
++static void __exit max77620_pinctrl_exit(void)
++{
++	platform_driver_unregister(&max77620_pinctrl_driver);
++}
++module_exit(max77620_pinctrl_exit);
++
++MODULE_DESCRIPTION("MAX77620/MAX20024 pin control driver");
++MODULE_AUTHOR("Chaitanya Bandi<bandik@nvidia.com>");
++MODULE_AUTHOR("Laxman Dewangan<ldewangan@nvidia.com>");
++MODULE_ALIAS("platform:max77620-pinctrl");
 +MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/mfd/max77620.h b/include/linux/mfd/max77620.h
-new file mode 100644
-index 0000000..446f176
---- /dev/null
-+++ b/include/linux/mfd/max77620.h
-@@ -0,0 +1,407 @@
-+/*
-+ * max77620.h: Defining registers address and its bit definitions
-+ *	of MAX77620 and	MAX20024
-+ *
-+ * Copyright (C) 2016 NVIDIA CORPORATION. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ */
-+
-+#ifndef _LINUX_MFD_MAX77620_H_
-+#define _LINUX_MFD_MAX77620_H_
-+
-+#include <linux/device.h>
-+#include <linux/regmap.h>
-+
-+/* GLOBAL, PMIC, GPIO, FPS, ONOFFC, CID Registers */
-+#define MAX77620_REG_CNFGGLBL1			0x00
-+#define MAX77620_REG_CNFGGLBL2			0x01
-+#define MAX77620_REG_CNFGGLBL3			0x02
-+#define MAX77620_REG_CNFG1_32K			0x03
-+#define MAX77620_REG_CNFGBBC			0x04
-+#define MAX77620_REG_IRQTOP			0x05
-+#define MAX77620_REG_INTLBT			0x06
-+#define MAX77620_REG_IRQSD			0x07
-+#define MAX77620_REG_IRQ_LVL2_L0_7		0x08
-+#define MAX77620_REG_IRQ_LVL2_L8		0x09
-+#define MAX77620_REG_IRQ_LVL2_GPIO		0x0A
-+#define MAX77620_REG_ONOFFIRQ			0x0B
-+#define MAX77620_REG_NVERC			0x0C
-+#define MAX77620_REG_IRQTOPM			0x0D
-+#define MAX77620_REG_INTENLBT			0x0E
-+#define MAX77620_REG_IRQMASKSD			0x0F
-+#define MAX77620_REG_IRQ_MSK_L0_7		0x10
-+#define MAX77620_REG_IRQ_MSK_L8			0x11
-+#define MAX77620_REG_ONOFFIRQM			0x12
-+#define MAX77620_REG_STATLBT			0x13
-+#define MAX77620_REG_STATSD			0x14
-+#define MAX77620_REG_ONOFFSTAT			0x15
-+
-+/* SD and LDO Registers */
-+#define MAX77620_REG_SD0			0x16
-+#define MAX77620_REG_SD1			0x17
-+#define MAX77620_REG_SD2			0x18
-+#define MAX77620_REG_SD3			0x19
-+#define MAX77620_REG_SD4			0x1A
-+#define MAX77620_REG_DVSSD0			0x1B
-+#define MAX77620_REG_DVSSD1			0x1C
-+#define MAX77620_REG_SD0_CFG			0x1D
-+#define MAX77620_REG_SD1_CFG			0x1E
-+#define MAX77620_REG_SD2_CFG			0x1F
-+#define MAX77620_REG_SD3_CFG			0x20
-+#define MAX77620_REG_SD4_CFG			0x21
-+#define MAX77620_REG_SD_CFG2			0x22
-+#define MAX77620_REG_LDO0_CFG			0x23
-+#define MAX77620_REG_LDO0_CFG2			0x24
-+#define MAX77620_REG_LDO1_CFG			0x25
-+#define MAX77620_REG_LDO1_CFG2			0x26
-+#define MAX77620_REG_LDO2_CFG			0x27
-+#define MAX77620_REG_LDO2_CFG2			0x28
-+#define MAX77620_REG_LDO3_CFG			0x29
-+#define MAX77620_REG_LDO3_CFG2			0x2A
-+#define MAX77620_REG_LDO4_CFG			0x2B
-+#define MAX77620_REG_LDO4_CFG2			0x2C
-+#define MAX77620_REG_LDO5_CFG			0x2D
-+#define MAX77620_REG_LDO5_CFG2			0x2E
-+#define MAX77620_REG_LDO6_CFG			0x2F
-+#define MAX77620_REG_LDO6_CFG2			0x30
-+#define MAX77620_REG_LDO7_CFG			0x31
-+#define MAX77620_REG_LDO7_CFG2			0x32
-+#define MAX77620_REG_LDO8_CFG			0x33
-+#define MAX77620_REG_LDO8_CFG2			0x34
-+#define MAX77620_REG_LDO_CFG3			0x35
-+
-+#define MAX77620_LDO_SLEW_RATE_MASK		0x1
-+
-+/* LDO Configuration 3 */
-+#define MAX77620_TRACK4_MASK			BIT(5)
-+#define MAX77620_TRACK4_SHIFT			5
-+
-+/* Voltage */
-+#define  MAX77620_SDX_VOLT_MASK			0xFF
-+#define  MAX77620_SD0_VOLT_MASK			0x3F
-+#define  MAX77620_SD1_VOLT_MASK			0x7F
-+#define MAX77620_LDO_VOLT_MASK			0x3F
-+
-+#define MAX77620_REG_GPIO0			0x36
-+#define MAX77620_REG_GPIO1			0x37
-+#define MAX77620_REG_GPIO2			0x38
-+#define MAX77620_REG_GPIO3			0x39
-+#define MAX77620_REG_GPIO4			0x3A
-+#define MAX77620_REG_GPIO5			0x3B
-+#define MAX77620_REG_GPIO6			0x3C
-+#define MAX77620_REG_GPIO7			0x3D
-+#define MAX77620_REG_PUE_GPIO			0x3E
-+#define MAX77620_REG_PDE_GPIO			0x3F
-+#define MAX77620_REG_AME_GPIO			0x40
-+#define MAX77620_REG_ONOFFCNFG1			0x41
-+#define MAX77620_REG_ONOFFCNFG2			0x42
-+
-+/* FPS Registers */
-+#define MAX77620_REG_FPS_CFG0			0x43
-+#define MAX77620_REG_FPS_CFG1			0x44
-+#define MAX77620_REG_FPS_CFG2			0x45
-+#define MAX77620_REG_FPS_LDO0			0x46
-+#define MAX77620_REG_FPS_LDO1			0x47
-+#define MAX77620_REG_FPS_LDO2			0x48
-+#define MAX77620_REG_FPS_LDO3			0x49
-+#define MAX77620_REG_FPS_LDO4			0x4A
-+#define MAX77620_REG_FPS_LDO5			0x4B
-+#define MAX77620_REG_FPS_LDO6			0x4C
-+#define MAX77620_REG_FPS_LDO7			0x4D
-+#define MAX77620_REG_FPS_LDO8			0x4E
-+#define MAX77620_REG_FPS_SD0			0x4F
-+#define MAX77620_REG_FPS_SD1			0x50
-+#define MAX77620_REG_FPS_SD2			0x51
-+#define MAX77620_REG_FPS_SD3			0x52
-+#define MAX77620_REG_FPS_SD4			0x53
-+#define MAX77620_REG_FPS_NONE			0
-+
-+#define MAX77620_FPS_SRC_MASK			0xC0
-+#define MAX77620_FPS_SRC_SHIFT			6
-+#define MAX77620_FPS_PU_PERIOD_MASK		0x38
-+#define MAX77620_FPS_PU_PERIOD_SHIFT		3
-+#define MAX77620_FPS_PD_PERIOD_MASK		0x07
-+#define MAX77620_FPS_PD_PERIOD_SHIFT		0
-+#define MAX77620_FPS_TIME_PERIOD_MASK		0x38
-+#define MAX77620_FPS_TIME_PERIOD_SHIFT		3
-+#define MAX77620_FPS_EN_SRC_MASK		0x06
-+#define MAX77620_FPS_EN_SRC_SHIFT		1
-+#define MAX77620_FPS_ENFPS_MASK			0x01
-+
-+#define MAX77620_REG_FPS_GPIO1			0x54
-+#define MAX77620_REG_FPS_GPIO2			0x55
-+#define MAX77620_REG_FPS_GPIO3			0x56
-+#define MAX77620_REG_FPS_RSO			0x57
-+#define MAX77620_REG_CID0			0x58
-+#define MAX77620_REG_CID1			0x59
-+#define MAX77620_REG_CID2			0x5A
-+#define MAX77620_REG_CID3			0x5B
-+#define MAX77620_REG_CID4			0x5C
-+#define MAX77620_REG_CID5			0x5D
-+
-+#define MAX77620_REG_DVSSD4			0x5E
-+#define MAX20024_REG_MAX_ADD			0x70
-+
-+#define MAX77620_CID_DIDM_MASK			0xF0
-+#define MAX77620_CID_DIDM_SHIFT			4
-+
-+/* CNCG2SD */
-+#define MAX77620_SD_CNF2_ROVS_EN_SD1		BIT(1)
-+#define MAX77620_SD_CNF2_ROVS_EN_SD0		BIT(2)
-+
-+/* Device Identification Metal */
-+#define MAX77620_CID5_DIDM(n)			(((n) >> 4) & 0xF)
-+/* Device Indentification OTP */
-+#define MAX77620_CID5_DIDO(n)			((n) & 0xF)
-+
-+/* SD CNFG1 */
-+#define MAX77620_SD_SR_MASK			0xC0
-+#define MAX77620_SD_SR_SHIFT			6
-+#define MAX77620_SD_POWER_MODE_MASK		0x30
-+#define MAX77620_SD_POWER_MODE_SHIFT		4
-+#define MAX77620_SD_CFG1_ADE_MASK		BIT(3)
-+#define MAX77620_SD_CFG1_ADE_DISABLE		0
-+#define MAX77620_SD_CFG1_ADE_ENABLE		BIT(3)
-+#define MAX77620_SD_FPWM_MASK			0x04
-+#define MAX77620_SD_FPWM_SHIFT			2
-+#define MAX77620_SD_FSRADE_MASK			0x01
-+#define MAX77620_SD_FSRADE_SHIFT		0
-+#define MAX77620_SD_CFG1_FPWM_SD_MASK		BIT(2)
-+#define MAX77620_SD_CFG1_FPWM_SD_SKIP		0
-+#define MAX77620_SD_CFG1_FPWM_SD_FPWM		BIT(2)
-+#define MAX77620_SD_CFG1_FSRADE_SD_MASK		BIT(0)
-+#define MAX77620_SD_CFG1_FSRADE_SD_DISABLE	0
-+#define MAX77620_SD_CFG1_FSRADE_SD_ENABLE	BIT(0)
-+
-+/* LDO_CNFG2 */
-+#define MAX77620_LDO_POWER_MODE_MASK		0xC0
-+#define MAX77620_LDO_POWER_MODE_SHIFT		6
-+#define MAX77620_LDO_CFG2_ADE_MASK		BIT(1)
-+#define MAX77620_LDO_CFG2_ADE_DISABLE		0
-+#define MAX77620_LDO_CFG2_ADE_ENABLE		BIT(1)
-+#define MAX77620_LDO_CFG2_SS_MASK		BIT(0)
-+#define MAX77620_LDO_CFG2_SS_FAST		BIT(0)
-+#define MAX77620_LDO_CFG2_SS_SLOW		0
-+
-+#define MAX77620_IRQ_TOP_GLBL_MASK		BIT(7)
-+#define MAX77620_IRQ_TOP_SD_MASK		BIT(6)
-+#define MAX77620_IRQ_TOP_LDO_MASK		BIT(5)
-+#define MAX77620_IRQ_TOP_GPIO_MASK		BIT(4)
-+#define MAX77620_IRQ_TOP_RTC_MASK		BIT(3)
-+#define MAX77620_IRQ_TOP_32K_MASK		BIT(2)
-+#define MAX77620_IRQ_TOP_ONOFF_MASK		BIT(1)
-+
-+#define MAX77620_IRQ_LBM_MASK			BIT(3)
-+#define MAX77620_IRQ_TJALRM1_MASK		BIT(2)
-+#define MAX77620_IRQ_TJALRM2_MASK		BIT(1)
-+
-+#define MAX77620_PWR_I2C_ADDR			0x3c
-+#define MAX77620_RTC_I2C_ADDR			0x68
-+
-+#define MAX77620_CNFG_GPIO_DRV_MASK		BIT(0)
-+#define MAX77620_CNFG_GPIO_DRV_PUSHPULL		BIT(0)
-+#define MAX77620_CNFG_GPIO_DRV_OPENDRAIN	0
-+#define MAX77620_CNFG_GPIO_DIR_MASK		BIT(1)
-+#define MAX77620_CNFG_GPIO_DIR_INPUT		BIT(1)
-+#define MAX77620_CNFG_GPIO_DIR_OUTPUT		0
-+#define MAX77620_CNFG_GPIO_INPUT_VAL_MASK	BIT(2)
-+#define MAX77620_CNFG_GPIO_OUTPUT_VAL_MASK	BIT(3)
-+#define MAX77620_CNFG_GPIO_OUTPUT_VAL_HIGH	BIT(3)
-+#define MAX77620_CNFG_GPIO_OUTPUT_VAL_LOW	0
-+#define MAX77620_CNFG_GPIO_INT_MASK		(0x3 << 4)
-+#define MAX77620_CNFG_GPIO_INT_FALLING		BIT(4)
-+#define MAX77620_CNFG_GPIO_INT_RISING		BIT(5)
-+#define MAX77620_CNFG_GPIO_DBNC_MASK		(0x3 << 6)
-+#define MAX77620_CNFG_GPIO_DBNC_None		(0x0 << 6)
-+#define MAX77620_CNFG_GPIO_DBNC_8ms		(0x1 << 6)
-+#define MAX77620_CNFG_GPIO_DBNC_16ms		(0x2 << 6)
-+#define MAX77620_CNFG_GPIO_DBNC_32ms		(0x3 << 6)
-+
-+#define MAX77620_IRQ_LVL2_GPIO_EDGE0		BIT(0)
-+#define MAX77620_IRQ_LVL2_GPIO_EDGE1		BIT(1)
-+#define MAX77620_IRQ_LVL2_GPIO_EDGE2		BIT(2)
-+#define MAX77620_IRQ_LVL2_GPIO_EDGE3		BIT(3)
-+#define MAX77620_IRQ_LVL2_GPIO_EDGE4		BIT(4)
-+#define MAX77620_IRQ_LVL2_GPIO_EDGE5		BIT(5)
-+#define MAX77620_IRQ_LVL2_GPIO_EDGE6		BIT(6)
-+#define MAX77620_IRQ_LVL2_GPIO_EDGE7		BIT(7)
-+
-+#define MAX77620_CNFG1_32K_OUT0_EN		BIT(2)
-+
-+#define MAX77620_ONOFFCNFG1_SFT_RST		BIT(7)
-+#define MAX77620_ONOFFCNFG1_MRT_MASK		0x38
-+#define MAX77620_ONOFFCNFG1_MRT_SHIFT		0x3
-+#define MAX77620_ONOFFCNFG1_SLPEN		BIT(2)
-+#define MAX77620_ONOFFCNFG1_PWR_OFF		BIT(1)
-+#define MAX20024_ONOFFCNFG1_CLRSE		0x18
-+
-+#define MAX77620_ONOFFCNFG2_SFT_RST_WK		BIT(7)
-+#define MAX77620_ONOFFCNFG2_WD_RST_WK		BIT(6)
-+#define MAX77620_ONOFFCNFG2_SLP_LPM_MSK		BIT(5)
-+#define MAX77620_ONOFFCNFG2_WK_ALARM1		BIT(2)
-+#define MAX77620_ONOFFCNFG2_WK_EN0		BIT(0)
-+
-+#define	MAX77620_GLBLM_MASK			BIT(0)
-+
-+#define MAX77620_WDTC_MASK			0x3
-+#define MAX77620_WDTOFFC			BIT(4)
-+#define MAX77620_WDTSLPC			BIT(3)
-+#define MAX77620_WDTEN				BIT(2)
-+
-+#define MAX77620_TWD_MASK			0x3
-+#define MAX77620_TWD_2s				0x0
-+#define MAX77620_TWD_16s			0x1
-+#define MAX77620_TWD_64s			0x2
-+#define MAX77620_TWD_128s			0x3
-+
-+#define MAX77620_CNFGGLBL1_LBDAC_EN		BIT(7)
-+#define MAX77620_CNFGGLBL1_MPPLD		BIT(6)
-+#define MAX77620_CNFGGLBL1_LBHYST		(BIT(5) | BIT(4))
-+#define MAX77620_CNFGGLBL1_LBDAC		0x0E
-+#define MAX77620_CNFGGLBL1_LBRSTEN		BIT(0)
-+
-+/* CNFG BBC registers */
-+#define MAX77620_CNFGBBC_ENABLE			BIT(0)
-+#define MAX77620_CNFGBBC_CURRENT_MASK		0x06
-+#define MAX77620_CNFGBBC_CURRENT_SHIFT		1
-+#define MAX77620_CNFGBBC_VOLTAGE_MASK		0x18
-+#define MAX77620_CNFGBBC_VOLTAGE_SHIFT		3
-+#define MAX77620_CNFGBBC_LOW_CURRENT_DISABLE	BIT(5)
-+#define MAX77620_CNFGBBC_RESISTOR_MASK		0xC0
-+#define MAX77620_CNFGBBC_RESISTOR_SHIFT		6
-+
-+/* I2c Slave Id */
-+enum {
-+	MAX77620_PWR_SLAVE,
-+	MAX77620_RTC_SLAVE,
-+	MAX77620_NUM_SLAVES,
-+};
-+
-+/* GPIOs */
-+enum {
-+	MAX77620_GPIO0,
-+	MAX77620_GPIO1,
-+	MAX77620_GPIO2,
-+	MAX77620_GPIO3,
-+	MAX77620_GPIO4,
-+	MAX77620_GPIO5,
-+	MAX77620_GPIO6,
-+	MAX77620_GPIO7,
-+
-+	MAX77620_GPIO_NR,
-+};
-+
-+/* Interrupts */
-+enum {
-+	MAX77620_IRQ_TOP_GLBL,		/* Low-Battery */
-+	MAX77620_IRQ_TOP_SD,		/* SD power fail */
-+	MAX77620_IRQ_TOP_LDO,		/* LDO power fail */
-+	MAX77620_IRQ_TOP_GPIO,		/* TOP GPIO internal int to MAX77620 */
-+	MAX77620_IRQ_TOP_RTC,		/* RTC */
-+	MAX77620_IRQ_TOP_32K,		/* 32kHz oscillator */
-+	MAX77620_IRQ_TOP_ONOFF,		/* ON/OFF oscillator */
-+
-+	MAX77620_IRQ_LBT_MBATLOW,	/* Thermal alarm status, > 120C */
-+	MAX77620_IRQ_LBT_TJALRM1,	/* Thermal alarm status, > 120C */
-+	MAX77620_IRQ_LBT_TJALRM2,	/* Thermal alarm status, > 140C */
-+
-+	MAX77620_IRQ_GPIO0,		/* GPIO0 edge detection */
-+	MAX77620_IRQ_GPIO1,		/* GPIO1 edge detection */
-+	MAX77620_IRQ_GPIO2,		/* GPIO2 edge detection */
-+	MAX77620_IRQ_GPIO3,		/* GPIO3 edge detection */
-+	MAX77620_IRQ_GPIO4,		/* GPIO4 edge detection */
-+	MAX77620_IRQ_GPIO5,		/* GPIO5 edge detection */
-+	MAX77620_IRQ_GPIO6,		/* GPIO6 edge detection */
-+	MAX77620_IRQ_GPIO7,		/* GPIO7 edge detection */
-+
-+	MAX77620_IRQ_ONOFF_MRWRN,	/* Hard power off warnning */
-+	MAX77620_IRQ_ONOFF_EN0_1SEC,	/* EN0 active for 1s */
-+	MAX77620_IRQ_ONOFF_EN0_F,	/* EN0 falling */
-+	MAX77620_IRQ_ONOFF_EN0_R,	/* EN0 rising */
-+	MAX77620_IRQ_ONOFF_LID_F,	/* LID falling */
-+	MAX77620_IRQ_ONOFF_LID_R,	/* LID rising */
-+	MAX77620_IRQ_ONOFF_ACOK_F,	/* ACOK falling */
-+	MAX77620_IRQ_ONOFF_ACOK_R,	/* ACOK rising */
-+
-+	MAX77620_IRQ_NVER,		/* Non-Volatile Event Recorder */
-+	MAX77620_IRQ_NR,
-+};
-+
-+enum max77620_regulators {
-+	MAX77620_REGULATOR_ID_SD0,
-+	MAX77620_REGULATOR_ID_SD1,
-+	MAX77620_REGULATOR_ID_SD2,
-+	MAX77620_REGULATOR_ID_SD3,
-+	MAX77620_REGULATOR_ID_SD4,
-+	MAX77620_REGULATOR_ID_LDO0,
-+	MAX77620_REGULATOR_ID_LDO1,
-+	MAX77620_REGULATOR_ID_LDO2,
-+	MAX77620_REGULATOR_ID_LDO3,
-+	MAX77620_REGULATOR_ID_LDO4,
-+	MAX77620_REGULATOR_ID_LDO5,
-+	MAX77620_REGULATOR_ID_LDO6,
-+	MAX77620_REGULATOR_ID_LDO7,
-+	MAX77620_REGULATOR_ID_LDO8,
-+	MAX77620_NUM_REGS,
-+};
-+
-+/* FPS Source */
-+enum max77620_regulator_fps_src {
-+	FPS_SRC_0,
-+	FPS_SRC_1,
-+	FPS_SRC_2,
-+	FPS_SRC_NONE,
-+	FPS_SRC_DEF,
-+};
-+
-+/* Regulator types */
-+enum max77620_regulator_type {
-+	MAX77620_REGULATOR_TYPE_SD,
-+	MAX77620_REGULATOR_TYPE_LDO_N,
-+	MAX77620_REGULATOR_TYPE_LDO_P,
-+};
-+
-+enum max77620_chip_id {
-+	MAX77620,
-+	MAX20024,
-+};
-+
-+struct max77620_chip {
-+	struct device *dev;
-+
-+	struct i2c_client *clients[MAX77620_NUM_SLAVES];
-+	struct regmap *rmap[MAX77620_NUM_SLAVES];
-+
-+	int chip_irq;
-+	int irq_base;
-+	int irq_mbattlow;
-+
-+	struct mutex mutex_config;
-+	bool sleep_enable;
-+	bool enable_global_lpm;
-+	int active_fps_period[3];
-+	int suspend_fps_period[3];
-+
-+	struct regmap_irq_chip_data *top_irq_data;
-+	struct regmap_irq_chip_data *gpio_irq_data;
-+
-+	/* chip id */
-+	u32 id;
-+};
-+
-+extern int max77620_irq_get_virq(struct device *dev, int irq);
-+extern int max77620_reg_write(struct device *dev, int sid,
-+		unsigned int reg, u8 val);
-+extern int max77620_reg_read(struct device *dev, int sid,
-+		unsigned int reg, u8 *val);
-+extern int max77620_reg_update(struct device *dev, int sid,
-+		unsigned int reg, unsigned int mask, unsigned int val);
-+#endif /* _LINUX_MFD_MAX77620_H_ */
 -- 
 2.1.4
