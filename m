@@ -1,118 +1,30 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] arm: dts: zynq: Add MicroZed board support
-Date: Tue, 12 Jan 2016 12:47:40 +0100
-Message-ID: <5694E7DC.4010602@xilinx.com>
-References: <1452578026-4496-1-git-send-email-jteki@openedev.com>
- <5694D8D8.1050204@xilinx.com> <5694DA56.70704@openedev.com>
+From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/1] USB: core: let USB device know device node
+Date: Tue, 12 Jan 2016 03:54:31 -0800
+Message-ID: <2243040.bqZF27Q8z8@diplodocus>
+References: <1452594758-23417-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5694DA56.70704-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452594758-23417-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12.1.2016 11:49, Jagan Teki wrote:
-> On Tuesday 12 January 2016 04:13 PM, Michal Simek wrote:
->> On 12.1.2016 06:53, Jagan Teki wrote:
->>> Added basic dts support for MicroZed board.
->>>
->>> Cc: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>> Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>> Signed-off-by: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
->>> ---
->>>   arch/arm/boot/dts/Makefile          |  1 +
->>>   arch/arm/boot/dts/zynq-microzed.dts | 45
->>> +++++++++++++++++++++++++++++++++++++
->>>   2 files changed, 46 insertions(+)
->>>   create mode 100644 arch/arm/boot/dts/zynq-microzed.dts
->>>
->>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->>> index 30bbc37..9eb52fa 100644
->>> --- a/arch/arm/boot/dts/Makefile
->>> +++ b/arch/arm/boot/dts/Makefile
->>> @@ -725,6 +725,7 @@ dtb-$(CONFIG_ARCH_VT8500) += \
->>>       wm8750-apc8750.dtb \
->>>       wm8850-w70v2.dtb
->>>   dtb-$(CONFIG_ARCH_ZYNQ) += \
->>> +    zynq-microzed.dtb \
->>>       zynq-parallella.dtb \
->>>       zynq-zc702.dtb \
->>>       zynq-zc706.dtb \
->>> diff --git a/arch/arm/boot/dts/zynq-microzed.dts
->>> b/arch/arm/boot/dts/zynq-microzed.dts
->>> new file mode 100644
->>> index 0000000..a8c7d2b
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/zynq-microzed.dts
->>> @@ -0,0 +1,45 @@
->>> +/*
->>> + * Copyright (C) 2015 Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
->>> + *
->>> + * This software is licensed under the terms of the GNU General Public
->>> + * License version 2, as published by the Free Software Foundation, and
->>> + * may be copied, distributed, and modified under those terms.
->>> + *
->>> + * This program is distributed in the hope that it will be useful,
->>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>> + * GNU General Public License for more details.
->>> + */
->>> +/dts-v1/;
->>> +/include/ "zynq-7000.dtsi"
->>> +
->>> +/ {
->>> +    model = "Zynq MicroZED Development Board";
->>> +    compatible = "xlnx,zynq-microzed", "xlnx,zynq-7000";
->>> +
->>> +    aliases {
->>> +        serial0 = &uart1;
->>> +    };
->>> +
->>> +    memory {
->>> +        device_type = "memory";
->>> +        reg = <0x0 0x40000000>;
->>> +    };
->>> +
->>> +    chosen {
->>> +        bootargs = "earlyprintk";
->>> +        stdout-path = "serial0:115200n8";
->>> +    };
->>> +};
->>> +
->>> +&clkc {
->>> +    ps-clk-frequency = <33333333>;
->>> +};
->>> +
->>> +&sdhci0 {
->>> +    status = "okay";
->>> +};
->>> +
->>> +&uart1 {
->>> +    status = "okay";
->>> +};
->>>
->>
->> I would prefer to have full description of this board instead of partial
->> one. In U-Boot there is also qspi enabled. Board has also USB and
->> ethernet that's why all of these should be enabled and tested.
-> 
-> I have verified what all I added like uart, mmc ie why I described as
-> basic support.
-> 
-> May be we can move this first and rest will add in future like USB and
-> Ethernet. For qspi the driver is not mainlined yet.
+On Tuesday, January 12, 2016 06:32:38 PM Peter Chen wrote:
+> descirbe these at device tree.
+s/descirbe/describe/
 
-Adding USB, ethernet should be quite simple. It means if you have the
-board please test it and send v2 with that.
-Hopefully both 7010 and 7020 microzed boards are the same.
+...by the way
+I no longer see any reference to a reset GPIO.
+Did that get moved to u-boot, and if so is that posted somewhere?
 
-Thanks,
-Michal
-
+I'm curious because I've got a board (not yet mainlined) with one of
+these onboard hubs that is currently using the fake regulator hack.
+I want to test your patch(es). 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
