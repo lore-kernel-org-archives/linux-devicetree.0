@@ -1,227 +1,98 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2 1/1] USB: core: let USB device know device node
-Date: Tue, 12 Jan 2016 18:32:38 +0800
-Message-ID: <1452594758-23417-1-git-send-email-peter.chen@freescale.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH] arm: dts: zynq: Add MicroZed board support
+Date: Tue, 12 Jan 2016 11:43:36 +0100
+Message-ID: <5694D8D8.1050204@xilinx.com>
+References: <1452578026-4496-1-git-send-email-jteki@openedev.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1452578026-4496-1-git-send-email-jteki@openedev.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jteki@openedev.com>, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Soren Brinkmann <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Although most of USB devices are hot-plug's, there are still some devices
-are hard wired on the board, eg, for HSIC and SSIC interface USB devices.
-If these kinds of USB devices are multiple functions, and they can supply
-other interfaces like i2c, gpios for other devices, we may need to
-descirbe these at device tree.
+On 12.1.2016 06:53, Jagan Teki wrote:
+> Added basic dts support for MicroZed board.
+> 
+> Cc: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Jagan Teki <jteki@openedev.com>
+> ---
+>  arch/arm/boot/dts/Makefile          |  1 +
+>  arch/arm/boot/dts/zynq-microzed.dts | 45 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 46 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/zynq-microzed.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 30bbc37..9eb52fa 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -725,6 +725,7 @@ dtb-$(CONFIG_ARCH_VT8500) += \
+>  	wm8750-apc8750.dtb \
+>  	wm8850-w70v2.dtb
+>  dtb-$(CONFIG_ARCH_ZYNQ) += \
+> +	zynq-microzed.dtb \
+>  	zynq-parallella.dtb \
+>  	zynq-zc702.dtb \
+>  	zynq-zc706.dtb \
+> diff --git a/arch/arm/boot/dts/zynq-microzed.dts b/arch/arm/boot/dts/zynq-microzed.dts
+> new file mode 100644
+> index 0000000..a8c7d2b
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/zynq-microzed.dts
+> @@ -0,0 +1,45 @@
+> +/*
+> + * Copyright (C) 2015 Jagan Teki <jteki@openedev.com>
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +/dts-v1/;
+> +/include/ "zynq-7000.dtsi"
+> +
+> +/ {
+> +	model = "Zynq MicroZED Development Board";
+> +	compatible = "xlnx,zynq-microzed", "xlnx,zynq-7000";
+> +
+> +	aliases {
+> +		serial0 = &uart1;
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x0 0x40000000>;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "earlyprintk";
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +};
+> +
+> +&clkc {
+> +	ps-clk-frequency = <33333333>;
+> +};
+> +
+> +&sdhci0 {
+> +	status = "okay";
+> +};
+> +
+> +&uart1 {
+> +	status = "okay";
+> +};
+> 
 
-In this commit, it uses "reg" in dts as port number to match the port
-number decided by USB core, if they are the same, then the device node
-is for the device we are creating for USB core.
+I would prefer to have full description of this board instead of partial
+one. In U-Boot there is also qspi enabled. Board has also USB and
+ethernet that's why all of these should be enabled and tested.
 
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-
----
-
-Changes for v2:
-- Fix build error reported by kbuild robot, lack of "static" for
-  inline usb_of_get_child_node  
-- Fix typo, "devcie_node" -> "device_node"
-- Add kernel-doc for of_node at struct usb_device
-
-Changes from RFC:
-- Fix the error address for binding doc, and add compatible for binding doc
-- Change get child node API from "usb_of_find_node" to
-  "usb_of_get_child_node"
-- Delete unecessary header files
-- One typo
-
- .../devicetree/bindings/usb/usb-device.txt         | 17 ++++++++
- drivers/usb/core/Makefile                          |  2 +-
- drivers/usb/core/of.c                              | 47 ++++++++++++++++++++++
- drivers/usb/core/usb.c                             |  8 +++-
- include/linux/usb.h                                |  3 ++
- include/linux/usb/of.h                             |  7 ++++
- 6 files changed, 81 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/usb-device.txt
- create mode 100644 drivers/usb/core/of.c
-
-diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
-new file mode 100644
-index 0000000..0468834
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/usb-device.txt
-@@ -0,0 +1,17 @@
-+Generic USB Device Properties
-+
-+Usually, we only use device tree for hard wired USB device.
-+The reference binding doc is from:
-+http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
-+
-+Required properties:
-+- compatible: usbVID,PID
-+- reg: the port number which this device is connecting to.
-+
-+
-+Example:
-+
-+hub: genesys@01 {
-+	compatible = "usb05e3,0608";
-+	reg = <0x01>;
-+};
-diff --git a/drivers/usb/core/Makefile b/drivers/usb/core/Makefile
-index 2f6f932..9780877 100644
---- a/drivers/usb/core/Makefile
-+++ b/drivers/usb/core/Makefile
-@@ -5,7 +5,7 @@
- usbcore-y := usb.o hub.o hcd.o urb.o message.o driver.o
- usbcore-y += config.o file.o buffer.o sysfs.o endpoint.o
- usbcore-y += devio.o notify.o generic.o quirks.o devices.o
--usbcore-y += port.o
-+usbcore-y += port.o of.o
- 
- usbcore-$(CONFIG_PCI)		+= hcd-pci.o
- usbcore-$(CONFIG_ACPI)		+= usb-acpi.o
-diff --git a/drivers/usb/core/of.c b/drivers/usb/core/of.c
-new file mode 100644
-index 0000000..2289700
---- /dev/null
-+++ b/drivers/usb/core/of.c
-@@ -0,0 +1,47 @@
-+/*
-+ * of.c		The helpers for hcd device tree support
-+ *
-+ * Copyright (C) 2016 Freescale Semiconductor, Inc.
-+ * Author: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-+ *
-+ * This program is free software: you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2  of
-+ * the License as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/of.h>
-+
-+/**
-+ * usb_of_get_child_node - Find the device node match port number
-+ * @parent: the parent device node
-+ * @portnum: the port number which device is connecting
-+ *
-+ * Find the node from device tree according to its port number.
-+ *
-+ * Return: On success, a pointer to the device node, %NULL on failure.
-+ */
-+struct device_node *usb_of_get_child_node(struct device_node *parent,
-+					int portnum)
-+{
-+	struct device_node *node;
-+	u32 port;
-+
-+	for_each_child_of_node(parent, node) {
-+		if (!of_property_read_u32(node, "reg", &port)) {
-+			if (port == portnum)
-+				return node;
-+		}
-+	}
-+
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(usb_of_get_child_node);
-+
-diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
-index 77e4c9b..64c094e 100644
---- a/drivers/usb/core/usb.c
-+++ b/drivers/usb/core/usb.c
-@@ -36,6 +36,7 @@
- #include <linux/mutex.h>
- #include <linux/workqueue.h>
- #include <linux/debugfs.h>
-+#include <linux/usb/of.h>
- 
- #include <asm/io.h>
- #include <linux/scatterlist.h>
-@@ -502,11 +503,14 @@ struct usb_device *usb_alloc_dev(struct usb_device *parent,
- 	dev->connect_time = jiffies;
- 	dev->active_duration = -jiffies;
- #endif
--	if (root_hub)	/* Root hub always ok [and always wired] */
-+	if (root_hub) {	/* Root hub always ok [and always wired] */
- 		dev->authorized = 1;
--	else {
-+		dev->of_node = bus->controller->of_node;
-+	} else {
- 		dev->authorized = !!HCD_DEV_AUTHORIZED(usb_hcd);
- 		dev->wusb = usb_bus_is_wusb(bus) ? 1 : 0;
-+		dev->dev.of_node = usb_of_get_child_node
-+			(parent->of_node, dev->portnum);
- 	}
- 	return dev;
- }
-diff --git a/include/linux/usb.h b/include/linux/usb.h
-index 89533ba..98fa1f4 100644
---- a/include/linux/usb.h
-+++ b/include/linux/usb.h
-@@ -25,6 +25,7 @@
- struct usb_device;
- struct usb_driver;
- struct wusb_dev;
-+struct device_node;
- 
- /*-------------------------------------------------------------------------*/
- 
-@@ -536,6 +537,7 @@ struct usb3_lpm_parameters {
-  *	to keep track of the number of functions that require USB 3.0 Link Power
-  *	Management to be disabled for this usb_device.  This count should only
-  *	be manipulated by those functions, with the bandwidth_mutex is held.
-+ * @of_node: Associated device tree node
-  *
-  * Notes:
-  * Usbcore drivers should not set usbdev->state directly.  Instead use
-@@ -616,6 +618,7 @@ struct usb_device {
- 	struct usb3_lpm_parameters u1_params;
- 	struct usb3_lpm_parameters u2_params;
- 	unsigned lpm_disable_count;
-+	struct device_node	*of_node;
- };
- #define	to_usb_device(d) container_of(d, struct usb_device, dev)
- 
-diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
-index 974bce9..de3237f 100644
---- a/include/linux/usb/of.h
-+++ b/include/linux/usb/of.h
-@@ -16,6 +16,8 @@ enum usb_dr_mode of_usb_get_dr_mode_by_phy(struct device_node *phy_np);
- bool of_usb_host_tpl_support(struct device_node *np);
- int of_usb_update_otg_caps(struct device_node *np,
- 			struct usb_otg_caps *otg_caps);
-+struct device_node *usb_of_get_child_node(struct device_node *parent,
-+			int portnum);
- #else
- static inline enum usb_dr_mode
- of_usb_get_dr_mode_by_phy(struct device_node *phy_np)
-@@ -31,6 +33,11 @@ static inline int of_usb_update_otg_caps(struct device_node *np,
- {
- 	return 0;
- }
-+static inline struct device_node *usb_of_get_child_node
-+		(struct device_node *parent, int portnum)
-+{
-+	return NULL;
-+}
- #endif
- 
- #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_USB_SUPPORT)
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Michal
