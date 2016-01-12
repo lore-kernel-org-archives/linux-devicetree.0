@@ -1,130 +1,37 @@
-From: xuejiancheng <xuejiancheng@huawei.com>
-Subject: Re: [PATCH v5 5/6] mfd: dt-bindings: add device tree bindings for
- Hi3519 sysctrl
-Date: Tue, 12 Jan 2016 17:28:05 +0800
-Message-ID: <5694C725.6010502@huawei.com>
-References: <1452219400-32478-1-git-send-email-xuejiancheng@huawei.com>
- <1452219400-32478-6-git-send-email-xuejiancheng@huawei.com>
- <20160111054846.GD3331@x1> <56935EA8.4060801@huawei.com>
- <20160111085555.GE14104@x1> <5694584D.7040301@huawei.com>
- <20160112074107.GK19803@x1> <5694B68A.6040300@huawei.com>
- <20160112083946.GN19803@x1>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [patch 1/2 -next] mdio: remove an unneed condition
+Date: Tue, 12 Jan 2016 12:35:34 +0300
+Message-ID: <20160112093534.GE29804@mwanda>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160112083946.GN19803@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, p.zabel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+It used to be that mdio->irq was a pointer but after e7f4dc3536a4
+('mdio: Move allocation of interrupts into core') it's an array inside
+the mdio struct so it can never be NULL.
 
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-On 2016/1/12 16:39, Lee Jones wrote:
-> On Tue, 12 Jan 2016, xuejiancheng wrote:
->=20
->> Hello Lee,
->>
->> On 2016/1/12 15:41, Lee Jones wrote:
->>> On Tue, 12 Jan 2016, xuejiancheng wrote:
->>>
->>>>
->>>>
->>>> On 2016/1/11 16:55, Lee Jones wrote:
->>>>> On Mon, 11 Jan 2016, xuejiancheng wrote:
->>>>>> On 2016/1/11 13:48, Lee Jones wrote:
->>>>>>> On Fri, 08 Jan 2016, Jiancheng Xue wrote:
->>>>>>>
->>>>>>>> Add device tree bindings for Hi3519 system controller.
->>>>>>>>
->>>>>>>> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
->>>>>>>> ---
->>>>>>>>  Documentation/devicetree/bindings/mfd/hi3519.txt | 14 +++++++=
-+++++++
->>>>>>>>  1 file changed, 14 insertions(+)
->>>>>>>>  create mode 100644 Documentation/devicetree/bindings/mfd/hi35=
-19.txt
->>>>>>>
->>>>>>> I have this patch, but none of the others in the set, thus I am
->>>>>>> lacking context.
->>>>>>>
->>>>>> I can forward other patches in the set to you. Thank you.
->>>>>>
->>>>>>>> diff --git a/Documentation/devicetree/bindings/mfd/hi3519.txt =
-b/Documentation/devicetree/bindings/mfd/hi3519.txt
->>>>>>>> new file mode 100644
->>>>>>>> index 0000000..115c5be
->>>>>>>> --- /dev/null
->>>>>>>> +++ b/Documentation/devicetree/bindings/mfd/hi3519.txt
->>>>>>>> @@ -0,0 +1,14 @@
->>>>>>>> +* Hisilicon Hi3519 System Controller Block
->>>>>>>> +
->>>>>>>> +This bindings use the following binding:
->>>>>>>> +Documentation/devicetree/bindings/mfd/syscon.txt
->>>>>>>> +
->>>>>>>> +Required properties:
->>>>>>>> +- compatible: "hisilicon,hi3519-sysctrl".
->>>>>>>> +- reg: the register region of this block
->>>>>>>> +
->>>>>>>> +Examples:
->>>>>>>> +sysctrl: system-controller@12010000 {
->>>>>>>> +	compatible =3D "hisilicon,hi3519-sysctrl", "syscon";
->>>>>>>> +	reg =3D <0x12010000 0x1000>;
->>>>>>>> +};
->>>>>>>
->>>>>>> There is no requirement (nor want) for binding documents where =
-the
->>>>>>> given device is simply using highly generic bindings.  This jus=
-t
->>>>>>> amounts to churn.
->>>>>>>
->>>>>> This block is specific for Hi3519 SOC, and may has its own drive=
-r.
->>>>>
->>>>> Does it have its own driver currently?
->>>>>
->>>> Not yet.
->>>> Arnd Bergmann and Rob Herring all suggested adding a specific comp=
-atible string
->>>> with the SOC name. This binding is just used for describing the co=
-mpatible string now.
->>>> When more functions on hi3519 SOC are added later, the specific dr=
-iver will be also
->>>> needed.
->>>
->>> Save this binding until it has more functionality.  We here "I'll a=
-dd
->>> to this later" all too often.
->>>
->>
->> In the hi3519.dtsi file, there is a system-controller device node de=
-scribed like below:
->> sysctrl: system-controller@12010000 {
->> 	compatible =3D "hisilicon,hi3519-sysctrl", "syscon";
->> 	reg =3D <0x12010000 0x1000>;
->> };
->> Do you mean that I should remove "hisilicon,hi3519-sysctrl" and just=
- use "syscon" as the
->> compatible string?=E3=80=80
->=20
-> Where is this compatible string _used_?
->=20
->> If I want to add "hisilicon,hi3519-sysctrl" for hi3519. where should=
- I put this binding?
->> Could you give some suggestions?  Thank you very much!
->=20
-> If you're not using the compatible i.e. the device doesn't have its
-> own driver yet, then there is no need to supply the binding at all, i=
-s
-> there?
->=20
-
-OK. Thank you.
-
->>>>>> So I think it's better to keep this binding.
->>>>>
->>>>
->>>
->>
->=20
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index c0a8f84..86829f8 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -62,11 +62,9 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
+ 	rc = irq_of_parse_and_map(child, 0);
+ 	if (rc > 0) {
+ 		phy->irq = rc;
+-		if (mdio->irq)
+-			mdio->irq[addr] = rc;
++		mdio->irq[addr] = rc;
+ 	} else {
+-		if (mdio->irq)
+-			phy->irq = mdio->irq[addr];
++		phy->irq = mdio->irq[addr];
+ 	}
+ 
+ 	if (of_property_read_bool(child, "broken-turn-around"))
