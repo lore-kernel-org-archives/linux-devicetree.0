@@ -1,109 +1,41 @@
-From: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] arm: dts: zynq: Add MicroZed board support
-Date: Tue, 12 Jan 2016 16:19:58 +0530
-Message-ID: <5694DA56.70704@openedev.com>
-References: <1452578026-4496-1-git-send-email-jteki@openedev.com> <5694D8D8.1050204@xilinx.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] wlcore/wl12xx: spi: add device tree support
+Date: Tue, 12 Jan 2016 13:24:38 +0200
+Message-ID: <5694E276.8000304@ti.com>
+References: <1451482533-8624-1-git-send-email-uri.mashiach@compulab.co.il>
+ <1451482533-8624-3-git-send-email-uri.mashiach@compulab.co.il>
+ <20160109025645.GB3644@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5694D8D8.1050204-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160109025645.GB3644@earth>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 12 January 2016 04:13 PM, Michal Simek wrote:
-> On 12.1.2016 06:53, Jagan Teki wrote:
->> Added basic dts support for MicroZed board.
->>
->> Cc: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->> Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/Makefile          |  1 +
->>   arch/arm/boot/dts/zynq-microzed.dts | 45 +++++++++++++++++++++++++++++++++++++
->>   2 files changed, 46 insertions(+)
->>   create mode 100644 arch/arm/boot/dts/zynq-microzed.dts
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index 30bbc37..9eb52fa 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -725,6 +725,7 @@ dtb-$(CONFIG_ARCH_VT8500) += \
->>   	wm8750-apc8750.dtb \
->>   	wm8850-w70v2.dtb
->>   dtb-$(CONFIG_ARCH_ZYNQ) += \
->> +	zynq-microzed.dtb \
->>   	zynq-parallella.dtb \
->>   	zynq-zc702.dtb \
->>   	zynq-zc706.dtb \
->> diff --git a/arch/arm/boot/dts/zynq-microzed.dts b/arch/arm/boot/dts/zynq-microzed.dts
->> new file mode 100644
->> index 0000000..a8c7d2b
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/zynq-microzed.dts
->> @@ -0,0 +1,45 @@
->> +/*
->> + * Copyright (C) 2015 Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
->> + *
->> + * This software is licensed under the terms of the GNU General Public
->> + * License version 2, as published by the Free Software Foundation, and
->> + * may be copied, distributed, and modified under those terms.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +/dts-v1/;
->> +/include/ "zynq-7000.dtsi"
->> +
->> +/ {
->> +	model = "Zynq MicroZED Development Board";
->> +	compatible = "xlnx,zynq-microzed", "xlnx,zynq-7000";
->> +
->> +	aliases {
->> +		serial0 = &uart1;
->> +	};
->> +
->> +	memory {
->> +		device_type = "memory";
->> +		reg = <0x0 0x40000000>;
->> +	};
->> +
->> +	chosen {
->> +		bootargs = "earlyprintk";
->> +		stdout-path = "serial0:115200n8";
->> +	};
->> +};
->> +
->> +&clkc {
->> +	ps-clk-frequency = <33333333>;
->> +};
->> +
->> +&sdhci0 {
->> +	status = "okay";
->> +};
->> +
->> +&uart1 {
->> +	status = "okay";
->> +};
->>
+On 01/09/2016 04:56 AM, Sebastian Reichel wrote:
+> Hi,
 >
-> I would prefer to have full description of this board instead of partial
-> one. In U-Boot there is also qspi enabled. Board has also USB and
-> ethernet that's why all of these should be enabled and tested.
+> On Wed, Dec 30, 2015 at 03:35:32PM +0200, Uri Mashiach wrote:
+>> Add DT support for the wl1271 SPI WiFi.
+>>
+>> Add documentation file for the wl1271 SPI WiFi.
+>>
+>> Signed-off-by: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+> [On Nokia N950]
+> Tested-By: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-I have verified what all I added like uart, mmc ie why I described as 
-basic support.
 
-May be we can move this first and rest will add in future like USB and 
-Ethernet. For qspi the driver is not mainlined yet.
+Reviewed-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 
--- 
-Jagan
+Thanks.--
+regards,
+-grygorii
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
