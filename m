@@ -1,113 +1,80 @@
-From: Caesar Wang <caesar.upstream@gmail.com>
-Subject: Re: [PATCH v3 2/3] soc: rockchip: power-domain: Modify power domain
- driver for rk3368
-Date: Tue, 12 Jan 2016 10:00:31 +0800
-Message-ID: <56945E3F.9070404@gmail.com>
+From: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: add power-domain header for RK3368
+ SoCs
+Date: Tue, 12 Jan 2016 10:03:13 +0800
+Message-ID: <56945EE1.6020602@gmail.com>
 References: <1452508600-3512-1-git-send-email-zhangqing@rock-chips.com>
- <1452508600-3512-3-git-send-email-zhangqing@rock-chips.com>
+ <1452508600-3512-2-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8;
 	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452508600-3512-3-git-send-email-zhangqing@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: zhangqing <zhangqing@rock-chips.com>
-Cc: heiko@sntech.de, wxt@rock-chips.com, mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@linaro.org, huangtao@rock-chips.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, zyw@rock-chips.com, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452508600-3512-2-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi
 
 =E5=9C=A8 2016=E5=B9=B401=E6=9C=8811=E6=97=A5 18:36, zhangqing =E5=86=99=
 =E9=81=93:
-> This driver is modified to support RK3368 SoC.
+> According to a description from TRM, add all the power domains.
 >
-> Signed-off-by: zhangqing <zhangqing@rock-chips.com>
+> Signed-off-by: zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Reviewed-by: Caesar Wang <wxt@rock-chips.com>
+Reviewed-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
 > ---
->   drivers/soc/rockchip/pm_domains.c | 33 ++++++++++++++++++++++++++++=
-+++++
->   1 file changed, 33 insertions(+)
+>   include/dt-bindings/power/rk3368-power.h | 28 +++++++++++++++++++++=
++++++++
+>   1 file changed, 28 insertions(+)
+>   create mode 100644 include/dt-bindings/power/rk3368-power.h
 >
-> diff --git a/drivers/soc/rockchip/pm_domains.c b/drivers/soc/rockchip=
-/pm_domains.c
-> index 534c589..6cdffb1 100644
-> --- a/drivers/soc/rockchip/pm_domains.c
-> +++ b/drivers/soc/rockchip/pm_domains.c
-> @@ -18,6 +18,7 @@
->   #include <linux/regmap.h>
->   #include <linux/mfd/syscon.h>
->   #include <dt-bindings/power/rk3288-power.h>
-> +#include <dt-bindings/power/rk3368-power.h>
->  =20
->   struct rockchip_domain_info {
->   	int pwr_mask;
-> @@ -75,6 +76,9 @@ struct rockchip_pmu {
->   #define DOMAIN_RK3288(pwr, status, req)		\
->   	DOMAIN(pwr, status, req, req, (req) + 16)
->  =20
-> +#define DOMAIN_RK3368(pwr, status, req)		\
-> +	DOMAIN(pwr, status, req, (req) + 16, req)
+> diff --git a/include/dt-bindings/power/rk3368-power.h b/include/dt-bi=
+ndings/power/rk3368-power.h
+> new file mode 100644
+> index 0000000..93633d5
+> --- /dev/null
+> +++ b/include/dt-bindings/power/rk3368-power.h
+> @@ -0,0 +1,28 @@
+> +#ifndef __DT_BINDINGS_POWER_RK3368_POWER_H__
+> +#define __DT_BINDINGS_POWER_RK3368_POWER_H__
 > +
->   static bool rockchip_pmu_domain_is_idle(struct rockchip_pm_domain *=
-pd)
->   {
->   	struct rockchip_pmu *pmu =3D pd->pmu;
-> @@ -444,6 +448,14 @@ static const struct rockchip_domain_info rk3288_=
-pm_domains[] =3D {
->   	[RK3288_PD_GPU]		=3D DOMAIN_RK3288(9, 9, 2),
->   };
->  =20
-> +static const struct rockchip_domain_info rk3368_pm_domains[] =3D {
-> +	[RK3368_PD_PERI]	=3D DOMAIN_RK3368(13, 12, 6),
-> +	[RK3368_PD_VIO]		=3D DOMAIN_RK3368(15, 14, 8),
-> +	[RK3368_PD_VIDEO]	=3D DOMAIN_RK3368(14, 13, 7),
-> +	[RK3368_PD_GPU_0]	=3D DOMAIN_RK3368(16, 15, 2),
-> +	[RK3368_PD_GPU_1]	=3D DOMAIN_RK3368(17, 16, 2),
-> +};
+> +/* VD_CORE */
+> +#define RK3368_PD_A53_L0	0
+> +#define RK3368_PD_A53_L1	1
+> +#define RK3368_PD_A53_L2	2
+> +#define RK3368_PD_A53_L3	3
+> +#define RK3368_PD_SCU_L		4
+> +#define RK3368_PD_A53_B0	5
+> +#define RK3368_PD_A53_B1	6
+> +#define RK3368_PD_A53_B2	7
+> +#define RK3368_PD_A53_B3	8
+> +#define RK3368_PD_SCU_B		9
 > +
->   static const struct rockchip_pmu_info rk3288_pmu =3D {
->   	.pwr_offset =3D 0x08,
->   	.status_offset =3D 0x0c,
-> @@ -461,11 +473,32 @@ static const struct rockchip_pmu_info rk3288_pm=
-u =3D {
->   	.domain_info =3D rk3288_pm_domains,
->   };
->  =20
-> +static const struct rockchip_pmu_info rk3368_pmu =3D {
-> +	.pwr_offset =3D 0x0c,
-> +	.status_offset =3D 0x10,
-> +	.req_offset =3D 0x3c,
-> +	.idle_offset =3D 0x40,
-> +	.ack_offset =3D 0x40,
+> +/* VD_LOGIC */
+> +#define RK3368_PD_BUS		10
+> +#define RK3368_PD_PERI		11
+> +#define RK3368_PD_VIO		12
+> +#define RK3368_PD_ALIVE		13
+> +#define RK3368_PD_VIDEO		14
+> +#define RK3368_PD_GPU_0		15
+> +#define RK3368_PD_GPU_1		16
 > +
-> +	.core_pwrcnt_offset =3D 0x48,
-> +	.gpu_pwrcnt_offset =3D 0x50,
+> +/* VD_PMU */
+> +#define RK3368_PD_PMU		17
 > +
-> +	.core_power_transition_time =3D 24,
-> +	.gpu_power_transition_time =3D 24,
-> +
-> +	.num_domains =3D ARRAY_SIZE(rk3368_pm_domains),
-> +	.domain_info =3D rk3368_pm_domains,
-> +};
-> +
->   static const struct of_device_id rockchip_pm_domain_dt_match[] =3D =
-{
->   	{
->   		.compatible =3D "rockchip,rk3288-power-controller",
->   		.data =3D (void *)&rk3288_pmu,
->   	},
-> +	{
-> +		.compatible =3D "rockchip,rk3368-power-controller",
-> +		.data =3D (void *)&rk3368_pmu,
-> +	},
->   	{ /* sentinel */ },
->   };
->  =20
+> +#endif
 
 
 --=20
 Thanks,
 Caesar
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
