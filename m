@@ -1,43 +1,68 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v5 5/7] MAINTAINERS: Add ST's Remote Processor Driver to
- ARM/STI ARCHITECTURE
-Date: Tue, 12 Jan 2016 12:46:19 +0000
-Message-ID: <1452602781-22424-6-git-send-email-lee.jones@linaro.org>
+Subject: [PATCH v5 2/7] remoteproc: dt: Provide bindings for ST's Remote Processor Controller driver
+Date: Tue, 12 Jan 2016 12:46:16 +0000
+Message-ID: <1452602781-22424-3-git-send-email-lee.jones@linaro.org>
 References: <1452602781-22424-1-git-send-email-lee.jones@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1452602781-22424-1-git-send-email-lee.jones@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: ohad@wizery.com, devicetree@vger.kernel.org, f.fainelli@gmail.com, kernel@stlinux.com, Nathan_Lynch@mentor.com, Lee Jones <lee.jones@linaro.org>, ludovic.barre@st.com, maxime.coquelin@st.com
+Cc: kernel@stlinux.com, maxime.coquelin@st.com, ohad@wizery.com, devicetree@vger.kernel.org, Nathan_Lynch@mentor.com, f.fainelli@gmail.com, ludovic.barre@st.com, s-anna@ti.com, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/remoteproc/st-rproc.txt    | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/st-rproc.txt
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5f46784..322f5b4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1538,6 +1538,7 @@ F:	drivers/phy/phy-miphy365x.c
- F:	drivers/phy/phy-stih407-usb.c
- F:	drivers/phy/phy-stih41x-usb.c
- F:	drivers/pinctrl/pinctrl-st.c
-+F:	drivers/remoteproc/st_remoteproc.c
- F:	drivers/reset/sti/
- F:	drivers/rtc/rtc-st-lpc.c
- F:	drivers/tty/serial/st-asc.c
+diff --git a/Documentation/devicetree/bindings/remoteproc/st-rproc.txt b/Documentation/devicetree/bindings/remoteproc/st-rproc.txt
+new file mode 100644
+index 0000000..1031bcd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/st-rproc.txt
+@@ -0,0 +1,41 @@
++STMicroelectronics Co-Processor Bindings
++----------------------------------------
++
++This binding provides support for adjunct processors found on ST SoCs.
++
++Co-processors can be controlled from the bootloader or the primary OS. If
++the bootloader starts a co-processor, the primary OS must detect its state
++and act accordingly.
++
++Required properties:
++- compatible		Should be one of:
++				"st,st231-rproc"
++				"st,st40-rproc"
++- memory-region		Reserved memory (See: ../reserved-memory/reserved-memory.txt)
++- resets		Reset lines (See: ../reset/reset.txt)
++- reset-names		Must be "sw_reset" and "pwr_reset"
++- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
++- clock-frequency	Clock frequency to set co-processor at if the bootloader
++			hasn't already done so
++- st,syscfg		System configuration register which holds the boot vector
++			for the co-processor
++				1st cell: Phandle to syscon block
++				2nd cell: Boot vector register offset
++
++Example:
++
++	audio_reserved: rproc@42000000 {
++		compatible = "shared-dma-pool";
++		reg = <0x42000000 0x01000000>;
++		no-map;
++	};
++
++	st231-audio {
++		compatible	= "st,st231-rproc";
++		memory-region	= <&audio_reserved>;
++		resets		= <&softreset STIH407_ST231_AUD_SOFTRESET>;
++		reset-names	= "sw_reset";
++		clocks		= <&clk_s_c0_flexgen CLK_ST231_AUD_0>;
++		clock-frequency	= <600000000>;
++		st,syscfg	= <&syscfg_core 0x228>;
++	};
 -- 
 1.9.1
