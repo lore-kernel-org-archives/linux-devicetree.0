@@ -1,91 +1,277 @@
-From: John Crispin <blogic@openwrt.org>
-Subject: Re: [PATCH v3 0/6] Add clock support for Mediatek MT2701
-Date: Tue, 12 Jan 2016 11:10:14 +0100
-Message-ID: <5694D106.2030009@openwrt.org>
-References: <1452587470-61506-1-git-send-email-jamesjj.liao@mediatek.com>
+From: liviu.dudau@arm.com
+Subject: Re: [PATCH v1 3/3] ARM64 LPC: update binding doc
+Date: Tue, 12 Jan 2016 10:14:18 +0000
+Message-ID: <20160112101418.GO13633@e106497-lin.cambridge.arm.com>
+References: <1451396032-23708-1-git-send-email-zourongrong@gmail.com>
+ <CABTftiT1+AmrNjiAie-T6on-oWA4Zz73+Tj2pQrixMT3o475uw@mail.gmail.com>
+ <568912EE.9030009@huawei.com>
+ <15026471.7nGZ0rWlIf@wuerfel>
+ <20160111161415.GM13633@e106497-lin.cambridge.arm.com>
+ <56946768.7090805@gmail.com>
+ <20160112090722.GN13633@e106497-lin.cambridge.arm.com>
+ <5694C6A4.8060308@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452587470-61506-1-git-send-email-jamesjj.liao@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <5694C6A4.8060308@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: James Liao <jamesjj.liao@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Rongrong Zou <zourongrong@huawei.com>
+Cc: Rongrong Zou <zourongrong@gmail.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Arnd Bergmann <arnd@arndb.de>, Corey Minyard <minyard@acm.org>, gregkh@linuxfoundation.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linuxarm@huawei.com, benh@kernel.crashing.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi James,
+On Tue, Jan 12, 2016 at 05:25:56PM +0800, Rongrong Zou wrote:
+> =E5=9C=A8 2016/1/12 17:07, liviu.dudau@arm.com =E5=86=99=E9=81=93:
+> >On Tue, Jan 12, 2016 at 10:39:36AM +0800, Rongrong Zou wrote:
+> >>On 2016/1/12 0:14, liviu.dudau@arm.com wrote:
+> >>>On Mon, Jan 04, 2016 at 12:13:05PM +0100, Arnd Bergmann wrote:
+> >>>>On Sunday 03 January 2016 20:24:14 Rongrong Zou wrote:
+> >>>>>=E5=9C=A8 2015/12/31 23:00, Rongrong Zou =E5=86=99=E9=81=93:
+> >>>>>>2015-12-31 22:40 GMT+08:00 Arnd Bergmann <arnd@arndb.de <mailto=
+:arnd@arndb.de>>:
+> >>>>>>  > On Thursday 31 December 2015 22:12:19 Rongrong Zou wrote:
+> >>>>>>  > > =E5=9C=A8 2015/12/30 17:06, Arnd Bergmann =E5=86=99=E9=81=
+=93:
+> >>>>>>  > > > On Tuesday 29 December 2015 21:33:52 Rongrong Zou wrote=
+:
+> >>>>>>  >
+> >>>>>>  > The DT sample above looks good in principle. I believe what=
+ you are missing
+> >>>>>>  > here is code in your driver to scan the child nodes to crea=
+te the platform
+> >>>>>>  > devices. of_bus_isa_translate() should work with your defin=
+ition here
+> >>>>>>  > and create the correct IORESOURCE_IO resources. You don't h=
+ave any MMIO
+> >>>>>>  > resources, so the absence of a ranges property is ok. Maybe=
+ all you
+> >>>>>>  > are missing is a call to of_platform_populate() or of_platf=
+orm_bus_probe()?
+> >>>>>>  >
+> >>>>>>
+> >>>>>>You are right. thanks, i'll try on test board .  if i get the c=
+orrect result , the new patch
+> >>>>>>will be sent later. By the way, it's my another email account u=
+se when i at home.
+> >>>>>
+> >>>>>I tried, and there need some additional changes.
+> >>>>>
+> >>>>>isa@a01b0000 {
+> >>>>>
+> >>>>>/*the node name should start with "isa", because of below defini=
+tion
+> >>>>>* static int of_bus_isa_match(struct device_node *np)
+> >>>>>* {
+> >>>>>*	return !strcmp(np->name, "isa");
+> >>>>>* }
+> >>>>
+> >>>>Looks good. It would be nicer to match on device_type than on nam=
+e,
+> >>>>but this is ancient code and it's probably best not to touch it
+> >>>>so we don't accidentally break some old SPARC or PPC system.
+> >>>>
+> >>>>>*/
+> >>>>>	compatible =3D "low-pin-count";
+> >>>>>	device_type =3D "isa";
+> >>>>>	#address-cells =3D <2>;
+> >>>>>	#size-cells =3D <1>;
+> >>>>>	reg =3D <0x0 0xa01b0000 0x0 0x10000>;
+> >>>>>	ranges =3D <0x1 0x0 0x0 0x0 0x1000>;
+> >>>>>/*
+> >>>>>*  ranges is required, then i can get the IORESOURCE_IO <0xe4,4>=
+ from "reg =3D <0x1, 0x000000e4, 4>".
+> >>>>>*
+> >>>>>*/
+> >>>>>	ipmi_0:ipmi@000000e4{
+> >>>>>		device_type =3D "ipmi";
+> >>>>>		compatible =3D "ipmi-bt";
+> >>>>>		reg =3D <0x1 0x000000e4 0x4>;
+> >>>>>};
+> >>>>>
+> >>>>
+> >>>>This looks wrong: the property above says that the I/O port range=
+ is
+> >>>>translated to MMIO address 0x00000000 to 0x00010000, which is not
+> >>>>true on your hardware. I think this needs to be changed in the co=
+de
+> >>>>so the ranges property is not required for I/O ports.
+> >>>>
+> >>>>>drivers\of\address.c
+> >>>>>static int __of_address_to_resource(struct device_node *dev,
+> >>>>>                  const __be32 *addrp, u64 size, unsigned int fl=
+ags,
+> >>>>>                  const char *name, struct resource *r)
+> >>>>>{
+> >>>>>          u64 taddr;
+> >>>>>
+> >>>>>          if ((flags & (IORESOURCE_IO | IORESOURCE_MEM)) =3D=3D =
+0)
+> >>>>>                  return -EINVAL;
+> >>>>>          taddr =3D of_translate_address(dev, addrp);
+> >>>>>          if (taddr =3D=3D OF_BAD_ADDR)
+> >>>>>                  return -EINVAL;
+> >>>>>          memset(r, 0, sizeof(struct resource));
+> >>>>>          if (flags & IORESOURCE_IO) {
+> >>>>>                  unsigned long port;
+> >>>>>
+> >>>>>/***************************************************************=
+**/
+> >>>>>/*legacy port(< 0x1000) is reserved, and need no translation her=
+e*/
+> >>>>>/***************************************************************=
+**/
+> >>>>>                  if(taddr + size < PCIBIOS_MIN_IO){
+> >>>>>                          r->start =3D taddr;
+> >>>>>                          r->end =3D taddr + size - 1;
+> >>>>>                  }
+> >>>>
+> >>>>I don't like having a special case based on the address here,
+> >>>>the same kind of hack might be needed for PCI I/O spaces in
+> >>>>hardware that uses an indirect method like your LPC bus
+> >>>>does, and the code above will not work on any LPC implementation
+> >>>>that correctly multiplexes its I/O ports with the first PCI domai=
+n.
+> >>>>
+> >>>>I think it would be better to avoid translating the port into
+> >>>>a physical address to start with just to translate it back into
+> >>>>a port number, what we need instead is the offset between the
+> >>>>bus specific port number and the linux port number. I've added
+> >>>>Liviu to Cc, he wrote this code originally and may have some idea
+> >>>>of how we could do that.
+> >>>
+> >>>Hi,
+> >>
+> >>Hi Liviu,
+> >>
+> >>Thanks for reviewing this.
+> >>
+> >>>
+> >>>Getting back to work after a longer holiday, my brain might not be=
+ running
+> >>>at full speed here, so I'm trying to clarify things a bit here.
+> >>>
+> >>>It looks to me like Rongrong is trying to trap the inb()/outb() ca=
+lls that he
+> >>>added to arm64 by patch 1/3 and redirect those operations to the m=
+emory
+> >>>mapped LPC driver. I think the whole redirection and registration =
+of inb/outb
+> >>>ops can be made cleaner, so that the general concept resembles the=
+ DMA ops
+> >>>registration? (I have this mental picture that what Rongrong is tr=
+ying to do
+> >>>is similar to what a DMA engine does, except this is slowing down =
+things to
+> >>>byte level). If that is done properly in the parent node, then we =
+should not
+> >>>care what the PCIBIOS_MIN_IO value is as the inb()/outb() calls wi=
+ll always
+> >>>go through the redirection for the children.
+> >>>
+> >>>As for the ranges property: does he wants the ipmi-bt driver to se=
+e in the
+> >>>reg property the legacy ISA I/O ports values or the CPU addresses?=
+ If the former,
+> >>>then I agree that the range property should not be required, but a=
+lso the
+> >>>reg values need to be changed (drop the top bit). If the later, th=
+en the
+> >>>ranges property is required to do the proper translation.
+> >>
+> >>The former, thanks.
+> >>
+> >>>
+> >>>Rongrong, removing the ranges property and with a reg =3D <0xe4 0x=
+4> property
+> >>>in the ipmi-bt node, what IO_RESOURCE type resources do you get ba=
+ck from
+> >>>the of_address_to_resource() translation?
+> >>
+> >>I want to get IORESOURCE_IO type resource, but if the parent node d=
+rop the
+> >>"rangs" property, the of_address_to_resource() translation will ret=
+urn with -EINVAL.
+> >
+> >Have you tracked what part of the code is sensitive to the presence =
+of "ranges"
+> >property? Does of_get_address() call returns the IO_RESOURCE flag se=
+t without "ranges"?
+> >
+>=20
+>=20
+> Yes, IO_RESOURCE flag can be get without "ranges".
+> I tracked the code, it is at of_translate_one(), Below is the calling=
+ infomation.
+>=20
+> of_address_to_resource-> __of_address_to_resource ->of_translate_addr=
+ess->
+> __of_translate_address(dev, in_addr, "ranges")->of_translate_one()
+>=20
+>=20
+> static int of_translate_one(struct device_node *parent, struct of_bus=
+ *bus,
+> 			    struct of_bus *pbus, __be32 *addr,
+> 			    int na, int ns, int pna, const char *rprop)
+> {
+> 	const __be32 *ranges;
+> 	unsigned int rlen;
+> 	int rone;
+> 	u64 offset =3D OF_BAD_ADDR;
+>=20
+> 	ranges =3D of_get_property(parent, rprop, &rlen);
+> 	if (ranges =3D=3D NULL && !of_empty_ranges_quirk(parent)) {
+> 		pr_debug("OF: no ranges; cannot translate\n");
+> 		return 1;
+> 	}
+> 	...
+> }
 
-On 12/01/2016 09:31, James Liao wrote:
-> This patchset is based on 4.4-rc7, add clock and reset controller support
-> for Mediatek MT2701.
-> 
-> This patchset also refined makefile and Kconfig to support configurable
-> multiple SoC clock support.
-> 
-> changes since v2:
-> - Fix ethsys definition.
-> - Replace read-modify-write with regmap_update_bits() in clock operations.
-> - Move mt2701-resets.h to include/dt-bindings/reset/.
-> - Add hifsys reset patch from John Crispin.
+OK, looking at of_translate_one() comments it looks like a missing "ran=
+ges" property is
+only accepted on PowerPC. I suggest you have an empty "ranges" property=
+ in your isa
+parent node, that will signal to the OF parsing code that the mapping i=
+s 1:1. Then have
+the IPMI node use the reg =3D <0x0 0xe4 4>; property values instead of =
+reg =3D <0x1 0xe4 4>;
 
-thanks for folding the fixup.
+Best regards,
+Liviu
 
-i have been testing your V2 on MT7623 for several days now and updated
-to V3 this morning which works just as well. feel free to add
-
-Tested-by: John Crispin <blogic@openwrt.org>
-
-
-	John
-
-
-> changes since v1:
-> - Document MT2701 compatible strings.
-> 
-> James Liao (2):
->   clk: mediatek: Refine the makefile to support multiple clock drivers
->   dt-bindings: ARM: Mediatek: Document bindings for MT2701
-> 
-> Shunli Wang (4):
->   clk: mediatek: Add dt-bindings for MT2701 clocks
->   clk: mediatek: Add MT2701 clock support
->   reset: mediatek: Add MT2701 reset controller dt-binding file
->   reset: mediatek: Add MT2701 reset driver
-> 
->  .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |    1 +
->  .../bindings/arm/mediatek/mediatek,bdpsys.txt      |   22 +
->  .../bindings/arm/mediatek/mediatek,ethsys.txt      |   22 +
->  .../bindings/arm/mediatek/mediatek,hifsys.txt      |   22 +
->  .../bindings/arm/mediatek/mediatek,imgsys.txt      |    1 +
->  .../bindings/arm/mediatek/mediatek,infracfg.txt    |    1 +
->  .../bindings/arm/mediatek/mediatek,mmsys.txt       |    1 +
->  .../bindings/arm/mediatek/mediatek,pericfg.txt     |    1 +
->  .../bindings/arm/mediatek/mediatek,topckgen.txt    |    1 +
->  .../bindings/arm/mediatek/mediatek,vdecsys.txt     |    1 +
->  drivers/clk/Kconfig                                |    1 +
->  drivers/clk/mediatek/Kconfig                       |   31 +
->  drivers/clk/mediatek/Makefile                      |    7 +-
->  drivers/clk/mediatek/clk-gate.c                    |   52 +
->  drivers/clk/mediatek/clk-gate.h                    |    2 +
->  drivers/clk/mediatek/clk-mt2701.c                  | 1216 ++++++++++++++++++++
->  drivers/clk/mediatek/clk-mtk.c                     |   25 +
->  drivers/clk/mediatek/clk-mtk.h                     |   35 +-
->  include/dt-bindings/clock/mt2701-clk.h             |  481 ++++++++
->  include/dt-bindings/reset/mt2701-resets.h          |   83 ++
->  20 files changed, 2000 insertions(+), 6 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,hifsys.txt
->  create mode 100644 drivers/clk/mediatek/Kconfig
->  create mode 100644 drivers/clk/mediatek/clk-mt2701.c
->  create mode 100644 include/dt-bindings/clock/mt2701-clk.h
->  create mode 100644 include/dt-bindings/reset/mt2701-resets.h
-> 
-> --
-> 1.9.1
-> 
+>=20
+> >Best regards,
+> >Liviu
+> >
+> >>
+> >>>
+> >>>Best regards,
+> >>>Liviu
+> >>>
+> >>>
+> >>>>
+> >>>>	Arnd
+> >>>>
+> >>>
+> >>Regards,
+> >>Rongrong
+> >>
+> >
+> --=20
+> Regards,
+> Rongrong
+>=20
 > _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
-> 
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
