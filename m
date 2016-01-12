@@ -1,54 +1,42 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] input: gpio-keys: add support to name the gpio-keys
-Date: Tue, 12 Jan 2016 08:43:01 -0600
-Message-ID: <20160112144301.GA30932@rob-hp-laptop>
-References: <1452598370-28509-1-git-send-email-ldewangan@nvidia.com>
- <1452598370-28509-2-git-send-email-ldewangan@nvidia.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 2/7] remoteproc: dt: Provide bindings for ST's Remote
+ Processor Controller driver
+Date: Tue, 12 Jan 2016 14:46:10 +0000
+Message-ID: <20160112144610.GJ27358@x1>
+References: <1452602781-22424-1-git-send-email-lee.jones@linaro.org>
+ <1452602781-22424-3-git-send-email-lee.jones@linaro.org>
+ <20160112143305.GA28251@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1452598370-28509-2-git-send-email-ldewangan@nvidia.com>
+In-Reply-To: <20160112143305.GA28251@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: dmitry.torokhov@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, bjorn.andersson@sonymobile.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, ohad@wizery.com, devicetree@vger.kernel.org, Nathan_Lynch@mentor.com, f.fainelli@gmail.com, ludovic.barre@st.com, s-anna@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 12, 2016 at 05:02:50PM +0530, Laxman Dewangan wrote:
-> Add support from DT to name the gpio-keys driver to have
-> desired key name for this input system.
-> 
-> This helps userspace code to get name and perform proper
-> event to key mapping in some of cases. In android, the
-> user space map the key code to application code using
-> key character layout and for this it uses the name of
-> input system.
+On Tue, 12 Jan 2016, Rob Herring wrote:
 
-Why is specifying the key code not enough?
+> On Tue, Jan 12, 2016 at 12:46:16PM +0000, Lee Jones wrote:
+> > Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  .../devicetree/bindings/remoteproc/st-rproc.txt    | 41 ++++++++++=
+++++++++++++
+> >  1 file changed, 41 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/remoteproc/st=
+-rproc.txt
+>=20
+> Acked-by: Rob Herring <robh@kernel.org>
 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> ---
->  Documentation/devicetree/bindings/input/gpio-keys.txt | 1 +
->  drivers/input/keyboard/gpio_keys.c                    | 2 ++
->  2 files changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt b/Documentation/devicetree/bindings/input/gpio-keys.txt
-> index cf1333d..2e6bcd2 100644
-> --- a/Documentation/devicetree/bindings/input/gpio-keys.txt
-> +++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
-> @@ -4,6 +4,7 @@ Required properties:
->  	- compatible = "gpio-keys";
->  
->  Optional properties:
-> +	- gpio-keys,name: String, name of the gpio-keys input system.
+Ah balls.  I've somehow dropped yours and Bjorn's Acks from the set.
 
-gpio-keys is not a vendor.
+Apologies for that.  I did apply them, honest!
 
-Would "label" work for you instead?
-
-Either way, I'm concerned this doesn't work for other key bindings 
-which have multiple keys.
-
->  	- autorepeat: Boolean, Enable auto repeat feature of Linux input
->  	  subsystem.
->  
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
