@@ -1,82 +1,126 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [rtc-linux] [PATCH 5/6] rtc: max77620: add support for
- max77620/max20024 RTC driver
-Date: Tue, 12 Jan 2016 12:51:51 +0900
-Message-ID: <56947857.30709@samsung.com>
-References: <1452177524-23192-1-git-send-email-ldewangan@nvidia.com>
- <1452177524-23192-6-git-send-email-ldewangan@nvidia.com>
- <CAJKOXPd938soaa5M0GFo5HpVCYzAS1w8j8Hko3Ja9mx47NYkEQ@mail.gmail.com>
- <568F8D7E.10500@nvidia.com> <20160108125117.GM6588@sirena.org.uk>
- <568FB3DD.4090503@nvidia.com> <20160108133648.GQ6588@sirena.org.uk>
- <568FBB6D.2020904@nvidia.com> <5693AB6E.4090700@nvidia.com>
- <20160111160419.GA3367@piout.net> <5693E14B.4050306@nvidia.com>
- <56944520.6090301@samsung.com> <569465DA.10609@nvidia.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH v2] dtc: create tool to diff device trees
+Date: Tue, 12 Jan 2016 15:31:53 +1100
+Message-ID: <20160112043153.GS22925@voom.redhat.com>
+References: <568EB672.6060300@gmail.com>
+ <20160111023742.GA22925@voom.redhat.com>
+ <56936041.2080104@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-reply-to: <569465DA.10609@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Mark Brown <broonie@kernel.org>, rtc-linux@googlegroups.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, a.zummo@towertech.it, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, swarren@nvidia.com, treding@nvidia.com, Chaitanya Bandi <bandik@nvidia.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4AfY4lbNVy6SI0IG"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56936041.2080104-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12.01.2016 11:32, Laxman Dewangan wrote:
-> 
-> On Tuesday 12 January 2016 05:43 AM, Krzysztof Kozlowski wrote:
->> On 12.01.2016 02:07, Laxman Dewangan wrote:
->>>>> The RTC driver parent is not the same parent for which i2c slave
->>>>> address get
->>>>> registered.
->>>>> There is two slave address from max77620, 0x3C (for general) and 0x68
->>>>> for
->>>>> RTC.
->>>>>
->>>>> In max77620 mfd driver, we make dummy i2c client for 0x68 and
->>>>> initialize
->>>>> regmap with this address.
->>>>>
->>>>> Now on mfd_add_devices, we pass the device for 0x3c and hence the RTC
->>>>> driver
->>>>> treat the parent as the 0x3c device but actually it should be 0x68 to
->>>>> get
->>>>> the proper regmap.
->>>>>
->>>>>
->>>>> Two approach:
->>>>> 1. If we add the option to pass parent_dev when adding cells form
->>>>> mfd_add_devices and select the parent device based on this option
->>>>> then it
->>>>> can be easily handle.
->>>>>       Add parent_dev structure in struct mfd_cell and then change the
->>>>> parent
->>>>> in mfd_add_device() if cells has parent device.
->>>>>
->>>>> 2. Register the RTC driver with different mfd_add_devices with
->>>>> dummy i2c
->>>>> client device.
->>>>> So two times mfd_add_devices.
->> Lexman,
->>
->> I don't quite get the problem. This looks exactly the same as for
->> max77686. What is the difference? I don't see any need to change the
->> mfd_cell for current drivers...
->>
->>
-> 
-> Here the change is only required to pass the regmap handle from mfd to
-> the rtc driver. There is no change for rest of rtc driver.
-> 
-> RTC i2c regmap registered with i2c dummy client device, not with actual
-> parent device and hence we need to register RTC with this dummy i2c
-> client device. This way we can get regmap handle by using the
-> dev_get_regmap(pdev->dev.parent).
 
-It seems that both max77620 and max77686 use separate I2C addresses for
-RTC block. The max77802 does not. This means that probably each child
-driver should be responsible for its own regmap. The max77620 and
-max77686 will create new I2C dummy devices and new regmaps. The max77802
-will re-use references passed by parent (MFD).
+--4AfY4lbNVy6SI0IG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+On Sun, Jan 10, 2016 at 11:56:49PM -0800, Frank Rowand wrote:
+> On 1/10/2016 6:37 PM, David Gibson wrote:
+> > On Thu, Jan 07, 2016 at 11:03:14AM -0800, Frank Rowand wrote:
+> >> From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+> >>
+> >> Create script to diff device trees.
+> >>
+> >> The device tree can be in any of the forms recognized by the dtc compi=
+ler:
+> >>   - source
+> >>   - binary blob
+> >>   - file system tree (from /proc/devicetree)
+> >>
+> >> If the device tree is a source file, then it is pre-processed in the
+> >> same way as it would be when built in the linux kernel source tree
+> >> before diffing.
+> >>
+> >> Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+> >> ---
+> >>
+> >> Tools to develop and debug device tree are somewhat inadequate.  This =
+is a
+> >> small step in improving the situation.
+> >>
+> >> Rationale for and examples of using the script are provided in slides
+> >> 1 - 78 of the elce 2015 presentation "Solving Device Tree Issues",
+> >> which can be found at:
+> >>
+> >>    http://elinux.org/images/0/04/Dt_debugging_elce_2015_151006_0421.pdf
+> >>
+> >> (The script was named dtdiff instead of dtx_diff in the presentation.)
+> >>
+> >> Changes in v2:
+> >>   - Remove dt-bindings from list of includes in cpp_flags
+> >>   - Remove arch_dtc_flags, which were generated from the arch specific
+> >>     dts makefile
+> >>   - Reformat to 8 character tabs
+> >>   - compile_to_dts(): added back missing return for binary blob
+> >>
+> >>
+> >>  scripts/dtc/dtx_diff |  343 +++++++++++++++++++++++++++++++++++++++++=
+++++++++++
+> >>  1 file changed, 343 insertions(+)
+> >>
+> >> Index: b/scripts/dtc/dtx_diff
+> >=20
+> > I think this is probably the wrong directory to put this in.  Because
+> > it preprocesses in the style of the kernel, this script belongs in the
+> > kernel tree, not the upstream dtc tree.  However, basically everything
+> > else in this directory is imported directly from upstream dtc.
+> >=20
+> > Putting this kernel-specific file in here will probably make updates
+> > to newer upstream dtc versions more complicated.
+>=20
+> I agree with the concern (and had the same concern when I made the choice=
+).
+>=20
+> One thing that makes me more comfortable with the location is that the fi=
+les
+> in the directory are updated with scripts/dtc/update-dtc-source.sh, which
+> explicitly lists which files it copies into the Linux tree.  But even with
+> that, I still admit to some discomfort with the location.
+>=20
+> Without getting too deeply into bike shedding, does anyone have a better
+> location?  And keep in mind that there are several more tools coming in
+> the pipeline that would likely end up in the same location.
+
+Hm, yeah, that's a good point.  There isn't an obvious better
+candidate directory.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--4AfY4lbNVy6SI0IG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWlIG5AAoJEGw4ysog2bOStusQAMSIK9QMRsqLymJHQLdNSc6k
+TY3rZx6v2jNOuhBgA/fiEaQp1TwE9TpH1cyHxG4rKgZtKCe6qvgZvkJ8BQjZ0TJc
+IVcGCp57+aizvM6CGMrATgnZWaA3aBbSn0oK3IYuYIkNaiK9kEZdNK1a8ECicqNC
+lXO4N0+Dk34Ucp2BZsi1otaNukyV8Vg+LFR98WReQi3YmL9Vfob3rtx1Tv8sS/vz
+55pdICf0aHqyG2b2VE1SPqzKNTRHDq+ELeH2cOwLaQ45LlyevrdwnJKmHzTJhUhp
+Yz757fwU2dnCNhp50UmvQ2dlkIriDcBeMP8k/UdmuIKjHDlTuTA5WEs5bMcwbPHg
+TrRaAnRBJB606Y2Uv/OfqnUWmbplbRHR2sTCzs5msZjd6+AzWKAdBKccnljSS065
+vFQOiOXpQpUKAo7m17x2N4SKocRfTtiOdlU7mw2bRSOYyBUH7mU/2ZPc+vmgen3K
+pcKXYMHMgy1rVDAbrAApqyasv5jBm+jTPKzVlm5lXTig2iaOLl5NXhgKotDRCxtZ
+PojH5c5Dtw5rm1rGioIoz3l9Ne9hEVDv7ld+a6H6YakZ115CmvMR9I+IE4AoQFRO
+2lH6HWFKBnISImQxaW31BgyYa565B7Uz02APS/abj0BKb2vi4AukPDDC6y7r0aPO
+F9eq7TB4Xn0auqNbvXDj
+=0C/3
+-----END PGP SIGNATURE-----
+
+--4AfY4lbNVy6SI0IG--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
