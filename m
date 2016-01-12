@@ -1,78 +1,186 @@
-From: Yao Yuan <yao.yuan@nxp.com>
-Subject: RE: [PATCH v2 1/4] Documentation: fsl-quadspi: Add fsl,ls2080a-dspi
- compatible string
-Date: Tue, 12 Jan 2016 04:36:39 +0000
-Message-ID: <AM2PR04MB07220B81AE758762CB6B13D489CA0@AM2PR04MB0722.eurprd04.prod.outlook.com>
-References: <1450954863-7540-1-git-send-email-yao.yuan@freescale.com>
- <20151229183501.GH12450@rob-hp-laptop>
- <AM2PR04MB07228C97A751DA40EEDD231489FD0@AM2PR04MB0722.eurprd04.prod.outlook.com>
- <CAL_Jsq+fsqJkN+5859rLm56Ch1k48LRDsRMP6KFHywnCNyf=kA@mail.gmail.com>
+From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Subject: Re: [2/2] mtd: spi-nor: Add driver for Cadence Quad SPI Flash
+ Controller.
+Date: Tue, 12 Jan 2016 10:29:11 +0530
+Message-ID: <5694881F.10707@ti.com>
+References: <1440148851-14621-2-git-send-email-marex@denx.de>
+ <56932C19.6000509@ti.com> <201601110550.25422.marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201601110550.25422.marex-ynQEQJNshbs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBEZWMgMzEsIDIwMTUgYXQgMTA6MzVQTSwgWWFvIFl1YW4gPHlhby55dWFuQG54cC5j
-b20+IHdyb3RlOg0KPiBPbiBXZWQsIERlYyAzMCwgMjAxNSBhdCAxMToyMCBQTSwgUm9iIEhlcnJp
-bmcgd3JvdGU6DQo+ID4gT24gVHVlLCBEZWMgMjksIDIwMTUgYXQgOToxNyBQTSwgWWFvIFl1YW4g
-PHlhby55dWFuQG54cC5jb20+IHdyb3RlOg0KPiA+ID4gSGkgUm9iLA0KPiA+ID4NCj4gPiA+IFRo
-YW5rcyBmb3IgeW91ciByZXZpZXcuDQo+ID4gPiBTbyB5b3UgbWVhbiB0aGF0IEkgc2hvdWxkIGFk
-ZCB0aGUgY29tbWl0IG1lc3NhZ2UgZm9yIHdoeSBJIGFkZCB0aGlzDQo+ID4gPiBuZXcNCj4gPiBj
-b21wYXRpYmxlPw0KPiA+DQo+ID4gUGxlYXNlIGRvbid0IHRvcCBwb3N0IG9uIHRoZSBsaXN0cy4N
-Cj4gPg0KPiA+IE5vLCB0aGUgYmluZGluZyBkb2Mgc2hvdWxkIGV4cGxhaW4gd2hhdCBhcmUgdmFs
-aWQgY29tYmluYXRpb25zIG9mDQo+ID4gY29tcGF0aWJsZSBzdHJpbmdzIGFuZCB0aGUgb3JkZXIg
-d2hlbiB0aGUgZHRzIGNhbiBoYXZlIG11bHRpcGxlDQo+ID4gc3RyaW5ncy4gRm9yIGV4YW1wbGUs
-IGlzIHRoaXMgdmFsaWQ6DQo+ID4NCj4gPiBjb21wYXRpYmxlID0gImZzbCx2ZjYxMC1kc3BpIiwg
-ImZzbCxsczIwODBhLWRzcGkiOw0KPiA+DQo+ID4gSW4gb3RoZXIgd29yZHMsIEkgc2hvdWxkIGJl
-IGFibGUgdG8gY2hlY2sgYSBkdHMgZmlsZSBhZ2FpbnN0IHdoYXQgdGhlDQo+ID4gYmluZGluZyBk
-b2Mgc2F5cy4NCj4gPg0KPiA+IFJvYg0KPiANCj4gT0ssIEkgZ290IGl0Lg0KPiBUaGUgImZzbCx2
-ZjYxMC1kc3BpIiwgImZzbCxsczEwMjFhLXYxLjAtZHNwaSIsICJmc2wsbHMyMDg1YS1kc3BpIiBp
-cyB2YWxpZCBhbmQgdXNlZA0KPiBpbiBkcml2ZXIuDQo+IEJ1dCAiZnNsLGxzMjA4MGEtZHNwaSIg
-aXMganVzdCB1c2VkIGZvciBwbGF0Zm9ybSBmbGFnLg0KPiBDb3VsZCB5b3UgaGVscCB0byBnaXZl
-IGFuIGV4YW1wbGUgdGhhdCBob3cgY2FuIEkgZXhwbGFpbiBpdCBpbiBEb2N1bWVudHM/DQo+IE9y
-IHNob3VsZCBJIG5vdCB3cml0ZSB0aGlzIGNvbXBhdGlibGUgaW4gRG9jdW1lbnQuDQo+IA0KPiBJ
-IGZpbmQgdGhhdCBtYW55IGNvbXBhdGlibGUgc3RyaW5ncyBsaWtlIHRoaXMgKG5vdCB2YWxpZCBq
-dXN0IGEgcGxhdGZvcm0gZmxhZykgZm9yDQo+IG90aGVyIGRyaXZlciBhcmUgbm90IHJlY29yZCBp
-biBkb2N1bWVudC4NCj4gDQo+IFRoYW5rcy4NCj4gDQo+IFl1YW4gWWFvDQoNCkhpIFJvYiwNCkhv
-dyBhYm91dCBsaWtlIHRoaXM6DQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL210ZC9mc2wtcXVhZHNwaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvbXRkL2ZzbC1xdWFkc3BpLnR4dA0KaW5kZXggMDBjNTg3Yi4uN2E5YTUyMyAxMDA2
-NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZnNsLXF1YWRz
-cGkudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2ZzbC1x
-dWFkc3BpLnR4dA0KQEAgLTQsNiArNCw4IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQogICAtIGNv
-bXBhdGlibGUgOiBTaG91bGQgYmUgImZzbCx2ZjYxMC1xc3BpIiwgImZzbCxpbXg2c3gtcXNwaSIs
-DQogICAgICAgICAgICAgICAgICJmc2wsaW14N2QtcXNwaSIsICJmc2wsaW14NnVsLXFzcGkiLA0K
-ICAgICAgICAgICAgICAgICAiZnNsLGxzMTAyMS1xc3BpIg0KKyAgICAgICBJbnZhbGlkIGNvbXBh
-dGlibGUganVzdCBmb3IgU09DIGZsYWc6DQorICAgICAgICAgICAgICAgImZzbCxsczIwODBhLXFz
-cGkiDQogICAtIHJlZyA6IHRoZSBmaXJzdCBjb250YWlucyB0aGUgcmVnaXN0ZXIgbG9jYXRpb24g
-YW5kIGxlbmd0aCwNCiAgICAgICAgICAgdGhlIHNlY29uZCBjb250YWlucyB0aGUgbWVtb3J5IG1h
-cHBpbmcgYWRkcmVzcyBhbmQgbGVuZ3RoDQogICAtIHJlZy1uYW1lczogU2hvdWxkIGNvbnRhaW4g
-dGhlIHJlZyBuYW1lcyAiUXVhZFNQSSIgYW5kICJRdWFkU1BJLW1lbW9yeSINCg0KVGhhbmtzIGZv
-ciB5b3VyIHJldmlldy4NCg0KPiANCj4gPg0KPiA+ID4gT24gV2VkLCBEZWMgMzAsIDIwMTUgYXQg
-MDI6MzVBTSwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+ID4gPj4gT24gVGh1LCBEZWMgMjQsIDIwMTUg
-YXQgMDc6MDE6MDBQTSArMDgwMCwgWXVhbiBZYW8gd3JvdGU6DQo+ID4gPj4gPiBuZXcgY29tcGF0
-aWJsZSBzdHJpbmc6ICJmc2wsbHMyMDgwYS1xc3BpIi4NCj4gPiA+PiA+DQo+ID4gPj4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBZdWFuIFlhbyA8eWFvLnl1YW5AbnhwLmNvbT4NCj4gPiA+PiA+IC0tLQ0KPiA+
-ID4+ID4gQ2hhbmdlZCBpbiB2MjoNCj4gPiA+PiA+IFVwZGF0ZSBteSBlbWFpbCB0byA8eWFvLnl1
-YW5AbnhwLmNvbT4NCj4gPiA+PiA+IC0tLQ0KPiA+ID4+ID4gIERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9zcGkvc3BpLWZzbC1kc3BpLnR4dCB8IDMgKystDQo+ID4gPj4gPiAgMSBm
-aWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+ID4+ID4NCj4g
-PiA+PiA+IGRpZmYgLS1naXQNCj4gPiA+PiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3NwaS9zcGktZnNsLWRzcGkudHh0DQo+ID4gPj4gYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3Mvc3BpL3NwaS1mc2wtZHNwaS50eHQNCj4gPiA+PiA+IGluZGV4IGZhNzdm
-ODcuLjJmZTUxZDYgMTAwNjQ0DQo+ID4gPj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3Mvc3BpL3NwaS1mc2wtZHNwaS50eHQNCj4gPiA+PiA+ICsrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLWZzbC1kc3BpLnR4dA0KPiA+ID4+ID4g
-QEAgLTEsNyArMSw4IEBADQo+ID4gPj4gPiAgQVJNIEZyZWVzY2FsZSBEU1BJIGNvbnRyb2xsZXIN
-Cj4gPiA+PiA+DQo+ID4gPj4gPiAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiA+PiA+IC0tIGNv
-bXBhdGlibGUgOiAiZnNsLHZmNjEwLWRzcGkiLCAiZnNsLGxzMTAyMWEtdjEuMC1kc3BpIiwgImZz
-bCxsczIwODVhLWRzcGkiDQo+ID4gPj4gPiArLSBjb21wYXRpYmxlIDogImZzbCx2ZjYxMC1kc3Bp
-IiwgImZzbCxsczEwMjFhLXYxLjAtZHNwaSIsDQo+ID4gPj4gPiArICAgICAgICAgICAiZnNsLGxz
-MjA4NWEtZHNwaSIsICJmc2wsbHMyMDgwYS1kc3BpIg0KPiA+ID4+DQo+ID4gPj4gWW91IHNob3Vs
-ZCBleHBsYWluIHdoYXQgY29tYmluYXRpb25zIG9mIGNvbXBhdGlibGUgc3RyaW5ncyBhcmUgdmFs
-aWQuDQo+ID4gPj4NCj4gPiA+PiBSb2INCg==
+Hi,
+
+On 01/11/2016 10:20 AM, Marek Vasut wrote:
+> On Monday, January 11, 2016 at 05:14:17 AM, R, Vignesh wrote:
+>> Hi Marek,
+> 
+> Hi!
+> 
+>> On 08/21/2015 02:50 PM, Marek Vasut wrote:
+>>> From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>>
+>>> Add support for the Cadence QSPI controller. This controller is
+>>> present in the Altera SoCFPGA SoCs and this driver has been tested
+>>> on the Cyclone V SoC.
+>>
+>> Thanks for the patch.
+>> I have a TI EVM with Cadence QSPI controller connected to Spansion
+>> flash(s25fl512s), and I gave this series a try. It worked with couple of
+>> changes, please see comments inline.
+> 
+> I just posted the latest greatest version I have in tree, could you give it
+> a spin please ?
+> 
+
+Thanks, I will test it soon.
+
+>>> Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+>>> Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>> Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+>>> Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>> Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>> Cc: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
+>>> Cc: Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> 
+> [...]
+> 
+>>> +static irqreturn_t cqspi_irq_handler(int this_irq, void *dev)
+>>> +{
+>>> +	struct cqspi_st *cqspi = dev;
+>>> +	unsigned int irq_status;
+>>> +
+>>> +	/* Read interrupt status */
+>>> +	irq_status = readl(cqspi->iobase + CQSPI_REG_IRQSTATUS);
+>>> +
+>>> +	/* Clear interrupt */
+>>> +	writel(irq_status, cqspi->iobase + CQSPI_REG_IRQSTATUS);
+>>> +
+>>> +	irq_status &= CQSPI_IRQ_MASK_RD | CQSPI_IRQ_MASK_WR;
+>>> +
+>>> +	if (irq_status)
+>>> +		complete(&cqspi->transfer_complete);
+>>> +
+>>
+>> You seem to signal completion even if the interrupt is
+>> CQSPI_REG_IRQ_IND_(WR|RD)_OVERFLOW. Doesn't this lead to data loss on
+>> overflow?
+> 
+> That's a good question. The write routine, cqspi_indirect_write_execute(),
+> always writes a page and then waits for completion, so the overflow should
+> never happen.
+> 
+> What would you suggest to do about write overflow interrupt anyway ? :(
+> 
+
+My concern was signalling completion on CQSPI_REG_IRQ_IND_WR_OVERFLOW
+interrupt which meant data loss.
+But, I see you have disabled CQSPI_REG_IRQ_IND_WR_OVERFLOW in v10. This
+addresses my concern.
+
+
+>>> +	return IRQ_HANDLED;
+>>> +}
+> 
+> [...]
+> 
+>>> +static int cqspi_prep(struct spi_nor *nor, enum spi_nor_ops ops)
+>>> +{
+>>> +	struct cqspi_flash_pdata *f_pdata = nor->priv;
+>>> +	struct cqspi_st *cqspi = f_pdata->cqspi;
+>>> +	const unsigned int sclk = f_pdata->clk_rate;
+>>> +
+>>> +	/* Switch chip select. */
+>>> +	if (cqspi->current_cs != f_pdata->cs) {
+>>> +		cqspi->current_cs = f_pdata->cs;
+>>> +		cqspi_switch_cs(nor);
+>>> +	}
+>>> +
+>>> +	/* Setup baudrate divisor and delays */
+>>> +	if (cqspi->sclk != sclk) {
+>>> +		cqspi->sclk = sclk;
+>>> +		cqspi_controller_disable(cqspi);
+>>> +		cqspi_config_baudrate_div(cqspi, sclk);
+>>> +		cqspi_delay(nor, sclk);
+>>> +		cqspi_readdata_capture(cqspi, 1, f_pdata->read_delay);
+>>
+>> I see bypass field value is being hard coded to 1. Atleast on TI SoC,
+>> bypass=0 when SPI bus frequency is  >= 50MHz. Therefore, is it possible
+>> to provide a way to configure bypass bit from DT?
+>> Or if bypass=0 for >=50MHz on your SoC too then, its better to configure
+>> bypass bit based on SPI bus frequency.
+> 
+> You can have multiple SPI peripherals attached to the QSPI block, each running 
+> at different bus speed, so I think the bypass should be configured based on the 
+> frequency of the active peripheral, not from OF.
+
+I agree, if the dependency is uniform across SoCs, then bypass should be
+configured based on the frequency of the active peripheral.
+
+> 
+> I don't know exactly what impact configuring this bit has, the socfpga datasheet 
+> is not very clear about the meaning of this bit, so it'd be better if someone 
+> from Altera answered this question.
+> 
+
+Have you tested the driver at SPI bus frequency >50MHz?
+
+>>> +		cqspi_controller_enable(cqspi);
+>>> +	}
+>>> +	return 0;
+>>> +}
+> 
+> [...]
+> 
+[...]
+>>> +	ret = devm_request_irq(dev, irq, cqspi_irq_handler, 0,
+>>> +			       pdev->name, cqspi);
+>>> +	if (ret) {
+>>> +		dev_err(dev, "Cannot request IRQ.\n");
+>>> +		return ret;
+>>> +	}
+>>> +
+>>
+>> pm_runtime_enable(), pm_runtime_get_sync() might be needed here as QSPI
+>> clocks may not be enabled by default on all platforms.
+> 
+> Can you whip up a bit of code and test it on your platform ? I dont think
+> socfpga has runtime PM yet. I'd like to add it into the driver or you can
+> send a small patch later, whichever way you prefer.
+> 
+
+Ok, I can send a patch once the driver is accepted.
+
+>>> +	cqspi_wait_idle(cqspi);
+>>> +	cqspi_controller_init(cqspi);
+>>> +	cqspi->current_cs = -1;
+>>> +	cqspi->sclk = 0;
+>>> +
+>>> +	ret = cqspi_setup_flash(cqspi, np);
+>>> +	if (ret) {
+>>> +		dev_err(dev, "Cadence QSPI NOR probe failed %d\n", ret);
+>>> +		cqspi_controller_disable(cqspi);
+>>> +	}
+>>> +
+>>> +	return ret;
+>>> +}
+> 
+> Thanks!
+> 
+
+-- 
+Regards
+Vignesh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
