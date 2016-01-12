@@ -1,98 +1,78 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RESEND PATCH 1/2] devicetree: mxsfb: add reset-active property
-Date: Tue, 12 Jan 2016 14:44:12 +0200
-Message-ID: <5694F51C.7040107@ti.com>
-References: <1452594141-26073-1-git-send-email-mans@mansr.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="5KeKpCIvWrmmOJAsR5GNG7i2I2j3KCaNm"
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v5 0/7] remoteproc: Add driver for STMicroelectronics platforms
+Date: Tue, 12 Jan 2016 12:46:14 +0000
+Message-ID: <1452602781-22424-1-git-send-email-lee.jones@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452594141-26073-1-git-send-email-mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, s-anna-l0cyMroinI0@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---5KeKpCIvWrmmOJAsR5GNG7i2I2j3KCaNm
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+ST's platforms often have multiple co-processors (usually ST40s or ST231s)
+on-board.  This provides the Linux-side infrastructure to flash and boot
+them successfully.
+  
+This set has been tested on an STiH410-B2120.
 
+v4 => v5:
+ - Check for invalid 'count' (command read length) in write fn()s
+  
+v3 => v4:
+ Suggested-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+ - Move to using 'reserved-memory' API
+   - New 'reserved-memory' nodes
+   - Remove memory locations from RemoteProc's DT node's reg properties
+   - Remove C code obtaining/allocating DMA memory
+ - Re-order .start() and .stop() ops
+ - Add protection around Reset API in error path
+ - Explicitly set .has_iommu to false
+  
+v2 => v3:
+ - Generify syscon property (st,syscfg-boot => st,syscfg)
+ - Rename IP in DT bindings doc (Remote Processor => Co-Processor)
+ - Remove superfluous 'clock-names' property
+ - Remove superfluous 'reg-names' property
+ - Populate MAINTAINERS
+ - Clean-up DTS formatting
+ - Use strings in debugfs to control procs ('1|0' => 'start|stop')
+ - Align copyright statement with MODULE() macros
+ - Rename driver data structure ('st_rproc' => 'ddata')
+ - Addition of a full error path in .start()
 
-On 12/01/16 12:22, Mans Rullgard wrote:
-> Some boards connect the LCD_RESET pin to a reset input on the
-> display panel.  On these boards, this pin must be set to the
-> proper level for the display to function.
->=20
-> This adds an optional "reset-active" property to the "display"
-> subnode such that devicetrees can specify the desired polarity
-> of the LCD_RESET pin.
->=20
-> Signed-off-by: Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/display/mxsfb.txt | 5 +++++
->  1 file changed, 5 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/display/mxsfb.txt b/Docu=
-mentation/devicetree/bindings/display/mxsfb.txt
-> index 96ec5179c8a0..cb7212a6bdf2 100644
-> --- a/Documentation/devicetree/bindings/display/mxsfb.txt
-> +++ b/Documentation/devicetree/bindings/display/mxsfb.txt
-> @@ -13,6 +13,11 @@ Required properties:
->  - bits-per-pixel : <16> for RGB565, <32> for RGB888/666.
->  - bus-width : number of data lines.  Could be <8>, <16>, <18> or <24>.=
+v1 => v2:
+ - Remove Linux implementation specific comment from binding document
+ - Force debugfs '0' to shutdown co-processor - rather than !1
+ - Supply more detailed commit message
+ - Propagate errors back from .stop()
+ - Review GPL wording
+ - Supply original author's SoBs
 
-> =20
-> +Optional properties:
-> +- reset-active : <0>: reset pin is active low
-> +                 <1>: reset pin is active high
-> +                 omitted: reset pin not used
-> +
->  Required sub-node:
->  - display-timings : Refer to binding doc display-timing.txt for detail=
-s.
+Lee Jones (7):
+  remoteproc: debugfs: Check of invalid 'count' value
+  remoteproc: dt: Provide bindings for ST's Remote Processor Controller
+    driver
+  remoteproc: debugfs: Add ability to boot remote processor using
+    debugfs
+  remoteproc: Supply controller driver for ST's Remote Processors
+  MAINTAINERS: Add ST's Remote Processor Driver to ARM/STI ARCHITECTURE
+  ARM: STiH407: Add nodes for RemoteProc
+  ARM: STiH407: Move over to using the 'reserved-memory' API for
+    obtaining DMA memory
 
-So maybe this is fine for the mxsfb if it doesn't support any kind of
-panel drivers, and there's no plan to extend it. Otherwise the LCD_RESET
-pin could perhaps be exposed as a GPIO for the panel drivers.
+ .../devicetree/bindings/remoteproc/st-rproc.txt    |  41 +++
+ MAINTAINERS                                        |   1 +
+ arch/arm/boot/dts/stih407-family.dtsi              |  70 +++++
+ drivers/remoteproc/Kconfig                         |   9 +
+ drivers/remoteproc/Makefile                        |   1 +
+ drivers/remoteproc/remoteproc_debugfs.c            |  38 ++-
+ drivers/remoteproc/st_remoteproc.c                 | 297 +++++++++++++++++++++
+ 7 files changed, 455 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/st-rproc.txt
+ create mode 100644 drivers/remoteproc/st_remoteproc.c
 
-But even so, I think the definition of "reset" is a bit vague.
+-- 
+1.9.1
 
-I know panels for which "reset" is a pulse, you assert it for a short
-period. Other panels take reset more like a on/off switch. If I'm not
-mistaken, this one is the latter kind.
-
-I don't see any sleeps related to reset in the code. If reset is
-asserted when the display is blanked, is it guaranteed that the reset
-stays asserted long enough until the display is enabled again?
-
- Tomi
-
-
---5KeKpCIvWrmmOJAsR5GNG7i2I2j3KCaNm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJWlPUdAAoJEPo9qoy8lh71L0sP/jxLQiym+W5FpfffaIewsik2
-GF0idTsNiQ2C4aPVEl/ABo39LcDo81i2u8YNo02q4hKwAEMVcB3vByrjAjBxPUgW
-uYQasa1NeXwLIwxES3qMbas9ABBXE9yAm/r51MlvXWUbwzFj2sZaYIvblFEtJTGU
-APdy/kHMhBMcmdy1Mc43gnh6CTs7gRMKhf92n2Whm+R4xji8Bo3sI32ZAEDx2GrW
-KY/BInFEupLb7lL51uehe+FriAigtPMZjJoo8Kf7bHTbYkd9JiIPFGEMn+U3xJUw
-IRINet3jxZlQHVAkAY3qSVek91odbtBQRrD8pTYs417c9nciytb8FKoPKvsjgyb6
-wegJf+tf4A3aDehwrYa2IESiOLmTYGkUe4z/SGox5vBorBTJVfefl5v3L1rb31d8
-qd4tAh88Tx9TJzOePg3aM+ZckMe9kfwxE1JHVdfbrgjUpEM9xs2lg53Z4Gk0BnUx
-kurch4sBOZqieCyVxeLuL2JeST3GDiDQNWFIJW08X1d63MDBG/ShoX3vFHgHtrHr
-KJrX9unVRJl1Zr7i4JUzWNakiDu573hcPs3dYrP10Y3sBp0I0ZX4rVdPgUTQLrBZ
-VKBYFF0g1qIAAD784P53h6bxs5cnbTtjNiu1F6SsFRoTAyh0BDx9SX1E2+fmZDFE
-MoV7fQTHqUEl5VDCYE+b
-=Wq/S
------END PGP SIGNATURE-----
-
---5KeKpCIvWrmmOJAsR5GNG7i2I2j3KCaNm--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
