@@ -1,57 +1,118 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH 2/2] input: gpio-keys: add support to name the gpio-keys
-Date: Tue, 12 Jan 2016 17:02:50 +0530
-Message-ID: <1452598370-28509-2-git-send-email-ldewangan@nvidia.com>
-References: <1452598370-28509-1-git-send-email-ldewangan@nvidia.com>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] arm: dts: zynq: Add MicroZed board support
+Date: Tue, 12 Jan 2016 12:47:40 +0100
+Message-ID: <5694E7DC.4010602@xilinx.com>
+References: <1452578026-4496-1-git-send-email-jteki@openedev.com>
+ <5694D8D8.1050204@xilinx.com> <5694DA56.70704@openedev.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1452598370-28509-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-input-owner@vger.kernel.org
-To: robh+dt@kernel.org, dmitry.torokhov@gmail.com
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, bjorn.andersson@sonymobile.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5694DA56.70704-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support from DT to name the gpio-keys driver to have
-desired key name for this input system.
+On 12.1.2016 11:49, Jagan Teki wrote:
+> On Tuesday 12 January 2016 04:13 PM, Michal Simek wrote:
+>> On 12.1.2016 06:53, Jagan Teki wrote:
+>>> Added basic dts support for MicroZed board.
+>>>
+>>> Cc: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>>> Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>>> Signed-off-by: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>   arch/arm/boot/dts/Makefile          |  1 +
+>>>   arch/arm/boot/dts/zynq-microzed.dts | 45
+>>> +++++++++++++++++++++++++++++++++++++
+>>>   2 files changed, 46 insertions(+)
+>>>   create mode 100644 arch/arm/boot/dts/zynq-microzed.dts
+>>>
+>>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>>> index 30bbc37..9eb52fa 100644
+>>> --- a/arch/arm/boot/dts/Makefile
+>>> +++ b/arch/arm/boot/dts/Makefile
+>>> @@ -725,6 +725,7 @@ dtb-$(CONFIG_ARCH_VT8500) += \
+>>>       wm8750-apc8750.dtb \
+>>>       wm8850-w70v2.dtb
+>>>   dtb-$(CONFIG_ARCH_ZYNQ) += \
+>>> +    zynq-microzed.dtb \
+>>>       zynq-parallella.dtb \
+>>>       zynq-zc702.dtb \
+>>>       zynq-zc706.dtb \
+>>> diff --git a/arch/arm/boot/dts/zynq-microzed.dts
+>>> b/arch/arm/boot/dts/zynq-microzed.dts
+>>> new file mode 100644
+>>> index 0000000..a8c7d2b
+>>> --- /dev/null
+>>> +++ b/arch/arm/boot/dts/zynq-microzed.dts
+>>> @@ -0,0 +1,45 @@
+>>> +/*
+>>> + * Copyright (C) 2015 Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+>>> + *
+>>> + * This software is licensed under the terms of the GNU General Public
+>>> + * License version 2, as published by the Free Software Foundation, and
+>>> + * may be copied, distributed, and modified under those terms.
+>>> + *
+>>> + * This program is distributed in the hope that it will be useful,
+>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>> + * GNU General Public License for more details.
+>>> + */
+>>> +/dts-v1/;
+>>> +/include/ "zynq-7000.dtsi"
+>>> +
+>>> +/ {
+>>> +    model = "Zynq MicroZED Development Board";
+>>> +    compatible = "xlnx,zynq-microzed", "xlnx,zynq-7000";
+>>> +
+>>> +    aliases {
+>>> +        serial0 = &uart1;
+>>> +    };
+>>> +
+>>> +    memory {
+>>> +        device_type = "memory";
+>>> +        reg = <0x0 0x40000000>;
+>>> +    };
+>>> +
+>>> +    chosen {
+>>> +        bootargs = "earlyprintk";
+>>> +        stdout-path = "serial0:115200n8";
+>>> +    };
+>>> +};
+>>> +
+>>> +&clkc {
+>>> +    ps-clk-frequency = <33333333>;
+>>> +};
+>>> +
+>>> +&sdhci0 {
+>>> +    status = "okay";
+>>> +};
+>>> +
+>>> +&uart1 {
+>>> +    status = "okay";
+>>> +};
+>>>
+>>
+>> I would prefer to have full description of this board instead of partial
+>> one. In U-Boot there is also qspi enabled. Board has also USB and
+>> ethernet that's why all of these should be enabled and tested.
+> 
+> I have verified what all I added like uart, mmc ie why I described as
+> basic support.
+> 
+> May be we can move this first and rest will add in future like USB and
+> Ethernet. For qspi the driver is not mainlined yet.
 
-This helps userspace code to get name and perform proper
-event to key mapping in some of cases. In android, the
-user space map the key code to application code using
-key character layout and for this it uses the name of
-input system.
+Adding USB, ethernet should be quite simple. It means if you have the
+board please test it and send v2 with that.
+Hopefully both 7010 and 7020 microzed boards are the same.
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
----
- Documentation/devicetree/bindings/input/gpio-keys.txt | 1 +
- drivers/input/keyboard/gpio_keys.c                    | 2 ++
- 2 files changed, 3 insertions(+)
+Thanks,
+Michal
 
-diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt b/Documentation/devicetree/bindings/input/gpio-keys.txt
-index cf1333d..2e6bcd2 100644
---- a/Documentation/devicetree/bindings/input/gpio-keys.txt
-+++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
-@@ -4,6 +4,7 @@ Required properties:
- 	- compatible = "gpio-keys";
- 
- Optional properties:
-+	- gpio-keys,name: String, name of the gpio-keys input system.
- 	- autorepeat: Boolean, Enable auto repeat feature of Linux input
- 	  subsystem.
- 
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-index cf068cb..c95dc3b 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -628,6 +628,8 @@ gpio_keys_get_devtree_pdata(struct device *dev)
- 
- 	pdata->rep = !!of_get_property(node, "autorepeat", NULL);
- 
-+	of_property_read_string(node, "gpio-keys,name", &pdata->name);
-+
- 	i = 0;
- 	for_each_child_of_node(node, pp) {
- 		enum of_gpio_flags flags;
--- 
-2.1.4
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
