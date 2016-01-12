@@ -1,89 +1,44 @@
-From: Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] dts/ls2080a: Update DTSI to add support of SP805 WDT
-Date: Tue, 12 Jan 2016 22:17:50 +0800
-Message-ID: <CADRPPNTS4yD6LEJTZy-307jT0n+sQcCWf3Gj1mrUWoaTyMZB6w@mail.gmail.com>
-References: <1450189825-29065-1-git-send-email-bhupesh.sharma@freescale.com>
-	<1450189825-29065-3-git-send-email-bhupesh.sharma@freescale.com>
-	<CAFTCetS7P6wF3MhgMSXSXP_jnLQvBc-NSY0TW3OOnCjtbL0N_w@mail.gmail.com>
-	<201512241118.32946.arnd@arndb.de>
-	<BN3PR0301MB1298AF2C5A88FCA392D0E9DD82E70@BN3PR0301MB1298.namprd03.prod.outlook.com>
-	<20151225015616.GA27329@dragon>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 2/5] arm64: dts: apq8016-sbc: move sdhci node under soc
+ node
+Date: Tue, 12 Jan 2016 14:18:53 +0000
+Message-ID: <56950B4D.3030707@linaro.org>
+References: <1452606358-24569-1-git-send-email-srinivas.kandagatla@linaro.org> <1452606412-24659-1-git-send-email-srinivas.kandagatla@linaro.org> <18094818.3Fy0P66y0u@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20151225015616.GA27329@dragon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sharma Bhupesh <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Bhupesh SHARMA <bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <18094818.3Fy0P66y0u@wuerfel>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 25, 2015 at 9:56 AM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Dec 24, 2015 at 08:41:54PM +0000, Sharma Bhupesh wrote:
+
+
+On 12/01/16 14:00, Arnd Bergmann wrote:
+> On Tuesday 12 January 2016 13:46:52 Srinivas Kandagatla wrote:
+>> To be consistent with other nodes move sdhci node under the soc node,
+>> rather than using lable references.
 >>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 >>
->> > -----Original Message-----
->> > From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
->> > Sent: Thursday, December 24, 2015 3:49 PM
->> > To: Bhupesh SHARMA
->> > Cc: Sharma Bhupesh-B45370; Mark Rutland; linux-arm-
->> > kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Olof Johansson; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
->> > Rob Herring; Will Deacon; Catalin Marinas; Li Yang-Leo-R58472; Wood
->> > Scott-B07421; Yoder Stuart-B08248; shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
->> > Subject: Re: [PATCH v3 2/2] dts/ls2080a: Update DTSI to add support of
->> > SP805 WDT
->> >
->> > On Wednesday 23 December 2015, Bhupesh SHARMA wrote:
->> > >
->> > > Hi Arnd, Olof, Kevin
->> > >
->> > > On Tue, Dec 15, 2015 at 8:00 PM, Bhupesh Sharma
->> > > <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
->> > > > This patch updates the LS2080a DTSI (DTS Include) file to add
->> > > > support for eight SP805 Watchdog units which can be used to reset
->> > > > the eight Cortex-A57 cores available on LS2080A.
->> > > >
->> > > > Signed-off-by: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> > > > ---
->> > > >  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi |   56
->> > ++++++++++++++++++++++++
->> > > >  1 file changed, 56 insertions(+)
->> > >
->> > > Since Rob has acked the SP805 WDT binding documentation patch (patch
->> > > 1/2 of this series),
->> > > can this DTSI change, please be considered for absorption in the arm-
->> > soc tree.
->> >
->> > Sure, please submit it for inclusion. Who is the maintainer for
->> > arch/arm64/boot/dts/freescale/ ? Can they pick up all the freescale
->> > related dts changes and submit them as a pull request? Should they go
->> > through Shawn's tree maybe?
->>
->> Thanks Arnd. For now, may-be I can send this patchset with Rob's Acked-by added
->> for 1/2 to 'arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org'. So that this can be picked by via the arm-soc tree.
->> Shawn, I hope it's ok with you.
 >
-> Yeah.  I'm maintaining a git tree, collecting all Freescale arm32
-> platform patches, and sending them to arm-soc for each merge window.
-> If I can be copied on those arm64 patches, I do not mind handling them
-> together with arm32 ones.
+> Maybe remove the label as well if you are no longer using it?
+Label "sdhc_1" in this case is used in aliases node.
 
-Shawn,  Thanks a lot for offering to help.
+>
+My understanding so far was qcom specific dt want to use hierarchical dt 
+nodes in the board files, but this brings the question of should we 
+delete all the unused labels.
 
-Sorry for a very delayed response as I was on vacation.  I have
-recently been made responsible by the company to push and track the
-upstreaming of all armv8 related software within the Digital
-Networking group of FSL/NXP which is currently the only business unit
-to use ARMv8 cores.  We also agreed in an internal discussion that it
-will be good for me to also help organize patches for upstream
-acceptance.  I think I can help to make it more effective in
-communicating community requirements and feedback to all related
-developers and their management.  And I can also help to enable the
-internal test team to better test the staging patches before they hit
-the mainline.
+IMO, some unused labels are harmless and would give more consistency to 
+the reader, removing them might not add great value.
 
-Regards,
-Leo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Andy/Stephen, any comments?
+
+
+--srini
+
+> 	Arnd
+>
