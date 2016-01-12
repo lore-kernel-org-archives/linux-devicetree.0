@@ -1,153 +1,41 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] serial: 8250_early: Add support for regshift
-Date: Tue, 12 Jan 2016 10:43:09 -0800
-Message-ID: <5695493D.50900@hurleysoftware.com>
-References: <1452594809-17972-1-git-send-email-jonathanh@nvidia.com>
- <1452594809-17972-3-git-send-email-jonathanh@nvidia.com>
- <569526B1.3030000@hurleysoftware.com> <569545B8.5000200@nvidia.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: imx6ul: add support for Ka-Ro electronics
+ TXUL modules
+Date: Tue, 12 Jan 2016 16:43:20 -0200
+Message-ID: <CAOMZO5Dhho3whg8p0t6FARG8vyU158mFc7d8BHxThjojm-dcQg@mail.gmail.com>
+References: <1452621710-15336-1-git-send-email-LW@KARO-electronics.de>
+	<1452621710-15336-2-git-send-email-LW@KARO-electronics.de>
+	<1452621710-15336-3-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <569545B8.5000200-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452621710-15336-3-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Lothar_Wa=C3=9Fmann?= <LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/12/2016 10:28 AM, Jon Hunter wrote:
-> Hi Peter,
-> 
-> On 12/01/16 16:15, Peter Hurley wrote:
->> Hi Jon,
->>
->> On 01/12/2016 02:33 AM, Jon Hunter wrote:
->>> The 8250 early console assumes a default regshift for each iotype. This
->>> does not work for all devices. For example, Tegra UARTs use a iotype of
->>> UPIO_MEM with a regshift of 2 because the registers are 32-bit aligned
->>> and permit byte access.
->>>
->>> If the regshift is specified (for example, via device-tree), then use the
->>> value provided and otherwise revert to the defaults assumed for each
->>> iotype.
->>>
->>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>> ---
->>> Please note that today for Tegra, early console is supported by passing
->>> the boot parameter "earlycon=uart8250,mmio32,0xXXXXXXXX". While this works
->>> and we could use UPIO_MEM32 for tegra, this would mean changing all the
->>> DT source files for Tegra to add the "reg-io-width" property. IMO it seems
->>> better to make early console for 8250 work in the same way as the normal
->>> 8250 console and support regshift.
->>>
->>>  drivers/tty/serial/8250/8250_early.c | 36 ++++++++++++++++++++++++++----------
->>>  1 file changed, 26 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/drivers/tty/serial/8250/8250_early.c b/drivers/tty/serial/8250/8250_early.c
->>> index af62131af21e..758054957788 100644
->>> --- a/drivers/tty/serial/8250/8250_early.c
->>> +++ b/drivers/tty/serial/8250/8250_early.c
->>> @@ -41,15 +41,15 @@ static unsigned int __init serial8250_early_in(struct uart_port *port, int offse
->>>  {
->>>  	switch (port->iotype) {
->>>  	case UPIO_MEM:
->>> -		return readb(port->membase + offset);
->>> +		return readb(port->membase + (offset << port->regshift));
->>>  	case UPIO_MEM16:
->>> -		return readw(port->membase + (offset << 1));
->>> +		return readw(port->membase + (offset << port->regshift));
->>>  	case UPIO_MEM32:
->>> -		return readl(port->membase + (offset << 2));
->>> +		return readl(port->membase + (offset << port->regshift));
->>>  	case UPIO_MEM32BE:
->>> -		return ioread32be(port->membase + (offset << 2));
->>> +		return ioread32be(port->membase + (offset << port->regshift));
->>>  	case UPIO_PORT:
->>> -		return inb(port->iobase + offset);
->>> +		return inb(port->iobase + (offset << port->regshift));
->>>  	default:
->>>  		return 0;
->>>  	}
->>> @@ -59,19 +59,19 @@ static void __init serial8250_early_out(struct uart_port *port, int offset, int
->>>  {
->>>  	switch (port->iotype) {
->>>  	case UPIO_MEM:
->>> -		writeb(value, port->membase + offset);
->>> +		writeb(value, port->membase + (offset << port->regshift));
->>>  		break;
->>>  	case UPIO_MEM16:
->>> -		writew(value, port->membase + (offset << 1));
->>> +		writew(value, port->membase + (offset << port->regshift));
->>>  		break;
->>>  	case UPIO_MEM32:
->>> -		writel(value, port->membase + (offset << 2));
->>> +		writel(value, port->membase + (offset << port->regshift));
->>>  		break;
->>>  	case UPIO_MEM32BE:
->>> -		iowrite32be(value, port->membase + (offset << 2));
->>> +		iowrite32be(value, port->membase + (offset << port->regshift));
->>>  		break;
->>>  	case UPIO_PORT:
->>> -		outb(value, port->iobase + offset);
->>> +		outb(value, port->iobase + (offset << port->regshift));
->>>  		break;
->>>  	}
->>>  }
->>> @@ -128,6 +128,22 @@ int __init early_serial8250_setup(struct earlycon_device *device,
->>>  	if (!(device->port.membase || device->port.iobase))
->>>  		return -ENODEV;
->>>  
->>> +	/*
->>> +	 * If regshift is not specified, then assume the
->>> +	 * following defaults for the below iotypes.
->>> +	 */
->>> +	if (!device->port.regshift) {
->>> +		switch (device->port.iotype) {
->>> +		case UPIO_MEM16:
->>> +			device->port.regshift = 1;
->>> +			break;
->>> +		case UPIO_MEM32:
->>> +		case UPIO_MEM32BE:
->>> +			device->port.regshift = 2;
->>> +			break;
->>> +		}
->>> +	}
->>
->> Since the earlycon command line parsing sets port->regshift, the only possible
->> path requiring defaults would be DT, but 8250 DT should not have default
->> regshift based on the iotype; the 8250 port driver doesn't.
-> 
-> Ah, I see, I missed that. However, for command line parsing, I only see
-> regshift being set to 2 for mmio32 (and I guess it will be 0 otherwise).
+On Tue, Jan 12, 2016 at 4:01 PM, Lothar Wa=C3=9Fmann <LW@karo-electroni=
+cs.de> wrote:
 
-Exactly. Currently unrepresented is 8-bit wide, 32-bit aligned mmio.
+> +               spi@0 {
+> +                       compatible =3D "spidev";
+> +                       reg =3D <0>;
+> +                       spi-max-frequency =3D <54000000>;
+> +               };
+> +
+> +               spi@1 {
+> +                       compatible =3D "spidev";
+> +                       reg =3D <1>;
+> +                       spi-max-frequency =3D <54000000>;
+> +               };
+> +       };
 
-> Is mmio16 not supported for command line parsing?
-
-In Greg's tty-next branch @
-git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git
-
-commit bd94c4077a0b2ecc35562c294f80f3659ecd8499
-Author: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Date:   Wed Oct 28 12:46:05 2015 +0900
-
-    serial: support 16-bit register interface for console
-    
-    Currently, 8-bit (MMIO) and 32-bit (MMIO32) register interfaces are
-    supported for the 8250 console, but the 16-bit (MMIO16) is not.
-    The 8250 UART device on my board is connected to a 16-bit bus and
-    my main motivation is to use earlycon with it.
-    (Refer to arch/arm/boot/dts/uniphier-support-card.dtsi)
-    
-    Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-    Reviewed-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-    Signed-off-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-
-Regards,
-Peter Hurley
-
-> Ok, I will drop the above hunk.
-> 
-> Cheers
-> Jon
-> 
+If you leave the spidev node, the spi core will complain loudly about i=
+t.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
