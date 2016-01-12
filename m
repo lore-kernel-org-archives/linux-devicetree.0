@@ -1,29 +1,81 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 2/2] input: gpio-keys: add support to name the gpio-keys
-Date: Tue, 12 Jan 2016 20:54:08 +0530
-Message-ID: <56951A98.40502@nvidia.com>
-References: <1452598370-28509-1-git-send-email-ldewangan@nvidia.com> <1452598370-28509-2-git-send-email-ldewangan@nvidia.com> <20160112144301.GA30932@rob-hp-laptop> <569513E6.60608@nvidia.com> <CAL_Jsq+ZLVNXVnQX+fYGjhqAx6aFrPNgBBXbPGTKrWoY52vMvw@mail.gmail.com>
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: [PATCHv2 1/2] remove redundant struct clk NULL checks
+Date: Tue, 12 Jan 2016 16:17:55 +0100
+Message-ID: <1452611876-451-2-git-send-email-LW__19734.7676069059$1452613150$gmane$org@KARO-electronics.de>
+References: <1452611876-451-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+ZLVNXVnQX+fYGjhqAx6aFrPNgBBXbPGTKrWoY52vMvw@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452611876-451-1-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>, Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nimrod Andy <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Philippe Reynes <tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeff Kirsher <jeffrey.t.kirsher-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Russell
 List-Id: devicetree@vger.kernel.org
 
+NULL is a valid argument to clk_enable()/clk_disable(). Remove
+redundant checks before calling those functions.
 
-On Tuesday 12 January 2016 08:53 PM, Rob Herring wrote:
-> On Tue, Jan 12, 2016 at 8:55 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
->> On Tuesday 12 January 2016 08:13 PM, Rob Herring wrote:
->>> On Tue, Jan 12, 2016 at 05:02:50PM +0530, Laxman Dewangan wrote:
+Signed-off-by: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+---
+ drivers/net/ethernet/freescale/fec_main.c | 23 +++++++++--------------
+ 1 file changed, 9 insertions(+), 14 deletions(-)
 
-> So label is exactly for this purpose of defining user meaningful names.
->
-Yes, I can use the label for name. I will update the patch.
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/et=
+hernet/freescale/fec_main.c
+index 502da6f..592a7a4 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -1874,35 +1874,30 @@ static int fec_enet_clk_enable(struct net_devic=
+e *ndev, bool enable)
+ 			}
+ 			mutex_unlock(&fep->ptp_clk_mutex);
+ 		}
+-		if (fep->clk_ref) {
+-			ret =3D clk_prepare_enable(fep->clk_ref);
+-			if (ret)
+-				goto failed_clk_ref;
+-		}
++
++		ret =3D clk_prepare_enable(fep->clk_ref);
++		if (ret)
++			goto failed_clk_ref;
+ 	} else {
+ 		clk_disable_unprepare(fep->clk_ahb);
+-		if (fep->clk_enet_out)
+-			clk_disable_unprepare(fep->clk_enet_out);
++		clk_disable_unprepare(fep->clk_enet_out);
+ 		if (fep->clk_ptp) {
+ 			mutex_lock(&fep->ptp_clk_mutex);
+ 			clk_disable_unprepare(fep->clk_ptp);
+ 			fep->ptp_clk_on =3D false;
+ 			mutex_unlock(&fep->ptp_clk_mutex);
+ 		}
+-		if (fep->clk_ref)
+-			clk_disable_unprepare(fep->clk_ref);
++		clk_disable_unprepare(fep->clk_ref);
+ 	}
+=20
+ 	return 0;
+=20
+ failed_clk_ref:
+-	if (fep->clk_ref)
+-		clk_disable_unprepare(fep->clk_ref);
++	clk_disable_unprepare(fep->clk_ref);
+ failed_clk_ptp:
+-	if (fep->clk_enet_out)
+-		clk_disable_unprepare(fep->clk_enet_out);
++	clk_disable_unprepare(fep->clk_enet_out);
+ failed_clk_enet_out:
+-		clk_disable_unprepare(fep->clk_ahb);
++	clk_disable_unprepare(fep->clk_ahb);
+=20
+ 	return ret;
+ }
+--=20
+2.1.4
 
-Just for understanding, is "label" is better property name to pass the 
-specific name?
-
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
