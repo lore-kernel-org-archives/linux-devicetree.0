@@ -1,47 +1,51 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/3] ARM: STi: Add DT defines for co-processor reset lines
-Date: Tue, 12 Jan 2016 13:34:37 +0000
-Message-ID: <20160112133437.GH27358@x1>
-References: <1445856969-19424-1-git-send-email-lee.jones@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH v2 0/2] regulator: Add support for parallel regulators
+Date: Tue, 12 Jan 2016 14:37:20 +0100
+Message-ID: <1452605842-9317-1-git-send-email-maxime.ripard@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1445856969-19424-1-git-send-email-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: kernel@stlinux.com, maxime.coquelin@st.com, devicetree@vger.kernel.org, p.zabel@pengutronix.de
+To: Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 26 Oct 2015, Lee Jones wrote:
+Hi,
 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  include/dt-bindings/reset-controller/stih407-resets.h | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/include/dt-bindings/reset-controller/stih407-resets.h b/=
-include/dt-bindings/reset-controller/stih407-resets.h
-> index 02d4328..4ab3a1c 100644
-> --- a/include/dt-bindings/reset-controller/stih407-resets.h
-> +++ b/include/dt-bindings/reset-controller/stih407-resets.h
-> @@ -52,6 +52,10 @@
->  #define STIH407_KEYSCAN_SOFTRESET	26
->  #define STIH407_USB2_PORT0_SOFTRESET	27
->  #define STIH407_USB2_PORT1_SOFTRESET	28
-> +#define STIH407_ST231_AUD_SOFTRESET	29
-> +#define STIH407_ST231_DMU_SOFTRESET	30
-> +#define STIH407_ST231_GP0_SOFTRESET	31
-> +#define STIH407_ST231_GP1_SOFTRESET	32
-> =20
->  /* Picophy reset defines */
->  #define STIH407_PICOPHY0_RESET		0
+On some boards, devices consuming a lot of power cannot use a single
+regulator, but few of them in parallel to spread the consumption.
 
-Has anyone seen this patch?
+In such a case, we must ensure that all these regulators are kept in
+sync.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Since this is something that is totally board specific, it should
+obviously not be handle by each and every customer drivers that might
+be driving a device wired this way on a particular board.
+
+Instead, we implemented a regulator driver that just aggregates
+several parent regulators and just forwards the regulators calls to
+them.
+
+Let me know what you think,
+Maxime
+
+Changes from v1:
+  - Added documentation
+  - Fixed an error in the is_enabled callback returned value
+  - Unwind the enable and disable callbacks in case of a failure
+  - Added a depency on CONFIG_OF
+  - Added the missing module device table
+
+Maxime Ripard (2):
+  regulator: Add coupled regulator
+  ARM: sunxi: chip: Add Wifi chip
+
+ .../bindings/regulator/coupled-voltage.txt         |  18 ++
+ arch/arm/boot/dts/sun5i-r8-chip.dts                |  44 ++-
+ drivers/regulator/Kconfig                          |   8 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/coupled-voltage-regulator.c      | 299 +++++++++++++++++++++
+ 5 files changed, 369 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/coupled-voltage.txt
+ create mode 100644 drivers/regulator/coupled-voltage-regulator.c
+
+-- 
+2.6.4
