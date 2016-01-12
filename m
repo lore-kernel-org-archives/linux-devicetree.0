@@ -1,131 +1,58 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 5/6] mfd: dt-bindings: add device tree bindings for
- Hi3519 sysctrl
-Date: Tue, 12 Jan 2016 08:39:46 +0000
-Message-ID: <20160112083946.GN19803@x1>
-References: <1452219400-32478-1-git-send-email-xuejiancheng@huawei.com>
- <1452219400-32478-6-git-send-email-xuejiancheng@huawei.com>
- <20160111054846.GD3331@x1>
- <56935EA8.4060801@huawei.com>
- <20160111085555.GE14104@x1>
- <5694584D.7040301@huawei.com>
- <20160112074107.GK19803@x1>
- <5694B68A.6040300@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5694B68A.6040300@huawei.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: xuejiancheng <xuejiancheng@huawei.com>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, p.zabel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: [PATCH V6 0/6] i2c: qup: Add support for v2 tags and bam dma
+Date: Tue, 12 Jan 2016 14:13:47 +0530
+Message-ID: <1452588233-1803-1-git-send-email-sricharan@codeaurora.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, agross@codeaurora.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, galak@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andy.gross@linaro.org, ntelkar@codeaurora.org, wsa@the-dreams.de
+Cc: srichara@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 12 Jan 2016, xuejiancheng wrote:
+i2c: qup: Add support for v2 tags and bam dma
 
-> Hello Lee,
->=20
-> On 2016/1/12 15:41, Lee Jones wrote:
-> > On Tue, 12 Jan 2016, xuejiancheng wrote:
-> >=20
-> >>
-> >>
-> >> On 2016/1/11 16:55, Lee Jones wrote:
-> >>> On Mon, 11 Jan 2016, xuejiancheng wrote:
-> >>>> On 2016/1/11 13:48, Lee Jones wrote:
-> >>>>> On Fri, 08 Jan 2016, Jiancheng Xue wrote:
-> >>>>>
-> >>>>>> Add device tree bindings for Hi3519 system controller.
-> >>>>>>
-> >>>>>> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
-> >>>>>> ---
-> >>>>>>  Documentation/devicetree/bindings/mfd/hi3519.txt | 14 +++++++=
-+++++++
-> >>>>>>  1 file changed, 14 insertions(+)
-> >>>>>>  create mode 100644 Documentation/devicetree/bindings/mfd/hi35=
-19.txt
-> >>>>>
-> >>>>> I have this patch, but none of the others in the set, thus I am
-> >>>>> lacking context.
-> >>>>>
-> >>>> I can forward other patches in the set to you. Thank you.
-> >>>>
-> >>>>>> diff --git a/Documentation/devicetree/bindings/mfd/hi3519.txt =
-b/Documentation/devicetree/bindings/mfd/hi3519.txt
-> >>>>>> new file mode 100644
-> >>>>>> index 0000000..115c5be
-> >>>>>> --- /dev/null
-> >>>>>> +++ b/Documentation/devicetree/bindings/mfd/hi3519.txt
-> >>>>>> @@ -0,0 +1,14 @@
-> >>>>>> +* Hisilicon Hi3519 System Controller Block
-> >>>>>> +
-> >>>>>> +This bindings use the following binding:
-> >>>>>> +Documentation/devicetree/bindings/mfd/syscon.txt
-> >>>>>> +
-> >>>>>> +Required properties:
-> >>>>>> +- compatible: "hisilicon,hi3519-sysctrl".
-> >>>>>> +- reg: the register region of this block
-> >>>>>> +
-> >>>>>> +Examples:
-> >>>>>> +sysctrl: system-controller@12010000 {
-> >>>>>> +	compatible =3D "hisilicon,hi3519-sysctrl", "syscon";
-> >>>>>> +	reg =3D <0x12010000 0x1000>;
-> >>>>>> +};
-> >>>>>
-> >>>>> There is no requirement (nor want) for binding documents where =
-the
-> >>>>> given device is simply using highly generic bindings.  This jus=
-t
-> >>>>> amounts to churn.
-> >>>>>
-> >>>> This block is specific for Hi3519 SOC, and may has its own drive=
-r.
-> >>>
-> >>> Does it have its own driver currently?
-> >>>
-> >> Not yet.
-> >> Arnd Bergmann and Rob Herring all suggested adding a specific comp=
-atible string
-> >> with the SOC name. This binding is just used for describing the co=
-mpatible string now.
-> >> When more functions on hi3519 SOC are added later, the specific dr=
-iver will be also
-> >> needed.
-> >=20
-> > Save this binding until it has more functionality.  We here "I'll a=
-dd
-> > to this later" all too often.
-> >=20
->=20
-> In the hi3519.dtsi file, there is a system-controller device node des=
-cribed like below:
-> sysctrl: system-controller@12010000 {
-> 	compatible =3D "hisilicon,hi3519-sysctrl", "syscon";
-> 	reg =3D <0x12010000 0x1000>;
-> };
-> Do you mean that I should remove "hisilicon,hi3519-sysctrl" and just =
-use "syscon" as the
-> compatible string?=E3=80=80
+QUP from version 2.1.1 onwards, supports a new format of i2c command tags.
+Tag codes instructs the controller to perform a operation like read/write.
+This new tagging version supports and is required for adding bam dma
+capabilities. V2 tags supports transfer of more than 256 bytes in a single i2c
+transaction. Also adding bam dma support facilitates transferring each i2c_msg
+in i2c_msgs without a 'stop' bit in between which is required for some of
+the clients.
 
-Where is this compatible string _used_?
+Tested this series on apq8074 dragon board eeprom client on i2c bus1
 
-> If I want to add "hisilicon,hi3519-sysctrl" for hi3519. where should =
-I put this binding?
-> Could you give some suggestions?  Thank you very much!
+[V6] Added review tags and fixed a checkpatch warning in patch 4/6.
 
-If you're not using the compatible i.e. the device doesn't have its
-own driver yet, then there is no need to supply the binding at all, is
-there?
+[V5] Addressed few more comments from Ivan T. Ivanov.
+     Squashed patch 2 and 3 as no point in having only few lines of
+     common code between v1 and v2 tags for increased complexity.
+     Couple of non functional review comments fixes in patch 3, 4.
+     Added a change in patch 4 to have proper transfer completion in
+     a corner case. patch 5, 6 unchanged.
 
-> >>>> So I think it's better to keep this binding.
-> >>>
-> >>
-> >=20
->=20
+[V4] Added a patch to factor out some common code.
+     Removed support for freq > 400KHZ as per comments.
+     Addressed comments from Ivan T. Ivanov to keep the code for
+     V2 support in a separate path.
+     Changed the authorship of V2 tags support patch.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+[V3] Added support to coalesce each i2c_msg in i2c_msgs for fifo and
+     block mode in Patch 2. Also addressed further code comments.
+
+     http://comments.gmane.org/gmane.linux.drivers.i2c/22497
+
+[V2] Addressed comments from Ivan T. Ivanov, Andy Gross [v1] Initial Version
+
+Sricharan R (6):
+  i2c: qup: Change qup_wait_writeready function to use for all timeouts
+  i2c: qup: Add V2 tags support
+  i2c: qup: Transfer each i2c_msg in i2c_msgs without a stop bit
+  i2c: qup: Add bam dma capabilities
+  dts: msm8974: Add blsp2_bam dma node
+  dts: msm8974: Add dma channels for blsp2_i2c1 node
+
+ arch/arm/boot/dts/qcom-msm8974.dtsi |  14 +-
+ drivers/i2c/busses/i2c-qup.c        | 922 ++++++++++++++++++++++++++++++++++--
+ 2 files changed, 887 insertions(+), 49 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
