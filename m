@@ -1,69 +1,111 @@
-From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
-Subject: RE: [PATCH v2 0/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD
- driver
-Date: Tue, 12 Jan 2016 08:49:48 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A243641D63E8931@penmbx01>
-References: <1452585915-551-1-git-send-email-wenyou.yang@atmel.com>
- <20160112084543.GP19803@x1>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] mfd: add documentation for ACT8945A DT bindings
+Date: Tue, 12 Jan 2016 08:53:55 +0000
+Message-ID: <20160112085355.GR19803@x1>
+References: <1452218729-11357-1-git-send-email-wenyou.yang@atmel.com>
+ <1452218729-11357-3-git-send-email-wenyou.yang@atmel.com>
+ <20160111054908.GE3331@x1>
+ <B256D81BAE5131468A838E5D7A243641D63E8756@penmbx01>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160112084543.GP19803@x1>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Javier Martinez Canillas <javier@dowhile0.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <B256D81BAE5131468A838E5D7A243641D63E8756@penmbx01>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGVlLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExlZSBKb25l
-cyBbbWFpbHRvOmxlZS5qb25lc0BsaW5hcm8ub3JnXQ0KPiBTZW50OiAyMDE25bm0MeaciDEy5pel
-IDE2OjQ2DQo+IFRvOiBZYW5nLCBXZW55b3UgPFdlbnlvdS5ZYW5nQGF0bWVsLmNvbT4NCj4gQ2M6
-IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBQYXdlbCBNb2xsIDxwYXdlbC5tb2xs
-QGFybS5jb20+Ow0KPiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgSWFuIENh
-bXBiZWxsDQo+IDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az47IEt1bWFyIEdhbGEgPGdh
-bGFrQGNvZGVhdXJvcmEub3JnPjsgSmF2aWVyDQo+IE1hcnRpbmV6IENhbmlsbGFzIDxqYXZpZXJA
-ZG93aGlsZTAub3JnPjsgS3J6eXN6dG9mIEtvemxvd3NraQ0KPiA8ay5rb3psb3dza2lAc2Ftc3Vu
-Zy5jb20+OyBGZXJyZSwgTmljb2xhcyA8Tmljb2xhcy5GRVJSRUBhdG1lbC5jb20+Ow0KPiBsaW51
-eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
-bC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFU
-Q0ggdjIgMC8yXSBtZmQ6IGFjdDg5NDVhOiBhZGQgQWN0aXZlLXNlbWkgQUNUODk0NUEgUE1JQw0K
-PiBNRkQgZHJpdmVyDQo+IA0KPiBPbiBUdWUsIDEyIEphbiAyMDE2LCBXZW55b3UgWWFuZyB3cm90
-ZToNCj4gDQo+ID4gVGhpcyBwYXRjaCBzZXQgYWRkcyBzdXBwb3J0IGZvciB0aGUgQWN0aXZlLXNl
-bWkgQUNUODk0NUEgUE1JQyBNRkQNCj4gPiBkcml2ZXIuIEl0IGlzIGEgTXVsdGkgRnVuY3Rpb24g
-RGV2aWNlIHdpdGggdGhlIGZvbGxvd2luZw0KPiA+IHN1YmRldmljZXM6DQo+ID4gIC0gUmVndWxh
-dG9yDQo+ID4gIC0gQ2hhcmdlcg0KPiA+DQo+ID4gSXQgaXMgaW50ZXJmYWNlZCB0byB0aGUgaG9z
-dCBjb250cm9sbGVyIHVzaW5nIEkyQyBpbnRlcmZhY2UsIEFDVDg5NDVBDQo+ID4gaXMgYSBjaGls
-ZCBkZXZpY2Ugb2YgdGhlIEkyQy4NCj4gPg0KPiA+IENoYW5nZXMgaW4gdjI6DQo+ID4gIC0gYWRk
-IG1vcmUgaGVscCBpbmZvcm1hdGlvbiBpbiBLY29uZmlnLg0KPiA+ICAtIHVwZGF0ZSB0aGUgZmls
-ZSBoZWFkZXIgd2l0aCBzaG9ydCB2ZXJzaW9uIGxpY2Vuc2UgYW5kIGF1dGhvciBsaW5lLg0KPiA+
-ICAtIHJlbW92ZSB1bnVzZWQgc3RydWN0dXJlIG1lbWJlcnMgKGRldiwgaTJjX2NsaWVudCkgb2Yg
-c3R1Y3QgYWN0ODk0NWFfZGV2Lg0KPiA+ICAtIHVzZSBkZWZpbmUgIlBMQVRGT1JNX0RFVklEX05P
-TkUiIGZvciBtZmRfYWRkX2RldmljZXMoKSwgaW5zdGVhZCBvZiAnLTEnLg0KPiA+ICAtIHVzZSBt
-b3JlIGV4cGxpY2l0IGluZm8gdG8gaW5kaWNhdGUgdGhlIGZhaWx1cmUgdG8gYWRkIHN1YiBkZXZp
-Y2VzLg0KPiA+ICAtIHJlbW92ZSB0aGUgdW5uZWNlc3NhcnkgcHJpbnQgb3V0Lg0KPiA+ICAtIHN1
-YnN0aXR1dGUgTU9EVUxFX0xJQ0VOU0UoIkdQTCIpIGZvciBNT0RVTEVfTElDRU5TRSgiR1BMIHYy
-IikuDQo+ID4gIC0gdXNlIG1vcmUgc3BlY2lmaWMgbGFiZWwgaW4gRXhhbXBsZS4NCj4gPiAgLSBh
-ZGQgcG1pYyBhbmQgY2hhcmdlciBub2RlcyBpbiBFeGFtcGxlLg0KPiA+DQo+ID4gV2VueW91IFlh
-bmcgKDIpOg0KPiA+ICAgbWZkOiBhY3Q4OTQ1YTogYWRkIEFjdGl2ZS1zZW1pIEFDVDg5NDVBIFBN
-SUMgTUZEIGRyaXZlcg0KPiA+ICAgbWZkOiBhZGQgZG9jdW1lbnRhdGlvbiBmb3IgQUNUODk0NUEg
-RFQgYmluZGluZ3MNCj4gDQo+IFNlbmRpbmcgb3V0IDMgcGF0Y2gtc2V0cyBmb3IgcmVsYXRlZCBj
-aGFuZ2VzIGlzIGEgcHJldHR5IHVuY29udmVudGlvbmFsIHdheSBvZg0KPiBkb2luZyB0aGluZ3Mu
-ICBJbiBmdXR1cmUgY291bGQgeW91IHBsYWNlIHRoZW0gYWxsIGluIHRoZSBzYW1lIHBsYWNlLCB0
-aGF0IHdheSBhbGwgb2YNCj4gdGhlIHBhdGNoZXMgc3RheSB0b2dldGhlciB3aGlzdCBob3BwaW5n
-IGFyb3VuZCBvdXIgaW5ib3hlcy4NCg0KVGhhbmsgeW91IGZvciB5b3VyIGFkdmljZSwgSSB3aWxs
-IGtlZXAgaW4gbWluZCBuZXh0IHRpbWUuDQoNCj4gDQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9tZmQvYWN0ODk0NWEudHh0IHwgICA4MiArKysrKysrKysrKysrKysNCj4g
-PiAgZHJpdmVycy9tZmQvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAg
-IDExICsrDQo+ID4gIGRyaXZlcnMvbWZkL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHwgICAgMSArDQo+ID4gIGRyaXZlcnMvbWZkL2FjdDg5NDVhLmMgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHwgIDEwOSArKysrKysrKysrKysrKysrKysrKw0KPiA+ICBpbmNsdWRl
-L2xpbnV4L21mZC9hY3Q4OTQ1YS5oICAgICAgICAgICAgICAgICAgICAgICB8ICAgMjEgKysrKw0K
-PiA+ICA1IGZpbGVzIGNoYW5nZWQsIDIyNCBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2FjdDg5NDVhLnR4
-dA0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tZmQvYWN0ODk0NWEuYyAgY3JlYXRl
-IG1vZGUgMTAwNjQ0DQo+ID4gaW5jbHVkZS9saW51eC9tZmQvYWN0ODk0NWEuaA0KPiA+DQo+IA0K
-PiAtLQ0KPiBMZWUgSm9uZXMNCj4gTGluYXJvIFNUTWljcm9lbGVjdHJvbmljcyBMYW5kaW5nIFRl
-YW0gTGVhZCBMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZQ0KPiBzb2Z0d2FyZSBmb3IgQVJNIFNv
-Q3MgRm9sbG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZw0KDQoNCkJlc3QgUmVn
-YXJkcywNCldlbnlvdSBZYW5nDQo=
+On Tue, 12 Jan 2016, Yang, Wenyou wrote:
+
+> Hi Lee,
+>=20
+> > -----Original Message-----
+> > From: Lee Jones [mailto:lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org]
+> > Sent: 2016=E5=B9=B41=E6=9C=8811=E6=97=A5 13:49
+> > To: Yang, Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Pawel Moll <pawel.moll-AbSShOkvfpQ@public.gmane.org=
+m>;
+> > Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>; Ian Campbell
+> > <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>; Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>;=
+ Ferre,
+> > Nicolas <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Subject: Re: [PATCH 2/2] mfd: add documentation for ACT8945A DT bin=
+dings
+> >=20
+> > On Fri, 08 Jan 2016, Wenyou Yang wrote:
+> >=20
+> > > The Active-semi ACT8945A PMIC is a Multi-Function Device, it has =
+two
+> > > subdevices:
+> > >  - Regulator
+> > >  - Charger
+> >=20
+> > Is this really an MFD?  What special handling does it require?
+>=20
+> Yes, this is an MFD, two sub devices: regulators and charger.
+>=20
+> >=20
+> > > This patch adds documentation for ACT8945A DT bindings.
+> > >
+> > > Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > > ---
+> > >
+> > >  Documentation/devicetree/bindings/mfd/act8945a.txt |   16
+> > ++++++++++++++++
+> > >  1 file changed, 16 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/mfd/act8945=
+a.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/mfd/act8945a.txt
+> > > b/Documentation/devicetree/bindings/mfd/act8945a.txt
+> > > new file mode 100644
+> > > index 0000000..406db16
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/mfd/act8945a.txt
+> > > @@ -0,0 +1,16 @@
+> > > +Device-Tree bindings for Active-semi ACT8945A MFD driver
+> > > +
+> > > +Required properties:
+> > > + - compatible: "active-semi,act8945a".
+> > > + - reg: the I2C slave address for the ACT8945A chip
+> > > +
+> > > +The chip exposes two subdevices:
+> > > + - a regulators: see ../regulator/act8945a-regulator.txt
+> > > + - a charger: see ../power/act8945a-charger.txt
+> > > +
+> > > +Example:
+> > > +	mfd: act8945a@5b {
+> >=20
+> > "mfd" is too generic to be a label.
+> >=20
+> > Why do you need a label in any case?
+>=20
+> Remove the mfd, use act8945a@5b.
+
+Use pmic@5b
+
+> > > +		compatible =3D "active-semi,act8945a";
+> > > +		reg =3D <0x5b>;
+> > > +		status =3D "okay";
+> > > +	};
+> >=20
+> > This doesn't look much like an MFD to me.
+>=20
+> I will add the child nodes for its sub devices, inclusive pmic and ch=
+arger nodes.
+
+Very well.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
