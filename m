@@ -1,29 +1,54 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [patch 1/2 -next] mdio: remove an unneed condition
-Date: Tue, 12 Jan 2016 14:30:48 -0500 (EST)
-Message-ID: <20160112.143048.1357041752363538499.davem@davemloft.net>
-References: <20160112093534.GE29804@mwanda>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
+Subject: [PATCH 2/2] ARM: DTS: kirkwood-openrd: fix SD slot default
+ configuration
+Date: Tue, 12 Jan 2016 22:07:33 +0200
+Message-ID: <1452629253-21748-2-git-send-email-aaro.koskinen@iki.fi>
+References: <1452629253-21748-1-git-send-email-aaro.koskinen@iki.fi>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160112093534.GE29804@mwanda>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org
-Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1452629253-21748-1-git-send-email-aaro.koskinen@iki.fi>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Date: Tue, 12 Jan 2016 12:35:34 +0300
+The SD card slot was enabled by default with legacy booting.
+It does not work anymore with DT boot. Fix by providing GPIO configuration
+that matches the old default.
 
-> It used to be that mdio->irq was a pointer but after e7f4dc3536a4
-> ('mdio: Move allocation of interrupts into core') it's an array inside
-> the mdio struct so it can never be NULL.
-> 
-> Signed-off-by: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+---
+ arch/arm/boot/dts/kirkwood-openrd.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Applied.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/kirkwood-openrd.dtsi b/arch/arm/boot/dts/kirkwood-openrd.dtsi
+index 2a3dafd..f65b727 100644
+--- a/arch/arm/boot/dts/kirkwood-openrd.dtsi
++++ b/arch/arm/boot/dts/kirkwood-openrd.dtsi
+@@ -65,6 +65,14 @@
+ 			status = "okay";
+ 			cd-gpios = <&gpio0 29 9>;
+ 		};
++		gpio@10140 {
++			p2 {
++				gpio-hog;
++				gpios = <2 GPIO_ACTIVE_HIGH>;
++				output-high; /* Select SD by default */
++				line-name = "SelUARTorSD";
++			};
++		};
+ 	};
+ };
+ 
+-- 
+2.4.0
