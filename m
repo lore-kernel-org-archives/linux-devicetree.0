@@ -1,40 +1,64 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/5] arm64: dts: apq8016-sbc: move sdhci node under soc node
-Date: Tue, 12 Jan 2016 15:49:52 +0100
-Message-ID: <5301475.Pt8xa8PKiv@wuerfel>
-References: <1452606358-24569-1-git-send-email-srinivas.kandagatla@linaro.org> <18094818.3Fy0P66y0u@wuerfel> <56950B4D.3030707@linaro.org>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 2/2] input: gpio-keys: add support to name the gpio-keys
+Date: Tue, 12 Jan 2016 20:25:34 +0530
+Message-ID: <569513E6.60608@nvidia.com>
+References: <1452598370-28509-1-git-send-email-ldewangan@nvidia.com> <1452598370-28509-2-git-send-email-ldewangan@nvidia.com> <20160112144301.GA30932@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56950B4D.3030707@linaro.org>
+In-Reply-To: <20160112144301.GA30932@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
+To: Rob Herring <robh@kernel.org>
+Cc: dmitry.torokhov@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, bjorn.andersson@sonymobile.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 12 January 2016 14:18:53 Srinivas Kandagatla wrote:
-> On 12/01/16 14:00, Arnd Bergmann wrote:
-> > On Tuesday 12 January 2016 13:46:52 Srinivas Kandagatla wrote:
-> >> To be consistent with other nodes move sdhci node under the soc node,
-> >> rather than using lable references.
-> >>
-> >> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> >>
-> >
-> > Maybe remove the label as well if you are no longer using it?
-> Label "sdhc_1" in this case is used in aliases node.
-> 
 
-Ok, nevermind then.
+On Tuesday 12 January 2016 08:13 PM, Rob Herring wrote:
+> On Tue, Jan 12, 2016 at 05:02:50PM +0530, Laxman Dewangan wrote:
+>> Add support from DT to name the gpio-keys driver to have
+>> desired key name for this input system.
+>>
+>> This helps userspace code to get name and perform proper
+>> event to key mapping in some of cases. In android, the
+>> user space map the key code to application code using
+>> key character layout and for this it uses the name of
+>> input system.
+> Why is specifying the key code not enough?
 
-> My understanding so far was qcom specific dt want to use hierarchical dt 
-> nodes in the board files, but this brings the question of should we 
-> delete all the unused labels.
-> 
-> IMO, some unused labels are harmless and would give more consistency to 
-> the reader, removing them might not add great value.
+This is the name for input system instead of individual keys.
+In android system, the key mapping is done in user space. By having name 
+offers to specifying the customized key character layout instead of 
+generic one form android which is fall-back.
 
-Fair enough.
 
-	Arnd
+>
+>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+>> ---
+>>   Documentation/devicetree/bindings/input/gpio-keys.txt | 1 +
+>>   drivers/input/keyboard/gpio_keys.c                    | 2 ++
+>>   2 files changed, 3 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt b/Documentation/devicetree/bindings/input/gpio-keys.txt
+>> index cf1333d..2e6bcd2 100644
+>> --- a/Documentation/devicetree/bindings/input/gpio-keys.txt
+>> +++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
+>> @@ -4,6 +4,7 @@ Required properties:
+>>   	- compatible = "gpio-keys";
+>>   
+>>   Optional properties:
+>> +	- gpio-keys,name: String, name of the gpio-keys input system.
+> gpio-keys is not a vendor.
+>
+> Would "label" work for you instead?
+
+"label" means node name?
+
+>
+> Either way, I'm concerned this doesn't work for other key bindings
+> which have multiple keys.
+>
+>
+
+This is not for the individual keys, its for input system like 
+/sys/class/input/input0/name.
