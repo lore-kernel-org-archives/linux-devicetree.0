@@ -1,217 +1,104 @@
-From: liviu.dudau@arm.com
-Subject: Re: [PATCH v1 3/3] ARM64 LPC: update binding doc
-Date: Tue, 12 Jan 2016 09:07:22 +0000
-Message-ID: <20160112090722.GN13633@e106497-lin.cambridge.arm.com>
-References: <1451396032-23708-1-git-send-email-zourongrong@gmail.com>
- <CABTftiT1+AmrNjiAie-T6on-oWA4Zz73+Tj2pQrixMT3o475uw@mail.gmail.com>
- <568912EE.9030009@huawei.com>
- <15026471.7nGZ0rWlIf@wuerfel>
- <20160111161415.GM13633@e106497-lin.cambridge.arm.com>
- <56946768.7090805@gmail.com>
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v2 2/2] mfd: add documentation for ACT8945A DT bindings
+Date: Tue, 12 Jan 2016 09:26:15 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D63E8A0D@penmbx01>
+References: <1452585915-551-1-git-send-email-wenyou.yang@atmel.com>
+ <1452585915-551-3-git-send-email-wenyou.yang@atmel.com>
+ <20160112085207.GQ19803@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56946768.7090805@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rongrong Zou <zourongrong@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Rongrong Zou <zourongrong@huawei.com>, devicetree@vger.kernel.org, benh@kernel.crashing.org, Corey Minyard <minyard@acm.org>, gregkh@linuxfoundation.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linuxarm@huawei.com, Catalin Marinas <catalin.marinas@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160112085207.GQ19803@x1>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 12, 2016 at 10:39:36AM +0800, Rongrong Zou wrote:
-> On 2016/1/12 0:14, liviu.dudau@arm.com wrote:
-> >On Mon, Jan 04, 2016 at 12:13:05PM +0100, Arnd Bergmann wrote:
-> >>On Sunday 03 January 2016 20:24:14 Rongrong Zou wrote:
-> >>>=E5=9C=A8 2015/12/31 23:00, Rongrong Zou =E5=86=99=E9=81=93:
-> >>>>2015-12-31 22:40 GMT+08:00 Arnd Bergmann <arnd@arndb.de <mailto:a=
-rnd@arndb.de>>:
-> >>>>  > On Thursday 31 December 2015 22:12:19 Rongrong Zou wrote:
-> >>>>  > > =E5=9C=A8 2015/12/30 17:06, Arnd Bergmann =E5=86=99=E9=81=93=
-:
-> >>>>  > > > On Tuesday 29 December 2015 21:33:52 Rongrong Zou wrote:
-> >>>>  >
-> >>>>  > The DT sample above looks good in principle. I believe what y=
-ou are missing
-> >>>>  > here is code in your driver to scan the child nodes to create=
- the platform
-> >>>>  > devices. of_bus_isa_translate() should work with your definit=
-ion here
-> >>>>  > and create the correct IORESOURCE_IO resources. You don't hav=
-e any MMIO
-> >>>>  > resources, so the absence of a ranges property is ok. Maybe a=
-ll you
-> >>>>  > are missing is a call to of_platform_populate() or of_platfor=
-m_bus_probe()?
-> >>>>  >
-> >>>>
-> >>>>You are right. thanks, i'll try on test board .  if i get the cor=
-rect result , the new patch
-> >>>>will be sent later. By the way, it's my another email account use=
- when i at home.
-> >>>
-> >>>I tried, and there need some additional changes.
-> >>>
-> >>>isa@a01b0000 {
-> >>>
-> >>>/*the node name should start with "isa", because of below definiti=
-on
-> >>>* static int of_bus_isa_match(struct device_node *np)
-> >>>* {
-> >>>*	return !strcmp(np->name, "isa");
-> >>>* }
-> >>
-> >>Looks good. It would be nicer to match on device_type than on name,
-> >>but this is ancient code and it's probably best not to touch it
-> >>so we don't accidentally break some old SPARC or PPC system.
-> >>
-> >>>*/
-> >>>	compatible =3D "low-pin-count";
-> >>>	device_type =3D "isa";
-> >>>	#address-cells =3D <2>;
-> >>>	#size-cells =3D <1>;
-> >>>	reg =3D <0x0 0xa01b0000 0x0 0x10000>;
-> >>>	ranges =3D <0x1 0x0 0x0 0x0 0x1000>;
-> >>>/*
-> >>>*  ranges is required, then i can get the IORESOURCE_IO <0xe4,4> f=
-rom "reg =3D <0x1, 0x000000e4, 4>".
-> >>>*
-> >>>*/
-> >>>	ipmi_0:ipmi@000000e4{
-> >>>		device_type =3D "ipmi";
-> >>>		compatible =3D "ipmi-bt";
-> >>>		reg =3D <0x1 0x000000e4 0x4>;
-> >>>};
-> >>>
-> >>
-> >>This looks wrong: the property above says that the I/O port range i=
-s
-> >>translated to MMIO address 0x00000000 to 0x00010000, which is not
-> >>true on your hardware. I think this needs to be changed in the code
-> >>so the ranges property is not required for I/O ports.
-> >>
-> >>>drivers\of\address.c
-> >>>static int __of_address_to_resource(struct device_node *dev,
-> >>>                  const __be32 *addrp, u64 size, unsigned int flag=
-s,
-> >>>                  const char *name, struct resource *r)
-> >>>{
-> >>>          u64 taddr;
-> >>>
-> >>>          if ((flags & (IORESOURCE_IO | IORESOURCE_MEM)) =3D=3D 0)
-> >>>                  return -EINVAL;
-> >>>          taddr =3D of_translate_address(dev, addrp);
-> >>>          if (taddr =3D=3D OF_BAD_ADDR)
-> >>>                  return -EINVAL;
-> >>>          memset(r, 0, sizeof(struct resource));
-> >>>          if (flags & IORESOURCE_IO) {
-> >>>                  unsigned long port;
-> >>>
-> >>>/*****************************************************************=
-/
-> >>>/*legacy port(< 0x1000) is reserved, and need no translation here*=
-/
-> >>>/*****************************************************************=
-/
-> >>>                  if(taddr + size < PCIBIOS_MIN_IO){
-> >>>                          r->start =3D taddr;
-> >>>                          r->end =3D taddr + size - 1;
-> >>>                  }
-> >>
-> >>I don't like having a special case based on the address here,
-> >>the same kind of hack might be needed for PCI I/O spaces in
-> >>hardware that uses an indirect method like your LPC bus
-> >>does, and the code above will not work on any LPC implementation
-> >>that correctly multiplexes its I/O ports with the first PCI domain.
-> >>
-> >>I think it would be better to avoid translating the port into
-> >>a physical address to start with just to translate it back into
-> >>a port number, what we need instead is the offset between the
-> >>bus specific port number and the linux port number. I've added
-> >>Liviu to Cc, he wrote this code originally and may have some idea
-> >>of how we could do that.
-> >
-> >Hi,
->=20
-> Hi Liviu,
->=20
-> Thanks for reviewing this.
->=20
-> >
-> >Getting back to work after a longer holiday, my brain might not be r=
-unning
-> >at full speed here, so I'm trying to clarify things a bit here.
-> >
-> >It looks to me like Rongrong is trying to trap the inb()/outb() call=
-s that he
-> >added to arm64 by patch 1/3 and redirect those operations to the mem=
-ory
-> >mapped LPC driver. I think the whole redirection and registration of=
- inb/outb
-> >ops can be made cleaner, so that the general concept resembles the D=
-MA ops
-> >registration? (I have this mental picture that what Rongrong is tryi=
-ng to do
-> >is similar to what a DMA engine does, except this is slowing down th=
-ings to
-> >byte level). If that is done properly in the parent node, then we sh=
-ould not
-> >care what the PCIBIOS_MIN_IO value is as the inb()/outb() calls will=
- always
-> >go through the redirection for the children.
-> >
-> >As for the ranges property: does he wants the ipmi-bt driver to see =
-in the
-> >reg property the legacy ISA I/O ports values or the CPU addresses? I=
-f the former,
-> >then I agree that the range property should not be required, but als=
-o the
-> >reg values need to be changed (drop the top bit). If the later, then=
- the
-> >ranges property is required to do the proper translation.
->=20
-> The former, thanks.
->=20
-> >
-> >Rongrong, removing the ranges property and with a reg =3D <0xe4 0x4>=
- property
-> >in the ipmi-bt node, what IO_RESOURCE type resources do you get back=
- from
-> >the of_address_to_resource() translation?
->=20
-> I want to get IORESOURCE_IO type resource, but if the parent node dro=
-p the
-> "rangs" property, the of_address_to_resource() translation will retur=
-n with -EINVAL.
-
-Have you tracked what part of the code is sensitive to the presence of =
-"ranges"
-property? Does of_get_address() call returns the IO_RESOURCE flag set w=
-ithout "ranges"?
-
-Best regards,
-Liviu
-
->=20
-> >
-> >Best regards,
-> >Liviu
-> >
-> >
-> >>
-> >>	Arnd
-> >>
-> >
-> Regards,
-> Rongrong
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+SGkgTGVlLA0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGVlIEpv
+bmVzIFttYWlsdG86bGVlLmpvbmVzQGxpbmFyby5vcmddDQo+IFNlbnQ6IDIwMTblubQx5pyIMTLm
+l6UgMTY6NTINCj4gVG86IFlhbmcsIFdlbnlvdSA8V2VueW91LllhbmdAYXRtZWwuY29tPg0KPiBD
+YzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IFBhd2VsIE1vbGwgPHBhd2VsLm1v
+bGxAYXJtLmNvbT47DQo+IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBJYW4g
+Q2FtcGJlbGwNCj4gPGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrPjsgS3VtYXIgR2FsYSA8
+Z2FsYWtAY29kZWF1cm9yYS5vcmc+OyBKYXZpZXINCj4gTWFydGluZXogQ2FuaWxsYXMgPGphdmll
+ckBkb3doaWxlMC5vcmc+OyBLcnp5c3p0b2YgS296bG93c2tpDQo+IDxrLmtvemxvd3NraUBzYW1z
+dW5nLmNvbT47IEZlcnJlLCBOaWNvbGFzIDxOaWNvbGFzLkZFUlJFQGF0bWVsLmNvbT47DQo+IGxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQ
+QVRDSCB2MiAyLzJdIG1mZDogYWRkIGRvY3VtZW50YXRpb24gZm9yIEFDVDg5NDVBIERUIGJpbmRp
+bmdzDQo+IA0KPiBPbiBUdWUsIDEyIEphbiAyMDE2LCBXZW55b3UgWWFuZyB3cm90ZToNCj4gDQo+
+ID4gVGhlIEFjdGl2ZS1zZW1pIEFDVDg5NDVBIFBNSUMgaXMgYSBNdWx0aS1GdW5jdGlvbiBEZXZp
+Y2UsIGl0IGhhcyB0d28NCj4gPiBzdWJkZXZpY2VzOg0KPiA+ICAtIFJlZ3VsYXRvcg0KPiA+ICAt
+IENoYXJnZXINCj4gPg0KPiA+IFRoaXMgcGF0Y2ggYWRkcyBkb2N1bWVudGF0aW9uIGZvciBBQ1Q4
+OTQ1QSBEVCBiaW5kaW5ncy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFdlbnlvdSBZYW5nIDx3
+ZW55b3UueWFuZ0BhdG1lbC5jb20+DQo+ID4gLS0tDQo+ID4NCj4gPiBDaGFuZ2VzIGluIHYyOg0K
+PiA+ICAtIHVzZSBtb3JlIHNwZWNpZmljIGxhYmVsIGluIEV4YW1wbGUuDQo+ID4gIC0gYWRkIHBt
+aWMgYW5kIGNoYXJnZXIgbm9kZXMgaW4gRXhhbXBsZS4NCj4gPg0KPiA+ICBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2FjdDg5NDVhLnR4dCB8ICAgODINCj4gKysrKysrKysr
+KysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDgyIGluc2VydGlvbnMoKykNCj4gPiAg
+Y3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQv
+YWN0ODk0NWEudHh0DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL21mZC9hY3Q4OTQ1YS50eHQNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9tZmQvYWN0ODk0NWEudHh0DQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQN
+Cj4gPiBpbmRleCAwMDAwMDAwLi5lNGE4YWFmDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvYWN0ODk0NWEudHh0DQo+ID4g
+QEAgLTAsMCArMSw4MiBAQA0KPiA+ICtEZXZpY2UtVHJlZSBiaW5kaW5ncyBmb3IgQWN0aXZlLXNl
+bWkgQUNUODk0NUEgTUZEIGRyaXZlcg0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoN
+Cj4gPiArIC0gY29tcGF0aWJsZTogImFjdGl2ZS1zZW1pLGFjdDg5NDVhIi4NCj4gPiArIC0gcmVn
+OiB0aGUgSTJDIHNsYXZlIGFkZHJlc3MgZm9yIHRoZSBBQ1Q4OTQ1QSBjaGlwDQo+ID4gKw0KPiA+
+ICtUaGUgY2hpcCBleHBvc2VzIHR3byBzdWJkZXZpY2VzOg0KPiA+ICsgLSBhIHJlZ3VsYXRvcnM6
+IHNlZSAuLi9yZWd1bGF0b3IvYWN0ODk0NWEtcmVndWxhdG9yLnR4dA0KPiA+ICsgLSBhIGNoYXJn
+ZXI6IHNlZSAuLi9wb3dlci9hY3Q4OTQ1YS1jaGFyZ2VyLnR4dA0KPiA+ICsNCj4gPiArRXhhbXBs
+ZToNCj4gPiArCWFjdDg5NDVhQDViIHsNCj4gPiArCQljb21wYXRpYmxlID0gImFjdGl2ZS1zZW1p
+LGFjdDg5NDVhIjsNCj4gPiArCQlyZWcgPSA8MHg1Yj47DQo+ID4gKwkJc3RhdHVzID0gIm9rYXki
+Ow0KPiA+ICsNCj4gPiArCQlwbWljIHsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJhY3RpdmUtc2Vt
+aSxhY3Q4OTQ1YS1yZWd1bGF0b3IiOw0KPiA+ICsJCQlhY3RpdmUtc2VtaSx2c2VsLWhpZ2g7DQo+
+ID4gKw0KPiA+ICsJCQkJcmVndWxhdG9ycyB7DQo+IA0KPiBZb3VyIHRhYmJpbmcgaGVyZSBpcyBu
+b3QgY29ycmVjdC4NCg0KT2gsIFllcywgaXQgaXMgbm90IGNvcnJlY3QsIEkgd2lsbCBjb3JyZWN0
+IGl0Lg0KDQpUaGFua3MuDQoNCj4gDQo+ID4gKwkJCQkJdmRkXzF2MzVfcmVnOiBEQ0RDX1JFRzEg
+ew0KPiA+ICsJCQkJCQlyZWd1bGF0b3ItbmFtZSA9ICJWRERfMVYzNSI7DQo+ID4gKwkJCQkJCXJl
+Z3VsYXRvci1taW4tbWljcm92b2x0ID0NCj4gPDEzNTAwMDA+Ow0KPiA+ICsJCQkJCQlyZWd1bGF0
+b3ItbWF4LW1pY3Jvdm9sdCA9DQo+IDwxMzUwMDAwPjsNCj4gPiArCQkJCQkJcmVndWxhdG9yLWFs
+d2F5cy1vbjsNCj4gPiArCQkJCQl9Ow0KPiA+ICsNCj4gPiArCQkJCQl2ZGRfMXYyX3JlZzogRENE
+Q19SRUcyIHsNCj4gPiArCQkJCQkJcmVndWxhdG9yLW5hbWUgPSAiVkREXzFWMiI7DQo+ID4gKwkJ
+CQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0NCj4gPDExMDAwMDA+Ow0KPiA+ICsJCQkJCQly
+ZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9DQo+IDwxMzAwMDAwPjsNCj4gPiArCQkJCQkJcmVndWxh
+dG9yLWFsd2F5cy1vbjsNCj4gPiArCQkJCQl9Ow0KPiA+ICsNCj4gPiArCQkJCQl2ZGRfM3YzX3Jl
+ZzogRENEQ19SRUczIHsNCj4gPiArCQkJCQkJcmVndWxhdG9yLW5hbWUgPSAiVkREXzNWMyI7DQo+
+ID4gKwkJCQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0NCj4gPDMzMDAwMDA+Ow0KPiA+ICsJ
+CQkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9DQo+IDwzMzAwMDAwPjsNCj4gPiArCQkJCQkJ
+cmVndWxhdG9yLWFsd2F5cy1vbjsNCj4gPiArCQkJCQl9Ow0KPiA+ICsNCj4gPiArCQkJCQl2ZGRf
+ZnVzZV9yZWc6IExET19SRUcxIHsNCj4gPiArCQkJCQkJcmVndWxhdG9yLW5hbWUgPSAiVkREX0ZV
+U0UiOw0KPiA+ICsJCQkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9DQo+IDwyNTAwMDAwPjsN
+Cj4gPiArCQkJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPQ0KPiA8MjUwMDAwMD47DQo+ID4g
+KwkJCQkJCXJlZ3VsYXRvci1hbHdheXMtb247DQo+ID4gKwkJCQkJfTsNCj4gPiArDQo+ID4gKwkJ
+CQkJdmRkXzN2M19scF9yZWc6IExET19SRUcyIHsNCj4gPiArCQkJCQkJcmVndWxhdG9yLW5hbWUg
+PSAiVkREXzNWM19MUCI7DQo+ID4gKwkJCQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0NCj4g
+PDMzMDAwMDA+Ow0KPiA+ICsJCQkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9DQo+IDwzMzAw
+MDAwPjsNCj4gPiArCQkJCQkJcmVndWxhdG9yLWFsd2F5cy1vbjsNCj4gPiArCQkJCQl9Ow0KPiA+
+ICsNCj4gPiArCQkJCQl2ZGRfbGVkX3JlZzogTERPX1JFRzMgew0KPiA+ICsJCQkJCQlyZWd1bGF0
+b3ItbmFtZSA9ICJWRERfTEVEIjsNCj4gPiArCQkJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQg
+PQ0KPiA8MzMwMDAwMD47DQo+ID4gKwkJCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0NCj4g
+PDMzMDAwMDA+Ow0KPiA+ICsJCQkJCQlyZWd1bGF0b3ItYWx3YXlzLW9uOw0KPiA+ICsJCQkJCX07
+DQo+ID4gKw0KPiA+ICsJCQkJCXZkZF9zZGhjXzF2OF9yZWc6IExET19SRUc0IHsNCj4gPiArCQkJ
+CQkJcmVndWxhdG9yLW5hbWUgPQ0KPiAiVkREX1NESENfMVY4IjsNCj4gPiArCQkJCQkJcmVndWxh
+dG9yLW1pbi1taWNyb3ZvbHQgPQ0KPiA8MTgwMDAwMD47DQo+ID4gKwkJCQkJCXJlZ3VsYXRvci1t
+YXgtbWljcm92b2x0ID0NCj4gPDE4MDAwMDA+Ow0KPiA+ICsJCQkJCQlyZWd1bGF0b3ItYWx3YXlz
+LW9uOw0KPiA+ICsJCQkJCX07DQo+ID4gKwkJCQl9Ow0KPiA+ICsJCQl9Ow0KPiA+ICsNCj4gPiAr
+CQljaGFyZ2VyIHsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJhY3RpdmUtc2VtaSxhY3Q4OTQ1YS1j
+aGFyZ2VyIjsNCj4gPiArCQkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiArCQkJcGlu
+Y3RybC0wID0gPCZwaW5jdHJsX2NoYXJnZXJfY2hnbGV2PjsNCj4gPiArCQkJYWN0aXZlLXNlbWks
+Y2hnbGV2LWdwaW8gPSA8JnBpb0EgMTINCj4gR1BJT19BQ1RJVkVfSElHSD47DQo+ID4gKwkJCWFj
+dGl2ZS1zZW1pLGlucHV0X3ZvbHRhZ2VfdGhyZXNob2xkID0gPDY2MDA+Ow0KPiA+ICsJCQlhY3Rp
+dmUtc2VtaSxwcmVjb25kaXRpb25fdGltZW91dCA9IDw0MD47DQo+ID4gKwkJCWFjdGl2ZS1zZW1p
+LHRvdGFsX3RpbWVvdXQgPSA8Mz47DQo+ID4gKwkJfTsNCj4gPiArCX07DQo+IA0KPiAtLQ0KPiBM
+ZWUgSm9uZXMNCj4gTGluYXJvIFNUTWljcm9lbGVjdHJvbmljcyBMYW5kaW5nIFRlYW0gTGVhZCBM
+aW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZQ0KPiBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MgRm9sbG93
+IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZw0KDQoNCkJlc3QgUmVnYXJkcywNCldl
+bnlvdSBZYW5nDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
