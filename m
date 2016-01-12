@@ -1,49 +1,35 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 1/3] ARM: STi: Add DT defines for co-processor reset
- lines
-Date: Tue, 12 Jan 2016 14:41:39 +0100
-Message-ID: <1452606099.4292.20.camel@pengutronix.de>
-References: <1445856969-19424-1-git-send-email-lee.jones@linaro.org>
-	 <20160112133437.GH27358@x1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160112133437.GH27358@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, devicetree@vger.kernel.org
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 0/5] arm64: dts: apq8016-sbc dt patches.
+Date: Tue, 12 Jan 2016 13:45:58 +0000
+Message-ID: <1452606358-24569-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+Hi Andy, 
 
-Am Dienstag, den 12.01.2016, 13:34 +0000 schrieb Lee Jones:
-> On Mon, 26 Oct 2015, Lee Jones wrote:
-> 
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  include/dt-bindings/reset-controller/stih407-resets.h | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/include/dt-bindings/reset-controller/stih407-resets.h b/include/dt-bindings/reset-controller/stih407-resets.h
-> > index 02d4328..4ab3a1c 100644
-> > --- a/include/dt-bindings/reset-controller/stih407-resets.h
-> > +++ b/include/dt-bindings/reset-controller/stih407-resets.h
-> > @@ -52,6 +52,10 @@
-> >  #define STIH407_KEYSCAN_SOFTRESET	26
-> >  #define STIH407_USB2_PORT0_SOFTRESET	27
-> >  #define STIH407_USB2_PORT1_SOFTRESET	28
-> > +#define STIH407_ST231_AUD_SOFTRESET	29
-> > +#define STIH407_ST231_DMU_SOFTRESET	30
-> > +#define STIH407_ST231_GP0_SOFTRESET	31
-> > +#define STIH407_ST231_GP1_SOFTRESET	32
-> >  
-> >  /* Picophy reset defines */
-> >  #define STIH407_PICOPHY0_RESET		0
-> 
-> Has anyone seen this patch?
+Here are some dt patches which I can go on in next patch cycle.
+Most of the patches are to do with adding regulators to apq8016-sbc/db410c.
 
-c9bfec0032fb, sorry I missed 4.4.
+One patch moves up the sdhci node under soc node and other patch is to add
+missing regulators and pinctrl to sdhc_1.
 
-regards
-Philipp
+thanks,
+srini
+
+
+Srinivas Kandagatla (5):
+  arm64: dts: apq8016-sbc: add regulators support
+  arm64: dts: apq8016-sbc: move sdhci node under soc node
+  arm64: dts: remove s2 regulator from smd regulators.
+  arm64: dts: apq8016-sbc: make 1.8v available on LS expansion
+  arm64: dts: apq8016-sbc: Add real regulators and pinctrl for sdhc
+
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 160 +++++++++++++++++++++++++++++-
+ arch/arm64/boot/dts/qcom/msm8916.dtsi     |   1 -
+ 2 files changed, 156 insertions(+), 5 deletions(-)
+
+-- 
+1.9.1
