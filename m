@@ -1,123 +1,64 @@
-From: Laura Abbott <laura@labbott.name>
-Subject: Re: [RESEND][PATCHv2 1/3] ion: Devicetree bindings for Ion
-Date: Mon, 11 Jan 2016 16:26:28 -0800
-Message-ID: <56944834.4040108@labbott.name>
-References: <1452548364-9522-1-git-send-email-laura@labbott.name>
- <1452548364-9522-2-git-send-email-laura@labbott.name>
- <CAL_JsqLBk1TAa2bKnA6TpEfrXxVZ7JYojOgmszEKoWC0+Huuug@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] devicetree: mxsfb: add reset-active property
+Date: Mon, 11 Jan 2016 18:28:31 -0600
+Message-ID: <CAL_Jsq+jod-Jib8V1NYqBW2JQVrR+p3utHif=VknuEjdUh4BuA@mail.gmail.com>
+References: <1450200297-19243-1-git-send-email-mans@mansr.com>
+ <20151220033823.GE9883@rob-hp-laptop> <yw1xy4bww598.fsf@unicorn.mansr.com>
+ <CAL_Jsq++UkEVJDcWVrDZ9pdkz++uU8uD_skYCAmGWv412RbnVA@mail.gmail.com> <yw1xvb6zvf02.fsf@unicorn.mansr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <CAL_JsqLBk1TAa2bKnA6TpEfrXxVZ7JYojOgmszEKoWC0+Huuug@mail.gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: devel@driverdev.osuosl.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Andrianov <andrew@ncrmnt.org>, Tom Gall <tom.gall@linaro.org>, Rom Lemarchand <romlem@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, arve@android.com, Colin Cross <ccross@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Riley Andrews <riandrews@android.com>, John Stultz <john.stultz@linaro.org>, Feng Tang <feng.tang@intel.com>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <yw1xvb6zvf02.fsf@unicorn.mansr.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On 1/11/16 3:28 PM, Rob Herring wrote:
-> On Mon, Jan 11, 2016 at 3:39 PM, Laura Abbott <laura@labbott.name> wrote:
+On Mon, Jan 11, 2016 at 6:05 PM, M=C3=A5ns Rullg=C3=A5rd <mans@mansr.co=
+m> wrote:
+> Rob Herring <robh@kernel.org> writes:
+>
+>> On Mon, Jan 11, 2016 at 8:38 AM, M=C3=A5ns Rullg=C3=A5rd <mans@mansr=
+=2Ecom> wrote:
+>>> Rob Herring <robh@kernel.org> writes:
+>>>
+>>>> On Tue, Dec 15, 2015 at 05:24:56PM +0000, Mans Rullgard wrote:
+>>>>> Some boards connect the LCD_RESET pin to a reset input on the
+>>>>> display panel.  On these boards, this pin must be set to the
+>>>>> proper level for the display to function.
+>>>>>
+>>>>> This adds an optional "reset-active" property to the "display"
+>>>>> subnode such that devicetrees can specify the desired polarity
+>>>>> of the LCD_RESET pin.
+>>>>>
+>>>>> Signed-off-by: Mans Rullgard <mans@mansr.com>
+>>>>
+>>>> Acked-by: Rob Herring <robh@kernel.org>
+>>>
+>>> What happened to this patch?
 >>
->> This adds a base set of devicetree bindings for the Ion memory
->> manager. This supports setting up the generic set of heaps and
->> their properties.
->>
->> Signed-off-by: Laura Abbott <laura@labbott.name>
->> ---
->>   drivers/staging/android/ion/devicetree.txt | 50 ++++++++++++++++++++++++++++++
->>   1 file changed, 50 insertions(+)
->>   create mode 100644 drivers/staging/android/ion/devicetree.txt
->>
->> diff --git a/drivers/staging/android/ion/devicetree.txt b/drivers/staging/android/ion/devicetree.txt
->> new file mode 100644
->> index 0000000..e1ea537
->> --- /dev/null
->> +++ b/drivers/staging/android/ion/devicetree.txt
->> @@ -0,0 +1,50 @@
->> +Ion Memory Manager
->> +
->> +Ion is a memory manager that allows for sharing of buffers via dma-buf.
->> +Ion allows for different types of allocation via an abstraction called
->> +a 'heap'. A heap represents a specific type of memory. Each heap has
->> +a different type. There can be multiple instances of the same heap
->> +type.
->> +
->> +Required properties for Ion
->> +
->> +- compatible: "linux,ion" PLUS a compatible property for the device
->> +
->> +All child nodes of a linux,ion node are interpreted as heaps
->> +
->> +required properties for heaps
->> +
->> +- compatible: compatible string for a heap type PLUS a compatible property
->> +for the specific instance of the heap. Current heap types
->> +-- linux,ion-heap-system
->> +-- linux,ion-heap-system-contig
->> +-- linux,ion-heap-carveout
->> +-- linux,ion-heap-chunk
->> +-- linux,ion-heap-dma
->> +-- linux,ion-heap-custom
->> +
->> +Optional properties
->> +- memory-region: A phandle to a memory region. Required for DMA heap type
->> +(see reserved-memory.txt for details on the reservation)
+>> If I acked it, then I'm expecting the platform or subsystem maintain=
+er
+>> to pick up the series. I don't have patch #2 either, so I'm definite=
+ly
+>> not picking up the series.
 >
-> Why would all of them not require a memory region other than system heap?
->
->> +
->> +Example:
->> +
->> +       ion {
->> +               compatbile = "qcom,msm8916-ion", "linux,ion";
->> +               #address-cells = <1>;
->> +               #size-cells = <0>;
->> +
->> +               ion-system-heap {
->> +                       compatbile = "qcom,system-heap", "linux,ion-heap-system"
->> +               };
->
-> What is the purpose of this in DT? Don't we always want/need a system
-> heap? How does it vary by platform?
->
->> +               ion-camera-region {
->> +                       compatible = "qcom,camera-heap", "linux,ion-heap-dma"
->> +                       memory-region = <&camera_region>;
->
-> Why not just add a property (or properties) to the camera_region node
-> that ION drivers can search for?
->
-> Rob
->
+> Argh, get_maintainer.pl picking different people for different patche=
+s
+> again.  I really wish it would/could send all patches in a series to =
+the
+> same recipients in cases like this.
 
-Thinking about all of this put together with the general comments, would the
-following be more acceptable:
+Yeah, we really need some scripts around creating Cc list for series
+gel_maintainers.pl really only works for a single commit. I imagine
+everyone has some level of scripts around it.
 
-- Keep the approach of this patch series with having the heaps specified
-in an array in a file
-- For each array of heaps, have a list of machine compatible strings that
-work with the heaps.
-- Call of_machine_is_compatible on all the heaps until one is found
-- When setting up the heaps, check for a property like Rob suggested
-to get the appropriate memory node
-- Add appropriate documentation in the devicetree directory explaining
-the entire approach
+> Should I resend both to the combined set of people so everybody gets =
+to
+> see everything?
 
-The only Ion data in the DT with this approach would be the property in the
-appropriate memory node. There is no ABI except the memory property so as
-Ion changes there would be no breakage. This approach does go a little
-bit out outside of the traditional way devicetree works. A more
-traditional approach would be to just have an ion node with a compatible
-string and then just find the memory node via a property (although this
-does taint the DT more with Ion even if the ABI may be relatively stable)
+Yes, as long as you are not resending daily, just resend. Send the
+series TO who you think should merge it.
 
-Thanks,
-Laura
+Rob
