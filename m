@@ -1,137 +1,69 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 2/2] mfd: add documentation for ACT8945A DT bindings
-Date: Tue, 12 Jan 2016 08:52:07 +0000
-Message-ID: <20160112085207.GQ19803@x1>
+From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
+Subject: RE: [PATCH v2 0/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD
+ driver
+Date: Tue, 12 Jan 2016 08:49:48 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D63E8931@penmbx01>
 References: <1452585915-551-1-git-send-email-wenyou.yang@atmel.com>
- <1452585915-551-3-git-send-email-wenyou.yang@atmel.com>
+ <20160112084543.GP19803@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1452585915-551-3-git-send-email-wenyou.yang@atmel.com>
+In-Reply-To: <20160112084543.GP19803@x1>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wenyou Yang <wenyou.yang@atmel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Javier Martinez Canillas <javier@dowhile0.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Javier Martinez Canillas <javier@dowhile0.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 12 Jan 2016, Wenyou Yang wrote:
-
-> The Active-semi ACT8945A PMIC is a Multi-Function Device, it has
-> two subdevices:
->  - Regulator
->  - Charger
->=20
-> This patch adds documentation for ACT8945A DT bindings.
->=20
-> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
-> ---
->=20
-> Changes in v2:
->  - use more specific label in Example.
->  - add pmic and charger nodes in Example.
->=20
->  Documentation/devicetree/bindings/mfd/act8945a.txt |   82 ++++++++++=
-++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/act8945a.tx=
-t
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/act8945a.txt b/Doc=
-umentation/devicetree/bindings/mfd/act8945a.txt
-> new file mode 100644
-> index 0000000..e4a8aaf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/act8945a.txt
-> @@ -0,0 +1,82 @@
-> +Device-Tree bindings for Active-semi ACT8945A MFD driver
-> +
-> +Required properties:
-> + - compatible: "active-semi,act8945a".
-> + - reg: the I2C slave address for the ACT8945A chip
-> +
-> +The chip exposes two subdevices:
-> + - a regulators: see ../regulator/act8945a-regulator.txt
-> + - a charger: see ../power/act8945a-charger.txt
-> +
-> +Example:
-> +	act8945a@5b {
-> +		compatible =3D "active-semi,act8945a";
-> +		reg =3D <0x5b>;
-> +		status =3D "okay";
-> +
-> +		pmic {
-> +			compatible =3D "active-semi,act8945a-regulator";
-> +			active-semi,vsel-high;
-> +
-> +				regulators {
-
-Your tabbing here is not correct.
-
-> +					vdd_1v35_reg: DCDC_REG1 {
-> +						regulator-name =3D "VDD_1V35";
-> +						regulator-min-microvolt =3D <1350000>;
-> +						regulator-max-microvolt =3D <1350000>;
-> +						regulator-always-on;
-> +					};
-> +
-> +					vdd_1v2_reg: DCDC_REG2 {
-> +						regulator-name =3D "VDD_1V2";
-> +						regulator-min-microvolt =3D <1100000>;
-> +						regulator-max-microvolt =3D <1300000>;
-> +						regulator-always-on;
-> +					};
-> +
-> +					vdd_3v3_reg: DCDC_REG3 {
-> +						regulator-name =3D "VDD_3V3";
-> +						regulator-min-microvolt =3D <3300000>;
-> +						regulator-max-microvolt =3D <3300000>;
-> +						regulator-always-on;
-> +					};
-> +
-> +					vdd_fuse_reg: LDO_REG1 {
-> +						regulator-name =3D "VDD_FUSE";
-> +						regulator-min-microvolt =3D <2500000>;
-> +						regulator-max-microvolt =3D <2500000>;
-> +						regulator-always-on;
-> +					};
-> +
-> +					vdd_3v3_lp_reg: LDO_REG2 {
-> +						regulator-name =3D "VDD_3V3_LP";
-> +						regulator-min-microvolt =3D <3300000>;
-> +						regulator-max-microvolt =3D <3300000>;
-> +						regulator-always-on;
-> +					};
-> +
-> +					vdd_led_reg: LDO_REG3 {
-> +						regulator-name =3D "VDD_LED";
-> +						regulator-min-microvolt =3D <3300000>;
-> +						regulator-max-microvolt =3D <3300000>;
-> +						regulator-always-on;
-> +					};
-> +
-> +					vdd_sdhc_1v8_reg: LDO_REG4 {
-> +						regulator-name =3D "VDD_SDHC_1V8";
-> +						regulator-min-microvolt =3D <1800000>;
-> +						regulator-max-microvolt =3D <1800000>;
-> +						regulator-always-on;
-> +					};
-> +				};
-> +			};
-> +
-> +		charger {
-> +			compatible =3D "active-semi,act8945a-charger";
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&pinctrl_charger_chglev>;
-> +			active-semi,chglev-gpio =3D <&pioA 12 GPIO_ACTIVE_HIGH>;
-> +			active-semi,input_voltage_threshold =3D <6600>;
-> +			active-semi,precondition_timeout =3D <40>;
-> +			active-semi,total_timeout =3D <3>;
-> +		};
-> +	};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+SGkgTGVlLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExlZSBKb25l
+cyBbbWFpbHRvOmxlZS5qb25lc0BsaW5hcm8ub3JnXQ0KPiBTZW50OiAyMDE25bm0MeaciDEy5pel
+IDE2OjQ2DQo+IFRvOiBZYW5nLCBXZW55b3UgPFdlbnlvdS5ZYW5nQGF0bWVsLmNvbT4NCj4gQ2M6
+IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBQYXdlbCBNb2xsIDxwYXdlbC5tb2xs
+QGFybS5jb20+Ow0KPiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgSWFuIENh
+bXBiZWxsDQo+IDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az47IEt1bWFyIEdhbGEgPGdh
+bGFrQGNvZGVhdXJvcmEub3JnPjsgSmF2aWVyDQo+IE1hcnRpbmV6IENhbmlsbGFzIDxqYXZpZXJA
+ZG93aGlsZTAub3JnPjsgS3J6eXN6dG9mIEtvemxvd3NraQ0KPiA8ay5rb3psb3dza2lAc2Ftc3Vu
+Zy5jb20+OyBGZXJyZSwgTmljb2xhcyA8Tmljb2xhcy5GRVJSRUBhdG1lbC5jb20+Ow0KPiBsaW51
+eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFU
+Q0ggdjIgMC8yXSBtZmQ6IGFjdDg5NDVhOiBhZGQgQWN0aXZlLXNlbWkgQUNUODk0NUEgUE1JQw0K
+PiBNRkQgZHJpdmVyDQo+IA0KPiBPbiBUdWUsIDEyIEphbiAyMDE2LCBXZW55b3UgWWFuZyB3cm90
+ZToNCj4gDQo+ID4gVGhpcyBwYXRjaCBzZXQgYWRkcyBzdXBwb3J0IGZvciB0aGUgQWN0aXZlLXNl
+bWkgQUNUODk0NUEgUE1JQyBNRkQNCj4gPiBkcml2ZXIuIEl0IGlzIGEgTXVsdGkgRnVuY3Rpb24g
+RGV2aWNlIHdpdGggdGhlIGZvbGxvd2luZw0KPiA+IHN1YmRldmljZXM6DQo+ID4gIC0gUmVndWxh
+dG9yDQo+ID4gIC0gQ2hhcmdlcg0KPiA+DQo+ID4gSXQgaXMgaW50ZXJmYWNlZCB0byB0aGUgaG9z
+dCBjb250cm9sbGVyIHVzaW5nIEkyQyBpbnRlcmZhY2UsIEFDVDg5NDVBDQo+ID4gaXMgYSBjaGls
+ZCBkZXZpY2Ugb2YgdGhlIEkyQy4NCj4gPg0KPiA+IENoYW5nZXMgaW4gdjI6DQo+ID4gIC0gYWRk
+IG1vcmUgaGVscCBpbmZvcm1hdGlvbiBpbiBLY29uZmlnLg0KPiA+ICAtIHVwZGF0ZSB0aGUgZmls
+ZSBoZWFkZXIgd2l0aCBzaG9ydCB2ZXJzaW9uIGxpY2Vuc2UgYW5kIGF1dGhvciBsaW5lLg0KPiA+
+ICAtIHJlbW92ZSB1bnVzZWQgc3RydWN0dXJlIG1lbWJlcnMgKGRldiwgaTJjX2NsaWVudCkgb2Yg
+c3R1Y3QgYWN0ODk0NWFfZGV2Lg0KPiA+ICAtIHVzZSBkZWZpbmUgIlBMQVRGT1JNX0RFVklEX05P
+TkUiIGZvciBtZmRfYWRkX2RldmljZXMoKSwgaW5zdGVhZCBvZiAnLTEnLg0KPiA+ICAtIHVzZSBt
+b3JlIGV4cGxpY2l0IGluZm8gdG8gaW5kaWNhdGUgdGhlIGZhaWx1cmUgdG8gYWRkIHN1YiBkZXZp
+Y2VzLg0KPiA+ICAtIHJlbW92ZSB0aGUgdW5uZWNlc3NhcnkgcHJpbnQgb3V0Lg0KPiA+ICAtIHN1
+YnN0aXR1dGUgTU9EVUxFX0xJQ0VOU0UoIkdQTCIpIGZvciBNT0RVTEVfTElDRU5TRSgiR1BMIHYy
+IikuDQo+ID4gIC0gdXNlIG1vcmUgc3BlY2lmaWMgbGFiZWwgaW4gRXhhbXBsZS4NCj4gPiAgLSBh
+ZGQgcG1pYyBhbmQgY2hhcmdlciBub2RlcyBpbiBFeGFtcGxlLg0KPiA+DQo+ID4gV2VueW91IFlh
+bmcgKDIpOg0KPiA+ICAgbWZkOiBhY3Q4OTQ1YTogYWRkIEFjdGl2ZS1zZW1pIEFDVDg5NDVBIFBN
+SUMgTUZEIGRyaXZlcg0KPiA+ICAgbWZkOiBhZGQgZG9jdW1lbnRhdGlvbiBmb3IgQUNUODk0NUEg
+RFQgYmluZGluZ3MNCj4gDQo+IFNlbmRpbmcgb3V0IDMgcGF0Y2gtc2V0cyBmb3IgcmVsYXRlZCBj
+aGFuZ2VzIGlzIGEgcHJldHR5IHVuY29udmVudGlvbmFsIHdheSBvZg0KPiBkb2luZyB0aGluZ3Mu
+ICBJbiBmdXR1cmUgY291bGQgeW91IHBsYWNlIHRoZW0gYWxsIGluIHRoZSBzYW1lIHBsYWNlLCB0
+aGF0IHdheSBhbGwgb2YNCj4gdGhlIHBhdGNoZXMgc3RheSB0b2dldGhlciB3aGlzdCBob3BwaW5n
+IGFyb3VuZCBvdXIgaW5ib3hlcy4NCg0KVGhhbmsgeW91IGZvciB5b3VyIGFkdmljZSwgSSB3aWxs
+IGtlZXAgaW4gbWluZCBuZXh0IHRpbWUuDQoNCj4gDQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9tZmQvYWN0ODk0NWEudHh0IHwgICA4MiArKysrKysrKysrKysrKysNCj4g
+PiAgZHJpdmVycy9tZmQvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAg
+IDExICsrDQo+ID4gIGRyaXZlcnMvbWZkL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHwgICAgMSArDQo+ID4gIGRyaXZlcnMvbWZkL2FjdDg5NDVhLmMgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHwgIDEwOSArKysrKysrKysrKysrKysrKysrKw0KPiA+ICBpbmNsdWRl
+L2xpbnV4L21mZC9hY3Q4OTQ1YS5oICAgICAgICAgICAgICAgICAgICAgICB8ICAgMjEgKysrKw0K
+PiA+ICA1IGZpbGVzIGNoYW5nZWQsIDIyNCBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2FjdDg5NDVhLnR4
+dA0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tZmQvYWN0ODk0NWEuYyAgY3JlYXRl
+IG1vZGUgMTAwNjQ0DQo+ID4gaW5jbHVkZS9saW51eC9tZmQvYWN0ODk0NWEuaA0KPiA+DQo+IA0K
+PiAtLQ0KPiBMZWUgSm9uZXMNCj4gTGluYXJvIFNUTWljcm9lbGVjdHJvbmljcyBMYW5kaW5nIFRl
+YW0gTGVhZCBMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZQ0KPiBzb2Z0d2FyZSBmb3IgQVJNIFNv
+Q3MgRm9sbG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZw0KDQoNCkJlc3QgUmVn
+YXJkcywNCldlbnlvdSBZYW5nDQo=
