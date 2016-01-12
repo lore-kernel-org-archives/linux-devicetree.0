@@ -1,82 +1,45 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v2 4/4] ARM64: dts: rockchip: add syscon-reboot-mode DT node
-Date: Tue, 12 Jan 2016 19:33:47 +0800
-Message-ID: <1452598427-8418-1-git-send-email-andy.yan@rock-chips.com>
-References: <1452598029-8222-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1452598029-8222-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: heiko@sntech.de, arnd@arndb.de, john.stultz@linaro.org
-Cc: linux@roeck-us.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, catalin.marinas@arm.com, geert+renesas@glider.be, sre@kernel.org, olof@lixom.net, dbaryshkov@gmail.com, alexandre.belloni@free-electrons.com, jun.nie@linaro.org, pawel.moll@arm.com, f.fainelli@gmail.com, will.deacon@arm.com, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, moritz.fischer@ettus.com, cernekee@gmail.com, linux-kernel@vger.kernel.org, dwmw2@infradead.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, Andy Yan <andy.yan@rock-chips.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH 1/2] input: gpio-keys: add support for disable button from DT
+Date: Tue, 12 Jan 2016 17:02:49 +0530
+Message-ID: <1452598370-28509-1-git-send-email-ldewangan@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: robh+dt@kernel.org, dmitry.torokhov@gmail.com
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, bjorn.andersson@sonymobile.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Add syscon-reboot-mode driver DT node for rk3368 platform
+Add support to disable the button from DT via status property
+if given button is not supporting on given platforms.
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+This will help to re-use the existing dtsi file with status
+enable/disable across platforms.
 
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 ---
+ drivers/input/keyboard/gpio_keys.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Changes in v2:
-- make this node as a subnode of pmugrf
-
-Changes in v1: None
-
- arch/arm64/boot/dts/rockchip/rk3368.dtsi | 33 +++++++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-index cc093a4..20997a2 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-@@ -45,6 +45,7 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/pinctrl/rockchip.h>
-+#include <dt-bindings/soc/rockchip_boot-mode.h>
+diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+index bef317f..cf068cb 100644
+--- a/drivers/input/keyboard/gpio_keys.c
++++ b/drivers/input/keyboard/gpio_keys.c
+@@ -632,6 +632,14 @@ gpio_keys_get_devtree_pdata(struct device *dev)
+ 	for_each_child_of_node(node, pp) {
+ 		enum of_gpio_flags flags;
  
- / {
- 	compatible = "rockchip,rk3368";
-@@ -485,8 +486,38 @@
- 	};
++		/* Ignore the button if status of node is disabled */
++		error = of_device_is_available(pp);
++		if (!error) {
++			dev_info(dev, "Button %s is ignored\n", pp->name);
++			pdata->nbuttons--;
++			continue;
++		}
++
+ 		button = &pdata->buttons[i++];
  
- 	pmugrf: syscon@ff738000 {
--		compatible = "rockchip,rk3368-pmugrf", "syscon";
-+		compatible = "rockchip,rk3368-pmugrf", "syscon", "simple-mfd";
- 		reg = <0x0 0xff738000 0x0 0x1000>;
-+
-+		reboot-mode {
-+			compatible = "syscon-reboot-mode";
-+			offset = <0x200>;
-+
-+			normal {
-+				linux,mode = "normal";
-+				loader,magic = <BOOT_NORMAL>;
-+			};
-+
-+			loader {
-+				linux,mode = "loader";
-+				loader,magic = <BOOT_LOADER>;
-+			};
-+
-+			maskrom {
-+				linux,mode = "maskrom";
-+				loader,magic = <BOOT_MASKROM>;
-+			};
-+
-+			recovery {
-+				linux,mode = "recovery";
-+				loader,magic = <BOOT_RECOVERY>;
-+			};
-+
-+			fastboot {
-+				linux,mode = "fastboot";
-+				loader,magic = <BOOT_FASTBOOT>;
-+			};
-+		};
- 	};
- 
- 	cru: clock-controller@ff760000 {
+ 		button->gpio = of_get_gpio_flags(pp, 0, &flags);
 -- 
-1.9.1
-
+2.1.4
 
