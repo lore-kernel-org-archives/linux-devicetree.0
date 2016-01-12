@@ -1,75 +1,140 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v9 07/14] drm/mediatek: enable hdmi output control bit
-Date: Tue, 12 Jan 2016 16:15:43 +0100
-Message-ID: <1452611750-16283-8-git-send-email-p.zabel@pengutronix.de>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v9 14/14] drm/mediatek: Add interface to allocate Mediatek GEM
+ buffer.
+Date: Tue, 12 Jan 2016 16:15:50 +0100
+Message-ID: <1452611750-16283-15-git-send-email-p.zabel@pengutronix.de>
 References: <1452611750-16283-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452611750-16283-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cawa Cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Daniel Stone <daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1452611750-16283-1-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Nicolas Boichat <drinkcat@chromium.org>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-
-MT8173 HDMI hardware has a output control bit to enable/disable HDMI
-output. Because of security reason, so this bit can ONLY be controlled
-in ARM supervisor mode. Now the only way to enter ARM supervisor is the
-ARM trusted firmware. So atf provides a API for HDMI driver to call to
-setup this HDMI control bit to enable HDMI output in supervisor mode.
-
-Signed-off-by: Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- drivers/gpu/drm/mediatek/mtk_hdmi_hw.c   | 11 +++++++++++
- drivers/gpu/drm/mediatek/mtk_hdmi_regs.h |  1 +
- 2 files changed, 12 insertions(+)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_hw.c b/drivers/gpu/drm/mediatek/mtk_hdmi_hw.c
-index 99c7ffc..054afc6 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi_hw.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi_hw.c
-@@ -19,8 +19,15 @@
- #include <linux/delay.h>
- #include <linux/hdmi.h>
- #include <linux/io.h>
-+#include <linux/psci.h>
- #include <linux/regmap.h>
- 
-+static int (*invoke_psci_fn)(u64, u64, u64, u64);
-+typedef int (*psci_initcall_t)(const struct device_node *);
-+
-+asmlinkage int __invoke_psci_fn_hvc(u64, u64, u64, u64);
-+asmlinkage int __invoke_psci_fn_smc(u64, u64, u64, u64);
-+
- static u32 mtk_hdmi_read(struct mtk_hdmi *hdmi, u32 offset)
- {
- 	return readl(hdmi->regs + offset);
-@@ -50,6 +57,10 @@ void mtk_hdmi_hw_vid_black(struct mtk_hdmi *hdmi,
- 
- void mtk_hdmi_hw_make_reg_writable(struct mtk_hdmi *hdmi, bool enable)
- {
-+	invoke_psci_fn = __invoke_psci_fn_smc;
-+	invoke_psci_fn(MTK_SIP_SET_AUTHORIZED_SECURE_REG,
-+		       0x14000904, 0x80000000, 0);
-+
- 	regmap_update_bits(hdmi->sys_regmap, hdmi->sys_offset + HDMI_SYS_CFG20,
- 			   HDMI_PCLK_FREE_RUN, enable ? HDMI_PCLK_FREE_RUN : 0);
- 	regmap_update_bits(hdmi->sys_regmap, hdmi->sys_offset + HDMI_SYS_CFG1C,
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_regs.h b/drivers/gpu/drm/mediatek/mtk_hdmi_regs.h
-index de7ee22..8d7d60a 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi_regs.h
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi_regs.h
-@@ -218,4 +218,5 @@
- #define MHL_SYNC_AUTO_EN		BIT(30)
- #define HDMI_PCLK_FREE_RUN		BIT(31)
- 
-+#define MTK_SIP_SET_AUTHORIZED_SECURE_REG 0x82000001
- #endif
--- 
-2.6.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4KCkFkZCBhbiBpbnRlcmZhY2UgdG8gYWxs
+b2NhdGUgTWVkaWF0ZWsgR0VNIGJ1ZmZlcnMsIGFsbG93IHRoZSBJT0NUTHMKdG8gYmUgdXNlZCBi
+eSByZW5kZXIgbm9kZXMuClRoaXMgcGF0Y2ggYWxzbyBzZXRzIHRoZSBSRU5ERVIgZHJpdmVyIGZl
+YXR1cmUuCgpTaWduZWQtb2ZmLWJ5OiBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPgpTaWduZWQt
+b2ZmLWJ5OiBOaWNvbGFzIEJvaWNoYXQgPGRyaW5rY2F0QGNocm9taXVtLm9yZz4KU2lnbmVkLW9m
+Zi1ieTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4KLS0tCiBkcml2ZXJz
+L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyB8IDEzICsrKysrKystCiBkcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9nZW0uYyB8IDM5ICsrKysrKysrKysrKysrKysrKysrKysK
+IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2dlbS5oIHwgMTIgKysrKysrKwogaW5j
+bHVkZS91YXBpL2RybS9tZWRpYXRla19kcm0uaCAgICAgICAgfCA1OSArKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrCiA0IGZpbGVzIGNoYW5nZWQsIDEyMiBpbnNlcnRpb25zKCspLCAx
+IGRlbGV0aW9uKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS91YXBpL2RybS9tZWRpYXRl
+a19kcm0uaAoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Ry
+di5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMKaW5kZXggZmRiMjdl
+OS4uMWY3NzZhOSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
+ZHJ2LmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMKQEAgLTIy
+LDYgKzIyLDcgQEAKICNpbmNsdWRlIDxsaW51eC9vZl9hZGRyZXNzLmg+CiAjaW5jbHVkZSA8bGlu
+dXgvb2ZfcGxhdGZvcm0uaD4KICNpbmNsdWRlIDxsaW51eC9wbV9ydW50aW1lLmg+CisjaW5jbHVk
+ZSA8ZHJtL21lZGlhdGVrX2RybS5oPgogCiAjaW5jbHVkZSAibXRrX2NlYy5oIgogI2luY2x1ZGUg
+Im10a19kcm1fY3J0Yy5oIgpAQCAtMjIyLDYgKzIyMywxNCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0
+IHZtX29wZXJhdGlvbnNfc3RydWN0IG10a19kcm1fZ2VtX3ZtX29wcyA9IHsKIAkuY2xvc2UgPSBk
+cm1fZ2VtX3ZtX2Nsb3NlLAogfTsKIAorc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1faW9jdGxfZGVz
+YyBtdGtfaW9jdGxzW10gPSB7CisJRFJNX0lPQ1RMX0RFRl9EUlYoTVRLX0dFTV9DUkVBVEUsIG10
+a19nZW1fY3JlYXRlX2lvY3RsLAorCQkJICBEUk1fVU5MT0NLRUQgfCBEUk1fQVVUSCB8IERSTV9S
+RU5ERVJfQUxMT1cpLAorCURSTV9JT0NUTF9ERUZfRFJWKE1US19HRU1fTUFQX09GRlNFVCwKKwkJ
+CSAgbXRrX2dlbV9tYXBfb2Zmc2V0X2lvY3RsLAorCQkJICBEUk1fVU5MT0NLRUQgfCBEUk1fQVVU
+SCB8IERSTV9SRU5ERVJfQUxMT1cpLAorfTsKKwogc3RhdGljIGNvbnN0IHN0cnVjdCBmaWxlX29w
+ZXJhdGlvbnMgbXRrX2RybV9mb3BzID0gewogCS5vd25lciA9IFRISVNfTU9EVUxFLAogCS5vcGVu
+ID0gZHJtX29wZW4sCkBAIC0yMzcsNyArMjQ2LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBmaWxl
+X29wZXJhdGlvbnMgbXRrX2RybV9mb3BzID0gewogCiBzdGF0aWMgc3RydWN0IGRybV9kcml2ZXIg
+bXRrX2RybV9kcml2ZXIgPSB7CiAJLmRyaXZlcl9mZWF0dXJlcyA9IERSSVZFUl9NT0RFU0VUIHwg
+RFJJVkVSX0dFTSB8IERSSVZFUl9QUklNRSB8Ci0JCQkgICBEUklWRVJfQVRPTUlDLAorCQkJICAg
+RFJJVkVSX0FUT01JQyB8IERSSVZFUl9SRU5ERVIsCiAJLnVubG9hZCA9IG10a19kcm1fdW5sb2Fk
+LAogCS5zZXRfYnVzaWQgPSBkcm1fcGxhdGZvcm1fc2V0X2J1c2lkLAogCkBAIC0yNTcsNiArMjY2
+LDggQEAgc3RhdGljIHN0cnVjdCBkcm1fZHJpdmVyIG10a19kcm1fZHJpdmVyID0gewogCS5nZW1f
+cHJpbWVfaW1wb3J0ID0gZHJtX2dlbV9wcmltZV9pbXBvcnQsCiAJLmdlbV9wcmltZV9nZXRfc2df
+dGFibGUgPSBtdGtfZ2VtX3ByaW1lX2dldF9zZ190YWJsZSwKIAkuZ2VtX3ByaW1lX21tYXAgPSBt
+dGtfZHJtX2dlbV9tbWFwX2J1ZiwKKwkuaW9jdGxzID0gbXRrX2lvY3RscywKKwkubnVtX2lvY3Rs
+cyA9IEFSUkFZX1NJWkUobXRrX2lvY3RscyksCiAJLmZvcHMgPSAmbXRrX2RybV9mb3BzLAogCiAJ
+Lm5hbWUgPSBEUklWRVJfTkFNRSwKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfZHJtX2dlbS5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZ2VtLmMK
+aW5kZXggOTZjYzk4MC4uZjcyNmQ1NSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fZ2VtLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
+Z2VtLmMKQEAgLTEzLDYgKzEzLDcgQEAKIAogI2luY2x1ZGUgPGRybS9kcm1QLmg+CiAjaW5jbHVk
+ZSA8ZHJtL2RybV9nZW0uaD4KKyNpbmNsdWRlIDxkcm0vbWVkaWF0ZWtfZHJtLmg+CiAKICNpbmNs
+dWRlICJtdGtfZHJtX2dlbS5oIgogCkBAIC0yMjUsMyArMjI2LDQxIEBAIHN0cnVjdCBzZ190YWJs
+ZSAqbXRrX2dlbV9wcmltZV9nZXRfc2dfdGFibGUoc3RydWN0IGRybV9nZW1fb2JqZWN0ICpvYmop
+CiAKIAlyZXR1cm4gc2d0OwogfQorCitpbnQgbXRrX2dlbV9tYXBfb2Zmc2V0X2lvY3RsKHN0cnVj
+dCBkcm1fZGV2aWNlICpkcm0sIHZvaWQgKmRhdGEsCisJCQkgICAgIHN0cnVjdCBkcm1fZmlsZSAq
+ZmlsZV9wcml2KQoreworCXN0cnVjdCBkcm1fbXRrX2dlbV9tYXBfb2ZmICphcmdzID0gZGF0YTsK
+KworCXJldHVybiBtdGtfZHJtX2dlbV9kdW1iX21hcF9vZmZzZXQoZmlsZV9wcml2LCBkcm0sIGFy
+Z3MtPmhhbmRsZSwKKwkJCQkJICAgJmFyZ3MtPm9mZnNldCk7Cit9CisKK2ludCBtdGtfZ2VtX2Ny
+ZWF0ZV9pb2N0bChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LCB2b2lkICpkYXRhLAorCQkJIHN0cnVj
+dCBkcm1fZmlsZSAqZmlsZV9wcml2KQoreworCXN0cnVjdCBtdGtfZHJtX2dlbV9vYmogKm10a19n
+ZW07CisJc3RydWN0IGRybV9tdGtfZ2VtX2NyZWF0ZSAqYXJncyA9IGRhdGE7CisJaW50IHJldDsK
+KworCW10a19nZW0gPSBtdGtfZHJtX2dlbV9jcmVhdGUoZGV2LCBhcmdzLT5zaXplLCBmYWxzZSk7
+CisJaWYgKElTX0VSUihtdGtfZ2VtKSkKKwkJcmV0dXJuIFBUUl9FUlIobXRrX2dlbSk7CisKKwkv
+KgorCSAqIGFsbG9jYXRlIGEgaWQgb2YgaWRyIHRhYmxlIHdoZXJlIHRoZSBvYmogaXMgcmVnaXN0
+ZXJlZAorCSAqIGFuZCBoYW5kbGUgaGFzIHRoZSBpZCB3aGF0IHVzZXIgY2FuIHNlZS4KKwkgKi8K
+KwlyZXQgPSBkcm1fZ2VtX2hhbmRsZV9jcmVhdGUoZmlsZV9wcml2LCAmbXRrX2dlbS0+YmFzZSwg
+JmFyZ3MtPmhhbmRsZSk7CisJaWYgKHJldCkKKwkJZ290byBlcnJfaGFuZGxlX2NyZWF0ZTsKKwor
+CS8qIGRyb3AgcmVmZXJlbmNlIGZyb20gYWxsb2NhdGUgLSBoYW5kbGUgaG9sZHMgaXQgbm93LiAq
+LworCWRybV9nZW1fb2JqZWN0X3VucmVmZXJlbmNlX3VubG9ja2VkKCZtdGtfZ2VtLT5iYXNlKTsK
+KworCXJldHVybiAwOworCitlcnJfaGFuZGxlX2NyZWF0ZToKKwltdGtfZHJtX2dlbV9mcmVlX29i
+amVjdCgmbXRrX2dlbS0+YmFzZSk7CisJcmV0dXJuIHJldDsKK30KZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2dlbS5oIGIvZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fZ2VtLmgKaW5kZXggOWJkZWViMy4uMjhiOGZhNyAxMDA2NDQKLS0tIGEvZHJp
+dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZ2VtLmgKKysrIGIvZHJpdmVycy9ncHUvZHJt
+L21lZGlhdGVrL210a19kcm1fZ2VtLmgKQEAgLTUyLDQgKzUyLDE2IEBAIGludCBtdGtfZHJtX2dl
+bV9tbWFwX2J1ZihzdHJ1Y3QgZHJtX2dlbV9vYmplY3QgKm9iaiwKIAkJc3RydWN0IHZtX2FyZWFf
+c3RydWN0ICp2bWEpOwogc3RydWN0IHNnX3RhYmxlICptdGtfZ2VtX3ByaW1lX2dldF9zZ190YWJs
+ZShzdHJ1Y3QgZHJtX2dlbV9vYmplY3QgKm9iaik7CiAKKy8qCisgKiByZXF1ZXN0IGdlbSBvYmpl
+Y3QgY3JlYXRpb24gYW5kIGJ1ZmZlciBhbGxvY2F0aW9uIGFzIHRoZSBzaXplCisgKiB0aGF0IGl0
+IGlzIGNhbGN1bGF0ZWQgd2l0aCBmcmFtZWJ1ZmZlciBpbmZvcm1hdGlvbiBzdWNoIGFzIHdpZHRo
+LAorICogaGVpZ2h0IGFuZCBicHAuCisgKi8KK2ludCBtdGtfZ2VtX2NyZWF0ZV9pb2N0bChzdHJ1
+Y3QgZHJtX2RldmljZSAqZGV2LCB2b2lkICpkYXRhLAorCQlzdHJ1Y3QgZHJtX2ZpbGUgKmZpbGVf
+cHJpdik7CisKKy8qIGdldCBidWZmZXIgb2Zmc2V0IHRvIG1hcCB0byB1c2VyIHNwYWNlLiAqLwor
+aW50IG10a19nZW1fbWFwX29mZnNldF9pb2N0bChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LCB2b2lk
+ICpkYXRhLAorCQlzdHJ1Y3QgZHJtX2ZpbGUgKmZpbGVfcHJpdik7CisKICNlbmRpZgpkaWZmIC0t
+Z2l0IGEvaW5jbHVkZS91YXBpL2RybS9tZWRpYXRla19kcm0uaCBiL2luY2x1ZGUvdWFwaS9kcm0v
+bWVkaWF0ZWtfZHJtLmgKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uMTllYTM1
+NwotLS0gL2Rldi9udWxsCisrKyBiL2luY2x1ZGUvdWFwaS9kcm0vbWVkaWF0ZWtfZHJtLmgKQEAg
+LTAsMCArMSw1OSBAQAorLyoKKyAqIENvcHlyaWdodCAoYykgMjAxNSBNZWRpYVRlayBJbmMuCisg
+KgorICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRl
+IGl0IGFuZC9vciBtb2RpZnkKKyAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVy
+YWwgUHVibGljIExpY2Vuc2UgdmVyc2lvbiAyIGFzCisgKiBwdWJsaXNoZWQgYnkgdGhlIEZyZWUg
+U29mdHdhcmUgRm91bmRhdGlvbi4KKyAqCisgKiBUaGlzIHByb2dyYW0gaXMgZGlzdHJpYnV0ZWQg
+aW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxsIGJlIHVzZWZ1bCwKKyAqIGJ1dCBXSVRIT1VUIEFOWSBX
+QVJSQU5UWTsgd2l0aG91dCBldmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5IG9mCisgKiBNRVJDSEFO
+VEFCSUxJVFkgb3IgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UuICBTZWUgdGhlCisg
+KiBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBmb3IgbW9yZSBkZXRhaWxzLgorICovCisKKwor
+I2lmbmRlZiBfVUFQSV9NRURJQVRFS19EUk1fSAorI2RlZmluZSBfVUFQSV9NRURJQVRFS19EUk1f
+SAorCisjaW5jbHVkZSA8ZHJtL2RybS5oPgorCisvKioKKyAqIFVzZXItZGVzaXJlZCBidWZmZXIg
+Y3JlYXRpb24gaW5mb3JtYXRpb24gc3RydWN0dXJlLgorICoKKyAqIEBzaXplOiB1c2VyLWRlc2ly
+ZWQgbWVtb3J5IGFsbG9jYXRpb24gc2l6ZS4KKyAqCS0gdGhpcyBzaXplIHZhbHVlIHdvdWxkIGJl
+IHBhZ2UtYWxpZ25lZCBpbnRlcm5hbGx5LgorICogQGZsYWdzOiB1c2VyIHJlcXVlc3QgZm9yIHNl
+dHRpbmcgbWVtb3J5IHR5cGUgb3IgY2FjaGUgYXR0cmlidXRlcy4KKyAqIEBoYW5kbGU6IHJldHVy
+bmVkIGEgaGFuZGxlIHRvIGNyZWF0ZWQgZ2VtIG9iamVjdC4KKyAqCS0gdGhpcyBoYW5kbGUgd2ls
+bCBiZSBzZXQgYnkgZ2VtIG1vZHVsZSBvZiBrZXJuZWwgc2lkZS4KKyAqLworc3RydWN0IGRybV9t
+dGtfZ2VtX2NyZWF0ZSB7CisJdWludDY0X3Qgc2l6ZTsKKwl1aW50MzJfdCBmbGFnczsKKwl1aW50
+MzJfdCBoYW5kbGU7Cit9OworCisvKioKKyAqIEEgc3RydWN0dXJlIGZvciBnZXR0aW5nIGJ1ZmZl
+ciBvZmZzZXQuCisgKgorICogQGhhbmRsZTogYSBwb2ludGVyIHRvIGdlbSBvYmplY3QgY3JlYXRl
+ZC4KKyAqIEBwYWQ6IGp1c3QgcGFkZGluZyB0byBiZSA2NC1iaXQgYWxpZ25lZC4KKyAqIEBvZmZz
+ZXQ6IHJlbGF0aXZlZCBvZmZzZXQgdmFsdWUgb2YgdGhlIG1lbW9yeSByZWdpb24gYWxsb2NhdGVk
+LgorICogICAgIC0gdGhpcyB2YWx1ZSBzaG91bGQgYmUgc2V0IGJ5IHVzZXIuCisgKi8KK3N0cnVj
+dCBkcm1fbXRrX2dlbV9tYXBfb2ZmIHsKKwl1aW50MzJfdCBoYW5kbGU7CisJdWludDMyX3QgcGFk
+OworCXVpbnQ2NF90IG9mZnNldDsKK307CisKKyNkZWZpbmUgRFJNX01US19HRU1fQ1JFQVRFCQkw
+eDAwCisjZGVmaW5lIERSTV9NVEtfR0VNX01BUF9PRkZTRVQJCTB4MDEKKworI2RlZmluZSBEUk1f
+SU9DVExfTVRLX0dFTV9DUkVBVEUJRFJNX0lPV1IoRFJNX0NPTU1BTkRfQkFTRSArIFwKKwkJRFJN
+X01US19HRU1fQ1JFQVRFLCBzdHJ1Y3QgZHJtX210a19nZW1fY3JlYXRlKQorCisjZGVmaW5lIERS
+TV9JT0NUTF9NVEtfR0VNX01BUF9PRkZTRVQJRFJNX0lPV1IoRFJNX0NPTU1BTkRfQkFTRSArIFwK
+KwkJRFJNX01US19HRU1fTUFQX09GRlNFVCwgc3RydWN0IGRybV9tdGtfZ2VtX21hcF9vZmYpCisK
+KworI2VuZGlmIC8qIF9VQVBJX01FRElBVEVLX0RSTV9IICovCi0tIAoyLjYuNAoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
