@@ -1,49 +1,70 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v9 14/14] drm/mediatek: Add interface to allocate Mediatek
- GEM buffer.
-Date: Tue, 12 Jan 2016 23:40:10 +0100
-Message-ID: <CAKMK7uGHWT0TTc2Y5fmCALn2fzQPrTMGymJK4etYjXMcPGE61Q@mail.gmail.com>
-References: <1452611750-16283-1-git-send-email-p.zabel@pengutronix.de>
- <1452611750-16283-15-git-send-email-p.zabel@pengutronix.de>
- <CAL_JsqJ4pEDSeEopDuMUGbi5sdv=Cva42Bj=QSpnMjMw_LmzaA@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 5/6] mfd: dt-bindings: add device tree bindings for Hi3519 sysctrl
+Date: Tue, 12 Jan 2016 23:51:21 +0100
+Message-ID: <5675031.hi9rRCqFXs@wuerfel>
+References: <1452219400-32478-1-git-send-email-xuejiancheng@huawei.com> <20160112083946.GN19803@x1> <5694C725.6010502@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqJ4pEDSeEopDuMUGbi5sdv=Cva42Bj=QSpnMjMw_LmzaA@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, dri-devel <dri-devel@lists.freedesktop.org>, Nicolas Boichat <drinkcat@chromium.org>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jitao Shi <jitao.shi@mediatek.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5694C725.6010502@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: xuejiancheng <xuejiancheng@huawei.com>
+Cc: Lee Jones <lee.jones@linaro.org>, mturquette@baylibre.com, sboyd@codeaurora.org, p.zabel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKYW4gMTIsIDIwMTYgYXQgMTE6MDIgUE0sIFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtl
-cm5lbC5vcmc+IHdyb3RlOgo+IE9uIFR1ZSwgSmFuIDEyLCAyMDE2IGF0IDk6MTUgQU0sIFBoaWxp
-cHAgWmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOgo+PiBGcm9tOiBDSyBIdSA8
-Y2suaHVAbWVkaWF0ZWsuY29tPgo+Pgo+PiBBZGQgYW4gaW50ZXJmYWNlIHRvIGFsbG9jYXRlIE1l
-ZGlhdGVrIEdFTSBidWZmZXJzLCBhbGxvdyB0aGUgSU9DVExzCj4+IHRvIGJlIHVzZWQgYnkgcmVu
-ZGVyIG5vZGVzLgo+PiBUaGlzIHBhdGNoIGFsc28gc2V0cyB0aGUgUkVOREVSIGRyaXZlciBmZWF0
-dXJlLgo+Cj4gQnV0IGl0IHNob3VsZCBub3QgYSBiZSByZW5kZXIgbm9kZSB1bmxlc3MgaXQgaGFz
-IGEgR1BVIEFGQUlLLiBUaGVuCj4gYWdhaW4sIEkgc3RpbGwgZG9uJ3QgdW5kZXJzdGFuZCB0aGUg
-bWFkbmVzcyBvZiBldmVyeSBkcml2ZXIgZGVmaW5pbmcKPiB0aGVpciBvd24gYnVmZmVyIGlvY3Rs
-cyBlaXRoZXIuIFRoZSBvbmx5IGxpbmUgcmVtb3RlbHkgaC93IHNwZWNpZmljCj4gaGVyZSBpcyBt
-dGtfZHJtX2dlbV9jcmVhdGUgY2FsbC4KClN1cHBvcnQgZ2VtX2NyZWF0ZS9tbWFwX29mZmV0IGFs
-b25lIGlzIGluZGVlZCBwb2ludGxlc3Mgd2l0aG91dCBzb21lCnJlYWwgc3VwcG9ydCBmb3IgZ3B1
-IHdvcmtsb2Fkcy4gRm9yIHBsYWluIGRpc3BsYXkgZHJpdmVycyB0aGUgZHVtYgpidWZmZXIgYXBp
-LCBwbHVzIHByaW1lL2RtYS1idWYgaW1wb3J0IHNob3VsZCBiZSBwbGVudHkgZW5vdWdoLgoKVGhl
-IHVzdWFsIHJlYXNvbiBmb3IgZG9pbmcgdGhpcyBpcyBzb21lIGJsb2IgZHJpdmVyIGZvciBvcGVu
-Z2wgdGhhdApjYW4ndCBiZSBvcGVuLXNvdXJjZSwgd2hpY2ggaXMgYSBiaWcgbm8tZ28gZm9yIHVw
-c3RyZWFtLgoKSW1vIGJlc3QgdG8ganVzdCByaXAgdGhpcyBvdXQsIGNvbnNpZGVyIGl0IG5hY2tl
-ZCB3aXRob3V0IGZ1bGwtYmxvd24KdXNlcnNwYWNlIGFuZCB3aGF0ZXZlciBlbHNlIGlzIG5lZWRp
-bmcgdGhlc2UgYnVmZmVycy4KLURhbmllbAotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdp
-bmVlciwgSW50ZWwgQ29ycG9yYXRpb24KKzQxICgwKSA3OSAzNjUgNTcgNDggLSBodHRwOi8vYmxv
-Zy5mZndsbC5jaApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Tuesday 12 January 2016 17:28:05 xuejiancheng wrote:
+> >>>>>
+> >>>> Not yet.
+> >>>> Arnd Bergmann and Rob Herring all suggested adding a specific co=
+mpatible string
+> >>>> with the SOC name. This binding is just used for describing the =
+compatible string now.
+> >>>> When more functions on hi3519 SOC are added later, the specific =
+driver will be also
+> >>>> needed.
+> >>>
+> >>> Save this binding until it has more functionality.  We here "I'll=
+ add
+> >>> to this later" all too often.
+> >>>
+> >>
+> >> In the hi3519.dtsi file, there is a system-controller device node =
+described like below:
+> >> sysctrl: system-controller@12010000 {
+> >>      compatible =3D "hisilicon,hi3519-sysctrl", "syscon";
+> >>      reg =3D <0x12010000 0x1000>;
+> >> };
+> >> Do you mean that I should remove "hisilicon,hi3519-sysctrl" and ju=
+st use "syscon" as the
+> >> compatible string?=E3=80=80
+> >=20
+> > Where is this compatible string _used_?
+> >=20
+> >> If I want to add "hisilicon,hi3519-sysctrl" for hi3519. where shou=
+ld I put this binding?
+> >> Could you give some suggestions?  Thank you very much!
+> >=20
+> > If you're not using the compatible i.e. the device doesn't have its
+> > own driver yet, then there is no need to supply the binding at all,=
+ is
+> > there?
+> >=20
+>=20
+> OK. Thank you.
+>=20
+
+Sorry for stepping in late here. I still think that every syscon device=
+ should
+come with a specific compatible string, so we have the option of creati=
+ng a
+driver later on, and I'd like to see a binding document that lists thos=
+e strings
+(which I believe exists here).
+
+It's really hard to add compatible strings later on, anything else we c=
+an
+work around by keying off that string and adding a workaround in the ke=
+rnel.
+
+	Arnd
