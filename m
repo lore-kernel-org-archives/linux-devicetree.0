@@ -1,91 +1,95 @@
-From: Antony Pavlov <antonynpavlov@gmail.com>
-Subject: Re: [RFC v3 08/14] MIPS: dts: qca: introduce AR9331 devicetree
-Date: Sun, 31 Jan 2016 23:59:54 +0300
-Message-ID: <20160131235954.255ec9cb48ab36f6dc64a67f@gmail.com>
-References: <1453580251-2341-1-git-send-email-antonynpavlov@gmail.com>
-        <1453580251-2341-9-git-send-email-antonynpavlov@gmail.com>
-        <20160125234630.16098b7f@tock>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20160125234630.16098b7f@tock>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Alban <albeu@free.fr>
-Cc: linux-mips@linux-mips.org, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>
-List-Id: devicetree@vger.kernel.org
+Return-Path: <linux-arm-kernel-bounces+robh=kernel.org@lists.infradead.org>
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+Subject: [PATCHv2 2/2] net: fec: Reset ethernet PHY whenever the enet_out
+ clock is being enabled
+Date: Tue, 12 Jan 2016 16:17:56 +0100
+Message-Id: <1452611876-451-3-git-send-email-LW@KARO-electronics.de>
+In-Reply-To: <1452611876-451-2-git-send-email-LW@KARO-electronics.de>
+References: <1452611876-451-1-git-send-email-LW@KARO-electronics.de>
+ <1452611876-451-2-git-send-email-LW@KARO-electronics.de>
+MIME-Version: 1.0
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+robh=kernel.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Fabio Estevam <fabio.estevam@freescale.com>, Greg Ungerer <gerg@uclinux.org>, Kevin Hao <haokexin@gmail.com>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>, Lucas Stach <l.stach@pengutronix.de>, Nimrod Andy <B38611@freescale.com>, Philippe Reynes <tremyfr@gmail.com>, Richard Cochran <richardcochran@gmail.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Stefan Agner <stefan@agner.ch>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Jeff Kirsher <jeffrey.t.kirsher@intel.com>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+List-ID: <devicetree@vger.kernel.org>
 
-On Mon, 25 Jan 2016 23:46:30 +0100
-Alban <albeu@free.fr> wrote:
-
-> On Sat, 23 Jan 2016 23:17:25 +0300
-> Antony Pavlov <antonynpavlov@gmail.com> wrote:
->=20
-> > This patch introduces devicetree for Atheros AR9331 SoC (AKA Hornet=
-).
-> > The AR9331 chip is a Wi-Fi System-On-Chip (WiSOC),
-> > typically used in very cheap Access Points and Routers.
-> >=20
-> > Signed-off-by: Antony Pavlov <antonynpavlov@gmail.com>
-> > Cc: Gabor Juhos <juhosg@openwrt.org>
-> > Cc: Alban Bedel <albeu@free.fr>
-> > Cc: linux-mips@linux-mips.org
-> > Cc: devicetree@vger.kernel.org
-> > ---
-> >  arch/mips/boot/dts/qca/ar9331.dtsi | 123 +++++++++++++++++++++++++=
-++++++++++++
-> >  1 file changed, 123 insertions(+)
-> >=20
-> > diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dt=
-s/qca/ar9331.dtsi
-> > new file mode 100644
-> > index 0000000..bf128a2
-> > --- /dev/null
-> > +++ b/arch/mips/boot/dts/qca/ar9331.dtsi
-> > @@ -0,0 +1,123 @@
-> > +#include <dt-bindings/clock/ath79-clk.h>
-> > +
-> > +/ {
-> > +	compatible =3D "qca,ar9331";
-> > +
->=20
-> [...]
->=20
-> > +
-> > +	extosc: oscillator {
-> > +		compatible =3D "fixed-clock";
-> > +		#clock-cells =3D <0>;
-> > +	};
->=20
-> This oscillator is on the board and not in the SoC, so it should
-> be in the board DTS.
-
-This oscillator is always has to be connected to the SoC, it's abligato=
-ry thing.
-So there no logic incosistency in adding this oscillator node template =
-to SoC's dtsi file.
-
-This oscillator node is not describes oscillator completely but this no=
-de
-makes it possible to introduce oscillator early so we can make referenc=
-e on
-it just in ar9331.dtsi file. So we have no need to make full oscillator=
- description
-in every board dts file.
-=46uther is we make full oscillator' description in a board dts file th=
-en we have
-to additionally describe binding of the oscillator to SoC's clk block.
-
-
-
---=A0
-Best regards,
-=A0 Antony Pavlov
+SWYgYSBQSFkgdXNlcyBFTkVUX09VVCBhcyByZWZlcmVuY2UgY2xvY2ssIGl0IG1heSBuZWVkIGEg
+UkVTRVQgdG8gZ2V0CmZ1bmN0aW9uYWwgYWZ0ZXIgdGhlIGNsb2NrIGhhZCBiZWVuIGRpc2FibGVk
+LgoKRmFpbHVyZSB0byBkbyB0aGlzIHJlc3VsdHMgaW4gdGhlIGxpbmsgc3RhdGUgY29uc3RhbnRs
+eSB0b2dnbGluZwpiZXR3ZWVuIHVwIGFuZCBkb3duOgpmZWMgMDIxODgwMDAuZXRoZXJuZXQgZXRo
+MDogTGluayBpcyBVcCAtIDEwME1icHMvRnVsbCAtIGZsb3cgY29udHJvbCByeC90eApmZWMgMDIx
+ODgwMDAuZXRoZXJuZXQgZXRoMDogTGluayBpcyBEb3duCmZlYyAwMjE4ODAwMC5ldGhlcm5ldCBl
+dGgwOiBMaW5rIGlzIFVwIC0gMTAwTWJwcy9GdWxsIC0gZmxvdyBjb250cm9sIHJ4L3R4CmZlYyAw
+MjE4ODAwMC5ldGhlcm5ldCBldGgwOiBMaW5rIGlzIERvd24KWy4uLl0KClNpZ25lZC1vZmYtYnk6
+IExvdGhhciBXYcOfbWFubiA8TFdAS0FSTy1lbGVjdHJvbmljcy5kZT4KLS0tCiBkcml2ZXJzL25l
+dC9ldGhlcm5ldC9mcmVlc2NhbGUvZmVjLmggICAgICB8ICAxICsKIGRyaXZlcnMvbmV0L2V0aGVy
+bmV0L2ZyZWVzY2FsZS9mZWNfbWFpbi5jIHwgMzggKysrKysrKysrKysrKysrKysrKysrKysrKy0t
+LS0tLQogMiBmaWxlcyBjaGFuZ2VkLCAzMiBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQoK
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9mZWMuaCBiL2RyaXZl
+cnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9mZWMuaAppbmRleCA5OWQzM2UyLi4zMzIyOGRmIDEw
+MDY0NAotLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZmVjLmgKKysrIGIvZHJp
+dmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2ZlYy5oCkBAIC01MTksNiArNTE5LDcgQEAgc3Ry
+dWN0IGZlY19lbmV0X3ByaXZhdGUgewogCWludAlwYXVzZV9mbGFnOwogCWludAl3b2xfZmxhZzsK
+IAl1MzIJcXVpcmtzOworCWludAlwaHlfcmVzZXRfZ3BpbzsKIAogCXN0cnVjdAluYXBpX3N0cnVj
+dCBuYXBpOwogCWludAljc3VtX2ZsYWdzOwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJu
+ZXQvZnJlZXNjYWxlL2ZlY19tYWluLmMgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUv
+ZmVjX21haW4uYwppbmRleCA1OTJhN2E0Li5mYjBiMGViIDEwMDY0NAotLS0gYS9kcml2ZXJzL25l
+dC9ldGhlcm5ldC9mcmVlc2NhbGUvZmVjX21haW4uYworKysgYi9kcml2ZXJzL25ldC9ldGhlcm5l
+dC9mcmVlc2NhbGUvZmVjX21haW4uYwpAQCAtNjcsNiArNjcsNyBAQAogCiBzdGF0aWMgdm9pZCBz
+ZXRfbXVsdGljYXN0X2xpc3Qoc3RydWN0IG5ldF9kZXZpY2UgKm5kZXYpOwogc3RhdGljIHZvaWQg
+ZmVjX2VuZXRfaXRyX2NvYWxfaW5pdChzdHJ1Y3QgbmV0X2RldmljZSAqbmRldik7CitzdGF0aWMg
+dm9pZCBmZWNfcmVzZXRfcGh5KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpOwogCiAjZGVm
+aW5lIERSSVZFUl9OQU1FCSJmZWMiCiAKQEAgLTE4NjIsNiArMTg2Myw4IEBAIHN0YXRpYyBpbnQg
+ZmVjX2VuZXRfY2xrX2VuYWJsZShzdHJ1Y3QgbmV0X2RldmljZSAqbmRldiwgYm9vbCBlbmFibGUp
+CiAJCQlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoZmVwLT5jbGtfZW5ldF9vdXQpOwogCQkJaWYg
+KHJldCkKIAkJCQlnb3RvIGZhaWxlZF9jbGtfZW5ldF9vdXQ7CisKKwkJCWZlY19yZXNldF9waHko
+ZmVwLT5wZGV2KTsKIAkJfQogCQlpZiAoZmVwLT5jbGtfcHRwKSB7CiAJCQltdXRleF9sb2NrKCZm
+ZXAtPnB0cF9jbGtfbXV0ZXgpOwpAQCAtMzIxNiwxMSArMzIxOSwxMiBAQCBzdGF0aWMgaW50IGZl
+Y19lbmV0X2luaXQoc3RydWN0IG5ldF9kZXZpY2UgKm5kZXYpCiAjaWZkZWYgQ09ORklHX09GCiBz
+dGF0aWMgdm9pZCBmZWNfcmVzZXRfcGh5KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCiB7
+Ci0JaW50IGVyciwgcGh5X3Jlc2V0OwotCWludCBtc2VjID0gMTsKKwlzdHJ1Y3QgbmV0X2Rldmlj
+ZSAqbmRldiA9IHBsYXRmb3JtX2dldF9kcnZkYXRhKHBkZXYpOworCXN0cnVjdCBmZWNfZW5ldF9w
+cml2YXRlICpmZXAgPSBuZXRkZXZfcHJpdihuZGV2KTsKIAlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5w
+ID0gcGRldi0+ZGV2Lm9mX25vZGU7CisJaW50IG1zZWMgPSAxOwogCi0JaWYgKCFucCkKKwlpZiAo
+IWdwaW9faXNfdmFsaWQoZmVwLT5waHlfcmVzZXRfZ3BpbykpCiAJCXJldHVybjsKIAogCW9mX3By
+b3BlcnR5X3JlYWRfdTMyKG5wLCAicGh5LXJlc2V0LWR1cmF0aW9uIiwgJm1zZWMpOwpAQCAtMzIy
+OCwxOCArMzIzMiwyNyBAQCBzdGF0aWMgdm9pZCBmZWNfcmVzZXRfcGh5KHN0cnVjdCBwbGF0Zm9y
+bV9kZXZpY2UgKnBkZXYpCiAJaWYgKG1zZWMgPiAxMDAwKQogCQltc2VjID0gMTsKIAorCWdwaW9f
+c2V0X3ZhbHVlX2NhbnNsZWVwKGZlcC0+cGh5X3Jlc2V0X2dwaW8sIDApOworCW1zbGVlcChtc2Vj
+KTsKKwlncGlvX3NldF92YWx1ZV9jYW5zbGVlcChmZXAtPnBoeV9yZXNldF9ncGlvLCAxKTsKK30K
+Kworc3RhdGljIGludCBmZWNfZ2V0X3Jlc2V0X2dwaW8oc3RydWN0IHBsYXRmb3JtX2RldmljZSAq
+cGRldikKK3sKKwlpbnQgZXJyLCBwaHlfcmVzZXQ7CisJc3RydWN0IGRldmljZV9ub2RlICpucCA9
+IHBkZXYtPmRldi5vZl9ub2RlOworCiAJcGh5X3Jlc2V0ID0gb2ZfZ2V0X25hbWVkX2dwaW8obnAs
+ICJwaHktcmVzZXQtZ3Bpb3MiLCAwKTsKIAlpZiAoIWdwaW9faXNfdmFsaWQocGh5X3Jlc2V0KSkK
+LQkJcmV0dXJuOworCQlyZXR1cm4gcGh5X3Jlc2V0OwogCiAJZXJyID0gZGV2bV9ncGlvX3JlcXVl
+c3Rfb25lKCZwZGV2LT5kZXYsIHBoeV9yZXNldCwKIAkJCQkgICAgR1BJT0ZfT1VUX0lOSVRfTE9X
+LCAicGh5LXJlc2V0Iik7CiAJaWYgKGVycikgewogCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWls
+ZWQgdG8gZ2V0IHBoeS1yZXNldC1ncGlvczogJWRcbiIsIGVycik7Ci0JCXJldHVybjsKKwkJcmV0
+dXJuIGVycjsKIAl9Ci0JbXNsZWVwKG1zZWMpOwotCWdwaW9fc2V0X3ZhbHVlX2NhbnNsZWVwKHBo
+eV9yZXNldCwgMSk7CisJcmV0dXJuIHBoeV9yZXNldDsKIH0KICNlbHNlIC8qIENPTkZJR19PRiAq
+Lwogc3RhdGljIHZvaWQgZmVjX3Jlc2V0X3BoeShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2
+KQpAQCAtMzI0OSw2ICszMjYyLDExIEBAIHN0YXRpYyB2b2lkIGZlY19yZXNldF9waHkoc3RydWN0
+IHBsYXRmb3JtX2RldmljZSAqcGRldikKIAkgKiBieSBtYWNoaW5lIGNvZGUuCiAJICovCiB9CisK
+K3N0YXRpYyBpbmxpbmUgaW50IGZlY19nZXRfcmVzZXRfZ3BpbyhzdHJ1Y3QgcGxhdGZvcm1fZGV2
+aWNlICpwZGV2KQoreworCXJldHVybiAtRUlOVkFMOworfQogI2VuZGlmIC8qIENPTkZJR19PRiAq
+LwogCiBzdGF0aWMgdm9pZApAQCAtMzMzOSw2ICszMzU3LDExIEBAIGZlY19wcm9iZShzdHJ1Y3Qg
+cGxhdGZvcm1fZGV2aWNlICpwZGV2KQogCiAJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgbmRl
+dik7CiAKKwlyZXQgPSBmZWNfZ2V0X3Jlc2V0X2dwaW8ocGRldik7CisJaWYgKHJldCA9PSAtRVBS
+T0JFX0RFRkVSKQorCQlnb3RvIGdwaW9fZGVmZXI7CisJZmVwLT5waHlfcmVzZXRfZ3BpbyA9IHJl
+dDsKKwogCWlmIChvZl9nZXRfcHJvcGVydHkobnAsICJmc2wsbWFnaWMtcGFja2V0IiwgTlVMTCkp
+CiAJCWZlcC0+d29sX2ZsYWcgfD0gRkVDX1dPTF9IQVNfTUFHSUNfUEFDS0VUOwogCkBAIC0zNDkz
+LDYgKzM1MTYsNyBAQCBmYWlsZWRfY2xrX2lwZzoKIGZhaWxlZF9jbGs6CiBmYWlsZWRfcGh5Ogog
+CW9mX25vZGVfcHV0KHBoeV9ub2RlKTsKK2dwaW9fZGVmZXI6CiBmYWlsZWRfaW9yZW1hcDoKIAlm
+cmVlX25ldGRldihuZGV2KTsKIAotLSAKMi4xLjQKCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
+eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
