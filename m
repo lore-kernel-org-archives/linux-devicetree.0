@@ -1,313 +1,141 @@
-From: Rongrong Zou <zourongrong@huawei.com>
-Subject: Re: [PATCH v1 3/3] ARM64 LPC: update binding doc
-Date: Tue, 12 Jan 2016 19:56:47 +0800
-Message-ID: <5694E9FF.6030904@huawei.com>
-References: <1451396032-23708-1-git-send-email-zourongrong@gmail.com>
- <CABTftiT1+AmrNjiAie-T6on-oWA4Zz73+Tj2pQrixMT3o475uw@mail.gmail.com>
- <568912EE.9030009@huawei.com> <15026471.7nGZ0rWlIf@wuerfel>
- <20160111161415.GM13633@e106497-lin.cambridge.arm.com>
- <56946768.7090805@gmail.com>
- <20160112090722.GN13633@e106497-lin.cambridge.arm.com>
- <5694C6A4.8060308@huawei.com>
- <20160112101418.GO13633@e106497-lin.cambridge.arm.com>
- <5694DDF9.1050902@huawei.com>
- <20160112112741.GP13633@e106497-lin.cambridge.arm.com>
+From: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 01/23] devicetree: bindings: hisi_sas: add v2 HW bindings
+Date: Tue, 12 Jan 2016 12:16:34 +0000
+Message-ID: <5694EEA2.8060000@huawei.com>
+References: <1452262542-64589-1-git-send-email-john.garry@huawei.com>
+ <1452262542-64589-2-git-send-email-john.garry@huawei.com>
+ <20160108145256.GG3097@leverpostej> <568FD281.4050207@huawei.com>
+ <20160108151934.GA32692@leverpostej> <568FD70D.1090303@huawei.com>
+ <20160108164910.GD32692@leverpostej> <5693B59A.6000705@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160112112741.GP13633@e106497-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: liviu.dudau@arm.com
-Cc: Rongrong Zou <zourongrong@gmail.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Arnd Bergmann <arnd@arndb.de>, Corey Minyard <minyard@acm.org>, gregkh@linuxfoundation.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linuxarm@huawei.com, benh@kernel.crashing.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5693B59A.6000705-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, JBottomley-wo1vFcy6AUs@public.gmane.org, john.garry2-s/0ZXS5h9803lw97EnAbAg@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2016/1/12 19:27, liviu.dudau@arm.com =E5=86=99=E9=81=93:
-> On Tue, Jan 12, 2016 at 07:05:29PM +0800, Rongrong Zou wrote:
->> =E5=9C=A8 2016/1/12 18:14, liviu.dudau@arm.com =E5=86=99=E9=81=93:
->>> On Tue, Jan 12, 2016 at 05:25:56PM +0800, Rongrong Zou wrote:
->>>> =E5=9C=A8 2016/1/12 17:07, liviu.dudau@arm.com =E5=86=99=E9=81=93:
->>>>> On Tue, Jan 12, 2016 at 10:39:36AM +0800, Rongrong Zou wrote:
->>>>>> On 2016/1/12 0:14, liviu.dudau@arm.com wrote:
->>>>>>> On Mon, Jan 04, 2016 at 12:13:05PM +0100, Arnd Bergmann wrote:
->>>>>>>> On Sunday 03 January 2016 20:24:14 Rongrong Zou wrote:
->>>>>>>>> =E5=9C=A8 2015/12/31 23:00, Rongrong Zou =E5=86=99=E9=81=93:
->>>>>>>>>> 2015-12-31 22:40 GMT+08:00 Arnd Bergmann <arnd@arndb.de <mai=
-lto:arnd@arndb.de>>:
->>>>>>>>>>   > On Thursday 31 December 2015 22:12:19 Rongrong Zou wrote=
-:
->>>>>>>>>>   > > =E5=9C=A8 2015/12/30 17:06, Arnd Bergmann =E5=86=99=E9=
-=81=93:
->>>>>>>>>>   > > > On Tuesday 29 December 2015 21:33:52 Rongrong Zou wr=
-ote:
->>>>>>>>>>   >
->>>>>>>>>>   > The DT sample above looks good in principle. I believe w=
-hat you are missing
->>>>>>>>>>   > here is code in your driver to scan the child nodes to c=
-reate the platform
->>>>>>>>>>   > devices. of_bus_isa_translate() should work with your de=
-finition here
->>>>>>>>>>   > and create the correct IORESOURCE_IO resources. You don'=
-t have any MMIO
->>>>>>>>>>   > resources, so the absence of a ranges property is ok. Ma=
-ybe all you
->>>>>>>>>>   > are missing is a call to of_platform_populate() or of_pl=
-atform_bus_probe()?
->>>>>>>>>>   >
->>>>>>>>>>
->>>>>>>>>> You are right. thanks, i'll try on test board .  if i get th=
-e correct result , the new patch
->>>>>>>>>> will be sent later. By the way, it's my another email accoun=
-t use when i at home.
->>>>>>>>>
->>>>>>>>> I tried, and there need some additional changes.
->>>>>>>>>
->>>>>>>>> isa@a01b0000 {
->>>>>>>>>
->>>>>>>>> /*the node name should start with "isa", because of below def=
-inition
->>>>>>>>> * static int of_bus_isa_match(struct device_node *np)
->>>>>>>>> * {
->>>>>>>>> *	return !strcmp(np->name, "isa");
->>>>>>>>> * }
->>>>>>>>
->>>>>>>> Looks good. It would be nicer to match on device_type than on =
-name,
->>>>>>>> but this is ancient code and it's probably best not to touch i=
-t
->>>>>>>> so we don't accidentally break some old SPARC or PPC system.
->>>>>>>>
->>>>>>>>> */
->>>>>>>>> 	compatible =3D "low-pin-count";
->>>>>>>>> 	device_type =3D "isa";
->>>>>>>>> 	#address-cells =3D <2>;
->>>>>>>>> 	#size-cells =3D <1>;
->>>>>>>>> 	reg =3D <0x0 0xa01b0000 0x0 0x10000>;
->>>>>>>>> 	ranges =3D <0x1 0x0 0x0 0x0 0x1000>;
->>>>>>>>> /*
->>>>>>>>> *  ranges is required, then i can get the IORESOURCE_IO <0xe4=
-,4> from "reg =3D <0x1, 0x000000e4, 4>".
->>>>>>>>> *
->>>>>>>>> */
->>>>>>>>> 	ipmi_0:ipmi@000000e4{
->>>>>>>>> 		device_type =3D "ipmi";
->>>>>>>>> 		compatible =3D "ipmi-bt";
->>>>>>>>> 		reg =3D <0x1 0x000000e4 0x4>;
->>>>>>>>> };
->>>>>>>>>
->>>>>>>>
->>>>>>>> This looks wrong: the property above says that the I/O port ra=
-nge is
->>>>>>>> translated to MMIO address 0x00000000 to 0x00010000, which is =
-not
->>>>>>>> true on your hardware. I think this needs to be changed in the=
- code
->>>>>>>> so the ranges property is not required for I/O ports.
->>>>>>>>
->>>>>>>>> drivers\of\address.c
->>>>>>>>> static int __of_address_to_resource(struct device_node *dev,
->>>>>>>>>                   const __be32 *addrp, u64 size, unsigned int=
- flags,
->>>>>>>>>                   const char *name, struct resource *r)
->>>>>>>>> {
->>>>>>>>>           u64 taddr;
->>>>>>>>>
->>>>>>>>>           if ((flags & (IORESOURCE_IO | IORESOURCE_MEM)) =3D=3D=
- 0)
->>>>>>>>>                   return -EINVAL;
->>>>>>>>>           taddr =3D of_translate_address(dev, addrp);
->>>>>>>>>           if (taddr =3D=3D OF_BAD_ADDR)
->>>>>>>>>                   return -EINVAL;
->>>>>>>>>           memset(r, 0, sizeof(struct resource));
->>>>>>>>>           if (flags & IORESOURCE_IO) {
->>>>>>>>>                   unsigned long port;
->>>>>>>>>
->>>>>>>>> /************************************************************=
-*****/
->>>>>>>>> /*legacy port(< 0x1000) is reserved, and need no translation =
-here*/
->>>>>>>>> /************************************************************=
-*****/
->>>>>>>>>                   if(taddr + size < PCIBIOS_MIN_IO){
->>>>>>>>>                           r->start =3D taddr;
->>>>>>>>>                           r->end =3D taddr + size - 1;
->>>>>>>>>                   }
->>>>>>>>
->>>>>>>> I don't like having a special case based on the address here,
->>>>>>>> the same kind of hack might be needed for PCI I/O spaces in
->>>>>>>> hardware that uses an indirect method like your LPC bus
->>>>>>>> does, and the code above will not work on any LPC implementati=
-on
->>>>>>>> that correctly multiplexes its I/O ports with the first PCI do=
-main.
->>>>>>>>
->>>>>>>> I think it would be better to avoid translating the port into
->>>>>>>> a physical address to start with just to translate it back int=
-o
->>>>>>>> a port number, what we need instead is the offset between the
->>>>>>>> bus specific port number and the linux port number. I've added
->>>>>>>> Liviu to Cc, he wrote this code originally and may have some i=
-dea
->>>>>>>> of how we could do that.
->>>>>>>
->>>>>>> Hi,
->>>>>>
->>>>>> Hi Liviu,
->>>>>>
->>>>>> Thanks for reviewing this.
->>>>>>
->>>>>>>
->>>>>>> Getting back to work after a longer holiday, my brain might not=
- be running
->>>>>>> at full speed here, so I'm trying to clarify things a bit here.
->>>>>>>
->>>>>>> It looks to me like Rongrong is trying to trap the inb()/outb()=
- calls that he
->>>>>>> added to arm64 by patch 1/3 and redirect those operations to th=
-e memory
->>>>>>> mapped LPC driver. I think the whole redirection and registrati=
-on of inb/outb
->>>>>>> ops can be made cleaner, so that the general concept resembles =
-the DMA ops
->>>>>>> registration? (I have this mental picture that what Rongrong is=
- trying to do
->>>>>>> is similar to what a DMA engine does, except this is slowing do=
-wn things to
->>>>>>> byte level). If that is done properly in the parent node, then =
-we should not
->>>>>>> care what the PCIBIOS_MIN_IO value is as the inb()/outb() calls=
- will always
->>>>>>> go through the redirection for the children.
->>>>>>>
->>>>>>> As for the ranges property: does he wants the ipmi-bt driver to=
- see in the
->>>>>>> reg property the legacy ISA I/O ports values or the CPU address=
-es? If the former,
->>>>>>> then I agree that the range property should not be required, bu=
-t also the
->>>>>>> reg values need to be changed (drop the top bit). If the later,=
- then the
->>>>>>> ranges property is required to do the proper translation.
->>>>>>
->>>>>> The former, thanks.
->>>>>>
->>>>>>>
->>>>>>> Rongrong, removing the ranges property and with a reg =3D <0xe4=
- 0x4> property
->>>>>>> in the ipmi-bt node, what IO_RESOURCE type resources do you get=
- back from
->>>>>>> the of_address_to_resource() translation?
->>>>>>
->>>>>> I want to get IORESOURCE_IO type resource, but if the parent nod=
-e drop the
->>>>>> "rangs" property, the of_address_to_resource() translation will =
-return with -EINVAL.
->>>>>
->>>>> Have you tracked what part of the code is sensitive to the presen=
-ce of "ranges"
->>>>> property? Does of_get_address() call returns the IO_RESOURCE flag=
- set without "ranges"?
->>>>>
->>>>
->>>>
->>>> Yes, IO_RESOURCE flag can be get without "ranges".
->
-> Earlier, you said this ^
->
->>>> I tracked the code, it is at of_translate_one(), Below is the call=
-ing infomation.
->>>>
->>>> of_address_to_resource-> __of_address_to_resource ->of_translate_a=
-ddress->
->>>> __of_translate_address(dev, in_addr, "ranges")->of_translate_one()
->>>>
->>>>
->>>> static int of_translate_one(struct device_node *parent, struct of_=
-bus *bus,
->>>> 			    struct of_bus *pbus, __be32 *addr,
->>>> 			    int na, int ns, int pna, const char *rprop)
->>>> {
->>>> 	const __be32 *ranges;
->>>> 	unsigned int rlen;
->>>> 	int rone;
->>>> 	u64 offset =3D OF_BAD_ADDR;
->>>>
->>>> 	ranges =3D of_get_property(parent, rprop, &rlen);
->>>> 	if (ranges =3D=3D NULL && !of_empty_ranges_quirk(parent)) {
->>>> 		pr_debug("OF: no ranges; cannot translate\n");
->>>> 		return 1;
->>>> 	}
->>>> 	...
->>>> }
->>>
->>> OK, looking at of_translate_one() comments it looks like a missing =
-"ranges" property is
->>> only accepted on PowerPC. I suggest you have an empty "ranges" prop=
-erty in your isa
->>> parent node, that will signal to the OF parsing code that the mappi=
-ng is 1:1. Then have
->>> the IPMI node use the reg =3D <0x0 0xe4 4>; property values instead=
- of reg =3D <0x1 0xe4 4>;
+On 11/01/2016 14:00, John Garry wrote:
+>>> This is a specific issue for hip06 chipset.
 >>
->> But in this condition, I still can't get the right resource type IOR=
-ESOURCE_IO, I just get
->> the MMIO resource E4:E7. Please see the url at https://lkml.org/lkml=
-/2016/1/5/199, the empty
->> ranges has been discussed.
->
-> So, when you use an empty "ranges" of_get_address() doesn't return th=
-e right flags? What resource
-> do you actually get, MMIO is not a valid value.
-
-
-
-I'm sorry I did not describe clearly.
-Without "ranges", of_get_address() will return with valid value, but of=
-_address_to_resource()
-will return with -EINVAL;
-
-int of_address_to_resource(struct device_node *dev, int index,
-			   struct resource *r)
-{
-	...
-	/* flags can be get here, without ranges property reqired.
-	 * if the reg =3D <0x0 0xe4 4>, I can get flag of IORESOURCE_MEM,
-	 * if the reg =3D <0x1 0xe4 4>, I can get flag of IORESOURCE_IO,
-	 */
-	addrp =3D of_get_address(dev, index, &size, &flags);
-
-	if (addrp =3D=3D NULL)
-		return -EINVAL;
-
-	/* Get optional "reg-names" property to add a name to a resource */
-	of_property_read_string_index(dev, "reg-names",	index, &name);
-
-
-	/* If it is empty ranges, and the flag is IORESOURCE_MEM then the belo=
-w  __of_address_to_resource return with valid addr,
-	 * if it is empty ranges, and the flag is IORESOURCE_IO then return wi=
-th -EINVAL, because
-	 *    pci_address_to_pio() will be called when flag is IORESOURCE_IO.
-	 * if the ranges is absent, then return with -EINVAL.
-	 */
-	return __of_address_to_resource(dev, addrp, size, flags, name, r);
-}
-
-I want to get resource with flag =3D IORESOURCE_IO, resource.start=3D0X=
-E4, resource.size=3D0X4,
-
->
-> Liviu
->
+>> Ok. So is this:
 >>
->> --
->> Regards,
->> Rongrong
+>> * a bug within the SAS controller in hip06, or:
+>>
+>> * a requirement/bug of an endpoint attached to the controller, or:
+>>
+>> * a requirement/bug of some interconnect between the controller and
+>>    endpoint, or:
+>>
+>> * some other integration bug?
 >>
 >
+> This is related to how the SAS controller IP was integrated into the
+> chip. It is related to how many bursts are permitted for this controller
+> on the AXI bus.
+>
+>> Please describe what the issue is that you're trying to work around, not
+>> only your solution to it.
+>>
+>>> There is a bug in the HW on hip06 where controller #1 has to set to 2
+>>> registers to non-default values to limit "am-max-transmissions".
+>>
+>> I got that. However, I have no idea what "am-max-transmissions" is, no
+>> idea why you need to limit it (hopefully you can describe that a little
+>> better above), nor what the semantics are for "limit".
+>>
+>
+> So am-max-transmissions is a SW configurable feature of the controller.
+>  From a high-level, it means how many commands we can send in parallel
+> to the end device(s) without waiting for a response. It is dependent on
+> the chip bus design.
+>
+>> The description of the property is an imperative, which reads like a
+>> description of a specific driver behaviour rather than a property of the
+>> hardware that leads to that behaviour being necessary. That's a warning
+>> sign that the property is ill-defined, and we may encounter problems in
+>> future due to changes in Linux.
+>>
+>
+> Agreed.
+>
+>> Without knowing _why_ it's necessary to limit this, it's not possible to
+>> know if the property is both necessary and sufficient to solve the
+>> problem such that it doesn't rear its ugly head in future.
+>>
+>> For example, if this is simply one way to work around a hip06-specific
+>> integration bug that we cannot imagine occurring elsewhere, it may be
+>> better to instead key off of a platform-specific compatible string for
+>> the v2 SAS controller in hip06. That gives us more freedom to apply
+>> different workarounds if we have to.
+>>
+>> I see that the presence of this property will cause the driver to writes
+>> hard-coded values two two registers. Not knowing the format of those
+>> registers, their default values, nor how they respond to writes, I can't
+>> tell:
+>>
+>
+> As for writing hardcoded values, by default the related registers will
+> hold 0x40, which means we can have upto 64 outstanding requests on this
+> controller. Due to controller #1 integration restrictions, we can only
+> issue 32 requests.
+>
+>> * If the writes have other effects.
+>>
+>> * If the limit is a single bit being flipped (i.e. this is a boolean in
+>>    hardware too).
+>>
+>> * If the limit is some arbitrary chosen value which is not described in
+>>    the property or the binding, nor what that value is. If we encounter a
+>>    similar bug requiring a different bound in future, it may be
+>>    problematic to have chosen an arbitrary fixed value, and it may make
+>>    more sense to describe the value in the DT.
+>>
+>> So, please:
+>>
+>> * Update the DT property description to describe the specific HW issue
+>>    that needs to be worked around, with a full description in the commit
+>>    message.
+>>
+>> * Add a comment to the driver to explain what the effect of the register
+>>    writes is intended to be, i.e. what value am max transmissions is
+>>    being set to, and why that value isn't arbitrary.
+>>
+>
+> As I understand, there are no more restictions/special requirements for
+> controller #1. This v2 controller IP will be used in other chips, so we
+> may have this issue again - I am seeking information from HW people. As
+> such, it may be useful to know this info before decided on how this is
+> decribed in the DT.
+
+This issue is specific to only SAS controller #1 in hip06. The 
+controller is designed to permit upto 64, but, due to chip bus design, 
+this specific controller is limited to support 32.
+So, after considering this, would a platform-specific compatible string 
+be a better way of decribing this specific controller?
+
+>
+>>> This would not be a common SAS/SCSI controller property and is
+>>> specific to our HW.
+>>
+>> Ok.
+>>
+>> Thanks,
+>> Mark.
+>>
+>
+thanks,
+John
+
+> _______________________________________________
+> linuxarm mailing list
+> linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+> http://rnd-openeuler.huawei.com/mailman/listinfo/linuxarm
 
 
---=20
-Regards,
-Rongrong
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
