@@ -1,190 +1,97 @@
-From: Rongrong Zou <zourongrong@gmail.com>
-Subject: Re: [PATCH v1 3/3] ARM64 LPC: update binding doc
-Date: Tue, 12 Jan 2016 10:39:36 +0800
-Message-ID: <56946768.7090805@gmail.com>
-References: <1451396032-23708-1-git-send-email-zourongrong@gmail.com>
- <CABTftiT1+AmrNjiAie-T6on-oWA4Zz73+Tj2pQrixMT3o475uw@mail.gmail.com>
- <568912EE.9030009@huawei.com> <15026471.7nGZ0rWlIf@wuerfel>
- <20160111161415.GM13633@e106497-lin.cambridge.arm.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [rtc-linux] [PATCH 5/6] rtc: max77620: add support for max77620/max20024
+ RTC driver
+Date: Tue, 12 Jan 2016 08:02:58 +0530
+Message-ID: <569465DA.10609@nvidia.com>
+References: <1452177524-23192-1-git-send-email-ldewangan@nvidia.com> <1452177524-23192-6-git-send-email-ldewangan@nvidia.com> <CAJKOXPd938soaa5M0GFo5HpVCYzAS1w8j8Hko3Ja9mx47NYkEQ@mail.gmail.com> <568F8D7E.10500@nvidia.com> <20160108125117.GM6588@sirena.org.uk> <568FB3DD.4090503@nvidia.com> <20160108133648.GQ6588@sirena.org.uk> <568FBB6D.2020904@nvidia.com> <5693AB6E.4090700@nvidia.com> <20160111160419.GA3367@piout.net> <5693E14B.4050306@nvidia.com> <56944520.6090301@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160111161415.GM13633@e106497-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: liviu.dudau@arm.com, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Rongrong Zou <zourongrong@huawei.com>, devicetree@vger.kernel.org, benh@kernel.crashing.org, Corey Minyard <minyard@acm.org>, gregkh@linuxfoundation.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linuxarm@huawei.com, Catalin Marinas <catalin.marinas@arm.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <56944520.6090301@samsung.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Mark Brown <broonie@kernel.org>, rtc-linux@googlegroups.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, a.zummo@towertech.it, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, swarren@nvidia.com, treding@nvidia.com, Chaitanya Bandi <bandik@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2016/1/12 0:14, liviu.dudau@arm.com wrote:
-> On Mon, Jan 04, 2016 at 12:13:05PM +0100, Arnd Bergmann wrote:
->> On Sunday 03 January 2016 20:24:14 Rongrong Zou wrote:
->>> =E5=9C=A8 2015/12/31 23:00, Rongrong Zou =E5=86=99=E9=81=93:
->>>> 2015-12-31 22:40 GMT+08:00 Arnd Bergmann <arnd@arndb.de <mailto:ar=
-nd@arndb.de>>:
->>>>   > On Thursday 31 December 2015 22:12:19 Rongrong Zou wrote:
->>>>   > > =E5=9C=A8 2015/12/30 17:06, Arnd Bergmann =E5=86=99=E9=81=93=
-:
->>>>   > > > On Tuesday 29 December 2015 21:33:52 Rongrong Zou wrote:
->>>>   >
->>>>   > The DT sample above looks good in principle. I believe what yo=
-u are missing
->>>>   > here is code in your driver to scan the child nodes to create =
-the platform
->>>>   > devices. of_bus_isa_translate() should work with your definiti=
-on here
->>>>   > and create the correct IORESOURCE_IO resources. You don't have=
- any MMIO
->>>>   > resources, so the absence of a ranges property is ok. Maybe al=
-l you
->>>>   > are missing is a call to of_platform_populate() or of_platform=
-_bus_probe()?
->>>>   >
+
+On Tuesday 12 January 2016 05:43 AM, Krzysztof Kozlowski wrote:
+> On 12.01.2016 02:07, Laxman Dewangan wrote:
+>> On Monday 11 January 2016 09:34 PM, Alexandre Belloni wrote:
+>>> On 11/01/2016 at 18:47:34 +0530, Laxman Dewangan wrote :
+>>>> On Friday 08 January 2016 07:06 PM, Laxman Dewangan wrote:
+>>>>> On Friday 08 January 2016 07:06 PM, Mark Brown wrote:
+>>>>>> * PGP Signed by an unknown key
+>>>>>>
+>>>>>> On Fri, Jan 08, 2016 at 06:34:29PM +0530, Laxman Dewangan wrote:
+>>>>>>
+>>>>>>> If we get the parent device, regmap handle and interrupt number from
+>>>>>>> mfd
+>>>>>>> core independent of the PMIC (MAX77620 or MAX77686), then same driver
+>>>>>>> can be
+>>>>>>> used here.
+>>>>>>> Two way which I can think of here:
+>>>>>> Parent device is just dev->parent, you can use dev_get_regmap() to
+>>>>>> get a
+>>>>>> regmap given a struct device and you can use platform resources to
+>>>>>> pass
+>>>>>> the interrupts to the children from the MFD (there's some examples,
+>>>>>> wm831x is one).
+>>>>>>
+>>>>>>
+>>>>> I think it should work with named regmap. mfd whould init regmap
+>>>>> with name
+>>>>> and rtc driver should ask with same name.
+>>>>>
+>>>>> I saw three drivers which looks same:
+>>>>> rtc-max77620.c (new from me) and already available rtc-max77686.c,
+>>>>> rtc-max77802.c
+>>>>>
+>>>>> Seems I can develop IP based rtc driver as rtc-max77xxx.c
+>>>> I came with one of issue when doing this.
 >>>>
->>>> You are right. thanks, i'll try on test board .  if i get the corr=
-ect result , the new patch
->>>> will be sent later. By the way, it's my another email account use =
-when i at home.
->>>
->>> I tried, and there need some additional changes.
->>>
->>> isa@a01b0000 {
->>>
->>> /*the node name should start with "isa", because of below definitio=
-n
->>> * static int of_bus_isa_match(struct device_node *np)
->>> * {
->>> *	return !strcmp(np->name, "isa");
->>> * }
->>
->> Looks good. It would be nicer to match on device_type than on name,
->> but this is ancient code and it's probably best not to touch it
->> so we don't accidentally break some old SPARC or PPC system.
->>
->>> */
->>> 	compatible =3D "low-pin-count";
->>> 	device_type =3D "isa";
->>> 	#address-cells =3D <2>;
->>> 	#size-cells =3D <1>;
->>> 	reg =3D <0x0 0xa01b0000 0x0 0x10000>;
->>> 	ranges =3D <0x1 0x0 0x0 0x0 0x1000>;
->>> /*
->>> *  ranges is required, then i can get the IORESOURCE_IO <0xe4,4> fr=
-om "reg =3D <0x1, 0x000000e4, 4>".
->>> *
->>> */
->>> 	ipmi_0:ipmi@000000e4{
->>> 		device_type =3D "ipmi";
->>> 		compatible =3D "ipmi-bt";
->>> 		reg =3D <0x1 0x000000e4 0x4>;
->>> };
->>>
->>
->> This looks wrong: the property above says that the I/O port range is
->> translated to MMIO address 0x00000000 to 0x00010000, which is not
->> true on your hardware. I think this needs to be changed in the code
->> so the ranges property is not required for I/O ports.
->>
->>> drivers\of\address.c
->>> static int __of_address_to_resource(struct device_node *dev,
->>>                   const __be32 *addrp, u64 size, unsigned int flags=
-,
->>>                   const char *name, struct resource *r)
->>> {
->>>           u64 taddr;
->>>
->>>           if ((flags & (IORESOURCE_IO | IORESOURCE_MEM)) =3D=3D 0)
->>>                   return -EINVAL;
->>>           taddr =3D of_translate_address(dev, addrp);
->>>           if (taddr =3D=3D OF_BAD_ADDR)
->>>                   return -EINVAL;
->>>           memset(r, 0, sizeof(struct resource));
->>>           if (flags & IORESOURCE_IO) {
->>>                   unsigned long port;
->>>
->>> /*****************************************************************/
->>> /*legacy port(< 0x1000) is reserved, and need no translation here*/
->>> /*****************************************************************/
->>>                   if(taddr + size < PCIBIOS_MIN_IO){
->>>                           r->start =3D taddr;
->>>                           r->end =3D taddr + size - 1;
->>>                   }
->>
->> I don't like having a special case based on the address here,
->> the same kind of hack might be needed for PCI I/O spaces in
->> hardware that uses an indirect method like your LPC bus
->> does, and the code above will not work on any LPC implementation
->> that correctly multiplexes its I/O ports with the first PCI domain.
->>
->> I think it would be better to avoid translating the port into
->> a physical address to start with just to translate it back into
->> a port number, what we need instead is the offset between the
->> bus specific port number and the linux port number. I've added
->> Liviu to Cc, he wrote this code originally and may have some idea
->> of how we could do that.
+>>>> The RTC driver parent is not the same parent for which i2c slave
+>>>> address get
+>>>> registered.
+>>>> There is two slave address from max77620, 0x3C (for general) and 0x68
+>>>> for
+>>>> RTC.
+>>>>
+>>>> In max77620 mfd driver, we make dummy i2c client for 0x68 and initialize
+>>>> regmap with this address.
+>>>>
+>>>> Now on mfd_add_devices, we pass the device for 0x3c and hence the RTC
+>>>> driver
+>>>> treat the parent as the 0x3c device but actually it should be 0x68 to
+>>>> get
+>>>> the proper regmap.
+>>>>
+>>>>
+>>>> Two approach:
+>>>> 1. If we add the option to pass parent_dev when adding cells form
+>>>> mfd_add_devices and select the parent device based on this option
+>>>> then it
+>>>> can be easily handle.
+>>>>       Add parent_dev structure in struct mfd_cell and then change the
+>>>> parent
+>>>> in mfd_add_device() if cells has parent device.
+>>>>
+>>>> 2. Register the RTC driver with different mfd_add_devices with dummy i2c
+>>>> client device.
+>>>> So two times mfd_add_devices.
+> Lexman,
 >
-> Hi,
+> I don't quite get the problem. This looks exactly the same as for
+> max77686. What is the difference? I don't see any need to change the
+> mfd_cell for current drivers...
+>
+>
 
-Hi Liviu,
+Here the change is only required to pass the regmap handle from mfd to 
+the rtc driver. There is no change for rest of rtc driver.
 
-Thanks for reviewing this.
+RTC i2c regmap registered with i2c dummy client device, not with actual 
+parent device and hence we need to register RTC with this dummy i2c 
+client device. This way we can get regmap handle by using the 
+dev_get_regmap(pdev->dev.parent).
 
->
-> Getting back to work after a longer holiday, my brain might not be ru=
-nning
-> at full speed here, so I'm trying to clarify things a bit here.
->
-> It looks to me like Rongrong is trying to trap the inb()/outb() calls=
- that he
-> added to arm64 by patch 1/3 and redirect those operations to the memo=
-ry
-> mapped LPC driver. I think the whole redirection and registration of =
-inb/outb
-> ops can be made cleaner, so that the general concept resembles the DM=
-A ops
-> registration? (I have this mental picture that what Rongrong is tryin=
-g to do
-> is similar to what a DMA engine does, except this is slowing down thi=
-ngs to
-> byte level). If that is done properly in the parent node, then we sho=
-uld not
-> care what the PCIBIOS_MIN_IO value is as the inb()/outb() calls will =
-always
-> go through the redirection for the children.
->
-> As for the ranges property: does he wants the ipmi-bt driver to see i=
-n the
-> reg property the legacy ISA I/O ports values or the CPU addresses? If=
- the former,
-> then I agree that the range property should not be required, but also=
- the
-> reg values need to be changed (drop the top bit). If the later, then =
-the
-> ranges property is required to do the proper translation.
-
-The former, thanks.
-
->
-> Rongrong, removing the ranges property and with a reg =3D <0xe4 0x4> =
-property
-> in the ipmi-bt node, what IO_RESOURCE type resources do you get back =
-from
-> the of_address_to_resource() translation?
-
-I want to get IORESOURCE_IO type resource, but if the parent node drop =
-the
-"rangs" property, the of_address_to_resource() translation will return =
-with -EINVAL.
-
->
-> Best regards,
-> Liviu
->
->
->>
->> 	Arnd
->>
->
-Regards,
-Rongrong
