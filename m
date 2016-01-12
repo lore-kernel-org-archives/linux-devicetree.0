@@ -1,41 +1,64 @@
-From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
-Subject: RE: [PATCH 2/2] regulator: add documentation for ACT8945A's
- regulator DT bindings
-Date: Tue, 12 Jan 2016 07:55:45 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A243641D63E8796@penmbx01>
-References: <1452218938-10621-1-git-send-email-wenyou.yang@atmel.com>
- <1452218938-10621-3-git-send-email-wenyou.yang@atmel.com>
- <20160109153554.GA25800@rob-hp-laptop>
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH 2/2] mfd: add documentation for ACT8945A DT bindings
+Date: Tue, 12 Jan 2016 08:04:06 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D63E87BB@penmbx01>
+References: <1452218729-11357-1-git-send-email-wenyou.yang@atmel.com>
+ <1452218729-11357-3-git-send-email-wenyou.yang@atmel.com>
+ <20160109153805.GA27000@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="gb2312"
 Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160109153554.GA25800@rob-hp-laptop>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160109153805.GA27000@rob-hp-laptop>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgYWNrZWQuDQoNCj4gLS0tLS1PcmlnaW5hbCBN
-ZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgW21haWx0bzpyb2JoQGtlcm5lbC5vcmdd
-DQo+IFNlbnQ6IDIwMTbE6jHUwjnI1SAyMzozNg0KPiBUbzogWWFuZywgV2VueW91IDxXZW55b3Uu
-WWFuZ0BhdG1lbC5jb20+DQo+IENjOiBMaWFtIEdpcmR3b29kIDxsZ2lyZHdvb2RAZ21haWwuY29t
-PjsgTWFyayBCcm93biA8YnJvb25pZUBrZXJuZWwub3JnPjsNCj4gUGF3ZWwgTW9sbCA8cGF3ZWwu
-bW9sbEBhcm0uY29tPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IElhbg0K
-PiBDYW1wYmVsbCA8aWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs+OyBLdW1hciBHYWxhIDxn
-YWxha0Bjb2RlYXVyb3JhLm9yZz47DQo+IEZlcnJlLCBOaWNvbGFzIDxOaWNvbGFzLkZFUlJFQGF0
-bWVsLmNvbT47IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4
-LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+
-IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMi8yXSByZWd1bGF0b3I6IGFkZCBkb2N1bWVudGF0aW9uIGZv
-ciBBQ1Q4OTQ1QSdzIHJlZ3VsYXRvcg0KPiBEVCBiaW5kaW5ncw0KPiANCj4gT24gRnJpLCBKYW4g
-MDgsIDIwMTYgYXQgMTA6MDg6NThBTSArMDgwMCwgV2VueW91IFlhbmcgd3JvdGU6DQo+ID4gVGhp
-cyBwYXRjaCBhZGRzIGRvY3VtZW50YXRpb24gZm9yIHRoZSBEVCBiaW5kaW5ncyBvZiB0aGUgcmVn
-dWxhdG9yDQo+ID4gc3ViZGV2aWNlIG9mIEFDVDg5NDVBIE1GRC4NCj4gPg0KPiA+IFNpZ25lZC1v
-ZmYtYnk6IFdlbnlvdSBZYW5nIDx3ZW55b3UueWFuZ0BhdG1lbC5jb20+DQo+ID4gLS0tDQo+ID4N
-Cj4gPiAgLi4uL2JpbmRpbmdzL3JlZ3VsYXRvci9hY3Q4OTQ1YS1yZWd1bGF0b3IudHh0ICAgICAg
-fCAgIDc4ICsrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA3OCBpbnNl
-cnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3IvYWN0ODk0NWEtcmVndWxhdG9yLnR4dA0KPiANCj4g
-QWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQoNCg0KQmVzdCBSZWdhcmRz
-LA0KV2VueW91IFlhbmcNCg==
+SGkgUm9iLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJy
+aW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE2xOox1MI5yNUgMjM6MzgN
+Cj4gVG86IFlhbmcsIFdlbnlvdSA8V2VueW91LllhbmdAYXRtZWwuY29tPg0KPiBDYzogTGVlIEpv
+bmVzIDxsZWUuam9uZXNAbGluYXJvLm9yZz47IFBhd2VsIE1vbGwgPHBhd2VsLm1vbGxAYXJtLmNv
+bT47IE1hcmsNCj4gUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBJYW4gQ2FtcGJlbGwg
+PGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrPjsNCj4gS3VtYXIgR2FsYSA8Z2FsYWtAY29k
+ZWF1cm9yYS5vcmc+OyBGZXJyZSwgTmljb2xhcw0KPiA8Tmljb2xhcy5GRVJSRUBhdG1lbC5jb20+
+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDIvMl0gbWZkOiBhZGQgZG9jdW1lbnRhdGlvbiBm
+b3IgQUNUODk0NUEgRFQgYmluZGluZ3MNCj4gDQo+IE9uIEZyaSwgSmFuIDA4LCAyMDE2IGF0IDEw
+OjA1OjI4QU0gKzA4MDAsIFdlbnlvdSBZYW5nIHdyb3RlOg0KPiA+IFRoZSBBY3RpdmUtc2VtaSBB
+Q1Q4OTQ1QSBQTUlDIGlzIGEgTXVsdGktRnVuY3Rpb24gRGV2aWNlLCBpdCBoYXMgdHdvDQo+ID4g
+c3ViZGV2aWNlczoNCj4gPiAgLSBSZWd1bGF0b3INCj4gPiAgLSBDaGFyZ2VyDQo+ID4NCj4gPiBU
+aGlzIHBhdGNoIGFkZHMgZG9jdW1lbnRhdGlvbiBmb3IgQUNUODk0NUEgRFQgYmluZGluZ3MuDQo+
+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBXZW55b3UgWWFuZyA8d2VueW91LnlhbmdAYXRtZWwuY29t
+Pg0KPiANCj4gT25lIG5pdCwgb3RoZXJ3aXNlOg0KPiANCj4gQWNrZWQtYnk6IFJvYiBIZXJyaW5n
+IDxyb2JoQGtlcm5lbC5vcmc+DQo+IA0KPiA+IC0tLQ0KPiA+DQo+ID4gIERvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvYWN0ODk0NWEudHh0IHwgICAxNg0KPiArKysrKysrKysr
+KysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxNiBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2FjdDg5
+NDVhLnR4dA0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tZmQvYWN0ODk0NWEudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvbWZkL2FjdDg5NDVhLnR4dA0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4g
+aW5kZXggMDAwMDAwMC4uNDA2ZGIxNg0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2FjdDg5NDVhLnR4dA0KPiA+IEBAIC0w
+LDAgKzEsMTYgQEANCj4gPiArRGV2aWNlLVRyZWUgYmluZGluZ3MgZm9yIEFjdGl2ZS1zZW1pIEFD
+VDg5NDVBIE1GRCBkcml2ZXINCj4gPiArDQo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4g
+KyAtIGNvbXBhdGlibGU6ICJhY3RpdmUtc2VtaSxhY3Q4OTQ1YSIuDQo+ID4gKyAtIHJlZzogdGhl
+IEkyQyBzbGF2ZSBhZGRyZXNzIGZvciB0aGUgQUNUODk0NUEgY2hpcA0KPiA+ICsNCj4gPiArVGhl
+IGNoaXAgZXhwb3NlcyB0d28gc3ViZGV2aWNlczoNCj4gPiArIC0gYSByZWd1bGF0b3JzOiBzZWUg
+Li4vcmVndWxhdG9yL2FjdDg5NDVhLXJlZ3VsYXRvci50eHQNCj4gPiArIC0gYSBjaGFyZ2VyOiBz
+ZWUgLi4vcG93ZXIvYWN0ODk0NWEtY2hhcmdlci50eHQNCj4gPiArDQo+ID4gK0V4YW1wbGU6DQo+
+ID4gKwltZmQ6IGFjdDg5NDVhQDViIHsNCj4gDQo+IHMvYWN0ODk0NWEvcG1pYy8NCg0KVGhlIHBh
+dGNoIGlzIGNoYW5nZWQgaW4gdGhlIG5leHQgdmVyaW9uLCBhZGQgdGhlIHBtaWMgYW5kIGNoYXJn
+ZXIgbm9kZXMuDQoNClNvLCBJIGFtIG5vdCBhZGQgeW91ciBBY2tlZC1ieS4NCg0KPiANCj4gPiAr
+CQljb21wYXRpYmxlID0gImFjdGl2ZS1zZW1pLGFjdDg5NDVhIjsNCj4gPiArCQlyZWcgPSA8MHg1
+Yj47DQo+ID4gKwkJc3RhdHVzID0gIm9rYXkiOw0KPiA+ICsJfTsNCj4gPiAtLQ0KPiA+IDEuNy45
+LjUNCj4gPg0KPiA+IC0tDQo+ID4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQg
+dGhlIGxpbmUgInVuc3Vic2NyaWJlIGRldmljZXRyZWUiDQo+ID4gaW4gdGhlIGJvZHkgb2YgYSBt
+ZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcgTW9yZSBtYWpvcmRvbW8NCj4gPiBp
+bmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwNCg0KDQpC
+ZXN0IFJlZ2FyZHMsDQpXZW55b3UgWWFuZw0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
