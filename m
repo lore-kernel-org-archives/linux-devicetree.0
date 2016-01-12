@@ -1,51 +1,89 @@
-From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] arm64: dts: apq8016-sbc: move sdhci node under soc
- node
-Date: Tue, 12 Jan 2016 16:25:56 -0600
-Message-ID: <20160112222556.GB4125@hector.attlocal.net>
-References: <1452606358-24569-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1452606412-24659-1-git-send-email-srinivas.kandagatla@linaro.org>
- <18094818.3Fy0P66y0u@wuerfel>
- <56950B4D.3030707@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V2 3/5] PCI: xilinx: Modifying AXI PCIe Host Bridge driver to  work on both  Zynq and Microblaze
+Date: Tue, 12 Jan 2016 23:27:25 +0100
+Message-ID: <4734542.KZZp0TeeeM@wuerfel>
+References: <1452620173-4905-1-git-send-email-bharatku@xilinx.com> <1452620173-4905-4-git-send-email-bharatku@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56950B4D.3030707-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1452620173-4905-4-git-send-email-bharatku@xilinx.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc: bhelgaas@google.com, michals@xilinx.com, lorenzo.pieralisi@arm.com, paul.burton@imgtec.com, yinghai@kernel.org, wangyijing@huawei.com, robh@kernel.org, russell.joyce@york.ac.uk, sorenb@xilinx.com, jiang.liu@linux.intel.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, Ravi Kiran Gummaluri <rgummal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 12, 2016 at 02:18:53PM +0000, Srinivas Kandagatla wrote:
+On Tuesday 12 January 2016 23:06:11 Bharat Kumar Gogada wrote:
+> Modifying Xilinx AXI PCIe Host Bridge Soft IP driver to work on both
+> Zynq and Microblaze Architectures.
+> With these modifications drivers/pci/host/pcie-xilinx.c, will
+> work on both Zynq and Microblaze Architectures.
 > 
-> 
-> On 12/01/16 14:00, Arnd Bergmann wrote:
-> >On Tuesday 12 January 2016 13:46:52 Srinivas Kandagatla wrote:
-> >>To be consistent with other nodes move sdhci node under the soc node,
-> >>rather than using lable references.
-> >>
-> >>Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>
-> >
-> >Maybe remove the label as well if you are no longer using it?
-> Label "sdhc_1" in this case is used in aliases node.
-> 
-> >
-> My understanding so far was qcom specific dt want to use hierarchical dt
-> nodes in the board files, but this brings the question of should we delete
-> all the unused labels.
-> 
-> IMO, some unused labels are harmless and would give more consistency to the
-> reader, removing them might not add great value.
-> 
-> Andy/Stephen, any comments?
+> Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+> Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
 
-I tend to lean towards leaving the labels in.  But at the same time we don't
-want to get cluttered with unused labels.  That said, perhaps If the label
-makes things more understandable, then leave them in.  Otherwise, they really
-have no use.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think this patch should be split into three, as you are doing three
+unrelated things here.
+
+> ---
+> Changes:
+> Changed Total number of MSI IRQ count logic according to both architectures.
+> Updated MSI assigning functions accordingly to new count.
+> Modified irq_domain_add_linear with new MSI IRQ count.
+> Added #ifdef to pci_fixup_irqs which is ARM specific API.
+> ---
+>  drivers/pci/host/pcie-xilinx.c | 22 +++++++++++++++++-----
+>  1 file changed, 17 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/host/pcie-xilinx.c b/drivers/pci/host/pcie-xilinx.c
+> index 3e3757f..1981948 100644
+> --- a/drivers/pci/host/pcie-xilinx.c
+> +++ b/drivers/pci/host/pcie-xilinx.c
+> @@ -92,7 +92,12 @@
+>  #define ECAM_DEV_NUM_SHIFT		12
+>  
+>  /* Number of MSI IRQs */
+> -#define XILINX_NUM_MSI_IRQS		128
+> +#define XILINX_NUM_MSI_IRQS	128
+> +#ifdef CONFIG_ARM
+> +#define TOT_NR_IRQS		XILINX_NUM_MSI_IRQS
+> +#else
+> +#define TOT_NR_IRQS		(NR_IRQS + XILINX_NUM_MSI_IRQS)
+> +#endif
+
+Something looks wrong here in the microblaze variant. What does NR_IRQS
+have to do with it?
+
+> @@ -238,15 +243,20 @@ static void xilinx_pcie_destroy_msi(unsigned int irq)
+>   */
+>  static int xilinx_pcie_assign_msi(struct xilinx_pcie_port *port)
+>  {
+> +	int irq;
+>  	int pos;
+>  
+>  	pos = find_first_zero_bit(msi_irq_in_use, XILINX_NUM_MSI_IRQS);
+> -	if (pos < XILINX_NUM_MSI_IRQS)
+> +	irq = pos;
+> +#ifdef CONFIG_MICROBLAZE
+> +	irq = XILINX_NUM_MSI_IRQS + pos;
+> +#endif
+
+
+	if (IS_ENABLED(CONFIG_MICROBLAZE))
+		irq = XILINX_NUM_MSI_IRQS + pos;
+
+> @@ -705,7 +715,9 @@ static int xilinx_pcie_probe(struct platform_device *pdev)
+>  #endif
+>  	pci_scan_child_bus(bus);
+>  	pci_assign_unassigned_bus_resources(bus);
+> +#ifdef CONFIG_ARM
+>  	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
+> +#endif
+>  	pci_bus_add_devices(bus);
+>  	platform_set_drvdata(pdev, port);
+
+Here it looks like microblaze gets it right. I'm not sure why we still
+need the pci_fixup_irqs() on ARM, but my feeling is that this should be
+fixed in common code.
+
+	Arnd
