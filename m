@@ -1,7 +1,7 @@
 From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: [PATCH V2 2/5] PCI: xilinx: Removing struct hw_irq structure.
-Date: Tue, 12 Jan 2016 23:06:10 +0530
-Message-ID: <1452620173-4905-3-git-send-email-bharatku@xilinx.com>
+Subject: [PATCH V2 4/5] PCI: xilinx: Updating Zynq PCI binding documentation with  Microblaze node.
+Date: Tue, 12 Jan 2016 23:06:12 +0530
+Message-ID: <1452620173-4905-5-git-send-email-bharatku@xilinx.com>
 References: <1452620173-4905-1-git-send-email-bharatku@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,164 +12,79 @@ To: bhelgaas@google.com, michals@xilinx.com, lorenzo.pieralisi@arm.com, paul.bur
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, Ravi Kiran Gummaluri <rgummal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Removing struct hw_irq and adding generic PCI core API's.
+Updated Zynq PCI binding documentation with Microblaze node.
 
 Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
 Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
 ---
-Removing architecure dependecy structure struct hw_irq which is ARM 32-bit
-specific structure, and adding generic PCI core API's to register to
-PCI subsytem.
-Removing funtions which are not being used with generic API's.
+Changes:
+Adding Microblaze device tree node Documnetation.
 ---
- drivers/pci/host/pcie-xilinx.c | 81 +++++++++---------------------------------
- 1 file changed, 16 insertions(+), 65 deletions(-)
+ .../devicetree/bindings/pci/xilinx-pcie.txt        | 36 ++++++++++++++++++++--
+ 1 file changed, 33 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/host/pcie-xilinx.c b/drivers/pci/host/pcie-xilinx.c
-index f02cfe7..3e3757f 100644
---- a/drivers/pci/host/pcie-xilinx.c
-+++ b/drivers/pci/host/pcie-xilinx.c
-@@ -117,11 +117,6 @@ struct xilinx_pcie_port {
+diff --git a/Documentation/devicetree/bindings/pci/xilinx-pcie.txt b/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
+index 02f979a..d207bf4 100644
+--- a/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
+@@ -17,7 +17,10 @@ Required properties:
+ 	Please refer to the standard PCI bus binding document for a more
+ 	detailed explanation
  
- static DECLARE_BITMAP(msi_irq_in_use, XILINX_NUM_MSI_IRQS);
- 
--static inline struct xilinx_pcie_port *sys_to_pcie(struct pci_sys_data *sys)
--{
--	return sys->private_data;
--}
--
- static inline u32 pcie_read(struct xilinx_pcie_port *port, u32 reg)
- {
- 	return readl(port->reg_base + reg);
-@@ -163,7 +158,7 @@ static void xilinx_pcie_clear_err_interrupts(struct xilinx_pcie_port *port)
-  */
- static bool xilinx_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
- {
--	struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
-+	struct xilinx_pcie_port *port = bus->sysdata;
- 
- 	/* Check if link is up when trying to access downstream ports */
- 	if (bus->number != port->root_busno)
-@@ -196,7 +191,7 @@ static bool xilinx_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
- static void __iomem *xilinx_pcie_map_bus(struct pci_bus *bus,
- 					 unsigned int devfn, int where)
- {
--	struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
-+	struct xilinx_pcie_port *port = bus->sysdata;
- 	int relbus;
- 
- 	if (!xilinx_pcie_valid_device(bus, devfn))
-@@ -228,7 +223,7 @@ static void xilinx_pcie_destroy_msi(unsigned int irq)
- 
- 	if (!test_bit(irq, msi_irq_in_use)) {
- 		msi = irq_get_msi_desc(irq);
--		port = sys_to_pcie(msi_desc_to_pci_sysdata(msi));
-+		port = msi_desc_to_pci_sysdata(msi);
- 		dev_err(port->dev, "Trying to free unused MSI#%d\n", irq);
- 	} else {
- 		clear_bit(irq, msi_irq_in_use);
-@@ -277,7 +272,7 @@ static int xilinx_pcie_msi_setup_irq(struct msi_controller *chip,
- 				     struct pci_dev *pdev,
- 				     struct msi_desc *desc)
- {
--	struct xilinx_pcie_port *port = sys_to_pcie(pdev->bus->sysdata);
-+	struct xilinx_pcie_port *port = pdev->bus->sysdata;
- 	unsigned int irq;
- 	int hwirq;
- 	struct msi_msg msg;
-@@ -614,47 +609,6 @@ static void xilinx_pcie_init_port(struct xilinx_pcie_port *port)
- }
- 
- /**
-- * xilinx_pcie_setup - Setup memory resources
-- * @nr: Bus number
-- * @sys: Per controller structure
-- *
-- * Return: '1' on success and error value on failure
-- */
--static int xilinx_pcie_setup(int nr, struct pci_sys_data *sys)
--{
--	struct xilinx_pcie_port *port = sys_to_pcie(sys);
--
--	list_splice_init(&port->resources, &sys->resources);
--
--	return 1;
--}
--
--/**
-- * xilinx_pcie_scan_bus - Scan PCIe bus for devices
-- * @nr: Bus number
-- * @sys: Per controller structure
-- *
-- * Return: Valid Bus pointer on success and NULL on failure
-- */
--static struct pci_bus *xilinx_pcie_scan_bus(int nr, struct pci_sys_data *sys)
--{
--	struct xilinx_pcie_port *port = sys_to_pcie(sys);
--	struct pci_bus *bus;
--
--	port->root_busno = sys->busnr;
--
--	if (IS_ENABLED(CONFIG_PCI_MSI))
--		bus = pci_scan_root_bus_msi(port->dev, sys->busnr,
--					    &xilinx_pcie_ops, sys,
--					    &sys->resources,
--					    &xilinx_pcie_msi_chip);
--	else
--		bus = pci_scan_root_bus(port->dev, sys->busnr,
--					&xilinx_pcie_ops, sys, &sys->resources);
--	return bus;
--}
--
--/**
-  * xilinx_pcie_parse_dt - Parse Device tree
-  * @port: PCIe port information
-  *
-@@ -704,8 +658,9 @@ static int xilinx_pcie_parse_dt(struct xilinx_pcie_port *port)
- static int xilinx_pcie_probe(struct platform_device *pdev)
- {
- 	struct xilinx_pcie_port *port;
--	struct hw_pci hw;
- 	struct device *dev = &pdev->dev;
-+	struct pci_bus *bus;
+-Optional properties:
++Optional properties for Zynq:
++- bus-range: PCI bus numbers covered
 +
- 	int err;
- 	resource_size_t iobase = 0;
- 	LIST_HEAD(res);
-@@ -739,24 +694,20 @@ static int xilinx_pcie_probe(struct platform_device *pdev)
- 		dev_err(dev, "Getting bridge resources failed\n");
- 		return err;
- 	}
--
--	platform_set_drvdata(pdev, port);
--
--	/* Register the device */
--	memset(&hw, 0, sizeof(hw));
--	hw = (struct hw_pci) {
--		.nr_controllers	= 1,
--		.private_data	= (void **)&port,
--		.setup		= xilinx_pcie_setup,
--		.map_irq	= of_irq_parse_and_map_pci,
--		.scan		= xilinx_pcie_scan_bus,
--		.ops		= &xilinx_pcie_ops,
--	};
-+	bus = pci_create_root_bus(&pdev->dev, 0,
-+				  &xilinx_pcie_ops, port, &res);
-+	if (!bus)
-+		return -ENOMEM;
++Required property for Microblaze:
+ - bus-range: PCI bus numbers covered
  
- #ifdef CONFIG_PCI_MSI
- 	xilinx_pcie_msi_chip.dev = port->dev;
-+	bus->msi = &xilinx_pcie_msi_chip;
- #endif
--	pci_common_init_dev(dev, &hw);
-+	pci_scan_child_bus(bus);
-+	pci_assign_unassigned_bus_resources(bus);
-+	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
-+	pci_bus_add_devices(bus);
-+	platform_set_drvdata(pdev, port);
+ Interrupt controller child node
+@@ -38,13 +41,13 @@ the four INTx interrupts in ISR and route them to this domain.
  
- 	return 0;
- }
+ Example:
+ ++++++++
+-
++Zynq:
+ 	pci_express: axi-pcie@50000000 {
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+ 		#interrupt-cells = <1>;
+ 		compatible = "xlnx,axi-pcie-host-1.00.a";
+-		reg = < 0x50000000 0x10000000 >;
++		reg = < 0x50000000 0x1000000 >;
+ 		device_type = "pci";
+ 		interrupts = < 0 52 4 >;
+ 		interrupt-map-mask = <0 0 0 7>;
+@@ -60,3 +63,30 @@ Example:
+ 			#interrupt-cells = <1>;
+ 		};
+ 	};
++
++
++Microblaze:
++	pci_express: axi-pcie@10000000 {
++		#address-cells = <3>;
++		#size-cells = <2>;
++		#interrupt-cells = <1>;
++		compatible = "xlnx,axi-pcie-host-1.00.a";
++		reg = <0x10000000 0x4000000>;
++		device_type = "pci";
++		interrupt-parent = <&microbalze_0_intc>;
++		interrupts = <1 2>;
++		interrupt-map-mask = <0 0 0 7>;
++		interrupt-map = <0 0 0 1 &pcie_intc 1>,
++				<0 0 0 2 &pcie_intc 2>,
++				<0 0 0 3 &pcie_intc 3>,
++				<0 0 0 4 &pcie_intc 4>;
++		ranges = <0x02000000 0x00000000 0x80000000 0x80000000 0x00000000 0x10000000>;
++		bus-range = <0x00 0xff>;
++
++		pcie_intc: interrupt-controller {
++			interrupt-controller;
++			#address-cells = <0>;
++			#interrupt-cells = <1>;
++		};
++
++	};
 -- 
 2.1.1
