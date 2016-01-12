@@ -1,69 +1,30 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] regulator: Add coupled regulator
-Date: Tue, 12 Jan 2016 08:31:00 -0600
-Message-ID: <20160112143100.GA14628@rob-hp-laptop>
-References: <1452605842-9317-1-git-send-email-maxime.ripard@free-electrons.com>
- <1452605842-9317-2-git-send-email-maxime.ripard@free-electrons.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 2/7] remoteproc: dt: Provide bindings for ST's Remote
+ Processor Controller driver
+Date: Tue, 12 Jan 2016 08:33:05 -0600
+Message-ID: <20160112143305.GA28251@rob-hp-laptop>
+References: <1452602781-22424-1-git-send-email-lee.jones@linaro.org>
+ <1452602781-22424-3-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1452605842-9317-2-git-send-email-maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1452602781-22424-3-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, s-anna-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 12, 2016 at 02:37:21PM +0100, Maxime Ripard wrote:
-> Some boards, in order to power devices that have a quite high power
-> consumption, wire multiple regulators in parallel.
-> 
-> In such a case, the regulators need to be kept in sync, all of them being
-> enabled or disabled in parallel.
-> 
-> This also requires to expose only the voltages that are common to all the
-> regulators.
-> 
-> Eventually support for changing the voltage in parallel should be added
-> too, possibly with delays between each other to avoid having a too brutal
-> peak consumption.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+On Tue, Jan 12, 2016 at 12:46:16PM +0000, Lee Jones wrote:
+> Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  .../bindings/regulator/coupled-voltage.txt         |  18 ++
->  drivers/regulator/Kconfig                          |   8 +
->  drivers/regulator/Makefile                         |   1 +
->  drivers/regulator/coupled-voltage-regulator.c      | 299 +++++++++++++++++++++
->  4 files changed, 326 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/coupled-voltage.txt
->  create mode 100644 drivers/regulator/coupled-voltage-regulator.c
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/coupled-voltage.txt b/Documentation/devicetree/bindings/regulator/coupled-voltage.txt
-> new file mode 100644
-> index 000000000000..f5401aab52f2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/coupled-voltage.txt
-> @@ -0,0 +1,18 @@
-> +Coupled voltage regulators
-> +
-> +Required properties:
-> +- compatible		: Must be "coupled-voltage-regulator".
-> +
-> +Optional properties:
-> +- vinX-supply		: Phandle to the regulators it aggregates
-> +
-> +Any property defined as part of the core regulator binding defined in
-> +regulator.txt can also be used.
-> +
-> +Example:
-> +	vcc_wifi: wifi_reg {
-> +		compatible = "coupled-voltage-regulator";
-> +		regulator-name = "vcc-wifi";
-> +		vin0-supply = <&reg_ldo3>;
-> +		vin1-supply = <&reg_ldo4>;
-> +	};
+>  .../devicetree/bindings/remoteproc/st-rproc.txt    | 41 ++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/st-rproc.txt
 
-Why not just make ?-supply a list of phandles? That would be simpler 
-than a virtual regulator.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
