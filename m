@@ -1,69 +1,42 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/3] ARM: STi: Add DT defines for co-processor reset lines
-Date: Tue, 12 Jan 2016 16:25:22 +0000
-Message-ID: <20160112162522.GL27358@x1>
-References: <1445856969-19424-1-git-send-email-lee.jones@linaro.org>
- <20160112133437.GH27358@x1>
- <1452606099.4292.20.camel@pengutronix.de>
- <20160112142658.GI27358@x1>
- <1452614214.4292.24.camel@pengutronix.de>
+From: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 0/4] mtd: atmel_nand: Add support for NAND Flash on SAMA5D2
+Date: Tue, 12 Jan 2016 17:55:08 +0100
+Message-ID: <CAGkQfmOmgiKwziQ+HuJTN1Qk1aHEXBWYcE1LT+XT2d-Xv7kxNw@mail.gmail.com>
+References: <1452609223-14790-1-git-send-email-romain.izard.pro@gmail.com> <56951F91.1090101@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1452614214.4292.24.camel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, maxime.coquelin@st.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56951F91.1090101-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 12 Jan 2016, Philipp Zabel wrote:
-> Am Dienstag, den 12.01.2016, 14:26 +0000 schrieb Lee Jones:
-> > On Tue, 12 Jan 2016, Philipp Zabel wrote:
-> >=20
-> > > Hi Lee,
-> > >=20
-> > > Am Dienstag, den 12.01.2016, 13:34 +0000 schrieb Lee Jones:
-> > > > On Mon, 26 Oct 2015, Lee Jones wrote:
-> > > >=20
-> > > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > > > ---
-> > > > >  include/dt-bindings/reset-controller/stih407-resets.h | 4 ++=
-++
-> > > > >  1 file changed, 4 insertions(+)
-> > > > >=20
-> > > > > diff --git a/include/dt-bindings/reset-controller/stih407-res=
-ets.h b/include/dt-bindings/reset-controller/stih407-resets.h
-> > > > > index 02d4328..4ab3a1c 100644
-> > > > > --- a/include/dt-bindings/reset-controller/stih407-resets.h
-> > > > > +++ b/include/dt-bindings/reset-controller/stih407-resets.h
-> > > > > @@ -52,6 +52,10 @@
-> > > > >  #define STIH407_KEYSCAN_SOFTRESET	26
-> > > > >  #define STIH407_USB2_PORT0_SOFTRESET	27
-> > > > >  #define STIH407_USB2_PORT1_SOFTRESET	28
-> > > > > +#define STIH407_ST231_AUD_SOFTRESET	29
-> > > > > +#define STIH407_ST231_DMU_SOFTRESET	30
-> > > > > +#define STIH407_ST231_GP0_SOFTRESET	31
-> > > > > +#define STIH407_ST231_GP1_SOFTRESET	32
-> > > > > =20
-> > > > >  /* Picophy reset defines */
-> > > > >  #define STIH407_PICOPHY0_RESET		0
-> > > >=20
-> > > > Has anyone seen this patch?
-> > >=20
-> > > c9bfec0032fb, sorry I missed 4.4.
-> >=20
-> > What about v4.5?  The merge window has only just opened.
->=20
-> It's sitting in arm-soc/for-next, so it should hit mainline during th=
-is
-> merge window.
+Hi Nicolas,
 
-Wonderful, thanks.
+2016-01-12 16:45 GMT+01:00 Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>:
+>
+> The maintainers for this driver changed very recently, so you'll have to
+> includes these names to your CC list:
+>
+> M:      Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> M:      Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Ok. It might be a good idea to update the MAINTAINERS file, as Josh Wu's atmel
+address now bounces, and it is still referenced there.
+
+>
+> I also think that Wenyou did some work regarding this support. So you'll
+> have to coordinat together.
+
+Is it possible to know what are the developments in progress regarding SAMA5D2
+drivers? The github repository does not expose any working trees, and only the
+current "stable" trees are visible.
+
+Best regards,
+-- 
+Romain Izard
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
