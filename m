@@ -1,106 +1,122 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and
- charging of backup battery
-Date: Mon, 11 Jan 2016 16:09:17 -0800
-Message-ID: <20160112000917.GC12777@atomide.com>
-References: <8FE6954B-6411-4593-9CE5-717A469A6AA8@goldelico.com>
- <20160106164136.GI12777@atomide.com>
- <2AC46952-3758-458A-B0A5-1794C207BD4C@goldelico.com>
- <20160106170925.GK12777@atomide.com>
- <66F37918-EA7F-4D83-8B5F-A6B5C0CD7623@goldelico.com>
- <20160108181551.GX12777@atomide.com>
- <832803EE-E4CB-46B1-BF39-2DC0BB695A5D@goldelico.com>
- <20160108190457.GY12777@atomide.com>
- <CCB763BE-5D1F-4A53-BF9A-C12C08A6EFC4@goldelico.com>
- <20160111202421.GA12777@atomide.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [rtc-linux] [PATCH 5/6] rtc: max77620: add support for
+ max77620/max20024 RTC driver
+Date: Tue, 12 Jan 2016 09:13:20 +0900
+Message-ID: <56944520.6090301@samsung.com>
+References: <1452177524-23192-1-git-send-email-ldewangan@nvidia.com>
+ <1452177524-23192-6-git-send-email-ldewangan@nvidia.com>
+ <CAJKOXPd938soaa5M0GFo5HpVCYzAS1w8j8Hko3Ja9mx47NYkEQ@mail.gmail.com>
+ <568F8D7E.10500@nvidia.com> <20160108125117.GM6588@sirena.org.uk>
+ <568FB3DD.4090503@nvidia.com> <20160108133648.GQ6588@sirena.org.uk>
+ <568FBB6D.2020904@nvidia.com> <5693AB6E.4090700@nvidia.com>
+ <20160111160419.GA3367@piout.net> <5693E14B.4050306@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160111202421.GA12777-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, =?utf-8?Q?Gra=C5=BEvydas?= Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-reply-to: <5693E14B.4050306@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Mark Brown <broonie@kernel.org>, rtc-linux@googlegroups.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, a.zummo@towertech.it, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, swarren@nvidia.com, treding@nvidia.com, Chaitanya Bandi <bandik@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [160111 12:27]:
+On 12.01.2016 02:07, Laxman Dewangan wrote:
 > 
-> OK so the issue is that the twl msecure pin should be high to enable
-> the RTC registers. We used to have that code with platform_data, but
-> no longer have it with device tree based booting. I'll send a patch
-> for that.
+> On Monday 11 January 2016 09:34 PM, Alexandre Belloni wrote:
+>> On 11/01/2016 at 18:47:34 +0530, Laxman Dewangan wrote :
+>>> On Friday 08 January 2016 07:06 PM, Laxman Dewangan wrote:
+>>>> On Friday 08 January 2016 07:06 PM, Mark Brown wrote:
+>>>>> * PGP Signed by an unknown key
+>>>>>
+>>>>> On Fri, Jan 08, 2016 at 06:34:29PM +0530, Laxman Dewangan wrote:
+>>>>>
+>>>>>> If we get the parent device, regmap handle and interrupt number from
+>>>>>> mfd
+>>>>>> core independent of the PMIC (MAX77620 or MAX77686), then same driver
+>>>>>> can be
+>>>>>> used here.
+>>>>>> Two way which I can think of here:
+>>>>> Parent device is just dev->parent, you can use dev_get_regmap() to
+>>>>> get a
+>>>>> regmap given a struct device and you can use platform resources to
+>>>>> pass
+>>>>> the interrupts to the children from the MFD (there's some examples,
+>>>>> wm831x is one).
+>>>>>
+>>>>>
+>>>> I think it should work with named regmap. mfd whould init regmap
+>>>> with name
+>>>> and rtc driver should ask with same name.
+>>>>
+>>>> I saw three drivers which looks same:
+>>>> rtc-max77620.c (new from me) and already available rtc-max77686.c,
+>>>> rtc-max77802.c
+>>>>
+>>>> Seems I can develop IP based rtc driver as rtc-max77xxx.c
+>>> I came with one of issue when doing this.
+>>>
+>>> The RTC driver parent is not the same parent for which i2c slave
+>>> address get
+>>> registered.
+>>> There is two slave address from max77620, 0x3C (for general) and 0x68
+>>> for
+>>> RTC.
+>>>
+>>> In max77620 mfd driver, we make dummy i2c client for 0x68 and initialize
+>>> regmap with this address.
+>>>
+>>> Now on mfd_add_devices, we pass the device for 0x3c and hence the RTC
+>>> driver
+>>> treat the parent as the 0x3c device but actually it should be 0x68 to
+>>> get
+>>> the proper regmap.
+>>>
+>>>
+>>> Two approach:
+>>> 1. If we add the option to pass parent_dev when adding cells form
+>>> mfd_add_devices and select the parent device based on this option
+>>> then it
+>>> can be easily handle.
+>>>      Add parent_dev structure in struct mfd_cell and then change the
+>>> parent
+>>> in mfd_add_device() if cells has parent device.
+>>>
+>>> 2. Register the RTC driver with different mfd_add_devices with dummy i2c
+>>> client device.
+>>> So two times mfd_add_devices.
+
+Lexman,
+
+I don't quite get the problem. This looks exactly the same as for
+max77686. What is the difference? I don't see any need to change the
+mfd_cell for current drivers...
+
+
+>>>
+>>>
+>>> IMO, approach 1 looks good to me.
+>>>
+>>> Any opinion?
+>>>
+>> If the RTC is not at the same address, I'd say this is not an mfd
+>> anymore, can't you probe it directly from DT?
+>>
+>>
+> This approach is also possible but,
 > 
-> Curiously setting jumper j5 on beagle-x15 that controls what used to
-> be the msecure and now is powerhold, does the opposite.. The
-> device boots automatically but RTC is stopped?
+> although this is independent IP with separate i2c address but became it
+> is inside the PMIC and its interrupt depends on PMIC internals, I like
+> to register this rtc device from the mfd core.
+> So that when mfd core is ready with their interrupts and initial
+> setting, it can register rtc device.
 
-And here's a fix the issue for omap5. Beagle-x15 needs to be
-investigated more.
+Alexandre,
 
-Care to test it with your RTC enabling patch?
+All of these devices have some of the blocks under separate I2C address.
+It is still a MFD because for example interrupts are shared and governed
+by parent.
 
-Regards,
+Best regards,
+Krzysztof
 
-Tony
 
-8< ---------------
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Date: Mon, 11 Jan 2016 14:35:24 -0800
-Subject: [PATCH] ARM: dts: Fix omap5 PMIC control lines for RTC writes
-
-The palmas PMIC has some control lines that need to be muxed properly
-for things to work. The sys_nirq pin is used for interrupts, and msecure
-pin is used for enabling writes to some PMIC registers.
-
-Without these pins configured properly things can fail in mysterious
-ways. For example, we can't update the RTC registers on palmas PMIC
-unless the msecure pin is configured. And this is probably the reason
-why we had RTC missing from the omap5 dts file.
-
-According to "OMAP5430 ES2.0 Data Manual [Public] VErsion A (Rev. F)"
-swps052f.pdf, mux mode 1 is for sys_drm_msecure so there's no need to
-configure it as a GPIO pin.
-
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-
---- a/arch/arm/boot/dts/omap5-board-common.dtsi
-+++ b/arch/arm/boot/dts/omap5-board-common.dtsi
-@@ -213,6 +213,12 @@
- 		>;
- 	};
- 
-+	palmas_msecure_pins: palmas_msecure_pins {
-+		pinctrl-single,pins = <
-+			OMAP5_IOPAD(0x180, PIN_OUTPUT | MUX_MODE1) /* gpio8_234.sys_drm_msecure */
-+		>;
-+	};
-+
- 	usbhost_pins: pinmux_usbhost_pins {
- 		pinctrl-single,pins = <
- 			0x84 (PIN_INPUT | MUX_MODE0) /* usbb2_hsic_strobe */
-@@ -278,6 +284,12 @@
- 			&usbhost_wkup_pins
- 	>;
- 
-+	palmas_sys_nirq_pins: pinmux_palmas_sys_nirq_pins {
-+		pinctrl-single,pins = <
-+			OMAP5_IOPAD(0x068, PIN_INPUT_PULLUP | MUX_MODE0) /* sys_nirq1 */
-+		>;
-+	};
-+
- 	usbhost_wkup_pins: pinmux_usbhost_wkup_pins {
- 		pinctrl-single,pins = <
- 			0x1A (PIN_OUTPUT | MUX_MODE0) /* fref_clk1_out, USB hub clk */
-@@ -345,6 +357,8 @@
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 		ti,system-power-controller;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&palmas_sys_nirq_pins &palmas_msecure_pins>;
- 
- 		extcon_usb3: palmas_usb {
- 			compatible = "ti,palmas-usb-vid";
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
