@@ -1,36 +1,54 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 3/3] dt-bindings: bsm2835: fix bindings documentation
- to use new clock framework
-Date: Tue, 12 Jan 2016 08:36:01 -0600
-Message-ID: <20160112143601.GA29373@rob-hp-laptop>
-References: <1452602149-5875-1-git-send-email-kernel@martin.sperl.org>
- <1452602149-5875-4-git-send-email-kernel@martin.sperl.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] input: gpio-keys: add support to name the gpio-keys
+Date: Tue, 12 Jan 2016 08:43:01 -0600
+Message-ID: <20160112144301.GA30932@rob-hp-laptop>
+References: <1452598370-28509-1-git-send-email-ldewangan@nvidia.com>
+ <1452598370-28509-2-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1452602149-5875-4-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+In-Reply-To: <1452598370-28509-2-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: dmitry.torokhov@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, bjorn.andersson@sonymobile.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 12, 2016 at 12:35:48PM +0000, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
-> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-
-Typo in the subject (bsm).
-
+On Tue, Jan 12, 2016 at 05:02:50PM +0530, Laxman Dewangan wrote:
+> Add support from DT to name the gpio-keys driver to have
+> desired key name for this input system.
 > 
-> The bcm2835-i2s driver has been updated to use the new clock framework
-> for the bcm2835 SOC.
-> 
-> This patch documents the required changes to the bindings.
-> 
-> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+> This helps userspace code to get name and perform proper
+> event to key mapping in some of cases. In android, the
+> user space map the key code to application code using
+> key character layout and for this it uses the name of
+> input system.
 
-Please add acks when you post new versions.
+Why is specifying the key code not enough?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> ---
+>  Documentation/devicetree/bindings/input/gpio-keys.txt | 1 +
+>  drivers/input/keyboard/gpio_keys.c                    | 2 ++
+>  2 files changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt b/Documentation/devicetree/bindings/input/gpio-keys.txt
+> index cf1333d..2e6bcd2 100644
+> --- a/Documentation/devicetree/bindings/input/gpio-keys.txt
+> +++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
+> @@ -4,6 +4,7 @@ Required properties:
+>  	- compatible = "gpio-keys";
+>  
+>  Optional properties:
+> +	- gpio-keys,name: String, name of the gpio-keys input system.
+
+gpio-keys is not a vendor.
+
+Would "label" work for you instead?
+
+Either way, I'm concerned this doesn't work for other key bindings 
+which have multiple keys.
+
+>  	- autorepeat: Boolean, Enable auto repeat feature of Linux input
+>  	  subsystem.
+>  
