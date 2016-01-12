@@ -1,325 +1,55 @@
-Return-Path: <petr@barix.com>
-Subject: Re: [PATCH 2/2] Drivers: MUSB: Davinci MUSB: added DT support
-References: <1453387999-4485-1-git-send-email-petr@barix.com>
- <20160121230751.GA3991@rob-hp-laptop>
-From: Petr Kulhavy <petr@barix.com>
-Message-ID: <56A1EFFE.3070401@barix.com>
-Date: Fri, 22 Jan 2016 10:01:50 +0100
+Return-Path: <linux-arm-kernel-bounces+robh=kernel.org@lists.infradead.org>
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+Subject: [PATCHv2 1/2] remove redundant struct clk NULL checks
+Date: Tue, 12 Jan 2016 16:17:55 +0100
+Message-Id: <1452611876-451-2-git-send-email-LW@KARO-electronics.de>
+In-Reply-To: <1452611876-451-1-git-send-email-LW@KARO-electronics.de>
+References: <1452611876-451-1-git-send-email-LW@KARO-electronics.de>
 MIME-Version: 1.0
-In-Reply-To: <20160121230751.GA3991@rob-hp-laptop>
-Content-Type: multipart/alternative;
- boundary="------------090404060904000200080309"
-To: Rob Herring <robh@kernel.org>
-Cc: balbi@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+robh=kernel.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Fabio Estevam <fabio.estevam@freescale.com>, Greg Ungerer <gerg@uclinux.org>, Kevin Hao <haokexin@gmail.com>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>, Lucas Stach <l.stach@pengutronix.de>, Nimrod Andy <B38611@freescale.com>, Philippe Reynes <tremyfr@gmail.com>, Richard Cochran <richardcochran@gmail.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Stefan Agner <stefan@agner.ch>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Jeff Kirsher <jeffrey.t.kirsher@intel.com>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-This is a multi-part message in MIME format.
---------------090404060904000200080309
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Transfer-Encoding: quoted-printable
-
-Hi Rob,
-
-thanks a lot for your comments. I admit I got inspired by the=20
-usb/omap-usb.txt  and usb/am33xx-usb.txt bindings
-which use identical keywords, mode, num-eps, ram-bits, power and=20
-multipoint as all these chips use the same or similar MUSB core.
- From your comments I have the feeling these are not the best bindings=20
-to take as an example.
-What would you recommend as a good example then?
-
-Regards
-Petr
-
-On 22.01.2016 00:07, Rob Herring wrote:
-> On Thu, Jan 21, 2016 at 03:53:19PM +0100, Petr Kulhavy wrote:
->> TI DaVinci MUSB driver equipped with DeviceTree support.
->> Tested with AM1808 board and USB2.0 (OTG) in host mode.
->>
->> Signed-off-by: Petr Kulhavy <petr@barix.com>
->> ---
->>   .../devicetree/bindings/usb/da8xx-usb.txt          |  52 +++++++
->>   drivers/usb/musb/da8xx.c                           | 166 +++++++++++=
-++++++++++
->>   include/linux/platform_data/usb-davinci.h          |   3 +-
->>   3 files changed, 220 insertions(+), 1 deletion(-)
->>   create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.t=
-xt
->>
->> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Doc=
-umentation/devicetree/bindings/usb/da8xx-usb.txt
->> new file mode 100644
->> index 0000000..c81d665
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-> Follow the compatible string for the filename (with wildcards is fine).=
-
->
->> @@ -0,0 +1,52 @@
->> +TI DaVinci MUSB
->> +
->> +Required properties:
->> +
->> + - compatible : Should be "ti,da850-musb" or "ti,da830-musb"
->> +
->> + - mode : USB mode. "1" signifies HOST, "2" represents PERIPHERAL,
->> +     "3" represents OTG.
-> Surely we have a similar property defined already. Don't create
-> something new.
->
->> +
->> + - power : This signifies the maximum current the controller can
->> +     supply in host mode. The unit size is 2mA, the maximum value is =
-510mA.
-> You should model this as a regulator.
->
->> + - num-eps : Specifies the number of endpoints. This is also a
->> +     MUSB configuration-specific setting.
-> Just spell out endpoints.
->
->> +
->> + - multipoint : Should be "1" indicating the musb controller supports=
-
->> +     multipoint. This is a MUSB configuration-specific setting.
-> What does multipoint mean?
->
->> + - ram-bits : Specifies the ram address size.
-> Needs a better description. Then it probably needs a better name too,
-> but without a description I can't tell what that would be.
->
->> +
->> +
->> +Optional properties:
->> +
->> + - da8xx,phy20-clkmux-cfg: Integer. Defines the USB 2.0 PHY reference=
- clock source.
->> +     Supported values: "0" for external pin, "1" for internal PLL.
-> How about a boolean property instead. Name it based on the less used
-> option (external pin I'm guessing).
->
->> + - da8xx,phy20-refclock-frequency : Integer. Defines the USB 2.0 PHY =
-reference clock input
->> +     frequency in Hz in case the clock is generated by the internal P=
-LL.
->> +     Supported values are 12MHz, 13MHz, 19.2MHz, 20MHz, 24MHz, 26MHz,=
- 38.4MHz, 40MHz, 48MHz
-> da8xx is not a vendor.
->
-> Rob
-
---=20
-
-
---=20
-Petr Kulhavy, MSc
-System Architect
-
-*BARIX*
-
-petr@barix.com <mailto:petr@barix.com> | Skype: brain.barix
-
-Barix AG, Seefeldstrasse 303 | 8008 Zurich, Switzerland
-T +41 43 43322 11 | www.barix.com <http://www.barix.com>
-
-You have received this email because of your relationship Barix AG and=20
-its affiliated companies. Barix AG and its affiliated companies do not=20
-sell or exchange email addresses, or any other personal contact=20
-information provided by you with any third parties. All email=20
-distributions are managed and controlled by Barix AG and its affiliated=20
-companies.
-Barix AG, Seefeldstr. 303, 8008 Z=FCrich, Switzerland. Company Reg. No:=20
-CH-020.3.023.869-8, VAT Reg. No: CHE-105.687.663.
-
---------------090404060904000200080309
-Content-Type: text/html; charset=iso-8859-2
-Content-Transfer-Encoding: quoted-printable
-
-<html>
-  <head>
-    <meta content=3D"text/html; charset=3Diso-8859-2"
-      http-equiv=3D"Content-Type">
-  </head>
-  <body text=3D"#000000" bgcolor=3D"#FFFFFF">
-    Hi Rob,<br>
-    <br>
-    thanks a lot for your comments. I admit I got inspired by the
-    usb/omap-usb.txt=A0 and usb/am33xx-usb.txt bindings<br>
-    which use identical keywords, mode, num-eps, ram-bits, power and
-    multipoint as all these chips use the same or similar MUSB core. <br>=
-
-    From your comments I have the feeling these are not the best
-    bindings to take as an example. <br>
-    What would you recommend as a good example then?<br>
-    <br>
-    Regards<br>
-    Petr<br>
-    <br>
-    <div class=3D"moz-cite-prefix">On 22.01.2016 00:07, Rob Herring wrote=
-:<br>
-    </div>
-    <blockquote cite=3D"mid:20160121230751.GA3991@rob-hp-laptop"
-      type=3D"cite">
-      <pre wrap=3D"">On Thu, Jan 21, 2016 at 03:53:19PM +0100, Petr Kulha=
-vy wrote:
-</pre>
-      <blockquote type=3D"cite">
-        <pre wrap=3D"">TI DaVinci MUSB driver equipped with DeviceTree su=
-pport.
-Tested with AM1808 board and USB2.0 (OTG) in host mode.
-
-Signed-off-by: Petr Kulhavy <a class=3D"moz-txt-link-rfc2396E" href=3D"ma=
-ilto:petr@barix.com">&lt;petr@barix.com&gt;</a>
----
- .../devicetree/bindings/usb/da8xx-usb.txt          |  52 +++++++
- drivers/usb/musb/da8xx.c                           | 166 +++++++++++++++=
-++++++
- include/linux/platform_data/usb-davinci.h          |   3 +-
- 3 files changed, 220 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
-
-diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Docume=
-ntation/devicetree/bindings/usb/da8xx-usb.txt
-new file mode 100644
-index 0000000..c81d665
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-</pre>
-      </blockquote>
-      <pre wrap=3D"">
-Follow the compatible string for the filename (with wildcards is fine).
-
-</pre>
-      <blockquote type=3D"cite">
-        <pre wrap=3D"">@@ -0,0 +1,52 @@
-+TI DaVinci MUSB
-+
-+Required properties:
-+
-+ - compatible : Should be "ti,da850-musb" or "ti,da830-musb"
-+
-+ - mode : USB mode. "1" signifies HOST, "2" represents PERIPHERAL,
-+     "3" represents OTG.
-</pre>
-      </blockquote>
-      <pre wrap=3D"">
-Surely we have a similar property defined already. Don't create=20
-something new.
-
-</pre>
-      <blockquote type=3D"cite">
-        <pre wrap=3D"">+
-+ - power : This signifies the maximum current the controller can
-+     supply in host mode. The unit size is 2mA, the maximum value is 510=
-mA.
-</pre>
-      </blockquote>
-      <pre wrap=3D"">
-You should model this as a regulator.
-
-</pre>
-      <blockquote type=3D"cite">
-        <pre wrap=3D"">+ - num-eps : Specifies the number of endpoints. T=
-his is also a
-+     MUSB configuration-specific setting.
-</pre>
-      </blockquote>
-      <pre wrap=3D"">
-Just spell out endpoints.
-
-</pre>
-      <blockquote type=3D"cite">
-        <pre wrap=3D"">+
-+ - multipoint : Should be "1" indicating the musb controller supports
-+     multipoint. This is a MUSB configuration-specific setting.
-</pre>
-      </blockquote>
-      <pre wrap=3D"">
-What does multipoint mean?
-
-</pre>
-      <blockquote type=3D"cite">
-        <pre wrap=3D"">+ - ram-bits : Specifies the ram address size.
-</pre>
-      </blockquote>
-      <pre wrap=3D"">
-Needs a better description. Then it probably needs a better name too,=20
-but without a description I can't tell what that would be.
-
-</pre>
-      <blockquote type=3D"cite">
-        <pre wrap=3D"">+
-+
-+Optional properties:
-+
-+ - da8xx,phy20-clkmux-cfg: Integer. Defines the USB 2.0 PHY reference cl=
-ock source.
-+     Supported values: "0" for external pin, "1" for internal PLL.
-</pre>
-      </blockquote>
-      <pre wrap=3D"">
-How about a boolean property instead. Name it based on the less used=20
-option (external pin I'm guessing).
-
-</pre>
-      <blockquote type=3D"cite">
-        <pre wrap=3D"">+ - da8xx,phy20-refclock-frequency : Integer. Defi=
-nes the USB 2.0 PHY reference clock input
-+     frequency in Hz in case the clock is generated by the internal PLL.=
-
-+     Supported values are 12MHz, 13MHz, 19.2MHz, 20MHz, 24MHz, 26MHz, 38=
-=2E4MHz, 40MHz, 48MHz
-</pre>
-      </blockquote>
-      <pre wrap=3D"">
-da8xx is not a vendor.
-
-Rob
-</pre>
-    </blockquote>
-    <br>
-    <div class=3D"moz-signature">-- <br>
-      <meta http-equiv=3D"content-type" content=3D"text/html;
-        charset=3Diso-8859-2">
-      <title></title>
-      <br clear=3D"all">
-      <br>
-      -- <br>
-      <div><span
-style=3D"font-size:13px;font-family:arial,sans,sans-serif;color:#000000;t=
-ext-align:left">Petr
-
-          Kulhavy, MSc<br>
-        </span></div>
-      <span
-style=3D"font-size:13px;font-family:arial,sans,sans-serif;color:#000000;t=
-ext-align:left">System
-
-        Architect<br>
-      </span><span
-style=3D"font-size:13px;font-family:arial,sans,sans-serif;color:#000000;t=
-ext-align:left"><br>
-        <font size=3D"4"><b>BARIX</b></font><br>
-        <br>
-        <a href=3D"mailto:petr@barix.com" target=3D"_blank">petr@barix.co=
-m</a>
-        | Skype: brain.barix<br>
-        <br>
-        Barix AG, Seefeldstrasse 303 | 8008 Zurich, Switzerland<br>
-        T +41 43 43322 11 | <a href=3D"http://www.barix.com"
-          target=3D"_blank">www.barix.com</a><br>
-        <br>
-        <font size=3D"1">You have received this email because of your
-          relationship Barix AG and its affiliated companies. Barix AG
-          and its affiliated companies do not sell or exchange email
-          addresses, or any other personal contact information provided
-          by you with any third parties. All email distributions are
-          managed and controlled by Barix AG and its affiliated
-          companies.<br>
-          Barix AG, Seefeldstr. 303, 8008 Z=FCrich, Switzerland. Company
-          Reg. No: CH-020.3.023.869-8, VAT Reg. No: CHE-105.687.663.</fon=
-t></span>
-    </div>
-  </body>
-</html>
-
---------------090404060904000200080309--
+TlVMTCBpcyBhIHZhbGlkIGFyZ3VtZW50IHRvIGNsa19lbmFibGUoKS9jbGtfZGlzYWJsZSgpLiBS
+ZW1vdmUKcmVkdW5kYW50IGNoZWNrcyBiZWZvcmUgY2FsbGluZyB0aG9zZSBmdW5jdGlvbnMuCgpT
+aWduZWQtb2ZmLWJ5OiBMb3RoYXIgV2HDn21hbm4gPExXQEtBUk8tZWxlY3Ryb25pY3MuZGU+Ci0t
+LQogZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2ZlY19tYWluLmMgfCAyMyArKysrKysr
+KystLS0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwgMTQgZGVs
+ZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2Zl
+Y19tYWluLmMgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZmVjX21haW4uYwppbmRl
+eCA1MDJkYTZmLi41OTJhN2E0IDEwMDY0NAotLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVl
+c2NhbGUvZmVjX21haW4uYworKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZmVj
+X21haW4uYwpAQCAtMTg3NCwzNSArMTg3NCwzMCBAQCBzdGF0aWMgaW50IGZlY19lbmV0X2Nsa19l
+bmFibGUoc3RydWN0IG5ldF9kZXZpY2UgKm5kZXYsIGJvb2wgZW5hYmxlKQogCQkJfQogCQkJbXV0
+ZXhfdW5sb2NrKCZmZXAtPnB0cF9jbGtfbXV0ZXgpOwogCQl9Ci0JCWlmIChmZXAtPmNsa19yZWYp
+IHsKLQkJCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZShmZXAtPmNsa19yZWYpOwotCQkJaWYgKHJl
+dCkKLQkJCQlnb3RvIGZhaWxlZF9jbGtfcmVmOwotCQl9CisKKwkJcmV0ID0gY2xrX3ByZXBhcmVf
+ZW5hYmxlKGZlcC0+Y2xrX3JlZik7CisJCWlmIChyZXQpCisJCQlnb3RvIGZhaWxlZF9jbGtfcmVm
+OwogCX0gZWxzZSB7CiAJCWNsa19kaXNhYmxlX3VucHJlcGFyZShmZXAtPmNsa19haGIpOwotCQlp
+ZiAoZmVwLT5jbGtfZW5ldF9vdXQpCi0JCQljbGtfZGlzYWJsZV91bnByZXBhcmUoZmVwLT5jbGtf
+ZW5ldF9vdXQpOworCQljbGtfZGlzYWJsZV91bnByZXBhcmUoZmVwLT5jbGtfZW5ldF9vdXQpOwog
+CQlpZiAoZmVwLT5jbGtfcHRwKSB7CiAJCQltdXRleF9sb2NrKCZmZXAtPnB0cF9jbGtfbXV0ZXgp
+OwogCQkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGZlcC0+Y2xrX3B0cCk7CiAJCQlmZXAtPnB0cF9j
+bGtfb24gPSBmYWxzZTsKIAkJCW11dGV4X3VubG9jaygmZmVwLT5wdHBfY2xrX211dGV4KTsKIAkJ
+fQotCQlpZiAoZmVwLT5jbGtfcmVmKQotCQkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGZlcC0+Y2xr
+X3JlZik7CisJCWNsa19kaXNhYmxlX3VucHJlcGFyZShmZXAtPmNsa19yZWYpOwogCX0KIAogCXJl
+dHVybiAwOwogCiBmYWlsZWRfY2xrX3JlZjoKLQlpZiAoZmVwLT5jbGtfcmVmKQotCQljbGtfZGlz
+YWJsZV91bnByZXBhcmUoZmVwLT5jbGtfcmVmKTsKKwljbGtfZGlzYWJsZV91bnByZXBhcmUoZmVw
+LT5jbGtfcmVmKTsKIGZhaWxlZF9jbGtfcHRwOgotCWlmIChmZXAtPmNsa19lbmV0X291dCkKLQkJ
+Y2xrX2Rpc2FibGVfdW5wcmVwYXJlKGZlcC0+Y2xrX2VuZXRfb3V0KTsKKwljbGtfZGlzYWJsZV91
+bnByZXBhcmUoZmVwLT5jbGtfZW5ldF9vdXQpOwogZmFpbGVkX2Nsa19lbmV0X291dDoKLQkJY2xr
+X2Rpc2FibGVfdW5wcmVwYXJlKGZlcC0+Y2xrX2FoYik7CisJY2xrX2Rpc2FibGVfdW5wcmVwYXJl
+KGZlcC0+Y2xrX2FoYik7CiAKIAlyZXR1cm4gcmV0OwogfQotLSAKMi4xLjQKCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
+aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
