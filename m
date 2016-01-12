@@ -1,51 +1,88 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [patch 1/2 -next] mdio: remove an unneed condition
-Date: Tue, 12 Jan 2016 15:09:30 +0100
-Message-ID: <20160112140930.GB5527@lunn.ch>
-References: <20160112093534.GE29804@mwanda>
+From: Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] dts/ls2080a: Update DTSI to add support of SP805 WDT
+Date: Tue, 12 Jan 2016 22:17:50 +0800
+Message-ID: <CADRPPNTS4yD6LEJTZy-307jT0n+sQcCWf3Gj1mrUWoaTyMZB6w@mail.gmail.com>
+References: <1450189825-29065-1-git-send-email-bhupesh.sharma@freescale.com>
+	<1450189825-29065-3-git-send-email-bhupesh.sharma@freescale.com>
+	<CAFTCetS7P6wF3MhgMSXSXP_jnLQvBc-NSY0TW3OOnCjtbL0N_w@mail.gmail.com>
+	<201512241118.32946.arnd@arndb.de>
+	<BN3PR0301MB1298AF2C5A88FCA392D0E9DD82E70@BN3PR0301MB1298.namprd03.prod.outlook.com>
+	<20151225015616.GA27329@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160112093534.GE29804@mwanda>
+In-Reply-To: <20151225015616.GA27329@dragon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sharma Bhupesh <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Bhupesh SHARMA <bhupesh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 12, 2016 at 12:35:34PM +0300, Dan Carpenter wrote:
-> It used to be that mdio->irq was a pointer but after e7f4dc3536a4
-> ('mdio: Move allocation of interrupts into core') it's an array inside
-> the mdio struct so it can never be NULL.
-> 
-> Signed-off-by: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+On Fri, Dec 25, 2015 at 9:56 AM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Dec 24, 2015 at 08:41:54PM +0000, Sharma Bhupesh wrote:
+>>
+>>
+>> > -----Original Message-----
+>> > From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
+>> > Sent: Thursday, December 24, 2015 3:49 PM
+>> > To: Bhupesh SHARMA
+>> > Cc: Sharma Bhupesh-B45370; Mark Rutland; linux-arm-
+>> > kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Olof Johansson; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+>> > Rob Herring; Will Deacon; Catalin Marinas; Li Yang-Leo-R58472; Wood
+>> > Scott-B07421; Yoder Stuart-B08248; shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+>> > Subject: Re: [PATCH v3 2/2] dts/ls2080a: Update DTSI to add support of
+>> > SP805 WDT
+>> >
+>> > On Wednesday 23 December 2015, Bhupesh SHARMA wrote:
+>> > >
+>> > > Hi Arnd, Olof, Kevin
+>> > >
+>> > > On Tue, Dec 15, 2015 at 8:00 PM, Bhupesh Sharma
+>> > > <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+>> > > > This patch updates the LS2080a DTSI (DTS Include) file to add
+>> > > > support for eight SP805 Watchdog units which can be used to reset
+>> > > > the eight Cortex-A57 cores available on LS2080A.
+>> > > >
+>> > > > Signed-off-by: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>> > > > ---
+>> > > >  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi |   56
+>> > ++++++++++++++++++++++++
+>> > > >  1 file changed, 56 insertions(+)
+>> > >
+>> > > Since Rob has acked the SP805 WDT binding documentation patch (patch
+>> > > 1/2 of this series),
+>> > > can this DTSI change, please be considered for absorption in the arm-
+>> > soc tree.
+>> >
+>> > Sure, please submit it for inclusion. Who is the maintainer for
+>> > arch/arm64/boot/dts/freescale/ ? Can they pick up all the freescale
+>> > related dts changes and submit them as a pull request? Should they go
+>> > through Shawn's tree maybe?
+>>
+>> Thanks Arnd. For now, may-be I can send this patchset with Rob's Acked-by added
+>> for 1/2 to 'arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org'. So that this can be picked by via the arm-soc tree.
+>> Shawn, I hope it's ok with you.
+>
+> Yeah.  I'm maintaining a git tree, collecting all Freescale arm32
+> platform patches, and sending them to arm-soc for each merge window.
+> If I can be copied on those arm64 patches, I do not mind handling them
+> together with arm32 ones.
 
-For both patches:
+Shawn,  Thanks a lot for offering to help.
 
-Reviewd-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Sorry for a very delayed response as I was on vacation.  I have
+recently been made responsible by the company to push and track the
+upstreaming of all armv8 related software within the Digital
+Networking group of FSL/NXP which is currently the only business unit
+to use ARMv8 cores.  We also agreed in an internal discussion that it
+will be good for me to also help organize patches for upstream
+acceptance.  I think I can help to make it more effective in
+communicating community requirements and feedback to all related
+developers and their management.  And I can also help to enable the
+internal test team to better test the staging patches before they hit
+the mainline.
 
-Thanks
-	Andrew
-
-> 
-> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> index c0a8f84..86829f8 100644
-> --- a/drivers/of/of_mdio.c
-> +++ b/drivers/of/of_mdio.c
-> @@ -62,11 +62,9 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio, struct device_node *chi
->  	rc = irq_of_parse_and_map(child, 0);
->  	if (rc > 0) {
->  		phy->irq = rc;
-> -		if (mdio->irq)
-> -			mdio->irq[addr] = rc;
-> +		mdio->irq[addr] = rc;
->  	} else {
-> -		if (mdio->irq)
-> -			phy->irq = mdio->irq[addr];
-> +		phy->irq = mdio->irq[addr];
->  	}
->  
->  	if (of_property_read_bool(child, "broken-turn-around"))
+Regards,
+Leo
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
