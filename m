@@ -1,100 +1,169 @@
 From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: [PATCH 3/5] PCI: xilinx: Modifying AXI PCIe Host Bridge driver to work on both  Zynq and Microblaze
-Date: Tue, 12 Jan 2016 10:56:37 +0530
-Message-ID: <1452576399-1513-4-git-send-email-bharatku@xilinx.com>
+Subject: [PATCH 5/5] Microblaze: Modifying microblaze PCI subsytem to support generic Xilinx  AXI PCIe Host Bridge IP driver
+Date: Tue, 12 Jan 2016 10:56:39 +0530
+Message-ID: <1452576399-1513-6-git-send-email-bharatku@xilinx.com>
 References: <1452576399-1513-1-git-send-email-bharatku@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1452576399-1513-1-git-send-email-bharatku@xilinx.com>
-Sender: linux-pci-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: bhelgaas@google.com, michals@xilinx.com, lorenzo.pieralisi@arm.com, yinghai@kernel.org, wangyijing@huawei.com, robh@kernel.org, russell.joyce@york.ac.uk, sorenb@xilinx.com, jiang.liu@linux.intel.com, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, Ravi Kiran Gummaluri <rgummal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Modifying Xilinx AXI PCIe Host Bridge Soft IP driver to work on both
-Zynq and Microblaze Architectures.
-With these modifications drivers/pci/host/pcie-xilinx.c, will
-work on both Zynq and Microblaze Architectures.
+This patch does required modifications to microblaze PCI subsystem, to
+work with generic driver (drivers/pci/host/pcie-xilinx.c) on Microblaze
+and Zynq.
 
 Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
 Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
 ---
-Changes:
-Changed Total number of MSI IRQ count logic according to both architectures.
-Updated MSI assigning functions accordingly to new count.
-Modified irq_domain_add_linear with new MSI IRQ count.
-Added #ifdef to pci_fixup_irqs which are ARM specific API.
+Modified pcibios_fixup_bus in pci-common.c, as per generic architecuture.
+Modified pcibios_align_resource in pci-common.c, as per generic
+architecuture.
+Modified pcibios_get_phb_of_node function in pci-common.c, to remove
+dependency on struct pci_controller.
+Removed pci_domain_nr in pci-common.c, instead using generic code.
+Added pcibios_add_device in pci-common.c, as per generic architecuture.
+Adding Kernel configuration in arch/microblaze as required for generic PCI
+domains.
+Added kernel configuration for driver to support Microblaze.
 ---
- drivers/pci/host/pcie-xilinx.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ arch/microblaze/Kconfig          |  3 ++
+ arch/microblaze/pci/pci-common.c | 61 +++++++++++++++-------------------------
+ drivers/pci/host/Kconfig         |  2 +-
+ 3 files changed, 27 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/pci/host/pcie-xilinx.c b/drivers/pci/host/pcie-xilinx.c
-index 3e3757f..05f6f2e 100644
---- a/drivers/pci/host/pcie-xilinx.c
-+++ b/drivers/pci/host/pcie-xilinx.c
-@@ -93,6 +93,11 @@
+diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
+index 0bce820..c3702b9 100644
+--- a/arch/microblaze/Kconfig
++++ b/arch/microblaze/Kconfig
+@@ -271,6 +271,9 @@ config PCI
+ config PCI_DOMAINS
+ 	def_bool PCI
  
- /* Number of MSI IRQs */
- #define XILINX_NUM_MSI_IRQS		128
-+#ifdef CONFIG_ARM
-+#define TOT_NR_IRQS			XILINX_NUM_MSI_IRQS
-+#else
-+#define TOT_NR_IRQS			(NR_IRQS + XILINX_NUM_MSI_IRQS)
-+#endif
++config PCI_DOMAINS_GENERIC
++	def_bool PCI_DOMAINS
++
+ config PCI_SYSCALL
+ 	def_bool PCI
  
+diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
+index ae838ed..bc72856 100644
+--- a/arch/microblaze/pci/pci-common.c
++++ b/arch/microblaze/pci/pci-common.c
+@@ -123,17 +123,6 @@ unsigned long pci_address_to_pio(phys_addr_t address)
+ }
+ EXPORT_SYMBOL_GPL(pci_address_to_pio);
  
- /**
-@@ -238,15 +243,20 @@ static void xilinx_pcie_destroy_msi(unsigned int irq)
-  */
- static int xilinx_pcie_assign_msi(struct xilinx_pcie_port *port)
+-/*
+- * Return the domain number for this bus.
+- */
+-int pci_domain_nr(struct pci_bus *bus)
+-{
+-	struct pci_controller *hose = pci_bus_to_host(bus);
+-
+-	return hose->global_number;
+-}
+-EXPORT_SYMBOL(pci_domain_nr);
+-
+ /* This routine is meant to be used early during boot, when the
+  * PCI bus numbers have not yet been assigned, and you need to
+  * issue PCI config cycles to an OF device.
+@@ -863,26 +852,10 @@ void pcibios_setup_bus_devices(struct pci_bus *bus)
+ 
+ void pcibios_fixup_bus(struct pci_bus *bus)
  {
-+	int irq;
- 	int pos;
+-	/* When called from the generic PCI probe, read PCI<->PCI bridge
+-	 * bases. This is -not- called when generating the PCI tree from
+-	 * the OF device-tree.
+-	 */
+-	if (bus->self != NULL)
+-		pci_read_bridge_bases(bus);
+-
+-	/* Now fixup the bus bus */
+-	pcibios_setup_bus_self(bus);
+-
+-	/* Now fixup devices on that bus */
+-	pcibios_setup_bus_devices(bus);
++	/* nothing to do */
+ }
+ EXPORT_SYMBOL(pcibios_fixup_bus);
  
- 	pos = find_first_zero_bit(msi_irq_in_use, XILINX_NUM_MSI_IRQS);
--	if (pos < XILINX_NUM_MSI_IRQS)
-+	irq = pos;
-+#ifdef CONFIG_MICROBLAZE
-+	irq = XILINX_NUM_MSI_IRQS + pos;
-+#endif
-+	if (irq < TOT_NR_IRQS)
- 		set_bit(pos, msi_irq_in_use);
- 	else
- 		return -ENOSPC;
+-static int skip_isa_ioresource_align(struct pci_dev *dev)
+-{
+-	return 0;
+-}
+-
+ /*
+  * We need to avoid collisions with `mirrored' VGA ports
+  * and other strange ISA hardware, so we always want the
+@@ -899,20 +872,20 @@ static int skip_isa_ioresource_align(struct pci_dev *dev)
+ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
+ 				resource_size_t size, resource_size_t align)
+ {
+-	struct pci_dev *dev = data;
+ 	resource_size_t start = res->start;
  
--	return pos;
-+	return irq;
+-	if (res->flags & IORESOURCE_IO) {
+-		if (skip_isa_ioresource_align(dev))
+-			return start;
+-		if (start & 0x300)
+-			start = (start + 0x3ff) & ~0x3ff;
+-	}
+-
+ 	return start;
+ }
+ EXPORT_SYMBOL(pcibios_align_resource);
+ 
++int pcibios_add_device(struct pci_dev *dev)
++{
++	dev->irq = of_irq_parse_and_map_pci(dev, 0, 0);
++
++	return 0;
++}
++EXPORT_SYMBOL(pcibios_add_device);
++
+ /*
+  * Reparent resource children of pr that conflict with res
+  * under res, and make res replace those children.
+@@ -1335,9 +1308,21 @@ static void pcibios_setup_phb_resources(struct pci_controller *hose,
+ 
+ struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus)
+ {
+-	struct pci_controller *hose = bus->sysdata;
++	struct device_node *np;
++
++	for_each_node_by_type(np, "pci") {
++		const void *prop;
++		unsigned int bus_min;
++
++		prop = of_get_property(np, "bus-range", NULL);
++		if (!prop)
++			continue;
++		bus_min = be32_to_cpup(prop);
++		if (bus->number == bus_min)
++			return np;
++	}
+ 
+-	return of_node_get(hose->dn);
++	return NULL;
  }
  
- /**
-@@ -520,7 +530,7 @@ static void xilinx_pcie_free_irq_domain(struct xilinx_pcie_port *port)
+ static void pcibios_scan_phb(struct pci_controller *hose)
+diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+index d5e58ba..7c56c2e 100644
+--- a/drivers/pci/host/Kconfig
++++ b/drivers/pci/host/Kconfig
+@@ -79,7 +79,7 @@ config PCI_KEYSTONE
  
- 		free_pages(port->msi_pages, 0);
- 
--		num_irqs = XILINX_NUM_MSI_IRQS;
-+		num_irqs = TOT_NR_IRQS;
- 	} else {
- 		/* INTx */
- 		num_irqs = 4;
-@@ -565,7 +575,7 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
- 	/* Setup MSI */
- 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
- 		port->irq_domain = irq_domain_add_linear(node,
--							 XILINX_NUM_MSI_IRQS,
-+							 TOT_NR_IRQS,
- 							 &msi_domain_ops,
- 							 &xilinx_pcie_msi_chip);
- 		if (!port->irq_domain) {
-@@ -705,7 +715,9 @@ static int xilinx_pcie_probe(struct platform_device *pdev)
- #endif
- 	pci_scan_child_bus(bus);
- 	pci_assign_unassigned_bus_resources(bus);
-+#ifdef CONFIG_ARM
- 	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
-+#endif
- 	pci_bus_add_devices(bus);
- 	platform_set_drvdata(pdev, port);
- 
+ config PCIE_XILINX
+ 	bool "Xilinx AXI PCIe host bridge support"
+-	depends on ARCH_ZYNQ
++	depends on ARCH_ZYNQ || MICROBLAZE
+ 	help
+ 	  Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
+ 	  Host Bridge driver.
 -- 
 2.1.1
