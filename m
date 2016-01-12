@@ -1,157 +1,483 @@
-From: Rongrong Zou <zourongrong@huawei.com>
-Subject: Re: [PATCH v1 3/3] ARM64 LPC: update binding doc
-Date: Tue, 12 Jan 2016 17:25:56 +0800
-Message-ID: <5694C6A4.8060308@huawei.com>
-References: <1451396032-23708-1-git-send-email-zourongrong@gmail.com>
- <CABTftiT1+AmrNjiAie-T6on-oWA4Zz73+Tj2pQrixMT3o475uw@mail.gmail.com>
- <568912EE.9030009@huawei.com> <15026471.7nGZ0rWlIf@wuerfel>
- <20160111161415.GM13633@e106497-lin.cambridge.arm.com>
- <56946768.7090805@gmail.com>
- <20160112090722.GN13633@e106497-lin.cambridge.arm.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V2 1/6] DT: mfd: add device-tree binding doc fro PMIC max77620/max20024
+Date: Tue, 12 Jan 2016 14:47:48 +0530
+Message-ID: <1452590273-16421-2-git-send-email-ldewangan@nvidia.com>
+References: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160112090722.GN13633@e106497-lin.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: liviu.dudau@arm.com, Rongrong Zou <zourongrong@gmail.com>
-Cc: devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Arnd Bergmann <arnd@arndb.de>, Corey Minyard <minyard@acm.org>, gregkh@linuxfoundation.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linuxarm@huawei.com, benh@kernel.crashing.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com
+Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-5ZyoIDIwMTYvMS8xMiAxNzowNywgbGl2aXUuZHVkYXVAYXJtLmNvbSDlhpnpgZM6Cj4gT24gVHVl
-LCBKYW4gMTIsIDIwMTYgYXQgMTA6Mzk6MzZBTSArMDgwMCwgUm9uZ3JvbmcgWm91IHdyb3RlOgo+
-PiBPbiAyMDE2LzEvMTIgMDoxNCwgbGl2aXUuZHVkYXVAYXJtLmNvbSB3cm90ZToKPj4+IE9uIE1v
-biwgSmFuIDA0LCAyMDE2IGF0IDEyOjEzOjA1UE0gKzAxMDAsIEFybmQgQmVyZ21hbm4gd3JvdGU6
-Cj4+Pj4gT24gU3VuZGF5IDAzIEphbnVhcnkgMjAxNiAyMDoyNDoxNCBSb25ncm9uZyBab3Ugd3Jv
-dGU6Cj4+Pj4+IOWcqCAyMDE1LzEyLzMxIDIzOjAwLCBSb25ncm9uZyBab3Ug5YaZ6YGTOgo+Pj4+
-Pj4gMjAxNS0xMi0zMSAyMjo0MCBHTVQrMDg6MDAgQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5k
-ZSA8bWFpbHRvOmFybmRAYXJuZGIuZGU+PjoKPj4+Pj4+ICAgPiBPbiBUaHVyc2RheSAzMSBEZWNl
-bWJlciAyMDE1IDIyOjEyOjE5IFJvbmdyb25nIFpvdSB3cm90ZToKPj4+Pj4+ICAgPiA+IOWcqCAy
-MDE1LzEyLzMwIDE3OjA2LCBBcm5kIEJlcmdtYW5uIOWGmemBkzoKPj4+Pj4+ICAgPiA+ID4gT24g
-VHVlc2RheSAyOSBEZWNlbWJlciAyMDE1IDIxOjMzOjUyIFJvbmdyb25nIFpvdSB3cm90ZToKPj4+
-Pj4+ICAgPgo+Pj4+Pj4gICA+IFRoZSBEVCBzYW1wbGUgYWJvdmUgbG9va3MgZ29vZCBpbiBwcmlu
-Y2lwbGUuIEkgYmVsaWV2ZSB3aGF0IHlvdSBhcmUgbWlzc2luZwo+Pj4+Pj4gICA+IGhlcmUgaXMg
-Y29kZSBpbiB5b3VyIGRyaXZlciB0byBzY2FuIHRoZSBjaGlsZCBub2RlcyB0byBjcmVhdGUgdGhl
-IHBsYXRmb3JtCj4+Pj4+PiAgID4gZGV2aWNlcy4gb2ZfYnVzX2lzYV90cmFuc2xhdGUoKSBzaG91
-bGQgd29yayB3aXRoIHlvdXIgZGVmaW5pdGlvbiBoZXJlCj4+Pj4+PiAgID4gYW5kIGNyZWF0ZSB0
-aGUgY29ycmVjdCBJT1JFU09VUkNFX0lPIHJlc291cmNlcy4gWW91IGRvbid0IGhhdmUgYW55IE1N
-SU8KPj4+Pj4+ICAgPiByZXNvdXJjZXMsIHNvIHRoZSBhYnNlbmNlIG9mIGEgcmFuZ2VzIHByb3Bl
-cnR5IGlzIG9rLiBNYXliZSBhbGwgeW91Cj4+Pj4+PiAgID4gYXJlIG1pc3NpbmcgaXMgYSBjYWxs
-IHRvIG9mX3BsYXRmb3JtX3BvcHVsYXRlKCkgb3Igb2ZfcGxhdGZvcm1fYnVzX3Byb2JlKCk/Cj4+
-Pj4+PiAgID4KPj4+Pj4+Cj4+Pj4+PiBZb3UgYXJlIHJpZ2h0LiB0aGFua3MsIGknbGwgdHJ5IG9u
-IHRlc3QgYm9hcmQgLiAgaWYgaSBnZXQgdGhlIGNvcnJlY3QgcmVzdWx0ICwgdGhlIG5ldyBwYXRj
-aAo+Pj4+Pj4gd2lsbCBiZSBzZW50IGxhdGVyLiBCeSB0aGUgd2F5LCBpdCdzIG15IGFub3RoZXIg
-ZW1haWwgYWNjb3VudCB1c2Ugd2hlbiBpIGF0IGhvbWUuCj4+Pj4+Cj4+Pj4+IEkgdHJpZWQsIGFu
-ZCB0aGVyZSBuZWVkIHNvbWUgYWRkaXRpb25hbCBjaGFuZ2VzLgo+Pj4+Pgo+Pj4+PiBpc2FAYTAx
-YjAwMDAgewo+Pj4+Pgo+Pj4+PiAvKnRoZSBub2RlIG5hbWUgc2hvdWxkIHN0YXJ0IHdpdGggImlz
-YSIsIGJlY2F1c2Ugb2YgYmVsb3cgZGVmaW5pdGlvbgo+Pj4+PiAqIHN0YXRpYyBpbnQgb2ZfYnVz
-X2lzYV9tYXRjaChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQo+Pj4+PiAqIHsKPj4+Pj4gKglyZXR1
-cm4gIXN0cmNtcChucC0+bmFtZSwgImlzYSIpOwo+Pj4+PiAqIH0KPj4+Pgo+Pj4+IExvb2tzIGdv
-b2QuIEl0IHdvdWxkIGJlIG5pY2VyIHRvIG1hdGNoIG9uIGRldmljZV90eXBlIHRoYW4gb24gbmFt
-ZSwKPj4+PiBidXQgdGhpcyBpcyBhbmNpZW50IGNvZGUgYW5kIGl0J3MgcHJvYmFibHkgYmVzdCBu
-b3QgdG8gdG91Y2ggaXQKPj4+PiBzbyB3ZSBkb24ndCBhY2NpZGVudGFsbHkgYnJlYWsgc29tZSBv
-bGQgU1BBUkMgb3IgUFBDIHN5c3RlbS4KPj4+Pgo+Pj4+PiAqLwo+Pj4+PiAJY29tcGF0aWJsZSA9
-ICJsb3ctcGluLWNvdW50IjsKPj4+Pj4gCWRldmljZV90eXBlID0gImlzYSI7Cj4+Pj4+IAkjYWRk
-cmVzcy1jZWxscyA9IDwyPjsKPj4+Pj4gCSNzaXplLWNlbGxzID0gPDE+Owo+Pj4+PiAJcmVnID0g
-PDB4MCAweGEwMWIwMDAwIDB4MCAweDEwMDAwPjsKPj4+Pj4gCXJhbmdlcyA9IDwweDEgMHgwIDB4
-MCAweDAgMHgxMDAwPjsKPj4+Pj4gLyoKPj4+Pj4gKiAgcmFuZ2VzIGlzIHJlcXVpcmVkLCB0aGVu
-IGkgY2FuIGdldCB0aGUgSU9SRVNPVVJDRV9JTyA8MHhlNCw0PiBmcm9tICJyZWcgPSA8MHgxLCAw
-eDAwMDAwMGU0LCA0PiIuCj4+Pj4+ICoKPj4+Pj4gKi8KPj4+Pj4gCWlwbWlfMDppcG1pQDAwMDAw
-MGU0ewo+Pj4+PiAJCWRldmljZV90eXBlID0gImlwbWkiOwo+Pj4+PiAJCWNvbXBhdGlibGUgPSAi
-aXBtaS1idCI7Cj4+Pj4+IAkJcmVnID0gPDB4MSAweDAwMDAwMGU0IDB4ND47Cj4+Pj4+IH07Cj4+
-Pj4+Cj4+Pj4KPj4+PiBUaGlzIGxvb2tzIHdyb25nOiB0aGUgcHJvcGVydHkgYWJvdmUgc2F5cyB0
-aGF0IHRoZSBJL08gcG9ydCByYW5nZSBpcwo+Pj4+IHRyYW5zbGF0ZWQgdG8gTU1JTyBhZGRyZXNz
-IDB4MDAwMDAwMDAgdG8gMHgwMDAxMDAwMCwgd2hpY2ggaXMgbm90Cj4+Pj4gdHJ1ZSBvbiB5b3Vy
-IGhhcmR3YXJlLiBJIHRoaW5rIHRoaXMgbmVlZHMgdG8gYmUgY2hhbmdlZCBpbiB0aGUgY29kZQo+
-Pj4+IHNvIHRoZSByYW5nZXMgcHJvcGVydHkgaXMgbm90IHJlcXVpcmVkIGZvciBJL08gcG9ydHMu
-Cj4+Pj4KPj4+Pj4gZHJpdmVyc1xvZlxhZGRyZXNzLmMKPj4+Pj4gc3RhdGljIGludCBfX29mX2Fk
-ZHJlc3NfdG9fcmVzb3VyY2Uoc3RydWN0IGRldmljZV9ub2RlICpkZXYsCj4+Pj4+ICAgICAgICAg
-ICAgICAgICAgIGNvbnN0IF9fYmUzMiAqYWRkcnAsIHU2NCBzaXplLCB1bnNpZ25lZCBpbnQgZmxh
-Z3MsCj4+Pj4+ICAgICAgICAgICAgICAgICAgIGNvbnN0IGNoYXIgKm5hbWUsIHN0cnVjdCByZXNv
-dXJjZSAqcikKPj4+Pj4gewo+Pj4+PiAgICAgICAgICAgdTY0IHRhZGRyOwo+Pj4+Pgo+Pj4+PiAg
-ICAgICAgICAgaWYgKChmbGFncyAmIChJT1JFU09VUkNFX0lPIHwgSU9SRVNPVVJDRV9NRU0pKSA9
-PSAwKQo+Pj4+PiAgICAgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsKPj4+Pj4gICAgICAg
-ICAgIHRhZGRyID0gb2ZfdHJhbnNsYXRlX2FkZHJlc3MoZGV2LCBhZGRycCk7Cj4+Pj4+ICAgICAg
-ICAgICBpZiAodGFkZHIgPT0gT0ZfQkFEX0FERFIpCj4+Pj4+ICAgICAgICAgICAgICAgICAgIHJl
-dHVybiAtRUlOVkFMOwo+Pj4+PiAgICAgICAgICAgbWVtc2V0KHIsIDAsIHNpemVvZihzdHJ1Y3Qg
-cmVzb3VyY2UpKTsKPj4+Pj4gICAgICAgICAgIGlmIChmbGFncyAmIElPUkVTT1VSQ0VfSU8pIHsK
-Pj4+Pj4gICAgICAgICAgICAgICAgICAgdW5zaWduZWQgbG9uZyBwb3J0Owo+Pj4+Pgo+Pj4+PiAv
-KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
-KioqKioqKiovCj4+Pj4+IC8qbGVnYWN5IHBvcnQoPCAweDEwMDApIGlzIHJlc2VydmVkLCBhbmQg
-bmVlZCBubyB0cmFuc2xhdGlvbiBoZXJlKi8KPj4+Pj4gLyoqKioqKioqKioqKioqKioqKioqKioq
-KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqLwo+Pj4+PiAgICAgICAg
-ICAgICAgICAgICBpZih0YWRkciArIHNpemUgPCBQQ0lCSU9TX01JTl9JTyl7Cj4+Pj4+ICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgci0+c3RhcnQgPSB0YWRkcjsKPj4+Pj4gICAgICAgICAgICAg
-ICAgICAgICAgICAgICByLT5lbmQgPSB0YWRkciArIHNpemUgLSAxOwo+Pj4+PiAgICAgICAgICAg
-ICAgICAgICB9Cj4+Pj4KPj4+PiBJIGRvbid0IGxpa2UgaGF2aW5nIGEgc3BlY2lhbCBjYXNlIGJh
-c2VkIG9uIHRoZSBhZGRyZXNzIGhlcmUsCj4+Pj4gdGhlIHNhbWUga2luZCBvZiBoYWNrIG1pZ2h0
-IGJlIG5lZWRlZCBmb3IgUENJIEkvTyBzcGFjZXMgaW4KPj4+PiBoYXJkd2FyZSB0aGF0IHVzZXMg
-YW4gaW5kaXJlY3QgbWV0aG9kIGxpa2UgeW91ciBMUEMgYnVzCj4+Pj4gZG9lcywgYW5kIHRoZSBj
-b2RlIGFib3ZlIHdpbGwgbm90IHdvcmsgb24gYW55IExQQyBpbXBsZW1lbnRhdGlvbgo+Pj4+IHRo
-YXQgY29ycmVjdGx5IG11bHRpcGxleGVzIGl0cyBJL08gcG9ydHMgd2l0aCB0aGUgZmlyc3QgUENJ
-IGRvbWFpbi4KPj4+Pgo+Pj4+IEkgdGhpbmsgaXQgd291bGQgYmUgYmV0dGVyIHRvIGF2b2lkIHRy
-YW5zbGF0aW5nIHRoZSBwb3J0IGludG8KPj4+PiBhIHBoeXNpY2FsIGFkZHJlc3MgdG8gc3RhcnQg
-d2l0aCBqdXN0IHRvIHRyYW5zbGF0ZSBpdCBiYWNrIGludG8KPj4+PiBhIHBvcnQgbnVtYmVyLCB3
-aGF0IHdlIG5lZWQgaW5zdGVhZCBpcyB0aGUgb2Zmc2V0IGJldHdlZW4gdGhlCj4+Pj4gYnVzIHNw
-ZWNpZmljIHBvcnQgbnVtYmVyIGFuZCB0aGUgbGludXggcG9ydCBudW1iZXIuIEkndmUgYWRkZWQK
-Pj4+PiBMaXZpdSB0byBDYywgaGUgd3JvdGUgdGhpcyBjb2RlIG9yaWdpbmFsbHkgYW5kIG1heSBo
-YXZlIHNvbWUgaWRlYQo+Pj4+IG9mIGhvdyB3ZSBjb3VsZCBkbyB0aGF0Lgo+Pj4KPj4+IEhpLAo+
-Pgo+PiBIaSBMaXZpdSwKPj4KPj4gVGhhbmtzIGZvciByZXZpZXdpbmcgdGhpcy4KPj4KPj4+Cj4+
-PiBHZXR0aW5nIGJhY2sgdG8gd29yayBhZnRlciBhIGxvbmdlciBob2xpZGF5LCBteSBicmFpbiBt
-aWdodCBub3QgYmUgcnVubmluZwo+Pj4gYXQgZnVsbCBzcGVlZCBoZXJlLCBzbyBJJ20gdHJ5aW5n
-IHRvIGNsYXJpZnkgdGhpbmdzIGEgYml0IGhlcmUuCj4+Pgo+Pj4gSXQgbG9va3MgdG8gbWUgbGlr
-ZSBSb25ncm9uZyBpcyB0cnlpbmcgdG8gdHJhcCB0aGUgaW5iKCkvb3V0YigpIGNhbGxzIHRoYXQg
-aGUKPj4+IGFkZGVkIHRvIGFybTY0IGJ5IHBhdGNoIDEvMyBhbmQgcmVkaXJlY3QgdGhvc2Ugb3Bl
-cmF0aW9ucyB0byB0aGUgbWVtb3J5Cj4+PiBtYXBwZWQgTFBDIGRyaXZlci4gSSB0aGluayB0aGUg
-d2hvbGUgcmVkaXJlY3Rpb24gYW5kIHJlZ2lzdHJhdGlvbiBvZiBpbmIvb3V0Ygo+Pj4gb3BzIGNh
-biBiZSBtYWRlIGNsZWFuZXIsIHNvIHRoYXQgdGhlIGdlbmVyYWwgY29uY2VwdCByZXNlbWJsZXMg
-dGhlIERNQSBvcHMKPj4+IHJlZ2lzdHJhdGlvbj8gKEkgaGF2ZSB0aGlzIG1lbnRhbCBwaWN0dXJl
-IHRoYXQgd2hhdCBSb25ncm9uZyBpcyB0cnlpbmcgdG8gZG8KPj4+IGlzIHNpbWlsYXIgdG8gd2hh
-dCBhIERNQSBlbmdpbmUgZG9lcywgZXhjZXB0IHRoaXMgaXMgc2xvd2luZyBkb3duIHRoaW5ncyB0
-bwo+Pj4gYnl0ZSBsZXZlbCkuIElmIHRoYXQgaXMgZG9uZSBwcm9wZXJseSBpbiB0aGUgcGFyZW50
-IG5vZGUsIHRoZW4gd2Ugc2hvdWxkIG5vdAo+Pj4gY2FyZSB3aGF0IHRoZSBQQ0lCSU9TX01JTl9J
-TyB2YWx1ZSBpcyBhcyB0aGUgaW5iKCkvb3V0YigpIGNhbGxzIHdpbGwgYWx3YXlzCj4+PiBnbyB0
-aHJvdWdoIHRoZSByZWRpcmVjdGlvbiBmb3IgdGhlIGNoaWxkcmVuLgo+Pj4KPj4+IEFzIGZvciB0
-aGUgcmFuZ2VzIHByb3BlcnR5OiBkb2VzIGhlIHdhbnRzIHRoZSBpcG1pLWJ0IGRyaXZlciB0byBz
-ZWUgaW4gdGhlCj4+PiByZWcgcHJvcGVydHkgdGhlIGxlZ2FjeSBJU0EgSS9PIHBvcnRzIHZhbHVl
-cyBvciB0aGUgQ1BVIGFkZHJlc3Nlcz8gSWYgdGhlIGZvcm1lciwKPj4+IHRoZW4gSSBhZ3JlZSB0
-aGF0IHRoZSByYW5nZSBwcm9wZXJ0eSBzaG91bGQgbm90IGJlIHJlcXVpcmVkLCBidXQgYWxzbyB0
-aGUKPj4+IHJlZyB2YWx1ZXMgbmVlZCB0byBiZSBjaGFuZ2VkIChkcm9wIHRoZSB0b3AgYml0KS4g
-SWYgdGhlIGxhdGVyLCB0aGVuIHRoZQo+Pj4gcmFuZ2VzIHByb3BlcnR5IGlzIHJlcXVpcmVkIHRv
-IGRvIHRoZSBwcm9wZXIgdHJhbnNsYXRpb24uCj4+Cj4+IFRoZSBmb3JtZXIsIHRoYW5rcy4KPj4K
-Pj4+Cj4+PiBSb25ncm9uZywgcmVtb3ZpbmcgdGhlIHJhbmdlcyBwcm9wZXJ0eSBhbmQgd2l0aCBh
-IHJlZyA9IDwweGU0IDB4ND4gcHJvcGVydHkKPj4+IGluIHRoZSBpcG1pLWJ0IG5vZGUsIHdoYXQg
-SU9fUkVTT1VSQ0UgdHlwZSByZXNvdXJjZXMgZG8geW91IGdldCBiYWNrIGZyb20KPj4+IHRoZSBv
-Zl9hZGRyZXNzX3RvX3Jlc291cmNlKCkgdHJhbnNsYXRpb24/Cj4+Cj4+IEkgd2FudCB0byBnZXQg
-SU9SRVNPVVJDRV9JTyB0eXBlIHJlc291cmNlLCBidXQgaWYgdGhlIHBhcmVudCBub2RlIGRyb3Ag
-dGhlCj4+ICJyYW5ncyIgcHJvcGVydHksIHRoZSBvZl9hZGRyZXNzX3RvX3Jlc291cmNlKCkgdHJh
-bnNsYXRpb24gd2lsbCByZXR1cm4gd2l0aCAtRUlOVkFMLgo+Cj4gSGF2ZSB5b3UgdHJhY2tlZCB3
-aGF0IHBhcnQgb2YgdGhlIGNvZGUgaXMgc2Vuc2l0aXZlIHRvIHRoZSBwcmVzZW5jZSBvZiAicmFu
-Z2VzIgo+IHByb3BlcnR5PyBEb2VzIG9mX2dldF9hZGRyZXNzKCkgY2FsbCByZXR1cm5zIHRoZSBJ
-T19SRVNPVVJDRSBmbGFnIHNldCB3aXRob3V0ICJyYW5nZXMiPwo+CgoKWWVzLCBJT19SRVNPVVJD
-RSBmbGFnIGNhbiBiZSBnZXQgd2l0aG91dCAicmFuZ2VzIi4KSSB0cmFja2VkIHRoZSBjb2RlLCBp
-dCBpcyBhdCBvZl90cmFuc2xhdGVfb25lKCksIEJlbG93IGlzIHRoZSBjYWxsaW5nIGluZm9tYXRp
-b24uCgpvZl9hZGRyZXNzX3RvX3Jlc291cmNlLT4gX19vZl9hZGRyZXNzX3RvX3Jlc291cmNlIC0+
-b2ZfdHJhbnNsYXRlX2FkZHJlc3MtPgpfX29mX3RyYW5zbGF0ZV9hZGRyZXNzKGRldiwgaW5fYWRk
-ciwgInJhbmdlcyIpLT5vZl90cmFuc2xhdGVfb25lKCkKCgpzdGF0aWMgaW50IG9mX3RyYW5zbGF0
-ZV9vbmUoc3RydWN0IGRldmljZV9ub2RlICpwYXJlbnQsIHN0cnVjdCBvZl9idXMgKmJ1cywKCQkJ
-ICAgIHN0cnVjdCBvZl9idXMgKnBidXMsIF9fYmUzMiAqYWRkciwKCQkJICAgIGludCBuYSwgaW50
-IG5zLCBpbnQgcG5hLCBjb25zdCBjaGFyICpycHJvcCkKewoJY29uc3QgX19iZTMyICpyYW5nZXM7
-Cgl1bnNpZ25lZCBpbnQgcmxlbjsKCWludCByb25lOwoJdTY0IG9mZnNldCA9IE9GX0JBRF9BRERS
-OwoKCXJhbmdlcyA9IG9mX2dldF9wcm9wZXJ0eShwYXJlbnQsIHJwcm9wLCAmcmxlbik7CglpZiAo
-cmFuZ2VzID09IE5VTEwgJiYgIW9mX2VtcHR5X3Jhbmdlc19xdWlyayhwYXJlbnQpKSB7CgkJcHJf
-ZGVidWcoIk9GOiBubyByYW5nZXM7IGNhbm5vdCB0cmFuc2xhdGVcbiIpOwoJCXJldHVybiAxOwoJ
-fQoJLi4uCn0KCj4gQmVzdCByZWdhcmRzLAo+IExpdml1Cj4KPj4KPj4+Cj4+PiBCZXN0IHJlZ2Fy
-ZHMsCj4+PiBMaXZpdQo+Pj4KPj4+Cj4+Pj4KPj4+PiAJQXJuZAo+Pj4+Cj4+Pgo+PiBSZWdhcmRz
-LAo+PiBSb25ncm9uZwo+Pgo+Ci0tIApSZWdhcmRzLApSb25ncm9uZwoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
-IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+The MAXIM PMIC MAX77620 and MAX20024 are power management IC
+which supports RTC, GPIO, DCDC/LDO regulators, interrupt,
+watchdog etc.
+
+Add DT binding document for the different functionality of
+this device.
+
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+Changes from V1:
+- Added units in some of properties.
+- Change the boolean property to tristate type and detail some of
+  properties.
+
+ Documentation/devicetree/bindings/mfd/max77620.txt | 397 +++++++++++++++++++++
+ include/dt-bindings/mfd/max77620.h                 |  38 ++
+ 2 files changed, 435 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77620.txt
+ create mode 100644 include/dt-bindings/mfd/max77620.h
+
+diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
+new file mode 100644
+index 0000000..76cda7f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/max77620.txt
+@@ -0,0 +1,397 @@
++* MAX77620 Power management IC from Maxim Semiconductor.
++
++Required properties:
++-------------------
++- compatible: Must be one of
++		"maxim,max77620" or
++		"maxim,max20024".
++- reg: I2C device address.
++- interrupt-controller: MAX77620 has internal interrupt controller which
++  takes the interrupt request from internal sub-blocks like RTC,
++  regulators, GPIOs as well as external input.
++- #interrupt-cells: Should be set to 2 for IRQ number and flags.
++  The first cell is the IRQ number. IRQ numbers for different interrupt
++  source of MAX77620 are defined at dt-bindings/mfd/max77620.h
++  The second cell is the flags, encoded as the trigger masks from binding
++  document interrupts.txt, using dt-bindings/irq.
++
++Optional properties:
++-------------------
++This device also supports the power OFF of system.
++Following properties are used for this purpose:
++- system-power-controller: Boolean, This device will be use as
++	system power controller and used for power OFF of system.
++	Host issue necessary command to PMIC.
++
++
++Optional submodule and their properties:
++=======================================
++
++Flexible power sequence configuration
++====================================
++This sub-node configures the Flexible Power Sequnece(FPS) for power ON slot,
++power OFF slot and slot period of the device. Device has 3 FPS as FPS0,
++FPS1 and FPS2. The details of FPS configuration is provided through
++subnode "fps". The details of FPS0, FPS1, FPS2 are provided through the
++child node under this subnodes. The FPS number is provided via reg property.
++
++The property for fps child nodes as:
++Required properties:
++	-reg: FPS number like 0, 1, 2 for FPS0, FPS1 and FPS2 respectively.
++Optinal properties:
++	-maxim,active-fps-time-period: Active state FPS time period in
++		microseconds.
++	-maxim,suspend-fps-time-period: Suspend state FPS time period in
++		microseconds.
++	-maxim,fps-enable-input: FPS enable source like EN0, EN1 or SW. The
++			macros are defined on dt-bindings/mfd/max77620.h for
++			different enable source.
++				FPS_EN_SRC_EN0 for EN0 enable source.
++				FPS_EN_SRC_EN1 for En1 enable source.
++				FPS_EN_SRC_SW for SW based control.
++	-maxim,fps-sw-enable: Boolean, applicable if enable input is SW.
++			If this property present then enable the FPS else
++			disable FPS.
++	-maxim,enable-sleep: Boolean, enable sleep when the external control
++			goes from HIGH to LOW.
++	-maxim,enable-global-lpm: Boolean, enable global LPM when the external
++			control goes from HIGH to LOW.
++
++Here supported time periods by device in microseconds are as follows:
++MAX77620 supports 40, 80, 160, 320, 640, 1280, 2560 and 5120 microseconds.
++MAX20024 supports 20, 40, 80, 160, 320, 640, 1280 and 2540 microseconds.
++
++Pinmux and GPIO:
++===============
++Device has 8 GPIO pins which can be configured as GPIO as well as the
++special IO functions.
++
++Please refer to pinctrl-bindings.txt for details of the common pinctrl
++bindings used by client devices, including the meaning of the phrase
++"pin configuration node".
++
++Following are properties which is needed if GPIO and pinmux functionality
++is required:
++    Required properties:
++    -------------------
++	- gpio-controller: Marks the device node as a GPIO controller.
++	- #gpio-cells: Number of GPIO cells. Refer to binding document
++			gpio/gpio.txt
++
++    Optional properties:
++    --------------------
++	Following properties are require if pin control setting is required
++	at boot.
++	- pinctrl-names: A pinctrl state named "default" be defined, using
++		the bindings in pinctrl/pinctrl-binding.txt.
++	- pinctrl[0...n]: Properties to contain the phandle that refer to
++		different nodes of pin control settings. These nodes
++		represents the pin control setting of state 0 to state n.
++		Each of these nodes contains different subnodes to
++		represents some desired configuration for a list of pins.
++		This configuration can include the mux function to select
++		on those pin(s), and various pin configuration parameters,
++		such as pull-up, open drain.
++
++		Each subnode have following properties:
++		Required properties:
++		    - pins: List of pins. Valid values of pins properties
++				are: gpio0, gpio1, gpio2, gpio3, gpio4,
++				gpio5, gpio6, gpio7
++
++		Optional properties:
++			function, drive-push-pull, drive-open-drain,
++			bias-pull-up, bias-pull-down.
++				Definitions are in the pinmux dt binding
++			devicetree/bindings/pinctrl/pinctrl-bindings.txt
++			Absence of properties will leave the configuration
++			on default.
++
++			Valid values for function properties are:
++				gpio, lpm-control-in, fps-out, 32k-out,
++				sd0-dvs-in, sd1-dvs-in, reference-out
++			Theres is also customised property for the GPIO1,
++				GPIO2 and GPIO3.
++			- maxim,active-fps-source: FPS source for the gpios in
++				active state of the GPIO. Valid values are
++				FPS_SRC_0, FPS_SRC_1, FPS_SRC_2 and
++				FPS_SRC_NONE. Absence of this property will
++				leave the pin on default.
++			- maxim,active-fps-power-up-slot: Power up slot on
++				given FPS for acive state.Valid values are 0
++				to 7.
++			- maxim,active-fps-power-down-slot: Power down slot
++				on given FPS for active state. Valid values
++				are 0 t  7.
++			- maxim,suspend-fps-source: Suspend state FPS source.
++			- maxim,suspend-fps-power-down-slot: Suspend state
++				power down slot.
++			- maxim,suspend-fps-power-up-slot: Suspend state power
++				up slot.
++
++Regulators:
++===========
++Device has multiple DCDC(sd[0-3] and LDOs(ldo[0-8]). The node "regulators"
++is require if regulator functionality is needed.
++
++Following are properties of regulator subnode.
++
++    Optional properties:
++    -------------------
++	The input supply of regulators are the optional properties on the
++	regulator node. The input supply of these regulators are provided
++	through following properties:
++		in-sd0-supply: Input supply for SD0, INA-SD0 or INB-SD0 pins.
++		in-sd1-supply: Input supply for SD1.
++		in-sd2-supply: Input supply for SD2.
++		in-sd3-supply: Input supply for SD3.
++		in-ldo0-1-supply: Input supply for LDO0 and LDO1.
++		in-ldo2-supply: Input supply for LDO2.
++		in-ldo3-5-supply: Input supply for LDO3 and LDO5
++		in-ldo4-6-supply: Input supply for LDO4 and LDO6.
++		in-ldo7-8-supply: Input supply for LDO7 and LDO8.
++
++
++    Optional sub nodes for regulators:
++    ---------------------------------
++	The subnodes name is the name of regulator and it must be one of:
++	sd[0-3], ldo[0-8]
++
++	Each sub-node should contain the constraints and initialization
++	information for that regulator. See regulator.txt for a description
++	of standard properties for these sub-nodes.
++	Additional optional custom properties  are listed below.
++		maxim,active-fps-source: FPS source. The macros are defined at
++			dt-bindings/mfd/max77620.h
++		maxim,shutdown-fps-source: Same as maxim,fps-source, but it
++			will apply during shutdown of system.
++		maxim,active-fps-power-up-slot: Active state Power up slot for
++			rail on given FPS.
++		maxim,active-fps-power-down-slot: Active state Power down slot
++			for rail on given FPS.
++		maxim,suspend-fps-source: Suspend state FPS source of rail.
++		maxim,suspend-fps-power-up-slot: Suspend state FPS power
++			up slot.
++		maxim,suspend-fps-power-down-slot: Suspend state FPS power
++			down slot.
++		maxim,enable-group-low-power: Enable Group low power mode.
++		maxim,enable-sd0-en2-control: Enable EN2 pincontrol for SD0.
++			This property is only applicable for SD0.
++		maxim,disable-remote-sense-on-suspend: Boolean, disable
++			remote sense on suspend and re-enable on resume.
++			If this property is not there then no change on
++			configuration.
++
++Backup Battery:
++==============
++This sub-node configure charging backup battery of the device. Device
++has support of charging the backup battery. The subnode name is
++"backup-battery".
++
++The property for backup-battery child nodes as:
++Presense of this child node will enable the backup battery charging.
++
++Optinal properties:
++	-maxim,bb-charging-current-microamp: Charging current
++			setting.
++			The device supports 50/100/200/400/600/800uA.
++			If this property is unavailable then it will
++			charge with 50uA.
++	-maxim,bb-charging-voltage-microvolt: Charging Voltage Limit Setting.
++			Device supports 2500000/3000000/3300000/350000uV.
++			Default will be set to 2500mV. The voltage will be roundoff
++			to nearest lower side if other than above is configured.
++	-maxim,bb-output-resister-ohm: Output resistor on Ohm.
++			Device supports 100/1000/3000/6000 Ohms.
++
++Low-Battery Monitor:
++==================
++This sub-node configure low battery monitor configuration registers.
++Device has support for low-battery monitor configuration through
++child DT node "low-battery-monitor".
++
++Optinal properties:
++	- maxim,low-battery-dac: Tristate, enable/disable low battery DAC.
++			0 for disable,
++			1 for enable,
++			absence will left configuration to default.
++	- maxim,low-battery-shutdown: Tristate, enable/disable low battery
++		shutdown.
++			0 for disable,
++			1 for enable,
++			absence will left configuration to default.
++	- maxim,low-battery-reset: Tristate, enable/disable low battery reset.
++			0 for disable,
++			1 for enable,
++			absence will left configuration to default.
++
++Example:
++--------
++#include <dt-bindings/mfd/max77620.h>
++...
++max77620@3c {
++	compatible = "maxim,max77620";
++	reg = <0x3c>;
++
++	interrupt-parent = <&intc>;
++	interrupts = <0 86 IRQ_TYPE_NONE>;
++
++
++Example:
++--------
++#include <dt-bindings/mfd/max77620.h>
++...
++max77620@3c {
++	compatible = "maxim,max77620";
++	reg = <0x3c>;
++
++	interrupt-parent = <&intc>;
++	interrupts = <0 86 IRQ_TYPE_NONE>;
++
++	interrupt-controller;
++	#interrupt-cells = <2>;
++
++	gpio-controller;
++	#gpio-cells = <2>;
++
++	backup-battery {
++		maxim,bb-charging-current-microamp = <100>;
++		maxim,bb-charging-voltage-microvolt = <3000000>;
++		maxim,bb-output-resister-ohm = <100>;
++	};
++
++	fps {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		fps@0 {
++			reg = <0>;
++			maxim,fps-time-period = <100>;
++			maxim,fps-enable-input = <FPS_EN_SRC_EN0>;
++		};
++
++		fps@1 {
++			reg = <1>;
++			maxim,fps-time-period = <100>;
++			maxim,fps-enable-input = <FPS_EN_SRC_EN1>;
++		};
++
++		fps@2 {
++			reg = <2>;
++			maxim,fps-time-period = <100>;
++			maxim,fps-enable-input = <FPS_EN_SRC_SW>;
++		};
++	};
++
++	regulators {
++		in-ldo0-1-supply = <&max77620_sd2>;
++		in-ldo7-8-supply = <&max77620_sd2>;
++
++		max77620_sd0: sd0 {
++			regulator-name = "vdd-core";
++			regulator-min-microvolt = <600000>;
++			regulator-max-microvolt = <1400000>;
++			regulator-boot-on;
++			regulator-always-on;
++			maxim,fps-source = <FPS_SRC_1>;
++			regulator-init-mode = <REGULATOR_MODE_NORMAL>;
++		};
++
++		max77620_sd1: sd1 {
++			regulator-name = "vddio-ddr";
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			regulator-always-on;
++			regulator-boot-on;
++			regulator-init-mode = <REGULATOR_MODE_NORMAL>;
++			maxim,fps-source = <FPS_SRC_0>;
++		};
++
++		max77620_sd2: sd2 {
++			regulator-name = "vdd-pre-reg";
++			regulator-min-microvolt = <1350000>;
++			regulator-max-microvolt = <1350000>;
++			maxim,fps-source = <FPS_SRC_1>;
++		};
++
++		max77620_sd3: sd3 {
++			regulator-name = "vdd-1v8";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-always-on;
++			regulator-boot-on;
++			maxim,fps-source = <FPS_SRC_0>;
++			regulator-init-mode = <REGULATOR_MODE_NORMAL>;
++		};
++
++		max77620_ldo0: ldo0 {
++			regulator-name = "avdd-sys";
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			regulator-always-on;
++			regulator-boot-on;
++			maxim,fps-source = <FPS_SRC_NONE>;
++		};
++
++		max77620_ldo1: ldo1 {
++			regulator-name = "vdd-pex";
++			regulator-min-microvolt = <1050000>;
++			regulator-max-microvolt = <1050000>;
++			maxim,fps-source = <FPS_SRC_NONE>;
++		};
++
++		max77620_ldo2: ldo2 {
++			regulator-name = "vddio-sdmmc3";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <3300000>;
++			maxim,fps-source = <FPS_SRC_NONE>;
++		};
++
++		max77620_ldo3: ldo3 {
++			regulator-name = "vdd-cam-hv";
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <2800000>;
++			maxim,fps-source = <FPS_SRC_NONE>;
++		};
++
++		max77620_ldo4: ldo4 {
++			regulator-name = "vdd-rtc";
++			regulator-min-microvolt = <1250000>;
++			regulator-max-microvolt = <1250000>;
++			regulator-always-on;
++			regulator-boot-on;
++			maxim,fps-source = <FPS_SRC_0>;
++		};
++
++		max77620_ldo5: ldo5 {
++			regulator-name = "avdd-ts-hv";
++			regulator-min-microvolt = <3000000>;
++			regulator-max-microvolt = <3000000>;
++			maxim,fps-source = <FPS_SRC_NONE>;
++		};
++
++		max77620_ldo6: ldo6 {
++			regulator-name = "vdd-ts";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-always-on;
++			regulator-boot-on;
++			maxim,fps-source = <FPS_SRC_NONE>;
++		};
++
++		max77620_ldo7: ldo7 {
++			regulator-name = "vdd-gen-pll-edp";
++			regulator-min-microvolt = <1050000>;
++			regulator-max-microvolt = <1050000>;
++			regulator-always-on;
++			regulator-boot-on;
++			maxim,fps-source = <FPS_SRC_1>;
++		};
++
++		max77620_ldo8: ldo8 {
++			regulator-name = "vdd-hdmi-dp";
++			regulator-min-microvolt = <1050000>;
++			regulator-max-microvolt = <1050000>;
++			maxim,fps-source = <FPS_SRC_NONE>;
++		};
++	};
++};
+diff --git a/include/dt-bindings/mfd/max77620.h b/include/dt-bindings/mfd/max77620.h
+new file mode 100644
+index 0000000..8423d1d
+--- /dev/null
++++ b/include/dt-bindings/mfd/max77620.h
+@@ -0,0 +1,38 @@
++/*
++ * This header provides macros for MAXIM MAX77620 device bindings.
++ *
++ * Copyright (c) 2016, NVIDIA Corporation.
++ *
++ * Author: Laxman Dewangan <ldewangan@nvidia.com>
++ *
++ */
++
++#ifndef _DT_BINDINGS_MFD_MAX77620_H
++#define _DT_BINDINGS_MFD_MAX77620_H
++
++/* MAX77620 interrupts */
++#define MAX77620_IRQ_TOP_GLBL		0 /* Low-Battery */
++#define MAX77620_IRQ_TOP_SD		1 /* SD power fail */
++#define MAX77620_IRQ_TOP_LDO		2 /* LDO power fail */
++#define MAX77620_IRQ_TOP_GPIO		3 /* GPIO internal int to MAX77620 */
++#define MAX77620_IRQ_TOP_RTC		4 /* RTC */
++#define MAX77620_IRQ_TOP_32K		5 /* 32kHz oscillator */
++#define MAX77620_IRQ_TOP_ONOFF		6 /* ON/OFF oscillator */
++#define MAX77620_IRQ_LBT_MBATLOW	7 /* Thermal alarm status, > 120C */
++#define MAX77620_IRQ_LBT_TJALRM1	8 /* Thermal alarm status, > 120C */
++#define MAX77620_IRQ_LBT_TJALRM2	9 /* Thermal alarm status, > 140C */
++
++/* FPS enable -inputs */
++#define FPS_EN_SRC_EN0	0
++#define FPS_EN_SRC_EN1	1
++#define FPS_EN_SRC_SW	2
++#define FPS_EN_SRC_RSVD	3
++
++/* FPS source */
++#define FPS_SRC_0	0
++#define FPS_SRC_1	1
++#define FPS_SRC_2	2
++#define FPS_SRC_NONE	3
++#define FPS_SRC_DEF	4
++
++#endif
+-- 
+2.1.4
