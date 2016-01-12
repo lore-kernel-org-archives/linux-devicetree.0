@@ -1,80 +1,40 @@
-From: =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Subject: Re: [RESEND PATCH 1/2] devicetree: mxsfb: add reset-active property
-Date: Tue, 12 Jan 2016 13:10:29 +0000
-Message-ID: <yw1x7fjfuenu.fsf@unicorn.mansr.com>
-References: <1452594141-26073-1-git-send-email-mans@mansr.com>
-	<5694F51C.7040107@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [Gta04-owner] [PATCH 0/4] UART slave device support - version 4
+Date: Tue, 12 Jan 2016 14:28:00 +0100
+Message-ID: <481E05A9-A192-438D-B092-D7700B30BBC4@goldelico.com>
+References: <20150511013540.5709.93626.stgit@notabene.brown> <CAAObsKD7-02HVUosXVwqcH6HyGEGYJ9jdNepuNhLiiL+ujO5iw@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5694F51C.7040107@ti.com> (Tomi Valkeinen's message of "Tue, 12
-	Jan 2016 14:44:12 +0200")
+In-Reply-To: <CAAObsKD7-02HVUosXVwqcH6HyGEGYJ9jdNepuNhLiiL+ujO5iw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org
+To: List for communicating with real GTA04 owners <gta04-owner@goldelico.com>, tomeu@tomeuvizoso.net
+Cc: NeilBrown <neil@brown.name>, Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robherring2@gmail.com>, Pavel Machek <pavel@ucw.cz>, linux-serial@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-Tomi Valkeinen <tomi.valkeinen@ti.com> writes:
+Hi Tomeu,
 
-> On 12/01/16 12:22, Mans Rullgard wrote:
->> Some boards connect the LCD_RESET pin to a reset input on the
->> display panel.  On these boards, this pin must be set to the
->> proper level for the display to function.
->>=20
->> This adds an optional "reset-active" property to the "display"
->> subnode such that devicetrees can specify the desired polarity
->> of the LCD_RESET pin.
->>=20
->> Signed-off-by: Mans Rullgard <mans@mansr.com>
->> ---
->>  Documentation/devicetree/bindings/display/mxsfb.txt | 5 +++++
->>  1 file changed, 5 insertions(+)
->>=20
->> diff --git a/Documentation/devicetree/bindings/display/mxsfb.txt b/D=
-ocumentation/devicetree/bindings/display/mxsfb.txt
->> index 96ec5179c8a0..cb7212a6bdf2 100644
->> --- a/Documentation/devicetree/bindings/display/mxsfb.txt
->> +++ b/Documentation/devicetree/bindings/display/mxsfb.txt
->> @@ -13,6 +13,11 @@ Required properties:
->>  - bits-per-pixel : <16> for RGB565, <32> for RGB888/666.
->>  - bus-width : number of data lines.  Could be <8>, <16>, <18> or <2=
-4>.
->> =20
->> +Optional properties:
->> +- reset-active : <0>: reset pin is active low
->> +                 <1>: reset pin is active high
->> +                 omitted: reset pin not used
->> +
->>  Required sub-node:
->>  - display-timings : Refer to binding doc display-timing.txt for det=
-ails.
->
-> So maybe this is fine for the mxsfb if it doesn't support any kind of
-> panel drivers, and there's no plan to extend it. Otherwise the LCD_RE=
-SET
-> pin could perhaps be exposed as a GPIO for the panel drivers.
->
-> But even so, I think the definition of "reset" is a bit vague.
->
-> I know panels for which "reset" is a pulse, you assert it for a short
-> period. Other panels take reset more like a on/off switch. If I'm not
-> mistaken, this one is the latter kind.
->
-> I don't see any sleeps related to reset in the code. If reset is
-> asserted when the display is blanked, is it guaranteed that the reset
-> stays asserted long enough until the display is enabled again?
+Am 12.01.2016 um 14:06 schrieb Tomeu Vizoso <tomeu@tomeuvizoso.net>:
 
-In the datasheet for the panel I'm dealing with, there's some vague
-mention of 10 us (I missed it last time I looked), and my patch indeed
-fails to ensure this is met.  Other panels will obviously have differen=
-t
-requirements.  To handle all cases properly, I suppose a configurable
-delay after changing the reset pin should be added.
+> On 11 May 2015 at 03:56, NeilBrown <neil@brown.name> wrote:
+>> Hi all,
+>> here is version 4 of my "UART slave device" patch set, previously
+>> known as "tty slave devices".
+> 
+> Hi Neil,
+> 
+> do you (or someone else) have plans to continue this work in the short
+> or medium term?
 
-I could also take the lazy way out, pinmux this signal high and leave i=
-t
-at that.
+yes, there is something in our upstreaming pipeline. This one works for us on top of 4.4.0:
 
---=20
-M=E5ns Rullg=E5rd
+<http://git.goldelico.com/?p=gta04-kernel.git;a=shortlog;h=refs/heads/work/hns/misc/w2sg-tty-slave2-v4>
+
+There is one point still to be solved: the exact style of the DT bindings.
+
+We have an idea how a driver can implement two different styles (child node AND phandle)
+so that it is up to the DTS developer to use the one that best fits into the existing DTS.
+ 
+BR,
+Nikolaus
