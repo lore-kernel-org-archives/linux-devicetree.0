@@ -1,81 +1,45 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] input: gpio-keys: add support to name the gpio-keys
-Date: Tue, 12 Jan 2016 09:23:58 -0600
-Message-ID: <CAL_Jsq+ZLVNXVnQX+fYGjhqAx6aFrPNgBBXbPGTKrWoY52vMvw@mail.gmail.com>
-References: <1452598370-28509-1-git-send-email-ldewangan@nvidia.com>
- <1452598370-28509-2-git-send-email-ldewangan@nvidia.com> <20160112144301.GA30932@rob-hp-laptop>
- <569513E6.60608@nvidia.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCHv2 0/2] net: fec: Reset ethernet PHY whenever the enet_out
+ clock is being enabled
+Date: Tue, 12 Jan 2016 15:24:05 +0000
+Message-ID: <20160112152405.GZ19062@n2100.arm.linux.org.uk>
+References: <1452611876-451-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <569513E6.60608-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1452611876-451-1-git-send-email-LW@KARO-electronics.de>
+Sender: netdev-owner@vger.kernel.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Fabio Estevam <fabio.estevam@freescale.com>, Greg Ungerer <gerg@uclinux.org>, Kevin Hao <haokexin@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Nimrod Andy <B38611@freescale.com>, Philippe Reynes <tremyfr@gmail.com>, Richard Cochran <richardcochran@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Stefan Agner <stefan@agner.ch>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Jeff Kirsher <jeffrey.t.kirsher@intel.com>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kerne
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 12, 2016 at 8:55 AM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->
-> On Tuesday 12 January 2016 08:13 PM, Rob Herring wrote:
->>
->> On Tue, Jan 12, 2016 at 05:02:50PM +0530, Laxman Dewangan wrote:
->>>
->>> Add support from DT to name the gpio-keys driver to have
->>> desired key name for this input system.
->>>
->>> This helps userspace code to get name and perform proper
->>> event to key mapping in some of cases. In android, the
->>> user space map the key code to application code using
->>> key character layout and for this it uses the name of
->>> input system.
->>
->> Why is specifying the key code not enough?
->
->
-> This is the name for input system instead of individual keys.
-> In android system, the key mapping is done in user space. By having name
-> offers to specifying the customized key character layout instead of generic
-> one form android which is fall-back.
+On Tue, Jan 12, 2016 at 04:17:54PM +0100, Lothar Wa=DFmann wrote:
+> This patchset fixes a regression introduced by
+> commit e8fcfcd5684a ("net: fec: optimize the clock management to save=
+ power")
+> for ethernet PHYs that are using ENET_OUT as reference clock (on i.MX=
+6 or i.MX28)
+>=20
+> Changes vs. v1:
+> - fixed reference to the commit that introduced the regression.
+> - dropped patch to use gpiod framework. This should be added later,
+>   after the affected DTBs have been updated to specify the correct
+>   gpio_flags.
+>=20
+> Patch overview:
+> 1. cleanup patch to remove redundant NULL checks
+> 2. call fec_reset_phy() after the ENET_OUT clock has been enabled
 
-Okay, got it.
+I definitely want to test these on my SolidRun boards before these get
+merged: the AR8035 on there is configured via pin-straps, and then
+further tweaked with PHY quirks.  Resetting with the iMX6 in the
+wrong state may result in the AR8035 being reconfigured (even jumping
+to a different MDIO address) and certainly would need the PHY quirks
+re-running.
 
->>> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>> ---
->>>   Documentation/devicetree/bindings/input/gpio-keys.txt | 1 +
->>>   drivers/input/keyboard/gpio_keys.c                    | 2 ++
->>>   2 files changed, 3 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt
->>> b/Documentation/devicetree/bindings/input/gpio-keys.txt
->>> index cf1333d..2e6bcd2 100644
->>> --- a/Documentation/devicetree/bindings/input/gpio-keys.txt
->>> +++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
->>> @@ -4,6 +4,7 @@ Required properties:
->>>         - compatible = "gpio-keys";
->>>     Optional properties:
->>> +       - gpio-keys,name: String, name of the gpio-keys input system.
->>
->> gpio-keys is not a vendor.
->>
->> Would "label" work for you instead?
->
->
-> "label" means node name?
-
-No, the standard label property. See gpio-leds for an example.
-
->> Either way, I'm concerned this doesn't work for other key bindings
->> which have multiple keys.
->>
->>
->
-> This is not for the individual keys, its for input system like
-> /sys/class/input/input0/name.
-
-So label is exactly for this purpose of defining user meaningful names.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
+=46TTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
