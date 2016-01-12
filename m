@@ -1,277 +1,73 @@
-From: liviu.dudau@arm.com
-Subject: Re: [PATCH v1 3/3] ARM64 LPC: update binding doc
-Date: Tue, 12 Jan 2016 10:14:18 +0000
-Message-ID: <20160112101418.GO13633@e106497-lin.cambridge.arm.com>
-References: <1451396032-23708-1-git-send-email-zourongrong@gmail.com>
- <CABTftiT1+AmrNjiAie-T6on-oWA4Zz73+Tj2pQrixMT3o475uw@mail.gmail.com>
- <568912EE.9030009@huawei.com>
- <15026471.7nGZ0rWlIf@wuerfel>
- <20160111161415.GM13633@e106497-lin.cambridge.arm.com>
- <56946768.7090805@gmail.com>
- <20160112090722.GN13633@e106497-lin.cambridge.arm.com>
- <5694C6A4.8060308@huawei.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH V6 0/6] i2c: qup: Add support for v2 tags and bam dma
+Date: Tue, 12 Jan 2016 15:49:43 +0530
+Message-ID: <5694D33F.7040205@codeaurora.org>
+References: <1452588233-1803-1-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5694C6A4.8060308@huawei.com>
+In-Reply-To: <1452588233-1803-1-git-send-email-sricharan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rongrong Zou <zourongrong@huawei.com>
-Cc: Rongrong Zou <zourongrong@gmail.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Arnd Bergmann <arnd@arndb.de>, Corey Minyard <minyard@acm.org>, gregkh@linuxfoundation.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linuxarm@huawei.com, benh@kernel.crashing.org, linux-arm-kernel@lists.infradead.org
+To: Sricharan R <sricharan@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, agross@codeaurora.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, galak@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andy.gross@linaro.org, ntelkar@codeaurora.org, wsa@the-dreams.de
+Cc: srichara@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 12, 2016 at 05:25:56PM +0800, Rongrong Zou wrote:
-> =E5=9C=A8 2016/1/12 17:07, liviu.dudau@arm.com =E5=86=99=E9=81=93:
-> >On Tue, Jan 12, 2016 at 10:39:36AM +0800, Rongrong Zou wrote:
-> >>On 2016/1/12 0:14, liviu.dudau@arm.com wrote:
-> >>>On Mon, Jan 04, 2016 at 12:13:05PM +0100, Arnd Bergmann wrote:
-> >>>>On Sunday 03 January 2016 20:24:14 Rongrong Zou wrote:
-> >>>>>=E5=9C=A8 2015/12/31 23:00, Rongrong Zou =E5=86=99=E9=81=93:
-> >>>>>>2015-12-31 22:40 GMT+08:00 Arnd Bergmann <arnd@arndb.de <mailto=
-:arnd@arndb.de>>:
-> >>>>>>  > On Thursday 31 December 2015 22:12:19 Rongrong Zou wrote:
-> >>>>>>  > > =E5=9C=A8 2015/12/30 17:06, Arnd Bergmann =E5=86=99=E9=81=
-=93:
-> >>>>>>  > > > On Tuesday 29 December 2015 21:33:52 Rongrong Zou wrote=
-:
-> >>>>>>  >
-> >>>>>>  > The DT sample above looks good in principle. I believe what=
- you are missing
-> >>>>>>  > here is code in your driver to scan the child nodes to crea=
-te the platform
-> >>>>>>  > devices. of_bus_isa_translate() should work with your defin=
-ition here
-> >>>>>>  > and create the correct IORESOURCE_IO resources. You don't h=
-ave any MMIO
-> >>>>>>  > resources, so the absence of a ranges property is ok. Maybe=
- all you
-> >>>>>>  > are missing is a call to of_platform_populate() or of_platf=
-orm_bus_probe()?
-> >>>>>>  >
-> >>>>>>
-> >>>>>>You are right. thanks, i'll try on test board .  if i get the c=
-orrect result , the new patch
-> >>>>>>will be sent later. By the way, it's my another email account u=
-se when i at home.
-> >>>>>
-> >>>>>I tried, and there need some additional changes.
-> >>>>>
-> >>>>>isa@a01b0000 {
-> >>>>>
-> >>>>>/*the node name should start with "isa", because of below defini=
-tion
-> >>>>>* static int of_bus_isa_match(struct device_node *np)
-> >>>>>* {
-> >>>>>*	return !strcmp(np->name, "isa");
-> >>>>>* }
-> >>>>
-> >>>>Looks good. It would be nicer to match on device_type than on nam=
-e,
-> >>>>but this is ancient code and it's probably best not to touch it
-> >>>>so we don't accidentally break some old SPARC or PPC system.
-> >>>>
-> >>>>>*/
-> >>>>>	compatible =3D "low-pin-count";
-> >>>>>	device_type =3D "isa";
-> >>>>>	#address-cells =3D <2>;
-> >>>>>	#size-cells =3D <1>;
-> >>>>>	reg =3D <0x0 0xa01b0000 0x0 0x10000>;
-> >>>>>	ranges =3D <0x1 0x0 0x0 0x0 0x1000>;
-> >>>>>/*
-> >>>>>*  ranges is required, then i can get the IORESOURCE_IO <0xe4,4>=
- from "reg =3D <0x1, 0x000000e4, 4>".
-> >>>>>*
-> >>>>>*/
-> >>>>>	ipmi_0:ipmi@000000e4{
-> >>>>>		device_type =3D "ipmi";
-> >>>>>		compatible =3D "ipmi-bt";
-> >>>>>		reg =3D <0x1 0x000000e4 0x4>;
-> >>>>>};
-> >>>>>
-> >>>>
-> >>>>This looks wrong: the property above says that the I/O port range=
- is
-> >>>>translated to MMIO address 0x00000000 to 0x00010000, which is not
-> >>>>true on your hardware. I think this needs to be changed in the co=
-de
-> >>>>so the ranges property is not required for I/O ports.
-> >>>>
-> >>>>>drivers\of\address.c
-> >>>>>static int __of_address_to_resource(struct device_node *dev,
-> >>>>>                  const __be32 *addrp, u64 size, unsigned int fl=
-ags,
-> >>>>>                  const char *name, struct resource *r)
-> >>>>>{
-> >>>>>          u64 taddr;
-> >>>>>
-> >>>>>          if ((flags & (IORESOURCE_IO | IORESOURCE_MEM)) =3D=3D =
-0)
-> >>>>>                  return -EINVAL;
-> >>>>>          taddr =3D of_translate_address(dev, addrp);
-> >>>>>          if (taddr =3D=3D OF_BAD_ADDR)
-> >>>>>                  return -EINVAL;
-> >>>>>          memset(r, 0, sizeof(struct resource));
-> >>>>>          if (flags & IORESOURCE_IO) {
-> >>>>>                  unsigned long port;
-> >>>>>
-> >>>>>/***************************************************************=
-**/
-> >>>>>/*legacy port(< 0x1000) is reserved, and need no translation her=
-e*/
-> >>>>>/***************************************************************=
-**/
-> >>>>>                  if(taddr + size < PCIBIOS_MIN_IO){
-> >>>>>                          r->start =3D taddr;
-> >>>>>                          r->end =3D taddr + size - 1;
-> >>>>>                  }
-> >>>>
-> >>>>I don't like having a special case based on the address here,
-> >>>>the same kind of hack might be needed for PCI I/O spaces in
-> >>>>hardware that uses an indirect method like your LPC bus
-> >>>>does, and the code above will not work on any LPC implementation
-> >>>>that correctly multiplexes its I/O ports with the first PCI domai=
-n.
-> >>>>
-> >>>>I think it would be better to avoid translating the port into
-> >>>>a physical address to start with just to translate it back into
-> >>>>a port number, what we need instead is the offset between the
-> >>>>bus specific port number and the linux port number. I've added
-> >>>>Liviu to Cc, he wrote this code originally and may have some idea
-> >>>>of how we could do that.
-> >>>
-> >>>Hi,
-> >>
-> >>Hi Liviu,
-> >>
-> >>Thanks for reviewing this.
-> >>
-> >>>
-> >>>Getting back to work after a longer holiday, my brain might not be=
- running
-> >>>at full speed here, so I'm trying to clarify things a bit here.
-> >>>
-> >>>It looks to me like Rongrong is trying to trap the inb()/outb() ca=
-lls that he
-> >>>added to arm64 by patch 1/3 and redirect those operations to the m=
-emory
-> >>>mapped LPC driver. I think the whole redirection and registration =
-of inb/outb
-> >>>ops can be made cleaner, so that the general concept resembles the=
- DMA ops
-> >>>registration? (I have this mental picture that what Rongrong is tr=
-ying to do
-> >>>is similar to what a DMA engine does, except this is slowing down =
-things to
-> >>>byte level). If that is done properly in the parent node, then we =
-should not
-> >>>care what the PCIBIOS_MIN_IO value is as the inb()/outb() calls wi=
-ll always
-> >>>go through the redirection for the children.
-> >>>
-> >>>As for the ranges property: does he wants the ipmi-bt driver to se=
-e in the
-> >>>reg property the legacy ISA I/O ports values or the CPU addresses?=
- If the former,
-> >>>then I agree that the range property should not be required, but a=
-lso the
-> >>>reg values need to be changed (drop the top bit). If the later, th=
-en the
-> >>>ranges property is required to do the proper translation.
-> >>
-> >>The former, thanks.
-> >>
-> >>>
-> >>>Rongrong, removing the ranges property and with a reg =3D <0xe4 0x=
-4> property
-> >>>in the ipmi-bt node, what IO_RESOURCE type resources do you get ba=
-ck from
-> >>>the of_address_to_resource() translation?
-> >>
-> >>I want to get IORESOURCE_IO type resource, but if the parent node d=
-rop the
-> >>"rangs" property, the of_address_to_resource() translation will ret=
-urn with -EINVAL.
-> >
-> >Have you tracked what part of the code is sensitive to the presence =
-of "ranges"
-> >property? Does of_get_address() call returns the IO_RESOURCE flag se=
-t without "ranges"?
-> >
->=20
->=20
-> Yes, IO_RESOURCE flag can be get without "ranges".
-> I tracked the code, it is at of_translate_one(), Below is the calling=
- infomation.
->=20
-> of_address_to_resource-> __of_address_to_resource ->of_translate_addr=
-ess->
-> __of_translate_address(dev, in_addr, "ranges")->of_translate_one()
->=20
->=20
-> static int of_translate_one(struct device_node *parent, struct of_bus=
- *bus,
-> 			    struct of_bus *pbus, __be32 *addr,
-> 			    int na, int ns, int pna, const char *rprop)
-> {
-> 	const __be32 *ranges;
-> 	unsigned int rlen;
-> 	int rone;
-> 	u64 offset =3D OF_BAD_ADDR;
->=20
-> 	ranges =3D of_get_property(parent, rprop, &rlen);
-> 	if (ranges =3D=3D NULL && !of_empty_ranges_quirk(parent)) {
-> 		pr_debug("OF: no ranges; cannot translate\n");
-> 		return 1;
-> 	}
-> 	...
-> }
 
-OK, looking at of_translate_one() comments it looks like a missing "ran=
-ges" property is
-only accepted on PowerPC. I suggest you have an empty "ranges" property=
- in your isa
-parent node, that will signal to the OF parsing code that the mapping i=
-s 1:1. Then have
-the IPMI node use the reg =3D <0x0 0xe4 4>; property values instead of =
-reg =3D <0x1 0xe4 4>;
 
-Best regards,
-Liviu
+On 01/12/2016 02:13 PM, Sricharan R wrote:
+> i2c: qup: Add support for v2 tags and bam dma
+>
+> QUP from version 2.1.1 onwards, supports a new format of i2c command tags.
+> Tag codes instructs the controller to perform a operation like read/write.
+> This new tagging version supports and is required for adding bam dma
+> capabilities. V2 tags supports transfer of more than 256 bytes in a single i2c
+> transaction. Also adding bam dma support facilitates transferring each i2c_msg
+> in i2c_msgs without a 'stop' bit in between which is required for some of
+> the clients.
+>
+> Tested this series on apq8074 dragon board eeprom client on i2c bus1
+>
+> [V6] Added review tags and fixed a checkpatch warning in patch 4/6.
+>
+> [V5] Addressed few more comments from Ivan T. Ivanov.
+>       Squashed patch 2 and 3 as no point in having only few lines of
+>       common code between v1 and v2 tags for increased complexity.
+>       Couple of non functional review comments fixes in patch 3, 4.
+>       Added a change in patch 4 to have proper transfer completion in
+>       a corner case. patch 5, 6 unchanged.
+>
+> [V4] Added a patch to factor out some common code.
+>       Removed support for freq > 400KHZ as per comments.
+>       Addressed comments from Ivan T. Ivanov to keep the code for
+>       V2 support in a separate path.
+>       Changed the authorship of V2 tags support patch.
+>
+> [V3] Added support to coalesce each i2c_msg in i2c_msgs for fifo and
+>       block mode in Patch 2. Also addressed further code comments.
+>
+>       http://comments.gmane.org/gmane.linux.drivers.i2c/22497
+>
+> [V2] Addressed comments from Ivan T. Ivanov, Andy Gross [v1] Initial Version
 
->=20
-> >Best regards,
-> >Liviu
-> >
-> >>
-> >>>
-> >>>Best regards,
-> >>>Liviu
-> >>>
-> >>>
-> >>>>
-> >>>>	Arnd
-> >>>>
-> >>>
-> >>Regards,
-> >>Rongrong
-> >>
-> >
-> --=20
-> Regards,
-> Rongrong
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+For the series:
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+Tested-by: Archit Taneja <architt@codeaurora.org>
+
+>
+> Sricharan R (6):
+>    i2c: qup: Change qup_wait_writeready function to use for all timeouts
+>    i2c: qup: Add V2 tags support
+>    i2c: qup: Transfer each i2c_msg in i2c_msgs without a stop bit
+>    i2c: qup: Add bam dma capabilities
+>    dts: msm8974: Add blsp2_bam dma node
+>    dts: msm8974: Add dma channels for blsp2_i2c1 node
+>
+>   arch/arm/boot/dts/qcom-msm8974.dtsi |  14 +-
+>   drivers/i2c/busses/i2c-qup.c        | 922 ++++++++++++++++++++++++++++++++++--
+>   2 files changed, 887 insertions(+), 49 deletions(-)
+>
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum, hosted by The Linux Foundation
