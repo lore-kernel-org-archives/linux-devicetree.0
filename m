@@ -1,180 +1,303 @@
 From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCH 3/3] ARM: dts: imx6: add display timing for NL12880BC20 display to Ka-Ro electronics TX6 LVDS modules
-Date: Tue, 12 Jan 2016 19:01:50 +0100
-Message-ID: <1452621710-15336-4-git-send-email-LW@KARO-electronics.de>
+Subject: [PATCH 1/3] ARM: dts: imx6: add support for Ka-Ro electronics TX6S-8034 module
+Date: Tue, 12 Jan 2016 19:01:48 +0100
+Message-ID: <1452621710-15336-2-git-send-email-LW@KARO-electronics.de>
 References: <1452621710-15336-1-git-send-email-LW@KARO-electronics.de>
- <1452621710-15336-2-git-send-email-LW@KARO-electronics.de>
- <1452621710-15336-3-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452621710-15336-3-git-send-email-LW@KARO-electronics.de>
+In-Reply-To: <1452621710-15336-1-git-send-email-LW@KARO-electronics.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the NLT Technologies WXGA LVDS display NL12880BC20 to
-the TX6 LVDS modules from Ka-Ro electronics.
+Add support for the TX6S-8034 module from Ka-Ro electronics.
+The module is equipped with an i.MX6SOLO at 792MHz, 256MiB DDR3 SDRAM
+and 128MiB NAND flash.
 
 Signed-off-by: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
 ---
- arch/arm/boot/dts/imx6dl-tx6u-811x.dts | 42 ++++++++++++++++++++++++++=
-++++----
- arch/arm/boot/dts/imx6q-tx6q-1110.dts  | 42 ++++++++++++++++++++++++++=
-++++----
- 2 files changed, 76 insertions(+), 8 deletions(-)
+ arch/arm/boot/dts/Makefile             |   1 +
+ arch/arm/boot/dts/imx6dl-tx6s-8034.dts | 255 +++++++++++++++++++++++++=
+++++++++
+ 2 files changed, 256 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-tx6s-8034.dts
 
-diff --git a/arch/arm/boot/dts/imx6dl-tx6u-811x.dts b/arch/arm/boot/dts=
-/imx6dl-tx6u-811x.dts
-index c275eec..c14ee8f 100644
---- a/arch/arm/boot/dts/imx6dl-tx6u-811x.dts
-+++ b/arch/arm/boot/dts/imx6dl-tx6u-811x.dts
-@@ -104,8 +104,9 @@
- 		status =3D "okay";
-=20
- 		display-timings {
--			native-mode =3D <&lvds_timing0>;
--			lvds_timing0: hsd100pxn1 {
-+			native-mode =3D <&lvds0_timing0>;
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index a4a6d70..ac406d8 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -312,6 +312,7 @@ dtb-$(CONFIG_SOC_IMX6Q) +=3D \
+ 	imx6dl-sabrelite.dtb \
+ 	imx6dl-sabresd.dtb \
+ 	imx6dl-tx6dl-comtft.dtb \
++	imx6dl-tx6s-8034.dtb \
+ 	imx6dl-tx6u-801x.dtb \
+ 	imx6dl-tx6u-811x.dtb \
+ 	imx6dl-udoo.dtb \
+diff --git a/arch/arm/boot/dts/imx6dl-tx6s-8034.dts b/arch/arm/boot/dts=
+/imx6dl-tx6s-8034.dts
+new file mode 100644
+index 0000000..6545335
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6dl-tx6s-8034.dts
+@@ -0,0 +1,255 @@
++/*
++ * Copyright 2015 Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
 +
-+			lvds0_timing0: hsd100pxn1 {
- 				clock-frequency =3D <65000000>;
- 				hactive =3D <1024>;
- 				vactive =3D <768>;
-@@ -118,6 +119,22 @@
- 				de-active =3D <1>;
- 				pixelclk-active =3D <1>;
- 			};
++/dts-v1/;
++#include "imx6dl.dtsi"
++#include "imx6qdl-tx6.dtsi"
 +
-+			lvds0_timing1: nl12880bc20 {
-+				clock-frequency =3D <71000000>;
-+				hactive =3D <1280>;
-+				vactive =3D <800>;
-+				hback-porch =3D <50>;
-+				hsync-len =3D <60>;
-+				hfront-porch =3D <50>;
-+				vback-porch =3D <5>;
-+				vsync-len =3D <13>;
-+				vfront-porch =3D <5>;
++/ {
++	model =3D "Ka-Ro electronics TX6S-8034 Module";
++	compatible =3D "karo,imx6dl-tx6dl", "fsl,imx6dl";
++	timestamp =3D __DATE__, __TIME__;
++
++	aliases {
++		display =3D &display;
++		ipu1 =3D &ipu1;
++	};
++
++	cpus {
++		/delete-node/ cpu@1;
++	};
++
++	backlight: backlight {
++		compatible =3D "pwm-backlight";
++		pwms =3D <&pwm2 0 500000 PWM_POLARITY_INVERTED>;
++		power-supply =3D <&reg_3v3>;
++		/*
++		 * a poor man's way to create a 1:1 relationship between
++		 * the PWM value and the actual duty cycle
++		 */
++		brightness-levels =3D < 0  1  2  3  4  5  6  7  8  9
++				     10 11 12 13 14 15 16 17 18 19
++				     20 21 22 23 24 25 26 27 28 29
++				     30 31 32 33 34 35 36 37 38 39
++				     40 41 42 43 44 45 46 47 48 49
++				     50 51 52 53 54 55 56 57 58 59
++				     60 61 62 63 64 65 66 67 68 69
++				     70 71 72 73 74 75 76 77 78 79
++				     80 81 82 83 84 85 86 87 88 89
++				     90 91 92 93 94 95 96 97 98 99
++				    100>;
++		default-brightness-level =3D <50>;
++	};
++
++	display: display@di0 {
++		compatible =3D "fsl,imx-parallel-display";
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_disp0_1>;
++		interface-pix-fmt =3D "rgb24";
++//		fsl,panel =3D <&lcd0_panel>;
++		status =3D "okay";
++
++		port {
++			display0_in: endpoint {
++				remote-endpoint =3D <&ipu1_di0_disp0>;
++			};
++		};
++
++		display-timings {
++			VGA {
++				clock-frequency =3D <25200000>;
++				hactive =3D <640>;
++				vactive =3D <480>;
++				hback-porch =3D <48>;
++				hsync-len =3D <96>;
++				hfront-porch =3D <16>;
++				vback-porch =3D <31>;
++				vsync-len =3D <2>;
++				vfront-porch =3D <12>;
++				hsync-active =3D <0>;
++				vsync-active =3D <0>;
++				de-active =3D <1>;
++				pixelclk-active =3D <0>;
++			};
++
++			ETV570 {
++				clock-frequency =3D <25200000>;
++				hactive =3D <640>;
++				vactive =3D <480>;
++				hback-porch =3D <114>;
++				hsync-len =3D <30>;
++				hfront-porch =3D <16>;
++				vback-porch =3D <32>;
++				vsync-len =3D <3>;
++				vfront-porch =3D <10>;
++				hsync-active =3D <0>;
++				vsync-active =3D <0>;
++				de-active =3D <1>;
++				pixelclk-active =3D <0>;
++			};
++
++			ET0350 {
++				clock-frequency =3D <6413760>;
++				hactive =3D <320>;
++				vactive =3D <240>;
++				hback-porch =3D <34>;
++				hsync-len =3D <34>;
++				hfront-porch =3D <20>;
++				vback-porch =3D <15>;
++				vsync-len =3D <3>;
++				vfront-porch =3D <4>;
++				hsync-active =3D <0>;
++				vsync-active =3D <0>;
++				de-active =3D <1>;
++				pixelclk-active =3D <0>;
++			};
++
++			ET0430 {
++				clock-frequency =3D <9009000>;
++				hactive =3D <480>;
++				vactive =3D <272>;
++				hback-porch =3D <2>;
++				hsync-len =3D <41>;
++				hfront-porch =3D <2>;
++				vback-porch =3D <2>;
++				vsync-len =3D <10>;
++				vfront-porch =3D <2>;
 +				hsync-active =3D <0>;
 +				vsync-active =3D <0>;
 +				de-active =3D <1>;
 +				pixelclk-active =3D <1>;
 +			};
- 		};
- 	};
-=20
-@@ -127,8 +144,9 @@
- 		status =3D "disabled";
-=20
- 		display-timings {
--			native-mode =3D <&lvds_timing1>;
--			lvds_timing1: hsd100pxn1 {
-+			native-mode =3D <&lvds1_timing0>;
 +
-+			lvds1_timing0: hsd100pxn1 {
- 				clock-frequency =3D <65000000>;
- 				hactive =3D <1024>;
- 				vactive =3D <768>;
-@@ -141,6 +159,22 @@
- 				de-active =3D <1>;
- 				pixelclk-active =3D <1>;
- 			};
-+
-+			lvds1_timing1: nl12880bc20 {
-+				clock-frequency =3D <71000000>;
-+				hactive =3D <1280>;
-+				vactive =3D <800>;
-+				hback-porch =3D <50>;
-+				hsync-len =3D <60>;
-+				hfront-porch =3D <50>;
-+				vback-porch =3D <5>;
-+				vsync-len =3D <13>;
-+				vfront-porch =3D <5>;
++			ET0500 {
++				clock-frequency =3D <33264000>;
++				hactive =3D <800>;
++				vactive =3D <480>;
++				hback-porch =3D <88>;
++				hsync-len =3D <128>;
++				hfront-porch =3D <40>;
++				vback-porch =3D <33>;
++				vsync-len =3D <2>;
++				vfront-porch =3D <10>;
 +				hsync-active =3D <0>;
 +				vsync-active =3D <0>;
 +				de-active =3D <1>;
-+				pixelclk-active =3D <1>;
++				pixelclk-active =3D <0>;
 +			};
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx6q-tx6q-1110.dts b/arch/arm/boot/dts/=
-imx6q-tx6q-1110.dts
-index 88aa1e4..7a8be02 100644
---- a/arch/arm/boot/dts/imx6q-tx6q-1110.dts
-+++ b/arch/arm/boot/dts/imx6q-tx6q-1110.dts
-@@ -104,8 +104,9 @@
- 		status =3D "okay";
-=20
- 		display-timings {
--			native-mode =3D <&lvds_timing0>;
--			lvds_timing0: hsd100pxn1 {
-+			native-mode =3D <&lvds0_timing0>;
 +
-+			lvds0_timing0: hsd100pxn1 {
- 				clock-frequency =3D <65000000>;
- 				hactive =3D <1024>;
- 				vactive =3D <768>;
-@@ -118,6 +119,22 @@
- 				de-active =3D <1>;
- 				pixelclk-active =3D <1>;
- 			};
-+
-+			lvds0_timing1: nl12880bc20 {
-+				clock-frequency =3D <71000000>;
-+				hactive =3D <1280>;
-+				vactive =3D <800>;
-+				hback-porch =3D <50>;
-+				hsync-len =3D <60>;
-+				hfront-porch =3D <50>;
-+				vback-porch =3D <5>;
-+				vsync-len =3D <13>;
-+				vfront-porch =3D <5>;
++			ET0700 { /* same as ET0500 */
++				clock-frequency =3D <33264000>;
++				hactive =3D <800>;
++				vactive =3D <480>;
++				hback-porch =3D <88>;
++				hsync-len =3D <128>;
++				hfront-porch =3D <40>;
++				vback-porch =3D <33>;
++				vsync-len =3D <2>;
++				vfront-porch =3D <10>;
 +				hsync-active =3D <0>;
 +				vsync-active =3D <0>;
 +				de-active =3D <1>;
-+				pixelclk-active =3D <1>;
++				pixelclk-active =3D <0>;
 +			};
- 		};
- 	};
-=20
-@@ -127,8 +144,9 @@
- 		status =3D "disabled";
-=20
- 		display-timings {
--			native-mode =3D <&lvds_timing1>;
--			lvds_timing1: hsd100pxn1 {
-+			native-mode =3D <&lvds1_timing0>;
 +
-+			lvds1_timing0: hsd100pxn1 {
- 				clock-frequency =3D <65000000>;
- 				hactive =3D <1024>;
- 				vactive =3D <768>;
-@@ -141,6 +159,22 @@
- 				de-active =3D <1>;
- 				pixelclk-active =3D <1>;
- 			};
-+
-+			lvds1_timing1: nl12880bc20 {
-+				clock-frequency =3D <71000000>;
-+				hactive =3D <1280>;
-+				vactive =3D <800>;
-+				hback-porch =3D <50>;
-+				hsync-len =3D <60>;
-+				hfront-porch =3D <50>;
-+				vback-porch =3D <5>;
-+				vsync-len =3D <13>;
-+				vfront-porch =3D <5>;
++			ETQ570 {
++				clock-frequency =3D <6596040>;
++				hactive =3D <320>;
++				vactive =3D <240>;
++				hback-porch =3D <38>;
++				hsync-len =3D <30>;
++				hfront-porch =3D <30>;
++				vback-porch =3D <16>;
++				vsync-len =3D <3>;
++				vfront-porch =3D <4>;
 +				hsync-active =3D <0>;
 +				vsync-active =3D <0>;
 +				de-active =3D <1>;
-+				pixelclk-active =3D <1>;
++				pixelclk-active =3D <0>;
 +			};
- 		};
- 	};
- };
++		};
++	};
++
++	lcd0_panel: lcd-panel {
++		compatible =3D "edt,et070080dh6", "simple-panel";
++		power-supply =3D <&reg_lcd0_pwr>;
++		enable-gpios =3D <&gpio2 31 GPIO_ACTIVE_HIGH>;
++		backlight =3D <&backlight>;
++		status =3D "disabled";
++	};
++};
++
++&ds1339 {
++	status =3D "disabled";
++};
++
++&pinctrl_hog {
++	fsl,pins =3D <
++		MX6QDL_PAD_EIM_A18__GPIO2_IO20		0x1b0b1 /* LED */
++		MX6QDL_PAD_SD3_DAT2__GPIO7_IO06		0x1b0b1 /* ETN PHY RESET */
++		MX6QDL_PAD_SD3_DAT4__GPIO7_IO01		0x1b0b1 /* ETN PHY INT */
++		MX6QDL_PAD_EIM_A25__GPIO5_IO02		0x1b0b1 /* PWR BTN */
++	>;
++};
++
++&pinctrl_usdhc1 {
++	fsl,pins =3D <
++		MX6QDL_PAD_SD1_CMD__SD1_CMD		0x070b1
++		MX6QDL_PAD_SD1_CLK__SD1_CLK		0x07099
++		MX6QDL_PAD_SD1_DAT0__SD1_DATA0		0x070b1
++		MX6QDL_PAD_SD1_DAT1__SD1_DATA1		0x070b1
++		MX6QDL_PAD_SD1_DAT2__SD1_DATA2		0x070b1
++		MX6QDL_PAD_SD1_DAT3__SD1_DATA3		0x070b1
++		MX6QDL_PAD_SD3_CMD__GPIO7_IO02		0x170b0 /* SD1 CD */
++	>;
++};
++
++&ipu1_di0_disp0 {
++	remote-endpoint =3D <&display0_in>;
++};
++
++&reg_lcd0_pwr {
++	status =3D "disabled";
++};
++
++&reg_lcd1_pwr {
++	status =3D "disabled";
++};
 --=20
 2.1.4
