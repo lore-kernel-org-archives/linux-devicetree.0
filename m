@@ -1,50 +1,34 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [RFC v2 2/4] dt-bindings: i2c: mux: demux-pinctrl: add bindings
-Date: Wed, 13 Jan 2016 17:07:55 +0300
-Message-ID: <56965A3B.60208@cogentembedded.com>
-References: <1452088285-6427-1-git-send-email-wsa@the-dreams.de>
- <1452088285-6427-3-git-send-email-wsa@the-dreams.de>
- <CAMuHMdUdxk6yjYAr3i7sjdMa-WJxrbOhsEz3JidY9aZVhaoURw@mail.gmail.com>
- <20160113125227.GD1540@katana>
+From: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>
+Subject: [PATCH v2 1/3] phy: Add Display port and SGMII type PHYs
+Date: Wed, 13 Jan 2016 19:43:16 +0530
+Message-ID: <1452694396-1200-1-git-send-email-sbhatta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20160113125227.GD1540@katana>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linux I2C <linux-i2c@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Jan Luebbe <jlu@pengutronix.de>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kishon@ti.com, robh@kernel.org
+Cc: balbi@ti.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+This patch adds two new macros for specifying Display
+Port and SGMII PHYs.
 
-On 01/13/2016 03:52 PM, Wolfram Sang wrote:
+Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
+---
+ include/dt-bindings/phy/phy.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
->>> These bindings allow an I2C bus to switch between multiple masters. This
->>> is not hot-swichting because connected I2C slaves will be
->>> re-instantiated. It is meant to select the best I2C core at runtime once
->>> the task is known. Example: Prefer i2c-gpio over another I2C core
->>> because of HW errata affetcing your use case.
->>
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.txt
->>> @@ -0,0 +1,155 @@
->>
->>> +Here is a snipplet for a bus to be demuxed. It contains various i2c clients for
->>
->> snippet
->>
->>> +HDMI, so the bus is named "i2c-hdmi":
->>> +
->>> +       i2chdmi: i2c@8 {
->>
->> Would it make sense to call the node "i2c-bus@8"?
->
-> That sounds like a question for our EPapr expert Sergei (CCed) :)
-
-    ePAPR only mentions "i2c". I'm not sure where the numeric part of the name 
-comes from in this case...
-
-[...]
-
-MBR, Sergei
+diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
+index 6c90193..4e1b5d7 100644
+--- a/include/dt-bindings/phy/phy.h
++++ b/include/dt-bindings/phy/phy.h
+@@ -15,5 +15,7 @@
+ #define PHY_TYPE_PCIE		2
+ #define PHY_TYPE_USB2		3
+ #define PHY_TYPE_USB3		4
++#define PHY_TYPE_DP             5
++#define PHY_TYPE_SGMII          6
+ 
+ #endif /* _DT_BINDINGS_PHY */
+-- 
+2.1.2
