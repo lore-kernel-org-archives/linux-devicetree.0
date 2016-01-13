@@ -1,76 +1,128 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 2/6] dt-bindings: ARM: Mediatek: Document bindings
- for MT2701
-Date: Wed, 13 Jan 2016 11:39:15 +0800
-Message-ID: <1452656355.2657.12.camel@mtksdaap41>
-References: <1451975422-31174-1-git-send-email-jamesjj.liao@mediatek.com>
- <1451975422-31174-3-git-send-email-jamesjj.liao@mediatek.com>
- <20160106150800.GA941@rob-hp-laptop>
+From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
+Subject: RE: [PATCH v3 1/2] mfd: act8945a: add Active-semi ACT8945A PMIC MFD
+ driver
+Date: Wed, 13 Jan 2016 03:48:39 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D63E957A@penmbx01>
+References: <1452592015-22173-1-git-send-email-wenyou.yang@atmel.com>
+ <1452592015-22173-2-git-send-email-wenyou.yang@atmel.com>
+ <5695AC5E.9000804@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20160106150800.GA941@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5695AC5E.9000804@samsung.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: Javier Martinez Canillas <javier@dowhile0.org>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Wed, 2016-01-06 at 09:08 -0600, Rob Herring wrote:
-> On Tue, Jan 05, 2016 at 02:30:18PM +0800, James Liao wrote:
-> > This patch adds the binding documentation for apmixedsys, bdpsys,
-> > ethsys, hifsys, imgsys, infracfg, mmsys, pericfg, topckgen and
-> > vdecsys for Mediatek MT2701.
-> > 
-> > Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> [...]
-> 
-> > diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
-> > new file mode 100644
-> > index 0000000..4137196
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,bdpsys.txt
-> > @@ -0,0 +1,22 @@
-> > +Mediatek bdpsys controller
-> > +============================
-> > +
-> > +The Mediatek bdpsys controller provides various clocks to the system.
-> > +
-> > +Required Properties:
-> > +
-> > +- compatible: Should be:
-> > +	- "mediatek,mt2701-bdpsys", "syscon"
-> 
-> If this block and others only provide clocks, then why do you need 
-> syscon here? If it is more that clocks, then the description is wrong.
-
-Sorry for late reply.
-
-In bdpsys and other similar subsystems, clock controlling and other
-feature controlling share the same register space. That means we may
-have multiple DT nodes with the same reg (register address) property.
-But it's not a good idea because we may have racing issue when multiple
-drivers share the same register space. With syscon, drivers that need
-share the same register base with bdpsys can safely control registers
-through regmap APIs.
-
-These subsystem nodes described in arm/mediatek/ are clock controllers,
-some of them may be the reset controller at the same time. Other
-subsystem features will have their own DT nodes and share the same
-register space by referring to these clock controllers.
-
-
-Best regards,
-
-James
+SGkgS3J6eXN6dG9mLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEty
+enlzenRvZiBLb3psb3dza2kgW21haWx0bzprLmtvemxvd3NraUBzYW1zdW5nLmNvbV0NCj4gU2Vu
+dDogMjAxNsTqMdTCMTPI1SA5OjQ2DQo+IFRvOiBZYW5nLCBXZW55b3UgPFdlbnlvdS5ZYW5nQGF0
+bWVsLmNvbT47IExlZSBKb25lcw0KPiA8bGVlLmpvbmVzQGxpbmFyby5vcmc+OyBSb2IgSGVycmlu
+ZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgUGF3ZWwgTW9sbA0KPiA8cGF3ZWwubW9sbEBhcm0uY29t
+PjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IElhbiBDYW1wYmVsbA0KPiA8
+aWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs+OyBLdW1hciBHYWxhIDxnYWxha0Bjb2RlYXVy
+b3JhLm9yZz4NCj4gQ2M6IEphdmllciBNYXJ0aW5leiBDYW5pbGxhcyA8amF2aWVyQGRvd2hpbGUw
+Lm9yZz47IEZlcnJlLCBOaWNvbGFzDQo+IDxOaWNvbGFzLkZFUlJFQGF0bWVsLmNvbT47IGxpbnV4
+LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtl
+cm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFU
+Q0ggdjMgMS8yXSBtZmQ6IGFjdDg5NDVhOiBhZGQgQWN0aXZlLXNlbWkgQUNUODk0NUEgUE1JQw0K
+PiBNRkQgZHJpdmVyDQo+IA0KPiBPbiAxMi4wMS4yMDE2IDE4OjQ2LCBXZW55b3UgWWFuZyB3cm90
+ZToNCj4gPiBUaGlzIHBhdGNoIGFkZHMgc3VwcG9ydCBmb3IgdGhlIEFjdGl2ZS1zZW1pIEFDVDg5
+NDVBIFBNSUMuDQo+ID4gSXQgaXMgYSBNdWx0aSBGdW5jdGlvbiBEZXZpY2Ugd2l0aCB0aGUgZm9s
+bG93aW5nIHN1YmRldmljZXM6DQo+ID4gIC0gUmVndWxhdG9yDQo+ID4gIC0gQ2hhcmdlcg0KPiA+
+DQo+ID4gSXQgaXMgaW50ZXJmYWNlZCB0byB0aGUgaG9zdCBjb250cm9sbGVyIHVzaW5nIEkyQyBp
+bnRlcmZhY2UsIEFDVDg5NDVBDQo+ID4gaXMgYSBjaGlsZCBkZXZpY2Ugb2YgdGhlIEkyQy4NCj4g
+Pg0KPiA+IFNpZ25lZC1vZmYtYnk6IFdlbnlvdSBZYW5nIDx3ZW55b3UueWFuZ0BhdG1lbC5jb20+
+DQo+ID4gLS0tDQo+ID4NCj4gPiBDaGFuZ2VzIGluIHYzOiBOb25lDQo+ID4gQ2hhbmdlcyBpbiB2
+MjoNCj4gPiAgLSBhZGQgbW9yZSBoZWxwIGluZm9ybWF0aW9uIGluIEtjb25maWcuDQo+ID4gIC0g
+dXBkYXRlIHRoZSBmaWxlIGhlYWRlciB3aXRoIHNob3J0IHZlcnNpb24gbGljZW5zZSBhbmQgYXV0
+aG9yIGxpbmUuDQo+ID4gIC0gcmVtb3ZlIHVudXNlZCBzdHJ1Y3R1cmUgbWVtYmVycyAoZGV2LCBp
+MmNfY2xpZW50KSBvZiBzdHVjdCBhY3Q4OTQ1YV9kZXYuDQo+ID4gIC0gdXNlIGRlZmluZSAiUExB
+VEZPUk1fREVWSURfTk9ORSIgZm9yIG1mZF9hZGRfZGV2aWNlcygpLCBpbnN0ZWFkIG9mICctMScu
+DQo+ID4gIC0gdXNlIG1vcmUgZXhwbGljaXQgaW5mbyB0byBpbmRpY2F0ZSB0aGUgZmFpbHVyZSB0
+byBhZGQgc3ViIGRldmljZXMuDQo+ID4gIC0gcmVtb3ZlIHRoZSB1bm5lY2Vzc2FyeSBwcmludCBv
+dXQuDQo+ID4gIC0gc3Vic3RpdHV0ZSBNT0RVTEVfTElDRU5TRSgiR1BMIikgZm9yIE1PRFVMRV9M
+SUNFTlNFKCJHUEwgdjIiKS4NCj4gPg0KPiA+ICBkcml2ZXJzL21mZC9LY29uZmlnICAgICAgICAg
+IHwgICAxMSArKysrKw0KPiA+ICBkcml2ZXJzL21mZC9NYWtlZmlsZSAgICAgICAgIHwgICAgMSAr
+DQo+ID4gIGRyaXZlcnMvbWZkL2FjdDg5NDVhLmMgICAgICAgfCAgMTA5DQo+ICsrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICBpbmNsdWRlL2xpbnV4L21mZC9h
+Y3Q4OTQ1YS5oIHwgICAyMSArKysrKysrKw0KPiA+ICA0IGZpbGVzIGNoYW5nZWQsIDE0MiBpbnNl
+cnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21mZC9hY3Q4OTQ1YS5j
+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiBpbmNsdWRlL2xpbnV4L21mZC9hY3Q4OTQ1YS5oDQo+
+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQvS2NvbmZpZyBiL2RyaXZlcnMvbWZkL0tj
+b25maWcgaW5kZXgNCj4gPiA5Y2E2NmRlLi4zNDM3NWE5IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZl
+cnMvbWZkL0tjb25maWcNCj4gPiArKysgYi9kcml2ZXJzL21mZC9LY29uZmlnDQo+ID4gQEAgLTE4
+LDYgKzE4LDE3IEBAIGNvbmZpZyBNRkRfQ1M1NTM1DQo+ID4gIAkgIFRoaXMgaXMgdGhlIGNvcmUg
+ZHJpdmVyIGZvciBDUzU1MzUvQ1M1NTM2IE1GRCBmdW5jdGlvbnMuICBUaGlzIGlzDQo+ID4gICAg
+ICAgICAgICBuZWNlc3NhcnkgZm9yIHVzaW5nIHRoZSBib2FyZCdzIEdQSU8gYW5kIE1GR1BUIGZ1
+bmN0aW9uYWxpdHkuDQo+ID4NCj4gPiArY29uZmlnIE1GRF9BQ1Q4OTQ1QQ0KPiA+ICsJYm9vbCAi
+QWN0aXZlLXNlbWkgQUNUODk0NUEiDQo+ID4gKwlzZWxlY3QgTUZEX0NPUkUNCj4gPiArCXNlbGVj
+dCBSRUdNQVBfSTJDDQo+ID4gKwlkZXBlbmRzIG9uIEkyQyAmJiBPRg0KPiA+ICsJaGVscA0KPiA+
+ICsJICBTdXBwb3J0IGZvciB0aGUgQUNUODk0NUEgUE1JQyBmcm9tIEFjdGl2ZS1zZW1pLiBUaGlz
+IGRldmljZQ0KPiA+ICsJICBmZWF0dXJlcyB0aHJlZSBzdGVwLWRvd24gREMvREMgY29udmVydGVy
+cyBhbmQgZm91ciBsb3ctZHJvcG91dA0KPiA+ICsJICBsaW5lYXIgcmVndWxhdG9ycywgYWxvbmcg
+d2l0aCBhIGNvbXBsZXRlIEFjdGl2ZVBhdGggYmF0dGVyeQ0KPiA+ICsJICBjaGFyZ2VyLg0KPiA+
+ICsNCj4gPiAgY29uZmlnIE1GRF9BUzM3MTENCj4gPiAgCWJvb2wgIkFNUyBBUzM3MTEiDQo+ID4g
+IAlzZWxlY3QgTUZEX0NPUkUNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQvTWFrZWZpbGUg
+Yi9kcml2ZXJzL21mZC9NYWtlZmlsZSBpbmRleA0KPiA+IDBmMjMwYTYuLjJmMWNhODIgMTAwNjQ0
+DQo+ID4gLS0tIGEvZHJpdmVycy9tZmQvTWFrZWZpbGUNCj4gPiArKysgYi9kcml2ZXJzL21mZC9N
+YWtlZmlsZQ0KPiA+IEBAIC02LDYgKzYsNyBAQA0KPiA+ICBvYmotJChDT05GSUdfTUZEXzg4UE04
+NjBYKQkrPSA4OHBtODYweC5vDQo+ID4gIG9iai0kKENPTkZJR19NRkRfODhQTTgwMCkJKz0gODhw
+bTgwMC5vIDg4cG04MHgubw0KPiA+ICBvYmotJChDT05GSUdfTUZEXzg4UE04MDUpCSs9IDg4cG04
+MDUubyA4OHBtODB4Lm8NCj4gPiArb2JqLSQoQ09ORklHX01GRF9BQ1Q4OTQ1QSkJKz0gYWN0ODk0
+NWEubw0KPiA+ICBvYmotJChDT05GSUdfTUZEX1NNNTAxKQkJKz0gc201MDEubw0KPiA+ICBvYmot
+JChDT05GSUdfTUZEX0FTSUMzKQkJKz0gYXNpYzMubyB0bWlvX2NvcmUubw0KPiA+ICBvYmotJChD
+T05GSUdfTUZEX0JDTTU5MFhYKQkrPSBiY201OTB4eC5vDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvbWZkL2FjdDg5NDVhLmMgYi9kcml2ZXJzL21mZC9hY3Q4OTQ1YS5jIG5ldyBmaWxlDQo+ID4g
+bW9kZSAxMDA2NDQgaW5kZXggMDAwMDAwMC4uN2Y4YzUwYQ0KPiA+IC0tLSAvZGV2L251bGwNCj4g
+PiArKysgYi9kcml2ZXJzL21mZC9hY3Q4OTQ1YS5jDQo+ID4gQEAgLTAsMCArMSwxMDkgQEANCj4g
+PiArLyoNCj4gPiArICogTUZEIGRyaXZlciBmb3IgQWN0aXZlLXNlbWkgQUNUODk0NWEgUE1JQw0K
+PiA+ICsgKg0KPiA+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTUgQXRtZWwgQ29ycG9yYXRpb24uDQo+
+ID4gKyAqDQo+ID4gKyAqIEF1dGhvcjogV2VueW91IFlhbmcgPHdlbnlvdS55YW5nQGF0bWVsLmNv
+bT4NCj4gPiArICoNCj4gPiArICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBj
+YW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vcg0KPiA+ICttb2RpZnkgaXQNCj4gPiArICogdW5kZXIg
+IHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgIFB1YmxpYyBMaWNlbnNlIGFzIHB1Ymxpc2hl
+ZA0KPiA+ICtieSB0aGUNCj4gPiArICogRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uOyAgZWl0aGVy
+IHZlcnNpb24gMiBvZiB0aGUgTGljZW5zZSwgb3IgKGF0DQo+ID4gK3lvdXINCj4gPiArICogb3B0
+aW9uKSBhbnkgbGF0ZXIgdmVyc2lvbi4NCj4gPiArICovDQo+ID4gKw0KPiA+ICsjaW5jbHVkZSA8
+bGludXgvaTJjLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9tZmQvYWN0ODk0NWEuaD4NCj4gPiAr
+I2luY2x1ZGUgPGxpbnV4L21mZC9jb3JlLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUu
+aD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L29mX2RldmljZS5oPg0KPiA+ICsjaW5jbHVkZSA8bGlu
+dXgvcmVnbWFwLmg+DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG1mZF9jZWxsIGFj
+dDg5NDVhX2RldnNbXSA9IHsNCj4gPiArCXsNCj4gPiArCQkubmFtZSA9ICJhY3Q4OTQ1YS1wbWlj
+IiwNCj4gPiArCQkub2ZfY29tcGF0aWJsZSA9ICJhY3RpdmUtc2VtaSxhY3Q4OTQ1YS1yZWd1bGF0
+b3IiLA0KPiA+ICsJfSwNCj4gPiArCXsNCj4gPiArCQkubmFtZSA9ICJhY3Q4OTQ1YS1jaGFyZ2Vy
+IiwNCj4gPiArCQkub2ZfY29tcGF0aWJsZSA9ICJhY3RpdmUtc2VtaSxhY3Q4OTQ1YS1jaGFyZ2Vy
+IiwNCj4gPiArCX0sDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHJl
+Z21hcF9jb25maWcgYWN0ODk0NWFfcmVnbWFwX2NvbmZpZyA9IHsNCj4gPiArCS5yZWdfYml0cyA9
+IDgsDQo+ID4gKwkudmFsX2JpdHMgPSA4LA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGljIGlu
+dCBhY3Q4OTQ1YV9pMmNfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmkyYywNCj4gPiArCQkJICAg
+ICAgY29uc3Qgc3RydWN0IGkyY19kZXZpY2VfaWQgKmlkKSB7DQo+ID4gKwlzdHJ1Y3QgYWN0ODk0
+NWFfZGV2ICphY3Q4OTQ1YTsNCj4gPiArCWludCByZXQ7DQo+ID4gKw0KPiA+ICsJYWN0ODk0NWEg
+PSBkZXZtX2t6YWxsb2MoJmkyYy0+ZGV2LCBzaXplb2YoKmFjdDg5NDVhKSwgR0ZQX0tFUk5FTCk7
+DQo+ID4gKwlpZiAoIWFjdDg5NDVhKQ0KPiA+ICsJCXJldHVybiAtRU5PTUVNOw0KPiA+ICsNCj4g
+PiArCWkyY19zZXRfY2xpZW50ZGF0YShpMmMsIGFjdDg5NDVhKTsNCj4gPiArDQo+ID4gKwlhY3Q4
+OTQ1YS0+cmVnbWFwID0gZGV2bV9yZWdtYXBfaW5pdF9pMmMoaTJjLA0KPiAmYWN0ODk0NWFfcmVn
+bWFwX2NvbmZpZyk7DQo+ID4gKwlpZiAoSVNfRVJSKGFjdDg5NDVhLT5yZWdtYXApKSB7DQo+ID4g
+KwkJcmV0ID0gUFRSX0VSUihhY3Q4OTQ1YS0+cmVnbWFwKTsNCj4gPiArCQlkZXZfZXJyKCZpMmMt
+PmRldiwgInJlZ21hcCBpbml0IGZhaWxlZDogJWRcbiIsIHJldCk7DQo+ID4gKwkJcmV0dXJuIHJl
+dDsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwlyZXQgPSBtZmRfYWRkX2RldmljZXMoJmkyYy0+ZGV2
+LCBQTEFURk9STV9ERVZJRF9OT05FLA0KPiBhY3Q4OTQ1YV9kZXZzLA0KPiA+ICsJCQkgICAgICBB
+UlJBWV9TSVpFKGFjdDg5NDVhX2RldnMpLCBOVUxMLCAwLCBOVUxMKTsNCj4gPiArCWlmIChyZXQp
+IHsNCj4gPiArCQlkZXZfZXJyKCZpMmMtPmRldiwgIkZhaWxlZCB0byBhZGQgc3ViIGRldmljZXNc
+biIpOw0KPiA+ICsJCXJldHVybiByZXQ7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7
+DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgYWN0ODk0NWFfaTJjX3JlbW92ZShzdHJ1
+Y3QgaTJjX2NsaWVudCAqaTJjKSB7DQo+ID4gKwltZmRfcmVtb3ZlX2RldmljZXMoJmkyYy0+ZGV2
+KTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGNv
+bnN0IHN0cnVjdCBpMmNfZGV2aWNlX2lkIGFjdDg5NDVhX2kyY19pZFtdID0gew0KPiA+ICsJeyAi
+YWN0ODk0NWEiLCAwIH0sDQo+ID4gKwl7fQ0KPiA+ICt9Ow0KPiA+ICtNT0RVTEVfREVWSUNFX1RB
+QkxFKGkyYywgYWN0ODk0NWFfaTJjX2lkKTsNCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1
+Y3Qgb2ZfZGV2aWNlX2lkIGFjdDg5NDVhX29mX21hdGNoW10gPSB7DQo+ID4gKwl7LmNvbXBhdGli
+bGUgPSAiYWN0aXZlLXNlbWksYWN0ODk0NWEiLCB9LA0KPiANCj4gTml0OiBhIHNwYWNlIGJlZm9y
+ZSAuY29tcGF0aWJsZQ0KPiANCj4gT3ZlcmFsbCBpdCBsb29rcyBnb29kOg0KPiANCj4gUmV2aWV3
+ZWQtYnk6IEtyenlzenRvZiBLb3psb3dza2kgPGsua296bG93c2tpQHNhbXN1bmcuY29tPg0KDQpU
+aGFuayB5b3UgZm9yIHlvdXIgUmV2aWV3ZWQtYnkuDQoNCj4gDQo+IEJlc3QgcmVnYXJkcywNCj4g
+S3J6eXN6dG9mDQoNCg0KQmVzdCBSZWdhcmRzLA0KV2VueW91IFlhbmcNCg==
