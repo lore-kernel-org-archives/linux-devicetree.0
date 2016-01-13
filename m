@@ -1,49 +1,54 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [RFC v2 3/4] i2c: mux: demux-pinctrl: add driver
-Date: Wed, 13 Jan 2016 17:16:07 +0100
-Message-ID: <CAMuHMdVnYMmrt3PPb-cg4C889RB5pwKN+LX6O-1VSX1oaKY1ww@mail.gmail.com>
-References: <1452088285-6427-1-git-send-email-wsa@the-dreams.de>
-	<1452088285-6427-4-git-send-email-wsa@the-dreams.de>
-	<CAMuHMdUuiuXPFJQpUB+Y3xF34KnqhzdZ+x-E7zL1ywp=sAQWXg@mail.gmail.com>
-	<20160113125514.GE1540@katana>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v1 1/5] mtd: atmel_nand: Do not warn on bitflips
+Date: Wed, 13 Jan 2016 17:34:13 +0100
+Message-ID: <1452702857-2240-2-git-send-email-romain.izard.pro@gmail.com>
+References: <1452702857-2240-1-git-send-email-romain.izard.pro@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160113125514.GE1540@katana>
+In-Reply-To: <1452702857-2240-1-git-send-email-romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+When using multi-bit ECC, it is normal for the NAND Flash driver to
+correct bit errors during the life of the product. Those errors will
+only be cleared once a threshold has been reached, and corrections can
+occur regularly before this.
 
-On Wed, Jan 13, 2016 at 1:55 PM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
->> > +struct i2c_demux_pinctrl_priv {
->> > +       int cur_chan;
->> > +       int num_chan;
->>
->> This is always positive, so you can make num_chan and a few loop counters
->> unsigned.
->
-> Nope, sadly not. cur_chan can get a -ERRNO, and the type of num_chan is
+Use only dev_dbg and not dev_info to report the bitflips, to keep the
+system log clean when everything works correctly.
 
-Sorry for the bad quoting, my comment applied to num_chan only.
+Signed-off-by: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by:  Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+---
+ drivers/mtd/nand/atmel_nand.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> defined by the return type of of_count_phandle_with_args().
+diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
+index 46010bd895b1..9d71f9e6a8de 100644
+--- a/drivers/mtd/nand/atmel_nand.c
++++ b/drivers/mtd/nand/atmel_nand.c
+@@ -824,7 +824,7 @@ static void pmecc_correct_data(struct mtd_info *mtd, uint8_t *buf, uint8_t *ecc,
+ 			*(buf + byte_pos) ^= (1 << bit_pos);
+ 
+ 			pos = sector_num * host->pmecc_sector_size + byte_pos;
+-			dev_info(host->dev, "Bit flip in data area, byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
++			dev_dbg(host->dev, "Bit flip in data area, byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
+ 				pos, bit_pos, err_byte, *(buf + byte_pos));
+ 		} else {
+ 			/* Bit flip in OOB area */
+@@ -834,7 +834,7 @@ static void pmecc_correct_data(struct mtd_info *mtd, uint8_t *buf, uint8_t *ecc,
+ 			ecc[tmp] ^= (1 << bit_pos);
+ 
+ 			pos = tmp + nand_chip->ecc.layout->eccpos[0];
+-			dev_info(host->dev, "Bit flip in OOB, oob_byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
++			dev_dbg(host->dev, "Bit flip in OOB, oob_byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
+ 				pos, bit_pos, err_byte, ecc[tmp]);
+ 		}
+ 
+-- 
+2.5.0
 
-But you will never store negative error codes returned by that function, as you
-won't get to the storing part...
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
