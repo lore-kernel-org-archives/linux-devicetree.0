@@ -1,69 +1,52 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v1 1/5] mtd: atmel_nand: Do not warn on bitflips
-Date: Wed, 13 Jan 2016 18:54:21 +0100
-Message-ID: <20160113185421.22e1cb9c@bbrezillon>
-References: <1452702857-2240-1-git-send-email-romain.izard.pro@gmail.com>
-	<1452702857-2240-2-git-send-email-romain.izard.pro@gmail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 3/3] ARM: shmobile: r8a7790: rework dts to use i2c demuxer
+Date: Wed, 13 Jan 2016 18:57:57 +0100
+Message-ID: <20160113175756.GA2821@katana>
+References: <1452695369-29413-1-git-send-email-wsa@the-dreams.de>
+ <1452695369-29413-4-git-send-email-wsa@the-dreams.de>
+ <5696870C.102@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452702857-2240-2-git-send-email-romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5696870C.102@cogentembedded.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Jan Luebbe <jlu@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 13 Jan 2016 17:34:13 +0100
-Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> When using multi-bit ECC, it is normal for the NAND Flash driver to
-> correct bit errors during the life of the product. Those errors will
-> only be cleared once a threshold has been reached, and corrections can
-> occur regularly before this.
-> 
-> Use only dev_dbg and not dev_info to report the bitflips, to keep the
-> system log clean when everything works correctly.
-> 
-> Signed-off-by: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by:  Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-
-Reviewed-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-> ---
->  drivers/mtd/nand/atmel_nand.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
-> index 46010bd895b1..9d71f9e6a8de 100644
-> --- a/drivers/mtd/nand/atmel_nand.c
-> +++ b/drivers/mtd/nand/atmel_nand.c
-> @@ -824,7 +824,7 @@ static void pmecc_correct_data(struct mtd_info *mtd, uint8_t *buf, uint8_t *ecc,
->  			*(buf + byte_pos) ^= (1 << bit_pos);
->  
->  			pos = sector_num * host->pmecc_sector_size + byte_pos;
-> -			dev_info(host->dev, "Bit flip in data area, byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
-> +			dev_dbg(host->dev, "Bit flip in data area, byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
->  				pos, bit_pos, err_byte, *(buf + byte_pos));
->  		} else {
->  			/* Bit flip in OOB area */
-> @@ -834,7 +834,7 @@ static void pmecc_correct_data(struct mtd_info *mtd, uint8_t *buf, uint8_t *ecc,
->  			ecc[tmp] ^= (1 << bit_pos);
->  
->  			pos = tmp + nand_chip->ecc.layout->eccpos[0];
-> -			dev_info(host->dev, "Bit flip in OOB, oob_byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
-> +			dev_dbg(host->dev, "Bit flip in OOB, oob_byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
->  				pos, bit_pos, err_byte, ecc[tmp]);
->  		}
->  
+--2oS5YaxWCcQjTEyO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
 
+>    In a board file? When do you intend to enable it?
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please read the cover letter of this patch series.
+
+
+--2oS5YaxWCcQjTEyO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWlpAkAAoJEBQN5MwUoCm2ZX0QAI6fO9QCnjx8/d7e17MFoeYo
+MHpAB2XNbb+roJaDsxAvAB9FmLMxETdyYYtwoIaPFvKz3CPY0INoWs2L50CY2xOJ
+vFvb7nwvnq+nDgwf1zilskO6SfGrRMN6dniAnmeRupSmM6gRPHOhkCbgDFuViDdR
+7euf2KirmKptfYzrx+Hq+QEXQmbZDTfxdkgPx8T5a0c6q/Lak2OlwDjfvXmlVfkG
+42zRaag2viE2R5qsCX1lDA2cg3OwqwbE/g0WZjoiCF+IL6lUbgHcbuuiTpJoJHLb
+qIqT3S5xF0Q0Tht9sGpXaCNNYf0YfUeniLx4KwtpNrVeHyxyzkTuuA4y+aprNtDm
+itTK2XlHwhLJldhL+AU4Vvu5PeNfXjQj3eC81/+3xno4Z8VI3kAQOrVdAMaqheAA
+qqooUPXoB5ys3BIjrS08w9i72bkARFBjyU+MT6hDunOJiS06CSF0I4ff0KlxKCK3
+NBU6uy+q6iB6yBYTkGtLmHZlqdrB2vNWA+Gg5bAqXwlb+uB+mZq8mybpFSwwpLpA
+okf5pChEjUIZ0IkBJn4O5aCCuNIXo2qoB93/bXlZgViaNLmynno8zOL8rjJqD7H+
+s2Btk2Semv5ZCCAxJY6F37PPrbhNniTpSG2EnTq2yd3mjPfUtTIkFcAGh550GXdU
+gmVKmAqFtZ3ALJuTXnXd
+=Yyy5
+-----END PGP SIGNATURE-----
+
+--2oS5YaxWCcQjTEyO--
