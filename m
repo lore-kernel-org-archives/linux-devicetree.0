@@ -1,104 +1,65 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RFC v2 2/4] dt-bindings: i2c: mux: demux-pinctrl: add bindings
-Date: Wed, 13 Jan 2016 14:02:28 +0100
-Message-ID: <20160113130227.GG1540@katana>
-References: <1452088285-6427-1-git-send-email-wsa@the-dreams.de>
- <1452088285-6427-3-git-send-email-wsa@the-dreams.de>
- <1452185798.2915.44.camel@pengutronix.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V2 6/6] regulator: max77620: add regulator driver for
+ max77620/max20024
+Date: Wed, 13 Jan 2016 13:09:09 +0000
+Message-ID: <20160113130909.GL6588@sirena.org.uk>
+References: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com>
+ <1452590273-16421-7-git-send-email-ldewangan@nvidia.com>
+ <5695A854.60108@samsung.com>
+ <5696378B.6070704@nvidia.com>
+ <20160113115736.GJ6588@sirena.org.uk>
+ <56963D8D.9060908@nvidia.com>
+ <20160113123133.GK6588@sirena.org.uk>
+ <5696451F.3000707@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WkfBGePaEyrk4zXB"
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="GWLvvOwKrQC9aCO6"
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1452185798.2915.44.camel@pengutronix.de>
-Sender: linux-sh-owner@vger.kernel.org
-To: Jan =?utf-8?B?TMO8YmJl?= <jlu@pengutronix.de>
-Cc: linux-i2c@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+In-Reply-To: <5696451F.3000707@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, Mallikarjun Kasoju <mkasoju@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
 
---WkfBGePaEyrk4zXB
+--GWLvvOwKrQC9aCO6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi Jan,
+On Wed, Jan 13, 2016 at 06:07:51PM +0530, Laxman Dewangan wrote:
+> On Wednesday 13 January 2016 06:01 PM, Mark Brown wrote:
 
-> > +Required properties:
-> > +- compatible: "i2c-demux-pinctrl"
-> > +- i2c-parent: List of phandles of I2C masters available for selection.=
- The first
-> > +	      one will be used as default.
-> > +- i2c-bus-name: The name of this bus. Also needed as pinctrl-name for =
-the I2C
-> > +		parents.
-> [...]
-> > +	i2chdmi: i2c@8 {
-> > +		compatible =3D "i2c-demux-pinctrl";
-> > +		i2c-parent =3D <&gpioi2c>, <&iic2>, <&i2c2>;
-> > +		i2c-bus-name =3D "i2c-hdmi";
-> > +		#address-cells =3D <1>;
-> > +		#size-cells =3D <0>;
-> [...]
-> > +	gpioi2c: i2c@9 {
-> > +		#address-cells =3D <1>;
-> > +		#size-cells =3D <0>;
-> > +		compatible =3D "i2c-gpio";
-> [...]
-> > +&i2c2	{
-> > +	pinctrl-0 =3D <&i2c2_pins>;
-> > +	pinctrl-names =3D "i2c-hdmi";
-> > +
-> > +	clock-frequency =3D <100000>;
-> > +};
-> [...]
-> > +&iic2	{
-> > +	pinctrl-0 =3D <&iic2_pins>;
-> > +	pinctrl-names =3D "i2c-hdmi";
-> > +
-> > +	clock-frequency =3D <100000>;
-> > +};
-> [...]
->=20
-> It seems that the demux-pinctrl driver reconfigures the pinctrl settings
-> for the parent devices. I would have expected to have alternative
-> pinctrl state on the demux node support switching the same external pins
-> between the different controllers. Wouldn't it be possible to have
-> pinctrl conflicts between &i2c2_pins and &iic2_pins otherwise?
+> >What is FPS_SRC and why is it set from init_data?  A driver should never
+> >be looking at init_data.
 
-I don't think so. Before i2c2 is enabled, iic2 gets disabled (status =3D
-"disabled" via OF_DYNAMIC) and thus the pins get free. Doing it this
-way, you could even have something like this:
+> When FPS_SRC is set to NONE (this is needed from platform data) then based
+> on constraint like boot enable/always enable, it need to be on desired
+> state. Otherwise we may endup with disabling the rail when setting to NONE
+> and create issue.
 
-	pinctrl-0 =3D <&iic2_pins>, <&iic2_c_pins>;
-	pinctrl-names =3D "i2c-hdmi", "i2c-sensors";
+What is "it" and why can't we check what the current configuration is
+while setting FPS to NONE?
 
-which allows you to demux this controller to this or that bus. I haven't
-tested this, though.
+> I need to set the FPS src properly for each rails before callback happen
+> from regulator init so that enable/disable/is_enable can handle it properly.
 
-   Wolfram
+Why not just reorder the callback so it happens before the constraints
+are applied?
 
-
---WkfBGePaEyrk4zXB
+--GWLvvOwKrQC9aCO6
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2
 
-iQIcBAEBAgAGBQJWlkrjAAoJEBQN5MwUoCm2X/kP/jSsfBpuaKdOC/o5BJDqD5S4
-yIMmK5h6B3RektVBK9N4h4IsQ+Fn/CpoRsZzmS/Pz6FwzuKuK1SDzMXDdzHmkrqX
-Zvok6pVinyPg5c88Rl8etZw19OjPBLYkxL3YjEhX/tI2+yLJKPRkQHMQiw2a1Jih
-ki34btRsifN2khpwu/p6B6iykGkDak+L82uqFYOwiTYgbQb2aWtThKDXVFzuNaSv
-oor9/2WWT06UYvGe2jfK0njHKF2UnbP6lJ7dcOHgkviiW+eYzdEXB8jTYvBKhkQp
-O12aVPCuiSRw1yLPMW5MRoSzVBmpFqqkQm8W7yDMiFwMJ2McXNjzHWWc7Hq1v07B
-o988kafEexfLP3haphH3ViE4pebzqMF9pcPl1i95K0I/tq/iNLpeF8OH0Nlwtxxz
-/3oZrowOwEgUfjv0usafZlxADFGiyKImbLF/+OddBhUIohxcq4770d8mji8n8v8q
-/xVVq3qcfsYwxxnACaaar2L8wY+1a9XKiR5srzzwHU+sYu++HwDKH37r/WCNDIe4
-od21vAW98UiyFCRh0sehv6F5tmgv4o5p84s57IzNoGijwoLQUaLf6gVNn52saAkR
-ZmbwbLwmMUAD1EQZ93iGtNHEtRHCpS3rnsvIw7S+itFxy/daite6PFPBFZuEjwnc
-yWkj39pR/JSltLHeOWw7
-=P3xr
+iQEcBAEBCAAGBQJWlkx0AAoJECTWi3JdVIfQH50H/2fuJLY76kSR7ePDsn6wPrIE
+5srOQ0u5g8LLfdwt21pyjUHao8j/npEfiXpgYr6chcezHqYYtP5CEC7UDud8rmUa
+CHmGucFHTytYS7W0d8XNdbONIcxUOtXN2Bui+SYvpONb2OUFe8elh8TW/hmz/NIo
+iiWkRrnFLUc+Uf7dZw9RMsu0NXBU2VXqeCY1BN1fY7Sif/eWBf+YP4mpEdFj5l9+
+ebmdPCrILWRDrzsEUrCuo0o2+saJaIWzGHv7gwOBu02Dh07zPVr+57fuAHdiBQmn
+worPox87muri8Rq5sSENdP9mMa4dOsBf9FuZTNsVFRWVH6BkyFDNWsBvz4f1Cwo=
+=MLnx
 -----END PGP SIGNATURE-----
 
---WkfBGePaEyrk4zXB--
+--GWLvvOwKrQC9aCO6--
