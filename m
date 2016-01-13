@@ -1,40 +1,46 @@
 From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 1/2] phy: zynqmp: Add dt bindings for ZynqMP PHY.
-Date: Wed, 13 Jan 2016 07:25:38 -0800
-Message-ID: <20160113152538.GK6491@xsjsorenbubuntu>
-References: <1452676943-18931-1-git-send-email-sbhatta@xilinx.com>
+Subject: Re: [PATCH v2 2/3] phy: zynqmp: Add dt bindings for ZynqMP PHY.
+Date: Wed, 13 Jan 2016 07:31:13 -0800
+Message-ID: <20160113153113.GL6491@xsjsorenbubuntu>
+References: <1452694404-1253-1-git-send-email-sbhatta@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1452676943-18931-1-git-send-email-sbhatta@xilinx.com>
+In-Reply-To: <1452694404-1253-1-git-send-email-sbhatta@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>
 Cc: kishon@ti.com, robh@kernel.org, balbi@ti.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2016-01-13 at 02:52PM +0530, Subbaraya Sundeep Bhatta wrote:
+On Wed, 2016-01-13 at 07:43PM +0530, Subbaraya Sundeep Bhatta wrote:
 > This patch adds the document describing dt bindings for ZynqMP
 > PHY. ZynqMP SOC has a High Speed Processing System Gigabit
 > Transceiver which provides PHY capabilties to USB, SATA,
 > PCIE, Display Port and Ehernet SGMII controllers.
 >=20
 > Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
+
+I missed the v2 hence again.
+
 > ---
->  .../devicetree/bindings/phy/phy-zynqmp.txt         | 104 +++++++++++=
+>  v2:
+> 	modified to use phy cells as 2.
+>=20
+>  .../devicetree/bindings/phy/phy-zynqmp.txt         | 103 +++++++++++=
 ++++++++++
->  1 file changed, 104 insertions(+)
+>  1 file changed, 103 insertions(+)
 >  create mode 100644 Documentation/devicetree/bindings/phy/phy-zynqmp.=
 txt
 >=20
 > diff --git a/Documentation/devicetree/bindings/phy/phy-zynqmp.txt b/D=
 ocumentation/devicetree/bindings/phy/phy-zynqmp.txt
 > new file mode 100644
-> index 0000000..ec0d3de
+> index 0000000..975cf21
 > --- /dev/null
 > +++ b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
-> @@ -0,0 +1,104 @@
+> @@ -0,0 +1,103 @@
 > +Xilinx ZynqMP PHY binding
 > +
 > +This binding describes a ZynqMP PHY device that is used to control Z=
@@ -57,10 +63,10 @@ to the
 > +			- lpd: Low power domain peripherals reset control
 > +			- fpd: Full power domain peripherals reset control
 
-Reset registers should not be directly modifiable by Linux. This is
-likely to need a reset controller that uses FW to control eligible
-resets.
-
+The reset registers should not be directly modified by Linux. Any acces=
+s
+to resets is likely requiring a reset controller that uses platform FW
+to modify the resets.
 > +
 > +-xlnx,tx_termination_fix: Include fix for a functional issue in the =
 GT. The TX
@@ -68,8 +74,8 @@ GT. The TX
 > +			  bug in the calibration logic. This issue will be fixed
 > +			  in silicon in future versions.
 
-Isn't the silicon version run-time detectable? This property may not be
-needed.
+The silicon version is run-time detectable. There should be a way to ge=
+t
+away without this property.
 
-	Thanks,
 	S=C3=B6ren
