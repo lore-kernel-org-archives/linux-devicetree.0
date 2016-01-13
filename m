@@ -1,60 +1,139 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v1 3/3] ARM64 LPC: update binding doc
-Date: Wed, 13 Jan 2016 16:53:33 +1100
-Message-ID: <1452664413.2403.20.camel@kernel.crashing.org>
-References: <568912EE.9030009@huawei.com> <5694E9FF.6030904@huawei.com>
-	 <20160112151335.GS13633@e106497-lin.cambridge.arm.com>
-	 <4731036.9QlepWb5cE@wuerfel>
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [RFC PATCH 2/4] mtd: atmel_nand: Support variable RB_EDGE
+ interrupts
+Date: Wed, 13 Jan 2016 06:14:33 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D63E9786@penmbx01>
+References: <1452609223-14790-1-git-send-email-romain.izard.pro@gmail.com>
+ <1452609223-14790-3-git-send-email-romain.izard.pro@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4731036.9QlepWb5cE@wuerfel>
+In-Reply-To: <1452609223-14790-3-git-send-email-romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, liviu.dudau-5wv7dgnIgG8@public.gmane.org
-Cc: Rongrong Zou <zourongrong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rongrong Zou <zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org" <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>
+Cc: "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2016-01-12 at 23:52 +0100, Arnd Bergmann wrote:
-> On Tuesday 12 January 2016 15:13:35 liviu.dudau-5wv7dgnIgG8@public.gmane.org=C2=A0wrote:
-> > > int of_address_to_resource(struct device_node *dev, int index,
-> > >=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 struct resource *r)
-> > > {
-> > >=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ...
-> > >=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* flags can be get here, wit=
-hout ranges property reqired.
-> > >=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * if the reg =3D <0x0 0=
-xe4 4>, I can get flag of
-> IORESOURCE_MEM,
-> > >=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * if the reg =3D <0x1 0=
-xe4 4>, I can get flag of
-> IORESOURCE_IO,
-> >=C2=A0
-> > That is strange, the parent node has #address-cells =3D <2> so the
-> first two numbers should be part
-> > of the address and not influence the flags. Can you add some
-> debugging in of_get_address() and
-> > try to figure out what bus is used in=C2=A0 *flags =3D bus-
-> >get_flags(prop) ?
-> >=C2=A0
-> >=C2=A0
->=20
-> This is the standard ISA binding. The first cell is the address space
-> (IO or MEM), the second cell is the address within that space. This
-> is similar to how PCI works.
-
-Picking up that mid-way, I have LPC busses on power and am using a
-similar binding. I'll try to grab some examples and review the
-document tomorrow (only just noticed it while unpiling emails post-
-vacation).
-
-Cheers,
-Ben.
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgtbXRkIFttYWls
+dG86bGludXgtbXRkLWJvdW5jZXNAbGlzdHMuaW5mcmFkZWFkLm9yZ10gT24gQmVoYWxmIE9mDQo+
+IFJvbWFpbiBJemFyZA0KPiBTZW50OiAyMDE2xOox1MIxMsjVIDIyOjM0DQo+IFRvOiBsaW51eC1t
+dGRAbGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6
+IFd1LCBKb3NoIDxKb3NoLnd1QGF0bWVsLmNvbT47IFJvbWFpbiBJemFyZA0KPiA8cm9tYWluLml6
+YXJkLnByb0BnbWFpbC5jb20+OyBGZXJyZSwgTmljb2xhcyA8Tmljb2xhcy5GRVJSRUBhdG1lbC5j
+b20+DQo+IFN1YmplY3Q6IFtSRkMgUEFUQ0ggMi80XSBtdGQ6IGF0bWVsX25hbmQ6IFN1cHBvcnQg
+dmFyaWFibGUgUkJfRURHRQ0KPiBpbnRlcnJ1cHRzDQo+IA0KPiBUaGUgTkZDIGNvbnRyb2xsZXIg
+dXNlZCB0byBhY2NlbGVyYXRlIHRoZSBOQU5EIHRyYW5zZmVycyBvbiBTQU1BNSBjaGlwcyBjYW4N
+Cj4gdXNlIGVpdGhlciBSQl9FREdFMCBvciBSQl9FREdFMyBhcyBpdHMgcmVhZHkvYnVzeSBpbnRl
+cnJ1cHQgYml0Lg0KPiANCj4gVXNlIHRoZSBjb250cm9sbGVyJ3MgY29tcGF0aWJsZSBzdHJpbmcg
+dG8gc2VsZWN0IHRoZSBjb3JyZWN0IGJpdC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFJvbWFpbiBJ
+emFyZCA8cm9tYWluLml6YXJkLnByb0BnbWFpbC5jb20+DQoNClJldmlld2VkLWJ5OiBXZW55b3Ug
+WWFuZyA8V2VueW91LnlhbmdAYXRtZWwuY29tPg0KDQoNCj4gLS0tDQo+ICAuLi4vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9tdGQvYXRtZWwtbmFuZC50eHQgICAgICAgICB8ICAyICstDQo+ICBkcml2ZXJz
+L210ZC9uYW5kL2F0bWVsX25hbmQuYyAgICAgICAgICAgICAgICAgICAgICB8IDM5ICsrKysrKysr
+KysrKysrKysrLS0tLS0NCj4gIGRyaXZlcnMvbXRkL25hbmQvYXRtZWxfbmFuZF9uZmMuaCAgICAg
+ICAgICAgICAgICAgIHwgIDUgKystDQo+ICAzIGZpbGVzIGNoYW5nZWQsIDM2IGluc2VydGlvbnMo
+KyksIDEwIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9tdGQvYXRtZWwtbmFuZC50eHQNCj4gYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvbXRkL2F0bWVsLW5hbmQudHh0DQo+IGluZGV4IDdkNGM4ZWI3NzVh
+NS4uODliMGRiOTgwMWIwIDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvbXRkL2F0bWVsLW5hbmQudHh0DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9tdGQvYXRtZWwtbmFuZC50eHQNCj4gQEAgLTM0LDcgKzM0LDcgQEAgT3B0
+aW9uYWwgcHJvcGVydGllczoNCj4gIC0gbmFuZC1vbi1mbGFzaC1iYnQ6IGJvb2xlYW4gdG8gZW5h
+YmxlIG9uIGZsYXNoIGJidCBvcHRpb24gaWYgbm90IHByZXNlbnQgZmFsc2UNCj4gIC0gTmFuZCBG
+bGFzaCBDb250cm9sbGVyKE5GQykgaXMgYSBzbGF2ZSBkcml2ZXIgdW5kZXIgQXRtZWwgbmFuZCBm
+bGFzaA0KPiAgICAtIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+IC0gICAgLSBjb21wYXRpYmxlIDog
+ImF0bWVsLHNhbWE1ZDMtbmZjIi4NCj4gKyAgICAtIGNvbXBhdGlibGUgOiAiYXRtZWwsc2FtYTVk
+My1uZmMiIG9yICJhdG1lbCxzYW1hNWQ0LW5mYyIuDQo+ICAgICAgLSByZWcgOiBzaG91bGQgc3Bl
+Y2lmeSB0aGUgYWRkcmVzcyBhbmQgc2l6ZSB1c2VkIGZvciBORkMgY29tbWFuZCByZWdpc3RlcnMs
+DQo+ICAgICAgICAgICAgICBORkMgcmVnaXN0ZXJzIGFuZCBORkMgU3JhbS4gTkZDIFNyYW0gYWRk
+cmVzcyBhbmQgc2l6ZSBjYW4gYmUNCj4gYWJzZW50DQo+ICAgICAgICAgICAgICBpZiBkb24ndCB3
+YW50IHRvIHVzZSBpdC4NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL25hbmQvYXRtZWxfbmFu
+ZC5jIGIvZHJpdmVycy9tdGQvbmFuZC9hdG1lbF9uYW5kLmMgaW5kZXgNCj4gOWQ3MWY5ZTZhOGRl
+Li5lNWQ3ZTdlNjNmNDkgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbXRkL25hbmQvYXRtZWxfbmFu
+ZC5jDQo+ICsrKyBiL2RyaXZlcnMvbXRkL25hbmQvYXRtZWxfbmFuZC5jDQo+IEBAIC02Nyw2ICs2
+NywxMCBAQCBzdHJ1Y3QgYXRtZWxfbmFuZF9jYXBzIHsNCj4gIAlib29sIHBtZWNjX2NvcnJlY3Rf
+ZXJhc2VfcGFnZTsNCj4gIH07DQo+IA0KPiArc3RydWN0IGF0bWVsX25hbmRfbmZjX3ByaXYgew0K
+PiArCXVpbnQzMl90IHJiX2VkZ2U7DQo+ICt9Ow0KPiArDQo+ICAvKiBvb2IgbGF5b3V0IGZvciBs
+YXJnZSBwYWdlIHNpemUNCj4gICAqIGJhZCBibG9jayBpbmZvIGlzIG9uIGJ5dGVzIDAgYW5kIDEN
+Cj4gICAqIHRoZSBieXRlcyBoYXZlIHRvIGJlIGNvbnNlY3V0aXZlcyB0byBhdm9pZCBAQCAtMTEx
+LDYgKzExNSw3IEBAIHN0cnVjdA0KPiBhdG1lbF9uZmMgew0KPiAgCS8qIFBvaW50IHRvIHRoZSBz
+cmFtIGJhbmsgd2hpY2ggaW5jbHVkZSByZWFkZWQgZGF0YSB2aWEgTkZDICovDQo+ICAJdm9pZAkJ
+CSpkYXRhX2luX3NyYW07DQo+ICAJYm9vbAkJCXdpbGxfd3JpdGVfc3JhbTsNCj4gKwl1aW50MzJf
+dAkJcmJfZWRnZTsNCj4gIH07DQo+ICBzdGF0aWMgc3RydWN0IGF0bWVsX25mYwluYW5kX25mYzsN
+Cj4gDQo+IEBAIC0xNjc1LDkgKzE2ODAsOSBAQCBzdGF0aWMgaXJxcmV0dXJuX3QgaHNtY19pbnRl
+cnJ1cHQoaW50IGlycSwgdm9pZCAqZGV2X2lkKQ0KPiAgCQluZmNfd3JpdGVsKGhvc3QtPm5mYy0+
+aHNtY19yZWdzLCBJRFIsIE5GQ19TUl9YRlJfRE9ORSk7DQo+ICAJCXJldCA9IElSUV9IQU5ETEVE
+Ow0KPiAgCX0NCj4gLQlpZiAocGVuZGluZyAmIE5GQ19TUl9SQl9FREdFKSB7DQo+ICsJaWYgKHBl
+bmRpbmcgJiBob3N0LT5uZmMtPnJiX2VkZ2UpIHsNCj4gIAkJY29tcGxldGUoJmhvc3QtPm5mYy0+
+Y29tcF9yZWFkeSk7DQo+IC0JCW5mY193cml0ZWwoaG9zdC0+bmZjLT5oc21jX3JlZ3MsIElEUiwg
+TkZDX1NSX1JCX0VER0UpOw0KPiArCQluZmNfd3JpdGVsKGhvc3QtPm5mYy0+aHNtY19yZWdzLCBJ
+RFIsIGhvc3QtPm5mYy0+cmJfZWRnZSk7DQo+ICAJCXJldCA9IElSUV9IQU5ETEVEOw0KPiAgCX0N
+Cj4gIAlpZiAocGVuZGluZyAmIE5GQ19TUl9DTURfRE9ORSkgew0KPiBAQCAtMTY5NSw3ICsxNzAw
+LDcgQEAgc3RhdGljIHZvaWQgbmZjX3ByZXBhcmVfaW50ZXJydXB0KHN0cnVjdA0KPiBhdG1lbF9u
+YW5kX2hvc3QgKmhvc3QsIHUzMiBmbGFnKQ0KPiAgCWlmIChmbGFnICYgTkZDX1NSX1hGUl9ET05F
+KQ0KPiAgCQlpbml0X2NvbXBsZXRpb24oJmhvc3QtPm5mYy0+Y29tcF94ZmVyX2RvbmUpOw0KPiAN
+Cj4gLQlpZiAoZmxhZyAmIE5GQ19TUl9SQl9FREdFKQ0KPiArCWlmIChmbGFnICYgaG9zdC0+bmZj
+LT5yYl9lZGdlKQ0KPiAgCQlpbml0X2NvbXBsZXRpb24oJmhvc3QtPm5mYy0+Y29tcF9yZWFkeSk7
+DQo+IA0KPiAgCWlmIChmbGFnICYgTkZDX1NSX0NNRF9ET05FKQ0KPiBAQCAtMTcxMyw3ICsxNzE4
+LDcgQEAgc3RhdGljIGludCBuZmNfd2FpdF9pbnRlcnJ1cHQoc3RydWN0IGF0bWVsX25hbmRfaG9z
+dA0KPiAqaG9zdCwgdTMyIGZsYWcpDQo+ICAJaWYgKGZsYWcgJiBORkNfU1JfWEZSX0RPTkUpDQo+
+ICAJCWNvbXBbaW5kZXgrK10gPSAmaG9zdC0+bmZjLT5jb21wX3hmZXJfZG9uZTsNCj4gDQo+IC0J
+aWYgKGZsYWcgJiBORkNfU1JfUkJfRURHRSkNCj4gKwlpZiAoZmxhZyAmIGhvc3QtPm5mYy0+cmJf
+ZWRnZSkNCj4gIAkJY29tcFtpbmRleCsrXSA9ICZob3N0LT5uZmMtPmNvbXBfcmVhZHk7DQo+IA0K
+PiAgCWlmIChmbGFnICYgTkZDX1NSX0NNRF9ET05FKQ0KPiBAQCAtMTc4MSw3ICsxNzg2LDcgQEAg
+c3RhdGljIGludCBuZmNfZGV2aWNlX3JlYWR5KHN0cnVjdCBtdGRfaW5mbyAqbXRkKQ0KPiAgCQlk
+ZXZfZXJyKGhvc3QtPmRldiwgIkxvc3QgdGhlIGludGVycnVwdCBmbGFnczogMHglMDh4XG4iLA0K
+PiAgCQkJCW1hc2sgJiBzdGF0dXMpOw0KPiANCj4gLQlyZXR1cm4gc3RhdHVzICYgTkZDX1NSX1JC
+X0VER0U7DQo+ICsJcmV0dXJuIHN0YXR1cyAmIGhvc3QtPm5mYy0+cmJfZWRnZTsNCj4gIH0NCj4g
+DQo+ICBzdGF0aWMgdm9pZCBuZmNfc2VsZWN0X2NoaXAoc3RydWN0IG10ZF9pbmZvICptdGQsIGlu
+dCBjaGlwKSBAQCAtMTk1NCw4ICsxOTU5LDgNCj4gQEAgc3RhdGljIHZvaWQgbmZjX25hbmRfY29t
+bWFuZChzdHJ1Y3QgbXRkX2luZm8gKm10ZCwgdW5zaWduZWQgaW50IGNvbW1hbmQsDQo+ICAJCX0N
+Cj4gIAkJLyogZmFsbCB0aHJvdWdoICovDQo+ICAJZGVmYXVsdDoNCj4gLQkJbmZjX3ByZXBhcmVf
+aW50ZXJydXB0KGhvc3QsIE5GQ19TUl9SQl9FREdFKTsNCj4gLQkJbmZjX3dhaXRfaW50ZXJydXB0
+KGhvc3QsIE5GQ19TUl9SQl9FREdFKTsNCj4gKwkJbmZjX3ByZXBhcmVfaW50ZXJydXB0KGhvc3Qs
+IGhvc3QtPm5mYy0+cmJfZWRnZSk7DQo+ICsJCW5mY193YWl0X2ludGVycnVwdChob3N0LCBob3N0
+LT5uZmMtPnJiX2VkZ2UpOw0KPiAgCX0NCj4gIH0NCj4gDQo+IEBAIC0yMzE4LDkgKzIzMjMsMTIg
+QEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgYXRtZWxfbmFuZF9kdF9pZHNbXSA9
+DQo+IHsNCj4gDQo+ICBNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBhdG1lbF9uYW5kX2R0X2lkcyk7
+DQo+IA0KPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgYXRtZWxfbmFuZF9uZmNf
+bWF0Y2hbXTsNCj4gKw0KPiAgc3RhdGljIGludCBhdG1lbF9uYW5kX25mY19wcm9iZShzdHJ1Y3Qg
+cGxhdGZvcm1fZGV2aWNlICpwZGV2KSAgew0KPiAgCXN0cnVjdCBhdG1lbF9uZmMgKm5mYyA9ICZu
+YW5kX25mYzsNCj4gKwljb25zdCBzdHJ1Y3QgYXRtZWxfbmFuZF9uZmNfcHJpdiAqcHJpdjsNCj4g
+IAlzdHJ1Y3QgcmVzb3VyY2UgKm5mY19jbWRfcmVncywgKm5mY19oc21jX3JlZ3MsICpuZmNfc3Jh
+bTsNCj4gIAlpbnQgcmV0Ow0KPiANCj4gQEAgLTIzNTIsNiArMjM2MCwxMiBAQCBzdGF0aWMgaW50
+IGF0bWVsX25hbmRfbmZjX3Byb2JlKHN0cnVjdA0KPiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+
+ICAJCX0NCj4gIAl9DQo+IA0KPiArCXByaXYgPSBvZl9tYXRjaF9kZXZpY2UoYXRtZWxfbmFuZF9u
+ZmNfbWF0Y2gsICZwZGV2LT5kZXYpLT5kYXRhOw0KPiArCWlmIChOVUxMID09IHByaXYpDQo+ICsJ
+CXJldHVybiAtRU5PREVWOw0KPiArDQo+ICsJbmZjLT5yYl9lZGdlID0gcHJpdi0+cmJfZWRnZTsN
+Cj4gKw0KPiAgCW5mY193cml0ZWwobmZjLT5oc21jX3JlZ3MsIElEUiwgMHhmZmZmZmZmZik7DQo+
+ICAJbmZjX3JlYWRsKG5mYy0+aHNtY19yZWdzLCBTUik7CS8qIGNsZWFyIHRoZSBORkNfU1IgKi8N
+Cj4gDQo+IEBAIC0yMzgwLDggKzIzOTQsMTcgQEAgc3RhdGljIGludCBhdG1lbF9uYW5kX25mY19y
+ZW1vdmUoc3RydWN0DQo+IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gIAlyZXR1cm4gMDsNCj4g
+IH0NCj4gDQo+ICtzdGF0aWMgc3RydWN0IGF0bWVsX25hbmRfbmZjX3ByaXYgc2FtYTVkM19uZmNf
+cHJpdiA9IHsNCj4gKwkucmJfZWRnZSA9IE5GQ19TUl9SQl9FREdFMCwNCj4gK307DQo+ICsNCj4g
+K3N0YXRpYyBzdHJ1Y3QgYXRtZWxfbmFuZF9uZmNfcHJpdiBzYW1hNWQ0X25mY19wcml2ID0gew0K
+PiArCS5yYl9lZGdlID0gTkZDX1NSX1JCX0VER0UzLA0KPiArfTsNCj4gKw0KPiAgc3RhdGljIGNv
+bnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgYXRtZWxfbmFuZF9uZmNfbWF0Y2hbXSA9IHsNCj4gLQl7
+IC5jb21wYXRpYmxlID0gImF0bWVsLHNhbWE1ZDMtbmZjIiB9LA0KPiArCXsgLmNvbXBhdGlibGUg
+PSAiYXRtZWwsc2FtYTVkMy1uZmMiLCAuZGF0YSA9ICZzYW1hNWQzX25mY19wcml2IH0sDQo+ICsJ
+eyAuY29tcGF0aWJsZSA9ICJhdG1lbCxzYW1hNWQ0LW5mYyIsIC5kYXRhID0gJnNhbWE1ZDRfbmZj
+X3ByaXYgfSwNCj4gIAl7IC8qIHNlbnRpbmVsICovIH0NCj4gIH07DQo+ICBNT0RVTEVfREVWSUNF
+X1RBQkxFKG9mLCBhdG1lbF9uYW5kX25mY19tYXRjaCk7IGRpZmYgLS1naXQNCj4gYS9kcml2ZXJz
+L210ZC9uYW5kL2F0bWVsX25hbmRfbmZjLmggYi9kcml2ZXJzL210ZC9uYW5kL2F0bWVsX25hbmRf
+bmZjLmgNCj4gaW5kZXggNGQ1ZDI2MjIxYTdlLi4yY2Q5YzU3YjFlNTMgMTAwNjQ0DQo+IC0tLSBh
+L2RyaXZlcnMvbXRkL25hbmQvYXRtZWxfbmFuZF9uZmMuaA0KPiArKysgYi9kcml2ZXJzL210ZC9u
+YW5kL2F0bWVsX25hbmRfbmZjLmgNCj4gQEAgLTQyLDcgKzQyLDEwIEBADQo+ICAjZGVmaW5lCQlO
+RkNfU1JfVU5ERUYJCSgxIDw8IDIxKQ0KPiAgI2RlZmluZQkJTkZDX1NSX0FXQgkJKDEgPDwgMjIp
+DQo+ICAjZGVmaW5lCQlORkNfU1JfQVNFCQkoMSA8PCAyMykNCj4gLSNkZWZpbmUJCU5GQ19TUl9S
+Ql9FREdFCQkoMSA8PCAyNCkNCj4gKyNkZWZpbmUJCU5GQ19TUl9SQl9FREdFMAkJKDEgPDwgMjQp
+DQo+ICsjZGVmaW5lCQlORkNfU1JfUkJfRURHRTEJCSgxIDw8IDI1KQ0KPiArI2RlZmluZQkJTkZD
+X1NSX1JCX0VER0UyCQkoMSA8PCAyNikNCj4gKyNkZWZpbmUJCU5GQ19TUl9SQl9FREdFMwkJKDEg
+PDwgMjcpDQo+IA0KPiAgI2RlZmluZSBBVE1FTF9IU01DX05GQ19JRVIJMHgwYw0KPiAgI2RlZmlu
+ZSBBVE1FTF9IU01DX05GQ19JRFIJMHgxMA0KPiAtLQ0KPiAyLjUuMA0KPiANCg0KQmVzdCBSZWdh
+cmRzLA0KV2VueW91IFlhbmcNCg==
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
