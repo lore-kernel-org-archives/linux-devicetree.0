@@ -1,38 +1,72 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V2 5/6] rtc: max77xxx: add RTC driver for Maxim MAX77xxx
- series RTC IP
-Date: Wed, 13 Jan 2016 09:55:19 +0530
-Message-ID: <5695D1AF.9000806@nvidia.com>
-References: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com> <1452590273-16421-6-git-send-email-ldewangan@nvidia.com> <569594F0.4020007@samsung.com> <5695CD73.5010709@nvidia.com> <5695D268.3060705@samsung.com>
+From: "Yang, Wenyou" <wenyou.yang@atmel.com>
+Subject: Re: [RFC PATCH 1/4] mtd: atmel_nand: Do not warn on bitflips
+Date: Wed, 13 Jan 2016 13:12:12 +0800
+Message-ID: <5695DCAC.3030306@atmel.com>
+References: <1452609223-14790-1-git-send-email-romain.izard.pro@gmail.com>
+ <1452609223-14790-2-git-send-email-romain.izard.pro@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5695D268.3060705@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com
-Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1452609223-14790-2-git-send-email-romain.izard.pro@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Romain Izard <romain.izard.pro@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Josh Wu <josh.wu@atmel.com>, Nicolas Ferre <nicolas.ferre@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Romain,
 
-On Wednesday 13 January 2016 09:58 AM, Krzysztof Kozlowski wrote:
-> On 13.01.2016 13:07, Laxman Dewangan wrote:
->> On Wednesday 13 January 2016 05:36 AM, Krzysztof Kozlowski wrote:
+On 2016/1/12 22:33, Romain Izard wrote:
+> When using multi-bit ECC, it is normal for the NAND Flash driver to
+> correct bit errors during the life of the product. Those errors will
+> only be cleared once a threshold has been reached, and corrections can
+> occur regularly before this.
 >
->> That is also fine to me but still I am not comfortable with the config
->> name and driver file name as this does not suggest the common.
-> The name does not matter. Really. We have a lot of drivers with a
-> specific device-like name and supporting different devices. To point
-> that your argument is invalid - your initial name of driver
-> "rtc-max77620.c" supported totally different "names": the max77620 and
-> max20024. It also wasn't suggesting something "common"...
-In all config string, I have mentioned the MAX20024.
+> Use only dev_dbg and not dev_info to report the bitflips, to keep the
+> system log clean when everything works correctly.
+>
+> Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
 
+Acked-by:  Wenyou Yang <wenyou.yang@atmel.com>
 
-> With my approach we are not developing common think neither. We just
-> want to extend/re-use existing max77686 (or max77802) driver for new
-> devices. Just like everywhere else.
+> ---
+>   drivers/mtd/nand/atmel_nand.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
+> index 46010bd895b1..9d71f9e6a8de 100644
+> --- a/drivers/mtd/nand/atmel_nand.c
+> +++ b/drivers/mtd/nand/atmel_nand.c
+> @@ -824,7 +824,7 @@ static void pmecc_correct_data(struct mtd_info *mtd, uint8_t *buf, uint8_t *ecc,
+>   			*(buf + byte_pos) ^= (1 << bit_pos);
+>   
+>   			pos = sector_num * host->pmecc_sector_size + byte_pos;
+> -			dev_info(host->dev, "Bit flip in data area, byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
+> +			dev_dbg(host->dev, "Bit flip in data area, byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
+>   				pos, bit_pos, err_byte, *(buf + byte_pos));
+>   		} else {
+>   			/* Bit flip in OOB area */
+> @@ -834,7 +834,7 @@ static void pmecc_correct_data(struct mtd_info *mtd, uint8_t *buf, uint8_t *ecc,
+>   			ecc[tmp] ^= (1 << bit_pos);
+>   
+>   			pos = tmp + nand_chip->ecc.layout->eccpos[0];
+> -			dev_info(host->dev, "Bit flip in OOB, oob_byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
+> +			dev_dbg(host->dev, "Bit flip in OOB, oob_byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
+>   				pos, bit_pos, err_byte, ecc[tmp]);
+>   		}
+>   
 
-OK, fine to me if this is acceptable.
-I will drop this rtc patch form this series and work in max77686 driver 
-to modify first and once merged, use this config on my defconfig.
+Best Regards,
+Wenyou Yang
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
