@@ -1,63 +1,35 @@
-From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [RFC PATCH 4/4] ARM: at91/dt: sama5d2: add nand0 and nfc0 nodes
-Date: Wed, 13 Jan 2016 06:06:16 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A243641D63E9755@penmbx01>
-References: <1452609223-14790-1-git-send-email-romain.izard.pro@gmail.com>
- <1452609223-14790-5-git-send-email-romain.izard.pro@gmail.com>
+From: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] wlcore/wl12xx: spi: add wifi support to cm-t335
+Date: Wed, 13 Jan 2016 08:09:10 +0200
+Message-ID: <5695EA06.5020801@compulab.co.il>
+References: <1451482533-8624-1-git-send-email-uri.mashiach@compulab.co.il>
+ <1451482533-8624-4-git-send-email-uri.mashiach@compulab.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452609223-14790-5-git-send-email-romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1451482533-8624-4-git-send-email-uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgtbXRkIFttYWls
-dG86bGludXgtbXRkLWJvdW5jZXNAbGlzdHMuaW5mcmFkZWFkLm9yZ10gT24gQmVoYWxmIE9mDQo+
-IFJvbWFpbiBJemFyZA0KPiBTZW50OiAyMDE2xOox1MIxMsjVIDIyOjM0DQo+IFRvOiBsaW51eC1t
-dGRAbGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6
-IFd1LCBKb3NoIDxKb3NoLnd1QGF0bWVsLmNvbT47IFJvbWFpbiBJemFyZA0KPiA8cm9tYWluLml6
-YXJkLnByb0BnbWFpbC5jb20+OyBGZXJyZSwgTmljb2xhcyA8Tmljb2xhcy5GRVJSRUBhdG1lbC5j
-b20+DQo+IFN1YmplY3Q6IFtSRkMgUEFUQ0ggNC80XSBBUk06IGF0OTEvZHQ6IHNhbWE1ZDI6IGFk
-ZCBuYW5kMCBhbmQgbmZjMCBub2Rlcw0KPiANCj4gQm90aCBub2RlcyBhcmUgcmVxdWlyZWQgdG8g
-YWNjZXNzIE5BTkQgRmxhc2ggbWVtb3J5LiBBZGRpdGlvbmFsIHNldHRpbmdzIHdpbGwNCj4gYmUg
-bmVjZXNzYXJ5IGF0IHRoZSBib2FyZCBsZXZlbCB0byB1c2UgaXQuDQo+IA0KPiBTaWduZWQtb2Zm
-LWJ5OiBSb21haW4gSXphcmQgPHJvbWFpbi5pemFyZC5wcm9AZ21haWwuY29tPg0KPiAtLS0NCj4g
-IGFyY2gvYXJtL2Jvb3QvZHRzL3NhbWE1ZDIuZHRzaSB8IDM4DQo+ICsrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMzggaW5zZXJ0aW9ucygr
-KQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3NhbWE1ZDIuZHRzaSBiL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL3NhbWE1ZDIuZHRzaSBpbmRleA0KPiBhZWU1NzE0NDgzNDIuLjgwNDIw
-MTc3ZWMxYSAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc2FtYTVkMi5kdHNpDQo+
-ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3NhbWE1ZDIuZHRzaQ0KPiBAQCAtMjY1LDYgKzI2NSw0
-NCBAQA0KPiAgCQkJY2FjaGUtbGV2ZWwgPSA8Mj47DQo+ICAJCX07DQo+IA0KPiArCQluYW5kMDog
-bmFuZEA4MDAwMDAwMCB7DQo+ICsJCQljb21wYXRpYmxlID0gImF0bWVsLHNhbWE1ZDItbmFuZCI7
-DQo+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gKwkJCSNzaXplLWNlbGxzID0gPDE+Ow0K
-PiArCQkJcmFuZ2VzOw0KPiArCQkJcmVnID0gPCAvKiBFQkkgQ1MzICovDQo+ICsJCQkJMHg4MDAw
-MDAwMCAweDA4MDAwMDAwDQo+ICsJCQkJLyogU01DIFBNRUNDIHJlZ3MgKi8NCj4gKwkJCQkweGY4
-MDE0MDcwIDB4MDAwMDA0OTANCj4gKwkJCQkvKiBTTUMgUE1FQ0MgRXJyb3IgTG9jYXRpb24gcmVn
-cyAqLw0KPiArCQkJCTB4ZjgwMTQ1MDAgMHgwMDAwMDIwMA0KPiArCQkJCS8qIFJPTSBHYWxvaXMg
-dGFibGVzICovDQo+ICsJCQkJMHgwMDA0MDAwMCAweDAwMDE4MDAwDQoNCkFzIHRoZXJlIGlzIG5v
-IFBNRUNDIGxvb2t1cCB0YWJsZSBpbiBST00gZXhwb3J0ZWQsIHJlbW92ZSB0aGlzIGxpbmUuDQoN
-Cj4gKwkJCQk+Ow0KPiArCQkJaW50ZXJydXB0cyA9IDwxNyBJUlFfVFlQRV9MRVZFTF9ISUdIIDY+
-Ow0KPiArCQkJYXRtZWwsbmFuZC1hZGRyLW9mZnNldCA9IDwyMT47DQo+ICsJCQlhdG1lbCxuYW5k
-LWNtZC1vZmZzZXQgPSA8MjI+Ow0KPiArCQkJYXRtZWwsbmFuZC1oYXMtZG1hOw0KPiArCQkJYXRt
-ZWwsaGFzLXBtZWNjOw0KPiArCQkJYXRtZWwscG1lY2MtbG9va3VwLXRhYmxlLW9mZnNldCA9IDww
-eDAgMHg4MDAwPjsNCg0KRGl0dG8sIHJlbW92ZSB0aGlzIGxpbmUuDQoNCj4gKwkJCXN0YXR1cyA9
-ICJkaXNhYmxlZCI7DQo+ICsNCj4gKwkJCW5mY0A5MDAwMDAwMCB7DQo+ICsJCQkJY29tcGF0aWJs
-ZSA9ICJhdG1lbCxzYW1hNWQ0LW5mYyI7DQo+ICsJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+
-ICsJCQkJI3NpemUtY2VsbHMgPSA8MT47DQo+ICsJCQkJcmVnID0gPCAvKiBORkMgQ29tbWFuZCBS
-ZWdpc3RlcnMgKi8NCj4gKwkJCQkJMHhDMDAwMDAwMCAweDA4MDAwMDAwDQo+ICsJCQkJCS8qIE5G
-QyBIU01DIHJlZ3MgKi8NCj4gKwkJCQkJMHhmODAxNDAwMCAweDAwMDAwMDcwDQo+ICsJCQkJCS8q
-IE5GQyBTUkFNIGJhbmtzICovDQo+ICsJCQkJCTB4MDAxMDAwMDAgMHgwMDEwMDAwMA0KPiArCQkJ
-CQk+Ow0KPiArCQkJCWNsb2NrcyA9IDwmaHNtY19jbGs+Ow0KPiArCQkJCWF0bWVsLHdyaXRlLWJ5
-LXNyYW07DQo+ICsJCQl9Ow0KPiArCQl9Ow0KPiArDQo+ICAJCXNkbW1jMDogc2Rpby1ob3N0QGEw
-MDAwMDAwIHsNCj4gIAkJCWNvbXBhdGlibGUgPSAiYXRtZWwsc2FtYTVkMi1zZGhjaSI7DQo+ICAJ
-CQlyZWcgPSA8MHhhMDAwMDAwMCAweDMwMD47DQo+IC0tDQo+IDIuNS4wDQo+IA0KDQoNCkJlc3Qg
-UmVnYXJkcywNCldlbnlvdSBZYW5nDQoNCg0K
+
+
+On 12/30/15 15:35, Uri Mashiach wrote:
+> Device tree modifications:
+> - Pinmux for SPI0 and WiFi GPIOs.
+> - SPI0 node with wlcore as a child node.
+> 
+> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+
+Acked-by: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+
+-- 
+Regards,
+Igor.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
