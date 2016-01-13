@@ -1,137 +1,63 @@
-From: Raja Mani <rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org>
-Subject: Re: [PATCH] dt: bindings: add bindings for ipq4019 wifi block
-Date: Wed, 13 Jan 2016 11:28:07 +0530
-Message-ID: <5695E76F.6060305@qti.qualcomm.com>
-References: <1450848915-9772-1-git-send-email-rmani@qti.qualcomm.com> <20151230163524.GA26810@rob-hp-laptop> <5684BFEF.8080302@qti.qualcomm.com> <CAL_JsqLH=Lr5UcgzFUr8AwVDXF8ahiyYfD2gfWng1zfhH21N5g@mail.gmail.com>
+From: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] wlcore/wl12xx: spi: add wifi support to cm-t335
+Date: Wed, 13 Jan 2016 08:00:34 +0200
+Message-ID: <5695E802.7050909@compulab.co.il>
+References: <1451482533-8624-1-git-send-email-uri.mashiach@compulab.co.il>
+ <1451482533-8624-4-git-send-email-uri.mashiach@compulab.co.il>
+ <87io35lq2p.fsf@kamboji.qca.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLH=Lr5UcgzFUr8AwVDXF8ahiyYfD2gfWng1zfhH21N5g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, mmcclint-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87io35lq2p.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Kalle Valo,
 
-On Wednesday 13 January 2016 07:53 AM, Rob Herring wrote:
-> On Wed, Dec 30, 2015 at 11:41 PM, Raja Mani <rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org> wrote:
+On 01/07/16 11:02, Kalle Valo wrote:
+> Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org> writes:
+> 
+>> Device tree modifications:
+>> - Pinmux for SPI0 and WiFi GPIOs.
+>> - SPI0 node with wlcore as a child node.
 >>
->> On Wednesday 30 December 2015 10:05 PM, Rob Herring wrote:
->>>
->>> On Wed, Dec 23, 2015 at 11:05:15AM +0530, Raja Mani wrote:
->>>>
->>>> Add device tree binding documentation details for wifi block present
->>>> in Qualcomm IPQ4019 SoC into qcom,ath10k.txt.
->>>>
->>>> Signed-off-by: Raja Mani <rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org>
->>>> ---
->>>>    .../bindings/net/wireless/qcom,ath10k.txt          | 87
->>>> ++++++++++++++++++++--
->>>>    1 file changed, 82 insertions(+), 5 deletions(-)
->>>>
->>>> diff --git
->>>> a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->>>> b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->>>> index edefc26..ffd0742 100644
->>>> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->>>> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->>>> @@ -1,17 +1,42 @@
->>>>    * Qualcomm Atheros ath10k wireless devices
->>>>
->>>> -For ath10k devices the calibration data can be provided through Device
->>>> -Tree. The node is a child node of the PCI controller.
->>>
->>>
->>> So it is now not a PCI device?
->>
->>
->> Right now, ath10k wireless driver has support for PCI devices. There is
->> a plan to extend ath10k driver to support wifi devices which are connected
->> over AHB as well (enumeration will happen via device tree node).
->>
->> Qualcomm IPQ4019 SoC has two inbuilt wifi block which are connected over AHB
->> bus (not connected over PCI bus) and also has one external PCI
->> slot where we can connect standalone wifi PCI devices.
->>
->> In future, ath10k would support both PCI and AHB. For PCI based
->> devices, only calibration data is supplied via device tree. For AHB
->> based devices (ie, ipq4019), all wifi properties are supplied
->> via device tree (including irq, reg addr, cal data,etc).
->
-> Put this information in the binding. It is not clear and you seem to
-> be removing PCI information.
+>> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+>> ---
 
-Okay, I'll fix it in next version.
+Uri, please document the dependencies next time. Thanks!
 
->
->>>> -
->>>>    Required properties:
->>>> --compatible : Should be "qcom,ath10k"
->>>> +- compatible: Should be one of the following:
->>>> +       * "qcom,ath10k"
->>>> +       * "qcom,ipq4019-wifi"
->>>
->>>
->>> One is a standalone PCI device and one is embedded block in an SOC?
+>> v1 -> v2: Replace interrupts and interrupt-parent with interrupts-extended.
+>> v2 -> v3: Move the pinctrl-0 = <&wifi_pins> to the wlcore node.
+>> v3 -> v4: replace interrupts-extended with interrupts and interrupt-parent. (revert v2 modification).
+>>           According to Rob Herring and Documentation/devicetree/bindings/interrupt-controller/interrupts.txt,
+>> 	  interrupts-extended should only be used when a device has multiple interrupt parents.
 >>
->>
->> Yes, it's possible to have this combination (one in SoC + one in
->> standalone PCI device in the same platform).
->>
->>> These should be more separated as all these new properties would only
->>> apply in the latter case.
->>
->>
->> Sorry, i didn't get this point. I mentioned it under optional
->> properties. Whichever properties applies to particular wifi, only
->> those parameters are needed. For example, for PCI based devices,
->> only calibration data is needed, for AHB based devices most the
->> properties are needed.
->>
->> Is it fine if add below text some thing like this ?
->>
->> "only "qcom,ath10k-calibration-data" is applicable for PCI based
->> devices, rest of the members are applicable only for AHB based
->> devices"
->
-> Yes, but you need to explain in terms of compatible strings. Which
-> compatible strings correspond to PCI devices.
+>>  arch/arm/boot/dts/am335x-cm-t335.dts | 55 ++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 55 insertions(+)
+> 
+> To what tree should this patch go? My wireless-drivers-next tree doesn't
+> even have this file.
 
-Sure, i'll add this detail.
+Right. It will hit the mainline during this merge window through Tony's and
+arm-soc trees.
 
->
->>>>    Optional properties:
->>>> +- reg: Address and length of the register set for the device.
->>>> +- core-id: Core number associated to the device.
->>>
->>>
->>> This needs a better explanation.
->>
->>
->> Sure, Let me add below text in next version.
->>
->> "core-id is numeric number associated to the wifi block.
->>   For example, 0 means first block, 1 means second wifi block,etc."
->
-> Are the blocks the same? If not, then use different compatible
-> strings. Otherwise doesn't the reg property identify which block is
-> which? Or some other property? Different freq bands? We generally
-> don't allow indexes like this in the DT, so I need to understand how
-> you use this.
->
-> Rob
->
+Do you think it will be sensible if you take 1/3 and 2/3 patches and Tony
+will take the 3/3 (there is no code dependency between first two and the last one),
+or we can just wait till arm-soc hits the mainline, so you will have the
+needed code?
 
-I understand the confusion and the limitation, i'll remove core-id in 
-next version and manage this in driver itself.
+> 
+> https://patchwork.kernel.org/patch/7933441/
+> 
 
-Could you please consider v3 of this patch for further review? I hope,
-i addressed all your review comments.
-
+-- 
+Regards,
+Igor.
 --
-Raja
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
