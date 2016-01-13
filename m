@@ -1,90 +1,88 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V2 5/6] rtc: max77xxx: add RTC driver for Maxim MAX77xxx
- series RTC IP
-Date: Wed, 13 Jan 2016 20:29:38 +0530
-Message-ID: <5696665A.5030508@nvidia.com>
-References: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com> <1452590273-16421-6-git-send-email-ldewangan@nvidia.com> <569594F0.4020007@samsung.com> <5695CD73.5010709@nvidia.com> <5695D268.3060705@samsung.com> <5695D1AF.9000806@nvidia.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and charging
+ of backup battery
+Date: Wed, 13 Jan 2016 17:14:13 +0200
+Message-ID: <569669C5.2070200@ti.com>
+References: <8FE6954B-6411-4593-9CE5-717A469A6AA8@goldelico.com>
+ <20160106164136.GI12777@atomide.com>
+ <2AC46952-3758-458A-B0A5-1794C207BD4C@goldelico.com>
+ <20160106170925.GK12777@atomide.com>
+ <66F37918-EA7F-4D83-8B5F-A6B5C0CD7623@goldelico.com>
+ <20160108181551.GX12777@atomide.com>
+ <832803EE-E4CB-46B1-BF39-2DC0BB695A5D@goldelico.com>
+ <20160108190457.GY12777@atomide.com>
+ <CCB763BE-5D1F-4A53-BF9A-C12C08A6EFC4@goldelico.com>
+ <20160111202421.GA12777@atomide.com> <20160112000917.GC12777@atomide.com>
+ <417BBA32-A7DC-40CD-8A6B-EA910B1C9C13@goldelico.com>
+ <E4C8F6CA-37C1-406F-9804-46055253BED9@goldelico.com>
+ <001346CD-CF31-4FEF-B406-B89EEBDFA063@goldelico.com>
+ <56966558.1070608@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5695D1AF.9000806-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <56966558.1070608-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, =?UTF-8?Q?Gra=c5=bevydas_Ignotas?= <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On Wednesday 13 January 2016 09:55 AM, Laxman Dewangan wrote:
->
-> On Wednesday 13 January 2016 09:58 AM, Krzysztof Kozlowski wrote:
->> On 13.01.2016 13:07, Laxman Dewangan wrote:
->>> On Wednesday 13 January 2016 05:36 AM, Krzysztof Kozlowski wrote:
+On 01/13/2016 04:55 PM, Nishanth Menon wrote:
+> On 01/13/2016 04:25 AM, H. Nikolaus Schaller wrote:
+> [...]
+> 
+>>>>>
+>>>>> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+>>>>>
+>>>>> --- a/arch/arm/boot/dts/omap5-board-common.dtsi
+>>>>> +++ b/arch/arm/boot/dts/omap5-board-common.dtsi
+>>>>> @@ -213,6 +213,12 @@
+>>>>> 		>;
+>>>>> 	};
+>>>>>
+>>>>> +	palmas_msecure_pins: palmas_msecure_pins {
+>>>>> +		pinctrl-single,pins = <
+>>>>> +			OMAP5_IOPAD(0x180, PIN_OUTPUT | MUX_MODE1) /* gpio8_234.sys_drm_msecure */
 >>
->>> That is also fine to me but still I am not comfortable with the config
->>> name and driver file name as this does not suggest the common.
->> The name does not matter. Really. We have a lot of drivers with a
->> specific device-like name and supporting different devices. To point
->> that your argument is invalid - your initial name of driver
->> "rtc-max77620.c" supported totally different "names": the max77620 and
->> max20024. It also wasn't suggesting something "common"...
-> In all config string, I have mentioned the MAX20024.
->
->
->> With my approach we are not developing common think neither. We just
->> want to extend/re-use existing max77686 (or max77802) driver for new
->> devices. Just like everywhere else.
->
-> OK, fine to me if this is acceptable.
-> I will drop this rtc patch form this series and work in max77686 
-> driver to modify first and once merged, use this config on my defconfig.
->
+>> I wonder now what MODE1 is.
+>>
+>> In my OMAP5 TRM (Version "Y" - may be too old) the MODE1 is tagged as "reserved".
+>>
+>> Maybe "reserved" happens to output a "1" on OMAP5 and a "0" on the X15?
+>>
+>> And as far as I am aware there is no "driver" for some MSECURE module (but I don't know the details of MSECURE control by software).
+> 
+> 
+> Good catch. This one is interesting. If my memory serves me right,
+> MSECURE signal from SoC is triggered in secure mode (trustzone) - the
+> requirement was that certain PMIC modifications should only be done in
+> secure mode for certain product applications. What this means is that
+> certain functions of the PMIC will be unavailable when the SoC is
+> running in "untrusted" mode.
+> 
+> Instead, the usual mode of operation is to set it up as GPIO (as Nikolas
+> pointed below) and either use GPIO HOG or default weak pull to keep it
+> in the required state.
+> 
+> I think it is better to set it as GPIO than as DRM_MSECURE.
+> 
+> This is probably also the reason why this mode is NOT in public TRM -
+> all security related topics are probably in the NDA only secure TRM
+> addendum.
+> 
+> 
+> I'd suggest setting up a GPIO hog and a mux to GPIO for board-common (we
+> are not doing any HS OMAP5 at least in public domain :) ).
 
-Here, MAX686 RTC driver needs two regmap handle, one for the rtc_regmap 
-and other for STATUS2 register access.
+Yeah. As I remember the same issue was with OMAP4 (twl6030_omap4.dtsi)
+and, again if i remember correctly, someone reported that sys_drm_msecure might have different values
+on different SoCs. Also I'd like to note that on Old non-DT kernel such functionality
+was always modeled using GPIO.
+ 
 
-         ret = regmap_read(info->max77686->regmap, MAX77686_REG_STATUS2, 
-&val);
-         if (ret < 0) {
-                 dev_err(info->dev, "%s:%d fail to read status2 reg(%d)\n",
-                                 __func__, __LINE__, ret);
-                 goto out;
-         }
-
-
-We can not have two regmap handle on rtc driver as both regmap (pmic and 
-rtc) registered with different i2c device.
-
-Also this register should not be accessed by RTC driver if we want to 
-decouple as this is very much MAX77686 register set.
-Do we need this code?
-static int max77686_rtc_read_alarm(struct device *dev, struct rtc_wkalrm 
-*alrm)
-{
-         struct max77686_rtc_info *info = dev_get_drvdata(dev);
-         u8 data[RTC_NR_TIME];
-         unsigned int val;
-         int i, ret;
-
-::::::::
-        alrm->pending = 0;
-         ret = regmap_read(info->max77686->regmap, MAX77686_REG_STATUS2, 
-&val);
-         if (ret < 0) {
-                 dev_err(info->dev, "%s:%d fail to read status2 reg(%d)\n",
-                                 __func__, __LINE__, ret);
-                 goto out;
-         }
-
-         if (val & (1 << 4)) /* RTCA1 */
-                 alrm->pending = 1;
-
-}
-
-
-
-
-
+-- 
+regards,
+-grygorii
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
