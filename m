@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v7 06/10] mfd: axp20x: Whitespace, open
- parenthesis alignment code style fixes
-Date: Wed, 13 Jan 2016 11:30:50 +0800
-Message-ID: <1452655854-1528-7-git-send-email-wens@csie.org>
+Subject: [PATCH v7 09/10] ARM: dts: sun8i: sinlinx-sina33: Add
+ AXP223 PMIC device and regulator nodes
+Date: Wed, 13 Jan 2016 11:30:53 +0800
+Message-ID: <1452655854-1528-10-git-send-email-wens@csie.org>
 References: <1452655854-1528-1-git-send-email-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB4UJ262AKGQEYE5MT4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB44J262AKGQEY35LDGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1452655854-1528-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,52 +20,123 @@ To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This fixes some leftover code style issues in the axp20x core.
+This board has a X-Powers AXP223 PMIC connected via RSB. Its regulators
+provide power to various parts of the SoC and the board.
+
+Also update the regulator supply phandles.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/mfd/axp20x.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts | 76 +++++++++++++++++++++++++-
+ 1 file changed, 73 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-index 8e569bcfe3bc..3054ea4b95e8 100644
---- a/drivers/mfd/axp20x.c
-+++ b/drivers/mfd/axp20x.c
-@@ -593,14 +593,14 @@ int axp20x_match_device(struct axp20x_dev *axp20x)
- 			dev_err(dev, "Unable to match OF ID\n");
- 			return -ENODEV;
- 		}
--		axp20x->variant = (long) of_id->data;
-+		axp20x->variant = (long)of_id->data;
- 	} else {
- 		acpi_id = acpi_match_device(dev->driver->acpi_match_table, dev);
- 		if (!acpi_id || !acpi_id->driver_data) {
- 			dev_err(dev, "Unable to match ACPI ID and data\n");
- 			return -ENODEV;
- 		}
--		axp20x->variant = (long) acpi_id->driver_data;
-+		axp20x->variant = (long)acpi_id->driver_data;
- 	}
+diff --git a/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts b/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
+index 13ce68f06dd6..8af38a9719ca 100644
+--- a/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
++++ b/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
+@@ -68,7 +68,7 @@
+ };
  
- 	switch (axp20x->variant) {
-@@ -634,7 +634,7 @@ int axp20x_match_device(struct axp20x_dev *axp20x)
- 		return -EINVAL;
- 	}
- 	dev_info(dev, "AXP20x variant %s found\n",
--		axp20x_model_names[axp20x->variant]);
-+		 axp20x_model_names[axp20x->variant]);
+ &lradc {
+-	vref-supply = <&reg_vcc3v0>;
++	vref-supply = <&reg_dcdc1>;
+ 	status = "okay";
  
- 	return 0;
- }
-@@ -654,7 +654,7 @@ int axp20x_device_probe(struct axp20x_dev *axp20x)
- 	}
+ 	button@200 {
+@@ -96,7 +96,7 @@
+ &mmc0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_sina33>;
+-	vmmc-supply = <&reg_vcc3v0>;
++	vmmc-supply = <&reg_dcdc1>;
+ 	bus-width = <4>;
+ 	cd-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
+ 	cd-inverted;
+@@ -106,7 +106,7 @@
+ &mmc2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc2_8bit_pins>;
+-	vmmc-supply = <&reg_vcc3v0>;
++	vmmc-supply = <&reg_dcdc1>;
+ 	bus-width = <8>;
+ 	non-removable;
+ 	status = "okay";
+@@ -132,6 +132,76 @@
  
- 	ret = mfd_add_devices(axp20x->dev, -1, axp20x->cells,
--			axp20x->nr_cells, NULL, 0, NULL);
-+			      axp20x->nr_cells, NULL, 0, NULL);
+ &r_rsb {
+ 	status = "okay";
++
++	axp22x: pmic@3a3 {
++		compatible = "x-powers,axp223";
++		reg = <0x3a3>;
++		interrupt-parent = <&nmi_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++		eldoin-supply = <&reg_dcdc1>;
++	};
++};
++
++#include "axp22x.dtsi"
++
++&reg_aldo1 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "vcc-io";
++};
++
++&reg_aldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <2350000>;
++	regulator-max-microvolt = <2650000>;
++	regulator-name = "vdd-dll";
++};
++
++&reg_aldo3 {
++	regulator-always-on;
++	regulator-min-microvolt = <2700000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-pll-avcc";
++};
++
++&reg_dc5ldo {
++	regulator-always-on;
++	regulator-min-microvolt = <900000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-cpus";
++};
++
++&reg_dcdc1 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "vcc-3v0";
++};
++
++&reg_dcdc2 {
++	regulator-always-on;
++	regulator-min-microvolt = <900000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-sys";
++};
++
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <900000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-cpu";
++};
++
++&reg_dcdc5 {
++	regulator-always-on;
++	regulator-min-microvolt = <1500000>;
++	regulator-max-microvolt = <1500000>;
++	regulator-name = "vcc-dram";
++};
++
++&reg_rtc_ldo {
++	regulator-name = "vcc-rtc";
+ };
  
- 	if (ret) {
- 		dev_err(axp20x->dev, "failed to add MFD devices: %d\n", ret);
+ &uart0 {
 -- 
 2.6.4
