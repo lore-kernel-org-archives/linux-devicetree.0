@@ -1,68 +1,57 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 3/3] ARM: shmobile: r8a7790: rework dts to use i2c demuxer
-Date: Wed, 13 Jan 2016 20:19:08 +0300
-Message-ID: <5696870C.102@cogentembedded.com>
-References: <1452695369-29413-1-git-send-email-wsa@the-dreams.de>
- <1452695369-29413-4-git-send-email-wsa@the-dreams.de>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 0/3] serial: earlycon: Add device-tree support for
+ earlycon on Tegra
+Date: Wed, 13 Jan 2016 17:21:54 +0000
+Message-ID: <569687B2.9090609@nvidia.com>
+References: <1452594809-17972-1-git-send-email-jonathanh@nvidia.com>
+ <20160113160340.GJ2588@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1452695369-29413-4-git-send-email-wsa@the-dreams.de>
-Sender: linux-sh-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Jan Luebbe <jlu@pengutronix.de>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160113160340.GJ2588@ulmo>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/13/2016 05:29 PM, Wolfram Sang wrote:
 
-> From: Wolfram Sang <wsa+renesas@sang-engineering.com>
->
-> Create a seperate bus for HDMI related I2C slaves and assign it
+On 13/01/16 16:03, Thierry Reding wrote:
+> * PGP Signed by an unknown key
+> 
+> On Tue, Jan 12, 2016 at 10:33:26AM +0000, Jon Hunter wrote:
+>> For Tegra the early console is support by passing the console information
+>> via the boot parameter earlycon. This series allows us to use the
+>> device-tree "stdout-path" property for early console (as well as the
+>> console) on Tegra.
+>>
+>> Jon Hunter (3):
+>>   serial: earlycon: Add device-tree support for other IO types
+>>   serial: 8250_early: Add support for regshift
+>>   serial: 8250_early: Add earlycon support for Tegra
+>>
+>>  drivers/of/fdt.c                     | 26 +++++++++++++++++++++++-
+>>  drivers/tty/serial/8250/8250_early.c | 38 ++++++++++++++++++++++++++----------
+>>  drivers/tty/serial/earlycon.c        |  6 ++++--
+>>  include/linux/serial_core.h          |  3 ++-
+>>  4 files changed, 59 insertions(+), 14 deletions(-)
+> 
+> The series:
+> 
+> Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-    Separate.
+Thanks. However, Peter Hurley also has a series he just refreshed from
+early last year that includes similar changes to patches 1 and 2 [0]. So
+I will probably drop these and just re-post patch 3 once his series is
+merged.
 
-> to a i2c-gpio master. It can be switched to the i2c-rcar or
-> i2c-sh_mobile core at runtime.
->
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->
-> After the technical details of the underlying driver seem to be more or less
-> sorted out, I would appreciate some discussion here about changing the Lager
-> DTS e.g. if we really want GPIO to be the default?
->
->   arch/arm/boot/dts/r8a7790-lager.dts | 141 ++++++++++++++++++++++--------------
->   1 file changed, 88 insertions(+), 53 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
-> index c553abd711eeb3..d8f0ca8e094dad 100644
-> --- a/arch/arm/boot/dts/r8a7790-lager.dts
-> +++ b/arch/arm/boot/dts/r8a7790-lager.dts
-[...]
-> @@ -252,6 +254,79 @@
->   		#clock-cells = <0>;
->   		clock-frequency = <148500000>;
->   	};
-> +
-> +
-> +	gpioi2c: i2c@9 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "i2c-gpio";
+> Jon, do you have plans on adding the stdout-path properties to existing
+> device tree files?
 
-    I think this prop should go first.
+I think that it would be a good idea and so I could include that in a
+series with patch #3.
 
-> +		status = "disabled";
+Cheers
+Jon
 
-    In a board file? When do you intend to enable it?
-
-> +		gpios = <&gpio5 6 GPIO_ACTIVE_HIGH /* sda */
-> +			 &gpio5 5 GPIO_ACTIVE_HIGH /* scl */
-> +			>;
-> +		i2c-gpio,delay-us = <5>;
-> +	};
-[...]
-
-MBR, Sergei
-
+[0] http://marc.info/?t=145262776100005&r=1&w=2
