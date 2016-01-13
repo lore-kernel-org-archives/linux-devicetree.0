@@ -1,234 +1,82 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] soc: mediatek: Add MT2701 scpsys driver
-Date: Wed, 13 Jan 2016 16:46:57 +0100
-Message-ID: <56967171.2070007@gmail.com>
-References: <1452676288-62711-1-git-send-email-jamesjj.liao@mediatek.com>
- <1452676288-62711-5-git-send-email-jamesjj.liao@mediatek.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 6/6] regulator: max77620: add regulator driver for
+ max77620/max20024
+Date: Wed, 13 Jan 2016 15:51:54 +0000
+Message-ID: <20160113155154.GN6588@sirena.org.uk>
+References: <5695A854.60108@samsung.com>
+ <5696378B.6070704@nvidia.com>
+ <20160113115736.GJ6588@sirena.org.uk>
+ <56963D8D.9060908@nvidia.com>
+ <20160113123133.GK6588@sirena.org.uk>
+ <5696451F.3000707@nvidia.com>
+ <20160113130909.GL6588@sirena.org.uk>
+ <56964CEF.3030900@nvidia.com>
+ <20160113142023.GM6588@sirena.org.uk>
+ <56966242.4080601@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="wCvMePosDEf3szVw"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452676288-62711-5-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56966242.4080601-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Mallikarjun Kasoju <mkasoju-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--wCvMePosDEf3szVw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 13/01/16 10:11, James Liao wrote:
-> From: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->
-> Add scpsys driver for MT2701.
->
-> Signed-off-by: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
+On Wed, Jan 13, 2016 at 08:12:10PM +0530, Laxman Dewangan wrote:
+> On Wednesday 13 January 2016 07:50 PM, Mark Brown wrote:
+> >On Wed, Jan 13, 2016 at 06:41:11PM +0530, Laxman Dewangan wrote:
+> >>On Wednesday 13 January 2016 06:39 PM, Mark Brown wrote:
 
-NAK, same as in v1. Please don't split up the driver in several code 
-files, but find a a way to share the common code elegantly.
-Comments below.
+> >>>What is "it" and why can't we check what the current configuration is
+> >>>while setting FPS to NONE?
 
->   drivers/soc/mediatek/Makefile            |   1 +
->   drivers/soc/mediatek/mtk-scpsys-mt2701.c | 170 +++++++++++++++++++++++++++++++
->   2 files changed, 171 insertions(+)
->   create mode 100644 drivers/soc/mediatek/mtk-scpsys-mt2701.c
->
-> diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
-> index 13f7d21..d693f7d 100644
-> --- a/drivers/soc/mediatek/Makefile
-> +++ b/drivers/soc/mediatek/Makefile
-> @@ -2,3 +2,4 @@ obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
->   obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
->   obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys.o
->   obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys-mt8173.o
-> +obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys-mt2701.o
-> diff --git a/drivers/soc/mediatek/mtk-scpsys-mt2701.c b/drivers/soc/mediatek/mtk-scpsys-mt2701.c
-> new file mode 100644
-> index 0000000..82c00ed
-> --- /dev/null
-> +++ b/drivers/soc/mediatek/mtk-scpsys-mt2701.c
-> @@ -0,0 +1,170 @@
-> +/*
-> + * Copyright (c) 2015 Mediatek, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/pm_domain.h>
-> +#include <linux/soc/mediatek/infracfg.h>
-> +#include <dt-bindings/power/mt2701-power.h>
-> +
-> +#include "mtk-scpsys.h"
-> +
-> +#define SPM_VDE_PWR_CON			0x0210
-> +#define SPM_MFG_PWR_CON			0x0214
-> +#define SPM_ISP_PWR_CON			0x0238
-> +#define SPM_DIS_PWR_CON			0x023C
-> +#define SPM_CONN_PWR_CON		0x0280
-> +#define SPM_BDP_PWR_CON			0x029C
-> +#define SPM_ETH_PWR_CON			0x02A0
-> +#define SPM_HIF_PWR_CON			0x02A4
-> +#define SPM_IFR_MSC_PWR_CON		0x02A8
-> +#define SPM_PWR_STATUS			0x060c
-> +#define SPM_PWR_STATUS_2ND		0x0610
-> +
-> +#define CONN_PWR_STA_MASK		BIT(1)
-> +#define DIS_PWR_STA_MASK		BIT(3)
-> +#define MFG_PWR_STA_MASK		BIT(4)
-> +#define ISP_PWR_STA_MASK		BIT(5)
-> +#define VDE_PWR_STA_MASK		BIT(7)
-> +#define BDP_PWR_STA_MASK		BIT(14)
-> +#define ETH_PWR_STA_MASK		BIT(15)
-> +#define HIF_PWR_STA_MASK		BIT(16)
-> +#define IFR_MSC_PWR_STA_MASK		BIT(17)
+> >>I will have platform specific data in callback of enable/disable only.
+> >>Which call back do I need to set this? enable/disable or post register?
 
-Apart from SPM_BDP_PWR_CON and BDP_PWR_STA_MASK this are compatible with 
-mt8173. So please avoid code duplication.
-Apart you changed the define names from PWR_STATUS_* to *_STA_MASK, 
-please keep a uniform naming across the driver.
+> >I'm sorry but I can't parse what you're saying here.
 
-Regards,
-Matthias
+> Here, before machine constraint applies, I need to configure FPS on desired
+> source.
 
-> +
-> +#define MT2701_TOP_AXI_PROT_EN_CONN	0x0104
-> +#define MT2701_TOP_AXI_PROT_EN_DISP	0x0002
-> +
-> +static const struct scp_domain_data scp_domain_data[] = {
-> +	[MT2701_POWER_DOMAIN_CONN] = {
-> +		.name = "conn",
-> +		.sta_mask = CONN_PWR_STA_MASK,
-> +		.ctl_offs = SPM_CONN_PWR_CON,
-> +		.bus_prot_mask = MT2701_TOP_AXI_PROT_EN_CONN,
-> +		.active_wakeup = true,
-> +	},
-> +	[MT2701_POWER_DOMAIN_DISP] = {
-> +		.name = "disp",
-> +		.sta_mask = DIS_PWR_STA_MASK,
-> +		.ctl_offs = SPM_DIS_PWR_CON,
-> +		.sram_pdn_bits = GENMASK(11, 8),
-> +		.clk_id = {CLK_MM},
-> +		.bus_prot_mask = MT2701_TOP_AXI_PROT_EN_DISP,
-> +		.active_wakeup = true,
-> +	},
-> +	[MT2701_POWER_DOMAIN_MFG] = {
-> +		.name = "mfg",
-> +		.sta_mask = MFG_PWR_STA_MASK,
-> +		.ctl_offs = SPM_MFG_PWR_CON,
-> +		.sram_pdn_bits = GENMASK(11, 8),
-> +		.sram_pdn_ack_bits = GENMASK(12, 12),
-> +		.active_wakeup = true,
-> +	},
-> +	[MT2701_POWER_DOMAIN_VDEC] = {
-> +		.name = "vdec",
-> +		.sta_mask = VDE_PWR_STA_MASK,
-> +		.ctl_offs = SPM_VDE_PWR_CON,
-> +		.sram_pdn_bits = GENMASK(11, 8),
-> +		.sram_pdn_ack_bits = GENMASK(12, 12),
-> +		.clk_id = {CLK_MM},
-> +		.active_wakeup = true,
-> +	},
-> +	[MT2701_POWER_DOMAIN_ISP] = {
-> +		.name = "isp",
-> +		.sta_mask = ISP_PWR_STA_MASK,
-> +		.ctl_offs = SPM_ISP_PWR_CON,
-> +		.sram_pdn_bits = GENMASK(11, 8),
-> +		.sram_pdn_ack_bits = GENMASK(13, 12),
-> +		.active_wakeup = true,
-> +	},
-> +	[MT2701_POWER_DOMAIN_BDP] = {
-> +		.name = "bdp",
-> +		.sta_mask = BDP_PWR_STA_MASK,
-> +		.ctl_offs = SPM_BDP_PWR_CON,
-> +		.sram_pdn_bits = GENMASK(11, 8),
-> +		.active_wakeup = true,
-> +	},
-> +	[MT2701_POWER_DOMAIN_ETH] = {
-> +		.name = "eth",
-> +		.sta_mask = ETH_PWR_STA_MASK,
-> +		.ctl_offs = SPM_ETH_PWR_CON,
-> +		.sram_pdn_bits = GENMASK(11, 8),
-> +		.sram_pdn_ack_bits = GENMASK(15, 12),
-> +		.active_wakeup = true,
-> +	},
-> +	[MT2701_POWER_DOMAIN_HIF] = {
-> +		.name = "hif",
-> +		.sta_mask = HIF_PWR_STA_MASK,
-> +		.ctl_offs = SPM_HIF_PWR_CON,
-> +		.sram_pdn_bits = GENMASK(11, 8),
-> +		.sram_pdn_ack_bits = GENMASK(15, 12),
-> +		.active_wakeup = true,
-> +	},
-> +	[MT2701_POWER_DOMAIN_IFR_MSC] = {
-> +		.name = "ifr_msc",
-> +		.sta_mask = IFR_MSC_PWR_STA_MASK,
-> +		.ctl_offs = SPM_IFR_MSC_PWR_CON,
-> +		.active_wakeup = true,
-> +	},
-> +};
-> +
-> +#define NUM_DOMAINS	ARRAY_SIZE(scp_domain_data)
-> +
-> +static int __init scpsys_probe(struct platform_device *pdev)
-> +{
-> +	struct scp *scp;
-> +
-> +	scp = init_scp(pdev, scp_domain_data, NUM_DOMAINS);
-> +	if (IS_ERR(scp))
-> +		return PTR_ERR(scp);
-> +
-> +	mtk_register_power_domains(pdev, scp, NUM_DOMAINS);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id of_scpsys_match_tbl[] = {
-> +	{
-> +		.compatible = "mediatek,mt2701-scpsys",
-> +	}, {
-> +		/* sentinel */
-> +	}
-> +};
-> +
-> +static struct platform_driver scpsys_drv = {
-> +	.driver = {
-> +		.name = "mtk-scpsys-mt2701",
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = of_match_ptr(of_scpsys_match_tbl),
-> +	},
-> +};
-> +
-> +static int __init scpsys_drv_init(void)
-> +{
-> +	return platform_driver_probe(&scpsys_drv, scpsys_probe);
-> +}
-> +
-> +/*
-> + * There are some Mediatek drivers which depend on the power domain driver need
-> + * to probe in earlier initcall levels. So scpsys driver also need to probe
-> + * earlier.
-> + *
-> + * IOMMU(M4U) and SMI drivers for example. SMI is a bridge between IOMMU and
-> + * multimedia HW. IOMMU depends on SMI, and SMI is a power domain consumer,
-> + * so the proper probe sequence should be scpsys -> SMI -> IOMMU driver.
-> + * IOMMU drivers are initialized during subsys_init by default, so we need to
-> + * move SMI and scpsys drivers to subsys_init or earlier init levels.
-> + */
-> +subsys_initcall(scpsys_drv_init);
-> +
-> +MODULE_DESCRIPTION("MediaTek MT2701 scpsys driver");
-> +MODULE_LICENSE("GPL v2");
->
+I'm a bit confused here - I had thought you needed things the other way
+around?  Can you describe in concrete terms what you want to configure?
+
+> >>>>I need to set the FPS src properly for each rails before callback happen
+> >>>>from regulator init so that enable/disable/is_enable can handle it properly.
+
+> >>>Why not just reorder the callback so it happens before the constraints
+> >>>are applied?
+
+> >>which callback I need to reorder for getting the context for configruation?
+> >The existing call to parse the DT.
+
+> Are we allow to do i2c transfer in the existing callback for parsing the DT?
+
+Yes, of course.
+
+--wCvMePosDEf3szVw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWlnKZAAoJECTWi3JdVIfQuTAH/2xoPMUPjm/TIKnibYdD8Pas
+DVtt7ufLP8+4/52m2te6EEtgHl1lFsqoTtvNyUMORjeY9Uv5aWXubNXFy2Je1vnr
+xplbYaIWV6tVzuFsfQABE000P3HEarIxWvvZImRQ187g0VDjDmsLbI7XrzIDJofd
+EdBeuCecL12RH1tOeQBUtagsZaWvMd1UWspmVUjmLp8MlrLVndHz6ZmkEIk17xdl
+6SIya8u8IFyB3+URQ9aRwiSH5CE0Rsm7kRT/PThbXWwfnnMSCUZimi7/6mHqvrFO
+OZS70XvOR+1n/ekkdPrd6YSWSsYenlfGy5H42muCLmw1VEbXdEK/uBHhoyG6D4k=
+=rJk0
+-----END PGP SIGNATURE-----
+
+--wCvMePosDEf3szVw--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
