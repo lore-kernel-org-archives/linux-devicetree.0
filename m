@@ -1,91 +1,45 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash Controller driver.
-Date: Wed, 13 Jan 2016 03:39:17 +0100
-Message-ID: <201601130339.17520.marex@denx.de>
-References: <1452486886-8049-1-git-send-email-marex@denx.de> <20160113022608.GA17483@rob-hp-laptop>
+From: Kejian Yan <yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [patch v3 net-next 0/2] dts: hisi: fixes no syscon fault when init mdio
+Date: Wed, 13 Jan 2016 11:01:11 +0800
+Message-ID: <1452654073-28039-2-git-send-email-yankejian@huawei.com>
+References: <1452654073-28039-1-git-send-email-yankejian@huawei.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160113022608.GA17483@rob-hp-laptop>
+In-Reply-To: <1452654073-28039-1-git-send-email-yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "R, Vignesh" <vigneshr-l0cyMroinI0@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lisheng011-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Cc: haifeng.wei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, January 13, 2016 at 03:26:08 AM, Rob Herring wrote:
-> On Mon, Jan 11, 2016 at 05:34:45AM +0100, Marek Vasut wrote:
-> > From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > 
-> > Add binding document for the Cadence QSPI controller.
-> > 
-> > Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> > Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-> > Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > Cc: "R, Vignesh" <vigneshr-l0cyMroinI0@public.gmane.org>
-> > Cc: Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > ---
-> > 
-> >  .../devicetree/bindings/mtd/cadence-quadspi.txt    | 56
-> >  ++++++++++++++++++++++ 1 file changed, 56 insertions(+)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-> > 
-> > V2: Add cdns prefix to driver-specific bindings.
-> > V3: Use existing property "is-decoded-cs" instead of creating a
-> > 
-> >     duplicate, "ext-decoder". Timing parameters are in nanoseconds,
-> >     not master reference clocks. Remove bus-num completely.
-> > 
-> > V4: Add new properties fifo-width and trigger-address
-> > V7: - Prefix all of the Cadence-specific properties with cdns prefix,
-> > 
-> >       those are in particular "cdns,is-decoded-cs", "cdns,fifo-depth",
-> >       "cdns,fifo-width", "cdns,trigger-address".
-> >     
-> >     - Drop bogus properties which were not used and were incorrect.
-> > 
-> > V8: Align lines to 80 chars.
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-> > b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt new file
-> > mode 100644
-> > index 0000000..f248056
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-> > @@ -0,0 +1,56 @@
-> > +* Cadence Quad SPI controller
-> > +
-> > +Required properties:
-> > +- compatible : Should be "cdns,qspi-nor".
-> 
-> Fine, but I expect to see SOCs using this block add their own compatible
-> strings. It wouldn't surprise me that we already have some using this
-> block.
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+This patchset fixes the bug that eth can't initial successful on hip05-D02
+because the dts files doesn't match the source code.
 
-I finally got an Ack on this, I am so happy :-)
+Kejian Yan (2):
+  dts: hisi: fixes no syscon fault when init mdio
+  net: hns: fixes no syscon error when init mdio
+---
+change log:
+v3:
+ 1) uses capital letter at the beginning of sentences
+ 2) updates the right device node name
 
-As for the SoCs, there is Altera SoCFPGA Gen 5 and Gen 10 which uses this.
-Then there is some TI SoC, but I don't know the model. Vignesh (on CC) would.
-Then there is some ST SoC, but I have no idea what that's all about, sorry.
+v2:
+ 1) update the related documented in the binding as well
+ 2) use the normal naming conventions using '-' instead of '_', and
+    update the related *.c files.
+v1:
+ first submit
 
-All these SoCs should be capable of tweaking the block to fit their needs
-by just the DT properties. I believe they differ only in the FIFO depth and
-sometimes someone is greedy and uses 4:16 CS multiplexer, which is an external
-passive component, but that's all.
+ .../devicetree/bindings/arm/hisilicon/hisilicon.txt      | 16 ++++++++++++++++
+ arch/arm64/boot/dts/hisilicon/hip05.dtsi                 |  5 +++++
+ arch/arm64/boot/dts/hisilicon/hip05_hns.dtsi             |  4 ++--
+ drivers/net/ethernet/hisilicon/hns_mdio.c                |  2 +-
+ 4 files changed, 24 insertions(+), 3 deletions(-)
 
-Would we need soc-specific compatible strings if this is the case?
+-- 
+2.4.1
 
-Best regards,
-Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
