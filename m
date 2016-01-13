@@ -1,7 +1,7 @@
 From: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v1 5/5] ARM: at91/dt: sama5d2: add nand0 and nfc0 nodes
-Date: Wed, 13 Jan 2016 17:34:17 +0100
-Message-ID: <1452702857-2240-6-git-send-email-romain.izard.pro@gmail.com>
+Subject: [PATCH v1 3/5] mtd: atmel_nand: Support PMECC on SAMA5D2
+Date: Wed, 13 Jan 2016 17:34:15 +0100
+Message-ID: <1452702857-2240-4-git-send-email-romain.izard.pro@gmail.com>
 References: <1452702857-2240-1-git-send-email-romain.izard.pro@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1452702857-2240-1-git-send-email-romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,63 +10,145 @@ To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79u
 Cc: Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Both nodes are required to access NAND Flash memory. Additional
-settings will be necessary at the board level to use it.
+Starting with the SAMA5D2, there is a new revision of the Atmel PMECC
+controller that can correct 32 bits in each sector. This controller is
+not 100% compatible with the previous revision that corrected a maximum
+of 24 bits by sector, as some register addresses overlap.
+
+Using information from the device tree, we can configure the driver to
+work with both versions.
 
 Signed-off-by: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/sama5d2.dtsi | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ .../devicetree/bindings/mtd/atmel-nand.txt         |  7 +++++--
+ drivers/mtd/nand/atmel_nand.c                      | 23 +++++++++++++++++++++-
+ drivers/mtd/nand/atmel_nand_ecc.h                  |  8 ++++++--
+ 3 files changed, 33 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-index aee571448342..80420177ec1a 100644
---- a/arch/arm/boot/dts/sama5d2.dtsi
-+++ b/arch/arm/boot/dts/sama5d2.dtsi
-@@ -265,6 +265,44 @@
- 			cache-level = <2>;
- 		};
+diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+index 89b0db9801b0..90887b430f03 100644
+--- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+@@ -1,7 +1,10 @@
+ Atmel NAND flash
  
-+		nand0: nand@80000000 {
-+			compatible = "atmel,sama5d2-nand";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+			reg = < /* EBI CS3 */
-+				0x80000000 0x08000000
-+				/* SMC PMECC regs */
-+				0xf8014070 0x00000490
-+				/* SMC PMECC Error Location regs */
-+				0xf8014500 0x00000200
-+				/* ROM Galois tables */
-+				0x00040000 0x00018000
-+				>;
-+			interrupts = <17 IRQ_TYPE_LEVEL_HIGH 6>;
-+			atmel,nand-addr-offset = <21>;
-+			atmel,nand-cmd-offset = <22>;
-+			atmel,nand-has-dma;
-+			atmel,has-pmecc;
-+			atmel,pmecc-lookup-table-offset = <0x0 0x8000>;
-+			status = "disabled";
+ Required properties:
+-- compatible : should be "atmel,at91rm9200-nand" or "atmel,sama5d4-nand".
++- compatible: The possible values are:
++	"atmel,at91rm9200-nand"
++	"atmel,sama5d2-nand"
++	"atmel,sama5d4-nand"
+ - reg : should specify localbus address and size used for the chip,
+ 	and hardware ECC controller if available.
+ 	If the hardware ECC is PMECC, it should contain address and size for
+@@ -22,7 +25,7 @@ Optional properties:
+   Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
+   "soft_bch".
+ - atmel,has-pmecc : boolean to enable Programmable Multibit ECC hardware.
+-  Only supported by at91sam9x5 or later sam9 product.
++  Supported by AT91SAM9x5 or later SAM9 chips, and SAMA5 chips.
+ - atmel,pmecc-cap : error correct capability for Programmable Multibit ECC
+   Controller. Supported values are: 2, 4, 8, 12, 24.
+ - atmel,pmecc-sector-size : sector size for ECC computation. Supported values
+diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
+index e5d7e7e63f49..6fe50e2d291f 100644
+--- a/drivers/mtd/nand/atmel_nand.c
++++ b/drivers/mtd/nand/atmel_nand.c
+@@ -65,6 +65,7 @@ module_param(on_flash_bbt, int, 0);
+ 
+ struct atmel_nand_caps {
+ 	bool pmecc_correct_erase_page;
++	uint8_t pmecc_max_correction;
+ };
+ 
+ struct atmel_nand_nfc_priv {
+@@ -146,6 +147,7 @@ struct atmel_nand_host {
+ 	int			pmecc_cw_len;	/* Length of codeword */
+ 
+ 	void __iomem		*pmerrloc_base;
++	void __iomem		*pmerrloc_el_base;
+ 	void __iomem		*pmecc_rom_base;
+ 
+ 	/* lookup table for alpha_to and index_of */
+@@ -817,7 +819,7 @@ static void pmecc_correct_data(struct mtd_info *mtd, uint8_t *buf, uint8_t *ecc,
+ 	sector_size = host->pmecc_sector_size;
+ 
+ 	while (err_nbr) {
+-		tmp = pmerrloc_readl_el_relaxed(host->pmerrloc_base, i) - 1;
++		tmp = pmerrloc_readl_el_relaxed(host->pmerrloc_el_base, i) - 1;
+ 		byte_pos = tmp / 8;
+ 		bit_pos  = tmp % 8;
+ 
+@@ -1208,6 +1210,8 @@ static int atmel_pmecc_nand_init_params(struct platform_device *pdev,
+ 		err_no = PTR_ERR(host->pmerrloc_base);
+ 		goto err;
+ 	}
++	host->pmerrloc_el_base = host->pmerrloc_base + ATMEL_PMERRLOC_SIGMAx +
++		(host->caps->pmecc_max_correction + 1) * 4;
+ 
+ 	if (!host->has_no_lookup_table) {
+ 		regs_rom = platform_get_resource(pdev, IORESOURCE_MEM, 3);
+@@ -2307,17 +2311,34 @@ static int atmel_nand_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++/*
++ * AT91RM9200 does not have PMECC or PMECC Errloc peripherals for
++ * BCH ECC. Combined with the "atmel,has-pmecc", it is used to describe
++ * devices from the SAM9 family that have those.
++ */
+ static struct atmel_nand_caps at91rm9200_caps = {
+ 	.pmecc_correct_erase_page = false,
++	.pmecc_max_correction = 24,
+ };
+ 
+ static struct atmel_nand_caps sama5d4_caps = {
+ 	.pmecc_correct_erase_page = true,
++	.pmecc_max_correction = 24,
++};
 +
-+			nfc@90000000 {
-+				compatible = "atmel,sama5d4-nfc";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				reg = < /* NFC Command Registers */
-+					0xC0000000 0x08000000
-+					/* NFC HSMC regs */
-+					0xf8014000 0x00000070
-+					/* NFC SRAM banks */
-+					0x00100000 0x00100000
-+					>;
-+				clocks = <&hsmc_clk>;
-+				atmel,write-by-sram;
-+			};
-+		};
++/*
++ * The PMECC Errloc controller starting in SAMA5D2 is not compatible,
++ * as the increased correction strength requires more registers.
++ */
++static struct atmel_nand_caps sama5d2_caps = {
++	.pmecc_correct_erase_page = true,
++	.pmecc_max_correction = 32,
+ };
+ 
+ static const struct of_device_id atmel_nand_dt_ids[] = {
+ 	{ .compatible = "atmel,at91rm9200-nand", .data = &at91rm9200_caps },
+ 	{ .compatible = "atmel,sama5d4-nand", .data = &sama5d4_caps },
++	{ .compatible = "atmel,sama5d2-nand", .data = &sama5d2_caps },
+ 	{ /* sentinel */ }
+ };
+ 
+diff --git a/drivers/mtd/nand/atmel_nand_ecc.h b/drivers/mtd/nand/atmel_nand_ecc.h
+index 668e7358f19b..ec964c43c932 100644
+--- a/drivers/mtd/nand/atmel_nand_ecc.h
++++ b/drivers/mtd/nand/atmel_nand_ecc.h
+@@ -108,7 +108,11 @@
+ #define		PMERRLOC_ERR_NUM_MASK		(0x1f << 8)
+ #define		PMERRLOC_CALC_DONE		(1 << 0)
+ #define ATMEL_PMERRLOC_SIGMAx		0x028	/* Error location SIGMA x */
+-#define ATMEL_PMERRLOC_ELx		0x08c	/* Error location x */
 +
- 		sdmmc0: sdio-host@a0000000 {
- 			compatible = "atmel,sama5d2-sdhci";
- 			reg = <0xa0000000 0x300>;
++/*
++ * The ATMEL_PMERRLOC_ELx register location depends from the number of
++ * bits corrected by the PMECC controller. Do not use it.
++ */
+ 
+ /* Register access macros for PMECC */
+ #define pmecc_readl_relaxed(addr, reg) \
+@@ -136,7 +140,7 @@
+ 	readl_relaxed((addr) + ATMEL_PMERRLOC_SIGMAx + ((n) * 4))
+ 
+ #define pmerrloc_readl_el_relaxed(addr, n) \
+-	readl_relaxed((addr) + ATMEL_PMERRLOC_ELx + ((n) * 4))
++	readl_relaxed((addr) + ((n) * 4))
+ 
+ /* Galois field dimension */
+ #define PMECC_GF_DIMENSION_13			13
 -- 
 2.5.0
 
