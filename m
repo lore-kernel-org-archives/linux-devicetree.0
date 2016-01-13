@@ -1,88 +1,42 @@
-From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH V2 3/4] clk: bcm2835: enable management of PCM clock
-Date: Wed, 13 Jan 2016 12:11:15 -0800
-Message-ID: <20160113201115.1168.91766@quark.deferred.io>
-References: <1452542157-2387-1-git-send-email-kernel@martin.sperl.org>
- <1452542157-2387-4-git-send-email-kernel@martin.sperl.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] ata: add AMD Seattle platform driver
+Date: Wed, 13 Jan 2016 21:39:48 +0100
+Message-ID: <10776629.UCmL1lPAav@wuerfel>
+References: <1452200002-31590-1-git-send-email-brijesh.singh@amd.com> <4689728.Nn3Rl2cUeP@wuerfel> <56968168.4010606@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452542157-2387-4-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Remi Pommarel <repk-lovNVp52yxIDGOk2Oe9MvA@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <56968168.4010606@amd.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Brijesh Singh <brijesh.singh@amd.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-ide@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, tj@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org (2016-01-11 11:55:55)
-> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-> 
-> Enable the PCM clock in the SOC, which is used by the
-> bcm2835-i2s driver.
-> 
-> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+On Wednesday 13 January 2016 10:55:04 Brijesh Singh wrote:
+> On 01/12/2016 08:24 AM, Arnd Bergmann wrote:
 
-Looks OK to me.
-
-Regards,
-Mike
-
-> ---
->  drivers/clk/bcm/clk-bcm2835.c       |   13 +++++++++++++
->  include/dt-bindings/clock/bcm2835.h |    1 +
->  2 files changed, 14 insertions(+)
+> > c) calling into the ACPI interpreter to do platform specific hacks
 > 
-> diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-> index 7c782d3..573b5b1 100644
-> --- a/drivers/clk/bcm/clk-bcm2835.c
-> +++ b/drivers/clk/bcm/clk-bcm2835.c
-> @@ -88,6 +88,8 @@
->  #define CM_HSMDIV              0x08c
->  #define CM_OTPCTL              0x090
->  #define CM_OTPDIV              0x094
-> +#define CM_PCMCTL              0x098
-> +#define CM_PCMDIV              0x09c
->  #define CM_PWMCTL              0x0a0
->  #define CM_PWMDIV              0x0a4
->  #define CM_SMICTL              0x0b0
-> @@ -826,6 +828,16 @@ static const struct bcm2835_clock_data bcm2835_clock_pwm_data = {
->         .frac_bits = 12,
->  };
->  
-> +static const struct bcm2835_clock_data bcm2835_clock_pcm_data = {
-> +       .name = "pcm",
-> +       .num_mux_parents = ARRAY_SIZE(bcm2835_clock_per_parents),
-> +       .parents = bcm2835_clock_per_parents,
-> +       .ctl_reg = CM_PCMCTL,
-> +       .div_reg = CM_PCMDIV,
-> +       .int_bits = 12,
-> +       .frac_bits = 12,
-> +};
-> +
->  struct bcm2835_pll {
->         struct clk_hw hw;
->         struct bcm2835_cprman *cprman;
-> @@ -1616,6 +1628,7 @@ static const struct bcm2835_register_clock bcm2835_register_clocks[] = {
->         REGISTER_CLOCK(BCM2835_CLOCK_HSM, &bcm2835_clock_hsm_data),
->         REGISTER_CLOCK(BCM2835_CLOCK_EMMC, &bcm2835_clock_emmc_data),
->         REGISTER_CLOCK(BCM2835_CLOCK_PWM, &bcm2835_clock_pwm_data),
-> +       REGISTER_CLOCK(BCM2835_CLOCK_PCM, &bcm2835_clock_pcm_data),
->  };
->  
->  void bcm2835_register_duplicate_index(
-> diff --git a/include/dt-bindings/clock/bcm2835.h b/include/dt-bindings/clock/bcm2835.h
-> index 87235ac..9a7b4a5 100644
-> --- a/include/dt-bindings/clock/bcm2835.h
-> +++ b/include/dt-bindings/clock/bcm2835.h
-> @@ -44,3 +44,4 @@
->  #define BCM2835_CLOCK_EMMC             28
->  #define BCM2835_CLOCK_PERI_IMAGE       29
->  #define BCM2835_CLOCK_PWM              30
-> +#define BCM2835_CLOCK_PCM              31
-> -- 
-> 1.7.10.4
+> Thanks for explaining. Now I understood your comment on AML however we need to consider the following:
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> a) activity LED blinking routines are called very frequent (10 to 100ms based on emp->state) and executing AML method that often would introduces its own overhead.
+> 
+> b) all BIOS vendors need to implement a new methods in their DSDT and release a new BIOS.
+> 
+> c) other OS'es (mainly Windows) driver need to be updated.
+> 
+> 
+> We don't know how many other SoC's have similar hacky implementation which can take advantage of extending generic
+> AHCI driver to call into AML methods for LED blink. Given some of these causes I think having a platform driver is much cleaner. I can drop DT binding part from this driver and keep just ACPI binding.
+> 
+> Thoughts ?
+
+I don't care what you do with ACPI, just make sure we can use the generic
+driver without any platform specific hacks for the DT case.
+
+For ACPI, please talk to the respective maintainers about whether they want
+to have a custom driver for this case, or a proper abstraction in the generic
+driver.
+
+	Arnd
