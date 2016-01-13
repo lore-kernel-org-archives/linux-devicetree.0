@@ -1,70 +1,78 @@
-From: Brijesh Singh <brijesh.singh@amd.com>
-Subject: Re: [PATCH] ata: add AMD Seattle platform driver
-Date: Wed, 13 Jan 2016 10:55:04 -0600
-Message-ID: <56968168.4010606@amd.com>
-References: <1452200002-31590-1-git-send-email-brijesh.singh@amd.com>
- <9923043.nz8DJ6lRiJ@wuerfel> <5693FAC2.4070003@amd.com>
- <4689728.Nn3Rl2cUeP@wuerfel>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V4 16/16] ARM64: tegra: select PM_GENERIC_DOMAINS
+Date: Wed, 13 Jan 2016 18:03:24 +0100
+Message-ID: <20160113170324.GO2588@ulmo>
+References: <1449241037-22193-1-git-send-email-jonathanh@nvidia.com>
+ <1449241037-22193-17-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4689728.Nn3Rl2cUeP@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, brijesh.singh@amd.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, tj@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Qa0ccP92Gc0Ko3P8"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1449241037-22193-17-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 01/12/2016 08:24 AM, Arnd Bergmann wrote:
->>>
->>> Isn't this the thing that ACPI based firmware would handle using AML anyway?
->>> I don't think the server people would be too happy to add a new driver
->>> each time a SATA controller does the LEDs slightly differently, and this
->>> is really the kind of platform specific hack that AML is meant for.
->>>
->> Sorry I am not able understand your comment, Could you please explain me what you mean by AML is meant for this kind of platform specific hack ?
->>
-> 
-> I meant the sgpio register should not be exposed through a resource on
-> an ACPI based system but the access be hidden behind a call into an AML
-> method.
-> 
-> You basically extend the generic AHCI driver to understand three ways of
-> blinking the LEDS:
-> 
-> a) standard AHCI enclosure management
-> b) the Linux LED subsystem using whatever LED implementation the platform provides
+--Qa0ccP92Gc0Ko3P8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes I could look into exploring LED implementation for DT case.
+On Fri, Dec 04, 2015 at 02:57:17PM +0000, Jon Hunter wrote:
+> Enable PM_GENERIC_DOMAINS for tegra 64-bit devices. To ensure that devices
+> dependent upon a particular power-domain are only probed when that power
+> domain has been powered up, requires that PM is made mandatory for tegra
+> 64-bit devices and so select this option for tegra as well.
+>=20
+> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm64/Kconfig.platforms | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> index 9806324fa215..e0b5bd0aff0f 100644
+> --- a/arch/arm64/Kconfig.platforms
+> +++ b/arch/arm64/Kconfig.platforms
+> @@ -93,6 +93,8 @@ config ARCH_TEGRA
+>  	select GENERIC_CLOCKEVENTS
+>  	select HAVE_CLK
+>  	select PINCTRL
+> +	select PM
+> +	select PM_GENERIC_DOMAINS
+>  	select RESET_CONTROLLER
+>  	help
+>  	  This enables support for the NVIDIA Tegra SoC family.
 
-> c) calling into the ACPI interpreter to do platform specific hacks
+This has potential consequences for multi-platform builds, doesn't it?
+All of a sudden any combination of builds that includes Tegra won't be
+possible to build without PM support.
 
-Thanks for explaining. Now I understood your comment on AML however we need to consider the following:
+Adding linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org for visibility.
 
-a) activity LED blinking routines are called very frequent (10 to 100ms based on emp->state) and executing AML method that often would introduces its own overhead.
+Thierry
 
-b) all BIOS vendors need to implement a new methods in their DSDT and release a new BIOS.
+--Qa0ccP92Gc0Ko3P8
+Content-Type: application/pgp-signature; name="signature.asc"
 
-c) other OS'es (mainly Windows) driver need to be updated.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
+iQIcBAABCAAGBQJWloNZAAoJEN0jrNd/PrOhiSsP/3+9Pa/eT+yiNAJHUw7uVnVT
+vsfDIb/2y3O1SKsLpBed8BCgLGES0wNqLKJ2XHeKJs0NE9jKnhsSUIzNMF+wMBHx
+nptdWAm4sHkbiYlpYv+fT1Y+WELHl+LwmdTlNnOx25r72dCSu+Hj1XIfwY2A9/1O
+cRoRjE5DcEPBBovaJYf2O4lp2vSKWOcA7Xj2PdWv1x73AE7kifK61f6vkXJgE97V
+eIzXHHVEZimLLVSy0F72/9ZoLCIWhg/z7Owg/YwvQnEclvHj6V14I4A5edglWSP/
+BFLXCq1J0qArE2Ew5DP/A2Mt0ZHNR+2Px53XYzr3s/PaviBK5+j6h+8HZlxRTMoB
+UPoz3QjY4B5voKbKlJv06kkXm8eFI5tdOg5/nEg/OWmPRhdImo3tLH71lqK0eO0i
+5pDkG0Yu5aSYrY/xYpepiHZeAR9+EjwCE3NsVm+5tlrd/8XirSZUx0nw7TjrlkQs
+T+Y2ja1dEr1EkXBMqkvwVuVt4ca3wpbOl2/BG+4aHKaFJaeFVVtyYC7kiYRBlF/0
+g55ed5zkDlsOYBwK3PWFQoiwjOqOVt9V5M1h9xdIkHH85anTeC3RVhBdfjgG8bE3
+G2NhAIzOVk9bEFwz16J7rZ7TZEJC+dtYj1cMTvCmJQuikDDFBi8X3ymPyf+ECq0N
+fLTet+6rQoHIUwQZtrYg
+=QG7j
+-----END PGP SIGNATURE-----
 
-We don't know how many other SoC's have similar hacky implementation which can take advantage of extending generic
-AHCI driver to call into AML methods for LED blink. Given some of these causes I think having a platform driver is much cleaner. I can drop DT binding part from this driver and keep just ACPI binding.
-
-Thoughts ?
-
--Brijesh
-
-> 
-> 	Arnd
-> 
+--Qa0ccP92Gc0Ko3P8--
