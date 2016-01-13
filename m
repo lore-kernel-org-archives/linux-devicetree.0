@@ -1,226 +1,143 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v1 2/5] mtd: atmel_nand: Support variable RB_EDGE
- interrupts
-Date: Wed, 13 Jan 2016 19:14:09 +0100
-Message-ID: <20160113191409.5cd0dc82@bbrezillon>
-References: <1452702857-2240-1-git-send-email-romain.izard.pro@gmail.com>
-	<1452702857-2240-3-git-send-email-romain.izard.pro@gmail.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and charging
+ of backup battery
+Date: Wed, 13 Jan 2016 12:18:06 -0600
+Message-ID: <569694DE.5050709@ti.com>
+References: <CCB763BE-5D1F-4A53-BF9A-C12C08A6EFC4@goldelico.com>
+ <20160111202421.GA12777@atomide.com> <20160112000917.GC12777@atomide.com>
+ <417BBA32-A7DC-40CD-8A6B-EA910B1C9C13@goldelico.com>
+ <E4C8F6CA-37C1-406F-9804-46055253BED9@goldelico.com>
+ <001346CD-CF31-4FEF-B406-B89EEBDFA063@goldelico.com>
+ <56966558.1070608@ti.com> <569669C5.2070200@ti.com>
+ <20160113164856.GF12777@atomide.com> <5696896F.4090309@ti.com>
+ <20160113180006.GJ12777@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452702857-2240-3-git-send-email-romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160113180006.GJ12777@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Laxman Dewangan <ldewangan@nvidia.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek@goldelico.com>, =?UTF-8?Q?Gra=c5=bevydas_Ignotas?= <notasas@gmail.com>, Keerthy <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Romain,
-
-On Wed, 13 Jan 2016 17:34:14 +0100
-Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-
-> The NFC controller used to accelerate the NAND transfers on SAMA5 chips
-> can use either RB_EDGE0 or RB_EDGE3 as its ready/busy interrupt bit.
+On 01/13/2016 12:00 PM, Tony Lindgren wrote:
+> * Nishanth Menon <nm@ti.com> [160113 09:30]:
+>> On 01/13/2016 10:48 AM, Tony Lindgren wrote:
+>>>
+>>> So if we start changing things to GPIO mode, we really need some
+>>> further explanations and neeed to handle the GPIO pin properly in
+>>> the TWL driver. And it should be done in a separate patch for all
+>>> of the TWL SoCs.
+>>
+>> That does not make sense to me. The original intent of MSECURE is to use
+>> PMIC control (in specific certain usecases - which are no longer
+>> relevant) in trustzone or equivalent secure processor modes. when such a
+>> mode is not planned on being used, you just tell PMIC that it is always
+>> in secure mode. In fact, there was discussion internally that MSECURE
+>> should never even have been connected to SoC if the SoC was GP SoC - but
+>> ofcourse, the want to have a consistent reference schematics for evms
+>> (since EVMs have HS/Non-HS parts) trumped such talk.
+>>
+>> trying to split this up into further steps adds 0 additional
+>> functionality - what is the pmic driver supposed to do with the GPIO even?
+>>
+>> in *real* HS product devices, in fact, the register space is really
+>> firewalled out
 > 
-> Use the controller's compatible string to select the correct bit.
+> Right, OK here we are finally getting some answers to the "why" part :)
 > 
-> Signed-off-by: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Reviewed-by: Wenyou Yang <Wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/mtd/atmel-nand.txt         |  2 +-
->  drivers/mtd/nand/atmel_nand.c                      | 39 +++++++++++++++++-----
->  drivers/mtd/nand/atmel_nand_nfc.h                  |  5 ++-
->  3 files changed, 36 insertions(+), 10 deletions(-)
+> And I also have few more "why" question in mind. If this change from
+> msecure to GPIO muxing is so important.
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> index 7d4c8eb775a5..89b0db9801b0 100644
-> --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> @@ -34,7 +34,7 @@ Optional properties:
->  - nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
->  - Nand Flash Controller(NFC) is a slave driver under Atmel nand flash
->    - Required properties:
-> -    - compatible : "atmel,sama5d3-nfc".
-> +    - compatible : "atmel,sama5d3-nfc" or "atmel,sama5d4-nfc".
->      - reg : should specify the address and size used for NFC command registers,
->              NFC registers and NFC Sram. NFC Sram address and size can be absent
->              if don't want to use it.
-> diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
-> index 9d71f9e6a8de..e5d7e7e63f49 100644
-> --- a/drivers/mtd/nand/atmel_nand.c
-> +++ b/drivers/mtd/nand/atmel_nand.c
-> @@ -67,6 +67,10 @@ struct atmel_nand_caps {
->  	bool pmecc_correct_erase_page;
->  };
->  
-> +struct atmel_nand_nfc_priv {
+> Why it was never fixed in the mainline kernel for omap4 and omap5 and
+> it was just sitting in various TI trees?
+> 
+> And it sounds like any kind of muxing on HS devices here for this
+> pin will oops the device?
+> 
 
-Can you rename this struct into atmel_nfc_caps to be consistant with the
-atmel_nand_caps?
+It depends on what the secure firewall does - unfortunately HS devices
+are basically lego blocks that way. In the original usecase where
+specific function like MSECURE was desired, the 4k chunk for padconf
+registers would be firewalled away and only setup for access from
+trustzone or a specific "trusted" processor like IPU M3/DSP.
 
-> +	uint32_t rb_edge;
+>> The last TI product kernel tree that seriously focussed on OMAP5/OMAP4
+>> was
+>> http://git.omapzoom.org/?p=kernel/omap.git;a=shortlog;h=refs/heads/p-linux-omap-3.4
+>> things changed definitions (in terms of descope) since then.. but
+>> anyways.. thought I'd just pitch it out here.
+>>
+>> sevm: - this board got scrapped
+>> http://git.omapzoom.org/?p=kernel/omap.git;a=blob;f=arch/arm/mach-omap2/board-omap5evm.c;h=bd8d71d75cc3da921856bb2004230e4cd6505328;hb=refs/heads/p-linux-omap-3.4#l1097
+>>
+>> omap5-panda is the omap5uevm/evm now:
+>> http://git.omapzoom.org/?p=kernel/omap.git;a=blob;f=arch/arm/mach-omap2/board-omap5panda.c;h=6113bc0e04625a1bd794b3f169581c67ad3b42ff;hb=refs/heads/p-linux-omap-3.4#l816
+> 
+> OK
+> 
+>>> I don't have anything against adding GPIO handling to the TWL driver
+>>> so it can be optionally specified. But that's clearly a separate patch
+>>
+>> TWL/TPS driver will need no change in the proposal I made with "gpio
+>> hog" mechanism (Documentation/devicetree/bindings/gpio/gpio.txt -
+>> gpio-hog property) - just a dt change for the right configuration.
+> 
+> OK. So are we sure the TWL driver will never have to toggle this pin?
+> 
+> Again, that's another "why" that I have no clue about and that is not
+> documented anywhere.
+> 
 
-Actually, AFAIU, it's not encoding the type of edges, but the available
-native R/B lines (by native I mean the R/B lines directly connected to
-the NFC IP).
-I suggest renaming this field avail_rb_lines, and making it a bitfield
-(one bit per possible R/B line).
+It is not necessary for the functions we just described -MSECURE
+function by itself is not something to be controlled by "non secure"
+software (which is probably weird to us, but that is what security team
+folks call HLOS like Linux). I dont recollect any recent product that
+actually uses MSECURE the way we originally defined it. For the sake of
+debate, Lets take a theoretical case where such a function might be
+desired: in such a case, "non-secure" software should generate an SMC
+service call into secure world for "setting RTC time"; When ARM enters
+trustzone mode, MSECURE will be auto asserted by SoC. the secure
+firmware will then have an I2C driver that will send a RTC set time
+register access for the RTC time to be set.
 
-> +};
-> +
->  /* oob layout for large page size
->   * bad block info is on bytes 0 and 1
->   * the bytes have to be consecutives to avoid
-> @@ -111,6 +115,7 @@ struct atmel_nfc {
->  	/* Point to the sram bank which include readed data via NFC */
->  	void			*data_in_sram;
->  	bool			will_write_sram;
-> +	uint32_t		rb_edge;
 
-Replace this by
-	const struct atmel_nfc_caps *caps;
+In the above definition, we should not even have an TWL RTC driver,
+instead a custom TWL-SMC-RTC driver will need to be written that will
+access RTC on TWL/TPS over SMC calls to secure service. infact, if DSP
+was desired for the "secure access", then a DSP-RPROC-RTC driver will
+have to be written. The "generic definition" then became "MSECURE" and
+was envisaged to protect further stuff eventually beyond RTC(I dont
+recollect more than RTC unfortunately). In all such cases, you'd not use
+MSECURE in GPIO mode - that will just defeat it's original purpose.
+Instead you'd set it up as MSECURE in  secure boot software(even before
+HLOS starts), then firewall the region off from access by non-secure
+software, finally write a shim driver to send non-secure requests to the
+secure world - which will determine who of the actors can actually do
+which actions..
 
-so that next time you have a per-SoC particularity, you can just add it
-to your struct atmel_nfc_caps without adding new fields to atmel_nfc.
+As you already see it is ridiculously round about way of protecting RTC
+time.. but anyways, for what ever reason, that was mandatory function to
+support on certain product lines.
 
->  };
->  static struct atmel_nfc	nand_nfc;
->  
-> @@ -1675,9 +1680,9 @@ static irqreturn_t hsmc_interrupt(int irq, void *dev_id)
->  		nfc_writel(host->nfc->hsmc_regs, IDR, NFC_SR_XFR_DONE);
->  		ret = IRQ_HANDLED;
->  	}
-> -	if (pending & NFC_SR_RB_EDGE) {
-> +	if (pending & host->nfc->rb_edge) {
->  		complete(&host->nfc->comp_ready);
-> -		nfc_writel(host->nfc->hsmc_regs, IDR, NFC_SR_RB_EDGE);
-> +		nfc_writel(host->nfc->hsmc_regs, IDR, host->nfc->rb_edge);
 
-How about creating a macro that would generate the appropriate bitmask
-for you?
+I hope this helps.
 
-Something like
+>>> and should be done by somebody who knows more about the issue and has
+>>> a test case needing the GPIO logic for this pin.
+>>
+>> Since my explanation does not seem to suffice, alright - we can wait for
+>> the right person, then.
+> 
+> Sorry don't take it personally. I'm just trying to make sense of the
+> "why do we need to do this change?" part. Especially if I need to make
+> the change and write the commit log.
 
-#define NFC_SR_RB_EDGE_MASK(x)	((x) << 24)
-
->  		ret = IRQ_HANDLED;
->  	}
->  	if (pending & NFC_SR_CMD_DONE) {
-> @@ -1695,7 +1700,7 @@ static void nfc_prepare_interrupt(struct atmel_nand_host *host, u32 flag)
->  	if (flag & NFC_SR_XFR_DONE)
->  		init_completion(&host->nfc->comp_xfer_done);
->  
-> -	if (flag & NFC_SR_RB_EDGE)
-> +	if (flag & host->nfc->rb_edge)
->  		init_completion(&host->nfc->comp_ready);
->  
->  	if (flag & NFC_SR_CMD_DONE)
-> @@ -1713,7 +1718,7 @@ static int nfc_wait_interrupt(struct atmel_nand_host *host, u32 flag)
->  	if (flag & NFC_SR_XFR_DONE)
->  		comp[index++] = &host->nfc->comp_xfer_done;
->  
-> -	if (flag & NFC_SR_RB_EDGE)
-> +	if (flag & host->nfc->rb_edge)
->  		comp[index++] = &host->nfc->comp_ready;
->  
->  	if (flag & NFC_SR_CMD_DONE)
-> @@ -1781,7 +1786,7 @@ static int nfc_device_ready(struct mtd_info *mtd)
->  		dev_err(host->dev, "Lost the interrupt flags: 0x%08x\n",
->  				mask & status);
->  
-> -	return status & NFC_SR_RB_EDGE;
-> +	return status & host->nfc->rb_edge;
->  }
->  
->  static void nfc_select_chip(struct mtd_info *mtd, int chip)
-> @@ -1954,8 +1959,8 @@ static void nfc_nand_command(struct mtd_info *mtd, unsigned int command,
->  		}
->  		/* fall through */
->  	default:
-> -		nfc_prepare_interrupt(host, NFC_SR_RB_EDGE);
-> -		nfc_wait_interrupt(host, NFC_SR_RB_EDGE);
-> +		nfc_prepare_interrupt(host, host->nfc->rb_edge);
-> +		nfc_wait_interrupt(host, host->nfc->rb_edge);
->  	}
->  }
->  
-> @@ -2318,9 +2323,12 @@ static const struct of_device_id atmel_nand_dt_ids[] = {
->  
->  MODULE_DEVICE_TABLE(of, atmel_nand_dt_ids);
->  
-> +static const struct of_device_id atmel_nand_nfc_match[];
-> +
->  static int atmel_nand_nfc_probe(struct platform_device *pdev)
->  {
->  	struct atmel_nfc *nfc = &nand_nfc;
-> +	const struct atmel_nand_nfc_priv *priv;
->  	struct resource *nfc_cmd_regs, *nfc_hsmc_regs, *nfc_sram;
->  	int ret;
->  
-> @@ -2352,6 +2360,12 @@ static int atmel_nand_nfc_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> +	priv = of_match_device(atmel_nand_nfc_match, &pdev->dev)->data;
-> +	if (NULL == priv)
-> +		return -ENODEV;
-> +
-> +	nfc->rb_edge = priv->rb_edge;
-> +
->  	nfc_writel(nfc->hsmc_regs, IDR, 0xffffffff);
->  	nfc_readl(nfc->hsmc_regs, SR);	/* clear the NFC_SR */
->  
-> @@ -2380,8 +2394,17 @@ static int atmel_nand_nfc_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static struct atmel_nand_nfc_priv sama5d3_nfc_priv = {
-> +	.rb_edge = NFC_SR_RB_EDGE0,
-> +};
-> +
-> +static struct atmel_nand_nfc_priv sama5d4_nfc_priv = {
-> +	.rb_edge = NFC_SR_RB_EDGE3,
-> +};
-> +
->  static const struct of_device_id atmel_nand_nfc_match[] = {
-> -	{ .compatible = "atmel,sama5d3-nfc" },
-> +	{ .compatible = "atmel,sama5d3-nfc", .data = &sama5d3_nfc_priv },
-> +	{ .compatible = "atmel,sama5d4-nfc", .data = &sama5d4_nfc_priv },
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, atmel_nand_nfc_match);
-> diff --git a/drivers/mtd/nand/atmel_nand_nfc.h b/drivers/mtd/nand/atmel_nand_nfc.h
-> index 4d5d26221a7e..2cd9c57b1e53 100644
-> --- a/drivers/mtd/nand/atmel_nand_nfc.h
-> +++ b/drivers/mtd/nand/atmel_nand_nfc.h
-> @@ -42,7 +42,10 @@
->  #define		NFC_SR_UNDEF		(1 << 21)
->  #define		NFC_SR_AWB		(1 << 22)
->  #define		NFC_SR_ASE		(1 << 23)
-> -#define		NFC_SR_RB_EDGE		(1 << 24)
-> +#define		NFC_SR_RB_EDGE0		(1 << 24)
-> +#define		NFC_SR_RB_EDGE1		(1 << 25)
-> +#define		NFC_SR_RB_EDGE2		(1 << 26)
-> +#define		NFC_SR_RB_EDGE3		(1 << 27)
-
-Please replace those 4 definitions by:
-
-#define			NFC_SR_RB_EDGE(x)	BIT(x + 24)
-
->  
->  #define ATMEL_HSMC_NFC_IER	0x0c
->  #define ATMEL_HSMC_NFC_IDR	0x10
-
-Best Regards,
-
-Boris
+Not a problem, just trying to share what I can given that not all
+thought process and background work that takes place inside TI is either
+"logical" or in many cases fails to reach public documentation :( .
 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Nishanth Menon
