@@ -1,41 +1,23 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH V2 2/6] mfd: max77620: add core driver for
- MAX77620/MAX20024
-Date: Wed, 13 Jan 2016 11:11:35 +0100
-Message-ID: <20160113101135.GI3367@piout.net>
-References: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com>
- <1452590273-16421-3-git-send-email-ldewangan@nvidia.com>
- <56959E9A.3060903@samsung.com>
- <5696122A.6000509@nvidia.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v1 3/3] ARM64 LPC: update binding doc
+Date: Wed, 13 Jan 2016 11:18:11 +0100
+Message-ID: <4304958.38AKuZJ4gb@wuerfel>
+References: <568912EE.9030009@huawei.com> <4731036.9QlepWb5cE@wuerfel> <20160113101028.GV13633@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5696122A.6000509@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, Chaitanya Bandi <bandik@nvidia.com>, Mallikarjun Kasoju <mkasoju@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160113101028.GV13633@e106497-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: liviu.dudau@arm.com
+Cc: Rongrong Zou <zourongrong@huawei.com>, Rongrong Zou <zourongrong@gmail.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Corey Minyard <minyard@acm.org>, gregkh@linuxfoundation.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linuxarm@huawei.com, benh@kernel.crashing.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 13/01/2016 at 14:30:26 +0530, Laxman Dewangan wrote :
-> In my 3rd patch, I tried to align it little more where is possible. But I
-> feel that all these indenting is more over individual choice. Example, I
-> added one more indent in below example to look better.
+On Wednesday 13 January 2016 10:10:28 liviu.dudau@arm.com wrote:
 > 
-> 
->         ret = max77620_reg_update(chip->dev, MAX77620_PWR_SLAVE,
-> -               MAX77620_REG_ONOFFCNFG2, MAX77620_ONOFFCNFG2_WK_EN0,
-> -               MAX77620_ONOFFCNFG2_WK_EN0);
-> +                       MAX77620_REG_ONOFFCNFG2, MAX77620_ONOFFCNFG2_WK_EN0,
-> +                       MAX77620_ONOFFCNFG2_WK_EN0);
-> 
-> 
+> OK, but from DT point of view and given the parent's #address-cells = <2> and #size-cells = <1>
+> should the reg not be something like reg = <0x1 0x0 0xe4 4> ?
 
-You should probably use checkpatch.pl --strict, it requires that you
-align on the open parenthesis.
+No: 2+1 = 3, not 4.
 
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+	Arnd
