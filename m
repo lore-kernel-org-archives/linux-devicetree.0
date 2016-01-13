@@ -1,14 +1,15 @@
-From: "Yang, Wenyou" <wenyou.yang@atmel.com>
-Subject: Re: [RFC PATCH 1/4] mtd: atmel_nand: Do not warn on bitflips
-Date: Wed, 13 Jan 2016 13:12:12 +0800
-Message-ID: <5695DCAC.3030306@atmel.com>
+From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
+Subject: RE: [RFC PATCH 1/4] mtd: atmel_nand: Do not warn on bitflips
+Date: Wed, 13 Jan 2016 05:14:25 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D63E9725@penmbx01>
 References: <1452609223-14790-1-git-send-email-romain.izard.pro@gmail.com>
  <1452609223-14790-2-git-send-email-romain.izard.pro@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
 In-Reply-To: <1452609223-14790-2-git-send-email-romain.izard.pro@gmail.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
  <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
@@ -18,55 +19,52 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
  <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
 Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Romain Izard <romain.izard.pro@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Josh Wu <josh.wu@atmel.com>, Nicolas Ferre <nicolas.ferre@atmel.com>
+To: Romain Izard <romain.izard.pro@gmail.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Romain,
-
-On 2016/1/12 22:33, Romain Izard wrote:
-> When using multi-bit ECC, it is normal for the NAND Flash driver to
-> correct bit errors during the life of the product. Those errors will
-> only be cleared once a threshold has been reached, and corrections can
-> occur regularly before this.
->
-> Use only dev_dbg and not dev_info to report the bitflips, to keep the
-> system log clean when everything works correctly.
->
-> Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
-
-Acked-by:  Wenyou Yang <wenyou.yang@atmel.com>
-
-> ---
->   drivers/mtd/nand/atmel_nand.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
-> index 46010bd895b1..9d71f9e6a8de 100644
-> --- a/drivers/mtd/nand/atmel_nand.c
-> +++ b/drivers/mtd/nand/atmel_nand.c
-> @@ -824,7 +824,7 @@ static void pmecc_correct_data(struct mtd_info *mtd, uint8_t *buf, uint8_t *ecc,
->   			*(buf + byte_pos) ^= (1 << bit_pos);
->   
->   			pos = sector_num * host->pmecc_sector_size + byte_pos;
-> -			dev_info(host->dev, "Bit flip in data area, byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
-> +			dev_dbg(host->dev, "Bit flip in data area, byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
->   				pos, bit_pos, err_byte, *(buf + byte_pos));
->   		} else {
->   			/* Bit flip in OOB area */
-> @@ -834,7 +834,7 @@ static void pmecc_correct_data(struct mtd_info *mtd, uint8_t *buf, uint8_t *ecc,
->   			ecc[tmp] ^= (1 << bit_pos);
->   
->   			pos = tmp + nand_chip->ecc.layout->eccpos[0];
-> -			dev_info(host->dev, "Bit flip in OOB, oob_byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
-> +			dev_dbg(host->dev, "Bit flip in OOB, oob_byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
->   				pos, bit_pos, err_byte, ecc[tmp]);
->   		}
->   
-
-Best Regards,
-Wenyou Yang
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgtbXRkIFttYWls
+dG86bGludXgtbXRkLWJvdW5jZXNAbGlzdHMuaW5mcmFkZWFkLm9yZ10gT24gQmVoYWxmIE9mDQo+
+IFJvbWFpbiBJemFyZA0KPiBTZW50OiAyMDE2xOox1MIxMsjVIDIyOjM0DQo+IFRvOiBsaW51eC1t
+dGRAbGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6
+IFd1LCBKb3NoIDxKb3NoLnd1QGF0bWVsLmNvbT47IFJvbWFpbiBJemFyZA0KPiA8cm9tYWluLml6
+YXJkLnByb0BnbWFpbC5jb20+OyBGZXJyZSwgTmljb2xhcyA8Tmljb2xhcy5GRVJSRUBhdG1lbC5j
+b20+DQo+IFN1YmplY3Q6IFtSRkMgUEFUQ0ggMS80XSBtdGQ6IGF0bWVsX25hbmQ6IERvIG5vdCB3
+YXJuIG9uIGJpdGZsaXBzDQo+IA0KPiBXaGVuIHVzaW5nIG11bHRpLWJpdCBFQ0MsIGl0IGlzIG5v
+cm1hbCBmb3IgdGhlIE5BTkQgRmxhc2ggZHJpdmVyIHRvIGNvcnJlY3QgYml0DQo+IGVycm9ycyBk
+dXJpbmcgdGhlIGxpZmUgb2YgdGhlIHByb2R1Y3QuIFRob3NlIGVycm9ycyB3aWxsIG9ubHkgYmUg
+Y2xlYXJlZCBvbmNlIGENCj4gdGhyZXNob2xkIGhhcyBiZWVuIHJlYWNoZWQsIGFuZCBjb3JyZWN0
+aW9ucyBjYW4gb2NjdXIgcmVndWxhcmx5IGJlZm9yZSB0aGlzLg0KPiANCj4gVXNlIG9ubHkgZGV2
+X2RiZyBhbmQgbm90IGRldl9pbmZvIHRvIHJlcG9ydCB0aGUgYml0ZmxpcHMsIHRvIGtlZXAgdGhl
+IHN5c3RlbSBsb2cNCj4gY2xlYW4gd2hlbiBldmVyeXRoaW5nIHdvcmtzIGNvcnJlY3RseS4NCj4g
+DQo+IFNpZ25lZC1vZmYtYnk6IFJvbWFpbiBJemFyZCA8cm9tYWluLml6YXJkLnByb0BnbWFpbC5j
+b20+DQoNCkFja2VkLWJ5IFdlbnlvdSBZYW5nIDx3ZW55b3UueWFuZ0BhdG1lbC5jb20+DQoNCj4g
+LS0tDQo+ICBkcml2ZXJzL210ZC9uYW5kL2F0bWVsX25hbmQuYyB8IDQgKystLQ0KPiAgMSBmaWxl
+IGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL210ZC9uYW5kL2F0bWVsX25hbmQuYyBiL2RyaXZlcnMvbXRkL25hbmQvYXRt
+ZWxfbmFuZC5jIGluZGV4DQo+IDQ2MDEwYmQ4OTViMS4uOWQ3MWY5ZTZhOGRlIDEwMDY0NA0KPiAt
+LS0gYS9kcml2ZXJzL210ZC9uYW5kL2F0bWVsX25hbmQuYw0KPiArKysgYi9kcml2ZXJzL210ZC9u
+YW5kL2F0bWVsX25hbmQuYw0KPiBAQCAtODI0LDcgKzgyNCw3IEBAIHN0YXRpYyB2b2lkIHBtZWNj
+X2NvcnJlY3RfZGF0YShzdHJ1Y3QgbXRkX2luZm8gKm10ZCwNCj4gdWludDhfdCAqYnVmLCB1aW50
+OF90ICplY2MsDQo+ICAJCQkqKGJ1ZiArIGJ5dGVfcG9zKSBePSAoMSA8PCBiaXRfcG9zKTsNCj4g
+DQo+ICAJCQlwb3MgPSBzZWN0b3JfbnVtICogaG9zdC0+cG1lY2Nfc2VjdG9yX3NpemUgKyBieXRl
+X3BvczsNCj4gLQkJCWRldl9pbmZvKGhvc3QtPmRldiwgIkJpdCBmbGlwIGluIGRhdGEgYXJlYSwg
+Ynl0ZV9wb3M6ICVkLA0KPiBiaXRfcG9zOiAlZCwgMHglMDJ4IC0+IDB4JTAyeFxuIiwNCj4gKwkJ
+CWRldl9kYmcoaG9zdC0+ZGV2LCAiQml0IGZsaXAgaW4gZGF0YSBhcmVhLCBieXRlX3BvczogJWQs
+DQo+IGJpdF9wb3M6DQo+ICslZCwgMHglMDJ4IC0+IDB4JTAyeFxuIiwNCj4gIAkJCQlwb3MsIGJp
+dF9wb3MsIGVycl9ieXRlLCAqKGJ1ZiArIGJ5dGVfcG9zKSk7DQo+ICAJCX0gZWxzZSB7DQo+ICAJ
+CQkvKiBCaXQgZmxpcCBpbiBPT0IgYXJlYSAqLw0KPiBAQCAtODM0LDcgKzgzNCw3IEBAIHN0YXRp
+YyB2b2lkIHBtZWNjX2NvcnJlY3RfZGF0YShzdHJ1Y3QgbXRkX2luZm8gKm10ZCwNCj4gdWludDhf
+dCAqYnVmLCB1aW50OF90ICplY2MsDQo+ICAJCQllY2NbdG1wXSBePSAoMSA8PCBiaXRfcG9zKTsN
+Cj4gDQo+ICAJCQlwb3MgPSB0bXAgKyBuYW5kX2NoaXAtPmVjYy5sYXlvdXQtPmVjY3Bvc1swXTsN
+Cj4gLQkJCWRldl9pbmZvKGhvc3QtPmRldiwgIkJpdCBmbGlwIGluIE9PQiwgb29iX2J5dGVfcG9z
+OiAlZCwNCj4gYml0X3BvczogJWQsIDB4JTAyeCAtPiAweCUwMnhcbiIsDQo+ICsJCQlkZXZfZGJn
+KGhvc3QtPmRldiwgIkJpdCBmbGlwIGluIE9PQiwgb29iX2J5dGVfcG9zOiAlZCwNCj4gYml0X3Bv
+czogJWQsDQo+ICsweCUwMnggLT4gMHglMDJ4XG4iLA0KPiAgCQkJCXBvcywgYml0X3BvcywgZXJy
+X2J5dGUsIGVjY1t0bXBdKTsNCj4gIAkJfQ0KPiANCj4gLS0NCj4gMi41LjANCj4gDQo+IA0KPiBf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4g
+TGludXggTVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0DQo+IGh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbXRkLw0KDQoNCkJlc3QgUmVnYXJkcywNCldl
+bnlvdSBZYW5nDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KTGludXggTVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
