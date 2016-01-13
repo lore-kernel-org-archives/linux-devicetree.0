@@ -1,105 +1,82 @@
-From: Caesar Wang <caesar.upstream@gmail.com>
-Subject: Re: [PATCH v2 0/4] add reboot mode driver
-Date: Wed, 13 Jan 2016 10:17:35 +0800
-Message-ID: <5695B3BF.4030505@gmail.com>
-References: <1452598029-8222-1-git-send-email-andy.yan@rock-chips.com>
+From: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v7 1/2] Documentation: bridge: Add documentation for ps8640 DT properties
+Date: Wed, 13 Jan 2016 10:18:13 +0800
+Message-ID: <1452651494-16806-1-git-send-email-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1452598029-8222-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andy Yan <andy.yan@rock-chips.com>, heiko@sntech.de, arnd@arndb.de, john.stultz@linaro.org
-Cc: mark.rutland@arm.com, geert+renesas@glider.be, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, lorenzo.pieralisi@arm.com, f.fainelli@gmail.com, linux@arm.linux.org.uk, dbaryshkov@gmail.com, cernekee@gmail.com, linux-rockchip@lists.infradead.org, linux@roeck-us.net, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, maxime.ripard@free-electrons.com, linux-arm-kernel@lists.infradead.org, moritz.fischer@ettus.com, linux-pm@vger.kernel.org, sre@kernel.org, galak@codeaurora.org, olof@lixom.net, jun.nie@linaro.org, dwmw2@infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, stonea168-9Onoh4P/yGk@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi ,
+Add documentation for DT properties supported by
+ps8640 DSI-eDP converter.
 
-=E5=9C=A8 2016=E5=B9=B401=E6=9C=8812=E6=97=A5 19:27, Andy Yan =E5=86=99=
-=E9=81=93:
-> This driver parse the reboot commands like "reboot loader"
-> and "reboot recovery" to get a boot mode described in the
-> device tree , then call the corresponding  write interface
-> to store the boot mode magic value in some persistent storage
-> like special register or ram , which can be read by the bootloader
-> after system reboot.
->
-> This is commonly used on Android based devices, which in order
-> to reboot the device into fastboot or recovery mode.
->
-> Before this patch , I have try some hack on[0], and then found
-> John Stultz also doing the same work[1].
->
-> As John is busy these days, I go on with this work.
->
-> [0]https://patchwork.kernel.org/patch/7647751/
-> [1]https://patchwork.kernel.org/patch/7802391/
->
-> Changes in v2:
-> - move to dir drivers/power/reset/
-> - make syscon-reboot-mode a generic driver
-> - make this DT node as a subnode of PMU/PMUGRF
->
-> Changes in v1:
-> - fix the embarrassed compile warning
-> - correct the maskrom magic number
-> - check for the normal reboot
-> - correct the maskrom magic number
-> - use macro defined in rockchip_boot-mode.h for reboot-mode DT node
->
-> Andy Yan (4):
->    dt-bindings: power: reset: add document for reboot-mode driver
->    power: reset: add reboot mode driver
->    ARM: dts: rockchip: add syscon-reboot-mode node
->    ARM64: dts: rockchip: add syscon-reboot-mode DT node
+Signed-off-by: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Reviewed-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+Change since v6:
+ - No change
+---
+ .../devicetree/bindings/display/bridge/ps8640.txt  |   43 ++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ps8640.txt
 
-This series patches are verified by my github based on kernel 4.4 relea=
-se.
-https://github.com/Caesar-github/rockchip/commits/kylin-develop4.4
-
-reboot loader, reboot recovery, reboot fastboot..... these are okay for=
-=20
-rk3288, rk3368. rk3036 Socs on my hand board.
-(Note: the loader need that jeffy send patches to support uboot on=20
-upstream,  that's also okay if you are using the RK loader from Rockchi=
-p)
-
-I just send the patch to support the rk3036 dts.=20
-<https://patchwork.kernel.org/patch/8021581/>
-
-So feel free add my test tags:
-
-Tested-by: Caesar Wang <wxt@rock-chips.com>
-
->
->   .../bindings/power/reset/reboot-mode.txt           |  41 +++++++++
->   .../bindings/power/reset/syscon-reboot-mode.txt    |  52 ++++++++++=
+diff --git a/Documentation/devicetree/bindings/display/bridge/ps8640.txt b/Documentation/devicetree/bindings/display/bridge/ps8640.txt
+new file mode 100644
+index 0000000..a3e0971
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/ps8640.txt
+@@ -0,0 +1,43 @@
++ps8640-bridge bindings
 +
->   arch/arm/boot/dts/rk3288.dtsi                      |  31 +++++++
->   arch/arm/boot/dts/rk3xxx.dtsi                      |  33 ++++++-
->   arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  33 ++++++-
->   drivers/power/reset/Kconfig                        |  16 ++++
->   drivers/power/reset/Makefile                       |   2 +
->   drivers/power/reset/reboot-mode.c                  | 100 ++++++++++=
-+++++++++++
->   drivers/power/reset/reboot-mode.h                  |   6 ++
->   drivers/power/reset/syscon-reboot-mode.c           |  62 ++++++++++=
-+++
->   include/dt-bindings/soc/rockchip_boot-mode.h       |  30 +++++++
->   11 files changed, 404 insertions(+), 2 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/power/reset/re=
-boot-mode.txt
->   create mode 100644 Documentation/devicetree/bindings/power/reset/sy=
-scon-reboot-mode.txt
->   create mode 100644 drivers/power/reset/reboot-mode.c
->   create mode 100644 drivers/power/reset/reboot-mode.h
->   create mode 100644 drivers/power/reset/syscon-reboot-mode.c
->   create mode 100644 include/dt-bindings/soc/rockchip_boot-mode.h
->
++Required properties:
++	- compatible: "parade,ps8640"
++	- reg: first page address of the bridge.
++	- sleep-gpios: OF device-tree gpio specification for PD_ pin.
++	- reset-gpios: OF device-tree gpio specification for reset pin.
++	- mode-sel-gpios: OF device-tree gpio specification for mode-sel pin.
++	- vdd12-supply: OF device-tree regulator specification for 1.2V power.
++	- vdd33-supply: OF device-tree regulator specification for 3.3V power.
++	- ports: The device node can contain video interface port nodes per
++		 the video-interfaces bind[1]. For port@0,set the reg = <0> as
++		 ps8640 dsi in and port@1,set the reg = <1> as ps8640 eDP out.
++
++[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
++
++Example:
++	edp-bridge@18 {
++		compatible = "parade,ps8640";
++		reg = <0x18>;
++		sleep-gpios = <&pio 116 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&pio 115 GPIO_ACTIVE_HIGH>;
++		mode-sel-gpios = <&pio 92 GPIO_ACTIVE_HIGH>;
++		vdd12-supply = <&ps8640_fixed_1v2>;
++		vdd33-supply = <&mt6397_vgp2_reg>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			port@0 {
++				reg = <0>;
++				ps8640_in: endpoint {
++					remote-endpoint = <&dsi0_out>;
++				};
++			};
++			port@1 {
++				reg = <1>;
++				ps8640_out: endpoint {
++					remote-endpoint = <&panel_in>;
++				};
++			};
++		};
++	};
+-- 
+1.7.9.5
 
-
---=20
-Thanks,
-Caesar
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
