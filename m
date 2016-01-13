@@ -1,115 +1,68 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt: bindings: add bindings for ipq4019 wifi block
-Date: Tue, 12 Jan 2016 20:23:06 -0600
-Message-ID: <CAL_JsqLH=Lr5UcgzFUr8AwVDXF8ahiyYfD2gfWng1zfhH21N5g@mail.gmail.com>
-References: <1450848915-9772-1-git-send-email-rmani@qti.qualcomm.com>
- <20151230163524.GA26810@rob-hp-laptop> <5684BFEF.8080302@qti.qualcomm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
+ Controller driver.
+Date: Tue, 12 Jan 2016 20:26:08 -0600
+Message-ID: <20160113022608.GA17483@rob-hp-laptop>
+References: <1452486886-8049-1-git-send-email-marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5684BFEF.8080302@qti.qualcomm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Raja Mani <rmani@qti.qualcomm.com>
-Cc: Andy Gross <agross@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ath10k@lists.infradead.org, linux-wireless@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, mmcclint@qca.qualcomm.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1452486886-8049-1-git-send-email-marex-ynQEQJNshbs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "R, Vignesh" <vigneshr-l0cyMroinI0@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 30, 2015 at 11:41 PM, Raja Mani <rmani@qti.qualcomm.com> wrote:
->
-> On Wednesday 30 December 2015 10:05 PM, Rob Herring wrote:
->>
->> On Wed, Dec 23, 2015 at 11:05:15AM +0530, Raja Mani wrote:
->>>
->>> Add device tree binding documentation details for wifi block present
->>> in Qualcomm IPQ4019 SoC into qcom,ath10k.txt.
->>>
->>> Signed-off-by: Raja Mani <rmani@qti.qualcomm.com>
->>> ---
->>>   .../bindings/net/wireless/qcom,ath10k.txt          | 87
->>> ++++++++++++++++++++--
->>>   1 file changed, 82 insertions(+), 5 deletions(-)
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->>> b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->>> index edefc26..ffd0742 100644
->>> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->>> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
->>> @@ -1,17 +1,42 @@
->>>   * Qualcomm Atheros ath10k wireless devices
->>>
->>> -For ath10k devices the calibration data can be provided through Device
->>> -Tree. The node is a child node of the PCI controller.
->>
->>
->> So it is now not a PCI device?
->
->
-> Right now, ath10k wireless driver has support for PCI devices. There is
-> a plan to extend ath10k driver to support wifi devices which are connected
-> over AHB as well (enumeration will happen via device tree node).
->
-> Qualcomm IPQ4019 SoC has two inbuilt wifi block which are connected over AHB
-> bus (not connected over PCI bus) and also has one external PCI
-> slot where we can connect standalone wifi PCI devices.
->
-> In future, ath10k would support both PCI and AHB. For PCI based
-> devices, only calibration data is supplied via device tree. For AHB
-> based devices (ie, ipq4019), all wifi properties are supplied
-> via device tree (including irq, reg addr, cal data,etc).
+On Mon, Jan 11, 2016 at 05:34:45AM +0100, Marek Vasut wrote:
+> From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> 
+> Add binding document for the Cadence QSPI controller.
+> 
+> Signed-off-by: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+> Cc: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> Cc: "R, Vignesh" <vigneshr-l0cyMroinI0@public.gmane.org>
+> Cc: Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  .../devicetree/bindings/mtd/cadence-quadspi.txt    | 56 ++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> 
+> V2: Add cdns prefix to driver-specific bindings.
+> V3: Use existing property "is-decoded-cs" instead of creating a
+>     duplicate, "ext-decoder". Timing parameters are in nanoseconds,
+>     not master reference clocks. Remove bus-num completely.
+> V4: Add new properties fifo-width and trigger-address
+> V7: - Prefix all of the Cadence-specific properties with cdns prefix,
+>       those are in particular "cdns,is-decoded-cs", "cdns,fifo-depth",
+>       "cdns,fifo-width", "cdns,trigger-address".
+>     - Drop bogus properties which were not used and were incorrect.
+> V8: Align lines to 80 chars.
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> new file mode 100644
+> index 0000000..f248056
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> @@ -0,0 +1,56 @@
+> +* Cadence Quad SPI controller
+> +
+> +Required properties:
+> +- compatible : Should be "cdns,qspi-nor".
 
-Put this information in the binding. It is not clear and you seem to
-be removing PCI information.
+Fine, but I expect to see SOCs using this block add their own compatible 
+strings. It wouldn't surprise me that we already have some using this 
+block.
 
->>> -
->>>   Required properties:
->>> --compatible : Should be "qcom,ath10k"
->>> +- compatible: Should be one of the following:
->>> +       * "qcom,ath10k"
->>> +       * "qcom,ipq4019-wifi"
->>
->>
->> One is a standalone PCI device and one is embedded block in an SOC?
->
->
-> Yes, it's possible to have this combination (one in SoC + one in
-> standalone PCI device in the same platform).
->
->> These should be more separated as all these new properties would only
->> apply in the latter case.
->
->
-> Sorry, i didn't get this point. I mentioned it under optional
-> properties. Whichever properties applies to particular wifi, only
-> those parameters are needed. For example, for PCI based devices,
-> only calibration data is needed, for AHB based devices most the
-> properties are needed.
->
-> Is it fine if add below text some thing like this ?
->
-> "only "qcom,ath10k-calibration-data" is applicable for PCI based
-> devices, rest of the members are applicable only for AHB based
-> devices"
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Yes, but you need to explain in terms of compatible strings. Which
-compatible strings correspond to PCI devices.
-
->>>   Optional properties:
->>> +- reg: Address and length of the register set for the device.
->>> +- core-id: Core number associated to the device.
->>
->>
->> This needs a better explanation.
->
->
-> Sure, Let me add below text in next version.
->
-> "core-id is numeric number associated to the wifi block.
->  For example, 0 means first block, 1 means second wifi block,etc."
-
-Are the blocks the same? If not, then use different compatible
-strings. Otherwise doesn't the reg property identify which block is
-which? Or some other property? Different freq bands? We generally
-don't allow indexes like this in the DT, so I need to understand how
-you use this.
-
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
