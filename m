@@ -1,72 +1,32 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 6/6] regulator: max77620: add regulator driver for
- max77620/max20024
-Date: Wed, 13 Jan 2016 14:20:23 +0000
-Message-ID: <20160113142023.GM6588@sirena.org.uk>
-References: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com>
- <1452590273-16421-7-git-send-email-ldewangan@nvidia.com>
- <5695A854.60108@samsung.com>
- <5696378B.6070704@nvidia.com>
- <20160113115736.GJ6588@sirena.org.uk>
- <56963D8D.9060908@nvidia.com>
- <20160113123133.GK6588@sirena.org.uk>
- <5696451F.3000707@nvidia.com>
- <20160113130909.GL6588@sirena.org.uk>
- <56964CEF.3030900@nvidia.com>
+From: Peter Korsgaard <peter@korsgaard.com>
+Subject: Re: [PATCH v2 1/2] regulator: act8945a: add regulator driver for ACT8945A
+Date: Wed, 13 Jan 2016 15:22:12 +0100
+Message-ID: <87oacp5zl7.fsf@dell.be.48ers.dk>
+References: <1452586629-1117-1-git-send-email-wenyou.yang@atmel.com>
+	<1452586629-1117-2-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="pU61X8j5lbVWa/m1"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56964CEF.3030900-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Mallikarjun Kasoju <mkasoju-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1452586629-1117-2-git-send-email-wenyou.yang@atmel.com> (Wenyou
+	Yang's message of "Tue, 12 Jan 2016 16:17:08 +0800")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wenyou Yang <wenyou.yang@atmel.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Javier Martinez Canillas <javier@dowhile0.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+>>>>> "Wenyou" == Wenyou Yang <wenyou.yang@atmel.com> writes:
 
---pU61X8j5lbVWa/m1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ > This patch adds new regulator driver to support ACT8945A MFD
+ > chip's regulators.
 
-On Wed, Jan 13, 2016 at 06:41:11PM +0530, Laxman Dewangan wrote:
-> On Wednesday 13 January 2016 06:39 PM, Mark Brown wrote:
+ > The ACT8945A has three step-down DC/DC converters and four
+ > low-dropout regulators.
 
-> >What is "it" and why can't we check what the current configuration is
-> >while setting FPS to NONE?
+ > Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
 
-> I will have platform specific data in callback of enable/disable only.
-> Which call back do I need to set this? enable/disable or post register?
+Isn't the regulator part of the act8945a identical to act8865? Can't we
+just use the existing act8865-regulator.c driver? (E.G. support 8865
+variant in the mfd driver, but only register the regulator sub device?)
 
-I'm sorry but I can't parse what you're saying here.
-
-> >>I need to set the FPS src properly for each rails before callback happen
-> >>from regulator init so that enable/disable/is_enable can handle it properly.
-
-> >Why not just reorder the callback so it happens before the constraints
-> >are applied?
-
-> which callback I need to reorder for getting the context for configruation?
-
-The existing call to parse the DT.
-
---pU61X8j5lbVWa/m1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWll0mAAoJECTWi3JdVIfQsukH/R+a9s1tTmf+1hQNVfXuJJ69
-62Zs2B+zrBEa5Cp+NcaeXbM6RJT4zjzjBsen0c+qV4ebDWPdIjNGJus1sCKgKxF1
-Uc5gU07Ht63Fved3Zp2RN19ZOKFih0PcoIZT/sN9eEpkFicoA45pEQhJuf8UDCry
-EbCQyxrE+Io0DJCWkE02bu1lAUI09XwvZiW9WUPIQOttgLyzWh5KSeG1Wnf14JZ1
-ETqIRllKLvcNOUdnIrXizckHC47hDKIeVT6FmcQrR92gXhLLiLH/cGU8oda2odnt
-M0JgviMMTTnLWJemVPa/hAPUzjuy26m5KBCEcmh61QvavUwIkbHHwivzU3BVGWY=
-=5Hxz
------END PGP SIGNATURE-----
-
---pU61X8j5lbVWa/m1--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Bye, Peter Korsgaard
