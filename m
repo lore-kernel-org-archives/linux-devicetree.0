@@ -1,69 +1,139 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v1 3/3] ARM64 LPC: update binding doc
-Date: Wed, 13 Jan 2016 10:26:54 +0100
-Message-ID: <4302652.ztAKMKjFNQ@wuerfel>
-References: <568912EE.9030009@huawei.com> <1452664413.2403.20.camel@kernel.crashing.org> <5695F007.3070005@gmail.com>
+From: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/2] phy: zynqmp: Add dt bindings for ZynqMP PHY.
+Date: Wed, 13 Jan 2016 14:52:23 +0530
+Message-ID: <1452676943-18931-1-git-send-email-sbhatta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5695F007.3070005-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rongrong Zou <zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, liviu.dudau-5wv7dgnIgG8@public.gmane.org, Rongrong Zou <zourongrong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: kishon-l0cyMroinI0@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 13 January 2016 14:34:47 Rongrong Zou wrote:
-> On 2016/1/13 13:53, Benjamin Herrenschmidt wrote:
-> > On Tue, 2016-01-12 at 23:52 +0100, Arnd Bergmann wrote:
-> >> On Tuesday 12 January 2016 15:13:35 liviu.dudau-5wv7dgnIgG8@public.gmane.org wrote:
-> >>>> int of_address_to_resource(struct device_node *dev, int index,
-> >>>>                            struct resource *r)
-> >>>> {
-> >>>>         ...
-> >>>>         /* flags can be get here, without ranges property reqired.
-> >>>>          * if the reg = <0x0 0xe4 4>, I can get flag of
-> >> IORESOURCE_MEM,
-> >>>>          * if the reg = <0x1 0xe4 4>, I can get flag of
-> >> IORESOURCE_IO,
-> >>>
-> >>> That is strange, the parent node has #address-cells = <2> so the
-> >> first two numbers should be part
-> >>> of the address and not influence the flags. Can you add some
-> >> debugging in of_get_address() and
-> >>> try to figure out what bus is used in  *flags = bus-
-> >>> get_flags(prop) ?
-> >>>
-> >>>
-> >>
-> >> This is the standard ISA binding. The first cell is the address space
-> >> (IO or MEM), the second cell is the address within that space. This
-> >> is similar to how PCI works.
-> >
-> > Picking up that mid-way, I have LPC busses on power and am using a
-> > similar binding. I'll try to grab some examples and review the
-> > document tomorrow (only just noticed it while unpiling emails post-
-> > vacation).
+This patch adds the document describing dt bindings for ZynqMP
+PHY. ZynqMP SOC has a High Speed Processing System Gigabit
+Transceiver which provides PHY capabilties to USB, SATA,
+PCIE, Display Port and Ehernet SGMII controllers.
 
-I really should have thought of that, as you mentioned already that
-there is an ast2400 on those machines, and no I/O space on the PCI
-bus.
+Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/phy/phy-zynqmp.txt         | 104 +++++++++++++++++++++
+ 1 file changed, 104 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-zynqmp.txt
 
-Too bad we have to keep the I/O workarounds alive on PowerPC now,
-I was already hoping they could go away after spider-pci gets phased
-out.
+diff --git a/Documentation/devicetree/bindings/phy/phy-zynqmp.txt b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+new file mode 100644
+index 0000000..ec0d3de
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+@@ -0,0 +1,104 @@
++Xilinx ZynqMP PHY binding
++
++This binding describes a ZynqMP PHY device that is used to control ZynqMP
++High Speed Gigabit Transceiver(GT). ZynqMP PS GTR provides four lanes
++and are used by USB, SATA, PCIE, Display port and Ethernet SGMMI controllers.
++
++Required properties (controller (parent) node):
++- compatible    : Should be "xlnx,zynqmp-psgtr"
++
++- reg		: Address and length of register sets for each device in
++		  "reg-names"
++- reg-names     : The names of the register addresses corresponding to the
++		  registers filled in "reg":
++			- serdes: SERDES block register set
++			- siou: SIOU block register set
++			- lpd: Low power domain peripherals reset control
++			- fpd: Full power domain peripherals reset control
++
++-xlnx,tx_termination_fix: Include fix for a functional issue in the GT. The TX
++			  termination resistance can be out of spec due to a
++			  bug in the calibration logic. This issue will be fixed
++			  in silicon in future versions.
++
++Required nodes	:  A sub-node is required for each lane the controller
++		   provides. These nodes are translated by the driver's
++		   .xlate() function.
++
++Required properties (port (child) nodes):
++lane0:
++- #phy-cells	: Should be 1
++		  Cell after port phandle is device type from:
++			- XPSGTR_TYPE_PCIE_0
++			- XPSGTR_TYPE_SATA_0
++			- XPSGTR_TYPE_USB0
++			- XPSGTR_TYPE_DP_1
++			- XPSGTR_TYPE_SGMII0
++lane1:
++- #phy-cells	: Should be 1
++		  Cell after port phandle is device type from:
++			- XPSGTR_TYPE_PCIE_1
++			- XPSGTR_TYPE_SATA_1
++			- XPSGTR_TYPE_USB0
++			- XPSGTR_TYPE_DP_0
++			- XPSGTR_TYPE_SGMII1
++lane2:
++- #phy-cells	: Should be 1
++		  Cell after port phandle is device type from:
++			- XPSGTR_TYPE_PCIE_2
++			- XPSGTR_TYPE_SATA_0
++			- XPSGTR_TYPE_USB0
++			- XPSGTR_TYPE_DP_1
++			- XPSGTR_TYPE_SGMII2
++lane3:
++- #phy-cells	: Should be 1
++		  Cell after port phandle is device type from:
++			- XPSGTR_TYPE_PCIE_3
++			- XPSGTR_TYPE_SATA_1
++			- XPSGTR_TYPE_USB1
++			- XPSGTR_TYPE_DP_0
++			- XPSGTR_TYPE_SGMII3
++
++Example:
++	zynqmp_phy@fd400000 {
++		compatible = "xlnx,zynqmp-psgtr";
++		status = "okay";
++		reg = <0x0 0xfd400000 0x40000>, <0x0 0xfd3d0000 0x1000>,
++			<0x0 0xfd1a0000 0x1000>, <0x0 0xff5e0000 0x1000>;
++		reg-names = "serdes", "siou", "fpd", "lpd";
++
++		lane0: lane@0 {
++			#phy-cells = <1>;
++		};
++		lane1: lane@1 {
++			#phy-cells = <1>;
++		};
++		lane2: lane@2 {
++			#phy-cells = <1>;
++		};
++		lane3: lane@3 {
++			#phy-cells = <1>;
++		};
++	};
++
++Specifying phy control of devices
++=================================
++
++Device nodes should specify the configuration required in their "phys"
++property, containing a phandle to the phy port node and a device type.
++
++Example:
++
++#include <dt-bindings/phy/phy.h>
++
++	usb@fe200000 {
++		...
++		phys	  = <&lane2 XPSGTR_TYPE_USB0>;
++		...
++	};
++
++	ahci@fd0c0000 {
++		...
++		phys	  = <&lane3 XPSGTR_TYPE_SATA_0>;
++		...
++	};
+-- 
+2.1.2
 
-> Thanks for reviewing this, I found a similar implementation at arch/powerpc/
-> platform/powernv/opal-lpc.c and I had get some ideas from your work. It is
-> nice to me. I'm expecting your suggestion.Thanks in advance.
-
-Unfortunately, the way that PCI host bridges on PowerPC are handled
-is a bit different from what we do on ARM64, otherwise the obvious
-solution would be to move the I/O workarounds to an architecture
-independent location. Maybe it's still possible, but that also requires
-some refactoring then.
-
-	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
