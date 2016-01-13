@@ -1,39 +1,66 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V2 6/6] regulator: max77620: add regulator driver for
- max77620/max20024
-Date: Wed, 13 Jan 2016 18:41:11 +0530
-Message-ID: <56964CEF.3030900@nvidia.com>
-References: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com> <1452590273-16421-7-git-send-email-ldewangan@nvidia.com> <5695A854.60108@samsung.com> <5696378B.6070704@nvidia.com> <20160113115736.GJ6588@sirena.org.uk> <56963D8D.9060908@nvidia.com> <20160113123133.GK6588@sirena.org.uk> <5696451F.3000707@nvidia.com> <20160113130909.GL6588@sirena.org.uk>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [v7,49/50] drivers/of: Export OF changeset functions
+Date: Wed, 13 Jan 2016 14:54:26 +0100
+Message-ID: <20160113135426.GA29030@katana>
+References: <1446642770-4681-50-git-send-email-gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160113130909.GL6588@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, Mallikarjun Kasoju <mkasoju@nvidia.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1446642770-4681-50-git-send-email-gwshan@linux.vnet.ibm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, aik@ozlabs.ru, linux-pci@vger.kernel.org, panto@antoniou-consulting.com, grant.likely@linaro.org, robherring2@gmail.com, bhelgaas@google.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
 
-On Wednesday 13 January 2016 06:39 PM, Mark Brown wrote:
-> * PGP Signed by an unknown key
->
-> On Wed, Jan 13, 2016 at 06:07:51PM +0530, Laxman Dewangan wrote:
->> On Wednesday 13 January 2016 06:01 PM, Mark Brown wrote:
->>> What is FPS_SRC and why is it set from init_data?  A driver should never
->>> be looking at init_data.
->> When FPS_SRC is set to NONE (this is needed from platform data) then based
->> on constraint like boot enable/always enable, it need to be on desired
->> state. Otherwise we may endup with disabling the rail when setting to NONE
->> and create issue.
-> What is "it" and why can't we check what the current configuration is
-> while setting FPS to NONE?
-I will have platform specific data in callback of enable/disable only.
-Which call back do I need to set this? enable/disable or post register?
+--M9NhX3UHpAaciwkO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> I need to set the FPS src properly for each rails before callback happen
->> from regulator init so that enable/disable/is_enable can handle it properly.
-> Why not just reorder the callback so it happens before the constraints
-> are applied?
->
-which callback I need to reorder for getting the context for configruation?
+On Thu, Nov 05, 2015 at 12:12:49AM +1100, Gavin Shan wrote:
+> The PowerNV PCI hotplug driver is going to use the OF changeset
+> to manage the changed device sub-tree. This exports those OF
+> changeset functions for that.
+>=20
+> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+
+I needed something like this, too [1] and rebased my series on top of
+this patch. So:
+
+Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+Thanks,
+
+   Wolfram
+
+[1] https://lkml.org/lkml/2016/1/6/385
+
+
+--M9NhX3UHpAaciwkO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWllcSAAoJEBQN5MwUoCm2rxoP/RfY0ZSyfXAqqmqLvmc5sXfh
+ldr1hK/rwAr/wuyfcDwE6Fqyt+HUNIP3g0B4p1FTJ6oJL0/6WpJb7SA2ytE3w/xP
+4ue9lFD+5g+KDvHnYm4I+ldiQj9E8I7vsgbcuiz+vZFwSRIhVMzJfziRZe2N48/X
+gsmz6313CGP8nekHEX5htpPSAswuhTzRL+0iPwX3TKK3gjasVMJo6Te3vK/4TjC0
+FNkm/2Vqea7Y4Ryucj7N3mbdeqT+DHB+x0MC1GtTYa3oXeN9zJuKoE7TanZXZkl7
+8g+Uw24YQFlZyz59YQBDkfKx4PYzVpIbcB8IpdwfeVwowOgz4hCOZP3c8zO9ivE0
+/8/QcV4ufPyDXO4nDoxxo6J8AGmCOGlCTpcNDGLOPyio/hcGjxCUm1QC5lt/+6/1
+IkhZL+rJ+nys0/H3AqPBdZi7BjtldEKan7+m7vw6ZS/fcO/haCB3+nM1I61WnA8V
+aBdFUKzXo/9gbyBNVr+A6QylLvxbn3WS0NtOOTayR3YGaqI0QUPcUslcf9snomT8
+UVAr0OMG1IxRkt4gTTQrm3gMG9CTos32fBZr83uo99cwG1FxLHsO5pf2SjlqpJ6B
+Og4eqS6qjYdWD960D+VoqAviSRpdPyL60OB8Flgv6sIiLi9FiN+Sxkio8OAvIIfu
+2JZQqGuwmr7Kcb9zlVzG
+=74ah
+-----END PGP SIGNATURE-----
+
+--M9NhX3UHpAaciwkO--
