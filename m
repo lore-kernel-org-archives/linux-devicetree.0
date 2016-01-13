@@ -1,57 +1,64 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 0/3] serial: earlycon: Add device-tree support for
- earlycon on Tegra
-Date: Wed, 13 Jan 2016 17:21:54 +0000
-Message-ID: <569687B2.9090609@nvidia.com>
-References: <1452594809-17972-1-git-send-email-jonathanh@nvidia.com>
- <20160113160340.GJ2588@ulmo>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] wlcore/wl12xx: spi: add wifi support to cm-t335
+Date: Wed, 13 Jan 2016 09:27:12 -0800
+Message-ID: <20160113172712.GI12777@atomide.com>
+References: <1451482533-8624-1-git-send-email-uri.mashiach@compulab.co.il>
+ <1451482533-8624-4-git-send-email-uri.mashiach@compulab.co.il>
+ <87io35lq2p.fsf@kamboji.qca.qualcomm.com>
+ <5695E802.7050909@compulab.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160113160340.GJ2588@ulmo>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5695E802.7050909-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Eliad Peller <eliad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 13/01/16 16:03, Thierry Reding wrote:
-> * PGP Signed by an unknown key
+* Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org> [160112 22:01]:
+> Hi Kalle Valo,
 > 
-> On Tue, Jan 12, 2016 at 10:33:26AM +0000, Jon Hunter wrote:
->> For Tegra the early console is support by passing the console information
->> via the boot parameter earlycon. This series allows us to use the
->> device-tree "stdout-path" property for early console (as well as the
->> console) on Tegra.
->>
->> Jon Hunter (3):
->>   serial: earlycon: Add device-tree support for other IO types
->>   serial: 8250_early: Add support for regshift
->>   serial: 8250_early: Add earlycon support for Tegra
->>
->>  drivers/of/fdt.c                     | 26 +++++++++++++++++++++++-
->>  drivers/tty/serial/8250/8250_early.c | 38 ++++++++++++++++++++++++++----------
->>  drivers/tty/serial/earlycon.c        |  6 ++++--
->>  include/linux/serial_core.h          |  3 ++-
->>  4 files changed, 59 insertions(+), 14 deletions(-)
+> On 01/07/16 11:02, Kalle Valo wrote:
+> > Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org> writes:
+> > 
+> >> Device tree modifications:
+> >> - Pinmux for SPI0 and WiFi GPIOs.
+> >> - SPI0 node with wlcore as a child node.
+> >>
+> >> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> >> Signed-off-by: Uri Mashiach <uri.mashiach-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+> >> ---
 > 
-> The series:
+> Uri, please document the dependencies next time. Thanks!
 > 
-> Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >> v1 -> v2: Replace interrupts and interrupt-parent with interrupts-extended.
+> >> v2 -> v3: Move the pinctrl-0 = <&wifi_pins> to the wlcore node.
+> >> v3 -> v4: replace interrupts-extended with interrupts and interrupt-parent. (revert v2 modification).
+> >>           According to Rob Herring and Documentation/devicetree/bindings/interrupt-controller/interrupts.txt,
+> >> 	  interrupts-extended should only be used when a device has multiple interrupt parents.
+> >>
+> >>  arch/arm/boot/dts/am335x-cm-t335.dts | 55 ++++++++++++++++++++++++++++++++++++
+> >>  1 file changed, 55 insertions(+)
+> > 
+> > To what tree should this patch go? My wireless-drivers-next tree doesn't
+> > even have this file.
+> 
+> Right. It will hit the mainline during this merge window through Tony's and
+> arm-soc trees.
+> 
+> Do you think it will be sensible if you take 1/3 and 2/3 patches and Tony
+> will take the 3/3 (there is no code dependency between first two and the last one),
+> or we can just wait till arm-soc hits the mainline, so you will have the
+> needed code?
 
-Thanks. However, Peter Hurley also has a series he just refreshed from
-early last year that includes similar changes to patches 1 and 2 [0]. So
-I will probably drop these and just re-post patch 3 once his series is
-merged.
+Yeah I'll pick the dts changes separately after the merge window as
+there is no dependency to the driver changes.
 
-> Jon, do you have plans on adding the stdout-path properties to existing
-> device tree files?
+Regards,
 
-I think that it would be a good idea and so I could include that in a
-series with patch #3.
-
-Cheers
-Jon
-
-[0] http://marc.info/?t=145262776100005&r=1&w=2
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
