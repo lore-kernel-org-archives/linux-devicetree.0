@@ -1,32 +1,142 @@
-From: Peter Korsgaard <peter@korsgaard.com>
-Subject: Re: [PATCH v2 1/2] regulator: act8945a: add regulator driver for ACT8945A
-Date: Wed, 13 Jan 2016 15:22:12 +0100
-Message-ID: <87oacp5zl7.fsf@dell.be.48ers.dk>
-References: <1452586629-1117-1-git-send-email-wenyou.yang@atmel.com>
-	<1452586629-1117-2-git-send-email-wenyou.yang@atmel.com>
+From: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 2/3] phy: zynqmp: Add dt bindings for ZynqMP PHY.
+Date: Wed, 13 Jan 2016 19:43:24 +0530
+Message-ID: <1452694404-1253-1-git-send-email-sbhatta@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452586629-1117-2-git-send-email-wenyou.yang@atmel.com> (Wenyou
-	Yang's message of "Tue, 12 Jan 2016 16:17:08 +0800")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wenyou Yang <wenyou.yang@atmel.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Javier Martinez Canillas <javier@dowhile0.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kishon-l0cyMroinI0@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
->>>>> "Wenyou" == Wenyou Yang <wenyou.yang@atmel.com> writes:
+This patch adds the document describing dt bindings for ZynqMP
+PHY. ZynqMP SOC has a High Speed Processing System Gigabit
+Transceiver which provides PHY capabilties to USB, SATA,
+PCIE, Display Port and Ehernet SGMII controllers.
 
- > This patch adds new regulator driver to support ACT8945A MFD
- > chip's regulators.
+Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+ v2:
+	modified to use phy cells as 2.
 
- > The ACT8945A has three step-down DC/DC converters and four
- > low-dropout regulators.
+ .../devicetree/bindings/phy/phy-zynqmp.txt         | 103 +++++++++++++++++++++
+ 1 file changed, 103 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-zynqmp.txt
 
- > Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
-
-Isn't the regulator part of the act8945a identical to act8865? Can't we
-just use the existing act8865-regulator.c driver? (E.G. support 8865
-variant in the mfd driver, but only register the regulator sub device?)
-
+diff --git a/Documentation/devicetree/bindings/phy/phy-zynqmp.txt b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+new file mode 100644
+index 0000000..975cf21
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+@@ -0,0 +1,103 @@
++Xilinx ZynqMP PHY binding
++
++This binding describes a ZynqMP PHY device that is used to control ZynqMP
++High Speed Gigabit Transceiver(GT). ZynqMP PS GTR provides four lanes
++and are used by USB, SATA, PCIE, Display port and Ethernet SGMMI controllers.
++
++Required properties (controller (parent) node):
++- compatible    : Should be "xlnx,zynqmp-psgtr"
++
++- reg		: Address and length of register sets for each device in
++		  "reg-names"
++- reg-names     : The names of the register addresses corresponding to the
++		  registers filled in "reg":
++			- serdes: SERDES block register set
++			- siou: SIOU block register set
++			- lpd: Low power domain peripherals reset control
++			- fpd: Full power domain peripherals reset control
++
++-xlnx,tx_termination_fix: Include fix for a functional issue in the GT. The TX
++			  termination resistance can be out of spec due to a
++			  bug in the calibration logic. This issue will be fixed
++			  in silicon in future versions.
++
++Required nodes	:  A sub-node is required for each lane the controller
++		   provides.
++
++Required properties (port (child) nodes):
++lane0:
++- #phy-cells	: Should be 2
++		  Cell after port phandle is device type from:
++			- <PHY_TYPE_PCIE 0>
++			- <PHY_TYPE_SATA 0>
++			- <PHY_TYPE_USB3 0>
++			- <PHY_TYPE_DP 1>
++			- <PHY_TYPE_SGMII 0>
++lane1:
++- #phy-cells	: Should be 2
++		  Cell after port phandle is device type from:
++			- <PHY_TYPE_PCIE 1>
++			- <PHY_TYPE_SATA 1>
++			- <PHY_TYPE_USB3 0>
++			- <PHY_TYPE_DP 0>
++			- <PHY_TYPE_SGMII 1>
++lane2:
++- #phy-cells	: Should be 2
++		  Cell after port phandle is device type from:
++			- <PHY_TYPE_PCIE 2>
++			- <PHY_TYPE_SATA 0>
++			- <PHY_TYPE_USB3 0>
++			- <PHY_TYPE_DP 1>
++			- <PHY_TYPE_SGMII 2>
++lane3:
++- #phy-cells	: Should be 2
++		  Cell after port phandle is device type from:
++			- <PHY_TYPE_PCIE 3>
++			- <PHY_TYPE_SATA 1>
++			- <PHY_TYPE_USB3 1>
++			- <PHY_TYPE_DP 0>
++			- <PHY_TYPE_SGMII 3>
++
++Example:
++	zynqmp_phy@fd400000 {
++		compatible = "xlnx,zynqmp-psgtr";
++		status = "okay";
++		reg = <0x0 0xfd400000 0x40000>, <0x0 0xfd3d0000 0x1000>,
++			<0x0 0xfd1a0000 0x1000>, <0x0 0xff5e0000 0x1000>;
++		reg-names = "serdes", "siou", "fpd", "lpd";
++
++		lane0: lane@0 {
++			#phy-cells = <2>;
++		};
++		lane1: lane@1 {
++			#phy-cells = <2>;
++		};
++		lane2: lane@2 {
++			#phy-cells = <2>;
++		};
++		lane3: lane@3 {
++			#phy-cells = <2>;
++		};
++	};
++
++Specifying phy control of devices
++=================================
++
++Device nodes should specify the configuration required in their "phys"
++property, containing a phandle to the phy port node and a device type.
++
++Example:
++
++#include <dt-bindings/phy/phy.h>
++
++	usb@fe200000 {
++		...
++		phys	  = <&lane2 PHY_TYPE_USB3 0>;
++		...
++	};
++
++	ahci@fd0c0000 {
++		...
++		phys	  = <&lane3 PHY_TYPE_SATA 1>;
++		...
++	};
 -- 
-Bye, Peter Korsgaard
+2.1.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
