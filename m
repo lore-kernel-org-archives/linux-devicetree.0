@@ -1,51 +1,91 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v12 0/18] Add Analogix Core Display Port Driver
-Date: Wed, 13 Jan 2016 15:59:51 +0100
-Message-ID: <2322926.s1viZ6tSS3@phil>
-References: <1450873538-18304-1-git-send-email-ykk@rock-chips.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V2 5/6] rtc: max77xxx: add RTC driver for Maxim MAX77xxx
+ series RTC IP
+Date: Wed, 13 Jan 2016 20:29:38 +0530
+Message-ID: <5696665A.5030508@nvidia.com>
+References: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com> <1452590273-16421-6-git-send-email-ldewangan@nvidia.com> <569594F0.4020007@samsung.com> <5695CD73.5010709@nvidia.com> <5695D268.3060705@samsung.com> <5695D1AF.9000806@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1450873538-18304-1-git-send-email-ykk@rock-chips.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-rockchip@lists.infradead.org, Jingoo Han <jingoohan1@gmail.com>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kishon Vijay Abraham I <kishon@ti.com>, javier@osg.samsung.com, Rob Herring <robh+dt@kernel.org>, Andy Yan <andy.yan@rock-chips.com>, Thierry Reding <treding@nvidia.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5695D1AF.9000806-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgWWFraXIsCgpBbSBNaXR0d29jaCwgMjMuIERlemVtYmVyIDIwMTUsIDIwOjI1OjM4IHNjaHJp
-ZWIgWWFraXIgWWFuZzoKPiAgICBUaGUgU2Ftc3VuZyBFeHlub3MgZURQIGNvbnRyb2xsZXIgYW5k
-IFJvY2tjaGlwIFJLMzI4OCBlRFAgY29udHJvbGxlcgo+IHNoYXJlIHRoZSBzYW1lIElQLCBzbyBh
-IGxvdCBvZiBwYXJ0cyBjYW4gYmUgcmUtdXNlZC4gSSBzcGxpdCB0aGUgY29tbW9uCj4gY29kZSBp
-bnRvIGJyaWRnZSBkaXJlY3RvcnksIHRoZW4gcmszMjg4IGFuZCBleHlub3Mgb25seSBuZWVkIHRv
-IGtlZXAKPiBzb21lIHBsYXRmb3JtIGNvZGUuIENhdXNlIEkgY2FuJ3QgZmluZCB0aGUgZXhhY3Qg
-SVAgbmFtZSBvZiBleHlub3MgZHAKPiBjb250cm9sbGVyLCBzbyBJIGRlY2lkZSB0byBuYW1lIGRw
-IGNvcmUgZHJpdmVyIHdpdGggImFuYWxvZ2l4IiB3aGljaCBJCj4gZmluZCBpbiByazMyODggZURQ
-IFRSTQoKY291bGQgeW91IHJlYmFzZSB5b3VyIHBhdGNoZXMgb24gdG9wIG9mIERhdmUncyBkcm0t
-bmV4dCBicmFuY2ggWzBdIHBsZWFzZT8KVGhlIGV4eW5vcyBwYXJ0IGdvdCBzb21lIGNvbnN0IGF0
-dHJpYnV0ZXMgZm9yIHRoZSAqX2Z1bmNfb3BzIHN0cnVjdHMgYW5kIApkcm1fZW5jb2Rlcl9pbml0
-IGdvdCBhbiBhZGRpdGlvbmFsIHBhcmFtZXRlci4KSSdtIHN0aWxsIGhvcGluZyB0aGF0IHdlIGNh
-biBnZXQgdGhpcyBmaW5hbGx5IGNvbW1pdHRlZCBvbmNlIDQuNS1yYzEgaXMgCnJlbGVhc2VkIGlu
-IDEuNSB3ZWVrcyA6LSkgLgoKSSBkaWQgdHJ5IHRvIG1lcmdlIHRoaW5ncyB0b2dldGhlciBbMV0s
-IHRoZSBzeXN0ZW0gYXQgbGVhc3QgY29tZXMgdXAgYW5kIApkZXRlY3RzIHRoZSBwYW5lbCAoRURJ
-RCBpcyByZWFkIGNvcnJlY3RseSBhbmQgaXQgdHVybnMgdGhlIGJhY2tsaWdodCBvbikgYnV0IApJ
-IGRvbid0IHNlZSBhbnkgb3V0cHV0IG9uIHRoZSBkaXNwbGF5IC0gaGRtaSB3b3JrcyBmaW5lIHRo
-b3VnaCBhbmQgWDExIGlzIApjbGFpbWluZyBldmVyeXRoaW5nIHRvIGJlIGZpbmUgaW4gYm90aCBj
-YXNlcy4KClNvIEkgZG9uJ3Qga25vdyB5ZXQgaWYgSSBtYWRlIGEgbWlzdGFrZSB3aGVuIHB1dHRp
-bmcgdGhpcyB0b2dldGhlciBvciB0aGVyZSAKaXMgYW4gaXNzdWUgb24gdGhlIGRyaXZlci1zaWRl
-LgoKClRoYW5rcwpIZWlrbwoKClswXSBodHRwOi8vY2dpdC5mcmVlZGVza3RvcC5vcmcvfmFpcmxp
-ZWQvbGludXgvbG9nLz9oPWRybS1uZXh0ClsxXSBodHRwczovL2dpdGh1Yi5jb20vbW1pbmQvbGlu
-dXgtcm9ja2NoaXAvdHJlZS90bXAvYW5hbG9naXhkcF92MTItdmV5cm9uCkkgbGVmdCBvdXQgcGF0
-Y2gxNiwgcGVyIHlvdXIgdGFsayB3aXRoIEppbmdvbyBhbmQgbWUgbm90IHNlZWluZyBhbnkgQVVY
-IENIIAplcnJvcnMgd2l0aG91dCBpdC4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+
+On Wednesday 13 January 2016 09:55 AM, Laxman Dewangan wrote:
+>
+> On Wednesday 13 January 2016 09:58 AM, Krzysztof Kozlowski wrote:
+>> On 13.01.2016 13:07, Laxman Dewangan wrote:
+>>> On Wednesday 13 January 2016 05:36 AM, Krzysztof Kozlowski wrote:
+>>
+>>> That is also fine to me but still I am not comfortable with the config
+>>> name and driver file name as this does not suggest the common.
+>> The name does not matter. Really. We have a lot of drivers with a
+>> specific device-like name and supporting different devices. To point
+>> that your argument is invalid - your initial name of driver
+>> "rtc-max77620.c" supported totally different "names": the max77620 and
+>> max20024. It also wasn't suggesting something "common"...
+> In all config string, I have mentioned the MAX20024.
+>
+>
+>> With my approach we are not developing common think neither. We just
+>> want to extend/re-use existing max77686 (or max77802) driver for new
+>> devices. Just like everywhere else.
+>
+> OK, fine to me if this is acceptable.
+> I will drop this rtc patch form this series and work in max77686 
+> driver to modify first and once merged, use this config on my defconfig.
+>
+
+Here, MAX686 RTC driver needs two regmap handle, one for the rtc_regmap 
+and other for STATUS2 register access.
+
+         ret = regmap_read(info->max77686->regmap, MAX77686_REG_STATUS2, 
+&val);
+         if (ret < 0) {
+                 dev_err(info->dev, "%s:%d fail to read status2 reg(%d)\n",
+                                 __func__, __LINE__, ret);
+                 goto out;
+         }
+
+
+We can not have two regmap handle on rtc driver as both regmap (pmic and 
+rtc) registered with different i2c device.
+
+Also this register should not be accessed by RTC driver if we want to 
+decouple as this is very much MAX77686 register set.
+Do we need this code?
+static int max77686_rtc_read_alarm(struct device *dev, struct rtc_wkalrm 
+*alrm)
+{
+         struct max77686_rtc_info *info = dev_get_drvdata(dev);
+         u8 data[RTC_NR_TIME];
+         unsigned int val;
+         int i, ret;
+
+::::::::
+        alrm->pending = 0;
+         ret = regmap_read(info->max77686->regmap, MAX77686_REG_STATUS2, 
+&val);
+         if (ret < 0) {
+                 dev_err(info->dev, "%s:%d fail to read status2 reg(%d)\n",
+                                 __func__, __LINE__, ret);
+                 goto out;
+         }
+
+         if (val & (1 << 4)) /* RTCA1 */
+                 alrm->pending = 1;
+
+}
+
+
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
