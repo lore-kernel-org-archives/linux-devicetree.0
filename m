@@ -1,67 +1,80 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 0/4] Mediatek MT2701 SCPSYS power domain support
-Date: Wed, 13 Jan 2016 17:11:24 +0800
-Message-ID: <1452676288-62711-1-git-send-email-jamesjj.liao@mediatek.com>
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: [PATCH v3 3/4] soc: mediatek: Add MT2701 power dt-bindings
+Date: Wed, 13 Jan 2016 17:11:27 +0800
+Message-ID: <1452676288-62711-4-git-send-email-jamesjj.liao@mediatek.com>
+References: <1452676288-62711-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1452676288-62711-1-git-send-email-jamesjj.liao@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <kernel@pengutronix.de>
+Cc: Kevin Hilman <khilman@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Rob Herring <robh@kernel.org>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Shunli Wang <shunli.wang@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset is based on v4.4-next/soc from Matthias [1], which is 4.4-rc1
-plus 2 patches. This patchset adds scpsys power domain support for
-Mediatek MT2701.
+From: Shunli Wang <shunli.wang@mediatek.com>
 
-This patchset also separate MT8173 scpsys driver into common part
-(mtk-scpsys.c) and platform part (mtk-scpsys-mt8173.c), so that MT2701
-scpsys driver can share most implementation with MT8173.
+Add power dt-bindings for MT2701.
 
-MT8173 and MT2701 scpsys init level are now subsys_init. Please refer to [2]
-to see discussion details.
-
-changes since v2:
-- Rebase to mbgg/linux-mediatek v4.4-next/soc [1].
-- Remove MTK_SCPSYS_MT8173 and MTK_SCPSYS_MT2701.
-- Modify scpsys dt-binding document to support MT2701.
-
-changes since v1:
-- Make MTK_SCPSYS in Kconfig invisible from users.
-- Add comments for changing scpsys init level to subsys_init.
-
-[1] https://github.com/mbgg/linux-mediatek/commits/v4.4-next/soc
-[2] http://lists.infradead.org/pipermail/linux-mediatek/2015-December/003416.html
-
-James Liao (2):
-  soc: mediatek: Separate scpsys driver common code
-  soc: mediatek: Init MT8173 scpsys driver earlier
-
-Shunli Wang (2):
-  soc: mediatek: Add MT2701 power dt-bindings
-  soc: mediatek: Add MT2701 scpsys driver
-
- .../devicetree/bindings/soc/mediatek/scpsys.txt    |   6 +-
- drivers/soc/mediatek/Makefile                      |   2 +
- drivers/soc/mediatek/mtk-scpsys-mt2701.c           | 170 ++++++++++++
- drivers/soc/mediatek/mtk-scpsys-mt8173.c           | 195 +++++++++++++
- drivers/soc/mediatek/mtk-scpsys.c                  | 307 ++++++---------------
- drivers/soc/mediatek/mtk-scpsys.h                  |  55 ++++
- include/dt-bindings/power/mt2701-power.h           |  27 ++
- 7 files changed, 531 insertions(+), 231 deletions(-)
- create mode 100644 drivers/soc/mediatek/mtk-scpsys-mt2701.c
- create mode 100644 drivers/soc/mediatek/mtk-scpsys-mt8173.c
- create mode 100644 drivers/soc/mediatek/mtk-scpsys.h
+Signed-off-by: Shunli Wang <shunli.wang@mediatek.com>
+Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+---
+ .../devicetree/bindings/soc/mediatek/scpsys.txt    |  6 +++--
+ include/dt-bindings/power/mt2701-power.h           | 27 ++++++++++++++++++++++
+ 2 files changed, 31 insertions(+), 2 deletions(-)
  create mode 100644 include/dt-bindings/power/mt2701-power.h
 
---
+diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+index a6c8afc..807d87f 100644
+--- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
++++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+@@ -9,10 +9,12 @@ domain control.
+ 
+ The driver implements the Generic PM domain bindings described in
+ power/power_domain.txt. It provides the power domains defined in
+-include/dt-bindings/power/mt8173-power.h.
++include/dt-bindings/power/mt8173-power.h and mt2701-power.h.
+ 
+ Required properties:
+-- compatible: Must be "mediatek,mt8173-scpsys"
++- compatible: Should be:
++	- "mediatek,mt8173-scpsys"
++	- "mediatek,mt2701-scpsys"
+ - #power-domain-cells: Must be 1
+ - reg: Address range of the SCPSYS unit
+ - infracfg: must contain a phandle to the infracfg controller
+diff --git a/include/dt-bindings/power/mt2701-power.h b/include/dt-bindings/power/mt2701-power.h
+new file mode 100644
+index 0000000..64cc826
+--- /dev/null
++++ b/include/dt-bindings/power/mt2701-power.h
+@@ -0,0 +1,27 @@
++/*
++ * Copyright (C) 2015 MediaTek Inc.
++ *
++ * This program is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef _DT_BINDINGS_POWER_MT2701_POWER_H
++#define _DT_BINDINGS_POWER_MT2701_POWER_H
++
++#define MT2701_POWER_DOMAIN_CONN	0
++#define MT2701_POWER_DOMAIN_DISP	1
++#define MT2701_POWER_DOMAIN_MFG		2
++#define MT2701_POWER_DOMAIN_VDEC	3
++#define MT2701_POWER_DOMAIN_ISP		4
++#define MT2701_POWER_DOMAIN_BDP		5
++#define MT2701_POWER_DOMAIN_ETH		6
++#define MT2701_POWER_DOMAIN_HIF		7
++#define MT2701_POWER_DOMAIN_IFR_MSC	8
++
++#endif /* _DT_BINDINGS_POWER_MT2701_POWER_H */
+-- 
 1.9.1
