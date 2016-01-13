@@ -1,141 +1,53 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and charging of backup battery
-Date: Wed, 13 Jan 2016 11:25:38 +0100
-Message-ID: <001346CD-CF31-4FEF-B406-B89EEBDFA063@goldelico.com>
-References: <8FE6954B-6411-4593-9CE5-717A469A6AA8@goldelico.com> <20160106164136.GI12777@atomide.com> <2AC46952-3758-458A-B0A5-1794C207BD4C@goldelico.com> <20160106170925.GK12777@atomide.com> <66F37918-EA7F-4D83-8B5F-A6B5C0CD7623@goldelico.com> <20160108181551.GX12777@atomide.com> <832803EE-E4CB-46B1-BF39-2DC0BB695A5D@goldelico.com> <20160108190457.GY12777@atomide.com> <CCB763BE-5D1F-4A53-BF9A-C12C08A6EFC4@goldelico.com> <20160111202421.GA12777@atomide.com> <20160112000917.GC12777@atomide.com> <417BBA32-A7DC-40CD-8A6B-EA910B1C9C13@goldelico.com> <E4C8F6CA-37C1-406F-9804-46055253BED9@goldelico.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <E4C8F6CA-37C1-406F-9804-46055253BED9@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, Nishanth Menon <nm@ti.com>, =?iso-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek@goldelico.com>, =?windows-1252?Q?Gra=9Evydas_Ignotas?= <notasas@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v1 3/3] ARM64 LPC: update binding doc
+Date: Wed, 13 Jan 2016 11:29:53 +0100
+Message-ID: <10121075.WaQr9PQ2xh@wuerfel>
+References: <1451396032-23708-1-git-send-email-zourongrong@gmail.com> <4052627.BRvFkUij6q@wuerfel> <20160113100911.GU13633@e106497-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160113100911.GU13633-2JSQmVVBSi7ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: liviu.dudau-5wv7dgnIgG8@public.gmane.org
+Cc: Rongrong Zou <zourongrong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rongrong Zou <zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
-
-Am 12.01.2016 um 22:27 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
-
-> Hi Tony,
+On Wednesday 13 January 2016 10:09:11 liviu.dudau-5wv7dgnIgG8@public.gmane.org wrote:
+> On Tue, Jan 12, 2016 at 11:54:59PM +0100, Arnd Bergmann wrote:
+> > On Tuesday 12 January 2016 10:14:18 liviu.dudau-5wv7dgnIgG8@public.gmane.org wrote:
+> > > 
+> > > OK, looking at of_translate_one() comments it looks like a missing "ranges" property is
+> > > only accepted on PowerPC. I suggest you have an empty "ranges" property in your isa
+> > > parent node, that will signal to the OF parsing code that the mapping is 1:1. Then have
+> > > the IPMI node use the reg = <0x0 0xe4 4>; property values instead of reg = <0x1 0xe4 4>;
+> > > 
+> > > 
+> > 
+> > A missing ranges property means that there is no translation, while an
+> > empty ranges means a 1:1 translation to the parent bus.
+> > 
+> > We really want the former here, as I/O port addresses are not mapped into
+> > the MMIO space of the parent bus.
 > 
-> Am 12.01.2016 um 14:30 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
-> 
->> Hi Tony,
->> 
->> Am 12.01.2016 um 01:09 schrieb Tony Lindgren <tony@atomide.com>:
->> 
->>> * Tony Lindgren <tony@atomide.com> [160111 12:27]:
->>>> 
->>>> OK so the issue is that the twl msecure pin should be high to enable
->>>> the RTC registers. We used to have that code with platform_data, but
->>>> no longer have it with device tree based booting. I'll send a patch
->>>> for that.
->>>> 
->>>> Curiously setting jumper j5 on beagle-x15 that controls what used to
->>>> be the msecure and now is powerhold, does the opposite.. The
->>>> device boots automatically but RTC is stopped?
->>> 
->>> And here's a fix the issue for omap5. Beagle-x15 needs to be
->>> investigated more.
->>> 
->>> Care to test it with your RTC enabling patch?
->> 
->> yes, I will test asap.
->> 
->> Reminds me on some issues we did have with msecure and twl4030 rtc some years ago.
-> 
-> Ok, works for me on OMAP5432EVM.
+> Agree. However of_translate_one()'s behaviour doesn't match our expectations and I have no
+> useful suggestions on what the right behaviour should be.
 
-Yes, it works, but I didn't look into the code yet.
+I believe of_get_address() already has the correct number (local to the
+ISA/LPC bus here), an we just need to teach __of_address_to_resource
+about ISA buses that have their own translation. We have the device
+node of the ISA bus here, so we just need to stop translating further
+using the ranges property and instead use the io_offset for that bus.
 
-> 
-> Thanks for spotting the issue.
-> 
->> 
->> BR,
->> Nikolaus
->> 
->>> 
->>> Regards,
->>> 
->>> Tony
->>> 
->>> 8< ---------------
->>> From: Tony Lindgren <tony@atomide.com>
->>> Date: Mon, 11 Jan 2016 14:35:24 -0800
->>> Subject: [PATCH] ARM: dts: Fix omap5 PMIC control lines for RTC writes
->>> 
->>> The palmas PMIC has some control lines that need to be muxed properly
->>> for things to work. The sys_nirq pin is used for interrupts, and msecure
->>> pin is used for enabling writes to some PMIC registers.
->>> 
->>> Without these pins configured properly things can fail in mysterious
->>> ways. For example, we can't update the RTC registers on palmas PMIC
->>> unless the msecure pin is configured. And this is probably the reason
->>> why we had RTC missing from the omap5 dts file.
->>> 
->>> According to "OMAP5430 ES2.0 Data Manual [Public] VErsion A (Rev. F)"
->>> swps052f.pdf, mux mode 1 is for sys_drm_msecure so there's no need to
->>> configure it as a GPIO pin.
->>> 
->>> Signed-off-by: Tony Lindgren <tony@atomide.com>
->>> 
->>> --- a/arch/arm/boot/dts/omap5-board-common.dtsi
->>> +++ b/arch/arm/boot/dts/omap5-board-common.dtsi
->>> @@ -213,6 +213,12 @@
->>> 		>;
->>> 	};
->>> 
->>> +	palmas_msecure_pins: palmas_msecure_pins {
->>> +		pinctrl-single,pins = <
->>> +			OMAP5_IOPAD(0x180, PIN_OUTPUT | MUX_MODE1) /* gpio8_234.sys_drm_msecure */
+In fact we can use the same method for both ISA and PCI buses, if
+we just remember which device node is the root for an I/O space
+and what its offset is relative to the Linux I/O space. Going all
+the way to a physical CPU address and then back to an I/O port number
+through pci_address_to_pio() is awkward anyway, but here it's wrong
+specifically because there is no physical address for it.
 
-I wonder now what MODE1 is.
-
-In my OMAP5 TRM (Version "Y" - may be too old) the MODE1 is tagged as "reserved".
-
-Maybe "reserved" happens to output a "1" on OMAP5 and a "0" on the X15?
-
-And as far as I am aware there is no "driver" for some MSECURE module (but I don't know the details of MSECURE control by software).
-
-This one
-
->>> 		OMAP5_IOPAD(0x180, PIN_INPUT _PULLUP | MUX_MODE6) /* gpio8_234 used for sys_drm_msecure */
-
-
-works for me on the OMAP5 EVM as well.
-
-BR,
-Nikolaus
-
->>> +		>;
->>> +	};
->>> +
->>> 	usbhost_pins: pinmux_usbhost_pins {
->>> 		pinctrl-single,pins = <
->>> 			0x84 (PIN_INPUT | MUX_MODE0) /* usbb2_hsic_strobe */
->>> @@ -278,6 +284,12 @@
->>> 			&usbhost_wkup_pins
->>> 	>;
->>> 
->>> +	palmas_sys_nirq_pins: pinmux_palmas_sys_nirq_pins {
->>> +		pinctrl-single,pins = <
->>> +			OMAP5_IOPAD(0x068, PIN_INPUT_PULLUP | MUX_MODE0) /* sys_nirq1 */
->>> +		>;
->>> +	};
->>> +
->>> 	usbhost_wkup_pins: pinmux_usbhost_wkup_pins {
->>> 		pinctrl-single,pins = <
->>> 			0x1A (PIN_OUTPUT | MUX_MODE0) /* fref_clk1_out, USB hub clk */
->>> @@ -345,6 +357,8 @@
->>> 		interrupt-controller;
->>> 		#interrupt-cells = <2>;
->>> 		ti,system-power-controller;
->>> +		pinctrl-names = "default";
->>> +		pinctrl-0 = <&palmas_sys_nirq_pins &palmas_msecure_pins>;
->>> 
->>> 		extcon_usb3: palmas_usb {
->>> 			compatible = "ti,palmas-usb-vid";
->> 
-> 
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
