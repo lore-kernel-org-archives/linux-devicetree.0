@@ -1,97 +1,205 @@
 From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 0/4] mtd: atmel_nand: Add support for NAND Flash on
- SAMA5D2
-Date: Wed, 13 Jan 2016 15:40:58 +0100
-Message-ID: <569661FA.6090904@atmel.com>
+Subject: Re: [RFC PATCH 4/4] ARM: at91/dt: sama5d2: add nand0 and nfc0 nodes
+Date: Wed, 13 Jan 2016 15:51:19 +0100
+Message-ID: <56966467.2070704@atmel.com>
 References: <1452609223-14790-1-git-send-email-romain.izard.pro@gmail.com>
- <56951F91.1090101@atmel.com>
- <CAGkQfmOmgiKwziQ+HuJTN1Qk1aHEXBWYcE1LT+XT2d-Xv7kxNw@mail.gmail.com>
- <56963918.7040809@atmel.com>
- <CAGkQfmNDZmKDJYMuVizbb-+3nXX2DAqDCOf8qE0DNR-3Y2Etcg@mail.gmail.com>
+ <1452609223-14790-5-git-send-email-romain.izard.pro@gmail.com>
+ <B256D81BAE5131468A838E5D7A243641D63E9755@penmbx01>
+ <CAGkQfmN3Ko0Pbyued0AGMPskqVUWStxO44Nj=k8O-+iWYObXMg@mail.gmail.com>
+ <B256D81BAE5131468A838E5D7A243641D63E9D62@penmbx01>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGkQfmNDZmKDJYMuVizbb-+3nXX2DAqDCOf8qE0DNR-3Y2Etcg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <B256D81BAE5131468A838E5D7A243641D63E9D62@penmbx01>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+To: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, romain izard <romain.izard-Tny/h2m1dROW3RwJEphJ61AUjnlXr6A1@public.gmane.org>
+Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 13/01/2016 13:56, Romain Izard a =C3=A9crit :
-> 2016-01-13 12:46 GMT+01:00 Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>:
->>> Ok. It might be a good idea to update the MAINTAINERS file, as Josh=
- Wu's
->>> atmel address now bounces, and it is still referenced there.
->>
->> It's already done and pushed to arm-soc. It's in linux-next:
->> http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree=
-/MAINTAINERS#n2000
->>
->> It will appear in Linus' tree in a couple of days ;-)
->>
-> Good. As I based my developments on the linux-4.1-at91 branch from th=
-e Linux4SAM
-> github which does not contain the update, I missed it.
+Le 13/01/2016 13:39, Yang, Wenyou a =C3=A9crit :
+> Hi Romain,
 >=20
->>>> I also think that Wenyou did some work regarding this support. So =
-you'll
->>>> have to coordinat together.
->>>
->>> Is it possible to know what are the developments in progress regard=
-ing
->>> SAMA5D2 drivers? The github repository does not expose any working =
-trees,
->>> and only the
->>
->> Which github repository are you talking about?
->>
->> The Linux4SAM github contains all that is need to work with sama5d2
->> (linux-4.1-at91 branch):
->> https://github.com/linux4sam/linux-at91/tree/linux-4.1-at91
+> Confirmed.=20
 >=20
-> That's the one. My point is that there is no hint in there that Wenyo=
-u worked
-> on supporting the NAND controller for SAMA5D2. So I wondered if there=
- were
-> other repositories I missed with more recent information.
+> You are right. The tables are accessible.
 
-Yes, that's very recent actually and we were testing internally just
-before releasing it.
-The reason is also that we didn't have a NAND flash on our reference
-platform which is the SAMA5D2 Xplained. So we had to wait for a new
-hardware from our colleagues of the HW team and bring it up before
-working on this NAND flash support (24 bits ECC and sama5d2 new
-modifications in fact).
+Yes, confirmed by my colleague who wrote the ROMCode. It's different
+from the sama5d4.
 
->> Developments in progress are listed in the Linux4SAM page:
->> http://www.at91.com/linux4sam/bin/view/Linux4SAM/Sama5d2XplainedMain=
-Page
->>
->> I admit that it's not copleted, but you'll have an idea here as well=
-:
->> http://www.at91.com/linux4sam/bin/view/Linux4SAM/Sama5d2XplainedMain=
-Page
+Gallois fields in ROM on sama5d2:
 
-Yes, I was meaning:
-http://www.at91.com/linux4sam/bin/view/Linux4SAM/LinuxKernel#Tags
+512 Bytes:  @ 0x40000 (32 KBytes)
+1024 Bytes: @ 0x48000 (96 KBytes)
 
-> Both URLs are the same, are you sure it's the correct link? It's a ve=
-ry
-> informative page and I often use it when I need information on the SA=
-MA5D2.
-> But I have a hard time finding something about work in progress in it=
-=2E
-
-Yes, we lack this kind of important information. It's scattered on some
-messages on the arm-linux-kernel mailing-list as we tend to publish
-pretty early in our work process (Cf. the new ADC driver by Ludovic). I
-don't promise but we will try to enhance this aspect in the near
-future... ;-)
-
-Thanks for your work and your feedback.
+even if the datasheet is not completely updated yet...
 
 Bye,
+
+
+> Please ignore my comments.
+>=20
+>=20
+> Best Regards,
+> Wenyou Yang
+>=20
+>> -----Original Message-----
+>> From: Yang, Wenyou
+>> Sent: 2016=E5=B9=B41=E6=9C=8813=E6=97=A5 19:29
+>> To: 'romain izard' <romain.izard-Tny/h2m1dROW3RwJEphJ61AUjnlXr6A1@public.gmane.org>
+>> Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Ferre=
+, Nicolas
+>> <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>> Subject: RE: [RFC PATCH 4/4] ARM: at91/dt: sama5d2: add nand0 and nf=
+c0
+>> nodes
+>>
+>> Hi Romain,
+>>
+>>> -----Original Message-----
+>>> From: romain izard [mailto:romain.izard-Tny/h2m1dROW3RwJEphJ61AUjnlXr6A1@public.gmane.org]
+>>> Sent: 2016=E5=B9=B41=E6=9C=8813=E6=97=A5 17:41
+>>> To: Yang, Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>>> Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Ferr=
+e,
+>>> Nicolas <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>>> Subject: Re: [RFC PATCH 4/4] ARM: at91/dt: sama5d2: add nand0 and n=
+fc0
+>>> nodes
+>>>
+>>> 2016-01-13 7:06 GMT+01:00 Yang, Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>:
+>>>>
+>>>>> -----Original Message-----
+>>>>> From: linux-mtd [mailto:linux-mtd-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org] On
+>>>>> Behalf Of Romain Izard
+>>>>> Sent: 2016=E5=B9=B41=E6=9C=8812=E6=97=A5 22:34
+>>>>> To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>>>> Cc: Wu, Josh <Josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>; Romain Izard
+>>>>> <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Ferre, Nicolas
+>>>>> <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>>>>> Subject: [RFC PATCH 4/4] ARM: at91/dt: sama5d2: add nand0 and nfc=
+0
+>>>>> nodes
+>>>>>
+>>>>> Both nodes are required to access NAND Flash memory. Additional
+>>>>> settings will be necessary at the board level to use it.
+>>>>>
+>>>>> Signed-off-by: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>> ---
+>>>>>  arch/arm/boot/dts/sama5d2.dtsi | 38
+>>>>> ++++++++++++++++++++++++++++++++++++++
+>>>>>  1 file changed, 38 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/arm/boot/dts/sama5d2.dtsi
+>>>>> b/arch/arm/boot/dts/sama5d2.dtsi index aee571448342..80420177ec1a
+>>>>> 100644
+>>>>> --- a/arch/arm/boot/dts/sama5d2.dtsi
+>>>>> +++ b/arch/arm/boot/dts/sama5d2.dtsi
+>>>>> @@ -265,6 +265,44 @@
+>>>>>                       cache-level =3D <2>;
+>>>>>               };
+>>>>>
+>>>>> +             nand0: nand@80000000 {
+>>>>> +                     compatible =3D "atmel,sama5d2-nand";
+>>>>> +                     #address-cells =3D <1>;
+>>>>> +                     #size-cells =3D <1>;
+>>>>> +                     ranges;
+>>>>> +                     reg =3D < /* EBI CS3 */
+>>>>> +                             0x80000000 0x08000000
+>>>>> +                             /* SMC PMECC regs */
+>>>>> +                             0xf8014070 0x00000490
+>>>>> +                             /* SMC PMECC Error Location regs */
+>>>>> +                             0xf8014500 0x00000200
+>>>>> +                             /* ROM Galois tables */
+>>>>> +                             0x00040000 0x00018000
+>>>>
+>>>> As there is no PMECC lookup table in ROM exported, remove this lin=
+e.
+>>>>
+>>>
+>>> From what I see in the SAMA5D2 xplained board on my table, it is no=
+t the case.
+>>> Reading at addresses 0x40000 and 0x48000 from U-Boot, I see data th=
+at
+>>> looks identical to the Galois tables in the Atmel example code.
+>>>
+>>> U-Boot> md.w 0x40000
+>>> 00040000: ffff 0000 0001 03a6 0002 074c 03a7 18c0
+>>> 00040010: 0003 1c66 074d 01ea 03a8 005d 18c1 0af2
+>>> 00040020: 0004 0e98 1c67 183e 074e 1181 01eb 0403
+>>> 00040030: 03a9 119c 005e 000d 18c2 0590 0af3 1877
+>>> 00040040: 0005 1c1d 0e99 191d 1c68 0d6f 183f 0936
+>>> 00040050: 074f 13d9 1182 1542 01ec 03b3 0404 1395
+>>> 00040060: 03aa 1aaa 119d 123e 005f 1be4 000e 0bda
+>>> 00040070: 18c3 07a9 0591 1d35 0af4 19ae 1878 1527
+>>>
+>>> U-Boot> md.w 0x48000
+>>> 00048000: ffff 0000 0001 0572 0002 0ae4 0573 015b
+>>> 00048010: 0003 06cd 0ae5 1ad9 0574 012e 015c 1056
+>>> 00048020: 0004 15c8 06ce 288d 0ae6 02b6 1ada 06a0
+>>> 00048030: 0575 2ed2 012f 0c3f 015d 204b 1057 3812
+>>> 00048040: 0005 3d84 15c9 0289 06cf 347d 288e 25bd
+>>> 00048050: 0ae7 10d1 02b7 3444 1adb 11b1 06a1 109c
+>>> 00048060: 0576 1c34 2ed3 1b3a 0130 2dff 0c40 2238
+>>> 00048070: 015e 0c12 204c 3d67 1058 3f47 3813 0828
+>>>
+>>>
+>>> This location matches the information in the SAMA5D2 datasheet from
+>>> chapter 6, "Memories", but not the contradicting information from
+>>> chapter 14, "Standard Boot Strategies".
+>>
+>> As I known, the Galois Field Table should not exported since SAMA5D4=
+, I will
+>> check with the system team.
+>>
+>>>
+>>>>> +                             >;
+>>>>> +                     interrupts =3D <17 IRQ_TYPE_LEVEL_HIGH 6>;
+>>>>> +                     atmel,nand-addr-offset =3D <21>;
+>>>>> +                     atmel,nand-cmd-offset =3D <22>;
+>>>>> +                     atmel,nand-has-dma;
+>>>>> +                     atmel,has-pmecc;
+>>>>> +                     atmel,pmecc-lookup-table-offset =3D <0x0
+>>>>> + 0x8000>;
+>>>>
+>>>> Ditto, remove this line.
+>>>>
+>>>>> +                     status =3D "disabled";
+>>>>> +
+>>>>> +                     nfc@90000000 {
+>>>>> +                             compatible =3D "atmel,sama5d4-nfc";
+>>>>> +                             #address-cells =3D <1>;
+>>>>> +                             #size-cells =3D <1>;
+>>>>> +                             reg =3D < /* NFC Command Registers =
+*/
+>>>>> +                                     0xC0000000 0x08000000
+>>>>> +                                     /* NFC HSMC regs */
+>>>>> +                                     0xf8014000 0x00000070
+>>>>> +                                     /* NFC SRAM banks */
+>>>>> +                                     0x00100000 0x00100000
+>>>>> +                                     >;
+>>>>> +                             clocks =3D <&hsmc_clk>;
+>>>>> +                             atmel,write-by-sram;
+>>>>> +                     };
+>>>>> +             };
+>>>>> +
+>>>>>               sdmmc0: sdio-host@a0000000 {
+>>>>>                       compatible =3D "atmel,sama5d2-sdhci";
+>>>>>                       reg =3D <0xa0000000 0x300>;
+>>>>> --
+>>>>> 2.5.0
+>>>>>
+>>>
+>>>
+>>> Best regards
+>>> --
+>>> Romain Izard
+>>
+>>
+>> Best Regards,
+>> Wenyou Yang
+
+
 --=20
 Nicolas Ferre
 --
