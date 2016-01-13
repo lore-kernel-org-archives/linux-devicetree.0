@@ -1,61 +1,108 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V2 6/6] regulator: max77620: add regulator driver for
- max77620/max20024
-Date: Wed, 13 Jan 2016 11:57:36 +0000
-Message-ID: <20160113115736.GJ6588@sirena.org.uk>
-References: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com>
- <1452590273-16421-7-git-send-email-ldewangan@nvidia.com>
- <5695A854.60108@samsung.com>
- <5696378B.6070704@nvidia.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 1/2] phy: zynqmp: Add dt bindings for ZynqMP PHY.
+Date: Wed, 13 Jan 2016 17:29:46 +0530
+Message-ID: <56963C32.8070909@ti.com>
+References: <1452676943-18931-1-git-send-email-sbhatta@xilinx.com>
+ <5696304A.8090508@ti.com>
+ <F1B223389110CE49B4CF055ABA2E5D3D78CDD5DB@XAP-PVEXMBX02.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="y23ShSVTng6i3e6h"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5696378B.6070704@nvidia.com>
+In-Reply-To: <F1B223389110CE49B4CF055ABA2E5D3D78CDD5DB@XAP-PVEXMBX02.xlnx.xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, Mallikarjun Kasoju <mkasoju@nvidia.com>
+To: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>, "robh@kernel.org" <robh@kernel.org>
+Cc: "balbi@ti.com" <balbi@ti.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---y23ShSVTng6i3e6h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Wed, Jan 13, 2016 at 05:09:55PM +0530, Laxman Dewangan wrote:
+On Wednesday 13 January 2016 05:19 PM, Subbaraya Sundeep Bhatta wrote:
+> Hi Kishon,
+> 
+>> -----Original Message-----
+>> From: Kishon Vijay Abraham I [mailto:kishon@ti.com]
+>> Sent: Wednesday, January 13, 2016 4:39 PM
+>> To: Subbaraya Sundeep Bhatta; robh@kernel.org
+>> Cc: balbi@ti.com; gregkh@linuxfoundation.org; devicetree@vger.kernel.org;
+>> linux-kernel@vger.kernel.org; Subbaraya Sundeep Bhatta
+>> Subject: Re: [PATCH 1/2] phy: zynqmp: Add dt bindings for ZynqMP PHY.
+>>
+>> Hi,
+>>
+>> On Wednesday 13 January 2016 02:52 PM, Subbaraya Sundeep Bhatta wrote:
+>>> This patch adds the document describing dt bindings for ZynqMP PHY.
+>>> ZynqMP SOC has a High Speed Processing System Gigabit Transceiver
+>>> which provides PHY capabilties to USB, SATA, PCIE, Display Port and
+>>> Ehernet SGMII controllers.
+>>>
+>>> Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
+>>> ---
+>>>  .../devicetree/bindings/phy/phy-zynqmp.txt         | 104
+>> +++++++++++++++++++++
+>>>  1 file changed, 104 insertions(+)
+>>>  create mode 100644
+>>> Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+>>> b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+>>> new file mode 100644
+>>> index 0000000..ec0d3de
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+>>> @@ -0,0 +1,104 @@
+>>> +Xilinx ZynqMP PHY binding
+>>> +
+>>> +This binding describes a ZynqMP PHY device that is used to control
+>>> +ZynqMP High Speed Gigabit Transceiver(GT). ZynqMP PS GTR provides
+>>> +four lanes and are used by USB, SATA, PCIE, Display port and Ethernet
+>> SGMMI controllers.
+>>> +
+>>> +Required properties (controller (parent) node):
+>>> +- compatible    : Should be "xlnx,zynqmp-psgtr"
+>>> +
+>>> +- reg		: Address and length of register sets for each device in
+>>> +		  "reg-names"
+>>> +- reg-names     : The names of the register addresses corresponding to the
+>>> +		  registers filled in "reg":
+>>> +			- serdes: SERDES block register set
+>>> +			- siou: SIOU block register set
+>>> +			- lpd: Low power domain peripherals reset control
+>>> +			- fpd: Full power domain peripherals reset control
+>>> +
+>>> +-xlnx,tx_termination_fix: Include fix for a functional issue in the GT. The TX
+>>> +			  termination resistance can be out of spec due to a
+>>> +			  bug in the calibration logic. This issue will be fixed
+>>> +			  in silicon in future versions.
+>>> +
+>>> +Required nodes	:  A sub-node is required for each lane the controller
+>>> +		   provides. These nodes are translated by the driver's
+>>> +		   .xlate() function.
+>>
+>> driver details need not be in the binding documentation.
+> 
+> Ok will remove this.
+>>> +
+>>> +Required properties (port (child) nodes):
+>>> +lane0:
+>>> +- #phy-cells	: Should be 1
+>>> +		  Cell after port phandle is device type from:
+>>> +			- XPSGTR_TYPE_PCIE_0
+>>> +			- XPSGTR_TYPE_SATA_0
+>>> +			- XPSGTR_TYPE_USB0
+>>> +			- XPSGTR_TYPE_DP_1
+>>> +			- XPSGTR_TYPE_SGMII0
+>>
+>> Why not use the already existing PHY TYPES?
+>> phy-cells can be made as '2' and the last cell can be used as index if that's
+>> required.
+> 
+> PCIE_0 means lane 0 of PCIe controller and USB0 is USB 0 controller
+> (there are two USB controllers). To differentiate I named like above.
+> phy-cells with 2 sounds good. Shall I add PHY_TYPE_SGMII to
+> include/dt-bindings/phy/phy.h and remove the phy-zynqmp.h ?
 
-> Yaah, this is something new and I think Mark also wanted to do this cleanup
-> on his comment. I did not understand it previously. Looks cool now.
+yes, so that it can be used by others too.
 
-I did, please don't just ignore review comments.
-
-> However, I have requirement to configure PMIC with some inital setting based
-> on init_data (parsed) before regulator registration happened. Once I move to
-> this new mecahinsm, the inti_data parsing and regulator init happen in the
-> same function. So I need to have one callback from regulator_register to
-> driver.
-> Something below. This will do the pre configuration before
-> regulator_register happena dn machine constraint sets.
-
-> I can not use the init_data->regulator_init() as I need to have the init
-> data passed to the driver.
-
-Why do you have this requirement?
-
---y23ShSVTng6i3e6h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWljuvAAoJECTWi3JdVIfQ8wgH/1cr0ePAjPu5Hqbfs3MHF++o
-yPxHIje7M4w3vA1WPCTVBAYrzy9HAM63VdMNph3w4K82TLArajbY+zzz3VRs9+/+
-QUAqyPrMEZ5+r/mg66MPwLVLfyoYvBmv0w93AP64Ik/9a8NmLN4usmzJIdfJAGl1
-wcYNQG/V2lTvRcJ/ypUZX3mEVQo34Sb+b5BkBU+ViugQ7jO87aAsvc3dGT0Srpsd
-iYujuh74ZJZp//936UEKBFj/5m0sG6w0cLZ/o2MVO8Uk1kRQWYJEvomcJte/yEZM
-oC0V65tUXqBWdKwVEVvQ6jGHzbwQkgTe38GElzbqR/Gbj03RjRkZJWrYSKOEMxY=
-=nZQW
------END PGP SIGNATURE-----
-
---y23ShSVTng6i3e6h--
+Thanks
+Kishon
