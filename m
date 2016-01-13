@@ -1,71 +1,62 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH V2 5/6] rtc: max77xxx: add RTC driver for Maxim MAX77xxx
- series RTC IP
-Date: Wed, 13 Jan 2016 09:06:08 +0900
-Message-ID: <569594F0.4020007@samsung.com>
-References: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com>
- <1452590273-16421-6-git-send-email-ldewangan@nvidia.com>
+From: Al Stone <al.stone@linaro.org>
+Subject: Re: [RFC 0/5] console/acpi: add DBG2 and SPCR console configuration
+Date: Tue, 12 Jan 2016 17:07:49 -0700
+Message-ID: <56959555.6090705@linaro.org>
+References: <1441716217-23786-1-git-send-email-leif.lindholm@linaro.org>
+ <56951841.4010101@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-reply-to: <1452590273-16421-6-git-send-email-ldewangan@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com
-Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <56951841.4010101@codeaurora.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Christopher Covington <cov@codeaurora.org>, Leif Lindholm <leif.lindholm@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, graeme.gregory@linaro.org
+Cc: mark.rutland@arm.com, linaro-acpi@lists.linaro.org, jcm@redhat.com, torez@redhat.com, lv.zheng@intel.com, Timur Tabi <timur@quicinc.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12.01.2016 18:17, Laxman Dewangan wrote:
-> Maxim Semiconductor's PMIC MAX77620, MAX77686, MAX20024 have
-> same RTC IP on these PMICs.
+On 01/12/2016 08:14 AM, Christopher Covington wrote:
+> Hi,
 > 
-> Add generic MAX77xxxx series RTC driver which can be used as
-> RTC driver for these PMIC and avoids duplication of RTC driver
-> for each PMICs. Their MFD driver can be different here.
+> On 09/08/2015 08:43 AM, Leif Lindholm wrote:
+>> Support for configuring bootconsole and console via the ACPI tables
+>> DBG2 (Debug Port Table 2) [1] and SPCR (Serial Port Console Redirection
+>> Table) [2], defined by Microsoft, has been discussed on and off over the
+>> years.
+>>
+>> [1] https://msdn.microsoft.com/en-us/library/windows/hardware/dn639131(v=vs.85).aspx
+>> [2] https://msdn.microsoft.com/en-us/library/windows/hardware/dn639132(v=vs.85).aspx
+>>
+>> Licensing concerns have prevented this happening in the past, but as of
+>> 10 August 2015, these tables have both been released also under OWF 1.0
+>> (http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0)
+>> which is think is noncontroversially GPL-compatible?
+>>
+>> This set is a first attempt at implementing this.
+>>
+>> Submitting as an RFC since the SPCR handling currently depends on the
+>> console driver being initialized after subsystem initcalls. Workaround
+>> to enable testing surrounding infrastructure in 5/5, _really_ not
+>> intended to be merged.
+>> (Suggestions for acceptable ways of working around this appreciated.)
 > 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> ---
-> Changes from V1: 
-> - Rename the file to rtc-max77xxx.c and make the generic implementation.
-> - Direct regmap apis are used for the register access.
-> - Decouped from max77620 driver.
-> - Taken care of cleanup comments form V1 version.
+> What's required for this to graduate from RFC status? Is anyone working
+> on it?
 > 
->  drivers/rtc/Kconfig        |  10 +
->  drivers/rtc/Makefile       |   1 +
->  drivers/rtc/rtc-max77xxx.c | 500 +++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 511 insertions(+)
->  create mode 100644 drivers/rtc/rtc-max77xxx.c
+> Thanks,
+> Christopher Covington
 > 
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> index 376322f..4972dd5 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -315,6 +315,16 @@ config RTC_DRV_MAX8997
->  	  This driver can also be built as a module. If so, the module
->  	  will be called rtc-max8997.
->  
-> +config RTC_DRV_MAX77XXX
-> +	tristate "Maxim MAX77XXX series generic RTC driver"
-> +	help
-> +	  If you say yes here you will get support for the generic RTC driver
-> +	  for Maxim Semiconductor MAX77XXX series of PMIC like MAX77620.
-> +	  This also supports the RTC driver for Maxim PMIC MaX20024 which
-> +	  is almost same as MAX77620.
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called rtc-max77xxx.
-> +
 
-That was not the consensus... You still added a new driver - but now
-with different name.
+Well, we have asked Aleksey Makarov <aleksy.makarov@linaro.org> to pick
+this task up from Leif within Linaro.  Perhaps drop him a line and see
+if the two of you can collaborate on this somehow?  I think it just needs
+nudging and a bit of TLC to get it past being an RFC.
 
-That is useless duplication
-
-Please work with existing code. Use existing maxim RTC drivers: either
-max77686 or max77802.
-
-There is no need for new one.
-
-Best regards,
-Krzysztof
-
+-- 
+ciao,
+al
+-----------------------------------
+Al Stone
+Software Engineer
+Linaro Enterprise Group
+al.stone@linaro.org
+-----------------------------------
