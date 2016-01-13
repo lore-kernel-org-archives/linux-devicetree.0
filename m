@@ -1,52 +1,56 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V3 1/1] input: gpio-keys: add support for disable button from DT
-Date: Wed, 13 Jan 2016 12:56:20 +0530
-Message-ID: <1452669980-16460-1-git-send-email-ldewangan@nvidia.com>
+From: Zhiqiang Hou <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] dts/spi: Change compatible to use right device name
+Date: Wed, 13 Jan 2016 15:54:46 +0800
+Message-ID: <1452671686-2693-1-git-send-email-Zhiqiang.Hou@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, dmitry.torokhov@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com
-Cc: galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linus.walleij@linaro.org, bjorn.andersson@sonymobile.com, Laxman Dewangan <ldewangan@nvidia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Hou Zhiqiang <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support to disable the button from DT via status property
-if given button is not supporting on given platforms.
+From: Hou Zhiqiang <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-This will help to re-use the existing dtsi file with status
-enable/disable across platforms.
+On the t208xrdb and t1040rdb, the SPI devices is n25q512ax3
+instead of n25q512a.
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
-Changes from V1: 
-- Converted print to dev_dbg.
-Changes from V2:
-- use of_get_available_child_count() and for_each_available_child_of_node()
+ arch/powerpc/boot/dts/fsl/t104xrdb.dtsi | 2 +-
+ arch/powerpc/boot/dts/fsl/t208xrdb.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
- drivers/input/keyboard/gpio_keys.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-index bef317f..ef6ca1c 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -613,7 +613,7 @@ gpio_keys_get_devtree_pdata(struct device *dev)
- 	if (!node)
- 		return ERR_PTR(-ENODEV);
- 
--	nbuttons = of_get_child_count(node);
-+	nbuttons = of_get_available_child_count(node);
- 	if (nbuttons == 0)
- 		return ERR_PTR(-ENODEV);
- 
-@@ -629,7 +629,7 @@ gpio_keys_get_devtree_pdata(struct device *dev)
- 	pdata->rep = !!of_get_property(node, "autorepeat", NULL);
- 
- 	i = 0;
--	for_each_child_of_node(node, pp) {
-+	for_each_available_child_of_node(node, pp) {
- 		enum of_gpio_flags flags;
- 
- 		button = &pdata->buttons[i++];
+diff --git a/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi b/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi
+index 830ea48..27758ff 100644
+--- a/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi
+@@ -103,7 +103,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "micron,n25q512a";
++				compatible = "micron,n25q512ax3";
+ 				reg = <0>;
+ 				spi-max-frequency = <10000000>; /* input clock */
+ 			};
+diff --git a/arch/powerpc/boot/dts/fsl/t208xrdb.dtsi b/arch/powerpc/boot/dts/fsl/t208xrdb.dtsi
+index 693d2a8..4a17150 100644
+--- a/arch/powerpc/boot/dts/fsl/t208xrdb.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t208xrdb.dtsi
+@@ -113,7 +113,7 @@
+ 			flash@0 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+-				compatible = "micron,n25q512a";
++				compatible = "micron,n25q512ax3";
+ 				reg = <0>;
+ 				spi-max-frequency = <10000000>; /* input clock */
+ 			};
 -- 
-2.1.4
+2.1.0.27.g96db324
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
