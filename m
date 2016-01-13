@@ -1,80 +1,55 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [v7,49/50] drivers/of: Export OF changeset functions
-Date: Wed, 13 Jan 2016 22:20:08 +0100
-Message-ID: <20160113212008.GC3881@katana>
-References: <1446642770-4681-50-git-send-email-gwshan@linux.vnet.ibm.com>
- <20160113135426.GA29030@katana>
- <1452719886.8203.1.camel@ellerman.id.au>
+From: Nishanth Menon <menon.nishanth@gmail.com>
+Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and charging
+ of backup battery
+Date: Wed, 13 Jan 2016 16:32:55 -0600
+Message-ID: <5696D097.3040208@gmail.com>
+References: <001346CD-CF31-4FEF-B406-B89EEBDFA063@goldelico.com>
+ <56966558.1070608@ti.com> <569669C5.2070200@ti.com>
+ <20160113164856.GF12777@atomide.com> <5696896F.4090309@ti.com>
+ <20160113180006.GJ12777@atomide.com>
+ <2B99611A-5D2E-4D17-A17D-0150516109FD@goldelico.com>
+ <56969800.5010206@ti.com>
+ <D6479E92-4226-4B07-95F3-C0DF092B827C@goldelico.com>
+ <5696A002.6050402@ti.com> <20160113194032.GL12777@atomide.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="TYecfFk8j8mZq+dy"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1452719886.8203.1.camel-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Cc: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, aik-sLpHqDYs0B2HXe+LvDLADg@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160113194032.GL12777@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>
+Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Laxman Dewangan <ldewangan@nvidia.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek@goldelico.com>, =?UTF-8?Q?Gra=c5=bevydas_Ignotas?= <notasas@gmail.com>, Keerthy <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+On 01/13/2016 01:40 PM, Tony Lindgren wrote:
 
---TYecfFk8j8mZq+dy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Anyways, considering what's been discussed, after the minimal RTC fix
+> we could also add code to allow the TWL driver optionally configure the
+> GPIO. This way the TWL driver could also check the GPIO state in case
+> some out-of-our-control mystery software goes tweak the msecure pin
+> state.
 
-On Thu, Jan 14, 2016 at 08:18:06AM +1100, Michael Ellerman wrote:
-> On Wed, 2016-01-13 at 14:54 +0100, Wolfram Sang wrote:
-> > On Thu, Nov 05, 2015 at 12:12:49AM +1100, Gavin Shan wrote:
-> > > The PowerNV PCI hotplug driver is going to use the OF changeset
-> > > to manage the changed device sub-tree. This exports those OF
-> > > changeset functions for that.
-> > >=20
-> > > Signed-off-by: Gavin Shan <gwshan-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >=20
-> > I needed something like this, too [1] and rebased my series on top of
-> > this patch. So:
-> >=20
-> > Acked-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
-> > Tested-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
->=20
-> OK. This series is kind of in limbo, it might hit 4.6, but it might not. =
-So if
-> you need this patch before then you should probably pull it in to your se=
-ries,
-> or ask Rob to merge it pre-emptively.
+I dont even know how that will work:
+If you are using MSECURE as it is intended to be, then you'd mux it to
+msecure, which means that GPIO read is just a waste of time - you dont
+even mux it to external world. Now, some SoCs like DRA7 has input lines
+always connected. even assuming this is for such a case:
+a) when you are running linux, you are already in nonsecure - it needs
+no read of MSECURE GPIO to figure that out.
+b)  when you are in secure world, Linux wont be running either.
 
-Yup, this is what I had in mind, too.
+Reading from GPIO is just misguided in my opinion. firewalls are not
+reconfigured, and muxes are usually done a single time.
 
-Thanks,
+ Or the RTC driver could just check that the bits really change
+> after= writing them. Then we would at least know things are not working
+> right for the TWL related RTC drivers.
 
-   Wolfram
+that is reasonable to check, but just a overhead - anyways, just
+isolated to palmas-rtc.. fail reason maynot always be issues with
+MSECURE mux.. it could be very well be 32k clk fail etc.. but yeah -
+that might give a hint that there is an issue..
 
-
---TYecfFk8j8mZq+dy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWlr+IAAoJEBQN5MwUoCm2CuwP/0+rRmIuLdyefG6ryBWXzONA
-/NEpjuUz+zugwMm+7K9Z6znKKqowMtYLZrLRbJhMlMta3bc5IZLgvz/sIIb/rRGS
-JI9uD19Gpxga1obMDCTxmrzPzZD68iC03i1W85PQ7F6+bzsl3Y8gAfNYF1Mirjhm
-Gy7aHfC5CkRqsCPDNHYp3c2bff7cFSyCpH8zHDytieSYU5q2wuekmpVbz4bb+D4E
-TJT93/bNhjHfBoxZ/5F8O9+LYI4xb6d+wFzBY0mkdiGXWJh4UecwyeDgdWVrsivc
-LpV25ASSxAFC0tsxUUoFXcsX/bGitbAUMCP3TtZ6OF0nFPIRPpFREcBHHAF62uMZ
-L20z50/j1bY6t/5UFN8CNWHdHRLvBhWr+aiAIWwSmHsdkFK57L1DGaxtyGXUeuxx
-kf3p76sSx8ri0lZkJ8sDHPJQEyY6W+TH4/uAiZiYo+DcWsCgQpGvzJiK7kpKV1Y2
-rDgZJmOcsqkxgZJKgrlBxmtEHbsC4SrIDHGSRsFGdd4SMddeyQKkLyd4fdId22Ma
-JM8kfm8RTXzktG8+BWh336Pg2vWgZrSBzj908pebls9kk70vhkHRJV6PyzfIMcvz
-wtx6w1NfRu5GfiL5F/xL7Z4Zrxh7NQOnvqGQ7MDz3GfYNmBMG/mbWk8mYkyrgxp4
-kSPyoNmmgEsqEJMUI1Ak
-=0neK
------END PGP SIGNATURE-----
-
---TYecfFk8j8mZq+dy--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Nishanth Menon
