@@ -1,75 +1,119 @@
-From: liviu.dudau@arm.com
-Subject: Re: [PATCH v1 3/3] ARM64 LPC: update binding doc
-Date: Wed, 13 Jan 2016 11:25:59 +0000
-Message-ID: <20160113112559.GX13633@e106497-lin.cambridge.arm.com>
-References: <1451396032-23708-1-git-send-email-zourongrong@gmail.com>
- <5694C6A4.8060308@huawei.com>
- <20160112101418.GO13633@e106497-lin.cambridge.arm.com>
- <4052627.BRvFkUij6q@wuerfel>
- <20160113100911.GU13633@e106497-lin.cambridge.arm.com>
- <56962FC2.1070101@gmail.com>
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [RFC PATCH 4/4] ARM: at91/dt: sama5d2: add nand0 and nfc0 nodes
+Date: Wed, 13 Jan 2016 11:33:41 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D63E9CE1@penmbx01>
+References: <1452609223-14790-1-git-send-email-romain.izard.pro@gmail.com>
+ <1452609223-14790-5-git-send-email-romain.izard.pro@gmail.com>
+ <B256D81BAE5131468A838E5D7A243641D63E9755@penmbx01>
+ <CAGkQfmN3Ko0Pbyued0AGMPskqVUWStxO44Nj=k8O-+iWYObXMg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56962FC2.1070101@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rongrong Zou <zourongrong@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Rongrong Zou <zourongrong@huawei.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Corey Minyard <minyard@acm.org>, gregkh@linuxfoundation.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linuxarm@huawei.com, benh@kernel.crashing.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGkQfmN3Ko0Pbyued0AGMPskqVUWStxO44Nj=k8O-+iWYObXMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: romain izard <romain.izard-Tny/h2m1dROW3RwJEphJ61AUjnlXr6A1@public.gmane.org>
+Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 13, 2016 at 07:06:42PM +0800, Rongrong Zou wrote:
-> On 2016/1/13 18:09, liviu.dudau@arm.com wrote:
-> >On Tue, Jan 12, 2016 at 11:54:59PM +0100, Arnd Bergmann wrote:
-> >>On Tuesday 12 January 2016 10:14:18 liviu.dudau@arm.com wrote:
-> >>>
-> >>>OK, looking at of_translate_one() comments it looks like a missing=
- "ranges" property is
-> >>>only accepted on PowerPC. I suggest you have an empty "ranges" pro=
-perty in your isa
-> >>>parent node, that will signal to the OF parsing code that the mapp=
-ing is 1:1. Then have
-> >>>the IPMI node use the reg =3D <0x0 0xe4 4>; property values instea=
-d of reg =3D <0x1 0xe4 4>;
-> >>>
-> >>>
-> >>
-> >>A missing ranges property means that there is no translation, while=
- an
-> >>empty ranges means a 1:1 translation to the parent bus.
-> >>
-> >>We really want the former here, as I/O port addresses are not mappe=
-d into
-> >>the MMIO space of the parent bus.
-> >
-> >Agree. However of_translate_one()'s behaviour doesn't match our expe=
-ctations and I have no
-> >useful suggestions on what the right behaviour should be.
-> >
->=20
-> I had tried to modify the drivers/of/address.c to address this proble=
-m, but it looks
-> not so general. I'm not sure you have seen this: https://lkml.org/lkm=
-l/2016/1/10/89 .
-
-Yes, I have seen it. Based on Arnd's suggestion, it is probably the way=
- to go.
-
-Best regards,
-Liviu
-
->=20
-> Regards,
-> Rongrong
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+SGkgUm9tYWluLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IHJvbWFp
+biBpemFyZCBbbWFpbHRvOnJvbWFpbi5pemFyZEBtb2JpbGUtZGV2aWNlcy5mcl0NCj4gU2VudDog
+MjAxNuW5tDHmnIgxM+aXpSAxNzo0MQ0KPiBUbzogWWFuZywgV2VueW91IDxXZW55b3UuWWFuZ0Bh
+dG1lbC5jb20+DQo+IENjOiBsaW51eC1tdGRAbGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJl
+ZUB2Z2VyLmtlcm5lbC5vcmc7IEZlcnJlLCBOaWNvbGFzDQo+IDxOaWNvbGFzLkZFUlJFQGF0bWVs
+LmNvbT4NCj4gU3ViamVjdDogUmU6IFtSRkMgUEFUQ0ggNC80XSBBUk06IGF0OTEvZHQ6IHNhbWE1
+ZDI6IGFkZCBuYW5kMCBhbmQgbmZjMA0KPiBub2Rlcw0KPiANCj4gMjAxNi0wMS0xMyA3OjA2IEdN
+VCswMTowMCBZYW5nLCBXZW55b3UgPFdlbnlvdS5ZYW5nQGF0bWVsLmNvbT46DQo+ID4NCj4gPj4g
+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4gRnJvbTogbGludXgtbXRkIFttYWlsdG86
+bGludXgtbXRkLWJvdW5jZXNAbGlzdHMuaW5mcmFkZWFkLm9yZ10gT24NCj4gPj4gQmVoYWxmIE9m
+IFJvbWFpbiBJemFyZA0KPiA+PiBTZW50OiAyMDE25bm0MeaciDEy5pelIDIyOjM0DQo+ID4+IFRv
+OiBsaW51eC1tdGRAbGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
+cmcNCj4gPj4gQ2M6IFd1LCBKb3NoIDxKb3NoLnd1QGF0bWVsLmNvbT47IFJvbWFpbiBJemFyZA0K
+PiA+PiA8cm9tYWluLml6YXJkLnByb0BnbWFpbC5jb20+OyBGZXJyZSwgTmljb2xhcw0KPiA+PiA8
+Tmljb2xhcy5GRVJSRUBhdG1lbC5jb20+DQo+ID4+IFN1YmplY3Q6IFtSRkMgUEFUQ0ggNC80XSBB
+Uk06IGF0OTEvZHQ6IHNhbWE1ZDI6IGFkZCBuYW5kMCBhbmQgbmZjMA0KPiA+PiBub2Rlcw0KPiA+
+Pg0KPiA+PiBCb3RoIG5vZGVzIGFyZSByZXF1aXJlZCB0byBhY2Nlc3MgTkFORCBGbGFzaCBtZW1v
+cnkuIEFkZGl0aW9uYWwNCj4gPj4gc2V0dGluZ3Mgd2lsbCBiZSBuZWNlc3NhcnkgYXQgdGhlIGJv
+YXJkIGxldmVsIHRvIHVzZSBpdC4NCj4gPj4NCj4gPj4gU2lnbmVkLW9mZi1ieTogUm9tYWluIEl6
+YXJkIDxyb21haW4uaXphcmQucHJvQGdtYWlsLmNvbT4NCj4gPj4gLS0tDQo+ID4+ICBhcmNoL2Fy
+bS9ib290L2R0cy9zYW1hNWQyLmR0c2kgfCAzOA0KPiA+PiArKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKw0KPiA+PiAgMSBmaWxlIGNoYW5nZWQsIDM4IGluc2VydGlvbnMoKykN
+Cj4gPj4NCj4gPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3NhbWE1ZDIuZHRzaQ0K
+PiA+PiBiL2FyY2gvYXJtL2Jvb3QvZHRzL3NhbWE1ZDIuZHRzaSBpbmRleCBhZWU1NzE0NDgzNDIu
+LjgwNDIwMTc3ZWMxYQ0KPiA+PiAxMDA2NDQNCj4gPj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMv
+c2FtYTVkMi5kdHNpDQo+ID4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3NhbWE1ZDIuZHRzaQ0K
+PiA+PiBAQCAtMjY1LDYgKzI2NSw0NCBAQA0KPiA+PiAgICAgICAgICAgICAgICAgICAgICAgY2Fj
+aGUtbGV2ZWwgPSA8Mj47DQo+ID4+ICAgICAgICAgICAgICAgfTsNCj4gPj4NCj4gPj4gKyAgICAg
+ICAgICAgICBuYW5kMDogbmFuZEA4MDAwMDAwMCB7DQo+ID4+ICsgICAgICAgICAgICAgICAgICAg
+ICBjb21wYXRpYmxlID0gImF0bWVsLHNhbWE1ZDItbmFuZCI7DQo+ID4+ICsgICAgICAgICAgICAg
+ICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPj4gKyAgICAgICAgICAgICAgICAgICAg
+ICNzaXplLWNlbGxzID0gPDE+Ow0KPiA+PiArICAgICAgICAgICAgICAgICAgICAgcmFuZ2VzOw0K
+PiA+PiArICAgICAgICAgICAgICAgICAgICAgcmVnID0gPCAvKiBFQkkgQ1MzICovDQo+ID4+ICsg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4ODAwMDAwMDAgMHgwODAwMDAwMA0KPiA+PiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAvKiBTTUMgUE1FQ0MgcmVncyAqLw0KPiA+PiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweGY4MDE0MDcwIDB4MDAwMDA0OTANCj4gPj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLyogU01DIFBNRUNDIEVycm9yIExvY2F0aW9u
+IHJlZ3MgKi8NCj4gPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHhmODAxNDUwMCAw
+eDAwMDAwMjAwDQo+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8qIFJPTSBHYWxv
+aXMgdGFibGVzICovDQo+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwNDAw
+MDAgMHgwMDAxODAwMA0KPiA+DQo+ID4gQXMgdGhlcmUgaXMgbm8gUE1FQ0MgbG9va3VwIHRhYmxl
+IGluIFJPTSBleHBvcnRlZCwgcmVtb3ZlIHRoaXMgbGluZS4NCj4gPg0KPiANCj4gRnJvbSB3aGF0
+IEkgc2VlIGluIHRoZSBTQU1BNUQyIHhwbGFpbmVkIGJvYXJkIG9uIG15IHRhYmxlLCBpdCBpcyBu
+b3QgdGhlIGNhc2UuDQo+IFJlYWRpbmcgYXQgYWRkcmVzc2VzIDB4NDAwMDAgYW5kIDB4NDgwMDAg
+ZnJvbSBVLUJvb3QsIEkgc2VlIGRhdGEgdGhhdCBsb29rcw0KPiBpZGVudGljYWwgdG8gdGhlIEdh
+bG9pcyB0YWJsZXMgaW4gdGhlIEF0bWVsIGV4YW1wbGUgY29kZS4NCj4gDQo+IFUtQm9vdD4gbWQu
+dyAweDQwMDAwDQo+IDAwMDQwMDAwOiBmZmZmIDAwMDAgMDAwMSAwM2E2IDAwMDIgMDc0YyAwM2E3
+IDE4YzANCj4gMDAwNDAwMTA6IDAwMDMgMWM2NiAwNzRkIDAxZWEgMDNhOCAwMDVkIDE4YzEgMGFm
+Mg0KPiAwMDA0MDAyMDogMDAwNCAwZTk4IDFjNjcgMTgzZSAwNzRlIDExODEgMDFlYiAwNDAzDQo+
+IDAwMDQwMDMwOiAwM2E5IDExOWMgMDA1ZSAwMDBkIDE4YzIgMDU5MCAwYWYzIDE4NzcNCj4gMDAw
+NDAwNDA6IDAwMDUgMWMxZCAwZTk5IDE5MWQgMWM2OCAwZDZmIDE4M2YgMDkzNg0KPiAwMDA0MDA1
+MDogMDc0ZiAxM2Q5IDExODIgMTU0MiAwMWVjIDAzYjMgMDQwNCAxMzk1DQo+IDAwMDQwMDYwOiAw
+M2FhIDFhYWEgMTE5ZCAxMjNlIDAwNWYgMWJlNCAwMDBlIDBiZGENCj4gMDAwNDAwNzA6IDE4YzMg
+MDdhOSAwNTkxIDFkMzUgMGFmNCAxOWFlIDE4NzggMTUyNw0KPiANCj4gVS1Cb290PiBtZC53IDB4
+NDgwMDANCj4gMDAwNDgwMDA6IGZmZmYgMDAwMCAwMDAxIDA1NzIgMDAwMiAwYWU0IDA1NzMgMDE1
+Yg0KPiAwMDA0ODAxMDogMDAwMyAwNmNkIDBhZTUgMWFkOSAwNTc0IDAxMmUgMDE1YyAxMDU2DQo+
+IDAwMDQ4MDIwOiAwMDA0IDE1YzggMDZjZSAyODhkIDBhZTYgMDJiNiAxYWRhIDA2YTANCj4gMDAw
+NDgwMzA6IDA1NzUgMmVkMiAwMTJmIDBjM2YgMDE1ZCAyMDRiIDEwNTcgMzgxMg0KPiAwMDA0ODA0
+MDogMDAwNSAzZDg0IDE1YzkgMDI4OSAwNmNmIDM0N2QgMjg4ZSAyNWJkDQo+IDAwMDQ4MDUwOiAw
+YWU3IDEwZDEgMDJiNyAzNDQ0IDFhZGIgMTFiMSAwNmExIDEwOWMNCj4gMDAwNDgwNjA6IDA1NzYg
+MWMzNCAyZWQzIDFiM2EgMDEzMCAyZGZmIDBjNDAgMjIzOA0KPiAwMDA0ODA3MDogMDE1ZSAwYzEy
+IDIwNGMgM2Q2NyAxMDU4IDNmNDcgMzgxMyAwODI4DQo+IA0KPiANCj4gVGhpcyBsb2NhdGlvbiBt
+YXRjaGVzIHRoZSBpbmZvcm1hdGlvbiBpbiB0aGUgU0FNQTVEMiBkYXRhc2hlZXQgZnJvbSBjaGFw
+dGVyIDYsDQo+ICJNZW1vcmllcyIsIGJ1dCBub3QgdGhlIGNvbnRyYWRpY3RpbmcgaW5mb3JtYXRp
+b24gZnJvbSBjaGFwdGVyIDE0LCAiU3RhbmRhcmQgQm9vdA0KPiBTdHJhdGVnaWVzIi4NCg0KQXMg
+SSBrbm93biwgdGhlIEdhbG9pcyBGaWVsZCBUYWJsZSBzaG91bGQgbm90IGV4cG9ydGVkIHNpbmNl
+IFNBTUE1RDQsIEkgd2lsbCBjaGVjayB3aXRoIHRoZSBzeXN0ZW0gdGVhbS4NCg0KPiANCj4gPj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPjsNCj4gPj4gKyAgICAgICAgICAgICAgICAg
+ICAgIGludGVycnVwdHMgPSA8MTcgSVJRX1RZUEVfTEVWRUxfSElHSCA2PjsNCj4gPj4gKyAgICAg
+ICAgICAgICAgICAgICAgIGF0bWVsLG5hbmQtYWRkci1vZmZzZXQgPSA8MjE+Ow0KPiA+PiArICAg
+ICAgICAgICAgICAgICAgICAgYXRtZWwsbmFuZC1jbWQtb2Zmc2V0ID0gPDIyPjsNCj4gPj4gKyAg
+ICAgICAgICAgICAgICAgICAgIGF0bWVsLG5hbmQtaGFzLWRtYTsNCj4gPj4gKyAgICAgICAgICAg
+ICAgICAgICAgIGF0bWVsLGhhcy1wbWVjYzsNCj4gPj4gKyAgICAgICAgICAgICAgICAgICAgIGF0
+bWVsLHBtZWNjLWxvb2t1cC10YWJsZS1vZmZzZXQgPSA8MHgwIDB4ODAwMD47DQo+ID4NCj4gPiBE
+aXR0bywgcmVtb3ZlIHRoaXMgbGluZS4NCj4gPg0KPiA+PiArICAgICAgICAgICAgICAgICAgICAg
+c3RhdHVzID0gImRpc2FibGVkIjsNCj4gPj4gKw0KPiA+PiArICAgICAgICAgICAgICAgICAgICAg
+bmZjQDkwMDAwMDAwIHsNCj4gPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0
+aWJsZSA9ICJhdG1lbCxzYW1hNWQ0LW5mYyI7DQo+ID4+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+PiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAjc2l6ZS1jZWxscyA9IDwxPjsNCj4gPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgcmVnID0gPCAvKiBORkMgQ29tbWFuZCBSZWdpc3RlcnMgKi8NCj4gPj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweEMwMDAwMDAwIDB4MDgwMDAwMDANCj4gPj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAvKiBORkMgSFNNQyByZWdzICov
+DQo+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHhmODAxNDAwMCAw
+eDAwMDAwMDcwDQo+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLyog
+TkZDIFNSQU0gYmFua3MgKi8NCj4gPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAweDAwMTAwMDAwIDB4MDAxMDAwMDANCj4gPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICA+Ow0KPiA+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9j
+a3MgPSA8JmhzbWNfY2xrPjsNCj4gPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXRt
+ZWwsd3JpdGUtYnktc3JhbTsNCj4gPj4gKyAgICAgICAgICAgICAgICAgICAgIH07DQo+ID4+ICsg
+ICAgICAgICAgICAgfTsNCj4gPj4gKw0KPiA+PiAgICAgICAgICAgICAgIHNkbW1jMDogc2Rpby1o
+b3N0QGEwMDAwMDAwIHsNCj4gPj4gICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAi
+YXRtZWwsc2FtYTVkMi1zZGhjaSI7DQo+ID4+ICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8
+MHhhMDAwMDAwMCAweDMwMD47DQo+ID4+IC0tDQo+ID4+IDIuNS4wDQo+ID4+DQo+IA0KPiANCj4g
+QmVzdCByZWdhcmRzDQo+IC0tDQo+IFJvbWFpbiBJemFyZA0KDQoNCkJlc3QgUmVnYXJkcywNCldl
+bnlvdSBZYW5nDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
