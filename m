@@ -1,53 +1,69 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and charging
- of backup battery
-Date: Wed, 13 Jan 2016 11:38:36 -0600
-Message-ID: <56968B9C.1060600@ti.com>
-References: <832803EE-E4CB-46B1-BF39-2DC0BB695A5D@goldelico.com>
- <20160108190457.GY12777@atomide.com>
- <CCB763BE-5D1F-4A53-BF9A-C12C08A6EFC4@goldelico.com>
- <20160111202421.GA12777@atomide.com> <20160112000917.GC12777@atomide.com>
- <417BBA32-A7DC-40CD-8A6B-EA910B1C9C13@goldelico.com>
- <E4C8F6CA-37C1-406F-9804-46055253BED9@goldelico.com>
- <001346CD-CF31-4FEF-B406-B89EEBDFA063@goldelico.com>
- <56966558.1070608@ti.com> <569669C5.2070200@ti.com>
- <20160113164856.GF12777@atomide.com> <56968596.2070105@ti.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v1 1/5] mtd: atmel_nand: Do not warn on bitflips
+Date: Wed, 13 Jan 2016 18:54:21 +0100
+Message-ID: <20160113185421.22e1cb9c@bbrezillon>
+References: <1452702857-2240-1-git-send-email-romain.izard.pro@gmail.com>
+	<1452702857-2240-2-git-send-email-romain.izard.pro@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56968596.2070105@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, Laxman Dewangan <ldewangan@nvidia.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek@goldelico.com>, =?UTF-8?Q?Gra=c5=bevydas_Ignotas?= <notasas@gmail.com>, Keerthy <j-keerthy@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452702857-2240-2-git-send-email-romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/13/2016 11:12 AM, Grygorii Strashko wrote:
-> On 01/13/2016 06:48 PM, Tony Lindgren wrote:
+On Wed, 13 Jan 2016 17:34:13 +0100
+Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-[...]
+> When using multi-bit ECC, it is normal for the NAND Flash driver to
+> correct bit errors during the life of the product. Those errors will
+> only be cleared once a threshold has been reached, and corrections can
+> occur regularly before this.
+> 
+> Use only dev_dbg and not dev_info to report the bitflips, to keep the
+> system log clean when everything works correctly.
+> 
+> Signed-off-by: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Acked-by:  Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
->> Care to dig up some more information on that?
+Reviewed-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+> ---
+>  drivers/mtd/nand/atmel_nand.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> i can't find this report, sry - as i remember there was difference
-> between some OMAP4 HS and GP SoCs. 
-> 
-> But links on commits for old 3.4 kernel below:
-> http://omapzoom.org/?p=kernel/omap.git;a=commitdiff;h=a7a516be9338eabc9a7682e7433fa34d86c1f208
-> http://omapzoom.org/?p=kernel/omap.git;a=commitdiff;h=262669aebf4af4044a25e8292f0e27986e18445a
-> 
->>
->> I don't have anything against adding GPIO handling to the TWL driver
->> so it can be optionally specified. But that's clearly a separate patch
->> and should be done by somebody who knows more about the issue and has
->> a test case needing the GPIO logic for this pin.
->>
-> 
-> 
-if it helps in anyways
-http://lists.infradead.org/pipermail/linux-arm-kernel/2013-May/170707.html
+> diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
+> index 46010bd895b1..9d71f9e6a8de 100644
+> --- a/drivers/mtd/nand/atmel_nand.c
+> +++ b/drivers/mtd/nand/atmel_nand.c
+> @@ -824,7 +824,7 @@ static void pmecc_correct_data(struct mtd_info *mtd, uint8_t *buf, uint8_t *ecc,
+>  			*(buf + byte_pos) ^= (1 << bit_pos);
+>  
+>  			pos = sector_num * host->pmecc_sector_size + byte_pos;
+> -			dev_info(host->dev, "Bit flip in data area, byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
+> +			dev_dbg(host->dev, "Bit flip in data area, byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
+>  				pos, bit_pos, err_byte, *(buf + byte_pos));
+>  		} else {
+>  			/* Bit flip in OOB area */
+> @@ -834,7 +834,7 @@ static void pmecc_correct_data(struct mtd_info *mtd, uint8_t *buf, uint8_t *ecc,
+>  			ecc[tmp] ^= (1 << bit_pos);
+>  
+>  			pos = tmp + nand_chip->ecc.layout->eccpos[0];
+> -			dev_info(host->dev, "Bit flip in OOB, oob_byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
+> +			dev_dbg(host->dev, "Bit flip in OOB, oob_byte_pos: %d, bit_pos: %d, 0x%02x -> 0x%02x\n",
+>  				pos, bit_pos, err_byte, ecc[tmp]);
+>  		}
+>  
+
 
 
 -- 
-Regards,
-Nishanth Menon
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
