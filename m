@@ -1,60 +1,71 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH 1/3] Documentation: Update the APM X-Gene SoC EDAC DTS
- binding for missing RB
-Date: Tue, 12 Jan 2016 15:24:41 -0800
-Message-ID: <CAPw-ZTmuavkEd0_7W+86m_RQHZHGCwWr4dRNCxjrgBPLa_Qg0w@mail.gmail.com>
-References: <1452639900-30919-1-git-send-email-lho@apm.com>
-	<1452639900-30919-2-git-send-email-lho@apm.com>
-	<4027351.WdK3AXxgBQ@wuerfel>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH V2 5/6] rtc: max77xxx: add RTC driver for Maxim MAX77xxx
+ series RTC IP
+Date: Wed, 13 Jan 2016 09:06:08 +0900
+Message-ID: <569594F0.4020007@samsung.com>
+References: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com>
+ <1452590273-16421-6-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4027351.WdK3AXxgBQ@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-edac <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-reply-to: <1452590273-16421-6-git-send-email-ldewangan@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com
+Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On 12.01.2016 18:17, Laxman Dewangan wrote:
+> Maxim Semiconductor's PMIC MAX77620, MAX77686, MAX20024 have
+> same RTC IP on these PMICs.
+> 
+> Add generic MAX77xxxx series RTC driver which can be used as
+> RTC driver for these PMIC and avoids duplication of RTC driver
+> for each PMICs. Their MFD driver can be different here.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> ---
+> Changes from V1: 
+> - Rename the file to rtc-max77xxx.c and make the generic implementation.
+> - Direct regmap apis are used for the register access.
+> - Decouped from max77620 driver.
+> - Taken care of cleanup comments form V1 version.
+> 
+>  drivers/rtc/Kconfig        |  10 +
+>  drivers/rtc/Makefile       |   1 +
+>  drivers/rtc/rtc-max77xxx.c | 500 +++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 511 insertions(+)
+>  create mode 100644 drivers/rtc/rtc-max77xxx.c
+> 
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> index 376322f..4972dd5 100644
+> --- a/drivers/rtc/Kconfig
+> +++ b/drivers/rtc/Kconfig
+> @@ -315,6 +315,16 @@ config RTC_DRV_MAX8997
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called rtc-max8997.
+>  
+> +config RTC_DRV_MAX77XXX
+> +	tristate "Maxim MAX77XXX series generic RTC driver"
+> +	help
+> +	  If you say yes here you will get support for the generic RTC driver
+> +	  for Maxim Semiconductor MAX77XXX series of PMIC like MAX77620.
+> +	  This also supports the RTC driver for Maxim PMIC MaX20024 which
+> +	  is almost same as MAX77620.
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called rtc-max77xxx.
+> +
 
->> --- a/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
->> +++ b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
->> @@ -16,6 +16,7 @@ Required properties:
->>  - regmap-mcba          : Regmap of the MCB-A (memory bridge) resource.
->>  - regmap-mcbb          : Regmap of the MCB-B (memory bridge) resource.
->>  - regmap-efuse         : Regmap of the PMD efuse resource.
->> +- regmap-rb            : Regmap of the register bus resource.
->>  - reg                  : First resource shall be the CPU bus (PCP) resource.
->>  - interrupts            : Interrupt-specifier for MCU, PMD, L3, or SoC error
->>                           IRQ(s).
->> @@ -64,6 +65,11 @@ Example:
->>                 reg = <0x0 0x1054a000 0x0 0x20>;
->>         };
->>
->> +       rb: rb@7e000000 {
->> +               compatible = "apm,xgene-rb", "syscon";
->> +               reg = <0x0 0x7e000000 0x0 0x10>;
->> +       };
->> +
->>         edac@78800000 {
->>                 compatible = "apm,xgene-edac";
->>
->
-> When you add a property, please list that as "optional", not "required",
-> to ensure that the old dtb files still conform to the binding.
->
-> In the driver, make sure it is not a fatal error when the property is
-> missing and the driver can keep working without it.
+That was not the consensus... You still added a new driver - but now
+with different name.
 
->From my view, this is required. Otherwise, the error condition will
-NOT be cleared correctly and will get constant interrupt. Though, for
-compatibility, we can make it optional but system will be unusable
-should such error occurred. Though, it would be rare or with bad FW. I
-will fix in the next version by making it optional such as it will
-still probe correctly with older DT binding.
+That is useless duplication
 
--Loc
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please work with existing code. Use existing maxim RTC drivers: either
+max77686 or max77802.
+
+There is no need for new one.
+
+Best regards,
+Krzysztof
+
