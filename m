@@ -1,142 +1,201 @@
-From: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 2/3] phy: zynqmp: Add dt bindings for ZynqMP PHY.
-Date: Wed, 13 Jan 2016 19:43:24 +0530
-Message-ID: <1452694404-1253-1-git-send-email-sbhatta@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kishon-l0cyMroinI0@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 1/3] dt-bindings: i2c: mux: demux-pinctrl: add bindings
+Date: Wed, 13 Jan 2016 15:29:27 +0100
+Message-ID: <1452695369-29413-2-git-send-email-wsa@the-dreams.de>
+References: <1452695369-29413-1-git-send-email-wsa@the-dreams.de>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1452695369-29413-1-git-send-email-wsa@the-dreams.de>
+Sender: linux-i2c-owner@vger.kernel.org
+To: linux-i2c@vger.kernel.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Jan Luebbe <jlu@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the document describing dt bindings for ZynqMP
-PHY. ZynqMP SOC has a High Speed Processing System Gigabit
-Transceiver which provides PHY capabilties to USB, SATA,
-PCIE, Display Port and Ehernet SGMII controllers.
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+These bindings allow an I2C bus to switch between multiple masters. This
+is not hot-switching because connected I2C slaves will be
+re-instantiated. It is meant to select the best I2C core at runtime once
+the task is known. Example: Prefer i2c-gpio over another I2C core
+because of HW errata affecting your use case.
+
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- v2:
-	modified to use phy cells as 2.
+ .../ABI/testing/sysfs-platform-i2c-demux-pinctrl   |  23 ++++
+ .../devicetree/bindings/i2c/i2c-demux-pinctrl.txt  | 136 +++++++++++++++++++++
+ 2 files changed, 159 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-i2c-demux-pinctrl
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.txt
 
- .../devicetree/bindings/phy/phy-zynqmp.txt         | 103 +++++++++++++++++++++
- 1 file changed, 103 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-zynqmp.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/phy-zynqmp.txt b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+diff --git a/Documentation/ABI/testing/sysfs-platform-i2c-demux-pinctrl b/Documentation/ABI/testing/sysfs-platform-i2c-demux-pinctrl
 new file mode 100644
-index 0000000..975cf21
+index 00000000000000..7ac7d7262bb718
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
-@@ -0,0 +1,103 @@
-+Xilinx ZynqMP PHY binding
++++ b/Documentation/ABI/testing/sysfs-platform-i2c-demux-pinctrl
+@@ -0,0 +1,23 @@
++What:		/sys/devices/platform/<i2c-demux-name>/cur_master
++Date:		January 2016
++KernelVersion:	4.6
++Contact:	Wolfram Sang <wsa@the-dreams.de>
++Description:
 +
-+This binding describes a ZynqMP PHY device that is used to control ZynqMP
-+High Speed Gigabit Transceiver(GT). ZynqMP PS GTR provides four lanes
-+and are used by USB, SATA, PCIE, Display port and Ethernet SGMMI controllers.
++This file selects the active I2C master for a demultiplexed bus.
 +
-+Required properties (controller (parent) node):
-+- compatible    : Should be "xlnx,zynqmp-psgtr"
++Write 0 there for the first master, 1 for the second etc. Reading the file will
++give you a list with the active master marked. Example from a Renesas Lager
++board:
 +
-+- reg		: Address and length of register sets for each device in
-+		  "reg-names"
-+- reg-names     : The names of the register addresses corresponding to the
-+		  registers filled in "reg":
-+			- serdes: SERDES block register set
-+			- siou: SIOU block register set
-+			- lpd: Low power domain peripherals reset control
-+			- fpd: Full power domain peripherals reset control
++root@Lager:~# cat /sys/devices/platform/i2c@8/cur_master
++* 0 - /i2c@9
++  1 - /i2c@e6520000
++  2 - /i2c@e6530000
 +
-+-xlnx,tx_termination_fix: Include fix for a functional issue in the GT. The TX
-+			  termination resistance can be out of spec due to a
-+			  bug in the calibration logic. This issue will be fixed
-+			  in silicon in future versions.
++root@Lager:~# echo 2 > /sys/devices/platform/i2c@8/cur_master
 +
-+Required nodes	:  A sub-node is required for each lane the controller
-+		   provides.
++root@Lager:~# cat /sys/devices/platform/i2c@8/cur_master
++  0 - /i2c@9
++  1 - /i2c@e6520000
++* 2 - /i2c@e6530000
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.txt b/Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.txt
+new file mode 100644
+index 00000000000000..6c8aace7d78e64
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.txt
+@@ -0,0 +1,136 @@
++Pinctrl-based I2C Bus DeMux
 +
-+Required properties (port (child) nodes):
-+lane0:
-+- #phy-cells	: Should be 2
-+		  Cell after port phandle is device type from:
-+			- <PHY_TYPE_PCIE 0>
-+			- <PHY_TYPE_SATA 0>
-+			- <PHY_TYPE_USB3 0>
-+			- <PHY_TYPE_DP 1>
-+			- <PHY_TYPE_SGMII 0>
-+lane1:
-+- #phy-cells	: Should be 2
-+		  Cell after port phandle is device type from:
-+			- <PHY_TYPE_PCIE 1>
-+			- <PHY_TYPE_SATA 1>
-+			- <PHY_TYPE_USB3 0>
-+			- <PHY_TYPE_DP 0>
-+			- <PHY_TYPE_SGMII 1>
-+lane2:
-+- #phy-cells	: Should be 2
-+		  Cell after port phandle is device type from:
-+			- <PHY_TYPE_PCIE 2>
-+			- <PHY_TYPE_SATA 0>
-+			- <PHY_TYPE_USB3 0>
-+			- <PHY_TYPE_DP 1>
-+			- <PHY_TYPE_SGMII 2>
-+lane3:
-+- #phy-cells	: Should be 2
-+		  Cell after port phandle is device type from:
-+			- <PHY_TYPE_PCIE 3>
-+			- <PHY_TYPE_SATA 1>
-+			- <PHY_TYPE_USB3 1>
-+			- <PHY_TYPE_DP 0>
-+			- <PHY_TYPE_SGMII 3>
++This binding describes an I2C bus demultiplexer that uses pin multiplexing to
++route the I2C signals, and represents the pin multiplexing configuration using
++the pinctrl device tree bindings. This may be used to select one I2C IP core at
++runtime which may have a better feature set for a given task than another I2C
++IP core on the SoC. The most simple example is to fall back to GPIO bitbanging
++if your current runtime configuration hits an errata of the internal IP core.
 +
-+Example:
-+	zynqmp_phy@fd400000 {
-+		compatible = "xlnx,zynqmp-psgtr";
-+		status = "okay";
-+		reg = <0x0 0xfd400000 0x40000>, <0x0 0xfd3d0000 0x1000>,
-+			<0x0 0xfd1a0000 0x1000>, <0x0 0xff5e0000 0x1000>;
-+		reg-names = "serdes", "siou", "fpd", "lpd";
++    +-------------------------------+
++    | SoC                           |
++    |                               |   +-----+  +-----+
++    |   +------------+              |   | dev |  | dev |
++    |   |I2C IP Core1|--\           |   +-----+  +-----+
++    |   +------------+   \-------+  |      |        |
++    |                    |Pinctrl|--|------+--------+
++    |   +------------+   +-------+  |
++    |   |I2C IP Core2|--/           |
++    |   +------------+              |
++    |                               |
++    +-------------------------------+
 +
-+		lane0: lane@0 {
-+			#phy-cells = <2>;
-+		};
-+		lane1: lane@1 {
-+			#phy-cells = <2>;
-+		};
-+		lane2: lane@2 {
-+			#phy-cells = <2>;
-+		};
-+		lane3: lane@3 {
-+			#phy-cells = <2>;
-+		};
-+	};
++Required properties:
++- compatible: "i2c-demux-pinctrl"
++- i2c-parent: List of phandles of I2C masters available for selection. The first
++	      one will be used as default.
++- i2c-bus-name: The name of this bus. Also needed as pinctrl-name for the I2C
++		parents.
 +
-+Specifying phy control of devices
-+=================================
-+
-+Device nodes should specify the configuration required in their "phys"
-+property, containing a phandle to the phy port node and a device type.
++Furthermore, I2C mux properties and child nodes. See mux.txt in this directory.
 +
 +Example:
 +
-+#include <dt-bindings/phy/phy.h>
++Here is a snipplet for a bus to be demuxed. It contains various i2c clients for
++HDMI, so the bus is named "i2c-hdmi":
 +
-+	usb@fe200000 {
-+		...
-+		phys	  = <&lane2 PHY_TYPE_USB3 0>;
-+		...
++	i2chdmi: i2c@8 {
++
++		compatible = "i2c-demux-pinctrl";
++		i2c-parent = <&gpioi2c>, <&iic2>, <&i2c2>;
++		i2c-bus-name = "i2c-hdmi";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ak4643: sound-codec@12 {
++			compatible = "asahi-kasei,ak4643";
++
++			#sound-dai-cells = <0>;
++			reg = <0x12>;
++		};
++
++		composite-in@20 {
++			compatible = "adi,adv7180";
++			reg = <0x20>;
++			remote = <&vin1>;
++
++			port {
++				adv7180: endpoint {
++					bus-width = <8>;
++					remote-endpoint = <&vin1ep0>;
++				};
++			};
++		};
++
++		hdmi@39 {
++			compatible = "adi,adv7511w";
++			reg = <0x39>;
++			interrupt-parent = <&gpio1>;
++			interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
++
++			adi,input-depth = <8>;
++			adi,input-colorspace = "rgb";
++			adi,input-clock = "1x";
++			adi,input-style = <1>;
++			adi,input-justification = "evenly";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					adv7511_in: endpoint {
++						remote-endpoint = <&du_out_lvds0>;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++					adv7511_out: endpoint {
++						remote-endpoint = <&hdmi_con>;
++					};
++				};
++			};
++		};
 +	};
 +
-+	ahci@fd0c0000 {
-+		...
-+		phys	  = <&lane3 PHY_TYPE_SATA 1>;
-+		...
++And for clarification, here are the snipplets for the i2c-parents:
++
++	gpioi2c: i2c@9 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "i2c-gpio";
++		status = "disabled";
++		gpios = <&gpio5 6 GPIO_ACTIVE_HIGH /* sda */
++			 &gpio5 5 GPIO_ACTIVE_HIGH /* scl */
++			>;
++		i2c-gpio,delay-us = <5>;
 +	};
++
++...
++
++&i2c2	{
++	pinctrl-0 = <&i2c2_pins>;
++	pinctrl-names = "i2c-hdmi";
++
++	clock-frequency = <100000>;
++};
++
++...
++
++&iic2	{
++	pinctrl-0 = <&iic2_pins>;
++	pinctrl-names = "i2c-hdmi";
++
++	clock-frequency = <100000>;
++};
++
++Please note:
++
++- pinctrl properties for the parent I2C controllers need a pinctrl state
++  with the same name as i2c-bus-name, not "default"!
++
++- the i2c masters must have their status "disabled". This driver will
++  enable them at runtime when needed.
++
 -- 
-2.1.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
