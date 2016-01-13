@@ -1,52 +1,104 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 3/3] ARM: shmobile: r8a7790: rework dts to use i2c demuxer
-Date: Wed, 13 Jan 2016 18:57:57 +0100
-Message-ID: <20160113175756.GA2821@katana>
-References: <1452695369-29413-1-git-send-email-wsa@the-dreams.de>
- <1452695369-29413-4-git-send-email-wsa@the-dreams.de>
- <5696870C.102@cogentembedded.com>
+From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V9 2/5] dma: add Qualcomm Technologies HIDMA management
+ driver
+Date: Wed, 13 Jan 2016 12:59:24 -0500
+Message-ID: <5696907C.6000809@codeaurora.org>
+References: <1449850623-32214-1-git-send-email-okaya@codeaurora.org>
+ <1449850623-32214-3-git-send-email-okaya@codeaurora.org>
+ <20151211164137.GA23638@leverpostej> <566B1F64.9010500@codeaurora.org>
+ <20151211193742.GD23638@leverpostej> <566B4ACC.3070005@codeaurora.org>
+ <20151214120339.GA21356@leverpostej> <569265D6.5060407@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5696870C.102@cogentembedded.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Jan Luebbe <jlu@pengutronix.de>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <569265D6.5060407-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.orgvinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Mark, Rob, Frank, Grant and other DT experts;
 
---2oS5YaxWCcQjTEyO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>>>
+>>> I'll add support for both. Both having a parent-child relationship while
+>>> inside the hypervisor and flat hierarchy while running in the guest
+>>> machine for QEMU.
+>>
+>> I'm happy with that.
+>>
+>>> I just created a child object of the management driver and channel
+>>> driver got probed properly. So, it just a matter of device-tree
+>>> documentation at this point.
+>>>
+>>> It will be like this though.
+>>>
+>>>>>> hidma {
+>>>>>> 	compatible - "qcom,hidma-1.0";
+>>>>>>
+>>>>>> 	/* OPTIONAL management interface registers */
+>>>>>> 	reg = < ... ... >;
+>>>>>>
+>>>>>> 	...
+>>>>>>
+>>>>>> 	channel0 {
+>>>>>> 		compatible = "qcom,
+>>>>>> 		reg = < ... ... >;
+>>>>>>
+>>>>>> 		...
+>>>>>> 	};
+>>>>>>
+>>>>>> 	...
+>>>>>> };
+>>>
+>>> This seems to have worked without requiring any work from me.
+>>>
+>>> I need to associate sysfs next.
+>>
+>> Ok. I look forward to seeing those patches.
+>>
+>> Thanks,
+>> Mark.
+>>
+> 
+> Mark,
+> The patch has been posted here. Please review.
+> 
+> https://lkml.org/lkml/2016/1/3/246
+> 
+> Sinan
+> 
+> 
+> 
+> 
 
+I have been trying to reach to device tree reviewers without any luck for the last two weeks. 
+It must be the holidays. 
 
->    In a board file? When do you intend to enable it?
+I have restructured the code address concerns from Mark Rutland above. The dma-engine maintainer, Vinod Koul;
+is looking for an ACK from the DT community before the patches can be incorporated.
 
-Please read the cover letter of this patch series.
+Could you please kindly review the series here from DT perspective and ACK it if you are OK?
+https://lkml.org/lkml/2016/1/11/517
 
+This document here
+https://www.kernel.org/doc/linux/MAINTAINERS
 
---2oS5YaxWCcQjTEyO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+tells me that Rob Herring, Frank Rowand and Grant Likely are the maintainers for device tree.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+OPEN FIRMWARE AND FLATTENED DEVICE TREE
+M:	Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+M:	Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+M:	Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+L:	devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 
-iQIcBAEBAgAGBQJWlpAkAAoJEBQN5MwUoCm2ZX0QAI6fO9QCnjx8/d7e17MFoeYo
-MHpAB2XNbb+roJaDsxAvAB9FmLMxETdyYYtwoIaPFvKz3CPY0INoWs2L50CY2xOJ
-vFvb7nwvnq+nDgwf1zilskO6SfGrRMN6dniAnmeRupSmM6gRPHOhkCbgDFuViDdR
-7euf2KirmKptfYzrx+Hq+QEXQmbZDTfxdkgPx8T5a0c6q/Lak2OlwDjfvXmlVfkG
-42zRaag2viE2R5qsCX1lDA2cg3OwqwbE/g0WZjoiCF+IL6lUbgHcbuuiTpJoJHLb
-qIqT3S5xF0Q0Tht9sGpXaCNNYf0YfUeniLx4KwtpNrVeHyxyzkTuuA4y+aprNtDm
-itTK2XlHwhLJldhL+AU4Vvu5PeNfXjQj3eC81/+3xno4Z8VI3kAQOrVdAMaqheAA
-qqooUPXoB5ys3BIjrS08w9i72bkARFBjyU+MT6hDunOJiS06CSF0I4ff0KlxKCK3
-NBU6uy+q6iB6yBYTkGtLmHZlqdrB2vNWA+Gg5bAqXwlb+uB+mZq8mybpFSwwpLpA
-okf5pChEjUIZ0IkBJn4O5aCCuNIXo2qoB93/bXlZgViaNLmynno8zOL8rjJqD7H+
-s2Btk2Semv5ZCCAxJY6F37PPrbhNniTpSG2EnTq2yd3mjPfUtTIkFcAGh550GXdU
-gmVKmAqFtZ3ALJuTXnXd
-=Yyy5
------END PGP SIGNATURE-----
+That's why, I'm reaching out.
 
---2oS5YaxWCcQjTEyO--
+-- 
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
