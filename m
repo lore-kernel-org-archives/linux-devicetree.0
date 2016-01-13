@@ -1,152 +1,137 @@
-From: Raja Mani <rmani@qti.qualcomm.com>
-Subject: [PATCH v3] dt: bindings: add bindings for ipq4019 wifi block
-Date: Wed, 13 Jan 2016 11:26:44 +0530
-Message-ID: <1452664604-8014-1-git-send-email-rmani@qti.qualcomm.com>
+From: Raja Mani <rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org>
+Subject: Re: [PATCH] dt: bindings: add bindings for ipq4019 wifi block
+Date: Wed, 13 Jan 2016 11:28:07 +0530
+Message-ID: <5695E76F.6060305@qti.qualcomm.com>
+References: <1450848915-9772-1-git-send-email-rmani@qti.qualcomm.com> <20151230163524.GA26810@rob-hp-laptop> <5684BFEF.8080302@qti.qualcomm.com> <CAL_JsqLH=Lr5UcgzFUr8AwVDXF8ahiyYfD2gfWng1zfhH21N5g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: agross@codeaurora.org, devicetree@vger.kernel.org
-Cc: ath10k@lists.infradead.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Raja Mani <rmani@qti.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLH=Lr5UcgzFUr8AwVDXF8ahiyYfD2gfWng1zfhH21N5g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, mmcclint-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation details for wifi block present
-in Qualcomm IPQ4019 SoC into "qcom,ath10k.txt".
 
-Right now, ath10k wireless driver has support for PCI based wlan devices.
-There is a plan to extend ath10k driver to support wifi devices which are
-connected over AHB as well (enumeration will happen via device tree node).
-For AHB based devices (ie, ipq4019), all wifi properties are supplied via
-device tree (including irq, reg addr, cal data,etc).
+On Wednesday 13 January 2016 07:53 AM, Rob Herring wrote:
+> On Wed, Dec 30, 2015 at 11:41 PM, Raja Mani <rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org> wrote:
+>>
+>> On Wednesday 30 December 2015 10:05 PM, Rob Herring wrote:
+>>>
+>>> On Wed, Dec 23, 2015 at 11:05:15AM +0530, Raja Mani wrote:
+>>>>
+>>>> Add device tree binding documentation details for wifi block present
+>>>> in Qualcomm IPQ4019 SoC into qcom,ath10k.txt.
+>>>>
+>>>> Signed-off-by: Raja Mani <rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org>
+>>>> ---
+>>>>    .../bindings/net/wireless/qcom,ath10k.txt          | 87
+>>>> ++++++++++++++++++++--
+>>>>    1 file changed, 82 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+>>>> b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+>>>> index edefc26..ffd0742 100644
+>>>> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+>>>> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+>>>> @@ -1,17 +1,42 @@
+>>>>    * Qualcomm Atheros ath10k wireless devices
+>>>>
+>>>> -For ath10k devices the calibration data can be provided through Device
+>>>> -Tree. The node is a child node of the PCI controller.
+>>>
+>>>
+>>> So it is now not a PCI device?
+>>
+>>
+>> Right now, ath10k wireless driver has support for PCI devices. There is
+>> a plan to extend ath10k driver to support wifi devices which are connected
+>> over AHB as well (enumeration will happen via device tree node).
+>>
+>> Qualcomm IPQ4019 SoC has two inbuilt wifi block which are connected over AHB
+>> bus (not connected over PCI bus) and also has one external PCI
+>> slot where we can connect standalone wifi PCI devices.
+>>
+>> In future, ath10k would support both PCI and AHB. For PCI based
+>> devices, only calibration data is supplied via device tree. For AHB
+>> based devices (ie, ipq4019), all wifi properties are supplied
+>> via device tree (including irq, reg addr, cal data,etc).
+>
+> Put this information in the binding. It is not clear and you seem to
+> be removing PCI information.
 
-Signed-off-by: Raja Mani <rmani@qti.qualcomm.com>
----
-v3 changes:
-  - Removed core-id - [Rob]
-  - Documented which compatible string corresponds to pci devices
-    and which corresponds to ahb devices. - [Rob]
+Okay, I'll fix it in next version.
 
-v2 changes:
- - Improved "core-id" description - [Rob]
- - Removed "status" documentation - [Rob]
- - Added description which properties are applicable
-   for ahb and which are applicable for pci devices - [Rob]
- - Improved commit msg to explain the context.
- - Renamed "qca,msi_addr" to "qcom,msi_addr" and
-   "qca,msi_base" to "qcom,msi_base" to follow uniformity.
+>
+>>>> -
+>>>>    Required properties:
+>>>> --compatible : Should be "qcom,ath10k"
+>>>> +- compatible: Should be one of the following:
+>>>> +       * "qcom,ath10k"
+>>>> +       * "qcom,ipq4019-wifi"
+>>>
+>>>
+>>> One is a standalone PCI device and one is embedded block in an SOC?
+>>
+>>
+>> Yes, it's possible to have this combination (one in SoC + one in
+>> standalone PCI device in the same platform).
+>>
+>>> These should be more separated as all these new properties would only
+>>> apply in the latter case.
+>>
+>>
+>> Sorry, i didn't get this point. I mentioned it under optional
+>> properties. Whichever properties applies to particular wifi, only
+>> those parameters are needed. For example, for PCI based devices,
+>> only calibration data is needed, for AHB based devices most the
+>> properties are needed.
+>>
+>> Is it fine if add below text some thing like this ?
+>>
+>> "only "qcom,ath10k-calibration-data" is applicable for PCI based
+>> devices, rest of the members are applicable only for AHB based
+>> devices"
+>
+> Yes, but you need to explain in terms of compatible strings. Which
+> compatible strings correspond to PCI devices.
 
- .../bindings/net/wireless/qcom,ath10k.txt          | 89 ++++++++++++++++++++--
- 1 file changed, 84 insertions(+), 5 deletions(-)
+Sure, i'll add this detail.
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-index edefc26..bf8c0f8c 100644
---- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-@@ -1,17 +1,46 @@
- * Qualcomm Atheros ath10k wireless devices
- 
--For ath10k devices the calibration data can be provided through Device
--Tree. The node is a child node of the PCI controller.
--
- Required properties:
---compatible : Should be "qcom,ath10k"
-+- compatible: Should be one of the following:
-+	* "qcom,ath10k"
-+	* "qcom,ipq4019-wifi"
-+
-+PCI based devices uses compatible string "qcom,ath10k" and takes only
-+calibration data via "qcom,ath10k-calibration-data". Reset of the properties
-+are not applicable for PCI based devices.
-+
-+AHB based devices (ie, ipq4019) uses compatible string "qcom,ipq4019-wifi"
-+and also uses most of the properties defined in this doc.
- 
- Optional properties:
-+- reg: Address and length of the register set for the device.
-+- resets: Must contain an entry for each entry in reset-names.
-+          See ../reset/reseti.txt for details.
-+- reset-names: Must include the list of following reset names,
-+	       "wifi_cpu_init"
-+	       "wifi_radio_srif"
-+	       "wifi_radio_warm"
-+	       "wifi_radio_cold"
-+	       "wifi_core_warm"
-+	       "wifi_core_cold"
-+- clocks: List of clock specifiers, must contain an entry for each required
-+          entry in clock-names.
-+- clock-names: Should contain the clock names "wifi_wcss_cmd", "wifi_wcss_ref",
-+               "wifi_wcss_rtc".
-+- interrupts: List of interrupt lines. Must contain an entry
-+	      for each entry in the interrupt-names property.
-+- interrupt-names: Must include the entries for MSI interrupt
-+		   names ("msi0" to "msi15") and legacy interrupt
-+		   name ("legacy"),
-+- qcom,msi_addr: MSI interrupt address.
-+- qcom,msi_base: Base value to add before writing MSI data into
-+		MSI address register.
- - qcom,ath10k-calibration-data : calibration data as an array, the
- 				 length can vary between hw versions
- 
-+Example (to supply the calibration data alone):
- 
--Example:
-+In this example, the node is defined as child node of the PCI controller.
- 
- pci {
- 	pcie@0 {
-@@ -28,3 +57,53 @@ pci {
- 		};
- 	};
- };
-+
-+Example (to supply ipq4019 SoC wifi block details):
-+
-+wifi0: wifi@a000000 {
-+	compatible = "qcom,ipq4019-wifi";
-+	reg = <0xa000000 0x200000>;
-+	resets = <&gcc WIFI0_CPU_INIT_RESET>,
-+		 <&gcc WIFI0_RADIO_SRIF_RESET>,
-+		 <&gcc WIFI0_RADIO_WARM_RESET>,
-+		 <&gcc WIFI0_RADIO_COLD_RESET>,
-+		 <&gcc WIFI0_CORE_WARM_RESET>,
-+		 <&gcc WIFI0_CORE_COLD_RESET>;
-+	reset-names = "wifi_cpu_init",
-+		      "wifi_radio_srif",
-+		      "wifi_radio_warm",
-+		      "wifi_radio_cold",
-+		      "wifi_core_warm",
-+		      "wifi_core_cold";
-+	clocks = <&gcc GCC_WCSS2G_CLK>,
-+		 <&gcc GCC_WCSS2G_REF_CLK>,
-+		 <&gcc GCC_WCSS2G_RTC_CLK>;
-+	clock-names = "wifi_wcss_cmd",
-+		      "wifi_wcss_ref",
-+		      "wifi_wcss_rtc";
-+	interrupts = <0 0x20 0x1>,
-+		     <0 0x21 0x1>,
-+		     <0 0x22 0x1>,
-+		     <0 0x23 0x1>,
-+		     <0 0x24 0x1>,
-+		     <0 0x25 0x1>,
-+		     <0 0x26 0x1>,
-+		     <0 0x27 0x1>,
-+		     <0 0x28 0x1>,
-+		     <0 0x29 0x1>,
-+		     <0 0x2a 0x1>,
-+		     <0 0x2b 0x1>,
-+		     <0 0x2c 0x1>,
-+		     <0 0x2d 0x1>,
-+		     <0 0x2e 0x1>,
-+		     <0 0x2f 0x1>,
-+		     <0 0xa8 0x0>;
-+	interrupt-names = "msi0",  "msi1",  "msi2",  "msi3",
-+			  "msi4",  "msi5",  "msi6",  "msi7",
-+			  "msi8",  "msi9",  "msi10", "msi11",
-+			  "msi12", "msi13", "msi14", "msi15",
-+			  "legacy";
-+	qcom,msi_addr = <0x0b006040>;
-+	qcom,msi_base = <0x40>;
-+	qcom,ath10k-calibration-data = [ 01 02 03 ... ];
-+};
--- 
-1.8.1.2
+>
+>>>>    Optional properties:
+>>>> +- reg: Address and length of the register set for the device.
+>>>> +- core-id: Core number associated to the device.
+>>>
+>>>
+>>> This needs a better explanation.
+>>
+>>
+>> Sure, Let me add below text in next version.
+>>
+>> "core-id is numeric number associated to the wifi block.
+>>   For example, 0 means first block, 1 means second wifi block,etc."
+>
+> Are the blocks the same? If not, then use different compatible
+> strings. Otherwise doesn't the reg property identify which block is
+> which? Or some other property? Different freq bands? We generally
+> don't allow indexes like this in the DT, so I need to understand how
+> you use this.
+>
+> Rob
+>
+
+I understand the confusion and the limitation, i'll remove core-id in 
+next version and manage this in driver itself.
+
+Could you please consider v3 of this patch for further review? I hope,
+i addressed all your review comments.
+
+--
+Raja
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
