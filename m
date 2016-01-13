@@ -1,104 +1,98 @@
-From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V9 2/5] dma: add Qualcomm Technologies HIDMA management
- driver
-Date: Wed, 13 Jan 2016 12:59:24 -0500
-Message-ID: <5696907C.6000809@codeaurora.org>
-References: <1449850623-32214-1-git-send-email-okaya@codeaurora.org>
- <1449850623-32214-3-git-send-email-okaya@codeaurora.org>
- <20151211164137.GA23638@leverpostej> <566B1F64.9010500@codeaurora.org>
- <20151211193742.GD23638@leverpostej> <566B4ACC.3070005@codeaurora.org>
- <20151214120339.GA21356@leverpostej> <569265D6.5060407@codeaurora.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and
+ charging of backup battery
+Date: Wed, 13 Jan 2016 10:00:07 -0800
+Message-ID: <20160113180006.GJ12777@atomide.com>
+References: <CCB763BE-5D1F-4A53-BF9A-C12C08A6EFC4@goldelico.com>
+ <20160111202421.GA12777@atomide.com>
+ <20160112000917.GC12777@atomide.com>
+ <417BBA32-A7DC-40CD-8A6B-EA910B1C9C13@goldelico.com>
+ <E4C8F6CA-37C1-406F-9804-46055253BED9@goldelico.com>
+ <001346CD-CF31-4FEF-B406-B89EEBDFA063@goldelico.com>
+ <56966558.1070608@ti.com>
+ <569669C5.2070200@ti.com>
+ <20160113164856.GF12777@atomide.com>
+ <5696896F.4090309@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <569265D6.5060407-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.orgvinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5696896F.4090309@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Laxman Dewangan <ldewangan@nvidia.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek@goldelico.com>, =?utf-8?Q?Gra=C5=BEvydas?= Ignotas <notasas@gmail.com>, Keerthy <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark, Rob, Frank, Grant and other DT experts;
-
->>>
->>> I'll add support for both. Both having a parent-child relationship while
->>> inside the hypervisor and flat hierarchy while running in the guest
->>> machine for QEMU.
->>
->> I'm happy with that.
->>
->>> I just created a child object of the management driver and channel
->>> driver got probed properly. So, it just a matter of device-tree
->>> documentation at this point.
->>>
->>> It will be like this though.
->>>
->>>>>> hidma {
->>>>>> 	compatible - "qcom,hidma-1.0";
->>>>>>
->>>>>> 	/* OPTIONAL management interface registers */
->>>>>> 	reg = < ... ... >;
->>>>>>
->>>>>> 	...
->>>>>>
->>>>>> 	channel0 {
->>>>>> 		compatible = "qcom,
->>>>>> 		reg = < ... ... >;
->>>>>>
->>>>>> 		...
->>>>>> 	};
->>>>>>
->>>>>> 	...
->>>>>> };
->>>
->>> This seems to have worked without requiring any work from me.
->>>
->>> I need to associate sysfs next.
->>
->> Ok. I look forward to seeing those patches.
->>
->> Thanks,
->> Mark.
->>
+* Nishanth Menon <nm@ti.com> [160113 09:30]:
+> On 01/13/2016 10:48 AM, Tony Lindgren wrote:
+> > 
+> > So if we start changing things to GPIO mode, we really need some
+> > further explanations and neeed to handle the GPIO pin properly in
+> > the TWL driver. And it should be done in a separate patch for all
+> > of the TWL SoCs.
 > 
-> Mark,
-> The patch has been posted here. Please review.
+> That does not make sense to me. The original intent of MSECURE is to use
+> PMIC control (in specific certain usecases - which are no longer
+> relevant) in trustzone or equivalent secure processor modes. when such a
+> mode is not planned on being used, you just tell PMIC that it is always
+> in secure mode. In fact, there was discussion internally that MSECURE
+> should never even have been connected to SoC if the SoC was GP SoC - but
+> ofcourse, the want to have a consistent reference schematics for evms
+> (since EVMs have HS/Non-HS parts) trumped such talk.
 > 
-> https://lkml.org/lkml/2016/1/3/246
+> trying to split this up into further steps adds 0 additional
+> functionality - what is the pmic driver supposed to do with the GPIO even?
 > 
-> Sinan
+> in *real* HS product devices, in fact, the register space is really
+> firewalled out
+
+Right, OK here we are finally getting some answers to the "why" part :)
+
+And I also have few more "why" question in mind. If this change from
+msecure to GPIO muxing is so important.
+
+Why it was never fixed in the mainline kernel for omap4 and omap5 and
+it was just sitting in various TI trees?
+
+And it sounds like any kind of muxing on HS devices here for this
+pin will oops the device?
+
+> The last TI product kernel tree that seriously focussed on OMAP5/OMAP4
+> was
+> http://git.omapzoom.org/?p=kernel/omap.git;a=shortlog;h=refs/heads/p-linux-omap-3.4
+> things changed definitions (in terms of descope) since then.. but
+> anyways.. thought I'd just pitch it out here.
 > 
+> sevm: - this board got scrapped
+> http://git.omapzoom.org/?p=kernel/omap.git;a=blob;f=arch/arm/mach-omap2/board-omap5evm.c;h=bd8d71d75cc3da921856bb2004230e4cd6505328;hb=refs/heads/p-linux-omap-3.4#l1097
 > 
+> omap5-panda is the omap5uevm/evm now:
+> http://git.omapzoom.org/?p=kernel/omap.git;a=blob;f=arch/arm/mach-omap2/board-omap5panda.c;h=6113bc0e04625a1bd794b3f169581c67ad3b42ff;hb=refs/heads/p-linux-omap-3.4#l816
+
+OK
+
+> > I don't have anything against adding GPIO handling to the TWL driver
+> > so it can be optionally specified. But that's clearly a separate patch
 > 
+> TWL/TPS driver will need no change in the proposal I made with "gpio
+> hog" mechanism (Documentation/devicetree/bindings/gpio/gpio.txt -
+> gpio-hog property) - just a dt change for the right configuration.
+
+OK. So are we sure the TWL driver will never have to toggle this pin?
+
+Again, that's another "why" that I have no clue about and that is not
+documented anywhere.
+
+> > and should be done by somebody who knows more about the issue and has
+> > a test case needing the GPIO logic for this pin.
 > 
+> Since my explanation does not seem to suffice, alright - we can wait for
+> the right person, then.
 
-I have been trying to reach to device tree reviewers without any luck for the last two weeks. 
-It must be the holidays. 
+Sorry don't take it personally. I'm just trying to make sense of the
+"why do we need to do this change?" part. Especially if I need to make
+the change and write the commit log.
 
-I have restructured the code address concerns from Mark Rutland above. The dma-engine maintainer, Vinod Koul;
-is looking for an ACK from the DT community before the patches can be incorporated.
+Regards,
 
-Could you please kindly review the series here from DT perspective and ACK it if you are OK?
-https://lkml.org/lkml/2016/1/11/517
-
-This document here
-https://www.kernel.org/doc/linux/MAINTAINERS
-
-tells me that Rob Herring, Frank Rowand and Grant Likely are the maintainers for device tree.
-
-OPEN FIRMWARE AND FLATTENED DEVICE TREE
-M:	Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-M:	Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-M:	Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-L:	devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-
-That's why, I'm reaching out.
-
--- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
