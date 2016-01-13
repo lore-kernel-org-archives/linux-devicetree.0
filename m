@@ -1,66 +1,50 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [v7,49/50] drivers/of: Export OF changeset functions
-Date: Wed, 13 Jan 2016 14:54:26 +0100
-Message-ID: <20160113135426.GA29030@katana>
-References: <1446642770-4681-50-git-send-email-gwshan@linux.vnet.ibm.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [RFC v2 2/4] dt-bindings: i2c: mux: demux-pinctrl: add bindings
+Date: Wed, 13 Jan 2016 17:07:55 +0300
+Message-ID: <56965A3B.60208@cogentembedded.com>
+References: <1452088285-6427-1-git-send-email-wsa@the-dreams.de>
+ <1452088285-6427-3-git-send-email-wsa@the-dreams.de>
+ <CAMuHMdUdxk6yjYAr3i7sjdMa-WJxrbOhsEz3JidY9aZVhaoURw@mail.gmail.com>
+ <20160113125227.GD1540@katana>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1446642770-4681-50-git-send-email-gwshan@linux.vnet.ibm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, aik@ozlabs.ru, linux-pci@vger.kernel.org, panto@antoniou-consulting.com, grant.likely@linaro.org, robherring2@gmail.com, bhelgaas@google.com, frowand.list@gmail.com
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20160113125227.GD1540@katana>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linux I2C <linux-i2c@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Jan Luebbe <jlu@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
---M9NhX3UHpAaciwkO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 01/13/2016 03:52 PM, Wolfram Sang wrote:
 
-On Thu, Nov 05, 2015 at 12:12:49AM +1100, Gavin Shan wrote:
-> The PowerNV PCI hotplug driver is going to use the OF changeset
-> to manage the changed device sub-tree. This exports those OF
-> changeset functions for that.
->=20
-> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> Acked-by: Rob Herring <robh@kernel.org>
+>>> These bindings allow an I2C bus to switch between multiple masters. This
+>>> is not hot-swichting because connected I2C slaves will be
+>>> re-instantiated. It is meant to select the best I2C core at runtime once
+>>> the task is known. Example: Prefer i2c-gpio over another I2C core
+>>> because of HW errata affetcing your use case.
+>>
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.txt
+>>> @@ -0,0 +1,155 @@
+>>
+>>> +Here is a snipplet for a bus to be demuxed. It contains various i2c clients for
+>>
+>> snippet
+>>
+>>> +HDMI, so the bus is named "i2c-hdmi":
+>>> +
+>>> +       i2chdmi: i2c@8 {
+>>
+>> Would it make sense to call the node "i2c-bus@8"?
+>
+> That sounds like a question for our EPapr expert Sergei (CCed) :)
 
-I needed something like this, too [1] and rebased my series on top of
-this patch. So:
+    ePAPR only mentions "i2c". I'm not sure where the numeric part of the name 
+comes from in this case...
 
-Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+[...]
 
-Thanks,
-
-   Wolfram
-
-[1] https://lkml.org/lkml/2016/1/6/385
-
-
---M9NhX3UHpAaciwkO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWllcSAAoJEBQN5MwUoCm2rxoP/RfY0ZSyfXAqqmqLvmc5sXfh
-ldr1hK/rwAr/wuyfcDwE6Fqyt+HUNIP3g0B4p1FTJ6oJL0/6WpJb7SA2ytE3w/xP
-4ue9lFD+5g+KDvHnYm4I+ldiQj9E8I7vsgbcuiz+vZFwSRIhVMzJfziRZe2N48/X
-gsmz6313CGP8nekHEX5htpPSAswuhTzRL+0iPwX3TKK3gjasVMJo6Te3vK/4TjC0
-FNkm/2Vqea7Y4Ryucj7N3mbdeqT+DHB+x0MC1GtTYa3oXeN9zJuKoE7TanZXZkl7
-8g+Uw24YQFlZyz59YQBDkfKx4PYzVpIbcB8IpdwfeVwowOgz4hCOZP3c8zO9ivE0
-/8/QcV4ufPyDXO4nDoxxo6J8AGmCOGlCTpcNDGLOPyio/hcGjxCUm1QC5lt/+6/1
-IkhZL+rJ+nys0/H3AqPBdZi7BjtldEKan7+m7vw6ZS/fcO/haCB3+nM1I61WnA8V
-aBdFUKzXo/9gbyBNVr+A6QylLvxbn3WS0NtOOTayR3YGaqI0QUPcUslcf9snomT8
-UVAr0OMG1IxRkt4gTTQrm3gMG9CTos32fBZr83uo99cwG1FxLHsO5pf2SjlqpJ6B
-Og4eqS6qjYdWD960D+VoqAviSRpdPyL60OB8Flgv6sIiLi9FiN+Sxkio8OAvIIfu
-2JZQqGuwmr7Kcb9zlVzG
-=74ah
------END PGP SIGNATURE-----
-
---M9NhX3UHpAaciwkO--
+MBR, Sergei
