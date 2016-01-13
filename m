@@ -1,59 +1,45 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V2 1/2] input: gpio-keys: add support for disable button
- from DT
-Date: Wed, 13 Jan 2016 12:37:02 +0530
-Message-ID: <5695F796.3030503@nvidia.com>
-References: <1452665657-9412-1-git-send-email-ldewangan@nvidia.com> <20160113070609.GB8906@dtor-ws>
+From: Holger Schurig <holgerschurig-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: imx6: add support for Ka-Ro electronics TX6S-8034 module
+Date: Wed, 13 Jan 2016 08:35:28 +0100
+Message-ID: <87h9iigce7.fsf@gmail.com>
+References: <1452621710-15336-1-git-send-email-LW@KARO-electronics.de>
+	<1452621710-15336-2-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20160113070609.GB8906@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linus.walleij@linaro.org, bjorn.andersson@sonymobile.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452621710-15336-2-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+	("Lothar \=\?utf-8\?Q\?Wa\=C3\=9Fmann\=22's\?\= message of "Tue, 12 Jan 2016
+ 19:01:48 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lothar =?utf-8?Q?Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org> writes:
 
-On Wednesday 13 January 2016 12:36 PM, Dmitry Torokhov wrote:
-> On Wed, Jan 13, 2016 at 11:44:16AM +0530, Laxman Dewangan wrote:
->> Add support to disable the button from DT via status property
->> if given button is not supporting on given platforms.
->>
->> This will help to re-use the existing dtsi file with status
->> enable/disable across platforms.
->>
->> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
->> ---
->> Changes from V1:
->> - Converted print to dev_dbg.
->>
->>   drivers/input/keyboard/gpio_keys.c | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
->> index bef317f..08bada8 100644
->> --- a/drivers/input/keyboard/gpio_keys.c
->> +++ b/drivers/input/keyboard/gpio_keys.c
->> @@ -632,6 +632,14 @@ gpio_keys_get_devtree_pdata(struct device *dev)
->>   	for_each_child_of_node(node, pp) {
->>   		enum of_gpio_flags flags;
->>   
->> +		/* Ignore the button if status of node is disabled */
->> +		error = of_device_is_available(pp);
->> +		if (!error) {
->> +			dev_dbg(dev, "Button %s is ignored\n", pp->name);
->> +			pdata->nbuttons--;
-> Looking at this some more, maybe we should be using
-> of_get_available_child_count() when calculating pdata->nbuttons (and do
-> not decrement it here) and maybe even use
-> for_each_available_child_of_node() in this loop and forego manual check.
->
+> +/ {
+> +	model =3D "Ka-Ro electronics TX6S-8034 Module";
+> +	compatible =3D "karo,imx6dl-tx6dl", "fsl,imx6dl";
+> +	timestamp =3D __DATE__, __TIME__;
+
+Is this needed or useful?
+
+There's a movement that aims to do "reproducible builds" ...   being
+able to recompile an image and verify it against the supplied can be
+helpful for security audit purposes.
 
 
-yes, that is better option here. I was not knowing these APIs. Thanks 
-for information. I will make another patch for this.
+> +	display: display@di0 {
+> +		compatible =3D "fsl,imx-parallel-display";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pinctrl_disp0_1>;
+> +		interface-pix-fmt =3D "rgb24";
+> +//		fsl,panel =3D <&lcd0_panel>;
 
-Thanks,
-Laxman
-
+Probably not for upstream inclusion?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
