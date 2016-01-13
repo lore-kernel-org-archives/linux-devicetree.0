@@ -1,45 +1,52 @@
-From: Holger Schurig <holgerschurig-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: imx6: add support for Ka-Ro electronics TX6S-8034 module
-Date: Wed, 13 Jan 2016 08:35:28 +0100
-Message-ID: <87h9iigce7.fsf@gmail.com>
-References: <1452621710-15336-1-git-send-email-LW@KARO-electronics.de>
-	<1452621710-15336-2-git-send-email-LW@KARO-electronics.de>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V3 1/1] input: gpio-keys: add support for disable button from DT
+Date: Wed, 13 Jan 2016 12:56:20 +0530
+Message-ID: <1452669980-16460-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452621710-15336-2-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-	("Lothar \=\?utf-8\?Q\?Wa\=C3\=9Fmann\=22's\?\= message of "Tue, 12 Jan 2016
- 19:01:48 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lothar =?utf-8?Q?Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, dmitry.torokhov@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com
+Cc: galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linus.walleij@linaro.org, bjorn.andersson@sonymobile.com, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org> writes:
+Add support to disable the button from DT via status property
+if given button is not supporting on given platforms.
 
-> +/ {
-> +	model =3D "Ka-Ro electronics TX6S-8034 Module";
-> +	compatible =3D "karo,imx6dl-tx6dl", "fsl,imx6dl";
-> +	timestamp =3D __DATE__, __TIME__;
+This will help to re-use the existing dtsi file with status
+enable/disable across platforms.
 
-Is this needed or useful?
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+Changes from V1: 
+- Converted print to dev_dbg.
+Changes from V2:
+- use of_get_available_child_count() and for_each_available_child_of_node()
 
-There's a movement that aims to do "reproducible builds" ...   being
-able to recompile an image and verify it against the supplied can be
-helpful for security audit purposes.
+ drivers/input/keyboard/gpio_keys.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-
-> +	display: display@di0 {
-> +		compatible =3D "fsl,imx-parallel-display";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&pinctrl_disp0_1>;
-> +		interface-pix-fmt =3D "rgb24";
-> +//		fsl,panel =3D <&lcd0_panel>;
-
-Probably not for upstream inclusion?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+index bef317f..ef6ca1c 100644
+--- a/drivers/input/keyboard/gpio_keys.c
++++ b/drivers/input/keyboard/gpio_keys.c
+@@ -613,7 +613,7 @@ gpio_keys_get_devtree_pdata(struct device *dev)
+ 	if (!node)
+ 		return ERR_PTR(-ENODEV);
+ 
+-	nbuttons = of_get_child_count(node);
++	nbuttons = of_get_available_child_count(node);
+ 	if (nbuttons == 0)
+ 		return ERR_PTR(-ENODEV);
+ 
+@@ -629,7 +629,7 @@ gpio_keys_get_devtree_pdata(struct device *dev)
+ 	pdata->rep = !!of_get_property(node, "autorepeat", NULL);
+ 
+ 	i = 0;
+-	for_each_child_of_node(node, pp) {
++	for_each_available_child_of_node(node, pp) {
+ 		enum of_gpio_flags flags;
+ 
+ 		button = &pdata->buttons[i++];
+-- 
+2.1.4
