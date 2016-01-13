@@ -1,45 +1,84 @@
-From: Rongrong Zou <zourongrong@gmail.com>
-Subject: Re: [PATCH v1 3/3] ARM64 LPC: update binding doc
-Date: Wed, 13 Jan 2016 19:06:42 +0800
-Message-ID: <56962FC2.1070101@gmail.com>
-References: <1451396032-23708-1-git-send-email-zourongrong@gmail.com>
- <5694C6A4.8060308@huawei.com>
- <20160112101418.GO13633@e106497-lin.cambridge.arm.com>
- <4052627.BRvFkUij6q@wuerfel>
- <20160113100911.GU13633@e106497-lin.cambridge.arm.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/2] phy: zynqmp: Add dt bindings for ZynqMP PHY.
+Date: Wed, 13 Jan 2016 16:38:58 +0530
+Message-ID: <5696304A.8090508@ti.com>
+References: <1452676943-18931-1-git-send-email-sbhatta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160113100911.GU13633@e106497-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: liviu.dudau@arm.com, Arnd Bergmann <arnd@arndb.de>
-Cc: Rongrong Zou <zourongrong@huawei.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Corey Minyard <minyard@acm.org>, gregkh@linuxfoundation.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linuxarm@huawei.com, benh@kernel.crashing.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1452676943-18931-1-git-send-email-sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016/1/13 18:09, liviu.dudau@arm.com wrote:
-> On Tue, Jan 12, 2016 at 11:54:59PM +0100, Arnd Bergmann wrote:
->> On Tuesday 12 January 2016 10:14:18 liviu.dudau@arm.com wrote:
->>>
->>> OK, looking at of_translate_one() comments it looks like a missing "ranges" property is
->>> only accepted on PowerPC. I suggest you have an empty "ranges" property in your isa
->>> parent node, that will signal to the OF parsing code that the mapping is 1:1. Then have
->>> the IPMI node use the reg = <0x0 0xe4 4>; property values instead of reg = <0x1 0xe4 4>;
->>>
->>>
->>
->> A missing ranges property means that there is no translation, while an
->> empty ranges means a 1:1 translation to the parent bus.
->>
->> We really want the former here, as I/O port addresses are not mapped into
->> the MMIO space of the parent bus.
->
-> Agree. However of_translate_one()'s behaviour doesn't match our expectations and I have no
-> useful suggestions on what the right behaviour should be.
->
+Hi,
 
-I had tried to modify the drivers/of/address.c to address this problem, but it looks
-not so general. I'm not sure you have seen this: https://lkml.org/lkml/2016/1/10/89 .
+On Wednesday 13 January 2016 02:52 PM, Subbaraya Sundeep Bhatta wrote:
+> This patch adds the document describing dt bindings for ZynqMP
+> PHY. ZynqMP SOC has a High Speed Processing System Gigabit
+> Transceiver which provides PHY capabilties to USB, SATA,
+> PCIE, Display Port and Ehernet SGMII controllers.
+> 
+> Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/phy/phy-zynqmp.txt         | 104 +++++++++++++++++++++
+>  1 file changed, 104 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-zynqmp.txt b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+> new file mode 100644
+> index 0000000..ec0d3de
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+> @@ -0,0 +1,104 @@
+> +Xilinx ZynqMP PHY binding
+> +
+> +This binding describes a ZynqMP PHY device that is used to control ZynqMP
+> +High Speed Gigabit Transceiver(GT). ZynqMP PS GTR provides four lanes
+> +and are used by USB, SATA, PCIE, Display port and Ethernet SGMMI controllers.
+> +
+> +Required properties (controller (parent) node):
+> +- compatible    : Should be "xlnx,zynqmp-psgtr"
+> +
+> +- reg		: Address and length of register sets for each device in
+> +		  "reg-names"
+> +- reg-names     : The names of the register addresses corresponding to the
+> +		  registers filled in "reg":
+> +			- serdes: SERDES block register set
+> +			- siou: SIOU block register set
+> +			- lpd: Low power domain peripherals reset control
+> +			- fpd: Full power domain peripherals reset control
+> +
+> +-xlnx,tx_termination_fix: Include fix for a functional issue in the GT. The TX
+> +			  termination resistance can be out of spec due to a
+> +			  bug in the calibration logic. This issue will be fixed
+> +			  in silicon in future versions.
+> +
+> +Required nodes	:  A sub-node is required for each lane the controller
+> +		   provides. These nodes are translated by the driver's
+> +		   .xlate() function.
 
-Regards,
-Rongrong
+driver details need not be in the binding documentation.
+> +
+> +Required properties (port (child) nodes):
+> +lane0:
+> +- #phy-cells	: Should be 1
+> +		  Cell after port phandle is device type from:
+> +			- XPSGTR_TYPE_PCIE_0
+> +			- XPSGTR_TYPE_SATA_0
+> +			- XPSGTR_TYPE_USB0
+> +			- XPSGTR_TYPE_DP_1
+> +			- XPSGTR_TYPE_SGMII0
+
+Why not use the already existing PHY TYPES?
+phy-cells can be made as '2' and the last cell can be used as index if that's
+required.
+
+Thanks
+Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
