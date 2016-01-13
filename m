@@ -1,44 +1,41 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH 0/4] UART slave device support - version 4
-Date: Wed, 13 Jan 2016 20:00:04 +0100
-Message-ID: <20160113190004.GB9821@amd>
-References: <20150511013540.5709.93626.stgit@notabene.brown>
- <CAAObsKD7-02HVUosXVwqcH6HyGEGYJ9jdNepuNhLiiL+ujO5iw@mail.gmail.com>
- <87lh7u8p3b.fsf@notabene.neil.brown.name>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH V9 2/5] dma: add Qualcomm Technologies HIDMA management
+ driver
+Date: Wed, 13 Jan 2016 19:02:20 +0000
+Message-ID: <20160113190220.GO23370@leverpostej>
+References: <1449850623-32214-1-git-send-email-okaya@codeaurora.org>
+ <1449850623-32214-3-git-send-email-okaya@codeaurora.org>
+ <20151211164137.GA23638@leverpostej>
+ <566B1F64.9010500@codeaurora.org>
+ <20151211193742.GD23638@leverpostej>
+ <566B4ACC.3070005@codeaurora.org>
+ <20151214120339.GA21356@leverpostej>
+ <569265D6.5060407@codeaurora.org>
+ <5696907C.6000809@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <87lh7u8p3b.fsf-wvvUuzkyo1HefUI2i7LXDhCRmIWqnp/j@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>
-Cc: Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <5696907C.6000809@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: robh+dt@kernel.org, frowand.list@gmail.com, grant.likely@linaro.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, agross@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 2016-01-13 08:28:24, NeilBrown wrote:
-> On Wed, Jan 13 2016, Tomeu Vizoso wrote:
-> 
-> > On 11 May 2015 at 03:56, NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org> wrote:
-> >> Hi all,
-> >>  here is version 4 of my "UART slave device" patch set, previously
-> >>  known as "tty slave devices".
-> >
-> > Hi Neil,
-> >
-> > do you (or someone else) have plans to continue this work in the short
-> > or medium term?
-> >
-> 
-> I personally have no current plans.  Too many other interesting things
-> to do and my interest in the hardware is in the waning phase.
+On Wed, Jan 13, 2016 at 12:59:24PM -0500, Sinan Kaya wrote:
+> Hi Mark, Rob, Frank, Grant and other DT experts;
+> I have been trying to reach to device tree reviewers without any luck for the last two weeks. 
+> It must be the holidays. 
 
-Can we convince you to play with N900? Your python stuff should still
-work, it has keyboard, and we have calls working now ;-).		Pavel
+Indeed. Apologies for the delay.
 
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I have restructured the code address concerns from Mark Rutland above. The dma-engine maintainer, Vinod Koul;
+> is looking for an ACK from the DT community before the patches can be incorporated.
+> 
+> Could you please kindly review the series here from DT perspective and ACK it if you are OK?
+> https://lkml.org/lkml/2016/1/11/517
+
+I will try to look at v12 shortly (i.e. in the next day or two).
+
+Thanks,
+Mark.
