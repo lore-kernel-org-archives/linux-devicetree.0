@@ -1,69 +1,41 @@
-From: liviu.dudau-5wv7dgnIgG8@public.gmane.org
-Subject: Re: [PATCH v1 3/3] ARM64 LPC: update binding doc
-Date: Wed, 13 Jan 2016 10:10:28 +0000
-Message-ID: <20160113101028.GV13633@e106497-lin.cambridge.arm.com>
-References: <568912EE.9030009@huawei.com>
- <5694E9FF.6030904@huawei.com>
- <20160112151335.GS13633@e106497-lin.cambridge.arm.com>
- <4731036.9QlepWb5cE@wuerfel>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH V2 2/6] mfd: max77620: add core driver for
+ MAX77620/MAX20024
+Date: Wed, 13 Jan 2016 11:11:35 +0100
+Message-ID: <20160113101135.GI3367@piout.net>
+References: <1452590273-16421-1-git-send-email-ldewangan@nvidia.com>
+ <1452590273-16421-3-git-send-email-ldewangan@nvidia.com>
+ <56959E9A.3060903@samsung.com>
+ <5696122A.6000509@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4731036.9QlepWb5cE@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Rongrong Zou <zourongrong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rongrong Zou <zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <5696122A.6000509@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, treding@nvidia.com, Chaitanya Bandi <bandik@nvidia.com>, Mallikarjun Kasoju <mkasoju@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 12, 2016 at 11:52:48PM +0100, Arnd Bergmann wrote:
-> On Tuesday 12 January 2016 15:13:35 liviu.dudau-5wv7dgnIgG8@public.gmane.org wrote:
-> > > int of_address_to_resource(struct device_node *dev, int index,
-> > >                          struct resource *r)
-> > > {
-> > >       ...
-> > >       /* flags can be get here, without ranges property reqired.
-> > >        * if the reg =3D <0x0 0xe4 4>, I can get flag of IORESOURC=
-E_MEM,
-> > >        * if the reg =3D <0x1 0xe4 4>, I can get flag of IORESOURC=
-E_IO,
-> >=20
-> > That is strange, the parent node has #address-cells =3D <2> so the =
-first two numbers should be part
-> > of the address and not influence the flags. Can you add some debugg=
-ing in of_get_address() and
-> > try to figure out what bus is used in  *flags =3D bus->get_flags(pr=
-op) ?
-> >=20
-> >=20
->=20
-> This is the standard ISA binding. The first cell is the address space
-> (IO or MEM), the second cell is the address within that space. This
-> is similar to how PCI works.
+On 13/01/2016 at 14:30:26 +0530, Laxman Dewangan wrote :
+> In my 3rd patch, I tried to align it little more where is possible. But I
+> feel that all these indenting is more over individual choice. Example, I
+> added one more indent in below example to look better.
+> 
+> 
+>         ret = max77620_reg_update(chip->dev, MAX77620_PWR_SLAVE,
+> -               MAX77620_REG_ONOFFCNFG2, MAX77620_ONOFFCNFG2_WK_EN0,
+> -               MAX77620_ONOFFCNFG2_WK_EN0);
+> +                       MAX77620_REG_ONOFFCNFG2, MAX77620_ONOFFCNFG2_WK_EN0,
+> +                       MAX77620_ONOFFCNFG2_WK_EN0);
+> 
+> 
 
-OK, but from DT point of view and given the parent's #address-cells =3D=
- <2> and #size-cells =3D <1>
-should the reg not be something like reg =3D <0x1 0x0 0xe4 4> ?
+You should probably use checkpatch.pl --strict, it requires that you
+align on the open parenthesis.
 
-Best regards,
-Liviu
 
->=20
-> 	Arnd
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
